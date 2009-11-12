@@ -484,8 +484,6 @@ ipmi_sel_parse_output_dell_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
    * From Dell Spec and Dell Code
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
-          || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
       && ctx->ipmi_version_major == IPMI_1_5_MAJOR_VERSION
       && ctx->ipmi_version_minor == IPMI_1_5_MINOR_VERSION
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
@@ -715,8 +713,6 @@ ipmi_sel_parse_output_dell_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
    * From Dell Spec and Dell Code
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
-          || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
       && ctx->ipmi_version_major == IPMI_1_5_MAJOR_VERSION
       && ctx->ipmi_version_minor == IPMI_1_5_MINOR_VERSION
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
@@ -1339,8 +1335,6 @@ ipmi_sel_parse_output_dell_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
    * achu: XXX: dataX & 0x1F != 1F ???  Need to ask Dell.
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
-          || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
       && ctx->ipmi_version_major == IPMI_2_0_MAJOR_VERSION
       && ctx->ipmi_version_minor == IPMI_2_0_MINOR_VERSION
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC

@@ -275,66 +275,6 @@ increments (e.g. 1 = 1 minute), 0 or "none" will configure no timeout.
 Command confirmed to work on Dell Xanadu2.
 .RE
 .TP
-.B Fujitsu
-.RS
-.TP
-.B get-network-name
-This OEM command will get the Network Name.  The network name is
-typically used for DNS.  Command confirmed to work on Fujitsu RX100 S5.
-.TP
-.B set-network-name \fIstring\fR
-This OEM command will set the current Network Name.  The maximum
-length is 16 bytes.  Command confirmed to work on Fujitsu RX100 S5.
-.TP
-.B get-use-network-name
-This OEM command will determine if the Network Name is currently
-used or not.  Command confirmed to work on Fujitsu RX100 S5.
-.TP
-.B set-use-network-name \fIyes|no\fR
-This OEM command will configure if the Network Name should be used
-or not.  Command confirmed to work on Fujitsu RX100 S5.
-.TP
-.B get-name-extension
-This OEM command will get the Network Name Extension.  Command
-confirmed to work on Fujitsu RX100 S5.
-.TP
-.B set-name-extension \fIstring\fR
-This OEM command will set the current Network Name Extension.  It
-can be used for a longer Network Name if the Network Name
-configuration of 16 bytes is too short.  The maximum length is 16
-bytes.  Command confirmed to work on Fujitsu RX100 S5.
-.TP
-.B get-add-name-extension
-This OEM command will determine if the Network Name Extension is
-currently used or not.  Command confirmed to work on Fujitsu RX100 S5.
-.TP
-.B set-add-name extension \fIyes|no\fR
-This OEM command will configure if the Network Name should have the
-Network Name Extension appended or not.  Command confirmed to work on
-Fujitsu RX100 S5.
-.TP
-.B get-add-serial-number
-This OEM command will determine if a portion of the MAC address will
-be appended to the Network Name.  Command confirmed to work on
-Fujitsu RX100 S5.
-.TP
-.B set-add-serial-number \fIyes|no\fR
-This OEM command will configure if the Network Name should have a
-portion of the MAC address appended or not.  Command confirmed to work
-on Fujitsu RX100 S5.
-.TP
-.B get-register-dhcp-in-dns
-This OEM command will determine if the Network Name should be
-registered in DNS via DHCP.  Command confirmed to work on Fujitsu
-RX100 S5.
-.TP
-.B set-register-dhcp-in-dns \fIyes|no\fR
-This OEM command will configure if the Network Name should be
-registered in DNS via DHCP.  If enabled, it may trigger a DHCP renew
-and make IPMI over LAN temporarily unavailable.  Command confirmed to
-work on Fujitsu RX100 S5.
-.RE
-.TP
 .B inventec
 .RS
 .TP
