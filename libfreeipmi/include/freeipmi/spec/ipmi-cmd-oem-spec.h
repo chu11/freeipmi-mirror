@@ -71,16 +71,6 @@ extern "C" {
 #define IPMI_CMD_OEM_DELL_GET_FCB_VERSION  0x16
 
 /* 
- * Fujitsu
- */
-
-/*
- * Fujitsu RX100 S5
- */
-/* IPMI_NET_FN_OEM_GROUP_RQ / IPMI_NET_FN_OEM_GROUP_RS */
-#define IPMI_CMD_OEM_FUJITSU_CONFIG_BMC 0xE0
-
-/* 
  * Inventec
  */
 
