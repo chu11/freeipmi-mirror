@@ -70,7 +70,7 @@ special OEM command
 .B list
 may be passed to any OEM ID to list commands supported by that OEM ID.
 .TP
-.B dell
+.B Dell
 .RS
 .TP
 .B get-system-info \fIasset\-tag|service\-tag|product\-name|mac\-addresses\fR
@@ -275,7 +275,7 @@ increments (e.g. 1 = 1 minute), 0 or "none" will configure no timeout.
 Command confirmed to work on Dell Xanadu2.
 .RE
 .TP
-.B inventec
+.B Inventec
 .RS
 .TP
 .B get-nic-status
@@ -433,7 +433,7 @@ for description on LED modes.)  Command confirmed to work on Sun Fire
 4100 with ILOM.
 .RE
 .TP
-.B supermicro
+.B Supermicro
 .RS
 .TP
 .B extra-firmware-info
