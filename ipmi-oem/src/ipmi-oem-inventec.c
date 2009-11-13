@@ -836,7 +836,7 @@ ipmi_oem_inventec_set_mac_address (ipmi_oem_state_data_t *state_data)
                                                    rs_len,
                                                    2,
                                                    cmd,
-                                                   IPMI_NET_FN_OEM_GROUP_RQ) < 0)
+                                                   IPMI_NET_FN_OEM_GROUP_RS) < 0)
     goto cleanup;
   
   rv = 0;

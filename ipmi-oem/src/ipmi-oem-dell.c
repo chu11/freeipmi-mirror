@@ -734,7 +734,7 @@ _get_dell_system_info_11g_mac_addresses (ipmi_oem_state_data_t *state_data)
                                                    rs_len,
                                                    3,
                                                    IPMI_CMD_GET_SYSTEM_INFO_PARAMETERS,
-                                                   IPMI_NET_FN_APP_RQ) < 0)
+                                                   IPMI_NET_FN_APP_RS) < 0)
     goto cleanup;
   
   total_bytes = bytes_rs[3];
@@ -790,7 +790,7 @@ _get_dell_system_info_11g_mac_addresses (ipmi_oem_state_data_t *state_data)
 						       rs_len,
 						       11,
 						       IPMI_CMD_GET_SYSTEM_INFO_PARAMETERS,
-						       IPMI_NET_FN_APP_RQ) < 0)
+						       IPMI_NET_FN_APP_RS) < 0)
 	goto cleanup;
       
       mac_type = (bytes_rs[3] & IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_TYPE_BITMASK);
@@ -1258,7 +1258,7 @@ _dell_reserve_extended_configuration (ipmi_oem_state_data_t *state_data,
                                                    rs_len,
                                                    6,
                                                    IPMI_CMD_OEM_DELL_RESERVED_EXTENDED_CONFIGURATION,
-                                                   IPMI_NET_FN_OEM_GROUP_RQ) < 0)
+                                                   IPMI_NET_FN_OEM_GROUP_RS) < 0)
     goto cleanup;
   
   (*reservation_id) = bytes_rs[5];
@@ -1361,7 +1361,7 @@ _dell_get_extended_configuration (ipmi_oem_state_data_t *state_data,
 						       rs_len,
 						       8 + IPMI_OEM_DELL_TOKEN_DATA_COMMON_HEADER_LEN,
 						       IPMI_CMD_OEM_DELL_GET_EXTENDED_CONFIGURATION,
-						       IPMI_NET_FN_OEM_GROUP_RQ) < 0)
+						       IPMI_NET_FN_OEM_GROUP_RS) < 0)
 	goto cleanup;
       
       bytes_read = bytes_rs[7];
@@ -1582,7 +1582,7 @@ _dell_set_extended_configuration (ipmi_oem_state_data_t *state_data,
 						       rs_len,
 						       6,
 						       IPMI_CMD_OEM_DELL_SET_EXTENDED_CONFIGURATION,
-						       IPMI_NET_FN_OEM_GROUP_RQ) < 0)
+						       IPMI_NET_FN_OEM_GROUP_RS) < 0)
 	goto cleanup;
       
       if (bytes_rs[5] != token_write_length)
