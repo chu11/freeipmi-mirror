@@ -61,7 +61,7 @@ OEM ID and OEM COMMANDS specified.
 .SH "SUPPORTED OEM IDS and COMMANDS"
 The currently supported OEM IDs and COMMANDs are:
 .TP
-.B dell
+.B Dell
 .RS
 .TP
 .B get-system-info \fIasset\-tag|service\-tag|product\-name|mac\-addresses\fR
@@ -198,7 +198,7 @@ This OEM command can retrieve the fan control board (FCB) version
 number.  Command confirmed to work on Dell Xanadu2.
 .RE
 .TP
-.B inventec
+.B Inventec
 .RS
 .TP
 .B get-nic-status
@@ -259,7 +259,7 @@ being done.  Command confirmed to work on Inventec 5441 (and
 subsequently Dell Xanadu2).
 .RE
 .TP
-.B supermicro
+.B Supermicro
 .RS
 .TP
 .B extra-firmware-info
