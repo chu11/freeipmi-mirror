@@ -1,5 +1,10 @@
 2009-11-13  Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/: Support Fujitsu OEM commands from online
+	documentation.
+	
+2009-11-13  Albert Chu <chu11@llnl.gov>
+
 	* Fix documentation typos.
 
 2009-11-12  Yaroslav Halchenko <debian@onerussian.com>

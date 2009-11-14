@@ -42,6 +42,16 @@ extern "C" {
 #define IPMI_NET_FN_OEM_DELL_XANADU2_RQ 0x34
 #define IPMI_NET_FN_OEM_DELL_XANADU2_RS 0x35
 
+/*
+ * Fujitsu
+ */
+
+/*
+ * Fujitsu RX100 S5
+ */
+#define IPMI_NET_FN_OEM_FUJITSU_GENERIC_RQ 0x30
+#define IPMI_NET_FN_OEM_FUJITSU_GENERIC_RS 0x31
+
 /* 
  * Inventec
  */

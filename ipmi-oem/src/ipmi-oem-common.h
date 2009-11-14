@@ -26,6 +26,7 @@
 #define IPMI_OEM_TIME_BUFLEN    1024
 #define IPMI_OEM_HEX_BASE       16
 #define IPMI_OEM_FMT_BUFLEN     1024
+#define IPMI_OEM_STR_BUFLEN     2048
 
 int ipmi_oem_check_response_and_completion_code (ipmi_oem_state_data_t *state_data,
                                                  const void *bytes_rs,

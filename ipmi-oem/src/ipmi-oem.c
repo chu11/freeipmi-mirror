@@ -33,6 +33,7 @@
 #include "ipmi-oem-argp.h"
 #include "ipmi-oem-common.h"
 #include "ipmi-oem-dell.h"
+#include "ipmi-oem-fujitsu.h"
 #include "ipmi-oem-inventec.h"
 #include "ipmi-oem-sun.h"
 #include "ipmi-oem-supermicro.h"
@@ -302,6 +303,52 @@ struct ipmi_oem_command oem_dell[] =
     },
   };
 
+struct ipmi_oem_command oem_fujitsu[] =
+  {
+    {
+      "get-power-on-source",
+      NULL,
+      0,
+      0,
+      ipmi_oem_fujitsu_get_power_on_source
+    },
+    {
+      "get-power-off-source",
+      NULL,
+      0,
+      0,
+      ipmi_oem_fujitsu_get_power_off_source
+    },
+    {
+      "get-identify-led",
+      NULL,
+      0,
+      0,
+      ipmi_oem_fujitsu_get_identify_led
+    },
+    {
+      "set-identify-led",
+      "<on|off>",
+      1,
+      0,
+      ipmi_oem_fujitsu_set_identify_led
+    },
+    {
+      "get-error-led",
+      NULL,
+      0,
+      0,
+      ipmi_oem_fujitsu_get_error_led
+    },
+    {
+      NULL,
+      NULL,
+      0,
+      0,
+      NULL
+    },
+  };
+
 struct ipmi_oem_command oem_inventec[] =
   {
     {
@@ -486,6 +533,10 @@ struct ipmi_oem_id oem_cb[] =
     {
       "Dell",
       oem_dell
+    },
+    {
+      "Fujitsu",
+      oem_fujitsu
     },
     {
       "Inventec",
