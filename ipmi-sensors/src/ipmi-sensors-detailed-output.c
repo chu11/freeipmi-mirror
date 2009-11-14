@@ -520,12 +520,12 @@ _detailed_output_sensor_reading_ranges (ipmi_sensors_state_data_t *state_data,
 
   if (nominal_reading)
     pstdout_printf (state_data->pstate,
-                    "Nominal reading: %f %s\n",
+                    "Nominal Reading: %f %s\n",
                     *nominal_reading,
                     sensor_units_str);
   else
     pstdout_printf (state_data->pstate,
-                    "Nominal reading: %s\n",
+                    "Nominal Reading: %s\n",
                     IPMI_SENSORS_NA_STRING_OUTPUT);
 
   rv = 0;
