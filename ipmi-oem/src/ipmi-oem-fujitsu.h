@@ -16,21 +16,18 @@
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 */
 
-#ifndef _IPMI_OEM_COMMON_H
-#define _IPMI_OEM_COMMON_H
+#ifndef _IPMI_OEM_FUJITSU_H
+#define _IPMI_OEM_FUJITSU_H
 
 #include "ipmi-oem.h"
 
-#define IPMI_OEM_MAX_BYTES      256
-#define IPMI_OEM_ERR_BUFLEN     1024
-#define IPMI_OEM_TIME_BUFLEN    1024
-#define IPMI_OEM_STR_BUFLEN     2048
+int ipmi_oem_fujitsu_get_power_on_source (ipmi_oem_state_data_t *state_data);
 
-int ipmi_oem_check_response_and_completion_code (ipmi_oem_state_data_t *state_data,
-                                                 uint8_t *bytes_rs,
-                                                 unsigned int bytes_rs_len,
-                                                 unsigned int expected_bytes_rs_len,
-                                                 uint8_t cmd,
-                                                 uint8_t netfn);
+int ipmi_oem_fujitsu_get_power_off_source (ipmi_oem_state_data_t *state_data);
+
+int ipmi_oem_fujitsu_get_identify_led (ipmi_oem_state_data_t *state_data);
+int ipmi_oem_fujitsu_set_identify_led (ipmi_oem_state_data_t *state_data);
+
+int ipmi_oem_fujitsu_get_error_led (ipmi_oem_state_data_t *state_data);
 
 #endif
