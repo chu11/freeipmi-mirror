@@ -13,6 +13,8 @@ log sel events to syslog?
 - could work across cluster?
 - need filtering thingie to remove crud?
 requires a sel montioring lib? like ipmimonitoring?
+- sensor type filter
+- date range filter
 
 general
 -------
