@@ -2179,7 +2179,7 @@ _output_manufacturer_id (ipmi_sensors_state_data_t *state_data,
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       ": %s\n",
+                       "ipmi_sdr_parse_manufacturer_id: %s\n",
                        ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
       return (-1);
     }
