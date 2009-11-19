@@ -1109,7 +1109,7 @@ ipmi_event_message_separator (const char *separator)
       return (-1);
     }
 
-  _ipmi_event_message_separator = separator;
+  _ipmi_event_message_separator = (char *)separator;
   return (0);
 }
 
