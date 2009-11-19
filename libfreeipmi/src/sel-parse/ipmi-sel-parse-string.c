@@ -243,7 +243,7 @@ _get_sdr_id_string (ipmi_sel_parse_ctx_t ctx,
 
   if (!ret)
     {
-      rv = 0;
+      rv = 0;      
       goto cleanup;
     }
 
@@ -256,6 +256,8 @@ _get_sdr_id_string (ipmi_sel_parse_ctx_t ctx,
       if (ipmi_sdr_parse_ctx_errnum (ctx->sdr_parse_ctx) == IPMI_SDR_PARSE_ERR_INVALID_SDR_RECORD
           || ipmi_sdr_parse_ctx_errnum (ctx->sdr_parse_ctx) == IPMI_SDR_PARSE_ERR_INCOMPLETE_SDR_RECORD)
         rv = 0;
+      else
+        SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_INTERNAL_ERROR);
       goto cleanup;
     }
 
@@ -329,6 +331,8 @@ _get_sensor_reading (ipmi_sel_parse_ctx_t ctx,
       if (ipmi_sdr_parse_ctx_errnum (ctx->sdr_parse_ctx) == IPMI_SDR_PARSE_ERR_INVALID_SDR_RECORD
           || ipmi_sdr_parse_ctx_errnum (ctx->sdr_parse_ctx) == IPMI_SDR_PARSE_ERR_INCOMPLETE_SDR_RECORD)
         rv = 0;
+      else
+        SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_INTERNAL_ERROR);
       goto cleanup;
     }
 
@@ -351,6 +355,8 @@ _get_sensor_reading (ipmi_sel_parse_ctx_t ctx,
       if (ipmi_sdr_parse_ctx_errnum (ctx->sdr_parse_ctx) == IPMI_SDR_PARSE_ERR_INVALID_SDR_RECORD
           || ipmi_sdr_parse_ctx_errnum (ctx->sdr_parse_ctx) == IPMI_SDR_PARSE_ERR_INCOMPLETE_SDR_RECORD)
         rv = 0;
+      else
+        SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_INTERNAL_ERROR);
       goto cleanup;
     }
 
@@ -366,6 +372,8 @@ _get_sensor_reading (ipmi_sel_parse_ctx_t ctx,
       if (ipmi_sdr_parse_ctx_errnum (ctx->sdr_parse_ctx) == IPMI_SDR_PARSE_ERR_INVALID_SDR_RECORD
           || ipmi_sdr_parse_ctx_errnum (ctx->sdr_parse_ctx) == IPMI_SDR_PARSE_ERR_INCOMPLETE_SDR_RECORD)
         rv = 0;
+      else
+        SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_INTERNAL_ERROR);
       goto cleanup;
     }
 
@@ -658,10 +666,10 @@ _output_sensor_name (ipmi_sel_parse_ctx_t ctx,
   if (ret)
     {
       if (ipmi_sel_parse_string_snprintf (buf,
-                     buflen,
-                     wlen,
-                     "%s",
-                     id_string))
+                                          buflen,
+                                          wlen,
+                                          "%s",
+                                          id_string))
         return (1);
       return (0);
     }
