@@ -183,6 +183,7 @@ int ipmi_cmd (ipmi_ctx_t ctx,
               fiid_obj_t obj_cmd_rs);
 
 int ipmi_cmd_ipmb (ipmi_ctx_t ctx,
+                   uint8_t channel_number,
                    uint8_t rs_addr,
                    uint8_t lun,
                    uint8_t net_fn,

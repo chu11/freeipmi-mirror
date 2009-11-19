@@ -399,6 +399,7 @@ ipmi_openipmi_ctx_io_init (ipmi_openipmi_ctx_t ctx)
 
 static int
 _openipmi_write (ipmi_openipmi_ctx_t ctx,
+                 uint8_t channel_number,
                  uint8_t rs_addr,
                  uint8_t lun,
                  uint8_t net_fn,
@@ -456,7 +457,7 @@ _openipmi_write (ipmi_openipmi_ctx_t ctx,
   else
     {
       ipmb_addr.addr_type = IPMI_IPMB_ADDR_TYPE; /* openipmi macro */
-      ipmb_addr.channel = IPMI_CHANNEL_NUMBER_PRIMARY_IPMB; /* freeipmi macro */
+      ipmb_addr.channel = channel_number;
       ipmb_addr.slave_addr = rs_addr;
       ipmb_addr.lun = lun;
 
@@ -588,6 +589,7 @@ ipmi_openipmi_cmd (ipmi_openipmi_ctx_t ctx,
 
   if (_openipmi_write (ctx,
                        0,
+                       0,
                        lun,
                        net_fn,
                        obj_cmd_rq,
@@ -603,6 +605,7 @@ ipmi_openipmi_cmd (ipmi_openipmi_ctx_t ctx,
 
 int
 ipmi_openipmi_cmd_ipmb (ipmi_openipmi_ctx_t ctx,
+                        uint8_t channel_number,
                         uint8_t rs_addr,
                         uint8_t lun,
                         uint8_t net_fn,
@@ -632,6 +635,7 @@ ipmi_openipmi_cmd_ipmb (ipmi_openipmi_ctx_t ctx,
     }
 
   if (_openipmi_write (ctx,
+                       channel_number,
                        rs_addr,
                        lun,
                        net_fn,

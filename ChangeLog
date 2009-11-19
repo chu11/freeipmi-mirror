@@ -1,3 +1,7 @@
+2009-11-18  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/: Support sensor bridging across different channels.
+	
 2009-11-17  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors/: Fix debug output typos.

@@ -1498,6 +1498,7 @@ ipmi_cmd (ipmi_ctx_t ctx,
 
 int
 ipmi_cmd_ipmb (ipmi_ctx_t ctx,
+               uint8_t channel_number,
                uint8_t rs_addr,
                uint8_t lun,
                uint8_t net_fn,
@@ -1541,6 +1542,7 @@ ipmi_cmd_ipmb (ipmi_ctx_t ctx,
       return (-1);
     }
 
+  ctx->channel_number = channel_number;
   ctx->rs_addr = rs_addr;
   ctx->lun = lun;
   ctx->net_fn = net_fn;

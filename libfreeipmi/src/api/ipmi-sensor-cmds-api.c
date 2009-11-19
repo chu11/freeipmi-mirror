@@ -877,6 +877,7 @@ ipmi_cmd_get_sensor_reading (ipmi_ctx_t ctx,
 
 int
 ipmi_cmd_get_sensor_reading_ipmb (ipmi_ctx_t ctx,
+                                  uint8_t channel_number,
                                   uint8_t slave_address,
                                   uint8_t lun,
                                   uint8_t sensor_number,
@@ -918,6 +919,7 @@ ipmi_cmd_get_sensor_reading_ipmb (ipmi_ctx_t ctx,
     }
 
   if (api_ipmi_cmd_ipmb (ctx,
+                         channel_number,
                          slave_address,
                          lun,
                          IPMI_NET_FN_SENSOR_EVENT_RQ,

@@ -40,6 +40,7 @@ int ipmi_cmd_set_event_receiver (ipmi_ctx_t ctx,
                                  fiid_obj_t obj_cmd_rs);
 
 int ipmi_cmd_set_event_receiver_ipmb (ipmi_ctx_t ctx,
+                                      uint8_t channel_number,
                                       uint8_t slave_address,
                                       uint8_t event_receiver_slave_address,
                                       uint8_t event_receiver_lun,

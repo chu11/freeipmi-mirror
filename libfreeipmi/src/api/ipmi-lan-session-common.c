@@ -1106,7 +1106,7 @@ _ipmi_cmd_send_ipmb (ipmi_ctx_t ctx,
     }
 
   if (ipmi_cmd_send_message (ctx,
-                             IPMI_CHANNEL_NUMBER_PRIMARY_IPMB,
+                             ctx->channel_number,
                              IPMI_SEND_MESSAGE_AUTHENTICATION_NOT_REQUIRED,
                              IPMI_SEND_MESSAGE_ENCRYPTION_NOT_REQUIRED,
                              IPMI_SEND_MESSAGE_TRACKING_OPERATION_TRACKING_REQUEST,
