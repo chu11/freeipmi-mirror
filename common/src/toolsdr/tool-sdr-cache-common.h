@@ -26,7 +26,6 @@
 
 #include "pstdout.h"
 
-#define IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH 1024
 #define IPMI_SDR_CACHE_MAX_ID_STRING         16
 #define IPMI_SDR_CACHE_MAX_DEVICE_ID_STRING  16
 

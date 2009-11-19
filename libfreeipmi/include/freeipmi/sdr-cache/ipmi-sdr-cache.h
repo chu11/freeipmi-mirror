@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache.h,v 1.17 2009-11-03 18:58:44 chu11 Exp $
+ *  $Id: ipmi-sdr-cache.h,v 1.18 2009-11-19 19:24:21 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -62,6 +62,8 @@ extern "C" {
 
 #define IPMI_SDR_CACHE_FLAGS_DEFAULT                   0x0000
 #define IPMI_SDR_CACHE_FLAGS_DEBUG_DUMP                0x0001
+
+#define IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH           261 /* 256 + header */
 
 #define IPMI_SDR_CACHE_CREATE_FLAGS_DEFAULT            0x0
 /* During cache creation, overwrite any previously created cache.  Default
