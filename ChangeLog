@@ -3,6 +3,8 @@
 	* libfreeipmi/: Support sensor bridging across different channels.
 
 	* libfreeipmi/src/debug/: Fix rmcpplus ipmb output corner case.
+
+	* libfreeipmi/src/api/: Fix ipmi 2.0 ipmb bridging.
 	
 2009-11-17  Albert Chu <chu11@llnl.gov>
 

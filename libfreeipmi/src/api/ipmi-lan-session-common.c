@@ -2925,7 +2925,7 @@ ipmi_lan_2_0_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
       if ((ret = _session_timed_out (ctx)) < 0)
         break;
 
-      if (!ret)
+      if (ret)
         {
           API_SET_ERRNUM (ctx, IPMI_ERR_SESSION_TIMEOUT);
           break;
