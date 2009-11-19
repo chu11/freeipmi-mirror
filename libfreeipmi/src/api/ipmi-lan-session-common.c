@@ -569,7 +569,7 @@ _ipmi_lan_cmd_recv (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (ctx->io.outofband.retransmission_timeout != 0)
+  if (ctx->io.outofband.retransmission_timeout)
     {
       FD_ZERO (&read_set);
       FD_SET (ctx->io.outofband.sockfd, &read_set);
@@ -2197,7 +2197,7 @@ _ipmi_lan_2_0_cmd_recv (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (ctx->io.outofband.retransmission_timeout != 0)
+  if (ctx->io.outofband.retransmission_timeout)
     {
       FD_ZERO (&read_set);
       FD_SET (ctx->io.outofband.sockfd, &read_set);
