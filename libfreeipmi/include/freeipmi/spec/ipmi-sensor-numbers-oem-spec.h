@@ -23,9 +23,9 @@
 extern "C" {
 #endif
 
-/* 
- * Dell
- */
+/*******************************************
+ * Dell                                    *
+ *******************************************/
 
 /*
  * Dell Poweredge R610
@@ -70,9 +70,9 @@ extern "C" {
 #define IPMI_SENSOR_NUMBER_OEM_DELL_FATAL_IO_ERROR                                      0x27
 #define IPMI_SENSOR_NUMBER_OEM_DELL_MSR_INFO_LOG                                        0x28
 
-/* 
- * Inventec
- */
+/*******************************************
+ * Inventec                                *
+ *******************************************/
 
 /*
  * Inventec 5441/Dell Xanadu2

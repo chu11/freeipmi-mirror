@@ -23,9 +23,9 @@
 extern "C" {
 #endif
 
-/* 
- * Dell
- */
+/******************************************* 
+ * Dell                                    *
+ *******************************************/
   
 /*
  * Dell Poweredge R610
@@ -70,9 +70,9 @@ extern "C" {
 #define IPMI_CMD_OEM_DELL_SET_FCB_VERSION  0x15
 #define IPMI_CMD_OEM_DELL_GET_FCB_VERSION  0x16
 
-/*
- * Fujitsu
- */
+/******************************************* 
+ * Fujitsu                                 *
+ *******************************************/
 
 /*
  * Fujitsu RX100 S5
@@ -94,9 +94,9 @@ extern "C" {
 #define IPMI_CMD_OEM_FUJITSU_GET_REMOTE_STORAGE_CONNECTION_OR_STATUS 0x19
 #define IPMI_CMD_OEM_FUJITSU_SET_VIDEO_DISPLAY_ON_OFF                0x1A
 
-/* 
- * Inventec
- */
+/******************************************* 
+ * Inventec                                *
+ *******************************************/
 
 /*
  * Inventec 5441/Dell Xanadu2
@@ -114,9 +114,9 @@ extern "C" {
 #define IPMI_CMD_OEM_INVENTEC_SET_DEDICATED_MAC_ADDRESS    0x21
 #define IPMI_CMD_OEM_INVENTEC_SET_SHARED_MAC_ADDRESS       0x23
 
-/*
- * Sun
- */
+/******************************************* 
+ * Sun                                     *
+ *******************************************/
   
 /*
  * Sun 4140
@@ -126,9 +126,9 @@ extern "C" {
 #define IPMI_CMD_OEM_SUN_GET_LED 0x21
 #define IPMI_CMD_OEM_SUN_SET_LED 0x22
 
-/*
- * Supermicro
- */
+/******************************************* 
+ * Supermicro                              *
+ *******************************************/
   
 /*
  * Supermicro H8QME

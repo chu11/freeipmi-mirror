@@ -23,9 +23,9 @@
 extern "C" {
 #endif
 
-/* 
- * Dell
- */
+/*******************************************
+ * Dell                                    *
+ *******************************************/
 
 /*
  * Dell Poweredge R610
@@ -39,9 +39,9 @@ extern "C" {
 #define IPMI_SENSOR_TYPE_OEM_DELL_FATAL_IO_ERROR                        0xC3
 #define IPMI_SENSOR_TYPE_OEM_DELL_UPGRADE                               0xC4
 
-/* 
- * Inventec
- */
+/*******************************************
+ * Inventec                                *
+ *******************************************/
 
 /*
  * Inventec 5441/Dell Xanadu2
@@ -49,9 +49,9 @@ extern "C" {
 /* achu: not official names, named based on use context */
 #define IPMI_SENSOR_TYPE_OEM_INVENTEC_BIOS 0xC1
 
-/*
- * Supermicro
- */
+/*******************************************
+ * Supermicro                              *
+ *******************************************/
 
 /*
  * Supermicro X8DTH

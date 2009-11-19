@@ -25,9 +25,9 @@ extern "C" {
 
 #include <stdint.h>
 
-/* 
- * Dell
- */
+/*******************************************
+ * Dell                                    *
+ *******************************************/
   
 /*
  * Dell Poweredge R610
@@ -253,9 +253,9 @@ extern unsigned int ipmi_sensor_type_oem_dell_upgrade_max_index;
 #define IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_INCORRECT_MEMORY_CONFIGURATION          0xC4
 #define IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_GENERAL_FAILURE_AFTER_VIDEO             0xFE
 
-/*
- * Inventec
- */
+/*******************************************
+ * Inventec                                *
+ *******************************************/
 
 /*
  * Inventec 5441/Dell Xanadu2
@@ -349,9 +349,9 @@ extern unsigned int ipmi_sensor_type_oem_dell_upgrade_max_index;
 #define IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_CPUID_PROCESSOR_MODEL_ARE_DIFFERENT    0x0196
 #define IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_PROCESSOR_SPEEDS_MISMATCHED            0x0197
 
-/*
- * Supermicro
- */
+/*******************************************
+ * Supermicro                              *
+ *******************************************/
 
 /*
  * Supermicro X8DTH

@@ -23,9 +23,9 @@
 extern "C" {
 #endif
 
-/* 
- * Dell
- */
+/*******************************************
+ * Dell                                    *
+ *******************************************/
 
 /*
  * Dell Poweredge R610
@@ -42,9 +42,9 @@ extern "C" {
 #define IPMI_NET_FN_OEM_DELL_XANADU2_RQ 0x34
 #define IPMI_NET_FN_OEM_DELL_XANADU2_RS 0x35
 
-/*
- * Fujitsu
- */
+/*******************************************
+ * Fujitsu                                 *
+ *******************************************/
 
 /*
  * Fujitsu RX100 S5
@@ -52,9 +52,9 @@ extern "C" {
 #define IPMI_NET_FN_OEM_FUJITSU_GENERIC_RQ 0x30
 #define IPMI_NET_FN_OEM_FUJITSU_GENERIC_RS 0x31
 
-/* 
- * Inventec
- */
+/*******************************************
+ * Inventec                                *
+ *******************************************/
 
 /*
  * Inventec 5441/Dell Xanadu2
@@ -63,9 +63,9 @@ extern "C" {
 #define IPMI_NET_FN_OEM_INVENTEC_GENERIC_RQ 0x30
 #define IPMI_NET_FN_OEM_INVENTEC_GENERIC_RS 0x31
 
-/*
- * Supermicro
- */
+/*******************************************
+ * Supermicro                              *
+ *******************************************/
 
 /*
  * Supermicro H8QME
