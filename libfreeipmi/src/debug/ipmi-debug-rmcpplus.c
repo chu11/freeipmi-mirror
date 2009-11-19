@@ -1553,9 +1553,9 @@ ipmi_dump_rmcpplus_packet_ipmb (int fd,
       || (confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128
           && (!confidentiality_key
               || !confidentiality_key_len))
-      || tmpl_cmd
-      || tmpl_ipmb_msg_hdr
-      || tmpl_ipmb_cmd)
+      || !tmpl_cmd
+      || !tmpl_ipmb_msg_hdr
+      || !tmpl_ipmb_cmd)
     {
       SET_ERRNO (EINVAL);
       return (-1);
