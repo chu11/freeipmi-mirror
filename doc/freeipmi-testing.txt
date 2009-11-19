@@ -450,6 +450,22 @@ Execute ipmi-sensors with very verbose output (-vv), verify tool:
 
 Test)
 
+Execute ipmi-sensors in-band with the --bridge-sensors option to
+verify that sensors not owned by the BMC are output correctly, verify
+tool:
+- Executes without errors
+- All bridged sensors are output correctly.
+
+Test)
+
+Execute ipmi-sensors out-of-band with the --bridge-sensors option to
+verify that sensors not owned by the BMC are output correctly, verify
+tool:
+- Executes without errors
+- All bridged sensors are output correctly.
+
+Test)
+
 Testing Power Supply Sensors:
 
 - Use a dual power supply motherboard.
