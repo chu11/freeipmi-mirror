@@ -737,14 +737,14 @@ _output_sensor_name (ipmi_sel_parse_ctx_t ctx,
  * 1 - buffer full, return full buffer to user
  */
 static int
-_output_oem_event_offset_class_sensor_specific_discrete (ipmi_sel_parse_ctx_t ctx,
-                                                         struct ipmi_sel_parse_entry *sel_parse_entry,
-                                                         uint8_t sel_record_type,
-                                                         char *tmpbuf,
-                                                         unsigned int tmpbuflen,
-                                                         unsigned int flags,
-                                                         unsigned int *wlen,
-                                                         struct ipmi_sel_system_event_record_data *system_event_record_data)
+_output_oem_event_data1_class_sensor_specific_discrete (ipmi_sel_parse_ctx_t ctx,
+                                                        struct ipmi_sel_parse_entry *sel_parse_entry,
+                                                        uint8_t sel_record_type,
+                                                        char *tmpbuf,
+                                                        unsigned int tmpbuflen,
+                                                        unsigned int flags,
+                                                        unsigned int *wlen,
+                                                        struct ipmi_sel_system_event_record_data *system_event_record_data)
 
 {
   int ret;
@@ -760,14 +760,14 @@ _output_oem_event_offset_class_sensor_specific_discrete (ipmi_sel_parse_ctx_t ct
   assert (system_event_record_data);
   assert (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC);
 
-  if ((ret = ipmi_sel_parse_output_dell_event_offset_class_sensor_specific_discrete (ctx,
-										     sel_parse_entry,
-										     sel_record_type,
-										     tmpbuf,
-										     tmpbuflen,
-										     flags,
-										     wlen,
-										     system_event_record_data)) < 0)
+  if ((ret = ipmi_sel_parse_output_dell_event_data1_class_sensor_specific_discrete (ctx,
+                                                                                    sel_parse_entry,
+                                                                                    sel_record_type,
+                                                                                    tmpbuf,
+                                                                                    tmpbuflen,
+                                                                                    flags,
+                                                                                    wlen,
+                                                                                    system_event_record_data)) < 0)
     return (-1);
   
   if (ret)
@@ -784,14 +784,14 @@ _output_oem_event_offset_class_sensor_specific_discrete (ipmi_sel_parse_ctx_t ct
  * 1 - buffer full, return full buffer to user
  */
 static int
-_output_oem_event_offset_class_oem (ipmi_sel_parse_ctx_t ctx,
-                                    struct ipmi_sel_parse_entry *sel_parse_entry,
-                                    uint8_t sel_record_type,
-                                    char *tmpbuf,
-                                    unsigned int tmpbuflen,
-                                    unsigned int flags,
-                                    unsigned int *wlen,
-                                    struct ipmi_sel_system_event_record_data *system_event_record_data)
+_output_oem_event_data1_class_oem (ipmi_sel_parse_ctx_t ctx,
+                                   struct ipmi_sel_parse_entry *sel_parse_entry,
+                                   uint8_t sel_record_type,
+                                   char *tmpbuf,
+                                   unsigned int tmpbuflen,
+                                   unsigned int flags,
+                                   unsigned int *wlen,
+                                   struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   int ret;
 
@@ -805,27 +805,27 @@ _output_oem_event_offset_class_oem (ipmi_sel_parse_ctx_t ctx,
   assert (wlen);
   assert (system_event_record_data);
 
-  if ((ret = ipmi_sel_parse_output_dell_event_offset_class_oem (ctx,
-								sel_parse_entry,
-								sel_record_type,
-								tmpbuf,
-								tmpbuflen,
-								flags,
-								wlen,
-								system_event_record_data)) < 0)
+  if ((ret = ipmi_sel_parse_output_dell_event_data1_class_oem (ctx,
+                                                               sel_parse_entry,
+                                                               sel_record_type,
+                                                               tmpbuf,
+                                                               tmpbuflen,
+                                                               flags,
+                                                               wlen,
+                                                               system_event_record_data)) < 0)
     return (-1);
   
   if (ret)
     return (1);
 
-  if ((ret = ipmi_sel_parse_output_inventec_event_offset_class_oem (ctx,
-								    sel_parse_entry,
-								    sel_record_type,
-								    tmpbuf,
-								    tmpbuflen,
-								    flags,
-								    wlen,
-								    system_event_record_data)) < 0)
+  if ((ret = ipmi_sel_parse_output_inventec_event_data1_class_oem (ctx,
+                                                                   sel_parse_entry,
+                                                                   sel_record_type,
+                                                                   tmpbuf,
+                                                                   tmpbuflen,
+                                                                   flags,
+                                                                   wlen,
+                                                                   system_event_record_data)) < 0)
     return (-1);
   
   if (ret)
@@ -839,13 +839,13 @@ _output_oem_event_offset_class_oem (ipmi_sel_parse_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 static int
-_output_event_offset (ipmi_sel_parse_ctx_t ctx,
-                      struct ipmi_sel_parse_entry *sel_parse_entry,
-                      uint8_t sel_record_type,
-                      char *buf,
-                      unsigned int buflen,
-                      unsigned int flags,
-                      unsigned int *wlen)
+_output_event_data1 (ipmi_sel_parse_ctx_t ctx,
+                     struct ipmi_sel_parse_entry *sel_parse_entry,
+                     uint8_t sel_record_type,
+                     char *buf,
+                     unsigned int buflen,
+                     unsigned int flags,
+                     unsigned int *wlen)
 {
   struct ipmi_sel_system_event_record_data system_event_record_data;
   char tmpbuf[EVENT_BUFFER_LENGTH];
@@ -886,14 +886,14 @@ _output_event_offset (ipmi_sel_parse_ctx_t ctx,
 
       if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA)
         {
-          if ((ret = _output_oem_event_offset_class_sensor_specific_discrete (ctx,
-                                                                              sel_parse_entry,
-                                                                              sel_record_type,
-                                                                              tmpbuf,
-                                                                              EVENT_BUFFER_LENGTH,
-                                                                              flags,
-                                                                              wlen,
-                                                                              &system_event_record_data)) < 0)
+          if ((ret = _output_oem_event_data1_class_sensor_specific_discrete (ctx,
+                                                                             sel_parse_entry,
+                                                                             sel_record_type,
+                                                                             tmpbuf,
+                                                                             EVENT_BUFFER_LENGTH,
+                                                                             flags,
+                                                                             wlen,
+                                                                             &system_event_record_data)) < 0)
             return (-1);
           
           if (ret)
@@ -935,14 +935,14 @@ _output_event_offset (ipmi_sel_parse_ctx_t ctx,
 
       if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA)
         {
-          if ((ret = _output_oem_event_offset_class_oem (ctx,
-                                                         sel_parse_entry,
-                                                         sel_record_type,
-                                                         tmpbuf,
-                                                         EVENT_BUFFER_LENGTH,
-                                                         flags,
-                                                         wlen,
-                                                         &system_event_record_data)) < 0)
+          if ((ret = _output_oem_event_data1_class_oem (ctx,
+                                                        sel_parse_entry,
+                                                        sel_record_type,
+                                                        tmpbuf,
+                                                        EVENT_BUFFER_LENGTH,
+                                                        flags,
+                                                        wlen,
+                                                        &system_event_record_data)) < 0)
             return (-1);
           
           if (ret)
@@ -988,20 +988,20 @@ _output_event_offset (ipmi_sel_parse_ctx_t ctx,
       if (flags & IPMI_SEL_PARSE_STRING_FLAGS_VERBOSE)
         {
           if (ipmi_sel_parse_string_snprintf (buf,
-                         buflen,
-                         wlen,
-                         "Event Offset = %02Xh (Event Type Code = %02Xh)",
-                         system_event_record_data.offset_from_event_reading_type_code,
-                         system_event_record_data.event_type_code))
+                                              buflen,
+                                              wlen,
+                                              "Event Offset = %02Xh (Event Type Code = %02Xh)",
+                                              system_event_record_data.offset_from_event_reading_type_code,
+                                              system_event_record_data.event_type_code))
             return (1);
         }
       else
         {
           if (ipmi_sel_parse_string_snprintf (buf,
-                         buflen,
-                         wlen,
-                         "Event Offset = %02Xh",
-                         system_event_record_data.offset_from_event_reading_type_code))
+                                              buflen,
+                                              wlen,
+                                              "Event Offset = %02Xh",
+                                              system_event_record_data.offset_from_event_reading_type_code))
             return (1);
         }
     }
@@ -2592,15 +2592,15 @@ sel_parse_format_record_string (ipmi_sel_parse_ctx_t ctx,
             goto out;
           percent_flag = 0;
         }
-      else if (percent_flag && *fmt == 'e') /* event offset */
+      else if (percent_flag && *fmt == 'e') /* event data1 */
         {
-          if ((ret = _output_event_offset (ctx,
-                                           &sel_parse_entry,
-                                           sel_record_type,
-                                           buf,
-                                           buflen,
-                                           flags,
-                                           &wlen)) < 0)
+          if ((ret = _output_event_data1 (ctx,
+                                          &sel_parse_entry,
+                                          sel_record_type,
+                                          buf,
+                                          buflen,
+                                          flags,
+                                          &wlen)) < 0)
             goto cleanup;
           if (ret)
             goto out;

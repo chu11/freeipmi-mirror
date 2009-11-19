@@ -214,7 +214,7 @@ int ipmi_sel_parse_read_record (ipmi_sel_parse_ctx_t ctx,
  *
  * %T - sensor type
  * %s - sensor name
- * %e - offset from event/reading code type string
+ * %e - event data 1 string (usually offset from event/reading code type string)
  * %f - event data 2 string [1]
  * %h - event data 3 string
  * %c - combined event data 2 and event data 3 string [2]
