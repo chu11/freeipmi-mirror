@@ -1,4 +1,4 @@
-0.7.15 - xx/xx/xx
+0.7.15 - 11/19/09
 -----------------
 o Add "solstatus" workaround to ipmiconsole.
 o Support hex codes to event filter sensor type inputs in pef-config.
