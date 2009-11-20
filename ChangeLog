@@ -1,6 +1,8 @@
 2009-11-19  Albert Chu <chu11@llnl.gov>
 
 	* Continue code cleanup.
+
+	* ipmi-sensors/: Fix output corner case.
 	
 2009-11-18  Albert Chu <chu11@llnl.gov>
 
