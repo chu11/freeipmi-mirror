@@ -357,6 +357,7 @@ o libfreeipmi
     supported.
   - Add a number of 'errormsg' functions so common code of 
     foo_strerror(foo_errnum(ctx)) can be condensed to foo_errormsg(ctx).
+  - Add 'ipmb' raw functions.
   - Various API cleanup.
     - Return int instead of int8_t or int32_t consistently.
     - Pass unsigned int instead of uint32_t for buffer lengths.
