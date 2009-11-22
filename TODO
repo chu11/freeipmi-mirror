@@ -23,10 +23,6 @@ functions to support "is supported" checks for OEM stuff
 - i.e. you don't need to check manufactur ids in two places, just use
   the function.
 all conf files in /etc/freeipmi/ instead of /etc
-in particular for ipmi-raw, but for all tools
-- support input of different slave address
-- " different channel
-
 
 hpm/hpmi
 --------
