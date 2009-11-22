@@ -453,13 +453,13 @@ config_file_workaround_flags (conffile_t cf,
 
 int
 config_file_tool_option_username (conffile_t cf,
-                                    struct conffile_data *data,
-                                    char *optionname,
-                                    int option_type,
-                                    void *option_ptr,
-                                    int option_data,
-                                    void *app_ptr,
-                                    int app_data)
+                                  struct conffile_data *data,
+                                  char *optionname,
+                                  int option_type,
+                                  void *option_ptr,
+                                  int option_data,
+                                  void *app_ptr,
+                                  int app_data)
 {
   struct cmd_args_config *cmd_args_config;
 
@@ -490,13 +490,13 @@ config_file_tool_option_username (conffile_t cf,
 
 int
 config_file_tool_option_password (conffile_t cf,
-                                    struct conffile_data *data,
-                                    char *optionname,
-                                    int option_type,
-                                    void *option_ptr,
-                                    int option_data,
-                                    void *app_ptr,
-                                    int app_data)
+                                  struct conffile_data *data,
+                                  char *optionname,
+                                  int option_type,
+                                  void *option_ptr,
+                                  int option_data,
+                                  void *app_ptr,
+                                  int app_data)
 {
   struct cmd_args_config *cmd_args_config;
 
@@ -527,13 +527,13 @@ config_file_tool_option_password (conffile_t cf,
 
 int
 config_file_tool_option_k_g (conffile_t cf,
-                               struct conffile_data *data,
-                               char *optionname,
-                               int option_type,
-                               void *option_ptr,
-                               int option_data,
-                               void *app_ptr,
-                               int app_data)
+                             struct conffile_data *data,
+                             char *optionname,
+                             int option_type,
+                             void *option_ptr,
+                             int option_data,
+                             void *app_ptr,
+                             int app_data)
 {
   struct cmd_args_config *cmd_args_config;
   int rv;
@@ -562,13 +562,13 @@ config_file_tool_option_k_g (conffile_t cf,
 
 int
 config_file_tool_option_authentication_type (conffile_t cf,
-                                               struct conffile_data *data,
-                                               char *optionname,
-                                               int option_type,
-                                               void *option_ptr,
-                                               int option_data,
-                                               void *app_ptr,
-                                               int app_data)
+                                             struct conffile_data *data,
+                                             char *optionname,
+                                             int option_type,
+                                             void *option_ptr,
+                                             int option_data,
+                                             void *app_ptr,
+                                             int app_data)
 {
   struct cmd_args_config *cmd_args_config;
   int tmp;
@@ -593,13 +593,13 @@ config_file_tool_option_authentication_type (conffile_t cf,
 
 int
 config_file_tool_option_cipher_suite_id (conffile_t cf,
-                                           struct conffile_data *data,
-                                           char *optionname,
-                                           int option_type,
-                                           void *option_ptr,
-                                           int option_data,
-                                           void *app_ptr,
-                                           int app_data)
+                                         struct conffile_data *data,
+                                         char *optionname,
+                                         int option_type,
+                                         void *option_ptr,
+                                         int option_data,
+                                         void *app_ptr,
+                                         int app_data)
 {
   struct cmd_args_config *cmd_args_config;
 
@@ -625,13 +625,13 @@ config_file_tool_option_cipher_suite_id (conffile_t cf,
 
 int
 config_file_tool_option_privilege_level (conffile_t cf,
-                                           struct conffile_data *data,
-                                           char *optionname,
-                                           int option_type,
-                                           void *option_ptr,
-                                           int option_data,
-                                           void *app_ptr,
-                                           int app_data)
+                                         struct conffile_data *data,
+                                         char *optionname,
+                                         int option_type,
+                                         void *option_ptr,
+                                         int option_data,
+                                         void *app_ptr,
+                                         int app_data)
 {
   struct cmd_args_config *cmd_args_config;
   int tmp;
@@ -656,13 +656,13 @@ config_file_tool_option_privilege_level (conffile_t cf,
 
 int
 config_file_tool_option_workaround_flags (conffile_t cf,
-                                            struct conffile_data *data,
+                                          struct conffile_data *data,
                                             char *optionname,
-                                            int option_type,
-                                            void *option_ptr,
-                                            int option_data,
-                                            void *app_ptr,
-                                            int app_data)
+                                          int option_type,
+                                          void *option_ptr,
+                                          int option_data,
+                                          void *app_ptr,
+                                          int app_data)
 {
   struct cmd_args_config *cmd_args_config;
   unsigned int i;
@@ -851,13 +851,13 @@ _config_file_sensor_types (struct conffile_data *data,
 
 int
 config_file_ipmi_sensors_sensor_types (conffile_t cf,
-                                 struct conffile_data *data,
-                                 char *optionname,
-                                 int option_type,
-                                 void *option_ptr,
-                                 int option_data,
-                                 void *app_ptr,
-                                 int app_data)
+                                       struct conffile_data *data,
+                                       char *optionname,
+                                       int option_type,
+                                       void *option_ptr,
+                                       int option_data,
+                                       void *app_ptr,
+                                       int app_data)
 {
   struct config_file_data_ipmi_sensors *config_file_data;
 
@@ -873,13 +873,13 @@ config_file_ipmi_sensors_sensor_types (conffile_t cf,
 
 int
 config_file_ipmi_sensors_exclude_sensor_types (conffile_t cf,
-                                         struct conffile_data *data,
-                                         char *optionname,
-                                         int option_type,
-                                         void *option_ptr,
-                                         int option_data,
-                                         void *app_ptr,
-                                         int app_data)
+                                               struct conffile_data *data,
+                                               char *optionname,
+                                               int option_type,
+                                               void *option_ptr,
+                                               int option_data,
+                                               void *app_ptr,
+                                               int app_data)
 {
   struct config_file_data_ipmi_sensors *config_file_data;
 
