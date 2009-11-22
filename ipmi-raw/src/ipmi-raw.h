@@ -26,13 +26,19 @@
 
 enum ipmi_raw_argp_option_keys
   {
-    CMD_FILE_KEY = 160,
+    CHANNEL_NUMBER_KEY = 160,
+    SLAVE_ADDRESS_KEY = 161,
+    CMD_FILE_KEY = 162,
   };
 
 struct ipmi_raw_arguments
 {
   struct common_cmd_args common;
   struct hostrange_cmd_args hostrange;
+  int channel_number;
+  uint8_t channel_number_arg;
+  int slave_address;
+  uint8_t slave_address_arg;
   char *cmd_file;
   long arg_max;
   uint8_t *cmd;

@@ -51,6 +51,7 @@ ipmi_raw_cmdline (ipmi_raw_state_data_t *state_data)
   uint8_t *bytes_rs = NULL;
   int rs_len;
   int rv = -1;
+  int i;
 
   assert (state_data);
   assert (state_data->prog_data->args->cmd);
@@ -75,30 +76,49 @@ ipmi_raw_cmdline (ipmi_raw_state_data_t *state_data)
       goto cleanup;
     }
 
-  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
-                              bytes_rq[0],
-                              bytes_rq[1],
-                              &bytes_rq[2],
-                              send_len - 2,
-                              bytes_rs,
-                              state_data->prog_data->args->arg_max)) >= 0)
+  if (state_data->prog_data->args->channel_number
+      && state_data->prog_data->args->slave_address)
     {
-      int i;
-
-      pstdout_printf (state_data->pstate, "rcvd: ");
-      for (i = 0; i < rs_len; i++)
-        pstdout_printf (state_data->pstate, "%02X ", bytes_rs[i]);
-      pstdout_printf (state_data->pstate, "\n");
+      if ((rs_len = ipmi_cmd_raw_ipmb (state_data->ipmi_ctx,
+                                       state_data->prog_data->args->channel_number_arg,
+                                       state_data->prog_data->args->slave_address_arg,
+                                       bytes_rq[0],
+                                       bytes_rq[1],
+                                       &bytes_rq[2],
+                                       send_len - 2,
+                                       bytes_rs,
+                                       state_data->prog_data->args->arg_max)) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_cmd_raw_ipmb: %s\n",
+                           ipmi_ctx_errormsg (state_data->ipmi_ctx));
+          goto cleanup;
+        }
     }
   else
     {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "ipmi_cmd_raw: %s\n",
-                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
-      goto cleanup;
+      if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                                  bytes_rq[0],
+                                  bytes_rq[1],
+                                  &bytes_rq[2],
+                                  send_len - 2,
+                                  bytes_rs,
+                                  state_data->prog_data->args->arg_max)) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_cmd_raw: %s\n",
+                           ipmi_ctx_errormsg (state_data->ipmi_ctx));
+          goto cleanup;
+        }
     }
-
+  
+  pstdout_printf (state_data->pstate, "rcvd: ");
+  for (i = 0; i < rs_len; i++)
+    pstdout_printf (state_data->pstate, "%02X ", bytes_rs[i]);
+  pstdout_printf (state_data->pstate, "\n");
+  
   rv = 0;
  cleanup:
   if (bytes_rs)
@@ -260,20 +280,43 @@ ipmi_raw_stream (ipmi_raw_state_data_t *state_data, FILE *stream)
           pstdout_perror (state_data->pstate, "calloc");
           goto cleanup;
         }
-      
-      if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
-                                  bytes_rq[0],
-                                  bytes_rq[1],
-                                  &bytes_rq[2],
-                                  send_len - 2,
-                                  bytes_rs,
-                                  state_data->prog_data->args->arg_max)) < 0)
+  
+      if (state_data->prog_data->args->channel_number
+          && state_data->prog_data->args->slave_address)
         {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "ipmi_cmd_raw: %s\n",
-                           ipmi_ctx_errormsg (state_data->ipmi_ctx));
-          goto end_loop;
+          if ((rs_len = ipmi_cmd_raw_ipmb (state_data->ipmi_ctx,
+                                           state_data->prog_data->args->channel_number_arg,
+                                           state_data->prog_data->args->slave_address_arg,
+                                           bytes_rq[0],
+                                           bytes_rq[1],
+                                           &bytes_rq[2],
+                                           send_len - 2,
+                                           bytes_rs,
+                                           state_data->prog_data->args->arg_max)) < 0)
+            {
+              pstdout_fprintf (state_data->pstate,
+                               stderr,
+                               "ipmi_cmd_raw_ipmb: %s\n",
+                               ipmi_ctx_errormsg (state_data->ipmi_ctx));
+              goto end_loop;
+            }
+        }
+      else
+        {
+          if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                                      bytes_rq[0],
+                                      bytes_rq[1],
+                                      &bytes_rq[2],
+                                      send_len - 2,
+                                      bytes_rs,
+                                      state_data->prog_data->args->arg_max)) < 0)
+            {
+              pstdout_fprintf (state_data->pstate,
+                               stderr,
+                               "ipmi_cmd_raw: %s\n",
+                               ipmi_ctx_errormsg (state_data->ipmi_ctx));
+              goto end_loop;
+            }
         }
 
       pstdout_printf (state_data->pstate, "rcvd: ");

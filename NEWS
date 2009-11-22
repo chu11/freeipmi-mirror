@@ -289,6 +289,7 @@ o ipmi-chassis
     - 'G' (legacy --get-boot-flags)
     - 'L' (legacy --set-boot-flags)
 o ipmi-raw
+  - Support --channel-number and --slave-address for command bridging.
   - Removed the following short options (long options remain).
     - 'f' (--file)
 o bmc-config

@@ -70,8 +70,12 @@ static struct argp_option cmdline_options[] =
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
     ARGP_COMMON_HOSTRANGED_OPTIONS,
     ARGP_COMMON_OPTIONS_DEBUG,
+    { "channel-number", CHANNEL_NUMBER_KEY, "NUMBER", 0,
+      "Specify an alternate channel number to bridge raw commands to.", 30},
+    { "slave-address", SLAVE_ADDRESS_KEY, "ADDRESS", 0,
+      "Specify an alternate slave address to bridge raw commands to.", 31},
     { "file", CMD_FILE_KEY, "CMD-FILE", 0,
-      "Specify a file to read command requests from.", 30},
+      "Specify a file to read command requests from.", 32},
     { 0 }
   };
 
@@ -91,10 +95,39 @@ static error_t
 cmdline_parse (int key, char *arg, struct argp_state *state)
 {
   struct ipmi_raw_arguments *cmd_args = state->input;
+  char *ptr;
+  int value;
   error_t ret;
 
   switch (key)
     {
+    case CHANNEL_NUMBER_KEY:
+      ptr = NULL;
+      errno = 0;
+      value = strtol (arg, &ptr, 0);
+      if (errno
+          || ptr[0] != '\0'
+          || !IPMI_CHANNEL_NUMBER_VALID (value))
+        {
+          fprintf (stderr, "invalid channel number\n");
+          exit (1);
+        }
+      cmd_args->channel_number_arg = (uint8_t) value;
+      cmd_args->channel_number = 1;
+      break;
+    case SLAVE_ADDRESS_KEY:
+      ptr = NULL;
+      errno = 0;
+      value = strtol (arg, &ptr, 0);
+      if (errno
+          || ptr[0] != '\0')
+        {
+          fprintf (stderr, "invalid channel number\n");
+          exit (1);
+        }
+      cmd_args->slave_address_arg = (uint8_t) value;
+      cmd_args->slave_address = 1;
+      break;
     case CMD_FILE_KEY:
       if (!(cmd_args->cmd_file = strdup (arg)))
         {
@@ -168,12 +201,27 @@ _ipmi_raw_config_file_parse (struct ipmi_raw_arguments *cmd_args)
     }
 }
 
+static void
+_ipmi_raw_args_validate (struct ipmi_raw_arguments *cmd_args)
+{
+  if ((cmd_args->channel_number
+       && !cmd_args->slave_address)
+      || (!cmd_args->channel_number
+          && cmd_args->slave_address))
+    {
+      fprintf (stderr, "must specify both channel number and slave address\n");
+      exit (1);
+    }
+}
+
 void
 ipmi_raw_argp_parse (int argc, char **argv, struct ipmi_raw_arguments *cmd_args)
 {
   init_common_cmd_args_admin (&(cmd_args->common));
   init_hostrange_cmd_args (&(cmd_args->hostrange));
 
+  cmd_args->channel_number = 0;
+  cmd_args->slave_address = 0;
   cmd_args->cmd_file = NULL;
   errno = 0;
   if ((cmd_args->arg_max = sysconf (_SC_ARG_MAX)) <= 0)
@@ -210,6 +258,5 @@ ipmi_raw_argp_parse (int argc, char **argv, struct ipmi_raw_arguments *cmd_args)
 
   verify_common_cmd_args (&(cmd_args->common));
   verify_hostrange_cmd_args (&(cmd_args->hostrange));
+  _ipmi_raw_args_validate (cmd_args);
 }
-
-
