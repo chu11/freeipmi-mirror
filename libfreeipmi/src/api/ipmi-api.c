@@ -1519,6 +1519,12 @@ ipmi_cmd_ipmb (ipmi_ctx_t ctx,
       return (-1);
     }
 
+  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number))
+    {
+      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
+
   if (ctx->type == IPMI_DEVICE_UNKNOWN)
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_DEVICE_NOT_OPEN);
@@ -1742,6 +1748,12 @@ ipmi_cmd_raw_ipmb (ipmi_ctx_t ctx,
       || !buf_rq_len
       || !buf_rs
       || !buf_rs_len)
+    {
+      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);

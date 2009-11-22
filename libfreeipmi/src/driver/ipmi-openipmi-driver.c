@@ -417,6 +417,7 @@ _openipmi_write (ipmi_openipmi_ctx_t ctx,
 
   assert (ctx);
   assert (ctx->magic == IPMI_OPENIPMI_CTX_MAGIC);
+  assert (IPMI_CHANNEL_NUMBER_VALID (channel_number));
   assert (IPMI_BMC_LUN_VALID (lun));
   assert (IPMI_NET_FN_RQ_VALID (net_fn));
   assert (fiid_obj_valid (obj_cmd_rq));
@@ -618,7 +619,8 @@ ipmi_openipmi_cmd_ipmb (ipmi_openipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_BMC_LUN_VALID (lun)
+  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
+      || !IPMI_BMC_LUN_VALID (lun)
       || !IPMI_NET_FN_RQ_VALID (net_fn)
       || !fiid_obj_valid (obj_cmd_rq)
       || !fiid_obj_valid (obj_cmd_rs)
