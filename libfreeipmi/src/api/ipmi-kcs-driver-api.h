@@ -42,5 +42,11 @@ int ipmi_kcs_cmd_raw_api (ipmi_ctx_t ctx,
                           void *buf_rs,
                           unsigned int buf_rs_len);
 
+int ipmi_kcs_cmd_raw_api_ipmb (ipmi_ctx_t ctx,
+			       const void *buf_rq,
+			       unsigned int buf_rq_len,
+			       void *buf_rs,
+			       unsigned int buf_rs_len);
+
 #endif /* ipmi-kcs-driver-api.h */
 

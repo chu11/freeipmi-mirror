@@ -201,6 +201,19 @@ int ipmi_cmd_raw (ipmi_ctx_t ctx,
                   void *buf_rs,
                   unsigned int buf_rs_len);
 
+/* for request/response, byte #1 = cmd */
+/* for response, byte #2 (typically) = completion code */
+/* returns length written into buf_fs on success, -1 on error */
+int ipmi_cmd_raw_ipmb (ipmi_ctx_t ctx,
+		       uint8_t channel_number,
+		       uint8_t rs_addr,
+		       uint8_t lun,
+		       uint8_t net_fn,
+		       const void *buf_rq,
+		       unsigned int buf_rq_len,
+		       void *buf_rs,
+		       unsigned int buf_rs_len);
+
 int ipmi_ctx_close (ipmi_ctx_t ctx);
 
 void ipmi_ctx_destroy (ipmi_ctx_t ctx);

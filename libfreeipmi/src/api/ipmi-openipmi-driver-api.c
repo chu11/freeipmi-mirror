@@ -186,11 +186,83 @@ ipmi_openipmi_cmd_raw_api (ipmi_ctx_t ctx,
       goto cleanup;
     }
 
-  if (ipmi_openipmi_cmd (ctx->io.inband.openipmi_ctx,
-                         ctx->lun,
-                         ctx->net_fn,
-                         obj_cmd_rq,
-                         obj_cmd_rs) < 0)
+  if (ipmi_openipmi_cmd_api (ctx,
+			     obj_cmd_rq,
+			     obj_cmd_rs) < 0)
+    {
+      API_OPENIPMI_ERRNUM_TO_API_ERRNUM (ctx, ipmi_openipmi_ctx_errnum (ctx->io.inband.openipmi_ctx));
+      goto cleanup;
+    }
+
+  if ((len = fiid_obj_get_all (obj_cmd_rs,
+                               buf_rs,
+                               buf_rs_len)) < 0)
+    {
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
+      goto cleanup;
+    }
+
+  rv = len;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
+int
+ipmi_openipmi_cmd_raw_api_ipmb (ipmi_ctx_t ctx,
+				const void *buf_rq,
+				unsigned int buf_rq_len,
+				void *buf_rs,
+				unsigned int buf_rs_len)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  fiid_obj_t obj_cmd_rs = NULL;
+  int len, rv = -1;
+
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if (!buf_rq
+      || !buf_rq_len
+      || !buf_rs
+      || !buf_rs_len)
+    {
+      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  if (ctx->type != IPMI_DEVICE_OPENIPMI)
+    {
+      API_SET_ERRNUM (ctx, IPMI_ERR_INTERNAL_ERROR);
+      return (-1);
+    }
+
+  if (!(obj_cmd_rq = fiid_obj_create (tmpl_openipmi_raw)))
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_openipmi_raw)))
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (fiid_obj_set_all (obj_cmd_rq,
+                        buf_rq,
+                        buf_rq_len) < 0)
+    {
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
+      goto cleanup;
+    }
+
+  if (ipmi_openipmi_cmd_api_ipmb (ctx,
+				  obj_cmd_rq,
+				  obj_cmd_rs) < 0)
     {
       API_OPENIPMI_ERRNUM_TO_API_ERRNUM (ctx, ipmi_openipmi_ctx_errnum (ctx->io.inband.openipmi_ctx));
       goto cleanup;

@@ -1548,13 +1548,13 @@ ipmi_cmd_ipmb (ipmi_ctx_t ctx,
   ctx->net_fn = net_fn;
 
   if (ctx->type == IPMI_DEVICE_LAN)
-    rv = ipmi_lan_cmd_wrapper_ipmb (ctx,
-                                    obj_cmd_rq,
-                                    obj_cmd_rs);
+    rv = ipmi_lan_cmd_ipmb (ctx,
+			    obj_cmd_rq,
+			    obj_cmd_rs);
   else if (ctx->type == IPMI_DEVICE_LAN_2_0)
-    rv = ipmi_lan_2_0_cmd_wrapper_ipmb (ctx,
-                                        obj_cmd_rq,
-                                        obj_cmd_rs);
+    rv = ipmi_lan_2_0_cmd_ipmb (ctx,
+				obj_cmd_rq,
+				obj_cmd_rs);
   else if (ctx->type == IPMI_DEVICE_KCS)
     rv = ipmi_kcs_cmd_api_ipmb (ctx,
                                 obj_cmd_rq,
@@ -1707,6 +1707,96 @@ ipmi_cmd_raw (ipmi_ctx_t ctx,
                          buf_rs,
                          rv);
         }
+    }
+
+  /* errnum set in ipmi_*_cmd_raw functions */
+  return (rv);
+}
+
+int
+ipmi_cmd_raw_ipmb (ipmi_ctx_t ctx,
+		   uint8_t channel_number,
+		   uint8_t rs_addr,
+		   uint8_t lun,
+		   uint8_t net_fn,
+		   const void *buf_rq,
+		   unsigned int buf_rq_len,
+		   void *buf_rs,
+		   unsigned int buf_rs_len)
+{
+  int rv = 0;
+
+  /* achu:
+   *
+   * Thanks to the OpenIPMI folks and tcpdumps from their project. I
+   * had trouble figuring out a few chunks of the bridging code.
+   */
+
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if (!buf_rq
+      || !buf_rq_len
+      || !buf_rs
+      || !buf_rs_len)
+    {
+      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  if (ctx->type == IPMI_DEVICE_UNKNOWN)
+    {
+      API_SET_ERRNUM (ctx, IPMI_ERR_DEVICE_NOT_OPEN);
+      return (-1);
+    }
+
+  if (ctx->type != IPMI_DEVICE_LAN
+      && ctx->type != IPMI_DEVICE_LAN_2_0
+      && ctx->type != IPMI_DEVICE_KCS
+      && ctx->type != IPMI_DEVICE_SSIF
+      && ctx->type != IPMI_DEVICE_OPENIPMI
+      && ctx->type != IPMI_DEVICE_SUNBMC)
+    {
+      API_SET_ERRNUM (ctx, IPMI_ERR_INTERNAL_ERROR);
+      return (-1);
+    }
+
+  ctx->channel_number = channel_number;
+  ctx->rs_addr = rs_addr;
+  ctx->lun = lun;
+  ctx->net_fn = net_fn;
+
+  if (ctx->type == IPMI_DEVICE_LAN)
+    rv = ipmi_lan_cmd_raw_ipmb (ctx,
+				buf_rq,
+				buf_rq_len,
+				buf_rs,
+				buf_rs_len);
+  else if (ctx->type == IPMI_DEVICE_LAN_2_0)
+    rv = ipmi_lan_2_0_cmd_raw_ipmb (ctx,
+				    buf_rq,
+				    buf_rq_len,
+				    buf_rs,
+				    buf_rs_len);
+  else if (ctx->type == IPMI_DEVICE_KCS)
+    rv = ipmi_kcs_cmd_raw_api_ipmb (ctx,
+				    buf_rq,
+				    buf_rq_len,
+				    buf_rs,
+				    buf_rs_len);
+  else if (ctx->type == IPMI_DEVICE_OPENIPMI)
+    rv = ipmi_openipmi_cmd_raw_api_ipmb (ctx,
+					 buf_rq,
+					 buf_rq_len,
+					 buf_rs,
+					 buf_rs_len);
+  else
+    {
+      API_SET_ERRNUM (ctx, IPMI_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE);
+      return (-1);
     }
 
   /* errnum set in ipmi_*_cmd_raw functions */
