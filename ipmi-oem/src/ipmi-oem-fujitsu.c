@@ -754,6 +754,8 @@ ipmi_oem_fujitsu_get_system_status (ipmi_oem_state_data_t *state_data)
     css_led_str = "C";
   else if (css_led == IPMI_OEM_FUJITSU_CSS_LED_D)
     css_led_str = "D";
+  else
+    css_led_str = "Unknown LED State";
 
   pstdout_printf (state_data->pstate,
                   "CSS LED               : %s\n",
@@ -767,6 +769,8 @@ ipmi_oem_fujitsu_get_system_status (ipmi_oem_state_data_t *state_data)
     global_error_led_str = "C";
   else if (global_error_led == IPMI_OEM_FUJITSU_GLOBAL_ERROR_LED_D)
     global_error_led_str = "D";
+  else
+    global_error_led_str = "Unknown LED State";
 
   pstdout_printf (state_data->pstate,
                   "Global error LED      : %s\n",
