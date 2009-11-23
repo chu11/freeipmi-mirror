@@ -1,5 +1,9 @@
 2009-11-23  Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/: Support additional Fujitsu OEM commands.
+	
+2009-11-23  Albert Chu <chu11@llnl.gov>
+
 	* Tagged Release-0_8_0_beta6.
 
 2009-11-22  Albert Chu <chu11@llnl.gov>

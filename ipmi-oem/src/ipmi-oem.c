@@ -320,6 +320,27 @@ struct ipmi_oem_command oem_fujitsu[] =
       ipmi_oem_fujitsu_get_power_off_source
     },
     {
+      "get-remote-storage-status",
+      "<connection_number>",
+      1,
+      0,
+      ipmi_oem_fujitsu_get_remote_storage_status
+    },
+    {
+      "get-system-status",
+      NULL,
+      0,
+      0,
+      ipmi_oem_fujitsu_get_system_status
+    },
+    {
+      "get-eeprom-version-info",
+      "<eeprom_number>",
+      1,
+      0,
+      ipmi_oem_fujitsu_get_eeprom_version_info
+    },
+    {
       "get-identify-led",
       NULL,
       0,
