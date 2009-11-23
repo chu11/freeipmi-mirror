@@ -1,10 +1,14 @@
+0.7.16 - xx/xx/xx
+-----------------
+o In ipmi-oem, add additional Fujitsu OEM support.
+
 0.7.15 - 11/19/09
 -----------------
 o Add "solstatus" workaround to ipmiconsole.
 o Support hex codes to event filter sensor type inputs in pef-config.
 o In ipmiconsole, handle corner cases surrounding non-default SOL
   ports more cleanly.
-o In ipmi-oem, suppoort Fujitsu OEM commands.
+o In ipmi-oem, support Fujitsu OEM commands.
 o Document workarounds for additional motherboards.
 
 0.7.14 - 10/16/09

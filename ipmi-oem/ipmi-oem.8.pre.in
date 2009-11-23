@@ -209,6 +209,21 @@ Command confirmed to work on Fujitsu RX100 S5.
 This OEM command will return the reason for the most recent Power Off.
 Command confirmed to work on Fujitsu RX100 S5.
 .TP
+.B get-remote-storage-status \fIconnection_number\fR
+This OEM command will return the connection and/or status of remote
+storage.  \fIconnection_number\fR currently supports a range of 0-1.
+Command confirmed to work on Fujitsu RX100 S5.
+.TP
+.B get-system-status
+This OEM command will return the current system status.  Command
+confirmed to work on Fujitsu RX100 S5.
+.TP
+.B get-eeprom-version-info \fIeeprom_number\fR
+This OEM command will return the current version info for various
+hardware elements, including firmware, SDR, and boot revision.
+\fIeeprom_number\fR currently supports a range of 0-1.  Command
+confirmed to work on Fujitsu RX100 S5.
+.TP
 .B get-identify-led
 This OEM command will get the current identify LED status.  Command
 confirmed to work on Fujitsu RX100 S5.

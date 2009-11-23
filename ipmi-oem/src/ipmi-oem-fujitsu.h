@@ -25,6 +25,12 @@ int ipmi_oem_fujitsu_get_power_on_source (ipmi_oem_state_data_t *state_data);
 
 int ipmi_oem_fujitsu_get_power_off_source (ipmi_oem_state_data_t *state_data);
 
+int ipmi_oem_fujitsu_get_remote_storage_status (ipmi_oem_state_data_t *state_data);
+
+int ipmi_oem_fujitsu_get_system_status (ipmi_oem_state_data_t *state_data);
+
+int ipmi_oem_fujitsu_get_eeprom_version_info (ipmi_oem_state_data_t *state_data);
+
 int ipmi_oem_fujitsu_get_identify_led (ipmi_oem_state_data_t *state_data);
 int ipmi_oem_fujitsu_set_identify_led (ipmi_oem_state_data_t *state_data);
 
