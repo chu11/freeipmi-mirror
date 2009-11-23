@@ -1,3 +1,7 @@
+2009-11-23  Albert Chu <chu11@llnl.gov>
+
+	* Tagged Release-0_8_0_beta6.
+
 2009-11-22  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/: Various code cleanup.  Support raw ipmb.
