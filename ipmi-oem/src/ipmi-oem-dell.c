@@ -3465,7 +3465,7 @@ ipmi_oem_dell_get_power_supply_info (ipmi_oem_state_data_t *state_data)
 	    {
 	      uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
 	      uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
-	      int32_t rs_len;
+	      int rs_len;
 	      uint16_t ratedwatts;
 	      uint16_t ratedamps;
 	      uint16_t ratedvolts;
@@ -4493,7 +4493,7 @@ ipmi_oem_dell_get_board_id (ipmi_oem_state_data_t *state_data)
 {
   uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
   uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
-  int32_t rs_len;
+  int rs_len;
   int rv = -1;
 
   assert (state_data);
@@ -4555,7 +4555,7 @@ ipmi_oem_dell_set_board_id (ipmi_oem_state_data_t *state_data)
   uint8_t boardid;
   long tmp;
   char *ptr;
-  int32_t rs_len;
+  int rs_len;
   int rv = -1;
 
   assert (state_data);
@@ -4628,7 +4628,7 @@ ipmi_oem_dell_get_fcb_version (ipmi_oem_state_data_t *state_data)
 {
   uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
   uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
-  int32_t rs_len;
+  int rs_len;
   int rv = -1;
 
   assert (state_data);
@@ -4693,7 +4693,7 @@ ipmi_oem_dell_set_fcb_version (ipmi_oem_state_data_t *state_data)
   uint8_t minorversion;
   long tmp;
   char *ptr;
-  int32_t rs_len;
+  int rs_len;
   int rv = -1;
 
   assert (state_data);
