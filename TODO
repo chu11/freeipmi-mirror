@@ -83,6 +83,98 @@ ipmi-oem-config
 oem
 ---
 dell poweredge lcd support
+sun sel 4140
+=====================================================
+SEL Event Record
+=====================================================
+[             6DFh] = record_id[16b]
+[               2h] = record_type[ 8b]
+[        4AD3A4B4h] = timestamp[32b]
+[               1h] = generator_id.id_type[ 1b]
+[               0h] = generator_id.id[ 7b]
+[               0h] = ipmb_device_lun[ 2b]
+[               0h] = reserved[ 2b]
+[               0h] = channel_number[ 4b]
+[               4h] = event_message_format_version[ 8b]
+[              2Ch] = sensor_type[ 8b]
+[              32h] = sensor_number[ 8b]
+[              6Fh] = event_type_code[ 7b]
+[               0h] = event_dir[ 1b]
+[               3h] = offset_from_event_reading_type_code[ 4b]
+[               2h] = event_data3_flag[ 2b]
+[               2h] = event_data2_flag[ 2b]
+[               0h] = event_data2[ 8b]
+[              32h] = event_data3[ 8b]
+ID   | Date        | Time     | Name             | Type                    | Event
+1759 | Oct-12-2009 | 14:50:44 | Sensor #50       | FRU State               | FRU Activation In Progress ; OEM Event Data2 code = 00h ; OEM Event Data3 code = 32h
+=====================================================
+SEL Event Record 
+=====================================================
+[             6E3h] = record_id[16b]
+[               2h] = record_type[ 8b]
+[        4AD3A5ABh] = timestamp[32b]
+[               1h] = generator_id.id_type[ 1b]
+[               0h] = generator_id.id[ 7b]
+[               0h] = ipmb_device_lun[ 2b]
+[               0h] = reserved[ 2b]
+[               0h] = channel_number[ 4b]
+[               4h] = event_message_format_version[ 8b]
+[               Fh] = sensor_type[ 8b]
+[               1h] = sensor_number[ 8b]
+[              6Fh] = event_type_code[ 7b]
+[               0h] = event_dir[ 1b]
+[               0h] = offset_from_event_reading_type_code[ 4b]
+[               2h] = event_data3_flag[ 2b]
+[               0h] = event_data2_flag[ 2b]
+[               0h] = event_data2[ 8b]
+[               1h] = event_data3[ 8b]
+1763 | Oct-12-2009 | 14:54:51 | Sensor #1        | System Firmware Progress | System Firmware Error ; OEM Event Data3 code = 01h
+=====================================================
+SEL Event Record
+=====================================================
+[             6ECh] = record_id[16b]
+[               2h] = record_type[ 8b]
+[        4AD3BB23h] = timestamp[32b]
+[               1h] = generator_id.id_type[ 1b]
+[               0h] = generator_id.id[ 7b]
+[               0h] = ipmb_device_lun[ 2b]
+[               0h] = reserved[ 2b]
+[               0h] = channel_number[ 4b]
+[               4h] = event_message_format_version[ 8b]
+[               7h] = sensor_type[ 8b]
+[               2h] = sensor_number[ 8b]
+[              6Fh] = event_type_code[ 7b]
+[               0h] = event_dir[ 1b]
+[               7h] = offset_from_event_reading_type_code[ 4b]
+[               2h] = event_data3_flag[ 2b]
+[               3h] = event_data2_flag[ 2b]
+[              FFh] = event_data2[ 8b]
+[               2h] = event_data3[ 8b] 
+1772 | Oct-12-2009 | 16:26:27 | Sensor #2        | Processor                | Processor Presence detected ; OEM Event Data3 code = 02h
+psun: =====================================================
+psun: SEL Event Record 
+psun: =====================================================
+psun: [             6E1h] = record_id[16b]
+psun: [               2h] = record_type[ 8b]
+psun: [        4A2F6512h] = timestamp[32b]
+psun: [               1h] = generator_id.id_type[ 1b]
+psun: [               0h] = generator_id.id[ 7b]
+psun: [               0h] = ipmb_device_lun[ 2b]
+psun: [               0h] = reserved[ 2b]
+psun: [               0h] = channel_number[ 4b]
+psun: [               4h] = event_message_format_version[ 8b]
+psun: [               7h] = sensor_type[ 8b]
+psun: [               2h] = sensor_number[ 8b]
+psun: [              6Fh] = event_type_code[ 7b]
+psun: [               0h] = event_dir[ 1b]
+psun: [               7h] = offset_from_event_reading_type_code[ 4b]
+psun: [               2h] = event_data3_flag[ 2b]
+psun: [               3h] = event_data2_flag[ 2b]
+psun: [              FFh] = event_data2[ 8b]
+psun: [               4h] = event_data3[ 8b]
+ID    | Date        | Time     | Name             | Type                    | Event
+1761  | Jun-10-2009 | 00:47:30 | Sensor #2        | Processor               | Processor Presence detected ; OEM Event Data3 code = 04h
+
 
 libfreeipmi
 -----------
