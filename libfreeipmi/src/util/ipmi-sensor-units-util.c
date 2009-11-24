@@ -95,11 +95,18 @@ ipmi_sensor_units_string (uint8_t sensor_units_percentage,
   
   if (sensor_units_rate != IPMI_SENSOR_RATE_UNIT_NONE)
     {
-      rv = snprintf (buf + offset,
-                     buflen,
-                     "%s %s",
-                     sensor_units[sensor_base_unit_type],
-                     ipmi_sensor_rate_units[sensor_units_rate]);
+      /* Special case, inherit in the units */
+      if (sensor_base_unit_type == IPMI_SENSOR_UNIT_RPM)
+        rv = snprintf (buf + offset,
+                       buflen,
+                       "%s",
+                       sensor_units[sensor_base_unit_type]);
+      else
+        rv = snprintf (buf + offset,
+                       buflen,
+                       "%s %s",
+                       sensor_units[sensor_base_unit_type],
+                       ipmi_sensor_rate_units[sensor_units_rate]);
       return (rv);
     }
   

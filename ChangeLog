@@ -1,6 +1,9 @@
 2009-11-23  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/: Support additional Fujitsu OEM commands.
+
+	* libfreeipmi/src/util/ipmi-sensor-units-util.c: Make interesting
+	output combination cleaner.
 	
 2009-11-23  Albert Chu <chu11@llnl.gov>
 
