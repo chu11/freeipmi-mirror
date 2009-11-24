@@ -315,6 +315,7 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
                   const void *sdr_record,
                   unsigned int sdr_record_len,
                   uint8_t shared_sensor_number_offset,
+                  uint8_t *sensor_reading_raw,
                   double **sensor_reading,
                   uint16_t *sensor_event_bitmask)
 {
@@ -336,6 +337,7 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
   uint8_t channel_number = 0;
   uint8_t slave_address = 0;
   uint8_t reading_state, sensor_scanning;
+  uint8_t local_sensor_reading_raw;
   unsigned int ctx_flags_orig;
   int event_reading_type_code_class = 0;
 
@@ -596,20 +598,23 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
       goto cleanup;
     }
 
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "sensor_reading",
+                    &val) < 0)
+    {
+      SENSOR_READ_FIID_OBJECT_ERROR_TO_SENSOR_READ_ERRNUM (ctx, obj_cmd_rs);
+      goto cleanup;
+    }
+  local_sensor_reading_raw = val;
+  
+  if (sensor_reading_raw)
+    (*sensor_reading_raw) = local_sensor_reading_raw;
+
   event_reading_type_code_class = ipmi_event_reading_type_code_class (event_reading_type_code);
 
   if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD)
     {
-      uint8_t l_sensor_reading;
-      
-      if (FIID_OBJ_GET (obj_cmd_rs,
-                        "sensor_reading",
-                        &val) < 0)
-        {
-          SENSOR_READ_FIID_OBJECT_ERROR_TO_SENSOR_READ_ERRNUM (ctx, obj_cmd_rs);
-          goto cleanup;
-        }
-      l_sensor_reading = val;
+     
 
       if (record_type == IPMI_SDR_FORMAT_FULL_SENSOR_RECORD)
         {
@@ -663,7 +668,7 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
                                         b,
                                         linearization,
                                         analog_data_format,
-                                        l_sensor_reading,
+                                        local_sensor_reading_raw,
                                         tmp_sensor_reading) < 0)
             {
               SENSOR_READ_SET_ERRNUM (ctx, IPMI_SENSOR_READ_ERR_INTERNAL_ERROR);

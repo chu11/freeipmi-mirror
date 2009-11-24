@@ -442,6 +442,7 @@ _output_sensor (ipmi_sensors_state_data_t *state_data,
                 uint8_t sensor_number_base,
                 uint8_t shared_sensor_number_offset)
 {
+  uint8_t sensor_reading_raw = 0;
   double *sensor_reading = NULL;
   uint16_t sensor_event_bitmask = 0;
   uint8_t event_reading_type_code;
@@ -458,6 +459,7 @@ _output_sensor (ipmi_sensors_state_data_t *state_data,
                         sdr_record,
                         sdr_record_len,
                         shared_sensor_number_offset,
+                        &sensor_reading_raw,
                         &sensor_reading,
                         &sensor_event_bitmask) <= 0)
     {

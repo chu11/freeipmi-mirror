@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.79 2009-09-16 23:12:23 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.80 2009-11-24 19:34:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -485,6 +485,7 @@ _get_sensor_reading (ipmi_monitoring_ctx_t c,
                         sdr_record,
                         sdr_record_len,
                         shared_sensor_number_offset,
+                        NULL,
                         &l_sensor_reading,
                         sensor_event_bitmask) <= 0)
     {

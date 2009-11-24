@@ -88,6 +88,10 @@ int ipmi_sensor_read_ctx_set_flags (ipmi_sensor_read_ctx_t ctx, unsigned int fla
  *
  * if reading returned, must be free'd by caller
  *
+ * 'sensor_reading_raw' is optional and need not be specified.
+ *
+ * under return of 0 or 1, the sensor_reading_raw will be filled with the raw reading
+ *
  * Notes:
  *
  * shared_sensor_number_offset used for sensor record sharing in compact
@@ -97,6 +101,7 @@ int ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
                       const void *sdr_record,
                       unsigned int sdr_record_len,
                       uint8_t shared_sensor_number_offset,
+                      uint8_t *sensor_reading_raw,
                       double **sensor_reading,
                       uint16_t *sensor_event_bitmask);
 

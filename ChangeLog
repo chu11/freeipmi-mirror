@@ -1,5 +1,10 @@
 2009-11-24  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/: Support reading raw readings from sensor-read
+	library.
+	
+2009-11-24  Albert Chu <chu11@llnl.gov>
+
 	* ipmi-oem/: Fix Fujitsu OEM command.
 
 2009-11-24  Albert Chu <chu11@llnl.gov>
