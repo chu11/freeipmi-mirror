@@ -216,6 +216,7 @@ fi
 %doc %{_datadir}/doc/%{name}/freeipmi-libraries.txt
 %doc %{_datadir}/doc/%{name}/freeipmi-bugs-and-workarounds.txt
 %doc %{_datadir}/doc/%{name}/freeipmi-testing.txt
+%doc %{_datadir}/doc/%{name}/freeipmi-oem-documentation-requirements.txt
 %dir %{_datadir}/doc/%{name}
 %{_libdir}/libipmiconsole*so.*
 %{_libdir}/libfreeipmi*so.*

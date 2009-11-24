@@ -2,6 +2,8 @@
 
 	* libfreeipmi/: Support reading raw readings from sensor-read
 	library.
+
+	* freeipmi.spec.in: Add missing docs.
 	
 2009-11-24  Albert Chu <chu11@llnl.gov>
 
