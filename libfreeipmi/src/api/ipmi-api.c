@@ -1553,6 +1553,56 @@ ipmi_cmd_ipmb (ipmi_ctx_t ctx,
   ctx->lun = lun;
   ctx->net_fn = net_fn;
 
+  if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
+    {
+      /* lan packets are dumped in ipmi lan code */
+      /* kcs packets are dumped in kcs code */
+      /* ssif packets are dumped in ssif code */
+      if (ctx->type != IPMI_DEVICE_LAN
+          && ctx->type != IPMI_DEVICE_LAN_2_0
+          && ctx->type != IPMI_DEVICE_KCS
+          && ctx->type != IPMI_DEVICE_SSIF)
+        {
+          char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
+          uint8_t cmd = 0;
+	  uint8_t group_extension = 0;
+          uint64_t val;
+
+          /* ignore error, continue on */
+          if (FIID_OBJ_GET (obj_cmd_rq,
+                            "cmd",
+                            &val) < 0)
+            API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
+          else
+            cmd = val;
+
+	  if (IPMI_NET_FN_GROUP_EXTENSION (ctx->net_fn))
+	    {
+	      /* ignore error, continue on */
+	      if (FIID_OBJ_GET (obj_cmd_rq,
+				"group_extension_identification",
+				&val) < 0)
+		API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
+	      else
+		group_extension = val;
+	    }
+
+          debug_hdr_cmd (DEBUG_UTIL_TYPE_INBAND,
+                         DEBUG_UTIL_DIRECTION_REQUEST,
+                         ctx->net_fn,
+                         cmd,
+			 group_extension,
+                         hdrbuf,
+                         DEBUG_UTIL_HDR_BUFLEN);
+
+          ipmi_obj_dump (STDERR_FILENO,
+                         NULL,
+                         hdrbuf,
+                         NULL,
+                         obj_cmd_rq);
+        }
+    }
+
   if (ctx->type == IPMI_DEVICE_LAN)
     rv = ipmi_lan_cmd_ipmb (ctx,
 			    obj_cmd_rq,
@@ -1573,6 +1623,57 @@ ipmi_cmd_ipmb (ipmi_ctx_t ctx,
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE);
       return (-1);
+    }
+
+  if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
+    {
+      /* lan packets are dumped in ipmi lan code */
+      /* kcs packets are dumped in kcs code */
+      /* ssif packets are dumped in ssif code */
+      if (ctx->type != IPMI_DEVICE_LAN
+          && ctx->type != IPMI_DEVICE_LAN_2_0
+          && ctx->type != IPMI_DEVICE_KCS
+          && ctx->type != IPMI_DEVICE_SSIF)
+        {
+          char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
+          uint8_t cmd = 0;
+	  uint8_t group_extension = 0;
+          uint64_t val;
+
+          /* ignore error, continue on */
+          if (FIID_OBJ_GET (obj_cmd_rq,
+                            "cmd",
+                            &val) < 0)
+            API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
+          else
+            cmd = val;
+
+	  if (IPMI_NET_FN_GROUP_EXTENSION (ctx->net_fn))
+	    {
+	      /* ignore error, continue on */
+	      if (FIID_OBJ_GET (obj_cmd_rq,
+				"group_extension_identification",
+				&val) < 0)
+		API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
+	      else
+		group_extension = val;
+	    }
+
+          /* its ok to use the "request" net_fn */
+          debug_hdr_cmd (DEBUG_UTIL_TYPE_INBAND,
+                         DEBUG_UTIL_DIRECTION_RESPONSE,
+                         ctx->net_fn,
+                         cmd,
+			 group_extension,
+                         hdrbuf,
+                         DEBUG_UTIL_HDR_BUFLEN);
+
+          ipmi_obj_dump (STDERR_FILENO,
+                         NULL,
+                         hdrbuf,
+                         NULL,
+                         obj_cmd_rs);
+        }
     }
 
   /* errnum set in ipmi_*_cmd functions */
