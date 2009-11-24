@@ -662,15 +662,15 @@ ipmi_oem_fujitsu_get_system_status (ipmi_oem_state_data_t *state_data)
   bytes_rq[3] = (IPMI_IANA_ENTERPRISE_ID_FUJITSU & 0xFF0000) >> 16;
   bytes_rq[4] = IPMI_OEM_FUJITSU_COMMAND_SPECIFIER_GET_SYSTEM_STATUS;
   bytes_rq[5] = (t.tv_sec & 0x000000FF);
-  bytes_rq[5] = (t.tv_sec & 0x0000FF00) >> 8;
-  bytes_rq[5] = (t.tv_sec & 0x00FF0000) >> 16;
-  bytes_rq[5] = (t.tv_sec & 0xFF000000) >> 24;
+  bytes_rq[6] = (t.tv_sec & 0x0000FF00) >> 8;
+  bytes_rq[7] = (t.tv_sec & 0x00FF0000) >> 16;
+  bytes_rq[8] = (t.tv_sec & 0xFF000000) >> 24;
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
                               IPMI_NET_FN_OEM_GROUP_RQ, /* network function */
                               bytes_rq, /* data */
-                              5, /* num bytes */
+                              9, /* num bytes */
                               bytes_rs,
                               IPMI_OEM_MAX_BYTES)) < 0)
     {
