@@ -306,7 +306,6 @@ fi
 %{_includedir}/freeipmi/*.h
 %{_includedir}/freeipmi/api/*.h
 %{_includedir}/freeipmi/cmds/*.h
-%{_includedir}/freeipmi/dcmi/*.h
 %{_includedir}/freeipmi/debug/*.h
 %{_includedir}/freeipmi/driver/*.h
 %{_includedir}/freeipmi/fiid/*.h

@@ -6,6 +6,8 @@
 
 	* libfreeipmi/: Re-org dcmi to be organized like oem extensions
 	instead of in separate directory.
+
+	* freeipmi.spec.in: Update for change.
 	
 2009-11-24  Albert Chu <chu11@llnl.gov>
 
