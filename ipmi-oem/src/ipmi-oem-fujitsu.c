@@ -544,6 +544,8 @@ ipmi_oem_fujitsu_get_remote_storage_status (ipmi_oem_state_data_t *state_data)
   else if (storage_type == IPMI_OEM_FUJITSU_REMOTE_STORAGE_TYPE_APPLET)
     storage_type_str = "Applet";
   else if (storage_type == IPMI_OEM_FUJITSU_REMOTE_STORAGE_TYPE_NONE_NOT_CONNECTED)
+    storage_type_str = "None / Not connected";
+  else
     storage_type_str = "Unknown Storage Type";
   
   pstdout_printf (state_data->pstate,
