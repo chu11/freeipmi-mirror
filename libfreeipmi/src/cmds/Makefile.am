@@ -10,6 +10,7 @@ libcmds_la_CPPFLAGS = \
 libcmds_la_SOURCES = \
 	ipmi-bmc-watchdog-timer-cmds.c \
 	ipmi-chassis-cmds.c \
+	ipmi-dcmi-cmds.c \
 	ipmi-device-global-cmds.c \
 	ipmi-event-cmds.c \
 	ipmi-fru-inventory-device-cmds.c \

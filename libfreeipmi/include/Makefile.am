@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.57 2009-09-22 00:10:21 chu11 Exp $
+## $Id: Makefile.am,v 1.58 2009-11-25 15:47:40 chu11 Exp $
 ##*****************************************************************************
 
 nobase_include_HEADERS = \
@@ -33,7 +33,6 @@ nobase_include_HEADERS = \
 	freeipmi/cmds/ipmi-serial-modem-cmds.h \
 	freeipmi/cmds/ipmi-sol-cmds.h \
 	freeipmi/cmds/rmcp-cmds.h \
-	freeipmi/dcmi/ipmi-dcmi.h \
 	freeipmi/debug/ipmi-debug.h \
 	freeipmi/driver/ipmi-kcs-driver.h \
 	freeipmi/driver/ipmi-openipmi-driver.h \
@@ -60,8 +59,10 @@ nobase_include_HEADERS = \
 	freeipmi/spec/ipmi-chassis-boot-options-parameter-spec.h \
 	freeipmi/spec/ipmi-chassis-boot-options-parameter-oem-spec.h \
 	freeipmi/spec/ipmi-cmd-spec.h \
+	freeipmi/spec/ipmi-cmd-dcmi-spec.h \
 	freeipmi/spec/ipmi-cmd-oem-spec.h \
 	freeipmi/spec/ipmi-comp-code-spec.h \
+	freeipmi/spec/ipmi-comp-code-dcmi-spec.h \
 	freeipmi/spec/ipmi-comp-code-oem-spec.h \
 	freeipmi/spec/ipmi-device-types-spec.h \
 	freeipmi/spec/ipmi-device-types-oem-spec.h \
@@ -125,6 +126,7 @@ nobase_include_HEADERS = \
 	freeipmi/util/ipmi-cipher-suite-util.h \
 	freeipmi/util/ipmi-device-types-util.h \
 	freeipmi/util/ipmi-error-util.h \
+	freeipmi/util/ipmi-error-dcmi-util.h \
 	freeipmi/util/ipmi-iana-enterprise-numbers-util.h \
 	freeipmi/util/ipmi-ipmb-util.h \
 	freeipmi/util/ipmi-lan-util.h \
@@ -134,4 +136,5 @@ nobase_include_HEADERS = \
 	freeipmi/util/ipmi-sensor-util.h \
 	freeipmi/util/ipmi-sensor-units-util.h \
 	freeipmi/util/ipmi-util.h \
+	freeipmi/util/ipmi-dcmi-util.h \
 	freeipmi/util/rmcp-util.h

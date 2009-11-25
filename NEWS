@@ -343,7 +343,7 @@ o libfreeipmi
   - Add new sdr-parse sub library.
   - Add new sel-parse sub library.
   - Add new sensor-read sub library.
-  - Add new dcmi sub library.
+  - Add dcmi support.
   - The locate sub library now uses a context style API for
     consistency to the rest of libfreeipmi.
   - Re-architect all 'unassemble' functions to return 1 if packet

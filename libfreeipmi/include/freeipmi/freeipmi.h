@@ -25,6 +25,8 @@ extern "C" {
 
 #include <freeipmi/api/ipmi-api.h>
 #include <freeipmi/api/ipmi-chassis-cmds-api.h>
+#include <freeipmi/api/ipmi-dcmi-cmds-api.h>
+#include <freeipmi/api/ipmi-dcmi-cmds-api.h>
 #include <freeipmi/api/ipmi-device-global-cmds-api.h>
 #include <freeipmi/api/ipmi-event-cmds-api.h>
 #include <freeipmi/api/ipmi-fru-inventory-device-cmds-api.h>
@@ -39,6 +41,7 @@ extern "C" {
 #include <freeipmi/api/ipmi-sol-cmds-api.h>
 #include <freeipmi/cmds/ipmi-bmc-watchdog-timer-cmds.h>
 #include <freeipmi/cmds/ipmi-chassis-cmds.h>
+#include <freeipmi/cmds/ipmi-dcmi-cmds.h>
 #include <freeipmi/cmds/ipmi-device-global-cmds.h>
 #include <freeipmi/cmds/ipmi-event-cmds.h>
 #include <freeipmi/cmds/ipmi-fru-inventory-device-cmds.h>
@@ -52,7 +55,6 @@ extern "C" {
 #include <freeipmi/cmds/ipmi-serial-modem-cmds.h>
 #include <freeipmi/cmds/ipmi-sol-cmds.h>
 #include <freeipmi/cmds/rmcp-cmds.h>
-#include <freeipmi/dcmi/ipmi-dcmi.h>
 #include <freeipmi/debug/ipmi-debug.h>
 #include <freeipmi/driver/ipmi-kcs-driver.h>
 #include <freeipmi/driver/ipmi-ssif-driver.h>
@@ -79,8 +81,10 @@ extern "C" {
 #include <freeipmi/spec/ipmi-chassis-boot-options-parameter-spec.h>
 #include <freeipmi/spec/ipmi-chassis-boot-options-parameter-oem-spec.h>
 #include <freeipmi/spec/ipmi-cmd-spec.h>
+#include <freeipmi/spec/ipmi-cmd-dcmi-spec.h>
 #include <freeipmi/spec/ipmi-cmd-oem-spec.h>
 #include <freeipmi/spec/ipmi-comp-code-spec.h>
+#include <freeipmi/spec/ipmi-comp-code-dcmi-spec.h>
 #include <freeipmi/spec/ipmi-comp-code-oem-spec.h>
 #include <freeipmi/spec/ipmi-device-types-spec.h>
 #include <freeipmi/spec/ipmi-device-types-oem-spec.h>
@@ -119,6 +123,7 @@ extern "C" {
 #include <freeipmi/util/ipmi-cipher-suite-util.h>
 #include <freeipmi/util/ipmi-device-types-util.h>
 #include <freeipmi/util/ipmi-error-util.h>
+#include <freeipmi/util/ipmi-error-dcmi-util.h>
 #include <freeipmi/util/ipmi-iana-enterprise-numbers-util.h>
 #include <freeipmi/util/ipmi-ipmb-util.h>
 #include <freeipmi/util/ipmi-lan-util.h>
@@ -128,6 +133,7 @@ extern "C" {
 #include <freeipmi/util/ipmi-sensor-util.h>
 #include <freeipmi/util/ipmi-sensor-units-util.h>
 #include <freeipmi/util/ipmi-util.h>
+#include <freeipmi/util/ipmi-dcmi-util.h>
 #include <freeipmi/util/rmcp-util.h>
 
 #ifdef __cplusplus

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-dcmi.c,v 1.3 2009-11-04 18:45:40 chu11 Exp $
+ *  $Id: ipmi-dcmi.c,v 1.4 2009-11-25 15:47:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2009 Lawrence Livermore National Security, LLC.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -75,7 +75,7 @@ _dcmi_specification_conformance (ipmi_dcmi_state_data_t *state_data, uint8_t *pa
   assert (state_data);
   assert (parameter_revision);
 
-  if (!(obj_cmd_rs = fiid_obj_create (tmpl_dcmi_cmd_get_dcmi_capability_info_supported_dcmi_capabilities_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_dcmi_get_dcmi_capability_info_supported_dcmi_capabilities_rs)))
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -84,12 +84,12 @@ _dcmi_specification_conformance (ipmi_dcmi_state_data_t *state_data, uint8_t *pa
       goto cleanup;
     }
 
-  if (ipmi_dcmi_cmd_get_dcmi_capability_info_supported_dcmi_capabilities (state_data->ipmi_ctx,
+  if (ipmi_cmd_dcmi_get_dcmi_capability_info_supported_dcmi_capabilities (state_data->ipmi_ctx,
                                                                           obj_cmd_rs) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "ipmi_dcmi_cmd_get_dcmi_capability_info_supported_dcmi_capabilities: %s\n",
+                       "ipmi_cmd_dcmi_get_dcmi_capability_info_supported_dcmi_capabilities: %s\n",
                        ipmi_ctx_errormsg (state_data->ipmi_ctx));
       goto cleanup;
     }
@@ -159,7 +159,7 @@ _supported_dcmi_capabilities (ipmi_dcmi_state_data_t *state_data)
 
   assert (state_data);
 
-  if (!(obj_cmd_rs = fiid_obj_create (tmpl_dcmi_cmd_get_dcmi_capability_info_supported_dcmi_capabilities_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_dcmi_get_dcmi_capability_info_supported_dcmi_capabilities_rs)))
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -168,12 +168,12 @@ _supported_dcmi_capabilities (ipmi_dcmi_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (ipmi_dcmi_cmd_get_dcmi_capability_info_supported_dcmi_capabilities (state_data->ipmi_ctx,
+  if (ipmi_cmd_dcmi_get_dcmi_capability_info_supported_dcmi_capabilities (state_data->ipmi_ctx,
                                                                           obj_cmd_rs) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "ipmi_dcmi_cmd_get_dcmi_capability_info_supported_dcmi_capabilities: %s\n",
+                       "ipmi_cmd_dcmi_get_dcmi_capability_info_supported_dcmi_capabilities: %s\n",
                        ipmi_ctx_errormsg (state_data->ipmi_ctx));
       goto cleanup;
     }
@@ -383,7 +383,7 @@ _mandatory_platform_attributes (ipmi_dcmi_state_data_t *state_data)
 
   assert (state_data);
 
-  if (!(obj_cmd_rs = fiid_obj_create (tmpl_dcmi_cmd_get_dcmi_capability_info_mandatory_platform_attributes_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_dcmi_get_dcmi_capability_info_mandatory_platform_attributes_rs)))
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -392,12 +392,12 @@ _mandatory_platform_attributes (ipmi_dcmi_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (ipmi_dcmi_cmd_get_dcmi_capability_info_mandatory_platform_attributes (state_data->ipmi_ctx,
+  if (ipmi_cmd_dcmi_get_dcmi_capability_info_mandatory_platform_attributes (state_data->ipmi_ctx,
                                                                             obj_cmd_rs) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "ipmi_dcmi_cmd_get_dcmi_capability_info_mandatory_platform_attributes: %s\n",
+                       "ipmi_cmd_dcmi_get_dcmi_capability_info_mandatory_platform_attributes: %s\n",
                        ipmi_ctx_errormsg (state_data->ipmi_ctx));
       goto cleanup;
     }
@@ -570,7 +570,7 @@ _optional_platform_attributes (ipmi_dcmi_state_data_t *state_data)
 
   assert (state_data);
 
-  if (!(obj_cmd_rs = fiid_obj_create (tmpl_dcmi_cmd_get_dcmi_capability_info_optional_platform_attributes_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_dcmi_get_dcmi_capability_info_optional_platform_attributes_rs)))
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -579,7 +579,7 @@ _optional_platform_attributes (ipmi_dcmi_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (ipmi_dcmi_cmd_get_dcmi_capability_info_optional_platform_attributes (state_data->ipmi_ctx,
+  if (ipmi_cmd_dcmi_get_dcmi_capability_info_optional_platform_attributes (state_data->ipmi_ctx,
                                                                            obj_cmd_rs) < 0)
     {
       /* this optional parameter is not supported */
@@ -593,7 +593,7 @@ _optional_platform_attributes (ipmi_dcmi_state_data_t *state_data)
 
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "ipmi_dcmi_cmd_get_dcmi_capability_info_optional_platform_attributes: %s\n",
+                       "ipmi_cmd_dcmi_get_dcmi_capability_info_optional_platform_attributes: %s\n",
                        ipmi_ctx_errormsg (state_data->ipmi_ctx));
       goto cleanup;
     }
@@ -664,7 +664,7 @@ _manageability_access_attributes (ipmi_dcmi_state_data_t *state_data)
 
   assert (state_data);
 
-  if (!(obj_cmd_rs = fiid_obj_create (tmpl_dcmi_cmd_get_dcmi_capability_info_manageability_access_attributes_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_dcmi_get_dcmi_capability_info_manageability_access_attributes_rs)))
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -673,12 +673,12 @@ _manageability_access_attributes (ipmi_dcmi_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (ipmi_dcmi_cmd_get_dcmi_capability_info_manageability_access_attributes (state_data->ipmi_ctx,
+  if (ipmi_cmd_dcmi_get_dcmi_capability_info_manageability_access_attributes (state_data->ipmi_ctx,
                                                                               obj_cmd_rs) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "ipmi_dcmi_cmd_get_dcmi_capability_info_manageability_access_attributes: %s\n",
+                       "ipmi_cmd_dcmi_get_dcmi_capability_info_manageability_access_attributes: %s\n",
                        ipmi_ctx_errormsg (state_data->ipmi_ctx));
       goto cleanup;
     }
@@ -766,7 +766,7 @@ _get_ehanced_system_power_statistics_attributes (ipmi_dcmi_state_data_t *state_d
   assert (rolling_average_time_periods);
   assert (rolling_average_time_periods_buflen);
 
-  if (!(obj_cmd_rs = fiid_obj_create (tmpl_dcmi_cmd_get_dcmi_capability_info_enhanced_system_power_statistics_attributes_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_dcmi_get_dcmi_capability_info_enhanced_system_power_statistics_attributes_rs)))
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -775,12 +775,12 @@ _get_ehanced_system_power_statistics_attributes (ipmi_dcmi_state_data_t *state_d
       goto cleanup;
     }
 
-  if (ipmi_dcmi_cmd_get_dcmi_capability_info_enhanced_system_power_statistics_attributes (state_data->ipmi_ctx,
+  if (ipmi_cmd_dcmi_get_dcmi_capability_info_enhanced_system_power_statistics_attributes (state_data->ipmi_ctx,
                                                                                           obj_cmd_rs) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "ipmi_dcmi_cmd_get_dcmi_capability_info_enhanced_system_power_statistics_attributes: %s\n",
+                       "ipmi_cmd_dcmi_get_dcmi_capability_info_enhanced_system_power_statistics_attributes: %s\n",
                        ipmi_ctx_errormsg (state_data->ipmi_ctx));
       goto cleanup;
     }
@@ -1022,7 +1022,7 @@ _output_power_statistics (ipmi_dcmi_state_data_t *state_data,
 
   assert (state_data);
 
-  if (!(obj_cmd_rs = fiid_obj_create (tmpl_dcmi_cmd_get_power_reading_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_dcmi_get_power_reading_rs)))
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -1031,14 +1031,14 @@ _output_power_statistics (ipmi_dcmi_state_data_t *state_data,
       goto cleanup;
     }
 
-  if (ipmi_dcmi_cmd_get_power_reading (state_data->ipmi_ctx,
+  if (ipmi_cmd_dcmi_get_power_reading (state_data->ipmi_ctx,
                                        mode,
                                        mode_attributes,
                                        obj_cmd_rs) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "ipmi_dcmi_cmd_get_power_reading: %s\n",
+                       "ipmi_cmd_dcmi_get_power_reading: %s\n",
                        ipmi_ctx_errormsg (state_data->ipmi_ctx));
       goto cleanup;
     }
@@ -1238,7 +1238,7 @@ _get_power_limit (ipmi_dcmi_state_data_t *state_data,
   assert (correction_time_limit);
   assert (management_application_statistics_sampling_period);
 
-  if (!(obj_cmd_rs = fiid_obj_create (tmpl_dcmi_cmd_get_power_limit_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_dcmi_get_power_limit_rs)))
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -1247,12 +1247,12 @@ _get_power_limit (ipmi_dcmi_state_data_t *state_data,
       goto cleanup;
     }
 
-  if (ipmi_dcmi_cmd_get_power_limit (state_data->ipmi_ctx,
+  if (ipmi_cmd_dcmi_get_power_limit (state_data->ipmi_ctx,
                                      obj_cmd_rs) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "ipmi_dcmi_cmd_get_power_limit: %s\n",
+                       "ipmi_cmd_dcmi_get_power_limit: %s\n",
                        ipmi_ctx_errormsg (state_data->ipmi_ctx));
       goto cleanup;
     }
@@ -1401,7 +1401,7 @@ set_power_limit (ipmi_dcmi_state_data_t *state_data)
   if (!args->statistics_sampling_period)
     args->statistics_sampling_period_arg = management_application_statistics_sampling_period;
 
-  if (!(obj_cmd_rs = fiid_obj_create (tmpl_dcmi_cmd_set_power_limit_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_dcmi_set_power_limit_rs)))
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -1410,7 +1410,7 @@ set_power_limit (ipmi_dcmi_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (ipmi_dcmi_cmd_set_power_limit (state_data->ipmi_ctx,
+  if (ipmi_cmd_dcmi_set_power_limit (state_data->ipmi_ctx,
                                      args->exception_actions_arg,
                                      args->power_limit_requested_arg,
                                      args->correction_time_limit_arg,
@@ -1419,7 +1419,7 @@ set_power_limit (ipmi_dcmi_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "ipmi_dcmi_cmd_set_power_limit: %s\n",
+                       "ipmi_cmd_dcmi_set_power_limit: %s\n",
                        ipmi_ctx_errormsg (state_data->ipmi_ctx));
       goto cleanup;
     }
@@ -1441,7 +1441,7 @@ activate_deactivate_power_limit (ipmi_dcmi_state_data_t *state_data)
 
   args = state_data->prog_data->args;
 
-  if (!(obj_cmd_rs = fiid_obj_create (tmpl_dcmi_cmd_activate_deactivate_power_limit_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_dcmi_activate_deactivate_power_limit_rs)))
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -1450,13 +1450,13 @@ activate_deactivate_power_limit (ipmi_dcmi_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (ipmi_dcmi_cmd_activate_deactivate_power_limit (state_data->ipmi_ctx,
+  if (ipmi_cmd_dcmi_activate_deactivate_power_limit (state_data->ipmi_ctx,
                                                      args->activate_deactivate_power_limit_arg,
                                                      obj_cmd_rs) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "ipmi_dcmi_cmd_activate_deactivate_power_limit: %s\n",
+                       "ipmi_cmd_dcmi_activate_deactivate_power_limit: %s\n",
                        ipmi_ctx_errormsg (state_data->ipmi_ctx));
       goto cleanup;
     }
@@ -1480,7 +1480,7 @@ get_asset_tag (ipmi_dcmi_state_data_t *state_data)
 
   assert (state_data);
 
-  if (!(obj_cmd_rs = fiid_obj_create (tmpl_dcmi_cmd_get_asset_tag_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_dcmi_get_asset_tag_rs)))
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -1495,14 +1495,14 @@ get_asset_tag (ipmi_dcmi_state_data_t *state_data)
     {
       uint64_t val;
 
-      if (ipmi_dcmi_cmd_get_asset_tag (state_data->ipmi_ctx,
+      if (ipmi_cmd_dcmi_get_asset_tag (state_data->ipmi_ctx,
                                        asset_tag_data_offset,
                                        IPMI_DCMI_ASSET_TAG_NUMBER_OF_BYTES_TO_READ_MAX,
                                        obj_cmd_rs) < 0)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "ipmi_dcmi_cmd_get_asset_tag: %s\n",
+                           "ipmi_cmd_dcmi_get_asset_tag: %s\n",
                            ipmi_ctx_errormsg (state_data->ipmi_ctx));
           goto cleanup;
         }
@@ -1614,7 +1614,7 @@ _sensor_info_output (ipmi_dcmi_state_data_t *state_data,
                   "%s SDR Record IDs\n",
                   _entity_string (entity_id));
 
-  if (!(obj_cmd_rs = fiid_obj_create (tmpl_dcmi_cmd_get_dcmi_sensor_info_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_dcmi_get_dcmi_sensor_info_rs)))
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -1634,7 +1634,7 @@ _sensor_info_output (ipmi_dcmi_state_data_t *state_data,
 
       fiid_obj_clear (obj_cmd_rs);
 
-      if (ipmi_dcmi_cmd_get_dcmi_sensor_info (state_data->ipmi_ctx,
+      if (ipmi_cmd_dcmi_get_dcmi_sensor_info (state_data->ipmi_ctx,
                                               sensor_type,
                                               entity_id,
                                               IPMI_DCMI_ENTITY_INSTANCE_ALL,
@@ -1643,7 +1643,7 @@ _sensor_info_output (ipmi_dcmi_state_data_t *state_data,
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "ipmi_dcmi_cmd_get_dcmi_sensor_info: %s\n",
+                           "ipmi_cmd_dcmi_get_dcmi_sensor_info: %s\n",
                            ipmi_ctx_errormsg (state_data->ipmi_ctx));
           goto cleanup;
         }

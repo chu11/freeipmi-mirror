@@ -13,6 +13,7 @@ libutil_la_SOURCES = \
 	ipmi-cipher-suite-util.c \
 	ipmi-device-types-util.c \
 	ipmi-error-util.c \
+	ipmi-error-dcmi-util.c \
 	ipmi-iana-enterprise-numbers-util.c \
 	ipmi-ipmb-util.c \
 	ipmi-lan-util.c \
@@ -22,4 +23,5 @@ libutil_la_SOURCES = \
 	ipmi-sensor-util.c \
 	ipmi-sensor-units-util.c \
 	ipmi-util.c \
+	ipmi-dcmi-util.c \
 	rmcp-util.c

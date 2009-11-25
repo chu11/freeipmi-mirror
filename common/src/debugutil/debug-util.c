@@ -131,7 +131,7 @@ debug_hdr_cmd (uint8_t packet_type,
   if (IPMI_NET_FN_GROUP_EXTENSION (net_fn))
     {
       if (group_extension == IPMI_NET_FN_GROUP_EXTENSION_IDENTIFICATION_DCMI)
-	str_cmd = ipmi_dcmi_cmd_str (cmd);
+	str_cmd = ipmi_cmd_dcmi_str (cmd);
       else
 	str_cmd = "Unknown";
       packet_flags = DEBUG_UTIL_FLAGS_GROUP_EXTENSION;
