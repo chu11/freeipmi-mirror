@@ -26,7 +26,6 @@ extern "C" {
 #include <freeipmi/api/ipmi-api.h>
 #include <freeipmi/api/ipmi-chassis-cmds-api.h>
 #include <freeipmi/api/ipmi-dcmi-cmds-api.h>
-#include <freeipmi/api/ipmi-dcmi-cmds-api.h>
 #include <freeipmi/api/ipmi-device-global-cmds-api.h>
 #include <freeipmi/api/ipmi-event-cmds-api.h>
 #include <freeipmi/api/ipmi-fru-inventory-device-cmds-api.h>
