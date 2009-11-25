@@ -4,6 +4,10 @@
 	library.
 
 	* freeipmi.spec.in: Add missing docs.
+
+	* libfreeipmi/: Increase KCS retry/timeout for ipmb messages.
+
+	* libfreeipmi/: Fix error message output corner case.
 	
 2009-11-24  Albert Chu <chu11@llnl.gov>
 

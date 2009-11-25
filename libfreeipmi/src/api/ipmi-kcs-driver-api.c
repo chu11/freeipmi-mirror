@@ -57,12 +57,15 @@
 #include "freeipmi-portability.h"
 #include "debug-util.h"
 
-/* achu: I dunno what's a good number, ten seems good.  Similar to the
+/* achu: I dunno what's a good number, 32 seems good.  Similar to the
  * inband "TIMEOUT", the purpose is to just not hang any user code
  * trying to do ipmb.  You gotta give up at some point.
+ *
+ * achu: On Inventec 5441/Dell Xanadu2 10 seemed too low, so upped it to
+ * 32.
  */
-#define IPMI_KCS_IPMB_RETRANSMISSION_COUNT   10
-#define IPMI_KCS_IPMB_REREAD_COUNT           10
+#define IPMI_KCS_IPMB_RETRANSMISSION_COUNT   32
+#define IPMI_KCS_IPMB_REREAD_COUNT           32
 
 fiid_template_t tmpl_kcs_raw =
   {
@@ -754,10 +757,7 @@ ipmi_kcs_cmd_raw_api (ipmi_ctx_t ctx,
   if (ipmi_kcs_cmd_api (ctx,
 			obj_cmd_rq,
 			obj_cmd_rs) < 0)
-    {
-      API_KCS_ERRNUM_TO_API_ERRNUM (ctx, ipmi_kcs_ctx_errnum (ctx->io.inband.kcs_ctx));
-      goto cleanup;
-    }
+    goto cleanup;
   
   if ((len = fiid_obj_get_all (obj_cmd_rs,
                                buf_rs,
@@ -828,10 +828,7 @@ ipmi_kcs_cmd_raw_api_ipmb (ipmi_ctx_t ctx,
   if (ipmi_kcs_cmd_api_ipmb (ctx,
 			     obj_cmd_rq,
 			     obj_cmd_rs) < 0)
-    {
-      API_KCS_ERRNUM_TO_API_ERRNUM (ctx, ipmi_kcs_ctx_errnum (ctx->io.inband.kcs_ctx));
-      goto cleanup;
-    }
+    goto cleanup;
   
   if ((len = fiid_obj_get_all (obj_cmd_rs,
                                buf_rs,

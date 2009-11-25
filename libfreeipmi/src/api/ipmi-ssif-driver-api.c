@@ -429,10 +429,7 @@ ipmi_ssif_cmd_raw_api (ipmi_ctx_t ctx,
   if (ipmi_ssif_cmd_api (ctx,
 			 obj_cmd_rq,
 			 obj_cmd_rs) < 0)
-    {
-      API_SSIF_ERRNUM_TO_API_ERRNUM (ctx, ipmi_ssif_ctx_errnum (ctx->io.inband.ssif_ctx));
-      goto cleanup;
-    }
+    goto cleanup;
 
   if ((len = fiid_obj_get_all (obj_cmd_rs,
                                buf_rs,
