@@ -68,6 +68,11 @@ if user inputs hostname of localhost, do inband not outofband?
 config tools
 ------------
 collapse into one allmight tool?
+- user must pick section
+- bmc, pef, sensor, chassis, all
+- makes more extensible in the future
+  - oem, dcmi, etc.
+
 
 bmc-config
 ----------
