@@ -1,3 +1,7 @@
+2009-11-25  Cyril Brulebois <kibi@debian.org>
+
+	* Fix portability issue for kfreebsd.
+		
 2009-11-25  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/: Re-org dcmi to be organized like oem extensions
