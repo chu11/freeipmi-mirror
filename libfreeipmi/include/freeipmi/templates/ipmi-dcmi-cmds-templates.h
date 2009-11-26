@@ -16,8 +16,8 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 */
 
-#ifndef _IPMI_DCMI_TEMPLATES_H
-#define _IPMI_DCMI_TEMPLATES_H
+#ifndef _IPMI_DCMI_CMDS_TEMPLATES_H
+#define _IPMI_DCMI_CMDS_TEMPLATES_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -49,7 +49,7 @@ fiid_template_t tmpl_dcmi_rolling_average_time_period =
 DCMI Get DCMI Capability Info Request
 -------------------------------------
 
-fiid_template_t tmpl_dcmi_cmd_get_dcmi_capability_info_rq =
+fiid_template_t tmpl_cmd_dcmi_get_dcmi_capability_info_rq =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8, "group_extension_identification", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -60,7 +60,7 @@ fiid_template_t tmpl_dcmi_cmd_get_dcmi_capability_info_rq =
 DCMI Get DCMI Capability Info Response
 --------------------------------------
 
-fiid_template_t tmpl_dcmi_cmd_get_dcmi_capability_info_rs =
+fiid_template_t tmpl_cmd_dcmi_get_dcmi_capability_info_rs =
   {
     { 8,    "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 8,    "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
@@ -76,7 +76,7 @@ DCMI Get DCMI Capability Info (Supported DCMI Capabilities) Response
 --------------------------------------------------------------------
 
 /* achu: assume typo "Out-Of-B" means "Out-Of-Band" */
-fiid_template_t tmpl_dcmi_cmd_get_dcmi_capability_info_supported_dcmi_capabilities_rs =
+fiid_template_t tmpl_cmd_dcmi_get_dcmi_capability_info_supported_dcmi_capabilities_rs =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
@@ -112,7 +112,7 @@ fiid_template_t tmpl_dcmi_cmd_get_dcmi_capability_info_supported_dcmi_capabiliti
 DCMI Get DCMI Capability Info (Mandatory Platform Attributes) Response
 ----------------------------------------------------------------------
 
-fiid_template_t tmpl_dcmi_cmd_get_dcmi_capability_info_mandatory_platform_attributes_rs =
+fiid_template_t tmpl_cmd_dcmi_get_dcmi_capability_info_mandatory_platform_attributes_rs =
   {
     { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
@@ -141,7 +141,7 @@ fiid_template_t tmpl_dcmi_cmd_get_dcmi_capability_info_mandatory_platform_attrib
 DCMI Get DCMI Capability Info (Optional Platform Attributes) Response
 ---------------------------------------------------------------------
 
-fiid_template_t tmpl_dcmi_cmd_get_dcmi_capability_info_optional_platform_attributes_rs =
+fiid_template_t tmpl_cmd_dcmi_get_dcmi_capability_info_optional_platform_attributes_rs =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
@@ -160,7 +160,7 @@ DCMI Get DCMI Capability Info (Manageability Access Attributes) Response
 ------------------------------------------------------------------------
 
 /* achu: for consistency, renamed "oob" to "out_of_band" */
-fiid_template_t tmpl_dcmi_cmd_get_dcmi_capability_info_manageability_access_attributes_rs =
+fiid_template_t tmpl_cmd_dcmi_get_dcmi_capability_info_manageability_access_attributes_rs =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
@@ -178,7 +178,7 @@ DCMI Get DCMI Capability Info (Enhanced System Power Statistics Attributes) Resp
 ------------------------------------------------------------------------------------
 
 /* 256 * 8 = 2048 */
-fiid_template_t tmpl_dcmi_cmd_get_dcmi_capability_info_enhanced_system_power_statistics_attributes_rs =
+fiid_template_t tmpl_cmd_dcmi_get_dcmi_capability_info_enhanced_system_power_statistics_attributes_rs =
 {
   { 8,    "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
   { 8,    "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
@@ -194,7 +194,7 @@ fiid_template_t tmpl_dcmi_cmd_get_dcmi_capability_info_enhanced_system_power_sta
 DCMI Get Power Reading Request
 ------------------------------
 
-fiid_template_t tmpl_dcmi_cmd_get_power_reading_rq =
+fiid_template_t tmpl_cmd_dcmi_get_power_reading_rq =
   {
     { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8,  "group_extension_identification", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -206,7 +206,7 @@ fiid_template_t tmpl_dcmi_cmd_get_power_reading_rq =
 DCMI Get Power Reading Response
 -------------------------------
 
-fiid_template_t tmpl_dcmi_cmd_get_power_reading_rs =
+fiid_template_t tmpl_cmd_dcmi_get_power_reading_rs =
   {
     { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
@@ -226,7 +226,7 @@ fiid_template_t tmpl_dcmi_cmd_get_power_reading_rs =
 DCMI Get Power Limit Request
 ----------------------------
 
-fiid_template_t tmpl_dcmi_cmd_get_power_limit_rq =
+fiid_template_t tmpl_cmd_dcmi_get_power_limit_rq =
   {
     { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8,  "group_extension_identification", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -237,7 +237,7 @@ fiid_template_t tmpl_dcmi_cmd_get_power_limit_rq =
 DCMI Get Power Limit Response
 -----------------------------
 
-fiid_template_t tmpl_dcmi_cmd_get_power_limit_rs =
+fiid_template_t tmpl_cmd_dcmi_get_power_limit_rs =
   {
     { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
@@ -254,7 +254,7 @@ fiid_template_t tmpl_dcmi_cmd_get_power_limit_rs =
 DCMI Set Power Limit Request
 ----------------------------
 
-fiid_template_t tmpl_dcmi_cmd_set_power_limit_rq =
+fiid_template_t tmpl_cmd_dcmi_set_power_limit_rq =
   {
     { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8,  "group_extension_identification", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -270,7 +270,7 @@ fiid_template_t tmpl_dcmi_cmd_set_power_limit_rq =
 DCMI Set Power Limit Response
 -----------------------------
 
-fiid_template_t tmpl_dcmi_cmd_set_power_limit_rs =
+fiid_template_t tmpl_cmd_dcmi_set_power_limit_rs =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
@@ -281,7 +281,7 @@ fiid_template_t tmpl_dcmi_cmd_set_power_limit_rs =
 DCMI Activate/Deactivate Power Limit Request
 --------------------------------------------
 
-fiid_template_t tmpl_dcmi_cmd_activate_deactivate_power_limit_rq =
+fiid_template_t tmpl_cmd_dcmi_activate_deactivate_power_limit_rq =
   {
     { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8,  "group_extension_identification", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -293,7 +293,7 @@ fiid_template_t tmpl_dcmi_cmd_activate_deactivate_power_limit_rq =
 DCMI Activate/Deactivate Power Limit Response
 ---------------------------------------------
 
-fiid_template_t tmpl_dcmi_cmd_activate_deactivate_power_limit_rs =
+fiid_template_t tmpl_cmd_dcmi_activate_deactivate_power_limit_rs =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
@@ -304,7 +304,7 @@ fiid_template_t tmpl_dcmi_cmd_activate_deactivate_power_limit_rs =
 DCMI Get Asset Tag Request
 --------------------------
 
-fiid_template_t tmpl_dcmi_cmd_get_asset_tag_rq =
+fiid_template_t tmpl_cmd_dcmi_get_asset_tag_rq =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8, "group_extension_identification", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -319,7 +319,7 @@ DCMI Get Asset Tag Response
 /* achu: number_of_bytes_to_read is max 16, so presumably data can only be max 16, but
  * asset tag max is 64 bytes.  We'll use 64 bytes (512 bits) as the max then.
  */
-fiid_template_t tmpl_dcmi_cmd_get_asset_tag_rs =
+fiid_template_t tmpl_cmd_dcmi_get_asset_tag_rs =
   {
     { 8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 8,   "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
@@ -332,7 +332,7 @@ fiid_template_t tmpl_dcmi_cmd_get_asset_tag_rs =
 DCMI Get DCMI Sensor Info Request
 ---------------------------------
 
-fiid_template_t tmpl_dcmi_cmd_get_dcmi_sensor_info_rq =
+fiid_template_t tmpl_cmd_dcmi_get_dcmi_sensor_info_rq =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8, "group_extension_identification", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -348,7 +348,7 @@ DCMI Get DCMI Sensor Info Response
 /* presumably a max of 256 entity_instances (b/c 1 byte field), so 
  * assume max record ids of 256.  record_id = 16 bits, so 256 * 16 = 4096
  */
-fiid_template_t tmpl_dcmi_cmd_get_dcmi_sensor_info_rs =
+fiid_template_t tmpl_cmd_dcmi_get_dcmi_sensor_info_rs =
   {
     { 8,    "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 8,    "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
@@ -365,4 +365,4 @@ fiid_template_t tmpl_dcmi_cmd_get_dcmi_sensor_info_rs =
 }
 #endif
 
-#endif  /* _IPMI_DCMI_TEMPLATES_H */
+#endif  /* _IPMI_DCMI_CMDS_TEMPLATES_H */

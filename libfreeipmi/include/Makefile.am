@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.59 2009-11-25 18:03:23 chu11 Exp $
+## $Id: Makefile.am,v 1.60 2009-11-26 14:54:34 chu11 Exp $
 ##*****************************************************************************
 
 nobase_include_HEADERS = \
@@ -101,7 +101,7 @@ nobase_include_HEADERS = \
 	freeipmi/spec/ipmi-system-software-id-spec.h \
 	freeipmi/templates/ipmi-bmc-watchdog-timer-cmds-templates.h \
 	freeipmi/templates/ipmi-chassis-cmds-templates.h \
-	freeipmi/templates/ipmi-dcmi-templates.h \
+	freeipmi/templates/ipmi-dcmi-cmds-templates.h \
 	freeipmi/templates/ipmi-device-global-cmds-templates.h \
 	freeipmi/templates/ipmi-event-cmds-templates.h \
 	freeipmi/templates/ipmi-fru-inventory-device-cmds-templates.h \
