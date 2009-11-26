@@ -30,8 +30,8 @@ extern "C" {
 /* 
  * ipmi_cmd* functions return 0 on success, -1 on error.
  *
- * obj_cmd_rs must be for the fill function's respective fiid
- * template response.
+ * obj_cmd_rs must be for the function's respective fiid template
+ * response.
  *
  */
 
