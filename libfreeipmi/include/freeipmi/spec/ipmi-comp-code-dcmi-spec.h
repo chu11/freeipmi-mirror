@@ -17,8 +17,6 @@
 
 */
 /*****************************************************************************\
- *  $Id: ipmi-comp-code-dcmi-spec.h,v 1.1 2009-11-25 15:47:40 chu11 Exp $
- *****************************************************************************
  *  Copyright (C) 2009 Lawrence Livermore National Security, LLC.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
  *  Written by Albert Chu <chu11@llnl.gov>

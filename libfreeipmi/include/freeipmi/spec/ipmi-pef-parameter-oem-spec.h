@@ -16,8 +16,6 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 */
 
-/* $Id: ipmi-pef-parameter-oem-spec.h,v 1.1 2009-09-10 18:52:09 chu11 Exp $ */
-
 #ifndef IPMI_PEF_PARAMETER_OEM_SPEC_H
 #define IPMI_PEF_PARAMETER_OEM_SPEC_H
 

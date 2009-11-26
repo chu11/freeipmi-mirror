@@ -14,9 +14,7 @@
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
- */
-
-/* $Id: ipmi-pef-and-alerting-cmds-api.h,v 1.10 2009-06-30 00:11:07 chu11 Exp $ */
+*/
 
 #ifndef _IPMI_PEF_AND_ALERTING_CMDS_API_H
 #define _IPMI_PEF_AND_ALERTING_CMDS_API_H

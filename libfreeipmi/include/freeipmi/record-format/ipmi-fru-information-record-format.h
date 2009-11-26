@@ -1,29 +1,44 @@
+/*
+   Copyright (C) 2003-2009 FreeIPMI Core Team
+
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2, or (at your option)
+   any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
+*/
 /*****************************************************************************\
-*  $Id: ipmi-fru-information-record-format.h,v 1.8 2009-04-17 23:50:27 chu11 Exp $
-*****************************************************************************
-*  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
-*  Copyright (C) 2007 The Regents of the University of California.
-*  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
-*  Written by Albert Chu <chu11@llnl.gov>
-*  UCRL-CODE-232183
-*
-*  This file is part of Ipmi-fru, a tool used for retrieving
-*  motherboard field replaceable unit (FRU) information. For details,
-*  see http://www.llnl.gov/linux/.
-*
-*  Ipmi-fru is free software; you can redistribute it and/or modify
-*  it under the terms of the GNU General Public License as published by the
-*  Free Software Foundation; either version 2 of the License, or (at your
-*  option) any later version.
-*
-*  Ipmi-fru is distributed in the hope that it will be useful, but
-*  WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-*  or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
-*  for more details.
-*
-*  You should have received a copy of the GNU General Public License along
-*  with Ipmi-fru; if not, write to the Free Software Foundation, Inc.,
-*  51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
+ *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
+ *  Copyright (C) 2007 The Regents of the University of California.
+ *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
+ *  Written by Albert Chu <chu11@llnl.gov>
+ *  UCRL-CODE-232183
+ *
+ *  This file is part of Ipmi-fru, a tool used for retrieving
+ *  motherboard field replaceable unit (FRU) information. For details,
+ *  see http://www.llnl.gov/linux/.
+ *
+ *  Ipmi-fru is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by the
+ *  Free Software Foundation; either version 2 of the License, or (at your
+ *  option) any later version.
+ *
+ *  Ipmi-fru is distributed in the hope that it will be useful, but
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ *  or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ *  for more details.
+ *
+ *  You should have received a copy of the GNU General Public License along
+ *  with Ipmi-fru; if not, write to the Free Software Foundation, Inc.,
+ *  51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 \*****************************************************************************/
 
 #ifndef _IPMI_FRU_INFORMATION_RECORD_FORMAT_H
