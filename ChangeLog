@@ -1,5 +1,9 @@
 2009-11-26  Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/: add flags for future use needs.
+	
+2009-11-26  Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/: Fix templates given dcmi reorg.
 
 2009-11-25  Cyril Brulebois <kibi@debian.org>

@@ -53,6 +53,7 @@ struct ipmi_oem_command
   char *command_options;
   int required_oem_options;
   int oem_options_count_variable;
+  unsigned int flags;
   oem_callback func;
 };
 
@@ -69,11 +70,13 @@ struct ipmi_oem_command oem_dell[] =
       "<asset-tag|service-tag|product-name|mac-addresses>",
       1,
       0,
+      0,
       ipmi_oem_dell_get_system_info
     },
     {
       "get-nic-selection",
       NULL,
+      0,
       0,
       0,
       ipmi_oem_dell_get_nic_selection
@@ -83,11 +86,13 @@ struct ipmi_oem_command oem_dell[] =
       "<dedicated|shared|shared_failover_nic2|shared_failover_all>",
       1,
       0,
+      0,
       ipmi_oem_dell_set_nic_selection
     },
     {
       "get-ssh-config",
       NULL,
+      0,
       0,
       0,
       ipmi_oem_dell_get_ssh_config
@@ -97,11 +102,13 @@ struct ipmi_oem_command oem_dell[] =
       "KEY=VALUE ...",
       1,
       1,
+      0,
       ipmi_oem_dell_set_ssh_config
     },
     {
       "get-telnet-config",
       NULL,
+      0,
       0,
       0,
       ipmi_oem_dell_get_telnet_config
@@ -111,11 +118,13 @@ struct ipmi_oem_command oem_dell[] =
       "KEY=VALUE ...",
       1,
       1,
+      0,
       ipmi_oem_dell_set_telnet_config
     },
     {
       "get-web-server-config",
       NULL,
+      0,
       0,
       0,
       ipmi_oem_dell_get_web_server_config
@@ -125,11 +134,13 @@ struct ipmi_oem_command oem_dell[] =
       "KEY=VALUE ...",
       1,
       1,
+      0,
       ipmi_oem_dell_set_web_server_config
     },
     {
       "get-active-directory-config",
       NULL,
+      0,
       0,
       0,
       ipmi_oem_dell_get_active_directory_config
@@ -139,11 +150,13 @@ struct ipmi_oem_command oem_dell[] =
       "KEY=VALUE ...",
       1,
       1,
+      0,
       ipmi_oem_dell_set_active_directory_config
     },
     {
       "reset-to-defaults",
       NULL,
+      0,
       0,
       0,
       ipmi_oem_dell_reset_to_defaults
@@ -153,6 +166,7 @@ struct ipmi_oem_command oem_dell[] =
       NULL,
       0,
       0,
+      0,
       ipmi_oem_dell_get_power_info
     },
     {
@@ -160,11 +174,13 @@ struct ipmi_oem_command oem_dell[] =
       "<cumulative|peak>",
       1,
       0,
+      0,
       ipmi_oem_dell_reset_power_info
     },
     {
       "get-power-supply-info",
       NULL,
+      0,
       0,
       0,
       ipmi_oem_dell_get_power_supply_info
@@ -174,11 +190,13 @@ struct ipmi_oem_command oem_dell[] =
       NULL,
       0,
       0,
+      0,
       ipmi_oem_dell_get_instantaneous_power_consumption_info
     },
     {
       "get-power-headroom-info",
       NULL,
+      0,
       0,
       0,
       ipmi_oem_dell_get_power_headroom_info
@@ -188,11 +206,13 @@ struct ipmi_oem_command oem_dell[] =
       NULL,
       0,
       0,
+      0,
       ipmi_oem_dell_get_average_power_history
     },
     {
       "get-peak-power-history",
       NULL,
+      0,
       0,
       0,
       ipmi_oem_dell_get_peak_power_history
@@ -202,6 +222,7 @@ struct ipmi_oem_command oem_dell[] =
       NULL,
       0,
       0,
+      0,
       ipmi_oem_dell_get_power_capacity
     },
     {
@@ -209,11 +230,13 @@ struct ipmi_oem_command oem_dell[] =
       "<power-capacity>",
       1,
       0,
+      0,
       ipmi_oem_dell_set_power_capacity
     },
     {
       "get-power-capacity-status",
       NULL,
+      0,
       0,
       0,
       ipmi_oem_dell_get_power_capacity_status
@@ -223,11 +246,13 @@ struct ipmi_oem_command oem_dell[] =
       "<enable|disable>",
       1,
       0,
+      0,
       ipmi_oem_dell_set_power_capacity_status
     },
     {
       "get-board-id",
       NULL,
+      0,
       0,
       0,
       ipmi_oem_dell_get_board_id
@@ -237,11 +262,13 @@ struct ipmi_oem_command oem_dell[] =
       "<boardid>",
       1,
       0,
+      0,
       ipmi_oem_dell_set_board_id
     },
     {
       "get-fcb-version",
       NULL,
+      0,
       0,
       0,
       ipmi_oem_dell_get_fcb_version
@@ -251,6 +278,7 @@ struct ipmi_oem_command oem_dell[] =
       "<majorversion> <minorversion>",
       2,
       0,
+      0,
       ipmi_oem_dell_set_fcb_version
     },
 #if 0
@@ -259,6 +287,7 @@ struct ipmi_oem_command oem_dell[] =
       "set-asset-tag",
       "<asset-tag>",
       1,
+      0,
       0,
       ipmi_oem_dell_set_asset_tag
     },
@@ -270,12 +299,14 @@ struct ipmi_oem_command oem_dell[] =
       NULL,
       0,
       0,
+      0,
       ipmi_oem_dell_get_dhcp_retry
     },
     {
       "set-dhcp-retry",
       "<retry-count> <retry-interval> <retry-timeout>",
       3,
+      0,
       0,
       ipmi_oem_dell_set_dhcp_retry
     },
@@ -285,6 +316,7 @@ struct ipmi_oem_command oem_dell[] =
       NULL,
       0,
       0,
+      0,
       ipmi_oem_dell_get_sol_inactivity_timeout
     },
     {
@@ -292,11 +324,13 @@ struct ipmi_oem_command oem_dell[] =
       "<inactivity-timeout>",
       1,
       0,
+      0,
       ipmi_oem_dell_set_sol_inactivity_timeout
     },
     {
       NULL,
       NULL,
+      0,
       0,
       0,
       NULL
@@ -310,11 +344,13 @@ struct ipmi_oem_command oem_fujitsu[] =
       NULL,
       0,
       0,
+      0,
       ipmi_oem_fujitsu_get_power_on_source
     },
     {
       "get-power-off-source",
       NULL,
+      0,
       0,
       0,
       ipmi_oem_fujitsu_get_power_off_source
@@ -324,11 +360,13 @@ struct ipmi_oem_command oem_fujitsu[] =
       "<connection_number>",
       1,
       0,
+      0,
       ipmi_oem_fujitsu_get_remote_storage_status
     },
     {
       "get-system-status",
       NULL,
+      0,
       0,
       0,
       ipmi_oem_fujitsu_get_system_status
@@ -338,11 +376,13 @@ struct ipmi_oem_command oem_fujitsu[] =
       "<eeprom_number>",
       1,
       0,
+      0,
       ipmi_oem_fujitsu_get_eeprom_version_info
     },
     {
       "get-identify-led",
       NULL,
+      0,
       0,
       0,
       ipmi_oem_fujitsu_get_identify_led
@@ -352,6 +392,7 @@ struct ipmi_oem_command oem_fujitsu[] =
       "<on|off>",
       1,
       0,
+      0,
       ipmi_oem_fujitsu_set_identify_led
     },
     {
@@ -359,11 +400,13 @@ struct ipmi_oem_command oem_fujitsu[] =
       NULL,
       0,
       0,
+      0,
       ipmi_oem_fujitsu_get_error_led
     },
     {
       NULL,
       NULL,
+      0,
       0,
       0,
       NULL
@@ -377,6 +420,7 @@ struct ipmi_oem_command oem_inventec[] =
       NULL,
       0,
       0,
+      0,
       ipmi_oem_inventec_get_nic_status
     },
     {
@@ -384,11 +428,13 @@ struct ipmi_oem_command oem_inventec[] =
       "<dedicated|shared>",
       1,
       0,
+      0,
       ipmi_oem_inventec_set_nic_status
     },
     {
       "get-mac-address",
       NULL,
+      0,
       0,
       0,
       ipmi_oem_inventec_get_mac_address
@@ -398,11 +444,13 @@ struct ipmi_oem_command oem_inventec[] =
       "<dedicated|shared> <MACADDRESS>",
       2,
       0,
+      0,
       ipmi_oem_inventec_set_mac_address
     },
     {
       "get-bmc-services",
       NULL,
+      0,
       0,
       0,
       ipmi_oem_inventec_get_bmc_services
@@ -412,11 +460,13 @@ struct ipmi_oem_command oem_inventec[] =
       "<enable|disable> <all|kvm|http|ssh>",
       2,
       0,
+      0,
       ipmi_oem_inventec_set_bmc_services
     },
     {
       "get-authentication-config",
       NULL,
+      0,
       0,
       0,
       ipmi_oem_inventec_get_authentication_config
@@ -426,11 +476,13 @@ struct ipmi_oem_command oem_inventec[] =
       "KEY=VALUE ...",
       1,
       1,
+      0,
       ipmi_oem_inventec_set_authentication_config
     },
     {
       "get-web-server-config",
       NULL,
+      0,
       0,
       0,
       ipmi_oem_inventec_get_web_server_config
@@ -440,11 +492,13 @@ struct ipmi_oem_command oem_inventec[] =
       "KEY=VALUE ...",
       1,
       1,
+      0,
       ipmi_oem_inventec_set_web_server_config
     },
     {
       "get-power-management-config",
       NULL,
+      0,
       0,
       0,
       ipmi_oem_inventec_get_power_management_config
@@ -454,6 +508,7 @@ struct ipmi_oem_command oem_inventec[] =
       "KEY=VALUE ...",
       1,
       1,
+      0,
       ipmi_oem_inventec_set_power_management_config
     },
 #if 0
@@ -462,6 +517,7 @@ struct ipmi_oem_command oem_inventec[] =
       "restore-to-defaults",
       "<all|user|lan|sol|serial|pef>",
       1,
+      0,
       0,
       ipmi_oem_inventec_restore_to_defaults
     },
@@ -473,6 +529,7 @@ struct ipmi_oem_command oem_inventec[] =
       "<system_guid>",
       1,
       0,
+      0,
       ipmi_oem_inventec_set_system_guid
     },
 #endif
@@ -481,6 +538,7 @@ struct ipmi_oem_command oem_inventec[] =
       "<at24c256n>",
       1,
       0,
+      0,
       ipmi_oem_inventec_read_eeprom
     },
     {
@@ -488,11 +546,13 @@ struct ipmi_oem_command oem_inventec[] =
       "<at24c256n>",
       1,
       0,
+      0,
       ipmi_oem_inventec_clear_eeprom
     },
     {
       NULL,
       NULL,
+      0,
       0,
       0,
       NULL
@@ -506,6 +566,7 @@ struct ipmi_oem_command oem_sun[] =
       NULL,
       0,
       0,
+      0,
       ipmi_oem_sun_get_led
     },
     {
@@ -513,11 +574,13 @@ struct ipmi_oem_command oem_sun[] =
       "<record_id> <off|on|standby|slow|fast>",
       2,
       0,
+      0,
       ipmi_oem_sun_set_led
     },
     {
       NULL,
       NULL,
+      0,
       0,
       0,
       NULL
@@ -531,6 +594,7 @@ struct ipmi_oem_command oem_supermicro[] =
       NULL,
       0,
       0,
+      0,
       ipmi_oem_supermicro_extra_firmware_info
     },
     {
@@ -538,11 +602,13 @@ struct ipmi_oem_command oem_supermicro[] =
       NULL,
       0,
       0,
+      0,
       ipmi_oem_supermicro_reset_intrusion
     },
     {
       NULL,
       NULL,
+      0,
       0,
       0,
       NULL
