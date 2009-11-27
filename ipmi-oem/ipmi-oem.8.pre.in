@@ -322,14 +322,14 @@ This OEM command will determine the current NIC status as dedicated or
 shared.  Dedicated indicates IPMI is only available on the dedicated
 management port.  Shared indicates IPMI is also available on one of
 the primary ethernet ports.  Command confirmed to work on Inventec
-5441 and Dell Xanadu2.
+5441 (and subsequently Dell Xanadu2).
 .TP
 .B set-nic-status \fIdedicated|shared\fR
 This OEM command will set the current NIC status to dedicated or
 shared.  (See \fIget\-nic\-status\fR above for description on dedicated
 vs. shared status.)  This OEM command may internally reset the BMC,
 making the BMC unusable for awhile.  Command confirmed to work on
-Inventec 5441 and Dell Xanadu2.
+Inventec 5441 (and subsequently Dell Xanadu2).
 .TP
 .B get-mac-address\fR
 This command will retrieve the BMC MAC address.  This is actually not
@@ -351,24 +351,24 @@ configuration an alternate MAC address instead.  After configuration
 of the MAC address, the BMC must be reset.  This may be accomplished
 by executing a cold-reset with
 .B bmc-device(8).
-Command confirmed to work on Inventec 5441 and Dell Xanadu2.
+Command confirmed to work on Inventec 5441 (and subsequently Dell Xanadu2).
 .TP
 .B get-bmc-services
 This OEM command will display the currently enables BMC services.
-Command confirmed to work on Inventec 5441 and Dell Xanadu2.
+Command confirmed to work on Inventec 5441 (and subsequently Dell Xanadu2).
 .TP
 .B set-bmc-services \fIenable|disable\fR \fIall|kvm|http|ssh\fR
 This OEM command will enable or disable other BMC services besides
 IPMI.  \fIall\fR can be specified to enable/disable all services,
 \fIkvm\fR specifies KVM and Virtual Storage, \fIhttp\fR specifies HTTP
 and HTTPS, and \fIssh\fR specifies both SSH and Telnet.  Command
-confirmed to work on Inventec 5441 and Dell Xanadu2.
+confirmed to work on Inventec 5441 (and subsequently Dell Xanadu2).
 .TP
 .B get-authentication-config
 This OEM command will display additional OEM authentication settings.
 (See \fIset\-authentication\-config\fR below for description on
-outputs.)  Command confirmed to work on Inventec 5441 aCnd
-Dell Xanadu2.
+outputs.)  Command confirmed to work on Inventec 5441 (and
+subsequently Dell Xanadu2).
 .TP
 .B set-authentication-config \fIKEY=VALUE ...\fR
 This OEM command will set additional OEM authentication settings on
@@ -384,13 +384,13 @@ any of the settings will disable the lockout feature.  Each time any
 of these settings is modified, the authentication failure count of
 each enabled user is reset to 0.  Multiple key=value pairs may be
 specified.  If no key=value pairs are specifed, available pairs are
-output.  Command confirmed to work on Inventec 5441 and 
-Dell Xanadu2.
+output.  Command confirmed to work on Inventec 5441 (and subsequently
+Dell Xanadu2).
 .TP
 .B get-web-server-config
 This OEM command will get the current web server configuration on the
-IPMI card.  Command confirmed to work on Inventec 5441 and
-Dell Xanadu2.
+IPMI card.  Command confirmed to work on Inventec 5441 (and
+subsequently Dell Xanadu2).
 .TP
 .B set-web-server-config \fIKEY=VALUE ...\fR
 This OEM command will set the current web server configuration on the
@@ -399,12 +399,12 @@ IPMI card.  The possible keys and values are
 \fIhttpportnumber=num\fR, and \fIhttpsportnumber=num\fR.  Multiple
 key=value pairs may be specified.  If no key=value pairs are specifed,
 available pairs are output.  Command confirmed to work on Inventec
-5441 and Dell Xanadu2.
+5441 (and subsequently Dell Xanadu2).
 .TP
 .B get-power-management-config
 This OEM command will get the current power management configuration on the
-IPMI card.  Command confirmed to work on Inventec 5441 and
-Dell Xanadu2.
+IPMI card.  Command confirmed to work on Inventec 5441 (and
+subsequently Dell Xanadu2).
 .TP
 .B set-power-management-config \fIKEY=VALUE ...\fR
 This OEM command will set the current power management configuration
@@ -419,33 +419,33 @@ minimum and maximum configured, and \fIuser\fR uses the user defined
 time defined by \fIpowerondelay\fR.  \fIpowerondelay\fR must be within
 the minimum and maximum power on delay times.  Multiple key=value
 pairs may be specified.  If no key=value pairs are specifed, available
-pairs are output.  Command confirmed to work on Inventec 5441 and
-Dell Xanadu2.
+pairs are output.  Command confirmed to work on Inventec 5441 (and
+subsequently Dell Xanadu2).
 .if 0 \{
 .TP
 .B restore-to-defaults \fIall|user|lan|sol|serial|pef\fR
 This OEM command will restore certain BMC configuration sections back
 to default values.  The command will spin until the reset is confirmed
-to be complete.  Command confirmed to work on Inventec 5441 and
-Dell Xanadu2.
+to be complete.  Command confirmed to work on Inventec 5441 (and
+subsequently Dell Xanadu2).
 \}
 .if 0 \{
 .TP
 .B set-system-guid \fIsystemguid\fR
 This OEM command will set the system guid.  Command confirmed to work
-on Inventec 5441 and Dell Xanadu2.
+on Inventec 5441 (and subsequently Dell Xanadu2).
 \}
 .TP
 .B read-eeprom \fIat24c256n\fR
 This OEM command will read the specified eeprom. Command confirmed to
-work on Inventec 5441 and Dell Xanadu2 for
+work on Inventec 5441 (and subsequently Dell Xanadu2) for
 \fIat24c256\fR.
 .TP
 .B clear-eeprom \fIat24c256n\fR
 This OEM command will clear the specified eeprom.  If the verbose
 option is set, progress percent will be output as the clearing is
-being done.  Command confirmed to work on Inventec 5441 and
-Dell Xanadu2 for \fIat24c256\fR.
+being done.  Command confirmed to work on Inventec 5441 (and
+subsequently Dell Xanadu2) for \fIat24c256\fR.
 .RE
 .TP
 .B Sun
