@@ -1,5 +1,6 @@
-0.8.0 - XX/XX/XX
-----------------
+FreeIPMI 0.8.0 - XX/XX/XX
+-------------------------
+
 Tools - High Level Description of Changes
 -----------------------------------------
 o Support ipmi-dcmi, Data Center Management Interface (often referred
@@ -425,8 +426,8 @@ Contributions
 o Update Ganglia and Nagios plugins for changes in ipmi-sensors and
 ipmimonitoring.
 
-0.7.15 - 11/19/09
------------------
+FreeIPMI 0.7.15 - 11/19/09
+--------------------------
 o Add "solstatus" workaround to ipmiconsole.
 o Support hex codes to event filter sensor type inputs in pef-config.
 o In ipmiconsole, handle corner cases surrounding non-default SOL
@@ -434,19 +435,19 @@ o In ipmiconsole, handle corner cases surrounding non-default SOL
 o In ipmi-oem, support Fujitsu OEM commands.
 o Document workarounds for additional motherboards.
 
-0.7.14 - 10/16/09
------------------
+FreeIPMI 0.7.14 - 10/16/09
+--------------------------
 o Fix consolidated-output corner cases.
 
-0.7.13 - 09/30/09
------------------
+FreeIPMI 0.7.13 - 09/30/09
+--------------------------
 o Support --platform-event in bmc-device.
 o Support read/clear eeprom in ipmi-oem.
 o Fix corner case in system firmware progress error data2 output.
 o Fix documentation typos.
 
-0.7.12 - 09/08/09
------------------
+FreeIPMI 0.7.12 - 09/08/09
+--------------------------
 o In bmc-config, fix SOL config corner case.  Assume LAN channel if
   SOL channel cannot be read.
 o In bmc-config, configure Password before Enable_User by default for
@@ -460,8 +461,8 @@ o In ipmi-oem, support additional Supermicro OEM commands.
 o Document workarounds necessary for newer Supermicro motherboards.
 o Fix several error output corner cases.
 
-0.7.11 - 07/28/09
------------------
+FreeIPMI 0.7.11 - 07/28/09
+--------------------------
 o In ipmi-fru, fix FRU output corner cases.
 o In ipmi-oem, support Dell poweredge, Dell Xanadu2, and new Inventec
   OEM commands.
@@ -472,8 +473,8 @@ o Support --without-encryption build option .
 o Do not require execute permissions on driver devices.
 o Fix portability for some embedded systems.
 
-0.7.10 - 06/16/09
------------------
+FreeIPMI 0.7.10 - 06/16/09
+--------------------------
 o In all tools, properly deal with workaround flags when specifying
   different devices than what workaround flags are intended for.
 o In bmc-config, fix bug setting volatile vs. non-volatile settings.
@@ -487,8 +488,8 @@ o In ipmiconsole, consider IPMICONSOLE_ERR_BMC_IMPLEMENTATION a
   non-fatal error.
 o Update workaround documentation with additional motherboards.
 
-0.7.9 - 05/15/09
-----------------
+FreeIPMI 0.7.9 - 05/15/09
+-------------------------
 o In bmc-config, fix diff check for "Password20" field.
 o In ipmi-fru, fix various output typoes and output errors.
   - Output "Product Name" instead of "Product Product Name".
@@ -507,8 +508,8 @@ o Fix debug output corner case in ipmi-oem.
 o Fix glibc 2.8 portability bug with ipmi-raw.
 o Fix freeipmi.conf comment typos.
 
-0.7.8 - 04/10/09
-----------------
+FreeIPMI 0.7.8 - 04/10/09
+-------------------------
 o Support and document Inventec 5441 workarounds.  Most notably, added
   "opensesspriv" workaround to tools and OPEN_SESSION_PRIVILEGE
   workaround to libraries.
@@ -518,8 +519,8 @@ o In bmc-info, output device ID, manufacturer ID, and product ID as
   integers, not hex.
 o Fix glibc 2.8 compile bug.
 
-0.7.7 - 04/03/09
-----------------
+FreeIPMI 0.7.7 - 04/03/09
+-------------------------
 o Support inventec get-nic-status, set-nic-status, get-mac-address,
   and set-mac-address OEM commands in ipmi-oem.
 o Make default privilege level ADMIN for ipmi-oem.
@@ -537,27 +538,8 @@ o Support build option (--with-dont-check-for-root) to not have tools
 o Update bmc-config manpage with Dell specific workaround.
 o Remove "experimental" note from SUNBMC driver documentation.
 
-0.7.7 - 04/03/09
-----------------
-o Support inventec get-nic-status, set-nic-status, get-mac-address,
-  and set-mac-address OEM commands in ipmi-oem.
-o Make default privilege level ADMIN for ipmi-oem.
-o In bmc-info, output both chars of firmware minor revision (i.e. 1.01
-  instead of 1.1).
-o Fix libfreeipmi field validity checks for sensor units.
-o Support "oem_reserved" group input to ipmi-sensors.
-o Fix Solaris porting bugs.
-o Fix potential config file bug by clearing out stack data
-  appropriatly.
-o Support build option (--with-dont-check-for-root) to not have tools
-  check for root for in-band IPMI communication.  Permission checks are 
-  subsequently dealt with at underlying system calls and
-  drivers. (i.e. open() on /dev/ipmi0).
-o Update bmc-config manpage with Dell specific workaround.
-o Remove "experimental" note from SUNBMC driver documentation.
-
-0.7.6 - 02/25/09
-----------------
+FreeIPMI 0.7.6 - 02/25/09
+-------------------------
 o In ipmimonitoring, output sensor group names consistently to other
   tools:
   "Cable Interconnect" -> "Cable/Interconnect"
@@ -574,8 +556,8 @@ o In ipmi-sensors-config, fix event bit bug in which assertion events
 o Fix bmc-watchdog init script portability to Suse.
 o Update ipmi-sel manpage.
 
-0.7.5 - 01/12/09
-----------------
+FreeIPMI 0.7.5 - 01/12/09
+-------------------------
 o In ipmi-fru, do not output error messages for FRU entries that do
 not exist on a motherboard.
 o In ipmi-sel, fix SEL message output corner case.
@@ -584,8 +566,8 @@ record IDs are not illegal record ID values.
 o In bmc-config, fix "Enable_User" checkout corner case bug.
 o Fix/clarify minor documentation typos/wording.
 
-0.7.4 - 12/15/08
-----------------
+FreeIPMI 0.7.4 - 12/15/08
+-------------------------
 o Change -I short option (for --chassis-identify) to -i in
   ipmi-chassis to avoid conflicting short option with -I (for
   --cipher-suite-id).
@@ -604,8 +586,8 @@ o Fix Suse build issue in spec file.
 o Fix glibc 2.8 build issues.
 o Fix/clarify minor documentation typos/wording.
 
-0.7.3 - 12/01/08
-----------------
+FreeIPMI 0.7.3 - 12/01/08
+-------------------------
 o Add workaround into ipmi-sensors and ipmi-sensors-config for
 motherboards that do not support the Get Sensor Thresholds command.
 o Output 'NA' on sensors in ipmi-sensors and ipmimonitoring that have
@@ -653,8 +635,8 @@ o Optionally output auxiliary information in bmc-info.
 o Add ipmi_monitoring_sensors.conf.5 manpage.
 o Various documentation updates.
 
-0.7.2 - 11/18/08
-----------------
+FreeIPMI 0.7.2 - 11/18/08
+-------------------------
 o Add Sensor Owner ID output to verbose and very verbose output in
 ipmi-sensors.  Alter previous ipmi-sensors output of slave address and
 system software id to deal with slave address/system software ID
@@ -662,8 +644,8 @@ vs. sensor owner ID semantics.
 o Fix ipmi-raw cmdline parsing corner case.
 o Fix/clarify documentation.
 
-0.7.1 - 11/07/08
-----------------
+FreeIPMI 0.7.1 - 11/07/08
+-------------------------
 
 Tools - New Significant Additions/Features
 ------------------------------------------
@@ -842,44 +824,44 @@ Contributions
 o Ganglia plugin scripts ganglia_ipmimonitoring.pl and ganglia_ipmi_sensors.pl.
 o Nagios plugin script nagios_ipmimonitoring.pl.
 
-0.6.10 - 10/13/08
------------------
+FreeIPMI 0.6.10 - 10/13/08
+--------------------------
 o Fix ipmi-fru FRU parsing corner case.
 
-0.6.9 - 09/26/08
-----------------
+FreeIPMI 0.6.9 - 09/26/08
+-------------------------
 o Handle ipmiconsole/libipmiconsole non-default port corner cases.
 o Fix --debug portability.
 o Document new workarounds.
 
-0.6.8 - 09/22/08
-----------------
+FreeIPMI 0.6.8 - 09/22/08
+-------------------------
 o Handle "invalid parameters" error codes in ipmi-sensors and
 ipmimonitoring/libipmimonitoring to work around some motherboards.
 o Fix bug in ipmimonitoring sensors configuration file parsing.
 o Fix corner case in libipmimonitoring sdr-cache filename creation.
 o Fix config tool exit code corner case.
 
-0.6.7 - 09/11/08
-----------------
+FreeIPMI 0.6.7 - 09/11/08
+-------------------------
 o Handle "illegal sensor" error code in ipmi-sensors and
 ipmimonitoring/libipmimonitoring.
 
-0.6.6 - 08/26/08
-----------------
+FreeIPMI 0.6.6 - 08/26/08
+-------------------------
 o Output NA/Unknown for non-BMC owned sensors in ipmi-sensors.
 o Do not output readings for non-BMC owned sensors in ipmimonitoring.
 o libfreeipmi/ipmi-chassis fix invalid console redirection input check.
 
-0.6.5 - 08/02/08
-----------------
+FreeIPMI 0.6.5 - 08/02/08
+-------------------------
 o Fix ipmimonitoring group assignment bug.
 o Fix several invalid error outputs.
 o Fix several minor bugs.
 o Minor documentation cleanup.
 
-0.6.4 - 06/04/08
-----------------
+FreeIPMI 0.6.4 - 06/04/08
+-------------------------
 o Do not exit ipmi-sensors or ipmimonitoring for sensors that return
   "sensor data not present" errors.  Output "NA", "Unknown", skip sensor
   output, etc. as needed.
@@ -893,8 +875,8 @@ o Add workaround in ipmi-sensors and ipmimonitoring when dealing with
 o Fix minor corner cases.
 o Fix manpage typos.
 
-0.6.3 - 05/27/08
-----------------
+FreeIPMI 0.6.3 - 05/27/08
+-------------------------
 o Fix --eliminate option in ipmipower.
 o Fix --quiet-cache option to work with flushing cache.
 o Fix ipmi-sensors-config flush cache corner case.
@@ -902,8 +884,8 @@ o Fix ipmi-fru output corner case.
 o Fix workarounds parsing bug.
 o Fix/clarify various manpage text.
 
-0.6.2 - 05/15/08
-----------------
+FreeIPMI 0.6.2 - 05/15/08
+-------------------------
 o Fix ipmi-fru output corner cases.
 o Fix ipmi-chassis boot-device configuration bug.
 o Fix ipmiconsole config file parsing corner case.
@@ -912,8 +894,8 @@ o Fix command line parsing error messages.
 o Remove excess error output messages.
 o Add missing manpage option listings.
 
-0.6.1 - 04/27/08
-----------------
+FreeIPMI 0.6.1 - 04/27/08
+-------------------------
 For Users
 ---------
 o Add new tool ipmi-sensors-config.
@@ -985,20 +967,20 @@ o Support driver timeout error codes in all drivers and APIs.
 o SDR record dumping added into all tools.
 o Various other bug fixes and enhancements.
 
-0.5.6 - 03/27/08
-----------------
+FreeIPMI 0.5.6 - 03/27/08
+-------------------------
 o Fix bmc-watchdog probing corner case.
 o Fix bmc-watchdog openipmi corner case.
 
-0.5.5 - 02/25/08
-----------------
+FreeIPMI 0.5.5 - 02/25/08
+-------------------------
 o Fix bmc-info firmware and IPMI version output.
 o Fix Sun endian bug workaround.
 o Fix FRU data output corner cases.
 o Fix workaround documentation.
 
-0.5.4 - 02/07/08
-----------------
+FreeIPMI 0.5.4 - 02/07/08
+-------------------------
 o Output addresses in hex in ipmi-locate.
 o Clarify device addresses in manpages.
 o Support --ignore-sdr-cache option in ipmi-sel and ipmi-fru.
@@ -1006,8 +988,8 @@ o Minor SDR caching bug fixes.
 o Minor ipmimonitoring corner case fixes.
 o Various SSIF corner case fixes.
 
-0.5.3 - 01/02/08
-----------------
+FreeIPMI 0.5.3 - 01/02/08
+-------------------------
 o Fix minor ipmimonitoring command line option combination bugs.
 o Fix several minor corner cases in ipmi-sel, ipmi-sensors, and
 ipmimonitoring.
@@ -1015,14 +997,14 @@ o Fix corner case in all tools by recognizing 127.0.0.1 as the same as
 localhost.
 o Fix documentation/manpage text/typos.
 
-0.5.2 - 12/21/07
-----------------
+FreeIPMI 0.5.2 - 12/21/07
+-------------------------
 o Clarify "Password Verification Timeout" troubleshooting information.
 o Fix ipmipower cmdline parse bug.
 o Support suffixes in hostrange inputs.
 
-0.5.1 - 12/07/07
-----------------
+FreeIPMI 0.5.1 - 12/07/07
+-------------------------
 For Users
 ---------
 o Added previously missing IPMI 2.0 (-D LAN_2_0) support into
@@ -1102,24 +1084,24 @@ o Fix various library variable names and macros for consistency.
      has been updated appropriately.
 o Various bug fixes and enhancements.
      
-0.4.6 - 10/11/07
-----------------
+FreeIPMI 0.4.6 - 10/11/07
+-------------------------
 o Fix sdr cache corruption bug.
 
-0.4.5 - 10/02/07
-----------------
+FreeIPMI 0.4.5 - 10/02/07
+-------------------------
 o Fix command line parse issue in ipmidetect.
 o Fix rpm daemon install scripts for ipmidetectd.
 
-0.4.4 - 09/19/07
-----------------
+FreeIPMI 0.4.4 - 09/19/07
+-------------------------
 o Alter userncame-capabilities workaround to
 authentication-capabilities workaronds to cover more situations.
 o Fix libipmiconsole new console port corner case.
 o Fix manpage typos.
 
-0.4.3 - 08/14/07
-----------------
+FreeIPMI 0.4.3 - 08/14/07
+-------------------------
 o Add ASUS P5M2 workarounds in ipmipower, ipmiconsole, and ipmimonitoring.
 o Fix bad input assert corner cases.
 o Fix non-default install bug.
@@ -1132,13 +1114,13 @@ o Fix error output messages in bmc-config.
 o Fix legacy config option issues.
 o Fix usage help in ipmiconsole.
 
-0.4.2 - 08/02/07
-----------------
+FreeIPMI 0.4.2 - 08/02/07
+-------------------------
 o ipmimonitoring: Fixed free bug that can cause segfaults.
 o Fix SLES packaging issue.
 
-0.4.1 - 07/26/07
-----------------
+FreeIPMI 0.4.1 - 07/26/07
+-------------------------
 
 For Users
 ---------
@@ -1171,8 +1153,8 @@ o Additional IPMI sub section support in libfreeipmi.
 o Re-architected UDM for more descriptive error codes.
 o Various bug fixes/performance fixes to libipmiconsole, libfreeipmi.
 
-0.3.3 - 05/05/07
-----------------
+FreeIPMI 0.3.3 - 05/05/07
+-------------------------
 o Support per-msg-auth in LAN udm and majority of FreeIPMI tools.
 o Support hex k-g input/output.
 o Fix ipmipower per-msg-auth.
@@ -1182,8 +1164,8 @@ o Fix OpenIPMI driver build bug.
 o Fix strdup corner case in bmc-config.
 o Allow OEM network functions.
 
-0.3.2 - 03/29/07
-----------------
+FreeIPMI 0.3.2 - 03/29/07
+-------------------------
 o -N option added to ipmiconsole.
 o -L option added to ipmiconsole.
 o -K option added to ipmipower and ipmiconsole.
@@ -1193,8 +1175,8 @@ o Fix seg-fault in ipmiconsole.
 o Fix various bugs in in libipmiconsole and ipmiconsole.
 o Fix secure malloc bug.
 
-0.3.1 - 12/18/06
-----------------
+FreeIPMI 0.3.1 - 12/18/06
+-------------------------
 
 o FreeBSD Support
 o libfreeipmi: Header file include/C++ fixes.
@@ -1202,8 +1184,8 @@ o ipmi-sensors, ipmi-sel: Fix SDR cache creation bug for /tmp.
 o ipmi-sensors: Fix SDR parsing corner case bugs.
 o ipmipower, ipmiconsole: Fix mem-leak possibility.
 
-0.3.0 - 11/13/06
-----------------
+FreeIPMI 0.3.0 - 11/13/06
+-------------------------
 
 For Users
 ---------
