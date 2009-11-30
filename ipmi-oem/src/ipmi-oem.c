@@ -47,12 +47,14 @@
 
 typedef int (*oem_callback)(ipmi_oem_state_data_t *);
 
+#define IPMI_OEM_COMMAND_FLAGS_DEFAULT                0x00
+#define IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE 0x01
+
 struct ipmi_oem_command
 {
   char *oem_command;
   char *command_options;
   int required_oem_options;
-  int oem_options_count_variable;
   unsigned int flags;
   oem_callback func;
 };
@@ -69,216 +71,189 @@ struct ipmi_oem_command oem_dell[] =
       "get-system-info",
       "<asset-tag|service-tag|product-name|mac-addresses>",
       1,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_dell_get_system_info
     },
     {
       "get-nic-selection",
       NULL,
       0,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_dell_get_nic_selection
     },
     {
       "set-nic-selection",
       "<dedicated|shared|shared_failover_nic2|shared_failover_all>",
       1,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_dell_set_nic_selection
     },
     {
       "get-ssh-config",
       NULL,
       0,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_dell_get_ssh_config
     },
     {
       "set-ssh-config",
       "KEY=VALUE ...",
       1,
-      1,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
       ipmi_oem_dell_set_ssh_config
     },
     {
       "get-telnet-config",
       NULL,
       0,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_dell_get_telnet_config
     },
     {
       "set-telnet-config",
       "KEY=VALUE ...",
       1,
-      1,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
       ipmi_oem_dell_set_telnet_config
     },
     {
       "get-web-server-config",
       NULL,
       0,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_dell_get_web_server_config
     },
     {
       "set-web-server-config",
       "KEY=VALUE ...",
       1,
-      1,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
       ipmi_oem_dell_set_web_server_config
     },
     {
       "get-active-directory-config",
       NULL,
       0,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_dell_get_active_directory_config
     },
     {
       "set-active-directory-config",
       "KEY=VALUE ...",
       1,
-      1,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
       ipmi_oem_dell_set_active_directory_config
     },
     {
       "reset-to-defaults",
       NULL,
       0,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_dell_reset_to_defaults
     },
     {
       "get-power-info",
       NULL,
       0,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_dell_get_power_info
     },
     {
       "reset-power-info",
       "<cumulative|peak>",
       1,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_dell_reset_power_info
     },
     {
       "get-power-supply-info",
       NULL,
       0,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_dell_get_power_supply_info
     },
     {
       "get-instantaneous-power-consumption-info",
       NULL,
       0,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_dell_get_instantaneous_power_consumption_info
     },
     {
       "get-power-headroom-info",
       NULL,
       0,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_dell_get_power_headroom_info
     },
     {
       "get-average-power-history",
       NULL,
       0,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_dell_get_average_power_history
     },
     {
       "get-peak-power-history",
       NULL,
       0,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_dell_get_peak_power_history
     },
     {
       "get-power-capacity",
       NULL,
       0,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_dell_get_power_capacity
     },
     {
       "set-power-capacity",
       "<power-capacity>",
       1,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_dell_set_power_capacity
     },
     {
       "get-power-capacity-status",
       NULL,
       0,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_dell_get_power_capacity_status
     },
     {
       "set-power-capacity-status",
       "<enable|disable>",
       1,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_dell_set_power_capacity_status
     },
     {
       "get-board-id",
       NULL,
       0,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_dell_get_board_id
     },
     {
       "set-board-id",
       "<boardid>",
       1,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_dell_set_board_id
     },
     {
       "get-fcb-version",
       NULL,
       0,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_dell_get_fcb_version
     },
     {
       "set-fcb-version",
       "<majorversion> <minorversion>",
       2,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_dell_set_fcb_version
     },
 #if 0
@@ -287,8 +262,7 @@ struct ipmi_oem_command oem_dell[] =
       "set-asset-tag",
       "<asset-tag>",
       1,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_dell_set_asset_tag
     },
 #endif
@@ -298,16 +272,14 @@ struct ipmi_oem_command oem_dell[] =
       "get-dhcp-retry",
       NULL,
       0,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_dell_get_dhcp_retry
     },
     {
       "set-dhcp-retry",
       "<retry-count> <retry-interval> <retry-timeout>",
       3,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_dell_set_dhcp_retry
     },
 #endif
@@ -315,24 +287,21 @@ struct ipmi_oem_command oem_dell[] =
       "get-sol-inactivity-timeout",
       NULL,
       0,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_dell_get_sol_inactivity_timeout
     },
     {
       "set-sol-inactivity-timeout",
       "<inactivity-timeout>",
       1,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_dell_set_sol_inactivity_timeout
     },
     {
       NULL,
       NULL,
       0,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       NULL
     },
   };
@@ -343,72 +312,63 @@ struct ipmi_oem_command oem_fujitsu[] =
       "get-power-on-source",
       NULL,
       0,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_fujitsu_get_power_on_source
     },
     {
       "get-power-off-source",
       NULL,
       0,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_fujitsu_get_power_off_source
     },
     {
       "get-remote-storage-status",
       "<connection_number>",
       1,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_fujitsu_get_remote_storage_status
     },
     {
       "get-system-status",
       NULL,
       0,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_fujitsu_get_system_status
     },
     {
       "get-eeprom-version-info",
       "<eeprom_number>",
       1,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_fujitsu_get_eeprom_version_info
     },
     {
       "get-identify-led",
       NULL,
       0,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_fujitsu_get_identify_led
     },
     {
       "set-identify-led",
       "<on|off>",
       1,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_fujitsu_set_identify_led
     },
     {
       "get-error-led",
       NULL,
       0,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_fujitsu_get_error_led
     },
     {
       NULL,
       NULL,
       0,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       NULL
     },
   };
@@ -419,96 +379,84 @@ struct ipmi_oem_command oem_inventec[] =
       "get-nic-status",
       NULL,
       0,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_inventec_get_nic_status
     },
     {
       "set-nic-status",
       "<dedicated|shared>",
       1,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_inventec_set_nic_status
     },
     {
       "get-mac-address",
       NULL,
       0,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_inventec_get_mac_address
     },
     {
       "set-mac-address",
       "<dedicated|shared> <MACADDRESS>",
       2,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_inventec_set_mac_address
     },
     {
       "get-bmc-services",
       NULL,
       0,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_inventec_get_bmc_services
     },
     {
       "set-bmc-services",
       "<enable|disable> <all|kvm|http|ssh>",
       2,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_inventec_set_bmc_services
     },
     {
       "get-authentication-config",
       NULL,
       0,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_inventec_get_authentication_config
     },
     {
       "set-authentication-config",
       "KEY=VALUE ...",
       1,
-      1,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
       ipmi_oem_inventec_set_authentication_config
     },
     {
       "get-web-server-config",
       NULL,
       0,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_inventec_get_web_server_config
     },
     {
       "set-web-server-config",
       "KEY=VALUE ...",
       1,
-      1,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
       ipmi_oem_inventec_set_web_server_config
     },
     {
       "get-power-management-config",
       NULL,
       0,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_inventec_get_power_management_config
     },
     {
       "set-power-management-config",
       "KEY=VALUE ...",
       1,
-      1,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
       ipmi_oem_inventec_set_power_management_config
     },
 #if 0
@@ -517,8 +465,7 @@ struct ipmi_oem_command oem_inventec[] =
       "restore-to-defaults",
       "<all|user|lan|sol|serial|pef>",
       1,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_inventec_restore_to_defaults
     },
 #endif
@@ -528,8 +475,7 @@ struct ipmi_oem_command oem_inventec[] =
       "set-system-guid",
       "<system_guid>",
       1,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_inventec_set_system_guid
     },
 #endif
@@ -537,24 +483,21 @@ struct ipmi_oem_command oem_inventec[] =
       "read-eeprom",
       "<at24c256n>",
       1,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_inventec_read_eeprom
     },
     {
       "clear-eeprom",
       "<at24c256n>",
       1,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_inventec_clear_eeprom
     },
     {
       NULL,
       NULL,
       0,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       NULL
     },
   };
@@ -565,24 +508,21 @@ struct ipmi_oem_command oem_sun[] =
       "get-led",
       NULL,
       0,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_sun_get_led
     },
     {
       "set-led",
       "<record_id> <off|on|standby|slow|fast>",
       2,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_sun_set_led
     },
     {
       NULL,
       NULL,
       0,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       NULL
     },
   };
@@ -593,24 +533,21 @@ struct ipmi_oem_command oem_supermicro[] =
       "extra-firmware-info",
       NULL,
       0,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_supermicro_extra_firmware_info
     },
     {
       "reset-intrusion",
       NULL,
       0,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_supermicro_reset_intrusion
     },
     {
       NULL,
       NULL,
       0,
-      0,
-      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       NULL
     },
   };
@@ -738,10 +675,10 @@ _run_oem_cmd (ipmi_oem_state_data_t *state_data)
                 {
                   cmd_found++;
 
-                  if ((oem_cmd->oem_options_count_variable
+                  if ((oem_cmd->flags & IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE
 		       && state_data->prog_data->args->oem_options_count
 		       && state_data->prog_data->args->oem_options_count < oem_cmd->required_oem_options)
-		      || (!oem_cmd->oem_options_count_variable
+		      || (!(oem_cmd->flags & IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE)
 			  && state_data->prog_data->args->oem_options_count != oem_cmd->required_oem_options))
                     {
                       pstdout_fprintf (state_data->pstate,
