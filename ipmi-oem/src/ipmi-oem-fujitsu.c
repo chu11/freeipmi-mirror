@@ -181,15 +181,21 @@
 #define IPMI_OEM_FUJITSU_SYSTEM_STATUS_NOTIFICATIONS_NEW_OUTPUT_ON_LOCALVIEW_DISPLAY_BITMASK 0x01
 #define IPMI_OEM_FUJITSU_SYSTEM_STATUS_NOTIFICATIONS_NEW_OUTPUT_ON_LOCALVIEW_DISPLAY_SHIFT   0
 
-#define IPMI_OEM_FUJITSU_CSS_LED_A 0x0
-#define IPMI_OEM_FUJITSU_CSS_LED_B 0x1
-#define IPMI_OEM_FUJITSU_CSS_LED_C 0x2
-#define IPMI_OEM_FUJITSU_CSS_LED_D 0x3
+/* achu: not defined in Fujitsu docs.  "off" is confirmed to be
+ * correct, but "on" and "blink" are being gussed based on ordering of
+ * error leds in LED sections.
+ */
+#define IPMI_OEM_FUJITSU_CSS_LED_OFF   0x0
+#define IPMI_OEM_FUJITSU_CSS_LED_ON    0x1
+#define IPMI_OEM_FUJITSU_CSS_LED_BLINK 0x2
 
-#define IPMI_OEM_FUJITSU_GLOBAL_ERROR_LED_A 0x0
-#define IPMI_OEM_FUJITSU_GLOBAL_ERROR_LED_B 0x1
-#define IPMI_OEM_FUJITSU_GLOBAL_ERROR_LED_C 0x2
-#define IPMI_OEM_FUJITSU_GLOBAL_ERROR_LED_D 0x3
+/* achu: not defined in Fujitsu docs.  "off" is confirmed to be
+ * correct, but "on" and "blink" are being gussed based on ordering of
+ * error leds in LED sections.
+ */
+#define IPMI_OEM_FUJITSU_GLOBAL_ERROR_LED_OFF   0x0
+#define IPMI_OEM_FUJITSU_GLOBAL_ERROR_LED_ON    0x1
+#define IPMI_OEM_FUJITSU_GLOBAL_ERROR_LED_BLINK 0x2
 
 #define IPMI_OEM_FUJITSU_EEPROM_NUMBER_MIN 0
 #define IPMI_OEM_FUJITSU_EEPROM_NUMBER_MAX 1
@@ -736,14 +742,12 @@ ipmi_oem_fujitsu_get_system_status (ipmi_oem_state_data_t *state_data)
                   "Local LED             : %s\n",
                   local_led ? "On" : "Off");
 
-  if (css_led == IPMI_OEM_FUJITSU_CSS_LED_A)
-    css_led_str = "A";
-  else if (css_led == IPMI_OEM_FUJITSU_CSS_LED_B)
-    css_led_str = "B";
-  else if (css_led == IPMI_OEM_FUJITSU_CSS_LED_C)
-    css_led_str = "C";
-  else if (css_led == IPMI_OEM_FUJITSU_CSS_LED_D)
-    css_led_str = "D";
+  if (css_led == IPMI_OEM_FUJITSU_CSS_LED_OFF)
+    css_led_str = "Off";
+  else if (css_led == IPMI_OEM_FUJITSU_CSS_LED_ON)
+    css_led_str = "On";
+  else if (css_led == IPMI_OEM_FUJITSU_CSS_LED_BLINK)
+    css_led_str = "Blink";
   else
     css_led_str = "Unknown LED State";
 
@@ -751,14 +755,12 @@ ipmi_oem_fujitsu_get_system_status (ipmi_oem_state_data_t *state_data)
                   "CSS LED               : %s\n",
                   css_led_str);
   
-  if (global_error_led == IPMI_OEM_FUJITSU_GLOBAL_ERROR_LED_A)
-    global_error_led_str = "A";
-  else if (global_error_led == IPMI_OEM_FUJITSU_GLOBAL_ERROR_LED_B)
-    global_error_led_str = "B";
-  else if (global_error_led == IPMI_OEM_FUJITSU_GLOBAL_ERROR_LED_C)
-    global_error_led_str = "C";
-  else if (global_error_led == IPMI_OEM_FUJITSU_GLOBAL_ERROR_LED_D)
-    global_error_led_str = "D";
+  if (global_error_led == IPMI_OEM_FUJITSU_GLOBAL_ERROR_LED_OFF)
+    global_error_led_str = "Off";
+  else if (global_error_led == IPMI_OEM_FUJITSU_GLOBAL_ERROR_LED_ON)
+    global_error_led_str = "On";
+  else if (global_error_led == IPMI_OEM_FUJITSU_GLOBAL_ERROR_LED_BLINK)
+    global_error_led_str = "Blink";
   else
     global_error_led_str = "Unknown LED State";
 
