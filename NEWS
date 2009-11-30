@@ -1,4 +1,4 @@
-0.7.16 - xx/xx/xx
+0.7.16 - 11/30/09
 -----------------
 o In ipmi-oem, add additional Fujitsu OEM support.
 o Fix portability to kfreebsd.
