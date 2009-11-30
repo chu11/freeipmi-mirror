@@ -426,6 +426,11 @@ Contributions
 o Update Ganglia and Nagios plugins for changes in ipmi-sensors and
 ipmimonitoring.
 
+FreeIPMI 0.7.16 - 11/30/09
+--------------------------
+o In ipmi-oem, add additional Fujitsu OEM support.
+o Fix portability to kfreebsd.
+
 FreeIPMI 0.7.15 - 11/19/09
 --------------------------
 o Add "solstatus" workaround to ipmiconsole.
