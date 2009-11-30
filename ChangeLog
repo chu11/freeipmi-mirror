@@ -1,6 +1,8 @@
 2009-11-30  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/: Complete Fujitsu OEM commands.
+
+	* ipmi-oem/: Code cleanup.
 	
 2009-11-26  Albert Chu <chu11@llnl.gov>
 
