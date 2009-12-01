@@ -317,17 +317,17 @@ confirmed to work on Fujitsu RX100 S5.
 .B Inventec
 .RS
 .TP
-.B get-nic-status
-This OEM command will determine the current NIC status as dedicated or
+.B get-nic-mode
+This OEM command will determine the current NIC mode as dedicated or
 shared.  Dedicated indicates IPMI is only available on the dedicated
 management port.  Shared indicates IPMI is also available on one of
 the primary ethernet ports.  Command confirmed to work on Inventec
 5441 (and subsequently Dell Xanadu2).
 .TP
-.B set-nic-status \fIdedicated|shared\fR
-This OEM command will set the current NIC status to dedicated or
-shared.  (See \fIget\-nic\-status\fR above for description on dedicated
-vs. shared status.)  This OEM command may internally reset the BMC,
+.B set-nic-mode \fIdedicated|shared\fR
+This OEM command will set the current NIC mode to dedicated or
+shared.  (See \fIget\-nic\-mode\fR above for description on dedicated
+vs. shared mode.)  This OEM command may internally reset the BMC,
 making the BMC unusable for awhile.  Command confirmed to work on
 Inventec 5441 (and subsequently Dell Xanadu2).
 .TP
@@ -340,8 +340,8 @@ tool).  This command is placed here for convenience.
 .TP
 .B set-mac-address \fIdedicated|shared\fR \fIMACADDR\fR
 This OEM command will set the dedicated or shared BMC MAC address.
-(See \fIget\-nic\-status\fR above for description on dedicated
-vs. shared status.)  The BMC MAC address cannot be set through the
+(See \fIget\-nic\-mode\fR above for description on dedicated
+vs. shared mode.)  The BMC MAC address cannot be set through the
 normal IPMI MAC address command (what is used in the
 .B bmc-config(8)
 tool).  The MACADDR should be specified in XX:XX:XX:XX:XX:XX form.  A
@@ -435,6 +435,47 @@ subsequently Dell Xanadu2).
 This OEM command will set the system guid.  Command confirmed to work
 on Inventec 5441 (and subsequently Dell Xanadu2).
 \}
+.TP
+.B get-firmware-update-config
+This OEM command will get the current firmware update configuration on the
+IPMI card.  Command confirmed to work on Inventec 5441 (and
+subsequently Dell Xanadu2).
+.TP
+.B set-firmware-update-config \fIKEY=VALUE ...\fR
+This OEM command will set the current firmware update configuration on
+the IPMI card.  The possible keys and values are
+\fIremoteupdate=enable|disable\fR,
+\fIURI=tftp://...|ftp://...|http://...\fR, \fIconnectionretry=num\fR,
+\fIretryinterval=seconds\fR, \fIdelaytime=seconds|random\fR,
+\fIremoteupdate\fR enables or disables remote update capabilities.
+\fIURI\fR determines the location of the image file.
+\fIconnectionretry\fR specifies the number of retries for connecting.
+\fIretryinterval\fR specifies the number seconds in a retry interval.
+\fIdelaytime\fR specifies the number of seconds to wait before
+connecting.  If set to zero, the connection is immeadite.  If the user
+specifies \fIrandom\fR, a random time between 5 and 10 seconds is
+chosen.  Command confirmed to work on Inventec 5441 (and subsequently
+Dell Xanadu2).  After setting these configuration parameters,
+typically a user will want to execute the \fIupdate-firmware\fR command
+listed below.
+.if 0 \{
+.TP
+.B get-firmware-information
+This OEM command will get current firmware information.  Command
+confirmed to work on Inventec 5441 (and subsequently Dell Xanadu2).
+\}
+.TP
+.B update-firmware <tftp|ftp|http> [config=preserve|nopreserve]
+This OEM command will inform the motherboard to perform a firmware
+update with the specified protocol and return after detecting that it
+has completed or an error has occurred.  \fItftp\fR, \fIftp\fR, and
+\fIhttp\fR indicate the desired protocol to use.  The parameters
+following it depend on the specific motherboard for availability,
+support, or possibly requirement.  The
+\fIconfig=preserve|nopreserve\fR is currently supported on the Dell
+Xanadu2.  If the verbose option is set, progress will be output with
+information that is available.  Command confirmed to work on Inventec
+5441 (and subsequently Dell Xanadu2).
 .TP
 .B read-eeprom \fIat24c256n\fR
 This OEM command will read the specified eeprom. Command confirmed to

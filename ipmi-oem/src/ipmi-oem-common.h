@@ -60,6 +60,13 @@ int ipmi_oem_parse_4_byte_field (ipmi_oem_state_data_t *state_data,
 				 const char *value,
 				 uint32_t *value_out);
 
+int ipmi_oem_parse_unsigned_int_range (ipmi_oem_state_data_t *state_data,
+                                       unsigned int option_num,
+                                       const char *value,
+                                       uint32_t *value_out,
+                                       unsigned int min,
+                                       unsigned int max);
+
 int ipmi_oem_parse_port (ipmi_oem_state_data_t *state_data,
                          unsigned int option_num,
                          const char *value,

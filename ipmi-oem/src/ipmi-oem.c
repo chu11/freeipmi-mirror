@@ -476,6 +476,37 @@ struct ipmi_oem_command oem_inventec[] =
       IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
       ipmi_oem_inventec_set_power_management_config
     },
+    {
+      "get-firmware-update-config",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_inventec_get_firmware_update_config
+    },
+    {
+      "set-firmware-update-config",
+      "KEY=VALUE ...",
+      1,
+      IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
+      ipmi_oem_inventec_set_firmware_update_config
+    },
+#if 0
+    /* cannot verify */
+    {
+      "get-firmware-information",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_inventec_get_firmware_information
+    },
+#endif
+    {
+      "update-firmware",
+      "<tftp|ftp|http> [config=preserve|nopreserve]",
+      1,
+      IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
+      ipmi_oem_inventec_update_firmware
+    },
 #if 0
     /* cannot verify */
     {
@@ -699,7 +730,6 @@ _run_oem_cmd (ipmi_oem_state_data_t *state_data)
                   cmd_found++;
 
                   if ((oem_cmd->flags & IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE
-		       && state_data->prog_data->args->oem_options_count
 		       && state_data->prog_data->args->oem_options_count < oem_cmd->required_oem_options)
 		      || (!(oem_cmd->flags & IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE)
 			  && state_data->prog_data->args->oem_options_count != oem_cmd->required_oem_options))

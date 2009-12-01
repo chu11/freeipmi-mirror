@@ -290,6 +290,54 @@ ipmi_oem_parse_4_byte_field (ipmi_oem_state_data_t *state_data,
 }
 
 int
+ipmi_oem_parse_unsigned_int_range (ipmi_oem_state_data_t *state_data,
+                                   unsigned int option_num,
+                                   const char *value,
+                                   uint32_t *value_out,
+                                   unsigned int min,
+                                   unsigned int max)
+{
+  unsigned int temp;
+  char *ptr = NULL;
+  
+  assert (state_data);
+  assert (value);
+  assert (value_out);
+  assert (min < max);
+  
+  errno = 0;
+  
+  temp = strtoul (value, &ptr, 10);
+  
+  if (errno
+      || ptr[0] != '\0')
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s' : invalid value\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[option_num]);
+      return (-1);
+    }
+  
+  if (temp < min
+      || temp > max)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s' : out of range\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[option_num]);
+      return (-1);
+    }
+
+  (*value_out) = temp;
+  return (0);
+}
+
+int
 ipmi_oem_parse_string (ipmi_oem_state_data_t *state_data,
                        unsigned int option_num,
                        const char *value,
