@@ -3,6 +3,9 @@
 	* ipmi-oem/: Complete Fujitsu OEM commands.
 
 	* ipmi-oem/: Code cleanup.
+
+	* ipmi-oem/: Rename "get/set-nic-status" to "get/set-nic-mode" for
+	consistency to OEM doc.
 	
 2009-11-26  Albert Chu <chu11@llnl.gov>
 

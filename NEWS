@@ -330,6 +330,8 @@ o ipmi-oem
   - Add additional Dell OEM commands.
   - Add additional Inventec OEM commands.
   - Add additional Sun OEM commands.
+  - Rename "get/set-nic-status" as "get/set-nic-mode" to meet vendor
+    doc naming.  Backwards compatability included.
 o bmc-watchdog
   - Removed the following short options.
     - 'h' (legacy -?)
