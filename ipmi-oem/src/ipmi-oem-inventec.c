@@ -117,7 +117,7 @@
 
 /* achu: all named from doc except 'lan' configuration id, which I assumed names */
 
-#define IPMI_OEM_EXTENDED_CONFIGURATION_ID_LAN                      0x02
+#define IPMI_OEM_EXTENDED_CONFIGURATION_ID_NIC                      0x02
 #define IPMI_OEM_EXTENDED_CONFIGURATION_ID_SOL                      0x03
 #define IPMI_OEM_EXTENDED_CONFIGURATION_ID_SECURITY                 0x04
 #define IPMI_OEM_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION 0x0C
@@ -128,7 +128,7 @@
 
 /* nic status - 1 byte, 0 = shared, 1 = dedicated
  */
-#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_LAN_NIC_STATUS 0x01
+#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_NIC_MODE 0x01
 
 /* sol idle timeout - 2 bytes, ls byte first, 0h = no timeout, default = 01h
  *
@@ -257,8 +257,8 @@
 
 #define IPMI_OEM_EXTENDED_CONFIG_READ_ALL_BYTES           0xFF
 
-#define IPMI_OEM_EXTENDED_CONFIG_LAN_NIC_STATUS_SHARED    0x00
-#define IPMI_OEM_EXTENDED_CONFIG_LAN_NIC_STATUS_DEDICATED 0x01
+#define IPMI_OEM_EXTENDED_CONFIG_NIC_MODE_SHARED    0x00
+#define IPMI_OEM_EXTENDED_CONFIG_NIC_MODE_DEDICATED 0x01
 
 #define IPMI_OEM_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_ENABLE_ALL   0x00
 #define IPMI_OEM_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_ALL  0x01
@@ -553,7 +553,7 @@ _ipmi_oem_inventec_set_extended_config (ipmi_oem_state_data_t *state_data,
 }
 
 int
-ipmi_oem_inventec_get_nic_status (ipmi_oem_state_data_t *state_data)
+ipmi_oem_inventec_get_nic_mode (ipmi_oem_state_data_t *state_data)
 {
   uint32_t tmpvalue;
   int rv = -1;
@@ -581,22 +581,22 @@ ipmi_oem_inventec_get_nic_status (ipmi_oem_state_data_t *state_data)
    */
 
   if (_ipmi_oem_inventec_get_extended_config (state_data,
-                                              IPMI_OEM_EXTENDED_CONFIGURATION_ID_LAN,
-                                              IPMI_OEM_EXTENDED_ATTRIBUTE_ID_LAN_NIC_STATUS,
+                                              IPMI_OEM_EXTENDED_CONFIGURATION_ID_NIC,
+                                              IPMI_OEM_EXTENDED_ATTRIBUTE_ID_NIC_MODE,
                                               1,
                                               &tmpvalue) < 0)
     goto cleanup;
 
   switch (tmpvalue)
     {
-    case IPMI_OEM_EXTENDED_CONFIG_LAN_NIC_STATUS_SHARED:
+    case IPMI_OEM_EXTENDED_CONFIG_NIC_MODE_SHARED:
       pstdout_printf (state_data->pstate, "shared\n");
       break;
-    case IPMI_OEM_EXTENDED_CONFIG_LAN_NIC_STATUS_DEDICATED:
+    case IPMI_OEM_EXTENDED_CONFIG_NIC_MODE_DEDICATED:
       pstdout_printf (state_data->pstate, "dedicated\n");
       break;
     default:
-      pstdout_printf (state_data->pstate, "unknown NIC status: %Xh\n", tmpvalue);
+      pstdout_printf (state_data->pstate, "unknown NIC mode: %Xh\n", tmpvalue);
       break;
     }
 
@@ -606,9 +606,9 @@ ipmi_oem_inventec_get_nic_status (ipmi_oem_state_data_t *state_data)
 }
 
 int
-ipmi_oem_inventec_set_nic_status (ipmi_oem_state_data_t *state_data)
+ipmi_oem_inventec_set_nic_mode (ipmi_oem_state_data_t *state_data)
 {
-  uint8_t status;
+  uint8_t mode;
   int rv = -1;
 
   assert (state_data);
@@ -647,15 +647,15 @@ ipmi_oem_inventec_set_nic_status (ipmi_oem_state_data_t *state_data)
    */
 
   if (!strcasecmp (state_data->prog_data->args->oem_options[0], "shared"))
-    status = IPMI_OEM_EXTENDED_CONFIG_LAN_NIC_STATUS_SHARED;
+    mode = IPMI_OEM_EXTENDED_CONFIG_NIC_MODE_SHARED;
   else
-    status = IPMI_OEM_EXTENDED_CONFIG_LAN_NIC_STATUS_DEDICATED;
+    mode = IPMI_OEM_EXTENDED_CONFIG_NIC_MODE_DEDICATED;
 
   if (_ipmi_oem_inventec_set_extended_config (state_data,
-                                              IPMI_OEM_EXTENDED_CONFIGURATION_ID_LAN,
-                                              IPMI_OEM_EXTENDED_ATTRIBUTE_ID_LAN_NIC_STATUS,
+                                              IPMI_OEM_EXTENDED_CONFIGURATION_ID_NIC,
+                                              IPMI_OEM_EXTENDED_ATTRIBUTE_ID_NIC_MODE,
                                               1,
-                                              (uint32_t)status) < 0)
+                                              (uint32_t)mode) < 0)
     goto cleanup;
 
   rv = 0;

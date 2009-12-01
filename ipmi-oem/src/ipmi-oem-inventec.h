@@ -21,8 +21,8 @@
 
 #include "ipmi-oem.h"
 
-int ipmi_oem_inventec_get_nic_status (ipmi_oem_state_data_t *state_data);
-int ipmi_oem_inventec_set_nic_status (ipmi_oem_state_data_t *state_data);
+int ipmi_oem_inventec_get_nic_mode (ipmi_oem_state_data_t *state_data);
+int ipmi_oem_inventec_set_nic_mode (ipmi_oem_state_data_t *state_data);
 
 int ipmi_oem_inventec_get_mac_address (ipmi_oem_state_data_t *state_data);
 int ipmi_oem_inventec_set_mac_address (ipmi_oem_state_data_t *state_data);

@@ -47,8 +47,9 @@
 
 typedef int (*oem_callback)(ipmi_oem_state_data_t *);
 
-#define IPMI_OEM_COMMAND_FLAGS_DEFAULT                0x00
-#define IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE 0x01
+#define IPMI_OEM_COMMAND_FLAGS_DEFAULT                0x0000
+#define IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE 0x0001
+#define IPMI_OEM_COMMAND_FLAGS_HIDDEN                 0x0100
 
 struct ipmi_oem_command
 {
@@ -375,19 +376,35 @@ struct ipmi_oem_command oem_fujitsu[] =
 
 struct ipmi_oem_command oem_inventec[] =
   {
+    /* legacy */
     {
       "get-nic-status",
       NULL,
       0,
-      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
-      ipmi_oem_inventec_get_nic_status
+      IPMI_OEM_COMMAND_FLAGS_HIDDEN,
+      ipmi_oem_inventec_get_nic_mode
     },
+    /* legacy */
     {
       "set-nic-status",
       "<dedicated|shared>",
       1,
+      IPMI_OEM_COMMAND_FLAGS_HIDDEN,
+      ipmi_oem_inventec_set_nic_mode
+    },
+    {
+      "get-nic-mode",
+      NULL,
+      0,
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
-      ipmi_oem_inventec_set_nic_status
+      ipmi_oem_inventec_get_nic_mode
+    },
+    {
+      "set-nic-mode",
+      "<dedicated|shared>",
+      1,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_inventec_set_nic_mode
     },
     {
       "get-mac-address",
@@ -593,13 +610,16 @@ _list (void)
 
       while (oem_cmd && oem_cmd->oem_command)
         {
-          if (oem_cmd->command_options)
-            printf ("    Command: %s %s\n",
-                    oem_cmd->oem_command,
-                    oem_cmd->command_options);
-          else
-            printf ("    Command: %s\n",
-                    oem_cmd->oem_command);
+          if (!(oem_cmd->flags & IPMI_OEM_COMMAND_FLAGS_HIDDEN))
+            {
+              if (oem_cmd->command_options)
+                printf ("    Command: %s %s\n",
+                        oem_cmd->oem_command,
+                        oem_cmd->command_options);
+              else
+                printf ("    Command: %s\n",
+                        oem_cmd->oem_command);
+            }
           oem_cmd++;
         }
 
@@ -653,15 +673,18 @@ _run_oem_cmd (ipmi_oem_state_data_t *state_data)
             {
               while (oem_cmd && oem_cmd->oem_command)
                 {
-                  if (oem_cmd->command_options)
-                    printf ("%s Command: %s %s\n",
-                            oem_id->oem_id,
-                            oem_cmd->oem_command,
-                            oem_cmd->command_options);
-                  else
-                    printf ("%s Command: %s\n",
-                            oem_id->oem_id,
-                            oem_cmd->oem_command);
+                  if (!(oem_cmd->flags & IPMI_OEM_COMMAND_FLAGS_HIDDEN))
+                    {
+                      if (oem_cmd->command_options)
+                        printf ("%s Command: %s %s\n",
+                                oem_id->oem_id,
+                                oem_cmd->oem_command,
+                                oem_cmd->command_options);
+                      else
+                        printf ("%s Command: %s\n",
+                                oem_id->oem_id,
+                                oem_cmd->oem_command);
+                    }
                   oem_cmd++;
                 }
 
