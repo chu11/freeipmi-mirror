@@ -451,6 +451,8 @@ _ipmi_oem_inventec_get_extended_config_value (ipmi_oem_state_data_t *state_data,
   return (rv);
 }
 
+#if 0
+/* waiting for verification from Dell */
 static int
 _ipmi_oem_inventec_get_extended_config_string (ipmi_oem_state_data_t *state_data,
                                                uint8_t configuration_id,
@@ -548,6 +550,7 @@ _ipmi_oem_inventec_get_extended_config_string (ipmi_oem_state_data_t *state_data
  cleanup:
   return (rv);
 }
+#endif
 
 static int
 _ipmi_oem_inventec_set_extended_config_value (ipmi_oem_state_data_t *state_data,
@@ -646,6 +649,8 @@ _ipmi_oem_inventec_set_extended_config_value (ipmi_oem_state_data_t *state_data,
   return (rv);
 }
 
+#if 0
+/* waiting for verification from Dell */
 static int
 _ipmi_oem_inventec_set_extended_config_string (ipmi_oem_state_data_t *state_data,
                                                uint8_t configuration_id,
@@ -726,6 +731,7 @@ _ipmi_oem_inventec_set_extended_config_string (ipmi_oem_state_data_t *state_data
  cleanup:
   return (rv);
 }
+#endif
 
 int
 ipmi_oem_inventec_get_nic_mode (ipmi_oem_state_data_t *state_data)
@@ -1777,6 +1783,8 @@ ipmi_oem_inventec_set_power_management_config (ipmi_oem_state_data_t *state_data
   return (rv);
 }
 
+#if 0
+/* waiting for verification from Dell */
 int
 ipmi_oem_inventec_get_firmware_update_config (ipmi_oem_state_data_t *state_data)
 {
@@ -2066,6 +2074,7 @@ ipmi_oem_inventec_set_firmware_update_config (ipmi_oem_state_data_t *state_data)
  cleanup:
   return (rv);
 }
+#endif
 
 #if 0
 /* cannot verify */
@@ -2188,6 +2197,8 @@ ipmi_oem_inventec_get_firmware_information (ipmi_oem_state_data_t *state_data)
 }
 #endif
 
+#if 0
+/* waiting for verification from Dell */
 int
 ipmi_oem_inventec_update_firmware (ipmi_oem_state_data_t *state_data)
 {
@@ -2494,6 +2505,7 @@ ipmi_oem_inventec_update_firmware (ipmi_oem_state_data_t *state_data)
  cleanup:
   return (rv);
 }
+#endif
 
 #if 0
 /* cannot verify */

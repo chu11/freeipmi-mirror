@@ -476,6 +476,8 @@ struct ipmi_oem_command oem_inventec[] =
       IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
       ipmi_oem_inventec_set_power_management_config
     },
+#if 0
+    /* waiting for verification from Dell */
     {
       "get-firmware-update-config",
       NULL,
@@ -490,6 +492,7 @@ struct ipmi_oem_command oem_inventec[] =
       IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
       ipmi_oem_inventec_set_firmware_update_config
     },
+#endif
 #if 0
     /* cannot verify */
     {
@@ -500,6 +503,8 @@ struct ipmi_oem_command oem_inventec[] =
       ipmi_oem_inventec_get_firmware_information
     },
 #endif
+#if 0
+    /* waiting for verification from Dell */
     {
       "update-firmware",
       "<tftp|ftp|http> [config=preserve|nopreserve]",
@@ -507,6 +512,7 @@ struct ipmi_oem_command oem_inventec[] =
       IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
       ipmi_oem_inventec_update_firmware
     },
+#endif
 #if 0
     /* cannot verify */
     {

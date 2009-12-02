@@ -435,6 +435,7 @@ subsequently Dell Xanadu2).
 This OEM command will set the system guid.  Command confirmed to work
 on Inventec 5441 (and subsequently Dell Xanadu2).
 \}
+.if 0 \{
 .TP
 .B get-firmware-update-config
 This OEM command will get the current firmware update configuration on the
@@ -458,12 +459,14 @@ chosen.  Command confirmed to work on Inventec 5441 (and subsequently
 Dell Xanadu2).  After setting these configuration parameters,
 typically a user will want to execute the \fIupdate-firmware\fR command
 listed below.
+\}
 .if 0 \{
 .TP
 .B get-firmware-information
 This OEM command will get current firmware information.  Command
 confirmed to work on Inventec 5441 (and subsequently Dell Xanadu2).
 \}
+.if 0 \{
 .TP
 .B update-firmware <tftp|ftp|http> [config=preserve|nopreserve]
 This OEM command will inform the motherboard to perform a firmware
@@ -476,6 +479,7 @@ support, or possibly requirement.  The
 Xanadu2.  If the verbose option is set, progress will be output with
 information that is available.  Command confirmed to work on Inventec
 5441 (and subsequently Dell Xanadu2).
+\}
 .TP
 .B read-eeprom \fIat24c256n\fR
 This OEM command will read the specified eeprom. Command confirmed to

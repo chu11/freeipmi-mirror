@@ -39,15 +39,21 @@ int ipmi_oem_inventec_set_web_server_config (ipmi_oem_state_data_t *state_data);
 int ipmi_oem_inventec_get_power_management_config (ipmi_oem_state_data_t *state_data);
 int ipmi_oem_inventec_set_power_management_config (ipmi_oem_state_data_t *state_data);
 
+#if 0
+/* waiting for verification from Dell */
 int ipmi_oem_inventec_get_firmware_update_config (ipmi_oem_state_data_t *state_data);
 int ipmi_oem_inventec_set_firmware_update_config (ipmi_oem_state_data_t *state_data);
+#endif
 
 #if 0
 /* cannot verify */
 int ipmi_oem_inventec_get_firmware_information (ipmi_oem_state_data_t *state_data);
 #endif
 
+#if 0
+/* waiting for verification from Dell */
 int ipmi_oem_inventec_update_firmware (ipmi_oem_state_data_t *state_data);
+#endif
 
 #if 0
 /* cannot verify */
