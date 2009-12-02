@@ -28,7 +28,8 @@ Intel SR870BN4/Tiger 4
 Supermicro H8QME with SIMSO daughter card
 Sun X4140
 Inventec 5441/Dell Xanadu2
-Dell Poweredge R610/R710
+Dell Poweredge R610
+Dell Poweredge R710
 
 I have had some temporary access to the following for a short time:
 
@@ -287,7 +288,7 @@ error.  This bug is confirmed to be fixed on newer firmware.
 Supermicro X8DTH: SOL payload sizes are reported incorrectly.
 Resolved with a workaround to skip payload size checks.
 
-Dell Poweredge R610/R710: When a SOL session is closed by another
+Dell Poweredge R610, R710: When a SOL session is closed by another
 session, the initial SOL session is not given a "SOL is deactivating"
 flag in a BMC to Remote Console packet.  Not a severe issue, since the
 SOL session will eventually timeout.  No current resolution.
@@ -393,11 +394,11 @@ Forgotten/Undocumented Motherboard(s): Setting a password using IPMI
 2.0 extensions (i.e. up to 20 bytes in length) does not appear to
 work.  User must configure password using IPMI 1.5 formatted payloads.
 
-Dell Poweredge R610/R710: User cannot be enabled/disabled until after
+Dell Poweredge R610, R710: User cannot be enabled/disabled until after
 a non-null password has been configured.  Added workaround for this
 specific case.
 
-Dell Poweredge R610/R710: Default Authentication Type Enables
+Dell Poweredge R610, R710: Default Authentication Type Enables
 configure several OEM authentications on.  However, the motherboard
 does not support these OEM authentications, and any subsequent
 configuration of them results in a bad parameter completion code
@@ -406,15 +407,15 @@ allowing bmc-config to "absorb" future configuration values, so that
 multiple fields can be configured simultaneously instead of just one
 field.
 
-Dell Poweredge R610/R710: Read only fields return an error code of
+Dell Poweredge R610, R710: Read only fields return an error code of
 0xD5 (request parameter not supported) instead of 0x82 (read only
 parameter).  No current resolution.
 
-Dell Poweredge R610/R710: User IPMI messaging being enabled/disabled
+Dell Poweredge R610, R710: User IPMI messaging being enabled/disabled
 does not seem to affect authentication and/or execution of IPMI
 commands.  No current resolution.
 
-Dell Poweredge R610/R710: ARP response configuration is not available
+Dell Poweredge R610, R710: ARP response configuration is not available
 even though the BMC ARP responds.  No current resolution.
 
 Inventec 5441/Dell Xanadu2: Configuring the Subnet Mask will also lead
@@ -429,7 +430,7 @@ Inventec 5441/Dell Xanadu2: Some FRU data has invalid checksums.
 Resolved with workaround to ignore the checksum (and pray for the
 best).
 
-Dell Poweredge R610/R710: Some FRU data has invalid checksums.
+Dell Poweredge R610, R710: Some FRU data has invalid checksums.
 Resolved with workaround to ignore the checksum (and pray for the
 best).
 

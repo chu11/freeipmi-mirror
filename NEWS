@@ -67,7 +67,8 @@ o ipmi-sel
   - Support --no-sensor-type-output option.
   - Support --interpret-oem-data option.
   - Support Inventec 5441/Dell Xanadu2 OEM SEL records.
-  - Support Dell Poweredge R610/R710 OEM SEL records.
+  - Support Dell Poweredge R610 OEM SEL records.
+  - Support Dell Poweredge R710 OEM SEL records.
   - Support --comma-separated-output option.
   - Support --no-header-output option.
   - Rename --delete-all to --clear for consistency to IPMI spec.
@@ -116,7 +117,8 @@ o ipmi-sensors
   - Support --entity-sensor-names option.
   - Support --no-sensor-type-output option.
   - Support --interpret-oem-data option.
-  - Support Dell Poweredge R610/R710 OEM sensors.
+  - Support Dell Poweredge R610 OEM sensors.
+  - Support Dell Poweredge R710 OEM sensors.
   - Support Supermicro X8DTH OEM sensors.
   - Do not output Sensor Reading for discrete sensors under verbose
     mode (because the result is always "N/A").
