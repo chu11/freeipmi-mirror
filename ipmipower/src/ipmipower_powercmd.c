@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.195 2009-11-04 18:45:40 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.196 2009-12-02 17:59:20 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -1374,7 +1374,8 @@ _check_ipmi_1_5_authentication_capabilities (ipmipower_powercmd_t ip,
 
   /* IPMI Workaround (achu)
    *
-   * Not discovered yet, assume will happen.
+   * Not discovered yet, assume some motherboard will have it some
+   * day.
    *
    * Authentication capabilities flags are not listed properly in the
    * response.  The workaround is to skip these checks.

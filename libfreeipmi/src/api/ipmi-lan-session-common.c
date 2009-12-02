@@ -709,18 +709,6 @@ _ipmi_lan_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
       goto cleanup;
     }
 
-  /* IPMI Workaround (achu)
-   *
-   * Discovered on Dell PowerEdge 2850
-   *
-   * When per-message authentication is disabled, and we send a
-   * message to a remote machine with auth-type none, the Dell
-   * motherboard will respond with a message with the auth-type used
-   * in the activate session stage and the appropriate authcode. So
-   * here is our second session-authcode check attempt under these
-   * circumstances.
-   */
-
   if (check_authentication_code)
     {
       if ((ret = ipmi_lan_check_session_authentication_code (ctx->io.outofband.rs.obj_lan_session_hdr,
@@ -734,6 +722,18 @@ _ipmi_lan_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
           API_ERRNO_TO_API_ERRNUM (ctx, errno);
           goto cleanup;
         }
+      
+      /* IPMI Workaround (achu)
+       *
+       * Discovered on Dell PowerEdge 2850
+       *
+       * When per-message authentication is disabled, and we send a
+       * message to a remote machine with auth-type none, the Dell
+       * motherboard will respond with a message with the auth-type used
+       * in the activate session stage and the appropriate authcode. So
+       * here is our second session-authcode check attempt under these
+       * circumstances.
+       */
       
       if ((internal_workaround_flags & IPMI_INTERNAL_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE)
           && !ret)
@@ -1414,7 +1414,8 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
 
   /* IPMI Workaround (achu)
    *
-   * Not discovered yet, assume will happen.
+   * Not discovered yet, assume some motherboard will have it some
+   * day.
    *
    * Authentication capabilities flags are not listed properly in the
    * response.  The workaround is to skip these checks.
