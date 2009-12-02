@@ -102,7 +102,8 @@ ipmi_oem_supermicro_extra_firmware_info (ipmi_oem_state_data_t *state_data)
                                                    rs_len,
                                                    19,
                                                    IPMI_CMD_OEM_SUPERMICRO_EXTRA_FIRMWARE_INFO,
-                                                   IPMI_NET_FN_OEM_SUPERMICRO_PEPPERCON_RS) < 0)
+                                                   IPMI_NET_FN_OEM_SUPERMICRO_PEPPERCON_RS,
+                                                   NULL) < 0)
     goto cleanup;
 
   firmware_major_version = bytes_rs[2];
@@ -194,7 +195,8 @@ ipmi_oem_supermicro_reset_intrusion (ipmi_oem_state_data_t *state_data)
                                                    rs_len,
                                                    2,
                                                    IPMI_CMD_OEM_SUPERMICRO_RESET_INTRUSION,
-                                                   IPMI_NET_FN_OEM_SUPERMICRO_GENERIC_RS) < 0)
+                                                   IPMI_NET_FN_OEM_SUPERMICRO_GENERIC_RS,
+                                                   NULL) < 0)
     goto cleanup;
 
   rv = 0;

@@ -338,7 +338,8 @@ _inventec_get_reservation (ipmi_oem_state_data_t *state_data,
                                                    rs_len,
                                                    3,
                                                    IPMI_CMD_OEM_INVENTEC_RESERVED_EXTENDED_CONFIGUATION,
-                                                   IPMI_NET_FN_OEM_INVENTEC_GENERIC_RS) < 0)
+                                                   IPMI_NET_FN_OEM_INVENTEC_GENERIC_RS,
+                                                   NULL) < 0)
     goto cleanup;
   
   (*reservation_id) = bytes_rs[2];
@@ -425,7 +426,8 @@ _ipmi_oem_inventec_get_extended_config_value (ipmi_oem_state_data_t *state_data,
                                                    rs_len,
                                                    6 + value_return_length,
                                                    IPMI_CMD_OEM_INVENTEC_GET_EXTENDED_CONFIGURATION,
-                                                   IPMI_NET_FN_OEM_INVENTEC_GENERIC_RS) < 0)
+                                                   IPMI_NET_FN_OEM_INVENTEC_GENERIC_RS,
+                                                   NULL) < 0)
     goto cleanup;
 
   (*value) = 0;
@@ -524,7 +526,8 @@ _ipmi_oem_inventec_get_extended_config_string (ipmi_oem_state_data_t *state_data
                                                    rs_len,
                                                    6,
                                                    IPMI_CMD_OEM_INVENTEC_GET_EXTENDED_CONFIGURATION,
-                                                   IPMI_NET_FN_OEM_INVENTEC_GENERIC_RS) < 0)
+                                                   IPMI_NET_FN_OEM_INVENTEC_GENERIC_RS,
+                                                   NULL) < 0)
     goto cleanup;
 
   memset (buf, '\0', buflen);
@@ -634,7 +637,8 @@ _ipmi_oem_inventec_set_extended_config_value (ipmi_oem_state_data_t *state_data,
                                                    rs_len,
                                                    2,
                                                    IPMI_CMD_OEM_INVENTEC_SET_EXTENDED_CONFIGURATION,
-                                                   IPMI_NET_FN_OEM_INVENTEC_GENERIC_RS) < 0)
+                                                   IPMI_NET_FN_OEM_INVENTEC_GENERIC_RS,
+                                                   NULL) < 0)
     goto cleanup;
 
   rv = 0;
@@ -714,7 +718,8 @@ _ipmi_oem_inventec_set_extended_config_string (ipmi_oem_state_data_t *state_data
                                                    rs_len,
                                                    2,
                                                    IPMI_CMD_OEM_INVENTEC_SET_EXTENDED_CONFIGURATION,
-                                                   IPMI_NET_FN_OEM_INVENTEC_GENERIC_RS) < 0)
+                                                   IPMI_NET_FN_OEM_INVENTEC_GENERIC_RS,
+                                                   NULL) < 0)
     goto cleanup;
 
   rv = 0;
@@ -1006,7 +1011,8 @@ ipmi_oem_inventec_set_mac_address (ipmi_oem_state_data_t *state_data)
                                                    rs_len,
                                                    2,
                                                    cmd,
-                                                   IPMI_NET_FN_OEM_GROUP_RS) < 0)
+                                                   IPMI_NET_FN_OEM_GROUP_RS,
+                                                   NULL) < 0)
     goto cleanup;
   
   rv = 0;
@@ -2335,7 +2341,8 @@ ipmi_oem_inventec_update_firmware (ipmi_oem_state_data_t *state_data)
                                                    rs_len,
                                                    2,
                                                    IPMI_CMD_OEM_INVENTEC_UPDATE_FIRMARE,
-                                                   IPMI_NET_FN_FIRMWARE_RS) < 0)
+                                                   IPMI_NET_FN_FIRMWARE_RS,
+                                                   NULL) < 0)
     goto cleanup;
 
   task_id = bytes_rs[2];
@@ -2397,7 +2404,8 @@ ipmi_oem_inventec_update_firmware (ipmi_oem_state_data_t *state_data)
                                                        rs_len,
                                                        2,
                                                        IPMI_CMD_OEM_INVENTEC_GET_UPDATE_STATUS,
-                                                       IPMI_NET_FN_FIRMWARE_RS) < 0)
+                                                       IPMI_NET_FN_FIRMWARE_RS,
+                                                       NULL) < 0)
         goto cleanup;
 
       update_status = bytes_rs[2];
@@ -2599,7 +2607,8 @@ ipmi_oem_inventec_restore_to_defaults (ipmi_oem_state_data_t *state_data)
                                                    rs_len,
                                                    3,
                                                    IPMI_CMD_OEM_INVENTEC_RESTORE_TO_DEFAULTS,
-                                                   IPMI_NET_FN_OEM_INVENTEC_GENERIC_RS) < 0)
+                                                   IPMI_NET_FN_OEM_INVENTEC_GENERIC_RS,
+                                                   NULL) < 0)
     goto cleanup;
   
   task_id = bytes_rs[2];
@@ -2630,7 +2639,8 @@ ipmi_oem_inventec_restore_to_defaults (ipmi_oem_state_data_t *state_data)
 						       rs_len,
 						       3,
 						       IPMI_CMD_OEM_INVENTEC_RESTORE_TO_DEFAULTS,
-						       IPMI_NET_FN_OEM_INVENTEC_GENERIC_RS) < 0)
+						       IPMI_NET_FN_OEM_INVENTEC_GENERIC_RS,
+                                                       NULL) < 0)
 	goto cleanup;
 
       if (bytes_rs[2] == IPMI_OEM_INVENTEC_GET_RESTORE_STATUS_RESTORE_COMPLETE)
@@ -2741,7 +2751,8 @@ ipmi_oem_inventec_set_system_guid (ipmi_oem_state_data_t *state_data)
                                                    rs_len,
                                                    2,
                                                    IPMI_CMD_OEM_INVENTEC_SET_SYSTEM_GUID,
-                                                   IPMI_NET_FN_OEM_INVENTEC_GENERIC_RS) < 0)
+                                                   IPMI_NET_FN_OEM_INVENTEC_GENERIC_RS,
+                                                   NULL) < 0)
     goto cleanup;
   
   rv = 0;

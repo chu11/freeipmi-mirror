@@ -43,7 +43,8 @@ ipmi_oem_check_response_and_completion_code (ipmi_oem_state_data_t *state_data,
                                              unsigned int bytes_rs_len,
                                              unsigned int expected_bytes_rs_len,
                                              uint8_t cmd,
-                                             uint8_t netfn)
+                                             uint8_t netfn,
+                                             Ipmi_oem_comp_code_strerror comp_code_strerror)
 {
   const uint8_t *bytes_rs_ptr = bytes_rs;
 
@@ -68,17 +69,31 @@ ipmi_oem_check_response_and_completion_code (ipmi_oem_state_data_t *state_data,
  output_comp_code_error:  
   if (bytes_rs_ptr[1] != IPMI_COMP_CODE_COMMAND_SUCCESS)
     {
-      char errbuf[IPMI_OEM_ERR_BUFLEN];
+      char errbuf[IPMI_OEM_ERR_BUFLEN + 1];
       
-      memset (errbuf, '\0', IPMI_OEM_ERR_BUFLEN);
-      if (ipmi_completion_code_strerror_r (cmd, /* cmd */
-                                           netfn, /* network function */
-                                           bytes_rs_ptr[1], /* completion code */
-                                           errbuf,
-                                           IPMI_OEM_ERR_BUFLEN) < 0)
+      memset (errbuf, '\0', IPMI_OEM_ERR_BUFLEN + 1);
+
+      if (comp_code_strerror)
         {
-          pstdout_perror (state_data->pstate, "ipmi_completion_code_strerror_r");
-          snprintf (errbuf, IPMI_OEM_ERR_BUFLEN, "completion-code = 0x%X", bytes_rs_ptr[1]);
+          if (comp_code_strerror (state_data,
+                                  bytes_rs_ptr[1], /* completion code */
+                                  cmd,
+                                  netfn,
+                                  errbuf,
+                                  IPMI_OEM_ERR_BUFLEN) < 0)
+            snprintf (errbuf, IPMI_OEM_ERR_BUFLEN, "completion-code = 0x%X", bytes_rs_ptr[1]);
+        }
+      else
+        {
+          if (ipmi_completion_code_strerror_r (cmd, /* cmd */
+                                               netfn, /* network function */
+                                               bytes_rs_ptr[1], /* completion code */
+                                               errbuf,
+                                               IPMI_OEM_ERR_BUFLEN) < 0)
+            {
+              pstdout_perror (state_data->pstate, "ipmi_completion_code_strerror_r");
+              snprintf (errbuf, IPMI_OEM_ERR_BUFLEN, "completion-code = 0x%X", bytes_rs_ptr[1]);
+            }
         }
       
       pstdout_fprintf (state_data->pstate,

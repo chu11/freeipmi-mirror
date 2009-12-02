@@ -1,6 +1,8 @@
 2009-12-02  Albert Chu <chu11@llnl.gov>
 
 	* Fix comments.
+
+	* ipmi-oem/: Re-architect for oem command specific completion codes.
 	
 2009-12-01  Albert Chu <chu11@llnl.gov>
 

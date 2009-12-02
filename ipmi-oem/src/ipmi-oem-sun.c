@@ -270,7 +270,8 @@ ipmi_oem_sun_get_led (ipmi_oem_state_data_t *state_data)
                                                        rs_len,
                                                        3,
                                                        IPMI_CMD_OEM_SUN_GET_LED,
-                                                       IPMI_NET_FN_OEM_GROUP_RS) < 0)
+                                                       IPMI_NET_FN_OEM_GROUP_RS,
+                                                       NULL) < 0)
         goto cleanup;
       
       if (!header_output_flag)
@@ -593,7 +594,8 @@ ipmi_oem_sun_set_led (ipmi_oem_state_data_t *state_data)
                                                    rs_len,
                                                    2,
                                                    IPMI_CMD_OEM_SUN_SET_LED,
-                                                   IPMI_NET_FN_OEM_GROUP_RS) < 0)
+                                                   IPMI_NET_FN_OEM_GROUP_RS,
+                                                   NULL) < 0)
     goto cleanup;
  
   rv = 0;

@@ -28,12 +28,20 @@
 #define IPMI_OEM_FMT_BUFLEN     1024
 #define IPMI_OEM_STR_BUFLEN     2048
 
+typedef int (*Ipmi_oem_comp_code_strerror)(ipmi_oem_state_data_t *state_data,
+                                           uint8_t comp_code,
+                                           uint8_t cmd,
+                                           uint8_t netfn,
+                                           char *errbuf,
+                                           unsigned int errbuflen);
+
 int ipmi_oem_check_response_and_completion_code (ipmi_oem_state_data_t *state_data,
                                                  const void *bytes_rs,
                                                  unsigned int bytes_rs_len,
                                                  unsigned int expected_bytes_rs_len,
                                                  uint8_t cmd,
-                                                 uint8_t netfn);
+                                                 uint8_t netfn,
+                                                 Ipmi_oem_comp_code_strerror comp_code_strerror);
 
 int ipmi_oem_parse_key_value (ipmi_oem_state_data_t *state_data,
                               unsigned int option_num,

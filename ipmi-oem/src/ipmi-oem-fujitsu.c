@@ -284,7 +284,8 @@ _ipmi_oem_get_power_source (ipmi_oem_state_data_t *state_data,
                                                    rs_len,
                                                    7,
                                                    IPMI_CMD_OEM_FUJITSU_POWER,
-                                                   IPMI_NET_FN_OEM_GROUP_RS) < 0)
+                                                   IPMI_NET_FN_OEM_GROUP_RS,
+                                                   NULL) < 0)
     goto cleanup;
 
   (*source) = bytes_rs[6];
@@ -516,7 +517,8 @@ ipmi_oem_fujitsu_get_remote_storage_status (ipmi_oem_state_data_t *state_data)
                                                    rs_len,
                                                    6,
                                                    IPMI_CMD_OEM_FUJITSU_GET_REMOTE_STORAGE_CONNECTION_OR_STATUS,
-                                                   IPMI_NET_FN_OEM_FUJITSU_GENERIC_RS) < 0)
+                                                   IPMI_NET_FN_OEM_FUJITSU_GENERIC_RS,
+                                                   NULL) < 0)
     goto cleanup;
 
   storage_status = bytes_rs[4];
@@ -682,7 +684,8 @@ ipmi_oem_fujitsu_get_system_status (ipmi_oem_state_data_t *state_data)
                                                    rs_len,
                                                    9,
                                                    IPMI_CMD_OEM_FUJITSU_SYSTEM,
-                                                   IPMI_NET_FN_OEM_GROUP_RS) < 0)
+                                                   IPMI_NET_FN_OEM_GROUP_RS,
+                                                   NULL) < 0)
     goto cleanup;
 
   /* achu: the "Notifications" are dependent on the timestamp input,
@@ -902,7 +905,8 @@ ipmi_oem_fujitsu_get_eeprom_version_info (ipmi_oem_state_data_t *state_data)
                                                    rs_len,
                                                    21,
                                                    IPMI_CMD_OEM_FUJITSU_SYSTEM,
-                                                   IPMI_NET_FN_OEM_GROUP_RS) < 0)
+                                                   IPMI_NET_FN_OEM_GROUP_RS,
+                                                   NULL) < 0)
     goto cleanup;
 
   status = bytes_rs[5];
@@ -1041,7 +1045,8 @@ ipmi_oem_fujitsu_get_identify_led (ipmi_oem_state_data_t *state_data)
                                                    rs_len,
                                                    6,
                                                    IPMI_CMD_OEM_FUJITSU_SYSTEM,
-                                                   IPMI_NET_FN_OEM_GROUP_RS) < 0)
+                                                   IPMI_NET_FN_OEM_GROUP_RS,
+                                                   NULL) < 0)
     goto cleanup;
 
   state = (bytes_rs[5] & IPMI_OEM_FUJITSU_IDENTIFY_LED_BITMASK);
@@ -1134,7 +1139,8 @@ ipmi_oem_fujitsu_set_identify_led (ipmi_oem_state_data_t *state_data)
                                                    rs_len,
                                                    5,
                                                    IPMI_CMD_OEM_FUJITSU_SYSTEM,
-                                                   IPMI_NET_FN_OEM_GROUP_RS) < 0)
+                                                   IPMI_NET_FN_OEM_GROUP_RS,
+                                                   NULL) < 0)
     goto cleanup;
 
   rv = 0;
@@ -1216,7 +1222,8 @@ ipmi_oem_fujitsu_get_error_led (ipmi_oem_state_data_t *state_data)
                                                    rs_len,
                                                    6,
                                                    IPMI_CMD_OEM_FUJITSU_SYSTEM,
-                                                   IPMI_NET_FN_OEM_GROUP_RS) < 0)
+                                                   IPMI_NET_FN_OEM_GROUP_RS,
+                                                   NULL) < 0)
     goto cleanup;
 
   state = bytes_rs[5];
