@@ -194,7 +194,8 @@ Depending on configuration settings, a K_g key, privilege level,
 authentication type, cipher suite id, or protocol version may need to
 be specified.  Some vendors may have not implemented IPMI properly and
 a vendor specific workaround may also be necessary.  See tool manpages
-for more information and general trouble-shooting information.
+for more information, examples, and general trouble-shooting
+information.
 
 .SH "Configuration"
 In order to avoid typing in a long list of command line options to
