@@ -24,6 +24,19 @@
 extern "C" {
 #endif
 
+/******************************************* 
+ * Fujitsu                                 *
+ *******************************************/
+
+/*
+ * Fujitsu RX100 S5
+ *
+ * http://manuals.ts.fujitsu.com/file/4390/irmc_s2-en.pdf
+ */
+/* IPMI_CMD_OEM_FUJITSU_BIOS - w/ GET_CPU_INFO Command Specifier */
+#define IPMI_COMP_CODE_OEM_FUJITSU_UNPOPULATED_CPU_SOCKET 0x01
+#define IPMI_COMP_CODE_OEM_FUJITSU_UNPOPULATED_CPU_SOCKET_STR \
+  "Unpopulated CPU Socket"
 
 #ifdef __cplusplus
 }
