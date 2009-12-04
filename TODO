@@ -67,6 +67,10 @@ if user inputs hostname of localhost, do inband not outofband?
 
 config tools
 ------------
+rework workaronds
+- pass around sections into callbacks so they can do the search/find, etc.  No need to continue adding more cruft
+into each state_data.
+
 collapse into one allmight tool?
 - user must pick section
 - bmc, pef, sensor, chassis, all
