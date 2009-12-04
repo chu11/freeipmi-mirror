@@ -60,6 +60,10 @@ typedef struct ipmi_pef_config_state_data
   ipmi_ctx_t ipmi_ctx;
   pstdout_state_t pstate;
 
+  /* achu: workaround for OEM compliance issue, see alert policy section */
+  unsigned int alert_policy_sections_len;
+  struct config_section **alert_policy_sections;
+
   /* achu: caching to make ipmi-pef-config work more quickly */
   int lan_channel_number_initialized;
   uint8_t lan_channel_number;
@@ -71,6 +75,7 @@ typedef struct ipmi_pef_config_state_data
   uint8_t number_of_alert_policy_entries;
   int number_of_event_filters_initialized;
   uint8_t number_of_event_filters;
+
 } ipmi_pef_config_state_data_t;
 
 #endif

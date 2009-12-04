@@ -423,6 +423,15 @@ to the "Default Gateway IP Address" to be configured (i.e. there is
 some type of memory corruption, memory something that causes both to
 be configured via one IPMI command).  No current resolution.
 
+ipmi-pef-config
+---------------
+
+Fujitsu RX 100: Alert Policy configurations cannot be configured
+"piecemeal".  If it's not configured perfectly and simultaneously,
+every configuration will result in a completion code of 0xCC (Invalid
+data field in Request).  This is possibly not a compliance issue, however
+it leads to difficult development.  [config-1]
+
 ipmi-fru
 --------
 
@@ -551,3 +560,8 @@ think the completion codes above don't give an accurate description of
 what's going on (assuming they are supposed to represent "this sensor
 isn't available on this motherboard").
 
+[config-1]
+
+To see a discussion on why this implementation is poor, please see
+"Configuration tool callback design" in the freeipmi-coding.txt
+document.

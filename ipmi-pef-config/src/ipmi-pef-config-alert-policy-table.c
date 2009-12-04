@@ -222,14 +222,112 @@ _set_alert_policy_table (struct ipmi_pef_config_state_data *state_data,
                          "ipmi_cmd_set_pef_configuration_parameters_alert_policy_table: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+      /* IPMI Workaround
+       *
+       * Fujitsu RX 100 S5
+       *
+       * All fields have to be applied simultaneously, the motherboard
+       * does not appear to like configuration of one field of a time,
+       * always leading to invalid input errors.
+       */
+      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+          && (ipmi_check_completion_code (obj_cmd_rs,
+                                          IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1))
+        {
+          struct config_section *section = NULL;
+          struct config_keyvalue *kv;
+          unsigned int i;
+          
+          for (i = 0; i < state_data->alert_policy_sections_len; i++)
+            {
+              if (!strcasecmp (section_name, state_data->alert_policy_sections[i]->section_name))
+                {
+                  section = state_data->alert_policy_sections[i];
+                  break;
+                }
+            }
+
+          /* shouldn't be possible */
+          if (!section)
+            goto cleanup;
+
+          if ((kv = config_find_keyvalue (state_data->pstate,
+                                          section,
+                                          "Policy_Type")))
+            apt->policy_type = policy_type_number (kv->value_input);
+
+          if ((kv = config_find_keyvalue (state_data->pstate,
+                                          section,
+                                          "Policy_Enabled")))
+            apt->policy_enabled = same (kv->value_input, "yes");
+
+          if ((kv = config_find_keyvalue (state_data->pstate,
+                                          section,
+                                          "Policy_Number")))
+            apt->policy_number = atoi (kv->value_input);
+
+          if ((kv = config_find_keyvalue (state_data->pstate,
+                                          section,
+                                          "Destination_Selector")))
+            apt->destination_selector = atoi (kv->value_input);
+          
+          if ((kv = config_find_keyvalue (state_data->pstate,
+                                          section,
+                                          "Channel_Number")))
+            apt->channel_number = atoi (kv->value_input);
+
+          if ((kv = config_find_keyvalue (state_data->pstate,
+                                          section,
+                                          "Alert_String_Set_Selector")))
+            apt->alert_string_set_selector = atoi (kv->value_input);
+          
+          if ((kv = config_find_keyvalue (state_data->pstate,
+                                          section,
+                                          "Event_Specific_Alert_String")))
+            apt->event_specific_alert_string = same (kv->value_input, "yes");
+
+          if (state_data->prog_data->args->config_args.common.debug)
+            pstdout_fprintf (state_data->pstate,
+                             stderr,
+                             "ipmi_cmd_set_pef_configuration_parameters_alert_policy_table: attempting workaround\n");
+
+          if (ipmi_cmd_set_pef_configuration_parameters_alert_policy_table (state_data->ipmi_ctx,
+                                                                            alert_policy_entry_number,
+                                                                            apt->policy_type,
+                                                                            apt->policy_enabled,
+                                                                            apt->policy_number,
+                                                                            apt->destination_selector,
+                                                                            apt->channel_number,
+                                                                            apt->alert_string_set_selector,
+                                                                            apt->event_specific_alert_string,
+                                                                            obj_cmd_rs) < 0)
+            {
+              if (state_data->prog_data->args->config_args.common.debug)
+                pstdout_fprintf (state_data->pstate,
+                                 stderr,
+                                 "ipmi_cmd_set_pef_configuration_parameters_alert_policy_table: %s\n",
+                                 ipmi_ctx_errormsg (state_data->ipmi_ctx));
+
+              if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+                                                          obj_cmd_rs,
+                                                          &ret))
+                rv = ret;
+
+              goto cleanup;
+            }
+
+          /* success */
+          goto out;
+        }
+      else if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
     }
 
+ out:
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
