@@ -1,3 +1,7 @@
+0.7.16 - xx/xx/xx
+-----------------
+o Support workaround for Alert Policy config on Fujitsu motherboards.
+
 0.7.16 - 11/30/09
 -----------------
 o In ipmi-oem, add additional Fujitsu OEM support.
