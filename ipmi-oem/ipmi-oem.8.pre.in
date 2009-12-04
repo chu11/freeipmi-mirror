@@ -519,12 +519,12 @@ entity ID and instance when appropriate.  (Similar to the
 and
 .B ipmimonitoring
 )
-Command confirmed to work on Sun Fire 4100 with ILOM.
+Command confirmed to work on Sun Fire 4140 with ILOM.
 .TP
 .B set-led \fIrecord_id\fR \fIoff|on|standby|slow|fast\fR
 This OEM command will configure LED modes.  (See \fIget\-led\fR above
 for description on LED modes.)  Command confirmed to work on Sun Fire
-4100 with ILOM.
+4140 with ILOM.
 .RE
 .TP
 .B Supermicro
