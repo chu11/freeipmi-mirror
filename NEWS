@@ -321,6 +321,7 @@ o ipmi-pef-config/pef-config
   - Make output of ipmi-chassis, bmc-info, bmc-device, and info output
     of ipmi-sel, ipmi-sensors, and ipmi-pef-config consistent to
     each other.
+  - Support workaround for Alert Policy config on Fujitsu motherboards.
   - Support ability to report read only field error.
   - Support ability to report not supported field error.
   - Support additional options in FreeIPMI config file.
