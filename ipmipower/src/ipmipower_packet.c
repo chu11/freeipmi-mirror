@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.123 2009-08-17 23:20:22 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.124 2009-12-04 18:37:35 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -1333,7 +1333,7 @@ ipmipower_packet_errmsg (ipmipower_powercmd_t ip, packet_type_t pkt)
         }
       else if (pkt == AUTHENTICATION_CAPABILITIES_RES
                && cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0
-               && comp_code == IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD)
+               && comp_code == IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST)
         return (MSG_TYPE_IPMI_2_0_UNAVAILABLE);
       else if (pkt == GET_SESSION_CHALLENGE_RES
                && (comp_code == IPMI_COMP_CODE_INVALID_USERNAME

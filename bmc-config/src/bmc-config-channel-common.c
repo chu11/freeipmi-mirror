@@ -437,7 +437,7 @@ _enable_user_level_authentication_commit (const char *section_name,
                                   &comp_code)) != CONFIG_ERR_SUCCESS)
     {
       if (ret == CONFIG_ERR_NON_FATAL_ERROR_INVALID_UNSUPPORTED_CONFIG
-          && comp_code == IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD)
+          && comp_code == IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST)
         ret = CONFIG_ERR_NON_FATAL_ERROR_NOT_SUPPORTED;
       return (ret);
     }

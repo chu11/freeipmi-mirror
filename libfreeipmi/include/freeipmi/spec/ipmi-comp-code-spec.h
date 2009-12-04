@@ -34,8 +34,8 @@ extern "C" {
   "Node Busy. Command could not be processed because command " \
   "processing resources are temporarily unavailable."
 
-#define IPMI_COMP_CODE_COMMAND_INVALID                               0xC1
-#define IPMI_COMP_CODE_COMMAND_INVALID_STR \
+#define IPMI_COMP_CODE_INVALID_COMMAND                               0xC1
+#define IPMI_COMP_CODE_INVALID_COMMAND_STR \
   "Invalid Command. Used to indicate an unrecognized or unsupported command."
 
 
@@ -87,20 +87,20 @@ extern "C" {
 #define IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT_STR \
   "Requested Sensor, data, or record not present."
 
-#define IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD                    0xCC
-#define IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD_STR \
+#define IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST                 0xCC
+#define IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST_STR \
   "Invalid data field in Request"
 
 #define IPMI_COMP_CODE_COMMAND_ILLEGAL_FOR_SENSOR_OR_RECORD_TYPE     0xCD
 #define IPMI_COMP_CODE_COMMAND_ILLEGAL_FOR_SENSOR_OR_RECORD_TYPE_STR \
   "Command illegal for specified sensor or record type."
 
-#define IPMI_COMP_CODE_COMMAND_CANNOT_RESPOND                        0xCE
-#define IPMI_COMP_CODE_COMMAND_CANNOT_RESPOND_STR \
+#define IPMI_COMP_CODE_COMMAND_RESPONSE_COULD_NOT_BE_PROVIDED        0xCE
+#define IPMI_COMP_CODE_COMMAND_RESPONSE_COULD_NOT_BE_PROVIDED_STR \
   "Command response could not be provided."
 
-#define IPMI_COMP_CODE_COMMAND_DUPLICATE_REQUEST                     0xCF
-#define IPMI_COMP_CODE_COMMAND_DUPLICATE_REQUEST_STR                   \
+#define IPMI_COMP_CODE_CANNOT_EXECUTE_DUPLICATE_REQUEST              0xCF
+#define IPMI_COMP_CODE_CANNOT_EXECUTE_DUPLICATE_REQUEST_STR            \
   "Cannot execute duplicated request. This completion code is "        \
   "for devices which cannot return the response that was returned "    \
   "for the original instance of the request. Such devices should "     \
@@ -109,18 +109,18 @@ extern "C" {
   "use this completion code, but returns the 00h completion code in "  \
   "the response to (valid) duplicated requests."
 
-#define IPMI_COMP_CODE_SDR_UPDATE_MODE                               0xD0
-#define IPMI_COMP_CODE_SDR_UPDATE_MODE_STR                     \
+#define IPMI_COMP_CODE_SDR_REPOSITORY_IN_UPDATE_MODE                 0xD0
+#define IPMI_COMP_CODE_SDR_REPOSITORY_IN_UPDATE_MODE_STR       \
   "Command response could not be provided. SDR Repository in " \
   "update mode."
 
-#define IPMI_COMP_CODE_FIRMWARE_UPDATE_MODE                          0xD1
-#define IPMI_COMP_CODE_FIRMWARE_UPDATE_MODE_STR                 \
+#define IPMI_COMP_CODE_DEVICE_IN_FIRMWARE_UPDATE_MODE                0xD1
+#define IPMI_COMP_CODE_DEVICE_IN_FIRMWARE_UPDATE_MODE_STR       \
   "Command response could not be provided. Device in firmware " \
   "update mode."
 
-#define IPMI_COMP_CODE_BMC_INIT_MODE                                 0xD2
-#define IPMI_COMP_CODE_BMC_INIT_MODE_STR                           \
+#define IPMI_COMP_CODE_BMC_INITIALIZATION_IN_PROGRESS                0xD2
+#define IPMI_COMP_CODE_BMC_INITIALIZATION_IN_PROGRESS_STR          \
   "Command response could not be provided. BMC initialization or " \
   "initialization agent in progress."
 

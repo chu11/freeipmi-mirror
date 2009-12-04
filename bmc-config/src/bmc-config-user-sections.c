@@ -138,7 +138,7 @@ _get_user_access (bmc_config_state_data_t *state_data,
 
       if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
           && (ipmi_check_completion_code (obj_cmd_rs,
-                                          IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD) == 1))
+                                          IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1))
         (*username_not_set_yet) = 1;
 
       if (config_is_non_fatal_error (state_data->ipmi_ctx,
@@ -354,7 +354,7 @@ username_checkout (const char *section_name,
 
       if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
           && (ipmi_check_completion_code (obj_cmd_rs,
-                                          IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD) == 1))
+                                          IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1))
         {
           strcpy (username, CONFIG_USERNAME_NOT_SET_YET_STR);
           goto got_data;
@@ -1467,7 +1467,7 @@ sol_payload_access_checkout (const char *section_name,
 
       if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
           && (ipmi_check_completion_code (obj_cmd_rs,
-                                          IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD) == 1))
+                                          IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1))
         {
           if (config_section_update_keyvalue_output (state_data->pstate,
                                                      kv,
@@ -1895,7 +1895,7 @@ serial_session_limit_commit (const char *section_name,
                                &comp_code)) != CONFIG_ERR_SUCCESS)
     {
       if (ret == CONFIG_ERR_NON_FATAL_ERROR_INVALID_UNSUPPORTED_CONFIG
-          && comp_code == IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD)
+          && comp_code == IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST)
         ret = CONFIG_ERR_NON_FATAL_ERROR_NOT_SUPPORTED;
       return (ret);
     }

@@ -96,9 +96,9 @@ api_set_api_errnum_by_bad_response (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
     ctx->errnum = IPMI_ERR_MESSAGE_TIMEOUT;
   else if (ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_NODE_BUSY) == 1
       || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_OUT_OF_SPACE) == 1
-      || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_SDR_UPDATE_MODE) == 1
-      || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_FIRMWARE_UPDATE_MODE) == 1
-      || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_BMC_INIT_MODE) == 1)
+      || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_SDR_REPOSITORY_IN_UPDATE_MODE) == 1
+      || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_DEVICE_IN_FIRMWARE_UPDATE_MODE) == 1
+      || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_BMC_INITIALIZATION_IN_PROGRESS) == 1)
     ctx->errnum = IPMI_ERR_BMC_BUSY;
   else if (ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_INSUFFICIENT_PRIVILEGE_LEVEL) == 1)
     ctx->errnum = IPMI_ERR_PRIVILEGE_LEVEL_INSUFFICIENT;

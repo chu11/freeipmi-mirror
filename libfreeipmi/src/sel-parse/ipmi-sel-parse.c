@@ -1888,7 +1888,7 @@ ipmi_sel_parse_delete_sel_entry (ipmi_sel_parse_ctx_t ctx, uint16_t record_id)
         {
           if (ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
               && (ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1
-                  || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD) == 1))
+                  || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1))
             {
               SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_NOT_FOUND);
               goto cleanup;

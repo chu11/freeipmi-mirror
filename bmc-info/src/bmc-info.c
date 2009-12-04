@@ -676,7 +676,7 @@ display_system_info_common (bmc_info_state_data_t *state_data,
       if (!state_data->prog_data->args->get_system_info
           && ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
           && ipmi_check_completion_code (obj_cmd_first_set_rs,
-                                         IPMI_COMP_CODE_COMMAND_INVALID) == 1)
+                                         IPMI_COMP_CODE_INVALID_COMMAND) == 1)
         {
           rv = 0;
           goto cleanup;
@@ -757,7 +757,7 @@ display_system_info_common (bmc_info_state_data_t *state_data,
           if (!state_data->prog_data->args->get_system_info
               && ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
               && ipmi_check_completion_code (obj_cmd_first_set_rs,
-                                             IPMI_COMP_CODE_COMMAND_INVALID) == 1)
+                                             IPMI_COMP_CODE_INVALID_COMMAND) == 1)
             {
               rv = 0;
               goto cleanup;

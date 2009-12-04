@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_packet.c,v 1.53 2009-08-31 20:33:39 chu11 Exp $
+ *  $Id: ipmiconsole_packet.c,v 1.54 2009-12-04 18:37:35 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -1708,7 +1708,7 @@ ipmiconsole_calculate_errnum (ipmiconsole_ctx_t c,
         }
 
       if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_RS
-          && comp_code == IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD)
+          && comp_code == IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST)
         {
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_IPMI_2_0_UNAVAILABLE);
           return (0);

@@ -1,5 +1,7 @@
 2009-12-04  Albert Chu <chu11@llnl.gov>
 
+	* Update comp code macros to more closely match IPMI spec.
+
 	* Various doc updates.
 	
 2009-12-02  Albert Chu <chu11@llnl.gov>

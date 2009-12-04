@@ -75,7 +75,7 @@ sel_parse_get_reservation_id (ipmi_sel_parse_ctx_t ctx,
        */
       if (ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
           && ipmi_check_completion_code (obj_cmd_rs,
-                                         IPMI_COMP_CODE_COMMAND_INVALID) == 1)
+                                         IPMI_COMP_CODE_INVALID_COMMAND) == 1)
         {
           *reservation_id = 0;
           goto out;

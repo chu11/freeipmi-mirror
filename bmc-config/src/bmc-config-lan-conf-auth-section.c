@@ -552,7 +552,7 @@ _set_authentication_type_enables (bmc_config_state_data_t *state_data,
            */
           if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
               && (ipmi_check_completion_code (obj_cmd_rs,
-                                              IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD) == 1))
+                                              IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1))
             {
               if (state_data->lan_conf_auth_callback_level_oem_proprietary_set)
                 al->callback_level_oem_proprietary = state_data->lan_conf_auth_callback_level_oem_proprietary;

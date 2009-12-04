@@ -219,9 +219,9 @@ _sensor_reading_corner_case_checks (ipmi_sensor_read_ctx_t ctx,
            || (ipmi_check_completion_code (obj_cmd_rs,
                                            IPMI_COMP_CODE_PARAMETER_OUT_OF_RANGE) == 1)
            || (ipmi_check_completion_code (obj_cmd_rs,
-                                           IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD) == 1)
+                                           IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1)
            || (ipmi_check_completion_code (obj_cmd_rs, 
-                                           IPMI_COMP_CODE_COMMAND_CANNOT_RESPOND) == 1)
+                                           IPMI_COMP_CODE_COMMAND_RESPONSE_COULD_NOT_BE_PROVIDED) == 1)
            || (ipmi_check_completion_code (obj_cmd_rs,
                                            IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED) == 1))
     {

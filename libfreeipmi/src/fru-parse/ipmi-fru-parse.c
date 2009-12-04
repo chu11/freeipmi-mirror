@@ -17,7 +17,7 @@
 
 */
 /*****************************************************************************\
- *  $Id: ipmi-fru-parse.c,v 1.13 2009-09-29 21:38:37 chu11 Exp $
+ *  $Id: ipmi-fru-parse.c,v 1.14 2009-12-04 18:37:35 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -428,7 +428,7 @@ _read_fru_data (ipmi_fru_parse_ctx_t ctx,
            */
           if (!num_bytes_read
               && (ipmi_check_completion_code (fru_read_data_rs, IPMI_COMP_CODE_COMMAND_TIMEOUT) == 1
-                  || ipmi_check_completion_code (fru_read_data_rs, IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD) == 1))
+                  || ipmi_check_completion_code (fru_read_data_rs, IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1))
             {
               FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_NO_FRU_INFORMATION);
               goto cleanup;
