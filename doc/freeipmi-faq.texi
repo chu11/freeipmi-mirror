@@ -241,11 +241,11 @@ temporarily removed for servicing.
 
 2) Additional OEM support
 
-FreeIPMI contains support for a number of OEM extensions.  Ipmi-oem
-currently supports OEM command extensions from Dell, Fujitsu,
-Inventec, Sun, and Supermicro.  Ipmi-sensors and Ipmi-sel have are
-capable of interpreting OEM specific sensors or events from Dell,
-Inventec, and Supermicro.
+FreeIPMI contains support for a number of OEM extensions and OEM
+sensors and/or events.  Ipmi-oem currently supports OEM command
+extensions from Dell, Fujitsu, Inventec, Sun, and Supermicro.
+Ipmi-sensors and Ipmi-sel support OEM sensors and/oor events from
+Dell, Inventec, and Supermicro.
 
 3) Easy setup
 
