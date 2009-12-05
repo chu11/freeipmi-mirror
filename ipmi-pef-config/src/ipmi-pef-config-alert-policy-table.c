@@ -234,23 +234,21 @@ _set_alert_policy_table (struct ipmi_pef_config_state_data *state_data,
           && (ipmi_check_completion_code (obj_cmd_rs,
                                           IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1))
         {
-          struct config_section *section = NULL;
+          struct config_section *section;
           struct config_keyvalue *kv;
-          unsigned int i;
           
-          for (i = 0; i < state_data->alert_policy_sections_len; i++)
+          section = state_data->sections;
+          while (section)
             {
-              if (!strcasecmp (section_name, state_data->alert_policy_sections[i]->section_name))
-                {
-                  section = state_data->alert_policy_sections[i];
-                  break;
-                }
+              if (!strcasecmp (section_name, section->section_name))
+                break;
+              section = section->next;
             }
 
           /* shouldn't be possible */
           if (!section)
             goto cleanup;
-
+          
           if ((kv = config_find_keyvalue (state_data->pstate,
                                           section,
                                           "Policy_Type")))

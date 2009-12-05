@@ -534,97 +534,134 @@ _set_authentication_type_enables (bmc_config_state_data_t *state_data,
                          "ipmi_cmd_set_lan_configuration_parameters_authentication_type_enables: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (!IPMI_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
+      /*
+       * IPMI Workaround
+       *
+       * Dell Poweredge R610
+       *
+       * Nodes come default w/ OEM authentication enables turned
+       * on, but you cannot configure them on.  So this always
+       * leads to invalid data errors (0xCC) b/c we are
+       * configuring one field at a time.  So we will "absorb" the
+       * OEM configuration of later fields and try again, hoping
+       * that the user has tried to "right" the badness already
+       * sitting on the motherboard.
+       */
+      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+          && (ipmi_check_completion_code (obj_cmd_rs,
+                                          IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1))
         {
-          /*
-           * IPMI Workaround
-           *
-           * Dell Poweredge R610
-           *
-           * Nodes come default w/ OEM authentication enables turned
-           * on, but you cannot configure them on.  So this always
-           * leads to invalid data errors (0xCC) b/c we are
-           * configuring one field at a time (and continuing
-           * non-this-field to whatever is on the motherboard).  So we
-           * will "absorb" the OEM configuration of later fields and
-           * try again, hoping that the user has tried to "right" the
-           * badness already sitting on the motherboard.
-           */
-          if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
-              && (ipmi_check_completion_code (obj_cmd_rs,
-                                              IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1))
+          struct config_section *section;
+          struct config_keyvalue *kv;
+          
+          section = state_data->sections;
+          while (section)
             {
-              if (state_data->lan_conf_auth_callback_level_oem_proprietary_set)
-                al->callback_level_oem_proprietary = state_data->lan_conf_auth_callback_level_oem_proprietary;
-              if (state_data->lan_conf_auth_user_level_oem_proprietary_set)
-                al->user_level_oem_proprietary = state_data->lan_conf_auth_user_level_oem_proprietary;
-              if (state_data->lan_conf_auth_operator_level_oem_proprietary_set)
-                al->operator_level_oem_proprietary = state_data->lan_conf_auth_operator_level_oem_proprietary;
-              if (state_data->lan_conf_auth_admin_level_oem_proprietary_set)
-                al->admin_level_oem_proprietary = state_data->lan_conf_auth_admin_level_oem_proprietary;
-              if (state_data->lan_conf_auth_oem_level_none_set)
-                al->oem_level_none = state_data->lan_conf_auth_oem_level_none;
-              if (state_data->lan_conf_auth_oem_level_md2_set)
-                al->oem_level_md2 = state_data->lan_conf_auth_oem_level_md2;
-              if (state_data->lan_conf_auth_oem_level_md5_set)
-                al->oem_level_md5 = state_data->lan_conf_auth_oem_level_md5;
-              if (state_data->lan_conf_auth_oem_level_straight_password_set)
-                al->oem_level_straight_password = state_data->lan_conf_auth_oem_level_straight_password;
-              if (state_data->lan_conf_auth_oem_level_oem_proprietary_set)
-                al->oem_level_oem_proprietary = state_data->lan_conf_auth_oem_level_oem_proprietary;
-
-              if (ipmi_cmd_set_lan_configuration_parameters_authentication_type_enables (state_data->ipmi_ctx,
-                                                                                         channel_number,
-                                                                                         al->callback_level_none,
-                                                                                         al->callback_level_md2,
-                                                                                         al->callback_level_md5,
-                                                                                         al->callback_level_straight_password,
-                                                                                         al->callback_level_oem_proprietary,
-                                                                                         al->user_level_none,
-                                                                                         al->user_level_md2,
-                                                                                         al->user_level_md5,
-                                                                                         al->user_level_straight_password,
-                                                                                         al->user_level_oem_proprietary,
-                                                                                         al->operator_level_none,
-                                                                                         al->operator_level_md2,
-                                                                                         al->operator_level_md5,
-                                                                                         al->operator_level_straight_password,
-                                                                                         al->operator_level_oem_proprietary,
-                                                                                         al->admin_level_none,
-                                                                                         al->admin_level_md2,
-                                                                                         al->admin_level_md5,
-                                                                                         al->admin_level_straight_password,
-                                                                                         al->admin_level_oem_proprietary,
-                                                                                         al->oem_level_none,
-                                                                                         al->oem_level_md2,
-                                                                                         al->oem_level_md5,
-                                                                                         al->oem_level_straight_password,
-                                                                                         al->oem_level_oem_proprietary,
-                                                                                         obj_cmd_rs) < 0)
-                {
-                  if (state_data->prog_data->args->config_args.common.debug)
-                    pstdout_fprintf (state_data->pstate,
-                                     stderr,
-                                     "ipmi_cmd_set_lan_configuration_parameters_authentication_type_enables: %s\n",
-                                     ipmi_ctx_errormsg (state_data->ipmi_ctx));
-
-                  if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                              obj_cmd_rs,
-                                                              &ret))
-                    rv = ret;
-
-                  goto cleanup;
-                }
-              
-              /* success!! */
-              goto out;
-
+              if (!strcasecmp (section->section_name, "Lan_Conf_Auth"))
+                break;
+              section = section->next;
             }
-          else if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                           obj_cmd_rs,
-                                                           &ret))
-            rv = ret;
+          
+          /* shouldn't be possible */
+          if (!section)
+            goto cleanup;
+          
+          if ((kv = config_find_keyvalue (state_data->pstate,
+                                          section,
+                                          "Callback_Enable_Auth_Type_OEM_Proprietary")))
+            al->callback_level_oem_proprietary = same (kv->value_input, "yes");
+          
+          if ((kv = config_find_keyvalue (state_data->pstate,
+                                          section,
+                                          "User_Enable_Auth_Type_OEM_Proprietary")))
+            al->user_level_oem_proprietary = same (kv->value_input, "yes");
+          
+          if ((kv = config_find_keyvalue (state_data->pstate,
+                                          section,
+                                          "Operator_Enable_Auth_Type_OEM_Proprietary")))
+            al->operator_level_oem_proprietary = same (kv->value_input, "yes");
+          
+          if ((kv = config_find_keyvalue (state_data->pstate,
+                                          section,
+                                          "Admin_Enable_Auth_Type_OEM_Proprietary")))
+            al->admin_level_oem_proprietary = same (kv->value_input, "yes");
+          
+          if ((kv = config_find_keyvalue (state_data->pstate,
+                                          section,
+                                          "OEM_Enable_Auth_Type_None")))
+            al->oem_level_none = same (kv->value_input, "yes");
+          
+          if ((kv = config_find_keyvalue (state_data->pstate,
+                                          section,
+                                          "OEM_Enable_Auth_Type_MD2")))
+            al->oem_level_md2 = same (kv->value_input, "yes");
+          
+          if ((kv = config_find_keyvalue (state_data->pstate,
+                                          section,
+                                          "OEM_Enable_Auth_Type_MD5")))
+            al->oem_level_md5 = same (kv->value_input, "yes");
+          
+          if ((kv = config_find_keyvalue (state_data->pstate,
+                                          section,
+                                          "OEM_Enable_Auth_Type_Straight_Password")))
+            al->oem_level_straight_password = same (kv->value_input, "yes");
+          
+          if ((kv = config_find_keyvalue (state_data->pstate,
+                                          section,
+                                          "OEM_Enable_Auth_Type_OEM_Proprietary")))
+            al->oem_level_oem_proprietary = same (kv->value_input, "yes");
+          
+          if (ipmi_cmd_set_lan_configuration_parameters_authentication_type_enables (state_data->ipmi_ctx,
+                                                                                     channel_number,
+                                                                                     al->callback_level_none,
+                                                                                     al->callback_level_md2,
+                                                                                     al->callback_level_md5,
+                                                                                     al->callback_level_straight_password,
+                                                                                     al->callback_level_oem_proprietary,
+                                                                                     al->user_level_none,
+                                                                                     al->user_level_md2,
+                                                                                     al->user_level_md5,
+                                                                                     al->user_level_straight_password,
+                                                                                     al->user_level_oem_proprietary,
+                                                                                     al->operator_level_none,
+                                                                                     al->operator_level_md2,
+                                                                                     al->operator_level_md5,
+                                                                                     al->operator_level_straight_password,
+                                                                                     al->operator_level_oem_proprietary,
+                                                                                     al->admin_level_none,
+                                                                                     al->admin_level_md2,
+                                                                                     al->admin_level_md5,
+                                                                                     al->admin_level_straight_password,
+                                                                                     al->admin_level_oem_proprietary,
+                                                                                     al->oem_level_none,
+                                                                                     al->oem_level_md2,
+                                                                                     al->oem_level_md5,
+                                                                                     al->oem_level_straight_password,
+                                                                                     al->oem_level_oem_proprietary,
+                                                                                     obj_cmd_rs) < 0)
+            {
+              if (state_data->prog_data->args->config_args.common.debug)
+                pstdout_fprintf (state_data->pstate,
+                                 stderr,
+                                 "ipmi_cmd_set_lan_configuration_parameters_authentication_type_enables: %s\n",
+                                 ipmi_ctx_errormsg (state_data->ipmi_ctx));
+              
+              if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+                                                          obj_cmd_rs,
+                                                          &ret))
+                rv = ret;
+              
+              goto cleanup;
+            }
+          
+          /* success!! */
+          goto out;
         }
+      else if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+                                                       obj_cmd_rs,
+                                                       &ret))
+        rv = ret;
+
       goto cleanup;
     }
 

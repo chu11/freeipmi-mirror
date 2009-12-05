@@ -48,9 +48,6 @@ _ipmi_pef_config_state_data_init (ipmi_pef_config_state_data_t *state_data)
   state_data->ipmi_ctx = NULL;
   state_data->sections = NULL;
   
-  state_data->alert_policy_sections_len = 0;
-  state_data->alert_policy_sections = NULL;
-
   state_data->lan_channel_number_initialized = 0;
   state_data->number_of_lan_alert_destinations_initialized = 0;
   state_data->number_of_alert_strings_initialized = 0;
@@ -231,51 +228,6 @@ _ipmi_pef_config (pstdout_state_t pstate,
               goto cleanup;
             }
           sstr = sstr->next;
-        }
-    }
-
-  /* Special case(s):
-   *
-   * A) On some motherboards, the "Alert_Policy" fields must be input
-   * all at once.  See workaround details in alert policy section
-   * code.
-   */
-  if (prog_data->args->config_args.action == CONFIG_ACTION_COMMIT)
-    {
-      struct config_section *section;
-      unsigned int alert_policy_count = 0;
-
-      /* First, see how many alert policy sections there are */
-      section = state_data.sections;
-      while (section)
-        {
-          if (stristr (section->section_name, "Alert_Policy"))
-            alert_policy_count++;
-          section = section->next;
-        }
-
-      if (alert_policy_count)
-        {
-          unsigned int index = 0;
-
-          if (!(state_data.alert_policy_sections = (struct config_section **) malloc (alert_policy_count * sizeof (struct config_section *))))
-            {
-              pstdout_perror (pstate, "malloc");
-              goto cleanup;
-            }
-          
-          state_data.alert_policy_sections_len = alert_policy_count;
-          
-          section = state_data.sections;
-          while (section)
-            {
-              if (stristr (section->section_name, "Alert_Policy"))
-                {
-                  state_data.alert_policy_sections[index] = section;
-                  index++;
-                }
-              section = section->next;
-            }
         }
     }
   
