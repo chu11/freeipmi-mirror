@@ -46,6 +46,7 @@ _ipmi_pef_config_state_data_init (ipmi_pef_config_state_data_t *state_data)
   memset (state_data, '\0', sizeof (ipmi_pef_config_state_data_t));
   state_data->prog_data = NULL;
   state_data->ipmi_ctx = NULL;
+  state_data->sections = NULL;
   
   state_data->alert_policy_sections_len = 0;
   state_data->alert_policy_sections = NULL;
@@ -65,7 +66,6 @@ _ipmi_pef_config (pstdout_state_t pstate,
   ipmi_pef_config_state_data_t state_data;
   ipmi_pef_config_prog_data_t *prog_data;
   char errmsg[IPMI_OPEN_ERRMSGLEN];
-  struct config_section *sections = NULL;
   int exit_code = -1;
   config_err_t ret = 0;
   int file_opened = 0;
@@ -91,7 +91,7 @@ _ipmi_pef_config (pstdout_state_t pstate,
       goto cleanup;
     }
 
-  if (!(sections = ipmi_pef_config_sections_create (&state_data)))
+  if (!(state_data.sections = ipmi_pef_config_sections_create (&state_data)))
     {
       exit_code = EXIT_FAILURE;
       goto cleanup;
@@ -154,7 +154,7 @@ _ipmi_pef_config (pstdout_state_t pstate,
           && !prog_data->args->config_args.keypairs))
     {
       if (config_parse (pstate,
-                        sections,
+                        state_data.sections,
                         &(prog_data->args->config_args),
                         fp) < 0)
         {
@@ -173,7 +173,7 @@ _ipmi_pef_config (pstdout_state_t pstate,
       && prog_data->args->config_args.keypairs)
     {
       if (config_sections_insert_keyvalues (pstate,
-                                            sections,
+                                            state_data.sections,
                                             prog_data->args->config_args.keypairs) < 0)
         {
           /* errors printed in function call */
@@ -193,7 +193,7 @@ _ipmi_pef_config (pstdout_state_t pstate,
         value_input_required = 1;
 
       if ((num = config_sections_validate_keyvalue_inputs (pstate,
-                                                           sections,
+                                                           state_data.sections,
                                                            value_input_required,
                                                            &state_data)) < 0)
         {
@@ -220,7 +220,7 @@ _ipmi_pef_config (pstdout_state_t pstate,
       while (sstr)
         {
           if (!config_find_section (pstate,
-                                    sections,
+                                    state_data.sections,
                                     sstr->section_name))
             {
               pstdout_fprintf (pstate,
@@ -246,7 +246,7 @@ _ipmi_pef_config (pstdout_state_t pstate,
       unsigned int alert_policy_count = 0;
 
       /* First, see how many alert policy sections there are */
-      section = sections;
+      section = state_data.sections;
       while (section)
         {
           if (stristr (section->section_name, "Alert_Policy"))
@@ -266,7 +266,7 @@ _ipmi_pef_config (pstdout_state_t pstate,
           
           state_data.alert_policy_sections_len = alert_policy_count;
           
-          section = sections;
+          section = state_data.sections;
           while (section)
             {
               if (stristr (section->section_name, "Alert_Policy"))
@@ -300,7 +300,7 @@ _ipmi_pef_config (pstdout_state_t pstate,
                 config_err_t this_ret;
 
                 if (!(s = config_find_section (pstate,
-                                               sections,
+                                               state_data.sections,
                                                sstr->section_name)))
                   {
                     pstdout_fprintf (pstate,
@@ -333,7 +333,7 @@ _ipmi_pef_config (pstdout_state_t pstate,
               all_keys_if_none_specified++;
 
             ret = config_checkout (pstate,
-                                   sections,
+                                   state_data.sections,
                                    &(prog_data->args->config_args),
                                    all_keys_if_none_specified,
                                    fp,
@@ -343,18 +343,18 @@ _ipmi_pef_config (pstdout_state_t pstate,
         break;
       case CONFIG_ACTION_COMMIT:
         ret = config_commit (pstate,
-                             sections,
+                             state_data.sections,
                              &(prog_data->args->config_args),
                              &state_data);
         break;
       case CONFIG_ACTION_DIFF:
         ret = config_diff (pstate,
-                           sections,
+                           state_data.sections,
                            &(prog_data->args->config_args),
                            &state_data);
         break;
       case CONFIG_ACTION_LIST_SECTIONS:
-        ret = config_output_sections_list (pstate, sections);
+        ret = config_output_sections_list (pstate, state_data.sections);
         break;
       }
     }
@@ -374,8 +374,8 @@ _ipmi_pef_config (pstdout_state_t pstate,
     }
   if (file_opened)
     fclose (fp);
-  if (sections)
-    config_sections_destroy (pstate, sections);
+  if (state_data.sections)
+    config_sections_destroy (pstate, state_data.sections);
   return (exit_code);
 }
 

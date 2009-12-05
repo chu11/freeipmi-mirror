@@ -46,6 +46,7 @@ _bmc_config_state_data_init (bmc_config_state_data_t *state_data)
   memset (state_data, '\0', sizeof (bmc_config_state_data_t));
   state_data->prog_data = NULL;
   state_data->ipmi_ctx = NULL;
+  state_data->sections = NULL;
 
   state_data->lan_user_session_limit_len = 0;
   state_data->lan_user_session_limit = NULL;
@@ -85,7 +86,6 @@ _bmc_config (pstdout_state_t pstate,
   bmc_config_state_data_t state_data;
   bmc_config_prog_data_t *prog_data;
   char errmsg[IPMI_OPEN_ERRMSGLEN];
-  struct config_section *sections = NULL;
   int exit_code = -1;
   config_err_t ret = 0;
   int file_opened = 0;
@@ -111,7 +111,7 @@ _bmc_config (pstdout_state_t pstate,
       goto cleanup;
     }
 
-  if (!(sections = bmc_config_sections_create (&state_data)))
+  if (!(state_data.sections = bmc_config_sections_create (&state_data)))
     {
       exit_code = EXIT_FAILURE;
       goto cleanup;
@@ -174,7 +174,7 @@ _bmc_config (pstdout_state_t pstate,
           && !prog_data->args->config_args.keypairs))
     {
       if (config_parse (pstate,
-                        sections,
+                        state_data.sections,
                         &(prog_data->args->config_args),
                         fp) < 0)
         {
@@ -193,7 +193,7 @@ _bmc_config (pstdout_state_t pstate,
       && prog_data->args->config_args.keypairs)
     {
       if (config_sections_insert_keyvalues (pstate,
-                                            sections,
+                                            state_data.sections,
                                             prog_data->args->config_args.keypairs) < 0)
         {
           /* errors printed in function call */
@@ -213,7 +213,7 @@ _bmc_config (pstdout_state_t pstate,
         value_input_required = 1;
 
       if ((num = config_sections_validate_keyvalue_inputs (pstate,
-                                                           sections,
+                                                           state_data.sections,
                                                            value_input_required,
                                                            &state_data)) < 0)
         {
@@ -239,7 +239,7 @@ _bmc_config (pstdout_state_t pstate,
       while (sstr)
         {
           if (!config_find_section (pstate,
-                                    sections,
+                                    state_data.sections,
                                     sstr->section_name))
             {
               pstdout_fprintf (pstate,
@@ -274,7 +274,7 @@ _bmc_config (pstdout_state_t pstate,
       unsigned int user_count = 0;
 
       /* First, see how many user sections there are */
-      section = sections;
+      section = state_data.sections;
       while (section)
         {
           if (stristr (section->section_name, "User"))
@@ -293,7 +293,7 @@ _bmc_config (pstdout_state_t pstate,
           /* Two, is the user configuring anything these special cases
            * care about?
            */
-          section = sections;
+          section = state_data.sections;
           while (section)
             {
               struct config_keyvalue *kv;
@@ -376,7 +376,7 @@ _bmc_config (pstdout_state_t pstate,
               || serial_session_limit_found
               || lan_conf_auth_found)
             {
-              section = sections;
+              section = state_data.sections;
               while (section)
                 {
                   struct config_keyvalue *kv;
@@ -498,7 +498,7 @@ _bmc_config (pstdout_state_t pstate,
       struct config_section *section;
 
       if ((section = config_find_section (pstate,
-                                          sections,
+                                          state_data.sections,
                                           "Lan_Conf")))
         {
           if (config_find_keyvalue (pstate,
@@ -542,7 +542,7 @@ _bmc_config (pstdout_state_t pstate,
             config_err_t this_ret;
 
             if (!(s = config_find_section (pstate,
-                                           sections,
+                                           state_data.sections,
                                            sstr->section_name)))
               {
                 pstdout_fprintf (pstate,
@@ -575,7 +575,7 @@ _bmc_config (pstdout_state_t pstate,
           all_keys_if_none_specified++;
 
         ret = config_checkout (pstate,
-                               sections,
+                               state_data.sections,
                                &(prog_data->args->config_args),
                                all_keys_if_none_specified,
                                fp,
@@ -585,18 +585,18 @@ _bmc_config (pstdout_state_t pstate,
     break;
   case CONFIG_ACTION_COMMIT:
     ret = config_commit (pstate,
-                         sections,
+                         state_data.sections,
                          &(prog_data->args->config_args),
                          &state_data);
     break;
   case CONFIG_ACTION_DIFF:
     ret = config_diff (pstate,
-                       sections,
+                       state_data.sections,
                        &(prog_data->args->config_args),
                        &state_data);
     break;
   case CONFIG_ACTION_LIST_SECTIONS:
-    ret = config_output_sections_list (pstate, sections);
+    ret = config_output_sections_list (pstate, state_data.sections);
     break;
   }
 
@@ -619,8 +619,8 @@ _bmc_config (pstdout_state_t pstate,
     free (state_data.serial_user_session_limit);
   if (file_opened)
     fclose (fp);
-  if (sections)
-    config_sections_destroy (pstate, sections);
+  if (state_data.sections)
+    config_sections_destroy (pstate, state_data.sections);
   return (exit_code);
 }
 

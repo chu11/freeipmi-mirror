@@ -62,6 +62,7 @@ typedef struct bmc_config_state_data
   bmc_config_prog_data_t *prog_data;
   ipmi_ctx_t ipmi_ctx;
   pstdout_state_t pstate;
+  struct config_section *sections;
 
   /* achu: workaround for IPMI limitation */
   int lan_user_session_limit_len;

@@ -46,6 +46,7 @@ _ipmi_sensors_config_state_data_init (ipmi_sensors_config_state_data_t *state_da
   memset (state_data, '\0', sizeof (ipmi_sensors_config_state_data_t));
   state_data->prog_data = NULL;
   state_data->ipmi_ctx = NULL;
+  state_data->sections = NULL;
 }
 
 static int
@@ -56,7 +57,6 @@ _ipmi_sensors_config (pstdout_state_t pstate,
   ipmi_sensors_config_state_data_t state_data;
   ipmi_sensors_config_prog_data_t *prog_data;
   char errmsg[IPMI_OPEN_ERRMSGLEN];
-  struct config_section *sections = NULL;
   int exit_code = -1;
   config_err_t ret = 0;
   int file_opened = 0;
@@ -150,7 +150,7 @@ _ipmi_sensors_config (pstdout_state_t pstate,
       goto cleanup;
     }
 
-  if (!(sections = ipmi_sensors_config_sections_create (&state_data)))
+  if (!(state_data.sections = ipmi_sensors_config_sections_create (&state_data)))
     {
       exit_code = EXIT_FAILURE;
       goto cleanup;
@@ -213,7 +213,7 @@ _ipmi_sensors_config (pstdout_state_t pstate,
           && !prog_data->args->config_args.keypairs))
     {
       if (config_parse (pstate,
-                        sections,
+                        state_data.sections,
                         &(prog_data->args->config_args),
                         fp) < 0)
         {
@@ -232,7 +232,7 @@ _ipmi_sensors_config (pstdout_state_t pstate,
       && prog_data->args->config_args.keypairs)
     {
       if (config_sections_insert_keyvalues (pstate,
-                                            sections,
+                                            state_data.sections,
                                             prog_data->args->config_args.keypairs) < 0)
         {
           /* errors printed in function call */
@@ -252,7 +252,7 @@ _ipmi_sensors_config (pstdout_state_t pstate,
         value_input_required = 1;
 
       if ((num = config_sections_validate_keyvalue_inputs (pstate,
-                                                           sections,
+                                                           state_data.sections,
                                                            value_input_required,
                                                            &state_data)) < 0)
         {
@@ -278,7 +278,7 @@ _ipmi_sensors_config (pstdout_state_t pstate,
       while (sstr)
         {
           if (!config_find_section (pstate,
-                                    sections,
+                                    state_data.sections,
                                     sstr->section_name))
             {
               pstdout_fprintf (pstate,
@@ -310,7 +310,7 @@ _ipmi_sensors_config (pstdout_state_t pstate,
             config_err_t this_ret;
 
             if (!(s = config_find_section (pstate,
-                                           sections,
+                                           state_data.sections,
                                            sstr->section_name)))
               {
                 pstdout_fprintf (pstate,
@@ -343,7 +343,7 @@ _ipmi_sensors_config (pstdout_state_t pstate,
           all_keys_if_none_specified++;
 
         ret = config_checkout (pstate,
-                               sections,
+                               state_data.sections,
                                &(prog_data->args->config_args),
                                all_keys_if_none_specified,
                                fp,
@@ -353,18 +353,18 @@ _ipmi_sensors_config (pstdout_state_t pstate,
     break;
   case CONFIG_ACTION_COMMIT:
     ret = config_commit (pstate,
-                         sections,
+                         state_data.sections,
                          &(prog_data->args->config_args),
                          &state_data);
     break;
   case CONFIG_ACTION_DIFF:
     ret = config_diff (pstate,
-                       sections,
+                       state_data.sections,
                        &(prog_data->args->config_args),
                        &state_data);
     break;
   case CONFIG_ACTION_LIST_SECTIONS:
-    ret = config_output_sections_list (pstate, sections);
+    ret = config_output_sections_list (pstate, state_data.sections);
     break;
   }
 
@@ -385,8 +385,8 @@ _ipmi_sensors_config (pstdout_state_t pstate,
     }
   if (file_opened)
     fclose (fp);
-  if (sections)
-    config_sections_destroy (pstate, sections);
+  if (state_data.sections)
+    config_sections_destroy (pstate, state_data.sections);
   return (exit_code);
 }
 

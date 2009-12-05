@@ -59,6 +59,7 @@ typedef struct ipmi_pef_config_state_data
   ipmi_pef_config_prog_data_t *prog_data;
   ipmi_ctx_t ipmi_ctx;
   pstdout_state_t pstate;
+  struct config_section *sections;
 
   /* achu: workaround for OEM compliance issue, see alert policy section */
   unsigned int alert_policy_sections_len;
