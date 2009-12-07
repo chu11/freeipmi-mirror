@@ -671,7 +671,7 @@ A) (This is the primary reason this architecture is still kept.)  Due
 to widely varying hardware and implementations, this handles the write
 configuration case best.  Suppose FieldB.2 is only configurable on
 IPMI 2.0 systems but not IPMI 1.5 systems.  Suppose (perhaps b/c it is
-optional in the IPMI specification) FieldB.3 is suppored by some
+optional in the IPMI specification) FieldB.3 is supported by some
 vendors but not other vendors.  Suppose FieldB.4 is simply not
 implemented correctly by the vendor (which has been a common problem
 that has to be dealt in the open-source community).
@@ -688,6 +688,9 @@ is).
 In the future, functionality could be added to retry each field
 separately if there was such a failure, however that would add another
 piece of complexity into the code we currently don't have time to add.
+(Not to mention, can we trust that all the IPMI firmware writers will
+return consistent error codes such that this could be implemently
+across a large number of motherboards).
 
 B) There are several (and possibly more future) vendor compliance
 problems that can be (or will need to be) worked around.  By using
@@ -718,6 +721,13 @@ will result in a "invalid input" error.
 
 Currently, this has been seen a very small minority of systems and
 work arounds have been added for those systems.
+
+Another fallout from this design is that the vendor must allow "piece
+meal" configuration.  Some vendors require that fields be written
+"simultaneously", and do not support the ability to alter
+configuration one by one.  Again, this has been seen a very small
+minority of systems and work arounds have been added for those
+systems.
 
 9) Dealing with workarounds
 ---------------------------
