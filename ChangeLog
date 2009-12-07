@@ -1,6 +1,10 @@
+2009-12-07  Albert Chu <chu11@llnl.gov>
+
+	* pef-config/: Fix backport bug.
+	
 2009-12-04  Albert Chu <chu11@llnl.gov>
 
-        * ipmi-pef-config/: Support workaround for Alert Policy Config on
+        * pef-config/: Support workaround for Alert Policy Config on
         Fujitsu motherboards.
 	
 2009-11-30  Albert Chu <chu11@llnl.gov>

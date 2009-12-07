@@ -153,7 +153,7 @@ _set_alert_policy_table (struct pef_config_state_data *state_data,
        * does not appear to like configuration of one field of a time,
        * always leading to invalid input errors.
        */
-      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_REQUEST_DATA_INVALID
           && (ipmi_check_completion_code (obj_cmd_rs,
                                           IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD) == 1))
         {
