@@ -426,11 +426,17 @@ be configured via one IPMI command).  No current resolution.
 ipmi-pef-config
 ---------------
 
+Inventec 5441/Dell Xanadu2: Alert Policy configurations cannot be
+configured "piecemeal".  If it's not configured perfectly and
+simultaneously, every configuration will result in a completion code
+of 0xCC (Invalid data field in Request).  This isn't a compliance
+issue, however it leads to difficult development.  [config-1]
+
 Fujitsu RX 100: Alert Policy configurations cannot be configured
 "piecemeal".  If it's not configured perfectly and simultaneously,
 every configuration will result in a completion code of 0xCC (Invalid
-data field in Request).  This is possibly not a compliance issue, however
-it leads to difficult development.  [config-1]
+data field in Request).  This isn't a compliance issue, however it
+leads to difficult development.  [config-1]
 
 ipmi-fru
 --------
