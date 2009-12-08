@@ -226,9 +226,13 @@ _set_alert_policy_table (struct ipmi_pef_config_state_data *state_data,
        *
        * Fujitsu RX 100 S5
        *
+       * Inventec 5441/Dell Xanadu2
+       *
        * All fields have to be applied simultaneously, the motherboard
        * does not appear to like configuration of one field of a time,
-       * always leading to invalid input errors.
+       * always leading to invalid input errors.  This isn't a
+       * compliance issue, but makes it tough to make a portable/good
+       * interface.
        */
       if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
           && (ipmi_check_completion_code (obj_cmd_rs,
