@@ -1966,6 +1966,18 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
            * column size.  So I will only assume it can happen if there
            * are sensor types in the SDR that are atleast 2 chars less
            * than this string.
+           *
+           * I think this is a pretty good guess.  "System Firmware
+           * Progress" is a sensor that seems to exist more on the
+           * major tier 1 vendor motherboards that also include
+           * additional "fancy" sensors such as "Event Logging
+           * Disabled" (2 shorter in string length) or "System ACPI
+           * Power State" (1 shorter in string length).
+           *
+           * The non-tier 1 vendors tend not to include such fancy
+           * sensors on their motherboards, limiting themselves to the
+           * standard temp, voltage, fan, etc. so the probability of
+           * hitting "System Firmware Progress" is lower.
            */
           if (state_data->column_width.sensor_type >= (strlen (ipmi_sensor_types[IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS]) - 2))
             {
