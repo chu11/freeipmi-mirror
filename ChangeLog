@@ -5,6 +5,8 @@
 
 	* ipmi-sel/src/ipmi-sel.c (_display_sel_records): Fix output
 	corner case when --ignore-sdr-cache is specified.
+
+	* doc/freeipmi-testing.txt: Update w/ nice to have sel test.
 	
 2009-12-07  Albert Chu <chu11@llnl.gov>
 
