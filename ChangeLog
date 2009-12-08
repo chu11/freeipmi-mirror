@@ -2,6 +2,8 @@
 
 	* doc/freeipmi-testing.txt: Update w/ nice to have sel test.
 
+	* doc/freeipmi-coding.txt: Update w/ config tools info.
+
 2009-12-07  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sel/src/ipmi-sel.c (_display_sel_records): Tweak column

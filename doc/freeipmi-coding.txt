@@ -667,14 +667,12 @@ a large number of inputs the Configtools can be slow.
 Here are some of the major reasons why this was done and is still
 kept.
 
-A) (This is the primary reason this architecture is still kept.)  Due
-to widely varying hardware and implementations, this handles the write
-configuration case best.  Suppose FieldB.2 is only configurable on
-IPMI 2.0 systems but not IPMI 1.5 systems.  Suppose (perhaps b/c it is
-optional in the IPMI specification) FieldB.3 is supported by some
-vendors but not other vendors.  Suppose FieldB.4 is simply not
-implemented correctly by the vendor (which has been a common problem
-that has to be dealt in the open-source community).
+A) Due to widely varying IPMI versions and implementations, this
+handles the write configuration case best.  Suppose FieldB.2 is only
+configurable on IPMI 2.0 systems but not IPMI 1.5 systems.  Suppose
+(perhaps b/c it is optional in the IPMI specification) FieldB.3 is
+supported by some vendors but not other vendors.  Suppose FieldB.4 is
+simply not implemented correctly by the vendor.
 
 This architecture allows the majority of the configuration to succeed
 on a specific platform, and allows the end user to know exactly what
@@ -682,24 +680,20 @@ fields may or may not be configurable.  If all 4 fields of
 FieldB.1-FieldB.4 were written at the same time, there is currently no
 method in the IPMI protocol to know what field was configured
 incorrectly and why (only a generic error of "invalid input" is
-returned by the remote motherboard, but you won't know which field it
-is).
+returned, but you won't know which field it is).
 
 In the future, functionality could be added to retry each field
 separately if there was such a failure, however that would add another
 piece of complexity into the code we currently don't have time to add.
 (Not to mention, can we trust that all the IPMI firmware writers will
-return consistent error codes such that this could be implemently
+return consistent error codes such that this could be implemented
 across a large number of motherboards).
 
 B) There are several (and possibly more future) vendor compliance
 problems that can be (or will need to be) worked around.  By using
 this architecture each specific field can be worked around
-independently depending on the vendor.
-
-C) In the beginning of the Configtools development, 'FieldA' type
-fields were a bit more common than 'FieldB' type fields.  Currently,
-it's about 50-50.
+independently depending on the vendor.  These workarounds need to be
+handled on both the read and write conditions.
 
 One of the major fallouts from this design is that if an
 invalid/illegal configuration exists on the motherboard by default,
@@ -716,18 +710,26 @@ the BMC, change only FieldA.1, then try to write all the fields back
 to the BMC.  Then it would be repeated for FieldA.2, etc.
 
 However, suppose the default setting on the motherboard for FieldA.4
-is illegal.  Then every attempt to write a value to the motherboard
-will result in a "invalid input" error.
+is illegal.  Then each time we attempt to write FieldA.1, FieldA.2,
+and FieldA.3, an invalid input error will be returned b/c FieldA.4 is
+illegal.  Things cannot change until FieldA.4 is modified.
+
+In a worse scenario, suppose the default setting on the motherboard is
+illegal for both FieldA.3 and FieldA.4.  That means we will receive an
+invalid input error for the config of FieldA.1 through FieldA.4.
 
 Currently, this has been seen a very small minority of systems and
 work arounds have been added for those systems.
 
-Another fallout from this design is that the vendor must allow "piece
-meal" configuration.  Some vendors require that fields be written
-"simultaneously", and do not support the ability to alter
-configuration one by one.  Again, this has been seen a very small
-minority of systems and work arounds have been added for those
-systems.
+Another similar fallout from this design is that the vendor must allow
+"piecemeal" configuration.  In other words, the vendor must allow a
+subset of the fields to perhaps be configured "incorrectly" while the
+other subset may be configured "correctly".  Some vendors require that
+fields be written "simultaneously", and do not support the ability to
+alter configuration one by one.
+
+Again, this has been seen a very small minority of systems and work
+arounds have been added for those systems.
 
 9) Dealing with workarounds
 ---------------------------
