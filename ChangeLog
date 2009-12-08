@@ -1,4 +1,9 @@
 2009-12-07  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sensors/src/ipmi-sensors-detailed-output.c
+	(_output_device_type_and_modifier): Fix output corner case.
+	
+2009-12-07  Albert Chu <chu11@llnl.gov>
 	
 	* Tagged Release-0_8_1.
 

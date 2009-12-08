@@ -76,8 +76,8 @@ ipmi_device_type_modifer_message (uint8_t device_type,
     {
     case IPMI_DEVICE_TYPE_DS1624_TEMPERATURE_SENSOR_EEPROM_OR_EQUIVALENT:
       return (_get_message (device_modifier,
-                                  buf,
-                                  buflen,
+                            buf,
+                            buflen,
                             ipmi_device_type_modifier_ds1624_temperature_sensor_eeprom_or_equivalent_max_index,
                             ipmi_device_type_modifier_ds1624_temperature_sensor_eeprom_or_equivalent));
     case IPMI_DEVICE_TYPE_DS1621_TEMPERATURE_SENSOR_OR_EQUIVALENT:
