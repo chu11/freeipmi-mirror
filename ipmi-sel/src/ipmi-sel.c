@@ -59,6 +59,8 @@
 
 #define IPMI_SEL_EVENT_SEPARATOR " ; "
 
+#define IPMI_SEL_AVG_SENSOR_NAME_LENGTH 16
+
 static int
 _display_sel_info (ipmi_sel_state_data_t *state_data)
 {
@@ -1910,67 +1912,80 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
 
     }
 
-  if (!args->sdr.ignore_sdr_cache && !args->legacy_output)
+  if (!args->legacy_output)
     {
-      struct sensor_entity_id_counts *entity_ptr = NULL;
-
-      if (args->entity_sensor_names)
+      if (!args->sdr.ignore_sdr_cache)
         {
-          if (calculate_entity_id_counts (state_data->pstate,
-                                          state_data->sdr_cache_ctx,
-                                          state_data->sdr_parse_ctx,
-                                          &(state_data->entity_id_counts)) < 0)
+          struct sensor_entity_id_counts *entity_ptr = NULL;
+          
+          if (args->entity_sensor_names)
+            {
+              if (calculate_entity_id_counts (state_data->pstate,
+                                              state_data->sdr_cache_ctx,
+                                              state_data->sdr_parse_ctx,
+                                              &(state_data->entity_id_counts)) < 0)
+                goto cleanup;
+              
+              entity_ptr = &(state_data->entity_id_counts);
+            }
+          
+          if (calculate_column_widths (state_data->pstate,
+                                       state_data->sdr_cache_ctx,
+                                       state_data->sdr_parse_ctx,
+                                       NULL,
+                                       0,
+                                       NULL,
+                                       0,
+                                       !state_data->prog_data->args->non_abbreviated_units,
+                                       (entity_ptr) ? 1 : 0, /* shared_sensors */
+                                       1, /* count_event_only_records */
+                                       0,
+                                       entity_ptr,
+                                       &(state_data->column_width)) < 0)
             goto cleanup;
-
-          entity_ptr = &(state_data->entity_id_counts);
+          
+          /* Unlike sensors output, SEL entries are not predictable,
+           * events can happen w/ sensor numbers and sensor types that are
+           * not listed in the SDR.  So I can't perfectly predict the
+           * largest column size (w/o going through the SEL atleast once).
+           *
+           * Ultimately, there is some balance that must be done to:
+           *
+           * A) make sure the output looks good
+           *
+           * B) not have a ridiculously sized sensor type column that
+           * makes the output look bad.
+           *
+           * The following is the fudging I have elected to do
+           */
+          
+          /* Fudging #1 - "System Firmware Progress" is a relatively
+           * common sensor event that isn't mentioned in the SDR.
+           *
+           * However, it's a pretty big string and can lead to a big
+           * column size.  So I will only assume it can happen if there
+           * are sensor types in the SDR that are atleast 2 chars less
+           * than this string.
+           */
+          if (state_data->column_width.sensor_type >= (strlen (ipmi_sensor_types[IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS]) - 2))
+            {
+              if (state_data->column_width.sensor_type < strlen (ipmi_sensor_types[IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS]))
+                state_data->column_width.sensor_type = strlen (ipmi_sensor_types[IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS]);
+            }
         }
-
-      if (calculate_column_widths (state_data->pstate,
-                                   state_data->sdr_cache_ctx,
-                                   state_data->sdr_parse_ctx,
-                                   NULL,
-                                   0,
-                                   NULL,
-                                   0,
-                                   !state_data->prog_data->args->non_abbreviated_units,
-				   (entity_ptr) ? 1 : 0, /* shared_sensors */
-                                   1, /* count_event_only_records */
-                                   0,
-                                   entity_ptr,
-                                   &(state_data->column_width)) < 0)
-        goto cleanup;
-
-      /* Unlike sensors output, SEL entries are not predictable,
-       * events can happen w/ sensor numbers and sensor types that are
-       * not listed in the SDR.  So I can't perfectly predict the
-       * largest column size (w/o going through the SEL atleast once).
-       *
-       * Ultimately, there is some balance that must be done to:
-       *
-       * A) make sure the output looks good
-       *
-       * B) not have a ridiculously sized sensor type column that
-       * makes the output look bad.
-       *
-       * The following is the fudging I have elected to do
-       */
-      
-      /* Fudging #1 - "System Firmware Progress" is a relatively
-       * common sensor event that isn't mentioned in the SDR.
-       *
-       * However, it's a pretty big string and can lead to a big
-       * column size.  So I will only assume it can happen if there
-       * are sensor types in the SDR that are atleast 2 chars less
-       * than this string.
-       */
-      if (state_data->column_width.sensor_type >= (strlen (ipmi_sensor_types[IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS]) - 2))
+      else
         {
-          if (state_data->column_width.sensor_type < strlen (ipmi_sensor_types[IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS]))
-            state_data->column_width.sensor_type = strlen (ipmi_sensor_types[IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS]);
+          /* Ignoring the SDR cache, gotta make some guesses */
+          state_data->column_width.sensor_name = IPMI_SEL_AVG_SENSOR_NAME_LENGTH;
+          state_data->column_width.sensor_type = strlen (ipmi_sensor_types[IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS]);
+          if (state_data->prog_data->args->non_abbreviated_units)
+            state_data->column_width.sensor_units = strlen (ipmi_sensor_units[IPMI_SENSOR_UNIT_DEGREES_C]);
+          else
+            state_data->column_width.sensor_units = strlen (ipmi_sensor_units[IPMI_SENSOR_UNIT_RPM]);
         }
 
       /* Record IDs for SEL entries are calculated a bit differently */
-
+      
       if (state_data->prog_data->args->display)
         {
           uint16_t max_record_id = 0;

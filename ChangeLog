@@ -2,6 +2,9 @@
 
 	* ipmi-sel/src/ipmi-sel.c (_display_sel_records): Tweak column
 	size slightly for common scenario.
+
+	* ipmi-sel/src/ipmi-sel.c (_display_sel_records): Fix output
+	corner case when --ignore-sdr-cache is specified.
 	
 2009-12-07  Albert Chu <chu11@llnl.gov>
 
