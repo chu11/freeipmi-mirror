@@ -1,5 +1,8 @@
 2009-12-08  Albert Chu <chu11@llnl.gov>
 
+	* ipmiconsole/src/libipmiconsole/ipmiconsole_engine.c
+	(ipmiconsole_engine_setup): Fix error message.
+
 	* doc/freeipmi-testing.txt: Update w/ nice to have sel test.
 
 	* doc/freeipmi-coding.txt: Update w/ config tools info.

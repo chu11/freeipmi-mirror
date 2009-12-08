@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.90 2009-10-22 20:20:00 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.90.4.1 2009-12-08 19:07:04 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -198,7 +198,7 @@ ipmiconsole_engine_setup (unsigned int thread_count)
 
   if (ipmi_rmcpplus_init () < 0)
     {
-      IPMICONSOLE_DEBUG (("ipmi_crypt_init: %s", strerror (errno)));
+      IPMICONSOLE_DEBUG (("ipmi_rmcpplus_init: %s", strerror (errno)));
       goto cleanup;
     }
 
