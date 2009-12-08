@@ -1940,6 +1940,35 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
                                    &(state_data->column_width)) < 0)
         goto cleanup;
 
+      /* Unlike sensors output, SEL entries are not predictable,
+       * events can happen w/ sensor numbers and sensor types that are
+       * not listed in the SDR.  So I can't perfectly predict the
+       * largest column size (w/o going through the SEL atleast once).
+       *
+       * Ultimately, there is some balance that must be done to:
+       *
+       * A) make sure the output looks good
+       *
+       * B) not have a ridiculously sized sensor type column that
+       * makes the output look bad.
+       *
+       * The following is the fudging I have elected to do
+       */
+      
+      /* Fudging #1 - "System Firmware Progress" is a relatively
+       * common sensor event that isn't mentioned in the SDR.
+       *
+       * However, it's a pretty big string and can lead to a big
+       * column size.  So I will only assume it can happen if there
+       * are sensor types in the SDR that are atleast 2 chars less
+       * than this string.
+       */
+      if (state_data->column_width.sensor_type >= (strlen (ipmi_sensor_types[IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS]) - 2))
+        {
+          if (state_data->column_width.sensor_type < strlen (ipmi_sensor_types[IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS]))
+            state_data->column_width.sensor_type = strlen (ipmi_sensor_types[IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS]);
+        }
+
       /* Record IDs for SEL entries are calculated a bit differently */
 
       if (state_data->prog_data->args->display)

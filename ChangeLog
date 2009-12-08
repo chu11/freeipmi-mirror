@@ -1,5 +1,10 @@
 2009-12-07  Albert Chu <chu11@llnl.gov>
 
+	* ipmi-sel/src/ipmi-sel.c (_display_sel_records): Tweak column
+	size slightly for common scenario.
+	
+2009-12-07  Albert Chu <chu11@llnl.gov>
+
 	* ipmi-sensors/src/ipmi-sensors-detailed-output.c
 	(_output_device_type_and_modifier): Fix output corner case.
 	
