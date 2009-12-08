@@ -216,6 +216,8 @@ extern fiid_template_t tmpl_rmcpplus_rakp_message_4;
  * Must be called first to initialize crypt libs.  In threaded
  * programs, must be called before threads are created.
  *
+ * If errno returned == EPERM, underlying crypt library incompatible.
+ *
  * Returns 0 on success, -1 on error.
  */
 int ipmi_rmcpplus_init (void);

@@ -586,7 +586,10 @@ ipmi_ctx_open_outofband_2_0 (ipmi_ctx_t ctx,
 
   if (ipmi_rmcpplus_init () < 0)
     {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      if (errno == EPERM)
+        API_SET_ERRNUM (ctx, IPMI_ERR_SYSTEM_ERROR);
+      else
+        API_ERRNO_TO_API_ERRNUM (ctx, errno);
       return (-1);
     }
 

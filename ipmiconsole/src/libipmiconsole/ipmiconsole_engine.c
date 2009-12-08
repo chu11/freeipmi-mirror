@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.91 2009-12-08 19:06:49 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.92 2009-12-08 21:36:19 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -198,7 +198,10 @@ ipmiconsole_engine_setup (unsigned int thread_count)
 
   if (ipmi_rmcpplus_init () < 0)
     {
-      IPMICONSOLE_DEBUG (("ipmi_rmcpplus_init: %s", strerror (errno)));
+      if (errno == EPERM)
+        IPMICONSOLE_DEBUG (("ipmi_rmcpplus_init: incompatible crypto library"));
+      else
+        IPMICONSOLE_DEBUG (("ipmi_rmcpplus_init: %s", strerror (errno)));
       goto cleanup;
     }
 

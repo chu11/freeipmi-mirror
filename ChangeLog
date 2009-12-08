@@ -1,5 +1,10 @@
 2009-12-08  Albert Chu <chu11@llnl.gov>
 
+	* ipmiconsole/, ipmipower/, libfreeipmi/: Support ability to
+	report incompatible crypt library.
+	
+2009-12-08  Albert Chu <chu11@llnl.gov>
+
 	* ipmiconsole/src/libipmiconsole/ipmiconsole_engine.c
 	(ipmiconsole_engine_setup): Fix error message.
 
