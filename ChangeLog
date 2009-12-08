@@ -1,3 +1,7 @@
+2009-12-08  Albert Chu <chu11@llnl.gov>
+
+	* doc/freeipmi-testing.txt: Update w/ nice to have sel test.
+
 2009-12-07  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sel/src/ipmi-sel.c (_display_sel_records): Tweak column

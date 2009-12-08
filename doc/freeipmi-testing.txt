@@ -5,7 +5,7 @@ by
 Albert Chu
 chu11@llnl.gov
 
-Updated: 12/07/09 for FreeIPMI 0.8.1
+Updated: 12/08/09 for FreeIPMI 0.8.1
 
 The following is a list of tests I've (semi) regularly done to measure
 the compliance of a motherboard to IPMI as well as FreeIPMI's
@@ -20,8 +20,8 @@ below as mandatory vs. optional requirements.  While some of the below
 may technically be optional for IPMI compliance, I consider them to be
 practically mandatory for a functioning IPMI system supporting IPMI
 1.5, IPMI 2.0, Serial-over-LAN, etc.  A few tests may have "**Nice to
-have**", which indicate something that would be nice to have, but
-ultimately is not an IPMI compliance issue.
+have**" listed next to it, which indicate something that would be nice
+to have, but ultimately is not an IPMI compliance issue.
 
 The error messages listed in tests below highlight what I believe to
 be the "best" or "most likely" error messages that should be returned
@@ -532,6 +532,16 @@ Execute ipmi-sel with no ipmi-sel specific options, verify tool:
     SDR to indicate those events are possible could be added, thus
     allowing the tools to output a cleaner, nicer output for the
     users.
+
+Test) **Nice to have**
+Execute ipmi-sel with no ipmi-sel specific options, verify tool:
+- Executes without errors
+- All events have an identified name in the "Name" column.  In other
+  words, there is no output like "Sensor #1".
+  * If not, are there SDR records that identify every potential event
+    that can occur on the motherboard.  If not, perhaps some entries
+    (most likely event-only records) in the SDR could help make the
+    output of ipmi-sel cleaner, nicer, and better for the end user.
 
 Ipmi-fru Testing
 ----------------
