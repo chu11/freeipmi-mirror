@@ -741,15 +741,45 @@ options on the command line.  For example, we could detect vendor
 product-IDs early in the protocol, and if necessary for a particular
 vendor, turn on the workarounds.
 
-On the other hand, a number of these workarounds are due to vendor
-compliance problems.  In some cases, the workarounds are so intrusive
-(e.g. using a different hashing algorithm for keys) they must require
-a workaround on the command line b/c there is really no other way to
-handle it.  However, some could be handled seemlessly, but would
-require altered behavior to handle the "common case".
+On the other hand, some workarounds cannot be detected properly all of
+the time.  For example, the workaround may exist on one firmware
+release vs. another firmware release.  It may exist between one
+product of a vendor vs. another product from the vendor.  Another
+example, is that while we can make a pretty decent guess what the
+vendor intended, ultimately, there's no real way to know if the guess
+is correct.
+
+A number of these workarounds are due to vendor compliance problems
+that are sometimes so intrusive (e.g. using a different hashing
+algorithm for keys) they must require a workaround on the command line
+b/c there is really no other way to handle it.  However, some could be
+handled seemlessly, but would require altered behavior to handle the
+"common case" or "lowest common denominator" of all IPMI protocols.
 
 The general rule that I've come to is that if the workaround changes
-some "normal" behavior, it must require a specific workaround on the
-command line.  Although it may/will be annoying to a number of users,
-I feel it is better for the long term.  It can hopefully also pressure
-vendors into their fixing the implementations down the road.
+some "normal" or "good" behavior, it must require a specific
+workaround on the command line.  Although it may/will be annoying to a
+number of users, I feel it is better for the long term.  It can
+hopefully also pressure vendors into fixing their implementations down
+the road.
+
+As an example, on some motherboards, we found that System Event Log
+(SEL) records reported an invalid sensor generator ID.  We found that
+the reported generator ID was shifted off by one.  Thus, as a
+workround, if a SDR entry cannot be found for a respective system
+event, we will also search for a SDR entry using the generator ID
+shifted by one, and if the SDR entry is found, we assume the original
+generator ID was just off by one and we use the located SDR record.
+This workaround is seemless and doesn't involve an option on the
+command line.
+
+In contrast, we found on some other motherboards that some SEL records
+report an invalid event record type.  Unlike the above situation,
+there is no additional information from this record that can give us
+any indication if we parsed it correctly or incorrectly.  As far as we
+can tell, it just might be an OEM specific record.  Therefore, we
+implemented a workaround called "assumesystemevent", which the user
+can specify to assume a valid system event record no matter what.
+
+Admittedly, the area is grey, and at some point, it's a judgement call
+:-)
