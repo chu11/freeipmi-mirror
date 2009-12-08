@@ -1839,12 +1839,11 @@ _output_device_type_and_modifier (ipmi_sensors_state_data_t *state_data,
                                                device_type_modifier_buf,
                                                IPMI_SENSORS_DEVICE_TYPE_BUFLEN)) < 0)
     {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "ipmi_device_type_modifer_message: %s\n",
-                       strerror (errno));
-
-      return (-1);
+      /* assume invalid device type and/or modifier */
+      pstdout_printf (state_data->pstate,
+                      "Device Type Modifier: %Xh\n",
+                      device_type_modifier);
+      return (0);
     }
 
   if (len)
