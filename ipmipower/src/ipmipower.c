@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.87 2009-06-26 05:47:27 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.87.4.1 2009-12-08 21:37:45 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -102,7 +102,10 @@ _ipmipower_setup (void)
 
   if (ipmi_rmcpplus_init () < 0)
     {
-      IPMIPOWER_ERROR (("ipmi_rmcpplus_init: %s", strerror (errno)));
+      if (errno == EPERM)
+        IPMIPOWER_ERROR (("ipmi_rmcpplus_init: incompatible crypto library"));
+      else
+        IPMIPOWER_ERROR (("ipmi_rmcpplus_init: %s", strerror (errno)));
       exit (1);
     }
 

@@ -69,8 +69,8 @@ ipmi_crypt_init (void)
 
   if (!gcry_check_version (GCRYPT_VERSION))
     {
-      ERR_TRACE (gcry_strerror (e), e);
-      SET_ERRNO (_gpg_error_to_errno (e));
+      ERR_TRACE ("invalid gcrypt library version", EPERM);
+      SET_ERRNO (EPERM);
       return (-1);
     }
 
