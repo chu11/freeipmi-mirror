@@ -54,6 +54,15 @@ cygwin
     - if so, change socket creations to bind/connect to/from location
     - change recvfrom to recv(), and code's just gotta be smart enough
       to know not to check the "from" parameter.
+    - overall better, but alot of work
+  - or another idea
+    - create send(), recv() equivalent funcs
+    - autoconf check cygwin, and make use of those instead
+    - less work, maybe cleaner?
+    - still need to bind/connect
+  - cleanest/quickest hack
+    - do recv() instead of recvfrom() inside ipmi_lan_recvrom()
+    - code has to be smart and not use the 'from' return var
 
 simulator
 ---------
