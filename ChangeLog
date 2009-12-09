@@ -1,3 +1,7 @@
+2009-12-09  Albert Chu <chu11@llnl.gov>
+
+	* doc/freeipmi-bugs-and-workarounds.txt: Update w/ more stuff.
+	
 2009-12-08  Albert Chu <chu11@llnl.gov>
 
 	* ipmiconsole/, ipmipower/, libfreeipmi/: Support ability to

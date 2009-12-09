@@ -12,7 +12,12 @@ the motherboards these issues were found on are also documented.
 
 This is mostly to document compliance issues I've discovered.  When I
 talk to vendors and they say, "IPMI is 100% compliant, we don't know
-what you're talking about.", well, here's this document :-)
+what you're talking about.", well, here's this document :-) 
+
+In addition, I've listed a few "issues" that while not compliance
+issues, I do feel that the choice of implementation makes it difficult
+to work with and/or a poor IPMI implementation for the end user.  I've
+placed a label of "[NICETOHAVE]" next to these issues.
 
 Naturally the motherboards I have much more access to and am capable
 of working on will probably have more issues discovered.  As I develop
@@ -423,6 +428,13 @@ to the "Default Gateway IP Address" to be configured (i.e. there is
 some type of memory corruption, memory something that causes both to
 be configured via one IPMI command).  No current resolution.
 
+Inventec 5441/Dell Xanadu2: Several configuration fields, most notably
+several SOL configuraiton fields, are stored in volatile memory rather
+than non-volatile memory.  These particular configuration fields were
+not required by IPMI to be stored in non-volatile memory, but
+ultimately is an issue b/c it requires users to reconfigure IPMI on
+every system boot. [NICETOHAVE]
+
 ipmi-pef-config
 ---------------
 
@@ -430,13 +442,14 @@ Inventec 5441/Dell Xanadu2: Alert Policy configurations cannot be
 configured "piecemeal".  If it's not configured perfectly and
 simultaneously, every configuration will result in a completion code
 of 0xCC (Invalid data field in Request).  This isn't a compliance
-issue, however it leads to difficult development.  [config-1]
+issue, however it leads to difficult development.  [NICETOHAVE]
+[config-1]
 
 Fujitsu RX 100: Alert Policy configurations cannot be configured
 "piecemeal".  If it's not configured perfectly and simultaneously,
 every configuration will result in a completion code of 0xCC (Invalid
 data field in Request).  This isn't a compliance issue, however it
-leads to difficult development.  [config-1]
+leads to difficult development. [NICETOHAVE] [config-1]
 
 ipmi-fru
 --------
@@ -532,7 +545,7 @@ resolution.
 HP DL 380 G5: Some SEL records report a record type of 0x00, which is
 illegal.  Resolved with workaround to assume a valid record type.
 
-Addendum
+Appendix
 --------
 
 [sensors-1]
@@ -571,3 +584,9 @@ isn't available on this motherboard").
 To see a discussion on why this implementation is poor, please see
 "Configuration tool callback design" in the freeipmi-coding.txt
 document.
+
+[NICETOHAVE]
+
+This is not an IPMI compliance issue, but choice of implementation
+makes for (in our opinion) a poor user experience or poor development
+experience.
