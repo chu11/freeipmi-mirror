@@ -1,5 +1,10 @@
 2009-12-09  Albert Chu <chu11@llnl.gov>
 
+	* ipmi-sel/src/ipmi-sel.c (_normal_output_event): Remove legacy
+	special/unique checks that are no longer needed.
+	
+2009-12-09  Albert Chu <chu11@llnl.gov>
+
 	* doc/freeipmi-bugs-and-workarounds.txt: Update w/ more stuff.
 
 	* doc/freeipmi-oem-documentation-requirements.txt: Minor updates.
