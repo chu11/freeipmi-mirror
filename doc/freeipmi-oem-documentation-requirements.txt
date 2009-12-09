@@ -26,9 +26,14 @@ OEM commands for retrieving motherboard specific information.  For
 example, OEM commands for reading firmware versions (ipmi-oem's
 Supermicro extra-firmware-info command is an example of this).
 
-OEM commands for retrieving/configuring motherboard specific hardware.
-For example, reading and configuring power capacity status (ipmi-oem's
+OEM commands for getting/setting motherboard specific hardware.  For
+example, reading and configuring power capacity status (ipmi-oem's
 Dell set-power-capacity-status command is an example of this).
+
+OEM commands for retrieving motherboard specific hardware information
+necessary for hardware monitoring.  For example, retrieving the
+current health status of hardware (ipmi-oem's Fujitsu
+get-remote-storage-status command is an example of this).
 
 OEM commands for resetting configuration back to the manufacturer
 defaults (ipmi-oem's Dell reset-to-defaults command is an
@@ -51,7 +56,7 @@ SOL Inactivity Timeouts via Set SOL Configuration Parameters
 commands are examples of this).
 
 The following is a (likely) incomplete list of IPMI commands the
-vendor may have added OEM extensions.
+vendor may have added OEM extensions to.
 
 Get/Set System Info Parameters (22.14a/22.14b)
 
@@ -114,7 +119,8 @@ what is in the IPMI spec.
 B) 
 
 Sample code is not documentation.  I hope this one is self
-explanatory.  Code is often not descriptive or detailed.
+explanatory.  Unless the code is documented in detail like the IPMI
+specification, it's not going to be detailed or descriptive enough.
 
 C) 
 
@@ -211,7 +217,9 @@ F)
 
 The endian of multibyte fields is needed.  Different vendors use
 different endian, it's not a good idea to assume the user magically
-knows what endian is actually being used.
+knows what endian is actually being used.  Yes, the IPMI specification
+says to use little endian, but when it's OEM specific, there's no
+reason for me to believe that the vendor is willing to following that.
 
 G)
 
