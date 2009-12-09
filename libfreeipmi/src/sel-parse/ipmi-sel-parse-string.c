@@ -2082,41 +2082,41 @@ _output_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
           && strcasecmp (tmpbufdata3, NA_STRING)))
     {
       if (ipmi_sel_parse_string_snprintf (buf,
-                     buflen,
-                     wlen,
-                     "%s%s%s",
-                     tmpbufdata2,
-                     ctx->separator ? ctx->separator : IPMI_SEL_PARSE_SEPARATOR_STRING,
-                     tmpbufdata3))
+                                          buflen,
+                                          wlen,
+                                          "%s%s%s",
+                                          tmpbufdata2,
+                                          ctx->separator ? ctx->separator : IPMI_SEL_PARSE_SEPARATOR_STRING,
+                                          tmpbufdata3))
         return (1);
     }
   else if (strlen (tmpbufdata2)
            && strcasecmp (tmpbufdata2, NA_STRING))
     {
       if (ipmi_sel_parse_string_snprintf (buf,
-                     buflen,
-                     wlen,
-                     "%s",
-                     tmpbufdata2))
+                                          buflen,
+                                          wlen,
+                                          "%s",
+                                          tmpbufdata2))
         return (1);
     }
   else if (strlen (tmpbufdata3)
            && strcasecmp (tmpbufdata3, NA_STRING))
     {
       if (ipmi_sel_parse_string_snprintf (buf,
-                     buflen,
-                     wlen,
-                     "%s",
-                     tmpbufdata3))
+                                          buflen,
+                                          wlen,
+                                          "%s",
+                                          tmpbufdata3))
         return (1);
     }
   else if (flags & IPMI_SEL_PARSE_STRING_FLAGS_OUTPUT_NOT_AVAILABLE)
     {
       if (ipmi_sel_parse_string_snprintf (buf,
-                     buflen,
-                     wlen,
-                     "%s",
-                     NA_STRING))
+                                          buflen,
+                                          wlen,
+                                          "%s",
+                                          NA_STRING))
         return (1);
     }
 
