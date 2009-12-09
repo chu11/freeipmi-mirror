@@ -226,11 +226,15 @@ int ipmi_sel_parse_read_record (ipmi_sel_parse_ctx_t ctx,
  * from a discrete sensor, they are concataneted with the defined
  * separator in between.
  *
- * [2] - most useful for threshold events where trigger and threshold
- * readings are available.  The combined output can indicate if the
- * reading has gone greater than, less than, etc. to a threshold.  If a discrete
- * sensor, event strings will just be put into the same string together with
- * the defined separator.
+ * [2] - for events where both event data 2 and event data 3 hold data
+ * that must be combined for an effective output.  As an example, data
+ * 2 holds a minor version number and data 3 holds a major version
+ * number.  The combined output might print out "Version 1.2" instead
+ * of a separated "Major Version 1 ; Minor Version 2" if you did them
+ * separately.  If a combined output is not available or not
+ * reasonable, event data 2 and event data 3 output will be output
+ * separately with the defined separator between them
+ * (e.g. effectively "%f ; %h").
  *
  * [3] - if event type code indicates a discrete sensor and event data 2
  * flag indicates a previous state and/or severity state is available.
