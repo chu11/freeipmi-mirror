@@ -171,6 +171,13 @@ config_section_destroy (pstdout_state_t pstate,
       if (section->section_comment)
         free(section->section_comment);
       
+      while (section->keys)
+        {
+          struct config_key *key_next = section->keys->next;
+          _config_key_destroy (pstate, section->keys);
+          section->keys = key_next;
+        }
+      
       while (section->keyvalues)
 	{
 	  struct config_keyvalue *keyvalue_next = section->keyvalues->next;

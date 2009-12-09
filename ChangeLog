@@ -1,3 +1,7 @@
+2009-12-09  Albert Chu <chu11@llnl.gov>
+
+	* common/src/: Fix various memleaks.
+
 2009-12-07  Albert Chu <chu11@llnl.gov>
 
 	* pef-config/: Fix backport bug.
