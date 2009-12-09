@@ -6,6 +6,9 @@
 
 	* libfreeipmi/src/sel-parse/ipmi-sel-parse-string.c: Fix
 	whitespace.
+
+	* libfreeipmi/include/freeipmi/sel-parse/ipmi-sel-parse.h: Fix
+	API documentation.
 	
 2009-12-08  Albert Chu <chu11@llnl.gov>
 
