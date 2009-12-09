@@ -44,6 +44,17 @@ entity ids
 0x41, 0x42, are "identical" to other entries
 - should map them together for entity-id-names output in sensors?
 
+portability
+-----------
+cygwin
+- recvfrom not portable to cygwin
+  - change API? not likely
+  - best idea so far that I have:
+    - autoconf to see if you are building in cygwin
+    - if so, change socket creations to bind/connect to/from location
+    - change recvfrom to recv(), and code's just gotta be smart enough
+      to know not to check the "from" parameter.
+
 simulator
 ---------
 server simulator, for scalable testing
