@@ -1164,38 +1164,6 @@ _normal_output_event (ipmi_sel_state_data_t *state_data, unsigned int flags)
         }
     
       /* OEM Interpretation
-       *
-       * Inventec 5441/Dell Xanadu2
-       *
-       * Unique condition 1, want to output the major and minor
-       * versions of the bios as "version x.y", don't want to see
-       * "major x ; minor y" using below code.
-       *
-       * Unique condition 2, event data 2 and 3 are one error code
-       * from the bios.  So there is no individual event data 2/3
-       * output, the only output is the combined output.
-       */
-      if (state_data->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
-          && state_data->product_id == IPMI_INVENTEC_PRODUCT_ID_5441
-          /* Unique Condition 1 */
-          && ((generator_id == IPMI_GENERATOR_ID_OEM_INVENTEC_BIOS
-               && event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INVENTEC_BIOS
-               && sensor_type == IPMI_SENSOR_TYPE_OEM_INVENTEC_BIOS
-               && sensor_number == IPMI_SENSOR_NUMBER_OEM_INVENTEC_POST_START
-               && !event_data1_offset
-               && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
-               && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
-              /* Unique Condition 2 */
-              || (generator_id == IPMI_GENERATOR_ID_OEM_INVENTEC_POST_ERROR_CODE
-                  && event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
-                  && sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS
-                  && sensor_number == IPMI_SENSOR_NUMBER_OEM_INVENTEC_POST_ERROR_CODE)))
-        {
-          strcat (fmtbuf, "%c");
-          goto output;
-        }
-
-      /* OEM Interpretation
        * 
        * Dell Poweredge 2900
        * Dell Poweredge 2950
@@ -1217,131 +1185,15 @@ _normal_output_event (ipmi_sel_state_data_t *state_data, unsigned int flags)
 	  strcat (fmtbuf, "%f ; %h");
 	  goto output;
         }
-
-      /* OEM Interpretation
-       * 
-       * Dell Poweredge R610
-       * Dell Poweredge R710
-       *
-       * Unique condition 1, event data 2 and 3 together hold dimm
-       * location.
-       *
-       * Unique condition 2, event_data 2 and 3 together hold slot,
-       * bus, device, function information.
-       *
-       * Unique condition 3, event_data 2 holds firmware version to
-       * determine if data 3 is valid..
-       *
-       * Unique condition 4, event data 2 and 3 together hold slot,
-       * mezzanine, bus, device, function information for specific
-       * offsets
-       *
-       * Unique condition 5, event data 2 and 3 hold version mismatch
-       * information.
-       */
-      if (state_data->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-          && (state_data->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
-              || state_data->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
-          /* Unique Condition 1 */
-          && ((((event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
-                 && ((sensor_type == IPMI_SENSOR_TYPE_MEMORY
-                      && (event_data1_offset == IPMI_SENSOR_TYPE_MEMORY_CORRECTABLE_MEMORY_ERROR
-                          || event_data1_offset == IPMI_SENSOR_TYPE_MEMORY_UNCORRECTABLE_MEMORY_ERROR
-                          || event_data1_offset == IPMI_SENSOR_TYPE_MEMORY_CRITICAL_OVERTEMPERATURE))
-                     || (sensor_type == IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED
-                         && event_data1_offset == IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED_CORRECTABLE_MEMORY_ERROR_LOGGING_DISABLED)))
-                || (event_type_code == IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY
-                    && sensor_type == IPMI_SENSOR_TYPE_MEMORY
-                    && event_data1_offset == IPMI_GENERIC_EVENT_READING_TYPE_CODE_REDUNDANCY_REDUNDANCY_LOST)
-                || (event_type_code == IPMI_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY
-                    && sensor_type == IPMI_SENSOR_TYPE_MEMORY
-                    && (event_data1_offset == IPMI_GENERIC_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY_TRANSITION_TO_NON_CRITICAL_FROM_OK
-                        || event_data1_offset == IPMI_GENERIC_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY_TRANSITION_TO_CRITICAL_FROM_LESS_SEVERE)))
-               && state_data->ipmi_version_major == IPMI_2_0_MAJOR_VERSION
-               && state_data->ipmi_version_minor == IPMI_2_0_MINOR_VERSION
-               && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
-               && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
-              /* Unique Condition 2 */
-              || (event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
-                  && ((sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
-                       && ((event_data1_offset == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_PERR
-                            && sensor_number == IPMI_SENSOR_NUMBER_OEM_DELL_PCI_PARITY_ERROR)
-                           || event_data1_offset == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_SERR
-                           || event_data1_offset == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_BUS_FATAL_ERROR))
-                      || (sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_NON_FATAL_ERROR
-                          && event_data1_offset == IPMI_SENSOR_TYPE_OEM_DELL_NON_FATAL_ERROR_PCIE_ERROR)
-                      || (sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_FATAL_IO_ERROR
-                          && event_data1_offset == IPMI_SENSOR_TYPE_OEM_DELL_FATAL_IO_ERROR_FATAL_IO_ERROR))
-                  && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
-                  && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
-              /* Unique Condition 3 */
-              || (event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
-                  && sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE
-                  && event_data1_offset == IPMI_SENSOR_TYPE_VERSION_CHANGE_HARDWARE_INCOMPATABILITY_DETECTED_WITH_ASSOCIATED_ENTITY
-                  && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
-                  && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
-              /* Unique Condition 4 */
-              || (event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
-                  && sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING
-                  && event_data1_offset == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING_DEVICE_OPTION_ROM_FAILED_TO_SUPPORT_LINK_TUNING_OR_FLEX_ADDRESS
-                  && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
-                  && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
-              /* Unique Condition 5 */
-              || (event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
-                  && sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE
-                  && event_data1_offset == IPMI_SENSOR_TYPE_VERSION_CHANGE_FIRMWARE_OR_SOFTWARE_INCOMPATABILITY_DETECTED_WITH_ASSOCIATED_ENTITY
-                  && state_data->ipmi_version_major == IPMI_2_0_MAJOR_VERSION
-                  && state_data->ipmi_version_minor == IPMI_2_0_MINOR_VERSION
-                  && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
-                  && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)))
-        {
-          strcat (fmtbuf, "%c");
-          goto output;
-        }
-
-      /* OEM Interpretation
-       * 
-       * Dell Poweredge R610
-       * Dell Poweredge R710
-       *
-       * Unique condition, event_data 2 and 3 contain watt output, but
-       * only for a specific event_data3 flag conditions.
-       */
-      if (state_data->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-          && (state_data->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
-              || state_data->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
-          && event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
-          && sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY
-          && event_data1_offset == IPMI_SENSOR_TYPE_POWER_SUPPLY_CONFIGURATION_ERROR
-          && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
-          && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
-        {
-          uint8_t event_data3_error_type;
-          
-          event_data3_error_type = (event_data3 & IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA3_OEM_DELL_OFFSET_CONFIGURATION_ERROR_ERROR_TYPE_BITMASK);
-          event_data3_error_type >>= IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA3_OEM_DELL_OFFSET_CONFIGURATION_ERROR_ERROR_TYPE_SHIFT;
-          
-          if (event_data3_error_type == IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA3_OFFSET_CONFIGURATION_ERROR_ERROR_TYPE_POWER_SUPPLY_RATING_MISMATCH)
-            {
-              strcat (fmtbuf, "%c");
-              goto output;
-            }
-        }
     }
 
-  /* special case, event_data3 describes event_data2 type, so really
-   * only want the one output
-   */
-  if (ipmi_event_reading_type_code_class (event_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE
-      && sensor_type == IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED
-      && event_data1_offset == IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED_CORRECTABLE_MACHINE_CHECK_ERROR_LOGGING_DISABLED
-      && event_data2_flag == IPMI_SEL_EVENT_DATA_SENSOR_SPECIFIC_EVENT_EXTENSION_CODE
-      && event_data3_flag == IPMI_SEL_EVENT_DATA_SENSOR_SPECIFIC_EVENT_EXTENSION_CODE)
-    strcat (fmtbuf, "%c");
-  else if (event_data2_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE
-           && event_data3_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE)
+  if (event_data2_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE
+      && event_data3_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE)
     {
-      strcat (fmtbuf, "%f ; %h");
+      /* will effectively output "%f ; %h" if combined output not
+       * available or reasonable
+       */
+      strcat (fmtbuf, "%c");
       check_for_na++;
     }
   else if (event_data2_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE)
