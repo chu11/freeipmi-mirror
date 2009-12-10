@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.88 2009-12-08 21:36:20 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.89 2009-12-10 00:49:52 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -255,7 +255,8 @@ _recvfrom (cbuf_t cbuf, int fd, struct sockaddr_in *srcaddr)
                               buf,
                               IPMIPOWER_PACKET_BUFLEN,
                               0,
-                              (struct sockaddr *)&from, &fromlen);
+                              (struct sockaddr *)&from,
+                              &fromlen);
     } while (rv < 0 && errno == EINTR);
 
   if (rv < 0)

@@ -2,6 +2,8 @@
 
 	* ipmi-sel/src/ipmi-sel.c (_normal_output_event): Remove legacy
 	special/unique checks that are no longer needed.
+
+	* ipmipower/src/ipmipower.c: Fix whitespace.
 	
 2009-12-09  Albert Chu <chu11@llnl.gov>
 
