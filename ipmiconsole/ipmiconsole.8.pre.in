@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmiconsole.8.pre.in,v 1.45 2009-11-04 19:43:36 chu11 Exp $
+.\"$Id: ipmiconsole.8.pre.in,v 1.46 2009-12-10 23:38:03 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -232,8 +232,6 @@ left in
 for debugging purposes:
 
 .IP o 2
-Sensitive command line arguments are not cleared from memory.
-.IP o
 Core dumps are enabled.
 
 Before placing ipmiconsole in a production system, it is recommended
