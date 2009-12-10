@@ -118,7 +118,7 @@ freeipmi_memcpy (void *dest, const void *src, size_t n)
 void *freeipmi_mempcpy (void *to, const void *from, size_t size);
 #endif /* HAVE_MEMPCPY */
 
-#  ifndef HAVE_MEMSET
+#ifndef HAVE_MEMSET
 static inline void*
 freeipmi_memset (void *s, int c, size_t n)
 {
