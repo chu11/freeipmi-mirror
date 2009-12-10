@@ -9,6 +9,7 @@ o Report proper error message when underlying crypt library is
   incompatible.
 o Fix header file typing inconsistencies.
 o Fix header file documentation.
+o Fix manpage documentation.
 
 FreeIPMI 0.8.1 - 12/07/09
 -------------------------
