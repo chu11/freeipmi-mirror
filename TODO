@@ -63,6 +63,9 @@ cygwin
   - cleanest/quickest hack
     - do recv() instead of recvfrom() inside ipmi_lan_recvrom()
     - code has to be smart and not use the 'from' return var
+  - do connected udp sockets everywhere
+    - what corner cases will I miss?  any?  I'm scared of the behavior
+      of select(), poll() under error conditions.
 
 simulator
 ---------
