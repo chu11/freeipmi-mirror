@@ -1,7 +1,15 @@
 2009-12-10  Albert Chu <chu11@llnl.gov>
 
+	* ipmipower/ipmipower.8.pre.in, ipmiconsole/ipmiconsole.8.pre.in:
+	Remove legacy comments.
+	
+2009-12-10  Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/cmds/ipmi-messaging-support-cmds.h:
 	Fix typing inconsistency.
+
+	* common/src/portability/freeipmi-portability.h: Fix whitespace
+	formatting.
 	
 2009-12-09  Albert Chu <chu11@llnl.gov>
 
