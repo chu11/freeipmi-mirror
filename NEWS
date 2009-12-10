@@ -7,6 +7,7 @@ o In ipmi-sel, fix output corner case when --ignore-sdr-cache is
   specified.
 o Report proper error message when underlying crypt library is
   incompatible.
+o Fix header file typing inconsistencies.
 o Fix header file documentation.
 
 FreeIPMI 0.8.1 - 12/07/09

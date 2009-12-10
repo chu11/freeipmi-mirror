@@ -1,3 +1,8 @@
+2009-12-10  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/cmds/ipmi-messaging-support-cmds.h:
+	Fix typing inconsistency.
+	
 2009-12-09  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sel/src/ipmi-sel.c (_normal_output_event): Remove legacy

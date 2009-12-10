@@ -420,7 +420,7 @@ int fill_cmd_send_message (uint8_t channel_number,
                            uint8_t message_encryption,
                            uint8_t tracking_operation,
                            const void *message_data,
-                           uint32_t message_data_len,
+                           unsigned int message_data_len,
                            fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_read_event_message_buffer (fiid_obj_t obj_cmd_rq);
