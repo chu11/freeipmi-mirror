@@ -247,12 +247,19 @@ extensions from Dell, Fujitsu, Inventec, Sun, and Supermicro.
 Ipmi-sensors and Ipmi-sel support OEM sensors and/or events from
 Dell, Inventec, and Supermicro.
 
-3) Easy setup
+3) Additional flexibility
+
+By implementing various IPMI sub-sections into multiple tools, each
+tool is capable of providing the user with more options, features, or
+more flexibility.  It may not be as easy (or architecturally possible)
+to do in a all-in-one tool.
+
+4) Easy setup
 
 By implementing drivers in userspace libraries, there is no need to
 build/setup/manage any kernel modules/drivers.
 
-4) Portability
+5) Portability
 
 Likewise, by implementing everything in userspace libraries and tools,
 portability to multiple operating systems and architectures should be

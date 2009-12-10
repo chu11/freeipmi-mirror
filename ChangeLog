@@ -2,6 +2,8 @@
 
 	* ipmipower/ipmipower.8.pre.in, ipmiconsole/ipmiconsole.8.pre.in:
 	Remove legacy comments.
+
+	* doc/freeipmi-faq.texi: Add "special" note.
 	
 2009-12-10  Albert Chu <chu11@llnl.gov>
 
