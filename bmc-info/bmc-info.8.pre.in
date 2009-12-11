@@ -32,10 +32,13 @@ The following options are specific to
 .TP
 \fB\-\-get\-device\-id\fR
 Display only device ID information.
+.TP
 \fB\-\-get\-device\-guid\fR
 Display only device guid.
+.TP
 \fB\-\-get\-system\-info\fR
 Display only system info.
+.TP
 \fB\-\-get\-channel\-info\fR
 Display only channel information.
 #include <@top_srcdir@/common/man/manpage-common-interpret-oem-data.man>
