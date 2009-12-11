@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.138 2009-11-04 18:45:40 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.139 2009-12-11 00:32:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -602,11 +602,11 @@ _output_sensor_bitmask (ipmimonitoring_state_data_t *state_data,
               char buffer[IPMIMONITORING_BUFLEN+1];
 
               memset (buffer, '\0', IPMIMONITORING_BUFLEN+1);
-              if (ipmi_monitoring_bitmask_string (state_data->ctx,
-                                                  sensor_bitmask_type,
-                                                  (sensor_bitmask_value & (0x1 << j)),
-                                                  buffer,
-                                                  IPMIMONITORING_BUFLEN) < 0)
+              if (ipmi_monitoring_sensor_bitmask_string (state_data->ctx,
+                                                         sensor_bitmask_type,
+                                                         (sensor_bitmask_value & (0x1 << j)),
+                                                         buffer,
+                                                         IPMIMONITORING_BUFLEN) < 0)
                 {
                   /* If parameters error, assume remote machine has given us some
                    * bogus offset.  Output an appropriate string.
@@ -615,7 +615,7 @@ _output_sensor_bitmask (ipmimonitoring_state_data_t *state_data,
                     {
                       pstdout_fprintf (state_data->pstate,
                                        stderr,
-                                       "ipmi_monitoring_bitmask_string: %s\n",
+                                       "ipmi_monitoring_sensor_bitmask_string: %s\n",
                                        ipmi_monitoring_ctx_errormsg (state_data->ctx));
                       goto cleanup;
                     }
@@ -624,7 +624,7 @@ _output_sensor_bitmask (ipmimonitoring_state_data_t *state_data,
                       && state_data->prog_data->args->common.debug)
                     pstdout_fprintf (state_data->pstate,
                                      stderr,
-                                     "ipmi_monitoring_bitmask_string: %s: invalid bitmask likely: %X\n",
+                                     "ipmi_monitoring_sensor_bitmask_string: %s: invalid bitmask likely: %X\n",
                                      ipmi_monitoring_ctx_errormsg (state_data->ctx),
                                      sensor_bitmask_value);
 

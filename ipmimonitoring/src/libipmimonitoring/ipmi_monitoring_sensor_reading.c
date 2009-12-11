@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.80 2009-11-24 19:34:14 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.81 2009-12-11 00:32:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -342,12 +342,6 @@ _get_digital_sensor_state (ipmi_monitoring_ctx_t c,
            && sdr_sensor_type == IPMI_SENSOR_TYPE_POWER_UNIT)
     config = ipmi_power_unit_redundancy_config;
   else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
-           && sdr_sensor_type == IPMI_SENSOR_TYPE_MODULE_BOARD)
-    config = ipmi_module_board_state_config;
-  else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_PRESENT
-           && sdr_sensor_type == IPMI_SENSOR_TYPE_MODULE_BOARD)
-    config = ipmi_module_board_device_present_config;
-  else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
            && sdr_sensor_type == IPMI_SENSOR_TYPE_DRIVE_SLOT)
     config = ipmi_drive_slot_state_config;
   else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_PREDICTIVE_FAILURE
@@ -359,6 +353,12 @@ _get_digital_sensor_state (ipmi_monitoring_ctx_t c,
   else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
            && sdr_sensor_type == IPMI_SENSOR_TYPE_BUTTON_SWITCH)
     config = ipmi_button_switch_state_config;
+  else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
+           && sdr_sensor_type == IPMI_SENSOR_TYPE_MODULE_BOARD)
+    config = ipmi_module_board_state_config;
+  else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_PRESENT
+           && sdr_sensor_type == IPMI_SENSOR_TYPE_MODULE_BOARD)
+    config = ipmi_module_board_device_present_config;
   else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_PRESENT
            && sdr_sensor_type == IPMI_SENSOR_TYPE_ENTITY_PRESENCE)
     config = ipmi_entity_presence_device_present_config;
@@ -405,8 +405,16 @@ _get_specific_sensor_state (ipmi_monitoring_ctx_t c,
     config = ipmi_system_event_config;
   else if (sdr_sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
     config = ipmi_critical_interrupt_config;
+  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_BUTTON_SWITCH)
+    config = ipmi_button_switch_config;
+  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_CABLE_INTERCONNECT)
+    config = ipmi_cable_interconnect_config;
+  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_BOOT_ERROR)
+    config = ipmi_boot_error_config;
   else if (sdr_sensor_type == IPMI_SENSOR_TYPE_SLOT_CONNECTOR)
     config = ipmi_slot_connector_config;
+  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_SYSTEM_ACPI_POWER_STATE)
+    config = ipmi_system_acpi_power_state_config;
   else if (sdr_sensor_type == IPMI_SENSOR_TYPE_WATCHDOG2)
     config = ipmi_watchdog2_config;
   else if (sdr_sensor_type == IPMI_SENSOR_TYPE_ENTITY_PRESENCE)
@@ -417,14 +425,6 @@ _get_specific_sensor_state (ipmi_monitoring_ctx_t c,
     config = ipmi_battery_config;
   else if (sdr_sensor_type == IPMI_SENSOR_TYPE_FRU_STATE)
     config = ipmi_fru_state_config;
-  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_CABLE_INTERCONNECT)
-    config = ipmi_cable_interconnect_config;
-  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_BOOT_ERROR)
-    config = ipmi_boot_error_config;
-  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_BUTTON_SWITCH)
-    config = ipmi_button_switch_config;
-  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_SYSTEM_ACPI_POWER_STATE)
-    config = ipmi_system_acpi_power_state_config;
   else
     {
       IPMI_MONITORING_DEBUG (("sensor_type '0x%X' not supported", sdr_sensor_type));
@@ -813,40 +813,76 @@ _get_specific_sensor_bitmask_type (ipmi_monitoring_ctx_t c,
     sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_POWER_SUPPLY;
   else if (sdr_sensor_type == IPMI_SENSOR_TYPE_POWER_UNIT)
     sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_POWER_UNIT;
+  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_COOLING_DEVICE)
+    sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_COOLING_DEVICE;
+  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_OTHER_UNITS_BASED_SENSOR)
+    sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_OTHER_UNITS_BASED_SENSOR;
   else if (sdr_sensor_type == IPMI_SENSOR_TYPE_MEMORY)
     sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_MEMORY;
   else if (sdr_sensor_type == IPMI_SENSOR_TYPE_DRIVE_SLOT)
     sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_DRIVE_SLOT;
+  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_POST_MEMORY_RESIZE)
+    sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_POST_MEMORY_RESIZE;
   else if (sdr_sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS)
     sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_SYSTEM_FIRMWARE_PROGRESS;
   else if (sdr_sensor_type == IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED)
     sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_EVENT_LOGGING_DISABLED;
+  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_WATCHDOG1)
+    sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_WATCHDOG1;
   else if (sdr_sensor_type == IPMI_SENSOR_TYPE_SYSTEM_EVENT)
     sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_SYSTEM_EVENT;
   else if (sdr_sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
     sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_CRITICAL_INTERRUPT;
+  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_BUTTON_SWITCH)
+    sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_BUTTON_SWITCH;
   else if (sdr_sensor_type == IPMI_SENSOR_TYPE_MODULE_BOARD)
     sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_MODULE_BOARD;
+  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_MICROCONTROLLER_COPROCESSOR)
+    sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_MICROCONTROLLER_COPROCESSOR;
+  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_ADD_IN_CARD)
+    sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_ADD_IN_CARD;
+  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_CHASSIS)
+    sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_CHASSIS;
+  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_CHIP_SET)
+    sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_CHIP_SET;
+  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_OTHER_FRU)
+    sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_OTHER_FRU;
+  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_CABLE_INTERCONNECT)
+    sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_CABLE_INTERCONNECT;
+  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_TERMINATOR)
+    sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_TERMINATOR;
+  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_SYSTEM_BOOT_INITIATED)
+    sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_SYSTEM_BOOT_INITIATED;
+  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_BOOT_ERROR)
+    sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_BOOT_ERROR;
+  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_OS_BOOT)
+    sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_OS_BOOT;
+  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_OS_CRITICAL_STOP)
+    sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_OS_CRITICAL_STOP;
   else if (sdr_sensor_type == IPMI_SENSOR_TYPE_SLOT_CONNECTOR)
     sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_SLOT_CONNECTOR;
+  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_SYSTEM_ACPI_POWER_STATE)
+    sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_SYSTEM_ACPI_POWER_STATE;
   else if (sdr_sensor_type == IPMI_SENSOR_TYPE_WATCHDOG2)
     sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_WATCHDOG2;
+  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_PLATFORM_ALERT)
+    sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_PLATFORM_ALERT;
   else if (sdr_sensor_type == IPMI_SENSOR_TYPE_ENTITY_PRESENCE)
     sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_ENTITY_PRESENCE;
+  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_MONITOR_ASIC_IC)
+    sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_MONITOR_ASIC_IC;
+  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_LAN)
+    sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_LAN;
   else if (sdr_sensor_type == IPMI_SENSOR_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH)
     sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH;
   else if (sdr_sensor_type == IPMI_SENSOR_TYPE_BATTERY)
     sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_BATTERY;
+  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_SESSION_AUDIT)
+    sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_SESSION_AUDIT;
+  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE)
+    sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_VERSION_CHANGE;
   else if (sdr_sensor_type == IPMI_SENSOR_TYPE_FRU_STATE)
     sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_FRU_STATE;
-  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_CABLE_INTERCONNECT)
-    sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_CABLE_INTERCONNECT;
-  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_BOOT_ERROR)
-    sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_BOOT_ERROR;
-  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_BUTTON_SWITCH)
-    sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_BUTTON_SWITCH;
-  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_SYSTEM_ACPI_POWER_STATE)
-    sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_SYSTEM_ACPI_POWER_STATE;
   else
     {
       IPMI_MONITORING_DEBUG (("sensor_type '0x%X' bitmask not supported", sdr_sensor_type));
@@ -933,12 +969,14 @@ _specific_sensor_reading (ipmi_monitoring_ctx_t c,
 
 static int
 _get_sensor_type (ipmi_monitoring_ctx_t c,
-                   uint8_t sdr_sensor_type)
+                  uint8_t sdr_sensor_type)
 {
   assert (c);
   assert (c->magic == IPMI_MONITORING_MAGIC);
 
-  if (sdr_sensor_type == IPMI_SENSOR_TYPE_TEMPERATURE)
+  if (sdr_sensor_type == IPMI_SENSOR_TYPE_RESERVED)
+    return (IPMI_MONITORING_SENSOR_TYPE_RESERVED);
+  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_TEMPERATURE)
     return (IPMI_MONITORING_SENSOR_TYPE_TEMPERATURE);
   else if (sdr_sensor_type == IPMI_SENSOR_TYPE_VOLTAGE)
     return (IPMI_MONITORING_SENSOR_TYPE_VOLTAGE);
@@ -956,43 +994,79 @@ _get_sensor_type (ipmi_monitoring_ctx_t c,
     return (IPMI_MONITORING_SENSOR_TYPE_POWER_SUPPLY);
   else if (sdr_sensor_type == IPMI_SENSOR_TYPE_POWER_UNIT)
     return (IPMI_MONITORING_SENSOR_TYPE_POWER_UNIT);
+  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_COOLING_DEVICE)
+    return (IPMI_MONITORING_SENSOR_TYPE_COOLING_DEVICE);
+  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_OTHER_UNITS_BASED_SENSOR)
+    return (IPMI_MONITORING_SENSOR_TYPE_OTHER_UNITS_BASED_SENSOR);
   else if (sdr_sensor_type == IPMI_SENSOR_TYPE_MEMORY)
     return (IPMI_MONITORING_SENSOR_TYPE_MEMORY);
   else if (sdr_sensor_type == IPMI_SENSOR_TYPE_DRIVE_SLOT)
     return (IPMI_MONITORING_SENSOR_TYPE_DRIVE_SLOT);
+  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_POST_MEMORY_RESIZE)
+    return (IPMI_MONITORING_SENSOR_TYPE_POST_MEMORY_RESIZE);
   else if (sdr_sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS)
     return (IPMI_MONITORING_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS);
   else if (sdr_sensor_type == IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED)
     return (IPMI_MONITORING_SENSOR_TYPE_EVENT_LOGGING_DISABLED);
+  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_WATCHDOG1)
+    return (IPMI_MONITORING_SENSOR_TYPE_WATCHDOG1);
   else if (sdr_sensor_type == IPMI_SENSOR_TYPE_SYSTEM_EVENT)
     return (IPMI_MONITORING_SENSOR_TYPE_SYSTEM_EVENT);
   else if (sdr_sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
     return (IPMI_MONITORING_SENSOR_TYPE_CRITICAL_INTERRUPT);
+  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_BUTTON_SWITCH)
+    return (IPMI_MONITORING_SENSOR_TYPE_BUTTON_SWITCH);
   else if (sdr_sensor_type == IPMI_SENSOR_TYPE_MODULE_BOARD)
     return (IPMI_MONITORING_SENSOR_TYPE_MODULE_BOARD);
+  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_MICROCONTROLLER_COPROCESSOR)
+    return (IPMI_MONITORING_SENSOR_TYPE_MICROCONTROLLER_COPROCESSOR);
+  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_ADD_IN_CARD)
+    return (IPMI_MONITORING_SENSOR_TYPE_ADD_IN_CARD);
+  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_CHASSIS)
+    return (IPMI_MONITORING_SENSOR_TYPE_CHASSIS);
+  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_CHIP_SET)
+    return (IPMI_MONITORING_SENSOR_TYPE_CHIP_SET);
+  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_OTHER_FRU)
+    return (IPMI_MONITORING_SENSOR_TYPE_OTHER_FRU);
+  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_CABLE_INTERCONNECT)
+    return (IPMI_MONITORING_SENSOR_TYPE_CABLE_INTERCONNECT);
+  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_TERMINATOR)
+    return (IPMI_MONITORING_SENSOR_TYPE_TERMINATOR);
+  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_SYSTEM_BOOT_INITIATED)
+    return (IPMI_MONITORING_SENSOR_TYPE_SYSTEM_BOOT_INITIATED);
+  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_BOOT_ERROR)
+    return (IPMI_MONITORING_SENSOR_TYPE_BOOT_ERROR);
+  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_OS_BOOT)
+    return (IPMI_MONITORING_SENSOR_TYPE_OS_BOOT);
+  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_OS_CRITICAL_STOP)
+    return (IPMI_MONITORING_SENSOR_TYPE_OS_CRITICAL_STOP);
   else if (sdr_sensor_type == IPMI_SENSOR_TYPE_SLOT_CONNECTOR)
     return (IPMI_MONITORING_SENSOR_TYPE_SLOT_CONNECTOR);
+  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_SYSTEM_ACPI_POWER_STATE)
+    return (IPMI_MONITORING_SENSOR_TYPE_SYSTEM_ACPI_POWER_STATE);
   else if (sdr_sensor_type == IPMI_SENSOR_TYPE_WATCHDOG2)
     return (IPMI_MONITORING_SENSOR_TYPE_WATCHDOG2);
+  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_PLATFORM_ALERT)
+    return (IPMI_MONITORING_SENSOR_TYPE_PLATFORM_ALERT);
   else if (sdr_sensor_type == IPMI_SENSOR_TYPE_ENTITY_PRESENCE)
     return (IPMI_MONITORING_SENSOR_TYPE_ENTITY_PRESENCE);
+  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_MONITOR_ASIC_IC)
+    return (IPMI_MONITORING_SENSOR_TYPE_MONITOR_ASIC_IC);
+  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_LAN)
+    return (IPMI_MONITORING_SENSOR_TYPE_LAN);
   else if (sdr_sensor_type == IPMI_SENSOR_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH)
     return (IPMI_MONITORING_SENSOR_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH);
   else if (sdr_sensor_type == IPMI_SENSOR_TYPE_BATTERY)
     return (IPMI_MONITORING_SENSOR_TYPE_BATTERY);
+  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_SESSION_AUDIT)
+    return (IPMI_MONITORING_SENSOR_TYPE_SESSION_AUDIT);
+  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE)
+    return (IPMI_MONITORING_SENSOR_TYPE_VERSION_CHANGE);
   else if (sdr_sensor_type == IPMI_SENSOR_TYPE_FRU_STATE)
     return (IPMI_MONITORING_SENSOR_TYPE_FRU_STATE);
-  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_CABLE_INTERCONNECT)
-    return (IPMI_MONITORING_SENSOR_TYPE_CABLE_INTERCONNECT);
-  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_BOOT_ERROR)
-    return (IPMI_MONITORING_SENSOR_TYPE_BOOT_ERROR);
-  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_BUTTON_SWITCH)
-    return (IPMI_MONITORING_SENSOR_TYPE_BUTTON_SWITCH);
-  else if (sdr_sensor_type == IPMI_SENSOR_TYPE_SYSTEM_ACPI_POWER_STATE)
-    return (IPMI_MONITORING_SENSOR_TYPE_SYSTEM_ACPI_POWER_STATE);
 
   IPMI_MONITORING_DEBUG (("sensor_type '0x%X' not supported", sdr_sensor_type));
-  return (IPMI_MONITORING_SENSOR_TYPE_UNKNOWN);
+  return (sdr_sensor_type);
 }
 
 int

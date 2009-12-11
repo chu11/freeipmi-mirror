@@ -1,5 +1,11 @@
 2009-12-10  Albert Chu <chu11@llnl.gov>
 
+	Merge changes from ipmimonitoring_rearch_branch
+
+	* ipmimonitoring/: Rearch to support more sensor types.
+	
+2009-12-10  Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/record-format/ipmi-sdr-record-format.h:
 	Cleanup linearization macros.
 	

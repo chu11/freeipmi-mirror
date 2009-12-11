@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_defs.h,v 1.31 2009-09-16 23:12:23 chu11 Exp $
+ *  $Id: ipmi_monitoring_defs.h,v 1.32 2009-12-11 00:32:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -44,9 +44,14 @@
 #endif /* MAXPATHLEN */
 
 /* +1 to avoid gcc warnings */
-#define IPMI_MONITORING_SENSOR_TYPE_VALID(__val)                      \
-  ((((__val) + 1) >= (IPMI_MONITORING_SENSOR_TYPE_TEMPERATURE + 1)    \
-    && (__val) <= IPMI_MONITORING_SENSOR_TYPE_UNKNOWN) ? 1 : 0)
+#define IPMI_MONITORING_SENSOR_TYPE_VALID(__val)                    \
+  (((((__val) + 1) >= (IPMI_MONITORING_SENSOR_TYPE_RESERVED + 1)    \
+     && ((__val) - 1) <= (IPMI_MONITORING_SENSOR_TYPE_OEM_MAX - 1)) \
+    || ((__val) == IPMI_MONITORING_SENSOR_TYPE_UNKNOWN)) ? 1 : 0)
+
+#define IPMI_MONITORING_SENSOR_TYPE_INPUT_VALID(__val)              \
+  ((((__val) + 1) >= (IPMI_MONITORING_SENSOR_TYPE_TEMPERATURE + 1)  \
+    && ((__val) - 1) <= (IPMI_MONITORING_SENSOR_TYPE_OEM_MAX - 1)) ? 1 : 0)
 
 #define IPMI_MONITORING_SENSOR_STATE_VALID(__val)                  \
   (((__val) == IPMI_MONITORING_SENSOR_STATE_NOMINAL                \
@@ -66,7 +71,7 @@
     || (__val) == IPMI_MONITORING_SENSOR_READING_TYPE_UNKNOWN) ? 1 : 0)
 
 /* +1 to avoid gcc warnings */
-#define IPMI_MONITORING_SENSOR_BITMASK_TYPE_VALID(__val)                 \
+#define IPMI_MONITORING_SENSOR_BITMASK_TYPE_VALID(__val)         \
   ((((__val) + 1) >= (IPMI_MONITORING_SENSOR_BITMASK_TYPE_THRESHOLD + 1) \
     && (__val) <= IPMI_MONITORING_SENSOR_BITMASK_TYPE_UNKNOWN) ? 1 : 0)
 

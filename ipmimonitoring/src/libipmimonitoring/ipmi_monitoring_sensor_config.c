@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_config.c,v 1.38 2009-09-09 20:27:25 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_config.c,v 1.39 2009-12-11 00:32:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -106,105 +106,6 @@ struct ipmi_sensor_config ipmi_fan_redundancy_config[] =
     { NULL, -1},
   };
 
-struct ipmi_sensor_config ipmi_processor_state_config[] =
-  {
-    { "IPMI_Processor_State_Deasserted", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
-    { "IPMI_Processor_State_Asserted", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
-    { NULL, -1},
-  };
-
-struct ipmi_sensor_config ipmi_power_supply_state_config[] =
-  {
-    { "IPMI_Power_Supply_State_Deasserted", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
-    { "IPMI_Power_Supply_State_Asserted", IPMI_MONITORING_SENSOR_STATE_WARNING},
-    { NULL, -1},
-  };
-
-struct ipmi_sensor_config ipmi_power_supply_redundancy_config[] =
-  {
-    { "IPMI_Power_Supply_Redundancy_Fully_Redundant", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
-    { "IPMI_Power_Supply_Redundancy_Redundancy_Lost", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
-    { "IPMI_Power_Supply_Redundancy_Redundancy_Degraded", IPMI_MONITORING_SENSOR_STATE_WARNING},
-    { "IPMI_Power_Supply_Redundancy_Non_Redundant_Sufficient_Resources_From_Redundant", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
-    { "IPMI_Power_Supply_Redundancy_Non_Redundant_Sufficient_Resources_From_Insufficient_Redundancy", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
-    { "IPMI_Power_Supply_Redundancy_Non_Redundant_Insufficient_Resources", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
-    { "IPMI_Power_Supply_Redundancy_Redundancy_Degraded_From_Fully_Redundant", IPMI_MONITORING_SENSOR_STATE_WARNING},
-    { "IPMI_Power_Supply_Redundancy_Redundancy_Degraded_From_Non_Redundant", IPMI_MONITORING_SENSOR_STATE_WARNING},
-    { NULL, -1},
-  };
-
-struct ipmi_sensor_config ipmi_power_unit_device_present_config[] =
-  {
-    { "IPMI_Power_Unit_Device_Present_Device_Removed_Device_Absent", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
-    { "IPMI_Power_Unit_Device_Present_Device_Inserted_Device_Present", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
-    { NULL, -1},
-  };
-
-struct ipmi_sensor_config ipmi_power_unit_redundancy_config[] =
-  {
-    { "IPMI_Power_Unit_Redundancy_Fully_Redundant", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
-    { "IPMI_Power_Unit_Redundancy_Redundancy_Lost", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
-    { "IPMI_Power_Unit_Redundancy_Redundancy_Degraded", IPMI_MONITORING_SENSOR_STATE_WARNING},
-    { "IPMI_Power_Unit_Redundancy_Non_Redundant_Sufficient_Resources_From_Redundant", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
-    { "IPMI_Power_Unit_Redundancy_Non_Redundant_Sufficient_Resources_From_Insufficient_Redundancy", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
-    { "IPMI_Power_Unit_Redundancy_Non_Redundant_Insufficient_Resources", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
-    { "IPMI_Power_Unit_Redundancy_Redundancy_Degraded_From_Fully_Redundant", IPMI_MONITORING_SENSOR_STATE_WARNING},
-    { "IPMI_Power_Unit_Redundancy_Redundancy_Degraded_From_Non_Redundant", IPMI_MONITORING_SENSOR_STATE_WARNING},
-    { NULL, -1},
-  };
-
-struct ipmi_sensor_config ipmi_module_board_state_config[] =
-  {
-    { "IPMI_Module_Board_State_Deasserted", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
-    { "IPMI_Module_Board_State_Asserted", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
-    { NULL, -1},
-  };
-
-struct ipmi_sensor_config ipmi_module_board_device_present_config[] =
-  {
-    { "IPMI_Module_Board_Device_Present_Device_Removed_Device_Absent", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
-    { "IPMI_Module_Board_Device_Present_Device_Inserted_Device_Present", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
-    { NULL, -1},
-  };
-
-struct ipmi_sensor_config ipmi_drive_slot_state_config[] =
-  {
-    { "IPMI_Drive_Slot_State_Deasserted", IPMI_MONITORING_SENSOR_STATE_WARNING},
-    { "IPMI_Drive_Slot_State_Asserted", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
-    { NULL, -1},
-  };
-
-struct ipmi_sensor_config ipmi_drive_slot_predictive_failure_config[] =
-  {
-    { "IPMI_Drive_Slot_Predictive_Failure_Deasserted", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
-    { "IPMI_Drive_Slot_Predictive_Failure_Asserted", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
-    { NULL, -1},
-  };
-
-struct ipmi_sensor_config ipmi_drive_slot_device_present_config[] =
-  {
-    { "IPMI_Drive_Slot_Device_Present_Device_Removed_Device_Absent", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
-    { "IPMI_Drive_Slot_Device_Present_Device_Inserted_Device_Present", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
-    { NULL, -1},
-  };
-
-/* achu: for a button/switch states, I don't think users really care.
- * So report Nominal for all states.
- */
-struct ipmi_sensor_config ipmi_button_switch_state_config[] =
-  {
-    { "IPMI_Button_Switch_State_Deasserted", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
-    { "IPMI_Button_Switch_State_Asserted", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
-    { NULL, -1},
-  };
-
-struct ipmi_sensor_config ipmi_entity_presence_device_present_config[] =
-  {
-    { "IPMI_Entity_Presence_Device_Present_Device_Removed_Device_Absent", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
-    { "IPMI_Entity_Presence_Device_Present_Device_Inserted_Device_Present", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
-    { NULL, -1},
-  };
-
 struct ipmi_sensor_config ipmi_physical_security_config[] =
   {
     { "IPMI_Physical_Security_General_Chassis_Intrusion", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
@@ -246,6 +147,13 @@ struct ipmi_sensor_config ipmi_processor_config[] =
     { NULL, -1},
   };
 
+struct ipmi_sensor_config ipmi_processor_state_config[] =
+  {
+    { "IPMI_Processor_State_Deasserted", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
+    { "IPMI_Processor_State_Asserted", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    { NULL, -1},
+  };
+
 struct ipmi_sensor_config ipmi_power_supply_config[] =
   {
     { "IPMI_Power_Supply_Presence_Detected", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
@@ -255,6 +163,26 @@ struct ipmi_sensor_config ipmi_power_supply_config[] =
     { "IPMI_Power_Supply_Power_Supply_Input_Lost_Or_Out_Of_Range", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
     { "IPMI_Power_Supply_Power_Supply_Input_Out_Of_Range_But_Present", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
     { "IPMI_Power_Supply_Configuration_Error", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    { NULL, -1},
+  };
+
+struct ipmi_sensor_config ipmi_power_supply_state_config[] =
+  {
+    { "IPMI_Power_Supply_State_Deasserted", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
+    { "IPMI_Power_Supply_State_Asserted", IPMI_MONITORING_SENSOR_STATE_WARNING},
+    { NULL, -1},
+  };
+
+struct ipmi_sensor_config ipmi_power_supply_redundancy_config[] =
+  {
+    { "IPMI_Power_Supply_Redundancy_Fully_Redundant", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
+    { "IPMI_Power_Supply_Redundancy_Redundancy_Lost", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    { "IPMI_Power_Supply_Redundancy_Redundancy_Degraded", IPMI_MONITORING_SENSOR_STATE_WARNING},
+    { "IPMI_Power_Supply_Redundancy_Non_Redundant_Sufficient_Resources_From_Redundant", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    { "IPMI_Power_Supply_Redundancy_Non_Redundant_Sufficient_Resources_From_Insufficient_Redundancy", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    { "IPMI_Power_Supply_Redundancy_Non_Redundant_Insufficient_Resources", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    { "IPMI_Power_Supply_Redundancy_Redundancy_Degraded_From_Fully_Redundant", IPMI_MONITORING_SENSOR_STATE_WARNING},
+    { "IPMI_Power_Supply_Redundancy_Redundancy_Degraded_From_Non_Redundant", IPMI_MONITORING_SENSOR_STATE_WARNING},
     { NULL, -1},
   };
 
@@ -268,6 +196,26 @@ struct ipmi_sensor_config ipmi_power_unit_config[] =
     { "IPMI_Power_Unit_Soft_Power_Control_Failure", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
     { "IPMI_Power_Unit_Power_Unit_Failure_Detected", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
     { "IPMI_Power_Unit_Predictive_Failure", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    { NULL, -1},
+  };
+
+struct ipmi_sensor_config ipmi_power_unit_device_present_config[] =
+  {
+    { "IPMI_Power_Unit_Device_Present_Device_Removed_Device_Absent", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    { "IPMI_Power_Unit_Device_Present_Device_Inserted_Device_Present", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
+    { NULL, -1},
+  };
+
+struct ipmi_sensor_config ipmi_power_unit_redundancy_config[] =
+  {
+    { "IPMI_Power_Unit_Redundancy_Fully_Redundant", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
+    { "IPMI_Power_Unit_Redundancy_Redundancy_Lost", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    { "IPMI_Power_Unit_Redundancy_Redundancy_Degraded", IPMI_MONITORING_SENSOR_STATE_WARNING},
+    { "IPMI_Power_Unit_Redundancy_Non_Redundant_Sufficient_Resources_From_Redundant", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    { "IPMI_Power_Unit_Redundancy_Non_Redundant_Sufficient_Resources_From_Insufficient_Redundancy", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    { "IPMI_Power_Unit_Redundancy_Non_Redundant_Insufficient_Resources", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    { "IPMI_Power_Unit_Redundancy_Redundancy_Degraded_From_Fully_Redundant", IPMI_MONITORING_SENSOR_STATE_WARNING},
+    { "IPMI_Power_Unit_Redundancy_Redundancy_Degraded_From_Non_Redundant", IPMI_MONITORING_SENSOR_STATE_WARNING},
     { NULL, -1},
   };
 
@@ -298,6 +246,27 @@ struct ipmi_sensor_config ipmi_drive_slot_config[] =
     { "IPMI_Drive_Slot_In_Failed_Array", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
     { "IPMI_Drive_Slot_Rebuild_Remap_In_Progress", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
     { "IPMI_Drive_Slot_Rebuild_Remap_Aborted", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    { NULL, -1},
+  };
+
+struct ipmi_sensor_config ipmi_drive_slot_state_config[] =
+  {
+    { "IPMI_Drive_Slot_State_Deasserted", IPMI_MONITORING_SENSOR_STATE_WARNING},
+    { "IPMI_Drive_Slot_State_Asserted", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
+    { NULL, -1},
+  };
+
+struct ipmi_sensor_config ipmi_drive_slot_predictive_failure_config[] =
+  {
+    { "IPMI_Drive_Slot_Predictive_Failure_Deasserted", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
+    { "IPMI_Drive_Slot_Predictive_Failure_Asserted", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    { NULL, -1},
+  };
+
+struct ipmi_sensor_config ipmi_drive_slot_device_present_config[] =
+  {
+    { "IPMI_Drive_Slot_Device_Present_Device_Removed_Device_Absent", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    { "IPMI_Drive_Slot_Device_Present_Device_Inserted_Device_Present", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
     { NULL, -1},
   };
 
@@ -349,6 +318,57 @@ struct ipmi_sensor_config ipmi_critical_interrupt_config[] =
     { NULL, -1},
   };
 
+struct ipmi_sensor_config ipmi_button_switch_config[] =
+  {
+    { "IPMI_Button_Switch_Power_Button_Pressed", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
+    { "IPMI_Button_Switch_Sleep_Button_Pressed", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
+    { "IPMI_Button_Switch_Reset_Button_Pressed", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
+    { "IPMI_Button_Switch_FRU_Latch_Open", IPMI_MONITORING_SENSOR_STATE_WARNING},
+    { "IPMI_Button_Switch_FRU_Service_Request_Button", IPMI_MONITORING_SENSOR_STATE_WARNING},
+    { NULL, -1},
+  };
+
+/* achu: for a button/switch states, I don't think users really care.
+ * So report Nominal for all states.
+ */
+struct ipmi_sensor_config ipmi_button_switch_state_config[] =
+  {
+    { "IPMI_Button_Switch_State_Deasserted", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
+    { "IPMI_Button_Switch_State_Asserted", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
+    { NULL, -1},
+  };
+
+struct ipmi_sensor_config ipmi_module_board_state_config[] =
+  {
+    { "IPMI_Module_Board_State_Deasserted", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
+    { "IPMI_Module_Board_State_Asserted", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    { NULL, -1},
+  };
+
+struct ipmi_sensor_config ipmi_module_board_device_present_config[] =
+  {
+    { "IPMI_Module_Board_Device_Present_Device_Removed_Device_Absent", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    { "IPMI_Module_Board_Device_Present_Device_Inserted_Device_Present", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
+    { NULL, -1},
+  };
+
+struct ipmi_sensor_config ipmi_cable_interconnect_config[] =
+  {
+    { "IPMI_Cable_Interconnect_Is_Connected", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
+    { "IPMI_Cable_Interconnect_Configuration_Error", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    { NULL, -1},
+  };
+
+struct ipmi_sensor_config ipmi_boot_error_config[] =
+  {
+    { "IPMI_Boot_Error_No_Bootable_Media", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    { "IPMI_Boot_Error_Non_Bootable_Diskette_Left_In_Drive", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    { "IPMI_Boot_Error_PXE_Server_Not_Found", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    { "IPMI_Boot_Error_Invalid_Boot_Sector", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    { "IPMI_Boot_Error_Timeout_Waiting_For_User_Selection_Of_Boot_Source", IPMI_MONITORING_SENSOR_STATE_WARNING},
+    { NULL, -1},
+  };
+
 struct ipmi_sensor_config ipmi_slot_connector_config[] =
   {
     { "IPMI_Slot_Connector_Fault_Status_Asserted", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
@@ -361,6 +381,26 @@ struct ipmi_sensor_config ipmi_slot_connector_config[] =
     { "IPMI_Slot_Connector_Interlock_Asserted", IPMI_MONITORING_SENSOR_STATE_WARNING},
     { "IPMI_Slot_Connector_Slot_Is_Disabled", IPMI_MONITORING_SENSOR_STATE_WARNING},
     { "IPMI_Slot_Connector_Slot_Holds_Spare_Device", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
+    { NULL, -1},
+  };
+
+struct ipmi_sensor_config ipmi_system_acpi_power_state_config[] =
+  {
+    { "IPMI_System_ACPI_Power_State_S0_G0", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
+    { "IPMI_System_ACPI_Power_State_S1", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
+    { "IPMI_System_ACPI_Power_State_S2", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
+    { "IPMI_System_ACPI_Power_State_S3", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
+    { "IPMI_System_ACPI_Power_State_S4", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
+    { "IPMI_System_ACPI_Power_State_S5_G2", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
+    { "IPMI_System_ACPI_Power_State_S4_S5_Soft_Off", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
+    { "IPMI_System_ACPI_Power_State_G3_Mechanical_Off", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
+    { "IPMI_System_ACPI_Power_State_Sleeping_in_an_S1_S2_or_S3_States", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
+    { "IPMI_System_ACPI_Power_State_G1_Sleeping", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
+    { "IPMI_System_ACPI_Power_State_S5_Entered_By_Override", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
+    { "IPMI_System_ACPI_Power_State_Legacy_ON_State", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
+    { "IPMI_System_ACPI_Power_State_Legacy_OFF_State", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
+    { "IPMI_System_ACPI_Power_State_Unspecified", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    { "IPMI_System_ACPI_Power_State_Unknown", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
     { NULL, -1},
   };
 
@@ -383,6 +423,13 @@ struct ipmi_sensor_config ipmi_entity_presence_config[] =
     { "IPMI_Entity_Presence_Entity_Present", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
     { "IPMI_Entity_Presence_Entity_Absent", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
     { "IPMI_Entity_Presence_Entity_Disabled", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    { NULL, -1},
+  };
+
+struct ipmi_sensor_config ipmi_entity_presence_device_present_config[] =
+  {
+    { "IPMI_Entity_Presence_Device_Present_Device_Removed_Device_Absent", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    { "IPMI_Entity_Presence_Device_Present_Device_Inserted_Device_Present", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
     { NULL, -1},
   };
 
@@ -415,53 +462,6 @@ struct ipmi_sensor_config ipmi_fru_state_config[] =
     { "IPMI_FRU_State_FRU_Deactivation_Requested", IPMI_MONITORING_SENSOR_STATE_WARNING},
     { "IPMI_FRU_State_FRU_Deactivation_In_Progress", IPMI_MONITORING_SENSOR_STATE_WARNING},
     { "IPMI_FRU_State_FRU_Communication_Lost", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
-    { NULL, -1},
-  };
-
-struct ipmi_sensor_config ipmi_cable_interconnect_config[] =
-  {
-    { "IPMI_Cable_Interconnect_Is_Connected", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
-    { "IPMI_Cable_Interconnect_Configuration_Error", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
-    { NULL, -1},
-  };
-
-struct ipmi_sensor_config ipmi_boot_error_config[] =
-  {
-    { "IPMI_Boot_Error_No_Bootable_Media", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
-    { "IPMI_Boot_Error_Non_Bootable_Diskette_Left_In_Drive", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
-    { "IPMI_Boot_Error_PXE_Server_Not_Found", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
-    { "IPMI_Boot_Error_Invalid_Boot_Sector", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
-    { "IPMI_Boot_Error_Timeout_Waiting_For_User_Selection_Of_Boot_Source", IPMI_MONITORING_SENSOR_STATE_WARNING},
-    { NULL, -1},
-  };
-
-struct ipmi_sensor_config ipmi_button_switch_config[] =
-  {
-    { "IPMI_Button_Switch_Power_Button_Pressed", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
-    { "IPMI_Button_Switch_Sleep_Button_Pressed", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
-    { "IPMI_Button_Switch_Reset_Button_Pressed", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
-    { "IPMI_Button_Switch_FRU_Latch_Open", IPMI_MONITORING_SENSOR_STATE_WARNING},
-    { "IPMI_Button_Switch_FRU_Service_Request_Button", IPMI_MONITORING_SENSOR_STATE_WARNING},
-    { NULL, -1},
-  };
-
-struct ipmi_sensor_config ipmi_system_acpi_power_state_config[] =
-  {
-    { "IPMI_System_ACPI_Power_State_S0_G0", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
-    { "IPMI_System_ACPI_Power_State_S1", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
-    { "IPMI_System_ACPI_Power_State_S2", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
-    { "IPMI_System_ACPI_Power_State_S3", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
-    { "IPMI_System_ACPI_Power_State_S4", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
-    { "IPMI_System_ACPI_Power_State_S5_G2", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
-    { "IPMI_System_ACPI_Power_State_S4_S5_Soft_Off", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
-    { "IPMI_System_ACPI_Power_State_G3_Mechanical_Off", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
-    { "IPMI_System_ACPI_Power_State_Sleeping_in_an_S1_S2_or_S3_States", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
-    { "IPMI_System_ACPI_Power_State_G1_Sleeping", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
-    { "IPMI_System_ACPI_Power_State_S5_Entered_By_Override", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
-    { "IPMI_System_ACPI_Power_State_Legacy_ON_State", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
-    { "IPMI_System_ACPI_Power_State_Legacy_OFF_State", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
-    { "IPMI_System_ACPI_Power_State_Unspecified", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
-    { "IPMI_System_ACPI_Power_State_Unknown", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
     { NULL, -1},
   };
 
@@ -543,22 +543,6 @@ ipmi_monitoring_sensor_config (int *errnum)
   int fan_redundancy_flag0, fan_redundancy_flag1, fan_redundancy_flag2,
     fan_redundancy_flag3, fan_redundancy_flag4, fan_redundancy_flag5,
     fan_redundancy_flag6, fan_redundancy_flag7;
-  int processor_state_flag0, processor_state_flag1;
-  int power_supply_state_flag0, power_supply_state_flag1;
-  int power_supply_redundancy_flag0, power_supply_redundancy_flag1, power_supply_redundancy_flag2,
-    power_supply_redundancy_flag3, power_supply_redundancy_flag4, power_supply_redundancy_flag5,
-    power_supply_redundancy_flag6, power_supply_redundancy_flag7;
-  int power_unit_device_present_flag0, power_unit_device_present_flag1;
-  int power_unit_redundancy_flag0, power_unit_redundancy_flag1, power_unit_redundancy_flag2,
-    power_unit_redundancy_flag3, power_unit_redundancy_flag4, power_unit_redundancy_flag5,
-    power_unit_redundancy_flag6, power_unit_redundancy_flag7;
-  int module_board_state_flag0, module_board_state_flag1;
-  int module_board_device_present_flag0, module_board_device_present_flag1;
-  int drive_slot_state_flag0, drive_slot_state_flag1;
-  int drive_slot_predictive_failure_flag0, drive_slot_predictive_failure_flag1;
-  int drive_slot_device_present_flag0, drive_slot_device_present_flag1;
-  int button_switch_state_flag0, button_switch_state_flag1;
-  int entity_presence_device_present_flag0, entity_presence_device_present_flag1;
   int physical_security_flag0, physical_security_flag1, physical_security_flag2,
     physical_security_flag3, physical_security_flag4, physical_security_flag5,
     physical_security_flag6;
@@ -568,16 +552,28 @@ ipmi_monitoring_sensor_config (int *errnum)
   int processor_flag0, processor_flag1, processor_flag2, processor_flag3,
     processor_flag4, processor_flag5, processor_flag6, processor_flag7,
     processor_flag8, processor_flag9, processor_flag10, processor_flag11;
+  int processor_state_flag0, processor_state_flag1;
   int power_supply_flag0, power_supply_flag1, power_supply_flag2, power_supply_flag3,
     power_supply_flag4, power_supply_flag5, power_supply_flag6;
+  int power_supply_state_flag0, power_supply_state_flag1;
+  int power_supply_redundancy_flag0, power_supply_redundancy_flag1, power_supply_redundancy_flag2,
+    power_supply_redundancy_flag3, power_supply_redundancy_flag4, power_supply_redundancy_flag5,
+    power_supply_redundancy_flag6, power_supply_redundancy_flag7;
   int power_unit_flag0, power_unit_flag1, power_unit_flag2, power_unit_flag3,
     power_unit_flag4, power_unit_flag5, power_unit_flag6, power_unit_flag7;
+  int power_unit_device_present_flag0, power_unit_device_present_flag1;
+  int power_unit_redundancy_flag0, power_unit_redundancy_flag1, power_unit_redundancy_flag2,
+    power_unit_redundancy_flag3, power_unit_redundancy_flag4, power_unit_redundancy_flag5,
+    power_unit_redundancy_flag6, power_unit_redundancy_flag7;
   int memory_flag0, memory_flag1, memory_flag2, memory_flag3, memory_flag4,
     memory_flag5, memory_flag6, memory_flag7, memory_flag8, memory_flag9,
     memory_flag10;
   int drive_slot_flag0, drive_slot_flag1, drive_slot_flag2, drive_slot_flag3,
     drive_slot_flag4, drive_slot_flag5, drive_slot_flag6, drive_slot_flag7,
     drive_slot_flag8;
+  int drive_slot_state_flag0, drive_slot_state_flag1;
+  int drive_slot_predictive_failure_flag0, drive_slot_predictive_failure_flag1;
+  int drive_slot_device_present_flag0, drive_slot_device_present_flag1;
   int system_firmware_progress_flag0, system_firmware_progress_flag1, system_firmware_progress_flag2;
   int event_logging_disabled_flag0, event_logging_disabled_flag1, event_logging_disabled_flag2,
     event_logging_disabled_flag3, event_logging_disabled_flag4, event_logging_disabled_flag5,
@@ -588,25 +584,18 @@ ipmi_monitoring_sensor_config (int *errnum)
     critical_interrupt_flag3, critical_interrupt_flag4, critical_interrupt_flag5,
     critical_interrupt_flag6, critical_interrupt_flag7, critical_interrupt_flag8,
     critical_interrupt_flag9, critical_interrupt_flag10, critical_interrupt_flag11;
+  int button_switch_flag0, button_switch_flag1, button_switch_flag2,
+    button_switch_flag3, button_switch_flag4;
+  int button_switch_state_flag0, button_switch_state_flag1;
+  int module_board_state_flag0, module_board_state_flag1;
+  int module_board_device_present_flag0, module_board_device_present_flag1;
+  int cable_interconnect_flag0, cable_interconnect_flag1;
+  int boot_error_flag0, boot_error_flag1, boot_error_flag2,
+    boot_error_flag3, boot_error_flag4;
   int slot_connector_flag0, slot_connector_flag1, slot_connector_flag2,
     slot_connector_flag3, slot_connector_flag4, slot_connector_flag5,
     slot_connector_flag6, slot_connector_flag7, slot_connector_flag8,
     slot_connector_flag9;
-  int watchdog2_flag0, watchdog2_flag1, watchdog2_flag2, watchdog2_flag3,
-    watchdog2_flag4, watchdog2_flag5, watchdog2_flag6, watchdog2_flag7,
-    watchdog2_flag8;
-  int entity_presence_flag0, entity_presence_flag1, entity_presence_flag2;
-  int management_subsystem_health_flag0, management_subsystem_health_flag1,
-    management_subsystem_health_flag2, management_subsystem_health_flag3,
-    management_subsystem_health_flag4, management_subsystem_health_flag5;
-  int battery_flag0, battery_flag1, battery_flag2;
-  int fru_state_flag0, fru_state_flag1, fru_state_flag2, fru_state_flag3,
-    fru_state_flag4, fru_state_flag5, fru_state_flag6, fru_state_flag7;
-  int cable_interconnect_flag0, cable_interconnect_flag1;
-  int boot_error_flag0, boot_error_flag1, boot_error_flag2,
-    boot_error_flag3, boot_error_flag4;
-  int button_switch_flag0, button_switch_flag1, button_switch_flag2,
-    button_switch_flag3, button_switch_flag4;
   int system_acpi_power_state_flag0, system_acpi_power_state_flag1,
     system_acpi_power_state_flag2, system_acpi_power_state_flag3,
     system_acpi_power_state_flag4, system_acpi_power_state_flag5,
@@ -615,6 +604,17 @@ ipmi_monitoring_sensor_config (int *errnum)
     system_acpi_power_state_flag10, system_acpi_power_state_flag11,
     system_acpi_power_state_flag12, system_acpi_power_state_flag13,
     system_acpi_power_state_flag14;
+  int watchdog2_flag0, watchdog2_flag1, watchdog2_flag2, watchdog2_flag3,
+    watchdog2_flag4, watchdog2_flag5, watchdog2_flag6, watchdog2_flag7,
+    watchdog2_flag8;
+  int entity_presence_flag0, entity_presence_flag1, entity_presence_flag2;
+  int entity_presence_device_present_flag0, entity_presence_device_present_flag1;
+  int management_subsystem_health_flag0, management_subsystem_health_flag1,
+    management_subsystem_health_flag2, management_subsystem_health_flag3,
+    management_subsystem_health_flag4, management_subsystem_health_flag5;
+  int battery_flag0, battery_flag1, battery_flag2;
+  int fru_state_flag0, fru_state_flag1, fru_state_flag2, fru_state_flag3,
+    fru_state_flag4, fru_state_flag5, fru_state_flag6, fru_state_flag7;
   conffile_t cf = NULL;
   int num;
   int rv = -1;
@@ -958,438 +958,6 @@ ipmi_monitoring_sensor_config (int *errnum)
         0
       },
       /*
-       * IPMI_Processor_State
-       */
-      {
-        ipmi_processor_state_config[0].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &processor_state_flag0,
-        ipmi_processor_state_config,
-        0
-      },
-      {
-        ipmi_processor_state_config[1].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &processor_state_flag1,
-        ipmi_processor_state_config,
-        0
-      },
-      /*
-       * IPMI_Power_Supply_State
-       */
-      {
-        ipmi_power_supply_state_config[0].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &power_supply_state_flag0,
-        ipmi_power_supply_state_config,
-        0
-      },
-      {
-        ipmi_power_supply_state_config[1].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &power_supply_state_flag1,
-        ipmi_power_supply_state_config,
-        0
-      },
-      /*
-       * IPMI_Power_Supply_Redundancy
-       */
-      {
-        ipmi_power_supply_redundancy_config[0].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &power_supply_redundancy_flag0,
-        ipmi_power_supply_redundancy_config,
-        0
-      },
-      {
-        ipmi_power_supply_redundancy_config[1].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &power_supply_redundancy_flag1,
-        ipmi_power_supply_redundancy_config,
-        0
-      },
-      {
-        ipmi_power_supply_redundancy_config[2].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &power_supply_redundancy_flag2,
-        ipmi_power_supply_redundancy_config,
-        0
-      },
-      {
-        ipmi_power_supply_redundancy_config[3].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &power_supply_redundancy_flag3,
-        ipmi_power_supply_redundancy_config,
-        0
-      },
-      {
-        ipmi_power_supply_redundancy_config[4].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &power_supply_redundancy_flag4,
-        ipmi_power_supply_redundancy_config,
-        0
-      },
-      {
-        ipmi_power_supply_redundancy_config[5].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &power_supply_redundancy_flag5,
-        ipmi_power_supply_redundancy_config,
-        0
-      },
-      {
-        ipmi_power_supply_redundancy_config[6].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &power_supply_redundancy_flag6,
-        ipmi_power_supply_redundancy_config,
-        0
-      },
-      {
-        ipmi_power_supply_redundancy_config[7].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &power_supply_redundancy_flag7,
-        ipmi_power_supply_redundancy_config,
-        0
-      },
-      /*
-       * IPMI_Power_Unit_Device_Present
-       */
-      {
-        ipmi_power_unit_device_present_config[0].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &power_unit_device_present_flag0,
-        ipmi_power_unit_device_present_config,
-        0
-      },
-      {
-        ipmi_power_unit_device_present_config[1].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &power_unit_device_present_flag1,
-        ipmi_power_unit_device_present_config,
-        0
-      },
-      /*
-       * IPMI_Power_Unit_Redundancy
-       */
-      {
-        ipmi_power_unit_redundancy_config[0].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &power_unit_redundancy_flag0,
-        ipmi_power_unit_redundancy_config,
-        0
-      },
-      {
-        ipmi_power_unit_redundancy_config[1].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &power_unit_redundancy_flag1,
-        ipmi_power_unit_redundancy_config,
-        0
-      },
-      {
-        ipmi_power_unit_redundancy_config[2].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &power_unit_redundancy_flag2,
-        ipmi_power_unit_redundancy_config,
-        0
-      },
-      {
-        ipmi_power_unit_redundancy_config[3].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &power_unit_redundancy_flag3,
-        ipmi_power_unit_redundancy_config,
-        0
-      },
-      {
-        ipmi_power_unit_redundancy_config[4].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &power_unit_redundancy_flag4,
-        ipmi_power_unit_redundancy_config,
-        0
-      },
-      {
-        ipmi_power_unit_redundancy_config[5].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &power_unit_redundancy_flag5,
-        ipmi_power_unit_redundancy_config,
-        0
-      },
-      {
-        ipmi_power_unit_redundancy_config[6].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &power_unit_redundancy_flag6,
-        ipmi_power_unit_redundancy_config,
-        0
-      },
-      {
-        ipmi_power_unit_redundancy_config[7].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &power_unit_redundancy_flag7,
-        ipmi_power_unit_redundancy_config,
-        0
-      },
-      /*
-       * IPMI_Module_Board_State
-       */
-      {
-        ipmi_module_board_state_config[0].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &module_board_state_flag0,
-        ipmi_module_board_state_config,
-        0
-      },
-      {
-        ipmi_module_board_state_config[1].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &module_board_state_flag1,
-        ipmi_module_board_state_config,
-        0
-      },
-      /*
-       * IPMI_Module_Board_Device_Present
-       */
-      {
-        ipmi_module_board_device_present_config[0].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &module_board_device_present_flag0,
-        ipmi_module_board_device_present_config,
-        0
-      },
-      {
-        ipmi_module_board_device_present_config[1].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &module_board_device_present_flag1,
-        ipmi_module_board_device_present_config,
-        0
-      },
-      /*
-       * IPMI_Drive_Slot_State
-       */
-      {
-        ipmi_drive_slot_state_config[0].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &drive_slot_state_flag0,
-        ipmi_drive_slot_state_config,
-        0
-      },
-      {
-        ipmi_drive_slot_state_config[1].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &drive_slot_state_flag1,
-        ipmi_drive_slot_state_config,
-        0
-      },
-      /*
-       * IPMI_Drive_Slot_Predictive_Failure
-       */
-      {
-        ipmi_drive_slot_predictive_failure_config[0].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &drive_slot_predictive_failure_flag0,
-        ipmi_drive_slot_predictive_failure_config,
-        0
-      },
-      {
-        ipmi_drive_slot_predictive_failure_config[1].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &drive_slot_predictive_failure_flag1,
-        ipmi_drive_slot_predictive_failure_config,
-        0
-      },
-      /*
-       * IPMI_Drive_Slot_Device_Present
-       */
-      {
-        ipmi_drive_slot_device_present_config[0].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &drive_slot_device_present_flag0,
-        ipmi_drive_slot_device_present_config,
-        0
-      },
-      {
-        ipmi_drive_slot_device_present_config[1].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &drive_slot_device_present_flag1,
-        ipmi_drive_slot_device_present_config,
-        0
-      },
-      /*
-       * IPMI_Button_Switch_State
-       */
-      {
-        ipmi_button_switch_state_config[0].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &button_switch_state_flag0,
-        ipmi_button_switch_state_config,
-        0
-      },
-      {
-        ipmi_button_switch_state_config[1].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &button_switch_state_flag1,
-        ipmi_button_switch_state_config,
-        0
-      },
-      /*
-       * IPMI_Entity_Presence_Device_Present
-       */
-      {
-        ipmi_entity_presence_device_present_config[0].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &entity_presence_device_present_flag0,
-        ipmi_entity_presence_device_present_config,
-        0
-      },
-      {
-        ipmi_entity_presence_device_present_config[1].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &entity_presence_device_present_flag1,
-        ipmi_entity_presence_device_present_config,
-        0
-      },
-      /*
        * IPMI_Physical_Security
        */
       {
@@ -1674,6 +1242,31 @@ ipmi_monitoring_sensor_config (int *errnum)
         0
       },
       /*
+       * IPMI_Processor_State
+       */
+      {
+        ipmi_processor_state_config[0].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &processor_state_flag0,
+        ipmi_processor_state_config,
+        0
+      },
+      {
+        ipmi_processor_state_config[1].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &processor_state_flag1,
+        ipmi_processor_state_config,
+        0
+      },
+      /*
        * IPMI_Power_Supply
        */
       {
@@ -1751,6 +1344,122 @@ ipmi_monitoring_sensor_config (int *errnum)
         0,
         &power_supply_flag6,
         ipmi_power_supply_config,
+        0
+      },
+      /*
+       * IPMI_Power_Supply_State
+       */
+      {
+        ipmi_power_supply_state_config[0].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &power_supply_state_flag0,
+        ipmi_power_supply_state_config,
+        0
+      },
+      {
+        ipmi_power_supply_state_config[1].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &power_supply_state_flag1,
+        ipmi_power_supply_state_config,
+        0
+      },
+      /*
+       * IPMI_Power_Supply_Redundancy
+       */
+      {
+        ipmi_power_supply_redundancy_config[0].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &power_supply_redundancy_flag0,
+        ipmi_power_supply_redundancy_config,
+        0
+      },
+      {
+        ipmi_power_supply_redundancy_config[1].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &power_supply_redundancy_flag1,
+        ipmi_power_supply_redundancy_config,
+        0
+      },
+      {
+        ipmi_power_supply_redundancy_config[2].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &power_supply_redundancy_flag2,
+        ipmi_power_supply_redundancy_config,
+        0
+      },
+      {
+        ipmi_power_supply_redundancy_config[3].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &power_supply_redundancy_flag3,
+        ipmi_power_supply_redundancy_config,
+        0
+      },
+      {
+        ipmi_power_supply_redundancy_config[4].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &power_supply_redundancy_flag4,
+        ipmi_power_supply_redundancy_config,
+        0
+      },
+      {
+        ipmi_power_supply_redundancy_config[5].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &power_supply_redundancy_flag5,
+        ipmi_power_supply_redundancy_config,
+        0
+      },
+      {
+        ipmi_power_supply_redundancy_config[6].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &power_supply_redundancy_flag6,
+        ipmi_power_supply_redundancy_config,
+        0
+      },
+      {
+        ipmi_power_supply_redundancy_config[7].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &power_supply_redundancy_flag7,
+        ipmi_power_supply_redundancy_config,
         0
       },
       /*
@@ -1842,6 +1551,122 @@ ipmi_monitoring_sensor_config (int *errnum)
         0,
         &power_unit_flag7,
         ipmi_power_unit_config,
+        0
+      },
+      /*
+       * IPMI_Power_Unit_Device_Present
+       */
+      {
+        ipmi_power_unit_device_present_config[0].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &power_unit_device_present_flag0,
+        ipmi_power_unit_device_present_config,
+        0
+      },
+      {
+        ipmi_power_unit_device_present_config[1].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &power_unit_device_present_flag1,
+        ipmi_power_unit_device_present_config,
+        0
+      },
+      /*
+       * IPMI_Power_Unit_Redundancy
+       */
+      {
+        ipmi_power_unit_redundancy_config[0].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &power_unit_redundancy_flag0,
+        ipmi_power_unit_redundancy_config,
+        0
+      },
+      {
+        ipmi_power_unit_redundancy_config[1].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &power_unit_redundancy_flag1,
+        ipmi_power_unit_redundancy_config,
+        0
+      },
+      {
+        ipmi_power_unit_redundancy_config[2].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &power_unit_redundancy_flag2,
+        ipmi_power_unit_redundancy_config,
+        0
+      },
+      {
+        ipmi_power_unit_redundancy_config[3].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &power_unit_redundancy_flag3,
+        ipmi_power_unit_redundancy_config,
+        0
+      },
+      {
+        ipmi_power_unit_redundancy_config[4].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &power_unit_redundancy_flag4,
+        ipmi_power_unit_redundancy_config,
+        0
+      },
+      {
+        ipmi_power_unit_redundancy_config[5].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &power_unit_redundancy_flag5,
+        ipmi_power_unit_redundancy_config,
+        0
+      },
+      {
+        ipmi_power_unit_redundancy_config[6].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &power_unit_redundancy_flag6,
+        ipmi_power_unit_redundancy_config,
+        0
+      },
+      {
+        ipmi_power_unit_redundancy_config[7].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &power_unit_redundancy_flag7,
+        ipmi_power_unit_redundancy_config,
         0
       },
       /*
@@ -2068,6 +1893,81 @@ ipmi_monitoring_sensor_config (int *errnum)
         0,
         &drive_slot_flag8,
         ipmi_drive_slot_config,
+        0
+      },
+      /*
+       * IPMI_Drive_Slot_State
+       */
+      {
+        ipmi_drive_slot_state_config[0].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &drive_slot_state_flag0,
+        ipmi_drive_slot_state_config,
+        0
+      },
+      {
+        ipmi_drive_slot_state_config[1].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &drive_slot_state_flag1,
+        ipmi_drive_slot_state_config,
+        0
+      },
+      /*
+       * IPMI_Drive_Slot_Predictive_Failure
+       */
+      {
+        ipmi_drive_slot_predictive_failure_config[0].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &drive_slot_predictive_failure_flag0,
+        ipmi_drive_slot_predictive_failure_config,
+        0
+      },
+      {
+        ipmi_drive_slot_predictive_failure_config[1].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &drive_slot_predictive_failure_flag1,
+        ipmi_drive_slot_predictive_failure_config,
+        0
+      },
+      /*
+       * IPMI_Drive_Slot_Device_Present
+       */
+      {
+        ipmi_drive_slot_device_present_config[0].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &drive_slot_device_present_flag0,
+        ipmi_drive_slot_device_present_config,
+        0
+      },
+      {
+        ipmi_drive_slot_device_present_config[1].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &drive_slot_device_present_flag1,
+        ipmi_drive_slot_device_present_config,
         0
       },
       /*
@@ -2391,6 +2291,222 @@ ipmi_monitoring_sensor_config (int *errnum)
         0
       },
       /*
+       * IPMI_Button_Switch
+       */
+      {
+        ipmi_button_switch_config[0].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &button_switch_flag0,
+        ipmi_button_switch_config,
+        0
+      },
+      {
+        ipmi_button_switch_config[1].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &button_switch_flag1,
+        ipmi_button_switch_config,
+        0
+      },
+      {
+        ipmi_button_switch_config[2].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &button_switch_flag2,
+        ipmi_button_switch_config,
+        0
+      },
+      {
+        ipmi_button_switch_config[3].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &button_switch_flag3,
+        ipmi_button_switch_config,
+        0
+      },
+      {
+        ipmi_button_switch_config[4].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &button_switch_flag4,
+        ipmi_button_switch_config,
+        0
+      },
+      /*
+       * IPMI_Button_Switch_State
+       */
+      {
+        ipmi_button_switch_state_config[0].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &button_switch_state_flag0,
+        ipmi_button_switch_state_config,
+        0
+      },
+      {
+        ipmi_button_switch_state_config[1].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &button_switch_state_flag1,
+        ipmi_button_switch_state_config,
+        0
+      },
+      /*
+       * IPMI_Module_Board_State
+       */
+      {
+        ipmi_module_board_state_config[0].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &module_board_state_flag0,
+        ipmi_module_board_state_config,
+        0
+      },
+      {
+        ipmi_module_board_state_config[1].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &module_board_state_flag1,
+        ipmi_module_board_state_config,
+        0
+      },
+      /*
+       * IPMI_Module_Board_Device_Present
+       */
+      {
+        ipmi_module_board_device_present_config[0].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &module_board_device_present_flag0,
+        ipmi_module_board_device_present_config,
+        0
+      },
+      {
+        ipmi_module_board_device_present_config[1].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &module_board_device_present_flag1,
+        ipmi_module_board_device_present_config,
+        0
+      },
+      /*
+       * IPMI_Cable_Interconnect
+       */
+      {
+        ipmi_cable_interconnect_config[0].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &cable_interconnect_flag0,
+        ipmi_cable_interconnect_config,
+        0
+      },
+      {
+        ipmi_cable_interconnect_config[1].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &cable_interconnect_flag1,
+        ipmi_cable_interconnect_config,
+        0
+      },
+      /*
+       * IPMI_Boot_Error
+       */
+      {
+        ipmi_boot_error_config[0].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &boot_error_flag0,
+        ipmi_boot_error_config,
+        0
+      },
+      {
+        ipmi_boot_error_config[1].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &boot_error_flag1,
+        ipmi_boot_error_config,
+        0
+      },
+      {
+        ipmi_boot_error_config[2].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &boot_error_flag2,
+        ipmi_boot_error_config,
+        0
+      },
+      {
+        ipmi_boot_error_config[3].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &boot_error_flag3,
+        ipmi_boot_error_config,
+        0
+      },
+      {
+        ipmi_boot_error_config[4].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &boot_error_flag4,
+        ipmi_boot_error_config,
+        0
+      },
+      /*
        * IPMI_Slot_Connector
        */
       {
@@ -2501,6 +2617,174 @@ ipmi_monitoring_sensor_config (int *errnum)
         0,
         &slot_connector_flag9,
         ipmi_slot_connector_config,
+        0
+      },
+      /*
+       * IPMI_System_Acpi_Power_State
+       */
+      {
+        ipmi_system_acpi_power_state_config[0].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &system_acpi_power_state_flag0,
+        ipmi_system_acpi_power_state_config,
+        0
+      },
+      {
+        ipmi_system_acpi_power_state_config[1].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &system_acpi_power_state_flag1,
+        ipmi_system_acpi_power_state_config,
+        0
+      },
+      {
+        ipmi_system_acpi_power_state_config[2].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &system_acpi_power_state_flag2,
+        ipmi_system_acpi_power_state_config,
+        0
+      },
+      {
+        ipmi_system_acpi_power_state_config[3].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &system_acpi_power_state_flag3,
+        ipmi_system_acpi_power_state_config,
+        0
+      },
+      {
+        ipmi_system_acpi_power_state_config[4].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &system_acpi_power_state_flag4,
+        ipmi_system_acpi_power_state_config,
+        0
+      },
+      {
+        ipmi_system_acpi_power_state_config[5].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &system_acpi_power_state_flag5,
+        ipmi_system_acpi_power_state_config,
+        0
+      },
+      {
+        ipmi_system_acpi_power_state_config[6].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &system_acpi_power_state_flag6,
+        ipmi_system_acpi_power_state_config,
+        0
+      },
+      {
+        ipmi_system_acpi_power_state_config[7].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &system_acpi_power_state_flag7,
+        ipmi_system_acpi_power_state_config,
+        0
+      },
+      {
+        ipmi_system_acpi_power_state_config[8].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &system_acpi_power_state_flag8,
+        ipmi_system_acpi_power_state_config,
+        0
+      },
+      {
+        ipmi_system_acpi_power_state_config[9].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &system_acpi_power_state_flag9,
+        ipmi_system_acpi_power_state_config,
+        0
+      },
+      {
+        ipmi_system_acpi_power_state_config[10].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &system_acpi_power_state_flag10,
+        ipmi_system_acpi_power_state_config,
+        0
+      },
+      {
+        ipmi_system_acpi_power_state_config[11].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &system_acpi_power_state_flag11,
+        ipmi_system_acpi_power_state_config,
+        0
+      },
+      {
+        ipmi_system_acpi_power_state_config[12].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &system_acpi_power_state_flag12,
+        ipmi_system_acpi_power_state_config,
+        0
+      },
+      {
+        ipmi_system_acpi_power_state_config[13].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &system_acpi_power_state_flag13,
+        ipmi_system_acpi_power_state_config,
+        0
+      },
+      {
+        ipmi_system_acpi_power_state_config[14].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &system_acpi_power_state_flag14,
+        ipmi_system_acpi_power_state_config,
         0
       },
       /*
@@ -2639,6 +2923,31 @@ ipmi_monitoring_sensor_config (int *errnum)
         0,
         &entity_presence_flag2,
         ipmi_entity_presence_config,
+        0
+      },
+      /*
+       * IPMI_Entity_Presence_Device_Present
+       */
+      {
+        ipmi_entity_presence_device_present_config[0].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &entity_presence_device_present_flag0,
+        ipmi_entity_presence_device_present_config,
+        0
+      },
+      {
+        ipmi_entity_presence_device_present_config[1].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &entity_presence_device_present_flag1,
+        ipmi_entity_presence_device_present_config,
         0
       },
       /*
@@ -2835,315 +3144,6 @@ ipmi_monitoring_sensor_config (int *errnum)
         0,
         &fru_state_flag7,
         ipmi_fru_state_config,
-        0
-      },
-      /*
-       * IPMI_Cable_Interconnect
-       */
-      {
-        ipmi_cable_interconnect_config[0].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &cable_interconnect_flag0,
-        ipmi_cable_interconnect_config,
-        0
-      },
-      {
-        ipmi_cable_interconnect_config[1].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &cable_interconnect_flag1,
-        ipmi_cable_interconnect_config,
-        0
-      },
-      /*
-       * IPMI_Boot_Error
-       */
-      {
-        ipmi_boot_error_config[0].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &boot_error_flag0,
-        ipmi_boot_error_config,
-        0
-      },
-      {
-        ipmi_boot_error_config[1].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &boot_error_flag1,
-        ipmi_boot_error_config,
-        0
-      },
-      {
-        ipmi_boot_error_config[2].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &boot_error_flag2,
-        ipmi_boot_error_config,
-        0
-      },
-      {
-        ipmi_boot_error_config[3].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &boot_error_flag3,
-        ipmi_boot_error_config,
-        0
-      },
-      {
-        ipmi_boot_error_config[4].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &boot_error_flag4,
-        ipmi_boot_error_config,
-        0
-      },
-      /*
-       * IPMI_Button_Switch
-       */
-      {
-        ipmi_button_switch_config[0].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &button_switch_flag0,
-        ipmi_button_switch_config,
-        0
-      },
-      {
-        ipmi_button_switch_config[1].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &button_switch_flag1,
-        ipmi_button_switch_config,
-        0
-      },
-      {
-        ipmi_button_switch_config[2].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &button_switch_flag2,
-        ipmi_button_switch_config,
-        0
-      },
-      {
-        ipmi_button_switch_config[3].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &button_switch_flag3,
-        ipmi_button_switch_config,
-        0
-      },
-      {
-        ipmi_button_switch_config[4].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &button_switch_flag4,
-        ipmi_button_switch_config,
-        0
-      },
-      /*
-       * IPMI_System_Acpi_Power_State
-       */
-      {
-        ipmi_system_acpi_power_state_config[0].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &system_acpi_power_state_flag0,
-        ipmi_system_acpi_power_state_config,
-        0
-      },
-      {
-        ipmi_system_acpi_power_state_config[1].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &system_acpi_power_state_flag1,
-        ipmi_system_acpi_power_state_config,
-        0
-      },
-      {
-        ipmi_system_acpi_power_state_config[2].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &system_acpi_power_state_flag2,
-        ipmi_system_acpi_power_state_config,
-        0
-      },
-      {
-        ipmi_system_acpi_power_state_config[3].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &system_acpi_power_state_flag3,
-        ipmi_system_acpi_power_state_config,
-        0
-      },
-      {
-        ipmi_system_acpi_power_state_config[4].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &system_acpi_power_state_flag4,
-        ipmi_system_acpi_power_state_config,
-        0
-      },
-      {
-        ipmi_system_acpi_power_state_config[5].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &system_acpi_power_state_flag5,
-        ipmi_system_acpi_power_state_config,
-        0
-      },
-      {
-        ipmi_system_acpi_power_state_config[6].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &system_acpi_power_state_flag6,
-        ipmi_system_acpi_power_state_config,
-        0
-      },
-      {
-        ipmi_system_acpi_power_state_config[7].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &system_acpi_power_state_flag7,
-        ipmi_system_acpi_power_state_config,
-        0
-      },
-      {
-        ipmi_system_acpi_power_state_config[8].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &system_acpi_power_state_flag8,
-        ipmi_system_acpi_power_state_config,
-        0
-      },
-      {
-        ipmi_system_acpi_power_state_config[9].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &system_acpi_power_state_flag9,
-        ipmi_system_acpi_power_state_config,
-        0
-      },
-      {
-        ipmi_system_acpi_power_state_config[10].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &system_acpi_power_state_flag10,
-        ipmi_system_acpi_power_state_config,
-        0
-      },
-      {
-        ipmi_system_acpi_power_state_config[11].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &system_acpi_power_state_flag11,
-        ipmi_system_acpi_power_state_config,
-        0
-      },
-      {
-        ipmi_system_acpi_power_state_config[12].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &system_acpi_power_state_flag12,
-        ipmi_system_acpi_power_state_config,
-        0
-      },
-      {
-        ipmi_system_acpi_power_state_config[13].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &system_acpi_power_state_flag13,
-        ipmi_system_acpi_power_state_config,
-        0
-      },
-      {
-        ipmi_system_acpi_power_state_config[14].option_str,
-        CONFFILE_OPTION_STRING,
-        -1,
-        _cb_sensor_state_parse,
-        1,
-        0,
-        &system_acpi_power_state_flag14,
-        ipmi_system_acpi_power_state_config,
         0
       },
     };
