@@ -42,33 +42,33 @@ sdr_cache_set_sdr_cache_errnum_by_errno (ipmi_sdr_cache_ctx_t ctx, int __errno)
   if (!ctx || ctx->magic != IPMI_SDR_CACHE_CTX_MAGIC)
     return;
 
-  if (errno == 0)
+  if (__errno == 0)
     ctx->errnum = IPMI_SDR_CACHE_ERR_SUCCESS;
-  else if (errno == ENOSPC)
+  else if (__errno == ENOSPC)
     ctx->errnum = IPMI_SDR_CACHE_ERR_FILESYSTEM;
-  else if (errno == EMFILE)
+  else if (__errno == EMFILE)
     ctx->errnum = IPMI_SDR_CACHE_ERR_FILESYSTEM;
-  else if (errno == ENFILE)
+  else if (__errno == ENFILE)
     ctx->errnum = IPMI_SDR_CACHE_ERR_FILESYSTEM;
-  else if (errno == EPERM)
+  else if (__errno == EPERM)
     ctx->errnum = IPMI_SDR_CACHE_ERR_PERMISSION;
-  else if (errno == EACCES)
+  else if (__errno == EACCES)
     ctx->errnum = IPMI_SDR_CACHE_ERR_PERMISSION;
-  else if (errno == EISDIR)
+  else if (__errno == EISDIR)
     ctx->errnum = IPMI_SDR_CACHE_ERR_PERMISSION;
-  else if (errno == EROFS)
+  else if (__errno == EROFS)
     ctx->errnum = IPMI_SDR_CACHE_ERR_PERMISSION;
-  else if (errno == ENOENT)
+  else if (__errno == ENOENT)
     ctx->errnum = IPMI_SDR_CACHE_ERR_CACHE_READ_CACHE_DOES_NOT_EXIST;
-  else if (errno == ENOTDIR)
+  else if (__errno == ENOTDIR)
     ctx->errnum = IPMI_SDR_CACHE_ERR_CACHE_READ_CACHE_DOES_NOT_EXIST;
-  else if (errno == ENAMETOOLONG)
+  else if (__errno == ENAMETOOLONG)
     ctx->errnum = IPMI_SDR_CACHE_ERR_FILENAME_INVALID;
-  else if (errno == ELOOP)
+  else if (__errno == ELOOP)
     ctx->errnum = IPMI_SDR_CACHE_ERR_FILENAME_INVALID;
-  else if (errno == ENOMEM)
+  else if (__errno == ENOMEM)
     ctx->errnum = IPMI_SDR_CACHE_ERR_OUT_OF_MEMORY;
-  else if (errno == EINVAL)
+  else if (__errno == EINVAL)
     ctx->errnum = IPMI_SDR_CACHE_ERR_INTERNAL_ERROR;
   else
     ctx->errnum = IPMI_SDR_CACHE_ERR_SYSTEM_ERROR;

@@ -42,15 +42,15 @@ locate_set_locate_errnum_by_errno (ipmi_locate_ctx_t ctx, int __errno)
   if (!ctx || ctx->magic != IPMI_LOCATE_CTX_MAGIC)
     return;
 
-  if (errno == 0)
+  if (__errno == 0)
     ctx->errnum = IPMI_LOCATE_ERR_SUCCESS;
-  else if (errno == EPERM)
+  else if (__errno == EPERM)
     ctx->errnum = IPMI_LOCATE_ERR_PERMISSION;
-  else if (errno == EACCES)
+  else if (__errno == EACCES)
     ctx->errnum = IPMI_LOCATE_ERR_PERMISSION;
-  else if (errno == ENOMEM)
+  else if (__errno == ENOMEM)
     ctx->errnum = IPMI_LOCATE_ERR_OUT_OF_MEMORY;
-  else if (errno == EINVAL)
+  else if (__errno == EINVAL)
     ctx->errnum = IPMI_LOCATE_ERR_INTERNAL_ERROR;
   else
     ctx->errnum = IPMI_LOCATE_ERR_SYSTEM_ERROR;
