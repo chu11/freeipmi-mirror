@@ -48,6 +48,9 @@
 #include <sys/ioccom.h>         /* solaris _IOR, etc. */
 #endif /* !HAVE_SYS_IOCCOM_H */
 #include <sys/select.h>
+#ifdef __CYGWIN__
+#define __USE_LINUX_IOCTL_DEFS
+#endif /* !__CYGWIN__ */
 #include <sys/ioctl.h>
 #include <assert.h>
 #include <errno.h>

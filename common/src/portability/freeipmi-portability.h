@@ -77,7 +77,10 @@
 
 /* FreeBSD don't have log2(), exp10() and exp2() */
 #ifndef HAVE_LOG2
+/* Cygwin has a log2 macro to already handle portability */
+#ifndef log2
 #define log2(x)         (M_LOG2E * log ((x)))
+#endif
 #endif
 #ifndef HAVE_EXP10
 #define exp10(x)        (pow (10.0, (x)))
