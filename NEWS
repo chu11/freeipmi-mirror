@@ -1,3 +1,22 @@
+FreeIPMI 0.9.1 - 12/07/09
+-------------------------
+
+High Level Description of Changes
+---------------------------------
+o Re-architect libipmimonitoring to support all defined IPMI sensor
+  types.
+
+Tools - Detailed Enhancements/Changes/Fixes
+-------------------------------------------
+
+Libraries - Detailed Enhancements/Changes/Fixes
+-----------------------------------------------
+o libipmimonitoring
+  - Re-architect to support all defined IPMI sensor types.
+
+Contributions
+-------------
+
 FreeIPMI 0.8.1 - 12/07/09
 -------------------------
 
