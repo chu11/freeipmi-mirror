@@ -4,6 +4,8 @@
 	Remove legacy comments.
 
 	* doc/freeipmi-faq.texi: Add "special" note.
+
+	* bmc-info/bmc-info.8.pre.in: Fix formatting.
 	
 2009-12-10  Albert Chu <chu11@llnl.gov>
 
