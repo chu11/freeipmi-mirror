@@ -1,5 +1,10 @@
 2009-12-10  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/record-format/ipmi-sdr-record-format.h:
+	Cleanup linearization macros.
+	
+2009-12-10  Albert Chu <chu11@llnl.gov>
+
 	* ipmipower/ipmipower.8.pre.in, ipmiconsole/ipmiconsole.8.pre.in:
 	Remove legacy comments.
 

@@ -101,18 +101,21 @@ extern "C" {
     || (__sensor_modifier_unit) == IPMI_SDR_MODIFIER_UNIT_DIVIDE \
     || (__sensor_modifier_unit) == IPMI_SDR_MODIFIER_UNIT_MULTIPLY) ? 1 : 0)
 
-#define IPMI_SDR_LINEARIZATION_LINEAR   0
-#define IPMI_SDR_LINEARIZATION_LN       1
-#define IPMI_SDR_LINEARIZATION_LOG10    2
-#define IPMI_SDR_LINEARIZATION_LOG2     3
-#define IPMI_SDR_LINEARIZATION_E        4
-#define IPMI_SDR_LINEARIZATION_EXP10    5
-#define IPMI_SDR_LINEARIZATION_EXP2     6
-#define IPMI_SDR_LINEARIZATION_INVERSE  7
-#define IPMI_SDR_LINEARIZATION_SQR      8
-#define IPMI_SDR_LINEARIZATION_CUBE     9
-#define IPMI_SDR_LINEARIZATION_SQRT    10
-#define IPMI_SDR_LINEARIZATION_CUBERT  11
+#define IPMI_SDR_LINEARIZATION_LINEAR                0
+#define IPMI_SDR_LINEARIZATION_LN                    1
+#define IPMI_SDR_LINEARIZATION_LOG10                 2
+#define IPMI_SDR_LINEARIZATION_LOG2                  3
+#define IPMI_SDR_LINEARIZATION_E                     4
+#define IPMI_SDR_LINEARIZATION_EXP10                 5
+#define IPMI_SDR_LINEARIZATION_EXP2                  6
+#define IPMI_SDR_LINEARIZATION_INVERSE               7
+#define IPMI_SDR_LINEARIZATION_SQR                   8
+#define IPMI_SDR_LINEARIZATION_CUBE                  9
+#define IPMI_SDR_LINEARIZATION_SQRT                 10
+#define IPMI_SDR_LINEARIZATION_CUBERT               11
+#define IPMI_SDR_LINEARIZATION_NON_LINEAR         0x70
+#define IPMI_SDR_LINEARIZATION_NON_LINEAR_OEM_MIN 0x71
+#define IPMI_SDR_LINEARIZATION_NON_LINEAR_OEM_MAX 0x7F
 
 #define IPMI_SDR_LINEARIZATION_LINEAR_STRING     "linear"
 #define IPMI_SDR_LINEARIZATION_LN_STRING         "ln"
@@ -134,8 +137,8 @@ extern "C" {
     && (__sensor_linearization) <= IPMI_SDR_LINEARIZATION_CUBERT) ? 1 : 0)
 
 #define IPMI_SDR_LINEARIZATION_IS_NON_LINEAR(__sensor_linearization) \
-  (((__sensor_linearization) >= 0x70                                 \
-    && (__sensor_linearization) <= 0x7F) ? 1 : 0)
+  (((__sensor_linearization) >= IPMI_SDR_LINEARIZATION_NON_LINEAR \
+    && (__sensor_linearization) <=IPMI_SDR_LINEARIZATION_NON_LINEAR_OEM_MAX) ? 1 : 0)
 
 #define IPMI_SDR_PERCENTAGE_NO  0
 #define IPMI_SDR_PERCENTAGE_YES 1
