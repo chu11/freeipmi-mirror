@@ -532,8 +532,6 @@ _ipmi_lan_cmd_recv (ipmi_ctx_t ctx,
 		    uint8_t group_extension, /* for debug dumping */
                     fiid_obj_t obj_cmd_rs)
 {
-  struct sockaddr_in from;
-  socklen_t fromlen = 0;
   struct timeval timeout;
   fd_set read_set;
   int status = 0;
@@ -597,8 +595,8 @@ _ipmi_lan_cmd_recv (ipmi_ctx_t ctx,
                                     pkt,
                                     pkt_len,
                                     0,
-                                    (struct sockaddr *) &from,
-                                    &fromlen);
+                                    NULL,
+                                    NULL);
     } while (recv_len < 0 && errno == EINTR);
 
   if (recv_len < 0)
@@ -2149,8 +2147,6 @@ _ipmi_lan_2_0_cmd_recv (ipmi_ctx_t ctx,
 			uint8_t group_extension, /* for debug dumping */
                         fiid_obj_t obj_cmd_rs)
 {
-  struct sockaddr_in from;
-  socklen_t fromlen = 0;
   struct timeval timeout;
   fd_set read_set;
   int recv_len = 0;
@@ -2226,8 +2222,8 @@ _ipmi_lan_2_0_cmd_recv (ipmi_ctx_t ctx,
                                     pkt,
                                     pkt_len,
                                     0,
-                                    (struct sockaddr *) &from,
-                                    &fromlen);
+                                    NULL,
+                                    NULL);
     } while (recv_len < 0 && errno == EINTR);
   
   if (recv_len < 0)
