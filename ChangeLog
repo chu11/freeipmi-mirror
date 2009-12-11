@@ -1,5 +1,11 @@
 2009-12-11  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/src/api/ipmi-lan-session-common.c
+	(_ipmi_lan_cmd_recv, _ipmi_lan_2_0_cmd_recv): Do not pass from
+	parameter if not necessary.
+	
+2009-12-11  Albert Chu <chu11@llnl.gov>
+
 	Fix up cygwin portability issues.
 
 	* common/src/portability/freeipmi-portability.h: Do not define
