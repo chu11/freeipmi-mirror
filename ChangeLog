@@ -1,3 +1,13 @@
+2009-12-11  Albert Chu <chu11@llnl.gov>
+
+	Fix up cygwin portability issues.
+
+	* common/src/portability/freeipmi-portability.h: Do not define
+	log2 if it's already defined.
+
+	* libfreeipmi/src/driver/ipmi-openipmi-driver.c: Define
+	__USE_LINUX_IOCTL_DEFS as needed.
+	
 2009-12-11  Holger Liebig <holger.liebig@ts.fujitsu.com>
 
 	* libfreeipmi/src/locate/ipmi-locate-util.c
