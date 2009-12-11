@@ -1,3 +1,10 @@
+2009-12-11  Holger Liebig <holger.liebig@ts.fujitsu.com>
+
+	* libfreeipmi/src/locate/ipmi-locate-util.c
+	(locate_set_locate_errnum_by_errno),
+	libfreeipmi/src/sdr-cache/ipmi-sdr-cache-util.c
+	(sdr_cache_set_sdr_cache_errnum_by_errno): Fix logic bugs.
+	
 2009-12-11  Albert Chu <chu11@llnl.gov>
 
 	* doc/freeipmi-faq.texi: Update special section.
