@@ -1,3 +1,7 @@
+2009-12-11  Albert Chu <chu11@llnl.gov>
+
+	* doc/freeipmi-faq.texi: Update special section.
+	
 2009-12-10  Albert Chu <chu11@llnl.gov>
 
 	Merge changes from ipmimonitoring_rearch_branch
