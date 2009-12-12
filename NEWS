@@ -1,5 +1,7 @@
 FreeIPMI 0.8.2 - 12/07/09
 -------------------------
+o Add fixes to deal with OSes that will report ECONNRESET or
+  ECONNREFUSED on failed UDP sends.
 o In ipmi-sensors, fix output corner case w/ device types and
   modifiers.
 o In ipmi-sel, tweak column size to fix output for common scenario.

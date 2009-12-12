@@ -154,9 +154,11 @@ _session_timed_out (ipmi_ctx_t ctx)
   return (timercmp (&current, &session_timeout, >));
 }
 
+/* return 1 on continue, 0 if timeout already happened, -1 on error */
 static int
 _calculate_timeout (ipmi_ctx_t ctx,
                     unsigned int retransmission_count,
+                    struct timeval *recv_starttime,
                     struct timeval *timeout)
 {
   struct timeval current;
@@ -166,12 +168,14 @@ _calculate_timeout (ipmi_ctx_t ctx,
   struct timeval retransmission_timeout;
   struct timeval retransmission_timeout_len;
   struct timeval retransmission_timeout_val;
+  struct timeval already_timedout_check;
   unsigned int retransmission_timeout_multiplier;
 
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC
           && (ctx->type == IPMI_DEVICE_LAN
               || ctx->type == IPMI_DEVICE_LAN_2_0)
+          && recv_starttime
           && timeout);
 
   if (gettimeofday (&current, NULL) < 0)
@@ -183,8 +187,8 @@ _calculate_timeout (ipmi_ctx_t ctx,
   session_timeout_len.tv_sec = ctx->io.outofband.session_timeout / 1000;
   session_timeout_len.tv_usec = (ctx->io.outofband.session_timeout - (session_timeout_len.tv_sec * 1000)) * 1000;
 
-  timeradd (&current, &session_timeout_len, &session_timeout);
-  timersub (&session_timeout, &current, &session_timeout_val);
+  timeradd (recv_starttime, &session_timeout_len, &session_timeout);
+  timersub (&session_timeout, recv_starttime, &session_timeout_val);
 
   retransmission_timeout_multiplier = (retransmission_count / IPMI_LAN_BACKOFF_COUNT) + 1;
 
@@ -192,7 +196,7 @@ _calculate_timeout (ipmi_ctx_t ctx,
   retransmission_timeout_len.tv_usec = ((retransmission_timeout_multiplier * ctx->io.outofband.retransmission_timeout) - (retransmission_timeout_len.tv_sec * 1000)) * 1000;
 
   timeradd (&ctx->io.outofband.last_send, &retransmission_timeout_len, &retransmission_timeout);
-  timersub (&retransmission_timeout, &current, &retransmission_timeout_val);
+  timersub (&retransmission_timeout, recv_starttime, &retransmission_timeout_val);
 
   if (timercmp (&retransmission_timeout_val, &session_timeout_val, <))
     {
@@ -205,7 +209,80 @@ _calculate_timeout (ipmi_ctx_t ctx,
       timeout->tv_usec = session_timeout_val.tv_usec;
     }
 
-  return (0);
+  /* See portability issue below regarding ECONNRESET and ECONNREFUSED
+   * to see why there could be two calls to this in a row, and thus
+   * this check is necessary
+   */
+
+  timersub (&current, recv_starttime, &already_timedout_check);
+  
+  if (timercmp (timeout, &already_timedout_check, <))
+    return (0);
+
+  return (1);
+}
+
+static int
+_ipmi_lan_recvfrom (ipmi_ctx_t ctx,
+                    void *pkt,
+                    unsigned int pkt_len,
+                    unsigned int retransmission_count,
+                    struct timeval *recv_starttime)
+{
+  struct timeval timeout;
+  fd_set read_set;
+  int status = 0;
+  int recv_len;
+  int ret;
+
+  assert (ctx
+          && ctx->magic == IPMI_CTX_MAGIC
+          && (ctx->type == IPMI_DEVICE_LAN
+              || ctx->type == IPMI_DEVICE_LAN_2_0)
+          && ctx->io.outofband.sockfd
+          && pkt
+          && pkt_len
+          && recv_starttime);
+
+  if (ctx->io.outofband.retransmission_timeout)
+    {
+      FD_ZERO (&read_set);
+      FD_SET (ctx->io.outofband.sockfd, &read_set);
+
+      if ((ret = _calculate_timeout (ctx,
+                                     retransmission_count,
+                                     recv_starttime,
+                                     &timeout)) < 0)
+        return (-1);
+
+      if (!ret)
+        return (0);
+
+      if ((status = select ((ctx->io.outofband.sockfd + 1),
+                            &read_set,
+                            NULL,
+                            NULL,
+                            &timeout)) < 0)
+        {
+          API_ERRNO_TO_API_ERRNUM (ctx, errno);
+          return (-1);
+        }
+
+      if (!status)
+        return (0); /* resend the request */
+    }
+
+  do
+    {
+      recv_len = ipmi_lan_recvfrom (ctx->io.outofband.sockfd,
+                                    pkt,
+                                    pkt_len,
+                                    0,
+                                    NULL,
+                                    NULL);
+    } while (recv_len < 0 && errno == EINTR);
+
+  return (recv_len);
 }
 
 static void
@@ -532,10 +609,9 @@ _ipmi_lan_cmd_recv (ipmi_ctx_t ctx,
 		    uint8_t group_extension, /* for debug dumping */
                     fiid_obj_t obj_cmd_rs)
 {
-  struct timeval timeout;
-  fd_set read_set;
-  int status = 0;
-  int ret, recv_len;
+  struct timeval recv_starttime;
+  int recv_len = 0;
+  int ret;
 
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC
@@ -545,6 +621,12 @@ _ipmi_lan_cmd_recv (ipmi_ctx_t ctx,
           && pkt
           && pkt_len
           && fiid_obj_valid (obj_cmd_rs));
+
+  if (gettimeofday (&recv_starttime, NULL) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      return (-1);
+    }
 
   if (fiid_obj_clear (ctx->io.outofband.rs.obj_rmcp_hdr) < 0)
     {
@@ -567,37 +649,50 @@ _ipmi_lan_cmd_recv (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (ctx->io.outofband.retransmission_timeout)
+  recv_len = _ipmi_lan_recvfrom (ctx,
+                                 pkt,
+                                 pkt_len,
+                                 retransmission_count,
+                                 &recv_starttime);
+
+  if (!recv_len)
+    return (0); /* resend the request */
+
+  /* achu & hliebig:
+   *
+   * Premise from ipmitool (http://ipmitool.sourceforge.net/)
+   *
+   * On some OSes (it seems Unixes), the behavior is to not return
+   * errors up to the client for UDP responses (i.e. you need to
+   * timeout).  But on some OSes (it seems Windows), the behavior is
+   * to return port denied errors up to the user for UDP responses.
+   *
+   * In addition (according to Ipmitool), a read may return
+   * ECONNREFUSED or ECONNRESET if both the OS and BMC respond to an
+   * IPMI request.
+   *
+   * If the ECONNREFUSED or ECONNRESET is from the OS, but we will get
+   * an IPMI response later, we just do the recvfrom again to get the
+   * packet we expect.
+   *
+   * If the ECONNREFUSED or ECONNRESET is from the OS but there is no
+   * BMC, just do the recvfrom again to give us the eventual
+   * timeout.
+   */
+
+  if (recv_len < 0
+      && (errno == ECONNRESET
+          || errno == ECONNREFUSED))
     {
-      FD_ZERO (&read_set);
-      FD_SET (ctx->io.outofband.sockfd, &read_set);
-
-      if (_calculate_timeout (ctx, retransmission_count, &timeout) < 0)
-        return (-1);
-
-      if ((status = select ((ctx->io.outofband.sockfd + 1),
-                            &read_set,
-                            NULL,
-                            NULL,
-                            &timeout)) < 0)
-        {
-          API_ERRNO_TO_API_ERRNUM (ctx, errno);
-          return (-1);
-        }
-
-      if (!status)
+      recv_len = _ipmi_lan_recvfrom (ctx,
+                                     pkt,
+                                     pkt_len,
+                                     retransmission_count,
+                                     &recv_starttime);
+      
+      if (!recv_len)
         return (0); /* resend the request */
     }
-
-  do
-    {
-      recv_len = ipmi_lan_recvfrom (ctx->io.outofband.sockfd,
-                                    pkt,
-                                    pkt_len,
-                                    0,
-                                    NULL,
-                                    NULL);
-    } while (recv_len < 0 && errno == EINTR);
 
   if (recv_len < 0)
     {
@@ -2147,10 +2242,8 @@ _ipmi_lan_2_0_cmd_recv (ipmi_ctx_t ctx,
 			uint8_t group_extension, /* for debug dumping */
                         fiid_obj_t obj_cmd_rs)
 {
-  struct timeval timeout;
-  fd_set read_set;
+  struct timeval recv_starttime;
   int recv_len = 0;
-  int status = 0;
   int ret;
 
   assert (ctx
@@ -2162,6 +2255,12 @@ _ipmi_lan_2_0_cmd_recv (ipmi_ctx_t ctx,
           && pkt
           && pkt_len
           && fiid_obj_valid (obj_cmd_rs));
+
+  if (gettimeofday (&recv_starttime, NULL) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      return (-1);
+    }
 
   if (fiid_obj_clear (ctx->io.outofband.rs.obj_rmcp_hdr) < 0)
     {
@@ -2194,38 +2293,51 @@ _ipmi_lan_2_0_cmd_recv (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (ctx->io.outofband.retransmission_timeout)
+  recv_len = _ipmi_lan_recvfrom (ctx,
+                                 pkt,
+                                 pkt_len,
+                                 retransmission_count,
+                                 &recv_starttime);
+
+  if (!recv_len)
+    return (0); /* resend the request */
+
+  /* achu & hliebig:
+   *
+   * Premise from ipmitool (http://ipmitool.sourceforge.net/)
+   *
+   * On some OSes (it seems Unixes), the behavior is to not return
+   * errors up to the client for UDP responses (i.e. you need to
+   * timeout).  But on some OSes (it seems Windows), the behavior is
+   * to return port denied errors up to the user for UDP responses.
+   *
+   * In addition (according to Ipmitool), a read may return
+   * ECONNREFUSED or ECONNRESET if both the OS and BMC respond to an
+   * IPMI request.
+   *
+   * If the ECONNREFUSED or ECONNRESET is from the OS, but we will get
+   * an IPMI response later, we just do the recvfrom again to get the
+   * packet we expect.
+   *
+   * If the ECONNREFUSED or ECONNRESET is from the OS but there is no
+   * BMC, just do the recvfrom again to give us the eventually
+   * timeout.
+   */
+
+  if (recv_len < 0
+      && (errno == ECONNRESET
+          || errno == ECONNREFUSED))
     {
-      FD_ZERO (&read_set);
-      FD_SET (ctx->io.outofband.sockfd, &read_set);
-
-      if (_calculate_timeout (ctx, retransmission_count, &timeout) < 0)
-        return (-1);
-
-      if ((status = select ((ctx->io.outofband.sockfd + 1),
-                            &read_set,
-                            NULL,
-                            NULL,
-                            &timeout)) < 0)
-        {
-          API_ERRNO_TO_API_ERRNUM (ctx, errno);
-          return (-1);
-        }
-
-      if (!status)
+      recv_len = _ipmi_lan_recvfrom (ctx,
+                                     pkt,
+                                     pkt_len,
+                                     retransmission_count,
+                                     &recv_starttime);
+      
+      if (!recv_len)
         return (0); /* resend the request */
     }
-
-  do
-    {
-      recv_len = ipmi_lan_recvfrom (ctx->io.outofband.sockfd,
-                                    pkt,
-                                    pkt_len,
-                                    0,
-                                    NULL,
-                                    NULL);
-    } while (recv_len < 0 && errno == EINTR);
-  
+ 
   if (recv_len < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);

@@ -54,6 +54,10 @@ api_set_api_errnum_by_errno (ipmi_ctx_t ctx, int __errno)
     ctx->errnum = IPMI_ERR_OUT_OF_MEMORY;
   else if (__errno == ENODEV)
     ctx->errnum = IPMI_ERR_DEVICE_NOT_SUPPORTED;
+  else if (__errno == ECONNRESET)
+    ctx->errnum = IPMI_ERR_IPMI_ERROR;
+  else if (__errno == ECONNREFUSED)
+    ctx->errnum = IPMI_ERR_IPMI_ERROR;
   else
     ctx->errnum = IPMI_ERR_INTERNAL_ERROR;
 }

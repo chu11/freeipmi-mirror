@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmidetectd_loop.c,v 1.21 2009-08-17 23:20:22 chu11 Exp $
+ *  $Id: ipmidetectd_loop.c,v 1.21.4.1 2009-12-12 00:06:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -401,12 +401,40 @@ _receive_ping (int fd)
    * checking sequence numbers or anything like that.
    */
 
-  if ((len = recvfrom (fd,
-                       buf,
-                       IPMIDETECTD_BUFLEN,
-                       0,
-                       (struct sockaddr *)&from,
-                       &fromlen)) < 0)
+  len = recvfrom (fd,
+                  buf,
+                  IPMIDETECTD_BUFLEN,
+                  0,
+                  (struct sockaddr *)&from,
+                  &fromlen);
+
+  /* achu & hliebig:
+   *
+   * Premise from ipmitool (http://ipmitool.sourceforge.net/)
+   *
+   * On some OSes (it seems Unixes), the behavior is to not return
+   * errors up to the client for UDP responses (i.e. you need to
+   * timeout).  But on some OSes (it seems Windows), the behavior is
+   * to return port denied errors up to the user for UDP responses.
+   *
+   * In addition (according to Ipmitool), a read may return
+   * ECONNREFUSED or ECONNRESET if both the OS and BMC respond to an
+   * IPMI request.
+   *
+   * If the ECONNREFUSED or ECONNRESET is from the OS, but we will get
+   * an IPMI response later, we just do the recvfrom again to get the
+   * packet we expect.  This will be handled by way of the poll.
+   *
+   * If the ECONNREFUSED or ECONNRESET is from the OS but there is no
+   * BMC, just do the recvfrom again to give us the eventual
+   * timeout.  This will be handled by way of the poll.
+   */
+  if (len < 0
+      && (errno == ECONNRESET
+          || errno == ECONNREFUSED))
+    return;
+    
+  if (len < 0)
     IPMIDETECTD_EXIT (("recvfrom: %s", strerror (errno)));
 
   if (!(tmpstr = inet_ntoa (from.sin_addr)))
