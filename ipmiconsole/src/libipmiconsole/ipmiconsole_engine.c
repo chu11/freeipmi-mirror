@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.90.4.3 2009-12-12 00:06:15 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.90.4.4 2009-12-12 21:23:35 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -40,6 +40,7 @@
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
 #include <sys/types.h>
+#include <sys/select.h>
 #include <sys/poll.h>
 #include <signal.h>
 #include <limits.h>
@@ -470,28 +471,7 @@ _ipmi_recvfrom (ipmiconsole_ctx_t c)
                                &fromlen);
     } while (len < 0 && errno == EINTR);
 
-  /* achu & hliebig:
-   *
-   * Premise from ipmitool (http://ipmitool.sourceforge.net/)
-   *
-   * On some OSes (it seems Unixes), the behavior is to not return
-   * errors up to the client for UDP responses (i.e. you need to
-   * timeout).  But on some OSes (it seems Windows), the behavior is
-   * to return port denied errors up to the user for UDP responses.
-   *
-   * In addition (according to Ipmitool), a read may return
-   * ECONNREFUSED or ECONNRESET if both the OS and BMC respond to an
-   * IPMI request.
-   *
-   * If the ECONNREFUSED or ECONNRESET is from the OS, but we will get
-   * an IPMI response later, we just do the recvfrom again to get the
-   * packet we expect.  This will be handled by way of the poll.
-   *
-   * If the ECONNREFUSED or ECONNRESET is from the OS but there is no
-   * BMC, just do the recvfrom again to give us the eventual
-   * timeout.  This will be handled by way of the poll.
-   */
-
+  /* See comments in _error_recvfrom() */
   if (len < 0
       && (errno == ECONNRESET
           || errno == ECONNREFUSED))
@@ -560,6 +540,94 @@ _ipmi_recvfrom (ipmiconsole_ctx_t c)
 
   return (0);
 }
+
+/*
+ * Return 0 on success
+ * Return -1 on fatal error
+ */
+static int
+_error_recvfrom (ipmiconsole_ctx_t c)
+{
+  struct timeval timeout;
+  fd_set read_set;
+  int fdcount;
+
+  assert (c);
+  assert (c->magic == IPMICONSOLE_CTX_MAGIC);
+
+  /* achu & hliebig:
+   *
+   * Premise from ipmitool (http://ipmitool.sourceforge.net/)
+   *
+   * On some OSes (it seems Unixes), the behavior is to not return
+   * port denied errors up to the client for UDP responses (i.e. you
+   * need to timeout).  But on some OSes (it seems Windows), the
+   * behavior is to return port denied errors up to the user for UDP
+   * responses via ECONNRESET or ECONNREFUSED.
+   *
+   * If this were just the case, we could return or handle errors
+   * properly and move on.  However, it's not the case.
+   *
+   * According to Ipmitool, on some motherboards, both the OS and the
+   * BMC are capable of responding to an IPMI request.  That means you
+   * can get an ECONNRESET or ECONNREFUSED, then later on, get your
+   * real IPMI response.
+   *
+   * Our solution is copied from Ipmitool, we'll ignore some specific
+   * errors and try to read again.
+   *
+   * If the ECONNREFUSED or ECONNRESET is from the OS, but we will get
+   * an IPMI response later, the recvfrom later on gets the packet we
+   * want.
+   *
+   * If the ECONNREFUSED or ECONNRESET is from the OS but there is no
+   * BMC (or IPMI disabled, etc.), just do the recvfrom again to
+   * eventually get a timeout, which is the behavior we'd like.
+   */
+
+  /* achu:
+   *
+   * select() returns a read fd for a ECONNRESET or ECONNREFUSED while
+   * poll() returns the POLLERR.  Need to make sure we can read
+   * something (i.e. not block) and get the ECONNRESET or ECONNREFUSED
+   * "off the wire."
+   *
+   * But, this leads to another issue, on older systems, FD_SET cannot
+   * be used with a file descriptor above a certain number (i.e. max
+   * fds is 1024, and the max file descriptor number is 1024,
+   * vs. modern systems where max fds is 1024, but the file descriptor
+   * number could be any legal number).  Below poll() is capable of
+   * supporting way more file descriptors than select().
+   *
+   * On most modern systems, I believe select() is no longer a blind
+   * bitmask.  It can hold any legal file descriptor number and we're
+   * only going to FD_SET one file descriptor below.  Should be
+   * portable enough for most modern systems.  If not ... I'll deal
+   * with it when it comes to pass.
+   */
+
+  FD_ZERO (&read_set);
+  FD_SET (c->connection.ipmi_fd, &read_set);
+
+  timeout.tv_sec = 0;
+  timeout.tv_usec = 0;
+
+  if ((fdcount = select (c->connection.ipmi_fd + 1,
+                         &read_set,
+                         NULL,
+                         NULL,
+                         &timeout)) < 0)
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("select: %s", strerror (errno)));
+      return (-1);
+    }
+  
+  if (fdcount != 1)
+    return (-1);
+
+  return (_ipmi_recvfrom (c));
+}
+
 
 /*
  * Return 0 on success
@@ -1021,9 +1089,12 @@ _ipmiconsole_engine (void *arg)
           if (poll_data.pfds[i*3].revents & POLLERR)
             {
               IPMICONSOLE_CTX_DEBUG (poll_data.pfds_ctxs[i], ("POLLERR"));
-              ipmiconsole_ctx_set_errnum (poll_data.pfds_ctxs[i], IPMICONSOLE_ERR_INTERNAL_ERROR);
-              poll_data.pfds_ctxs[i]->session.close_session_flag++;
-              continue;
+              if (_error_recvfrom (poll_data.pfds_ctxs[i]) < 0)
+                {
+                  ipmiconsole_ctx_set_errnum (poll_data.pfds_ctxs[i], IPMICONSOLE_ERR_SYSTEM_ERROR);
+                  poll_data.pfds_ctxs[i]->session.close_session_flag++;
+                  continue;
+                }
             }
           if (!poll_data.pfds_ctxs[i]->session.close_session_flag)
             {

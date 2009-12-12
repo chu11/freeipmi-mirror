@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmidetectd_loop.c,v 1.21.4.1 2009-12-12 00:06:15 chu11 Exp $
+ *  $Id: ipmidetectd_loop.c,v 1.21.4.2 2009-12-12 21:23:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -351,13 +351,13 @@ _ipmidetectd_send_pings (void)
       if ((len = _ipmi_ping_build (info, buf, IPMIDETECTD_BUFLEN)) < 0)
         IPMIDETECTD_EXIT (("_ipmi_ping_build: %s", strerror (errno)));
 
-      if (sendto (info->fd,
-                  buf,
-                  len,
-                  0,
-                  (struct sockaddr *)&(info->destaddr),
-                  sizeof (struct sockaddr_in)) < 0)
-        IPMIDETECTD_EXIT (("sendto: %s", strerror (errno)));
+      if (ipmi_lan_sendto (info->fd,
+                           buf,
+                           len,
+                           0,
+                           (struct sockaddr *)&(info->destaddr),
+                           sizeof (struct sockaddr_in)) < 0)
+        IPMIDETECTD_EXIT (("ipmi_lan_sendto: %s", strerror (errno)));
 
 #ifndef NDEBUG
       if (conf.debug)
@@ -401,41 +401,21 @@ _receive_ping (int fd)
    * checking sequence numbers or anything like that.
    */
 
-  len = recvfrom (fd,
-                  buf,
-                  IPMIDETECTD_BUFLEN,
-                  0,
-                  (struct sockaddr *)&from,
-                  &fromlen);
-
-  /* achu & hliebig:
-   *
-   * Premise from ipmitool (http://ipmitool.sourceforge.net/)
-   *
-   * On some OSes (it seems Unixes), the behavior is to not return
-   * errors up to the client for UDP responses (i.e. you need to
-   * timeout).  But on some OSes (it seems Windows), the behavior is
-   * to return port denied errors up to the user for UDP responses.
-   *
-   * In addition (according to Ipmitool), a read may return
-   * ECONNREFUSED or ECONNRESET if both the OS and BMC respond to an
-   * IPMI request.
-   *
-   * If the ECONNREFUSED or ECONNRESET is from the OS, but we will get
-   * an IPMI response later, we just do the recvfrom again to get the
-   * packet we expect.  This will be handled by way of the poll.
-   *
-   * If the ECONNREFUSED or ECONNRESET is from the OS but there is no
-   * BMC, just do the recvfrom again to give us the eventual
-   * timeout.  This will be handled by way of the poll.
-   */
+  len = ipmi_lan_recvfrom (fd,
+                           buf,
+                           IPMIDETECTD_BUFLEN,
+                           0,
+                           (struct sockaddr *)&from,
+                           &fromlen);
+  
+  /* See comments in _error_receive_ping() */
   if (len < 0
       && (errno == ECONNRESET
           || errno == ECONNREFUSED))
     return;
     
   if (len < 0)
-    IPMIDETECTD_EXIT (("recvfrom: %s", strerror (errno)));
+    IPMIDETECTD_EXIT (("ipmi_lan_recvfrom: %s", strerror (errno)));
 
   if (!(tmpstr = inet_ntoa (from.sin_addr)))
     IPMIDETECTD_EXIT (("inet_ntoa: %s", strerror (errno))); /* strerror? */
@@ -450,6 +430,83 @@ _receive_ping (int fd)
         fprintf (stderr, "Ping Reply from %s\n", info->hostname);
 #endif /* NDEBUG */
     }
+}
+
+static void
+_error_receive_ping (int fd)
+{
+  struct timeval timeout;
+  fd_set read_set;
+  int fdcount;
+
+  /* achu & hliebig:
+   *
+   * Premise from ipmitool (http://ipmitool.sourceforge.net/)
+   *
+   * On some OSes (it seems Unixes), the behavior is to not return
+   * port denied errors up to the client for UDP responses (i.e. you
+   * need to timeout).  But on some OSes (it seems Windows), the
+   * behavior is to return port denied errors up to the user for UDP
+   * responses via ECONNRESET or ECONNREFUSED.
+   *
+   * If this were just the case, we could return or handle errors
+   * properly and move on.  However, it's not the case.
+   *
+   * According to Ipmitool, on some motherboards, both the OS and the
+   * BMC are capable of responding to an IPMI request.  That means you
+   * can get an ECONNRESET or ECONNREFUSED, then later on, get your
+   * real IPMI response.
+   *
+   * Our solution is copied from Ipmitool, we'll ignore some specific
+   * errors and try to read again.
+   *
+   * If the ECONNREFUSED or ECONNRESET is from the OS, but we will get
+   * an IPMI response later, the recvfrom later on gets the packet we
+   * want.
+   *
+   * If the ECONNREFUSED or ECONNRESET is from the OS but there is no
+   * BMC (or IPMI disabled, etc.), just do the recvfrom again to
+   * eventually get a timeout, which is the behavior we'd like.
+   */
+
+  /* achu:
+   *
+   * select() returns a read fd for a ECONNRESET or ECONNREFUSED while
+   * poll() returns the POLLERR.  Need to make sure we can read
+   * something (i.e. not block) and get the ECONNRESET or ECONNREFUSED
+   * "off the wire."
+   *
+   * But, this leads to another issue, on older systems, FD_SET cannot
+   * be used with a file descriptor above a certain number (i.e. max
+   * fds is 1024, and the max file descriptor number is 1024,
+   * vs. modern systems where max fds is 1024, but the file descriptor
+   * number could be any legal number).  Below poll() is capable of
+   * supporting way more file descriptors than select().
+   *
+   * On most modern systems, I believe select() is no longer a blind
+   * bitmask.  It can hold any legal file descriptor number and we're
+   * only going to FD_SET one file descriptor below.  Should be
+   * portable enough for most modern systems.  If not ... I'll deal
+   * with it when it comes to pass.
+   */
+
+  FD_ZERO (&read_set);
+  FD_SET (fd, &read_set);
+
+  timeout.tv_sec = 0;
+  timeout.tv_usec = 0;
+
+  if ((fdcount = select (fd + 1,
+                         &read_set,
+                         NULL,
+                         NULL,
+                         &timeout)) < 0)
+    IPMIDETECTD_EXIT (("select: %s", strerror (errno)));
+  
+  if (fdcount != 1)
+    return;
+  
+  _receive_ping (fd);
 }
 
 static void
@@ -546,6 +603,8 @@ ipmidetectd_loop (void)
         {
           for (i = 0; i < fds_count; i++)
             {
+              if (pfds[i].revents & POLLERR)
+                _error_receive_ping (fds[i]);
               if (pfds[i].revents & POLLIN)
                 _receive_ping (fds[i]);
             }

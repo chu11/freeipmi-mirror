@@ -657,7 +657,7 @@ config_file_tool_option_privilege_level (conffile_t cf,
 int
 config_file_tool_option_workaround_flags (conffile_t cf,
                                           struct conffile_data *data,
-                                            char *optionname,
+                                          char *optionname,
                                           int option_type,
                                           void *option_ptr,
                                           int option_data,
@@ -812,9 +812,9 @@ config_file_ipmi_sensors_exclude_record_ids (conffile_t cf,
 
 static int
 _config_file_sensor_types (struct conffile_data *data,
-                            char *optionname,
-                            char sensor_types[][CONFIG_FILE_MAX_SENSOR_TYPES_STRING_LENGTH+1],
-                            unsigned int *sensor_types_length)
+                           char *optionname,
+                           char sensor_types[][CONFIG_FILE_MAX_SENSOR_TYPES_STRING_LENGTH+1],
+                           unsigned int *sensor_types_length)
 {
   unsigned int i;
 
@@ -866,9 +866,9 @@ config_file_ipmi_sensors_sensor_types (conffile_t cf,
   config_file_data = (struct config_file_data_ipmi_sensors *)option_ptr;
 
   return (_config_file_sensor_types (data,
-                                      optionname,
-                                      config_file_data->sensor_types,
-                                      &(config_file_data->sensor_types_length)));
+                                     optionname,
+                                     config_file_data->sensor_types,
+                                     &(config_file_data->sensor_types_length)));
 }
 
 int
@@ -888,9 +888,9 @@ config_file_ipmi_sensors_exclude_sensor_types (conffile_t cf,
   config_file_data = (struct config_file_data_ipmi_sensors *)option_ptr;
 
   return (_config_file_sensor_types (data,
-                                      optionname,
-                                      config_file_data->exclude_sensor_types,
-                                      &(config_file_data->exclude_sensor_types_length)));
+                                     optionname,
+                                     config_file_data->exclude_sensor_types,
+                                     &(config_file_data->exclude_sensor_types_length)));
 }
 
 static int
@@ -959,13 +959,13 @@ config_file_ipmimonitoring_exclude_record_ids (conffile_t cf,
 
 int
 config_file_ipmimonitoring_sensor_types (conffile_t cf,
-                                   struct conffile_data *data,
-                                   char *optionname,
-                                   int option_type,
-                                   void *option_ptr,
-                                   int option_data,
-                                   void *app_ptr,
-                                   int app_data)
+                                         struct conffile_data *data,
+                                         char *optionname,
+                                         int option_type,
+                                         void *option_ptr,
+                                         int option_data,
+                                         void *app_ptr,
+                                         int app_data)
 {
   struct config_file_data_ipmimonitoring *config_file_data;
 
@@ -974,20 +974,20 @@ config_file_ipmimonitoring_sensor_types (conffile_t cf,
   config_file_data = (struct config_file_data_ipmimonitoring *)option_ptr;
 
   return (_config_file_sensor_types (data,
-                                      optionname,
-                                      config_file_data->sensor_types,
-                                      &(config_file_data->sensor_types_length)));
+                                     optionname,
+                                     config_file_data->sensor_types,
+                                     &(config_file_data->sensor_types_length)));
 }
 
 int
 config_file_ipmimonitoring_exclude_sensor_types (conffile_t cf,
-                                           struct conffile_data *data,
-                                           char *optionname,
-                                           int option_type,
-                                           void *option_ptr,
-                                           int option_data,
-                                           void *app_ptr,
-                                           int app_data)
+                                                 struct conffile_data *data,
+                                                 char *optionname,
+                                                 int option_type,
+                                                 void *option_ptr,
+                                                 int option_data,
+                                                 void *app_ptr,
+                                                 int app_data)
 {
   struct config_file_data_ipmimonitoring *config_file_data;
 
@@ -996,9 +996,9 @@ config_file_ipmimonitoring_exclude_sensor_types (conffile_t cf,
   config_file_data = (struct config_file_data_ipmimonitoring *)option_ptr;
 
   return (_config_file_sensor_types (data,
-                                      optionname,
-                                      config_file_data->exclude_sensor_types,
-                                      &(config_file_data->exclude_sensor_types_length)));
+                                     optionname,
+                                     config_file_data->exclude_sensor_types,
+                                     &(config_file_data->exclude_sensor_types_length)));
 }
 
 int
