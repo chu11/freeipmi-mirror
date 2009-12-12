@@ -36,9 +36,22 @@
 #define SENSORS_HEADER_UNITS_STR            "Units"
 #define SENSORS_HEADER_EVENT_STR            "Event"
 
+/* achu:
+ *
+ * The stack on cygwin is smaller than on unixes, and for the life of
+ * me, I can't get a bigger stack when I compile
+ * (i.e. -W--stack,8000000) or anything, so the tools using these
+ * macros keep on crashing.  So we're just going to use smaller values
+ * to deal with the problem.
+ */
+#ifdef __CYGWIN__
+#define MAX_SENSOR_RECORD_IDS               128
+#define MAX_SENSOR_TYPES                    16
+#else /* !__CYGWIN__ */
 /* record id is 16 bits - 65536 */
 #define MAX_SENSOR_RECORD_IDS               65536
 #define MAX_SENSOR_TYPES                    256
+#endif /* !__CYGWIN__ */
 #define MAX_SENSOR_TYPES_STRING_LENGTH      256
 
 #define SENSOR_PARSE_ALL_STRING             "all"

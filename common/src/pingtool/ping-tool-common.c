@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ping-tool-common.c,v 1.18 2009-12-12 00:02:15 chu11 Exp $
+ *  $Id: ping-tool-common.c,v 1.19 2009-12-12 21:23:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -482,21 +482,29 @@ _main_loop (Ipmi_Ping_CreatePacket _create,
                * Premise from ipmitool (http://ipmitool.sourceforge.net/)
                *
                * On some OSes (it seems Unixes), the behavior is to not return
-               * errors up to the client for UDP responses (i.e. you need to
-               * timeout).  But on some OSes (it seems Windows), the behavior is
-               * to return port denied errors up to the user for UDP responses.
+               * port denied errors up to the client for UDP responses (i.e. you
+               * need to timeout).  But on some OSes (it seems Windows), the
+               * behavior is to return port denied errors up to the user for UDP
+               * responses via ECONNRESET or ECONNREFUSED.
                *
-               * In addition (according to Ipmitool), a read may return
-               * ECONNREFUSED or ECONNRESET if both the OS and BMC respond to an
-               * IPMI request.
+               * If this were just the case, we could return or handle errors
+               * properly and move on.  However, it's not the case.
+               *
+               * According to Ipmitool, on some motherboards, both the OS and the
+               * BMC are capable of responding to an IPMI request.  That means you
+               * can get an ECONNRESET or ECONNREFUSED, then later on, get your
+               * real IPMI response.
+               *
+               * Our solution is copied from Ipmitool, we'll ignore some specific
+               * errors and try to read again.
                *
                * If the ECONNREFUSED or ECONNRESET is from the OS, but we will get
-               * an IPMI response later, we just do the recvfrom again to get the
-               * packet we expect.
+               * an IPMI response later, the recvfrom later on gets the packet we
+               * want.
                *
                * If the ECONNREFUSED or ECONNRESET is from the OS but there is no
-               * BMC, just do the recvfrom again to give us the eventual
-               * timeout.
+               * BMC (or IPMI disabled, etc.), just do the recvfrom again to
+               * eventually get a timeout, which is the behavior we'd like.
                */
 
               if (len < 0

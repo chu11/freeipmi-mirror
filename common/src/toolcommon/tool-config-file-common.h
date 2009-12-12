@@ -51,9 +51,22 @@
 #define CONFIG_FILE_TOOL_IPMIMONITORING      0x00008000
 #define CONFIG_FILE_TOOL_IPMIPOWER           0x00010000
 
+/* achu:
+ *
+ * The stack on cygwin is smaller than on unixes, and for the life of
+ * me, I can't get a bigger stack when I compile
+ * (i.e. -W--stack,8000000) or anything, so the tools using these
+ * macros keep on crashing.  So we're just going to use smaller values
+ * to deal with the problem.
+ */
+#ifdef __CYGWIN__
+#define CONFIG_FILE_MAX_SENSOR_RECORD_IDS           128
+#define CONFIG_FILE_MAX_SENSOR_TYPES                16
+#else /* !__CYGWIN__ */
 /* record id is 16 bits - 65536 */
 #define CONFIG_FILE_MAX_SENSOR_RECORD_IDS           65536
 #define CONFIG_FILE_MAX_SENSOR_TYPES                256
+#endif /* !__CYGWIN__ */
 #define CONFIG_FILE_MAX_SENSOR_TYPES_STRING_LENGTH  256
 
 struct config_file_data_bmc_config
