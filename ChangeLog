@@ -1,6 +1,6 @@
 2009-12-11  Holger Liebig <holger.liebig@ts.fujitsu.com> and Albert Chu <chu11@llnl.gov>
 
-	* ipmipower/, common/src/pingtool/,
+	* ipmipower/, common/src/pingtool/, ipmidetect/src/ipmidetectd/,
 	ipmiconsole/src/libipmiconsole/, libfreeipmi/src/api/: Support
 	workaround to deal with OSes that will return ECONNRESET or
 	ECONNREFUSED if the IPMI port cannot be reached.
