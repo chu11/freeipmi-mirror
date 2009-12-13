@@ -95,8 +95,13 @@ ipmi_sensor_units_string (uint8_t sensor_units_percentage,
   
   if (sensor_units_rate != IPMI_SENSOR_RATE_UNIT_NONE)
     {
-      /* Special case, inherit in the units */
-      if (sensor_base_unit_type == IPMI_SENSOR_UNIT_RPM)
+      /* Special case, RPM is inheritly per minute
+       *
+       * If vendor specifies a rate other than "per minute", that's
+       * probably a bug in their SDR.
+       */
+      if (sensor_base_unit_type == IPMI_SENSOR_UNIT_RPM
+          && sensor_units_rate == IPMI_SENSOR_RATE_UNIT_PER_MINUTE)
         rv = snprintf (buf + offset,
                        buflen,
                        "%s",
