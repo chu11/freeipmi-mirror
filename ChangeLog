@@ -1,3 +1,8 @@
+2009-12-13  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/util/ipmi-sensor-units-util.c
+	(ipmi_sensor_units_string): Fix output corner case.
+	
 2009-12-12  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/api/ipmi-lan-session-common.c: Header file
