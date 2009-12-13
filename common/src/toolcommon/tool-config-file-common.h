@@ -53,11 +53,12 @@
 
 /* achu:
  *
- * The stack on cygwin is smaller than on unixes, and for the life of
- * me, I can't get a bigger stack when I compile
- * (i.e. -W--stack,8000000) or anything, so the tools using these
- * macros keep on crashing.  So we're just going to use smaller values
- * to deal with the problem.
+ * The stack on cygwin is smaller than on unixes, and the ability for
+ * me to get a bigger stack in cygwin is difficult.  The normal unix
+ * ways (i.e. ulimit -s unlimited) don't work.  Some posts online
+ * indicate it's b/c of the way windows works with stack limits.
+ *
+ * So we're just going to use smaller values to deal with the problem.
  */
 #ifdef __CYGWIN__
 #define CONFIG_FILE_MAX_SENSOR_RECORD_IDS           128
