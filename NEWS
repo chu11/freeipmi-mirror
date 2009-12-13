@@ -10,6 +10,7 @@ o In ipmi-sel, fix output corner case when --ignore-sdr-cache is
 o Report proper error message when underlying crypt library is
   incompatible.
 o Fix Cygwin portability bugs.
+o Fix minor output corner cases on sensor units.
 o Fix header file typing inconsistencies.
 o Fix header file documentation.
 o Fix manpage documentation.
