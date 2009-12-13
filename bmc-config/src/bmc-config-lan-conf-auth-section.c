@@ -566,48 +566,39 @@ _set_authentication_type_enables (bmc_config_state_data_t *state_data,
           if (!section)
             goto cleanup;
           
-          if ((kv = config_find_keyvalue (state_data->pstate,
-                                          section,
+          if ((kv = config_find_keyvalue (section,
                                           "Callback_Enable_Auth_Type_OEM_Proprietary")))
             al->callback_level_oem_proprietary = same (kv->value_input, "yes");
           
-          if ((kv = config_find_keyvalue (state_data->pstate,
-                                          section,
+          if ((kv = config_find_keyvalue (section,
                                           "User_Enable_Auth_Type_OEM_Proprietary")))
             al->user_level_oem_proprietary = same (kv->value_input, "yes");
           
-          if ((kv = config_find_keyvalue (state_data->pstate,
-                                          section,
+          if ((kv = config_find_keyvalue (section,
                                           "Operator_Enable_Auth_Type_OEM_Proprietary")))
             al->operator_level_oem_proprietary = same (kv->value_input, "yes");
           
-          if ((kv = config_find_keyvalue (state_data->pstate,
-                                          section,
+          if ((kv = config_find_keyvalue (section,
                                           "Admin_Enable_Auth_Type_OEM_Proprietary")))
             al->admin_level_oem_proprietary = same (kv->value_input, "yes");
           
-          if ((kv = config_find_keyvalue (state_data->pstate,
-                                          section,
+          if ((kv = config_find_keyvalue (section,
                                           "OEM_Enable_Auth_Type_None")))
             al->oem_level_none = same (kv->value_input, "yes");
           
-          if ((kv = config_find_keyvalue (state_data->pstate,
-                                          section,
+          if ((kv = config_find_keyvalue (section,
                                           "OEM_Enable_Auth_Type_MD2")))
             al->oem_level_md2 = same (kv->value_input, "yes");
           
-          if ((kv = config_find_keyvalue (state_data->pstate,
-                                          section,
+          if ((kv = config_find_keyvalue (section,
                                           "OEM_Enable_Auth_Type_MD5")))
             al->oem_level_md5 = same (kv->value_input, "yes");
           
-          if ((kv = config_find_keyvalue (state_data->pstate,
-                                          section,
+          if ((kv = config_find_keyvalue (section,
                                           "OEM_Enable_Auth_Type_Straight_Password")))
             al->oem_level_straight_password = same (kv->value_input, "yes");
           
-          if ((kv = config_find_keyvalue (state_data->pstate,
-                                          section,
+          if ((kv = config_find_keyvalue (section,
                                           "OEM_Enable_Auth_Type_OEM_Proprietary")))
             al->oem_level_oem_proprietary = same (kv->value_input, "yes");
           
@@ -1139,6 +1130,6 @@ bmc_config_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
 
  cleanup:
   if (section)
-    config_section_destroy (state_data->pstate, section);
+    config_section_destroy (section);
   return (NULL);
 }

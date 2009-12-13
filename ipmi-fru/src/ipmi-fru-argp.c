@@ -1,5 +1,5 @@
 /***************************************************************************** \
- *  $Id: ipmi-fru-argp.c,v 1.30 2009-05-28 17:35:33 chu11 Exp $
+ *  $Id: ipmi-fru-argp.c,v 1.31 2009-12-13 00:32:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -87,7 +87,7 @@ static struct argp_option cmdline_options[] =
       "Skip FRU checksum checks", 32},
     { "interpret-oem-data", INTERPRET_OEM_DATA, NULL, 0,
       "Attempt to interpret OEM data.", 33},
-    { 0 }
+    { NULL, 0, NULL, 0, NULL, 0}
   };
 
 static error_t cmdline_parse (int key, char *arg, struct argp_state *state);
@@ -146,11 +146,11 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case ARGP_KEY_END:
       break;
     default:
-      ret = common_parse_opt (key, arg, state, &(cmd_args->common));
+      ret = common_parse_opt (key, arg, &(cmd_args->common));
       if (ret == ARGP_ERR_UNKNOWN)
-        ret = sdr_parse_opt (key, arg, state, &(cmd_args->sdr));
+        ret = sdr_parse_opt (key, arg, &(cmd_args->sdr));
       if (ret == ARGP_ERR_UNKNOWN)
-        ret = hostrange_parse_opt (key, arg, state, &(cmd_args->hostrange));
+        ret = hostrange_parse_opt (key, arg, &(cmd_args->hostrange));
       return (ret);
     }
 

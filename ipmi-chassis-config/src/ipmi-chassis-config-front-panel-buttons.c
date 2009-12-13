@@ -502,6 +502,6 @@ ipmi_chassis_config_front_panel_buttons_get (ipmi_chassis_config_state_data_t *s
 
  cleanup:
   if (section)
-    config_section_destroy (state_data->pstate, section);
+    config_section_destroy (section);
   return (NULL);
 }

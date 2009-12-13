@@ -62,16 +62,13 @@ int config_mac_address_string2int (pstdout_state_t pstate,
                                    const char *src,
                                    uint64_t *dest);
 
-struct config_section *config_find_section (pstdout_state_t pstate,
-                                            struct config_section *sections,
+struct config_section *config_find_section (struct config_section *sections,
                                             const char *section_name);
 
-struct config_key *config_find_key (pstdout_state_t pstate,
-                                    struct config_section *section,
+struct config_key *config_find_key (struct config_section *section,
                                     const char *key_name);
 
-struct config_keyvalue *config_find_keyvalue (pstdout_state_t pstate,
-                                              struct config_section *section,
+struct config_keyvalue *config_find_keyvalue (struct config_section *section,
                                               const char *key_name);
 
 int config_is_non_fatal_error (ipmi_ctx_t ipmi_ctx,

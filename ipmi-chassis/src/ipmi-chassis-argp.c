@@ -112,7 +112,7 @@ static struct argp_option cmdline_options[] =
       "Get system boot-flags.", 47},
     { "get-power-on-hours-counter", GET_POWER_ON_HOURS_COUNTER_KEY, NULL, 0,
       "Get power on hours (POH) counter.", 48},
-    { 0 }
+    { NULL, 0, NULL, 0, NULL, 0}
   };
 
 static error_t cmdline_parse (int key, char *arg, struct argp_state *state);
@@ -452,9 +452,9 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     default:
       ret = boot_flag_parse (key, arg, state);
       if (ret == ARGP_ERR_UNKNOWN)
-        ret = common_parse_opt (key, arg, state, &(cmd_args->common));
+        ret = common_parse_opt (key, arg, &(cmd_args->common));
       if (ret == ARGP_ERR_UNKNOWN)
-        ret = hostrange_parse_opt (key, arg, state, &(cmd_args->hostrange));
+        ret = hostrange_parse_opt (key, arg, &(cmd_args->hostrange));
       return (ret);
     }
 

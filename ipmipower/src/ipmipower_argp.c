@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_argp.c,v 1.22 2009-06-26 03:43:18 chu11 Exp $
+ *  $Id: ipmipower_argp.c,v 1.23 2009-12-13 00:32:30 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -131,7 +131,7 @@ static struct argp_option cmdline_options[] =
       "Specify the ping percent value.", 46},
     { "ping-consec-count", PING_CONSEC_COUNT_KEY, "COUNT", 0,
       "Specify the ping consecutive count.", 47},
-    { 0 }
+    { NULL, 0, NULL, 0, NULL, 0}
   };
 
 static error_t cmdline_parse (int key, char *arg, struct argp_state *state);
@@ -282,9 +282,9 @@ cmdline_parse (int key,
       break;
       /* removed legacy short options */
     default:
-      ret = common_parse_opt (key, arg, state, &(cmd_args->common));
+      ret = common_parse_opt (key, arg, &(cmd_args->common));
       if (ret == ARGP_ERR_UNKNOWN)
-        ret = hostrange_parse_opt (key, arg, state, &(cmd_args->hostrange));
+        ret = hostrange_parse_opt (key, arg, &(cmd_args->hostrange));
       return (ret);
     }
 

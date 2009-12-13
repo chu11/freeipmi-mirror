@@ -253,38 +253,31 @@ _set_alert_policy_table (struct ipmi_pef_config_state_data *state_data,
           if (!section)
             goto cleanup;
           
-          if ((kv = config_find_keyvalue (state_data->pstate,
-                                          section,
+          if ((kv = config_find_keyvalue (section,
                                           "Policy_Type")))
             apt->policy_type = policy_type_number (kv->value_input);
 
-          if ((kv = config_find_keyvalue (state_data->pstate,
-                                          section,
+          if ((kv = config_find_keyvalue (section,
                                           "Policy_Enabled")))
             apt->policy_enabled = same (kv->value_input, "yes");
 
-          if ((kv = config_find_keyvalue (state_data->pstate,
-                                          section,
+          if ((kv = config_find_keyvalue (section,
                                           "Policy_Number")))
             apt->policy_number = atoi (kv->value_input);
 
-          if ((kv = config_find_keyvalue (state_data->pstate,
-                                          section,
+          if ((kv = config_find_keyvalue (section,
                                           "Destination_Selector")))
             apt->destination_selector = atoi (kv->value_input);
           
-          if ((kv = config_find_keyvalue (state_data->pstate,
-                                          section,
+          if ((kv = config_find_keyvalue (section,
                                           "Channel_Number")))
             apt->channel_number = atoi (kv->value_input);
 
-          if ((kv = config_find_keyvalue (state_data->pstate,
-                                          section,
+          if ((kv = config_find_keyvalue (section,
                                           "Alert_String_Set_Selector")))
             apt->alert_string_set_selector = atoi (kv->value_input);
           
-          if ((kv = config_find_keyvalue (state_data->pstate,
-                                          section,
+          if ((kv = config_find_keyvalue (section,
                                           "Event_Specific_Alert_String")))
             apt->event_specific_alert_string = same (kv->value_input, "yes");
 
@@ -769,7 +762,7 @@ ipmi_pef_config_alert_policy_table_section_get (ipmi_pef_config_state_data_t *st
   if (strp)
     free (strp);
   if (section)
-    config_section_destroy (state_data->pstate, section);
+    config_section_destroy (section);
   return (NULL);
 }
 

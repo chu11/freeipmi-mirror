@@ -64,7 +64,7 @@ static struct argp_option cmdline_options[] =
     ARGP_COMMON_HOSTRANGED_OPTIONS,
     ARGP_COMMON_OPTIONS_DEBUG,
     CONFIG_ARGP_COMMON_OPTIONS,
-    { 0, }
+    { NULL, 0, NULL, 0, NULL, 0}
   };
 
 static error_t cmdline_parse (int key, char *arg, struct argp_state *state);
@@ -94,11 +94,11 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case ARGP_KEY_END:
       break;
     default:
-      ret = config_parse_opt (key, arg, state, &cmd_args->config_args);
+      ret = config_parse_opt (key, arg, &cmd_args->config_args);
       if (ret == ARGP_ERR_UNKNOWN)
-        ret = common_parse_opt (key, arg, state, &(cmd_args->config_args.common));
+        ret = common_parse_opt (key, arg, &(cmd_args->config_args.common));
       if (ret == ARGP_ERR_UNKNOWN)
-        ret = hostrange_parse_opt (key, arg, state, &(cmd_args->config_args.hostrange));
+        ret = hostrange_parse_opt (key, arg, &(cmd_args->config_args.hostrange));
       return (ret);
     }
 

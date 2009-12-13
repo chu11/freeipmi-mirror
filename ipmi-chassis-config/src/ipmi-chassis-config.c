@@ -213,8 +213,7 @@ _ipmi_chassis_config (pstdout_state_t pstate,
       sstr = prog_data->args->config_args.section_strs;
       while (sstr)
         {
-          if (!config_find_section (pstate,
-                                    state_data.sections,
+          if (!config_find_section (state_data.sections,
                                     sstr->section_name))
             {
               pstdout_fprintf (pstate,
@@ -243,32 +242,28 @@ _ipmi_chassis_config (pstdout_state_t pstate,
 
           if (!strcasecmp (section->section_name, "Chassis_Front_Panel_Buttons"))
             {
-              if ((kv = config_find_keyvalue (pstate,
-                                              section,
+              if ((kv = config_find_keyvalue (section,
                                               "Enable_Standby_Button_For_Entering_Standby")))
                 {
                   state_data.front_panel_enable_standby_button_for_entering_standby_initialized++;
                   state_data.front_panel_enable_standby_button_for_entering_standby = same (kv->value_input, "yes") ? IPMI_CHASSIS_BUTTON_ENABLE : IPMI_CHASSIS_BUTTON_DISABLE;
                 }
 
-              if ((kv = config_find_keyvalue (pstate,
-                                              section,
+              if ((kv = config_find_keyvalue (section,
                                               "Enable_Diagnostic_Interrupt_Button")))
                 {
                   state_data.front_panel_enable_diagnostic_interrupt_button_initialized++;
                   state_data.front_panel_enable_diagnostic_interrupt_button = same (kv->value_input, "yes") ? IPMI_CHASSIS_BUTTON_ENABLE : IPMI_CHASSIS_BUTTON_DISABLE;
                 }
 
-              if ((kv = config_find_keyvalue (pstate,
-                                              section,
+              if ((kv = config_find_keyvalue (section,
                                               "Enable_Reset_Button")))
                 {
                   state_data.front_panel_enable_reset_button_initialized++;
                   state_data.front_panel_enable_reset_button = same (kv->value_input, "yes") ? IPMI_CHASSIS_BUTTON_ENABLE : IPMI_CHASSIS_BUTTON_DISABLE;
                 }
 
-              if ((kv = config_find_keyvalue (pstate,
-                                              section,
+              if ((kv = config_find_keyvalue (section,
                                               "Enable_Power_Off_Button_For_Power_Off_Only")))
                 {
                   state_data.front_panel_enable_power_off_button_for_power_off_only_initialized++;
@@ -295,8 +290,7 @@ _ipmi_chassis_config (pstdout_state_t pstate,
             struct config_section *s;
             config_err_t this_ret;
 
-            if (!(s = config_find_section (pstate,
-                                           state_data.sections,
+            if (!(s = config_find_section (state_data.sections,
                                            sstr->section_name)))
               {
                 pstdout_fprintf (pstate,
@@ -370,7 +364,7 @@ _ipmi_chassis_config (pstdout_state_t pstate,
   if (file_opened)
     fclose (fp);
   if (state_data.sections)
-    config_sections_destroy (pstate, state_data.sections);
+    config_sections_destroy (state_data.sections);
   return (exit_code);
 }
 

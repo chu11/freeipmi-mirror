@@ -34,8 +34,7 @@
 #include "freeipmi-portability.h"
 
 int
-config_section_append (pstdout_state_t pstate,
-                       struct config_section **sections,
+config_section_append (struct config_section **sections,
                        struct config_section *section)
 {
   assert (sections);
@@ -55,15 +54,14 @@ config_section_append (pstdout_state_t pstate,
 }
 
 void
-config_sections_destroy (pstdout_state_t pstate,
-                         struct config_section *sections)
+config_sections_destroy (struct config_section *sections)
 {
   if (sections)
     {
       while (sections)
         {
           struct config_section *sections_next = sections->next;
-          config_section_destroy (pstate, sections);
+          config_section_destroy (sections);
           sections = sections_next;
         }
     }
@@ -125,13 +123,12 @@ config_section_create (pstdout_state_t pstate,
 
  cleanup:
   if (section)
-    config_section_destroy (pstate, section);
+    config_section_destroy (section);
   return (NULL);
 }
 
 static void
-_config_key_destroy (pstdout_state_t pstate,
-                     struct config_key *key)
+_config_key_destroy (struct config_key *key)
 {
   if (key)
     {
@@ -144,8 +141,7 @@ _config_key_destroy (pstdout_state_t pstate,
 }
 
 static void
-_config_keyvalue_destroy (pstdout_state_t pstate,
-                          struct config_keyvalue *keyvalue)
+_config_keyvalue_destroy (struct config_keyvalue *keyvalue)
 {
   if (keyvalue)
     {
@@ -158,8 +154,7 @@ _config_keyvalue_destroy (pstdout_state_t pstate,
 }
 
 void
-config_section_destroy (pstdout_state_t pstate,
-                        struct config_section *section)
+config_section_destroy (struct config_section *section)
 {
   if (section)
     {
@@ -175,14 +170,14 @@ config_section_destroy (pstdout_state_t pstate,
       while (section->keys)
         {
           struct config_key *key_next = section->keys->next;
-          _config_key_destroy (pstate, section->keys);
+          _config_key_destroy (section->keys);
           section->keys = key_next;
         }
 
       while (section->keyvalues)
         {
           struct config_keyvalue *keyvalue_next = section->keyvalues->next;
-          _config_keyvalue_destroy (pstate, section->keyvalues);
+          _config_keyvalue_destroy (section->keyvalues);
           section->keyvalues = keyvalue_next;
         }
 
@@ -246,7 +241,7 @@ config_section_add_key (pstdout_state_t pstate,
 
   return (0);
  cleanup:
-  _config_key_destroy (pstate, k);
+  _config_key_destroy (k);
   return (-1);
 }
 
@@ -308,7 +303,7 @@ config_section_add_keyvalue (pstdout_state_t pstate,
   return (0);
 
  cleanup:
-  _config_keyvalue_destroy (pstate, kv);
+  _config_keyvalue_destroy (kv);
   return (-1);
 }
 
@@ -517,7 +512,7 @@ config_sections_insert_keyvalues (pstdout_state_t pstate,
   kp = keypairs;
   while (kp)
     {
-      if (!(s = config_find_section (pstate, sections, kp->section_name)))
+      if (!(s = config_find_section (sections, kp->section_name)))
         {
           PSTDOUT_FPRINTF (pstate,
                            stderr,
@@ -527,7 +522,7 @@ config_sections_insert_keyvalues (pstdout_state_t pstate,
           goto next_keypair;
         }
 
-      if (!(k = config_find_key (pstate, s, kp->key_name)))
+      if (!(k = config_find_key (s, kp->key_name)))
         {
           PSTDOUT_FPRINTF (pstate,
                            stderr,
@@ -538,7 +533,7 @@ config_sections_insert_keyvalues (pstdout_state_t pstate,
           goto next_keypair;
         }
 
-      if ((kv = config_find_keyvalue (pstate, s, kp->key_name)))
+      if ((kv = config_find_keyvalue (s, kp->key_name)))
         {
           if (config_section_update_keyvalue_input (pstate,
                                                     kv,

@@ -416,8 +416,7 @@ config_mac_address_string2int (pstdout_state_t pstate,
 }
 
 struct config_section *
-config_find_section (pstdout_state_t pstate,
-                     struct config_section *sections,
+config_find_section (struct config_section *sections,
                      const char *section_name)
 {
   struct config_section *s = NULL;
@@ -437,8 +436,7 @@ config_find_section (pstdout_state_t pstate,
 }
 
 struct config_key *
-config_find_key (pstdout_state_t pstate,
-                 struct config_section *section,
+config_find_key (struct config_section *section,
                  const char *key_name)
 {
   struct config_key *k = NULL;
@@ -458,8 +456,7 @@ config_find_key (pstdout_state_t pstate,
 }
 
 struct config_keyvalue *
-config_find_keyvalue (pstdout_state_t pstate,
-                      struct config_section *section,
+config_find_keyvalue (struct config_section *section,
                       const char *key_name)
 {
   struct config_keyvalue *kv = NULL;

@@ -247,7 +247,6 @@ __secure_memset (void *s, int c, size_t n)
 error_t
 common_parse_opt (int key,
                   char *arg,
-                  struct argp_state *state,
                   struct common_cmd_args *cmd_args)
 {
   char *ptr;
@@ -521,7 +520,6 @@ common_parse_opt (int key,
 error_t
 sdr_parse_opt (int key,
                char *arg,
-               struct argp_state *state,
                struct sdr_cmd_args *sdr_cmd_args)
 {
   switch (key)
@@ -557,7 +555,6 @@ sdr_parse_opt (int key,
 error_t
 hostrange_parse_opt (int key,
                      char *arg,
-                     struct argp_state *state,
                      struct hostrange_cmd_args *hostrange_cmd_args)
 {
   char *ptr;

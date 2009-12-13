@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole-argp.c,v 1.30 2009-06-04 16:51:20 chu11 Exp $
+ *  $Id: ipmiconsole-argp.c,v 1.31 2009-12-13 00:32:30 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -97,7 +97,7 @@ static struct argp_option cmdline_options[] =
     { "noraw", NORAW_KEY, 0, 0,
       "Don't enter terminal raw mode.", 35},
 #endif
-    { 0 }
+    { NULL, 0, NULL, 0, NULL, 0}
   };
 
 static error_t cmdline_parse (int key, char *arg, struct argp_state *state);
@@ -147,7 +147,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case ARGP_KEY_END:
       break;
     default:
-      ret = common_parse_opt (key, arg, state, &(cmd_args->common));
+      ret = common_parse_opt (key, arg, &(cmd_args->common));
       return (ret);
     }
 

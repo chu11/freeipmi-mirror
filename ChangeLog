@@ -1,4 +1,4 @@
-2009-12-11  Albert Chu <chu11@llnl.gov>
+2009-12-12  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/api/ipmi-lan-session-common.c: Header file
 	cleanup.
@@ -9,6 +9,8 @@
 	* ipmipower/, ipmiconsole/src/libipmiconsole/, ipmidetectd/:
 	Adjust workaround to deal with OSes that will return ECONNRESET or
 	ECONNREFUSED if the IPMI port cannot be reached.
+
+	* Fix compiler warnings.
 
 2009-12-11  Holger Liebig <holger.liebig@ts.fujitsu.com> and Albert Chu <chu11@llnl.gov>
 

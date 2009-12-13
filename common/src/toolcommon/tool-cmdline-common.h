@@ -306,17 +306,14 @@ int parse_workaround_flags (const char *str,
 
 error_t common_parse_opt (int key,
                           char *arg,
-                          struct argp_state *state,
                           struct common_cmd_args *common_cmd_args);
 
 error_t sdr_parse_opt (int key,
                        char *arg,
-                       struct argp_state *state,
                        struct sdr_cmd_args *sdr_cmd_args);
 
 error_t hostrange_parse_opt (int key,
                              char *arg,
-                             struct argp_state *state,
                              struct hostrange_cmd_args *hostrange_cmd_args);
 
 void init_common_cmd_args_user (struct common_cmd_args *cmd_args);

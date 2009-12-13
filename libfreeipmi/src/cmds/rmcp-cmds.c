@@ -25,6 +25,7 @@
 #ifdef STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#include <arpa/inet.h>
 #include <errno.h>
 
 #include "freeipmi/cmds/rmcp-cmds.h"
