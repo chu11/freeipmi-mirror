@@ -216,8 +216,7 @@ _ipmi_pef_config (pstdout_state_t pstate,
       sstr = prog_data->args->config_args.section_strs;
       while (sstr)
         {
-          if (!config_find_section (pstate,
-                                    state_data.sections,
+          if (!config_find_section (state_data.sections,
                                     sstr->section_name))
             {
               pstdout_fprintf (pstate,
@@ -251,8 +250,7 @@ _ipmi_pef_config (pstdout_state_t pstate,
                 struct config_section *s;
                 config_err_t this_ret;
 
-                if (!(s = config_find_section (pstate,
-                                               state_data.sections,
+                if (!(s = config_find_section (state_data.sections,
                                                sstr->section_name)))
                   {
                     pstdout_fprintf (pstate,
@@ -327,7 +325,7 @@ _ipmi_pef_config (pstdout_state_t pstate,
   if (file_opened)
     fclose (fp);
   if (state_data.sections)
-    config_sections_destroy (pstate, state_data.sections);
+    config_sections_destroy (state_data.sections);
   return (exit_code);
 }
 

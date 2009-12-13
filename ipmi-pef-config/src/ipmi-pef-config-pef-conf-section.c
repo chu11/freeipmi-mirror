@@ -458,7 +458,7 @@ ipmi_pef_config_pef_conf_section_get (ipmi_pef_config_state_data_t *state_data)
 
  cleanup:
   if (section)
-    config_section_destroy (state_data->pstate, section);
+    config_section_destroy (section);
   return (NULL);
 }
 

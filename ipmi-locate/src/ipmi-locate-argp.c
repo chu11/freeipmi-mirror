@@ -48,7 +48,7 @@ static char cmdline_args_doc[] = "";
 
 static struct argp_option cmdline_options[] =
   {
-    { 0 }
+    { NULL, 0, NULL, 0, NULL, 0}
   };
 
 static error_t cmdline_parse (int key, char *arg, struct argp_state *state);

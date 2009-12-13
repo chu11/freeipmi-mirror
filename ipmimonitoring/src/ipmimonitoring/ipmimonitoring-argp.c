@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-argp.c,v 1.64 2009-11-04 18:45:40 chu11 Exp $
+ *  $Id: ipmimonitoring-argp.c,v 1.64.4.1 2009-12-13 00:32:42 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -130,7 +130,7 @@ static struct argp_option cmdline_options[] =
       "Output in legacy format.", 51},
     { "sensor-config-file", SENSOR_CONFIG_FILE_KEY, "FILE", 0,
       "Specify an alternate sensor configuration file.", 52},
-    { 0 }
+    { NULL, 0, NULL, 0, NULL, 0}
   };
 
 static error_t cmdline_parse (int key, char *arg, struct argp_state *state);
@@ -163,7 +163,6 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case CACHE_DIR_KEY:
       return (sdr_parse_opt (ARGP_SDR_CACHE_DIRECTORY_KEY,
                              arg,
-                             state,
                              &(cmd_args->sdr)));
       break;
     case QUIET_READINGS_KEY:
@@ -317,11 +316,11 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case ARGP_KEY_END:
       break;
     default:
-      ret = common_parse_opt (key, arg, state, &(cmd_args->common));
+      ret = common_parse_opt (key, arg, &(cmd_args->common));
       if (ret == ARGP_ERR_UNKNOWN)
-        ret = sdr_parse_opt (key, arg, state, &(cmd_args->sdr));
+        ret = sdr_parse_opt (key, arg, &(cmd_args->sdr));
       if (ret == ARGP_ERR_UNKNOWN)
-        ret = hostrange_parse_opt (key, arg, state, &(cmd_args->hostrange));
+        ret = hostrange_parse_opt (key, arg, &(cmd_args->hostrange));
       return (ret);
     }
 

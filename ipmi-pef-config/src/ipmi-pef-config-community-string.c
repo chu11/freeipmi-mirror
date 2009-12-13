@@ -196,7 +196,7 @@ ipmi_pef_config_community_string_section_get (ipmi_pef_config_state_data_t *stat
 
  cleanup:
   if (section)
-    config_section_destroy (state_data->pstate, section);
+    config_section_destroy (section);
   return (NULL);
 }
 

@@ -171,7 +171,7 @@ ipmi_sensors_config_sections_create (ipmi_sensors_config_state_data_t *state_dat
           continue;
         }
 
-      if (config_section_append (state_data->pstate, &sections, section) < 0)
+      if (config_section_append (&sections, section) < 0)
         goto cleanup;
     }
 
@@ -179,6 +179,6 @@ ipmi_sensors_config_sections_create (ipmi_sensors_config_state_data_t *state_dat
   return (sections);
 
  cleanup:
-  config_sections_destroy (state_data->pstate, sections);
+  config_sections_destroy (sections);
   return (NULL);
 }

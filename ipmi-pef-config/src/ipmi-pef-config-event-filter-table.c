@@ -1974,6 +1974,6 @@ ipmi_pef_config_event_filter_table_section_get (ipmi_pef_config_state_data_t *st
 
  cleanup:
   if (section)
-    config_section_destroy (state_data->pstate, section);
+    config_section_destroy (section);
   return (NULL);
 }

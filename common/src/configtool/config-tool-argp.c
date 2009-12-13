@@ -55,7 +55,6 @@ init_config_args (struct config_arguments *config_args)
 error_t
 config_parse_opt (int key,
                   char *arg,
-                  struct argp_state *state,
                   struct config_arguments *config_args)
 {
   struct config_keypair *kp = NULL;

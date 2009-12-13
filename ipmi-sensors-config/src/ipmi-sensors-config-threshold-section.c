@@ -1438,6 +1438,6 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
 
  cleanup:
   if (section)
-    config_section_destroy (state_data->pstate, section);
+    config_section_destroy (section);
   return (rv);
 }

@@ -24,12 +24,10 @@
 
 /* no config_sections_create, responsibility of config tool to create list */
 
-int config_section_append (pstdout_state_t pstate,
-                           struct config_section **sections,
+int config_section_append (struct config_section **sections,
                            struct config_section *section);
 
-void config_sections_destroy (pstdout_state_t pstate,
-                              struct config_section *sections);
+void config_sections_destroy (struct config_section *sections);
 
 struct config_section *config_section_create (pstdout_state_t pstate,
                                               const char *section_name,
@@ -39,8 +37,7 @@ struct config_section *config_section_create (pstdout_state_t pstate,
                                               Section_Pre_Commit section_pre_commit,
                                               Section_Post_Commit section_post_commit);
 
-void config_section_destroy (pstdout_state_t pstate,
-                             struct config_section *section);
+void config_section_destroy (struct config_section *section);
 
 int config_section_add_key (pstdout_state_t pstate,
                             struct config_section *section,

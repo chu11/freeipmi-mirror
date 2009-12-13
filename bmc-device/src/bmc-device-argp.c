@@ -112,7 +112,7 @@ static struct argp_option cmdline_options[] =
       "Set Operating System Name.", 52},
     { "verbose", VERBOSE_KEY, 0, 0,
       "Increase verbosity in output.", 53},
-    { 0 }
+    { NULL, 0, NULL, 0, NULL, 0}
   };
 
 static error_t cmdline_parse (int key, char *arg, struct argp_state *state);
@@ -273,9 +273,9 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case ARGP_KEY_END:
       break;
     default:
-      ret = common_parse_opt (key, arg, state, &(cmd_args->common));
+      ret = common_parse_opt (key, arg, &(cmd_args->common));
       if (ret == ARGP_ERR_UNKNOWN)
-        ret = hostrange_parse_opt (key, arg, state, &(cmd_args->hostrange));
+        ret = hostrange_parse_opt (key, arg, &(cmd_args->hostrange));
       return (ret);
     }
 

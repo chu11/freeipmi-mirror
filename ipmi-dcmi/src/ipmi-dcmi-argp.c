@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-dcmi-argp.c,v 1.3 2009-05-28 17:35:33 chu11 Exp $
+ *  $Id: ipmi-dcmi-argp.c,v 1.3.4.1 2009-12-13 00:32:41 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2009 Lawrence Livermore National Security, LLC.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -96,7 +96,7 @@ static struct argp_option cmdline_options[] =
       "Get asset tag.", 40},
     { "get-dcmi-sensor-info", GET_DCMI_SENSOR_INFO, NULL, 0,
       "Get DCMI sensor information.", 41},
-    { 0 }
+    { NULL, 0, NULL, 0, NULL, 0}
   };
 
 static error_t cmdline_parse (int key, char *arg, struct argp_state *state);
@@ -232,9 +232,9 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case ARGP_KEY_END:
       break;
     default:
-      ret = common_parse_opt (key, arg, state, &(cmd_args->common));
+      ret = common_parse_opt (key, arg, &(cmd_args->common));
       if (ret == ARGP_ERR_UNKNOWN)
-        ret = hostrange_parse_opt (key, arg, state, &(cmd_args->hostrange));
+        ret = hostrange_parse_opt (key, arg, &(cmd_args->hostrange));
       return (ret);
     }
 

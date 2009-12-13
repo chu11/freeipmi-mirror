@@ -85,8 +85,7 @@ config_parse (pstdout_state_t pstate,
               goto cleanup;
             }
 
-          if (!(section = config_find_section (pstate,
-                                               sections,
+          if (!(section = config_find_section (sections,
                                                tok)))
             {
               PSTDOUT_FPRINTF (pstate,
@@ -137,8 +136,7 @@ config_parse (pstdout_state_t pstate,
           goto cleanup;
         }
 
-      if (!(key = config_find_key (pstate,
-                                   section,
+      if (!(key = config_find_key (section,
                                    str)))
         {
           PSTDOUT_FPRINTF (pstate,
@@ -161,8 +159,7 @@ config_parse (pstdout_state_t pstate,
                          key->key_name,
                          tok);
 
-      if (config_find_keyvalue (pstate,
-                                section,
+      if (config_find_keyvalue (section,
                                 key->key_name))
         {
           PSTDOUT_FPRINTF (pstate,

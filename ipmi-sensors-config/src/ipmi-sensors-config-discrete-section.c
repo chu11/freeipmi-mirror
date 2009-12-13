@@ -86,6 +86,6 @@ ipmi_sensors_config_discrete_section (ipmi_sensors_config_state_data_t *state_da
 
  cleanup:
   if (section)
-    config_section_destroy (state_data->pstate, section);
+    config_section_destroy (section);
   return (rv);
 }

@@ -228,8 +228,7 @@ _bmc_config (pstdout_state_t pstate,
       sstr = prog_data->args->config_args.section_strs;
       while (sstr)
         {
-          if (!config_find_section (pstate,
-                                    state_data.sections,
+          if (!config_find_section (state_data.sections,
                                     sstr->section_name))
             {
               pstdout_fprintf (pstate,
@@ -290,18 +289,15 @@ _bmc_config (pstdout_state_t pstate,
 
                   if (userid < user_count)
                     {
-                      if ((kv = config_find_keyvalue (pstate,
-                                                      section,
+                      if ((kv = config_find_keyvalue (section,
                                                       "Lan_Session_Limit")))
                         lan_session_limit_found = 1;
 
-                      if ((kv = config_find_keyvalue (pstate,
-                                                      section,
+                      if ((kv = config_find_keyvalue (section,
                                                       "Serial_Session_Limit")))
                         serial_session_limit_found = 1;
 
-                      if ((kv = config_find_keyvalue (pstate,
-                                                      section,
+                      if ((kv = config_find_keyvalue (section,
                                                       "Enable_User")))
                         enable_user_found = 1;
                     }
@@ -371,16 +367,14 @@ _bmc_config (pstdout_state_t pstate,
                         {
                           if (lan_session_limit_found)
                             {
-                              if ((kv = config_find_keyvalue (pstate,
-                                                              section,
+                              if ((kv = config_find_keyvalue (section,
                                                               "Lan_Session_Limit")))
                                 state_data.lan_user_session_limit[userid-1] = atoi (kv->value_input);
                             }
                              
                           if (serial_session_limit_found)
                             {
-                              if ((kv = config_find_keyvalue (pstate,
-                                                              section,
+                              if ((kv = config_find_keyvalue (section,
                                                               "Serial_Session_Limit")))
                                 state_data.serial_user_session_limit[userid-1] = atoi (kv->value_input);
                             }
@@ -402,12 +396,10 @@ _bmc_config (pstdout_state_t pstate,
     {
       struct config_section *section;
 
-      if ((section = config_find_section (pstate,
-                                          state_data.sections,
+      if ((section = config_find_section (state_data.sections,
                                           "Lan_Conf")))
         {
-          if (config_find_keyvalue (pstate,
-                                    section,
+          if (config_find_keyvalue (section,
                                     "IP_Address"))
             {
               pstdout_fprintf (pstate,
@@ -417,8 +409,7 @@ _bmc_config (pstdout_state_t pstate,
               goto cleanup;
             }
 
-          if (config_find_keyvalue (pstate,
-                                    section,
+          if (config_find_keyvalue (section,
                                     "MAC_Address"))
             {
               pstdout_fprintf (pstate,
@@ -446,8 +437,7 @@ _bmc_config (pstdout_state_t pstate,
             struct config_section *s;
             config_err_t this_ret;
 
-            if (!(s = config_find_section (pstate,
-                                           state_data.sections,
+            if (!(s = config_find_section (state_data.sections,
                                            sstr->section_name)))
               {
                 pstdout_fprintf (pstate,
@@ -525,7 +515,7 @@ _bmc_config (pstdout_state_t pstate,
   if (file_opened)
     fclose (fp);
   if (state_data.sections)
-    config_sections_destroy (pstate, state_data.sections);
+    config_sections_destroy (state_data.sections);
   return (exit_code);
 }
 
