@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-dcmi.c,v 1.4 2009-11-25 15:47:40 chu11 Exp $
+ *  $Id: ipmi-dcmi.c,v 1.5 2009-12-14 19:41:54 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2009 Lawrence Livermore National Security, LLC.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1859,6 +1859,7 @@ main (int argc, char **argv)
   ipmi_dcmi_prog_data_t prog_data;
   struct ipmi_dcmi_arguments cmd_args;
   int exit_code;
+  int hosts_count;
   int rv;
 
   ipmi_disable_coredump ();
@@ -1868,14 +1869,20 @@ main (int argc, char **argv)
   ipmi_dcmi_argp_parse (argc, argv, &cmd_args);
   prog_data.args = &cmd_args;
 
-  if (pstdout_setup (&(prog_data.args->common.hostname),
-                     prog_data.args->hostrange.buffer_output,
-                     prog_data.args->hostrange.consolidate_output,
-                     prog_data.args->hostrange.fanout,
-                     prog_data.args->hostrange.eliminate,
-                     prog_data.args->hostrange.always_prefix) < 0)
+  if ((hosts_count = pstdout_setup (&(prog_data.args->common.hostname),
+                                    prog_data.args->hostrange.buffer_output,
+                                    prog_data.args->hostrange.consolidate_output,
+                                    prog_data.args->hostrange.fanout,
+                                    prog_data.args->hostrange.eliminate,
+                                    prog_data.args->hostrange.always_prefix)) < 0)
     {
       exit_code = EXIT_FAILURE;
+      goto cleanup;
+    }
+
+  if (!hosts_count)
+    {
+      exit_code = EXIT_SUCCESS;
       goto cleanup;
     }
 

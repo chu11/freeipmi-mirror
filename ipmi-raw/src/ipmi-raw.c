@@ -446,6 +446,7 @@ main (int argc, char **argv)
   ipmi_raw_prog_data_t prog_data;
   struct ipmi_raw_arguments cmd_args;
   int exit_code;
+  int hosts_count;
   int rv;
 
   ipmi_disable_coredump ();
@@ -455,14 +456,20 @@ main (int argc, char **argv)
   ipmi_raw_argp_parse (argc, argv, &cmd_args);
   prog_data.args = &cmd_args;
 
-  if (pstdout_setup (&(prog_data.args->common.hostname),
-                     prog_data.args->hostrange.buffer_output,
-                     prog_data.args->hostrange.consolidate_output,
-                     prog_data.args->hostrange.fanout,
-                     prog_data.args->hostrange.eliminate,
-                     prog_data.args->hostrange.always_prefix) < 0)
+  if ((hosts_count = pstdout_setup (&(prog_data.args->common.hostname),
+                                    prog_data.args->hostrange.buffer_output,
+                                    prog_data.args->hostrange.consolidate_output,
+                                    prog_data.args->hostrange.fanout,
+                                    prog_data.args->hostrange.eliminate,
+                                    prog_data.args->hostrange.always_prefix)) < 0)
     {
       exit_code = EXIT_FAILURE;
+      goto cleanup;
+    }
+
+  if (!hosts_count)
+    {
+      exit_code = EXIT_SUCCESS;
       goto cleanup;
     }
 

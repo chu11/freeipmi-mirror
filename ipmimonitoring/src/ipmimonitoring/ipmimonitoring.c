@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.139 2009-12-11 00:32:27 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.140 2009-12-14 19:41:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -1558,6 +1558,12 @@ main (int argc, char **argv)
                                     prog_data.args->hostrange.always_prefix)) < 0)
     {
       exit_code = EXIT_FAILURE;
+      goto cleanup;
+    }
+
+  if (!hosts_count)
+    {
+      exit_code = EXIT_SUCCESS;
       goto cleanup;
     }
 
