@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.87.4.4 2009-12-12 21:23:36 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.87.4.5 2009-12-14 23:14:10 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -51,7 +51,6 @@
 #include <sys/stat.h>
 #include <sys/resource.h>
 #include <sys/types.h>
-#include <sys/select.h>
 #if HAVE_FCNTL_H
 #include <fcntl.h>
 #endif /* HAVE_FCNTL_H */
@@ -261,7 +260,35 @@ _recvfrom (cbuf_t cbuf, int fd, struct sockaddr_in *srcaddr)
                               &fromlen);
     } while (rv < 0 && errno == EINTR);
 
-  /* See comments in _error_recvfrom() */
+  /* achu & hliebig:
+   *
+   * Premise from ipmitool (http://ipmitool.sourceforge.net/)
+   *
+   * On some OSes (it seems Unixes), the behavior is to not return
+   * port denied errors up to the client for UDP responses (i.e. you
+   * need to timeout).  But on some OSes (it seems Windows), the
+   * behavior is to return port denied errors up to the user for UDP
+   * responses via ECONNRESET or ECONNREFUSED.
+   *
+   * If this were just the case, we could return or handle errors
+   * properly and move on.  However, it's not the case.
+   *
+   * According to Ipmitool, on some motherboards, both the OS and the
+   * BMC are capable of responding to an IPMI request.  That means you
+   * can get an ECONNRESET or ECONNREFUSED, then later on, get your
+   * real IPMI response.
+   *
+   * Our solution is copied from Ipmitool, we'll ignore some specific
+   * errors and try to read again.
+   *
+   * If the ECONNREFUSED or ECONNRESET is from the OS, but we will get
+   * an IPMI response later, the recvfrom later on gets the packet we
+   * want.
+   *
+   * If the ECONNREFUSED or ECONNRESET is from the OS but there is no
+   * BMC (or IPMI disabled, etc.), just do the recvfrom again to
+   * eventually get a timeout, which is the behavior we'd like.
+   */
   if (rv < 0
       && (errno == ECONNRESET
           || errno == ECONNREFUSED))
@@ -317,86 +344,6 @@ _recvfrom (cbuf_t cbuf, int fd, struct sockaddr_in *srcaddr)
 
   if (dropped)
     IPMIPOWER_DEBUG (("cbuf_write: read dropped %d bytes", dropped));
-}
-
-static void
-_error_recvfrom (cbuf_t cbuf, int fd, struct sockaddr_in *srcaddr)
-{
-  struct timeval timeout;
-  fd_set read_set;
-  int fdcount;
-  
-  /* achu & hliebig:
-   *
-   * Premise from ipmitool (http://ipmitool.sourceforge.net/)
-   *
-   * On some OSes (it seems Unixes), the behavior is to not return
-   * port denied errors up to the client for UDP responses (i.e. you
-   * need to timeout).  But on some OSes (it seems Windows), the
-   * behavior is to return port denied errors up to the user for UDP
-   * responses via ECONNRESET or ECONNREFUSED.
-   *
-   * If this were just the case, we could return or handle errors
-   * properly and move on.  However, it's not the case.
-   *
-   * According to Ipmitool, on some motherboards, both the OS and the
-   * BMC are capable of responding to an IPMI request.  That means you
-   * can get an ECONNRESET or ECONNREFUSED, then later on, get your
-   * real IPMI response.
-   *
-   * Our solution is copied from Ipmitool, we'll ignore some specific
-   * errors and try to read again.
-   *
-   * If the ECONNREFUSED or ECONNRESET is from the OS, but we will get
-   * an IPMI response later, the recvfrom later on gets the packet we
-   * want.
-   *
-   * If the ECONNREFUSED or ECONNRESET is from the OS but there is no
-   * BMC (or IPMI disabled, etc.), just do the recvfrom again to
-   * eventually get a timeout, which is the behavior we'd like.
-   */
-
-  /* achu:
-   *
-   * select() returns a read fd for a ECONNRESET or ECONNREFUSED while
-   * poll() returns the POLLERR.  Need to make sure we can read
-   * something (i.e. not block) and get the ECONNRESET or ECONNREFUSED
-   * "off the wire."
-   *
-   * But, this leads to another issue, on older systems, FD_SET cannot
-   * be used with a file descriptor above a certain number (i.e. max
-   * fds is 1024, and the max file descriptor number is 1024,
-   * vs. modern systems where max fds is 1024, but the file descriptor
-   * number could be any legal number).  Below poll() is capable of
-   * supporting way more file descriptors than select().
-   *
-   * On most modern systems, I believe select() is no longer a blind
-   * bitmask.  It can hold any legal file descriptor number and we're
-   * only going to FD_SET one file descriptor below.  Should be
-   * portable enough for most modern systems.  If not ... I'll deal
-   * with it when it comes to pass.
-   */
-  
-  FD_ZERO (&read_set);
-  FD_SET (fd, &read_set);
-
-  timeout.tv_sec = 0;
-  timeout.tv_usec = 0;
-
-  if ((fdcount = select (fd + 1,
-                         &read_set,
-                         NULL,
-                         NULL,
-                         &timeout)) < 0)
-    {
-      IPMIPOWER_DEBUG (("select: %s", strerror (errno)));
-      return;
-    }
-  
-  if (fdcount != 1)
-    return;
-
-  _recvfrom (cbuf, fd, srcaddr);
 }
 
 /* _poll_loop
@@ -501,7 +448,8 @@ _poll_loop (int non_interactive)
           if (pfds[i*2].revents & POLLERR)
             {
               IPMIPOWER_DEBUG (("host = %s; IPMI POLLERR", ics[i].hostname));
-              _error_recvfrom (ics[i].ipmi_in, ics[i].ipmi_fd, &(ics[i].destaddr));
+              /* See comments in _ipmi_recvfrom() regarding ECONNRESET/ECONNREFUSED */
+              _recvfrom (ics[i].ipmi_in, ics[i].ipmi_fd, &(ics[i].destaddr));
             }
           else
             {
@@ -518,7 +466,7 @@ _poll_loop (int non_interactive)
           if (pfds[i*2+1].revents & POLLERR)
             {
               IPMIPOWER_DEBUG (("host = %s; PING_POLLERR", ics[i].hostname));
-              _error_recvfrom (ics[i].ping_in, ics[i].ping_fd, &(ics[i].destaddr));
+              _recvfrom (ics[i].ping_in, ics[i].ping_fd, &(ics[i].destaddr));
             }
           else
             {
