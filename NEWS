@@ -11,6 +11,7 @@ o Fix --eliminate corner case when elimination of nodes leads to 0
   hosts specified.
 o Report proper error message when underlying crypt library is
   incompatible.
+o In ipmidetectd, support quick port reuse on server setup.
 o Fix Cygwin portability bugs.
 o Fix minor output corner cases on sensor units.
 o Fix header file typing inconsistencies.
