@@ -119,7 +119,13 @@ eliminate_nodes (char **hosts)
     }
   host = NULL;
 
-  if (hostlist_ranged_string (hlnew, HOSTLIST_BUFLEN, hostbuf) <= 0)
+  if (!hostlist_count (hlnew))
+    {
+      rv = 0;
+      goto cleanup;
+    }
+  
+  if (hostlist_ranged_string (hlnew, HOSTLIST_BUFLEN, hostbuf) < 0)
     {
       fprintf (stderr,
                "hostlist_ranged_string: truncation\n");
@@ -133,7 +139,7 @@ eliminate_nodes (char **hosts)
       goto cleanup;
     }
 
-  rv = 0;
+  rv = hostlist_count (hlnew);
  cleanup:
   if (id)
     ipmidetect_handle_destroy (id);
@@ -238,8 +244,12 @@ pstdout_setup (char **hosts,
 
   if (*hosts && eliminate)
     {
-      if (eliminate_nodes (hosts) < 0)
+      int hosts_count_new;
+      
+      if ((hosts_count_new = eliminate_nodes (hosts)) < 0)
         goto cleanup;
+
+      hosts_count = hosts_count_new;
     }
 
   return (hosts_count);

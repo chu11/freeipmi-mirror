@@ -416,6 +416,12 @@ main (int argc, char **argv)
       goto cleanup;
     }
 
+  if (!hosts_count)
+    {
+      exit_code = EXIT_SUCCESS;
+      goto cleanup;
+    }
+
   /* We don't want caching info to output when are doing ranged output */
   if (hosts_count > 1)
     prog_data.args->sdr.quiet_cache = 1;

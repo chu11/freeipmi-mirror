@@ -357,6 +357,12 @@ main (int argc, char **argv)
       goto cleanup;
     }
 
+  if (!hosts_count)
+    {
+      exit_code = EXIT_SUCCESS;
+      goto cleanup;
+    }
+
   prog_data.hosts_count = hosts_count;
 
   if ((rv = pstdout_launch (prog_data.args->config_args.common.hostname,

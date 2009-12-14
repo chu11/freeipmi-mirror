@@ -1,3 +1,11 @@
+2009-12-14  Albert Chu <chu11@llnl.gov>
+
+	* common/src/toolhostrange/tool-hostrange-common.c
+	(eliminate_nodes, pstdout_setup): Fix corner case where eliminate
+	option leads to 0 hosts.
+
+	* Adjust all tools appropriately for change.
+	
 2009-12-13  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/util/ipmi-sensor-units-util.c
