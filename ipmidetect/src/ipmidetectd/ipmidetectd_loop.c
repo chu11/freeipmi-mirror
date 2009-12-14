@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmidetectd_loop.c,v 1.23 2009-12-12 21:23:25 chu11 Exp $
+ *  $Id: ipmidetectd_loop.c,v 1.24 2009-12-14 23:08:45 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -107,6 +107,8 @@ static void
 _fds_setup (void)
 {
   struct sockaddr_in addr;
+  int option_value;
+  socklen_t option_value_len;
   unsigned int i;
 
   assert (!fds);
@@ -146,6 +148,17 @@ _fds_setup (void)
 
   if (bind (server_fd, (struct sockaddr *)&addr, sizeof (struct sockaddr_in)) < 0)
     IPMIDETECTD_EXIT (("bind: %s", strerror (errno)));
+
+  /* For quick start/restart */
+  option_value = 1;
+  option_value_len = sizeof(option_value);
+
+  if (setsockopt (server_fd,
+                  SOL_SOCKET,
+                  SO_REUSEADDR,
+                  &option_value,
+                  option_value_len) < 0)
+    IPMIDETECTD_EXIT (("setsockopt: %s", strerror (errno)));
 
   if (listen (server_fd, IPMIDETECTD_SERVER_BACKLOG) < 0)
     IPMIDETECTD_EXIT (("listen: %s", strerror (errno)));

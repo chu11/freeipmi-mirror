@@ -5,6 +5,10 @@
 	option leads to 0 hosts.
 
 	* Adjust all tools appropriately for change.
+
+	* ipmidetect/src/ipmidetectd/ipmidetectd_loop.c (_fds_setup):
+	Setup listening socket to be able to more quickly reuse local
+	addresses.
 	
 2009-12-13  Albert Chu <chu11@llnl.gov>
 
