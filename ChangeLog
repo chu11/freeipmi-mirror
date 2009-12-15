@@ -8,6 +8,10 @@
 	* common/man/manpage-common-interpret-oem-data.man: Slightly
 	modify statement.
 
+	* ipmi-dcmi/ipmi-dcmi.8.pre.in: Fix text for exception actions.
+
+	* ipmi-dcmi/: Support --interpret-oem-data option.
+
 2009-12-15  Holger Liebig <holger.liebig@ts.fujitsu.com>
 
 	* libfreeipmi/src/cmds/ipmi-dcmi-cmds.c,

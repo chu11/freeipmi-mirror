@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmi-dcmi.8.pre.in,v 1.4 2009-12-15 06:44:22 chu11 Exp $
+.\"$Id: ipmi-dcmi.8.pre.in,v 1.5 2009-12-15 22:43:21 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2009 Lawrence Livermore National Security, LLC.
 .\"  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -104,8 +104,8 @@ configuration will be utilized.
 .TP
 \fB\-\-exception\-actions\fR=\fIBITMASK\fR
 Specify exception actions for set power limit configuration.  Special
-case allowable values: HARD_POWER_OFF_SYSTEM.  Other bitmasks
-(e.g. 0x02, 0x04, etc.) are OEM dependent.  Used with the
+case allowable values: HARD_POWER_OFF_SYSTEM.  Other values
+(e.g. 0x02 through 0x10) are OEM dependent.  Used with the
 \fB\-\-set\-power\-limit\fR option.
 .TP
 \fB\-\-power\-limit\-requested\fR=\fIWATTS\fR
