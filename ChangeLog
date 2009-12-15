@@ -1,3 +1,13 @@
+2009-12-15  Holger Liebig <holger.liebig@ts.fujitsu.com>
+
+	* libfreeipmi/src/cmds/ipmi-dcmi-cmds.c,
+	libfreeipmi/include/freeipmi/templates/ipmi-dcmi-cmds-templates.h:
+	Fix incorrect correction_time_limit field sizes.
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-netfn-spec.h
+	(IPMI_NET_FN_GROUP_EXTENSION, IPMI_NET_FN_OEM_GROUP): Fix macro
+	checks.
+	
 2009-12-14  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-raw/ipmi-raw.8.pre.in: Fix spelling typo.
