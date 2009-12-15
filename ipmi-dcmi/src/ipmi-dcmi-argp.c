@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-dcmi-argp.c,v 1.3.4.1 2009-12-13 00:32:41 chu11 Exp $
+ *  $Id: ipmi-dcmi-argp.c,v 1.3.4.2 2009-12-15 01:14:46 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2009 Lawrence Livermore National Security, LLC.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -90,7 +90,7 @@ static struct argp_option cmdline_options[] =
       "Specify correction time limit for set power limit configuration.", 37},
     { "statistics-sampling-period", STATISTICS_SAMPLING_PERIOD, "SECONDS", 0,
       "Specify management application statistics sampling period for set power limit configuration.", 38},
-    { "activate-deactivate-power-limit", ACTIVATE_DEACTIVATE_POWER_LIMIT, NULL, 0,
+    { "activate-deactivate-power-limit", ACTIVATE_DEACTIVATE_POWER_LIMIT, "ACTION", 0,
       "Activate or deactivate power limit.", 39},
     { "get-asset-tag", GET_ASSET_TAG, NULL, 0,
       "Get asset tag.", 40},

@@ -8,6 +8,8 @@ o In ipmi-sel, tweak column size to fix output for common scenario.
 o In ipmi-sel, fix output corner case when --ignore-sdr-cache is
   specified.
 o In ipmi-dcmi, fix various output bugs.
+o In ipmi-dcmi, fix command line parsing of
+  --activate-deactivate-power-limit.
 o Fix --eliminate corner case when elimination of nodes leads to 0
   hosts specified.
 o Report proper error message when underlying crypt library is
