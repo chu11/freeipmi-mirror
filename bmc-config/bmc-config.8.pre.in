@@ -126,7 +126,7 @@ cannot be enabled.  However, the default motherboard settings have
 these fields enabled.  Users are advised to disable all OEM
 Authentication in this section.
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-main.man>
-#include <@top_srcdir@/common/man/manpage-common-hostranged-text-shell.man>
+#include <@top_srcdir@/common/man/manpage-common-hostranged-text-threads.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-options.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-localhost.man>
 #include <@top_srcdir@/common/man/manpage-common-troubleshooting.man>

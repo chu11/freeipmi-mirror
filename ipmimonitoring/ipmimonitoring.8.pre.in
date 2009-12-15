@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmimonitoring.8.pre.in,v 1.69 2009-10-02 17:21:38 chu11 Exp $
+.\"$Id: ipmimonitoring.8.pre.in,v 1.70 2009-12-15 06:44:22 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -121,7 +121,7 @@ Specify an alternate sensor configuration file.
 #include <@top_srcdir@/common/man/manpage-common-hostranged-eliminate.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-always-prefix.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-main.man>
-#include <@top_srcdir@/common/man/manpage-common-hostranged-text-shell.man>
+#include <@top_srcdir@/common/man/manpage-common-hostranged-text-threads.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-options.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-localhost.man>
 #include <@top_srcdir@/common/man/manpage-common-troubleshooting.man>

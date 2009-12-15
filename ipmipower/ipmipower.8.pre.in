@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmipower.8.pre.in,v 1.53 2009-12-10 23:38:03 chu11 Exp $
+.\"$Id: ipmipower.8.pre.in,v 1.54 2009-12-15 06:44:23 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -358,7 +358,13 @@ Output the current configuration.
 Quit program.
 .B ipmipower.
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-main.man>
-#include <@top_srcdir@/common/man/manpage-common-hostranged-text-shell.man>
+.LP
+When multiple hosts are specified by the user, a socket will be
+created for each host and polled on, effectively allowing
+communication to all hosts in parallel.  This will allow communication
+to large numbers of nodes far more quickly than if done in serial.
+The \fB\-F\fR option can configure the number of nodes that can be
+communicated with in parallel at the same time.
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-options.man>
 .SH "EXAMPLES"
 .LP

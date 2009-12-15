@@ -1,6 +1,18 @@
 2009-12-14  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-raw/ipmi-raw.8.pre.in: Fix spelling typo.
+
+	* man/freeipmi.7.pre.in: Fix punctuation typo.
+
+	* common/man/manpage-common-hostranged-text-threads.man: New file.
+
+	* common/man/manpage-common-hostranged-text-shell.man: Collapse
+	text into manpage-common-hostranged-text-main.man.  Remove file.
+
+	* Add new documentation to manpages as needed.
+
+	* ipmipower/ipmipower.8.pre.in: Document how ipmipower is
+	different than other tools in parallelism.
 	
 2009-12-14  Albert Chu <chu11@llnl.gov>
 

@@ -75,7 +75,7 @@ field cannot be checked out.  Therefore the checked out value will
 always be blank.
 
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-main.man>
-#include <@top_srcdir@/common/man/manpage-common-hostranged-text-shell.man>
+#include <@top_srcdir@/common/man/manpage-common-hostranged-text-threads.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-options.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-localhost.man>
 #include <@top_srcdir@/common/man/manpage-common-troubleshooting.man>

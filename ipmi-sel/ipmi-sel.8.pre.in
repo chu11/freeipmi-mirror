@@ -115,7 +115,7 @@ motherboards.
 #include <@top_srcdir@/common/man/manpage-common-hostranged-eliminate.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-always-prefix.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-main.man>
-#include <@top_srcdir@/common/man/manpage-common-hostranged-text-shell.man>
+#include <@top_srcdir@/common/man/manpage-common-hostranged-text-threads.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-options.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-localhost.man>
 #include <@top_srcdir@/common/man/manpage-common-troubleshooting.man>

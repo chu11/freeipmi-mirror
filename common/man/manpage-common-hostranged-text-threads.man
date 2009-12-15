@@ -1,0 +1,6 @@
+.LP
+When multiple hosts are specified by the user, a thread will be
+executed for each host in parallel up to the configured fanout (which
+can be adjusted via the \fB\-F\fR option).  This will allow
+communication to large numbers of nodes far more quickly than if done
+in serial.
