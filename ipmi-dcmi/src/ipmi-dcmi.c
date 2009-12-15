@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-dcmi.c,v 1.4.2.1 2009-12-14 19:42:07 chu11 Exp $
+ *  $Id: ipmi-dcmi.c,v 1.4.2.2 2009-12-15 01:10:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2009 Lawrence Livermore National Security, LLC.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -751,10 +751,10 @@ _manageability_access_attributes (ipmi_dcmi_state_data_t *state_data)
 
 /* return 1 on output success, 0 on no output, -1 on error */
 static int
-_get_ehanced_system_power_statistics_attributes (ipmi_dcmi_state_data_t *state_data,
-                                                 uint8_t *number_of_supported_rolling_average_time_periods,
-                                                 uint8_t *rolling_average_time_periods,
-                                                 unsigned int rolling_average_time_periods_buflen)
+_get_enhanced_system_power_statistics_attributes (ipmi_dcmi_state_data_t *state_data,
+                                                  uint8_t *number_of_supported_rolling_average_time_periods,
+                                                  uint8_t *rolling_average_time_periods,
+                                                  unsigned int rolling_average_time_periods_buflen)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
@@ -928,10 +928,10 @@ _enhanced_system_power_statistics_attributes (ipmi_dcmi_state_data_t *state_data
 
   assert (state_data);
 
-  if (_get_ehanced_system_power_statistics_attributes (state_data,
-                                                       &number_of_supported_rolling_average_time_periods,
-                                                       rolling_average_time_periods,
-                                                       IPMI_DCMI_ROLLING_AVERAGE_TIME_PERIOD_BUFLEN) < 0)
+  if (_get_enhanced_system_power_statistics_attributes (state_data,
+                                                        &number_of_supported_rolling_average_time_periods,
+                                                        rolling_average_time_periods,
+                                                        IPMI_DCMI_ROLLING_AVERAGE_TIME_PERIOD_BUFLEN) < 0)
     return (-1);
 
   for (i = 0; i < number_of_supported_rolling_average_time_periods; i++)
@@ -1116,7 +1116,7 @@ _output_power_statistics (ipmi_dcmi_state_data_t *state_data,
   statistics_reporting_time_period = val;
 
   if (FIID_OBJ_GET (obj_cmd_rs,
-                    "power_measurement",
+                    "power_reading_state.power_measurement",
                     &val) < 0)
     {
       pstdout_fprintf (state_data->pstate,
@@ -1187,10 +1187,10 @@ get_enhanced_system_power_statistics (ipmi_dcmi_state_data_t *state_data)
 
   assert (state_data);
 
-  if (_get_ehanced_system_power_statistics_attributes (state_data,
-                                                       &number_of_supported_rolling_average_time_periods,
-                                                       rolling_average_time_periods,
-                                                       IPMI_DCMI_ROLLING_AVERAGE_TIME_PERIOD_BUFLEN) < 0)
+  if (_get_enhanced_system_power_statistics_attributes (state_data,
+                                                        &number_of_supported_rolling_average_time_periods,
+                                                        rolling_average_time_periods,
+                                                        IPMI_DCMI_ROLLING_AVERAGE_TIME_PERIOD_BUFLEN) < 0)
     return (-1);
 
 
@@ -1339,15 +1339,16 @@ get_power_limit (ipmi_dcmi_state_data_t *state_data)
     pstdout_printf (state_data->pstate,
                     "Exception Actions                                 : Hard Power Off system (%Xh)\n",
                     exception_actions);
-  else if (exception_actions & IPMI_DCMI_EXCEPTION_ACTION_HARD_POWER_OFF_SYSTEM)
+  else if ((exception_actions >= IPMI_DCMI_EXCEPTION_ACTION_OEM_MIN)
+           && (exception_actions <= IPMI_DCMI_EXCEPTION_ACTION_OEM_MAX))
     pstdout_printf (state_data->pstate,
-                    "Exception Actions                                 : Hard Power Off system, OEM actions (%Xh)\n",
+                    "Exception Actions                                 : OEM action (%Xh)\n",
                     exception_actions);
-  else
+  else 
     pstdout_printf (state_data->pstate,
-                    "Exception Actions                                 : OEM actions (%Xh)\n",
+                    "Exception Actions                                 : Unknown action (%Xh)\n",
                     exception_actions);
-    
+   
   pstdout_printf (state_data->pstate,
                   "Power Limit Requested                             : %u watts\n",
                   power_limit_requested);
@@ -1475,6 +1476,7 @@ get_asset_tag (ipmi_dcmi_state_data_t *state_data)
   int asset_tag_data_len;
   unsigned int asset_tag_data_offset = 0;
   uint8_t total_asset_tag_length = 0;
+  uint8_t bytes_to_read = IPMI_DCMI_ASSET_TAG_NUMBER_OF_BYTES_TO_READ_MAX;
   ipmi_fru_parse_ctx_t fru_parse_ctx = NULL;
   int rv = -1;
 
@@ -1495,9 +1497,15 @@ get_asset_tag (ipmi_dcmi_state_data_t *state_data)
     {
       uint64_t val;
 
+      if (!asset_tag_data_offset
+          || ((total_asset_tag_length - asset_tag_data_offset) >= IPMI_DCMI_ASSET_TAG_NUMBER_OF_BYTES_TO_READ_MAX))
+        bytes_to_read = IPMI_DCMI_ASSET_TAG_NUMBER_OF_BYTES_TO_READ_MAX;
+      else 
+        bytes_to_read = total_asset_tag_length - asset_tag_data_offset;
+      
       if (ipmi_cmd_dcmi_get_asset_tag (state_data->ipmi_ctx,
                                        asset_tag_data_offset,
-                                       IPMI_DCMI_ASSET_TAG_NUMBER_OF_BYTES_TO_READ_MAX,
+                                       bytes_to_read,
                                        obj_cmd_rs) < 0)
         {
           pstdout_fprintf (state_data->pstate,
@@ -1539,46 +1547,23 @@ get_asset_tag (ipmi_dcmi_state_data_t *state_data)
         break;
     }
 
-  if (total_asset_tag_length && asset_tag_data_offset)
-    {
-      char asset_tag[IPMI_DCMI_MAX_ASSET_TAG_LENGTH + 1];
-      unsigned int asset_tag_len = IPMI_DCMI_MAX_ASSET_TAG_LENGTH;
-
-      if (!(fru_parse_ctx = ipmi_fru_parse_ctx_create (state_data->ipmi_ctx)))
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "ipmi_fru_parse_ctx_create: %s\n",
-                           strerror(errno));
-          goto cleanup;
-        }
-
-      memset (asset_tag, '\0', IPMI_DCMI_MAX_ASSET_TAG_LENGTH + 1);
-
-      /* assume english? DCMI spec doesn't state */
-      if (ipmi_fru_parse_type_length_field_to_string (fru_parse_ctx,
-                                                      asset_tag_data,
-                                                      asset_tag_data_offset,
-                                                      IPMI_FRU_LANGUAGE_CODE_ENGLISH,
-                                                      asset_tag,
-                                                      &asset_tag_len) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "ipmi_fru_parse_type_length_field_to_string: %s\n",
-                           ipmi_fru_parse_ctx_errormsg (fru_parse_ctx));
-          goto cleanup;
-        }
-
-      if (asset_tag_len)
-        pstdout_printf (state_data->pstate,
-                        "%s\n",
-                        asset_tag);
-    }
+  /* HLiebig:
+   *
+   * Output as simple English/Latin-1 string, nothing is specified in the 
+   * DCMI 1.0 spec. 
+   *
+   * achu:
+   *
+   * Spec suggests it is not encoded as FRU string, but this is not the case.
+   */
+  if (total_asset_tag_length)
+    pstdout_printf (state_data->pstate,
+                    "%s\n",
+                    asset_tag_data);
 
   rv = 0;
  cleanup:
-      ipmi_fru_parse_ctx_destroy (fru_parse_ctx);
+  ipmi_fru_parse_ctx_destroy (fru_parse_ctx);
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
@@ -1719,6 +1704,7 @@ _sensor_info_output (ipmi_dcmi_state_data_t *state_data,
           pstdout_printf (state_data->pstate,
                           "%u\n",
                           record_id);
+          total_entity_instances_parsed++;
         }
       
       /* achu: entity IDs are returned sequentially?  If not, I'm not
@@ -1726,6 +1712,11 @@ _sensor_info_output (ipmi_dcmi_state_data_t *state_data,
        * start the next time around.  Hopefully this is a correct
        * assumption
        */
+      /* HLiebig: Note: Intel simply increments the offset by 8 (max number of 
+       * SDR Id's per response.
+       * See dcmitool from www.intel.com/go/DCMI (a modified ipmitool)
+       */
+  
       entity_instance_start += number_of_record_ids_in_this_response;
 
       if (total_entity_instances_parsed >= total_number_of_available_instances)

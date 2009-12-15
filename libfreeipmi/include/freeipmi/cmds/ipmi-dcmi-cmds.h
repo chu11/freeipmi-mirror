@@ -94,7 +94,7 @@ extern "C" {
 #define IPMI_DCMI_POWER_READING_MODE_POWER_STATISTICS                 IPMI_DCMI_POWER_READING_MODE_SYSTEM_POWER_STATISTICS
 #define IPMI_DCMI_POWER_READING_MODE_ENHANCED_SYSTEM_POWER_STATISTICS 0x02
 
-  /* spec only lists one mode right now, assume there can/will be more in the future */
+/* spec only lists one mode right now, assume there can/will be more in the future */
 #define IPMI_DCMI_POWER_READING_MODE_VALID(__mode) \
   (((__mode) == IPMI_DCMI_POWER_READING_MODE_POWER_STATISTICS \
     || (__mode) == IPMI_DCMI_POWER_READING_MODE_ENHANCED_SYSTEM_POWER_STATISTICS) ? 1 : 0)
@@ -102,11 +102,14 @@ extern "C" {
 #define IPMI_DCMI_POWER_READING_STATE_POWER_MEASUREMENT_ACTIVE       0x1
 #define IPMI_DCMI_POWER_READING_STATE_NO_POWER_MEASUREMENT_AVAILABLE 0x0
 
+/* HLiebig: specific value, not a bitmask */
 #define IPMI_DCMI_EXCEPTION_ACTION_HARD_POWER_OFF_SYSTEM 0x01
+#define IPMI_DCMI_EXCEPTION_ACTION_OEM_MIN 0x02
+#define IPMI_DCMI_EXCEPTION_ACTION_OEM_MAX 0x10
 
-  /* achu: it's an 8 bit field, why not allow all 8 bitmasks?  Beats
-   * me, that's what's in the spec
-   */
+/* achu: it's an 8 bit field, why not allow all 8 bitmasks?  Beats
+ * me, that's what's in the spec
+ */
 #define IPMI_DCMI_EXCEPTION_ACTIONS_MIN 0x00
 #define IPMI_DCMI_EXCEPTION_ACTIONS_MAX 0x1F
 

@@ -1,5 +1,22 @@
 2009-12-14  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/cmds/ipmi-dcmi-cmds.h: Add macros
+	for OEM min/max exception actions.
+
+2009-12-14  Holger Liebig <holger.liebig@ts.fujitsu.com>
+
+	* libfreeipmi/src/cmds/ipmi-dcmi-cmds.c,
+	libfreeipmi/include/freeipmi/templates/ipmi-dcmi-cmds-templates.h:
+	Fix invalid
+	tmpl_cmd_dcmi_get_dcmi_capability_info_enhanced_system_power_statistics_attributes_rs
+	template.
+
+	* ipmi-dcmi/src/ipmi-dcmi.c (get_asset_tag, _sensor_info_output,
+	get_power_limit, _output_power_statistics): Fix output bugs and
+	typos.
+
+2009-12-14  Albert Chu <chu11@llnl.gov>
+
 	* common/src/toolhostrange/tool-hostrange-common.c
 	(eliminate_nodes, pstdout_setup): Fix corner case where eliminate
 	option leads to 0 hosts.
