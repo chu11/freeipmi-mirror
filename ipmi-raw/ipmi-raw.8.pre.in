@@ -40,7 +40,7 @@ option.
 .TP
 \fB\-\-slave\-address\fR=\fIaddress\fR
 Specify an alternate slave address to bridge raw commands to.  You
-must also specify teh \fIchannel-number\fR above if you use this
+must also specify the \fIchannel-number\fR above if you use this
 option.
 .TP
 \fB\-\-file\fR=\fICMD\-FILE\fR
