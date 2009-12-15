@@ -16,7 +16,7 @@
   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 */
 /*****************************************************************************\
- *  $Id: ipmi-dcmi-cmds.c,v 1.1 2009-11-25 15:47:40 chu11 Exp $
+ *  $Id: ipmi-dcmi-cmds.c,v 1.2 2009-12-15 01:10:10 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2009 Lawrence Livermore National Security, LLC.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -186,7 +186,7 @@ fiid_template_t tmpl_cmd_dcmi_get_dcmi_capability_info_enhanced_system_power_sta
     { 8,    "dcmi_specification_conformance.minor_version", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8,    "parameter_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8,    "number_of_supported_rolling_average_time_periods", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 2048, "rolling_average_time_periods", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 2048, "rolling_average_time_periods", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
     { 0, "", 0}
   };
 
