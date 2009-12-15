@@ -3,6 +3,9 @@
 	* libfreeipmi/include/freeipmi/cmds/ipmi-dcmi-cmds.h: Add macros
 	for OEM min/max exception actions.
 
+	* ipmi-dcmi/src/ipmi-dcmi-argp.c: Fix command line parsing of
+	--activate-deactivate-power-limit.
+
 2009-12-14  Holger Liebig <holger.liebig@ts.fujitsu.com>
 
 	* libfreeipmi/src/cmds/ipmi-dcmi-cmds.c,
