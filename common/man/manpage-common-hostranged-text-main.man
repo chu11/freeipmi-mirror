@@ -17,3 +17,7 @@ Some examples of range usage follow:
     foo[7,9-10] instead of foo7,foo9,foo10
     foo[0-3] instead of foo0,foo1,foo2,foo3
 .fi
+.LP
+As a reminder to the reader, some shells will interpret brackets ([
+and ]) for pattern matching.  Depending on your shell, it may be
+necessary to enclose ranged lists within quotes.

@@ -19,7 +19,7 @@ o Fix Cygwin portability bugs.
 o Fix minor output corner cases on sensor units.
 o Fix header file typing inconsistencies.
 o Fix header file documentation.
-o Fix manpage documentation.
+o Various documentation updates and fixes.
 
 FreeIPMI 0.8.1 - 12/07/09
 -------------------------

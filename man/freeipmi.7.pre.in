@@ -221,7 +221,7 @@ and
 .B ipmi-sensors(8)
 ) come with hostrange support so multiple hosts can be specified on
 the command line at the same time and IPMI can be executed against
-the hosts in parallel .  See tool manpages for more information.
+the hosts in parallel.  See tool manpages for more information.
 Also see the document 
 \fIfreeipmi-hostrange.txt\fR 
 for detailed usage and explanation.  The 

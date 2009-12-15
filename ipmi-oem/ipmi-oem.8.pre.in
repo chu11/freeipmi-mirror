@@ -545,7 +545,7 @@ chassis is not open, but was opened in the past.  Command confirmed to
 work on Supermicro H8QME.
 .RE
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-main.man>
-#include <@top_srcdir@/common/man/manpage-common-hostranged-text-shell.man>
+#include <@top_srcdir@/common/man/manpage-common-hostranged-text-threads.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-options.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-localhost.man>
 #include <@top_srcdir@/common/man/manpage-common-troubleshooting.man>
