@@ -47,6 +47,7 @@
 #include "tool-common.h"
 #include "tool-cmdline-common.h"
 #include "tool-hostrange-common.h"
+#include "tool-oem-common.h"
 #include "tool-sdr-cache-common.h"
 #include "tool-sensor-common.h"
 
@@ -1174,11 +1175,11 @@ _normal_output_event (ipmi_sel_state_data_t *state_data, unsigned int flags)
        * listed as "unspecified", so we need to handle this as a
        * special case.
        */
-      if (state_data->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-          && (state_data->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_2900
-              || state_data->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_2950
-              || state_data->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
-              || state_data->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
+      if (state_data->oem_data.manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
+          && (state_data->oem_data.product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_2900
+              || state_data->oem_data.product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_2950
+              || state_data->oem_data.product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+              || state_data->oem_data.product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
           && sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING
           && event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_DELL_OEM_DIAGNOSTIC_EVENT_DATA)
         {
@@ -1910,66 +1911,13 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
 
   if (args->interpret_oem_data)
     {
-      if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_device_id_rs)))
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "fiid_obj_create: %s\n",
-                           strerror (errno));
-          goto cleanup;
-        }
-      
-      if (ipmi_cmd_get_device_id (state_data->ipmi_ctx, obj_cmd_rs) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "ipmi_cmd_get_device_id: %s\n",
-                           ipmi_ctx_errormsg (state_data->ipmi_ctx));
-          goto cleanup;
-        }
-
-      if (FIID_OBJ_GET (obj_cmd_rs, "manufacturer_id.id", &val) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "fiid_obj_get: 'manufacturer_id.id': %s\n",
-                           fiid_obj_errormsg (obj_cmd_rs));
-          goto cleanup;
-        }
-      state_data->manufacturer_id = val;
-
-      if (FIID_OBJ_GET (obj_cmd_rs, "product_id", &val) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "fiid_obj_get: 'product_id': %s\n",
-                           fiid_obj_errormsg (obj_cmd_rs));
-          goto cleanup;
-        }
-      state_data->product_id = val;
-
-      if (FIID_OBJ_GET (obj_cmd_rs, "ipmi_version_major", &val) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "fiid_obj_get: 'ipmi_version_major': %s\n",
-                           fiid_obj_errormsg (obj_cmd_rs));
-          goto cleanup;
-        }
-      state_data->ipmi_version_major = val;
-
-      if (FIID_OBJ_GET (obj_cmd_rs, "ipmi_version_minor", &val) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "fiid_obj_get: 'ipmi_version_minor': %s\n",
-                           fiid_obj_errormsg (obj_cmd_rs));
-          goto cleanup;
-        }
-      state_data->ipmi_version_minor = val;
+      if (ipmi_get_oem_data (state_data->pstate,
+                             state_data->ipmi_ctx,
+                             &state_data->oem_data) < 0)
+        goto cleanup;
 
       if (ipmi_sel_parse_ctx_set_manufacturer_id (state_data->sel_parse_ctx,
-                                                  state_data->manufacturer_id) < 0)
+                                                  state_data->oem_data.manufacturer_id) < 0)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
@@ -1979,7 +1927,7 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
         }
       
       if (ipmi_sel_parse_ctx_set_product_id (state_data->sel_parse_ctx,
-                                             state_data->product_id) < 0)
+                                             state_data->oem_data.product_id) < 0)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
@@ -1989,8 +1937,8 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
         }
 
       if (ipmi_sel_parse_ctx_set_ipmi_version (state_data->sel_parse_ctx,
-                                               state_data->ipmi_version_major,
-                                               state_data->ipmi_version_minor) < 0)
+                                               state_data->oem_data.ipmi_version_major,
+                                               state_data->oem_data.ipmi_version_minor) < 0)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
@@ -1998,9 +1946,6 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
                            ipmi_sel_parse_ctx_errormsg (state_data->sel_parse_ctx));
           goto cleanup;
         }
-
-      fiid_obj_destroy (obj_cmd_rs);
-      obj_cmd_rs = NULL;
     }
 
   if (state_data->prog_data->args->display)

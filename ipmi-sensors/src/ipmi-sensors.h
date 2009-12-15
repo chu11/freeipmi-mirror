@@ -22,6 +22,7 @@
 #include <freeipmi/freeipmi.h>
 
 #include "tool-cmdline-common.h"
+#include "tool-oem-common.h"
 #include "tool-sdr-cache-common.h"
 #include "tool-sensor-common.h"
 #include "pstdout.h"
@@ -101,8 +102,7 @@ typedef struct ipmi_sensors_state_data
   int output_headers;
   struct sensor_entity_id_counts entity_id_counts;
   struct sensor_column_width column_width;
-  uint32_t manufacturer_id;
-  uint16_t product_id;
+  struct ipmi_oem_data oem_data;
 } ipmi_sensors_state_data_t;
 
 #endif

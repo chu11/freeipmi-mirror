@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.c,v 1.56 2009-12-14 19:41:54 chu11 Exp $
+ *  $Id: ipmi-fru.c,v 1.57 2009-12-15 22:11:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -47,6 +47,7 @@
 #include "tool-common.h"
 #include "tool-cmdline-common.h"
 #include "tool-hostrange-common.h"
+#include "tool-oem-common.h"
 #include "tool-sdr-cache-common.h"
 
 #define IPMI_FRU_DEFAULT_DEVICE_ID_STRING "Default FRU Device"
@@ -254,7 +255,6 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
   struct ipmi_fru_arguments *args;
   uint16_t record_count;
   unsigned int output_count = 0;
-  fiid_obj_t obj_cmd_rs = NULL;
   unsigned int i;
   int rv = -1;
 
@@ -299,48 +299,13 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
 
   if (args->interpret_oem_data)
     {
-      uint64_t val;
-
-      if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_device_id_rs)))
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "fiid_obj_create: %s\n",
-                           strerror (errno));
-          goto cleanup;
-        }
-
-      if (ipmi_cmd_get_device_id (state_data->ipmi_ctx, obj_cmd_rs) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "ipmi_cmd_get_device_id: %s\n",
-                           ipmi_ctx_errormsg (state_data->ipmi_ctx));
-          goto cleanup;
-        }
-
-      if (FIID_OBJ_GET (obj_cmd_rs, "manufacturer_id.id", &val) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "fiid_obj_get: 'manufacturer_id.id': %s\n",
-                           fiid_obj_errormsg (obj_cmd_rs));
-          goto cleanup;
-        }
-      state_data->manufacturer_id = val;
-
-      if (FIID_OBJ_GET (obj_cmd_rs, "product_id", &val) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "fiid_obj_get: 'product_id': %s\n",
-                           fiid_obj_errormsg (obj_cmd_rs));
-          goto cleanup;
-        }
-      state_data->product_id = val;
+      if (ipmi_get_oem_data (state_data->pstate,
+                             state_data->ipmi_ctx,
+                             &state_data->oem_data) < 0)
+        goto cleanup;
 
       if (ipmi_fru_parse_ctx_set_manufacturer_id (state_data->fru_parse_ctx,
-                                                  state_data->manufacturer_id) < 0)
+                                                  state_data->oem_data.manufacturer_id) < 0)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
@@ -350,7 +315,7 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
         }
 
       if (ipmi_fru_parse_ctx_set_product_id (state_data->fru_parse_ctx,
-                                             state_data->product_id) < 0)
+                                             state_data->oem_data.product_id) < 0)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
@@ -473,7 +438,6 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
 
   rv = 0;
  cleanup:
-  fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
