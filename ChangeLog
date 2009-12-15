@@ -5,6 +5,9 @@
 	* ipmi-fru/, ipmi-sensors/, ipmi-sel/: Use new convenience lib for
 	common actions of --interpret-oem-data.
 
+	* common/man/manpage-common-interpret-oem-data.man: Slightly
+	modify statement.
+
 2009-12-15  Holger Liebig <holger.liebig@ts.fujitsu.com>
 
 	* libfreeipmi/src/cmds/ipmi-dcmi-cmds.c,
