@@ -6,5 +6,6 @@ SUBDIRS = \
 	portability \
 	toolcommon \
 	toolhostrange \
+	tooloem \
 	toolsdr \
 	toolsensor

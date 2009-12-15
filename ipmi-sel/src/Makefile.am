@@ -5,6 +5,7 @@ noinst_HEADERS = \
 AM_CPPFLAGS = \
 	-I$(top_srcdir)/common/src/toolcommon \
 	-I$(top_srcdir)/common/src/toolhostrange \
+	-I$(top_srcdir)/common/src/tooloem \
 	-I$(top_srcdir)/common/src/toolsdr \
 	-I$(top_srcdir)/common/src/toolsensor \
 	-I$(top_srcdir)/common/src/debugutil \
@@ -19,6 +20,7 @@ sbin_PROGRAMS = ipmi-sel
 ipmi_sel_LDADD = \
 	$(top_builddir)/common/src/toolcommon/libtoolcommon.la \
 	$(top_builddir)/common/src/toolhostrange/libtoolhostrange.la \
+	$(top_builddir)/common/src/tooloem/libtooloem.la \
 	$(top_builddir)/common/src/toolsdr/libtoolsdr.la \
 	$(top_builddir)/common/src/toolsensor/libtoolsensor.la \
 	$(top_builddir)/common/src/debugutil/libdebugutil.la \
@@ -35,6 +37,9 @@ $(top_builddir)/common/src/toolcommon/libtoolcommon.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
 $(top_builddir)/common/src/toolhostrange/libtoolhostrange.la : force-dependency-check
+	@cd `dirname $@` && $(MAKE) `basename $@`
+
+$(top_builddir)/common/src/tooloem/libtooloem.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
 $(top_builddir)/common/src/toolsdr/libtoolsdr.la : force-dependency-check

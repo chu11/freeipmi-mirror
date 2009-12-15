@@ -51,6 +51,7 @@
 #include "tool-common.h"
 #include "tool-cmdline-common.h"
 #include "tool-hostrange-common.h"
+#include "tool-oem-common.h"
 #include "tool-sdr-cache-common.h"
 #include "tool-sensor-common.h"
 
@@ -598,9 +599,9 @@ _output_sensor (ipmi_sensors_state_data_t *state_data,
    */
   else if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM
            && state_data->prog_data->args->interpret_oem_data
-           && state_data->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-           && (state_data->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
-               || state_data->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
+           && state_data->oem_data.manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
+           && (state_data->oem_data.product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+               || state_data->oem_data.product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
            && event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_DELL_STATUS)
     {
       if (get_generic_event_message_list (state_data,
@@ -617,9 +618,9 @@ _output_sensor (ipmi_sensors_state_data_t *state_data,
    */
   else if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM
            && state_data->prog_data->args->interpret_oem_data
-           && (state_data->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_SUPERMICRO
-	       || state_data->manufacturer_id ==  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND)
-	   && state_data->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTH
+           && (state_data->oem_data.manufacturer_id == IPMI_IANA_ENTERPRISE_ID_SUPERMICRO
+	       || state_data->oem_data.manufacturer_id ==  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND)
+	   && state_data->oem_data.product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTH
 	   && event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_SUPERMICRO_GENERIC)
     {
       char event_buf[IPMI_SENSORS_OEM_MESSAGE_LENGTH + 1];
@@ -642,8 +643,8 @@ _output_sensor (ipmi_sensors_state_data_t *state_data,
 
       memset (event_buf, '\0', IPMI_SENSORS_OEM_MESSAGE_LENGTH + 1);
 
-      if ((ret = ipmi_get_oem_sensor_event_bitmask_message (state_data->manufacturer_id,
-							    state_data->product_id,
+      if ((ret = ipmi_get_oem_sensor_event_bitmask_message (state_data->oem_data.manufacturer_id,
+							    state_data->oem_data.product_id,
 							    event_reading_type_code,
 							    sensor_type,
 							    sensor_event_bitmask,
@@ -746,7 +747,6 @@ static int
 _display_sensors (ipmi_sensors_state_data_t *state_data)
 {
   struct ipmi_sensors_arguments *args = NULL;
-  fiid_obj_t obj_cmd_rs = NULL;
   uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
   int sdr_record_len = 0;
   unsigned int output_record_ids[MAX_SENSOR_RECORD_IDS];
@@ -760,46 +760,10 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
 
   if (args->interpret_oem_data)
     {
-      uint64_t val;
-
-      if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_device_id_rs)))
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "fiid_obj_create: %s\n",
-                           strerror (errno));
-          goto cleanup;
-        }
-      
-      if (ipmi_cmd_get_device_id (state_data->ipmi_ctx, obj_cmd_rs) < 0)
-        {
-          if (args->common.debug)
-            pstdout_fprintf (state_data->pstate,
-                             stderr,
-                             "ipmi_cmd_get_device_id: %s\n",
-                             ipmi_ctx_errormsg (state_data->ipmi_ctx));
-          goto cleanup;
-        }
-
-      if (FIID_OBJ_GET (obj_cmd_rs, "manufacturer_id.id", &val) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "fiid_obj_get: 'manufacturer_id.id': %s\n",
-                           fiid_obj_errormsg (obj_cmd_rs));
-          goto cleanup;
-        }
-      state_data->manufacturer_id = val;
-
-      if (FIID_OBJ_GET (obj_cmd_rs, "product_id", &val) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "fiid_obj_get: 'product_id': %s\n",
-                           fiid_obj_errormsg (obj_cmd_rs));
-          goto cleanup;
-        }
-      state_data->product_id = val;
+      if (ipmi_get_oem_data (state_data->pstate,
+                             state_data->ipmi_ctx,
+                             &state_data->oem_data) < 0)
+        goto cleanup;
     }
 
   if (_output_setup (state_data) < 0)
@@ -939,7 +903,6 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
 
   rv = 0;
  cleanup:
-  fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 

@@ -193,9 +193,9 @@ _event_reading_type_code_is_oem_interpretable (struct ipmi_sensors_state_data *s
    * Dell Poweredge R610
    * Dell Poweredge R710
    */
-  if (state_data->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && (state_data->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
-          || state_data->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
+  if (state_data->oem_data.manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
+      && (state_data->oem_data.product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+          || state_data->oem_data.product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
       && event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_DELL_STATUS)
     return (1);
   
@@ -234,8 +234,8 @@ get_generic_event_message_list (struct ipmi_sensors_state_data *state_data,
               && state_data->prog_data->args->interpret_oem_data
               && _event_reading_type_code_is_oem_interpretable (state_data, event_reading_type_code))
             {
-              ret = ipmi_get_oem_generic_event_message (state_data->manufacturer_id,
-                                                        state_data->product_id,
+              ret = ipmi_get_oem_generic_event_message (state_data->oem_data.manufacturer_id,
+                                                        state_data->oem_data.product_id,
                                                         event_reading_type_code,
                                                         i,
                                                         buf,
@@ -327,9 +327,9 @@ _sensor_type_is_oem_interpretable (struct ipmi_sensors_state_data *state_data,
    * Dell Poweredge R610
    * Dell Poweredge R710
    */
-  if (state_data->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && (state_data->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
-          || state_data->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
+  if (state_data->oem_data.manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
+      && (state_data->oem_data.product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+          || state_data->oem_data.product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
       && (sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_SYSTEM_PERFORMANCE_DEGRADATION_STATUS
           || sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING
           || sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_NON_FATAL_ERROR
@@ -373,8 +373,8 @@ get_sensor_specific_event_message_list (struct ipmi_sensors_state_data *state_da
               && state_data->prog_data->args->interpret_oem_data
               && _sensor_type_is_oem_interpretable (state_data, sensor_type))
             {
-              ret = ipmi_get_oem_sensor_type_message (state_data->manufacturer_id,
-                                                      state_data->product_id,
+              ret = ipmi_get_oem_sensor_type_message (state_data->oem_data.manufacturer_id,
+                                                      state_data->oem_data.product_id,
                                                       sensor_type,
                                                       i,
                                                       buf,
