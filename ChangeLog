@@ -1,5 +1,9 @@
 2009-12-14  Albert Chu <chu11@llnl.gov>
 
+	* ipmi-raw/ipmi-raw.8.pre.in: Fix spelling typo.
+	
+2009-12-14  Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/cmds/ipmi-dcmi-cmds.h: Add macros
 	for OEM min/max exception actions.
 
