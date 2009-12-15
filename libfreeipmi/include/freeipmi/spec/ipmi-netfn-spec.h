@@ -73,11 +73,11 @@ extern "C" {
 
 #define IPMI_NET_FN_GROUP_EXTENSION(__net_fn) \
   (((__net_fn) == IPMI_NET_FN_GROUP_EXTENSION_RQ \
-    && (__net_fn) == IPMI_NET_FN_GROUP_EXTENSION_RS) ? 1 : 0)
+    || (__net_fn) == IPMI_NET_FN_GROUP_EXTENSION_RS) ? 1 : 0)
 
 #define IPMI_NET_FN_OEM_GROUP(__net_fn) \
   (((__net_fn) == IPMI_NET_FN_OEM_GROUP_RQ \
-    && (__net_fn) == IPMI_NET_FN_OEM_GROUP_RS) ? 1 : 0)
+    || (__net_fn) == IPMI_NET_FN_OEM_GROUP_RS) ? 1 : 0)
 
 #define IPMI_NET_FN_CONTROLLER_SPECIFIC_OEM_GROUP(__net_fn) \
   (((__net_fn) >= IPMI_NET_FN_CONTROLLER_SPECIFIC_OEM_GROUP_MIN \
