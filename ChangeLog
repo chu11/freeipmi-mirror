@@ -10,7 +10,8 @@
 
 	* ipmi-dcmi/ipmi-dcmi.8.pre.in: Fix text for exception actions.
 
-	* ipmi-dcmi/: Support --interpret-oem-data option.
+	* ipmi-dcmi/src/ipmi-dcmi.c (_get_power_limit, set_power_limit):
+	Output error messages for special completion codes.
 
 2009-12-15  Holger Liebig <holger.liebig@ts.fujitsu.com>
 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-dcmi.c,v 1.6 2009-12-15 01:10:10 chu11 Exp $
+ *  $Id: ipmi-dcmi.c,v 1.7 2009-12-15 23:38:30 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2009 Lawrence Livermore National Security, LLC.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1250,10 +1250,18 @@ _get_power_limit (ipmi_dcmi_state_data_t *state_data,
   if (ipmi_cmd_dcmi_get_power_limit (state_data->ipmi_ctx,
                                      obj_cmd_rs) < 0)
     {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "ipmi_cmd_dcmi_get_power_limit: %s\n",
-                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+          && ipmi_check_completion_code (obj_cmd_rs,
+                                         IPMI_COMP_CODE_DCMI_NO_SET_POWER_LIMIT) == 1)
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_cmd_dcmi_get_power_limit: %s\n",
+                         IPMI_COMP_CODE_DCMI_NO_SET_POWER_LIMIT_STR);
+      else
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_cmd_dcmi_get_power_limit: %s\n",
+                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
       goto cleanup;
     }
 
@@ -1418,10 +1426,32 @@ set_power_limit (ipmi_dcmi_state_data_t *state_data)
                                      args->statistics_sampling_period_arg,
                                      obj_cmd_rs) < 0)
     {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "ipmi_cmd_dcmi_set_power_limit: %s\n",
-                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+          && ipmi_check_completion_code (obj_cmd_rs,
+                                         IPMI_COMP_CODE_DCMI_POWER_LIMIT_OUT_OF_RANGE) == 1)
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_cmd_dcmi_set_power_limit: %s\n",
+                         IPMI_COMP_CODE_DCMI_POWER_LIMIT_OUT_OF_RANGE_STR);
+      else if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+               && ipmi_check_completion_code (obj_cmd_rs,
+                                              IPMI_COMP_CODE_DCMI_CORRECTION_TIME_OUT_OF_RANGE) == 1)
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_cmd_dcmi_set_power_limit: %s\n",
+                         IPMI_COMP_CODE_DCMI_CORRECTION_TIME_OUT_OF_RANGE_STR);
+      else if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+               && ipmi_check_completion_code (obj_cmd_rs,
+                                              IPMI_COMP_CODE_DCMI_STATISTICS_REPORTING_PERIOD_OUT_OF_RANGE) == 1)
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_cmd_dcmi_set_power_limit: %s\n",
+                         IPMI_COMP_CODE_DCMI_STATISTICS_REPORTING_PERIOD_OUT_OF_RANGE_STR);
+      else
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_cmd_dcmi_set_power_limit: %s\n",
+                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
       goto cleanup;
     }
 
