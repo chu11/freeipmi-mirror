@@ -539,6 +539,11 @@ above.  Multiple workarounds can be specified separated by whitespace.
 Please see 
 .B ipmi-dcmi(8) 
 manpage for available workarounds.
+.TP
+\fBipmi\-dcmi\-interpret\-oem\-data\fR \fIENABLE|DISABLE\fR
+Specify if
+.B ipmi-dcmi
+should attempt to interpret OEM data by default or not.
 
 .SH "IPMI-FRU OPTIONS"
 The following options are specific to 

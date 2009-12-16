@@ -1191,6 +1191,9 @@ config_file_parse (const char *filename,
   struct config_file_data_ipmi_chassis_config ipmi_chassis_config_data;
   struct config_file_data_ipmi_chassis_config *ipmi_chassis_config_data_ptr;
 
+  struct config_file_data_ipmi_dcmi ipmi_dcmi_data;
+  struct config_file_data_ipmi_dcmi *ipmi_dcmi_data_ptr;
+
   struct config_file_data_ipmi_fru ipmi_fru_data;
   struct config_file_data_ipmi_fru *ipmi_fru_data_ptr;
 
@@ -2099,6 +2102,17 @@ config_file_parse (const char *filename,
         &ipmi_dcmi_workaround_flags_count,
         &cmd_args_config,
         0
+      },
+      {
+        "ipmi-dcmi-interpret-oem-data",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        config_file_bool,
+        1,
+        0,
+        &(ipmi_dcmi_data.interpret_oem_data_count),
+        &(ipmi_dcmi_data.interpret_oem_data),
+        0,
       },
     };
 
@@ -3999,7 +4013,7 @@ config_file_parse (const char *filename,
               || ((tool_support & CONFIG_FILE_TOOL_BMC_WATCHDOG) && tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMI_CHASSIS) && !tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMI_CHASSIS_CONFIG) && tool_data)
-              || ((tool_support & CONFIG_FILE_TOOL_IPMI_DCMI) && !tool_data)
+              || ((tool_support & CONFIG_FILE_TOOL_IPMI_DCMI) && tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMI_FRU) && tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMI_OEM) && tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMI_PEF_CONFIG) && tool_data)
@@ -4273,6 +4287,7 @@ config_file_parse (const char *filename,
   memset (&bmc_info_data, '\0', sizeof (struct config_file_data_bmc_info));
   memset (&bmc_watchdog_data, '\0', sizeof (struct config_file_data_bmc_watchdog));
   memset (&ipmi_chassis_config_data, '\0', sizeof (struct config_file_data_ipmi_chassis_config));
+  memset (&ipmi_dcmi_data, '\0', sizeof (struct config_file_data_ipmi_dcmi));
   memset (&ipmi_fru_data, '\0', sizeof (struct config_file_data_ipmi_fru));
   memset (&ipmi_oem_data, '\0', sizeof (struct config_file_data_ipmi_oem));
   memset (&ipmi_pef_config_data, '\0', sizeof (struct config_file_data_ipmi_pef_config));
@@ -4390,6 +4405,13 @@ config_file_parse (const char *filename,
       memcpy (ipmi_chassis_config_data_ptr,
               &ipmi_chassis_config_data,
               sizeof (struct config_file_data_ipmi_chassis_config));
+    }
+  else if (tool_support & CONFIG_FILE_TOOL_IPMI_DCMI)
+    {
+      ipmi_dcmi_data_ptr = (struct config_file_data_ipmi_dcmi *)tool_data;
+      memcpy (ipmi_dcmi_data_ptr,
+              &ipmi_dcmi_data,
+              sizeof (struct config_file_data_ipmi_dcmi));
     }
   else if (tool_support & CONFIG_FILE_TOOL_IPMI_FRU)
     {
