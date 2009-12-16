@@ -458,13 +458,13 @@ configured "piecemeal".  If it's not configured perfectly and
 simultaneously, every configuration will result in a completion code
 of 0xCC (Invalid data field in Request).  This isn't a compliance
 issue, however it leads to difficult development.  [NICETOHAVE]
-[config-1]
+[CONFIG-1]
 
 Fujitsu RX 100: Alert Policy configurations cannot be configured
 "piecemeal".  If it's not configured perfectly and simultaneously,
 every configuration will result in a completion code of 0xCC (Invalid
 data field in Request).  This isn't a compliance issue, however it
-leads to difficult development. [NICETOHAVE] [config-1]
+leads to difficult development. [NICETOHAVE] [CONFIG-1]
 
 ipmi-fru
 --------
@@ -497,21 +497,21 @@ ignoring sensor states that are unknown.
 Dell 2950: Some sensors return
 IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT (0xCB)
 completion codes for unknown reasons.  Resolved by ignoring sensors
-that return this return code. [sensors-1]
+that return this return code. [SENSORS-1]
 
 Sun V20Z: Some sensors return
 IPMI_COMP_CODE_COMMAND_ILLEGAL_FOR_SENSOR_OR_RECORD_TYPE (0xCD) for
 unknown reasons.  Resolved by ignoring sensors that return this return
-code. [sensors-1]
+code. [SENSORS-1]
 
 Dell 2650: Some sensors return IPMI_COMP_CODE_PARAMETER_OUT_OF_RANGE
 (0xC9) completion codes for unknown reasons.  Resolved by ignoring
-sensors that return this return code. [sensors-1]
+sensors that return this return code. [SENSORS-1]
 
 HP ProLiant DL145 G2: Some sensors return
 IPMI_COMP_CODE_COMMAND_CANNOT_RESPOND (0xCE) completion codes for
 unknown reasons.  Resolved by ignoring sensors that return this return
-code. [sensors-1]
+code. [SENSORS-1]
 
 Sun X4140: The Get Sensor Event Enable command always returns "sensor
 scanning disabled" bit.  No current resolution.
@@ -536,7 +536,7 @@ states have been asserted).
 Sun Fire X4450 w/ ELOM 3.0.0: Some sensors return
 IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED (0xD5) completion codes
 for unknown reasons.  Resolved by ignoring sensors that return this
-return code. [sensors-1]
+return code. [SENSORS-1]
 
 Intel SR2500, Intel SR1500SAS, Intel S5000PAL: Some sensors report
 invalid event bitmasks.  For example, when the lower critical
@@ -563,12 +563,12 @@ illegal.  Resolved with workaround to assume a valid record type.
 Appendix
 --------
 
-[sensors-1]
+[SENSORS-1]
 
 In all liklihood, these are all circumstances that the vendor wanted
 to say "this sensor isn't available on this motherboard".  (It is
 ironic that there are so many error codes vendors are returning for
-this circumstance, but I digress.).
+this circumstance, but I digress.)
 
 I get the impression vendors try to put the same SDR on multiple
 motherboards, regardless of whether a motherboard can even have a
@@ -581,7 +581,7 @@ the type and number of sensors in the platform ..." (1.7.7).
 
 "The SDR Repository is intended to hold information indicating the set
 of management controllers, sensors, and FRU Devices that is expected
-to be in the system ... For example, suppose the baseboard ahd
+to be in the system ... For example, suppose the baseboard had
 connectors for five fans, but only the first four were supposed to be
 populated.  The SDRs for the system would report four fan sensors ..."
 (33)
@@ -594,7 +594,7 @@ think the completion codes above don't give an accurate description of
 what's going on (assuming they are supposed to represent "this sensor
 isn't available on this motherboard").
 
-[config-1]
+[CONFIG-1]
 
 To see a discussion on why this implementation is poor, please see
 "Configuration tool callback design" in the freeipmi-coding.txt
