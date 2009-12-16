@@ -12,6 +12,7 @@ o In ipmi-dcmi, fix various output bugs.
 o In ipmi-dcmi, add more detailed error messages.
 o In ipmi-dcmi, fix command line parsing of
   --activate-deactivate-power-limit.
+o Support --interpret-oem-data option in ipmi-dcmi.
 o Fix --eliminate corner case when elimination of nodes leads to 0
   hosts specified.
 o Report proper error message when underlying crypt library is

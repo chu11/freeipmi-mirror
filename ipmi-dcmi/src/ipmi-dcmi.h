@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-dcmi.h,v 1.1 2009-05-26 23:35:57 chu11 Exp $
+ *  $Id: ipmi-dcmi.h,v 1.1.4.1 2009-12-16 23:36:30 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2009 Lawrence Livermore National Security, LLC.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -31,6 +31,7 @@
 #include <freeipmi/freeipmi.h>
 
 #include "tool-cmdline-common.h"
+#include "tool-oem-common.h"
 #include "pstdout.h"
 
 enum ipmi_dcmi_argp_option_keys
@@ -47,6 +48,7 @@ enum ipmi_dcmi_argp_option_keys
     ACTIVATE_DEACTIVATE_POWER_LIMIT = 169,
     GET_ASSET_TAG = 170,
     GET_DCMI_SENSOR_INFO = 171,
+    INTERPRET_OEM_DATA_KEY = 172,
   };
 
 struct ipmi_dcmi_arguments
@@ -70,6 +72,7 @@ struct ipmi_dcmi_arguments
   uint8_t activate_deactivate_power_limit_arg;
   int get_asset_tag;
   int get_dcmi_sensor_info;
+  int interpret_oem_data;
 };
 
 typedef struct ipmi_dcmi_prog_data
@@ -83,6 +86,7 @@ typedef struct ipmi_dcmi_state_data
   ipmi_dcmi_prog_data_t *prog_data;
   ipmi_ctx_t ipmi_ctx;
   pstdout_state_t pstate;
+  struct ipmi_oem_data oem_data;
 } ipmi_dcmi_state_data_t;
 
 #endif

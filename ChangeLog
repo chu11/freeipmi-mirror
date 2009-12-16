@@ -7,6 +7,8 @@
 	set_power_limit): Implement workaround to deal w/ DCMI
 	interpretation issue.
 
+	* ipmi-dcmi/: Support --interpret-oem-data option.
+
 2009-12-16  Albert Chu <chu11@llnl.gov>
 
 	* doc/freeipmi-bugs-and-workarounds.txt: Rename to
