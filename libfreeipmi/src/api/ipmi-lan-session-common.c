@@ -3337,6 +3337,22 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
       goto cleanup;
     }
 
+  /*
+   * IPMI Workaround (achu)
+   *
+   * Forgotten Motherboard
+   *
+   * Cipher suite IDs are attached to specific privilege levels
+   * rather than a maximum privilege level limit.  So you can only
+   * authenticate at the configured privilege level rather than a
+   * privilege level <= to it.
+   *
+   * To deal with this situation.  We send the "request highest
+   * privilege" flag in the open session request.  This should be
+   * enough to work around this issue but still work with other
+   * motherboards.
+   */
+
   /* IPMI Workaround (achu)
    *
    * Discovered on SE7520AF2 with Intel Server Management Module

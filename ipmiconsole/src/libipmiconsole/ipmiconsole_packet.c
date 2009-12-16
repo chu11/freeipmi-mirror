@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_packet.c,v 1.54 2009-12-04 18:37:35 chu11 Exp $
+ *  $Id: ipmiconsole_packet.c,v 1.55 2009-12-16 18:39:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -973,6 +973,22 @@ ipmiconsole_ipmi_packet_assemble (ipmiconsole_ctx_t c,
   else if (p == IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_REQUEST)
     {
       uint8_t privilege_level;
+
+      /*
+       * IPMI Workaround (achu)
+       *
+       * Forgotten Motherboard
+       *
+       * Cipher suite IDs are attached to specific privilege levels
+       * rather than a maximum privilege level limit.  So you can only
+       * authenticate at the configured privilege level rather than a
+       * privilege level <= to it.
+       *
+       * To deal with this situation.  We send the "request highest
+       * privilege" flag in the open session request.  This should be
+       * enough to work around this issue but still work with other
+       * motherboards.
+       */
 
       /* IPMI Workaround
        *

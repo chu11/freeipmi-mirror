@@ -1,23 +1,25 @@
-FreeIPMI Bugs and Workarounds
+FreeIPMI Bugs, Issues, and Workarounds
 
 by 
 
 Albert Chu
 chu11@llnl.gov
 
-These are some short descriptions of the bugs and (if possible)
-workarounds I've found and discovered while developing FreeIPMI on
-various motherboards.  When it was documented (or I remember them),
-the motherboards these issues were found on are also documented.
+These are some short descriptions of the bugs, issues, and (if
+relevant) workarounds I've found and discovered while developing
+FreeIPMI on various motherboards.  When it was documented (or I
+remember them), the motherboards these issues were found on are also
+documented.
 
 This is mostly to document compliance issues I've discovered.  When I
 talk to vendors and they say, "IPMI is 100% compliant, we don't know
 what you're talking about.", well, here's this document :-) 
 
-In addition, I've listed a few "issues" that while not compliance
-issues, I do feel that the choice of implementation makes it difficult
-to work with and/or a poor IPMI implementation for the end user.  I've
-placed a label of "[NICETOHAVE]" next to these issues.
+I have also listed a set of other issues that, while not compliance
+issues, are either interpretation issues I've found between multiple
+motherboards or a poor choice of implementation that makes it
+difficult to work with.  I have placed a label of [INTERPRETATION] or
+[NICETOHAVE] next to these issues respectively.
 
 Naturally the motherboards I have much more access to and am capable
 of working on will probably have more issues discovered.  As I develop
@@ -36,7 +38,7 @@ Inventec 5441/Dell Xanadu2
 Dell Poweredge R610
 Dell Poweredge R710
 
-I have had some temporary access to the following for a short time:
+I have had some short term access to the following:
 
 Intel SE7520AF2 with Intel Server Management Module (Professional
 Edition)
@@ -45,9 +47,9 @@ Tyan S4811 with SMDC daughter card
 Supermicro X6-DHR-1G with BMC2.0 daughter card
 Supermicro X8DTH
 
-The remaining motherboards (and subsequent bugs/workarounds) listed
-below are from interaction with users in the community and I never
-personally accessed (atleast at the time of documentation of the
+The remaining motherboards (and subsequent bugs/issues/workarounds)
+listed below are from interaction with users in the community and I
+never personally accessed (atleast at the time of documentation of the
 bug/workaround).
 
 For the record, I have nothing against the companies and these issues.
@@ -69,6 +71,11 @@ Forgotten/Undocumented Motherboard(s): The only authentication
 supported by the motherboard is an OEM specific authentication.  No
 resolution implemented.  (Al comment: This was a really old Supermicro
 motherboard, but I can't remember which one.)
+
+Intel SE7520JR2 with National Semiconductor PC87431M mBMC: The initial
+outbound sequence number on activate session response is off by one.
+The activate session response packet is supposed to contain the
+initial outbound sequence number passed during the request.
 
 Supermicro H8QME with SIMSO daughter card: The IPMI 2.0 packet
 responses for RAKP 2 have payload lengths that are off by 1.  Resolved
@@ -107,6 +114,14 @@ hash calculation.
 Intel SE7520AF2 with Intel Server Management Module (Professional
 Edition): During the RAKP3 request, the name_only_lookup field must be
 disabled.  Resolved with a workaround to adjust the hash calculation.
+
+Forgotten/Undocumented Motherboard(s): Cipher suite IDs are are
+attached to specific privilege levels rather than a maximum privilege
+level limit.  So you can only authenticate at the configured privilege
+level rather than a privilege level <= to it.  Resolved by passing
+IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL during the session establishment
+instead of the specific privilege level.  (Al comment: I think this
+was a really old Tyan motherboard, but I'm not 100% sure.)
 
 Sun Fire 4100 with ILOM: During a RAKP2 response, the key exchange
 authentication code is the wrong length.  Resolved with a workaround
@@ -584,6 +599,12 @@ isn't available on this motherboard").
 To see a discussion on why this implementation is poor, please see
 "Configuration tool callback design" in the freeipmi-coding.txt
 document.
+
+[INTERPRETATION]
+
+This is not an IPMI compliance issue, but rather a interpretation
+issue in the specification that has lead to multiple implementations
+by vendors.
 
 [NICETOHAVE]
 
