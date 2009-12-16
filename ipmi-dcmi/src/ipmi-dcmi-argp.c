@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-dcmi-argp.c,v 1.3.4.3 2009-12-16 23:36:30 chu11 Exp $
+ *  $Id: ipmi-dcmi-argp.c,v 1.3.4.4 2009-12-16 23:45:30 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2009 Lawrence Livermore National Security, LLC.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -249,6 +249,12 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 static void
 _ipmi_dcmi_config_file_parse (struct ipmi_dcmi_arguments *cmd_args)
 {
+  struct config_file_data_ipmi_dcmi config_file_data;
+
+  memset (&config_file_data,
+          '\0',
+          sizeof (struct config_file_data_ipmi_dcmi));
+
   if (config_file_parse (cmd_args->common.config_file,
                          0,
                          &(cmd_args->common),
@@ -256,11 +262,14 @@ _ipmi_dcmi_config_file_parse (struct ipmi_dcmi_arguments *cmd_args)
                          &(cmd_args->hostrange),
                          CONFIG_FILE_INBAND | CONFIG_FILE_OUTOFBAND | CONFIG_FILE_HOSTRANGE,
                          CONFIG_FILE_TOOL_IPMI_DCMI,
-                         NULL) < 0)
+                         &config_file_data) < 0)
     {
       fprintf (stderr, "config_file_parse: %s\n", strerror (errno));
       exit (1);
     }
+
+  if (config_file_data.interpret_oem_data_count)
+    cmd_args->interpret_oem_data = config_file_data.interpret_oem_data;
 }
 
 static void
@@ -304,7 +313,6 @@ _ipmi_dcmi_args_validate (struct ipmi_dcmi_arguments *cmd_args)
                "No power limit configuration changes specified\n");
       exit (1);
     }
-
 }
 
 void

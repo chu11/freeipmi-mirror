@@ -9,6 +9,11 @@
 
 	* ipmi-dcmi/: Support --interpret-oem-data option.
 
+	* ipmi-dcmi/, common/src/toolcommon/tool-config-file-common.h,
+	common/src/toolcommon/tool-config-file-common.c,
+	man/freeipmi.conf.5.pre.in, etc/freeipmi.conf: Support
+	--interpret-oem-data config file option.
+
 2009-12-16  Albert Chu <chu11@llnl.gov>
 
 	* doc/freeipmi-bugs-and-workarounds.txt: Rename to

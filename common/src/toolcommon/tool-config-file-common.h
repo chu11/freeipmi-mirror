@@ -96,6 +96,12 @@ struct config_file_data_ipmi_chassis_config
   int verbose_count_count;
 };
 
+struct config_file_data_ipmi_dcmi
+{
+  int interpret_oem_data;
+  int interpret_oem_data_count;
+};
+
 struct config_file_data_ipmi_fru
 {
   int verbose_count;
