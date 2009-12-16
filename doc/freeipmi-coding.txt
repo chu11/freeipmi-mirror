@@ -785,3 +785,26 @@ can specify to assume a valid system event record no matter what.
 
 Admittedly, the area is grey, and at some point, it's a judgement call
 :-)
+
+10) Dealing with OEM extensions
+-------------------------------
+
+Similar to the "Dealing with workarounds" question above, there is a
+similar question of how to deal with OEM extensions.  Should code
+automatically detect the manufacturer and product to determine if OEM
+extensions can be handled or should be output?
+
+We would like the tools to operator as simply for the users without
+specifying options on the command line.  However, can we trust that a
+vendor will implement their extensions consistently across
+motherboards, products, or even firmware revisions?
+
+The general decision is that there will be an option for the user to
+specify if they would like OEM interpreted output if available.  Many
+FreeIPMI tools come with a --interpret-oem-data option for this
+situation.  If a motherboard is specifically supported by FreeIPMI the
+user is free to use and trust the OEM support.  However, if OEM
+extensions happen to work for a unlisted motherboard, the user must
+take the output with some grain of salt.
+
+
