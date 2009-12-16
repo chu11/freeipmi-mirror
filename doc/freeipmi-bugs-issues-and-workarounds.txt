@@ -560,6 +560,18 @@ resolution.
 HP DL 380 G5: Some SEL records report a record type of 0x00, which is
 illegal.  Resolved with workaround to assume a valid record type.
 
+Inventec 5441/Dell Xanadu2: The SEL contains sensor numbers and sensor
+owner IDs which are not listed in the SDR.  While this is not a
+compliance issue, it leads to an output that ultimately contains less
+useful information.  In particular, instead of a reasonable sensor
+name, ipmi-sel must output "Sensor #8".  [NICETOHAVE]
+
+Sun Fire X4150: The SEL contains sensor numbers and sensor owner IDs
+which are not listed in the SDR.  While this is not a compliance
+issue, it leads to an output that ultimately contains less useful
+information.  In particular, instead of a reasonable sensor name,
+ipmi-sel must output "Sensor #8".  [NICETOHAVE]
+
 Appendix
 --------
 
