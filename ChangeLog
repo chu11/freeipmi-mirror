@@ -1,5 +1,14 @@
 2009-12-16  Albert Chu <chu11@llnl.gov>
 
+	* doc/freeipmi-bugs-issues-and-workarounds.txt: Document
+	workaround/interpretation issue in DCMI.
+
+	* ipmi-dcmi/src/ipmi-dcmi.c (_get_power_limit, get_power_limit,
+	set_power_limit): Implement workaround to deal w/ DCMI
+	interpretation issue.
+
+2009-12-16  Albert Chu <chu11@llnl.gov>
+
 	* doc/freeipmi-bugs-and-workarounds.txt: Rename to
 	freeipmi-bugs-issues-and-workarounds.txt.
 

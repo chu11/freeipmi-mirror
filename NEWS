@@ -7,6 +7,7 @@ o In ipmi-sensors, fix output corner case w/ device types and
 o In ipmi-sel, tweak column size to fix output for common scenario.
 o In ipmi-sel, fix output corner case when --ignore-sdr-cache is
   specified.
+o In ipmi-dcmi, handle interpretation issue on --set-power-limit.
 o In ipmi-dcmi, fix various output bugs.
 o In ipmi-dcmi, add more detailed error messages.
 o In ipmi-dcmi, fix command line parsing of

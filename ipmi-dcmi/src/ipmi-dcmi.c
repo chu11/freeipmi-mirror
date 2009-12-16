@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-dcmi.c,v 1.4.2.3 2009-12-15 23:38:45 chu11 Exp $
+ *  $Id: ipmi-dcmi.c,v 1.4.2.4 2009-12-16 22:40:32 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2009 Lawrence Livermore National Security, LLC.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -62,6 +62,8 @@
 #define IPMI_DCMI_MAX_ASSET_TAG_LENGTH  512
 
 #define IPMI_DCMI_MAX_RECORD_IDS_BUFLEN 1024
+
+#define IPMI_DCMI_ERROR_BUFLEN          1024
 
 /* return 1 on output success, 0 on no output, -1 on error */
 static int
@@ -1226,7 +1228,11 @@ _get_power_limit (ipmi_dcmi_state_data_t *state_data,
                   uint8_t *exception_actions,
                   uint16_t *power_limit_requested,
                   uint32_t *correction_time_limit,
-                  uint16_t *management_application_statistics_sampling_period)
+                  uint16_t *management_application_statistics_sampling_period,
+                  uint8_t *comp_code,
+                  char *errorbuf,
+                  unsigned int errorbuflen)
+
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
@@ -1237,13 +1243,15 @@ _get_power_limit (ipmi_dcmi_state_data_t *state_data,
   assert (power_limit_requested);
   assert (correction_time_limit);
   assert (management_application_statistics_sampling_period);
+  assert (errorbuf);
+  assert (errorbuflen);
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_dcmi_get_power_limit_rs)))
     {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_create: %s\n",
-                       strerror (errno));
+      snprintf (errorbuf,
+                errorbuflen,
+                "fiid_obj_create: %s",
+                strerror (errno));
       goto cleanup;
     }
 
@@ -1253,15 +1261,31 @@ _get_power_limit (ipmi_dcmi_state_data_t *state_data,
       if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
           && ipmi_check_completion_code (obj_cmd_rs,
                                          IPMI_COMP_CODE_DCMI_NO_SET_POWER_LIMIT) == 1)
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "ipmi_cmd_dcmi_get_power_limit: %s\n",
-                         IPMI_COMP_CODE_DCMI_NO_SET_POWER_LIMIT_STR);
+        snprintf (errorbuf,
+                  errorbuflen,
+                  "ipmi_cmd_dcmi_get_power_limit: %s",
+                  IPMI_COMP_CODE_DCMI_NO_SET_POWER_LIMIT_STR);
       else
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "ipmi_cmd_dcmi_get_power_limit: %s\n",
-                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
+        snprintf (errorbuf,
+                  errorbuflen,
+                  "ipmi_cmd_dcmi_get_power_limit: %s",
+                  ipmi_ctx_errormsg (state_data->ipmi_ctx));
+
+      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+          && comp_code)
+        {
+          (*comp_code) = 0;
+          if (FIID_OBJ_GET (obj_cmd_rs, "comp_code", &val) < 0)
+            {
+              snprintf (errorbuf,
+                        errorbuflen,
+                        "fiid_obj_get: 'comp_code': %s",
+                        fiid_obj_errormsg (obj_cmd_rs));
+              goto cleanup;
+            }
+          (*comp_code) = val;
+        }
+      
       goto cleanup;
     }
 
@@ -1269,10 +1293,10 @@ _get_power_limit (ipmi_dcmi_state_data_t *state_data,
                     "exception_actions",
                     &val) < 0)
     {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_get: 'exception_actions': %s\n",
-                       fiid_obj_errormsg (obj_cmd_rs));
+      snprintf (errorbuf,
+                errorbuflen,
+                "fiid_obj_get: 'exception_actions': %s",
+                fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
   (*exception_actions) = val;
@@ -1281,10 +1305,10 @@ _get_power_limit (ipmi_dcmi_state_data_t *state_data,
                     "power_limit_requested",
                     &val) < 0)
     {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_get: 'power_limit_requested': %s\n",
-                       fiid_obj_errormsg (obj_cmd_rs));
+      snprintf (errorbuf,
+                errorbuflen,
+                "fiid_obj_get: 'power_limit_requested': %s",
+                fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
   (*power_limit_requested) = val;
@@ -1293,10 +1317,10 @@ _get_power_limit (ipmi_dcmi_state_data_t *state_data,
                     "correction_time_limit",
                     &val) < 0)
     {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_get: 'correction_time_limit': %s\n",
-                       fiid_obj_errormsg (obj_cmd_rs));
+      snprintf (errorbuf,
+                errorbuflen,
+                "fiid_obj_get: 'correction_time_limit': %s",
+                fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
   (*correction_time_limit) = val;
@@ -1305,10 +1329,10 @@ _get_power_limit (ipmi_dcmi_state_data_t *state_data,
                     "management_application_statistics_sampling_period",
                     &val) < 0)
     {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_get: 'management_application_statistics_sampling_period': %s\n",
-                       fiid_obj_errormsg (obj_cmd_rs));
+      snprintf (errorbuf,
+                errorbuflen,
+                "fiid_obj_get: 'management_application_statistics_sampling_period': %s",
+                fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
   (*management_application_statistics_sampling_period) = val;
@@ -1327,15 +1351,27 @@ get_power_limit (ipmi_dcmi_state_data_t *state_data)
   uint16_t power_limit_requested;
   uint32_t correction_time_limit;
   uint16_t management_application_statistics_sampling_period;
+  char errorbuf[IPMI_DCMI_ERROR_BUFLEN + 1];
 
   assert (state_data);
+
+  memset (errorbuf, '\0', IPMI_DCMI_ERROR_BUFLEN + 1);
 
   if (_get_power_limit (state_data,
                         &exception_actions,
                         &power_limit_requested,
                         &correction_time_limit,
-                        &management_application_statistics_sampling_period) < 0)
-    return (-1);
+                        &management_application_statistics_sampling_period,
+                        NULL,   /* comp_code */
+                        errorbuf,
+                        IPMI_DCMI_ERROR_BUFLEN) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s\n",
+                       errorbuf);
+      return (-1);
+    }
 
   /* XXX: figure out OEM specifics, and list details given manufacturer ID/product ID */
 
@@ -1377,10 +1413,12 @@ set_power_limit (ipmi_dcmi_state_data_t *state_data)
 {
   struct ipmi_dcmi_arguments *args;
   fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t comp_code = 0;
   uint8_t exception_actions;
   uint16_t power_limit_requested;
   uint32_t correction_time_limit;
   uint16_t management_application_statistics_sampling_period;
+  char errorbuf[IPMI_DCMI_ERROR_BUFLEN + 1];
   int rv = -1;
 
   assert (state_data);
@@ -1391,12 +1429,61 @@ set_power_limit (ipmi_dcmi_state_data_t *state_data)
 
   args = state_data->prog_data->args;
 
+  memset (errorbuf, '\0', IPMI_DCMI_ERROR_BUFLEN + 1);
+
   if (_get_power_limit (state_data,
                         &exception_actions,
                         &power_limit_requested,
                         &correction_time_limit,
-                        &management_application_statistics_sampling_period) < 0)
-    return (-1);
+                        &management_application_statistics_sampling_period,
+                        &comp_code,
+                        errorbuf,
+                        IPMI_DCMI_ERROR_BUFLEN) < 0)
+    {
+      /* IPMI Workaround/Interpretation
+       *
+       * The DCMI spec indicates a potential completion code for the
+       * "Get Power Limit" command as "No Set Power Limit" (0x80).
+       * FreeIPMI interpreted this to mean the "Set Power Limit"
+       * command was not available.  The vendor interpreted this to
+       * mean "No Power Limit Set".  One can consider this an English
+       * interpretation issue of 'No set *POWER LIMIT*' vs. 'No *SET
+       * POWER LIMIT*' (i.e. is "set" a noun or a verb here).
+       * Confounding this issue is the fact that the DCMI Conformance
+       * test suite acts differently than the example implementation
+       * in Intel's DCMItool.
+       * 
+       * So we will do the following.
+       *
+       * If the "No Set Power Limit" completion code is returned,
+       * obviously, we won't have values from "Get Power Limit" and
+       * won't know how to do the configuration properly in "Set Power
+       * Limit".  So we will require that the user input all fields
+       * for "Set Power Limit".
+       */
+      if (comp_code == IPMI_COMP_CODE_DCMI_NO_SET_POWER_LIMIT)
+        {
+          if (!args->exception_actions
+              || !args->power_limit_requested
+              || !args->correction_time_limit
+              || !args->statistics_sampling_period)
+            {
+              pstdout_fprintf (state_data->pstate,
+                               stderr,
+                               "Must specify --exception-actions, --power-limit-requested, "
+                               "--correction-time-limit, and --statistics-sampling-period\n");
+              goto cleanup;
+            }
+        }
+      else
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "%s\n",
+                           errorbuf);
+          goto cleanup;
+        }
+    }
 
   if (!args->exception_actions)
     args->exception_actions_arg = exception_actions;
