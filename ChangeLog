@@ -1,5 +1,19 @@
 2009-12-16  Albert Chu <chu11@llnl.gov>
 
+	* doc/freeipmi-bugs-and-workarounds.txt: Rename to
+	freeipmi-bugs-issues-and-workarounds.txt.
+
+	* doc/freeipmi-bugs-issues-and-workarounds.txt: Update w/
+	"interpretation" issues.
+
+	* ipmpower/, ipmiconsole/src/libipmiconsole/,
+	libfreeipmi/src/api/: More accurately comment on IPMI compliance
+	issue.
+
+	* freeipmi.spec.in: Update appropriately for doc change.
+	
+2009-12-16  Albert Chu <chu11@llnl.gov>
+
 	* common/src/miscutil/hostlist.c, common/src/miscutil/hostlist.h:
 	Update newest lib versions.
 	

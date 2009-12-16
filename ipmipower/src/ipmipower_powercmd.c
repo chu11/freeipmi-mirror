@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.196 2009-12-02 17:59:20 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.196.2.1 2009-12-16 18:40:11 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -248,29 +248,17 @@ ipmipower_powercmd_queue (power_cmd_t cmd, struct ipmipower_connection *ic)
       /*
        * IPMI Workaround (achu)
        *
-       * Sigh.  There are two interpretations of the IPMI 2.0 Spec.
+       * Forgotten Motherboard
        *
-       * Interpretation #1:
+       * Cipher suite IDs are attached to specific privilege levels
+       * rather than a maximum privilege level limit.  So you can only
+       * authenticate at the configured privilege level rather than a
+       * privilege level <= to it.
        *
-       * Cipher Suite IDs (and thus authentication mechanisms) are not
-       * attached to specific privilege levels.  Cipher Suite IDs are
-       * assigned a privilege level limit.  So if we cannot connect at a
-       * lower privilege, there is no need to see if we can connect at a
-       * higher privilege.
-       *
-       * Interpretation #2:
-       *
-       * Cipher Suite Ids (and thus authentication algorithms) are
-       * attached to specific privilege levels.  You can authenticate only
-       * at that privilege level.
-       *
-       * In other words, the interpretations are nearly opposite of each other.
-       *
-       * We send the "request highest privilege" flag in the open session
-       * request.  This should be enough to work around both
-       * interpretations.
-       *
-       * Sigh ...
+       * To deal with this situation.  We send the "request highest
+       * privilege" flag in the open session request.  This should be
+       * enough to work around this issue but still work with other
+       * motherboards.
        */
 
       /* IPMI Workaround (achu)
