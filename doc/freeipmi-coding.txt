@@ -802,8 +802,8 @@ motherboards, products, or even firmware revisions?
 The general decision is that there will be an option for the user to
 specify if they would like OEM interpreted output if available.  Many
 FreeIPMI tools come with a --interpret-oem-data option for this
-situation.  If a motherboard is specifically supported by FreeIPMI the
-user is free to use and trust the OEM support.  However, if OEM
+situation.  If a motherboard is specifically supported by FreeIPMI,
+the user is free to use and trust the OEM support.  However, if OEM
 extensions happen to work for a unlisted motherboard, the user must
 take the output with some grain of salt.
 
