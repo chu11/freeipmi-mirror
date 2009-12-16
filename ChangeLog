@@ -1,5 +1,9 @@
 2009-12-15  Albert Chu <chu11@llnl.gov>
 
+	* doc/freeipmi-coding.txt: Add section on OEM extensions.
+	
+2009-12-15  Albert Chu <chu11@llnl.gov>
+
 	* common/src/tooloem/: New convenience lib.
 
 	* ipmi-fru/, ipmi-sensors/, ipmi-sel/: Use new convenience lib for
