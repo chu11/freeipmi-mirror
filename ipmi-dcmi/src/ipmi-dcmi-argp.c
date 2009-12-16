@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-dcmi-argp.c,v 1.5 2009-12-15 01:14:33 chu11 Exp $
+ *  $Id: ipmi-dcmi-argp.c,v 1.6 2009-12-16 23:35:50 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2009 Lawrence Livermore National Security, LLC.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -96,6 +96,8 @@ static struct argp_option cmdline_options[] =
       "Get asset tag.", 40},
     { "get-dcmi-sensor-info", GET_DCMI_SENSOR_INFO, NULL, 0,
       "Get DCMI sensor information.", 41},
+    { "interpret-oem-data", INTERPRET_OEM_DATA_KEY, NULL, 0,
+      "Attempt to interpret OEM data.", 42},
     { NULL, 0, NULL, 0, NULL, 0}
   };
 
@@ -225,6 +227,9 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case GET_DCMI_SENSOR_INFO:
       cmd_args->get_dcmi_sensor_info++;
       break;
+    case INTERPRET_OEM_DATA_KEY:
+      cmd_args->interpret_oem_data = 1;
+      break;
     case ARGP_KEY_ARG:
       /* Too many arguments. */
       argp_usage (state);
@@ -320,6 +325,7 @@ ipmi_dcmi_argp_parse (int argc, char **argv, struct ipmi_dcmi_arguments *cmd_arg
   cmd_args->activate_deactivate_power_limit = 0;
   cmd_args->get_asset_tag = 0;
   cmd_args->get_dcmi_sensor_info = 0;
+  cmd_args->interpret_oem_data = 0;
 
   argp_parse (&cmdline_config_file_argp,
               argc,

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-dcmi.c,v 1.8 2009-12-16 22:39:56 chu11 Exp $
+ *  $Id: ipmi-dcmi.c,v 1.9 2009-12-16 23:35:50 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2009 Lawrence Livermore National Security, LLC.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1887,6 +1887,14 @@ run_cmd_args (ipmi_dcmi_state_data_t *state_data)
 
   args = state_data->prog_data->args;
 
+  if (args->interpret_oem_data)
+    {
+      if (ipmi_get_oem_data (state_data->pstate,
+                             state_data->ipmi_ctx,
+                             &state_data->oem_data) < 0)
+        goto cleanup;
+    }
+
   if (args->get_dcmi_capability_info)
     return (get_dcmi_capability_info (state_data));
 
@@ -1912,6 +1920,7 @@ run_cmd_args (ipmi_dcmi_state_data_t *state_data)
     return (get_dcmi_sensor_info (state_data));
 
   rv = 0;
+ cleanup:
   return (rv);
 }
 

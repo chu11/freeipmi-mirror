@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmi-dcmi.8.pre.in,v 1.5 2009-12-15 22:43:21 chu11 Exp $
+.\"$Id: ipmi-dcmi.8.pre.in,v 1.6 2009-12-16 23:35:50 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2009 Lawrence Livermore National Security, LLC.
 .\"  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -130,6 +130,7 @@ Get asset tag.
 .TP
 \fB\-\-get\-dcmi\-sensor\-info\fR
 Get DCMI sensor information.
+#include <@top_srcdir@/common/man/manpage-common-interpret-oem-data.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-options-header.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-buffer.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-consolidate.man>
@@ -143,6 +144,9 @@ Get DCMI sensor information.
 #include <@top_srcdir@/common/man/manpage-common-troubleshooting.man>
 #include <@top_srcdir@/common/man/manpage-common-workaround-heading-text.man>
 #include <@top_srcdir@/common/man/manpage-common-workaround-text.man>
+#include <@top_srcdir@/common/man/manpage-common-oem-interpretation.man>
+.LP
+Currently None
 .SH "EXAMPLES"
 .B # ipmi-dcmi --get-power-limit
 .PP
