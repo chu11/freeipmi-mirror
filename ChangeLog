@@ -1,3 +1,8 @@
+2009-12-16  Albert Chu <chu11@llnl.gov>
+
+	* common/src/miscutil/hostlist.c, common/src/miscutil/hostlist.h:
+	Update newest lib versions.
+	
 2009-12-15  Albert Chu <chu11@llnl.gov>
 
 	* doc/freeipmi-coding.txt: Add section on OEM extensions.
