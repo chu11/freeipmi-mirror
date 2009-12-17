@@ -41,6 +41,7 @@ extern "C" {
 #include <freeipmi/cmds/ipmi-bmc-watchdog-timer-cmds.h>
 #include <freeipmi/cmds/ipmi-chassis-cmds.h>
 #include <freeipmi/cmds/ipmi-dcmi-cmds.h>
+#include <freeipmi/cmds/ipmi-dcmi-oem-cmds.h>
 #include <freeipmi/cmds/ipmi-device-global-cmds.h>
 #include <freeipmi/cmds/ipmi-event-cmds.h>
 #include <freeipmi/cmds/ipmi-fru-inventory-device-cmds.h>
