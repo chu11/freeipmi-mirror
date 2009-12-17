@@ -154,12 +154,16 @@
 #define IPMI_OEM_FUJITSU_SYSTEM_STATUS_POST_STATE_SHIFT   0
 
 /* rename from "localize" */
+/* Bit 7 */
 #define IPMI_OEM_FUJITSU_SYSTEM_STATUS_SIGNALING_LOCAL_LED_BITMASK 0x80
 #define IPMI_OEM_FUJITSU_SYSTEM_STATUS_SIGNALING_LOCAL_LED_SHIFT   7
+/* Bit 6..4 currently undefined */
 
-#define IPMI_OEM_FUJITSU_SYSTEM_STATUS_SIGNALING_CSS_LED_BITMASK 0xC0
+/* Bit 3..2 */
+#define IPMI_OEM_FUJITSU_SYSTEM_STATUS_SIGNALING_CSS_LED_BITMASK 0x0C
 #define IPMI_OEM_FUJITSU_SYSTEM_STATUS_SIGNALING_CSS_LED_SHIFT   2
 
+/* Bit 1..0 */
 #define IPMI_OEM_FUJITSU_SYSTEM_STATUS_SIGNALING_GLOBAL_ERROR_LED_BITMASK 0x03
 #define IPMI_OEM_FUJITSU_SYSTEM_STATUS_SIGNALING_GLOBAL_ERROR_LED_SHIFT   0
 
@@ -337,9 +341,11 @@ ipmi_oem_fujitsu_get_power_on_source (ipmi_oem_state_data_t *state_data)
   else if (source == IPMI_OEM_FUJITSU_POWER_ON_SOURCE_POWERED_ON_BY_A_PCI_BUS_POWER_MANAGEMENT_EVENT)
     snprintf (str, IPMI_OEM_STR_BUFLEN, "Powered on by a PCI Bus Power Management Event");
   else if (source == IPMI_OEM_FUJITSU_POWER_ON_SOURCE_POWERED_ON_BY_REMOTE_CONTROL_VIA_REMOTE_MANAGER)
-    snprintf (str, IPMI_OEM_STR_BUFLEN, "Powered on by remote control via remote manager");
+    /* HLiebig: capitalized "remote manager" from doc */
+    snprintf (str, IPMI_OEM_STR_BUFLEN, "Powered on by remote control via Remote Manager");
   else if (source == IPMI_OEM_FUJITSU_POWER_ON_SOURCE_REBOOT_RESET_BY_REMOTE_CONTROL_VIA_REMOTE_MANAGER)
-    snprintf (str, IPMI_OEM_STR_BUFLEN, "Reboot/reset by remote control via remote manager");
+    /* HLiebig: capitalized "remote manager" from doc */
+    snprintf (str, IPMI_OEM_STR_BUFLEN, "Reboot/reset by remote control via Remote Manager");
   else
     snprintf (str, IPMI_OEM_STR_BUFLEN, "Unrecognized source: %02Xh", source);
   
@@ -370,7 +376,7 @@ ipmi_oem_fujitsu_get_power_off_source (ipmi_oem_state_data_t *state_data)
   memset (str, '\0', IPMI_OEM_STR_BUFLEN);
 
   if (source == IPMI_OEM_FUJITSU_POWER_OFF_SOURCE_SOFTWARE)
-    snprintf (str, IPMI_OEM_STR_BUFLEN, "Software");
+    snprintf (str, IPMI_OEM_STR_BUFLEN, "Software or command");
   else if (source == IPMI_OEM_FUJITSU_POWER_OFF_SOURCE_POWER_SWITCH)
     snprintf (str, IPMI_OEM_STR_BUFLEN, "Power switch");
   else if (source == IPMI_OEM_FUJITSU_POWER_OFF_SOURCE_AC_POWER_FAIL)
@@ -386,7 +392,8 @@ ipmi_oem_fujitsu_get_power_off_source (ipmi_oem_state_data_t *state_data)
   else if (source == IPMI_OEM_FUJITSU_POWER_OFF_SOURCE_FINAL_POWER_OFF_AFTER_REPEATED_CPU_ERRORS)
     snprintf (str, IPMI_OEM_STR_BUFLEN, "Final power-off after repeated CPU errors");
   else if (source == IPMI_OEM_FUJITSU_POWER_OFF_SOURCE_POWERED_OFF_BY_REMOTE_CONTROL_VIA_REMOTE_MANAGER)
-    snprintf (str, IPMI_OEM_STR_BUFLEN, "Powered off by remote control via remote manager");
+    /* HLiebig: capitalized "remote manager" from doc */
+    snprintf (str, IPMI_OEM_STR_BUFLEN, "Powered off by remote control via Remote Manager");
   else
     snprintf (str, IPMI_OEM_STR_BUFLEN, "Unrecognized source: %02Xh", source);
   
@@ -578,7 +585,7 @@ ipmi_oem_fujitsu_get_system_status (ipmi_oem_state_data_t *state_data)
   uint8_t watchdog_active;
   uint8_t agent_connected;
   uint8_t post_state;
-  uint8_t local_led;            /* rename from "localize" */
+  uint8_t identify_led;            /* rename from "localize" */
   uint8_t css_led;
   uint8_t global_error_led;
   char *css_led_str = NULL;
@@ -624,7 +631,7 @@ ipmi_oem_fujitsu_get_system_status (ipmi_oem_state_data_t *state_data)
    *      bit 1 - Agent connected
    *      bit 0 - Post State
    * 0x?? - Signaling
-   *      bit 7 - Localize LED (achu: is this a typo, "Local" LED?)
+   *      bit 7 - Identify LED (sometimes refered as "Localize")
    *      bit 6 - 
    *      bit 5 - 
    *      bit 4 - 
@@ -641,7 +648,7 @@ ipmi_oem_fujitsu_get_system_status (ipmi_oem_state_data_t *state_data)
    *      bit 2 - 
    *      bit 1 - 
    *      bit 0 - New Output on LocalView display
-   * 0x?? - POST Code
+   * 0x?? - Last POST Code (Port 80) (HLiebig: renamed from "Post Code" in doc)
    *
    * achu: Docs say "timestamp is only relevant for evaluating the
    * Notifications Byte".  I assume this is because the Notifications
@@ -711,8 +718,8 @@ ipmi_oem_fujitsu_get_system_status (ipmi_oem_state_data_t *state_data)
   post_state = (system_status & IPMI_OEM_FUJITSU_SYSTEM_STATUS_POST_STATE_BITMASK);
   post_state >>= IPMI_OEM_FUJITSU_SYSTEM_STATUS_POST_STATE_SHIFT;
 
-  local_led = (signaling & IPMI_OEM_FUJITSU_SYSTEM_STATUS_SIGNALING_LOCAL_LED_BITMASK);
-  local_led >>= IPMI_OEM_FUJITSU_SYSTEM_STATUS_SIGNALING_LOCAL_LED_SHIFT;
+  identify_led = (signaling & IPMI_OEM_FUJITSU_SYSTEM_STATUS_SIGNALING_LOCAL_LED_BITMASK);
+  identify_led >>= IPMI_OEM_FUJITSU_SYSTEM_STATUS_SIGNALING_LOCAL_LED_SHIFT;
 
   css_led = (signaling & IPMI_OEM_FUJITSU_SYSTEM_STATUS_SIGNALING_CSS_LED_BITMASK);
   css_led >>= IPMI_OEM_FUJITSU_SYSTEM_STATUS_SIGNALING_CSS_LED_SHIFT;
@@ -721,29 +728,29 @@ ipmi_oem_fujitsu_get_system_status (ipmi_oem_state_data_t *state_data)
   global_error_led >>= IPMI_OEM_FUJITSU_SYSTEM_STATUS_SIGNALING_GLOBAL_ERROR_LED_SHIFT;
 
   pstdout_printf (state_data->pstate,
-                  "System Power          : %s\n",
+                  "System Power             : %s\n",
                   system_power ? "On" : "Off");
 
   pstdout_printf (state_data->pstate,
-                  "SEL Entries Available : %s\n",
+                  "SEL Entries Available    : %s\n",
                   sel_entries_available ? "Yes" : "No");
 
   pstdout_printf (state_data->pstate,
-                  "Watchdog Active       : %s\n",
+                  "Watchdog Active          : %s\n",
                   watchdog_active ? "Yes" : "No");
 
   pstdout_printf (state_data->pstate,
-                  "Agent Connected       : %s\n",
+                  "Agent Connected          : %s\n",
                   agent_connected ? "Yes" : "No");
 
-  /* achu: on vs. off?? or should be something else? */
+  /* HLiebig: renamed from "Post State" in doc */
   pstdout_printf (state_data->pstate,
-                  "Post State            : %s\n",
-                  post_state ? "On" : "Off");
+                  "System in POST           : %s\n",
+                  post_state ? "Yes" : "No");
 
   pstdout_printf (state_data->pstate,
-                  "Local LED             : %s\n",
-                  local_led ? "On" : "Off");
+                  "Identify LED             : %s\n",
+                  identify_led ? "On" : "Off");
 
   if (css_led == IPMI_OEM_FUJITSU_CSS_LED_OFF)
     css_led_str = "Off";
@@ -755,7 +762,7 @@ ipmi_oem_fujitsu_get_system_status (ipmi_oem_state_data_t *state_data)
     css_led_str = "Unknown LED State";
 
   pstdout_printf (state_data->pstate,
-                  "CSS LED               : %s\n",
+                  "CSS LED                  : %s\n",
                   css_led_str);
   
   if (global_error_led == IPMI_OEM_FUJITSU_GLOBAL_ERROR_LED_OFF)
@@ -768,11 +775,12 @@ ipmi_oem_fujitsu_get_system_status (ipmi_oem_state_data_t *state_data)
     global_error_led_str = "Unknown LED State";
 
   pstdout_printf (state_data->pstate,
-                  "Global error LED      : %s\n",
+                  "Global Error LED         : %s\n",
                   global_error_led_str);
 
+  /* HLiebig: renamed from "Post Code" in doc */
   pstdout_printf (state_data->pstate,
-                  "Post Code             : %02Xh\n",
+                  "Last POST Code (Port 80) : %02Xh\n",
                   post_code);
 
   rv = 0;
@@ -862,18 +870,18 @@ ipmi_oem_fujitsu_get_eeprom_version_info (ipmi_oem_state_data_t *state_data)
    *        0x00 - checksum error
    *        0x01 - ok
    * 0x?? - major fw revision - binary coded
-   * 0x?? - minor fw revision - bcd coded
+   * 0x?? - minor fw revision - binary - 2 char field coded (HLiebig: listed incorrectly as BCD in doc)
    * 0x?? - aux fw revision (lsb first) - binary coded, major/minor/res.
    * 0x?? - aux fw revision
    * 0x?? - aux fw revision
    * 0x?? - major fw char - ascii char
-   * 0x?? - major sdrr revision - bcd coded
+   * 0x?? - major sdrr revision - binary coded (HLiebig: listed incorrectly as BCD in doc)
    * 0x?? - minor sdrr revision - bcd coded
    * 0x?? - major sdrr char - ascii char
-   * 0x?? - sdrr-ID (lsb) - binary coded
-   * 0x?? - sdrr-ID (msb) - binary coded
+   * 0x?? - sdrr-ID (lsb) - hex coded (HLiebig: listed incorrectly as binary in doc)
+   * 0x?? - sdrr-ID (msb) - hex coded (HLiebig: listed incorrectly as binary in doc)
    * 0x?? - major booter revision - binary coded
-   * 0x?? - minor booter revision - bcd coded
+   * 0x?? - minor booter revision - binary - 2 char field coded (HLiebig: listed incorrectly as BCD in doc)
    * 0x?? - aux booter revision (lsb first) - binary coded, major/minor
    * 0x?? - aux booter revision
    */
@@ -939,46 +947,48 @@ ipmi_oem_fujitsu_get_eeprom_version_info (ipmi_oem_state_data_t *state_data)
   aux_booter_revision_minor = bytes_rs[20];
   
   /* make sure char is atleast legit */
+  /* HLiebig: minor_firmware_revision listed incorrectly as BCD in doc */
   if (isalnum(major_firmware_revision_char))
     pstdout_printf (state_data->pstate,
-                    "Firmware Revsion : %c%u.%02X.%u.%u.%u\n",
+                    "Firmware Revision : %u.%02u%c (%u.%02u)\n",
+                    aux_firmware_revision_major,
+                    aux_firmware_revision_minor,
                     major_firmware_revision_char,
                     major_firmware_revision,
-                    minor_firmware_revision,
-                    aux_firmware_revision_major,
-                    aux_firmware_revision_minor,
-                    aux_firmware_revision_res);
+                    minor_firmware_revision);
   else
     pstdout_printf (state_data->pstate,
-                    "Firmware Revsion : %u.%02X.%u.%u.%u\n",
-                    major_firmware_revision,
-                    minor_firmware_revision,
+                    "Firmware Revision : %u.%02u (%u.%02u)\n",
                     aux_firmware_revision_major,
                     aux_firmware_revision_minor,
-                    aux_firmware_revision_res);
+                    major_firmware_revision,
+                    minor_firmware_revision);
 
+  /* HLiebig: major_sdrr_revision listed incorrectly as BCD in doc */
   if (isalnum (major_sdrr_revision_char))
     pstdout_printf (state_data->pstate,
-                    "SDRR Revision    : %c%02X.%02X\n",
-                    major_sdrr_revision_char,
+                    "SDRR Revision     : %u.%02X%c\n",
                     major_sdrr_revision,
-                    minor_sdrr_revision);
+                    minor_sdrr_revision,
+                    major_sdrr_revision_char);
   else
     pstdout_printf (state_data->pstate,
-                    "SDRR Revision    : %02X.%02X\n",
+                    "SDRR Revision     : %u.%02X\n",
                     major_sdrr_revision,
                     minor_sdrr_revision);
 
+  /* HLiebig: sdrr_id listed incorrectly as binary in doc */
   pstdout_printf (state_data->pstate,
-                  "SDRR ID          : %u\n",
+                  "SDRR ID           : %X\n",
                   sdrr_id);
 
+  /* HLiebig: minor_booter_revision listed incorrectly as BCD in doc */
   pstdout_printf (state_data->pstate,
-                  "Booter Revision  : %u.%02X.%u.%u\n",
-                  major_booter_revision,
-                  minor_booter_revision,
+                  "Booter Revision   : %u.%02u (%u.%02u)\n",
                   aux_booter_revision_major,
-                  aux_booter_revision_minor);
+                  aux_booter_revision_minor,
+                  major_booter_revision,
+                  minor_booter_revision);
   rv = 0;
  cleanup:
   return (rv);
