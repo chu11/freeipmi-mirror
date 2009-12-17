@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-dcmi.c,v 1.9 2009-12-16 23:35:50 chu11 Exp $
+ *  $Id: ipmi-dcmi.c,v 1.10 2009-12-17 18:49:26 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2009 Lawrence Livermore National Security, LLC.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1236,6 +1236,7 @@ _get_power_limit (ipmi_dcmi_state_data_t *state_data,
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
+  int no_set_power_limit_error_flag = 0;
   int rv = -1;
 
   assert (state_data);
@@ -1255,22 +1256,32 @@ _get_power_limit (ipmi_dcmi_state_data_t *state_data,
       goto cleanup;
     }
 
+  /* IPMI Workaround/Interpretation
+   *
+   * The DCMI spec indicates a potential completion code for the "Get
+   * Power Limit" command as "No Set Power Limit" (0x80).  FreeIPMI
+   * interpreted this to mean the "Set Power Limit" command was not
+   * available.  Atleast one vendor interpreted this to mean "No Power
+   * Limit Set".  One can consider this an English interpretation
+   * issue of 'No set *POWER LIMIT*' vs. 'No *SET POWER LIMIT*'
+   * (i.e. is "set" a noun or a verb here).  Confounding this issue is
+   * the fact that the example implementation in Intel's DCMItool
+   * implements the former, while the DCMI Conformance test suite
+   * implements the later.  In addition to this, with the later
+   * interpretation, it need not be an indication of an error, but
+   * rather a flag.  So the rest of the packet can be completely full
+   * of legitimate data.
+   *
+   * So how do we handle this?
+   *
+   * If we hit "No Set Power Limit", try to read data.  If we can't
+   * read data (b/c it's not set), fail out, but preserve the "No Set
+   * Power Limit" error message.
+   */
+
   if (ipmi_cmd_dcmi_get_power_limit (state_data->ipmi_ctx,
                                      obj_cmd_rs) < 0)
     {
-      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
-          && ipmi_check_completion_code (obj_cmd_rs,
-                                         IPMI_COMP_CODE_DCMI_NO_SET_POWER_LIMIT) == 1)
-        snprintf (errorbuf,
-                  errorbuflen,
-                  "ipmi_cmd_dcmi_get_power_limit: %s",
-                  IPMI_COMP_CODE_DCMI_NO_SET_POWER_LIMIT_STR);
-      else
-        snprintf (errorbuf,
-                  errorbuflen,
-                  "ipmi_cmd_dcmi_get_power_limit: %s",
-                  ipmi_ctx_errormsg (state_data->ipmi_ctx));
-
       if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
           && comp_code)
         {
@@ -1286,17 +1297,38 @@ _get_power_limit (ipmi_dcmi_state_data_t *state_data,
           (*comp_code) = val;
         }
       
+      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+          && ipmi_check_completion_code (obj_cmd_rs,
+                                         IPMI_COMP_CODE_DCMI_NO_SET_POWER_LIMIT) == 1)
+        {
+          snprintf (errorbuf,
+                    errorbuflen,
+                    "ipmi_cmd_dcmi_get_power_limit: %s",
+                    IPMI_COMP_CODE_DCMI_NO_SET_POWER_LIMIT_STR);
+          no_set_power_limit_error_flag++;
+          goto read_data;
+        }
+      else
+        snprintf (errorbuf,
+                  errorbuflen,
+                  "ipmi_cmd_dcmi_get_power_limit: %s",
+                  ipmi_ctx_errormsg (state_data->ipmi_ctx));
+
       goto cleanup;
     }
+
+ read_data:
 
   if (FIID_OBJ_GET (obj_cmd_rs,
                     "exception_actions",
                     &val) < 0)
     {
-      snprintf (errorbuf,
-                errorbuflen,
-                "fiid_obj_get: 'exception_actions': %s",
-                fiid_obj_errormsg (obj_cmd_rs));
+      if (!no_set_power_limit_error_flag
+          || fiid_obj_errnum (obj_cmd_rs) != FIID_ERR_DATA_NOT_AVAILABLE)
+        snprintf (errorbuf,
+                  errorbuflen,
+                  "fiid_obj_get: 'exception_actions': %s",
+                  fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
   (*exception_actions) = val;
@@ -1305,10 +1337,12 @@ _get_power_limit (ipmi_dcmi_state_data_t *state_data,
                     "power_limit_requested",
                     &val) < 0)
     {
-      snprintf (errorbuf,
-                errorbuflen,
-                "fiid_obj_get: 'power_limit_requested': %s",
-                fiid_obj_errormsg (obj_cmd_rs));
+      if (!no_set_power_limit_error_flag
+          || fiid_obj_errnum (obj_cmd_rs) != FIID_ERR_DATA_NOT_AVAILABLE)
+        snprintf (errorbuf,
+                  errorbuflen,
+                  "fiid_obj_get: 'power_limit_requested': %s",
+                  fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
   (*power_limit_requested) = val;
@@ -1317,10 +1351,12 @@ _get_power_limit (ipmi_dcmi_state_data_t *state_data,
                     "correction_time_limit",
                     &val) < 0)
     {
-      snprintf (errorbuf,
-                errorbuflen,
-                "fiid_obj_get: 'correction_time_limit': %s",
-                fiid_obj_errormsg (obj_cmd_rs));
+      if (!no_set_power_limit_error_flag
+          || fiid_obj_errnum (obj_cmd_rs) != FIID_ERR_DATA_NOT_AVAILABLE)
+        snprintf (errorbuf,
+                  errorbuflen,
+                  "fiid_obj_get: 'correction_time_limit': %s",
+                  fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
   (*correction_time_limit) = val;
@@ -1329,10 +1365,12 @@ _get_power_limit (ipmi_dcmi_state_data_t *state_data,
                     "management_application_statistics_sampling_period",
                     &val) < 0)
     {
-      snprintf (errorbuf,
-                errorbuflen,
-                "fiid_obj_get: 'management_application_statistics_sampling_period': %s",
-                fiid_obj_errormsg (obj_cmd_rs));
+      if (!no_set_power_limit_error_flag
+          || fiid_obj_errnum (obj_cmd_rs) != FIID_ERR_DATA_NOT_AVAILABLE)
+        snprintf (errorbuf,
+                  errorbuflen,
+                  "fiid_obj_get: 'management_application_statistics_sampling_period': %s",
+                  fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
   (*management_application_statistics_sampling_period) = val;
@@ -1442,24 +1480,31 @@ set_power_limit (ipmi_dcmi_state_data_t *state_data)
     {
       /* IPMI Workaround/Interpretation
        *
-       * The DCMI spec indicates a potential completion code for the
-       * "Get Power Limit" command as "No Set Power Limit" (0x80).
-       * FreeIPMI interpreted this to mean the "Set Power Limit"
-       * command was not available.  The vendor interpreted this to
-       * mean "No Power Limit Set".  One can consider this an English
-       * interpretation issue of 'No set *POWER LIMIT*' vs. 'No *SET
-       * POWER LIMIT*' (i.e. is "set" a noun or a verb here).
-       * Confounding this issue is the fact that the DCMI Conformance
-       * test suite acts differently than the example implementation
-       * in Intel's DCMItool.
+       * The DCMI spec indicates a potential completion code for the "Get
+       * Power Limit" command as "No Set Power Limit" (0x80).  FreeIPMI
+       * interpreted this to mean the "Set Power Limit" command was not
+       * available.  Atleast one vendor interpreted this to mean "No Power
+       * Limit Set".  One can consider this an English interpretation
+       * issue of 'No set *POWER LIMIT*' vs. 'No *SET POWER LIMIT*'
+       * (i.e. is "set" a noun or a verb here).  Confounding this issue is
+       * the fact that the example implementation in Intel's DCMItool
+       * implements the former, while the DCMI Conformance test suite
+       * implements the later.  In addition to this, with the later
+       * interpretation, it need not be an indication of an error, but
+       * rather a flag.  So the rest of the packet can be completely full
+       * of legitimate data.
        * 
        * So we will do the following.
        *
-       * If the "No Set Power Limit" completion code is returned,
-       * obviously, we won't have values from "Get Power Limit" and
-       * won't know how to do the configuration properly in "Set Power
-       * Limit".  So we will require that the user input all fields
-       * for "Set Power Limit".
+       * If the "No Set Power Limit" completion code is returned and 
+       * we were able to read all of the fields, _get_power_limit() will
+       * return normally and this error fallthrough won't occur.
+       *
+       * If the "No Set Power Limit", completion code is returned and
+       * we were *not* able to read all of the fields, we won't have
+       * values from "Get Power Limit" and won't know how to do the
+       * configuration properly in "Set Power Limit".  So we will
+       * require that the user input all fields for "Set Power Limit".
        */
       if (comp_code == IPMI_COMP_CODE_DCMI_NO_SET_POWER_LIMIT)
         {
