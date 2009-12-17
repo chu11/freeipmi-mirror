@@ -1,3 +1,8 @@
+2009-12-17  Holger Liebig <holger.liebig@ts.fujitsu.com>
+
+	* ipmi-oem/src/ipmi-oem-fujitsu.c: Correct ambiguities from the
+	official documentation.
+
 2009-12-17  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-dcmi/src/ipmi-dcmi.c (_get_power_limit, set_power_limit):
