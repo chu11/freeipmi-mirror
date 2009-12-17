@@ -192,10 +192,21 @@ In order to remotely connect to a machine, you typically must specify
 the host, username, and password for the tool in order to connect.
 Depending on configuration settings, a K_g key, privilege level,
 authentication type, cipher suite id, or protocol version may need to
-be specified.  Some vendors may have not implemented IPMI properly and
-a vendor specific workaround may also be necessary.  See tool manpages
-for more information, examples, and general trouble-shooting
-information.
+be specified.
+
+.PP
+Some vendors may have not implemented IPMI properly and a workaround
+must be specified into FreeIPMI to ensure the tool can execute
+properly.  For example, a fair number of vendors have populated their
+FRU records with invalid checksums.  To properly ignore these set of
+checksums a \fIskipchecks\fR workaround has been added to
+.B ipmi-fru(8).
+Please see each of the tool manpages to see a list of available
+workarounds.
+
+.PP
+Additionl information, examples, and general trouble-shooting can be
+found in each of the tool manpages.
 
 .SH "Configuration"
 In order to avoid typing in a long list of command line options to

@@ -11,4 +11,5 @@ specify a workaround be used via the -W option.
 The hardware listed below may only indicate the hardware that a
 problem was discovered on.  Newer versions of hardware may fix the
 problems indicated below.  Similar machines from vendors may or may
-not exhibit the same problems.
+not exhibit the same problems.  If FreeIPMI is not working by default,
+it may be worth trying one or more workarounds to see if they help.
