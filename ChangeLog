@@ -1,5 +1,10 @@
 2009-12-17  Albert Chu <chu11@llnl.gov>
 
+	* ipmi-dcmi/src/ipmi-dcmi.c (_get_power_limit, set_power_limit):
+	Implement workaround to deal w/ DCMI interpretation issue.
+	
+2009-12-17  Albert Chu <chu11@llnl.gov>
+
 	* man/freeipmi.7.pre.in,
 	common/man/manpage-common-workaround-heading-text.man, README: Add
 	some workaround information.

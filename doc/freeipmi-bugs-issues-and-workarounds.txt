@@ -583,8 +583,11 @@ Limit Set".  One can consider this an English interpretation issue of
 'No set *POWER LIMIT*' vs. 'No *SET POWER LIMIT*' (i.e. is "set" a
 noun or a verb here).  Confounding this issue is the fact that the
 example implementation in Intel's DCMItool implements the former,
-while the DCMI Conformance test suite implements the later.  Resolved
-by handling both interpretations.  [INTERPRETATION]
+while the DCMI Conformance test suite implements the later.  In
+addition to this, with the later interpretation, it need not be an
+indication of an error, but rather a flag.  So the rest of the packet
+can be completely full of legitimate data.  Resolved by handling both
+interpretations.  [INTERPRETATION]
 
 Appendix
 --------
