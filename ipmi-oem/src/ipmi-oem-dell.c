@@ -3323,9 +3323,13 @@ ipmi_oem_dell_reset_power_consumption_data (ipmi_oem_state_data_t *state_data)
   assert (state_data);
   assert (state_data->prog_data->args->oem_options_count == 1);
 
+  /* achu: XXX
+   *
+   * "both" or "all" byte doesn't appear to work, maybe in a later
+   * firmware release?
+   */
   if (strcasecmp (state_data->prog_data->args->oem_options[0], "cumulative")
-      && strcasecmp (state_data->prog_data->args->oem_options[0], "peak")
-      && strcasecmp (state_data->prog_data->args->oem_options[0], "all"))
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "peak"))
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -3347,7 +3351,7 @@ ipmi_oem_dell_reset_power_consumption_data (ipmi_oem_state_data_t *state_data)
    * 0x9d - OEM cmd
    * 0x07 - Entity ID
    * 0x01 - Entity Instance
-   * 0x?? - field to clear (0x1 = cumulative, 0x2 = peak)
+   * 0x?? - field to clear (0x1 = cumulative, 0x2 = peak, 0x4 = all/both)
    * 
    * Response
    *

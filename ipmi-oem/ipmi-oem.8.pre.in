@@ -187,8 +187,8 @@ This OEM command can retrieve power consumption data.  Command
 confirmed to work on Dell Poweredge R610 and R710 (Dell 11G Poweredge
 systems).
 .TP
-.B reset-power-consumption-data \fIcumulative|peak|all\fI
-This OEM command can reset the cumulative and/or peak power consumption
+.B reset-power-consumption-data \fIcumulative|peak\fI
+This OEM command can reset the cumulative or peak power consumption
 data (viewed via \fBget\-power\-consumption\-data\fR).  Command
 confirmed to work on Dell Poweredge R610 and R710 (Dell 11G Poweredge
 systems).
