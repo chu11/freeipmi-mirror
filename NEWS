@@ -15,6 +15,11 @@ o In ipmi-dcmi, fix command line parsing of
 o Support --interpret-oem-data option in ipmi-dcmi.
 o In ipmi-oem, fix various Fujitsu ambiguities from the official
   documentation.
+o In ipmi-oem, fix various Dell options and output given Dell docs
+  (backwards compatability maintained on options).
+  - Dell get-power-info is now get-power-consumption-data
+  - Dell reset-power-info is now reset-power-consumption-data
+  - Support "all" option to reset-power-consumption-data
 o Fix --eliminate corner case when elimination of nodes leads to 0
   hosts specified.
 o Report proper error message when underlying crypt library is

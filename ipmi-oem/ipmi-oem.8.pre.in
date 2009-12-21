@@ -182,14 +182,16 @@ values.  The command will spin until the reset is confirmed to be
 complete.  Command confirmed to work on Dell Poweredge R610 and R710
 (Dell 11G Poweredge systems).
 .TP
-.B get-power-info
-This OEM command can retrieve power information.  Command confirmed to
-work on Dell Poweredge R610 and R710 (Dell 11G Poweredge systems).
+.B get-power-consumption-data
+This OEM command can retrieve power consumption data.  Command
+confirmed to work on Dell Poweredge R610 and R710 (Dell 11G Poweredge
+systems).
 .TP
-.B reset-power-info \fIcumulative|peak\fI
-This OEM command can reset the cumulative or peak power information
-readings (viewed via \fBget\-power\-info\fR).  Command confirmed to
-work on Dell Poweredge R610 and R710 (Dell 11G Poweredge systems).
+.B reset-power-consumption-data \fIcumulative|peak|all\fI
+This OEM command can reset the cumulative and/or peak power consumption
+data (viewed via \fBget\-power\-consumption\-data\fR).  Command
+confirmed to work on Dell Poweredge R610 and R710 (Dell 11G Poweredge
+systems).
 .TP
 .B get-power-supply-info
 This OEM command can read and output power supply ratings and other

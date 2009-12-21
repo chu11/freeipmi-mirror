@@ -40,9 +40,9 @@ int ipmi_oem_dell_set_active_directory_config (ipmi_oem_state_data_t *state_data
 
 int ipmi_oem_dell_reset_to_defaults (ipmi_oem_state_data_t *state_data);
 
-int ipmi_oem_dell_get_power_info (ipmi_oem_state_data_t *state_data);
+int ipmi_oem_dell_get_power_consumption_data (ipmi_oem_state_data_t *state_data);
 
-int ipmi_oem_dell_reset_power_info (ipmi_oem_state_data_t *state_data);
+int ipmi_oem_dell_reset_power_consumption_data (ipmi_oem_state_data_t *state_data);
 
 int ipmi_oem_dell_get_power_supply_info (ipmi_oem_state_data_t *state_data);
 
