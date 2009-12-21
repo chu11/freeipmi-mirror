@@ -220,17 +220,26 @@ struct ipmi_oem_command oem_dell[] =
       ipmi_oem_dell_get_power_headroom_info
     },
     {
+      "get-power-consumption-statistics",
+      "<average|max|min>",
+      1,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_dell_get_power_consumption_statistics
+    },
+    /* legacy */
+    {
       "get-average-power-history",
       NULL,
       0,
-      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      IPMI_OEM_COMMAND_FLAGS_HIDDEN,
       ipmi_oem_dell_get_average_power_history
     },
+    /* legacy */
     {
       "get-peak-power-history",
       NULL,
       0,
-      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      IPMI_OEM_COMMAND_FLAGS_HIDDEN,
       ipmi_oem_dell_get_peak_power_history
     },
     {

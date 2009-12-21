@@ -211,14 +211,10 @@ This OEM command can read power headroom information.  Command
 confirmed to work on Dell Poweredge R610 and R710 (Dell 11G Poweredge
 systems).
 .TP
-.B get-average-power-history
-This OEM command can read average power usage history.  Command
-confirmed to work on Dell Poweredge R610 and R710 (Dell 11G Poweredge
-systems).
-.TP
-.B get-peak-power-history
-This OEM command can read peak power usage history.  Command confirmed
-to work on Dell Poweredge R610 and R710 (Dell 11G Poweredge systems).
+.B get-power-consumption-statistics \fIaverage|max|min\fR
+This OEM command can read average, max, or min power consumption
+history.  Command confirmed to work on Dell Poweredge R610 and R710
+(Dell 11G Poweredge systems).
 .TP
 .B get-power-capacity
 This OEM command can read the current power capacity.  Command
