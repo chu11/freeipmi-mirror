@@ -73,9 +73,9 @@ may be passed to any OEM ID to list commands supported by that OEM ID.
 .B Dell
 .RS
 .TP
-.B get-system-info \fIasset\-tag|service\-tag|product\-name|mac\-addresses\fR
+.B get-system-info \fIasset\-tag|service\-tag|platform\-model\-name|mac\-addresses\fR
 This OEM command can retrieve the motherboard asset tag, service tag,
-product name, or mac addresses.  Command confirmed to work on Dell
+platform model name, or mac addresses.  Command confirmed to work on Dell
 Poweredge 2900, 2950, R610, and R710 (Dell 10G and 11G Poweredge
 systems).  However, specific system information may not be readable or
 available on all systems.

@@ -3,6 +3,9 @@
 	* libfreeipmi/include/freeipmi/spec/ipmi-cmd-oem-spec.h: Update
 	appropriately w/ Dell docs given.
 
+	* libfreeipmi/include/freeipmi/spec/ipmi-system-info-parameter-oem-spec.h:
+	Update appropriately w/ Dell docs given.
+
 	* ipmi-oem/: Update commands, output, comments, etc. w/ Dell docs
 	given.
 	

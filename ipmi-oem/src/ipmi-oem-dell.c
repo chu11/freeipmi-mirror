@@ -69,9 +69,17 @@
 /* 256 b/c length is 8 bit field */
 #define IPMI_OEM_DELL_MAX_BYTES 256
 
-#define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_TYPE_10G            0x08
-#define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_TYPE_11G_MONOLITHIC 0x0A
-#define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_TYPE_11G_MODULAR    0x0B
+#define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IP_ADDRESS_FORMAT_IPV4 0x00
+#define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IP_ADDRESS_FORMAT_IPV6 0x01
+
+#define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IP_ADDRESS_CONFIG_DHCP   0x00
+#define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IP_ADDRESS_CONFIG_STATIC 0x01
+
+#define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_10G            0x08
+#define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_CMC            0x09
+#define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_11G_MONOLITHIC 0x0A
+#define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_11G_MODULAR    0x0B
+#define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_MASER_LITE_BMC 0x0D
 
 #define IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_TYPE_BITMASK 0x30
 #define IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_TYPE_SHIFT   4
@@ -528,24 +536,31 @@ _get_dell_system_info_idrac_info (ipmi_oem_state_data_t *state_data,
    *
    * Uses Get System Info command
    *
-   * iDRAC Validator Parameter = 0xDD
-   * iDRAC Validator Set Selector = 0x02
+   * iDRAC Info Parameter = 0xDD
+   * iDRAC Info Set Selector = ... see below ...
    *
    * Parameter data response formatted:
    *
-   * 1st byte = ??
-   * 2nd byte = ??
-   * 3rd byte = ??
-   * 4th byte = ??
-   * 5th byte = ??
-   * 6th byte = ??
-   * 7th byte = ??
-   * 8th byte = ??
-   * 9th byte = ??
-   * 10th byte = iDRAC type
-   * - 0x08 = iDRAC 10g
-   * - 0x0A = iDRAC 11g monolithic
-   * - 0x0B = iDRAC 11g modular
+   * 1st byte - string type
+   * 2nd byte - string length
+   * 3rd byte - IP address format
+   * - 0x00 - IPv4
+   * - 0x01 - IPv6
+   * 4th byte - DHCP or static
+   * - 0x00 - dhcp
+   * - 0x00 - static
+   * bytes 5-20 - IP address
+   * bytes 21-40 - IDRAC firmware version
+   * byte 41 - idrac type
+   * - 0x08 - 10G
+   * - 0x09 - CMC
+   * - 0x0A - 11G monolithic
+   * - 0x0B - 11g modular
+   * - 0x0D - maser lite
+   *
+   * set selector 0 = bytes 1-16
+   * set selector 1 = bytes 17-32
+   * set selector 2 = bytes 33-41
    */
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_system_info_parameters_rs)))
@@ -556,10 +571,11 @@ _get_dell_system_info_idrac_info (ipmi_oem_state_data_t *state_data,
                        strerror (errno));
       goto cleanup;
     }
-
+  
+  /* Do set selector 2, we only care about the idrac type */
   if (ipmi_cmd_get_system_info_parameters (state_data->ipmi_ctx,
                                            IPMI_GET_SYSTEM_INFO_PARAMETER,
-                                           IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_IDRAC_VALIDATOR,
+                                           IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_IDRAC_INFO,
                                            0x02,
                                            IPMI_SYSTEM_INFO_NO_BLOCK_SELECTOR,
                                            obj_cmd_rs) < 0)
@@ -600,6 +616,7 @@ _get_dell_system_info_idrac_info (ipmi_oem_state_data_t *state_data,
       goto cleanup;
     }
 
+  /* idrac type in set selector 2 happens to be index 9 */
   (*idrac_type) = configuration_parameter_data[9];
 
   rv = 1;
@@ -856,9 +873,16 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
       && strcasecmp (state_data->prog_data->args->oem_options[0], "service-tag")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "service_tag")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "servicetag")
-      && strcasecmp (state_data->prog_data->args->oem_options[0], "product-name")
-      && strcasecmp (state_data->prog_data->args->oem_options[0], "product_name")
-      && strcasecmp (state_data->prog_data->args->oem_options[0], "productname")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "product-name") /* legacy */
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "product_name") /* legacy */
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "productname") /* legacy */
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "platform-model-name")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "platform-model_name")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "platform_model-name")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "platform_model_name")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "platform-modelname")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "platformmodel-name")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "platformmodelname")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "mac-addresses")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "mac_addresses")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "macaddresses"))
@@ -961,7 +985,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
       || !strcasecmp (state_data->prog_data->args->oem_options[0], "assettag"))
     {
       if (_get_dell_system_info_short_string (state_data,
-                                              IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_ASSET_TAG,
+                                              IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_SYSTEM_ASSET_TAG,
                                               string,
                                               IPMI_OEM_DELL_MAX_BYTES) < 0)
         goto cleanup;
@@ -975,7 +999,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
            || !strcasecmp (state_data->prog_data->args->oem_options[0], "servicetag"))
     {
       if (_get_dell_system_info_short_string (state_data,
-                                              IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_SERVICE_TAG,
+                                              IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_SYSTEM_SERVICE_TAG,
                                               string,
                                               IPMI_OEM_DELL_MAX_BYTES) < 0)
         goto cleanup;
@@ -984,12 +1008,19 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
 		      "%s\n",
 		      string);
     }
-  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "product-name")
-           || !strcasecmp (state_data->prog_data->args->oem_options[0], "product_name")
-           || !strcasecmp (state_data->prog_data->args->oem_options[0], "productname"))
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "product-name") /* legacy */
+           || !strcasecmp (state_data->prog_data->args->oem_options[0], "product_name") /* legacy */
+           || !strcasecmp (state_data->prog_data->args->oem_options[0], "productname") /* legacy */
+           || !strcasecmp (state_data->prog_data->args->oem_options[0], "platform-model-name")
+           || !strcasecmp (state_data->prog_data->args->oem_options[0], "platform-model_name")
+           || !strcasecmp (state_data->prog_data->args->oem_options[0], "platform_model-name")
+           || !strcasecmp (state_data->prog_data->args->oem_options[0], "platform_model_name")
+           || !strcasecmp (state_data->prog_data->args->oem_options[0], "platform-modelname")
+           || !strcasecmp (state_data->prog_data->args->oem_options[0], "platformmodel-name")
+           || !strcasecmp (state_data->prog_data->args->oem_options[0], "platformmodelname"))
     {
       if (_get_dell_system_info_long_string (state_data,
-                                             IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_PRODUCT_NAME,
+                                             IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_PLATFORM_MODEL_NAME,
                                              string,
                                              IPMI_OEM_DELL_MAX_BYTES) < 0)
         goto cleanup;
@@ -1012,14 +1043,14 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
       if (ret)
 	{
 	  /* iDRAC 10g */
-	  if (idrac_type == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_TYPE_10G)
+	  if (idrac_type == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_10G)
 	    {
 	      if (_get_dell_system_info_10g_mac_addresses (state_data) < 0)
 		goto cleanup;
 	    }
 	  /* iDRAC 11g */
-	  else if (idrac_type == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_TYPE_11G_MONOLITHIC
-		   || idrac_type == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_TYPE_11G_MODULAR)
+	  else if (idrac_type == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_11G_MONOLITHIC
+		   || idrac_type == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_11G_MODULAR)
 	    {
 	      if (_get_dell_system_info_11g_mac_addresses (state_data) < 0)
 		goto cleanup;
@@ -3854,7 +3885,7 @@ ipmi_oem_dell_get_average_power_history (ipmi_oem_state_data_t *state_data)
 
   if (ipmi_cmd_get_system_info_parameters (state_data->ipmi_ctx,
                                            IPMI_GET_SYSTEM_INFO_PARAMETER,
-                                           IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_AVERAGE_POWER_HISTORY,
+                                           IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_AVERAGE_POWER_CONSUMPTION_STATISTICS,
                                            0,
                                            IPMI_SYSTEM_INFO_NO_BLOCK_SELECTOR,
                                            obj_cmd_rs) < 0)
@@ -3974,7 +4005,7 @@ ipmi_oem_dell_get_peak_power_history (ipmi_oem_state_data_t *state_data)
 
   if (ipmi_cmd_get_system_info_parameters (state_data->ipmi_ctx,
                                            IPMI_GET_SYSTEM_INFO_PARAMETER,
-                                           IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_PEAK_POWER_HISTORY,
+                                           IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_MAX_POWER_CONSUMPTION_STATISTICS,
                                            0,
                                            IPMI_SYSTEM_INFO_NO_BLOCK_SELECTOR,
                                            obj_cmd_rs) < 0)
