@@ -17,6 +17,8 @@ o In ipmi-oem, fix various Fujitsu ambiguities from the official
   documentation.
 o In ipmi-oem, fix various Dell options and output given Dell docs
   (backwards compatability maintained on options).
+  - Rename 'product-name' to 'platform-model-name' for Dell
+    get-system-info.
   - Dell get-power-info is now get-power-consumption-data
   - Dell reset-power-info is now reset-power-consumption-data
   - Support "all" option to reset-power-consumption-data
