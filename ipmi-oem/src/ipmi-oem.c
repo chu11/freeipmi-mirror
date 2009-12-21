@@ -70,7 +70,7 @@ struct ipmi_oem_command oem_dell[] =
   {
     {
       "get-system-info",
-      "<asset-tag|service-tag|product-name|mac-addresses>",
+      "<asset-tag|service-tag|platform-model-name|mac-addresses>",
       1,
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_dell_get_system_info
@@ -200,14 +200,14 @@ struct ipmi_oem_command oem_dell[] =
     /* legacy */
     {
       "get-instantaneous-power-consumption-info",
-      NULL,
+      "[power_supply_instance]",
       0,
       IPMI_OEM_COMMAND_FLAGS_HIDDEN | IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
       ipmi_oem_dell_get_instantaneous_power_consumption_data
     },
     {
       "get-instantaneous-power-consumption-data",
-      NULL,
+      "[power_supply_instance]",
       0,
       IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
       ipmi_oem_dell_get_instantaneous_power_consumption_data
