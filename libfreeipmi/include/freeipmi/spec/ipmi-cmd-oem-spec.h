@@ -39,17 +39,19 @@ extern "C" {
 
 /* IPMI_NET_FN_OEM_DELL_GENERIC_RQ / IPMI_NET_FN_OEM_DELL_GENERIC_RS */
 /* achu: names taken from code, are correct names? */
-#define IPMI_CMD_OEM_DELL_RESET_TO_DEFAULTS                        0x21
-#define IPMI_CMD_OEM_DELL_SET_NIC_SELECTION                        0x24
-#define IPMI_CMD_OEM_DELL_GET_NIC_SELECTION                        0x25
-#define IPMI_CMD_OEM_DELL_QUERY_CHASSIS_IDENTIFY_STATUS            0x32
-#define IPMI_CMD_OEM_DELL_GET_CPLD_VERSION                         0x33
-#define IPMI_CMD_OEM_DELL_GET_POWER_CONSUMPTION_DATA               0x9C
-#define IPMI_CMD_OEM_DELL_RESET_POWER_CONSUMPTION_DATA             0x9D
-#define IPMI_CMD_OEM_DELL_GET_POWER_SUPPLY_INFO                    0xB0
-#define IPMI_CMD_OEM_DELL_GET_INSTANTANEOUS_POWER_CONSUMPTION_INFO 0xB3
-#define IPMI_CMD_OEM_DELL_GET_POWER_HEADROOM_INFO                  0xBB
-#define IPMI_CMD_OEM_DELL_POWER_CAPACITY_STATUS                    0xBA
+#define IPMI_CMD_OEM_DELL_RESET_TO_DEFAULTS                                    0x21
+#define IPMI_CMD_OEM_DELL_SET_NIC_SELECTION                                    0x24
+#define IPMI_CMD_OEM_DELL_GET_NIC_SELECTION                                    0x25
+#define IPMI_CMD_OEM_DELL_QUERY_CHASSIS_IDENTIFY_STATUS                        0x32
+#define IPMI_CMD_OEM_DELL_GET_CPLD_VERSION                                     0x33
+#define IPMI_CMD_OEM_DELL_GET_POWER_CONSUMPTION_DATA                           0x9C
+#define IPMI_CMD_OEM_DELL_RESET_POWER_CONSUMPTION_DATA                         0x9D
+#define IPMI_CMD_OEM_DELL_POWER_SUPPLY_INFO                                    0xB0
+#define IPMI_CMD_OEM_DELL_POWER_MONITORING_OVER_A_SPECIFIED_AVERAGING_INTERVAL 0xB1
+#define IPMI_CMD_OEM_DELL_POWER_MONITORING_AVERAGING_INTERVAL_RANGE            0xB2
+#define IPMI_CMD_OEM_DELL_POWER_CONSUMPTION                                    0xB3
+#define IPMI_CMD_OEM_DELL_GET_POWER_HEADROOM_INFO                              0xBB
+#define IPMI_CMD_OEM_DELL_POWER_CAPACITY_STATUS                                0xBA
 
 /*
  * Dell Xanadu2

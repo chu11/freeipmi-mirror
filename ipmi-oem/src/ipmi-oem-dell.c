@@ -217,6 +217,8 @@
 #define IPMI_OEM_DELL_POWER_SUPPLY_INFO_AC 0x00
 #define IPMI_OEM_DELL_POWER_SUPPLY_INFO_DC 0x01
 
+#define IPMI_OEM_DELL_POWER_CONSUMPTION_ENTITY_INSTANCE_ALL 0x00
+
 #define IPMI_OEM_DELL_POWER_CAPACITY_UNITS_WATTS   0x00
 #define IPMI_OEM_DELL_POWER_CAPACITY_UNITS_BTUPHR  0x01
 #define IPMI_OEM_DELL_POWER_CAPACITY_UNITS_PERCENT 0x03
@@ -3164,7 +3166,7 @@ ipmi_oem_dell_get_power_consumption_data (ipmi_oem_state_data_t *state_data)
    * 0x9c - OEM cmd
    * 0x?? - Completion Code
    * bytes 2-5 - cumulative start time
-   * bytes 6-9 - cumulative reading
+   * bytes 6-9 - cumulative reading (in WH)
    * bytes 10-13 - peak start time
    * bytes 14-17 - peak amp time
    * bytes 18-21 - peak amp reading
@@ -3363,7 +3365,7 @@ ipmi_oem_dell_reset_power_consumption_data (ipmi_oem_state_data_t *state_data)
 }
 
 int
-ipmi_oem_dell_get_power_supply_info (ipmi_oem_state_data_t *state_data)
+ipmi_oem_dell_power_supply_info (ipmi_oem_state_data_t *state_data)
 {
   struct sensor_entity_id_counts entity_id_counts;
   uint16_t record_count;
@@ -3399,7 +3401,7 @@ ipmi_oem_dell_get_power_supply_info (ipmi_oem_state_data_t *state_data)
 
   /* Dell Poweredge OEM
    *
-   * Get Power Supply Info Request
+   * Power Supply Info Request
    * From Dell Provided Docs
    *
    * 0x30 - OEM network function
@@ -3412,15 +3414,17 @@ ipmi_oem_dell_get_power_supply_info (ipmi_oem_state_data_t *state_data)
    * 0xB0 - OEM cmd
    * 0x?? - Completion Code
    * bytes 2-3 - rated watts
-   * bytes 4-5 - rated amps
+   * bytes 4-5 - rated amps (in 0.1 amps)
    * bytes 6-7 - rated volts
-   * bytes 8-11 - vendor ID (internal for Dell)
+   * bytes 8-11 - component ID (internal for Dell)
    * bytes 12-19 - firmware version (string, non-null terminated)
    * bytes 20 - power supply type
    * - 0x00 - AC
    * - 0x01 - DC
    * bytes 21-22 - rated dc watts
-   * bytes 23-24 - reserved
+   * bytes 23 - online status
+   * - maps to power supply sensor events
+   * bytes 24 - reserved
    */
 
   for (i = 0; i < record_count; i++, ipmi_sdr_cache_next (state_data->sdr_cache_ctx))
@@ -3498,10 +3502,11 @@ ipmi_oem_dell_get_power_supply_info (ipmi_oem_state_data_t *state_data)
 	      uint16_t ratedwatts;
 	      uint16_t ratedamps;
 	      uint16_t ratedvolts;
-	      uint32_t vendorid;
+	      uint32_t componentid;
 	      char firmwareversion[IPMI_OEM_MAX_BYTES];
 	      uint8_t powersupplytype;
 	      uint16_t rateddcwatts;
+              uint8_t onlinestatus;
 	      double ratedamps_val;
 	      char sensor_name_buf[MAX_ENTITY_ID_SENSOR_NAME_STRING + 1];
 	      
@@ -3523,7 +3528,7 @@ ipmi_oem_dell_get_power_supply_info (ipmi_oem_state_data_t *state_data)
 						 MAX_ENTITY_ID_SENSOR_NAME_STRING) < 0)
 		goto cleanup;
 	      
-	      bytes_rq[0] = IPMI_CMD_OEM_DELL_GET_POWER_SUPPLY_INFO;
+	      bytes_rq[0] = IPMI_CMD_OEM_DELL_POWER_SUPPLY_INFO;
 	      bytes_rq[1] = entity_id;
 	      bytes_rq[2] = entity_instance;
 	      
@@ -3546,7 +3551,7 @@ ipmi_oem_dell_get_power_supply_info (ipmi_oem_state_data_t *state_data)
 							       bytes_rs,
 							       rs_len,
 							       25,
-							       IPMI_CMD_OEM_DELL_GET_POWER_SUPPLY_INFO,
+							       IPMI_CMD_OEM_DELL_POWER_SUPPLY_INFO,
 							       IPMI_NET_FN_OEM_DELL_GENERIC_RS,
                                                                NULL) < 0)
 		goto cleanup;
@@ -3560,10 +3565,10 @@ ipmi_oem_dell_get_power_supply_info (ipmi_oem_state_data_t *state_data)
 	      ratedvolts = bytes_rs[6];
 	      ratedvolts |= (bytes_rs[7] << 8);
 	      
-	      vendorid = bytes_rs[8];
-	      vendorid |= (bytes_rs[9] << 8);
-	      vendorid |= (bytes_rs[10] << 16);
-	      vendorid |= (bytes_rs[11] << 24);
+	      componentid = bytes_rs[8];
+	      componentid |= (bytes_rs[9] << 8);
+	      componentid |= (bytes_rs[10] << 16);
+	      componentid |= (bytes_rs[11] << 24);
 	      
 	      memcpy(firmwareversion, &(bytes_rs[12]), 8);
 	      
@@ -3571,41 +3576,52 @@ ipmi_oem_dell_get_power_supply_info (ipmi_oem_state_data_t *state_data)
 	      
 	      rateddcwatts = bytes_rs[21];
 	      rateddcwatts |= (bytes_rs[22] << 8);
+
+              onlinestatus = bytes_rs[23];
 	      
 	      pstdout_printf (state_data->pstate,
-			      "Power Supply        : %s\n",
+			      "Power Supply      : %s\n",
 			      sensor_name_buf);
 
 	      pstdout_printf (state_data->pstate,
-			      "Rated Input Wattage : %u W\n",
+			      "Rated Watts       : %u W\n",
 			      ratedwatts);
-	      
-	      pstdout_printf (state_data->pstate,
-			      "Rated Ouput Wattage : %u W\n",
-			      rateddcwatts);
 	      
 	      ratedamps_val = ((double)ratedamps) / 10.0;
 
 	      pstdout_printf (state_data->pstate,
-			      "Rated Amps          : %.2f A\n",
+			      "Rated Amps        : %.2f A\n",
 			      ratedamps_val);
-	      
+
 	      pstdout_printf (state_data->pstate,
-			      "Rated Volts         : %u V\n",
+			      "Rated Volts       : %u V\n",
 			      ratedvolts);
+
+	      pstdout_printf (state_data->pstate,
+			      "Rated DC Watts    : %u W\n",
+			      rateddcwatts);
 	      
 	      pstdout_printf (state_data->pstate,
-			      "Power Supply Type   : %s\n",
+			      "Power Supply Type : %s\n",
 			      (powersupplytype == IPMI_OEM_DELL_POWER_SUPPLY_INFO_DC) ? "DC" : "AC");
+              
+              if (onlinestatus <= ipmi_sensor_type_power_supply_max_index)
+                pstdout_printf (state_data->pstate,
+                                "Online Status     : %s\n",
+                                ipmi_sensor_type_power_supply[onlinestatus]);
+              else
+                pstdout_printf (state_data->pstate,
+                                "Online Status     : %02Xh\n",
+                                onlinestatus);
 	      
 	      pstdout_printf (state_data->pstate,
-			      "Firmare Version     : %s\n",
+			      "Firmare Version   : %s\n",
 			      firmwareversion);
 	      
-	      /* internal dell vendorid code */
+	      /* internal dell componentid code */
 	      pstdout_printf (state_data->pstate,
-			      "Dell VendorID       : %u\n",
-			      vendorid);
+			      "Dell Componentid  : %u\n",
+			      componentid);
 
 	      pstdout_printf (state_data->pstate,
 			      "\n");
@@ -3619,19 +3635,18 @@ ipmi_oem_dell_get_power_supply_info (ipmi_oem_state_data_t *state_data)
 }
 
 int
-ipmi_oem_dell_get_instantaneous_power_consumption_info (ipmi_oem_state_data_t *state_data)
+ipmi_oem_dell_get_instantaneous_power_consumption_data (ipmi_oem_state_data_t *state_data)
 {
   uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
   uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
-  uint16_t instantaneous_power_consumption;
+  uint16_t instantaneous_power;
   uint16_t instantaneous_amps;
   double instantaneous_amps_val;
   int rs_len;
   int rv = -1;
 
   assert (state_data);
-  assert (!state_data->prog_data->args->oem_options_count);
-
+ 
   /* Dell Poweredge OEM
    *
    * From Dell Provided Source Code
@@ -3641,21 +3656,40 @@ ipmi_oem_dell_get_instantaneous_power_consumption_info (ipmi_oem_state_data_t *s
    *
    * 0x30 - OEM network function
    * 0xB3 - OEM cmd
-   * 0x0A - ??
-   * 0x00 - ??
+   * 0x0A - Entity ID
+   * 0x?? - Entity Instance
+   * - 0x00 - both/all power supplies
    * 
    * Response
    *
    * 0xB3 - OEM cmd
    * 0x?? - Completion Code
-   * bytes 2-3 - instantaneous power consumption
+   * bytes 2-3 - instantaneous power
    * bytes 4-5 - instantaneous amps
    * bytes 6-8 - reserved
    */
 
-  bytes_rq[0] = IPMI_CMD_OEM_DELL_GET_INSTANTANEOUS_POWER_CONSUMPTION_INFO;
-  bytes_rq[1] = 0x0A;
-  bytes_rq[2] = 0x00;
+  bytes_rq[0] = IPMI_CMD_OEM_DELL_POWER_CONSUMPTION;
+  bytes_rq[1] = IPMI_ENTITY_ID_POWER_SUPPLY;
+  if (!state_data->prog_data->args->oem_options_count)
+    bytes_rq[2] = IPMI_OEM_DELL_POWER_CONSUMPTION_ENTITY_INSTANCE_ALL;
+  else
+    {
+      char *ptr = NULL;
+
+      errno = 0;
+      bytes_rq[2] = strtoul (state_data->prog_data->args->oem_options[0], &ptr, 10);
+      if (errno || ptr[0] != '\0')
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "%s:%s invalid OEM option argument '%s'\n",
+                           state_data->prog_data->args->oem_id,
+                           state_data->prog_data->args->oem_command,
+                           state_data->prog_data->args->oem_options[0]);
+          goto cleanup;
+        }
+    }    
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
@@ -3676,13 +3710,13 @@ ipmi_oem_dell_get_instantaneous_power_consumption_info (ipmi_oem_state_data_t *s
                                                    bytes_rs,
                                                    rs_len,
                                                    9,
-                                                   IPMI_CMD_OEM_DELL_GET_INSTANTANEOUS_POWER_CONSUMPTION_INFO,
+                                                   IPMI_CMD_OEM_DELL_POWER_CONSUMPTION,
                                                    IPMI_NET_FN_OEM_DELL_GENERIC_RS,
                                                    NULL) < 0)
     goto cleanup;
 
-  instantaneous_power_consumption = bytes_rs[2];
-  instantaneous_power_consumption |= (bytes_rs[3] << 8);
+  instantaneous_power = bytes_rs[2];
+  instantaneous_power |= (bytes_rs[3] << 8);
 
   instantaneous_amps = bytes_rs[4];
   instantaneous_amps |= (bytes_rs[5] << 8);
@@ -3690,11 +3724,11 @@ ipmi_oem_dell_get_instantaneous_power_consumption_info (ipmi_oem_state_data_t *s
   instantaneous_amps_val = ((double)instantaneous_amps) / 10.0;
 
   pstdout_printf (state_data->pstate,
-		  "Instantaneous Power Consumption : %u W\n",
-		  instantaneous_power_consumption);
+		  "Instantaneous Power : %u W\n",
+		  instantaneous_power);
 
   pstdout_printf (state_data->pstate,
-		  "Instantaneous Amperage          : %.2f A\n",
+		  "Instantaneous Amps  : %.2f A\n",
 		  instantaneous_amps_val);
 
   rv = 0;
