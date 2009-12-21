@@ -182,19 +182,35 @@ struct ipmi_oem_command oem_dell[] =
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_dell_reset_power_consumption_data
     },
+    /* legacy */
     {
       "get-power-supply-info",
       NULL,
       0,
-      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
-      ipmi_oem_dell_get_power_supply_info
+      IPMI_OEM_COMMAND_FLAGS_HIDDEN,
+      ipmi_oem_dell_power_supply_info
     },
+    {
+      "power-supply-info",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_dell_power_supply_info
+    },
+    /* legacy */
     {
       "get-instantaneous-power-consumption-info",
       NULL,
       0,
-      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
-      ipmi_oem_dell_get_instantaneous_power_consumption_info
+      IPMI_OEM_COMMAND_FLAGS_HIDDEN | IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
+      ipmi_oem_dell_get_instantaneous_power_consumption_data
+    },
+    {
+      "get-instantaneous-power-consumption-data",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
+      ipmi_oem_dell_get_instantaneous_power_consumption_data
     },
     {
       "get-power-headroom-info",

@@ -20,6 +20,11 @@ o In ipmi-oem, fix various Dell options and output given Dell docs
   - Dell get-power-info is now get-power-consumption-data
   - Dell reset-power-info is now reset-power-consumption-data
   - Support "all" option to reset-power-consumption-data
+  - Dell get-power-supply-info is now power-supply-info
+  - Include additional output in Dell power-supply-info.
+  - Dell get-instantaneous-power-consumption-info is now
+    get-instantaneous-power-consumption-data.
+  - Support instance number for get-instantaneous-power-consumption-data.
 o Fix --eliminate corner case when elimination of nodes leads to 0
   hosts specified.
 o Report proper error message when underlying crypt library is

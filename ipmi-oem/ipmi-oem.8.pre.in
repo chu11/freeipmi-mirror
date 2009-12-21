@@ -193,16 +193,18 @@ data (viewed via \fBget\-power\-consumption\-data\fR).  Command
 confirmed to work on Dell Poweredge R610 and R710 (Dell 11G Poweredge
 systems).
 .TP
-.B get-power-supply-info
+.B power-supply-info
 This OEM command can read and output power supply ratings and other
 information.  This OEM command requires access to the SDR.  Command
 confirmed to work on Dell Poweredge R610 and R710 (Dell 11G Poweredge
 systems).
 .TP
-.B get-instantaneous-power-consumption-info
-This OEM command can read instantaneous power consumption information.
-Command confirmed to work on Dell Poweredge R610 and R710 (Dell 11G
-Poweredge systems).
+.B get-instantaneous-power-consumption-data \fIpower_supply_instance\fR
+This OEM command can read instantaneous power consumption data.  If a
+power supply instance number is specified, only data for that instance
+will be gathered.  Otherwise, collective power consumption will be
+gathered.  Command confirmed to work on Dell Poweredge R610 and R710
+(Dell 11G Poweredge systems).
 .TP
 .B get-power-headroom-info
 This OEM command can read power headroom information.  Command
