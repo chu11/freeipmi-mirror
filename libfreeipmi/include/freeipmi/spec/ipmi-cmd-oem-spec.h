@@ -38,7 +38,6 @@ extern "C" {
 #define IPMI_CMD_OEM_DELL_SET_EXTENDED_CONFIGURATION      0x03
 
 /* IPMI_NET_FN_OEM_DELL_GENERIC_RQ / IPMI_NET_FN_OEM_DELL_GENERIC_RS */
-/* achu: names taken from code, are correct names? */
 #define IPMI_CMD_OEM_DELL_RESET_TO_DEFAULTS                                    0x21
 #define IPMI_CMD_OEM_DELL_SET_NIC_SELECTION                                    0x24
 #define IPMI_CMD_OEM_DELL_GET_NIC_SELECTION                                    0x25
@@ -50,7 +49,14 @@ extern "C" {
 #define IPMI_CMD_OEM_DELL_POWER_MONITORING_OVER_A_SPECIFIED_AVERAGING_INTERVAL 0xB1
 #define IPMI_CMD_OEM_DELL_POWER_MONITORING_AVERAGING_INTERVAL_RANGE            0xB2
 #define IPMI_CMD_OEM_DELL_POWER_CONSUMPTION                                    0xB3
+#define IPMI_CMD_OEM_DELL_LCD_INFO                                             0xB5
+#define IPMI_CMD_OEM_DELL_ROLLBACK_FIRMWARE_VERSION                            0xBE
+#define IPMI_CMD_OEM_DELL_GET_IDRAC_FIRMWARE_VERSION_NUMBER                    0xBF
+#define IPMI_CMD_OEM_DELL_GET_ACTIVE_LOM_STATUS                                0xC1
+#define IPMI_CMD_OEM_DELL_IDRAC_VIRTUAL_MAC                                    0xC9
+/* achu: this one is taken from code, is correct name? */
 #define IPMI_CMD_OEM_DELL_GET_POWER_HEADROOM_INFO                              0xBB
+/* achu: this one is taken from code, is correct name? */
 #define IPMI_CMD_OEM_DELL_POWER_CAPACITY_STATUS                                0xBA
 
 /*
@@ -63,16 +69,15 @@ extern "C" {
 #define IPMI_CMD_OEM_DELL_COPY_IMAGE_DATA   0x03
 
 /* IPMI_NET_FN_OEM_DELL_XANADU2_RQ / IPMI_NET_FN_OEM_DELL_XANADU2_RS */ 
-/* achu: names taken from code, are correct names? */
-#define IPMI_CMD_OEM_DELL_SET_WEB_PORT_NUM 0x02
-#define IPMI_CMD_OEM_DELL_GET_WEB_PORT_NUM 0x03
-#define IPMI_CMD_OEM_DELL_SET_BOARD_ID     0x10
-#define IPMI_CMD_OEM_DELL_GET_BOARD_ID     0x11
-#define IPMI_CMD_OEM_DELL_SET_ASSET_TAG    0x12
-#define IPMI_CMD_OEM_DELL_SET_LAN_SOURCE   0x13
-#define IPMI_CMD_OEM_DELL_GET_LAN_SOURCE   0x14
-#define IPMI_CMD_OEM_DELL_SET_FCB_VERSION  0x15
-#define IPMI_CMD_OEM_DELL_GET_FCB_VERSION  0x16
+#define IPMI_CMD_OEM_DELL_SET_WEB_PORT_NUM    0x02
+#define IPMI_CMD_OEM_DELL_GET_WEB_PORT_NUM    0x03
+#define IPMI_CMD_OEM_DELL_SET_BOARD_ID        0x10
+#define IPMI_CMD_OEM_DELL_GET_BOARD_ID        0x11
+#define IPMI_CMD_OEM_DELL_SET_ASSET_TAG       0x12
+#define IPMI_CMD_OEM_DELL_SET_LAN_SOURCE      0x13
+#define IPMI_CMD_OEM_DELL_GET_LAN_SOURCE      0x14
+#define IPMI_CMD_OEM_DELL_SET_FCB_FW_VERSION  0x15
+#define IPMI_CMD_OEM_DELL_GET_FCB_FW_VERSION  0x16
 
 /******************************************* 
  * Fujitsu                                 *

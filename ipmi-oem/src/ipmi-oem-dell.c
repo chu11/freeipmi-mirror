@@ -4714,12 +4714,12 @@ ipmi_oem_dell_get_fcb_version (ipmi_oem_state_data_t *state_data)
 
   /* Dell Xanadu2 OEM
    *
-   * Get FCB Version Request
+   * Get FCB FW Version Request
    *
    * 0x34 - OEM network function
    * 0x16 - OEM cmd
    *
-   * Get FCB Version Response
+   * Get FCB FW Version Response
    *
    * 0x16 - OEM cmd
    * 0x?? - Completion Code
@@ -4727,7 +4727,7 @@ ipmi_oem_dell_get_fcb_version (ipmi_oem_state_data_t *state_data)
    * 0x?? - minor version (in hex)
    */
 
-  bytes_rq[0] = IPMI_CMD_OEM_DELL_GET_FCB_VERSION;
+  bytes_rq[0] = IPMI_CMD_OEM_DELL_GET_FCB_FW_VERSION;
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
@@ -4748,7 +4748,7 @@ ipmi_oem_dell_get_fcb_version (ipmi_oem_state_data_t *state_data)
                                                    bytes_rs,
                                                    rs_len,
                                                    4,
-                                                   IPMI_CMD_OEM_DELL_GET_FCB_VERSION,
+                                                   IPMI_CMD_OEM_DELL_GET_FCB_FW_VERSION,
                                                    IPMI_NET_FN_OEM_DELL_XANADU2_RS,
                                                    NULL) < 0)
     goto cleanup;
@@ -4814,20 +4814,20 @@ ipmi_oem_dell_set_fcb_version (ipmi_oem_state_data_t *state_data)
 
   /* Dell Xanadu2 OEM
    *
-   * Set FCB Version Request
+   * Set FCB FW Version Request
    *
    * 0x34 - OEM network function
    * 0x15 - OEM cmd
    * 0x?? - major version (in hex)
    * 0x?? - minor version (in hex)
    *
-   * Set FCB Version Response
+   * Set FCB FW Version Response
    *
    * 0x15 - OEM cmd
    * 0x?? - Completion Code
    */
 
-  bytes_rq[0] = IPMI_CMD_OEM_DELL_SET_FCB_VERSION;
+  bytes_rq[0] = IPMI_CMD_OEM_DELL_SET_FCB_FW_VERSION;
   bytes_rq[1] = majorversion;
   bytes_rq[2] = minorversion;
 
@@ -4850,7 +4850,7 @@ ipmi_oem_dell_set_fcb_version (ipmi_oem_state_data_t *state_data)
                                                    bytes_rs,
                                                    rs_len,
                                                    2,
-                                                   IPMI_CMD_OEM_DELL_SET_FCB_VERSION,
+                                                   IPMI_CMD_OEM_DELL_SET_FCB_FW_VERSION,
                                                    IPMI_NET_FN_OEM_DELL_XANADU2_RS,
                                                    NULL) < 0)
     goto cleanup;
