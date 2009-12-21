@@ -7,6 +7,10 @@ inband
     anything in acpi/smbios/etc.
   - User can use ipmi-locate if they really want to probe.
 
+asf
+---
+support asf base protocol stuff in addition to IPMI?
+
 ipmi-seld
 ---------
 log sel events to syslog?
