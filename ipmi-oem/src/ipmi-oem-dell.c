@@ -210,8 +210,9 @@
 #define IPMI_OEM_DELL_RESET_TO_DEFAULTS_IN_PROGRESS 0x00
 #define IPMI_OEM_DELL_RESET_TO_DEFAULTS_COMPLETE    0x01
 
-#define IPMI_OEM_DELL_RESET_POWER_INFO_CUMULATIVE 1
-#define IPMI_OEM_DELL_RESET_POWER_INFO_PEAK       2
+#define IPMI_OEM_DELL_RESET_POWER_CONSUMPTION_DATA_CUMULATIVE 0x01
+#define IPMI_OEM_DELL_RESET_POWER_CONSUMPTION_DATA_PEAK       0x02
+#define IPMI_OEM_DELL_RESET_POWER_CONSUMPTION_DATA_ALL        0x04
 
 #define IPMI_OEM_DELL_POWER_SUPPLY_INFO_AC 0x00
 #define IPMI_OEM_DELL_POWER_SUPPLY_INFO_DC 0x01
@@ -873,6 +874,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
    *
    * Some from http://linux.dell.com/files/openipmi/ipmitool/
    * Some from Dell Provided Source Code
+   * Some from Dell Provided Docs
    *
    * Uses Get System Info command
    *
@@ -1056,6 +1058,8 @@ ipmi_oem_dell_get_nic_selection (ipmi_oem_state_data_t *state_data)
 
   /* Dell Poweredge OEM
    *
+   * From Dell Provided Docs
+   *
    * Get NIC Selection Request
    *
    * 0x30 - OEM network function
@@ -1148,6 +1152,8 @@ ipmi_oem_dell_set_nic_selection (ipmi_oem_state_data_t *state_data)
     }
 
   /* Dell Poweredge OEM
+   *
+   * From Dell Provided Docs
    *
    * Set NIC Selection Request
    *
@@ -1300,6 +1306,8 @@ _dell_get_extended_configuration (ipmi_oem_state_data_t *state_data,
   assert (token_data_read);
 
   /* Dell Poweredge OEM
+   *
+   * From Dell Provided Docs
    *
    * Get Extended Configuration Request
    *
@@ -1469,6 +1477,8 @@ _dell_set_extended_configuration (ipmi_oem_state_data_t *state_data,
   assert (valid_field_mask);
 
   /* Dell Poweredge OEM
+   *
+   * From Dell Provided Docs
    *
    * Set Extended Configuration Request
    *
@@ -3026,6 +3036,8 @@ ipmi_oem_dell_reset_to_defaults (ipmi_oem_state_data_t *state_data)
 
   /* Dell Poweredge OEM
    *
+   * From Dell Provided Docs
+   *
    * From Dell Provided Source Code
    *
    * Request
@@ -3113,7 +3125,7 @@ ipmi_oem_dell_reset_to_defaults (ipmi_oem_state_data_t *state_data)
 }
 
 int
-ipmi_oem_dell_get_power_info (ipmi_oem_state_data_t *state_data)
+ipmi_oem_dell_get_power_consumption_data (ipmi_oem_state_data_t *state_data)
 {
   uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
   uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
@@ -3138,13 +3150,14 @@ ipmi_oem_dell_get_power_info (ipmi_oem_state_data_t *state_data)
   /* Dell Poweredge OEM
    *
    * From http://linux.dell.com/files/openipmi/ipmitool/
+   * From Dell Provided Docs
    *
    * Request
    *
    * 0x30 - OEM network function
    * 0x9c - OEM cmd
-   * 0x07 - ??
-   * 0x01 - ??
+   * 0x07 - Entity ID
+   * 0x01 - Entity Instance
    * 
    * Response
    *
@@ -3159,8 +3172,8 @@ ipmi_oem_dell_get_power_info (ipmi_oem_state_data_t *state_data)
    * bytes 26-29 - peak watt reading
    */
 
-  bytes_rq[0] = IPMI_CMD_OEM_DELL_GET_POWER_INFO;
-  bytes_rq[1] = 0x07;
+  bytes_rq[0] = IPMI_CMD_OEM_DELL_GET_POWER_CONSUMPTION_DATA;
+  bytes_rq[1] = IPMI_ENTITY_ID_SYSTEM_BOARD;
   bytes_rq[2] = 0x01;
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
@@ -3182,7 +3195,7 @@ ipmi_oem_dell_get_power_info (ipmi_oem_state_data_t *state_data)
                                                    bytes_rs,
                                                    rs_len,
                                                    26,
-                                                   IPMI_CMD_OEM_DELL_GET_POWER_INFO,
+                                                   IPMI_CMD_OEM_DELL_GET_POWER_CONSUMPTION_DATA,
                                                    IPMI_NET_FN_OEM_DELL_GENERIC_RS,
                                                    NULL) < 0)
     goto cleanup;
@@ -3267,7 +3280,7 @@ ipmi_oem_dell_get_power_info (ipmi_oem_state_data_t *state_data)
 }
 
 int
-ipmi_oem_dell_reset_power_info (ipmi_oem_state_data_t *state_data)
+ipmi_oem_dell_reset_power_consumption_data (ipmi_oem_state_data_t *state_data)
 {
   uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
   uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
@@ -3278,7 +3291,8 @@ ipmi_oem_dell_reset_power_info (ipmi_oem_state_data_t *state_data)
   assert (state_data->prog_data->args->oem_options_count == 1);
 
   if (strcasecmp (state_data->prog_data->args->oem_options[0], "cumulative")
-      && strcasecmp (state_data->prog_data->args->oem_options[0], "peak"))
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "peak")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "all"))
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -3292,13 +3306,14 @@ ipmi_oem_dell_reset_power_info (ipmi_oem_state_data_t *state_data)
   /* Dell Poweredge OEM
    *
    * From http://linux.dell.com/files/openipmi/ipmitool/
+   * From Dell Provided Docs
    *
    * Request
    *
    * 0x30 - OEM network function
    * 0x9d - OEM cmd
-   * 0x07 - ??
-   * 0x01 - ??
+   * 0x07 - Entity ID
+   * 0x01 - Entity Instance
    * 0x?? - field to clear (0x1 = cumulative, 0x2 = peak)
    * 
    * Response
@@ -3307,14 +3322,16 @@ ipmi_oem_dell_reset_power_info (ipmi_oem_state_data_t *state_data)
    * 0x?? - Completion Code
    */
 
-  bytes_rq[0] = IPMI_CMD_OEM_DELL_RESET_POWER_INFO;
-  bytes_rq[1] = 0x07;
+  bytes_rq[0] = IPMI_CMD_OEM_DELL_RESET_POWER_CONSUMPTION_DATA;
+  bytes_rq[1] = IPMI_ENTITY_ID_SYSTEM_BOARD;
   bytes_rq[2] = 0x01;
 
   if (!strcasecmp (state_data->prog_data->args->oem_options[0], "cumulative"))
-    bytes_rq[3] = IPMI_OEM_DELL_RESET_POWER_INFO_CUMULATIVE;
+    bytes_rq[3] = IPMI_OEM_DELL_RESET_POWER_CONSUMPTION_DATA_CUMULATIVE;
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "peak"))
+    bytes_rq[3] = IPMI_OEM_DELL_RESET_POWER_CONSUMPTION_DATA_PEAK;
   else
-    bytes_rq[3] = IPMI_OEM_DELL_RESET_POWER_INFO_PEAK;
+    bytes_rq[3] = IPMI_OEM_DELL_RESET_POWER_CONSUMPTION_DATA_ALL;
   
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
@@ -3335,7 +3352,7 @@ ipmi_oem_dell_reset_power_info (ipmi_oem_state_data_t *state_data)
                                                    bytes_rs,
                                                    rs_len,
                                                    2,
-                                                   IPMI_CMD_OEM_DELL_RESET_POWER_INFO,
+                                                   IPMI_CMD_OEM_DELL_RESET_POWER_CONSUMPTION_DATA,
                                                    IPMI_NET_FN_OEM_DELL_GENERIC_RS,
                                                    NULL) < 0)
     goto cleanup;
@@ -3383,6 +3400,7 @@ ipmi_oem_dell_get_power_supply_info (ipmi_oem_state_data_t *state_data)
   /* Dell Poweredge OEM
    *
    * Get Power Supply Info Request
+   * From Dell Provided Docs
    *
    * 0x30 - OEM network function
    * 0xB0 - OEM cmd
@@ -3617,6 +3635,7 @@ ipmi_oem_dell_get_instantaneous_power_consumption_info (ipmi_oem_state_data_t *s
   /* Dell Poweredge OEM
    *
    * From Dell Provided Source Code
+   * From Dell Provided Docs
    *
    * Request
    *
@@ -3699,6 +3718,7 @@ ipmi_oem_dell_get_power_headroom_info (ipmi_oem_state_data_t *state_data)
   /* Dell Poweredge OEM
    *
    * From Dell Provided Source Code
+   * From Dell Provided Docs
    *
    * Request
    *
@@ -3776,6 +3796,7 @@ ipmi_oem_dell_get_average_power_history (ipmi_oem_state_data_t *state_data)
   /* Dell Poweredge OEM
    *
    * From Dell Provided Source Code
+   * From Dell Provided Docs
    *
    * Uses Get System Info command
    *
@@ -3891,6 +3912,7 @@ ipmi_oem_dell_get_peak_power_history (ipmi_oem_state_data_t *state_data)
   /* Dell Poweredge OEM
    *
    * From Dell Provided Source Code
+   * From Dell Provided Docs
    *
    * Uses Get System Info command
    *
@@ -4055,6 +4077,7 @@ _get_power_capacity (ipmi_oem_state_data_t *state_data,
   /* Dell Poweredge OEM
    *
    * From Dell Provided Source Code
+   * From Dell Provided Docs
    *
    * Uses Get System Info command
    *
@@ -4141,6 +4164,7 @@ _get_power_capacity_status (ipmi_oem_state_data_t *state_data,
   /* Dell Poweredge OEM
    *
    * From Dell Provided Source Code
+   * From Dell Provided Docs
    *
    * Power Capacity Status Request
    *
@@ -4299,6 +4323,7 @@ ipmi_oem_dell_set_power_capacity (ipmi_oem_state_data_t *state_data)
   /* Dell Poweredge OEM
    *
    * From Dell Provided Source Code
+   * From Dell Provided Docs
    *
    * Uses Set System Info command
    *
@@ -4442,6 +4467,7 @@ ipmi_oem_dell_set_power_capacity_status (ipmi_oem_state_data_t *state_data)
   /* Dell Poweredge OEM
    *
    * From Dell Provided Source Code
+   * From Dell Provided Docs
    *
    * Power Capacity Status Request
    *
@@ -5124,8 +5150,9 @@ ipmi_oem_dell_set_sol_inactivity_timeout (ipmi_oem_state_data_t *state_data)
   
   /* Dell Poweredge OEM
    *
-   * Uses Get/Set SOL Configuration
+   * From Dell Provided Docs
    *
+   * Uses Get/Set SOL Configuration
    * parameter = 192
    *
    * Data format

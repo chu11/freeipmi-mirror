@@ -153,18 +153,34 @@ struct ipmi_oem_command oem_dell[] =
       ipmi_oem_dell_reset_to_defaults
     },
     {
-      "get-power-info",
+      "get-power-consumption-data",
       NULL,
       0,
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
-      ipmi_oem_dell_get_power_info
+      ipmi_oem_dell_get_power_consumption_data
     },
+    /* legacy */
+    {
+      "get-power-info",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_HIDDEN,
+      ipmi_oem_dell_get_power_consumption_data
+    },
+    /* legacy */
     {
       "reset-power-info",
       "<cumulative|peak>",
       1,
+      IPMI_OEM_COMMAND_FLAGS_HIDDEN,
+      ipmi_oem_dell_reset_power_consumption_data
+    },
+    {
+      "reset-power-consumption-data",
+      "<cumulative|peak>",
+      1,
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
-      ipmi_oem_dell_reset_power_info
+      ipmi_oem_dell_reset_power_consumption_data
     },
     {
       "get-power-supply-info",

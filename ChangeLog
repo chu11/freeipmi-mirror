@@ -1,3 +1,11 @@
+2009-12-21  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-cmd-oem-spec.h: Update
+	appropriately w/ Dell docs given.
+
+	* ipmi-oem/: Update commands, output, comments, etc. w/ Dell docs
+	given.
+	
 2009-12-17  Holger Liebig <holger.liebig@ts.fujitsu.com>
 
 	* ipmi-oem/src/ipmi-oem-fujitsu.c: Correct ambiguities from the
