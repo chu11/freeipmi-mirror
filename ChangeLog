@@ -1,5 +1,10 @@
 2009-12-21  Albert Chu <chu11@llnl.gov>
 
+	* ipmi-sensors/: Output Entity String along with "Container Entity
+	ID" or "FRU Entity ID".
+	
+2009-12-21  Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/spec/ipmi-cmd-oem-spec.h: Update
 	appropriately w/ Dell docs given.
 

@@ -29,6 +29,8 @@ o In ipmi-oem, fix various Dell options and output given Dell docs
   - Dell get-average-power-history and get-peak-power-history
     collapsed into get-power-consumption-statistics.
   - Support 'min' option for Dell get-power-consumption-statistics.
+o In ipmi-sensors, output Entity ID string with "Container Entity ID"
+  and "FRU Entity ID" if string available.
 o Fix --eliminate corner case when elimination of nodes leads to 0
   hosts specified.
 o Report proper error message when underlying crypt library is
