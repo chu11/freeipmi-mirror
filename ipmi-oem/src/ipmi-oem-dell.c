@@ -111,10 +111,43 @@
 
 #define IPMI_OEM_DELL_11G_MAC_ADDRESS_LENGTH         8 
 
-#define IPMI_OEM_DELL_TOKEN_ID_SSH                   0x0A
-#define IPMI_OEM_DELL_TOKEN_ID_TELNET                0x0B
-#define IPMI_OEM_DELL_TOKEN_ID_WEB_SERVER            0x0C
-#define IPMI_OEM_DELL_TOKEN_ID_ACTIVE_DIRECTORY      0x07
+#define IPMI_OEM_DELL_TOKEN_ID_NIC_LINK_SETTING_GROUP    0x02
+#define IPMI_OEM_DELL_TOKEN_ID_RAC_USER_PRIVILEGE        0x04
+#define IPMI_OEM_DELL_TOKEN_ID_SNMP_GROUP                0x05
+#define IPMI_OEM_DELL_TOKEN_ID_DNS_AND_DDNS_GROUP        0x06
+#define IPMI_OEM_DELL_TOKEN_ID_AD_CONFIGURATION          0x07
+#define IPMI_OEM_DELL_TOKEN_ID_EMAIL_ALERT_CONFIGURATION 0x08
+#define IPMI_OEM_DELL_TOKEN_ID_SSL_CONFIGURATION         0x09
+#define IPMI_OEM_DELL_TOKEN_ID_SSH_CONFIGURATION         0x0A
+#define IPMI_OEM_DELL_TOKEN_ID_TELNET_CONFIGURATION      0x0B
+#define IPMI_OEM_DELL_TOKEN_ID_WEB_SERVER_CONFIGURATION  0x0C
+#define IPMI_OEM_DELL_TOKEN_ID_CR_CONFIGURATION          0x0D
+#define IPMI_OEM_DELL_TOKEN_ID_VM_CONFIGURATION          0x0E
+#define IPMI_OEM_DELL_TOKEN_ID_RAC_INFO                  0x0F
+#define IPMI_OEM_DELL_TOKEN_ID_RAC_FW_UPDATE             0x10
+#define IPMI_OEM_DELL_TOKEN_ID_RAC_SERIAL_SHELL          0x11
+#define IPMI_OEM_DELL_TOKEN_ID_MISC                      0x12
+#define IPMI_OEM_DELL_TOKEN_ID_OOB_SECURITY              0x13
+#define IPMI_OEM_DELL_TOKEN_ID_RAC_CONTROL               0x14
+#define IPMI_OEM_DELL_TOKEN_ID_RAC_LOG_FILES             0x15
+#define IPMI_OEM_DELL_TOKEN_ID_RAC_CERTIFICATE_FILES     0x16
+#define IPMI_OEM_DELL_TOKEN_ID_RAC_SESSION_INFO          0x17
+#define IPMI_OEM_DELL_TOKEN_ID_RAC_TIME                  0x19
+#define IPMI_OEM_DELL_TOKEN_ID_RAC_SSAD_CONFIGURATION    0x1B
+#define IPMI_OEM_DELL_TOKEN_ID_RAC_USER_CERT_FILES       0x1C
+#define IPMI_OEM_DELL_TOKEN_ID_RAC_LOCAL_CONFIGURATION   0x1D
+#define IPMI_OEM_DELL_TOKEN_ID_RAC_VKVM_CONFIGURATION    0x1E
+#define IPMI_OEM_DELL_TOKEN_ID_IPV6_EXTENDED_GROUP       0x20
+#define IPMI_OEM_DELL_TOKEN_ID_IPV6_URL_GROUP            0x23
+#define IPMI_OEM_DELL_TOKEN_ID_ACTIVE_DIRECTORY_USER_DOMAIN_GROUP 0x24
+#define IPMI_OEM_DELL_TOKEN_ID_SMART_CARD_GROUP          0x25
+#define IPMI_OEM_DELL_TOKEN_ID_VMEDIA_SHARING_VIA_CMC    0x26
+#define IPMI_OEM_DELL_TOKEN_ID_REMOTE_SYSLOG             0x28
+#define IPMI_OEM_DELL_TOKEN_ID_GENERIC_LDAP_GROUP        0x29
+#define IPMI_OEM_DELL_TOKEN_ID_LDAP_RATE_GROUP           0x2A
+#define IPMI_OEM_DELL_TOKEN_ID_SSH_PK_GROUP              0x2B
+#define IPMI_OEM_DELL_TOKEN_ID_AD_SRV_LOOKUP_GROUP       0x2D
+#define IPMI_OEM_DELL_TOKEN_ID_CLOSE_RAC_SESSION_INFO    0x2E
 
 #define IPMI_OEM_DELL_TOKEN_VERSION                  0x01
 
@@ -131,86 +164,86 @@
 #define IPMI_OEM_DELL_EXTENDED_CONFIG_IN_PROGRESS    0x00
 #define IPMI_OEM_DELL_EXTENDED_CONFIG_LAST_TOKEN     0x01
 
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_ENABLE_FIELD_MASK             0x0001
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_MAX_CONNECTIONS_FIELD_MASK    0x0002
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_ACTIVE_CONNECTIONS_FIELD_MASK 0x0004
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_IDLE_TIMEOUT_FIELD_MASK       0x0008
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_PORT_NUMBER_FIELD_MASK        0x0010
+#define IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_ENABLE_FIELD_MASK                        0x0001
+#define IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_TIMEOUT_FIELD_MASK                       0x0002
+#define IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_ROOT_DOMAIN_FIELD_MASK                   0x0004
+#define IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_RAC_DOMAIN_FIELD_MASK                    0x0008
+#define IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_RAC_NAME_FIELD_MASK                      0x0010
+#define IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_TYPE_FIELD_MASK                          0x0020
+#define IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_SCL_STATE_FIELD_MASK                        0x0040
+#define IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_CRL_STATE_FIELD_MASK                        0x0080
+#define IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_SSO_ENABLE_FIELD_MASK                    0x0100
+#define IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_DC_FILTER1_FIELD_MASK                    0x0200
+#define IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_DC_FILTER2_FIELD_MASK                    0x0400
+#define IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_DC_FILTER3_FIELD_MASK                    0x0800
+#define IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_GC_FILTER1_FIELD_MASK                    0x1000
+#define IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_GC_FILTER2_FIELD_MASK                    0x2000
+#define IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_GC_FILTER3_FIELD_MASK                    0x4000
+#define IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_CERTIFICATE_VALIDATION_ENABLE_FIELD_MASK 0x8000
 
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_ALL_FIELD_MASK                \
-  (IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_ENABLE_FIELD_MASK                  \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_MAX_CONNECTIONS_FIELD_MASK       \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_ACTIVE_CONNECTIONS_FIELD_MASK    \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_IDLE_TIMEOUT_FIELD_MASK          \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_PORT_NUMBER_FIELD_MASK);
+#define IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_ALL_FIELD_MASK   \
+  (IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_ENABLE_FIELD_MASK  \
+   | IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_TIMEOUT_FIELD_MASK \
+   | IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_ROOT_DOMAIN_FIELD_MASK \
+   | IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_RAC_DOMAIN_FIELD_MASK \
+   | IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_RAC_NAME_FIELD_MASK \
+   | IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_TYPE_FIELD_MASK  \
+   | IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_SCL_STATE_FIELD_MASK \
+   | IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_CRL_STATE_FIELD_MASK \
+   | IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_SSO_ENABLE_FIELD_MASK \
+   | IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_DC_FILTER1_FIELD_MASK \
+   | IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_DC_FILTER2_FIELD_MASK \
+   | IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_DC_FILTER3_FIELD_MASK \
+   | IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_GC_FILTER1_FIELD_MASK \
+   | IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_GC_FILTER2_FIELD_MASK \
+   | IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_GC_FILTER3_FIELD_MASK \
+   | IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_CERTIFICATE_VALIDATION_ENABLE_FIELD_MASK)
 
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_ENABLE_FIELD_MASK          0x0001
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_MAX_SESSIONS_FIELD_MASK    0x0002
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_ACTIVE_SESSIONS_FIELD_MASK 0x0004
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_SESSION_TIMEOUT_FIELD_MASK 0x0008
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_PORT_NUMBER_FIELD_MASK     0x0010
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_7FLS_BACKSPACE_FIELD_MASK  0x0020
+#define IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_TYPE_EXTENDED 1
+#define IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_TYPE_STANDARD 2
 
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_ALL_FIELD_MASK             \
-  (IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_ENABLE_FIELD_MASK               \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_MAX_SESSIONS_FIELD_MASK       \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_ACTIVE_SESSIONS_FIELD_MASK    \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_SESSION_TIMEOUT_FIELD_MASK    \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_PORT_NUMBER_FIELD_MASK        \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_7FLS_BACKSPACE_FIELD_MASK)
+#define IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_CONFIGURATION_ENABLE_FIELD_MASK             0x0001
+#define IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_CONFIGURATION_MAX_CONNECTIONS_FIELD_MASK    0x0002
+#define IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_CONFIGURATION_ACTIVE_CONNECTIONS_FIELD_MASK 0x0004
+#define IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_CONFIGURATION_IDLE_TIMEOUT_FIELD_MASK       0x0008
+#define IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_CONFIGURATION_PORT_NUMBER_FIELD_MASK        0x0010
 
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_ENABLE_FIELD_MASK            0x0001
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_MAX_SESSIONS_FIELD_MASK      0x0002
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_ACTIVE_SESSIONS_FIELD_MASK   0x0004
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_SESSION_TIMEOUT_FIELD_MASK   0x0008
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_HTTP_PORT_NUMBER_FIELD_MASK  0x0010
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_HTTPS_PORT_NUMBER_FIELD_MASK 0x0020
+#define IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_CONFIGURATION_ALL_FIELD_MASK                \
+  (IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_CONFIGURATION_ENABLE_FIELD_MASK                  \
+   | IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_CONFIGURATION_MAX_CONNECTIONS_FIELD_MASK       \
+   | IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_CONFIGURATION_ACTIVE_CONNECTIONS_FIELD_MASK    \
+   | IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_CONFIGURATION_IDLE_TIMEOUT_FIELD_MASK          \
+   | IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_CONFIGURATION_PORT_NUMBER_FIELD_MASK);
 
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_ALL_FIELD_MASK         \
-  (IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_ENABLE_FIELD_MASK           \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_MAX_SESSIONS_FIELD_MASK   \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_ACTIVE_SESSIONS_FIELD_MASK \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_SESSION_TIMEOUT_FIELD_MASK \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_HTTP_PORT_NUMBER_FIELD_MASK \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_HTTPS_PORT_NUMBER_FIELD_MASK)
+#define IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_CONFIGURATION_ENABLE_FIELD_MASK          0x0001
+#define IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_CONFIGURATION_MAX_SESSIONS_FIELD_MASK    0x0002
+#define IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_CONFIGURATION_ACTIVE_SESSIONS_FIELD_MASK 0x0004
+#define IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_CONFIGURATION_SESSION_TIMEOUT_FIELD_MASK 0x0008
+#define IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_CONFIGURATION_PORT_NUMBER_FIELD_MASK     0x0010
+#define IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_CONFIGURATION_7FLS_BACKSPACE_FIELD_MASK  0x0020
 
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_ENABLE_FIELD_MASK                        0x0001
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_TIMEOUT_FIELD_MASK                       0x0002
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_ROOT_DOMAIN_FIELD_MASK                   0x0004
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_RAC_DOMAIN_FIELD_MASK                    0x0008
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_RAC_NAME_FIELD_MASK                      0x0010
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_TYPE_FIELD_MASK                          0x0020
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_SCL_STATE_FIELD_MASK                        0x0040
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_CRL_STATE_FIELD_MASK                        0x0080
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_SSO_ENABLE_FIELD_MASK                    0x0100
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_DC_FILTER1_FIELD_MASK                    0x0200
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_DC_FILTER2_FIELD_MASK                    0x0400
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_DC_FILTER3_FIELD_MASK                    0x0800
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_GC_FILTER1_FIELD_MASK                    0x1000
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_GC_FILTER2_FIELD_MASK                    0x2000
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_GC_FILTER3_FIELD_MASK                    0x4000
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_CERTIFICATE_VALIDATION_ENABLE_FIELD_MASK 0x8000
+#define IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_CONFIGURATION_ALL_FIELD_MASK             \
+  (IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_CONFIGURATION_ENABLE_FIELD_MASK               \
+   | IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_CONFIGURATION_MAX_SESSIONS_FIELD_MASK       \
+   | IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_CONFIGURATION_ACTIVE_SESSIONS_FIELD_MASK    \
+   | IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_CONFIGURATION_SESSION_TIMEOUT_FIELD_MASK    \
+   | IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_CONFIGURATION_PORT_NUMBER_FIELD_MASK        \
+   | IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_CONFIGURATION_7FLS_BACKSPACE_FIELD_MASK)
 
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_ALL_FIELD_MASK   \
-  (IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_ENABLE_FIELD_MASK  \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_TIMEOUT_FIELD_MASK \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_ROOT_DOMAIN_FIELD_MASK \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_RAC_DOMAIN_FIELD_MASK \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_RAC_NAME_FIELD_MASK \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_TYPE_FIELD_MASK  \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_SCL_STATE_FIELD_MASK \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_CRL_STATE_FIELD_MASK \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_SSO_ENABLE_FIELD_MASK \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_DC_FILTER1_FIELD_MASK \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_DC_FILTER2_FIELD_MASK \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_DC_FILTER3_FIELD_MASK \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_GC_FILTER1_FIELD_MASK \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_GC_FILTER2_FIELD_MASK \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_GC_FILTER3_FIELD_MASK \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_CERTIFICATE_VALIDATION_ENABLE_FIELD_MASK)
+#define IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_CONFIGURATION_ENABLE_FIELD_MASK            0x0001
+#define IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_CONFIGURATION_MAX_SESSIONS_FIELD_MASK      0x0002
+#define IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_CONFIGURATION_ACTIVE_SESSIONS_FIELD_MASK   0x0004
+#define IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_CONFIGURATION_SESSION_TIMEOUT_FIELD_MASK   0x0008
+#define IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_CONFIGURATION_HTTP_PORT_NUMBER_FIELD_MASK  0x0010
+#define IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_CONFIGURATION_HTTPS_PORT_NUMBER_FIELD_MASK 0x0020
 
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_TYPE_EXTENDED 1
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_TYPE_STANDARD 2
+#define IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_CONFIGURATION_ALL_FIELD_MASK         \
+  (IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_CONFIGURATION_ENABLE_FIELD_MASK           \
+   | IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_CONFIGURATION_MAX_SESSIONS_FIELD_MASK   \
+   | IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_CONFIGURATION_ACTIVE_SESSIONS_FIELD_MASK \
+   | IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_CONFIGURATION_SESSION_TIMEOUT_FIELD_MASK \
+   | IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_CONFIGURATION_HTTP_PORT_NUMBER_FIELD_MASK \
+   | IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_CONFIGURATION_HTTPS_PORT_NUMBER_FIELD_MASK)
 
 #define IPMI_OEM_DELL_RESET_TO_DEFAULTS_GET_STATUS                  0x00
 #define IPMI_OEM_DELL_RESET_TO_DEFAULTS_INITIATE_RESULT_TO_DEFAULTS 0xAA
@@ -1668,7 +1701,7 @@ int
 ipmi_oem_dell_get_ssh_config (ipmi_oem_state_data_t *state_data)
 {
   uint8_t token_data[IPMI_OEM_DELL_TOKEN_DATA_MAX];
-  uint16_t expected_valid_field_mask = IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_ALL_FIELD_MASK;
+  uint16_t expected_valid_field_mask = IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_CONFIGURATION_ALL_FIELD_MASK;
   unsigned int token_data_read = 0;
   unsigned int expected_token_data_read = 0;
   uint8_t sshenable;
@@ -1703,7 +1736,7 @@ ipmi_oem_dell_get_ssh_config (ipmi_oem_state_data_t *state_data)
   assert (!state_data->prog_data->args->oem_options_count);
 
   if (_dell_get_extended_configuration (state_data,
-					IPMI_OEM_DELL_TOKEN_ID_SSH,
+					IPMI_OEM_DELL_TOKEN_ID_SSH_CONFIGURATION,
 					token_data,
 					IPMI_OEM_DELL_TOKEN_DATA_MAX,
 					expected_valid_field_mask,
@@ -1815,21 +1848,21 @@ ipmi_oem_dell_set_ssh_config (ipmi_oem_state_data_t *state_data)
           if (ipmi_oem_parse_enable (state_data, i, value, &sshenable) < 0)
             goto cleanup;
           
-          valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_ENABLE_FIELD_MASK;
+          valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_CONFIGURATION_ENABLE_FIELD_MASK;
         }
       else if (!strcasecmp (key, "idletimeout"))
         {
           if (ipmi_oem_parse_4_byte_field (state_data, i, value, &idletimeout) < 0)
             goto cleanup;
           
-          valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_IDLE_TIMEOUT_FIELD_MASK;
+          valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_CONFIGURATION_IDLE_TIMEOUT_FIELD_MASK;
         }
       else if (!strcasecmp (key, "portnumber"))
         {
           if (ipmi_oem_parse_2_byte_field (state_data, i, value, &portnumber) < 0)
             goto cleanup;
           
-          valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_PORT_NUMBER_FIELD_MASK;
+          valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_CONFIGURATION_PORT_NUMBER_FIELD_MASK;
         }
       else
         {
@@ -1857,7 +1890,7 @@ ipmi_oem_dell_set_ssh_config (ipmi_oem_state_data_t *state_data)
   token_data[8] = (portnumber & 0xFF00) >> 8;
 
   if (_dell_set_extended_configuration (state_data,
-					IPMI_OEM_DELL_TOKEN_ID_SSH,
+					IPMI_OEM_DELL_TOKEN_ID_SSH_CONFIGURATION,
 					token_data,
 					9,
 					valid_field_mask) < 0)
@@ -1872,7 +1905,7 @@ int
 ipmi_oem_dell_get_telnet_config (ipmi_oem_state_data_t *state_data)
 {
   uint8_t token_data[IPMI_OEM_DELL_TOKEN_DATA_MAX];
-  uint16_t expected_valid_field_mask = IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_ALL_FIELD_MASK;
+  uint16_t expected_valid_field_mask = IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_CONFIGURATION_ALL_FIELD_MASK;
   unsigned int token_data_read = 0;
   unsigned int expected_token_data_read = 0;
   uint8_t telnetenable;
@@ -1909,7 +1942,7 @@ ipmi_oem_dell_get_telnet_config (ipmi_oem_state_data_t *state_data)
   assert (!state_data->prog_data->args->oem_options_count);
 
   if (_dell_get_extended_configuration (state_data,
-					IPMI_OEM_DELL_TOKEN_ID_TELNET,
+					IPMI_OEM_DELL_TOKEN_ID_TELNET_CONFIGURATION,
 					token_data,
 					IPMI_OEM_DELL_TOKEN_DATA_MAX,
 					expected_valid_field_mask,
@@ -2032,28 +2065,28 @@ ipmi_oem_dell_set_telnet_config (ipmi_oem_state_data_t *state_data)
           if (ipmi_oem_parse_enable (state_data, i, value, &telnetenable) < 0)
             goto cleanup;
 
-          valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_ENABLE_FIELD_MASK;
+          valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_CONFIGURATION_ENABLE_FIELD_MASK;
         }
       else if (!strcasecmp (key, "sessiontimeout"))
         {
           if (ipmi_oem_parse_4_byte_field (state_data, i, value, &sessiontimeout) < 0)
             goto cleanup;
 
-          valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_SESSION_TIMEOUT_FIELD_MASK;
+          valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_CONFIGURATION_SESSION_TIMEOUT_FIELD_MASK;
         }
       else if (!strcasecmp (key, "portnumber"))
         {
           if (ipmi_oem_parse_2_byte_field (state_data, i, value, &portnumber) < 0)
             goto cleanup;
           
-          valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_PORT_NUMBER_FIELD_MASK;
+          valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_CONFIGURATION_PORT_NUMBER_FIELD_MASK;
         }
       else if (!strcasecmp (key, "7fls"))
         {
           if (ipmi_oem_parse_enable (state_data, i, value, &_7flsenable) < 0)
             goto cleanup;
           
-          valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_7FLS_BACKSPACE_FIELD_MASK;
+          valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_CONFIGURATION_7FLS_BACKSPACE_FIELD_MASK;
         }
       else
         {
@@ -2082,7 +2115,7 @@ ipmi_oem_dell_set_telnet_config (ipmi_oem_state_data_t *state_data)
   token_data[9] = _7flsenable;
 
   if (_dell_set_extended_configuration (state_data,
-					IPMI_OEM_DELL_TOKEN_ID_TELNET,
+					IPMI_OEM_DELL_TOKEN_ID_TELNET_CONFIGURATION,
 					token_data,
 					10,
 					valid_field_mask) < 0)
@@ -2097,7 +2130,7 @@ int
 ipmi_oem_dell_get_web_server_config (ipmi_oem_state_data_t *state_data)
 {
   uint8_t token_data[IPMI_OEM_DELL_TOKEN_DATA_MAX];
-  uint16_t expected_valid_field_mask = IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_ALL_FIELD_MASK;
+  uint16_t expected_valid_field_mask = IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_CONFIGURATION_ALL_FIELD_MASK;
   unsigned int token_data_read = 0;
   unsigned int expected_token_data_read = 0;
   uint8_t webserverenable;
@@ -2134,7 +2167,7 @@ ipmi_oem_dell_get_web_server_config (ipmi_oem_state_data_t *state_data)
   assert (!state_data->prog_data->args->oem_options_count);
 
   if (_dell_get_extended_configuration (state_data,
-					IPMI_OEM_DELL_TOKEN_ID_WEB_SERVER,
+					IPMI_OEM_DELL_TOKEN_ID_WEB_SERVER_CONFIGURATION,
 					token_data,
 					IPMI_OEM_DELL_TOKEN_DATA_MAX,
 					expected_valid_field_mask,
@@ -2255,28 +2288,28 @@ ipmi_oem_dell_set_web_server_config (ipmi_oem_state_data_t *state_data)
           if (ipmi_oem_parse_enable (state_data, i, value, &webserverenable) < 0)
             goto cleanup;
 
-          valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_ENABLE_FIELD_MASK;
+          valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_CONFIGURATION_ENABLE_FIELD_MASK;
         }
       else if (!strcasecmp (key, "sessiontimeout"))
         {
           if (ipmi_oem_parse_4_byte_field (state_data, i, value, &sessiontimeout) < 0)
             goto cleanup;
           
-          valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_SESSION_TIMEOUT_FIELD_MASK;
+          valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_CONFIGURATION_SESSION_TIMEOUT_FIELD_MASK;
         }
       else if (!strcasecmp (key, "httpportnumber"))
         {
           if (ipmi_oem_parse_2_byte_field (state_data, i, value, &httpportnumber) < 0)
             goto cleanup;
           
-          valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_HTTP_PORT_NUMBER_FIELD_MASK;
+          valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_CONFIGURATION_HTTP_PORT_NUMBER_FIELD_MASK;
         }
       else if (!strcasecmp (key, "httpsportnumber"))
         {
           if (ipmi_oem_parse_2_byte_field (state_data, i, value, &httpsportnumber) < 0)
             goto cleanup;
           
-          valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_HTTPS_PORT_NUMBER_FIELD_MASK;
+          valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_CONFIGURATION_HTTPS_PORT_NUMBER_FIELD_MASK;
         }
       else
         {
@@ -2306,7 +2339,7 @@ ipmi_oem_dell_set_web_server_config (ipmi_oem_state_data_t *state_data)
   token_data[10] = (httpsportnumber & 0xFF00) >> 8;
 
   if (_dell_set_extended_configuration (state_data,
-					IPMI_OEM_DELL_TOKEN_ID_WEB_SERVER,
+					IPMI_OEM_DELL_TOKEN_ID_WEB_SERVER_CONFIGURATION,
 					token_data,
 					11,
 					valid_field_mask) < 0)
@@ -2321,7 +2354,7 @@ int
 ipmi_oem_dell_get_active_directory_config (ipmi_oem_state_data_t *state_data)
 {
   uint8_t token_data[IPMI_OEM_MAX_BYTES];
-  uint16_t expected_valid_field_mask = IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_ALL_FIELD_MASK;
+  uint16_t expected_valid_field_mask = IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_ALL_FIELD_MASK;
   unsigned int token_data_read = 0;
   unsigned int min_token_data_read = 0;
   uint8_t ad_enable;
@@ -2408,7 +2441,7 @@ ipmi_oem_dell_get_active_directory_config (ipmi_oem_state_data_t *state_data)
   memset (ad_gc_filter3_string, '\0', IPMI_OEM_DELL_TOKEN_STRING_MAX+1);
 
   if (_dell_get_extended_configuration (state_data,
-					IPMI_OEM_DELL_TOKEN_ID_ACTIVE_DIRECTORY,
+					IPMI_OEM_DELL_TOKEN_ID_AD_CONFIGURATION,
 					token_data,
 					IPMI_OEM_DELL_TOKEN_DATA_MAX,
 					expected_valid_field_mask,
@@ -2733,14 +2766,14 @@ ipmi_oem_dell_set_active_directory_config (ipmi_oem_state_data_t *state_data)
           if (ipmi_oem_parse_enable (state_data, i, value, &ad_enable) < 0)
             goto cleanup;
 
-          valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_ENABLE_FIELD_MASK;
+          valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_ENABLE_FIELD_MASK;
         }
       else if (!strcasecmp (key, "timeout"))
         {
           if (ipmi_oem_parse_4_byte_field (state_data, i, value, &ad_timeout) < 0)
             goto cleanup;
           
-          valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_TIMEOUT_FIELD_MASK;
+          valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_TIMEOUT_FIELD_MASK;
         }
 #if 0
       /* don't support for now */
@@ -2754,7 +2787,7 @@ ipmi_oem_dell_set_active_directory_config (ipmi_oem_state_data_t *state_data)
                                      IPMI_OEM_DELL_TOKEN_STRING_MAX) < 0)
             goto cleanup;
           
-          valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_ROOT_DOMAIN_FIELD_MASK;
+          valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_ROOT_DOMAIN_FIELD_MASK;
         }
       else if (!strcasecmp (key, "racdomain"))
         {
@@ -2766,7 +2799,7 @@ ipmi_oem_dell_set_active_directory_config (ipmi_oem_state_data_t *state_data)
                                      IPMI_OEM_DELL_TOKEN_STRING_MAX) < 0)
             goto cleanup;
           
-          valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_RAC_DOMAIN_FIELD_MASK;
+          valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_RAC_DOMAIN_FIELD_MASK;
         }
       else if (!strcasecmp (key, "racname"))
         {
@@ -2778,7 +2811,7 @@ ipmi_oem_dell_set_active_directory_config (ipmi_oem_state_data_t *state_data)
                                      IPMI_OEM_DELL_TOKEN_STRING_MAX) < 0)
             goto cleanup;
           
-          valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_RAC_NAME_FIELD_MASK;
+          valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_RAC_NAME_FIELD_MASK;
         }
 #endif
       else if (!strcasecmp (key, "type"))
@@ -2795,11 +2828,11 @@ ipmi_oem_dell_set_active_directory_config (ipmi_oem_state_data_t *state_data)
 	    }
 	  
 	  if (!strcasecmp (value, "extended"))
-	    ad_type = IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_TYPE_EXTENDED;
+	    ad_type = IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_TYPE_EXTENDED;
 	  else
-	    ad_type = IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_TYPE_STANDARD;
+	    ad_type = IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_TYPE_STANDARD;
 
-	  valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_TYPE_FIELD_MASK;
+	  valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_TYPE_FIELD_MASK;
 	}
 #if 0
       /* read only on iDRAC6 */
@@ -2808,7 +2841,7 @@ ipmi_oem_dell_set_active_directory_config (ipmi_oem_state_data_t *state_data)
           if (ipmi_oem_parse_enable (state_data, i, value, &scl_state) < 0)
             goto cleanup;
 
-          valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_SCL_STATE_FIELD_MASK;
+          valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_SCL_STATE_FIELD_MASK;
         }
 #endif
 #if 0
@@ -2818,7 +2851,7 @@ ipmi_oem_dell_set_active_directory_config (ipmi_oem_state_data_t *state_data)
           if (ipmi_oem_parse_enable (state_data, i, value, &crl_state) < 0)
             goto cleanup;
 
-          valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_CRL_STATE_FIELD_MASK;
+          valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_CRL_STATE_FIELD_MASK;
         }
 #endif
       else if (!strcasecmp (key, "sso"))
@@ -2826,7 +2859,7 @@ ipmi_oem_dell_set_active_directory_config (ipmi_oem_state_data_t *state_data)
           if (ipmi_oem_parse_enable (state_data, i, value, &ad_sso_enable) < 0)
             goto cleanup;
 
-          valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_SSO_ENABLE_FIELD_MASK;
+          valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_SSO_ENABLE_FIELD_MASK;
         }
 #if 0
       /* don't support for now */
@@ -2840,7 +2873,7 @@ ipmi_oem_dell_set_active_directory_config (ipmi_oem_state_data_t *state_data)
                                      IPMI_OEM_DELL_TOKEN_STRING_MAX) < 0)
             goto cleanup;
           
-          valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_DC_FILTER1_FIELD_MASK;
+          valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_DC_FILTER1_FIELD_MASK;
         }
       else if (!strcasecmp (key, "dcfilter2"))
         {
@@ -2852,7 +2885,7 @@ ipmi_oem_dell_set_active_directory_config (ipmi_oem_state_data_t *state_data)
                                      IPMI_OEM_DELL_TOKEN_STRING_MAX) < 0)
             goto cleanup;
           
-          valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_DC_FILTER2_FIELD_MASK;
+          valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_DC_FILTER2_FIELD_MASK;
         }
       else if (!strcasecmp (key, "dcfilter3"))
         {
@@ -2864,7 +2897,7 @@ ipmi_oem_dell_set_active_directory_config (ipmi_oem_state_data_t *state_data)
                                      IPMI_OEM_DELL_TOKEN_STRING_MAX) < 0)
             goto cleanup;
           
-          valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_DC_FILTER3_FIELD_MASK;
+          valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_DC_FILTER3_FIELD_MASK;
         }
       else if (!strcasecmp (key, "gcfilter1"))
         {
@@ -2876,7 +2909,7 @@ ipmi_oem_dell_set_active_directory_config (ipmi_oem_state_data_t *state_data)
                                      IPMI_OEM_DELL_TOKEN_STRING_MAX) < 0)
             goto cleanup;
           
-          valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_GC_FILTER1_FIELD_MASK;
+          valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_GC_FILTER1_FIELD_MASK;
         }
       else if (!strcasecmp (key, "gcfilter2"))
         {
@@ -2888,7 +2921,7 @@ ipmi_oem_dell_set_active_directory_config (ipmi_oem_state_data_t *state_data)
                                      IPMI_OEM_DELL_TOKEN_STRING_MAX) < 0)
             goto cleanup;
           
-          valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_GC_FILTER2_FIELD_MASK;
+          valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_GC_FILTER2_FIELD_MASK;
         }
       else if (!strcasecmp (key, "gcfilter3"))
         {
@@ -2900,7 +2933,7 @@ ipmi_oem_dell_set_active_directory_config (ipmi_oem_state_data_t *state_data)
                                      IPMI_OEM_DELL_TOKEN_STRING_MAX) < 0)
             goto cleanup;
           
-          valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_GC_FILTER3_FIELD_MASK;
+          valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_GC_FILTER3_FIELD_MASK;
         }
 #endif
       else if (!strcasecmp (key, "certificatevalidation"))
@@ -2908,7 +2941,7 @@ ipmi_oem_dell_set_active_directory_config (ipmi_oem_state_data_t *state_data)
           if (ipmi_oem_parse_enable (state_data, i, value, &ad_certificate_validation_enable) < 0)
             goto cleanup;
 
-          valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_CERTIFICATE_VALIDATION_ENABLE_FIELD_MASK;
+          valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_CERTIFICATE_VALIDATION_ENABLE_FIELD_MASK;
         }
       else
         {
@@ -3045,7 +3078,7 @@ ipmi_oem_dell_set_active_directory_config (ipmi_oem_state_data_t *state_data)
   offset++;
 
   if (_dell_set_extended_configuration (state_data,
-					IPMI_OEM_DELL_TOKEN_ID_ACTIVE_DIRECTORY,
+					IPMI_OEM_DELL_TOKEN_ID_AD_CONFIGURATION,
 					token_data,
 					offset,
 					valid_field_mask) < 0)
