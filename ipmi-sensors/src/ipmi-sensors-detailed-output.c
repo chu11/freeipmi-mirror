@@ -124,6 +124,56 @@ _detailed_output_record_type_and_id (ipmi_sensors_state_data_t *state_data,
 }
 
 static int
+_detailed_output_entity_id_and_instance (ipmi_sensors_state_data_t *state_data,
+                                         char *entity_id_prefix,
+                                         uint8_t entity_id,
+                                         uint8_t entity_instance)
+{
+  assert (state_data);
+  assert (state_data->prog_data->args->verbose_count >= 1);
+
+  if (IPMI_ENTITY_ID_VALID (entity_id))
+    pstdout_printf (state_data->pstate,
+                    "%s%sEntity ID: %s (%u)\n",
+                    (entity_id_prefix) ? entity_id_prefix : "",
+                    (entity_id_prefix) ? " " : "",
+                    ipmi_entity_ids[entity_id],
+                    entity_id);
+  else if (IPMI_ENTITY_ID_IS_CHASSIS_SPECIFIC (entity_id))
+    pstdout_printf (state_data->pstate,
+                    "%s%sEntity ID: Chassis Specific (%u)\n",
+                    (entity_id_prefix) ? entity_id_prefix : "",
+                    (entity_id_prefix) ? " " : "",
+                    entity_id);
+  else if (IPMI_ENTITY_ID_IS_BOARD_SET_SPECIFIC (entity_id))
+    pstdout_printf (state_data->pstate,
+                    "%s%sEntity ID: Board-Set Specific (%u)\n",
+                    (entity_id_prefix) ? entity_id_prefix : "",
+                    (entity_id_prefix) ? " " : "",
+                    entity_id);
+  else if (IPMI_ENTITY_ID_IS_OEM_SYSTEM_INTEGRATOR_DEFINED (entity_id))
+    pstdout_printf (state_data->pstate,
+                    "%s%sEntity ID: OEM System Integrator (%u)\n",
+                    (entity_id_prefix) ? entity_id_prefix : "",
+                    (entity_id_prefix) ? " " : "",
+                    entity_id);
+  else
+    pstdout_printf (state_data->pstate,
+                    "%s%sEntity ID: %u\n",
+                    (entity_id_prefix) ? entity_id_prefix : "",
+                    (entity_id_prefix) ? " " : "",
+                    entity_id);
+
+  pstdout_printf (state_data->pstate,
+                  "%s%sEntity Instance: %u\n",
+                  (entity_id_prefix) ? entity_id_prefix : "",
+                  (entity_id_prefix) ? " " : "",
+                  entity_instance);
+
+  return (0);
+}
+
+static int
 _detailed_output_header (ipmi_sensors_state_data_t *state_data,
                          const void *sdr_record,
                          unsigned int sdr_record_len,
@@ -254,30 +304,13 @@ _detailed_output_header (ipmi_sensors_state_data_t *state_data,
   pstdout_printf (state_data->pstate,
                   "Channel Number: %Xh\n",
                   channel_number);
-  if (IPMI_ENTITY_ID_VALID (entity_id))
-    pstdout_printf (state_data->pstate,
-                    "Entity ID: %s (%u)\n",
-                    ipmi_entity_ids[entity_id],
-                    entity_id);
-  else if (IPMI_ENTITY_ID_IS_CHASSIS_SPECIFIC (entity_id))
-    pstdout_printf (state_data->pstate,
-                    "Entity ID: Chassis Specific (%u)\n",
-                    entity_id);
-  else if (IPMI_ENTITY_ID_IS_BOARD_SET_SPECIFIC (entity_id))
-    pstdout_printf (state_data->pstate,
-                    "Entity ID: Board-Set Specific (%u)\n",
-                    entity_id);
-  else if (IPMI_ENTITY_ID_IS_OEM_SYSTEM_INTEGRATOR_DEFINED (entity_id))
-    pstdout_printf (state_data->pstate,
-                    "Entity ID: OEM System Integrator (%u)\n",
-                    entity_id);
-  else
-    pstdout_printf (state_data->pstate,
-                    "Entity ID: %u\n",
-                    entity_id);
-  pstdout_printf (state_data->pstate,
-                  "Entity Instance: %u\n",
-                  entity_instance);
+
+  if (_detailed_output_entity_id_and_instance (state_data,
+                                               NULL,
+                                               entity_id,
+                                               entity_instance) < 0)
+    return (-1);
+
   pstdout_printf (state_data->pstate,
                   "Entity Instance Type: %s\n",
                   (entity_instance_type == IPMI_SDR_PHYSICAL_ENTITY) ? "Physical Entity" : "Logical Container Entity");
@@ -1690,12 +1723,11 @@ _detailed_output_entity_association_record (ipmi_sensors_state_data_t *state_dat
                                            record_id) < 0)
     return (-1);
 
-  pstdout_printf (state_data->pstate,
-                  "Container Entity ID: %u\n",
-                  container_entity_id);
-  pstdout_printf (state_data->pstate,
-                  "Container Entity Instance: %u\n",
-                  container_entity_instance);
+  if (_detailed_output_entity_id_and_instance (state_data,
+                                               "Container",
+                                               container_entity_id,
+                                               container_entity_instance) < 0)
+    return (-1);
 
   pstdout_printf (state_data->pstate, "\n");
 
@@ -1735,12 +1767,11 @@ _detailed_output_device_relative_entity_association_record (ipmi_sensors_state_d
                                            record_id) < 0)
     return (-1);
 
-  pstdout_printf (state_data->pstate,
-                  "Container Entity ID: %u\n",
-                  container_entity_id);
-  pstdout_printf (state_data->pstate,
-                  "Container Entity Instance: %u\n",
-                  container_entity_instance);
+  if (_detailed_output_entity_id_and_instance (state_data,
+                                               "Container",
+                                               container_entity_id,
+                                               container_entity_instance) < 0)
+    return (-1);
 
   pstdout_printf (state_data->pstate, "\n");
 
@@ -1887,31 +1918,11 @@ _output_entity_id_and_instance (ipmi_sensors_state_data_t *state_data,
       return (-1);
     }
 
-  if (IPMI_ENTITY_ID_VALID (entity_id))
-    pstdout_printf (state_data->pstate,
-                    "Entity ID: %s (%u)\n",
-                    ipmi_entity_ids[entity_id],
-                    entity_id);
-  else if (IPMI_ENTITY_ID_IS_CHASSIS_SPECIFIC (entity_id))
-    pstdout_printf (state_data->pstate,
-                    "Entity ID: Chassis Specific (%u)\n",
-                    entity_id);
-  else if (IPMI_ENTITY_ID_IS_BOARD_SET_SPECIFIC (entity_id))
-    pstdout_printf (state_data->pstate,
-                    "Entity ID: Board-Set Specific (%u)\n",
-                    entity_id);
-  else if (IPMI_ENTITY_ID_IS_OEM_SYSTEM_INTEGRATOR_DEFINED (entity_id))
-    pstdout_printf (state_data->pstate,
-                    "Entity ID: OEM System Integrator (%u)\n",
-                    entity_id);
-  else
-    pstdout_printf (state_data->pstate,
-                    "Entity ID: %u\n",
-                    entity_id);
-  
-  pstdout_printf (state_data->pstate,
-                  "Entity Instance: %u\n",
-                  entity_instance);
+  if (_detailed_output_entity_id_and_instance (state_data,
+                                               NULL,
+                                               entity_id,
+                                               entity_instance) < 0)
+    return (-1);
 
   pstdout_printf (state_data->pstate,
                   "Entity Instance Type: %s\n",
@@ -2091,13 +2102,11 @@ _detailed_output_fru_device_locator_record (ipmi_sensors_state_data_t *state_dat
       return (-1);
     }
 
-  pstdout_printf (state_data->pstate,
-                  "FRU Entity ID: %u\n",
-                  fru_entity_id);
-
-  pstdout_printf (state_data->pstate,
-                  "FRU Entity Instance: %u\n",
-                  fru_entity_instance);
+  if (_detailed_output_entity_id_and_instance (state_data,
+                                               "FRU",
+                                               fru_entity_id,
+                                               fru_entity_instance) < 0)
+    return (-1);
 
   pstdout_printf (state_data->pstate, "\n");
 
