@@ -1,3 +1,7 @@
+2009-12-22  Albert Chu <chu11@llnl.gov>
+
+	* doc/freeipmi-faq.texi: Add operating sytems section.
+	
 2009-12-21  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors/: Output Entity String along with "Container Entity
