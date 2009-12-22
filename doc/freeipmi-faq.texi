@@ -57,8 +57,8 @@ release @value{VERSION} of the FreeIPMI.
 @menu
 * What is IPMI::                
 * What is FreeIPMI?::       
-* How did it start?::           
-* Who maintains FreeIPMI?::
+* How did FreeIPMI start?::           
+* What operating systems does FreeIPMI run on?::
 * FreeIPMI vs OpenIPMI vs Ipmitool vs Ipmiutil::  
 * What is special about FreeIPMI::  
 * SSIF Driver Configuration::   
@@ -90,7 +90,7 @@ conditions for later examination and alerting where the platform
 issues the alert without aid of run-time software.  Lastly it includes
 inventory information that can help identify a failed hardware unit.
 
-@node What is FreeIPMI?, How did it start?, What is IPMI, Top
+@node What is FreeIPMI?, How did FreeIPMI start?, What is IPMI, Top
 @section What is FreeIPMI?
 
 FreeIPMI is a collection of Intelligent Platform Management
@@ -99,8 +99,8 @@ software and a development library conforming to the Intelligent
 Platform Management Interface (@acronym{IPMI} v1.5 and v2.0)
 standards.
 
-@node How did it start?, Who maintains FreeIPMI?, What is FreeIPMI?, Top
-@section How did it start?
+@node How did FreeIPMI start?, What operating systems does FreeIPMI run on?, What is FreeIPMI?, Top
+@section How did FreeIPMI start?
 
 In October 2003, California Digital Corp. (CDC) was contracted by
 Lawrence Livermore National Laboratory (LLNL) for the assembly of
@@ -124,15 +124,17 @@ bmc-device, ipmi-oem, ipmi-dcmi, and portions of ipmi-pef-config.
 (Note: The original FreeIPMI developers from California Digital
 Corp. are now at Zresearch Inc.)
 
-@node Who maintains FreeIPMI?, FreeIPMI vs OpenIPMI vs Ipmitool vs Ipmiutil, How did it start?, Top
-@section Who maintains FreeIPMI?
+@node What operating systems does FreeIPMI run on?, FreeIPMI vs OpenIPMI vs Ipmitool vs Ipmiutil, How did FreeIPMI start?, Top
+@section What operating systems does FreeIPMI run on?
 
-Primary maintenance of FreeIPMI is currently managed by Lawrence
-Livermore National Laboratory (LLNL).  Overall maintenance of FreeIPMI
-has been handled by staff at CDC, Zresearch, and LLNL during the
-lifetime of FreeIPMI.
+FreeIPMI was originally developed on Linux.  It has been confirmed to
+be built on most major Linux distributions such as Redhat, Fedora,
+Suse, and Debian.  FreeIPMI has been ported and confirmed to work on
+atleast FreeBSD, OpenBSD, Solaris, OpenSolaris, and Windows via
+Cygwin.  We imagine it would build cleanly on many other operating
+systems too.
 
-@node FreeIPMI vs OpenIPMI vs Ipmitool vs Ipmiutil, What is special about FreeIPMI, Who maintains FreeIPMI?, Top
+@node FreeIPMI vs OpenIPMI vs Ipmitool vs Ipmiutil, What is special about FreeIPMI, What operating systems does FreeIPMI run on?, Top
 @section What is the relationship between FreeIPMI, OpenIPMI, Ipmitool, and Ipmiutil? 
 There are multiple implementations, APIs, interfaces, end user
 requirements, etc. that one can choose when developing IPMI drivers,
