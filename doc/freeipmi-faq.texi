@@ -131,8 +131,9 @@ FreeIPMI was originally developed on Linux.  It has been confirmed to
 be built on most major Linux distributions such as Redhat, Fedora,
 Suse, and Debian.  FreeIPMI has been ported and confirmed to work on
 atleast FreeBSD, OpenBSD, Solaris, OpenSolaris, and Windows via
-Cygwin.  We imagine it would build cleanly on many other operating
-systems too.
+Cygwin.  We imagine it would build cleanly on other Linux
+distributions and Unix operating systems.  If it doesn't, it should be
+easily portable to them.
 
 @node FreeIPMI vs OpenIPMI vs Ipmitool vs Ipmiutil, What is special about FreeIPMI, What operating systems does FreeIPMI run on?, Top
 @section What is the relationship between FreeIPMI, OpenIPMI, Ipmitool, and Ipmiutil? 
