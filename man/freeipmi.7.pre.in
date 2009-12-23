@@ -255,7 +255,7 @@ Or see the document
 #include <@top_srcdir@/common/man/manpage-common-reporting-bugs.man>
 
 .SH "COPYRIGHT"
-Copyright \(co 2003-2009 FreeIPMI Core Team.  
+Copyright \(co 2003-2010 FreeIPMI Core Team.  
 
 FreeIPMI is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

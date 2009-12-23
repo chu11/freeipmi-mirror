@@ -1,7 +1,7 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-delete.c,v 1.9 2009-05-01 01:55:10 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-delete.c,v 1.9.4.1 2009-12-23 21:24:23 chu11 Exp $
  *****************************************************************************
- *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
+ *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
  *  Written by Albert Chu <chu11@llnl.gov>

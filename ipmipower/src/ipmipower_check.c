@@ -1,7 +1,7 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.115 2009-08-17 23:20:22 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.115.4.1 2009-12-23 21:24:13 chu11 Exp $
  *****************************************************************************
- *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
+ *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
  *  Written by Albert Chu <chu11@llnl.gov>

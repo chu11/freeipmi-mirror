@@ -1,7 +1,7 @@
 .\"#############################################################################
-.\"$Id: ipmiconsole.8.pre.in,v 1.45.4.1 2009-12-10 23:37:56 chu11 Exp $
+.\"$Id: ipmiconsole.8.pre.in,v 1.45.4.2 2009-12-23 21:24:10 chu11 Exp $
 .\"#############################################################################
-.\"  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
+.\"  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
 .\"  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
 .\"  Written by Albert Chu <chu11@llnl.gov>
@@ -239,7 +239,7 @@ that the program be compiled with debugging turned off.
 \}
 #include <@top_srcdir@/common/man/manpage-common-reporting-bugs.man>
 .SH COPYRIGHT
-Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
+Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
 .br
 Copyright (C) 2006-2007 The Regents of the University of California.
 #include <@top_srcdir@/common/man/manpage-common-gpl-program-text.man>

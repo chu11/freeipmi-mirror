@@ -1,7 +1,7 @@
 /*****************************************************************************\
- *  $Id: ipmipower_error.c,v 1.2 2009-06-26 03:43:18 chu11 Exp $
+ *  $Id: ipmipower_error.c,v 1.2.4.1 2009-12-23 21:24:13 chu11 Exp $
  *****************************************************************************
- *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
+ *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
  *  Written by Albert Chu <chu11@llnl.gov>
@@ -24,9 +24,9 @@
  *  with Ipmipower.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 /*****************************************************************************\
- *  $Id: ipmipower_error.c,v 1.2 2009-06-26 03:43:18 chu11 Exp $
+ *  $Id: ipmipower_error.c,v 1.2.4.1 2009-12-23 21:24:13 chu11 Exp $
  *****************************************************************************
- *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
+ *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
  *  Written by Albert Chu <chu11@llnl.gov>

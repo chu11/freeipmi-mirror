@@ -1,7 +1,7 @@
 /*****************************************************************************\
- *  $Id: ipmidetectd_loop.h,v 1.9 2009-03-03 23:56:53 chu11 Exp $
+ *  $Id: ipmidetectd_loop.h,v 1.9.8.1 2009-12-23 21:24:11 chu11 Exp $
  *****************************************************************************
- *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
+ *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
  *  Written by Albert Chu <chu11@llnl.gov>

@@ -1,7 +1,7 @@
 /*****************************************************************************\
- *  $Id: ipmi-dcmi-argp.h,v 1.1 2009-05-26 23:35:57 chu11 Exp $
+ *  $Id: ipmi-dcmi-argp.h,v 1.1.4.1 2009-12-23 21:24:05 chu11 Exp $
  *****************************************************************************
- *  Copyright (C) 2009 Lawrence Livermore National Security, LLC.
+ *  Copyright (C) 2009-2010 Lawrence Livermore National Security, LLC.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
  *  Written by Albert Chu <chu11@llnl.gov>
  *  UCRL-CODE-155698

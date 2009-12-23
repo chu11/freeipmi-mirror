@@ -1,7 +1,7 @@
 /*****************************************************************************\
- *  $Id: ipmipower_argp.c,v 1.22.4.1 2009-12-13 00:32:42 chu11 Exp $
+ *  $Id: ipmipower_argp.c,v 1.22.4.2 2009-12-23 21:24:13 chu11 Exp $
  *****************************************************************************
- *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
+ *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
  *  Written by Albert Chu <chu11@llnl.gov>
@@ -58,7 +58,7 @@ extern struct ipmipower_connection *ics;
 
 const char *argp_program_version =
   "ipmipower - " PACKAGE_VERSION "\n"
-  "Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.\n"
+  "Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.\n"
   "Copyright (C) 2003-2007 The Regents of the University of California.\n"
   "This program is free software; you may redistribute it under the terms of\n"
   "the GNU General Public License.  This program has absolutely no warranty.";
