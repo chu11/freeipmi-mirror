@@ -241,8 +241,8 @@ and R710 (Dell 11G Poweredge systems).
 .TP
 .B get-chassis-identify-status
 This OEM command will retrieve the current chassis identify (i.e. LED)
-status.  Command confirmed to work on Dell Poweredge R610 and R710
-(Dell 11G Poweredge systems).
+status.  Command confirmed to work on Dell Poweredge 2900, 2950, R610,
+and R710 (Dell 10G and 11G Poweredge systems).
 .TP
 .B get-board-id
 This OEM command can get the board ID.  Command confirmed to work on
