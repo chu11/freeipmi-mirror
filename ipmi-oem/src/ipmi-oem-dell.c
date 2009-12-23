@@ -277,6 +277,9 @@
 #define IPMI_OEM_DELL_SET_POWER_CAPACITY_STATUS_ENABLE  0x01
 #define IPMI_OEM_DELL_SET_POWER_CAPACITY_STATUS_DISABLE 0x00
 
+#define IPMI_OEM_DELL_QUERY_CHASSIS_IDENTIFY_STATUS_OFF 0x00
+#define IPMI_OEM_DELL_QUERY_CHASSIS_IDENTIFY_STATUS_ON  0x01
+
 #define IPMI_OEM_DELL_ASSET_TAG_MAX 10
 
 /* Will call ipmi_cmd_get_system_info_parameters only once, b/c field
@@ -4627,6 +4630,79 @@ ipmi_oem_dell_set_power_capacity_status (ipmi_oem_state_data_t *state_data)
                                                    IPMI_NET_FN_OEM_DELL_GENERIC_RS,
                                                    NULL) < 0)
     goto cleanup;
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
+ipmi_oem_dell_get_chassis_identify_status (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  uint8_t identify_status;
+  int rs_len;
+  int rv = -1;
+  
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+
+  /* Dell Poweredge OEM
+   *
+   * From Dell Provided Docs
+   *
+   * Query Chassis Identify Status Request
+   *
+   * 0x30 - OEM network function
+   * 0x32 - OEM cmd
+   * 
+   * Query Chassis Identify Status Response
+   * 
+   * 0x32 - OEM cmd
+   * 0x?? - Completion Code
+   * 0x?? - identify status
+   * - 0x00 - off
+   * - 0x01 - on
+   */
+
+  bytes_rq[0] = IPMI_CMD_OEM_DELL_QUERY_CHASSIS_IDENTIFY_STATUS;
+
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+                              IPMI_NET_FN_OEM_DELL_GENERIC_RQ, /* network function */
+                              bytes_rq, /* data */
+                              1, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                   bytes_rs,
+                                                   rs_len,
+                                                   2,
+                                                   IPMI_CMD_OEM_DELL_QUERY_CHASSIS_IDENTIFY_STATUS,
+                                                   IPMI_NET_FN_OEM_DELL_GENERIC_RS,
+                                                   NULL) < 0)
+    goto cleanup;
+
+  identify_status = bytes_rs[2];
+
+#define IPMI_OEM_DELL_QUERY_CHASSIS_IDENTIFY_STATUS_OFF 0x00
+#define IPMI_OEM_DELL_QUERY_CHASSIS_IDENTIFY_STATUS_ON  0x01
+
+  if (identify_status == IPMI_OEM_DELL_QUERY_CHASSIS_IDENTIFY_STATUS_OFF)
+    pstdout_printf (state_data->pstate, "Off\n");
+  else if (identify_status == IPMI_OEM_DELL_QUERY_CHASSIS_IDENTIFY_STATUS_ON)
+    pstdout_printf (state_data->pstate, "On\n");
+  else
+    pstdout_printf (state_data->pstate, "Unknown\n");
 
   rv = 0;
  cleanup:

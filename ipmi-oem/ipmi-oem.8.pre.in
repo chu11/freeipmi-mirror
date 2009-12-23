@@ -236,6 +236,11 @@ This OEM command can configure the current power capacity to be
 enabled or disabled.  Command confirmed to work on Dell Poweredge R610
 and R710 (Dell 11G Poweredge systems).
 .TP
+.B get-chassis-identify-status
+This OEM command will retrieve the current chassis identify (i.e. LED)
+status.  Command confirmed to work on Dell Poweredge R610 and R710
+(Dell 11G Poweredge systems).
+.TP
 .B get-board-id
 This OEM command can get the board ID.  Command confirmed to work on
 Dell Xanadu2.
