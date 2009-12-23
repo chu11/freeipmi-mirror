@@ -517,8 +517,7 @@ entity ID and instance when appropriate.  (Similar to the
 \fI\-\-entity\-sensor\-names\fR options in
 .B ipmi-sensors
 and
-.B ipmimonitoring
-)
+.B ipmimonitoring.)
 Command confirmed to work on Sun Fire 4140 with ILOM.
 .TP
 .B set-led \fIrecord_id\fR \fIoff|on|standby|slow|fast\fR

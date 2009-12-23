@@ -1,3 +1,7 @@
+2009-12-23  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-oem/ipmi-oem.8.pre.in: Fix grammer typo.
+
 2009-12-22  sandeep patra <kernel32.dll1981@gmail.com>
 
 	* ipmi-pef-config/src/Makefile.am: Fix portability bug to cygwin.
