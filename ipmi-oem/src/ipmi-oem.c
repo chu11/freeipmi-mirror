@@ -271,6 +271,13 @@ struct ipmi_oem_command oem_dell[] =
       ipmi_oem_dell_set_power_capacity_status
     },
     {
+      "query-chassis-identify-status",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_dell_get_chassis_identify_status,
+    },
+    {
       "get-board-id",
       NULL,
       0,
