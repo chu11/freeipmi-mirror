@@ -1,7 +1,7 @@
 /***************************************************************************** \
- *  $Id: ipmi-fru-argp.c,v 1.31 2009-12-13 00:32:29 chu11 Exp $
+ *  $Id: ipmi-fru-argp.c,v 1.32 2009-12-23 21:23:20 chu11 Exp $
  *****************************************************************************
- *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
+ *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
  *  Written by Albert Chu <chu11@llnl.gov>
@@ -52,7 +52,7 @@
 
 const char *argp_program_version =
   "ipmi-fru - " PACKAGE_VERSION "\n"
-  "Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.\n"
+  "Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.\n"
   "Copyright (C) 2007 The Regents of the University of California.\n"
   "This program is free software; you may redistribute it under the terms of\n"
   "the GNU General Public License.  This program has absolutely no warranty.";

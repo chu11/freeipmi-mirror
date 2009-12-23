@@ -1,5 +1,9 @@
 2009-12-23  Albert Chu <chu11@llnl.gov>
 
+	* Globally fix copyright years for 2010.
+	
+2009-12-23  Albert Chu <chu11@llnl.gov>
+
 	* ipmi-oem/: Support dell get-chassis-identify-status.
 
 	* ipmi-oem/: Support 'guid', 'chassis-service-tag',
