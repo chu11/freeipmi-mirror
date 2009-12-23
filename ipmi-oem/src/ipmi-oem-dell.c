@@ -289,7 +289,8 @@ static int
 _get_dell_system_info_short_string (ipmi_oem_state_data_t *state_data,
                                     uint8_t parameter_selector,
                                     char *string,
-                                    unsigned int string_len)
+                                    unsigned int string_len,
+				    unsigned int *string_len_ret)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t configuration_parameter_data[IPMI_OEM_MAX_BYTES];
@@ -371,6 +372,9 @@ _get_dell_system_info_short_string (ipmi_oem_state_data_t *state_data,
               &(configuration_parameter_data[1]),
               configuration_parameter_data[0]);
     }
+
+  if (string_len_ret)
+    (*string_len_ret) = configuration_parameter_data[0];
 
   rv = 0;
  cleanup:
@@ -897,31 +901,42 @@ int
 ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
 {
   char string[IPMI_OEM_DELL_MAX_BYTES+1];
+  unsigned int string_len = 0;
   int rv = -1;
 
   assert (state_data);
-  assert (state_data->prog_data->args->oem_options_count == 1);
 
-  /* achu: handle some common typo situations */
-  if (strcasecmp (state_data->prog_data->args->oem_options[0], "asset-tag")
-      && strcasecmp (state_data->prog_data->args->oem_options[0], "asset_tag")
-      && strcasecmp (state_data->prog_data->args->oem_options[0], "assettag")
+  if (!state_data->prog_data->args->oem_options_count)
+    {
+      pstdout_printf (state_data->pstate,
+                      "Option: guid\n"
+                      "Option: asset-tag\n"
+                      "Option: service-tag\n"
+		      "Option: chassis-service-tag\n"
+		      "Option: chassis-related-service-tag\n"
+		      "Option: board-revision\n",
+		      "Option: platform-model-name\n"
+                      "Option: mac-addresses\n");
+      return (0);
+    }
+
+  if (state_data->prog_data->args->oem_options_count != 1)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s please specify only get-system-info KEY\n");
+      goto cleanup;
+    }
+
+  if (strcasecmp (state_data->prog_data->args->oem_options[0], "guid")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "asset-tag")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "service-tag")
-      && strcasecmp (state_data->prog_data->args->oem_options[0], "service_tag")
-      && strcasecmp (state_data->prog_data->args->oem_options[0], "servicetag")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "chassis-service-tag")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "chassis-related-service-tag")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "board-revision")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "product-name") /* legacy */
-      && strcasecmp (state_data->prog_data->args->oem_options[0], "product_name") /* legacy */
-      && strcasecmp (state_data->prog_data->args->oem_options[0], "productname") /* legacy */
       && strcasecmp (state_data->prog_data->args->oem_options[0], "platform-model-name")
-      && strcasecmp (state_data->prog_data->args->oem_options[0], "platform-model_name")
-      && strcasecmp (state_data->prog_data->args->oem_options[0], "platform_model-name")
-      && strcasecmp (state_data->prog_data->args->oem_options[0], "platform_model_name")
-      && strcasecmp (state_data->prog_data->args->oem_options[0], "platform-modelname")
-      && strcasecmp (state_data->prog_data->args->oem_options[0], "platformmodel-name")
-      && strcasecmp (state_data->prog_data->args->oem_options[0], "platformmodelname")
-      && strcasecmp (state_data->prog_data->args->oem_options[0], "mac-addresses")
-      && strcasecmp (state_data->prog_data->args->oem_options[0], "mac_addresses")
-      && strcasecmp (state_data->prog_data->args->oem_options[0], "macaddresses"))
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "mac-addresses"))
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -945,13 +960,17 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
    *
    * Format #1)
    *
+   * guid parameter = 0xC3
    * asset-tag parameter = 0xC4
    * service-tag parameter = 0xC5
+   * chassis-service-tag parameter = 0xC6
+   * chassis-related-service-tag parameter = 0xC7
+   * board-revision parameter = 0xC8
    *
    * Parameter data response formatted:
    *
    * 1st byte = length
-   * ? bytes = string
+   * ? bytes = string/buf
    *
    * Format #2)
    *
@@ -1016,44 +1035,110 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
 
   memset (string, '\0', IPMI_OEM_DELL_MAX_BYTES + 1);
 
-  if (!strcasecmp (state_data->prog_data->args->oem_options[0], "asset-tag")
-      || !strcasecmp (state_data->prog_data->args->oem_options[0], "asset_tag")
-      || !strcasecmp (state_data->prog_data->args->oem_options[0], "assettag"))
+  if (!strcasecmp (state_data->prog_data->args->oem_options[0], "guid"))
+    {
+      if (_get_dell_system_info_short_string (state_data,
+                                              IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_SYSTEM_GUID,
+                                              string,
+                                              IPMI_OEM_DELL_MAX_BYTES,
+					      &string_len) < 0)
+        goto cleanup;
+      
+      if (string_len != IPMI_SYSTEM_GUID_LENGTH)
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "Invalid GUID length returned: %s\n",
+			   string_len);
+	  goto cleanup;
+	}
+
+      pstdout_printf (state_data->pstate,
+		      "%02X%02X%02X%02X-%02X%02X-%02X%02X-%02X%02X-%02X%02X%02X%02X%02X%02X\n",
+		      (uint8_t)string[15],  /* time low */
+		      (uint8_t)string[14],
+		      (uint8_t)string[13],
+		      (uint8_t)string[12],
+		      (uint8_t)string[11],  /* time mid */
+		      (uint8_t)string[10],
+		      (uint8_t)string[9],   /* time high and version */
+		      (uint8_t)string[8],
+		      (uint8_t)string[6],   /* clock seq high and reserved - comes before clock seq low */
+		      (uint8_t)string[7],   /* clock seq low */
+		      (uint8_t)string[5],   /* node */
+		      (uint8_t)string[4],
+		      (uint8_t)string[3],
+		      (uint8_t)string[2],
+		      (uint8_t)string[1],
+		      (uint8_t)string[0]);
+    }
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "asset-tag"))
     {
       if (_get_dell_system_info_short_string (state_data,
                                               IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_SYSTEM_ASSET_TAG,
                                               string,
-                                              IPMI_OEM_DELL_MAX_BYTES) < 0)
+                                              IPMI_OEM_DELL_MAX_BYTES,
+					      NULL) < 0)
         goto cleanup;
 
       pstdout_printf (state_data->pstate,
 		      "%s\n",
 		      string);
     }
-  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "service-tag")
-           || !strcasecmp (state_data->prog_data->args->oem_options[0], "service_tag")
-           || !strcasecmp (state_data->prog_data->args->oem_options[0], "servicetag"))
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "service-tag"))
     {
       if (_get_dell_system_info_short_string (state_data,
                                               IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_SYSTEM_SERVICE_TAG,
                                               string,
-                                              IPMI_OEM_DELL_MAX_BYTES) < 0)
+                                              IPMI_OEM_DELL_MAX_BYTES,
+					      NULL) < 0)
         goto cleanup;
 
       pstdout_printf (state_data->pstate,
 		      "%s\n",
 		      string);
     }
-  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "product-name") /* legacy */
-           || !strcasecmp (state_data->prog_data->args->oem_options[0], "product_name") /* legacy */
-           || !strcasecmp (state_data->prog_data->args->oem_options[0], "productname") /* legacy */
-           || !strcasecmp (state_data->prog_data->args->oem_options[0], "platform-model-name")
-           || !strcasecmp (state_data->prog_data->args->oem_options[0], "platform-model_name")
-           || !strcasecmp (state_data->prog_data->args->oem_options[0], "platform_model-name")
-           || !strcasecmp (state_data->prog_data->args->oem_options[0], "platform_model_name")
-           || !strcasecmp (state_data->prog_data->args->oem_options[0], "platform-modelname")
-           || !strcasecmp (state_data->prog_data->args->oem_options[0], "platformmodel-name")
-           || !strcasecmp (state_data->prog_data->args->oem_options[0], "platformmodelname"))
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "chassis-service-tag"))
+    {
+      if (_get_dell_system_info_short_string (state_data,
+                                              IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_CHASSIS_SERVICE_TAG,
+                                              string,
+                                              IPMI_OEM_DELL_MAX_BYTES,
+					      NULL) < 0)
+        goto cleanup;
+
+      pstdout_printf (state_data->pstate,
+		      "%s\n",
+		      string);
+    }
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "chassis-related-service-tag"))
+    {
+      if (_get_dell_system_info_short_string (state_data,
+                                              IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_CHASSIS_RELATED_SERVICE_TAG,
+                                              string,
+                                              IPMI_OEM_DELL_MAX_BYTES,
+					      NULL) < 0)
+        goto cleanup;
+
+      pstdout_printf (state_data->pstate,
+		      "%s\n",
+		      string);
+    }
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "board-revision"))
+    {
+      if (_get_dell_system_info_short_string (state_data,
+                                              IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_BOARD_REVISION,
+                                              string,
+                                              IPMI_OEM_DELL_MAX_BYTES,
+					      NULL) < 0)
+        goto cleanup;
+
+      pstdout_printf (state_data->pstate,
+		      "%s\n",
+		      string);
+    }
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "product-name")
+           || !strcasecmp (state_data->prog_data->args->oem_options[0], "platform-model-name"))
     {
       if (_get_dell_system_info_long_string (state_data,
                                              IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_PLATFORM_MODEL_NAME,
@@ -1066,9 +1151,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
 		      string);
 
     }
-  else /* (!strcasecmp (state_data->prog_data->args->oem_options[0], "mac-addresses")
-          || !strcasecmp (state_data->prog_data->args->oem_options[0], "mac_addresses")
-          || !strcasecmp (state_data->prog_data->args->oem_options[0], "macaddresses")) */
+  else /* (!strcasecmp (state_data->prog_data->args->oem_options[0], "mac-addresses")) */
     {
       uint8_t idrac_type = 0;
       int ret;
