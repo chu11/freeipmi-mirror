@@ -914,7 +914,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
                       "Option: service-tag\n"
 		      "Option: chassis-service-tag\n"
 		      "Option: chassis-related-service-tag\n"
-		      "Option: board-revision\n",
+		      "Option: board-revision\n"
 		      "Option: platform-model-name\n"
                       "Option: mac-addresses\n");
       return (0);
