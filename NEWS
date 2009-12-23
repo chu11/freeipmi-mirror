@@ -31,6 +31,8 @@ o In ipmi-oem, fix various Dell options and output given Dell docs
   - Support 'min' option for Dell get-power-consumption-statistics.
 o In ipmi-oem, support additional OEM commands
   - Dell get-chassis-identify-status
+  - Dell get-system-info 'guid', 'chassis-service-tag',
+    'chassis-related-service-tag', and 'board-revision' inputs.
 o In ipmi-sensors, output Entity ID string with "Container Entity ID"
   and "FRU Entity ID" if string available.
 o Fix --eliminate corner case when elimination of nodes leads to 0

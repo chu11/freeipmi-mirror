@@ -1,6 +1,10 @@
 2009-12-23  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/: Support dell get-chassis-identify-status.
+
+	* ipmi-oem/: Support 'guid', 'chassis-service-tag',
+	'chassis-related-service-tag', 'board-revision' for Dell
+	get-system-info.
 	
 2009-12-23  Albert Chu <chu11@llnl.gov>
 

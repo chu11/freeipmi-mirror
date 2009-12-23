@@ -73,12 +73,15 @@ may be passed to any OEM ID to list commands supported by that OEM ID.
 .B Dell
 .RS
 .TP
-.B get-system-info \fIasset\-tag|service\-tag|platform\-model\-name|mac\-addresses\fR
-This OEM command can retrieve the motherboard asset tag, service tag,
-platform model name, or mac addresses.  Command confirmed to work on Dell
-Poweredge 2900, 2950, R610, and R710 (Dell 10G and 11G Poweredge
-systems).  However, specific system information may not be readable or
-available on all systems.
+.B get-system-info \fIKEY\fR
+This OEM command can retrieve the motherboard system information.
+Valid keys are \fIguid\fR, \fIasset\-tag\fR, \fIservice\-tag\fR,
+\fIchassis\-service\-tag\fR, \fIchassis\-related\-service\-tag\fR,
+\fIboard\-revision\fR, \fIplatform\-model\-name\fR, or
+\fImac\-addresses\fR.  Command confirmed to work on Dell Poweredge
+2900, 2950, R610, and R710 (Dell 10G and 11G Poweredge systems).
+However, specific system information may not be readable or available
+on all systems.
 .TP
 .B get-nic-selection
 This OEM command will determine the current NIC selection for IPMI as

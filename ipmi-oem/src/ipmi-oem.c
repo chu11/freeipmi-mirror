@@ -70,9 +70,9 @@ struct ipmi_oem_command oem_dell[] =
   {
     {
       "get-system-info",
-      "<asset-tag|service-tag|platform-model-name|mac-addresses>",
-      1,
-      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      "<KEY>",
+      0,
+      IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
       ipmi_oem_dell_get_system_info
     },
     {
