@@ -57,7 +57,7 @@ Parameters command (ipmi-oem's Dell get-system-info and
 get/set-sol-inactivity-timeout commands are examples of this).
 
 The following is a (likely) incomplete list of IPMI commands OEM
-parameter extensions may have been added.
+parameter extensions may have been added to.
 
 Get/Set System Info Parameters (22.14a/22.14b)
 
@@ -136,12 +136,6 @@ spec should be documented.
 
 B) 
 
-Sample code is not documentation.  I hope this one is self
-explanatory.  Unless the code is documented in detail like the IPMI
-specification, the situation described in 'A' will occur.
-
-C) 
-
 Hex to string/flag mapping information in sensors, system event logs,
 configuration fields, etc. should be documented.
 
@@ -178,12 +172,12 @@ OR
 0x81 = error message 2
 0x82 = error message 3
 
-D) 
+C) 
 
-Related to 'B' and 'C' above, enough detail should be documented to
-calculate, determine, handle errors, etc. of various packet or record
-fields.  This is especially true when bitmasks, bit shifts, bit
-manipulation, multipliers, etc. are involved.
+Enough detail should be documented to calculate, determine, handle
+errors, etc. of various packet or record fields.  This is especially
+true when bitmasks, bit shifts, bit manipulation, multipliers,
+etc. are involved.
 
 For example, we may be given a code snippet such as:
 
@@ -201,22 +195,20 @@ In the example above, there is a fair amount of detail missing:
 - It seems that event_data2 holds a bitmask, what other bitmask
   conditions are possible?
 
+D)
+
+The units of packet or record fields should always be documented.
+
 E)
 
-The units of packet or record fields should always be documented.  I
-hope this one is self explanatory.
+The endian of multibyte fields should always be documented.
 
 F)
 
-The endian of multibyte fields should always be documented.  I hope
-this one is self explanatory.
+Configuration fields should be documented as read only, write only, or
+read/write.
 
 G)
-
-Configuration fields should be documented as read only, write only, or
-read/write.  I hope this one is self explanatory.
-
-H)
 
 Details for mapping between technical information and "real life"
 information should be documented.
