@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.h,v 1.53 2009-12-23 21:23:24 chu11 Exp $
+ *  $Id: ipmi_monitoring.h,v 1.54 2009-12-28 22:57:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -988,13 +988,13 @@ int ipmi_monitoring_sensor_readings_by_record_id (ipmi_monitoring_ctx_t c,
  * Returns number of sensors values retrieved on success, -1 on error
  */
 int ipmi_monitoring_sensor_readings_by_sensor_type (ipmi_monitoring_ctx_t c,
-                                                     const char *hostname,
-                                                     struct ipmi_monitoring_ipmi_config *config,
-                                                     unsigned int sensor_reading_flags,
-                                                     unsigned int *sensor_types,
-                                                     unsigned int sensor_types_len,
-                                                     Ipmi_Monitoring_Sensor_Readings_Callback callback,
-                                                     void *callback_data);
+                                                    const char *hostname,
+                                                    struct ipmi_monitoring_ipmi_config *config,
+                                                    unsigned int sensor_reading_flags,
+                                                    unsigned int *sensor_types,
+                                                    unsigned int sensor_types_len,
+                                                    Ipmi_Monitoring_Sensor_Readings_Callback callback,
+                                                    void *callback_data);
 
 /*
  * ipmi_monitoring_iterator_first
