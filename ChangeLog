@@ -1,3 +1,8 @@
+2009-12-28  Albert Chu <chu11@llnl.gov>
+
+	* ipmimonitoring/src/libipmimonitoring/ipmi_monitoring.h: Fix
+	tabbing.
+	
 2009-12-24  Albert Chu <chu11@llnl.gov>
 
 	* doc/freeipmi-oem-documentation-requirements.txt: Update.
