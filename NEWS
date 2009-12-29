@@ -13,6 +13,7 @@ Libraries - Detailed Enhancements/Changes/Fixes
 -----------------------------------------------
 o libipmimonitoring
   - Re-architect to support all defined IPMI sensor types.
+  - Support IPMI_MONITORING_ERR_CONFIG_FILE_DOES_NOT_EXIST error code.
 
 Contributions
 -------------
