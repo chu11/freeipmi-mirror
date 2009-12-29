@@ -58,6 +58,9 @@ other utility functions necessary to communicate on an IPMI
 interface.  Utilized by the 'api' sub-section and tools such as
 ipmipower(8) and ipmiconsole(8).
 
+interpret - Provides an API for interpreting sensor events by mapping
+them into Nominal, Warning, or Critical states.
+
 locate - Provides an API to probe several standards to find default
 values for in-band IPMI communication.  Utilized by the 'api'
 sub-section and the ipmi-locate(8) tool.

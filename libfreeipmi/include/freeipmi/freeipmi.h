@@ -67,6 +67,7 @@ extern "C" {
 #include <freeipmi/interface/ipmi-lan-interface.h>
 #include <freeipmi/interface/ipmi-rmcpplus-interface.h>
 #include <freeipmi/interface/rmcp-interface.h>
+#include <freeipmi/interpret/ipmi-interpret.h>
 #include <freeipmi/locate/ipmi-locate.h>
 #include <freeipmi/record-format/ipmi-cipher-suite-record-format.h>
 #include <freeipmi/record-format/ipmi-fru-information-record-format.h>
