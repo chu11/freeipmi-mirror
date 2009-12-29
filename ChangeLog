@@ -1,7 +1,7 @@
 2010-xx-xx  Albert Chu <chu11@llnl.gov>
 
 	* ipmimonitoring/src/libipmimonitoring/: Support
-	IPMI_MONITORING_ERR_CONFIG_FILE_DOES_NOT_EXIST error code.
+	IPMI_MONITORING_ERR_SENSOR_CONFIG_FILE_DOES_NOT_EXIST error code.
 	Remove unused IPMI_MONITORING_ERR_CONFIG_FILE_PARSE error code.
 	
 2009-12-28  Albert Chu <chu11@llnl.gov>

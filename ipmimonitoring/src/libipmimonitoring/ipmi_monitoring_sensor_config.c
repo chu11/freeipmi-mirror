@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_config.c,v 1.40.2.1 2009-12-29 00:04:52 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_config.c,v 1.40.2.2 2009-12-29 18:57:33 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -3184,7 +3184,7 @@ ipmi_monitoring_sensor_config (int *errnum)
             }
           else
             {
-              *errnum = IPMI_MONITORING_ERR_CONFIG_FILE_DOES_NOT_EXIST;
+              *errnum = IPMI_MONITORING_ERR_SENSOR_CONFIG_FILE_DOES_NOT_EXIST;
               goto cleanup;
             }
         }

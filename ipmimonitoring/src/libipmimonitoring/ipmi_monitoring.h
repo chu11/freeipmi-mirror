@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.h,v 1.54.2.2 2009-12-29 17:47:45 chu11 Exp $
+ *  $Id: ipmi_monitoring.h,v 1.54.2.3 2009-12-29 18:57:33 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -39,7 +39,7 @@ enum ipmi_monitoring_error_codes
     IPMI_MONITORING_ERR_PARAMETERS                          = 3,
     IPMI_MONITORING_ERR_PERMISSION                          = 4,
     IPMI_MONITORING_ERR_LIBRARY_UNINITIALIZED               = 5,
-    IPMI_MONITORING_ERR_CONFIG_FILE_DOES_NOT_EXIST          = 6,
+    IPMI_MONITORING_ERR_SENSOR_CONFIG_FILE_DOES_NOT_EXIST   = 6,
     IPMI_MONITORING_ERR_SENSOR_CONFIG_FILE_PARSE            = 7,
     IPMI_MONITORING_ERR_SDR_CACHE_PERMISSION                = 8,
     IPMI_MONITORING_ERR_SDR_CACHE_FILESYSTEM                = 9,
