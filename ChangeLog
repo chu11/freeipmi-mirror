@@ -2,6 +2,9 @@
 
 	* ipmimonitoring/src/libipmimonitoring/ipmi_monitoring.h: Fix
 	tabbing.
+
+	* doc/freeipmi-libraries.txt, libfreeipmi/libfreeipmi.3.pre.in:
+	Remove dcmi sub-library, was removed.
 	
 2009-12-24  Albert Chu <chu11@llnl.gov>
 

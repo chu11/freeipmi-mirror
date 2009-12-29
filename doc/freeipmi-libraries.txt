@@ -26,8 +26,6 @@ IPMI commands.  The cmds are used by most other portions of
 libfreeipmi including the 'api' sub-section and tools such as
 ipmipower(8) and ipmiconsole(8).
 
-dcmi - Provides Data Center Management Interface (DCMI) extensions.
-
 debug - Provides various packet/record dumping utility functions.
 Utilized by the 'api' subsection and by tools such as ipmipower(8) and
 ipmiconsole(8).
