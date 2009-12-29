@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.68.2.1 2009-12-29 00:04:52 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.68.2.2 2009-12-29 17:47:45 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -61,7 +61,6 @@ static char *ipmi_monitoring_errmsgs[] =
     "permission denied",
     "library uninitialized",
     "config file does not exist",
-    "config file parse error",
     "sensor config file parse error",
     "sdr cache permission error",
     "sdr cache filesystem error",
