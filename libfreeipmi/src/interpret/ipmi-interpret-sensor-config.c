@@ -14,38 +14,25 @@
   You should have received a copy of the GNU General Public License
   along with this program; if not, write to the Free Software Foundation,
   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
-
 */
 
-#ifndef _IPMI_INTERPRET_DEFS_H
-#define _IPMI_INTERPRET_DEFS_H
-
 #ifdef HAVE_CONFIG_H
-#include "config.h"
+#include <config.h>
 #endif /* HAVE_CONFIG_H */
 
-#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#ifdef STDC_HEADERS
+#include <string.h>
+#endif /* STDC_HEADERS */
+#include <errno.h>
 
-#include "freeipmi/sdr-parse/ipmi-sdr-parse.h"
 #include "freeipmi/interpret/ipmi-interpret.h"
 
+#include "ipmi-interpret-defs.h"
+#include "ipmi-interpret-trace.h"
 #include "ipmi-interpret-sensor-config.h"
+#include "ipmi-interpret-util.h"
 
-#include "list.h"
+#include "freeipmi-portability.h"
 
-#define IPMI_INTERPRET_CTX_MAGIC 0xACFF3289
-
-#define IPMI_INTERPRET_FLAGS_MASK \
-  (IPMI_INTERPRET_FLAGS_DEFAULT)
-
-struct ipmi_interpret_ctx {
-  uint32_t magic;
-  int errnum;
-  unsigned int flags;
-
-  ipmi_sdr_parse_ctx_t sdr_parse_ctx;
-
-  struct ipmi_interpret_sensors interpret_sensors;
-};
-
-#endif /* _IPMI_INTERPRET_DEFS_H */
