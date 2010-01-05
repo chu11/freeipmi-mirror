@@ -38,7 +38,7 @@
 
 int ipmi_interpret_sensors_init (ipmi_interpret_ctx_t ctx);
 
-int ipmi_interpret_sensors_destroy (ipmi_interpret_ctx_t ctx);
+void ipmi_interpret_sensors_destroy (ipmi_interpret_ctx_t ctx);
 
 #endif /* ipmi-interpret-sensor-config.h */
 
