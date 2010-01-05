@@ -1,4 +1,4 @@
-FreeIPMI 0.8.2 - 12/07/09
+FreeIPMI 0.8.2 - 01/05/10
 -------------------------
 o Add fixes to deal with OSes that will report ECONNRESET or
   ECONNREFUSED on failed UDP sends.
