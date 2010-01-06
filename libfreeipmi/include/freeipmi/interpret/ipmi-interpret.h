@@ -31,12 +31,13 @@ extern "C" {
 #define IPMI_INTERPRET_ERR_CONTEXT_INVALID                    2
 #define IPMI_INTERPRET_ERR_PARAMETERS                         3
 #define IPMI_INTERPRET_ERR_OUT_OF_MEMORY                      4
-#define IPMI_INTERPRET_ERR_SENSOR_CONFIG_FILE_DOES_NOT_EXIST  5        
-#define IPMI_INTERPRET_ERR_SENSOR_CONFIG_FILE_PARSE           6
-#define IPMI_INTERPRET_ERR_SYSTEM_ERROR                       7
-#define IPMI_INTERPRET_ERR_OVERFLOW                           8
-#define IPMI_INTERPRET_ERR_INTERNAL_ERROR                     9
-#define IPMI_INTERPRET_ERR_ERRNUMRANGE                       10
+#define IPMI_INTERPRET_ERR_PERMISSION                         5
+#define IPMI_INTERPRET_ERR_SENSOR_CONFIG_FILE_DOES_NOT_EXIST  6        
+#define IPMI_INTERPRET_ERR_SENSOR_CONFIG_FILE_PARSE           7
+#define IPMI_INTERPRET_ERR_SYSTEM_ERROR                       8
+#define IPMI_INTERPRET_ERR_OVERFLOW                           9
+#define IPMI_INTERPRET_ERR_INTERNAL_ERROR                    10
+#define IPMI_INTERPRET_ERR_ERRNUMRANGE                       11
 
 #define IPMI_INTERPRET_FLAGS_DEFAULT                     0x0000
 

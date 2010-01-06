@@ -29,6 +29,8 @@
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
+#include <sys/types.h>
+#include <sys/stat.h>
 #include <assert.h>
 #include <errno.h>
 
@@ -52,6 +54,7 @@ static char *ipmi_interpret_errmsgs[] =
     "context invalid",
     "invalid parameters",
     "out of memory",
+    "permission denied",
     "sensor config file does not exist",
     "sensor config file parse error",
     "internal system error",
@@ -81,6 +84,9 @@ ipmi_interpret_ctx_create (void)
       goto cleanup;
     }
 
+  if (ipmi_interpret_sensors_init (ctx) < 0)
+    goto cleanup;
+
   return (ctx);
 
  cleanup:
@@ -88,6 +94,7 @@ ipmi_interpret_ctx_create (void)
     {
       if (ctx->sdr_parse_ctx)
         ipmi_sdr_parse_ctx_destroy (ctx->sdr_parse_ctx);
+      ipmi_interpret_sensors_destroy (ctx);
       free (ctx);
     }
   return (NULL);
@@ -174,6 +181,7 @@ int
 ipmi_interpret_load_sensor_config (ipmi_interpret_ctx_t ctx,
                                    const char *sensor_config_file)
 {
+  struct stat buf;
   int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_INTERPRET_CTX_MAGIC)
@@ -182,6 +190,24 @@ ipmi_interpret_load_sensor_config (ipmi_interpret_ctx_t ctx,
       return (-1);
     }
 
+  if (sensor_config_file)
+    {
+      if (stat (sensor_config_file, &buf) < 0)
+        {
+          if (errno == EACCES || errno == EPERM)
+            INTERPRET_SET_ERRNUM (ctx, IPMI_INTERPRET_ERR_PERMISSION);
+          else if (errno == ENOENT)
+            INTERPRET_SET_ERRNUM (ctx, IPMI_INTERPRET_ERR_SENSOR_CONFIG_FILE_DOES_NOT_EXIST);
+          else
+            INTERPRET_SET_ERRNUM (ctx, IPMI_INTERPRET_ERR_PARAMETERS);
+          goto cleanup;
+        }
+    }
+
+  if (ipmi_interpret_sensor_config_parse (ctx, sensor_config_file) < 0)
+    goto cleanup;
+
+  rv = 0;
  cleanup:
   return (rv);
 }

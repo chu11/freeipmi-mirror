@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.8.1],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.186.2.1 2009-12-29 21:30:46 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.186.2.2 2010-01-06 23:25:14 chu11 Exp $])
 
 dnl We require a modern autoconf and automake
 AC_PREREQ([2.57])
@@ -614,7 +614,9 @@ dnl Misc checks and build options
 AC_FREEIPMI_CONFIG_FILE
 AC_BMC_WATCHDOG_LOGFILE_DEFAULT
 AC_IPMI_MONITORING_SDR_CACHE_DIR
+dnl legacy
 AC_IPMI_MONITORING_SENSOR_CONFIG_FILE
+AC_INTERPRET_SENSOR_CONFIG_FILE
 AC_IPMIDETECT_CONFIG_FILE
 AC_IPMIDETECTD_CONFIG_FILE
 AC_DONT_CHECK_FOR_ROOT
