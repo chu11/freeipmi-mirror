@@ -26,7 +26,6 @@
 
 #include <stdint.h>
 
-#include "freeipmi/sdr-parse/ipmi-sdr-parse.h"
 #include "freeipmi/interpret/ipmi-interpret.h"
 
 #include "ipmi-interpret-sensor-config.h"
@@ -89,8 +88,6 @@ struct ipmi_interpret_ctx {
   uint32_t magic;
   int errnum;
   unsigned int flags;
-
-  ipmi_sdr_parse_ctx_t sdr_parse_ctx;
 
   struct ipmi_interpret_sensors interpret_sensors;
 };

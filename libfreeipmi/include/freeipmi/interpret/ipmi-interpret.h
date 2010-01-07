@@ -67,10 +67,10 @@ int ipmi_interpret_load_sensor_config (ipmi_interpret_ctx_t ctx,
 
 /* interpret core functions */
 int ipmi_interpret_sensor (ipmi_interpret_ctx_t ctx,
-                           const void *sdr_record,
-                           unsigned int sdr_record_len,
-                           uint8_t shared_sensor_number_offset,
-                           uint16_t sensor_event_bitmask);
+                           uint8_t event_reading_type_code,
+                           uint8_t sensor_type,
+                           uint16_t sensor_event_bitmask,
+                           unsigned int *sensor_state);
 
 #ifdef __cplusplus
 }
