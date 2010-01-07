@@ -11,6 +11,10 @@ asf
 ---
 support asf base protocol stuff in addition to IPMI?
 
+ipmi-sensors
+------------
+output event bitmask instead of strings
+
 ipmi-seld
 ---------
 log sel events to syslog?
