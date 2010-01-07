@@ -121,9 +121,7 @@ tmpl_cmd_get_channel_authentication_capabilities_rq
 tmpl_cmd_get_channel_authentication_capabilities_rs
 
 are the templates for the Get Channel Authentication Capapilities
-command.  They are listed first in the file b/c they are the first
-commands in the IPMI Messaging Support Commands chapter implemented in
-that file.
+command.
 
 fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_rq =
   {

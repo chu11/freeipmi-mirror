@@ -1,5 +1,9 @@
 2010-01-07  Albert Chu <chu11@llnl.gov>
 
+	* doc/freeipmi-coding.txt: Update text.
+
+2010-01-07  Albert Chu <chu11@llnl.gov>
+
 	* ipmimonitoring/ipmi_monitoring_sensors.conf.5.pre.in: Remove
 	unnecessary text.
 	
