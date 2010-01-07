@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.8.1],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.186.2.2 2010-01-06 23:25:14 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.186.2.3 2010-01-07 23:18:08 chu11 Exp $])
 
 dnl We require a modern autoconf and automake
 AC_PREREQ([2.57])
@@ -41,6 +41,7 @@ AC_CONFIG_FILES([
         contrib/nagios/Makefile
         libfreeipmi/Makefile 
         libfreeipmi/libfreeipmi.3.pre
+        libfreeipmi/freeipmi_interpret_sensors.conf.5.pre
         libfreeipmi/include/Makefile 
 	libfreeipmi/src/Makefile 
         libfreeipmi/src/api/Makefile

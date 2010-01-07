@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.h,v 1.54.2.3 2009-12-29 18:57:33 chu11 Exp $
+ *  $Id: ipmi_monitoring.h,v 1.54.2.4 2010-01-07 23:18:10 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -860,50 +860,6 @@ typedef struct ipmi_monitoring_ctx *ipmi_monitoring_ctx_t;
 typedef int (*Ipmi_Monitoring_Sensor_Readings_Callback)(ipmi_monitoring_ctx_t c, void *callback_data);
 
 /*
- * ipmi_monitoring_sensor_config_file
- *
- * Initialize the ipmi monitoring library with a different default
- * sensor configuration file.  Threaded applications are responsible
- * for calling this function before any thread may call another
- * function in the library.  Should be called before
- * ipmi_monitoring_init().
- *
- * Returns 0 on success, -1 on error
- */
-int ipmi_monitoring_sensor_config_file (const char *file, int *errnum);
-
-/*
- * ipmi_monitoring_sdr_cache_directory
- *
- * Initialize the ipmi monitoring library with a different SDR cache
- * directory.  Threaded applications are responsible for calling this
- * function before any thread may call another function in the
- * library.  Should be called before ipmi_monitoring_init().
- *
- * Returns 0 on success, -1 on error
- */
-int ipmi_monitoring_sdr_cache_directory (const char *dir, int *errnum);
-
-/*
- * ipmi_monitoring_sdr_cache_filenames
- *
- * Initialize how sdr cache filenames will be formatted when
- * written/read.  Threaded applications are responsible for calling
- * this function before any thread may call another function in the
- * library.  Should be called before ipmi_monitoring_init().
- *
- * The following may be included in the format.
- *
- * %L - the hostname of the local machine
- * %H - the remote host being monitored
- *
- * Atleast %H must be specified.
- *
- * Returns 0 on success, -1 on error
- */
-int ipmi_monitoring_sdr_cache_filenames (const char *format, int *errnum);
-
-/*
  * ipmi_monitoring_init
  *
  * Initialize the ipmi monitoring library.  Needs to be called only
@@ -953,6 +909,48 @@ char *ipmi_monitoring_ctx_strerror (int errnum);
  * most recently caused error.
  */
 char *ipmi_monitoring_ctx_errormsg (ipmi_monitoring_ctx_t c);
+
+/*
+ * ipmi_monitoring_ctx_sensor_config_file
+ *
+ * Initialize the ipmi monitoring context with the interpretation
+ * rules stored in a specific sensor configuration file.  If NULL
+ * sensor_config_file is specified, the default sensor configuration
+ * file will be read and parsed.
+ *
+ * Returns 0 on success, -1 on error
+ */
+int ipmi_monitoring_ctx_sensor_config_file (ipmi_monitoring_ctx_t c,
+                                            const char *sensor_config_file);
+  
+/*
+ * ipmi_monitoring_ctx_sdr_cache_directory
+ *
+ * Initialize the ipmi monitoring context with a different SDR cache
+ * directory.
+ *
+ * Returns 0 on success, -1 on error
+ */
+int ipmi_monitoring_ctx_sdr_cache_directory (ipmi_monitoring_ctx_t c,
+                                             const char *dir);
+
+/*
+ * ipmi_monitoring_sdr_cache_filenames
+ *
+ * Initialize how sdr cache filenames will be formatted when
+ * written/read.
+ *
+ * The following may be included in the format.
+ *
+ * %L - the hostname of the local machine
+ * %H - the remote host being monitored
+ *
+ * Atleast %H must be specified.
+ *
+ * Returns 0 on success, -1 on error
+ */
+int ipmi_monitoring_ctx_sdr_cache_filenames (ipmi_monitoring_ctx_t c,
+                                             const char *format);
 
 /*
  * ipmi_monitoring_sensor_readings_by_record_id

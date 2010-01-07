@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.141 2009-12-23 21:23:23 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.141.2.1 2010-01-07 23:18:09 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -159,54 +159,9 @@ _flush_cache (ipmimonitoring_state_data_t *state_data)
 static int
 _setup_ipmimonitoring_lib (struct ipmimonitoring_arguments *args)
 {
-  char sdr_cache_directory[MAXPATHLEN+1];
   int errnum;
 
   assert (args);
-
-  /* Force use of same directory used for other FreeIPMI tools.
-   *
-   * call sdr_cache_create_directory() to create it first, otherwise
-   * lib will say directory doesn't exist.
-   */
-
-  if (sdr_cache_create_directory (NULL, args->sdr.sdr_cache_directory) < 0)
-    return (-1);
-
-  if (sdr_cache_get_cache_directory (NULL,
-                                     args->sdr.sdr_cache_directory,
-                                     sdr_cache_directory,
-                                     MAXPATHLEN) < 0)
-    return (-1);
-
-  if (ipmi_monitoring_sdr_cache_directory (sdr_cache_directory, &errnum) < 0)
-    {
-      fprintf (stderr,
-               "ipmi_monitoring_sdr_cache_directory: %s\n",
-               ipmi_monitoring_ctx_strerror (errnum));
-      return (-1);
-    }
-
-  /* Force use of same filename format used for other FreeIPMI tools.
-   */
-  if (ipmi_monitoring_sdr_cache_filenames ("sdr-cache-%L.%H", &errnum) < 0)
-    {
-      fprintf (stderr,
-               "ipmi_monitoring_sdr_cache_filename: %s\n",
-               ipmi_monitoring_ctx_strerror (errnum));
-      return (-1);
-    }
-
-  if (args->sensor_config_file)
-    {
-      if (ipmi_monitoring_sensor_config_file (args->sensor_config_file, &errnum) < 0)
-        {
-          fprintf (stderr,
-                   "ipmi_monitoring_sensor_config_file: %s\n",
-                   ipmi_monitoring_ctx_strerror (errnum));
-          return (-1);
-        }
-    }
 
   if (ipmi_monitoring_init (args->ipmimonitoring_flags, &errnum) < 0)
     {
@@ -1042,6 +997,7 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
   unsigned int output_record_ids[MAX_SENSOR_RECORD_IDS];
   unsigned int output_record_ids_length = 0;
   unsigned int *output_record_ids_ptr = NULL;
+  char sdr_cache_directory[MAXPATHLEN+1];
 
   assert (state_data);
 
@@ -1052,6 +1008,52 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
 
   if (args->sdr.flush_cache)
     return (_flush_cache (state_data));
+
+  /* Force use of same directory used for other FreeIPMI tools.
+   *
+   * call sdr_cache_create_directory() to create it first, otherwise
+   * lib will say directory doesn't exist.
+   */
+
+  if (sdr_cache_create_directory (NULL, args->sdr.sdr_cache_directory) < 0)
+    return (-1);
+
+  memset (sdr_cache_directory, '\0', MAXPATHLEN + 1);
+
+  if (sdr_cache_get_cache_directory (NULL,
+                                     args->sdr.sdr_cache_directory,
+                                     sdr_cache_directory,
+                                     MAXPATHLEN) < 0)
+    return (-1);
+
+  if (ipmi_monitoring_ctx_sdr_cache_directory (state_data->ctx,
+                                               sdr_cache_directory) < 0)
+    {
+      fprintf (stderr,
+               "ipmi_monitoring_ctx_sdr_cache_directory: %s\n",
+               ipmi_monitoring_ctx_errormsg (state_data->ctx));
+      return (-1);
+    }
+
+  /* Force use of same filename format used for other FreeIPMI tools.
+   */
+  if (ipmi_monitoring_ctx_sdr_cache_filenames (state_data->ctx,
+                                               "sdr-cache-%L.%H") < 0)
+    {
+      fprintf (stderr,
+               "ipmi_monitoring_ctx_sdr_cache_filename: %s\n",
+               ipmi_monitoring_ctx_errormsg (state_data->ctx));
+      return (-1);
+    }
+
+  if (ipmi_monitoring_ctx_sensor_config_file (state_data->ctx,
+                                              args->sensor_config_file) < 0)
+    {
+      fprintf (stderr,
+               "ipmi_monitoring_ctx_sensor_config_file: %s\n",
+               ipmi_monitoring_ctx_errormsg (state_data->ctx));
+      return (-1);
+    }
 
   /* libipmimonitoring SDR creation/loading on its own.  However we do
    * it here so the ipmimonitoring tool and resemble other FreeIPMI

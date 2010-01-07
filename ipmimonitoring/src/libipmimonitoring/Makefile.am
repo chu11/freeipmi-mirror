@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.15 2009-02-03 22:48:22 chu11 Exp $
+## $Id: Makefile.am,v 1.15.14.1 2010-01-07 23:18:10 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
@@ -9,8 +9,7 @@ noinst_HEADERS = \
 	ipmi_monitoring_defs.h \
 	ipmi_monitoring_ipmi_communication.h \
 	ipmi_monitoring_sdr_cache.h \
-	ipmi_monitoring_sensor_reading.h \
-	ipmi_monitoring_sensor_config.h
+	ipmi_monitoring_sensor_reading.h
 
 include_HEADERS = ipmi_monitoring.h
 
@@ -36,8 +35,7 @@ libipmimonitoring_la_SOURCES = \
 	ipmi_monitoring_debug.c \
 	ipmi_monitoring_ipmi_communication.c \
 	ipmi_monitoring_sdr_cache.c \
-	ipmi_monitoring_sensor_reading.c \
-	ipmi_monitoring_sensor_config.c
+	ipmi_monitoring_sensor_reading.c
 
 $(top_builddir)/common/src/miscutil/libmiscutils.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`

@@ -1,6 +1,6 @@
 SUBDIRS = include src 
 
-MANS_CPP = libfreeipmi.3
+MANS_CPP = libfreeipmi.3 freeipmi_interpret_sensors.conf.5
 
 $(MANS_CPP): $(MANS_CPP:%=%.pre)
 	$(CPP) -C -P -I. $@.pre  $@
