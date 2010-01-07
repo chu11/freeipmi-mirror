@@ -100,8 +100,9 @@ ipmi_interpret_ctx_destroy (ipmi_interpret_ctx_t ctx)
   if (!ctx || ctx->magic != IPMI_INTERPRET_CTX_MAGIC)
     return;
 
-  ctx->magic = ~IPMI_INTERPRET_CTX_MAGIC;
   ipmi_interpret_sensors_destroy (ctx);
+
+  ctx->magic = ~IPMI_INTERPRET_CTX_MAGIC;
   free (ctx);
 }
 
@@ -226,7 +227,7 @@ _get_sensor_state (ipmi_interpret_ctx_t ctx,
     {
       if (sensor_event_bitmask & (0x1 << i))
         {
-          if (config[i]->sensor_state > sensor_state)
+          if (config[i]->sensor_state > (*sensor_state))
             (*sensor_state) = config[i]->sensor_state;
         }
       i++;
