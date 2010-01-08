@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.68.2.4 2010-01-07 23:18:10 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.68.2.5 2010-01-08 18:26:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -262,8 +262,6 @@ int
 ipmi_monitoring_ctx_sensor_config_file (ipmi_monitoring_ctx_t c,
                                         const char *sensor_config_file)
 {
-  struct stat buf;
-
   if (!c || c->magic != IPMI_MONITORING_MAGIC)
     return (-1);
   

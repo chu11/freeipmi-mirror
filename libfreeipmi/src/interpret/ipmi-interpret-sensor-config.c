@@ -3616,7 +3616,7 @@ ipmi_interpret_sensor_config_parse (ipmi_interpret_ctx_t ctx,
 
   num = sizeof (options)/sizeof (struct conffile_option);
   if (conffile_parse (cf,
-                      sensor_config_file,
+                      config_file,
                       options,
                       num,
                       NULL,

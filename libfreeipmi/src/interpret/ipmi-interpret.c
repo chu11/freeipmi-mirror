@@ -198,10 +198,25 @@ ipmi_interpret_load_sensor_config (ipmi_interpret_ctx_t ctx,
           goto cleanup;
         }
     }
+  else
+    {
+      if (stat (INTERPRET_SENSOR_CONFIG_FILE_DEFAULT, &buf) < 0)
+        {
+          /* Its not an error if the default configuration file doesn't exist */
+          if (errno == ENOENT)
+            goto out;
+          else if (errno == EACCES || errno == EPERM)
+            INTERPRET_SET_ERRNUM (ctx, IPMI_INTERPRET_ERR_PERMISSION);
+          else
+            INTERPRET_SET_ERRNUM (ctx, IPMI_INTERPRET_ERR_PARAMETERS);
+          goto cleanup;
+        }
+    }
 
   if (ipmi_interpret_sensor_config_parse (ctx, sensor_config_file) < 0)
     goto cleanup;
 
+ out:
   rv = 0;
  cleanup:
   return (rv);
