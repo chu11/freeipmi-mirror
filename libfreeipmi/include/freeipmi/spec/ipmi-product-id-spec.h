@@ -63,6 +63,12 @@ extern "C" {
 #define IPMI_DELL_PRODUCT_ID_XANADU2 IPMI_INVENTEC_PRODUCT_ID_5441
 
 /*
+ * Sun Microsystems
+ */
+
+#define IPMI_SUN_MICROSYSTEMS_PRODUCT_ID_X4140 18177
+
+/*
  * Supermicro
  */
 

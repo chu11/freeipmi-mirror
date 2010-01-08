@@ -1,3 +1,9 @@
+2010-01-08  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-product-id-spec.h,
+	libfreeipmi/include/freeipmi/spec/ipmi-iana-enterprise-numbers-spec.h:
+	Add Sun manufacturer and product IDs.
+	
 2010-01-07  Albert Chu <chu11@llnl.gov>
 
 	* doc/freeipmi-coding.txt: Update text.
