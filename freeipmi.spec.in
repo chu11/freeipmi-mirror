@@ -268,6 +268,7 @@ fi
 %{_mandir}/man5/ipmimonitoring_sensors.conf.5*
 %{_mandir}/man5/ipmimonitoring.conf.5*
 %{_mandir}/man5/libipmimonitoring.conf.5*
+%{_mandir}/man5/freeipmi_interpret_sensors.conf.5*
 %{_mandir}/man8/ipmi-chassis.8*
 %{_mandir}/man8/ipmi-chassis-config.8*
 %{_mandir}/man8/ipmi-dcmi.8*
@@ -312,6 +313,7 @@ fi
 %{_includedir}/freeipmi/fiid/*.h
 %{_includedir}/freeipmi/fru-parse/*.h
 %{_includedir}/freeipmi/interface/*.h
+%{_includedir}/freeipmi/interpret/*.h
 %{_includedir}/freeipmi/locate/*.h
 %{_includedir}/freeipmi/record-format/*.h
 %{_includedir}/freeipmi/sdr-cache/*.h
