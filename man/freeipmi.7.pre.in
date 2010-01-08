@@ -131,9 +131,7 @@ read and write console data through a file descriptor.
 .PP
 .B Libipmimonitoring
 .PP
-A library for sensor monitoring and interpretation.  Sensor monitoring
-and interpretation of those sensors is abstracted into an API with
-an iterator interface.
+A library for sensor monitoring that abstracts away most IPMI details.
 .PP
 .B Libipmidetect
 .PP

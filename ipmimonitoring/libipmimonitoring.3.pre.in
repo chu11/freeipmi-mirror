@@ -1,5 +1,5 @@
 .\"############################################################################
-.\"  $Id: libipmimonitoring.3.pre.in,v 1.17 2009-12-23 21:23:23 chu11 Exp $
+.\"  $Id: libipmimonitoring.3.pre.in,v 1.17.2.1 2010-01-08 19:10:35 chu11 Exp $
 .\"############################################################################
 .\"  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -31,10 +31,6 @@ libipmimonitoring \- a library for IPMI sensor monitoring
 .sp
 .BI "int ipmi_monitoring_init(unsigned int debug_flags, int *errnum);"
 .sp
-.BI "int ipmi_monitoring_sdr_cache_directory(char *dir, int *errnum);"
-.sp
-.BI "int ipmi_monitoring_sdr_cache_filenames(char *format, int *errnum);"
-.sp
 .BI "ipmi_monitoring_ctx_t ipmi_monitoring_ctx_create(void);"
 .sp
 .BI "void ipmi_monitoring_ctx_destroy(ipmi_monitoring_ctx_t c);"
@@ -42,6 +38,12 @@ libipmimonitoring \- a library for IPMI sensor monitoring
 .BI "int ipmi_monitoring_ctx_errnum(ipmi_monitoring_ctx_t c);"
 .sp
 .BI "char *ipmi_monitoring_ctx_strerror(int errnum);"
+.sp
+.BI "int ipmi_monitoring_ctx_sensor_config_file(ipmi_monitoring_ctx_t c, const char *sensor_config_file);
+.sp
+.BI "int ipmi_monitoring_ctx_sdr_cache_directory(ipmi_monitoring_ctx_t c, char *dir);"
+.sp
+.BI "int ipmi_monitoring_ctx_sdr_cache_filenames(ipmi_monitoring_ctx_t c, char *format);"
 .sp
 .BI "int ipmi_monitoring_sensor_readings_by_record_id(ipmi_monitoring_ctx_t c, char *hostname, struct ipmi_monitoring_ipmi_config *config, unsigned int sensor_reading_flags, unsigned int *record_ids, unsigned int record_ids_len, Ipmi_Monitoring_Sensor_Readings_Callback callback, void *callback_data);"
 .sp
@@ -71,34 +73,23 @@ libipmimonitoring \- a library for IPMI sensor monitoring
 .SH "DESCRIPTION"
 The 
 .B Libipmimonitoring 
-implements a high level sensor monitoring API for IPMI sensors.  The
-goal of this library is to abstract away all of the underlying IPMI
-details away from the user and map IPMI sensor readings into NOMINAL,
-WARNING, or CRITICAL states.  By mapping sensor readings into NOMINAL,
-WARNING, or CRITICAL states, it makes monitoring sensors easier across
-large numbers of nodes.  An iterator interface is also provided that
-allows the user to iterate through sensor values, types, units, and
-states.
-
+implements a high level sensor monitoring API for IPMI sensors.  An
+iterator interface is provided that allows the user to iterate through
+sensor values, types, units, and states.
 .LP
 In order to improve efficiency, SDR data will be cached on the host.
 By default it is cached in @IPMI_MONITORING_SDR_CACHE_DIR@.
 .LP
-Interpretation rules have not been written for all sensors
-permutations and types.  If sensor interpretation rules are needed,
-please contact the developers as listed below.
-
-.SH "STATE CONFIGURATION" 
-The interpretation of sensors is configurable via the configuration
-file stored at @IPMI_MONITORING_SENSOR_CONFIG_FILE_DEFAULT@.  
-See
-.B ipmi_monitoring_sensors.conf(5)
+Interpretation rules for sensors are guided by
+.B libfreeipmi(3)'s
+interpretation library.  Configuration of the interpretation rules can
+be configurd via the configuration file
+@INTERPRET_SENSOR_CONFIG_FILE_DEFAULT@.  See
+.B freeipmi_interpret_sensors.conf(5)
 for more information on configuring sensor interpretations.
 
 .SH "FILES"
 @IPMI_MONITORING_SDR_CACHE_DIR@
-
-@IPMI_MONITORING_SENSOR_CONFIG_FILE_DEFAULT@
 
 #include <@top_srcdir@/common/man/manpage-common-reporting-bugs.man>
 
@@ -108,5 +99,5 @@ Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
 Copyright (C) 2006-2007 The Regents of the University of California.
 #include <@top_srcdir@/common/man/manpage-common-gpl-library-text.man>
 .SH "SEE ALSO"
-ipmi_monitoring_sensors.conf(5), ipmimonitoring(8)
+freeipmi_interpret_sensors.conf(5)
 #include <@top_srcdir@/common/man/manpage-common-homepage.man>

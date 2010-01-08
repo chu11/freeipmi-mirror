@@ -951,7 +951,7 @@ Defaults to Critical.
 .RE
 
 .SH "FILES"
-@IPMI_MONITORING_SENSOR_CONFIG_FILE_DEFAULT@
+@INTERPRET_SENSOR_CONFIG_FILE_DEFAULT@
 
 #include <@top_srcdir@/common/man/manpage-common-reporting-bugs.man>
 .SH "COPYRIGHT"

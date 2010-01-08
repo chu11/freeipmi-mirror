@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.h,v 1.54.2.4 2010-01-07 23:18:10 chu11 Exp $
+ *  $Id: ipmi_monitoring.h,v 1.54.2.5 2010-01-08 19:10:35 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -935,7 +935,7 @@ int ipmi_monitoring_ctx_sdr_cache_directory (ipmi_monitoring_ctx_t c,
                                              const char *dir);
 
 /*
- * ipmi_monitoring_sdr_cache_filenames
+ * ipmi_monitoring_ctx_sdr_cache_filenames
  *
  * Initialize how sdr cache filenames will be formatted when
  * written/read.

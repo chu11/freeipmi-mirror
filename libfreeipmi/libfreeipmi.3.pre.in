@@ -69,8 +69,8 @@ the 'api' sub-section and tools such as
 .TP
 .B interpret
 Provides an API for interpreting sensor events by mapping them into
-Nominal, Warning, or Critical states.  Utilized by tools and libraries
-such as
+Nominal, Warning, or Critical states.  Utilized by FreeIPMI tools and
+libraries such as
 .B ipmi-sensors(8)
 and
 .B libipmimonitoring(3).
