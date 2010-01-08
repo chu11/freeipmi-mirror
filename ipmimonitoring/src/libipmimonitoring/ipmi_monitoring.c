@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.68 2009-12-23 21:23:24 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.69 2010-01-08 19:28:06 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -46,7 +46,6 @@
 #include "ipmi_monitoring_debug.h"
 #include "ipmi_monitoring_ipmi_communication.h"
 #include "ipmi_monitoring_sdr_cache.h"
-#include "ipmi_monitoring_sensor_config.h"
 #include "ipmi_monitoring_sensor_reading.h"
 
 #include "freeipmi-portability.h"
@@ -60,7 +59,7 @@ static char *ipmi_monitoring_errmsgs[] =
     "invalid parameters",
     "permission denied",
     "library uninitialized",
-    "config file parse error",
+    "sensor config file does not exist",
     "sensor config file parse error",
     "sdr cache permission error",
     "sdr cache filesystem error",
@@ -93,14 +92,35 @@ static int _ipmi_monitoring_initialized = 0;
 
 uint32_t _ipmi_monitoring_flags = 0;
 
-extern char sensor_config_file[MAXPATHLEN+1];
-extern int sensor_config_file_set;
+char sensor_config_file[MAXPATHLEN+1];
+int sensor_config_file_set;
 
 extern char sdr_cache_directory[MAXPATHLEN+1];
 extern int sdr_cache_directory_set;
 
 extern char sdr_cache_filename_format[MAXPATHLEN+1];
 extern int sdr_cache_filename_format_set;
+
+int
+ipmi_monitoring_init (unsigned int flags, int *errnum)
+{
+  if (flags & ~IPMI_MONITORING_FLAGS_MASK)
+    {
+      if (errnum)
+        *errnum = IPMI_MONITORING_ERR_PARAMETERS;
+      return (-1);
+    }
+
+  if (_ipmi_monitoring_initialized)
+    return (0);
+
+  _ipmi_monitoring_flags = flags;
+
+  _ipmi_monitoring_initialized++;
+  if (errnum)
+    *errnum = IPMI_MONITORING_ERR_SUCCESS;
+  return (0);
+}
 
 static void
 _init_ctx (ipmi_monitoring_ctx_t c)
@@ -117,6 +137,12 @@ _destroy_ctx (ipmi_monitoring_ctx_t c)
   assert (c);
   assert (c->magic == IPMI_MONITORING_MAGIC);
 
+  if (c->interpret_ctx)
+    {
+      ipmi_interpret_ctx_destroy (c->interpret_ctx);
+      c->interpret_ctx = NULL;
+    }
+    
   if (c->sdr_cache_ctx)
     {
       ipmi_sdr_cache_ctx_destroy (c->sdr_cache_ctx);
@@ -164,17 +190,19 @@ ipmi_monitoring_ctx_create (void)
     }
   c->magic = IPMI_MONITORING_MAGIC;
 
+  if (!(c->interpret_ctx = ipmi_interpret_ctx_create ()))
+    goto cleanup;
+
   if (!(c->sensor_readings = list_create ((ListDelF)free)))
-    {
-      if (_ipmi_monitoring_flags & IPMI_MONITORING_FLAGS_LOCK_MEMORY)
-        secure_free (c, sizeof (struct ipmi_monitoring_ctx));
-      else
-        free (c);
-      return (NULL);
-    }
+    goto cleanup;
 
   _init_ctx (c);
   return (c);
+
+ cleanup:
+  if (c)
+    _destroy_ctx (c);
+  return (NULL);
 }
 
 void
@@ -212,124 +240,137 @@ ipmi_monitoring_ctx_errormsg (ipmi_monitoring_ctx_t c)
   return (ipmi_monitoring_ctx_strerror (ipmi_monitoring_ctx_errnum (c)));
 }
 
-int
-ipmi_monitoring_init (unsigned int flags, int *errnum)
+static void
+_interpret_ctx_error_convert (ipmi_monitoring_ctx_t c)
 {
-  if (flags & ~IPMI_MONITORING_FLAGS_MASK)
+  assert (c);
+  assert (c->magic == IPMI_MONITORING_MAGIC);
+
+  if (ipmi_interpret_ctx_errnum (c->interpret_ctx) == IPMI_INTERPRET_ERR_OUT_OF_MEMORY)
+    c->errnum = IPMI_MONITORING_ERR_OUT_OF_MEMORY;
+  else if (ipmi_interpret_ctx_errnum (c->interpret_ctx) == IPMI_INTERPRET_ERR_PERMISSION)
+    c->errnum = IPMI_MONITORING_ERR_PERMISSION;
+  else if (ipmi_interpret_ctx_errnum (c->interpret_ctx) == IPMI_INTERPRET_ERR_SENSOR_CONFIG_FILE_DOES_NOT_EXIST)
+    c->errnum = IPMI_MONITORING_ERR_SENSOR_CONFIG_FILE_DOES_NOT_EXIST;
+  else if (ipmi_interpret_ctx_errnum (c->interpret_ctx) == IPMI_INTERPRET_ERR_SENSOR_CONFIG_FILE_PARSE)
+    c->errnum = IPMI_MONITORING_ERR_SENSOR_CONFIG_FILE_PARSE;
+  else
+    c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
+}
+
+int
+ipmi_monitoring_ctx_sensor_config_file (ipmi_monitoring_ctx_t c,
+                                        const char *sensor_config_file)
+{
+  if (!c || c->magic != IPMI_MONITORING_MAGIC)
+    return (-1);
+  
+  if (sensor_config_file)
     {
-      if (errnum)
-        *errnum = IPMI_MONITORING_ERR_PARAMETERS;
-      return (-1);
+      if (ipmi_interpret_load_sensor_config (c->interpret_ctx,
+                                             sensor_config_file) < 0)
+        {
+          _interpret_ctx_error_convert (c);
+          return (-1);
+        }
     }
+  else
+    {
+      /* legacy */
+      if (ipmi_interpret_load_sensor_config (c->interpret_ctx,
+                                             IPMI_MONITORING_SENSOR_CONFIG_FILE_DEFAULT) < 0)
+        {
+          if (ipmi_interpret_ctx_errnum (c->interpret_ctx) != IPMI_INTERPRET_ERR_SENSOR_CONFIG_FILE_DOES_NOT_EXIST)
+            {
+              _interpret_ctx_error_convert (c);
+              return (-1);
+            }
+        }
+      else
+        goto out;
 
-  if (_ipmi_monitoring_initialized)
-    return (0);
+      if (ipmi_interpret_load_sensor_config (c->interpret_ctx, NULL) < 0)
+        {
+          _interpret_ctx_error_convert (c);
+          return (-1);
+        }
+    }
+  
+ out:
+  c->errnum = IPMI_MONITORING_ERR_SUCCESS;
+  return (0);
+}
 
-  /* before ipmi_monitoring_sensor_config() for debugging */
-  _ipmi_monitoring_flags = flags;
+int
+ipmi_monitoring_ctx_sdr_cache_directory (ipmi_monitoring_ctx_t c, const char *dir)
+{
+  struct stat buf;
 
-  if (ipmi_monitoring_sensor_config (errnum) < 0)
+  if (!c || c->magic != IPMI_MONITORING_MAGIC)
     return (-1);
 
-  _ipmi_monitoring_initialized++;
-  if (errnum)
-    *errnum = IPMI_MONITORING_ERR_SUCCESS;
-  return (0);
-}
-
-int
-ipmi_monitoring_sensor_config_file (const char *file, int *errnum)
-{
-  struct stat buf;
-
-  if (!file || (strlen (file) > MAXPATHLEN))
+  if (!_ipmi_monitoring_initialized)
     {
-      if (errnum)
-        *errnum = IPMI_MONITORING_ERR_PARAMETERS;
+      c->errnum = IPMI_MONITORING_ERR_LIBRARY_UNINITIALIZED;
       return (-1);
     }
-
-  if (stat (file, &buf) < 0)
-    {
-      if (errnum)
-        {
-          if (errno == EACCES || errno == EPERM)
-            *errnum = IPMI_MONITORING_ERR_PERMISSION;
-          else
-            *errnum = IPMI_MONITORING_ERR_PARAMETERS;
-        }
-      return (-1);
-    }
-
-  strncpy (sensor_config_file, file, MAXPATHLEN);
-  sensor_config_file_set = 1;
-
-  if (errnum)
-    *errnum = IPMI_MONITORING_ERR_SUCCESS;
-  return (0);
-}
-
-int
-ipmi_monitoring_sdr_cache_directory (const char *dir, int *errnum)
-{
-  struct stat buf;
 
   if (!dir || (strlen (dir) > MAXPATHLEN))
     {
-      if (errnum)
-        *errnum = IPMI_MONITORING_ERR_PARAMETERS;
+      c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
       return (-1);
     }
 
   if (stat (dir, &buf) < 0)
     {
-      if (errnum)
-        {
-          if (errno == EACCES || errno == EPERM)
-            *errnum = IPMI_MONITORING_ERR_PERMISSION;
-          else
-            *errnum = IPMI_MONITORING_ERR_PARAMETERS;
-        }
+      if (errno == EACCES || errno == EPERM)
+        c->errnum = IPMI_MONITORING_ERR_PERMISSION;
+      else
+        c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
       return (-1);
     }
 
-  strncpy (sdr_cache_directory, dir, MAXPATHLEN);
-  sdr_cache_directory_set = 1;
+  strncpy (c->sdr_cache_directory, dir, MAXPATHLEN);
+  c->sdr_cache_directory_set = 1;
 
-  if (errnum)
-    *errnum = IPMI_MONITORING_ERR_SUCCESS;
+  c->errnum = IPMI_MONITORING_ERR_SUCCESS;
   return (0);
 }
 
 int
-ipmi_monitoring_sdr_cache_filenames (const char *format, int *errnum)
+ipmi_monitoring_ctx_sdr_cache_filenames (ipmi_monitoring_ctx_t c, const char *format)
 {
+  if (!c || c->magic != IPMI_MONITORING_MAGIC)
+    return (-1);
+
+  if (!_ipmi_monitoring_initialized)
+    {
+      c->errnum = IPMI_MONITORING_ERR_LIBRARY_UNINITIALIZED;
+      return (-1);
+    }
+
   if (!format)
     {
-      if (errnum)
-        *errnum = IPMI_MONITORING_ERR_PARAMETERS;
+      c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
       return (-1);
     }
 
   if (strchr (format, '/'))
     {
-      if (errnum)
-        *errnum = IPMI_MONITORING_ERR_PARAMETERS;
+      c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
       return (-1);
     }
 
   if (!strstr (format, "%H"))
     {
-      if (errnum)
-        *errnum = IPMI_MONITORING_ERR_PARAMETERS;
+      c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
       return (-1);
     }
 
-  strncpy (sdr_cache_filename_format, format, MAXPATHLEN);
-  sdr_cache_filename_format_set = 1;
+  strncpy (c->sdr_cache_filename_format, format, MAXPATHLEN);
+  c->sdr_cache_filename_format_set = 1;
 
-  if (errnum)
-    *errnum = IPMI_MONITORING_ERR_SUCCESS;
+  c->errnum = IPMI_MONITORING_ERR_SUCCESS;
   return (0);
 }
 

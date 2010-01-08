@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_defs.h,v 1.33 2009-12-23 21:23:24 chu11 Exp $
+ *  $Id: ipmi_monitoring_defs.h,v 1.34 2010-01-08 19:28:06 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -126,11 +126,6 @@
 
 #define IPMI_MONITORING_PACKET_BUFLEN 1024
 
-struct ipmi_sensor_config {
-  char *option_str;
-  int sensor_state;
-};
-
 struct ipmi_monitoring_sensor_reading {
   int record_id;
   int sensor_number;
@@ -151,6 +146,13 @@ struct ipmi_monitoring_sensor_reading {
 struct ipmi_monitoring_ctx {
   uint32_t magic;
   int errnum;
+
+  /* initialize this in ctx create */
+  ipmi_interpret_ctx_t interpret_ctx;
+  char sdr_cache_directory[MAXPATHLEN+1];
+  int sdr_cache_directory_set;
+  char sdr_cache_filename_format[MAXPATHLEN+1];
+  int sdr_cache_filename_format_set;
 
   ipmi_sdr_cache_ctx_t sdr_cache_ctx;
 

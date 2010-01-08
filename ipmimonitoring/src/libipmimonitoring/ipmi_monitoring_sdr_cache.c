@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sdr_cache.c,v 1.25 2009-12-23 21:23:24 chu11 Exp $
+ *  $Id: ipmi_monitoring_sdr_cache.c,v 1.26 2010-01-08 19:28:06 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -51,12 +51,6 @@
 
 #define IPMI_MONITORING_SDR_CACHE_FILENAME       "ipmimonitoringsdrcache"
 #define IPMI_MONITORING_SDR_CACHE_INBAND         "localhost"
-
-char sdr_cache_directory[MAXPATHLEN+1];
-int sdr_cache_directory_set = 0;
-
-char sdr_cache_filename_format[MAXPATHLEN+1];
-int sdr_cache_filename_format_set = 0;
 
 extern uint32_t _ipmi_monitoring_flags;
 
@@ -110,8 +104,8 @@ _ipmi_monitoring_sdr_cache_filename (ipmi_monitoring_ctx_t c,
   assert (buf);
   assert (buflen);
 
-  if (sdr_cache_directory_set)
-    dir = sdr_cache_directory;
+  if (c->sdr_cache_directory_set)
+    dir = c->sdr_cache_directory;
   else
     dir = IPMI_MONITORING_SDR_CACHE_DIRECTORY;
 
@@ -119,13 +113,13 @@ _ipmi_monitoring_sdr_cache_filename (ipmi_monitoring_ctx_t c,
     hostname = IPMI_MONITORING_SDR_CACHE_INBAND;
 
   memset (sdr_cache_filename, '\0', MAXPATHLEN+1);
-  if (sdr_cache_filename_format_set)
+  if (c->sdr_cache_filename_format_set)
     {
       int index = 0;
       int percent = 0;
       char *str;
 
-      str = sdr_cache_filename_format;
+      str = c->sdr_cache_filename_format;
       while (str && *str && index < MAXPATHLEN)
         {
           if (percent)

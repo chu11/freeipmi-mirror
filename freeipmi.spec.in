@@ -169,7 +169,7 @@ fi
 
 %files
 %defattr(-,root,root)
-%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/ipmi_monitoring_sensors.conf
+%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/freeipmi_interpret_sensors.conf
 %attr(0600,root,root) %config(noreplace) %{_sysconfdir}/freeipmi.conf
 %doc %{_datadir}/doc/%{name}/AUTHORS
 %doc %{_datadir}/doc/%{name}/COPYING
@@ -268,6 +268,7 @@ fi
 %{_mandir}/man5/ipmimonitoring_sensors.conf.5*
 %{_mandir}/man5/ipmimonitoring.conf.5*
 %{_mandir}/man5/libipmimonitoring.conf.5*
+%{_mandir}/man5/freeipmi_interpret_sensors.conf.5*
 %{_mandir}/man8/ipmi-chassis.8*
 %{_mandir}/man8/ipmi-chassis-config.8*
 %{_mandir}/man8/ipmi-dcmi.8*
@@ -291,6 +292,7 @@ fi
 %dir %{_includedir}/freeipmi/fiid
 %dir %{_includedir}/freeipmi/fru-parse
 %dir %{_includedir}/freeipmi/interface
+%dir %{_includedir}/freeipmi/interpret
 %dir %{_includedir}/freeipmi/locate
 %dir %{_includedir}/freeipmi/record-format
 %dir %{_includedir}/freeipmi/sdr-cache
@@ -311,6 +313,7 @@ fi
 %{_includedir}/freeipmi/fiid/*.h
 %{_includedir}/freeipmi/fru-parse/*.h
 %{_includedir}/freeipmi/interface/*.h
+%{_includedir}/freeipmi/interpret/*.h
 %{_includedir}/freeipmi/locate/*.h
 %{_includedir}/freeipmi/record-format/*.h
 %{_includedir}/freeipmi/sdr-cache/*.h
@@ -343,6 +346,9 @@ fi
 %{_mandir}/man8/ipmidetectd.8*
 
 %changelog
+* Tue Dec 29 2009 Albert Chu <chu11@llnl.gov> 0.9.0
+- Add interpret sub-library.
+
 * Wed Sep 30 2009 Albert Chu <chu11@llnl.gov> 0.8.0
 - Update for dcmi.
 - Update for renaming of pef-config.

@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.61 2009-12-17 00:16:39 chu11 Exp $
+## $Id: Makefile.am,v 1.62 2010-01-08 19:28:07 chu11 Exp $
 ##*****************************************************************************
 
 nobase_include_HEADERS = \
@@ -48,6 +48,7 @@ nobase_include_HEADERS = \
 	freeipmi/interface/ipmi-kcs-interface.h \
 	freeipmi/interface/ipmi-lan-interface.h \
 	freeipmi/interface/ipmi-rmcpplus-interface.h \
+	freeipmi/interpret/ipmi-interpret.h \
 	freeipmi/locate/ipmi-locate.h \
 	freeipmi/record-format/ipmi-cipher-suite-record-format.h \
 	freeipmi/record-format/ipmi-fru-information-record-format.h \

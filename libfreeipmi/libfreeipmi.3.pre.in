@@ -63,6 +63,14 @@ the 'api' sub-section and tools such as
 .B ipmipower(8) and 
 .B ipmiconsole(8).
 .TP
+.B interpret
+Provides an API for interpreting sensor events by mapping them into
+Nominal, Warning, or Critical states.  Utilized by FreeIPMI tools and
+libraries such as
+.B ipmi-sensors(8)
+and
+.B libipmimonitoring(3).
+.TP
 .B locate
 Provides an API to probe several standards to find default values for
 in-band IPMI communication.  Utilized by the 'api' sub-section and the

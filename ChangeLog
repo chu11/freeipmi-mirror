@@ -1,3 +1,19 @@
+2010-01-08  Albert Chu <chu11@llnl.gov>
+
+	Merge lib_interpret_branch
+
+	* ipmimonitoring/src/libipmimonitoring/: Support
+	IPMI_MONITORING_ERR_SENSOR_CONFIG_FILE_DOES_NOT_EXIST error code.
+	Remove unused IPMI_MONITORING_ERR_CONFIG_FILE_PARSE error code.
+
+	* Add interpret sub library to libfreeipmi.
+
+	* ipmimonitoring/src/libipmimonitoring/: Re-adjust library to use
+	interpret sub-library instead of internal.  Maintain backwards
+	compatability to original config file.
+
+	* freeipmi.spec.in: Update appropriately for changes.
+
 2010-01-07  Albert Chu <chu11@llnl.gov>
 
 	* doc/freeipmi-coding.txt: Update text.
