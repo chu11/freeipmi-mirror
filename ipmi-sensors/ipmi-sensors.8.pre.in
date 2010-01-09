@@ -113,7 +113,7 @@ Show verbose sensors and readings on the local machine.
 .PP
 Show sensor record ids 7, 11, and 102 on the local machine.
 .PP
-.B # ipmi-sensors --types=fan
+.B # ipmi-sensors --sensor-types=fan
 .PP
 Show all sensors of type fan on the local machine.
 .PP
