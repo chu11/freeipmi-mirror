@@ -1,3 +1,9 @@
+2010-01-14  Klaus Kaempf <kkaempf@suse.de>
+
+	* libfreeipmi/src/cmds/ipmi-messaging-support-cmds.c
+	(fill_cmd_set_system_info_parameters_primary_operating_system_name):
+	Fix cut and paste typo.
+	
 2010-01-08  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors/, ipmimonitoring/: Fix manpage examples.
