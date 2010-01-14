@@ -1481,14 +1481,6 @@ fill_cmd_set_system_info_parameters_primary_operating_system_name_first_set (uin
     memcpy (stringbuf, string_block, string_block_length);
   FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, "string", stringbuf, IPMI_SYSTEM_INFO_FIRST_SET_STRING_LEN_MAX);
 
-  /* achu: spec is not clear if this data should be 0 extended, we
-   * will do it to be on the safe side
-   */
-  memset (stringbuf, '\0', IPMI_SYSTEM_INFO_SET_STRING_LEN_MAX);
-  if (string_block && string_block_length)
-    memcpy (stringbuf, string_block, string_block_length);
-  FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, "string", stringbuf, IPMI_SYSTEM_INFO_SET_STRING_LEN_MAX);
-
   return (0);
 }
 
