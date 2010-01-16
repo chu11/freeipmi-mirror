@@ -16,6 +16,11 @@ ipmi-sensors
 output event bitmask instead of strings
 output sensor state option
 
+ipmi-sel
+--------
+sensor types options
+date range option
+
 ipmi-seld
 ---------
 log sel events to syslog?
