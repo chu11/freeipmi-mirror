@@ -15,11 +15,13 @@ ipmi-sensors
 ------------
 output event bitmask instead of strings
 output sensor state option
+consolidate event message output w/ ipmimonitoring
 
 ipmi-sel
 --------
 sensor types options
 date range option
+binary search like mechanism to make --display faster
 
 ipmi-seld
 ---------
