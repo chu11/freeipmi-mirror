@@ -1,3 +1,15 @@
+2010-01-15  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/sel-parse/ipmi-sel-parse-string-sun.h,
+	libfreeipmi/src/sel-parse/ipmi-sel-parse-string-sun.c: New files.
+
+	* libfreeipmi/src/sel-parse/ipmi-sel-parse-string.c: Support Sun
+	interpretations.
+
+	* ipmi-sel/ipmi-sel.8.pre.in: Update motherboard list.
+
+	* doc/freeipmi-faq.texi: Update vendor list.
+	
 2010-01-14  Klaus Kaempf <kkaempf@suse.de>
 
 	* libfreeipmi/src/cmds/ipmi-messaging-support-cmds.c

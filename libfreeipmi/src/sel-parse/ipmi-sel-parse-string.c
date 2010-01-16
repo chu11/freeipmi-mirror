@@ -64,6 +64,7 @@
 #include "ipmi-sel-parse-string.h"
 #include "ipmi-sel-parse-string-dell.h"
 #include "ipmi-sel-parse-string-inventec.h"
+#include "ipmi-sel-parse-string-sun.h"
 #include "ipmi-sel-parse-trace.h"
 #include "ipmi-sel-parse-util.h"
 
@@ -1030,6 +1031,39 @@ _round_double2 (double d)
  * 1 - buffer full, return full buffer to user
  */
 static int
+_output_oem_event_data2_threshold_oem (ipmi_sel_parse_ctx_t ctx,
+                                       struct ipmi_sel_parse_entry *sel_parse_entry,
+                                       uint8_t sel_record_type,
+                                       char *tmpbuf,
+                                       unsigned int tmpbuflen,
+                                       unsigned int flags,
+                                       unsigned int *wlen,
+                                       struct ipmi_sel_system_event_record_data *system_event_record_data)
+{
+  assert (ctx);
+  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (sel_parse_entry);
+  assert (tmpbuf);
+  assert (tmpbuflen);
+  assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
+  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (wlen);
+  assert (system_event_record_data);
+  assert (system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
+
+  /* Nothing Yet */
+
+  return (0);
+}
+
+/* return (0) - no OEM match
+ * return (1) - OEM match
+ * return (-1) - error, cleanup and return error
+ *
+ * 0 - continue on
+ * 1 - buffer full, return full buffer to user
+ */
+static int
 _output_oem_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
                                       struct ipmi_sel_parse_entry *sel_parse_entry,
                                       uint8_t sel_record_type,
@@ -1234,6 +1268,25 @@ _output_event_data2 (ipmi_sel_parse_ctx_t ctx,
             output_flag++;
           break;
         case IPMI_SEL_EVENT_DATA_OEM_CODE:
+
+          if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA)
+            {
+              if ((ret = _output_oem_event_data2_threshold_oem (ctx,
+                                                                sel_parse_entry,
+                                                                sel_record_type,
+                                                                tmpbuf,
+                                                                EVENT_BUFFER_LENGTH,
+                                                                flags,
+                                                                wlen,
+                                                                &system_event_record_data)) < 0)
+                return (-1);
+              
+              if (ret)
+                {
+                  output_flag++;
+                  break;
+                }
+            }
 
           if (system_event_record_data.event_data2 == IPMI_SEL_RECORD_UNSPECIFIED_EVENT)
             {
@@ -1502,6 +1555,52 @@ _output_event_data2 (ipmi_sel_parse_ctx_t ctx,
  * 1 - buffer full, return full buffer to user
  */
 static int
+_output_oem_event_data3_threshold_oem (ipmi_sel_parse_ctx_t ctx,
+                                       struct ipmi_sel_parse_entry *sel_parse_entry,
+                                       uint8_t sel_record_type,
+                                       char *tmpbuf,
+                                       unsigned int tmpbuflen,
+                                       unsigned int flags,
+                                       unsigned int *wlen,
+                                       struct ipmi_sel_system_event_record_data *system_event_record_data)
+{
+  int ret;
+
+  assert (ctx);
+  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (sel_parse_entry);
+  assert (tmpbuf);
+  assert (tmpbuflen);
+  assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
+  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (wlen);
+  assert (system_event_record_data);
+  assert (system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
+
+  if ((ret = ipmi_sel_parse_output_sun_event_data3_threshold_oem (ctx,
+                                                                  sel_parse_entry,
+                                                                  sel_record_type,
+                                                                  tmpbuf,
+                                                                  tmpbuflen,
+                                                                  flags,
+                                                                  wlen,
+                                                                  system_event_record_data)) < 0)
+    return (-1);
+  
+  if (ret)
+    return (1);
+
+  return (0);
+}
+
+/* return (0) - no OEM match
+ * return (1) - OEM match
+ * return (-1) - error, cleanup and return error
+ *
+ * 0 - continue on
+ * 1 - buffer full, return full buffer to user
+ */
+static int
 _output_oem_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
                                       struct ipmi_sel_parse_entry *sel_parse_entry,
                                       uint8_t sel_record_type,
@@ -1545,6 +1644,19 @@ _output_oem_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
 								      flags,
 								      wlen,
 								      system_event_record_data)) < 0)
+    return (-1);
+  
+  if (ret)
+    return (1);
+
+  if ((ret = ipmi_sel_parse_output_sun_event_data3_discrete_oem (ctx,
+                                                                 sel_parse_entry,
+                                                                 sel_record_type,
+                                                                 tmpbuf,
+                                                                 tmpbuflen,
+                                                                 flags,
+                                                                 wlen,
+                                                                 system_event_record_data)) < 0)
     return (-1);
   
   if (ret)
@@ -1698,6 +1810,25 @@ _output_event_data3 (ipmi_sel_parse_ctx_t ctx,
             output_flag++;
           break;
         case IPMI_SEL_EVENT_DATA_OEM_CODE:
+
+          if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA)
+            {
+              if ((ret = _output_oem_event_data3_threshold_oem (ctx,
+                                                                sel_parse_entry,
+                                                                sel_record_type,
+                                                                tmpbuf,
+                                                                EVENT_BUFFER_LENGTH,
+                                                                flags,
+                                                                wlen,
+                                                                &system_event_record_data)) < 0)
+                return (-1);
+              
+              if (ret)
+                {
+                  output_flag++;
+                  break;
+                }
+            }
 
           if (system_event_record_data.event_data3 == IPMI_SEL_RECORD_UNSPECIFIED_EVENT)
             {
