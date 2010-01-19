@@ -216,6 +216,7 @@ struct ipmi_oem_command oem_dell[] =
     {
       "get-power-headroom-info",
       NULL,
+      0,
       IPMI_OEM_COMMAND_FLAGS_HIDDEN | IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
       ipmi_oem_dell_get_power_head_room
     },
