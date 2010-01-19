@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.143 2009-12-23 21:23:24 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.144 2010-01-19 03:50:08 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -43,6 +43,10 @@
 #endif /* !TIME_WITH_SYS_TIME */
 #include <sys/param.h>
 #include <netinet/in.h>
+#include <limits.h>             /* MAXHOSTNAMELEN */
+#ifdef HAVE_NETDB_H
+#include <netdb.h>              /* MAXHOSTNAMELEN Solaris */
+#endif /* HAVE_NETDB_H */
 
 #include <freeipmi/freeipmi.h>
 
