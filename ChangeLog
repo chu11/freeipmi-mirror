@@ -1,4 +1,4 @@
-2010-01-18  Albert Chu <chu11@llnl.gov>
+2010-01-18  Andrew Wansink <ajwans@evostor.com> and Albert Chu <chu11@llnl.gov>
 
 	* Fix portability issues to Solaris w/ MAXHOSTNAMELEN definition.
 	
