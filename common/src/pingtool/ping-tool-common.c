@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ping-tool-common.c,v 1.17.4.3 2009-12-23 21:24:03 chu11 Exp $
+ *  $Id: ping-tool-common.c,v 1.17.4.4 2010-01-19 03:50:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -67,6 +67,10 @@
 #include <time.h>
 #endif  /* !HAVE_SYS_TIME_H */
 #endif /* !TIME_WITH_SYS_TIME */
+#include <limits.h>             /* MAXHOSTNAMELEN */
+#ifdef HAVE_NETDB_H
+#include <netdb.h>              /* MAXHOSTNAMELEN Solaris */
+#endif /* HAVE_NETDB_H */
 #include <assert.h>
 
 #include <freeipmi/freeipmi.h>

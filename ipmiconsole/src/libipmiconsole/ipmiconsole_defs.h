@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_defs.h,v 1.75.4.1 2009-12-23 21:24:10 chu11 Exp $
+ *  $Id: ipmiconsole_defs.h,v 1.75.4.2 2010-01-19 03:50:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -46,6 +46,10 @@
 #endif /* !TIME_WITH_SYS_TIME */
 #include <sys/param.h>
 #include <netinet/in.h>
+#include <limits.h>             /* MAXHOSTNAMELEN */
+#ifdef HAVE_NETDB_H
+#include <netdb.h>              /* MAXHOSTNAMELEN Solaris */
+#endif /* HAVE_NETDB_H */
 #include <freeipmi/freeipmi.h>
 
 #include "scbuf.h"

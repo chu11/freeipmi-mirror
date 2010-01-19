@@ -28,12 +28,15 @@
 #endif /* STDC_HEADERS */
 #include <pwd.h>
 #include <sys/param.h>
-#include <limits.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif  /* HAVE_UNISTD_H */
+#include <limits.h>             /* MAXHOSTNAMELEN */
+#ifdef HAVE_NETDB_H
+#include <netdb.h>              /* MAXHOSTNAMELEN Solaris */
+#endif /* HAVE_NETDB_H */
 #include <assert.h>
 #include <errno.h>
 

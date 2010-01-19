@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_defs.h,v 1.31.4.1 2009-12-23 21:24:12 chu11 Exp $
+ *  $Id: ipmi_monitoring_defs.h,v 1.31.4.2 2010-01-19 03:50:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -27,10 +27,18 @@
 #ifndef _IPMI_MONITORING_DEFS_H
 #define _IPMI_MONITORING_DEFS_H
 
+#if HAVE_CONFIG_H
+#include <config.h>
+#endif /* HAVE_CONFIG_H */
+
 #include <stdint.h>
 #include <sys/param.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <limits.h>             /* MAXHOSTNAMELEN */
+#ifdef HAVE_NETDB_H
+#include <netdb.h>              /* MAXHOSTNAMELEN Solaris */
+#endif /* HAVE_NETDB_H */
 #include <freeipmi/freeipmi.h>
 
 #include "list.h"

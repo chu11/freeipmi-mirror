@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmidetectd.h,v 1.8.20.1 2009-12-23 21:24:11 chu11 Exp $
+ *  $Id: ipmidetectd.h,v 1.8.20.2 2010-01-19 03:50:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -31,7 +31,10 @@
 #include "config.h"
 #endif /* HAVE_CONFIG_H */
 
-#include <limits.h>
+#include <limits.h>             /* MAXHOSTNAMELEN */
+#ifdef HAVE_NETDB_H
+#include <netdb.h>              /* MAXHOSTNAMELEN Solaris */
+#endif /* HAVE_NETDB_H */
 
 #ifndef MAXHOSTNAMELEN
 #define MAXHOSTNAMELEN 64
