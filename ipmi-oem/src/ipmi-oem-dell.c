@@ -688,7 +688,7 @@ _get_dell_system_info_10g_mac_addresses (ipmi_oem_state_data_t *state_data)
 
   if (ipmi_cmd_get_system_info_parameters (state_data->ipmi_ctx,
                                            IPMI_GET_SYSTEM_INFO_PARAMETER,
-                                           IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_10G_MAC_ADDRESSES,
+                                           IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_EMBEDDED_NICS_MAC_ADDRESSES,
                                            0,
                                            IPMI_SYSTEM_INFO_NO_BLOCK_SELECTOR,
                                            obj_cmd_rs) < 0)
@@ -3891,12 +3891,12 @@ ipmi_oem_dell_get_instantaneous_power_consumption_data (ipmi_oem_state_data_t *s
 }
 
 int
-ipmi_oem_dell_get_power_headroom_info (ipmi_oem_state_data_t *state_data)
+ipmi_oem_dell_get_power_head_room (ipmi_oem_state_data_t *state_data)
 {
   uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
   uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
-  uint16_t instantaneous_power_headroom;
-  uint16_t peak_power_headroom;
+  uint16_t instantaneous_head_room;
+  uint16_t peak_head_room;
   int rs_len;
   int rv = -1;
 
@@ -3917,11 +3917,14 @@ ipmi_oem_dell_get_power_headroom_info (ipmi_oem_state_data_t *state_data)
    *
    * 0xBB - OEM cmd
    * 0x?? - Completion Code
-   * bytes 2-3 - instantaneous power headroom
-   * bytes 4-5 - peak power headroom
+   * bytes 2-3 - instantaneous head room in watts
+   * bytes 4-5 - peak head room in watts
+   *
+   * Notes: Head room is the difference between Max potential and the
+   * current power consumption.
    */
 
-  bytes_rq[0] = IPMI_CMD_OEM_DELL_GET_POWER_HEADROOM_INFO;
+  bytes_rq[0] = IPMI_CMD_OEM_DELL_GET_POWER_HEAD_ROOM;
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
@@ -3942,24 +3945,24 @@ ipmi_oem_dell_get_power_headroom_info (ipmi_oem_state_data_t *state_data)
                                                    bytes_rs,
                                                    rs_len,
                                                    6,
-                                                   IPMI_CMD_OEM_DELL_GET_POWER_HEADROOM_INFO,
+                                                   IPMI_CMD_OEM_DELL_GET_POWER_HEAD_ROOM,
                                                    IPMI_NET_FN_OEM_DELL_GENERIC_RS,
                                                    NULL) < 0)
     goto cleanup;
 
-  instantaneous_power_headroom = bytes_rs[2];
-  instantaneous_power_headroom |= (bytes_rs[3] << 8);
+  instantaneous_head_room = bytes_rs[2];
+  instantaneous_head_room |= (bytes_rs[3] << 8);
 
-  peak_power_headroom = bytes_rs[4];
-  peak_power_headroom |= (bytes_rs[5] << 8);
-
-  pstdout_printf (state_data->pstate,
-		  "Instantaneous Power Headroom : %u W\n",
-		  instantaneous_power_headroom);
+  peak_head_room = bytes_rs[4];
+  peak_head_room |= (bytes_rs[5] << 8);
 
   pstdout_printf (state_data->pstate,
-		  "Peak Power Headroom          : %u W\n",
-		  peak_power_headroom);
+		  "Instantaneous Head Room : %u W\n",
+		  instantaneous_head_room);
+
+  pstdout_printf (state_data->pstate,
+		  "Peak Head Room          : %u W\n",
+		  peak_head_room);
 
   rv = 0;
  cleanup:
