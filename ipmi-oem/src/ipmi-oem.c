@@ -212,12 +212,20 @@ struct ipmi_oem_command oem_dell[] =
       IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
       ipmi_oem_dell_get_instantaneous_power_consumption_data
     },
+    /* legacy */
     {
       "get-power-headroom-info",
       NULL,
+      IPMI_OEM_COMMAND_FLAGS_HIDDEN | IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_dell_get_power_head_room
+    },
+    {
+      "get-power-head-room",
+      NULL,
       0,
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
-      ipmi_oem_dell_get_power_headroom_info
+      ipmi_oem_dell_get_power_head_room
     },
     {
       "get-power-consumption-statistics",

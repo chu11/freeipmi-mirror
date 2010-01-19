@@ -209,10 +209,9 @@ will be gathered.  Otherwise, collective power consumption will be
 gathered.  Command confirmed to work on Dell Poweredge R610 and R710
 (Dell 11G Poweredge systems).
 .TP
-.B get-power-headroom-info
-This OEM command can read power headroom information.  Command
-confirmed to work on Dell Poweredge R610 and R710 (Dell 11G Poweredge
-systems).
+.B get-power-head-room
+This OEM command can read power head room.  Command confirmed to work
+on Dell Poweredge R610 and R710 (Dell 11G Poweredge systems).
 .TP
 .B get-power-consumption-statistics \fIaverage|max|min\fR
 This OEM command can read average, max, or min power consumption

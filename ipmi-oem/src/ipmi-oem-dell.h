@@ -48,7 +48,7 @@ int ipmi_oem_dell_power_supply_info (ipmi_oem_state_data_t *state_data);
 
 int ipmi_oem_dell_get_instantaneous_power_consumption_data (ipmi_oem_state_data_t *state_data);
 
-int ipmi_oem_dell_get_power_headroom_info (ipmi_oem_state_data_t *state_data);
+int ipmi_oem_dell_get_power_head_room (ipmi_oem_state_data_t *state_data);
 
 int ipmi_oem_dell_get_power_consumption_statistics (ipmi_oem_state_data_t *state_data);
 

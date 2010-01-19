@@ -52,8 +52,7 @@ extern "C" {
 #define IPMI_CMD_OEM_DELL_LCD_INFO                                             0xB5
 /* achu: this one is taken from code, is correct name? */
 #define IPMI_CMD_OEM_DELL_POWER_CAPACITY_STATUS                                0xBA
-/* achu: this one is taken from code, is correct name? */
-#define IPMI_CMD_OEM_DELL_GET_POWER_HEADROOM_INFO                              0xBB
+#define IPMI_CMD_OEM_DELL_GET_POWER_HEAD_ROOM                                  0xBB
 #define IPMI_CMD_OEM_DELL_ROLLBACK_FIRMWARE_VERSION                            0xBE
 #define IPMI_CMD_OEM_DELL_GET_IDRAC_FIRMWARE_VERSION_NUMBER                    0xBF
 #define IPMI_CMD_OEM_DELL_GET_ACTIVE_LOM_STATUS                                0xC1
