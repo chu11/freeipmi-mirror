@@ -16,6 +16,7 @@ ipmi-sensors
 output event bitmask instead of strings
 output sensor state option
 consolidate event message output w/ ipmimonitoring
+common "get event message" like function for libipmimonitoring
 
 ipmi-sel
 --------
