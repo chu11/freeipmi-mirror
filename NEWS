@@ -9,6 +9,8 @@ o Support new 'interpret' sub-library in libfreeipmi.
 
 Tools - Detailed Enhancements/Changes/Fixes
 -------------------------------------------
+o ipmi-sensors
+  - Support --output-event-bitmask option.
 
 Libraries - Detailed Enhancements/Changes/Fixes
 -----------------------------------------------

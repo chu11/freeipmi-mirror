@@ -77,6 +77,9 @@ Show sensor data repository (SDR) information
 .TP
 \fB\-\-ignore\-not\-available\-sensors\fR
 Ignore not-available (i.e. N/A) sensors in output.
+.TP
+\fB\-\-output\-event\-bitmask\fR
+Output event bitmask value instead of the string representation.
 #include <@top_srcdir@/common/man/manpage-common-entity-sensor-names.man>
 #include <@top_srcdir@/common/man/manpage-common-no-sensor-type-output.man>
 #include <@top_srcdir@/common/man/manpage-common-comma-separated-output.man>

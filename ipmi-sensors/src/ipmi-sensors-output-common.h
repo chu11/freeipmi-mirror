@@ -50,7 +50,18 @@
 
 #define IPMI_SENSORS_UNITS_BUFLEN    1024
 
+#define IPMI_SENSORS_EVENT_NORMAL  0x0
+#define IPMI_SENSORS_EVENT_NA      0x1
+#define IPMI_SENSORS_EVENT_UNKNOWN 0x2
+
+#define IPMI_SENSORS_EVENT_VALID(__val) \
+  (((__val) == IPMI_SENSORS_EVENT_NORMAL \
+    || (__val) == IPMI_SENSORS_EVENT_NA \
+    || (__val) == IPMI_SENSORS_EVENT_UNKNOWN) ? 1 : 0)
+
 int ipmi_sensors_output_event_message_list (ipmi_sensors_state_data_t *state_data,
+                                            int event_message_output_type,
+                                            uint16_t sensor_event_bitmask,
                                             char **event_message_list,
                                             unsigned int event_message_list_len,
                                             char *prefix,

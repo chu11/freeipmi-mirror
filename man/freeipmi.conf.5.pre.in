@@ -1006,6 +1006,11 @@ Specify if
 .B ipmi-sensors
 should ignore not-available (i.e. N/A) sensors by default.
 .TP
+\fBipmi\-sensors\-output\-event\-bitmask\fR \fIENABLE|DISABLE\fR
+Specify if
+.B ipmi-sensors
+should output event bitmasks instead of string representations by default.
+.TP
 \fBipmi\-sensors\-entity\-sensor\-names\fR \fIENABLE|DISABLE\fR
 Specify if output of sensor names should include entity ids and
 instances.

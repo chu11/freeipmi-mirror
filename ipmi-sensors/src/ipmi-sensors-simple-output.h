@@ -28,6 +28,8 @@ int ipmi_sensors_simple_output (ipmi_sensors_state_data_t *state_data,
                                 unsigned int sdr_record_len,
                                 uint8_t sensor_number,
                                 double *reading,
+                                int event_message_output_type,
+                                uint16_t sensor_event_bitmask,
                                 char **event_message_list,
                                 unsigned int event_message_list_len);
 

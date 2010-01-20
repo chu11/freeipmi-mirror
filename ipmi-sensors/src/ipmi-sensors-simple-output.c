@@ -158,6 +158,8 @@ _legacy_simple_output_full_record (ipmi_sensors_state_data_t *state_data,
                                    unsigned int sdr_record_len,
                                    uint16_t record_id,
                                    double *reading,
+                                   int event_message_output_type,
+                                   uint16_t sensor_event_bitmask,
                                    char **event_message_list,
                                    unsigned int event_message_list_len)
 {
@@ -173,6 +175,7 @@ _legacy_simple_output_full_record (ipmi_sensors_state_data_t *state_data,
   assert (state_data);
   assert (sdr_record);
   assert (sdr_record_len);
+  assert (IPMI_SENSORS_EVENT_VALID (event_message_output_type));
 
   if (_legacy_simple_output_header (state_data,
                                     sdr_record,
@@ -273,6 +276,8 @@ _legacy_simple_output_full_record (ipmi_sensors_state_data_t *state_data,
     case IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM:
     default:
       if (ipmi_sensors_output_event_message_list (state_data,
+                                                  event_message_output_type,
+                                                  sensor_event_bitmask,
                                                   event_message_list,
                                                   event_message_list_len,
                                                   NULL,
@@ -303,12 +308,15 @@ _legacy_simple_output_compact_record (ipmi_sensors_state_data_t *state_data,
                                       const void *sdr_record,
                                       unsigned int sdr_record_len,
                                       uint16_t record_id,
+                                      int event_message_output_type,
+                                      uint16_t sensor_event_bitmask,
                                       char **event_message_list,
                                       unsigned int event_message_list_len)
 {
   assert (state_data);
   assert (sdr_record);
   assert (sdr_record_len);
+  assert (IPMI_SENSORS_EVENT_VALID (event_message_output_type));
 
   if (_legacy_simple_output_header (state_data,
                                     sdr_record,
@@ -317,6 +325,8 @@ _legacy_simple_output_compact_record (ipmi_sensors_state_data_t *state_data,
     return (-1);
 
   if (ipmi_sensors_output_event_message_list (state_data,
+                                              event_message_output_type,
+                                              sensor_event_bitmask,
                                               event_message_list,
                                               event_message_list_len,
                                               NULL,
@@ -442,6 +452,8 @@ _simple_output_full_record (ipmi_sensors_state_data_t *state_data,
                             uint16_t record_id,
                             uint8_t sensor_number,
                             double *reading,
+                            int event_message_output_type,
+                            uint16_t sensor_event_bitmask,
                             char **event_message_list,
                             unsigned int event_message_list_len)
 {
@@ -452,6 +464,7 @@ _simple_output_full_record (ipmi_sensors_state_data_t *state_data,
   assert (state_data);
   assert (sdr_record);
   assert (sdr_record_len);
+  assert (IPMI_SENSORS_EVENT_VALID (event_message_output_type));
 
   if (_simple_output_header (state_data,
                              sdr_record,
@@ -533,6 +546,8 @@ _simple_output_full_record (ipmi_sensors_state_data_t *state_data,
         pstdout_printf (state_data->pstate, " | ");
 
       if (ipmi_sensors_output_event_message_list (state_data,
+                                                  event_message_output_type,
+                                                  sensor_event_bitmask,
                                                   event_message_list,
                                                   event_message_list_len,
                                                   NULL,
@@ -573,6 +588,8 @@ _simple_output_full_record (ipmi_sensors_state_data_t *state_data,
         }
 
       if (ipmi_sensors_output_event_message_list (state_data,
+                                                  event_message_output_type,
+                                                  sensor_event_bitmask,
                                                   event_message_list,
                                                   event_message_list_len,
                                                   NULL,
@@ -592,12 +609,15 @@ _simple_output_compact_record (ipmi_sensors_state_data_t *state_data,
                                unsigned int sdr_record_len,
                                uint16_t record_id,
                                uint8_t sensor_number,
+                               int event_message_output_type,
+                               uint16_t sensor_event_bitmask,                              
                                char **event_message_list,
                                unsigned int event_message_list_len)
 {
   assert (state_data);
   assert (sdr_record);
   assert (sdr_record_len);
+  assert (IPMI_SENSORS_EVENT_VALID (event_message_output_type));
 
   if (_simple_output_header (state_data,
                              sdr_record,
@@ -636,6 +656,8 @@ _simple_output_compact_record (ipmi_sensors_state_data_t *state_data,
     }
 
   if (ipmi_sensors_output_event_message_list (state_data,
+                                              event_message_output_type,
+                                              sensor_event_bitmask,
                                               event_message_list,
                                               event_message_list_len,
                                               NULL,
@@ -651,6 +673,8 @@ ipmi_sensors_simple_output (ipmi_sensors_state_data_t *state_data,
                             unsigned int sdr_record_len,
                             uint8_t sensor_number,
                             double *reading,
+                            int event_message_output_type,
+                            uint16_t sensor_event_bitmask,
                             char **event_message_list,
                             unsigned int event_message_list_len)
 {
@@ -660,6 +684,7 @@ ipmi_sensors_simple_output (ipmi_sensors_state_data_t *state_data,
   assert (state_data);
   assert (sdr_record);
   assert (sdr_record_len);
+  assert (IPMI_SENSORS_EVENT_VALID (event_message_output_type));
 
   if (ipmi_sdr_parse_record_id_and_type (state_data->sdr_parse_ctx,
                                          sdr_record,
@@ -697,6 +722,8 @@ ipmi_sensors_simple_output (ipmi_sensors_state_data_t *state_data,
                                                    sdr_record_len,
                                                    record_id,
                                                    reading,
+                                                   event_message_output_type,
+                                                   sensor_event_bitmask,
                                                    event_message_list,
                                                    event_message_list_len));
       else
@@ -706,6 +733,8 @@ ipmi_sensors_simple_output (ipmi_sensors_state_data_t *state_data,
                                             record_id,
                                             sensor_number,
                                             reading,
+                                            event_message_output_type,
+                                            sensor_event_bitmask,
                                             event_message_list,
                                             event_message_list_len));
     case IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD:
@@ -714,6 +743,8 @@ ipmi_sensors_simple_output (ipmi_sensors_state_data_t *state_data,
                                                       sdr_record,
                                                       sdr_record_len,
                                                       record_id,
+                                                      event_message_output_type,
+                                                      sensor_event_bitmask,
                                                       event_message_list,
                                                       event_message_list_len));
       else
@@ -722,6 +753,8 @@ ipmi_sensors_simple_output (ipmi_sensors_state_data_t *state_data,
                                                sdr_record_len,
                                                record_id,
                                                sensor_number,
+                                               event_message_output_type,
+                                               sensor_event_bitmask,
                                                event_message_list,
                                                event_message_list_len));
     default:

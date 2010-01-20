@@ -43,6 +43,8 @@
 
 int
 ipmi_sensors_output_event_message_list (ipmi_sensors_state_data_t *state_data,
+                                        int event_message_output_type,
+                                        uint16_t sensor_event_bitmask,
                                         char **event_message_list,
                                         unsigned int event_message_list_len,
                                         char *prefix,
@@ -52,6 +54,7 @@ ipmi_sensors_output_event_message_list (ipmi_sensors_state_data_t *state_data,
   unsigned int i;
 
   assert (state_data);
+  assert (IPMI_SENSORS_EVENT_VALID (event_message_output_type));
 
   if (prefix)
     pstdout_printf (state_data->pstate, "%s", prefix);
@@ -69,48 +72,18 @@ ipmi_sensors_output_event_message_list (ipmi_sensors_state_data_t *state_data,
         strcat (spcbuf, " ");
     }
 
-  if (event_message_list)
+  if (event_message_output_type == IPMI_SENSORS_EVENT_NA)
     {
-      if (event_message_list_len >= 1)
-        {
-          if (state_data->prog_data->args->legacy_output)
-            pstdout_printf (state_data->pstate,
-                            "[%s]",
-                            event_message_list[0]);
-          else
-            {
-              if (!strcmp (event_message_list[0], IPMI_SENSORS_NA_STRING))
-                pstdout_printf (state_data->pstate,
-                                "%s",
-                                event_message_list[0]);
-              else
-                pstdout_printf (state_data->pstate,
-                                "'%s'",
-                                event_message_list[0]);
-            }
-        }
-
-      for (i = 1; i < event_message_list_len; i++)
-        {
-          if (each_on_newline)
-            pstdout_printf (state_data->pstate,
-                            "\n");
-          if (state_data->prog_data->args->legacy_output)
-            pstdout_printf (state_data->pstate,
-                            "%s[%s]",
-                            spcbuf,
-                            event_message_list[i]);
-          else
-            pstdout_printf (state_data->pstate,
-                            "%s'%s'",
-                            prefix ? prefix : "",
-                            event_message_list[i]);
-        }
-
-      pstdout_printf (state_data->pstate,
-                      "\n");
+      if (state_data->prog_data->args->legacy_output)
+        pstdout_printf (state_data->pstate,
+                        "[%s]\n",
+                        IPMI_SENSORS_NA_STRING_OUTPUT);
+      else
+        pstdout_printf (state_data->pstate,
+                        "%s\n",
+                        IPMI_SENSORS_NA_STRING_OUTPUT);
     }
-  else
+  else if (event_message_output_type == IPMI_SENSORS_EVENT_UNKNOWN)
     {
       if (state_data->prog_data->args->legacy_output)
         pstdout_printf (state_data->pstate,
@@ -120,6 +93,45 @@ ipmi_sensors_output_event_message_list (ipmi_sensors_state_data_t *state_data,
         pstdout_printf (state_data->pstate,
                         "%s\n",
                         "Unknown");
+    }
+  else
+    {
+      if (state_data->prog_data->args->legacy_output)
+        pstdout_printf (state_data->pstate,
+                        "[%s]",
+                        event_message_list[0]);
+      else if (state_data->prog_data->args->output_event_bitmask)
+        pstdout_printf (state_data->pstate,
+                        "%04Xh",
+                        sensor_event_bitmask);
+      else
+        pstdout_printf (state_data->pstate,
+                        "'%s'",
+                        event_message_list[0]);
+
+      if (event_message_list_len > 1)
+        {
+          for (i = 1; i < event_message_list_len; i++)
+            {
+              if (each_on_newline)
+                pstdout_printf (state_data->pstate,
+                                "\n");
+              
+              if (state_data->prog_data->args->legacy_output)
+                pstdout_printf (state_data->pstate,
+                                "%s[%s]",
+                                spcbuf,
+                                event_message_list[i]);
+              else
+                pstdout_printf (state_data->pstate,
+                                "%s'%s'",
+                                prefix ? prefix : "",
+                                event_message_list[i]);
+            }
+        }
+      
+      pstdout_printf (state_data->pstate,
+                      "\n");
     }
 
   return (0);

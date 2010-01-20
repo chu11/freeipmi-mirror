@@ -21,6 +21,8 @@
 
 #include "ipmi-sensors.h"
 
+#include <stdarg.h>
+
 int get_msg_message_list (struct ipmi_sensors_state_data *state_data,
                           char ***event_message_list,
                           unsigned int *event_message_list_len,

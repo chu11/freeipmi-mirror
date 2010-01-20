@@ -1,3 +1,9 @@
+2010-01-20  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sensors/: Support --output-event-bitmask option.
+
+	* ipmi-sensors/: Re-org and cleanup code significantly.
+	
 2010-01-19  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/spec/: Update macros based on Dell docs.
