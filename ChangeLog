@@ -1,3 +1,7 @@
+2010-01-21  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-pef-config/ipmi-pef-config.8.pre.in: Fix typo.
+
 2010-01-19  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/spec/: Update macros based on Dell docs.
