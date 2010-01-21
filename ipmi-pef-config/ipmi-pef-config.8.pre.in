@@ -58,7 +58,7 @@ Options for editing fields in the checkout file are usually listed in
 a comment above the field.  When there are to many options to make it
 practical, they are listed here in the MAN page.
 .TP
-\fB\Sensor_Type Options\fR 
+\fBSensor_Type Options\fR 
 Reserved, Temperature, Voltage, Current, Fan, Physical_Security,
 Platform_Security_Violation_Attempt, Processor, Power_Supply,
 Power_Unit, Cooling_Device, Other_Units_Based_Sensor, Memory,

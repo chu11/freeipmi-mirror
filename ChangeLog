@@ -1,3 +1,7 @@
+2010-01-21  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-pef-config/ipmi-pef-config.8.pre.in: Fix typo.
+	
 2010-01-20  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors/: Support --output-event-bitmask option.
