@@ -240,6 +240,11 @@ Tool Issues
 
 ipmiconsole/libipmiconsole
 --------------------------
+
+Forgotten/Undocumented Motherboard(s): Serial breaks are not supported
+(Al comment: I think this was a really old Tyan motherboard, but I'm
+not 100% sure.)
+
 Asus P5M2/P5MT-R/S162-E4/RX4: SOL payload sizes are reported
 incorrectly.  Resolved with a workaround to skip payload size checks.
 
