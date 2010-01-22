@@ -4656,7 +4656,6 @@ ipmi_oem_dell_set_power_capacity_status (ipmi_oem_state_data_t *state_data)
   /* Dell Poweredge OEM
    *
    * From Dell Provided Source Code
-   * From Dell Provided Docs
    *
    * Power Capacity Status Request
    *
