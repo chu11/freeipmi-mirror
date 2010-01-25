@@ -792,7 +792,7 @@ similar question of how to deal with OEM extensions.  Should code
 automatically detect the manufacturer and product to determine if OEM
 extensions can be handled or should be output?
 
-We would like the tools to operator as simply for the users without
+We would like the tools to operate as simply for the users without
 specifying options on the command line.  However, can we trust that a
 vendor will implement their extensions consistently across
 motherboards, products, or even firmware revisions?
