@@ -1,3 +1,7 @@
+2010-01-25  Albert Chu <chu11@llnl.gov>
+
+	* doc/freeipmi-coding.txt: Fix typos.
+	
 2010-01-21  Albert Chu <chu11@llnl.gov>
 
 	* README, man/freeipmi.7.pre.in: Additional general information added.
