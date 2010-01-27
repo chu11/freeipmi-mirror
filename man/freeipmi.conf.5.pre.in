@@ -886,22 +886,23 @@ should attempt to interpret OEM data by default or not.
 .TP
 \fBipmi\-sel\-entity\-sensor\-names\fR \fIENABLE|DISABLE\fR
 Specify if output of sensor names should include entity ids and
-instances.
+instances by default or not.
 .TP
 \fBipmi\-sel\-no\-sensor\-type\-output\fR \fIENABLE|DISABLE\fR
-Specify if output of the sensor type should be output or not.
+Specify if output of the sensor type should be output by default or
+not.
 .TP
 \fBipmi\-sel\-comma\-separated\-output\fR \fIENABLE|DISABLE\fR
-Specify if output should be comma separated or not.
+Specify if output should be comma separated by default or not.
 .TP
 \fBipmi\-sel\-no\-header\-output\fR \fIENABLE|DISABLE\fR
-Specify if column headers should be output or not.
+Specify if column headers should be output by default or not.
 .TP
 \fBipmi\-sel\-non\-abbreviated\-units\fR \fIENABLE|DISABLE\fR
-Specify if output should have units abbreviated or not.
+Specify if output should have units abbreviated by default or not.
 .TP
 \fBipmi\-sel\-legacy\-output\fR \fIENABLE|DISABLE\fR
-Specify if output should be in legacy format or not.
+Specify if output should be in legacy format by default or not.
 
 .SH "IPMI-SENSORS OPTIONS"
 The following options are specific to 
@@ -1008,22 +1009,23 @@ should ignore not-available (i.e. N/A) sensors by default.
 .TP
 \fBipmi\-sensors\-entity\-sensor\-names\fR \fIENABLE|DISABLE\fR
 Specify if output of sensor names should include entity ids and
-instances.
+instances by default or not.
 .TP
 \fBipmi\-sensors\-no\-sensor\-type\-output\fR \fIENABLE|DISABLE\fR
-Specify if output of the sensor type should be output or not.
+Specify if output of the sensor type should be output by default or
+not.
 .TP
 \fBipmi\-sensors\-comma\-separated\-output\fR \fIENABLE|DISABLE\fR
-Specify if output should be comma separated or not.
+Specify if output should be comma separated by default or not.
 .TP
 \fBipmi\-sensors\-no\-header\-output\fR \fIENABLE|DISABLE\fR
-Specify if column headers should be output or not.
+Specify if column headers should be output by default or not.
 .TP
 \fBipmi\-sensors\-non\-abbreviated\-units\fR \fIENABLE|DISABLE\fR
-Specify if output should have units abbreviated or not.
+Specify if output should have units abbreviated by default or not.
 .TP
 \fBipmi\-sensors\-legacy\-output\fR \fIENABLE|DISABLE\fR
-Specify if output should be in legacy format or not.
+Specify if output should be in legacy format by default or not.
 
 .SH "IPMI-SENSORS-CONFIG OPTIONS"
 The following options are specific to 
@@ -1264,19 +1266,20 @@ Specify if output of sensor names should include entity ids and
 instances.
 .TP
 \fBipmimonitoring\-no\-sensor\-type\-output\fR \fIENABLE|DISABLE\fR
-Specify if output of the sensor type should be output or not.
+Specify if output of the sensor type should be output by default or
+not.
 .TP
 \fBipmimonitoring\-comma\-separated\-output\fR \fIENABLE|DISABLE\fR
-Specify if output should be comma separated or not.
+Specify if output should be comma separated by default or not.
 .TP
 \fBipmimonitoring\-no\-header\-output\fR \fIENABLE|DISABLE\fR
-Specify if column headers should be output or not.
+Specify if column headers should be output by default or not.
 .TP
 \fBipmimonitoring\-non\-abbreviated\-units\fR \fIENABLE|DISABLE\fR
-Specify if output should have units abbreviated or not.
+Specify if output should have units abbreviated by default or not.
 .TP
 \fBipmimonitoring\-legacy\-output\fR \fIENABLE|DISABLE\fR
-Specify if output should be in legacy format or not.
+Specify if output should be in legacy format by default or not.
 .TP
 \fBipmimonitoring\-sensor\-config\-file\fR \fIFILE\fR
 Specify the default sensor configuration file.
