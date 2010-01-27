@@ -180,6 +180,10 @@ struct config_file_data_ipmi_sensors
   int entity_sensor_names_count;
   int output_event_bitmask;
   int output_event_bitmask_count;
+  int output_sensor_state;
+  int output_sensor_state_count;
+  char *sensor_state_config_file;
+  int sensor_state_config_file_count;
   int no_sensor_type_output;
   int no_sensor_type_output_count;
   int comma_separated_output_count;

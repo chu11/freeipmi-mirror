@@ -48,12 +48,14 @@ enum ipmi_sensors_argp_option_keys
     INTERPRET_OEM_DATA_KEY = 165,
     IGNORE_NOT_AVAILABLE_SENSORS_KEY = 166,
     OUTPUT_EVENT_BITMASK_KEY = 167,
-    ENTITY_SENSOR_NAMES_KEY = 168,
-    NO_SENSOR_TYPE_OUTPUT_KEY = 169,
-    COMMA_SEPARATED_OUTPUT_KEY = 170,
-    NO_HEADER_OUTPUT_KEY = 171,
-    NON_ABBREVIATED_UNITS_KEY = 172,
-    LEGACY_OUTPUT_KEY = 173,
+    OUTPUT_SENSOR_STATE_KEY = 168,
+    SENSOR_STATE_CONFIG_FILE_KEY = 169,
+    ENTITY_SENSOR_NAMES_KEY = 170,
+    NO_SENSOR_TYPE_OUTPUT_KEY = 171,
+    COMMA_SEPARATED_OUTPUT_KEY = 172,
+    NO_HEADER_OUTPUT_KEY = 173,
+    NON_ABBREVIATED_UNITS_KEY = 174,
+    LEGACY_OUTPUT_KEY = 175,
   };
 
 struct ipmi_sensors_arguments
@@ -78,6 +80,8 @@ struct ipmi_sensors_arguments
   int interpret_oem_data;
   int ignore_not_available_sensors;
   int output_event_bitmask;
+  int output_sensor_state;
+  char *sensor_state_config_file;
   int entity_sensor_names;
   int no_sensor_type_output;
   int comma_separated_output;
@@ -101,6 +105,7 @@ typedef struct ipmi_sensors_state_data
   ipmi_sdr_cache_ctx_t sdr_cache_ctx;
   ipmi_sdr_parse_ctx_t sdr_parse_ctx;
   ipmi_sensor_read_ctx_t sensor_read_ctx;
+  ipmi_interpret_ctx_t interpret_ctx;
   int output_headers;
   struct sensor_entity_id_counts entity_id_counts;
   struct sensor_column_width column_width;

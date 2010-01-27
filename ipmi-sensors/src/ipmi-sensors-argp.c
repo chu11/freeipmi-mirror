@@ -116,18 +116,25 @@ static struct argp_option cmdline_options[] =
       "Ignore not-available (i.e. N/A) sensors.", 47},
     { "output-event-bitmask", OUTPUT_EVENT_BITMASK_KEY, NULL, 0,
       "Output event bitmask value instead of the string representation.", 48},
+    { "output-sensor-state", OUTPUT_SENSOR_STATE_KEY, NULL, 0,
+      "Output sensor state in output.", 49},
+    { "sensor-state-config-file", SENSOR_STATE_CONFIG_FILE_KEY, "FILE", 0,
+      "Specify an alternate sensor state configuration  file.", 50},
+    /* ipmimonitoring legacy support */
+    { "sensor-state-config-file", SENSOR_STATE_CONFIG_FILE_KEY, "FILE", OPTION_HIDDEN,
+      "Specify an alternate sensor state configuration  file.", 51},
     { "entity-sensor-names", ENTITY_SENSOR_NAMES_KEY, NULL, 0,
-      "Output sensor names with entity ids and instances.", 49},
+      "Output sensor names with entity ids and instances.", 52},
     { "no-sensor-type-output", NO_SENSOR_TYPE_OUTPUT_KEY, 0, 0,
-      "Do not show sensor type output.", 50},
+      "Do not show sensor type output.", 53},
     { "comma-separated-output", COMMA_SEPARATED_OUTPUT_KEY, 0, 0,
-      "Output fields in comma separated format.", 51},
+      "Output fields in comma separated format.", 54},
     { "no-header-output", NO_HEADER_OUTPUT_KEY, 0, 0,
-      "Do not output column headers.", 52},
+      "Do not output column headers.", 55},
     { "non-abbreviated-units", NON_ABBREVIATED_UNITS_KEY, 0, 0,
-      "Output non-abbreviated units (e.g. 'Amps' insetead of 'A').", 53},
+      "Output non-abbreviated units (e.g. 'Amps' insetead of 'A').", 56},
     { "legacy-output", LEGACY_OUTPUT_KEY, 0, 0,
-      "Output in legacy format.", 54},
+      "Output in legacy format.", 57},
     { NULL, 0, NULL, 0, NULL, 0}
   };
 
@@ -287,6 +294,16 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case OUTPUT_EVENT_BITMASK_KEY:
       cmd_args->output_event_bitmask = 1;
       break;
+    case OUTPUT_SENSOR_STATE_KEY:
+      cmd_args->output_sensor_state = 1;
+      break;
+    case SENSOR_STATE_CONFIG_FILE_KEY:
+      if (!(cmd_args->sensor_state_config_file = strdup (arg)))
+        {
+          perror ("strdup");
+          exit (1);
+        }
+      break;
     case ENTITY_SENSOR_NAMES_KEY:
       cmd_args->entity_sensor_names = 1;
       break;
@@ -405,6 +422,10 @@ _ipmi_sensors_config_file_parse (struct ipmi_sensors_arguments *cmd_args)
     cmd_args->ignore_not_available_sensors = config_file_data.ignore_not_available_sensors;
   if (config_file_data.output_event_bitmask_count)
     cmd_args->output_event_bitmask = config_file_data.output_event_bitmask;
+  if (config_file_data.output_sensor_state_count)
+    cmd_args->output_sensor_state = config_file_data.output_sensor_state;
+  if (config_file_data.sensor_state_config_file_count)
+    cmd_args->sensor_state_config_file = config_file_data.sensor_state_config_file;
   if (config_file_data.entity_sensor_names_count)
     cmd_args->entity_sensor_names = config_file_data.entity_sensor_names;
   if (config_file_data.no_sensor_type_output_count)
@@ -521,6 +542,8 @@ ipmi_sensors_argp_parse (int argc, char **argv, struct ipmi_sensors_arguments *c
   cmd_args->interpret_oem_data = 0;
   cmd_args->ignore_not_available_sensors = 0;
   cmd_args->output_event_bitmask = 0;
+  cmd_args->output_sensor_state = 0;
+  cmd_args->sensor_state_config_file = NULL;
   cmd_args->entity_sensor_names = 0;
   cmd_args->no_sensor_type_output = 0;
   cmd_args->comma_separated_output = 0;

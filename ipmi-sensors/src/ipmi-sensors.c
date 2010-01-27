@@ -1047,6 +1047,58 @@ _ipmi_sensors (pstdout_state_t pstate,
         }
     }
 
+  if (prog_data->args->output_sensor_state)
+    {
+      if (!(state_data.interpret_ctx = ipmi_interpret_ctx_create ()))
+        {
+          pstdout_perror (pstate, "ipmi_interpret_ctx_create()");
+          exit_code = EXIT_FAILURE;
+          goto cleanup;
+        }
+
+      if (prog_data->args->sensor_state_config_file)
+        {
+          if (ipmi_interpret_load_sensor_config (state_data.interpret_ctx,
+                                                 prog_data->args->sensor_state_config_file) < 0)
+            {
+              if (ipmi_interpret_ctx_errnum (state_data.interpret_ctx) == IPMI_INTERPRET_ERR_SENSOR_CONFIG_FILE_DOES_NOT_EXIST)
+                pstdout_fprintf (pstate,
+                                 stderr,
+                                 "sensor state config file '%s' does not exist\n",
+                                 prog_data->args->sensor_state_config_file);
+              else if (ipmi_interpret_ctx_errnum (state_data.interpret_ctx) == IPMI_INTERPRET_ERR_SENSOR_CONFIG_FILE_PARSE)
+                pstdout_fprintf (pstate,
+                                 stderr,
+                                 "sensor state config file '%s' parse error\n",
+                                 prog_data->args->sensor_state_config_file);
+              else
+                pstdout_fprintf (pstate,
+                                 stderr,
+                                 "ipmi_interpret_load_sensor_config: %s\n",
+                                 ipmi_interpret_ctx_errormsg (state_data.interpret_ctx));
+              exit_code = EXIT_FAILURE;
+              goto cleanup;
+            }
+        }
+      else
+        {
+          if (ipmi_interpret_load_sensor_config (state_data.interpret_ctx, NULL) < 0)
+            {
+              if (ipmi_interpret_ctx_errnum (state_data.interpret_ctx) == IPMI_INTERPRET_ERR_SENSOR_CONFIG_FILE_PARSE)
+                pstdout_fprintf (pstate,
+                                 stderr,
+                                 "sensor state config file parse error\n");
+              else
+                pstdout_fprintf (pstate,
+                                 stderr,
+                                 "ipmi_interpret_load_sensor_config: %s\n",
+                                 ipmi_interpret_ctx_errormsg (state_data.interpret_ctx));
+              exit_code = EXIT_FAILURE;
+              goto cleanup;
+            }
+        }
+    }
+
   if (run_cmd_args (&state_data) < 0)
     {
       exit_code = EXIT_FAILURE;
@@ -1061,6 +1113,8 @@ _ipmi_sensors (pstdout_state_t pstate,
     ipmi_sdr_parse_ctx_destroy (state_data.sdr_parse_ctx);
   if (state_data.sensor_read_ctx)
     ipmi_sensor_read_ctx_destroy (state_data.sensor_read_ctx);
+  if (state_data.interpret_ctx)
+    ipmi_interpret_ctx_destroy (state_data.interpret_ctx);
   if (state_data.ipmi_ctx)
     {
       ipmi_ctx_close (state_data.ipmi_ctx);

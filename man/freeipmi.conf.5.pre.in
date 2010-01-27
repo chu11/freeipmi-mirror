@@ -1011,9 +1011,17 @@ Specify if
 .B ipmi-sensors
 should output event bitmasks instead of string representations by default.
 .TP
+\fBipmi\-sensors\-output\-sensor\-state\fR \fIENABLE|DISABLE\fR
+Specify if
+.B ipmi-sensors
+should output the sensor state by default.
+.TP
+\fBipmi\-sensors\-sensor\-state\-config\-file\fR \fIFILE\fR
+Specify the default sensor state configuration file.
+.TP
 \fBipmi\-sensors\-entity\-sensor\-names\fR \fIENABLE|DISABLE\fR
 Specify if output of sensor names should include entity ids and
-instances.
+instances
 .TP
 \fBipmi\-sensors\-no\-sensor\-type\-output\fR \fIENABLE|DISABLE\fR
 Specify if output of the sensor type should be output or not.

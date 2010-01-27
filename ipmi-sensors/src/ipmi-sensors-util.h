@@ -23,6 +23,9 @@
 
 #include <stdarg.h>
 
+char *get_sensor_state_str (unsigned sensor_state);
+                          
+
 int get_msg_message_list (struct ipmi_sensors_state_data *state_data,
                           char ***event_message_list,
                           unsigned int *event_message_list_len,

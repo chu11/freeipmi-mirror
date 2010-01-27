@@ -31,6 +31,7 @@
 #include <freeipmi/freeipmi.h>
 
 #include "ipmi-sensors-util.h"
+#include "ipmi-sensors-output-common.h"
 
 #include "freeipmi-portability.h"
 
@@ -38,6 +39,19 @@
 #define IPMI_SENSORS_MAX_LIST   32
 
 #define UNRECOGNIZED_STATE "Unrecognized State"
+
+char *
+get_sensor_state_str (unsigned sensor_state)
+{
+  if (sensor_state == IPMI_INTERPRET_SENSOR_STATE_NOMINAL)
+    return "Nominal";
+  else if (sensor_state == IPMI_INTERPRET_SENSOR_STATE_WARNING)
+    return "Warning";
+  else if (sensor_state == IPMI_INTERPRET_SENSOR_STATE_CRITICAL)
+    return "Critical";
+
+  return (IPMI_SENSORS_NA_STRING);
+}
 
 int
 get_msg_message_list (struct ipmi_sensors_state_data *state_data,

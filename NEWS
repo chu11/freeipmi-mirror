@@ -11,6 +11,8 @@ Tools - Detailed Enhancements/Changes/Fixes
 -------------------------------------------
 o ipmi-sensors
   - Support --output-event-bitmask option.
+  - Support --output-sensor-state option.
+  - Support --sensor-state-config-file option.
 
 Libraries - Detailed Enhancements/Changes/Fixes
 -----------------------------------------------

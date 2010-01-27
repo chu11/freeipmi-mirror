@@ -1,3 +1,8 @@
+2010-01-27  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sensors/: Support --output-sensor-state and
+	--sensor-state-config-file.
+	
 2010-01-25  Albert Chu <chu11@llnl.gov>
 
 	* doc/freeipmi-coding.txt: Fix typos.

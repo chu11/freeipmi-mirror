@@ -80,6 +80,23 @@ Ignore not-available (i.e. N/A) sensors in output.
 .TP
 \fB\-\-output\-event\-bitmask\fR
 Output event bitmask value instead of the string representation.
+.TP
+\fB\-\-output\-sensor\-state\fR
+Output sensor state in output.  This will add an additional output
+reporting if a sensor is in a NOMINAL, WARNING, or CRITICAL state.
+The sensor state is an interpreted value based on the current sensor
+event.  The sensor state interpretations are determined by the
+configuration file @INTERPRET_SENSOR_CONFIG_FILE_DEFAULT@.
+See
+.B freeipmi_interpret_sensors.conf(5)
+for more information.
+This option gives identical output to the sensor state
+previously output by
+.B ipmimonitoring(8).
+.TP
+\fB\-\-sensor\-state\-config\-file\fR=\fIFILE\fR
+Specify an alternate sensor state configuration file.  Option ignored
+if \fB\-\-output\-sensor\-state\fR not specified.
 #include <@top_srcdir@/common/man/manpage-common-entity-sensor-names.man>
 #include <@top_srcdir@/common/man/manpage-common-no-sensor-type-output.man>
 #include <@top_srcdir@/common/man/manpage-common-comma-separated-output.man>
@@ -98,6 +115,15 @@ Output event bitmask value instead of the string representation.
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-options.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-localhost.man>
 #include <@top_srcdir@/common/man/manpage-common-troubleshooting.man>
+.SH "IPMI-SENSORS TROUBLESHOOTING"
+The following are common issues for given error messages specifically
+for
+.B ipmi-sensors.
+.LP
+"sensor config file parse error" - A parse error was found in the 
+sensor state configuration file.
+Please see
+.B freeipmi_interpret_sensors.conf(5).
 #include <@top_srcdir@/common/man/manpage-common-workaround-heading-text.man>
 #include <@top_srcdir@/common/man/manpage-common-workaround-text.man>
 #include <@top_srcdir@/common/man/manpage-common-oem-interpretation.man>
@@ -141,5 +167,5 @@ Copyright \(co 2003-2010 FreeIPMI Core Team.
 #include <@top_srcdir@/common/man/manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
 freeipmi(7), bmc-config(8), bmc-device(8), ipmimonitoring(8),
-ipmi-sensors-config(8)
+ipmi-sensors-config(8), freeipmi_interpret_sensors.conf(5)
 #include <@top_srcdir@/common/man/manpage-common-homepage.man>
