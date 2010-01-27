@@ -27,6 +27,55 @@ o libipmimonitoring
 Contributions
 -------------
 
+FreeIPMI 0.8.2 - 01/05/10
+-------------------------
+o Add fixes to deal with OSes that will report ECONNRESET or
+  ECONNREFUSED on failed UDP sends.
+o In ipmi-sensors, fix output corner case w/ device types and
+  modifiers.
+o In ipmi-sel, tweak column size to fix output for common scenario.
+o In ipmi-sel, fix output corner case when --ignore-sdr-cache is
+  specified.
+o In ipmi-dcmi, handle interpretation issue on --set-power-limit.
+o In ipmi-dcmi, fix various output bugs.
+o In ipmi-dcmi, add more detailed error messages.
+o In ipmi-dcmi, fix command line parsing of
+  --activate-deactivate-power-limit.
+o Support --interpret-oem-data option in ipmi-dcmi.
+o In ipmi-oem, fix various Fujitsu ambiguities from the official
+  documentation.
+o In ipmi-oem, fix various Dell options and output given Dell docs
+  (backwards compatability maintained on options).
+  - Rename 'product-name' to 'platform-model-name' for Dell
+    get-system-info.
+  - Dell get-power-info is now get-power-consumption-data
+  - Dell reset-power-info is now reset-power-consumption-data
+  - Dell get-power-supply-info is now power-supply-info
+  - Include additional output in Dell power-supply-info.
+  - Dell get-instantaneous-power-consumption-info is now
+    get-instantaneous-power-consumption-data.
+  - Support instance number for get-instantaneous-power-consumption-data.
+  - Dell get-average-power-history and get-peak-power-history
+    collapsed into get-power-consumption-statistics.
+  - Support 'min' option for Dell get-power-consumption-statistics.
+o In ipmi-oem, support additional OEM commands
+  - Dell get-chassis-identify-status
+  - Dell get-system-info 'guid', 'chassis-service-tag',
+    'chassis-related-service-tag', and 'board-revision' inputs.
+o In ipmi-sensors, output Entity ID string with "Container Entity ID"
+  and "FRU Entity ID" if string available.
+o Fix --eliminate corner case when elimination of nodes leads to 0
+  hosts specified.
+o Report proper error message when underlying crypt library is
+  incompatible.
+o In ipmidetectd, support quick port reuse on server setup.
+o Fix hostrange parsing corner case.
+o Fix Cygwin portability bugs.
+o Fix minor output corner cases on sensor units.
+o Fix header file typing inconsistencies.
+o Fix header file documentation.
+o Various documentation updates and fixes.
+
 FreeIPMI 0.8.1 - 12/07/09
 -------------------------
 
