@@ -924,3 +924,76 @@ ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
     }
   return (rv);
 }
+
+int
+ipmi_sensors_get_sensor_state (ipmi_sensors_state_data_t *state_data,
+                               const void *sdr_record,
+                               unsigned int sdr_record_len,
+                               int event_message_output_type,
+                               uint16_t sensor_event_bitmask,
+                               char **sensor_state_str)
+{
+  assert (state_data);
+  assert (state_data->prog_data->args->output_sensor_state);
+  assert (sdr_record);
+  assert (sdr_record_len);
+  assert (IPMI_SENSORS_EVENT_VALID (event_message_output_type));
+  assert (sensor_state_str);
+
+  if (event_message_output_type == IPMI_SENSORS_EVENT_NORMAL)
+    {
+      uint8_t sensor_type;
+      uint8_t event_reading_type_code;
+      unsigned int sensor_state;
+
+      if (ipmi_sdr_parse_sensor_type (state_data->sdr_parse_ctx,
+                                      sdr_record,
+                                      sdr_record_len,
+                                      &sensor_type) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_sdr_parse_sensor_type: %s\n",
+                           ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+          return (-1);
+        }
+      
+      if (ipmi_sdr_parse_event_reading_type_code (state_data->sdr_parse_ctx,
+                                                  sdr_record,
+                                                  sdr_record_len,
+                                                  &event_reading_type_code) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_sdr_parse_event_reading_type_code: %s\n",
+                           ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+          return (-1);
+        }
+      
+      if (ipmi_interpret_sensor (state_data->interpret_ctx,
+                                 event_reading_type_code,
+                                 sensor_type,
+                                 sensor_event_bitmask,
+                                 &sensor_state) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_interpret_sensor: %s\n",
+                           ipmi_interpret_ctx_errormsg (state_data->interpret_ctx));
+          return (-1);
+        }
+      
+      if (sensor_state == IPMI_INTERPRET_SENSOR_STATE_NOMINAL)
+        (*sensor_state_str) = "Nominal";
+      else if (sensor_state == IPMI_INTERPRET_SENSOR_STATE_WARNING)
+        (*sensor_state_str) = "Warning";
+      else if (sensor_state == IPMI_INTERPRET_SENSOR_STATE_CRITICAL)
+        (*sensor_state_str) = "Critical";
+      else
+        (*sensor_state_str) = IPMI_SENSORS_NA_STRING;
+    }
+  else
+    (*sensor_state_str) = IPMI_SENSORS_NA_STRING;
+
+  return (0);
+}

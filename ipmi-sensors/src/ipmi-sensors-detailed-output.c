@@ -1388,6 +1388,37 @@ _analog_data_format_string (ipmi_sensors_state_data_t *state_data, uint8_t analo
 }
 
 static int
+_detailed_output_sensor_state (ipmi_sensors_state_data_t *state_data,
+                               const void *sdr_record,
+                               unsigned int sdr_record_len,
+                               int event_message_output_type,
+                               uint16_t sensor_event_bitmask)
+{
+  assert (state_data);
+  assert (sdr_record);
+  assert (sdr_record_len);
+  
+  if (state_data->prog_data->args->output_sensor_state)
+    {
+      char *sensor_state_str = NULL;
+      
+      if (ipmi_sensors_get_sensor_state (state_data,
+                                         sdr_record,
+                                         sdr_record_len,
+                                         event_message_output_type,
+                                         sensor_event_bitmask,
+                                         &sensor_state_str) < 0)
+        return (-1);
+      
+      pstdout_printf (state_data->pstate,
+                      "Sensor State: %s\n",
+                      sensor_state_str);
+    }
+  
+  return (0);
+}
+
+static int
 _detailed_output_full_record (ipmi_sensors_state_data_t *state_data,
                               const void *sdr_record,
                               unsigned int sdr_record_len,
@@ -1541,6 +1572,14 @@ _detailed_output_full_record (ipmi_sensors_state_data_t *state_data,
         return (-1);
     }
 
+
+  if (_detailed_output_sensor_state (state_data,
+                                     sdr_record,
+                                     sdr_record_len,
+                                     event_message_output_type,
+                                     sensor_event_bitmask) < 0)
+    return (-1);
+
   if (state_data->prog_data->args->legacy_output)
     {
       if (reading)
@@ -1567,7 +1606,7 @@ _detailed_output_full_record (ipmi_sensors_state_data_t *state_data,
                         "Sensor Reading: %s\n",
                         IPMI_SENSORS_NA_STRING_OUTPUT);
     }
-
+  
   if (_detailed_output_event_message_list (state_data,
                                            event_message_output_type,
                                            sensor_event_bitmask,
@@ -1669,6 +1708,13 @@ _detailed_output_compact_record (ipmi_sensors_state_data_t *state_data,
         pstdout_printf (state_data->pstate,
                         "Entity Instance Sharing: Same for all records\n");
     }
+
+  if (_detailed_output_sensor_state (state_data,
+                                     sdr_record,
+                                     sdr_record_len,
+                                     event_message_output_type,
+                                     sensor_event_bitmask) < 0)
+    return (-1);
 
   if (_detailed_output_event_message_list (state_data,
                                            event_message_output_type,
