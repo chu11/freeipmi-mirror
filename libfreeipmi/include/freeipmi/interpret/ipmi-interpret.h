@@ -40,6 +40,7 @@ extern "C" {
 #define IPMI_INTERPRET_ERR_ERRNUMRANGE                       11
 
 #define IPMI_INTERPRET_FLAGS_DEFAULT                     0x0000
+#define IPMI_INTERPRET_FLAGS_INTERPRET_OEM_DATA          0x0001
 
 #define IPMI_INTERPRET_SENSOR_STATE_NOMINAL                0x00
 #define IPMI_INTERPRET_SENSOR_STATE_WARNING                0x01

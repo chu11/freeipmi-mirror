@@ -35,7 +35,7 @@
 #define IPMI_INTERPRET_CTX_MAGIC 0xACFF3289
 
 #define IPMI_INTERPRET_FLAGS_MASK \
-  (IPMI_INTERPRET_FLAGS_DEFAULT)
+  (IPMI_INTERPRET_FLAGS_INTERPRET_OEM_DATA)
 
 struct ipmi_interpret_sensor_config {
   char *option_str;

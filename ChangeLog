@@ -4,6 +4,10 @@
 	--sensor-state-config-file.
 
 	* man/freeipmi.conf.5.pre.in: Fix language consistency.
+
+	* libfreeipmi/include/freeipmi/interpret/ipmi-interpret.h,
+	libfreeipmi/src/interpret/ipmi-interpret-defs.h: Support
+	IPMI_INTERPRET_FLAGS_INTERPRET_OEM_DATA flag.
 	
 2010-01-25  Albert Chu <chu11@llnl.gov>
 
