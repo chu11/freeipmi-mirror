@@ -1,3 +1,9 @@
+2010-01-29  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/util/ipmi-sensor-util.h, libfreeipmi/src/util/ipmi-sensor-util.c (ipmi_get_sensor_event_messages): New function.
+
+	* ipmi-sensors/: Use ipmi_get_sensor_event_messages().
+	
 2010-01-27  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors/: Support --output-sensor-state and

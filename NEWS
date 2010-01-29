@@ -13,6 +13,8 @@ o ipmi-sensors
   - Support --output-event-bitmask option.
   - Support --output-sensor-state option.
   - Support --sensor-state-config-file option.
+  - The "Unrecognized State" event string is now output as
+    "Unrecognized Event = X", where X is the event bitmask.
 
 Libraries - Detailed Enhancements/Changes/Fixes
 -----------------------------------------------

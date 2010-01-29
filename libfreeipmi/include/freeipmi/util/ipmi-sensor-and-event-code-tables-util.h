@@ -103,7 +103,8 @@ int ipmi_get_oem_sensor_event_bitmask_message (uint32_t manufacturer_id,
 					       uint16_t sensor_event_bitmask,
 					       char *buf,
 					       unsigned int buflen);
-  
+
+ 
 #ifdef __cplusplus
 }
 #endif

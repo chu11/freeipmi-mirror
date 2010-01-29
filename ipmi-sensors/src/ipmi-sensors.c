@@ -444,8 +444,11 @@ _get_event_message (ipmi_sensors_state_data_t *state_data,
                     char ***event_message_list,
                     unsigned int *event_message_list_len)
 {
+  uint8_t sensor_type;
   uint8_t event_reading_type_code;
-  int event_reading_type_code_class;
+  uint32_t manufacturer_id = 0;
+  uint16_t product_id = 0;
+  unsigned int flags = IPMI_GET_SENSOR_EVENT_MESSAGES_FLAGS_DEFAULT;
   int rv = -1;
 
   assert (state_data);
@@ -454,6 +457,18 @@ _get_event_message (ipmi_sensors_state_data_t *state_data,
   assert (event_message_list);
   assert (event_message_list_len);
 
+  if (ipmi_sdr_parse_sensor_type (state_data->sdr_parse_ctx,
+                                  sdr_record,
+                                  sdr_record_len,
+                                  &sensor_type) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_sdr_parse_sensor_type: %s\n",
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+      goto cleanup;
+    }
+  
   if (ipmi_sdr_parse_event_reading_type_code (state_data->sdr_parse_ctx,
                                               sdr_record,
                                               sdr_record_len,
@@ -465,140 +480,35 @@ _get_event_message (ipmi_sensors_state_data_t *state_data,
                        ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
       goto cleanup;
     }
+  
+  flags |= IPMI_GET_SENSOR_EVENT_MESSAGES_OK_IF_NO_EVENT;
 
-  event_reading_type_code_class = ipmi_event_reading_type_code_class (event_reading_type_code);
+  if (!state_data->prog_data->args->verbose_count)
+    flags |= IPMI_GET_SENSOR_EVENT_MESSAGES_FLAGS_SHORT;
 
-  if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD)
+  if (state_data->prog_data->args->interpret_oem_data)
     {
-      if (get_threshold_message_list (state_data,
+      manufacturer_id = state_data->oem_data.manufacturer_id;
+      product_id = state_data->oem_data.product_id;
+      flags |= IPMI_GET_SENSOR_EVENT_MESSAGES_FLAGS_INTERPRET_OEM_DATA;
+    }
+
+  if (ipmi_get_sensor_event_messages (event_reading_type_code,
+                                      sensor_type,
+                                      sensor_event_bitmask,
+                                      manufacturer_id,
+                                      product_id,
                                       event_message_list,
                                       event_message_list_len,
-                                      sensor_event_bitmask,
-                                      IPMI_SENSORS_NO_EVENT_STRING) < 0)
-        goto cleanup;
-    }
-  else if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_GENERIC_DISCRETE)
+                                      flags) < 0)
     {
-      if (get_generic_event_message_list (state_data,
-                                          event_message_list,
-                                          event_message_list_len,
-                                          event_reading_type_code,
-                                          sensor_event_bitmask,
-                                          IPMI_SENSORS_NO_EVENT_STRING) < 0)
-        goto cleanup;
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_get_sensor_event_messages: %s\n",
+                       strerror (errno));
+      goto cleanup;
     }
-  else if (event_reading_type_code_class ==  IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE)
-    {
-      uint8_t sensor_type;
 
-      if (ipmi_sdr_parse_sensor_type (state_data->sdr_parse_ctx,
-                                      sdr_record,
-                                      sdr_record_len,
-                                      &sensor_type) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "ipmi_sdr_parse_sensor_type: %s\n",
-                           ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
-          goto cleanup;
-        }
-
-      if (get_sensor_specific_event_message_list (state_data,
-                                                  event_message_list,
-                                                  event_message_list_len,
-                                                  sensor_type,
-                                                  sensor_event_bitmask,
-                                                  IPMI_SENSORS_NO_EVENT_STRING) < 0)
-        goto cleanup;
-    }
-  /* OEM Interpretation
-   *
-   * Dell Poweredge R610
-   * Dell Poweredge R710
-   */
-  else if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM
-           && state_data->prog_data->args->interpret_oem_data
-           && state_data->oem_data.manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-           && (state_data->oem_data.product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
-               || state_data->oem_data.product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
-           && event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_DELL_STATUS)
-    {
-      if (get_generic_event_message_list (state_data,
-                                          event_message_list,
-                                          event_message_list_len,
-                                          event_reading_type_code,
-                                          sensor_event_bitmask,
-                                          IPMI_SENSORS_NO_EVENT_STRING) < 0)
-        goto cleanup;
-    }
-  /* OEM Interpretation
-   *
-   * Supermicro X8DTH
-   */
-  else if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM
-           && state_data->prog_data->args->interpret_oem_data
-           && (state_data->oem_data.manufacturer_id == IPMI_IANA_ENTERPRISE_ID_SUPERMICRO
-	       || state_data->oem_data.manufacturer_id ==  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND)
-	   && state_data->oem_data.product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTH
-	   && event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_SUPERMICRO_GENERIC)
-    {
-      char event_buf[IPMI_SENSORS_MESSAGE_LENGTH + 1];
-      uint8_t sensor_type;
-      int ret;
-
-      if (ipmi_sdr_parse_sensor_type (state_data->sdr_parse_ctx,
-                                      sdr_record,
-                                      sdr_record_len,
-                                      &sensor_type) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "ipmi_sdr_parse_sensor_type: %s\n",
-                           ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
-          goto cleanup;
-        }
-
-      memset (event_buf, '\0', IPMI_SENSORS_MESSAGE_LENGTH + 1);
-
-      if ((ret = ipmi_get_oem_sensor_event_bitmask_message (state_data->oem_data.manufacturer_id,
-							    state_data->oem_data.product_id,
-							    event_reading_type_code,
-							    sensor_type,
-							    sensor_event_bitmask,
-							    event_buf,
-							    IPMI_SENSORS_MESSAGE_LENGTH)) < 0)
-	goto oem_normal_output;
-      
-      if (!ret)
-	goto oem_normal_output;
-
-      if (get_msg_message_list (state_data,
-                                event_message_list,
-                                event_message_list_len,
-                                event_buf) < 0)
-        goto cleanup;
-    }
-  else /* OEM Event */
-    {
-    oem_normal_output:
-      {
-        char event_buf[IPMI_SENSORS_MESSAGE_LENGTH + 1];
-        
-        memset (event_buf, '\0', IPMI_SENSORS_MESSAGE_LENGTH + 1);
-	
-        snprintf (event_buf,
-                  IPMI_SENSORS_MESSAGE_LENGTH,
-                  "OEM Event = %04Xh",
-                  sensor_event_bitmask);
-
-        if (get_msg_message_list (state_data,
-                                  event_message_list,
-                                  event_message_list_len,
-                                  event_buf) < 0)
-          goto cleanup;
-      }
-    }
-  
   rv = 0;
  cleanup:
   return (rv);

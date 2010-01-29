@@ -1945,3 +1945,4 @@ ipmi_get_oem_sensor_event_bitmask_message (uint32_t manufacturer_id,
   SET_ERRNO (EINVAL);
   return (-1);
 }
+
