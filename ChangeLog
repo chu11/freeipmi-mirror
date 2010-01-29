@@ -1,3 +1,8 @@
+2010-01-29  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sensors/src/ipmi-sensors-detailed-output.c
+	(_detailed_output_event_enable): Fix mem-leak.
+	
 2010-01-27  Albert Chu <chu11@llnl.gov>
 
 	* man/freeipmi.conf.5.pre.in: Fix language consistency.
