@@ -2,6 +2,21 @@
 
 	* ipmi-sensors/src/ipmi-sensors-detailed-output.c
 	(_detailed_output_event_enable): Fix mem-leak.
+
+	* libfreeipmi/include/util/ipmi-sensor-util.h,
+	libfreeipmi/src/util/ipmi-sensor-util.c, *
+	libfreeipmi/include/util/ipmi-sensor-and-event-code-tables.h,
+	libfreeipmi/src/util/ipmi-sensor-and-event-code-tables.c,
+	(ipmi_get_sensor_event_messages, ipmi_get_event_messages): Rename
+	ipmi_get_sensor_event_messages to ipmi_get_event_messages.  Add
+	IPMI_GET_EVENT_MESSAGES_FLAGS_SENSOR_READING bitmask.
+
+	* libfreeipmi/include/util/ipmi-sensor-and-event-code-tables.h,
+	libfreeipmi/src/util/ipmi-sensor-and-event-code-tables.c
+	(ipmi_get_oem_event_bitmask_message): Renamed from
+	ipmi_get_oem_sensor_event_bitmask_message.
+
+	* ipmi-sensors/: Update appropriately.
 	
 2010-01-29  Albert Chu <chu11@llnl.gov>
 

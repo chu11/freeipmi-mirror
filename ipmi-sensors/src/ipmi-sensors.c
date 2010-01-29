@@ -447,7 +447,7 @@ _get_event_message (ipmi_sensors_state_data_t *state_data,
   uint8_t event_reading_type_code;
   uint32_t manufacturer_id = 0;
   uint16_t product_id = 0;
-  unsigned int flags = IPMI_GET_SENSOR_EVENT_MESSAGES_FLAGS_DEFAULT;
+  unsigned int flags = IPMI_GET_EVENT_MESSAGES_FLAGS_DEFAULT;
   int rv = -1;
 
   assert (state_data);
@@ -480,31 +480,31 @@ _get_event_message (ipmi_sensors_state_data_t *state_data,
       goto cleanup;
     }
   
-  flags |= IPMI_GET_SENSOR_EVENT_MESSAGES_FLAGS_SENSOR_READING;
+  flags |= IPMI_GET_EVENT_MESSAGES_FLAGS_SENSOR_READING;
 
   if (!state_data->prog_data->args->verbose_count)
-    flags |= IPMI_GET_SENSOR_EVENT_MESSAGES_FLAGS_SHORT;
+    flags |= IPMI_GET_EVENT_MESSAGES_FLAGS_SHORT;
 
   if (state_data->prog_data->args->interpret_oem_data)
     {
       manufacturer_id = state_data->oem_data.manufacturer_id;
       product_id = state_data->oem_data.product_id;
-      flags |= IPMI_GET_SENSOR_EVENT_MESSAGES_FLAGS_INTERPRET_OEM_DATA;
+      flags |= IPMI_GET_EVENT_MESSAGES_FLAGS_INTERPRET_OEM_DATA;
     }
 
-  if (ipmi_get_sensor_event_messages (event_reading_type_code,
-                                      sensor_type,
-                                      sensor_event_bitmask,
-                                      manufacturer_id,
-                                      product_id,
-                                      event_message_list,
-                                      event_message_list_len,
-                                      IPMI_SENSORS_NO_EVENT_STRING,
-                                      flags) < 0)
+  if (ipmi_get_event_messages (event_reading_type_code,
+                               sensor_type,
+                               sensor_event_bitmask,
+                               manufacturer_id,
+                               product_id,
+                               event_message_list,
+                               event_message_list_len,
+                               IPMI_SENSORS_NO_EVENT_STRING,
+                               flags) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "ipmi_get_sensor_event_messages: %s\n",
+                       "ipmi_get_event_messages: %s\n",
                        strerror (errno));
       goto cleanup;
     }

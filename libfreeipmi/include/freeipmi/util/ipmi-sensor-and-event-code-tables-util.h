@@ -31,6 +31,11 @@ extern "C" {
 #define IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM                      0x04
 #define IPMI_EVENT_READING_TYPE_CODE_CLASS_UNKNOWN                  0x05
 
+#define IPMI_GET_EVENT_MESSAGES_FLAGS_DEFAULT            0x0000
+#define IPMI_GET_EVENT_MESSAGES_FLAGS_SHORT              0x0001
+#define IPMI_GET_EVENT_MESSAGES_FLAGS_INTERPRET_OEM_DATA 0x0002
+#define IPMI_GET_EVENT_MESSAGES_FLAGS_SENSOR_READING     0x0004
+
 int ipmi_event_reading_type_code_class (uint8_t event_reading_type_code);
 
 int ipmi_event_message_separator (const char *separator);
@@ -96,14 +101,57 @@ int ipmi_get_oem_sensor_type_message (uint32_t manufacturer_id,
 /* some vendors return values instead of event bitmasks in the 
  * sensor or SEL event, this is to handle this special case
  */
-int ipmi_get_oem_sensor_event_bitmask_message (uint32_t manufacturer_id,
-					       uint16_t product_id,
-					       uint8_t event_reading_type_code,
-					       uint8_t sensor_type,
-					       uint16_t sensor_event_bitmask,
-					       char *buf,
-					       unsigned int buflen);
+int ipmi_get_oem_event_bitmask_message (uint32_t manufacturer_id,
+                                        uint16_t product_id,
+                                        uint8_t event_reading_type_code,
+                                        uint8_t sensor_type,
+                                        uint16_t event_bitmask,
+                                        char *buf,
+                                        unsigned int buflen);
 
+/* wrapper function to handle retrieval of event messages.
+ *
+ * collectively wraps
+ *
+ * ipmi_get_generic_event_message()
+ * ipmi_get_sensor_type_message()
+ *
+ * If flag IPMI_GET_EVENT_MESSAGES_FLAGS_SHORT is specified,
+ * ipmi_get_generic_event_message_short() and
+ * ipmi_get_sensor_type_message_short() are called respectively inplace
+ * of ipmi_get_generic_event_message() and ipmi_get_sensor_type_message().
+ *
+ * If flag IPMI_GET_EVENT_MESSAGES_FLAGS_INTERPRET_OEM_DATA is
+ * specified ipmi_get_oem_generic_event_message(),
+ * ipmi_get_oem_sensor_type_message(), and
+ * ipmi_get_oem_sensor_event_bitmask_message() are called respectively
+ * if necessary.
+ *
+ * If flag IPMI_GET_EVENT_MESSAGES_FLAGS_SENSOR_READING is
+ * specified ipmi_get_threshold_message() will be called for a
+ * sensor_event_bitmask instead of ipmi_get_generic_event_message() if
+ * it is a threshold sensor.  Primarily used for event messages
+ * following a get sensor reading in which threshold event bitmasks
+ * are slightly different.
+ *
+ * If there are no event messages, and 'no_event_message_string' is
+ * non-NULL, it will be placed into 'event_messages' as the lone event
+ * message.
+ *
+ * Returns 0 on success, -1 on error.  Number of messages allocated in
+ * 'event_messages' is returned in 'event_messages_count'.
+ *
+ * User responsible for clearing memory created in 'event_messages'.
+ */ 
+int ipmi_get_event_messages (uint8_t event_reading_type_code,
+                             uint8_t sensor_type, /* ignored if not relevant for event_reading_type_code */
+                             uint16_t event_bitmask,
+                             uint32_t manufacturer_id, /* ignored if INTERPRET_OEM_DATA not set */
+                             uint16_t product_id, /* ignored if INTERPRET_OEM_DATA not set */
+                             char ***event_messages,
+                             unsigned int *event_messages_count,
+                             const char *no_event_message_string,
+                             unsigned int flags);
  
 #ifdef __cplusplus
 }
