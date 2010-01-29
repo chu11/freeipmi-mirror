@@ -32,7 +32,6 @@
 
 #include "ipmi-sensors.h"
 #include "ipmi-sensors-output-common.h"
-#include "ipmi-sensors-util.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
@@ -1043,6 +1042,9 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
   unsigned int assertion_event_message_list_len = 0;
   char **deassertion_event_message_list = NULL;
   unsigned int deassertion_event_message_list_len = 0;
+  uint32_t manufacturer_id = 0;
+  uint16_t product_id = 0;
+  unsigned int event_message_flags = IPMI_GET_SENSOR_EVENT_MESSAGES_FLAGS_DEFAULT;
   unsigned int i;
   int field_flag;
   int rv = -1;
@@ -1209,6 +1211,16 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
       goto cleanup;
     }
 
+  if (!state_data->prog_data->args->verbose_count)
+    event_message_flags |= IPMI_GET_SENSOR_EVENT_MESSAGES_FLAGS_SHORT;
+
+  if (state_data->prog_data->args->interpret_oem_data)
+    {
+      manufacturer_id = state_data->oem_data.manufacturer_id;
+      product_id = state_data->oem_data.product_id;
+      event_message_flags |= IPMI_GET_SENSOR_EVENT_MESSAGES_FLAGS_INTERPRET_OEM_DATA;
+    }
+
   /* achu: According to the spec, bytes 3-6 of the packet should exist
    * if all event messages are not disabled and sensor scanning is not
    * disabled.
@@ -1228,26 +1240,21 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
 
   if (field_flag)
     {
-      if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD
-          || event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_GENERIC_DISCRETE)
+      if (ipmi_get_sensor_event_messages (event_reading_type_code,
+                                          sensor_type,
+                                          event_bitmask,
+                                          manufacturer_id,
+                                          product_id,
+                                          &assertion_event_message_list,
+                                          &assertion_event_message_list_len,
+                                          IPMI_SENSORS_NONE_STRING,
+                                          event_message_flags) < 0)
         {
-          if (get_generic_event_message_list (state_data,
-                                              &assertion_event_message_list,
-                                              &assertion_event_message_list_len,
-                                              event_reading_type_code,
-                                              event_bitmask,
-                                              IPMI_SENSORS_NONE_STRING) < 0)
-            goto cleanup;
-        }
-      else
-        {
-          if (get_sensor_specific_event_message_list (state_data,
-                                                      &assertion_event_message_list,
-                                                      &assertion_event_message_list_len,
-                                                      sensor_type,
-                                                      event_bitmask,
-                                                      IPMI_SENSORS_NONE_STRING) < 0)
-            goto cleanup;
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_get_sensor_event_messages: %s\n",
+                           strerror (errno));
+          goto cleanup;
         }
 
       if (ipmi_sensors_output_event_message_list (state_data,
@@ -1274,26 +1281,21 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
 
   if (field_flag)
     {
-      if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD
-          || event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_GENERIC_DISCRETE)
+      if (ipmi_get_sensor_event_messages (event_reading_type_code,
+                                          sensor_type,
+                                          event_bitmask,
+                                          manufacturer_id,
+                                          product_id,
+                                          &deassertion_event_message_list,
+                                          &deassertion_event_message_list_len,
+                                          IPMI_SENSORS_NONE_STRING,
+                                          event_message_flags) < 0)
         {
-          if (get_generic_event_message_list (state_data,
-                                              &deassertion_event_message_list,
-                                              &deassertion_event_message_list_len,
-                                              event_reading_type_code,
-                                              event_bitmask,
-                                              IPMI_SENSORS_NONE_STRING) < 0)
-            goto cleanup;
-        }
-      else
-        {
-          if (get_sensor_specific_event_message_list (state_data,
-                                                      &deassertion_event_message_list,
-                                                      &deassertion_event_message_list_len,
-                                                      sensor_type,
-                                                      event_bitmask,
-                                                      IPMI_SENSORS_NONE_STRING) < 0)
-            goto cleanup;
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_get_sensor_event_messages: %s\n",
+                           strerror (errno));
+          goto cleanup;
         }
 
       if (ipmi_sensors_output_event_message_list (state_data,

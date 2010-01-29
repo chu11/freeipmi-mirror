@@ -3,8 +3,7 @@ noinst_HEADERS = \
 	ipmi-sensors-argp.h \
 	ipmi-sensors-detailed-output.h \
 	ipmi-sensors-output-common.h \
-	ipmi-sensors-simple-output.h \
-	ipmi-sensors-util.h
+	ipmi-sensors-simple-output.h
 
 AM_CPPFLAGS = \
 	-I$(top_srcdir)/common/src/toolcommon \
@@ -36,8 +35,7 @@ ipmi_sensors_SOURCES = \
 	ipmi-sensors-argp.c \
 	ipmi-sensors-detailed-output.c \
 	ipmi-sensors-output-common.c \
-	ipmi-sensors-simple-output.c \
-	ipmi-sensors-util.c
+	ipmi-sensors-simple-output.c
 
 $(top_builddir)/common/src/toolcommon/libtoolcommon.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`

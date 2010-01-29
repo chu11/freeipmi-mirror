@@ -38,7 +38,6 @@
 
 #include "ipmi-sensors.h"
 #include "ipmi-sensors-argp.h"
-#include "ipmi-sensors-util.h"
 
 #include "freeipmi-portability.h"
 #include "tool-cmdline-common.h"

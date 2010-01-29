@@ -46,8 +46,6 @@
 
 #define SENSORS_OEM_EVENT          "OEM Event = %04Xh"
 
-#define SENSORS_OK_EVENT           "OK"
-
 /*
  * Threshold Comparsion status
  */
@@ -344,6 +342,7 @@ ipmi_get_sensor_event_messages (uint8_t event_reading_type_code,
                                 uint16_t product_id, /* ignored if INTERPRET_OEM_DATA not set */
                                 char ***event_messages,
                                 unsigned int *event_messages_count,
+                                const char *no_event_message_string,
                                 unsigned int flags)
 {
   char **tmp_event_messages_ptr = NULL;
@@ -358,8 +357,8 @@ ipmi_get_sensor_event_messages (uint8_t event_reading_type_code,
   if (!event_messages
       || !event_messages_count
       || (flags & ~(IPMI_GET_SENSOR_EVENT_MESSAGES_FLAGS_SHORT
-                    | IPMI_GET_SENSOR_EVENT_MESSAGES_OK_IF_NO_EVENT
-                    | IPMI_GET_SENSOR_EVENT_MESSAGES_FLAGS_INTERPRET_OEM_DATA)))
+                    | IPMI_GET_SENSOR_EVENT_MESSAGES_FLAGS_INTERPRET_OEM_DATA
+                    | IPMI_GET_SENSOR_EVENT_MESSAGES_FLAGS_SENSOR_READING)))
     {
       SET_ERRNO (EINVAL);
       return (-1);
@@ -369,7 +368,8 @@ ipmi_get_sensor_event_messages (uint8_t event_reading_type_code,
 
   event_reading_type_code_class = ipmi_event_reading_type_code_class (event_reading_type_code);
 
-  if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD)
+  if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD
+      && flags & IPMI_GET_SENSOR_EVENT_MESSAGES_FLAGS_SENSOR_READING)
     {
       int j;
 
@@ -422,7 +422,8 @@ ipmi_get_sensor_event_messages (uint8_t event_reading_type_code,
    * Dell Poweredge R610
    * Dell Poweredge R710
    */
-  else if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_GENERIC_DISCRETE
+  else if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD
+           || event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_GENERIC_DISCRETE
            || event_reading_type_code_class ==  IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE
            || (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM
                && flags & IPMI_GET_SENSOR_EVENT_MESSAGES_FLAGS_INTERPRET_OEM_DATA
@@ -440,7 +441,8 @@ ipmi_get_sensor_event_messages (uint8_t event_reading_type_code,
             {
               memset (buf, '\0', SENSORS_BUFLEN + 1);
 
-              if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_GENERIC_DISCRETE)
+              if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD
+                  || event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_GENERIC_DISCRETE)
                 {
                   if (flags & IPMI_GET_SENSOR_EVENT_MESSAGES_FLAGS_SHORT)
                     len = ipmi_get_generic_event_message_short (event_reading_type_code,
@@ -583,17 +585,17 @@ ipmi_get_sensor_event_messages (uint8_t event_reading_type_code,
     }
 
   if (!tmp_event_messages_count
-      && (flags & IPMI_GET_SENSOR_EVENT_MESSAGES_OK_IF_NO_EVENT))
+      && no_event_message_string)
     {     
-      if (!(tmp_event_messages[0] = strdup (SENSORS_OK_EVENT)))
+      if (!(tmp_event_messages[0] = strdup (no_event_message_string)))
         {
           SET_ERRNO (ENOMEM);
           goto cleanup;
         }
-
+      
       tmp_event_messages_count++;
     }
-    
+  
   if (tmp_event_messages_count)
     {
       if (!(tmp_event_messages_ptr = (char **) malloc (sizeof (char *) * (tmp_event_messages_count + 1))))
@@ -604,7 +606,7 @@ ipmi_get_sensor_event_messages (uint8_t event_reading_type_code,
       
       for (i = 0; i < tmp_event_messages_count; i++)
         tmp_event_messages_ptr[i] = tmp_event_messages[i];
-
+      
       tmp_event_messages_ptr[tmp_event_messages_count] = NULL;
     }
 

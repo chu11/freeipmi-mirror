@@ -32,7 +32,6 @@
 
 #include "ipmi-sensors.h"
 #include "ipmi-sensors-output-common.h"
-#include "ipmi-sensors-util.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
