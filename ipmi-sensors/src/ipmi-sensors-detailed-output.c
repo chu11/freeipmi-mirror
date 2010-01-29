@@ -1043,6 +1043,7 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
   unsigned int assertion_event_message_list_len = 0;
   char **deassertion_event_message_list = NULL;
   unsigned int deassertion_event_message_list_len = 0;
+  unsigned int i;
   int field_flag;
   int rv = -1;
 
@@ -1307,6 +1308,18 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
 
   rv = 0;
  cleanup:
+  if (assertion_event_message_list)
+    {
+      for (i = 0; i < assertion_event_message_list_len; i++)
+        free (assertion_event_message_list[i]);
+      free (assertion_event_message_list);
+    }
+  if (deassertion_event_message_list)
+    {
+      for (i = 0; i < deassertion_event_message_list_len; i++)
+        free (deassertion_event_message_list[i]);
+      free (deassertion_event_message_list);
+    }
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }

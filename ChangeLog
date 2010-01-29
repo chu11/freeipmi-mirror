@@ -1,6 +1,13 @@
 2010-01-29  Albert Chu <chu11@llnl.gov>
 
-	* libfreeipmi/include/util/ipmi-sensor-util.h, libfreeipmi/src/util/ipmi-sensor-util.c (ipmi_get_sensor_event_messages): New function.
+	* ipmi-sensors/src/ipmi-sensors-detailed-output.c
+	(_detailed_output_event_enable): Fix mem-leak.
+	
+2010-01-29  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/util/ipmi-sensor-util.h,
+	libfreeipmi/src/util/ipmi-sensor-util.c
+	(ipmi_get_sensor_event_messages): New function.
 
 	* ipmi-sensors/: Use ipmi_get_sensor_event_messages().
 	
