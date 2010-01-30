@@ -109,7 +109,8 @@ int ipmi_get_oem_event_bitmask_message (uint32_t manufacturer_id,
                                         char *buf,
                                         unsigned int buflen);
 
-/* wrapper function to handle retrieval of event messages.
+/* wrapper function to handle retrieval of an array of event messages.
+ * The array is NULL pointer terminated.
  *
  * collectively wraps
  *
