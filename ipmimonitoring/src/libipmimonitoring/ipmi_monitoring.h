@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.h,v 1.55 2010-01-08 19:28:06 chu11 Exp $
+ *  $Id: ipmi_monitoring.h,v 1.56 2010-01-30 01:13:47 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -1093,6 +1093,14 @@ int ipmi_monitoring_read_sensor_bitmask_type (ipmi_monitoring_ctx_t c);
 int ipmi_monitoring_read_sensor_bitmask (ipmi_monitoring_ctx_t c);
 
 /*
+ * ipmi_monitoring_read_sensor_bitmask_strings
+ *
+ * Returns an array of strings representing the events in the bitmask.
+ * Returns NULL if no events are indicated.
+ */
+char **ipmi_monitoring_read_sensor_bitmask_strings (ipmi_monitoring_ctx_t c);
+
+/*
  * ipmi_monitoring_read_sensor_reading
  *
  * Returns a pointer to the sensor reading of the current sensor
@@ -1102,18 +1110,6 @@ int ipmi_monitoring_read_sensor_bitmask (ipmi_monitoring_ctx_t c);
  */
 void *ipmi_monitoring_read_sensor_reading (ipmi_monitoring_ctx_t c);
 
-/*
- * ipmi_monitoring_sensor_bitmask_string
- *
- * Retrieve a string for the given bitmask.
- *
- * Returns 0 on success, -1 on error
- */
-int ipmi_monitoring_sensor_bitmask_string (ipmi_monitoring_ctx_t c,
-                                           unsigned int bitmask_type,
-                                           unsigned int bitmask,
-                                           char *buffer,
-                                           unsigned int buflen);
 #ifdef __cplusplus
 }
 #endif

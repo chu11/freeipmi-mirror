@@ -1,5 +1,16 @@
 2010-01-29  Albert Chu <chu11@llnl.gov>
 
+	* ipmimonitoring/src/libipmimonitoring/
+	(ipmi_monitoring_read_sensor_bitmask_strings): New function.
+
+	* ipmimonitoring/src/libipmimonitoring/
+	(ipmi_monitoring_sensor_bitmask_string): Removed function.
+
+	* ipmimonitoring/src/ipmimonitoring/: Update appropriately for API
+	change.
+	
+2010-01-29  Albert Chu <chu11@llnl.gov>
+
 	* ipmi-sensors/src/ipmi-sensors-detailed-output.c
 	(_detailed_output_event_enable): Fix mem-leak.
 

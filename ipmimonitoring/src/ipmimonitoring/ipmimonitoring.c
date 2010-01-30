@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.142 2010-01-08 19:28:06 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.143 2010-01-30 01:13:46 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -517,103 +517,40 @@ _output_sensor_units (ipmimonitoring_state_data_t *state_data,
 }
 
 static int
-_output_sensor_bitmask (ipmimonitoring_state_data_t *state_data,
-                        int sensor_bitmask,
-                        int sensor_bitmask_type)
+_output_sensor_bitmask_strings (ipmimonitoring_state_data_t *state_data,
+                                int sensor_state,
+                                char **sensor_bitmask_strings)
 {
-  uint16_t sensor_bitmask_value = sensor_bitmask;
-  int rv = -1;
-
   assert (state_data);
 
-  if (sensor_bitmask_type != IPMI_MONITORING_SENSOR_BITMASK_TYPE_UNKNOWN)
+  if (sensor_state != IPMI_MONITORING_SENSOR_STATE_UNKNOWN)
     {
-      unsigned int output_count = 0;
-      int j, j_start = 0, j_end = 16, j_decr_flag = 0;
-
-      /* achu: multiple threshold flags can be set (e.g. if we pass the
-       * critical threshold, we've also passed the non-critical threshold)
-       * but we only want to * output one message at the max.  Luckily for
-       * us (and due to smarts by the IPMI specification authors) if we
-       * go from high bits to low bits, we will read the flags in the
-       * correct order for output.
-       */
-      if (sensor_bitmask_type == IPMI_MONITORING_SENSOR_BITMASK_TYPE_THRESHOLD)
-        {
-          j_start = 5;
-          j_end = 0;
-          j_decr_flag = 1;
-        }
-
       if (state_data->prog_data->args->comma_separated_output)
         pstdout_printf (state_data->pstate, ",");
       else
         pstdout_printf (state_data->pstate, " |");
       
-      for (j = j_start; j_decr_flag ? j >= j_end : j < j_end; j_decr_flag ? j-- : j++)
+      if (sensor_bitmask_strings)
         {
-          if (sensor_bitmask_value & (0x1 << j))
+          unsigned int i = 0;
+          
+          while (sensor_bitmask_strings[i])
             {
-              char buffer[IPMIMONITORING_BUFLEN+1];
-
-              memset (buffer, '\0', IPMIMONITORING_BUFLEN+1);
-              if (ipmi_monitoring_sensor_bitmask_string (state_data->ctx,
-                                                         sensor_bitmask_type,
-                                                         (sensor_bitmask_value & (0x1 << j)),
-                                                         buffer,
-                                                         IPMIMONITORING_BUFLEN) < 0)
-                {
-                  /* If parameters error, assume remote machine has given us some
-                   * bogus offset.  Output an appropriate string.
-                   */
-                  if (ipmi_monitoring_ctx_errnum (state_data->ctx) != IPMI_MONITORING_ERR_PARAMETERS)
-                    {
-                      pstdout_fprintf (state_data->pstate,
-                                       stderr,
-                                       "ipmi_monitoring_sensor_bitmask_string: %s\n",
-                                       ipmi_monitoring_ctx_errormsg (state_data->ctx));
-                      goto cleanup;
-                    }
-
-                  if (ipmi_monitoring_ctx_errnum (state_data->ctx) == IPMI_MONITORING_ERR_PARAMETERS
-                      && state_data->prog_data->args->common.debug)
-                    pstdout_fprintf (state_data->pstate,
-                                     stderr,
-                                     "ipmi_monitoring_sensor_bitmask_string: %s: invalid bitmask likely: %X\n",
-                                     ipmi_monitoring_ctx_errormsg (state_data->ctx),
-                                     sensor_bitmask_value);
-
-                  if (!state_data->prog_data->args->comma_separated_output)
-                    pstdout_printf (state_data->pstate, " ");
-
-                  snprintf (buffer, IPMIMONITORING_BUFLEN, "%s", IPMIMONITORING_UNRECOGNIZED_STATE);
-                  pstdout_printf (state_data->pstate,
-                                  "'%s'",
-                                  buffer);
-                  output_count++;
-                  break;
-                }
-
               if (!state_data->prog_data->args->comma_separated_output)
                 pstdout_printf (state_data->pstate, " ");
-
+              
               pstdout_printf (state_data->pstate,
                               "'%s'",
-                              buffer);
-
-              output_count++;
-
-              /* output at max one message for thresholds*/
-              if (sensor_bitmask_type == IPMI_MONITORING_SENSOR_BITMASK_TYPE_THRESHOLD && output_count)
-                break;
+                              sensor_bitmask_strings[i]);
+              
+              i++;
             }
         }
-
-      if (!output_count)
+      else
         {
           if (!state_data->prog_data->args->comma_separated_output)
             pstdout_printf (state_data->pstate, " ");
-
+          
           pstdout_printf (state_data->pstate,
                           "'%s'",
                           IPMIMONITORING_NO_EVENT_STRING);
@@ -631,9 +568,7 @@ _output_sensor_bitmask (ipmimonitoring_state_data_t *state_data,
                         IPMIMONITORING_NA_STRING);
     }
 
-  rv = 0;
- cleanup:
-  return (rv);
+  return (0);
 }
 
 static int
@@ -643,6 +578,7 @@ _ipmimonitoring_callback (ipmi_monitoring_ctx_t c, void *callback_data)
   struct ipmimonitoring_arguments *args;
   int record_id, sensor_type, sensor_state, sensor_units,
     sensor_reading_type, sensor_bitmask_type, sensor_bitmask;
+  char **sensor_bitmask_strings = NULL;
   const char *sensor_type_str;
   const char *sensor_state_str;
   char *sensor_name = NULL;
@@ -735,7 +671,7 @@ _ipmimonitoring_callback (ipmi_monitoring_ctx_t c, void *callback_data)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "ipmi_monitoring_read_sensor_name: %s\n",
+                          "ipmi_monitoring_read_sensor_name: %s\n",
                            ipmi_monitoring_ctx_errormsg (state_data->ctx));
           goto cleanup;
         }
@@ -780,6 +716,8 @@ _ipmimonitoring_callback (ipmi_monitoring_ctx_t c, void *callback_data)
                        ipmi_monitoring_ctx_errormsg (state_data->ctx));
       goto cleanup;
     }
+
+  sensor_bitmask_strings = ipmi_monitoring_read_sensor_bitmask_strings (state_data->ctx);
 
   sensor_reading = ipmi_monitoring_read_sensor_reading (state_data->ctx);
 
@@ -906,9 +844,9 @@ _ipmimonitoring_callback (ipmi_monitoring_ctx_t c, void *callback_data)
       else if (args->legacy_output)
         {
           /* legacy output has the bitmask as the "sensor reading" */
-          if (_output_sensor_bitmask (state_data,
-                                      sensor_bitmask,
-                                      sensor_bitmask_type) < 0)
+          if (_output_sensor_bitmask_strings (state_data,
+                                              sensor_state,
+                                              sensor_bitmask_strings) < 0)
             goto cleanup;
         }
       else
@@ -934,9 +872,9 @@ _ipmimonitoring_callback (ipmi_monitoring_ctx_t c, void *callback_data)
         {
           _output_sensor_units (state_data, sensor_units);
 
-          if (_output_sensor_bitmask (state_data,
-                                      sensor_bitmask,
-                                      sensor_bitmask_type) < 0)
+          if (_output_sensor_bitmask_strings (state_data,
+                                              sensor_state,
+                                              sensor_bitmask_strings) < 0)
             goto cleanup;
         }
     }
@@ -967,16 +905,16 @@ _ipmimonitoring_callback (ipmi_monitoring_ctx_t c, void *callback_data)
                           IPMIMONITORING_NA_STRING);
         }
 
-      if (_output_sensor_bitmask (state_data,
-                                  sensor_bitmask,
-                                  sensor_bitmask_type) < 0)
+      if (_output_sensor_bitmask_strings (state_data,
+                                          sensor_state,
+                                          sensor_bitmask_strings) < 0)
         goto cleanup;
     }
   else if (args->quiet_readings && !args->legacy_output)
     {
-      if (_output_sensor_bitmask (state_data,
-                                  sensor_bitmask,
-                                  sensor_bitmask_type) < 0)
+      if (_output_sensor_bitmask_strings (state_data,
+                                          sensor_state,
+                                          sensor_bitmask_strings) < 0)
         goto cleanup;
     }
 

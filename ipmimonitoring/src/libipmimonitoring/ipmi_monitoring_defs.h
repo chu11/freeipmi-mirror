@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_defs.h,v 1.35 2010-01-19 03:50:08 chu11 Exp $
+ *  $Id: ipmi_monitoring_defs.h,v 1.36 2010-01-30 01:13:47 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -144,6 +144,7 @@ struct ipmi_monitoring_sensor_reading {
   int sensor_reading_type;
   int sensor_bitmask_type;
   int sensor_bitmask;
+  char **sensor_bitmask_strings;
   union {
     uint8_t bool_val;
     uint32_t integer_val;

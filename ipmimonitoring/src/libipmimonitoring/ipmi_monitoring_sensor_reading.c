@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.83 2010-01-08 19:28:07 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.84 2010-01-30 01:13:47 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -132,6 +132,7 @@ _store_sensor_reading (ipmi_monitoring_ctx_t c,
                        int sensor_reading_type,
                        int sensor_bitmask_type,
                        uint16_t sensor_bitmask,
+                       char **sensor_bitmask_strings,
                        void *sensor_reading)
 {
   struct ipmi_monitoring_sensor_reading *s = NULL;
@@ -163,6 +164,7 @@ _store_sensor_reading (ipmi_monitoring_ctx_t c,
   s->sensor_reading_type = sensor_reading_type;
   s->sensor_bitmask_type = sensor_bitmask_type;
   s->sensor_bitmask = sensor_bitmask;
+  s->sensor_bitmask_strings = sensor_bitmask_strings;
 
   if (s->sensor_reading_type == IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER8_BOOL)
     s->sensor_reading.bool_val = *((uint8_t *)sensor_reading);
@@ -234,6 +236,7 @@ _store_unreadable_sensor_reading (ipmi_monitoring_ctx_t c,
   s->sensor_reading_type = IPMI_MONITORING_SENSOR_READING_TYPE_UNKNOWN;
   s->sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_UNKNOWN;
   s->sensor_bitmask = 0;
+  s->sensor_bitmask_strings = NULL;
 
   /* achu: should come before list_append to avoid having a freed entry on the list */
   if (c->callback)
@@ -438,6 +441,66 @@ _get_sensor_units (ipmi_monitoring_ctx_t c,
 }
 
 static int
+_get_sensor_bitmask_strings (ipmi_monitoring_ctx_t c,
+                             unsigned int sensor_reading_flags,
+                             uint8_t event_reading_type_code,
+                             uint8_t sensor_type,
+                             uint16_t sensor_event_bitmask,
+                             char ***sensor_bitmask_strings)
+{
+  char **tmp_sensor_bitmask_strings = NULL;
+  unsigned int tmp_sensor_bitmask_strings_count = 0;
+  uint32_t manufacturer_id = 0;
+  uint16_t product_id = 0;
+  unsigned int flags;
+  unsigned int i;
+  int rv = -1;
+
+  assert (c);
+  assert (c->magic == IPMI_MONITORING_MAGIC);
+  assert (sensor_bitmask_strings);
+  
+  flags = IPMI_GET_EVENT_MESSAGES_FLAGS_SENSOR_READING;
+  
+  if (sensor_reading_flags & IPMI_MONITORING_SENSOR_READING_FLAGS_INTERPRET_OEM_DATA)
+    {
+      manufacturer_id = c->manufacturer_id;
+      product_id = c->product_id;
+      flags |= IPMI_GET_EVENT_MESSAGES_FLAGS_INTERPRET_OEM_DATA;
+    }
+
+  if (ipmi_get_event_messages (event_reading_type_code,
+                               sensor_type,
+                               sensor_event_bitmask,
+                               manufacturer_id,
+                               product_id,
+                               &tmp_sensor_bitmask_strings,
+                               &tmp_sensor_bitmask_strings_count,
+                               NULL,
+                               flags) < 0)
+    {
+      IPMI_MONITORING_DEBUG (("ipmi_get_event_messages: %s", strerror (errno)));
+      c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
+      goto cleanup;
+    }
+
+  (*sensor_bitmask_strings) = tmp_sensor_bitmask_strings;
+
+  rv = 0;
+ cleanup:
+  if (rv < 0)
+    {
+      if (tmp_sensor_bitmask_strings)
+        {
+          for (i = 0; i < tmp_sensor_bitmask_strings_count; i++)
+            free (tmp_sensor_bitmask_strings[i]);
+          free (tmp_sensor_bitmask_strings);
+        }
+    }
+  return (rv);
+}
+
+static int
 _threshold_sensor_reading (ipmi_monitoring_ctx_t c,
                            unsigned int sensor_reading_flags,
                            uint16_t record_id,
@@ -457,6 +520,7 @@ _threshold_sensor_reading (ipmi_monitoring_ctx_t c,
   uint8_t sensor_modifier_unit_type;
   double sensor_reading;
   uint16_t sensor_event_bitmask;
+  char **sensor_bitmask_strings = NULL;
   int sensor_units;
   int sensor_state;
   int ret;
@@ -521,6 +585,14 @@ _threshold_sensor_reading (ipmi_monitoring_ctx_t c,
                                          sensor_event_bitmask)) < 0)
     return (-1);
 
+  if (_get_sensor_bitmask_strings (c,
+                                   sensor_reading_flags,
+                                   event_reading_type_code,
+                                   sdr_sensor_type,
+                                   sensor_event_bitmask,
+                                   &sensor_bitmask_strings) < 0)
+    return (-1);
+
   if (_store_sensor_reading (c,
                              sensor_reading_flags,
                              record_id,
@@ -532,6 +604,7 @@ _threshold_sensor_reading (ipmi_monitoring_ctx_t c,
                              IPMI_MONITORING_SENSOR_READING_TYPE_DOUBLE,
                              IPMI_MONITORING_SENSOR_BITMASK_TYPE_THRESHOLD,
                              sensor_event_bitmask,
+                             sensor_bitmask_strings,
                              &sensor_reading) < 0)
     return (-1);
 
@@ -598,6 +671,7 @@ _digital_sensor_reading (ipmi_monitoring_ctx_t c,
 {
   double sensor_reading;
   uint16_t sensor_event_bitmask;
+  char **sensor_bitmask_strings = NULL;
   int sensor_state;
   int sensor_bitmask_type;
   int ret;
@@ -644,6 +718,14 @@ _digital_sensor_reading (ipmi_monitoring_ctx_t c,
                                                                event_reading_type_code)) < 0)
     return (-1);
 
+  if (_get_sensor_bitmask_strings (c,
+                                   sensor_reading_flags,
+                                   event_reading_type_code,
+                                   sdr_sensor_type,
+                                   sensor_event_bitmask,
+                                   &sensor_bitmask_strings) < 0)
+    return (-1);
+
   /* No actual sensor reading, only a sensor event bitmask */
   if (_store_sensor_reading (c,
                              sensor_reading_flags,
@@ -656,6 +738,7 @@ _digital_sensor_reading (ipmi_monitoring_ctx_t c,
                              IPMI_MONITORING_SENSOR_READING_TYPE_UNKNOWN,
                              sensor_bitmask_type,
                              sensor_event_bitmask,
+                             sensor_bitmask_strings,
                              NULL) < 0)
     return (-1);
 
@@ -775,6 +858,7 @@ _specific_sensor_reading (ipmi_monitoring_ctx_t c,
 {
   double sensor_reading;
   uint16_t sensor_event_bitmask;
+  char **sensor_bitmask_strings = NULL;
   int sensor_state;
   int sensor_bitmask_type;
   int ret;
@@ -819,6 +903,14 @@ _specific_sensor_reading (ipmi_monitoring_ctx_t c,
                                                                 sdr_sensor_type)) < 0)
     return (-1);
 
+  if (_get_sensor_bitmask_strings (c,
+                                   sensor_reading_flags,
+                                   event_reading_type_code,
+                                   sdr_sensor_type,
+                                   sensor_event_bitmask,
+                                   &sensor_bitmask_strings) < 0)
+    return (-1);
+
   /* No actual sensor reading, only a sensor event bitmask */
   if (_store_sensor_reading (c,
                              sensor_reading_flags,
@@ -831,6 +923,7 @@ _specific_sensor_reading (ipmi_monitoring_ctx_t c,
                              IPMI_MONITORING_SENSOR_READING_TYPE_UNKNOWN,
                              sensor_bitmask_type,
                              sensor_event_bitmask,
+                             sensor_bitmask_strings,
                              NULL) < 0)
     return (-1);
 
