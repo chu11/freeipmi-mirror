@@ -3,6 +3,8 @@
 	* ipmiconsole/ipmiconsole.8.pre.in: Format change.
 
 	* ipmimonitoring/src/ipmimonitoring/: Update for newer sensor types.
+
+	* ipmimonitoring/src/ipmimonitoring/: Various cleanup.
 	
 2010-01-29  Albert Chu <chu11@llnl.gov>
 

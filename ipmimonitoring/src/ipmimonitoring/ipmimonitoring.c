@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.144 2010-02-01 19:36:51 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.145 2010-02-01 21:30:52 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -428,12 +428,12 @@ _output_sensor_units (ipmimonitoring_state_data_t *state_data,
 
 static int
 _output_sensor_bitmask_strings (ipmimonitoring_state_data_t *state_data,
-                                int sensor_state,
+				int sensor_bitmask_type,
                                 char **sensor_bitmask_strings)
 {
   assert (state_data);
 
-  if (sensor_state != IPMI_MONITORING_SENSOR_STATE_UNKNOWN)
+  if (sensor_bitmask_type != IPMI_MONITORING_SENSOR_BITMASK_TYPE_UNKNOWN)
     {
       if (state_data->prog_data->args->comma_separated_output)
         pstdout_printf (state_data->pstate, ",");
@@ -755,7 +755,7 @@ _ipmimonitoring_callback (ipmi_monitoring_ctx_t c, void *callback_data)
         {
           /* legacy output has the bitmask as the "sensor reading" */
           if (_output_sensor_bitmask_strings (state_data,
-                                              sensor_state,
+					      sensor_bitmask_type,
                                               sensor_bitmask_strings) < 0)
             goto cleanup;
         }
@@ -783,7 +783,7 @@ _ipmimonitoring_callback (ipmi_monitoring_ctx_t c, void *callback_data)
           _output_sensor_units (state_data, sensor_units);
 
           if (_output_sensor_bitmask_strings (state_data,
-                                              sensor_state,
+					      sensor_bitmask_type,
                                               sensor_bitmask_strings) < 0)
             goto cleanup;
         }
@@ -816,14 +816,14 @@ _ipmimonitoring_callback (ipmi_monitoring_ctx_t c, void *callback_data)
         }
 
       if (_output_sensor_bitmask_strings (state_data,
-                                          sensor_state,
+					  sensor_bitmask_type,
                                           sensor_bitmask_strings) < 0)
         goto cleanup;
     }
   else if (args->quiet_readings && !args->legacy_output)
     {
       if (_output_sensor_bitmask_strings (state_data,
-                                          sensor_state,
+					  sensor_bitmask_type,
                                           sensor_bitmask_strings) < 0)
         goto cleanup;
     }
