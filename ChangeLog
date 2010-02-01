@@ -5,6 +5,8 @@
 	* ipmimonitoring/src/ipmimonitoring/: Update for newer sensor types.
 
 	* ipmimonitoring/src/ipmimonitoring/: Various cleanup.
+
+	* ipmimonitoring/: Support OEM bitmask types.
 	
 2010-01-29  Albert Chu <chu11@llnl.gov>
 

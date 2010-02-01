@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_defs.h,v 1.36 2010-01-30 01:13:47 chu11 Exp $
+ *  $Id: ipmi_monitoring_defs.h,v 1.37 2010-02-01 21:53:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -79,9 +79,11 @@
     || (__val) == IPMI_MONITORING_SENSOR_READING_TYPE_UNKNOWN) ? 1 : 0)
 
 /* +1 to avoid gcc warnings */
-#define IPMI_MONITORING_SENSOR_BITMASK_TYPE_VALID(__val)         \
-  ((((__val) + 1) >= (IPMI_MONITORING_SENSOR_BITMASK_TYPE_THRESHOLD + 1) \
-    && (__val) <= IPMI_MONITORING_SENSOR_BITMASK_TYPE_UNKNOWN) ? 1 : 0)
+#define IPMI_MONITORING_SENSOR_BITMASK_TYPE_VALID(__val)                  \
+  (((((__val) + 1) >= (IPMI_MONITORING_SENSOR_BITMASK_TYPE_THRESHOLD + 1) \
+     && (__val) <= IPMI_MONITORING_SENSOR_BITMASK_TYPE_FRU_STATE)         \
+    || (__val) == IPMI_MONITORING_SENSOR_BITMASK_TYPE_OEM                 \
+    || (__val) == IPMI_MONITORING_SENSOR_BITMASK_TYPE_UNKNOWN) ? 1 : 0)
 
 #define IPMI_MONITORING_MAX_USER_NAME_LENGTH IPMI_MAX_USER_NAME_LENGTH
 

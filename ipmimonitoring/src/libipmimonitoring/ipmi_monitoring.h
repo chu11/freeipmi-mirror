@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.h,v 1.56 2010-01-30 01:13:47 chu11 Exp $
+ *  $Id: ipmi_monitoring.h,v 1.57 2010-02-01 21:53:35 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -203,7 +203,8 @@ enum ipmi_monitoring_sensor_bitmask_type
     IPMI_MONITORING_SENSOR_BITMASK_TYPE_SESSION_AUDIT                       = 0x31,
     IPMI_MONITORING_SENSOR_BITMASK_TYPE_VERSION_CHANGE                      = 0x32,
     IPMI_MONITORING_SENSOR_BITMASK_TYPE_FRU_STATE                           = 0x33,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_UNKNOWN                             = 0x34,
+    IPMI_MONITORING_SENSOR_BITMASK_TYPE_OEM                                 = 0xFE,
+    IPMI_MONITORING_SENSOR_BITMASK_TYPE_UNKNOWN                             = 0xFF,
   };
 
 enum ipmi_monitoring_driver_type
