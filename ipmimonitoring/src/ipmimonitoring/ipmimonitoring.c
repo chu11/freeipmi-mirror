@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.143 2010-01-30 01:13:46 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.144 2010-02-01 19:36:51 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -83,61 +83,20 @@
 static int
 _list_sensor_types (ipmimonitoring_state_data_t *state_data)
 {
+  unsigned int i = 0;
+
   assert (state_data);
 
-  if (display_sensor_type_cmdline (state_data->pstate, IPMI_SENSOR_TYPE_TEMPERATURE) < 0)
-    return (-1);
-  if (display_sensor_type_cmdline (state_data->pstate, IPMI_SENSOR_TYPE_VOLTAGE) < 0)
-    return (-1);
-  if (display_sensor_type_cmdline (state_data->pstate, IPMI_SENSOR_TYPE_CURRENT) < 0)
-    return (-1);
-  if (display_sensor_type_cmdline (state_data->pstate, IPMI_SENSOR_TYPE_FAN) < 0)
-    return (-1);
-  if (display_sensor_type_cmdline (state_data->pstate, IPMI_SENSOR_TYPE_PHYSICAL_SECURITY) < 0)
-    return (-1);
-  if (display_sensor_type_cmdline (state_data->pstate, IPMI_SENSOR_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT) < 0)
-    return (-1);
-  if (display_sensor_type_cmdline (state_data->pstate, IPMI_SENSOR_TYPE_PROCESSOR) < 0)
-    return (-1);
-  if (display_sensor_type_cmdline (state_data->pstate, IPMI_SENSOR_TYPE_POWER_SUPPLY) < 0)
-    return (-1);
-  if (display_sensor_type_cmdline (state_data->pstate, IPMI_SENSOR_TYPE_POWER_UNIT) < 0)
-    return (-1);
-  if (display_sensor_type_cmdline (state_data->pstate, IPMI_SENSOR_TYPE_MEMORY) < 0)
-    return (-1);
-  if (display_sensor_type_cmdline (state_data->pstate, IPMI_SENSOR_TYPE_DRIVE_SLOT) < 0)
-    return (-1);
-  if (display_sensor_type_cmdline (state_data->pstate, IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS) < 0)
-    return (-1);
-  if (display_sensor_type_cmdline (state_data->pstate, IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED) < 0)
-    return (-1);
-  if (display_sensor_type_cmdline (state_data->pstate, IPMI_SENSOR_TYPE_SYSTEM_EVENT) < 0)
-    return (-1);
-  if (display_sensor_type_cmdline (state_data->pstate, IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT) < 0)
-    return (-1);
-  if (display_sensor_type_cmdline (state_data->pstate, IPMI_SENSOR_TYPE_MODULE_BOARD) < 0)
-    return (-1);
-  if (display_sensor_type_cmdline (state_data->pstate, IPMI_SENSOR_TYPE_SLOT_CONNECTOR) < 0)
-    return (-1);
-  if (display_sensor_type_cmdline (state_data->pstate, IPMI_SENSOR_TYPE_WATCHDOG2) < 0)
-    return (-1);
-  if (display_sensor_type_cmdline (state_data->pstate, IPMI_SENSOR_TYPE_ENTITY_PRESENCE) < 0)
-    return (-1);
-  if (display_sensor_type_cmdline (state_data->pstate, IPMI_SENSOR_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH) < 0)
-    return (-1);
-  if (display_sensor_type_cmdline (state_data->pstate, IPMI_SENSOR_TYPE_BATTERY) < 0)
-    return (-1);
-  if (display_sensor_type_cmdline (state_data->pstate, IPMI_SENSOR_TYPE_FRU_STATE) < 0)
-    return (-1);
-  if (display_sensor_type_cmdline (state_data->pstate, IPMI_SENSOR_TYPE_CABLE_INTERCONNECT) < 0)
-    return (-1);
-  if (display_sensor_type_cmdline (state_data->pstate, IPMI_SENSOR_TYPE_BOOT_ERROR) < 0)
-    return (-1);
-  if (display_sensor_type_cmdline (state_data->pstate, IPMI_SENSOR_TYPE_BUTTON_SWITCH) < 0)
-    return (-1);
-  if (display_sensor_type_cmdline (state_data->pstate, IPMI_SENSOR_TYPE_SYSTEM_ACPI_POWER_STATE) < 0)
-    return (-1);
+  /* make sure API is consistent to libipmimonitoring */
+  assert (IPMI_SENSOR_TYPE_TEMPERATURE == IPMI_MONITORING_SENSOR_TYPE_TEMPERATURE);
+  assert (IPMI_SENSOR_TYPE_FRU_STATE == IPMI_MONITORING_SENSOR_TYPE_FRU_STATE);
 
+  for (i = IPMI_SENSOR_TYPE_TEMPERATURE; i <= IPMI_SENSOR_TYPE_FRU_STATE; i++)
+    {
+      if (display_sensor_type_cmdline (state_data->pstate, i) < 0)
+        return (-1);
+    }
+  
   return (0);
 }
 
@@ -179,60 +138,11 @@ _get_sensor_type_string (ipmimonitoring_state_data_t *state_data, int sensor_typ
 {
   assert (state_data);
 
-  if (sensor_type == IPMI_MONITORING_SENSOR_TYPE_TEMPERATURE)
-    return (ipmi_sensor_types[IPMI_SENSOR_TYPE_TEMPERATURE]);
-  else if (sensor_type == IPMI_MONITORING_SENSOR_TYPE_VOLTAGE)
-    return (ipmi_sensor_types[IPMI_SENSOR_TYPE_VOLTAGE]);
-  else if (sensor_type == IPMI_MONITORING_SENSOR_TYPE_CURRENT)
-    return (ipmi_sensor_types[IPMI_SENSOR_TYPE_CURRENT]);
-  else if (sensor_type == IPMI_MONITORING_SENSOR_TYPE_FAN)
-    return (ipmi_sensor_types[IPMI_SENSOR_TYPE_FAN]);
-  else if (sensor_type == IPMI_MONITORING_SENSOR_TYPE_PHYSICAL_SECURITY)
-    return (ipmi_sensor_types[IPMI_SENSOR_TYPE_PHYSICAL_SECURITY]);
-  else if (sensor_type == IPMI_MONITORING_SENSOR_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT)
-    return (ipmi_sensor_types[IPMI_SENSOR_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT]);
-  else if (sensor_type == IPMI_MONITORING_SENSOR_TYPE_PROCESSOR)
-    return (ipmi_sensor_types[IPMI_SENSOR_TYPE_PROCESSOR]);
-  else if (sensor_type == IPMI_MONITORING_SENSOR_TYPE_POWER_SUPPLY)
-    return (ipmi_sensor_types[IPMI_SENSOR_TYPE_POWER_SUPPLY]);
-  else if (sensor_type == IPMI_MONITORING_SENSOR_TYPE_POWER_UNIT)
-    return (ipmi_sensor_types[IPMI_SENSOR_TYPE_POWER_UNIT]);
-  else if (sensor_type == IPMI_MONITORING_SENSOR_TYPE_MEMORY)
-    return (ipmi_sensor_types[IPMI_SENSOR_TYPE_MEMORY]);
-  else if (sensor_type == IPMI_MONITORING_SENSOR_TYPE_DRIVE_SLOT)
-    return (ipmi_sensor_types[IPMI_SENSOR_TYPE_DRIVE_SLOT]);
-  else if (sensor_type == IPMI_MONITORING_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS)
-    return (ipmi_sensor_types[IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS]);
-  else if (sensor_type == IPMI_MONITORING_SENSOR_TYPE_EVENT_LOGGING_DISABLED)
-    return (ipmi_sensor_types[IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED]);
-  else if (sensor_type == IPMI_MONITORING_SENSOR_TYPE_SYSTEM_EVENT)
-    return (ipmi_sensor_types[IPMI_SENSOR_TYPE_SYSTEM_EVENT]);
-  else if (sensor_type == IPMI_MONITORING_SENSOR_TYPE_CRITICAL_INTERRUPT)
-    return (ipmi_sensor_types[IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT]);
-  else if (sensor_type == IPMI_MONITORING_SENSOR_TYPE_MODULE_BOARD)
-    return (ipmi_sensor_types[IPMI_SENSOR_TYPE_MODULE_BOARD]);
-  else if (sensor_type == IPMI_MONITORING_SENSOR_TYPE_SLOT_CONNECTOR)
-    return (ipmi_sensor_types[IPMI_SENSOR_TYPE_SLOT_CONNECTOR]);
-  else if (sensor_type == IPMI_MONITORING_SENSOR_TYPE_WATCHDOG2)
-    return (ipmi_sensor_types[IPMI_SENSOR_TYPE_WATCHDOG2]);
-  else if (sensor_type == IPMI_MONITORING_SENSOR_TYPE_ENTITY_PRESENCE)
-    return (ipmi_sensor_types[IPMI_SENSOR_TYPE_ENTITY_PRESENCE]);
-  else if (sensor_type == IPMI_MONITORING_SENSOR_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH)
-    return (ipmi_sensor_types[IPMI_SENSOR_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH]);
-  else if (sensor_type == IPMI_MONITORING_SENSOR_TYPE_BATTERY)
-    return (ipmi_sensor_types[IPMI_SENSOR_TYPE_BATTERY]);
-  else if (sensor_type == IPMI_MONITORING_SENSOR_TYPE_FRU_STATE)
-    return (ipmi_sensor_types[IPMI_SENSOR_TYPE_FRU_STATE]);
-  else if (sensor_type == IPMI_MONITORING_SENSOR_TYPE_CABLE_INTERCONNECT)
-    return (ipmi_sensor_types[IPMI_SENSOR_TYPE_CABLE_INTERCONNECT]);
-  else if (sensor_type == IPMI_MONITORING_SENSOR_TYPE_BOOT_ERROR)
-    return (ipmi_sensor_types[IPMI_SENSOR_TYPE_BOOT_ERROR]);
-  else if (sensor_type == IPMI_MONITORING_SENSOR_TYPE_BUTTON_SWITCH)
-    return (ipmi_sensor_types[IPMI_SENSOR_TYPE_BUTTON_SWITCH]);
-  else if (sensor_type == IPMI_MONITORING_SENSOR_TYPE_SYSTEM_ACPI_POWER_STATE)
-    return (ipmi_sensor_types[IPMI_SENSOR_TYPE_SYSTEM_ACPI_POWER_STATE]);
+  /* make sure API is consistent to libipmimonitoring */
+  assert (IPMI_SENSOR_TYPE_TEMPERATURE == IPMI_MONITORING_SENSOR_TYPE_TEMPERATURE);
+  assert (IPMI_SENSOR_TYPE_FRU_STATE == IPMI_MONITORING_SENSOR_TYPE_FRU_STATE);
 
-  return (IPMIMONITORING_NA_STRING);
+  return (get_sensor_type_output_string (sensor_type));
 }
 
 static const char *
@@ -1261,123 +1171,26 @@ _ipmimonitoring (pstdout_state_t pstate,
 }
 
 static int
-_convert_to_ipmimonitoring_sensor_type (const char *sensor_type)
+_convert_to_ipmimonitoring_sensor_type_str (const char *sensor_type_str)
 {
-  int n;
+  unsigned int i;
 
-  assert (sensor_type);
+  assert (sensor_type_str);
 
-  if (sensor_type_strcmp (NULL,
-                          sensor_type,
-                          IPMI_SENSOR_TYPE_TEMPERATURE) == 1)
-    n = IPMI_MONITORING_SENSOR_TYPE_TEMPERATURE;
-  else if (sensor_type_strcmp (NULL,
-                               sensor_type,
-                               IPMI_SENSOR_TYPE_VOLTAGE) == 1)
-    n = IPMI_MONITORING_SENSOR_TYPE_VOLTAGE;
-  else if (sensor_type_strcmp (NULL,
-                               sensor_type,
-                               IPMI_SENSOR_TYPE_CURRENT) == 1)
-    n = IPMI_MONITORING_SENSOR_TYPE_CURRENT;
-  else if (sensor_type_strcmp (NULL,
-                               sensor_type,
-                               IPMI_SENSOR_TYPE_FAN) == 1)
-    n = IPMI_MONITORING_SENSOR_TYPE_FAN;
-  else if (sensor_type_strcmp (NULL,
-                               sensor_type,
-                               IPMI_SENSOR_TYPE_PHYSICAL_SECURITY) == 1)
-    n = IPMI_MONITORING_SENSOR_TYPE_PHYSICAL_SECURITY;
-  else if (sensor_type_strcmp (NULL,
-                               sensor_type,
-                               IPMI_SENSOR_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT) == 1)
-    n = IPMI_MONITORING_SENSOR_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT;
-  else if (sensor_type_strcmp (NULL,
-                               sensor_type,
-                               IPMI_SENSOR_TYPE_PROCESSOR) == 1)
-    n = IPMI_MONITORING_SENSOR_TYPE_PROCESSOR;
-  else if (sensor_type_strcmp (NULL,
-                               sensor_type,
-                               IPMI_SENSOR_TYPE_POWER_SUPPLY) == 1)
-    n = IPMI_MONITORING_SENSOR_TYPE_POWER_SUPPLY;
-  else if (sensor_type_strcmp (NULL,
-                               sensor_type,
-                               IPMI_SENSOR_TYPE_POWER_UNIT) == 1)
-    n = IPMI_MONITORING_SENSOR_TYPE_POWER_UNIT;
-  else if (sensor_type_strcmp (NULL,
-                               sensor_type,
-                               IPMI_SENSOR_TYPE_MEMORY) == 1)
-    n = IPMI_MONITORING_SENSOR_TYPE_MEMORY;
-  else if (sensor_type_strcmp (NULL,
-                               sensor_type,
-                               IPMI_SENSOR_TYPE_DRIVE_SLOT) == 1)
-    n = IPMI_MONITORING_SENSOR_TYPE_DRIVE_SLOT;
-  else if (sensor_type_strcmp (NULL,
-                               sensor_type,
-                               IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS) == 1)
-    n = IPMI_MONITORING_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS;
-  else if (sensor_type_strcmp (NULL,
-                               sensor_type,
-                               IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED) == 1)
-    n = IPMI_MONITORING_SENSOR_TYPE_EVENT_LOGGING_DISABLED;
-  else if (sensor_type_strcmp (NULL,
-                               sensor_type,
-                               IPMI_SENSOR_TYPE_SYSTEM_EVENT) == 1)
-    n = IPMI_MONITORING_SENSOR_TYPE_SYSTEM_EVENT;
-  else if (sensor_type_strcmp (NULL,
-                               sensor_type,
-                               IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT) == 1)
-    n = IPMI_MONITORING_SENSOR_TYPE_CRITICAL_INTERRUPT;
-  else if (sensor_type_strcmp (NULL,
-                               sensor_type,
-                               IPMI_SENSOR_TYPE_MODULE_BOARD) == 1)
-    n = IPMI_MONITORING_SENSOR_TYPE_MODULE_BOARD;
-  else if (sensor_type_strcmp (NULL,
-                               sensor_type,
-                               IPMI_SENSOR_TYPE_SLOT_CONNECTOR) == 1)
-    n = IPMI_MONITORING_SENSOR_TYPE_SLOT_CONNECTOR;
-  else if (sensor_type_strcmp (NULL,
-                               sensor_type,
-                               IPMI_SENSOR_TYPE_WATCHDOG2) == 1)
-    n = IPMI_MONITORING_SENSOR_TYPE_WATCHDOG2;
-  else if (sensor_type_strcmp (NULL,
-                               sensor_type,
-                               IPMI_SENSOR_TYPE_ENTITY_PRESENCE) == 1)
-    n = IPMI_MONITORING_SENSOR_TYPE_ENTITY_PRESENCE;
-  else if (sensor_type_strcmp (NULL,
-                               sensor_type,
-                               IPMI_SENSOR_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH) == 1)
-    n = IPMI_MONITORING_SENSOR_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH;
-  else if (sensor_type_strcmp (NULL,
-                               sensor_type,
-                               IPMI_SENSOR_TYPE_BATTERY) == 1)
-    n = IPMI_MONITORING_SENSOR_TYPE_BATTERY;
-  else if (sensor_type_strcmp (NULL,
-                               sensor_type,
-                               IPMI_SENSOR_TYPE_FRU_STATE) == 1)
-    n = IPMI_MONITORING_SENSOR_TYPE_FRU_STATE;
-  else if (sensor_type_strcmp (NULL,
-                               sensor_type,
-                               IPMI_SENSOR_TYPE_CABLE_INTERCONNECT) == 1)
-    n = IPMI_MONITORING_SENSOR_TYPE_CABLE_INTERCONNECT;
-  else if (sensor_type_strcmp (NULL,
-                               sensor_type,
-                               IPMI_SENSOR_TYPE_BOOT_ERROR) == 1)
-    n = IPMI_MONITORING_SENSOR_TYPE_BOOT_ERROR;
-  else if (sensor_type_strcmp (NULL,
-                               sensor_type,
-                               IPMI_SENSOR_TYPE_BUTTON_SWITCH) == 1)
-    n = IPMI_MONITORING_SENSOR_TYPE_BUTTON_SWITCH;
-  else if (sensor_type_strcmp (NULL,
-                               sensor_type,
-                               IPMI_SENSOR_TYPE_SYSTEM_ACPI_POWER_STATE) == 1)
-    n = IPMI_MONITORING_SENSOR_TYPE_SYSTEM_ACPI_POWER_STATE;
-  else
+  /* make sure API is consistent to libipmimonitoring */
+  assert (IPMI_SENSOR_TYPE_TEMPERATURE == IPMI_MONITORING_SENSOR_TYPE_TEMPERATURE);
+  assert (IPMI_SENSOR_TYPE_FRU_STATE == IPMI_MONITORING_SENSOR_TYPE_FRU_STATE);
+
+  for (i = IPMI_SENSOR_TYPE_TEMPERATURE; i <= IPMI_SENSOR_TYPE_FRU_STATE; i++)
     {
-      fprintf (stderr, "invalid sensor type '%s'\n", sensor_type);
-      exit (1);
+      if (sensor_type_strcmp (NULL,
+			      sensor_type_str,
+			      i) == 1)
+	return (i);
     }
-
-  return (n);
+  
+  fprintf (stderr, "invalid sensor type '%s'\n", sensor_type_str);
+  exit (1);
 }
 
 /* For some ipmimonitoring library functions, we need to convert
@@ -1460,7 +1273,7 @@ _convert_to_ipmimonitoring_options (struct ipmimonitoring_arguments *cmd_args)
     {
       int n;
 
-      n = _convert_to_ipmimonitoring_sensor_type (cmd_args->sensor_types[i]);
+      n = _convert_to_ipmimonitoring_sensor_type_str (cmd_args->sensor_types[i]);
       cmd_args->ipmimonitoring_sensor_types[cmd_args->ipmimonitoring_sensor_types_length] = n;
       cmd_args->ipmimonitoring_sensor_types_length++;
     }

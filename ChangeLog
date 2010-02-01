@@ -1,6 +1,8 @@
 2010-02-01  Albert Chu <chu11@llnl.gov>
 
 	* ipmiconsole/ipmiconsole.8.pre.in: Format change.
+
+	* ipmimonitoring/src/ipmimonitoring/: Update for newer sensor types.
 	
 2010-01-29  Albert Chu <chu11@llnl.gov>
 
