@@ -548,6 +548,17 @@ invalid event bitmasks.  For example, when the lower critical
 threshold has *not* been crossed, the lower critical threshold event
 bitmask is set.  No current resolution.
 
+Various Motherboards: Sensors do not assert state bits (i.e. sensor
+event bitmask) consistently to indicate that a sensor is "doing good".
+For example, for a "Power Supply" sensor, offset 00h (i.e. state 0 or
+bitmask 0x0001) indicates "Presence Detected".  On some motherboards
+this is considered the "good" result to see from a "Power Supply"
+sensor reading.  On some other motherboards, the motherboards have
+elected to not return any offset (i.e. no states set or bitmask
+0x0000) when the power supply is fine, electing to only return an
+offset when an actual failure occurs.  This results in one of two
+possible "good" scenarios for ipmi-sensors to output. [INTERPRETATION]
+
 ipmi-sel
 --------
 
@@ -597,6 +608,24 @@ interpretations.  [INTERPRETATION]
 Appendix
 --------
 
+[CONFIG-1]
+
+To see a discussion on why this implementation is poor, please see
+"Configuration tool callback design" in the freeipmi-coding.txt
+document.
+
+[INTERPRETATION]
+
+This is not an IPMI compliance issue, but rather a interpretation
+issue in the specification that has lead to multiple implementations
+by vendors.
+
+[NICETOHAVE]
+
+This is not an IPMI compliance issue, but choice of implementation
+makes for (in our opinion) a poor user experience or poor development
+experience.
+
 [SENSORS-1]
 
 In all liklihood, these are all circumstances that the vendor wanted
@@ -627,21 +656,3 @@ returning one of the random completion codes listed above.  IMO, I
 think the completion codes above don't give an accurate description of
 what's going on (assuming they are supposed to represent "this sensor
 isn't available on this motherboard").
-
-[CONFIG-1]
-
-To see a discussion on why this implementation is poor, please see
-"Configuration tool callback design" in the freeipmi-coding.txt
-document.
-
-[INTERPRETATION]
-
-This is not an IPMI compliance issue, but rather a interpretation
-issue in the specification that has lead to multiple implementations
-by vendors.
-
-[NICETOHAVE]
-
-This is not an IPMI compliance issue, but choice of implementation
-makes for (in our opinion) a poor user experience or poor development
-experience.
