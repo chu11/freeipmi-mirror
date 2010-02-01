@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmiconsole.8.pre.in,v 1.45.4.2 2009-12-23 21:24:10 chu11 Exp $
+.\"$Id: ipmiconsole.8.pre.in,v 1.45.4.3 2010-02-01 18:17:31 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -84,14 +84,6 @@ cipher suite ids are currently supported:
 #include <@top_srcdir@/common/man/manpage-common-workaround-flags.man>
 #include <@top_srcdir@/common/man/manpage-common-debug.man>
 #include <@top_srcdir@/common/man/manpage-common-misc.man>
-.if @WITH_DEBUG@ \{
-.TP
-\fB\-\-debugfile\fR
-Output debugging to the debugfile rather than to standard output.
-.TP
-\fB\-\-noraw\fR
-Don't enter terminal raw mode.
-\}
 .SH "IPMICONSOLE OPTIONS"
 The following options are specific to
 .B Ipmiconsole.
@@ -113,6 +105,14 @@ Deactivate a SOL session if one is detected as being in use and exit.
 \fB\-\-lock-memory\fR
 Lock sensitive information (such as usernames and passwords) in
 memory.
+.if @WITH_DEBUG@ \{
+.TP
+\fB\-\-debugfile\fR
+Output debugging to the debugfile rather than to standard output.
+.TP
+\fB\-\-noraw\fR
+Don't enter terminal raw mode.
+\}
 .LP
 
 .SH "ESCAPE CHARACTERS"
