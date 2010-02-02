@@ -1,4 +1,4 @@
-FreeIPMI 0.8.3 - 01/05/10
+FreeIPMI 0.8.3 - 02/02/10
 -------------------------
 o Support Sun Microsystems OEM SEL events.
 o Fix Solaris 64 bit portability bugs.
