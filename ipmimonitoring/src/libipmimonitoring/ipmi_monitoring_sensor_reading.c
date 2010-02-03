@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.86 2010-02-01 21:53:36 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.87 2010-02-03 00:43:13 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -728,8 +728,9 @@ _get_sensor_bitmask_type (ipmi_monitoring_ctx_t c,
 	sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_VERSION_CHANGE;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_FRU_STATE)
 	sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_FRU_STATE;
+      /* To avoid gcc warnings, subtract -1 in comparison */
       else if (sdr_sensor_type >= IPMI_SENSOR_TYPE_OEM_MIN
-	       && sdr_sensor_type <= IPMI_SENSOR_TYPE_OEM_MAX)
+	       && (sdr_sensor_type - 1) <= (IPMI_SENSOR_TYPE_OEM_MAX - 1))
 	{
 	  IPMI_MONITORING_DEBUG (("sensor_type '0x%X' bitmask is OEM", sdr_sensor_type));
 	  sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_OEM;

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: conffile.h,v 1.4 2009-12-23 21:23:18 chu11 Exp $
+ *  $Id: conffile.h,v 1.5 2010-02-03 00:43:13 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -294,7 +294,8 @@ typedef int (*conffile_option_func)(conffile_t cf,
  * 'callback_func' is the callback function to be called when the
  *     option has been found.
  * 'max_count' is the maximum number of times this option can be
- *     listed in the configuration file.  Typically this is one.
+ *     listed in the configuration file.  Typically this is one.  If
+ *     set to < 0, there is no maximum.
  * 'required_count' is the required number of times this option should
  *     be listed in the configuration file.  Typically this is 0 for not
  *     required, or identical to 'max_count'.

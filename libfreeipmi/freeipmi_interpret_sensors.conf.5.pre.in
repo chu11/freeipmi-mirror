@@ -949,6 +949,35 @@ Defaults to Warning.
 \fBIPMI_FRU_State_FRU_Communication_Lost\fR
 Defaults to Critical.
 .RE
+.TP
+.B IPMI_OEM
+The following configuration options can be used to configure OEM
+specific interpretations.  Users should be aware that both
+\fBIPMI_OEM_Bitmask\fR and \fBIPMI_OEM_Value\fR can be configured for
+an identical \fIManufacturer-ID\fR, \fIProduct-ID\fR,
+\fIEvent-Reading-Type-Code\fR, and \fISensor-Type\fR combination.  All
+interpretations rules for a specific combination are iterated through
+and the worst resulting sensor state is returned (i.e. Warning <
+Nominal, Critical < Warning).  If no match is found, no sensor state
+is returned for the OEM sensor reading.
+.RS
+.TP
+\fBIPMI_OEM_Bitmask\fR \fIManufacturer-ID\fR \fIProduct-ID\fR \fIEvent-Reading-Type-Code\fR \fISensor-Type\fR \fISensor-Event-Bitmask\fR \fIState\fR
+\fBIPMI_OEM_Bitmask\fR can be used to configure a state interpretation
+for a specific \fIManufacturer-ID\fR, \fIProduct-ID\fR,
+\fIEvent-Reading-Type-Code\fR, and \fISensor-Type\fR combination and a
+specific bitmask of the the \fISensor-Event\fR.  The state will be
+accepted as the sensor interpretation if the inputted bitmask ANDed
+with the actual sensor event bitmask reading is true.
+.TP
+\fBIPMI_OEM_Value\fR \fIManufacturer-ID\fR \fIProduct-ID\fR \fIEvent-Reading-Type-Code\fR \fISensor-Type\fR \fISensor-Event-Bitmask-Value\fR \fIState\fR
+\fBIPMI_OEM_Value\fR can be used to configure a state interpretation
+for a specific \fIManufacturer-ID\fR, \fIProduct-ID\fR,
+\fIEvent-Reading-Type-Code\fR, and \fISensor-Type\fR combination and a
+specific value for the \fISensor-Event-Bitmask\fR.  The state will be
+accepted as the sensor interpretation if the inputted bitmask value is
+equal to the actual sensor event bitmask reading.
+.RE
 
 .SH "FILES"
 @INTERPRET_SENSOR_CONFIG_FILE_DEFAULT@

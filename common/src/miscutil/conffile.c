@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: conffile.c,v 1.4 2009-12-23 21:23:18 chu11 Exp $
+ *  $Id: conffile.c,v 1.5 2010-02-03 00:43:13 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -528,9 +528,12 @@ _parseline(conffile_t cf, char *linebuf, int linebuflen)
         return 0;
 
     (*option->count_ptr)++;
-    if ((*option->count_ptr) > option->max_count) {
-        cf->errnum = CONFFILE_ERR_PARSE_OPTION_TOOMANY;
-        return -1;
+
+    if (option->max_count > 0) {
+        if ((*option->count_ptr) > option->max_count) {
+            cf->errnum = CONFFILE_ERR_PARSE_OPTION_TOOMANY;
+            return -1;
+        }
     }
 
     if ((linebuf = _move_past_whitespace(cf, linebuf)) != NULL) {
@@ -714,7 +717,6 @@ conffile_parse(conffile_t cf,
                  || options[i].option_type == CONFFILE_OPTION_LIST_DOUBLE
                  || options[i].option_type == CONFFILE_OPTION_LIST_STRING)
                 && ((int)options[i].option_type_arg) == 0)
-            || options[i].max_count < 0
             || options[i].required_count < 0
             || (options[i].option_type != CONFFILE_OPTION_IGNORE
                 && options[i].count_ptr == NULL)) {
@@ -761,6 +763,7 @@ conffile_parse(conffile_t cf,
     retval = 0;
 
  cleanup:
+    /* ignore potential error, just return result to user */
     close(cf->fd);
     return retval;
 }

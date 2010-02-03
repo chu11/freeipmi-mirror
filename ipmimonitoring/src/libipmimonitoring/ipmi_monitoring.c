@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.70 2010-01-30 01:13:47 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.71 2010-02-03 00:43:13 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -461,6 +461,36 @@ _ipmi_monitoring_sensor_readings_flags_common (ipmi_monitoring_ctx_t c,
           goto cleanup;
         }
       c->product_id = val;
+
+      if (ipmi_interpret_ctx_set_flags (c->interpret_ctx, IPMI_INTERPRET_FLAGS_INTERPRET_OEM_DATA) < 0)
+	{
+	  IPMI_MONITORING_DEBUG (("ipmi_interpret_ctx_set_flags: %s", ipmi_interpret_ctx_errormsg (c->interpret_ctx)));
+	  c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
+	  goto cleanup;
+	}
+
+      if (ipmi_interpret_ctx_set_manufacturer_id (c->interpret_ctx, c->manufacturer_id) < 0)
+	{
+	  IPMI_MONITORING_DEBUG (("ipmi_interpret_ctx_set_manufacturer_id: %s", ipmi_interpret_ctx_errormsg (c->interpret_ctx)));
+	  c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
+	  goto cleanup;
+	}
+
+      if (ipmi_interpret_ctx_set_product_id (c->interpret_ctx, c->product_id) < 0)
+	{
+	  IPMI_MONITORING_DEBUG (("ipmi_interpret_ctx_set_product_id: %s", ipmi_interpret_ctx_errormsg (c->interpret_ctx)));
+	  c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
+	  goto cleanup;
+	}
+    }
+  else
+    {
+      if (ipmi_interpret_ctx_set_flags (c->interpret_ctx, IPMI_INTERPRET_FLAGS_DEFAULT) < 0)
+        {
+          IPMI_MONITORING_DEBUG (("ipmi_interpret_ctx_set_flags: %s", ipmi_interpret_ctx_errormsg (c->interpret_ctx)));
+          c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
+          goto cleanup;
+        }
     }
 
   rv = 0;

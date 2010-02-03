@@ -1,6 +1,8 @@
 2010-02-02  Albert Chu <chu11@llnl.gov>
 
-	* ipmimonitoring/: Support OEM sensor interpretations.
+	* libfreeipmi/src/interpret/,
+	libfreeipmi/include/freeipmi/interpret/, ipmimonitoring/: Support
+	OEM sensor interpretations.
 
 	* common/src/miscutil/conffile.c, common/src/miscutil/conffile.h:
 	Update to support infinite option arguments.

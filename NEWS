@@ -4,7 +4,7 @@ FreeIPMI 0.9.1 - 12/07/09
 High Level Description of Changes
 ---------------------------------
 o Re-architect libipmimonitoring to support all defined IPMI sensor
-  types.
+  types, OEM bitmasks, and OEM interpretations.
 o Support new 'interpret' sub-library in libfreeipmi.
 
 Tools - Detailed Enhancements/Changes/Fixes
@@ -28,6 +28,8 @@ o libipmimonitoring
     - Add bitmask type IPMI_MONITORING_SENSOR_BITMASK_TYPE_OEM.
     - Add ipmi_monitoring_read_sensor_bitmask_string().
     - Remove ipmi_monitoring_sensor_bitmask_string().
+  - Through libfreeipmi 'interpret' sub-library, support OEM sensor
+    interpretations.
   - Support IPMI_MONITORING_ERR_SENSOR_CONFIG_FILE_DOES_NOT_EXIST error code.
   - Remove unused IPMI_MONITORING_ERR_CONFIG_FILE_PARSE error code.
 

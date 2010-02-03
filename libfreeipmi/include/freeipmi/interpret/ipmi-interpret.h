@@ -59,6 +59,12 @@ char * ipmi_interpret_ctx_errormsg (ipmi_interpret_ctx_t ctx);
 /* interpret flag functions */
 int ipmi_interpret_ctx_get_flags (ipmi_interpret_ctx_t ctx, unsigned int *flags);
 int ipmi_interpret_ctx_set_flags (ipmi_interpret_ctx_t ctx, unsigned int flags);
+/* for use w/ IPMI_INTERPRET_FLAGS_INTERPRET_OEM_DATA */
+int ipmi_interpret_ctx_get_manufacturer_id (ipmi_interpret_ctx_t ctx, uint32_t *manufacturer_id);
+int ipmi_interpret_ctx_set_manufacturer_id (ipmi_interpret_ctx_t ctx, uint32_t manufacturer_id);
+/* for use w/ IPMI_INTERPRET_FLAGS_INTERPRET_OEM_DATA */
+int ipmi_interpret_ctx_get_product_id (ipmi_interpret_ctx_t ctx, uint16_t *product_id);
+int ipmi_interpret_ctx_set_product_id (ipmi_interpret_ctx_t ctx, uint16_t product_id);
 
 /* interpret file config loading */
 /* specify NULL for default config file */

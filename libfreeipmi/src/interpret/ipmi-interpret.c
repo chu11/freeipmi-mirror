@@ -173,6 +173,74 @@ ipmi_interpret_ctx_set_flags (ipmi_interpret_ctx_t ctx, unsigned int flags)
 }
 
 int
+ipmi_interpret_ctx_get_manufacturer_id (ipmi_interpret_ctx_t ctx, uint32_t *manufacturer_id)
+{
+  if (!ctx || ctx->magic != IPMI_INTERPRET_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_interpret_ctx_errormsg (ctx), ipmi_interpret_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if (!manufacturer_id)
+    {
+      INTERPRET_SET_ERRNUM (ctx, IPMI_INTERPRET_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  *manufacturer_id = ctx->manufacturer_id;
+  ctx->errnum = IPMI_INTERPRET_ERR_SUCCESS;
+  return (0);
+}
+
+int
+ipmi_interpret_ctx_set_manufacturer_id (ipmi_interpret_ctx_t ctx, uint32_t manufacturer_id)
+{
+  if (!ctx || ctx->magic != IPMI_INTERPRET_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_interpret_ctx_errormsg (ctx), ipmi_interpret_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  ctx->manufacturer_id = manufacturer_id;
+  ctx->errnum = IPMI_INTERPRET_ERR_SUCCESS;
+  return (0);
+}
+
+int
+ipmi_interpret_ctx_get_product_id (ipmi_interpret_ctx_t ctx, uint16_t *product_id)
+{
+  if (!ctx || ctx->magic != IPMI_INTERPRET_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_interpret_ctx_errormsg (ctx), ipmi_interpret_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if (!product_id)
+    {
+      INTERPRET_SET_ERRNUM (ctx, IPMI_INTERPRET_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  *product_id = ctx->product_id;
+  ctx->errnum = IPMI_INTERPRET_ERR_SUCCESS;
+  return (0);
+}
+
+int
+ipmi_interpret_ctx_set_product_id (ipmi_interpret_ctx_t ctx, uint16_t product_id)
+{
+  if (!ctx || ctx->magic != IPMI_INTERPRET_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_interpret_ctx_errormsg (ctx), ipmi_interpret_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  ctx->product_id = product_id;
+  ctx->errnum = IPMI_INTERPRET_ERR_SUCCESS;
+  return (0);
+}
+
+int
 ipmi_interpret_load_sensor_config (ipmi_interpret_ctx_t ctx,
                                    const char *sensor_config_file)
 {
@@ -250,6 +318,70 @@ _get_sensor_state (ipmi_interpret_ctx_t ctx,
 
   return (0);
 }
+
+static int
+_get_oem_sensor_state (ipmi_interpret_ctx_t ctx,
+		       uint8_t event_reading_type_code,
+		       uint8_t sensor_type,
+		       uint16_t sensor_event_bitmask,
+		       unsigned int *sensor_state)
+{
+  char keybuf[IPMI_OEM_HASH_KEY_BUFLEN + 1];
+  struct ipmi_interpret_oem_sensor_config *oem_conf;
+
+  assert (ctx);
+  assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
+  assert (sensor_state);
+
+  memset (keybuf, '\0', IPMI_OEM_HASH_KEY_BUFLEN + 1);
+
+  snprintf (keybuf,
+            IPMI_OEM_HASH_KEY_BUFLEN,
+            "%u:%u:%u:%u",
+            ctx->manufacturer_id,
+            ctx->product_id,
+            event_reading_type_code,
+            sensor_type);
+
+  if ((oem_conf = hash_find (ctx->interpret_sensors.oem_config,
+			     keybuf)))
+    {
+      unsigned int i;
+      int found = 0;
+
+      (*sensor_state) = IPMI_INTERPRET_SENSOR_STATE_NOMINAL;
+
+      for (i = 0; i < oem_conf->oem_state_count; i++)
+	{
+	  if (oem_conf->oem_state[i].oem_state_type == IPMI_OEM_STATE_TYPE_BITMASK)
+	    {
+	      if (oem_conf->oem_state[i].sensor_event_bitmask & sensor_event_bitmask)
+		{
+		  if (oem_conf->oem_state[i].sensor_state > (*sensor_state))
+		    (*sensor_state) = oem_conf->oem_state[i].sensor_state;
+		  found++;
+		}
+	    }
+	  else
+	    {
+	      if (oem_conf->oem_state[i].sensor_event_bitmask == sensor_event_bitmask)
+		{
+		  if (oem_conf->oem_state[i].sensor_state > (*sensor_state))
+		    (*sensor_state) = oem_conf->oem_state[i].sensor_state;
+		  found++;
+		}
+	    }
+	}
+      
+      if (!found)
+	(*sensor_state) = IPMI_INTERPRET_SENSOR_STATE_UNKNOWN;
+    }
+  else
+    (*sensor_state) = IPMI_INTERPRET_SENSOR_STATE_UNKNOWN;
+
+  return (0);
+}
+
 
 int
 ipmi_interpret_sensor (ipmi_interpret_ctx_t ctx,
@@ -392,6 +524,18 @@ ipmi_interpret_sensor (ipmi_interpret_ctx_t ctx,
         sensor_config = ctx->interpret_sensors.ipmi_interpret_battery_config;
       else if (sensor_type == IPMI_SENSOR_TYPE_FRU_STATE)
         sensor_config = ctx->interpret_sensors.ipmi_interpret_fru_state_config;
+      else if (ctx->flags & IPMI_INTERPRET_FLAGS_INTERPRET_OEM_DATA
+	       && IPMI_SENSOR_TYPE_IS_OEM (sensor_type))
+	{
+	  if (_get_oem_sensor_state (ctx,
+				     event_reading_type_code,
+				     sensor_type,
+				     sensor_event_bitmask,
+				     sensor_state) < 0)
+	    goto cleanup;
+          rv = 0;
+          goto cleanup;
+	}
       else
         {
           (*sensor_state) = IPMI_INTERPRET_SENSOR_STATE_UNKNOWN;
@@ -404,6 +548,16 @@ ipmi_interpret_sensor (ipmi_interpret_ctx_t ctx,
                              sensor_state,
                              sensor_config) < 0)
         goto cleanup;
+    }
+  else if (ctx->flags & IPMI_INTERPRET_FLAGS_INTERPRET_OEM_DATA
+	   && IPMI_EVENT_READING_TYPE_CODE_IS_OEM (event_reading_type_code))
+    {
+      if (_get_oem_sensor_state (ctx,
+				 event_reading_type_code,
+				 sensor_type,
+				 sensor_event_bitmask,
+				 sensor_state) < 0)
+	goto cleanup;
     }
   else
     {

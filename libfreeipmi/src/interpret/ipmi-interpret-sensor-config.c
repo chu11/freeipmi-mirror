@@ -48,6 +48,7 @@
 #ifdef STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#include <limits.h>
 #include <assert.h>
 #include <errno.h>
 
@@ -60,6 +61,11 @@
 
 #include "freeipmi-portability.h"
 #include "conffile.h"
+#include "hash.h"
+
+/*
+ * Standard Sensors
+ */
 
 static struct ipmi_interpret_sensor_config ipmi_interpret_threshold_sensor_config[] =
   {
@@ -479,6 +485,12 @@ static struct ipmi_interpret_sensor_config ipmi_interpret_fru_state_config[] =
   };
 static unsigned int ipmi_interpret_fru_state_config_len = 8;
 
+/*
+ * OEM Sensors
+ */
+
+
+
 static int
 _interpret_sensor_config_init (ipmi_interpret_ctx_t ctx,
                                struct ipmi_interpret_sensor_config ***sensor_config_dest,
@@ -768,6 +780,15 @@ ipmi_interpret_sensors_init (ipmi_interpret_ctx_t ctx)
                                      ipmi_interpret_fru_state_config_len) < 0)
     goto cleanup;
 
+  if (!(ctx->interpret_sensors.oem_config = hash_create (IPMI_INTERPRET_HASH_SIZE,
+							 (hash_key_f)hash_key_string,
+							 (hash_cmp_f)strcmp,
+							 (hash_del_f)free)))
+    {
+      INTERPRET_SET_ERRNUM (ctx, IPMI_INTERPRET_ERR_OUT_OF_MEMORY);
+      goto cleanup;
+    }
+
   rv = 0;
  cleanup:
   return (rv);
@@ -915,18 +936,17 @@ ipmi_interpret_sensors_destroy (ipmi_interpret_ctx_t ctx)
 
   _interpret_sensor_config_destroy (ctx,
                                     ctx->interpret_sensors.ipmi_interpret_fru_state_config);
+
+  if (ctx->interpret_sensors.oem_config)
+    hash_destroy (ctx->interpret_sensors.oem_config);
 }
 
 static int
 _sensor_state (conffile_t cf,
-               int option_type,
                char *option_string)
 {
   assert (cf);
   assert (option_string);
-
-  if (option_type != CONFFILE_OPTION_STRING)
-    conffile_seterrnum (cf, CONFFILE_ERR_INTERNAL);
 
   if (!strcasecmp (option_string, "Nominal"))
     return (IPMI_INTERPRET_SENSOR_STATE_NOMINAL);
@@ -955,10 +975,11 @@ _cb_sensor_state_parse (conffile_t cf,
 
   assert (cf);
   assert (data);
+  assert (option_type == CONFFILE_OPTION_STRING);
   assert (optionname);
   assert (option_ptr);
 
-  if ((sensor_state = _sensor_state (cf, option_type, data->string)) < 0)
+  if ((sensor_state = _sensor_state (cf, data->string)) < 0)
     return (-1);
 
   i = 0;
@@ -975,6 +996,171 @@ _cb_sensor_state_parse (conffile_t cf,
 
   conffile_seterrnum (cf, CONFFILE_ERR_INTERNAL);
   return (-1);
+}
+
+static int
+_strtoul (conffile_t cf,
+	  const char *str,
+	  uint32_t max,
+	  uint32_t *value)
+{
+  char *ptr = NULL;
+
+  assert (str);
+  assert (value);
+
+  errno = 0;
+
+  (*value) = strtoul (str, &ptr, 0);
+
+  if (errno
+      || (*ptr) != '\0'
+      || (*value) > max)
+    {
+      conffile_seterrnum (cf, CONFFILE_ERR_PARSE_ARG_INVALID);
+      return (-1);
+    }
+  
+  return (0);
+}
+
+static int
+_cb_oem_parse (conffile_t cf,
+	       struct conffile_data *data,
+	       char *optionname,
+	       int option_type,
+	       void *option_ptr,
+	       int option_data,
+	       void *app_ptr,
+	       int app_data)
+{
+  hash_t *h = NULL;
+  char keybuf[IPMI_OEM_HASH_KEY_BUFLEN + 1];
+  uint32_t manufacturer_id;
+  uint16_t product_id;
+  uint8_t event_reading_type_code;
+  uint8_t sensor_type;
+  uint16_t sensor_event_bitmask;
+  int sensor_state;
+  int oem_state_type;
+  uint32_t tmp;
+  struct ipmi_interpret_oem_sensor_config *oem_conf;
+  unsigned int i;
+
+  assert (cf);
+  assert (data);
+  assert (optionname);
+  assert (option_ptr);
+
+  h = (hash_t *)option_ptr;
+
+  memset (keybuf, '\0', IPMI_OEM_HASH_KEY_BUFLEN + 1);
+
+  if (data->stringlist_len != 6)
+    conffile_seterrnum (cf, CONFFILE_ERR_PARSE_ARG_MISSING);
+  
+  if (_strtoul (cf,
+		data->stringlist[0],
+		0x00FFFFFF,	/* 24 bit manufacturer ID */
+		&tmp) < 0)
+    return (-1);
+  manufacturer_id = tmp;
+
+  if (_strtoul (cf,
+		data->stringlist[1],
+		USHRT_MAX,
+		&tmp) < 0)
+    return (-1);
+  product_id = tmp;
+
+  if (_strtoul (cf,
+		data->stringlist[2],
+		UCHAR_MAX,
+		&tmp) < 0)
+    return (-1);
+  event_reading_type_code = tmp;
+
+  if (_strtoul (cf,
+		data->stringlist[3],
+		UCHAR_MAX,
+		&tmp) < 0)
+    return (-1);
+  sensor_type = tmp;
+  
+  if (_strtoul (cf,
+                data->stringlist[4],
+                USHRT_MAX,
+                &tmp) < 0)
+    return (-1);
+  sensor_event_bitmask = tmp;
+
+  if ((sensor_state = _sensor_state (cf, data->stringlist[5])) < 0)
+    return (-1);
+  
+  if (!strcasecmp (optionname, "IPMI_OEM_Bitmask"))
+    oem_state_type = IPMI_OEM_STATE_TYPE_BITMASK;
+  else if (!strcasecmp (optionname, "IPMI_OEM_Value"))
+    oem_state_type = IPMI_OEM_STATE_TYPE_VALUE;
+  else
+    {
+      conffile_seterrnum (cf, CONFFILE_ERR_INTERNAL);
+      return (-1);
+    }
+  
+  snprintf (keybuf,
+	    IPMI_OEM_HASH_KEY_BUFLEN,
+	    "%u:%u:%u:%u",
+	    manufacturer_id,
+	    product_id,
+	    event_reading_type_code,
+	    sensor_type);
+
+  if (!(oem_conf = hash_find ((*h), keybuf)))
+    {
+      if (!(oem_conf = (struct ipmi_interpret_oem_sensor_config *)malloc (sizeof (struct ipmi_interpret_oem_sensor_config))))
+	{
+	  conffile_seterrnum (cf, CONFFILE_ERR_OUTMEM);
+	  return (-1);
+	}
+      memset (oem_conf, '\0', sizeof (struct ipmi_interpret_oem_sensor_config));
+
+      memcpy (oem_conf->key, keybuf, IPMI_OEM_HASH_KEY_BUFLEN);
+      oem_conf->manufacturer_id = manufacturer_id;
+      oem_conf->product_id = product_id;
+      oem_conf->event_reading_type_code = event_reading_type_code;
+      oem_conf->sensor_type = sensor_type;
+
+      if (!hash_insert ((*h), oem_conf->key, oem_conf))
+	{
+	  conffile_seterrnum (cf, CONFFILE_ERR_INTERNAL);
+	  free (oem_conf);
+	  return (-1);
+	}
+    }
+
+  if (oem_conf->oem_state_count >= IPMI_INTERPRET_MAX_BITMASKS)
+    {
+      conffile_seterrnum (cf, CONFFILE_ERR_PARSE_ARG_TOOMANY);
+      return (-1);
+    }
+
+  /* check for duplicates */
+  for (i = 0; i < oem_conf->oem_state_count; i++)
+    {
+      if (oem_conf->oem_state[i].oem_state_type == oem_state_type
+	  && oem_conf->oem_state[i].sensor_event_bitmask == sensor_event_bitmask)
+	{
+	  conffile_seterrnum (cf, CONFFILE_ERR_PARSE_ARG_INVALID);
+	  return (-1);
+	}
+    }
+
+  oem_conf->oem_state[oem_conf->oem_state_count].sensor_event_bitmask = sensor_event_bitmask;
+  oem_conf->oem_state[oem_conf->oem_state_count].sensor_state = sensor_state;
+  oem_conf->oem_state[oem_conf->oem_state_count].oem_state_type = oem_state_type;
+  oem_conf->oem_state_count++;
+
+  return (0);
 }
 
 int
@@ -1066,6 +1252,8 @@ ipmi_interpret_sensor_config_parse (ipmi_interpret_ctx_t ctx,
   int battery_flag0, battery_flag1, battery_flag2;
   int fru_state_flag0, fru_state_flag1, fru_state_flag2, fru_state_flag3,
     fru_state_flag4, fru_state_flag5, fru_state_flag6, fru_state_flag7;
+  int oem_bitmask_flag;
+  int oem_value_flag;
   struct conffile_option options[] =
     {
       /*
@@ -3593,6 +3781,29 @@ ipmi_interpret_sensor_config_parse (ipmi_interpret_ctx_t ctx,
         &fru_state_flag7,
         ctx->interpret_sensors.ipmi_interpret_fru_state_config,
         0
+      },
+      /* OEM Config */
+      {
+	"IPMI_OEM_Bitmask",
+	CONFFILE_OPTION_LIST_STRING,
+	6,
+	_cb_oem_parse,
+	-1,
+	0,
+	&oem_bitmask_flag,
+	&ctx->interpret_sensors.oem_config,
+	0
+      },
+      {
+	"IPMI_OEM_Value",
+	CONFFILE_OPTION_LIST_STRING,
+	6,
+	_cb_oem_parse,
+	-1,
+	0,
+	&oem_value_flag,
+	&ctx->interpret_sensors.oem_config,
+	0
       },
     };
   char *config_file = NULL;
