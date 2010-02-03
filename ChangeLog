@@ -3,6 +3,8 @@
 	* libfreeipmi/src/interpret/: Fix OEM parsing issue.
 
 	* libfreeipmi/src/interpret/: Support Supermicro OEM by default.
+
+	* ipmi-sensors/: Support OEM interpretations in ipmi-sensors.
 	
 2010-02-02  Albert Chu <chu11@llnl.gov>
 

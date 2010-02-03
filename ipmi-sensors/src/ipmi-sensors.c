@@ -688,6 +688,29 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
                              state_data->ipmi_ctx,
                              &state_data->oem_data) < 0)
         goto cleanup;
+
+      if (args->output_sensor_state)
+	{
+	  if (ipmi_interpret_ctx_set_manufacturer_id (state_data->interpret_ctx,
+						      state_data->oem_data.manufacturer_id) < 0)
+	    {
+	      pstdout_fprintf (state_data->pstate,
+			       stderr,
+			       "ipmi_interpret_ctx_set_manufacturer_id: %s\n",
+			       ipmi_interpret_ctx_errormsg (state_data->interpret_ctx));
+	      goto cleanup;
+	    }
+
+	  if (ipmi_interpret_ctx_set_product_id (state_data->interpret_ctx,
+						 state_data->oem_data.product_id) < 0)
+	    {
+	      pstdout_fprintf (state_data->pstate,
+			       stderr,
+			       "ipmi_interpret_ctx_set_product_id: %s\n",
+			       ipmi_interpret_ctx_errormsg (state_data->interpret_ctx));
+	      goto cleanup;
+	    }
+	}
     }
 
   if (_output_setup (state_data) < 0)
@@ -1007,6 +1030,19 @@ _ipmi_sensors (pstdout_state_t pstate,
               goto cleanup;
             }
         }
+
+      if (prog_data->args->interpret_oem_data)
+	{
+	  if (ipmi_interpret_ctx_set_flags (state_data.interpret_ctx, IPMI_INTERPRET_FLAGS_INTERPRET_OEM_DATA) < 0)
+	    {
+	      pstdout_fprintf (pstate,
+			       stderr,
+			       "ipmi_interpret_ctx_set_flags: %s\n",
+			       ipmi_interpret_ctx_errormsg (state_data.interpret_ctx));
+              exit_code = EXIT_FAILURE;
+	      goto cleanup;
+	    }
+	}
     }
 
   if (run_cmd_args (&state_data) < 0)
