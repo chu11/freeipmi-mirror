@@ -485,11 +485,6 @@ static struct ipmi_interpret_sensor_config ipmi_interpret_fru_state_config[] =
   };
 static unsigned int ipmi_interpret_fru_state_config_len = 8;
 
-/*
- * OEM Sensors
- */
-
-
 
 static int
 _interpret_sensor_config_init (ipmi_interpret_ctx_t ctx,
@@ -1045,6 +1040,7 @@ _cb_oem_parse (conffile_t cf,
   int oem_state_type;
   uint32_t tmp;
   struct ipmi_interpret_oem_sensor_config *oem_conf;
+  int found = 0;
   unsigned int i;
 
   assert (cf);
@@ -1150,15 +1146,19 @@ _cb_oem_parse (conffile_t cf,
       if (oem_conf->oem_state[i].oem_state_type == oem_state_type
 	  && oem_conf->oem_state[i].sensor_event_bitmask == sensor_event_bitmask)
 	{
-	  conffile_seterrnum (cf, CONFFILE_ERR_PARSE_ARG_INVALID);
-	  return (-1);
+	  oem_conf->oem_state[oem_conf->oem_state_count].sensor_state = sensor_state;
+	  found++;
+	  break;
 	}
     }
 
-  oem_conf->oem_state[oem_conf->oem_state_count].sensor_event_bitmask = sensor_event_bitmask;
-  oem_conf->oem_state[oem_conf->oem_state_count].sensor_state = sensor_state;
-  oem_conf->oem_state[oem_conf->oem_state_count].oem_state_type = oem_state_type;
-  oem_conf->oem_state_count++;
+  if (!found)
+    {
+      oem_conf->oem_state[oem_conf->oem_state_count].sensor_event_bitmask = sensor_event_bitmask;
+      oem_conf->oem_state[oem_conf->oem_state_count].sensor_state = sensor_state;
+      oem_conf->oem_state[oem_conf->oem_state_count].oem_state_type = oem_state_type;
+      oem_conf->oem_state_count++;
+    }
 
   return (0);
 }
