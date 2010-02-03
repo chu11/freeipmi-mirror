@@ -53,6 +53,11 @@
 #include <errno.h>
 
 #include "freeipmi/interpret/ipmi-interpret.h"
+#include "freeipmi/spec/ipmi-event-reading-type-code-oem-spec.h"
+#include "freeipmi/spec/ipmi-iana-enterprise-numbers-spec.h"
+#include "freeipmi/spec/ipmi-product-id-spec.h"
+#include "freeipmi/spec/ipmi-sensor-types-oem-spec.h"
+#include "freeipmi/spec/ipmi-sensor-and-event-code-tables-oem-spec.h"
 
 #include "ipmi-interpret-defs.h"
 #include "ipmi-interpret-trace.h"
@@ -533,6 +538,122 @@ _interpret_sensor_config_init (ipmi_interpret_ctx_t ctx,
   return (rv);
 }
 
+static int
+_interpret_oem_sensor_config_create (ipmi_interpret_ctx_t ctx,
+				     uint32_t manufacturer_id,
+				     uint16_t product_id,
+				     uint8_t event_reading_type_code,
+				     uint8_t sensor_type,
+				     struct ipmi_interpret_oem_sensor_config **oem_conf)
+{
+  struct ipmi_interpret_oem_sensor_config *tmp_oem_conf = NULL;
+  char keybuf[IPMI_OEM_HASH_KEY_BUFLEN + 1];
+  int rv = -1;
+
+  assert (ctx);
+  assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
+  assert (ctx->interpret_sensors.oem_config);
+  assert (oem_conf);
+
+  memset (keybuf, '\0', IPMI_OEM_HASH_KEY_BUFLEN + 1);
+
+  snprintf (keybuf,
+	    IPMI_OEM_HASH_KEY_BUFLEN,
+	    "%u:%u:%u:%u",
+	    manufacturer_id,
+	    product_id,
+	    event_reading_type_code,
+	    sensor_type);
+
+  if (!(tmp_oem_conf = (struct ipmi_interpret_oem_sensor_config *)malloc (sizeof (struct ipmi_interpret_oem_sensor_config))))
+    {
+      INTERPRET_SET_ERRNUM (ctx, IPMI_INTERPRET_ERR_OUT_OF_MEMORY);
+      goto cleanup;
+    }
+
+  memset (tmp_oem_conf, '\0', sizeof (struct ipmi_interpret_oem_sensor_config));
+  
+  memcpy (tmp_oem_conf->key, keybuf, IPMI_OEM_HASH_KEY_BUFLEN);
+  tmp_oem_conf->manufacturer_id = manufacturer_id;
+  tmp_oem_conf->product_id = product_id;
+  tmp_oem_conf->event_reading_type_code = event_reading_type_code;
+  tmp_oem_conf->sensor_type = sensor_type;
+  
+  if (!hash_insert (ctx->interpret_sensors.oem_config, tmp_oem_conf->key, tmp_oem_conf))
+    {
+      INTERPRET_SET_ERRNUM (ctx, IPMI_INTERPRET_ERR_INTERNAL_ERROR);
+      goto cleanup;
+    }
+  
+  (*oem_conf) = tmp_oem_conf;
+  rv = 0;
+ cleanup:
+  if (rv < 0)
+    free (tmp_oem_conf);
+  return (rv);
+}
+
+static int
+_interpret_oem_sensor_config_init (ipmi_interpret_ctx_t ctx)
+{
+  struct ipmi_interpret_oem_sensor_config *oem_conf;
+
+  /* Supermicro X8DTH CPU Temperature Sensor
+   *
+   * Manufacturer ID = 47488 (not IANA number, special case)
+   * Product ID = 43707
+   * Event/Reading Type Code = 70h
+   * Sensor Type = C0h
+   * Value 0x0000 = "Low"
+   * Value 0x0001 = "Medium"
+   * Value 0x0002 = "High"
+   * Value 0x0004 = "Overheat"
+   * Value 0x0007 = "Not Installed"
+   *
+   * IPMI_OEM_Value 47488 43707 0x70 0xC0 0x0000 Nominal
+   * IPMI_OEM_Value 47488 43707 0x70 0xC0 0x0001 Warning
+   * IPMI_OEM_Value 47488 43707 0x70 0xC0 0x0002 Warning
+   * IPMI_OEM_Value 47488 43707 0x70 0xC0 0x0004 Critical
+   * IPMI_OEM_Value 47488 43707 0x70 0xC0 0x0007 Warning
+   */
+
+  assert (ctx);
+  assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
+  assert (ctx->interpret_sensors.oem_config);
+  
+  if (_interpret_oem_sensor_config_create (ctx,
+					   IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
+					   IPMI_SUPERMICRO_PRODUCT_ID_X8DTH,
+					   IPMI_EVENT_READING_TYPE_CODE_OEM_SUPERMICRO_GENERIC,
+					   IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP,
+					   &oem_conf) < 0)
+    return (-1);
+
+  oem_conf->oem_state[0].sensor_event_bitmask = IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP_LOW;
+  oem_conf->oem_state[0].sensor_state = IPMI_INTERPRET_SENSOR_STATE_NOMINAL;
+  oem_conf->oem_state[0].oem_state_type = IPMI_OEM_STATE_TYPE_VALUE;
+
+  oem_conf->oem_state[1].sensor_event_bitmask = IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP_MEDIUM;
+  oem_conf->oem_state[1].sensor_state = IPMI_INTERPRET_SENSOR_STATE_WARNING;
+  oem_conf->oem_state[1].oem_state_type = IPMI_OEM_STATE_TYPE_VALUE;
+
+  oem_conf->oem_state[2].sensor_event_bitmask = IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP_HIGH;
+  oem_conf->oem_state[2].sensor_state = IPMI_INTERPRET_SENSOR_STATE_WARNING;
+  oem_conf->oem_state[2].oem_state_type = IPMI_OEM_STATE_TYPE_VALUE;
+
+  oem_conf->oem_state[3].sensor_event_bitmask = IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP_OVERHEAT;
+  oem_conf->oem_state[3].sensor_state = IPMI_INTERPRET_SENSOR_STATE_CRITICAL;
+  oem_conf->oem_state[3].oem_state_type = IPMI_OEM_STATE_TYPE_VALUE;
+
+  oem_conf->oem_state[4].sensor_event_bitmask = IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP_NOT_INSTALLED;
+  oem_conf->oem_state[4].sensor_state = IPMI_INTERPRET_SENSOR_STATE_WARNING;
+  oem_conf->oem_state[4].oem_state_type = IPMI_OEM_STATE_TYPE_VALUE;
+
+  oem_conf->oem_state_count = 5;
+
+  return (0);
+}
+
 int
 ipmi_interpret_sensors_init (ipmi_interpret_ctx_t ctx)
 {
@@ -783,6 +904,9 @@ ipmi_interpret_sensors_init (ipmi_interpret_ctx_t ctx)
       INTERPRET_SET_ERRNUM (ctx, IPMI_INTERPRET_ERR_OUT_OF_MEMORY);
       goto cleanup;
     }
+
+  if (_interpret_oem_sensor_config_init (ctx) < 0)
+    goto cleanup;
 
   rv = 0;
  cleanup:
