@@ -1,3 +1,7 @@
+license
+-------
+do GPLv3
+
 inband
 ------
 --fail-if-ipmi-not-detected
