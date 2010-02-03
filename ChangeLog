@@ -1,3 +1,10 @@
+2010-02-02  Albert Chu <chu11@llnl.gov>
+
+	* ipmimonitoring/: Support OEM sensor interpretations.
+
+	* common/src/miscutil/conffile.c, common/src/miscutil/conffile.h:
+	Update to support infinite option arguments.
+
 2010-02-01  Albert Chu <chu11@llnl.gov>
 
 	* ipmiconsole/ipmiconsole.8.pre.in: Format change.
@@ -7,7 +14,7 @@
 	* ipmimonitoring/src/ipmimonitoring/: Various cleanup.
 
 	* ipmimonitoring/: Support OEM bitmask types.
-	
+
 2010-01-29  Albert Chu <chu11@llnl.gov>
 
 	* ipmimonitoring/src/libipmimonitoring/
