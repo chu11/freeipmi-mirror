@@ -5,6 +5,8 @@
 	* libfreeipmi/src/interpret/: Support Supermicro OEM by default.
 
 	* ipmi-sensors/: Support OEM interpretations in ipmi-sensors.
+
+	* libfreeipmi/src/interpret/: Add Dell OEM interpretations.
 	
 2010-02-02  Albert Chu <chu11@llnl.gov>
 

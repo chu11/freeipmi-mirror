@@ -53,6 +53,7 @@
 #include <errno.h>
 
 #include "freeipmi/interpret/ipmi-interpret.h"
+#include "freeipmi/spec/ipmi-event-reading-type-code-spec.h"
 #include "freeipmi/spec/ipmi-event-reading-type-code-oem-spec.h"
 #include "freeipmi/spec/ipmi-iana-enterprise-numbers-spec.h"
 #include "freeipmi/spec/ipmi-product-id-spec.h"
@@ -597,6 +598,64 @@ static int
 _interpret_oem_sensor_config_init (ipmi_interpret_ctx_t ctx)
 {
   struct ipmi_interpret_oem_sensor_config *oem_conf;
+
+  /* Dell Poweredge R610/R710 Power Optimized
+   *
+   * Manufacturer ID = 674
+   * Product ID = 256
+   * Event/Reading Type Code = 6Fh (Sensor Specific)
+   * Sensor Type = C0h
+   * Bitmask 0x0001 = "Good"
+   * Bitmask 0x0002 = "Degraded, other"
+   * Bitmask 0x0004 = "Degraded, thermal protection"
+   * Bitmask 0x0008 = "Degraded, cooling capacity change"
+   * Bitmask 0x0010 = "Degraded, power capacity change"
+   * Bitmask 0x0020 = "Degraded, user defined power capacity"
+   * Bitmask 0x0040 = "Halted, system power exceeds capacity"
+   * Bitmask 0x0080 = "Degraded, system power exceeds capacity"
+   */
+  
+  if (_interpret_oem_sensor_config_create (ctx,
+					   IPMI_IANA_ENTERPRISE_ID_DELL,
+					   IPMI_DELL_PRODUCT_ID_POWEREDGE,
+					   IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC,
+					   IPMI_SENSOR_TYPE_OEM_DELL_SYSTEM_PERFORMANCE_DEGRADATION_STATUS,
+					   &oem_conf) < 0)
+    return (-1);
+
+  oem_conf->oem_state[0].sensor_event_bitmask = (0x1 << IPMI_SENSOR_TYPE_OEM_DELL_SYSTEM_PERFORMANCE_DEGRADATION_STATUS_GOOD);
+  oem_conf->oem_state[0].sensor_state = IPMI_INTERPRET_SENSOR_STATE_NOMINAL;
+  oem_conf->oem_state[0].oem_state_type = IPMI_OEM_STATE_TYPE_BITMASK;
+
+  oem_conf->oem_state[1].sensor_event_bitmask = (0x1 << IPMI_SENSOR_TYPE_OEM_DELL_SYSTEM_PERFORMANCE_DEGRADATION_STATUS_DEGRADED_OTHER);
+  oem_conf->oem_state[1].sensor_state = IPMI_INTERPRET_SENSOR_STATE_WARNING;
+  oem_conf->oem_state[1].oem_state_type = IPMI_OEM_STATE_TYPE_BITMASK;
+
+  oem_conf->oem_state[2].sensor_event_bitmask = (0x1 << IPMI_SENSOR_TYPE_OEM_DELL_SYSTEM_PERFORMANCE_DEGRADATION_STATUS_DEGRADED_THERMAL_PROTECTION);
+  oem_conf->oem_state[2].sensor_state = IPMI_INTERPRET_SENSOR_STATE_WARNING;
+  oem_conf->oem_state[2].oem_state_type = IPMI_OEM_STATE_TYPE_BITMASK;
+
+  oem_conf->oem_state[3].sensor_event_bitmask = (0x1 << IPMI_SENSOR_TYPE_OEM_DELL_SYSTEM_PERFORMANCE_DEGRADATION_STATUS_DEGRADED_COOLING_CAPACITY_CHANGE);
+  oem_conf->oem_state[3].sensor_state = IPMI_INTERPRET_SENSOR_STATE_WARNING;
+  oem_conf->oem_state[3].oem_state_type = IPMI_OEM_STATE_TYPE_BITMASK;
+
+  oem_conf->oem_state[4].sensor_event_bitmask = (0x1 << IPMI_SENSOR_TYPE_OEM_DELL_SYSTEM_PERFORMANCE_DEGRADATION_STATUS_DEGRADED_POWER_CAPACITY_CHANGE);
+  oem_conf->oem_state[4].sensor_state = IPMI_INTERPRET_SENSOR_STATE_WARNING;
+  oem_conf->oem_state[4].oem_state_type = IPMI_OEM_STATE_TYPE_BITMASK;
+
+  oem_conf->oem_state[5].sensor_event_bitmask = (0x1 << IPMI_SENSOR_TYPE_OEM_DELL_SYSTEM_PERFORMANCE_DEGRADATION_STATUS_DEGRADED_USER_DEFINED_POWER_CAPACITY);
+  oem_conf->oem_state[5].sensor_state = IPMI_INTERPRET_SENSOR_STATE_WARNING;
+  oem_conf->oem_state[5].oem_state_type = IPMI_OEM_STATE_TYPE_BITMASK;
+
+  oem_conf->oem_state[6].sensor_event_bitmask = (0x1 << IPMI_SENSOR_TYPE_OEM_DELL_SYSTEM_PERFORMANCE_DEGRADATION_STATUS_HALTED_SYSTEM_POWER_EXCEEDS_CAPACITY);
+  oem_conf->oem_state[6].sensor_state = IPMI_INTERPRET_SENSOR_STATE_CRITICAL;
+  oem_conf->oem_state[6].oem_state_type = IPMI_OEM_STATE_TYPE_BITMASK;
+
+  oem_conf->oem_state[7].sensor_event_bitmask = (0x1 << IPMI_SENSOR_TYPE_OEM_DELL_SYSTEM_PERFORMANCE_DEGRADATION_STATUS_DEGRADED_SYSTEM_POWER_EXCEEDS_CAPACITY);
+  oem_conf->oem_state[7].sensor_state = IPMI_INTERPRET_SENSOR_STATE_WARNING;
+  oem_conf->oem_state[7].oem_state_type = IPMI_OEM_STATE_TYPE_BITMASK;
+
+  oem_conf->oem_state_count = 8;
 
   /* Supermicro X8DTH CPU Temperature Sensor
    *
