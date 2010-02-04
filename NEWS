@@ -38,6 +38,17 @@ o libipmimonitoring
 Contributions
 -------------
 
+FreeIPMI 0.8.3 - 02/02/10
+-------------------------
+o Support Sun Microsystems OEM SEL events.
+o Fix Solaris 64 bit portability bugs.
+o In ipmi-oem, fix some Dell options and output given Dell docs 
+  (backwards compatability maintained on options).
+  - Rename 'get-power-headroom-info' to 'get-power-head-room'.
+o Minor bug fixes.
+o Minor documentation updates.
+o Minor documentation fixes.
+
 FreeIPMI 0.8.2 - 01/05/10
 -------------------------
 o Add fixes to deal with OSes that will report ECONNRESET or
