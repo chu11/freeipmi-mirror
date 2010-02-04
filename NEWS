@@ -29,7 +29,9 @@ o libipmimonitoring
     - Add ipmi_monitoring_read_sensor_bitmask_string().
     - Remove ipmi_monitoring_sensor_bitmask_string().
   - Through libfreeipmi 'interpret' sub-library, support OEM sensor
-    interpretations.
+    interpretations.  Initial OEM interpretations include:
+    - Dell Poweredge R610/R710
+    - Supermicro X8DTH
   - Support IPMI_MONITORING_ERR_SENSOR_CONFIG_FILE_DOES_NOT_EXIST error code.
   - Remove unused IPMI_MONITORING_ERR_CONFIG_FILE_PARSE error code.
 
