@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.71 2010-02-03 00:43:13 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.72 2010-02-05 23:58:10 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -589,7 +589,7 @@ _ipmi_monitoring_sensor_readings_by_record_id (ipmi_monitoring_ctx_t c,
   assert (_ipmi_monitoring_initialized);
   assert (!(sensor_reading_flags & ~IPMI_MONITORING_SENSOR_READING_FLAGS_MASK));
 
-  ipmi_monitoring_iterator_destroy (c);
+  ipmi_monitoring_sensor_iterator_destroy (c);
 
   if (ipmi_monitoring_ipmi_communication_init (c, hostname, config) < 0)
     goto cleanup;
@@ -729,7 +729,7 @@ _ipmi_monitoring_sensor_readings_by_record_id (ipmi_monitoring_ctx_t c,
 
  cleanup:
   ipmi_monitoring_sdr_cache_unload (c);
-  ipmi_monitoring_iterator_destroy (c);
+  ipmi_monitoring_sensor_iterator_destroy (c);
   ipmi_monitoring_ipmi_communication_cleanup (c);
   ipmi_monitoring_sensor_reading_cleanup (c);
   return (-1);
@@ -811,7 +811,7 @@ _ipmi_monitoring_sensor_readings_by_sensor_type (ipmi_monitoring_ctx_t c,
   assert (!(sensor_reading_flags & ~IPMI_MONITORING_SENSOR_READING_FLAGS_MASK));
   assert (!(sensor_types && !sensor_types_len));
 
-  ipmi_monitoring_iterator_destroy (c);
+  ipmi_monitoring_sensor_iterator_destroy (c);
 
   if (ipmi_monitoring_ipmi_communication_init (c, hostname, config) < 0)
     goto cleanup;
@@ -894,7 +894,7 @@ _ipmi_monitoring_sensor_readings_by_sensor_type (ipmi_monitoring_ctx_t c,
 
  cleanup:
   ipmi_monitoring_sdr_cache_unload (c);
-  ipmi_monitoring_iterator_destroy (c);
+  ipmi_monitoring_sensor_iterator_destroy (c);
   ipmi_monitoring_ipmi_communication_cleanup (c);
   ipmi_monitoring_sensor_reading_cleanup (c);
   return (-1);
@@ -986,7 +986,7 @@ _sensor_readings_delete_all (void *x, void *y)
 }
 
 void
-ipmi_monitoring_iterator_destroy (ipmi_monitoring_ctx_t c)
+ipmi_monitoring_sensor_iterator_destroy (ipmi_monitoring_ctx_t c)
 {
   if (!c || c->magic != IPMI_MONITORING_MAGIC)
     return;
@@ -1003,8 +1003,8 @@ ipmi_monitoring_iterator_destroy (ipmi_monitoring_ctx_t c)
 }
 
 static int
-_ipmi_monitoring_read_common (ipmi_monitoring_ctx_t c,
-                              struct ipmi_monitoring_sensor_reading **sensor_reading)
+_ipmi_monitoring_sensor_read_common (ipmi_monitoring_ctx_t c,
+                                     struct ipmi_monitoring_sensor_reading **sensor_reading)
 {
   assert (sensor_reading);
 
@@ -1034,11 +1034,11 @@ _ipmi_monitoring_read_common (ipmi_monitoring_ctx_t c,
 }
 
 int
-ipmi_monitoring_read_record_id (ipmi_monitoring_ctx_t c)
+ipmi_monitoring_sensor_read_record_id (ipmi_monitoring_ctx_t c)
 {
   struct ipmi_monitoring_sensor_reading *sensor_reading = NULL;
 
-  if (_ipmi_monitoring_read_common (c, &sensor_reading) < 0)
+  if (_ipmi_monitoring_sensor_read_common (c, &sensor_reading) < 0)
     return (-1);
 
   c->errnum = IPMI_MONITORING_ERR_SUCCESS;
@@ -1046,11 +1046,11 @@ ipmi_monitoring_read_record_id (ipmi_monitoring_ctx_t c)
 }
 
 int
-ipmi_monitoring_read_sensor_number (ipmi_monitoring_ctx_t c)
+ipmi_monitoring_sensor_read_sensor_number (ipmi_monitoring_ctx_t c)
 {
   struct ipmi_monitoring_sensor_reading *sensor_reading = NULL;
 
-  if (_ipmi_monitoring_read_common (c, &sensor_reading) < 0)
+  if (_ipmi_monitoring_sensor_read_common (c, &sensor_reading) < 0)
     return (-1);
 
   c->errnum = IPMI_MONITORING_ERR_SUCCESS;
@@ -1058,11 +1058,11 @@ ipmi_monitoring_read_sensor_number (ipmi_monitoring_ctx_t c)
 }
 
 int
-ipmi_monitoring_read_sensor_type (ipmi_monitoring_ctx_t c)
+ipmi_monitoring_sensor_read_sensor_type (ipmi_monitoring_ctx_t c)
 {
   struct ipmi_monitoring_sensor_reading *sensor_reading = NULL;
 
-  if (_ipmi_monitoring_read_common (c, &sensor_reading) < 0)
+  if (_ipmi_monitoring_sensor_read_common (c, &sensor_reading) < 0)
     return (-1);
 
   c->errnum = IPMI_MONITORING_ERR_SUCCESS;
@@ -1070,11 +1070,11 @@ ipmi_monitoring_read_sensor_type (ipmi_monitoring_ctx_t c)
 }
 
 char *
-ipmi_monitoring_read_sensor_name (ipmi_monitoring_ctx_t c)
+ipmi_monitoring_sensor_read_sensor_name (ipmi_monitoring_ctx_t c)
 {
   struct ipmi_monitoring_sensor_reading *sensor_reading = NULL;
 
-  if (_ipmi_monitoring_read_common (c, &sensor_reading) < 0)
+  if (_ipmi_monitoring_sensor_read_common (c, &sensor_reading) < 0)
     return (NULL);
 
   c->errnum = IPMI_MONITORING_ERR_SUCCESS;
@@ -1083,11 +1083,11 @@ ipmi_monitoring_read_sensor_name (ipmi_monitoring_ctx_t c)
 
 
 int
-ipmi_monitoring_read_sensor_state (ipmi_monitoring_ctx_t c)
+ipmi_monitoring_sensor_read_sensor_state (ipmi_monitoring_ctx_t c)
 {
   struct ipmi_monitoring_sensor_reading *sensor_reading = NULL;
 
-  if (_ipmi_monitoring_read_common (c, &sensor_reading) < 0)
+  if (_ipmi_monitoring_sensor_read_common (c, &sensor_reading) < 0)
     return (-1);
 
   c->errnum = IPMI_MONITORING_ERR_SUCCESS;
@@ -1095,11 +1095,11 @@ ipmi_monitoring_read_sensor_state (ipmi_monitoring_ctx_t c)
 }
 
 int
-ipmi_monitoring_read_sensor_units (ipmi_monitoring_ctx_t c)
+ipmi_monitoring_sensor_read_sensor_units (ipmi_monitoring_ctx_t c)
 {
   struct ipmi_monitoring_sensor_reading *sensor_reading = NULL;
 
-  if (_ipmi_monitoring_read_common (c, &sensor_reading) < 0)
+  if (_ipmi_monitoring_sensor_read_common (c, &sensor_reading) < 0)
     return (-1);
 
   c->errnum = IPMI_MONITORING_ERR_SUCCESS;
@@ -1107,11 +1107,11 @@ ipmi_monitoring_read_sensor_units (ipmi_monitoring_ctx_t c)
 }
 
 int
-ipmi_monitoring_read_sensor_reading_type (ipmi_monitoring_ctx_t c)
+ipmi_monitoring_sensor_read_sensor_reading_type (ipmi_monitoring_ctx_t c)
 {
   struct ipmi_monitoring_sensor_reading *sensor_reading = NULL;
 
-  if (_ipmi_monitoring_read_common (c, &sensor_reading) < 0)
+  if (_ipmi_monitoring_sensor_read_common (c, &sensor_reading) < 0)
     return (-1);
 
   c->errnum = IPMI_MONITORING_ERR_SUCCESS;
@@ -1119,11 +1119,11 @@ ipmi_monitoring_read_sensor_reading_type (ipmi_monitoring_ctx_t c)
 }
 
 int
-ipmi_monitoring_read_sensor_bitmask_type (ipmi_monitoring_ctx_t c)
+ipmi_monitoring_sensor_read_sensor_bitmask_type (ipmi_monitoring_ctx_t c)
 {
   struct ipmi_monitoring_sensor_reading *sensor_reading = NULL;
 
-  if (_ipmi_monitoring_read_common (c, &sensor_reading) < 0)
+  if (_ipmi_monitoring_sensor_read_common (c, &sensor_reading) < 0)
     return (-1);
 
   c->errnum = IPMI_MONITORING_ERR_SUCCESS;
@@ -1131,11 +1131,11 @@ ipmi_monitoring_read_sensor_bitmask_type (ipmi_monitoring_ctx_t c)
 }
 
 int
-ipmi_monitoring_read_sensor_bitmask (ipmi_monitoring_ctx_t c)
+ipmi_monitoring_sensor_read_sensor_bitmask (ipmi_monitoring_ctx_t c)
 {
   struct ipmi_monitoring_sensor_reading *sensor_reading = NULL;
 
-  if (_ipmi_monitoring_read_common (c, &sensor_reading) < 0)
+  if (_ipmi_monitoring_sensor_read_common (c, &sensor_reading) < 0)
     return (-1);
 
   c->errnum = IPMI_MONITORING_ERR_SUCCESS;
@@ -1143,11 +1143,11 @@ ipmi_monitoring_read_sensor_bitmask (ipmi_monitoring_ctx_t c)
 }
 
 char **
-ipmi_monitoring_read_sensor_bitmask_strings (ipmi_monitoring_ctx_t c)
+ipmi_monitoring_sensor_read_sensor_bitmask_strings (ipmi_monitoring_ctx_t c)
 {
   struct ipmi_monitoring_sensor_reading *sensor_reading = NULL;
 
-  if (_ipmi_monitoring_read_common (c, &sensor_reading) < 0)
+  if (_ipmi_monitoring_sensor_read_common (c, &sensor_reading) < 0)
     return (NULL);
 
   c->errnum = IPMI_MONITORING_ERR_SUCCESS;
@@ -1155,12 +1155,12 @@ ipmi_monitoring_read_sensor_bitmask_strings (ipmi_monitoring_ctx_t c)
 }
 
 void *
-ipmi_monitoring_read_sensor_reading (ipmi_monitoring_ctx_t c)
+ipmi_monitoring_sensor_read_sensor_reading (ipmi_monitoring_ctx_t c)
 {
   struct ipmi_monitoring_sensor_reading *sensor_reading = NULL;
   void *rv = NULL;
 
-  if (_ipmi_monitoring_read_common (c, &sensor_reading) < 0)
+  if (_ipmi_monitoring_sensor_read_common (c, &sensor_reading) < 0)
     return (NULL);
 
   if (sensor_reading->sensor_reading_type == IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER8_BOOL)

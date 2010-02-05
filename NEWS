@@ -24,6 +24,8 @@ o libfreeipmi
 o libipmimonitoring
   - Re-architect to support all defined IPMI sensor types.
   - Re-architect to use 'interpret' sub-library.
+  - Rename a number of functions to differentiate sensor vs. SEL
+    functions.
   - Support OEM bitmasks and bitmask strings.
     - Add bitmask type IPMI_MONITORING_SENSOR_BITMASK_TYPE_OEM.
     - Add ipmi_monitoring_read_sensor_bitmask_string().
