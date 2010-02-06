@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.h,v 1.58 2010-02-05 23:58:10 chu11 Exp $
+ *  $Id: ipmi_monitoring.h,v 1.59 2010-02-06 00:01:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -1101,7 +1101,7 @@ int ipmi_monitoring_sensor_read_sensor_bitmask (ipmi_monitoring_ctx_t c);
  * ipmi_monitoring_sensor_read_sensor_bitmask_strings
  *
  * Returns an array of strings representing the events in the bitmask.
- * Returns NULL if no events are indicated.
+ * Array is NULL terminated.  Returns NULL if no events are indicated.
  */
 char **ipmi_monitoring_sensor_read_sensor_bitmask_strings (ipmi_monitoring_ctx_t c);
 
