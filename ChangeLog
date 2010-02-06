@@ -2,7 +2,7 @@
 
 	Begin update to GPLv3 globally.
 
-	* Replace all COPYING files w/ GPLv3 COPYING file.
+	* Replace COPYING w/ GPLv3 COPYING file.
 
 	* Update all FreeIPMI core team code header files.
 	
