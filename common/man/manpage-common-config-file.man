@@ -1,3 +1,0 @@
-.TP
-\fB\-\-config\-file\fR=\fIFILE\fR
-Specify an alternate configuration file.
