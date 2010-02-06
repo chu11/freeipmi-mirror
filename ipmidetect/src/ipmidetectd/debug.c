@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: debug.c,v 1.8 2009-03-03 23:56:52 chu11 Exp $
+ *  $Id: debug.c,v 1.9 2010-02-06 01:16:35 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2005 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -21,8 +21,7 @@
  *  details.
  *
  *  You should have received a copy of the GNU General Public License along
- *  with Genders; if not, write to the Free Software Foundation, Inc.,
- *  51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
+ *  with Cerebro.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
 #if HAVE_CONFIG_H
