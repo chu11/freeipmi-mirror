@@ -5,6 +5,8 @@
 	* Replace COPYING w/ GPLv3 COPYING file.
 
 	* Update all FreeIPMI core team code header files.
+
+	* Fix up some header file inconsistencies.
 	
 2010-02-05  Albert Chu <chu11@llnl.gov>
 
