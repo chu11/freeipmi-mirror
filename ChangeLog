@@ -1,5 +1,11 @@
 2010-02-05  Albert Chu <chu11@llnl.gov>
 
+	Begin update to GPLv3 globally.
+
+	* Replace all COPYING files w/ GPLv3 COPYING file.
+	
+2010-02-05  Albert Chu <chu11@llnl.gov>
+
 	* ipmimonitoring/: Rename a number of functions to specify that
 	they are sensor monitoring functions.  This is to prepare for
 	future API additions for SEL monitoring.
