@@ -17,7 +17,10 @@ o ipmi-sensors
   - The "Unrecognized State" event string is now output as
     "Unrecognized Event = X" or "OEM Event = X" where X is the event
     bitmask.
-
+o ipmi-locate
+  - Do not output system defaults by default.
+  - Support --defaults option.
+  
 Libraries - Detailed Enhancements/Changes/Fixes
 -----------------------------------------------
 o libfreeipmi

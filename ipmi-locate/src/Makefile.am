@@ -1,4 +1,6 @@
-noinst_HEADERS = ipmi-locate-argp.h
+noinst_HEADERS = \
+	ipmi-locate.h \
+	ipmi-locate-argp.h
 
 AM_CPPFLAGS = \
 	-I$(top_srcdir)/common/src/portability \

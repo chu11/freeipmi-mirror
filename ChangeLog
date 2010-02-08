@@ -1,5 +1,9 @@
 2010-02-08  Albert Chu <chu11@llnl.gov>
 
+	* ipmi-locate/: Support --defaults option.
+	
+2010-02-08  Albert Chu <chu11@llnl.gov>
+
 	* doc/: Fix Linux vs. GNU/Linux usage.
 	
 2010-02-05  Albert Chu <chu11@llnl.gov>

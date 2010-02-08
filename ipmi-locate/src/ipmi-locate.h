@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005-2010 FreeIPMI Core Team
+ * Copyright (C) 2003-2010 FreeIPMI Core Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +16,19 @@
  * 
  */
 
-#ifndef _IPMI_LOCATE_ARGP_H
-#define _IPMI_LOCATE_ARGP_H
+#ifndef _BMC_INFO_H
+#define _BMC_INFO_H
 
-void ipmi_locate_argp_parse (int argc, char **argv, struct ipmi_locate_arguments *cmd_args);
+#include <freeipmi/freeipmi.h>
+
+enum bmc_info_argp_option_keys
+  {
+    DEFAULTS_KEY = 160,
+  };
+
+struct ipmi_locate_arguments
+{
+  int defaults;
+};
 
 #endif
