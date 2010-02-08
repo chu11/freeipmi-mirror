@@ -127,11 +127,11 @@ Corp. are now at Zresearch Inc.)
 @node What operating systems does FreeIPMI run on?, FreeIPMI vs OpenIPMI vs Ipmitool vs Ipmiutil, How did FreeIPMI start?, Top
 @section What operating systems does FreeIPMI run on?
 
-FreeIPMI was originally developed on Linux.  It has been confirmed to
-be built on most major Linux distributions such as Redhat, Fedora,
+FreeIPMI was originally developed on Gnu/GNU/Linux.  It has been confirmed to
+be built on most major GNU/Linux distributions such as Redhat, Fedora,
 Suse, and Debian.  FreeIPMI has been ported and confirmed to work on
 atleast FreeBSD, OpenBSD, Solaris, OpenSolaris, and Windows via
-Cygwin.  We imagine it would build cleanly on other Linux
+Cygwin.  We imagine it would build cleanly on other GNU/Linux
 distributions and Unix operating systems.  If it doesn't, it should be
 easily portable to them.
 
@@ -310,7 +310,7 @@ BMC address Locator:
 @node x86-64 Compilation, SUNBMC Driver Compilation, SSIF Driver Configuration, Top
 @section x86-64 Compilation
 
-Under some x86-64 platforms such as SUSE GNU/Linux, native 64
+Under some x86-64 platforms such as SUSE Linux, native 64
 bit libraries reside under lib64 and 32 bit libs under lib. Autotools
 by default installs libfreeipmi.so under /usr/lib, instead of
 /usr/lib64 causing dynamic linking errors.  Pass libdir appropriately

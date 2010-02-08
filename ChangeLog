@@ -1,3 +1,7 @@
+2010-02-08  Albert Chu <chu11@llnl.gov>
+
+	* doc/: Fix Linux vs. GNU/Linux usage.
+
 2010-02-02  Albert Chu <chu11@llnl.gov>
 
 	* configure.ac: Update for release.
