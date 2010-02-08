@@ -44,6 +44,7 @@ EXTRA_DIST = \
 	manpage-common-reporting-bugs.man \
 	manpage-common-gpl-library-text.man \
 	manpage-common-gpl-program-text.man \
+	manpage-common-gpl-freeipmi-text.man \
 	manpage-common-ping-options.man \
 	manpage-common-ping-origin.man \
 	manpage-common-table-of-contents.man \

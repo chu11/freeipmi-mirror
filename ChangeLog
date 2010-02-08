@@ -1,5 +1,7 @@
 2010-02-08  Albert Chu <chu11@llnl.gov>
 	
+	Continue update to GPLv3 globally.
+
 	* Replace LLNL tool COPYING files w/ GPLv3 COPYING file.
 
 	* DISCLAIMER.rmcpping, DISCLAIMER.rmcpping.UC, COPYING.rmcpping:
@@ -8,6 +10,12 @@
 	* Update LLNL ipmi tool project headers.
 
 	* Fix LLNL ipmi tool project head typos.
+
+	* common/man/: Update manpages w/ GPLv3 info.
+
+	* common/man/manpage-common-gpl-freeipmi-text.man: New file.
+
+	* Fix other miscallaneous header files.
 
 2010-02-08  Albert Chu <chu11@llnl.gov>
 
