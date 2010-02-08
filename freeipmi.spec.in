@@ -186,7 +186,6 @@ fi
 %doc %{_infodir}/*
 %doc %{_datadir}/doc/%{name}/COPYING.ipmiping
 %doc %{_datadir}/doc/%{name}/COPYING.ipmipower
-%doc %{_datadir}/doc/%{name}/COPYING.rmcpping
 %doc %{_datadir}/doc/%{name}/COPYING.ipmiconsole
 %doc %{_datadir}/doc/%{name}/COPYING.ipmimonitoring
 %doc %{_datadir}/doc/%{name}/COPYING.pstdout
@@ -196,7 +195,6 @@ fi
 %doc %{_datadir}/doc/%{name}/COPYING.ZRESEARCH
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmiping
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmipower
-%doc %{_datadir}/doc/%{name}/DISCLAIMER.rmcpping
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmiconsole
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmimonitoring
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.pstdout
@@ -205,7 +203,6 @@ fi
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmi-dcmi
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmiping.UC
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmipower.UC
-%doc %{_datadir}/doc/%{name}/DISCLAIMER.rmcpping.UC
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmiconsole.UC
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmimonitoring.UC
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.pstdout.UC

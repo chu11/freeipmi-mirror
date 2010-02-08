@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole-argp.c,v 1.32 2009-12-23 21:23:22 chu11 Exp $
+ *  $Id: ipmiconsole-argp.c,v 1.33 2010-02-08 22:02:30 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -10,18 +10,18 @@
  *  This file is part of Ipmiconsole, a set of IPMI 2.0 SOL libraries
  *  and utilities.  For details, see http://www.llnl.gov/linux/.
  *
- *  Ipmipower is free software; you can redistribute it and/or modify
+ *  Ipmiconsole is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by the
- *  Free Software Foundation; either version 2 of the License, or (at your
+ *  Free Software Foundation; either version 3 of the License, or (at your
  *  option) any later version.
  *
- *  Ipmipower is distributed in the hope that it will be useful, but
+ *  Ipmiconsole is distributed in the hope that it will be useful, but
  *  WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
  *  or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
  *  for more details.
  *
  *  You should have received a copy of the GNU General Public License along
- *  with Ipmipower.  If not, see <http://www.gnu.org/licenses/>.
+ *  with Ipmiconsole.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
 #if HAVE_CONFIG_H

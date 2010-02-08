@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-dcmi-argp.c,v 1.8 2009-12-23 21:23:19 chu11 Exp $
+ *  $Id: ipmi-dcmi-argp.c,v 1.9 2010-02-08 22:02:30 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2009-2010 Lawrence Livermore National Security, LLC.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -12,7 +12,7 @@
  *
  *  Ipmi-Dcmi is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by the
- *  Free Software Foundation; either version 2 of the License, or (at your
+ *  Free Software Foundation; either version 3 of the License, or (at your
  *  option) any later version.
  *
  *  Ipmi-Dcmi is distributed in the hope that it will be useful, but

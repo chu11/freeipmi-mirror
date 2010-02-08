@@ -5,6 +5,10 @@
 	* DISCLAIMER.rmcpping, DISCLAIMER.rmcpping.UC, COPYING.rmcpping:
 	Remove files, "rmcpping" is a part of "ipmiping."
 
+	* Update LLNL ipmi tool project headers.
+
+	* Fix LLNL ipmi tool project head typos.
+
 2010-02-08  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-locate/: Support --defaults option.
