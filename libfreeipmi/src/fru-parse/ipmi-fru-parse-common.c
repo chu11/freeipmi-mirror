@@ -16,7 +16,7 @@
  * 
  */
 /*****************************************************************************\
- *  $Id: ipmi-fru-parse-common.c,v 1.9 2010-02-06 01:20:42 chu11 Exp $
+ *  $Id: ipmi-fru-parse-common.c,v 1.10 2010-02-08 22:09:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -30,7 +30,7 @@
  *
  *  Ipmi-fru is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by the
- *  Free Software Foundation; either version 2 of the License, or (at your
+ *  Free Software Foundation; either version 3 of the License, or (at your
  *  option) any later version.
  *
  *  Ipmi-fru is distributed in the hope that it will be useful, but
