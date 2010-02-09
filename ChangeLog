@@ -10,6 +10,11 @@
 	* contrib/ganglia/ganglia_ipmimonitoring.pl: Remove file.
 	Superseded by changes in ganglia_ipmi_sensors.pl.
 
+	* contrib/nagios/nagios_ipmi_sensors.pl: New file.
+
+	* contrib/nagios/nagios_ipmimonitoring.pl: Remove file.
+	Superseded by nagios_ipmi_sensors.pl.
+
 2010-02-08  Albert Chu <chu11@llnl.gov>
 	
 	Continue update to GPLv3 globally.

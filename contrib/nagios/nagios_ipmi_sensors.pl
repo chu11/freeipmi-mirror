@@ -16,7 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #############################################################################
 #
-# nagios_ipmimonitoring.sh
+# nagios_ipmi_sensors.pl
 #
 # Author: 
 #
@@ -25,25 +25,31 @@
 # Description:
 #
 # This script can be used to monitor IPMI sensors in nagios via
-# FreeIPMI's ipmimonitoring utility.  The Nominal, Warning, and
-# Critical states of each sensor will be collected and counted.  The
-# overall IPMI sensor status will be mapped into a Nagios status of
-# OK, Warning, or Critical.  Details will then be output for Nagios to
-# read.
+# FreeIPMI's ipmi-sensors.
+#
+# This tool will monitor the sensor state (Nominal, Warning, or
+# Critical) of each sensor as determined by libfreeipmi's interpret
+# library.  The Nominal, Warning, and Critical states of each sensor
+# will be collected and counted.  The overall IPMI sensor status will
+# be mapped into a Nagios status of OK, Warning, or Critical.  Details
+# will then be output for Nagios to read.  See ipmi-sensors(8) for
+# more general info on ipmi-sensors and
+# freeipmi_interpret_sensors.conf(5) for more information on sensor
+# states.
 #
 # Options:
 #
 # -h - specify hostname(s) to remotely access (don't specify for inband)
-# -M - specify an alternate ipmimonitoring location
-# -m - specify additional ipmimonitoring arguments
+# -S - specify an alternate ipmi_sensors location
+# -s - specify additional ipmi_sensors arguments
 # -d - print debug info
 # -H - output help
 #
 # Environment Variables:
 #
 # IPMI_HOSTS - specify hostname(s) to remotely access (don't specify for inband)
-# IPMIMONITORING_PATH - specify an alternate ipmimonitoring location
-# IPMIMONITORING_ARGS - specify additional ipmimonitoring arguments
+# IPMI_SENSORS_PATH - specify an alternate ipmi-ssensors location
+# IPMI_SENSORS_ARGS - specify additional ipmi-sensors arguments
 #
 # Setup Notes:
 #
@@ -59,12 +65,12 @@
 # the IPMI status for each individual machine being monitored),
 # however more than one host can be analyzed for a collective result.
 #
-# If stored in a non-default location the -M option or
-# IPMIMONITORING_PATH environment variable must be specified to
+# If stored in a non-default location the -S option or
+# IPMI_SENSORS_PATH environment variable must be specified to
 # determine the ipmimonitoring location.
 #
-# In order to specify non-defaults for ipmimonitoring use the -m
-# argument or IPMIMONITORING_ARGS environment variable.  Typically,
+# In order to specify non-defaults for ipmimonitoring use the -s
+# argument or IPMI_SENSORS_ARGS environment variable.  Typically,
 # this option is necessary for non-default communication information
 # or authentication information (e.g. driver path, driver type,
 # username, password, etc.).  Non-default communication information
@@ -79,17 +85,17 @@
 # command and then a service.
 #
 # define command  {
-#    command_name nagios_ipmimonitoring
-#    command_line /path/nagios_ipmimonitoring.pl -h $ARG1$
+#    command_name nagios_ipmi_sensors
+#    command_line /path/nagios_ipmi_sensors.pl -h $ARG1$
 # }
 #
 # define service {
 #    host_name           foohost
 #    service_description ipmi
-#    check_command       nagios_ipmimonitoring!foohost
+#    check_command       nagios_ipmi_sensors!foohost
 # }
 #
-# The default session timeout length in ipmimonitoring is 20 seconds.
+# The default session timeout length in ipmi-sensors is 20 seconds.
 # We would recommend that IPMI not be monitored more frequently than
 # that.
 #
@@ -106,11 +112,11 @@ use Getopt::Std;
 my $debug = 0;
 
 my $IPMI_HOSTS = undef;
-my $IPMIMONITORING_PATH = "/usr/sbin/ipmimonitoring";
-my $IPMIMONITORING_ARGS = "";
+my $IPMI_SENSORS_PATH = "/usr/sbin/ipmi-sensors";
+my $IPMI_SENSORS_ARGS = "";
 
-my $IPMIMONITORING_OUTPUT;
-my @IPMIMONITORING_OUTPUT_LINES;
+my $IPMI_SENSORS_OUTPUT;
+my @IPMI_SENSORS_OUTPUT_LINES;
 my $line;
 
 my $cmd;
@@ -123,16 +129,16 @@ my $fatal_error = 0;
 sub usage
 {
     my $prog = $0;
-    print "Usage: $prog -h <hostname(s)> -M <path> -m <sensors arguments> -d -H\n";
+    print "Usage: $prog [-h <hostname(s)>] [-S <path>] [-s <sensors arguments>] [-d] [-H]\n";
     print "  -h specify hostname(s) to remotely access\n";
-    print "  -M specify an alternate ipmimonitoring path\n";
-    print "  -m specify additional ipmimonitoring arguments\n";
+    print "  -S specify an alternate ipmi-sensors path\n";
+    print "  -s specify additional ipmi-sensors arguments\n";
     print "  -d print debug info\n";
     print "  -H output help\n";
     exit 0;
 }
 
-if (!getopts("h:M:m:dH"))
+if (!getopts("h:S:s:dH"))
 {
     usage();
 }
@@ -147,14 +153,14 @@ if (defined($main::opt_h))
     $IPMI_HOSTS = $main::opt_h;
 }
 
-if (defined($main::opt_M))
+if (defined($main::opt_S))
 {
-    $IPMIMONITORING_PATH = $main::opt_M;
+    $IPMI_SENSORS_PATH = $main::opt_S;
 }
 
-if (defined($main::opt_m))
+if (defined($main::opt_s))
 {
-    $IPMIMONITORING_ARGS = $main::opt_m;
+    $IPMI_SENSORS_ARGS = $main::opt_s;
 }
 
 if (defined($main::opt_d))
@@ -167,87 +173,90 @@ if ($ENV{"IPMI_HOSTS"})
     $IPMI_HOSTS = $ENV{"IPMI_HOSTS"};
 }
 
-if ($ENV{"IPMIMONITORING_PATH"})
+if ($ENV{"IPMI_SENSORS_PATH"})
 {
-    $IPMIMONITORING_PATH = $ENV{"IPMIMONITORING_PATH"};
+    $IPMI_SENSORS_PATH = $ENV{"IPMI_SENSORS_PATH"};
 }
 
-if ($ENV{"IPMIMONITORING_ARGS"})
+if ($ENV{"IPMI_SENSORS_ARGS"})
 {
-    $IPMIMONITORING_ARGS = $ENV{"IPMIMONITORING_ARGS"};
+    $IPMI_SENSORS_ARGS = $ENV{"IPMI_SENSORS_ARGS"};
 }
 
 if ($debug)
 {
     print "IPMI_HOSTS=$IPMI_HOSTS\n";
-    print "IPMIMONITORING_PATH=$IPMIMONITORING_PATH\n";
-    print "IPMIMONITORING_ARGS=$IPMIMONITORING_ARGS\n";
+    print "IPMI_SENSORS_PATH=$IPMI_SENSORS_PATH\n";
+    print "IPMI_SENSORS_ARGS=$IPMI_SENSORS_ARGS\n";
 }
 
-if (!(-x $IPMIMONITORING_PATH))
+if (!(-x $IPMI_SENSORS_PATH))
 {
-    print "$IPMIMONITORING_PATH cannot be executed\n";
+    print "$IPMI_SENSORS_PATH cannot be executed\n";
     exit(1);
 }
 
 # note, don't need --ignore-non-interpretable-sensors, legacy output handles it
 if ($IPMI_HOSTS)
 {
-    $cmd = "$IPMIMONITORING_PATH $IPMIMONITORING_ARGS -h $IPMI_HOSTS --quiet-cache --sdr-cache-recreate --always-prefix --legacy-output";
+    $cmd = "$IPMI_SENSORS_PATH $IPMI_SENSORS_ARGS -h $IPMI_HOSTS --quiet-cache --sdr-cache-recreate --always-prefix --no-header-output --output-sensor-state";
 }
 else
 {
-    $cmd = "$IPMIMONITORING_PATH $IPMIMONITORING_ARGS --quiet-cache --sdr-cache-recreate --always-prefix --legacy-output"
+    $cmd = "$IPMI_SENSORS_PATH $IPMI_SENSORS_ARGS --quiet-cache --sdr-cache-recreate --always-prefix --no-header-output --output-sensor-state"
 }
 
 if ($debug)
 {
-    print "ipmimonitoring command: $cmd\n";
+    print "ipmi-sensors command: $cmd\n";
 }
 
-$IPMIMONITORING_OUTPUT = `$cmd`;
+$IPMI_SENSORS_OUTPUT = `$cmd`;
 if ($? != 0)
 {
-    print "$IPMIMONITORING_PATH: failed\n";
+    print "$IPMI_SENSORS_PATH: failed\n";
     exit(1);
 }
 
-@IPMIMONITORING_OUTPUT_LINES = split(/\n/, $IPMIMONITORING_OUTPUT);
+@IPMI_SENSORS_OUTPUT_LINES = split(/\n/, $IPMI_SENSORS_OUTPUT);
 
-foreach $line (@IPMIMONITORING_OUTPUT_LINES)
+foreach $line (@IPMI_SENSORS_OUTPUT_LINES)
 {
     my $hostname;
     my $record_id;
     my $id_string;
-    my $group;
+    my $type;
     my $state;
     my $reading;
-    my $unit;
+    my $units;
+    my $event;
     my $id_string_state;
 
     my $output_str;
-
-    # skip header line
-    if ($line =~ "Record_ID"
-        || $line =~ "Record ID")
-    {
-        next;
-    }
 
     if ($debug)
     {
         print "Parsing: $line\n";
     }
 
-    if ($line =~ /(.+)\: (\d+) \| (.+) \| (.+) \| (.+) \| (.+) \| (.+)/)
+    if ($line =~ /(.+)\: (\d+)(\s+)\| (.+)(\s+)\| (.+)(\s+)\| (.+)(\s+)\| (.+)(\s+)\| (.+)(\s+)\| (.+)/)
     {
         $hostname = $1;
         $record_id = $2;
-        $id_string = $3;
-        $group = $4;
-        $state = $5;
-        $unit = $6;
-        $reading = $7;
+        $id_string = $4;
+        $type = $6;
+        $state = $8;
+        $reading = $10;
+        $units = $12;
+        $event = $14;
+        
+        # trim whitespace off end of string
+        $record_id =~ s/\s+$//;
+        $id_string =~ s/\s+$//;
+        $type =~ s/\s+$//;
+        $state =~ s/\s+$//;
+        $reading =~ s/\s+$//;
+        $units =~ s/\s+$//;
     }
     else
     {
@@ -256,10 +265,16 @@ foreach $line (@IPMIMONITORING_OUTPUT_LINES)
         next;
     }
 
+    # make name better, convert spaces and slashes into underscores
     $id_string =~ s/ /_/g;
     $id_string =~ s/\//_/g;
 
     if ($state eq "Nominal") 
+    {
+        next;
+    }
+
+    if ($state eq "N/A")
     {
         next;
     }

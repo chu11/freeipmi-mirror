@@ -50,6 +50,10 @@ o ganglia_ipmi_sensors.pl
     state or sensor readings.
 o ganglia_ipmimonitoring.pl
   - Removed.  Superseded by ganglia_ipmi_sensors.pl.
+o nagios_ipmi_sensors.pl
+  - New tool to replace nagios_ipmimonitoring.pl.
+o nagios_ipmimonitoring.pl
+  - Removed.  Superseded by nagios_ipmi_sensors.pl.
 
 FreeIPMI 0.8.3 - 02/02/10
 -------------------------
