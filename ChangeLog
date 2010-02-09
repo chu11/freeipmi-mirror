@@ -1,3 +1,15 @@
+2010-02-09  Albert Chu <chu11@llnl.gov>
+
+	* contrib/ganglia/: Update appropriately for changes.
+
+	* contrib/ganglia/ganglia_ipmi_sensors.pl: Updated for new output
+	format and options.  Support ability to monitor sensor state.
+	Support -T and -t options to allow option to monitor only sensor
+	state or sensor readings.
+
+	* contrib/ganglia/ganglia_ipmimonitoring.pl: Remove file.
+	Superseded by changes in ganglia_ipmi_sensors.pl.
+
 2010-02-08  Albert Chu <chu11@llnl.gov>
 	
 	Continue update to GPLv3 globally.

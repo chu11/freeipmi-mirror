@@ -41,9 +41,15 @@ o libipmimonitoring
   - Support IPMI_MONITORING_ERR_SENSOR_CONFIG_FILE_DOES_NOT_EXIST error code.
   - Remove unused IPMI_MONITORING_ERR_CONFIG_FILE_PARSE error code.
 
-
 Contributions
 -------------
+o ganglia_ipmi_sensors.pl
+  - Updated for new output format and options.
+  - Support ability to monitor sensor state.
+  - Support -T and -t options to allow option to monitor only sensor
+    state or sensor readings.
+o ganglia_ipmimonitoring.pl
+  - Removed.  Superseded by ganglia_ipmi_sensors.pl.
 
 FreeIPMI 0.8.3 - 02/02/10
 -------------------------

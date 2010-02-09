@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 #############################################################################
-# Copyright (C) 2003-2009 FreeIPMI Core Team
+# Copyright (C) 2003-2010 FreeIPMI Core Team
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -13,8 +13,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software Foundation,
-# Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #############################################################################
 #
 # ganglia_ipmi_sensors.sh
@@ -29,8 +28,14 @@
 # FreeIPMI's ipmi-sensors utility.  Data will be passed into ganglia
 # via ganglia's gmetric utility.
 #
-# Currently only temperature, fan, and voltage sensor readings are
-# monitored.
+# By default, this tool will monitor the state (Nominal, Warning, or
+# Critical) of each sensor as determined by libfreeipmi's interpret
+# library.  See freeipmi_interpret_sensors.conf(5) for more
+# information.
+#
+# By default, this tool will also monitor the sensor readings for
+# temperature, fan, and voltage sensors (e.g. 99.0 C, 130000.00 RPM,
+# 1.2 V).
 #
 # Options:
 #
@@ -72,14 +77,15 @@
 # location.
 #
 # In order to specify non-defaults for ipmi-sensors use the -s
-# argument or IPMI_SENSORS_ARGS environment variable.  Typically, this
-# option is necessary for non-default communication information or
-# authentication information (e.g. driver path, driver type, username,
-# password, etc.).  Non-default communication information can also be
-# stored in the FreeIPMI configuration file.  This is the suggested
-# method because passwords and other sensitive information could show
-# up in ps(1).  If you wish to limit the sensors being monitored, you
-# can also specify which record-ids are to be monitored (-s option).
+# argument or IPMI_SENSORS_ARGS environment variable.  Typically,
+# this option is necessary for non-default communication information
+# or authentication information (e.g. driver path, driver type,
+# username, password, etc.).  Non-default communication information
+# can also be stored in the FreeIPMI configuration file.  This is the
+# suggested method because passwords and other sensitive information
+# could show up in ps(1).  If you wish to limit the sensors being
+# monitored, you can also specify which record-ids are to be monitored
+# (-r option).
 #
 # In order to specify non-defaults for gmetric, use the -g argument
 # or GMETRIC_ARGS environment variable.  Typically, this option is
@@ -103,6 +109,8 @@ use Getopt::Std;
 
 use Socket;
 
+my $no_sensor_state = 0;
+my $no_sensor_readings = 0;
 my $debug = 0;
 my $no_ganglia = 0;
 
@@ -111,6 +119,7 @@ my $IPMI_SENSORS_PATH = "/usr/sbin/ipmi-sensors";
 my $IPMI_SENSORS_ARGS = "";
 my $GMETRIC_PATH = "/usr/bin/gmetric";
 my $GMETRIC_ARGS = "";
+my $IPMI_SENSORS_EXTRA_ARGS = "";
 
 my $IPMI_SENSORS_OUTPUT;
 my @IPMI_SENSORS_OUTPUT_LINES;
@@ -121,19 +130,21 @@ my $cmd;
 sub usage
 {
     my $prog = $0;
-    print "Usage: $prog -h <hostname(s)> -S <path> -s <sensors arguments> -G <path> -g <arguments> -d -H\n";
+    print "Usage: $prog [-h <hostname(s)>] [-S <path>] [-s <sensors arguments>] [-G <path>] [-g <arguments>] [-T] [-t] [-d] [-H]\n";
     print "  -h specify hostname(s) to remotely access\n";
     print "  -S specify an alternate ipmi-sensors path\n";
     print "  -s specify additional ipmi-sensors arguments\n";
     print "  -G specify an alternate gmetric path\n";
     print "  -g specify additional gmetric arguments\n";
+    print "  -T do not monitor sensor state\n";
+    print "  -t do not monitor sensor readings\n";
     print "  -d print debug info\n";
     print "  -D do not send sensor data to ganglia (useful during debugging)\n";
     print "  -H output help\n";
     exit 0;
 }
 
-if (!getopts("h:S:s:G:g:dDH"))
+if (!getopts("h:S:s:G:g:TtdDH"))
 {
     usage();
 }
@@ -166,6 +177,16 @@ if (defined($main::opt_G))
 if (defined($main::opt_g))
 {
     $GMETRIC_ARGS = $main::opt_g;
+}
+
+if (defined($main::opt_T))
+{
+    $no_sensor_state = 1;
+}
+
+if (defined($main::opt_t))
+{
+    $no_sensor_readings = 1;
 }
 
 if (defined($main::opt_d))
@@ -227,13 +248,19 @@ if (!$no_ganglia)
     }
 }
 
+if ($no_sensor_state && $no_sensor_readings)
+{
+    print "Must monitor atleast sensor state or sensor readings\n";
+    exit(1);
+}
+
 if ($IPMI_HOSTS)
 {
-    $cmd = "$IPMI_SENSORS_PATH $IPMI_SENSORS_ARGS -h $IPMI_HOSTS --quiet-cache --sdr-cache-recreate --always-prefix --legacy-output";
+    $cmd = "$IPMI_SENSORS_PATH $IPMI_SENSORS_ARGS -h $IPMI_HOSTS --quiet-cache --sdr-cache-recreate --always-prefix --no-header-output --output-sensor-state";
 }
 else
 {
-    $cmd = "$IPMI_SENSORS_PATH $IPMI_SENSORS_ARGS --quiet-cache --sdr-cache-recreate --always-prefix --legacy-output"
+    $cmd = "$IPMI_SENSORS_PATH $IPMI_SENSORS_ARGS --quiet-cache --sdr-cache-recreate --always-prefix --no-header-output --output-sensor-state"
 }
 
 if ($debug)
@@ -255,82 +282,132 @@ foreach $line (@IPMI_SENSORS_OUTPUT_LINES)
     my $hostname;
     my $record_id;
     my $id_string;
-    my $group;
-    my $reading;
-    my $unit;
-    my $threshold_low;
-    my $threshold_high;
+    my $type;
     my $state;
+    my $reading;
+    my $units;
+    my $event;
+    my $id_string_state;
 
     my $ip_address;
+
+    my $cmd_state;
+    my $cmd_reading;
 
     if ($debug)
     {
         print "Parsing: $line\n";
     }
 
-    if ($line =~ /Temperature/
-        || $line =~ /Voltage/
-        || $line =~ /Fan/)
+    if ($line =~ /(.+)\: (\d+)(\s+)\| (.+)(\s+)\| (.+)(\s+)\| (.+)(\s+)\| (.+)(\s+)\| (.+)(\s+)\| (.+)/)
     {
-        if ($line =~ /(.+)\: (\d+)\: (.+) \((.+)\)\: (.+) (.+) \((.+)\/(.+)\)\: \[(.+)\]/)
+        $hostname = $1;
+        $record_id = $2;
+        $id_string = $4;
+        $type = $6;
+        $state = $8;
+        $reading = $10;
+        $units = $12;
+        $event = $14;
+
+        # trim whitespace off end of string
+        $record_id =~ s/\s+$//;
+        $id_string =~ s/\s+$//;
+        $type =~ s/\s+$//;
+        $state =~ s/\s+$//;
+        $reading =~ s/\s+$//;
+        $units =~ s/\s+$//;
+    }
+    else
+    {
+        print "Line not parsable\n";
+        next;
+    }
+
+    # make name better, convert spaces and slashes into underscores
+    $id_string =~ s/ /_/g;
+    $id_string =~ s/\//_/g;
+    
+    if ($hostname ne "localhost" && $hostname ne "127.0.0.1")
+    {
+        my $packet_ip = gethostbyname($hostname);
+        
+        if (defined($packet_ip))
         {
-            $hostname = $1;
-            $record_id = $2;
-            $id_string = $3;
-            $group = $4;
-            $reading = $5;
-            $unit = $6;
-            $threshold_low = $7;
-            $threshold_high = $8;
-            $state = $9;
+            $ip_address = inet_ntoa($packet_ip);
         }
         else
         {
-            print "Line not parsable\n";
+            print "Cannot resolve ip: $hostname\n";
             next;
         }
-
-        $id_string =~ s/ /_/g;
-        $id_string =~ s/\//_/g;
-
-        if ($hostname ne "localhost" && $hostname ne "127.0.0.1")
+    }
+   
+    if (!$no_sensor_state)
+    {
+        if ($state ne "N/A")
         {
-            my $packet_ip = gethostbyname($hostname);
-            
-            if (defined($packet_ip))
+            $id_string_state = $id_string . "_State";
+            if ($hostname ne "localhost" && $hostname ne "127.0.0.1")
             {
-                $ip_address = inet_ntoa($packet_ip);
+                $cmd_state = "$GMETRIC_PATH $GMETRIC_ARGS -n $id_string_state -v $state -t string -S $ip_address:$hostname";
             }
             else
             {
-                print "Cannot resolve ip: $hostname\n";
-                next;
+                $cmd_state = "$GMETRIC_PATH $GMETRIC_ARGS -n $id_string_state -v $state -t string";
             }
         }
-        
-        if ($hostname ne "localhost" && $hostname ne "127.0.0.1")
+    }
+
+    if (!$no_sensor_readings)
+    {
+        if (($type eq "Temperature"
+             || $type eq "Voltage"
+             || $type eq "Fan")
+            && $reading ne "N/A")
         {
-            $cmd = "$GMETRIC_PATH $GMETRIC_ARGS -n $id_string -v $reading -t double -u $unit -S $ip_address:$hostname";
+            if ($hostname ne "localhost" && $hostname ne "127.0.0.1")
+            {
+                $cmd_reading = "$GMETRIC_PATH $GMETRIC_ARGS -n $id_string -v $reading -t double -u $units -S $ip_address:$hostname";
+            }
+            else
+            {
+                $cmd_reading = "$GMETRIC_PATH $GMETRIC_ARGS -n $id_string -v $reading -t double -u $units";
+            }
         }
-        else
+    }
+
+    if ($debug)
+    {
+        if ($cmd_state)
         {
-            $cmd = "$GMETRIC_PATH $GMETRIC_ARGS -n $id_string -v $reading -t double -u $unit";
+            print "gmetric command = $cmd_state\n";
         }
-        
-        if ($debug)
+        if ($cmd_reading)
         {
-            print "gmetric command = $cmd\n";
+            print "gmetric command = $cmd_reading\n";
         }
-        
-        if (!$no_ganglia)
+    }
+
+    if (!$no_ganglia)
+    {
+        if ($cmd_state)
         {
-            `$cmd`;
+            `$cmd_state`;
             if ($? != 0)
             {
-                print "\"$cmd\": failed\n";
+                print "\"$cmd_state\": failed\n";
                 exit(1);
-            }        
+            }
+        }
+        if ($cmd_reading)
+        {
+            `$cmd_reading`;
+            if ($? != 0)
+            {
+                print "\"$cmd_reading\": failed\n";
+                exit(1);
+            }
         }
     }
 }
