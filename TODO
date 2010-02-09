@@ -11,11 +11,6 @@ asf
 ---
 support asf base protocol stuff in addition to IPMI?
 
-ipmi-sensors
-------------
-consolidate event message output w/ ipmimonitoring
-common "get event message" like function for libipmimonitoring
-
 ipmi-sel
 --------
 sensor types options
