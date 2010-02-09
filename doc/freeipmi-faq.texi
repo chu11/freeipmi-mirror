@@ -127,7 +127,7 @@ Corp. are now at Zresearch Inc.)
 @node What operating systems does FreeIPMI run on?, FreeIPMI vs OpenIPMI vs Ipmitool vs Ipmiutil, How did FreeIPMI start?, Top
 @section What operating systems does FreeIPMI run on?
 
-FreeIPMI was originally developed on Gnu/GNU/Linux.  It has been confirmed to
+FreeIPMI was originally developed on GNU/Linux.  It has been confirmed to
 be built on most major GNU/Linux distributions such as Redhat, Fedora,
 Suse, and Debian.  FreeIPMI has been ported and confirmed to work on
 atleast FreeBSD, OpenBSD, Solaris, OpenSolaris, and Windows via
@@ -151,7 +151,7 @@ In our eyes, there are several reasons why FreeIPMI is particularly special.
 
 A number of HPC aspects have been added to the tools and/or are
 supported by other HPC software due to the need for FreeIPMI to work
-on LLNL's Linux clusters.
+on LLNL's GNU/Linux clusters.
 
 Scalable parallel execution of many FreeIPMI tools (ipmi-sensors,
 ipmi-sel, bmc-info, ipmimonitoring, etc.) across a cluster is
@@ -310,12 +310,11 @@ BMC address Locator:
 @node x86-64 Compilation, SUNBMC Driver Compilation, SSIF Driver Configuration, Top
 @section x86-64 Compilation
 
-Under some x86-64 platforms such as SUSE Linux, native 64
-bit libraries reside under lib64 and 32 bit libs under lib. Autotools
-by default installs libfreeipmi.so under /usr/lib, instead of
-/usr/lib64 causing dynamic linking errors.  Pass libdir appropriately
-to configure script to workaround this
-problem. (e.g. --libdir=/usr/lib64)
+Under some x86-64 platforms, native 64 bit libraries reside under
+lib64 and 32 bit libs under lib. Autotools by default installs
+libfreeipmi.so under /usr/lib, instead of /usr/lib64 causing dynamic
+linking errors.  Pass libdir appropriately to configure script to
+workaround this problem. (e.g. --libdir=/usr/lib64)
 
 Example:
 @example
