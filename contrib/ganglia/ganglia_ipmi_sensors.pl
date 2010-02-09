@@ -16,7 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #############################################################################
 #
-# ganglia_ipmi_sensors.sh
+# ganglia_ipmi_sensors.pl
 #
 # Author: 
 #
