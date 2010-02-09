@@ -25,8 +25,7 @@
 # Description:
 #
 # This script can be used to monitor IPMI sensors in ganglia via
-# FreeIPMI.  Please see instructions found at the top of the script
-# for detailed instructions.
+# FreeIPMI.
 #
 # By default, this tool will monitor the sensor state (Nominal,
 # Warning, or Critical) of each sensor as determined by libfreeipmi's
