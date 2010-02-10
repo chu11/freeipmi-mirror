@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-argp.c,v 1.68 2010-02-10 00:36:35 chu11 Exp $
+ *  $Id: ipmimonitoring-argp.c,v 1.69 2010-02-10 00:41:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -429,14 +429,16 @@ _ipmimonitoring_args_validate (struct ipmimonitoring_arguments *cmd_args)
   if (cmd_args->sensor_types_length)
     {
       if (valid_sensor_types (cmd_args->sensor_types,
-                              cmd_args->sensor_types_length) < 0)
+                              cmd_args->sensor_types_length,
+                              0) < 0)
         exit (1);
     }
   
   if (cmd_args->exclude_sensor_types_length)
     {
       if (valid_sensor_types (cmd_args->exclude_sensor_types,
-                              cmd_args->exclude_sensor_types_length) < 0)
+                              cmd_args->exclude_sensor_types_length,
+                              0) < 0)
         exit (1);
     }
 }
