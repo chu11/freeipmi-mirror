@@ -438,8 +438,7 @@ list_sensor_types (pstdout_state_t pstate,
 }
 
 int
-valid_sensor_types (pstdout_state_t pstate,
-                    char sensor_types[][MAX_SENSOR_TYPES_STRING_LENGTH+1],
+valid_sensor_types (char sensor_types[][MAX_SENSOR_TYPES_STRING_LENGTH+1],
                     unsigned int sensor_types_length)
 {
   unsigned int i;
@@ -751,6 +750,7 @@ _is_sdr_sensor_type_listed (pstdout_state_t pstate,
 
   return (0);
 }
+
 static void
 _sensor_entity_id_counts_init (struct sensor_entity_id_counts *entity_id_counts)
 {

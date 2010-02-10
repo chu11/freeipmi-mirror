@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-argp.c,v 1.67 2010-02-08 22:02:31 chu11 Exp $
+ *  $Id: ipmimonitoring-argp.c,v 1.68 2010-02-10 00:36:35 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -423,6 +423,24 @@ _ipmimonitoring_config_file_parse (struct ipmimonitoring_arguments *cmd_args)
     cmd_args->sensor_config_file = config_file_data.sensor_config_file;
 }
 
+static void
+_ipmimonitoring_args_validate (struct ipmimonitoring_arguments *cmd_args)
+{
+  if (cmd_args->sensor_types_length)
+    {
+      if (valid_sensor_types (cmd_args->sensor_types,
+                              cmd_args->sensor_types_length) < 0)
+        exit (1);
+    }
+  
+  if (cmd_args->exclude_sensor_types_length)
+    {
+      if (valid_sensor_types (cmd_args->exclude_sensor_types,
+                              cmd_args->exclude_sensor_types_length) < 0)
+        exit (1);
+    }
+}
+
 void
 ipmimonitoring_argp_parse (int argc, char **argv, struct ipmimonitoring_arguments *cmd_args)
 {
@@ -497,6 +515,7 @@ ipmimonitoring_argp_parse (int argc, char **argv, struct ipmimonitoring_argument
   verify_common_cmd_args (&(cmd_args->common));
   verify_sdr_cmd_args (&(cmd_args->sdr));
   verify_hostrange_cmd_args (&(cmd_args->hostrange));
+  _ipmimonitoring_args_validate (cmd_args);
 }
 
 

@@ -100,8 +100,7 @@ int list_sensor_types (pstdout_state_t pstate,
                        unsigned int show_oem_reserved);
 
 /* 1 if all valid, 0 if not, -1 on error */
-int valid_sensor_types (pstdout_state_t pstate,
-                        char sensor_types[][MAX_SENSOR_TYPES_STRING_LENGTH+1],
+int valid_sensor_types (char sensor_types[][MAX_SENSOR_TYPES_STRING_LENGTH+1],
                         unsigned int sensor_types_length);
 
 int sensor_type_strcmp (pstdout_state_t pstate,
