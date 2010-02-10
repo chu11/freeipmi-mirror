@@ -192,9 +192,9 @@ _read_range (int *flag,
 
   (*flag) = 1;
 
-  if (!(range_str = strdupa (arg)))
+  if (!(range_str = strdup (arg)))
     {
-      perror ("strdupa");
+      perror ("strdup");
       exit (1);
     }
   if (!(start_ptr = strchr (range_str, '-')))
@@ -203,9 +203,9 @@ _read_range (int *flag,
       fprintf (stderr, "invalid range input\n");
       exit (1);
     }
-  if (!(range2_str = strdupa (start_ptr + 1)))
+  if (!(range2_str = strdup (start_ptr + 1)))
     {
-      perror ("strdupa");
+      perror ("strdup");
       exit (1);
     }
   *start_ptr = '\0';
@@ -250,6 +250,9 @@ _read_range (int *flag,
       fprintf (stderr, "invalid END range\n");
       exit (1);
     }
+
+  free (range1_str);
+  free (range2_str);
 }
 
 static error_t
