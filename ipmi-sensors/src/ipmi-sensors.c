@@ -396,20 +396,11 @@ _flush_cache (ipmi_sensors_state_data_t *state_data)
 }
 
 static int
-_display_sensor_type (ipmi_sensors_state_data_t *state_data)
+_list_sensor_types (ipmi_sensors_state_data_t *state_data)
 {
-  unsigned int i = 0;
-
   assert (state_data);
 
-  for (i = IPMI_SENSOR_TYPE_TEMPERATURE; i <= IPMI_SENSOR_TYPE_FRU_STATE; i++)
-    {
-      if (display_sensor_type_cmdline (state_data->pstate, i) < 0)
-        return (-1);
-    }
-  
-  if (display_string_cmdline (state_data->pstate,
-                              ipmi_oem_sensor_type) < 0)
+  if (list_sensor_types (state_data->pstate, 1) < 0)
     return (-1);
 
   return (0);
@@ -869,7 +860,7 @@ run_cmd_args (ipmi_sensors_state_data_t *state_data)
     return (_flush_cache (state_data));
 
   if (args->list_sensor_types)
-    return (_display_sensor_type (state_data));
+    return (_list_sensor_types (state_data));
 
   if (sdr_cache_create_and_load (state_data->sdr_cache_ctx,
                                  state_data->pstate,

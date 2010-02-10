@@ -98,11 +98,8 @@ int get_entity_sensor_name_string_by_record_id (pstdout_state_t pstate,
                                                 char *sensor_name_buf,
                                                 unsigned int sensor_name_buf_len);
 
-int display_sensor_type_cmdline (pstdout_state_t pstate, 
-                                 unsigned int sensor_type);
-
-int display_string_cmdline (pstdout_state_t pstate, 
-                            const char *str);
+int list_sensor_types (pstdout_state_t pstatem,
+                       unsigned int show_oem_reserved);
 
 int sensor_type_strcmp (pstdout_state_t pstate,
                         const char *sensor_type_str_input,

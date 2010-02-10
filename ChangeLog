@@ -1,5 +1,10 @@
 2010-02-09  Albert Chu <chu11@llnl.gov>
 
+	* common/src/toolsensor/, ipmi-sensors/, ipmimonitoring/: Various
+	code cleanup.
+	
+2010-02-09  Albert Chu <chu11@llnl.gov>
+
 	* contrib/ganglia/: Update appropriately for changes.
 
 	* contrib/ganglia/ganglia_ipmi_sensors.pl: Updated for new output

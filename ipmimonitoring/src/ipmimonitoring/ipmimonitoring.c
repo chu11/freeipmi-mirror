@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.147 2010-02-08 22:02:31 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.148 2010-02-10 00:03:20 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -83,19 +83,14 @@
 static int
 _list_sensor_types (ipmimonitoring_state_data_t *state_data)
 {
-  unsigned int i = 0;
-
   assert (state_data);
 
   /* make sure API is consistent to libipmimonitoring */
   assert (IPMI_SENSOR_TYPE_TEMPERATURE == IPMI_MONITORING_SENSOR_TYPE_TEMPERATURE);
   assert (IPMI_SENSOR_TYPE_FRU_STATE == IPMI_MONITORING_SENSOR_TYPE_FRU_STATE);
 
-  for (i = IPMI_SENSOR_TYPE_TEMPERATURE; i <= IPMI_SENSOR_TYPE_FRU_STATE; i++)
-    {
-      if (display_sensor_type_cmdline (state_data->pstate, i) < 0)
-        return (-1);
-    }
+  if (list_sensor_types (state_data->pstate, 0) < 0)
+    return (-1);
   
   return (0);
 }

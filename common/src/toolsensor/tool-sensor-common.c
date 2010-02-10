@@ -392,27 +392,48 @@ get_entity_sensor_name_string_by_record_id (pstdout_state_t pstate,
                                         sensor_name_buf_len);
 }
 
-int
-display_sensor_type_cmdline (pstdout_state_t pstate, 
-                             unsigned int sensor_type)
+static int
+_output_sensor_type (pstdout_state_t pstate,
+                     const char *sensor_type_str)
 {
-  const char *sensor_type_str;
   char *tmpstr = NULL;
 
-  sensor_type_str = get_sensor_type_output_string (sensor_type);
+  assert (sensor_type_str);
 
-  if (!(tmpstr = strdupa (sensor_type_str)))
+  if (!(tmpstr = (char *)strdup (sensor_type_str)))
     {
       PSTDOUT_FPRINTF (pstate,
                        stderr,
-                       "strdupa: %s\n",
+                       "strdup: %s\n",
                        strerror (errno));
       return (-1);
     }
 
   get_sensor_type_cmdline_string (tmpstr);
-
+  
   PSTDOUT_PRINTF (pstate, "%s\n", tmpstr);
+  
+  free (tmpstr);
+  return (0);
+}
+
+int
+list_sensor_types (pstdout_state_t pstate,
+                   unsigned int show_oem_reserved)
+{
+  unsigned int i;
+
+  for (i = IPMI_SENSOR_TYPE_TEMPERATURE; i <= IPMI_SENSOR_TYPE_FRU_STATE; i++)
+    {
+      assert (ipmi_sensor_types[i]);
+
+      if (_output_sensor_type (pstate, ipmi_sensor_types[i]) < 0)
+        return (-1);
+    }
+  
+  if (_output_sensor_type (pstate, ipmi_oem_sensor_type) < 0)
+    return (-1);
+  
   return (0);
 }
 
@@ -474,29 +495,6 @@ get_sensor_units_output_string (pstdout_state_t pstate,
   rv = 0;
  cleanup:
   return rv;
-}
-
-int
-display_string_cmdline (pstdout_state_t pstate, 
-                        const char *str)
-{
-  char *tmpstr;
-
-  assert (str);
-
-  if (!(tmpstr = strdupa (str)))
-    {
-      PSTDOUT_FPRINTF (pstate,
-                       stderr,
-                       "strdupa: %s\n",
-                       strerror (errno));
-      return (-1);
-    } 
-
-  get_sensor_type_cmdline_string (tmpstr);
-
-  PSTDOUT_PRINTF (pstate, "%s\n", tmpstr);
-  return (0);
 }
 
 int
