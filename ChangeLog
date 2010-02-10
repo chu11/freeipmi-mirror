@@ -1,3 +1,16 @@
+2010-02-XX  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sensors/ipmimonitoring.8: New file.
+
+	* ipmi-sensors/src/ipmimonitoring: New file.
+
+	* ipmimonitoring/ipmimonitoring.8.pre.in: Remove file.
+
+	* ipmimonitoring/src/ipmimonitoring/Makefile.am: No-inst
+	ipmimonitoring.
+
+	* configure.ac: Update appropriately for changes.
+	
 2010-02-09  Albert Chu <chu11@llnl.gov>
 
 	* common/src/toolsensor/, ipmi-sensors/, ipmimonitoring/,

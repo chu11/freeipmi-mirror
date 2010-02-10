@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.23 2009-03-12 17:57:52 chu11 Exp $
+## $Id: Makefile.am,v 1.23.12.1 2010-02-10 22:06:59 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
@@ -20,7 +20,7 @@ AM_CPPFLAGS = \
 	-D_GNU_SOURCE \
 	-D_REENTRANT
 
-sbin_PROGRAMS = ipmimonitoring
+noinst_PROGRAMS = ipmimonitoring
 
 ipmimonitoring_LDADD = \
 	$(top_builddir)/common/src/toolcommon/libtoolcommon.la \

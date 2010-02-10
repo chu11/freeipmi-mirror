@@ -5,8 +5,10 @@ MANS_CPP = ipmi-sensors.8
 $(MANS_CPP): $(MANS_CPP:%=%.pre)
 	$(CPP) -C -P -I. $@.pre  $@
 
-dist_man_MANS = $(MANS_CPP)
+dist_man_MANS = $(MANS_CPP) ipmimonitoring.8
 
 CLEANFILES = $(MANS_CPP) *~
 
 DISTCLEANFILES = $(MANS_CPP) $(MANS_CPP:%=%.pre) .deps/*.P
+
+EXTRA_DIST = ipmimonitoring.8

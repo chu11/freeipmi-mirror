@@ -1,7 +1,6 @@
 SUBDIRS = src
 
 MANS_CPP = \
-	ipmimonitoring.8 \
 	libipmimonitoring.3 \
 	ipmi_monitoring_sensors.conf.5 \
 	ipmimonitoring_sensors.conf.5 \

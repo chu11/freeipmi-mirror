@@ -19,6 +19,8 @@ AM_CPPFLAGS = \
 
 sbin_PROGRAMS = ipmi-sensors
 
+sbin_SCRIPTS = ipmimonitoring
+
 ipmi_sensors_LDADD = \
 	$(top_builddir)/common/src/toolcommon/libtoolcommon.la \
 	$(top_builddir)/common/src/toolhostrange/libtoolhostrange.la \
@@ -65,3 +67,4 @@ $(top_builddir)/libfreeipmi/src/libfreeipmi.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
 force-dependency-check:
+
