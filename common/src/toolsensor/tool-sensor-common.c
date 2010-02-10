@@ -698,6 +698,33 @@ output_sensor_headers (pstdout_state_t pstate,
                     SENSORS_HEADER_EVENT_STR);
 }
 
+int
+sensor_type_listed (pstdout_state_t pstate,
+                    uint8_t sensor_type,
+                    char sensor_types[][MAX_SENSOR_TYPES_STRING_LENGTH+1],
+                    unsigned int sensor_types_length)
+{
+  unsigned int i;
+
+  assert (sensor_types);
+  assert (sensor_types_length);
+
+  for (i = 0; i < sensor_types_length; i++)
+    {
+      int ret;
+
+      if ((ret = sensor_type_strcmp (pstate,
+                                     sensor_types[i],
+                                     sensor_type)) < 0)
+        return (-1);
+
+      if (ret)
+        return (1);
+    }
+  
+  return (0);
+}
+
 static int
 _is_sdr_sensor_type_listed (pstdout_state_t pstate,
                             ipmi_sdr_parse_ctx_t sdr_parse_ctx,
@@ -709,7 +736,6 @@ _is_sdr_sensor_type_listed (pstdout_state_t pstate,
   uint16_t record_id;
   uint8_t record_type;
   uint8_t sensor_type;
-  int i;
 
   assert (sdr_parse_ctx);
   assert (sdr_record);
@@ -747,20 +773,10 @@ _is_sdr_sensor_type_listed (pstdout_state_t pstate,
       return (-1);
     }
 
-  for (i = 0; i < sensor_types_length; i++)
-    {
-      int ret;
-
-      if ((ret = sensor_type_strcmp (pstate,
-                                     sensor_types[i],
-                                     sensor_type)) < 0)
-        return (-1);
-
-      if (ret)
-        return (1);
-    }
-
-  return (0);
+  return (sensor_type_listed (pstate,
+                              sensor_type,
+                              sensor_types,
+                              sensor_types_length));
 }
 
 static void
