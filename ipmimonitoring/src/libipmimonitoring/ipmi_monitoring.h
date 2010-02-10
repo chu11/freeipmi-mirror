@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.h,v 1.60 2010-02-08 22:02:31 chu11 Exp $
+ *  $Id: ipmi_monitoring.h,v 1.61 2010-02-10 21:58:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -1082,6 +1082,16 @@ int ipmi_monitoring_sensor_read_sensor_units (ipmi_monitoring_ctx_t c);
 int ipmi_monitoring_sensor_read_sensor_reading_type (ipmi_monitoring_ctx_t c);
 
 /*
+ * ipmi_monitoring_sensor_read_sensor_reading
+ *
+ * Returns a pointer to the sensor reading of the current sensor
+ * reading in a callback or the iterator.  It is the responsibility of
+ * the user to cast it to the correct type based on the reading type.
+ * Returns NULL if no reading available.
+ */
+void *ipmi_monitoring_sensor_read_sensor_reading (ipmi_monitoring_ctx_t c);
+
+/*
  * ipmi_monitoring_sensor_read_sensor_bitmask_type
  *
  * Returns the bitmask type of the current sensor reading in a
@@ -1104,16 +1114,6 @@ int ipmi_monitoring_sensor_read_sensor_bitmask (ipmi_monitoring_ctx_t c);
  * Array is NULL terminated.  Returns NULL if no events are indicated.
  */
 char **ipmi_monitoring_sensor_read_sensor_bitmask_strings (ipmi_monitoring_ctx_t c);
-
-/*
- * ipmi_monitoring_sensor_read_sensor_reading
- *
- * Returns a pointer to the sensor reading of the current sensor
- * reading in a callback or the iterator.  It is the responsibility of
- * the user to cast it to the correct type based on the reading type.
- * Returns NULL if no reading available.
- */
-void *ipmi_monitoring_sensor_read_sensor_reading (ipmi_monitoring_ctx_t c);
 
 #ifdef __cplusplus
 }

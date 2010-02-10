@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.73 2010-02-08 22:02:31 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.74 2010-02-10 21:58:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -1107,18 +1107,6 @@ ipmi_monitoring_sensor_read_sensor_units (ipmi_monitoring_ctx_t c)
 }
 
 int
-ipmi_monitoring_sensor_read_sensor_reading_type (ipmi_monitoring_ctx_t c)
-{
-  struct ipmi_monitoring_sensor_reading *sensor_reading = NULL;
-
-  if (_ipmi_monitoring_sensor_read_common (c, &sensor_reading) < 0)
-    return (-1);
-
-  c->errnum = IPMI_MONITORING_ERR_SUCCESS;
-  return (sensor_reading->sensor_reading_type);
-}
-
-int
 ipmi_monitoring_sensor_read_sensor_bitmask_type (ipmi_monitoring_ctx_t c)
 {
   struct ipmi_monitoring_sensor_reading *sensor_reading = NULL;
@@ -1152,6 +1140,18 @@ ipmi_monitoring_sensor_read_sensor_bitmask_strings (ipmi_monitoring_ctx_t c)
 
   c->errnum = IPMI_MONITORING_ERR_SUCCESS;
   return (sensor_reading->sensor_bitmask_strings);
+}
+
+int
+ipmi_monitoring_sensor_read_sensor_reading_type (ipmi_monitoring_ctx_t c)
+{
+  struct ipmi_monitoring_sensor_reading *sensor_reading = NULL;
+
+  if (_ipmi_monitoring_sensor_read_common (c, &sensor_reading) < 0)
+    return (-1);
+
+  c->errnum = IPMI_MONITORING_ERR_SUCCESS;
+  return (sensor_reading->sensor_reading_type);
 }
 
 void *
