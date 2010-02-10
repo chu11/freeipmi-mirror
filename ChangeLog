@@ -2,6 +2,8 @@
 
 	* common/src/toolsensor/, ipmi-sensors/, ipmimonitoring/: Various
 	code cleanup.
+
+	* COPYING.ZRESEARCH: Update to GPLv3.
 	
 2010-02-09  Albert Chu <chu11@llnl.gov>
 
