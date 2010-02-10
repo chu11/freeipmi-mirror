@@ -1,5 +1,5 @@
 .\"############################################################################
-.\"  $Id: libipmimonitoring.3.pre.in,v 1.19 2010-02-08 22:02:31 chu11 Exp $
+.\"  $Id: libipmimonitoring.3.pre.in,v 1.20 2010-02-10 21:56:42 chu11 Exp $
 .\"############################################################################
 .\"  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -49,25 +49,29 @@ libipmimonitoring \- a library for IPMI sensor monitoring
 .sp
 .BI "int ipmi_monitoring_sensor_readings_by_sensor_type(ipmi_monitoring_ctx_t c, char *hostname, struct ipmi_monitoring_ipmi_config *config, unsigned int sensor_reading_flags, unsigned int *sensor_types, unsigned int sensor_types_len, Ipmi_Monitoring_Sensor_Readings_Callback callback, void *callback_data);"
 .sp
-.BI "int ipmi_monitoring_iterator_first(ipmi_monitoring_ctx_t c);"
+.BI "int ipmi_monitoring_sensor_iterator_first(ipmi_monitoring_ctx_t c);"
 .sp
-.BI "int ipmi_monitoring_iterator_next(ipmi_monitoring_ctx_t c);"
+.BI "int ipmi_monitoring_sensor_iterator_next(ipmi_monitoring_ctx_t c);"
 .sp
-.BI "int ipmi_monitoring_iterator_record_id(ipmi_monitoring_ctx_t c);"
+.BI "int ipmi_monitoring_sensor_iterator_record_id(ipmi_monitoring_ctx_t c);"
 .sp
-.BI "int ipmi_monitoring_iterator_sensor_type(ipmi_monitoring_ctx_t c);"
+.BI "int ipmi_monitoring_sensor_iterator_sensor_type(ipmi_monitoring_ctx_t c);"
 .sp
-.BI "char *ipmi_monitoring_iterator_sensor_name(ipmi_monitoring_ctx_t c);"
+.BI "char *ipmi_monitoring_sensor_iterator_sensor_name(ipmi_monitoring_ctx_t c);"
 .sp
-.BI "int ipmi_monitoring_iterator_sensor_state(ipmi_monitoring_ctx_t c);"
+.BI "int ipmi_monitoring_sensor_iterator_sensor_state(ipmi_monitoring_ctx_t c);"
 .sp
-.BI "int ipmi_monitoring_iterator_sensor_units(ipmi_monitoring_ctx_t c);"
+.BI "int ipmi_monitoring_sensor_iterator_sensor_units(ipmi_monitoring_ctx_t c);"
 .sp
-.BI "int ipmi_monitoring_iterator_sensor_reading_type(ipmi_monitoring_ctx_t c);"
+.BI "int ipmi_monitoring_sensor_iterator_sensor_reading_type(ipmi_monitoring_ctx_t c);"
 .sp
-.BI "void *ipmi_monitoring_iterator_sensor_reading(ipmi_monitoring_ctx_t c);"
+.BI "void *ipmi_monitoring_sensor_iterator_sensor_reading(ipmi_monitoring_ctx_t c);"
 .sp
-.BI "void ipmi_monitoring_iterator_destroy(ipmi_monitoring_ctx_t c);"
+.BI "int ipmi_monitoring_sensor_iterator_sensor_bitmask_type(ipmi_monitoring_ctx_t c);"
+.sp
+.BI "void *ipmi_monitoring_sensor_iterator_sensor_bitmask(ipmi_monitoring_ctx_t c);"
+.sp
+.BI "void ipmi_monitoring_sensor_iterator_destroy(ipmi_monitoring_ctx_t c);"
 .sp
 .br
 .SH "DESCRIPTION"
@@ -75,7 +79,7 @@ The
 .B Libipmimonitoring 
 implements a high level sensor monitoring API for IPMI sensors.  An
 iterator interface is provided that allows the user to iterate through
-sensor values, types, units, and states.
+sensor values, types, units, states, and more.
 .LP
 In order to improve efficiency, SDR data will be cached on the host.
 By default it is cached in @IPMI_MONITORING_SDR_CACHE_DIR@.

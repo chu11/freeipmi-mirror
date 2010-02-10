@@ -1,3 +1,8 @@
+2010-02-10  Albert Chu <chu11@llnl.gov>
+
+	* ipmimonitoring/libipmimonitoring.3.pre.in: Update for recent
+	changes.
+	
 2010-02-09  Albert Chu <chu11@llnl.gov>
 
 	* common/src/toolsensor/, ipmi-sensors/, ipmimonitoring/,
