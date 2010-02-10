@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: pstdout.h,v 1.6 2010-02-08 22:02:30 chu11 Exp $
+ *  $Id: pstdout.h,v 1.7 2010-02-10 01:27:44 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -256,21 +256,23 @@ int pstdout_launch(const char *hostnames, Pstdout_Thread pstdout_func, void *arg
 /* PSTDOUT_PRINTF
  *
  * Identical to 'pstdout_printf', but will call standard printf() if an invalid
- * pstate is passed in (e.g. a NULL pstate).
+ * pstate is passed in (e.g. a NULL pstate) or the library is not initialized.
  */
 int PSTDOUT_PRINTF(pstdout_state_t pstate, const char *format, ...);
 
 /* PSTDOUT_FPRINTF
  *
- * Identical to 'pstdout_fprintf', but will call standard fprintf() if an invalid
- * pstate or stream is passed in (e.g. a NULL pstate).
+ * Identical to 'pstdout_fprintf', but will call standard fprintf() if
+ * an invalid pstate or stream is passed in (e.g. a NULL pstate) or
+ * the library is not initialized.
  */
 int PSTDOUT_FPRINTF(pstdout_state_t pstate, FILE *stream, const char *format, ...);
 
 /* PSTDOUT_PERROR
  *
- * Identical to 'pstdout_perror', but will call standard perror() if an invalid
- * pstate is passed in (e.g. a NULL pstate).
+ * Identical to 'pstdout_perror', but will call standard perror() if
+ * an invalid pstate is passed in (e.g. a NULL pstate) or the library
+ * is not initialized.
  */
 void PSTDOUT_PERROR(pstdout_state_t pstate, const char *s);
 

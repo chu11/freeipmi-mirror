@@ -438,7 +438,8 @@ list_sensor_types (pstdout_state_t pstate,
 }
 
 int
-valid_sensor_types (char sensor_types[][MAX_SENSOR_TYPES_STRING_LENGTH+1],
+valid_sensor_types (pstdout_state_t pstate,
+                    char sensor_types[][MAX_SENSOR_TYPES_STRING_LENGTH+1],
                     unsigned int sensor_types_length,
                     unsigned int allow_oem_reserved)
 {
@@ -485,9 +486,10 @@ valid_sensor_types (char sensor_types[][MAX_SENSOR_TYPES_STRING_LENGTH+1],
       
       if (!found)
         {
-          fprintf (stderr,
-                   "invalid sensor type '%s'\n",
-                   sensor_types[i]);
+          PSTDOUT_FPRINTF (pstate,
+                           stderr,
+                           "invalid sensor type '%s'\n",
+                           sensor_types[i]);
           return (-1);
         }
     }

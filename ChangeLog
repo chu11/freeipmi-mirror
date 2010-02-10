@@ -3,6 +3,10 @@
 	* common/src/toolsensor/, ipmi-sensors/, ipmimonitoring/,
 	ipmi-sel/: Various code cleanup.
 
+	* common/src/toolhostrange/pstdout.h,
+	common/src/toolhostrange/pstdout.c: For wrapper pstdout's use
+	normal printf/fprintf/perror if library not initialzed.
+
 	* COPYING.ZRESEARCH: Update to GPLv3.
 	
 2010-02-09  Albert Chu <chu11@llnl.gov>
