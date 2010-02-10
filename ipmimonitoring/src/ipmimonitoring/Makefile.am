@@ -1,12 +1,12 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.23.12.1 2010-02-10 22:06:59 chu11 Exp $
+## $Id: Makefile.am,v 1.23.12.2 2010-02-10 22:22:25 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
 
 noinst_HEADERS = \
-	ipmimonitoring.h \
-	ipmimonitoring-argp.h
+	ipmimonitoring-sensors.h \
+	ipmimonitoring-sensors-argp.h
 
 AM_CPPFLAGS = \
 	-I$(top_srcdir)/common/src/toolcommon \
@@ -20,9 +20,9 @@ AM_CPPFLAGS = \
 	-D_GNU_SOURCE \
 	-D_REENTRANT
 
-noinst_PROGRAMS = ipmimonitoring
+noinst_PROGRAMS = ipmimonitoring-sensors
 
-ipmimonitoring_LDADD = \
+ipmimonitoring_sensors_LDADD = \
 	$(top_builddir)/common/src/toolcommon/libtoolcommon.la \
 	$(top_builddir)/common/src/toolhostrange/libtoolhostrange.la \
 	$(top_builddir)/common/src/toolsdr/libtoolsdr.la \
@@ -32,9 +32,9 @@ ipmimonitoring_LDADD = \
 	$(top_builddir)/ipmidetect/src/libipmidetect/libipmidetect.la \
 	$(top_builddir)/ipmimonitoring/src/libipmimonitoring/libipmimonitoring.la
 
-ipmimonitoring_SOURCES = \
-	ipmimonitoring.c \
-	ipmimonitoring-argp.c
+ipmimonitoring_sensors_SOURCES = \
+	ipmimonitoring-sensors.c \
+	ipmimonitoring-sensors-argp.c
 
 $(top_builddir)/common/src/toolcommon/libtoolcommon.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`

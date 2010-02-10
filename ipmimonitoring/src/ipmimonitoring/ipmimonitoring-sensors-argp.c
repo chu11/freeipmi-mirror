@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-argp.c,v 1.70 2010-02-10 01:27:44 chu11 Exp $
+ *  $Id: ipmimonitoring-sensors-argp.c,v 1.1.2.1 2010-02-10 22:22:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -44,8 +44,8 @@
 #include <assert.h>
 #include <errno.h>
 
-#include "ipmimonitoring.h"
-#include "ipmimonitoring-argp.h"
+#include "ipmimonitoring-sensors.h"
+#include "ipmimonitoring-sensors-argp.h"
 
 #include "freeipmi-portability.h"
 #include "tool-cmdline-common.h"
@@ -62,7 +62,7 @@ const char *argp_program_bug_address =
   "<" PACKAGE_BUGREPORT ">";
 
 static char cmdline_doc[] =
-  "ipmimonitoring - IPMI monitoring utility";
+  "ipmimonitoring-sensors - test utility for libipmimonitoring sensors monitoring";
 
 static char cmdline_args_doc[] = "";
 
@@ -148,7 +148,7 @@ static struct argp cmdline_config_file_argp = { cmdline_options,
 static error_t
 cmdline_parse (int key, char *arg, struct argp_state *state)
 {
-  struct ipmimonitoring_arguments *cmd_args = state->input;
+  struct ipmimonitoring_sensors_arguments *cmd_args = state->input;
   char *ptr;
   char *tok;
   int value;
@@ -328,7 +328,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 }
 
 static void
-_ipmimonitoring_config_file_parse (struct ipmimonitoring_arguments *cmd_args)
+_ipmimonitoring_config_file_parse (struct ipmimonitoring_sensors_arguments *cmd_args)
 {
   struct config_file_data_ipmimonitoring config_file_data;
 
@@ -424,7 +424,7 @@ _ipmimonitoring_config_file_parse (struct ipmimonitoring_arguments *cmd_args)
 }
 
 static void
-_ipmimonitoring_args_validate (struct ipmimonitoring_arguments *cmd_args)
+_ipmimonitoring_args_validate (struct ipmimonitoring_sensors_arguments *cmd_args)
 {
   if (cmd_args->sensor_types_length)
     {
@@ -446,7 +446,7 @@ _ipmimonitoring_args_validate (struct ipmimonitoring_arguments *cmd_args)
 }
 
 void
-ipmimonitoring_argp_parse (int argc, char **argv, struct ipmimonitoring_arguments *cmd_args)
+ipmimonitoring_sensors_argp_parse (int argc, char **argv, struct ipmimonitoring_sensors_arguments *cmd_args)
 {
   unsigned int i;
 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.148 2010-02-10 00:03:20 chu11 Exp $
+ *  $Id: ipmimonitoring-sensors.c,v 1.1.2.1 2010-02-10 22:22:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -54,8 +54,8 @@
 
 #include "ipmi_monitoring.h"    /* lib .h file */
 
-#include "ipmimonitoring.h"     /* tool .h file */
-#include "ipmimonitoring-argp.h"
+#include "ipmimonitoring-sensors.h"
+#include "ipmimonitoring-sensors-argp.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
@@ -70,18 +70,14 @@
 #define MAXPATHLEN 4096
 #endif /* MAXPATHLEN */
 
-#define IPMIMONITORING_BUFLEN                 1024
+#define IPMIMONITORING_SENSORS_NA_STRING              "N/A"
 
-#define IPMIMONITORING_NA_STRING              "N/A"
+#define IPMIMONITORING_SENSORS_NO_EVENT_STRING        "OK"
 
-#define IPMIMONITORING_NO_EVENT_STRING        "OK"
-
-#define IPMIMONITORING_UNRECOGNIZED_STATE     "Unrecognized State"
-
-#define IPMIMONITORING_FMT_BUFLEN             1024
+#define IPMIMONITORING_SENSORS_FMT_BUFLEN             1024
 
 static int
-_list_sensor_types (ipmimonitoring_state_data_t *state_data)
+_list_sensor_types (ipmimonitoring_sensors_state_data_t *state_data)
 {
   assert (state_data);
 
@@ -96,7 +92,7 @@ _list_sensor_types (ipmimonitoring_state_data_t *state_data)
 }
 
 static int
-_flush_cache (ipmimonitoring_state_data_t *state_data)
+_flush_cache (ipmimonitoring_sensors_state_data_t *state_data)
 {
   assert (state_data);
 
@@ -111,7 +107,7 @@ _flush_cache (ipmimonitoring_state_data_t *state_data)
 }
 
 static int
-_setup_ipmimonitoring_lib (struct ipmimonitoring_arguments *args)
+_setup_ipmimonitoring_lib (struct ipmimonitoring_sensors_arguments *args)
 {
   int errnum;
 
@@ -129,7 +125,7 @@ _setup_ipmimonitoring_lib (struct ipmimonitoring_arguments *args)
 }
 
 static const char *
-_get_sensor_type_string (ipmimonitoring_state_data_t *state_data, int sensor_type)
+_get_sensor_type_string (ipmimonitoring_sensors_state_data_t *state_data, int sensor_type)
 {
   assert (state_data);
 
@@ -141,7 +137,7 @@ _get_sensor_type_string (ipmimonitoring_state_data_t *state_data, int sensor_typ
 }
 
 static const char *
-_get_sensor_state_string (ipmimonitoring_state_data_t *state_data, int sensor_state)
+_get_sensor_state_string (ipmimonitoring_sensors_state_data_t *state_data, int sensor_state)
 {
   assert (state_data);
 
@@ -152,11 +148,11 @@ _get_sensor_state_string (ipmimonitoring_state_data_t *state_data, int sensor_st
   else if (sensor_state == IPMI_MONITORING_SENSOR_STATE_CRITICAL)
     return "Critical";
 
-  return (IPMIMONITORING_NA_STRING);
+  return (IPMIMONITORING_SENSORS_NA_STRING);
 }
 
 static const char *
-_get_sensor_units_string (ipmimonitoring_state_data_t *state_data,
+_get_sensor_units_string (ipmimonitoring_sensors_state_data_t *state_data,
                           uint8_t sensor_units)
 {
   const char *sensor_units_str;
@@ -182,13 +178,13 @@ _get_sensor_units_string (ipmimonitoring_state_data_t *state_data,
   else if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_WATTS)
     sensor_units_str = sensor_units_ptr[IPMI_SENSOR_UNIT_WATTS];
   else
-    sensor_units_str = IPMIMONITORING_NA_STRING;
+    sensor_units_str = IPMIMONITORING_SENSORS_NA_STRING;
 
   return (sensor_units_str);
 }
 
 static int
-_store_sensor_units_column_width (ipmimonitoring_state_data_t *state_data)
+_store_sensor_units_column_width (ipmimonitoring_sensors_state_data_t *state_data)
 {
   const char *sensor_units_str;
   int len;
@@ -236,7 +232,7 @@ _store_sensor_units_column_width (ipmimonitoring_state_data_t *state_data)
 }
 
 static int 
-_output_setup (ipmimonitoring_state_data_t *state_data)
+_output_setup (ipmimonitoring_sensors_state_data_t *state_data)
 {
   assert (state_data);
 
@@ -283,11 +279,11 @@ _output_setup (ipmimonitoring_state_data_t *state_data)
 }
 
 static int
-_calculate_record_ids (ipmimonitoring_state_data_t *state_data,
+_calculate_record_ids (ipmimonitoring_sensors_state_data_t *state_data,
                        unsigned int output_record_ids[MAX_SENSOR_RECORD_IDS],
                        unsigned int *output_record_ids_length)
 {
-  struct ipmimonitoring_arguments *args = NULL;
+  struct ipmimonitoring_sensors_arguments *args = NULL;
   unsigned int tmp_record_ids[MAX_SENSOR_RECORD_IDS];
   unsigned int tmp_record_ids_length = 0;
 
@@ -386,7 +382,7 @@ _calculate_record_ids (ipmimonitoring_state_data_t *state_data,
   
 
 static void
-_output_sensor_units (ipmimonitoring_state_data_t *state_data,
+_output_sensor_units (ipmimonitoring_sensors_state_data_t *state_data,
                       int sensor_units)
 {
   const char *sensor_units_str;
@@ -401,17 +397,17 @@ _output_sensor_units (ipmimonitoring_state_data_t *state_data,
                     sensor_units_str);
   else
     {
-      char fmt[IPMIMONITORING_FMT_BUFLEN + 1];
+      char fmt[IPMIMONITORING_SENSORS_FMT_BUFLEN + 1];
 
-      memset (fmt, '\0', IPMIMONITORING_FMT_BUFLEN + 1);
+      memset (fmt, '\0', IPMIMONITORING_SENSORS_FMT_BUFLEN + 1);
       
       if (state_data->prog_data->args->comma_separated_output)
         snprintf (fmt,
-                  IPMIMONITORING_FMT_BUFLEN,
+                  IPMIMONITORING_SENSORS_FMT_BUFLEN,
                   ",%%s");
       else
         snprintf (fmt,
-                  IPMIMONITORING_FMT_BUFLEN,
+                  IPMIMONITORING_SENSORS_FMT_BUFLEN,
                   " | %%-%ds",
                   state_data->column_width.sensor_units);
       
@@ -422,7 +418,7 @@ _output_sensor_units (ipmimonitoring_state_data_t *state_data,
 }
 
 static int
-_output_sensor_bitmask_strings (ipmimonitoring_state_data_t *state_data,
+_output_sensor_bitmask_strings (ipmimonitoring_sensors_state_data_t *state_data,
 				int sensor_bitmask_type,
                                 char **sensor_bitmask_strings)
 {
@@ -458,7 +454,7 @@ _output_sensor_bitmask_strings (ipmimonitoring_state_data_t *state_data,
           
           pstdout_printf (state_data->pstate,
                           "'%s'",
-                          IPMIMONITORING_NO_EVENT_STRING);
+                          IPMIMONITORING_SENSORS_NO_EVENT_STRING);
         }
     }
   else
@@ -466,11 +462,11 @@ _output_sensor_bitmask_strings (ipmimonitoring_state_data_t *state_data,
       if (state_data->prog_data->args->comma_separated_output)
         pstdout_printf (state_data->pstate,
                         ",%s",
-                        IPMIMONITORING_NA_STRING);
+                        IPMIMONITORING_SENSORS_NA_STRING);
       else
         pstdout_printf (state_data->pstate,
                         " | %s",
-                        IPMIMONITORING_NA_STRING);
+                        IPMIMONITORING_SENSORS_NA_STRING);
     }
 
   return (0);
@@ -479,8 +475,8 @@ _output_sensor_bitmask_strings (ipmimonitoring_state_data_t *state_data,
 static int
 _ipmimonitoring_callback (ipmi_monitoring_ctx_t c, void *callback_data)
 {
-  ipmimonitoring_state_data_t *state_data;
-  struct ipmimonitoring_arguments *args;
+  ipmimonitoring_sensors_state_data_t *state_data;
+  struct ipmimonitoring_sensors_arguments *args;
   int record_id, sensor_type, sensor_state, sensor_units,
     sensor_reading_type, sensor_bitmask_type, sensor_bitmask;
   char **sensor_bitmask_strings = NULL;
@@ -489,13 +485,13 @@ _ipmimonitoring_callback (ipmi_monitoring_ctx_t c, void *callback_data)
   char *sensor_name = NULL;
   void *sensor_reading;
   char sensor_name_buf[MAX_ENTITY_ID_SENSOR_NAME_STRING + 1];
-  char fmt[IPMIMONITORING_FMT_BUFLEN + 1];
+  char fmt[IPMIMONITORING_SENSORS_FMT_BUFLEN + 1];
   int rv = -1;
 
   assert (c);
   assert (callback_data);
 
-  state_data = (ipmimonitoring_state_data_t *)callback_data;
+  state_data = (ipmimonitoring_sensors_state_data_t *)callback_data;
   args = state_data->prog_data->args;
 
   if (!state_data->prog_data->args->no_header_output
@@ -628,7 +624,7 @@ _ipmimonitoring_callback (ipmi_monitoring_ctx_t c, void *callback_data)
 
   if (!sensor_name
       || !strlen (sensor_name))
-    sensor_name = IPMIMONITORING_NA_STRING;
+    sensor_name = IPMIMONITORING_SENSORS_NA_STRING;
 
   sensor_type_str = _get_sensor_type_string (state_data, sensor_type);
 
@@ -643,17 +639,17 @@ _ipmimonitoring_callback (ipmi_monitoring_ctx_t c, void *callback_data)
                     sensor_state_str);
   else
     {
-      memset (fmt, '\0', IPMIMONITORING_FMT_BUFLEN + 1);
+      memset (fmt, '\0', IPMIMONITORING_SENSORS_FMT_BUFLEN + 1);
 
       if (args->no_sensor_type_output)
         {
           if (args->comma_separated_output)
             snprintf (fmt,
-                      IPMIMONITORING_FMT_BUFLEN,
+                      IPMIMONITORING_SENSORS_FMT_BUFLEN,
                       "%%u,%%s,%%s");
           else
             snprintf (fmt,
-                      IPMIMONITORING_FMT_BUFLEN,
+                      IPMIMONITORING_SENSORS_FMT_BUFLEN,
                       "%%-%du | %%-%ds | %%-8s",
                       state_data->column_width.record_id,
                       state_data->column_width.sensor_name);
@@ -668,11 +664,11 @@ _ipmimonitoring_callback (ipmi_monitoring_ctx_t c, void *callback_data)
         {
           if (args->comma_separated_output)
             snprintf (fmt,
-                      IPMIMONITORING_FMT_BUFLEN,
+                      IPMIMONITORING_SENSORS_FMT_BUFLEN,
                       "%%u,%%s,%%s,%%s");
           else
             snprintf (fmt,
-                      IPMIMONITORING_FMT_BUFLEN,
+                      IPMIMONITORING_SENSORS_FMT_BUFLEN,
                       "%%-%du | %%-%ds | %%-%ds | %%-8s",
                       state_data->column_width.record_id,
                       state_data->column_width.sensor_name,
@@ -759,17 +755,17 @@ _ipmimonitoring_callback (ipmi_monitoring_ctx_t c, void *callback_data)
           if (args->legacy_output)
             pstdout_printf (state_data->pstate,
                             " | %s",
-                            IPMIMONITORING_NA_STRING);
+                            IPMIMONITORING_SENSORS_NA_STRING);
           else
             {
               if (args->comma_separated_output)
                 pstdout_printf (state_data->pstate,
                                 ",%s",
-                                IPMIMONITORING_NA_STRING);
+                                IPMIMONITORING_SENSORS_NA_STRING);
               else
                 pstdout_printf (state_data->pstate,
                                 " | %-10s",
-                                IPMIMONITORING_NA_STRING);
+                                IPMIMONITORING_SENSORS_NA_STRING);
             }
         }
 
@@ -788,26 +784,26 @@ _ipmimonitoring_callback (ipmi_monitoring_ctx_t c, void *callback_data)
       if (args->legacy_output)
         pstdout_printf (state_data->pstate,
                         " | %s",
-                        IPMIMONITORING_NA_STRING);
+                        IPMIMONITORING_SENSORS_NA_STRING);
       else
         {
-          char fmt[IPMIMONITORING_FMT_BUFLEN + 1];
+          char fmt[IPMIMONITORING_SENSORS_FMT_BUFLEN + 1];
           
-          memset (fmt, '\0', IPMIMONITORING_FMT_BUFLEN + 1);
+          memset (fmt, '\0', IPMIMONITORING_SENSORS_FMT_BUFLEN + 1);
           if (args->comma_separated_output)
             snprintf (fmt,
-                      IPMIMONITORING_FMT_BUFLEN,
+                      IPMIMONITORING_SENSORS_FMT_BUFLEN,
                       ",%%s,%%s");
           else
             snprintf (fmt,
-                      IPMIMONITORING_FMT_BUFLEN,
+                      IPMIMONITORING_SENSORS_FMT_BUFLEN,
                       " | %%-10s | %%-%ds",
                       state_data->column_width.sensor_units);
           
           pstdout_printf (state_data->pstate,
                           fmt,
-                          IPMIMONITORING_NA_STRING,
-                          IPMIMONITORING_NA_STRING);
+                          IPMIMONITORING_SENSORS_NA_STRING,
+                          IPMIMONITORING_SENSORS_NA_STRING);
         }
 
       if (_output_sensor_bitmask_strings (state_data,
@@ -832,10 +828,10 @@ _ipmimonitoring_callback (ipmi_monitoring_ctx_t c, void *callback_data)
 }
 
 static int
-run_cmd_args (ipmimonitoring_state_data_t *state_data)
+run_cmd_args (ipmimonitoring_sensors_state_data_t *state_data)
 {
   struct ipmi_monitoring_ipmi_config conf;
-  struct ipmimonitoring_arguments *args;
+  struct ipmimonitoring_sensors_arguments *args;
   unsigned int sensor_reading_flags = 0;
   unsigned int output_record_ids[MAX_SENSOR_RECORD_IDS];
   unsigned int output_record_ids_length = 0;
@@ -1073,13 +1069,13 @@ _ipmimonitoring (pstdout_state_t pstate,
                  const char *hostname,
                  void *arg)
 {
-  ipmimonitoring_state_data_t state_data;
-  ipmimonitoring_prog_data_t *prog_data;
+  ipmimonitoring_sensors_state_data_t state_data;
+  ipmimonitoring_sensors_prog_data_t *prog_data;
   char errmsg[IPMI_OPEN_ERRMSGLEN];
   int exit_code;
 
-  prog_data = (ipmimonitoring_prog_data_t *)arg;
-  memset (&state_data, '\0', sizeof (ipmimonitoring_state_data_t));
+  prog_data = (ipmimonitoring_sensors_prog_data_t *)arg;
+  memset (&state_data, '\0', sizeof (ipmimonitoring_sensors_state_data_t));
 
   state_data.prog_data = prog_data;
   state_data.pstate = pstate;
@@ -1193,7 +1189,7 @@ _convert_to_ipmimonitoring_sensor_type_str (const char *sensor_type_str)
  * structs.
  */
 static void
-_convert_to_ipmimonitoring_options (struct ipmimonitoring_arguments *cmd_args)
+_convert_to_ipmimonitoring_options (struct ipmimonitoring_sensors_arguments *cmd_args)
 {
   unsigned int i;
 
@@ -1277,17 +1273,17 @@ _convert_to_ipmimonitoring_options (struct ipmimonitoring_arguments *cmd_args)
 int
 main (int argc, char **argv)
 {
-  ipmimonitoring_prog_data_t prog_data;
-  struct ipmimonitoring_arguments cmd_args;
+  ipmimonitoring_sensors_prog_data_t prog_data;
+  struct ipmimonitoring_sensors_arguments cmd_args;
   int exit_code;
   int hosts_count;
   int rv;
 
   ipmi_disable_coredump ();
 
-  memset (&prog_data, '\0', sizeof (ipmimonitoring_prog_data_t));
+  memset (&prog_data, '\0', sizeof (ipmimonitoring_sensors_prog_data_t));
   prog_data.progname = argv[0];
-  ipmimonitoring_argp_parse (argc, argv, &cmd_args);
+  ipmimonitoring_sensors_argp_parse (argc, argv, &cmd_args);
   prog_data.args = &cmd_args;
 
   _convert_to_ipmimonitoring_options (&cmd_args);

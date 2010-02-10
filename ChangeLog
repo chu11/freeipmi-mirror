@@ -9,6 +9,10 @@
 	* ipmimonitoring/src/ipmimonitoring/Makefile.am: No-inst
 	ipmimonitoring.
 
+	* ipmimonitoring/src/ipmimonitoring/: Rename files appropriately
+	for name change.  Rename ipmimonitoring to ipmimonitoring-sensors
+	for testing.
+
 	* configure.ac: Update appropriately for changes.
 	
 2010-02-09  Albert Chu <chu11@llnl.gov>

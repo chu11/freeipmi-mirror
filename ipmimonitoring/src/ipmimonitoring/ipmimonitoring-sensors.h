@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.h,v 1.39 2010-02-08 22:02:31 chu11 Exp $
+ *  $Id: ipmimonitoring-sensors.h,v 1.1.2.1 2010-02-10 22:22:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -24,8 +24,8 @@
  *  with Ipmimonitoring.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _IPMIMONITORING_H
-#define _IPMIMONITORING_H
+#ifndef _IPMIMONITORING_SENSORS_H
+#define _IPMIMONITORING_SENSORS_H
 
 #include <freeipmi/freeipmi.h>
 
@@ -35,7 +35,7 @@
 #include "tool-sensor-common.h"
 #include "pstdout.h"
 
-enum ipmimonitoring_argp_option_keys
+enum ipmimonitoring_sensors_argp_option_keys
   {
     VERBOSE_KEY = 'v',
     QUIET_READINGS_KEY = 'q',
@@ -62,7 +62,7 @@ enum ipmimonitoring_argp_option_keys
     SENSOR_CONFIG_FILE_KEY = 172,
   };
 
-struct ipmimonitoring_arguments
+struct ipmimonitoring_sensors_arguments
 {
   struct common_cmd_args common;
   struct sdr_cmd_args sdr;
@@ -97,15 +97,15 @@ struct ipmimonitoring_arguments
   unsigned int ipmimonitoring_sensor_types_length;
 };
 
-typedef struct ipmimonitoring_prog_data
+typedef struct ipmimonitoring_sensors_prog_data
 {
   char *progname;
-  struct ipmimonitoring_arguments *args;
-} ipmimonitoring_prog_data_t;
+  struct ipmimonitoring_sensors_arguments *args;
+} ipmimonitoring_sensors_prog_data_t;
 
-typedef struct ipmimonitoring_state_data
+typedef struct ipmimonitoring_sensors_state_data
 {
-  ipmimonitoring_prog_data_t *prog_data;
+  ipmimonitoring_sensors_prog_data_t *prog_data;
   ipmi_ctx_t ipmi_ctx;
   pstdout_state_t pstate;
   char *hostname;
@@ -115,6 +115,6 @@ typedef struct ipmimonitoring_state_data
   int output_headers;
   struct sensor_entity_id_counts entity_id_counts;
   struct sensor_column_width column_width;
-} ipmimonitoring_state_data_t;
+} ipmimonitoring_sensors_state_data_t;
 
 #endif
