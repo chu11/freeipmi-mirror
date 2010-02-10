@@ -501,7 +501,8 @@ sensor_type_strcmp (pstdout_state_t pstate,
                     unsigned int sensor_type)
 {
   const char *sensor_type_str;
-  char *tmpstr;
+  char *tmpstr = NULL;
+  int rv = -1;
 
   assert (sensor_type_str_input);
 
@@ -509,24 +510,31 @@ sensor_type_strcmp (pstdout_state_t pstate,
   sensor_type_str = ipmi_get_sensor_type_string (sensor_type);
 
   if (!sensor_type_str)
-    return (0);
+    {
+      rv = 0;
+      goto cleanup;
+    }
 
-  if (!(tmpstr = strdupa (sensor_type_str)))
+  if (!(tmpstr = strdup (sensor_type_str)))
     {
       PSTDOUT_FPRINTF (pstate,
                        stderr,
-                       "strdupa: %s\n",
+                       "strdup: %s\n",
                        strerror (errno));
-      return (-1);
+      goto cleanup;
     }
 
   _get_sensor_type_cmdline_string (tmpstr);
 
   if (!strcasecmp (sensor_type_str_input, sensor_type_str)
       || !strcasecmp (sensor_type_str_input, tmpstr))
-    return (1);
-  
-  return (0);
+    rv = 1;
+  else
+    rv = 0;
+
+ cleanup:
+  free (tmpstr);
+  return (rv);
 }
 
 int
