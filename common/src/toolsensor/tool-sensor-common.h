@@ -78,8 +78,6 @@ struct sensor_entity_id_counts
 
 const char * get_sensor_type_output_string (unsigned int sensor_type);
 
-void get_sensor_type_cmdline_string (char *sensor_type);
-
 int get_entity_sensor_name_string (pstdout_state_t pstate,
                                    ipmi_sdr_parse_ctx_t sdr_parse_ctx,
                                    const void *sdr_record,
@@ -98,8 +96,13 @@ int get_entity_sensor_name_string_by_record_id (pstdout_state_t pstate,
                                                 char *sensor_name_buf,
                                                 unsigned int sensor_name_buf_len);
 
-int list_sensor_types (pstdout_state_t pstatem,
+int list_sensor_types (pstdout_state_t pstate,
                        unsigned int show_oem_reserved);
+
+/* 1 if all valid, 0 if not, -1 on error */
+int valid_sensor_types (pstdout_state_t pstate,
+                        char sensor_types[][MAX_SENSOR_TYPES_STRING_LENGTH+1],
+                        unsigned int sensor_types_length);
 
 int sensor_type_strcmp (pstdout_state_t pstate,
                         const char *sensor_type_str_input,

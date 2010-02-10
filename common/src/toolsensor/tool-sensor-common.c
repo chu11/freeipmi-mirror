@@ -74,15 +74,6 @@ get_sensor_type_output_string (unsigned int sensor_type)
   return (UNRECOGNIZED_SENSOR_TYPE);
 }
 
-void
-get_sensor_type_cmdline_string (char *sensor_type)
-{
-  assert (sensor_type);
-
-  _str_replace_char (sensor_type, ' ', '_');
-  _str_replace_char (sensor_type, '/', '_');
-}
-
 int
 get_entity_sensor_name_string (pstdout_state_t pstate,
                                ipmi_sdr_parse_ctx_t sdr_parse_ctx,
@@ -392,6 +383,15 @@ get_entity_sensor_name_string_by_record_id (pstdout_state_t pstate,
                                         sensor_name_buf_len);
 }
 
+static void
+_get_sensor_type_cmdline_string (char *sensor_type)
+{
+  assert (sensor_type);
+
+  _str_replace_char (sensor_type, ' ', '_');
+  _str_replace_char (sensor_type, '/', '_');
+}
+
 static int
 _output_sensor_type (pstdout_state_t pstate,
                      const char *sensor_type_str)
@@ -409,7 +409,7 @@ _output_sensor_type (pstdout_state_t pstate,
       return (-1);
     }
 
-  get_sensor_type_cmdline_string (tmpstr);
+  _get_sensor_type_cmdline_string (tmpstr);
   
   PSTDOUT_PRINTF (pstate, "%s\n", tmpstr);
   
@@ -433,6 +433,95 @@ list_sensor_types (pstdout_state_t pstate,
   
   if (_output_sensor_type (pstate, ipmi_oem_sensor_type) < 0)
     return (-1);
+  
+  return (0);
+}
+
+int
+valid_sensor_types (pstdout_state_t pstate,
+                    char sensor_types[][MAX_SENSOR_TYPES_STRING_LENGTH+1],
+                    unsigned int sensor_types_length)
+{
+  unsigned int i;
+
+  assert (sensor_types);
+  assert (sensor_types_length);
+
+  for (i = 0; i < sensor_types_length; i++)
+    {
+      int j = 0;
+      int found = 0;
+      
+      while (ipmi_sensor_types[j])
+        {
+          char sensor_type_cmdline[MAX_SENSOR_TYPES_STRING_LENGTH];
+          
+          strcpy (sensor_type_cmdline, ipmi_sensor_types[j]);
+          _get_sensor_type_cmdline_string (sensor_type_cmdline);
+          
+          if (!strcasecmp (sensor_types[i], ipmi_sensor_types[j])
+              || !strcasecmp (sensor_types[i], sensor_type_cmdline))
+            {
+              found++;
+              break;
+            }
+          j++;
+        }
+      
+      if (!found)
+        {
+          char sensor_type_cmdline[MAX_SENSOR_TYPES_STRING_LENGTH];
+          
+          strcpy (sensor_type_cmdline, ipmi_oem_sensor_type);
+          _get_sensor_type_cmdline_string (sensor_type_cmdline);
+          
+          if (!strcasecmp (sensor_types[i], ipmi_oem_sensor_type)
+              || !strcasecmp (sensor_types[i], sensor_type_cmdline))
+            found++;
+        }
+      
+      if (!found)
+        {
+          fprintf (stderr,
+                   "invalid sensor type '%s'\n",
+                   sensor_types[i]);
+          return (-1);
+        }
+    }
+
+  return (0);
+}
+
+int
+sensor_type_strcmp (pstdout_state_t pstate,
+                    const char *sensor_type_str_input,
+                    unsigned int sensor_type)
+{
+  const char *sensor_type_str;
+  char *tmpstr;
+
+  assert (sensor_type_str_input);
+
+  /* Don't use get_sensor_type_output_string() - want NULL if invalid */
+  sensor_type_str = ipmi_get_sensor_type_string (sensor_type);
+
+  if (!sensor_type_str)
+    return (0);
+
+  if (!(tmpstr = strdupa (sensor_type_str)))
+    {
+      PSTDOUT_FPRINTF (pstate,
+                       stderr,
+                       "strdupa: %s\n",
+                       strerror (errno));
+      return (-1);
+    }
+
+  _get_sensor_type_cmdline_string (tmpstr);
+
+  if (!strcasecmp (sensor_type_str_input, sensor_type_str)
+      || !strcasecmp (sensor_type_str_input, tmpstr))
+    return (1);
   
   return (0);
 }
@@ -495,40 +584,6 @@ get_sensor_units_output_string (pstdout_state_t pstate,
   rv = 0;
  cleanup:
   return rv;
-}
-
-int
-sensor_type_strcmp (pstdout_state_t pstate,
-                    const char *sensor_type_str_input,
-                    unsigned int sensor_type)
-{
-  const char *sensor_type_str;
-  char *tmpstr;
-
-  assert (sensor_type_str_input);
-
-  /* Don't use get_sensor_type_output_string() - want NULL if invalid */
-  sensor_type_str = ipmi_get_sensor_type_string (sensor_type);
-
-  if (!sensor_type_str)
-    return (0);
-
-  if (!(tmpstr = strdupa (sensor_type_str)))
-    {
-      PSTDOUT_FPRINTF (pstate,
-                       stderr,
-                       "strdupa: %s\n",
-                       strerror (errno));
-      return (-1);
-    }
-
-  get_sensor_type_cmdline_string (tmpstr);
-
-  if (!strcasecmp (sensor_type_str_input, sensor_type_str)
-      || !strcasecmp (sensor_type_str_input, tmpstr))
-    return (1);
-  
-  return (0);
 }
 
 void

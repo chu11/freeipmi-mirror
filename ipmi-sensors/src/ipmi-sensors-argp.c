@@ -440,64 +440,23 @@ _ipmi_sensors_config_file_parse (struct ipmi_sensors_arguments *cmd_args)
 }
 
 static void
-_ipmi_sensors_validate_sensor_types (char sensor_types[][MAX_SENSOR_TYPES_STRING_LENGTH+1],
-                                     unsigned int sensor_types_length)
-{
-  unsigned int i;
-
-  assert (sensor_types); 
-
-  for (i = 0; i < sensor_types_length; i++)
-    {
-      int j = 0;
-      int found = 0;
-      
-      while (ipmi_sensor_types[j])
-        {
-          char sensor_type_cmdline[MAX_SENSOR_TYPES_STRING_LENGTH];
-          
-          strcpy (sensor_type_cmdline, ipmi_sensor_types[j]);
-          get_sensor_type_cmdline_string (sensor_type_cmdline);
-          
-          if (!strcasecmp (sensor_types[i], ipmi_sensor_types[j])
-              || !strcasecmp (sensor_types[i], sensor_type_cmdline))
-            {
-              found++;
-              break;
-            }
-          j++;
-        }
-      
-      if (!found)
-        {
-          char sensor_type_cmdline[MAX_SENSOR_TYPES_STRING_LENGTH];
-          
-          strcpy (sensor_type_cmdline, ipmi_oem_sensor_type);
-          get_sensor_type_cmdline_string (sensor_type_cmdline);
-          
-          if (!strcasecmp (sensor_types[i], ipmi_oem_sensor_type)
-              || !strcasecmp (sensor_types[i], sensor_type_cmdline))
-            found++;
-        }
-      
-      if (!found)
-        {
-          fprintf (stderr, "invalid sensor type '%s'\n", sensor_types[i]);
-          exit (1);
-        }
-    }
-}
-
-static void
 _ipmi_sensors_args_validate (struct ipmi_sensors_arguments *cmd_args)
 {
   if (cmd_args->sensor_types_length)
-    _ipmi_sensors_validate_sensor_types (cmd_args->sensor_types,
-                                         cmd_args->sensor_types_length);
+    {
+      if (valid_sensor_types (NULL,
+                              cmd_args->sensor_types,
+                              cmd_args->sensor_types_length) < 0)
+        exit (1);
+    }
 
   if (cmd_args->exclude_sensor_types_length)
-    _ipmi_sensors_validate_sensor_types (cmd_args->exclude_sensor_types,
-                                         cmd_args->exclude_sensor_types_length);
+    {
+      if (valid_sensor_types (NULL,
+                              cmd_args->exclude_sensor_types,
+                              cmd_args->exclude_sensor_types_length) < 0)
+        exit (1);
+    }
 }
 
 void
