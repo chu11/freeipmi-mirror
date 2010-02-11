@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-sensors-argp.c,v 1.1.2.2 2010-02-11 17:45:35 chu11 Exp $
+ *  $Id: ipmimonitoring-sensors-argp.c,v 1.1.2.3 2010-02-11 18:03:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -81,38 +81,26 @@ static struct argp_option cmdline_options[] =
     ARGP_COMMON_OPTIONS_DEBUG,
     { "verbose", VERBOSE_KEY, 0, 0,
       "Increase verbosity in output.", 30},
-    { "quiet-readings", QUIET_READINGS_KEY,  0, 0,
-      "Do not output sensor readings, only states.", 31},
     { "record-ids",     RECORD_IDS_KEY, "RECORD-IDS-LIST", 0,
-      "Show specific sensors by record id.  Accepts space or comma separated lists", 32},
+      "Show specific sensors by record id.  Accepts space or comma separated lists", 31},
     { "exclude-record-ids", EXCLUDE_RECORD_IDS_KEY, "RECORD-IDS-LIST", 0,
-      "Do not show specific sensors by record id.  Accepts space or comma separated lists", 33},
+      "Do not show specific sensors by record id.  Accepts space or comma separated lists", 32},
     { "sensor-types",   SENSOR_TYPES_KEY,  "SENSOR-TYPE-LIST", 0,
-      "Show sensors of a specific type.", 34},
+      "Show sensors of a specific type.", 33},
     { "exclude-sensor-types", EXCLUDE_SENSOR_TYPES_KEY, "SENSOR-TYPE-LIST", 0,
-      "Do not show sensors of a specific type.", 35},
+      "Do not show sensors of a specific type.", 34},
     { "list-sensor-types",    LIST_SENSOR_TYPES_KEY, 0, 0,
-      "List sensor types.", 36},
+      "List sensor types.", 35},
     { "bridge-sensors", BRIDGE_SENSORS_KEY, NULL, 0,
-      "Bridge addresses to read non-BMC owned sensors.", 37},
+      "Bridge addresses to read non-BMC owned sensors.", 36},
     { "shared-sensors", SHARED_SENSORS_KEY, NULL, 0,
-      "Iterate over shared sensors in a single record.", 38},
+      "Iterate over shared sensors in a single record.", 37},
     { "interpret-oem-data", INTERPRET_OEM_DATA_KEY, NULL, 0,
-      "Attempt to interpret OEM data.", 39},
+      "Attempt to interpret OEM data.", 38},
     { "ignore-non-interpretable-sensors", IGNORE_NON_INTERPRETABLE_SENSORS_KEY, NULL, 0,
-      "Ignore non-interpretable sensors in output.", 40},
-    { "entity-sensor-names", ENTITY_SENSOR_NAMES_KEY, NULL, 0,
-      "Output sensor names with entity ids and instances.", 41},
-    { "no-sensor-type-output", NO_SENSOR_TYPE_OUTPUT_KEY, 0, 0,
-      "Do not show sensor type output.", 42},
-    { "comma-separated-output", COMMA_SEPARATED_OUTPUT_KEY, 0, 0,
-      "Output fields in comma separated format.", 43},
-    { "no-header-output", NO_HEADER_OUTPUT_KEY, 0, 0,
-      "Do not output column headers.", 44},
-    { "non-abbreviated-units", NON_ABBREVIATED_UNITS_KEY, 0, 0,
-      "Output non-abbreviated units (e.g. 'Amps' instead of 'A').", 45},
+      "Ignore non-interpretable sensors in output.", 39},
     { "sensor-config-file", SENSOR_CONFIG_FILE_KEY, "FILE", 0,
-      "Specify an alternate sensor configuration file.", 46},
+      "Specify an alternate sensor configuration file.", 40},
     { NULL, 0, NULL, 0, NULL, 0}
   };
 
@@ -136,9 +124,6 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     {
     case VERBOSE_KEY:
       cmd_args->verbose_count++;
-      break;
-    case QUIET_READINGS_KEY:
-      cmd_args->quiet_readings = 1;
       break;
     case RECORD_IDS_KEY:
       tok = strtok (arg, " ,");
@@ -249,21 +234,6 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case IGNORE_NON_INTERPRETABLE_SENSORS_KEY:
       cmd_args->ignore_non_interpretable_sensors = 1;
       break;
-    case ENTITY_SENSOR_NAMES_KEY:
-      cmd_args->entity_sensor_names = 1;
-      break;
-    case NO_SENSOR_TYPE_OUTPUT_KEY:
-      cmd_args->no_sensor_type_output = 1;
-      break;
-    case COMMA_SEPARATED_OUTPUT_KEY:
-      cmd_args->comma_separated_output = 1;
-      break;
-    case NO_HEADER_OUTPUT_KEY:
-      cmd_args->no_header_output = 1;
-      break;
-    case NON_ABBREVIATED_UNITS_KEY:
-      cmd_args->non_abbreviated_units = 1;
-      break;
     case SENSOR_CONFIG_FILE_KEY:
       if (cmd_args->sensor_config_file)
         free (cmd_args->sensor_config_file);
@@ -300,7 +270,6 @@ ipmimonitoring_sensors_argp_parse (int argc, char **argv, struct ipmimonitoring_
   init_sdr_cmd_args (&(cmd_args->sdr));
   init_hostrange_cmd_args (&(cmd_args->hostrange));
   cmd_args->verbose_count = 0;
-  cmd_args->quiet_readings = 0;
 
   memset (cmd_args->record_ids,
           '\0',
@@ -330,11 +299,6 @@ ipmimonitoring_sensors_argp_parse (int argc, char **argv, struct ipmimonitoring_
   cmd_args->shared_sensors = 0;
   cmd_args->interpret_oem_data = 0;
   cmd_args->ignore_non_interpretable_sensors = 0;
-  cmd_args->entity_sensor_names = 0;
-  cmd_args->no_sensor_type_output = 0;
-  cmd_args->comma_separated_output = 0;
-  cmd_args->no_header_output = 0;
-  cmd_args->non_abbreviated_units = 0;
   cmd_args->sensor_config_file = NULL;
 
   memset (&(cmd_args->conf), '\0', sizeof (struct ipmi_monitoring_ipmi_config));

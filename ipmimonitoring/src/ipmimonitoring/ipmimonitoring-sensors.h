@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-sensors.h,v 1.1.2.2 2010-02-11 17:45:35 chu11 Exp $
+ *  $Id: ipmimonitoring-sensors.h,v 1.1.2.3 2010-02-11 18:03:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -38,22 +38,16 @@
 enum ipmimonitoring_sensors_argp_option_keys
   {
     VERBOSE_KEY = 'v',
-    QUIET_READINGS_KEY = 'q',
     RECORD_IDS_KEY = 'r',
     EXCLUDE_RECORD_IDS_KEY = 'R',
     SENSOR_TYPES_KEY = 't',
     EXCLUDE_SENSOR_TYPES_KEY = 'T',
     LIST_SENSOR_TYPES_KEY = 'L',
     BRIDGE_SENSORS_KEY = 'b',
-    SHARED_SENSORS_KEY = 163,
-    INTERPRET_OEM_DATA_KEY = 164,
-    IGNORE_NON_INTERPRETABLE_SENSORS_KEY = 165,
-    ENTITY_SENSOR_NAMES_KEY = 166,
-    NO_SENSOR_TYPE_OUTPUT_KEY = 167,
-    COMMA_SEPARATED_OUTPUT_KEY = 168,
-    NO_HEADER_OUTPUT_KEY = 169,
-    NON_ABBREVIATED_UNITS_KEY = 170,
-    SENSOR_CONFIG_FILE_KEY = 171,
+    SHARED_SENSORS_KEY = 161,
+    INTERPRET_OEM_DATA_KEY = 162,
+    IGNORE_NON_INTERPRETABLE_SENSORS_KEY = 163,
+    SENSOR_CONFIG_FILE_KEY = 164,
   };
 
 struct ipmimonitoring_sensors_arguments
@@ -63,7 +57,6 @@ struct ipmimonitoring_sensors_arguments
   struct hostrange_cmd_args hostrange;
   int verbose_count;
   int regenerate_sdr_cache;
-  int quiet_readings;
   unsigned int record_ids[MAX_SENSOR_RECORD_IDS];
   unsigned int record_ids_length;
   unsigned int exclude_record_ids[MAX_SENSOR_RECORD_IDS];
@@ -77,11 +70,6 @@ struct ipmimonitoring_sensors_arguments
   int shared_sensors;
   int interpret_oem_data;
   int ignore_non_interpretable_sensors;
-  int entity_sensor_names;
-  int no_sensor_type_output;
-  int comma_separated_output;
-  int no_header_output;
-  int non_abbreviated_units;
   char *sensor_config_file;
 
   struct ipmi_monitoring_ipmi_config conf;

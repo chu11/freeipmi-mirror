@@ -68,7 +68,7 @@ ipmi_sensors_simple_output_setup (ipmi_sensors_state_data_t *state_data)
                                    state_data->prog_data->args->sensor_types_length,
                                    state_data->prog_data->args->record_ids,
                                    state_data->prog_data->args->record_ids_length,
-                                   !state_data->prog_data->args->non_abbreviated_units,
+                                   state_data->prog_data->args->non_abbreviated_units,
 				   state_data->prog_data->args->shared_sensors,
                                    0,
                                    0,
@@ -210,7 +210,7 @@ _legacy_simple_output_full_record (ipmi_sensors_state_data_t *state_data,
                                               sdr_record_len,
                                               sensor_units_buf,
                                               IPMI_SENSORS_UNITS_BUFLEN,
-                                              1) < 0)
+                                              0) < 0)
             goto cleanup;
 
           if (ipmi_sensors_get_thresholds (state_data,
@@ -529,7 +529,7 @@ _simple_output_full_record (ipmi_sensors_state_data_t *state_data,
                                               sdr_record_len,
                                               sensor_units_buf,
                                               IPMI_SENSORS_UNITS_BUFLEN,
-                                              !state_data->prog_data->args->non_abbreviated_units) < 0)
+                                              state_data->prog_data->args->non_abbreviated_units) < 0)
             goto cleanup;
 
           memset (fmt, '\0', IPMI_SENSORS_FMT_BUFLEN + 1);
