@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-sensors.h,v 1.1.2.1 2010-02-10 22:22:25 chu11 Exp $
+ *  $Id: ipmimonitoring-sensors.h,v 1.1.2.2 2010-02-11 17:45:35 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -39,16 +39,11 @@ enum ipmimonitoring_sensors_argp_option_keys
   {
     VERBOSE_KEY = 'v',
     QUIET_READINGS_KEY = 'q',
-    SENSORS_KEY = 's',          /* legacy */
     RECORD_IDS_KEY = 'r',
     EXCLUDE_RECORD_IDS_KEY = 'R',
-    GROUPS_KEY = 'g',           /* legacy */
-    EXCLUDE_GROUPS_KEY = 160,   /* legacy */
-    LIST_GROUPS_KEY = 161,      /* legacy */
     SENSOR_TYPES_KEY = 't',
     EXCLUDE_SENSOR_TYPES_KEY = 'T',
     LIST_SENSOR_TYPES_KEY = 'L',
-    CACHE_DIR_KEY = 162,              /* legacy */
     BRIDGE_SENSORS_KEY = 'b',
     SHARED_SENSORS_KEY = 163,
     INTERPRET_OEM_DATA_KEY = 164,
@@ -58,8 +53,7 @@ enum ipmimonitoring_sensors_argp_option_keys
     COMMA_SEPARATED_OUTPUT_KEY = 168,
     NO_HEADER_OUTPUT_KEY = 169,
     NON_ABBREVIATED_UNITS_KEY = 170,
-    LEGACY_OUTPUT_KEY = 171,
-    SENSOR_CONFIG_FILE_KEY = 172,
+    SENSOR_CONFIG_FILE_KEY = 171,
   };
 
 struct ipmimonitoring_sensors_arguments
@@ -88,7 +82,6 @@ struct ipmimonitoring_sensors_arguments
   int comma_separated_output;
   int no_header_output;
   int non_abbreviated_units;
-  int legacy_output;
   char *sensor_config_file;
 
   struct ipmi_monitoring_ipmi_config conf;

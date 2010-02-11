@@ -48,8 +48,7 @@
 #define CONFIG_FILE_TOOL_IPMI_SENSORS        0x00001000
 #define CONFIG_FILE_TOOL_IPMI_SENSORS_CONFIG 0x00002000
 #define CONFIG_FILE_TOOL_IPMICONSOLE         0x00004000
-#define CONFIG_FILE_TOOL_IPMIMONITORING      0x00008000
-#define CONFIG_FILE_TOOL_IPMIPOWER           0x00010000
+#define CONFIG_FILE_TOOL_IPMIPOWER           0x00008000
 
 /* achu:
  *
@@ -210,48 +209,6 @@ struct config_file_data_ipmiconsole
   int dont_steal_count;
   int lock_memory;
   int lock_memory_count;
-};
-
-struct config_file_data_ipmimonitoring
-{
-  int verbose_count;
-  int verbose_count_count;
-  int quiet_readings;
-  int quiet_readings_count;
-  unsigned int record_ids[CONFIG_FILE_MAX_SENSOR_RECORD_IDS];
-  unsigned int record_ids_length;
-  int record_ids_count;
-  unsigned int exclude_record_ids[CONFIG_FILE_MAX_SENSOR_RECORD_IDS];
-  unsigned int exclude_record_ids_length;
-  int exclude_record_ids_count;
-  char sensor_types[CONFIG_FILE_MAX_SENSOR_TYPES][CONFIG_FILE_MAX_SENSOR_TYPES_STRING_LENGTH+1];
-  unsigned int sensor_types_length;
-  int sensor_types_count;
-  char exclude_sensor_types[CONFIG_FILE_MAX_SENSOR_TYPES][CONFIG_FILE_MAX_SENSOR_TYPES_STRING_LENGTH+1];
-  unsigned int exclude_sensor_types_length;
-  int exclude_sensor_types_count;
-  int bridge_sensors;
-  int bridge_sensors_count;
-  int shared_sensors;
-  int shared_sensors_count;
-  int interpret_oem_data;
-  int interpret_oem_data_count;
-  int ignore_non_interpretable_sensors;
-  int ignore_non_interpretable_sensors_count;
-  int entity_sensor_names;
-  int entity_sensor_names_count;
-  int no_sensor_type_output;
-  int no_sensor_type_output_count;
-  int comma_separated_output_count;
-  int comma_separated_output;
-  int no_header_output;
-  int no_header_output_count;
-  int non_abbreviated_units;
-  int non_abbreviated_units_count;
-  int legacy_output;
-  int legacy_output_count;
-  char *sensor_config_file;
-  int sensor_config_file_count;
 };
 
 struct config_file_data_ipmipower
