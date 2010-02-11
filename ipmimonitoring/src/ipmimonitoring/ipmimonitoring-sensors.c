@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-sensors.c,v 1.1.2.3 2010-02-11 18:03:16 chu11 Exp $
+ *  $Id: ipmimonitoring-sensors.c,v 1.1.2.4 2010-02-11 18:25:20 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -52,7 +52,7 @@
 #include <assert.h>
 #include <errno.h>
 
-#include "ipmi_monitoring.h"    /* lib .h file */
+#include "ipmi_monitoring.h"
 
 #include "ipmimonitoring-sensors.h"
 #include "ipmimonitoring-sensors-argp.h"
@@ -73,8 +73,6 @@
 #define IPMIMONITORING_SENSORS_NA_STRING              "N/A"
 
 #define IPMIMONITORING_SENSORS_NO_EVENT_STRING        "OK"
-
-#define IPMIMONITORING_SENSORS_FMT_BUFLEN             1024
 
 static int
 _list_sensor_types (ipmimonitoring_sensors_state_data_t *state_data)
@@ -175,83 +173,6 @@ _get_sensor_units_string (ipmimonitoring_sensors_state_data_t *state_data,
     sensor_units_str = IPMIMONITORING_SENSORS_NA_STRING;
 
   return (sensor_units_str);
-}
-
-static int
-_store_sensor_units_column_width (ipmimonitoring_sensors_state_data_t *state_data)
-{
-  const char *sensor_units_str;
-  int len;
-
-  assert (state_data);
-
-  /* Calculate units column width special since it's a limited bunch */
-
-  state_data->column_width.sensor_units = 0;
-  
-  sensor_units_str = _get_sensor_units_string (state_data, IPMI_MONITORING_SENSOR_UNITS_CELSIUS);
-  len = strlen (sensor_units_str);
-  if (len > state_data->column_width.sensor_units)
-    state_data->column_width.sensor_units = len;
-
-  sensor_units_str = _get_sensor_units_string (state_data, IPMI_MONITORING_SENSOR_UNITS_FAHRENHEIT);
-  len = strlen (sensor_units_str);
-  if (len > state_data->column_width.sensor_units)
-    state_data->column_width.sensor_units = len;
-
-  sensor_units_str = _get_sensor_units_string (state_data, IPMI_MONITORING_SENSOR_UNITS_VOLTS);
-  len = strlen (sensor_units_str);
-  if (len > state_data->column_width.sensor_units)
-    state_data->column_width.sensor_units = len;
-
-  sensor_units_str = _get_sensor_units_string (state_data, IPMI_MONITORING_SENSOR_UNITS_AMPS);
-  len = strlen (sensor_units_str);
-  if (len > state_data->column_width.sensor_units)
-    state_data->column_width.sensor_units = len;
-
-  sensor_units_str = _get_sensor_units_string (state_data, IPMI_MONITORING_SENSOR_UNITS_RPM);
-  len = strlen (sensor_units_str);
-  if (len > state_data->column_width.sensor_units)
-    state_data->column_width.sensor_units = len;
-
-  sensor_units_str = _get_sensor_units_string (state_data, IPMI_MONITORING_SENSOR_UNITS_WATTS);
-  len = strlen (sensor_units_str);
-  if (len > state_data->column_width.sensor_units)
-    state_data->column_width.sensor_units = len;
-
-  if (state_data->column_width.sensor_units < strlen(SENSORS_HEADER_UNITS_STR))
-    state_data->column_width.sensor_units = strlen(SENSORS_HEADER_UNITS_STR);
-
-  return (0);
-}
-
-static int 
-_output_setup (ipmimonitoring_sensors_state_data_t *state_data)
-{
-  assert (state_data);
-
-  if (calculate_column_widths (state_data->pstate,
-                               state_data->sdr_cache_ctx,
-                               state_data->sdr_parse_ctx,
-                               state_data->prog_data->args->sensor_types,
-                               state_data->prog_data->args->sensor_types_length,
-                               state_data->prog_data->args->record_ids,
-                               state_data->prog_data->args->record_ids_length,
-                               0, /* non_abbreviated_units */
-                               state_data->prog_data->args->shared_sensors,
-                               0,
-                               0,
-                               NULL,
-                               &(state_data->column_width)) < 0)
-    return (-1);
-  
-  /* Calculate units column width special since it's a limited
-   * bunch for ipmimonitoring 
-   */
-  if (_store_sensor_units_column_width (state_data) < 0)
-    return (-1);
-  
-  return (0);
 }
 
 static int
@@ -356,30 +277,6 @@ _calculate_record_ids (ipmimonitoring_sensors_state_data_t *state_data,
   return (0);
 }
   
-
-static void
-_output_sensor_units (ipmimonitoring_sensors_state_data_t *state_data,
-                      int sensor_units)
-{
-  char fmt[IPMIMONITORING_SENSORS_FMT_BUFLEN + 1];
-  const char *sensor_units_str;
-
-  assert (state_data);
-
-  memset (fmt, '\0', IPMIMONITORING_SENSORS_FMT_BUFLEN + 1);
-
-  sensor_units_str = _get_sensor_units_string (state_data, sensor_units);
-      
-  snprintf (fmt,
-            IPMIMONITORING_SENSORS_FMT_BUFLEN,
-            " | %%-%ds",
-            state_data->column_width.sensor_units);
-  
-  pstdout_printf (state_data->pstate,
-                  fmt,
-                  sensor_units_str);
-}
-
 static int
 _output_sensor_bitmask_strings (ipmimonitoring_sensors_state_data_t *state_data,
 				int sensor_bitmask_type,
@@ -388,13 +285,13 @@ _output_sensor_bitmask_strings (ipmimonitoring_sensors_state_data_t *state_data,
   assert (state_data);
 
   if (sensor_bitmask_type != IPMI_MONITORING_SENSOR_BITMASK_TYPE_UNKNOWN)
-    {
-      pstdout_printf (state_data->pstate, " |");
-      
+    {     
       if (sensor_bitmask_strings)
         {
           unsigned int i = 0;
           
+          pstdout_printf (state_data->pstate, ",");
+      
           while (sensor_bitmask_strings[i])
             {
               pstdout_printf (state_data->pstate, " ");
@@ -408,16 +305,14 @@ _output_sensor_bitmask_strings (ipmimonitoring_sensors_state_data_t *state_data,
         }
       else
         {
-          pstdout_printf (state_data->pstate, " ");
-          
           pstdout_printf (state_data->pstate,
-                          "'%s'",
+                          ", '%s'",
                           IPMIMONITORING_SENSORS_NO_EVENT_STRING);
         }
     }
   else
     pstdout_printf (state_data->pstate,
-                    " | %s",
+                    ", %s",
                     IPMIMONITORING_SENSORS_NA_STRING);
 
   return (0);
@@ -435,7 +330,6 @@ _ipmimonitoring_callback (ipmi_monitoring_ctx_t c, void *callback_data)
   const char *sensor_state_str;
   char *sensor_name = NULL;
   void *sensor_reading;
-  char fmt[IPMIMONITORING_SENSORS_FMT_BUFLEN + 1];
   int rv = -1;
 
   assert (c);
@@ -446,12 +340,16 @@ _ipmimonitoring_callback (ipmi_monitoring_ctx_t c, void *callback_data)
 
   if (!state_data->output_headers)
     {
-      output_sensor_headers (state_data->pstate,
-                             0, /* quiet_readings */
-                             1,
-                             0, /* comma_separated_output */
-                             0, /* no_sensor_type_output */
-                             &(state_data->column_width));
+      pstdout_printf (state_data->pstate,
+                      "%s, %s, %s, %s, %s, %s, %s, %s\n",
+                      "Record ID",
+                      "Sensor Name",
+                      "Sensor Type",
+                      "Sensor State",
+                      "Sensor Reading",
+                      "Sensor Units",
+                      "Sensor Event Bitmask",
+                      "Sensor Event String");
 
       state_data->output_headers++;
     }
@@ -501,15 +399,6 @@ _ipmimonitoring_callback (ipmi_monitoring_ctx_t c, void *callback_data)
       goto cleanup;
     }
 
-  if ((sensor_reading_type = ipmi_monitoring_sensor_read_sensor_reading_type (state_data->ctx)) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "ipmi_monitoring_sensor_read_sensor_reading_type: %s\n",
-                       ipmi_monitoring_ctx_errormsg (state_data->ctx));
-      goto cleanup;
-    }
-
   if ((sensor_bitmask_type = ipmi_monitoring_sensor_read_sensor_bitmask_type (state_data->ctx)) < 0)
     {
       pstdout_fprintf (state_data->pstate,
@@ -530,6 +419,15 @@ _ipmimonitoring_callback (ipmi_monitoring_ctx_t c, void *callback_data)
 
   sensor_bitmask_strings = ipmi_monitoring_sensor_read_sensor_bitmask_strings (state_data->ctx);
 
+  if ((sensor_reading_type = ipmi_monitoring_sensor_read_sensor_reading_type (state_data->ctx)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_monitoring_sensor_read_sensor_reading_type: %s\n",
+                       ipmi_monitoring_ctx_errormsg (state_data->ctx));
+      goto cleanup;
+    }
+
   sensor_reading = ipmi_monitoring_sensor_read_sensor_reading (state_data->ctx);
 
   if (!sensor_name
@@ -540,17 +438,8 @@ _ipmimonitoring_callback (ipmi_monitoring_ctx_t c, void *callback_data)
 
   sensor_state_str = _get_sensor_state_string (state_data, sensor_state);
 
-  memset (fmt, '\0', IPMIMONITORING_SENSORS_FMT_BUFLEN + 1);
-
-  snprintf (fmt,
-            IPMIMONITORING_SENSORS_FMT_BUFLEN,
-            "%%-%du | %%-%ds | %%-%ds | %%-8s",
-            state_data->column_width.record_id,
-            state_data->column_width.sensor_name,
-            state_data->column_width.sensor_type);
-  
   pstdout_printf (state_data->pstate,
-                  fmt,
+                  "%u, %s, %s, %s",
                   record_id,
                   sensor_name,
                   sensor_type_str,
@@ -560,49 +449,45 @@ _ipmimonitoring_callback (ipmi_monitoring_ctx_t c, void *callback_data)
     {
       if (sensor_reading_type == IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER8_BOOL)
         pstdout_printf (state_data->pstate,
-                        " | %-10s",
+                        ", %s",
                         (*((uint8_t *)sensor_reading) ? "true" : "false"));
       else if (sensor_reading_type == IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER32)
         pstdout_printf (state_data->pstate,
-                        " | %-10u",
+                        ", %u",
                         *((uint32_t *)sensor_reading));
       else if (sensor_reading_type == IPMI_MONITORING_SENSOR_READING_TYPE_DOUBLE)
         pstdout_printf (state_data->pstate,
-                        " | %-10.2f",
+                        ", %.2f",
                         *((double *)sensor_reading));
       else
         pstdout_printf (state_data->pstate,
-                        " | %-10s",
+                        ", %s",
                         IPMIMONITORING_SENSORS_NA_STRING);
 
-      _output_sensor_units (state_data, sensor_units);
+      pstdout_printf (state_data->pstate,
+                      ", %s",
+                      _get_sensor_units_string (state_data, sensor_units));
 
-      if (_output_sensor_bitmask_strings (state_data,
-                                          sensor_bitmask_type,
-                                          sensor_bitmask_strings) < 0)
-        goto cleanup;
     }
   else if (!sensor_reading)
-    {
-      char fmt[IPMIMONITORING_SENSORS_FMT_BUFLEN + 1];
-      
-      memset (fmt, '\0', IPMIMONITORING_SENSORS_FMT_BUFLEN + 1);
-
-      snprintf (fmt,
-                IPMIMONITORING_SENSORS_FMT_BUFLEN,
-                " | %%-10s | %%-%ds",
-                state_data->column_width.sensor_units);
-      
-      pstdout_printf (state_data->pstate,
-                      fmt,
-                      IPMIMONITORING_SENSORS_NA_STRING,
-                      IPMIMONITORING_SENSORS_NA_STRING);
-
-      if (_output_sensor_bitmask_strings (state_data,
-					  sensor_bitmask_type,
-                                          sensor_bitmask_strings) < 0)
-        goto cleanup;
-    }
+    pstdout_printf (state_data->pstate,
+                    ", %s, %s",
+                    IPMIMONITORING_SENSORS_NA_STRING,
+                    IPMIMONITORING_SENSORS_NA_STRING);
+  
+  if (sensor_bitmask_type != IPMI_MONITORING_SENSOR_BITMASK_TYPE_UNKNOWN)
+    pstdout_printf (state_data->pstate,
+                    ", %Xh",
+                    sensor_bitmask);
+  else
+    pstdout_printf (state_data->pstate,
+                    ", %s",
+                    IPMIMONITORING_SENSORS_NA_STRING);
+  
+  if (_output_sensor_bitmask_strings (state_data,
+                                      sensor_bitmask_type,
+                                      sensor_bitmask_strings) < 0)
+    goto cleanup;
 
   pstdout_printf (state_data->pstate,
                   "\n");
@@ -691,9 +576,6 @@ run_cmd_args (ipmimonitoring_sensors_state_data_t *state_data)
                                  args->sdr.sdr_cache_recreate,
                                  state_data->hostname,
                                  args->sdr.sdr_cache_directory) < 0)
-    return (-1);
-
-  if (_output_setup (state_data) < 0)
     return (-1);
 
   /* achu: for consistent output to ipmi-sensors, calculate
