@@ -4,6 +4,8 @@
 
 	* ipmimonitoring/src/libipmimonitoring/ipmi_monitoring_bitmasks.h:
 	New file.
+
+	* freeipmi.spec.in: Update appropriately.
 	
 2010-02-10  Albert Chu <chu11@llnl.gov>
 
