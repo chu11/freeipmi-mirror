@@ -24,6 +24,10 @@
 
 	* configure.ac: Update appropriately for changes.
 	
+2010-02-11  Albert Chu <chu11@llnl.gov>
+
+	* ipmimonitoring/src/libipmimonitoring: Fix sensor naming.
+	
 2010-02-09  Albert Chu <chu11@llnl.gov>
 
 	* common/src/toolsensor/, ipmi-sensors/, ipmimonitoring/,

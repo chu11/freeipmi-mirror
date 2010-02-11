@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-sensors.h,v 1.1.2.6 2010-02-11 19:45:10 chu11 Exp $
+ *  $Id: ipmimonitoring-sensors.h,v 1.1.2.7 2010-02-11 21:43:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -77,13 +77,5 @@ typedef struct ipmimonitoring_sensors_prog_data
   char *progname;
   struct ipmimonitoring_sensors_arguments *args;
 } ipmimonitoring_sensors_prog_data_t;
-
-typedef struct ipmimonitoring_sensors_state_data
-{
-  ipmimonitoring_sensors_prog_data_t *prog_data;
-  ipmi_monitoring_ctx_t ctx;
-  char *hostname;
-  int output_headers;
-} ipmimonitoring_sensors_state_data_t;
 
 #endif
