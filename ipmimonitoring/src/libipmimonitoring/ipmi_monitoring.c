@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.74 2010-02-10 21:58:25 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.75 2010-02-11 21:35:54 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -945,7 +945,7 @@ ipmi_monitoring_sensor_readings_by_sensor_type (ipmi_monitoring_ctx_t c,
 }
 
 int
-ipmi_monitoring_iterator_first (ipmi_monitoring_ctx_t c)
+ipmi_monitoring_sensor_iterator_first (ipmi_monitoring_ctx_t c)
 {
   if (!c || c->magic != IPMI_MONITORING_MAGIC)
     return (-1);
@@ -963,7 +963,7 @@ ipmi_monitoring_iterator_first (ipmi_monitoring_ctx_t c)
 }
 
 int
-ipmi_monitoring_iterator_next (ipmi_monitoring_ctx_t c)
+ipmi_monitoring_sensor_iterator_next (ipmi_monitoring_ctx_t c)
 {
   if (!c || c->magic != IPMI_MONITORING_MAGIC)
     return (-1);

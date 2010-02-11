@@ -1,3 +1,7 @@
+2010-02-11  Albert Chu <chu11@llnl.gov>
+
+	* ipmimonitoring/src/libipmimonitoring: Fix sensor naming.
+	
 2010-02-10  Albert Chu <chu11@llnl.gov>
 
 	* ipmimonitoring/libipmimonitoring.3.pre.in: Update for recent
