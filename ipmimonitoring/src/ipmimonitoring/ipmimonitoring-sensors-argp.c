@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-sensors-argp.c,v 1.1.2.4 2010-02-11 18:35:39 chu11 Exp $
+ *  $Id: ipmimonitoring-sensors-argp.c,v 1.1.2.5 2010-02-11 19:31:56 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -70,35 +70,29 @@ static struct argp_option cmdline_options[] =
   {
     ARGP_COMMON_OPTIONS_DRIVER,
     ARGP_COMMON_OPTIONS_INBAND,
-    ARGP_COMMON_OPTIONS_OUTOFBAND_HOSTRANGED,
+    ARGP_COMMON_OPTIONS_OUTOFBAND,
     ARGP_COMMON_OPTIONS_AUTHENTICATION_TYPE,
     ARGP_COMMON_OPTIONS_CIPHER_SUITE_ID,
     ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL,
     ARGP_COMMON_OPTIONS_CONFIG_FILE,
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
-    ARGP_COMMON_SDR_OPTIONS,
-    ARGP_COMMON_HOSTRANGED_OPTIONS,
     ARGP_COMMON_OPTIONS_DEBUG,
-    { "verbose", VERBOSE_KEY, 0, 0,
-      "Increase verbosity in output.", 30},
     { "record-ids",     RECORD_IDS_KEY, "RECORD-IDS-LIST", 0,
-      "Show specific sensors by record id.  Accepts space or comma separated lists", 31},
-    { "exclude-record-ids", EXCLUDE_RECORD_IDS_KEY, "RECORD-IDS-LIST", 0,
-      "Do not show specific sensors by record id.  Accepts space or comma separated lists", 32},
+      "Show specific sensors by record id.  Accepts space or comma separated lists", 30},
     { "sensor-types",   SENSOR_TYPES_KEY,  "SENSOR-TYPE-LIST", 0,
-      "Show sensors of a specific type.", 33},
-    { "exclude-sensor-types", EXCLUDE_SENSOR_TYPES_KEY, "SENSOR-TYPE-LIST", 0,
-      "Do not show sensors of a specific type.", 34},
+      "Show sensors of a specific type.", 31},
+    { "reread-sdr-cache", REREAD_SDR_CACHE_KEY, NULL, 0,
+      "Re-Read SDR cache.", 32},
     { "bridge-sensors", BRIDGE_SENSORS_KEY, NULL, 0,
-      "Bridge addresses to read non-BMC owned sensors.", 35},
+      "Bridge addresses to read non-BMC owned sensors.", 33},
     { "shared-sensors", SHARED_SENSORS_KEY, NULL, 0,
-      "Iterate over shared sensors in a single record.", 36},
+      "Iterate over shared sensors in a single record.", 34},
     { "interpret-oem-data", INTERPRET_OEM_DATA_KEY, NULL, 0,
-      "Attempt to interpret OEM data.", 37},
+      "Attempt to interpret OEM data.", 35},
     { "ignore-non-interpretable-sensors", IGNORE_NON_INTERPRETABLE_SENSORS_KEY, NULL, 0,
-      "Ignore non-interpretable sensors in output.", 38},
+      "Ignore non-interpretable sensors in output.", 36},
     { "sensor-config-file", SENSOR_CONFIG_FILE_KEY, "FILE", 0,
-      "Specify an alternate sensor configuration file.", 39},
+      "Specify an alternate sensor configuration file.", 37},
     { NULL, 0, NULL, 0, NULL, 0}
   };
 
@@ -120,9 +114,6 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 
   switch (key)
     {
-    case VERBOSE_KEY:
-      cmd_args->verbose_count++;
-      break;
     case RECORD_IDS_KEY:
       tok = strtok (arg, " ,");
       while (tok && cmd_args->record_ids_length < MAX_SENSOR_RECORD_IDS)
@@ -130,12 +121,6 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           value = 0;
           ptr = NULL;
           errno = 0;
-
-          if (!strcasecmp (tok, SENSOR_PARSE_ALL_STRING))
-            {
-              cmd_args->record_ids_length = 0;
-              break;
-            }
 
           value = strtol (tok, &ptr, 10);
 
@@ -154,46 +139,10 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           tok = strtok (NULL, " ,");
         }
       break;
-    case EXCLUDE_RECORD_IDS_KEY:
-      tok = strtok (arg, " ,");
-      while (tok && cmd_args->exclude_record_ids_length < MAX_SENSOR_RECORD_IDS)
-        {
-          value = 0;
-          ptr = NULL;
-          errno = 0;
-
-          if (!strcasecmp (tok, SENSOR_PARSE_NONE_STRING))
-            {
-              cmd_args->exclude_record_ids_length = 0;
-              break;
-            }
-
-          value = strtol (tok, &ptr, 10);
-
-          if (errno
-              || ptr[0] != '\0'
-              || value < 0
-              || value < IPMI_SDR_RECORD_ID_FIRST
-              || value > IPMI_SDR_RECORD_ID_LAST)
-            {
-              fprintf (stderr, "invalid sensor record id: %d\n", value);
-              exit (1);
-            }
-
-          cmd_args->exclude_record_ids[cmd_args->exclude_record_ids_length] = value;
-          cmd_args->exclude_record_ids_length++;
-          tok = strtok (NULL, " ,");
-        }
-      break;
     case SENSOR_TYPES_KEY:
       tok = strtok (arg, " ,");
       while (tok && cmd_args->sensor_types_length < MAX_SENSOR_TYPES)
         {
-          if (!strcasecmp (tok, SENSOR_PARSE_ALL_STRING))
-            {
-              cmd_args->sensor_types_length = 0;
-              break;
-            }
           strncpy (cmd_args->sensor_types[cmd_args->sensor_types_length],
                    tok,
                    MAX_SENSOR_TYPES_STRING_LENGTH);
@@ -201,33 +150,20 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           tok = strtok (NULL, " ,");
         }
       break;
-    case EXCLUDE_SENSOR_TYPES_KEY:
-      tok = strtok (arg, " ,");
-      while (tok && cmd_args->exclude_sensor_types_length < MAX_SENSOR_TYPES)
-        {
-          if (!strcasecmp (tok, SENSOR_PARSE_NONE_STRING))
-            {
-              cmd_args->exclude_sensor_types_length = 0;
-              break;
-            }
-          strncpy (cmd_args->exclude_sensor_types[cmd_args->exclude_sensor_types_length],
-                   tok,
-                   MAX_SENSOR_TYPES_STRING_LENGTH);
-          cmd_args->exclude_sensor_types_length++;
-          tok = strtok (NULL, " ,");
-        }
+    case REREAD_SDR_CACHE_KEY:
+      cmd_args->reread_sdr_cache = 1;
+      break;
+    case IGNORE_NON_INTERPRETABLE_SENSORS_KEY:
+      cmd_args->ignore_non_interpretable_sensors = 1;
       break;
     case BRIDGE_SENSORS_KEY:
       cmd_args->bridge_sensors = 1;
       break;
-    case SHARED_SENSORS_KEY:
-      cmd_args->shared_sensors = 1;
-      break;
     case INTERPRET_OEM_DATA_KEY:
       cmd_args->interpret_oem_data = 1;
       break;
-    case IGNORE_NON_INTERPRETABLE_SENSORS_KEY:
-      cmd_args->ignore_non_interpretable_sensors = 1;
+    case SHARED_SENSORS_KEY:
+      cmd_args->shared_sensors = 1;
       break;
     case SENSOR_CONFIG_FILE_KEY:
       if (cmd_args->sensor_config_file)
@@ -246,10 +182,6 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       break;
     default:
       ret = common_parse_opt (key, arg, &(cmd_args->common));
-      if (ret == ARGP_ERR_UNKNOWN)
-        ret = sdr_parse_opt (key, arg, &(cmd_args->sdr));
-      if (ret == ARGP_ERR_UNKNOWN)
-        ret = hostrange_parse_opt (key, arg, &(cmd_args->hostrange));
       return (ret);
     }
 
@@ -262,19 +194,11 @@ ipmimonitoring_sensors_argp_parse (int argc, char **argv, struct ipmimonitoring_
   unsigned int i;
 
   init_common_cmd_args_operator (&(cmd_args->common));
-  init_sdr_cmd_args (&(cmd_args->sdr));
-  init_hostrange_cmd_args (&(cmd_args->hostrange));
-  cmd_args->verbose_count = 0;
 
   memset (cmd_args->record_ids,
           '\0',
           sizeof (unsigned int) * MAX_SENSOR_RECORD_IDS);
   cmd_args->record_ids_length = 0;
-
-  memset (cmd_args->exclude_record_ids,
-          '\0',
-          sizeof (unsigned int) * MAX_SENSOR_RECORD_IDS);
-  cmd_args->exclude_record_ids_length = 0;
 
   for (i = 0; i < MAX_SENSOR_TYPES; i++)
     memset (cmd_args->sensor_types[i],
@@ -282,12 +206,7 @@ ipmimonitoring_sensors_argp_parse (int argc, char **argv, struct ipmimonitoring_
             MAX_SENSOR_TYPES_STRING_LENGTH+1);
   cmd_args->sensor_types_length = 0;
 
-  for (i = 0; i < MAX_SENSOR_TYPES; i++)
-    memset (cmd_args->exclude_sensor_types[i],
-            '\0',
-            MAX_SENSOR_TYPES_STRING_LENGTH+1);
-  cmd_args->exclude_sensor_types_length = 0;
-
+  cmd_args->reread_sdr_cache = 0;
   cmd_args->bridge_sensors = 0;
   cmd_args->shared_sensors = 0;
   cmd_args->interpret_oem_data = 0;
@@ -310,8 +229,6 @@ ipmimonitoring_sensors_argp_parse (int argc, char **argv, struct ipmimonitoring_
               cmd_args);
 
   verify_common_cmd_args (&(cmd_args->common));
-  verify_sdr_cmd_args (&(cmd_args->sdr));
-  verify_hostrange_cmd_args (&(cmd_args->hostrange));
 }
 
 

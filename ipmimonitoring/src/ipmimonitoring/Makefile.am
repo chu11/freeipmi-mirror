@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.23.12.2 2010-02-10 22:22:25 chu11 Exp $
+## $Id: Makefile.am,v 1.23.12.3 2010-02-11 19:31:56 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
@@ -10,10 +10,6 @@ noinst_HEADERS = \
 
 AM_CPPFLAGS = \
 	-I$(top_srcdir)/common/src/toolcommon \
-	-I$(top_srcdir)/common/src/toolhostrange \
-	-I$(top_srcdir)/common/src/toolsdr \
-	-I$(top_srcdir)/common/src/toolsensor \
-	-I$(top_srcdir)/common/src/miscutil \
 	-I$(top_srcdir)/common/src/portability \
 	-I$(top_srcdir)/ipmimonitoring/src/libipmimonitoring \
 	-I$(top_srcdir)/libfreeipmi/include \
@@ -24,10 +20,6 @@ noinst_PROGRAMS = ipmimonitoring-sensors
 
 ipmimonitoring_sensors_LDADD = \
 	$(top_builddir)/common/src/toolcommon/libtoolcommon.la \
-	$(top_builddir)/common/src/toolhostrange/libtoolhostrange.la \
-	$(top_builddir)/common/src/toolsdr/libtoolsdr.la \
-	$(top_builddir)/common/src/toolsensor/libtoolsensor.la \
-	$(top_builddir)/common/src/miscutil/libmiscutils.la \
 	$(top_builddir)/common/src/portability/libfreeipmiportability.la \
 	$(top_builddir)/ipmidetect/src/libipmidetect/libipmidetect.la \
 	$(top_builddir)/ipmimonitoring/src/libipmimonitoring/libipmimonitoring.la
@@ -43,9 +35,6 @@ $(top_builddir)/common/src/toolhostrange/libtoolhostrange.la : force-dependency-
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
 $(top_builddir)/common/src/toolsdr/libtoolsdr.la : force-dependency-check
-	@cd `dirname $@` && $(MAKE) `basename $@`
-
-$(top_builddir)/common/src/toolsensor/libtoolsensor.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
 $(top_builddir)/common/src/miscutil/libmiscutils.la : force-dependency-check
