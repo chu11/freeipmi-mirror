@@ -1,6 +1,9 @@
 2010-02-11  Albert Chu <chu11@llnl.gov>
 
 	* ipmimonitoring/src/libipmimonitoring: Fix sensor naming.
+
+	* ipmimonitoring/src/libipmimonitoring/ipmi_monitoring_bitmasks.h:
+	New file.
 	
 2010-02-10  Albert Chu <chu11@llnl.gov>
 

@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.16 2010-01-08 19:28:06 chu11 Exp $
+## $Id: Makefile.am,v 1.17 2010-02-11 21:49:24 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
@@ -11,7 +11,7 @@ noinst_HEADERS = \
 	ipmi_monitoring_sdr_cache.h \
 	ipmi_monitoring_sensor_reading.h
 
-include_HEADERS = ipmi_monitoring.h
+include_HEADERS = ipmi_monitoring.h ipmi_monitoring_bitmasks.h
 
 lib_LTLIBRARIES = libipmimonitoring.la
 
