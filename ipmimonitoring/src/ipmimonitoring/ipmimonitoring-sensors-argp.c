@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-sensors-argp.c,v 1.1.2.3 2010-02-11 18:03:16 chu11 Exp $
+ *  $Id: ipmimonitoring-sensors-argp.c,v 1.1.2.4 2010-02-11 18:35:39 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -89,18 +89,16 @@ static struct argp_option cmdline_options[] =
       "Show sensors of a specific type.", 33},
     { "exclude-sensor-types", EXCLUDE_SENSOR_TYPES_KEY, "SENSOR-TYPE-LIST", 0,
       "Do not show sensors of a specific type.", 34},
-    { "list-sensor-types",    LIST_SENSOR_TYPES_KEY, 0, 0,
-      "List sensor types.", 35},
     { "bridge-sensors", BRIDGE_SENSORS_KEY, NULL, 0,
-      "Bridge addresses to read non-BMC owned sensors.", 36},
+      "Bridge addresses to read non-BMC owned sensors.", 35},
     { "shared-sensors", SHARED_SENSORS_KEY, NULL, 0,
-      "Iterate over shared sensors in a single record.", 37},
+      "Iterate over shared sensors in a single record.", 36},
     { "interpret-oem-data", INTERPRET_OEM_DATA_KEY, NULL, 0,
-      "Attempt to interpret OEM data.", 38},
+      "Attempt to interpret OEM data.", 37},
     { "ignore-non-interpretable-sensors", IGNORE_NON_INTERPRETABLE_SENSORS_KEY, NULL, 0,
-      "Ignore non-interpretable sensors in output.", 39},
+      "Ignore non-interpretable sensors in output.", 38},
     { "sensor-config-file", SENSOR_CONFIG_FILE_KEY, "FILE", 0,
-      "Specify an alternate sensor configuration file.", 40},
+      "Specify an alternate sensor configuration file.", 39},
     { NULL, 0, NULL, 0, NULL, 0}
   };
 
@@ -219,9 +217,6 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           tok = strtok (NULL, " ,");
         }
       break;
-    case LIST_SENSOR_TYPES_KEY:
-      cmd_args->list_sensor_types = 1;
-      break;
     case BRIDGE_SENSORS_KEY:
       cmd_args->bridge_sensors = 1;
       break;
@@ -292,8 +287,6 @@ ipmimonitoring_sensors_argp_parse (int argc, char **argv, struct ipmimonitoring_
             '\0',
             MAX_SENSOR_TYPES_STRING_LENGTH+1);
   cmd_args->exclude_sensor_types_length = 0;
-
-  cmd_args->list_sensor_types = 0;
 
   cmd_args->bridge_sensors = 0;
   cmd_args->shared_sensors = 0;

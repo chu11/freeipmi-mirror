@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-sensors.c,v 1.1.2.4 2010-02-11 18:25:20 chu11 Exp $
+ *  $Id: ipmimonitoring-sensors.c,v 1.1.2.5 2010-02-11 18:35:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -75,21 +75,6 @@
 #define IPMIMONITORING_SENSORS_NO_EVENT_STRING        "OK"
 
 static int
-_list_sensor_types (ipmimonitoring_sensors_state_data_t *state_data)
-{
-  assert (state_data);
-
-  /* make sure API is consistent to libipmimonitoring */
-  assert (IPMI_SENSOR_TYPE_TEMPERATURE == IPMI_MONITORING_SENSOR_TYPE_TEMPERATURE);
-  assert (IPMI_SENSOR_TYPE_FRU_STATE == IPMI_MONITORING_SENSOR_TYPE_FRU_STATE);
-
-  if (list_sensor_types (state_data->pstate, 0) < 0)
-    return (-1);
-  
-  return (0);
-}
-
-static int
 _flush_cache (ipmimonitoring_sensors_state_data_t *state_data)
 {
   assert (state_data);
@@ -132,47 +117,6 @@ _get_sensor_type_string (ipmimonitoring_sensors_state_data_t *state_data, int se
   assert (IPMI_SENSOR_TYPE_FRU_STATE == IPMI_MONITORING_SENSOR_TYPE_FRU_STATE);
 
   return (get_sensor_type_output_string (sensor_type));
-}
-
-static const char *
-_get_sensor_state_string (ipmimonitoring_sensors_state_data_t *state_data, int sensor_state)
-{
-  assert (state_data);
-
-  if (sensor_state == IPMI_MONITORING_SENSOR_STATE_NOMINAL)
-    return "Nominal";
-  else if (sensor_state == IPMI_MONITORING_SENSOR_STATE_WARNING)
-    return "Warning";
-  else if (sensor_state == IPMI_MONITORING_SENSOR_STATE_CRITICAL)
-    return "Critical";
-
-  return (IPMIMONITORING_SENSORS_NA_STRING);
-}
-
-static const char *
-_get_sensor_units_string (ipmimonitoring_sensors_state_data_t *state_data,
-                          uint8_t sensor_units)
-{
-  const char *sensor_units_str;
-
-  assert (state_data);
-
-  if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_CELSIUS)
-    sensor_units_str = ipmi_sensor_units_abbreviated[IPMI_SENSOR_UNIT_DEGREES_C];
-  else if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_FAHRENHEIT)
-    sensor_units_str = ipmi_sensor_units_abbreviated[IPMI_SENSOR_UNIT_DEGREES_F];
-  else if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_VOLTS)
-    sensor_units_str = ipmi_sensor_units_abbreviated[IPMI_SENSOR_UNIT_VOLTS];
-  else if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_AMPS)
-    sensor_units_str = ipmi_sensor_units_abbreviated[IPMI_SENSOR_UNIT_AMPS];
-  else if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_RPM)
-    sensor_units_str = ipmi_sensor_units_abbreviated[IPMI_SENSOR_UNIT_RPM];
-  else if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_WATTS)
-    sensor_units_str = ipmi_sensor_units_abbreviated[IPMI_SENSOR_UNIT_WATTS];
-  else
-    sensor_units_str = IPMIMONITORING_SENSORS_NA_STRING;
-
-  return (sensor_units_str);
 }
 
 static int
@@ -277,47 +221,6 @@ _calculate_record_ids (ipmimonitoring_sensors_state_data_t *state_data,
   return (0);
 }
   
-static int
-_output_sensor_bitmask_strings (ipmimonitoring_sensors_state_data_t *state_data,
-				int sensor_bitmask_type,
-                                char **sensor_bitmask_strings)
-{
-  assert (state_data);
-
-  if (sensor_bitmask_type != IPMI_MONITORING_SENSOR_BITMASK_TYPE_UNKNOWN)
-    {     
-      if (sensor_bitmask_strings)
-        {
-          unsigned int i = 0;
-          
-          pstdout_printf (state_data->pstate, ",");
-      
-          while (sensor_bitmask_strings[i])
-            {
-              pstdout_printf (state_data->pstate, " ");
-              
-              pstdout_printf (state_data->pstate,
-                              "'%s'",
-                              sensor_bitmask_strings[i]);
-              
-              i++;
-            }
-        }
-      else
-        {
-          pstdout_printf (state_data->pstate,
-                          ", '%s'",
-                          IPMIMONITORING_SENSORS_NO_EVENT_STRING);
-        }
-    }
-  else
-    pstdout_printf (state_data->pstate,
-                    ", %s",
-                    IPMIMONITORING_SENSORS_NA_STRING);
-
-  return (0);
-}
-
 static int
 _ipmimonitoring_callback (ipmi_monitoring_ctx_t c, void *callback_data)
 {
@@ -436,17 +339,29 @@ _ipmimonitoring_callback (ipmi_monitoring_ctx_t c, void *callback_data)
 
   sensor_type_str = _get_sensor_type_string (state_data, sensor_type);
 
-  sensor_state_str = _get_sensor_state_string (state_data, sensor_state);
-
   pstdout_printf (state_data->pstate,
-                  "%u, %s, %s, %s",
+                  "%u, %s, %s",
                   record_id,
                   sensor_name,
-                  sensor_type_str,
+                  sensor_type_str);
+
+  if (sensor_state == IPMI_MONITORING_SENSOR_STATE_NOMINAL)
+    sensor_state_str = "Nominal";
+  else if (sensor_state == IPMI_MONITORING_SENSOR_STATE_WARNING)
+    sensor_state_str = "Warning";
+  else if (sensor_state == IPMI_MONITORING_SENSOR_STATE_CRITICAL)
+    sensor_state_str = "Critical";
+  else
+    sensor_state_str = IPMIMONITORING_SENSORS_NA_STRING;
+
+  pstdout_printf (state_data->pstate,
+                  ", %s",
                   sensor_state_str);
 
   if (sensor_reading)
     {
+      const char *sensor_units_str;
+
       if (sensor_reading_type == IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER8_BOOL)
         pstdout_printf (state_data->pstate,
                         ", %s",
@@ -464,12 +379,26 @@ _ipmimonitoring_callback (ipmi_monitoring_ctx_t c, void *callback_data)
                         ", %s",
                         IPMIMONITORING_SENSORS_NA_STRING);
 
+      if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_CELSIUS)
+        sensor_units_str = ipmi_sensor_units_abbreviated[IPMI_SENSOR_UNIT_DEGREES_C];
+      else if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_FAHRENHEIT)
+        sensor_units_str = ipmi_sensor_units_abbreviated[IPMI_SENSOR_UNIT_DEGREES_F];
+      else if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_VOLTS)
+        sensor_units_str = ipmi_sensor_units_abbreviated[IPMI_SENSOR_UNIT_VOLTS];
+      else if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_AMPS)
+        sensor_units_str = ipmi_sensor_units_abbreviated[IPMI_SENSOR_UNIT_AMPS];
+      else if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_RPM)
+        sensor_units_str = ipmi_sensor_units_abbreviated[IPMI_SENSOR_UNIT_RPM];
+      else if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_WATTS)
+        sensor_units_str = ipmi_sensor_units_abbreviated[IPMI_SENSOR_UNIT_WATTS];
+      else
+        sensor_units_str = IPMIMONITORING_SENSORS_NA_STRING;
+
       pstdout_printf (state_data->pstate,
                       ", %s",
-                      _get_sensor_units_string (state_data, sensor_units));
-
+                      sensor_units_str);
     }
-  else if (!sensor_reading)
+  else
     pstdout_printf (state_data->pstate,
                     ", %s, %s",
                     IPMIMONITORING_SENSORS_NA_STRING,
@@ -484,10 +413,34 @@ _ipmimonitoring_callback (ipmi_monitoring_ctx_t c, void *callback_data)
                     ", %s",
                     IPMIMONITORING_SENSORS_NA_STRING);
   
-  if (_output_sensor_bitmask_strings (state_data,
-                                      sensor_bitmask_type,
-                                      sensor_bitmask_strings) < 0)
-    goto cleanup;
+  if (sensor_bitmask_type != IPMI_MONITORING_SENSOR_BITMASK_TYPE_UNKNOWN)
+    {     
+      if (sensor_bitmask_strings)
+        {
+          unsigned int i = 0;
+          
+          pstdout_printf (state_data->pstate, ",");
+      
+          while (sensor_bitmask_strings[i])
+            {
+              pstdout_printf (state_data->pstate, " ");
+              
+              pstdout_printf (state_data->pstate,
+                              "'%s'",
+                              sensor_bitmask_strings[i]);
+              
+              i++;
+            }
+        }
+      else
+        pstdout_printf (state_data->pstate,
+                        ", '%s'",
+                        IPMIMONITORING_SENSORS_NO_EVENT_STRING);
+    }
+  else
+    pstdout_printf (state_data->pstate,
+                    ", %s",
+                    IPMIMONITORING_SENSORS_NA_STRING);
 
   pstdout_printf (state_data->pstate,
                   "\n");
@@ -511,9 +464,6 @@ run_cmd_args (ipmimonitoring_sensors_state_data_t *state_data)
   assert (state_data);
 
   args = state_data->prog_data->args;
-
-  if (args->list_sensor_types)
-    return (_list_sensor_types (state_data));
 
   if (args->sdr.flush_cache)
     return (_flush_cache (state_data));
@@ -739,8 +689,7 @@ _ipmimonitoring (pstdout_state_t pstate,
 
   /* Special case, just flush, don't do an IPMI connection */
   /* Special case, just list types, don't do an IPMI connection */
-  if (!prog_data->args->sdr.flush_cache
-      && !prog_data->args->list_sensor_types)
+  if (!prog_data->args->sdr.flush_cache)
     {
       if (!(state_data.ipmi_ctx = ipmi_open (prog_data->progname,
                                              hostname,

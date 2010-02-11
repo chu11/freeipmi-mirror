@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-sensors.h,v 1.1.2.3 2010-02-11 18:03:16 chu11 Exp $
+ *  $Id: ipmimonitoring-sensors.h,v 1.1.2.4 2010-02-11 18:35:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -42,7 +42,6 @@ enum ipmimonitoring_sensors_argp_option_keys
     EXCLUDE_RECORD_IDS_KEY = 'R',
     SENSOR_TYPES_KEY = 't',
     EXCLUDE_SENSOR_TYPES_KEY = 'T',
-    LIST_SENSOR_TYPES_KEY = 'L',
     BRIDGE_SENSORS_KEY = 'b',
     SHARED_SENSORS_KEY = 161,
     INTERPRET_OEM_DATA_KEY = 162,
@@ -65,7 +64,6 @@ struct ipmimonitoring_sensors_arguments
   unsigned int sensor_types_length;
   char exclude_sensor_types[MAX_SENSOR_TYPES][MAX_SENSOR_TYPES_STRING_LENGTH+1];
   unsigned int exclude_sensor_types_length;
-  int list_sensor_types;
   int bridge_sensors;
   int shared_sensors;
   int interpret_oem_data;
