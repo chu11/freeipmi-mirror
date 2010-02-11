@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-sensors-argp.c,v 1.1.2.6 2010-02-11 19:45:10 chu11 Exp $
+ *  $Id: ipmimonitoring-sensors-argp.c,v 1.1.2.7 2010-02-11 21:55:10 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -47,7 +47,6 @@
 #include "ipmimonitoring-sensors.h"
 #include "ipmimonitoring-sensors-argp.h"
 
-#include "freeipmi-portability.h"
 #include "tool-cmdline-common.h"
 #include "tool-config-file-common.h"
 

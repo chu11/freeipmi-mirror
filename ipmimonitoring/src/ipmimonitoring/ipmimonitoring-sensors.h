@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-sensors.h,v 1.1.2.7 2010-02-11 21:43:59 chu11 Exp $
+ *  $Id: ipmimonitoring-sensors.h,v 1.1.2.8 2010-02-11 21:55:10 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -27,9 +27,7 @@
 #ifndef _IPMIMONITORING_SENSORS_H
 #define _IPMIMONITORING_SENSORS_H
 
-#include <freeipmi/freeipmi.h>
-
-#include "ipmi_monitoring.h"
+#include <ipmi_monitoring.h>
 
 #include "tool-cmdline-common.h"
 

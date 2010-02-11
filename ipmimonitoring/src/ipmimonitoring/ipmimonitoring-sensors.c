@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-sensors.c,v 1.1.2.8 2010-02-11 21:43:59 chu11 Exp $
+ *  $Id: ipmimonitoring-sensors.c,v 1.1.2.9 2010-02-11 21:55:10 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -37,12 +37,11 @@
 #include <assert.h>
 #include <errno.h>
 
-#include "ipmi_monitoring.h"
+#include <ipmi_monitoring.h>
 
 #include "ipmimonitoring-sensors.h"
 #include "ipmimonitoring-sensors-argp.h"
 
-#include "freeipmi-portability.h"
 #include "tool-common.h"
 #include "tool-cmdline-common.h"
 
