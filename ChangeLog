@@ -11,9 +11,8 @@
 
 	* ipmimonitoring/src/ipmimonitoring/: Rename ipmimonitoring to
 	ipmimonitoring-sensors for testing.  Rename files appropriately
-	for name change.  Remove freeipmi.conf config file support.
-	Remove legacy support.  Remove unnecessary options for a testing
-	tool.
+	for name change.  Rework to be independent tool and example of how
+	to use the library.
 
 	* common/src/toolcommon/: Make ipmimonitoring config file options
 	backwards compatible to ipmi-sensors.
