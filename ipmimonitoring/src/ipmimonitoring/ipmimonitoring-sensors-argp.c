@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-sensors-argp.c,v 1.1.2.7 2010-02-11 21:55:10 chu11 Exp $
+ *  $Id: ipmimonitoring-sensors-argp.c,v 1.1.2.8 2010-02-11 21:57:21 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -117,7 +117,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     {
     case RECORD_IDS_KEY:
       tok = strtok (arg, " ,");
-      while (tok && cmd_args->record_ids_length < MAX_SENSOR_RECORD_IDS)
+      while (tok && cmd_args->record_ids_length < IPMI_MONITORING_SENSORS_MAX_RECORD_IDS)
         {
           value = 0;
           ptr = NULL;
@@ -142,11 +142,11 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       break;
     case SENSOR_TYPES_KEY:
       tok = strtok (arg, " ,");
-      while (tok && cmd_args->sensor_types_length < MAX_SENSOR_TYPES)
+      while (tok && cmd_args->sensor_types_length < IPMI_MONITORING_SENSORS_MAX_SENSOR_TYPES)
         {
           strncpy (cmd_args->sensor_types[cmd_args->sensor_types_length],
                    tok,
-                   MAX_SENSOR_TYPES_STRING_LENGTH);
+                   IPMI_MONITORING_SENSORS_MAX_SENSOR_TYPES_STRING_LENGTH);
           cmd_args->sensor_types_length++;
           tok = strtok (NULL, " ,");
         }
@@ -207,13 +207,13 @@ ipmimonitoring_sensors_argp_parse (int argc, char **argv, struct ipmimonitoring_
 
   memset (cmd_args->record_ids,
           '\0',
-          sizeof (unsigned int) * MAX_SENSOR_RECORD_IDS);
+          sizeof (unsigned int) * IPMI_MONITORING_SENSORS_MAX_RECORD_IDS);
   cmd_args->record_ids_length = 0;
 
-  for (i = 0; i < MAX_SENSOR_TYPES; i++)
+  for (i = 0; i < IPMI_MONITORING_SENSORS_MAX_SENSOR_TYPES; i++)
     memset (cmd_args->sensor_types[i],
             '\0',
-            MAX_SENSOR_TYPES_STRING_LENGTH+1);
+            IPMI_MONITORING_SENSORS_MAX_SENSOR_TYPES_STRING_LENGTH+1);
   cmd_args->sensor_types_length = 0;
 
   cmd_args->reread_sdr_cache = 0;
@@ -229,7 +229,7 @@ ipmimonitoring_sensors_argp_parse (int argc, char **argv, struct ipmimonitoring_
 
   memset (cmd_args->ipmimonitoring_sensor_types,
           '\0',
-          sizeof (unsigned int) * MAX_SENSOR_TYPES);
+          sizeof (unsigned int) * IPMI_MONITORING_SENSORS_MAX_SENSOR_TYPES);
   cmd_args->ipmimonitoring_sensor_types_length = 0;
 
   argp_parse (&cmdline_argp,

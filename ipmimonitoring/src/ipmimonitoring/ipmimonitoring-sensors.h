@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-sensors.h,v 1.1.2.8 2010-02-11 21:55:10 chu11 Exp $
+ *  $Id: ipmimonitoring-sensors.h,v 1.1.2.9 2010-02-11 21:57:22 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -31,9 +31,9 @@
 
 #include "tool-cmdline-common.h"
 
-#define MAX_SENSOR_RECORD_IDS               128
-#define MAX_SENSOR_TYPES                    16
-#define MAX_SENSOR_TYPES_STRING_LENGTH      256
+#define IPMI_MONITORING_SENSORS_MAX_RECORD_IDS                 128
+#define IPMI_MONITORING_SENSORS_MAX_SENSOR_TYPES               16
+#define IPMI_MONITORING_SENSORS_MAX_SENSOR_TYPES_STRING_LENGTH 256
 
 enum ipmimonitoring_sensors_argp_option_keys
   {
@@ -52,9 +52,9 @@ struct ipmimonitoring_sensors_arguments
 {
   struct common_cmd_args common;
   int regenerate_sdr_cache;
-  unsigned int record_ids[MAX_SENSOR_RECORD_IDS];
+  unsigned int record_ids[IPMI_MONITORING_SENSORS_MAX_RECORD_IDS];
   unsigned int record_ids_length;
-  char sensor_types[MAX_SENSOR_TYPES][MAX_SENSOR_TYPES_STRING_LENGTH+1];
+  char sensor_types[IPMI_MONITORING_SENSORS_MAX_SENSOR_TYPES][IPMI_MONITORING_SENSORS_MAX_SENSOR_TYPES_STRING_LENGTH+1];
   unsigned int sensor_types_length;
   int reread_sdr_cache;
   int ignore_non_interpretable_sensors;
@@ -66,7 +66,7 @@ struct ipmimonitoring_sensors_arguments
 
   struct ipmi_monitoring_ipmi_config conf;
   int ipmimonitoring_flags;
-  unsigned int ipmimonitoring_sensor_types[MAX_SENSOR_TYPES];
+  unsigned int ipmimonitoring_sensor_types[IPMI_MONITORING_SENSORS_MAX_SENSOR_TYPES];
   unsigned int ipmimonitoring_sensor_types_length;
 };
 
