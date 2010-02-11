@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-sensors.h,v 1.1.2.5 2010-02-11 19:31:56 chu11 Exp $
+ *  $Id: ipmimonitoring-sensors.h,v 1.1.2.6 2010-02-11 19:45:10 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -46,7 +46,8 @@ enum ipmimonitoring_sensors_argp_option_keys
     BRIDGE_SENSORS_KEY = 'b',
     INTERPRET_OEM_DATA_KEY = 163,
     SHARED_SENSORS_KEY = 164,
-    SENSOR_CONFIG_FILE_KEY = 165,
+    SDR_CACHE_DIRECTORY_KEY = 165,
+    SENSOR_CONFIG_FILE_KEY = 166,
   };
 
 struct ipmimonitoring_sensors_arguments
@@ -62,6 +63,7 @@ struct ipmimonitoring_sensors_arguments
   int bridge_sensors;
   int interpret_oem_data;
   int shared_sensors;
+  char *sdr_cache_directory;
   char *sensor_config_file;
 
   struct ipmi_monitoring_ipmi_config conf;

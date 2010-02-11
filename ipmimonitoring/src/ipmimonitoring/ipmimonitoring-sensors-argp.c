@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-sensors-argp.c,v 1.1.2.5 2010-02-11 19:31:56 chu11 Exp $
+ *  $Id: ipmimonitoring-sensors-argp.c,v 1.1.2.6 2010-02-11 19:45:10 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -91,8 +91,10 @@ static struct argp_option cmdline_options[] =
       "Attempt to interpret OEM data.", 35},
     { "ignore-non-interpretable-sensors", IGNORE_NON_INTERPRETABLE_SENSORS_KEY, NULL, 0,
       "Ignore non-interpretable sensors in output.", 36},
+    { "sdr-cache-directory", SDR_CACHE_DIRECTORY_KEY, "DIR", 0,
+      "Specify an alternate SDR cache directory.", 37},
     { "sensor-config-file", SENSOR_CONFIG_FILE_KEY, "FILE", 0,
-      "Specify an alternate sensor configuration file.", 37},
+      "Specify an alternate sensor state configuration file.", 38},
     { NULL, 0, NULL, 0, NULL, 0}
   };
 
@@ -165,6 +167,15 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case SHARED_SENSORS_KEY:
       cmd_args->shared_sensors = 1;
       break;
+    case SDR_CACHE_DIRECTORY_KEY:
+      if (cmd_args->sdr_cache_directory)
+        free (cmd_args->sdr_cache_directory);
+      if (!(cmd_args->sdr_cache_directory = strdup (arg)))
+        {
+          perror ("strdup");
+          exit (1);
+        }
+      break;
     case SENSOR_CONFIG_FILE_KEY:
       if (cmd_args->sensor_config_file)
         free (cmd_args->sensor_config_file);
@@ -211,6 +222,7 @@ ipmimonitoring_sensors_argp_parse (int argc, char **argv, struct ipmimonitoring_
   cmd_args->shared_sensors = 0;
   cmd_args->interpret_oem_data = 0;
   cmd_args->ignore_non_interpretable_sensors = 0;
+  cmd_args->sdr_cache_directory = NULL;
   cmd_args->sensor_config_file = NULL;
 
   memset (&(cmd_args->conf), '\0', sizeof (struct ipmi_monitoring_ipmi_config));

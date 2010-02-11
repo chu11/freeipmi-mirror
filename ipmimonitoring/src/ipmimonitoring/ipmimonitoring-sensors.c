@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-sensors.c,v 1.1.2.6 2010-02-11 19:31:56 chu11 Exp $
+ *  $Id: ipmimonitoring-sensors.c,v 1.1.2.7 2010-02-11 19:45:10 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -433,6 +433,32 @@ _ipmimonitoring (ipmimonitoring_sensors_prog_data_t *prog_data)
       goto cleanup;
     }
 
+  if (prog_data->args->sdr_cache_directory)
+    {
+      if (ipmi_monitoring_ctx_sdr_cache_directory (state_data.ctx,
+                                                   prog_data->args->sdr_cache_directory) < 0)
+        {
+          fprintf (stderr,
+                   "ipmi_monitoring_ctx_sdr_cache_directory: %s\n",
+                   ipmi_monitoring_ctx_errormsg (state_data.ctx));
+          exit_code = EXIT_FAILURE;
+          goto cleanup;
+        }
+    }
+
+  if (prog_data->args->sensor_config_file)
+    {
+      if (ipmi_monitoring_ctx_sensor_config_file (state_data.ctx,
+                                                  prog_data->args->sensor_config_file) < 0)
+        {
+          fprintf (stderr,
+                   "ipmi_monitoring_ctx_sensor_config_file: %s\n",
+                   ipmi_monitoring_ctx_errormsg (state_data.ctx));
+          exit_code = EXIT_FAILURE;
+          goto cleanup;
+        }
+    }
+  
   if (run_cmd_args (&state_data) < 0)
     {
       exit_code = EXIT_FAILURE;
