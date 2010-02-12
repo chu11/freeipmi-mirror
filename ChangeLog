@@ -1,5 +1,11 @@
 2010-02-11  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/src/api/ipmi-lan-session-common.c
+	(_ipmi_lan_2_0_cmd_wrapper_verify_packet): Fix session sequence
+	number wrap around corner case.
+	
+2010-02-11  Albert Chu <chu11@llnl.gov>
+
 	* ipmimonitoring/src/libipmimonitoring: Fix sensor naming.
 
 	* ipmimonitoring/src/libipmimonitoring/ipmi_monitoring_bitmasks.h:

@@ -2417,7 +2417,7 @@ _ipmi_lan_2_0_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
   uint8_t l_payload_type;
   uint32_t l_session_id;
   uint8_t l_message_tag;
-  uint8_t rs_session_sequence_number;
+  uint32_t rs_session_sequence_number;
   uint8_t rmcpplus_status_code;
   uint64_t val;
   int ret, rv = -1;
