@@ -70,7 +70,7 @@ tools like ipmi-sensors(8).
 
 sdr-cache - Provides an API for creating, caching, reading, and
 parsing a sensor data repository (SDR).  Utilized by tools such as
-ipmi-fru(8), ipmi-sensors(8) and ipmimonitoring(8).
+ipmi-fru(8) and ipmi-sensors(8).
 
 sdr-parse - Provides an API for parsing SDR records.  Utilized by
 tools such as ipmi-fru(8) and ipmi-sensors(8).

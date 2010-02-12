@@ -18,7 +18,7 @@
 
 	* common/src/toolsensor/: Code cleanup given changes.
 
-	* etc/, man/: Update appropriately for config file changes.
+	* etc/, doc/, man/: Update appropriately for changes.
 
 	* configure.ac: Update appropriately for changes.
 	

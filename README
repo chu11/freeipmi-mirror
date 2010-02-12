@@ -121,10 +121,11 @@ ipmi-sensors(8)) come with hostrange support so multiple hosts can be
 specified on the command line at the same time and IPMI can be
 executed against the hosts in parallel.  See tool manpages for more
 information.  Also see the document freeipmi-hostrange.txt for
-detailed usage and explanation.  The ipmimonitoring(8) tool interprets
-sensor readings as well as just reporting them.  By mapping sensor
-readings into NOMINAL, WARNING, or CRITICAL states, it makes
-monitoring sensors easier across large numbers of nodes.
+detailed usage and explanation.  Ipmi-sensors(8) and the
+libipmimonitoring(3) library support the ability to interpret sensor
+readings as well as just reporting them.  By mapping sensor readings
+into NOMINAL, WARNING, or CRITICAL states, it makes monitoring sensors
+easier across large numbers of nodes.
 
 Development
 -----------
@@ -193,12 +194,6 @@ Ipmi-locate
 
 A tool that can probe for information about the location of a BMC
 device, such as device addresses.
-
-Ipmimonitoring
-
-A tool for sensor monitoring and interpretation.  The tool is similar
-to ipmi-sensors, but sensor readings are analyzed and mapped into
-Nominal, Warning, and Critical states.
 
 Ipmi-chassis-config
 
