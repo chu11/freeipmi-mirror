@@ -9,10 +9,9 @@
 	* ipmimonitoring/src/ipmimonitoring/Makefile.am: No-inst
 	ipmimonitoring.
 
-	* ipmimonitoring/src/ipmimonitoring/: Rename ipmimonitoring to
-	ipmimonitoring-sensors for testing.  Rename files appropriately
-	for name change.  Rework to be independent tool and example of how
-	to use the library.
+	* ipmimonitoring/src/ipmimonitoring/: Remove ipmimonitoring.
+
+	* ipmimonitoring/src/examples/: Add ipmimonitoring-sensors example.
 
 	* common/src/toolcommon/: Make ipmimonitoring config file options
 	backwards compatible to ipmi-sensors.

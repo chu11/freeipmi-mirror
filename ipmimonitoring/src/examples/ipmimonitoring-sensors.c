@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-sensors.c,v 1.1.2.10 2010-02-11 23:44:59 chu11 Exp $
+ *  $Id: ipmimonitoring-sensors.c,v 1.1.2.1 2010-02-12 01:36:41 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -23,6 +23,23 @@
  *  You should have received a copy of the GNU General Public License along
  *  with Ipmimonitoring.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
+
+/* This is an example of how to use the libipmimonitoring library to
+ * read and monitor sensors.
+ *
+ * At the top of this file, you'll find a number of variables for
+ * configuration of IPMI communication and what sensors you are
+ * interested in monitoring.  Those variables are used in the
+ * libipmimonitoring calls below.
+ *
+ * Hopefully this example will be sufficient to help anyone program
+ * IPMI monitoring software for their environment.
+ *
+ * To compile, linking against the library should be sufficient for
+ * most environments.  e.g.
+ *
+ * gcc -o ipmimonitoring-sensors ipmimonitoring-sensors.c -lipmimonitoring
+ */
 
 #include <stdio.h>
 #include <stdlib.h>
