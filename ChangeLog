@@ -3,6 +3,8 @@
 	* ipmi-sensors-config/ipmi-sensors-config.8.pre.in,
 	libfreeipmi/libfreeipmi.3.pre.in: Fix typos, pef-config to
 	ipmi-pef-config.
+
+	* doc/freeipmi-hostrange.txt: Add some option info.
 	
 2010-02-11  Albert Chu <chu11@llnl.gov>
 

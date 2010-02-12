@@ -345,6 +345,10 @@ looking for or pipe it into a log monitoring utility.
 The hostrange functionality is also very useful to quickly clear the
 SEL logs across the entire cluster.
 
+The --no-header-output option may be useful for reducing output across
+a lot of nodes.  The --sdr-cache-recreate option may be useful to
+gracefully handle errors.
+
 ipmi-raw:
 
 The output of ipmi-raw will likely be only 1 long line.  The
@@ -380,6 +384,10 @@ individual nodes.  I imagine many users will want to run ipmi-sensors
 with the default output (each line of output is prepended with
 "hostname: ").  In this mode, key error messages and the node it came
 from can be easily monitored along w/ grep and awk in scripts.
+
+The --no-header-output and --ignore-not-available-sensors options may
+be useful for reducing output across a lot of nodes.  The
+--sdr-cache-recreate option may be useful to gracefully handle errors.
 
 ipmimonitoring:
 
