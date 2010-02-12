@@ -118,6 +118,6 @@ FreeIPMI maintainers.
 Copyright \(co 2008-2010 FreeIPMI Core Team.  
 #include <@top_srcdir@/common/man/manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
-freeipmi(7), bmc-config(8), pef-config(8), ipmi-chassis-config(8), 
-ipmi-sensors(8), ipmimonitoring(8)
+freeipmi(7), bmc-config(8), ipmi-pef-config(8),
+ipmi-chassis-config(8), ipmi-sensors(8), ipmimonitoring(8)
 #include <@top_srcdir@/common/man/manpage-common-homepage.man>
