@@ -68,3 +68,4 @@ $(top_builddir)/libfreeipmi/src/libfreeipmi.la : force-dependency-check
 
 force-dependency-check:
 
+EXTRA_DIST = ipmimonitoring
