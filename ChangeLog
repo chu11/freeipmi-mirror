@@ -6,9 +6,6 @@
 
 	* ipmimonitoring/ipmimonitoring.8.pre.in: Remove file.
 
-	* ipmimonitoring/src/ipmimonitoring/Makefile.am: No-inst
-	ipmimonitoring.
-
 	* ipmimonitoring/src/ipmimonitoring/: Remove ipmimonitoring.
 
 	* ipmimonitoring/src/examples/: Add ipmimonitoring-sensors example.
