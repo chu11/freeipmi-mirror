@@ -496,7 +496,7 @@ _simple_output_full_record (ipmi_sensors_state_data_t *state_data,
               if (state_data->prog_data->args->comma_separated_output)
                 snprintf (fmt,
                           IPMI_SENSORS_FMT_BUFLEN,
-                          ",%%-10.2f,%%s");
+                          ",%%.2f,%%s");
               else
                 snprintf (fmt,
                           IPMI_SENSORS_FMT_BUFLEN,
