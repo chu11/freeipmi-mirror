@@ -1,3 +1,9 @@
+2010-02-16  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sensors/src/ipmi-sensors-simple-output.c
+	(_simple_output_full_record): Fix comma separated output corner
+	case.
+	
 2010-02-12  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors-config/ipmi-sensors-config.8.pre.in,
