@@ -1,3 +1,7 @@
+sensors
+-------
+sensor-types/exclude-types take hex input for OEM.
+
 inband
 ------
 --fail-if-ipmi-not-detected
