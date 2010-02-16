@@ -609,6 +609,48 @@ output_sensor_headers (pstdout_state_t pstate,
                     SENSORS_HEADER_EVENT_STR);
 }
 
+static int
+_sensor_type_strcmp (pstdout_state_t pstate,
+                    const char *sensor_type_str_input,
+                    unsigned int sensor_type)
+{
+  const char *sensor_type_str;
+  char *tmpstr = NULL;
+  int rv = -1;
+
+  assert (sensor_type_str_input);
+  
+  /* Don't use get_sensor_type_output_string() - want NULL if invalid */
+  sensor_type_str = ipmi_get_sensor_type_string (sensor_type);
+  
+  if (!sensor_type_str)
+    { 
+      rv = 0;
+      goto cleanup;
+    } 
+  
+  if (!(tmpstr = strdup (sensor_type_str)))
+    { 
+      PSTDOUT_FPRINTF (pstate,
+                       stderr,
+                       "strdup: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    } 
+  
+  _get_sensor_type_cmdline_string (tmpstr);
+  
+  if (!strcasecmp (sensor_type_str_input, sensor_type_str)
+      || !strcasecmp (sensor_type_str_input, tmpstr))
+    rv = 1;
+  else
+    rv = 0;
+  
+ cleanup:
+  free (tmpstr);
+  return (rv);
+}
+
 int
 sensor_type_listed (pstdout_state_t pstate,
                     uint8_t sensor_type,
@@ -624,9 +666,9 @@ sensor_type_listed (pstdout_state_t pstate,
     {
       int ret;
 
-      if ((ret = sensor_type_strcmp (pstate,
-                                     sensor_types[i],
-                                     sensor_type)) < 0)
+      if ((ret = _sensor_type_strcmp (pstate,
+                                      sensor_types[i],
+                                      sensor_type)) < 0)
         return (-1);
 
       if (ret)
