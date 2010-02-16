@@ -334,55 +334,6 @@ get_entity_sensor_name_string (pstdout_state_t pstate,
   return (0);
 }
 
-int
-get_entity_sensor_name_string_by_record_id (pstdout_state_t pstate,
-                                            ipmi_sdr_parse_ctx_t sdr_parse_ctx,
-                                            ipmi_sdr_cache_ctx_t sdr_cache_ctx,
-                                            uint16_t record_id,
-                                            struct sensor_entity_id_counts *entity_id_counts,
-                                            uint8_t *sensor_number,
-                                            char *sensor_name_buf,
-                                            unsigned int sensor_name_buf_len)
-{
-  uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
-  int sdr_record_len = 0;
-
-  assert (sdr_parse_ctx);
-  assert (sdr_cache_ctx);
-  assert (entity_id_counts);
-  assert (sensor_name_buf);
-  assert (sensor_name_buf_len);
-
-  if (ipmi_sdr_cache_search_record_id (sdr_cache_ctx, record_id) < 0)
-    {
-      PSTDOUT_FPRINTF (pstate,
-                       stderr,
-                       "ipmi_sdr_cache_search_record_id: %s\n",
-                       ipmi_sdr_cache_ctx_errormsg (sdr_cache_ctx));
-      return (-1);
-    }
-
-  if ((sdr_record_len = ipmi_sdr_cache_record_read (sdr_cache_ctx,
-                                                    sdr_record,
-                                                    IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH)) < 0)
-    {
-      PSTDOUT_FPRINTF (pstate,
-                       stderr,
-                       "ipmi_sdr_cache_record_read: %s\n",
-                       ipmi_sdr_cache_ctx_errormsg (sdr_cache_ctx));
-      return (-1);
-    }
-
-  return get_entity_sensor_name_string (pstate,
-                                        sdr_parse_ctx,
-                                        sdr_record,
-                                        sdr_record_len,
-                                        entity_id_counts,
-                                        sensor_number,
-                                        sensor_name_buf,
-                                        sensor_name_buf_len);
-}
-
 static void
 _get_sensor_type_cmdline_string (char *sensor_type)
 {
@@ -495,48 +446,6 @@ valid_sensor_types (pstdout_state_t pstate,
     }
 
   return (0);
-}
-
-int
-sensor_type_strcmp (pstdout_state_t pstate,
-                    const char *sensor_type_str_input,
-                    unsigned int sensor_type)
-{
-  const char *sensor_type_str;
-  char *tmpstr = NULL;
-  int rv = -1;
-
-  assert (sensor_type_str_input);
-
-  /* Don't use get_sensor_type_output_string() - want NULL if invalid */
-  sensor_type_str = ipmi_get_sensor_type_string (sensor_type);
-
-  if (!sensor_type_str)
-    {
-      rv = 0;
-      goto cleanup;
-    }
-
-  if (!(tmpstr = strdup (sensor_type_str)))
-    {
-      PSTDOUT_FPRINTF (pstate,
-                       stderr,
-                       "strdup: %s\n",
-                       strerror (errno));
-      goto cleanup;
-    }
-
-  _get_sensor_type_cmdline_string (tmpstr);
-
-  if (!strcasecmp (sensor_type_str_input, sensor_type_str)
-      || !strcasecmp (sensor_type_str_input, tmpstr))
-    rv = 1;
-  else
-    rv = 0;
-
- cleanup:
-  free (tmpstr);
-  return (rv);
 }
 
 int
