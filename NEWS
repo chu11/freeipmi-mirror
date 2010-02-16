@@ -1,6 +1,6 @@
 FreeIPMI 0.8.4 - 02/02/10
 -------------------------
-o Fix IPMI 2.0 sequence number warp around corner case.
+o Fix IPMI 2.0 sequence number wrap around corner case.
 o Fix ipmi-sensors --comma-separated-output corner case.
 o Minor documentation updates.
 
