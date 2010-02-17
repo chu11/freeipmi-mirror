@@ -369,8 +369,7 @@ _output_sensor_type (pstdout_state_t pstate,
 }
 
 int
-list_sensor_types (pstdout_state_t pstate,
-                   unsigned int show_oem_reserved)
+list_sensor_types (pstdout_state_t pstate)
 {
   unsigned int i;
 

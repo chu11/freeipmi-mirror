@@ -21,6 +21,9 @@ o ipmi-sensors
   - The "Unrecognized State" event string is now output as
     "Unrecognized Event = X" or "OEM Event = X" where X is the event
     bitmask.
+o ipmi-sel
+  - Support --sensor-types option.
+  - Support --exclude-sensor-types option.
 o ipmimonitoring
   - Removed tool.  Tool is now superseded by ipmi-sensors and the new
     --output-sensor-state option.

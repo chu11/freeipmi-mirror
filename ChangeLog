@@ -2,6 +2,9 @@
 
 	* ipmi-sensors/, common/src/toolsensor/, man/: Support numeric
 	input for --sensor-types and --exclude-sensor-types.
+
+	* common/src/, ipmi-sel/: Support --sensor-types and
+	--exclude-sensor-types options.
 	
 2010-02-16  Albert Chu <chu11@llnl.gov>
 

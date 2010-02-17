@@ -730,6 +730,89 @@ config_file_fanout (conffile_t cf,
 }
 
 static int
+_config_file_sensor_types (struct conffile_data *data,
+                           char *optionname,
+                           char sensor_types[][CONFIG_FILE_MAX_SENSOR_TYPES_STRING_LENGTH+1],
+                           unsigned int *sensor_types_length)
+{
+  unsigned int i;
+
+  assert (data);
+  assert (optionname);
+  assert (sensor_types);
+  assert (sensor_types_length);
+
+  if (data->stringlist_len > CONFIG_FILE_MAX_SENSOR_TYPES)
+    {
+      fprintf (stderr, "Config File Error: invalid number of arguments for %s\n", optionname);
+      exit (1);
+    }
+
+  for (i = 0; i < data->stringlist_len; i++)
+    {
+      if (strlen (data->stringlist[i]) > CONFIG_FILE_MAX_SENSOR_TYPES_STRING_LENGTH)
+        {
+          fprintf (stderr, "Config File Error: invalid value '%s' for %s\n",
+                   data->stringlist[i],
+                   optionname);
+          exit (1);
+        }
+
+      strncpy (sensor_types[i],
+               data->stringlist[i],
+               CONFIG_FILE_MAX_SENSOR_TYPES_STRING_LENGTH);
+
+      (*sensor_types_length)++;
+    }
+
+  return (0);
+}
+
+int
+config_file_ipmi_sel_sensor_types (conffile_t cf,
+                                   struct conffile_data *data,
+                                   char *optionname,
+                                   int option_type,
+                                   void *option_ptr,
+                                   int option_data,
+                                   void *app_ptr,
+                                   int app_data)
+{
+  struct config_file_data_ipmi_sel *config_file_data;
+
+  assert (option_ptr);
+
+  config_file_data = (struct config_file_data_ipmi_sel *)option_ptr;
+
+  return (_config_file_sensor_types (data,
+                                     optionname,
+                                     config_file_data->sensor_types,
+                                     &(config_file_data->sensor_types_length)));
+}
+
+int
+config_file_ipmi_sel_exclude_sensor_types (conffile_t cf,
+                                           struct conffile_data *data,
+                                           char *optionname,
+                                           int option_type,
+                                           void *option_ptr,
+                                           int option_data,
+                                           void *app_ptr,
+                                           int app_data)
+{
+  struct config_file_data_ipmi_sel *config_file_data;
+
+  assert (option_ptr);
+
+  config_file_data = (struct config_file_data_ipmi_sel *)option_ptr;
+
+  return (_config_file_sensor_types (data,
+                                     optionname,
+                                     config_file_data->exclude_sensor_types,
+                                     &(config_file_data->exclude_sensor_types_length)));
+}
+
+static int
 _config_file_sensor_record_ids (struct conffile_data *data,
                                 char *optionname,
                                 unsigned int *record_ids,
@@ -808,45 +891,6 @@ config_file_ipmi_sensors_exclude_record_ids (conffile_t cf,
                                           optionname,
                                           config_file_data->exclude_record_ids,
                                           &(config_file_data->exclude_record_ids_length)));
-}
-
-static int
-_config_file_sensor_types (struct conffile_data *data,
-                           char *optionname,
-                           char sensor_types[][CONFIG_FILE_MAX_SENSOR_TYPES_STRING_LENGTH+1],
-                           unsigned int *sensor_types_length)
-{
-  unsigned int i;
-
-  assert (data);
-  assert (optionname);
-  assert (sensor_types);
-  assert (sensor_types_length);
-
-  if (data->stringlist_len > CONFIG_FILE_MAX_SENSOR_TYPES)
-    {
-      fprintf (stderr, "Config File Error: invalid number of arguments for %s\n", optionname);
-      exit (1);
-    }
-
-  for (i = 0; i < data->stringlist_len; i++)
-    {
-      if (strlen (data->stringlist[i]) > CONFIG_FILE_MAX_SENSOR_TYPES_STRING_LENGTH)
-        {
-          fprintf (stderr, "Config File Error: invalid value '%s' for %s\n",
-                   data->stringlist[i],
-                   optionname);
-          exit (1);
-        }
-
-      strncpy (sensor_types[i],
-               data->stringlist[i],
-               CONFIG_FILE_MAX_SENSOR_TYPES_STRING_LENGTH);
-
-      (*sensor_types_length)++;
-    }
-
-  return (0);
 }
 
 int
@@ -2599,6 +2643,28 @@ config_file_parse (const char *filename,
         0,
         &(ipmi_sel_data.verbose_count_count),
         &(ipmi_sel_data.verbose_count),
+        0,
+      },
+      {
+        "ipmi-sel-sensor-types",
+        CONFFILE_OPTION_LIST_STRING,
+        -1,
+        config_file_ipmi_sel_sensor_types,
+        1,
+        0,
+        &(ipmi_sel_data.sensor_types_count),
+        &(ipmi_sel_data),
+        0,
+      },
+      {
+        "ipmi-sel-exclude-sensor-types",
+        CONFFILE_OPTION_LIST_STRING,
+        -1,
+        config_file_ipmi_sel_exclude_sensor_types,
+        1,
+        0,
+        &(ipmi_sel_data.exclude_sensor_types_count),
+        &(ipmi_sel_data),
         0,
       },
       {

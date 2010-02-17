@@ -37,6 +37,9 @@ enum ipmi_sel_argp_option_keys
     EXCLUDE_DISPLAY_KEY = 161,
     DISPLAY_RANGE_KEY = 162,
     EXCLUDE_DISPLAY_RANGE_KEY = 163,
+    SENSOR_TYPES_KEY = 't',
+    EXCLUDE_SENSOR_TYPES_KEY = 'T',
+    LIST_SENSOR_TYPES_KEY = 'L',
     TAIL_KEY = 164,
     CLEAR_KEY = 165,
     DELETE_ALL_KEY = 166,       /* legacy */
@@ -74,6 +77,11 @@ struct ipmi_sel_arguments
   int exclude_display_range;
   uint16_t exclude_display_range1;
   uint16_t exclude_display_range2;
+  char sensor_types[MAX_SENSOR_TYPES][MAX_SENSOR_TYPES_STRING_LENGTH+1];
+  unsigned int sensor_types_length;
+  char exclude_sensor_types[MAX_SENSOR_TYPES][MAX_SENSOR_TYPES_STRING_LENGTH+1];
+  unsigned int exclude_sensor_types_length;
+  int list_sensor_types;
   int tail;
   uint16_t tail_count;
   int clear;

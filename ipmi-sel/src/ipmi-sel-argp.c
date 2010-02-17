@@ -83,39 +83,45 @@ static struct argp_option cmdline_options[] =
       "Display SEL records from record id START to END.", 34},
     { "exclude-display-range", EXCLUDE_DISPLAY_RANGE_KEY, "START-END", 0,
       "Exclude display of SEL records from record id START to END.", 35},
+    { "sensor-types",   SENSOR_TYPES_KEY,       "SENSOR-TYPES-LIST", 0,
+      "Show sensors of a specific type.", 36},
+    { "exclude-sensor-types", EXCLUDE_SENSOR_TYPES_KEY, "SENSOR-TYPES-LIST", 0,
+      "Do not show sensors of a specific type.", 37},
+    { "list-sensor-types",    LIST_SENSOR_TYPES_KEY, 0, 0,
+      "List sensor types.", 38},
     { "tail", TAIL_KEY, "COUNT", 0,
-      "Display approximately the last count SEL records.", 36},
+      "Display approximately the last count SEL records.", 39},
     { "clear", CLEAR_KEY, 0, 0,
-      "Clear SEL.", 37},
+      "Clear SEL.", 40},
     /* legacy */
     { "delete-all", DELETE_ALL_KEY, 0, OPTION_HIDDEN,
-      "Delete all SEL records.", 38},
+      "Delete all SEL records.", 41},
     { "delete",     DELETE_KEY,     "REC-LIST", 0,
-      "Delete SEL records by record ids.", 39},
+      "Delete SEL records by record ids.", 42},
     { "delete-range", DELETE_RANGE_KEY, "START-END", 0,
-      "Delete record ids from START to END in the SEL.", 40},
+      "Delete record ids from START to END in the SEL.", 43},
     { "system-event-only", SYSTEM_EVENT_ONLY_KEY, 0, 0,
-      "Output only system event records (i.e. don't output OEM records).", 41},
+      "Output only system event records (i.e. don't output OEM records).", 44},
     { "oem-event-only", OEM_EVENT_ONLY_KEY, 0, 0,
-      "Output only OEM event records.", 42},
+      "Output only OEM event records.", 45},
     { "hex-dump",   HEX_DUMP_KEY, 0, 0,
-      "Hex-dump SEL records.", 43},
+      "Hex-dump SEL records.", 46},
     { "assume-system-event-records", ASSUME_SYSTEM_EVENT_RECORDS_KEY, 0, 0,
-      "Assume invalid record types are system event records.", 44},
+      "Assume invalid record types are system event records.", 47},
     { "interpret-oem-data", INTERPRET_OEM_DATA_KEY, NULL, 0,
-      "Attempt to interpret OEM data.", 45},
+      "Attempt to interpret OEM data.", 48},
     { "entity-sensor-names", ENTITY_SENSOR_NAMES_KEY, NULL, 0,
-      "Output sensor names with entity ids and instances.", 46},
+      "Output sensor names with entity ids and instances.", 49},
     { "no-sensor-type-output", NO_SENSOR_TYPE_OUTPUT_KEY, 0, 0,
-      "Do not show sensor type output.", 47},
+      "Do not show sensor type output.", 50},
     { "comma-separated-output", COMMA_SEPARATED_OUTPUT_KEY, 0, 0,
-      "Output fields in comma separated format.", 48},
+      "Output fields in comma separated format.", 51},
     { "no-header-output", NO_HEADER_OUTPUT_KEY, 0, 0,
-      "Do not output column headers.", 49},
+      "Do not output column headers.", 52},
     { "non-abbreviated-units", NON_ABBREVIATED_UNITS_KEY, 0, 0,
-      "Output non-abbreviated units (e.g. 'Amps' instead of 'A').", 50},
+      "Output non-abbreviated units (e.g. 'Amps' instead of 'A').", 53},
     { "legacy-output", LEGACY_OUTPUT_KEY, 0, 0,
-      "Output in legacy format.", 51},
+      "Output in legacy format.", 54},
     { NULL, 0, NULL, 0, NULL, 0}
   };
 
@@ -261,6 +267,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
   struct ipmi_sel_arguments *cmd_args = state->input;
   error_t ret;
   char *ptr;
+  char *tok;
   int value;
 
   switch (key)
@@ -294,6 +301,41 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
                    &(cmd_args->exclude_display_range1),
                    &(cmd_args->exclude_display_range2),
                    arg);
+      break;
+    case SENSOR_TYPES_KEY:
+      tok = strtok (arg, " ,");
+      while (tok && cmd_args->sensor_types_length < MAX_SENSOR_TYPES)
+        {
+          if (!strcasecmp (tok, SENSOR_PARSE_ALL_STRING))
+            {
+              cmd_args->sensor_types_length = 0;
+              break;
+            }
+          strncpy (cmd_args->sensor_types[cmd_args->sensor_types_length],
+                   tok,
+                   MAX_SENSOR_TYPES_STRING_LENGTH);
+          cmd_args->sensor_types_length++;
+          tok = strtok (NULL, " ,");
+        }
+      break;
+    case EXCLUDE_SENSOR_TYPES_KEY:
+      tok = strtok (arg, " ,");
+      while (tok && cmd_args->exclude_sensor_types_length < MAX_SENSOR_TYPES)
+        {
+          if (!strcasecmp (tok, SENSOR_PARSE_NONE_STRING))
+            {
+              cmd_args->exclude_sensor_types_length = 0;
+              break;
+            }
+          strncpy (cmd_args->exclude_sensor_types[cmd_args->exclude_sensor_types_length],
+                   tok,
+                   MAX_SENSOR_TYPES_STRING_LENGTH);
+          cmd_args->exclude_sensor_types_length++;
+          tok = strtok (NULL, " ,");
+        }
+      break;
+    case LIST_SENSOR_TYPES_KEY:
+      cmd_args->list_sensor_types = 1;
       break;
     case TAIL_KEY:
       value = 0;
@@ -405,6 +447,32 @@ _ipmi_sel_config_file_parse (struct ipmi_sel_arguments *cmd_args)
 
   if (config_file_data.verbose_count_count)
     cmd_args->verbose_count = config_file_data.verbose_count;
+  if (config_file_data.sensor_types_count && config_file_data.sensor_types_length)
+    {
+      unsigned int i;
+
+      assert(MAX_SENSOR_TYPES == CONFIG_FILE_MAX_SENSOR_TYPES);
+      assert(MAX_SENSOR_TYPES_STRING_LENGTH == CONFIG_FILE_MAX_SENSOR_TYPES_STRING_LENGTH);
+
+      for (i = 0; i < config_file_data.sensor_types_length; i++)
+        strncpy (cmd_args->sensor_types[i],
+                 config_file_data.sensor_types[i],
+                 MAX_SENSOR_TYPES_STRING_LENGTH);
+      cmd_args->sensor_types_length = config_file_data.sensor_types_length;
+    }
+  if (config_file_data.exclude_sensor_types_count && config_file_data.exclude_sensor_types_length)
+    {
+      unsigned int i;
+
+      assert(MAX_SENSOR_TYPES == CONFIG_FILE_MAX_SENSOR_TYPES);
+      assert(MAX_SENSOR_TYPES_STRING_LENGTH == CONFIG_FILE_MAX_SENSOR_TYPES_STRING_LENGTH);
+
+      for (i = 0; i < config_file_data.exclude_sensor_types_length; i++)
+        strncpy (cmd_args->exclude_sensor_types[i],
+                 config_file_data.exclude_sensor_types[i],
+                 MAX_SENSOR_TYPES_STRING_LENGTH);
+      cmd_args->exclude_sensor_types_length = config_file_data.exclude_sensor_types_length;
+    }
   if (config_file_data.system_event_only_count)
     cmd_args->system_event_only = config_file_data.system_event_only;
   if (config_file_data.oem_event_only_count)
@@ -427,10 +495,33 @@ _ipmi_sel_config_file_parse (struct ipmi_sel_arguments *cmd_args)
     cmd_args->legacy_output = config_file_data.legacy_output;
 }
 
+static void
+_ipmi_sel_args_validate (struct ipmi_sel_arguments *cmd_args)
+{
+  if (cmd_args->sensor_types_length)
+    {
+      if (valid_sensor_types (NULL,
+                              cmd_args->sensor_types,
+                              cmd_args->sensor_types_length,
+                              1) < 0)
+        exit (1);
+    }
+  
+  if (cmd_args->exclude_sensor_types_length)
+    {
+      if (valid_sensor_types (NULL,
+                              cmd_args->exclude_sensor_types,
+                              cmd_args->exclude_sensor_types_length,
+                              1) < 0)
+        exit (1);
+    }
+}
 
 void
 ipmi_sel_argp_parse (int argc, char **argv, struct ipmi_sel_arguments *cmd_args)
 {
+  unsigned int i;
+
   init_common_cmd_args_operator (&(cmd_args->common));
   init_sdr_cmd_args (&(cmd_args->sdr));
   init_hostrange_cmd_args (&(cmd_args->hostrange));
@@ -452,6 +543,20 @@ ipmi_sel_argp_parse (int argc, char **argv, struct ipmi_sel_arguments *cmd_args)
   cmd_args->exclude_display_range = 0;
   cmd_args->exclude_display_range1 = 0;
   cmd_args->exclude_display_range2 = 0;
+  for (i = 0; i < MAX_SENSOR_TYPES; i++)
+    memset (cmd_args->sensor_types[i],
+            '\0',
+            MAX_SENSOR_TYPES_STRING_LENGTH+1);
+  cmd_args->sensor_types_length = 0;
+
+  for (i = 0; i < MAX_SENSOR_TYPES; i++)
+    memset (cmd_args->exclude_sensor_types[i],
+            '\0',
+            MAX_SENSOR_TYPES_STRING_LENGTH+1);
+  cmd_args->exclude_sensor_types_length = 0;
+
+  cmd_args->list_sensor_types = 0;
+
   cmd_args->tail = 0;
   cmd_args->tail_count = 0;
   cmd_args->clear = 0;
@@ -494,4 +599,5 @@ ipmi_sel_argp_parse (int argc, char **argv, struct ipmi_sel_arguments *cmd_args)
   verify_common_cmd_args (&(cmd_args->common));
   verify_sdr_cmd_args (&(cmd_args->sdr));
   verify_hostrange_cmd_args (&(cmd_args->hostrange));
+  _ipmi_sel_args_validate (cmd_args);
 }

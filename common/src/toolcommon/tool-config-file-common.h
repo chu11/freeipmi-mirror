@@ -127,6 +127,12 @@ struct config_file_data_ipmi_sel
 {
   int verbose_count;
   int verbose_count_count;
+  char sensor_types[CONFIG_FILE_MAX_SENSOR_TYPES][CONFIG_FILE_MAX_SENSOR_TYPES_STRING_LENGTH+1];
+  unsigned int sensor_types_length;
+  int sensor_types_count;
+  char exclude_sensor_types[CONFIG_FILE_MAX_SENSOR_TYPES][CONFIG_FILE_MAX_SENSOR_TYPES_STRING_LENGTH+1];
+  unsigned int exclude_sensor_types_length;
+  int exclude_sensor_types_count;
   int system_event_only;
   int system_event_only_count;
   int oem_event_only;

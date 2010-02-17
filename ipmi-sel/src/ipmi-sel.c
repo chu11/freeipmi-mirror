@@ -378,6 +378,17 @@ _flush_cache (ipmi_sel_state_data_t *state_data)
 }
 
 static int
+_list_sensor_types (ipmi_sel_state_data_t *state_data)
+{
+  assert (state_data);
+
+  if (list_sensor_types (state_data->pstate) < 0)
+    return (-1);
+
+  return (0);
+}
+
+static int
 _clear_entries (ipmi_sel_state_data_t *state_data)
 {
   int rv = -1;
@@ -1552,7 +1563,6 @@ _sel_parse_callback (ipmi_sel_parse_ctx_t ctx, void *callback_data)
   ipmi_sel_state_data_t *state_data;
   uint8_t record_type;
   int record_type_class;
-  int display_flag = 1;
   int rv = -1;
 
   assert (ctx);
@@ -1581,22 +1591,55 @@ _sel_parse_callback (ipmi_sel_parse_ctx_t ctx, void *callback_data)
           for (i = 0; i < state_data->prog_data->args->exclude_display_record_list_length; i++)
             {
               if (state_data->prog_data->args->exclude_display_record_list[i] == record_id)
-                {
-                  display_flag = 0;
-                  break;
-                }
+                goto out;
             }
         }
       else
         {
           if (record_id >= state_data->prog_data->args->exclude_display_range1
               && record_id <= state_data->prog_data->args->exclude_display_range2)
-            display_flag = 0;
+            goto out;
         }
     }
 
-  if (!display_flag)
-    goto out;
+  if (state_data->prog_data->args->sensor_types_length
+      || state_data->prog_data->args->exclude_sensor_types_length)
+    {
+      uint8_t sensor_type;
+      int flag;
+
+      if (ipmi_sel_parse_read_sensor_type (state_data->sel_parse_ctx,
+                                           &sensor_type) < 0)
+        {
+          if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_read_record_type") < 0)
+            goto cleanup;
+          goto out;
+        }
+
+      if (state_data->prog_data->args->sensor_types_length)
+        {
+          if ((flag = sensor_type_listed (state_data->pstate,
+                                          sensor_type,
+                                          state_data->prog_data->args->sensor_types,
+                                          state_data->prog_data->args->sensor_types_length)) < 0)
+            goto cleanup;
+          
+          if (!flag)
+            goto out;
+        }
+
+      if (state_data->prog_data->args->exclude_sensor_types_length)
+        {
+          if ((flag = sensor_type_listed (state_data->pstate,
+                                          sensor_type,
+                                          state_data->prog_data->args->exclude_sensor_types,
+                                          state_data->prog_data->args->exclude_sensor_types_length)) < 0)
+            goto cleanup;
+
+          if (flag)
+            goto out;
+        }
+    }
 
   if (ipmi_sel_parse_read_record_type (state_data->sel_parse_ctx,
                                        &record_type) < 0)
@@ -2131,6 +2174,9 @@ run_cmd_args (ipmi_sel_state_data_t *state_data)
 
   if (args->sdr.flush_cache)
     return (_flush_cache (state_data));
+
+  if (args->list_sensor_types)
+    return (_list_sensor_types (state_data));
 
   if (args->clear)
     return (_clear_entries (state_data));

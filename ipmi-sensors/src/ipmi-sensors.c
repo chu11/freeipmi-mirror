@@ -400,7 +400,7 @@ _list_sensor_types (ipmi_sensors_state_data_t *state_data)
 {
   assert (state_data);
 
-  if (list_sensor_types (state_data->pstate, 1) < 0)
+  if (list_sensor_types (state_data->pstate) < 0)
     return (-1);
 
   return (0);
