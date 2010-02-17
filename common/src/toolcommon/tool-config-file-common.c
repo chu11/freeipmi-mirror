@@ -914,94 +914,6 @@ config_file_ipmiconsole_escape_char (conffile_t cf,
 }
 
 int
-config_file_ipmimonitoring_record_ids (conffile_t cf,
-                                       struct conffile_data *data,
-                                       char *optionname,
-                                       int option_type,
-                                       void *option_ptr,
-                                       int option_data,
-                                       void *app_ptr,
-                                       int app_data)
-{
-  struct config_file_data_ipmimonitoring *config_file_data;
-
-  assert (option_ptr);
-
-  config_file_data = (struct config_file_data_ipmimonitoring *)option_ptr;
-
-  return (_config_file_sensor_record_ids (data,
-                                          optionname,
-                                          config_file_data->record_ids,
-                                          &(config_file_data->record_ids_length)));
-}
-
-int
-config_file_ipmimonitoring_exclude_record_ids (conffile_t cf,
-                                               struct conffile_data *data,
-                                               char *optionname,
-                                               int option_type,
-                                               void *option_ptr,
-                                               int option_data,
-                                               void *app_ptr,
-                                               int app_data)
-{
-  struct config_file_data_ipmimonitoring *config_file_data;
-
-  assert (option_ptr);
-
-  config_file_data = (struct config_file_data_ipmimonitoring *)option_ptr;
-
-  return (_config_file_sensor_record_ids (data,
-                                          optionname,
-                                          config_file_data->exclude_record_ids,
-                                          &(config_file_data->exclude_record_ids_length)));
-}
-
-int
-config_file_ipmimonitoring_sensor_types (conffile_t cf,
-                                         struct conffile_data *data,
-                                         char *optionname,
-                                         int option_type,
-                                         void *option_ptr,
-                                         int option_data,
-                                         void *app_ptr,
-                                         int app_data)
-{
-  struct config_file_data_ipmimonitoring *config_file_data;
-
-  assert (option_ptr);
-
-  config_file_data = (struct config_file_data_ipmimonitoring *)option_ptr;
-
-  return (_config_file_sensor_types (data,
-                                     optionname,
-                                     config_file_data->sensor_types,
-                                     &(config_file_data->sensor_types_length)));
-}
-
-int
-config_file_ipmimonitoring_exclude_sensor_types (conffile_t cf,
-                                                 struct conffile_data *data,
-                                                 char *optionname,
-                                                 int option_type,
-                                                 void *option_ptr,
-                                                 int option_data,
-                                                 void *app_ptr,
-                                                 int app_data)
-{
-  struct config_file_data_ipmimonitoring *config_file_data;
-
-  assert (option_ptr);
-
-  config_file_data = (struct config_file_data_ipmimonitoring *)option_ptr;
-
-  return (_config_file_sensor_types (data,
-                                     optionname,
-                                     config_file_data->exclude_sensor_types,
-                                     &(config_file_data->exclude_sensor_types_length)));
-}
-
-int
 config_file_ipmipower_ipmi_version (conffile_t cf,
                                     struct conffile_data *data,
                                     char *optionname,
@@ -1169,11 +1081,6 @@ config_file_parse (const char *filename,
     ipmiconsole_cipher_suite_id_count = 0, ipmiconsole_privilege_level_count = 0,
     ipmiconsole_workaround_flags_count = 0;
 
-  int ipmimonitoring_username_count = 0, ipmimonitoring_password_count = 0,
-    ipmimonitoring_k_g_count = 0, ipmimonitoring_authentication_type_count = 0,
-    ipmimonitoring_cipher_suite_id_count = 0, ipmimonitoring_privilege_level_count = 0,
-    ipmimonitoring_workaround_flags_count = 0;
-
   int ipmipower_username_count = 0, ipmipower_password_count = 0,
     ipmipower_k_g_count = 0, ipmipower_authentication_type_count = 0,
     ipmipower_cipher_suite_id_count = 0, ipmipower_privilege_level_count = 0,
@@ -1214,9 +1121,6 @@ config_file_parse (const char *filename,
 
   struct config_file_data_ipmiconsole ipmiconsole_data;
   struct config_file_data_ipmiconsole *ipmiconsole_data_ptr;
-
-  struct config_file_data_ipmimonitoring ipmimonitoring_data;
-  struct config_file_data_ipmimonitoring *ipmimonitoring_data_ptr;
 
   struct config_file_data_ipmipower ipmipower_data;
   struct config_file_data_ipmipower *ipmipower_data_ptr;
@@ -3138,6 +3042,320 @@ config_file_parse (const char *filename,
         &(ipmi_sensors_data.legacy_output),
         0,
       },
+      /* backwards compatability to ipmimonitoring */
+      {
+        "ipmimonitoring-username",
+        CONFFILE_OPTION_STRING,
+        -1,
+        config_file_tool_option_username,
+        1,
+        0,
+        &ipmi_sensors_username_count,
+        &cmd_args_config,
+        0,
+      },
+      /* backwards compatability to ipmimonitoring */
+      {
+        "ipmimonitoring-password",
+        CONFFILE_OPTION_STRING,
+        -1,
+        config_file_tool_option_password,
+        1,
+        0,
+        &ipmi_sensors_password_count,
+        &cmd_args_config,
+        0,
+      },
+      /* backwards compatability to ipmimonitoring */
+      {
+        "ipmimonitoring-k_g",
+        CONFFILE_OPTION_STRING,
+        -1,
+        config_file_tool_option_k_g,
+        1,
+        0,
+        &ipmi_sensors_k_g_count,
+        &cmd_args_config,
+        0,
+      },
+      /* backwards compatability to ipmimonitoring */
+      {
+        "ipmimonitoring-authentication-type",
+        CONFFILE_OPTION_STRING,
+        -1,
+        config_file_tool_option_authentication_type,
+        1,
+        0,
+        &ipmi_sensors_authentication_type_count,
+        &cmd_args_config,
+        0,
+      },
+      /* backwards compatability to ipmimonitoring */
+      {
+        "ipmimonitoring-cipher-suite-id",
+        CONFFILE_OPTION_INT,
+        -1,
+        config_file_tool_option_cipher_suite_id,
+        1,
+        0,
+        &ipmi_sensors_cipher_suite_id_count,
+        &cmd_args_config,
+        0,
+      },
+      /* backwards compatability to ipmimonitoring */
+      {
+        "ipmimonitoring-privilege-level",
+        CONFFILE_OPTION_STRING,
+        -1,
+        config_file_tool_option_privilege_level,
+        1,
+        0,
+        &ipmi_sensors_privilege_level_count,
+        &cmd_args_config,
+        0,
+      },
+      /* backwards compatability to ipmimonitoring */
+      {
+        "ipmimonitoring-workaround-flags",
+        CONFFILE_OPTION_LIST_STRING,
+        -1,
+        config_file_tool_option_workaround_flags,
+        1,
+        0,
+        &ipmi_sensors_workaround_flags_count,
+        &cmd_args_config,
+        0
+      },
+      /* backwards compatability to ipmimonitoring */
+      {
+        "ipmimonitoring-quiet-readings",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        config_file_bool,
+        1,
+        0,
+        &(ipmi_sensors_data.quiet_readings_count),
+        &(ipmi_sensors_data.quiet_readings),
+        0,
+      },
+      /* backwards compatability to ipmimonitoring */
+      {
+        "ipmimonitoring-record-ids",
+        CONFFILE_OPTION_LIST_INT,
+        -1,
+        config_file_ipmi_sensors_record_ids,
+        1,
+        0,
+        &(ipmi_sensors_data.record_ids_count),
+        &(ipmi_sensors_data),
+        0,
+      },
+      /* backwards compatability to ipmimonitoring */
+      {
+        "ipmimonitoring-exclude-record-ids",
+        CONFFILE_OPTION_LIST_INT,
+        -1,
+        config_file_ipmi_sensors_exclude_record_ids,
+        1,
+        0,
+        &(ipmi_sensors_data.exclude_record_ids_count),
+        &(ipmi_sensors_data),
+        0,
+      },
+      /* backwards compatability to ipmimonitoring */
+      /* maintained for backwards compatability */
+      {
+        "ipmimonitoring-groups",
+        CONFFILE_OPTION_LIST_STRING,
+        -1,
+        config_file_ipmi_sensors_sensor_types,
+        1,
+        0,
+        &(ipmi_sensors_data.sensor_types_count),
+        &(ipmi_sensors_data),
+        0,
+      },
+      /* backwards compatability to ipmimonitoring */
+      /* maintained for backwards compatability */
+      {
+        "ipmimonitoring-exclude-groups",
+        CONFFILE_OPTION_LIST_STRING,
+        -1,
+        config_file_ipmi_sensors_exclude_sensor_types,
+        1,
+        0,
+        &(ipmi_sensors_data.exclude_sensor_types_count),
+        &(ipmi_sensors_data),
+        0,
+      },
+      /* backwards compatability to ipmimonitoring */
+      {
+        "ipmimonitoring-sensor-types",
+        CONFFILE_OPTION_LIST_STRING,
+        -1,
+        config_file_ipmi_sensors_sensor_types,
+        1,
+        0,
+        &(ipmi_sensors_data.sensor_types_count),
+        &(ipmi_sensors_data),
+        0,
+      },
+      /* backwards compatability to ipmimonitoring */
+      {
+        "ipmimonitoring-exclude-sensor-types",
+        CONFFILE_OPTION_LIST_STRING,
+        -1,
+        config_file_ipmi_sensors_exclude_sensor_types,
+        1,
+        0,
+        &(ipmi_sensors_data.exclude_sensor_types_count),
+        &(ipmi_sensors_data),
+        0,
+      },
+      /* backwards compatability to ipmimonitoring */
+      {
+        "ipmimonitoring-bridge-sensors",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        config_file_bool,
+        1,
+        0,
+        &(ipmi_sensors_data.bridge_sensors_count),
+        &(ipmi_sensors_data.bridge_sensors),
+        0,
+      },
+      /* backwards compatability to ipmimonitoring */
+      {
+        "ipmimonitoring-shared-sensors",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        config_file_bool,
+        1,
+        0,
+        &(ipmi_sensors_data.shared_sensors_count),
+        &(ipmi_sensors_data.shared_sensors),
+        0,
+      },
+      /* backwards compatability to ipmimonitoring */
+      {
+        "ipmimonitoring-interpret-oem-data",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        config_file_bool,
+        1,
+        0,
+        &(ipmi_sensors_data.interpret_oem_data_count),
+        &(ipmi_sensors_data.interpret_oem_data),
+        0,
+      },
+      /* backwards compatability to ipmimonitoring */
+      {
+        "ipmimonitoring-ignore-non-interpretable-sensors",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        config_file_bool,
+        1,
+        0,
+        &(ipmi_sensors_data.ignore_not_available_sensors_count),
+        &(ipmi_sensors_data.ignore_not_available_sensors),
+        0,
+      },
+      /* backwards compatability to ipmimonitoring */
+      {
+        "ipmimonitoring-verbose-count",
+        CONFFILE_OPTION_INT,
+        -1,
+        config_file_non_negative_int,
+        1,
+        0,
+        &(ipmi_sensors_data.verbose_count_count),
+        &(ipmi_sensors_data.verbose_count),
+        0,
+      },
+      /* backwards compatability to ipmimonitoring */
+      {
+        "ipmimonitoring-entity-sensor-names",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        config_file_bool,
+        1,
+        0,
+        &(ipmi_sensors_data.entity_sensor_names_count),
+        &(ipmi_sensors_data.entity_sensor_names),
+        0,
+      },
+      /* backwards compatability to ipmimonitoring */
+      {
+        "ipmimonitoring-no-sensor-type-output",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        config_file_bool,
+        1,
+        0,
+        &(ipmi_sensors_data.no_sensor_type_output_count),
+        &(ipmi_sensors_data.no_sensor_type_output),
+        0,
+      },
+      /* backwards compatability to ipmimonitoring */
+      {
+        "ipmimonitoring-comma-separated-output",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        config_file_bool,
+        1,
+        0,
+        &(ipmi_sensors_data.comma_separated_output_count),
+        &(ipmi_sensors_data.comma_separated_output),
+        0,
+      },
+      /* backwards compatability to ipmimonitoring */
+      {
+        "ipmimonitoring-no-header-output",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        config_file_bool,
+        1,
+        0,
+        &(ipmi_sensors_data.no_header_output_count),
+        &(ipmi_sensors_data.no_header_output),
+        0,
+      },
+      /* backwards compatability to ipmimonitoring */
+      {
+        "ipmimonitoring-non-abbreviated-units",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        config_file_bool,
+        1,
+        0,
+        &(ipmi_sensors_data.non_abbreviated_units_count),
+        &(ipmi_sensors_data.non_abbreviated_units),
+        0,
+      },
+      /* backwards compatability to ipmimonitoring */
+      {
+        "ipmimonitoring-legacy-output",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        config_file_bool,
+        1,
+        0,
+        &(ipmi_sensors_data.legacy_output_count),
+        &(ipmi_sensors_data.legacy_output),
+        0,
+      },
+      /* backwards compatability to ipmimonitoring */
+      {
+        "ipmimonitoring-sensor-config-file",
+        CONFFILE_OPTION_STRING,
+        -1,
+        config_file_string,
+        1,
+        0,
+        &(ipmi_sensors_data.sensor_state_config_file_count),
+        &(ipmi_sensors_data.sensor_state_config_file),
+        0
+      },
     };
 
   /*
@@ -3391,302 +3609,6 @@ config_file_parse (const char *filename,
         &(ipmiconsole_data.lock_memory_count),
         &(ipmiconsole_data.lock_memory),
         0,
-      },
-    };
-
-  /*
-   * ipmimonitoring
-   */
-
-  struct conffile_option ipmimonitoring_options[] =
-    {
-      {
-        "ipmimonitoring-username",
-        CONFFILE_OPTION_STRING,
-        -1,
-        config_file_tool_option_username,
-        1,
-        0,
-        &ipmimonitoring_username_count,
-        &cmd_args_config,
-        0,
-      },
-      {
-        "ipmimonitoring-password",
-        CONFFILE_OPTION_STRING,
-        -1,
-        config_file_tool_option_password,
-        1,
-        0,
-        &ipmimonitoring_password_count,
-        &cmd_args_config,
-        0,
-      },
-      {
-        "ipmimonitoring-k_g",
-        CONFFILE_OPTION_STRING,
-        -1,
-        config_file_tool_option_k_g,
-        1,
-        0,
-        &ipmimonitoring_k_g_count,
-        &cmd_args_config,
-        0,
-      },
-      {
-        "ipmimonitoring-authentication-type",
-        CONFFILE_OPTION_STRING,
-        -1,
-        config_file_tool_option_authentication_type,
-        1,
-        0,
-        &ipmimonitoring_authentication_type_count,
-        &cmd_args_config,
-        0,
-      },
-      {
-        "ipmimonitoring-cipher-suite-id",
-        CONFFILE_OPTION_INT,
-        -1,
-        config_file_tool_option_cipher_suite_id,
-        1,
-        0,
-        &ipmimonitoring_cipher_suite_id_count,
-        &cmd_args_config,
-        0,
-      },
-      {
-        "ipmimonitoring-privilege-level",
-        CONFFILE_OPTION_STRING,
-        -1,
-        config_file_tool_option_privilege_level,
-        1,
-        0,
-        &ipmimonitoring_privilege_level_count,
-        &cmd_args_config,
-        0,
-      },
-      {
-        "ipmimonitoring-workaround-flags",
-        CONFFILE_OPTION_LIST_STRING,
-        -1,
-        config_file_tool_option_workaround_flags,
-        1,
-        0,
-        &ipmimonitoring_workaround_flags_count,
-        &cmd_args_config,
-        0
-      },
-      {
-        "ipmimonitoring-quiet-readings",
-        CONFFILE_OPTION_BOOL,
-        -1,
-        config_file_bool,
-        1,
-        0,
-        &(ipmimonitoring_data.quiet_readings_count),
-        &(ipmimonitoring_data.quiet_readings),
-        0,
-      },
-      {
-        "ipmimonitoring-record-ids",
-        CONFFILE_OPTION_LIST_INT,
-        -1,
-        config_file_ipmimonitoring_record_ids,
-        1,
-        0,
-        &(ipmimonitoring_data.record_ids_count),
-        &(ipmimonitoring_data),
-        0,
-      },
-      {
-        "ipmimonitoring-exclude-record-ids",
-        CONFFILE_OPTION_LIST_INT,
-        -1,
-        config_file_ipmimonitoring_exclude_record_ids,
-        1,
-        0,
-        &(ipmimonitoring_data.exclude_record_ids_count),
-        &(ipmimonitoring_data),
-        0,
-      },
-      /* maintained for backwards compatability */
-      {
-        "ipmimonitoring-groups",
-        CONFFILE_OPTION_LIST_STRING,
-        -1,
-        config_file_ipmimonitoring_sensor_types,
-        1,
-        0,
-        &(ipmimonitoring_data.sensor_types_count),
-        &(ipmimonitoring_data),
-        0,
-      },
-      /* maintained for backwards compatability */
-      {
-        "ipmimonitoring-exclude-groups",
-        CONFFILE_OPTION_LIST_STRING,
-        -1,
-        config_file_ipmimonitoring_exclude_sensor_types,
-        1,
-        0,
-        &(ipmimonitoring_data.exclude_sensor_types_count),
-        &(ipmimonitoring_data),
-        0,
-      },
-      {
-        "ipmimonitoring-sensor-types",
-        CONFFILE_OPTION_LIST_STRING,
-        -1,
-        config_file_ipmimonitoring_sensor_types,
-        1,
-        0,
-        &(ipmimonitoring_data.sensor_types_count),
-        &(ipmimonitoring_data),
-        0,
-      },
-      {
-        "ipmimonitoring-exclude-sensor-types",
-        CONFFILE_OPTION_LIST_STRING,
-        -1,
-        config_file_ipmimonitoring_exclude_sensor_types,
-        1,
-        0,
-        &(ipmimonitoring_data.exclude_sensor_types_count),
-        &(ipmimonitoring_data),
-        0,
-      },
-      {
-        "ipmimonitoring-bridge-sensors",
-        CONFFILE_OPTION_BOOL,
-        -1,
-        config_file_bool,
-        1,
-        0,
-        &(ipmimonitoring_data.bridge_sensors_count),
-        &(ipmimonitoring_data.bridge_sensors),
-        0,
-      },
-      {
-        "ipmimonitoring-shared-sensors",
-        CONFFILE_OPTION_BOOL,
-        -1,
-        config_file_bool,
-        1,
-        0,
-        &(ipmimonitoring_data.shared_sensors_count),
-        &(ipmimonitoring_data.shared_sensors),
-        0,
-      },
-      {
-        "ipmimonitoring-interpret-oem-data",
-        CONFFILE_OPTION_BOOL,
-        -1,
-        config_file_bool,
-        1,
-        0,
-        &(ipmimonitoring_data.interpret_oem_data_count),
-        &(ipmimonitoring_data.interpret_oem_data),
-        0,
-      },
-      {
-        "ipmimonitoring-ignore-non-interpretable-sensors",
-        CONFFILE_OPTION_BOOL,
-        -1,
-        config_file_bool,
-        1,
-        0,
-        &(ipmimonitoring_data.ignore_non_interpretable_sensors_count),
-        &(ipmimonitoring_data.ignore_non_interpretable_sensors),
-        0,
-      },
-      {
-        "ipmimonitoring-verbose-count",
-        CONFFILE_OPTION_INT,
-        -1,
-        config_file_non_negative_int,
-        1,
-        0,
-        &(ipmimonitoring_data.verbose_count_count),
-        &(ipmimonitoring_data.verbose_count),
-        0,
-      },
-      {
-        "ipmimonitoring-entity-sensor-names",
-        CONFFILE_OPTION_BOOL,
-        -1,
-        config_file_bool,
-        1,
-        0,
-        &(ipmimonitoring_data.entity_sensor_names_count),
-        &(ipmimonitoring_data.entity_sensor_names),
-        0,
-      },
-      {
-        "ipmimonitoring-no-sensor-type-output",
-        CONFFILE_OPTION_BOOL,
-        -1,
-        config_file_bool,
-        1,
-        0,
-        &(ipmimonitoring_data.no_sensor_type_output_count),
-        &(ipmimonitoring_data.no_sensor_type_output),
-        0,
-      },
-      {
-        "ipmimonitoring-comma-separated-output",
-        CONFFILE_OPTION_BOOL,
-        -1,
-        config_file_bool,
-        1,
-        0,
-        &(ipmimonitoring_data.comma_separated_output_count),
-        &(ipmimonitoring_data.comma_separated_output),
-        0,
-      },
-      {
-        "ipmimonitoring-no-header-output",
-        CONFFILE_OPTION_BOOL,
-        -1,
-        config_file_bool,
-        1,
-        0,
-        &(ipmimonitoring_data.no_header_output_count),
-        &(ipmimonitoring_data.no_header_output),
-        0,
-      },
-      {
-        "ipmimonitoring-non-abbreviated-units",
-        CONFFILE_OPTION_BOOL,
-        -1,
-        config_file_bool,
-        1,
-        0,
-        &(ipmimonitoring_data.non_abbreviated_units_count),
-        &(ipmimonitoring_data.non_abbreviated_units),
-        0,
-      },
-      {
-        "ipmimonitoring-legacy-output",
-        CONFFILE_OPTION_BOOL,
-        -1,
-        config_file_bool,
-        1,
-        0,
-        &(ipmimonitoring_data.legacy_output_count),
-        &(ipmimonitoring_data.legacy_output),
-        0,
-      },
-      {
-        "ipmimonitoring-sensor-config-file",
-        CONFFILE_OPTION_STRING,
-        -1,
-        config_file_string,
-        1,
-        0,
-        &(ipmimonitoring_data.sensor_config_file_count),
-        &(ipmimonitoring_data.sensor_config_file),
-        0
       },
     };
 
@@ -4068,7 +3990,6 @@ config_file_parse (const char *filename,
               || ((tool_support & CONFIG_FILE_TOOL_IPMI_SENSORS) && tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMI_SENSORS_CONFIG) && tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMICONSOLE) && tool_data)
-              || ((tool_support & CONFIG_FILE_TOOL_IPMIMONITORING) && tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMIPOWER) && tool_data)));
 
   memset (config_file_options, '\0', sizeof (struct conffile_option));
@@ -4305,17 +4226,6 @@ config_file_parse (const char *filename,
 
   config_file_options_len += options_len;
 
-  options_len = sizeof (ipmimonitoring_options)/sizeof (struct conffile_option);
-  if (!(tool_support & CONFIG_FILE_TOOL_IPMIMONITORING))
-    _ignore_options (ipmimonitoring_options, options_len);
-
-  _copy_options (config_file_options,
-                 config_file_options_len,
-                 ipmimonitoring_options,
-                 options_len);
-
-  config_file_options_len += options_len;
-
   options_len = sizeof (ipmipower_options)/sizeof (struct conffile_option);
   if (!(tool_support & CONFIG_FILE_TOOL_IPMIPOWER))
     _ignore_options (ipmipower_options, options_len);
@@ -4341,7 +4251,6 @@ config_file_parse (const char *filename,
   memset (&ipmi_sensors_data, '\0', sizeof (struct config_file_data_ipmi_sensors));
   memset (&ipmi_sensors_config_data, '\0', sizeof (struct config_file_data_ipmi_sensors_config));
   memset (&ipmiconsole_data, '\0', sizeof (struct config_file_data_ipmiconsole));
-  memset (&ipmimonitoring_data, '\0', sizeof (struct config_file_data_ipmimonitoring));
   memset (&ipmipower_data, '\0', sizeof (struct config_file_data_ipmipower));
   memset (&cmd_args_config, '\0', sizeof (struct cmd_args_config));
 
@@ -4507,13 +4416,6 @@ config_file_parse (const char *filename,
       memcpy (ipmiconsole_data_ptr,
               &ipmiconsole_data,
               sizeof (struct config_file_data_ipmiconsole));
-    }
-  else if (tool_support & CONFIG_FILE_TOOL_IPMIMONITORING)
-    {
-      ipmimonitoring_data_ptr = (struct config_file_data_ipmimonitoring *)tool_data;
-      memcpy (ipmimonitoring_data_ptr,
-              &ipmimonitoring_data,
-              sizeof (struct config_file_data_ipmimonitoring));
     }
   else if (tool_support & CONFIG_FILE_TOOL_IPMIPOWER)
     {

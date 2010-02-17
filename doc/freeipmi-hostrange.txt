@@ -389,21 +389,9 @@ The --no-header-output and --ignore-not-available-sensors options may
 be useful for reducing output across a lot of nodes.  The
 --sdr-cache-recreate option may be useful to gracefully handle errors.
 
-ipmimonitoring:
-
-Ipmimonitoring interprets sensor readings into NOMINAL, WARNING, and
-CRITICAL states.  It performs similar functionality of ipmi-sensors,
-but gives you a somewhat fixed set of strings to more easily grep.
-This allows you to use hostranged input/output with Ipmimonitoring to
-quickly monitor your cluster out-of-band.
-
-The -q option will also allow you suppress sensor readings to make
-things easier for consolidating the output.
-
-I imagine many users will want to run ipmimonitoring with the default
-output (each line of output is prepended with "hostname: ").  In this
-mode, you can easily grep for "Warning" and "Critical" and determine
-which nodes have problems via scripts.
+Users may wish to use the --output-sensor-state option w/ ipmi-sensors
+to also output the current sensor state.  This option will output
+NOMINAL, WARNING, and CRITICAL states which allow for easy grepping.
 
 bmc-config/ipmi-chassis-config/ipmi-pef-config/ipmi-sensors-config:
 

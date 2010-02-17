@@ -118,8 +118,9 @@ libfreeipmi, and ipmi support in Powerman.  In October 2004, FreeIPMI
 Since the 0.1.0 release, Z Research developers have contributed
 ipmi-chassis, ipmi-raw, ipmi-locate, and portions of ipmi-pef-config.
 LLNL has contributed IPMI 2.0 support, hostrange support, ipmiconsole,
-ipmimonitoring, ipmidetect, ipmi-sensors-config, ipmi-chassis-config,
-bmc-device, ipmi-oem, ipmi-dcmi, and portions of ipmi-pef-config.
+libipmiconsole, ipmidetect, ipmi-sensors-config, ipmi-chassis-config,
+bmc-device, ipmi-oem, ipmi-dcmi, libipmimonitoring, and portions of
+ipmi-pef-config.
 
 (Note: The original FreeIPMI developers from California Digital
 Corp. are now at Zresearch Inc.)
@@ -154,8 +155,8 @@ supported by other HPC software due to the need for FreeIPMI to work
 on LLNL's GNU/Linux clusters.
 
 Scalable parallel execution of many FreeIPMI tools (ipmi-sensors,
-ipmi-sel, bmc-info, ipmimonitoring, etc.) across a cluster is
-supported through hostranged input and output.  For example:
+ipmi-sel, bmc-info, etc.) across a cluster is supported through
+hostranged input and output.  For example:
 
 @example
 # > bmc-info -h "pwopr[0-5]" -u XXX -p XXX --get-device-id -C
@@ -215,11 +216,11 @@ largest clusters in under a second.
 Ipmiconsole is currently supported by Conman
 (@uref{http://home.gna.org/conman/}) for scalable console management.
 
-Ipmimonitoring interprets sensor readings as well as just reporting
-them.  It can be used for host monitoring IPMI on a cluster.  By
-mapping sensor readings into NOMINAL, WARNING, or CRITICAL states, it
-makes monitoring sensors easier across large numbers of nodes.
-Skummee
+Ipmi-sensors and libipmimonitoring are capable of interpreting sensor
+readings as well as just reporting them.  It can be used for host
+monitoring IPMI on a cluster.  By mapping sensor readings into
+NOMINAL, WARNING, or CRITICAL states, it makes monitoring sensors
+easier across large numbers of nodes.  Skummee
 (@uref{http://sourceforge.net/projects/skummee}) 
 uses libipmimonitoring on LLNL clusters up to 1152 nodes in size.  
 FreeIPMI monitoring plugins

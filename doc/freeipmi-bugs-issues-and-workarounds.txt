@@ -487,8 +487,8 @@ checksums.  Resolved with workaround to ignore the checksum (and pray
 for the best).  (Al comment: I know this was either an Intel Tiger 2
 or Intel Tiger 4 motherboard, but I can't remember which one.)
 
-ipmi-sensors/ipmimonitoring
----------------------------
+ipmi-sensors
+------------
 
 Dell 2950: Some sensors don't return a sensor state (16 bit field)
 although only half of the sensor state (8 bit field) is optional.

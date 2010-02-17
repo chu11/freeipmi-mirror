@@ -3,6 +3,8 @@ FreeIPMI 0.9.1 - 12/07/09
 
 High Level Description of Changes
 ---------------------------------
+o Remove ipmimonitoring tool.  Tool is now superseded by ipmi-sensors
+  and the new --output-sensor-state option.
 o Re-architect libipmimonitoring to support all defined IPMI sensor
   types, OEM bitmasks, and OEM interpretations.
 o Support new 'interpret' sub-library in libfreeipmi.
@@ -17,6 +19,9 @@ o ipmi-sensors
   - The "Unrecognized State" event string is now output as
     "Unrecognized Event = X" or "OEM Event = X" where X is the event
     bitmask.
+o ipmimonitoring
+  - Removed tool.  Tool is now superseded by ipmi-sensors and the new
+    --output-sensor-state option.
 o ipmi-locate
   - Do not output system defaults by default.
   - Support --defaults option.

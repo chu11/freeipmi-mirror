@@ -87,15 +87,6 @@ int get_entity_sensor_name_string (pstdout_state_t pstate,
                                    char *sensor_name_buf,
                                    unsigned int sensor_name_buf_len);
 
-int get_entity_sensor_name_string_by_record_id (pstdout_state_t pstate,
-                                                ipmi_sdr_parse_ctx_t sdr_parse_ctx,
-                                                ipmi_sdr_cache_ctx_t sdr_cache_ctx,
-                                                uint16_t record_id,
-                                                struct sensor_entity_id_counts *entity_id_counts,
-                                                uint8_t *sensor_number,
-                                                char *sensor_name_buf,
-                                                unsigned int sensor_name_buf_len);
-
 int list_sensor_types (pstdout_state_t pstate,
                        unsigned int show_oem_reserved);
 
@@ -105,10 +96,6 @@ int valid_sensor_types (pstdout_state_t pstate,
                         unsigned int sensor_types_length,
                         unsigned int allow_oem_reserved);
 
-int sensor_type_strcmp (pstdout_state_t pstate,
-                        const char *sensor_type_str_input,
-                        unsigned int sensor_type);
-
 int get_sensor_units_output_string (pstdout_state_t pstate,
                                     ipmi_sdr_parse_ctx_t sdr_parse_ctx,
                                     const void *sdr_record,
@@ -117,17 +104,17 @@ int get_sensor_units_output_string (pstdout_state_t pstate,
                                     unsigned int sensor_units_buflen,
                                     unsigned int abbreviated_units_flag);
 
-void output_sensor_headers (pstdout_state_t pstate,
-                            int quiet_readings,
-                            int output_sensor_state,
-                            int comma_separated_output,
-                            int no_sensor_type_output,
-                            struct sensor_column_width *column_width);
-
 int sensor_type_listed (pstdout_state_t pstate,
                         uint8_t sensor_type,
                         char sensor_types[][MAX_SENSOR_TYPES_STRING_LENGTH+1],
                         unsigned int sensor_types_length);
+
+int sensor_type_listed_in_sdr (pstdout_state_t pstate,
+                               ipmi_sdr_parse_ctx_t sdr_parse_ctx,
+                               const void *sdr_record,
+                               unsigned int sdr_record_len,
+                               char sensor_types[][MAX_SENSOR_TYPES_STRING_LENGTH+1],
+                               unsigned int sensor_types_length);
 
 int calculate_entity_id_counts (pstdout_state_t pstate,
                                 ipmi_sdr_cache_ctx_t sdr_cache_ctx,
@@ -142,25 +129,11 @@ int calculate_column_widths (pstdout_state_t pstate,
                              unsigned int sensor_types_length,
                              unsigned int record_ids[],
                              unsigned int record_ids_length,
-                             unsigned int abbreviated_units,
+                             unsigned int non_abbreviated_units,
                              unsigned int shared_sensors,
                              unsigned int count_event_only_records,
                              unsigned int count_device_locator_records,
                              struct sensor_entity_id_counts *entity_id_counts,
                              struct sensor_column_width *column_width);
-
-int calculate_record_ids (pstdout_state_t pstate,
-                          ipmi_sdr_cache_ctx_t sdr_cache_ctx,
-                          ipmi_sdr_parse_ctx_t sdr_parse_ctx,
-                          char sensor_types[][MAX_SENSOR_TYPES_STRING_LENGTH+1],
-                          unsigned int sensor_types_length,
-                          char exclude_sensor_types[][MAX_SENSOR_TYPES_STRING_LENGTH+1],
-                          unsigned int exclude_sensor_types_length,
-                          unsigned int record_ids[],
-                          unsigned int record_ids_length,
-                          unsigned int exclude_record_ids[],
-                          unsigned int exclude_record_ids_length,
-                          unsigned int output_record_ids[MAX_SENSOR_RECORD_IDS],
-                          unsigned int *output_record_ids_length);
 
 #endif

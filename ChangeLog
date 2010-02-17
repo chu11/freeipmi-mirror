@@ -1,5 +1,28 @@
 2010-02-16  Albert Chu <chu11@llnl.gov>
 
+	From pre_ipmimonitoring_to_ipmi_sensors_branch
+
+	* ipmi-sensors/ipmimonitoring.8: New file.
+
+	* ipmi-sensors/src/ipmimonitoring: New file.
+
+	* ipmimonitoring/ipmimonitoring.8.pre.in: Remove file.
+
+	* ipmimonitoring/src/ipmimonitoring/: Remove ipmimonitoring.
+
+	* ipmimonitoring/src/examples/: Add ipmimonitoring-sensors example.
+
+	* common/src/toolcommon/: Make ipmimonitoring config file options
+	backwards compatible to ipmi-sensors.
+
+	* common/src/toolsensor/: Code cleanup given changes.
+
+	* etc/, doc/, man/: Update appropriately for changes.
+
+	* configure.ac: Update appropriately for changes.
+
+2010-02-16  Albert Chu <chu11@llnl.gov>
+
 	* ipmi-sensors/src/ipmi-sensors-simple-output.c
 	(_simple_output_full_record): Fix comma separated output corner
 	case.
