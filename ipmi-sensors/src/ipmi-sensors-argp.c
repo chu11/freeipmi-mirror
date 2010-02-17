@@ -274,8 +274,8 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           tok = strtok (NULL, " ,");
         }
       break;
-    case LIST_GROUPS_KEY:
-    case LIST_SENSOR_TYPES_KEY:        /* legacy */
+    case LIST_GROUPS_KEY:       /* legacy */
+    case LIST_SENSOR_TYPES_KEY:
       cmd_args->list_sensor_types = 1;
       break;
     case BRIDGE_SENSORS_KEY:
