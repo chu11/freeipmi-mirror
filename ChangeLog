@@ -1,3 +1,8 @@
+2010-02-17  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sensors/, common/src/toolsensor/, man/: Support numeric
+	input for --sensor-types and --exclude-sensor-types.
+	
 2010-02-16  Albert Chu <chu11@llnl.gov>
 
 	From pre_ipmimonitoring_to_ipmi_sensors_branch

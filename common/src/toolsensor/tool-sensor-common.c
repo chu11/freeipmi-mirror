@@ -403,21 +403,35 @@ valid_sensor_types (pstdout_state_t pstate,
     {
       int j = 0;
       int found = 0;
-      
-      while (ipmi_sensor_types[j])
+      int value;
+      char *ptr = NULL;
+
+      errno = 0;
+      value = strtol (sensor_types[i], &ptr, 0);
+
+      if (!errno
+          && !ptr[0]
+          && (IPMI_SENSOR_TYPE_VALID ((uint8_t)value)
+              || IPMI_SENSOR_TYPE_IS_OEM ((uint8_t)value)))
+        found++;
+
+      if (!found)
         {
-          char sensor_type_cmdline[MAX_SENSOR_TYPES_STRING_LENGTH];
-          
-          strcpy (sensor_type_cmdline, ipmi_sensor_types[j]);
-          _get_sensor_type_cmdline_string (sensor_type_cmdline);
-          
-          if (!strcasecmp (sensor_types[i], ipmi_sensor_types[j])
-              || !strcasecmp (sensor_types[i], sensor_type_cmdline))
+          while (ipmi_sensor_types[j])
             {
-              found++;
-              break;
+              char sensor_type_cmdline[MAX_SENSOR_TYPES_STRING_LENGTH];
+              
+              strcpy (sensor_type_cmdline, ipmi_sensor_types[j]);
+              _get_sensor_type_cmdline_string (sensor_type_cmdline);
+              
+              if (!strcasecmp (sensor_types[i], ipmi_sensor_types[j])
+                  || !strcasecmp (sensor_types[i], sensor_type_cmdline))
+                {
+                  found++;
+                  break;
+                }
+              j++;
             }
-          j++;
         }
       
       if (allow_oem_reserved)
@@ -510,15 +524,31 @@ get_sensor_units_output_string (pstdout_state_t pstate,
 
 static int
 _sensor_type_strcmp (pstdout_state_t pstate,
-                    const char *sensor_type_str_input,
-                    unsigned int sensor_type)
+                     const char *sensor_type_str_input,
+                     uint8_t sensor_type)
 {
   const char *sensor_type_str;
   char *tmpstr = NULL;
   int rv = -1;
+  int value;
+  char *ptr = NULL;
 
   assert (sensor_type_str_input);
   
+  errno = 0;
+  value = strtol (sensor_type_str_input, &ptr, 0);
+
+  /* should be validated earlier - this in the only check to do */
+  if (!errno
+      && !ptr[0])
+    {
+      if ((uint8_t)value == sensor_type)
+        rv = 1;
+      else
+        rv = 0;
+      goto cleanup;
+    }
+
   /* Don't use get_sensor_type_output_string() - want NULL if invalid */
   sensor_type_str = ipmi_get_sensor_type_string (sensor_type);
   
@@ -578,12 +608,12 @@ sensor_type_listed (pstdout_state_t pstate,
 }
 
 int
-sensor_type_listed_in_sdr (pstdout_state_t pstate,
-                           ipmi_sdr_parse_ctx_t sdr_parse_ctx,
-                           const void *sdr_record,
-                           unsigned int sdr_record_len,
-                           char sensor_types[][MAX_SENSOR_TYPES_STRING_LENGTH+1],
-                           unsigned int sensor_types_length)
+sensor_type_listed_sdr (pstdout_state_t pstate,
+                        ipmi_sdr_parse_ctx_t sdr_parse_ctx,
+                        const void *sdr_record,
+                        unsigned int sdr_record_len,
+                        char sensor_types[][MAX_SENSOR_TYPES_STRING_LENGTH+1],
+                        unsigned int sensor_types_length)
 {
   uint16_t record_id;
   uint8_t record_type;
@@ -1243,12 +1273,12 @@ calculate_column_widths (pstdout_state_t pstate,
 
           if (sensor_types && sensor_types_length)
             {
-              if ((ret = sensor_type_listed_in_sdr (pstate,
-                                                     sdr_parse_ctx,
-                                                     sdr_record,
-                                                     sdr_record_len,
-                                                     sensor_types,
-                                                     sensor_types_length)) < 0)
+              if ((ret = sensor_type_listed_sdr (pstate,
+                                                 sdr_parse_ctx,
+                                                 sdr_record,
+                                                 sdr_record_len,
+                                                 sensor_types,
+                                                 sensor_types_length)) < 0)
                 goto cleanup;
             }
           else

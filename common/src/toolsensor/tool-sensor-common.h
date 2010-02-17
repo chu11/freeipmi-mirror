@@ -109,12 +109,12 @@ int sensor_type_listed (pstdout_state_t pstate,
                         char sensor_types[][MAX_SENSOR_TYPES_STRING_LENGTH+1],
                         unsigned int sensor_types_length);
 
-int sensor_type_listed_in_sdr (pstdout_state_t pstate,
-                               ipmi_sdr_parse_ctx_t sdr_parse_ctx,
-                               const void *sdr_record,
-                               unsigned int sdr_record_len,
-                               char sensor_types[][MAX_SENSOR_TYPES_STRING_LENGTH+1],
-                               unsigned int sensor_types_length);
+int sensor_type_listed_sdr (pstdout_state_t pstate,
+                            ipmi_sdr_parse_ctx_t sdr_parse_ctx,
+                            const void *sdr_record,
+                            unsigned int sdr_record_len,
+                            char sensor_types[][MAX_SENSOR_TYPES_STRING_LENGTH+1],
+                            unsigned int sensor_types_length);
 
 int calculate_entity_id_counts (pstdout_state_t pstate,
                                 ipmi_sdr_cache_ctx_t sdr_cache_ctx,
