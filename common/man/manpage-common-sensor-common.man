@@ -7,7 +7,7 @@ cluster and want to consolidate the output.
 \fB\-r\fR "RECORD-IDS-LIST", \fB\-\-record\-ids\fR=\fB"RECORD-IDS-LIST"\fR
 Specify sensors to show by record id.  Multiple record ids can be
 separated by commas or spaces.  If both \fB\-\-record\-ids\fR and
-\fB\-\-types\fR are specified, \fB\-\-record\-ids\fR takes
+\fB\-\-sensor\-types\fR are specified, \fB\-\-record\-ids\fR takes
 precedence.  A special command line record id of "all", will indicate
 all record ids should be shown (may be useful for overriding
 configured defaults).
@@ -21,14 +21,14 @@ for overriding configured defaults).
 \fB\-t\fR "SENSOR-TYPE-LIST", \fB\-\-sensor\-types\fR=\fISENSOR\-TYPE\-LIST\fR
 Specify sensor types to show sensor outputs for.  Multiple types can
 be separated by commas or spaces.  If both \fB\-\-record\-ids\fR and
-\fB\-\-types\fR are specified, \fB\-\-record\-ids\fR takes precedence.
+\fB\-\-sensor\-types\fR are specified, \fB\-\-record\-ids\fR takes precedence.
 A special command line type of "all", will indicate all types should
 be shown (may be useful for overriding configured defaults).
 .TP
 \fB\-T\fR "SENSOR-TYPE-LIST", \fB\-\-exclude\-sensor\-types\fR=\fISENSOR\-TYPE\-LIST\fR
 Specify sensor types to not show sensor outputs for.  Multiple types
 can be eparated by commas or spaces.  A special command line type of
-"no", will indicate no types should be excluded (may be useful for
+"none", will indicate no types should be excluded (may be useful for
 overriding configured defaults).
 .TP
 \fB\-L\fR, \fB\-\-list\-sensor\-types\fR

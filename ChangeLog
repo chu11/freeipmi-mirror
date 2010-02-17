@@ -1,3 +1,7 @@
+2010-02-17  Albert Chu <chu11@llnl.gov>
+
+	* common/man/manpage-common-sensor-common.man: Fix typos.
+
 2010-02-16  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors/src/ipmi-sensors-simple-output.c
