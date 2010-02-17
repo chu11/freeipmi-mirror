@@ -966,7 +966,7 @@ is returned for the OEM sensor reading.
 \fBIPMI_OEM_Bitmask\fR can be used to configure a state interpretation
 for a specific \fIManufacturer-ID\fR, \fIProduct-ID\fR,
 \fIEvent-Reading-Type-Code\fR, and \fISensor-Type\fR combination and a
-specific bitmask of the the \fISensor-Event\fR.  The state will be
+specific bitmask of the \fISensor-Event\fR.  The state will be
 accepted as the sensor interpretation if the inputted bitmask ANDed
 with the actual sensor event bitmask reading is true.
 .TP
