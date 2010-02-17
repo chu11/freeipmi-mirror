@@ -120,7 +120,7 @@ static struct argp_option cmdline_options[] =
     { "sensor-state-config-file", SENSOR_STATE_CONFIG_FILE_KEY, "FILE", 0,
       "Specify an alternate sensor state configuration  file.", 50},
     /* ipmimonitoring legacy support */
-    { "sensor-state-config-file", SENSOR_STATE_CONFIG_FILE_KEY, "FILE", OPTION_HIDDEN,
+    { "sensor-config-file", SENSOR_STATE_CONFIG_FILE_KEY, "FILE", OPTION_HIDDEN,
       "Specify an alternate sensor state configuration  file.", 51},
     { "entity-sensor-names", ENTITY_SENSOR_NAMES_KEY, NULL, 0,
       "Output sensor names with entity ids and instances.", 52},
