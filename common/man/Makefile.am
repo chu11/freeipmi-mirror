@@ -49,7 +49,6 @@ EXTRA_DIST = \
 	manpage-common-ping-origin.man \
 	manpage-common-table-of-contents.man \
 	manpage-common-homepage.man \
-	manpage-common-sensor-common.man \
 	manpage-common-interpret-oem-data.man \
 	manpage-common-oem-interpretation.man \
 	manpage-common-entity-sensor-names.man \

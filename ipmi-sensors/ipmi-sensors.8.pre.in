@@ -71,7 +71,56 @@ about events, other sensor types, and oem sensors.
 .TP
 \fB\-i\fR, \fB\-\-sdr\-info\fR
 Show sensor data repository (SDR) information
-#include <@top_srcdir@/common/man/manpage-common-sensor-common.man>
+.TP
+\fB\-q\fR, \fB\-\-quiet-readings\fR
+Do not output sensor reading values by default.  This option is
+particularly useful if you want to use hostranged output across a
+cluster and want to consolidate the output.
+.TP
+\fB\-r\fR "RECORD-IDS-LIST", \fB\-\-record\-ids\fR=\fB"RECORD-IDS-LIST"\fR
+Specify sensors to show by record id.  Multiple record ids can be
+separated by commas or spaces.  If both \fB\-\-record\-ids\fR and
+\fB\-\-types\fR are specified, \fB\-\-record\-ids\fR takes
+precedence.  A special command line record id of "all", will indicate
+all record ids should be shown (may be useful for overriding
+configured defaults).
+.TP
+\fB\-R\fR "RECORD-IDS-LIST", \fB\-\-exclude\-record\-ids\fR=\fB"RECORD-IDS-LIST"\fR
+Specify sensors to not show by record id.  Multiple record ids can be
+separated by commas or spaces.  A special command line record id of
+"none", will indicate no record ids should be excluded (may be useful
+for overriding configured defaults).
+.TP
+\fB\-t\fR "SENSOR-TYPE-LIST", \fB\-\-sensor\-types\fR=\fISENSOR\-TYPE\-LIST\fR
+Specify sensor types to show sensor outputs for.  Multiple types can
+be separated by commas or spaces.  If both \fB\-\-record\-ids\fR and
+\fB\-\-types\fR are specified, \fB\-\-record\-ids\fR takes precedence.
+A special command line type of "all", will indicate all types should
+be shown (may be useful for overriding configured defaults).
+.TP
+\fB\-T\fR "SENSOR-TYPE-LIST", \fB\-\-exclude\-sensor\-types\fR=\fISENSOR\-TYPE\-LIST\fR
+Specify sensor types to not show sensor outputs for.  Multiple types
+can be eparated by commas or spaces.  A special command line type of
+"no", will indicate no types should be excluded (may be useful for
+overriding configured defaults).
+.TP
+\fB\-L\fR, \fB\-\-list\-sensor\-types\fR
+List sensor types.
+.TP
+\fB\-b\fR, \fB\-\-bridge\-sensors\fR
+By default, sensors readings are not attempted for sensors on non-BMC
+owners.  By setting this option, sensor requests can be bridged to
+non-BMC owners to obtain sensor readings (experimental).  Bridging may
+not work on some interfaces/driver types.
+.TP
+\fB\-\-shared\-sensors\fR
+Some sensors share the same sensor data record (SDR).  This is
+typically utilized for system event log (SEL) entries and not for
+sensor readings.  However, there may be some motherboards in which
+this format is utilized for multiple active sensors, or the user
+simply has interest in seeing the permutation of entries shared by a
+SDR entry.  By setting this option, each sensor number shared by a
+record will be iterated over and output.
 #include <@top_srcdir@/common/man/manpage-common-interpret-oem-data.man>
 .TP
 \fB\-\-ignore\-not\-available\-sensors\fR
