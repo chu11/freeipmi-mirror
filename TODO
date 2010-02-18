@@ -13,8 +13,6 @@ support asf base protocol stuff in addition to IPMI?
 
 ipmi-sel
 --------
-sensor types options
-exclude sensor types options
 date range option
 binary search like mechanism to make --display faster
 
