@@ -698,11 +698,11 @@ _output_sensor_name (ipmi_sel_parse_ctx_t ctx,
   if (flags & IPMI_SEL_PARSE_STRING_FLAGS_VERBOSE)
     {
       if (ipmi_sel_parse_string_snprintf (buf,
-                     buflen,
-                     wlen,
-                     "Sensor #%d (Generator ID %02Xh)",
-                     system_event_record_data.sensor_number,
-                     system_event_record_data.generator_id))
+                                          buflen,
+                                          wlen,
+                                          "Sensor #%d (Generator ID %02Xh)",
+                                          system_event_record_data.sensor_number,
+                                          system_event_record_data.generator_id))
         return (1);
     }
   else
