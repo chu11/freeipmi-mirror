@@ -2,6 +2,8 @@ FreeIPMI 0.8.4 - 02/02/10
 -------------------------
 o Fix IPMI 2.0 sequence number wrap around corner case.
 o Fix ipmi-sensors --comma-separated-output corner case.
+o In ipmi-sensors, output multiple event strings w/ space delimiter in
+  simple output.
 o Minor documentation updates.
 
 FreeIPMI 0.8.3 - 02/02/10
