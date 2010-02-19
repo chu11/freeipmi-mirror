@@ -37,29 +37,6 @@ extern "C" {
 #define IPMI_SDR_FORMAT_BMC_MESSAGE_CHANNEL_INFO_RECORD             0x14
 #define IPMI_SDR_FORMAT_OEM_RECORD                                  0xC0
 
-#define IPMI_SDR_FORMAT_FULL_SENSOR_RECORD_NAME \
-  "Full Sensor Record"
-#define IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD_NAME \
-  "Compact Sensor Record"
-#define IPMI_SDR_FORMAT_EVENT_ONLY_RECORD_NAME \
-  "Event-Only Record"
-#define IPMI_SDR_FORMAT_ENTITY_ASSOCIATION_RECORD_NAME \
-  "Entity Association Record"
-#define IPMI_SDR_FORMAT_DEVICE_RELATIVE_ENTITY_ASSOCIATION_RECORD_NAME \
-  "Device-relative Entity Association Record"
-#define IPMI_SDR_FORMAT_GENERIC_DEVICE_LOCATOR_RECORD_NAME \
-  "Generic Device Locator Record"
-#define IPMI_SDR_FORMAT_FRU_DEVICE_LOCATOR_RECORD_NAME \
-  "FRU Device Locator Record"
-#define IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD_NAME \
-  "Management Controller Device Locator Record"
-#define IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_CONFIRMATION_RECORD_NAME \
-  "Management Controller Confirmation Record"
-#define IPMI_SDR_FORMAT_BMC_MESSAGE_CHANNEL_INFO_RECORD_NAME \
-  "BMC Message Channel Info Record"
-#define IPMI_SDR_FORMAT_OEM_RECORD_NAME \
-  "OEM Record"
-
 #define IPMI_SDR_FORMAT_TYPE_VALID(__val)                                     \
   (((__val) == IPMI_SDR_FORMAT_FULL_SENSOR_RECORD                             \
     || (__val) == IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD                       \

@@ -1,3 +1,7 @@
+2010-02-18  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sensors/: Code cleanup.
+
 2010-02-17  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors/, common/src/toolsensor/, man/: Support numeric

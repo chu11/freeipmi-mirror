@@ -55,27 +55,27 @@ _get_record_type_string (ipmi_sensors_state_data_t *state_data,
   switch (record_type)
     {
     case IPMI_SDR_FORMAT_FULL_SENSOR_RECORD:
-      return (IPMI_SDR_FORMAT_FULL_SENSOR_RECORD_NAME);
+      return "Full Sensor Record";
     case IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD:
-      return (IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD_NAME);
+      return "Compact Sensor Record";
     case IPMI_SDR_FORMAT_EVENT_ONLY_RECORD:
-      return (IPMI_SDR_FORMAT_EVENT_ONLY_RECORD_NAME);
+      return "Event-Only Record";
     case IPMI_SDR_FORMAT_ENTITY_ASSOCIATION_RECORD:
-      return (IPMI_SDR_FORMAT_ENTITY_ASSOCIATION_RECORD_NAME);
+      return "Entity Association Record";
     case IPMI_SDR_FORMAT_DEVICE_RELATIVE_ENTITY_ASSOCIATION_RECORD:
-      return (IPMI_SDR_FORMAT_DEVICE_RELATIVE_ENTITY_ASSOCIATION_RECORD_NAME);
+      return "Device-relative Entity Association Record";
     case IPMI_SDR_FORMAT_GENERIC_DEVICE_LOCATOR_RECORD:
-      return (IPMI_SDR_FORMAT_GENERIC_DEVICE_LOCATOR_RECORD_NAME);
+      return "Generic Device Locator Record";
     case IPMI_SDR_FORMAT_FRU_DEVICE_LOCATOR_RECORD:
-      return (IPMI_SDR_FORMAT_FRU_DEVICE_LOCATOR_RECORD_NAME);
+      return "FRU Device Locator Record";
     case IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD:
-      return (IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD_NAME);
+      return "Management Controller Device Locator Record";
     case IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_CONFIRMATION_RECORD:
-      return (IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_CONFIRMATION_RECORD_NAME);
+      return "Management Controller Confirmation Record";
     case IPMI_SDR_FORMAT_BMC_MESSAGE_CHANNEL_INFO_RECORD:
-      return (IPMI_SDR_FORMAT_BMC_MESSAGE_CHANNEL_INFO_RECORD_NAME);
+      return "BMC Message Channel Info Record";
     case IPMI_SDR_FORMAT_OEM_RECORD:
-      return (IPMI_SDR_FORMAT_OEM_RECORD_NAME);
+      return "OEM Record";
     default:
       break;
     }
