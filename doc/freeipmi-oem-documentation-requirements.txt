@@ -182,15 +182,14 @@ etc. are involved.
 For example, we may be given a code snippet such as:
 
 if (event_data2 & 0xF)
-  printf("DIMM bank %d\n", event_dat2 & 0xF0 >> 4 | event_data3);
+  printf("DIMM bank %d\n", event_data3);
 
 In the example above, there is a fair amount of detail missing:
 
 - How do you print DIMM information if "event_data2 & 0xF" isn't true?
 
-- Or is that an error condition?
-
-- If so what error conditions are possible?
+- Or is it an error condition? If so what error conditions are
+  possible?
 
 - It seems that event_data2 holds a bitmask, what other bitmask
   conditions are possible?
