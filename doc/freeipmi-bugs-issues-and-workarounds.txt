@@ -648,11 +648,3 @@ to be in the system ... For example, suppose the baseboard had
 connectors for five fans, but only the first four were supposed to be
 populated.  The SDRs for the system would report four fan sensors ..."
 (33)
-
-I think the next best thing vendors could do is to have the Get Sensor
-Reading command return the "sensor reading unavailable" flag if a
-particular SDR entry is not supported on the motherboard, instead of
-returning one of the random completion codes listed above.  IMO, I
-think the completion codes above don't give an accurate description of
-what's going on (assuming they are supposed to represent "this sensor
-isn't available on this motherboard").
