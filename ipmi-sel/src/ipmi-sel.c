@@ -864,6 +864,24 @@ _normal_output_date_and_time (ipmi_sel_state_data_t *state_data, unsigned int fl
  * return (-1) on error
  */
 static int
+_normal_output_not_available_date_and_time (ipmi_sel_state_data_t *state_data, unsigned int flags)
+{
+  assert (state_data);
+  assert (!state_data->prog_data->args->legacy_output);
+
+  if (state_data->prog_data->args->comma_separated_output)
+    pstdout_printf (state_data->pstate, ",%s,%s", IPMI_SEL_NA_STRING, IPMI_SEL_NA_STRING);
+  else
+    pstdout_printf (state_data->pstate, " | %-11s | %-8s", IPMI_SEL_NA_STRING, IPMI_SEL_NA_STRING);
+
+  return (1);
+}
+
+/* return 1 on success
+ * return (0) on non-success, but don't fail
+ * return (-1) on error
+ */
+static int
 _normal_output_sensor_name_and_type (ipmi_sel_state_data_t *state_data, unsigned int flags)
 {
   char fmt[IPMI_SEL_FMT_BUFLEN + 1];
@@ -1031,6 +1049,50 @@ _normal_output_sensor_name_and_type (ipmi_sel_state_data_t *state_data, unsigned
  * return (-1) on error
  */
 static int
+_normal_output_not_available_sensor_name_and_type (ipmi_sel_state_data_t *state_data, unsigned int flags)
+{
+  char fmt[IPMI_SEL_FMT_BUFLEN + 1];
+
+  assert (state_data);
+  assert (!state_data->prog_data->args->legacy_output);
+
+  memset (fmt, '\0', IPMI_SEL_FMT_BUFLEN + 1);
+  if (state_data->prog_data->args->comma_separated_output)
+    snprintf (fmt,
+              IPMI_SEL_FMT_BUFLEN,
+              ",%%s");
+  else
+    snprintf (fmt,
+              IPMI_SEL_FMT_BUFLEN,
+              " | %%-%ds",
+              state_data->column_width.sensor_name);
+
+  pstdout_printf (state_data->pstate, fmt, IPMI_SEL_NA_STRING);
+
+  if (!state_data->prog_data->args->no_sensor_type_output)
+    {
+      memset (fmt, '\0', IPMI_SEL_FMT_BUFLEN + 1);
+      if (state_data->prog_data->args->comma_separated_output)
+        snprintf (fmt,
+                  IPMI_SEL_FMT_BUFLEN,
+                  ",%%s");
+      else
+        snprintf (fmt,
+                  IPMI_SEL_FMT_BUFLEN,
+                  " | %%-%ds",
+                  state_data->column_width.sensor_type);
+      
+      pstdout_printf (state_data->pstate, fmt, IPMI_SEL_NA_STRING);
+    }
+
+  return (1);
+}
+
+/* return 1 on success
+ * return (0) on non-success, but don't fail
+ * return (-1) on error
+ */
+static int
 _normal_output_event_direction (ipmi_sel_state_data_t *state_data, unsigned int flags)
 {
   char outbuf[IPMI_SEL_OUTPUT_BUFLEN+1];
@@ -1066,6 +1128,25 @@ _normal_output_event_direction (ipmi_sel_state_data_t *state_data, unsigned int 
       else
         pstdout_printf (state_data->pstate, " | %-17s", IPMI_SEL_NA_STRING);
     }
+
+  return (1);
+}
+
+/* return 1 on success
+ * return (0) on non-success, but don't fail
+ * return (-1) on error
+ */
+static int
+_normal_output_not_available_event_direction (ipmi_sel_state_data_t *state_data, unsigned int flags)
+{
+  assert (state_data);
+  assert (!state_data->prog_data->args->legacy_output);
+  assert (state_data->prog_data->args->verbose_count >= 1);
+
+  if (state_data->prog_data->args->comma_separated_output)
+    pstdout_printf (state_data->pstate, ",%s", IPMI_SEL_NA_STRING);
+  else
+    pstdout_printf (state_data->pstate, " | %-17s", IPMI_SEL_NA_STRING);
 
   return (1);
 }
@@ -1283,7 +1364,9 @@ output:
  * return (-1) on error
  */
 static int
-_normal_output_manufacturer_id (ipmi_sel_state_data_t *state_data, unsigned int flags)
+_normal_output_oem_data (ipmi_sel_state_data_t *state_data,
+                         int record_has_manufacturer_id,
+                         unsigned int flags)
 {
   char outbuf[IPMI_SEL_OUTPUT_BUFLEN+1];
   int outbuf_len;
@@ -1292,58 +1375,32 @@ _normal_output_manufacturer_id (ipmi_sel_state_data_t *state_data, unsigned int 
   assert (!state_data->prog_data->args->legacy_output);
 
   memset (outbuf, '\0', IPMI_SEL_OUTPUT_BUFLEN+1);
-  if ((outbuf_len = ipmi_sel_parse_read_record_string (state_data->sel_parse_ctx,
-                                                       "%m",
-                                                       outbuf,
-                                                       IPMI_SEL_OUTPUT_BUFLEN,
-                                                       flags)) < 0)
+  if (state_data->prog_data->args->output_manufacturer_id
+      && record_has_manufacturer_id)
     {
-      if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_read_record_string") < 0)
-        return (-1);
-      return (0);
-    }
-
-  if (state_data->prog_data->args->comma_separated_output)
-    {
-      if (outbuf_len)
-        pstdout_printf (state_data->pstate, ",%s", outbuf);
-      else
-        pstdout_printf (state_data->pstate, ",%s", IPMI_SEL_NA_STRING);
+      if ((outbuf_len = ipmi_sel_parse_read_record_string (state_data->sel_parse_ctx,
+                                                           "%m ; %o",
+                                                           outbuf,
+                                                           IPMI_SEL_OUTPUT_BUFLEN,
+                                                           flags)) < 0)
+        {
+          if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_read_record_string") < 0)
+            return (-1);
+          return (0);
+        }
     }
   else
     {
-      if (outbuf_len)
-        pstdout_printf (state_data->pstate, " | %-16s", outbuf);
-      else
-        pstdout_printf (state_data->pstate, " | %-16s", IPMI_SEL_NA_STRING);
-    }
-
-  return (1);
-}
-
-/* return 1 on success
- * return (0) on non-success, but don't fail
- * return (-1) on error
- */
-static int
-_normal_output_oem_data (ipmi_sel_state_data_t *state_data, unsigned int flags)
-{
-  char outbuf[IPMI_SEL_OUTPUT_BUFLEN+1];
-  int outbuf_len;
-
-  assert (state_data);
-  assert (!state_data->prog_data->args->legacy_output);
-
-  memset (outbuf, '\0', IPMI_SEL_OUTPUT_BUFLEN+1);
-  if ((outbuf_len = ipmi_sel_parse_read_record_string (state_data->sel_parse_ctx,
-                                                       "%o",
-                                                       outbuf,
-                                                       IPMI_SEL_OUTPUT_BUFLEN,
-                                                       flags)) < 0)
-    {
-      if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_read_record_string") < 0)
-        return (-1);
-      return (0);
+      if ((outbuf_len = ipmi_sel_parse_read_record_string (state_data->sel_parse_ctx,
+                                                           "%o",
+                                                           outbuf,
+                                                           IPMI_SEL_OUTPUT_BUFLEN,
+                                                           flags)) < 0)
+        {
+          if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_read_record_string") < 0)
+            return (-1);
+          return (0);
+        }
     }
 
   if (state_data->prog_data->args->comma_separated_output)
@@ -1514,13 +1571,22 @@ _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
       if (!ret)
         goto newline_out;
 
-      if ((ret = _normal_output_manufacturer_id (state_data, flags)) < 0)
+      if ((ret = _normal_output_not_available_sensor_name_and_type (state_data, flags)) < 0)
         goto cleanup;
 
       if (!ret)
         goto newline_out;
 
-      if ((ret = _normal_output_oem_data (state_data, flags)) < 0)
+      if (state_data->prog_data->args->verbose_count >= 1)
+        {
+          if ((ret = _normal_output_not_available_event_direction (state_data, flags)) < 0)
+            goto cleanup;
+
+          if (!ret)
+            goto newline_out;
+        }
+
+      if ((ret = _normal_output_oem_data (state_data, 1, flags)) < 0)
         goto cleanup;
 
       if (!ret)
@@ -1534,7 +1600,28 @@ _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
       if (!ret)
         goto out;
 
-      if ((ret = _normal_output_oem_data (state_data, flags)) < 0)
+      if ((ret = _normal_output_not_available_date_and_time (state_data, flags)) < 0)
+        goto cleanup;
+
+      if (!ret)
+        goto newline_out;
+
+      if ((ret = _normal_output_not_available_sensor_name_and_type (state_data, flags)) < 0)
+        goto cleanup;
+
+      if (!ret)
+        goto newline_out;
+
+      if (state_data->prog_data->args->verbose_count >= 1)
+        {
+          if ((ret = _normal_output_not_available_event_direction (state_data, flags)) < 0)
+            goto cleanup;
+
+          if (!ret)
+            goto newline_out;
+        }
+
+      if ((ret = _normal_output_oem_data (state_data, 0, flags)) < 0)
         goto cleanup;
 
       if (!ret)

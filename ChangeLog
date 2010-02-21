@@ -1,3 +1,10 @@
+2010-02-21  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sel/, common/src/toolcommon/: Support
+	--output-manufacturer-id.  Alter OEM record output to align with
+	columns by outputting "N/A" in appropriate fields and putting
+	manufacturer ID in event output.
+	
 2010-02-19  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors/: Ensure multiple event output strings separated by

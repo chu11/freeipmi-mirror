@@ -108,6 +108,10 @@ Output only system event records (i.e. don't output OEM records).
 \fB\-\-oem\-only\fR
 Output only OEM event records.
 .TP
+\fB\-\-output\-manufacturer\-id\fR
+For OEM SEL record types, output the manufacturer ID along with event
+data when available.
+.TP
 \fB\-\-hex\-dump\fR
 Hex-dump SEL entries.
 .TP

@@ -24,6 +24,9 @@ o ipmi-sensors
 o ipmi-sel
   - Support --sensor-types option.
   - Support --exclude-sensor-types option.
+  - Support --output-manufacturer-id option.
+  - Alter OEM record output to align with columns by outputting "N/A"
+    in appropriate fields and putting manufacturer ID in event output.
 o ipmimonitoring
   - Removed tool.  Tool is now superseded by ipmi-sensors and the new
     --output-sensor-state option.

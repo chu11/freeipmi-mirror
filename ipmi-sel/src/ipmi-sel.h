@@ -47,15 +47,16 @@ enum ipmi_sel_argp_option_keys
     DELETE_RANGE_KEY = 168,
     SYSTEM_EVENT_ONLY_KEY = 169,
     OEM_EVENT_ONLY_KEY = 170,
-    HEX_DUMP_KEY = 171,
-    ASSUME_SYSTEM_EVENT_RECORDS_KEY = 172,
-    INTERPRET_OEM_DATA_KEY = 173,
-    ENTITY_SENSOR_NAMES_KEY = 174,
-    NO_SENSOR_TYPE_OUTPUT_KEY = 175,
-    COMMA_SEPARATED_OUTPUT_KEY = 176,
-    NO_HEADER_OUTPUT_KEY = 177,
-    NON_ABBREVIATED_UNITS_KEY = 178,
-    LEGACY_OUTPUT_KEY = 179,
+    OUTPUT_MANUFACTURER_ID_KEY = 171,
+    HEX_DUMP_KEY = 172,
+    ASSUME_SYSTEM_EVENT_RECORDS_KEY = 173,
+    INTERPRET_OEM_DATA_KEY = 174,
+    ENTITY_SENSOR_NAMES_KEY = 175,
+    NO_SENSOR_TYPE_OUTPUT_KEY = 176,
+    COMMA_SEPARATED_OUTPUT_KEY = 177,
+    NO_HEADER_OUTPUT_KEY = 178,
+    NON_ABBREVIATED_UNITS_KEY = 179,
+    LEGACY_OUTPUT_KEY = 180,
   };
 
 struct ipmi_sel_arguments
@@ -93,6 +94,7 @@ struct ipmi_sel_arguments
   uint16_t delete_range2;
   int system_event_only;
   int oem_event_only;
+  int output_manufacturer_id;
   int hex_dump;
   int assume_system_event_records;
   int interpret_oem_data;

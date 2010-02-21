@@ -874,6 +874,10 @@ Specify if output should only include system event records.
 \fBipmi\-sel\-oem\-event\-only\fR \fIENABLE|DISABLE\fR
 Specify if output should only include OEM event records.
 .TP
+\fBipmi\-sel\-output\-manufacturer\-id\fR \fIENABLE|DISABLE\fR
+Specify if output of OEM event records should include manufacturer ID
+by default or not.
+.TP
 \fBipmi\-sel\-assume\-system\-event\-records\fR \fIENABLE|DISABLE\fR
 Specify if system event records should be assumed when there are
 invalid record types.
