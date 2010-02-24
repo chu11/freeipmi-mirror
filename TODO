@@ -19,6 +19,11 @@ ipmi-sel
 --------
 date range option
 binary search like mechanism to make --display faster
+support kernel panic OEM event 0xf0
+- can't make work, is just my motherboard?
+- redhat doesn't enable by default, probably don't need to worry about this much
+- http://cateee.net/lkddb/web-lkddb/IPMI_PANIC_STRING.html
+- http://www.cyberciti.biz/tips/compiling-linux-kernel-module.html
 
 ipmi-seld
 ---------
