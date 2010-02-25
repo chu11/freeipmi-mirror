@@ -218,3 +218,14 @@ information physically printed on the motherboard (e.g. DIMM A1, DIMM
 A2, DIMM B1, DIMM B2) is not given.  Without it, the information is of
 very little use to those using FreeIPMI to diagnose problems.
 
+Other Notes
+-----------
+
+While it is possible that code would be sufficient documentation of
+the above, it is typically not sufficient.  Code often implements a
+subset of the actual data/information for the needs of the particular
+software.  For example, outputting only the information the software
+deems "useful" and ignoring the rest.  Code is often not documented
+at a level that is sufficient as real documentation.  In order to
+convert the code into code necessary for another project may require
+reverse engineering or guesses.
