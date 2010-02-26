@@ -34,6 +34,7 @@
 #include "ipmi-oem-common.h"
 #include "ipmi-oem-dell.h"
 #include "ipmi-oem-fujitsu.h"
+#include "ipmi-oem-ibm.h"
 #include "ipmi-oem-inventec.h"
 #include "ipmi-oem-sun.h"
 #include "ipmi-oem-supermicro.h"
@@ -430,6 +431,27 @@ struct ipmi_oem_command oem_fujitsu[] =
     },
   };
 
+struct ipmi_oem_command oem_ibm[] =
+  {
+#if 0
+/* need to verify */
+    {
+      "get-led",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_ibm_get_led
+    },
+#endif
+    {
+      NULL,
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      NULL
+    },
+  };
+
 struct ipmi_oem_command oem_inventec[] =
   {
     /* legacy */
@@ -672,6 +694,13 @@ struct ipmi_oem_id oem_cb[] =
       "Fujitsu",
       oem_fujitsu
     },
+#if 0
+    /* none verified yet */
+    {
+      "IBM",
+      oem_ibm
+    },
+#endif
     {
       "Inventec",
       oem_inventec
