@@ -1,3 +1,7 @@
+2010-XX-XX  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-oem/: Support IBM get-led.
+	
 2010-02-21  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sel/, common/src/toolcommon/: Support

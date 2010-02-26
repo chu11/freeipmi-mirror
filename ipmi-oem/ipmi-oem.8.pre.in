@@ -331,6 +331,14 @@ This OEM command will get the current error LED status.  Command
 confirmed to work on Fujitsu RX100 S5.
 .RE
 .TP
+.B IBM
+.RS
+.TP
+.B get-led
+This OEM command will get the current LED status.  Command confirmed
+to work on IBM XXX.
+.RE
+.TP
 .B Inventec
 .RS
 .TP

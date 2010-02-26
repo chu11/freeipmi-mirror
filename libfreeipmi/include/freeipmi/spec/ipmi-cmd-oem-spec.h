@@ -102,6 +102,17 @@ extern "C" {
 #define IPMI_CMD_OEM_FUJITSU_GET_REMOTE_STORAGE_CONNECTION_OR_STATUS 0x19
 #define IPMI_CMD_OEM_FUJITSU_SET_VIDEO_DISPLAY_ON_OFF                0x1A
 
+/*******************************************
+ * IBM                                     *
+ *******************************************/
+
+/*
+ * IBM x3455/x3755
+ */
+/* IPMI_NET_FN_OEM_IBM_LED_RQ / IPMI_NET_FN_OEM_IBM_LED_RS */
+/* achu: not official names, named based on use context */
+#define IPMI_CMD_OEM_IBM_GET_LED 0xC0
+
 /******************************************* 
  * Inventec                                *
  *******************************************/

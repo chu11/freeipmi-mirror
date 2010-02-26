@@ -430,6 +430,24 @@ struct ipmi_oem_command oem_fujitsu[] =
     },
   };
 
+struct ipmi_oem_command oem_sun[] =
+  {
+    {
+      "get-led",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_ibm_get_led
+    },
+    {
+      NULL,
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      NULL
+    },
+  };
+
 struct ipmi_oem_command oem_inventec[] =
   {
     /* legacy */
@@ -671,6 +689,10 @@ struct ipmi_oem_id oem_cb[] =
     {
       "Fujitsu",
       oem_fujitsu
+    },
+    {
+      "IBM",
+      oem_ibm
     },
     {
       "Inventec",
