@@ -34,6 +34,7 @@
 #include "ipmi-oem-common.h"
 #include "ipmi-oem-dell.h"
 #include "ipmi-oem-fujitsu.h"
+#include "ipmi-oem-ibm.h"
 #include "ipmi-oem-inventec.h"
 #include "ipmi-oem-sun.h"
 #include "ipmi-oem-supermicro.h"
@@ -430,7 +431,7 @@ struct ipmi_oem_command oem_fujitsu[] =
     },
   };
 
-struct ipmi_oem_command oem_sun[] =
+struct ipmi_oem_command oem_ibm[] =
   {
     {
       "get-led",

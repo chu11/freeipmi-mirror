@@ -57,6 +57,8 @@
 #define IPMI_SDR_RECORD_OEM_IBM_LED_ID_LS_OEM_DATA_INDEX   7
 #define IPMI_SDR_RECORD_OEM_IBM_LED_ID_MS_OEM_DATA_INDEX   8
 
+#define IPMI_SDR_RECORD_OEM_IBM_LED_SENSOR_TYPE      0xED
+
 #define IPMI_IBM_LED_STATE_INACTIVE                  0x0
 
 #define IPMI_IBM_LED_ACTIVE_BY_LED                   0x1
@@ -157,6 +159,8 @@
 #define IPMI_LED_NAME_BUFLEN       17
 
 #define IPMI_LED_STATE_COLUMN_SIZE 8
+
+#define IPMI_LED_ID_STRING_BUFLEN  64
 
 #define IPMI_LED_INFO_BUFLEN       1024
 
@@ -349,10 +353,151 @@ _get_led_name (ipmi_oem_state_data_t *state_data,
    else
      snprintf (led_name,
                led_name_len,
-               "LED = %04h",
+               "LED = %04Xh",
                led_id);      
    
    return (0);
+}
+
+static int
+_find_sensor (ipmi_oem_state_data_t *state_data,
+              uint8_t sensor_number,
+              char *id_string,
+              unsigned int id_string_len)
+{
+  ipmi_sdr_cache_ctx_t tmp_sdr_cache_ctx = NULL;
+  uint16_t record_count;
+  int found = 0;
+  int rv = -1;
+  int i;
+
+  assert (state_data);
+  assert (id_string);
+  assert (id_string_len);
+
+  /* Make temporary sdr cache to search for sensor
+   *
+   * Redo loading of SDR cache since this is being called from a loop
+   * using the state_data sdr_cache_ctx.
+   */
+  if (!(tmp_sdr_cache_ctx = ipmi_sdr_cache_ctx_create ()))
+    {
+      pstdout_perror (state_data->pstate, "ipmi_sdr_cache_ctx_create()");
+      goto cleanup;
+    }
+
+  if (state_data->prog_data->args->common.debug)
+    {
+      /* Don't error out, if this fails we can still continue */
+      if (ipmi_sdr_cache_ctx_set_flags (tmp_sdr_cache_ctx,
+                                        IPMI_SDR_CACHE_FLAGS_DEBUG_DUMP) < 0)
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_sdr_cache_ctx_set_flags: %s\n",
+                         ipmi_sdr_cache_ctx_strerror (ipmi_sdr_cache_ctx_errnum (tmp_sdr_cache_ctx)));
+
+      if (state_data->hostname)
+        {
+          if (ipmi_sdr_cache_ctx_set_debug_prefix (tmp_sdr_cache_ctx,
+                                                   state_data->hostname) < 0)
+            pstdout_fprintf (state_data->pstate,
+                             stderr,
+                             "ipmi_sdr_cache_ctx_set_debug_prefix: %s\n",
+                             ipmi_sdr_cache_ctx_strerror (ipmi_sdr_cache_ctx_errnum (tmp_sdr_cache_ctx)));
+        }
+    }
+
+  /* Should not cause sdr recreation, since this is the second time we're calling it */
+  if (sdr_cache_create_and_load (tmp_sdr_cache_ctx,
+                                 state_data->pstate,
+                                 state_data->ipmi_ctx,
+                                 1, /* quiet_cache */
+                                 0, /* sdr_cache_recreate */
+                                 state_data->hostname,
+                                 state_data->prog_data->args->sdr.sdr_cache_directory) < 0)
+    goto cleanup;
+
+  if (ipmi_sdr_cache_record_count (state_data->sdr_cache_ctx, &record_count) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "ipmi_sdr_cache_record_count: %s\n",
+		       ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
+      goto cleanup;
+    }
+
+  for (i = 0; i < record_count; i++, ipmi_sdr_cache_next (state_data->sdr_cache_ctx))
+    {
+      uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
+      int sdr_record_len = 0;
+      uint16_t record_id;
+      uint8_t record_type;
+      uint8_t sdr_sensor_number;
+
+      if ((sdr_record_len = ipmi_sdr_cache_record_read (tmp_sdr_cache_ctx,
+							sdr_record,
+							IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH)) < 0)
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_sdr_cache_record_read: %s\n",
+			   ipmi_sdr_cache_ctx_errormsg (tmp_sdr_cache_ctx));
+	  goto cleanup;
+	}
+      
+      if (ipmi_sdr_parse_record_id_and_type (state_data->sdr_parse_ctx,
+					     sdr_record,
+					     sdr_record_len,
+					     &record_id,
+					     &record_type) < 0)
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_sdr_parse_record_id_and_type: %s\n",
+			   ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+	  goto cleanup;
+	}
+      
+      /* achu: xCAT only checks for Full records, I'll check compact too though */
+      if (record_type != IPMI_SDR_FORMAT_FULL_SENSOR_RECORD
+          && record_type != IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD)
+        continue;
+
+      if (ipmi_sdr_parse_sensor_number (state_data->sdr_parse_ctx,
+                                        sdr_record,
+                                        sdr_record_len,
+                                        &sdr_sensor_number) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_sdr_parse_sensor_number: %s\n",
+                           ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+          goto cleanup;
+        }
+
+      if (sensor_number == sdr_sensor_number)
+        {
+          if (ipmi_sdr_parse_id_string (state_data->sdr_parse_ctx,
+                                        sdr_record,
+                                        sdr_record_len,
+                                        id_string,
+                                        id_string_len) < 0)
+            goto cleanup;
+
+          found++;
+          break;
+        }
+    }
+
+  if (!found)
+    snprintf (id_string,
+              id_string_len,
+              "Sensor Number = %02Xh",
+              sensor_number);
+  rv = 0;
+ cleanup:
+  ipmi_sdr_cache_ctx_destroy (tmp_sdr_cache_ctx);
+  return (rv);
 }
 
 int
@@ -443,14 +588,14 @@ ipmi_oem_ibm_get_led (ipmi_oem_state_data_t *state_data)
       int rs_len;
       uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
       int sdr_record_len = 0;
-      uint8_t oem_data[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
-      int oem_data_len;
+      uint8_t oem_data_buf[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
+      int oem_data_buf_len;
       uint16_t record_id;
       uint8_t record_type;
       char fmt[IPMI_OEM_FMT_BUFLEN + 1];
       char led_name[IPMI_LED_NAME_BUFLEN + 1];
       char led_pointer_name[IPMI_LED_NAME_BUFLEN + 1];
-      char id_string[IPMI_SDR_CACHE_MAX_ID_STRING + 1];
+      char id_string[IPMI_LED_ID_STRING_BUFLEN + 1];
       char led_info[IPMI_LED_INFO_BUFLEN + 1];
       char *led_state_str = NULL;
       uint8_t sensor_type;
@@ -490,10 +635,10 @@ ipmi_oem_ibm_get_led (ipmi_oem_state_data_t *state_data)
       if (record_type != IPMI_SDR_FORMAT_OEM_RECORD)
         continue;
 
-      if ((oem_data_len = ipmi_sdr_parse_oem_data (state_data->sdr_parse_ctx,
+      if ((oem_data_buf_len = ipmi_sdr_parse_oem_data (state_data->sdr_parse_ctx,
                                                    sdr_record,
                                                    sdr_record_len,
-                                                   oem_data,
+                                                   oem_data_buf,
                                                    IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH)) < 0)
         {
           pstdout_fprintf (state_data->pstate,
@@ -503,25 +648,29 @@ ipmi_oem_ibm_get_led (ipmi_oem_state_data_t *state_data)
           goto cleanup;
         }
       
-      /* If not enough data, continue on */
-      if (oem_data_len < IPMI_SDR_RECORD_OEM_IBM_LED_OEM_DATA_MIN_LENGTH)
+      /* If not enough data, skip it */
+      if (oem_data_buf_len < IPMI_SDR_RECORD_OEM_IBM_LED_OEM_DATA_MIN_LENGTH)
         continue;
 
-      sensor_type = oem_data[IPMI_SDR_RECORD_OEM_IBM_SENSOR_TYPE_OEM_DATA_INDEX];
+      sensor_type = oem_data_buf[IPMI_SDR_RECORD_OEM_IBM_SENSOR_TYPE_OEM_DATA_INDEX];
       
+      /* If not LED sensor type, skip it */
+      if (sensor_type != IPMI_SDR_RECORD_OEM_IBM_LED_SENSOR_TYPE)
+        continue;
+
       /* IBM systems use inconsistent endian, guess endian by assuming
        * LED IDs are numerically started at 0
        */
       
-      if (oem_data[IPMI_SDR_RECORD_OEM_IBM_LED_ID_LS_OEM_DATA_INDEX] > oem_data[IPMI_SDR_RECORD_OEM_IBM_LED_ID_MS_OEM_DATA_INDEX])
+      if (oem_data_buf[IPMI_SDR_RECORD_OEM_IBM_LED_ID_LS_OEM_DATA_INDEX] > oem_data_buf[IPMI_SDR_RECORD_OEM_IBM_LED_ID_MS_OEM_DATA_INDEX])
         {
-          led_id_ls = oem_data[IPMI_SDR_RECORD_OEM_IBM_LED_ID_LS_OEM_DATA_INDEX];
-          led_id_ms = oem_data[IPMI_SDR_RECORD_OEM_IBM_LED_ID_MS_OEM_DATA_INDEX];
+          led_id_ls = oem_data_buf[IPMI_SDR_RECORD_OEM_IBM_LED_ID_LS_OEM_DATA_INDEX];
+          led_id_ms = oem_data_buf[IPMI_SDR_RECORD_OEM_IBM_LED_ID_MS_OEM_DATA_INDEX];
         }
       else
         {
-          led_id_ls = oem_data[IPMI_SDR_RECORD_OEM_IBM_LED_ID_MS_OEM_DATA_INDEX];
-          led_id_ms = oem_data[IPMI_SDR_RECORD_OEM_IBM_LED_ID_LS_OEM_DATA_INDEX];
+          led_id_ls = oem_data_buf[IPMI_SDR_RECORD_OEM_IBM_LED_ID_MS_OEM_DATA_INDEX];
+          led_id_ms = oem_data_buf[IPMI_SDR_RECORD_OEM_IBM_LED_ID_LS_OEM_DATA_INDEX];
         }
 
       led_id = led_id_ls | (led_id_ms << 8);
@@ -605,7 +754,7 @@ ipmi_oem_ibm_get_led (ipmi_oem_state_data_t *state_data)
       
       memset (led_name, '\0', IPMI_LED_NAME_BUFLEN + 1);
       memset (led_pointer_name, '\0', IPMI_LED_NAME_BUFLEN + 1);
-      memset (id_string, '\0', IPMI_SDR_CACHE_MAX_ID_STRING + 1);
+      memset (id_string, '\0', IPMI_LED_ID_STRING_BUFLEN + 1);
       memset (led_info, '\0', IPMI_LED_INFO_BUFLEN + 1);
       
       if (_get_led_name (state_data,
@@ -645,7 +794,22 @@ ipmi_oem_ibm_get_led (ipmi_oem_state_data_t *state_data)
             }
           else if (led_active_type == IPMI_IBM_LED_ACTIVE_BY_SENSOR)
             {
-              /* XXX todo */
+              /* achu: sensor numbers may not be unique.  I'm copying
+               * this algorithm from xCAT so I assume it's safe for
+               * IBM machines b/c IBM lays out their SDRs in a fashion
+               * that this search is safe and won't result in an
+               * incorrect output.
+               */
+              if (_find_sensor (state_data,
+                                sensor_number,
+                                id_string,
+                                IPMI_LED_ID_STRING_BUFLEN) < 0)
+                goto cleanup;
+                             
+              snprintf (led_info,
+                        IPMI_LED_INFO_BUFLEN,
+                        "Sensor '%s' error",
+                        id_string);
             }
           else if (led_active_type == IPMI_IBM_LED_ACTIVE_BY_USER)
             {
