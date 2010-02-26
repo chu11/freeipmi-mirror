@@ -25,6 +25,7 @@ sbin_PROGRAMS = ipmi-oem
 ipmi_oem_LDADD = \
 	$(top_builddir)/common/src/toolcommon/libtoolcommon.la \
 	$(top_builddir)/common/src/toolhostrange/libtoolhostrange.la \
+	$(top_builddir)/common/src/tooloem/libtooloem.la \
 	$(top_builddir)/common/src/toolsdr/libtoolsdr.la \
 	$(top_builddir)/common/src/toolsensor/libtoolsensor.la \
 	$(top_builddir)/common/src/miscutil/libmiscutils.la \
@@ -47,6 +48,9 @@ $(top_builddir)/common/src/toolcommon/libtoolcommon.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
 $(top_builddir)/common/src/toolhostrange/libtoolhostrange.la : force-dependency-check
+	@cd `dirname $@` && $(MAKE) `basename $@`
+
+$(top_builddir)/common/src/tooloem/libtooloem.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
 $(top_builddir)/common/src/toolsdr/libtoolsdr.la : force-dependency-check
