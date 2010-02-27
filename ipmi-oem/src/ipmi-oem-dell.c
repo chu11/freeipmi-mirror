@@ -107,6 +107,15 @@
 #define IPMI_OEM_DELL_NIC_SELECTION_DEDICATED                        0x02
 #define IPMI_OEM_DELL_NIC_SELECTION_SHARED_WITH_FAILOVER_TO_ALL_NICS 0x03
 
+#define IPMI_OEM_DELL_GET_ACTIVE_LOM_STATUS_GET_STATUS 0x00
+
+#define IPMI_OEM_DELL_LOM_STATUS_NO_ACTIVE_LOM 0x00
+#define IPMI_OEM_DELL_LOM_STATUS_LOM_1         0x01
+#define IPMI_OEM_DELL_LOM_STATUS_LOM_2         0x02
+#define IPMI_OEM_DELL_LOM_STATUS_LOM_3         0x03
+#define IPMI_OEM_DELL_LOM_STATUS_LOM_4         0x04
+#define IPMI_OEM_DELL_LOM_STATUS_UNKNOWN       0xFF
+
 #define IPMI_OEM_DELL_MAC_ADDRESS_LENGTH             6
 
 #define IPMI_OEM_DELL_11G_MAC_ADDRESS_LENGTH         8 
@@ -1358,6 +1367,99 @@ ipmi_oem_dell_set_nic_selection (ipmi_oem_state_data_t *state_data)
                                                    NULL) < 0)
     goto cleanup;
 
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
+ipmi_oem_dell_get_active_lom_status (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  int rs_len;
+  int rv = -1;
+
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+
+  /* Dell Poweredge OEM
+   *
+   * From Dell Provided Docs
+   *
+   * Get Active LOM Status
+   *
+   * 0x30 - OEM network function
+   * 0xC1 - OEM cmd
+   * 0x?? - reserved
+   * 0x?? - reserved
+   * 
+   * Get NIC Selection Response
+   *
+   * 0xC1 - OEM cmd
+   * 0x?? - Completion Code
+   * 0x?? - 
+   *      - 0x00 = No Lom Active (i.e. dedicated)
+   *      - 0x01 = LOM 1
+   *      - 0x02 = LOM 2
+   *      - 0x03 = LOM 3
+   *      - 0x04 = LOM 4
+   *      - 0xff = unknown
+   * 0x?? - reserved
+   * 0x?? - reserved
+   */
+
+  bytes_rq[0] = IPMI_CMD_OEM_DELL_GET_ACTIVE_LOM_STATUS;
+  bytes_rq[1] = IPMI_OEM_DELL_GET_ACTIVE_LOM_STATUS_GET_STATUS;
+  bytes_rq[2] = 0;
+  bytes_rq[3] = 0;
+
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+                              IPMI_NET_FN_OEM_DELL_GENERIC_RQ, /* network function */
+                              bytes_rq, /* data */
+                              4, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                   bytes_rs,
+                                                   rs_len,
+                                                   3,
+                                                   IPMI_CMD_OEM_DELL_GET_ACTIVE_LOM_STATUS,
+                                                   IPMI_NET_FN_OEM_DELL_GENERIC_RS,
+                                                   NULL) < 0)
+    goto cleanup;
+
+  switch (bytes_rs[2])
+    {
+    case IPMI_OEM_DELL_LOM_STATUS_NO_ACTIVE_LOM:
+      pstdout_printf (state_data->pstate, "dedicated\n");
+      break;
+    case IPMI_OEM_DELL_LOM_STATUS_LOM_1:
+      pstdout_printf (state_data->pstate, "LOM 1\n");
+      break;
+    case IPMI_OEM_DELL_LOM_STATUS_LOM_2:
+      pstdout_printf (state_data->pstate, "LOM 2\n");
+      break;
+    case IPMI_OEM_DELL_LOM_STATUS_LOM_3:
+      pstdout_printf (state_data->pstate, "LOM 3\n");
+      break;
+    case IPMI_OEM_DELL_LOM_STATUS_LOM_4:
+      pstdout_printf (state_data->pstate, "LOM 4\n");
+      break;
+    default:
+      pstdout_printf (state_data->pstate, "unknown active LOM\n");
+      break;
+    }
+  
   rv = 0;
  cleanup:
   return (rv);

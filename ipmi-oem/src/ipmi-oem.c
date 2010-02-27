@@ -90,6 +90,13 @@ struct ipmi_oem_command oem_dell[] =
       ipmi_oem_dell_set_nic_selection
     },
     {
+      "get-active-lom-status",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_dell_get_active_lom_status
+    },
+    {
       "get-ssh-config",
       NULL,
       0,
