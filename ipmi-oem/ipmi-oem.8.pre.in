@@ -102,6 +102,11 @@ Poweredge systems, \fIshared_failover_nic2\fR may have ben documented
 as just \fIfailover\fR.  Command confirmed to work on Dell Poweredge
 2900, 2950, R610, and R710 (Dell 10G and 11G Poweredge systems).
 .TP
+.B get-active-lom-status
+This OEM command will get the current NIC being used for out of band
+management.  Command confirmed to work on Dell Poweredge R610 and R710
+(Dell 11G Poweredge systems).
+.TP
 .B get-ssh-config
 This OEM command will get the current SSH configuration on the IPMI
 card.  Command confirmed to work on Dell Poweredge R610 and R710 (Dell

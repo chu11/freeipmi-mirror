@@ -1,3 +1,7 @@
+2010-02-27  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-oem/: Add Dell Get Active LOM Status support.
+	
 2010-02-25  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/: Add IBM get-led base code.
