@@ -89,10 +89,6 @@ if user inputs hostname of localhost, do inband not outofband?
 
 config tools
 ------------
-rework workaronds
-- pass around sections into callbacks so they can do the search/find, etc.  No need to continue adding more cruft
-into each state_data.
-
 collapse into one allmight tool?
 - user must pick section
 - bmc, pef, sensor, chassis, all
@@ -117,98 +113,6 @@ ipmi-oem-config
 oem
 ---
 dell poweredge lcd support
-sun sel 4140
-=====================================================
-SEL Event Record
-=====================================================
-[             6DFh] = record_id[16b]
-[               2h] = record_type[ 8b]
-[        4AD3A4B4h] = timestamp[32b]
-[               1h] = generator_id.id_type[ 1b]
-[               0h] = generator_id.id[ 7b]
-[               0h] = ipmb_device_lun[ 2b]
-[               0h] = reserved[ 2b]
-[               0h] = channel_number[ 4b]
-[               4h] = event_message_format_version[ 8b]
-[              2Ch] = sensor_type[ 8b]
-[              32h] = sensor_number[ 8b]
-[              6Fh] = event_type_code[ 7b]
-[               0h] = event_dir[ 1b]
-[               3h] = offset_from_event_reading_type_code[ 4b]
-[               2h] = event_data3_flag[ 2b]
-[               2h] = event_data2_flag[ 2b]
-[               0h] = event_data2[ 8b]
-[              32h] = event_data3[ 8b]
-ID   | Date        | Time     | Name             | Type                    | Event
-1759 | Oct-12-2009 | 14:50:44 | Sensor #50       | FRU State               | FRU Activation In Progress ; OEM Event Data2 code = 00h ; OEM Event Data3 code = 32h
-=====================================================
-SEL Event Record 
-=====================================================
-[             6E3h] = record_id[16b]
-[               2h] = record_type[ 8b]
-[        4AD3A5ABh] = timestamp[32b]
-[               1h] = generator_id.id_type[ 1b]
-[               0h] = generator_id.id[ 7b]
-[               0h] = ipmb_device_lun[ 2b]
-[               0h] = reserved[ 2b]
-[               0h] = channel_number[ 4b]
-[               4h] = event_message_format_version[ 8b]
-[               Fh] = sensor_type[ 8b]
-[               1h] = sensor_number[ 8b]
-[              6Fh] = event_type_code[ 7b]
-[               0h] = event_dir[ 1b]
-[               0h] = offset_from_event_reading_type_code[ 4b]
-[               2h] = event_data3_flag[ 2b]
-[               0h] = event_data2_flag[ 2b]
-[               0h] = event_data2[ 8b]
-[               1h] = event_data3[ 8b]
-1763 | Oct-12-2009 | 14:54:51 | Sensor #1        | System Firmware Progress | System Firmware Error ; OEM Event Data3 code = 01h
-=====================================================
-SEL Event Record
-=====================================================
-[             6ECh] = record_id[16b]
-[               2h] = record_type[ 8b]
-[        4AD3BB23h] = timestamp[32b]
-[               1h] = generator_id.id_type[ 1b]
-[               0h] = generator_id.id[ 7b]
-[               0h] = ipmb_device_lun[ 2b]
-[               0h] = reserved[ 2b]
-[               0h] = channel_number[ 4b]
-[               4h] = event_message_format_version[ 8b]
-[               7h] = sensor_type[ 8b]
-[               2h] = sensor_number[ 8b]
-[              6Fh] = event_type_code[ 7b]
-[               0h] = event_dir[ 1b]
-[               7h] = offset_from_event_reading_type_code[ 4b]
-[               2h] = event_data3_flag[ 2b]
-[               3h] = event_data2_flag[ 2b]
-[              FFh] = event_data2[ 8b]
-[               2h] = event_data3[ 8b] 
-1772 | Oct-12-2009 | 16:26:27 | Sensor #2        | Processor                | Processor Presence detected ; OEM Event Data3 code = 02h
-psun: =====================================================
-psun: SEL Event Record 
-psun: =====================================================
-psun: [             6E1h] = record_id[16b]
-psun: [               2h] = record_type[ 8b]
-psun: [        4A2F6512h] = timestamp[32b]
-psun: [               1h] = generator_id.id_type[ 1b]
-psun: [               0h] = generator_id.id[ 7b]
-psun: [               0h] = ipmb_device_lun[ 2b]
-psun: [               0h] = reserved[ 2b]
-psun: [               0h] = channel_number[ 4b]
-psun: [               4h] = event_message_format_version[ 8b]
-psun: [               7h] = sensor_type[ 8b]
-psun: [               2h] = sensor_number[ 8b]
-psun: [              6Fh] = event_type_code[ 7b]
-psun: [               0h] = event_dir[ 1b]
-psun: [               7h] = offset_from_event_reading_type_code[ 4b]
-psun: [               2h] = event_data3_flag[ 2b]
-psun: [               3h] = event_data2_flag[ 2b]
-psun: [              FFh] = event_data2[ 8b]
-psun: [               4h] = event_data3[ 8b]
-ID    | Date        | Time     | Name             | Type                    | Event
-1761  | Jun-10-2009 | 00:47:30 | Sensor #2        | Processor               | Processor Presence detected ; OEM Event Data3 code = 04h
-
 
 libfreeipmi
 -----------
@@ -225,46 +129,24 @@ ipmi-fru
 
 bmc-config
 ----------
-(TEST) that ipmi 2.0 (> 20 char) password not possible on ipmi 1.5 only mobo
 destination address vlan tags (or would be in ipmi-pef-config?)
 all lan destination config (or would be in ipmi-pef-config?)
 (NEVER TESTED) bmc password threshold
 
 sensors/monitoring
 ------------------
-(TEST) make sure bridging still works w/ sensor-read lib
-(TEST) make sure oem still outputs fine
 sensor reading factors
 - to support non-linear sensors
-specify sensors by name too
-- useful in libipmimonitoring, if heterogenous firmware versions, but
-same sensor names?
-- manually check thresholds, don't trust motherboard to help deal w/ 
-issues on some motherboards.
 check sensor thresholds manually instead of trust flags
 - some mobos seem to set flags incorrectly
 
 ipmimonitoring
 --------------
-- how to deal with OEM sensors??  special config file format?
----
-OEM <manufacturer_id> <product_id> <generator_id> <sensor_type> <event_offset> <nominal|warning|critical>
----
-- how to deal with one-off oddities from vendors?  another config file format?
----
-SPECIAL <generator_id> <sensor_type> <event_offset> <nominal|warning|critical>
----
-- extend to monitor/interpret SEL entries too??
 ryan b. suggestions
 - make alternate config file to ipmi_monitoring_sensor_config
 - allow more than nominal | warning | critical, allow "info" too so like syslog
   - allows user to config away things are normal and always happening, such as boot
     events
-- make a "interpret sensor based on this info" function which returns
-  nominal/warning/critical.
-  - so can support output in ipmi-sensors, ipmi-sel instead of new tool
-- another idea
-  - new lib "ipmiinterpret" or something like that?
 - on the other hand
   - unlike sensors, no way to "limit" output or by record-id or sensor-type
   - whatever events happened just happened
@@ -308,7 +190,6 @@ e.g. workarounds FOO nodes[0-100]
 bmc-device
 --------
 (NEVER TESTED) get auxiliary log status - not tested, don't have a machine with this support
-(TEST) ensure get-lan-statistics and clear-lan-statistics still work
 
 ipmi-pef-config
 -----------
@@ -341,22 +222,6 @@ contribs
 module for snmptrapd to parse ipmi traps
 zenoss
 - request from someone
-
-oem-isms
---------
-what OEM vendors can add
-- bmc-info - device specific info
-- ipmi-oem - any oem-sms
-- ipmi-dcmi - oem exception actions
-- ipmi-fru/fru-parse - oem fru records
-- ipmi-sel/sel-parse - oem sel records and oem codes
-- ipmi-sensors/ipmi-sensors-config/ipmimonitoring/sensor-read/libipmimonitoring - oem sensors
-- ipmi-sensors - OEM sdr records
-
-DCMI functionality
-------------------
-(NEVER TESTED) capability info > revision 1
-(NEVER TESTED) everything else
 
 ipmi proxy daemon
 -----------------
