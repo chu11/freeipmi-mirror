@@ -37,12 +37,12 @@ useful or interesting.  However, perhaps you want to determine if
 every node of your cluster booted with the same kernel.
 
 > pdsh -w "wopr[0-5]" uname -r
-wopr1: 2.6.9-65chaos
-wopr0: 2.6.9-65chaos
-wopr5: 2.6.9-65chaos
-wopr2: 2.6.9-65chaos
-wopr4: 2.6.9-65chaos
-wopr3: 2.6.9-65chaos
+wopr1: 2.6.9-65
+wopr0: 2.6.9-65
+wopr5: 2.6.9-65
+wopr2: 2.6.9-65
+wopr4: 2.6.9-65
+wopr3: 2.6.9-65
 
 Seems pretty useful. However, on larger clusters, this type of output
 will get pretty large, especially if the command generates greater
@@ -179,7 +179,7 @@ sys     0m0.012s
 
 The time differences may not seem like much difference in these
 examples.  But think of when this is done across an extremeley large
-cluster.
+cluster (i.e. thousands of nodes).
 
 2) Hostrange input/output in FreeIPMI
 -------------------------------------
@@ -298,7 +298,7 @@ user    0m0.029s
 sys     0m0.003s
 
 Running with the -E option (and assuming ipmidetectd has been setup
-and is running) the -E option equickly eliminates pwopr6.
+and is running) the -E option quickly eliminates pwopr6.
 
 > time ipmi-sensors -h "pwopr[0-6]" -u XXX -p YYY --record-ids=10 -E
 pwopr0: 10 | CPU3 Vcore | Voltage | 1.31       | V     | 'OK'
