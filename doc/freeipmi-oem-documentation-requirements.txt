@@ -27,10 +27,6 @@ OEM commands for retrieving motherboard specific information.  For
 example, OEM commands for reading firmware versions (ipmi-oem's
 Supermicro extra-firmware-info command is an example of this).
 
-OEM commands for getting/setting motherboard specific hardware.  For
-example, reading and configuring power capacity status (ipmi-oem's
-Dell set-power-capacity-status command is an example of this).
-
 OEM commands for retrieving motherboard specific hardware information
 necessary for hardware monitoring.  For example, retrieving the
 current health status of hardware (ipmi-oem's Fujitsu
