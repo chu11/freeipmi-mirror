@@ -47,15 +47,14 @@
  * 4     - Record Type (0xC0 - standard)
  * 5     - Record Length (standard)
  * 6-8   - Manufacturer ID (standard)
- * 9-12  - ?? (oem_data)
- * 13    - OEM Sensor Type (oem_data)
- * 14-15 - ?? (oem_data)
- * 16-17 - LED ID (oem_data)
+ * 9     - OEM Sensor Type (oem_data)
+ * 10-11 - ?? (oem_data)
+ * 12-13 - LED ID (oem_data)
  */
-#define IPMI_SDR_RECORD_OEM_IBM_LED_OEM_DATA_MIN_LENGTH    9
-#define IPMI_SDR_RECORD_OEM_IBM_SENSOR_TYPE_OEM_DATA_INDEX 4
-#define IPMI_SDR_RECORD_OEM_IBM_LED_ID_LS_OEM_DATA_INDEX   7
-#define IPMI_SDR_RECORD_OEM_IBM_LED_ID_MS_OEM_DATA_INDEX   8
+#define IPMI_SDR_RECORD_OEM_IBM_LED_OEM_DATA_MIN_LENGTH    5
+#define IPMI_SDR_RECORD_OEM_IBM_SENSOR_TYPE_OEM_DATA_INDEX 0
+#define IPMI_SDR_RECORD_OEM_IBM_LED_ID_LS_OEM_DATA_INDEX   3
+#define IPMI_SDR_RECORD_OEM_IBM_LED_ID_MS_OEM_DATA_INDEX   4
 
 #define IPMI_SDR_RECORD_OEM_IBM_LED_SENSOR_TYPE      0xED
 
