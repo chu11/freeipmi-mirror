@@ -25,6 +25,8 @@ o ipmi-sel
   - Support --sensor-types option.
   - Support --exclude-sensor-types option.
   - Support --output-manufacturer-id option.
+  - Support --date-range option.
+  - Support --exclude-date-range option.
   - Alter OEM record output to align with columns by outputting "N/A"
     in appropriate fields and putting manufacturer ID in event output.
 o ipmimonitoring

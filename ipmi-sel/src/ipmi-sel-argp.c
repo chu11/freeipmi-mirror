@@ -317,13 +317,19 @@ _read_date_range (int *flag,
   *start_ptr = '\0';
   range1_str = range_str;
 
+  /* Posix says individual calls need not clear/set all portions of
+   * 'struct tm', thus passing 'struct tm' between functions could
+   * have issues.  So we need to memset.
+   */
+  memset (&tm, '\0', sizeof (struct tm));
+
   if (!strcasecmp (range1_str, "now"))
     t = time (NULL);
   else
     {
       if (!strptime (range1_str, "%m/%d/%Y", &tm))
         {
-          if (!strptime (range1_str, "%b/%d/%Y"))
+          if (!strptime (range1_str, "%b/%d/%Y", &tm))
             {
               if (!strptime (range1_str, "%m-%d-%Y", &tm))
                 {
@@ -348,13 +354,19 @@ _read_date_range (int *flag,
 
   (*range1) = (uint32_t)t;
 
+  /* Posix says individual calls need not clear/set all portions of
+   * 'struct tm', thus passing 'struct tm' between functions could
+   * have issues.  So we need to memset.
+   */
+  memset (&tm, '\0', sizeof (struct tm));
+
   if (!strcasecmp (range2_str, "now"))
     t = time (NULL);
   else
     {
       if (!strptime (range2_str, "%m/%d/%Y", &tm))
         {
-          if (!strptime (range2_str, "%b/%d/%Y"))
+          if (!strptime (range2_str, "%b/%d/%Y", &tm))
             {
               if (!strptime (range2_str, "%m-%d-%Y", &tm))
                 {

@@ -67,15 +67,19 @@ Display SEL records from record id START to END.
 \fB\-\-exclude\-display-range\fR=\fBSTART\-END\fR
 Exclude display of SEL records from record id START to END.
 .TP
-\fB\-\-date\-range\fR=\fBMM/DD/YYYY\-MM/DD/YYYY\fR
+\fB\-\-date\-range\fR=\fBDATE\-DATE\fR
 Display SEL records with events occurring in the specified date range.
-The current local system time can be specified with "now".  Note that
+Dates may be specified in MM/DD/YYYY or MM-DD-YYYY format.  The month
+may be specified as a numeral or its abbreviated string name.  The
+current local system time can be specified with "now".  Note that
 non-timestamped records will not be displayed automatically because
 they do not possess a timestamp.
 .TP
-\fB\-\-exclude\-date\-range\fR=\fBMM/DD/YYYY\-MM/DD/YYYY\fR
+\fB\-\-exclude\-date\-range\fR=\fBDATE\-DATE\fR
 Exclude display of SEL records with events occurring in the specified
-date range.  The current local system time can be specified with
+date range.  Dates may be specified in MM/DD/YYYY or MM-DD-YYYY
+format.  The month may be specified as a numeral or its abbreviated
+string name.  The current local system time can be specified with
 "now".  Note that non-timestamped records will be displayed
 automatically because they do not possess a timestamp.
 .TP

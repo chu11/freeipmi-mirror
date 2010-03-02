@@ -844,6 +844,12 @@ set_sdr_repository_time (bmc_device_state_data_t *state_data)
 
   args = state_data->prog_data->args;
 
+  /* Posix says individual calls need not clear/set all portions of
+   * 'struct tm', thus passing 'struct tm' between functions could
+   * have issues.  So we need to memset.
+   */
+  memset (&tm, '\0', sizeof(struct tm));
+
   if (!strcasecmp (args->set_sdr_repository_time_arg, "now"))
     t = time (NULL);
   else
@@ -953,6 +959,12 @@ set_sel_time (bmc_device_state_data_t *state_data)
   assert (state_data);
 
   args = state_data->prog_data->args;
+
+  /* Posix says individual calls need not clear/set all portions of
+   * 'struct tm', thus passing 'struct tm' between functions could
+   * have issues.  So we need to memset.
+   */
+  memset (&tm, '\0', sizeof(struct tm));
 
   if (!strcasecmp (args->set_sel_time_arg, "now"))
     t = time (NULL);

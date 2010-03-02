@@ -152,6 +152,12 @@ _sdr_repository_info (ipmi_sensors_state_data_t *state_data)
       goto cleanup;
     }
 
+  /* Posix says individual calls need not clear/set all portions of
+   * 'struct tm', thus passing 'struct tm' between functions could
+   * have issues.  So we need to memset.
+   */
+  memset (&tmp, '\0', sizeof(struct tm));
+
   t = val;
   localtime_r (&t, &tmp);
   strftime (timestr, sizeof (timestr), "%m/%d/%Y - %H:%M:%S", &tmp);
@@ -167,6 +173,12 @@ _sdr_repository_info (ipmi_sensors_state_data_t *state_data)
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+
+  /* Posix says individual calls need not clear/set all portions of
+   * 'struct tm', thus passing 'struct tm' between functions could
+   * have issues.  So we need to memset.
+   */
+  memset (&tmp, '\0', sizeof(struct tm));
 
   t = val;
   localtime_r (&t, &tmp);

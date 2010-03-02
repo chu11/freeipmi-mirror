@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-output.c,v 1.7 2010-02-08 22:20:58 chu11 Exp $
+ *  $Id: ipmi-fru-output.c,v 1.8 2010-03-02 21:09:07 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -260,6 +260,12 @@ ipmi_fru_output_board_info_area (ipmi_fru_state_data_t *state_data,
                         "  FRU Board Language Code: %02Xh\n",
                         language_code);
     }
+
+  /* Posix says individual calls need not clear/set all portions of
+   * 'struct tm', thus passing 'struct tm' between functions could
+   * have issues.  So we need to memset.
+   */
+  memset (&mfg_date_time_tm, '\0', sizeof (struct tm));
 
   timetmp = mfg_date_time;
   localtime_r (&timetmp, &mfg_date_time_tm);
