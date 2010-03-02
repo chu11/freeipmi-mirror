@@ -416,16 +416,16 @@ _find_sensor (ipmi_oem_state_data_t *state_data,
                                  state_data->prog_data->args->sdr.sdr_cache_directory) < 0)
     goto cleanup;
 
-  if (ipmi_sdr_cache_record_count (state_data->sdr_cache_ctx, &record_count) < 0)
+  if (ipmi_sdr_cache_record_count (tmp_sdr_cache_ctx, &record_count) < 0)
     {
       pstdout_fprintf (state_data->pstate,
 		       stderr,
 		       "ipmi_sdr_cache_record_count: %s\n",
-		       ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
+		       ipmi_sdr_cache_ctx_errormsg (tmp_sdr_cache_ctx));
       goto cleanup;
     }
 
-  for (i = 0; i < record_count; i++, ipmi_sdr_cache_next (state_data->sdr_cache_ctx))
+  for (i = 0; i < record_count; i++, ipmi_sdr_cache_next (tmp_sdr_cache_ctx))
     {
       uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
       int sdr_record_len = 0;
@@ -736,7 +736,7 @@ ipmi_oem_ibm_get_led (ipmi_oem_state_data_t *state_data)
           
           snprintf (fmt,
                     IPMI_OEM_FMT_BUFLEN,
-                    "%%-%ds | LED               | State   | LED Information\n",
+                    "%%-%ds | LED               | State    | LED Information\n",
                     column_width.record_id);
 
           pstdout_printf (state_data->pstate,
