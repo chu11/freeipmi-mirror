@@ -605,6 +605,7 @@ ipmi_oem_ibm_get_led (ipmi_oem_state_data_t *state_data)
       uint8_t led_active_type;
       uint16_t led_pointer_id;
       uint8_t sensor_number;
+      int available_led;
 
       if ((sdr_record_len = ipmi_sdr_cache_record_read (state_data->sdr_cache_ctx,
 							sdr_record,
@@ -721,15 +722,23 @@ ipmi_oem_ibm_get_led (ipmi_oem_state_data_t *state_data)
        * are.
        */
 
-      if (ipmi_oem_check_response_and_completion_code (state_data,
-                                                       bytes_rs,
-                                                       rs_len,
-                                                       8,
-                                                       IPMI_CMD_OEM_IBM_GET_LED,
-                                                       IPMI_NET_FN_OEM_IBM_LED_RS,
-                                                       NULL) < 0)
-        goto cleanup;
-      
+      /* Assume this error code means LED not available */
+      if (bytes_rs[1] == IPMI_COMP_CODE_PARAMETER_OUT_OF_RANGE)
+        available_led = 0;
+      else
+        {
+          if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                           bytes_rs,
+                                                           rs_len,
+                                                           8,
+                                                           IPMI_CMD_OEM_IBM_GET_LED,
+                                                           IPMI_NET_FN_OEM_IBM_LED_RS,
+                                                           NULL) < 0)
+            goto cleanup;
+
+          available_led = 1;
+        }
+
       if (!header_output_flag)
         {
           memset (fmt, '\0', IPMI_OEM_FMT_BUFLEN + 1);
@@ -746,11 +755,6 @@ ipmi_oem_ibm_get_led (ipmi_oem_state_data_t *state_data)
           header_output_flag++;
         }
       
-      led_state = bytes_rs[3];
-      led_active_type = bytes_rs[7];
-      led_pointer_id = (bytes_rs[5] << 8) | bytes_rs[6];
-      sensor_number = bytes_rs[6];
-      
       memset (led_name, '\0', IPMI_LED_NAME_BUFLEN + 1);
       memset (led_pointer_name, '\0', IPMI_LED_NAME_BUFLEN + 1);
       memset (id_string, '\0', IPMI_LED_ID_STRING_BUFLEN + 1);
@@ -763,66 +767,76 @@ ipmi_oem_ibm_get_led (ipmi_oem_state_data_t *state_data)
                          IPMI_LED_NAME_BUFLEN) < 0)
         goto cleanup;
       
-      if (led_state == IPMI_IBM_LED_STATE_INACTIVE)
-        led_state_str = "Inactive";
-      else
-        led_state_str = "Active";
-      
-      if (led_state != IPMI_IBM_LED_STATE_INACTIVE)
+      if (available_led)
         {
-          /* Location LED special case */
-          if (!led_id)
+          led_state = bytes_rs[3];
+          led_active_type = bytes_rs[7];
+          led_pointer_id = (bytes_rs[5] << 8) | bytes_rs[6];
+          sensor_number = bytes_rs[6];
+
+          if (led_state == IPMI_IBM_LED_STATE_INACTIVE)
+            led_state_str = "Inactive";
+          else
+            led_state_str = "Active";
+      
+          if (led_state != IPMI_IBM_LED_STATE_INACTIVE)
             {
-              snprintf (led_info,
-                        IPMI_LED_INFO_BUFLEN,
-                        "System Error Condition");
-            }
-          else if (led_active_type == IPMI_IBM_LED_ACTIVE_BY_LED)
-            {
-              if (_get_led_name (state_data,
-                                 &oem_data,
-                                 led_pointer_id,
-                                 led_pointer_name,
-                                 IPMI_LED_NAME_BUFLEN) < 0)
-                goto cleanup;
-              
-              snprintf (led_info,
-                        IPMI_LED_INFO_BUFLEN,
-                        "'%s' Active",
-                        led_pointer_name);
-            }
-          else if (led_active_type == IPMI_IBM_LED_ACTIVE_BY_SENSOR)
-            {
-              /* achu: sensor numbers may not be unique.  I'm copying
-               * this algorithm from xCAT so I assume it's safe for
-               * IBM machines b/c IBM lays out their SDRs in a fashion
-               * that this search is safe and won't result in an
-               * incorrect output.
-               */
-              if (_find_sensor (state_data,
-                                sensor_number,
-                                id_string,
-                                IPMI_LED_ID_STRING_BUFLEN) < 0)
-                goto cleanup;
-                             
-              snprintf (led_info,
-                        IPMI_LED_INFO_BUFLEN,
-                        "Sensor '%s' error",
-                        id_string);
-            }
-          else if (led_active_type == IPMI_IBM_LED_ACTIVE_BY_USER)
-            {
-              snprintf (led_info,
-                        IPMI_LED_INFO_BUFLEN,
-                        "LED Activated by User");
-            }
-          else if (led_active_type == IPMI_IBM_LED_ACTIVE_BY_BIOS_OR_ADMINISTRATOR)
-            {
-              snprintf (led_info,
-                        IPMI_LED_INFO_BUFLEN,
-                        "LED Activated by BIOS or Administrator");
+              /* Location LED special case */
+              if (!led_id)
+                {
+                  snprintf (led_info,
+                            IPMI_LED_INFO_BUFLEN,
+                            "System Error Condition");
+                }
+              else if (led_active_type == IPMI_IBM_LED_ACTIVE_BY_LED)
+                {
+                  if (_get_led_name (state_data,
+                                     &oem_data,
+                                     led_pointer_id,
+                                     led_pointer_name,
+                                     IPMI_LED_NAME_BUFLEN) < 0)
+                    goto cleanup;
+                  
+                  snprintf (led_info,
+                            IPMI_LED_INFO_BUFLEN,
+                            "'%s' Active",
+                            led_pointer_name);
+                }
+              else if (led_active_type == IPMI_IBM_LED_ACTIVE_BY_SENSOR)
+                {
+                  /* achu: sensor numbers may not be unique.  I'm copying
+                   * this algorithm from xCAT so I assume it's safe for
+                   * IBM machines b/c IBM lays out their SDRs in a fashion
+                   * that this search is safe and won't result in an
+                   * incorrect output.
+                   */
+                  if (_find_sensor (state_data,
+                                    sensor_number,
+                                    id_string,
+                                    IPMI_LED_ID_STRING_BUFLEN) < 0)
+                    goto cleanup;
+                  
+                  snprintf (led_info,
+                            IPMI_LED_INFO_BUFLEN,
+                            "Sensor '%s' error",
+                            id_string);
+                }
+              else if (led_active_type == IPMI_IBM_LED_ACTIVE_BY_USER)
+                {
+                  snprintf (led_info,
+                            IPMI_LED_INFO_BUFLEN,
+                            "LED Activated by User");
+                }
+              else if (led_active_type == IPMI_IBM_LED_ACTIVE_BY_BIOS_OR_ADMINISTRATOR)
+                {
+                  snprintf (led_info,
+                            IPMI_LED_INFO_BUFLEN,
+                            "LED Activated by BIOS or Administrator");
+                }
             }
         }
+      else
+        led_state_str = "N/A";
       
       snprintf (fmt,
                 IPMI_OEM_FMT_BUFLEN,
