@@ -1,6 +1,7 @@
 2010-03-02  Albert Chu <chu11@llnl.gov>
 
-	* ipmi-oem/: Uncomment IBM Get LED, verified.
+	* ipmi-oem/: Uncomment IBM Get LED, verified.  Sensor search bug
+	fix.
 	
 2010-03-01  Albert Chu <chu11@llnl.gov>
 

@@ -25,6 +25,16 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#if TIME_WITH_SYS_TIME
+#include <sys/time.h>
+#include <time.h>
+#else /* !TIME_WITH_SYS_TIME */
+#if HAVE_SYS_TIME_H
+#include <sys/time.h>
+#else /* !HAVE_SYS_TIME_H */
+#include <time.h>
+#endif /* !HAVE_SYS_TIME_H */
+#endif /* !TIME_WITH_SYS_TIME */
 #if HAVE_ARGP_H
 #include <argp.h>
 #else /* !HAVE_ARGP_H */
@@ -83,6 +93,10 @@ static struct argp_option cmdline_options[] =
       "Display SEL records from record id START to END.", 34},
     { "exclude-display-range", EXCLUDE_DISPLAY_RANGE_KEY, "START-END", 0,
       "Exclude display of SEL records from record id START to END.", 35},
+    { "date-range", DATE_RANGE_KEY, "MM/DD/YYYY-MM/DD/YYYY", 0,
+      "Display SEL records in the specified date range.", 36},
+    { "exclude-date-range", EXCLUDE_DATE_RANGE_KEY, "MM/DD/YYYY-MM/DD/YYYY", 0,
+      "Exclude display of SEL records in the specified date range.", 37},
     { "sensor-types",   SENSOR_TYPES_KEY,       "SENSOR-TYPES-LIST", 0,
       "Show sensors of a specific type.", 36},
     { "exclude-sensor-types", EXCLUDE_SENSOR_TYPES_KEY, "SENSOR-TYPES-LIST", 0,
@@ -181,10 +195,10 @@ _read_record_list (int *flag,
 }
 
 static void
-_read_range (int *flag,
-             uint16_t *range1,
-             uint16_t *range2,
-             char *arg)
+_read_record_id_range (int *flag,
+                       uint16_t *range1,
+                       uint16_t *range2,
+                       char *arg)
 {
   char *ptr;
   char *range_str = NULL;
@@ -263,6 +277,118 @@ _read_range (int *flag,
   free (range2_str);
 }
 
+static void
+_read_date_range (int *flag,
+                  uint32_t *range1,
+                  uint32_t *range2,
+                  char *arg)
+{
+  char *ptr;
+  char *range_str = NULL;
+  char *start_ptr = NULL;
+  char *range1_str = NULL;
+  char *range2_str = NULL;
+  time_t t;
+  struct tm tm;
+
+  assert (flag);
+  assert (range1);
+  assert (range2);
+  assert (arg);
+
+  (*flag) = 1;
+
+  if (!(range_str = strdup (arg)))
+    {
+      perror ("strdup");
+      exit (1);
+    }
+  if (!(start_ptr = strchr (range_str, '-')))
+    {
+      /* invalid input */
+      fprintf (stderr, "invalid range input\n");
+      exit (1);
+    }
+  if (!(range2_str = strdup (start_ptr + 1)))
+    {
+      perror ("strdup");
+      exit (1);
+    }
+  *start_ptr = '\0';
+  range1_str = range_str;
+
+  if (!strcasecmp (range1_str, "now"))
+    t = time (NULL);
+  else
+    {
+      if (!strptime (range1_str, "%m/%d/%Y", &tm))
+        {
+          if (!strptime (range1_str, "%b/%d/%Y"))
+            {
+              if (!strptime (range1_str, "%m-%d-%Y", &tm))
+                {
+                  if (!strptime (range1_str, "%b-%d-%Y", &tm))
+                    {
+                      fprintf (stderr,
+                               "Invalid time specification '%s'.\n",
+                               range1_str);
+                      exit (1);
+                    }
+                }
+            }
+        }
+      if ((t = mktime (&tm)) == (time_t)-1)
+        {
+          fprintf (stderr,
+                   "Time specification '%s' cannot be represented.\n",
+                   range1_str);
+          exit (1);
+        }
+    }
+
+  (*range1) = (uint32_t)t;
+
+  if (!strcasecmp (range2_str, "now"))
+    t = time (NULL);
+  else
+    {
+      if (!strptime (range2_str, "%m/%d/%Y", &tm))
+        {
+          if (!strptime (range2_str, "%b/%d/%Y"))
+            {
+              if (!strptime (range2_str, "%m-%d-%Y", &tm))
+                {
+                  if (!strptime (range2_str, "%b-%d-%Y", &tm))
+                    {
+                      fprintf (stderr,
+                               "Invalid time specification '%s'.\n",
+                               range2_str);
+                      exit (1);
+                    }
+                }
+            }
+        }
+      if ((t = mktime (&tm)) == (time_t)-1)
+        {
+          fprintf (stderr,
+                   "Time specification '%s' cannot be represented.\n",
+                   range2_str);
+          exit (1);
+        }
+    }
+
+  (*range2) = (uint32_t)t;
+
+  if ((*range2) < (*range1))
+    {
+      fprintf (stderr, "invalid range\n");
+      exit (1);
+    }
+
+  free (range1_str);
+  free (range2_str);
+}
+
 static error_t
 cmdline_parse (int key, char *arg, struct argp_state *state)
 {
@@ -293,16 +419,28 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
                          arg);
       break;
     case DISPLAY_RANGE_KEY:
-      _read_range (&(cmd_args->display_range),
-                   &(cmd_args->display_range1),
-                   &(cmd_args->display_range2),
-                   arg);
+      _read_record_id_range (&(cmd_args->display_range),
+                             &(cmd_args->display_range1),
+                             &(cmd_args->display_range2),
+                             arg);
       break;
     case EXCLUDE_DISPLAY_RANGE_KEY:
-      _read_range (&(cmd_args->exclude_display_range),
-                   &(cmd_args->exclude_display_range1),
-                   &(cmd_args->exclude_display_range2),
-                   arg);
+      _read_record_id_range (&(cmd_args->exclude_display_range),
+                             &(cmd_args->exclude_display_range1),
+                             &(cmd_args->exclude_display_range2),
+                             arg);
+      break;
+    case DATE_RANGE_KEY:
+      _read_date_range (&(cmd_args->date_range),
+                        &(cmd_args->date_range1),
+                        &(cmd_args->date_range2),
+                        arg);
+      break;
+    case EXCLUDE_DATE_RANGE_KEY:
+      _read_date_range (&(cmd_args->exclude_date_range),
+                        &(cmd_args->exclude_date_range1),
+                        &(cmd_args->exclude_date_range2),
+                        arg);
       break;
     case SENSOR_TYPES_KEY:
       tok = strtok (arg, " ,");
@@ -369,10 +507,10 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
                          arg);
       break;
     case DELETE_RANGE_KEY:
-      _read_range (&(cmd_args->delete_range),
-                   &(cmd_args->delete_range1),
-                   &(cmd_args->delete_range2),
-                   arg);
+      _read_record_id_range (&(cmd_args->delete_range),
+                             &(cmd_args->delete_range1),
+                             &(cmd_args->delete_range2),
+                             arg);
       break;
     case SYSTEM_EVENT_ONLY_KEY:
       cmd_args->system_event_only = 1;
@@ -550,6 +688,13 @@ ipmi_sel_argp_parse (int argc, char **argv, struct ipmi_sel_arguments *cmd_args)
   cmd_args->exclude_display_range = 0;
   cmd_args->exclude_display_range1 = 0;
   cmd_args->exclude_display_range2 = 0;
+  cmd_args->date_range = 0;
+  cmd_args->date_range1 = 0;
+  cmd_args->date_range2 = 0;
+  cmd_args->exclude_date_range = 0;
+  cmd_args->exclude_date_range1 = 0;
+  cmd_args->exclude_date_range2 = 0;
+
   for (i = 0; i < MAX_SENSOR_TYPES; i++)
     memset (cmd_args->sensor_types[i],
             '\0',

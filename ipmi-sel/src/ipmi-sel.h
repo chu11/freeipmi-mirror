@@ -37,26 +37,28 @@ enum ipmi_sel_argp_option_keys
     EXCLUDE_DISPLAY_KEY = 161,
     DISPLAY_RANGE_KEY = 162,
     EXCLUDE_DISPLAY_RANGE_KEY = 163,
+    DATE_RANGE_KEY = 164,
+    EXCLUDE_DATE_RANGE_KEY = 165,
     SENSOR_TYPES_KEY = 't',
     EXCLUDE_SENSOR_TYPES_KEY = 'T',
     LIST_SENSOR_TYPES_KEY = 'L',
-    TAIL_KEY = 164,
-    CLEAR_KEY = 165,
-    DELETE_ALL_KEY = 166,       /* legacy */
-    DELETE_KEY = 167,
-    DELETE_RANGE_KEY = 168,
-    SYSTEM_EVENT_ONLY_KEY = 169,
-    OEM_EVENT_ONLY_KEY = 170,
-    OUTPUT_MANUFACTURER_ID_KEY = 171,
-    HEX_DUMP_KEY = 172,
-    ASSUME_SYSTEM_EVENT_RECORDS_KEY = 173,
-    INTERPRET_OEM_DATA_KEY = 174,
-    ENTITY_SENSOR_NAMES_KEY = 175,
-    NO_SENSOR_TYPE_OUTPUT_KEY = 176,
-    COMMA_SEPARATED_OUTPUT_KEY = 177,
-    NO_HEADER_OUTPUT_KEY = 178,
-    NON_ABBREVIATED_UNITS_KEY = 179,
-    LEGACY_OUTPUT_KEY = 180,
+    TAIL_KEY = 166,
+    CLEAR_KEY = 167,
+    DELETE_ALL_KEY = 168,       /* legacy */
+    DELETE_KEY = 169,
+    DELETE_RANGE_KEY = 170,
+    SYSTEM_EVENT_ONLY_KEY = 171,
+    OEM_EVENT_ONLY_KEY = 172,
+    OUTPUT_MANUFACTURER_ID_KEY = 173,
+    HEX_DUMP_KEY = 174,
+    ASSUME_SYSTEM_EVENT_RECORDS_KEY = 175,
+    INTERPRET_OEM_DATA_KEY = 176,
+    ENTITY_SENSOR_NAMES_KEY = 177,
+    NO_SENSOR_TYPE_OUTPUT_KEY = 178,
+    COMMA_SEPARATED_OUTPUT_KEY = 179,
+    NO_HEADER_OUTPUT_KEY = 180,
+    NON_ABBREVIATED_UNITS_KEY = 181,
+    LEGACY_OUTPUT_KEY = 182,
   };
 
 struct ipmi_sel_arguments
@@ -78,6 +80,12 @@ struct ipmi_sel_arguments
   int exclude_display_range;
   uint16_t exclude_display_range1;
   uint16_t exclude_display_range2;
+  int date_range;
+  uint32_t date_range1;
+  uint32_t date_range2;
+  int exclude_date_range;
+  uint32_t exclude_date_range1;
+  uint32_t exclude_date_range2;
   char sensor_types[MAX_SENSOR_TYPES][MAX_SENSOR_TYPES_STRING_LENGTH+1];
   unsigned int sensor_types_length;
   char exclude_sensor_types[MAX_SENSOR_TYPES][MAX_SENSOR_TYPES_STRING_LENGTH+1];
