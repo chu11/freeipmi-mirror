@@ -163,8 +163,6 @@
 
 #define IPMI_LED_INFO_BUFLEN       1024
 
-#if 0
-/* unused until get_let verified */
 static int
 _get_led_name (ipmi_oem_state_data_t *state_data,
                struct ipmi_oem_data *oem_data,
@@ -359,10 +357,7 @@ _get_led_name (ipmi_oem_state_data_t *state_data,
    
    return (0);
 }
-#endif
 
-#if 0
-/* unused until get_let verified */
 static int
 _find_sensor (ipmi_oem_state_data_t *state_data,
               uint8_t sensor_number,
@@ -503,10 +498,7 @@ _find_sensor (ipmi_oem_state_data_t *state_data,
   ipmi_sdr_cache_ctx_destroy (tmp_sdr_cache_ctx);
   return (rv);
 }
-#endif
 
-#if 0
-/* need to verify */
 int
 ipmi_oem_ibm_get_led (ipmi_oem_state_data_t *state_data)
 {
@@ -744,7 +736,7 @@ ipmi_oem_ibm_get_led (ipmi_oem_state_data_t *state_data)
           
           snprintf (fmt,
                     IPMI_OEM_FMT_BUFLEN,
-                    "%%-%ds | LED               | State   | LED Information\n",
+                    "%%-%ds | LED               | State    | LED Information\n",
                     column_width.record_id);
 
           pstdout_printf (state_data->pstate,
@@ -853,4 +845,3 @@ ipmi_oem_ibm_get_led (ipmi_oem_state_data_t *state_data)
  cleanup:
   return (rv);
 }
-#endif

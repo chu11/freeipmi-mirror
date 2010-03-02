@@ -431,20 +431,6 @@ struct ipmi_oem_command oem_fujitsu[] =
     },
     {
       NULL,
-struct ipmi_oem_command oem_ibm[] =
-  {
-#if 0
-/* need to verify */
-    {
-      "get-led",
-      NULL,
-      0,
-      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
-      ipmi_oem_ibm_get_led
-    },
-#endif
-    {
-      NULL,
       NULL,
       0,
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
@@ -452,6 +438,17 @@ struct ipmi_oem_command oem_ibm[] =
     },
   };
 
+struct ipmi_oem_command oem_ibm[] =
+  {
+    {
+      "get-led",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_ibm_get_led
+    },
+    {
+      NULL,
       NULL,
       0,
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
@@ -694,19 +691,16 @@ struct ipmi_oem_command oem_supermicro[] =
 struct ipmi_oem_id oem_cb[] =
   {
     {
-#if 0
-    /* none verified yet */
-    {
-      "IBM",
-      oem_ibm
-    },
-#endif
       "Dell",
       oem_dell
     },
     {
       "Fujitsu",
       oem_fujitsu
+    },
+    {
+      "IBM",
+      oem_ibm
     },
     {
       "Inventec",
