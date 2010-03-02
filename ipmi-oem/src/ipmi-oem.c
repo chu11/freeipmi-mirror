@@ -440,8 +440,6 @@ struct ipmi_oem_command oem_fujitsu[] =
 
 struct ipmi_oem_command oem_ibm[] =
   {
-#if 0
-/* need to verify */
     {
       "get-led",
       NULL,
@@ -449,7 +447,6 @@ struct ipmi_oem_command oem_ibm[] =
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_ibm_get_led
     },
-#endif
     {
       NULL,
       NULL,
