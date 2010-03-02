@@ -5,6 +5,8 @@ o Fix ipmi-sensors --comma-separated-output corner case.
 o In ipmi-sensors, output multiple event strings w/ space delimiter in
   simple output.
 o In ipmi-oem, support Dell get-active-lom-status.
+o In ipmi-oem, support IBM get-led.
+o Fix Posix portability issue w/ time functions.
 o Minor documentation updates.
 
 FreeIPMI 0.8.3 - 02/02/10

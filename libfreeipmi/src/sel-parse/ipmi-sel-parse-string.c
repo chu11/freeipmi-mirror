@@ -466,6 +466,12 @@ _output_time (ipmi_sel_parse_ctx_t ctx,
   if (sel_parse_get_timestamp (ctx, sel_parse_entry, &timestamp) < 0)
     return (-1);
 
+  /* Posix says individual calls need not clear/set all portions of
+   * 'struct tm', thus passing 'struct tm' between functions could
+   * have issues.  So we need to memset.
+   */
+  memset (&tmp, '\0', sizeof (struct tm));
+
   t = timestamp;
   localtime_r (&t, &tmp);
   strftime (tmpbuf, SEL_PARSE_BUFFER_LENGTH, "%H:%M:%S", &tmp);
@@ -508,6 +514,12 @@ _output_date (ipmi_sel_parse_ctx_t ctx,
 
   if (sel_parse_get_timestamp (ctx, sel_parse_entry, &timestamp) < 0)
     return (-1);
+
+  /* Posix says individual calls need not clear/set all portions of
+   * 'struct tm', thus passing 'struct tm' between functions could
+   * have issues.  So we need to memset.
+   */
+  memset (&tmp, '\0', sizeof (struct tm));
 
   t = timestamp;
   localtime_r (&t, &tmp);

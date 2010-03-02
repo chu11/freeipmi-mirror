@@ -819,6 +819,12 @@ get_sdr_repository_time (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
 
+  /* Posix says individual calls need not clear/set all portions of
+   * 'struct tm', thus passing 'struct tm' between functions could
+   * have issues.  So we need to memset.
+   */
+  memset (&tm, '\0', sizeof(struct tm));
+
   t = val;
   localtime_r (&t, &tm);
   strftime (timestr, sizeof (timestr), "%m/%d/%Y - %H:%M:%S", &tm);
@@ -843,6 +849,12 @@ set_sdr_repository_time (bmc_device_state_data_t *state_data)
   assert (state_data);
 
   args = state_data->prog_data->args;
+
+  /* Posix says individual calls need not clear/set all portions of
+   * 'struct tm', thus passing 'struct tm' between functions could
+   * have issues.  So we need to memset.
+   */
+  memset (&tm, '\0', sizeof(struct tm));
 
   if (!strcasecmp (args->set_sdr_repository_time_arg, "now"))
     t = time (NULL);
@@ -929,6 +941,12 @@ get_sel_time (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
 
+  /* Posix says individual calls need not clear/set all portions of
+   * 'struct tm', thus passing 'struct tm' between functions could
+   * have issues.  So we need to memset.
+   */
+  memset (&tm, '\0', sizeof(struct tm));
+
   t = val;
   localtime_r (&t, &tm);
   strftime (timestr, sizeof (timestr), "%m/%d/%Y - %H:%M:%S", &tm);
@@ -953,6 +971,12 @@ set_sel_time (bmc_device_state_data_t *state_data)
   assert (state_data);
 
   args = state_data->prog_data->args;
+
+  /* Posix says individual calls need not clear/set all portions of
+   * 'struct tm', thus passing 'struct tm' between functions could
+   * have issues.  So we need to memset.
+   */
+  memset (&tm, '\0', sizeof(struct tm));
 
   if (!strcasecmp (args->set_sel_time_arg, "now"))
     t = time (NULL);
@@ -1322,6 +1346,12 @@ get_mca_auxiliary_log_status (bmc_device_state_data_t *state_data)
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+
+  /* Posix says individual calls need not clear/set all portions of
+   * 'struct tm', thus passing 'struct tm' between functions could
+   * have issues.  So we need to memset.
+   */
+  memset (&tm, '\0', sizeof(struct tm));
 
   t = val;
   localtime_r (&t, &tm);

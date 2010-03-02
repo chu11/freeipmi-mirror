@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-dcmi.c,v 1.4.2.7 2009-12-23 21:24:05 chu11 Exp $
+ *  $Id: ipmi-dcmi.c,v 1.4.2.8 2010-03-02 21:13:38 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2009-2010 Lawrence Livermore National Security, LLC.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1144,6 +1144,12 @@ _output_power_statistics (ipmi_dcmi_state_data_t *state_data,
   pstdout_printf (state_data->pstate,
                   "Average Power over sampling duration : %u watts\n",
                   average_power_over_sampling_duration);
+
+  /* Posix says individual calls need not clear/set all portions of
+   * 'struct tm', thus passing 'struct tm' between functions could
+   * have issues.  So we need to memset.
+   */
+  memset (&tm, '\0', sizeof(struct tm));
 
   t = time_stamp;
   localtime_r (&t, &tm);
