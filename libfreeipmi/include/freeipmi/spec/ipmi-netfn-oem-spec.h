@@ -53,6 +53,17 @@ extern "C" {
 #define IPMI_NET_FN_OEM_FUJITSU_GENERIC_RS 0x31
 
 /*******************************************
+ * IBM                                     *
+ *******************************************/
+
+/*
+ * IBM x3455/x3755
+ */
+/* achu: not official names, named based on use context */
+#define IPMI_NET_FN_OEM_IBM_LED_RQ 0x3A
+#define IPMI_NET_FN_OEM_IBM_LED_RS 0x3B
+
+/*******************************************
  * Inventec                                *
  *******************************************/
 
