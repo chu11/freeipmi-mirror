@@ -1,5 +1,9 @@
 2010-03-02  Albert Chu <chu11@llnl.gov>
 
+	* Fix Posix time portability globally.
+
+2010-03-02  Albert Chu <chu11@llnl.gov>
+
 	* ipmi-sel/: Support --date-range and --exclude-date-range.
 	
 2010-03-02  Albert Chu <chu11@llnl.gov>
