@@ -4,6 +4,7 @@ noinst_HEADERS = \
 	ipmi-oem-common.h \
 	ipmi-oem-dell.h \
 	ipmi-oem-fujitsu.h \
+	ipmi-oem-ibm.h \
 	ipmi-oem-inventec.h \
 	ipmi-oem-sun.h \
 	ipmi-oem-supermicro.h
@@ -11,6 +12,7 @@ noinst_HEADERS = \
 AM_CPPFLAGS = \
 	-I$(top_srcdir)/common/src/toolcommon \
 	-I$(top_srcdir)/common/src/toolhostrange \
+	-I$(top_srcdir)/common/src/tooloem \
 	-I$(top_srcdir)/common/src/toolsdr \
 	-I$(top_srcdir)/common/src/toolsensor \
 	-I$(top_srcdir)/common/src/miscutil \
@@ -24,6 +26,7 @@ sbin_PROGRAMS = ipmi-oem
 ipmi_oem_LDADD = \
 	$(top_builddir)/common/src/toolcommon/libtoolcommon.la \
 	$(top_builddir)/common/src/toolhostrange/libtoolhostrange.la \
+	$(top_builddir)/common/src/tooloem/libtooloem.la \
 	$(top_builddir)/common/src/toolsdr/libtoolsdr.la \
 	$(top_builddir)/common/src/toolsensor/libtoolsensor.la \
 	$(top_builddir)/common/src/miscutil/libmiscutils.la \
@@ -37,6 +40,7 @@ ipmi_oem_SOURCES = \
 	ipmi-oem-common.c \
 	ipmi-oem-dell.c \
 	ipmi-oem-fujitsu.c \
+	ipmi-oem-ibm.c \
 	ipmi-oem-inventec.c \
 	ipmi-oem-sun.c \
 	ipmi-oem-supermicro.c
@@ -45,6 +49,9 @@ $(top_builddir)/common/src/toolcommon/libtoolcommon.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
 $(top_builddir)/common/src/toolhostrange/libtoolhostrange.la : force-dependency-check
+	@cd `dirname $@` && $(MAKE) `basename $@`
+
+$(top_builddir)/common/src/tooloem/libtooloem.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
 $(top_builddir)/common/src/toolsdr/libtoolsdr.la : force-dependency-check
