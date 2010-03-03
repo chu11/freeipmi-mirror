@@ -1800,6 +1800,15 @@ _sel_parse_callback (ipmi_sel_parse_ctx_t ctx, void *callback_data)
         }
     }
 
+  /* Special case, if there is no timestamp, filter it out */
+  if (state_data->prog_data->args->date_range
+      && record_type_class == IPMI_SEL_RECORD_TYPE_CLASS_NON_TIMESTAMPED_OEM_RECORD)
+    {
+      if (state_data->prog_data->args->date_range)
+        goto out;
+    }
+  
+
   if (state_data->prog_data->args->hex_dump)
     {
       if (_hex_output (state_data) < 0)
