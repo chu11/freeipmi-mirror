@@ -6,6 +6,7 @@ o In ipmi-sensors, output multiple event strings w/ space delimiter in
   simple output.
 o In ipmi-oem, support Dell get-active-lom-status.
 o In ipmi-oem, support IBM get-led.
+o In ipmi-sel, fix possible --assume-system-event-records corner case.
 o Fix Posix portability issue w/ time functions.
 o Minor documentation updates.
 

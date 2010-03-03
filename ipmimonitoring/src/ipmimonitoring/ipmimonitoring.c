@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.138.4.2 2009-12-23 21:24:11 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.138.4.3 2010-03-03 17:12:22 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -406,6 +406,7 @@ _output_setup (ipmimonitoring_state_data_t *state_data)
                                    state_data->prog_data->args->record_ids_length,
                                    !state_data->prog_data->args->non_abbreviated_units,
 				   state_data->prog_data->args->shared_sensors,
+                                   0,
                                    0,
                                    0,
                                    entity_ptr,

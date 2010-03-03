@@ -1,3 +1,7 @@
+2010-03-03  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sel/: Fix possible HP workaround bug.
+	
 2010-03-02  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/: Fix column output for IBM get-led.
