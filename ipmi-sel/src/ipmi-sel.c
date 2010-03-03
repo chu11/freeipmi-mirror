@@ -1934,7 +1934,8 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
                                        state_data->prog_data->args->non_abbreviated_units,
                                        (entity_ptr) ? 1 : 0, /* shared_sensors */
                                        1, /* count_event_only_records */
-                                       0,
+                                       0, /* count_device_locator_records */
+                                       0, /* count_oem_records */
                                        entity_ptr,
                                        &(state_data->column_width)) < 0)
             goto cleanup;
