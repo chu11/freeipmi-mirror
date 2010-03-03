@@ -1,3 +1,11 @@
+2010-xx-xx  Albert Chu <chu11@llnl.gov>
+	
+	Merge sel_interpret_branch.
+
+	* Add interpret sel support in interpret library to libfreeipmi.
+
+	* ipmi-sel/: Support --output-sel-state option.
+	
 2010-03-03  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sel/: Fix possible HP workaround bug.

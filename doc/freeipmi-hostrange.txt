@@ -349,6 +349,10 @@ The --no-header-output option may be useful for reducing output across
 a lot of nodes.  The --sdr-cache-recreate option may be useful to
 gracefully handle errors.
 
+Users may wish to use the --output-sensor-state option w/ ipmi-sel to
+also output the current sensor state.  This option will output INFO,
+NOMINAL, WARNING, and CRITICAL states which allow for easy grepping.
+
 ipmi-raw:
 
 The output of ipmi-raw will likely be only 1 long line.  The

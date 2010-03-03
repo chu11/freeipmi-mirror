@@ -218,7 +218,7 @@ Ipmiconsole is currently supported by Conman
 
 Ipmi-sensors and libipmimonitoring are capable of interpreting sensor
 readings as well as just reporting them.  It can be used for host
-monitoring IPMI on a cluster.  By mapping sensor readings into
+monitoring IPMI sensors on a cluster.  By mapping sensor readings into
 NOMINAL, WARNING, or CRITICAL states, it makes monitoring sensors
 easier across large numbers of nodes.  Skummee
 (@uref{http://sourceforge.net/projects/skummee}) 
@@ -230,6 +230,12 @@ and Nagios
 (@uref{http://www.nagios.org/}) 
 have also been developed and made available for download
 (@uref{http://www.gnu.org/software/freeipmi/download.html}).
+
+Ipmi-sel and libipmimonitoring are capable of interpreting system
+event log (SEL) entries as well as just reporting them.  It can be
+used for host monitoring IPMI events on a cluster.  By mapping events
+into INFO, NOMINAL, WARNING, or CRITICAL states, it makes monitoring
+system events easier across large numbers of nodes.
 
 The bmc-config, ipmi-chassis-config, ipmi-pef-config,
 ipmi-sensors-config, and configuration file and command-line interface
