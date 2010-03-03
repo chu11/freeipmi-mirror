@@ -896,6 +896,7 @@ _store_column_widths (pstdout_state_t pstate,
                       unsigned int abbreviated_units,
                       unsigned int count_event_only_records,
                       unsigned int count_device_locator_records,
+                      unsigned int count_oem_records,
                       struct sensor_entity_id_counts *entity_id_counts,
                       struct sensor_column_width *column_width)
 {
@@ -930,7 +931,9 @@ _store_column_widths (pstdout_state_t pstate,
           || record_type != IPMI_SDR_FORMAT_EVENT_ONLY_RECORD)
       && (!count_device_locator_records
           || (record_type != IPMI_SDR_FORMAT_GENERIC_DEVICE_LOCATOR_RECORD
-              && record_type != IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD)))
+              && record_type != IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD))
+      && (!count_oem_records
+          || record_type != IPMI_SDR_FORMAT_OEM_RECORD))
     return (0);
 
   memset (record_id_buf, '\0', RECORD_ID_BUFLEN + 1);
@@ -939,6 +942,10 @@ _store_column_widths (pstdout_state_t pstate,
   len = strlen (record_id_buf);
   if (len > column_width->record_id)
     column_width->record_id = len;
+
+  /* Done, only need to calculate record id column for OEM records */
+  if (record_type == IPMI_SDR_FORMAT_OEM_RECORD)
+    return (0);
 
   if (entity_id_counts)
     {
@@ -1073,6 +1080,7 @@ _store_column_widths_shared (pstdout_state_t pstate,
                              unsigned int abbreviated_units,
                              unsigned int count_event_only_records,
                              unsigned int count_device_locator_records,
+                             unsigned int count_oem_records,
                              struct sensor_entity_id_counts *entity_id_counts,
                              struct sensor_column_width *column_width)
 {
@@ -1110,6 +1118,7 @@ _store_column_widths_shared (pstdout_state_t pstate,
                                 abbreviated_units,
                                 count_event_only_records,
                                 count_device_locator_records,
+                                count_oem_records,
                                 entity_id_counts,
                                 column_width) < 0)
         return (-1);
@@ -1141,6 +1150,7 @@ _store_column_widths_shared (pstdout_state_t pstate,
                                 abbreviated_units,
                                 count_event_only_records,
                                 count_device_locator_records,
+                                count_oem_records,
                                 entity_id_counts,
                                 column_width) < 0)
         return (-1);
@@ -1180,6 +1190,7 @@ _store_column_widths_shared (pstdout_state_t pstate,
                                 abbreviated_units,
                                 count_event_only_records,
                                 count_device_locator_records,
+                                count_oem_records,
                                 entity_id_counts,
                                 column_width) < 0)
         return (-1);
@@ -1200,6 +1211,7 @@ calculate_column_widths (pstdout_state_t pstate,
                          unsigned int shared_sensors,
                          unsigned int count_event_only_records,
                          unsigned int count_device_locator_records,
+                         unsigned int count_oem_records,
                          struct sensor_entity_id_counts *entity_id_counts,
                          struct sensor_column_width *column_width)
 {
@@ -1256,6 +1268,7 @@ calculate_column_widths (pstdout_state_t pstate,
                                                abbreviated_units,
                                                count_event_only_records,
                                                count_device_locator_records,
+                                               count_oem_records,
                                                entity_id_counts,
                                                column_width) < 0)
                 goto cleanup;
@@ -1270,6 +1283,7 @@ calculate_column_widths (pstdout_state_t pstate,
                                         abbreviated_units,
                                         count_event_only_records,
                                         count_device_locator_records,
+                                        count_oem_records,
                                         entity_id_counts,
                                         column_width) < 0)
                 goto cleanup;
@@ -1332,6 +1346,7 @@ calculate_column_widths (pstdout_state_t pstate,
                                                    abbreviated_units,
                                                    count_event_only_records,
                                                    count_device_locator_records,
+                                                   count_oem_records,
                                                    entity_id_counts,
                                                    column_width) < 0)
                     goto cleanup;
@@ -1346,6 +1361,7 @@ calculate_column_widths (pstdout_state_t pstate,
                                             abbreviated_units,
                                             count_event_only_records,
                                             count_device_locator_records,
+                                            count_oem_records,
                                             entity_id_counts,
                                             column_width) < 0)
                     goto cleanup;

@@ -532,6 +532,7 @@ ipmi_oem_ibm_get_led (ipmi_oem_state_data_t *state_data)
                                0,
                                0,
                                0,
+                               0,
                                NULL,
                                &column_width) < 0)
     goto cleanup;

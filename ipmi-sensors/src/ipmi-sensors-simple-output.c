@@ -71,8 +71,9 @@ ipmi_sensors_simple_output_setup (ipmi_sensors_state_data_t *state_data)
                                    state_data->prog_data->args->record_ids_length,
                                    !state_data->prog_data->args->non_abbreviated_units,
 				   state_data->prog_data->args->shared_sensors,
-                                   0,
-                                   0,
+                                   0, /* count_event_only_records */
+                                   0, /* count_device_locator_records */
+                                   0, /* count_oem_records */
                                    entity_ptr,
                                    &(state_data->column_width)) < 0)
         return (-1);
