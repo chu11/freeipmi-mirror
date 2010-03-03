@@ -17,13 +17,17 @@ support asf base protocol stuff in addition to IPMI?
 
 ipmi-sel
 --------
-date range option
 binary search like mechanism to make --display faster
 support kernel panic OEM event 0xf0
 - can't make work, is just my motherboard?  Or perhaps specific panics, not test panics.
 - redhat doesn't enable by default, probably don't need to worry about this much
 - http://cateee.net/lkddb/web-lkddb/IPMI_PANIC_STRING.html
 - http://www.cyberciti.biz/tips/compiling-linux-kernel-module.html
+interpret
+libipmimonitoring sel interpret
+ganglia pluging
+nagios plugin
+skummee support
 
 ipmi-seld
 ---------
@@ -89,11 +93,13 @@ if user inputs hostname of localhost, do inband not outofband?
 
 config tools
 ------------
-collapse into one allmight tool?
+collapse into one allmight tool? ipmi-config
 - user must pick section
 - bmc, pef, sensor, chassis, all
 - makes more extensible in the future
   - oem, dcmi, etc.
+- --category option (bmc, sensors, chassis, pef, oem, dcmi, intel)
+  - prefix sensor config w/ something?
 
 bmc-config
 ----------
