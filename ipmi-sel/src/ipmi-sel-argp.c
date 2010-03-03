@@ -283,11 +283,12 @@ _read_date_range (int *flag,
                   uint32_t *range2,
                   char *arg)
 {
-  char *ptr;
   char *range_str = NULL;
-  char *start_ptr = NULL;
+  char *split_ptr = NULL;
   char *range1_str = NULL;
   char *range2_str = NULL;
+  char *ptr = NULL;
+  unsigned int dash_count = 0;
   time_t t;
   struct tm tm;
 
@@ -303,18 +304,69 @@ _read_date_range (int *flag,
       perror ("strdup");
       exit (1);
     }
-  if (!(start_ptr = strchr (range_str, '-')))
+  
+  /* Count number of dashes, to see what format user input */
+  ptr = range_str;
+  do {
+    ptr = strchr (ptr, '-');
+    if (ptr)
+      {
+        ptr++;
+        dash_count++;
+      }
+  } while (ptr);
+
+  if (dash_count == 1)
+    split_ptr = strchr (range_str, '-');
+  else if (dash_count == 3)
     {
-      /* invalid input */
+      /* one date input w/ dashes, one with slashes */
+      char *ptr1, *ptr2;
+
+      ptr1 = strchr (range_str, '/');
+      ptr2 = strchr (range_str, '-');
+
+      /* determine if MM/DD/YYYY is first or second date listed */
+      if (ptr1 < ptr2)
+        split_ptr = strchr (range_str, '-');
+      else
+        {
+          ptr = range_str;
+          ptr = strchr (ptr, '-');
+          ptr++;
+          ptr = strchr (ptr, '-');
+          ptr++;
+          split_ptr = strchr (ptr, '-');
+        }
+    }
+  else if (dash_count == 5)
+    {
+      /* find the middle dash */
+      ptr = range_str;
+      ptr = strchr (ptr, '-');
+      ptr++;
+      ptr = strchr (ptr, '-');
+      ptr++;
+      split_ptr = strchr (ptr, '-');
+    }
+  else
+    {
       fprintf (stderr, "invalid range input\n");
       exit (1);
     }
-  if (!(range2_str = strdup (start_ptr + 1)))
+
+  if (*(split_ptr + 1) == '\0')
+    {
+      fprintf (stderr, "invalid range input\n");
+      exit (1);
+    }
+
+  if (!(range2_str = strdup (split_ptr + 1)))
     {
       perror ("strdup");
       exit (1);
     }
-  *start_ptr = '\0';
+  *split_ptr = '\0';
   range1_str = range_str;
 
   /* Posix says individual calls need not clear/set all portions of
@@ -396,6 +448,12 @@ _read_date_range (int *flag,
       fprintf (stderr, "invalid range\n");
       exit (1);
     }
+
+  /* Date range input means beginning of range1 date to end of range2 date
+   * so we might need to add seconds to the end of the range2 date.
+   */
+  if (strcasecmp (range2_str, "now"))
+    (*range2) = (*range2) + (24 * 60 * 60);
 
   free (range1_str);
   free (range2_str);

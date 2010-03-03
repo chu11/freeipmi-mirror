@@ -1770,6 +1770,36 @@ _sel_parse_callback (ipmi_sel_parse_ctx_t ctx, void *callback_data)
       && record_type_class != IPMI_SEL_RECORD_TYPE_CLASS_NON_TIMESTAMPED_OEM_RECORD)
     goto out;
 
+  if ((state_data->prog_data->args->date_range
+       || state_data->prog_data->args->exclude_date_range)
+      && (record_type_class == IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD
+          || record_type_class == IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD))
+    {
+      uint32_t timestamp;
+      
+      if (ipmi_sel_parse_read_timestamp (state_data->sel_parse_ctx,
+                                         &timestamp) < 0)
+        {
+          if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_read_timestamp") < 0)
+            goto cleanup;
+          goto out;
+        }
+      
+      if (state_data->prog_data->args->date_range)
+        {
+          if (timestamp < state_data->prog_data->args->date_range1
+              || timestamp > state_data->prog_data->args->date_range2)
+            goto out;
+        }
+
+      if (state_data->prog_data->args->exclude_date_range)
+        {
+          if (timestamp >= state_data->prog_data->args->exclude_date_range1
+              && timestamp <= state_data->prog_data->args->exclude_date_range2)
+            goto out;
+        }
+    }
+
   if (state_data->prog_data->args->hex_dump)
     {
       if (_hex_output (state_data) < 0)
