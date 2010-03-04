@@ -1,6 +1,6 @@
-.TH FREEIPMI_INTERPRET_SENSORS 5 "@ISODATE@" "FreeIPMI @PACKAGE_VERSION@" "Configuration"
+.TH FREEIPMI_INTERPRET_SENSOR 5 "@ISODATE@" "FreeIPMI @PACKAGE_VERSION@" "Configuration"
 .SH "NAME"
-freeipmi_interpret_sensors.conf \- specify sensor interpretation rules
+freeipmi_interpret_sensor.conf \- specify sensor interpretation rules
 .SH "DESCRIPTION"
 The
 .B @INTERPRET_SENSOR_CONFIG_FILE_DEFAULT@
