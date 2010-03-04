@@ -342,6 +342,27 @@ ipmi_interpret_load_sensor_config (ipmi_interpret_ctx_t ctx,
   return (rv);
 }
 
+int
+ipmi_interpret_sel (ipmi_interpret_ctx_t ctx,
+                    const void *record_buf,
+                    unsigned int record_buflen,
+                    unsigned int *sensor_state)
+{
+  if (!ctx || ctx->magic != IPMI_INTERPRET_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_interpret_ctx_errormsg (ctx), ipmi_interpret_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if (!sensor_state)
+    {
+      INTERPRET_SET_ERRNUM (ctx, IPMI_INTERPRET_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  return (0);
+}
+
 static int
 _get_sensor_state (ipmi_interpret_ctx_t ctx,
                    uint16_t sensor_event_bitmask,
