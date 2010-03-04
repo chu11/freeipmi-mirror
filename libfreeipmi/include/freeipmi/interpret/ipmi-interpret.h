@@ -31,26 +31,28 @@ extern "C" {
 #define IPMI_INTERPRET_ERR_PARAMETERS                         3
 #define IPMI_INTERPRET_ERR_OUT_OF_MEMORY                      4
 #define IPMI_INTERPRET_ERR_PERMISSION                         5
-#define IPMI_INTERPRET_ERR_SENSOR_CONFIG_FILE_DOES_NOT_EXIST  6        
-#define IPMI_INTERPRET_ERR_SENSOR_CONFIG_FILE_PARSE           7
-#define IPMI_INTERPRET_ERR_SYSTEM_ERROR                       8
-#define IPMI_INTERPRET_ERR_OVERFLOW                           9
-#define IPMI_INTERPRET_ERR_INTERNAL_ERROR                    10
-#define IPMI_INTERPRET_ERR_ERRNUMRANGE                       11
+#define IPMI_INTERPRET_ERR_SEL_CONFIG_FILE_DOES_NOT_EXIST     6
+#define IPMI_INTERPRET_ERR_SEL_CONFIG_FILE_PARSE              7
+#define IPMI_INTERPRET_ERR_SENSOR_CONFIG_FILE_DOES_NOT_EXIST  8        
+#define IPMI_INTERPRET_ERR_SENSOR_CONFIG_FILE_PARSE           9
+#define IPMI_INTERPRET_ERR_SYSTEM_ERROR                      10 
+#define IPMI_INTERPRET_ERR_OVERFLOW                          11
+#define IPMI_INTERPRET_ERR_INTERNAL_ERROR                    12
+#define IPMI_INTERPRET_ERR_ERRNUMRANGE                       13
 
 #define IPMI_INTERPRET_FLAGS_DEFAULT                     0x0000
 #define IPMI_INTERPRET_FLAGS_INTERPRET_OEM_DATA          0x0001
+
+#define IPMI_INTERPRET_SEL_STATE_INFO                      0x00
+#define IPMI_INTERPRET_SEL_STATE_NOMINAL                   0x01
+#define IPMI_INTERPRET_SEL_STATE_WARNING                   0x02
+#define IPMI_INTERPRET_SEL_STATE_CRITICAL                  0x03
+#define IPMI_INTERPRET_SEL_STATE_UNKNOWN                   0x04
 
 #define IPMI_INTERPRET_SENSOR_STATE_NOMINAL                0x00
 #define IPMI_INTERPRET_SENSOR_STATE_WARNING                0x01
 #define IPMI_INTERPRET_SENSOR_STATE_CRITICAL               0x02
 #define IPMI_INTERPRET_SENSOR_STATE_UNKNOWN                0x03
-
-#define IPMI_INTERPRET_SEL_STATE_INFO                   0x00
-#define IPMI_INTERPRET_SEL_STATE_NOMINAL                0x01
-#define IPMI_INTERPRET_SEL_STATE_WARNING                0x02
-#define IPMI_INTERPRET_SEL_STATE_CRITICAL               0x03
-#define IPMI_INTERPRET_SEL_STATE_UNKNOWN                0x04
 
 typedef struct ipmi_interpret_ctx *ipmi_interpret_ctx_t;
 
@@ -75,27 +77,26 @@ int ipmi_interpret_ctx_set_product_id (ipmi_interpret_ctx_t ctx, uint16_t produc
 
 /* specify NULL for default config file */
 /* if not called, library default will always be used */
-int ipmi_interpret_load_sensor_config (ipmi_interpret_ctx_t ctx,
-                                       const char *sensor_config_file);
-
-/* specify NULL for default config file */
-/* if not called, library default will always be used */
 int ipmi_interpret_load_sel_config (ipmi_interpret_ctx_t ctx,
                                     const char *sel_config_file);
 
+/* specify NULL for default config file */
+/* if not called, library default will always be used */
+int ipmi_interpret_load_sensor_config (ipmi_interpret_ctx_t ctx,
+                                       const char *sensor_config_file);
 
 /* interpret core functions */
+
+int ipmi_interpret_sel (ipmi_interpret_ctx_t ctx,
+                        const void *record_buf,
+                        unsigned int record_buflen,
+                        unsigned int *sensor_state);
 
 int ipmi_interpret_sensor (ipmi_interpret_ctx_t ctx,
                            uint8_t event_reading_type_code,
                            uint8_t sensor_type,
                            uint16_t sensor_event_bitmask,
                            unsigned int *sensor_state);
-
-int ipmi_interpret_sel (ipmi_interpret_ctx_t ctx,
-                        const void *record_buf,
-                        unsigned int record_buflen,
-                        unsigned int *sensor_state);
 
 #ifdef __cplusplus
 }

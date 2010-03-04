@@ -1,11 +1,12 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.2 2010-01-08 19:28:07 chu11 Exp $
+## $Id: Makefile.am,v 1.2.6.1 2010-03-04 17:08:45 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
 
 noinst_HEADERS = \
 	ipmi-interpret-defs.h \
+	ipmi-interpret-sel-config.h \
 	ipmi-interpret-sensor-config.h \
 	ipmi-interpret-trace.h \
 	ipmi-interpret-util.h
@@ -22,5 +23,6 @@ libinterpret_la_CPPFLAGS = \
 
 libinterpret_la_SOURCES = \
 	ipmi-interpret.c \
+	ipmi-interpret-sel-config.c \
 	ipmi-interpret-sensor-config.c \
 	ipmi-interpret-util.c

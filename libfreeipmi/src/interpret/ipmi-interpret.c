@@ -41,6 +41,7 @@
 
 #include "ipmi-interpret-defs.h"
 #include "ipmi-interpret-trace.h"
+#include "ipmi-interpret-sel-config.h"
 #include "ipmi-interpret-sensor-config.h"
 #include "ipmi-interpret-util.h"
 
@@ -56,6 +57,8 @@ static char *ipmi_interpret_errmsgs[] =
     "invalid parameters",
     "out of memory",
     "permission denied",
+    "sel config file does not exist",
+    "sel config file parse error",
     "sensor config file does not exist",
     "sensor config file parse error",
     "internal system error",
@@ -237,6 +240,56 @@ ipmi_interpret_ctx_set_product_id (ipmi_interpret_ctx_t ctx, uint16_t product_id
   ctx->product_id = product_id;
   ctx->errnum = IPMI_INTERPRET_ERR_SUCCESS;
   return (0);
+}
+
+int
+ipmi_interpret_load_sel_config (ipmi_interpret_ctx_t ctx,
+                                const char *sel_config_file)
+{
+  struct stat buf;
+  int rv = -1;
+
+  if (!ctx || ctx->magic != IPMI_INTERPRET_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_interpret_ctx_errormsg (ctx), ipmi_interpret_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if (sel_config_file)
+    {
+      if (stat (sel_config_file, &buf) < 0)
+        {
+          if (errno == EACCES || errno == EPERM)
+            INTERPRET_SET_ERRNUM (ctx, IPMI_INTERPRET_ERR_PERMISSION);
+          else if (errno == ENOENT)
+            INTERPRET_SET_ERRNUM (ctx, IPMI_INTERPRET_ERR_SEL_CONFIG_FILE_DOES_NOT_EXIST);
+          else
+            INTERPRET_SET_ERRNUM (ctx, IPMI_INTERPRET_ERR_PARAMETERS);
+          goto cleanup;
+        }
+    }
+  else
+    {
+      if (stat (INTERPRET_SEL_CONFIG_FILE_DEFAULT, &buf) < 0)
+        {
+          /* Its not an error if the default configuration file doesn't exist */
+          if (errno == ENOENT)
+            goto out;
+          else if (errno == EACCES || errno == EPERM)
+            INTERPRET_SET_ERRNUM (ctx, IPMI_INTERPRET_ERR_PERMISSION);
+          else
+            INTERPRET_SET_ERRNUM (ctx, IPMI_INTERPRET_ERR_PARAMETERS);
+          goto cleanup;
+        }
+    }
+
+  if (ipmi_interpret_sel_config_parse (ctx, sel_config_file) < 0)
+    goto cleanup;
+
+ out:
+  rv = 0;
+ cleanup:
+  return (rv);
 }
 
 int
