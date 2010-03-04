@@ -540,14 +540,14 @@ _interpret_sensor_config_init (ipmi_interpret_ctx_t ctx,
 }
 
 static int
-_interpret_oem_sensor_config_create (ipmi_interpret_ctx_t ctx,
+_interpret_sensor_oem_config_create (ipmi_interpret_ctx_t ctx,
 				     uint32_t manufacturer_id,
 				     uint16_t product_id,
 				     uint8_t event_reading_type_code,
 				     uint8_t sensor_type,
-				     struct ipmi_interpret_oem_sensor_config **oem_conf)
+				     struct ipmi_interpret_sensor_oem_config **oem_conf)
 {
-  struct ipmi_interpret_oem_sensor_config *tmp_oem_conf = NULL;
+  struct ipmi_interpret_sensor_oem_config *tmp_oem_conf = NULL;
   char keybuf[IPMI_OEM_HASH_KEY_BUFLEN + 1];
   int rv = -1;
 
@@ -566,13 +566,13 @@ _interpret_oem_sensor_config_create (ipmi_interpret_ctx_t ctx,
 	    event_reading_type_code,
 	    sensor_type);
 
-  if (!(tmp_oem_conf = (struct ipmi_interpret_oem_sensor_config *)malloc (sizeof (struct ipmi_interpret_oem_sensor_config))))
+  if (!(tmp_oem_conf = (struct ipmi_interpret_sensor_oem_config *)malloc (sizeof (struct ipmi_interpret_sensor_oem_config))))
     {
       INTERPRET_SET_ERRNUM (ctx, IPMI_INTERPRET_ERR_OUT_OF_MEMORY);
       goto cleanup;
     }
 
-  memset (tmp_oem_conf, '\0', sizeof (struct ipmi_interpret_oem_sensor_config));
+  memset (tmp_oem_conf, '\0', sizeof (struct ipmi_interpret_sensor_oem_config));
   
   memcpy (tmp_oem_conf->key, keybuf, IPMI_OEM_HASH_KEY_BUFLEN);
   tmp_oem_conf->manufacturer_id = manufacturer_id;
@@ -595,9 +595,9 @@ _interpret_oem_sensor_config_create (ipmi_interpret_ctx_t ctx,
 }
 
 static int
-_interpret_oem_sensor_config_init (ipmi_interpret_ctx_t ctx)
+_interpret_sensor_oem_config_init (ipmi_interpret_ctx_t ctx)
 {
-  struct ipmi_interpret_oem_sensor_config *oem_conf;
+  struct ipmi_interpret_sensor_oem_config *oem_conf;
 
   /* Dell Poweredge R610/R710 Power Optimized
    *
@@ -615,7 +615,7 @@ _interpret_oem_sensor_config_init (ipmi_interpret_ctx_t ctx)
    * Bitmask 0x0080 = "Degraded, system power exceeds capacity"
    */
   
-  if (_interpret_oem_sensor_config_create (ctx,
+  if (_interpret_sensor_oem_config_create (ctx,
 					   IPMI_IANA_ENTERPRISE_ID_DELL,
 					   IPMI_DELL_PRODUCT_ID_POWEREDGE,
 					   IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC,
@@ -680,7 +680,7 @@ _interpret_oem_sensor_config_init (ipmi_interpret_ctx_t ctx)
   assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
   assert (ctx->interpret_sensor.oem_config);
   
-  if (_interpret_oem_sensor_config_create (ctx,
+  if (_interpret_sensor_oem_config_create (ctx,
 					   IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
 					   IPMI_SUPERMICRO_PRODUCT_ID_X8DTH,
 					   IPMI_EVENT_READING_TYPE_CODE_OEM_SUPERMICRO_GENERIC,
@@ -964,7 +964,7 @@ ipmi_interpret_sensor_init (ipmi_interpret_ctx_t ctx)
       goto cleanup;
     }
 
-  if (_interpret_oem_sensor_config_init (ctx) < 0)
+  if (_interpret_sensor_oem_config_init (ctx) < 0)
     goto cleanup;
 
   rv = 0;
@@ -1222,7 +1222,7 @@ _cb_oem_parse (conffile_t cf,
   int sensor_state;
   int oem_state_type;
   uint32_t tmp;
-  struct ipmi_interpret_oem_sensor_config *oem_conf;
+  struct ipmi_interpret_sensor_oem_config *oem_conf;
   int found = 0;
   unsigned int i;
 
@@ -1296,12 +1296,12 @@ _cb_oem_parse (conffile_t cf,
 
   if (!(oem_conf = hash_find ((*h), keybuf)))
     {
-      if (!(oem_conf = (struct ipmi_interpret_oem_sensor_config *)malloc (sizeof (struct ipmi_interpret_oem_sensor_config))))
+      if (!(oem_conf = (struct ipmi_interpret_sensor_oem_config *)malloc (sizeof (struct ipmi_interpret_sensor_oem_config))))
 	{
 	  conffile_seterrnum (cf, CONFFILE_ERR_OUTMEM);
 	  return (-1);
 	}
-      memset (oem_conf, '\0', sizeof (struct ipmi_interpret_oem_sensor_config));
+      memset (oem_conf, '\0', sizeof (struct ipmi_interpret_sensor_oem_config));
 
       memcpy (oem_conf->key, keybuf, IPMI_OEM_HASH_KEY_BUFLEN);
       oem_conf->manufacturer_id = manufacturer_id;

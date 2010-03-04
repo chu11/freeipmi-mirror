@@ -50,19 +50,19 @@ struct ipmi_interpret_sensor_config {
   int sensor_state;
 };
 
-struct ipmi_interpret_oem_state {
+struct ipmi_interpret_sensor_oem_state {
   uint16_t sensor_event_bitmask;
   unsigned int sensor_state;
   int oem_state_type;
 };
 
-struct ipmi_interpret_oem_sensor_config {
+struct ipmi_interpret_sensor_oem_config {
   char key[IPMI_OEM_HASH_KEY_BUFLEN + 1];
   uint32_t manufacturer_id;
   uint16_t product_id;
   uint8_t event_reading_type_code;
   uint8_t sensor_type;
-  struct ipmi_interpret_oem_state oem_state[IPMI_INTERPRET_MAX_BITMASKS];
+  struct ipmi_interpret_sensor_oem_state oem_state[IPMI_INTERPRET_MAX_BITMASKS];
   unsigned int oem_state_count;
 };
 

@@ -405,7 +405,7 @@ _get_oem_sensor_state (ipmi_interpret_ctx_t ctx,
 		       unsigned int *sensor_state)
 {
   char keybuf[IPMI_OEM_HASH_KEY_BUFLEN + 1];
-  struct ipmi_interpret_oem_sensor_config *oem_conf;
+  struct ipmi_interpret_sensor_oem_config *oem_conf;
 
   assert (ctx);
   assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
