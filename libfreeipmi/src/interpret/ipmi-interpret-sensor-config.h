@@ -35,9 +35,9 @@
 #include "ipmi-interpret-sensor-config.h"
 #include "ipmi-interpret-defs.h"
 
-int ipmi_interpret_sensors_init (ipmi_interpret_ctx_t ctx);
+int ipmi_interpret_sensor_init (ipmi_interpret_ctx_t ctx);
 
-void ipmi_interpret_sensors_destroy (ipmi_interpret_ctx_t ctx);
+void ipmi_interpret_sensor_destroy (ipmi_interpret_ctx_t ctx);
 
 int ipmi_interpret_sensor_config_parse (ipmi_interpret_ctx_t ctx,
                                         const char *sensor_config_file);

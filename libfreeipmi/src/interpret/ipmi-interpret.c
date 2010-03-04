@@ -82,7 +82,10 @@ ipmi_interpret_ctx_create (void)
   ctx->magic = IPMI_INTERPRET_CTX_MAGIC;
   ctx->flags = IPMI_INTERPRET_FLAGS_DEFAULT;
 
-  if (ipmi_interpret_sensors_init (ctx) < 0)
+  if (ipmi_interpret_sel_init (ctx) < 0)
+    goto cleanup;
+
+  if (ipmi_interpret_sensor_init (ctx) < 0)
     goto cleanup;
 
   return (ctx);
@@ -90,7 +93,8 @@ ipmi_interpret_ctx_create (void)
  cleanup:
   if (ctx)
     {
-      ipmi_interpret_sensors_destroy (ctx);
+      ipmi_interpret_sel_destroy (ctx);
+      ipmi_interpret_sensor_destroy (ctx);
       free (ctx);
     }
   return (NULL);
@@ -102,7 +106,8 @@ ipmi_interpret_ctx_destroy (ipmi_interpret_ctx_t ctx)
   if (!ctx || ctx->magic != IPMI_INTERPRET_CTX_MAGIC)
     return;
 
-  ipmi_interpret_sensors_destroy (ctx);
+  ipmi_interpret_sel_destroy (ctx);
+  ipmi_interpret_sensor_destroy (ctx);
 
   ctx->magic = ~IPMI_INTERPRET_CTX_MAGIC;
   free (ctx);
@@ -416,7 +421,7 @@ _get_oem_sensor_state (ipmi_interpret_ctx_t ctx,
             event_reading_type_code,
             sensor_type);
 
-  if ((oem_conf = hash_find (ctx->interpret_sensors.oem_config,
+  if ((oem_conf = hash_find (ctx->interpret_sensor.oem_config,
 			     keybuf)))
     {
       unsigned int i;
@@ -483,62 +488,62 @@ ipmi_interpret_sensor (ipmi_interpret_ctx_t ctx,
       if (_get_sensor_state (ctx,
                              sensor_event_bitmask,
                              sensor_state,
-                             ctx->interpret_sensors.ipmi_interpret_threshold_sensor_config) < 0)
+                             ctx->interpret_sensor.ipmi_interpret_threshold_sensor_config) < 0)
         goto cleanup;
     }
   else if (IPMI_EVENT_READING_TYPE_CODE_IS_GENERIC (event_reading_type_code))
     {
       if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
           && sensor_type == IPMI_SENSOR_TYPE_VOLTAGE)
-        sensor_config = ctx->interpret_sensors.ipmi_interpret_voltage_state_config;
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_voltage_state_config;
       else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_PERFORMANCE
                && sensor_type == IPMI_SENSOR_TYPE_VOLTAGE)
-        sensor_config = ctx->interpret_sensors.ipmi_interpret_voltage_performance_config;
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_voltage_performance_config;
       else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_PRESENT
                && sensor_type == IPMI_SENSOR_TYPE_FAN)
-        sensor_config = ctx->interpret_sensors.ipmi_interpret_fan_device_present_config;
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_fan_device_present_config;
       else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_TRANSITION_AVAILABILITY
                && sensor_type == IPMI_SENSOR_TYPE_FAN)
-        sensor_config = ctx->interpret_sensors.ipmi_interpret_fan_transition_availability_config;
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_fan_transition_availability_config;
       else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY
                && sensor_type == IPMI_SENSOR_TYPE_FAN)
-        sensor_config = ctx->interpret_sensors.ipmi_interpret_fan_redundancy_config;
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_fan_redundancy_config;
       else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
                && sensor_type == IPMI_SENSOR_TYPE_PROCESSOR)
-        sensor_config = ctx->interpret_sensors.ipmi_interpret_processor_state_config;
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_processor_state_config;
       else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
                && sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY)
-        sensor_config = ctx->interpret_sensors.ipmi_interpret_power_supply_state_config;
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_power_supply_state_config;
       else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY
                && sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY)
-        sensor_config = ctx->interpret_sensors.ipmi_interpret_power_supply_redundancy_config;
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_power_supply_redundancy_config;
       else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_PRESENT
                && sensor_type == IPMI_SENSOR_TYPE_POWER_UNIT)
-        sensor_config = ctx->interpret_sensors.ipmi_interpret_power_unit_device_present_config;
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_power_unit_device_present_config;
       else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY
                && sensor_type == IPMI_SENSOR_TYPE_POWER_UNIT)
-        sensor_config = ctx->interpret_sensors.ipmi_interpret_power_unit_redundancy_config;
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_power_unit_redundancy_config;
       else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
                && sensor_type == IPMI_SENSOR_TYPE_DRIVE_SLOT)
-        sensor_config = ctx->interpret_sensors.ipmi_interpret_drive_slot_state_config;
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_drive_slot_state_config;
       else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_PREDICTIVE_FAILURE
                && sensor_type == IPMI_SENSOR_TYPE_DRIVE_SLOT)
-        sensor_config = ctx->interpret_sensors.ipmi_interpret_drive_slot_predictive_failure_config;
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_drive_slot_predictive_failure_config;
       else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_PRESENT
                && sensor_type == IPMI_SENSOR_TYPE_DRIVE_SLOT)
-        sensor_config = ctx->interpret_sensors.ipmi_interpret_drive_slot_device_present_config;
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_drive_slot_device_present_config;
       else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
                && sensor_type == IPMI_SENSOR_TYPE_BUTTON_SWITCH)
-        sensor_config = ctx->interpret_sensors.ipmi_interpret_button_switch_state_config;
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_button_switch_state_config;
       else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
                && sensor_type == IPMI_SENSOR_TYPE_MODULE_BOARD)
-        sensor_config = ctx->interpret_sensors.ipmi_interpret_module_board_state_config;
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_module_board_state_config;
       else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_PRESENT
                && sensor_type == IPMI_SENSOR_TYPE_MODULE_BOARD)
-        sensor_config = ctx->interpret_sensors.ipmi_interpret_module_board_device_present_config;
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_module_board_device_present_config;
       else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_PRESENT
                && sensor_type == IPMI_SENSOR_TYPE_ENTITY_PRESENCE)
-        sensor_config = ctx->interpret_sensors.ipmi_interpret_entity_presence_device_present_config;
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_entity_presence_device_present_config;
       else
         {
           (*sensor_state) = IPMI_INTERPRET_SENSOR_STATE_UNKNOWN;
@@ -556,47 +561,47 @@ ipmi_interpret_sensor (ipmi_interpret_ctx_t ctx,
   else if (IPMI_EVENT_READING_TYPE_CODE_IS_SENSOR_SPECIFIC (event_reading_type_code))
     {
       if (sensor_type == IPMI_SENSOR_TYPE_PHYSICAL_SECURITY)
-        sensor_config = ctx->interpret_sensors.ipmi_interpret_physical_security_config;
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_physical_security_config;
       else if (sensor_type == IPMI_SENSOR_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT)
-        sensor_config = ctx->interpret_sensors.ipmi_interpret_platform_security_violation_attempt_config;
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_platform_security_violation_attempt_config;
       else if (sensor_type == IPMI_SENSOR_TYPE_PROCESSOR)
-        sensor_config = ctx->interpret_sensors.ipmi_interpret_processor_config;
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_processor_config;
       else if (sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY)
-        sensor_config = ctx->interpret_sensors.ipmi_interpret_power_supply_config;
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_power_supply_config;
       else if (sensor_type == IPMI_SENSOR_TYPE_POWER_UNIT)
-        sensor_config = ctx->interpret_sensors.ipmi_interpret_power_unit_config;
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_power_unit_config;
       else if (sensor_type == IPMI_SENSOR_TYPE_MEMORY)
-        sensor_config = ctx->interpret_sensors.ipmi_interpret_memory_config;
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_memory_config;
       else if (sensor_type == IPMI_SENSOR_TYPE_DRIVE_SLOT)
-        sensor_config = ctx->interpret_sensors.ipmi_interpret_drive_slot_config;
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_drive_slot_config;
       else if (sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS)
-        sensor_config = ctx->interpret_sensors.ipmi_interpret_system_firmware_progress_config;
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_system_firmware_progress_config;
       else if (sensor_type == IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED)
-        sensor_config = ctx->interpret_sensors.ipmi_interpret_event_logging_disabled_config;
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_event_logging_disabled_config;
       else if (sensor_type == IPMI_SENSOR_TYPE_SYSTEM_EVENT)
-        sensor_config = ctx->interpret_sensors.ipmi_interpret_system_event_config;
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_system_event_config;
       else if (sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
-        sensor_config = ctx->interpret_sensors.ipmi_interpret_critical_interrupt_config;
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_critical_interrupt_config;
       else if (sensor_type == IPMI_SENSOR_TYPE_BUTTON_SWITCH)
-        sensor_config = ctx->interpret_sensors.ipmi_interpret_button_switch_config;
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_button_switch_config;
       else if (sensor_type == IPMI_SENSOR_TYPE_CABLE_INTERCONNECT)
-        sensor_config = ctx->interpret_sensors.ipmi_interpret_cable_interconnect_config;
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_cable_interconnect_config;
       else if (sensor_type == IPMI_SENSOR_TYPE_BOOT_ERROR)
-        sensor_config = ctx->interpret_sensors.ipmi_interpret_boot_error_config;
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_boot_error_config;
       else if (sensor_type == IPMI_SENSOR_TYPE_SLOT_CONNECTOR)
-        sensor_config = ctx->interpret_sensors.ipmi_interpret_slot_connector_config;
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_slot_connector_config;
       else if (sensor_type == IPMI_SENSOR_TYPE_SYSTEM_ACPI_POWER_STATE)
-        sensor_config = ctx->interpret_sensors.ipmi_interpret_system_acpi_power_state_config;
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_system_acpi_power_state_config;
       else if (sensor_type == IPMI_SENSOR_TYPE_WATCHDOG2)
-        sensor_config = ctx->interpret_sensors.ipmi_interpret_watchdog2_config;
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_watchdog2_config;
       else if (sensor_type == IPMI_SENSOR_TYPE_ENTITY_PRESENCE)
-        sensor_config = ctx->interpret_sensors.ipmi_interpret_entity_presence_config;
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_entity_presence_config;
       else if (sensor_type == IPMI_SENSOR_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH)
-        sensor_config = ctx->interpret_sensors.ipmi_interpret_management_subsystem_health_config;
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_management_subsystem_health_config;
       else if (sensor_type == IPMI_SENSOR_TYPE_BATTERY)
-        sensor_config = ctx->interpret_sensors.ipmi_interpret_battery_config;
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_battery_config;
       else if (sensor_type == IPMI_SENSOR_TYPE_FRU_STATE)
-        sensor_config = ctx->interpret_sensors.ipmi_interpret_fru_state_config;
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_fru_state_config;
       else if (ctx->flags & IPMI_INTERPRET_FLAGS_INTERPRET_OEM_DATA
 	       && IPMI_SENSOR_TYPE_IS_OEM (sensor_type))
 	{

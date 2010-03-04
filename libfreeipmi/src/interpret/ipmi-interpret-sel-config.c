@@ -62,7 +62,7 @@
 
 #include "ipmi-interpret-defs.h"
 #include "ipmi-interpret-trace.h"
-#include "ipmi-interpret-sensor-config.h"
+#include "ipmi-interpret-sel-config.h"
 #include "ipmi-interpret-util.h"
 
 #include "freeipmi-portability.h"

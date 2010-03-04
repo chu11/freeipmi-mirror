@@ -553,7 +553,7 @@ _interpret_oem_sensor_config_create (ipmi_interpret_ctx_t ctx,
 
   assert (ctx);
   assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
-  assert (ctx->interpret_sensors.oem_config);
+  assert (ctx->interpret_sensor.oem_config);
   assert (oem_conf);
 
   memset (keybuf, '\0', IPMI_OEM_HASH_KEY_BUFLEN + 1);
@@ -580,7 +580,7 @@ _interpret_oem_sensor_config_create (ipmi_interpret_ctx_t ctx,
   tmp_oem_conf->event_reading_type_code = event_reading_type_code;
   tmp_oem_conf->sensor_type = sensor_type;
   
-  if (!hash_insert (ctx->interpret_sensors.oem_config, tmp_oem_conf->key, tmp_oem_conf))
+  if (!hash_insert (ctx->interpret_sensor.oem_config, tmp_oem_conf->key, tmp_oem_conf))
     {
       INTERPRET_SET_ERRNUM (ctx, IPMI_INTERPRET_ERR_INTERNAL_ERROR);
       goto cleanup;
@@ -678,7 +678,7 @@ _interpret_oem_sensor_config_init (ipmi_interpret_ctx_t ctx)
 
   assert (ctx);
   assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
-  assert (ctx->interpret_sensors.oem_config);
+  assert (ctx->interpret_sensor.oem_config);
   
   if (_interpret_oem_sensor_config_create (ctx,
 					   IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
@@ -714,7 +714,7 @@ _interpret_oem_sensor_config_init (ipmi_interpret_ctx_t ctx)
 }
 
 int
-ipmi_interpret_sensors_init (ipmi_interpret_ctx_t ctx)
+ipmi_interpret_sensor_init (ipmi_interpret_ctx_t ctx)
 {
   int rv = -1;
 
@@ -722,240 +722,240 @@ ipmi_interpret_sensors_init (ipmi_interpret_ctx_t ctx)
   assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
 
   if (_interpret_sensor_config_init (ctx,
-                                     &ctx->interpret_sensors.ipmi_interpret_threshold_sensor_config,
+                                     &ctx->interpret_sensor.ipmi_interpret_threshold_sensor_config,
                                      ipmi_interpret_threshold_sensor_config,
                                      ipmi_interpret_threshold_sensor_config_len) < 0)
     goto cleanup;
 
   if (_interpret_sensor_config_init (ctx,
-                                     &ctx->interpret_sensors.ipmi_interpret_voltage_state_config,
+                                     &ctx->interpret_sensor.ipmi_interpret_voltage_state_config,
                                      ipmi_interpret_voltage_state_config,
                                      ipmi_interpret_voltage_state_config_len) < 0)
     goto cleanup;
 
   if (_interpret_sensor_config_init (ctx,
-                                     &ctx->interpret_sensors.ipmi_interpret_voltage_performance_config,
+                                     &ctx->interpret_sensor.ipmi_interpret_voltage_performance_config,
                                      ipmi_interpret_voltage_performance_config,
                                      ipmi_interpret_voltage_performance_config_len) < 0)
     goto cleanup;
 
   if (_interpret_sensor_config_init (ctx,
-                                     &ctx->interpret_sensors.ipmi_interpret_fan_device_present_config,
+                                     &ctx->interpret_sensor.ipmi_interpret_fan_device_present_config,
                                      ipmi_interpret_fan_device_present_config,
                                      ipmi_interpret_fan_device_present_config_len) < 0)
     goto cleanup;
 
   if (_interpret_sensor_config_init (ctx,
-                                     &ctx->interpret_sensors.ipmi_interpret_fan_transition_availability_config,
+                                     &ctx->interpret_sensor.ipmi_interpret_fan_transition_availability_config,
                                      ipmi_interpret_fan_transition_availability_config,
                                      ipmi_interpret_fan_transition_availability_config_len) < 0)
     goto cleanup;
 
   if (_interpret_sensor_config_init (ctx,
-                                     &ctx->interpret_sensors.ipmi_interpret_fan_redundancy_config,
+                                     &ctx->interpret_sensor.ipmi_interpret_fan_redundancy_config,
                                      ipmi_interpret_fan_redundancy_config,
                                      ipmi_interpret_fan_redundancy_config_len) < 0)
     goto cleanup;
 
   if (_interpret_sensor_config_init (ctx,
-                                     &ctx->interpret_sensors.ipmi_interpret_physical_security_config,
+                                     &ctx->interpret_sensor.ipmi_interpret_physical_security_config,
                                      ipmi_interpret_physical_security_config,
                                      ipmi_interpret_physical_security_config_len) < 0)
     goto cleanup;
 
   if (_interpret_sensor_config_init (ctx,
-                                     &ctx->interpret_sensors.ipmi_interpret_platform_security_violation_attempt_config,
+                                     &ctx->interpret_sensor.ipmi_interpret_platform_security_violation_attempt_config,
                                      ipmi_interpret_platform_security_violation_attempt_config,
                                      ipmi_interpret_platform_security_violation_attempt_config_len) < 0)
     goto cleanup;
 
   if (_interpret_sensor_config_init (ctx,
-                                     &ctx->interpret_sensors.ipmi_interpret_processor_config,
+                                     &ctx->interpret_sensor.ipmi_interpret_processor_config,
                                      ipmi_interpret_processor_config,
                                      ipmi_interpret_processor_config_len) < 0)
     goto cleanup;
 
   if (_interpret_sensor_config_init (ctx,
-                                     &ctx->interpret_sensors.ipmi_interpret_processor_state_config,
+                                     &ctx->interpret_sensor.ipmi_interpret_processor_state_config,
                                      ipmi_interpret_processor_state_config,
                                      ipmi_interpret_processor_state_config_len) < 0)
     goto cleanup;
 
   if (_interpret_sensor_config_init (ctx,
-                                     &ctx->interpret_sensors.ipmi_interpret_power_supply_config,
+                                     &ctx->interpret_sensor.ipmi_interpret_power_supply_config,
                                      ipmi_interpret_power_supply_config,
                                      ipmi_interpret_power_supply_config_len) < 0)
     goto cleanup;
 
   if (_interpret_sensor_config_init (ctx,
-                                     &ctx->interpret_sensors.ipmi_interpret_power_supply_state_config,
+                                     &ctx->interpret_sensor.ipmi_interpret_power_supply_state_config,
                                      ipmi_interpret_power_supply_state_config,
                                      ipmi_interpret_power_supply_state_config_len) < 0)
     goto cleanup;
 
   if (_interpret_sensor_config_init (ctx,
-                                     &ctx->interpret_sensors.ipmi_interpret_power_supply_redundancy_config,
+                                     &ctx->interpret_sensor.ipmi_interpret_power_supply_redundancy_config,
                                      ipmi_interpret_power_supply_redundancy_config,
                                      ipmi_interpret_power_supply_redundancy_config_len) < 0)
     goto cleanup;
 
   if (_interpret_sensor_config_init (ctx,
-                                     &ctx->interpret_sensors.ipmi_interpret_power_unit_config,
+                                     &ctx->interpret_sensor.ipmi_interpret_power_unit_config,
                                      ipmi_interpret_power_unit_config,
                                      ipmi_interpret_power_unit_config_len) < 0)
     goto cleanup;
 
   if (_interpret_sensor_config_init (ctx,
-                                     &ctx->interpret_sensors.ipmi_interpret_power_unit_device_present_config,
+                                     &ctx->interpret_sensor.ipmi_interpret_power_unit_device_present_config,
                                      ipmi_interpret_power_unit_device_present_config,
                                      ipmi_interpret_power_unit_device_present_config_len) < 0)
     goto cleanup;
 
   if (_interpret_sensor_config_init (ctx,
-                                     &ctx->interpret_sensors.ipmi_interpret_power_unit_redundancy_config,
+                                     &ctx->interpret_sensor.ipmi_interpret_power_unit_redundancy_config,
                                      ipmi_interpret_power_unit_redundancy_config,
                                      ipmi_interpret_power_unit_redundancy_config_len) < 0)
     goto cleanup;
 
   if (_interpret_sensor_config_init (ctx,
-                                     &ctx->interpret_sensors.ipmi_interpret_memory_config,
+                                     &ctx->interpret_sensor.ipmi_interpret_memory_config,
                                      ipmi_interpret_memory_config,
                                      ipmi_interpret_memory_config_len) < 0)
     goto cleanup;
 
   if (_interpret_sensor_config_init (ctx,
-                                     &ctx->interpret_sensors.ipmi_interpret_drive_slot_config,
+                                     &ctx->interpret_sensor.ipmi_interpret_drive_slot_config,
                                      ipmi_interpret_drive_slot_config,
                                      ipmi_interpret_drive_slot_config_len) < 0)
     goto cleanup;
 
   if (_interpret_sensor_config_init (ctx,
-                                     &ctx->interpret_sensors.ipmi_interpret_drive_slot_state_config,
+                                     &ctx->interpret_sensor.ipmi_interpret_drive_slot_state_config,
                                      ipmi_interpret_drive_slot_state_config,
                                      ipmi_interpret_drive_slot_state_config_len) < 0)
     goto cleanup;
 
   if (_interpret_sensor_config_init (ctx,
-                                     &ctx->interpret_sensors.ipmi_interpret_drive_slot_predictive_failure_config,
+                                     &ctx->interpret_sensor.ipmi_interpret_drive_slot_predictive_failure_config,
                                      ipmi_interpret_drive_slot_predictive_failure_config,
                                      ipmi_interpret_drive_slot_predictive_failure_config_len) < 0)
     goto cleanup;
 
   if (_interpret_sensor_config_init (ctx,
-                                     &ctx->interpret_sensors.ipmi_interpret_drive_slot_device_present_config,
+                                     &ctx->interpret_sensor.ipmi_interpret_drive_slot_device_present_config,
                                      ipmi_interpret_drive_slot_device_present_config,
                                      ipmi_interpret_drive_slot_device_present_config_len) < 0)
     goto cleanup;
 
   if (_interpret_sensor_config_init (ctx,
-                                     &ctx->interpret_sensors.ipmi_interpret_system_firmware_progress_config,
+                                     &ctx->interpret_sensor.ipmi_interpret_system_firmware_progress_config,
                                      ipmi_interpret_system_firmware_progress_config,
                                      ipmi_interpret_system_firmware_progress_config_len) < 0)
     goto cleanup;
 
   if (_interpret_sensor_config_init (ctx,
-                                     &ctx->interpret_sensors.ipmi_interpret_event_logging_disabled_config,
+                                     &ctx->interpret_sensor.ipmi_interpret_event_logging_disabled_config,
                                      ipmi_interpret_event_logging_disabled_config,
                                      ipmi_interpret_event_logging_disabled_config_len) < 0)
     goto cleanup;
 
   if (_interpret_sensor_config_init (ctx,
-                                     &ctx->interpret_sensors.ipmi_interpret_system_event_config,
+                                     &ctx->interpret_sensor.ipmi_interpret_system_event_config,
                                      ipmi_interpret_system_event_config,
                                      ipmi_interpret_system_event_config_len) < 0)
     goto cleanup;
 
   if (_interpret_sensor_config_init (ctx,
-                                     &ctx->interpret_sensors.ipmi_interpret_critical_interrupt_config,
+                                     &ctx->interpret_sensor.ipmi_interpret_critical_interrupt_config,
                                      ipmi_interpret_critical_interrupt_config,
                                      ipmi_interpret_critical_interrupt_config_len) < 0)
     goto cleanup;
 
   if (_interpret_sensor_config_init (ctx,
-                                     &ctx->interpret_sensors.ipmi_interpret_button_switch_config,
+                                     &ctx->interpret_sensor.ipmi_interpret_button_switch_config,
                                      ipmi_interpret_button_switch_config,
                                      ipmi_interpret_button_switch_config_len) < 0)
     goto cleanup;
 
   if (_interpret_sensor_config_init (ctx,
-                                     &ctx->interpret_sensors.ipmi_interpret_button_switch_state_config,
+                                     &ctx->interpret_sensor.ipmi_interpret_button_switch_state_config,
                                      ipmi_interpret_button_switch_state_config,
                                      ipmi_interpret_button_switch_state_config_len) < 0)
     goto cleanup;
 
   if (_interpret_sensor_config_init (ctx,
-                                     &ctx->interpret_sensors.ipmi_interpret_module_board_state_config,
+                                     &ctx->interpret_sensor.ipmi_interpret_module_board_state_config,
                                      ipmi_interpret_module_board_state_config,
                                      ipmi_interpret_module_board_state_config_len) < 0)
     goto cleanup;
 
   if (_interpret_sensor_config_init (ctx,
-                                     &ctx->interpret_sensors.ipmi_interpret_module_board_device_present_config,
+                                     &ctx->interpret_sensor.ipmi_interpret_module_board_device_present_config,
                                      ipmi_interpret_module_board_device_present_config,
                                      ipmi_interpret_module_board_device_present_config_len) < 0)
     goto cleanup;
 
   if (_interpret_sensor_config_init (ctx,
-                                     &ctx->interpret_sensors.ipmi_interpret_cable_interconnect_config,
+                                     &ctx->interpret_sensor.ipmi_interpret_cable_interconnect_config,
                                      ipmi_interpret_cable_interconnect_config,
                                      ipmi_interpret_cable_interconnect_config_len) < 0)
     goto cleanup;
 
   if (_interpret_sensor_config_init (ctx,
-                                     &ctx->interpret_sensors.ipmi_interpret_boot_error_config,
+                                     &ctx->interpret_sensor.ipmi_interpret_boot_error_config,
                                      ipmi_interpret_boot_error_config,
                                      ipmi_interpret_boot_error_config_len) < 0)
     goto cleanup;
 
   if (_interpret_sensor_config_init (ctx,
-                                     &ctx->interpret_sensors.ipmi_interpret_slot_connector_config,
+                                     &ctx->interpret_sensor.ipmi_interpret_slot_connector_config,
                                      ipmi_interpret_slot_connector_config,
                                      ipmi_interpret_slot_connector_config_len) < 0)
     goto cleanup;
 
   if (_interpret_sensor_config_init (ctx,
-                                     &ctx->interpret_sensors.ipmi_interpret_system_acpi_power_state_config,
+                                     &ctx->interpret_sensor.ipmi_interpret_system_acpi_power_state_config,
                                      ipmi_interpret_system_acpi_power_state_config,
                                      ipmi_interpret_system_acpi_power_state_config_len) < 0)
     goto cleanup;
 
   if (_interpret_sensor_config_init (ctx,
-                                     &ctx->interpret_sensors.ipmi_interpret_watchdog2_config,
+                                     &ctx->interpret_sensor.ipmi_interpret_watchdog2_config,
                                      ipmi_interpret_watchdog2_config,
                                      ipmi_interpret_watchdog2_config_len) < 0)
     goto cleanup;
 
   if (_interpret_sensor_config_init (ctx,
-                                     &ctx->interpret_sensors.ipmi_interpret_entity_presence_config,
+                                     &ctx->interpret_sensor.ipmi_interpret_entity_presence_config,
                                      ipmi_interpret_entity_presence_config,
                                      ipmi_interpret_entity_presence_config_len) < 0)
     goto cleanup;
 
   if (_interpret_sensor_config_init (ctx,
-                                     &ctx->interpret_sensors.ipmi_interpret_entity_presence_device_present_config,
+                                     &ctx->interpret_sensor.ipmi_interpret_entity_presence_device_present_config,
                                      ipmi_interpret_entity_presence_device_present_config,
                                      ipmi_interpret_entity_presence_device_present_config_len) < 0)
     goto cleanup;
 
   if (_interpret_sensor_config_init (ctx,
-                                     &ctx->interpret_sensors.ipmi_interpret_management_subsystem_health_config,
+                                     &ctx->interpret_sensor.ipmi_interpret_management_subsystem_health_config,
                                      ipmi_interpret_management_subsystem_health_config,
                                      ipmi_interpret_management_subsystem_health_config_len) < 0)
     goto cleanup;
 
   if (_interpret_sensor_config_init (ctx,
-                                     &ctx->interpret_sensors.ipmi_interpret_battery_config,
+                                     &ctx->interpret_sensor.ipmi_interpret_battery_config,
                                      ipmi_interpret_battery_config,
                                      ipmi_interpret_battery_config_len) < 0)
     goto cleanup;
 
   if (_interpret_sensor_config_init (ctx,
-                                     &ctx->interpret_sensors.ipmi_interpret_fru_state_config,
+                                     &ctx->interpret_sensor.ipmi_interpret_fru_state_config,
                                      ipmi_interpret_fru_state_config,
                                      ipmi_interpret_fru_state_config_len) < 0)
     goto cleanup;
 
-  if (!(ctx->interpret_sensors.oem_config = hash_create (IPMI_INTERPRET_HASH_SIZE,
+  if (!(ctx->interpret_sensor.oem_config = hash_create (IPMI_INTERPRET_HASH_SIZE,
 							 (hash_key_f)hash_key_string,
 							 (hash_cmp_f)strcmp,
 							 (hash_del_f)free)))
@@ -993,130 +993,130 @@ _interpret_sensor_config_destroy (ipmi_interpret_ctx_t ctx,
 }
 
 void
-ipmi_interpret_sensors_destroy (ipmi_interpret_ctx_t ctx)
+ipmi_interpret_sensor_destroy (ipmi_interpret_ctx_t ctx)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
 
   _interpret_sensor_config_destroy (ctx,
-                                    ctx->interpret_sensors.ipmi_interpret_threshold_sensor_config);
+                                    ctx->interpret_sensor.ipmi_interpret_threshold_sensor_config);
 
   _interpret_sensor_config_destroy (ctx,
-                                    ctx->interpret_sensors.ipmi_interpret_voltage_state_config);
+                                    ctx->interpret_sensor.ipmi_interpret_voltage_state_config);
 
   _interpret_sensor_config_destroy (ctx,
-                                    ctx->interpret_sensors.ipmi_interpret_voltage_performance_config);
+                                    ctx->interpret_sensor.ipmi_interpret_voltage_performance_config);
 
   _interpret_sensor_config_destroy (ctx,
-                                    ctx->interpret_sensors.ipmi_interpret_fan_device_present_config);
+                                    ctx->interpret_sensor.ipmi_interpret_fan_device_present_config);
 
   _interpret_sensor_config_destroy (ctx,
-                                    ctx->interpret_sensors.ipmi_interpret_fan_transition_availability_config);
+                                    ctx->interpret_sensor.ipmi_interpret_fan_transition_availability_config);
 
   _interpret_sensor_config_destroy (ctx,
-                                    ctx->interpret_sensors.ipmi_interpret_fan_redundancy_config);
+                                    ctx->interpret_sensor.ipmi_interpret_fan_redundancy_config);
 
   _interpret_sensor_config_destroy (ctx,
-                                    ctx->interpret_sensors.ipmi_interpret_physical_security_config);
+                                    ctx->interpret_sensor.ipmi_interpret_physical_security_config);
 
   _interpret_sensor_config_destroy (ctx,
-                                    ctx->interpret_sensors.ipmi_interpret_platform_security_violation_attempt_config);
+                                    ctx->interpret_sensor.ipmi_interpret_platform_security_violation_attempt_config);
 
   _interpret_sensor_config_destroy (ctx,
-                                    ctx->interpret_sensors.ipmi_interpret_processor_config);
+                                    ctx->interpret_sensor.ipmi_interpret_processor_config);
 
   _interpret_sensor_config_destroy (ctx,
-                                    ctx->interpret_sensors.ipmi_interpret_processor_state_config);
+                                    ctx->interpret_sensor.ipmi_interpret_processor_state_config);
 
   _interpret_sensor_config_destroy (ctx,
-                                    ctx->interpret_sensors.ipmi_interpret_power_supply_config);
+                                    ctx->interpret_sensor.ipmi_interpret_power_supply_config);
 
   _interpret_sensor_config_destroy (ctx,
-                                    ctx->interpret_sensors.ipmi_interpret_power_supply_state_config);
+                                    ctx->interpret_sensor.ipmi_interpret_power_supply_state_config);
 
   _interpret_sensor_config_destroy (ctx,
-                                    ctx->interpret_sensors.ipmi_interpret_power_supply_redundancy_config);
+                                    ctx->interpret_sensor.ipmi_interpret_power_supply_redundancy_config);
 
   _interpret_sensor_config_destroy (ctx,
-                                    ctx->interpret_sensors.ipmi_interpret_power_unit_config);
+                                    ctx->interpret_sensor.ipmi_interpret_power_unit_config);
 
   _interpret_sensor_config_destroy (ctx,
-                                    ctx->interpret_sensors.ipmi_interpret_power_unit_device_present_config);
+                                    ctx->interpret_sensor.ipmi_interpret_power_unit_device_present_config);
 
   _interpret_sensor_config_destroy (ctx,
-                                    ctx->interpret_sensors.ipmi_interpret_power_unit_redundancy_config);
+                                    ctx->interpret_sensor.ipmi_interpret_power_unit_redundancy_config);
 
   _interpret_sensor_config_destroy (ctx,
-                                    ctx->interpret_sensors.ipmi_interpret_memory_config);
+                                    ctx->interpret_sensor.ipmi_interpret_memory_config);
 
   _interpret_sensor_config_destroy (ctx,
-                                    ctx->interpret_sensors.ipmi_interpret_drive_slot_config);
+                                    ctx->interpret_sensor.ipmi_interpret_drive_slot_config);
 
   _interpret_sensor_config_destroy (ctx,
-                                    ctx->interpret_sensors.ipmi_interpret_drive_slot_state_config);
+                                    ctx->interpret_sensor.ipmi_interpret_drive_slot_state_config);
 
   _interpret_sensor_config_destroy (ctx,
-                                    ctx->interpret_sensors.ipmi_interpret_drive_slot_predictive_failure_config);
+                                    ctx->interpret_sensor.ipmi_interpret_drive_slot_predictive_failure_config);
 
   _interpret_sensor_config_destroy (ctx,
-                                    ctx->interpret_sensors.ipmi_interpret_drive_slot_device_present_config);
+                                    ctx->interpret_sensor.ipmi_interpret_drive_slot_device_present_config);
 
   _interpret_sensor_config_destroy (ctx,
-                                    ctx->interpret_sensors.ipmi_interpret_system_firmware_progress_config);
+                                    ctx->interpret_sensor.ipmi_interpret_system_firmware_progress_config);
 
   _interpret_sensor_config_destroy (ctx,
-                                    ctx->interpret_sensors.ipmi_interpret_event_logging_disabled_config);
+                                    ctx->interpret_sensor.ipmi_interpret_event_logging_disabled_config);
 
   _interpret_sensor_config_destroy (ctx,
-                                    ctx->interpret_sensors.ipmi_interpret_system_event_config);
+                                    ctx->interpret_sensor.ipmi_interpret_system_event_config);
 
   _interpret_sensor_config_destroy (ctx,
-                                    ctx->interpret_sensors.ipmi_interpret_critical_interrupt_config);
+                                    ctx->interpret_sensor.ipmi_interpret_critical_interrupt_config);
 
   _interpret_sensor_config_destroy (ctx,
-                                    ctx->interpret_sensors.ipmi_interpret_button_switch_config);
+                                    ctx->interpret_sensor.ipmi_interpret_button_switch_config);
 
   _interpret_sensor_config_destroy (ctx,
-                                    ctx->interpret_sensors.ipmi_interpret_button_switch_state_config);
+                                    ctx->interpret_sensor.ipmi_interpret_button_switch_state_config);
 
   _interpret_sensor_config_destroy (ctx,
-                                    ctx->interpret_sensors.ipmi_interpret_module_board_state_config);
+                                    ctx->interpret_sensor.ipmi_interpret_module_board_state_config);
 
   _interpret_sensor_config_destroy (ctx,
-                                    ctx->interpret_sensors.ipmi_interpret_module_board_device_present_config);
+                                    ctx->interpret_sensor.ipmi_interpret_module_board_device_present_config);
 
   _interpret_sensor_config_destroy (ctx,
-                                    ctx->interpret_sensors.ipmi_interpret_cable_interconnect_config);
+                                    ctx->interpret_sensor.ipmi_interpret_cable_interconnect_config);
 
   _interpret_sensor_config_destroy (ctx,
-                                    ctx->interpret_sensors.ipmi_interpret_boot_error_config);
+                                    ctx->interpret_sensor.ipmi_interpret_boot_error_config);
 
   _interpret_sensor_config_destroy (ctx,
-                                    ctx->interpret_sensors.ipmi_interpret_slot_connector_config);
+                                    ctx->interpret_sensor.ipmi_interpret_slot_connector_config);
 
   _interpret_sensor_config_destroy (ctx,
-                                    ctx->interpret_sensors.ipmi_interpret_system_acpi_power_state_config);
+                                    ctx->interpret_sensor.ipmi_interpret_system_acpi_power_state_config);
 
   _interpret_sensor_config_destroy (ctx,
-                                    ctx->interpret_sensors.ipmi_interpret_watchdog2_config);
+                                    ctx->interpret_sensor.ipmi_interpret_watchdog2_config);
 
   _interpret_sensor_config_destroy (ctx,
-                                    ctx->interpret_sensors.ipmi_interpret_entity_presence_config);
+                                    ctx->interpret_sensor.ipmi_interpret_entity_presence_config);
 
   _interpret_sensor_config_destroy (ctx,
-                                    ctx->interpret_sensors.ipmi_interpret_entity_presence_device_present_config);
+                                    ctx->interpret_sensor.ipmi_interpret_entity_presence_device_present_config);
 
   _interpret_sensor_config_destroy (ctx,
-                                    ctx->interpret_sensors.ipmi_interpret_management_subsystem_health_config);
+                                    ctx->interpret_sensor.ipmi_interpret_management_subsystem_health_config);
 
   _interpret_sensor_config_destroy (ctx,
-                                    ctx->interpret_sensors.ipmi_interpret_battery_config);
+                                    ctx->interpret_sensor.ipmi_interpret_battery_config);
 
   _interpret_sensor_config_destroy (ctx,
-                                    ctx->interpret_sensors.ipmi_interpret_fru_state_config);
+                                    ctx->interpret_sensor.ipmi_interpret_fru_state_config);
 
-  if (ctx->interpret_sensors.oem_config)
-    hash_destroy (ctx->interpret_sensors.oem_config);
+  if (ctx->interpret_sensor.oem_config)
+    hash_destroy (ctx->interpret_sensor.oem_config);
 }
 
 static int
@@ -1443,2526 +1443,2526 @@ ipmi_interpret_sensor_config_parse (ipmi_interpret_ctx_t ctx,
        * IPMI_Threshold_Sensor
        */
       {
-        ctx->interpret_sensors.ipmi_interpret_threshold_sensor_config[0]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_threshold_sensor_config[0]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &threshold_sensor_flag0,
-        ctx->interpret_sensors.ipmi_interpret_threshold_sensor_config,
+        ctx->interpret_sensor.ipmi_interpret_threshold_sensor_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_threshold_sensor_config[1]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_threshold_sensor_config[1]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &threshold_sensor_flag1,
-        ctx->interpret_sensors.ipmi_interpret_threshold_sensor_config,
+        ctx->interpret_sensor.ipmi_interpret_threshold_sensor_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_threshold_sensor_config[2]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_threshold_sensor_config[2]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &threshold_sensor_flag2,
-        ctx->interpret_sensors.ipmi_interpret_threshold_sensor_config,
+        ctx->interpret_sensor.ipmi_interpret_threshold_sensor_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_threshold_sensor_config[3]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_threshold_sensor_config[3]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &threshold_sensor_flag3,
-        ctx->interpret_sensors.ipmi_interpret_threshold_sensor_config,
+        ctx->interpret_sensor.ipmi_interpret_threshold_sensor_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_threshold_sensor_config[4]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_threshold_sensor_config[4]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &threshold_sensor_flag4,
-        ctx->interpret_sensors.ipmi_interpret_threshold_sensor_config,
+        ctx->interpret_sensor.ipmi_interpret_threshold_sensor_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_threshold_sensor_config[5]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_threshold_sensor_config[5]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &threshold_sensor_flag5,
-        ctx->interpret_sensors.ipmi_interpret_threshold_sensor_config,
+        ctx->interpret_sensor.ipmi_interpret_threshold_sensor_config,
         0
       },
       /*
        * IPMI_Voltage_State
        */
       {
-        ctx->interpret_sensors.ipmi_interpret_voltage_state_config[0]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_voltage_state_config[0]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &voltage_state_flag0,
-        ctx->interpret_sensors.ipmi_interpret_voltage_state_config,
+        ctx->interpret_sensor.ipmi_interpret_voltage_state_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_voltage_state_config[1]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_voltage_state_config[1]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &voltage_state_flag1,
-        ctx->interpret_sensors.ipmi_interpret_voltage_state_config,
+        ctx->interpret_sensor.ipmi_interpret_voltage_state_config,
         0
       },
       /*
        * IPMI_Voltage_Performance
        */
       {
-        ctx->interpret_sensors.ipmi_interpret_voltage_performance_config[0]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_voltage_performance_config[0]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &voltage_performance_flag0,
-        ctx->interpret_sensors.ipmi_interpret_voltage_performance_config,
+        ctx->interpret_sensor.ipmi_interpret_voltage_performance_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_voltage_performance_config[1]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_voltage_performance_config[1]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &voltage_performance_flag1,
-        ctx->interpret_sensors.ipmi_interpret_voltage_performance_config,
+        ctx->interpret_sensor.ipmi_interpret_voltage_performance_config,
         0
       },
       /*
        * IPMI_Fan_Device_Present
        */
       {
-        ctx->interpret_sensors.ipmi_interpret_fan_device_present_config[0]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_fan_device_present_config[0]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &fan_device_present_flag0,
-        ctx->interpret_sensors.ipmi_interpret_fan_device_present_config,
+        ctx->interpret_sensor.ipmi_interpret_fan_device_present_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_fan_device_present_config[1]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_fan_device_present_config[1]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &fan_device_present_flag1,
-        ctx->interpret_sensors.ipmi_interpret_fan_device_present_config,
+        ctx->interpret_sensor.ipmi_interpret_fan_device_present_config,
         0
       },
       /*
        * IPMI_Fan_Transition_Availability
        */
       {
-        ctx->interpret_sensors.ipmi_interpret_fan_transition_availability_config[0]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_fan_transition_availability_config[0]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &fan_transition_availability_flag0,
-        ctx->interpret_sensors.ipmi_interpret_fan_transition_availability_config,
+        ctx->interpret_sensor.ipmi_interpret_fan_transition_availability_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_fan_transition_availability_config[1]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_fan_transition_availability_config[1]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &fan_transition_availability_flag1,
-        ctx->interpret_sensors.ipmi_interpret_fan_transition_availability_config,
+        ctx->interpret_sensor.ipmi_interpret_fan_transition_availability_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_fan_transition_availability_config[2]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_fan_transition_availability_config[2]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &fan_transition_availability_flag2,
-        ctx->interpret_sensors.ipmi_interpret_fan_transition_availability_config,
+        ctx->interpret_sensor.ipmi_interpret_fan_transition_availability_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_fan_transition_availability_config[3]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_fan_transition_availability_config[3]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &fan_transition_availability_flag3,
-        ctx->interpret_sensors.ipmi_interpret_fan_transition_availability_config,
+        ctx->interpret_sensor.ipmi_interpret_fan_transition_availability_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_fan_transition_availability_config[4]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_fan_transition_availability_config[4]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &fan_transition_availability_flag4,
-        ctx->interpret_sensors.ipmi_interpret_fan_transition_availability_config,
+        ctx->interpret_sensor.ipmi_interpret_fan_transition_availability_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_fan_transition_availability_config[5]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_fan_transition_availability_config[5]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &fan_transition_availability_flag5,
-        ctx->interpret_sensors.ipmi_interpret_fan_transition_availability_config,
+        ctx->interpret_sensor.ipmi_interpret_fan_transition_availability_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_fan_transition_availability_config[6]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_fan_transition_availability_config[6]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &fan_transition_availability_flag6,
-        ctx->interpret_sensors.ipmi_interpret_fan_transition_availability_config,
+        ctx->interpret_sensor.ipmi_interpret_fan_transition_availability_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_fan_transition_availability_config[7]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_fan_transition_availability_config[7]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &fan_transition_availability_flag7,
-        ctx->interpret_sensors.ipmi_interpret_fan_transition_availability_config,
+        ctx->interpret_sensor.ipmi_interpret_fan_transition_availability_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_fan_transition_availability_config[8]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_fan_transition_availability_config[8]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &fan_transition_availability_flag8,
-        ctx->interpret_sensors.ipmi_interpret_fan_transition_availability_config,
+        ctx->interpret_sensor.ipmi_interpret_fan_transition_availability_config,
         0
       },
       /*
        * IPMI_Fan_Redundancy
        */
       {
-        ctx->interpret_sensors.ipmi_interpret_fan_redundancy_config[0]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_fan_redundancy_config[0]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &fan_redundancy_flag0,
-        ctx->interpret_sensors.ipmi_interpret_fan_redundancy_config,
+        ctx->interpret_sensor.ipmi_interpret_fan_redundancy_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_fan_redundancy_config[1]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_fan_redundancy_config[1]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &fan_redundancy_flag1,
-        ctx->interpret_sensors.ipmi_interpret_fan_redundancy_config,
+        ctx->interpret_sensor.ipmi_interpret_fan_redundancy_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_fan_redundancy_config[2]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_fan_redundancy_config[2]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &fan_redundancy_flag2,
-        ctx->interpret_sensors.ipmi_interpret_fan_redundancy_config,
+        ctx->interpret_sensor.ipmi_interpret_fan_redundancy_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_fan_redundancy_config[3]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_fan_redundancy_config[3]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &fan_redundancy_flag3,
-        ctx->interpret_sensors.ipmi_interpret_fan_redundancy_config,
+        ctx->interpret_sensor.ipmi_interpret_fan_redundancy_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_fan_redundancy_config[4]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_fan_redundancy_config[4]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &fan_redundancy_flag4,
-        ctx->interpret_sensors.ipmi_interpret_fan_redundancy_config,
+        ctx->interpret_sensor.ipmi_interpret_fan_redundancy_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_fan_redundancy_config[5]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_fan_redundancy_config[5]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &fan_redundancy_flag5,
-        ctx->interpret_sensors.ipmi_interpret_fan_redundancy_config,
+        ctx->interpret_sensor.ipmi_interpret_fan_redundancy_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_fan_redundancy_config[6]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_fan_redundancy_config[6]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &fan_redundancy_flag6,
-        ctx->interpret_sensors.ipmi_interpret_fan_redundancy_config,
+        ctx->interpret_sensor.ipmi_interpret_fan_redundancy_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_fan_redundancy_config[7]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_fan_redundancy_config[7]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &fan_redundancy_flag7,
-        ctx->interpret_sensors.ipmi_interpret_fan_redundancy_config,
+        ctx->interpret_sensor.ipmi_interpret_fan_redundancy_config,
         0
       },
       /*
        * IPMI_Physical_Security
        */
       {
-        ctx->interpret_sensors.ipmi_interpret_physical_security_config[0]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_physical_security_config[0]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &physical_security_flag0,
-        ctx->interpret_sensors.ipmi_interpret_physical_security_config,
+        ctx->interpret_sensor.ipmi_interpret_physical_security_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_physical_security_config[1]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_physical_security_config[1]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &physical_security_flag1,
-        ctx->interpret_sensors.ipmi_interpret_physical_security_config,
+        ctx->interpret_sensor.ipmi_interpret_physical_security_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_physical_security_config[2]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_physical_security_config[2]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &physical_security_flag2,
-        ctx->interpret_sensors.ipmi_interpret_physical_security_config,
+        ctx->interpret_sensor.ipmi_interpret_physical_security_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_physical_security_config[3]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_physical_security_config[3]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &physical_security_flag3,
-        ctx->interpret_sensors.ipmi_interpret_physical_security_config,
+        ctx->interpret_sensor.ipmi_interpret_physical_security_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_physical_security_config[4]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_physical_security_config[4]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &physical_security_flag4,
-        ctx->interpret_sensors.ipmi_interpret_physical_security_config,
+        ctx->interpret_sensor.ipmi_interpret_physical_security_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_physical_security_config[5]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_physical_security_config[5]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &physical_security_flag5,
-        ctx->interpret_sensors.ipmi_interpret_physical_security_config,
+        ctx->interpret_sensor.ipmi_interpret_physical_security_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_physical_security_config[6]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_physical_security_config[6]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &physical_security_flag6,
-        ctx->interpret_sensors.ipmi_interpret_physical_security_config,
+        ctx->interpret_sensor.ipmi_interpret_physical_security_config,
         0
       },
       /*
        * IPMI_Platform_Security_Violation_Attempt
        */
       {
-        ctx->interpret_sensors.ipmi_interpret_platform_security_violation_attempt_config[0]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_platform_security_violation_attempt_config[0]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &platform_security_violation_attempt_flag0,
-        ctx->interpret_sensors.ipmi_interpret_platform_security_violation_attempt_config,
+        ctx->interpret_sensor.ipmi_interpret_platform_security_violation_attempt_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_platform_security_violation_attempt_config[1]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_platform_security_violation_attempt_config[1]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &platform_security_violation_attempt_flag1,
-        ctx->interpret_sensors.ipmi_interpret_platform_security_violation_attempt_config,
+        ctx->interpret_sensor.ipmi_interpret_platform_security_violation_attempt_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_platform_security_violation_attempt_config[2]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_platform_security_violation_attempt_config[2]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &platform_security_violation_attempt_flag2,
-        ctx->interpret_sensors.ipmi_interpret_platform_security_violation_attempt_config,
+        ctx->interpret_sensor.ipmi_interpret_platform_security_violation_attempt_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_platform_security_violation_attempt_config[3]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_platform_security_violation_attempt_config[3]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &platform_security_violation_attempt_flag3,
-        ctx->interpret_sensors.ipmi_interpret_platform_security_violation_attempt_config,
+        ctx->interpret_sensor.ipmi_interpret_platform_security_violation_attempt_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_platform_security_violation_attempt_config[4]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_platform_security_violation_attempt_config[4]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &platform_security_violation_attempt_flag4,
-        ctx->interpret_sensors.ipmi_interpret_platform_security_violation_attempt_config,
+        ctx->interpret_sensor.ipmi_interpret_platform_security_violation_attempt_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_platform_security_violation_attempt_config[5]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_platform_security_violation_attempt_config[5]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &platform_security_violation_attempt_flag5,
-        ctx->interpret_sensors.ipmi_interpret_platform_security_violation_attempt_config,
+        ctx->interpret_sensor.ipmi_interpret_platform_security_violation_attempt_config,
         0
       },
       /*
        * IPMI_Processor
        */
       {
-        ctx->interpret_sensors.ipmi_interpret_processor_config[0]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_processor_config[0]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &processor_flag0,
-        ctx->interpret_sensors.ipmi_interpret_processor_config,
+        ctx->interpret_sensor.ipmi_interpret_processor_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_processor_config[1]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_processor_config[1]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &processor_flag1,
-        ctx->interpret_sensors.ipmi_interpret_processor_config,
+        ctx->interpret_sensor.ipmi_interpret_processor_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_processor_config[2]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_processor_config[2]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &processor_flag2,
-        ctx->interpret_sensors.ipmi_interpret_processor_config,
+        ctx->interpret_sensor.ipmi_interpret_processor_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_processor_config[3]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_processor_config[3]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &processor_flag3,
-        ctx->interpret_sensors.ipmi_interpret_processor_config,
+        ctx->interpret_sensor.ipmi_interpret_processor_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_processor_config[4]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_processor_config[4]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &processor_flag4,
-        ctx->interpret_sensors.ipmi_interpret_processor_config,
+        ctx->interpret_sensor.ipmi_interpret_processor_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_processor_config[5]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_processor_config[5]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &processor_flag5,
-        ctx->interpret_sensors.ipmi_interpret_processor_config,
+        ctx->interpret_sensor.ipmi_interpret_processor_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_processor_config[6]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_processor_config[6]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &processor_flag6,
-        ctx->interpret_sensors.ipmi_interpret_processor_config,
+        ctx->interpret_sensor.ipmi_interpret_processor_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_processor_config[7]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_processor_config[7]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &processor_flag7,
-        ctx->interpret_sensors.ipmi_interpret_processor_config,
+        ctx->interpret_sensor.ipmi_interpret_processor_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_processor_config[8]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_processor_config[8]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &processor_flag8,
-        ctx->interpret_sensors.ipmi_interpret_processor_config,
+        ctx->interpret_sensor.ipmi_interpret_processor_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_processor_config[9]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_processor_config[9]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &processor_flag9,
-        ctx->interpret_sensors.ipmi_interpret_processor_config,
+        ctx->interpret_sensor.ipmi_interpret_processor_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_processor_config[10]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_processor_config[10]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &processor_flag10,
-        ctx->interpret_sensors.ipmi_interpret_processor_config,
+        ctx->interpret_sensor.ipmi_interpret_processor_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_processor_config[11]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_processor_config[11]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &processor_flag11,
-        ctx->interpret_sensors.ipmi_interpret_processor_config,
+        ctx->interpret_sensor.ipmi_interpret_processor_config,
         0
       },
       /*
        * IPMI_Processor_State
        */
       {
-        ctx->interpret_sensors.ipmi_interpret_processor_state_config[0]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_processor_state_config[0]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &processor_state_flag0,
-        ctx->interpret_sensors.ipmi_interpret_processor_state_config,
+        ctx->interpret_sensor.ipmi_interpret_processor_state_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_processor_state_config[1]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_processor_state_config[1]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &processor_state_flag1,
-        ctx->interpret_sensors.ipmi_interpret_processor_state_config,
+        ctx->interpret_sensor.ipmi_interpret_processor_state_config,
         0
       },
       /*
        * IPMI_Power_Supply
        */
       {
-        ctx->interpret_sensors.ipmi_interpret_power_supply_config[0]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_power_supply_config[0]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &power_supply_flag0,
-        ctx->interpret_sensors.ipmi_interpret_power_supply_config,
+        ctx->interpret_sensor.ipmi_interpret_power_supply_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_power_supply_config[1]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_power_supply_config[1]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &power_supply_flag1,
-        ctx->interpret_sensors.ipmi_interpret_power_supply_config,
+        ctx->interpret_sensor.ipmi_interpret_power_supply_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_power_supply_config[2]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_power_supply_config[2]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &power_supply_flag2,
-        ctx->interpret_sensors.ipmi_interpret_power_supply_config,
+        ctx->interpret_sensor.ipmi_interpret_power_supply_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_power_supply_config[3]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_power_supply_config[3]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &power_supply_flag3,
-        ctx->interpret_sensors.ipmi_interpret_power_supply_config,
+        ctx->interpret_sensor.ipmi_interpret_power_supply_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_power_supply_config[4]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_power_supply_config[4]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &power_supply_flag4,
-        ctx->interpret_sensors.ipmi_interpret_power_supply_config,
+        ctx->interpret_sensor.ipmi_interpret_power_supply_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_power_supply_config[5]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_power_supply_config[5]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &power_supply_flag5,
-        ctx->interpret_sensors.ipmi_interpret_power_supply_config,
+        ctx->interpret_sensor.ipmi_interpret_power_supply_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_power_supply_config[6]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_power_supply_config[6]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &power_supply_flag6,
-        ctx->interpret_sensors.ipmi_interpret_power_supply_config,
+        ctx->interpret_sensor.ipmi_interpret_power_supply_config,
         0
       },
       /*
        * IPMI_Power_Supply_State
        */
       {
-        ctx->interpret_sensors.ipmi_interpret_power_supply_state_config[0]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_power_supply_state_config[0]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &power_supply_state_flag0,
-        ctx->interpret_sensors.ipmi_interpret_power_supply_state_config,
+        ctx->interpret_sensor.ipmi_interpret_power_supply_state_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_power_supply_state_config[1]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_power_supply_state_config[1]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &power_supply_state_flag1,
-        ctx->interpret_sensors.ipmi_interpret_power_supply_state_config,
+        ctx->interpret_sensor.ipmi_interpret_power_supply_state_config,
         0
       },
       /*
        * IPMI_Power_Supply_Redundancy
        */
       {
-        ctx->interpret_sensors.ipmi_interpret_power_supply_redundancy_config[0]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_power_supply_redundancy_config[0]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &power_supply_redundancy_flag0,
-        ctx->interpret_sensors.ipmi_interpret_power_supply_redundancy_config,
+        ctx->interpret_sensor.ipmi_interpret_power_supply_redundancy_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_power_supply_redundancy_config[1]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_power_supply_redundancy_config[1]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &power_supply_redundancy_flag1,
-        ctx->interpret_sensors.ipmi_interpret_power_supply_redundancy_config,
+        ctx->interpret_sensor.ipmi_interpret_power_supply_redundancy_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_power_supply_redundancy_config[2]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_power_supply_redundancy_config[2]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &power_supply_redundancy_flag2,
-        ctx->interpret_sensors.ipmi_interpret_power_supply_redundancy_config,
+        ctx->interpret_sensor.ipmi_interpret_power_supply_redundancy_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_power_supply_redundancy_config[3]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_power_supply_redundancy_config[3]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &power_supply_redundancy_flag3,
-        ctx->interpret_sensors.ipmi_interpret_power_supply_redundancy_config,
+        ctx->interpret_sensor.ipmi_interpret_power_supply_redundancy_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_power_supply_redundancy_config[4]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_power_supply_redundancy_config[4]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &power_supply_redundancy_flag4,
-        ctx->interpret_sensors.ipmi_interpret_power_supply_redundancy_config,
+        ctx->interpret_sensor.ipmi_interpret_power_supply_redundancy_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_power_supply_redundancy_config[5]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_power_supply_redundancy_config[5]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &power_supply_redundancy_flag5,
-        ctx->interpret_sensors.ipmi_interpret_power_supply_redundancy_config,
+        ctx->interpret_sensor.ipmi_interpret_power_supply_redundancy_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_power_supply_redundancy_config[6]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_power_supply_redundancy_config[6]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &power_supply_redundancy_flag6,
-        ctx->interpret_sensors.ipmi_interpret_power_supply_redundancy_config,
+        ctx->interpret_sensor.ipmi_interpret_power_supply_redundancy_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_power_supply_redundancy_config[7]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_power_supply_redundancy_config[7]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &power_supply_redundancy_flag7,
-        ctx->interpret_sensors.ipmi_interpret_power_supply_redundancy_config,
+        ctx->interpret_sensor.ipmi_interpret_power_supply_redundancy_config,
         0
       },
       /*
        * IPMI_Power_Unit
        */
       {
-        ctx->interpret_sensors.ipmi_interpret_power_unit_config[0]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_power_unit_config[0]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &power_unit_flag0,
-        ctx->interpret_sensors.ipmi_interpret_power_unit_config,
+        ctx->interpret_sensor.ipmi_interpret_power_unit_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_power_unit_config[1]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_power_unit_config[1]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &power_unit_flag1,
-        ctx->interpret_sensors.ipmi_interpret_power_unit_config,
+        ctx->interpret_sensor.ipmi_interpret_power_unit_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_power_unit_config[2]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_power_unit_config[2]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &power_unit_flag2,
-        ctx->interpret_sensors.ipmi_interpret_power_unit_config,
+        ctx->interpret_sensor.ipmi_interpret_power_unit_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_power_unit_config[3]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_power_unit_config[3]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &power_unit_flag3,
-        ctx->interpret_sensors.ipmi_interpret_power_unit_config,
+        ctx->interpret_sensor.ipmi_interpret_power_unit_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_power_unit_config[4]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_power_unit_config[4]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &power_unit_flag4,
-        ctx->interpret_sensors.ipmi_interpret_power_unit_config,
+        ctx->interpret_sensor.ipmi_interpret_power_unit_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_power_unit_config[5]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_power_unit_config[5]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &power_unit_flag5,
-        ctx->interpret_sensors.ipmi_interpret_power_unit_config,
+        ctx->interpret_sensor.ipmi_interpret_power_unit_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_power_unit_config[6]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_power_unit_config[6]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &power_unit_flag6,
-        ctx->interpret_sensors.ipmi_interpret_power_unit_config,
+        ctx->interpret_sensor.ipmi_interpret_power_unit_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_power_unit_config[7]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_power_unit_config[7]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &power_unit_flag7,
-        ctx->interpret_sensors.ipmi_interpret_power_unit_config,
+        ctx->interpret_sensor.ipmi_interpret_power_unit_config,
         0
       },
       /*
        * IPMI_Power_Unit_Device_Present
        */
       {
-        ctx->interpret_sensors.ipmi_interpret_power_unit_device_present_config[0]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_power_unit_device_present_config[0]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &power_unit_device_present_flag0,
-        ctx->interpret_sensors.ipmi_interpret_power_unit_device_present_config,
+        ctx->interpret_sensor.ipmi_interpret_power_unit_device_present_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_power_unit_device_present_config[1]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_power_unit_device_present_config[1]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &power_unit_device_present_flag1,
-        ctx->interpret_sensors.ipmi_interpret_power_unit_device_present_config,
+        ctx->interpret_sensor.ipmi_interpret_power_unit_device_present_config,
         0
       },
       /*
        * IPMI_Power_Unit_Redundancy
        */
       {
-        ctx->interpret_sensors.ipmi_interpret_power_unit_redundancy_config[0]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_power_unit_redundancy_config[0]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &power_unit_redundancy_flag0,
-        ctx->interpret_sensors.ipmi_interpret_power_unit_redundancy_config,
+        ctx->interpret_sensor.ipmi_interpret_power_unit_redundancy_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_power_unit_redundancy_config[1]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_power_unit_redundancy_config[1]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &power_unit_redundancy_flag1,
-        ctx->interpret_sensors.ipmi_interpret_power_unit_redundancy_config,
+        ctx->interpret_sensor.ipmi_interpret_power_unit_redundancy_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_power_unit_redundancy_config[2]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_power_unit_redundancy_config[2]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &power_unit_redundancy_flag2,
-        ctx->interpret_sensors.ipmi_interpret_power_unit_redundancy_config,
+        ctx->interpret_sensor.ipmi_interpret_power_unit_redundancy_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_power_unit_redundancy_config[3]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_power_unit_redundancy_config[3]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &power_unit_redundancy_flag3,
-        ctx->interpret_sensors.ipmi_interpret_power_unit_redundancy_config,
+        ctx->interpret_sensor.ipmi_interpret_power_unit_redundancy_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_power_unit_redundancy_config[4]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_power_unit_redundancy_config[4]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &power_unit_redundancy_flag4,
-        ctx->interpret_sensors.ipmi_interpret_power_unit_redundancy_config,
+        ctx->interpret_sensor.ipmi_interpret_power_unit_redundancy_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_power_unit_redundancy_config[5]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_power_unit_redundancy_config[5]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &power_unit_redundancy_flag5,
-        ctx->interpret_sensors.ipmi_interpret_power_unit_redundancy_config,
+        ctx->interpret_sensor.ipmi_interpret_power_unit_redundancy_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_power_unit_redundancy_config[6]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_power_unit_redundancy_config[6]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &power_unit_redundancy_flag6,
-        ctx->interpret_sensors.ipmi_interpret_power_unit_redundancy_config,
+        ctx->interpret_sensor.ipmi_interpret_power_unit_redundancy_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_power_unit_redundancy_config[7]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_power_unit_redundancy_config[7]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &power_unit_redundancy_flag7,
-        ctx->interpret_sensors.ipmi_interpret_power_unit_redundancy_config,
+        ctx->interpret_sensor.ipmi_interpret_power_unit_redundancy_config,
         0
       },
       /*
        * IPMI_Memory
        */
       {
-        ctx->interpret_sensors.ipmi_interpret_memory_config[0]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_memory_config[0]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &memory_flag0,
-        ctx->interpret_sensors.ipmi_interpret_memory_config,
+        ctx->interpret_sensor.ipmi_interpret_memory_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_memory_config[1]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_memory_config[1]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &memory_flag1,
-        ctx->interpret_sensors.ipmi_interpret_memory_config,
+        ctx->interpret_sensor.ipmi_interpret_memory_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_memory_config[2]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_memory_config[2]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &memory_flag2,
-        ctx->interpret_sensors.ipmi_interpret_memory_config,
+        ctx->interpret_sensor.ipmi_interpret_memory_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_memory_config[3]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_memory_config[3]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &memory_flag3,
-        ctx->interpret_sensors.ipmi_interpret_memory_config,
+        ctx->interpret_sensor.ipmi_interpret_memory_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_memory_config[4]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_memory_config[4]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &memory_flag4,
-        ctx->interpret_sensors.ipmi_interpret_memory_config,
+        ctx->interpret_sensor.ipmi_interpret_memory_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_memory_config[5]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_memory_config[5]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &memory_flag5,
-        ctx->interpret_sensors.ipmi_interpret_memory_config,
+        ctx->interpret_sensor.ipmi_interpret_memory_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_memory_config[6]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_memory_config[6]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &memory_flag6,
-        ctx->interpret_sensors.ipmi_interpret_memory_config,
+        ctx->interpret_sensor.ipmi_interpret_memory_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_memory_config[7]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_memory_config[7]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &memory_flag7,
-        ctx->interpret_sensors.ipmi_interpret_memory_config,
+        ctx->interpret_sensor.ipmi_interpret_memory_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_memory_config[8]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_memory_config[8]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &memory_flag8,
-        ctx->interpret_sensors.ipmi_interpret_memory_config,
+        ctx->interpret_sensor.ipmi_interpret_memory_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_memory_config[9]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_memory_config[9]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &memory_flag9,
-        ctx->interpret_sensors.ipmi_interpret_memory_config,
+        ctx->interpret_sensor.ipmi_interpret_memory_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_memory_config[10]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_memory_config[10]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &memory_flag10,
-        ctx->interpret_sensors.ipmi_interpret_memory_config,
+        ctx->interpret_sensor.ipmi_interpret_memory_config,
         0
       },
       /*
        * IPMI_Drive_Slot
        */
       {
-        ctx->interpret_sensors.ipmi_interpret_drive_slot_config[0]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_drive_slot_config[0]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &drive_slot_flag0,
-        ctx->interpret_sensors.ipmi_interpret_drive_slot_config,
+        ctx->interpret_sensor.ipmi_interpret_drive_slot_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_drive_slot_config[1]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_drive_slot_config[1]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &drive_slot_flag1,
-        ctx->interpret_sensors.ipmi_interpret_drive_slot_config,
+        ctx->interpret_sensor.ipmi_interpret_drive_slot_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_drive_slot_config[2]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_drive_slot_config[2]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &drive_slot_flag2,
-        ctx->interpret_sensors.ipmi_interpret_drive_slot_config,
+        ctx->interpret_sensor.ipmi_interpret_drive_slot_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_drive_slot_config[3]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_drive_slot_config[3]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &drive_slot_flag3,
-        ctx->interpret_sensors.ipmi_interpret_drive_slot_config,
+        ctx->interpret_sensor.ipmi_interpret_drive_slot_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_drive_slot_config[4]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_drive_slot_config[4]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &drive_slot_flag4,
-        ctx->interpret_sensors.ipmi_interpret_drive_slot_config,
+        ctx->interpret_sensor.ipmi_interpret_drive_slot_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_drive_slot_config[5]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_drive_slot_config[5]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &drive_slot_flag5,
-        ctx->interpret_sensors.ipmi_interpret_drive_slot_config,
+        ctx->interpret_sensor.ipmi_interpret_drive_slot_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_drive_slot_config[6]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_drive_slot_config[6]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &drive_slot_flag6,
-        ctx->interpret_sensors.ipmi_interpret_drive_slot_config,
+        ctx->interpret_sensor.ipmi_interpret_drive_slot_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_drive_slot_config[7]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_drive_slot_config[7]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &drive_slot_flag7,
-        ctx->interpret_sensors.ipmi_interpret_drive_slot_config,
+        ctx->interpret_sensor.ipmi_interpret_drive_slot_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_drive_slot_config[8]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_drive_slot_config[8]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &drive_slot_flag8,
-        ctx->interpret_sensors.ipmi_interpret_drive_slot_config,
+        ctx->interpret_sensor.ipmi_interpret_drive_slot_config,
         0
       },
       /*
        * IPMI_Drive_Slot_State
        */
       {
-        ctx->interpret_sensors.ipmi_interpret_drive_slot_state_config[0]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_drive_slot_state_config[0]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &drive_slot_state_flag0,
-        ctx->interpret_sensors.ipmi_interpret_drive_slot_state_config,
+        ctx->interpret_sensor.ipmi_interpret_drive_slot_state_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_drive_slot_state_config[1]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_drive_slot_state_config[1]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &drive_slot_state_flag1,
-        ctx->interpret_sensors.ipmi_interpret_drive_slot_state_config,
+        ctx->interpret_sensor.ipmi_interpret_drive_slot_state_config,
         0
       },
       /*
        * IPMI_Drive_Slot_Predictive_Failure
        */
       {
-        ctx->interpret_sensors.ipmi_interpret_drive_slot_predictive_failure_config[0]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_drive_slot_predictive_failure_config[0]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &drive_slot_predictive_failure_flag0,
-        ctx->interpret_sensors.ipmi_interpret_drive_slot_predictive_failure_config,
+        ctx->interpret_sensor.ipmi_interpret_drive_slot_predictive_failure_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_drive_slot_predictive_failure_config[1]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_drive_slot_predictive_failure_config[1]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &drive_slot_predictive_failure_flag1,
-        ctx->interpret_sensors.ipmi_interpret_drive_slot_predictive_failure_config,
+        ctx->interpret_sensor.ipmi_interpret_drive_slot_predictive_failure_config,
         0
       },
       /*
        * IPMI_Drive_Slot_Device_Present
        */
       {
-        ctx->interpret_sensors.ipmi_interpret_drive_slot_device_present_config[0]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_drive_slot_device_present_config[0]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &drive_slot_device_present_flag0,
-        ctx->interpret_sensors.ipmi_interpret_drive_slot_device_present_config,
+        ctx->interpret_sensor.ipmi_interpret_drive_slot_device_present_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_drive_slot_device_present_config[1]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_drive_slot_device_present_config[1]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &drive_slot_device_present_flag1,
-        ctx->interpret_sensors.ipmi_interpret_drive_slot_device_present_config,
+        ctx->interpret_sensor.ipmi_interpret_drive_slot_device_present_config,
         0
       },
       /*
        * IPMI_System_Firmware_Progress
        */
       {
-        ctx->interpret_sensors.ipmi_interpret_system_firmware_progress_config[0]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_system_firmware_progress_config[0]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &system_firmware_progress_flag0,
-        ctx->interpret_sensors.ipmi_interpret_system_firmware_progress_config,
+        ctx->interpret_sensor.ipmi_interpret_system_firmware_progress_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_system_firmware_progress_config[1]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_system_firmware_progress_config[1]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &system_firmware_progress_flag1,
-        ctx->interpret_sensors.ipmi_interpret_system_firmware_progress_config,
+        ctx->interpret_sensor.ipmi_interpret_system_firmware_progress_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_system_firmware_progress_config[2]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_system_firmware_progress_config[2]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &system_firmware_progress_flag2,
-        ctx->interpret_sensors.ipmi_interpret_system_firmware_progress_config,
+        ctx->interpret_sensor.ipmi_interpret_system_firmware_progress_config,
         0
       },
       /*
        * IPMI_Event_Logging_Disabled
        */
       {
-        ctx->interpret_sensors.ipmi_interpret_event_logging_disabled_config[0]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_event_logging_disabled_config[0]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &event_logging_disabled_flag0,
-        ctx->interpret_sensors.ipmi_interpret_event_logging_disabled_config,
+        ctx->interpret_sensor.ipmi_interpret_event_logging_disabled_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_event_logging_disabled_config[1]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_event_logging_disabled_config[1]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &event_logging_disabled_flag1,
-        ctx->interpret_sensors.ipmi_interpret_event_logging_disabled_config,
+        ctx->interpret_sensor.ipmi_interpret_event_logging_disabled_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_event_logging_disabled_config[2]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_event_logging_disabled_config[2]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &event_logging_disabled_flag2,
-        ctx->interpret_sensors.ipmi_interpret_event_logging_disabled_config,
+        ctx->interpret_sensor.ipmi_interpret_event_logging_disabled_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_event_logging_disabled_config[3]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_event_logging_disabled_config[3]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &event_logging_disabled_flag3,
-        ctx->interpret_sensors.ipmi_interpret_event_logging_disabled_config,
+        ctx->interpret_sensor.ipmi_interpret_event_logging_disabled_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_event_logging_disabled_config[4]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_event_logging_disabled_config[4]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &event_logging_disabled_flag4,
-        ctx->interpret_sensors.ipmi_interpret_event_logging_disabled_config,
+        ctx->interpret_sensor.ipmi_interpret_event_logging_disabled_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_event_logging_disabled_config[5]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_event_logging_disabled_config[5]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &event_logging_disabled_flag5,
-        ctx->interpret_sensors.ipmi_interpret_event_logging_disabled_config,
+        ctx->interpret_sensor.ipmi_interpret_event_logging_disabled_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_event_logging_disabled_config[6]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_event_logging_disabled_config[6]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &event_logging_disabled_flag6,
-        ctx->interpret_sensors.ipmi_interpret_event_logging_disabled_config,
+        ctx->interpret_sensor.ipmi_interpret_event_logging_disabled_config,
         0
       },
       /*
        * IPMI_System_Event
        */
       {
-        ctx->interpret_sensors.ipmi_interpret_system_event_config[0]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_system_event_config[0]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &system_event_flag0,
-        ctx->interpret_sensors.ipmi_interpret_system_event_config,
+        ctx->interpret_sensor.ipmi_interpret_system_event_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_system_event_config[1]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_system_event_config[1]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &system_event_flag1,
-        ctx->interpret_sensors.ipmi_interpret_system_event_config,
+        ctx->interpret_sensor.ipmi_interpret_system_event_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_system_event_config[2]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_system_event_config[2]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &system_event_flag2,
-        ctx->interpret_sensors.ipmi_interpret_system_event_config,
+        ctx->interpret_sensor.ipmi_interpret_system_event_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_system_event_config[3]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_system_event_config[3]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &system_event_flag3,
-        ctx->interpret_sensors.ipmi_interpret_system_event_config,
+        ctx->interpret_sensor.ipmi_interpret_system_event_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_system_event_config[4]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_system_event_config[4]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &system_event_flag4,
-        ctx->interpret_sensors.ipmi_interpret_system_event_config,
+        ctx->interpret_sensor.ipmi_interpret_system_event_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_system_event_config[5]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_system_event_config[5]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &system_event_flag5,
-        ctx->interpret_sensors.ipmi_interpret_system_event_config,
+        ctx->interpret_sensor.ipmi_interpret_system_event_config,
         0
       },
       /*
        * IPMI_Critical_Interrupt
        */
       {
-        ctx->interpret_sensors.ipmi_interpret_critical_interrupt_config[0]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_critical_interrupt_config[0]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &critical_interrupt_flag0,
-        ctx->interpret_sensors.ipmi_interpret_critical_interrupt_config,
+        ctx->interpret_sensor.ipmi_interpret_critical_interrupt_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_critical_interrupt_config[1]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_critical_interrupt_config[1]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &critical_interrupt_flag1,
-        ctx->interpret_sensors.ipmi_interpret_critical_interrupt_config,
+        ctx->interpret_sensor.ipmi_interpret_critical_interrupt_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_critical_interrupt_config[2]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_critical_interrupt_config[2]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &critical_interrupt_flag2,
-        ctx->interpret_sensors.ipmi_interpret_critical_interrupt_config,
+        ctx->interpret_sensor.ipmi_interpret_critical_interrupt_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_critical_interrupt_config[3]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_critical_interrupt_config[3]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &critical_interrupt_flag3,
-        ctx->interpret_sensors.ipmi_interpret_critical_interrupt_config,
+        ctx->interpret_sensor.ipmi_interpret_critical_interrupt_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_critical_interrupt_config[4]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_critical_interrupt_config[4]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &critical_interrupt_flag4,
-        ctx->interpret_sensors.ipmi_interpret_critical_interrupt_config,
+        ctx->interpret_sensor.ipmi_interpret_critical_interrupt_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_critical_interrupt_config[5]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_critical_interrupt_config[5]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &critical_interrupt_flag5,
-        ctx->interpret_sensors.ipmi_interpret_critical_interrupt_config,
+        ctx->interpret_sensor.ipmi_interpret_critical_interrupt_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_critical_interrupt_config[6]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_critical_interrupt_config[6]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &critical_interrupt_flag6,
-        ctx->interpret_sensors.ipmi_interpret_critical_interrupt_config,
+        ctx->interpret_sensor.ipmi_interpret_critical_interrupt_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_critical_interrupt_config[7]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_critical_interrupt_config[7]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &critical_interrupt_flag7,
-        ctx->interpret_sensors.ipmi_interpret_critical_interrupt_config,
+        ctx->interpret_sensor.ipmi_interpret_critical_interrupt_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_critical_interrupt_config[8]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_critical_interrupt_config[8]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &critical_interrupt_flag8,
-        ctx->interpret_sensors.ipmi_interpret_critical_interrupt_config,
+        ctx->interpret_sensor.ipmi_interpret_critical_interrupt_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_critical_interrupt_config[9]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_critical_interrupt_config[9]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &critical_interrupt_flag9,
-        ctx->interpret_sensors.ipmi_interpret_critical_interrupt_config,
+        ctx->interpret_sensor.ipmi_interpret_critical_interrupt_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_critical_interrupt_config[10]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_critical_interrupt_config[10]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &critical_interrupt_flag10,
-        ctx->interpret_sensors.ipmi_interpret_critical_interrupt_config,
+        ctx->interpret_sensor.ipmi_interpret_critical_interrupt_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_critical_interrupt_config[11]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_critical_interrupt_config[11]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &critical_interrupt_flag11,
-        ctx->interpret_sensors.ipmi_interpret_critical_interrupt_config,
+        ctx->interpret_sensor.ipmi_interpret_critical_interrupt_config,
         0
       },
       /*
        * IPMI_Button_Switch
        */
       {
-        ctx->interpret_sensors.ipmi_interpret_button_switch_config[0]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_button_switch_config[0]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &button_switch_flag0,
-        ctx->interpret_sensors.ipmi_interpret_button_switch_config,
+        ctx->interpret_sensor.ipmi_interpret_button_switch_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_button_switch_config[1]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_button_switch_config[1]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &button_switch_flag1,
-        ctx->interpret_sensors.ipmi_interpret_button_switch_config,
+        ctx->interpret_sensor.ipmi_interpret_button_switch_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_button_switch_config[2]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_button_switch_config[2]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &button_switch_flag2,
-        ctx->interpret_sensors.ipmi_interpret_button_switch_config,
+        ctx->interpret_sensor.ipmi_interpret_button_switch_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_button_switch_config[3]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_button_switch_config[3]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &button_switch_flag3,
-        ctx->interpret_sensors.ipmi_interpret_button_switch_config,
+        ctx->interpret_sensor.ipmi_interpret_button_switch_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_button_switch_config[4]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_button_switch_config[4]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &button_switch_flag4,
-        ctx->interpret_sensors.ipmi_interpret_button_switch_config,
+        ctx->interpret_sensor.ipmi_interpret_button_switch_config,
         0
       },
       /*
        * IPMI_Button_Switch_State
        */
       {
-        ctx->interpret_sensors.ipmi_interpret_button_switch_state_config[0]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_button_switch_state_config[0]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &button_switch_state_flag0,
-        ctx->interpret_sensors.ipmi_interpret_button_switch_state_config,
+        ctx->interpret_sensor.ipmi_interpret_button_switch_state_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_button_switch_state_config[1]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_button_switch_state_config[1]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &button_switch_state_flag1,
-        ctx->interpret_sensors.ipmi_interpret_button_switch_state_config,
+        ctx->interpret_sensor.ipmi_interpret_button_switch_state_config,
         0
       },
       /*
        * IPMI_Module_Board_State
        */
       {
-        ctx->interpret_sensors.ipmi_interpret_module_board_state_config[0]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_module_board_state_config[0]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &module_board_state_flag0,
-        ctx->interpret_sensors.ipmi_interpret_module_board_state_config,
+        ctx->interpret_sensor.ipmi_interpret_module_board_state_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_module_board_state_config[1]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_module_board_state_config[1]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &module_board_state_flag1,
-        ctx->interpret_sensors.ipmi_interpret_module_board_state_config,
+        ctx->interpret_sensor.ipmi_interpret_module_board_state_config,
         0
       },
       /*
        * IPMI_Module_Board_Device_Present
        */
       {
-        ctx->interpret_sensors.ipmi_interpret_module_board_device_present_config[0]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_module_board_device_present_config[0]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &module_board_device_present_flag0,
-        ctx->interpret_sensors.ipmi_interpret_module_board_device_present_config,
+        ctx->interpret_sensor.ipmi_interpret_module_board_device_present_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_module_board_device_present_config[1]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_module_board_device_present_config[1]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &module_board_device_present_flag1,
-        ctx->interpret_sensors.ipmi_interpret_module_board_device_present_config,
+        ctx->interpret_sensor.ipmi_interpret_module_board_device_present_config,
         0
       },
       /*
        * IPMI_Cable_Interconnect
        */
       {
-        ctx->interpret_sensors.ipmi_interpret_cable_interconnect_config[0]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_cable_interconnect_config[0]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &cable_interconnect_flag0,
-        ctx->interpret_sensors.ipmi_interpret_cable_interconnect_config,
+        ctx->interpret_sensor.ipmi_interpret_cable_interconnect_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_cable_interconnect_config[1]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_cable_interconnect_config[1]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &cable_interconnect_flag1,
-        ctx->interpret_sensors.ipmi_interpret_cable_interconnect_config,
+        ctx->interpret_sensor.ipmi_interpret_cable_interconnect_config,
         0
       },
       /*
        * IPMI_Boot_Error
        */
       {
-        ctx->interpret_sensors.ipmi_interpret_boot_error_config[0]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_boot_error_config[0]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &boot_error_flag0,
-        ctx->interpret_sensors.ipmi_interpret_boot_error_config,
+        ctx->interpret_sensor.ipmi_interpret_boot_error_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_boot_error_config[1]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_boot_error_config[1]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &boot_error_flag1,
-        ctx->interpret_sensors.ipmi_interpret_boot_error_config,
+        ctx->interpret_sensor.ipmi_interpret_boot_error_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_boot_error_config[2]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_boot_error_config[2]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &boot_error_flag2,
-        ctx->interpret_sensors.ipmi_interpret_boot_error_config,
+        ctx->interpret_sensor.ipmi_interpret_boot_error_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_boot_error_config[3]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_boot_error_config[3]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &boot_error_flag3,
-        ctx->interpret_sensors.ipmi_interpret_boot_error_config,
+        ctx->interpret_sensor.ipmi_interpret_boot_error_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_boot_error_config[4]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_boot_error_config[4]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &boot_error_flag4,
-        ctx->interpret_sensors.ipmi_interpret_boot_error_config,
+        ctx->interpret_sensor.ipmi_interpret_boot_error_config,
         0
       },
       /*
        * IPMI_Slot_Connector
        */
       {
-        ctx->interpret_sensors.ipmi_interpret_slot_connector_config[0]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_slot_connector_config[0]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &slot_connector_flag0,
-        ctx->interpret_sensors.ipmi_interpret_slot_connector_config,
+        ctx->interpret_sensor.ipmi_interpret_slot_connector_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_slot_connector_config[1]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_slot_connector_config[1]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &slot_connector_flag1,
-        ctx->interpret_sensors.ipmi_interpret_slot_connector_config,
+        ctx->interpret_sensor.ipmi_interpret_slot_connector_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_slot_connector_config[2]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_slot_connector_config[2]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &slot_connector_flag2,
-        ctx->interpret_sensors.ipmi_interpret_slot_connector_config,
+        ctx->interpret_sensor.ipmi_interpret_slot_connector_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_slot_connector_config[3]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_slot_connector_config[3]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &slot_connector_flag3,
-        ctx->interpret_sensors.ipmi_interpret_slot_connector_config,
+        ctx->interpret_sensor.ipmi_interpret_slot_connector_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_slot_connector_config[4]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_slot_connector_config[4]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &slot_connector_flag4,
-        ctx->interpret_sensors.ipmi_interpret_slot_connector_config,
+        ctx->interpret_sensor.ipmi_interpret_slot_connector_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_slot_connector_config[5]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_slot_connector_config[5]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &slot_connector_flag5,
-        ctx->interpret_sensors.ipmi_interpret_slot_connector_config,
+        ctx->interpret_sensor.ipmi_interpret_slot_connector_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_slot_connector_config[6]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_slot_connector_config[6]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &slot_connector_flag6,
-        ctx->interpret_sensors.ipmi_interpret_slot_connector_config,
+        ctx->interpret_sensor.ipmi_interpret_slot_connector_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_slot_connector_config[7]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_slot_connector_config[7]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &slot_connector_flag7,
-        ctx->interpret_sensors.ipmi_interpret_slot_connector_config,
+        ctx->interpret_sensor.ipmi_interpret_slot_connector_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_slot_connector_config[8]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_slot_connector_config[8]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &slot_connector_flag8,
-        ctx->interpret_sensors.ipmi_interpret_slot_connector_config,
+        ctx->interpret_sensor.ipmi_interpret_slot_connector_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_slot_connector_config[9]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_slot_connector_config[9]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &slot_connector_flag9,
-        ctx->interpret_sensors.ipmi_interpret_slot_connector_config,
+        ctx->interpret_sensor.ipmi_interpret_slot_connector_config,
         0
       },
       /*
        * IPMI_System_Acpi_Power_State
        */
       {
-        ctx->interpret_sensors.ipmi_interpret_system_acpi_power_state_config[0]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_system_acpi_power_state_config[0]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &system_acpi_power_state_flag0,
-        ctx->interpret_sensors.ipmi_interpret_system_acpi_power_state_config,
+        ctx->interpret_sensor.ipmi_interpret_system_acpi_power_state_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_system_acpi_power_state_config[1]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_system_acpi_power_state_config[1]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &system_acpi_power_state_flag1,
-        ctx->interpret_sensors.ipmi_interpret_system_acpi_power_state_config,
+        ctx->interpret_sensor.ipmi_interpret_system_acpi_power_state_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_system_acpi_power_state_config[2]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_system_acpi_power_state_config[2]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &system_acpi_power_state_flag2,
-        ctx->interpret_sensors.ipmi_interpret_system_acpi_power_state_config,
+        ctx->interpret_sensor.ipmi_interpret_system_acpi_power_state_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_system_acpi_power_state_config[3]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_system_acpi_power_state_config[3]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &system_acpi_power_state_flag3,
-        ctx->interpret_sensors.ipmi_interpret_system_acpi_power_state_config,
+        ctx->interpret_sensor.ipmi_interpret_system_acpi_power_state_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_system_acpi_power_state_config[4]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_system_acpi_power_state_config[4]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &system_acpi_power_state_flag4,
-        ctx->interpret_sensors.ipmi_interpret_system_acpi_power_state_config,
+        ctx->interpret_sensor.ipmi_interpret_system_acpi_power_state_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_system_acpi_power_state_config[5]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_system_acpi_power_state_config[5]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &system_acpi_power_state_flag5,
-        ctx->interpret_sensors.ipmi_interpret_system_acpi_power_state_config,
+        ctx->interpret_sensor.ipmi_interpret_system_acpi_power_state_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_system_acpi_power_state_config[6]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_system_acpi_power_state_config[6]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &system_acpi_power_state_flag6,
-        ctx->interpret_sensors.ipmi_interpret_system_acpi_power_state_config,
+        ctx->interpret_sensor.ipmi_interpret_system_acpi_power_state_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_system_acpi_power_state_config[7]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_system_acpi_power_state_config[7]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &system_acpi_power_state_flag7,
-        ctx->interpret_sensors.ipmi_interpret_system_acpi_power_state_config,
+        ctx->interpret_sensor.ipmi_interpret_system_acpi_power_state_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_system_acpi_power_state_config[8]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_system_acpi_power_state_config[8]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &system_acpi_power_state_flag8,
-        ctx->interpret_sensors.ipmi_interpret_system_acpi_power_state_config,
+        ctx->interpret_sensor.ipmi_interpret_system_acpi_power_state_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_system_acpi_power_state_config[9]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_system_acpi_power_state_config[9]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &system_acpi_power_state_flag9,
-        ctx->interpret_sensors.ipmi_interpret_system_acpi_power_state_config,
+        ctx->interpret_sensor.ipmi_interpret_system_acpi_power_state_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_system_acpi_power_state_config[10]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_system_acpi_power_state_config[10]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &system_acpi_power_state_flag10,
-        ctx->interpret_sensors.ipmi_interpret_system_acpi_power_state_config,
+        ctx->interpret_sensor.ipmi_interpret_system_acpi_power_state_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_system_acpi_power_state_config[11]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_system_acpi_power_state_config[11]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &system_acpi_power_state_flag11,
-        ctx->interpret_sensors.ipmi_interpret_system_acpi_power_state_config,
+        ctx->interpret_sensor.ipmi_interpret_system_acpi_power_state_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_system_acpi_power_state_config[12]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_system_acpi_power_state_config[12]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &system_acpi_power_state_flag12,
-        ctx->interpret_sensors.ipmi_interpret_system_acpi_power_state_config,
+        ctx->interpret_sensor.ipmi_interpret_system_acpi_power_state_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_system_acpi_power_state_config[13]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_system_acpi_power_state_config[13]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &system_acpi_power_state_flag13,
-        ctx->interpret_sensors.ipmi_interpret_system_acpi_power_state_config,
+        ctx->interpret_sensor.ipmi_interpret_system_acpi_power_state_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_system_acpi_power_state_config[14]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_system_acpi_power_state_config[14]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &system_acpi_power_state_flag14,
-        ctx->interpret_sensors.ipmi_interpret_system_acpi_power_state_config,
+        ctx->interpret_sensor.ipmi_interpret_system_acpi_power_state_config,
         0
       },
       /*
        * IPMI_Watchdog2
        */
       {
-        ctx->interpret_sensors.ipmi_interpret_watchdog2_config[0]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_watchdog2_config[0]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &watchdog2_flag0,
-        ctx->interpret_sensors.ipmi_interpret_watchdog2_config,
+        ctx->interpret_sensor.ipmi_interpret_watchdog2_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_watchdog2_config[1]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_watchdog2_config[1]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &watchdog2_flag1,
-        ctx->interpret_sensors.ipmi_interpret_watchdog2_config,
+        ctx->interpret_sensor.ipmi_interpret_watchdog2_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_watchdog2_config[2]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_watchdog2_config[2]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &watchdog2_flag2,
-        ctx->interpret_sensors.ipmi_interpret_watchdog2_config,
+        ctx->interpret_sensor.ipmi_interpret_watchdog2_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_watchdog2_config[3]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_watchdog2_config[3]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &watchdog2_flag3,
-        ctx->interpret_sensors.ipmi_interpret_watchdog2_config,
+        ctx->interpret_sensor.ipmi_interpret_watchdog2_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_watchdog2_config[4]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_watchdog2_config[4]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &watchdog2_flag4,
-        ctx->interpret_sensors.ipmi_interpret_watchdog2_config,
+        ctx->interpret_sensor.ipmi_interpret_watchdog2_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_watchdog2_config[5]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_watchdog2_config[5]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &watchdog2_flag5,
-        ctx->interpret_sensors.ipmi_interpret_watchdog2_config,
+        ctx->interpret_sensor.ipmi_interpret_watchdog2_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_watchdog2_config[6]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_watchdog2_config[6]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &watchdog2_flag6,
-        ctx->interpret_sensors.ipmi_interpret_watchdog2_config,
+        ctx->interpret_sensor.ipmi_interpret_watchdog2_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_watchdog2_config[7]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_watchdog2_config[7]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &watchdog2_flag7,
-        ctx->interpret_sensors.ipmi_interpret_watchdog2_config,
+        ctx->interpret_sensor.ipmi_interpret_watchdog2_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_watchdog2_config[8]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_watchdog2_config[8]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &watchdog2_flag8,
-        ctx->interpret_sensors.ipmi_interpret_watchdog2_config,
+        ctx->interpret_sensor.ipmi_interpret_watchdog2_config,
         0
       },
       /*
        * IPMI_Entity_Presence
        */
       {
-        ctx->interpret_sensors.ipmi_interpret_entity_presence_config[0]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_entity_presence_config[0]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &entity_presence_flag0,
-        ctx->interpret_sensors.ipmi_interpret_entity_presence_config,
+        ctx->interpret_sensor.ipmi_interpret_entity_presence_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_entity_presence_config[1]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_entity_presence_config[1]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &entity_presence_flag1,
-        ctx->interpret_sensors.ipmi_interpret_entity_presence_config,
+        ctx->interpret_sensor.ipmi_interpret_entity_presence_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_entity_presence_config[2]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_entity_presence_config[2]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &entity_presence_flag2,
-        ctx->interpret_sensors.ipmi_interpret_entity_presence_config,
+        ctx->interpret_sensor.ipmi_interpret_entity_presence_config,
         0
       },
       /*
        * IPMI_Entity_Presence_Device_Present
        */
       {
-        ctx->interpret_sensors.ipmi_interpret_entity_presence_device_present_config[0]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_entity_presence_device_present_config[0]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &entity_presence_device_present_flag0,
-        ctx->interpret_sensors.ipmi_interpret_entity_presence_device_present_config,
+        ctx->interpret_sensor.ipmi_interpret_entity_presence_device_present_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_entity_presence_device_present_config[1]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_entity_presence_device_present_config[1]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &entity_presence_device_present_flag1,
-        ctx->interpret_sensors.ipmi_interpret_entity_presence_device_present_config,
+        ctx->interpret_sensor.ipmi_interpret_entity_presence_device_present_config,
         0
       },
       /*
        * IPMI_Management_Subsystem_Health
        */
       {
-        ctx->interpret_sensors.ipmi_interpret_management_subsystem_health_config[0]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_management_subsystem_health_config[0]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &management_subsystem_health_flag0,
-        ctx->interpret_sensors.ipmi_interpret_management_subsystem_health_config,
+        ctx->interpret_sensor.ipmi_interpret_management_subsystem_health_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_management_subsystem_health_config[1]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_management_subsystem_health_config[1]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &management_subsystem_health_flag1,
-        ctx->interpret_sensors.ipmi_interpret_management_subsystem_health_config,
+        ctx->interpret_sensor.ipmi_interpret_management_subsystem_health_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_management_subsystem_health_config[2]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_management_subsystem_health_config[2]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &management_subsystem_health_flag2,
-        ctx->interpret_sensors.ipmi_interpret_management_subsystem_health_config,
+        ctx->interpret_sensor.ipmi_interpret_management_subsystem_health_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_management_subsystem_health_config[3]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_management_subsystem_health_config[3]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &management_subsystem_health_flag3,
-        ctx->interpret_sensors.ipmi_interpret_management_subsystem_health_config,
+        ctx->interpret_sensor.ipmi_interpret_management_subsystem_health_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_management_subsystem_health_config[4]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_management_subsystem_health_config[4]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &management_subsystem_health_flag4,
-        ctx->interpret_sensors.ipmi_interpret_management_subsystem_health_config,
+        ctx->interpret_sensor.ipmi_interpret_management_subsystem_health_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_management_subsystem_health_config[5]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_management_subsystem_health_config[5]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &management_subsystem_health_flag5,
-        ctx->interpret_sensors.ipmi_interpret_management_subsystem_health_config,
+        ctx->interpret_sensor.ipmi_interpret_management_subsystem_health_config,
         0
       },
       /*
        * IPMI_Battery
        */
       {
-        ctx->interpret_sensors.ipmi_interpret_battery_config[0]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_battery_config[0]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &battery_flag0,
-        ctx->interpret_sensors.ipmi_interpret_battery_config,
+        ctx->interpret_sensor.ipmi_interpret_battery_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_battery_config[1]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_battery_config[1]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &battery_flag1,
-        ctx->interpret_sensors.ipmi_interpret_battery_config,
+        ctx->interpret_sensor.ipmi_interpret_battery_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_battery_config[2]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_battery_config[2]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &battery_flag2,
-        ctx->interpret_sensors.ipmi_interpret_battery_config,
+        ctx->interpret_sensor.ipmi_interpret_battery_config,
         0
       },
       /*
        * IPMI_FRU_State
        */
       {
-        ctx->interpret_sensors.ipmi_interpret_fru_state_config[0]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_fru_state_config[0]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &fru_state_flag0,
-        ctx->interpret_sensors.ipmi_interpret_fru_state_config,
+        ctx->interpret_sensor.ipmi_interpret_fru_state_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_fru_state_config[1]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_fru_state_config[1]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &fru_state_flag1,
-        ctx->interpret_sensors.ipmi_interpret_fru_state_config,
+        ctx->interpret_sensor.ipmi_interpret_fru_state_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_fru_state_config[2]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_fru_state_config[2]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &fru_state_flag2,
-        ctx->interpret_sensors.ipmi_interpret_fru_state_config,
+        ctx->interpret_sensor.ipmi_interpret_fru_state_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_fru_state_config[3]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_fru_state_config[3]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &fru_state_flag3,
-        ctx->interpret_sensors.ipmi_interpret_fru_state_config,
+        ctx->interpret_sensor.ipmi_interpret_fru_state_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_fru_state_config[4]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_fru_state_config[4]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &fru_state_flag4,
-        ctx->interpret_sensors.ipmi_interpret_fru_state_config,
+        ctx->interpret_sensor.ipmi_interpret_fru_state_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_fru_state_config[5]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_fru_state_config[5]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &fru_state_flag5,
-        ctx->interpret_sensors.ipmi_interpret_fru_state_config,
+        ctx->interpret_sensor.ipmi_interpret_fru_state_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_fru_state_config[6]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_fru_state_config[6]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &fru_state_flag6,
-        ctx->interpret_sensors.ipmi_interpret_fru_state_config,
+        ctx->interpret_sensor.ipmi_interpret_fru_state_config,
         0
       },
       {
-        ctx->interpret_sensors.ipmi_interpret_fru_state_config[7]->option_str,
+        ctx->interpret_sensor.ipmi_interpret_fru_state_config[7]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sensor_state_parse,
         1,
         0,
         &fru_state_flag7,
-        ctx->interpret_sensors.ipmi_interpret_fru_state_config,
+        ctx->interpret_sensor.ipmi_interpret_fru_state_config,
         0
       },
       /* OEM Config */
@@ -3974,7 +3974,7 @@ ipmi_interpret_sensor_config_parse (ipmi_interpret_ctx_t ctx,
 	-1,
 	0,
 	&oem_bitmask_flag,
-	&ctx->interpret_sensors.oem_config,
+	&ctx->interpret_sensor.oem_config,
 	0
       },
       {
@@ -3985,7 +3985,7 @@ ipmi_interpret_sensor_config_parse (ipmi_interpret_ctx_t ctx,
 	-1,
 	0,
 	&oem_value_flag,
-	&ctx->interpret_sensors.oem_config,
+	&ctx->interpret_sensor.oem_config,
 	0
       },
     };

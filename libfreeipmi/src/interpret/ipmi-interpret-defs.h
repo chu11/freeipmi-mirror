@@ -66,7 +66,7 @@ struct ipmi_interpret_oem_sensor_config {
   unsigned int oem_state_count;
 };
 
-struct ipmi_interpret_sensors {
+struct ipmi_interpret_sensor {
   struct ipmi_interpret_sensor_config **ipmi_interpret_threshold_sensor_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_voltage_state_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_voltage_performance_config;
@@ -117,7 +117,7 @@ struct ipmi_interpret_ctx {
   uint32_t manufacturer_id;
   uint16_t product_id;
 
-  struct ipmi_interpret_sensors interpret_sensors;
+  struct ipmi_interpret_sensor interpret_sensor;
 };
 
 #endif /* _IPMI_INTERPRET_DEFS_H */
