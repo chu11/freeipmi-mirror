@@ -254,6 +254,10 @@ Update fsf directory info.
 Upload to ftp.gluster.com
 Upload to ftp.gnu.org
 
+Workaround for CVE
+
+perl -pe 's/perm -777 -exec chmod a\+rwx/perm -755 -exec chmod  755 /' Makefile.in
+
 info-gnu@gnu.org template e-mail 
 
 FreeIPMI X.X.X has been released. It can be downloaded at:
