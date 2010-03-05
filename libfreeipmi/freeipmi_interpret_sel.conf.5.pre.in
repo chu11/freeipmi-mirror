@@ -11,7 +11,7 @@ states/thresholds, libraries and tools such as
 .B libipmimonitoring(3) 
 and
 .B ipmi-sel(8) 
-can report if an event is "good" or "bad" via a report of INFO,
+can report if an event is "good" or "bad" via a report of
 NOMINAL, WARNING, or CRITICAL state.
 .LP
 Each of the states listed below are (hopefully) descriptive enough
@@ -25,8 +25,6 @@ that exist on a system by outputting very verbose output and seeing
 what types of Assertion or Deassertion events are possible.
 .LP
 The possible values for all states/thresholds below are:
-.LP
-Info - Signal Info reading is state/threshold tripped
 .LP
 Nominal - Signal Nominal reading if state/threshold tripped
 .LP
@@ -66,22 +64,40 @@ applies to sensors that measure non-discrete values, such as
 temperatures, voltages, RPM, etc.
 .RS
 .TP
-\fBIPMI_Threshold_Sensor_At_Or_Below_Lower_Non_Critical_Threshold\fR
+\fBIPMI_Threshold Sensor_Lower_Non_Critical_Going_Low\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Threshold Sensor_Lower_Non_Critical_Going_High\fR
 Defaults to Nominal.
 .TP
-\fBIPMI_Threshold_Sensor_At_Or_Below_Lower_Critical_Threshold\fR
+\fBIPMI_Threshold Sensor_Lower_Critical_Going_Low\fR
 Defaults to Critical.
 .TP
-\fBIPMI_Threshold_Sensor_At_Or_Below_Lower_Non_Recoverable_Threshold\fR
+\fBIPMI_Threshold Sensor_Lower_Critical_Going_High\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Threshold Sensor_Lower_Non_Recoverable_Going_Low\fR
 Defaults to Critical.
 .TP
-\fBIPMI_Threshold_Sensor_At_Or_Above_Upper_Non_Critical_Threshold\fR
+\fBIPMI_Threshold Sensor_Lower_Non_Recoverable_Going_High\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Threshold Sensor_Upper_Non_Critical_Going_Low\fR
 Defaults to Nominal.
 .TP
-\fBIPMI_Threshold_Sensor_At_Or_Above_Upper_Critical_Threshold\fR
+\fBIPMI_Threshold Sensor_Upper_Non_Critical_Going_High\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Threshold Sensor_Upper_Critical_Going_Low\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Threshold Sensor_Upper_Critical_Going_High\fR
 Defaults to Critical.
 .TP
-\fBIPMI_Threshold_Sensor_At_Or_Above_Upper_Non_Recoverable_Threshold\fR
+\fBIPMI_Threshold Sensor_Upper_Non_Recoverable_Going_Low\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Threshold Sensor_Upper_Non_Recoverable_Going_High\fR
 Defaults to Critical.
 .RE
 .TP
