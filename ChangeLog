@@ -1,3 +1,9 @@
+2010-03-05  Albert Chu <chu11@llnl.gov>
+
+	* configure.ac: Update for release.
+
+	* Tagged Release-0_8_4.
+
 2010-03-03  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sel/: Fix possible HP workaround bug.

@@ -1,4 +1,4 @@
-FreeIPMI 0.8.4 - 02/02/10
+FreeIPMI 0.8.4 - 03/05/10
 -------------------------
 o Fix IPMI 2.0 sequence number wrap around corner case.
 o Fix ipmi-sensors --comma-separated-output corner case.
