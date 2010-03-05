@@ -370,6 +370,13 @@ static struct ipmi_interpret_sel_config ipmi_interpret_button_switch_state_confi
   };
 static unsigned int ipmi_interpret_button_switch_state_config_len = 2;
 
+static struct ipmi_interpret_sel_config ipmi_interpret_chip_set_config[] =
+  {
+    { "IPMI_Chip_Set_Soft_Power_Control_Failure", IPMI_INTERPRET_SEL_STATE_CRITICAL},
+    { "IPMI_Chip_Set_Thermal_Trip", IPMI_INTERPRET_SEL_STATE_CRITICAL},
+  };
+static unsigned int ipmi_interpret_chip_set_config_len = 2;
+
 static struct ipmi_interpret_sel_config ipmi_interpret_module_board_state_config[] =
   {
     { "IPMI_Module_Board_State_Deasserted", IPMI_INTERPRET_SEL_STATE_NOMINAL},
@@ -812,6 +819,7 @@ ipmi_interpret_sel_config_parse (ipmi_interpret_ctx_t ctx,
   int button_switch_flag0, button_switch_flag1, button_switch_flag2,
     button_switch_flag3, button_switch_flag4;
   int button_switch_state_flag0, button_switch_state_flag1;
+  int chip_set_flag0, chip_set_flag1;
   int module_board_state_flag0, module_board_state_flag1;
   int module_board_device_present_flag0, module_board_device_present_flag1;
   int cable_interconnect_flag0, cable_interconnect_flag1;
@@ -2661,6 +2669,31 @@ ipmi_interpret_sel_config_parse (ipmi_interpret_ctx_t ctx,
         0,
         &button_switch_state_flag1,
         ctx->interpret_sel.ipmi_interpret_button_switch_state_config,
+        0
+      },
+      /*
+       * IPMI_Chip_Set
+       */
+      {
+        ctx->interpret_sel.ipmi_interpret_chip_set_config[0]->option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sel_state_parse,
+        1,
+        0,
+        &chip_set_flag0,
+        ctx->interpret_sel.ipmi_interpret_chip_set_config,
+        0
+      },
+      {
+        ctx->interpret_sel.ipmi_interpret_chip_set_config[1]->option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sel_state_parse,
+        1,
+        0,
+        &chip_set_flag1,
+        ctx->interpret_sel.ipmi_interpret_chip_set_config,
         0
       },
       /*

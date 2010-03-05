@@ -59,9 +59,9 @@ lines can be continued on the next using backslash ("\\").
 .SH "OPTIONS"
 .TP
 .B IPMI_Threshold_Sensor
-The following states correspond to threshold sensors.  This normally
-applies to sensors that measure non-discrete values, such as
-temperatures, voltages, RPM, etc.
+The following states correspond to threshold sensor events.  This
+normally applies to events that dealing with non-discrete values, such
+as temperatures, voltages, RPM, etc.
 .RS
 .TP
 \fBIPMI_Threshold Sensor_Lower_Non_Critical_Going_Low\fR
@@ -102,7 +102,7 @@ Defaults to Critical.
 .RE
 .TP
 .B IPMI_Voltage_State
-The following states correspond to Voltage sensors that report an
+The following states correspond to Voltage sensor events that report an
 assertion or deassertion.
 .RS
 .TP
@@ -114,7 +114,7 @@ Defaults to Warning.
 .RE
 .TP
 .B IPMI_Voltage_Performance
-The following states correspond to Voltage sensors that report on
+The following states correspond to Voltage sensor events that report on
 performance.
 .RS
 .TP
@@ -126,7 +126,7 @@ Defaults to Critical.
 .RE
 .TP
 .B IPMI_Fan_Device_Present
-The following states correspond to Fan sensors that report on
+The following states correspond to Fan sensor events that report on
 device installation.
 .RS
 .TP
@@ -138,7 +138,7 @@ Defaults to Nominal.
 .RE
 .TP
 .B IPMI_Fan_Transition_Availability
-The following states correspond to Fan sensors that report on
+The following states correspond to Fan sensor events that report on
 device availability.
 .RS
 .TP
@@ -171,7 +171,7 @@ Defaults to Critical.
 .RE
 .TP
 .B IPMI_Fan_Redundancy
-The following states correspond to Fan sensors that report on
+The following states correspond to Fan sensor events that report on
 redundancy.
 .RS
 .TP
@@ -201,8 +201,8 @@ Defaults to Warning.
 .RE
 .TP
 .B IPMI_Physical_Security
-The following states correspond to Physical Security sensors w/
-Physical Security specific output states.
+The following states correspond to Physical Security sensor events w/
+Physical Security specific output events.
 .RS
 .TP
 \fBIPMI_Physical_Security_General_Chassis_Intrusion\fR
@@ -228,8 +228,8 @@ Defaults to Critical.
 .RE
 .TP
 .B IPMI_Platform_Security_Violation_Attempt
-The following states correspond to Platform Violation Attempt sensors w/
-Platform Security Violation Attempt specific output states.
+The following states correspond to Platform Violation Attempt sensor events w/
+Platform Security Violation Attempt specific output events.
 .RS
 .TP
 \fBIPMI_Platform_Security_Violation_Attempt_Secure_Mode_Violation_Attempt\fR
@@ -252,8 +252,8 @@ Defaults to Critical.
 .RE
 .TP
 .B IPMI_Processor
-The following states correspond to Processor sensors w/
-Processor specific output states.
+The following states correspond to Processor sensor events w/
+Processor specific output events.
 .RS
 .TP
 \fBIPMI_Processor_IERR\fR
@@ -297,7 +297,7 @@ Defaults to Warning.
 .RE
 .TP
 .B IPMI_Processor_State
-The following states correspond to Processor sensors that report an
+The following states correspond to Processor sensor events that report an
 assertion or deassertion.
 .RS
 .TP
@@ -309,8 +309,8 @@ Defaults to Critical.
 .RE
 .TP
 .B IPMI_Power_Supply
-The following states correspond to Power Supply sensors w/
-Power Supply specific output states.
+The following states correspond to Power Supply sensor events w/
+Power Supply specific output events.
 .RS
 .TP
 \fBIPMI_Power_Supply_Presence_Detected\fR
@@ -336,7 +336,7 @@ Defaults to Critical.
 .RE
 .TP
 .B IPMI_Power_Supply_State
-The following states correspond to Power_Supply sensors that report an
+The following states correspond to Power_Supply sensor events that report an
 assertion or deassertion.
 .RS
 .TP
@@ -348,7 +348,7 @@ Defaults to Nominal.
 .RE
 .TP
 .B IPMI_Power_Supply_Redundancy
-The following states correspond to Power Supply sensors that report on
+The following states correspond to Power Supply sensor events that report on
 redundancy.
 .RS
 .TP
@@ -378,8 +378,8 @@ Defaults to Warning.
 .RE
 .TP
 .B IPMI_Power_Unit
-The following states correspond to Power Unit sensors w/
-Power Unit specific output states.
+The following states correspond to Power Unit sensor events w/
+Power Unit specific output events.
 .RS
 .TP
 \fBIPMI_Power_Unit_Power_Off_Power_Down\fR
@@ -408,7 +408,7 @@ Defaults to Critical.
 .RE
 .TP
 .B IPMI_Power_Unit_Device_Present
-The following states correspond to Power Unit sensors that report on
+The following states correspond to Power Unit sensor events that report on
 device installation.
 .RS
 .TP
@@ -420,7 +420,7 @@ Defaults to Nominal.
 .RE
 .TP
 .B IPMI_Power_Unit_Redundancy
-The following states correspond to Power Unit sensors that report on
+The following states correspond to Power Unit sensor events that report on
 redundancy.
 .RS
 .TP
@@ -450,8 +450,8 @@ Defaults to Warning.
 .RE
 .TP
 .B IPMI_Memory
-The following states correspond to Memory sensors w/
-Memory specific output states.
+The following states correspond to Memory sensor events w/
+Memory specific output events.
 .RS
 .TP
 \fBIPMI_Memory_Correctable_Memory_Error\fR
@@ -489,8 +489,8 @@ Defaults to Critical.
 .RE
 .TP
 .B IPMI_Drive_Slot
-The following states correspond to Drive Slot sensors w/
-Drive Slot specific output states.
+The following states correspond to Drive Slot sensor events w/
+Drive Slot specific output events.
 .RS
 .TP
 \fBIPMI_Drive_Slot_Drive_Presence\fR
@@ -522,7 +522,7 @@ Defaults to Critical.
 .RE
 .TP
 .B IPMI_Drive_Slot_State
-The following states correspond to Drive Slot sensors that report an
+The following states correspond to Drive Slot sensor events that report an
 assertion or deassertion.
 .RS
 .TP
@@ -534,7 +534,7 @@ Defaults to Nominal.
 .RE
 .TP
 .B IPMI_Drive_Slot_Predictive_Failure
-The following states correspond to Drive_Slot sensors that report a
+The following states correspond to Drive_Slot sensor events that report a
 predictive failure assertion or deassertion.
 .RS
 .TP
@@ -546,7 +546,7 @@ Defaults to Critical.
 .RE
 .TP
 .B IPMI_Drive_Slot_Device_Present
-The following states correspond to Drive Slot sensors that report on
+The following states correspond to Drive Slot sensor events that report on
 device installation.
 .RS
 .TP
@@ -558,8 +558,8 @@ Defaults to Nominal.
 .RE
 .TP
 .B IPMI_System_Firmware_Progress
-The following states correspond to System Firmware Progress sensors w/
-System Firmware Progress specific output states.
+The following states correspond to System Firmware Progress sensor events w/
+System Firmware Progress specific output events.
 .RS
 .TP
 \fBIPMI_System_Firmware_Progress_System_Firmware_Error\fR
@@ -573,7 +573,7 @@ Defaults to Nominal.
 .RE
 .TP
 .B IPMI_Event_Logging_Disabled
-The following states correspond to Event Logging Disabled sensors w/
+The following states correspond to Event Logging Disabled sensor events w/
 .RS
 .TP
 \fBIPMI_Event_Logging_Disabled_Correctable_Memory_Error_Logging_Disabled\fR
@@ -599,8 +599,8 @@ Defaults to Critical.
 .RE
 .TP
 .B IPMI_System_Event
-The following states correspond to System Event sensors w/
-System Event specific output states.
+The following states correspond to System Event sensor events w/
+System Event specific output events.
 .RS
 .TP
 \fBIPMI_System_Event_System_Reconfigured\fR
@@ -623,8 +623,8 @@ Defaults to Warning.
 .RE
 .TP
 .B IPMI_Critical_Interrupt
-The following states correspond to Critical Interrupt sensors w/
-Critical Interrupt specific output states.
+The following states correspond to Critical Interrupt sensor events w/
+Critical Interrupt specific output events.
 .RS
 .TP
 \fBIPMI_Critical_Interrupt_Front_Panel_NMI_Diagnostic_Interrupt\fR
@@ -664,8 +664,8 @@ Defaults to Warning.
 .RE
 .TP
 .B IPMI_Button_Switch
-The following states correspond to Button/Switch sensors w/
-Button/Switch specific output states.
+The following states correspond to Button/Switch sensor events w/
+Button/Switch specific output events.
 .RS
 .TP
 \fBIPMI_Button_Switch_Power_Button_Pressed\fR
@@ -685,7 +685,7 @@ Defaults to Warning.
 .RE
 .TP
 .B IPMI_Button_Switch_State
-The following states correspond to Button/Switch sensors that report an
+The following states correspond to Button/Switch sensor events that report an
 assertion or deassertion.
 .RS
 .TP
@@ -696,8 +696,20 @@ Defaults to Nominal.
 Defaults to Nominal.
 .RE
 .TP
+.B IPMI_Chip_Set
+The following states correspond to Chip Set sensor events w/ Chip
+Set specific output events.
+.RS
+.TP
+\fBIPMI_Chip_Set_Soft_Power_Control_Failure\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Chip_Set_Thermal_Trip\fR
+Defaults to Critical.
+.RE
+.TP
 .B IPMI_Module_Board_State
-The following states correspond to Module/Board sensors that report an
+The following states correspond to Module/Board sensor events that report an
 assertion or deassertion.
 .RS
 .TP
@@ -709,7 +721,7 @@ Defaults to Critical.
 .RE
 .TP
 .B IPMI_Module_Board_Device_Present
-The following states correspond to Module/Board sensors that report on
+The following states correspond to Module/Board sensor events that report on
 device installation.
 .RS
 .TP
@@ -721,8 +733,8 @@ Defaults to Nominal.
 .RE
 .TP
 .B IPMI_Cable_Interconnect
-The following states correspond to Cable/Interconnect sensors w/
-Cable/Interconnect specific output states.
+The following states correspond to Cable/Interconnect sensor events w/
+Cable/Interconnect specific output events.
 .RS
 .TP
 \fBIPMI_Cable_Interconnect_Is_Connected\fR
@@ -733,8 +745,8 @@ Defaults to Critical.
 .RE
 .TP
 .B IPMI_Boot_Error
-The following states correspond to Boot Error sensors w/
-Boot Error specific output states.
+The following states correspond to Boot Error sensor events w/
+Boot Error specific output events.
 .RS
 .TP
 \fBIPMI_Boot_Error_No_Bootable_Media\fR
@@ -754,8 +766,8 @@ Defaults to Warning.
 .RE
 .TP
 .B IPMI_Slot_Connector
-The following states correspond to Slot Connector sensors w/
-Slot Connector specific output states.
+The following states correspond to Slot Connector sensor events w/
+Slot Connector specific output events.
 .RS
 .TP
 \fBIPMI_Slot_Connector_Fault_Status_Asserted\fR
@@ -839,8 +851,8 @@ Defaults to Critical.
 .RE
 .TP
 .B IPMI_Watchdog2
-The following states correspond to Watchdog 2 sensors w/
-Watchdog 2 specific output states.
+The following states correspond to Watchdog 2 sensor events w/
+Watchdog 2 specific output events.
 .RS
 .TP
 \fBIPMI_Watchdog2_Timer_Expired\fR
@@ -872,8 +884,8 @@ Defaults to Warning.
 .RE
 .TP
 .B IPMI_Entity_Presence
-The following states correspond to Entity Presence sensors w/
-Entity Presence specific output states.
+The following states correspond to Entity Presence sensor events w/
+Entity Presence specific output events.
 .RS
 .TP
 \fBIPMI_Entity_Presence_Entity_Present\fR
@@ -887,7 +899,7 @@ Defaults to Critical.
 .RE
 .TP
 .B IPMI_Entity_Presence_Device_Present
-The following states correspond to Entity Presence sensors that report on
+The following states correspond to Entity Presence sensor events that report on
 device installation.
 .RS
 .TP
@@ -899,8 +911,8 @@ Defaults to Nominal.
 .RE
 .TP
 .B IPMI_Management_Subsystem_Health
-The following states correspond to Management Subsystem Health sensors w/
-Management Subsystem Health specific output states.
+The following states correspond to Management Subsystem Health sensor events w/
+Management Subsystem Health specific output events.
 .RS
 .TP
 \fBIPMI_Management_Subsystem_Health_Sensor_Access_Degraded_Or_Unavailable\fR
@@ -923,8 +935,8 @@ Defaults to Critical.
 .RE
 .TP
 .B IPMI_Battery
-The following states correspond to Battery sensors w/
-Battery specific output states.
+The following states correspond to Battery sensor events w/
+Battery specific output events.
 .RS
 .TP
 \fBIPMI_Battery_Battery_Low\fR
@@ -938,8 +950,8 @@ Defaults to Nominal.
 .RE
 .TP
 .B IPMI_FRU_State
-The following states correspond to FRU State sensors w/
-FRU State specific output states.
+The following states correspond to FRU State sensor events w/
+FRU State specific output events.
 .RS
 .TP
 \fBIPMI_FRU_State_FRU_Not_Installed\fR
