@@ -986,11 +986,11 @@ ipmi_sensors_get_sensor_state (ipmi_sensors_state_data_t *state_data,
           return (-1);
         }
       
-      if (sensor_state == IPMI_INTERPRET_SENSOR_STATE_NOMINAL)
+      if (sensor_state == IPMI_INTERPRET_STATE_NOMINAL)
         (*sensor_state_str) = "Nominal";
-      else if (sensor_state == IPMI_INTERPRET_SENSOR_STATE_WARNING)
+      else if (sensor_state == IPMI_INTERPRET_STATE_WARNING)
         (*sensor_state_str) = "Warning";
-      else if (sensor_state == IPMI_INTERPRET_SENSOR_STATE_CRITICAL)
+      else if (sensor_state == IPMI_INTERPRET_STATE_CRITICAL)
         (*sensor_state_str) = "Critical";
       else
         (*sensor_state_str) = IPMI_SENSORS_NA_STRING;

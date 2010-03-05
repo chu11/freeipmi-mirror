@@ -43,16 +43,10 @@ extern "C" {
 #define IPMI_INTERPRET_FLAGS_DEFAULT                     0x0000
 #define IPMI_INTERPRET_FLAGS_INTERPRET_OEM_DATA          0x0001
 
-#define IPMI_INTERPRET_SEL_STATE_INFO                      0x00
-#define IPMI_INTERPRET_SEL_STATE_NOMINAL                   0x01
-#define IPMI_INTERPRET_SEL_STATE_WARNING                   0x02
-#define IPMI_INTERPRET_SEL_STATE_CRITICAL                  0x03
-#define IPMI_INTERPRET_SEL_STATE_UNKNOWN                   0x04
-
-#define IPMI_INTERPRET_SENSOR_STATE_NOMINAL                0x00
-#define IPMI_INTERPRET_SENSOR_STATE_WARNING                0x01
-#define IPMI_INTERPRET_SENSOR_STATE_CRITICAL               0x02
-#define IPMI_INTERPRET_SENSOR_STATE_UNKNOWN                0x03
+#define IPMI_INTERPRET_STATE_NOMINAL                0x00
+#define IPMI_INTERPRET_STATE_WARNING                0x01
+#define IPMI_INTERPRET_STATE_CRITICAL               0x02
+#define IPMI_INTERPRET_STATE_UNKNOWN                0x03
 
 typedef struct ipmi_interpret_ctx *ipmi_interpret_ctx_t;
 
@@ -90,7 +84,7 @@ int ipmi_interpret_load_sensor_config (ipmi_interpret_ctx_t ctx,
 int ipmi_interpret_sel (ipmi_interpret_ctx_t ctx,
                         const void *record_buf,
                         unsigned int record_buflen,
-                        unsigned int *sensor_state);
+                        unsigned int *sel_state);
 
 int ipmi_interpret_sensor (ipmi_interpret_ctx_t ctx,
                            uint8_t event_reading_type_code,

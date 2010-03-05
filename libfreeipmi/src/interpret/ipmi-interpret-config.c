@@ -4777,6 +4777,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          threshold_sel_options,
                                          options_len,
                                          ctx->interpret_sel.ipmi_interpret_threshold_sel_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (voltage_state_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -4784,6 +4785,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          voltage_state_options,
                                          options_len,
                                          ctx->interpret_sel.ipmi_interpret_voltage_state_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (voltage_performance_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -4791,6 +4793,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          voltage_performance_options,
                                          options_len,
                                          ctx->interpret_sel.ipmi_interpret_voltage_performance_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (fan_device_present_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -4798,6 +4801,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          fan_device_present_options,
                                          options_len,
                                          ctx->interpret_sel.ipmi_interpret_fan_device_present_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (fan_transition_availability_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -4805,6 +4809,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          fan_transition_availability_options,
                                          options_len,
                                          ctx->interpret_sel.ipmi_interpret_fan_transition_availability_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (fan_redundancy_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -4812,6 +4817,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          fan_redundancy_options,
                                          options_len,
                                          ctx->interpret_sel.ipmi_interpret_fan_redundancy_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (physical_security_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -4819,6 +4825,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          physical_security_options,
                                          options_len,
                                          ctx->interpret_sel.ipmi_interpret_physical_security_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (platform_security_violation_attempt_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -4826,6 +4833,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          platform_security_violation_attempt_options,
                                          options_len,
                                          ctx->interpret_sel.ipmi_interpret_platform_security_violation_attempt_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (processor_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -4833,6 +4841,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          processor_options,
                                          options_len,
                                          ctx->interpret_sel.ipmi_interpret_processor_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (processor_state_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -4840,6 +4849,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          processor_state_options,
                                          options_len,
                                          ctx->interpret_sel.ipmi_interpret_processor_state_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (power_supply_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -4847,6 +4857,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          power_supply_options,
                                          options_len,
                                          ctx->interpret_sel.ipmi_interpret_power_supply_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (power_supply_state_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -4854,6 +4865,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          power_supply_state_options,
                                          options_len,
                                          ctx->interpret_sel.ipmi_interpret_power_supply_state_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (power_supply_redundancy_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -4861,6 +4873,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          power_supply_redundancy_options,
                                          options_len,
                                          ctx->interpret_sel.ipmi_interpret_power_supply_redundancy_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (power_unit_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -4868,6 +4881,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          power_unit_options,
                                          options_len,
                                          ctx->interpret_sel.ipmi_interpret_power_unit_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (power_unit_device_present_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -4875,6 +4889,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          power_unit_device_present_options,
                                          options_len,
                                          ctx->interpret_sel.ipmi_interpret_power_unit_device_present_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (power_unit_redundancy_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -4882,6 +4897,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          power_unit_redundancy_options,
                                          options_len,
                                          ctx->interpret_sel.ipmi_interpret_power_unit_redundancy_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (memory_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -4889,6 +4905,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          memory_options,
                                          options_len,
                                          ctx->interpret_sel.ipmi_interpret_memory_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (drive_slot_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -4896,6 +4913,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          drive_slot_options,
                                          options_len,
                                          ctx->interpret_sel.ipmi_interpret_drive_slot_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (drive_slot_state_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -4903,6 +4921,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          drive_slot_state_options,
                                          options_len,
                                          ctx->interpret_sel.ipmi_interpret_drive_slot_state_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (drive_slot_predictive_failure_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -4910,6 +4929,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          drive_slot_predictive_failure_options,
                                          options_len,
                                          ctx->interpret_sel.ipmi_interpret_drive_slot_predictive_failure_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (drive_slot_device_present_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -4917,6 +4937,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          drive_slot_device_present_options,
                                          options_len,
                                          ctx->interpret_sel.ipmi_interpret_drive_slot_device_present_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (system_firmware_progress_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -4924,6 +4945,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          system_firmware_progress_options,
                                          options_len,
                                          ctx->interpret_sel.ipmi_interpret_system_firmware_progress_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (event_logging_disabled_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -4931,6 +4953,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          event_logging_disabled_options,
                                          options_len,
                                          ctx->interpret_sel.ipmi_interpret_event_logging_disabled_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (system_event_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -4938,6 +4961,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          system_event_options,
                                          options_len,
                                          ctx->interpret_sel.ipmi_interpret_system_event_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (critical_interrupt_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -4945,6 +4969,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          critical_interrupt_options,
                                          options_len,
                                          ctx->interpret_sel.ipmi_interpret_critical_interrupt_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (button_switch_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -4952,6 +4977,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          button_switch_options,
                                          options_len,
                                          ctx->interpret_sel.ipmi_interpret_button_switch_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (button_switch_state_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -4959,6 +4985,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          button_switch_state_options,
                                          options_len,
                                          ctx->interpret_sel.ipmi_interpret_button_switch_state_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (chip_set_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -4966,6 +4993,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          chip_set_options,
                                          options_len,
                                          ctx->interpret_sel.ipmi_interpret_chip_set_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (module_board_state_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -4973,6 +5001,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          module_board_state_options,
                                          options_len,
                                          ctx->interpret_sel.ipmi_interpret_module_board_state_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (module_board_device_present_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -4980,6 +5009,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          module_board_device_present_options,
                                          options_len,
                                          ctx->interpret_sel.ipmi_interpret_module_board_device_present_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (cable_interconnect_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -4987,6 +5017,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          cable_interconnect_options,
                                          options_len,
                                          ctx->interpret_sel.ipmi_interpret_cable_interconnect_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (boot_error_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -4994,6 +5025,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          boot_error_options,
                                          options_len,
                                          ctx->interpret_sel.ipmi_interpret_boot_error_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (slot_connector_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -5001,6 +5033,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          slot_connector_options,
                                          options_len,
                                          ctx->interpret_sel.ipmi_interpret_slot_connector_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (system_acpi_power_state_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -5008,6 +5041,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          system_acpi_power_state_options,
                                          options_len,
                                          ctx->interpret_sel.ipmi_interpret_system_acpi_power_state_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (watchdog2_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -5015,6 +5049,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          watchdog2_options,
                                          options_len,
                                          ctx->interpret_sel.ipmi_interpret_watchdog2_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (entity_presence_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -5022,6 +5057,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          entity_presence_options,
                                          options_len,
                                          ctx->interpret_sel.ipmi_interpret_entity_presence_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (entity_presence_device_present_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -5029,6 +5065,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          entity_presence_device_present_options,
                                          options_len,
                                          ctx->interpret_sel.ipmi_interpret_entity_presence_device_present_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (management_subsystem_health_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -5036,6 +5073,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          management_subsystem_health_options,
                                          options_len,
                                          ctx->interpret_sel.ipmi_interpret_management_subsystem_health_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (battery_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -5043,6 +5081,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          battery_options,
                                          options_len,
                                          ctx->interpret_sel.ipmi_interpret_battery_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (fru_state_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -5050,6 +5089,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          fru_state_options,
                                          options_len,
                                          ctx->interpret_sel.ipmi_interpret_fru_state_config);
+      config_file_options_len += options_len;
     }
   else
     {
@@ -5059,6 +5099,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          threshold_sensor_options,
                                          options_len,
                                          ctx->interpret_sensor.ipmi_interpret_threshold_sensor_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (voltage_state_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -5066,6 +5107,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          voltage_state_options,
                                          options_len,
                                          ctx->interpret_sensor.ipmi_interpret_voltage_state_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (voltage_performance_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -5073,6 +5115,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          voltage_performance_options,
                                          options_len,
                                          ctx->interpret_sensor.ipmi_interpret_voltage_performance_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (fan_device_present_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -5080,6 +5123,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          fan_device_present_options,
                                          options_len,
                                          ctx->interpret_sensor.ipmi_interpret_fan_device_present_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (fan_transition_availability_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -5087,6 +5131,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          fan_transition_availability_options,
                                          options_len,
                                          ctx->interpret_sensor.ipmi_interpret_fan_transition_availability_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (fan_redundancy_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -5094,6 +5139,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          fan_redundancy_options,
                                          options_len,
                                          ctx->interpret_sensor.ipmi_interpret_fan_redundancy_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (physical_security_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -5101,6 +5147,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          physical_security_options,
                                          options_len,
                                          ctx->interpret_sensor.ipmi_interpret_physical_security_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (platform_security_violation_attempt_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -5108,6 +5155,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          platform_security_violation_attempt_options,
                                          options_len,
                                          ctx->interpret_sensor.ipmi_interpret_platform_security_violation_attempt_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (processor_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -5115,6 +5163,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          processor_options,
                                          options_len,
                                          ctx->interpret_sensor.ipmi_interpret_processor_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (processor_state_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -5122,6 +5171,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          processor_state_options,
                                          options_len,
                                          ctx->interpret_sensor.ipmi_interpret_processor_state_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (power_supply_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -5129,6 +5179,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          power_supply_options,
                                          options_len,
                                          ctx->interpret_sensor.ipmi_interpret_power_supply_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (power_supply_state_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -5136,6 +5187,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          power_supply_state_options,
                                          options_len,
                                          ctx->interpret_sensor.ipmi_interpret_power_supply_state_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (power_supply_redundancy_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -5143,6 +5195,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          power_supply_redundancy_options,
                                          options_len,
                                          ctx->interpret_sensor.ipmi_interpret_power_supply_redundancy_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (power_unit_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -5150,6 +5203,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          power_unit_options,
                                          options_len,
                                          ctx->interpret_sensor.ipmi_interpret_power_unit_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (power_unit_device_present_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -5157,6 +5211,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          power_unit_device_present_options,
                                          options_len,
                                          ctx->interpret_sensor.ipmi_interpret_power_unit_device_present_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (power_unit_redundancy_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -5164,6 +5219,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          power_unit_redundancy_options,
                                          options_len,
                                          ctx->interpret_sensor.ipmi_interpret_power_unit_redundancy_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (memory_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -5171,6 +5227,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          memory_options,
                                          options_len,
                                          ctx->interpret_sensor.ipmi_interpret_memory_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (drive_slot_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -5178,6 +5235,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          drive_slot_options,
                                          options_len,
                                          ctx->interpret_sensor.ipmi_interpret_drive_slot_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (drive_slot_state_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -5185,6 +5243,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          drive_slot_state_options,
                                          options_len,
                                          ctx->interpret_sensor.ipmi_interpret_drive_slot_state_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (drive_slot_predictive_failure_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -5192,6 +5251,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          drive_slot_predictive_failure_options,
                                          options_len,
                                          ctx->interpret_sensor.ipmi_interpret_drive_slot_predictive_failure_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (drive_slot_device_present_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -5199,6 +5259,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          drive_slot_device_present_options,
                                          options_len,
                                          ctx->interpret_sensor.ipmi_interpret_drive_slot_device_present_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (system_firmware_progress_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -5206,6 +5267,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          system_firmware_progress_options,
                                          options_len,
                                          ctx->interpret_sensor.ipmi_interpret_system_firmware_progress_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (event_logging_disabled_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -5213,6 +5275,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          event_logging_disabled_options,
                                          options_len,
                                          ctx->interpret_sensor.ipmi_interpret_event_logging_disabled_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (system_event_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -5220,6 +5283,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          system_event_options,
                                          options_len,
                                          ctx->interpret_sensor.ipmi_interpret_system_event_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (critical_interrupt_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -5227,6 +5291,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          critical_interrupt_options,
                                          options_len,
                                          ctx->interpret_sensor.ipmi_interpret_critical_interrupt_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (button_switch_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -5234,6 +5299,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          button_switch_options,
                                          options_len,
                                          ctx->interpret_sensor.ipmi_interpret_button_switch_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (button_switch_state_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -5241,6 +5307,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          button_switch_state_options,
                                          options_len,
                                          ctx->interpret_sensor.ipmi_interpret_button_switch_state_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (module_board_state_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -5248,6 +5315,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          module_board_state_options,
                                          options_len,
                                          ctx->interpret_sensor.ipmi_interpret_module_board_state_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (module_board_device_present_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -5255,6 +5323,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          module_board_device_present_options,
                                          options_len,
                                          ctx->interpret_sensor.ipmi_interpret_module_board_device_present_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (cable_interconnect_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -5262,6 +5331,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          cable_interconnect_options,
                                          options_len,
                                          ctx->interpret_sensor.ipmi_interpret_cable_interconnect_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (boot_error_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -5269,6 +5339,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          boot_error_options,
                                          options_len,
                                          ctx->interpret_sensor.ipmi_interpret_boot_error_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (slot_connector_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -5276,6 +5347,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          slot_connector_options,
                                          options_len,
                                          ctx->interpret_sensor.ipmi_interpret_slot_connector_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (system_acpi_power_state_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -5283,6 +5355,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          system_acpi_power_state_options,
                                          options_len,
                                          ctx->interpret_sensor.ipmi_interpret_system_acpi_power_state_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (watchdog2_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -5290,6 +5363,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          watchdog2_options,
                                          options_len,
                                          ctx->interpret_sensor.ipmi_interpret_watchdog2_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (entity_presence_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -5297,6 +5371,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          entity_presence_options,
                                          options_len,
                                          ctx->interpret_sensor.ipmi_interpret_entity_presence_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (entity_presence_device_present_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -5304,6 +5379,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          entity_presence_device_present_options,
                                          options_len,
                                          ctx->interpret_sensor.ipmi_interpret_entity_presence_device_present_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (management_subsystem_health_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -5311,6 +5387,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          management_subsystem_health_options,
                                          options_len,
                                          ctx->interpret_sensor.ipmi_interpret_management_subsystem_health_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (battery_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -5318,6 +5395,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          battery_options,
                                          options_len,
                                          ctx->interpret_sensor.ipmi_interpret_battery_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (fru_state_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
@@ -5325,13 +5403,15 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          fru_state_options,
                                          options_len,
                                          ctx->interpret_sensor.ipmi_interpret_fru_state_config);
+      config_file_options_len += options_len;
 
       options_len = sizeof (sensor_oem_config_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
                                          config_file_options_len,
-                                         fru_state_options,
+                                         sensor_oem_config_options,
                                          options_len,
                                          &ctx->interpret_sensor.oem_config);
+      config_file_options_len += options_len;
     }
 
   if (conffile_parse (cf,

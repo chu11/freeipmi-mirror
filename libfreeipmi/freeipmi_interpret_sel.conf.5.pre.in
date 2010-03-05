@@ -12,11 +12,11 @@ states/thresholds, libraries and tools such as
 and
 .B ipmi-sel(8) 
 can report if an event is "information" or "good" or "bad" via a
-report of an INFO, NOMINAL, WARNING, or CRITICAL state.
+report of a NOMINAL, WARNING, or CRITICAL state.
 .LP
 Each of the states listed below are (hopefully) descriptive enough
 to describe the state conditions that may be set/unset for each
-sensor type.  For more detailed information on each of the
+sensor or event type.  For more detailed information on each of the
 individual states listed below, please see the IPMI Specification
 "Sensor and Event Code Tables". 
 .B Ipmi-sensors(8) 
@@ -25,8 +25,6 @@ that exist on a system by outputting very verbose output and seeing
 what types of Assertion or Deassertion events are possible.
 .LP
 The possible values for all events below are:
-.LP
-Info - Signal Info reading if event tripped
 .LP
 Nominal - Signal Nominal reading if event tripped
 .LP

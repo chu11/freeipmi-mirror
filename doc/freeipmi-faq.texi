@@ -234,7 +234,7 @@ have also been developed and made available for download
 Ipmi-sel and libipmimonitoring are capable of interpreting system
 event log (SEL) entries as well as just reporting them.  It can be
 used for host monitoring IPMI events on a cluster.  By mapping events
-into INFO, NOMINAL, WARNING, or CRITICAL states, it makes monitoring
+into NOMINAL, WARNING, or CRITICAL states, it makes monitoring
 system events easier across large numbers of nodes.
 
 The bmc-config, ipmi-chassis-config, ipmi-pef-config,
