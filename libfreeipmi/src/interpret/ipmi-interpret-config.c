@@ -5401,7 +5401,7 @@ ipmi_interpret_sel_config_parse (ipmi_interpret_ctx_t ctx,
 
 int
 ipmi_interpret_sensor_config_parse (ipmi_interpret_ctx_t ctx,
-                                 const char *sensor_config_file)
+                                    const char *sensor_config_file)
 {
   char *config_file = NULL;
 
