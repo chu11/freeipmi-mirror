@@ -41,8 +41,7 @@
 
 #include "ipmi-interpret-defs.h"
 #include "ipmi-interpret-trace.h"
-#include "ipmi-interpret-sel-config.h"
-#include "ipmi-interpret-sensor-config.h"
+#include "ipmi-interpret-config.h"
 #include "ipmi-interpret-util.h"
 
 #include "libcommon/ipmi-fiid-util.h"
@@ -351,7 +350,7 @@ int
 ipmi_interpret_sel (ipmi_interpret_ctx_t ctx,
                     const void *record_buf,
                     unsigned int record_buflen,
-                    unsigned int *sensor_state)
+                    unsigned int *sel_state)
 {
   if (!ctx || ctx->magic != IPMI_INTERPRET_CTX_MAGIC)
     {
@@ -359,7 +358,7 @@ ipmi_interpret_sel (ipmi_interpret_ctx_t ctx,
       return (-1);
     }
 
-  if (!sensor_state)
+  if (!sel_state)
     {
       INTERPRET_SET_ERRNUM (ctx, IPMI_INTERPRET_ERR_PARAMETERS);
       return (-1);
@@ -372,7 +371,7 @@ static int
 _get_sensor_state (ipmi_interpret_ctx_t ctx,
                    uint16_t sensor_event_bitmask,
                    unsigned int *sensor_state,
-                   struct ipmi_interpret_sensor_config **config)
+                   struct ipmi_interpret_config **config)
 {
   int i = 0;
 
@@ -381,15 +380,15 @@ _get_sensor_state (ipmi_interpret_ctx_t ctx,
   assert (sensor_state);
   assert (config);
 
-  (*sensor_state) = IPMI_INTERPRET_SENSOR_STATE_NOMINAL;
+  (*sensor_state) = IPMI_INTERPRET_STATE_NOMINAL;
 
   i = 0;
   while (config[i] && i < 16)
     {
       if (sensor_event_bitmask & (0x1 << i))
         {
-          if (config[i]->sensor_state > (*sensor_state))
-            (*sensor_state) = config[i]->sensor_state;
+          if (config[i]->state > (*sensor_state))
+            (*sensor_state) = config[i]->state;
         }
       i++;
     }
@@ -398,7 +397,7 @@ _get_sensor_state (ipmi_interpret_ctx_t ctx,
 }
 
 static int
-_get_oem_sensor_state (ipmi_interpret_ctx_t ctx,
+_get_sensor_oem_state (ipmi_interpret_ctx_t ctx,
 		       uint8_t event_reading_type_code,
 		       uint8_t sensor_type,
 		       uint16_t sensor_event_bitmask,
@@ -427,7 +426,7 @@ _get_oem_sensor_state (ipmi_interpret_ctx_t ctx,
       unsigned int i;
       int found = 0;
 
-      (*sensor_state) = IPMI_INTERPRET_SENSOR_STATE_NOMINAL;
+      (*sensor_state) = IPMI_INTERPRET_STATE_NOMINAL;
 
       for (i = 0; i < oem_conf->oem_state_count; i++)
 	{
@@ -452,10 +451,10 @@ _get_oem_sensor_state (ipmi_interpret_ctx_t ctx,
 	}
       
       if (!found)
-	(*sensor_state) = IPMI_INTERPRET_SENSOR_STATE_UNKNOWN;
+	(*sensor_state) = IPMI_INTERPRET_STATE_UNKNOWN;
     }
   else
-    (*sensor_state) = IPMI_INTERPRET_SENSOR_STATE_UNKNOWN;
+    (*sensor_state) = IPMI_INTERPRET_STATE_UNKNOWN;
 
   return (0);
 }
@@ -468,7 +467,7 @@ ipmi_interpret_sensor (ipmi_interpret_ctx_t ctx,
                        uint16_t sensor_event_bitmask,
                        unsigned int *sensor_state)
 {
-  struct ipmi_interpret_sensor_config **sensor_config = NULL;
+  struct ipmi_interpret_config **sensor_config = NULL;
   int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_INTERPRET_CTX_MAGIC)
@@ -546,7 +545,7 @@ ipmi_interpret_sensor (ipmi_interpret_ctx_t ctx,
         sensor_config = ctx->interpret_sensor.ipmi_interpret_entity_presence_device_present_config;
       else
         {
-          (*sensor_state) = IPMI_INTERPRET_SENSOR_STATE_UNKNOWN;
+          (*sensor_state) = IPMI_INTERPRET_STATE_UNKNOWN;
           rv = 0;
           goto cleanup;
         }
@@ -605,7 +604,7 @@ ipmi_interpret_sensor (ipmi_interpret_ctx_t ctx,
       else if (ctx->flags & IPMI_INTERPRET_FLAGS_INTERPRET_OEM_DATA
 	       && IPMI_SENSOR_TYPE_IS_OEM (sensor_type))
 	{
-	  if (_get_oem_sensor_state (ctx,
+	  if (_get_sensor_oem_state (ctx,
 				     event_reading_type_code,
 				     sensor_type,
 				     sensor_event_bitmask,
@@ -616,7 +615,7 @@ ipmi_interpret_sensor (ipmi_interpret_ctx_t ctx,
 	}
       else
         {
-          (*sensor_state) = IPMI_INTERPRET_SENSOR_STATE_UNKNOWN;
+          (*sensor_state) = IPMI_INTERPRET_STATE_UNKNOWN;
           rv = 0;
           goto cleanup;
         }
@@ -630,7 +629,7 @@ ipmi_interpret_sensor (ipmi_interpret_ctx_t ctx,
   else if (ctx->flags & IPMI_INTERPRET_FLAGS_INTERPRET_OEM_DATA
 	   && IPMI_EVENT_READING_TYPE_CODE_IS_OEM (event_reading_type_code))
     {
-      if (_get_oem_sensor_state (ctx,
+      if (_get_sensor_oem_state (ctx,
 				 event_reading_type_code,
 				 sensor_type,
 				 sensor_event_bitmask,
@@ -639,7 +638,7 @@ ipmi_interpret_sensor (ipmi_interpret_ctx_t ctx,
     }
   else
     {
-      (*sensor_state) = IPMI_INTERPRET_SENSOR_STATE_UNKNOWN;
+      (*sensor_state) = IPMI_INTERPRET_STATE_UNKNOWN;
       rv = 0;
       goto cleanup;
     }
