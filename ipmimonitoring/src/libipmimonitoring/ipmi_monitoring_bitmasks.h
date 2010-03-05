@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_bitmasks.h,v 1.1 2010-02-11 21:49:24 chu11 Exp $
+ *  $Id: ipmi_monitoring_bitmasks.h,v 1.2 2010-03-05 00:00:54 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -30,70 +30,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-/*
- * IPMI Bitmask Types
- *
- * The following are the bitmask types that can be returned.
- */
-
-enum ipmi_monitoring_sensor_bitmask_type
-  {
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_THRESHOLD                           = 0x00,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_TRANSITION_STATE                    = 0x01,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_STATE                               = 0x02,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_PREDICTIVE_FAILURE                  = 0x03,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_LIMIT                               = 0x04,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_PERFORMANCE                         = 0x05,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_TRANSITION_SEVERITY                 = 0x06,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_DEVICE_PRESENT                      = 0x07,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_DEVICE_ENABLED                      = 0x08,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_TRANSITION_AVAILABILITY             = 0x09,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_REDUNDANCY                          = 0x0A,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_ACPI_POWER_STATE                    = 0x0B,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_PHYSICAL_SECURITY                   = 0x0C,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT = 0x0D,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_PROCESSOR                           = 0x0E,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_POWER_SUPPLY                        = 0x0F,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_POWER_UNIT                          = 0x10,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_COOLING_DEVICE                      = 0x11,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_OTHER_UNITS_BASED_SENSOR            = 0x12,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_MEMORY                              = 0x13,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_DRIVE_SLOT                          = 0x14,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_POST_MEMORY_RESIZE                  = 0x15,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_SYSTEM_FIRMWARE_PROGRESS            = 0x16,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_EVENT_LOGGING_DISABLED              = 0x17,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_WATCHDOG1                           = 0x18,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_SYSTEM_EVENT                        = 0x19,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_CRITICAL_INTERRUPT                  = 0x1A,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_BUTTON_SWITCH                       = 0x1B,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_MODULE_BOARD                        = 0x1C,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_MICROCONTROLLER_COPROCESSOR         = 0x1D,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_ADD_IN_CARD                         = 0x1E,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_CHASSIS                             = 0x1F,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_CHIP_SET                            = 0x20,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_OTHER_FRU                           = 0x21,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_CABLE_INTERCONNECT                  = 0x22,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_TERMINATOR                          = 0x23,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_SYSTEM_BOOT_INITIATED               = 0x24,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_BOOT_ERROR                          = 0x25,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_OS_BOOT                             = 0x26,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_OS_CRITICAL_STOP                    = 0x27,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_SLOT_CONNECTOR                      = 0x28,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_SYSTEM_ACPI_POWER_STATE             = 0x29,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_WATCHDOG2                           = 0x2A,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_PLATFORM_ALERT                      = 0x2B,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_ENTITY_PRESENCE                     = 0x2C,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_MONITOR_ASIC_IC                     = 0x2D,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_LAN                                 = 0x2E,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH         = 0x2F,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_BATTERY                             = 0x30,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_SESSION_AUDIT                       = 0x31,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_VERSION_CHANGE                      = 0x32,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_FRU_STATE                           = 0x33,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_OEM                                 = 0xFE,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_UNKNOWN                             = 0xFF,
-  };
 
 /*
  * IPMI Bitmasks
