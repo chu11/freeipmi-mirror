@@ -78,9 +78,7 @@ struct ipmi_interpret_sel {
   struct ipmi_interpret_sel_config **ipmi_interpret_critical_interrupt_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_button_switch_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_button_switch_state_config;
-
   struct ipmi_interpret_sel_config **ipmi_interpret_chip_set_config;
-
   struct ipmi_interpret_sel_config **ipmi_interpret_module_board_state_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_module_board_device_present_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_cable_interconnect_config;
@@ -186,6 +184,7 @@ struct ipmi_interpret_ctx {
   uint32_t manufacturer_id;
   uint16_t product_id;
 
+  struct ipmi_interpret_sel interpret_sel;
   struct ipmi_interpret_sensor interpret_sensor;
 };
 

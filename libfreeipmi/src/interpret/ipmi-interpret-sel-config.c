@@ -73,7 +73,7 @@
  * Standard Sensors
  */
 
-static struct ipmi_interpret_sel_config ipmi_interpret_threshold_sensor_config[] =
+static struct ipmi_interpret_sel_config ipmi_interpret_threshold_sel_config[] =
   {
     { "IPMI_Threshold Sensor_Lower_Non_Critical_Going_Low", IPMI_INTERPRET_SEL_STATE_WARNING},
     { "IPMI_Threshold Sensor_Lower_Non_Critical_Going_High", IPMI_INTERPRET_SEL_STATE_NOMINAL},
@@ -88,7 +88,7 @@ static struct ipmi_interpret_sel_config ipmi_interpret_threshold_sensor_config[]
     { "IPMI_Threshold Sensor_Upper_Non_Recoverable_Going_Low", IPMI_INTERPRET_SEL_STATE_CRITICAL},
     { "IPMI_Threshold Sensor_Upper_Non_Recoverable_Going_High", IPMI_INTERPRET_SEL_STATE_CRITICAL},
   };
-static unsigned int ipmi_interpret_threshold_sensor_config_len = 12;
+static unsigned int ipmi_interpret_threshold_sel_config_len = 12;
 
 static struct ipmi_interpret_sel_config ipmi_interpret_voltage_state_config[] =
   {
@@ -352,9 +352,9 @@ static unsigned int ipmi_interpret_critical_interrupt_config_len = 12;
 
 static struct ipmi_interpret_sel_config ipmi_interpret_button_switch_config[] =
   {
-    { "IPMI_Button_Switch_Power_Button_Pressed", IPMI_INTERPRET_SEL_STATE_NOMINAL},
-    { "IPMI_Button_Switch_Sleep_Button_Pressed", IPMI_INTERPRET_SEL_STATE_NOMINAL},
-    { "IPMI_Button_Switch_Reset_Button_Pressed", IPMI_INTERPRET_SEL_STATE_NOMINAL},
+    { "IPMI_Button_Switch_Power_Button_Pressed", IPMI_INTERPRET_SEL_STATE_INFO},
+    { "IPMI_Button_Switch_Sleep_Button_Pressed", IPMI_INTERPRET_SEL_STATE_INFO},
+    { "IPMI_Button_Switch_Reset_Button_Pressed", IPMI_INTERPRET_SEL_STATE_INFO},
     { "IPMI_Button_Switch_FRU_Latch_Open", IPMI_INTERPRET_SEL_STATE_WARNING},
     { "IPMI_Button_Switch_FRU_Service_Request_Button", IPMI_INTERPRET_SEL_STATE_WARNING},
   };
@@ -503,19 +503,325 @@ static struct ipmi_interpret_sel_config ipmi_interpret_fru_state_config[] =
     { "IPMI_FRU_State_FRU_Communication_Lost", IPMI_INTERPRET_SEL_STATE_CRITICAL},
   };
 static unsigned int ipmi_interpret_fru_state_config_len = 8;
-#endif
+
+static int
+_interpret_sel_config_init (ipmi_interpret_ctx_t ctx,
+                            struct ipmi_interpret_sel_config ***sel_config_dest,
+                            struct ipmi_interpret_sel_config *sel_config_src,
+                            unsigned int sel_config_len)
+{
+  unsigned int mlen;
+  unsigned int i;
+  int rv = -1;
+
+  assert (ctx);
+  assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
+  assert (sel_config_dest);
+  assert (sel_config_src);
+  assert (sel_config_len);
+
+  /* +1 for storing NULL pointer sentinel value */
+  mlen = sizeof (struct ipmi_interpret_sel_config *) * (sel_config_len + 1);
+
+  if (!((*sel_config_dest) = (struct ipmi_interpret_sel_config **) malloc (mlen)))
+    {
+      INTERPRET_SET_ERRNUM (ctx, IPMI_INTERPRET_ERR_OUT_OF_MEMORY);
+      goto cleanup;
+    }
+  memset ((*sel_config_dest), '\0', mlen);
+
+  mlen = sizeof (struct ipmi_interpret_sel_config);
+
+  for (i = 0; i < sel_config_len; i++)
+    {
+      if (!((*sel_config_dest)[i] = (struct ipmi_interpret_sel_config *) malloc (mlen)))
+        {
+          INTERPRET_SET_ERRNUM (ctx, IPMI_INTERPRET_ERR_OUT_OF_MEMORY);
+          goto cleanup;
+        }
+      memset ((*sel_config_dest)[i], '\0', mlen);
+
+      (*sel_config_dest)[i]->option_str = sel_config_src[i].option_str;
+      (*sel_config_dest)[i]->sel_state = sel_config_src[i].sel_state;
+    }
+  (*sel_config_dest)[i] = NULL;
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
 
 int
-ipmi_interpret_sel_init (ipmi_interpret_ctx_t ctx)
+ipmi_interpret_sensor_init (ipmi_interpret_ctx_t ctx)
 {
   int rv = -1;
 
   assert (ctx);
   assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
 
+  if (_interpret_sel_config_init (ctx,
+                                  &ctx->interpret_sel.ipmi_interpret_threshold_sel_config,
+                                  ipmi_interpret_threshold_sel_config,
+                                  ipmi_interpret_threshold_sel_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_sel_config_init (ctx,
+                                  &ctx->interpret_sel.ipmi_interpret_voltage_state_config,
+                                  ipmi_interpret_voltage_state_config,
+                                  ipmi_interpret_voltage_state_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_sel_config_init (ctx,
+                                  &ctx->interpret_sel.ipmi_interpret_voltage_performance_config,
+                                  ipmi_interpret_voltage_performance_config,
+                                  ipmi_interpret_voltage_performance_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_sel_config_init (ctx,
+                                  &ctx->interpret_sel.ipmi_interpret_fan_device_present_config,
+                                  ipmi_interpret_fan_device_present_config,
+                                  ipmi_interpret_fan_device_present_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_sel_config_init (ctx,
+                                  &ctx->interpret_sel.ipmi_interpret_fan_transition_availability_config,
+                                  ipmi_interpret_fan_transition_availability_config,
+                                  ipmi_interpret_fan_transition_availability_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_sel_config_init (ctx,
+                                  &ctx->interpret_sel.ipmi_interpret_fan_redundancy_config,
+                                  ipmi_interpret_fan_redundancy_config,
+                                  ipmi_interpret_fan_redundancy_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_sel_config_init (ctx,
+                                  &ctx->interpret_sel.ipmi_interpret_physical_security_config,
+                                  ipmi_interpret_physical_security_config,
+                                  ipmi_interpret_physical_security_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_sel_config_init (ctx,
+                                  &ctx->interpret_sel.ipmi_interpret_platform_security_violation_attempt_config,
+                                  ipmi_interpret_platform_security_violation_attempt_config,
+                                  ipmi_interpret_platform_security_violation_attempt_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_sel_config_init (ctx,
+                                  &ctx->interpret_sel.ipmi_interpret_processor_config,
+                                  ipmi_interpret_processor_config,
+                                  ipmi_interpret_processor_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_sel_config_init (ctx,
+                                  &ctx->interpret_sel.ipmi_interpret_processor_state_config,
+                                  ipmi_interpret_processor_state_config,
+                                  ipmi_interpret_processor_state_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_sel_config_init (ctx,
+                                  &ctx->interpret_sel.ipmi_interpret_power_supply_config,
+                                  ipmi_interpret_power_supply_config,
+                                  ipmi_interpret_power_supply_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_sel_config_init (ctx,
+                                  &ctx->interpret_sel.ipmi_interpret_power_supply_state_config,
+                                  ipmi_interpret_power_supply_state_config,
+                                  ipmi_interpret_power_supply_state_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_sel_config_init (ctx,
+                                  &ctx->interpret_sel.ipmi_interpret_power_supply_redundancy_config,
+                                  ipmi_interpret_power_supply_redundancy_config,
+                                  ipmi_interpret_power_supply_redundancy_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_sel_config_init (ctx,
+                                  &ctx->interpret_sel.ipmi_interpret_power_unit_config,
+                                  ipmi_interpret_power_unit_config,
+                                  ipmi_interpret_power_unit_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_sel_config_init (ctx,
+                                  &ctx->interpret_sel.ipmi_interpret_power_unit_device_present_config,
+                                  ipmi_interpret_power_unit_device_present_config,
+                                  ipmi_interpret_power_unit_device_present_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_sel_config_init (ctx,
+                                  &ctx->interpret_sel.ipmi_interpret_power_unit_redundancy_config,
+                                  ipmi_interpret_power_unit_redundancy_config,
+                                  ipmi_interpret_power_unit_redundancy_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_sel_config_init (ctx,
+                                  &ctx->interpret_sel.ipmi_interpret_memory_config,
+                                  ipmi_interpret_memory_config,
+                                  ipmi_interpret_memory_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_sel_config_init (ctx,
+                                  &ctx->interpret_sel.ipmi_interpret_drive_slot_config,
+                                  ipmi_interpret_drive_slot_config,
+                                  ipmi_interpret_drive_slot_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_sel_config_init (ctx,
+                                  &ctx->interpret_sel.ipmi_interpret_drive_slot_state_config,
+                                  ipmi_interpret_drive_slot_state_config,
+                                  ipmi_interpret_drive_slot_state_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_sel_config_init (ctx,
+                                  &ctx->interpret_sel.ipmi_interpret_drive_slot_predictive_failure_config,
+                                  ipmi_interpret_drive_slot_predictive_failure_config,
+                                  ipmi_interpret_drive_slot_predictive_failure_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_sel_config_init (ctx,
+                                  &ctx->interpret_sel.ipmi_interpret_drive_slot_device_present_config,
+                                  ipmi_interpret_drive_slot_device_present_config,
+                                  ipmi_interpret_drive_slot_device_present_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_sel_config_init (ctx,
+                                  &ctx->interpret_sel.ipmi_interpret_system_firmware_progress_config,
+                                  ipmi_interpret_system_firmware_progress_config,
+                                  ipmi_interpret_system_firmware_progress_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_sel_config_init (ctx,
+                                  &ctx->interpret_sel.ipmi_interpret_event_logging_disabled_config,
+                                  ipmi_interpret_event_logging_disabled_config,
+                                  ipmi_interpret_event_logging_disabled_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_sel_config_init (ctx,
+                                  &ctx->interpret_sel.ipmi_interpret_system_event_config,
+                                  ipmi_interpret_system_event_config,
+                                  ipmi_interpret_system_event_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_sel_config_init (ctx,
+                                  &ctx->interpret_sel.ipmi_interpret_critical_interrupt_config,
+                                  ipmi_interpret_critical_interrupt_config,
+                                  ipmi_interpret_critical_interrupt_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_sel_config_init (ctx,
+                                  &ctx->interpret_sel.ipmi_interpret_button_switch_config,
+                                  ipmi_interpret_button_switch_config,
+                                  ipmi_interpret_button_switch_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_sel_config_init (ctx,
+                                  &ctx->interpret_sel.ipmi_interpret_button_switch_state_config,
+                                  ipmi_interpret_button_switch_state_config,
+                                  ipmi_interpret_button_switch_state_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_sel_config_init (ctx,
+                                  &ctx->interpret_sel.ipmi_interpret_chip_set_config,
+                                  ipmi_interpret_chip_set_config,
+                                  ipmi_interpret_chip_set_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_sel_config_init (ctx,
+                                  &ctx->interpret_sel.ipmi_interpret_module_board_state_config,
+                                  ipmi_interpret_module_board_state_config,
+                                  ipmi_interpret_module_board_state_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_sel_config_init (ctx,
+                                  &ctx->interpret_sel.ipmi_interpret_module_board_device_present_config,
+                                  ipmi_interpret_module_board_device_present_config,
+                                  ipmi_interpret_module_board_device_present_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_sel_config_init (ctx,
+                                  &ctx->interpret_sel.ipmi_interpret_cable_interconnect_config,
+                                  ipmi_interpret_cable_interconnect_config,
+                                  ipmi_interpret_cable_interconnect_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_sel_config_init (ctx,
+                                  &ctx->interpret_sel.ipmi_interpret_boot_error_config,
+                                  ipmi_interpret_boot_error_config,
+                                  ipmi_interpret_boot_error_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_sel_config_init (ctx,
+                                  &ctx->interpret_sel.ipmi_interpret_slot_connector_config,
+                                  ipmi_interpret_slot_connector_config,
+                                  ipmi_interpret_slot_connector_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_sel_config_init (ctx,
+                                  &ctx->interpret_sel.ipmi_interpret_system_acpi_power_state_config,
+                                  ipmi_interpret_system_acpi_power_state_config,
+                                  ipmi_interpret_system_acpi_power_state_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_sel_config_init (ctx,
+                                  &ctx->interpret_sel.ipmi_interpret_watchdog2_config,
+                                  ipmi_interpret_watchdog2_config,
+                                  ipmi_interpret_watchdog2_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_sel_config_init (ctx,
+                                  &ctx->interpret_sel.ipmi_interpret_entity_presence_config,
+                                  ipmi_interpret_entity_presence_config,
+                                  ipmi_interpret_entity_presence_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_sel_config_init (ctx,
+                                  &ctx->interpret_sel.ipmi_interpret_entity_presence_device_present_config,
+                                  ipmi_interpret_entity_presence_device_present_config,
+                                  ipmi_interpret_entity_presence_device_present_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_sel_config_init (ctx,
+                                  &ctx->interpret_sel.ipmi_interpret_management_subsystem_health_config,
+                                  ipmi_interpret_management_subsystem_health_config,
+                                  ipmi_interpret_management_subsystem_health_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_sel_config_init (ctx,
+                                  &ctx->interpret_sel.ipmi_interpret_battery_config,
+                                  ipmi_interpret_battery_config,
+                                  ipmi_interpret_battery_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_sel_config_init (ctx,
+                                  &ctx->interpret_sel.ipmi_interpret_fru_state_config,
+                                  ipmi_interpret_fru_state_config,
+                                  ipmi_interpret_fru_state_config_len) < 0)
+    goto cleanup;
+
   rv = 0;
  cleanup:
   return (rv);
+}
+
+static void
+_interpret_sel_config_destroy (ipmi_interpret_ctx_t ctx,
+                               struct ipmi_interpret_sel_config **sel_config)
+{
+  unsigned int i = 0;
+
+  assert (ctx);
+  assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
+
+  if (sel_config)
+    {
+      while (sel_config[i])
+        {
+          free (sel_config[i]);
+          i++;
+        }
+      free (sel_config);
+    }
 }
 
 void
@@ -524,9 +830,124 @@ ipmi_interpret_sel_destroy (ipmi_interpret_ctx_t ctx)
   assert (ctx);
   assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
 
+  _interpret_sel_config_destroy (ctx,
+                                 ctx->interpret_sel.ipmi_interpret_threshold_sel_config);
+
+  _interpret_sel_config_destroy (ctx,
+                                 ctx->interpret_sel.ipmi_interpret_voltage_state_config);
+
+  _interpret_sel_config_destroy (ctx,
+                                 ctx->interpret_sel.ipmi_interpret_voltage_performance_config);
+
+  _interpret_sel_config_destroy (ctx,
+                                 ctx->interpret_sel.ipmi_interpret_fan_device_present_config);
+
+  _interpret_sel_config_destroy (ctx,
+                                 ctx->interpret_sel.ipmi_interpret_fan_transition_availability_config);
+
+  _interpret_sel_config_destroy (ctx,
+                                 ctx->interpret_sel.ipmi_interpret_fan_redundancy_config);
+
+  _interpret_sel_config_destroy (ctx,
+                                 ctx->interpret_sel.ipmi_interpret_physical_security_config);
+
+  _interpret_sel_config_destroy (ctx,
+                                 ctx->interpret_sel.ipmi_interpret_platform_security_violation_attempt_config);
+
+  _interpret_sel_config_destroy (ctx,
+                                 ctx->interpret_sel.ipmi_interpret_processor_config);
+
+  _interpret_sel_config_destroy (ctx,
+                                 ctx->interpret_sel.ipmi_interpret_processor_state_config);
+
+  _interpret_sel_config_destroy (ctx,
+                                 ctx->interpret_sel.ipmi_interpret_power_supply_config);
+
+  _interpret_sel_config_destroy (ctx,
+                                 ctx->interpret_sel.ipmi_interpret_power_supply_state_config);
+
+  _interpret_sel_config_destroy (ctx,
+                                 ctx->interpret_sel.ipmi_interpret_power_supply_redundancy_config);
+
+  _interpret_sel_config_destroy (ctx,
+                                 ctx->interpret_sel.ipmi_interpret_power_unit_config);
+
+  _interpret_sel_config_destroy (ctx,
+                                 ctx->interpret_sel.ipmi_interpret_power_unit_device_present_config);
+
+  _interpret_sel_config_destroy (ctx,
+                                 ctx->interpret_sel.ipmi_interpret_power_unit_redundancy_config);
+
+  _interpret_sel_config_destroy (ctx,
+                                 ctx->interpret_sel.ipmi_interpret_memory_config);
+
+  _interpret_sel_config_destroy (ctx,
+                                 ctx->interpret_sel.ipmi_interpret_drive_slot_config);
+
+  _interpret_sel_config_destroy (ctx,
+                                 ctx->interpret_sel.ipmi_interpret_drive_slot_state_config);
+
+  _interpret_sel_config_destroy (ctx,
+                                 ctx->interpret_sel.ipmi_interpret_drive_slot_predictive_failure_config);
+
+  _interpret_sel_config_destroy (ctx,
+                                 ctx->interpret_sel.ipmi_interpret_drive_slot_device_present_config);
+
+  _interpret_sel_config_destroy (ctx,
+                                 ctx->interpret_sel.ipmi_interpret_system_firmware_progress_config);
+
+  _interpret_sel_config_destroy (ctx,
+                                 ctx->interpret_sel.ipmi_interpret_event_logging_disabled_config);
+
+  _interpret_sel_config_destroy (ctx,
+                                 ctx->interpret_sel.ipmi_interpret_system_event_config);
+
+  _interpret_sel_config_destroy (ctx,
+                                 ctx->interpret_sel.ipmi_interpret_critical_interrupt_config);
+
+  _interpret_sel_config_destroy (ctx,
+                                 ctx->interpret_sel.ipmi_interpret_button_switch_config);
+
+  _interpret_sel_config_destroy (ctx,
+                                 ctx->interpret_sel.ipmi_interpret_button_switch_state_config);
+
+  _interpret_sel_config_destroy (ctx,
+                                 ctx->interpret_sel.ipmi_interpret_module_board_state_config);
+
+  _interpret_sel_config_destroy (ctx,
+                                 ctx->interpret_sel.ipmi_interpret_module_board_device_present_config);
+
+  _interpret_sel_config_destroy (ctx,
+                                 ctx->interpret_sel.ipmi_interpret_cable_interconnect_config);
+
+  _interpret_sel_config_destroy (ctx,
+                                 ctx->interpret_sel.ipmi_interpret_boot_error_config);
+
+  _interpret_sel_config_destroy (ctx,
+                                 ctx->interpret_sel.ipmi_interpret_slot_connector_config);
+
+  _interpret_sel_config_destroy (ctx,
+                                 ctx->interpret_sel.ipmi_interpret_system_acpi_power_state_config);
+
+  _interpret_sel_config_destroy (ctx,
+                                 ctx->interpret_sel.ipmi_interpret_watchdog2_config);
+
+  _interpret_sel_config_destroy (ctx,
+                                 ctx->interpret_sel.ipmi_interpret_entity_presence_config);
+
+  _interpret_sel_config_destroy (ctx,
+                                 ctx->interpret_sel.ipmi_interpret_entity_presence_device_present_config);
+
+  _interpret_sel_config_destroy (ctx,
+                                 ctx->interpret_sel.ipmi_interpret_management_subsystem_health_config);
+
+  _interpret_sel_config_destroy (ctx,
+                                 ctx->interpret_sel.ipmi_interpret_battery_config);
+
+  _interpret_sel_config_destroy (ctx,
+                                 ctx->interpret_sel.ipmi_interpret_fru_state_config);
 }
 
-#if 0
 static int
 _sel_state (conffile_t cf,
             char *option_string)
@@ -534,7 +955,9 @@ _sel_state (conffile_t cf,
   assert (cf);
   assert (option_string);
 
-  if (!strcasecmp (option_string, "Nominal"))
+  if (!strcasecmp (option_string, "Info"))
+    return (IPMI_INTERPRET_SEL_STATE_INFO);
+  else if (!strcasecmp (option_string, "Nominal"))
     return (IPMI_INTERPRET_SEL_STATE_NOMINAL);
   else if (!strcasecmp (option_string, "Warning"))
     return (IPMI_INTERPRET_SEL_STATE_WARNING);
@@ -555,7 +978,7 @@ _cb_sel_state_parse (conffile_t cf,
                      void *app_ptr,
                      int app_data)
 {
-  struct ipmi_interpret_sel_config **sensor_config;
+  struct ipmi_interpret_sel_config **sel_config;
   int sel_state;
   int i;
 
@@ -569,12 +992,12 @@ _cb_sel_state_parse (conffile_t cf,
     return (-1);
 
   i = 0;
-  sensor_config = (struct ipmi_interpret_sel_config **)option_ptr;
-  while (sensor_config[i])
+  sel_config = (struct ipmi_interpret_sel_config **)option_ptr;
+  while (sel_config[i])
     {
-      if (!strcasecmp (optionname, sensor_config[i]->option_str))
+      if (!strcasecmp (optionname, sel_config[i]->option_str))
         {
-          sensor_config[i]->sel_state = sel_state;
+          sel_config[i]->sel_state = sel_state;
           return (0);
         }
       i++;
@@ -620,6 +1043,7 @@ _cb_oem_parse (conffile_t cf,
 	       void *app_ptr,
 	       int app_data)
 {
+#if 0
   hash_t *h = NULL;
   char keybuf[IPMI_OEM_HASH_KEY_BUFLEN + 1];
   uint32_t manufacturer_id;
@@ -750,20 +1174,19 @@ _cb_oem_parse (conffile_t cf,
       oem_conf->oem_state[oem_conf->oem_state_count].oem_state_type = oem_state_type;
       oem_conf->oem_state_count++;
     }
+#endif
 
   return (0);
 }
-#endif
 
 int
 ipmi_interpret_sel_config_parse (ipmi_interpret_ctx_t ctx,
                                  const char *sel_config_file)
 {
-#if 0
-  int threshold_sensor_flag0, threshold_sensor_flag1, threshold_sensor_flag2,
-    threshold_sensor_flag3, threshold_sensor_flag4, threshold_sensor_flag5, threshold_sensor_flag6,
-    threshold_sensor_flag7, threshold_sensor_flag8, threshold_sensor_flag9, threshold_sensor_flag10,
-    threshold_sensor_flag11;
+  int threshold_sel_flag0, threshold_sel_flag1, threshold_sel_flag2,
+    threshold_sel_flag3, threshold_sel_flag4, threshold_sel_flag5, threshold_sel_flag6,
+    threshold_sel_flag7, threshold_sel_flag8, threshold_sel_flag9, threshold_sel_flag10,
+    threshold_sel_flag11;
   int voltage_state_flag0, voltage_state_flag1;
   int voltage_performance_flag0, voltage_performance_flag1;
   int fan_device_present_flag0, fan_device_present_flag1;
@@ -853,138 +1276,138 @@ ipmi_interpret_sel_config_parse (ipmi_interpret_ctx_t ctx,
   struct conffile_option options[] =
     {
       /*
-       * IPMI_Threshold_Sensor
+       * IPMI_Threshold_Sel
        */
       {
-        ctx->interpret_sel.ipmi_interpret_threshold_sensor_config[0]->option_str,
+        ctx->interpret_sel.ipmi_interpret_threshold_sel_config[0]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sel_state_parse,
         1,
         0,
-        &threshold_sensor_flag0,
-        ctx->interpret_sel.ipmi_interpret_threshold_sensor_config,
+        &threshold_sel_flag0,
+        ctx->interpret_sel.ipmi_interpret_threshold_sel_config,
         0
       },
       {
-        ctx->interpret_sel.ipmi_interpret_threshold_sensor_config[1]->option_str,
+        ctx->interpret_sel.ipmi_interpret_threshold_sel_config[1]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sel_state_parse,
         1,
         0,
-        &threshold_sensor_flag1,
-        ctx->interpret_sel.ipmi_interpret_threshold_sensor_config,
+        &threshold_sel_flag1,
+        ctx->interpret_sel.ipmi_interpret_threshold_sel_config,
         0
       },
       {
-        ctx->interpret_sel.ipmi_interpret_threshold_sensor_config[2]->option_str,
+        ctx->interpret_sel.ipmi_interpret_threshold_sel_config[2]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sel_state_parse,
         1,
         0,
-        &threshold_sensor_flag2,
-        ctx->interpret_sel.ipmi_interpret_threshold_sensor_config,
+        &threshold_sel_flag2,
+        ctx->interpret_sel.ipmi_interpret_threshold_sel_config,
         0
       },
       {
-        ctx->interpret_sel.ipmi_interpret_threshold_sensor_config[3]->option_str,
+        ctx->interpret_sel.ipmi_interpret_threshold_sel_config[3]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sel_state_parse,
         1,
         0,
-        &threshold_sensor_flag3,
-        ctx->interpret_sel.ipmi_interpret_threshold_sensor_config,
+        &threshold_sel_flag3,
+        ctx->interpret_sel.ipmi_interpret_threshold_sel_config,
         0
       },
       {
-        ctx->interpret_sel.ipmi_interpret_threshold_sensor_config[4]->option_str,
+        ctx->interpret_sel.ipmi_interpret_threshold_sel_config[4]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sel_state_parse,
         1,
         0,
-        &threshold_sensor_flag4,
-        ctx->interpret_sel.ipmi_interpret_threshold_sensor_config,
+        &threshold_sel_flag4,
+        ctx->interpret_sel.ipmi_interpret_threshold_sel_config,
         0
       },
       {
-        ctx->interpret_sel.ipmi_interpret_threshold_sensor_config[5]->option_str,
+        ctx->interpret_sel.ipmi_interpret_threshold_sel_config[5]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sel_state_parse,
         1,
         0,
-        &threshold_sensor_flag5,
-        ctx->interpret_sel.ipmi_interpret_threshold_sensor_config,
+        &threshold_sel_flag5,
+        ctx->interpret_sel.ipmi_interpret_threshold_sel_config,
         0
       },
       {
-        ctx->interpret_sel.ipmi_interpret_threshold_sensor_config[6]->option_str,
+        ctx->interpret_sel.ipmi_interpret_threshold_sel_config[6]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sel_state_parse,
         1,
         0,
-        &threshold_sensor_flag6,
-        ctx->interpret_sel.ipmi_interpret_threshold_sensor_config,
+        &threshold_sel_flag6,
+        ctx->interpret_sel.ipmi_interpret_threshold_sel_config,
         0
       },
       {
-        ctx->interpret_sel.ipmi_interpret_threshold_sensor_config[7]->option_str,
+        ctx->interpret_sel.ipmi_interpret_threshold_sel_config[7]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sel_state_parse,
         1,
         0,
-        &threshold_sensor_flag7,
-        ctx->interpret_sel.ipmi_interpret_threshold_sensor_config,
+        &threshold_sel_flag7,
+        ctx->interpret_sel.ipmi_interpret_threshold_sel_config,
         0
       },
       {
-        ctx->interpret_sel.ipmi_interpret_threshold_sensor_config[8]->option_str,
+        ctx->interpret_sel.ipmi_interpret_threshold_sel_config[8]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sel_state_parse,
         1,
         0,
-        &threshold_sensor_flag8,
-        ctx->interpret_sel.ipmi_interpret_threshold_sensor_config,
+        &threshold_sel_flag8,
+        ctx->interpret_sel.ipmi_interpret_threshold_sel_config,
         0
       },
       {
-        ctx->interpret_sel.ipmi_interpret_threshold_sensor_config[9]->option_str,
+        ctx->interpret_sel.ipmi_interpret_threshold_sel_config[9]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sel_state_parse,
         1,
         0,
-        &threshold_sensor_flag9,
-        ctx->interpret_sel.ipmi_interpret_threshold_sensor_config,
+        &threshold_sel_flag9,
+        ctx->interpret_sel.ipmi_interpret_threshold_sel_config,
         0
       },
       {
-        ctx->interpret_sel.ipmi_interpret_threshold_sensor_config[10]->option_str,
+        ctx->interpret_sel.ipmi_interpret_threshold_sel_config[10]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sel_state_parse,
         1,
         0,
-        &threshold_sensor_flag10,
-        ctx->interpret_sel.ipmi_interpret_threshold_sensor_config,
+        &threshold_sel_flag10,
+        ctx->interpret_sel.ipmi_interpret_threshold_sel_config,
         0
       },
       {
-        ctx->interpret_sel.ipmi_interpret_threshold_sensor_config[11]->option_str,
+        ctx->interpret_sel.ipmi_interpret_threshold_sel_config[11]->option_str,
         CONFFILE_OPTION_STRING,
         -1,
         _cb_sel_state_parse,
         1,
         0,
-        &threshold_sensor_flag11,
-        ctx->interpret_sel.ipmi_interpret_threshold_sensor_config,
+        &threshold_sel_flag11,
+        ctx->interpret_sel.ipmi_interpret_threshold_sel_config,
         0
       },
       /*
@@ -3469,6 +3892,7 @@ ipmi_interpret_sel_config_parse (ipmi_interpret_ctx_t ctx,
         ctx->interpret_sel.ipmi_interpret_fru_state_config,
         0
       },
+#if 0
       /* OEM Config */
       {
 	"IPMI_OEM_Bitmask",
@@ -3492,6 +3916,7 @@ ipmi_interpret_sel_config_parse (ipmi_interpret_ctx_t ctx,
 	&ctx->interpret_sel.oem_config,
 	0
       },
+#endif
     };
   char *config_file = NULL;
   conffile_t cf = NULL;
@@ -3551,7 +3976,4 @@ ipmi_interpret_sel_config_parse (ipmi_interpret_ctx_t ctx,
   if (cf)
     conffile_handle_destroy (cf);
   return (rv);
-#else
-  return (0);
-#endif
 }

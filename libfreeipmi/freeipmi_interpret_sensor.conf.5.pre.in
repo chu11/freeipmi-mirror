@@ -12,7 +12,7 @@ states/thresholds, libraries and tools such as
 .B libipmimonitoring(3) 
 and
 .B ipmi-sensors(8) 
-can report if a sensor reading is "good" or "bad" via a report of
+can report if a sensor reading is "good" or "bad" via a report of a
 NOMINAL, WARNING, or CRITICAL state.
 .LP
 Each of the states listed below are (hopefully) descriptive enough

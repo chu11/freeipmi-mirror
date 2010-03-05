@@ -43,10 +43,11 @@ extern "C" {
 #define IPMI_INTERPRET_FLAGS_DEFAULT                     0x0000
 #define IPMI_INTERPRET_FLAGS_INTERPRET_OEM_DATA          0x0001
 
-#define IPMI_INTERPRET_SEL_STATE_NOMINAL                   0x00
-#define IPMI_INTERPRET_SEL_STATE_WARNING                   0x01
-#define IPMI_INTERPRET_SEL_STATE_CRITICAL                  0x02
-#define IPMI_INTERPRET_SEL_STATE_UNKNOWN                   0x03
+#define IPMI_INTERPRET_SEL_STATE_INFO                      0x00
+#define IPMI_INTERPRET_SEL_STATE_NOMINAL                   0x01
+#define IPMI_INTERPRET_SEL_STATE_WARNING                   0x02
+#define IPMI_INTERPRET_SEL_STATE_CRITICAL                  0x03
+#define IPMI_INTERPRET_SEL_STATE_UNKNOWN                   0x04
 
 #define IPMI_INTERPRET_SENSOR_STATE_NOMINAL                0x00
 #define IPMI_INTERPRET_SENSOR_STATE_WARNING                0x01

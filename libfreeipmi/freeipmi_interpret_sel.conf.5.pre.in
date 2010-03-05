@@ -11,8 +11,8 @@ states/thresholds, libraries and tools such as
 .B libipmimonitoring(3) 
 and
 .B ipmi-sel(8) 
-can report if an event is "good" or "bad" via a report of
-NOMINAL, WARNING, or CRITICAL state.
+can report if an event is "information" or "good" or "bad" via a
+report of an INFO, NOMINAL, WARNING, or CRITICAL state.
 .LP
 Each of the states listed below are (hopefully) descriptive enough
 to describe the state conditions that may be set/unset for each
@@ -24,19 +24,21 @@ can be used to determine the sensor types and the states/thresholds
 that exist on a system by outputting very verbose output and seeing
 what types of Assertion or Deassertion events are possible.
 .LP
-The possible values for all states/thresholds below are:
+The possible values for all events below are:
 .LP
-Nominal - Signal Nominal reading if state/threshold tripped
+Info - Signal Info reading if event tripped
 .LP
-Warning - Signal Warning reading if state/treshold tripped
+Nominal - Signal Nominal reading if event tripped
 .LP
-Critical - Signal Critical reading if state/threshold tripped
+Warning - Signal Warning reading if event tripped
+.LP
+Critical - Signal Critical reading if event tripped
 .LP
 Not all IPMI sensor types and event types are currently supported.  If
 you would like more to be supported, please e-mail the FreeIPMI
 mailing list.
 .LP
-The default values selected for individual states/thresholds being
+The default values selected for individual events being
 tripped are based on best guesses and motherboards being analyzed.
 If you think they should be changed, please e-mail the FreeIPMI
 mailing list to discuss what the defaults should be.
@@ -669,13 +671,13 @@ Button/Switch specific output events.
 .RS
 .TP
 \fBIPMI_Button_Switch_Power_Button_Pressed\fR
-Defaults to Nominal.
+Defaults to Info.
 .TP
 \fBIPMI_Button_Switch_Sleep_Button_Pressed\fR
-Defaults to Nominal.
+Defaults to Info.
 .TP
 \fBIPMI_Button_Switch_Reset_Button_Pressed\fR
-Defaults to Nominal.
+Defaults to Info.
 .TP
 \fBIPMI_Button_Switch_FRU_Latch_Open\fR
 Defaults to Warning.
