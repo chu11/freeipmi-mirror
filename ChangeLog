@@ -4,7 +4,7 @@
 
 	* Add interpret sel support in interpret library to libfreeipmi.
 
-	* ipmi-sel/: Support --output-sel-state option.
+	* ipmi-sel/: Support --output-event-state option.
 
 	* Consistently name interpret 'sensors' to 'sensor'.
 

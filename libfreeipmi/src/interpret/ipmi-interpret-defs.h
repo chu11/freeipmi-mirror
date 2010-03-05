@@ -80,33 +80,21 @@ struct ipmi_interpret_sel {
   struct ipmi_interpret_config **ipmi_interpret_module_board_state_config;
   struct ipmi_interpret_config **ipmi_interpret_module_board_device_present_config;
   struct ipmi_interpret_config **ipmi_interpret_cable_interconnect_config;
-
   struct ipmi_interpret_config **ipmi_interpret_system_boot_initiated_config;
-
   struct ipmi_interpret_config **ipmi_interpret_boot_error_config;
-
   struct ipmi_interpret_config **ipmi_interpret_os_boot_config;
-
-  struct ipmi_interpret_config **ipmi_interpret_os_critical_stop;
-
+  struct ipmi_interpret_config **ipmi_interpret_os_critical_stop_config;
   struct ipmi_interpret_config **ipmi_interpret_slot_connector_config;
   struct ipmi_interpret_config **ipmi_interpret_system_acpi_power_state_config;
   struct ipmi_interpret_config **ipmi_interpret_watchdog2_config;
-
   struct ipmi_interpret_config **ipmi_interpret_platform_alert_config;
-
   struct ipmi_interpret_config **ipmi_interpret_entity_presence_config;
   struct ipmi_interpret_config **ipmi_interpret_entity_presence_device_present_config;
-
-  struct ipmi_interpret_config **ipmi_interpret_lan_heartbeat_config;
-
+  struct ipmi_interpret_config **ipmi_interpret_lan_config;
   struct ipmi_interpret_config **ipmi_interpret_management_subsystem_health_config;
   struct ipmi_interpret_config **ipmi_interpret_battery_config;
-
   struct ipmi_interpret_config **ipmi_interpret_session_audit_config;
-
   struct ipmi_interpret_config **ipmi_interpret_version_change_config;
-
   struct ipmi_interpret_config **ipmi_interpret_fru_state_config;
 };
 

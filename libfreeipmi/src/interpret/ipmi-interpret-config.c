@@ -411,6 +411,19 @@ static struct ipmi_interpret_config ipmi_interpret_cable_interconnect_config[] =
   };
 static unsigned int ipmi_interpret_cable_interconnect_config_len = 2;
 
+static struct ipmi_interpret_config ipmi_interpret_system_boot_initiated_config[] =
+  {
+    { "IPMI_System_Boot_Initiated_Initiated_By_Power_Up", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_System_Boot_Initiated_Initiated_By_Hard_Reset", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_System_Boot_Initiated_Initiated_By_Warm_Reset", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_System_Boot_Initiated_User_Requested_PXE_Boot", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_System_Boot_Initiated_Automatic_Boot_To_Diagnostic", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_System_Boot_Initiated_OS_Run_Time_Software_Initiated_Hard_Reset", IPMI_INTERPRET_STATE_WARNING},
+    { "IPMI_System_Boot_Initiated_OS_Run_Time_Software_Initiated_Warm_Reset", IPMI_INTERPRET_STATE_WARNING},
+    { "IPMI_System_Boot_Initiated_System_Restart", IPMI_INTERPRET_STATE_NOMINAL},
+  };
+static unsigned int ipmi_interpret_system_boot_initiated_config_len = 8;
+
 static struct ipmi_interpret_config ipmi_interpret_boot_error_config[] =
   {
     { "IPMI_Boot_Error_No_Bootable_Media", IPMI_INTERPRET_STATE_CRITICAL},
@@ -420,6 +433,30 @@ static struct ipmi_interpret_config ipmi_interpret_boot_error_config[] =
     { "IPMI_Boot_Error_Timeout_Waiting_For_User_Selection_Of_Boot_Source", IPMI_INTERPRET_STATE_WARNING},
   };
 static unsigned int ipmi_interpret_boot_error_config_len = 5;
+
+
+static struct ipmi_interpret_config ipmi_interpret_os_boot_config[] =
+  {
+    { "IPMI_OS_Boot_A_Boot_Completed", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_OS_Boot_C_Boot_Completed", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_OS_Boot_PXE_Boot_Completed", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_OS_Boot_Diagnostic_Boot_Completed", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_OS_Boot_CD_ROM_Boot_Completed", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_OS_Boot_ROM_Boot_Completed", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_OS_Boot_Boot_Completed_Boot_Device_Not_Specified", IPMI_INTERPRET_STATE_WARNING},
+  };
+static unsigned int ipmi_interpret_os_boot_config_len = 7;
+
+static struct ipmi_interpret_config ipmi_interpret_os_critical_stop_config[] =
+  {
+    { "IPMI_OS_Critical_Stop_Critical_Stop_During_OS_Load", IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_OS_Critical_Stop_Run_Time_Critical_Stop", IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_OS_Critical_Stop_OS_Graceful_Stop", IPMI_INTERPRET_STATE_WARNING},
+    { "IPMI_OS_Critical_Stop_OS_Graceful_Shutdown", IPMI_INTERPRET_STATE_WARNING},
+    { "IPMI_OS_Critical_Stop_Soft_Shutdown_Initiated_By_PEF", IPMI_INTERPRET_STATE_WARNING},
+    { "IPMI_OS_Critical_Stop_Agent_Not_Responding", IPMI_INTERPRET_STATE_CRITICAL},
+  };
+static unsigned int ipmi_interpret_os_critical_stop_config_len = 6;
 
 static struct ipmi_interpret_config ipmi_interpret_slot_connector_config[] =
   {
@@ -470,6 +507,15 @@ static struct ipmi_interpret_config ipmi_interpret_watchdog2_config[] =
   };
 static unsigned int ipmi_interpret_watchdog2_config_len = 9;
 
+static struct ipmi_interpret_config ipmi_interpret_platform_alert_config[] =
+  {
+    { "IPMI_Platform_Alert_Platform_Generated_Page", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_Platform_Alert_Platform_Generated_LAN_Alert", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_Platform_Alert_Platform_Event_Trap_Generated", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_Platform_Alert_Platform_Generated_SNMP_Trap", IPMI_INTERPRET_STATE_NOMINAL},
+  };
+static unsigned int ipmi_interpret_platform_alert_config_len = 4;
+
 static struct ipmi_interpret_config ipmi_interpret_entity_presence_config[] =
   {
     { "IPMI_Entity_Presence_Entity_Present", IPMI_INTERPRET_STATE_NOMINAL},
@@ -484,6 +530,13 @@ static struct ipmi_interpret_config ipmi_interpret_entity_presence_device_presen
     { "IPMI_Entity_Presence_Device_Present_Device_Inserted_Device_Present", IPMI_INTERPRET_STATE_NOMINAL},
   };
 static unsigned int ipmi_interpret_entity_presence_device_present_config_len = 2;
+
+static struct ipmi_interpret_config ipmi_interpret_lan_config[] =
+  {
+    { "IPMI_LAN_Heartbeat", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_LAN_Heartbeat_Lost", IPMI_INTERPRET_STATE_WARNING},
+  };
+static unsigned int ipmi_interpret_lan_config_len = 2;
 
 static struct ipmi_interpret_config ipmi_interpret_management_subsystem_health_config[] =
   {
@@ -504,6 +557,28 @@ static struct ipmi_interpret_config ipmi_interpret_battery_config[] =
   };
 static unsigned int ipmi_interpret_battery_config_len = 3;
 
+static struct ipmi_interpret_config ipmi_interpret_session_audit_config[] =
+  {
+    { "IPMI_Session_Audit_Session_Activated", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_Session_Audit_Session_Deactivated", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_Session_Audit_Invalid_Username_Or_Password", IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_Session_Audit_Invalid_Password_Disable", IPMI_INTERPRET_STATE_CRITICAL},
+  };
+static unsigned int ipmi_interpret_session_audit_config_len = 4;
+
+static struct ipmi_interpret_config ipmi_interpret_version_change_config[] =
+  {
+    { "IPMI_Version_Change_Hardware_Change_Detected_With_Associated_Entity", IPMI_INTERPRET_STATE_WARNING},
+    { "IPMI_Version_Change_Firmware_Or_Software_Change_Detected_With_Associated_Entity", IPMI_INTERPRET_STATE_WARNING},
+    { "IPMI_Version_Change_Hardware_Incompatability_Detected_With_Associated_Entity", IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_Version_Change_Firmware_Or_Software_Incompatability_Detected_With_Associated_Entity", IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_Version_Change_Entity_Is_Of_An_Invalid_Or_Unsupported_Hardware_Version", IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_Version_Change_Entity_Contains_An_Invalid_Or_Unsupported_Firmware_Or_Software_Version", IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_Version_Change_Hardware_Change_Detected_With_Associated_Entity_Was_Successful", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_Version_Change_Software_Or_FW_Change_Detected_With_Associated_Entity_Was_Successful", IPMI_INTERPRET_STATE_NOMINAL},
+  };
+static unsigned int ipmi_interpret_version_change_config_len = 8;
+
 static struct ipmi_interpret_config ipmi_interpret_fru_state_config[] =
   {
     { "IPMI_FRU_State_FRU_Not_Installed", IPMI_INTERPRET_STATE_CRITICAL},
@@ -516,7 +591,6 @@ static struct ipmi_interpret_config ipmi_interpret_fru_state_config[] =
     { "IPMI_FRU_State_FRU_Communication_Lost", IPMI_INTERPRET_STATE_CRITICAL},
   };
 static unsigned int ipmi_interpret_fru_state_config_len = 8;
-
 
 static int
 _interpret_config_init (ipmi_interpret_ctx_t ctx,
@@ -760,9 +834,27 @@ ipmi_interpret_sel_init (ipmi_interpret_ctx_t ctx)
     goto cleanup;
 
   if (_interpret_config_init (ctx,
+                              &ctx->interpret_sel.ipmi_interpret_system_boot_initiated_config,
+                              ipmi_interpret_system_boot_initiated_config,
+                              ipmi_interpret_system_boot_initiated_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_config_init (ctx,
                               &ctx->interpret_sel.ipmi_interpret_boot_error_config,
                               ipmi_interpret_boot_error_config,
                               ipmi_interpret_boot_error_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_config_init (ctx,
+                              &ctx->interpret_sel.ipmi_interpret_os_boot_config,
+                              ipmi_interpret_os_boot_config,
+                              ipmi_interpret_os_boot_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_config_init (ctx,
+                              &ctx->interpret_sel.ipmi_interpret_os_critical_stop_config,
+                              ipmi_interpret_os_critical_stop_config,
+                              ipmi_interpret_os_critical_stop_config_len) < 0)
     goto cleanup;
 
   if (_interpret_config_init (ctx,
@@ -784,6 +876,12 @@ ipmi_interpret_sel_init (ipmi_interpret_ctx_t ctx)
     goto cleanup;
 
   if (_interpret_config_init (ctx,
+                              &ctx->interpret_sel.ipmi_interpret_platform_alert_config,
+                              ipmi_interpret_platform_alert_config,
+                              ipmi_interpret_platform_alert_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_config_init (ctx,
                               &ctx->interpret_sel.ipmi_interpret_entity_presence_config,
                               ipmi_interpret_entity_presence_config,
                               ipmi_interpret_entity_presence_config_len) < 0)
@@ -796,6 +894,12 @@ ipmi_interpret_sel_init (ipmi_interpret_ctx_t ctx)
     goto cleanup;
 
   if (_interpret_config_init (ctx,
+                              &ctx->interpret_sel.ipmi_interpret_lan_config,
+                              ipmi_interpret_lan_config,
+                              ipmi_interpret_lan_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_config_init (ctx,
                               &ctx->interpret_sel.ipmi_interpret_management_subsystem_health_config,
                               ipmi_interpret_management_subsystem_health_config,
                               ipmi_interpret_management_subsystem_health_config_len) < 0)
@@ -805,6 +909,18 @@ ipmi_interpret_sel_init (ipmi_interpret_ctx_t ctx)
                               &ctx->interpret_sel.ipmi_interpret_battery_config,
                               ipmi_interpret_battery_config,
                               ipmi_interpret_battery_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_config_init (ctx,
+                              &ctx->interpret_sel.ipmi_interpret_session_audit_config,
+                              ipmi_interpret_session_audit_config,
+                              ipmi_interpret_session_audit_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_config_init (ctx,
+                              &ctx->interpret_sel.ipmi_interpret_version_change_config,
+                              ipmi_interpret_version_change_config,
+                              ipmi_interpret_version_change_config_len) < 0)
     goto cleanup;
 
   if (_interpret_config_init (ctx,
@@ -1368,7 +1484,16 @@ ipmi_interpret_sel_destroy (ipmi_interpret_ctx_t ctx)
                              ctx->interpret_sel.ipmi_interpret_cable_interconnect_config);
 
   _interpret_config_destroy (ctx,
+                             ctx->interpret_sel.ipmi_interpret_system_boot_initiated_config);
+
+  _interpret_config_destroy (ctx,
                              ctx->interpret_sel.ipmi_interpret_boot_error_config);
+
+  _interpret_config_destroy (ctx,
+                             ctx->interpret_sel.ipmi_interpret_os_boot_config);
+
+  _interpret_config_destroy (ctx,
+                             ctx->interpret_sel.ipmi_interpret_os_critical_stop_config);
 
   _interpret_config_destroy (ctx,
                              ctx->interpret_sel.ipmi_interpret_slot_connector_config);
@@ -1380,16 +1505,28 @@ ipmi_interpret_sel_destroy (ipmi_interpret_ctx_t ctx)
                              ctx->interpret_sel.ipmi_interpret_watchdog2_config);
 
   _interpret_config_destroy (ctx,
+                             ctx->interpret_sel.ipmi_interpret_platform_alert_config);
+
+  _interpret_config_destroy (ctx,
                              ctx->interpret_sel.ipmi_interpret_entity_presence_config);
 
   _interpret_config_destroy (ctx,
                              ctx->interpret_sel.ipmi_interpret_entity_presence_device_present_config);
 
   _interpret_config_destroy (ctx,
+                             ctx->interpret_sel.ipmi_interpret_lan_config);
+
+  _interpret_config_destroy (ctx,
                              ctx->interpret_sel.ipmi_interpret_management_subsystem_health_config);
 
   _interpret_config_destroy (ctx,
                              ctx->interpret_sel.ipmi_interpret_battery_config);
+
+  _interpret_config_destroy (ctx,
+                             ctx->interpret_sel.ipmi_interpret_session_audit_config);
+
+  _interpret_config_destroy (ctx,
+                             ctx->interpret_sel.ipmi_interpret_version_change_config);
 
   _interpret_config_destroy (ctx,
                              ctx->interpret_sel.ipmi_interpret_fru_state_config);
@@ -1852,8 +1989,14 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
   int module_board_state_flag0, module_board_state_flag1;
   int module_board_device_present_flag0, module_board_device_present_flag1;
   int cable_interconnect_flag0, cable_interconnect_flag1;
+  int system_boot_initiated_flag0, system_boot_initiated_flag1, system_boot_initiated_flag2,
+    system_boot_initiated_flag3, system_boot_initiated_flag4, system_boot_initiated_flag5;
   int boot_error_flag0, boot_error_flag1, boot_error_flag2,
     boot_error_flag3, boot_error_flag4;
+  int os_boot_flag0, os_boot_flag1, os_boot_flag2, os_boot_flag3, os_boot_flag4,
+    os_boot_flag5;
+  int os_critical_stop_flag0, os_critical_stop_flag1, os_critical_stop_flag2, os_critical_stop_flag3,
+    os_critical_stop_flag4, os_critical_stop_flag5;
   int slot_connector_flag0, slot_connector_flag1, slot_connector_flag2,
     slot_connector_flag3, slot_connector_flag4, slot_connector_flag5,
     slot_connector_flag6, slot_connector_flag7, slot_connector_flag8,
@@ -1869,16 +2012,22 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
   int watchdog2_flag0, watchdog2_flag1, watchdog2_flag2, watchdog2_flag3,
     watchdog2_flag4, watchdog2_flag5, watchdog2_flag6, watchdog2_flag7,
     watchdog2_flag8;
+  int platform_alert_flag0, platform_alert_flag1, platform_alert_flag2, platform_alert_flag3;
   int entity_presence_flag0, entity_presence_flag1, entity_presence_flag2;
   int entity_presence_device_present_flag0, entity_presence_device_present_flag1;
+  int lan_flag0, lan_flag1;
   int management_subsystem_health_flag0, management_subsystem_health_flag1,
     management_subsystem_health_flag2, management_subsystem_health_flag3,
     management_subsystem_health_flag4, management_subsystem_health_flag5;
   int battery_flag0, battery_flag1, battery_flag2;
+  int session_audit_flag0, session_audit_flag1, session_audit_flag2, session_audit_flag3;
+  int version_change_flag0, version_change_flag1, version_change_flag2, version_change_flag3,
+    version_change_flag4, version_change_flag5, version_change_flag6, version_change_flag7;
   int fru_state_flag0, fru_state_flag1, fru_state_flag2, fru_state_flag3,
     fru_state_flag4, fru_state_flag5, fru_state_flag6, fru_state_flag7;
   int sensor_oem_bitmask_flag;
   int sensor_oem_value_flag;
+
   /*
    * IPMI_Threshold_Sel
    */
@@ -3996,6 +4145,79 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
     };
 
   /*
+   * IPMI_System_Boot_Initiated
+   */
+  struct conffile_option system_boot_initiated_options[] =
+    {
+      {
+        ipmi_interpret_system_boot_initiated_config[0].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_state_parse,
+        1,
+        0,
+        &system_boot_initiated_flag0,
+        NULL,
+        0
+      },
+      {
+        ipmi_interpret_system_boot_initiated_config[1].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_state_parse,
+        1,
+        0,
+        &system_boot_initiated_flag1,
+        NULL,
+        0
+      },
+      {
+        ipmi_interpret_system_boot_initiated_config[2].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_state_parse,
+        1,
+        0,
+        &system_boot_initiated_flag2,
+        NULL,
+        0
+      },
+      {
+        ipmi_interpret_system_boot_initiated_config[3].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_state_parse,
+        1,
+        0,
+        &system_boot_initiated_flag3,
+        NULL,
+        0
+      },
+      {
+        ipmi_interpret_system_boot_initiated_config[4].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_state_parse,
+        1,
+        0,
+        &system_boot_initiated_flag4,
+        NULL,
+        0
+      },
+      {
+        ipmi_interpret_system_boot_initiated_config[5].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_state_parse,
+        1,
+        0,
+        &system_boot_initiated_flag5,
+        NULL,
+        0
+      },
+    };  
+
+  /*
    * IPMI_Boot_Error
    */
   struct conffile_option boot_error_options[] =
@@ -4056,6 +4278,163 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
         0
       },
     };
+
+  /*
+   * IPMI_OS_Boot
+   */
+  struct conffile_option os_boot_options[] =
+    {
+      {
+        ipmi_interpret_os_boot_config[0].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_state_parse,
+        1,
+        0,
+        &os_boot_flag0,
+        NULL,
+        0
+      },
+      {
+        ipmi_interpret_os_boot_config[1].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_state_parse,
+        1,
+        0,
+        &os_boot_flag1,
+        NULL,
+        0
+      },
+      {
+        ipmi_interpret_os_boot_config[2].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_state_parse,
+        1,
+        0,
+        &os_boot_flag2,
+        NULL,
+        0
+      },
+      {
+        ipmi_interpret_os_boot_config[3].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_state_parse,
+        1,
+        0,
+        &os_boot_flag3,
+        NULL,
+        0
+      },
+      {
+        ipmi_interpret_os_boot_config[4].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_state_parse,
+        1,
+        0,
+        &os_boot_flag4,
+        NULL,
+        0
+      },
+      {
+        ipmi_interpret_os_boot_config[5].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_state_parse,
+        1,
+        0,
+        &os_boot_flag5,
+        NULL,
+        0
+      },
+      {
+        ipmi_interpret_os_boot_config[6].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_state_parse,
+        1,
+        0,
+        &os_boot_flag5,
+        NULL,
+        0
+      },
+    };  
+
+  /*
+   * IPMI_OS_Critical_Stop
+   */
+  struct conffile_option os_critical_stop_options[] =
+    {
+      {
+        ipmi_interpret_os_critical_stop_config[0].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_state_parse,
+        1,
+        0,
+        &os_critical_stop_flag0,
+        NULL,
+        0
+      },
+      {
+        ipmi_interpret_os_critical_stop_config[1].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_state_parse,
+        1,
+        0,
+        &os_critical_stop_flag1,
+        NULL,
+        0
+      },
+      {
+        ipmi_interpret_os_critical_stop_config[2].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_state_parse,
+        1,
+        0,
+        &os_critical_stop_flag2,
+        NULL,
+        0
+      },
+      {
+        ipmi_interpret_os_critical_stop_config[3].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_state_parse,
+        1,
+        0,
+        &os_critical_stop_flag3,
+        NULL,
+        0
+      },
+      {
+        ipmi_interpret_os_critical_stop_config[4].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_state_parse,
+        1,
+        0,
+        &os_critical_stop_flag4,
+        NULL,
+        0
+      },
+      {
+        ipmi_interpret_os_critical_stop_config[5].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_state_parse,
+        1,
+        0,
+        &os_critical_stop_flag5,
+        NULL,
+        0
+      },
+    };  
 
   /*
    * IPMI_Slot_Connector
@@ -4453,6 +4832,57 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
     };
 
   /*
+   * IPMI_Platform_Alert
+   */
+  struct conffile_option platform_alert_options[] =
+    {
+      {
+        ipmi_interpret_platform_alert_config[0].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_state_parse,
+        1,
+        0,
+        &platform_alert_flag0,
+        NULL,
+        0
+      },
+      {
+        ipmi_interpret_platform_alert_config[1].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_state_parse,
+        1,
+        0,
+        &platform_alert_flag1,
+        NULL,
+        0
+      },
+      {
+        ipmi_interpret_platform_alert_config[2].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_state_parse,
+        1,
+        0,
+        &platform_alert_flag2,
+        NULL,
+        0
+      },
+      {
+        ipmi_interpret_platform_alert_config[3].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_state_parse,
+        1,
+        0,
+        &platform_alert_flag3,
+        NULL,
+        0
+      },
+    };
+
+  /*
    * IPMI_Entity_Presence
    */
   struct conffile_option entity_presence_options[] =
@@ -4516,6 +4946,35 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
         1,
         0,
         &entity_presence_device_present_flag1,
+        NULL,
+        0
+      },
+    };
+
+  /*
+   * IPMI_Lan
+   */
+  struct conffile_option lan_options[] =
+    {
+      {
+        ipmi_interpret_lan_config[0].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_state_parse,
+        1,
+        0,
+        &lan_flag0,
+        NULL,
+        0
+      },
+      {
+        ipmi_interpret_lan_config[1].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_state_parse,
+        1,
+        0,
+        &lan_flag1,
         NULL,
         0
       },
@@ -4629,6 +5088,152 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
         1,
         0,
         &battery_flag2,
+        NULL,
+        0
+      },
+    };
+
+  /*
+   * IPMI_Session_Audit
+   */
+  struct conffile_option session_audit_options[] =
+    {
+      {
+        ipmi_interpret_session_audit_config[0].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_state_parse,
+        1,
+        0,
+        &session_audit_flag0,
+        NULL,
+        0
+      },
+      {
+        ipmi_interpret_session_audit_config[1].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_state_parse,
+        1,
+        0,
+        &session_audit_flag1,
+        NULL,
+        0
+      },
+      {
+        ipmi_interpret_session_audit_config[2].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_state_parse,
+        1,
+        0,
+        &session_audit_flag2,
+        NULL,
+        0
+      },
+      {
+        ipmi_interpret_session_audit_config[3].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_state_parse,
+        1,
+        0,
+        &session_audit_flag3,
+        NULL,
+        0
+      },
+    };
+
+  /*
+   * IPMI_Version_Change
+   */
+  struct conffile_option version_change_options[] =
+    {
+      {
+        ipmi_interpret_version_change_config[0].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_state_parse,
+        1,
+        0,
+        &version_change_flag0,
+        NULL,
+        0
+      },
+      {
+        ipmi_interpret_version_change_config[1].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_state_parse,
+        1,
+        0,
+        &version_change_flag1,
+        NULL,
+        0
+      },
+      {
+        ipmi_interpret_version_change_config[2].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_state_parse,
+        1,
+        0,
+        &version_change_flag2,
+        NULL,
+        0
+      },
+      {
+        ipmi_interpret_version_change_config[3].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_state_parse,
+        1,
+        0,
+        &version_change_flag3,
+        NULL,
+        0
+      },
+      {
+        ipmi_interpret_version_change_config[4].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_state_parse,
+        1,
+        0,
+        &version_change_flag4,
+        NULL,
+        0
+      },
+      {
+        ipmi_interpret_version_change_config[5].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_state_parse,
+        1,
+        0,
+        &version_change_flag5,
+        NULL,
+        0
+      },
+      {
+        ipmi_interpret_version_change_config[6].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_state_parse,
+        1,
+        0,
+        &version_change_flag6,
+        NULL,
+        0
+      },
+      {
+        ipmi_interpret_version_change_config[7].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_state_parse,
+        1,
+        0,
+        &version_change_flag7,
         NULL,
         0
       },
@@ -4755,6 +5360,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
 	0
       },
     };
+
   conffile_t cf = NULL;
   int options_len;
   int rv = -1;
@@ -5019,12 +5625,36 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          ctx->interpret_sel.ipmi_interpret_cable_interconnect_config);
       config_file_options_len += options_len;
 
+      options_len = sizeof (system_boot_initiated_options)/sizeof (struct conffile_option);
+      _copy_options_and_fill_option_ptr (config_file_options,
+                                         config_file_options_len,
+                                         system_boot_initiated_options,
+                                         options_len,
+                                         ctx->interpret_sel.ipmi_interpret_system_boot_initiated_config);
+      config_file_options_len += options_len;
+
       options_len = sizeof (boot_error_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
                                          config_file_options_len,
                                          boot_error_options,
                                          options_len,
                                          ctx->interpret_sel.ipmi_interpret_boot_error_config);
+      config_file_options_len += options_len;
+
+      options_len = sizeof (os_boot_options)/sizeof (struct conffile_option);
+      _copy_options_and_fill_option_ptr (config_file_options,
+                                         config_file_options_len,
+                                         os_boot_options,
+                                         options_len,
+                                         ctx->interpret_sel.ipmi_interpret_os_boot_config);
+      config_file_options_len += options_len;
+
+      options_len = sizeof (os_critical_stop_options)/sizeof (struct conffile_option);
+      _copy_options_and_fill_option_ptr (config_file_options,
+                                         config_file_options_len,
+                                         os_critical_stop_options,
+                                         options_len,
+                                         ctx->interpret_sel.ipmi_interpret_os_critical_stop_config);
       config_file_options_len += options_len;
 
       options_len = sizeof (slot_connector_options)/sizeof (struct conffile_option);
@@ -5051,6 +5681,14 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          ctx->interpret_sel.ipmi_interpret_watchdog2_config);
       config_file_options_len += options_len;
 
+      options_len = sizeof (platform_alert_options)/sizeof (struct conffile_option);
+      _copy_options_and_fill_option_ptr (config_file_options,
+                                         config_file_options_len,
+                                         platform_alert_options,
+                                         options_len,
+                                         ctx->interpret_sel.ipmi_interpret_platform_alert_config);
+      config_file_options_len += options_len;
+
       options_len = sizeof (entity_presence_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
                                          config_file_options_len,
@@ -5067,6 +5705,14 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          ctx->interpret_sel.ipmi_interpret_entity_presence_device_present_config);
       config_file_options_len += options_len;
 
+      options_len = sizeof (lan_options)/sizeof (struct conffile_option);
+      _copy_options_and_fill_option_ptr (config_file_options,
+                                         config_file_options_len,
+                                         lan_options,
+                                         options_len,
+                                         ctx->interpret_sel.ipmi_interpret_lan_config);
+      config_file_options_len += options_len;
+
       options_len = sizeof (management_subsystem_health_options)/sizeof (struct conffile_option);
       _copy_options_and_fill_option_ptr (config_file_options,
                                          config_file_options_len,
@@ -5081,6 +5727,22 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          battery_options,
                                          options_len,
                                          ctx->interpret_sel.ipmi_interpret_battery_config);
+      config_file_options_len += options_len;
+
+      options_len = sizeof (session_audit_options)/sizeof (struct conffile_option);
+      _copy_options_and_fill_option_ptr (config_file_options,
+                                         config_file_options_len,
+                                         session_audit_options,
+                                         options_len,
+                                         ctx->interpret_sel.ipmi_interpret_session_audit_config);
+      config_file_options_len += options_len;
+
+      options_len = sizeof (version_change_options)/sizeof (struct conffile_option);
+      _copy_options_and_fill_option_ptr (config_file_options,
+                                         config_file_options_len,
+                                         version_change_options,
+                                         options_len,
+                                         ctx->interpret_sel.ipmi_interpret_version_change_config);
       config_file_options_len += options_len;
 
       options_len = sizeof (fru_state_options)/sizeof (struct conffile_option);
