@@ -53,6 +53,7 @@
 #include <errno.h>
 
 #include "freeipmi/interpret/ipmi-interpret.h"
+#include "freeipmi/record-format/ipmi-sel-record-format.h"
 #include "freeipmi/spec/ipmi-event-reading-type-code-spec.h"
 #include "freeipmi/spec/ipmi-event-reading-type-code-oem-spec.h"
 #include "freeipmi/spec/ipmi-iana-enterprise-numbers-spec.h"
@@ -929,6 +930,17 @@ ipmi_interpret_sel_init (ipmi_interpret_ctx_t ctx)
                               ipmi_interpret_fru_state_config_len) < 0)
     goto cleanup;
 
+  if (!(ctx->interpret_sel.oem_config = hash_create (IPMI_INTERPRET_SEL_HASH_SIZE,
+                                                     (hash_key_f)hash_key_string,
+                                                     (hash_cmp_f)strcmp,
+                                                     (hash_del_f)free)))
+    {
+      INTERPRET_SET_ERRNUM (ctx, IPMI_INTERPRET_ERR_OUT_OF_MEMORY);
+      goto cleanup;
+    }
+  
+  /* No OEM SEL Records to Initialize right now */
+
   rv = 0;
  cleanup:
   return (rv);
@@ -1350,7 +1362,7 @@ ipmi_interpret_sensor_init (ipmi_interpret_ctx_t ctx)
                               ipmi_interpret_fru_state_config_len) < 0)
     goto cleanup;
 
-  if (!(ctx->interpret_sensor.oem_config = hash_create (IPMI_INTERPRET_HASH_SIZE,
+  if (!(ctx->interpret_sensor.oem_config = hash_create (IPMI_INTERPRET_SENSOR_HASH_SIZE,
                                                         (hash_key_f)hash_key_string,
                                                         (hash_cmp_f)strcmp,
                                                         (hash_del_f)free)))
@@ -1743,14 +1755,180 @@ _strtoul (conffile_t cf,
 }
 
 static int
-_cb_oem_parse (conffile_t cf,
-	       struct conffile_data *data,
-	       char *optionname,
-	       int option_type,
-	       void *option_ptr,
-	       int option_data,
-	       void *app_ptr,
-	       int app_data)
+_cb_sel_oem_parse (conffile_t cf,
+                   struct conffile_data *data,
+                   char *optionname,
+                   int option_type,
+                   void *option_ptr,
+                   int option_data,
+                   void *app_ptr,
+                   int app_data)
+{
+  hash_t *h = NULL;
+  char keybuf[IPMI_OEM_HASH_KEY_BUFLEN + 1];
+  uint32_t manufacturer_id;
+  uint16_t product_id;
+  uint8_t record_type;
+  int sel_state;
+  uint32_t tmp;
+  struct ipmi_interpret_sel_oem_config *oem_conf;
+  struct ipmi_interpret_sel_oem_data_byte oem_bytes[IPMI_SEL_OEM_DATA_MAX];
+  unsigned int oem_data_count = 0;
+  int found = 0;
+  unsigned int i;
+
+  assert (cf);
+  assert (data);
+  assert (optionname);
+  assert (option_ptr);
+
+  h = (hash_t *)option_ptr;
+
+  memset (keybuf, '\0', IPMI_OEM_HASH_KEY_BUFLEN + 1);
+  memset (oem_bytes, '\0', sizeof (struct ipmi_interpret_sel_oem_data_byte) * IPMI_SEL_OEM_DATA_MAX);
+
+  if (!strcasecmp (optionname, "IPMI_OEM_Timestamped_Record"))
+    {
+      if (data->stringlist_len != 9)
+        conffile_seterrnum (cf, CONFFILE_ERR_PARSE_ARG_MISSING);
+      oem_data_count = IPMI_SEL_OEM_DATA_TIMESTAMPED_BYTES;
+    }
+  else
+    {
+      if (data->stringlist_len != 16)
+        conffile_seterrnum (cf, CONFFILE_ERR_PARSE_ARG_MISSING);
+      oem_data_count = IPMI_SEL_OEM_DATA_NON_TIMESTAMPED_BYTES;
+    }
+  
+  if (_strtoul (cf,
+		data->stringlist[0],
+		0x00FFFFFF,	/* 24 bit manufacturer ID */
+		&tmp) < 0)
+    return (-1);
+  manufacturer_id = tmp;
+
+  if (_strtoul (cf,
+		data->stringlist[1],
+		USHRT_MAX,
+		&tmp) < 0)
+    return (-1);
+  product_id = tmp;
+
+  if (_strtoul (cf,
+		data->stringlist[2],
+		UCHAR_MAX,
+		&tmp) < 0)
+    return (-1);
+  record_type = tmp;
+
+  if (oem_data_count == IPMI_SEL_OEM_DATA_TIMESTAMPED_BYTES)
+    {
+      if (!IPMI_SEL_RECORD_TYPE_IS_TIMESTAMPED_OEM (record_type))
+        {
+          conffile_seterrnum (cf, CONFFILE_ERR_PARSE_ARG_INVALID);
+          return (-1);
+        }
+    }
+  else
+    {
+      if (!IPMI_SEL_RECORD_TYPE_IS_NON_TIMESTAMPED_OEM (record_type))
+        {
+          conffile_seterrnum (cf, CONFFILE_ERR_PARSE_ARG_INVALID);
+          return (-1);
+        }
+    }
+
+  for (i = 0; i < oem_data_count; i++)
+    {
+      if (!strcasecmp (data->stringlist[3 + i], IPMI_SEL_OEM_DATA_HEX_BYTE_ANY))
+        {
+          oem_bytes[i].any_flag = 1;
+          oem_bytes[i].oem_data_byte = 0;
+        }
+      else
+        {
+          if (_strtoul (cf,
+                        data->stringlist[3 + i],
+                        UCHAR_MAX,
+                        &tmp) < 0)
+            return (-1);
+
+          oem_bytes[i].any_flag = 0;
+          oem_bytes[i].oem_data_byte = tmp;
+        }
+    }
+
+  if ((sel_state = _state (cf, data->stringlist[3 + oem_data_count])) < 0)
+    return (-1);
+  
+  snprintf (keybuf,
+	    IPMI_OEM_HASH_KEY_BUFLEN,
+	    "%u:%u:%u",
+	    manufacturer_id,
+	    product_id,
+            record_type);
+
+  if (!(oem_conf = hash_find ((*h), keybuf)))
+    {
+      if (!(oem_conf = (struct ipmi_interpret_sel_oem_config *)malloc (sizeof (struct ipmi_interpret_sel_oem_config))))
+	{
+	  conffile_seterrnum (cf, CONFFILE_ERR_OUTMEM);
+	  return (-1);
+	}
+      memset (oem_conf, '\0', sizeof (struct ipmi_interpret_sel_oem_config));
+
+      memcpy (oem_conf->key, keybuf, IPMI_OEM_HASH_KEY_BUFLEN);
+      oem_conf->manufacturer_id = manufacturer_id;
+      oem_conf->product_id = product_id;
+      oem_conf->record_type = record_type;
+
+      if (!hash_insert ((*h), oem_conf->key, oem_conf))
+	{
+	  conffile_seterrnum (cf, CONFFILE_ERR_INTERNAL);
+	  free (oem_conf);
+	  return (-1);
+	}
+    }
+
+  if (oem_conf->oem_record_count >= IPMI_SEL_OEM_RECORD_MAX)
+    {
+      conffile_seterrnum (cf, CONFFILE_ERR_PARSE_ARG_TOOMANY);
+      return (-1);
+    }
+
+  /* check for duplicates */
+  for (i = 0; i < oem_conf->oem_record_count; i++)
+    {
+      if (!memcmp (oem_bytes, oem_conf->oem_record[i].oem_bytes, sizeof (struct ipmi_interpret_sel_oem_data_byte) * IPMI_SEL_OEM_DATA_MAX))
+        {
+          oem_conf->oem_record[i].sel_state = sel_state;
+          found++;
+          break;
+        }
+    }
+
+  if (!found)
+    {
+      memcpy (oem_conf->oem_record[oem_conf->oem_record_count].oem_bytes,
+              oem_bytes,
+              sizeof (struct ipmi_interpret_sel_oem_data_byte) * IPMI_SEL_OEM_DATA_MAX);
+      oem_conf->oem_record[oem_conf->oem_record_count].oem_bytes_count = oem_data_count;
+      oem_conf->oem_record[oem_conf->oem_record_count].sel_state = sel_state;
+      oem_conf->oem_record_count++;
+    }
+
+  return (0);
+}
+
+static int
+_cb_sensor_oem_parse (conffile_t cf,
+                      struct conffile_data *data,
+                      char *optionname,
+                      int option_type,
+                      void *option_ptr,
+                      int option_data,
+                      void *app_ptr,
+                      int app_data)
 {
   hash_t *h = NULL;
   char keybuf[IPMI_OEM_HASH_KEY_BUFLEN + 1];
@@ -2025,6 +2203,8 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
     version_change_flag4, version_change_flag5, version_change_flag6, version_change_flag7;
   int fru_state_flag0, fru_state_flag1, fru_state_flag2, fru_state_flag3,
     fru_state_flag4, fru_state_flag5, fru_state_flag6, fru_state_flag7;
+  int sel_oem_timestamped_flag;
+  int sel_oem_non_timestamped_flag;
   int sensor_oem_bitmask_flag;
   int sensor_oem_value_flag;
 
@@ -5334,6 +5514,33 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
       },
     };
 
+  struct conffile_option sel_oem_config_options[] =
+    {
+      /* OEM Config */
+      {
+	"IPMI_OEM_Timestamped_Record",
+	CONFFILE_OPTION_LIST_STRING,
+	6,
+	_cb_sel_oem_parse,
+	-1,
+	0,
+	&sel_oem_timestamped_flag,
+	NULL,
+	0
+      },
+      {
+	"IPMI_OEM_Non_Timestamped_Record",
+	CONFFILE_OPTION_LIST_STRING,
+	6,
+	_cb_sel_oem_parse,
+	-1,
+	0,
+	&sel_oem_non_timestamped_flag,
+	NULL,
+	0
+      },
+    };
+
   struct conffile_option sensor_oem_config_options[] =
     {
       /* OEM Config */
@@ -5341,7 +5548,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
 	"IPMI_OEM_Bitmask",
 	CONFFILE_OPTION_LIST_STRING,
 	6,
-	_cb_oem_parse,
+	_cb_sensor_oem_parse,
 	-1,
 	0,
 	&sensor_oem_bitmask_flag,
@@ -5352,7 +5559,7 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
 	"IPMI_OEM_Value",
 	CONFFILE_OPTION_LIST_STRING,
 	6,
-	_cb_oem_parse,
+	_cb_sensor_oem_parse,
 	-1,
 	0,
 	&sensor_oem_value_flag,
@@ -5751,6 +5958,14 @@ _ipmi_interpret_config_parse (ipmi_interpret_ctx_t ctx,
                                          fru_state_options,
                                          options_len,
                                          ctx->interpret_sel.ipmi_interpret_fru_state_config);
+      config_file_options_len += options_len;
+
+      options_len = sizeof (sel_oem_config_options)/sizeof (struct conffile_option);
+      _copy_options_and_fill_option_ptr (config_file_options,
+                                         config_file_options_len,
+                                         sel_oem_config_options,
+                                         options_len,
+                                         &ctx->interpret_sel.oem_config);
       config_file_options_len += options_len;
     }
   else
@@ -6157,3 +6372,19 @@ ipmi_interpret_sensor_config_parse (ipmi_interpret_ctx_t ctx,
 
   return (_ipmi_interpret_config_parse (ctx, config_file, 0));
 }
+
+#if 0
+struct ipmi_interpret_sel_oem_data_byte {
+  unsigned int any_flag;
+  uint8_t oem_data_byte;
+};
+
+struct ipmi_interpret_sel_oem_config {
+  char key[IPMI_OEM_HASH_KEY_BUFLEN + 1];
+  uint32_t manufacturer_id;
+  uint16_t product_id;
+  uint8_t record_type;
+  struct ipmi_interpret_sel_oem_data_byte oem_bytes[IPMI_SEL_OEM_DATA_MAX];
+  unsigned int oem_bytes_count;
+};
+#endif

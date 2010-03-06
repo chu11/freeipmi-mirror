@@ -36,16 +36,48 @@
 
 #define IPMI_INTERPRET_MAX_BITMASKS 32
 
-#define IPMI_INTERPRET_HASH_SIZE 32
+#define IPMI_INTERPRET_SEL_HASH_SIZE 32
+
+#define IPMI_INTERPRET_SENSOR_HASH_SIZE 32
 
 #define IPMI_OEM_STATE_TYPE_BITMASK 0
 #define IPMI_OEM_STATE_TYPE_VALUE   1
 
 #define IPMI_OEM_HASH_KEY_BUFLEN    128
 
+#define IPMI_SEL_OEM_DATA_MAX                   13
+
+#define IPMI_SEL_OEM_DATA_TIMESTAMPED_BYTES     6
+
+#define IPMI_SEL_OEM_DATA_NON_TIMESTAMPED_BYTES 13
+
+#define IPMI_SEL_OEM_RECORD_MAX                 64
+
+#define IPMI_SEL_OEM_DATA_HEX_BYTE_ANY          "ANY"
+
 struct ipmi_interpret_config {
   char *option_str;
   int state;
+};
+
+struct ipmi_interpret_sel_oem_data_byte {
+  unsigned int any_flag;
+  uint8_t oem_data_byte;
+};
+
+struct ipmi_interpret_sel_oem_record {
+  struct ipmi_interpret_sel_oem_data_byte oem_bytes[IPMI_SEL_OEM_DATA_MAX];
+  unsigned int oem_bytes_count;
+  unsigned int sel_state;
+};
+
+struct ipmi_interpret_sel_oem_config {
+  char key[IPMI_OEM_HASH_KEY_BUFLEN + 1];
+  uint32_t manufacturer_id;
+  uint16_t product_id;
+  uint8_t record_type;
+  struct ipmi_interpret_sel_oem_record oem_record[IPMI_SEL_OEM_RECORD_MAX];
+  unsigned int oem_record_count;
 };
 
 struct ipmi_interpret_sel {
@@ -96,6 +128,8 @@ struct ipmi_interpret_sel {
   struct ipmi_interpret_config **ipmi_interpret_session_audit_config;
   struct ipmi_interpret_config **ipmi_interpret_version_change_config;
   struct ipmi_interpret_config **ipmi_interpret_fru_state_config;
+
+  hash_t oem_config;
 };
 
 struct ipmi_interpret_sensor_oem_state {
