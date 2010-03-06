@@ -6372,19 +6372,3 @@ ipmi_interpret_sensor_config_parse (ipmi_interpret_ctx_t ctx,
 
   return (_ipmi_interpret_config_parse (ctx, config_file, 0));
 }
-
-#if 0
-struct ipmi_interpret_sel_oem_data_byte {
-  unsigned int any_flag;
-  uint8_t oem_data_byte;
-};
-
-struct ipmi_interpret_sel_oem_config {
-  char key[IPMI_OEM_HASH_KEY_BUFLEN + 1];
-  uint32_t manufacturer_id;
-  uint16_t product_id;
-  uint8_t record_type;
-  struct ipmi_interpret_sel_oem_data_byte oem_bytes[IPMI_SEL_OEM_DATA_MAX];
-  unsigned int oem_bytes_count;
-};
-#endif
