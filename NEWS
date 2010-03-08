@@ -15,6 +15,8 @@ Tools - Detailed Enhancements/Changes/Fixes
 o ipmi-sensors
   - Support --output-event-bitmask option.
   - Support --output-sensor-state option.
+  - Some sensor states may now report 'N/A' if an invalid sensor event
+    occurred.
   - Support --sensor-state-config-file option.
   - Support number input for --sensor-types and
     --exclude-sensor-types.

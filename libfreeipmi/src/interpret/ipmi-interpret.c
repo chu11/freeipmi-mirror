@@ -312,8 +312,14 @@ _get_sensor_state (ipmi_interpret_ctx_t ctx,
           if (config[i]->sensor_state > (*sensor_state))
             (*sensor_state) = config[i]->sensor_state;
         }
+
+      sensor_event_bitmask &= ~(0x1 << i);
       i++;
     }
+
+  /* if any bits still set, they are outside of specification range */
+  if (sensor_event_bitmask)
+    (*sensor_state) = IPMI_INTERPRET_SENSOR_STATE_UNKNOWN;
 
   return (0);
 }

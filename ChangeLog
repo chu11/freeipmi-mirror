@@ -1,3 +1,8 @@
+2010-03-08  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/interpret/ipmi-interpret.c (_get_sensor_state):
+	Return UNKNOWN state if invalid sensor bitmask returned.
+	
 2010-03-03  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sel/: Fix possible HP workaround bug.
