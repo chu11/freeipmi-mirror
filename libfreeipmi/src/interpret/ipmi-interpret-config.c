@@ -938,7 +938,7 @@ ipmi_interpret_sel_init (ipmi_interpret_ctx_t ctx)
       INTERPRET_SET_ERRNUM (ctx, IPMI_INTERPRET_ERR_OUT_OF_MEMORY);
       goto cleanup;
     }
-  
+
   if (!(ctx->interpret_sel.sel_oem_record_config = hash_create (IPMI_INTERPRET_SEL_HASH_SIZE,
                                                                 (hash_key_f)hash_key_string,
                                                                 (hash_cmp_f)strcmp,
@@ -1788,8 +1788,8 @@ _cb_sel_oem_sensor_parse (conffile_t cf,
   uint16_t product_id;
   uint8_t event_reading_type_code;
   uint8_t sensor_type;
-  unsigned int direction_any_flag = 0;
-  uint8_t direction = 0;
+  unsigned int event_direction_any_flag = 0;
+  uint8_t event_direction = 0;
   unsigned int event_data1_any_flag = 0;
   uint8_t event_data1 = 0;
   unsigned int event_data2_any_flag = 0;
@@ -1843,11 +1843,11 @@ _cb_sel_oem_sensor_parse (conffile_t cf,
   sensor_type = tmp;
   
   if (!strcasecmp (data->stringlist[4], IPMI_SEL_OEM_DATA_HEX_BYTE_ANY))
-    direction_any_flag = 1;
+    event_direction_any_flag = 1;
   else if (!strcasecmp (data->stringlist[4], "assertion"))
-    direction = IPMI_SEL_RECORD_ASSERTION_EVENT;
+    event_direction = IPMI_SEL_RECORD_ASSERTION_EVENT;
   else if (!strcasecmp (data->stringlist[4], "deassertion"))
-    direction = IPMI_SEL_RECORD_DEASSERTION_EVENT;
+    event_direction = IPMI_SEL_RECORD_DEASSERTION_EVENT;
   else
     {
       conffile_seterrnum (cf, CONFFILE_ERR_PARSE_ARG_INVALID);
@@ -1936,8 +1936,8 @@ _cb_sel_oem_sensor_parse (conffile_t cf,
   /* check for duplicates */
   for (i = 0; i < oem_conf->oem_sensor_data_count; i++)
     {
-      if (oem_conf->oem_sensor_data[i].direction_any_flag == direction_any_flag
-          && oem_conf->oem_sensor_data[i].direction == direction
+      if (oem_conf->oem_sensor_data[i].event_direction_any_flag == event_direction_any_flag
+          && oem_conf->oem_sensor_data[i].event_direction == event_direction
           && oem_conf->oem_sensor_data[i].event_data1_any_flag == event_data1_any_flag
           && oem_conf->oem_sensor_data[i].event_data1 == event_data1
           && oem_conf->oem_sensor_data[i].event_data2_any_flag == event_data2_any_flag
@@ -1953,8 +1953,8 @@ _cb_sel_oem_sensor_parse (conffile_t cf,
 
   if (!found)
     {
-      oem_conf->oem_sensor_data[oem_conf->oem_sensor_data_count].direction_any_flag = direction_any_flag;
-      oem_conf->oem_sensor_data[oem_conf->oem_sensor_data_count].direction = direction;
+      oem_conf->oem_sensor_data[oem_conf->oem_sensor_data_count].event_direction_any_flag = event_direction_any_flag;
+      oem_conf->oem_sensor_data[oem_conf->oem_sensor_data_count].event_direction = event_direction;
       oem_conf->oem_sensor_data[oem_conf->oem_sensor_data_count].event_data1_any_flag = event_data1_any_flag;
       oem_conf->oem_sensor_data[oem_conf->oem_sensor_data_count].event_data1 = event_data1;
       oem_conf->oem_sensor_data[oem_conf->oem_sensor_data_count].event_data2_any_flag = event_data2_any_flag;

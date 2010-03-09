@@ -31,10 +31,13 @@
 #include <errno.h>
 
 #include "freeipmi/interpret/ipmi-interpret.h"
+#include "freeipmi/sel-parse/ipmi-sel-parse.h"
 
 #include "ipmi-interpret-defs.h"
 
 void interpret_set_interpret_errnum_by_errno (ipmi_interpret_ctx_t ctx, int __errno);
+
+void interpret_set_interpret_errnum_by_sel_parse_ctx (ipmi_interpret_ctx_t ctx, ipmi_sel_parse_ctx_t sel_parse_ctx);
 
 #endif /* ipmi-interpret-util.h */
 

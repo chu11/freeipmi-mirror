@@ -36,6 +36,7 @@
 #include "freeipmi/interpret/ipmi-interpret.h"
 
 #include "freeipmi/record-format/ipmi-sdr-record-format.h"
+#include "freeipmi/record-format/ipmi-sel-record-format.h"
 #include "freeipmi/sel-parse/ipmi-sel-parse.h"
 #include "freeipmi/spec/ipmi-event-reading-type-code-spec.h"
 #include "freeipmi/spec/ipmi-sensor-types-spec.h"
@@ -61,6 +62,7 @@ static char *ipmi_interpret_errmsgs[] =
     "sel config file parse error",
     "sensor config file does not exist",
     "sensor config file parse error",
+    "invalid sel record",
     "internal system error",
     "buffer overflow",
     "internal error",
@@ -384,6 +386,196 @@ _get_sel_state (ipmi_interpret_ctx_t ctx,
   return (0);
 }
 
+static int
+_get_sel_oem_sensor_state (ipmi_interpret_ctx_t ctx,
+                           const void *record_buf,
+                           unsigned int record_buflen,
+                           uint8_t event_reading_type_code,
+                           uint8_t sensor_type,
+                           unsigned int *sel_state)
+{
+  char keybuf[IPMI_OEM_HASH_KEY_BUFLEN + 1];
+  struct ipmi_interpret_sel_oem_sensor_config *oem_conf;
+
+  assert (ctx);
+  assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
+  assert (record_buf);
+  assert (record_buflen);
+  assert (sel_state);
+
+  memset (keybuf, '\0', IPMI_OEM_HASH_KEY_BUFLEN + 1);
+
+  snprintf (keybuf,
+            IPMI_OEM_HASH_KEY_BUFLEN,
+            "%u:%u:%u:%u",
+            ctx->manufacturer_id,
+            ctx->product_id,
+            event_reading_type_code,
+            sensor_type);
+  
+  if ((oem_conf = hash_find (ctx->interpret_sel.sel_oem_sensor_config,
+			     keybuf)))
+    {
+      unsigned int i;
+      uint8_t event_direction;
+      uint8_t event_data1;
+      uint8_t event_data2;
+      uint8_t event_data3;
+      int found = 0;
+      
+      (*sel_state) = IPMI_INTERPRET_STATE_NOMINAL;
+      
+      if (ipmi_sel_parse_record_sensor_type (ctx->sel_parse_ctx,
+                                             record_buf,
+                                             record_buflen,
+                                             &sensor_type) < 0)
+        {
+          INTERPRET_SEL_PARSE_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_parse_ctx);
+          return (-1);
+        }
+
+      if (ipmi_sel_parse_record_event_direction (ctx->sel_parse_ctx,
+                                                 record_buf,
+                                                 record_buflen,
+                                                 &event_direction) < 0)
+        {
+          INTERPRET_SEL_PARSE_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_parse_ctx);
+          return (-1);
+        }
+
+      if (ipmi_sel_parse_record_event_data1 (ctx->sel_parse_ctx,
+                                             record_buf,
+                                             record_buflen,
+                                             &event_data1) < 0)
+        {
+          INTERPRET_SEL_PARSE_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_parse_ctx);
+          return (-1);
+        }
+
+      if (ipmi_sel_parse_record_event_data2 (ctx->sel_parse_ctx,
+                                             record_buf,
+                                             record_buflen,
+                                             &event_data2) < 0)
+        {
+          INTERPRET_SEL_PARSE_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_parse_ctx);
+          return (-1);
+        }
+      
+      if (ipmi_sel_parse_record_event_data3 (ctx->sel_parse_ctx,
+                                             record_buf,
+                                             record_buflen,
+                                             &event_data3) < 0)
+        {
+          INTERPRET_SEL_PARSE_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_parse_ctx);
+          return (-1);
+        }
+
+      for (i = 0; i < oem_conf->oem_sensor_data_count; i++)
+	{
+          
+	  if ((oem_conf->oem_sensor_data[i].event_direction_any_flag
+               || oem_conf->oem_sensor_data[i].event_direction == event_direction)
+              && (oem_conf->oem_sensor_data[i].event_data1_any_flag
+                  || oem_conf->oem_sensor_data[i].event_data1 == event_data1)
+              && (oem_conf->oem_sensor_data[i].event_data2_any_flag
+                  || oem_conf->oem_sensor_data[i].event_data2 == event_data2)
+              && (oem_conf->oem_sensor_data[i].event_data3_any_flag
+                  || oem_conf->oem_sensor_data[i].event_data3 == event_data3))
+	    {
+              if (oem_conf->oem_sensor_data[i].sel_state > (*sel_state))
+                (*sel_state) = oem_conf->oem_sensor_data[i].sel_state;
+              found++;
+	    }
+	}
+      
+      if (!found)
+	(*sel_state) = IPMI_INTERPRET_STATE_UNKNOWN;
+    }
+  else
+    (*sel_state) = IPMI_INTERPRET_STATE_UNKNOWN;
+
+  return (0);
+}
+
+static int
+_get_sel_oem_record_state (ipmi_interpret_ctx_t ctx,
+                           const void *record_buf,
+                           unsigned int record_buflen,
+                           uint8_t record_type,
+                           unsigned int *sel_state)
+{
+  char keybuf[IPMI_OEM_HASH_KEY_BUFLEN + 1];
+  struct ipmi_interpret_sel_oem_record_config *oem_conf;
+
+  assert (ctx);
+  assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
+  assert (record_buf);
+  assert (record_buflen);
+  assert (sel_state);
+
+  memset (keybuf, '\0', IPMI_OEM_HASH_KEY_BUFLEN + 1);
+
+  snprintf (keybuf,
+            IPMI_OEM_HASH_KEY_BUFLEN,
+            "%u:%u:%u",
+            ctx->manufacturer_id,
+            ctx->product_id,
+            record_type);
+  
+  if ((oem_conf = hash_find (ctx->interpret_sel.sel_oem_record_config,
+			     keybuf)))
+    {
+      unsigned int i, j;
+      uint8_t oem_data[IPMI_SEL_OEM_DATA_MAX];
+      int oem_data_len;
+      int found = 0;
+      
+      (*sel_state) = IPMI_INTERPRET_STATE_NOMINAL;
+      
+      if ((oem_data_len = ipmi_sel_parse_record_oem (ctx->sel_parse_ctx,
+                                                     record_buf,
+                                                     record_buflen,
+                                                     oem_data,
+                                                     IPMI_SEL_OEM_DATA_MAX)) < 0)
+        {
+          INTERPRET_SEL_PARSE_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_parse_ctx);
+          return (-1);
+        }
+
+      for (i = 0; i < oem_conf->oem_record_count; i++)
+	{
+          int match = 1;
+          
+          if (oem_data_len != oem_conf->oem_record[i].oem_bytes_count)
+            continue;
+
+          for (j = 0; j < oem_conf->oem_record[i].oem_bytes_count; j++)
+            {
+              if (!oem_conf->oem_record[i].oem_bytes[j].any_flag
+                  && oem_conf->oem_record[i].oem_bytes[j].oem_data_byte != oem_data[j])
+                {
+                  match = 0;
+                  break;
+                }
+            }
+          
+          if (match)
+            {
+              if (oem_conf->oem_record[i].sel_state > (*sel_state))
+                (*sel_state) = oem_conf->oem_record[i].sel_state;
+              found++;
+            }
+	}
+      
+      if (!found)
+	(*sel_state) = IPMI_INTERPRET_STATE_UNKNOWN;
+    }
+  else
+    (*sel_state) = IPMI_INTERPRET_STATE_UNKNOWN;
+
+  return (0);
+}
+
 int
 ipmi_interpret_sel (ipmi_interpret_ctx_t ctx,
                     const void *record_buf,
@@ -391,6 +583,7 @@ ipmi_interpret_sel (ipmi_interpret_ctx_t ctx,
                     unsigned int *sel_state)
 {
   struct ipmi_interpret_config **sel_config = NULL;
+  uint8_t record_type;
   int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_INTERPRET_CTX_MAGIC)
@@ -405,191 +598,240 @@ ipmi_interpret_sel (ipmi_interpret_ctx_t ctx,
       return (-1);
     }
 
-#if 0
-  if (IPMI_EVENT_READING_TYPE_CODE_IS_THRESHOLD (event_reading_type_code))
+  if (ipmi_sel_parse_record_record_type (ctx->sel_parse_ctx,
+                                         record_buf,
+                                         record_buflen,
+                                         &record_type) < 0)
     {
-      if (_get_sel_state (ctx,
-                             sel_event_bitmask,
-                             sel_state,
-                             ctx->interpret_sel.ipmi_interpret_threshold_sel_config) < 0)
-        goto cleanup;
+      INTERPRET_SEL_PARSE_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_parse_ctx);
+      return (-1);
     }
-  else if (IPMI_EVENT_READING_TYPE_CODE_IS_GENERIC (event_reading_type_code))
+
+  /* XXX deal w/ HP workaround */
+  if (record_type == IPMI_SEL_RECORD_TYPE_SYSTEM_EVENT_RECORD)
     {
-      if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
-          && sensor_type == IPMI_SENSOR_TYPE_VOLTAGE)
-        sel_config = ctx->interpret_sel.ipmi_interpret_voltage_state_config;
-      else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_PERFORMANCE
-               && sensor_type == IPMI_SENSOR_TYPE_VOLTAGE)
-        sel_config = ctx->interpret_sel.ipmi_interpret_voltage_performance_config;
-      else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_PRESENT
-               && sensor_type == IPMI_SENSOR_TYPE_FAN)
-        sel_config = ctx->interpret_sel.ipmi_interpret_fan_device_present_config;
-      else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_TRANSITION_AVAILABILITY
-               && sensor_type == IPMI_SENSOR_TYPE_FAN)
-        sel_config = ctx->interpret_sel.ipmi_interpret_fan_transition_availability_config;
-      else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY
-               && sensor_type == IPMI_SENSOR_TYPE_FAN)
-        sel_config = ctx->interpret_sel.ipmi_interpret_fan_redundancy_config;
-      else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
-               && sensor_type == IPMI_SENSOR_TYPE_PROCESSOR)
-        sel_config = ctx->interpret_sel.ipmi_interpret_processor_state_config;
-      else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
-               && sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY)
-        sel_config = ctx->interpret_sel.ipmi_interpret_power_supply_state_config;
-      else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY
-               && sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY)
-        sel_config = ctx->interpret_sel.ipmi_interpret_power_supply_redundancy_config;
-      else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_PRESENT
-               && sensor_type == IPMI_SENSOR_TYPE_POWER_UNIT)
-        sel_config = ctx->interpret_sel.ipmi_interpret_power_unit_device_present_config;
-      else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY
-               && sensor_type == IPMI_SENSOR_TYPE_POWER_UNIT)
-        sel_config = ctx->interpret_sel.ipmi_interpret_power_unit_redundancy_config;
-      else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
-               && sensor_type == IPMI_SENSOR_TYPE_DRIVE_SLOT)
-        sel_config = ctx->interpret_sel.ipmi_interpret_drive_slot_state_config;
-      else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_PREDICTIVE_FAILURE
-               && sensor_type == IPMI_SENSOR_TYPE_DRIVE_SLOT)
-        sel_config = ctx->interpret_sel.ipmi_interpret_drive_slot_predictive_failure_config;
-      else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_PRESENT
-               && sensor_type == IPMI_SENSOR_TYPE_DRIVE_SLOT)
-        sel_config = ctx->interpret_sel.ipmi_interpret_drive_slot_device_present_config;
-      else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
-               && sensor_type == IPMI_SENSOR_TYPE_BUTTON_SWITCH)
-        sel_config = ctx->interpret_sel.ipmi_interpret_button_switch_state_config;
-      else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
-               && sensor_type == IPMI_SENSOR_TYPE_MODULE_BOARD)
-        sel_config = ctx->interpret_sel.ipmi_interpret_module_board_state_config;
-      else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_PRESENT
-               && sensor_type == IPMI_SENSOR_TYPE_MODULE_BOARD)
-        sel_config = ctx->interpret_sel.ipmi_interpret_module_board_device_present_config;
-      else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_PRESENT
-               && sensor_type == IPMI_SENSOR_TYPE_ENTITY_PRESENCE)
-        sel_config = ctx->interpret_sel.ipmi_interpret_entity_presence_device_present_config;
-      else
+      uint8_t event_reading_type_code;
+      uint8_t sensor_type;
+      uint8_t offset_from_event_reading_type_code;
+
+      if (ipmi_sel_parse_record_sensor_type (ctx->sel_parse_ctx,
+                                             record_buf,
+                                             record_buflen,
+                                             &sensor_type) < 0)
         {
-          (*sel_state) = IPMI_INTERPRET_STATE_UNKNOWN;
-          rv = 0;
+          INTERPRET_SEL_PARSE_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_parse_ctx);
           goto cleanup;
         }
 
-      if (_get_sel_state (ctx,
-                          offset_from_event_reading_type_code,
-                          sel_state,
-                          sel_config) < 0)
-        goto cleanup;
+      if (ipmi_sel_parse_record_event_type_code (ctx->sel_parse_ctx,
+                                                 record_buf,
+                                                 record_buflen,
+                                                 &event_reading_type_code) < 0)
+        {
+          INTERPRET_SEL_PARSE_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_parse_ctx);
+          goto cleanup;
+        }
 
-    }
-  else if (IPMI_EVENT_READING_TYPE_CODE_IS_SENSOR_SPECIFIC (event_reading_type_code))
-    {
-      if (sensor_type == IPMI_SENSOR_TYPE_PHYSICAL_SECURITY)
-        sel_config = ctx->interpret_sel.ipmi_interpret_physical_security_config;
-      else if (sensor_type == IPMI_SENSOR_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT)
-        sel_config = ctx->interpret_sel.ipmi_interpret_platform_security_violation_attempt_config;
-      else if (sensor_type == IPMI_SENSOR_TYPE_PROCESSOR)
-        sel_config = ctx->interpret_sel.ipmi_interpret_processor_config;
-      else if (sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY)
-        sel_config = ctx->interpret_sel.ipmi_interpret_power_supply_config;
-      else if (sensor_type == IPMI_SENSOR_TYPE_POWER_UNIT)
-        sel_config = ctx->interpret_sel.ipmi_interpret_power_unit_config;
-      else if (sensor_type == IPMI_SENSOR_TYPE_MEMORY)
-        sel_config = ctx->interpret_sel.ipmi_interpret_memory_config;
-      else if (sensor_type == IPMI_SENSOR_TYPE_DRIVE_SLOT)
-        sel_config = ctx->interpret_sel.ipmi_interpret_drive_slot_config;
-      else if (sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS)
-        sel_config = ctx->interpret_sel.ipmi_interpret_system_firmware_progress_config;
-      else if (sensor_type == IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED)
-        sel_config = ctx->interpret_sel.ipmi_interpret_event_logging_disabled_config;
-      else if (sensor_type == IPMI_SENSOR_TYPE_SYSTEM_EVENT)
-        sel_config = ctx->interpret_sel.ipmi_interpret_system_event_config;
-      else if (sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
-        sel_config = ctx->interpret_sel.ipmi_interpret_critical_interrupt_config;
-      else if (sensor_type == IPMI_SENSOR_TYPE_BUTTON_SWITCH)
-        sel_config = ctx->interpret_sel.ipmi_interpret_button_switch_config;
-      else if (sensor_type == IPMI_SENSOR_TYPE_CHIP_SET)
-        sel_config = ctx->interpret_sel.ipmi_interpret_chip_set_config;
-      else if (sensor_type == IPMI_SENSOR_TYPE_CABLE_INTERCONNECT)
-        sel_config = ctx->interpret_sel.ipmi_interpret_cable_interconnect_config;
-      else if (sensor_type == IPMI_SENSOR_TYPE_SYSTEM_BOOT_INITIATED);
-        sel_config = ctx->interpret_sel.ipmi_interpret_system_boot_initiated_config;
-      else if (sensor_type == IPMI_SENSOR_TYPE_BOOT_ERROR)
-        sel_config = ctx->interpret_sel.ipmi_interpret_boot_error_config;
-      else if (sensor_type == IPMI_SENSOR_TYPE_OS_BOOT)
-        sel_config = ctx->interpret_sel.ipmi_interpret_os_boot_config;
-      else if (sensor_type == IPMI_SENSOR_TYPE_OS_CRITICAL_STOP)
-        sel_config = ctx->interpret_sel.ipmi_interpret_os_critical_stop_config;
-      else if (sensor_type == IPMI_SENSOR_TYPE_SLOT_CONNECTOR)
-        sel_config = ctx->interpret_sel.ipmi_interpret_slot_connector_config;
-      else if (sensor_type == IPMI_SENSOR_TYPE_SYSTEM_ACPI_POWER_STATE)
-        sel_config = ctx->interpret_sel.ipmi_interpret_system_acpi_power_state_config;
-      else if (sensor_type == IPMI_SENSOR_TYPE_WATCHDOG2)
-        sel_config = ctx->interpret_sel.ipmi_interpret_watchdog2_config;
-      else if (sensor_type == IPMI_SENSOR_TYPE_PLATFORM_ALERT)
-        sel_config = ctx->interpret_sel.ipmi_interpret_platform_alert_config;
-      else if (sensor_type == IPMI_SENSOR_TYPE_ENTITY_PRESENCE)
-        sel_config = ctx->interpret_sel.ipmi_interpret_entity_presence_config;
-      else if (sensor_type == IPMI_SENSOR_TYPE_LAN)
-        sel_config = ctx->interpret_sel.ipmi_interpret_lan_config;       
-      else if (sensor_type == IPMI_SENSOR_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH)
-        sel_config = ctx->interpret_sel.ipmi_interpret_management_subsystem_health_config;
-      else if (sensor_type == IPMI_SENSOR_TYPE_BATTERY)
-        sel_config = ctx->interpret_sel.ipmi_interpret_battery_config;
-      else if (sensor_type == IPMI_SENSOR_TYPE_SESSION_AUDIT)
-        sel_config = ctx->interpret_sel.ipmi_interpret_session_audit_config;
-      else if (sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE)
-        sel_config = ctx->interpret_sel.ipmi_interpret_version_change_config;
-      else if (sensor_type == IPMI_SENSOR_TYPE_FRU_STATE)
-        sel_config = ctx->interpret_sel.ipmi_interpret_fru_state_config;
+      if (ipmi_sel_parse_record_event_data1_offset_from_event_reading_type_code (ctx->sel_parse_ctx,
+                                                                                 record_buf,
+                                                                                 record_buflen,
+                                                                                 &offset_from_event_reading_type_code) < 0)
+        {
+          INTERPRET_SEL_PARSE_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_parse_ctx);
+          goto cleanup;
+        }
+
+      if (IPMI_EVENT_READING_TYPE_CODE_IS_THRESHOLD (event_reading_type_code))
+        {
+          if (_get_sel_state (ctx,
+                              offset_from_event_reading_type_code,
+                              sel_state,
+                              ctx->interpret_sel.ipmi_interpret_threshold_sel_config) < 0)
+            goto cleanup;
+        }
+      else if (IPMI_EVENT_READING_TYPE_CODE_IS_GENERIC (event_reading_type_code))
+        {
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
+              && sensor_type == IPMI_SENSOR_TYPE_VOLTAGE)
+            sel_config = ctx->interpret_sel.ipmi_interpret_voltage_state_config;
+          else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_PERFORMANCE
+                   && sensor_type == IPMI_SENSOR_TYPE_VOLTAGE)
+            sel_config = ctx->interpret_sel.ipmi_interpret_voltage_performance_config;
+          else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_PRESENT
+                   && sensor_type == IPMI_SENSOR_TYPE_FAN)
+            sel_config = ctx->interpret_sel.ipmi_interpret_fan_device_present_config;
+          else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_TRANSITION_AVAILABILITY
+                   && sensor_type == IPMI_SENSOR_TYPE_FAN)
+            sel_config = ctx->interpret_sel.ipmi_interpret_fan_transition_availability_config;
+          else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY
+                   && sensor_type == IPMI_SENSOR_TYPE_FAN)
+            sel_config = ctx->interpret_sel.ipmi_interpret_fan_redundancy_config;
+          else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
+                   && sensor_type == IPMI_SENSOR_TYPE_PROCESSOR)
+            sel_config = ctx->interpret_sel.ipmi_interpret_processor_state_config;
+          else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
+                   && sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY)
+            sel_config = ctx->interpret_sel.ipmi_interpret_power_supply_state_config;
+          else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY
+                   && sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY)
+            sel_config = ctx->interpret_sel.ipmi_interpret_power_supply_redundancy_config;
+          else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_PRESENT
+                   && sensor_type == IPMI_SENSOR_TYPE_POWER_UNIT)
+            sel_config = ctx->interpret_sel.ipmi_interpret_power_unit_device_present_config;
+          else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY
+                   && sensor_type == IPMI_SENSOR_TYPE_POWER_UNIT)
+            sel_config = ctx->interpret_sel.ipmi_interpret_power_unit_redundancy_config;
+          else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
+                   && sensor_type == IPMI_SENSOR_TYPE_DRIVE_SLOT)
+            sel_config = ctx->interpret_sel.ipmi_interpret_drive_slot_state_config;
+          else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_PREDICTIVE_FAILURE
+                   && sensor_type == IPMI_SENSOR_TYPE_DRIVE_SLOT)
+            sel_config = ctx->interpret_sel.ipmi_interpret_drive_slot_predictive_failure_config;
+          else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_PRESENT
+                   && sensor_type == IPMI_SENSOR_TYPE_DRIVE_SLOT)
+            sel_config = ctx->interpret_sel.ipmi_interpret_drive_slot_device_present_config;
+          else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
+                   && sensor_type == IPMI_SENSOR_TYPE_BUTTON_SWITCH)
+            sel_config = ctx->interpret_sel.ipmi_interpret_button_switch_state_config;
+          else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
+                   && sensor_type == IPMI_SENSOR_TYPE_MODULE_BOARD)
+            sel_config = ctx->interpret_sel.ipmi_interpret_module_board_state_config;
+          else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_PRESENT
+                   && sensor_type == IPMI_SENSOR_TYPE_MODULE_BOARD)
+            sel_config = ctx->interpret_sel.ipmi_interpret_module_board_device_present_config;
+          else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_PRESENT
+                   && sensor_type == IPMI_SENSOR_TYPE_ENTITY_PRESENCE)
+            sel_config = ctx->interpret_sel.ipmi_interpret_entity_presence_device_present_config;
+          else
+            {
+              (*sel_state) = IPMI_INTERPRET_STATE_UNKNOWN;
+              rv = 0;
+              goto cleanup;
+            }
+
+          if (_get_sel_state (ctx,
+                              offset_from_event_reading_type_code,
+                              sel_state,
+                              sel_config) < 0)
+            goto cleanup;
+
+        }
+      else if (IPMI_EVENT_READING_TYPE_CODE_IS_SENSOR_SPECIFIC (event_reading_type_code))
+        {
+          if (sensor_type == IPMI_SENSOR_TYPE_PHYSICAL_SECURITY)
+            sel_config = ctx->interpret_sel.ipmi_interpret_physical_security_config;
+          else if (sensor_type == IPMI_SENSOR_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT)
+            sel_config = ctx->interpret_sel.ipmi_interpret_platform_security_violation_attempt_config;
+          else if (sensor_type == IPMI_SENSOR_TYPE_PROCESSOR)
+            sel_config = ctx->interpret_sel.ipmi_interpret_processor_config;
+          else if (sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY)
+            sel_config = ctx->interpret_sel.ipmi_interpret_power_supply_config;
+          else if (sensor_type == IPMI_SENSOR_TYPE_POWER_UNIT)
+            sel_config = ctx->interpret_sel.ipmi_interpret_power_unit_config;
+          else if (sensor_type == IPMI_SENSOR_TYPE_MEMORY)
+            sel_config = ctx->interpret_sel.ipmi_interpret_memory_config;
+          else if (sensor_type == IPMI_SENSOR_TYPE_DRIVE_SLOT)
+            sel_config = ctx->interpret_sel.ipmi_interpret_drive_slot_config;
+          else if (sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS)
+            sel_config = ctx->interpret_sel.ipmi_interpret_system_firmware_progress_config;
+          else if (sensor_type == IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED)
+            sel_config = ctx->interpret_sel.ipmi_interpret_event_logging_disabled_config;
+          else if (sensor_type == IPMI_SENSOR_TYPE_SYSTEM_EVENT)
+            sel_config = ctx->interpret_sel.ipmi_interpret_system_event_config;
+          else if (sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
+            sel_config = ctx->interpret_sel.ipmi_interpret_critical_interrupt_config;
+          else if (sensor_type == IPMI_SENSOR_TYPE_BUTTON_SWITCH)
+            sel_config = ctx->interpret_sel.ipmi_interpret_button_switch_config;
+          else if (sensor_type == IPMI_SENSOR_TYPE_CHIP_SET)
+            sel_config = ctx->interpret_sel.ipmi_interpret_chip_set_config;
+          else if (sensor_type == IPMI_SENSOR_TYPE_CABLE_INTERCONNECT)
+            sel_config = ctx->interpret_sel.ipmi_interpret_cable_interconnect_config;
+          else if (sensor_type == IPMI_SENSOR_TYPE_SYSTEM_BOOT_INITIATED)
+            sel_config = ctx->interpret_sel.ipmi_interpret_system_boot_initiated_config;
+          else if (sensor_type == IPMI_SENSOR_TYPE_BOOT_ERROR)
+            sel_config = ctx->interpret_sel.ipmi_interpret_boot_error_config;
+          else if (sensor_type == IPMI_SENSOR_TYPE_OS_BOOT)
+            sel_config = ctx->interpret_sel.ipmi_interpret_os_boot_config;
+          else if (sensor_type == IPMI_SENSOR_TYPE_OS_CRITICAL_STOP)
+            sel_config = ctx->interpret_sel.ipmi_interpret_os_critical_stop_config;
+          else if (sensor_type == IPMI_SENSOR_TYPE_SLOT_CONNECTOR)
+            sel_config = ctx->interpret_sel.ipmi_interpret_slot_connector_config;
+          else if (sensor_type == IPMI_SENSOR_TYPE_SYSTEM_ACPI_POWER_STATE)
+            sel_config = ctx->interpret_sel.ipmi_interpret_system_acpi_power_state_config;
+          else if (sensor_type == IPMI_SENSOR_TYPE_WATCHDOG2)
+            sel_config = ctx->interpret_sel.ipmi_interpret_watchdog2_config;
+          else if (sensor_type == IPMI_SENSOR_TYPE_PLATFORM_ALERT)
+            sel_config = ctx->interpret_sel.ipmi_interpret_platform_alert_config;
+          else if (sensor_type == IPMI_SENSOR_TYPE_ENTITY_PRESENCE)
+            sel_config = ctx->interpret_sel.ipmi_interpret_entity_presence_config;
+          else if (sensor_type == IPMI_SENSOR_TYPE_LAN)
+            sel_config = ctx->interpret_sel.ipmi_interpret_lan_config;       
+          else if (sensor_type == IPMI_SENSOR_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH)
+            sel_config = ctx->interpret_sel.ipmi_interpret_management_subsystem_health_config;
+          else if (sensor_type == IPMI_SENSOR_TYPE_BATTERY)
+            sel_config = ctx->interpret_sel.ipmi_interpret_battery_config;
+          else if (sensor_type == IPMI_SENSOR_TYPE_SESSION_AUDIT)
+            sel_config = ctx->interpret_sel.ipmi_interpret_session_audit_config;
+          else if (sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE)
+            sel_config = ctx->interpret_sel.ipmi_interpret_version_change_config;
+          else if (sensor_type == IPMI_SENSOR_TYPE_FRU_STATE)
+            sel_config = ctx->interpret_sel.ipmi_interpret_fru_state_config;
+          else if (ctx->flags & IPMI_INTERPRET_FLAGS_INTERPRET_OEM_DATA
+                   && IPMI_SENSOR_TYPE_IS_OEM (sensor_type))
+            {
+              if (_get_sel_oem_sensor_state (ctx,
+                                             record_buf,
+                                             record_buflen,
+                                             event_reading_type_code,
+                                             sensor_type,
+                                             sel_state) < 0)
+                goto cleanup;
+              rv = 0;
+              goto cleanup;
+            }
+          else
+            {
+              (*sel_state) = IPMI_INTERPRET_STATE_UNKNOWN;
+              rv = 0;
+              goto cleanup;
+            }
+
+          if (_get_sel_state (ctx,
+                              offset_from_event_reading_type_code,
+                              sel_state,
+                              sel_config) < 0)
+            goto cleanup;
+        }
       else if (ctx->flags & IPMI_INTERPRET_FLAGS_INTERPRET_OEM_DATA
-	       && IPMI_SENSOR_TYPE_IS_OEM (sensor_type))
-	{
-#if 0
-	  if (_get_sensor_oem_state (ctx,
-				     event_reading_type_code,
-				     sensor_type,
-				     sensor_event_bitmask,
-				     sel_state) < 0)
-	    goto cleanup;
-#endif
-          rv = 0;
-          goto cleanup;
-	}
+               && IPMI_EVENT_READING_TYPE_CODE_IS_OEM (event_reading_type_code))
+        {
+          if (_get_sel_oem_sensor_state (ctx,
+                                         record_buf,
+                                         record_buflen,
+                                         event_reading_type_code,
+                                         sensor_type,
+                                         sel_state) < 0)
+            goto cleanup;
+        }
       else
         {
           (*sel_state) = IPMI_INTERPRET_STATE_UNKNOWN;
           rv = 0;
           goto cleanup;
         }
-
-      if (_get_sel_state (ctx,
-                          offset_from_event_reading_type_code,
-                          sel_state,
-                          sel_config) < 0)
-        goto cleanup;
-    }
-  else if (ctx->flags & IPMI_INTERPRET_FLAGS_INTERPRET_OEM_DATA
-	   && IPMI_EVENT_READING_TYPE_CODE_IS_OEM (event_reading_type_code))
-    {
-#if 0
-      if (_get_sensor_oem_state (ctx,
-				 event_reading_type_code,
-				 sensor_type,
-				 sensor_event_bitmask,
-				 sel_state) < 0)
-#endif
-	goto cleanup;
     }
   else
     {
-      (*sel_state) = IPMI_INTERPRET_STATE_UNKNOWN;
-      rv = 0;
-      goto cleanup;
+      if (_get_sel_oem_record_state (ctx,
+                                     record_buf,
+                                     record_buflen,
+                                     record_type,
+                                     sel_state) < 0)
+        goto cleanup;
     }
 
   rv = 0;
  cleanup:
-#endif
   return (rv);
 }
 

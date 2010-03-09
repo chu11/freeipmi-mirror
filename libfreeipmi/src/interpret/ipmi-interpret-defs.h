@@ -64,8 +64,8 @@ struct ipmi_interpret_config {
 };
 
 struct ipmi_interpret_sel_oem_sensor_data {
-  unsigned int direction_any_flag;
-  uint8_t direction;
+  unsigned int event_direction_any_flag;
+  uint8_t event_direction;
   unsigned int event_data1_any_flag;
   uint8_t event_data1;
   unsigned int event_data2_any_flag;

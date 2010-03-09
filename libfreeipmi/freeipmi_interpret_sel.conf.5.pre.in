@@ -988,12 +988,12 @@ state is returned (i.e. Warning < Nominal, Critical < Warning).  If no
 match is found, no state is returned for the OEM event.
 .RS
 .TP
-\fBIPMI_OEM_Sensor_System_Event_Record\fR \fIManufacturer-ID\fR \fIProduct-ID\fR \fIEvent-Reading-Type-Code\fR \fISensor-Type\fR \fIDirection\fR \fIEventData1\fR \fIEventData2\fR \fIEventData3\fR \fIState\fR
+\fBIPMI_OEM_Sensor_System_Event_Record\fR \fIManufacturer-ID\fR \fIProduct-ID\fR \fIEvent-Reading-Type-Code\fR \fISensor-Type\fR \fIEvent-Direction\fR \fIEventData1\fR \fIEventData2\fR \fIEventData3\fR \fIState\fR
 \fBIPMI_OEM_System_Event_Record\fR can be used to configure a state
 interpretation for a specific \fIManufacturer-ID\fR, \fIProduct-ID\fR,
 \fIEvent-Reading-Type-Code\fR, and \fISensor-Type\fR combination, and
-a specific \fIDirection\fR, \fIEventData1\fR, \fIEventData2\fR, and
-\fIEventData3\fR.  The \fIDirection\fR field must specify
+a specific \fIEvent-Direction\fR, \fIEventData1\fR, \fIEventData2\fR, and
+\fIEventData3\fR.  The \fIEvent-Direction\fR field must specify
 \fIAssertion\fR, \fIDeassertion\fR, or \fIANY\fR.  Each of the
 \fIEventData\fR fields must specify a hex byte to match or the keyword
 \fIANY\fR to match anything.

@@ -35,10 +35,11 @@ extern "C" {
 #define IPMI_INTERPRET_ERR_SEL_CONFIG_FILE_PARSE              7
 #define IPMI_INTERPRET_ERR_SENSOR_CONFIG_FILE_DOES_NOT_EXIST  8        
 #define IPMI_INTERPRET_ERR_SENSOR_CONFIG_FILE_PARSE           9
-#define IPMI_INTERPRET_ERR_SYSTEM_ERROR                      10 
-#define IPMI_INTERPRET_ERR_OVERFLOW                          11
-#define IPMI_INTERPRET_ERR_INTERNAL_ERROR                    12
-#define IPMI_INTERPRET_ERR_ERRNUMRANGE                       13
+#define IPMI_INTERPRET_ERR_INVALID_SEL_RECORD                10
+#define IPMI_INTERPRET_ERR_SYSTEM_ERROR                      11
+#define IPMI_INTERPRET_ERR_OVERFLOW                          12
+#define IPMI_INTERPRET_ERR_INTERNAL_ERROR                    13
+#define IPMI_INTERPRET_ERR_ERRNUMRANGE                       14
 
 #define IPMI_INTERPRET_FLAGS_DEFAULT                     0x0000
 #define IPMI_INTERPRET_FLAGS_INTERPRET_OEM_DATA          0x0001
