@@ -54,10 +54,11 @@ bug/workaround).
 
 For the record, I have nothing against the companies and these issues.
 I am just as prone to programming bugs as they are.  The IPMI
-specification is gigantic and mistakes will happen.  This is more
-documentation for historical purposes, people searching for
-information, and to document the difficulty of developing portable
-IPMI code.
+specification is gigantic and mistakes will happen.  I expect some
+design decisions were made for time to release, cost, customer needs,
+etc. too.  This is more documentation for historical purposes, people
+searching for information, and to document the difficulty of
+developing portable IPMI code.
 
 Authentication Issues
 ---------------------
@@ -449,7 +450,7 @@ some type of memory corruption, memory something that causes both to
 be configured via one IPMI command).  No current resolution.
 
 Inventec 5441/Dell Xanadu2: Several configuration fields, most notably
-several SOL configuraiton fields, are stored in volatile memory rather
+several SOL configuration fields, are stored in volatile memory rather
 than non-volatile memory.  These particular configuration fields were
 not required by IPMI to be stored in non-volatile memory, but
 ultimately is an issue b/c it requires users to reconfigure IPMI on
