@@ -11,6 +11,10 @@ inband
     anything in acpi/smbios/etc.
   - User can use ipmi-locate if they really want to probe.
 
+oem
+---
+handle firmware version too
+
 asf
 ---
 support asf base protocol stuff in addition to IPMI?
