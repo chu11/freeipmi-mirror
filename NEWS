@@ -40,6 +40,8 @@ Libraries - Detailed Enhancements/Changes/Fixes
 -----------------------------------------------
 o libfreeipmi
   - Support new 'interpret' sub-library.
+  - 'sel-parse' library now does not require valid ipmi_ctx.
+    Functions performing ipmi communication will simply error.
 o libipmimonitoring
   - Re-architect to support all defined IPMI sensor types.
   - Re-architect to use 'interpret' sub-library.

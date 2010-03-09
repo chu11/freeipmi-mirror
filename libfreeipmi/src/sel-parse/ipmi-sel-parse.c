@@ -80,12 +80,6 @@ ipmi_sel_parse_ctx_create (ipmi_ctx_t ipmi_ctx, ipmi_sdr_cache_ctx_t sdr_cache_c
 {
   struct ipmi_sel_parse_ctx *ctx = NULL;
 
-  if (!ipmi_ctx)
-    {
-      SET_ERRNO (EINVAL);
-      return (NULL);
-    }
-
   if (!(ctx = (ipmi_sel_parse_ctx_t)malloc (sizeof (struct ipmi_sel_parse_ctx))))
     {
       ERRNO_TRACE (errno);
@@ -587,6 +581,7 @@ _get_sel_entry (ipmi_sel_parse_ctx_t ctx,
 
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->ipmi-ctx);
   assert (fiid_obj_valid (obj_cmd_rs) == 1);
   assert (fiid_obj_template_compare (obj_cmd_rs, tmpl_cmd_get_sel_entry_rs) == 1);
   assert (reservation_id);
@@ -676,6 +671,12 @@ ipmi_sel_parse (ipmi_sel_parse_ctx_t ctx,
   if (!ctx || ctx->magic != IPMI_SEL_PARSE_CTX_MAGIC)
     {
       ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if (!ctx->ipmi_ctx)
+    {
+      SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_IPMI_ERROR);
       return (-1);
     }
 
@@ -904,6 +905,12 @@ ipmi_sel_parse_record_ids (ipmi_sel_parse_ctx_t ctx,
   if (!ctx || ctx->magic != IPMI_SEL_PARSE_CTX_MAGIC)
     {
       ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if (!ctx->ipmi_ctx)
+    {
+      SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_IPMI_ERROR);
       return (-1);
     }
 

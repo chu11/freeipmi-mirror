@@ -26,6 +26,7 @@
 #include <stdint.h>
 
 #include "freeipmi/interpret/ipmi-interpret.h"
+#include "freeipmi/sel-parse/ipmi-sel-parse.h"
 
 #include "hash.h"
 
@@ -51,6 +52,8 @@
 
 #define IPMI_SEL_OEM_DATA_NON_TIMESTAMPED_BYTES 13
 
+#define IPMI_SEL_OEM_SENSOR_MAX                 32
+
 #define IPMI_SEL_OEM_RECORD_MAX                 64
 
 #define IPMI_SEL_OEM_DATA_HEX_BYTE_ANY          "ANY"
@@ -58,6 +61,28 @@
 struct ipmi_interpret_config {
   char *option_str;
   int state;
+};
+
+struct ipmi_interpret_sel_oem_sensor_data {
+  unsigned int direction_any_flag;
+  uint8_t direction;
+  unsigned int event_data1_any_flag;
+  uint8_t event_data1;
+  unsigned int event_data2_any_flag;
+  uint8_t event_data2;
+  unsigned int event_data3_any_flag;
+  uint8_t event_data3;
+  unsigned int sel_state;
+};
+
+struct ipmi_interpret_sel_oem_sensor_config {
+  char key[IPMI_OEM_HASH_KEY_BUFLEN + 1];
+  uint32_t manufacturer_id;
+  uint16_t product_id;
+  uint8_t event_reading_type_code;
+  uint8_t sensor_type;
+  struct ipmi_interpret_sel_oem_sensor_data oem_sensor_data[IPMI_SEL_OEM_SENSOR_MAX];
+  unsigned int oem_sensor_data_count;
 };
 
 struct ipmi_interpret_sel_oem_data_byte {
@@ -71,7 +96,7 @@ struct ipmi_interpret_sel_oem_record {
   unsigned int sel_state;
 };
 
-struct ipmi_interpret_sel_oem_config {
+struct ipmi_interpret_sel_oem_record_config {
   char key[IPMI_OEM_HASH_KEY_BUFLEN + 1];
   uint32_t manufacturer_id;
   uint16_t product_id;
@@ -129,7 +154,8 @@ struct ipmi_interpret_sel {
   struct ipmi_interpret_config **ipmi_interpret_version_change_config;
   struct ipmi_interpret_config **ipmi_interpret_fru_state_config;
 
-  hash_t oem_config;
+  hash_t sel_oem_sensor_config;
+  hash_t sel_oem_record_config;
 };
 
 struct ipmi_interpret_sensor_oem_state {
@@ -189,7 +215,7 @@ struct ipmi_interpret_sensor {
   struct ipmi_interpret_config **ipmi_interpret_battery_config;
   struct ipmi_interpret_config **ipmi_interpret_fru_state_config;
 
-  hash_t oem_config;
+  hash_t sensor_oem_config;
 };
 
 struct ipmi_interpret_ctx {
@@ -198,6 +224,8 @@ struct ipmi_interpret_ctx {
   unsigned int flags;
   uint32_t manufacturer_id;
   uint16_t product_id;
+
+  ipmi_sel_parse_ctx_t sel_parse_ctx;
 
   struct ipmi_interpret_sel interpret_sel;
   struct ipmi_interpret_sensor interpret_sensor;

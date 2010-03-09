@@ -4,6 +4,9 @@
 
 	* Add interpret sel support in interpret library to libfreeipmi.
 
+	* libfreeipmi/src/sel-parse/: Do not require valid ipmi_ctx.
+	Functions performing ipmi communication will simply error.
+
 	* ipmi-sel/: Support --output-event-state option.
 
 	* Consistently name interpret 'sensors' to 'sensor'.
