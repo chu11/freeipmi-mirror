@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.88 2010-02-08 22:02:31 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.89 2010-03-10 19:36:31 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -289,13 +289,13 @@ _get_sensor_state (ipmi_monitoring_ctx_t c,
       return (-1);
     }
   
-  if (sensor_state == IPMI_INTERPRET_SENSOR_STATE_NOMINAL)
+  if (sensor_state == IPMI_INTERPRET_STATE_NOMINAL)
     rv = IPMI_MONITORING_SENSOR_STATE_NOMINAL;
-  else if (sensor_state == IPMI_INTERPRET_SENSOR_STATE_WARNING)
+  else if (sensor_state == IPMI_INTERPRET_STATE_WARNING)
     rv = IPMI_MONITORING_SENSOR_STATE_WARNING;
-  else if (sensor_state == IPMI_INTERPRET_SENSOR_STATE_CRITICAL)
+  else if (sensor_state == IPMI_INTERPRET_STATE_CRITICAL)
     rv = IPMI_MONITORING_SENSOR_STATE_CRITICAL;
-  else if (sensor_state == IPMI_INTERPRET_SENSOR_STATE_UNKNOWN)
+  else if (sensor_state == IPMI_INTERPRET_STATE_UNKNOWN)
     rv = IPMI_MONITORING_SENSOR_STATE_UNKNOWN;
   return (rv);
 }

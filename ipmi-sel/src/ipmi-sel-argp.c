@@ -120,24 +120,28 @@ static struct argp_option cmdline_options[] =
       "Output only OEM event records.", 45},
     { "output-manufacturer-id", OUTPUT_MANUFACTURER_ID_KEY, 0, 0,
       "Output manufacturer ID on OEM event records when available.", 46},
+    { "output-event-state", OUTPUT_EVENT_STATE_KEY, 0, 0,
+      "Output event state in output.", 47},
+    { "event-state-config-file", EVENT_STATE_CONFIG_FILE_KEY, "FILE", 0,
+      "Specify an alternate event state configuration file.", 48},
     { "hex-dump",   HEX_DUMP_KEY, 0, 0,
-      "Hex-dump SEL records.", 47},
+      "Hex-dump SEL records.", 49},
     { "assume-system-event-records", ASSUME_SYSTEM_EVENT_RECORDS_KEY, 0, 0,
-      "Assume invalid record types are system event records.", 48},
+      "Assume invalid record types are system event records.", 51},
     { "interpret-oem-data", INTERPRET_OEM_DATA_KEY, NULL, 0,
-      "Attempt to interpret OEM data.", 49},
+      "Attempt to interpret OEM data.", 51},
     { "entity-sensor-names", ENTITY_SENSOR_NAMES_KEY, NULL, 0,
-      "Output sensor names with entity ids and instances.", 50},
+      "Output sensor names with entity ids and instances.", 52},
     { "no-sensor-type-output", NO_SENSOR_TYPE_OUTPUT_KEY, 0, 0,
-      "Do not show sensor type output.", 51},
+      "Do not show sensor type output.", 53},
     { "comma-separated-output", COMMA_SEPARATED_OUTPUT_KEY, 0, 0,
-      "Output fields in comma separated format.", 52},
+      "Output fields in comma separated format.", 54},
     { "no-header-output", NO_HEADER_OUTPUT_KEY, 0, 0,
-      "Do not output column headers.", 53},
+      "Do not output column headers.", 55},
     { "non-abbreviated-units", NON_ABBREVIATED_UNITS_KEY, 0, 0,
-      "Output non-abbreviated units (e.g. 'Amps' instead of 'A').", 54},
+      "Output non-abbreviated units (e.g. 'Amps' instead of 'A').", 56},
     { "legacy-output", LEGACY_OUTPUT_KEY, 0, 0,
-      "Output in legacy format.", 55},
+      "Output in legacy format.", 57},
     { NULL, 0, NULL, 0, NULL, 0}
   };
 
@@ -591,6 +595,16 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case OUTPUT_MANUFACTURER_ID_KEY:
       cmd_args->output_manufacturer_id = 1;
       break;
+    case OUTPUT_EVENT_STATE_KEY:
+      cmd_args->output_event_state = 1;
+      break;
+    case EVENT_STATE_CONFIG_FILE_KEY:
+      if (!(cmd_args->event_state_config_file = strdup (arg)))
+        {
+          perror ("strdup");
+          exit (1);
+        }
+      break;
     case HEX_DUMP_KEY:
       cmd_args->hex_dump = 1;
       break;
@@ -692,6 +706,10 @@ _ipmi_sel_config_file_parse (struct ipmi_sel_arguments *cmd_args)
     cmd_args->oem_event_only = config_file_data.oem_event_only;
   if (config_file_data.output_manufacturer_id_count)
     cmd_args->output_manufacturer_id = config_file_data.output_manufacturer_id;
+  if (config_file_data.output_event_state_count)
+    cmd_args->output_event_state = config_file_data.output_event_state;
+  if (config_file_data.event_state_config_file_count)
+    cmd_args->event_state_config_file = config_file_data.event_state_config_file;
   if (config_file_data.assume_system_event_records_count)
     cmd_args->assume_system_event_records = config_file_data.assume_system_event_records;
   if (config_file_data.interpret_oem_data_count)
@@ -793,6 +811,8 @@ ipmi_sel_argp_parse (int argc, char **argv, struct ipmi_sel_arguments *cmd_args)
   cmd_args->system_event_only = 0;
   cmd_args->oem_event_only = 0;
   cmd_args->output_manufacturer_id = 0;
+  cmd_args->output_event_state = 0;
+  cmd_args->event_state_config_file = NULL;
   cmd_args->hex_dump = 0;
   cmd_args->assume_system_event_records = 0;
   cmd_args->interpret_oem_data = 0;

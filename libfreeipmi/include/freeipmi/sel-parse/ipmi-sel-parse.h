@@ -73,6 +73,7 @@ typedef int (*Ipmi_Sel_Parse_Callback)(ipmi_sel_parse_ctx_t ctx, void *callback_
 /* SEL Parse Context Functions
  * - ipmi_ctx assumes ipmi opened and ready to go
  * - sdr_cache_ctx assumed ready for reading
+ * - ipmi_ctx is optional, if NULL ctx cannot be for SEL reading, only parsing records
  * - sdr_cache_ctx is optional, sdr won't be used if not available
  */
 ipmi_sel_parse_ctx_t ipmi_sel_parse_ctx_create (ipmi_ctx_t ipmi_ctx, ipmi_sdr_cache_ctx_t sdr_cache_ctx);

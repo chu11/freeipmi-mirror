@@ -1,3 +1,18 @@
+2010-03-10  Albert Chu <chu11@llnl.gov>
+	
+	Merge sel_interpret_branch.
+
+	* Add interpret sel support in interpret library to libfreeipmi.
+
+	* libfreeipmi/src/sel-parse/: Do not require valid ipmi_ctx.
+	Functions performing ipmi communication will simply error.
+
+	* ipmi-sel/: Support --output-event-state option.
+
+	* Consistently name interpret 'sensors' to 'sensor'.
+
+	* Minor cleanup and minor fixes.
+
 2010-03-08  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/interpret/ipmi-interpret.c (_get_sensor_state):

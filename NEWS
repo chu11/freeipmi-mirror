@@ -29,6 +29,7 @@ o ipmi-sel
   - Support --output-manufacturer-id option.
   - Support --date-range option.
   - Support --exclude-date-range option.
+  - Support --output-event-state option.
   - Alter OEM record output to align with columns by outputting "N/A"
     in appropriate fields and putting manufacturer ID in event output.
 o ipmimonitoring
@@ -42,6 +43,8 @@ Libraries - Detailed Enhancements/Changes/Fixes
 -----------------------------------------------
 o libfreeipmi
   - Support new 'interpret' sub-library.
+  - 'sel-parse' library now does not require valid ipmi_ctx.
+    Functions performing ipmi communication will simply error.
 o libipmimonitoring
   - Re-architect to support all defined IPMI sensor types.
   - Re-architect to use 'interpret' sub-library.
