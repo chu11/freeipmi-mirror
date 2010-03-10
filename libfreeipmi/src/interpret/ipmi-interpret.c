@@ -615,7 +615,7 @@ ipmi_interpret_sel (ipmi_interpret_ctx_t ctx,
    * is not a valid record type.
    */
   if (ctx->flags & IPMI_INTERPRET_FLAGS_SEL_ASSUME_SYSTEM_EVENT_RECORDS
-      !IPMI_SEL_RECORD_TYPE_VALID (record_type))
+      && !IPMI_SEL_RECORD_TYPE_VALID (record_type))
     record_type = IPMI_SEL_RECORD_TYPE_SYSTEM_EVENT_RECORD;
 
   if (record_type == IPMI_SEL_RECORD_TYPE_SYSTEM_EVENT_RECORD)
