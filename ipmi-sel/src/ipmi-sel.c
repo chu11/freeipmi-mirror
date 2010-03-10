@@ -1105,6 +1105,61 @@ _normal_output_not_available_sensor_name_and_type (ipmi_sel_state_data_t *state_
  * return (-1) on error
  */
 static int
+_normal_output_event_state (ipmi_sel_state_data_t *state_data, unsigned int flags)
+{
+  uint8_t record_data[IPMI_SEL_RECORD_SIZE];
+  int record_data_len;
+  unsigned int sel_state;
+  char *sel_state_str = NULL;
+  int rv = -1;
+
+  assert (state_data);
+  assert (!state_data->prog_data->args->legacy_output);
+  assert (state_data->prog_data->args->output_event_state);
+
+  if ((record_data_len = ipmi_sel_parse_read_record (state_data->sel_parse_ctx,
+                                                     record_data,
+                                                     IPMI_SEL_RECORD_SIZE)) < 0)
+    {
+      if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_read_record") < 0)
+        return (-1);
+      return (0);
+    }
+
+  if (ipmi_interpret_sel (state_data->interpret_ctx,
+                          record_data,
+                          record_data_len,
+                          &sel_state) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_interpret_sel: %s\n",
+                       ipmi_interpret_ctx_errormsg (state_data->interpret_ctx));
+      return (-1);
+    }
+
+  if (sel_state == IPMI_INTERPRET_STATE_NOMINAL)
+    sel_state_str = "Nominal";
+  else if (sel_state == IPMI_INTERPRET_STATE_WARNING)
+    sel_state_str = "Warning";
+  else if (sel_state == IPMI_INTERPRET_STATE_CRITICAL)
+    sel_state_str = "Critical";
+  else
+    sel_state_str = IPMI_SEL_NA_STRING;
+
+  if (state_data->prog_data->args->comma_separated_output)
+    pstdout_printf (state_data->pstate, ",%s", sel_state_str);
+  else
+    pstdout_printf (state_data->pstate, " | %-8s", sel_state_str);
+
+  return (1);
+}
+
+/* return 1 on success
+ * return (0) on non-success, but don't fail
+ * return (-1) on error
+ */
+static int
 _normal_output_event_direction (ipmi_sel_state_data_t *state_data, unsigned int flags)
 {
   char outbuf[IPMI_SEL_OUTPUT_BUFLEN+1];
@@ -1564,6 +1619,15 @@ _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
       if (!ret)
         goto newline_out;
 
+      if (state_data->prog_data->args->output_event_state)
+        {
+          if ((ret = _normal_output_event_state (state_data, flags)) < 0)
+            goto cleanup;
+
+          if (!ret)
+            goto newline_out;
+        }
+
       if (state_data->prog_data->args->verbose_count >= 1)
         {
           if ((ret = _normal_output_event_direction (state_data, flags)) < 0)
@@ -1599,6 +1663,15 @@ _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
       if (!ret)
         goto newline_out;
 
+      if (state_data->prog_data->args->output_event_state)
+        {
+          if ((ret = _normal_output_event_state (state_data, flags)) < 0)
+            goto cleanup;
+
+          if (!ret)
+            goto newline_out;
+        }
+
       if (state_data->prog_data->args->verbose_count >= 1)
         {
           if ((ret = _normal_output_not_available_event_direction (state_data, flags)) < 0)
@@ -1633,6 +1706,15 @@ _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
 
       if (!ret)
         goto newline_out;
+
+      if (state_data->prog_data->args->output_event_state)
+        {
+          if ((ret = _normal_output_event_state (state_data, flags)) < 0)
+            goto cleanup;
+
+          if (!ret)
+            goto newline_out;
+        }
 
       if (state_data->prog_data->args->verbose_count >= 1)
         {

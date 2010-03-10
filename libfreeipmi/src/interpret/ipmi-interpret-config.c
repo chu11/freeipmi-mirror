@@ -78,18 +78,18 @@
 
 static struct ipmi_interpret_config ipmi_interpret_threshold_sel_config[] =
   {
-    { "IPMI_Threshold Sensor_Lower_Non_Critical_Going_Low", IPMI_INTERPRET_STATE_WARNING},
-    { "IPMI_Threshold Sensor_Lower_Non_Critical_Going_High", IPMI_INTERPRET_STATE_NOMINAL},
-    { "IPMI_Threshold Sensor_Lower_Critical_Going_Low", IPMI_INTERPRET_STATE_CRITICAL},
-    { "IPMI_Threshold Sensor_Lower_Critical_Going_High", IPMI_INTERPRET_STATE_WARNING},
-    { "IPMI_Threshold Sensor_Lower_Non_Recoverable_Going_Low", IPMI_INTERPRET_STATE_CRITICAL},
-    { "IPMI_Threshold Sensor_Lower_Non_Recoverable_Going_High", IPMI_INTERPRET_STATE_CRITICAL},
-    { "IPMI_Threshold Sensor_Upper_Non_Critical_Going_Low", IPMI_INTERPRET_STATE_NOMINAL},
-    { "IPMI_Threshold Sensor_Upper_Non_Critical_Going_High", IPMI_INTERPRET_STATE_WARNING},
-    { "IPMI_Threshold Sensor_Upper_Critical_Going_Low", IPMI_INTERPRET_STATE_WARNING},
-    { "IPMI_Threshold Sensor_Upper_Critical_Going_High", IPMI_INTERPRET_STATE_CRITICAL},
-    { "IPMI_Threshold Sensor_Upper_Non_Recoverable_Going_Low", IPMI_INTERPRET_STATE_CRITICAL},
-    { "IPMI_Threshold Sensor_Upper_Non_Recoverable_Going_High", IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_Threshold_Sensor_Lower_Non_Critical_Going_Low", IPMI_INTERPRET_STATE_WARNING},
+    { "IPMI_Threshold_Sensor_Lower_Non_Critical_Going_High", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_Threshold_Sensor_Lower_Critical_Going_Low", IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_Threshold_Sensor_Lower_Critical_Going_High", IPMI_INTERPRET_STATE_WARNING},
+    { "IPMI_Threshold_Sensor_Lower_Non_Recoverable_Going_Low", IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_Threshold_Sensor_Lower_Non_Recoverable_Going_High", IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_Threshold_Sensor_Upper_Non_Critical_Going_Low", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_Threshold_Sensor_Upper_Non_Critical_Going_High", IPMI_INTERPRET_STATE_WARNING},
+    { "IPMI_Threshold_Sensor_Upper_Critical_Going_Low", IPMI_INTERPRET_STATE_WARNING},
+    { "IPMI_Threshold_Sensor_Upper_Critical_Going_High", IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_Threshold_Sensor_Upper_Non_Recoverable_Going_Low", IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_Threshold_Sensor_Upper_Non_Recoverable_Going_High", IPMI_INTERPRET_STATE_CRITICAL},
   };
 static unsigned int ipmi_interpret_threshold_sel_config_len = 12;
 

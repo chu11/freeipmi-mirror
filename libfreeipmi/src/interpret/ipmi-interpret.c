@@ -839,6 +839,12 @@ ipmi_interpret_sel (ipmi_interpret_ctx_t ctx,
                                      sel_state) < 0)
         goto cleanup;
     }
+  else
+    {
+      (*sel_state) = IPMI_INTERPRET_STATE_UNKNOWN;
+      rv = 0;
+      goto cleanup;
+    }
 
   rv = 0;
  cleanup:
