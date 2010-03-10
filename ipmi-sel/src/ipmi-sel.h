@@ -50,15 +50,17 @@ enum ipmi_sel_argp_option_keys
     SYSTEM_EVENT_ONLY_KEY = 171,
     OEM_EVENT_ONLY_KEY = 172,
     OUTPUT_MANUFACTURER_ID_KEY = 173,
-    HEX_DUMP_KEY = 174,
-    ASSUME_SYSTEM_EVENT_RECORDS_KEY = 175,
-    INTERPRET_OEM_DATA_KEY = 176,
-    ENTITY_SENSOR_NAMES_KEY = 177,
-    NO_SENSOR_TYPE_OUTPUT_KEY = 178,
-    COMMA_SEPARATED_OUTPUT_KEY = 179,
-    NO_HEADER_OUTPUT_KEY = 180,
-    NON_ABBREVIATED_UNITS_KEY = 181,
-    LEGACY_OUTPUT_KEY = 182,
+    OUTPUT_EVENT_STATE_KEY = 174,
+    EVENT_STATE_CONFIG_FILE_KEY = 175,
+    HEX_DUMP_KEY = 176,
+    ASSUME_SYSTEM_EVENT_RECORDS_KEY = 177,
+    INTERPRET_OEM_DATA_KEY = 178,
+    ENTITY_SENSOR_NAMES_KEY = 179,
+    NO_SENSOR_TYPE_OUTPUT_KEY = 180,
+    COMMA_SEPARATED_OUTPUT_KEY = 181,
+    NO_HEADER_OUTPUT_KEY = 182,
+    NON_ABBREVIATED_UNITS_KEY = 183,
+    LEGACY_OUTPUT_KEY = 184,
   };
 
 struct ipmi_sel_arguments
@@ -103,6 +105,8 @@ struct ipmi_sel_arguments
   int system_event_only;
   int oem_event_only;
   int output_manufacturer_id;
+  int output_event_state;
+  char *event_state_config_file;
   int hex_dump;
   int assume_system_event_records;
   int interpret_oem_data;
@@ -129,6 +133,7 @@ typedef struct ipmi_sel_state_data
   ipmi_sdr_cache_ctx_t sdr_cache_ctx;
   ipmi_sdr_parse_ctx_t sdr_parse_ctx;
   ipmi_sel_parse_ctx_t sel_parse_ctx;
+  ipmi_interpret_ctx_t interpret_ctx;
   int output_headers;
   struct sensor_entity_id_counts entity_id_counts;
   struct sensor_column_width column_width;

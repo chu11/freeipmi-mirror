@@ -878,6 +878,14 @@ Specify if output should only include OEM event records.
 Specify if output of OEM event records should include manufacturer ID
 by default or not.
 .TP
+\fBipmi\-sel\-output\-event\-state\fR \fIENABLE|DISABLE\fR
+Specify if
+.B ipmi-sel
+should output the event state state by default.
+.TP
+\fBipmi\-sel\-event\-state\-config\-file\fR \fIFILE\fR
+Specify the default event state configuration file.
+.TP
 \fBipmi\-sel\-assume\-system\-event\-records\fR \fIENABLE|DISABLE\fR
 Specify if system event records should be assumed when there are
 invalid record types.

@@ -820,7 +820,7 @@ ipmi_interpret_sel (ipmi_interpret_ctx_t ctx,
           goto cleanup;
         }
     }
-  else
+  else if (ctx->flags & IPMI_INTERPRET_FLAGS_INTERPRET_OEM_DATA)
     {
       if (_get_sel_oem_record_state (ctx,
                                      record_buf,

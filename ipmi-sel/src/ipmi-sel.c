@@ -1462,6 +1462,11 @@ _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
                             SENSORS_HEADER_NAME_STR,
                             SENSORS_HEADER_TYPE_STR);
 
+          if (state_data->prog_data->args->output_event_state)
+            pstdout_printf (state_data->pstate,
+                            ",%s",
+                            SENSORS_HEADER_STATE_STR);
+
           if (state_data->prog_data->args->verbose_count >= 1)
             pstdout_printf (state_data->pstate, ",Event Direction");
           
@@ -1501,6 +1506,11 @@ _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
                               SENSORS_HEADER_TYPE_STR);
             }
           
+          if (state_data->prog_data->args->output_event_state)
+            pstdout_printf (state_data->pstate,
+                            " | %s   ",
+                            SENSORS_HEADER_STATE_STR);
+
           if (state_data->prog_data->args->verbose_count >= 1)
             pstdout_printf (state_data->pstate, " | Event Direction  ");
           
@@ -2139,6 +2149,29 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
                            ipmi_sel_parse_ctx_errormsg (state_data->sel_parse_ctx));
           goto cleanup;
         }
+
+      if (args->output_event_state)
+        {
+          if (ipmi_interpret_ctx_set_manufacturer_id (state_data->interpret_ctx,
+                                                      state_data->oem_data.manufacturer_id) < 0)
+            {
+              pstdout_fprintf (state_data->pstate,
+                               stderr,
+                               "ipmi_interpret_ctx_set_manufacturer_id: %s\n",
+                               ipmi_interpret_ctx_errormsg (state_data->interpret_ctx));
+              goto cleanup;
+            }
+
+          if (ipmi_interpret_ctx_set_product_id (state_data->interpret_ctx,
+                                                 state_data->oem_data.product_id) < 0)
+            {
+              pstdout_fprintf (state_data->pstate,
+                               stderr,
+                               "ipmi_interpret_ctx_set_product_id: %s\n",
+                               ipmi_interpret_ctx_errormsg (state_data->interpret_ctx));
+              goto cleanup;
+            }
+        }
     }
 
   if (state_data->prog_data->args->display)
@@ -2443,6 +2476,71 @@ _ipmi_sel (pstdout_state_t pstate,
                                  stderr,
                                  "ipmi_sel_parse_ctx_set_debug_prefix: %s\n",
                                  ipmi_sel_parse_ctx_errormsg (state_data.sel_parse_ctx));
+            }
+        }
+    }
+
+  if (prog_data->args->output_event_state)
+    {
+      if (!(state_data.interpret_ctx = ipmi_interpret_ctx_create ()))
+        {
+          pstdout_perror (pstate, "ipmi_interpret_ctx_create()");
+          exit_code = EXIT_FAILURE;
+          goto cleanup;
+        }
+
+      if (prog_data->args->event_state_config_file)
+        {
+          if (ipmi_interpret_load_sel_config (state_data.interpret_ctx,
+                                              prog_data->args->event_state_config_file) < 0)
+            {
+              if (ipmi_interpret_ctx_errnum (state_data.interpret_ctx) == IPMI_INTERPRET_ERR_SEL_CONFIG_FILE_DOES_NOT_EXIST)
+                pstdout_fprintf (pstate,
+                                 stderr,
+                                 "sensor state config file '%s' does not exist\n",
+                                 prog_data->args->event_state_config_file);
+              else if (ipmi_interpret_ctx_errnum (state_data.interpret_ctx) == IPMI_INTERPRET_ERR_SEL_CONFIG_FILE_PARSE)
+                pstdout_fprintf (pstate,
+                                 stderr,
+                                 "sensor state config file '%s' parse error\n",
+                                 prog_data->args->event_state_config_file);
+              else
+                pstdout_fprintf (pstate,
+                                 stderr,
+                                 "ipmi_interpret_load_sel_config: %s\n",
+                                 ipmi_interpret_ctx_errormsg (state_data.interpret_ctx));
+              exit_code = EXIT_FAILURE;
+              goto cleanup;
+            }
+        }
+      else
+        {
+          if (ipmi_interpret_load_sel_config (state_data.interpret_ctx, NULL) < 0)
+            {
+              if (ipmi_interpret_ctx_errnum (state_data.interpret_ctx) == IPMI_INTERPRET_ERR_SEL_CONFIG_FILE_PARSE)
+                pstdout_fprintf (pstate,
+                                 stderr,
+                                 "sensor state config file parse error\n");
+              else
+                pstdout_fprintf (pstate,
+                                 stderr,
+                                 "ipmi_interpret_load_sel_config: %s\n",
+                                 ipmi_interpret_ctx_errormsg (state_data.interpret_ctx));
+              exit_code = EXIT_FAILURE;
+              goto cleanup;
+            }
+        }
+
+      if (prog_data->args->interpret_oem_data)
+        {
+          if (ipmi_interpret_ctx_set_flags (state_data.interpret_ctx, IPMI_INTERPRET_FLAGS_INTERPRET_OEM_DATA) < 0)
+            {
+              pstdout_fprintf (pstate,
+                               stderr,
+                               "ipmi_interpret_ctx_set_flags: %s\n",
+                               ipmi_interpret_ctx_errormsg (state_data.interpret_ctx));
+              exit_code = EXIT_FAILURE;
+              goto cleanup;
             }
         }
     }

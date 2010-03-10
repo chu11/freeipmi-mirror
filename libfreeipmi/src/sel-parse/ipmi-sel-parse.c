@@ -581,7 +581,7 @@ _get_sel_entry (ipmi_sel_parse_ctx_t ctx,
 
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
-  assert (ctx->ipmi-ctx);
+  assert (ctx->ipmi_ctx);
   assert (fiid_obj_valid (obj_cmd_rs) == 1);
   assert (fiid_obj_template_compare (obj_cmd_rs, tmpl_cmd_get_sel_entry_rs) == 1);
   assert (reservation_id);
