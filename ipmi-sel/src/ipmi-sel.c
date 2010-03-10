@@ -2482,6 +2482,8 @@ _ipmi_sel (pstdout_state_t pstate,
 
   if (prog_data->args->output_event_state)
     {
+      unsigned int flags = 0;
+
       if (!(state_data.interpret_ctx = ipmi_interpret_ctx_create ()))
         {
           pstdout_perror (pstate, "ipmi_interpret_ctx_create()");
@@ -2531,9 +2533,15 @@ _ipmi_sel (pstdout_state_t pstate,
             }
         }
 
+      if (prog_data->args->assume_system_event_records)
+        flags |= IPMI_INTERPRET_FLAGS_SEL_ASSUME_SYSTEM_EVENT_RECORDS;
+
       if (prog_data->args->interpret_oem_data)
+        flags |= IPMI_INTERPRET_FLAGS_INTERPRET_OEM_DATA;
+
+      if (flags)
         {
-          if (ipmi_interpret_ctx_set_flags (state_data.interpret_ctx, IPMI_INTERPRET_FLAGS_INTERPRET_OEM_DATA) < 0)
+          if (ipmi_interpret_ctx_set_flags (state_data.interpret_ctx, flags) < 0)
             {
               pstdout_fprintf (pstate,
                                stderr,

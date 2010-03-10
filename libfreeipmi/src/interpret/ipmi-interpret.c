@@ -607,7 +607,17 @@ ipmi_interpret_sel (ipmi_interpret_ctx_t ctx,
       return (-1);
     }
 
-  /* XXX deal w/ HP workaround */
+  /* IPMI Workaround
+   *
+   * HP DL 380 G5
+   *
+   * Motherboard is reporting SEL Records of record type 0x00, which
+   * is not a valid record type.
+   */
+  if (ctx->flags & IPMI_INTERPRET_FLAGS_SEL_ASSUME_SYSTEM_EVENT_RECORDS
+      !IPMI_SEL_RECORD_TYPE_VALID (record_type))
+    record_type = IPMI_SEL_RECORD_TYPE_SYSTEM_EVENT_RECORD;
+
   if (record_type == IPMI_SEL_RECORD_TYPE_SYSTEM_EVENT_RECORD)
     {
       uint8_t event_reading_type_code;
