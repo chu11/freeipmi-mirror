@@ -698,13 +698,10 @@ struct ipmi_oem_id oem_cb[] =
       "Fujitsu",
       oem_fujitsu
     },
-#if 0
-    /* none verified yet */
     {
       "IBM",
       oem_ibm
     },
-#endif
     {
       "Inventec",
       oem_inventec
