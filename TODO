@@ -51,6 +51,11 @@ functions to support "is supported" checks for OEM stuff
 all conf files in /etc/freeipmi/ instead of /etc
 serial interface? via serial basic mode?  Could just be another interfaace -I
 
+ipmi-fru/bmc-device
+-------------------
+way to write/edit FRU fields?
+- useful for OEM integrators
+
 hpm/hpmi
 --------
 picmg hpm/hpmi.1 standard - defines ipmi firmware update stuff
