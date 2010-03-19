@@ -1111,7 +1111,6 @@ _normal_output_event_state (ipmi_sel_state_data_t *state_data, unsigned int flag
   int record_data_len;
   unsigned int sel_state;
   char *sel_state_str = NULL;
-  int rv = -1;
 
   assert (state_data);
   assert (!state_data->prog_data->args->legacy_output);
