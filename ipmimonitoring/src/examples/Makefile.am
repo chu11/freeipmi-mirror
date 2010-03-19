@@ -3,7 +3,13 @@ AM_CPPFLAGS = \
 	-D_GNU_SOURCE \
 	-D_REENTRANT 
 
-noinst_PROGRAMS = ipmimonitoring-sensors
+noinst_PROGRAMS = ipmimonitoring-sel ipmimonitoring-sensors
+
+ipmimonitoring_sel_LDADD = \
+	$(top_builddir)/ipmimonitoring/src/libipmimonitoring/libipmimonitoring.la
+ 
+ipmimonitoring_sel_SOURCES = \
+	ipmimonitoring-sel.c
 
 ipmimonitoring_sensors_LDADD = \
 	$(top_builddir)/ipmimonitoring/src/libipmimonitoring/libipmimonitoring.la
@@ -16,4 +22,4 @@ $(top_builddir)/ipmimonitoring/src/libipmimonitoring/libipmimonitoring.la : forc
 
 force-dependency-check:
 
-EXTRA_DIST = ipmimonitoring-sensors.c
+EXTRA_DIST = ipmimonitoring-sel.c ipmimonitoring-sensors.c

@@ -7,6 +7,7 @@ o Remove ipmimonitoring tool.  Tool is now superseded by ipmi-sensors
   and the new --output-sensor-state option.
 o Re-architect libipmimonitoring to support all defined IPMI sensor
   types, OEM bitmasks, and OEM interpretations.
+o Add SEL monitoring support to libipmimonitoring.
 o Support new 'interpret' sub-library in libfreeipmi.
 o Update all licensing information to GPLv3.
 
@@ -46,6 +47,7 @@ o libfreeipmi
   - 'sel-parse' library now does not require valid ipmi_ctx.
     Functions performing ipmi communication will simply error.
 o libipmimonitoring
+  - Add SEL monitoring support to libipmimonitoring.
   - Re-architect to support all defined IPMI sensor types.
   - Re-architect to use 'interpret' sub-library.
   - Rename a number of functions to differentiate sensor vs. SEL

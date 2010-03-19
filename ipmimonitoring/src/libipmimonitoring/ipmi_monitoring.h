@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.h,v 1.62 2010-02-11 21:49:24 chu11 Exp $
+ *  $Id: ipmi_monitoring.h,v 1.63 2010-03-19 22:07:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -39,32 +39,53 @@ enum ipmi_monitoring_error_codes
     IPMI_MONITORING_ERR_PARAMETERS                          = 3,
     IPMI_MONITORING_ERR_PERMISSION                          = 4,
     IPMI_MONITORING_ERR_LIBRARY_UNINITIALIZED               = 5,
-    IPMI_MONITORING_ERR_SENSOR_CONFIG_FILE_DOES_NOT_EXIST   = 6,
-    IPMI_MONITORING_ERR_SENSOR_CONFIG_FILE_PARSE            = 7,
-    IPMI_MONITORING_ERR_SDR_CACHE_PERMISSION                = 8,
-    IPMI_MONITORING_ERR_SDR_CACHE_FILESYSTEM                = 9,
-    IPMI_MONITORING_ERR_HOSTNAME_INVALID                    = 10,
-    IPMI_MONITORING_ERR_SENSOR_NOT_FOUND                    = 11,
-    IPMI_MONITORING_ERR_NO_SENSOR_READINGS                  = 12,
-    IPMI_MONITORING_ERR_SENSOR_READINGS_LIST_END            = 13,
-    IPMI_MONITORING_ERR_CONNECTION_TIMEOUT                  = 14,
-    IPMI_MONITORING_ERR_SESSION_TIMEOUT                     = 15,
-    IPMI_MONITORING_ERR_USERNAME_INVALID                    = 16,
-    IPMI_MONITORING_ERR_PASSWORD_INVALID                    = 17,
-    IPMI_MONITORING_ERR_PASSWORD_VERIFICATION_TIMEOUT       = 18,
-    IPMI_MONITORING_ERR_K_G_INVALID                         = 19,
-    IPMI_MONITORING_ERR_PRIVILEGE_LEVEL_INSUFFICIENT        = 20,
-    IPMI_MONITORING_ERR_PRIVILEGEL_LEVEL_CANNOT_BE_OBTAINED = 21,
-    IPMI_MONITORING_ERR_AUTHENTICATION_TYPE_UNAVAILABLE     = 22,
-    IPMI_MONITORING_ERR_IPMI_2_0_UNAVAILABLE                = 23,
-    IPMI_MONITORING_ERR_CIPHER_SUITE_ID_UNAVAILABLE         = 24,
-    IPMI_MONITORING_ERR_CALLBACK_ERROR                      = 25,
-    IPMI_MONITORING_ERR_BMC_BUSY                            = 26,
-    IPMI_MONITORING_ERR_OUT_OF_MEMORY                       = 27,
-    IPMI_MONITORING_ERR_IPMI_ERROR                          = 28,
-    IPMI_MONITORING_ERR_SYSTEM_ERROR                        = 29,
-    IPMI_MONITORING_ERR_INTERNAL_ERROR                      = 30,
-    IPMI_MONITORING_ERR_ERRNUMRANGE                         = 31,
+    IPMI_MONITORING_ERR_SEL_CONFIG_FILE_DOES_NOT_EXIST      = 6,
+    IPMI_MONITORING_ERR_SEL_CONFIG_FILE_PARSE               = 7,
+    IPMI_MONITORING_ERR_SENSOR_CONFIG_FILE_DOES_NOT_EXIST   = 8,
+    IPMI_MONITORING_ERR_SENSOR_CONFIG_FILE_PARSE            = 9,
+    IPMI_MONITORING_ERR_SDR_CACHE_PERMISSION                = 10,
+    IPMI_MONITORING_ERR_SDR_CACHE_FILESYSTEM                = 11,
+    IPMI_MONITORING_ERR_HOSTNAME_INVALID                    = 12,
+    IPMI_MONITORING_ERR_SENSOR_NOT_FOUND                    = 13,
+    IPMI_MONITORING_ERR_NO_SEL_RECORDS                      = 14,
+    IPMI_MONITORING_ERR_SEL_RECORDS_LIST_END                = 15,
+    IPMI_MONITORING_ERR_SEL_RECORD_DATA_NOT_AVAILABLE       = 16,
+    IPMI_MONITORING_ERR_NO_SENSOR_READINGS                  = 17,
+    IPMI_MONITORING_ERR_SENSOR_READINGS_LIST_END            = 18,
+    IPMI_MONITORING_ERR_CONNECTION_TIMEOUT                  = 19,
+    IPMI_MONITORING_ERR_SESSION_TIMEOUT                     = 20,
+    IPMI_MONITORING_ERR_USERNAME_INVALID                    = 21,
+    IPMI_MONITORING_ERR_PASSWORD_INVALID                    = 22,
+    IPMI_MONITORING_ERR_PASSWORD_VERIFICATION_TIMEOUT       = 23,
+    IPMI_MONITORING_ERR_K_G_INVALID                         = 24,
+    IPMI_MONITORING_ERR_PRIVILEGE_LEVEL_INSUFFICIENT        = 25,
+    IPMI_MONITORING_ERR_PRIVILEGEL_LEVEL_CANNOT_BE_OBTAINED = 26,
+    IPMI_MONITORING_ERR_AUTHENTICATION_TYPE_UNAVAILABLE     = 27,
+    IPMI_MONITORING_ERR_IPMI_2_0_UNAVAILABLE                = 28,
+    IPMI_MONITORING_ERR_CIPHER_SUITE_ID_UNAVAILABLE         = 29,
+    IPMI_MONITORING_ERR_CALLBACK_ERROR                      = 30,
+    IPMI_MONITORING_ERR_BMC_BUSY                            = 31,
+    IPMI_MONITORING_ERR_OUT_OF_MEMORY                       = 32,
+    IPMI_MONITORING_ERR_IPMI_ERROR                          = 33,
+    IPMI_MONITORING_ERR_SYSTEM_ERROR                        = 34,
+    IPMI_MONITORING_ERR_INTERNAL_ERROR                      = 35,
+    IPMI_MONITORING_ERR_ERRNUMRANGE                         = 36,
+  };
+
+enum ipmi_monitoring_state
+  {
+    IPMI_MONITORING_STATE_NOMINAL  = 0x00,
+    IPMI_MONITORING_STATE_WARNING  = 0x01,
+    IPMI_MONITORING_STATE_CRITICAL = 0x02,
+    IPMI_MONITORING_STATE_UNKNOWN  = 0x03,
+  };
+
+enum ipmi_monitoring_sel_record_type_class
+  {
+    IPMI_MONITORING_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD        = 0x00,
+    IPMI_MONITORING_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD     = 0x01,
+    IPMI_MONITORING_SEL_RECORD_TYPE_CLASS_NON_TIMESTAMPED_OEM_RECORD = 0x02,
+    IPMI_MONITORING_SEL_RECORD_TYPE_CLASS_UNKNOWN                    = 0x03,
   };
 
 enum ipmi_monitoring_sensor_type
@@ -121,12 +142,10 @@ enum ipmi_monitoring_sensor_type
     IPMI_MONITORING_SENSOR_TYPE_UNKNOWN                             = 0xFFFF,
   } ipmi_monitoring_sensor_type_t;
 
-enum ipmi_monitoring_sensor_state
+enum ipmi_monitoring_sel_event_direction
   {
-    IPMI_MONITORING_SENSOR_STATE_NOMINAL  = 0x00,
-    IPMI_MONITORING_SENSOR_STATE_WARNING  = 0x01,
-    IPMI_MONITORING_SENSOR_STATE_CRITICAL = 0x02,
-    IPMI_MONITORING_SENSOR_STATE_UNKNOWN  = 0x03,
+    IPMI_MONITORING_SEL_EVENT_DIRECTION_ASSERTION   = 0x00,
+    IPMI_MONITORING_SEL_EVENT_DIRECTION_DEASSERTION = 0x01,
   };
 
 enum ipmi_monitoring_sensor_units
@@ -147,64 +166,6 @@ enum ipmi_monitoring_sensor_reading_type
     IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER32         = 0x01,
     IPMI_MONITORING_SENSOR_READING_TYPE_DOUBLE                     = 0x02,
     IPMI_MONITORING_SENSOR_READING_TYPE_UNKNOWN                    = 0x03,
-  };
-
-enum ipmi_monitoring_sensor_bitmask_type
-  {
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_THRESHOLD                           = 0x00,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_TRANSITION_STATE                    = 0x01,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_STATE                               = 0x02,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_PREDICTIVE_FAILURE                  = 0x03,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_LIMIT                               = 0x04,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_PERFORMANCE                         = 0x05,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_TRANSITION_SEVERITY                 = 0x06,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_DEVICE_PRESENT                      = 0x07,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_DEVICE_ENABLED                      = 0x08,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_TRANSITION_AVAILABILITY             = 0x09,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_REDUNDANCY                          = 0x0A,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_ACPI_POWER_STATE                    = 0x0B,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_PHYSICAL_SECURITY                   = 0x0C,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT = 0x0D,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_PROCESSOR                           = 0x0E,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_POWER_SUPPLY                        = 0x0F,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_POWER_UNIT                          = 0x10,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_COOLING_DEVICE                      = 0x11,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_OTHER_UNITS_BASED_SENSOR            = 0x12,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_MEMORY                              = 0x13,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_DRIVE_SLOT                          = 0x14,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_POST_MEMORY_RESIZE                  = 0x15,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_SYSTEM_FIRMWARE_PROGRESS            = 0x16,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_EVENT_LOGGING_DISABLED              = 0x17,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_WATCHDOG1                           = 0x18,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_SYSTEM_EVENT                        = 0x19,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_CRITICAL_INTERRUPT                  = 0x1A,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_BUTTON_SWITCH                       = 0x1B,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_MODULE_BOARD                        = 0x1C,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_MICROCONTROLLER_COPROCESSOR         = 0x1D,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_ADD_IN_CARD                         = 0x1E,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_CHASSIS                             = 0x1F,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_CHIP_SET                            = 0x20,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_OTHER_FRU                           = 0x21,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_CABLE_INTERCONNECT                  = 0x22,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_TERMINATOR                          = 0x23,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_SYSTEM_BOOT_INITIATED               = 0x24,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_BOOT_ERROR                          = 0x25,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_OS_BOOT                             = 0x26,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_OS_CRITICAL_STOP                    = 0x27,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_SLOT_CONNECTOR                      = 0x28,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_SYSTEM_ACPI_POWER_STATE             = 0x29,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_WATCHDOG2                           = 0x2A,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_PLATFORM_ALERT                      = 0x2B,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_ENTITY_PRESENCE                     = 0x2C,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_MONITOR_ASIC_IC                     = 0x2D,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_LAN                                 = 0x2E,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH         = 0x2F,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_BATTERY                             = 0x30,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_SESSION_AUDIT                       = 0x31,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_VERSION_CHANGE                      = 0x32,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_FRU_STATE                           = 0x33,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_OEM                                 = 0xFE,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_UNKNOWN                             = 0xFF,
   };
 
 enum ipmi_monitoring_driver_type
@@ -260,6 +221,13 @@ enum ipmi_monitoring_workaround_flags
     IPMI_MONITORING_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE      = 0x08000000,
   };
   
+enum ipmi_monitoring_sel_flags
+  {
+    IPMI_MONITORING_SEL_FLAGS_REREAD_SDR_CACHE           = 0x00000001,
+    IPMI_MONITORING_SEL_FLAGS_INTERPRET_OEM_DATA         = 0x00000002,
+    IPMI_MONITORING_SEL_FLAGS_ASSUME_SYSTEM_EVENT_RECORD = 0x00000004,
+  };
+
 enum ipmi_monitoring_sensor_reading_flags
   {
     IPMI_MONITORING_SENSOR_READING_FLAGS_REREAD_SDR_CACHE                 = 0x00000001,
@@ -424,12 +392,12 @@ struct ipmi_monitoring_ipmi_config
 typedef struct ipmi_monitoring_ctx *ipmi_monitoring_ctx_t;
 
 /*
- * Ipmi_Monitoring_Sensor_Readings_Callback
+ * Ipmi_Monitoring_Callback
  *
  * If callback returns < 0, libipmimonitoring will stop reading
- * remaining sensors.
+ * remaining information.
  */
-typedef int (*Ipmi_Monitoring_Sensor_Readings_Callback)(ipmi_monitoring_ctx_t c, void *callback_data);
+typedef int (*Ipmi_Monitoring_Callback)(ipmi_monitoring_ctx_t c, void *callback_data);
 
 /*
  * ipmi_monitoring_init
@@ -483,6 +451,19 @@ char *ipmi_monitoring_ctx_strerror (int errnum);
 char *ipmi_monitoring_ctx_errormsg (ipmi_monitoring_ctx_t c);
 
 /*
+ * ipmi_monitoring_ctx_sel_config_file
+ *
+ * Initialize the ipmi monitoring context with the interpretation
+ * rules stored in a specific sel configuration file.  If NULL
+ * sel_config_file is specified, the default sel configuration
+ * file will be read and parsed.
+ *
+ * Returns 0 on success, -1 on error
+ */
+int ipmi_monitoring_ctx_sel_config_file (ipmi_monitoring_ctx_t c,
+                                         const char *sel_config_file);
+
+/*
  * ipmi_monitoring_ctx_sensor_config_file
  *
  * Initialize the ipmi monitoring context with the interpretation
@@ -525,14 +506,273 @@ int ipmi_monitoring_ctx_sdr_cache_filenames (ipmi_monitoring_ctx_t c,
                                              const char *format);
 
 /*
+ * ipmi_monitoring_sel_by_record_id
+ *
+ * Retrieve SEL records by record ID and store them in the monitoring context.
+ *
+ * If 'hostname' is NULL, SEL records for the current node will be retrieved in-band.
+ * If 'record_ids' is NULL, all records will be retrieved
+ * If specified, callback function will be called after each record is read and parsed.
+ *
+ * Returns number of records retrieved on success, -1 on error.
+ * SEL iterators below may be used after calling this function to
+ * iterate through records.
+ */
+int ipmi_monitoring_sel_by_record_id (ipmi_monitoring_ctx_t c,
+                                      const char *hostname,
+                                      struct ipmi_monitoring_ipmi_config *config,
+                                      unsigned int sel_flags,
+                                      unsigned int *record_ids,
+                                      unsigned int record_ids_len,
+                                      Ipmi_Monitoring_Callback callback,
+                                      void *callback_data);
+
+/*
+ * ipmi_monitoring_sel_by_sensor_type
+ *
+ * Retrieve SEL records by sensor type and store them in the
+ * monitoring context.  See 'ipmi_monitoring_sensor_type' for possible
+ * sensor type values.
+ *
+ * If 'hostname' is NULL, SEL records for the current node will be retrieved in-band.
+ * If 'sensor_types' is NULL, all records will be retrieved.
+ * If specified, callback function will be called after each record is read and parsed.
+ *
+ * Returns number of records retrieved on success, -1 on error
+ * SEL iterators below may be used after calling this function to
+ * iterate through records.
+ */
+int ipmi_monitoring_sel_by_sensor_type (ipmi_monitoring_ctx_t c,
+                                        const char *hostname,
+                                        struct ipmi_monitoring_ipmi_config *config,
+                                        unsigned int sel_flags,
+                                        unsigned int *sensor_types,
+                                        unsigned int sensor_types_len,
+                                        Ipmi_Monitoring_Callback callback,
+                                        void *callback_data);
+
+/*
+ * ipmi_monitoring_sel_by_date_range
+ *
+ * Retrieve SEL records by date range and store them in the monitoring
+ * context.  Dates may be specified in a format of MM/DD/YYYY or
+ * MM-DD-YYYY.  The month may be specified as a numeral or its
+ * abbreviated string name.
+ *
+ * If 'hostname' is NULL, SEL records for the current node will be retrieved in-band.
+ * If 'date_begin' is NULL, all records before the 'date_end' will be retrieved.
+ * If 'date_end' is NULL, the current time is assumed.
+ * If specified, callback function will be called after each record is read and parsed.
+ *
+ * Note that non-timestamped SEL records will not be retrieved at all
+ * b/c they lack a timestamp.
+ *
+ * Returns number of records retrieved on success, -1 on error
+ * SEL iterators below may be used after calling this function to
+ * iterate through records.
+ */
+int ipmi_monitoring_sel_by_date_range (ipmi_monitoring_ctx_t c,
+                                       const char *hostname,
+                                       struct ipmi_monitoring_ipmi_config *config,
+                                       unsigned int sel_flags,
+                                       const char *date_begin,
+                                       const char *date_end,
+                                       Ipmi_Monitoring_Callback callback,
+                                       void *callback_data);
+
+/*
+ * ipmi_monitoring_sel_iterator_first
+ *
+ * Reset iterator to the first sel record
+ *
+ * Returns 0 on success, -1 on error
+ */
+int ipmi_monitoring_sel_iterator_first (ipmi_monitoring_ctx_t c);
+
+/*
+ * ipmi_monitoring_sel_iterator_next
+ *
+ * Advance iterator to the next sel record information
+ *
+ * Returns 0 on success, -1 on error
+ */
+int ipmi_monitoring_sel_iterator_next (ipmi_monitoring_ctx_t c);
+
+/*
+ * ipmi_monitoring_sel_iterator_destroy
+ *
+ * Destroy all internally stored sel records.
+ */
+void ipmi_monitoring_sel_iterator_destroy (ipmi_monitoring_ctx_t c);
+
+/*
+ * ipmi_monitoring_sel_read_record_id
+ *
+ * Returns the record id of the current sel record in a callback
+ * or the iterator, -1 on error.
+ */
+int ipmi_monitoring_sel_read_record_id (ipmi_monitoring_ctx_t c);
+
+/*
+ * ipmi_monitoring_sel_read_record_type
+ *
+ * Returns the sel record type of the current sel record in a
+ * callback or the iterator, -1 on error.
+ */
+int ipmi_monitoring_sel_read_record_type (ipmi_monitoring_ctx_t c);
+
+/*
+ * ipmi_monitoring_sel_read_record_type_class
+ *
+ * Returns the sel record type class of the current sel record in a
+ * callback or the iterator, -1 on error.  See
+ * 'ipmi_monitoring_sel_event_direction' for possible return values.
+ */
+int ipmi_monitoring_sel_read_record_type_class (ipmi_monitoring_ctx_t c);
+
+/*
+ * ipmi_monitoring_sel_read_sel_state
+ *
+ * Returns the sel state of the current sel record in a callback or
+ * the iterator, -1 on error.  See 'ipmi_monitoring_state' for
+ * possible return values.
+ */
+int ipmi_monitoring_sel_read_sel_state (ipmi_monitoring_ctx_t c);
+
+/*
+ * ipmi_monitoring_sel_read_timestamp
+ *
+ * Returns 0 on success, -1 on error.  Returns the sel record
+ * timestamp of the current sel record in 'timestamp'.  Valid for
+ * IPMI_MONITORING_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD or
+ * IPMI_MONITORING_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD class
+ * records.
+ */
+int ipmi_monitoring_sel_read_timestamp (ipmi_monitoring_ctx_t c, unsigned int *timestamp);
+
+/*
+ * ipmi_monitoring_sel_read_sensor_type
+ *
+ * Returns the sel record sensor type of the current sel record in a
+ * callback or the iterator, -1 on error.  Valid for
+ * IPMI_MONITORING_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD class
+ * records.  See 'ipmi_monitoring_sensor_type' for possible return
+ * values.
+ */
+int ipmi_monitoring_sel_read_sensor_type (ipmi_monitoring_ctx_t c);
+
+/*
+ * ipmi_monitoring_sel_read_sensor_name
+ *
+ * Returns the sel record sensor name of the current sel record in a
+ * callback or the iterator, NULL on error.  Valid for
+ * IPMI_MONITORING_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD class
+ * records.
+ */
+char *ipmi_monitoring_sel_read_sensor_name (ipmi_monitoring_ctx_t c);
+
+/*
+ * ipmi_monitoring_sel_read_event_direction
+ *
+ * Returns the sel record event direction of the current sel record in
+ * a callback or the iterator, -1 on error.  Valid for
+ * IPMI_MONITORING_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD class
+ * records.  See 'ipmi_monitoring_sel_event_direction' for possible
+ * return values.
+ */
+int ipmi_monitoring_sel_read_event_direction (ipmi_monitoring_ctx_t c);
+
+/*
+ * ipmi_monitoring_sel_read_event_offset_type
+ *
+ * Returns the offset type of the current sel record in a
+ * callback or the iterator, -1 on error.  See
+ * 'ipmi_monitoring_event_offset_type' and offsets in
+ * ipmi_monitoring_offsets.h to determine offset conditions for a
+ * given offset type.
+ */
+int ipmi_monitoring_sel_read_event_offset_type (ipmi_monitoring_ctx_t c);
+
+/*
+ * ipmi_monitoring_sel_read_event_offset
+ *
+ * Returns the offset of the current sel record in a callback or
+ * the iterator, -1 on error.  See offsets in ipmi_monitoring_offsets.h to
+ * determine offset conditions for a given offset type.
+ */
+int ipmi_monitoring_sel_read_event_offset (ipmi_monitoring_ctx_t c);
+
+/*
+ * ipmi_monitoring_sel_read_event_offset_string
+ *
+ * Returns a string representing the event in the event offset, NULL
+ * on error.  An empty string may be returned if no event offset
+ * string is available.
+ */
+char *ipmi_monitoring_sel_read_event_offset_string (ipmi_monitoring_ctx_t c);
+
+/*
+ * ipmi_monitoring_sel_read_event_type_code
+ *
+ * Returns the event type code of the current sel record in a callback
+ * or the iterator, -1 on error.  The event type code is is piece of
+ * information is internal to the IPMI protocol.  This may be useful
+ * for advanced users wanting to handle OEM sel records or sensors not
+ * covered by this library.  Valid for
+ * IPMI_MONITORING_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD class
+ * records.
+ */
+int ipmi_monitoring_sel_read_event_type_code (ipmi_monitoring_ctx_t c);
+
+/*
+ * ipmi_monitoring_sel_read_event_data
+ *
+ * Returns 0 on success, -1 on error.  Returns event data of the
+ * current sel record in a callback or the iterator in 'event_data1',
+ * 'event_data2', and 'event_data3' respectively.  The event data is
+ * is piece of information is internal to the IPMI protocol.  This may
+ * be useful for advanced users wanting to handle OEM sel records not
+ * covered by this library.  Valid for
+ * IPMI_MONITORING_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD class
+ * records.
+ */
+int ipmi_monitoring_sel_read_event_data (ipmi_monitoring_ctx_t c,
+                                         unsigned int *event_data1,
+                                         unsigned int *event_data2,
+                                         unsigned int *event_data3);
+
+/*
+ * ipmi_monitoring_sel_read_manufacturer_id
+ *
+ * Returns the manufacturer ID of the current sel record in a callback
+ * or the iterator, -1 on error.  Valid for
+ * IPMI_MONITORING_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD class
+ * records.
+ */
+int ipmi_monitoring_sel_read_manufacturer_id (ipmi_monitoring_ctx_t c);
+
+/*
+ * ipmi_monitoring_sel_read_oem_data
+ *
+ * Returns the OEM record data length of the current sel record in a
+ * callback or the iterator, -1 on error.  Returns OEM record data in
+ * 'oem_data'.  Valid for
+ * IPMI_MONITORING_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD or
+ * IPMI_MONITORING_SEL_RECORD_TYPE_CLASS_NON_TIMESTAMPED_OEM_RECORD
+ * class records.
+ */
+int ipmi_monitoring_sel_read_oem_data (ipmi_monitoring_ctx_t c,
+                                       void *oem_data,
+                                       unsigned int oem_data_len);
+
+/*
  * ipmi_monitoring_sensor_readings_by_record_id
  *
  * Retrieve sensor readings by sensor numbers and store them in the monitoring context.
  *
  * If 'hostname' is NULL, sensors for the current node will be retrieved in-band.
- * If 'record_ids' is NULL, default sensors will be retrieved
- * (default == all sensors unless configured otherwise).
- * Callback function will be called after each sensor is read and parsed.
+ * If 'record_ids' is NULL, all sensors will be retrieved
+ * If specified, callback function will be called after each sensor is read and parsed.
  *
  * Returns number of sensors values retrieved on success, -1 on error.
  * Sensor iterators below may be used after calling this function to
@@ -544,18 +784,19 @@ int ipmi_monitoring_sensor_readings_by_record_id (ipmi_monitoring_ctx_t c,
                                                   unsigned int sensor_reading_flags,
                                                   unsigned int *record_ids,
                                                   unsigned int record_ids_len,
-                                                  Ipmi_Monitoring_Sensor_Readings_Callback callback,
+                                                  Ipmi_Monitoring_Callback callback,
                                                   void *callback_data);
 
 /*
  * ipmi_monitoring_sensor_readings_by_sensor_type
  *
- * Retrieve sensor readings by sensor type and store them in the monitoring context.
+ * Retrieve sensor readings by sensor type and store them in the
+ * monitoring context.  See 'ipmi_monitoring_sensor_type' for possible
+ * sensor type values.
  *
  * If 'hostname' is NULL, sensors for the current node will be retrieved in-band.
- * If 'sensor_types' is NULL, default sensors will be retrieved.
- * (default == all sensors unless configured otherwise).
- * Callback function will be called after each sensor is read and parsed.
+ * If 'sensor_types' is NULL, all sensors will be retrieved.
+ * If specified, callback function will be called after each sensor is read and parsed.
  *
  * Returns number of sensors values retrieved on success, -1 on error
  * Sensor iterators below may be used after calling this function to
@@ -567,7 +808,7 @@ int ipmi_monitoring_sensor_readings_by_sensor_type (ipmi_monitoring_ctx_t c,
                                                     unsigned int sensor_reading_flags,
                                                     unsigned int *sensor_types,
                                                     unsigned int sensor_types_len,
-                                                    Ipmi_Monitoring_Sensor_Readings_Callback callback,
+                                                    Ipmi_Monitoring_Callback callback,
                                                     void *callback_data);
 
 /*
@@ -599,7 +840,7 @@ void ipmi_monitoring_sensor_iterator_destroy (ipmi_monitoring_ctx_t c);
  * ipmi_monitoring_sensor_read_record_id
  *
  * Returns the record id of the current sensor reading in a callback
- * or the iterator.
+ * or the iterator, -1 on error.
  */
 int ipmi_monitoring_sensor_read_record_id (ipmi_monitoring_ctx_t c);
 
@@ -607,7 +848,7 @@ int ipmi_monitoring_sensor_read_record_id (ipmi_monitoring_ctx_t c);
  * ipmi_monitoring_sensor_read_sensor_number
  *
  * Returns the sensor number of the current sensor reading in a
- * callback or the iterator.  May be useful if
+ * callback or the iterator, -1 on error.  May be useful if
  * IPMI_MONITORING_SENSOR_READING_FLAGS_SHARED_SENSORS has been set.
  */
 int ipmi_monitoring_sensor_read_sensor_number (ipmi_monitoring_ctx_t c);
@@ -615,8 +856,9 @@ int ipmi_monitoring_sensor_read_sensor_number (ipmi_monitoring_ctx_t c);
 /*
  * ipmi_monitoring_sensor_read_sensor_type
  *
- * Returns the sensor type of the current sensor reading in a
- * callback or the iterator.
+ * Returns the sensor type of the current sensor reading in a callback
+ * or the iterator, -1 on error.  See 'ipmi_monitoring_sensor_type' for possible
+ * return values.
  */
 int ipmi_monitoring_sensor_read_sensor_type (ipmi_monitoring_ctx_t c);
 
@@ -624,7 +866,7 @@ int ipmi_monitoring_sensor_read_sensor_type (ipmi_monitoring_ctx_t c);
  * ipmi_monitoring_sensor_read_sensor_name
  *
  * Returns a pointer to the sensor name of the current sensor reading
- * in a callback or the iterator.
+ * in a callback or the iterator, NULL on error.
  */
 char *ipmi_monitoring_sensor_read_sensor_name (ipmi_monitoring_ctx_t c);
 
@@ -632,7 +874,8 @@ char *ipmi_monitoring_sensor_read_sensor_name (ipmi_monitoring_ctx_t c);
  * ipmi_monitoring_sensor_read_sensor_state
  *
  * Returns the current sensor state of the current sensor reading in a
- * callback or the iterator.
+ * callback or the iterator, -1 on error.  See 'ipmi_monitoring_state'
+ * for possible return values.
  */
 int ipmi_monitoring_sensor_read_sensor_state (ipmi_monitoring_ctx_t c);
 
@@ -640,7 +883,8 @@ int ipmi_monitoring_sensor_read_sensor_state (ipmi_monitoring_ctx_t c);
  * ipmi_monitoring_sensor_read_sensor_units
  *
  * Returns the sensor units type of the current sensor reading in a
- * callback or the iterator.
+ * callback or the iterator, -1 on error.  See
+ * 'ipmi_monitoring_sensor_units' for possible return values.
  */
 int ipmi_monitoring_sensor_read_sensor_units (ipmi_monitoring_ctx_t c);
 
@@ -648,7 +892,8 @@ int ipmi_monitoring_sensor_read_sensor_units (ipmi_monitoring_ctx_t c);
  * ipmi_monitoring_sensor_read_sensor_reading_type
  *
  * Returns the sensor reading type of the current sensor reading in a
- * callback or the iterator.
+ * callback or the iterator, -1 on error.  See
+ * 'ipmi_monitoring_sensor_reading_type' for possible return values.
  */
 int ipmi_monitoring_sensor_read_sensor_reading_type (ipmi_monitoring_ctx_t c);
 
@@ -656,7 +901,7 @@ int ipmi_monitoring_sensor_read_sensor_reading_type (ipmi_monitoring_ctx_t c);
  * ipmi_monitoring_sensor_read_sensor_reading
  *
  * Returns a pointer to the sensor reading of the current sensor
- * reading in a callback or the iterator.  It is the responsibility of
+ * reading in a callback or the iterator, NULL on error.  It is the responsibility of
  * the user to cast it to the correct type based on the reading type.
  * Returns NULL if no reading available.
  */
@@ -666,7 +911,8 @@ void *ipmi_monitoring_sensor_read_sensor_reading (ipmi_monitoring_ctx_t c);
  * ipmi_monitoring_sensor_read_sensor_bitmask_type
  *
  * Returns the bitmask type of the current sensor reading in a
- * callback or the iterator.  See bitmasks in
+ * callback or the iterator, -1 on error.  See
+ * 'ipmi_monitoring_sensor_bitmask_type' and bitmasks in
  * ipmi_monitoring_bitmasks.h to determine bitmask conditions for a
  * given bitmask type.
  */
@@ -676,7 +922,7 @@ int ipmi_monitoring_sensor_read_sensor_bitmask_type (ipmi_monitoring_ctx_t c);
  * ipmi_monitoring_sensor_read_sensor_bitmask
  *
  * Returns the bitmask of the current sensor reading in a callback or
- * the iterator.  See bitmasks in ipmi_monitoring_bitmasks.h to
+ * the iterator, -1 on error.  See bitmasks in ipmi_monitoring_bitmasks.h to
  * determine bitmask conditions for a given bitmask type.
  */
 int ipmi_monitoring_sensor_read_sensor_bitmask (ipmi_monitoring_ctx_t c);
@@ -684,10 +930,21 @@ int ipmi_monitoring_sensor_read_sensor_bitmask (ipmi_monitoring_ctx_t c);
 /*
  * ipmi_monitoring_sensor_read_sensor_bitmask_strings
  *
- * Returns an array of strings representing the events in the bitmask.
- * Array is NULL terminated.  Returns NULL if no events are indicated.
+ * Returns an array of strings representing the events in the bitmask,
+ * NULL on error.  Array is NUL terminated.
  */
 char **ipmi_monitoring_sensor_read_sensor_bitmask_strings (ipmi_monitoring_ctx_t c);
+
+/*
+ * ipmi_monitoring_sensor_read_event_reading_type_code
+ *
+ * Returns the event/reading type code of the current sensor reading
+ * in a callback or the iterator, -1 on error.  The event/reading type
+ * code is is piece of information is internal to the IPMI protocol.
+ * This may be useful for advanced users wanting to handle OEM sensors
+ * not covered by this library.
+ */
+int ipmi_monitoring_sensor_read_event_reading_type_code (ipmi_monitoring_ctx_t c);
 
 #ifdef __cplusplus
 }

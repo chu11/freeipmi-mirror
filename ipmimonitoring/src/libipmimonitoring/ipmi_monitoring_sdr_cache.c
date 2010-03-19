@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sdr_cache.c,v 1.27 2010-02-08 22:02:31 chu11 Exp $
+ *  $Id: ipmi_monitoring_sdr_cache.c,v 1.28 2010-03-19 22:07:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -60,30 +60,27 @@ _ipmi_monitoring_sdr_cache_ctx_init (ipmi_monitoring_ctx_t c, const char *hostna
   assert (c);
   assert (c->magic == IPMI_MONITORING_MAGIC);
 
-  if (!(c->sdr_cache_ctx))
+  if (!(c->sdr_cache_ctx = ipmi_sdr_cache_ctx_create ()))
     {
-      if (!(c->sdr_cache_ctx = ipmi_sdr_cache_ctx_create ()))
-        {
-          IPMI_MONITORING_DEBUG (("ipmi_sdr_cache_create: %s", strerror (errno)));
-          if (errno == EPERM || errno == EACCES)
-            c->errnum = IPMI_MONITORING_ERR_PERMISSION;
-          else
-            c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
-          return (-1);
-        }
+      IPMI_MONITORING_DEBUG (("ipmi_sdr_cache_create: %s", strerror (errno)));
+      if (errno == EPERM || errno == EACCES)
+        c->errnum = IPMI_MONITORING_ERR_PERMISSION;
+      else
+        c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
+      return (-1);
+    }
 
-      if (_ipmi_monitoring_flags & IPMI_MONITORING_FLAGS_DEBUG_IPMI_PACKETS)
+  if (_ipmi_monitoring_flags & IPMI_MONITORING_FLAGS_DEBUG_IPMI_PACKETS)
+    {
+      /* Don't error out, if this fails we can still continue */
+      if (ipmi_sdr_cache_ctx_set_flags (c->sdr_cache_ctx, IPMI_SDR_CACHE_FLAGS_DEBUG_DUMP) < 0)
+        IPMI_MONITORING_DEBUG (("ipmi_sdr_cache_ctx_set_flags: %s", ipmi_sdr_cache_ctx_errormsg (c->sdr_cache_ctx)));
+      
+      if (hostname)
         {
-          /* Don't error out, if this fails we can still continue */
-          if (ipmi_sdr_cache_ctx_set_flags (c->sdr_cache_ctx, IPMI_SDR_CACHE_FLAGS_DEBUG_DUMP) < 0)
-            IPMI_MONITORING_DEBUG (("ipmi_sdr_cache_ctx_set_flags: %s", ipmi_sdr_cache_ctx_errormsg (c->sdr_cache_ctx)));
-
-          if (hostname)
-            {
-              if (ipmi_sdr_cache_ctx_set_debug_prefix (c->sdr_cache_ctx, hostname) < 0)
-                IPMI_MONITORING_DEBUG (("ipmi_sdr_cache_ctx_set_debug_prefix: %s",
-                                        ipmi_sdr_cache_ctx_errormsg (c->sdr_cache_ctx)));
-            }
+          if (ipmi_sdr_cache_ctx_set_debug_prefix (c->sdr_cache_ctx, hostname) < 0)
+            IPMI_MONITORING_DEBUG (("ipmi_sdr_cache_ctx_set_debug_prefix: %s",
+                                    ipmi_sdr_cache_ctx_errormsg (c->sdr_cache_ctx)));
         }
     }
 

@@ -51,7 +51,6 @@
 #include "tool-sdr-cache-common.h"
 #include "tool-sensor-common.h"
 
-#define IPMI_SEL_RECORD_SIZE   16
 #define IPMI_SEL_OUTPUT_BUFLEN 4096
 
 #define IPMI_SEL_NA_STRING     "N/A"
@@ -518,7 +517,7 @@ _sel_parse_err_handle (ipmi_sel_state_data_t *state_data, char *func)
 static int
 _hex_output (ipmi_sel_state_data_t *state_data)
 {
-  uint8_t record_data[IPMI_SEL_RECORD_SIZE];
+  uint8_t record_data[IPMI_SEL_RECORD_MAX_RECORD_LENGTH];
   int record_data_len;
   int rv = -1;
 
@@ -526,7 +525,7 @@ _hex_output (ipmi_sel_state_data_t *state_data)
 
   if ((record_data_len = ipmi_sel_parse_read_record (state_data->sel_parse_ctx,
                                                      record_data,
-                                                     IPMI_SEL_RECORD_SIZE)) < 0)
+                                                     IPMI_SEL_RECORD_MAX_RECORD_LENGTH)) < 0)
     {
       if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_read_record") < 0)
         goto cleanup;
@@ -534,7 +533,7 @@ _hex_output (ipmi_sel_state_data_t *state_data)
     }
 
   if (state_data->prog_data->args->common.debug
-      && record_data_len < IPMI_SEL_RECORD_SIZE)
+      && record_data_len < IPMI_SEL_RECORD_MAX_RECORD_LENGTH)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -1107,7 +1106,7 @@ _normal_output_not_available_sensor_name_and_type (ipmi_sel_state_data_t *state_
 static int
 _normal_output_event_state (ipmi_sel_state_data_t *state_data, unsigned int flags)
 {
-  uint8_t record_data[IPMI_SEL_RECORD_SIZE];
+  uint8_t record_data[IPMI_SEL_RECORD_MAX_RECORD_LENGTH];
   int record_data_len;
   unsigned int sel_state;
   char *sel_state_str = NULL;
@@ -1118,7 +1117,7 @@ _normal_output_event_state (ipmi_sel_state_data_t *state_data, unsigned int flag
 
   if ((record_data_len = ipmi_sel_parse_read_record (state_data->sel_parse_ctx,
                                                      record_data,
-                                                     IPMI_SEL_RECORD_SIZE)) < 0)
+                                                     IPMI_SEL_RECORD_MAX_RECORD_LENGTH)) < 0)
     {
       if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_read_record") < 0)
         return (-1);

@@ -1,3 +1,16 @@
+2010-03-19  Albert Chu <chu11@llnl.gov>
+
+	* ipmimonitoring/src/libipmimonitoring/: Support SEL monitoring.
+
+	* ipmimonitoring/src/libipmimonitoring/: Support event/reading
+	type code in sensor iterator.
+
+	* ipmimonitoring/src/examples/: Add SEL monitoring example.
+
+	* Various code cleanup.
+
+	* Minor bug fixes.
+	
 2010-03-10  Albert Chu <chu11@llnl.gov>
 	
 	Merge sel_interpret_branch.

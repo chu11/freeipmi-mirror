@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_defs.h,v 1.38 2010-02-08 22:02:31 chu11 Exp $
+ *  $Id: ipmi_monitoring_defs.h,v 1.39 2010-03-19 22:07:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -61,11 +61,11 @@
   ((((__val) + 1) >= (IPMI_MONITORING_SENSOR_TYPE_TEMPERATURE + 1)  \
     && ((__val) - 1) <= (IPMI_MONITORING_SENSOR_TYPE_OEM_MAX - 1)) ? 1 : 0)
 
-#define IPMI_MONITORING_SENSOR_STATE_VALID(__val)                  \
-  (((__val) == IPMI_MONITORING_SENSOR_STATE_NOMINAL                \
-    || (__val) == IPMI_MONITORING_SENSOR_STATE_WARNING             \
-    || (__val) == IPMI_MONITORING_SENSOR_STATE_CRITICAL            \
-    || (__val) == IPMI_MONITORING_SENSOR_STATE_UNKNOWN) ? 1 : 0)
+#define IPMI_MONITORING_STATE_VALID(__val)                  \
+  (((__val) == IPMI_MONITORING_STATE_NOMINAL                \
+    || (__val) == IPMI_MONITORING_STATE_WARNING             \
+    || (__val) == IPMI_MONITORING_STATE_CRITICAL            \
+    || (__val) == IPMI_MONITORING_STATE_UNKNOWN) ? 1 : 0)
 
 /* +1 to avoid gcc warnings */
 #define IPMI_MONITORING_SENSOR_UNITS_VALID(__val)                   \
@@ -117,6 +117,11 @@
    | IPMI_MONITORING_WORKAROUND_FLAGS_SUN_2_0_SESSION              \
    | IPMI_MONITORING_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE)
 
+#define IPMI_MONITORING_SEL_FLAGS_MASK                    \
+  (IPMI_MONITORING_SEL_FLAGS_REREAD_SDR_CACHE             \
+   | IPMI_MONITORING_SEL_FLAGS_INTERPRET_OEM_DATA         \
+   | IPMI_MONITORING_SEL_FLAGS_ASSUME_SYSTEM_EVENT_RECORD)
+
 #define IPMI_MONITORING_SENSOR_READING_FLAGS_MASK                          \
   (IPMI_MONITORING_SENSOR_READING_FLAGS_REREAD_SDR_CACHE                   \
    | IPMI_MONITORING_SENSOR_READING_FLAGS_IGNORE_NON_INTERPRETABLE_SENSORS \
@@ -132,15 +137,47 @@
 #define IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH      32
 #define IPMI_MONITORING_MAX_SDR_RECORD_LENGTH       1024
 
+#define IPMI_MONITORING_OEM_DATA_MAX                13
+
 #define IPMI_MONITORING_MAGIC         0xABCD9876
 
 #define IPMI_MONITORING_PACKET_BUFLEN 1024
+
+struct ipmi_monitoring_sel_record {
+  /* for all records */
+  int record_id;
+  int record_type;
+  int record_type_class;
+  int sel_state;
+
+  /* for timestamped records */
+  unsigned int timestamp;
+
+  /* for system event records */
+  int sensor_type;
+  char sensor_name[IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH + 1];
+  int event_direction;
+  int event_offset_type;
+  int event_offset;
+  char *event_offset_string;
+  int event_type_code;
+  uint8_t event_data1;
+  uint8_t event_data2;
+  uint8_t event_data3;
+
+  /* for oem timestamped records */
+  int manufacturer_id;
+
+  /* for oem timestamped & non-timestamped records */
+  uint8_t oem_data[IPMI_MONITORING_OEM_DATA_MAX];
+  unsigned int oem_data_len;
+};
 
 struct ipmi_monitoring_sensor_reading {
   int record_id;
   int sensor_number;
   int sensor_type;
-  char sensor_name[IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH];
+  char sensor_name[IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH + 1];
   int sensor_state;
   int sensor_units;
   int sensor_reading_type;
@@ -152,6 +189,7 @@ struct ipmi_monitoring_sensor_reading {
     uint32_t integer_val;
     double double_val;
   } sensor_reading;
+  int event_reading_type_code;
 };
 
 struct ipmi_monitoring_ctx {
@@ -165,22 +203,30 @@ struct ipmi_monitoring_ctx {
   char sdr_cache_filename_format[MAXPATHLEN+1];
   int sdr_cache_filename_format_set;
 
-  ipmi_sdr_cache_ctx_t sdr_cache_ctx;
+  /* for use by both sel and sensor codepath */
+  uint32_t manufacturer_id;
+  uint16_t product_id;
 
+  /* for use by both sel and sensor codepath */
+  ipmi_sdr_cache_ctx_t sdr_cache_ctx;
   ipmi_ctx_t ipmi_ctx;
+  Ipmi_Monitoring_Callback callback;
+  void *callback_data;
+
+  /* for sel codepath */
+  ipmi_sel_parse_ctx_t sel_parse_ctx;
+  List sel_records;
+  ListIterator sel_records_itr;
+  struct ipmi_monitoring_sel_record *current_sel_record;
+  struct ipmi_monitoring_sel_record *callback_sel_record;
+
+  /* for sensor codepath */
   ipmi_sensor_read_ctx_t sensor_read_ctx;
   ipmi_sdr_parse_ctx_t sdr_parse_ctx;
-
   List sensor_readings;
   ListIterator sensor_readings_itr;
   struct ipmi_monitoring_sensor_reading *current_sensor_reading;
-
-  Ipmi_Monitoring_Sensor_Readings_Callback callback;
-  void *callback_data;
   struct ipmi_monitoring_sensor_reading *callback_sensor_reading;
-
-  uint32_t manufacturer_id;
-  uint16_t product_id;
 };
 
 #endif /* _IPMI_MONITORING_DEFS_H */

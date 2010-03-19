@@ -71,6 +71,8 @@ extern "C" {
 #define IPMI_SEL_RECORD_UNSPECIFIED_EVENT  0xFF
 #define IPMI_SEL_RECORD_UNSPECIFIED_OFFSET 0x0F
 
+#define IPMI_SEL_RECORD_MAX_RECORD_LENGTH  16
+
 /* 
  * see freeipmi/templates/ for template definitions 
  */

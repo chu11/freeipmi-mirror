@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-sensors.c,v 1.3 2010-03-19 22:07:58 chu11 Exp $
+ *  $Id: ipmimonitoring-sel.c,v 1.1 2010-03-19 22:07:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -25,10 +25,10 @@
 \*****************************************************************************/
 
 /* This is an example of how to use the libipmimonitoring library to
- * read and monitor sensors.
+ * read and monitor the SEL.
  *
  * At the top of this file, you'll find a number of variables for
- * configuration of IPMI communication and what sensors you are
+ * configuration of IPMI communication and what SEL records you are
  * interested in monitoring.  Those variables are used in the
  * libipmimonitoring calls below.
  *
@@ -38,7 +38,7 @@
  * To compile, linking against the library should be sufficient for
  * most environments.  e.g.
  *
- * gcc -o ipmimonitoring-sensors ipmimonitoring-sensors.c -lipmimonitoring
+ * gcc -o ipmimonitoring-sel ipmimonitoring-sel.c -lipmimonitoring
  */
 
 #include <stdio.h>
@@ -49,7 +49,7 @@
 #include <errno.h>
 
 #include <ipmi_monitoring.h>
-#include <ipmi_monitoring_bitmasks.h>
+#include <ipmi_monitoring_offsets.h>
 
 /* Communication Configuration - Initialize accordingly */
 
@@ -88,16 +88,18 @@ unsigned int record_ids_length = 0;
 unsigned int sensor_types[] = {0};
 unsigned int sensor_types_length = 0;
 
+/* Initialize w/ date range to only monitoring specific date range */
+char *date_begin = NULL;        /* use MM/DD/YYYY format */
+char *date_end = NULL;          /* use MM/DD/YYYY format */
+
 /* Set to an appropriate alternate if desired */
 char *sdr_cache_directory = "/tmp";
-char *sensor_config_file = NULL;
+char *sel_config_file = NULL;
 
-/* Set to 1 or 0 to enable these sensor reading flags */
+/* Set to 1 or 0 to enable these SEL flags */
 int reread_sdr_cache = 0;
-int ignore_non_interpretable_sensors = 1;
-int bridge_sensors = 0;
 int interpret_oem_data = 0;
-int shared_sensors = 0;
+int assume_system_event_record = 0;
 
 /* Initialization flags
  * 
@@ -211,9 +213,9 @@ static int
 _ipmimonitoring (struct ipmi_monitoring_ipmi_config *ipmi_config)
 {
   ipmi_monitoring_ctx_t ctx = NULL;
-  unsigned int sensor_reading_flags = 0;
+  unsigned int sel_flags = 0;
   unsigned int i;
-  int sensor_count;
+  int sel_count;
   int errnum;
   int rv = -1;
 
@@ -243,272 +245,321 @@ _ipmimonitoring (struct ipmi_monitoring_ipmi_config *ipmi_config)
         }
     }
 
-  if (sensor_config_file)
+  if (sel_config_file)
     {
-      if (ipmi_monitoring_ctx_sensor_config_file (ctx,
-                                                  sensor_config_file) < 0)
+      if (ipmi_monitoring_ctx_sel_config_file (ctx,
+                                               sel_config_file) < 0)
         {
           fprintf (stderr,
-                   "ipmi_monitoring_ctx_sensor_config_file: %s\n",
+                   "ipmi_monitoring_ctx_sel_config_file: %s\n",
                    ipmi_monitoring_ctx_errormsg (ctx));
           goto cleanup;
         }
     }
   
   if (reread_sdr_cache)
-    sensor_reading_flags |= IPMI_MONITORING_SENSOR_READING_FLAGS_REREAD_SDR_CACHE;
-
-  if (ignore_non_interpretable_sensors)
-    sensor_reading_flags |= IPMI_MONITORING_SENSOR_READING_FLAGS_IGNORE_NON_INTERPRETABLE_SENSORS;
-  
-  if (bridge_sensors)
-    sensor_reading_flags |= IPMI_MONITORING_SENSOR_READING_FLAGS_BRIDGE_SENSORS;
+    sel_flags |= IPMI_MONITORING_SEL_FLAGS_REREAD_SDR_CACHE;
 
   if (interpret_oem_data)
-    sensor_reading_flags |= IPMI_MONITORING_SENSOR_READING_FLAGS_INTERPRET_OEM_DATA;
+    sel_flags |= IPMI_MONITORING_SEL_FLAGS_INTERPRET_OEM_DATA;
 
-  if (shared_sensors)
-    sensor_reading_flags |= IPMI_MONITORING_SENSOR_READING_FLAGS_SHARED_SENSORS;
+  if (assume_system_event_record)
+    sel_flags |= IPMI_MONITORING_SEL_FLAGS_ASSUME_SYSTEM_EVENT_RECORD;
 
-  if (!record_ids_length && !sensor_types_length)
+  if (record_ids_length)
     {
-      if ((sensor_count = ipmi_monitoring_sensor_readings_by_record_id (ctx,
-                                                                        hostname,
-                                                                        ipmi_config,
-                                                                        sensor_reading_flags,
-                                                                        NULL,
-                                                                        0,
-                                                                        NULL,
-                                                                        NULL)) < 0)
+      if ((sel_count = ipmi_monitoring_sel_by_record_id (ctx,
+                                                         hostname,
+                                                         ipmi_config,
+                                                         sel_flags,
+                                                         record_ids,
+                                                         record_ids_length,
+                                                         NULL,
+                                                         NULL)) < 0)
         {
           fprintf (stderr,
-                   "ipmi_monitoring_sensor_readings_by_record_id: %s\n",
+                   "ipmi_monitoring_sel_by_record_id: %s\n",
                    ipmi_monitoring_ctx_errormsg (ctx));
           goto cleanup;
         }
     }
-  else if (record_ids_length)
+  else if (sensor_types_length)
     {
-      if ((sensor_count = ipmi_monitoring_sensor_readings_by_record_id (ctx,
-                                                                        hostname,
-                                                                        ipmi_config,
-                                                                        sensor_reading_flags,
-                                                                        record_ids,
-                                                                        record_ids_length,
-                                                                        NULL,
-                                                                        NULL)) < 0)
+      if ((sel_count = ipmi_monitoring_sel_by_sensor_type (ctx,
+                                                           hostname,
+                                                           ipmi_config,
+                                                           sel_flags,
+                                                           sensor_types,
+                                                           sensor_types_length,
+                                                           NULL,
+                                                           NULL)) < 0)
         {
           fprintf (stderr,
-                   "ipmi_monitoring_sensor_readings_by_record_id: %s\n",
+                   "ipmi_monitoring_sel_by_sensor_type: %s\n",
+                   ipmi_monitoring_ctx_errormsg (ctx));
+          goto cleanup;
+        }
+    }
+  else if (date_begin
+           || date_end)
+    {
+      if ((sel_count = ipmi_monitoring_sel_by_date_range (ctx,
+                                                          hostname,
+                                                          ipmi_config,
+                                                          sel_flags,
+                                                          date_begin,
+                                                          date_end,
+                                                          NULL,
+                                                          NULL)) < 0)
+        {
+          fprintf (stderr,
+                   "ipmi_monitoring_sel_by_sensor_type: %s\n",
                    ipmi_monitoring_ctx_errormsg (ctx));
           goto cleanup;
         }
     }
   else
     {
-      if ((sensor_count = ipmi_monitoring_sensor_readings_by_sensor_type (ctx,
-                                                                          hostname,
-                                                                          ipmi_config,
-                                                                          sensor_reading_flags,
-                                                                          sensor_types,
-                                                                          sensor_types_length,
-                                                                          NULL,
-                                                                          NULL)) < 0)
+      if ((sel_count = ipmi_monitoring_sel_by_record_id (ctx,
+                                                         hostname,
+                                                         ipmi_config,
+                                                         sel_flags,
+                                                         NULL,
+                                                         0,
+                                                         NULL,
+                                                         NULL)) < 0)
         {
           fprintf (stderr,
-                   "ipmi_monitoring_sensor_readings_by_sensor_type: %s\n",
+                   "ipmi_monitoring_sel_by_record_id: %s\n",
                    ipmi_monitoring_ctx_errormsg (ctx));
           goto cleanup;
         }
     }
 
-  printf ("%s, %s, %s, %s, %s, %s, %s, %s, %s\n",
+  printf ("%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s\n",
           "Record ID",
+          "Record Type",
+          "SEL State",
+          "Timestamp",
           "Sensor Name",
           "Sensor Type",
-          "Sensor State",
-          "Sensor Reading",
-          "Sensor Units",
-          "Sensor Event/Reading Type Code",
-          "Sensor Event Bitmask",
-          "Sensor Event String");
+          "Event Direction",
+          "Event Type Code",
+          "Event Data",
+          "Event Offset",
+          "Event Offset String");
 
-  for (i = 0; i < sensor_count; i++, ipmi_monitoring_sensor_iterator_next (ctx))
+  for (i = 0; i < sel_count; i++, ipmi_monitoring_sel_iterator_next (ctx))
     {
-      int record_id, sensor_type, sensor_state, sensor_units,
-        sensor_bitmask_type, sensor_bitmask, sensor_reading_type,
-        event_reading_type_code;
-      char **sensor_bitmask_strings = NULL;
+      int record_id, record_type, sel_state, sensor_type, event_direction, event_offset_type,
+        event_offset, event_type_code, manufacturer_id;
+      unsigned int timestamp, event_data1, event_data2, event_data3;
+      int record_type_class;
+      char *event_offset_string = NULL;
       const char *sensor_type_str;
-      const char *sensor_state_str;
+      const char *event_direction_str;
+      const char *sel_state_str;
       char *sensor_name = NULL;
-      void *sensor_reading;
+      unsigned char oem_data[64];
+      int oem_data_len;
+      unsigned int j;
 
-      if ((record_id = ipmi_monitoring_sensor_read_record_id (ctx)) < 0)
+      if ((record_id = ipmi_monitoring_sel_read_record_id (ctx)) < 0)
         {
           fprintf (stderr,
-                   "ipmi_monitoring_sensor_read_record_id: %s\n",
+                   "ipmi_monitoring_sel_read_record_id: %s\n",
                    ipmi_monitoring_ctx_errormsg (ctx));
           goto cleanup;
         }
 
-      if ((sensor_type = ipmi_monitoring_sensor_read_sensor_type (ctx)) < 0)
+      if ((record_type = ipmi_monitoring_sel_read_record_type (ctx)) < 0)
         {
           fprintf (stderr,
-                   "ipmi_monitoring_sensor_read_sensor_type: %s\n",
+                   "ipmi_monitoring_sel_read_record_type: %s\n",
                    ipmi_monitoring_ctx_errormsg (ctx));
           goto cleanup;
         }
 
-      if (!(sensor_name = ipmi_monitoring_sensor_read_sensor_name (ctx)))
+      if ((record_type_class = ipmi_monitoring_sel_read_record_type_class (ctx)) < 0)
         {
           fprintf (stderr,
-                   "ipmi_monitoring_sensor_read_sensor_name: %s\n",
+                   "ipmi_monitoring_sel_read_record_type_class: %s\n",
                    ipmi_monitoring_ctx_errormsg (ctx));
           goto cleanup;
         }
 
-      if ((sensor_state = ipmi_monitoring_sensor_read_sensor_state (ctx)) < 0)
+      if ((sel_state = ipmi_monitoring_sel_read_sel_state (ctx)) < 0)
         {
           fprintf (stderr,
-                   "ipmi_monitoring_sensor_read_sensor_state: %s\n",
+                   "ipmi_monitoring_sel_read_sel_state: %s\n",
                    ipmi_monitoring_ctx_errormsg (ctx));
           goto cleanup;
         }
 
-      if ((sensor_units = ipmi_monitoring_sensor_read_sensor_units (ctx)) < 0)
-        {
-          fprintf (stderr,
-                   "ipmi_monitoring_sensor_read_sensor_units: %s\n",
-                   ipmi_monitoring_ctx_errormsg (ctx));
-          goto cleanup;
-        }
-
-      if ((sensor_bitmask_type = ipmi_monitoring_sensor_read_sensor_bitmask_type (ctx)) < 0)
-        {
-          fprintf (stderr,
-                   "ipmi_monitoring_sensor_read_sensor_bitmask_type: %s\n",
-                   ipmi_monitoring_ctx_errormsg (ctx));
-          goto cleanup;
-        }
-
-      if ((sensor_bitmask = ipmi_monitoring_sensor_read_sensor_bitmask (ctx)) < 0)
-        {
-          fprintf (stderr,
-                   "ipmi_monitoring_sensor_read_sensor_bitmask: %s\n",
-                   ipmi_monitoring_ctx_errormsg (ctx));
-          goto cleanup;
-        }
-
-      if (!(sensor_bitmask_strings = ipmi_monitoring_sensor_read_sensor_bitmask_strings (ctx)))
-        {
-          fprintf (stderr,
-                   "ipmi_monitoring_sensor_read_sensor_bitmask_strings: %s\n",
-                   ipmi_monitoring_ctx_errormsg (ctx));
-          goto cleanup;
-        }
-
-      if ((sensor_reading_type = ipmi_monitoring_sensor_read_sensor_reading_type (ctx)) < 0)
-        {
-          fprintf (stderr,
-                   "ipmi_monitoring_sensor_read_sensor_reading_type: %s\n",
-                   ipmi_monitoring_ctx_errormsg (ctx));
-          goto cleanup;
-        }
-
-      sensor_reading = ipmi_monitoring_sensor_read_sensor_reading (ctx);
-
-      if ((event_reading_type_code = ipmi_monitoring_sensor_read_event_reading_type_code (ctx)) < 0)
-        {
-          fprintf (stderr,
-                   "ipmi_monitoring_sensor_read_event_reading_type_code: %s\n",
-                   ipmi_monitoring_ctx_errormsg (ctx));
-          goto cleanup;
-        }
-
-      if (!strlen (sensor_name))
-        sensor_name = "N/A";
-
-      sensor_type_str = _get_sensor_type_string (sensor_type);
-
-      printf ("%u, %s, %s",
-              record_id,
-              sensor_name,
-              sensor_type_str);
-
-      if (sensor_state == IPMI_MONITORING_STATE_NOMINAL)
-        sensor_state_str = "Nominal";
-      else if (sensor_state == IPMI_MONITORING_STATE_WARNING)
-        sensor_state_str = "Warning";
-      else if (sensor_state == IPMI_MONITORING_STATE_CRITICAL)
-        sensor_state_str = "Critical";
+      if (sel_state == IPMI_MONITORING_STATE_NOMINAL)
+        sel_state_str = "Nominal";
+      else if (sel_state == IPMI_MONITORING_STATE_WARNING)
+        sel_state_str = "Warning";
+      else if (sel_state == IPMI_MONITORING_STATE_CRITICAL)
+        sel_state_str = "Critical";
       else
-        sensor_state_str = "N/A";
+        sel_state_str = "N/A";
 
-      printf (", %s", sensor_state_str);
-
-      if (sensor_reading)
+      printf ("%u, %u, %s",
+              record_id,
+              record_type,
+              sel_state_str);
+      
+      if (record_type_class == IPMI_MONITORING_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD
+          || record_type_class == IPMI_MONITORING_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD)
         {
-          const char *sensor_units_str;
+          
+          if (ipmi_monitoring_sel_read_timestamp (ctx, &timestamp) < 0)
+            {
+              fprintf (stderr,
+                       "ipmi_monitoring_sel_read_timestamp: %s\n",
+                       ipmi_monitoring_ctx_errormsg (ctx));
+              goto cleanup;
+            }
+          
+          /* XXX: This should be converted to a nice date output using
+           * your favorite timestamp -> string conversion functions.
+           */
+          printf (", %u", timestamp);
+        }
+      else
+        printf (", N/A");
 
-          if (sensor_reading_type == IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER8_BOOL)
-            printf (", %s",
-                    (*((uint8_t *)sensor_reading) ? "true" : "false"));
-          else if (sensor_reading_type == IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER32)
-            printf (", %u",
-                    *((uint32_t *)sensor_reading));
-          else if (sensor_reading_type == IPMI_MONITORING_SENSOR_READING_TYPE_DOUBLE)
-            printf (", %.2f",
-                    *((double *)sensor_reading));
+      if (record_type_class == IPMI_MONITORING_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)
+        {         
+          if (!(sensor_name = ipmi_monitoring_sel_read_sensor_name (ctx)))
+            {
+              fprintf (stderr,
+                       "ipmi_monitoring_sel_read_sensor_name: %s\n",
+                       ipmi_monitoring_ctx_errormsg (ctx));
+              goto cleanup;
+            }
+
+          if ((sensor_type = ipmi_monitoring_sel_read_sensor_type (ctx)) < 0)
+            {
+              fprintf (stderr,
+                       "ipmi_monitoring_sel_read_sensor_type: %s\n",
+                       ipmi_monitoring_ctx_errormsg (ctx));
+              goto cleanup;
+            }
+
+          if ((event_direction = ipmi_monitoring_sel_read_event_direction (ctx)) < 0)
+            {
+              fprintf (stderr,
+                       "ipmi_monitoring_sel_read_event_direction: %s\n",
+                       ipmi_monitoring_ctx_errormsg (ctx));
+              goto cleanup;
+            }
+
+          if ((event_type_code = ipmi_monitoring_sel_read_event_type_code (ctx)) < 0)
+            {
+              fprintf (stderr,
+                       "ipmi_monitoring_sel_read_event_type_code: %s\n",
+                       ipmi_monitoring_ctx_errormsg (ctx));
+              goto cleanup;
+            }
+
+          if (ipmi_monitoring_sel_read_event_data (ctx,
+                                                   &event_data1,
+                                                   &event_data2,
+                                                   &event_data3) < 0)
+            {
+              fprintf (stderr,
+                       "ipmi_monitoring_sel_read_event_data: %s\n",
+                       ipmi_monitoring_ctx_errormsg (ctx));
+              goto cleanup;
+            }         
+
+          if ((event_offset_type = ipmi_monitoring_sel_read_event_offset_type (ctx)) < 0)
+            {
+              fprintf (stderr,
+                       "ipmi_monitoring_sel_read_event_offset_type: %s\n",
+                       ipmi_monitoring_ctx_errormsg (ctx));
+              goto cleanup;
+            }
+          
+          if ((event_offset = ipmi_monitoring_sel_read_event_offset (ctx)) < 0)
+            {
+              fprintf (stderr,
+                       "ipmi_monitoring_sel_read_event_offset: %s\n",
+                       ipmi_monitoring_ctx_errormsg (ctx));
+              goto cleanup;
+            }
+          
+          if (!(event_offset_string = ipmi_monitoring_sel_read_event_offset_string (ctx)))
+            {
+              fprintf (stderr,
+                       "ipmi_monitoring_sel_read_event_offset_string: %s\n",
+                       ipmi_monitoring_ctx_errormsg (ctx));
+              goto cleanup;
+            }
+
+          if (!strlen (sensor_name))
+            sensor_name = "N/A";
+          
+          sensor_type_str = _get_sensor_type_string (sensor_type);
+
+          if (event_direction == IPMI_MONITORING_SEL_EVENT_DIRECTION_ASSERTION)
+            event_direction_str = "Assertion";
+          else
+            event_direction_str = "Deassertion";
+
+          printf (", %s, %s, %s, %Xh, %Xh-%Xh-%Xh",
+                  sensor_name,
+                  sensor_type_str,
+                  event_direction_str,
+                  event_type_code,
+                  event_data1,
+                  event_data2,
+                  event_data3);
+                  
+          if (event_offset_type != IPMI_MONITORING_EVENT_OFFSET_TYPE_UNKNOWN)
+            printf (", %Xh", event_offset);
           else
             printf (", N/A");
-
-          if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_CELSIUS)
-            sensor_units_str = "C";
-          else if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_FAHRENHEIT)
-            sensor_units_str = "F";
-          else if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_VOLTS)
-            sensor_units_str = "V";
-          else if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_AMPS)
-            sensor_units_str = "A";
-          else if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_RPM)
-            sensor_units_str = "RPM";
-          else if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_WATTS)
-            sensor_units_str = "W";
+          
+          if (event_offset_type != IPMI_MONITORING_EVENT_OFFSET_TYPE_UNKNOWN)
+            printf (", %s", event_offset_string);
           else
-            sensor_units_str = "N/A";
-
-          printf (", %s", sensor_units_str);
+            printf (", N/A");
         }
-      else
-        printf (", N/A, N/A");
-  
-      printf (", %Xh", event_reading_type_code);
- 
-      if (sensor_bitmask_type != IPMI_MONITORING_SENSOR_BITMASK_TYPE_UNKNOWN)
-        printf (", %Xh", sensor_bitmask);
-      else
-        printf (", N/A");
-  
-      if (sensor_bitmask_type != IPMI_MONITORING_SENSOR_BITMASK_TYPE_UNKNOWN)
-        {     
-          unsigned int i = 0;
-          
-          printf (",");
-          
-          while (sensor_bitmask_strings[i])
+      else if (record_type_class == IPMI_MONITORING_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD
+               || record_type_class == IPMI_MONITORING_SEL_RECORD_TYPE_CLASS_NON_TIMESTAMPED_OEM_RECORD)
+        {
+          if (record_type_class == IPMI_MONITORING_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD)
             {
-              printf (" ");
+              if ((manufacturer_id = ipmi_monitoring_sel_read_manufacturer_id (ctx)) < 0)
+                {
+                  fprintf (stderr,
+                           "ipmi_monitoring_sel_read_manufacturer_id: %s\n",
+                           ipmi_monitoring_ctx_errormsg (ctx));
+                  goto cleanup;
+                }
               
-              printf ("'%s'",
-                      sensor_bitmask_strings[i]);
-              
-              i++;
+              printf (", Manufacturer ID = %Xh", manufacturer_id);
             }
+
+          if ((oem_data_len = ipmi_monitoring_sel_read_oem_data (ctx, oem_data, 1024)) < 0)
+            {
+              fprintf (stderr,
+                       "ipmi_monitoring_sel_read_oem_data: %s\n",
+                       ipmi_monitoring_ctx_errormsg (ctx));
+              goto cleanup;
+            }
+
+          printf (", OEM Data = ");
+
+          for (j = 0; j < oem_data_len; j++)
+            printf ("%02Xh ", oem_data[j]);
         }
       else
-        printf (", N/A");
-
+        printf (", N/A, N/A, N/A, N/A, N/A, N/A, N/A");
+      
       printf ("\n");
     }
 
