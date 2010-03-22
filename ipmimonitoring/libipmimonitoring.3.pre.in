@@ -1,5 +1,5 @@
 .\"############################################################################
-.\"  $Id: libipmimonitoring.3.pre.in,v 1.22 2010-03-19 22:07:58 chu11 Exp $
+.\"  $Id: libipmimonitoring.3.pre.in,v 1.23 2010-03-22 17:15:31 chu11 Exp $
 .\"############################################################################
 .\"  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -25,83 +25,34 @@
 .\"############################################################################
 .TH LIBIPMIMONITORING 3 "December 2006" "LLNL" "LIBIPMIMONITORING"
 .SH "NAME"
-libipmimonitoring \- a library for IPMI sensor and system event monitoring
+libipmimonitoring \- a library for IPMI system event and sensor monitoring
 .SH "SYNOPSIS"
 .B #include <ipmi_monitoring.h>
-.sp
-.BI "int ipmi_monitoring_init(unsigned int debug_flags, int *errnum);"
-.sp
-.BI "ipmi_monitoring_ctx_t ipmi_monitoring_ctx_create(void);"
-.sp
-.BI "void ipmi_monitoring_ctx_destroy(ipmi_monitoring_ctx_t c);"
-.sp
-.BI "int ipmi_monitoring_ctx_errnum(ipmi_monitoring_ctx_t c);"
-.sp
-.BI "char *ipmi_monitoring_ctx_strerror(int errnum);"
-.sp
-.BI "int ipmi_monitoring_ctx_sensor_config_file(ipmi_monitoring_ctx_t c, const char *sensor_config_file);
-.sp
-.BI "int ipmi_monitoring_ctx_sdr_cache_directory(ipmi_monitoring_ctx_t c, char *dir);"
-.sp
-.BI "int ipmi_monitoring_ctx_sdr_cache_filenames(ipmi_monitoring_ctx_t c, char *format);"
-.sp
-.BI "int ipmi_monitoring_sensor_readings_by_record_id(ipmi_monitoring_ctx_t c, char *hostname, struct ipmi_monitoring_ipmi_config *config, unsigned int sensor_reading_flags, unsigned int *record_ids, unsigned int record_ids_len, Ipmi_Monitoring_Callback callback, void *callback_data);"
-.sp
-.BI "int ipmi_monitoring_sensor_readings_by_sensor_type(ipmi_monitoring_ctx_t c, char *hostname, struct ipmi_monitoring_ipmi_config *config, unsigned int sensor_reading_flags, unsigned int *sensor_types, unsigned int sensor_types_len, Ipmi_Monitoring_Callback callback, void *callback_data);"
-.sp
-.BI "int ipmi_monitoring_sensor_iterator_first(ipmi_monitoring_ctx_t c);"
-.sp
-.BI "int ipmi_monitoring_sensor_iterator_next(ipmi_monitoring_ctx_t c);"
-.sp
-.BI "void ipmi_monitoring_sensor_iterator_destroy(ipmi_monitoring_ctx_t c);"
-.sp
-.BI "int ipmi_monitoring_sensor_iterator_record_id(ipmi_monitoring_ctx_t c);"
-.sp
-.BI "int ipmi_monitoring_sensor_iterator_sensor_type(ipmi_monitoring_ctx_t c);"
-.sp
-.BI "char *ipmi_monitoring_sensor_iterator_sensor_name(ipmi_monitoring_ctx_t c);"
-.sp
-.BI "int ipmi_monitoring_sensor_iterator_sensor_state(ipmi_monitoring_ctx_t c);"
-.sp
-.BI "int ipmi_monitoring_sensor_iterator_sensor_units(ipmi_monitoring_ctx_t c);"
-.sp
-.BI "int ipmi_monitoring_sensor_iterator_sensor_reading_type(ipmi_monitoring_ctx_t c);"
-.sp
-.BI "void *ipmi_monitoring_sensor_iterator_sensor_reading(ipmi_monitoring_ctx_t c);"
-.sp
-.BI "int ipmi_monitoring_sensor_iterator_sensor_bitmask_type(ipmi_monitoring_ctx_t c);"
-.sp
-.BI "void *ipmi_monitoring_sensor_iterator_sensor_bitmask(ipmi_monitoring_ctx_t c);"
-.sp
-.BI "char **ipmi_monitoring_sensor_iterator_sensor_bitmask_strings(ipmi_monitoring_ctx_t c);"
-.sp
-.BI "int ipmi_monitoring_sensor_iterator_event_reading_type_code(ipmi_monitoring_ctx_t c);"
-.sp
 .br
 .SH "DESCRIPTION"
 The 
 .B Libipmimonitoring 
 implements a high level sensor and system event monitoring API.  For
+system events, an iterator interface is provided that allows the user
+to iterate through system events, types, states, and more.  For
 sensors, an iterator and callback interface is provided that allows
 the user to iterate through sensor values, types, units, states, and
-more.  For system events, an iterator interface is provided that
-allows the user to iterate through system events, types, states, and
 more.
 .LP
 In order to improve efficiency, SDR data will be cached on the host.
 By default it is cached in @IPMI_MONITORING_SDR_CACHE_DIR@.
 .LP
-Interpretation rules for sensors and system events are guided by
+Interpretation rules for system events and sensors are guided by
 .B libfreeipmi(3)'s
 interpretation library.  Configuration of the interpretation rules can
 be configurd via the configuration file
-@INTERPRET_SENSOR_CONFIG_FILE_DEFAULT@
-and
 @INTERPRET_SEL_CONFIG_FILE_DEFAULT@.
-See
-.B freeipmi_interpret_sensor.conf(5)
 and
+@INTERPRET_SENSOR_CONFIG_FILE_DEFAULT@
+See
 .B freeipmi_interpret_sel.conf(5)
+and
+.B freeipmi_interpret_sensor.conf(5)
 for more information on configuring sensor and system event interpretations.
 
 .SH "FILES"
