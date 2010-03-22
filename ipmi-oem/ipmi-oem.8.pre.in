@@ -98,7 +98,7 @@ R610, and R710 (Dell 10G and 11G Poweredge systems).
 This OEM command will set the current NIC selection to dedicated,
 shared, shared_failover_nic2, or shared_failover_all.  (See
 \fIget\-nic\-selection\fR above for description on inputs.)  On older
-Poweredge systems, \fIshared_failover_nic2\fR may have ben documented
+Poweredge systems, \fIshared_failover_nic2\fR may have been documented
 as just \fIfailover\fR.  Command confirmed to work on Dell Poweredge
 2900, 2950, R610, and R710 (Dell 10G and 11G Poweredge systems).
 .TP
