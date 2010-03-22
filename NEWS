@@ -1,3 +1,7 @@
+FreeIPMI 0.8.5 - xx/xx/10
+-------------------------
+o Fix documentation typos.
+
 FreeIPMI 0.8.4 - 03/05/10
 -------------------------
 o Fix IPMI 2.0 sequence number wrap around corner case.
