@@ -50,6 +50,9 @@ functions to support "is supported" checks for OEM stuff
   the function.
 all conf files in /etc/freeipmi/ instead of /etc
 serial interface? via serial basic mode?  Could just be another interfaace -I
+lan
+- don't increment req on retries, only seq?
+- dunno, atleast put comments on code as to why we do this
 
 ipmi-fru/bmc-device
 -------------------
@@ -112,6 +115,8 @@ collapse into one allmight tool? ipmi-config
 
 bmc-config
 ----------
+IPv6
+- support ipv4 mapped ipv6 addresses
 supermicro
 - if username not set and receive 0xCC from set user access, it's b/c
 username not set yet.  workaround?
