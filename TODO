@@ -27,8 +27,6 @@ support kernel panic OEM event 0xf0
 - redhat doesn't enable by default, probably don't need to worry about this much
 - http://cateee.net/lkddb/web-lkddb/IPMI_PANIC_STRING.html
 - http://www.cyberciti.biz/tips/compiling-linux-kernel-module.html
-interpret
-libipmimonitoring sel interpret
 ganglia pluging
 nagios plugin
 skummee support
@@ -227,7 +225,6 @@ ipmi-sensors-config
 
 ipmb
 ----
-(NEVER TESTED) ipmi 2.0 bridging
 (NEVER TESTED) openipmi ipmb
 
 libs
