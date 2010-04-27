@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmi-fru.8.pre.in,v 1.45 2010-02-08 22:20:58 chu11 Exp $
+.\"$Id: ipmi-fru.8.pre.in,v 1.46 2010-04-27 20:59:23 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2007 The Regents of the University of California.
@@ -65,7 +65,7 @@ Increase verbosity in output to include additional output.
 Skip FRU checksum checks. Some FRUs have incorrect checksums, but the
 FRU data is correct.  Use this option to skip the checks checksum.
 Output may be unknown, pray for the best.  This option is confirmed to
-work around compliances issues on Inventec 5441/Dell Xanadu2, Dell
+work around compliances issues on Inventec 5441/Dell Xanadu II, Dell
 Poweredge R610, and Dell Poweredge R710 motherboards.
 #include <@top_srcdir@/common/man/manpage-common-interpret-oem-data.man>
 #include <@top_srcdir@/common/man/manpage-common-sdr-options.man>
@@ -87,7 +87,7 @@ Poweredge R610, and Dell Poweredge R710 motherboards.
 "skipchecks" - This workaround option will skip FRU checksum checks.
 Some FRUs have incorrect checksums, but the FRU data is correct.
 Output may be unknown, pray for the best.  This option is confirmed to
-work around compliances issues on Inventec 5441/Dell Xanadu2, Dell
+work around compliances issues on Inventec 5441/Dell Xanadu II, Dell
 Poweredge R610, and Dell Poweredge R710 motherboards.  This option is
 identical to using the \fB\-\-skip\-checks\fR option above.
 #include <@top_srcdir@/common/man/manpage-common-oem-interpretation.man>

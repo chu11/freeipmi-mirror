@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_packet.c,v 1.57 2010-02-08 22:02:30 chu11 Exp $
+ *  $Id: ipmiconsole_packet.c,v 1.58 2010-04-27 20:59:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -994,7 +994,7 @@ ipmiconsole_ipmi_packet_assemble (ipmiconsole_ctx_t c,
        *
        * Discovered on SE7520AF2 with Intel Server Management Module
        * (Professional Edition), Sun Fire 4100, Inventec 5441/Dell
-       * Xanadu2, Supermicro X8DTH
+       * Xanadu II, Supermicro X8DTH
        *
        * The Intel's return IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL instead
        * of an actual privilege, so have to pass the actual privilege
@@ -1744,7 +1744,7 @@ ipmiconsole_calculate_errnum (ipmiconsole_ctx_t c,
         }
       /* Workaround
        *
-       * Inventec 5441/Dell Xanadu2 returns
+       * Inventec 5441/Dell Xanadu II returns
        * IPMI_COMP_CODE_PARAMETER_OUT_OF_RANGE, so we'll assume that
        * return code always means we need encryption.
        */

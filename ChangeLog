@@ -1,3 +1,8 @@
+2010-04-27  Albert Chu <chu11@llnl.gov>
+
+	* Rename "Xanadu2" to "Xanadu II" globally in documents, comments,
+	and codeto be consistent to Dell product name.
+	
 2010-03-22  Albert Chu <chu11@llnl.gov>
 
 	* Various code cleanup, organizational cleanup, fix rpm building, etc.

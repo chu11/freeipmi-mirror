@@ -60,7 +60,7 @@
  * inband "TIMEOUT", the purpose is to just not hang any user code
  * trying to do ipmb.  You gotta give up at some point.
  *
- * achu: On Inventec 5441/Dell Xanadu2 10 seemed too low, so upped it to
+ * achu: On Inventec 5441/Dell Xanadu II 10 seemed too low, so upped it to
  * 32.
  */
 #define IPMI_KCS_IPMB_RETRANSMISSION_COUNT   32

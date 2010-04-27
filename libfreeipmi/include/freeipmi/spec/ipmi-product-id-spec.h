@@ -67,7 +67,7 @@ extern "C" {
  * Inventec derived
  */
 
-#define IPMI_DELL_PRODUCT_ID_XANADU2 IPMI_INVENTEC_PRODUCT_ID_5441
+#define IPMI_DELL_PRODUCT_ID_XANADU_II IPMI_INVENTEC_PRODUCT_ID_5441
 
 /*
  * Sun Microsystems
