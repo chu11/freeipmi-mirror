@@ -3357,7 +3357,7 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
    *
    * Discovered on SE7520AF2 with Intel Server Management Module
    * (Professional Edition), Sun Fire 4100, Inventec 5441/Dell
-   * Xanadu2, Supermicro X8DTH
+   * Xanadu II, Supermicro X8DTH
    *
    * The Intel's return IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL instead
    * of an actual privilege, so have to pass the actual privilege

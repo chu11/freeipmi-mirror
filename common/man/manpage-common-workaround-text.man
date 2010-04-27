@@ -65,4 +65,4 @@ the Open Session stage of an IPMI 2.0 connection is used for hashing
 keys instead of the privilege level sent during the RAKP1 connection
 stage.  Those hitting this issue may see "password invalid" or "bad
 rmcpplus status code" errors.  Issue observed on Inventec 5441/Dell
-Xanadu2 and Supermicro X8DTH.
+Xanadu II and Supermicro X8DTH.

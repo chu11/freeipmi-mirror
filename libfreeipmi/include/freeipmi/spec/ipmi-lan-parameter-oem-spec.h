@@ -28,7 +28,7 @@ extern "C" {
  */
 
 /*
- * Dell Xanadu2
+ * Dell Xanadu II
  */
 
 #define IPMI_LAN_PARAMETER_OEM_DELL_DHCP_RETRY 192

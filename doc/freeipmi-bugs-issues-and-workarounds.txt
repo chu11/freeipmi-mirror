@@ -34,7 +34,7 @@ Intel SR870BR2/Tiger 2
 Intel SR870BN4/Tiger 4
 Supermicro H8QME with SIMSO daughter card
 Sun X4140
-Inventec 5441/Dell Xanadu2
+Inventec 5441/Dell Xanadu II
 Dell Poweredge R610
 Dell Poweredge R710
 
@@ -143,7 +143,7 @@ Intel SR1520ML/X38ML: Username capabilities and/or K_g status are not
 reported properly by the Get Authentication Capabilities response.
 Resolved with a workaround ignoring those flags.
 
-Inventec 5441/Dell Xanadu2: The remote BMC incorrectly calculates keys
+Inventec 5441/Dell Xanadu II: The remote BMC incorrectly calculates keys
 using the privilege specified in the open session stage rather than
 the privilege used during the RAKP1 stage.  This can be problematic if
 you specify IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL during that stage
@@ -151,7 +151,7 @@ instead of a real privilege level.  Resolved with a workaround to
 handle this specific situation.  This bug is confirmed to be fixed on
 newer firmware.
 
-Inventec 5441/Dell Xanadu2: Given specific configuration of IPMI 1.5
+Inventec 5441/Dell Xanadu II: Given specific configuration of IPMI 1.5
 authentication types, certain user privileges are not specified
 correctly during Get Authentication Capabilities and a CCh = "Invalid
 data field in request" is returned during Activiate Session.  This bug
@@ -296,16 +296,16 @@ Intel Unknown Motherboard: The Activate Payload requires the "BMC
 asserts CTS and DCD/DSR to baseboard upon activation" flag to be set.
 Resolved with an Intel specific workaround.
 
-Inventec 5441/Dell Xanadu2: SOL payload sizes are reported
+Inventec 5441/Dell Xanadu II: SOL payload sizes are reported
 incorrectly.  Resolved with a workaround to skip payload size checks.
 This bug is confirmed to be fixed on newer firmware.
 
-Inventec 5441/Dell Xanadu2: When a SOL session is closed by another
+Inventec 5441/Dell Xanadu II: When a SOL session is closed by another
 session, the initial SOL session is not given a "SOL is deactivating"
 flag in a BMC to Remote Console packet.  Not a severe issue, since the
 SOL session will eventually timeout.  No current resolution.
 
-Inventec 5441/Dell Xanadu2: If the remote system requires encryption,
+Inventec 5441/Dell Xanadu II: If the remote system requires encryption,
 but the user attempts to connect without encryption, an error response
 other than "Cannot activate payload without encryption." is returned.
 Not a severe issue, since the SOL session will connect with another
@@ -382,29 +382,29 @@ Sun X4140: Get Username and Get User Payload commands fail with CCh =
 "Invalid data field in request" if a username was not set previously.
 Added workaround for this specific case.
 
-Inventec 5441/Dell Xanadu2: Get Username and Get User Payload commands
+Inventec 5441/Dell Xanadu II: Get Username and Get User Payload commands
 fail with CCh = "Invalid data field in request" if a username was not
 set previously.  Added workaround for this specific case.
 
-Inventec 5441/Dell Xanadu2: User access parameters Enable_IPMI_Msgs
+Inventec 5441/Dell Xanadu II: User access parameters Enable_IPMI_Msgs
 and Privilege_Limit are not changeable via Set User Access for some
 users.  The values are not changeable until a username has been set.
 No current resolution.
 
-Inventec 5441/Dell Xanadu2: When disabling IPMI via Enable_IPMI_Msgs,
+Inventec 5441/Dell Xanadu II: When disabling IPMI via Enable_IPMI_Msgs,
 IPMI over LAN still works for a user.  This bug is confirmed to be
 fixed on newer firmware.
 
-Inventec 5441/Dell Xanadu2: Setting a channel privilege limit
+Inventec 5441/Dell Xanadu II: Setting a channel privilege limit
 (e.g. LAN channel privilege limit) does not seem to affect
 authentication and/or execution of IPMI commands.  No current
 resolution.
 
-Inventec 5441/Dell Xanadu2: Setting Non-volatile settings seems to
+Inventec 5441/Dell Xanadu II: Setting Non-volatile settings seems to
 also change volatile settings for channel configuration.  No current
 resolution.
 
-Inventec 5441/Dell Xanadu2: ARP response configuration is not
+Inventec 5441/Dell Xanadu II: ARP response configuration is not
 functional even though the BMC ARP responds.  This bug is confirmed to
 be fixed on newer firmware.
 
@@ -444,12 +444,12 @@ commands.  No current resolution.
 Dell Poweredge R610, R710: ARP response configuration is not available
 even though the BMC ARP responds.  No current resolution.
 
-Inventec 5441/Dell Xanadu2: Configuring the Subnet Mask will also lead
+Inventec 5441/Dell Xanadu II: Configuring the Subnet Mask will also lead
 to the "Default Gateway IP Address" to be configured (i.e. there is
 some type of memory corruption, memory something that causes both to
 be configured via one IPMI command).  No current resolution.
 
-Inventec 5441/Dell Xanadu2: Several configuration fields, most notably
+Inventec 5441/Dell Xanadu II: Several configuration fields, most notably
 several SOL configuration fields, are stored in volatile memory rather
 than non-volatile memory.  These particular configuration fields were
 not required by IPMI to be stored in non-volatile memory, but
@@ -459,7 +459,7 @@ every system boot. [NICETOHAVE]
 ipmi-pef-config
 ---------------
 
-Inventec 5441/Dell Xanadu2: Alert Policy configurations cannot be
+Inventec 5441/Dell Xanadu II: Alert Policy configurations cannot be
 configured "piecemeal".  If it's not configured perfectly and
 simultaneously, every configuration will result in a completion code
 of 0xCC (Invalid data field in Request).  This isn't a compliance
@@ -475,7 +475,7 @@ leads to difficult development. [NICETOHAVE] [CONFIG-1]
 ipmi-fru
 --------
 
-Inventec 5441/Dell Xanadu2: Some FRU data has invalid checksums.
+Inventec 5441/Dell Xanadu II: Some FRU data has invalid checksums.
 Resolved with workaround to ignore the checksum (and pray for the
 best).
 
@@ -526,15 +526,15 @@ Supermicro H8QME with SIMSO daughter card: Some sensors do not return
 sensor event bitmasks in accordance to the IPMI specification.  This
 bug is confirmed to be fixed on newer firmware.
 
-Inventec 5441/Dell Xanadu2: Several sensors have bogus Entity IDs.  In
+Inventec 5441/Dell Xanadu II: Several sensors have bogus Entity IDs.  In
 other words, not in the valid Entity ID range, or OEM defined range.
 No resolution required, output alternate text appropriately.
 
-Inventec 5441/Dell Xanadu2: Sensor bridging over IPMI 1.5 fails b/c
+Inventec 5441/Dell Xanadu II: Sensor bridging over IPMI 1.5 fails b/c
 IPMB respones have invalid authentication codes.  No current
 resolution.
 
-Inventec 5441/Dell Xanadu2: Some sensors don't return a sensor state
+Inventec 5441/Dell Xanadu II: Some sensors don't return a sensor state
 (16 bit field) although only half of the sensor state (8 bit field) is
 optional.  Resolved by assuming the sensor state is 0 (i.e. no sensor
 states have been asserted).
@@ -577,7 +577,7 @@ resolution.
 HP DL 380 G5: Some SEL records report a record type of 0x00, which is
 illegal.  Resolved with workaround to assume a valid record type.
 
-Inventec 5441/Dell Xanadu2: The SEL contains sensor numbers and sensor
+Inventec 5441/Dell Xanadu II: The SEL contains sensor numbers and sensor
 owner IDs which are not listed in the SDR.  While this is not a
 compliance issue, it leads to an output that ultimately contains less
 useful information.  In particular, instead of a reasonable sensor

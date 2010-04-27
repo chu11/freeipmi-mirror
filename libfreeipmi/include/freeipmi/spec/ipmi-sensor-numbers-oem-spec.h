@@ -75,7 +75,7 @@ extern "C" {
  *******************************************/
 
 /*
- * Inventec 5441/Dell Xanadu2
+ * Inventec 5441/Dell Xanadu II
  */
 /* achu: not official names, named based on use context */
 #define IPMI_SENSOR_NUMBER_OEM_INVENTEC_POST_START        0x81

@@ -226,7 +226,7 @@ _set_alert_policy_table (struct ipmi_pef_config_state_data *state_data,
        *
        * Fujitsu RX 100 S5
        *
-       * Inventec 5441/Dell Xanadu2
+       * Inventec 5441/Dell Xanadu II
        *
        * All fields have to be applied simultaneously, the motherboard
        * does not appear to like configuration of one field of a time,

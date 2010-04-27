@@ -55,7 +55,7 @@
 #include "tool-sensor-common.h"
 
 /*
- * Dell Xanadu2 (Inventec 5441) Notes
+ * Dell Xanadu II (Inventec 5441) Notes
  *
  * Dell appears to have implemented two equivalent OEM commands
  * that do the same as the Inventec get/set-nic-status commands.
@@ -4946,7 +4946,7 @@ ipmi_oem_dell_get_board_id (ipmi_oem_state_data_t *state_data)
   assert (state_data);
   assert (!state_data->prog_data->args->oem_options_count);
 
-  /* Dell Xanadu2 OEM
+  /* Dell Xanadu II OEM
    *
    * Get Board ID Request
    *
@@ -4964,7 +4964,7 @@ ipmi_oem_dell_get_board_id (ipmi_oem_state_data_t *state_data)
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
-                              IPMI_NET_FN_OEM_DELL_XANADU2_RQ, /* network function */
+                              IPMI_NET_FN_OEM_DELL_XANADU_II_RQ, /* network function */
                               bytes_rq, /* data */
                               1, /* num bytes */
                               bytes_rs,
@@ -4982,7 +4982,7 @@ ipmi_oem_dell_get_board_id (ipmi_oem_state_data_t *state_data)
                                                    rs_len,
                                                    3,
                                                    IPMI_CMD_OEM_DELL_GET_BOARD_ID,
-                                                   IPMI_NET_FN_OEM_DELL_XANADU2_RS,
+                                                   IPMI_NET_FN_OEM_DELL_XANADU_II_RS,
                                                    NULL) < 0)
     goto cleanup;
 
@@ -5026,7 +5026,7 @@ ipmi_oem_dell_set_board_id (ipmi_oem_state_data_t *state_data)
     }
   boardid = tmp;
 
-  /* Dell Xanadu2 OEM
+  /* Dell Xanadu II OEM
    *
    * Set Board ID Request
    *
@@ -5045,7 +5045,7 @@ ipmi_oem_dell_set_board_id (ipmi_oem_state_data_t *state_data)
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
-                              IPMI_NET_FN_OEM_DELL_XANADU2_RQ, /* network function */
+                              IPMI_NET_FN_OEM_DELL_XANADU_II_RQ, /* network function */
                               bytes_rq, /* data */
                               2, /* num bytes */
                               bytes_rs,
@@ -5063,7 +5063,7 @@ ipmi_oem_dell_set_board_id (ipmi_oem_state_data_t *state_data)
                                                    rs_len,
                                                    2,
                                                    IPMI_CMD_OEM_DELL_SET_BOARD_ID,
-                                                   IPMI_NET_FN_OEM_DELL_XANADU2_RS,
+                                                   IPMI_NET_FN_OEM_DELL_XANADU_II_RS,
                                                    NULL) < 0)
     goto cleanup;
 
@@ -5083,7 +5083,7 @@ ipmi_oem_dell_get_fcb_version (ipmi_oem_state_data_t *state_data)
   assert (state_data);
   assert (!state_data->prog_data->args->oem_options_count);
 
-  /* Dell Xanadu2 OEM
+  /* Dell Xanadu II OEM
    *
    * Get FCB FW Version Request
    *
@@ -5102,7 +5102,7 @@ ipmi_oem_dell_get_fcb_version (ipmi_oem_state_data_t *state_data)
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
-                              IPMI_NET_FN_OEM_DELL_XANADU2_RQ, /* network function */
+                              IPMI_NET_FN_OEM_DELL_XANADU_II_RQ, /* network function */
                               bytes_rq, /* data */
                               1, /* num bytes */
                               bytes_rs,
@@ -5120,7 +5120,7 @@ ipmi_oem_dell_get_fcb_version (ipmi_oem_state_data_t *state_data)
                                                    rs_len,
                                                    4,
                                                    IPMI_CMD_OEM_DELL_GET_FCB_FW_VERSION,
-                                                   IPMI_NET_FN_OEM_DELL_XANADU2_RS,
+                                                   IPMI_NET_FN_OEM_DELL_XANADU_II_RS,
                                                    NULL) < 0)
     goto cleanup;
 
@@ -5183,7 +5183,7 @@ ipmi_oem_dell_set_fcb_version (ipmi_oem_state_data_t *state_data)
     }
   minorversion = tmp;
 
-  /* Dell Xanadu2 OEM
+  /* Dell Xanadu II OEM
    *
    * Set FCB FW Version Request
    *
@@ -5204,7 +5204,7 @@ ipmi_oem_dell_set_fcb_version (ipmi_oem_state_data_t *state_data)
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
-                              IPMI_NET_FN_OEM_DELL_XANADU2_RQ, /* network function */
+                              IPMI_NET_FN_OEM_DELL_XANADU_II_RQ, /* network function */
                               bytes_rq, /* data */
                               3, /* num bytes */
                               bytes_rs,
@@ -5222,7 +5222,7 @@ ipmi_oem_dell_set_fcb_version (ipmi_oem_state_data_t *state_data)
                                                    rs_len,
                                                    2,
                                                    IPMI_CMD_OEM_DELL_SET_FCB_FW_VERSION,
-                                                   IPMI_NET_FN_OEM_DELL_XANADU2_RS,
+                                                   IPMI_NET_FN_OEM_DELL_XANADU_II_RS,
                                                    NULL) < 0)
     goto cleanup;
 
@@ -5285,7 +5285,7 @@ ipmi_oem_dell_set_asset_tag (ipmi_oem_state_data_t *state_data)
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
-                              IPMI_NET_FN_OEM_DELL_XANADU2_RQ, /* network function */
+                              IPMI_NET_FN_OEM_DELL_XANADU_II_RQ, /* network function */
                               bytes_rq, /* data */
                               rq_len, /* num bytes */
                               bytes_rs,
@@ -5303,7 +5303,7 @@ ipmi_oem_dell_set_asset_tag (ipmi_oem_state_data_t *state_data)
                                                    rs_len,
                                                    2,
                                                    IPMI_CMD_OEM_DELL_SET_ASSET_TAG,
-                                                   IPMI_NET_FN_OEM_DELL_XANADU2_RS,
+                                                   IPMI_NET_FN_OEM_DELL_XANADU_II_RS,
                                                    NULL) < 0)
     goto cleanup;
   
@@ -5328,7 +5328,7 @@ ipmi_oem_dell_get_dhcp_retry (ipmi_oem_state_data_t *state_data)
   assert (state_data);
   assert (!state_data->prog_data->args->oem_options_count);
 
-  /* Dell Xanadu2 OEM
+  /* Dell Xanadu II OEM
    *
    * Uses Get/Set Lan Configuration
    *
@@ -5436,7 +5436,7 @@ ipmi_oem_dell_get_sol_inactivity_timeout (ipmi_oem_state_data_t *state_data)
   assert (state_data);
   assert (!state_data->prog_data->args->oem_options_count);
 
-  /* Dell Xanadu2 OEM
+  /* Dell Xanadu II OEM
    *
    * Uses Get/Set SOL Configuration
    *

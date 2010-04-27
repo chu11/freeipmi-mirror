@@ -59,7 +59,7 @@ extern "C" {
 #define IPMI_CMD_OEM_DELL_IDRAC_VIRTUAL_MAC                                    0xC9
 
 /*
- * Dell Xanadu2
+ * Dell Xanadu II
  */
 
 /* IPMI_NET_FN_FIRMWARE_RQ / IPMI_NET_FN_FIRMWARE_RS */
@@ -67,7 +67,7 @@ extern "C" {
 #define IPMI_CMD_OEM_DELL_GET_UPDATE_STATUS 0x02
 #define IPMI_CMD_OEM_DELL_COPY_IMAGE_DATA   0x03
 
-/* IPMI_NET_FN_OEM_DELL_XANADU2_RQ / IPMI_NET_FN_OEM_DELL_XANADU2_RS */ 
+/* IPMI_NET_FN_OEM_DELL_XANADU_II_RQ / IPMI_NET_FN_OEM_DELL_XANADU_II_RS */ 
 #define IPMI_CMD_OEM_DELL_SET_WEB_PORT_NUM    0x02
 #define IPMI_CMD_OEM_DELL_GET_WEB_PORT_NUM    0x03
 #define IPMI_CMD_OEM_DELL_SET_BOARD_ID        0x10
@@ -118,7 +118,7 @@ extern "C" {
  *******************************************/
 
 /*
- * Inventec 5441/Dell Xanadu2
+ * Inventec 5441/Dell Xanadu II
  */
 
 /* IPMI_NET_FN_FIRMWARE_RQ / IPMI_NET_FN_FIRMWARE_RS */

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.106.4.1 2009-12-23 21:24:10 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.106.4.2 2010-04-27 20:59:28 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -2165,7 +2165,7 @@ _check_payload_sizes_legitimate (ipmiconsole_ctx_t c)
    *
    * Also seen on Intel X38ML motherboard.
    *
-   * Also seen on Inventec 5441/Dell Xanadu2 motherboard.
+   * Also seen on Inventec 5441/Dell Xanadu II motherboard.
    *
    * Also seen on Supermicro X8DTH motherboard.
    *

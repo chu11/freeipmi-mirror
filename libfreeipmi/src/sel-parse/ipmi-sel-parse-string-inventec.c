@@ -100,7 +100,7 @@ ipmi_sel_parse_output_inventec_sensor_name (ipmi_sel_parse_ctx_t ctx,
 
   /* OEM Interpretation
    *
-   * Inventec 5441/Dell Xanadu2
+   * Inventec 5441/Dell Xanadu II
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
       && ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441
@@ -164,7 +164,7 @@ ipmi_sel_parse_output_inventec_event_data1_class_oem (ipmi_sel_parse_ctx_t ctx,
 
   /* OEM Interpretation
    *
-   * Inventec 5441/Dell Xanadu2
+   * Inventec 5441/Dell Xanadu II
    *
    * achu note: There is no official "string" defining the event
    * from the vendor.  "BMC enabled by BIOS" is simply what
@@ -220,7 +220,7 @@ ipmi_sel_parse_output_inventec_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ct
 
   /* OEM Interpretation
    *
-   * Inventec 5441/Dell Xanadu2
+   * Inventec 5441/Dell Xanadu II
    *
    * Note: Dell engineer commented the SBE Warning threshold is 15h SBE
    * events in a 4 hour window.  SBE Critical Warning threshold is an
@@ -292,7 +292,7 @@ ipmi_sel_parse_output_inventec_event_data2_class_oem (ipmi_sel_parse_ctx_t ctx,
 
   /* OEM Interpretation
    *
-   * Inventec 5441/Dell Xanadu2
+   * Inventec 5441/Dell Xanadu II
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
       && ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441
@@ -345,7 +345,7 @@ ipmi_sel_parse_output_inventec_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ct
 
   /* OEM Interpretation
    *
-   * Inventec 5441/Dell Xanadu2
+   * Inventec 5441/Dell Xanadu II
    */
 
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
@@ -475,7 +475,7 @@ ipmi_sel_parse_output_inventec_event_data3_class_oem (ipmi_sel_parse_ctx_t ctx,
 
   /* OEM Interpretation
    *
-   * Inventec 5441/Dell Xanadu2
+   * Inventec 5441/Dell Xanadu II
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
       && ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441
@@ -530,7 +530,7 @@ ipmi_sel_parse_output_inventec_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx
 
   /* OEM Interpretation
    *
-   * Inventec 5441/Dell Xanadu2
+   * Inventec 5441/Dell Xanadu II
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
       && ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441)

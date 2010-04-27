@@ -36,11 +36,11 @@ extern "C" {
 #define IPMI_NET_FN_OEM_DELL_GENERIC_RS 0x31
 
 /*
- * Dell Xanadu2
+ * Dell Xanadu II
  */
 /* achu: not official names, named based on use context */
-#define IPMI_NET_FN_OEM_DELL_XANADU2_RQ 0x34
-#define IPMI_NET_FN_OEM_DELL_XANADU2_RS 0x35
+#define IPMI_NET_FN_OEM_DELL_XANADU_II_RQ 0x34
+#define IPMI_NET_FN_OEM_DELL_XANADU_II_RS 0x35
 
 /*******************************************
  * Fujitsu                                 *
@@ -68,7 +68,7 @@ extern "C" {
  *******************************************/
 
 /*
- * Inventec 5441/Dell Xanadu2
+ * Inventec 5441/Dell Xanadu II
  */
 /* achu: not official names, named based on use context */
 #define IPMI_NET_FN_OEM_INVENTEC_GENERIC_RQ 0x30

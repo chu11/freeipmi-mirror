@@ -28,7 +28,7 @@ extern "C" {
  *******************************************/
 
 /*
- * Inventec 5441/Dell Xanadu2
+ * Inventec 5441/Dell Xanadu II
  */
 /* achu: not official names, named based on use context */
 #define IPMI_GENERATOR_ID_OEM_INVENTEC_BIOS            0x01
