@@ -373,49 +373,49 @@ ipmi_sel_parse_output_inventec_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ct
               || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_UNCORRECTABLE_MEMORY_ERROR
               || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_PARITY
               || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_CORRECTABLE_MEMORY_ERROR_LOGGING_LIMIT_REACHED)
-          && (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU0_CH0_DIM1
-              || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU0_CH0_DIM0
-              || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU0_CH1_DIM1
-              || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU0_CH1_DIM0
-              || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU0_CH2_DIM1
-              || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU0_CH2_DIM0
-              || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU1_CH0_DIM0
-              || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU1_CH1_DIM0
-              || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU1_CH2_DIM0))
+          && (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5441_DIMM_CPU0_CH0_DIM1
+              || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5441_DIMM_CPU0_CH0_DIM0
+              || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5441_DIMM_CPU0_CH1_DIM1
+              || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5441_DIMM_CPU0_CH1_DIM0
+              || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5441_DIMM_CPU0_CH2_DIM1
+              || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5441_DIMM_CPU0_CH2_DIM0
+              || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5441_DIMM_CPU1_CH0_DIM0
+              || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5441_DIMM_CPU1_CH1_DIM0
+              || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5441_DIMM_CPU1_CH2_DIM0))
         {
-          if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU0_CH0_DIM1)
+          if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5441_DIMM_CPU0_CH0_DIM1)
             snprintf (tmpbuf,
                       tmpbuflen,
                       "Dimm Number - CPU0/Ch0/DIM1");
-          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU0_CH0_DIM0)
+          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5441_DIMM_CPU0_CH0_DIM0)
             snprintf (tmpbuf,
                       tmpbuflen,
                       "Dimm Number - CPU0/Ch0/DIM0");
-          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU0_CH1_DIM1)
+          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5441_DIMM_CPU0_CH1_DIM1)
             snprintf (tmpbuf,
                       tmpbuflen,
                       "Dimm Number - CPU0/Ch1/DIM1");
-          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU0_CH1_DIM0)
+          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5441_DIMM_CPU0_CH1_DIM0)
             snprintf (tmpbuf,
                       tmpbuflen,
                       "Dimm Number - CPU0/Ch1/DIM0");
-          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU0_CH2_DIM1)
+          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5441_DIMM_CPU0_CH2_DIM1)
             snprintf (tmpbuf,
                       tmpbuflen,
                       "Dimm Number - CPU0/Ch2/DIM1");
-          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU0_CH2_DIM0)
+          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5441_DIMM_CPU0_CH2_DIM0)
             snprintf (tmpbuf,
                       tmpbuflen,
                       "Dimm Number - CPU0/Ch2/DIM0");
-          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU1_CH0_DIM0)
+          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5441_DIMM_CPU1_CH0_DIM0)
             snprintf (tmpbuf,
                       tmpbuflen,
                       "Dimm Number - CPU1/Ch0/DIM0");
-          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU1_CH1_DIM0)
+          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5441_DIMM_CPU1_CH1_DIM0)
             snprintf (tmpbuf,
                       tmpbuflen,
                       "Dimm Number - CPU1/Ch1/DIM0");
-          else /* system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU1_CH2_DIM0 */
+          else /* system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5441_DIMM_CPU1_CH2_DIM0 */
             snprintf (tmpbuf,
                       tmpbuflen,
                       "Dimm Number - CPU1/Ch2/DIM0");
