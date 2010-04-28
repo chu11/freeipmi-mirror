@@ -426,6 +426,94 @@ ipmi_sel_parse_output_inventec_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ct
 
   /* OEM Interpretation
    *
+   * Inventec 5442/Dell Xanadu III
+   */
+
+  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
+      && ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5442)
+    {
+      if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INVENTEC_SMI
+          && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+          && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+          && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INVENTEC_MEMORY
+          && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_CORRECTABLE_MEMORY_ERROR
+              || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_UNCORRECTABLE_MEMORY_ERROR
+              || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_PARITY
+              || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_CORRECTABLE_MEMORY_ERROR_LOGGING_LIMIT_REACHED)
+          && (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU0_CH0_DIM1
+              || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU0_CH0_DIM0
+              || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU0_CH1_DIM1
+              || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU0_CH1_DIM0
+              || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU0_CH2_DIM1
+              || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU0_CH2_DIM0
+              || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU1_CH0_DIM1
+              || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU1_CH0_DIM0
+              || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU1_CH1_DIM1
+              || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU1_CH1_DIM0
+              || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU1_CH2_DIM1
+              || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU1_CH2_DIM0))
+        {
+          /* achu: technically there is a pattern here for this
+           * motherboard and I could make some of this code shorter
+           * w/ some bitmasking.  But I'll just brute force it out for
+           * readability.  I'll revisit as more motherboards are added
+           * later.
+           */
+          if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU0_CH0_DIM1)
+            snprintf (tmpbuf,
+                      tmpbuflen,
+                      "Dimm Number - CPU0/Ch0/DIM1");
+          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU0_CH0_DIM0)
+            snprintf (tmpbuf,
+                      tmpbuflen,
+                      "Dimm Number - CPU0/Ch0/DIM0");
+          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU0_CH1_DIM1)
+            snprintf (tmpbuf,
+                      tmpbuflen,
+                      "Dimm Number - CPU0/Ch1/DIM1");
+          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU0_CH1_DIM0)
+            snprintf (tmpbuf,
+                      tmpbuflen,
+                      "Dimm Number - CPU0/Ch1/DIM0");
+          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU0_CH2_DIM1)
+            snprintf (tmpbuf,
+                      tmpbuflen,
+                      "Dimm Number - CPU0/Ch2/DIM1");
+          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU0_CH2_DIM0)
+            snprintf (tmpbuf,
+                      tmpbuflen,
+                      "Dimm Number - CPU0/Ch2/DIM0");
+          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU1_CH0_DIM1)
+            snprintf (tmpbuf,
+                      tmpbuflen,
+                      "Dimm Number - CPU1/Ch0/DIM1");
+          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU1_CH0_DIM0)
+            snprintf (tmpbuf,
+                      tmpbuflen,
+                      "Dimm Number - CPU1/Ch0/DIM0");
+          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU1_CH1_DIM1)
+            snprintf (tmpbuf,
+                      tmpbuflen,
+                      "Dimm Number - CPU1/Ch1/DIM1");
+          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU1_CH1_DIM0)
+            snprintf (tmpbuf,
+                      tmpbuflen,
+                      "Dimm Number - CPU1/Ch1/DIM0");
+          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU1_CH2_DIM1)
+            snprintf (tmpbuf,
+                      tmpbuflen,
+                      "Dimm Number - CPU1/Ch2/DIM1");
+          else /* system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU1_CH2_DIM0 */
+            snprintf (tmpbuf,
+                      tmpbuflen,
+                      "Dimm Number - CPU1/Ch2/DIM0");
+          
+          return (1);
+        }
+    }
+
+  /* OEM Interpretation
+   *
    * Inventec 5441/Dell Xanadu II
    * Inventec 5442/Dell Xanadu III
    */
@@ -705,6 +793,8 @@ ipmi_sel_parse_output_inventec_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx
             error_code_str = "CPUID, Processor Model are different";
           else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_PROCESSOR_SPEEDS_MISMATCHED)
             error_code_str = "Processor speeds mismatched";
+          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_QPI_MISMATCHED)
+            error_code_str = "QPI mismatched"; /* QPI = Quickpath Interconnect */
           else
             error_code_str = "Undefined BIOS Error";
       
