@@ -488,6 +488,9 @@ checksums.  Resolved with workaround to ignore the checksum (and pray
 for the best).  (Al comment: I know this was either an Intel Tiger 2
 or Intel Tiger 4 motherboard, but I can't remember which one.)
 
+Quanta S99Q/Dell FS12-TY: A FRU Chassis Info Area reports an
+unspecified chassis type.  No current resolution.
+
 ipmi-sensors
 ------------
 
