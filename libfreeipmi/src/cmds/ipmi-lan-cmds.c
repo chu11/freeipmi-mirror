@@ -1465,7 +1465,7 @@ fill_cmd_set_lan_configuration_parameters_bad_password_threshold (uint8_t channe
       return (-1);
     }
 
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_vlan_priority_rq) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_bad_password_threshold_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
