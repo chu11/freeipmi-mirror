@@ -29,6 +29,7 @@ extern "C" {
 
 /*
  * Dell Xanadu II
+ * Dell Xanadu III
  */
 
 #define IPMI_SOL_PARAMETER_OEM_DELL_SOL_TIMEOUT 192
