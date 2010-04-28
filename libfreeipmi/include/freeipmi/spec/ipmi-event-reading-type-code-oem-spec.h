@@ -48,6 +48,7 @@ extern "C" {
 
 /*
  * Inventec 5441/Dell Xanadu II
+ * Inventec 5442/Dell Xanadu III
  */
 /* achu: not official names, named based on use context */
 #define IPMI_EVENT_READING_TYPE_CODE_OEM_INVENTEC_BIOS 0x70
