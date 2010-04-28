@@ -1,5 +1,11 @@
 2010-04-28  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/src/cmds/ipmi-lan-cmds.c
+	(fill_cmd_set_lan_configuration_parameters_bad_password_threshold):
+	Fix error check.
+	
+2010-04-28  Albert Chu <chu11@llnl.gov>
+
 	* Rename dimm macros specifically for motherboard they work on.
 
 	* Support Inventec 5442/Dell Xanadu III error codes and Dimms.
