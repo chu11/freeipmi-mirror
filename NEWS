@@ -1,5 +1,6 @@
 FreeIPMI 0.8.5 - xx/xx/10
 -------------------------
+o Support Inventec 5442/Dell Xanadu III motherboard.
 o Fix some library macro names based on actual OEM names.
 o Fix documentation typos.
 
