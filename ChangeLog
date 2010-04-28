@@ -1,6 +1,8 @@
 2010-04-28  Albert Chu <chu11@llnl.gov>
 
 	* Rename dimm macros specifically for motherboard they work on.
+
+	* Support Inventec 5442/Dell Xanadu III error codes and Dimms.
 	
 2010-04-27  Albert Chu <chu11@llnl.gov>
 
