@@ -149,7 +149,7 @@ _get_user_access (bmc_config_state_data_t *state_data,
                              "ipmi_cmd_get_user_access: %s\n",
                              ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-          if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+          if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BMC_BUSY
               && (ipmi_check_completion_code (obj_cmd_rs,
                                               IPMI_COMP_CODE_NODE_BUSY) == 1))
             {
@@ -1051,7 +1051,7 @@ enable_user_commit (const char *section_name,
                              "ipmi_cmd_set_user_password: %s\n",
                              ipmi_ctx_errormsg (state_data->ipmi_ctx));
           
-          if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+          if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BMC_BUSY
               && (ipmi_check_completion_code (obj_cmd_rs,
                                               IPMI_COMP_CODE_NODE_BUSY) == 1))
             {
