@@ -45,6 +45,8 @@ struct user_access {
   uint8_t user_id_enable_status;
 };
 
+#define NODE_BUSY_RETRY_COUNT 10
+
 static config_err_t enable_user_commit (const char *section_name,
 					const struct config_keyvalue *kv,
 					void *arg);
@@ -90,6 +92,7 @@ _get_user_access (bmc_config_state_data_t *state_data,
   uint64_t val;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
+  int node_busy_retry_count = 0;
 
   assert (state_data);
   assert (section_name);
@@ -113,34 +116,78 @@ _get_user_access (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_user_access (state_data->ipmi_ctx,
-                                channel_number,
-                                userid,
-                                obj_cmd_rs) < 0)
+  /* 
+   * IPMI Workaround (achu)
+   *
+   * Quanta S99Q/Dell FS12-TY
+   *
+   * After committing some key user information (most notably User,
+   * Password, or Enable_User), BMC seems to do something internally
+   * that takes awhile.  Subsequent configuration related calls
+   * timeout with IPMI_COMP_CODE_NODE_BUSY.  The loop below is to
+   * retry appropriately to limit failures.
+   *
+   * I will limit this code to the sections the specific IPMI calls
+   * that have exhibited problems, rather than all user section calls.
+   * The calls that have had problems are:
+   *
+   * ipmi_cmd_get_user_access (Lan_Enable_IPMI_Msgs)
+   *
+   * ipmi_cmd_set_user_password (Enable_User)
+   */
+
+  while (node_busy_retry_count < NODE_BUSY_RETRY_COUNT)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "ipmi_cmd_get_user_access: %s\n",
-                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
-      /*
-       * IPMI Workaround (achu)
-       *
-       * Discovered on Sun X4140
-       *
-       * Get Username and Get User Payload commands fail with CCh =
-       * "Invalid data field in request" if a username was not set
-       * previously.
-       *
-       * Although not seen on the Get User Access command, we're going
-       * to assume it's possible on some other motherboards.
-       */
+      if (ipmi_cmd_get_user_access (state_data->ipmi_ctx,
+                                    channel_number,
+                                    userid,
+                                    obj_cmd_rs) < 0)
+        {
+          if (state_data->prog_data->args->config_args.common.debug)
+            pstdout_fprintf (state_data->pstate,
+                             stderr,
+                             "ipmi_cmd_get_user_access: %s\n",
+                             ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
-          && (ipmi_check_completion_code (obj_cmd_rs,
-                                          IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1))
-        (*username_not_set_yet) = 1;
+          if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+              && (ipmi_check_completion_code (obj_cmd_rs,
+                                              IPMI_COMP_CODE_NODE_BUSY) == 1))
+            {
+              node_busy_retry_count++;
+              continue;
+            }
 
+          /*
+           * IPMI Workaround (achu)
+           *
+           * Discovered on Sun X4140
+           *
+           * Get Username and Get User Payload commands fail with CCh =
+           * "Invalid data field in request" if a username was not set
+           * previously.
+           *
+           * Although not seen on the Get User Access command, we're going
+           * to assume it's possible on some other motherboards.
+           */
+          
+          if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+              && (ipmi_check_completion_code (obj_cmd_rs,
+                                              IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1))
+            (*username_not_set_yet) = 1;
+          
+          if (config_is_non_fatal_error (state_data->ipmi_ctx,
+                                         obj_cmd_rs,
+                                         &ret))
+            rv = ret;
+          
+          goto cleanup;
+        }
+
+      break;
+    }
+
+  if (node_busy_retry_count >= NODE_BUSY_RETRY_COUNT)
+    {
       if (config_is_non_fatal_error (state_data->ipmi_ctx,
                                      obj_cmd_rs,
                                      &ret))
@@ -951,6 +998,7 @@ enable_user_commit (const char *section_name,
   uint8_t user_status;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
+  int node_busy_retry_count = 0;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_user_password_rs)))
     {
@@ -966,95 +1014,162 @@ enable_user_commit (const char *section_name,
   else
     user_status = IPMI_PASSWORD_OPERATION_DISABLE_USER;
 
-  memset (password, 0, IPMI_1_5_MAX_PASSWORD_LENGTH);
-  if (ipmi_cmd_set_user_password (state_data->ipmi_ctx,
-                                  userid,
-                                  IPMI_PASSWORD_SIZE_16_BYTES,
-                                  user_status,
-                                  password,
-                                  0,
-                                  obj_cmd_rs) < 0)
+  /* 
+   * IPMI Workaround (achu)
+   *
+   * Quanta S99Q/Dell FS12-TY
+   *
+   * After committing some key user information (most notably User,
+   * Password, or Enable_User), BMC seems to do something internally
+   * that takes awhile.  Subsequent configuration related calls
+   * timeout with IPMI_COMP_CODE_NODE_BUSY.  The loop below is to
+   * retry appropriately to limit failures.
+   *
+   * I will limit this code to the sections the specific IPMI calls
+   * that have exhibited problems, rather than all user section calls.
+   * The calls that have had problems are:
+   *
+   * ipmi_cmd_get_user_access (Lan_Enable_IPMI_Msgs)
+   *
+   * ipmi_cmd_set_user_password (Enable_User)
+   */
+
+  while (node_busy_retry_count < NODE_BUSY_RETRY_COUNT)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "ipmi_cmd_set_user_password: %s\n",
-                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
-
-      /*
-       * IPMI Workaround
-       *
-       * Forgotten/Undocumented Motherboard
-       * Sun X4140
-       *
-       * The IPMI spec says you don't have to set a password when you
-       * enable/disable a user.  But some BMCs care that you pass in
-       * some random password length (even though the password will be
-       * ignored)
-       */
-
-      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
-          && (ipmi_check_completion_code (obj_cmd_rs,
-                                          IPMI_COMP_CODE_REQUEST_DATA_LENGTH_INVALID) == 1))
+      memset (password, 0, IPMI_1_5_MAX_PASSWORD_LENGTH);
+      if (ipmi_cmd_set_user_password (state_data->ipmi_ctx,
+                                      userid,
+                                      IPMI_PASSWORD_SIZE_16_BYTES,
+                                      user_status,
+                                      password,
+                                      0,
+                                      obj_cmd_rs) < 0)
         {
           if (state_data->prog_data->args->config_args.common.debug)
             pstdout_fprintf (state_data->pstate,
                              stderr,
-                             "ipmi_cmd_set_user_password: attempting workaround\n");
-
-          if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_set_user_password_rq)))
+                             "ipmi_cmd_set_user_password: %s\n",
+                             ipmi_ctx_errormsg (state_data->ipmi_ctx));
+          
+          if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+              && (ipmi_check_completion_code (obj_cmd_rs,
+                                              IPMI_COMP_CODE_NODE_BUSY) == 1))
             {
-              pstdout_fprintf (state_data->pstate,
-                               stderr,
-                               "fiid_obj_create: %s\n",
-                               strerror (errno));
-              goto cleanup;
+              node_busy_retry_count++;
+              continue;
             }
 
-          if (fill_cmd_set_user_password (userid,
-                                          IPMI_PASSWORD_SIZE_16_BYTES,
-                                          user_status,
-                                          password,
-                                          0,
-                                          obj_cmd_rq) < 0)
-            goto cleanup;
-
-          /* Force the password to be filled in with a length */
-          if (fiid_obj_set_data (obj_cmd_rq,
-                                 "password",
-                                 password,
-                                 IPMI_1_5_MAX_PASSWORD_LENGTH) < 0)
-            {
-              pstdout_fprintf (state_data->pstate,
-                               stderr,
-                               "fiid_obj_set_data: 'password': %s\n",
-                               fiid_obj_errormsg (obj_cmd_rq));
-              goto cleanup;
-            }
-
-          if (ipmi_cmd (state_data->ipmi_ctx,
-                        IPMI_BMC_IPMB_LUN_BMC,
-                        IPMI_NET_FN_APP_RQ,
-                        obj_cmd_rq,
-                        obj_cmd_rs) < 0)
+          /*
+           * IPMI Workaround
+           *
+           * Forgotten/Undocumented Motherboard
+           * Sun X4140
+           *
+           * The IPMI spec says you don't have to set a password when you
+           * enable/disable a user.  But some BMCs care that you pass in
+           * some random password length (even though the password will be
+           * ignored)
+           */
+          
+          if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+              && (ipmi_check_completion_code (obj_cmd_rs,
+                                              IPMI_COMP_CODE_REQUEST_DATA_LENGTH_INVALID) == 1))
             {
               if (state_data->prog_data->args->config_args.common.debug)
                 pstdout_fprintf (state_data->pstate,
                                  stderr,
-                                 "ipmi_cmd: %s\n",
-                                 ipmi_ctx_errormsg (state_data->ipmi_ctx));
+                                 "ipmi_cmd_set_user_password: attempting workaround\n");
+              
+              if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_set_user_password_rq)))
+                {
+                  pstdout_fprintf (state_data->pstate,
+                                   stderr,
+                                   "fiid_obj_create: %s\n",
+                                   strerror (errno));
+                  goto cleanup;
+                }
+              
+              if (fill_cmd_set_user_password (userid,
+                                              IPMI_PASSWORD_SIZE_16_BYTES,
+                                              user_status,
+                                              password,
+                                              0,
+                                              obj_cmd_rq) < 0)
+                goto cleanup;
+              
+              /* Force the password to be filled in with a length */
+              if (fiid_obj_set_data (obj_cmd_rq,
+                                     "password",
+                                     password,
+                                     IPMI_1_5_MAX_PASSWORD_LENGTH) < 0)
+                {
+                  pstdout_fprintf (state_data->pstate,
+                                   stderr,
+                                   "fiid_obj_set_data: 'password': %s\n",
+                                   fiid_obj_errormsg (obj_cmd_rq));
+                  goto cleanup;
+                }
+              
+              if (ipmi_cmd (state_data->ipmi_ctx,
+                            IPMI_BMC_IPMB_LUN_BMC,
+                            IPMI_NET_FN_APP_RQ,
+                            obj_cmd_rq,
+                            obj_cmd_rs) < 0)
+                {
+                  if (state_data->prog_data->args->config_args.common.debug)
+                    pstdout_fprintf (state_data->pstate,
+                                     stderr,
+                                     "ipmi_cmd: %s\n",
+                                     ipmi_ctx_errormsg (state_data->ipmi_ctx));
+                  
+                  if (config_is_non_fatal_error (state_data->ipmi_ctx,
+                                                 obj_cmd_rs,
+                                                 &ret))
+                    rv = ret;
+                  
+                  goto cleanup;
+                }
 
-              if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                             obj_cmd_rs,
-                                             &ret))
-                rv = ret;
-
-              goto cleanup;
+              if (ipmi_check_completion_code_success (obj_cmd_rs) != 1)
+                {
+                  
+                  if (config_is_non_fatal_error (state_data->ipmi_ctx,
+                                                 obj_cmd_rs,
+                                                 &ret))
+                    rv = ret;
+                  
+                  goto cleanup;
+                }
             }
-
-          if (ipmi_check_completion_code_success (obj_cmd_rs) != 1)
+          /*
+           * IPMI Workaround
+           *
+           * Dell Poweredge R610
+           *
+           * Dell says this can only go after a set password command, and
+           * you configure a non-null password.  Save info to possibly
+           * retry the enable_user after a password is set (if it is done
+           * after the Enable_User config.
+           */
+          else if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+                   && (ipmi_check_completion_code (obj_cmd_rs,
+                                                   IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED) == 1))
             {
-
+              if (state_data->enable_user_after_password_len)
+                {
+                  state_data->enable_user_after_password[userid-1].enable_user_failed = 1;
+                  state_data->enable_user_after_password[userid-1].kv = (struct config_keyvalue *)kv;
+                }
+              
+              if (config_is_non_fatal_error (state_data->ipmi_ctx,
+                                             obj_cmd_rs,
+                                             &ret))
+                rv = ret;
+              
+              goto cleanup;
+            }
+          else
+            {
               if (config_is_non_fatal_error (state_data->ipmi_ctx,
                                              obj_cmd_rs,
                                              &ret))
@@ -1063,42 +1178,18 @@ enable_user_commit (const char *section_name,
               goto cleanup;
             }
         }
-      /*
-       * IPMI Workaround
-       *
-       * Dell Poweredge R610
-       *
-       * Dell says this can only go after a set password command, and
-       * you configure a non-null password.  Save info to possibly
-       * retry the enable_user after a password is set (if it is done
-       * after the Enable_User config.
-       */
-      else if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
-	       && (ipmi_check_completion_code (obj_cmd_rs,
-					       IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED) == 1))
-        {
-	  if (state_data->enable_user_after_password_len)
-	    {
-	      state_data->enable_user_after_password[userid-1].enable_user_failed = 1;
-	      state_data->enable_user_after_password[userid-1].kv = (struct config_keyvalue *)kv;
-	    }
-          
-          if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                         obj_cmd_rs,
-                                         &ret))
-            rv = ret;
 
-          goto cleanup;
-        }
-      else
-        {
-          if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                         obj_cmd_rs,
-                                         &ret))
-            rv = ret;
+      break;
+    }
 
-          goto cleanup;
-        }
+  if (node_busy_retry_count >= NODE_BUSY_RETRY_COUNT)
+    {
+      if (config_is_non_fatal_error (state_data->ipmi_ctx,
+                                     obj_cmd_rs,
+                                     &ret))
+        rv = ret;
+
+      goto cleanup;
     }
 
   rv = CONFIG_ERR_SUCCESS;

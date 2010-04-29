@@ -1,6 +1,9 @@
 2010-04-29  Albert Chu <chu11@llnl.gov>
 
 	* doc/: Update for Quanta S99Q/Dell FS12-TY.
+
+	* bmc-config/: Work around node busy issues with Quanta S99Q/Dell
+	FS12-TY.
 	
 2010-04-28  Albert Chu <chu11@llnl.gov>
 

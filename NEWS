@@ -1,6 +1,7 @@
 FreeIPMI 0.8.5 - xx/xx/10
 -------------------------
 o Support Inventec 5442/Dell Xanadu III OEM events.
+o Workaround Quanta S99Q/Dell FS12-TY Node Busy errors.
 o Fix some library error checks.
 o Fix some library macro names based on actual OEM names.
 o Fix documentation typos.
