@@ -37,6 +37,7 @@ Sun X4140
 Inventec 5441/Dell Xanadu II
 Dell Poweredge R610
 Dell Poweredge R710
+Quanta S99Q/Dell FS12-TY
 
 I have had some short term access to the following:
 
@@ -336,6 +337,15 @@ endian.  Resolved with a workaround to ignore this port and use the
 default SOL port anyways.  This bug is reported to be fixed on newer
 firmware.
 
+Quanta S99Q/Dell FS12-TY: When a SOL session is closed by another
+session, the initial SOL session is not given a "SOL is deactivating"
+flag in a BMC to Remote Console packet.  Not a severe issue, since the
+SOL session will connect with another error.  No current resolution.
+
+Quanta S99Q/Dell FS12-TY: The Get Payload Activation Status command
+does not properly indicate if a previous SOL session was created.  No
+current resolution.
+
 bmc-config
 ----------
 
@@ -455,6 +465,9 @@ than non-volatile memory.  These particular configuration fields were
 not required by IPMI to be stored in non-volatile memory, but
 ultimately is an issue b/c it requires users to reconfigure IPMI on
 every system boot. [NICETOHAVE]
+
+Quanta S99Q/Dell FS12-TY: Gratuitous ARPs can be enabled, but is not
+available.  No current resolution.
 
 ipmi-pef-config
 ---------------

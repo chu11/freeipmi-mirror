@@ -1,3 +1,7 @@
+2010-04-29  Albert Chu <chu11@llnl.gov>
+
+	* doc/: Update for Quanta S99Q/Dell FS12-TY.
+	
 2010-04-28  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/cmds/ipmi-lan-cmds.c

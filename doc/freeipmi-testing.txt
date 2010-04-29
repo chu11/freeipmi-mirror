@@ -1333,8 +1333,43 @@ verify tool:
 - Exits with error.  Most likely/best error message "cipher suite id unavailable".
 * It is most important that the connection not succeed.
 
-Misc Testing
-------------
+Misc: Bad Password Threshold
+----------------------------
+
+Goal: Ensure all important features function properly.
+
+Test)
+
+If Bad Password Thresholds are supported, configure a non-zero Bad
+Password Threshold.  Verify that a user is disabled after the number
+of bad passwords crosses the threshold.
+
+Test)
+
+If Bad Password Thresholds and Attempt Count Reset Interval are
+supported, configure a non-zero Bad Password Threshold and non-zero
+Attempt Count Reset Interval.  Verify that a user is diabled after the
+number of bad passwords crosses the threshold occurs with the Attempt
+Count Reset Interval.  Verify that a user is NOT disabled if the
+number of bad passwords crosses the threshold outside of the Attempt
+Count Reset Interval.
+
+Test)
+
+If Bad Password Thresholds and a User Lockout Interval are supported,
+configure a non-zero Bad Password Threshold and non-zero User Lockout
+Interval.  Verify that a user is diabled after the number of bad
+passwords crosses the threshold.  Verify that a user is enabled after
+the User Lockout Interval has passed.
+
+Test)
+
+If a user has been disabled due to excess Bad Passwords, ensure an
+event message has been generated to indicate this.
+
+
+Misc: ARP
+---------
 
 Goal: Ensure all important features function properly.
 
