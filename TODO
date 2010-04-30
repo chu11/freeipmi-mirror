@@ -110,6 +110,9 @@ collapse into one allmight tool? ipmi-config
   - oem, dcmi, etc.
 - --category option (bmc, sensors, chassis, pef, oem, dcmi, intel)
   - prefix sensor config w/ something?
+- make tools prefix sections w/ appropriate prefixes to allow
+  for checking of what sections should be used
+  - i.e. BMC, CHASSIS, PEF, etc.
 
 bmc-config
 ----------
