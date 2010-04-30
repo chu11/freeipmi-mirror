@@ -78,4 +78,4 @@ force-dependency-check:
 
 install-exec-hook:
 	$(install_sh) -d -m 755 $(DESTDIR)$(sbindir)
-	cp -d ./pef-config $(DESTDIR)$(sbindir)
+	$(install_sh) -c ./pef-config $(DESTDIR)$(sbindir)

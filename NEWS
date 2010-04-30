@@ -1,3 +1,7 @@
+FreeIPMI 0.8.6 - xx/xx/10
+-------------------------
+o Fix Solaris install issue.
+
 FreeIPMI 0.8.5 - 04/29/10
 -------------------------
 o Support Inventec 5442/Dell Xanadu III OEM events.
