@@ -41,7 +41,6 @@ EXTRA = \
 	README.argp \
 	README.build \
 	README.openipmi \
-	README.sunbmc \
 	TODO \
 	COPYING.bmc-watchdog \
 	COPYING.ipmipower \
@@ -53,6 +52,7 @@ EXTRA = \
 	COPYING.ipmidetect \
 	COPYING.ipmi-fru \
 	COPYING.ipmi-dcmi \
+	COPYING.sunbmc \
 	COPYING.ZRESEARCH \
 	DISCLAIMER.bmc-watchdog \
 	DISCLAIMER.ipmipower \
