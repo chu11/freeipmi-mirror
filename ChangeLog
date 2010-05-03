@@ -1,3 +1,8 @@
+2010-05-03  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/: If sunbmc driver is not supported, report "device
+	not supported" instead of "internal error".
+
 2010-04-30  Dave Love <fx@gnu.org>
 
 	* ipmi-pef-config/src/Makefile.am (install-exec-hook): Don't use
