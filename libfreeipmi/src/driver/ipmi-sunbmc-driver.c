@@ -97,7 +97,7 @@ static char * ipmi_sunbmc_ctx_errmsg[] =
     "out of memory",
     "driver timeout",
     "internal IPMI error",
-    "internal system error"
+    "internal system error",
     "internal error",
     "errnum out of range",
     NULL,
