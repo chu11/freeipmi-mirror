@@ -3,6 +3,7 @@ FreeIPMI 0.8.6 - xx/xx/10
 o Locally support sunbmc driver is bmc_intf.h header not found.
 o If Sunbmc driver is not supported, report "Device Not Supported"
   instead of "Internal Error".
+o Fix error output messages.
 o Fix Solaris install issue.
 
 FreeIPMI 0.8.5 - 04/29/10
