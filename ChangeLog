@@ -1,5 +1,11 @@
 2010-05-03  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/src/driver/ipmi-sunbmc-driver.c,
+	libfreeipmi/src/driver/ipmi-openipmi-driver.c: Fix string
+	concatentation bugs in error strings.
+	
+2010-05-03  Albert Chu <chu11@llnl.gov>
+
 	Build sunbmc driver w/o bmc_intf.h being found.
 
 	* COPYING.sunbmc: New file.
