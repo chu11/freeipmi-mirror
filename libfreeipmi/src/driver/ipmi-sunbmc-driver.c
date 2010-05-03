@@ -89,6 +89,7 @@ static char * ipmi_sunbmc_ctx_errmsg[] =
     "invalid parameter",
     "permission denied",
     "device not found",
+    "device not supported",
     "io not initialized",
     "out of memory",
     "driver timeout",
@@ -363,8 +364,8 @@ ipmi_sunbmc_ctx_io_init (ipmi_sunbmc_ctx_t ctx)
 
 #else /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
 
-  /* otherwise, we always return a system error */
-  SUNBMC_SET_ERRNUM (ctx, IPMI_SUNBMC_ERR_SYSTEM_ERROR);
+  /* otherwise, device is not supported */
+  SUNBMC_SET_ERRNUM (ctx, IPMI_SUNBMC_ERR_DEVICE_NOT_SUPPORTED);
   return (-1);
 
 #endif /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
@@ -465,8 +466,8 @@ _sunbmc_write (ipmi_sunbmc_ctx_t ctx,
     }
 
 #else /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
-  /* otherwise, we always return an internal error - we shouldn't reach this point */
-  SUNBMC_SET_ERRNUM (ctx, IPMI_SUNBMC_ERR_INTERNAL_ERROR);
+  /* otherwise, device is not supported */
+  SUNBMC_SET_ERRNUM (ctx, IPMI_SUNBMC_ERR_DEVICE_NOT_SUPPORTED);
   goto cleanup;
 #endif /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
 
@@ -508,8 +509,8 @@ _sunbmc_read (ipmi_sunbmc_ctx_t ctx,
   sbuf.maxlen = IPMI_SUNBMC_BUFLEN;
   sbuf.buf = (char *)rs_buf_temp;
 #else /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
-  /* otherwise, we always return an internal error - we shouldn't reach this point */
-  SUNBMC_SET_ERRNUM (ctx, IPMI_SUNBMC_ERR_INTERNAL_ERROR);
+  /* otherwise, device is not supported */
+  SUNBMC_SET_ERRNUM (ctx, IPMI_SUNBMC_ERR_DEVICE_NOT_SUPPORTED);
   return (-1);
 #endif /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
 
@@ -582,8 +583,8 @@ _sunbmc_read (ipmi_sunbmc_ctx_t ctx,
     }
 
 #else /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
-  /* otherwise, we always return an internal error - we shouldn't reach this point */
-  SUNBMC_SET_ERRNUM (ctx, IPMI_SUNBMC_ERR_INTERNAL_ERROR);
+  /* otherwise, device is not supported */
+  SUNBMC_SET_ERRNUM (ctx, IPMI_SUNBMC_ERR_DEVICE_NOT_SUPPORTED);
   return (-1);
 #endif /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
 
@@ -709,8 +710,8 @@ ipmi_sunbmc_cmd (ipmi_sunbmc_ctx_t ctx,
           return (-1);
         }
 #else /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
-      /* otherwise, we always return an internal error - we shouldn't reach this point */
-      SUNBMC_SET_ERRNUM (ctx, IPMI_SUNBMC_ERR_INTERNAL_ERROR);
+      /* otherwise, device is not supported */
+      SUNBMC_SET_ERRNUM (ctx, IPMI_SUNBMC_ERR_DEVICE_NOT_SUPPORTED);
       return (-1);
 #endif /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
     }

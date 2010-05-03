@@ -212,6 +212,8 @@ api_set_api_errnum_by_sunbmc_errnum (ipmi_ctx_t ctx, int sunbmc_errnum)
     ctx->errnum = IPMI_ERR_PERMISSION;
   else if (sunbmc_errnum == IPMI_SUNBMC_ERR_DEVICE_NOT_FOUND)
     ctx->errnum = IPMI_ERR_DEVICE_NOT_FOUND;
+  else if (sunbmc_errnum == IPMI_SUNBMC_ERR_DEVICE_NOT_SUPPORTED)
+    ctx->errnum = IPMI_ERR_DEVICE_NOT_SUPPORTED;
   else if (sunbmc_errnum == IPMI_SUNBMC_ERR_DRIVER_TIMEOUT)
     ctx->errnum = IPMI_ERR_DRIVER_TIMEOUT;
   else if (sunbmc_errnum == IPMI_SUNBMC_ERR_SYSTEM_ERROR)
