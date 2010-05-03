@@ -182,7 +182,6 @@ fi
 %doc %{_datadir}/doc/%{name}/README.argp
 %doc %{_datadir}/doc/%{name}/README.build
 %doc %{_datadir}/doc/%{name}/README.openipmi
-%doc %{_datadir}/doc/%{name}/README.sunbmc
 %doc %{_datadir}/doc/%{name}/TODO
 %doc %{_infodir}/*
 %doc %{_datadir}/doc/%{name}/COPYING.ipmiping
@@ -193,6 +192,7 @@ fi
 %doc %{_datadir}/doc/%{name}/COPYING.ipmidetect
 %doc %{_datadir}/doc/%{name}/COPYING.ipmi-fru
 %doc %{_datadir}/doc/%{name}/COPYING.ipmi-dcmi
+%doc %{_datadir}/doc/%{name}/COPYING.sunbmc
 %doc %{_datadir}/doc/%{name}/COPYING.ZRESEARCH
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmiping
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmipower

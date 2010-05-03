@@ -1,5 +1,31 @@
 2010-05-03  Albert Chu <chu11@llnl.gov>
 
+	Build sunbmc driver w/o bmc_intf.h being found.
+
+	* COPYING.sunbmc: New file.
+
+	* README.sunbmc: Removed.
+
+	* libfreeipmi/src/driver/freeipmi_bmc_intf.h: New file.
+
+	* libfreeipmi/src/driver/ipmi-sunbmc-driver.c: Adjusted appropriately.
+
+	* configure.ac, freeipmi.spec.in, Makefile.am,
+	doc/freeipmi-faq.texi: Adjusted appropriately.
+
+	* libfreeipmi/src/driver/ipmi-sunbmc-driver.c
+	(ipmi_sunbmc_ctx_io_init): Fix initialization corner case is
+	putmsg interface is used over ioctl interface.
+
+	* libfreeipmi/src/driver/ipmi-sunbmc-driver.c
+	(_set_sunbmc_ctx_errnum_by_errno): Assume EINVAL errno is a system
+	error (b/c system does not support ioctl).
+
+	* libfreeipmi/src/driver/ipmi-sunbmc-driver.c
+	(ipmi_sunbmc_ctx_errmsg): Fix string concat bug.
+	
+2010-05-03  Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/: If sunbmc driver is not supported, report "device
 	not supported" instead of "internal error".
 	

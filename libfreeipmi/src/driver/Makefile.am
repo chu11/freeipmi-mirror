@@ -1,4 +1,5 @@
 noinst_HEADERS = \
+	freeipmi_bmc_intf.h \
 	ipmi-driver-trace.h \
 	ipmi-semaphores.h
 

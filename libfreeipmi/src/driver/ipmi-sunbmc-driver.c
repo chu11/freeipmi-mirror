@@ -56,7 +56,9 @@
 #endif /* !HAVE_SYS_INT_TYPES_H */
 #if HAVE_BMC_INTF_H
 #include <bmc_intf.h>
-#endif /* HAVE_BMC_INTF_H */
+#else  /* !HAVE_BMC_INTF_H */
+#include "freeipmi_bmc_intf.h"  /* from ipmitool - is BSD license, not CDDL */
+#endif /* !HAVE_BMC_INTF_H */
 #include <sys/select.h>
 #include <sys/ioctl.h>
 #include <assert.h>
@@ -135,8 +137,6 @@ _set_sunbmc_ctx_errnum_by_errno (ipmi_sunbmc_ctx_t ctx, int _errno)
     ctx->errnum = IPMI_SUNBMC_ERR_DEVICE_NOT_FOUND;
   else if (_errno == ENOMEM)
     ctx->errnum = IPMI_SUNBMC_ERR_OUT_OF_MEMORY;
-  else if (_errno == EINVAL)
-    ctx->errnum = IPMI_SUNBMC_ERR_INTERNAL_ERROR;
   else if (_errno == ETIMEDOUT)
     ctx->errnum = IPMI_SUNBMC_ERR_DRIVER_TIMEOUT;
   else
@@ -303,10 +303,10 @@ ipmi_sunbmc_ctx_set_flags (ipmi_sunbmc_ctx_t ctx, unsigned int flags)
 int
 ipmi_sunbmc_ctx_io_init (ipmi_sunbmc_ctx_t ctx)
 {
-#if defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H) && defined(IOCTL_IPMI_INTERFACE_METHOD)
+#if defined(HAVE_SYS_STROPTS_H) && defined(IOCTL_IPMI_INTERFACE_METHOD)
   struct strioctl istr;
   uint8_t method;
-#endif /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H) && defined(IOCTL_IPMI_INTERFACE_METHOD)) */
+#endif /* !(defined(HAVE_SYS_STROPTS_H) && defined(IOCTL_IPMI_INTERFACE_METHOD)) */
   char *driver_device;
 
   if (!ctx || ctx->magic != IPMI_SUNBMC_CTX_MAGIC)
@@ -330,7 +330,7 @@ ipmi_sunbmc_ctx_io_init (ipmi_sunbmc_ctx_t ctx)
       goto cleanup;
     }
 
-#if defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)
+#if defined(HAVE_SYS_STROPTS_H)
 
 #ifdef IOCTL_IPMI_INTERFACE_METHOD
 
@@ -354,7 +354,7 @@ ipmi_sunbmc_ctx_io_init (ipmi_sunbmc_ctx_t ctx)
         }
       /* achu: assume ioctl method */
       ctx->putmsg_intf = 0;
-      goto out;
+      goto out_io_init;
     }
   ctx->putmsg_intf = method;
 #else /* !IOCTL_IPMI_INTERFACE_METHOD */
@@ -362,14 +362,15 @@ ipmi_sunbmc_ctx_io_init (ipmi_sunbmc_ctx_t ctx)
   ctx->putmsg_intf = 0;
 #endif /* !IOCTL_IPMI_INTERFACE_METHOD */
 
-#else /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
+#else /* !defined(HAVE_SYS_STROPTS_H) */
 
   /* otherwise, device is not supported */
   SUNBMC_SET_ERRNUM (ctx, IPMI_SUNBMC_ERR_DEVICE_NOT_SUPPORTED);
   return (-1);
 
-#endif /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
+#endif /* !defined(HAVE_SYS_STROPTS_H) */
 
+ out_io_init:
   ctx->io_init = 1;
  out:
   ctx->errnum = IPMI_SUNBMC_ERR_SUCCESS;
@@ -388,7 +389,7 @@ _sunbmc_write (ipmi_sunbmc_ctx_t ctx,
                uint8_t net_fn,
                fiid_obj_t obj_cmd_rq)
 {
-#if defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)
+#if defined(HAVE_SYS_STROPTS_H)
   struct strbuf sbuf;
   bmc_msg_t *msg = NULL;
   bmc_req_t *req = NULL;
@@ -398,7 +399,7 @@ _sunbmc_write (ipmi_sunbmc_ctx_t ctx,
   uint8_t rq_cmd;
   unsigned int rq_buf_len;
   int len;
-#endif /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
+#endif /* !defined(HAVE_SYS_STROPTS_H) */
   int rv = -1;
 
   assert (ctx);
@@ -410,7 +411,7 @@ _sunbmc_write (ipmi_sunbmc_ctx_t ctx,
   assert (ctx->io_init);
   assert (ctx->putmsg_intf);
 
-#if defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)
+#if defined(HAVE_SYS_STROPTS_H)
   memset (&sbuf, '\0', sizeof (struct strbuf));
 
   /* Due to API differences, we need to extract the cmd out of the
@@ -465,7 +466,7 @@ _sunbmc_write (ipmi_sunbmc_ctx_t ctx,
       goto cleanup;
     }
 
-#else /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
+#else /* !defined(HAVE_SYS_STROPTS_H) */
   /* otherwise, device is not supported */
   SUNBMC_SET_ERRNUM (ctx, IPMI_SUNBMC_ERR_DEVICE_NOT_SUPPORTED);
   goto cleanup;
@@ -473,10 +474,10 @@ _sunbmc_write (ipmi_sunbmc_ctx_t ctx,
 
   rv = 0;
  cleanup:
-#if defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)
+#if defined(HAVE_SYS_STROPTS_H)
   if (msg)
     free (msg);
-#endif /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
+#endif /* !defined(HAVE_SYS_STROPTS_H) */
   return (rv);
 }
 
@@ -484,7 +485,7 @@ static int
 _sunbmc_read (ipmi_sunbmc_ctx_t ctx,
               fiid_obj_t obj_cmd_rs)
 {
-#if defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)
+#if defined(HAVE_SYS_STROPTS_H)
   struct strbuf sbuf;
   bmc_msg_t *msg = NULL;
   bmc_rsp_t *rsp = NULL;
@@ -492,7 +493,7 @@ _sunbmc_read (ipmi_sunbmc_ctx_t ctx,
   uint8_t rs_buf_temp[IPMI_SUNBMC_BUFLEN];
   uint8_t rs_buf[IPMI_SUNBMC_BUFLEN];
   unsigned int rs_buf_len = 0;
-#endif /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
+#endif /* !defined(HAVE_SYS_STROPTS_H) */
   fd_set read_fds;
   struct timeval tv;
   int n;
@@ -503,16 +504,16 @@ _sunbmc_read (ipmi_sunbmc_ctx_t ctx,
   assert (ctx->putmsg_intf);
   assert (fiid_obj_valid (obj_cmd_rs));
 
-#if defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)
+#if defined(HAVE_SYS_STROPTS_H)
   memset (&sbuf, '\0', sizeof (struct strbuf));
 
   sbuf.maxlen = IPMI_SUNBMC_BUFLEN;
   sbuf.buf = (char *)rs_buf_temp;
-#else /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
+#else /* !defined(HAVE_SYS_STROPTS_H) */
   /* otherwise, device is not supported */
   SUNBMC_SET_ERRNUM (ctx, IPMI_SUNBMC_ERR_DEVICE_NOT_SUPPORTED);
   return (-1);
-#endif /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
+#endif /* !defined(HAVE_SYS_STROPTS_H) */
 
   FD_ZERO (&read_fds);
   FD_SET (ctx->device_fd, &read_fds);
@@ -537,7 +538,7 @@ _sunbmc_read (ipmi_sunbmc_ctx_t ctx,
       return (-1);
     }
 
-#if defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)
+#if defined(HAVE_SYS_STROPTS_H)
   if (getmsg (ctx->device_fd, NULL, &sbuf, &flags) < 0)
     {
       SUNBMC_ERRNO_TO_SUNBMC_ERRNUM (ctx, errno);
@@ -582,11 +583,11 @@ _sunbmc_read (ipmi_sunbmc_ctx_t ctx,
       return (-1);
     }
 
-#else /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
+#else /* !defined(HAVE_SYS_STROPTS_H) */
   /* otherwise, device is not supported */
   SUNBMC_SET_ERRNUM (ctx, IPMI_SUNBMC_ERR_DEVICE_NOT_SUPPORTED);
   return (-1);
-#endif /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
+#endif /* !defined(HAVE_SYS_STROPTS_H) */
 
   return (0);
 }
@@ -634,7 +635,7 @@ ipmi_sunbmc_cmd (ipmi_sunbmc_ctx_t ctx,
     }
   else
     {
-#if defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)
+#if defined(HAVE_SYS_STROPTS_H)
       struct strioctl istr;
       bmc_reqrsp_t reqrsp;
       uint8_t rq_buf_temp[IPMI_SUNBMC_BUFLEN];
@@ -709,11 +710,11 @@ ipmi_sunbmc_cmd (ipmi_sunbmc_ctx_t ctx,
           SUNBMC_SET_ERRNUM (ctx, IPMI_SUNBMC_ERR_INTERNAL_ERROR);
           return (-1);
         }
-#else /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
+#else /* !defined(HAVE_SYS_STROPTS_H) */
       /* otherwise, device is not supported */
       SUNBMC_SET_ERRNUM (ctx, IPMI_SUNBMC_ERR_DEVICE_NOT_SUPPORTED);
       return (-1);
-#endif /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
+#endif /* !defined(HAVE_SYS_STROPTS_H) */
     }
 
   return (0);
