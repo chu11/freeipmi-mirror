@@ -565,6 +565,10 @@ invalid event bitmasks.  For example, when the lower critical
 threshold has *not* been crossed, the lower critical threshold event
 bitmask is set.  No current resolution.
 
+HP Proliant DL140 G1: Sensors on the motherboard are owned by the BMC,
+but the SDR does not indicate this.  Thus, sensors cannot be read as
+bridging fails.  No current resolution.
+
 Various Motherboards: Sensors do not assert state bits (i.e. sensor
 event bitmask) consistently to indicate that a sensor is "doing good".
 For example, for a "Power Supply" sensor, offset 00h (i.e. state 0 or
