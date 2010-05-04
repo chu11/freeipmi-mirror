@@ -49,10 +49,6 @@ ipmi_pef_config_SOURCES = \
 	ipmi-pef-config-utils.c \
 	ipmi-pef-config-validate.c
 
-all: $(sbin_PROGRAMS)
-	rm -rf pef-config
-	$(LN_S) $(sbindir)/ipmi-pef-config pef-config
-
 $(top_builddir)/common/src/configtool/libconfigtoolcommon.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
@@ -78,4 +74,4 @@ force-dependency-check:
 
 install-exec-hook:
 	$(install_sh) -d -m 755 $(DESTDIR)$(sbindir)
-	$(install_sh) -c ./pef-config $(DESTDIR)$(sbindir)
+	$(LN_S) $(sbindir)/ipmi-pef-config $(DESTDIR)$(sbindir)/pef-config
