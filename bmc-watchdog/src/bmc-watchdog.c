@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.129 2010-02-08 22:02:30 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.130 2010-05-05 20:35:09 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -1918,7 +1918,7 @@ _daemon_cmd (void)
            && reset_period < (retry_wait_time * retry_attempt))
     retry_attempt = reset_period/retry_wait_time;
 
-  while(shutdown_flag)
+  while (shutdown_flag)
     {
       struct timeval start_tv, end_tv;
       int timeval_bad = 0;
