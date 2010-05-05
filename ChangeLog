@@ -1,3 +1,7 @@
+2010-05-05  Dave Love <fx@gnu.org>>
+
+	* bmc-watchdog/bmc-watchdog.8.pre.in: Fix formatting.
+	
 2010-05-04  Albert Chu <chu11@llnl.gov>
 
 	* Fix make distcheck.
