@@ -612,9 +612,10 @@ ipmi-sel must output "Sensor #8".  [NICETOHAVE]
 bmc-watchdog
 ------------
 
-Sun x4200: The timer is started/stopped flag appears to be stuck on
-"stopped" regardless if the timer is enabled/disabled.  Subsequent
-bmc-watchdog functionality is limitd.  No current resolution.
+Sun x4200, x4500: The timer is started/stopped flag appears to be
+stuck on "stopped" regardless if the timer is enabled/disabled.
+Subsequent bmc-watchdog functionality is limitd.  No current
+resolution.
 
 ipmi-dcmi
 ---------
