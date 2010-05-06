@@ -609,6 +609,13 @@ issue, it leads to an output that ultimately contains less useful
 information.  In particular, instead of a reasonable sensor name,
 ipmi-sel must output "Sensor #8".  [NICETOHAVE]
 
+bmc-watchdog
+------------
+
+Sun x4200: The timer is started/stopped flag appears to be stuck on
+"stopped" regardless if the timer is enabled/disabled.  Subsequent
+bmc-watchdog functionality is limitd.  No current resolution.
+
 ipmi-dcmi
 ---------
 
