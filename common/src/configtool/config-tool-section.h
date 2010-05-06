@@ -73,7 +73,6 @@ int config_section_update_keyvalue_output_double (pstdout_state_t pstate,
 /* returns -1 on error, number of non-valid values otherwise */
 int config_sections_validate_keyvalue_inputs (pstdout_state_t pstate,
                                               struct config_section *sections,
-                                              int value_input_required,
                                               void *arg);
 
 /* returns -1 on error, 0 on success */
