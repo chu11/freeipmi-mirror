@@ -614,7 +614,7 @@ bmc-watchdog
 
 Sun x4200, x4500: The timer is started/stopped flag appears to be
 stuck on "stopped" regardless if the timer is enabled/disabled.
-Subsequent bmc-watchdog functionality is limitd.  No current
+Subsequent bmc-watchdog functionality is limited.  No current
 resolution.
 
 ipmi-dcmi
