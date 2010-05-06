@@ -1,3 +1,15 @@
+2010-05-06  Albert Chu <chu11@llnl.gov>
+
+	*common/src/configtool/config-tool-section.h,
+	common/src/configtool/config-tool-section.c
+	(config_sections_validate_keyvalue_inputs): Do not take
+	value_input_required parameter.
+
+	* bmc-config/, ipmi-pef-config/, ipmi-sensors-config/,
+	ipmi-chassis-config/: Re-work for change in
+	config_sections_validate_keyvalue_inputs.  Do not check value
+	inputs when --checkout is specified since it is not necessary.
+
 2010-05-05  Dave Love <fx@gnu.org>>
 
 	* bmc-watchdog/bmc-watchdog.8.pre.in: Fix formatting.

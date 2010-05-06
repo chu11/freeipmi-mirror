@@ -1,5 +1,6 @@
 FreeIPMI 0.8.6 - xx/xx/10
 -------------------------
+o Fix --key-pair pursing bug in all config tools.
 o Locally support sunbmc driver if bmc_intf.h header not found.
 o If Sunbmc driver is not supported, report "Device Not Supported"
   instead of "Internal Error".

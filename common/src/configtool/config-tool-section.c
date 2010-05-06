@@ -402,7 +402,6 @@ config_section_update_keyvalue_output_double (pstdout_state_t pstate,
 int
 config_sections_validate_keyvalue_inputs (pstdout_state_t pstate,
                                           struct config_section *sections,
-                                          int value_input_required,
                                           void *arg)
 {
   struct config_section *s;
@@ -419,7 +418,7 @@ config_sections_validate_keyvalue_inputs (pstdout_state_t pstate,
       kv = s->keyvalues;
       while (kv)
         {
-          if (value_input_required && !kv->value_input)
+          if (!kv->value_input)
             {
               PSTDOUT_FPRINTF (pstate,
                                stderr,

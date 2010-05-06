@@ -192,19 +192,13 @@ _bmc_config (pstdout_state_t pstate,
         }
     }
 
-  if (prog_data->args->config_args.action == CONFIG_ACTION_CHECKOUT
-      || prog_data->args->config_args.action == CONFIG_ACTION_COMMIT
+  if (prog_data->args->config_args.action == CONFIG_ACTION_COMMIT
       || prog_data->args->config_args.action == CONFIG_ACTION_DIFF)
     {
       int num;
-      int value_input_required = 0;
-
-      if (prog_data->args->config_args.action != CONFIG_ACTION_CHECKOUT)
-        value_input_required = 1;
 
       if ((num = config_sections_validate_keyvalue_inputs (pstate,
                                                            state_data.sections,
-                                                           value_input_required,
                                                            &state_data)) < 0)
         {
           /* errors printed in function call */
