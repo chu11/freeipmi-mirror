@@ -6,6 +6,7 @@ o If Sunbmc driver is not supported, report "Device Not Supported"
   instead of "Internal Error".
 o Fix error output messages.
 o Fix Solaris install issue.
+o Other minor fixes.
 
 FreeIPMI 0.8.5 - 04/29/10
 -------------------------
