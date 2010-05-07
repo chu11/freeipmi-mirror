@@ -1,5 +1,9 @@
 2010-05-07  Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/src/ipmi-oem-ibm.c: Fix potential corner case.
+	
+2010-05-07  Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/spec/ipmi-cmd-oem-spec.h: Fix macro
 	typo.
 	

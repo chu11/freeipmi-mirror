@@ -696,7 +696,7 @@ ipmi_oem_ibm_get_led (ipmi_oem_state_data_t *state_data)
         }
       
       /* If get parameter out of range, assume LED ID endian wrong and try again */
-      if (bytes_rs[1] == IPMI_COMP_CODE_PARAMETER_OUT_OF_RANGE)
+      if (rs_len >= 2 && bytes_rs[1] == IPMI_COMP_CODE_PARAMETER_OUT_OF_RANGE)
         {
           bytes_rq[0] = IPMI_CMD_OEM_IBM_GET_LED;
           bytes_rq[1] = led_id_ls;
@@ -724,7 +724,7 @@ ipmi_oem_ibm_get_led (ipmi_oem_state_data_t *state_data)
        */
 
       /* Assume this error code means LED not available */
-      if (bytes_rs[1] == IPMI_COMP_CODE_PARAMETER_OUT_OF_RANGE)
+      if (rs_len >= 2 && bytes_rs[1] == IPMI_COMP_CODE_PARAMETER_OUT_OF_RANGE)
         available_led = 0;
       else
         {
