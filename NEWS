@@ -77,6 +77,27 @@ o nagios_ipmi_sensors.pl
 o nagios_ipmimonitoring.pl
   - Removed.  Superseded by nagios_ipmi_sensors.pl.
 
+FreeIPMI 0.8.5 - 04/29/10
+-------------------------
+o Support Inventec 5442/Dell Xanadu III OEM events.
+o Workaround Quanta S99Q/Dell FS12-TY Node Busy errors.
+o Fix some library error checks limiting bmc-config Bad Password
+  Threshold configuration.
+o Fix some library macro names based on actual OEM names.
+o Fix documentation typos.
+
+FreeIPMI 0.8.4 - 03/05/10
+-------------------------
+o Fix IPMI 2.0 sequence number wrap around corner case.
+o Fix ipmi-sensors --comma-separated-output corner case.
+o In ipmi-sensors, output multiple event strings w/ space delimiter in
+  simple output.
+o In ipmi-oem, support Dell get-active-lom-status.
+o In ipmi-oem, support IBM get-led.
+o In ipmi-sel, fix possible --assume-system-event-records corner case.
+o Fix Posix portability issue w/ time functions.
+o Minor documentation updates.
+
 FreeIPMI 0.8.3 - 02/02/10
 -------------------------
 o Support Sun Microsystems OEM SEL events.
