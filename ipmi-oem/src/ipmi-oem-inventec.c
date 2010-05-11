@@ -2576,12 +2576,14 @@ ipmi_oem_inventec_restore_to_defaults (ipmi_oem_state_data_t *state_data)
    */
 
   bytes_rq[0] = IPMI_CMD_OEM_INVENTEC_RESTORE_TO_DEFAULTS;
-  
-  bytes_rq[1] = IPMI_OEM_INVENTEC_RESTORE_TO_DEFAULTS_RESTORE_FLAG_RESTORE_PARAMETERS_NOT_INCLUDED_BELOW;
+   
+  bytes_rq[1] = IPMI_OEM_INVENTEC_RESTORE_TO_DEFAULTS_RESTORE_FLAG_REMAINING_PARAMETERS_STAY_WHAT_IT_IS;
   bytes_rq[1] <<= IPMI_OEM_INVENTEC_RESTORE_TO_DEFAULTS_RESTORE_FLAG_SHIFT;
-  
+
   if (!strcasecmp (state_data->prog_data->args->oem_options[0], "all"))
     {
+      bytes_rq[1] = IPMI_OEM_INVENTEC_RESTORE_TO_DEFAULTS_RESTORE_FLAG_RESTORE_PARAMETERS_NOT_INCLUDED_BELOW;
+      bytes_rq[1] <<= IPMI_OEM_INVENTEC_RESTORE_TO_DEFAULTS_RESTORE_FLAG_SHIFT;
       bytes_rq[1] |= IPMI_OEM_INVENTEC_RESTORE_TO_DEFAULTS_USER_ACCOUNTS_BITMASK;
       bytes_rq[1] |= IPMI_OEM_INVENTEC_RESTORE_TO_DEFAULTS_LAN_CONFIGURATION_BITMASK;
       bytes_rq[1] |= IPMI_OEM_INVENTEC_RESTORE_TO_DEFAULTS_SOL_CONFIGURATION_BITMASK;
@@ -2650,7 +2652,7 @@ ipmi_oem_inventec_restore_to_defaults (ipmi_oem_state_data_t *state_data)
 						       bytes_rs,
 						       rs_len,
 						       3,
-						       IPMI_CMD_OEM_INVENTEC_RESTORE_TO_DEFAULTS,
+						       IPMI_CMD_OEM_INVENTEC_GET_RESTORE_STATUS,
 						       IPMI_NET_FN_OEM_INVENTEC_GENERIC_RS,
                                                        NULL) < 0)
 	goto cleanup;

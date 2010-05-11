@@ -36,6 +36,16 @@ extern "C" {
 #define IPMI_GENERATOR_ID_OEM_INVENTEC_SMI             0x21
 #define IPMI_GENERATOR_ID_OEM_INVENTEC_POST_ERROR_CODE 0x31
 
+/*******************************************
+ * Quanta                                  *
+ *******************************************/
+
+/*
+ * Quanta S99Q/Dell TS12-TY
+ */
+/* achu: not official names, named based on use context */
+#define IPMI_GENERATOR_ID_OEM_QUANTA_ERROR           0x01
+
 #ifdef __cplusplus
 }
 #endif

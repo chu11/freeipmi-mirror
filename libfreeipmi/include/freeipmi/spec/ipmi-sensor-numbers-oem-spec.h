@@ -85,6 +85,19 @@ extern "C" {
 #define IPMI_SENSOR_NUMBER_OEM_INVENTEC_PORT80_CODE_EVENT 0x55
 #define IPMI_SENSOR_NUMBER_OEM_INVENTEC_MEMORY            0x60
 
+/*******************************************
+ * Quanta                                  *
+ *******************************************/
+
+/*
+ * Quanta S99Q/Dell TS12-TY
+ */
+#define IPMI_SENSOR_NUMBER_OEM_QUANTA_MEMORY              0x60
+#define IPMI_SENSOR_NUMBER_OEM_QUANTA_PCI_SENSORID        0x81
+#define IPMI_SENSOR_NUMBER_OEM_QUANTA_QPI_SENSORID        0x82
+#define IPMI_SENSOR_NUMBER_OEM_QUANTA_INT_SENSORID        0x83
+#define IPMI_SENSOR_NUMBER_OEM_QUANTA_SOFTWARE_NMI        0xA5
+
 #ifdef __cplusplus
 }
 #endif
