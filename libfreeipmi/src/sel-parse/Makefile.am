@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.6 2010-01-16 00:33:22 chu11 Exp $
+## $Id: Makefile.am,v 1.7 2010-05-11 23:34:48 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
@@ -10,6 +10,7 @@ noinst_HEADERS = \
 	ipmi-sel-parse-string.h \
 	ipmi-sel-parse-string-dell.h \
 	ipmi-sel-parse-string-inventec.h \
+	ipmi-sel-parse-string-quanta.h \
 	ipmi-sel-parse-string-sun.h \
 	ipmi-sel-parse-trace.h \
 	ipmi-sel-parse-util.h
@@ -31,5 +32,6 @@ libselparse_la_SOURCES = \
 	ipmi-sel-parse-string.c \
 	ipmi-sel-parse-string-dell.c \
 	ipmi-sel-parse-string-inventec.c \
+	ipmi-sel-parse-string-quanta.c \
 	ipmi-sel-parse-string-sun.c \
 	ipmi-sel-parse-util.c

@@ -64,6 +64,7 @@
 #include "ipmi-sel-parse-string.h"
 #include "ipmi-sel-parse-string-dell.h"
 #include "ipmi-sel-parse-string-inventec.h"
+#include "ipmi-sel-parse-string-quanta.h"
 #include "ipmi-sel-parse-string-sun.h"
 #include "ipmi-sel-parse-trace.h"
 #include "ipmi-sel-parse-util.h"
@@ -1124,6 +1125,19 @@ _output_oem_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
   if (ret)
     return (1);
 
+  if ((ret = ipmi_sel_parse_output_quanta_event_data2_discrete_oem (ctx,
+								    sel_parse_entry,
+								    sel_record_type,
+								    tmpbuf,
+								    tmpbuflen,
+								    flags,
+								    wlen,
+								    system_event_record_data)) < 0)
+    return (-1);
+  
+  if (ret)
+    return (1);
+
   return (0);
 }
 
@@ -1656,6 +1670,19 @@ _output_oem_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
 								      flags,
 								      wlen,
 								      system_event_record_data)) < 0)
+    return (-1);
+  
+  if (ret)
+    return (1);
+
+  if ((ret = ipmi_sel_parse_output_quanta_event_data3_discrete_oem (ctx,
+								    sel_parse_entry,
+								    sel_record_type,
+								    tmpbuf,
+								    tmpbuflen,
+								    flags,
+								    wlen,
+								    system_event_record_data)) < 0)
     return (-1);
   
   if (ret)

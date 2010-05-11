@@ -142,7 +142,29 @@ extern "C" {
 #define IPMI_CMD_OEM_INVENTEC_SET_SHARED_MAC_ADDRESS       0x23
 
 /******************************************* 
- * Sun                                     *
+ * Quanta                                  *
+ *******************************************/
+
+/*
+ * Quanta S99Q/Dell TS12-TY
+ */
+
+/* IPMI_NET_FN_FIRMWARE_RQ / IPMI_NET_FN_FIRMWARE_RS */
+#define IPMI_CMD_OEM_QUANTA_UPDATE_FIRMARE      0x01
+#define IPMI_CMD_OEM_QUANTA_GET_UPDATE_STATUS   0x02
+#define IPMI_CMD_OEM_QUANTA_COPY_IMAGE_DATA     0x03
+#define IPMI_CMD_OEM_QUANTA_USB_FIRMWARE_UPDATE 0x04
+
+/* IPMI_NET_FN_OEM_QUANTA_GENERIC_RQ / IPMI_NET_FN_OEM_QUANTA_GENERIC_RS */
+#define IPMI_CMD_OEM_QUANTA_GET_EXTENDED_CONFIGURATION        0x02
+#define IPMI_CMD_OEM_QUANTA_RESET_TO_DEFAULTS                 0x04
+#define IPMI_CMD_OEM_QUANTA_GET_RESTORE_STATUS                0x05
+#define IPMI_CMD_OEM_QUANTA_GET_SENSOR_TEMPERATURE_READING    0x10
+#define IPMI_CMD_OEM_QUANTA_GET_PROCESSOR_INFORMATION         0x18
+#define IPMI_CMD_OEM_QUANTA_SET_POWER_ON_BY_WAKE_ON_LAN_EVENT 0x1B
+
+/******************************************* 
+ * Sun Microsystems                        *
  *******************************************/
   
 /*

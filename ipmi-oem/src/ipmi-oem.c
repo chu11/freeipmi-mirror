@@ -36,6 +36,7 @@
 #include "ipmi-oem-fujitsu.h"
 #include "ipmi-oem-ibm.h"
 #include "ipmi-oem-inventec.h"
+#include "ipmi-oem-quanta.h"
 #include "ipmi-oem-sun.h"
 #include "ipmi-oem-supermicro.h"
 
@@ -663,6 +664,34 @@ struct ipmi_oem_command oem_sun[] =
     },
   };
 
+struct ipmi_oem_command oem_quanta[] =
+  {
+#if 0
+    /* dangerous - truly nukes settings, including SDR */
+    {
+      "reset-to-defaults",
+      "<all|user|lan|sol|serial|pef>",
+      1,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_quanta_reset_to_defaults
+    },
+#endif
+    {
+      "get-processor-information",
+      "[processor-index]",
+      0,
+      IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
+      ipmi_oem_quanta_get_processor_information
+    },
+    {
+      NULL,
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      NULL
+    },
+  };
+
 struct ipmi_oem_command oem_supermicro[] =
   {
     {
@@ -705,6 +734,10 @@ struct ipmi_oem_id oem_cb[] =
     {
       "Inventec",
       oem_inventec
+    },
+    {
+      "Quanta",
+      oem_quanta
     },
     {
       "Sun",
