@@ -43,9 +43,6 @@ requires a sel montioring lib? like ipmimonitoring?
 general
 -------
 forwarded command support (errata 35b)
-functions to support "is supported" checks for OEM stuff
-- i.e. you don't need to check manufactur ids in two places, just use
-  the function.
 all conf files in /etc/freeipmi/ instead of /etc
 serial interface? via serial basic mode?  Could just be another interfaace -I
 lan
@@ -160,24 +157,6 @@ sensor reading factors
 - to support non-linear sensors
 check sensor thresholds manually instead of trust flags
 - some mobos seem to set flags incorrectly
-
-ipmimonitoring
---------------
-ryan b. suggestions
-- make alternate config file to ipmi_monitoring_sensor_config
-- allow more than nominal | warning | critical, allow "info" too so like syslog
-  - allows user to config away things are normal and always happening, such as boot
-    events
-- on the other hand
-  - unlike sensors, no way to "limit" output or by record-id or sensor-type
-  - whatever events happened just happened
-  - difficult to differentiate between "info" events vs. "real issue" events
-    - on some mobos, fans/temps that don't exist, always report "lower non-recoverable"
-    - on some mobos, entity sensors always report "absent" if you never have
-      - but you can't differentiate betwwen "real issue" vs. non-issue
-        unless you program exact specific sensor numbers/record ids
-  - maybe best to leave as is, b/c that's just the nature of SEL
-  - leave to higher up analysis utilities to make use of data if they care
 
 ipmi-chassis-config
 -------------------
