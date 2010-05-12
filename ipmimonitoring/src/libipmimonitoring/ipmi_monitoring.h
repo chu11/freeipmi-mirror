@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.h,v 1.63 2010-03-19 22:07:58 chu11 Exp $
+ *  $Id: ipmi_monitoring.h,v 1.64 2010-05-12 21:52:50 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -157,7 +157,8 @@ enum ipmi_monitoring_sensor_units
     IPMI_MONITORING_SENSOR_UNITS_AMPS       = 0x04,
     IPMI_MONITORING_SENSOR_UNITS_RPM        = 0x05,
     IPMI_MONITORING_SENSOR_UNITS_WATTS      = 0x06,
-    IPMI_MONITORING_SENSOR_UNITS_UNKNOWN    = 0x07,
+    /* 0x07 - 0xFE - reserved for ipmimonitoring */
+    IPMI_MONITORING_SENSOR_UNITS_UNKNOWN    = 0xFF,
   };
 
 enum ipmi_monitoring_sensor_reading_type
@@ -165,7 +166,8 @@ enum ipmi_monitoring_sensor_reading_type
     IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER8_BOOL     = 0x00,
     IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER32         = 0x01,
     IPMI_MONITORING_SENSOR_READING_TYPE_DOUBLE                     = 0x02,
-    IPMI_MONITORING_SENSOR_READING_TYPE_UNKNOWN                    = 0x03,
+    /* 0x03 - 0xFE - reserved for ipmimonitoring */
+    IPMI_MONITORING_SENSOR_READING_TYPE_UNKNOWN                    = 0xFF,
   };
 
 enum ipmi_monitoring_driver_type
@@ -221,6 +223,13 @@ enum ipmi_monitoring_workaround_flags
     IPMI_MONITORING_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE      = 0x08000000,
   };
   
+/* REREAD_SDR_CACHE - Re-read the SDR cache
+ *
+ * INTERPRET_OEM_DATA - Attempt to interpret OEM data if read.
+ *
+ * ASSUME_SYSTEM_EVENT_RECORD - If an event record is illegal, assume
+ * it is a bug in the system and actually a system event record.
+ */
 enum ipmi_monitoring_sel_flags
   {
     IPMI_MONITORING_SEL_FLAGS_REREAD_SDR_CACHE           = 0x00000001,
@@ -228,6 +237,16 @@ enum ipmi_monitoring_sel_flags
     IPMI_MONITORING_SEL_FLAGS_ASSUME_SYSTEM_EVENT_RECORD = 0x00000004,
   };
 
+/* REREAD_SDR_CACHE - Re-read the SDR cache
+ *
+ * IGNORE_NON_INTERPRETABLE_SENSORS - Do not read sensors that cannot be interpreted.
+ *
+ * BRIDGE_SENSORS - Attempt to bridge sensors not owned by the BMC
+ *
+ * INTERPRET_OEM_DATA - Attempt to interpret OEM data if read.
+ *
+ * SHARED_SENSORS - Iterate through shared sensors if found
+ */
 enum ipmi_monitoring_sensor_reading_flags
   {
     IPMI_MONITORING_SENSOR_READING_FLAGS_REREAD_SDR_CACHE                 = 0x00000001,

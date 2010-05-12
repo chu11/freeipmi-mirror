@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-sel.c,v 1.1 2010-03-19 22:07:58 chu11 Exp $
+ *  $Id: ipmimonitoring-sel.c,v 1.2 2010-05-12 21:52:50 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -96,7 +96,9 @@ char *date_end = NULL;          /* use MM/DD/YYYY format */
 char *sdr_cache_directory = "/tmp";
 char *sel_config_file = NULL;
 
-/* Set to 1 or 0 to enable these SEL flags */
+/* Set to 1 or 0 to enable these SEL flags
+ * - See ipmi_monitoring.h for descriptions of these flags.
+ */
 int reread_sdr_cache = 0;
 int interpret_oem_data = 0;
 int assume_system_event_record = 0;
@@ -432,6 +434,18 @@ _ipmimonitoring (struct ipmi_monitoring_ipmi_config *ipmi_config)
 
       if (record_type_class == IPMI_MONITORING_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)
         {         
+          /* If you are integrating ipmimonitoring SEL into a monitoring application,
+           * you may wish to count the number of times a specific error occurred
+           * and report that to the monitoring application.
+           *
+           * In this particular case, you'll probably want to check out
+           * what sensor type each SEL event is reporting, the
+           * event offset type, and the specific event offset that occurred.
+           *
+           * See ipmi_monitoring_offsets.h for a list of event offsets
+           * and types.
+           */
+
           if (!(sensor_name = ipmi_monitoring_sel_read_sensor_name (ctx)))
             {
               fprintf (stderr,

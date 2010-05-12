@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-sensors.c,v 1.3 2010-03-19 22:07:58 chu11 Exp $
+ *  $Id: ipmimonitoring-sensors.c,v 1.4 2010-05-12 21:52:50 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -92,7 +92,9 @@ unsigned int sensor_types_length = 0;
 char *sdr_cache_directory = "/tmp";
 char *sensor_config_file = NULL;
 
-/* Set to 1 or 0 to enable these sensor reading flags */
+/* Set to 1 or 0 to enable these sensor reading flags
+ * - See ipmi_monitoring.h for descriptions of these flags.
+ */
 int reread_sdr_cache = 0;
 int ignore_non_interpretable_sensors = 1;
 int bridge_sensors = 0;
@@ -255,6 +257,7 @@ _ipmimonitoring (struct ipmi_monitoring_ipmi_config *ipmi_config)
         }
     }
   
+
   if (reread_sdr_cache)
     sensor_reading_flags |= IPMI_MONITORING_SENSOR_READING_FLAGS_REREAD_SDR_CACHE;
 
@@ -485,6 +488,13 @@ _ipmimonitoring (struct ipmi_monitoring_ipmi_config *ipmi_config)
   
       printf (", %Xh", event_reading_type_code);
  
+      /* It is possible you may want to monitor specific event
+       * conditions that may occur.  If that is the case, you may want
+       * to check out what specific bitmask type and bitmask events
+       * occurred.  See ipmi_monitoring_bitmasks.h for a list of
+       * bitmasks and types.
+       */
+
       if (sensor_bitmask_type != IPMI_MONITORING_SENSOR_BITMASK_TYPE_UNKNOWN)
         printf (", %Xh", sensor_bitmask);
       else
