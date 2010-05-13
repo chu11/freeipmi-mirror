@@ -138,8 +138,8 @@
  * 0x?? - sensor temperature reading
  */
 
-#define IPMI_OEM_QUANTA_RESET_TO_DEFAULTS_RESTORE_FLAG_RESTORE_PARAMETERS_NOT_INCLUDED_BELOW 0x0
-#define IPMI_OEM_QUANTA_RESET_TO_DEFAULTS_RESTORE_FLAG_REMAINING_PARAMETERS_STAY_WHAT_IT_IS  0x7
+#define IPMI_OEM_QUANTA_RESET_TO_DEFAULTS_RESTORE_FLAG_RESTORE_PARAMETERS_NOT_INCLUDED_BELOW 0x7
+#define IPMI_OEM_QUANTA_RESET_TO_DEFAULTS_RESTORE_FLAG_REMAINING_PARAMETERS_STAY_WHAT_IT_IS  0x0
 #define IPMI_OEM_QUANTA_RESET_TO_DEFAULTS_RESTORE_FLAG_SHIFT                                 5
 
 #define IPMI_OEM_QUANTA_RESET_TO_DEFAULTS_PEF_BITMASK                  0x10
@@ -166,7 +166,8 @@
 #define IPMI_QUANTA_PROCESSOR_TYPE_HARPERTOWN     0x0B
 #define IPMI_QUANTA_PROCESSOR_TYPE_WOLFDALE_DP    0x0C
 #define IPMI_QUANTA_PROCESSOR_TYPE_NEHALEM_EP     0x0D
-/* 0x0E-0xFE - Reserved */
+#define IPMI_QUANTA_PROCESSOR_TYPE_WESTMERE_EP    0x0E
+/* 0x0F-0xFE - Reserved */
 #define IPMI_QUANTA_PROCESSOR_TYPE_NO_CPU_PRESENT 0xFF
 
 #if 0
@@ -470,6 +471,8 @@ ipmi_oem_quanta_get_processor_information (ipmi_oem_state_data_t *state_data)
 	    processor_type_str = "Wolfdale-DP";
 	  else if (processor_type == IPMI_QUANTA_PROCESSOR_TYPE_NEHALEM_EP)
 	    processor_type_str = "Nehalem-EP";
+          else if (processor_type == IPMI_QUANTA_PROCESSOR_TYPE_WESTMERE_EP)
+            processor_type_str = "Westmere-EP";
 	  else      
 	    processor_type_str = "Unknown Processor";
 	  
