@@ -5,6 +5,8 @@ High Level Description of Changes
 ---------------------------------
 o Remove ipmimonitoring tool.  Tool is now superseded by ipmi-sensors
   and the new --output-sensor-state option.
+o Support --output-event-state option for ipmi-sel to support SEL event
+  interpretation.
 o Re-architect libipmimonitoring to support all defined IPMI sensor
   types, OEM bitmasks, and OEM interpretations.
 o Add SEL monitoring support to libipmimonitoring.
@@ -14,23 +16,24 @@ o Update all licensing information to GPLv3.
 Tools - Detailed Enhancements/Changes/Fixes
 -------------------------------------------
 o ipmi-sensors
-  - Support --output-event-bitmask option.
   - Support --output-sensor-state option.
+  - Support --sensor-state-config-file option.
+  - Support --output-event-bitmask option.
   - Some sensor states may now report 'N/A' if an invalid sensor event
     occurred.
-  - Support --sensor-state-config-file option.
   - Support number input for --sensor-types and
     --exclude-sensor-types.
   - The "Unrecognized State" event string is now output as
     "Unrecognized Event = X" or "OEM Event = X" where X is the event
     bitmask.
 o ipmi-sel
+  - Support --output-event-state option.
+  - Support --event-state-config-file option.
   - Support --sensor-types option.
   - Support --exclude-sensor-types option.
   - Support --output-manufacturer-id option.
   - Support --date-range option.
   - Support --exclude-date-range option.
-  - Support --output-event-state option.
   - Alter OEM record output to align with columns by outputting "N/A"
     in appropriate fields and putting manufacturer ID in event output.
 o ipmimonitoring
