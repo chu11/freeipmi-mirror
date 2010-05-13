@@ -4,6 +4,9 @@
 
 	* ipmi-oem/src/ipmi-oem-quanta.c: Add macro and output for
 	Westmere-EP processor.
+
+	* libfreeipmi/src/sel-parse/ipmi-sel-parse-string-quanta.c: Make
+	DIMM output more detailed.
 	
 2010-05-12  Albert Chu <chu11@llnl.gov>
 
