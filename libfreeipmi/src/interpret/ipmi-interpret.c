@@ -852,6 +852,40 @@ ipmi_interpret_sel (ipmi_interpret_ctx_t ctx,
 }
 
 static int
+_get_threshold_sensor_state (ipmi_interpret_ctx_t ctx,
+                             uint16_t sensor_event_bitmask,
+                             unsigned int *sensor_state)
+{
+  struct ipmi_interpret_config **config;
+  int i = 0;
+
+  assert (ctx);
+  assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
+  assert (sensor_state);
+  
+  config = ctx->interpret_sensor.ipmi_interpret_threshold_sensor_config;
+  
+  (*sensor_state) = IPMI_INTERPRET_STATE_NOMINAL;
+  
+  i = 0;
+  while (config[i] && i < IPMI_INTERPRET_MAX_SENSOR_AND_EVENT_OFFSET)
+    {
+      if (sensor_event_bitmask & (0x1 << i))
+        {
+          if (config[i]->state > (*sensor_state))
+            (*sensor_state) = config[i]->state;
+        }
+      
+      sensor_event_bitmask &= ~(0x1 << i);
+      i++;
+    }
+  
+  /* remaining bits may be set to 1b as defined by IPMI spec, ignore them */
+  
+  return (0);
+}
+
+static int
 _get_sensor_state (ipmi_interpret_ctx_t ctx,
                    uint16_t sensor_event_bitmask,
                    unsigned int *sensor_state,
@@ -973,10 +1007,9 @@ ipmi_interpret_sensor (ipmi_interpret_ctx_t ctx,
 
   if (IPMI_EVENT_READING_TYPE_CODE_IS_THRESHOLD (event_reading_type_code))
     {
-      if (_get_sensor_state (ctx,
-                             sensor_event_bitmask,
-                             sensor_state,
-                             ctx->interpret_sensor.ipmi_interpret_threshold_sensor_config) < 0)
+      if (_get_threshold_sensor_state (ctx,
+                                       sensor_event_bitmask,
+                                       sensor_state) < 0)
         goto cleanup;
     }
   else if (IPMI_EVENT_READING_TYPE_CODE_IS_GENERIC (event_reading_type_code))
