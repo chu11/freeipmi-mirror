@@ -52,6 +52,9 @@ static char *_ipmi_event_message_separator = " ; ";
 #define EVENT_BUFLEN       1024
 #define EVENT_MAX_MESSAGES   16
 
+/* 16th bit reserved, see Get Sensor Reading command in spec */
+#define IPMI_MAX_SENSOR_AND_EVENT_OFFSET 15
+
 int
 ipmi_event_reading_type_code_class (uint8_t event_reading_type_code)
 {
@@ -2049,7 +2052,7 @@ ipmi_get_event_messages (uint8_t event_reading_type_code,
                     && event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_DELL_STATUS))))
 
     {
-      for (i = 0; i < 16; i++)
+      for (i = 0; i < IPMI_MAX_SENSOR_AND_EVENT_OFFSET; i++)
         {
           bitmask = 0x1 << i;
 
