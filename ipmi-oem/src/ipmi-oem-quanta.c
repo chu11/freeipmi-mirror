@@ -439,7 +439,8 @@ ipmi_oem_quanta_get_processor_information (ipmi_oem_state_data_t *state_data)
 
       if (processor_type == IPMI_QUANTA_PROCESSOR_TYPE_NO_CPU_PRESENT)
 	pstdout_printf (state_data->pstate,
-			"Processor %u: No CPU Present\n");
+			"Processor %u: No CPU Present\n",
+                        processor_index);
       else
 	{
 	  if (processor_type == IPMI_QUANTA_PROCESSOR_TYPE_CELERON)
