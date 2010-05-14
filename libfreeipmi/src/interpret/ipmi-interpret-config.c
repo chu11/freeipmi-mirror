@@ -2198,6 +2198,11 @@ _cb_sensor_oem_parse (conffile_t cf,
     return (-1);
   sensor_type = tmp;
   
+  /* achu: sensor event bitmask bit 16 not legal, but we will allow it
+   * b/c perhaps some OEM sensors will breat legality of events, or
+   * perhaps there is a bug and some vendors need to have the 16th bit
+   * matched.
+   */
   if (_strtoul (cf,
                 data->stringlist[4],
                 USHRT_MAX,

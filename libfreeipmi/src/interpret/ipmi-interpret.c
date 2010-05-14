@@ -914,6 +914,9 @@ _get_sensor_state (ipmi_interpret_ctx_t ctx,
       i++;
     }
 
+  /* ignore 16th bit, as specified in IPMI spec */
+  sensor_event_bitmask &= ~(0x1 << IPMI_INTERPRET_MAX_SENSOR_AND_EVENT_OFFSET);
+
   /* if any bits still set, they are outside of specification range */
   if (sensor_event_bitmask)
     (*sensor_state) = IPMI_INTERPRET_STATE_UNKNOWN;
