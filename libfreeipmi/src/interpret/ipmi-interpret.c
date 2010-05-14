@@ -70,7 +70,8 @@ static char *ipmi_interpret_errmsgs[] =
     NULL
   };
 
-#define IPMI_INTERPRET_MAX_SENSOR_AND_EVENT_OFFSET 16
+/* 16th bit reserved, see Get Sensor Reading command in spec */
+#define IPMI_INTERPRET_MAX_SENSOR_AND_EVENT_OFFSET 15
 
 ipmi_interpret_ctx_t
 ipmi_interpret_ctx_create (void)
