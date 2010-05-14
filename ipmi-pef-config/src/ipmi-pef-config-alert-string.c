@@ -41,6 +41,8 @@
 */
 #define PEF_ALERT_STRING_MAX_LEN 64
 
+#define PEF_ALERT_STRING_BLOCK_SIZE 16
+
 struct alert_string_keys {
   uint8_t event_filter_number;
   uint8_t alert_string_set;
@@ -283,10 +285,10 @@ alert_string_checkout (const char *section_name,
       goto cleanup;
     }
 
-  if (!((PEF_ALERT_STRING_MAX_LEN) % 16))
-    blocks = (PEF_ALERT_STRING_MAX_LEN)/16;
+  if (!((PEF_ALERT_STRING_MAX_LEN) % PEF_ALERT_STRING_BLOCK_SIZE))
+    blocks = (PEF_ALERT_STRING_MAX_LEN)/PEF_ALERT_STRING_BLOCK_SIZE;
   else
-    blocks = (PEF_ALERT_STRING_MAX_LEN)/16 + 1;
+    blocks = (PEF_ALERT_STRING_MAX_LEN)/PEF_ALERT_STRING_BLOCK_SIZE + 1;
 
   for (i = 0; i < blocks; i++)
     {
@@ -326,8 +328,8 @@ alert_string_checkout (const char *section_name,
        */
       if (fiid_obj_get_data (obj_cmd_rs,
                              "string_data",
-                             alert_string + (i * 16),
-                             PEF_ALERT_STRING_MAX_LEN - (i * 16)) < 0)
+                             alert_string + (i * PEF_ALERT_STRING_BLOCK_SIZE),
+                             PEF_ALERT_STRING_MAX_LEN - (i * PEF_ALERT_STRING_BLOCK_SIZE)) < 0)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
@@ -337,9 +339,9 @@ alert_string_checkout (const char *section_name,
         }
 
       /* Check if we've found a nul character */
-      for (j = 0; j < 16; j++)
+      for (j = 0; j < PEF_ALERT_STRING_BLOCK_SIZE; j++)
         {
-          if (!((alert_string + (i * 16))[j]))
+          if (!((alert_string + (i * PEF_ALERT_STRING_BLOCK_SIZE))[j]))
             goto done;
         }
     }
@@ -399,24 +401,24 @@ alert_string_commit (const char *section_name,
   if (alert_string_len)
     memcpy (alert_string_buf, kv->value_input, alert_string_len);
 
-  if (!((alert_string_buf_len) % 16))
-    blocks = (alert_string_buf_len)/16;
+  if (!((alert_string_buf_len) % PEF_ALERT_STRING_BLOCK_SIZE))
+    blocks = (alert_string_buf_len)/PEF_ALERT_STRING_BLOCK_SIZE;
   else
-    blocks = (alert_string_buf_len)/16 + 1;
+    blocks = (alert_string_buf_len)/PEF_ALERT_STRING_BLOCK_SIZE + 1;
 
   for (i = 0; i < blocks; i++)
     {
       uint8_t len_to_write;
 
-      if ((alert_string_buf_len - (i * 16)) < 16)
-        len_to_write = alert_string_buf_len - (i * 16);
+      if ((alert_string_buf_len - (i * PEF_ALERT_STRING_BLOCK_SIZE)) < PEF_ALERT_STRING_BLOCK_SIZE)
+        len_to_write = alert_string_buf_len - (i * PEF_ALERT_STRING_BLOCK_SIZE);
       else
-        len_to_write = 16;
+        len_to_write = PEF_ALERT_STRING_BLOCK_SIZE;
 
       if (ipmi_cmd_set_pef_configuration_parameters_alert_strings (state_data->ipmi_ctx,
                                                                    string_selector,
                                                                    i+1,
-                                                                   alert_string_buf + (i * 16),
+                                                                   alert_string_buf + (i * PEF_ALERT_STRING_BLOCK_SIZE),
                                                                    len_to_write,
                                                                    obj_cmd_rs) < 0)
         {
