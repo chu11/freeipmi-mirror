@@ -3,6 +3,10 @@
 	* ipmi-oem/src/ipmi-oem-quanta.c: Fix minor bugs.
 
 	* libfreeipmi/src/interpret/: Fix bitmask corner case.
+
+	* libfreeipmi/src/util/: Fix bitmask corner case.
+
+	* ipmi-pef-config/: Code cleanup, use macro instead of magic number.
 	
 2010-05-13  Albert Chu <chu11@llnl.gov>
 
