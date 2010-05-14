@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.9.1.alpha1],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.194 2010-05-13 23:39:08 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.195 2010-05-14 23:00:31 chu11 Exp $])
 
 dnl We require a modern autoconf and automake
 AC_PREREQ([2.57])
@@ -105,6 +105,7 @@ AC_CONFIG_FILES([
         ipmi-sensors/Makefile 
 	ipmi-sensors/ipmi-sensors.8.pre
         ipmi-sensors/src/Makefile 
+        ipmi-sensors/src/ipmimonitoring
         ipmi-sensors-config/Makefile 
 	ipmi-sensors-config/ipmi-sensors-config.8.pre
         ipmi-sensors-config/src/Makefile 
@@ -630,6 +631,13 @@ AC_CHECK_DECLS([program_invocation_name, program_invocation_short_name],
 dnl Check for variables
 
 dnl Macro definitions
+
+dnl Misc substitutions
+dnl Must expand nested unquoting
+IPMIMONITORINGSBINDIR_TMP1="`eval echo ${sbindir}`"
+IPMIMONITORINGSBINDIR_TMP2="`echo $IPMIMONITORINGSBINDIR_TMP1 | sed 's/^NONE/$ac_default_prefix/'`"
+IPMIMONITORINGSBINDIR="`eval echo $IPMIMONITORINGSBINDIR_TMP2`"
+AC_SUBST([IPMIMONITORINGSBINDIR])
 
 dnl Check for random number paths
 AC_CHECK_FILE([/dev/urandom], AC_DEFINE([HAVE_DEVURANDOM], [1], [Define that you found /dev/urandom]))

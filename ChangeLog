@@ -1,5 +1,14 @@
 2010-05-14  Albert Chu <chu11@llnl.gov>
 
+	* ipmi-sensors/src/ipmimonitoring: Remove.
+
+	* ipmi-sensors/src/ipmimonitoring.in: New file.
+
+	* configure.ac, ipmi-sensors/src/Makefile.am: Fix portability
+	install bug.
+	
+2010-05-14  Albert Chu <chu11@llnl.gov>
+
 	* ipmi-oem/src/ipmi-oem-quanta.c: Fix minor bugs.
 
 	* libfreeipmi/src/interpret/: Fix bitmask corner case.
