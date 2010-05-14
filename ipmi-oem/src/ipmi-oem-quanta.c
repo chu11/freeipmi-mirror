@@ -136,6 +136,19 @@
  * 0x10 - OEM cmd
  * 0x?? - Completion Code
  * 0x?? - sensor temperature reading
+ *
+ * Set Processor Information Request
+ *
+ * 0x30 - network function
+ * 0x17 - OEM cmd
+ * 0x?? - Processor Index, 1 based
+ * 0x?? - Processor Type
+ * bytes 4-5 - Processor frequency in MHZ (LSB first)
+ *
+ * Set Processor Information Response
+ *
+ * 0x17 - OEM cmd
+ * 0x?? - Completion Code
  */
 
 #define IPMI_OEM_QUANTA_RESET_TO_DEFAULTS_RESTORE_FLAG_RESTORE_PARAMETERS_NOT_INCLUDED_BELOW 0x7
@@ -356,7 +369,7 @@ ipmi_oem_quanta_get_processor_information (ipmi_oem_state_data_t *state_data)
    * 
    * Response Get Processor Information
    *
-   * 0x04 - OEM cmd
+   * 0x18 - OEM cmd
    * 0x?? - Completion Code
    * 0x?? - Processor Type
    * bytes 3-4 - Processor frequency in MHZ (LSB first)
