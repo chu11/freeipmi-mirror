@@ -1,3 +1,8 @@
+2010-05-17  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-dcmi/, libfreeipmi/: Fix copyright headers on all DCMI
+	related files.
+	
 2010-05-14  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/src/ipmi-oem-quanta.c: Fix minor bugs.

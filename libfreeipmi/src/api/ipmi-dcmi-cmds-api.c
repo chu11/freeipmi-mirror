@@ -16,12 +16,12 @@
   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 */
 /*****************************************************************************\
- *  $Id: ipmi-dcmi-cmds-api.c,v 1.1.2.1 2009-12-23 21:24:18 chu11 Exp $
+ *  $Id: ipmi-dcmi-cmds-api.c,v 1.1.2.2 2010-05-17 17:42:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2009-2010 Lawrence Livermore National Security, LLC.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
  *  Written by Albert Chu <chu11@llnl.gov>
- *  UCRL-CODE-155698
+ *  LLNL-CODE-413270
  *
  *  This file is part of Ipmi-Dcmi, tools and libraries to support the
  *  data center manageability interface (DCMI).  For details, see

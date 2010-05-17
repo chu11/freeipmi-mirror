@@ -1,10 +1,10 @@
 /*****************************************************************************\
- *  $Id: ipmi-dcmi.c,v 1.4.2.8 2010-03-02 21:13:38 chu11 Exp $
+ *  $Id: ipmi-dcmi.c,v 1.4.2.9 2010-05-17 17:42:54 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2009-2010 Lawrence Livermore National Security, LLC.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
  *  Written by Albert Chu <chu11@llnl.gov>
- *  UCRL-CODE-155698
+ *  LLNL-CODE-413270
  *
  *  This file is part of Ipmi-Dcmi, tools and libraries to support the
  *  data center manageability interface (DCMI).  For details, see
