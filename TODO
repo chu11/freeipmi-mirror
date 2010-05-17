@@ -29,21 +29,17 @@ support kernel panic OEM event 0xf0
 - http://www.cyberciti.biz/tips/compiling-linux-kernel-module.html
 ganglia pluging
 nagios plugin
-skummee support
 
 ipmi-seld
 ---------
 log sel events to syslog?
 - could work across cluster?
 - need filtering thingie to remove crud?
-requires a sel montioring lib? like ipmimonitoring?
-- sensor type filter
-- date range filter
 
 general
 -------
 forwarded command support (errata 35b)
-all conf files in /etc/freeipmi/ instead of /etc
+all conf files in /etc/freeipmi/ instead of /etc??
 serial interface? via serial basic mode?  Could just be another interfaace -I
 lan
 - don't increment req on retries, only seq?
@@ -64,23 +60,17 @@ bmc-device
 set bmc global enables
 - really should be done by firmware? or OS distro?
 - or only as ipmi-oem-ism?
-
-ipmi-locate
------------
-(TEST) ensure no breakage on itanium, dell, sun machine for acpi/spmi
+(NEVER TESTED) get auxiliary log status - not tested, don't have a machine with this support
 
 entity ids
 -----------
 0x41, 0x42, are "identical" to other entries
 - should map them together for entity-id-names output in sensors?
 
-portability
------------
-
 simulator
 ---------
 server simulator, for scalable testing
-- test much larger set of corner cases, psosibilities, etc.
+- test much larger set of corner cases, possibilities, etc.
 - different SDR combos
 - different SEL entries
 - all permutations of sensors, etc.
@@ -110,11 +100,15 @@ collapse into one allmight tool? ipmi-config
 - make tools prefix sections w/ appropriate prefixes to allow
   for checking of what sections should be used
   - i.e. BMC, CHASSIS, PEF, etc.
+  - probably not, too much backwords compatability crap to handle.
+    Also would make code ugly as hell to make all duplicate sections.
+    should do database of what sections go to what categories
 
 bmc-config
 ----------
 IPv6
-- support ipv4 mapped ipv6 addresses
+- support ipv4 mapped ipv6 addresses?
+- simply have to deal w/ vendor crapola
 supermicro
 - if username not set and receive 0xCC from set user access, it's b/c
 username not set yet.  workaround?
@@ -126,7 +120,7 @@ ipmi-oem-config
 - to deal with config OEM stuff config tool style?
 - consider maybe down the road
 - inventec mac/shared nic stuff
-  - no, oem specific and will reboot BMC
+  - will reboot BMC, is big problem
 
 oem
 ---
@@ -136,23 +130,13 @@ libfreeipmi
 -----------
 * xRC4
   - on Quanta S99Q/Dell TS12-TY
-  - do we want to do it?
-  - do we care?
+  - do we want to do it?  do we care?
 * HMAC-SHA-256
   - on what mobos?
 
 config
 ------
 config file - support workarounds/etc. for heterogenous cluster?
-
-ipmi-fru
---------
-(TEST) multirecord stuff against a FRU
-
-bmc-config
-----------
-destination address vlan tags (or would be in ipmi-pef-config?)
-all lan destination config (or would be in ipmi-pef-config?)
 
 sensors/monitoring
 ------------------
@@ -190,23 +174,19 @@ have funcs that return buflen return ssize_t?, input should be size_t and void *
 config file support per host.
 e.g. workarounds FOO nodes[0-100]
 
-bmc-device
---------
-(NEVER TESTED) get auxiliary log status - not tested, don't have a machine with this support
-
 ipmi-pef-config
 -----------
 * conf.5 manpage
 * allow oem sensor types as input
 
-inband code
------------
-retry/resend code?
-
 ipmi-sensors-config
 -------------------
 * conf.5 manpage
 * instructions for each section??
+
+inband code
+-----------
+retry/resend code?
 
 ipmb
 ----
