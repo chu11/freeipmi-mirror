@@ -19,7 +19,7 @@
  *  Copyright (C) 2009-2010 Lawrence Livermore National Security, LLC.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
  *  Written by Albert Chu <chu11@llnl.gov>
- *  UCRL-CODE-155698
+ *  LLNL-CODE-413270
  *
  *  This file is part of Ipmi-Dcmi, tools and libraries to support the
  *  data center manageability interface (DCMI).  For details, see
