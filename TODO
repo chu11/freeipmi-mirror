@@ -1,3 +1,5 @@
+Priorities for 0.10.1 marked below (search for 0.10.1)
+
 doc
 ---
 oem in reeadme/generanl
@@ -90,7 +92,7 @@ if user inputs hostname of localhost, do inband not outofband?
 
 config tools
 ------------
-collapse into one allmight tool? ipmi-config
+collapse into one allmight tool? ipmi-config (0.10.1)
 - user must pick section
 - bmc, pef, sensor, chassis, all
 - makes more extensible in the future
@@ -128,9 +130,11 @@ dell poweredge lcd support
 
 libfreeipmi
 -----------
-* xRC4
+* xRC4 (0.10.1)
   - on Quanta S99Q/Dell TS12-TY
-  - do we want to do it?  do we care?
+  - will break ABI on libfreeipmi, since API not capable of handling
+    data offset in payload and IV knowledge outside of assemble functions.
+  - will require fair amount of rework/cleanup.
 * HMAC-SHA-256
   - on what mobos?
 
