@@ -176,7 +176,7 @@ IPv6
 - assume OEM extensions to configure IPv6 addresses?
 have funcs that return buflen return ssize_t?, input should be size_t and void *? like read(), write()?
 config file support per host.
-e.g. workarounds FOO nodes[0-100]
+- e.g. workarounds FOO nodes[0-100]
 
 ipmi-pef-config
 -----------
