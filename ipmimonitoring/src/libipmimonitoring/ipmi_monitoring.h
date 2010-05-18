@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.h,v 1.64 2010-05-12 21:52:50 chu11 Exp $
+ *  $Id: ipmi_monitoring.h,v 1.65 2010-05-18 23:24:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -645,7 +645,7 @@ int ipmi_monitoring_sel_read_record_type (ipmi_monitoring_ctx_t c);
  *
  * Returns the sel record type class of the current sel record in a
  * callback or the iterator, -1 on error.  See
- * 'ipmi_monitoring_sel_event_direction' for possible return values.
+ * 'ipmi_monitoring_sel_record_type_class' for possible return values.
  */
 int ipmi_monitoring_sel_read_record_type_class (ipmi_monitoring_ctx_t c);
 
