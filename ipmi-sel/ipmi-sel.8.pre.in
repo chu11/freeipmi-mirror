@@ -137,7 +137,7 @@ data when available.
 Output event state in output.  This will add an additional output
 reporting if an event should be viewed as NOMINAL, WARNING, or CRITICAL.
 The event state is an interpreted value based on the configuration
-file @INTERPRET_SEL_CONFIG_FILE_DEFAULT@.
+file @INTERPRET_SEL_CONFIG_FILE_DEFAULT@ and the event direction.
 See
 .B freeipmi_interpret_sel.conf(5)
 for more information.

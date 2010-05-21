@@ -1,3 +1,11 @@
+2010-05-21  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/interpret/: Support different SEL event
+	interpretation on assertion vs. deassertion.  Various code
+	cleanup.
+
+	* libfreeipmi/: Various code cleanup.
+	
 2010-05-17  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-dcmi/, libfreeipmi/: Fix copyright headers on all DCMI

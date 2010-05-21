@@ -16,19 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_INTERPRET_CONFIG_H
-#define _IPMI_INTERPRET_CONFIG_H
-
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif /* HAVE_CONFIG_H */
-
-#include <stdio.h>
-#include <stdlib.h>
-#ifdef STDC_HEADERS
-#include <string.h>
-#endif /* STDC_HEADERS */
-#include <errno.h>
+#ifndef _IPMI_INTERPRET_CONFIG_SEL_H
+#define _IPMI_INTERPRET_CONFIG_SEL_H
 
 #include "freeipmi/interpret/ipmi-interpret.h"
 
@@ -41,12 +30,5 @@ void ipmi_interpret_sel_destroy (ipmi_interpret_ctx_t ctx);
 int ipmi_interpret_sel_config_parse (ipmi_interpret_ctx_t ctx,
                                      const char *sel_config_file);
 
-int ipmi_interpret_sensor_init (ipmi_interpret_ctx_t ctx);
-
-void ipmi_interpret_sensor_destroy (ipmi_interpret_ctx_t ctx);
-
-int ipmi_interpret_sensor_config_parse (ipmi_interpret_ctx_t ctx,
-                                        const char *sensor_config_file);
-
-#endif /* ipmi-interpret-config.h */
+#endif /* ipmi-interpret-config-sel.h */
 

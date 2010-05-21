@@ -2579,12 +2579,12 @@ _ipmi_sel (pstdout_state_t pstate,
               if (ipmi_interpret_ctx_errnum (state_data.interpret_ctx) == IPMI_INTERPRET_ERR_SEL_CONFIG_FILE_DOES_NOT_EXIST)
                 pstdout_fprintf (pstate,
                                  stderr,
-                                 "sensor state config file '%s' does not exist\n",
+                                 "event state config file '%s' does not exist\n",
                                  prog_data->args->event_state_config_file);
               else if (ipmi_interpret_ctx_errnum (state_data.interpret_ctx) == IPMI_INTERPRET_ERR_SEL_CONFIG_FILE_PARSE)
                 pstdout_fprintf (pstate,
                                  stderr,
-                                 "sensor state config file '%s' parse error\n",
+                                 "event state config file '%s' parse error\n",
                                  prog_data->args->event_state_config_file);
               else
                 pstdout_fprintf (pstate,
@@ -2602,7 +2602,7 @@ _ipmi_sel (pstdout_state_t pstate,
               if (ipmi_interpret_ctx_errnum (state_data.interpret_ctx) == IPMI_INTERPRET_ERR_SEL_CONFIG_FILE_PARSE)
                 pstdout_fprintf (pstate,
                                  stderr,
-                                 "sensor state config file parse error\n");
+                                 "event state config file parse error\n");
               else
                 pstdout_fprintf (pstate,
                                  stderr,

@@ -11,8 +11,9 @@ states/thresholds, libraries and tools such as
 .B libipmimonitoring(3) 
 and
 .B ipmi-sel(8) 
-can report if an event is "information" or "good" or "bad" via a
-report of a NOMINAL, WARNING, or CRITICAL state.
+can report if an event is "good" or "bad" via a report of a NOMINAL,
+WARNING, or CRITICAL state.  A different state can be reported for an
+event depending on if it is asserted or deasserted.
 .LP
 Each of the states listed below are (hopefully) descriptive enough
 to describe the state conditions that may be set/unset for each
@@ -24,13 +25,19 @@ can be used to determine the sensor types and the states/thresholds
 that exist on a system by outputting very verbose output and seeing
 what types of Assertion or Deassertion events are possible.
 .LP
-The possible values for all events below are:
+Each of the events below may may take 1 or 2 of the following states
+as input.
 .LP
 Nominal - Signal Nominal reading if event tripped
 .LP
 Warning - Signal Warning reading if event tripped
 .LP
 Critical - Signal Critical reading if event tripped
+.LP
+If only one state is listed, that state will be interpreted when the
+event is asserted or deasserted.  If two states are listed, the first
+state will be interpreted when an event is asserted, and the later
+will be interpreted when an event is deasserted.
 .LP
 Not all IPMI sensor types and event types are currently supported.  If
 you would like more to be supported, please e-mail the FreeIPMI
@@ -64,41 +71,41 @@ normally applies to events that dealing with non-discrete values, such
 as temperatures, voltages, RPM, etc.
 .RS
 .TP
-\fBIPMI_Threshold Sensor_Lower_Non_Critical_Going_Low\fR
-Defaults to Warning.
+\fBIPMI_Threshold_Sensor_Lower_Non_Critical_Going_Low\fR
+Defaults to Warning/Nominal.
 .TP
-\fBIPMI_Threshold Sensor_Lower_Non_Critical_Going_High\fR
-Defaults to Nominal.
+\fBIPMI_Threshold_Sensor_Lower_Non_Critical_Going_High\fR
+Defaults to Nominal/Nominal.
 .TP
-\fBIPMI_Threshold Sensor_Lower_Critical_Going_Low\fR
-Defaults to Critical.
+\fBIPMI_Threshold_Sensor_Lower_Critical_Going_Low\fR
+Defaults to Critical/Warning.
 .TP
-\fBIPMI_Threshold Sensor_Lower_Critical_Going_High\fR
-Defaults to Warning.
+\fBIPMI_Threshold_Sensor_Lower_Critical_Going_High\fR
+Defaults to Warning/Warning.
 .TP
-\fBIPMI_Threshold Sensor_Lower_Non_Recoverable_Going_Low\fR
-Defaults to Critical.
+\fBIPMI_Threshold_Sensor_Lower_Non_Recoverable_Going_Low\fR
+Defaults to Critical/Critical.
 .TP
-\fBIPMI_Threshold Sensor_Lower_Non_Recoverable_Going_High\fR
-Defaults to Critical.
+\fBIPMI_Threshold_Sensor_Lower_Non_Recoverable_Going_High\fR
+Defaults to Critical/Critical.
 .TP
-\fBIPMI_Threshold Sensor_Upper_Non_Critical_Going_Low\fR
-Defaults to Nominal.
+\fBIPMI_Threshold_Sensor_Upper_Non_Critical_Going_Low\fR
+Defaults to Nominal/Nominal.
 .TP
-\fBIPMI_Threshold Sensor_Upper_Non_Critical_Going_High\fR
-Defaults to Warning.
+\fBIPMI_Threshold_Sensor_Upper_Non_Critical_Going_High\fR
+Defaults to Warning/Nominal.
 .TP
-\fBIPMI_Threshold Sensor_Upper_Critical_Going_Low\fR
-Defaults to Warning.
+\fBIPMI_Threshold_Sensor_Upper_Critical_Going_Low\fR
+Defaults to Warning/Warning.
 .TP
-\fBIPMI_Threshold Sensor_Upper_Critical_Going_High\fR
-Defaults to Critical.
+\fBIPMI_Threshold_Sensor_Upper_Critical_Going_High\fR
+Defaults to Critical/Warning.
 .TP
-\fBIPMI_Threshold Sensor_Upper_Non_Recoverable_Going_Low\fR
-Defaults to Critical.
+\fBIPMI_Threshold_Sensor_Upper_Non_Recoverable_Going_Low\fR
+Defaults to Critical/Critical.
 .TP
-\fBIPMI_Threshold Sensor_Upper_Non_Recoverable_Going_High\fR
-Defaults to Critical.
+\fBIPMI_Threshold_Sensor_Upper_Non_Recoverable_Going_High\fR
+Defaults to Critical/Critical.
 .RE
 .TP
 .B IPMI_Voltage_State
@@ -119,10 +126,10 @@ performance.
 .RS
 .TP
 \fBIPMI_Voltage_Performance_Met\fR
-Defaults to Nominal.
+Defaults to Nominal/Nominal.
 .TP
 \fBIPMI_Voltage_Performance_Lags\fR
-Defaults to Critical.
+Defaults to Critical/Warning.
 .RE
 .TP
 .B IPMI_Fan_Device_Present
@@ -143,31 +150,31 @@ device availability.
 .RS
 .TP
 \fBIPMI_Fan_Transition_Availability_To_Running\fR
-Defaults to Nominal.
+Defaults to Nominal/Nominal.
 .TP
 \fBIPMI_Fan_Transition_Availability_To_In_Test\fR
-Defaults to Warning.
+Defaults to Warning/Warning.
 .TP
 \fBIPMI_Fan_Transition_Availability_To_Power_Off\fR
-Defaults to Warning.
+Defaults to Warning/Warning.
 .TP
 \fBIPMI_Fan_Transition_Availability_To_On_Line\fR
-Defaults to Warning.
+Defaults to Warning/Warning.
 .TP
 \fBIPMI_Fan_Transition_Availability_To_Off_Line\fR
-Defaults to Warning.
+Defaults to Warning/Warning.
 .TP
 \fBIPMI_Fan_Transition_Availability_To_Off_Duty\fR
-Defaults to Warning.
+Defaults to Warning/Warning.
 .TP
 \fBIPMI_Fan_Transition_Availability_To_Degraded\fR
-Defaults to Critical.
+Defaults to Critical/Warning.
 .TP
 \fBIPMI_Fan_Transition_Availability_To_Power_Save\fR
-Defaults to Warning.
+Defaults to Warning/Warning.
 .TP
 \fBIPMI_Fan_Transition_Availability_Install_Error\fR
-Defaults to Critical.
+Defaults to Critical/Critical.
 .RE
 .TP
 .B IPMI_Fan_Redundancy
@@ -176,28 +183,28 @@ redundancy.
 .RS
 .TP
 \fBIPMI_Fan_Redundancy_Fully_Redundant\fR
-Defaults to Nominal.
+Defaults to Nominal/Nominal.
 .TP
 \fBIPMI_Fan_Redundancy_Redundancy_Lost\fR
-Defaults to Critical.
+Defaults to Critical/Warning.
 .TP
 \fBIPMI_Fan_Redundancy_Redundancy_Degraded\fR
-Defaults to Warning.
+Defaults to Warning/Warning.
 .TP
 \fBIPMI_Fan_Redundancy_Non_Redundant_Sufficient_Resources_From_Redundant\fR
-Defaults to Critical.
+Defaults to Critical/Warning.
 .TP
 \fBIPMI_Fan_Redundancy_Non_Redundant_Sufficient_Resources_From_Insufficient_Redundancy\fR
-Defaults to Critical.
+Defaults to Critical/Warning.
 .TP
 \fBIPMI_Fan_Redundancy_Non_Redundant_Insufficient_Resources\fR
-Defaults to Critical.
+Defaults to Critical/Warning.
 .TP
 \fBIPMI_Fan_Redundancy_Redundancy_Degraded_From_Fully_Redundant\fR
-Defaults to Warning.
+Defaults to Warning/Warning.
 .TP
 \fBIPMI_Fan_Redundancy_Redundancy_Degraded_From_Non_Redundant\fR
-Defaults to Warning.
+Defaults to Warning/Warning.
 .RE
 .TP
 .B IPMI_Physical_Security
@@ -314,25 +321,25 @@ Power Supply specific output events.
 .RS
 .TP
 \fBIPMI_Power_Supply_Presence_Detected\fR
-Defaults to Nominal.
+Defaults to Nominal/Nominal.
 .TP
 \fBIPMI_Power_Supply_Power_Supply_Failure_Detected\fR
-Defaults to Critical.
+Defaults to Critical/Critical.
 .TP
 \fBIPMI_Power_Supply_Predictive_Failure\fR
-Defaults to Critical.
+Defaults to Critical/Critical.
 .TP
 \fBIPMI_Power_Supply_Power_Supply_Input_Lost_AC_DC\fR
-Defaults to Critical.
+Defaults to Critical/Warning.
 .TP
 \fBIPMI_Power_Supply_Power_Supply_Input_Lost_Or_Out_Of_Range\fR
-Defaults to Critical.
+Defaults to Critical/Warning.
 .TP
 \fBIPMI_Power_Supply_Power_Supply_Input_Out_Of_Range_But_Present\fR
-Defaults to Critical.
+Defaults to Critical/Warning.
 .TP
 \fBIPMI_Power_Supply_Configuration_Error\fR
-Defaults to Critical.
+Defaults to Critical/Critical.
 .RE
 .TP
 .B IPMI_Power_Supply_State
@@ -353,28 +360,28 @@ redundancy.
 .RS
 .TP
 \fBIPMI_Power_Supply_Redundancy_Fully_Redundant\fR
-Defaults to Nominal.
+Defaults to Nominal/Nominal.
 .TP
 \fBIPMI_Power_Supply_Redundancy_Redundancy_Lost\fR
-Defaults to Critical.
+Defaults to Critical/Warning.
 .TP
 \fBIPMI_Power_Supply_Redundancy_Redundancy_Degraded\fR
-Defaults to Warning.
+Defaults to Warning/Warning.
 .TP
 \fBIPMI_Power_Supply_Redundancy_Non_Redundant_Sufficient_Resources_From_Redundant\fR
-Defaults to Critical.
+Defaults to Critical/Warning.
 .TP
 \fBIPMI_Power_Supply_Redundancy_Non_Redundant_Sufficient_Resources_From_Insufficient_Redundancy\fR
-Defaults to Critical.
+Defaults to Critical/Warning.
 .TP
 \fBIPMI_Power_Supply_Redundancy_Non_Redundant_Insufficient_Resources\fR
-Defaults to Critical.
+Defaults to Critical/Warning.
 .TP
 \fBIPMI_Power_Supply_Redundancy_Redundancy_Degraded_From_Fully_Redundant\fR
-Defaults to Warning.
+Defaults to Warning/Warning.
 .TP
 \fBIPMI_Power_Supply_Redundancy_Redundancy_Degraded_From_Non_Redundant\fR
-Defaults to Warning.
+Defaults to Warning/Warning.
 .RE
 .TP
 .B IPMI_Power_Unit
@@ -383,28 +390,28 @@ Power Unit specific output events.
 .RS
 .TP
 \fBIPMI_Power_Unit_Power_Off_Power_Down\fR
-Defaults to Nominal.
+Defaults to Nominal/Nominal.
 .TP
 \fBIPMI_Power_Unit_Power_Cycle\fR
-Defaults to Nominal.
+Defaults to Nominal/Nominal.
 .TP
 \fBIPMI_Power_Unit_240VA_Power_Down\fR
-Defaults to Warning.
+Defaults to Warning/Nominal.
 .TP
 \fBIPMI_Power_Unit_Interlock_Power_Down\fR
-Defaults to Warning.
+Defaults to Warning/Warning.
 .TP
 \fBIPMI_Power_Unit_AC_Lost\fR
-Defaults to Critical.
+Defaults to Critical/Warning.
 .TP
 \fBIPMI_Power_Unit_Soft_Power_Control_Failure\fR
-Defaults to Critical.
+Defaults to Critical/Critical.
 .TP
 \fBIPMI_Power_Unit_Power_Unit_Failure_Detected\fR
-Defaults to Critical.
+Defaults to Critical/Critical.
 .TP
 \fBIPMI_Power_Unit_Predictive_Failure\fR
-Defaults to Critical.
+Defaults to Critical/Critical.
 .RE
 .TP
 .B IPMI_Power_Unit_Device_Present
@@ -425,28 +432,28 @@ redundancy.
 .RS
 .TP
 \fBIPMI_Power_Unit_Redundancy_Fully_Redundant\fR
-Defaults to Nominal.
+Defaults to Nominal/Nominal.
 .TP
 \fBIPMI_Power_Unit_Redundancy_Redundancy_Lost\fR
-Defaults to Critical.
+Defaults to Critical/Warning.
 .TP
 \fBIPMI_Power_Unit_Redundancy_Redundancy_Degraded\fR
-Defaults to Warning.
+Defaults to Warning/Warning.
 .TP
 \fBIPMI_Power_Unit_Redundancy_Non_Redundant_Sufficient_Resources_From_Redundant\fR
-Defaults to Critical.
+Defaults to Critical/Warning.
 .TP
 \fBIPMI_Power_Unit_Redundancy_Non_Redundant_Sufficient_Resources_From_Insufficient_Redundancy\fR
-Defaults to Critical.
+Defaults to Critical/Warning.
 .TP
 \fBIPMI_Power_Unit_Redundancy_Non_Redundant_Insufficient_Resources\fR
-Defaults to Critical.
+Defaults to Critical/Warning.
 .TP
 \fBIPMI_Power_Unit_Redundancy_Redundancy_Degraded_From_Fully_Redundant\fR
-Defaults to Warning.
+Defaults to Warning/Warning.
 .TP
 \fBIPMI_Power_Unit_Redundancy_Redundancy_Degraded_From_Non_Redundant\fR
-Defaults to Warning.
+Defaults to Warning/Warning.
 .RE
 .TP
 .B IPMI_Memory
