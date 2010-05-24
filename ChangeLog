@@ -1,3 +1,9 @@
+2010-05-24  Albert Chu <chu11@llnl.gov>
+
+	* configure.ac: Update for release.
+
+	* Tagged Release-0_8_6.
+
 2010-05-17  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-dcmi/, libfreeipmi/: Fix copyright headers on all DCMI
