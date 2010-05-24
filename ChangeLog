@@ -1,3 +1,7 @@
+2010-05-24  Albert Chu <chu11@llnl.gov>
+
+	* Tagged Release-0_9_1_beta0.
+
 2010-05-21  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/interpret/: Support different SEL event
