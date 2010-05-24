@@ -80,6 +80,18 @@ o nagios_ipmi_sensors.pl
 o nagios_ipmimonitoring.pl
   - Removed.  Superseded by nagios_ipmi_sensors.pl.
 
+FreeIPMI 0.8.6 - 05/24/10
+-------------------------
+o Support Quanta S99Q/Dell FS12-TY OEM SEL events.
+o In ipmi-oem, support Quanta S99Q/Dell FS12-TY OEM commands.
+o Fix --key-pair parsing bug in all config tools.
+o Locally support sunbmc driver if bmc_intf.h header not found.
+o If Sunbmc driver is not supported, report "Device Not Supported"
+  instead of "Internal Error".
+o Fix error output messages.
+o Fix Solaris install issue.
+o Other minor fixes.
+
 FreeIPMI 0.8.5 - 04/29/10
 -------------------------
 o Support Inventec 5442/Dell Xanadu III OEM events.
