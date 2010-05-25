@@ -632,7 +632,8 @@ _output_sensor (ipmi_sensors_state_data_t *state_data,
            && state_data->prog_data->args->interpret_oem_data
            && (state_data->oem_data.manufacturer_id == IPMI_IANA_ENTERPRISE_ID_SUPERMICRO
 	       || state_data->oem_data.manufacturer_id ==  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND)
-	   && state_data->oem_data.product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTH
+	   && (state_data->oem_data.product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTH
+               || state_data->oem_data.product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTG)
 	   && event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_SUPERMICRO_GENERIC)
     {
       char event_buf[IPMI_SENSORS_OEM_MESSAGE_LENGTH + 1];
