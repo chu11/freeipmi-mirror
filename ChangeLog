@@ -1,3 +1,7 @@
+2010-05-25  Albert Chu <chu11@llnl.gov>
+
+	* Support Supermicro X8DTG motherboard.
+	
 2010-05-21  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/interpret/: Support different SEL event

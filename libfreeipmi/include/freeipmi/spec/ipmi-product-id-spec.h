@@ -93,7 +93,11 @@ extern "C" {
  * Supermicro                              *
  *******************************************/
 
-#define IPMI_SUPERMICRO_PRODUCT_ID_X8DTH 43707
+/* achu: I believe 43707 to be the x8dt "family" of products */
+
+#define IPMI_SUPERMICRO_PRODUCT_ID_X8DT  43707
+#define IPMI_SUPERMICRO_PRODUCT_ID_X8DTH IPMI_SUPERMICRO_PRODUCT_ID_X8DT
+#define IPMI_SUPERMICRO_PRODUCT_ID_X8DTG IPMI_SUPERMICRO_PRODUCT_ID_X8DT
 
 #ifdef __cplusplus
 }
