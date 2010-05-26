@@ -1,3 +1,8 @@
+2010-05-26  Frank Steiner (http://www.bio.ifi.lmu.de/~steiner/)
+
+	* bmc-watchdog/freeipmi-bmc-watchdog.init: exit status from rc_
+	functions is not returned by init script.
+	
 2010-05-25  Albert Chu <chu11@llnl.gov>
 
 	* Support Supermicro X8DTG motherboard.
