@@ -1,9 +1,7 @@
 .SH "GENERAL TROUBLESHOOTING"
-Most often, IPMI problems are due to configuration problems.  Inband
-IPMI problems are typically caused by improperly configured drivers or
-non-standard BMCs.  IPMI over LAN problems involve a misconfiguration
-of the remote machine's BMC.  Double check to make sure the following
-are configured properly in the remote machine's BMC: IP address, MAC
+Most often, IPMI over LAN problems involve a misconfiguration of the
+remote machine's BMC.  Double check to make sure the following are
+configured properly in the remote machine's BMC: IP address, MAC
 address, subnet mask, username, user enablement, user privilege,
 password, LAN privilege, LAN enablement, and allowed authentication
 type(s).  For IPMI 2.0 connections, double check to make sure the
@@ -65,26 +63,9 @@ on the remote server, the network connection is bad, etc.  Please
 verify configuration and connectivity.
 .LP
 "session timeout" - The IPMI session has timed out.  Please reconnect.
-If this error occurs often, you may wish to increase the
+If IPMI over LAN continually times out, you may wish to increase the
 retransmission timeout.  Some remote BMCs are considerably slower than
 others.
-.LP
-"device not found" - The specified device could not be found.  Please
-check configuration or inputs and try again.
-.LP
-"driver timeout" - Communication with the driver or device has timed
-out.  Please try again.
-.LP
-"message timeout" - Communication with the driver or device has timed
-out.  Please try again.
-.LP
-"BMC busy" - The BMC is currently busy.  It may be processing
-information or have too many simultaneous sessions to manage.  Please
-wait and try again.
-.LP
-"could not find inband device" - An inband device could not be found.
-Please check configuration or specify specific device or driver on the
-command line.
 .LP
 Please see WORKAROUNDS below to also if there are any vendor specific
 bugs that have been discovered and worked around.
