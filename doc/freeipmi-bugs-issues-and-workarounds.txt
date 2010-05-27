@@ -47,6 +47,7 @@ Sun Fire 4100 with ILOM
 Tyan S4811 with SMDC daughter card
 Supermicro X6-DHR-1G with BMC2.0 daughter card
 Supermicro X8DTH
+Supermicro X8DTG
 
 The remaining motherboards (and subsequent bugs/issues/workarounds)
 listed below are from interaction with users in the community and I
@@ -170,6 +171,22 @@ assigned to a cipher suite ID require authentication with that
 specific privilege level, rather than a privilege level less than or
 equal to it.  
 
+Supermicro X8DTG: The remote BMC incorrectly calculates keys using the
+privilege specified in the open session stage rather than the
+privilege used during the RAKP1 stage.  This can be problematic if you
+specify IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL during that stage instead
+of a real privilege level.  Resolved with a workaround to handle this
+specific situation.
+
+Supermicro X8DTG: Disabling a specific cipher suite ID does not
+prohibit a user from continuing to use that cipher suite ID.  No
+current resolution.
+
+Supermicro X8DTG: Cipher suites 0, 6, 7, 8, 11, and 12 do not appear
+to function properly and cannot be used for session communication.  No
+current resolution.
+
+
 Session Issues
 --------------
 
@@ -271,8 +288,8 @@ bug is confirmed to be fixed on newer firmware.
 Supermicro H8QME with SIMSO daughter card: When a SOL session is
 closed by another session, the initial SOL session is not given a "SOL
 is deactivating" flag in a BMC to Remote Console packet.  Not a severe
-issue, since the SOL session will eventually timeout.  Resolved with
-firmware fix.
+issue, since the SOL session will eventually time out, but it isn't
+clean.  Resolved with firmware fix.
 
 Intel SR1520ML/X38ML: SOL payload sizes are reported incorrectly.
 Resolved with a workaround to skip payload size checks.
@@ -304,7 +321,8 @@ This bug is confirmed to be fixed on newer firmware.
 Inventec 5441/Dell Xanadu II: When a SOL session is closed by another
 session, the initial SOL session is not given a "SOL is deactivating"
 flag in a BMC to Remote Console packet.  Not a severe issue, since the
-SOL session will eventually timeout.  No current resolution.
+SOL session will eventually time out, but it isn't clean.  No current
+resolution.
 
 Inventec 5441/Dell Xanadu II: If the remote system requires encryption,
 but the user attempts to connect without encryption, an error response
@@ -318,7 +336,8 @@ Resolved with a workaround to skip payload size checks.
 Dell Poweredge R610, R710: When a SOL session is closed by another
 session, the initial SOL session is not given a "SOL is deactivating"
 flag in a BMC to Remote Console packet.  Not a severe issue, since the
-SOL session will eventually timeout.  No current resolution.
+SOL session will eventually time out, but it isn't clean.  No current
+resolution.
 
 Supermicro X8SIL-F: The Get Payload Activation Status command appears
 to not be supported (or not implemented correctly, it is unclear given
@@ -345,6 +364,21 @@ SOL session will connect with another error.  No current resolution.
 Quanta S99Q/Dell FS12-TY: The Get Payload Activation Status command
 does not properly indicate if a previous SOL session was created.  No
 current resolution.
+
+Supermicro X8DTG: SOL payload sizes are reported incorrectly.
+Resolved with a workaround to skip payload size checks.
+
+Supermicro X8DTG: If SOL is disabled on the remote system, the user
+can still connect via SOL.  No current resolution.
+
+Supermicro X8DTG: If SOL Forced Authentication or Forced Encryption is
+disabled on the remote system, the user is still required to connect
+with Authentication or Encryption enabled.  No current resolution.
+
+Supermicro X8DTG: When a SOL session is closed by another session, the
+initial SOL session is not given a "SOL is deactivating" flag in a BMC
+to Remote Console packet.  Not a severe issue, since the SOL session
+will eventually time out, but it isn't clean.  No current resolution.
 
 bmc-config
 ----------
@@ -468,6 +502,12 @@ every system boot. [NICETOHAVE]
 
 Quanta S99Q/Dell FS12-TY: Gratuitous ARPs can be enabled, but is not
 available.  No current resolution.
+
+Supermicro X8DTG: Default ADMIN username cannot be changed.  No
+current resolution.
+
+Supermicro X8DTG: User access parameters configured via Set User
+Access does not work for some users.  No current resolution.
 
 ipmi-pef-config
 ---------------

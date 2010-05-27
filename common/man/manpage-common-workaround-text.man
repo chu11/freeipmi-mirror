@@ -63,6 +63,6 @@ IPMI 2.0 connection protocol to workaround an invalid hashing
 algorithm used by the remote system.  The privilege level sent during
 the Open Session stage of an IPMI 2.0 connection is used for hashing
 keys instead of the privilege level sent during the RAKP1 connection
-stage.  Those hitting this issue may see "password invalid" or "bad
-rmcpplus status code" errors.  Issue observed on Inventec 5441/Dell
-Xanadu II and Supermicro X8DTH.
+stage.  Those hitting this issue may see "password invalid", "k_g
+invalid", or "bad rmcpplus status code" errors.  Issue observed on
+Inventec 5441/Dell Xanadu II, Supermicro X8DTH, and Supermicro X8DTG.
