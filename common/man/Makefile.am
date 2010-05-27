@@ -39,6 +39,7 @@ EXTRA_DIST = \
 	manpage-common-config-tool-options.man \
 	manpage-common-config-tool-general-use.man \
 	manpage-common-troubleshooting.man \
+	manpage-common-troubleshooting-lan-only.man \
 	manpage-common-known-issues.man \
 	manpage-common-known-issues-ping.man \
 	manpage-common-reporting-bugs.man \

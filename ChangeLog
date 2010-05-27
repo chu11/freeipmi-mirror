@@ -3,6 +3,15 @@
 	* Document workarounds and issues with Supermicro X8DTG
 	motherboard.
 
+	* common/man/manpage-common-troubleshooting.man: Update w/ inband
+	troubleshooting.
+
+	* common/man/manpage-common-troubleshooting-lan-only.man: New
+	file.
+
+	* ipmipower/, ipmiconsole/: Update manpages w/ lan-only
+	troubleshooting.
+
 2010-05-26  Frank Steiner (http://www.bio.ifi.lmu.de/~steiner/)
 
 	* bmc-watchdog/freeipmi-bmc-watchdog.init: exit status from rc_
