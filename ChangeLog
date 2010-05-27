@@ -1,3 +1,8 @@
+2010-05-27  Albert Chu <chu11@llnl.gov>
+
+	* Document workarounds and issues with Supermicro X8DTG
+	motherboard.
+
 2010-05-26  Frank Steiner (http://www.bio.ifi.lmu.de/~steiner/)
 
 	* bmc-watchdog/freeipmi-bmc-watchdog.init: exit status from rc_
