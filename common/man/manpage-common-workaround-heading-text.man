@@ -1,8 +1,8 @@
 .SH "WORKAROUNDS"
-With so many different vendors implementing their
-own IPMI solutions, different vendors may implement their IPMI
-protocols incorrectly.  The following lists the workarounds
-currently available to handle discovered compliance issues.
+With so many different vendors implementing their own IPMI solutions,
+different vendors may implement their IPMI protocols incorrectly.  The
+following lists the workarounds currently available to handle
+discovered compliance issues.
 .LP
 When possible, workarounds have been implemented so they will be
 transparent to the user.  However, some will require the user to
@@ -11,5 +11,7 @@ specify a workaround be used via the -W option.
 The hardware listed below may only indicate the hardware that a
 problem was discovered on.  Newer versions of hardware may fix the
 problems indicated below.  Similar machines from vendors may or may
-not exhibit the same problems.  If FreeIPMI is not working by default,
-it may be worth trying one or more workarounds to see if they help.
+not exhibit the same problems.  Different vendors may license their
+firmware from the same IPMI firmware developer, so it may be
+worthwhile to try workarounds listed below even if your motherboard is
+not listed.
