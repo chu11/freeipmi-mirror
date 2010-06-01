@@ -182,10 +182,17 @@ Supermicro X8DTG: Disabling a specific cipher suite ID does not
 prohibit a user from continuing to use that cipher suite ID.  No
 current resolution.
 
-Supermicro X8DTG: Cipher suites 0, 6, 7, 8, 11, and 12 do not appear
-to function properly and cannot be used for session communication.  No
+Supermicro X8DTG: Cipher suites 0 fails to authenticate.  During the
+RAKP4 communication, an integrity key is returned, when it in fact
+should be 0 length.  No current resolution.
+
+Supermicro X8DTG: Cipher suites 7 and 8 fail to establish a session.
+It appears authentication codes are not returned for session packets,
+therefore packets are dropped as they are viewed as malformed.  No
 current resolution.
 
+Supermicro X8DTG: Cipher suites 11 and 12 fail to establish a session.
+No current resolution.
 
 Session Issues
 --------------
