@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.199 2010-02-08 22:02:31 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.200 2010-06-02 20:58:56 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -264,15 +264,24 @@ ipmipower_powercmd_queue (power_cmd_t cmd, struct ipmipower_connection *ic)
       /* IPMI Workaround (achu)
        *
        * Discovered on SE7520AF2 with Intel Server Management Module
-       * (Professional Edition), Sun Fire 4100, Inventec 5441
+       * (Professional Edition)
        *
        * The Intel's return IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL instead
        * of an actual privilege, so have to pass the actual privilege
        * we want to use.
+       */
+
+      /* IPMI Workaround (achu)
        *
-       * The Sun and Dell hash w/ the Privilege specified in the open
-       * session stage, not the one in the RAKP 1 stage, so you have
-       * to pass the used privilege level here.
+       * Discovered on Sun Fire 4100, Inventec 5441/Dell Xanadu II,
+       * Supermicro X8DTH, Supermicro X8DTG
+       *
+       * The remote BMC incorrectly calculates keys using the privilege
+       * specified in the open session stage rather than the privilege
+       * used during the RAKP1 stage.  This can be problematic if you
+       * specify IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL during that stage
+       * instead of a real privilege level.  So we must pass the actual
+       * privilege we want to use.
        */
       if (cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_INTEL_2_0_SESSION
           || cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_SUN_2_0_SESSION
