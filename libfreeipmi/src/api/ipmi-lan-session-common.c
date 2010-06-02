@@ -3356,12 +3356,24 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
   /* IPMI Workaround (achu)
    *
    * Discovered on SE7520AF2 with Intel Server Management Module
-   * (Professional Edition), Sun Fire 4100, Inventec 5441/Dell
-   * Xanadu II, Supermicro X8DTH
+   * (Professional Edition)
    *
    * The Intel's return IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL instead
    * of an actual privilege, so have to pass the actual privilege
    * we want to use.
+   */
+
+  /* IPMI Workaround (achu)
+   *
+   * Discovered on Sun Fire 4100, Inventec 5441/Dell Xanadu II,
+   * Supermicro X8DTH, Supermicro X8DTG
+   *
+   * The remote BMC incorrectly calculates keys using the privilege
+   * specified in the open session stage rather than the privilege
+   * used during the RAKP1 stage.  This can be problematic if you
+   * specify IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL during that stage
+   * instead of a real privilege level.  So we must pass the actual
+   * privilege we want to use.
    */
   if (ctx->workaround_flags & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION
       || ctx->workaround_flags & IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION

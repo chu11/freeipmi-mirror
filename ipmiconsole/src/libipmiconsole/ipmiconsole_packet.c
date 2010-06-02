@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_packet.c,v 1.54.2.3 2010-04-27 20:59:28 chu11 Exp $
+ *  $Id: ipmiconsole_packet.c,v 1.54.2.4 2010-06-02 20:59:09 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -990,15 +990,27 @@ ipmiconsole_ipmi_packet_assemble (ipmiconsole_ctx_t c,
        * motherboards.
        */
 
-      /* IPMI Workaround
+      /* IPMI Workaround (achu)
        *
        * Discovered on SE7520AF2 with Intel Server Management Module
-       * (Professional Edition), Sun Fire 4100, Inventec 5441/Dell
-       * Xanadu II, Supermicro X8DTH
+       * (Professional Edition)
        *
        * The Intel's return IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL instead
        * of an actual privilege, so have to pass the actual privilege
        * we want to use.
+       */
+
+      /* IPMI Workaround (achu)
+       *
+       * Discovered on Sun Fire 4100, Inventec 5441/Dell Xanadu II,
+       * Supermicro X8DTH, Supermicro X8DTG
+       *
+       * The remote BMC incorrectly calculates keys using the privilege
+       * specified in the open session stage rather than the privilege
+       * used during the RAKP1 stage.  This can be problematic if you
+       * specify IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL during that stage
+       * instead of a real privilege level.  So we must pass the actual
+       * privilege we want to use.
        */
       if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0_SESSION
           || c->config.workaround_flags & IPMICONSOLE_WORKAROUND_SUN_2_0_SESSION
