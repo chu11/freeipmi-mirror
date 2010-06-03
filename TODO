@@ -52,11 +52,6 @@ ipmi-fru/bmc-device
 way to write/edit FRU fields?
 - useful for OEM integrators
 
-hpm/hpmi
---------
-picmg hpm/hpmi.1 standard - defines ipmi firmware update stuff
-- http://www.picmg.org/v2internal/specifications.htm
-
 bmc-device
 --------
 set bmc global enables
@@ -177,6 +172,11 @@ IPv6
 have funcs that return buflen return ssize_t?, input should be size_t and void *? like read(), write()?
 config file support per host.
 - e.g. workarounds FOO nodes[0-100]
+
+ipmi extensions
+---------------
+picmg hpm/hpmi.1 standard - defines ipmi firmware update stuff
+- http://www.picmg.org/v2internal/specifications.htm
 
 ipmi-pef-config
 -----------
