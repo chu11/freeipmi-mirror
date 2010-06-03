@@ -101,6 +101,8 @@ typedef enum ipmi_driver_type ipmi_driver_type_t;
 #define IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION      0x02000000 /* IPMI 2.0  only */
 #define IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION             0x04000000 /* IPMI 2.0  only */
 #define IPMI_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE      0x08000000 /* IPMI 2.0  only */
+#define IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION_B    0x10000000 /* IPMI 2.0  only */
+
 
 /* NONBLOCKING - for inband only
  *

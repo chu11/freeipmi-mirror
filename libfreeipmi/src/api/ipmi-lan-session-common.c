@@ -3377,7 +3377,8 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
    */
   if (ctx->workaround_flags & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION
       || ctx->workaround_flags & IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION
-      || ctx->workaround_flags & IPMI_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE)
+      || ctx->workaround_flags & IPMI_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE
+      || ctx->workaround_flags & IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION_B)
     requested_maximum_privilege = ctx->io.outofband.privilege_level;
   else
     requested_maximum_privilege = IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL;
@@ -3970,6 +3971,25 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
   else
     authentication_algorithm = ctx->io.outofband.authentication_algorithm;
 
+  /* IPMI Workaround (achu)
+   *
+   * Discovered on Supermicro X8DTG
+   *
+   * For whatever reason, with cipher suite 0, the RAKP 4 response
+   * returns with an Integrity Check Value when it should be empty.
+   */
+  
+  if (ctx->workaround_flags & IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION_B
+      && !ctx->io.outofband.cipher_suite_id)
+    {
+      if (fiid_obj_clear_field (obj_cmd_rs,
+				"integrity_check_value") < 0)
+	{
+	  API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
+	  goto cleanup;
+	}
+    }
+  
   if (!assume_rakp_4_success)
     {
       if ((ret = ipmi_rmcpplus_check_rakp_4_integrity_check_value (authentication_algorithm,
@@ -3985,7 +4005,7 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
           API_ERRNO_TO_API_ERRNUM (ctx, errno);
           goto cleanup;
         }
-
+      
       if (!ret)
         {
           API_SET_ERRNUM (ctx, IPMI_ERR_K_G_INVALID);
