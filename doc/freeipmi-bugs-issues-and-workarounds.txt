@@ -184,7 +184,8 @@ current resolution.
 
 Supermicro X8DTG: Cipher suites 0 fails to authenticate.  During the
 RAKP4 communication, an integrity key is returned, when it in fact
-should be 0 length.  No current resolution.
+should be 0 length.  Resolved with a workaround to handle this
+specific situation.
 
 Supermicro X8DTG: Cipher suites 7 and 8 fail to establish a session.
 It appears authentication codes are not returned for session packets,
