@@ -193,7 +193,7 @@ therefore packets are dropped as they are viewed as malformed.  No
 current resolution.
 
 Supermicro X8DTG: Cipher suites 11 and 12 fail to establish a session.
-No current resolution.
+Authentication codes appear to be incorrect.  No current resolution.
 
 Session Issues
 --------------
