@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.83 2010-02-08 22:02:30 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.84 2010-06-03 23:17:51 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -156,16 +156,18 @@ extern "C" {
  *
  * SUPERMICRO_2_0_SESSION
  *
- * This workaround flag will work around several early Supermicro IPMI
- * 2.0 authentication issues.  The issues covered include handling
- * invalid length authentication codes.
+ * This workaround option will work around several Supermicro IPMI 2.0
+ * authentication issues on motherboards w/ Peppercon IPMI firmware.
+ * The issues covered include handling * invalid length authentication
+ * codes.
  *
  * SUN_2_0_SESSION
  *
  * This workaround flag will work work around several Sun IPMI 2.0
  * authentication issues.  The issues covered include invalid lengthed
  * hash keys, improperly hashed keys, and invalid cipher suite
- * records.
+ * records.  This workaround automatically includes the
+ * OPEN_SESSION_PRIVILEGE workaround.  
  *
  * OPEN_SESSION_PRIVILEGE
  * 
@@ -174,7 +176,8 @@ extern "C" {
  * by the remote system.  The privilege level sent during the Open
  * Session stage of an IPMI 2.0 connection is used for hashing keys
  * instead of the privilege level sent during the RAKP1 connection
- * stage.
+ * stage.  This workaround is automatically triggered with the
+ * SUN_2_0_SESSION workaround.
  *
  * Note: The non-logical bitmask order below is set for consistency of
  * masks with libfreeipmi bitmasks.
