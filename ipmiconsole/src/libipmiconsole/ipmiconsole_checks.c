@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_checks.c,v 1.42 2010-06-04 21:04:08 chu11 Exp $
+ *  $Id: ipmiconsole_checks.c,v 1.43 2010-06-04 21:25:10 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -900,6 +900,27 @@ ipmiconsole_check_rakp_4_integrity_check_value (ipmiconsole_ctx_t c, ipmiconsole
                                  managed_system_guid_len));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return (-1);
+    }
+
+  /* IPMI Workaround (achu)
+   *
+   * Discovered on Supermicro X8DTG
+   *
+   * For whatever reason, with cipher suite 0, the RAKP 4 response
+   * returns with an Integrity Check Value when it should be empty.
+   */
+  
+  if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0_SESSION_B
+      && !c->config.cipher_suite_id)
+    {
+      if (fiid_obj_clear_field (c->connection.obj_rakp_message_4,
+                                "integrity_check_value") < 0)
+        {
+          IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_clear_field: 'integrity_check_value': %s",
+                                     fiid_obj_errormsg (c->connection.obj_rakp_message_4)));
+          ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
+          return (-1);
+        }
     }
 
   if ((rv = ipmi_rmcpplus_check_rakp_4_integrity_check_value (authentication_algorithm,

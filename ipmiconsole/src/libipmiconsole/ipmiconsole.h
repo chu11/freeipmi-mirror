@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.85 2010-06-04 21:04:49 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.86 2010-06-04 21:25:10 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -172,6 +172,14 @@ extern "C" {
  * stage.  This workaround is automatically triggered with the
  * SUN_2_0_SESSION workaround.
  *
+ * SUPERMICRO_2_0_SESSION_B
+ *
+ * This workaround option will work around several Supermicro IPMI 2.0
+ * authentication issues on motherboards w/ AMI IPMI firmware.  The
+ * issues include handling invalid length integrity codes and
+ * improperly hashed keys.  This workaround automatically includes the
+ * OPEN_SESSION_PRIVILEGE workaround.
+ *
  * Note: The non-logical bitmask order below is set for consistency of
  * masks with libfreeipmi bitmasks.
  */
@@ -183,6 +191,7 @@ extern "C" {
 #define IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0_SESSION      0x02000000
 #define IPMICONSOLE_WORKAROUND_SUN_2_0_SESSION             0x04000000
 #define IPMICONSOLE_WORKAROUND_OPEN_SESSION_PRIVILEGE      0x08000000
+#define IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0_SESSION_B    0x10000000
 
 /*
  * Engine Flags

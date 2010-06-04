@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_defs.h,v 1.78 2010-02-08 22:02:30 chu11 Exp $
+ *  $Id: ipmiconsole_defs.h,v 1.79 2010-06-04 21:25:10 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -208,7 +208,8 @@ typedef enum
    | IPMICONSOLE_WORKAROUND_INTEL_2_0_SESSION          \
    | IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0_SESSION     \
    | IPMICONSOLE_WORKAROUND_SUN_2_0_SESSION            \
-   | IPMICONSOLE_WORKAROUND_OPEN_SESSION_PRIVILEGE)
+   | IPMICONSOLE_WORKAROUND_OPEN_SESSION_PRIVILEGE     \
+   | IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0_SESSION_B)
 
 #define IPMICONSOLE_ENGINE_MASK                    \
   (IPMICONSOLE_ENGINE_CLOSE_FD                     \
