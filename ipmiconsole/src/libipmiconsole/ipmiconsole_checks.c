@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_checks.c,v 1.41 2010-02-08 22:02:30 chu11 Exp $
+ *  $Id: ipmiconsole_checks.c,v 1.42 2010-06-04 21:04:08 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -859,8 +859,15 @@ ipmiconsole_check_rakp_4_integrity_check_value (ipmiconsole_ctx_t c, ipmiconsole
       else if (c->config.integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128)
         authentication_algorithm = IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5;
       else if (c->config.integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128)
-        /* achu: I have not been able to reverse engineer this.  So accept it */
-        return (1);
+        {
+          /* achu: I have thus far been unable to reverse engineer this
+           * corner case.  Since we cannot provide a reasonable two
+           * part authentication, we're going to error out.
+           */
+          IPMICONSOLE_CTX_DEBUG (c, ("Intel Non-Compliance: Cannot Reverse Engineer"));
+          ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_BMC_ERROR);
+          return (0);
+        }
     }
   else
     authentication_algorithm = c->config.authentication_algorithm;

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.117 2010-02-08 22:02:31 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.118 2010-06-04 21:04:08 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -1080,12 +1080,16 @@ ipmipower_check_rakp_4_integrity_check_value (ipmipower_powercmd_t ip, packet_ty
       else if (ip->integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128)
         authentication_algorithm = IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5;
       else if (ip->integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128)
-        /* achu: I have thus far been unable to reverse engineer this
-         * corner case.  So we're just going to accept whatever the
-         * remote BMC gives us.  This has been documented in the
-         * manpage.
-         */
-        return (1);
+        {
+          /* achu: I have thus far been unable to reverse engineer this
+           * corner case.  Since we cannot provide a reasonable two
+           * part authentication, we're going to error out.
+           */
+          IPMIPOWER_DEBUG (("host = %s; p = %d; rakp 4 check failed",
+                            ip->ic->hostname,
+                            ip->protocol_state));
+          return (0);
+        }
     }
   else
     authentication_algorithm = ip->authentication_algorithm;

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.84 2010-06-03 23:17:51 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.85 2010-06-04 21:04:49 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -146,13 +146,6 @@ extern "C" {
  * usernames, automatic acceptance of a RAKP 4 response integrity
  * check when using the integrity algorithm MD5-128, and password
  * truncation if the authentication algorithm is HMAC-MD5-128.
- *
- * Security Note: When the Integrity Algorithm is MD5-128 (Cipher
- * Suite ID 11 & 12), the integrity check value of a RAKP 4 packet
- * response is not tested, it is automatically accepted.  The other
- * integrity algorithms (None, HMAC-SHA1, HMAC-MD5) have been reverse
- * engineered for this non-compliance bug, however straight forward
- * MD5-128 has not yet been reverse engineered.
  *
  * SUPERMICRO_2_0_SESSION
  *

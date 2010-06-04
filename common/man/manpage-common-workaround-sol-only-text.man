@@ -11,12 +11,10 @@ and Sun Fire 2200/4150/4450 with ELOM.
 .LP
 "intel20" - This workaround option will work around several Intel IPMI
 2.0 authentication issues.  The issues covered include padding of
-usernames, automatic acceptance of a RAKP 4 response integrity check
-when using the integrity algorithm MD5-128, and password truncation if
-the authentication algorithm is HMAC-MD5-128.  Those hitting this
-issue may see "username invalid", "password invalid", or "k_g invalid"
-errors.  Issue observed on Intel SE7520AF2 with Intel Server
-Management Module (Professional Edition).
+usernames and password truncation if the authentication algorithm is
+HMAC-MD5-128.  Those hitting this issue may see "username invalid",
+"password invalid", or "k_g invalid" errors.  Issue observed on Intel
+SE7520AF2 with Intel Server Management Module (Professional Edition).
 .LP
 "supermicro20" - This workaround option will work around several
 Supermicro IPMI 2.0 authentication issues on motherboards w/ Peppercon

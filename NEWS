@@ -36,6 +36,10 @@ o ipmi-sel
   - Support --exclude-date-range option.
   - Alter OEM record output to align with columns by outputting "N/A"
     in appropriate fields and putting manufacturer ID in event output.
+o ipmiconsole
+  - Rework 'intel20' workaround to not allow a non two-part authentication.
+o ipmipower
+  - Rework 'intel20' workaround to not allow a non two-part authentication.
 o ipmimonitoring
   - Removed tool.  Tool is now superseded by ipmi-sensors and the new
     --output-sensor-state option.
@@ -49,6 +53,7 @@ o libfreeipmi
   - Support new 'interpret' sub-library.
   - 'sel-parse' library now does not require valid ipmi_ctx.
     Functions performing ipmi communication will simply error.
+  - Rework 'intel20' workaround to not allow a non two-part authentication.
 o libipmimonitoring
   - Add SEL monitoring support to libipmimonitoring.
   - Re-architect to support all defined IPMI sensor types.

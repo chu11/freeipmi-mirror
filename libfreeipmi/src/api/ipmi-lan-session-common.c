@@ -3159,7 +3159,6 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
   unsigned int password_len;
   uint8_t authentication_algorithm = 0; /* init to 0 to remove gcc warning */
   uint8_t requested_maximum_privilege;
-  uint8_t assume_rakp_4_success = 0;
   uint8_t name_only_lookup;
   char *tmp_username_ptr = NULL;
   char *tmp_password_ptr = NULL;
@@ -3960,12 +3959,14 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
       else if (ctx->io.outofband.integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128)
         authentication_algorithm = IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5;
       else if (ctx->io.outofband.integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128)
-        /* achu: I have thus far been unable to reverse engineer this
-         * corner case.  So we're just going to accept whatever the
-         * remote BMC gives us.  This has been documented in the
-         * manpage.
-         */
-        assume_rakp_4_success++;
+        {
+          /* achu: I have thus far been unable to reverse engineer this
+           * corner case.  Since we cannot provide a reasonable two
+           * part authentication, we're going to error out.
+           */
+          API_SET_ERRNUM (ctx, IPMI_ERR_IPMI_ERROR);
+          goto cleanup;
+        }
     }
   else
     authentication_algorithm = ctx->io.outofband.authentication_algorithm;
@@ -3989,27 +3990,24 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
 	}
     }
   
-  if (!assume_rakp_4_success)
+  if ((ret = ipmi_rmcpplus_check_rakp_4_integrity_check_value (authentication_algorithm,
+                                                               ctx->io.outofband.sik_key_ptr,
+                                                               ctx->io.outofband.sik_key_len,
+                                                               remote_console_random_number,
+                                                               IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH,
+                                                               ctx->io.outofband.managed_system_session_id,
+                                                               managed_system_guid,
+                                                               managed_system_guid_len,
+                                                               obj_cmd_rs)) < 0)
     {
-      if ((ret = ipmi_rmcpplus_check_rakp_4_integrity_check_value (authentication_algorithm,
-                                                                   ctx->io.outofband.sik_key_ptr,
-                                                                   ctx->io.outofband.sik_key_len,
-                                                                   remote_console_random_number,
-                                                                   IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH,
-                                                                   ctx->io.outofband.managed_system_session_id,
-                                                                   managed_system_guid,
-                                                                   managed_system_guid_len,
-                                                                   obj_cmd_rs)) < 0)
-        {
-          API_ERRNO_TO_API_ERRNUM (ctx, errno);
-          goto cleanup;
-        }
-      
-      if (!ret)
-        {
-          API_SET_ERRNUM (ctx, IPMI_ERR_K_G_INVALID);
-          goto cleanup;
-        }
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+  
+  if (!ret)
+    {
+      API_SET_ERRNUM (ctx, IPMI_ERR_K_G_INVALID);
+      goto cleanup;
     }
 
   fiid_obj_destroy (obj_cmd_rq);

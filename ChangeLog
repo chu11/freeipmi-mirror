@@ -1,3 +1,8 @@
+2010-06-04  Albert Chu <chu11@llnl.gov>
+
+	* Remove RAKP4 auto accept for intel20 workaround, should not
+	accept if two part authentication cannot be completed.
+	
 2010-06-03  Albert Chu <chu11@llnl.gov>
 
 	* Support supermicro20b workaround.
