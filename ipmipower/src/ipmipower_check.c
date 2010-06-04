@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.115.4.1 2009-12-23 21:24:13 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.115.4.2 2010-06-04 21:35:35 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -1108,6 +1108,26 @@ ipmipower_check_rakp_4_integrity_check_value (ipmipower_powercmd_t ip, packet_ty
       IPMIPOWER_ERROR (("fiid_obj_get_data: 'managed_system_guid': %s",
                         fiid_obj_errormsg (ip->obj_rakp_message_2_res)));
       exit (1);
+    }
+
+  /* IPMI Workaround (achu)
+   *
+   * Discovered on Supermicro X8DTG
+   *
+   * For whatever reason, with cipher suite 0, the RAKP 4 response
+   * returns with an Integrity Check Value when it should be empty.
+   */
+
+  if (cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION_B
+      && !cmd_args.common.cipher_suite_id)
+    {
+      if (fiid_obj_clear_field (ip->obj_rakp_message_4_res,
+                                "integrity_check_value") < 0)
+        {
+          IPMIPOWER_ERROR (("fiid_obj_clear_field: 'integrity_check_value': %s",
+                            fiid_obj_errormsg (ip->obj_open_session_res)));
+          exit (1);
+        }
     }
 
   if ((rv = ipmi_rmcpplus_check_rakp_4_integrity_check_value (authentication_algorithm,

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.h,v 1.51.4.2 2009-12-28 22:56:53 chu11 Exp $
+ *  $Id: ipmi_monitoring.h,v 1.51.4.3 2010-06-04 21:35:35 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -216,6 +216,7 @@ enum ipmi_monitoring_workaround_flags
     IPMI_MONITORING_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION      = 0x02000000,
     IPMI_MONITORING_WORKAROUND_FLAGS_SUN_2_0_SESSION             = 0x04000000,
     IPMI_MONITORING_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE      = 0x08000000,
+    IPMI_MONITORING_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION_B    = 0x10000000,
   };
   
 enum ipmi_monitoring_sensor_reading_flags

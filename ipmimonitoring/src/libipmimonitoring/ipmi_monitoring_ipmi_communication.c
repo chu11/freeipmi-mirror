@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.35.4.1 2009-12-23 21:24:12 chu11 Exp $
+ *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.35.4.2 2010-06-04 21:35:35 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -353,7 +353,8 @@ _ipmi_2_0_init (ipmi_monitoring_ctx_t c,
                                     | IPMI_MONITORING_WORKAROUND_FLAGS_INTEL_2_0_SESSION
                                     | IPMI_MONITORING_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION
                                     | IPMI_MONITORING_WORKAROUND_FLAGS_SUN_2_0_SESSION
-                                    | IPMI_MONITORING_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE);
+                                    | IPMI_MONITORING_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE
+                                    | IPMI_MONITORING_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION_B);
   assert (c);
   assert (c->magic == IPMI_MONITORING_MAGIC);
   assert (c->ipmi_ctx);
@@ -430,6 +431,8 @@ _ipmi_2_0_init (ipmi_monitoring_ctx_t c,
         workaround_flags |= IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION;
       if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE)
         workaround_flags |= IPMI_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE;
+      if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION_B)
+        workaround_flags |= IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION_B;
     }
 
   if ((_ipmi_monitoring_flags & IPMI_MONITORING_FLAGS_DEBUG)

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_defs.h,v 1.31.4.2 2010-01-19 03:50:16 chu11 Exp $
+ *  $Id: ipmi_monitoring_defs.h,v 1.31.4.3 2010-06-04 21:35:35 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -108,7 +108,8 @@
    | IPMI_MONITORING_WORKAROUND_FLAGS_INTEL_2_0_SESSION            \
    | IPMI_MONITORING_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION       \
    | IPMI_MONITORING_WORKAROUND_FLAGS_SUN_2_0_SESSION              \
-   | IPMI_MONITORING_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE)
+   | IPMI_MONITORING_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE       \
+   | IPMI_MONITORING_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION_B)
 
 #define IPMI_MONITORING_SENSOR_READING_FLAGS_MASK                          \
   (IPMI_MONITORING_SENSOR_READING_FLAGS_REREAD_SDR_CACHE                   \
