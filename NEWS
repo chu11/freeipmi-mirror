@@ -1,6 +1,7 @@
 FreeIPMI 0.8.7 - 05/24/10
 -------------------------
 o Support Supermicro X8DTG OEM sensors.
+o Support Supermicro X8DTG workarounds with supermicro20b flag.
 o Fix bmc-watchdog init script return codes on Suse.
 o Update documentation w/ Supermicro X8DTG issues.
 o Update documentation w/ inband troubleshooting.
