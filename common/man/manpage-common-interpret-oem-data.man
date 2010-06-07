@@ -1,8 +1,0 @@
-.TP
-\fB\-\-interpret\-oem\-data\fR
-Attempt to interpret OEM data, such as event data, sensor readings, or
-general extra info, etc.  If an OEM interpretation is not available,
-the default output will be generated.  Correctness of OEM
-interpretations cannot be guaranteed due to potential changes OEM
-vendors may make in products, firmware, etc.  See OEM INTERPRETATION
-below for confirmed supported motherboard interpretations.

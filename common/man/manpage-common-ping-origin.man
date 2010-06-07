@@ -1,3 +1,0 @@
-.SH "ORIGIN"
-Command and manpage based off
-.B ping(8).

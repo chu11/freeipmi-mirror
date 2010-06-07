@@ -1,5 +1,0 @@
-.TP
-\fB\-W\fR, \fB\-\-workaround\-flags\fR=\fIWORKAROUNDS\fR
-Specify workarounds to vendor compliance issues.  Multiple workarounds
-can be specified separated by commas.  See WORKAROUNDS below for a
-list of available workarounds.
