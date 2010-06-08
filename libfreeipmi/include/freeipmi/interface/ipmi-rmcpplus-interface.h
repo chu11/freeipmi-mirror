@@ -142,8 +142,9 @@ extern "C" {
 
 #define IPMI_CONFIDENTIALITY_ALGORITHM_SUPPORTED(__algorithm)       \
   (((__algorithm) ==  IPMI_CONFIDENTIALITY_ALGORITHM_NONE           \
-    || (__algorithm) ==  IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128) ? 1 : 0)
-
+    || (__algorithm) ==  IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128 \
+    || (____algorithm) == IPMI_CONFIDENTIALITY_ALGORITHM_XRC4_128) ? 1 : 0)
+  
 /***************************************
 * IPMI 2.0 Misc Flags and Definitions *
 ***************************************/
