@@ -143,6 +143,7 @@ sensor reading factors
 - to support non-linear sensors
 check sensor thresholds manually instead of trust flags
 - some mobos seem to set flags incorrectly
+percentage unit in libipmimonitoring
 
 ipmi-chassis-config
 -------------------
