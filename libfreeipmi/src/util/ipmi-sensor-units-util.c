@@ -72,11 +72,23 @@ ipmi_sensor_units_string (uint8_t sensor_units_percentage,
    */
   if (sensor_units_percentage == IPMI_SDR_PERCENTAGE_YES)
     {
-      offset = snprintf (buf,
-                         buflen,
-                         "%% ");
+      /* Special case, nothing to add to the end of the percentage,
+       * and the base unit is unspecified, just output '%' only.
+       */
+      if (sensor_units_modifier == IPMI_SDR_MODIFIER_UNIT_NONE
+	  && sensor_units_rate == IPMI_SENSOR_RATE_UNIT_NONE
+	  && sensor_base_unit_type == IPMI_SENSOR_UNIT_UNSPECIFIED)
+	{
+	  rv = snprintf (buf,
+			 buflen,
+			 "%%");
+	  return (rv);
+	}
+      else
+	offset = snprintf (buf,
+			   buflen,
+			   "%% ");
     }
-
 
   if (abbreviated_units_flag)
     sensor_units = (const char **)ipmi_sensor_units_abbreviated;

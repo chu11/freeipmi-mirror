@@ -1,3 +1,8 @@
+2010-06-09  Albert Chu <chu11@llnl.gov>
+
+	* Fix ipmi-sensors output corner case in which percent was output
+	as "% unspecified" instead of "%".
+	
 2010-06-07  Albert Chu <chu11@llnl.gov>
 
 	* Fix 'supermicro20b' workaround in ipmiconsole.
