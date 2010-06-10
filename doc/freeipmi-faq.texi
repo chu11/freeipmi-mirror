@@ -212,7 +212,7 @@ ipmipower is used for power control on clusters ranging from sizes of
 largest clusters in under a second.
 
 Ipmiconsole is currently supported by Conman
-(@uref{http://home.gna.org/conman/}) for scalable console management.
+(@uref{http://conman.googlecode.com/}) for scalable console management.
 
 Ipmimonitoring interprets sensor readings as well as just reporting
 them.  It can be used for host monitoring IPMI on a cluster.  By

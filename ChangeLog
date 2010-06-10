@@ -1,5 +1,9 @@
 2010-06-10  Albert Chu <chu11@llnl.gov>
 
+	* doc/freeipmi-faq.texi: Fix URL to Conman.
+	
+2010-06-10  Albert Chu <chu11@llnl.gov>
+
 	* Rename 'supermicro20b' to 'integritycheckvalue' and rework
 	specifically on one issue, rather than a set of issues.
 
