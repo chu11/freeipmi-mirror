@@ -38,6 +38,7 @@ Inventec 5441/Dell Xanadu II
 Dell Poweredge R610
 Dell Poweredge R710
 Quanta S99Q/Dell FS12-TY
+Intel S5500WBV/Penguin Relion 700
 
 I have had some short term access to the following:
 
@@ -194,6 +195,18 @@ current resolution.
 
 Supermicro X8DTG: Cipher suites 11 and 12 fail to establish a session.
 Authentication codes appear to be incorrect.  No current resolution.
+
+Intel S5500WBV/Penguin Relion 700: Cipher suites 0 fails to
+authenticate.  During the RAKP4 communication, an integrity key is
+returned, when it in fact should be 0 length.  Resolved with a
+workaround to handle this specific situation.
+
+Intel S5500WBV/Penguin Relion 700: The remote BMC incorrectly
+calculates keys using the privilege specified in the open session
+stage rather than the privilege used during the RAKP1 stage.  This can
+be problematic if you specify IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL
+during that stage instead of a real privilege level.  Resolved with a
+workaround to handle this specific situation.
 
 Session Issues
 --------------
@@ -388,6 +401,9 @@ initial SOL session is not given a "SOL is deactivating" flag in a BMC
 to Remote Console packet.  Not a severe issue, since the SOL session
 will eventually time out, but it isn't clean.  No current resolution.
 
+Intel S5500WBV/Penguin Relion 700: SOL payload sizes are reported
+incorrectly.  Resolved with a workaround to skip payload size checks.
+
 bmc-config
 ----------
 
@@ -516,6 +532,19 @@ current resolution.
 
 Supermicro X8DTG: User access parameters configured via Set User
 Access does not work for some users.  No current resolution.
+
+Intel S5500WBV/Penguin Relion 700: Default root username cannot be
+changed.  No current resolution.
+
+Intel S5500WBV/Penguin Relion 700: User access parameters
+Enable_IPMI_Msgs and Privilege_Limit are not changeable via Set User
+Access for some users.  The values are not changeable until a username
+has been set.  No current resolution.
+
+Intel S5500WBV/Penguin Relion 700: Usernames are not reconfigurable
+after they have been set atleast once.  Set User Name command responds
+with error code CCh = 'Invalid data field in Request'.  No current
+resolution.
 
 ipmi-pef-config
 ---------------
