@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.196.2.4 2010-06-04 21:35:35 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.196.2.5 2010-06-10 22:10:06 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -285,8 +285,7 @@ ipmipower_powercmd_queue (power_cmd_t cmd, struct ipmipower_connection *ic)
        */
       if (cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_INTEL_2_0_SESSION
           || cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_SUN_2_0_SESSION
-          || cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE
-          || cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION_B)
+          || cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE)
         ip->requested_maximum_privilege_level = cmd_args.common.privilege_level;
       else
         ip->requested_maximum_privilege_level = IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL;

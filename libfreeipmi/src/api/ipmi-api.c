@@ -555,7 +555,7 @@ ipmi_ctx_open_outofband_2_0 (ipmi_ctx_t ctx,
                                         | IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION
                                         | IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION
                                         | IPMI_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE
-					| IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION_B);
+					| IPMI_WORKAROUND_FLAGS_NON_EMPTY_INTEGRITY_CHECK_VALUE);
   unsigned int flags_mask = (IPMI_FLAGS_DEBUG_DUMP
                              | IPMI_FLAGS_NO_VALID_CHECK);
 

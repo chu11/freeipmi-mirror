@@ -1,3 +1,8 @@
+2010-06-10  Albert Chu <chu11@llnl.gov>
+
+	* Rename 'supermicro20b' to 'integritycheckvalue' and rework
+	specifically on one issue, rather than a set of issues.
+
 2010-06-09  Albert Chu <chu11@llnl.gov>
 
 	* Fix ipmi-sensors output corner case in which percent was output
