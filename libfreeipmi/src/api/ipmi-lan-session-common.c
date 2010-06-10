@@ -3375,8 +3375,7 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
    */
   if (ctx->workaround_flags & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION
       || ctx->workaround_flags & IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION
-      || ctx->workaround_flags & IPMI_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE
-      || ctx->workaround_flags & IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION_B)
+      || ctx->workaround_flags & IPMI_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE)
     requested_maximum_privilege = ctx->io.outofband.privilege_level;
   else
     requested_maximum_privilege = IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL;
@@ -3979,7 +3978,7 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
    * returns with an Integrity Check Value when it should be empty.
    */
   
-  if (ctx->workaround_flags & IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION_B
+  if (ctx->workaround_flags & IPMI_WORKAROUND_FLAGS_NON_EMPTY_INTEGRITY_CHECK_VALUE
       && !ctx->io.outofband.cipher_suite_id)
     {
       if (fiid_obj_clear_field (obj_cmd_rs,

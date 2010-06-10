@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.86 2010-06-04 21:25:10 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.87 2010-06-10 22:10:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -172,26 +172,25 @@ extern "C" {
  * stage.  This workaround is automatically triggered with the
  * SUN_2_0_SESSION workaround.
  *
- * SUPERMICRO_2_0_SESSION_B
+ * NON_EMPTY_INTEGRITY_CHECK_VALUE
  *
- * This workaround option will work around several Supermicro IPMI 2.0
- * authentication issues on motherboards w/ AMI IPMI firmware.  The
- * issues include handling invalid length integrity codes and
- * improperly hashed keys.  This workaround automatically includes the
- * OPEN_SESSION_PRIVILEGE workaround.
+ * This workaround option will work around an invalid integrity check
+ * value during an IPMI 2.0 session establishment when using Cipher
+ * Suite ID 0.  The integrity check value should be 0 length, however
+ * the remote motherboard responds with a non-empty field.
  *
  * Note: The non-logical bitmask order below is set for consistency of
  * masks with libfreeipmi bitmasks.
  */
-#define IPMICONSOLE_WORKAROUND_AUTHENTICATION_CAPABILITIES 0x00000010
-#define IPMICONSOLE_WORKAROUND_IGNORE_SOL_PAYLOAD_SIZE     0x00010000
-#define IPMICONSOLE_WORKAROUND_IGNORE_SOL_PORT             0x00020000
-#define IPMICONSOLE_WORKAROUND_SKIP_SOL_ACTIVATION_STATUS  0x00040000
-#define IPMICONSOLE_WORKAROUND_INTEL_2_0_SESSION           0x01000000
-#define IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0_SESSION      0x02000000
-#define IPMICONSOLE_WORKAROUND_SUN_2_0_SESSION             0x04000000
-#define IPMICONSOLE_WORKAROUND_OPEN_SESSION_PRIVILEGE      0x08000000
-#define IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0_SESSION_B    0x10000000
+#define IPMICONSOLE_WORKAROUND_AUTHENTICATION_CAPABILITIES     0x00000010
+#define IPMICONSOLE_WORKAROUND_IGNORE_SOL_PAYLOAD_SIZE         0x00010000
+#define IPMICONSOLE_WORKAROUND_IGNORE_SOL_PORT                 0x00020000
+#define IPMICONSOLE_WORKAROUND_SKIP_SOL_ACTIVATION_STATUS      0x00040000
+#define IPMICONSOLE_WORKAROUND_INTEL_2_0_SESSION               0x01000000
+#define IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0_SESSION          0x02000000
+#define IPMICONSOLE_WORKAROUND_SUN_2_0_SESSION                 0x04000000
+#define IPMICONSOLE_WORKAROUND_OPEN_SESSION_PRIVILEGE          0x08000000
+#define IPMICONSOLE_WORKAROUND_NON_EMPTY_INTEGRITY_CHECK_VALUE 0x10000000
 
 /*
  * Engine Flags

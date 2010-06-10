@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_checks.c,v 1.43 2010-06-04 21:25:10 chu11 Exp $
+ *  $Id: ipmiconsole_checks.c,v 1.44 2010-06-10 22:10:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -910,7 +910,7 @@ ipmiconsole_check_rakp_4_integrity_check_value (ipmiconsole_ctx_t c, ipmiconsole
    * returns with an Integrity Check Value when it should be empty.
    */
   
-  if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0_SESSION_B
+  if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_NON_EMPTY_INTEGRITY_CHECK_VALUE
       && !c->config.cipher_suite_id)
     {
       if (fiid_obj_clear_field (c->connection.obj_rakp_message_4,

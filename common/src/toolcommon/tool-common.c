@@ -107,8 +107,8 @@ ipmi_open (const char *progname,
             workaround_flags |= IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION;
           if (cmd_args->workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE)
             workaround_flags |= IPMI_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE;
-          if (cmd_args->workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION_B)
-            workaround_flags |= IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION_B;
+          if (cmd_args->workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_NON_EMPTY_INTEGRITY_CHECK_VALUE)
+            workaround_flags |= IPMI_WORKAROUND_FLAGS_NON_EMPTY_INTEGRITY_CHECK_VALUE;
           
           if (ipmi_ctx_open_outofband_2_0 (ipmi_ctx,
                                            hostname,

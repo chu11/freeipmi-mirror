@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.119 2010-06-04 21:25:10 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.120 2010-06-10 22:10:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -1122,7 +1122,7 @@ ipmipower_check_rakp_4_integrity_check_value (ipmipower_powercmd_t ip, packet_ty
    * returns with an Integrity Check Value when it should be empty.
    */
 
-  if (cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION_B
+  if (cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_NON_EMPTY_INTEGRITY_CHECK_VALUE
       && !cmd_args.common.cipher_suite_id)
     {
       if (fiid_obj_clear_field (ip->obj_rakp_message_4_res,
