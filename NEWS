@@ -2,6 +2,7 @@ FreeIPMI 0.8.7 - 05/24/10
 -------------------------
 o Support Supermicro X8DTG OEM sensors.
 o Support Supermicro X8DTG workarounds with 'integritycheckvalue' workaround flag.
+o Document workarounds for Intel S5500WBV/Penguin Relion 700 motherboard.
 o Fix bmc-watchdog init script return codes on Suse.
 o Fix ipmi-sensors corner case for sensors with percentage units.
 o Update documentation w/ Supermicro X8DTG issues.
