@@ -1,5 +1,10 @@
 2010-06-11  Albert Chu <chu11@llnl.gov>
 
+	* ipmimonitoring/src/libipmimonitoring/: Fix units output corner
+	case.
+	
+2010-06-11  Albert Chu <chu11@llnl.gov>
+
 	* Return 'privilege level cannot be obtained' error code when
 	rmcpplus status of 'invalid role' returned.
 	
