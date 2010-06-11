@@ -1,3 +1,8 @@
+2010-06-11  Albert Chu <chu11@llnl.gov>
+
+	* Document issues with Intel S5500WBV/Penguin Relion 700
+	motherboard.
+	
 2010-06-10  Albert Chu <chu11@llnl.gov>
 
 	* doc/freeipmi-faq.texi: Fix URL to Conman.
