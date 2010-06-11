@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.80.2.1 2009-12-23 21:24:12 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.80.2.2 2010-06-11 16:37:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -533,7 +533,7 @@ _get_sensor_units (ipmi_monitoring_ctx_t c,
   assert (c);
   assert (c->magic == IPMI_MONITORING_MAGIC);
 
-  if (sensor_units_modifier != IPMI_SDR_PERCENTAGE_NO)
+  if (sensor_units_percentage != IPMI_SDR_PERCENTAGE_NO)
     {
       IPMI_MONITORING_DEBUG (("sensor_units_percentage 'yes' not supported"));
       return (IPMI_MONITORING_SENSOR_UNITS_UNKNOWN);
