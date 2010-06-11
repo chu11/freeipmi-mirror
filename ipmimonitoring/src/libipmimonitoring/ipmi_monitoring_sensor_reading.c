@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.91 2010-06-11 16:37:40 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.92 2010-06-11 21:23:42 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -404,6 +404,12 @@ _get_sensor_units (ipmi_monitoring_ctx_t c,
 {
   assert (c);
   assert (c->magic == IPMI_MONITORING_MAGIC);
+
+  if (sensor_units_percentage == IPMI_SDR_PERCENTAGE_YES
+      && sensor_units_modifier == IPMI_SDR_MODIFIER_UNIT_NONE
+      && sensor_units_rate == IPMI_SENSOR_RATE_UNIT_NONE
+      && sensor_base_unit_type == IPMI_SENSOR_UNIT_UNSPECIFIED)
+    return (IPMI_MONITORING_SENSOR_UNITS_PERCENT);
 
   if (sensor_units_percentage != IPMI_SDR_PERCENTAGE_NO)
     {

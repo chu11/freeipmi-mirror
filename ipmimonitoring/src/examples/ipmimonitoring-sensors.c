@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-sensors.c,v 1.4 2010-05-12 21:52:50 chu11 Exp $
+ *  $Id: ipmimonitoring-sensors.c,v 1.5 2010-06-11 21:23:42 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -478,6 +478,8 @@ _ipmimonitoring (struct ipmi_monitoring_ipmi_config *ipmi_config)
             sensor_units_str = "RPM";
           else if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_WATTS)
             sensor_units_str = "W";
+          else if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_PERCENT)
+            sensor_units_str = "%";
           else
             sensor_units_str = "N/A";
 

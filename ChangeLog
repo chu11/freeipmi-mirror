@@ -1,5 +1,9 @@
 2010-06-11  Albert Chu <chu11@llnl.gov>
 
+	* ipmimonitoring/: Support '%' as sensor units.
+	
+2010-06-11  Albert Chu <chu11@llnl.gov>
+
 	* ipmimonitoring/src/libipmimonitoring/: Fix units output corner
 	case.
 	

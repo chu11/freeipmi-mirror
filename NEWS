@@ -60,6 +60,7 @@ o libipmimonitoring
   - Re-architect to use 'interpret' sub-library.
   - Rename a number of functions to differentiate sensor vs. SEL
     functions.
+  - Support percent (i.e. '%') units.
   - Support OEM bitmasks and bitmask strings.
     - Add bitmask type IPMI_MONITORING_SENSOR_BITMASK_TYPE_OEM.
     - Add ipmi_monitoring_read_sensor_bitmask_string().

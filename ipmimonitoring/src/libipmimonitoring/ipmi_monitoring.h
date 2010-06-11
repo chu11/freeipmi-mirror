@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.h,v 1.67 2010-06-10 22:10:12 chu11 Exp $
+ *  $Id: ipmi_monitoring.h,v 1.68 2010-06-11 21:23:42 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -157,7 +157,8 @@ enum ipmi_monitoring_sensor_units
     IPMI_MONITORING_SENSOR_UNITS_AMPS       = 0x04,
     IPMI_MONITORING_SENSOR_UNITS_RPM        = 0x05,
     IPMI_MONITORING_SENSOR_UNITS_WATTS      = 0x06,
-    /* 0x07 - 0xFE - reserved for ipmimonitoring */
+    IPMI_MONITORING_SENSOR_UNITS_PERCENT    = 0x07,
+    /* 0x08 - 0xFE - reserved for ipmimonitoring */
     IPMI_MONITORING_SENSOR_UNITS_UNKNOWN    = 0xFF,
   };
 
