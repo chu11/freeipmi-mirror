@@ -1,5 +1,10 @@
 2010-06-11  Albert Chu <chu11@llnl.gov>
 
+	* Return 'privilege level cannot be obtained' error code when
+	rmcpplus status of 'invalid role' returned.
+	
+2010-06-11  Albert Chu <chu11@llnl.gov>
+
 	* Document issues with Intel S5500WBV/Penguin Relion 700
 	motherboard.
 	
