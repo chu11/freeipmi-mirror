@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_packet.c,v 1.54.2.5 2010-06-11 15:56:52 chu11 Exp $
+ *  $Id: ipmiconsole_packet.c,v 1.54.2.6 2010-06-11 16:29:21 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -1695,7 +1695,8 @@ ipmiconsole_calculate_errnum (ipmiconsole_ctx_t c,
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_BMC_BUSY);
           return (0);
         }
-      else if (rmcpplus_status_code == RMCPPLUS_STATUS_UNAUTHORIZED_ROLE_OR_PRIVILEGE_LEVEL_REQUESTED)
+      else if (rmcpplus_status_code == RMCPPLUS_STATUS_UNAUTHORIZED_ROLE_OR_PRIVILEGE_LEVEL_REQUESTED
+	       || rmcpplus_status_code == RMCPPLUS_STATUS_INVALID_ROLE)
         {
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED);
           return (0);

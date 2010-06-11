@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.124.2.1 2009-12-23 21:24:13 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.124.2.2 2010-06-11 16:29:21 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -1303,7 +1303,8 @@ ipmipower_packet_errmsg (ipmipower_powercmd_t ip, packet_type_t pkt)
       else if (rmcpplus_status_code == RMCPPLUS_STATUS_INSUFFICIENT_RESOURCES_TO_CREATE_A_SESSION
                || rmcpplus_status_code == RMCPPLUS_STATUS_INSUFFICIENT_RESOURCES_TO_CREATE_A_SESSION_AT_THE_REQUESTED_TIME)
         return (MSG_TYPE_BMC_BUSY);
-      else if (rmcpplus_status_code == RMCPPLUS_STATUS_UNAUTHORIZED_ROLE_OR_PRIVILEGE_LEVEL_REQUESTED)
+      else if (rmcpplus_status_code == RMCPPLUS_STATUS_UNAUTHORIZED_ROLE_OR_PRIVILEGE_LEVEL_REQUESTED
+	       || rmcpplus_status_code == RMCPPLUS_STATUS_INVALID_ROLE)
         return (MSG_TYPE_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED);
       else if (rmcpplus_status_code == RMCPPLUS_STATUS_UNAUTHORIZED_NAME)
         return (MSG_TYPE_USERNAME_INVALID);
