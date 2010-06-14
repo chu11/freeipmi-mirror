@@ -1,0 +1,6 @@
+.LP
+"slowcommit" - This workaround will slow down commits to the BMC by
+sleeping a small amount between the commit of sections.  It works
+around motherboards that have BMCs that can be overwhelmed by commits.
+Those hitting this issue may see commit errors or commits not being
+written to the BMC.  Issue observed on Supermicro H8QME.

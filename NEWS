@@ -7,6 +7,7 @@ o Map IPMI 2.0 "invalid role" error code to "privilege level cannot be
   obtained" for better usability.
 o Fix bmc-watchdog init script return codes on Suse.
 o Fix ipmi-sensors corner case for sensors with percentage units.
+o Support 'slowcommit' workaround for config tools to work around slower BMCs.
 o Update documentation w/ Supermicro X8DTG issues.
 o Update documentation w/ inband troubleshooting.
 

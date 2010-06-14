@@ -1,3 +1,8 @@
+2010-06-14  Albert Chu <chu11@llnl.gov>
+
+	* Add 'slowcommit' workaround to config tools, to workaround BMCs
+	that cannot take large amounts of data.
+
 2010-06-11  Albert Chu <chu11@llnl.gov>
 
 	* ipmimonitoring/src/libipmimonitoring/: Fix units output corner
