@@ -17,9 +17,10 @@ what you're talking about.", well, here's this document :-)
 
 I have also listed a set of other issues that, while not compliance
 issues, are either interpretation issues I've found between multiple
-motherboards or a poor choice of implementation that makes it
-difficult to work with.  I have placed a label of [INTERPRETATION] or
-[NICETOHAVE] next to these issues respectively.
+motherboards, a poor choice of implementation that makes it difficult
+to work with, or functionally limiting.  I have placed a label of
+[INTERPRETATION], [NICETOHAVE], or [FUNCTIONAL] next to these issues
+respectively.
 
 Naturally the motherboards I have much more access to and am capable
 of working on will probably have more issues discovered.  As I develop
@@ -442,6 +443,12 @@ limit (e.g. LAN channel privilege limit) does not seem to affect
 authentication and/or execution of IPMI commands.  No current
 resolution.
 
+Supermicro H8QME with SIMSO daughter card: When commiting large
+amounts of data to the motherboard, some data does not get stored or
+written properly.  It appears that the BMC may lose data if
+overwhelmed with data written to the BMC.  No current resolution.
+[FUNCTIONAL]
+
 Tyan S4811 with SMDC daughter card: The ability to authenticate under
 IPMI 1.5 is tied to it being supported as an OEM authentication type.
 Resolved via different configuration w/ bmc-config.
@@ -545,6 +552,11 @@ Intel S5500WBV/Penguin Relion 700: Usernames are not reconfigurable
 after they have been set atleast once.  Set User Name command responds
 with error code CCh = 'Invalid data field in Request'.  No current
 resolution.
+
+Intel S5500WBV/Penguin Relion 700: When commiting large amounts of
+data to the motherboard, some data does not get stored or written
+properly.  It appears that the BMC may lose data if overwhelmed with
+data written to the BMC.  No current resolution. [FUNCTIONAL]
 
 ipmi-pef-config
 ---------------
@@ -719,6 +731,11 @@ Appendix
 To see a discussion on why this implementation is poor, please see
 "Configuration tool callback design" in the freeipmi-coding.txt
 document.
+
+[FUNCTIONAL]
+
+This is not an IPMI compliance issue, but rather a poor implementation
+that limits software development or gives the user a poor experience.
 
 [INTERPRETATION]
 
