@@ -132,6 +132,7 @@ Authentication in this section.
 #include <@top_srcdir@/common/man/manpage-common-troubleshooting.man>
 #include <@top_srcdir@/common/man/manpage-common-workaround-heading-text.man>
 #include <@top_srcdir@/common/man/manpage-common-workaround-text.man>
+#include <@top_srcdir@/common/man/manpage-common-workaround-config-tool.man>
 .SH "EXAMPLES"
 .B # bmc-config --checkout 
 .PP

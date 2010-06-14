@@ -222,6 +222,9 @@ parse_workaround_flags (const char *str,
       else if (tool_specific_workaround_flags
                && !strcasecmp (tok, IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_ASSUME_SYSTEM_EVENT_STR))
         (*tool_specific_workaround_flags) |= IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_ASSUME_SYSTEM_EVENT;
+      else if (tool_specific_workaround_flags
+               && !strcasecmp (tok, IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_SLOW_COMMIT_STR))
+        (*tool_specific_workaround_flags) |= IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_SLOW_COMMIT;
       else
         return (-1);
       tok = strtok (NULL, ",");

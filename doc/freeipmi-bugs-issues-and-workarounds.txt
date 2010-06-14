@@ -446,8 +446,8 @@ resolution.
 Supermicro H8QME with SIMSO daughter card: When commiting large
 amounts of data to the motherboard, some data does not get stored or
 written properly.  It appears that the BMC may lose data if
-overwhelmed with data written to the BMC.  No current resolution.
-[FUNCTIONAL]
+overwhelmed with data written to the BMC.  Resolved with workaround to
+slow down BMC commits.  [FUNCTIONAL]
 
 Tyan S4811 with SMDC daughter card: The ability to authenticate under
 IPMI 1.5 is tied to it being supported as an OEM authentication type.
@@ -552,11 +552,6 @@ Intel S5500WBV/Penguin Relion 700: Usernames are not reconfigurable
 after they have been set atleast once.  Set User Name command responds
 with error code CCh = 'Invalid data field in Request'.  No current
 resolution.
-
-Intel S5500WBV/Penguin Relion 700: When commiting large amounts of
-data to the motherboard, some data does not get stored or written
-properly.  It appears that the BMC may lose data if overwhelmed with
-data written to the BMC.  No current resolution. [FUNCTIONAL]
 
 ipmi-pef-config
 ---------------

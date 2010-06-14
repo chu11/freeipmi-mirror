@@ -25,6 +25,9 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#if HAVE_UNISTD_H
+#include <unistd.h>
+#endif /* HAVE_UNISTD_H */
 #include <errno.h>
 #include <assert.h>
 
@@ -178,6 +181,20 @@ config_commit (pstdout_state_t pstate,
             }
           rv = ret;
         }
+
+      /* IPMI Workaround (achu)
+       *
+       * Discovered on Supermicro H8QME with SIMSO daughter card.
+       *
+       * Some BMCs appear to not be able to accept a high number of
+       * commits/writes and eventually commits/writes are lost.  This
+       * workaround will slow down the commits/writes to give the BMC
+       * a better chance to accept all changes.
+       */
+
+      if (cmd_args->common.tool_specific_workaround_flags & IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_SLOW_COMMIT)
+	sleep (1);
+
       s = s->next;
     }
 
