@@ -5,6 +5,7 @@ o Support Supermicro X8DTG workarounds with 'integritycheckvalue' workaround fla
 o Document workarounds for Intel S5500WBV/Penguin Relion 700 motherboard.
 o Map IPMI 2.0 "invalid role" error code to "privilege level cannot be
   obtained" for better usability.
+o Fix bmc-config Security Keys commit by making some required fields optional.
 o Fix bmc-watchdog init script return codes on Suse.
 o Fix ipmi-sensors corner case for sensors with percentage units.
 o Support 'slowcommit' workaround for config tools to work around slower BMCs.
