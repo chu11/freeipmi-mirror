@@ -750,8 +750,8 @@ fiid_template_t tmpl_cmd_set_channel_security_keys_rs =
   {
     { 8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 8,   "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 2,   "lock_status", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 6,   "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 2,   "lock_status", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    { 6,   "reserved", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
     { 160, "key_value", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
     { 0, "", 0}
   };

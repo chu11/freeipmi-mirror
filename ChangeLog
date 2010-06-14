@@ -1,5 +1,11 @@
 2010-06-14  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/templates/ipmi-messaging-support-cmds-templates.h,
+	libfreeipmi/src/cmds/ipmi-messaging-support-cmds.c: Modify template to ensure some fields
+	that are required are actually optional.
+	
+2010-06-14  Albert Chu <chu11@llnl.gov>
+
 	* Add 'slowcommit' workaround to config tools, to workaround BMCs
 	that cannot take large amounts of data.
 
