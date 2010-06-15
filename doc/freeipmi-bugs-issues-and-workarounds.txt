@@ -447,7 +447,7 @@ Supermicro H8QME with SIMSO daughter card: When commiting large
 amounts of data to the motherboard, some data does not get stored or
 written properly.  It appears that the BMC may lose data if
 overwhelmed with data written to the BMC.  Resolved with workaround to
-slow down BMC commits.  [FUNCTIONAL]
+slow down BMC commits. [FUNCTIONAL]
 
 Tyan S4811 with SMDC daughter card: The ability to authenticate under
 IPMI 1.5 is tied to it being supported as an OEM authentication type.
@@ -455,16 +455,16 @@ Resolved via different configuration w/ bmc-config.
 
 Sun X4140: Get Username and Get User Payload commands fail with CCh =
 "Invalid data field in request" if a username was not set previously.
-Added workaround for this specific case.
+Added workaround for this specific case.  [FUNCTIONAL]
 
 Inventec 5441/Dell Xanadu II: Get Username and Get User Payload commands
 fail with CCh = "Invalid data field in request" if a username was not
-set previously.  Added workaround for this specific case.
+set previously.  Added workaround for this specific case.  [FUNCTIONAL]
 
 Inventec 5441/Dell Xanadu II: User access parameters Enable_IPMI_Msgs
 and Privilege_Limit are not changeable via Set User Access for some
 users.  The values are not changeable until a username has been set.
-No current resolution.
+No current resolution.  [FUNCTIONAL]
 
 Inventec 5441/Dell Xanadu II: When disabling IPMI via Enable_IPMI_Msgs,
 IPMI over LAN still works for a user.  This bug is confirmed to be
@@ -486,7 +486,7 @@ be fixed on newer firmware.
 Supermicro X8DTH: User access parameters Enable_IPMI_Msgs and
 Privilege_Limit are not changeable via Set User Access for some users.
 The values are not changeable until a username has been set.  No
-current resolution.
+current resolution.  [FUNCTIONAL]
 
 Supermicro X8DTH: Setting Non-volatile settings seems to also change
 volatile settings for channel configuration.  No current resolution.
@@ -497,7 +497,7 @@ work.  User must configure password using IPMI 1.5 formatted payloads.
 
 Dell Poweredge R610, R710: User cannot be enabled/disabled until after
 a non-null password has been configured.  Added workaround for this
-specific case.
+specific case.  [FUNCTIONAL]
 
 Dell Poweredge R610, R710: Default Authentication Type Enables
 configure several OEM authentications on.  However, the motherboard
@@ -541,17 +541,17 @@ Supermicro X8DTG: User access parameters configured via Set User
 Access does not work for some users.  No current resolution.
 
 Intel S5500WBV/Penguin Relion 700: Default root username cannot be
-changed.  No current resolution.
+changed.  No current resolution.  [FUNCTIONAL]
 
 Intel S5500WBV/Penguin Relion 700: User access parameters
 Enable_IPMI_Msgs and Privilege_Limit are not changeable via Set User
 Access for some users.  The values are not changeable until a username
-has been set.  No current resolution.
+has been set.  No current resolution.  [FUNCTIONAL]
 
 Intel S5500WBV/Penguin Relion 700: Usernames are not reconfigurable
 after they have been set atleast once.  Set User Name command responds
 with error code CCh = 'Invalid data field in Request'.  No current
-resolution.
+resolution.  [FUNCTIONAL]
 
 ipmi-pef-config
 ---------------
