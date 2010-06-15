@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.130 2010-05-05 20:35:09 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.130.2.1 2010-06-15 21:36:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -1889,6 +1889,8 @@ _daemon_cmd (void)
   uint8_t timer_use, timer_state, log, timeout_action, pre_timeout_interrupt,
     pre_timeout_interval;
   uint16_t initial_countdown_seconds;
+  uint16_t previous_present_countdown_seconds = 0;
+  uint16_t present_countdown_seconds;
   int retry_wait_time, retry_attempt;
   int ret;
 
@@ -1943,16 +1945,36 @@ _daemon_cmd (void)
                                           NULL,
                                           NULL,
                                           NULL,
-                                          NULL)))
+                                          &present_countdown_seconds)))
         {
           _daemon_cmd_error_noexit ("Get Watchdog Timer", ret);
           goto sleep_now;
         }
 
-      if (timer_state == IPMI_BMC_WATCHDOG_TIMER_TIMER_STATE_STOPPED)
+      /* IPMI Workaround
+       *
+       * Discovered on Sun x4100M2 and x4200M2
+       *
+       * On some BMCs, the timer state flag is not functional.  Therefore,
+       * to have an operational BMC watchdog, it must function without it.
+       * We instead look to see if the timer is changing.
+       */
+      if (cmd_args.common.tool_specific_workaround_flags & IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_IGNORE_STATE_FLAG)
         {
-          _bmclog ("timer stopped by another process");
-          goto cleanup;
+          if (previous_present_countdown_seconds == present_countdown_seconds)
+            {
+              _bmclog ("timer stopped by another process");
+              goto cleanup;
+            }
+          previous_present_countdown_seconds = present_countdown_seconds;
+        }
+      else
+        {
+          if (timer_state == IPMI_BMC_WATCHDOG_TIMER_TIMER_STATE_STOPPED)
+            {
+              _bmclog ("timer stopped by another process");
+              goto cleanup;
+            }
         }
 
       if ((ret = _reset_watchdog_timer_cmd (retry_wait_time,
