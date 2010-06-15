@@ -18,9 +18,9 @@ what you're talking about.", well, here's this document :-)
 I have also listed a set of other issues that, while not compliance
 issues, are either interpretation issues I've found between multiple
 motherboards, a poor choice of implementation that makes it difficult
-to work with, or functionally limiting.  I have placed a label of
-[INTERPRETATION], [NICETOHAVE], or [FUNCTIONAL] next to these issues
-respectively.
+to work with, or functionally limiting/annoying.  I have placed a
+label of [INTERPRETATION], [NICETOHAVE], or [FUNCTIONAL] next to these
+issues respectively.
 
 Naturally the motherboards I have much more access to and am capable
 of working on will probably have more issues discovered.  As I develop
