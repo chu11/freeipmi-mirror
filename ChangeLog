@@ -1,3 +1,7 @@
+2010-06-15  Albert Chu <chu11@llnl.gov>
+
+	* bmc-watchdog/: Support 'ignorestateflag' workaround.
+	
 2010-06-14  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/templates/ipmi-messaging-support-cmds-templates.h,
