@@ -40,6 +40,7 @@ Dell Poweredge R610
 Dell Poweredge R710
 Quanta S99Q/Dell FS12-TY
 Intel S5500WBV/Penguin Relion 700
+Supermicro X8DTG
 
 I have had some short term access to the following:
 
@@ -49,7 +50,6 @@ Sun Fire 4100 with ILOM
 Tyan S4811 with SMDC daughter card
 Supermicro X6-DHR-1G with BMC2.0 daughter card
 Supermicro X8DTH
-Supermicro X8DTG
 
 The remaining motherboards (and subsequent bugs/issues/workarounds)
 listed below are from interaction with users in the community and I
