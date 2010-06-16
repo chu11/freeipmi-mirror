@@ -1,4 +1,4 @@
-2010-XX-XX  Albert Chu <chu11@llnl.gov>
+2010-06-15  Albert Chu <chu11@llnl.gov>
 
 	* bmc-watchdog/: Support 'ignorestateflag' workaround.
 	
