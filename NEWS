@@ -1,8 +1,8 @@
 FreeIPMI 0.9.1 - 12/07/09
 -------------------------
 
-High Level Description of Changes
----------------------------------
+Major Changes, Additions, and Features
+--------------------------------------
 o Remove ipmimonitoring tool.  Tool is now superseded by ipmi-sensors
   and the new --output-sensor-state option.
 o Support --output-event-state option for ipmi-sel to support SEL event
@@ -85,6 +85,21 @@ o nagios_ipmi_sensors.pl
   - New tool to replace nagios_ipmimonitoring.pl.
 o nagios_ipmimonitoring.pl
   - Removed.  Superseded by nagios_ipmi_sensors.pl.
+
+FreeIPMI 0.8.7 - 06/17/10
+-------------------------
+o Support Supermicro X8DTG OEM sensors.
+o Support Supermicro X8DTG workarounds with 'integritycheckvalue' workaround flag.
+o Document workarounds for Intel S5500WBV/Penguin Relion 700 motherboard.
+o Map IPMI 2.0 "invalid role" error code to "privilege level cannot be
+  obtained" for better usability.
+o Fix bmc-config Security Keys commit by making some required fields optional.
+o Fix bmc-watchdog init script return codes on Suse.
+o Support 'ignorestateflag' workaround in bmc-watchdog.
+o Fix ipmi-sensors corner case for sensors with percentage units.
+o Support 'slowcommit' workaround for config tools to work around slower BMCs.
+o Update documentation w/ Supermicro X8DTG issues.
+o Update documentation w/ inband troubleshooting.
 
 FreeIPMI 0.8.6 - 05/24/10
 -------------------------
