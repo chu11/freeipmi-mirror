@@ -76,6 +76,7 @@ ipmiconsole
 -----------
 suport other escape codes like w/ &D
 - F1-F12 suggested by user
+"learn" workarounds function - to figure out workaround flags for user
 
 hostrange
 ---------

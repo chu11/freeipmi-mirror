@@ -23,6 +23,13 @@ authentication codes.  Those hitting this issue may see "password
 invalid" errors.  Issue observed on Supermicro H8QME with SIMSO
 daughter card.  Confirmed fixed on newerver firmware.
 .LP
+"sun20" - This workaround option will work work around several Sun
+IPMI 2.0 authentication issues.  The issues covered include invalid
+lengthed hash keys, improperly hashed keys, and invalid cipher suite
+records.  Those hitting this issue may see "password invalid" or "bmc
+error" errors.  Issue observed on Sun Fire 4100/4200/4500 with ILOM.
+This workaround automatically includes the "opensesspriv" workaround.
+.LP
 "opensesspriv" - This workaround option will slightly alter FreeIPMI's
 IPMI 2.0 connection protocol to workaround an invalid hashing
 algorithm used by the remote system.  The privilege level sent during
