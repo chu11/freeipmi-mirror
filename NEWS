@@ -1,5 +1,6 @@
 FreeIPMI 0.8.8 - 06/17/10
 -------------------------
+o Fix bmc-watchdog --version option.
 o Minor documentation updates.
 
 FreeIPMI 0.8.7 - 06/17/10

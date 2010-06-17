@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog-argp.c,v 1.20.4.2 2009-12-23 21:24:02 chu11 Exp $
+ *  $Id: bmc-watchdog-argp.c,v 1.20.4.3 2010-06-17 20:50:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -126,6 +126,10 @@ static struct argp_option cmdline_options[] =
       "Specify time interval before resetting timer.", 57},
     { "help", HELP_KEY, NULL, 0,
       "Output help.", 58},
+    { "help", HELP_KEY, NULL, 0,
+      "Output help.", 58},
+    { "version", VERSION_KEY, NULL, 0,
+      "Output version.", 59},
     { NULL, 0, NULL, 0, NULL, 0}
   };
 
@@ -480,6 +484,9 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case HELP_KEY:
       cmd_args->help++;
       break;
+    case VERSION_KEY:
+      cmd_args->version++;
+      break;
     case ARGP_KEY_ARG:
       /* Too many arguments. */
       argp_usage (state);
@@ -530,6 +537,12 @@ _bmc_watchdog_args_validate (struct bmc_watchdog_arguments *cmd_args)
 
   if (cmd_args->help)
     _usage (cmd_args);
+
+  if (cmd_args->version)
+    {
+      fprintf (stderr, "%s\n", argp_program_version);
+      exit (1);
+    }
 
   count = cmd_args->set + cmd_args->get + cmd_args->reset +
     cmd_args->start + cmd_args->stop + cmd_args->clear + cmd_args->daemon;
@@ -628,6 +641,7 @@ bmc_watchdog_argp_parse (int argc, char **argv, struct bmc_watchdog_arguments *c
   cmd_args->reset_period = 0;
   cmd_args->reset_period_arg = 0;
   cmd_args->help = 0;
+  cmd_args->version = 0;
 
   argp_parse (&cmdline_config_file_argp,
               argc,

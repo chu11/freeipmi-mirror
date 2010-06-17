@@ -1,3 +1,7 @@
+2010-06-17  Albert Chu <chu11@llnl.gov>
+
+	* bmc-watchdog/: Fix --version option.
+
 2010-06-16  Albert Chu <chu11@llnl.gov>
 
 	* configure.ac: Update for release.
