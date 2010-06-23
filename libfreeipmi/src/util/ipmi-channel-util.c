@@ -99,7 +99,8 @@ ipmi_get_channel_number (ipmi_ctx_t ctx,
           switch (product_id)
             {
             case 0x1B:
-              rv = 7;
+              rv = 0;
+              (*channel_number) = 7;
               goto cleanup;
             }
         }
