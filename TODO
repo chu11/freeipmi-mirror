@@ -102,6 +102,7 @@ collapse into one allmight tool? ipmi-config (0.10.1)
   - probably not, too much backwords compatability crap to handle.
     Also would make code ugly as hell to make all duplicate sections.
     should do database of what sections go to what categories
+- --lan-channel for pick one?
 
 bmc-config
 ----------
