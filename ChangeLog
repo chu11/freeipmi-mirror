@@ -1,3 +1,8 @@
+2010-06-22  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/util/ipmi-channel-util.c: Fix legacy corner
+	case.
+	
 2010-06-17  Albert Chu <chu11@llnl.gov>
 
 	* bmc-watchdog/: Fix --version option.
