@@ -1,6 +1,7 @@
 FreeIPMI 0.8.8 - 06/17/10
 -------------------------
 o Fix bmc-watchdog --version option.
+o Fix legacy workaround corner case in channel detection for Intel nodes.
 o Minor documentation updates.
 
 FreeIPMI 0.8.7 - 06/17/10
