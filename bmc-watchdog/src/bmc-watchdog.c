@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.131 2010-06-16 17:52:38 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.132 2010-06-28 20:11:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -1920,6 +1920,21 @@ _daemon_cmd (void)
            && reset_period < (retry_wait_time * retry_attempt))
     retry_attempt = reset_period/retry_wait_time;
 
+  /* IPMI Workaround
+   *
+   * Discovered on Sun x4100M2 and x4200M2
+   *
+   * If implementing the IGNORE_STATE_FLAG workaround flag below, we
+   * need to sleep a little bit to make sure the BMC timer has really
+   * started.
+   *
+   * From 27.7 "Internal delays in the BMC may require software to
+   * delay up to 100 ms before seeing the countdown value change and
+   * be reflected in teh Get Watchdog Timer command".
+   */
+  if (cmd_args.common.tool_specific_workaround_flags & IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_IGNORE_STATE_FLAG)
+    _sleep (1);
+
   while (shutdown_flag)
     {
       struct timeval start_tv, end_tv;
@@ -1982,6 +1997,45 @@ _daemon_cmd (void)
         {
           _daemon_cmd_error_noexit ("Reset Watchdog Timer", ret);
           goto sleep_now;
+        }
+
+      /* IPMI Workaround
+       *
+       * Discovered on Sun x4100M2 and x4200M2
+       *
+       * If implementing the IGNORE_STATE_FLAG workaround flag above,
+       * we need to reset the previous_present_countdown_seconds to
+       * what it is after the timer reset.
+       *
+       * From 27.7 "Internal delays in the BMC may require software to
+       * delay up to 100 ms before seeing the countdown value change and
+       * be reflected in teh Get Watchdog Timer command".
+       */
+      if (cmd_args.common.tool_specific_workaround_flags & IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_IGNORE_STATE_FLAG)
+        {
+          _sleep (1);
+
+          if ((ret = _get_watchdog_timer_cmd (retry_wait_time,
+                                              retry_attempt,
+                                              NULL,
+                                              NULL,
+                                              NULL,
+                                              NULL,
+                                              NULL,
+                                              NULL,
+                                              NULL,
+                                              NULL,
+                                              NULL,
+                                              NULL,
+                                              NULL,
+                                              NULL,
+                                              &present_countdown_seconds)))
+            {
+              _daemon_cmd_error_noexit ("Get Watchdog Timer", ret);
+              goto sleep_now;
+            }
+          
+          previous_present_countdown_seconds = present_countdown_seconds;
         }
 
     sleep_now:

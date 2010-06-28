@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: bmc-watchdog.8.pre.in,v 1.28 2010-06-16 17:52:38 chu11 Exp $
+.\"$Id: bmc-watchdog.8.pre.in,v 1.29 2010-06-28 20:11:23 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -287,9 +287,10 @@ never report that a BMC timer is running, even if it is.  The
 workaround will take notice of changes in the countdown seconds to
 determine if a timer is running or stopped.  With this type of
 implementation, the reset-period must be large enough to ensure minor
-fluctuations in the countdown will not affect the workaround.  This
-option is confirmed to work around compliances issues on Sun x4100,
-x4200, and x4500.
+fluctuations in the countdown will not affect the workaround.  Due to
+the implementation of this workaround, if another process stops the
+watchdog timer, it may be detectable.  This option is confirmed to
+work around compliances issues on Sun x4100, x4200, and x4500.
 
 .SH "EXAMPLES" 
 .LP 
