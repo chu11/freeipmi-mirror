@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.127.4.3 2010-06-28 20:06:56 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.127.4.4 2010-06-28 20:23:04 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -1930,7 +1930,7 @@ _daemon_cmd (void)
    *
    * From 27.7 "Internal delays in the BMC may require software to
    * delay up to 100 ms before seeing the countdown value change and
-   * be reflected in teh Get Watchdog Timer command".
+   * be reflected in the Get Watchdog Timer command".
    */
   if (cmd_args.common.tool_specific_workaround_flags & IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_IGNORE_STATE_FLAG)
     _sleep (1);
@@ -2009,7 +2009,7 @@ _daemon_cmd (void)
        *
        * From 27.7 "Internal delays in the BMC may require software to
        * delay up to 100 ms before seeing the countdown value change and
-       * be reflected in teh Get Watchdog Timer command".
+       * be reflected in the Get Watchdog Timer command".
        */
       if (cmd_args.common.tool_specific_workaround_flags & IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_IGNORE_STATE_FLAG)
         {
