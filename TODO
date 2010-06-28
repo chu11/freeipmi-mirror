@@ -80,6 +80,7 @@ suport other escape codes like w/ &D
 load alternate defaults into libipmiconsole
 - serial session stolen one way or another (another process, reboot,
 etc.), how inform ipmiconsole, b/c IPMI session could still be alive
+do keepalive-ping w/ NUL char, make sure session still really alive
 
 hostrange
 ---------
