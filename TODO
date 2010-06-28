@@ -149,6 +149,8 @@ sensor reading factors
 check sensor thresholds manually instead of trust flags
 - some mobos seem to set flags incorrectly
 percentage unit in libipmimonitoring
+ipmimonitoring via sensor name
+- deal w/ motherboards with slightly different SDRs
 
 ipmi-chassis-config
 -------------------
