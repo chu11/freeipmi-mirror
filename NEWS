@@ -11,6 +11,7 @@ o Re-architect libipmimonitoring to support all defined IPMI sensor
   types, OEM bitmasks, and OEM interpretations.
 o Add SEL monitoring support to libipmimonitoring.
 o Support new 'interpret' sub-library in libfreeipmi.
+o Various documentation updates.
 o Update all licensing information to GPLv3.
 
 Tools - Detailed Enhancements/Changes/Fixes

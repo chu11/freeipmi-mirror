@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmiconsole.8.pre.in,v 1.51 2010-05-27 22:35:30 chu11 Exp $
+.\"$Id: ipmiconsole.8.pre.in,v 1.52 2010-06-30 21:56:36 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -88,7 +88,7 @@ cipher suite ids are currently supported:
 The following options are specific to
 .B Ipmiconsole.
 .TP
-\fB\-e\fR, \fB\-\-escape-char\fR=\fICHAR\fR
+\fB\-e\fR \fICHAR\fR, \fB\-\-escape-char\fR=\fICHAR\fR
 Specify an alternate escape character (default char '&').
 .TP
 \fB\-\-dont-steal\fR

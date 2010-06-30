@@ -1,36 +1,36 @@
 .SH "OPTIONS"
 The following options are available
 .TP
-.I "-h"
+\fB\-h\fR
 Output help menu.
 .TP
-.I "-V"
+\fB\-V\fR
 Output version.
 .TP
-.I "-c count"
+\fB\-c\fR \fIcount\fR
 Stop after sending
 .I count
 packets.
 .TP
-.I "-i interval"
+\fB\-i\fR \fIinterval\fR
 Wait
 .I interval
 seconds between sending each packet.  The default is to wait for one
 second between each packet.
 .TP
-.I "-I interface address"
+\fB\-I\fR \fIinterface address\fR
 Set source address to specified interface address. Argument may
 be numeric IP address or name of device.
 .TP
-.I "-t timeout"
+\fB\-t\fR \fItimeout\fR
 Time to wait for a response, in seconds. Default is five seconds.
 .TP
-.I "-v"
+\fB\-v\fR
 Verbose output.
 .TP
-.I "-s num"
+\fB\-s\fR \fInum\fR
 Specify an initial starting sequence number.  The default is to use a
 random initial sequence number.
 .TP
-.I "-d"
+\fB\-d\fR
 Turn on debugging.

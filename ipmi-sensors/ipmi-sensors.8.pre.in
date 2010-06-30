@@ -77,7 +77,7 @@ Do not output sensor reading values by default.  This option is
 particularly useful if you want to use hostranged output across a
 cluster and want to consolidate the output.
 .TP
-\fB\-r\fR "RECORD-IDS-LIST", \fB\-\-record\-ids\fR=\fB"RECORD-IDS-LIST"\fR
+\fB\-r\fR \fIRECORD\-IDS\-LIST\fR, \fB\-\-record\-ids\fR=\fIRECORD\-IDS\-LIST\fR
 Specify sensors to show by record id.  Multiple record ids can be
 separated by commas or spaces.  If both \fB\-\-record\-ids\fR and
 \fB\-\-sensor\-types\fR are specified, \fB\-\-record\-ids\fR takes
@@ -85,13 +85,13 @@ precedence.  A special command line record id of "all", will indicate
 all record ids should be shown (may be useful for overriding
 configured defaults).
 .TP
-\fB\-R\fR "RECORD-IDS-LIST", \fB\-\-exclude\-record\-ids\fR=\fB"RECORD-IDS-LIST"\fR
+\fB\-R\fR \fIRECORD\-IDS\-LIST\fR, \fB\-\-exclude\-record\-ids\fR=\fIRECORD\-IDS\-LIST\fR
 Specify sensors to not show by record id.  Multiple record ids can be
 separated by commas or spaces.  A special command line record id of
 "none", will indicate no record ids should be excluded (may be useful
 for overriding configured defaults).
 .TP
-\fB\-t\fR "SENSOR-TYPE-LIST", \fB\-\-sensor\-types\fR=\fISENSOR\-TYPE\-LIST\fR
+\fB\-t\fR \fISENSOR\-TYPE\-LIST\fR, \fB\-\-sensor\-types\fR=\fISENSOR\-TYPE\-LIST\fR
 Specify sensor types to show outputs for.  Multiple types can
 be separated by commas or spaces.  If both \fB\-\-record\-ids\fR and
 \fB\-\-sensor\-types\fR are specified, \fB\-\-record\-ids\fR takes precedence.
@@ -100,7 +100,7 @@ be shown (may be useful for overriding configured defaults).  Users
 may specify sensor types by string (see \fB\-\-list\-sensor\-types\fR
 below) or by number (decimal or hex).
 .TP
-\fB\-T\fR "SENSOR-TYPE-LIST", \fB\-\-exclude\-sensor\-types\fR=\fISENSOR\-TYPE\-LIST\fR
+\fB\-T\fR \fISENSOR\-TYPE\-LIST\fR, \fB\-\-exclude\-sensor\-types\fR=\fISENSOR\-TYPE\-LIST\fR
 Specify sensor types to not show outputs for.  Multiple types
 can be eparated by commas or spaces.  A special command line type of
 "none", will indicate no types should be excluded (may be useful for

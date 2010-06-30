@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog-argp.c,v 1.24 2010-06-17 20:49:54 chu11 Exp $
+ *  $Id: bmc-watchdog-argp.c,v 1.25 2010-06-30 21:56:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -96,7 +96,7 @@ static struct argp_option cmdline_options[] =
       "Set timeout action.", 42},
     { "pre-timeout-interrupt", PRE_TIMEOUT_INTERRUPT_KEY, "INT", 0,
       "Set pre-timeout interrupt.", 43},
-    { "pre-timeout-interval", PRE_TIMEOUT_INTERVAL_KEY, "SECS", 0,
+    { "pre-timeout-interval", PRE_TIMEOUT_INTERVAL_KEY, "SECONDS", 0,
       "Set pre-timeout interval in seconds.", 44},
     { "clear-bios-frb2", CLEAR_BIOS_FRB2_KEY, NULL, 0,
       "Clear BIOS FRB2 Timer Use Flag.", 45},
@@ -108,7 +108,7 @@ static struct argp_option cmdline_options[] =
       "Clear SMS/OS Timer Use Flag.", 48},
     { "clear-oem", CLEAR_OEM_KEY, NULL, 0,
       "Clear OEM Timer Use Flag.", 49},
-    { "initial-countdown", INITIAL_COUNTDOWN_KEY, "SECS", 0,
+    { "initial-countdown", INITIAL_COUNTDOWN_KEY, "SECONDS", 0,
       "Set initial countdown in seconds.", 50},
     { "start-after-set", START_AFTER_SET_KEY, NULL, 0,
       "Start timer after set if timer is stopped.", 51},
@@ -122,7 +122,7 @@ static struct argp_option cmdline_options[] =
       "Set Gratuitous ARPs Flag.", 55},
     { "arp-response", ARP_RESPONSE_KEY, "INT", 0,
       "Set ARP Responses Flag.", 56},
-    { "reset-period", RESET_PERIOD_KEY, "SECS", 0,
+    { "reset-period", RESET_PERIOD_KEY, "SECONDS", 0,
       "Specify time interval before resetting timer.", 57},
     { "help", HELP_KEY, NULL, 0,
       "Output help.", 58},

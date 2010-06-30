@@ -1,5 +1,5 @@
 .TP
-\fB\-k\fR, \fB\-\-k-g\fR=\fIK_G\fR
+\fB\-k\fR \fIK_G\fR, \fB\-\-k-g\fR=\fIK_G\fR
 Specify the K_g BMC key to use when authenticating with the remote
 host for IPMI 2.0.  If not specified, a null key is assumed.  To input
 the key in hexadecimal form, prefix the string with '0x'.  E.g., the

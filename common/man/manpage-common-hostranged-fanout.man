@@ -1,5 +1,5 @@
 .TP
-\fB\-F\fR, \fB\-\-fanout\fR
+\fB\-F\fR \fINUM\fR, \fB\-\-fanout\fR=\fINUM\fR
 Specify multiple host fanout.  A "sliding window" (or fanout)
 algorithm is used for parallel IPMI communication so that slower nodes
 or timed out nodes will not impede parallel communication.  The

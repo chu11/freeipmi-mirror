@@ -59,20 +59,20 @@ names.
 \fB\-i\fR, \fB\-\-info\fR
 Show general information about the SEL.
 .TP
-\fB\-\-display\fR=\fBREC\-LIST\fR
+\fB\-\-display\fR=\fIRECORD\-IDS\-LIST\fR
 Display SEL records by record id.  Accepts space or comma separated lists.
 .TP
-\fB\-\-exclude\-display\fR=\fBREC\-LIST\fR
+\fB\-\-exclude\-display\fR=\fIRECORD\-IDS\-LIST\fR
 Exclude display of SEL records by record id.  Accepts space or comma
 separated lists.
 .TP
-\fB\-\-display-range\fR=\fBSTART\-END\fR
+\fB\-\-display-range\fR=\fISTART\-END\fR
 Display SEL records from record id START to END.
 .TP
-\fB\-\-exclude\-display-range\fR=\fBSTART\-END\fR
+\fB\-\-exclude\-display-range\fR=\fISTART\-END\fR
 Exclude display of SEL records from record id START to END.
 .TP
-\fB\-\-date\-range\fR=\fBDATE\-DATE\fR
+\fB\-\-date\-range\fR=\fIDATE\-DATE\fR
 Display SEL records with events occurring in the specified date range.
 Dates may be specified in MM/DD/YYYY or MM-DD-YYYY format.  The month
 may be specified as a numeral or its abbreviated string name.  The
@@ -80,7 +80,7 @@ current local system time can be specified with "now".  Note that
 non-timestamped records will not be displayed automatically because
 they do not possess a timestamp.
 .TP
-\fB\-\-exclude\-date\-range\fR=\fBDATE\-DATE\fR
+\fB\-\-exclude\-date\-range\fR=\fIDATE\-DATE\fR
 Exclude display of SEL records with events occurring in the specified
 date range.  Dates may be specified in MM/DD/YYYY or MM-DD-YYYY
 format.  The month may be specified as a numeral or its abbreviated
@@ -88,7 +88,7 @@ string name.  The current local system time can be specified with
 "now".  Note that non-timestamped records will be displayed
 automatically because they do not possess a timestamp.
 .TP
-\fB\-t\fR "SENSOR-TYPE-LIST", \fB\-\-sensor\-types\fR=\fISENSOR\-TYPE\-LIST\fR
+\fB\-t\fR \fISENSOR\-TYPE\-LIST\fR, \fB\-\-sensor\-types\fR=\fISENSOR\-TYPE\-LIST\fR
 Specify sensor types to show sensor outputs for.  Multiple types can
 be separated by commas or spaces.  A special command line type of
 "all", will indicate all types should be shown (may be useful for
@@ -96,7 +96,7 @@ overriding configured defaults).  Users may specify sensor types by
 string (see \fB\-\-list\-sensor\-types\fR below) or by number (decimal
 or hex).
 .TP
-\fB\-T\fR "SENSOR-TYPE-LIST", \fB\-\-exclude\-sensor\-types\fR=\fISENSOR\-TYPE\-LIST\fR
+\fB\-T\fR \fISENSOR\-TYPE\-LIST\fR, \fB\-\-exclude\-sensor\-types\fR=\fISENSOR\-TYPE\-LIST\fR
 Specify sensor types to not show sensor outputs for.  Multiple types
 can be eparated by commas or spaces.  A special command line type of
 "no", will indicate no types should be excluded (may be useful for
@@ -107,7 +107,7 @@ or hex).
 \fB\-L\fR, \fB\-\-list\-sensor\-types\fR
 List sensor types.
 .TP
-\fB\-\-tail\fR=\fBcount\fR
+\fB\-\-tail\fR=\fIcount\fR
 Display approximately the last \fIcount\fR SEL records.  The display
 count is calculated by approximating the record ids of the last SEL
 records.  It's correctness depends highly on the SEL implementation by
@@ -116,11 +116,11 @@ the vendor.
 \fB\-\-clear\fR
 Clear SEL.
 .TP
-\fB\-\-delete\fR=\fBREC\-LIST\fR
+\fB\-\-delete\fR=\fIRECORD\-IDS\-LIST\fR
 Delete records by record id in the SEL.  Accepts space or comma
 separated lists.
 .TP
-\fB\-\-delete-range\fR=\fBSTART\-END\fR
+\fB\-\-delete-range\fR=\fISTART\-END\fR
 Delete record ids from START to END in the SEL.
 .TP
 \fB\-\-system\-event\-only\fR

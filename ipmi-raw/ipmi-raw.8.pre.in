@@ -13,7 +13,7 @@ is used to execute IPMI commands by hex values.
 #include <@top_srcdir@/common/man/manpage-common-inband.man>
 #include <@top_srcdir@/common/man/manpage-common-outofband-hostname-hostranged.man>
 .TP
-\fB\-u\fR, \fB\-\-username\fR=\fIUSERNAME\fR
+\fB\-u\fR \fIUSERNAME\fR, \fB\-\-username\fR=\fIUSERNAME\fR
 Specify the username to use when authenticating with the remote host.
 If not specified, a null (i.e. anonymous) username is assumed.  The
 required user privilege will depend on the raw commands executed.
