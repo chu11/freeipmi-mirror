@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmidetectd_config.c,v 1.17 2010-02-08 22:02:30 chu11 Exp $
+ *  $Id: ipmidetectd_config.c,v 1.18 2010-06-30 16:36:09 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -107,6 +107,7 @@ _cmdline_parse (int argc, char **argv)
       { "config-file",         1, NULL, 'c'},
       { "debug",               0, NULL, 'd'},
 #endif /* NDEBUG */
+      { NULL,                  0, NULL, 0},
     };
 #endif /* HAVE_GETOPT_LONG */
 
