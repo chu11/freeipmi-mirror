@@ -45,6 +45,8 @@ enum config_argp_option_keys
     CONFIG_ARGP_SECTIONS_KEY = 'S',
     CONFIG_ARGP_LIST_SECTIONS_KEY = 'L',
     CONFIG_ARGP_VERBOSE_KEY = 'v',
+    CONFIG_ARGP_LAN_CHANNEL_NUMBER_KEY = 200,
+    CONFIG_ARGP_SERIAL_CHANNEL_NUMBER_KEY = 201,
   };
 
 #define CONFIG_ARGP_COMMON_OPTIONS                                                        \
@@ -65,10 +67,18 @@ enum config_argp_option_keys
   { "verbose", CONFIG_ARGP_VERBOSE_KEY, 0, 0,                                             \
       "Print additional detailed information.", 38}
 
+#define CONFIG_ARGP_LAN_CHANNEL_OPTION                                                    \
+  { "lan-channel-number", CONFIG_ARGP_LAN_CHANNEL_NUMBER_KEY, "NUMBER", 0,                \
+      "Use a specific LAN Channel Number.", 39}
+
+#define CONFIG_ARGP_SERIAL_CHANNEL_OPTION                                                 \
+  { "serial-channel-number", CONFIG_ARGP_SERIAL_CHANNEL_NUMBER_KEY, "NUMBER", 0,          \
+      "Use a specific Serial Channel Number.", 40}
+
 /* legacy short-option */
 #define CONFIG_ARGP_COMMON_OPTIONS_LEGACY                \
   { "foobar", CONFIG_ARGP_FILENAME_KEY_LEGACY, "FILENAME", OPTION_HIDDEN, \
-      "Specify a config file for checkout/commit/diff.", 39}
+      "Specify a config file for checkout/commit/diff.", 41}
 
 void init_config_args (struct config_arguments *config_args);
 

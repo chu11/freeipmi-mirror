@@ -1,5 +1,10 @@
 2010-06-30  Albert Chu <chu11@llnl.gov>
 
+	* bmc-config/, ipmi-pef-config/, common/src/configtool/: Support
+	--lan-channel-number, --serial-channel-number.
+	
+2010-06-30  Albert Chu <chu11@llnl.gov>
+
 	* Fix manpage consistency throughout.
 
 2010-06-30  Jan Safranek <jsafrane@redhat.com>

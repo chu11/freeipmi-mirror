@@ -46,6 +46,7 @@ The following options are specific to
 \fB\-i\fR, \fB\-\-info\fR
 Show general information about PEF configuration.
 #include <@top_srcdir@/common/man/manpage-common-config-tool-options.man>
+#include <@top_srcdir@/common/man/manpage-common-config-tool-options-lan-channel-number.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-options-header.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-buffer.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-consolidate.man>

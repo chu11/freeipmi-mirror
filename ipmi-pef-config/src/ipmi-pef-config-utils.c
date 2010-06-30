@@ -37,7 +37,7 @@
 config_err_t
 get_lan_channel_number (struct ipmi_pef_config_state_data *state_data, uint8_t *channel_num)
 {
-  uint8_t channel_number;
+  uint8_t lan_channel_number;
 
   assert (state_data);
   assert (channel_num);
@@ -48,20 +48,25 @@ get_lan_channel_number (struct ipmi_pef_config_state_data *state_data, uint8_t *
       return (0);
     }
 
-  if (ipmi_get_channel_number (state_data->ipmi_ctx,
-                               IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3,
-                               &channel_number) < 0)
+  if (!state_data->prog_data->args->config_args.lan_channel_number_set)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "ipmi_get_channel_number: %s\n",
-                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
-      return (CONFIG_ERR_NON_FATAL_ERROR);
+      if (ipmi_get_channel_number (state_data->ipmi_ctx,
+                                   IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3,
+                                   &lan_channel_number) < 0)
+        {
+          if (state_data->prog_data->args->config_args.common.debug)
+            pstdout_fprintf (state_data->pstate,
+                             stderr,
+                             "ipmi_get_channel_number: %s\n",
+                             ipmi_ctx_errormsg (state_data->ipmi_ctx));
+          return (CONFIG_ERR_NON_FATAL_ERROR);
+        }
     }
-
+  else
+    lan_channel_number = state_data->prog_data->args->config_args.lan_channel_number;
+  
   state_data->lan_channel_number_initialized = 1;
-  state_data->lan_channel_number = channel_number;
+  state_data->lan_channel_number = lan_channel_number;
   *channel_num = state_data->lan_channel_number;
   return (CONFIG_ERR_SUCCESS);
 }

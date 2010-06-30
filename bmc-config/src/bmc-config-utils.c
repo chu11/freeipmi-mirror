@@ -42,17 +42,22 @@ get_lan_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel_nu
       return (CONFIG_ERR_SUCCESS);
     }
 
-  if (ipmi_get_channel_number (state_data->ipmi_ctx,
-                               IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3,
-                               &lan_channel_number) < 0)
+  if (!state_data->prog_data->args->config_args.lan_channel_number_set)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "ipmi_get_channel_number: %s\n",
-                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
-      return (CONFIG_ERR_NON_FATAL_ERROR);
+      if (ipmi_get_channel_number (state_data->ipmi_ctx,
+                                   IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3,
+                                   &lan_channel_number) < 0)
+        {
+          if (state_data->prog_data->args->config_args.common.debug)
+            pstdout_fprintf (state_data->pstate,
+                             stderr,
+                             "ipmi_get_channel_number: %s\n",
+                             ipmi_ctx_errormsg (state_data->ipmi_ctx));
+          return (CONFIG_ERR_NON_FATAL_ERROR);
+        }
     }
+  else
+    lan_channel_number = state_data->prog_data->args->config_args.lan_channel_number;
 
   state_data->lan_channel_number_initialized = 1;
   state_data->lan_channel_number = lan_channel_number;
@@ -72,17 +77,22 @@ get_serial_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel
       return (CONFIG_ERR_SUCCESS);
     }
 
-  if (ipmi_get_channel_number (state_data->ipmi_ctx,
-                               IPMI_CHANNEL_MEDIUM_TYPE_RS232,
-                               &serial_channel_number) < 0)
+  if (!state_data->prog_data->args->config_args.serial_channel_number_set)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "ipmi_get_channel_number: %s\n",
-                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
-      return (CONFIG_ERR_NON_FATAL_ERROR);
+      if (ipmi_get_channel_number (state_data->ipmi_ctx,
+                                   IPMI_CHANNEL_MEDIUM_TYPE_RS232,
+                                   &serial_channel_number) < 0)
+        {
+          if (state_data->prog_data->args->config_args.common.debug)
+            pstdout_fprintf (state_data->pstate,
+                             stderr,
+                             "ipmi_get_channel_number: %s\n",
+                             ipmi_ctx_errormsg (state_data->ipmi_ctx));
+          return (CONFIG_ERR_NON_FATAL_ERROR);
+        }
     }
+  else
+    serial_channel_number = state_data->prog_data->args->config_args.serial_channel_number;
 
   state_data->serial_channel_number_initialized = 1;
   state_data->serial_channel_number = serial_channel_number;

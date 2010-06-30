@@ -48,8 +48,39 @@ init_config_args (struct config_arguments *config_args)
   config_args->action = 0;
   config_args->verbose_count = 0;
   config_args->filename = NULL;
+  config_args->lan_channel_number = 0;
+  config_args->lan_channel_number_set = 0;
+  config_args->serial_channel_number = 0;
+  config_args->serial_channel_number_set = 0;
   config_args->keypairs = NULL;
   config_args->section_strs = NULL;
+}
+
+static void
+_config_parse_channel_number (char *arg,
+                              uint8_t *channel_number,
+                              int *channel_number_set)
+{
+  char *ptr;
+  int tmp;
+
+  assert (arg);
+  assert (channel_number);
+  assert (channel_number_set);
+
+  tmp = strtol (arg, &ptr, 0);
+  if (ptr != (arg + strlen (arg)))
+    {
+      fprintf (stderr, "invalid channel number\n");
+      exit (1);
+    }
+  if (!IPMI_CHANNEL_NUMBER_VALID (tmp))
+    {
+      fprintf (stderr, "invalid channel number\n");
+      exit(1);
+    }
+  (*channel_number) = (uint8_t)tmp;
+  (*channel_number_set)++;
 }
 
 error_t
@@ -149,6 +180,16 @@ config_parse_opt (int key,
       break;
     case CONFIG_ARGP_VERBOSE_KEY:
       config_args->verbose_count++;
+      break;
+    case CONFIG_ARGP_LAN_CHANNEL_NUMBER_KEY:
+      _config_parse_channel_number (arg,
+                                    &(config_args->lan_channel_number),
+                                    &(config_args->lan_channel_number_set));
+      break;
+    case CONFIG_ARGP_SERIAL_CHANNEL_NUMBER_KEY:
+      _config_parse_channel_number (arg,
+                                    &(config_args->serial_channel_number),
+                                    &(config_args->serial_channel_number_set));
       break;
     default:
       return (ARGP_ERR_UNKNOWN);

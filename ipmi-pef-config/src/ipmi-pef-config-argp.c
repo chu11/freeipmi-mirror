@@ -67,6 +67,7 @@ static struct argp_option cmdline_options[] =
       "Show general information about PEF configuration.", 30},
     CONFIG_ARGP_COMMON_OPTIONS,
     CONFIG_ARGP_COMMON_OPTIONS_LEGACY,
+    CONFIG_ARGP_LAN_CHANNEL_OPTION,
     { NULL, 0, NULL, 0, NULL, 0}
   };
 
