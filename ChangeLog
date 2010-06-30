@@ -1,5 +1,9 @@
 2010-06-30  Albert Chu <chu11@llnl.gov>
 
+	* Support Supermicro X8DTU motherboard product id.
+	
+2010-06-30  Albert Chu <chu11@llnl.gov>
+
 	* bmc-config/, ipmi-pef-config/, common/src/configtool/: Support
 	--lan-channel-number, --serial-channel-number.
 	

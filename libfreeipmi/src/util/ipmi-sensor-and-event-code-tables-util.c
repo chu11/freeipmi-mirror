@@ -1919,7 +1919,8 @@ ipmi_get_oem_event_bitmask_message (uint32_t manufacturer_id,
   if ((manufacturer_id == IPMI_IANA_ENTERPRISE_ID_SUPERMICRO
        || manufacturer_id ==  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND)
       && (product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTH
-          || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTG))
+          || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTG
+          || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTU))
     {
       switch (event_reading_type_code)
 	{
@@ -2162,7 +2163,8 @@ ipmi_get_event_messages (uint8_t event_reading_type_code,
            && (manufacturer_id == IPMI_IANA_ENTERPRISE_ID_SUPERMICRO
                || manufacturer_id ==  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND)
            && (product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTH
-               || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTG)
+               || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTG
+               || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTU)
            && event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_SUPERMICRO_GENERIC)
     {
       len = ipmi_get_oem_event_bitmask_message (manufacturer_id,

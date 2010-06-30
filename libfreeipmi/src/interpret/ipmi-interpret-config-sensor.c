@@ -663,7 +663,7 @@ _interpret_sensor_oem_config_init (ipmi_interpret_ctx_t ctx, hash_t oem_config)
 
   oem_conf->oem_state_count = 8;
 
-  /* Supermicro X8DTH/X8DTG CPU Temperature Sensor
+  /* Supermicro X8DTH/X8DTG/X8DTU CPU Temperature Sensor
    *
    * Manufacturer ID = 47488 (not IANA number, special case)
    * Product ID = 43707
