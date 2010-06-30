@@ -41,6 +41,11 @@ o ipmiconsole
   - Rework 'intel20' workaround to not allow a non two-part authentication.
 o ipmipower
   - Rework 'intel20' workaround to not allow a non two-part authentication.
+o bmc-config
+  - Support --lan-channel-number.
+  - Support --serial-channel-number.
+o ipmi-pef-config
+  - Support --lan-channel-number.
 o ipmimonitoring
   - Removed tool.  Tool is now superseded by ipmi-sensors and the new
     --output-sensor-state option.
