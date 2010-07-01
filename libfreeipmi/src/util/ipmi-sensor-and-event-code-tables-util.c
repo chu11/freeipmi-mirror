@@ -1907,6 +1907,7 @@ ipmi_get_oem_event_bitmask_message (uint32_t manufacturer_id,
    *
    * Supermicro X8DTH
    * Supermicro X8DTG
+   * Supermicro X8DTU
    *
    * Event Reading Type Code = IPMI_EVENT_READING_TYPE_CODE_OEM_SUPERMICRO_GENERIC
    * Sensor Type = IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP
