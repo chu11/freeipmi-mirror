@@ -212,7 +212,7 @@ Delete SEL records 44 and 82 on the local machine.
 .PP
 Delete all SEL entries on the local machine.
 .PP
-.B # ipmi-sel --delete-range 12-42
+.B # ipmi-sel --delete-range=12-42
 .PP
 Delete SEL entries in the range 12 to 42 on the local machine.
 .PP
