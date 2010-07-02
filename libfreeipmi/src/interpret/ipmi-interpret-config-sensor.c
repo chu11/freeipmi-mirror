@@ -622,7 +622,7 @@ _interpret_sensor_oem_config_init (ipmi_interpret_ctx_t ctx, hash_t oem_config)
   
   if (_interpret_sensor_oem_config_create (ctx,
 					   IPMI_IANA_ENTERPRISE_ID_DELL,
-					   IPMI_DELL_PRODUCT_ID_POWEREDGE,
+					   IPMI_DELL_PRODUCT_ID_POWEREDGE_R610,
 					   IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC,
 					   IPMI_SENSOR_TYPE_OEM_DELL_SYSTEM_PERFORMANCE_DEGRADATION_STATUS,
                                            oem_config,

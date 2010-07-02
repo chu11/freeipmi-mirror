@@ -1,3 +1,7 @@
+2010-07-02  Albert Chu <chu11@llnl.gov>
+
+	* Fix compile bug w/ macro renaming.
+	
 2010-07-01  Albert Chu <chu11@llnl.gov>
 
 	* Prefix macros not intended to be used by users.
