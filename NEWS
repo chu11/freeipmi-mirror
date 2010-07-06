@@ -3,6 +3,7 @@ FreeIPMI 0.8.8 - 06/17/10
 o Support bmc-watchdog 'ignorestateflag' workaround around more issues.
 o Fix bmc-watchdog --version option.
 o Fix legacy workaround corner case in channel detection for Intel nodes.
+o Support --without-random-device configure option for some embedded systems.
 o Minor documentation updates.
 
 FreeIPMI 0.8.7 - 06/17/10

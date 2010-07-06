@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.8.8.beta1],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.185.2.24 2010-06-28 20:11:43 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.185.2.25 2010-07-06 22:38:49 chu11 Exp $])
 
 dnl We require a modern autoconf and automake
 AC_PREREQ([2.57])
@@ -627,7 +627,26 @@ dnl Check for variables
 dnl Macro definitions
 
 dnl Check for random number paths
-AC_CHECK_FILE([/dev/urandom], AC_DEFINE([HAVE_DEVURANDOM], [1], [Define that you found /dev/urandom]))
-AC_CHECK_FILE([/dev/random], AC_DEFINE([HAVE_DEVRANDOM], [1], [Define that you found /dev/urandom]))
+
+dnl Option to disable checking for /dev/urandom and /dev/random
+dnl
+dnl May be useful for cross compile distros where checking for
+dnl specific files is illegal.
+dnl
+AC_MSG_CHECKING([for random device support])
+AC_ARG_WITH([random-device],
+           AC_HELP_STRING([--without-random-device], [don't support random devices like /dev/urandom]),
+           [ case "$withval" in
+             no)  ac_with_random_device=no ;;
+             yes) ac_with_random_device=yes ;;
+             *)   ac_with_random_device=yes ;;
+           esac
+           ])
+AC_MSG_RESULT([${ac_with_random_device=yes}])
+
+if test x"${ac_with_random_device}" = xyes; then
+   AC_CHECK_FILE([/dev/urandom], AC_DEFINE([HAVE_DEVURANDOM], [1], [Define that you found /dev/urandom]))
+   AC_CHECK_FILE([/dev/random], AC_DEFINE([HAVE_DEVRANDOM], [1], [Define that you found /dev/urandom]))
+fi
 
 AC_OUTPUT
