@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.9.1.alpha4],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.199 2010-06-11 17:04:41 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.200 2010-07-06 22:38:36 chu11 Exp $])
 
 dnl We require a modern autoconf and automake
 AC_PREREQ([2.57])
@@ -640,7 +640,26 @@ IPMIMONITORINGSBINDIR="`eval echo $IPMIMONITORINGSBINDIR_TMP2`"
 AC_SUBST([IPMIMONITORINGSBINDIR])
 
 dnl Check for random number paths
-AC_CHECK_FILE([/dev/urandom], AC_DEFINE([HAVE_DEVURANDOM], [1], [Define that you found /dev/urandom]))
-AC_CHECK_FILE([/dev/random], AC_DEFINE([HAVE_DEVRANDOM], [1], [Define that you found /dev/urandom]))
+
+dnl Option to disable checking for /dev/urandom and /dev/random
+dnl
+dnl May be useful for cross compile distros where checking for
+dnl specific files is illegal.
+dnl
+AC_MSG_CHECKING([for random device support])
+AC_ARG_WITH([random-device],
+           AC_HELP_STRING([--without-random-device], [don't support random devices like /dev/urandom]),
+           [ case "$withval" in
+             no)  ac_with_random_device=no ;;
+             yes) ac_with_random_device=yes ;;
+             *)   ac_with_random_device=yes ;;
+           esac
+           ])
+AC_MSG_RESULT([${ac_with_random_device=yes}])
+
+if test x"${ac_with_random_device}" = xyes; then
+   AC_CHECK_FILE([/dev/urandom], AC_DEFINE([HAVE_DEVURANDOM], [1], [Define that you found /dev/urandom]))
+   AC_CHECK_FILE([/dev/random], AC_DEFINE([HAVE_DEVRANDOM], [1], [Define that you found /dev/urandom]))
+fi
 
 AC_OUTPUT
