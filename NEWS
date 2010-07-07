@@ -6,6 +6,8 @@ o Fix legacy workaround corner case in channel detection for Intel nodes.
 o Support --without-random-device configure option for some embedded systems.
 o Modify ipmiconsole protocol to not deactivate SOL protocol is SOL is
   already deactivated.
+o Modify ipmiconsole protocol to not error out under several malformed
+  packet scenarios.
 o Minor documentation updates.
 
 FreeIPMI 0.8.7 - 06/17/10

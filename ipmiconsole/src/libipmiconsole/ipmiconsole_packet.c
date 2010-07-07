@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_packet.c,v 1.54.2.6 2010-06-11 16:29:21 chu11 Exp $
+ *  $Id: ipmiconsole_packet.c,v 1.54.2.7 2010-07-07 21:44:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -1475,8 +1475,9 @@ ipmiconsole_packet_unassemble (ipmiconsole_ctx_t c,
   if ((ret = ipmi_is_ipmi_1_5_packet (buf, buflen)) < 0)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("ipmi_is_ipmi_1_5_packet: %s", strerror (errno)));
-      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return (-1);
+      /* Assume malformed packet */
+      pkt_ret = 0;
+      goto out;
     }
 
   if (ret)
@@ -1520,8 +1521,9 @@ ipmiconsole_packet_unassemble (ipmiconsole_ctx_t c,
       if (ipmi_rmcpplus_calculate_payload_type (buf, buflen, &payload_type) < 0)
         {
           IPMICONSOLE_CTX_DEBUG (c, ("ipmi_rmcpplus_calculate_payload_type: %s", strerror (errno)));
-          ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-          return (-1);
+	  /* Assume malformed packet */
+	  pkt_ret = 0;
+	  goto out;
         }
 
       if (payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE
