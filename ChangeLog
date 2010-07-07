@@ -1,3 +1,9 @@
+2010-07-07  Albert Chu <chu11@llnl.gov>
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole_packet.c
+	(ipmiconsole_packet_unassemble): On several errors, assume
+	malformed packet, not internal error.
+	
 2010-07-07  Albert Chu <chu11@llnl.gov> & Anonymous Avocent Developer
 
 	* ipmiconsole/src/libipmiconsole/ipmiconsole_processing.c
