@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.106.4.2 2010-04-27 20:59:28 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.106.4.3 2010-07-07 17:36:53 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -2275,7 +2275,7 @@ _check_try_new_port (ipmiconsole_ctx_t c)
  * Returns -1 on error
  */
 static int
-_sol_bmc_to_remote_console_packet (ipmiconsole_ctx_t c)
+_sol_bmc_to_remote_console_packet (ipmiconsole_ctx_t c, int *sol_deactivating_flag)
 {
   uint8_t packet_sequence_number;
   uint8_t packet_ack_nack_sequence_number;
@@ -2291,6 +2291,9 @@ _sol_bmc_to_remote_console_packet (ipmiconsole_ctx_t c)
   assert (c);
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
   assert (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION);
+  assert (sol_deactivating_flag);
+
+  (*sol_deactivating_flag) = 0;
 
   secure_malloc_flag = (c->config.engine_flags & IPMICONSOLE_ENGINE_LOCK_MEMORY) ? 1 : 0;
 
@@ -2391,6 +2394,7 @@ _sol_bmc_to_remote_console_packet (ipmiconsole_ctx_t c)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("SOL Deactivating"));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SOL_STOLEN);
+      (*sol_deactivating_flag) = 1;
       goto cleanup;
     }
 
@@ -3426,12 +3430,23 @@ _process_protocol_state_sol_session_receive (ipmiconsole_ctx_t c, ipmiconsole_pa
 
   if (p == IPMICONSOLE_PACKET_TYPE_SOL_PAYLOAD_DATA_RS)
     {
-      if (_sol_bmc_to_remote_console_packet (c) < 0)
+      int sol_deactivating_flag = 0;
+
+      if (_sol_bmc_to_remote_console_packet (c, &sol_deactivating_flag) < 0)
         {
           c->session.close_session_flag++;
-          if (_send_ipmi_packet (c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
-            return (-1);
-          c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
+          if (sol_deactivating_flag)
+            {
+              if (_send_ipmi_packet (c, IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RQ) < 0)
+                return (-1);
+              c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT;
+            }
+          else
+            {
+              if (_send_ipmi_packet (c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
+                return (-1);
+              c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
+            }
           return (0);
         }
     }
