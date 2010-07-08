@@ -1,3 +1,7 @@
+2010-07-08  Albert Chu <chu11@llnl.gov>
+
+	* bmc-config/bmc-config.8.pre.in: Add small OEM config note.
+	
 2010-07-07  Albert Chu <chu11@llnl.gov>
 
 	* ipmiconsole/src/libipmiconsole/ipmiconsole_packet.c

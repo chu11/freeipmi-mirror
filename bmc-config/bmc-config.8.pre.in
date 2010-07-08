@@ -115,6 +115,12 @@ On some motherboards,
 .B Lan_Conf:MAC_Address
 may be read only and the MAC address is automatically configured.
 
+On some motherboards,
+.B Lan_Conf:MAC_Address
+may be read only and the MAC address is configured via an OEM command.  See
+.B ipmi-oem(8)
+to see if OEM configuration for your motherboard is supported.
+
 On some motherboards, a number of user configuration fields cannot be
 read or configured until after a non-null username or non-null
 password is configured.  In some of these cases, an appropriate output
