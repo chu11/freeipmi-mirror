@@ -21,10 +21,7 @@
 
 #include "ipmi-oem.h"
 
-#if 0
-/* dangerous - truly nukes settings, including SDR */
 int ipmi_oem_quanta_reset_to_defaults (ipmi_oem_state_data_t *state_data);
-#endif
 
 int ipmi_oem_quanta_get_processor_information (ipmi_oem_state_data_t *state_data);
 

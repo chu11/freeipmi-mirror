@@ -1,3 +1,8 @@
+2010-07-08  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-oem/: Uncomment Quanta reset-to-defaults commands, is now
+	functional w/ proper documentation.
+	
 2010-07-08  Dick Detweiler <Dick.Detweiler@Emerson.com>
 
 	* common/src/pingtool/ping-tool-common.c (_cmdline_parse): Fix

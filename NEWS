@@ -3,13 +3,14 @@ FreeIPMI 0.8.8 - 06/17/10
 o Support bmc-watchdog 'ignorestateflag' workaround around more issues.
 o Fix bmc-watchdog --version option.
 o Fix legacy workaround corner case in channel detection for Intel nodes.
-o Support --without-random-device configure option for some embedded systems.
+o Support Quanta reset-to-defaults command in ipmi-oem.
 o Modify ipmiconsole protocol to not deactivate SOL protocol is SOL is
   already deactivated.
 o Modify ipmiconsole protocol to not error out under several malformed
   packet scenarios.
 o Fix ipmiping/rmcpping command line parsing corner case.
 o Minor documentation updates.
+o Support --without-random-device configure option for some embedded systems.
 
 FreeIPMI 0.8.7 - 06/17/10
 -------------------------
