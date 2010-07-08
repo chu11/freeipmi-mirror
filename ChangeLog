@@ -1,3 +1,8 @@
+2010-07-08  Dick Detweiler <Dick.Detweiler@Emerson.com>
+
+	* common/src/pingtool/ping-tool-common.c (_cmdline_parse): Fix
+	casting bug.
+	
 2010-07-08  Albert Chu <chu11@llnl.gov>
 
 	* bmc-config/bmc-config.8.pre.in: Add small OEM config note.
