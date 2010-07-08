@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ping-tool-common.c,v 1.17.4.4 2010-01-19 03:50:16 chu11 Exp $
+ *  $Id: ping-tool-common.c,v 1.17.4.5 2010-07-08 16:46:02 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -213,7 +213,8 @@ _cmdline_parse (int argc,
                 unsigned int max_sequence_number,
                 const char *options)
 {
-  char c, *ptr;
+  char *ptr;
+  int c;
 
   /* Turn off error messages */
   opterr = 0;

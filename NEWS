@@ -8,6 +8,7 @@ o Modify ipmiconsole protocol to not deactivate SOL protocol is SOL is
   already deactivated.
 o Modify ipmiconsole protocol to not error out under several malformed
   packet scenarios.
+o Fix ipmiping/rmcpping command line parsing corner case.
 o Minor documentation updates.
 
 FreeIPMI 0.8.7 - 06/17/10
