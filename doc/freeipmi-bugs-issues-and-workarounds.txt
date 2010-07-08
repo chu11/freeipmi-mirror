@@ -397,9 +397,6 @@ current resolution.
 Supermicro X8DTG: SOL payload sizes are reported incorrectly.
 Resolved with a workaround to skip payload size checks.
 
-Supermicro X8DTG: If SOL is disabled on the remote system, the user
-can still connect via SOL.  No current resolution.
-
 Supermicro X8DTG: If SOL Forced Authentication or Forced Encryption is
 disabled on the remote system, the user is still required to connect
 with Authentication or Encryption enabled.  No current resolution.
