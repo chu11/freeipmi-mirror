@@ -666,8 +666,6 @@ struct ipmi_oem_command oem_sun[] =
 
 struct ipmi_oem_command oem_quanta[] =
   {
-#if 0
-    /* dangerous - truly nukes settings, including SDR */
     {
       "reset-to-defaults",
       "<all|user|lan|sol|serial|pef>",
@@ -675,7 +673,6 @@ struct ipmi_oem_command oem_quanta[] =
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_quanta_reset_to_defaults
     },
-#endif
     {
       "get-processor-information",
       "[processor-index]",

@@ -524,13 +524,15 @@ subsequently Dell Xanadu II) for \fIat24c256\fR.
 .TP
 .B Quanta
 .RS
-.if 0 \{
 .TP
 .B reset-to-defaults \fIall|user|lan|sol|serial|pef\fR
 This OEM command will reset certain BMC configuration sections back to
 default values.  The command will spin until the reset is confirmed to
 be complete.  Command confirmed to work on Quanta S99Q (Dell TS12-TY).
-\}
+After running this command, the BMC must be reset to return it to
+functioning status.  This may be accomplished by executing a
+cold-reset with
+.B bmc-device(8).
 .TP
 .B get-processor-information \fI[processor-index]\fR
 This OEM command will determine system processor information.  By
