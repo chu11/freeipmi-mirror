@@ -479,8 +479,8 @@ Inventec 5441/Dell Xanadu II: Setting a channel privilege limit
 authentication and/or execution of IPMI commands.  No current
 resolution.
 
-Inventec 5441/Dell Xanadu II: Setting Non-volatile settings seems to
-also change volatile settings for channel configuration.  No current
+Inventec 5441/Dell Xanadu II: Setting Non-volatile settings also
+changes Volatile settings for channel configuration.  No current
 resolution.
 
 Inventec 5441/Dell Xanadu II: ARP response configuration is not
@@ -492,8 +492,8 @@ Privilege_Limit are not changeable via Set User Access for some users.
 The values are not changeable until a username has been set.  No
 current resolution.  [FUNCTIONAL]
 
-Supermicro X8DTH: Setting Non-volatile settings seems to also change
-volatile settings for channel configuration.  No current resolution.
+Supermicro X8DTH: Setting Non-volatile settings also changes Volatile
+settings for channel configuration.  No current resolution.
 
 Forgotten/Undocumented Motherboard(s): Setting a password using IPMI
 2.0 extensions (i.e. up to 20 bytes in length) does not appear to
@@ -556,6 +556,10 @@ Intel S5500WBV/Penguin Relion 700: Usernames are not reconfigurable
 after they have been set atleast once.  Set User Name command responds
 with error code CCh = 'Invalid data field in Request'.  No current
 resolution.  [FUNCTIONAL]
+
+Intel S5500WBV/Penguin Relion 700: Setting Non-volatile settings also
+changes Volatile settings for channel configuration.  No current
+resolution.
 
 ipmi-pef-config
 ---------------
