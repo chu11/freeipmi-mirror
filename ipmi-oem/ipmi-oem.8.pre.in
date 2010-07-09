@@ -397,9 +397,9 @@ confirmed to work on Inventec 5441/5442 (Dell Xanadu II/III).
 .B get-authentication-config
 This OEM command will display additional OEM authentication settings.
 (See \fIset\-authentication\-config\fR below for description on
-outputs.)  Command confirmed to work on Inventec 5441/5442 (and
-subsequently Dell Xanadu II/III).
-.TP
+outputs.)  Command confirmed to work on Inventec 5441/5442 (Dell
+Xanadu II/III).
+TP
 .B set-authentication-config \fIKEY=VALUE ...\fR
 This OEM command will set additional OEM authentication settings on
 the IPMI card.  The possible keys and values are
@@ -414,13 +414,13 @@ any of the settings will disable the lockout feature.  Each time any
 of these settings is modified, the authentication failure count of
 each enabled user is reset to 0.  Multiple key=value pairs may be
 specified.  If no key=value pairs are specifed, available pairs are
-output.  Command confirmed to work on Inventec 5441/5442 (and subsequently
-Dell Xanadu II/III).
+output.  Command confirmed to work on Inventec 5441/5442 (Dell Xanadu
+II/III).
 .TP
 .B get-web-server-config
 This OEM command will get the current web server configuration on the
-IPMI card.  Command confirmed to work on Inventec 5441/5442 (and
-subsequently Dell Xanadu II/III).
+IPMI card.  Command confirmed to work on Inventec 5441/5442 (Dell
+Xanadu II/III).
 .TP
 .B set-web-server-config \fIKEY=VALUE ...\fR
 This OEM command will set the current web server configuration on the
@@ -432,9 +432,9 @@ available pairs are output.  Command confirmed to work on Inventec
 5441/5442 (Dell Xanadu II/III).
 .TP
 .B get-power-management-config
-This OEM command will get the current power management configuration on the
-IPMI card.  Command confirmed to work on Inventec 5441/5442 (and
-subsequently Dell Xanadu II/III).
+This OEM command will get the current power management configuration
+on the IPMI card.  Command confirmed to work on Inventec 5441/5442
+(Dell Xanadu II/III).
 .TP
 .B set-power-management-config \fIKEY=VALUE ...\fR
 This OEM command will set the current power management configuration
@@ -449,8 +449,8 @@ minimum and maximum configured, and \fIuser\fR uses the user defined
 time defined by \fIpowerondelay\fR.  \fIpowerondelay\fR must be within
 the minimum and maximum power on delay times.  Multiple key=value
 pairs may be specified.  If no key=value pairs are specifed, available
-pairs are output.  Command confirmed to work on Inventec 5441/5442 (and
-subsequently Dell Xanadu II/III).
+pairs are output.  Command confirmed to work on Inventec 5441/5442
+(Dell Xanadu II/III).
 .if 0 \{
 .TP
 .B restore-to-defaults \fIall|user|lan|sol|serial|pef\fR
@@ -467,9 +467,9 @@ on Inventec 5441 (Dell Xanadu II).
 .if 0 \{
 .TP
 .B get-firmware-update-config
-This OEM command will get the current firmware update configuration on the
-IPMI card.  Command confirmed to work on Inventec 5441/5442 (and
-subsequently Dell Xanadu II).
+This OEM command will get the current firmware update configuration on
+the IPMI card.  Command confirmed to work on Inventec 5441/5442 (Dell
+Xanadu II).
 .TP
 .B set-firmware-update-config \fIKEY=VALUE ...\fR
 This OEM command will set the current firmware update configuration on
@@ -518,8 +518,8 @@ work on Inventec 5441 (Dell Xanadu II) for
 .B clear-eeprom \fIat24c256n\fR
 This OEM command will clear the specified eeprom.  If the verbose
 option is set, progress percent will be output as the clearing is
-being done.  Command confirmed to work on Inventec 5441 (and
-subsequently Dell Xanadu II) for \fIat24c256\fR.
+being done.  Command confirmed to work on Inventec 5441 (Dell Xanadu
+II) for \fIat24c256\fR.
 .RE
 .TP
 .B Quanta
