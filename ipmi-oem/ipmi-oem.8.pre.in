@@ -361,7 +361,7 @@ vs. shared mode.)  This OEM command may internally reset the BMC,
 making the BMC unusable for awhile.  Command confirmed to work on
 Inventec 5441/5442 (Dell Xanadu II/III).
 .TP
-.B get-mac-address\fR
+.B get-mac-address
 This command will retrieve the BMC MAC address.  This is actually not
 an OEM command, but rather the normal IPMI MAC address command
 (identical to what is used in the
@@ -384,7 +384,7 @@ by executing a cold-reset with
 Command confirmed to work on Inventec 5441/5442 (Dell Xanadu II/III).
 .TP
 .B get-bmc-services
-This OEM command will display the currently enables BMC services.
+This OEM command will display the currently enabled BMC services.
 Command confirmed to work on Inventec 5441/5442 (Dell Xanadu II/III).
 .TP
 .B set-bmc-services \fIenable|disable\fR \fIall|kvm|http|ssh\fR
