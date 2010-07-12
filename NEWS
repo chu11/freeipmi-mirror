@@ -1,5 +1,7 @@
 FreeIPMI 0.8.8 - 06/17/10
 -------------------------
+o Support Supermicro 'get-bmc-services-status' and
+  'set-bmc-services-status' in ipmi-oem.
 o Support bmc-watchdog 'ignorestateflag' workaround around more issues.
 o Fix bmc-watchdog --version option.
 o Fix legacy workaround corner case in channel detection for Intel nodes.

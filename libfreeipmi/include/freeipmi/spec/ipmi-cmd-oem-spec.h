@@ -187,6 +187,13 @@ extern "C" {
 #define IPMI_CMD_OEM_SUPERMICRO_EXTRA_FIRMWARE_INFO 0x20
 #define IPMI_CMD_OEM_SUPERMICRO_RESET_INTRUSION     0x03
 
+/*
+ * Supermicro X8DTG
+ */
+
+/* achu: not official names, named based on use context */
+#define IPMI_CMD_OEM_SUPERMICRO_GENERIC_EXTENSION   0x70 
+
 #ifdef __cplusplus
 }
 #endif

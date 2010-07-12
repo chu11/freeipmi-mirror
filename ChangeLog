@@ -1,5 +1,10 @@
 2010-07-12  Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/: Support Supermicro get-bmc-services-status and
+	set-bmc-services-status.
+	
+2010-07-12  Albert Chu <chu11@llnl.gov>
+
 	* Various documentation updates.
 	
 2010-07-08  Albert Chu <chu11@llnl.gov>

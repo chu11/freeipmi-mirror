@@ -39,6 +39,15 @@
 
 #define IPMI_OEM_SUPERMICRO_STRING_MAX 128
 
+#define IPMI_SUPERMICRO_SUB_COMMAND_BMC_SERVICES 0xF0
+
+#define IPMI_SUPERMICRO_BMC_SERVICES_ACTION_DISABLE  0x00
+#define IPMI_SUPERMICRO_BMC_SERVICES_ACTION_ENABLE   0x01
+#define IPMI_SUPERMICRO_BMC_SERVICES_ACTION_STATUS   0x02
+
+#define IPMI_SUPERMICRO_BMC_SERVICES_STATUS_DISABLED 0x00
+#define IPMI_SUPERMICRO_BMC_SERVICES_STATUS_ENABLED  0x01
+
 int
 ipmi_oem_supermicro_extra_firmware_info (ipmi_oem_state_data_t *state_data)
 {
@@ -199,6 +208,160 @@ ipmi_oem_supermicro_reset_intrusion (ipmi_oem_state_data_t *state_data)
                                                    NULL) < 0)
     goto cleanup;
 
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
+ipmi_oem_supermicro_get_bmc_services_status (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  int rs_len;
+  int rv = -1;
+
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+
+  /* Supermicro OEM
+   *
+   * Request 
+   *
+   * 0x30 - OEM network function
+   * 0x70 - OEM cmd
+   * 0xF0 - Sub-command
+   * 0x?? - action
+   *      - 0x00 - disable
+   *      - 0x01 - enable
+   *      - 0x02 - status
+   *
+   * Response 
+   *
+   * 0x70 - OEM cmd
+   * 0x?? - Completion Code
+   * 0x?? - if action == status
+   *      - 0x00 - disabled
+   *      - 0x01 - enabled
+   */
+
+  bytes_rq[0] = IPMI_CMD_OEM_SUPERMICRO_GENERIC_EXTENSION;
+  bytes_rq[1] = IPMI_SUPERMICRO_SUB_COMMAND_BMC_SERVICES;
+  bytes_rq[2] = IPMI_SUPERMICRO_BMC_SERVICES_ACTION_STATUS;
+
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+                              IPMI_NET_FN_OEM_SUPERMICRO_GENERIC_RQ, /* network function */
+                              bytes_rq, /* data */
+                              3, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+  
+  if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                   bytes_rs,
+                                                   rs_len,
+                                                   3,
+                                                   IPMI_CMD_OEM_SUPERMICRO_RESET_INTRUSION,
+                                                   IPMI_NET_FN_OEM_SUPERMICRO_GENERIC_RS,
+                                                   NULL) < 0)
+    goto cleanup;
+
+  if (bytes_rs[2] == IPMI_SUPERMICRO_BMC_SERVICES_STATUS_DISABLED)
+    pstdout_printf (state_data->pstate, "disabled\n");
+  else if (bytes_rs[2] == IPMI_SUPERMICRO_BMC_SERVICES_STATUS_ENABLED)
+    pstdout_printf (state_data->pstate, "enabled\n");
+  else
+    pstdout_fprintf (state_data->pstate,
+		     stderr,
+		     "Unknown Non-IPMI Ports Status\n");
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
+ipmi_oem_supermicro_set_bmc_services_status (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  int rs_len;
+  int rv = -1;
+
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 1);
+
+  if (strcasecmp (state_data->prog_data->args->oem_options[0], "enable")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "disable"))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[0]);
+      goto cleanup;
+    }
+
+  /* Supermicro OEM
+   *
+   * Request 
+   *
+   * 0x30 - OEM network function
+   * 0x70 - OEM cmd
+   * 0xF0 - Sub-command
+   * 0x?? - action
+   *      - 0x00 - disable
+   *      - 0x01 - enable
+   *      - 0x02 - status
+   *
+   * Response 
+   *
+   * 0x70 - OEM cmd
+   * 0x?? - Completion Code
+   * 0x?? - if action == status
+   *      - 0x00 - disabled
+   *      - 0x01 - enabled
+   */
+
+  bytes_rq[0] = IPMI_CMD_OEM_SUPERMICRO_GENERIC_EXTENSION;
+  bytes_rq[1] = IPMI_SUPERMICRO_SUB_COMMAND_BMC_SERVICES;
+
+  if (!strcasecmp (state_data->prog_data->args->oem_options[0], "enable"))
+    bytes_rq[2] = IPMI_SUPERMICRO_BMC_SERVICES_ACTION_ENABLE;
+  else /* !strcasecmp (state_data->prog_data->args->oem_options[0], "disable") */
+    bytes_rq[2] = IPMI_SUPERMICRO_BMC_SERVICES_ACTION_DISABLE;
+
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+                              IPMI_NET_FN_OEM_SUPERMICRO_GENERIC_RQ, /* network function */
+                              bytes_rq, /* data */
+                              3, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                   bytes_rs,
+                                                   rs_len,
+                                                   2,
+                                                   IPMI_CMD_OEM_SUPERMICRO_RESET_INTRUSION,
+                                                   IPMI_NET_FN_OEM_SUPERMICRO_GENERIC_RS,
+                                                   NULL) < 0)
+    goto cleanup;
+  
   rv = 0;
  cleanup:
   return (rv);

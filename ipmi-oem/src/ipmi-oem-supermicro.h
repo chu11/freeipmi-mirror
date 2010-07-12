@@ -25,4 +25,8 @@ int ipmi_oem_supermicro_extra_firmware_info (ipmi_oem_state_data_t *state_data);
 
 int ipmi_oem_supermicro_reset_intrusion (ipmi_oem_state_data_t *state_data);
 
+int ipmi_oem_supermicro_get_bmc_services_status (ipmi_oem_state_data_t *state_data);
+
+int ipmi_oem_supermicro_set_bmc_services_status (ipmi_oem_state_data_t *state_data);
+
 #endif
