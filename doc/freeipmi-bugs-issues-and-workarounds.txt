@@ -188,15 +188,17 @@ current resolution.
 Supermicro X8DTG: Cipher suites 0 fails to authenticate.  During the
 RAKP4 communication, an integrity key is returned, when it in fact
 should be 0 length.  Resolved with a workaround to handle this
-specific situation.
+specific situation.  This bug
+is confirmed to be fixed on newer firmware.
 
 Supermicro X8DTG: Cipher suites 7 and 8 fail to establish a session.
 It appears authentication codes are not returned for session packets,
-therefore packets are dropped as they are viewed as malformed.  No
-current resolution.
+therefore packets are dropped as they are viewed as malformed.  This
+bug is confirmed to be fixed on newer firmware.
 
 Supermicro X8DTG: Cipher suites 11 and 12 fail to establish a session.
-Authentication codes appear to be incorrect.  No current resolution.
+Authentication codes appear to be incorrect.  This bug is confirmed to
+be fixed on newer firmware.
 
 Intel S5500WBV/Penguin Relion 700: Cipher suites 0 fails to
 authenticate.  During the RAKP4 communication, an integrity key is
@@ -543,6 +545,11 @@ current resolution.
 
 Supermicro X8DTG: User access parameters configured via Set User
 Access does not work for some users.  No current resolution.
+
+Supermicro X8DTG: Despite Cipher Suites 6, 7, 8, 11, and 12 not being
+available on the board, these Cipher Suite's Maximum Privilege Level
+are configurable, suggesting to the user they are available.  No
+current resolution.
 
 Intel S5500WBV/Penguin Relion 700: Default root username cannot be
 changed.  No current resolution.  [FUNCTIONAL]
