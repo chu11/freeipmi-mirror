@@ -578,6 +578,17 @@ or
 you may notice a 'General Chassis Intrusion' if the motherboard
 chassis is not open, but was opened in the past.  Command confirmed to
 work on Supermicro H8QME.
+.TP
+.B get-bmc-services-status
+This OEM command will determine if non-IPMI services (e.g. ssh, http,
+https, vnc, etc.) are currently enabled or disabled on the BMC.
+Command confirmed to work on Supermicro X8DTG.
+.TP
+.B set-bmc-services-status \fIenable|disable\fR
+This OEM command will enable or disable all non-IPMI services on the
+BMC.  This command can be used to enable or disable non-IPMI services
+such as ssh, http, https, and vnc.  Command confirmed to work on
+Supermicro X8DTG.
 .RE
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-main.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-threads.man>

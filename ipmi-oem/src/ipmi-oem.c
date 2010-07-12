@@ -706,6 +706,20 @@ struct ipmi_oem_command oem_supermicro[] =
       ipmi_oem_supermicro_reset_intrusion
     },
     {
+      "get-bmc-services-status",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_supermicro_get_bmc_services_status
+    },
+    {
+      "set-bmc-services-status",
+      "<enable|disable>",
+      1,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_supermicro_set_bmc_services_status
+    },
+    {
       NULL,
       NULL,
       0,
