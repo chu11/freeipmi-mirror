@@ -1,5 +1,12 @@
 2010-07-13  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/src/api/, ipmipower/,
+	ipmiconsole/src/libipmiconsole/: Re-work OPEN_SESSION_PRIVILEGE
+	workaround to handle an additional OPEN_SESSION_PRIVILEGE corner
+	case.
+	
+2010-07-13  Albert Chu <chu11@llnl.gov>
+
 	* Various documentation updates.
 	
 2010-07-12  Albert Chu <chu11@llnl.gov>
