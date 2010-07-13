@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_argp.c,v 1.22.4.2 2009-12-23 21:24:13 chu11 Exp $
+ *  $Id: ipmipower_argp.c,v 1.22.4.3 2010-07-13 22:10:04 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -375,7 +375,7 @@ _ipmipower_args_validate (struct ipmipower_arguments *cmd_args)
 
   if (cmd_args->powercmd != POWER_CMD_NONE && !cmd_args->common.hostname)
     {
-      fprintf (stderr, "must specify target hostname(s) in non-interactive mode");
+      fprintf (stderr, "must specify target hostname(s) in non-interactive mode\n");
       exit (1);
     }
 
@@ -387,7 +387,7 @@ _ipmipower_args_validate (struct ipmipower_arguments *cmd_args)
 
   if (cmd_args->ping_consec_count > cmd_args->ping_packet_count)
     {
-      fprintf (stderr, "ping consec count larger than ping packet count");
+      fprintf (stderr, "ping consec count larger than ping packet count\n");
       exit (1);
     }
 }
