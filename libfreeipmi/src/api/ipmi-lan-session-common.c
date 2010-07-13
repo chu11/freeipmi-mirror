@@ -3366,8 +3366,8 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
   /* IPMI Workaround (achu)
    *
    * Discovered on Sun Fire 4100, Inventec 5441/Dell Xanadu II,
-   * Supermicro X8DTH, Supermicro X8DTG, Intel S5500WBV/Penguin Relion
-   * 700
+   * Supermicro X8DTH, Supermicro X8DTG, Supermicro X8DTU, Intel
+   * S5500WBV/Penguin Relion 700
    *
    * The remote BMC incorrectly calculates keys using the privilege
    * specified in the open session stage rather than the privilege
@@ -3975,7 +3975,8 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
 
   /* IPMI Workaround (achu)
    *
-   * Discovered on Supermicro X8DTG, Intel S5500WBV/Penguin Relion 700
+   * Discovered on Supermicro X8DTG, Supermicro X8DTU, Intel
+   * S5500WBV/Penguin Relion 700
    *
    * For whatever reason, with cipher suite 0, the RAKP 4 response
    * returns with an Integrity Check Value when it should be empty.
