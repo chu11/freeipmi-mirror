@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.81.4.4 2010-06-10 22:10:06 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.81.4.5 2010-07-13 23:51:34 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -174,10 +174,10 @@ extern "C" {
  * This workaround flag will slightly alter FreeIPMI's IPMI 2.0
  * connection protocol to workaround an invalid hashing algorithm used
  * by the remote system.  The privilege level sent during the Open
- * Session stage of an IPMI 2.0 connection is used for hashing keys
- * instead of the privilege level sent during the RAKP1 connection
- * stage.  This workaround is automatically triggered with the
- * SUN_2_0_SESSION workaround.
+ * Session stage of an IPMI 2.0 connection is sometimes invalid and
+ * used for hashing keys instead of the privilege level sent during
+ * the RAKP1 connection stage.  This workaround is automatically
+ * triggered with the SUN_2_0_SESSION workaround.
  *
  * NON_EMPTY_INTEGRITY_CHECK_VALUE
  *
