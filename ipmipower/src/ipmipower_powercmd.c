@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.203 2010-06-11 15:57:07 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.204 2010-07-13 20:53:02 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -274,8 +274,8 @@ ipmipower_powercmd_queue (power_cmd_t cmd, struct ipmipower_connection *ic)
       /* IPMI Workaround (achu)
        *
        * Discovered on Sun Fire 4100, Inventec 5441/Dell Xanadu II,
-       * Supermicro X8DTH, Supermicro X8DTG, Intel S5500WBV/Penguin
-       * Relion 700
+       * Supermicro X8DTH, Supermicro X8DTG, Supermicro X8DTU, Intel
+       * S5500WBV/Penguin Relion 700
        *
        * The remote BMC incorrectly calculates keys using the privilege
        * specified in the open session stage rather than the privilege

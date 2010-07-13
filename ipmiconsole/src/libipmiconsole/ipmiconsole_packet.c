@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_packet.c,v 1.62 2010-07-07 21:45:07 chu11 Exp $
+ *  $Id: ipmiconsole_packet.c,v 1.63 2010-07-13 20:53:02 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -1003,8 +1003,8 @@ ipmiconsole_ipmi_packet_assemble (ipmiconsole_ctx_t c,
       /* IPMI Workaround (achu)
        *
        * Discovered on Sun Fire 4100, Inventec 5441/Dell Xanadu II,
-       * Supermicro X8DTH, Supermicro X8DTG, Intel S5500WBV/Penguin
-       * Relion 700
+       * Supermicro X8DTH, Supermicro X8DTG, Supermicro X8DTU, Intel
+       * S5500WBV/Penguin Relion 700
        *
        * The remote BMC incorrectly calculates keys using the privilege
        * specified in the open session stage rather than the privilege

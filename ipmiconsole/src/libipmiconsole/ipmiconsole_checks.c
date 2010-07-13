@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_checks.c,v 1.45 2010-06-11 15:57:07 chu11 Exp $
+ *  $Id: ipmiconsole_checks.c,v 1.46 2010-07-13 20:53:01 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -904,7 +904,8 @@ ipmiconsole_check_rakp_4_integrity_check_value (ipmiconsole_ctx_t c, ipmiconsole
 
   /* IPMI Workaround (achu)
    *
-   * Discovered on Supermicro X8DTG, Intel S5500WBV/Penguin Relion 700
+   * Discovered on Supermicro X8DTG, Supermicro X8DTU, Intel
+   * S5500WBV/Penguin Relion 700
    *
    * For whatever reason, with cipher suite 0, the RAKP 4 response
    * returns with an Integrity Check Value when it should be empty.
