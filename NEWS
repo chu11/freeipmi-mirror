@@ -12,6 +12,7 @@ o Modify ipmiconsole protocol to not error out under several malformed
   packet scenarios.
 o Fix ipmiping/rmcpping command line parsing corner case.
 o Minor documentation updates.
+o Minor error message output fixes.
 o Support --without-random-device configure option for some embedded systems.
 
 FreeIPMI 0.8.7 - 06/17/10
