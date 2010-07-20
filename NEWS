@@ -1,4 +1,4 @@
-FreeIPMI 0.8.8 - 06/17/10
+FreeIPMI 0.8.8 - 07/20/10
 -------------------------
 o Support Supermicro 'get-bmc-services-status' and
   'set-bmc-services-status' in ipmi-oem.
