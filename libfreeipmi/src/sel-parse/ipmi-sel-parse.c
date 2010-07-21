@@ -723,7 +723,16 @@ ipmi_sel_parse (ipmi_sel_parse_ctx_t ctx,
                           &reservation_id,
                           &reservation_id_initialized,
                           IPMI_SEL_GET_RECORD_ID_LAST_ENTRY) < 0)
-        goto cleanup;
+	{
+          if (ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+              && ipmi_check_completion_code (obj_cmd_rs,
+                                             IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1)
+            {
+              /* If the sel is empty it's not really an error */
+              goto out;
+            }
+	  goto cleanup;
+	}
 
       memset (&spe, '\0', sizeof (struct ipmi_sel_parse_entry));
           
@@ -758,7 +767,16 @@ ipmi_sel_parse (ipmi_sel_parse_ctx_t ctx,
                           &reservation_id,
                           &reservation_id_initialized,
                           record_id_start) < 0)
-        goto cleanup;
+	{
+          if (ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+              && ipmi_check_completion_code (obj_cmd_rs,
+                                             IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1)
+            {
+              /* If the sel is empty it's not really an error */
+              goto out;
+            }
+	  goto cleanup;
+	}
 
       if (!(sel_parse_entry = (struct ipmi_sel_parse_entry *)malloc (sizeof (struct ipmi_sel_parse_entry))))
         {
