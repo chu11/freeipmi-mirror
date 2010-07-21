@@ -564,6 +564,22 @@ _sel_entry_dump (ipmi_sel_parse_ctx_t ctx, struct ipmi_sel_parse_entry *sel_pars
       goto cleanup;
     }
 
+#if 0
+  /* For those vendors that get confused when they see the nice output
+   * and want the hex output
+   */
+  if (ipmi_dump_hex (STDERR_FILENO,
+		     ctx->debug_prefix,
+		     hdrbuf,
+		     NULL,
+		     sel_parse_entry->sel_event_record,
+		     sel_parse_entry->sel_event_record_len) < 0)
+    {
+      ERRNO_TRACE (errno);
+      goto cleanup;
+    }
+#endif
+
  cleanup:
   fiid_obj_destroy (obj_sel_record);
 }
