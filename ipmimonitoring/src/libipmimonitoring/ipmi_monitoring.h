@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.h,v 1.68 2010-06-11 21:23:42 chu11 Exp $
+ *  $Id: ipmi_monitoring.h,v 1.69 2010-07-22 21:49:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -681,6 +681,16 @@ int ipmi_monitoring_sel_read_timestamp (ipmi_monitoring_ctx_t c, unsigned int *t
  * values.
  */
 int ipmi_monitoring_sel_read_sensor_type (ipmi_monitoring_ctx_t c);
+
+/*
+ * ipmi_monitoring_sel_read_sensor_number
+ *
+ * Returns the sel record sensor number of the current sel record in a
+ * callback or the iterator, -1 on error.  Valid for
+ * IPMI_MONITORING_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD class
+ * records.
+ */
+int ipmi_monitoring_sel_read_sensor_number (ipmi_monitoring_ctx_t c);
 
 /*
  * ipmi_monitoring_sel_read_sensor_name

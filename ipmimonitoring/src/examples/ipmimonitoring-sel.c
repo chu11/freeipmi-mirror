@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-sel.c,v 1.2 2010-05-12 21:52:50 chu11 Exp $
+ *  $Id: ipmimonitoring-sel.c,v 1.3 2010-07-22 21:49:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -353,8 +353,8 @@ _ipmimonitoring (struct ipmi_monitoring_ipmi_config *ipmi_config)
 
   for (i = 0; i < sel_count; i++, ipmi_monitoring_sel_iterator_next (ctx))
     {
-      int record_id, record_type, sel_state, sensor_type, event_direction, event_offset_type,
-        event_offset, event_type_code, manufacturer_id;
+      int record_id, record_type, sel_state, sensor_type, sensor_number, event_direction,
+        event_offset_type, event_offset, event_type_code, manufacturer_id;
       unsigned int timestamp, event_data1, event_data2, event_data3;
       int record_type_class;
       char *event_offset_string = NULL;
@@ -462,6 +462,14 @@ _ipmimonitoring (struct ipmi_monitoring_ipmi_config *ipmi_config)
               goto cleanup;
             }
 
+          if ((sensor_number = ipmi_monitoring_sel_read_sensor_number (ctx)) < 0)
+            {
+              fprintf (stderr,
+                       "ipmi_monitoring_sel_read_sensor_number: %s\n",
+                       ipmi_monitoring_ctx_errormsg (ctx));
+              goto cleanup;
+            }
+
           if ((event_direction = ipmi_monitoring_sel_read_event_direction (ctx)) < 0)
             {
               fprintf (stderr,
@@ -523,9 +531,10 @@ _ipmimonitoring (struct ipmi_monitoring_ipmi_config *ipmi_config)
           else
             event_direction_str = "Deassertion";
 
-          printf (", %s, %s, %s, %Xh, %Xh-%Xh-%Xh",
+          printf (", %s, %s, %u, %s, %Xh, %Xh-%Xh-%Xh",
                   sensor_name,
                   sensor_type_str,
+                  sensor_number,
                   event_direction_str,
                   event_type_code,
                   event_data1,

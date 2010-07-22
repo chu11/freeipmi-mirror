@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_defs.h,v 1.40 2010-06-04 21:25:10 chu11 Exp $
+ *  $Id: ipmi_monitoring_defs.h,v 1.41 2010-07-22 21:49:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -156,6 +156,7 @@ struct ipmi_monitoring_sel_record {
 
   /* for system event records */
   int sensor_type;
+  int sensor_number;
   char sensor_name[IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH + 1];
   int event_direction;
   int event_offset_type;

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.77 2010-03-19 22:07:58 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.78 2010-07-22 21:49:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -1057,6 +1057,20 @@ ipmi_monitoring_sel_read_sensor_type (ipmi_monitoring_ctx_t c)
 
   c->errnum = IPMI_MONITORING_ERR_SUCCESS;
   return (sel_record->sensor_type);
+}
+
+int
+ipmi_monitoring_sel_read_sensor_number (ipmi_monitoring_ctx_t c)
+{
+  struct ipmi_monitoring_sel_record *sel_record = NULL;
+
+  if (_ipmi_monitoring_sel_record_common (c,
+                                          IPMI_MONITORING_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD_ACCEPTABLE,
+                                          &sel_record) < 0)
+    return (-1);
+
+  c->errnum = IPMI_MONITORING_ERR_SUCCESS;
+  return (sel_record->sensor_number);
 }
 
 char *

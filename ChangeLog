@@ -1,6 +1,11 @@
 2010-07-22  Albert Chu <chu11@llnl.gov>
 
 	* ipmimonitoring/src/libipmimonitoring/: Fix seg-fault corner case.
+
+	* ipmimonitoring/src/libipmimonitoring/: Support ability to read
+	SEL sensor numbers.  Fix sensor number reading corner case.
+
+	* ipmimonitoring/src/examples/: Output sensor number in examples.
 	
 2010-07-21  Albert Chu <chu11@llnl.gov>
 

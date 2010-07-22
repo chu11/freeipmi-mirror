@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-sensors.c,v 1.5 2010-06-11 21:23:42 chu11 Exp $
+ *  $Id: ipmimonitoring-sensors.c,v 1.6 2010-07-22 21:49:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -325,9 +325,10 @@ _ipmimonitoring (struct ipmi_monitoring_ipmi_config *ipmi_config)
         }
     }
 
-  printf ("%s, %s, %s, %s, %s, %s, %s, %s, %s\n",
+  printf ("%s, %s, %s, %s, %s, %s, %s, %s, %s, %s\n",
           "Record ID",
           "Sensor Name",
+          "Sensor Number",
           "Sensor Type",
           "Sensor State",
           "Sensor Reading",
@@ -338,7 +339,7 @@ _ipmimonitoring (struct ipmi_monitoring_ipmi_config *ipmi_config)
 
   for (i = 0; i < sensor_count; i++, ipmi_monitoring_sensor_iterator_next (ctx))
     {
-      int record_id, sensor_type, sensor_state, sensor_units,
+      int record_id, sensor_number, sensor_type, sensor_state, sensor_units,
         sensor_bitmask_type, sensor_bitmask, sensor_reading_type,
         event_reading_type_code;
       char **sensor_bitmask_strings = NULL;
@@ -351,6 +352,14 @@ _ipmimonitoring (struct ipmi_monitoring_ipmi_config *ipmi_config)
         {
           fprintf (stderr,
                    "ipmi_monitoring_sensor_read_record_id: %s\n",
+                   ipmi_monitoring_ctx_errormsg (ctx));
+          goto cleanup;
+        }
+
+      if ((sensor_number = ipmi_monitoring_sensor_read_sensor_number (ctx)) < 0)
+        {
+          fprintf (stderr,
+                   "ipmi_monitoring_sensor_read_sensor_number: %s\n",
                    ipmi_monitoring_ctx_errormsg (ctx));
           goto cleanup;
         }
@@ -434,9 +443,10 @@ _ipmimonitoring (struct ipmi_monitoring_ipmi_config *ipmi_config)
 
       sensor_type_str = _get_sensor_type_string (sensor_type);
 
-      printf ("%u, %s, %s",
+      printf ("%u, %s, %u, %s",
               record_id,
               sensor_name,
+              sensor_number,
               sensor_type_str);
 
       if (sensor_state == IPMI_MONITORING_STATE_NOMINAL)

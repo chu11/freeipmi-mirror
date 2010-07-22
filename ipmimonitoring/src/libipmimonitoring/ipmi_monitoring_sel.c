@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sel.c,v 1.1 2010-03-19 22:07:58 chu11 Exp $
+ *  $Id: ipmi_monitoring_sel.c,v 1.2 2010-07-22 21:49:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -284,6 +284,7 @@ _ipmi_monitoring_sel_parse_system_event_record (ipmi_monitoring_ctx_t c,
 {
   uint32_t timestamp;
   uint8_t sel_sensor_type;
+  uint8_t sensor_number;
   uint8_t event_direction;
   uint8_t event_offset;
   uint8_t event_type_code;
@@ -320,6 +321,16 @@ _ipmi_monitoring_sel_parse_system_event_record (ipmi_monitoring_ctx_t c,
 
   s->sensor_type = sensor_type;
 
+  if (ipmi_sel_parse_read_sensor_number (c->sel_parse_ctx, &sensor_number) < 0)
+    {
+      IPMI_MONITORING_DEBUG (("ipmi_sel_parse_read_sensor_number: %s",
+                              ipmi_sel_parse_ctx_errnum (c->sel_parse_ctx)));
+      _sel_parse_ctx_error_convert (c);
+      return (-1);
+    }
+
+  s->sensor_number = sensor_number;
+  
   if (ipmi_sel_parse_read_event_direction (c->sel_parse_ctx, &event_direction) < 0)
     {
       IPMI_MONITORING_DEBUG (("ipmi_sel_parse_read_event_direction: %s",

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.93 2010-07-22 18:25:40 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.94 2010-07-22 21:49:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -1099,12 +1099,12 @@ ipmi_monitoring_get_sensor_reading (ipmi_monitoring_ctx_t c,
       return (0);
     }
 
-  if (ipmi_sdr_parse_sensor_type (c->sdr_parse_ctx,
-                                  sdr_record,
-                                  sdr_record_len,
-                                  &sensor_number_base) < 0)
+  if (ipmi_sdr_parse_sensor_number (c->sdr_parse_ctx,
+                                    sdr_record,
+                                    sdr_record_len,
+                                    &sensor_number_base) < 0)
     {
-      IPMI_MONITORING_DEBUG (("ipmi_sdr_parse_sensor_type: %s",
+      IPMI_MONITORING_DEBUG (("ipmi_sdr_parse_sensor_number: %s",
                               ipmi_sdr_parse_ctx_errormsg (c->sdr_parse_ctx)));
       c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
       return (-1);
