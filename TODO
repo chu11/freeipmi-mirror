@@ -200,6 +200,11 @@ ipmi-sensors-config
 * conf.5 manpage
 * instructions for each section??
 
+ipmi-sensors
+------------
+column for sensor number
+- useful is shared sensor output?
+
 inband code
 -----------
 retry/resend code?
