@@ -694,6 +694,11 @@ Supermicro H8QME with SIMSO daughter card: It appears different record
 ids (e.g. 280 vs. 281) can be used to retrieve identical SEL records.
 No workaround provided, assumed to be a non-issue.
 
+Supermicro H8QME with SIMSO daughter card: It appears the Reserve SEL
+IPMI command requires an Opertator privilege Level instead of a User
+privilege level.  This conflict with the IPMI specification.  Resolved
+with special case handling.
+
 HP DL 585: The Get SEL Entry command is not supported.  No current
 resolution.
 

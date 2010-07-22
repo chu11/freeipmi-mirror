@@ -1,3 +1,8 @@
+2010-07-22  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/sel-parse/: Workaround compliance issue in
+	Supermicro H8QME.
+
 2010-07-21  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/sel-parse/: Fix corner case, do not error out if

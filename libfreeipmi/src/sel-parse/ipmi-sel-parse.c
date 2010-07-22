@@ -584,6 +584,7 @@ _get_sel_entry (ipmi_sel_parse_ctx_t ctx,
 {
   unsigned int reservation_id_retry_count = 0;
   unsigned int reservation_canceled = 0;
+  unsigned int is_insufficient_privilege_level = 0;
   int rv = -1;
 
   assert (ctx);
@@ -613,8 +614,23 @@ _get_sel_entry (ipmi_sel_parse_ctx_t ctx,
     {
       if (!(*reservation_id_initialized) || reservation_canceled)
         {
-          if (sel_parse_get_reservation_id (ctx, reservation_id) < 0)
-            goto cleanup;
+          if (sel_parse_get_reservation_id (ctx, reservation_id, &is_insufficient_privilege_level) < 0)
+            {
+              /* IPMI Workaround (achu)
+               *
+               * Discovered on Supermicro H8QME with SIMSO daughter card.
+               *
+               * For some reason motherboard requires Operator
+               * privilege instead of User privilege.  If
+               * IPMI_COMP_CODE_INSUFFICIENT_PRIVILEGE_LEVEL was
+               * received, just use reservation ID 0. For the reasons
+               * listed above, it shouldn't matter.
+               */
+              if (is_insufficient_privilege_level)
+                (*reservation_id) = 0;
+              else
+                goto cleanup;
+            }
           (*reservation_id_initialized)++;
         }
       
@@ -1825,7 +1841,7 @@ ipmi_sel_parse_clear_sel (ipmi_sel_parse_ctx_t ctx)
 
   while (1)
     {
-      if (sel_parse_get_reservation_id (ctx, &reservation_id) < 0)
+      if (sel_parse_get_reservation_id (ctx, &reservation_id, NULL) < 0)
         goto cleanup;
 
       if (ipmi_cmd_clear_sel (ctx->ipmi_ctx,
@@ -1845,7 +1861,7 @@ ipmi_sel_parse_clear_sel (ipmi_sel_parse_ctx_t ctx)
                   goto cleanup;
                 }
 
-              if (sel_parse_get_reservation_id (ctx, &reservation_id) < 0)
+              if (sel_parse_get_reservation_id (ctx, &reservation_id, NULL) < 0)
                 goto cleanup;
 
               continue;
@@ -1896,7 +1912,7 @@ ipmi_sel_parse_delete_sel_entry (ipmi_sel_parse_ctx_t ctx, uint16_t record_id)
 
   while (1)
     {
-      if (sel_parse_get_reservation_id (ctx, &reservation_id) < 0)
+      if (sel_parse_get_reservation_id (ctx, &reservation_id, NULL) < 0)
         goto cleanup;
 
       if (ipmi_cmd_delete_sel_entry (ctx->ipmi_ctx,
@@ -1923,7 +1939,7 @@ ipmi_sel_parse_delete_sel_entry (ipmi_sel_parse_ctx_t ctx, uint16_t record_id)
                   goto cleanup;
                 }
 
-              if (sel_parse_get_reservation_id (ctx, &reservation_id) < 0)
+              if (sel_parse_get_reservation_id (ctx, &reservation_id, NULL) < 0)
                 goto cleanup;
 
               continue;

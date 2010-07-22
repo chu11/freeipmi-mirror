@@ -50,7 +50,8 @@ struct ipmi_sel_system_event_record_data
 };
 
 int sel_parse_get_reservation_id (ipmi_sel_parse_ctx_t ctx,
-                                  uint16_t *reservation_id);
+                                  uint16_t *reservation_id,
+                                  unsigned int *is_insufficient_privilege_level);
 
 int sel_parse_get_record_header_info (ipmi_sel_parse_ctx_t ctx,
                                       struct ipmi_sel_parse_entry *sel_parse_entry,
