@@ -1,5 +1,10 @@
 2010-07-22  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/src/sel-parse/: Workaround compliance issue in
+	Supermicro H8QME.
+	
+2010-07-22  Albert Chu <chu11@llnl.gov>
+
 	* ipmimonitoring/src/libipmimonitoring/: Fix seg-fault corner case.
 
 	* ipmimonitoring/src/libipmimonitoring/: Support ability to read
