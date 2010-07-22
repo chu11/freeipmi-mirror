@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.92 2010-06-11 21:23:42 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.93 2010-07-22 18:25:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -1141,7 +1141,7 @@ ipmi_monitoring_get_sensor_reading (ipmi_monitoring_ctx_t c,
         return (0);
     }
 
-  memset (sensor_name, '\0', IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH + 1);
+  memset (sensor_name, '\0', IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH);
 
   if ((len = ipmi_sdr_parse_id_string (c->sdr_parse_ctx,
                                        sdr_record,

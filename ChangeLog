@@ -1,3 +1,7 @@
+2010-07-22  Albert Chu <chu11@llnl.gov>
+
+	* ipmimonitoring/src/libipmimonitoring/: Fix seg-fault corner case.
+	
 2010-07-21  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/sel-parse/: Fix corner case, do not error out if
