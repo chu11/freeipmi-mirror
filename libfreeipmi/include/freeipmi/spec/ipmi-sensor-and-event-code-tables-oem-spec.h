@@ -418,7 +418,7 @@ extern unsigned int ipmi_sensor_type_oem_dell_upgrade_max_index;
  *******************************************/
 
 /*
- * Supermicro X8DTH
+ * Supermicro X8DTH, X8DTG, X8DTU
  */
 /* achu: not official names, named based on use context */
 #define IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP_LOW           0x00
