@@ -332,7 +332,7 @@ and receive a 'libgcrypt required to build libfreeipmi' error, please
 install libgcrypt.  For Linux users, this may require the install of
 the libgcrypt-devel package as well.  For those who do not need IPMI
 2.0 encryption, FreeIPMI may be built without it by specifying
---without-encryption during configure.
+--without-encryption when executing configure.
 
 @node Installing FreeIPMI on FreeBSD, , libgcrypt requirement, Top
 @section Installing FreeIPMI on FreeBSD
