@@ -63,6 +63,7 @@ release @value{VERSION} of the FreeIPMI.
 * What is special about FreeIPMI::  
 * SSIF Driver Configuration::   
 * x86-64 Compilation::          
+* libgcrypt requirement::          
 * Installing FreeIPMI on FreeBSD::
 @end menu
 
@@ -314,21 +315,34 @@ BMC address Locator:
     Usual values for record 08h -> 0x400
 @end example
 
-@node x86-64 Compilation, Installing FreeIPMI on FreeBSD, SSIF Driver Configuration, Top
+@node x86-64 Compilation, libgcrypt requirement, SSIF Driver Configuration, Top
 @section x86-64 Compilation
 
-Under some x86-64 platforms, native 64 bit libraries reside under
-lib64 and 32 bit libs under lib. Autotools by default installs
-libfreeipmi.so under /usr/lib, instead of /usr/lib64 causing dynamic
-linking errors.  Pass libdir appropriately to configure script to
-workaround this problem. (e.g. --libdir=/usr/lib64)
+By default, FreeIPMI's build autotools (e.g. configure) should detect
+if you are on a 64 bit system and should build against 64 bit
+libraries.  However, some multi-architecture installs (e.g. you have
+32 bit and 64 bit libraries installed) may lead to builds and installs
+of 32 bit instead of 64 bit.  For those noticing this, pass libdir
+appropriately to the configure script to workaround this
+problem. (e.g. --libdir=/usr/lib64)
 
 Example:
 @example
   # ./configure  --prefix=/usr --libdir=/usr/lib64
 @end example
 
-@node Installing FreeIPMI on FreeBSD, , x86-64 Compilation, Top
+@node libgcrypt requirement, Installing FreeIPMI on FreeBSD, x86-64 Compilation, Top
+@section libgcrypt requirement
+
+FreeIPMI requires the libgcrypt library to be installed for a variety
+of encryption requirements in IPMI 2.0.  If you are building FreeIPMI
+and receive a 'libgcrypt required to build libfreeipmi' error, please
+install libgcrypt.  For Linux users, this may require the install of
+the libgcrypt-devel package as well.  For those who do not need IPMI
+2.0 encryption, FreeIPMI may be built without it by specifying
+--without-encryption during configure.
+
+@node Installing FreeIPMI on FreeBSD, , libgcrypt requirement, Top
 @section Installing FreeIPMI on FreeBSD
 
 You can install a binary package of freeipmi or use the port,
