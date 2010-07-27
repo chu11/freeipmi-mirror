@@ -2158,6 +2158,8 @@ ipmi_get_event_messages (uint8_t event_reading_type_code,
   /* OEM Interpretation
    *
    * Supermicro X8DTH
+   * Supermicro X8DTG
+   * Supermicro X8DTU
    */
   else if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM
            && flags & IPMI_GET_EVENT_MESSAGES_FLAGS_INTERPRET_OEM_DATA
