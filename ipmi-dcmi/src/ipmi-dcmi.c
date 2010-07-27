@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-dcmi.c,v 1.14 2010-05-17 17:42:45 chu11 Exp $
+ *  $Id: ipmi-dcmi.c,v 1.15 2010-07-27 18:01:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2009-2010 Lawrence Livermore National Security, LLC.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1418,6 +1418,16 @@ get_power_limit (ipmi_dcmi_state_data_t *state_data)
     }
 
   /* XXX: figure out OEM specifics, and list details given manufacturer ID/product ID */
+  /* 
+
+  From Holger Liebig at Fujitsu
+
+  "Regarding OEM exception action we currently do support 'continue'
+  (0x02) and 'shutdown' (0x03) in addition to the 'hard power off'."
+
+  But I don't know what the manufacturer ID and product ID are, so we leave it out for now.
+
+  */
 
   if (!exception_actions)
     pstdout_printf (state_data->pstate,
