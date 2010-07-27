@@ -1,5 +1,8 @@
 2010-07-27  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/: Support Chassis Service Partition Selector and
+	Chassis Service Partition Scan templates, functions, etc.
+
 	* Various cleanup.
 	
 2010-07-23  Albert Chu <chu11@llnl.gov>

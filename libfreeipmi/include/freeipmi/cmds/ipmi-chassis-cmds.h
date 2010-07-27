@@ -186,6 +186,22 @@ extern "C" {
     || (__value) == IPMI_CHASSIS_BOOT_OPTIONS_SET_IN_PROGRESS    \
     || (__value) == IPMI_CHASSIS_BOOT_OPTIONS_SET_COMMIT_WRITE) ? 1 : 0 )
 
+#define IPMI_CHASSIS_BOOT_OPTIONS_SERVICE_PARTITION_UNSPECIFIED             0x00
+
+#define IPMI_CHASSIS_BOOT_OPTIONS_SERVICE_PARTITION_DISCOVERED              0X01
+#define IPMI_CHASSIS_BOOT_OPTIONS_SERVICE_PARTITION_UNDISCOVERED            0X00
+
+#define IPMI_CHASSIS_BOOT_OPTIONS_SERVICE_PARTITION_DISCOVERED_VALID(__value) \
+  (((__value) == IPMI_CHASSIS_BOOT_OPTIONS_SERVICE_PARTITION_DISCOVERED  \
+    || (__value) == IPMI_CHASSIS_BOOT_OPTIONS_SERVICE_PARTITION_UNDISCOVERED) ? 1 : 0 )
+
+#define IPMI_CHASSIS_BOOT_OPTIONS_SERVICE_PARTITION_SCAN                    0X01
+#define IPMI_CHASSIS_BOOT_OPTIONS_SERVICE_PARTITION_DO_NOT_SCAN             0X00
+
+#define IPMI_CHASSIS_BOOT_OPTIONS_SERVICE_PARTITION_SCAN_VALID(__value) \
+  (((__value) == IPMI_CHASSIS_BOOT_OPTIONS_SERVICE_PARTITION_SCAN  \
+    || (__value) == IPMI_CHASSIS_BOOT_OPTIONS_SERVICE_PARTITION_DO_NOT_SCAN) ? 1 : 0 )
+
 #define IPMI_CHASSIS_BOOT_OPTIONS_BOOT_INFO_ACKNOWLEDGE                     0x00
 #define IPMI_CHASSIS_BOOT_OPTIONS_BOOT_INFO_UNACKNOWLEDGE                   0x01
 
@@ -251,12 +267,16 @@ extern fiid_template_t tmpl_cmd_get_system_restart_cause_rs;
 extern fiid_template_t tmpl_cmd_set_system_boot_options_rq;
 extern fiid_template_t tmpl_cmd_set_system_boot_options_rs;
 extern fiid_template_t tmpl_cmd_set_system_boot_options_set_in_progress_rq;
+extern fiid_template_t tmpl_cmd_set_system_boot_options_service_partition_selector_rq;
+extern fiid_template_t tmpl_cmd_set_system_boot_options_service_partition_scan_rq;
 extern fiid_template_t tmpl_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing_rq;
 extern fiid_template_t tmpl_cmd_set_system_boot_options_boot_info_acknowledge_rq;
 extern fiid_template_t tmpl_cmd_set_system_boot_options_boot_flags_rq;
 
 extern fiid_template_t tmpl_cmd_get_system_boot_options_rq;
 extern fiid_template_t tmpl_cmd_get_system_boot_options_rs;
+extern fiid_template_t tmpl_cmd_get_system_boot_options_service_partition_selector_rs;
+extern fiid_template_t tmpl_cmd_get_system_boot_options_service_partition_scan_rs;
 extern fiid_template_t tmpl_cmd_get_system_boot_options_BMC_boot_flag_valid_bit_clearing_rs;
 extern fiid_template_t tmpl_cmd_get_system_boot_options_boot_info_acknowledge_rs;
 extern fiid_template_t tmpl_cmd_get_system_boot_options_boot_flags_rs;
@@ -296,6 +316,13 @@ int fill_cmd_set_system_boot_options (uint8_t parameter_selector,
 
 int fill_cmd_set_system_boot_options_set_in_progress (uint8_t value,
                                                       fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_set_system_boot_options_service_partition_selector (uint8_t service_partition_selector,
+                                                                 fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_set_system_boot_options_service_partition_scan (uint8_t service_partition_discovered,
+                                                             uint8_t service_partition_scan,
+                                                             fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing (uint8_t dont_clear_on_power_up,
                                                                        uint8_t dont_clear_on_pushbutton_or_soft_reset,

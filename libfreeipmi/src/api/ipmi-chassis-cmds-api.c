@@ -620,6 +620,122 @@ ipmi_cmd_set_system_boot_options_set_in_progress (ipmi_ctx_t ctx,
 }
 
 int
+ipmi_cmd_set_system_boot_options_service_partition_selector (ipmi_ctx_t ctx,
+                                                             uint8_t service_partition_selector,
+                                                             fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  int rv = -1;
+  
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+  
+  if (!fiid_obj_valid (obj_cmd_rs))
+    {
+      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_set_system_boot_options_rs) < 0)
+    {
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
+      return (-1);
+    }
+
+  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_set_system_boot_options_service_partition_selector_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (fill_cmd_set_system_boot_options_service_partition_selector (service_partition_selector,
+                                                                   obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+  
+  if (api_ipmi_cmd (ctx,
+                    IPMI_BMC_IPMB_LUN_BMC,
+                    IPMI_NET_FN_CHASSIS_RQ,
+                    obj_cmd_rq,
+                    obj_cmd_rs) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      goto cleanup;
+    }
+  
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rq);
+  return (rv);
+}
+
+int
+ipmi_cmd_set_system_boot_options_service_partition_scan (ipmi_ctx_t ctx,
+                                                         uint8_t service_partition_discovered,
+                                                         uint8_t service_partition_scan,
+                                                         fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  int rv = -1;
+  
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+  
+  if (!IPMI_CHASSIS_BOOT_OPTIONS_SERVICE_PARTITION_DISCOVERED_VALID (service_partition_discovered)
+      || !IPMI_CHASSIS_BOOT_OPTIONS_SERVICE_PARTITION_SCAN_VALID (service_partition_scan)
+      || !fiid_obj_valid (obj_cmd_rs))
+    {
+      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_set_system_boot_options_rs) < 0)
+    {
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
+      return (-1);
+    }
+  
+  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_set_system_boot_options_service_partition_scan_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (fill_cmd_set_system_boot_options_service_partition_scan (service_partition_discovered,
+                                                               service_partition_scan,
+                                                               obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+  
+  if (api_ipmi_cmd (ctx,
+                    IPMI_BMC_IPMB_LUN_BMC,
+                    IPMI_NET_FN_CHASSIS_RQ,
+                    obj_cmd_rq,
+                    obj_cmd_rs) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      goto cleanup;
+    }
+  
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rq);
+  return (rv);
+}
+
+int
 ipmi_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing (ipmi_ctx_t ctx,
                                                                    uint8_t dont_clear_on_power_up,
                                                                    uint8_t dont_clear_on_pushbutton_rest_soft_reset,
@@ -930,6 +1046,124 @@ ipmi_cmd_get_system_boot_options (ipmi_ctx_t ctx,
 }
 
 int
+ipmi_cmd_get_system_boot_options_service_partition_selector (ipmi_ctx_t ctx,
+                                                             uint8_t set_selector,
+                                                             uint8_t block_selector,
+                                                             fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  int rv = -1;
+
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if (!fiid_obj_valid (obj_cmd_rs))
+    {
+      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_get_system_boot_options_service_partition_selector_rs) < 0)
+    {
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
+      return (-1);
+    }
+
+  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_get_system_boot_options_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (fill_cmd_get_system_boot_options (IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_SERVICE_PARTITION_SELECTOR,
+                                        set_selector,
+                                        block_selector,
+                                        obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (api_ipmi_cmd (ctx,
+                    IPMI_BMC_IPMB_LUN_BMC,
+                    IPMI_NET_FN_CHASSIS_RQ,
+                    obj_cmd_rq,
+                    obj_cmd_rs) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      goto cleanup;
+    }
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rq);
+  return (rv);
+}
+
+int
+ipmi_cmd_get_system_boot_options_service_partition_scan (ipmi_ctx_t ctx,
+                                                         uint8_t set_selector,
+                                                         uint8_t block_selector,
+                                                         fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  int rv = -1;
+
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if (!fiid_obj_valid (obj_cmd_rs))
+    {
+      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_get_system_boot_options_service_partition_scan_rs) < 0)
+    {
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
+      return (-1);
+    }
+
+  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_get_system_boot_options_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (fill_cmd_get_system_boot_options (IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_SERVICE_PARTITION_SCAN,
+                                        set_selector,
+                                        block_selector,
+                                        obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (api_ipmi_cmd (ctx,
+                    IPMI_BMC_IPMB_LUN_BMC,
+                    IPMI_NET_FN_CHASSIS_RQ,
+                    obj_cmd_rq,
+                    obj_cmd_rs) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      goto cleanup;
+    }
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rq);
+  return (rv);
+}
+
+int
 ipmi_cmd_get_system_boot_options_BMC_boot_flag_valid_bit_clearing (ipmi_ctx_t ctx,
                                                                    uint8_t set_selector,
                                                                    uint8_t block_selector,
@@ -964,6 +1198,65 @@ ipmi_cmd_get_system_boot_options_BMC_boot_flag_valid_bit_clearing (ipmi_ctx_t ct
     }
 
   if (fill_cmd_get_system_boot_options (IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_BMC_BOOT_FLAG_VALID_BIT_CLEARING,
+                                        set_selector,
+                                        block_selector,
+                                        obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (api_ipmi_cmd (ctx,
+                    IPMI_BMC_IPMB_LUN_BMC,
+                    IPMI_NET_FN_CHASSIS_RQ,
+                    obj_cmd_rq,
+                    obj_cmd_rs) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      goto cleanup;
+    }
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rq);
+  return (rv);
+}
+
+int
+ipmi_cmd_get_system_boot_options_boot_info_acknowledge (ipmi_ctx_t ctx,
+                                                        uint8_t set_selector,
+                                                        uint8_t block_selector,
+                                                        fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  int rv = -1;
+
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if (!fiid_obj_valid (obj_cmd_rs))
+    {
+      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_get_system_boot_options_boot_info_acknowledge_rs) < 0)
+    {
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
+      return (-1);
+    }
+
+  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_get_system_boot_options_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (fill_cmd_get_system_boot_options (IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_BOOT_INFO_ACKNOWLEDGE,
                                         set_selector,
                                         block_selector,
                                         obj_cmd_rq) < 0)

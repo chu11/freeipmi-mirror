@@ -282,6 +282,32 @@ fiid_template_t tmpl_cmd_set_system_boot_options_set_in_progress_rq =
     { 0, "", 0},
   };
 
+Set System Boot Options (Service Partition Selector) Request
+------------------------------------------------------------
+
+fiid_template_t tmpl_cmd_set_system_boot_options_service_partition_selector_rq =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 7, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "parameter_valid", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "service_partition_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
+Set System Boot Options (Service Partition Scan) Request
+--------------------------------------------------------
+
+fiid_template_t tmpl_cmd_set_system_boot_options_service_partition_scan_rq =
+{
+  { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+  { 7, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+  { 1, "parameter_valid", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+  { 1, "service_partition_discovered", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+  { 1, "service_partition_scan", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+  { 6, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+  { 0, "", 0}
+};
+
 Set System Boot Options (BMC Boot Flag Valid Bit Clearing) Request
 ------------------------------------------------------------------
 
@@ -381,6 +407,38 @@ fiid_template_t tmpl_cmd_get_system_boot_options_rs =
     { 1, "parameter_valid", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 296, "configuration_parameter_data", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
     { 0, "", 0},
+  };
+
+Get System Boot Options (Service Partition Selector) Response
+-------------------------------------------------------------
+
+fiid_template_t tmpl_cmd_get_system_boot_options_service_partition_selector_rs =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 4, "parameter_version", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 7, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "parameter_valid", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "service_partition_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
+Get System Boot Options (Service Partition Scan) Response
+---------------------------------------------------------
+
+fiid_template_t tmpl_cmd_get_system_boot_options_service_partition_scan_rs =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 4, "parameter_version", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 7, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "parameter_valid", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "service_partition_discovered", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "service_partition_scan", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 6, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
   };
 
 Get System Boot Options (BMC Boot Flag Valid Bit Clearing) Response

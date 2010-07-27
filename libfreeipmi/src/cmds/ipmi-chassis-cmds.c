@@ -227,6 +227,26 @@ fiid_template_t tmpl_cmd_set_system_boot_options_set_in_progress_rq =
     { 0, "", 0},
   };
 
+fiid_template_t tmpl_cmd_set_system_boot_options_service_partition_selector_rq =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 7, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "parameter_valid", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "service_partition_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_set_system_boot_options_service_partition_scan_rq =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 7, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "parameter_valid", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "service_partition_discovered", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "service_partition_scan", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 6, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
 fiid_template_t tmpl_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing_rq =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -311,6 +331,32 @@ fiid_template_t tmpl_cmd_get_system_boot_options_rs =
     { 1, "parameter_valid", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 296, "configuration_parameter_data", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
     { 0, "", 0},
+  };
+
+fiid_template_t tmpl_cmd_get_system_boot_options_service_partition_selector_rs =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 4, "parameter_version", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 7, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "parameter_valid", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "service_partition_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_get_system_boot_options_service_partition_scan_rs =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 4, "parameter_version", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 7, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "parameter_valid", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "service_partition_discovered", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "service_partition_scan", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 6, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
   };
 
 fiid_template_t tmpl_cmd_get_system_boot_options_BMC_boot_flag_valid_bit_clearing_rs =
@@ -668,6 +714,67 @@ fill_cmd_set_system_boot_options_set_in_progress (uint8_t value,
   FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_valid", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_UNLOCKED);
 
   FILL_FIID_OBJ_SET (obj_cmd_rq, "set_in_progress", value);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
+
+  return (0);
+}
+
+int
+fill_cmd_set_system_boot_options_service_partition_selector (uint8_t service_partition_selector,
+                                                             fiid_obj_t obj_cmd_rq)
+{
+  if (!fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+  
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_system_boot_options_service_partition_selector_rq) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SYSTEM_BOOT_OPTIONS);
+
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_SERVICE_PARTITION_SELECTOR);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_valid", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_UNLOCKED);
+
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "service_partition_selector", service_partition_selector);
+
+  return (0);
+}
+
+int
+fill_cmd_set_system_boot_options_service_partition_scan (uint8_t service_partition_discovered,
+                                                         uint8_t service_partition_scan,
+                                                         fiid_obj_t obj_cmd_rq)
+{
+  if (!IPMI_CHASSIS_BOOT_OPTIONS_SERVICE_PARTITION_DISCOVERED_VALID (service_partition_discovered)
+      || !IPMI_CHASSIS_BOOT_OPTIONS_SERVICE_PARTITION_SCAN_VALID (service_partition_scan)
+      || !fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+  
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_system_boot_options_service_partition_scan_rq) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+  
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SYSTEM_BOOT_OPTIONS);
+
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_SERVICE_PARTITION_SCAN);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_valid", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_UNLOCKED);
+  
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "service_partition_discovered", service_partition_discovered);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "service_partition_scan", service_partition_scan);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
 
   return (0);

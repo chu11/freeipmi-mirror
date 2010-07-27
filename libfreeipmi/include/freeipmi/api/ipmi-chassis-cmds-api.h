@@ -120,14 +120,29 @@ int ipmi_cmd_get_system_boot_options (ipmi_ctx_t ctx,
                                       uint8_t block_selector,
                                       fiid_obj_t obj_cmd_rs);
 
+int ipmi_cmd_get_system_boot_options_service_partition_selector (ipmi_ctx_t ctx,
+                                                                 uint8_t set_selector,
+                                                                 uint8_t block_selector,
+                                                                 fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_get_system_boot_options_service_partition_scan (ipmi_ctx_t ctx,
+                                                             uint8_t set_selector,
+                                                             uint8_t block_selector,
+                                                             fiid_obj_t obj_cmd_rs);
+
 int ipmi_cmd_get_system_boot_options_BMC_boot_flag_valid_bit_clearing (ipmi_ctx_t ctx,
                                                                        uint8_t set_selector,
-                                                                       uint8_t boot_selector,
+                                                                       uint8_t block_selector,
                                                                        fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_get_system_boot_options_boot_info_acknowledge (ipmi_ctx_t ctx,
+                                                            uint8_t set_selector,
+                                                            uint8_t block_selector,
+                                                            fiid_obj_t obj_cmd_rs);
 
 int ipmi_cmd_get_system_boot_options_boot_flags (ipmi_ctx_t ctx,
                                                  uint8_t set_selector,
-                                                 uint8_t boot_selector,
+                                                 uint8_t block_selector,
                                                  fiid_obj_t obj_cmd_rs);
 
 int ipmi_cmd_get_power_on_hours_counter (ipmi_ctx_t ctx,
