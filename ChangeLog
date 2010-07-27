@@ -1,3 +1,7 @@
+2010-07-27  Albert Chu <chu11@llnl.gov>
+
+	* Various cleanup.
+	
 2010-07-23  Albert Chu <chu11@llnl.gov>
 
 	* doc/freeipmi-faq.texi: Update with x86-64 build instructions and

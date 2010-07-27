@@ -227,6 +227,20 @@ fiid_template_t tmpl_cmd_set_system_boot_options_set_in_progress_rq =
     { 0, "", 0},
   };
 
+fiid_template_t tmpl_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing_rq =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 7, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "parameter_valid", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "dont_clear_valid_bit_on_power_up_via_power_pushbutton_or_wake_event", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "dont_clear_valid_bit_on_pushbutton_reset_soft_reset", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "dont_clear_valid_bit_on_reset_power_cycle_caused_by_watchdog_timeout", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "dont_automatically_clear_boot_flag_valid_bit_if_chassis_control_command_not_received_within_60_second_timeout", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "dont_clear_valid_bit_on_reset_power_cycle_caused_by_PEF", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 3, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
 fiid_template_t tmpl_cmd_set_system_boot_options_boot_info_acknowledge_rq =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -245,20 +259,6 @@ fiid_template_t tmpl_cmd_set_system_boot_options_boot_info_acknowledge_rq =
     { 1, "os_or_service_partition_handled_boot_info", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1, "sms_handled_boot_info", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1, "oem_handled_boot_info", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 3, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
-
-fiid_template_t tmpl_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing_rq =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 7, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "parameter_valid", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "dont_clear_valid_bit_on_power_up_via_power_pushbutton_or_wake_event", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "dont_clear_valid_bit_on_pushbutton_reset_soft_reset", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "dont_clear_valid_bit_on_reset_power_cycle_caused_by_watchdog_timeout", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "dont_automatically_clear_boot_flag_valid_bit_if_chassis_control_command_not_received_within_60_second_timeout", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "dont_clear_valid_bit_on_reset_power_cycle_caused_by_PEF", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 3, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 0, "", 0}
   };
@@ -313,6 +313,23 @@ fiid_template_t tmpl_cmd_get_system_boot_options_rs =
     { 0, "", 0},
   };
 
+fiid_template_t tmpl_cmd_get_system_boot_options_BMC_boot_flag_valid_bit_clearing_rs =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 4, "parameter_version", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 7, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "parameter_valid", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "dont_clear_valid_bit_on_power_up_via_power_pushbutton_or_wake_event", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "dont_clear_valid_bit_on_pushbutton_reset_soft_reset", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "dont_clear_valid_bit_on_reset_power_cycle_caused_by_watchdog_timeout", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "dont_automatically_clear_boot_flag_valid_bit_if_chassis_control_command_not_received_within_60_second_timeout", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "dont_clear_valid_bit_on_reset_power_cycle_caused_by_PEF", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 3, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
 fiid_template_t tmpl_cmd_get_system_boot_options_boot_info_acknowledge_rs =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
@@ -335,23 +352,6 @@ fiid_template_t tmpl_cmd_get_system_boot_options_boot_info_acknowledge_rs =
     { 1, "sms_handled_boot_info", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1, "oem_handled_boot_info", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 3, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
-
-fiid_template_t tmpl_cmd_get_system_boot_options_BMC_boot_flag_valid_bit_clearing_rs =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 4, "parameter_version", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 7, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "parameter_valid", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "dont_clear_valid_bit_on_power_up_via_power_pushbutton_or_wake_event", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "dont_clear_valid_bit_on_pushbutton_reset_soft_reset", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "dont_clear_valid_bit_on_reset_power_cycle_caused_by_watchdog_timeout", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "dont_automatically_clear_boot_flag_valid_bit_if_chassis_control_command_not_received_within_60_second_timeout", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "dont_clear_valid_bit_on_reset_power_cycle_caused_by_PEF", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 3, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 0, "", 0}
   };
 
@@ -674,6 +674,45 @@ fill_cmd_set_system_boot_options_set_in_progress (uint8_t value,
 }
 
 int
+fill_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing (uint8_t dont_clear_on_power_up,
+                                                                   uint8_t dont_clear_on_pushbutton_reset_soft_reset,
+                                                                   uint8_t dont_clear_on_watchdog_timeout,
+                                                                   uint8_t dont_clear_on_chassis_control,
+                                                                   uint8_t dont_clear_on_PEF,
+                                                                   fiid_obj_t obj_cmd_rq)
+{
+  if (!IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT_VALID (dont_clear_on_power_up)
+      || !IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT_VALID (dont_clear_on_pushbutton_reset_soft_reset)
+      || !IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT_VALID (dont_clear_on_watchdog_timeout)
+      || !IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT_VALID (dont_clear_on_chassis_control)
+      || !IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT_VALID (dont_clear_on_PEF)
+      || !fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing_rq) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SYSTEM_BOOT_OPTIONS);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_BMC_BOOT_FLAG_VALID_BIT_CLEARING);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_valid", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_UNLOCKED);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "dont_clear_valid_bit_on_power_up_via_power_pushbutton_or_wake_event", dont_clear_on_power_up);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "dont_clear_valid_bit_on_pushbutton_reset_soft_reset", dont_clear_on_pushbutton_reset_soft_reset);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "dont_clear_valid_bit_on_reset_power_cycle_caused_by_watchdog_timeout", dont_clear_on_watchdog_timeout);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "dont_automatically_clear_boot_flag_valid_bit_if_chassis_control_command_not_received_within_60_second_timeout", dont_clear_on_chassis_control);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "dont_clear_valid_bit_on_reset_power_cycle_caused_by_PEF", dont_clear_on_PEF);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
+
+  return (0);
+}
+
+int
 fill_cmd_set_system_boot_options_boot_info_acknowledge (const uint8_t *bios_or_post_handled_boot_info,
                                                         const uint8_t *os_loader_handled_boot_info,
                                                         const uint8_t *os_or_service_partition_handled_boot_info,
@@ -768,45 +807,6 @@ fill_cmd_set_system_boot_options_boot_info_acknowledge (const uint8_t *bios_or_p
   FILL_FIID_OBJ_SET (obj_cmd_rq, "enable_write_bit_6", IPMI_CHASSIS_BOOT_OPTIONS_ENABLE);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "enable_write_bit_7", IPMI_CHASSIS_BOOT_OPTIONS_ENABLE);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0x7);
-  return (0);
-}
-
-int
-fill_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing (uint8_t dont_clear_on_power_up,
-                                                                   uint8_t dont_clear_on_pushbutton_reset_soft_reset,
-                                                                   uint8_t dont_clear_on_watchdog_timeout,
-                                                                   uint8_t dont_clear_on_chassis_control,
-                                                                   uint8_t dont_clear_on_PEF,
-                                                                   fiid_obj_t obj_cmd_rq)
-{
-  if (!IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT_VALID (dont_clear_on_power_up)
-      || !IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT_VALID (dont_clear_on_pushbutton_reset_soft_reset)
-      || !IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT_VALID (dont_clear_on_watchdog_timeout)
-      || !IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT_VALID (dont_clear_on_chassis_control)
-      || !IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT_VALID (dont_clear_on_PEF)
-      || !fiid_obj_valid (obj_cmd_rq))
-    {
-      SET_ERRNO (EINVAL);
-      return (-1);
-    }
-
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing_rq) < 0)
-    {
-      ERRNO_TRACE (errno);
-      return (-1);
-    }
-
-  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SYSTEM_BOOT_OPTIONS);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_BMC_BOOT_FLAG_VALID_BIT_CLEARING);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_valid", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_UNLOCKED);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "dont_clear_valid_bit_on_power_up_via_power_pushbutton_or_wake_event", dont_clear_on_power_up);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "dont_clear_valid_bit_on_pushbutton_reset_soft_reset", dont_clear_on_pushbutton_reset_soft_reset);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "dont_clear_valid_bit_on_reset_power_cycle_caused_by_watchdog_timeout", dont_clear_on_watchdog_timeout);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "dont_automatically_clear_boot_flag_valid_bit_if_chassis_control_command_not_received_within_60_second_timeout", dont_clear_on_chassis_control);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "dont_clear_valid_bit_on_reset_power_cycle_caused_by_PEF", dont_clear_on_PEF);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
-
   return (0);
 }
 

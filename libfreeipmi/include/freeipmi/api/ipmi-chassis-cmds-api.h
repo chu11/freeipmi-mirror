@@ -86,6 +86,14 @@ int ipmi_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing (ipmi_ctx_
                                                                        uint8_t dont_clear_on_PEF,
                                                                        fiid_obj_t obj_cmd_rs);
 
+int ipmi_cmd_set_system_boot_options_boot_info_acknowledge (ipmi_ctx_t ctx,
+                                                            const uint8_t *bios_or_post_handled_boot_info,
+                                                            const uint8_t *os_loader_handled_boot_info,
+                                                            const uint8_t *os_or_service_partition_handled_boot_info,
+                                                            const uint8_t *sms_handled_boot_info,
+                                                            const uint8_t *oem_handled_boot_info,
+                                                            fiid_obj_t obj_cmd_rs);
+
 int ipmi_cmd_set_system_boot_options_boot_flags (ipmi_ctx_t ctx,
                                                  uint8_t bios_boot_type,
                                                  uint8_t boot_flags_persistent,
@@ -105,14 +113,6 @@ int ipmi_cmd_set_system_boot_options_boot_flags (ipmi_ctx_t ctx,
                                                  uint8_t bios_shared_mode_override,
                                                  uint8_t device_instance_selector,
                                                  fiid_obj_t obj_cmd_rs);
-
-int ipmi_cmd_set_system_boot_options_boot_info_acknowledge (ipmi_ctx_t ctx,
-                                                            const uint8_t *bios_or_post_handled_boot_info,
-                                                            const uint8_t *os_loader_handled_boot_info,
-                                                            const uint8_t *os_or_service_partition_handled_boot_info,
-                                                            const uint8_t *sms_handled_boot_info,
-                                                            const uint8_t *oem_handled_boot_info,
-                                                            fiid_obj_t obj_cmd_rs);
 
 int ipmi_cmd_get_system_boot_options (ipmi_ctx_t ctx,
                                       uint8_t parameter_selector,

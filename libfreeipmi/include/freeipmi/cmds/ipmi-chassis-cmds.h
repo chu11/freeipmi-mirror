@@ -251,14 +251,14 @@ extern fiid_template_t tmpl_cmd_get_system_restart_cause_rs;
 extern fiid_template_t tmpl_cmd_set_system_boot_options_rq;
 extern fiid_template_t tmpl_cmd_set_system_boot_options_rs;
 extern fiid_template_t tmpl_cmd_set_system_boot_options_set_in_progress_rq;
-extern fiid_template_t tmpl_cmd_set_system_boot_options_boot_info_acknowledge_rq;
 extern fiid_template_t tmpl_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing_rq;
+extern fiid_template_t tmpl_cmd_set_system_boot_options_boot_info_acknowledge_rq;
 extern fiid_template_t tmpl_cmd_set_system_boot_options_boot_flags_rq;
 
 extern fiid_template_t tmpl_cmd_get_system_boot_options_rq;
 extern fiid_template_t tmpl_cmd_get_system_boot_options_rs;
-extern fiid_template_t tmpl_cmd_get_system_boot_options_boot_info_acknowledge_rs;
 extern fiid_template_t tmpl_cmd_get_system_boot_options_BMC_boot_flag_valid_bit_clearing_rs;
+extern fiid_template_t tmpl_cmd_get_system_boot_options_boot_info_acknowledge_rs;
 extern fiid_template_t tmpl_cmd_get_system_boot_options_boot_flags_rs;
 
 extern fiid_template_t tmpl_cmd_get_power_on_hours_counter_rq;
@@ -297,19 +297,19 @@ int fill_cmd_set_system_boot_options (uint8_t parameter_selector,
 int fill_cmd_set_system_boot_options_set_in_progress (uint8_t value,
                                                       fiid_obj_t obj_cmd_rq);
 
-int fill_cmd_set_system_boot_options_boot_info_acknowledge (const uint8_t *bios_or_post_handled_boot_info,
-                                                            const uint8_t *os_loader_handled_boot_info,
-                                                            const uint8_t *os_or_service_partition_handled_boot_info,
-                                                            const uint8_t *sms_handled_boot_info,
-                                                            const uint8_t *oem_handled_boot_info,
-                                                            fiid_obj_t obj_cmd_rq);
-
 int fill_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing (uint8_t dont_clear_on_power_up,
                                                                        uint8_t dont_clear_on_pushbutton_or_soft_reset,
                                                                        uint8_t dont_clear_on_watchdog_timeout,
                                                                        uint8_t dont_clear_on_chassis_control,
                                                                        uint8_t dont_clear_on_PEF,
                                                                        fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_set_system_boot_options_boot_info_acknowledge (const uint8_t *bios_or_post_handled_boot_info,
+                                                            const uint8_t *os_loader_handled_boot_info,
+                                                            const uint8_t *os_or_service_partition_handled_boot_info,
+                                                            const uint8_t *sms_handled_boot_info,
+                                                            const uint8_t *oem_handled_boot_info,
+                                                            fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_set_system_boot_options_boot_flags (uint8_t bios_boot_type,
                                                  uint8_t boot_flags_persistent,
