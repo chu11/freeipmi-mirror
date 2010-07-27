@@ -1,8 +1,8 @@
 Priorities for 0.10.1 marked below (search for 0.10.1)
 
-doc
+oem
 ---
-oem in reeadme/generanl
+handle firmware version too??
 
 inband
 ------
@@ -12,10 +12,6 @@ inband
   - Ultimately it is impossible to do correctly, vendor need not store
     anything in acpi/smbios/etc.
   - User can use ipmi-locate if they really want to probe.
-
-oem
----
-handle firmware version too
 
 asf
 ---
@@ -29,8 +25,8 @@ support kernel panic OEM event 0xf0
 - redhat doesn't enable by default, probably don't need to worry about this much
 - http://cateee.net/lkddb/web-lkddb/IPMI_PANIC_STRING.html
 - http://www.cyberciti.biz/tips/compiling-linux-kernel-module.html
-ganglia pluging
-nagios plugin
+ganglia plugin?
+nagios plugin?
 
 ipmi-seld
 ---------
@@ -83,7 +79,6 @@ etc.), how inform ipmiconsole, b/c IPMI session could still be alive
 do keepalive-ping w/ NUL char, make sure session still really alive
 - "learn" workarounds function - to figure out workaround flags for user
 load alternate defaults into libipmiconsole
-
 
 hostrange
 ---------
