@@ -2,6 +2,8 @@
 
 	* libfreeipmi/: Support Chassis Boot Options and Lan Configuration
 	Parameters Set In Progress.
+
+	* Fix some template bugs/typos.
 	
 2010-07-27  Albert Chu <chu11@llnl.gov>
 
