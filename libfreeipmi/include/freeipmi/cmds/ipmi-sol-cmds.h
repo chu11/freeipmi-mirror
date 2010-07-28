@@ -93,6 +93,15 @@ extern "C" {
 #define IPMI_SOL_CHARACTER_TRANSFER_UNAVAILABLE 0x1
 #define IPMI_SOL_CHARACTER_TRANSFER_AVAILABLE   0x0
 
+#define IPMI_SOL_CONFIGURATION_PARAMETERS_SET_COMPLETE                              0x00
+#define IPMI_SOL_CONFIGURATION_PARAMETERS_SET_IN_PROGRESS                           0x01
+#define IPMI_SOL_CONFIGURATION_PARAMETERS_SET_COMMIT_WRITE                          0x02
+
+#define IPMI_SOL_CONFIGURATION_PARAMETERS_SET_IN_PROGRESS_VALID(__value) \
+  (((__value) == IPMI_SOL_CONFIGURATION_PARAMETERS_SET_COMPLETE          \
+    || (__value) == IPMI_SOL_CONFIGURATION_PARAMETERS_SET_IN_PROGRESS    \
+    || (__value) == IPMI_SOL_CONFIGURATION_PARAMETERS_SET_COMMIT_WRITE) ? 1 : 0 )
+
 #define IPMI_SOL_SOL_DISABLE    0x0
 #define IPMI_SOL_SOL_ENABLE     0x1
 
@@ -151,6 +160,7 @@ extern fiid_template_t tmpl_sol_payload_data_bmc_to_remote_console;
 
 extern fiid_template_t tmpl_cmd_set_sol_configuration_parameters_rq;
 extern fiid_template_t tmpl_cmd_set_sol_configuration_parameters_rs;
+extern fiid_template_t tmpl_cmd_set_sol_configuration_parameters_set_in_progress_rq;
 extern fiid_template_t tmpl_cmd_set_sol_configuration_parameters_sol_enable_rq;
 extern fiid_template_t tmpl_cmd_set_sol_configuration_parameters_sol_authentication_rq;
 extern fiid_template_t tmpl_cmd_set_sol_configuration_parameters_character_accumulate_interval_and_send_threshold_rq;
@@ -161,6 +171,7 @@ extern fiid_template_t tmpl_cmd_set_sol_configuration_parameters_sol_payload_por
 
 extern fiid_template_t tmpl_cmd_get_sol_configuration_parameters_rq;
 extern fiid_template_t tmpl_cmd_get_sol_configuration_parameters_rs;
+extern fiid_template_t tmpl_cmd_get_sol_configuration_parameters_set_in_progress_rs;
 extern fiid_template_t tmpl_cmd_get_sol_configuration_parameters_sol_enable_rs;
 extern fiid_template_t tmpl_cmd_get_sol_configuration_parameters_sol_authentication_rs;
 extern fiid_template_t tmpl_cmd_get_sol_configuration_parameters_character_accumulate_interval_and_send_threshold_rs;
@@ -197,6 +208,10 @@ int fill_cmd_set_sol_configuration_parameters (uint8_t channel_number,
                                                const void *configuration_parameter_data,
                                                unsigned int configuration_parameter_data_len,
                                                fiid_obj_t obj_data_rq);
+
+int fill_cmd_set_sol_configuration_parameters_set_in_progress (uint8_t channel_number,
+                                                               uint8_t state,
+                                                               fiid_obj_t obj_data_rq);
 
 int fill_cmd_set_sol_configuration_parameters_sol_enable (uint8_t channel_number,
                                                           uint8_t sol_enable,
