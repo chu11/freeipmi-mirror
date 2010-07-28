@@ -1,6 +1,7 @@
 2010-07-28  Albert Chu <chu11@llnl.gov>
 
-	* libfreeipmi/: Support Chassis Boot Options Set In Progress.
+	* libfreeipmi/: Support Chassis Boot Options and Lan Configuration
+	Parameters Set In Progress.
 	
 2010-07-27  Albert Chu <chu11@llnl.gov>
 

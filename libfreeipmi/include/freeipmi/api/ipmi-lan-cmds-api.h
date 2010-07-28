@@ -42,6 +42,11 @@ int ipmi_cmd_set_lan_configuration_parameters (ipmi_ctx_t ctx,
                                                unsigned int configuration_parameter_data_len,
                                                fiid_obj_t obj_cmd_rs);
 
+int ipmi_cmd_set_lan_configuration_parameters_set_in_progress (ipmi_ctx_t ctx,
+                                                               uint8_t channel_number,
+                                                               uint8_t state,
+                                                               fiid_obj_t obj_cmd_rs);
+
 int ipmi_cmd_set_lan_configuration_parameters_authentication_type_enables (ipmi_ctx_t ctx,
                                                                            uint8_t channel_number,
                                                                            uint8_t callback_level_none,
@@ -191,6 +196,13 @@ int ipmi_cmd_get_lan_configuration_parameters (ipmi_ctx_t ctx,
                                                uint8_t set_selector,
                                                uint8_t block_selector,
                                                fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_get_lan_configuration_parameters_set_in_progress (ipmi_ctx_t ctx,
+                                                               uint8_t channel_number,
+                                                               uint8_t get_parameter,
+                                                               uint8_t set_selector,
+                                                               uint8_t block_selector,
+                                                               fiid_obj_t obj_cmd_rs);
 
 int ipmi_cmd_get_lan_configuration_parameters_authentication_type_support (ipmi_ctx_t ctx,
                                                                            uint8_t channel_number,

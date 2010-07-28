@@ -26,6 +26,15 @@ extern "C" {
 #include <stdint.h>
 #include <freeipmi/fiid/fiid.h>
 
+#define IPMI_LAN_CONFIGURATION_PARAMETERS_SET_COMPLETE                              0x00
+#define IPMI_LAN_CONFIGURATION_PARAMETERS_SET_IN_PROGRESS                           0x01
+#define IPMI_LAN_CONFIGURATION_PARAMETERS_SET_COMMIT_WRITE                          0x02
+
+#define IPMI_LAN_CONFIGURATION_PARAMETERS_SET_IN_PROGRESS_VALID(__value) \
+  (((__value) == IPMI_LAN_CONFIGURATION_PARAMETERS_SET_COMPLETE          \
+    || (__value) == IPMI_LAN_CONFIGURATION_PARAMETERS_SET_IN_PROGRESS    \
+    || (__value) == IPMI_LAN_CONFIGURATION_PARAMETERS_SET_COMMIT_WRITE) ? 1 : 0 )
+
 #define IPMI_AUTHENTICATION_TYPE_SUPPORTED             0x1
 #define IPMI_AUTHENTICATION_TYPE_UNSUPPORTED           0x0
 
@@ -156,6 +165,7 @@ extern "C" {
 extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_rq;
 extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_rs;
 
+extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_set_in_progress_rq;
 extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_authentication_type_enables_rq;
 extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ip_address_rq;
 extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ip_address_source_rq;
@@ -178,6 +188,7 @@ extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_bad_password_th
 extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_rq;
 extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_rs;
 
+extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_set_in_progress_rs;
 extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_authentication_type_support_rs;
 extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_authentication_type_enables_rs;
 extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ip_address_rs;
@@ -213,6 +224,10 @@ int fill_cmd_set_lan_configuration_parameters (uint8_t channel_number,
                                                unsigned int configuration_parameter_data_len,
                                                fiid_obj_t obj_cmd_rq);
   
+int fill_cmd_set_lan_configuration_parameters_set_in_progress (uint8_t channel_number,
+                                                               uint8_t state,
+                                                               fiid_obj_t obj_cmd_rq);
+
 int fill_cmd_set_lan_configuration_parameters_authentication_type_enables (uint8_t channel_number,
                                                                            uint8_t callback_level_none,
                                                                            uint8_t callback_level_md2,
