@@ -42,6 +42,11 @@ int ipmi_cmd_set_serial_modem_configuration (ipmi_ctx_t ctx,
                                              unsigned int configuration_parameter_data_len,
                                              fiid_obj_t obj_cmd_rs);
 
+int ipmi_cmd_set_serial_modem_configuration_set_in_progress (ipmi_ctx_t ctx,
+                                                             uint8_t channel_number,
+                                                             uint8_t state,
+                                                             fiid_obj_t obj_cmd_rs);
+
 int ipmi_cmd_set_serial_modem_configuration_connection_mode (ipmi_ctx_t ctx,
                                                              uint8_t channel_number,
                                                              uint8_t basic_mode,
@@ -74,6 +79,14 @@ int ipmi_cmd_get_serial_modem_configuration (ipmi_ctx_t ctx,
                                              uint8_t set_selector,
                                              uint8_t block_selector,
                                              fiid_obj_t obj_cmd_rs);
+
+
+int ipmi_cmd_get_serial_modem_configuration_set_in_progress (ipmi_ctx_t ctx,
+                                                             uint8_t channel_number,
+                                                             uint8_t get_parameter,
+                                                             uint8_t set_selector,
+                                                             uint8_t block_selector,
+                                                             fiid_obj_t obj_cmd_rs);
 
 int ipmi_cmd_get_serial_modem_configuration_connection_mode (ipmi_ctx_t ctx,
                                                              uint8_t channel_number,

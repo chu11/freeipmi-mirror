@@ -48,9 +48,9 @@ int ipmi_cmd_set_pef_configuration_parameters (ipmi_ctx_t ctx,
                                                unsigned int configuration_parameter_data_len,
                                                fiid_obj_t obj_cmd_rs);
 
-int ipmi_cmd_set_pef_configuration_parameters_pef_control (ipmi_ctx_t ctx,
-                                                           uint8_t state,
-                                                           fiid_obj_t obj_cmd_rs);
+int ipmi_cmd_set_pef_configuration_parameters_set_in_progress (ipmi_ctx_t ctx,
+                                                               uint8_t state,
+                                                               fiid_obj_t obj_cmd_rs);
 
 int ipmi_cmd_set_pef_configuration_parameters_pef_control (ipmi_ctx_t ctx,
                                                            uint8_t pef,

@@ -26,6 +26,15 @@ extern "C" {
 #include <stdint.h>
 #include <freeipmi/fiid/fiid.h>
 
+#define IPMI_SERIAL_MODEM_CONFIGURATION_PARAMETERS_SET_COMPLETE                              0x00
+#define IPMI_SERIAL_MODEM_CONFIGURATION_PARAMETERS_SET_IN_PROGRESS                           0x01
+#define IPMI_SERIAL_MODEM_CONFIGURATION_PARAMETERS_SET_COMMIT_WRITE                          0x02
+
+#define IPMI_SERIAL_MODEM_CONFIGURATION_PARAMETERS_SET_IN_PROGRESS_VALID(__value) \
+  (((__value) == IPMI_SERIAL_MODEM_CONFIGURATION_PARAMETERS_SET_COMPLETE          \
+    || (__value) == IPMI_SERIAL_MODEM_CONFIGURATION_PARAMETERS_SET_IN_PROGRESS    \
+    || (__value) == IPMI_SERIAL_MODEM_CONFIGURATION_PARAMETERS_SET_COMMIT_WRITE) ? 1 : 0 )
+
 #define IPMI_BASIC_MODE_ENABLE                             0x1
 #define IPMI_BASIC_MODE_DISABLE                            0x0
 
@@ -102,6 +111,7 @@ extern "C" {
 
 extern fiid_template_t tmpl_cmd_set_serial_modem_configuration_rq;
 extern fiid_template_t tmpl_cmd_set_serial_modem_configuration_rs;
+extern fiid_template_t tmpl_cmd_set_serial_modem_configuration_set_in_progress_rq;
 extern fiid_template_t tmpl_cmd_set_serial_modem_configuration_connection_mode_rq;
 extern fiid_template_t tmpl_cmd_set_serial_modem_configuration_ipmi_messaging_comm_settings_rq;
 extern fiid_template_t tmpl_cmd_set_serial_modem_configuration_page_blackout_interval_rq;
@@ -109,6 +119,7 @@ extern fiid_template_t tmpl_cmd_set_serial_modem_configuration_call_retry_interv
 
 extern fiid_template_t tmpl_cmd_get_serial_modem_configuration_rq;
 extern fiid_template_t tmpl_cmd_get_serial_modem_configuration_rs;
+extern fiid_template_t tmpl_cmd_get_serial_modem_configuration_set_in_progress_rs;
 extern fiid_template_t tmpl_cmd_get_serial_modem_configuration_connection_mode_rs;
 extern fiid_template_t tmpl_cmd_get_serial_modem_configuration_ipmi_messaging_comm_settings_rs;
 extern fiid_template_t tmpl_cmd_get_serial_modem_configuration_page_blackout_interval_rs;
@@ -119,6 +130,10 @@ int fill_cmd_set_serial_modem_configuration (uint8_t channel_number,
                                              const void *configuration_parameter_data,
                                              unsigned int configuration_parameter_data_len,
                                              fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_set_serial_modem_configuration_set_in_progress (uint8_t channel_number,
+                                                             uint8_t state,
+                                                             fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_set_serial_modem_configuration_connection_mode (uint8_t channel_number,
                                                              uint8_t basic_mode,
