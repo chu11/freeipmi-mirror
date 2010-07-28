@@ -368,6 +368,15 @@ fiid_template_t tmpl_cmd_set_system_info_parameters_rs =
     { 0, "", 0}
   };
 
+fiid_template_t tmpl_cmd_set_system_info_parameters_set_in_progress_rq =
+  {
+    { 8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,   "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 2,   "state", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 6,   "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
 fiid_template_t tmpl_cmd_set_system_info_parameters_system_firmware_version_first_set_rq =
   {
     { 8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -469,6 +478,16 @@ fiid_template_t tmpl_cmd_get_system_info_parameters_rs =
     { 8,    "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 8,    "parameter_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1024, "configuration_parameter_data", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
+    { 0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_get_system_info_parameters_set_in_progress_rs =
+  {
+    { 8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8,   "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8,   "parameter_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 2,   "state", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 6,   "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 0, "", 0}
   };
 
@@ -1266,6 +1285,36 @@ fill_cmd_set_system_info_parameters (uint8_t parameter_selector,
   return (0);
 }
   
+int
+fill_cmd_set_system_info_parameters_set_in_progress (uint8_t state,
+                                                     fiid_obj_t obj_cmd_rq)
+{
+  if (!IPMI_SYSTEM_INFO_PARAMETERS_SET_IN_PROGRESS_VALID (state)
+      || !fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_system_info_parameters_set_in_progress_rq) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq,
+                     "cmd",
+                     IPMI_CMD_SET_SYSTEM_INFO_PARAMETERS);
+
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SYSTEM_INFO_PARAMETER_SYSTEM_FIRMWARE_VERSION);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "state", state);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
+
+  return (0);
+}
+
 int
 fill_cmd_set_system_info_parameters_system_firmware_version_first_set (uint8_t set_selector,
                                                                        uint8_t encoding,

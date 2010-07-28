@@ -2,7 +2,8 @@
 
 	* libfreeipmi/: Support Chassis Boot Options, Lan Configuration
 	Parameters, Serial/Modem Configuration, SOL Configuration
-	Parameters, and PEF Configuration Parameters Set In Progress.
+	Parameters, System Info Parameters, and PEF Configuration
+	Parameters Set In Progress.
 
 	* Fix some template bugs/typos.
 	

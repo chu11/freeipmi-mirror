@@ -124,6 +124,15 @@ extern "C" {
   (((__val) == IPMI_GET_SYSTEM_INFO_PARAMETER       \
     || (__val) == IPMI_GET_SYSTEM_INFO_PARAMETER_REVISION_ONLY) ? 1 : 0)
 
+#define IPMI_SYSTEM_INFO_PARAMETERS_SET_COMPLETE                              0x00
+#define IPMI_SYSTEM_INFO_PARAMETERS_SET_IN_PROGRESS                           0x01
+#define IPMI_SYSTEM_INFO_PARAMETERS_SET_COMMIT_WRITE                          0x02
+
+#define IPMI_SYSTEM_INFO_PARAMETERS_SET_IN_PROGRESS_VALID(__value) \
+  (((__value) == IPMI_SYSTEM_INFO_PARAMETERS_SET_COMPLETE          \
+    || (__value) == IPMI_SYSTEM_INFO_PARAMETERS_SET_IN_PROGRESS    \
+    || (__value) == IPMI_SYSTEM_INFO_PARAMETERS_SET_COMMIT_WRITE) ? 1 : 0 )
+
 #define IPMI_SYSTEM_INFO_ENCODING_ASCII_LATIN1         0x0
 #define IPMI_SYSTEM_INFO_ENCODING_UTF_8                0x1
 #define IPMI_SYSTEM_INFO_ENCODING_UNICODE              0x2
@@ -332,6 +341,7 @@ extern fiid_template_t tmpl_cmd_get_device_guid_format_rs;
 extern fiid_template_t tmpl_cmd_set_system_info_parameters_rq;
 extern fiid_template_t tmpl_cmd_set_system_info_parameters_rs;
 
+extern fiid_template_t tmpl_cmd_set_system_info_parameters_set_in_progress;
 extern fiid_template_t tmpl_cmd_set_system_info_parameters_system_firmware_version_first_set_rq;
 extern fiid_template_t tmpl_cmd_set_system_info_parameters_system_firmware_version_rq;
 extern fiid_template_t tmpl_cmd_set_system_info_parameters_system_name_first_set_rq;
@@ -344,6 +354,7 @@ extern fiid_template_t tmpl_cmd_set_system_info_parameters_primary_operating_sys
 extern fiid_template_t tmpl_cmd_get_system_info_parameters_rq;
 extern fiid_template_t tmpl_cmd_get_system_info_parameters_rs;
 
+extern fiid_template_t tmpl_cmd_get_system_info_parameters_set_in_progress;
 extern fiid_template_t tmpl_cmd_get_system_info_parameters_system_firmware_version_first_set_rs;
 extern fiid_template_t tmpl_cmd_get_system_info_parameters_system_firmware_version_rs;
 extern fiid_template_t tmpl_cmd_get_system_info_parameters_system_name_first_set_rs;
@@ -451,6 +462,9 @@ int fill_cmd_set_system_info_parameters (uint8_t parameter_selector,
                                          unsigned int configuration_parameter_data_len,
                                          fiid_obj_t obj_cmd_rq);
   
+int fill_cmd_set_system_info_parameters_system_firmware_version_first_set (uint8_t state,
+                                                                           fiid_obj_t obj_cmd_rq);
+
 int fill_cmd_set_system_info_parameters_system_firmware_version_first_set (uint8_t set_selector,
                                                                            uint8_t encoding,
                                                                            uint8_t string_length,
