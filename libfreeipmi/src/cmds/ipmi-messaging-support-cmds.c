@@ -1271,12 +1271,8 @@ fill_cmd_set_system_info_parameters (uint8_t parameter_selector,
     }
 
   FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
-  FILL_FIID_OBJ_SET (obj_cmd_rq,
-                     "cmd",
-                     IPMI_CMD_SET_SYSTEM_INFO_PARAMETERS);
-
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SYSTEM_INFO_PARAMETERS);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", parameter_selector);
-
   FILL_FIID_OBJ_SET_DATA (obj_cmd_rq,
                           "configuration_parameter_data",
                           configuration_parameter_data,
@@ -1304,10 +1300,7 @@ fill_cmd_set_system_info_parameters_set_in_progress (uint8_t state,
 
   FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
   FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
-  FILL_FIID_OBJ_SET (obj_cmd_rq,
-                     "cmd",
-                     IPMI_CMD_SET_SYSTEM_INFO_PARAMETERS);
-
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SYSTEM_INFO_PARAMETERS);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SYSTEM_INFO_PARAMETER_SYSTEM_FIRMWARE_VERSION);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "state", state);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
@@ -1340,10 +1333,7 @@ fill_cmd_set_system_info_parameters_system_firmware_version_first_set (uint8_t s
     }
 
   FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
-  FILL_FIID_OBJ_SET (obj_cmd_rq,
-                     "cmd",
-                     IPMI_CMD_SET_SYSTEM_INFO_PARAMETERS);
-
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SYSTEM_INFO_PARAMETERS);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SYSTEM_INFO_PARAMETER_SYSTEM_FIRMWARE_VERSION);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "set_selector", set_selector);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "encoding", encoding);
@@ -1383,10 +1373,7 @@ fill_cmd_set_system_info_parameters_system_firmware_version (uint8_t set_selecto
     }
 
   FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
-  FILL_FIID_OBJ_SET (obj_cmd_rq,
-                     "cmd",
-                     IPMI_CMD_SET_SYSTEM_INFO_PARAMETERS);
-
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SYSTEM_INFO_PARAMETERS);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SYSTEM_INFO_PARAMETER_SYSTEM_FIRMWARE_VERSION);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "set_selector", set_selector);
 
@@ -1426,10 +1413,7 @@ fill_cmd_set_system_info_parameters_system_name_first_set (uint8_t set_selector,
     }
 
   FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
-  FILL_FIID_OBJ_SET (obj_cmd_rq,
-                     "cmd",
-                     IPMI_CMD_SET_SYSTEM_INFO_PARAMETERS);
-
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SYSTEM_INFO_PARAMETERS);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SYSTEM_INFO_PARAMETER_SYSTEM_NAME);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "set_selector", set_selector);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "encoding", encoding);
@@ -1469,10 +1453,7 @@ fill_cmd_set_system_info_parameters_system_name (uint8_t set_selector,
     }
 
   FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
-  FILL_FIID_OBJ_SET (obj_cmd_rq,
-                     "cmd",
-                     IPMI_CMD_SET_SYSTEM_INFO_PARAMETERS);
-
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SYSTEM_INFO_PARAMETERS);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SYSTEM_INFO_PARAMETER_SYSTEM_NAME);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "set_selector", set_selector);
 
@@ -1512,10 +1493,7 @@ fill_cmd_set_system_info_parameters_primary_operating_system_name_first_set (uin
     }
 
   FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
-  FILL_FIID_OBJ_SET (obj_cmd_rq,
-                     "cmd",
-                     IPMI_CMD_SET_SYSTEM_INFO_PARAMETERS);
-
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SYSTEM_INFO_PARAMETERS);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SYSTEM_INFO_PARAMETER_PRIMARY_OPERATING_SYSTEM_NAME);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "set_selector", set_selector);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "encoding", encoding);
@@ -1555,10 +1533,7 @@ fill_cmd_set_system_info_parameters_primary_operating_system_name (uint8_t set_s
     }
 
   FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
-  FILL_FIID_OBJ_SET (obj_cmd_rq,
-                     "cmd",
-                     IPMI_CMD_SET_SYSTEM_INFO_PARAMETERS);
-
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SYSTEM_INFO_PARAMETERS);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SYSTEM_INFO_PARAMETER_PRIMARY_OPERATING_SYSTEM_NAME);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "set_selector", set_selector);
 
@@ -1598,10 +1573,7 @@ fill_cmd_set_system_info_parameters_operating_system_name_first_set (uint8_t set
     }
 
   FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
-  FILL_FIID_OBJ_SET (obj_cmd_rq,
-                     "cmd",
-                     IPMI_CMD_SET_SYSTEM_INFO_PARAMETERS);
-
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SYSTEM_INFO_PARAMETERS);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SYSTEM_INFO_PARAMETER_OPERATING_SYSTEM_NAME);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "set_selector", set_selector);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "encoding", encoding);
@@ -1641,10 +1613,7 @@ fill_cmd_set_system_info_parameters_operating_system_name (uint8_t set_selector,
     }
 
   FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
-  FILL_FIID_OBJ_SET (obj_cmd_rq,
-                     "cmd",
-                     IPMI_CMD_SET_SYSTEM_INFO_PARAMETERS);
-
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SYSTEM_INFO_PARAMETERS);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SYSTEM_INFO_PARAMETER_OPERATING_SYSTEM_NAME);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "set_selector", set_selector);
 
