@@ -58,9 +58,9 @@ FRU Info Area Header
 
 fiid_template_t tmpl_fru_info_area_header =
   {
-    { 4,     "format_version", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4,     "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,     "info_area_length", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "format_version", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "info_area_length", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 0, "", 0}
   };
 
@@ -175,11 +175,11 @@ FRU Extended Compatability Record
 
 fiid_template_t tmpl_fru_extended_compatibility_record =
   {
-    { 24,   "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,    "entity_id_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,    "compatibility_base", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 7,    "compatibility_code_start_value", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1,    "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "entity_id_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "compatibility_base", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 7, "compatibility_code_start_value", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4096, "code_range_mask", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_VARIABLE},
     { 0, "", 0}
   };
@@ -189,7 +189,7 @@ FRU OEM Record
 
 fiid_template_t tmpl_fru_oem_record =
   {
-    { 24,   "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4096, "oem_data", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_VARIABLE},
     { 0, "", 0}
   };

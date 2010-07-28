@@ -32,14 +32,14 @@
 fiid_template_t tmpl_sel_record_header =
   {
     { 16, "record_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "record_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "record_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 0, "", 0}
   };
 
 fiid_template_t tmpl_sel_system_event_record =
   {
     { 16, "record_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "record_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "record_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 32, "timestamp", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
 
     /* Generator ID */
@@ -69,7 +69,7 @@ fiid_template_t tmpl_sel_system_event_record =
 fiid_template_t tmpl_sel_system_event_record_event_fields =
   {
     { 16, "record_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "record_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "record_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 32, "timestamp", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
 
     /* Generator ID */
@@ -105,7 +105,7 @@ fiid_template_t tmpl_sel_system_event_record_event_fields =
 fiid_template_t tmpl_sel_system_event_record_discrete_previous_state_severity =
   {
     { 16, "record_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "record_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "record_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 32, "timestamp", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
 
     /* Generator ID */
@@ -142,7 +142,7 @@ fiid_template_t tmpl_sel_system_event_record_discrete_previous_state_severity =
 fiid_template_t tmpl_sel_timestamped_oem_record =
   {
     { 16, "record_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "record_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "record_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 32, "timestamp", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 48, "oem_defined", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -152,7 +152,7 @@ fiid_template_t tmpl_sel_timestamped_oem_record =
 fiid_template_t tmpl_sel_non_timestamped_oem_record =
   {
     { 16, "record_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "record_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "record_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 104, "oem_defined", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 0, "", 0}
   };

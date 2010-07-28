@@ -116,9 +116,9 @@ fiid_template_t tmpl_acpi_table_hdr =
     /* Length of table, in bytes, including header */
     { 32, "length", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* ACPI Specification minor version # */
-    { 8,  "revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* To make sum of entire table == 0 */
-    { 8,  "checksum", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "checksum", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* OEM identification */
     { 48, "oem_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* OEM table identification */
@@ -129,7 +129,7 @@ fiid_template_t tmpl_acpi_table_hdr =
     { 32, "asl_compiler_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* ASL compiler revision number */
     { 32, "asl_compiler_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0,  "", 0}
+    { 0, "", 0}
   };
 
 fiid_template_t tmpl_acpi_spmi_table_descriptor =
@@ -141,9 +141,9 @@ fiid_template_t tmpl_acpi_spmi_table_descriptor =
        Interface Table. */
     { 32, "length", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* 5 */
-    { 8,  "revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* Entire table must sum to zero. */
-    { 8,  "checksum", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "checksum", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* OEM ID. Per ACPI specification. An OEM-supplied string that
        identifies the OEM. */
     { 48, "oemid", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -247,15 +247,15 @@ fiid_template_t tmpl_acpi_spmi_table_descriptor =
     /* Address space where
        struct or register
        exists. */
-    { 8,  "base_address.address_space_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "base_address.address_space_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* Size in bits of given
        register */
-    { 8,  "base_address.register_bit_width", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "base_address.register_bit_width", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* Bit offset within the
        register */
-    { 8,  "base_address.register_bit_offset", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "base_address.register_bit_offset", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* Must be 0 */
-    { 8,  "base_address.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "base_address.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* 64-bit address of
        struct or register */
     { 64, "base_address.address", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -267,7 +267,7 @@ fiid_template_t tmpl_acpi_spmi_table_descriptor =
        based on pre-IPMI v2.0 versions of SPMI may contain a null-
        terminated string here. */
     { 8, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0,  "", 0}
+    { 0, "", 0}
   };
 
 fiid_template_t tmpl_acpi_spmi_table_descriptor_ssif =
@@ -279,9 +279,9 @@ fiid_template_t tmpl_acpi_spmi_table_descriptor_ssif =
        Interface Table. */
     { 32, "length", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* 5 */
-    { 8,  "revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* Entire table must sum to zero. */
-    { 8,  "checksum", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "checksum", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* OEM ID. Per ACPI specification. An OEM-supplied string that
        identifies the OEM. */
     { 48, "oemid", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -385,16 +385,16 @@ fiid_template_t tmpl_acpi_spmi_table_descriptor_ssif =
     /* Address space where
        struct or register
        exists. */
-    { 8,  "base_address.address_space_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "base_address.address_space_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* Size in bits of given
        register */
-    { 8,  "base_address.register_bit_width", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "base_address.register_bit_width", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* Bit offset within the
        register */
-    { 8,  "base_address.register_bit_offset", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "base_address.register_bit_offset", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* field = 1 (byte
        access) */
-    { 8,  "base_address.address_size", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "base_address.address_size", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* SMBus address of BMC
        SSIF */
     { 7, "base_address.address", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -408,7 +408,7 @@ fiid_template_t tmpl_acpi_spmi_table_descriptor_ssif =
        based on pre-IPMI v2.0 versions of SPMI may contain a null-
        terminated string here. */
     { 8, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0,  "", 0}
+    { 0, "", 0}
   };
 
 fiid_template_t tmpl_acpi_spmi_table_descriptor_pci_ipmi =
@@ -420,9 +420,9 @@ fiid_template_t tmpl_acpi_spmi_table_descriptor_pci_ipmi =
        Interface Table. */
     { 32, "length", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* 5 */
-    { 8,  "revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* Entire table must sum to zero. */
-    { 8,  "checksum", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "checksum", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* OEM ID. Per ACPI specification. An OEM-supplied string that
        identifies the OEM. */
     { 48, "oemid", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -494,7 +494,7 @@ fiid_template_t tmpl_acpi_spmi_table_descriptor_pci_ipmi =
        significant byte of the _UID value. Set to 0b for SSIF. */
     { 1, "pci_device_flag", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* [7:1] - Reserved */
-    { 7,  "pci_device_flag.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 7, "pci_device_flag.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* The I/O APIC or I/O SAPIC Global System
        Interrupt used by the interface.
        (Note: This field is valid only if Bit[1] of the
@@ -525,15 +525,15 @@ fiid_template_t tmpl_acpi_spmi_table_descriptor_pci_ipmi =
     /* Address space where
        struct or register
        exists. */
-    { 8,  "base_address.address_space_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "base_address.address_space_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* Size in bits of given
        register */
-    { 8,  "base_address.register_bit_width", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "base_address.register_bit_width", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* Bit offset within the
        register */
-    { 8,  "base_address.register_bit_offset", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "base_address.register_bit_offset", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* Must be 0 */
-    { 8,  "base_address.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "base_address.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* 64-bit address of
        struct or register */
     { 64, "base_address.address", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -578,7 +578,7 @@ fiid_template_t tmpl_acpi_spmi_table_descriptor_pci_ipmi =
        based on pre-IPMI v2.0 versions of SPMI may contain a null-
        terminated string here. */
     { 8, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0,  "", 0}
+    { 0, "", 0}
   };
 
 static uint8_t _ipmi_acpi_table_checksum (ipmi_locate_ctx_t ctx,
@@ -1191,12 +1191,12 @@ _ipmi_acpi_get_firmware_table (ipmi_locate_ctx_t ctx,
   fiid_template_t tmpl_table_address_32 =
     {
       { 32, "table_address", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-      { 0,  "", 0}
+      { 0, "", 0}
     };
   fiid_template_t tmpl_table_address_64 =
     {
       { 64, "table_address", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-      { 0,  "", 0}
+      { 0, "", 0}
     };
 
   assert (ctx);

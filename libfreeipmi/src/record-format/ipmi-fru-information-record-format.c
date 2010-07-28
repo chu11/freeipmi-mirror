@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-information-record-format.c,v 1.12 2010-07-28 21:25:10 chu11 Exp $
+ *  $Id: ipmi-fru-information-record-format.c,v 1.13 2010-07-28 21:31:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -54,9 +54,9 @@ fiid_template_t tmpl_fru_common_header =
 
 fiid_template_t tmpl_fru_info_area_header =
   {
-    { 4,     "format_version", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4,     "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,     "info_area_length", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "format_version", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "info_area_length", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 0, "", 0}
   };
 
