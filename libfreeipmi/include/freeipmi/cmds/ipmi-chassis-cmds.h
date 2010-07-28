@@ -179,7 +179,7 @@ extern "C" {
 
 #define IPMI_CHASSIS_BOOT_OPTIONS_SET_COMPLETE                              0x00
 #define IPMI_CHASSIS_BOOT_OPTIONS_SET_IN_PROGRESS                           0x01
-#define IPMI_CHASSIS_BOOT_OPTIONS_SET_COMMIT_WRITE                          0x03
+#define IPMI_CHASSIS_BOOT_OPTIONS_SET_COMMIT_WRITE                          0x02
 
 #define IPMI_CHASSIS_BOOT_OPTIONS_SET_IN_PROGRESS_VALID(__value) \
   (((__value) == IPMI_CHASSIS_BOOT_OPTIONS_SET_COMPLETE          \
@@ -275,6 +275,7 @@ extern fiid_template_t tmpl_cmd_set_system_boot_options_boot_flags_rq;
 
 extern fiid_template_t tmpl_cmd_get_system_boot_options_rq;
 extern fiid_template_t tmpl_cmd_get_system_boot_options_rs;
+extern fiid_template_t tmpl_cmd_get_system_boot_options_set_in_progress_rs;
 extern fiid_template_t tmpl_cmd_get_system_boot_options_service_partition_selector_rs;
 extern fiid_template_t tmpl_cmd_get_system_boot_options_service_partition_scan_rs;
 extern fiid_template_t tmpl_cmd_get_system_boot_options_BMC_boot_flag_valid_bit_clearing_rs;
@@ -314,7 +315,7 @@ int fill_cmd_set_system_boot_options (uint8_t parameter_selector,
                                       unsigned int configuration_parameter_data_len,
                                       fiid_obj_t obj_cmd_rq);
 
-int fill_cmd_set_system_boot_options_set_in_progress (uint8_t value,
+int fill_cmd_set_system_boot_options_set_in_progress (uint8_t state,
                                                       fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_set_system_boot_options_service_partition_selector (uint8_t service_partition_selector,

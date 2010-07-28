@@ -222,7 +222,7 @@ fiid_template_t tmpl_cmd_set_system_boot_options_set_in_progress_rq =
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 7, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1, "parameter_valid", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 2, "set_in_progress", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 2, "state", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 6, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 0, "", 0},
   };
@@ -331,6 +331,19 @@ fiid_template_t tmpl_cmd_get_system_boot_options_rs =
     { 1, "parameter_valid", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 296, "configuration_parameter_data", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
     { 0, "", 0},
+  };
+
+fiid_template_t tmpl_cmd_get_system_boot_options_set_in_progress_rs =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 4, "parameter_version", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 7, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "parameter_valid", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 2, "state", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 6, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
   };
 
 fiid_template_t tmpl_cmd_get_system_boot_options_service_partition_selector_rs =
@@ -690,10 +703,10 @@ fill_cmd_set_system_boot_options (uint8_t parameter_selector,
 }
 
 int
-fill_cmd_set_system_boot_options_set_in_progress (uint8_t value,
+fill_cmd_set_system_boot_options_set_in_progress (uint8_t state,
                                                   fiid_obj_t obj_cmd_rq)
 {
-  if (!IPMI_CHASSIS_BOOT_OPTIONS_SET_IN_PROGRESS_VALID (value)
+  if (!IPMI_CHASSIS_BOOT_OPTIONS_SET_IN_PROGRESS_VALID (state)
       || !fiid_obj_valid (obj_cmd_rq))
     {
       SET_ERRNO (EINVAL);
@@ -713,7 +726,7 @@ fill_cmd_set_system_boot_options_set_in_progress (uint8_t value,
   FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_SET_IN_PROGRESS);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_valid", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_UNLOCKED);
 
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "set_in_progress", value);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "state", state);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
 
   return (0);
