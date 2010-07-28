@@ -110,6 +110,19 @@ fiid_template_t tmpl_cmd_set_pef_configuration_parameters_rs =
     { 0, "", 0}
   };
 
+Set PEF Configuration Parameters (Set In Progress) Request
+----------------------------------------------------------
+
+fiid_template_t tmpl_cmd_set_pef_configuration_parameters_set_in_progress_rq =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 7, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 2, "state", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 6, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
 Set PEF Configuration Parameters (PEF Control) Request
 ------------------------------------------------------
 
@@ -304,6 +317,20 @@ fiid_template_t tmpl_cmd_get_pef_configuration_parameters_rs =
     { 4,    "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4,    "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1024, "configuration_parameter_data", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_VARIABLE},
+    { 0, "", 0}
+  };
+
+Get PEF Configuration Parameters (Set In Progress) Response
+-----------------------------------------------------------
+
+fiid_template_t tmpl_cmd_get_pef_configuration_parameters_set_in_progress_rs =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 4, "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 2, "state", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 6, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 0, "", 0}
   };
 

@@ -60,6 +60,7 @@ o libfreeipmi
   - 'sel-parse' library now does not require valid ipmi_ctx.
     Functions performing ipmi communication will simply error.
   - Rework 'intel20' workaround to not allow a non two-part authentication.
+  - Support more IPMI templates.
   - Fix some template bugs/typos.
 o libipmimonitoring
   - Add SEL monitoring support to libipmimonitoring.

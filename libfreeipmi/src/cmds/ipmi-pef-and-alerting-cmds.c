@@ -91,6 +91,16 @@ fiid_template_t tmpl_cmd_set_pef_configuration_parameters_rs =
     { 0, "", 0}
   };
 
+fiid_template_t tmpl_cmd_set_pef_configuration_parameters_set_in_progress_rq =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 7, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 2, "state", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 6, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
 fiid_template_t tmpl_cmd_set_pef_configuration_parameters_pef_control_rq =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -252,6 +262,17 @@ fiid_template_t tmpl_cmd_get_pef_configuration_parameters_rs =
     { 4,    "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4,    "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1024, "configuration_parameter_data", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
+    { 0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_get_pef_configuration_parameters_set_in_progress_rs =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 4, "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 2, "state", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 6, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 0, "", 0}
   };
 
@@ -588,6 +609,32 @@ fill_cmd_set_pef_configuration_parameters (uint8_t parameter_selector,
                           configuration_parameter_data,
                           configuration_parameter_data_len);
 
+  return (0);
+}
+
+int
+fill_cmd_set_pef_configuration_parameters_set_in_progress (uint8_t state,
+                                                           fiid_obj_t obj_cmd_rq)
+{
+  if (!IPMI_PEF_CONFIGURATION_PARAMETERS_SET_IN_PROGRESS_VALID (state)
+      || !fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_pef_configuration_parameters_set_in_progress_rq) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_PEF_CONFIGURATION_PARAMETERS);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_PEF_PARAMETER_SET_IN_PROGRESS);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);  
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "state", state);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
   return (0);
 }
 

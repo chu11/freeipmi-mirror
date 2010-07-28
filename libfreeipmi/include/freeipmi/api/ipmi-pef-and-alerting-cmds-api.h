@@ -49,6 +49,10 @@ int ipmi_cmd_set_pef_configuration_parameters (ipmi_ctx_t ctx,
                                                fiid_obj_t obj_cmd_rs);
 
 int ipmi_cmd_set_pef_configuration_parameters_pef_control (ipmi_ctx_t ctx,
+                                                           uint8_t state,
+                                                           fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_set_pef_configuration_parameters_pef_control (ipmi_ctx_t ctx,
                                                            uint8_t pef,
                                                            uint8_t pef_event_messages,
                                                            uint8_t pef_startup_delay,
@@ -139,6 +143,12 @@ int ipmi_cmd_get_pef_configuration_parameters (ipmi_ctx_t ctx,
                                                uint8_t set_selector,
                                                uint8_t block_selector,
                                                fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_get_pef_configuration_parameters_set_in_progress (ipmi_ctx_t ctx,
+                                                               uint8_t get_parameter,
+                                                               uint8_t set_selector,
+                                                               uint8_t block_selector,
+                                                               fiid_obj_t obj_cmd_rs);
 
 int ipmi_cmd_get_pef_configuration_parameters_pef_control (ipmi_ctx_t ctx,
                                                            uint8_t get_parameter,
