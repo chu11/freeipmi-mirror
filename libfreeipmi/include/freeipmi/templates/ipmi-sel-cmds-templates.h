@@ -51,21 +51,21 @@ Get SEL Info Response
 
 fiid_template_t tmpl_cmd_get_sel_info_rs =
   {
-    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 4,  "sel_version_major", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4,  "sel_version_minor", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 4, "sel_version_major", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "sel_version_minor", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 16, "entries", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 16, "free_space", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 32, "most_recent_addition_timestamp", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 32, "most_recent_erase_timestamp", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "get_sel_allocation_info_command_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "reserve_sel_command_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "partial_add_sel_entry_command_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "delete_sel_command_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 3,  "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "overflow_flag", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0,  "", 0}
+    { 1, "get_sel_allocation_info_command_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "reserve_sel_command_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "partial_add_sel_entry_command_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "delete_sel_command_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 3, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "overflow_flag", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
   };
 
 Get SEL Allocation Info Request
@@ -82,14 +82,14 @@ Get SEL Allocation Info Response
 
 fiid_template_t tmpl_cmd_get_sel_allocation_info_rs =
   {
-    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 16, "number_of_possible_allocation_units", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 16, "allocation_unit_size", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 16, "number_of_free_allocation_units", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 16, "largest_free_block", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "maximum_record_size", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0,  "", 0}
+    { 8, "maximum_record_size", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
   };
 
 Reserve SEL Request
@@ -106,10 +106,10 @@ Reserve SEL Response
 
 fiid_template_t tmpl_cmd_reserve_sel_rs =
   {
-    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 16, "reservation_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0,  "", 0}
+    { 0, "", 0}
   };
 
 Get SEL Entry Request
@@ -117,12 +117,12 @@ Get SEL Entry Request
 
 fiid_template_t tmpl_cmd_get_sel_entry_rq =
   {
-    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 16, "reservation_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 16, "record_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "offset_into_record", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "bytes_to_read", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0,  "", 0}
+    { 8, "offset_into_record", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "bytes_to_read", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
   };
 
 Get SEL Entry Response
@@ -130,11 +130,11 @@ Get SEL Entry Response
 
 fiid_template_t tmpl_cmd_get_sel_entry_rs =
   {
-    { 8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 8,   "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 16,  "next_record_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 16, "next_record_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 128, "record_data", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
-    { 0,   "", 0}
+    { 0, "", 0}
   };
 
 Delete SEL Entry Request
@@ -142,10 +142,10 @@ Delete SEL Entry Request
 
 fiid_template_t tmpl_cmd_delete_sel_entry_rq =
   {
-    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 16, "reservation_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 16, "record_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0,  "", 0}
+    { 0, "", 0}
   };
 
 Delete SEL Entry Response
@@ -153,10 +153,10 @@ Delete SEL Entry Response
 
 fiid_template_t tmpl_cmd_delete_sel_entry_rs =
   {
-    { 8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 8,   "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 16,  "record_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0,   "", 0}
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 16, "record_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
   };
 
 Clear SEL Request
@@ -164,13 +164,13 @@ Clear SEL Request
 
 fiid_template_t tmpl_cmd_clear_sel_rq =
   {
-    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 16, "reservation_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "C", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "L", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "R", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "operation", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0,  "", 0}
+    { 8, "C", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "L", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "R", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "operation", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
   };
 
 Clear SEL Response
@@ -190,7 +190,7 @@ Get SEL Time Request
 
 fiid_template_t tmpl_cmd_get_sel_time_rq =
   {
-    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 0, "", 0}
   };
 
@@ -199,10 +199,10 @@ Get SEL Time Response
 
 fiid_template_t tmpl_cmd_get_sel_time_rs =
   {
-    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 32, "time", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0,   "", 0}
+    { 0, "", 0}
   };
 
 Set SEL Time Request
@@ -210,7 +210,7 @@ Set SEL Time Request
 
 fiid_template_t tmpl_cmd_set_sel_time_rq =
   {
-    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 32, "time", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 0, "", 0}
   };
@@ -220,9 +220,9 @@ Set SEL Time Response
 
 fiid_template_t tmpl_cmd_set_sel_time_rs =
   {
-    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 0,   "", 0}
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 0, "", 0}
   };
 
 Get Auxiliary Log Status Request
@@ -241,10 +241,10 @@ Get Auxiliary Log Status Response
 
 fiid_template_t tmpl_cmd_get_auxiliary_log_status_rs =
   {
-    { 8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 8,   "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 120, "log_data", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_VARIABLE},
-    { 0,   "", 0}
+    { 0, "", 0}
   };
 
 Get Auxiliary Log Status (MCA) Response
@@ -252,12 +252,12 @@ Get Auxiliary Log Status (MCA) Response
 
 fiid_template_t tmpl_cmd_get_auxiliary_log_status_mca_rs =
   {
-    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 32, "timestamp", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 32, "mca_log_entry_count", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 56, "log_data", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
-    { 0,  "", 0}
+    { 0, "", 0}
   };
 
 Get Auxiliary Log Status (OEM) Response
@@ -265,12 +265,12 @@ Get Auxiliary Log Status (OEM) Response
 
 fiid_template_t tmpl_cmd_get_auxiliary_log_status_oem_rs =
   {
-    { 8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 8,   "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 32,  "timestamp", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 24,  "oem_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 64,  "log_data", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_VARIABLE},
-    { 0,   "", 0}
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 32, "timestamp", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 24, "oem_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 64, "log_data", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_VARIABLE},
+    { 0, "", 0}
   };
 
 Set Auxiliary Log Status Request
@@ -278,11 +278,11 @@ Set Auxiliary Log Status Request
 
 fiid_template_t tmpl_cmd_set_auxiliary_log_status_rq =
   {
-    { 8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4,   "log_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4,   "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "log_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 120, "log_data", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_VARIABLE},
-    { 0,   "", 0}
+    { 0, "", 0}
   };
 
 Set Auxiliary Log Status Response

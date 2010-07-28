@@ -168,7 +168,7 @@ fiid_template_t tmpl_cmd_set_power_restore_policy_rs =
     { 1, "restoring_power_to_state_when_ac_mains_was_lost", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1, "always_powering_up_after_ac_mains_returns", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 5, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0,  "", 0}
+    { 0, "", 0}
   };
 
 fiid_template_t tmpl_cmd_set_power_cycle_interval_rq =
