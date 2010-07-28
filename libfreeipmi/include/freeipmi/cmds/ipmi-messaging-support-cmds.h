@@ -462,8 +462,8 @@ int fill_cmd_set_system_info_parameters (uint8_t parameter_selector,
                                          unsigned int configuration_parameter_data_len,
                                          fiid_obj_t obj_cmd_rq);
   
-int fill_cmd_set_system_info_parameters_system_firmware_version_first_set (uint8_t state,
-                                                                           fiid_obj_t obj_cmd_rq);
+int fill_cmd_set_system_info_parameters_set_in_progress (uint8_t state,
+                                                         fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_set_system_info_parameters_system_firmware_version_first_set (uint8_t set_selector,
                                                                            uint8_t encoding,
