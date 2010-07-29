@@ -300,7 +300,7 @@ provides a pretty good overview of setting of a serial console on
 Linux.  The only difference for setting up a serial console with
 Ipmiconsole or SOL, is the ttySX terminal may need to be changed.
 
-@node SSIF Driver Configuration, x86-64 Compilation, What is special about FreeIPMI, Top
+@node SSIF Driver Configuration, x86-64 Compilation, Serial Over LAN (SOL) / Ipmiconsole Setup, Top
 @section SSIF Driver Configuration
 
 FreeIPMI's SSIF driver works on top of kernel'2 i2c device
