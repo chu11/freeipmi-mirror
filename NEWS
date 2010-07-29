@@ -57,6 +57,8 @@ Libraries - Detailed Enhancements/Changes/Fixes
 -----------------------------------------------
 o libfreeipmi
   - Support new 'interpret' sub-library.
+  - Support new 'payload' sub-library and templates.  Split off SOL
+    Payload templates, functions, etc. into this section.
   - 'sel-parse' library now does not require valid ipmi_ctx.
     Functions performing ipmi communication will simply error.
   - Rework 'intel20' workaround to not allow a non two-part authentication.

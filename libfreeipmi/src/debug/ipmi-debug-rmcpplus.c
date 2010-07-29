@@ -36,6 +36,7 @@
 #include "freeipmi/interface/ipmi-lan-interface.h"
 #include "freeipmi/interface/ipmi-rmcpplus-interface.h"
 #include "freeipmi/interface/rmcp-interface.h"
+#include "freeipmi/payload/ipmi-sol-payload.h"
 #include "freeipmi/util/ipmi-rmcpplus-util.h"
 
 #include "ipmi-debug-common.h"

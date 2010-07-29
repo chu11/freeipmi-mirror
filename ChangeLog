@@ -1,3 +1,8 @@
+2010-07-29  Albert Chu <chu11@llnl.gov>
+
+	* Split off SOL payloads into new files and outside of
+	SOL-Commands.
+	
 2010-07-28  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/: Support Chassis Boot Options, Lan Configuration

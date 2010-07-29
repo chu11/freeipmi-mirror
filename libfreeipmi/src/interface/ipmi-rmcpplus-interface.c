@@ -35,6 +35,7 @@
 #include "freeipmi/fiid/fiid.h"
 #include "freeipmi/interface/ipmi-lan-interface.h"
 #include "freeipmi/interface/rmcp-interface.h"
+#include "freeipmi/payload/ipmi-sol-payload.h"
 #include "freeipmi/spec/ipmi-authentication-type-spec.h"
 #include "freeipmi/spec/ipmi-privilege-level-spec.h"
 #include "freeipmi/spec/ipmi-rmcpplus-status-spec.h"
