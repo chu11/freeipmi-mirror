@@ -61,6 +61,7 @@ release @value{VERSION} of the FreeIPMI.
 * What operating systems does FreeIPMI run on?::
 * FreeIPMI vs OpenIPMI vs Ipmitool vs Ipmiutil::  
 * What is special about FreeIPMI::  
+* Serial Over LAN (SOL) / Ipmiconsole Setup::
 * SSIF Driver Configuration::   
 * x86-64 Compilation::          
 * libgcrypt requirement::          
@@ -142,7 +143,7 @@ requirements, etc. that one can choose when developing IPMI drivers,
 libraries, and tools.  FreeIPMI has taken some different
 approaches than other open-source projects.
 
-@node What is special about FreeIPMI, SSIF Driver Configuration, FreeIPMI vs OpenIPMI vs Ipmitool vs Ipmiutil, Top
+@node What is special about FreeIPMI, Serial Over LAN (SOL) / Ipmiconsole Setup, FreeIPMI vs OpenIPMI vs Ipmitool vs Ipmiutil, Top
 @section What is special about FreeIPMI compared to other open source IPMI projects?
 
 In our eyes, there are several reasons why FreeIPMI is particularly special.
@@ -268,6 +269,36 @@ build/setup/manage any kernel modules/drivers.
 Likewise, by implementing everything in userspace libraries and tools,
 portability to multiple operating systems and architectures should be
 easier.
+
+
+@node Serial Over LAN (SOL) / Ipmiconsole Setup, SSIF Driver Configuration, What is special about FreeIPMI, Top
+@section What setup is needed for Serial over LAN (SOL) or Ipmiconsole
+
+The setup of Serial-over-LAN (SOL) and/or Ipmiconsole is highly dependent on your motherboard.  However, most motherboards
+require the following:
+
+1) Adjust the BIOS COM port for serial redirection over SOL instead of
+the normal serial port and set the appropriate baud rate.  If you do
+not know which port is the SOL port, you may need to play around and
+guess.  It is likely a non-default setting, since many manufacturers
+may still assume the default redirection is out of the normal serial
+port.  If you do not have a serial port on your motherboard, this part
+can probably be skipped.
+
+2) Configure IPMI on the motherboard to use SOL.  Many motherboards
+may have this enabled by default, however you may wish to verify with
+FreeIPMI's bmc-config.  More information can be found in the
+bmc-config.conf(5) manpage on the settings.  However, the key settings
+are to enable SOL on the system, enable SOL for individual users, and
+select the appropriate baud.  On many motherboards, the selected baud
+must match what is configured in the BIOS.
+
+3) Adjust your operating systems serial console settings to use the
+appropriate COM port.  For Linux, the following guide
+(@uref{http://www.vanemery.com/Linux/Serial/serial-console.html})
+provides a pretty good overview of setting of a serial console on
+Linux.  The only difference for setting up a serial console with
+Ipmiconsole or SOL, is the ttySX terminal may need to be changed.
 
 @node SSIF Driver Configuration, x86-64 Compilation, What is special about FreeIPMI, Top
 @section SSIF Driver Configuration
