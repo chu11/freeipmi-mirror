@@ -1,3 +1,46 @@
+2010-08-02  Albert Chu <chu11@llnl.gov>
+
+	* tagged pre_multi_channel_config
+	
+ 	* libfreeipmi/src/util/ipmi-channel-util.c
+ 	(ipmi_get_channel_numbers): New function.
+ 	
+ 	* libfreeipmi/src/util/ipmi-channel-util.c: Re-arch/cleanup for
+ 	new functionality.
+ 
+ 	* common/man/manpage-common-config-tool-options-verbose.man,
+ 	common/man/manpage-common-config-tool-options-very-verbose.man:
+ 	New files.
+ 
+ 	* common/man/manpage-common-config-tool-options.man: Split out
+ 	verbose option appropriately.
+ 	
+ 	* Adjust config tool manpages appropriately.
+ 
+ 	* common/src/configtool/config-tool-checkout.c: If user specifies
+ 	keypairs, don't output section comments.
+ 
+ 	* common/src/configtool/: Introduce CONFIG_DO_NOT_LIST flag.  Only
+ 	do not show sections with this flag when --list is done.
+ 
+ 	* common/src/configtool/, bmc-config/: Make verbose output only
+ 	for extra sections & fields.  Make very verbose output only for
+ 	info on why fields were/were not readable/writeable/etc.
+ 
+ 	* bmc-config/src/: Show all sections that can be checked out,
+ 	including verbose ones when -v isn't specified.
+ 	
+ 	* bmc-config/src/: If CONFIG_DO_NOT_CHECKOUT is specified for an
+ 	entire section, do not force CONFIG_DO_NOT_CHECKOUT if user
+ 	specifies section on command line.  Do not force
+ 	CONFIG_DO_NOT_CHECKOUT if user specifies key-pair on the command
+ 	line.
+ 
+ 	* bmc-config/, ipmi-pef-config/: Support new configuration fields
+ 	and sections for multi-channel configuration support.
+ 
+ 	* Various code cleanup.
+
 2010-07-29  Albert Chu <chu11@llnl.gov>
 
 	* Split off SOL payloads into new files and outside of

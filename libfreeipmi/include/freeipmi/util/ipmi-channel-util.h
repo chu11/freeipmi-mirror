@@ -26,9 +26,19 @@ extern "C" {
 #include <stdint.h>
 #include <freeipmi/api/ipmi-api.h>
 
+/* Get first channel found for medium type*/
 int ipmi_get_channel_number (ipmi_ctx_t ctx,
                              uint8_t channel_medium_type,
                              uint8_t *channel_number);
+
+/* Returns all channel numbers found for medium type, return value is
+ * number of channel numbers returned.  If number of channel numbers
+ * found exceeds channel_numbers_len, return is truncated.
+ */
+int ipmi_get_channel_numbers (ipmi_ctx_t ctx,
+                              uint8_t channel_medium_type,
+                              uint8_t *channel_numbers,
+                              unsigned int channel_numbers_len);
 
 #ifdef __cplusplus
 }

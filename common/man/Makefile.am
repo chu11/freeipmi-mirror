@@ -38,6 +38,8 @@ EXTRA_DIST = \
 	manpage-common-sdr-options.man \
 	manpage-common-ignore-sdr-cache.man \
 	manpage-common-config-tool-options.man \
+	manpage-common-config-tool-options-verbose.man \
+	manpage-common-config-tool-options-very-verbose.man \
 	manpage-common-config-tool-options-lan-channel-number.man \
 	manpage-common-config-tool-options-serial-channel-number.man \
 	manpage-common-config-tool-general-use.man \

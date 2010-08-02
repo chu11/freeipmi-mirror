@@ -57,6 +57,7 @@
 #define CONFIG_READABLE_ONLY                                    0x08
 #define CONFIG_UNDEFINED                                        0x10
 #define CONFIG_USERNAME_NOT_SET_YET                             0x20
+#define CONFIG_DO_NOT_LIST                                      0x40
 
 #define CONFIG_USERNAME_NOT_SET_YET_STR     "<username-not-set-yet>"
 
@@ -66,6 +67,7 @@
 #define CONFIG_OUTPUT_BUFLEN                               8192
 
 #define CONFIG_MAX_SECTION_NAME_LEN                        128
+#define CONFIG_MAX_KEY_NAME_LEN                            128
 #define CONFIG_MAX_DESCRIPTION_LEN                         1024
 
 #define CONFIG_SET_SELECTOR      0x0

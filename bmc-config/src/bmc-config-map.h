@@ -23,17 +23,17 @@
 
 int channel_access_mode (const char *string);
 
-char *channel_access_mode_string (uint8_t mode);
+char *channel_access_mode_string (uint8_t value);
 
-uint8_t get_privilege_limit_number (const char *value);
+uint8_t get_privilege_limit_number (const char *string);
 
-char *get_privilege_limit_string (uint8_t limit);
+char *get_privilege_limit_string (uint8_t value);
 
 int privilege_level_number (const char *string);
 
 char *privilege_level_string (uint8_t value);
 
-int rmcpplus_priv_number (const char *value);
+int rmcpplus_priv_number (const char *string);
 
 char *rmcpplus_priv_string (int value);
 
@@ -47,7 +47,7 @@ char *power_restore_policy_string (uint8_t value);
 
 int connect_mode_number (const char *string);
 
-char *connect_mode_string (uint8_t mode);
+char *connect_mode_string (uint8_t value);
 
 int flow_control_number (const char *string);
 
@@ -61,12 +61,12 @@ int sol_bit_rate_number (const char *string);
 
 char *sol_bit_rate_string (uint8_t value);
 
-int alert_destination_type_number (const char *source);
+int alert_destination_type_number (const char *string);
 
-char *alert_destination_type_string (uint8_t source);
+char *alert_destination_type_string (uint8_t value);
 
-int alert_gateway_number (const char *source);
+int alert_gateway_number (const char *string);
 
-char *alert_gateway_string (uint8_t source);
+char *alert_gateway_string (uint8_t value);
 
 #endif

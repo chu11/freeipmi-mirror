@@ -39,11 +39,17 @@ power_restore_policy_checkout (const char *section_name,
                                struct config_keyvalue *kv,
                                void *arg)
 {
-  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  ipmi_chassis_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   uint8_t power_restore_policy;
   uint64_t val;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_chassis_config_state_data_t *)arg;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_chassis_status_rs)))
     {
@@ -98,9 +104,15 @@ power_restore_policy_commit (const char *section_name,
                              const struct config_keyvalue *kv,
                              void *arg)
 {
-  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  ipmi_chassis_config_state_data_t *state_data;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   fiid_obj_t obj_cmd_rs = NULL;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_chassis_config_state_data_t *)arg;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_power_restore_policy_rs)))
     {
@@ -142,7 +154,13 @@ power_cycle_interval_checkout (const char *section_name,
                                struct config_keyvalue *kv,
                                void *arg)
 {
-  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  ipmi_chassis_config_state_data_t *state_data;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_chassis_config_state_data_t *)arg;
 
   /* achu: value cannot be checked out */
   if (config_section_update_keyvalue_output (state_data->pstate,
@@ -158,9 +176,15 @@ power_cycle_interval_commit (const char *section_name,
                              const struct config_keyvalue *kv,
                              void *arg)
 {
-  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  ipmi_chassis_config_state_data_t *state_data;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   fiid_obj_t obj_cmd_rs = NULL;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_chassis_config_state_data_t *)arg;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_power_cycle_interval_rs)))
     {

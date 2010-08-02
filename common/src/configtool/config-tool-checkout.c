@@ -53,9 +53,6 @@ config_checkout_section (pstdout_state_t pstate,
   assert (cmd_args);
   assert (fp);
 
-  if (section->flags & CONFIG_DO_NOT_CHECKOUT)
-    return (CONFIG_ERR_SUCCESS);
-
   /* if no keyvalues specified by user, we want to checkout all keys,
    * so build keyvalues list appropriately
    */
@@ -86,7 +83,8 @@ config_checkout_section (pstdout_state_t pstate,
    * us.
    */
   if (section->section_comment_section_name
-      && section->section_comment)
+      && section->section_comment
+      && all_keys_if_none_specified)
     {
       if (config_section_comments (pstate,
                                    section->section_comment_section_name,
@@ -134,7 +132,7 @@ config_checkout_section (pstdout_state_t pstate,
 
       if (CONFIG_IS_NON_FATAL_ERROR (this_ret))
         {
-          if (cmd_args->verbose_count)
+          if (cmd_args->verbose_count > 1)
             {
               if (this_ret == CONFIG_ERR_NON_FATAL_ERROR_NOT_SUPPORTED)
                 PSTDOUT_FPRINTF (pstate,
@@ -271,21 +269,25 @@ config_checkout (pstdout_state_t pstate,
   s = sections;
   while (s)
     {
-      if ((ret = config_checkout_section (pstate,
-                                          s,
-                                          cmd_args,
-                                          all_keys_if_none_specified,
-                                          fp,
-                                          line_length,
-                                          arg)) != CONFIG_ERR_SUCCESS)
-        {
-          if (ret == CONFIG_ERR_FATAL_ERROR)
-            {
-              rv = CONFIG_ERR_FATAL_ERROR;
-              break;
-            }
-          rv = ret;
-        }
+      if (!(s->flags & CONFIG_DO_NOT_CHECKOUT)
+	  || !all_keys_if_none_specified)
+	{
+	  if ((ret = config_checkout_section (pstate,
+					      s,
+					      cmd_args,
+					      all_keys_if_none_specified,
+					      fp,
+					      line_length,
+					      arg)) != CONFIG_ERR_SUCCESS)
+	    {
+	      if (ret == CONFIG_ERR_FATAL_ERROR)
+		{
+		  rv = CONFIG_ERR_FATAL_ERROR;
+		  break;
+		}
+	      rv = ret;
+	    }
+	}
       s = s->next;
     }
 

@@ -38,6 +38,7 @@
 
 static config_err_t
 _get_key (bmc_config_state_data_t *state_data,
+	  const char *section_name,
           uint8_t key_type,
           void *key,
           unsigned int key_len)
@@ -49,8 +50,12 @@ _get_key (bmc_config_state_data_t *state_data,
   config_err_t ret;
   uint8_t channel_number;
 
+  assert (state_data);
+  assert (section_name);
   assert (key_type == IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_R
           || key_type == IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_G);
+  assert (key);
+  assert (key_len);
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_channel_security_keys_rs)))
     {
@@ -61,7 +66,7 @@ _get_key (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number (state_data, section_name, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -114,6 +119,7 @@ _get_key (bmc_config_state_data_t *state_data,
 
 static config_err_t
 _set_key (bmc_config_state_data_t *state_data,
+	  const char *section_name,
           uint8_t key_type,
           const void *key,
           unsigned int key_len)
@@ -123,8 +129,11 @@ _set_key (bmc_config_state_data_t *state_data,
   config_err_t ret;
   uint8_t channel_number;
 
+  assert (state_data);
+  assert (section_name);
   assert (key_type == IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_R
           || key_type == IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_G);
+  assert (key);
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_channel_security_keys_rs)))
     {
@@ -135,7 +144,7 @@ _set_key (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number (state_data, section_name, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -170,13 +179,20 @@ k_r_checkout (const char *section_name,
               struct config_keyvalue *kv,
               void *arg)
 {
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  bmc_config_state_data_t *state_data;
   uint8_t k_r[IPMI_MAX_K_R_LENGTH + 1];
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (bmc_config_state_data_t *)arg;
 
   memset (k_r, 0, IPMI_MAX_K_R_LENGTH + 1);
   
   if ((ret = _get_key (state_data,
+		       section_name,
                        IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_R,
                        k_r,
                        IPMI_MAX_K_R_LENGTH)) != CONFIG_ERR_SUCCESS)
@@ -197,9 +213,16 @@ k_r_commit (const char *section_name,
             const struct config_keyvalue *kv,
             void *arg)
 {
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  bmc_config_state_data_t *state_data;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (bmc_config_state_data_t *)arg;
 
   return (_set_key (state_data,
+		    section_name,
                     IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_R,
                     kv->value_input,
                     strlen (kv->value_input)));
@@ -211,6 +234,10 @@ k_r_validate (const char *section_name,
               const char *value,
               void *arg)
 {
+  assert (section_name);
+  assert (key_name);
+  assert (value);
+
   if (strlen (value) <= IPMI_MAX_K_R_LENGTH)
     return (CONFIG_VALIDATE_VALID_VALUE);
   return (CONFIG_VALIDATE_INVALID_VALUE);
@@ -221,14 +248,21 @@ k_g_checkout (const char *section_name,
               struct config_keyvalue *kv,
               void *arg)
 {
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  bmc_config_state_data_t *state_data;
   uint8_t k_g[IPMI_MAX_K_G_LENGTH];
   char k_g_str[IPMI_MAX_K_G_LENGTH*2+3];
   config_err_t ret;
 
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (bmc_config_state_data_t *)arg;
+
   memset (k_g, 0, IPMI_MAX_K_G_LENGTH);
 
   if ((ret = _get_key (state_data,
+		       section_name,
                        IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_G,
                        k_g,
                        IPMI_MAX_K_G_LENGTH)) != CONFIG_ERR_SUCCESS)
@@ -276,9 +310,15 @@ k_g_commit (const char *section_name,
             const struct config_keyvalue *kv,
             void *arg)
 {
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  bmc_config_state_data_t *state_data;
   uint8_t k_g[IPMI_MAX_K_G_LENGTH+1];
   int k_g_len;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (bmc_config_state_data_t *)arg;
 
   memset (k_g, 0, IPMI_MAX_K_G_LENGTH + 1);
 
@@ -286,6 +326,7 @@ k_g_commit (const char *section_name,
     return (CONFIG_ERR_FATAL_ERROR);
 
   return (_set_key (state_data,
+		    section_name,
                     IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_G,
                     k_g,
                     k_g_len));
@@ -299,13 +340,19 @@ k_g_validate (const char *section_name,
 {
   uint8_t k_g[IPMI_MAX_K_G_LENGTH+1];
 
+  assert (section_name);
+  assert (key_name);
+  assert (value);
+
   if (parse_kg (k_g, IPMI_MAX_K_G_LENGTH + 1, value) < 0)
     return (CONFIG_VALIDATE_INVALID_VALUE);
   return (CONFIG_VALIDATE_VALID_VALUE);
 }
 
 struct config_section *
-bmc_config_lan_conf_security_keys_section_get (bmc_config_state_data_t *state_data)
+bmc_config_lan_conf_security_keys_section_get (bmc_config_state_data_t *state_data,
+					       unsigned int config_flags,
+					       int channel_index)
 {
   struct config_section *section = NULL;
   char *section_comment =
@@ -313,14 +360,19 @@ bmc_config_lan_conf_security_keys_section_get (bmc_config_state_data_t *state_da
     "K_g BMC key may be configurable.  The K_g key is an optional key that "
     "can be set for two key authentication in IPMI 2.0.  It is optionally "
     "configured.  Most users will want to set this to zero (or blank).";
+  char *section_name_base_str = "Lan_Conf_Security_Keys";
 
-  if (!(section = config_section_create (state_data->pstate,
-                                         "Lan_Conf_Security_Keys",
-                                         "Lan_Conf_Security_Keys",
-                                         section_comment,
-                                         0,
-                                         NULL,
-                                         NULL)))
+  assert (state_data);
+
+  if (!(section = config_section_multi_channel_create (state_data->pstate,
+						       section_name_base_str,
+						       section_comment,
+						       NULL,
+						       NULL,
+						       config_flags,
+						       channel_index,
+						       state_data->lan_channel_numbers,
+						       state_data->lan_channel_numbers_count)))
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,

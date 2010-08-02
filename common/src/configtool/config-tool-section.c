@@ -127,6 +127,87 @@ config_section_create (pstdout_state_t pstate,
   return (NULL);
 }
 
+struct config_section *
+config_section_multi_channel_create (pstdout_state_t pstate,
+				     const char *section_name_base_str,
+				     const char *section_comment,
+				     Section_Pre_Commit section_pre_commit,
+				     Section_Post_Commit section_post_commit,
+				     unsigned int config_flags,
+				     int channel_index,
+				     uint8_t *channel_numbers,
+				     unsigned int channel_numbers_count)
+{
+  struct config_section *section = NULL;
+
+  assert (section_name_base_str);
+  assert (channel_numbers);
+  assert (channel_index < (int)channel_numbers_count);
+
+  if (channel_index < 0)
+    {
+      if (!(section = config_section_create (pstate,
+                                             section_name_base_str,
+                                             section_name_base_str,
+                                             section_comment,
+                                             config_flags,
+                                             section_pre_commit,
+                                             section_post_commit)))
+        goto cleanup;
+    }
+  else
+    {
+      char section_name[CONFIG_MAX_SECTION_NAME_LEN];
+      char section_comment_section_name[CONFIG_MAX_SECTION_NAME_LEN];
+      char *section_comment_section_name_ptr = NULL;
+
+      snprintf (section_name,
+                CONFIG_MAX_SECTION_NAME_LEN,
+                "%s_Channel_%u",
+                section_name_base_str,
+                channel_numbers[channel_index]);
+
+      if (section_comment)
+	{
+	  snprintf (section_comment_section_name,
+		    CONFIG_MAX_SECTION_NAME_LEN,
+		    "%s_Channel_X",
+		    section_name_base_str);
+	  section_comment_section_name_ptr = section_comment_section_name;
+	}
+
+      if (!channel_index)
+        {
+          if (!(section = config_section_create (pstate,
+                                                 section_name,
+                                                 section_comment_section_name_ptr,
+                                                 section_comment,
+                                                 config_flags,
+                                                 section_pre_commit,
+                                                 section_post_commit)))
+            goto cleanup;
+        }
+      else
+        {
+          if (!(section = config_section_create (pstate,
+                                                 section_name,
+                                                 NULL,
+                                                 NULL,
+                                                 config_flags,
+                                                 section_pre_commit,
+                                                 section_post_commit)))
+            goto cleanup;
+        }
+    }
+
+  return (section);
+
+ cleanup:
+  if (section)
+    config_section_destroy (section);
+  return (NULL);
+}
+
 static void
 _config_key_destroy (struct config_key *key)
 {
@@ -246,6 +327,64 @@ config_section_add_key (pstdout_state_t pstate,
 }
 
 int
+config_section_multi_channel_add_key (pstdout_state_t pstate,
+				      struct config_section *section,
+				      const char *key_name_base_str,
+				      const char *description,
+				      unsigned int flags,
+				      Key_Checkout checkout,
+				      Key_Commit commit,
+				      Key_Validate validate,
+				      int channel_index,
+				      uint8_t *channel_numbers,
+				      unsigned int channel_numbers_count)
+{
+  assert (section);
+  assert (key_name_base_str);
+  assert (description);
+  assert (checkout);
+  assert (commit);
+  assert (validate);
+  assert (channel_numbers);
+  assert (channel_index < (int)channel_numbers_count);
+
+  if (channel_index < 0)
+    {
+      if (config_section_add_key (pstate,
+				  section,
+				  key_name_base_str,
+				  description,
+				  flags,
+				  checkout,
+				  commit,
+				  validate) < 0)
+	return (-1);
+    }
+  else
+    {
+      char key_name[CONFIG_MAX_KEY_NAME_LEN];
+
+      snprintf (key_name,
+		CONFIG_MAX_KEY_NAME_LEN,
+		"%s_Channel_%u",
+		key_name_base_str,
+		channel_numbers[channel_index]);
+
+      if (config_section_add_key (pstate,
+                                  section,
+                                  key_name,
+                                  description,
+                                  flags,
+                                  checkout,
+                                  commit,
+                                  validate) < 0)
+        return (-1);
+    }
+
+  return (0);
+}
+
+int
 config_section_add_keyvalue (pstdout_state_t pstate,
                              struct config_section *section,
                              struct config_key *key,
@@ -343,7 +482,6 @@ config_section_update_keyvalue_output (pstdout_state_t pstate,
 
   if (value_output)
     {
-
       if (!(keyvalue->value_output = strdup (value_output)))
         {
           PSTDOUT_PERROR (pstate,
@@ -572,7 +710,7 @@ config_output_sections_list (pstdout_state_t pstate,
   s = sections;
   while (s)
     {
-      if (!(s->flags & CONFIG_DO_NOT_CHECKOUT))
+      if (!(s->flags & CONFIG_DO_NOT_LIST))
         PSTDOUT_PRINTF (pstate,
                         "%s\n",
                         s->section_name);

@@ -25,7 +25,7 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
-#include <freeipmi/freeipmi.h>
+#include <assert.h>
 
 #include "ipmi-chassis-config.h"
 #include "ipmi-chassis-config-map.h"
@@ -35,6 +35,8 @@
 int
 power_restore_policy_number (const char *string)
 {
+  assert (string);
+
   if (same (string, "off_state_ac_apply"))
     return (IPMI_POWER_RESTORE_POLICY_POWERED_OFF_AFTER_AC_RETURNS);
   if (same (string, "restore_state_ac_apply"))
@@ -62,6 +64,8 @@ power_restore_policy_string (uint8_t value)
 int
 bios_boot_type_number (const char *string)
 {
+  assert (string);
+
   if (same (string, "PC-COMPATIBLE"))
     return (IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_TYPE_PC_COMPATIBLE);
   if (same (string, "EFI"))
@@ -85,6 +89,8 @@ bios_boot_type_string (uint8_t value)
 int
 boot_device_number (const char *string)
 {
+  assert (string);
+
   if (same (string, "NO-OVERRIDE"))
     return (IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_NO_OVERRIDE);
   if (same (string, "PXE"))
@@ -150,6 +156,8 @@ device_instance_selector_number (const char *string)
 {
   uint8_t device_instance_selector;
   char *str = NULL;
+
+  assert (string);
 
   if (same (string, "none"))
     return (0);
@@ -248,6 +256,8 @@ device_instance_selector_string (uint8_t value)
 int
 firmware_bios_verbosity_number (const char *string)
 {
+  assert (string);
+
   if (same (string, "DEFAULT"))
     return (IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_FIRMWARE_BIOS_VERBOSITY_DEFAULT);
   if (same (string, "QUIET"))
@@ -275,6 +285,8 @@ firmware_bios_verbosity_string (uint8_t value)
 int
 console_redirection_number (const char *string)
 {
+  assert (string);
+
   if (same (string, "BIOS-SETTING"))
     return (IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_CONSOLE_REDIRECTION_BIOS_SETTING);
   if (same (string, "SUPPRESS"))

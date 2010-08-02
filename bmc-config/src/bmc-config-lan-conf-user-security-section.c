@@ -46,6 +46,7 @@ struct bad_password_threshold
 
 static config_err_t
 _get_bad_password_threshold (bmc_config_state_data_t *state_data,
+			     const char *section_name,
                              struct bad_password_threshold *bpt)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -55,6 +56,7 @@ _get_bad_password_threshold (bmc_config_state_data_t *state_data,
   uint8_t channel_number;
 
   assert (state_data);
+  assert (section_name);
   assert (bpt);
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_lan_configuration_parameters_bad_password_threshold_rs)))
@@ -66,7 +68,7 @@ _get_bad_password_threshold (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
   
-  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number (state_data, section_name, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -141,6 +143,7 @@ _get_bad_password_threshold (bmc_config_state_data_t *state_data,
 
 static config_err_t
 _set_bad_password_threshold (bmc_config_state_data_t *state_data,
+			     const char *section_name,
                              struct bad_password_threshold *bpt)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -149,6 +152,7 @@ _set_bad_password_threshold (bmc_config_state_data_t *state_data,
   uint8_t channel_number;
 
   assert (state_data);
+  assert (section_name);
   assert (bpt);
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_lan_configuration_parameters_rs)))
@@ -160,7 +164,7 @@ _set_bad_password_threshold (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number (state_data, section_name, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -197,14 +201,20 @@ _set_bad_password_threshold (bmc_config_state_data_t *state_data,
 
 static config_err_t
 bad_password_threshold_checkout (const char *section_name,
-                                                  struct config_keyvalue *kv,
-                                                  void *arg)
+				 struct config_keyvalue *kv,
+				 void *arg)
 {
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  bmc_config_state_data_t *state_data;
   struct bad_password_threshold bpt;
   config_err_t ret;
   
-  if ((ret = _get_bad_password_threshold (state_data, &bpt)) != CONFIG_ERR_SUCCESS)
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (bmc_config_state_data_t *)arg;
+
+  if ((ret = _get_bad_password_threshold (state_data, section_name, &bpt)) != CONFIG_ERR_SUCCESS)
     return (ret);
   
   if (config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
@@ -220,15 +230,21 @@ bad_password_threshold_commit (const char *section_name,
                                                 const struct config_keyvalue *kv,
                                                 void *arg)
 {
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  bmc_config_state_data_t *state_data;
   struct bad_password_threshold bpt;
   config_err_t ret;
 
-  if ((ret = _get_bad_password_threshold (state_data, &bpt)) != CONFIG_ERR_SUCCESS)
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (bmc_config_state_data_t *)arg;
+
+  if ((ret = _get_bad_password_threshold (state_data, section_name, &bpt)) != CONFIG_ERR_SUCCESS)
     return (ret);
   
   bpt.bad_password_threshold_number = atoi (kv->value_input);
-  return (_set_bad_password_threshold (state_data, &bpt));
+  return (_set_bad_password_threshold (state_data, section_name, &bpt));
 }
 
 static config_err_t
@@ -236,11 +252,17 @@ attempt_count_reset_interval_checkout (const char *section_name,
                                        struct config_keyvalue *kv,
                                        void *arg)
 {
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  bmc_config_state_data_t *state_data;
   struct bad_password_threshold bpt;
   config_err_t ret;
   
-  if ((ret = _get_bad_password_threshold (state_data, &bpt)) != CONFIG_ERR_SUCCESS)
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (bmc_config_state_data_t *)arg;
+
+  if ((ret = _get_bad_password_threshold (state_data, section_name, &bpt)) != CONFIG_ERR_SUCCESS)
     return (ret);
   
   if (config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
@@ -256,15 +278,21 @@ attempt_count_reset_interval_commit (const char *section_name,
                                      const struct config_keyvalue *kv,
                                      void *arg)
 {
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  bmc_config_state_data_t *state_data;
   struct bad_password_threshold bpt;
   config_err_t ret;
 
-  if ((ret = _get_bad_password_threshold (state_data, &bpt)) != CONFIG_ERR_SUCCESS)
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (bmc_config_state_data_t *)arg;
+
+  if ((ret = _get_bad_password_threshold (state_data, section_name, &bpt)) != CONFIG_ERR_SUCCESS)
     return (ret);
   
   bpt.attempt_count_reset_interval = atoi (kv->value_input);
-  return (_set_bad_password_threshold (state_data, &bpt));
+  return (_set_bad_password_threshold (state_data, section_name, &bpt));
 }
 
 static config_err_t
@@ -272,11 +300,17 @@ user_lockout_interval_checkout (const char *section_name,
                                 struct config_keyvalue *kv,
                                 void *arg)
 {
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  bmc_config_state_data_t *state_data;
   struct bad_password_threshold bpt;
   config_err_t ret;
   
-  if ((ret = _get_bad_password_threshold (state_data, &bpt)) != CONFIG_ERR_SUCCESS)
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (bmc_config_state_data_t *)arg;
+
+  if ((ret = _get_bad_password_threshold (state_data, section_name, &bpt)) != CONFIG_ERR_SUCCESS)
     return (ret);
   
   if (config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
@@ -292,15 +326,21 @@ user_lockout_interval_commit (const char *section_name,
                               const struct config_keyvalue *kv,
                               void *arg)
 {
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  bmc_config_state_data_t *state_data;
   struct bad_password_threshold bpt;
   config_err_t ret;
 
-  if ((ret = _get_bad_password_threshold (state_data, &bpt)) != CONFIG_ERR_SUCCESS)
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (bmc_config_state_data_t *)arg;
+
+  if ((ret = _get_bad_password_threshold (state_data, section_name, &bpt)) != CONFIG_ERR_SUCCESS)
     return (ret);
   
   bpt.user_lockout_interval = atoi (kv->value_input);
-  return (_set_bad_password_threshold (state_data, &bpt));
+  return (_set_bad_password_threshold (state_data, section_name, &bpt));
 }
 
 static config_err_t
@@ -308,11 +348,17 @@ enable_event_message_when_user_disabled_checkout (const char *section_name,
                                                   struct config_keyvalue *kv,
                                                   void *arg)
 {
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  bmc_config_state_data_t *state_data;
   struct bad_password_threshold bpt;
   config_err_t ret;
   
-  if ((ret = _get_bad_password_threshold (state_data, &bpt)) != CONFIG_ERR_SUCCESS)
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (bmc_config_state_data_t *)arg;
+
+  if ((ret = _get_bad_password_threshold (state_data, section_name, &bpt)) != CONFIG_ERR_SUCCESS)
     return (ret);
   
   if (config_section_update_keyvalue_output (state_data->pstate,
@@ -328,19 +374,27 @@ enable_event_message_when_user_disabled_commit (const char *section_name,
                                                 const struct config_keyvalue *kv,
                                                 void *arg)
 {
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  bmc_config_state_data_t *state_data;
   struct bad_password_threshold bpt;
   config_err_t ret;
 
-  if ((ret = _get_bad_password_threshold (state_data, &bpt)) != CONFIG_ERR_SUCCESS)
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (bmc_config_state_data_t *)arg;
+
+  if ((ret = _get_bad_password_threshold (state_data, section_name, &bpt)) != CONFIG_ERR_SUCCESS)
     return (ret);
   
   bpt.user_disabled_event_message = same (kv->value_input, "yes");
-  return (_set_bad_password_threshold (state_data, &bpt));
+  return (_set_bad_password_threshold (state_data, section_name, &bpt));
 }
 
 struct config_section *
-bmc_config_lan_conf_user_security_section_get (bmc_config_state_data_t *state_data)
+bmc_config_lan_conf_user_security_section_get (bmc_config_state_data_t *state_data,
+					       unsigned int config_flags,
+					       int channel_index)
 {
   struct config_section *section = NULL;
   char *section_comment =
@@ -356,14 +410,19 @@ bmc_config_lan_conf_user_security_section_get (bmc_config_state_data_t *state_da
     "determines the time a user will be locked off if the bad password "
     "threshold is reached.  If set to \"Yes\", \"Enable_Event_Message_When_User_Disabled\" "
     "will inform the BMC to log an event message when a user is disabled.";
+  char *section_name_base_str = "Lan_Conf_User_Security";
 
-  if (!(section = config_section_create (state_data->pstate,
-                                         "Lan_Conf_User_Security",
-                                         "Lan_Conf_User_Security",
-                                         section_comment,
-                                         0,
-                                         NULL,
-                                         NULL)))
+  assert (state_data);
+
+  if (!(section = config_section_multi_channel_create (state_data->pstate,
+						       section_name_base_str,
+						       section_comment,
+						       NULL,
+						       NULL,
+						       config_flags,
+						       channel_index,
+						       state_data->lan_channel_numbers,
+						       state_data->lan_channel_numbers_count)))
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,

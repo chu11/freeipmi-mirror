@@ -25,7 +25,7 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
-#include <freeipmi/freeipmi.h>
+#include <assert.h>
 
 #include "ipmi-pef-config.h"
 #include "ipmi-pef-config-map.h"
@@ -33,21 +33,23 @@
 #include "freeipmi-portability.h"
 
 int
-alert_destination_type_number (const char *source)
+alert_destination_type_number (const char *string)
 {
-  if (same (source, "pet_trap"))
+  assert (string);
+
+  if (same (string, "pet_trap"))
     return (IPMI_DESTINATION_TYPE_PET_TRAP_DESTINATION);
-  if (same (source, "oem1"))
+  if (same (string, "oem1"))
     return (IPMI_DESTINATION_TYPE_OEM1);
-  if (same (source, "oem2"))
+  if (same (string, "oem2"))
     return (IPMI_DESTINATION_TYPE_OEM2);
   return (-1);
 }
 
 char *
-alert_destination_type_string (uint8_t source)
+alert_destination_type_string (uint8_t value)
 {
-  switch (source)
+  switch (value)
     {
     case IPMI_DESTINATION_TYPE_PET_TRAP_DESTINATION:
       return "PET_Trap";
@@ -60,19 +62,21 @@ alert_destination_type_string (uint8_t source)
 }
 
 int
-alert_gateway_number (const char *source)
+alert_gateway_number (const char *string)
 {
-  if (same (source, "default"))
+  assert (string);
+
+  if (same (string, "default"))
     return (IPMI_GATEWAY_SELECTOR_DEFAULT);
-  if (same (source, "backup"))
+  if (same (string, "backup"))
     return (IPMI_GATEWAY_SELECTOR_BACKUP);
   return (-1);
 }
 
 char *
-alert_gateway_string (uint8_t source)
+alert_gateway_string (uint8_t value)
 {
-  switch (source)
+  switch (value)
     {
     case IPMI_GATEWAY_SELECTOR_DEFAULT:
       return "Default";
@@ -83,25 +87,27 @@ alert_gateway_string (uint8_t source)
 }
 
 int
-policy_type_number (const char *source)
+policy_type_number (const char *string)
 {
-  if (same (source, "always_send_to_this_destination"))
+  assert (string);
+
+  if (same (string, "always_send_to_this_destination"))
     return (IPMI_ALERT_POLICY_ALWAYS_SEND_TO_THIS_DESTINATION);
-  if (same (source, "proceed_to_next_entry"))
+  if (same (string, "proceed_to_next_entry"))
     return (IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY);
-  if (same (source, "do_not_proceed_any_more_entries"))
+  if (same (string, "do_not_proceed_any_more_entries"))
     return (IPMI_ALERT_POLICY_DO_NOT_PROCEED_ANY_MORE_ENTRIES);
-  if (same (source, "proceed_to_next_entry_different_channel"))
+  if (same (string, "proceed_to_next_entry_different_channel"))
     return (IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY_DIFFERENT_CHANNEL);
-  if (same (source, "proceed_to_next_entry_different_destination_type"))
+  if (same (string, "proceed_to_next_entry_different_destination_type"))
     return (IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY_DIFFERENT_DESTINATION_TYPE);
   return (-1);
 }
 
 char *
-policy_type_string (uint8_t source)
+policy_type_string (uint8_t value)
 {
-  switch (source)
+  switch (value)
     {
     case IPMI_ALERT_POLICY_ALWAYS_SEND_TO_THIS_DESTINATION:
       return "Always_Send_To_This_Destination";
@@ -124,24 +130,26 @@ policy_type_string (uint8_t source)
 }
 
 int
-filter_type_number (const char *source)
+filter_type_number (const char *string)
 {
-  if (same (source, "manufacturer_pre_configured"))
+  assert (string);
+
+  if (same (string, "manufacturer_pre_configured"))
     return (IPMI_FILTER_CONFIGURATION_MANUFACTURER_PRE_CONFIGURED_FILTER);
-  if (same (source, "software_configurable"))
+  if (same (string, "software_configurable"))
     return (IPMI_FILTER_CONFIGURATION_SOFTWARE_CONFIGURABLE_FILTER);
-  if (same (source, "reserved1"))
+  if (same (string, "reserved1"))
     return (0x1);
-  if (same (source, "reserved3"))
+  if (same (string, "reserved3"))
     return (0x3);
 
   return (-1);
 }
 
 char *
-filter_type_string (uint8_t source)
+filter_type_string (uint8_t value)
 {
-  switch (source)
+  switch (value)
     {
     case IPMI_FILTER_CONFIGURATION_MANUFACTURER_PRE_CONFIGURED_FILTER:
       return "Manufacturer_Pre_Configured";
@@ -156,30 +164,32 @@ filter_type_string (uint8_t source)
 }
 
 int
-event_severity_number (const char *source)
+event_severity_number (const char *string)
 {
-  if (same (source, "unspecified"))
+  assert (string);
+
+  if (same (string, "unspecified"))
     return (IPMI_EVENT_SEVERITY_UNSPECIFIED);
-  if (same (source, "monitor"))
+  if (same (string, "monitor"))
     return (IPMI_EVENT_SEVERITY_MONITOR);
-  if (same (source, "information"))
+  if (same (string, "information"))
     return (IPMI_EVENT_SEVERITY_INFORMATION);
-  if (same (source, "ok"))
+  if (same (string, "ok"))
     return (IPMI_EVENT_SEVERITY_OK);
-  if (same (source, "non_critical"))
+  if (same (string, "non_critical"))
     return (IPMI_EVENT_SEVERITY_NON_CRITICAL_CONDITION);
-  if (same (source, "critical"))
+  if (same (string, "critical"))
     return (IPMI_EVENT_SEVERITY_CRITICAL_CONDITION);
-  if (same (source, "non_recoverable"))
+  if (same (string, "non_recoverable"))
     return (IPMI_EVENT_SEVERITY_NON_RECOVERABLE_CONDITION);
 
   return (-1);
 }
 
 char *
-event_severity_string (uint8_t source)
+event_severity_string (uint8_t value)
 {
-  switch (source)
+  switch (value)
     {
     case IPMI_EVENT_SEVERITY_UNSPECIFIED:
       return "Unspecified";
@@ -200,108 +210,110 @@ event_severity_string (uint8_t source)
 }
 
 int
-sensor_type_number (const char *source)
+sensor_type_number (const char *string)
 {
-  if (same (source, "reserved"))
+  assert (string);
+
+  if (same (string, "reserved"))
     return (IPMI_EVENT_SENSOR_TYPE_RESERVED);
-  if (same (source, "temperature"))
+  if (same (string, "temperature"))
     return (IPMI_EVENT_SENSOR_TYPE_TEMPERATURE);
-  if (same (source, "voltage"))
+  if (same (string, "voltage"))
     return (IPMI_EVENT_SENSOR_TYPE_VOLTAGE);
-  if (same (source, "current"))
+  if (same (string, "current"))
     return (IPMI_EVENT_SENSOR_TYPE_CURRENT);
-  if (same (source, "fan"))
+  if (same (string, "fan"))
     return (IPMI_EVENT_SENSOR_TYPE_FAN);
-  if (same (source, "physical_security"))
+  if (same (string, "physical_security"))
     return (IPMI_EVENT_SENSOR_TYPE_PHYSICAL_SECURITY);
-  if (same (source, "platform_security_violation_attempt"))
+  if (same (string, "platform_security_violation_attempt"))
     return (IPMI_EVENT_SENSOR_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT);
-  if (same (source, "processor"))
+  if (same (string, "processor"))
     return (IPMI_EVENT_SENSOR_TYPE_PROCESSOR);
-  if (same (source, "power_supply"))
+  if (same (string, "power_supply"))
     return (IPMI_EVENT_SENSOR_TYPE_POWER_SUPPLY);
-  if (same (source, "power_unit"))
+  if (same (string, "power_unit"))
     return (IPMI_EVENT_SENSOR_TYPE_POWER_UNIT);
-  if (same (source, "cooling_device"))
+  if (same (string, "cooling_device"))
     return (IPMI_EVENT_SENSOR_TYPE_COOLING_DEVICE);
-  if (same (source, "other_units_based_sensor"))
+  if (same (string, "other_units_based_sensor"))
     return (IPMI_EVENT_SENSOR_TYPE_OTHER_UNITS_BASED_SENSOR);
-  if (same (source, "memory"))
+  if (same (string, "memory"))
     return (IPMI_EVENT_SENSOR_TYPE_MEMORY);
-  if (same (source, "drive_slot"))
+  if (same (string, "drive_slot"))
     return (IPMI_EVENT_SENSOR_TYPE_DRIVE_SLOT);
-  if (same (source, "post_memory_resize"))
+  if (same (string, "post_memory_resize"))
     return (IPMI_EVENT_SENSOR_TYPE_POST_MEMORY_RESIZE);
-  if (same (source, "system_firmware_progress"))
+  if (same (string, "system_firmware_progress"))
     return (IPMI_EVENT_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS);
-  if (same (source, "event_logging_disabled"))
+  if (same (string, "event_logging_disabled"))
     return (IPMI_EVENT_SENSOR_TYPE_EVENT_LOGGING_DISABLED);
-  if (same (source, "watchdog1"))
+  if (same (string, "watchdog1"))
     return (IPMI_EVENT_SENSOR_TYPE_WATCHDOG1);
-  if (same (source, "system_event"))
+  if (same (string, "system_event"))
     return (IPMI_EVENT_SENSOR_TYPE_SYSTEM_EVENT);
-  if (same (source, "critical_interrupt"))
+  if (same (string, "critical_interrupt"))
     return (IPMI_EVENT_SENSOR_TYPE_CRITICAL_INTERRUPT);
-  if (same (source, "button_switch"))
+  if (same (string, "button_switch"))
     return (IPMI_EVENT_SENSOR_TYPE_BUTTON_SWITCH);
-  if (same (source, "module_board"))
+  if (same (string, "module_board"))
     return (IPMI_EVENT_SENSOR_TYPE_MODULE_BOARD);
-  if (same (source, "microcontroller_coprocessor"))
+  if (same (string, "microcontroller_coprocessor"))
     return (IPMI_EVENT_SENSOR_TYPE_MICROCONTROLLER_COPROCESSOR);
-  if (same (source, "add_in_card"))
+  if (same (string, "add_in_card"))
     return (IPMI_EVENT_SENSOR_TYPE_ADD_IN_CARD);
-  if (same (source, "chassis"))
+  if (same (string, "chassis"))
     return (IPMI_EVENT_SENSOR_TYPE_CHASSIS);
-  if (same (source, "chip_set"))
+  if (same (string, "chip_set"))
     return (IPMI_EVENT_SENSOR_TYPE_CHIP_SET);
-  if (same (source, "other_fru"))
+  if (same (string, "other_fru"))
     return (IPMI_EVENT_SENSOR_TYPE_OTHER_FRU);
-  if (same (source, "cable_interconnect"))
+  if (same (string, "cable_interconnect"))
     return (IPMI_EVENT_SENSOR_TYPE_CABLE_INTERCONNECT);
-  if (same (source, "terminator"))
+  if (same (string, "terminator"))
     return (IPMI_EVENT_SENSOR_TYPE_TERMINATOR);
-  if (same (source, "system_boot_initiated"))
+  if (same (string, "system_boot_initiated"))
     return (IPMI_EVENT_SENSOR_TYPE_SYSTEM_BOOT_INITIATED);
-  if (same (source, "boot_error"))
+  if (same (string, "boot_error"))
     return (IPMI_EVENT_SENSOR_TYPE_BOOT_ERROR);
-  if (same (source, "os_boot"))
+  if (same (string, "os_boot"))
     return (IPMI_EVENT_SENSOR_TYPE_OS_BOOT);
-  if (same (source, "os_critical_stop"))
+  if (same (string, "os_critical_stop"))
     return (IPMI_EVENT_SENSOR_TYPE_OS_CRITICAL_STOP);
-  if (same (source, "slot_connector"))
+  if (same (string, "slot_connector"))
     return (IPMI_EVENT_SENSOR_TYPE_SLOT_CONNECTOR);
-  if (same (source, "system_acpi_power_state"))
+  if (same (string, "system_acpi_power_state"))
     return (IPMI_EVENT_SENSOR_TYPE_SYSTEM_ACPI_POWER_STATE);
-  if (same (source, "watchdog2"))
+  if (same (string, "watchdog2"))
     return (IPMI_EVENT_SENSOR_TYPE_WATCHDOG2);
-  if (same (source, "platform_alert"))
+  if (same (string, "platform_alert"))
     return (IPMI_EVENT_SENSOR_TYPE_PLATFORM_ALERT);
-  if (same (source, "entity_presence"))
+  if (same (string, "entity_presence"))
     return (IPMI_EVENT_SENSOR_TYPE_ENTITY_PRESENCE);
-  if (same (source, "monitor_asic_ic"))
+  if (same (string, "monitor_asic_ic"))
     return (IPMI_EVENT_SENSOR_TYPE_MONITOR_ASIC_IC);
-  if (same (source, "lan"))
+  if (same (string, "lan"))
     return (IPMI_EVENT_SENSOR_TYPE_LAN);
-  if (same (source, "management_subsystem_health"))
+  if (same (string, "management_subsystem_health"))
     return (IPMI_EVENT_SENSOR_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH);
-  if (same (source, "battery"))
+  if (same (string, "battery"))
     return (IPMI_EVENT_SENSOR_TYPE_BATTERY);
-  if (same (source, "session_audit"))
+  if (same (string, "session_audit"))
     return (IPMI_EVENT_SENSOR_TYPE_SESSION_AUDIT);
-  if (same (source, "version_change"))
+  if (same (string, "version_change"))
     return (IPMI_EVENT_SENSOR_TYPE_VERSION_CHANGE);
-  if (same (source, "fru_state"))
+  if (same (string, "fru_state"))
     return (IPMI_EVENT_SENSOR_TYPE_FRU_STATE);
-  if (same (source, "any"))
+  if (same (string, "any"))
     return (IPMI_EVENT_SENSOR_TYPE_ANY);
 
   return (-1);
 }
 
 char *
-sensor_type_string (uint8_t source)
+sensor_type_string (uint8_t value)
 {
-  switch (source)
+  switch (value)
     {
     case IPMI_EVENT_SENSOR_TYPE_RESERVED:
       return "Reserved";

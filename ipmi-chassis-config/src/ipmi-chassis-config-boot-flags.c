@@ -335,9 +335,15 @@ boot_flags_persistent_checkout (const char *section_name,
                                 struct config_keyvalue *kv,
                                 void *arg)
 {
-  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  ipmi_chassis_config_state_data_t *state_data;
   struct boot_flags_data data;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_chassis_config_state_data_t *)arg;
 
   if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
     return (ret);
@@ -355,9 +361,15 @@ boot_flags_persistent_commit (const char *section_name,
                               const struct config_keyvalue *kv,
                               void *arg)
 {
-  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  ipmi_chassis_config_state_data_t *state_data;
   struct boot_flags_data data;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_chassis_config_state_data_t *)arg;
 
   if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
     return (ret);
@@ -375,9 +387,15 @@ bios_boot_type_checkout (const char *section_name,
                          struct config_keyvalue *kv,
                          void *arg)
 {
-  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  ipmi_chassis_config_state_data_t *state_data;
   struct boot_flags_data data;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_chassis_config_state_data_t *)arg;
 
   if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
     return (ret);
@@ -395,9 +413,15 @@ bios_boot_type_commit (const char *section_name,
                        const struct config_keyvalue *kv,
                        void *arg)
 {
-  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  ipmi_chassis_config_state_data_t *state_data;
   struct boot_flags_data data;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_chassis_config_state_data_t *)arg;
 
   if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
     return (ret);
@@ -415,9 +439,15 @@ cmos_clear_checkout (const char *section_name,
                      struct config_keyvalue *kv,
                      void *arg)
 {
-  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  ipmi_chassis_config_state_data_t *state_data;
   struct boot_flags_data data;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_chassis_config_state_data_t *)arg;
 
   if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
     return (ret);
@@ -435,9 +465,15 @@ cmos_clear_commit (const char *section_name,
                    const struct config_keyvalue *kv,
                    void *arg)
 {
-  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  ipmi_chassis_config_state_data_t *state_data;
   struct boot_flags_data data;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_chassis_config_state_data_t *)arg;
 
   if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
     return (ret);
@@ -455,9 +491,15 @@ lock_keyboard_checkout (const char *section_name,
                         struct config_keyvalue *kv,
                         void *arg)
 {
-  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  ipmi_chassis_config_state_data_t *state_data;
   struct boot_flags_data data;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_chassis_config_state_data_t *)arg;
 
   if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
     return (ret);
@@ -475,9 +517,15 @@ lock_keyboard_commit (const char *section_name,
                       const struct config_keyvalue *kv,
                       void *arg)
 {
-  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  ipmi_chassis_config_state_data_t *state_data;
   struct boot_flags_data data;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_chassis_config_state_data_t *)arg;
 
   if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
     return (ret);
@@ -495,9 +543,15 @@ screen_blank_checkout (const char *section_name,
                        struct config_keyvalue *kv,
                        void *arg)
 {
-  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  ipmi_chassis_config_state_data_t *state_data;
   struct boot_flags_data data;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_chassis_config_state_data_t *)arg;
 
   if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
     return (ret);
@@ -515,9 +569,15 @@ screen_blank_commit (const char *section_name,
                      const struct config_keyvalue *kv,
                      void *arg)
 {
-  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  ipmi_chassis_config_state_data_t *state_data;
   struct boot_flags_data data;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_chassis_config_state_data_t *)arg;
 
   if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
     return (ret);
@@ -535,9 +595,15 @@ boot_device_checkout (const char *section_name,
                       struct config_keyvalue *kv,
                       void *arg)
 {
-  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  ipmi_chassis_config_state_data_t *state_data;
   struct boot_flags_data data;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_chassis_config_state_data_t *)arg;
 
   if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
     return (ret);
@@ -555,9 +621,15 @@ boot_device_commit (const char *section_name,
                     const struct config_keyvalue *kv,
                     void *arg)
 {
-  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  ipmi_chassis_config_state_data_t *state_data;
   struct boot_flags_data data;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_chassis_config_state_data_t *)arg;
 
   if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
     return (ret);
@@ -575,9 +647,15 @@ device_instance_selector_checkout (const char *section_name,
                                    struct config_keyvalue *kv,
                                    void *arg)
 {
-  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  ipmi_chassis_config_state_data_t *state_data;
   struct boot_flags_data data;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_chassis_config_state_data_t *)arg;
 
   if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
     return (ret);
@@ -595,9 +673,15 @@ device_instance_selector_commit (const char *section_name,
                                  const struct config_keyvalue *kv,
                                  void *arg)
 {
-  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  ipmi_chassis_config_state_data_t *state_data;
   struct boot_flags_data data;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_chassis_config_state_data_t *)arg;
 
   if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
     return (ret);
@@ -615,9 +699,15 @@ lock_out_reset_button_checkout (const char *section_name,
                                 struct config_keyvalue *kv,
                                 void *arg)
 {
-  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  ipmi_chassis_config_state_data_t *state_data;
   struct boot_flags_data data;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_chassis_config_state_data_t *)arg;
 
   if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
     return (ret);
@@ -635,9 +725,15 @@ lock_out_reset_button_commit (const char *section_name,
                               const struct config_keyvalue *kv,
                               void *arg)
 {
-  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  ipmi_chassis_config_state_data_t *state_data;
   struct boot_flags_data data;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_chassis_config_state_data_t *)arg;
 
   if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
     return (ret);
@@ -655,9 +751,15 @@ lock_out_power_button_checkout (const char *section_name,
                                 struct config_keyvalue *kv,
                                 void *arg)
 {
-  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  ipmi_chassis_config_state_data_t *state_data;
   struct boot_flags_data data;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_chassis_config_state_data_t *)arg;
 
   if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
     return (ret);
@@ -675,9 +777,15 @@ lock_out_power_button_commit (const char *section_name,
                               const struct config_keyvalue *kv,
                               void *arg)
 {
-  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  ipmi_chassis_config_state_data_t *state_data;
   struct boot_flags_data data;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_chassis_config_state_data_t *)arg;
 
   if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
     return (ret);
@@ -695,9 +803,15 @@ lock_out_sleep_button_checkout (const char *section_name,
                                 struct config_keyvalue *kv,
                                 void *arg)
 {
-  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  ipmi_chassis_config_state_data_t *state_data;
   struct boot_flags_data data;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_chassis_config_state_data_t *)arg;
 
   if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
     return (ret);
@@ -715,9 +829,15 @@ lock_out_sleep_button_commit (const char *section_name,
                               const struct config_keyvalue *kv,
                               void *arg)
 {
-  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  ipmi_chassis_config_state_data_t *state_data;
   struct boot_flags_data data;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_chassis_config_state_data_t *)arg;
 
   if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
     return (ret);
@@ -734,10 +854,15 @@ static config_err_t
 chassis_boot_flags_post (const char *section_name,
                          void *arg)
 {
-  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  ipmi_chassis_config_state_data_t *state_data;
   uint8_t boot_info_acknowledge = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_INFO_UNACKNOWLEDGE;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   fiid_obj_t obj_cmd_rs = NULL;
+
+  assert (section_name);
+  assert (arg);
+
+  state_data = (ipmi_chassis_config_state_data_t *)arg;
 
   /* Following should be called to inform remaining chassis subsystems
    * that a boot configuration change has taken place.
@@ -787,9 +912,15 @@ firmware_bios_verbosity_checkout (const char *section_name,
                                   struct config_keyvalue *kv,
                                   void *arg)
 {
-  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  ipmi_chassis_config_state_data_t *state_data;
   struct boot_flags_data data;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_chassis_config_state_data_t *)arg;
 
   if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
     return (ret);
@@ -807,9 +938,15 @@ firmware_bios_verbosity_commit (const char *section_name,
                                 const struct config_keyvalue *kv,
                                 void *arg)
 {
-  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  ipmi_chassis_config_state_data_t *state_data;
   struct boot_flags_data data;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_chassis_config_state_data_t *)arg;
 
   if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
     return (ret);
@@ -827,9 +964,15 @@ force_progress_event_traps_checkout (const char *section_name,
                                      struct config_keyvalue *kv,
                                      void *arg)
 {
-  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  ipmi_chassis_config_state_data_t *state_data;
   struct boot_flags_data data;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_chassis_config_state_data_t *)arg;
 
   if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
     return (ret);
@@ -847,9 +990,15 @@ force_progress_event_traps_commit (const char *section_name,
                                    const struct config_keyvalue *kv,
                                    void *arg)
 {
-  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  ipmi_chassis_config_state_data_t *state_data;
   struct boot_flags_data data;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_chassis_config_state_data_t *)arg;
 
   if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
     return (ret);
@@ -867,9 +1016,15 @@ user_password_bypass_checkout (const char *section_name,
                                struct config_keyvalue *kv,
                                void *arg)
 {
-  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  ipmi_chassis_config_state_data_t *state_data;
   struct boot_flags_data data;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_chassis_config_state_data_t *)arg;
 
   if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
     return (ret);
@@ -887,9 +1042,15 @@ user_password_bypass_commit (const char *section_name,
                              const struct config_keyvalue *kv,
                              void *arg)
 {
-  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  ipmi_chassis_config_state_data_t *state_data;
   struct boot_flags_data data;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_chassis_config_state_data_t *)arg;
 
   if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
     return (ret);
@@ -907,9 +1068,15 @@ console_redirection_checkout (const char *section_name,
                               struct config_keyvalue *kv,
                               void *arg)
 {
-  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  ipmi_chassis_config_state_data_t *state_data;
   struct boot_flags_data data;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_chassis_config_state_data_t *)arg;
 
   if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
     return (ret);
@@ -927,9 +1094,15 @@ console_redirection_commit (const char *section_name,
                             const struct config_keyvalue *kv,
                             void *arg)
 {
-  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  ipmi_chassis_config_state_data_t *state_data;
   struct boot_flags_data data;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_chassis_config_state_data_t *)arg;
 
   if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
     return (ret);
@@ -960,6 +1133,8 @@ ipmi_chassis_config_boot_flags_get (ipmi_chassis_config_state_data_t *state_data
     "value BIOS-SETUP refers to booting *into* the BIOS Setup, not from it.  FLOPPY "
     "may refer to any type of removeable media.  \"Device_Instance_Selector\" may "
     "be be used to select a specific device instance for booting.";
+
+  assert (state_data);
 
   if (!(section = config_section_create (state_data->pstate,
                                          "Chassis_Boot_Flags",

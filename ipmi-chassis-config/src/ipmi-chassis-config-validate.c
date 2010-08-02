@@ -39,6 +39,10 @@ power_restore_policy_number_validate (const char *section_name,
                                       const char *value,
                                       void *arg)
 {
+  assert (section_name);
+  assert (key_name);
+  assert (value);
+
   if (power_restore_policy_number (value) != -1)
     return (CONFIG_VALIDATE_VALID_VALUE);
   return (CONFIG_VALIDATE_INVALID_VALUE);
@@ -50,6 +54,10 @@ bios_boot_type_number_validate (const char *section_name,
                                 const char *value,
                                 void *arg)
 {
+  assert (section_name);
+  assert (key_name);
+  assert (value);
+
   if (bios_boot_type_number (value) != -1)
     return (CONFIG_VALIDATE_VALID_VALUE);
   return (CONFIG_VALIDATE_INVALID_VALUE);
@@ -61,6 +69,10 @@ boot_device_number_validate (const char *section_name,
                              const char *value,
                              void *arg)
 {
+  assert (section_name);
+  assert (key_name);
+  assert (value);
+
   if (boot_device_number (value) != -1)
     return (CONFIG_VALIDATE_VALID_VALUE);
   return (CONFIG_VALIDATE_INVALID_VALUE);
@@ -72,6 +84,10 @@ device_instance_selector_number_validate (const char *section_name,
                                           const char *value,
                                           void *arg)
 {
+  assert (section_name);
+  assert (key_name);
+  assert (value);
+
   if (device_instance_selector_number (value) != -1)
     return (CONFIG_VALIDATE_VALID_VALUE);
   return (CONFIG_VALIDATE_INVALID_VALUE);
@@ -83,6 +99,10 @@ firmware_bios_verbosity_number_validate (const char *section_name,
                                          const char *value,
                                          void *arg)
 {
+  assert (section_name);
+  assert (key_name);
+  assert (value);
+
   if (firmware_bios_verbosity_number (value) != -1)
     return (CONFIG_VALIDATE_VALID_VALUE);
   return (CONFIG_VALIDATE_INVALID_VALUE);
@@ -94,6 +114,10 @@ console_redirection_number_validate (const char *section_name,
                                      const char *value,
                                      void *arg)
 {
+  assert (section_name);
+  assert (key_name);
+  assert (value);
+
   if (console_redirection_number (value) != -1)
     return (CONFIG_VALIDATE_VALID_VALUE);
   return (CONFIG_VALIDATE_INVALID_VALUE);

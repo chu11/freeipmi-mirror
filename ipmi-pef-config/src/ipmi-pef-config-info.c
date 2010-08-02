@@ -44,6 +44,8 @@ pef_info (ipmi_pef_config_state_data_t *state_data)
   uint8_t alert_action_support = 0;
   uint64_t val;
 
+  assert (state_data);
+
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_pef_capabilities_rs)))
     {
       pstdout_fprintf (state_data->pstate,

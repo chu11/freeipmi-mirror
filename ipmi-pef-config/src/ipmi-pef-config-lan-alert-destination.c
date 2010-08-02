@@ -79,7 +79,7 @@ _get_destination_type (ipmi_pef_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number (state_data, section_name, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -178,7 +178,7 @@ _set_destination_type (ipmi_pef_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number (state_data, section_name, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -218,9 +218,15 @@ alert_destination_type_checkout (const char *section_name,
                                  struct config_keyvalue *kv,
                                  void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   struct destination_type dt;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_destination_type (state_data,
                                     section_name,
@@ -240,9 +246,15 @@ alert_destination_type_commit (const char *section_name,
                                const struct config_keyvalue *kv,
                                void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   struct destination_type dt;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_destination_type (state_data,
                                     section_name,
@@ -261,9 +273,15 @@ alert_acknowledge_checkout (const char *section_name,
                             struct config_keyvalue *kv,
                             void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   struct destination_type dt;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_destination_type (state_data,
                                     section_name,
@@ -283,9 +301,15 @@ alert_acknowledge_commit (const char *section_name,
                           const struct config_keyvalue *kv,
                           void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   struct destination_type dt;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_destination_type (state_data,
                                     section_name,
@@ -304,9 +328,15 @@ alert_acknowledge_timeout_checkout (const char *section_name,
                                     struct config_keyvalue *kv,
                                     void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   struct destination_type dt;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_destination_type (state_data,
                                     section_name,
@@ -326,9 +356,15 @@ alert_acknowledge_timeout_commit (const char *section_name,
                                   const struct config_keyvalue *kv,
                                   void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   struct destination_type dt;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_destination_type (state_data,
                                     section_name,
@@ -347,9 +383,15 @@ alert_retries_checkout (const char *section_name,
                         struct config_keyvalue *kv,
                         void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   struct destination_type dt;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_destination_type (state_data,
                                     section_name,
@@ -369,9 +411,15 @@ alert_retries_commit (const char *section_name,
                       const struct config_keyvalue *kv,
                       void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   struct destination_type dt;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_destination_type (state_data,
                                     section_name,
@@ -391,6 +439,10 @@ alert_retries_validate (const char *section_name,
                         const char *value,
                         void *arg)
 {
+  assert (section_name);
+  assert (key_name);
+  assert (value);
+
   return (config_check_number_range (value, 0, IPMI_ALERT_RETRIES_MAX));
 }
 
@@ -423,7 +475,7 @@ _get_destination_addresses (ipmi_pef_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number (state_data, section_name, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -538,7 +590,7 @@ _set_destination_addresses (ipmi_pef_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number (state_data, section_name, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -587,9 +639,15 @@ alert_gateway_checkout (const char *section_name,
                         struct config_keyvalue *kv,
                         void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   struct destination_addresses da;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_destination_addresses (state_data,
                                          section_name,
@@ -609,9 +667,15 @@ alert_gateway_commit (const char *section_name,
                       const struct config_keyvalue *kv,
                       void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   struct destination_addresses da;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_destination_addresses (state_data,
                                          section_name,
@@ -630,9 +694,15 @@ alert_ip_address_checkout (const char *section_name,
                            struct config_keyvalue *kv,
                            void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   struct destination_addresses da;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_destination_addresses (state_data,
                                          section_name,
@@ -652,9 +722,15 @@ alert_ip_address_commit (const char *section_name,
                          const struct config_keyvalue *kv,
                          void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   struct destination_addresses da;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_destination_addresses (state_data,
                                          section_name,
@@ -674,9 +750,15 @@ alert_mac_address_checkout (const char *section_name,
                             struct config_keyvalue *kv,
                             void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   struct destination_addresses da;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_destination_addresses (state_data,
                                          section_name,
@@ -696,9 +778,15 @@ alert_mac_address_commit (const char *section_name,
                           const struct config_keyvalue *kv,
                           void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   struct destination_addresses da;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_destination_addresses (state_data,
                                          section_name,
@@ -714,29 +802,28 @@ alert_mac_address_commit (const char *section_name,
 }
 
 struct config_section *
-ipmi_pef_config_lan_alert_destination_section_get (ipmi_pef_config_state_data_t *state_data, int num)
+ipmi_pef_config_lan_alert_destination_section_get (ipmi_pef_config_state_data_t *state_data,
+						   unsigned int num,
+						   unsigned int config_flags,
+						   int channel_index)
 {
   struct config_section *section = NULL;
-  char buf[CONFIG_MAX_SECTION_NAME_LEN];
+  char section_name_base[CONFIG_MAX_SECTION_NAME_LEN];
 
-  if (num <= 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "Invalid Num = %d\n",
-                       num);
-      return (NULL);
-    }
+  assert (state_data);
+  assert (num);
 
-  snprintf (buf, CONFIG_MAX_SECTION_NAME_LEN, "Lan_Alert_Destination_%d", num);
+  snprintf (section_name_base, CONFIG_MAX_SECTION_NAME_LEN, "Lan_Alert_Destination_%u", num);
 
-  if (!(section = config_section_create (state_data->pstate,
-                                         buf,
-                                         NULL,
-                                         NULL,
-                                         0,
-                                         NULL,
-                                         NULL)))
+  if (!(section = config_section_multi_channel_create (state_data->pstate,
+                                                       section_name_base,
+                                                       NULL,
+                                                       NULL,
+                                                       NULL,
+                                                       config_flags,
+                                                       channel_index,
+                                                       state_data->lan_channel_numbers,
+                                                       state_data->lan_channel_numbers_count)))
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,

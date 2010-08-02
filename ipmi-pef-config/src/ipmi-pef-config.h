@@ -41,6 +41,8 @@ enum ipmi_pef_config_argp_option_keys
     INFO_KEY = 'i',
   };
 
+#define CHANNEL_NUMBERS_MAX 16
+
 struct ipmi_pef_config_arguments
 {
   struct config_arguments config_args;
@@ -61,18 +63,18 @@ typedef struct ipmi_pef_config_state_data
   pstdout_state_t pstate;
   struct config_section *sections;
 
-  /* achu: caching to make ipmi-pef-config work more quickly */
-  int lan_channel_number_initialized;
-  uint8_t lan_channel_number;
-  int number_of_lan_alert_destinations_initialized;
-  uint8_t number_of_lan_alert_destinations;
-  int number_of_alert_strings_initialized;
-  uint8_t number_of_alert_strings;
-  int number_of_alert_policy_entries_initialized;
-  uint8_t number_of_alert_policy_entries;
-  int number_of_event_filters_initialized;
-  uint8_t number_of_event_filters;
+  /* For multi-channel settings
+   *
+   * base is for base section name (e.g. "Community_String")
+   * channel is for channel suffixed section name (e.g. "Community_String_Channel_1")
+   */
+  unsigned int lan_base_config_flags;
+  unsigned int lan_channel_config_flags;
 
+  /* For channel reading */
+  uint8_t lan_channel_numbers[CHANNEL_NUMBERS_MAX];
+  unsigned int lan_channel_numbers_count;
+  unsigned int lan_channel_numbers_loaded;
 } ipmi_pef_config_state_data_t;
 
 #endif

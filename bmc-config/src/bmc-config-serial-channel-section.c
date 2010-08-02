@@ -25,14 +25,18 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#include <assert.h>
 
 #include "bmc-config.h"
 #include "bmc-config-channel-common.h"
+#include "bmc-config-utils.h"
 
 #include "freeipmi-portability.h"
 
 struct config_section *
-bmc_config_serial_channel_section_get (bmc_config_state_data_t *state_data)
+bmc_config_serial_channel_section_get (bmc_config_state_data_t *state_data,
+                                       unsigned int config_flags,
+				       int channel_index)
 {
   struct config_section * section = NULL;
   char *section_comment =
@@ -47,29 +51,30 @@ bmc_config_serial_channel_section_get (bmc_config_state_data_t *state_data)
     "Most users will only be interested in IPMI over LAN, therefore serial "
     "communication can be disabled.  This can be done by setting "
     "\"Access_Mode\" to \"Disabled\".";
-  unsigned int verbose_flags = 0;
+  char *section_name_base_str = "Serial_Channel";
+
+  assert (state_data);
 
   /*
    * achu: section not checked out by default.
    */
 
-  if (state_data->prog_data->args->config_args.verbose_count)
-    verbose_flags = 0;
-  else
-    verbose_flags = CONFIG_DO_NOT_CHECKOUT;
+  if (!state_data->prog_data->args->config_args.verbose_count)
+    config_flags |= CONFIG_DO_NOT_CHECKOUT;
 
-  if (!(section = config_section_create (state_data->pstate,
-                                         "Serial_Channel",
-                                         "Serial_Channel",
-                                         section_comment,
-                                         verbose_flags,
-                                         NULL,
-                                         NULL)))
+  if (!(section = config_section_multi_channel_create (state_data->pstate,
+						       section_name_base_str,
+						       section_comment,
+						       NULL,
+						       NULL,
+						       config_flags,
+						       channel_index,
+						       state_data->serial_channel_numbers,
+						       state_data->serial_channel_numbers_count)))
     goto cleanup;
 
   if (bmc_config_channel_common_section_get (state_data,
-                                             section,
-                                             verbose_flags) < 0)
+                                             section) < 0)
     goto cleanup;
 
   return (section);

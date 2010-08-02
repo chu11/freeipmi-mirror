@@ -59,16 +59,18 @@ _channel_info (bmc_config_state_data_t *state_data,
   if (stristr (section_name, "Lan"))
     {
       if ((ret = get_lan_channel_number (state_data,
-                                         channel_number)) != CONFIG_ERR_SUCCESS)
-        return (ret);
+					 section_name,
+					 channel_number)) != CONFIG_ERR_SUCCESS)
+	return (ret);
     }
   else
     {
       if ((ret = get_serial_channel_number (state_data,
-                                            channel_number)) != CONFIG_ERR_SUCCESS)
-        return (ret);
+					    section_name,
+					    channel_number)) != CONFIG_ERR_SUCCESS)
+	return (ret);
     }
-
+  
   return (CONFIG_ERR_SUCCESS);
 }
 
@@ -338,9 +340,15 @@ _access_mode_checkout (const char *section_name,
                        struct config_keyvalue *kv,
                        void *arg)
 {
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  bmc_config_state_data_t *state_data;
   struct channel_access ch;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+
+  state_data = (bmc_config_state_data_t *)arg;
 
   if ((ret = _get_channel_access (state_data,
                                   section_name,
@@ -361,9 +369,15 @@ _access_mode_commit (const char *section_name,
                      const struct config_keyvalue *kv,
                      void *arg)
 {
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  bmc_config_state_data_t *state_data;
   struct channel_access ch;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+
+  state_data = (bmc_config_state_data_t *)arg;
 
   if ((ret = _get_channel_access (state_data,
                                   section_name,
@@ -388,9 +402,15 @@ _enable_user_level_authentication_checkout (const char *section_name,
                                             struct config_keyvalue *kv,
                                             void *arg)
 {
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  bmc_config_state_data_t *state_data;
   struct channel_access ch;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+
+  state_data = (bmc_config_state_data_t *)arg;
 
   if ((ret = _get_channel_access (state_data,
                                   section_name,
@@ -412,10 +432,16 @@ _enable_user_level_authentication_commit (const char *section_name,
                                           const struct config_keyvalue *kv,
                                           void *arg)
 {
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  bmc_config_state_data_t *state_data;
   struct channel_access ch;
   config_err_t ret;
   uint8_t comp_code = 0;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+
+  state_data = (bmc_config_state_data_t *)arg;
 
   if ((ret = _get_channel_access (state_data,
                                   section_name,
@@ -450,9 +476,15 @@ _enable_per_message_authentication_checkout (const char *section_name,
                                              struct config_keyvalue *kv,
                                              void *arg)
 {
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  bmc_config_state_data_t *state_data;
   struct channel_access ch;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+
+  state_data = (bmc_config_state_data_t *)arg;
 
   if ((ret = _get_channel_access (state_data,
                                   section_name,
@@ -474,9 +506,15 @@ _enable_per_message_authentication_commit (const char *section_name,
                                            const struct config_keyvalue *kv,
                                            void *arg)
 {
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  bmc_config_state_data_t *state_data;
   struct channel_access ch;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+
+  state_data = (bmc_config_state_data_t *)arg;
 
   if ((ret = _get_channel_access (state_data,
                                   section_name,
@@ -501,9 +539,15 @@ _enable_pef_alerting_checkout (const char *section_name,
                                struct config_keyvalue *kv,
                                void *arg)
 {
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  bmc_config_state_data_t *state_data;
   struct channel_access ch;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+
+  state_data = (bmc_config_state_data_t *)arg;
 
   if ((ret = _get_channel_access (state_data,
                                   section_name,
@@ -525,9 +569,15 @@ _enable_pef_alerting_commit (const char *section_name,
                              const struct config_keyvalue *kv,
                              void *arg)
 {
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  bmc_config_state_data_t *state_data;
   struct channel_access ch;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+
+  state_data = (bmc_config_state_data_t *)arg;
 
   if ((ret = _get_channel_access (state_data,
                                   section_name,
@@ -552,9 +602,15 @@ _channel_privilege_limit_checkout (const char *section_name,
                                    struct config_keyvalue *kv,
                                    void *arg)
 {
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  bmc_config_state_data_t *state_data;
   struct channel_access ch;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+
+  state_data = (bmc_config_state_data_t *)arg;
 
   if ((ret = _get_channel_access (state_data,
                                   section_name,
@@ -575,9 +631,15 @@ _channel_privilege_limit_commit (const char *section_name,
                                  const struct config_keyvalue *kv,
                                  void *arg)
 {
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  bmc_config_state_data_t *state_data;
   struct channel_access ch;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+
+  state_data = (bmc_config_state_data_t *)arg;
 
   if ((ret = _get_channel_access (state_data,
                                   section_name,
@@ -599,8 +661,7 @@ _channel_privilege_limit_commit (const char *section_name,
 
 int
 bmc_config_channel_common_section_get (bmc_config_state_data_t *state_data,
-                                       struct config_section *channel_section,
-                                       unsigned int verbose_flags)
+                                       struct config_section *channel_section)
 {
   assert (state_data);
   assert (channel_section);
@@ -609,7 +670,7 @@ bmc_config_channel_common_section_get (bmc_config_state_data_t *state_data,
                               channel_section,
                               "Volatile_Access_Mode",
                               "Possible values: Disabled/Pre_Boot_Only/Always_Available/Shared",
-                              verbose_flags,
+                              0,
                               _access_mode_checkout,
                               _access_mode_commit,
                               channel_access_mode_validate) < 0)
@@ -619,7 +680,7 @@ bmc_config_channel_common_section_get (bmc_config_state_data_t *state_data,
                               channel_section,
                               "Volatile_Enable_User_Level_Auth",
                               "Possible values: Yes/No",
-                              verbose_flags,
+                              0,
                               _enable_user_level_authentication_checkout,
                               _enable_user_level_authentication_commit,
                               config_yes_no_validate) < 0)
@@ -629,7 +690,7 @@ bmc_config_channel_common_section_get (bmc_config_state_data_t *state_data,
                               channel_section,
                               "Volatile_Enable_Per_Message_Auth",
                               "Possible values: Yes/No",
-                              verbose_flags,
+                              0,
                               _enable_per_message_authentication_checkout,
                               _enable_per_message_authentication_commit,
                               config_yes_no_validate) < 0)
@@ -639,7 +700,7 @@ bmc_config_channel_common_section_get (bmc_config_state_data_t *state_data,
                               channel_section,
                               "Volatile_Enable_Pef_Alerting",
                               "Possible values: Yes/No",
-                              verbose_flags,
+                              0,
                               _enable_pef_alerting_checkout,
                               _enable_pef_alerting_commit,
                               config_yes_no_validate) < 0)
@@ -649,7 +710,7 @@ bmc_config_channel_common_section_get (bmc_config_state_data_t *state_data,
                               channel_section,
                               "Volatile_Channel_Privilege_Limit",
                               "Possible values: Callback/User/Operator/Administrator/OEM_Proprietary",
-                              verbose_flags,
+                              0,
                               _channel_privilege_limit_checkout,
                               _channel_privilege_limit_commit,
                               privilege_level_number_validate) < 0)
@@ -659,7 +720,7 @@ bmc_config_channel_common_section_get (bmc_config_state_data_t *state_data,
                               channel_section,
                               "Non_Volatile_Access_Mode",
                               "Possible values: Disabled/Pre_Boot_Only/Always_Available/Shared",
-                              verbose_flags,
+                              0,
                               _access_mode_checkout,
                               _access_mode_commit,
                               channel_access_mode_validate) < 0)
@@ -669,7 +730,7 @@ bmc_config_channel_common_section_get (bmc_config_state_data_t *state_data,
                               channel_section,
                               "Non_Volatile_Enable_User_Level_Auth",
                               "Possible values: Yes/No",
-                              verbose_flags,
+                              0,
                               _enable_user_level_authentication_checkout,
                               _enable_user_level_authentication_commit,
                               config_yes_no_validate) < 0)
@@ -679,7 +740,7 @@ bmc_config_channel_common_section_get (bmc_config_state_data_t *state_data,
                               channel_section,
                               "Non_Volatile_Enable_Per_Message_Auth",
                               "Possible values: Yes/No",
-                              verbose_flags,
+                              0,
                               _enable_per_message_authentication_checkout,
                               _enable_per_message_authentication_commit,
                               config_yes_no_validate) < 0)
@@ -689,7 +750,7 @@ bmc_config_channel_common_section_get (bmc_config_state_data_t *state_data,
                               channel_section,
                               "Non_Volatile_Enable_Pef_Alerting",
                               "Possible values: Yes/No",
-                              verbose_flags,
+                              0,
                               _enable_pef_alerting_checkout,
                               _enable_pef_alerting_commit,
                               config_yes_no_validate) < 0)
@@ -699,7 +760,7 @@ bmc_config_channel_common_section_get (bmc_config_state_data_t *state_data,
                               channel_section,
                               "Non_Volatile_Channel_Privilege_Limit",
                               "Possible values: Callback/User/Operator/Administrator/OEM_Proprietary",
-                              verbose_flags,
+                              0,
                               _channel_privilege_limit_checkout,
                               _channel_privilege_limit_commit,
                               privilege_level_number_validate) < 0)

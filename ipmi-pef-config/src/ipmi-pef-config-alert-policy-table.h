@@ -22,6 +22,6 @@
 #include "ipmi-pef-config.h"
 #include "ipmi-pef-config-sections.h"
 
-struct config_section * ipmi_pef_config_alert_policy_table_section_get (ipmi_pef_config_state_data_t *state_data, int num);
+struct config_section * ipmi_pef_config_alert_policy_table_section_get (ipmi_pef_config_state_data_t *state_data, unsigned int num);
 
 #endif /* _IPMI_PEF_CONFIG_ALERT_POLICY_TABLE_H_ */

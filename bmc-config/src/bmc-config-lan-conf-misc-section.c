@@ -44,6 +44,7 @@ struct bmc_generated_arp_control
 
 static config_err_t
 _get_bmc_generated_arp_control (bmc_config_state_data_t *state_data,
+				const char *section_name,
                                 struct bmc_generated_arp_control *ac)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -53,6 +54,7 @@ _get_bmc_generated_arp_control (bmc_config_state_data_t *state_data,
   uint8_t channel_number;
 
   assert (state_data);
+  assert (section_name);
   assert (ac);
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_lan_configuration_parameters_bmc_generated_arp_control_rs)))
@@ -64,7 +66,7 @@ _get_bmc_generated_arp_control (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number (state_data, section_name, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -119,6 +121,7 @@ _get_bmc_generated_arp_control (bmc_config_state_data_t *state_data,
 
 static config_err_t
 _set_bmc_generated_arp_control (bmc_config_state_data_t *state_data,
+				const char *section_name,
                                 struct bmc_generated_arp_control *ac)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -127,6 +130,7 @@ _set_bmc_generated_arp_control (bmc_config_state_data_t *state_data,
   uint8_t channel_number;
 
   assert (state_data);
+  assert (section_name);
   assert (ac);
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_lan_configuration_parameters_rs)))
@@ -138,7 +142,7 @@ _set_bmc_generated_arp_control (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number (state_data, section_name, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -176,11 +180,17 @@ enable_gratuitous_arps_checkout (const char *section_name,
                                  struct config_keyvalue *kv,
                                  void *arg)
 {
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  bmc_config_state_data_t *state_data;
   struct bmc_generated_arp_control ac;
   config_err_t ret;
 
-  if ((ret = _get_bmc_generated_arp_control (state_data, &ac)) != CONFIG_ERR_SUCCESS)
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+
+  state_data = (bmc_config_state_data_t *)arg;
+
+  if ((ret = _get_bmc_generated_arp_control (state_data, section_name, &ac)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
   if (config_section_update_keyvalue_output (state_data->pstate,
@@ -196,15 +206,21 @@ enable_gratuitous_arps_commit (const char *section_name,
                                const struct config_keyvalue *kv,
                                void *arg)
 {
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  bmc_config_state_data_t *state_data;
   struct bmc_generated_arp_control ac;
   config_err_t ret;
 
-  if ((ret = _get_bmc_generated_arp_control (state_data, &ac)) != CONFIG_ERR_SUCCESS)
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+
+  state_data = (bmc_config_state_data_t *)arg;
+
+  if ((ret = _get_bmc_generated_arp_control (state_data, section_name, &ac)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
   ac.bmc_generated_gratuitous_arps = same (kv->value_input, "yes");
-  return (_set_bmc_generated_arp_control (state_data, &ac));
+  return (_set_bmc_generated_arp_control (state_data, section_name, &ac));
 }
 
 static config_err_t
@@ -212,11 +228,17 @@ enable_arp_response_checkout (const char *section_name,
                               struct config_keyvalue *kv,
                               void *arg)
 {
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  bmc_config_state_data_t *state_data;
   struct bmc_generated_arp_control ac;
   config_err_t ret;
 
-  if ((ret = _get_bmc_generated_arp_control (state_data, &ac)) != CONFIG_ERR_SUCCESS)
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+
+  state_data = (bmc_config_state_data_t *)arg;
+
+  if ((ret = _get_bmc_generated_arp_control (state_data, section_name, &ac)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
   if (config_section_update_keyvalue_output (state_data->pstate,
@@ -232,15 +254,21 @@ enable_arp_response_commit (const char *section_name,
                             const struct config_keyvalue *kv,
                             void *arg)
 {
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  bmc_config_state_data_t *state_data;
   struct bmc_generated_arp_control ac;
   config_err_t ret;
 
-  if ((ret = _get_bmc_generated_arp_control (state_data, &ac)) != CONFIG_ERR_SUCCESS)
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+
+  state_data = (bmc_config_state_data_t *)arg;
+
+  if ((ret = _get_bmc_generated_arp_control (state_data, section_name, &ac)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
   ac.bmc_generated_arp_responses = same (kv->value_input, "yes");
-  return (_set_bmc_generated_arp_control (state_data, &ac));
+  return (_set_bmc_generated_arp_control (state_data, section_name, &ac));
 }
 
 static config_err_t
@@ -248,13 +276,19 @@ gratuitous_arp_interval_checkout (const char *section_name,
                                   struct config_keyvalue *kv,
                                   void *arg)
 {
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  bmc_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
   uint8_t channel_number;
   uint8_t gratuitous_arp_interval;
   uint64_t val;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+
+  state_data = (bmc_config_state_data_t *)arg;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_lan_configuration_parameters_gratuitous_arp_interval_rs)))
     {
@@ -265,7 +299,7 @@ gratuitous_arp_interval_checkout (const char *section_name,
       goto cleanup;
     }
 
-  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number (state_data, section_name, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -318,11 +352,17 @@ gratuitous_arp_interval_commit (const char *section_name,
                                 const struct config_keyvalue *kv,
                                 void *arg)
 {
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  bmc_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
   uint8_t channel_number;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+
+  state_data = (bmc_config_state_data_t *)arg;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_lan_configuration_parameters_rs)))
     {
@@ -333,7 +373,7 @@ gratuitous_arp_interval_commit (const char *section_name,
       goto cleanup;
     }
 
-  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number (state_data, section_name, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -366,7 +406,9 @@ gratuitous_arp_interval_commit (const char *section_name,
 }
 
 struct config_section *
-bmc_config_lan_conf_misc_section_get (bmc_config_state_data_t *state_data)
+bmc_config_lan_conf_misc_section_get (bmc_config_state_data_t *state_data,
+				      unsigned int config_flags,
+				      int channel_index)
 {
   struct config_section *section = NULL;
   char *section_comment =
@@ -384,14 +426,19 @@ bmc_config_lan_conf_misc_section_get (bmc_config_state_data_t *state_data)
     "\n"
     "If set to \"Yes\", \"Enable_ARP_Response\" will inform the BMC to"
     "respond to ARP requests from other machines.";
+  char *section_name_base_str = "Lan_Conf_Misc";
 
-  if (!(section = config_section_create (state_data->pstate,
-                                         "Lan_Conf_Misc",
-                                         "Lan_Conf_Misc",
-                                         section_comment,
-                                         0,
-                                         NULL,
-                                         NULL)))
+  assert (state_data);
+
+  if (!(section = config_section_multi_channel_create (state_data->pstate,
+						       section_name_base_str,
+						       section_comment,
+						       NULL,
+						       NULL,
+						       config_flags,
+						       channel_index,
+						       state_data->lan_channel_numbers,
+						       state_data->lan_channel_numbers_count)))
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,

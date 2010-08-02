@@ -7,6 +7,8 @@ o Remove ipmimonitoring tool.  Tool is now superseded by ipmi-sensors
   and the new --output-sensor-state option.
 o Support --output-event-state option for ipmi-sel to support SEL event
   interpretation.
+o All config-tools now support multi-channel configuration under
+  verbose mode.
 o Re-architect libipmimonitoring to support all defined IPMI sensor
   types, OEM bitmasks, and OEM interpretations.
 o Add SEL monitoring support to libipmimonitoring.
@@ -44,8 +46,31 @@ o ipmipower
 o bmc-config
   - Support --lan-channel-number.
   - Support --serial-channel-number.
+  - Show verbose-only sections in --list.
+  - Do not output section comments if key-pair specified on command line.
+  - Allow checkout of sections/key-pairs if specified on command line,
+    even if not available by default.
+  - Support very-verbose output by specifying -vv.  Move some output
+    from verbose output to very verbose output.
 o ipmi-pef-config
   - Support --lan-channel-number.
+  - Do not output section comments if key-pair specified on command line.
+  - Allow checkout of sections/key-pairs if specified on command line,
+    even if not available by default.
+  - Support very-verbose output by specifying -vv.  Move some output
+    from verbose output to very verbose output.
+o ipmi-sensors-config
+  - Do not output section comments if key-pair specified on command line.
+  - Allow checkout of sections/key-pairs if specified on command line,
+    even if not available by default.
+  - Support very-verbose output by specifying -vv.  Move some output
+    from verbose output to very verbose output.
+o ipmi-chassis-config
+  - Do not output section comments if key-pair specified on command line.
+  - Allow checkout of sections/key-pairs if specified on command line,
+    even if not available by default.
+  - Support very-verbose output by specifying -vv.  Move some output
+    from verbose output to very verbose output.
 o ipmimonitoring
   - Removed tool.  Tool is now superseded by ipmi-sensors and the new
     --output-sensor-state option.

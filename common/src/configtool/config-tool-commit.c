@@ -126,12 +126,6 @@ config_commit_section (pstdout_state_t pstate,
       kv = kv->next;
     }
 
-  if (cmd_args->verbose_count)
-    PSTDOUT_FPRINTF (pstate,
-                     stderr,
-                     "Completed commit of Section: %s\n",
-                     section->section_name);
-
   if (commit_count && section->section_post_commit)
     {
       if ((this_ret = section->section_post_commit (section->section_name,

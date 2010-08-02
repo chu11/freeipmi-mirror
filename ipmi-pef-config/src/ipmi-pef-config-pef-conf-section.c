@@ -25,6 +25,7 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#include <assert.h>
 
 #include "ipmi-pef-config.h"
 #include "ipmi-pef-config-validate.h"
@@ -37,7 +38,14 @@ _enable_pef_checkout (const char *section_name,
                       struct config_keyvalue *kv,
                       void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
+
   return (enable_pef_checkout (state_data->pstate,
                                kv,
                                state_data->ipmi_ctx,
@@ -49,7 +57,14 @@ _enable_pef_commit (const char *section_name,
                     const struct config_keyvalue *kv,
                     void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
+
   return (enable_pef_commit (state_data->pstate,
                              kv,
                              state_data->ipmi_ctx,
@@ -61,7 +76,14 @@ _enable_pef_event_messages_checkout (const char *section_name,
                                      struct config_keyvalue *kv,
                                      void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
+
   return (enable_pef_event_messages_checkout (state_data->pstate,
                                               kv,
                                               state_data->ipmi_ctx,
@@ -73,7 +95,14 @@ _enable_pef_event_messages_commit (const char *section_name,
                                    const struct config_keyvalue *kv,
                                    void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
+
   return (enable_pef_event_messages_commit (state_data->pstate,
                                             kv,
                                             state_data->ipmi_ctx,
@@ -85,7 +114,14 @@ _enable_pef_startup_delay_checkout (const char *section_name,
                                     struct config_keyvalue *kv,
                                     void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
+
   return (enable_pef_startup_delay_checkout (state_data->pstate,
                                              kv,
                                              state_data->ipmi_ctx,
@@ -97,7 +133,14 @@ _enable_pef_startup_delay_commit (const char *section_name,
                                   const struct config_keyvalue *kv,
                                   void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
+
   return (enable_pef_startup_delay_commit (state_data->pstate,
                                            kv,
                                            state_data->ipmi_ctx,
@@ -109,7 +152,14 @@ _enable_pef_alert_startup_delay_checkout (const char *section_name,
                                           struct config_keyvalue *kv,
                                           void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
+
   return (enable_pef_alert_startup_delay_checkout (state_data->pstate,
                                                    kv,
                                                    state_data->ipmi_ctx,
@@ -121,7 +171,14 @@ _enable_pef_alert_startup_delay_commit (const char *section_name,
                                         const struct config_keyvalue *kv,
                                         void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
+
   return (enable_pef_alert_startup_delay_commit (state_data->pstate,
                                                  kv,
                                                  state_data->ipmi_ctx,
@@ -133,7 +190,14 @@ _enable_alert_action_checkout (const char *section_name,
                                struct config_keyvalue *kv,
                                void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
+
   return (enable_alert_action_checkout (state_data->pstate,
                                         kv,
                                         state_data->ipmi_ctx,
@@ -145,7 +209,14 @@ _enable_alert_action_commit (const char *section_name,
                              const struct config_keyvalue *kv,
                              void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
+
   return (enable_alert_action_commit (state_data->pstate,
                                       kv,
                                       state_data->ipmi_ctx,
@@ -157,7 +228,14 @@ _enable_power_down_action_checkout (const char *section_name,
                                     struct config_keyvalue *kv,
                                     void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
+
   return (enable_power_down_action_checkout (state_data->pstate,
                                              kv,
                                              state_data->ipmi_ctx,
@@ -169,7 +247,14 @@ _enable_power_down_action_commit (const char *section_name,
                                   const struct config_keyvalue *kv,
                                   void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
+
   return (enable_power_down_action_commit (state_data->pstate,
                                            kv,
                                            state_data->ipmi_ctx,
@@ -181,7 +266,14 @@ _enable_reset_action_checkout (const char *section_name,
                                struct config_keyvalue *kv,
                                void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
+
   return (enable_reset_action_checkout (state_data->pstate,
                                         kv,
                                         state_data->ipmi_ctx,
@@ -193,7 +285,14 @@ _enable_reset_action_commit (const char *section_name,
                              const struct config_keyvalue *kv,
                              void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
+
   return (enable_reset_action_commit (state_data->pstate,
                                       kv,
                                       state_data->ipmi_ctx,
@@ -205,7 +304,14 @@ _enable_power_cycle_action_checkout (const char *section_name,
                                      struct config_keyvalue *kv,
                                      void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
+
   return (enable_power_cycle_action_checkout (state_data->pstate,
                                               kv,
                                               state_data->ipmi_ctx,
@@ -217,7 +323,14 @@ _enable_power_cycle_action_commit (const char *section_name,
                                    const struct config_keyvalue *kv,
                                    void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
+
   return (enable_power_cycle_action_commit (state_data->pstate,
                                             kv,
                                             state_data->ipmi_ctx,
@@ -229,7 +342,14 @@ _enable_oem_action_checkout (const char *section_name,
                              struct config_keyvalue *kv,
                              void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
+
   return (enable_oem_action_checkout (state_data->pstate,
                                       kv,
                                       state_data->ipmi_ctx,
@@ -241,7 +361,14 @@ _enable_oem_action_commit (const char *section_name,
                            const struct config_keyvalue *kv,
                            void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
+
   return (enable_oem_action_commit (state_data->pstate,
                                     kv,
                                     state_data->ipmi_ctx,
@@ -253,7 +380,14 @@ _enable_diagnostic_interrupt_checkout (const char *section_name,
                                        struct config_keyvalue *kv,
                                        void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
+
   return (enable_diagnostic_interrupt_checkout (state_data->pstate,
                                                 kv,
                                                 state_data->ipmi_ctx,
@@ -265,7 +399,14 @@ _enable_diagnostic_interrupt_commit (const char *section_name,
                                      const struct config_keyvalue *kv,
                                      void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
+
   return (enable_diagnostic_interrupt_commit (state_data->pstate,
                                               kv,
                                               state_data->ipmi_ctx,
@@ -277,7 +418,14 @@ _pef_startup_delay_checkout (const char *section_name,
                              struct config_keyvalue *kv,
                              void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
+
   return (pef_startup_delay_checkout (state_data->pstate,
                                       kv,
                                       state_data->ipmi_ctx,
@@ -289,7 +437,14 @@ _pef_startup_delay_commit (const char *section_name,
                            const struct config_keyvalue *kv,
                            void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
+
   return (pef_startup_delay_commit (state_data->pstate,
                                     kv,
                                     state_data->ipmi_ctx,
@@ -301,7 +456,14 @@ _pef_alert_startup_delay_checkout (const char *section_name,
                                    struct config_keyvalue *kv,
                                    void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
+
   return (pef_alert_startup_delay_checkout (state_data->pstate,
                                             kv,
                                             state_data->ipmi_ctx,
@@ -313,7 +475,14 @@ _pef_alert_startup_delay_commit (const char *section_name,
                                  const struct config_keyvalue *kv,
                                  void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
+
   return (pef_alert_startup_delay_commit (state_data->pstate,
                                           kv,
                                           state_data->ipmi_ctx,
@@ -324,6 +493,8 @@ struct config_section *
 ipmi_pef_config_pef_conf_section_get (ipmi_pef_config_state_data_t *state_data)
 {
   struct config_section *section;
+
+  assert (state_data);
 
   if (!(section = config_section_create (state_data->pstate,
                                          "PEF_Conf",

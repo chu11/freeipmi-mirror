@@ -43,6 +43,8 @@ ipmi_chassis_config_sections_create (ipmi_chassis_config_state_data_t *state_dat
   struct config_section *sections = NULL;
   struct config_section *section = NULL;
 
+  assert (state_data);
+
   if (!(section = ipmi_chassis_config_front_panel_buttons_get (state_data)))
     goto cleanup;
   if (config_section_append (&sections, section) < 0)

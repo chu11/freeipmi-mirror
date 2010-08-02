@@ -25,14 +25,18 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#include <assert.h>
 
 #include "bmc-config.h"
 #include "bmc-config-channel-common.h"
+#include "bmc-config-utils.h"
 
 #include "freeipmi-portability.h"
 
 struct config_section *
-bmc_config_lan_channel_section_get (bmc_config_state_data_t *state_data)
+bmc_config_lan_channel_section_get (bmc_config_state_data_t *state_data,
+                                    unsigned int config_flags,
+				    int channel_index)
 {
   struct config_section * section = NULL;
   char *section_comment =
@@ -51,19 +55,23 @@ bmc_config_lan_channel_section_get (bmc_config_state_data_t *state_data)
     "\n"
     "\"User_Level_Auth\" and \"Per_Message_Auth\" are typically set to "
     "\"Yes\" for additional security.";
+  char *section_name_base_str = "Lan_Channel";
 
-  if (!(section = config_section_create (state_data->pstate,
-                                         "Lan_Channel",
-                                         "Lan_Channel",
-                                         section_comment,
-                                         0,
-                                         NULL,
-                                         NULL)))
+  assert (state_data);
+
+  if (!(section = config_section_multi_channel_create (state_data->pstate,
+						       section_name_base_str,
+						       section_comment,
+						       NULL,
+						       NULL,
+						       config_flags,
+						       channel_index,
+						       state_data->lan_channel_numbers,
+						       state_data->lan_channel_numbers_count)))
     goto cleanup;
 
   if (bmc_config_channel_common_section_get (state_data,
-                                             section,
-                                             0) < 0)
+                                             section) < 0)
     goto cleanup;
 
   return (section);

@@ -178,9 +178,15 @@ event_filter_number_checkout (const char *section_name,
                               struct config_keyvalue *kv,
                               void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   struct alert_string_keys ask;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_alert_string_keys (state_data,
                                      section_name,
@@ -200,9 +206,15 @@ event_filter_number_commit (const char *section_name,
                             const struct config_keyvalue *kv,
                             void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   struct alert_string_keys ask;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_alert_string_keys (state_data,
                                      section_name,
@@ -221,9 +233,15 @@ alert_string_set_checkout (const char *section_name,
                            struct config_keyvalue *kv,
                            void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   struct alert_string_keys ask;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_alert_string_keys (state_data,
                                      section_name,
@@ -243,9 +261,15 @@ alert_string_set_commit (const char *section_name,
                          const struct config_keyvalue *kv,
                          void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   struct alert_string_keys ask;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_alert_string_keys (state_data,
                                      section_name,
@@ -264,13 +288,19 @@ alert_string_checkout (const char *section_name,
                        struct config_keyvalue *kv,
                        void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   char alert_string[PEF_ALERT_STRING_MAX_LEN+1];
   uint8_t string_selector;
   fiid_obj_t obj_cmd_rs = NULL;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   unsigned int blocks;
   unsigned int i;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   string_selector = atoi (section_name + strlen ("Alert_String_"));
 
@@ -364,7 +394,7 @@ alert_string_commit (const char *section_name,
                      const struct config_keyvalue *kv,
                      void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   uint8_t string_selector;
   fiid_obj_t obj_cmd_rs = NULL;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
@@ -373,6 +403,12 @@ alert_string_commit (const char *section_name,
   unsigned int alert_string_buf_len = 0;
   unsigned int blocks;
   unsigned int i;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   string_selector = atoi (section_name + strlen ("Alert_String_"));
 

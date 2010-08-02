@@ -81,12 +81,6 @@ config_diff (pstdout_state_t pstate,
           kv = kv->next;
         }
 
-      if (cmd_args->verbose_count)
-        PSTDOUT_FPRINTF (pstate,
-                         stderr,
-                         "Completed diff of Section: %s\n",
-                         s->section_name);
-
       s = s->next;
     }
 

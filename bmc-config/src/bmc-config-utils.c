@@ -25,6 +25,8 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#include <errno.h>
+#include <assert.h>
 
 #include "bmc-config-utils.h"
 
@@ -32,88 +34,215 @@
 #include "pstdout.h"
 
 config_err_t
-get_lan_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel_num)
+load_lan_channel_numbers (bmc_config_state_data_t *state_data)
 {
-  uint8_t lan_channel_number;
+  int ret;
 
-  if (state_data->lan_channel_number_initialized)
+  assert (state_data);
+
+  if ((ret = ipmi_get_channel_numbers (state_data->ipmi_ctx,
+                                       IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3,
+                                       state_data->lan_channel_numbers,
+                                       CHANNEL_NUMBERS_MAX)) < 0)
     {
-      *channel_num = state_data->lan_channel_number;
-      return (CONFIG_ERR_SUCCESS);
+      if (state_data->prog_data->args->config_args.common.debug)
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_get_channel_numbers: %s\n",
+                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      return (CONFIG_ERR_NON_FATAL_ERROR);
     }
+  
+  state_data->lan_channel_numbers_count = (unsigned int)ret;
+  state_data->lan_channel_numbers_loaded++;
+
+  return (CONFIG_ERR_SUCCESS);
+}
+
+config_err_t
+load_serial_channel_numbers (bmc_config_state_data_t *state_data)
+{
+  int ret;
+
+  assert (state_data);
+
+  if ((ret = ipmi_get_channel_numbers (state_data->ipmi_ctx,
+                                       IPMI_CHANNEL_MEDIUM_TYPE_RS232,
+                                       state_data->serial_channel_numbers,
+                                       CHANNEL_NUMBERS_MAX)) < 0)
+    {
+      if (state_data->prog_data->args->config_args.common.debug)
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_get_channel_numbers: %s\n",
+                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      return (CONFIG_ERR_NON_FATAL_ERROR);
+    }
+  
+  state_data->serial_channel_numbers_count = (unsigned int)ret;
+  state_data->serial_channel_numbers_loaded++;
+
+  return (CONFIG_ERR_SUCCESS);
+}
+
+config_err_t
+get_lan_channel_number (bmc_config_state_data_t *state_data,
+			const char *section_name,
+			uint8_t *channel_number)
+{
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  config_err_t ret;
+
+  assert (state_data);
+  /* section_name can be NULL if want to force IPMI search */
+  assert (channel_number);
+
+  /* For multi-channel cases, channel will be in the section name */
+
+  if (section_name)
+    {
+      char *ptr;
+
+      /* Special case for Lan_Channel_Channel_X */
+      if ((ptr = stristr (section_name, "Channel_Channel_")))
+	{
+	  (*channel_number) = atoi (ptr + strlen ("Channel_Channel_"));
+	  return (CONFIG_ERR_SUCCESS);
+	}
+
+      /* For all other sections with a channel number at the end of the section name */
+      if ((ptr = stristr (section_name, "Channel_")))
+	{
+	  (*channel_number) = atoi (ptr + strlen ("Channel_"));
+	  return (CONFIG_ERR_SUCCESS);
+	}
+    }
+
+  /* for single-channel, channel is first one found */
 
   if (!state_data->prog_data->args->config_args.lan_channel_number_set)
     {
-      if (ipmi_get_channel_number (state_data->ipmi_ctx,
-                                   IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3,
-                                   &lan_channel_number) < 0)
-        {
-          if (state_data->prog_data->args->config_args.common.debug)
-            pstdout_fprintf (state_data->pstate,
-                             stderr,
-                             "ipmi_get_channel_number: %s\n",
-                             ipmi_ctx_errormsg (state_data->ipmi_ctx));
-          return (CONFIG_ERR_NON_FATAL_ERROR);
-        }
+      if (!state_data->lan_channel_numbers_loaded)
+	{
+	  if ((ret = load_lan_channel_numbers (state_data)) != CONFIG_ERR_SUCCESS)
+	    {
+	      rv = ret;
+	      goto cleanup;
+	    }
+	}
+
+      if (!state_data->lan_channel_numbers_count)
+	{
+	  rv = CONFIG_ERR_NON_FATAL_ERROR;
+	  goto cleanup;
+	}
+
+      (*channel_number) = state_data->lan_channel_numbers[0];
     }
   else
-    lan_channel_number = state_data->prog_data->args->config_args.lan_channel_number;
-
-  state_data->lan_channel_number_initialized = 1;
-  state_data->lan_channel_number = lan_channel_number;
-  *channel_num = state_data->lan_channel_number;
-
-  return (CONFIG_ERR_SUCCESS);
+    (*channel_number) = state_data->prog_data->args->config_args.lan_channel_number;
+  
+  rv = CONFIG_ERR_SUCCESS;
+ cleanup:
+  return (rv);
 }
 
 config_err_t
-get_serial_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel_num)
+get_serial_channel_number (bmc_config_state_data_t *state_data,
+			   const char *section_name,
+			   uint8_t *channel_number)
 {
-  uint8_t serial_channel_number;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  config_err_t ret;
+ 
+  assert (state_data);
+  /* section_name can be NULL if want to force IPMI search */
+  assert (channel_number);
 
-  if (state_data->serial_channel_number_initialized)
+  /* For multi-channel cases, channel will be in the section name */
+
+  if (section_name)
     {
-      *channel_num = state_data->serial_channel_number;
-      return (CONFIG_ERR_SUCCESS);
+      char *ptr;
+
+      /* Special case for Serial_Channel_Channel_X */
+      if ((ptr = stristr (section_name, "Channel_Channel_")))
+	{
+	  (*channel_number) = atoi (ptr + strlen ("Channel_Channel_"));
+	  return (CONFIG_ERR_SUCCESS);
+	}
+
+      /* For all other sections with a channel number at the end of the section name */
+      if ((ptr = stristr (section_name, "Channel_")))
+	{
+	  (*channel_number) = atoi (ptr + strlen ("Channel_"));
+	  return (CONFIG_ERR_SUCCESS);
+	}
     }
+
+  /* for single-channel, channel is first one found */
 
   if (!state_data->prog_data->args->config_args.serial_channel_number_set)
     {
-      if (ipmi_get_channel_number (state_data->ipmi_ctx,
-                                   IPMI_CHANNEL_MEDIUM_TYPE_RS232,
-                                   &serial_channel_number) < 0)
-        {
-          if (state_data->prog_data->args->config_args.common.debug)
-            pstdout_fprintf (state_data->pstate,
-                             stderr,
-                             "ipmi_get_channel_number: %s\n",
-                             ipmi_ctx_errormsg (state_data->ipmi_ctx));
-          return (CONFIG_ERR_NON_FATAL_ERROR);
-        }
+      if (!state_data->serial_channel_numbers_loaded)
+	{
+	  if ((ret = load_serial_channel_numbers (state_data)) != CONFIG_ERR_SUCCESS)
+	    {
+	      rv = ret;
+	      goto cleanup;
+	    }
+	}
+
+      if (!state_data->serial_channel_numbers_count)
+	{
+	  rv = CONFIG_ERR_NON_FATAL_ERROR;
+	  goto cleanup;
+	}
+
+      (*channel_number) = state_data->serial_channel_numbers[0];
     }
   else
-    serial_channel_number = state_data->prog_data->args->config_args.serial_channel_number;
+    (*channel_number) = state_data->prog_data->args->config_args.serial_channel_number;
+  
+  rv = CONFIG_ERR_SUCCESS;
+ cleanup:
+  return (rv);
+}
 
-  state_data->serial_channel_number_initialized = 1;
-  state_data->serial_channel_number = serial_channel_number;
-  *channel_num = state_data->serial_channel_number;
+static void
+_sol_channel_number_save (bmc_config_state_data_t *state_data,
+			  uint8_t lan_channel_number,
+			  uint8_t sol_channel_number)
+{
+  assert (state_data);
+  assert (state_data->sol_channel_numbers_count < CHANNEL_NUMBERS_MAX);
 
-  return (CONFIG_ERR_SUCCESS);
+  state_data->sol_channel_numbers_lan_channel[state_data->sol_channel_numbers_count] = lan_channel_number;
+  state_data->sol_channel_numbers_sol_channel[state_data->sol_channel_numbers_count] = sol_channel_number;
+  state_data->sol_channel_numbers_count++;
 }
 
 config_err_t
-get_sol_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel_num)
+_get_sol_channel_number_for_channel (bmc_config_state_data_t *state_data,
+				     uint8_t lan_channel_number,
+				     uint8_t *channel_number)
 {
-  fiid_obj_t obj_cmd_rs = NULL;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
-  config_err_t rc;
+  config_err_t ret;
+  fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
-  uint8_t lan_channel_number;
+  int i;
 
-  if (state_data->sol_channel_number_initialized)
+  assert (state_data);
+  assert (channel_number);
+
+  for (i = 0; i < state_data->sol_channel_numbers_count; i++)
     {
-      *channel_num = state_data->sol_channel_number;
-      return (CONFIG_ERR_SUCCESS);
+      if (state_data->sol_channel_numbers_lan_channel[i] == lan_channel_number)
+	{
+	  (*channel_number) = state_data->sol_channel_numbers_sol_channel[i];
+	  goto out;
+	}
     }
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_sol_configuration_parameters_sol_payload_channel_rs)))
@@ -122,12 +251,6 @@ get_sol_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel_nu
                        stderr,
                        "fiid_obj_create: %s\n",
                        strerror (errno));
-      goto cleanup;
-    }
-
-  if ((rc = get_lan_channel_number (state_data, &lan_channel_number)) != CONFIG_ERR_SUCCESS)
-    {
-      rv = rc;
       goto cleanup;
     }
 
@@ -143,9 +266,8 @@ get_sol_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel_nu
           && (ipmi_check_completion_code (obj_cmd_rs,
                                           IPMI_COMP_CODE_SET_SOL_PARAMETER_NOT_SUPPORTED) == 1))
         {
-          state_data->sol_channel_number_initialized = 1;
-          state_data->sol_channel_number = lan_channel_number;
-          *channel_num = state_data->sol_channel_number;
+	  _sol_channel_number_save (state_data, lan_channel_number, lan_channel_number);
+          (*channel_number) = lan_channel_number;
           goto out;
         }
 
@@ -154,12 +276,12 @@ get_sol_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel_nu
                          stderr,
                          "ipmi_cmd_get_sol_configuration_parameters_sol_payload_channel: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
-
+      
       if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
                                                   obj_cmd_rs,
-                                                  &rc))
-        rv = rc;
-
+                                                  &ret))
+        rv = ret;
+      
       goto cleanup;
     }
 
@@ -171,9 +293,8 @@ get_sol_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel_nu
       goto cleanup;
     }
 
-  state_data->sol_channel_number_initialized = 1;
-  state_data->sol_channel_number = val;
-  *channel_num = state_data->sol_channel_number;
+  _sol_channel_number_save (state_data, lan_channel_number, val);
+  (*channel_number) = val;
 
  out:
   rv = CONFIG_ERR_SUCCESS;
@@ -183,64 +304,41 @@ get_sol_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel_nu
 }
 
 config_err_t
-get_number_of_users (bmc_config_state_data_t *state_data, uint8_t *number_of_users)
+get_sol_channel_number (bmc_config_state_data_t *state_data,
+			const char *section_name,
+			uint8_t *channel_number)
 {
-  fiid_obj_t obj_cmd_rs = NULL;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
-  config_err_t rc;
-  uint64_t val;
+  config_err_t ret;
   uint8_t lan_channel_number;
+  char *ptr;
 
-  if (state_data->number_of_users_initialized)
+  assert (state_data);
+  /* section_name can be NULL if want to force IPMI search */
+  assert (channel_number);
+
+  if (section_name
+      && (ptr = stristr (section_name, "Channel_")))
+    lan_channel_number = atoi (ptr + strlen ("Channel_"));
+  else
     {
-      *number_of_users = state_data->number_of_users;
-      return (CONFIG_ERR_SUCCESS);
+      if ((ret = get_lan_channel_number (state_data, section_name, &lan_channel_number)) != CONFIG_ERR_SUCCESS)
+	{
+	  rv = ret;
+	  goto cleanup;
+	}
     }
 
-  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_user_access_rs)))
+  if ((ret = _get_sol_channel_number_for_channel (state_data,
+						  lan_channel_number,
+						  channel_number)) != CONFIG_ERR_SUCCESS)
     {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_create: %s\n",
-                       strerror (errno));
+      rv = ret;
       goto cleanup;
     }
-
-  if ((rc = get_lan_channel_number (state_data, &lan_channel_number)) != CONFIG_ERR_SUCCESS)
-    {
-      rv = rc;
-      goto cleanup;
-    }
-
-  if (ipmi_cmd_get_user_access (state_data->ipmi_ctx,
-                                lan_channel_number,
-                                1, /* user_id number */
-                                obj_cmd_rs) < 0)
-    {
-      if (state_data->prog_data->args->config_args.common.debug)
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "ipmi_cmd_get_user_access: %s\n",
-                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
-      if (!IPMI_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
-        rv = CONFIG_ERR_NON_FATAL_ERROR;
-      goto cleanup;
-    }
-
-  if (FIID_OBJ_GET (obj_cmd_rs,
-                    "max_channel_user_ids",
-                    &val) < 0)
-    {
-      rv = CONFIG_ERR_NON_FATAL_ERROR;
-      goto cleanup;
-    }
-
-  state_data->number_of_users_initialized = 1;
-  state_data->number_of_users = val;
-  *number_of_users = state_data->number_of_users;
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
+

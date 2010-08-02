@@ -268,79 +268,80 @@ _ipmi_chassis_config (pstdout_state_t pstate,
         }
     }
 
-  switch (prog_data->args->config_args.action) {
-  case CONFIG_ACTION_CHECKOUT:
-    if (prog_data->args->config_args.section_strs)
-      {
-        struct config_section_str *sstr;
+  switch (prog_data->args->config_args.action)
+    {
+    case CONFIG_ACTION_CHECKOUT:
+      if (prog_data->args->config_args.section_strs)
+	{
+	  struct config_section_str *sstr;
 
-        /* note: argp validation catches if user specified --section
-         * and --keypair, so all_keys_if_none_specified should be '1'.
-         */
+	  /* note: argp validation catches if user specified --section
+	   * and --keypair, so all_keys_if_none_specified should be '1'.
+	   */
 
-        sstr = prog_data->args->config_args.section_strs;
-        while (sstr)
-          {
-            struct config_section *s;
-            config_err_t this_ret;
+	  sstr = prog_data->args->config_args.section_strs;
+	  while (sstr)
+	    {
+	      struct config_section *s;
+	      config_err_t this_ret;
 
-            if (!(s = config_find_section (state_data.sections,
-                                           sstr->section_name)))
-              {
-                pstdout_fprintf (pstate,
-                                 stderr,
-                                 "## FATAL: Cannot checkout section '%s'\n",
-                                 sstr->section_name);
-                continue;
-              }
+	      if (!(s = config_find_section (state_data.sections,
+					     sstr->section_name)))
+		{
+		  pstdout_fprintf (pstate,
+				   stderr,
+				   "## FATAL: Cannot checkout section '%s'\n",
+				   sstr->section_name);
+		  continue;
+		}
 
-            this_ret = config_checkout_section (pstate,
-                                                s,
-                                                &(prog_data->args->config_args),
-                                                1,
-                                                fp,
-                                                0,
-                                                &state_data);
-            if (this_ret != CONFIG_ERR_SUCCESS)
-              ret = this_ret;
-            if (ret == CONFIG_ERR_FATAL_ERROR)
-              break;
+	      this_ret = config_checkout_section (pstate,
+						  s,
+						  &(prog_data->args->config_args),
+						  1,
+						  fp,
+						  0,
+						  &state_data);
+	      if (this_ret != CONFIG_ERR_SUCCESS)
+		ret = this_ret;
+	      if (ret == CONFIG_ERR_FATAL_ERROR)
+		break;
 
-            sstr = sstr->next;
-          }
-      }
-    else
-      {
-        int all_keys_if_none_specified = 0;
+	      sstr = sstr->next;
+	    }
+	}
+      else
+	{
+	  int all_keys_if_none_specified = 0;
 
-        if (!prog_data->args->config_args.keypairs)
-          all_keys_if_none_specified++;
+	  if (!prog_data->args->config_args.keypairs)
+	    all_keys_if_none_specified++;
 
-        ret = config_checkout (pstate,
-                               state_data.sections,
-                               &(prog_data->args->config_args),
-                               all_keys_if_none_specified,
-                               fp,
-                               0,
-                               &state_data);
-      }
-    break;
-  case CONFIG_ACTION_COMMIT:
-    ret = config_commit (pstate,
-                         state_data.sections,
-                         &(prog_data->args->config_args),
-                         &state_data);
-    break;
-  case CONFIG_ACTION_DIFF:
-    ret = config_diff (pstate,
-                       state_data.sections,
-                       &(prog_data->args->config_args),
-                       &state_data);
-    break;
-  case CONFIG_ACTION_LIST_SECTIONS:
-    ret = config_output_sections_list (pstate, state_data.sections);
-    break;
-  }
+	  ret = config_checkout (pstate,
+				 state_data.sections,
+				 &(prog_data->args->config_args),
+				 all_keys_if_none_specified,
+				 fp,
+				 0,
+				 &state_data);
+	}
+      break;
+    case CONFIG_ACTION_COMMIT:
+      ret = config_commit (pstate,
+			   state_data.sections,
+			   &(prog_data->args->config_args),
+			   &state_data);
+      break;
+    case CONFIG_ACTION_DIFF:
+      ret = config_diff (pstate,
+			 state_data.sections,
+			 &(prog_data->args->config_args),
+			 &state_data);
+      break;
+    case CONFIG_ACTION_LIST_SECTIONS:
+      ret = config_output_sections_list (pstate, state_data.sections);
+      break;
+    }
 
   if (ret == CONFIG_ERR_FATAL_ERROR || ret == CONFIG_ERR_NON_FATAL_ERROR)
     {

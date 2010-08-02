@@ -497,9 +497,15 @@ filter_type_checkout (const char *section_name,
                       struct config_keyvalue *kv,
                       void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   config_err_t ret;
   struct event_filter_table eft;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
@@ -519,9 +525,15 @@ filter_type_commit (const char *section_name,
                     const struct config_keyvalue *kv,
                     void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   config_err_t ret;
   struct event_filter_table eft;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
@@ -540,9 +552,15 @@ enable_filter_checkout (const char *section_name,
                         struct config_keyvalue *kv,
                         void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   config_err_t ret;
   struct event_filter_table eft;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
@@ -562,9 +580,15 @@ enable_filter_commit (const char *section_name,
                       const struct config_keyvalue *kv,
                       void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   config_err_t ret;
   struct event_filter_table eft;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
@@ -583,9 +607,15 @@ event_filter_action_alert_checkout (const char *section_name,
                                     struct config_keyvalue *kv,
                                     void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   config_err_t ret;
   struct event_filter_table eft;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
@@ -605,9 +635,15 @@ event_filter_action_alert_commit (const char *section_name,
                                   const struct config_keyvalue *kv,
                                   void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   config_err_t ret;
   struct event_filter_table eft;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
@@ -626,9 +662,15 @@ event_filter_action_power_off_checkout (const char *section_name,
                                         struct config_keyvalue *kv,
                                         void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   config_err_t ret;
   struct event_filter_table eft;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
@@ -648,9 +690,15 @@ event_filter_action_power_off_commit (const char *section_name,
                                       const struct config_keyvalue *kv,
                                       void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   config_err_t ret;
   struct event_filter_table eft;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
@@ -669,9 +717,15 @@ event_filter_action_reset_checkout (const char *section_name,
                                     struct config_keyvalue *kv,
                                     void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   config_err_t ret;
   struct event_filter_table eft;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
@@ -691,9 +745,15 @@ event_filter_action_reset_commit (const char *section_name,
                                   const struct config_keyvalue *kv,
                                   void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   config_err_t ret;
   struct event_filter_table eft;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
@@ -712,9 +772,15 @@ event_filter_action_power_cycle_checkout (const char *section_name,
                                           struct config_keyvalue *kv,
                                           void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   config_err_t ret;
   struct event_filter_table eft;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
@@ -734,9 +800,15 @@ event_filter_action_power_cycle_commit (const char *section_name,
                                         const struct config_keyvalue *kv,
                                         void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   config_err_t ret;
   struct event_filter_table eft;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
@@ -755,9 +827,15 @@ event_filter_action_oem_checkout (const char *section_name,
                                   struct config_keyvalue *kv,
                                   void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   config_err_t ret;
   struct event_filter_table eft;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
@@ -777,9 +855,15 @@ event_filter_action_oem_commit (const char *section_name,
                                 const struct config_keyvalue *kv,
                                 void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   config_err_t ret;
   struct event_filter_table eft;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
@@ -798,9 +882,15 @@ event_filter_action_diagnostic_interrupt_checkout (const char *section_name,
                                                    struct config_keyvalue *kv,
                                                    void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   config_err_t ret;
   struct event_filter_table eft;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
@@ -820,9 +910,15 @@ event_filter_action_diagnostic_interrupt_commit (const char *section_name,
                                                  const struct config_keyvalue *kv,
                                                  void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   config_err_t ret;
   struct event_filter_table eft;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
@@ -841,9 +937,15 @@ event_filter_action_group_control_operation_checkout (const char *section_name,
                                                       struct config_keyvalue *kv,
                                                       void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   config_err_t ret;
   struct event_filter_table eft;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
@@ -863,9 +965,15 @@ event_filter_action_group_control_operation_commit (const char *section_name,
                                                     const struct config_keyvalue *kv,
                                                     void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   config_err_t ret;
   struct event_filter_table eft;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
@@ -884,9 +992,15 @@ alert_policy_number_checkout (const char *section_name,
                               struct config_keyvalue *kv,
                               void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   config_err_t ret;
   struct event_filter_table eft;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
@@ -906,9 +1020,15 @@ alert_policy_number_commit (const char *section_name,
                             const struct config_keyvalue *kv,
                             void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   config_err_t ret;
   struct event_filter_table eft;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
@@ -927,9 +1047,15 @@ group_control_selector_checkout (const char *section_name,
                                  struct config_keyvalue *kv,
                                  void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   config_err_t ret;
   struct event_filter_table eft;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
@@ -949,9 +1075,15 @@ group_control_selector_commit (const char *section_name,
                                const struct config_keyvalue *kv,
                                void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   config_err_t ret;
   struct event_filter_table eft;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
@@ -970,9 +1102,15 @@ event_severity_checkout (const char *section_name,
                          struct config_keyvalue *kv,
                          void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   config_err_t ret;
   struct event_filter_table eft;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
@@ -992,9 +1130,15 @@ event_severity_commit (const char *section_name,
                        const struct config_keyvalue *kv,
                        void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   config_err_t ret;
   struct event_filter_table eft;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
@@ -1013,9 +1157,15 @@ generator_id_byte_1_checkout (const char *section_name,
                               struct config_keyvalue *kv,
                               void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   config_err_t ret;
   struct event_filter_table eft;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
@@ -1035,9 +1185,15 @@ generator_id_byte_1_commit (const char *section_name,
                             const struct config_keyvalue *kv,
                             void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   config_err_t ret;
   struct event_filter_table eft;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
@@ -1057,9 +1213,15 @@ generator_id_byte_2_checkout (const char *section_name,
                               struct config_keyvalue *kv,
                               void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   config_err_t ret;
   struct event_filter_table eft;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
@@ -1079,9 +1241,15 @@ generator_id_byte_2_commit (const char *section_name,
                             const struct config_keyvalue *kv,
                             void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   config_err_t ret;
   struct event_filter_table eft;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
@@ -1100,10 +1268,16 @@ sensor_type_checkout (const char *section_name,
                       struct config_keyvalue *kv,
                       void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   config_err_t ret;
   struct event_filter_table eft;
   char *str;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
@@ -1136,10 +1310,16 @@ sensor_type_commit (const char *section_name,
                     const struct config_keyvalue *kv,
                     void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   config_err_t ret;
   struct event_filter_table eft;
   int num;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
@@ -1163,9 +1343,15 @@ sensor_number_checkout (const char *section_name,
                         struct config_keyvalue *kv,
                         void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   config_err_t ret;
   struct event_filter_table eft;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
@@ -1185,9 +1371,15 @@ sensor_number_commit (const char *section_name,
                       const struct config_keyvalue *kv,
                       void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   config_err_t ret;
   struct event_filter_table eft;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
@@ -1206,9 +1398,15 @@ event_trigger_checkout (const char *section_name,
                         struct config_keyvalue *kv,
                         void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   config_err_t ret;
   struct event_filter_table eft;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
@@ -1228,9 +1426,15 @@ event_trigger_commit (const char *section_name,
                       const struct config_keyvalue *kv,
                       void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   config_err_t ret;
   struct event_filter_table eft;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
@@ -1249,9 +1453,15 @@ event_data1_offset_mask_checkout (const char *section_name,
                                   struct config_keyvalue *kv,
                                   void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   config_err_t ret;
   struct event_filter_table eft;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
@@ -1271,9 +1481,15 @@ event_data1_offset_mask_commit (const char *section_name,
                                 const struct config_keyvalue *kv,
                                 void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   config_err_t ret;
   struct event_filter_table eft;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
@@ -1292,9 +1508,15 @@ event_data1_and_mask_checkout (const char *section_name,
                                struct config_keyvalue *kv,
                                void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   config_err_t ret;
   struct event_filter_table eft;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
@@ -1314,9 +1536,15 @@ event_data1_and_mask_commit (const char *section_name,
                              const struct config_keyvalue *kv,
                              void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   config_err_t ret;
   struct event_filter_table eft;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
@@ -1335,9 +1563,15 @@ event_data1_compare1_checkout (const char *section_name,
                                struct config_keyvalue *kv,
                                void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   config_err_t ret;
   struct event_filter_table eft;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
@@ -1357,9 +1591,15 @@ event_data1_compare1_commit (const char *section_name,
                              const struct config_keyvalue *kv,
                              void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   config_err_t ret;
   struct event_filter_table eft;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
@@ -1378,9 +1618,15 @@ event_data1_compare2_checkout (const char *section_name,
                                struct config_keyvalue *kv,
                                void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   config_err_t ret;
   struct event_filter_table eft;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
@@ -1400,9 +1646,15 @@ event_data1_compare2_commit (const char *section_name,
                              const struct config_keyvalue *kv,
                              void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   config_err_t ret;
   struct event_filter_table eft;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
@@ -1421,9 +1673,15 @@ event_data2_and_mask_checkout (const char *section_name,
                                struct config_keyvalue *kv,
                                void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   config_err_t ret;
   struct event_filter_table eft;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
@@ -1443,9 +1701,15 @@ event_data2_and_mask_commit (const char *section_name,
                              const struct config_keyvalue *kv,
                              void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   config_err_t ret;
   struct event_filter_table eft;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
@@ -1464,9 +1728,15 @@ event_data2_compare1_checkout (const char *section_name,
                                struct config_keyvalue *kv,
                                void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   config_err_t ret;
   struct event_filter_table eft;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
@@ -1486,9 +1756,15 @@ event_data2_compare1_commit (const char *section_name,
                              const struct config_keyvalue *kv,
                              void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   config_err_t ret;
   struct event_filter_table eft;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
@@ -1507,9 +1783,15 @@ event_data2_compare2_checkout (const char *section_name,
                                struct config_keyvalue *kv,
                                void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   config_err_t ret;
   struct event_filter_table eft;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
@@ -1529,9 +1811,15 @@ event_data2_compare2_commit (const char *section_name,
                              const struct config_keyvalue *kv,
                              void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   config_err_t ret;
   struct event_filter_table eft;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
@@ -1550,9 +1838,15 @@ event_data3_and_mask_checkout (const char *section_name,
                                struct config_keyvalue *kv,
                                void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   config_err_t ret;
   struct event_filter_table eft;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
@@ -1572,9 +1866,15 @@ event_data3_and_mask_commit (const char *section_name,
                              const struct config_keyvalue *kv,
                              void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   config_err_t ret;
   struct event_filter_table eft;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
@@ -1593,9 +1893,15 @@ event_data3_compare1_checkout (const char *section_name,
                                struct config_keyvalue *kv,
                                void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   config_err_t ret;
   struct event_filter_table eft;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
@@ -1615,9 +1921,15 @@ event_data3_compare1_commit (const char *section_name,
                              const struct config_keyvalue *kv,
                              void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   config_err_t ret;
   struct event_filter_table eft;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
@@ -1636,9 +1948,15 @@ event_data3_compare2_checkout (const char *section_name,
                                struct config_keyvalue *kv,
                                void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   config_err_t ret;
   struct event_filter_table eft;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
@@ -1658,9 +1976,15 @@ event_data3_compare2_commit (const char *section_name,
                              const struct config_keyvalue *kv,
                              void *arg)
 {
-  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data;
   config_err_t ret;
   struct event_filter_table eft;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_pef_config_state_data_t *)arg;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
@@ -1675,21 +1999,15 @@ event_data3_compare2_commit (const char *section_name,
 }
 
 struct config_section *
-ipmi_pef_config_event_filter_table_section_get (ipmi_pef_config_state_data_t *state_data, int num)
+ipmi_pef_config_event_filter_table_section_get (ipmi_pef_config_state_data_t *state_data, unsigned int num)
 {
   struct config_section *section = NULL;
   char buf[CONFIG_MAX_SECTION_NAME_LEN];
 
-  if (num <= 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "Invalid Num = %d\n",
-                       num);
-      return (NULL);
-    }
+  assert (state_data);
+  assert (num);
 
-  snprintf (buf, CONFIG_MAX_SECTION_NAME_LEN, "Event_Filter_%d", num);
+  snprintf (buf, CONFIG_MAX_SECTION_NAME_LEN, "Event_Filter_%u", num);
 
   if (!(section = config_section_create (state_data->pstate,
                                          buf,

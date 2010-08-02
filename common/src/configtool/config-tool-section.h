@@ -37,6 +37,17 @@ struct config_section *config_section_create (pstdout_state_t pstate,
                                               Section_Pre_Commit section_pre_commit,
                                               Section_Post_Commit section_post_commit);
 
+/* -1 for channel index indicates do nothing, do same as config_section_create */
+struct config_section *config_section_multi_channel_create (pstdout_state_t pstate,
+							    const char *section_name_base_str,
+							    const char *section_comment,
+							    Section_Pre_Commit section_pre_commit,
+							    Section_Post_Commit section_post_commit,
+							    unsigned int config_flags,
+							    int channel_index,
+							    uint8_t *channel_numbers,
+							    unsigned int channel_numbers_count);
+
 void config_section_destroy (struct config_section *section);
 
 int config_section_add_key (pstdout_state_t pstate,
@@ -47,6 +58,19 @@ int config_section_add_key (pstdout_state_t pstate,
                             Key_Checkout checkout,
                             Key_Commit commit,
                             Key_Validate validate);
+
+/* -1 for channel index indicates do nothing, do same as config_section_add_key */
+int config_section_multi_channel_add_key (pstdout_state_t pstate,
+					  struct config_section *section,
+					  const char *key_name_base_str,
+					  const char *description,
+					  unsigned int flags,
+					  Key_Checkout checkout,
+					  Key_Commit commit,
+					  Key_Validate validate,
+					  int channel_index,
+					  uint8_t *channel_numbers,
+					  unsigned int channel_numbers_count);
 
 int config_section_add_keyvalue (pstdout_state_t pstate,
                                  struct config_section *section,

@@ -59,12 +59,18 @@ enable_sol_checkout (const char *section_name,
                      struct config_keyvalue *kv,
                      void *arg)
 {
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  bmc_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
   uint8_t channel_number;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (bmc_config_state_data_t *)arg;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_sol_configuration_parameters_sol_enable_rs)))
     {
@@ -75,7 +81,7 @@ enable_sol_checkout (const char *section_name,
       goto cleanup;
     }
 
-  if ((ret = get_sol_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_sol_channel_number (state_data, section_name, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -127,11 +133,17 @@ enable_sol_commit (const char *section_name,
                    const struct config_keyvalue *kv,
                    void *arg)
 {
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  bmc_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
   uint8_t channel_number;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (bmc_config_state_data_t *)arg;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_sol_configuration_parameters_rs)))
     {
@@ -142,7 +154,7 @@ enable_sol_commit (const char *section_name,
       goto cleanup;
     }
 
-  if ((ret = get_sol_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_sol_channel_number (state_data, section_name, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -175,6 +187,7 @@ enable_sol_commit (const char *section_name,
 
 static config_err_t
 _get_sol_sol_authentication (bmc_config_state_data_t *state_data,
+			     const char *section_name,
                              struct sol_authentication *sa)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -184,6 +197,7 @@ _get_sol_sol_authentication (bmc_config_state_data_t *state_data,
   uint8_t channel_number;
 
   assert (state_data);
+  assert (section_name);
   assert (sa);
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_sol_configuration_parameters_sol_authentication_rs)))
@@ -195,7 +209,7 @@ _get_sol_sol_authentication (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if ((ret = get_sol_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_sol_channel_number (state_data, section_name, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -260,6 +274,7 @@ _get_sol_sol_authentication (bmc_config_state_data_t *state_data,
 
 static config_err_t
 _set_sol_sol_authentication (bmc_config_state_data_t *state_data,
+			     const char *section_name,
                              struct sol_authentication *sa)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -268,6 +283,7 @@ _set_sol_sol_authentication (bmc_config_state_data_t *state_data,
   uint8_t channel_number;
 
   assert (state_data);
+  assert (section_name);
   assert (sa);
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_sol_configuration_parameters_rs)))
@@ -279,7 +295,7 @@ _set_sol_sol_authentication (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if ((ret = get_sol_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_sol_channel_number (state_data, section_name, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -317,11 +333,17 @@ sol_privilege_level_checkout (const char *section_name,
                               struct config_keyvalue *kv,
                               void *arg)
 {
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  bmc_config_state_data_t *state_data;
   struct sol_authentication sa;
   config_err_t ret;
 
-  if ((ret = _get_sol_sol_authentication (state_data, &sa)) != CONFIG_ERR_SUCCESS)
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (bmc_config_state_data_t *)arg;
+
+  if ((ret = _get_sol_sol_authentication (state_data, section_name, &sa)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
   if (config_section_update_keyvalue_output (state_data->pstate,
@@ -337,16 +359,22 @@ sol_privilege_level_commit (const char *section_name,
                             const struct config_keyvalue *kv,
                             void *arg)
 {
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  bmc_config_state_data_t *state_data;
   struct sol_authentication sa;
   config_err_t ret;
 
-  if ((ret = _get_sol_sol_authentication (state_data, &sa)) != CONFIG_ERR_SUCCESS)
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (bmc_config_state_data_t *)arg;
+
+  if ((ret = _get_sol_sol_authentication (state_data, section_name, &sa)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
   sa.sol_privilege_level = privilege_level_number (kv->value_input);
 
-  return (_set_sol_sol_authentication (state_data, &sa));
+  return (_set_sol_sol_authentication (state_data, section_name, &sa));
 }
 
 static config_err_t
@@ -354,11 +382,17 @@ force_sol_payload_authentication_checkout (const char *section_name,
                                            struct config_keyvalue *kv,
                                            void *arg)
 {
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  bmc_config_state_data_t *state_data;
   struct sol_authentication sa;
   config_err_t ret;
 
-  if ((ret = _get_sol_sol_authentication (state_data, &sa)) != CONFIG_ERR_SUCCESS)
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (bmc_config_state_data_t *)arg;
+
+  if ((ret = _get_sol_sol_authentication (state_data, section_name, &sa)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
   if (config_section_update_keyvalue_output (state_data->pstate,
@@ -374,16 +408,22 @@ force_sol_payload_authentication_commit (const char *section_name,
                                          const struct config_keyvalue *kv,
                                          void *arg)
 {
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  bmc_config_state_data_t *state_data;
   struct sol_authentication sa;
   config_err_t ret;
 
-  if ((ret = _get_sol_sol_authentication (state_data, &sa)) != CONFIG_ERR_SUCCESS)
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (bmc_config_state_data_t *)arg;
+
+  if ((ret = _get_sol_sol_authentication (state_data, section_name, &sa)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
   sa.force_sol_payload_authentication = same (kv->value_input, "yes") ? 1 : 0;
 
-  return (_set_sol_sol_authentication (state_data, &sa));
+  return (_set_sol_sol_authentication (state_data, section_name, &sa));
 }
 
 static config_err_t
@@ -391,11 +431,17 @@ force_sol_payload_encryption_checkout (const char *section_name,
                                        struct config_keyvalue *kv,
                                        void *arg)
 {
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  bmc_config_state_data_t *state_data;
   struct sol_authentication sa;
   config_err_t ret;
 
-  if ((ret = _get_sol_sol_authentication (state_data, &sa)) != CONFIG_ERR_SUCCESS)
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (bmc_config_state_data_t *)arg;
+
+  if ((ret = _get_sol_sol_authentication (state_data, section_name, &sa)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
   if (config_section_update_keyvalue_output (state_data->pstate,
@@ -411,20 +457,27 @@ force_sol_payload_encryption_commit (const char *section_name,
                                      const struct config_keyvalue *kv,
                                      void *arg)
 {
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  bmc_config_state_data_t *state_data;
   struct sol_authentication sa;
   config_err_t ret;
 
-  if ((ret = _get_sol_sol_authentication (state_data, &sa)) != CONFIG_ERR_SUCCESS)
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (bmc_config_state_data_t *)arg;
+
+  if ((ret = _get_sol_sol_authentication (state_data, section_name, &sa)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
   sa.force_sol_payload_encryption = same (kv->value_input, "yes") ? 1 : 0;
 
-  return (_set_sol_sol_authentication (state_data, &sa));
+  return (_set_sol_sol_authentication (state_data, section_name, &sa));
 }
 
 static config_err_t
 _get_sol_character_accumulate_interval_and_send_threshold (bmc_config_state_data_t *state_data,
+							   const char *section_name,
                                                            struct interval_and_threshold *it)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -434,6 +487,7 @@ _get_sol_character_accumulate_interval_and_send_threshold (bmc_config_state_data
   uint8_t channel_number;
 
   assert (state_data);
+  assert (section_name);
   assert (it);
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_sol_configuration_parameters_character_accumulate_interval_and_send_threshold_rs)))
@@ -445,7 +499,7 @@ _get_sol_character_accumulate_interval_and_send_threshold (bmc_config_state_data
       goto cleanup;
     }
 
-  if ((ret = get_sol_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_sol_channel_number (state_data, section_name, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -500,6 +554,7 @@ _get_sol_character_accumulate_interval_and_send_threshold (bmc_config_state_data
 
 static config_err_t
 _set_sol_character_accumulate_interval_and_send_threshold (bmc_config_state_data_t *state_data,
+							   const char *section_name,
                                                            struct interval_and_threshold *it)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -508,6 +563,7 @@ _set_sol_character_accumulate_interval_and_send_threshold (bmc_config_state_data
   uint8_t channel_number;
 
   assert (state_data);
+  assert (section_name);
   assert (it);
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_sol_configuration_parameters_rs)))
@@ -519,7 +575,7 @@ _set_sol_character_accumulate_interval_and_send_threshold (bmc_config_state_data
       goto cleanup;
     }
 
-  if ((ret = get_sol_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_sol_channel_number (state_data, section_name, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -556,11 +612,17 @@ character_accumulate_interval_checkout (const char *section_name,
                                         struct config_keyvalue *kv,
                                         void *arg)
 {
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  bmc_config_state_data_t *state_data;
   struct interval_and_threshold it;
   config_err_t ret;
 
-  if ((ret = _get_sol_character_accumulate_interval_and_send_threshold (state_data, &it)) != CONFIG_ERR_SUCCESS)
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (bmc_config_state_data_t *)arg;
+
+  if ((ret = _get_sol_character_accumulate_interval_and_send_threshold (state_data, section_name, &it)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
   if (config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
@@ -576,16 +638,22 @@ character_accumulate_interval_commit (const char *section_name,
                                       const struct config_keyvalue *kv,
                                       void *arg)
 {
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  bmc_config_state_data_t *state_data;
   struct interval_and_threshold it;
   config_err_t ret;
 
-  if ((ret = _get_sol_character_accumulate_interval_and_send_threshold (state_data, &it)) != CONFIG_ERR_SUCCESS)
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (bmc_config_state_data_t *)arg;
+
+  if ((ret = _get_sol_character_accumulate_interval_and_send_threshold (state_data, section_name, &it)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
   it.character_accumulate_interval = atoi (kv->value_input);
 
-  return (_set_sol_character_accumulate_interval_and_send_threshold (state_data, &it));
+  return (_set_sol_character_accumulate_interval_and_send_threshold (state_data, section_name, &it));
 }
 
 static config_err_t
@@ -593,11 +661,17 @@ character_send_threshold_checkout (const char *section_name,
                                    struct config_keyvalue *kv,
                                    void *arg)
 {
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  bmc_config_state_data_t *state_data;
   struct interval_and_threshold it;
   config_err_t ret;
 
-  if ((ret = _get_sol_character_accumulate_interval_and_send_threshold (state_data, &it)) != CONFIG_ERR_SUCCESS)
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (bmc_config_state_data_t *)arg;
+
+  if ((ret = _get_sol_character_accumulate_interval_and_send_threshold (state_data, section_name, &it)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
   if (config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
@@ -613,20 +687,27 @@ character_send_threshold_commit (const char *section_name,
                                  const struct config_keyvalue *kv,
                                  void *arg)
 {
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  bmc_config_state_data_t *state_data;
   struct interval_and_threshold it;
   config_err_t ret;
 
-  if ((ret = _get_sol_character_accumulate_interval_and_send_threshold (state_data, &it)) != CONFIG_ERR_SUCCESS)
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (bmc_config_state_data_t *)arg;
+
+  if ((ret = _get_sol_character_accumulate_interval_and_send_threshold (state_data, section_name, &it)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
   it.character_send_threshold = atoi (kv->value_input);
 
-  return (_set_sol_character_accumulate_interval_and_send_threshold (state_data, &it));
+  return (_set_sol_character_accumulate_interval_and_send_threshold (state_data, section_name, &it));
 }
 
 static config_err_t
 _get_sol_sol_retry (bmc_config_state_data_t *state_data,
+		    const char *section_name,
                     struct sol_retry *sr)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -636,6 +717,7 @@ _get_sol_sol_retry (bmc_config_state_data_t *state_data,
   uint8_t channel_number;
 
   assert (state_data);
+  assert (section_name);
   assert (sr);
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_sol_configuration_parameters_sol_retry_rs)))
@@ -647,7 +729,7 @@ _get_sol_sol_retry (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if ((ret = get_sol_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_sol_channel_number (state_data, section_name, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -702,12 +784,17 @@ _get_sol_sol_retry (bmc_config_state_data_t *state_data,
 
 static config_err_t
 _set_sol_sol_retry (bmc_config_state_data_t *state_data,
+		    const char *section_name,
                     struct sol_retry *sr)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
   uint8_t channel_number;
+
+  assert (state_data);
+  assert (section_name);
+  assert (sr);
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_sol_configuration_parameters_rs)))
     {
@@ -718,7 +805,7 @@ _set_sol_sol_retry (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if ((ret = get_sol_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_sol_channel_number (state_data, section_name, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -755,11 +842,17 @@ sol_retry_count_checkout (const char *section_name,
                           struct config_keyvalue *kv,
                           void *arg)
 {
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  bmc_config_state_data_t *state_data;
   struct sol_retry sr;
   config_err_t ret;
 
-  if ((ret = _get_sol_sol_retry (state_data, &sr)) != CONFIG_ERR_SUCCESS)
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (bmc_config_state_data_t *)arg;
+
+  if ((ret = _get_sol_sol_retry (state_data, section_name, &sr)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
   if (config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
@@ -776,16 +869,22 @@ sol_retry_count_commit (const char *section_name,
                         const struct config_keyvalue *kv,
                         void *arg)
 {
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  bmc_config_state_data_t *state_data;
   struct sol_retry sr;
   config_err_t ret;
 
-  if ((ret = _get_sol_sol_retry (state_data, &sr)) != CONFIG_ERR_SUCCESS)
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (bmc_config_state_data_t *)arg;
+
+  if ((ret = _get_sol_sol_retry (state_data, section_name, &sr)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
   sr.retry_count = atoi (kv->value_input);
 
-  return (_set_sol_sol_retry (state_data, &sr));
+  return (_set_sol_sol_retry (state_data, section_name, &sr));
 }
 
 static config_err_t
@@ -793,11 +892,17 @@ sol_retry_interval_checkout (const char *section_name,
                              struct config_keyvalue *kv,
                              void *arg)
 {
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  bmc_config_state_data_t *state_data;
   struct sol_retry sr;
   config_err_t ret;
 
-  if ((ret = _get_sol_sol_retry (state_data, &sr)) != CONFIG_ERR_SUCCESS)
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (bmc_config_state_data_t *)arg;
+
+  if ((ret = _get_sol_sol_retry (state_data, section_name, &sr)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
   if (config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
@@ -813,16 +918,22 @@ sol_retry_interval_commit (const char *section_name,
                            const struct config_keyvalue *kv,
                            void *arg)
 {
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  bmc_config_state_data_t *state_data;
   struct sol_retry sr;
   config_err_t ret;
 
-  if ((ret = _get_sol_sol_retry (state_data, &sr)) != CONFIG_ERR_SUCCESS)
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (bmc_config_state_data_t *)arg;
+
+  if ((ret = _get_sol_sol_retry (state_data, section_name, &sr)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
   sr.retry_interval = atoi (kv->value_input);
 
-  return (_set_sol_sol_retry (state_data, &sr));
+  return (_set_sol_sol_retry (state_data, section_name, &sr));
 }
 
 static config_err_t
@@ -830,13 +941,19 @@ non_volatile_bit_rate_checkout (const char *section_name,
                                 struct config_keyvalue *kv,
                                 void *arg)
 {
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  bmc_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t bit_rate;
   uint64_t val;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
   uint8_t channel_number;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (bmc_config_state_data_t *)arg;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_sol_configuration_parameters_sol_non_volatile_bit_rate_rs)))
     {
@@ -847,7 +964,7 @@ non_volatile_bit_rate_checkout (const char *section_name,
       goto cleanup;
     }
 
-  if ((ret = get_sol_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_sol_channel_number (state_data, section_name, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -900,11 +1017,17 @@ non_volatile_bit_rate_commit (const char *section_name,
                               const struct config_keyvalue *kv,
                               void *arg)
 {
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  bmc_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
   uint8_t channel_number;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (bmc_config_state_data_t *)arg;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_sol_configuration_parameters_rs)))
     {
@@ -915,7 +1038,7 @@ non_volatile_bit_rate_commit (const char *section_name,
       goto cleanup;
     }
 
-  if ((ret = get_sol_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_sol_channel_number (state_data, section_name, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -951,13 +1074,19 @@ volatile_bit_rate_checkout (const char *section_name,
                             struct config_keyvalue *kv,
                             void *arg)
 {
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  bmc_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t bit_rate;
   uint64_t val;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
   uint8_t channel_number;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (bmc_config_state_data_t *)arg;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_sol_configuration_parameters_sol_volatile_bit_rate_rs)))
     {
@@ -968,7 +1097,7 @@ volatile_bit_rate_checkout (const char *section_name,
       goto cleanup;
     }
 
-  if ((ret = get_sol_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_sol_channel_number (state_data, section_name, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -1021,11 +1150,17 @@ volatile_bit_rate_commit (const char *section_name,
                           const struct config_keyvalue *kv,
                           void *arg)
 {
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  bmc_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
   uint8_t channel_number;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (bmc_config_state_data_t *)arg;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_sol_configuration_parameters_rs)))
     {
@@ -1036,7 +1171,7 @@ volatile_bit_rate_commit (const char *section_name,
       goto cleanup;
     }
 
-  if ((ret = get_sol_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_sol_channel_number (state_data, section_name, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -1072,13 +1207,19 @@ sol_payload_port_checkout (const char *section_name,
                            struct config_keyvalue *kv,
                            void *arg)
 {
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  bmc_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
   uint16_t port_number;
   uint64_t val;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
   uint8_t channel_number;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (bmc_config_state_data_t *)arg;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_sol_configuration_parameters_sol_payload_port_number_rs)))
     {
@@ -1089,7 +1230,7 @@ sol_payload_port_checkout (const char *section_name,
       goto cleanup;
     }
 
-  if ((ret = get_sol_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_sol_channel_number (state_data, section_name, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -1142,11 +1283,17 @@ sol_payload_port_commit (const char *section_name,
                          const struct config_keyvalue *kv,
                          void *arg)
 {
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  bmc_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
   uint8_t channel_number;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (bmc_config_state_data_t *)arg;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_sol_configuration_parameters_rs)))
     {
@@ -1157,7 +1304,7 @@ sol_payload_port_commit (const char *section_name,
       goto cleanup;
     }
 
-  if ((ret = get_sol_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_sol_channel_number (state_data, section_name, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -1189,7 +1336,9 @@ sol_payload_port_commit (const char *section_name,
 }
 
 struct config_section *
-bmc_config_sol_conf_section_get (bmc_config_state_data_t *state_data)
+bmc_config_sol_conf_section_get (bmc_config_state_data_t *state_data,
+				 unsigned int config_flags,
+                                 int channel_index)
 {
   struct config_section * section = NULL;
   char *section_comment =
@@ -1207,14 +1356,19 @@ bmc_config_sol_conf_section_get (bmc_config_state_data_t *state_data)
     "and \"Volatile_Bit_Rate\" should both be set to the appropriate baud "
     "rate for your system.  This is typically the same baud rate configured "
     "in the BIOS and/or operating system.";
+  char *section_name_base_str = "SOL_Conf";
 
-  if (!(section = config_section_create (state_data->pstate,
-                                         "SOL_Conf",
-                                         "SOL_Conf",
-                                         section_comment,
-                                         0,
-                                         NULL,
-                                         NULL)))
+  assert (state_data);
+
+  if (!(section = config_section_multi_channel_create (state_data->pstate,
+						       section_name_base_str,
+						       section_comment,
+						       NULL,
+						       NULL,
+						       config_flags,
+						       channel_index,
+						       state_data->lan_channel_numbers,
+						       state_data->lan_channel_numbers_count)))
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,

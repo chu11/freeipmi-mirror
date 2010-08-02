@@ -36,7 +36,8 @@
 #include "pstdout.h"
 
 static config_err_t
-_rmcpplus_cipher_suite_id_privilege_setup (bmc_config_state_data_t *state_data)
+_rmcpplus_cipher_suite_id_privilege_setup (bmc_config_state_data_t *state_data,
+					   const char *section_name)
 {
   fiid_obj_t obj_cmd_count_rs = NULL;
   fiid_obj_t obj_cmd_id_rs = NULL;
@@ -48,13 +49,14 @@ _rmcpplus_cipher_suite_id_privilege_setup (bmc_config_state_data_t *state_data)
   unsigned int i;
 
   assert (state_data);
+  assert (section_name);
 
   if (state_data->cipher_suite_entry_count
       && state_data->cipher_suite_id_supported_set
       && state_data->cipher_suite_priv_set)
     return (CONFIG_ERR_SUCCESS);
 
-  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number (state_data, section_name, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -291,12 +293,18 @@ id_checkout (const char *section_name,
              void *arg,
              int id)
 {
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  bmc_config_state_data_t *state_data;
   config_err_t ret;
   uint8_t privilege;
   int i, id_found = 0;
 
-  if ((ret = _rmcpplus_cipher_suite_id_privilege_setup (state_data)) != CONFIG_ERR_SUCCESS)
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (bmc_config_state_data_t *)arg;
+
+  if ((ret = _rmcpplus_cipher_suite_id_privilege_setup (state_data, section_name)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
   for (i = 0; i < state_data->cipher_suite_entry_count; i++)
@@ -327,7 +335,7 @@ id_commit (const char *section_name,
            void *arg,
            int id)
 {
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  bmc_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
@@ -335,7 +343,13 @@ id_commit (const char *section_name,
   uint8_t privs[CIPHER_SUITE_LEN];
   uint8_t privilege;
 
-  if ((ret = _rmcpplus_cipher_suite_id_privilege_setup (state_data)) != CONFIG_ERR_SUCCESS)
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (bmc_config_state_data_t *)arg;
+
+  if ((ret = _rmcpplus_cipher_suite_id_privilege_setup (state_data, section_name)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_lan_configuration_parameters_rs)))
@@ -347,7 +361,7 @@ id_commit (const char *section_name,
       goto cleanup;
     }
 
-  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number (state_data, section_name, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -420,7 +434,9 @@ id_commit_cb (const char *section_name,
 }
 
 struct config_section *
-bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_data)
+bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_data,
+						unsigned int config_flags,
+						int channel_index)
 {
   struct config_section *section = NULL;
   char *section_comment =
@@ -433,14 +449,19 @@ bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_d
     "algorithms for IPMI 2.0.  Typically, the highest privilege level any "
     "username configured should set for support under a cipher suite ID. "
     "This is typically \"Administrator\".";
+  char *section_name_base_str = "Rmcpplus_Conf_Privilege";
 
-  if (!(section = config_section_create (state_data->pstate,
-                                         "Rmcpplus_Conf_Privilege",
-                                         "Rmcpplus_Conf_Privilege",
-                                         section_comment,
-                                         0,
-                                         NULL,
-                                         NULL)))
+  assert (state_data);
+  
+  if (!(section = config_section_multi_channel_create (state_data->pstate,
+						       section_name_base_str,
+						       section_comment,
+						       NULL,
+						       NULL,
+						       config_flags,
+						       channel_index,
+						       state_data->lan_channel_numbers,
+						       state_data->lan_channel_numbers_count)))
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,

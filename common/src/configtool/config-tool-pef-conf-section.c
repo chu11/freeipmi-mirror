@@ -210,6 +210,10 @@ enable_pef_checkout (pstdout_state_t pstate,
   struct pef_control pc;
   config_err_t ret;
 
+  assert (kv);
+  assert (ipmi_ctx);
+  assert (cmd_args);
+
   if ((ret = _get_pef_control (pstate,
                                ipmi_ctx,
                                cmd_args,
@@ -233,6 +237,10 @@ enable_pef_commit (pstdout_state_t pstate,
   struct pef_control pc;
   config_err_t ret;
 
+  assert (kv);
+  assert (ipmi_ctx);
+  assert (cmd_args);
+
   if ((ret = _get_pef_control (pstate,
                                ipmi_ctx,
                                cmd_args,
@@ -252,6 +260,10 @@ enable_pef_event_messages_checkout (pstdout_state_t pstate,
 {
   struct pef_control pc;
   config_err_t ret;
+
+  assert (kv);
+  assert (ipmi_ctx);
+  assert (cmd_args);
 
   if ((ret = _get_pef_control (pstate,
                                ipmi_ctx,
@@ -276,6 +288,10 @@ enable_pef_event_messages_commit (pstdout_state_t pstate,
   struct pef_control pc;
   config_err_t ret;
 
+  assert (kv);
+  assert (ipmi_ctx);
+  assert (cmd_args);
+
   if ((ret = _get_pef_control (pstate,
                                ipmi_ctx,
                                cmd_args,
@@ -295,6 +311,10 @@ enable_pef_startup_delay_checkout (pstdout_state_t pstate,
 {
   struct pef_control pc;
   config_err_t ret;
+
+  assert (kv);
+  assert (ipmi_ctx);
+  assert (cmd_args);
 
   if ((ret = _get_pef_control (pstate,
                                ipmi_ctx,
@@ -319,6 +339,10 @@ enable_pef_startup_delay_commit (pstdout_state_t pstate,
   struct pef_control pc;
   config_err_t ret;
 
+  assert (kv);
+  assert (ipmi_ctx);
+  assert (cmd_args);
+
   if ((ret = _get_pef_control (pstate,
                                ipmi_ctx,
                                cmd_args,
@@ -338,6 +362,10 @@ enable_pef_alert_startup_delay_checkout (pstdout_state_t pstate,
 {
   struct pef_control pc;
   config_err_t ret;
+
+  assert (kv);
+  assert (ipmi_ctx);
+  assert (cmd_args);
 
   if ((ret = _get_pef_control (pstate,
                                ipmi_ctx,
@@ -361,6 +389,10 @@ enable_pef_alert_startup_delay_commit (pstdout_state_t pstate,
 {
   struct pef_control pc;
   config_err_t ret;
+
+  assert (kv);
+  assert (ipmi_ctx);
+  assert (cmd_args);
 
   if ((ret = _get_pef_control (pstate,
                                ipmi_ctx,
@@ -549,6 +581,10 @@ enable_alert_action_checkout (pstdout_state_t pstate,
   struct pef_action_global_control gc;
   config_err_t ret;
 
+  assert (kv);
+  assert (ipmi_ctx);
+  assert (cmd_args);
+
   if ((ret = _get_pef_action_global_control (pstate,
                                              ipmi_ctx,
                                              cmd_args,
@@ -572,6 +608,10 @@ enable_alert_action_commit (pstdout_state_t pstate,
   struct pef_action_global_control gc;
   config_err_t ret;
 
+  assert (kv);
+  assert (ipmi_ctx);
+  assert (cmd_args);
+
   if ((ret = _get_pef_action_global_control (pstate,
                                              ipmi_ctx,
                                              cmd_args,
@@ -591,6 +631,10 @@ enable_power_down_action_checkout (pstdout_state_t pstate,
 {
   struct pef_action_global_control gc;
   config_err_t ret;
+
+  assert (kv);
+  assert (ipmi_ctx);
+  assert (cmd_args);
 
   if ((ret = _get_pef_action_global_control (pstate,
                                              ipmi_ctx,
@@ -615,6 +659,10 @@ enable_power_down_action_commit (pstdout_state_t pstate,
   struct pef_action_global_control gc;
   config_err_t ret;
 
+  assert (kv);
+  assert (ipmi_ctx);
+  assert (cmd_args);
+
   if ((ret = _get_pef_action_global_control (pstate,
                                              ipmi_ctx,
                                              cmd_args,
@@ -634,6 +682,10 @@ enable_reset_action_checkout (pstdout_state_t pstate,
 {
   struct pef_action_global_control gc;
   config_err_t ret;
+
+  assert (kv);
+  assert (ipmi_ctx);
+  assert (cmd_args);
 
   if ((ret = _get_pef_action_global_control (pstate,
                                              ipmi_ctx,
@@ -658,6 +710,10 @@ enable_reset_action_commit (pstdout_state_t pstate,
   struct pef_action_global_control gc;
   config_err_t ret;
 
+  assert (kv);
+  assert (ipmi_ctx);
+  assert (cmd_args);
+
   if ((ret = _get_pef_action_global_control (pstate,
                                              ipmi_ctx,
                                              cmd_args,
@@ -677,6 +733,10 @@ enable_power_cycle_action_checkout (pstdout_state_t pstate,
 {
   struct pef_action_global_control gc;
   config_err_t ret;
+
+  assert (kv);
+  assert (ipmi_ctx);
+  assert (cmd_args);
 
   if ((ret = _get_pef_action_global_control (pstate,
                                              ipmi_ctx,
@@ -701,6 +761,10 @@ enable_power_cycle_action_commit (pstdout_state_t pstate,
   struct pef_action_global_control gc;
   config_err_t ret;
 
+  assert (kv);
+  assert (ipmi_ctx);
+  assert (cmd_args);
+
   if ((ret = _get_pef_action_global_control (pstate,
                                              ipmi_ctx,
                                              cmd_args,
@@ -720,6 +784,10 @@ enable_oem_action_checkout (pstdout_state_t pstate,
 {
   struct pef_action_global_control gc;
   config_err_t ret;
+
+  assert (kv);
+  assert (ipmi_ctx);
+  assert (cmd_args);
 
   if ((ret = _get_pef_action_global_control (pstate,
                                              ipmi_ctx,
@@ -744,6 +812,10 @@ enable_oem_action_commit (pstdout_state_t pstate,
   struct pef_action_global_control gc;
   config_err_t ret;
 
+  assert (kv);
+  assert (ipmi_ctx);
+  assert (cmd_args);
+
   if ((ret = _get_pef_action_global_control (pstate,
                                              ipmi_ctx,
                                              cmd_args,
@@ -763,6 +835,10 @@ enable_diagnostic_interrupt_checkout (pstdout_state_t pstate,
 {
   struct pef_action_global_control gc;
   config_err_t ret;
+
+  assert (kv);
+  assert (ipmi_ctx);
+  assert (cmd_args);
 
   if ((ret = _get_pef_action_global_control (pstate,
                                              ipmi_ctx,
@@ -786,6 +862,10 @@ enable_diagnostic_interrupt_commit (pstdout_state_t pstate,
 {
   struct pef_action_global_control gc;
   config_err_t ret;
+
+  assert (kv);
+  assert (ipmi_ctx);
+  assert (cmd_args);
 
   if ((ret = _get_pef_action_global_control (pstate,
                                              ipmi_ctx,
@@ -1031,5 +1111,3 @@ pef_alert_startup_delay_commit (pstdout_state_t pstate,
     fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
-
-

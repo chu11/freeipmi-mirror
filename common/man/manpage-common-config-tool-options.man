@@ -24,10 +24,6 @@ file with \fB\-\-filename\fR.
 Specify a SECTION for checkout.  This option can be used multiple times.
 .TP
 \fB\-L\fR, \fB\-\-listsections\fR
-List available sections for checkout.
-.TP
-\fB\-v\fR, \fB\-\-verbose\fR
-Output additional detailed information.  In general will output more
-detailed information about what fields can and cannot be checked out,
-committed, etc.  When used with \-\-checkout, additional uncommon,
-unconfigurable, and/or unused fields may be output.
+List available sections for checkout.  Some sections in the list may
+not be checked out by default and may require verbosity to be
+increased.

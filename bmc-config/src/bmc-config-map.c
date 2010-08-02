@@ -25,7 +25,7 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
-#include <freeipmi/freeipmi.h>
+#include <assert.h>
 
 #include "bmc-config.h"
 #include "bmc-config-map.h"
@@ -35,6 +35,8 @@
 int
 channel_access_mode (const char *string)
 {
+  assert (string);
+
   if (same (string, "disabled"))
     return (IPMI_MESSAGING_ACCESS_MODE_DISABLED);
   if (same (string, "pre_boot_only"))
@@ -47,9 +49,9 @@ channel_access_mode (const char *string)
 }
 
 char *
-channel_access_mode_string (uint8_t mode)
+channel_access_mode_string (uint8_t value)
 {
-  switch (mode)
+  switch (value)
     {
     case IPMI_MESSAGING_ACCESS_MODE_DISABLED:
       return "Disabled";
@@ -64,27 +66,29 @@ channel_access_mode_string (uint8_t mode)
 }
 
 uint8_t
-get_privilege_limit_number (const char *value)
+get_privilege_limit_number (const char *string)
 {
-  if (same (value, "callback"))
+  assert (string);
+
+  if (same (string, "callback"))
     return (IPMI_PRIVILEGE_LEVEL_CALLBACK);
-  if (same (value, "user"))
+  if (same (string, "user"))
     return (IPMI_PRIVILEGE_LEVEL_USER);
-  if (same (value, "operator"))
+  if (same (string, "operator"))
     return (IPMI_PRIVILEGE_LEVEL_OPERATOR);
-  if (same (value, "administrator"))
+  if (same (string, "administrator"))
     return (IPMI_PRIVILEGE_LEVEL_ADMIN);
-  if (same (value, "oem_proprietary"))
+  if (same (string, "oem_proprietary"))
     return (IPMI_PRIVILEGE_LEVEL_OEM);
-  if (same (value, "no_access"))
+  if (same (string, "no_access"))
     return (IPMI_PRIVILEGE_LEVEL_NO_ACCESS);
   return (0);
 }
 
 char *
-get_privilege_limit_string (uint8_t limit)
+get_privilege_limit_string (uint8_t value)
 {
-  switch (limit)
+  switch (value)
     {
     case IPMI_PRIVILEGE_LEVEL_CALLBACK:
       return "Callback";
@@ -105,6 +109,8 @@ get_privilege_limit_string (uint8_t limit)
 int
 privilege_level_number (const char *string)
 {
+  assert (string);
+
   if (same (string, "callback"))
     return (IPMI_PRIVILEGE_LEVEL_CALLBACK);
   if (same (string, "user"))
@@ -138,19 +144,21 @@ privilege_level_string (uint8_t value)
 }
 
 int
-rmcpplus_priv_number (const char *value)
+rmcpplus_priv_number (const char *string)
 {
-  if (same (value, "unused"))
+  assert (string);
+
+  if (same (string, "unused"))
     return (0);
-  if (same (value, "callback"))
+  if (same (string, "callback"))
     return (IPMI_PRIVILEGE_LEVEL_CALLBACK);
-  if (same (value, "user"))
+  if (same (string, "user"))
     return (IPMI_PRIVILEGE_LEVEL_USER);
-  if (same (value, "operator"))
+  if (same (string, "operator"))
     return (IPMI_PRIVILEGE_LEVEL_OPERATOR);
-  if (same (value, "administrator"))
+  if (same (string, "administrator"))
     return (IPMI_PRIVILEGE_LEVEL_ADMIN);
-  if (same (value, "oem_proprietary"))
+  if (same (string, "oem_proprietary"))
     return (IPMI_PRIVILEGE_LEVEL_OEM);
   return (-1);
 }
@@ -177,25 +185,27 @@ rmcpplus_priv_string (int value)
 }
 
 int
-ip_address_source_number (const char *source)
+ip_address_source_number (const char *string)
 {
-  if (same (source, "unspecified"))
+  assert (string);
+
+  if (same (string, "unspecified"))
     return (IPMI_IP_ADDRESS_SOURCE_UNSPECIFIED);
-  if (same (source, "static"))
+  if (same (string, "static"))
     return (IPMI_IP_ADDRESS_SOURCE_STATIC);
-  if (same (source, "use_dhcp"))
+  if (same (string, "use_dhcp"))
     return (IPMI_IP_ADDRESS_SOURCE_DHCP);
-  if (same (source, "use_bios"))
+  if (same (string, "use_bios"))
     return (IPMI_IP_ADDRESS_SOURCE_BIOS);
-  if (same (source, "use_others"))
+  if (same (string, "use_others"))
     return (IPMI_IP_ADDRESS_SOURCE_OTHER);
   return (-1);
 }
 
 char *
-ip_address_source_string (uint8_t source)
+ip_address_source_string (uint8_t value)
 {
-  switch (source)
+  switch (value)
     {
     case IPMI_IP_ADDRESS_SOURCE_UNSPECIFIED:
       return "Unspecified";
@@ -214,6 +224,8 @@ ip_address_source_string (uint8_t source)
 int
 power_restore_policy_number (const char *string)
 {
+  assert (string);
+
   if (same (string, "off_state_ac_apply"))
     return (IPMI_POWER_RESTORE_POLICY_POWERED_OFF_AFTER_AC_RETURNS);
   if (same (string, "restore_state_ac_apply"))
@@ -241,6 +253,8 @@ power_restore_policy_string (uint8_t value)
 int
 connect_mode_number (const char *string)
 {
+  assert (string);
+
   if (same (string, "Modem_Connect"))
     return (IPMI_CONNECT_MODE_MODEM);
   if (same (string, "Direct_Connect"))
@@ -250,9 +264,9 @@ connect_mode_number (const char *string)
 }
 
 char *
-connect_mode_string (uint8_t mode)
+connect_mode_string (uint8_t value)
 {
-  switch (mode)
+  switch (value)
     {
     case IPMI_CONNECT_MODE_MODEM:
       return "Modem_Connect";
@@ -265,6 +279,8 @@ connect_mode_string (uint8_t mode)
 int
 flow_control_number (const char *string)
 {
+  assert (string);
+
   if (same (string, "no_flow_control"))
     return (IPMI_FLOW_CONTROL_NO_FLOW_CONTROL);
   if (same (string, "rts_cts"))
@@ -292,6 +308,8 @@ flow_control_string (uint8_t value)
 int
 bit_rate_number (const char *string)
 {
+  assert (string);
+
   if (same (string, "9600"))
     return (IPMI_BIT_RATE_9600_BPS);
   if (same (string, "19200"))
@@ -327,6 +345,8 @@ bit_rate_string (uint8_t value)
 int
 sol_bit_rate_number (const char *string)
 {
+  assert (string);
+
   if (same (string, "serial"))
     return (IPMI_SOL_BIT_RATE_SERIAL_BIT_RATE);
   if (same (string, "9600"))
@@ -364,21 +384,23 @@ sol_bit_rate_string (uint8_t value)
 }
 
 int
-alert_destination_type_number (const char *source)
+alert_destination_type_number (const char *string)
 {
-  if (same (source, "pet_trap"))
+  assert (string);
+
+  if (same (string, "pet_trap"))
     return (IPMI_DESTINATION_TYPE_PET_TRAP_DESTINATION);
-  if (same (source, "oem1"))
+  if (same (string, "oem1"))
     return (IPMI_DESTINATION_TYPE_OEM1);
-  if (same (source, "oem2"))
+  if (same (string, "oem2"))
     return (IPMI_DESTINATION_TYPE_OEM2);
   return (-1);
 }
 
 char *
-alert_destination_type_string (uint8_t source)
+alert_destination_type_string (uint8_t value)
 {
-  switch (source)
+  switch (value)
     {
     case IPMI_DESTINATION_TYPE_PET_TRAP_DESTINATION:
       return "PET_Trap";
@@ -391,19 +413,21 @@ alert_destination_type_string (uint8_t source)
 }
 
 int
-alert_gateway_number (const char *source)
+alert_gateway_number (const char *string)
 {
-  if (same (source, "default"))
+  assert (string);
+
+  if (same (string, "default"))
     return (IPMI_GATEWAY_SELECTOR_DEFAULT);
-  if (same (source, "backup"))
+  if (same (string, "backup"))
     return (IPMI_GATEWAY_SELECTOR_BACKUP);
   return (-1);
 }
 
 char *
-alert_gateway_string (uint8_t source)
+alert_gateway_string (uint8_t value)
 {
-  switch (source)
+  switch (value)
     {
     case IPMI_GATEWAY_SELECTOR_DEFAULT:
       return "Default";

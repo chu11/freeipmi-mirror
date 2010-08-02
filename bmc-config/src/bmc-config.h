@@ -39,6 +39,8 @@
 
 #define CIPHER_SUITE_LEN 16
 
+#define CHANNEL_NUMBERS_MAX 16
+
 struct bmc_config_arguments
 {
   struct config_arguments config_args;
@@ -89,15 +91,28 @@ typedef struct bmc_config_state_data
   uint8_t cipher_suite_priv[CIPHER_SUITE_LEN];
   int cipher_suite_priv_set;
 
-  /* achu: caching to make bmc-config work more quickly */
-  int lan_channel_number_initialized;
-  uint8_t lan_channel_number;
-  int serial_channel_number_initialized;
-  uint8_t serial_channel_number;
-  int sol_channel_number_initialized;
-  uint8_t sol_channel_number;
-  int number_of_users_initialized;
-  uint8_t number_of_users;
+  /* For multi-channel settings
+   *
+   * base is for base section name (e.g. "Lan_Conf")
+   * channel is for channel suffixed section name (e.g. "Lan_Conf_Channel_1")
+   */
+  unsigned int lan_base_config_flags;
+  unsigned int lan_channel_config_flags;
+  unsigned int serial_base_config_flags;
+  unsigned int serial_channel_config_flags;
+
+  /* For channel reading */
+  uint8_t lan_channel_numbers[CHANNEL_NUMBERS_MAX];
+  unsigned int lan_channel_numbers_count;
+  unsigned int lan_channel_numbers_loaded;
+  uint8_t serial_channel_numbers[CHANNEL_NUMBERS_MAX];
+  unsigned int serial_channel_numbers_count;
+  unsigned int serial_channel_numbers_loaded;
+  
+  /* cache for multi-channel */
+  uint8_t sol_channel_numbers_lan_channel[CHANNEL_NUMBERS_MAX];
+  uint8_t sol_channel_numbers_sol_channel[CHANNEL_NUMBERS_MAX];
+  unsigned int sol_channel_numbers_count;
 } bmc_config_state_data_t;
 
 #endif /* _BMC_CONFIG_H_ */

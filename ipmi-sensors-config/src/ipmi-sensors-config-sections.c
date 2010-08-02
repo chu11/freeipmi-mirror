@@ -44,6 +44,8 @@ ipmi_sensors_config_sections_create (ipmi_sensors_config_state_data_t *state_dat
   uint16_t record_count;
   unsigned int i;
 
+  assert (state_data);
+
   if (ipmi_sdr_cache_record_count (state_data->sdr_cache_ctx, &record_count) < 0)
     {
       pstdout_fprintf (state_data->pstate,

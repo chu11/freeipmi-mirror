@@ -49,6 +49,14 @@ See GENERAL USE below for a description on how most will want to use
 #include <@top_srcdir@/common/man/manpage-common-debug.man>
 #include <@top_srcdir@/common/man/manpage-common-misc.man>
 #include <@top_srcdir@/common/man/manpage-common-config-tool-options.man>
+.TP
+\fB\-v\fR, \fB\-\-verbose\fR
+Output verbose information.  When used with \-\-checkout, additional
+uncommon sections and/or fields will be shown.  In
+.B bmc-config,
+this includes checking out Serial Configuration parameters, and
+sections for each channel on a system, if multiple channels exist.
+#include <@top_srcdir@/common/man/manpage-common-config-tool-options-very-verbose.man>
 #include <@top_srcdir@/common/man/manpage-common-config-tool-options-lan-channel-number.man>
 #include <@top_srcdir@/common/man/manpage-common-config-tool-options-serial-channel-number.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-options-header.man>
@@ -133,6 +141,16 @@ On some motherboards, OEM Authentication in
 cannot be enabled.  However, the default motherboard settings have
 these fields enabled.  Users are advised to disable all OEM
 Authentication in this section.
+
+On some motherboards, multiple channels may exist for either LAN or
+Serial IPMI communication.  If multiple channels exist, configuration
+of both channels can be viewed and ultimately configured by running
+\fI\-\-checkout\fR under verbose mode.  Each section or key name will
+be suffixed appropriately with the word \fIChannel\fR and the channel
+number.  For example, you might see a \fILan_Conf_Channel_1\fR and
+\fILan_Conf_Channel_3\fR, where you can configure LAN configuration on
+Channels 1 and 3 respectively.
+
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-main.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-threads.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-options.man>

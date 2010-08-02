@@ -23,6 +23,9 @@
 #include "ipmi-pef-config.h"
 #include "ipmi-pef-config-sections.h"
 
-struct config_section * ipmi_pef_config_lan_alert_destination_section_get (ipmi_pef_config_state_data_t *state_data, int num);
+struct config_section * ipmi_pef_config_lan_alert_destination_section_get (ipmi_pef_config_state_data_t *state_data,
+									   unsigned int num,
+									   unsigned int config_flags,
+									   int channel_index);
 
 #endif /* _IPMI_PEF_CONFIG_LAN_ALERT_DESTINATION_H_ */

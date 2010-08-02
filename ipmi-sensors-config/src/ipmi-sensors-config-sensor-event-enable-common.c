@@ -655,10 +655,16 @@ sensor_event_enable_enable_all_event_messages_checkout (const char *section_name
                                                         struct config_keyvalue *kv,
                                                         void *arg)
 {
-  ipmi_sensors_config_state_data_t *state_data = (ipmi_sensors_config_state_data_t *)arg;
+  ipmi_sensors_config_state_data_t *state_data;
   struct sensor_event_enable_data data;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_sensors_config_state_data_t *)arg;
 
   if ((ret = _get_sensor_event_enable (state_data,
                                        section_name,
@@ -683,10 +689,16 @@ sensor_event_enable_enable_all_event_messages_commit (const char *section_name,
                                                       const struct config_keyvalue *kv,
                                                       void *arg)
 {
-  ipmi_sensors_config_state_data_t *state_data = (ipmi_sensors_config_state_data_t *)arg;
+  ipmi_sensors_config_state_data_t *state_data;
   struct sensor_event_enable_data data;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_sensors_config_state_data_t *)arg;
 
   if ((ret = _get_sensor_event_enable (state_data,
                                        section_name,
@@ -721,10 +733,16 @@ sensor_event_enable_enable_scanning_on_this_sensor_checkout (const char *section
                                                              struct config_keyvalue *kv,
                                                              void *arg)
 {
-  ipmi_sensors_config_state_data_t *state_data = (ipmi_sensors_config_state_data_t *)arg;
+  ipmi_sensors_config_state_data_t *state_data;
   struct sensor_event_enable_data data;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_sensors_config_state_data_t *)arg;
 
   if ((ret = _get_sensor_event_enable (state_data,
                                        section_name,
@@ -749,10 +767,16 @@ sensor_event_enable_enable_scanning_on_this_sensor_commit (const char *section_n
                                                            const struct config_keyvalue *kv,
                                                            void *arg)
 {
-  ipmi_sensors_config_state_data_t *state_data = (ipmi_sensors_config_state_data_t *)arg;
+  ipmi_sensors_config_state_data_t *state_data;
   struct sensor_event_enable_data data;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_sensors_config_state_data_t *)arg;
 
   if ((ret = _get_sensor_event_enable (state_data,
                                        section_name,
@@ -795,6 +819,8 @@ _setup_event_enable_key (ipmi_sensors_config_state_data_t *state_data,
   assert (state_data);
   assert (section);
   assert (key_name);
+  assert (checkout_func);
+  assert (commit_func);
 
   if (event_supported
       || state_data->prog_data->args->config_args.verbose_count)
@@ -937,12 +963,18 @@ threshold_event_enable_checkout (const char *section_name,
                                  struct config_keyvalue *kv,
                                  void *arg)
 {
-  ipmi_sensors_config_state_data_t *state_data = (ipmi_sensors_config_state_data_t *)arg;
+  ipmi_sensors_config_state_data_t *state_data;
   struct sensor_event_enable_data data;
   uint16_t bits = 0;
   uint8_t bitposition = 0;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_sensors_config_state_data_t *)arg;
 
   if ((ret = _threshold_event_enable_verify (state_data,
                                              section_name)) != CONFIG_ERR_SUCCESS)
@@ -977,13 +1009,19 @@ threshold_event_enable_commit (const char *section_name,
                                const struct config_keyvalue *kv,
                                void *arg)
 {
-  ipmi_sensors_config_state_data_t *state_data = (ipmi_sensors_config_state_data_t *)arg;
+  ipmi_sensors_config_state_data_t *state_data;
   struct sensor_event_enable_data data;
   uint16_t bits = 0;
   uint8_t bitposition = 0;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
   uint8_t event_message_action;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_sensors_config_state_data_t *)arg;
 
   if ((ret = _threshold_event_enable_verify (state_data,
                                              section_name)) != CONFIG_ERR_SUCCESS)
@@ -1401,13 +1439,19 @@ generic_event_enable_checkout (const char *section_name,
                                struct config_keyvalue *kv,
                                void *arg)
 {
-  ipmi_sensors_config_state_data_t *state_data = (ipmi_sensors_config_state_data_t *)arg;
+  ipmi_sensors_config_state_data_t *state_data;
   struct sensor_event_enable_data data;
   uint16_t bits = 0;
   uint8_t bitposition = 0;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
   uint8_t event_reading_type_code;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_sensors_config_state_data_t *)arg;
 
   if ((ret = _generic_event_enable_verify (state_data,
                                            section_name,
@@ -1444,7 +1488,7 @@ generic_event_enable_commit (const char *section_name,
                              const struct config_keyvalue *kv,
                              void *arg)
 {
-  ipmi_sensors_config_state_data_t *state_data = (ipmi_sensors_config_state_data_t *)arg;
+  ipmi_sensors_config_state_data_t *state_data;
   struct sensor_event_enable_data data;
   uint16_t bits = 0;
   uint8_t bitposition = 0;
@@ -1452,6 +1496,12 @@ generic_event_enable_commit (const char *section_name,
   config_err_t ret;
   uint8_t event_reading_type_code;
   uint8_t event_message_action;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_sensors_config_state_data_t *)arg;
 
   if ((ret = _generic_event_enable_verify (state_data,
                                            section_name,
@@ -1823,13 +1873,19 @@ sensor_specific_event_enable_checkout (const char *section_name,
                                        struct config_keyvalue *kv,
                                        void *arg)
 {
-  ipmi_sensors_config_state_data_t *state_data = (ipmi_sensors_config_state_data_t *)arg;
+  ipmi_sensors_config_state_data_t *state_data;
   struct sensor_event_enable_data data;
   uint16_t bits = 0;
   uint8_t bitposition = 0;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
   uint8_t sensor_type;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_sensors_config_state_data_t *)arg;
 
   if ((ret = _sensor_specific_event_enable_verify (state_data,
                                                    section_name,
@@ -1866,7 +1922,7 @@ sensor_specific_event_enable_commit (const char *section_name,
                                      const struct config_keyvalue *kv,
                                      void *arg)
 {
-  ipmi_sensors_config_state_data_t *state_data = (ipmi_sensors_config_state_data_t *)arg;
+  ipmi_sensors_config_state_data_t *state_data;
   struct sensor_event_enable_data data;
   uint16_t bits = 0;
   uint8_t bitposition = 0;
@@ -1874,6 +1930,12 @@ sensor_specific_event_enable_commit (const char *section_name,
   config_err_t ret;
   uint8_t sensor_type;
   uint8_t event_message_action;
+
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (ipmi_sensors_config_state_data_t *)arg;
 
   if ((ret = _sensor_specific_event_enable_verify (state_data,
                                                    section_name,
