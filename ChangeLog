@@ -41,6 +41,8 @@
  
  	* Various code cleanup.
 
+	* tagged post_multi_channel_config
+
 2010-07-29  Albert Chu <chu11@llnl.gov>
 
 	* Split off SOL payloads into new files and outside of
