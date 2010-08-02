@@ -194,10 +194,6 @@ Supermicro X8DTG, X8DTU: Cipher suites 11 and 12 fail to establish a
 session.  Authentication codes appear to be incorrect.  This bug is
 confirmed to be fixed on newer firmware.
 
-Supermicro X8DTG: Using only IPMI 2.0, the maximum privilege level
-allowed returned via the Open Session Response, is sometimes invalid.
-Will cause privilege checks to fail.  No current resolution.
-
 Supermicro X8DTG: When attempting to authenticate with a disabled
 Cipher Suite ID, a 0Ah status ("Unauthorized role or privelege level
 requested.") is returned instead of 11h ("No Cipher Suite match with
