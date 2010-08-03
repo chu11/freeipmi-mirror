@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.111 2010-07-13 23:51:42 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.112 2010-08-03 00:10:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -1818,8 +1818,6 @@ _calculate_cipher_keys (ipmiconsole_ctx_t c)
   char *password;
   unsigned int password_len;
   void *k_g;
-  uint8_t session_keys_privilege;
-  uint64_t val;
 
   assert (c);
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
@@ -1893,33 +1891,6 @@ _calculate_cipher_keys (ipmiconsole_ctx_t c)
       return (-1);
     }
 
-  /* IPMI Workaround
-   *
-   * Discovered on Supermicro X8DTG
-   *
-   * The maximum privilege level returned from the Open Session
-   * Privilege Response may be incorrect, leading to issues with SIK
-   * key generation.
-   *
-   * In order to workaround this, we use the "maximum_privilege_level"
-   * for generating the SIK key below.
-   */
-  if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_OPEN_SESSION_PRIVILEGE)
-    {
-      if (FIID_OBJ_GET (c->connection.obj_open_session_response,
-                        "maximum_privilege_level",
-                        &val) < 0)
-        {
-	  IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: 'maximum_privilege_level': %s",
-				     fiid_obj_errormsg (c->connection.obj_open_session_response)));
-	  ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-	  return (-1);
-        }
-      session_keys_privilege = val;
-    }
-  else
-    session_keys_privilege = c->config.privilege_level;
-  
   if (ipmi_calculate_rmcpplus_session_keys (c->config.authentication_algorithm,
                                             c->config.integrity_algorithm,
                                             c->config.confidentiality_algorithm,
@@ -1932,7 +1903,7 @@ _calculate_cipher_keys (ipmiconsole_ctx_t c)
                                             managed_system_random_number,
                                             IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH,
                                             c->session.name_only_lookup,
-					    session_keys_privilege,
+                                            c->config.privilege_level,
                                             username,
                                             username_len,
                                             &(c->session.sik_key_ptr),

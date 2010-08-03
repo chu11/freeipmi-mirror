@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_checks.c,v 1.47 2010-07-13 23:51:42 chu11 Exp $
+ *  $Id: ipmiconsole_checks.c,v 1.48 2010-08-03 00:10:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -575,32 +575,14 @@ ipmiconsole_check_open_session_response_privilege (ipmiconsole_ctx_t c, ipmicons
     }
   else
     {
-      /* IPMI Workaround
-       *
-       * Discovered on Supermicro X8DTG
-       *
-       * The maximum privilege level returned may be incorrect, leading to
-       * a possible IPMI_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED errors and
-       * related issues with SIK key generation.
-       *
-       * In order to workaround this, we skip the following check and
-       * use the "maximum_privilege_level" for generating the SIK key
-       * below.  Any privilege level issues will be caught by setting
-       * the session privilege level later on.
-       */
-      if (!(c->config.workaround_flags & IPMICONSOLE_WORKAROUND_OPEN_SESSION_PRIVILEGE))
-	{
-	  if ((rv = ipmi_check_open_session_maximum_privilege (c->config.privilege_level,
-							       c->connection.obj_open_session_response)) < 0)
-	    {
-	      IPMICONSOLE_CTX_DEBUG (c, ("ipmi_check_open_session_maximum_privilege: %s",
-					 strerror (errno)));
-	      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-	      return (-1);
-	    }
-	}
-      else
-	rv = 1;
+      if ((rv = ipmi_check_open_session_maximum_privilege (c->config.privilege_level,
+                                                           c->connection.obj_open_session_response)) < 0)
+        {
+          IPMICONSOLE_CTX_DEBUG (c, ("ipmi_check_open_session_maximum_privilege: %s",
+                                     strerror (errno)));
+          ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
+          return (-1);
+        }
     }
 
   if (!rv)
