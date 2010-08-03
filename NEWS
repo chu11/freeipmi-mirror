@@ -3,6 +3,7 @@ FreeIPMI 0.8.9 - XX/XX/10
 o In ipmi-sel and ipmimonitoring, workaround Supermicro H8QME SEL
   compliance issues in ipmi-sel.
 o In ipmi-sel, do not report error if SEL is empty.
+o Revert 'Open Session Privilege Workaround' changes in 0.8.8, were unnecessary.
 
 FreeIPMI 0.8.8 - 07/20/10
 -------------------------

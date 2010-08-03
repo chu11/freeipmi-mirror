@@ -1,3 +1,9 @@
+2010-08-02  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/api/, ipmipower/,
+	ipmiconsole/src/libipmiconsole/: Revert OPEN_SESSION_PRIVILEGE
+	rework done on 2010-07-13.  Change is unnecessary.
+	
 2010-07-23  Albert Chu <chu11@llnl.gov>
 
 	* doc/freeipmi-faq.texi: Update with x86-64 build instructions and

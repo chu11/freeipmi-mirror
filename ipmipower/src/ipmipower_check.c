@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.115.4.6 2010-07-13 23:51:35 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.115.4.7 2010-08-03 00:10:49 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -796,30 +796,12 @@ ipmipower_check_open_session_response_privilege (ipmipower_powercmd_t ip, packet
     }
   else
     {
-      /* IPMI Workaround (achu)
-       *
-       * Discovered on Supermicro X8DTG
-       *
-       * The maximum privilege level returned may be incorrect, leading to
-       * a possible IPMI_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED errors and
-       * related issues with SIK key generation.
-       *
-       * In order to workaround this, we skip the following check and
-       * use the "maximum_privilege_level" for generating the SIK key
-       * below.  Any privilege level issues will be caught by setting
-       * the session privilege level later on.
-       */
-      if (!(cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE))
-	{
-	  if ((rv = ipmi_check_open_session_maximum_privilege (cmd_args.common.privilege_level,
-							       ip->obj_open_session_res)) < 0)
-	    {
-	      IPMIPOWER_ERROR (("ipmi_check_open_session_maximum_privilege: %s", strerror (errno)));
-	      exit (1);
-	    }
-	}
-      else
-	rv = 1;
+      if ((rv = ipmi_check_open_session_maximum_privilege (cmd_args.common.privilege_level,
+                                                           ip->obj_open_session_res)) < 0)
+        {
+          IPMIPOWER_ERROR (("ipmi_check_open_session_maximum_privilege: %s", strerror (errno)));
+          exit (1);
+        }
     }
 
   if (!rv)

@@ -3161,7 +3161,6 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
   uint8_t authentication_algorithm = 0; /* init to 0 to remove gcc warning */
   uint8_t requested_maximum_privilege;
   uint8_t assume_rakp_4_success = 0;
-  uint8_t session_keys_privilege;
   uint8_t name_only_lookup;
   char *tmp_username_ptr = NULL;
   char *tmp_password_ptr = NULL;
@@ -3466,45 +3465,15 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
       maximum_privilege_level = val;
       
       ret = (maximum_privilege_level == requested_maximum_privilege) ? 1 : 0;
-      session_keys_privilege = ctx->io.outofband.privilege_level;
     }
   else
     {
-      /* IPMI Workaround (achu)
-       *
-       * Discovered on Supermicro X8DTG
-       *
-       * The maximum privilege level returned may be incorrect, leading to
-       * a possible IPMI_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED errors and
-       * related issues with SIK key generation.
-       *
-       * In order to workaround this, we skip the following check and
-       * use the "maximum_privilege_level" for generating the SIK key
-       * below.  Any privilege level issues will be caught by setting
-       * the session privilege level later on.
-       */
-      if (ctx->workaround_flags & IPMI_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE)
-	{
-	  if (FIID_OBJ_GET (obj_cmd_rs,
-			    "maximum_privilege_level",
-			    &val) < 0)
-	    {
-	      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
-	      goto cleanup;
-	    }
-	  session_keys_privilege = val;
-	  ret = 1;
-	}
-      else
-	{
-	  if ((ret = ipmi_check_open_session_maximum_privilege (ctx->io.outofband.privilege_level,
-								obj_cmd_rs)) < 0)
-	    {
-	      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-	      goto cleanup;
-	    }
-	  session_keys_privilege = ctx->io.outofband.privilege_level;
-	}
+      if ((ret = ipmi_check_open_session_maximum_privilege (ctx->io.outofband.privilege_level,
+                                                            obj_cmd_rs)) < 0)
+        {
+          API_ERRNO_TO_API_ERRNUM (ctx, errno);
+          goto cleanup;
+        }
     }
 
   if (!ret)
@@ -3838,7 +3807,7 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
                                             managed_system_random_number,
                                             IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH,
                                             IPMI_NAME_ONLY_LOOKUP,
-					    session_keys_privilege,
+                                            ctx->io.outofband.privilege_level,
                                             username,
                                             username_len,
                                             &(ctx->io.outofband.sik_key_ptr),
