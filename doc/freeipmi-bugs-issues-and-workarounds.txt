@@ -536,6 +536,16 @@ every system boot. [NICETOHAVE]
 Quanta S99Q/Dell FS12-TY: Gratuitous ARPs can be enabled, but is not
 available.  No current resolution.
 
+Quanta S99Q/Dell FS12-TY: MAC Addresses appear to be read only, but
+motherboard does not returns success instead of a read-only error.
+Leads user to believe MAC address can be configured.  No current
+resolution.
+
+Quanta S99Q/Dell FS12-TY: IPMI over LAN functions only if ARPs are
+enabled.  If ARPs are disabled and you choose to store the MAC address
+in an ARP cache, IPMI over LAN will not function.  No current
+resolution.
+ 
 Supermicro X8DTG, X8DTU: Default ADMIN username cannot be changed.  No
 current resolution. [FUNCTIONAL]
 
