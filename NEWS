@@ -4,6 +4,7 @@ o In ipmi-sel and ipmimonitoring, workaround Supermicro H8QME SEL
   compliance issues in ipmi-sel.
 o In ipmi-sel, do not report error if SEL is empty.
 o Revert 'Open Session Privilege Workaround' changes in 0.8.8, were unnecessary.
+o Fix daylight savings bug when configuring BMC times in bmc-device.
 
 FreeIPMI 0.8.8 - 07/20/10
 -------------------------
