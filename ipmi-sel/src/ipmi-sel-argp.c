@@ -399,6 +399,12 @@ _read_date_range (int *flag,
                 }
             }
         }
+
+      /* strptime() does not set tm_isdst.  Set so mktime() will not
+       * adjust for daylight savings time.
+       */
+      tm.tm_isdst = -1;
+
       if ((t = mktime (&tm)) == (time_t)-1)
         {
           fprintf (stderr,
@@ -436,6 +442,12 @@ _read_date_range (int *flag,
                 }
             }
         }
+
+      /* strptime() does not set tm_isdst.  Set so mktime() will not
+       * adjust for daylight savings time.
+       */
+      tm.tm_isdst = -1;
+
       if ((t = mktime (&tm)) == (time_t)-1)
         {
           fprintf (stderr,

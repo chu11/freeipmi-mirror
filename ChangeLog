@@ -1,3 +1,8 @@
+2010-08-03  Albert Chu <chu11@llnl.gov>
+
+	* ipmimonitoring/src/libipmimonitoring/, ipmi-sel/, bmc-device/:
+	Fix corner case with time calculating and daylight savings.
+
 2010-08-02  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/api/, ipmipower/,

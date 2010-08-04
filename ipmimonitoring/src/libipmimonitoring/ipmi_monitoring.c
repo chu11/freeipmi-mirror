@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.78 2010-07-22 21:49:00 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.79 2010-08-04 20:41:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -770,6 +770,11 @@ _ipmi_monitoring_date_parse (ipmi_monitoring_ctx_t c,
             }
         }
     }
+
+  /* strptime() does not set tm_isdst.  Set so mktime() will not
+   * adjust for daylight savings time.
+   */
+  tm.tm_isdst = -1;
 
   if ((t = mktime (&tm)) == (time_t)-1)
     {

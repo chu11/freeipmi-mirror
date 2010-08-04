@@ -868,6 +868,12 @@ set_sdr_repository_time (bmc_device_state_data_t *state_data)
                            args->set_sdr_repository_time_arg);
           goto cleanup;
         }
+
+      /* strptime() does not set tm_isdst.  Set so mktime() will not
+       * adjust for daylight savings time.
+       */
+      tm.tm_isdst = -1;
+
       if ((t = mktime (&tm)) == (time_t)-1)
         {
           pstdout_fprintf (state_data->pstate,
@@ -990,6 +996,12 @@ set_sel_time (bmc_device_state_data_t *state_data)
                            args->set_sel_time_arg);
           goto cleanup;
         }
+
+      /* strptime() does not set tm_isdst.  Set so mktime() will not
+       * adjust for daylight savings time.
+       */
+      tm.tm_isdst = -1;
+
       if ((t = mktime (&tm)) == (time_t)-1)
         {
           pstdout_fprintf (state_data->pstate,
