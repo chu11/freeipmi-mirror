@@ -82,7 +82,21 @@ config_commit_section (pstdout_state_t pstate,
             goto cleanup;
 
           if (this_ret == CONFIG_ERR_SUCCESS)
-            commit_count++;
+	    {
+	      /* Discovered on Quanta S99Q/Dell FS12-TY
+	       *
+	       * A number of values on this motherboard appear to take
+	       * a reasonable amount of time to store, causing the BMC
+	       * to return BUSY errors for a bit.  In some cases, the
+	       * BMC eventually hangs or subsequent writes are
+	       * ignored.  We want to try to avoid this.
+	       */
+	      
+	      if (cmd_args->common.tool_specific_workaround_flags & IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_VERY_SLOW_COMMIT)
+		sleep (1);
+	      
+	      commit_count++;
+	    }
 
           if (CONFIG_IS_NON_FATAL_ERROR (this_ret))
             {
@@ -184,9 +198,18 @@ config_commit (pstdout_state_t pstate,
        * commits/writes and eventually commits/writes are lost.  This
        * workaround will slow down the commits/writes to give the BMC
        * a better chance to accept all changes.
+       *
+       * Discovered on Quanta S99Q/Dell FS12-TY
+       *
+       * A number of values on this motherboard appear to take
+       * a reasonable amount of time to store, causing the BMC
+       * to return BUSY errors for a bit.  In some cases, the
+       * BMC eventually hangs or subsequent writes are
+       * ignored.  We want to try to avoid this.
        */
 
-      if (cmd_args->common.tool_specific_workaround_flags & IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_SLOW_COMMIT)
+      if (cmd_args->common.tool_specific_workaround_flags & IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_SLOW_COMMIT
+	  || cmd_args->common.tool_specific_workaround_flags & IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_VERY_SLOW_COMMIT)
 	sleep (1);
 
       s = s->next;

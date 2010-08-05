@@ -1,3 +1,8 @@
+2010-08-05  Albert Chu <chu11@llnl.gov>
+
+	* common/src/configtool/: Support 'veryslowcommit' workaround in
+	config tools for very slow BMCs.
+	
 2010-08-03  Albert Chu <chu11@llnl.gov>
 
 	* ipmimonitoring/src/libipmimonitoring/, ipmi-sel/, bmc-device/:
