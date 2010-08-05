@@ -546,6 +546,12 @@ enabled.  If ARPs are disabled and you choose to store the MAC address
 in an ARP cache, IPMI over LAN will not function.  No current
 resolution.
  
+Quanta S99Q/Dell FS12-TY: When commiting a number of data to the
+motherboard, the BMC apparently must pause and/or requires excessive
+time to store the value to memory.  Apparently, future data writes do
+not get stored or written properly if the BMC is overwhelmed with
+data.  Resolved with workaround to slow down BMC commits. [FUNCTIONAL]
+
 Supermicro X8DTG, X8DTU: Default ADMIN username cannot be changed.  No
 current resolution. [FUNCTIONAL]
 
