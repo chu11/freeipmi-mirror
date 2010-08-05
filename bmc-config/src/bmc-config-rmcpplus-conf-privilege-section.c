@@ -51,16 +51,22 @@ _rmcpplus_cipher_suite_id_privilege_setup (bmc_config_state_data_t *state_data,
   assert (state_data);
   assert (section_name);
 
-  if (state_data->cipher_suite_entry_count
-      && state_data->cipher_suite_id_supported_set
-      && state_data->cipher_suite_priv_set)
-    return (CONFIG_ERR_SUCCESS);
-
   if ((ret = get_lan_channel_number (state_data, section_name, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
+
+  if (state_data->cipher_suite_entry_count
+      && state_data->cipher_suite_id_supported_set
+      && state_data->cipher_suite_priv_set
+      && state_data->cipher_suite_channel_number == channel_number)
+    return (CONFIG_ERR_SUCCESS);
+
+  state_data->cipher_suite_entry_count = 0;
+  state_data->cipher_suite_id_supported_set = 0;
+  state_data->cipher_suite_priv_set = 0;
+  state_data->cipher_suite_channel_number = 0;
 
   if (!state_data->cipher_suite_entry_count)
     {

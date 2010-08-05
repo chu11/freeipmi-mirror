@@ -90,6 +90,7 @@ typedef struct bmc_config_state_data
   int cipher_suite_id_supported_set;
   uint8_t cipher_suite_priv[CIPHER_SUITE_LEN];
   int cipher_suite_priv_set;
+  uint8_t cipher_suite_channel_number;
 
   /* For multi-channel settings
    *
