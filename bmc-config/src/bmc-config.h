@@ -78,6 +78,7 @@ typedef struct bmc_config_state_data
 
   /* achu: caching to make lan authentication enables go faster */
   int authentication_type_initialized;
+  uint8_t authentication_type_channel_number;
   uint8_t authentication_type_none;
   uint8_t authentication_type_md2;
   uint8_t authentication_type_md5;

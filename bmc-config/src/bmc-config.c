@@ -57,6 +57,7 @@ _bmc_config_state_data_init (bmc_config_state_data_t *state_data)
   state_data->enable_user_after_password = NULL;
 
   state_data->authentication_type_initialized = 0;
+  state_data->authentication_type_channel_number = 0;
 
   state_data->cipher_suite_entry_count = 0;
   state_data->cipher_suite_id_supported_set = 0;

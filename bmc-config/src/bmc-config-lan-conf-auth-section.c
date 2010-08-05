@@ -76,18 +76,25 @@ _get_authentication_type_support (bmc_config_state_data_t *state_data,
   assert (state_data);
   assert (section_name);
 
+  if ((ret = get_lan_channel_number (state_data, section_name, &channel_number)) != CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+  
+  if (state_data->authentication_type_initialized
+      && state_data->authentication_type_channel_number == channel_number)
+    goto out;
+  
+  state_data->authentication_type_initialized = 0;
+  state_data->authentication_type_channel_number = 0;
+
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_lan_configuration_parameters_authentication_type_support_rs)))
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "fiid_obj_create: %s\n",
                        strerror (errno));
-      goto cleanup;
-    }
-
-  if ((ret = get_lan_channel_number (state_data, section_name, &channel_number)) != CONFIG_ERR_SUCCESS)
-    {
-      rv = ret;
       goto cleanup;
     }
 
@@ -163,6 +170,7 @@ _get_authentication_type_support (bmc_config_state_data_t *state_data,
   state_data->authentication_type_oem_proprietary = val;
 
   state_data->authentication_type_initialized++;
+ out:
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
@@ -758,15 +766,12 @@ _authentication_type_enable_available (bmc_config_state_data_t *state_data,
   /* default to always allow checkout */
   *available = 1;
 
-  /* always output under verbose mode */
-  if (state_data->prog_data->args->config_args.verbose_count)
+  /* always output under very verbose mode */
+  if (state_data->prog_data->args->config_args.verbose_count > 1)
     return (CONFIG_ERR_SUCCESS);
 
-  if (!state_data->authentication_type_initialized)
-    {
-      if ((ret = _get_authentication_type_support (state_data, section_name)) != CONFIG_ERR_SUCCESS)
-        return (ret);
-    }
+  if ((ret = _get_authentication_type_support (state_data, section_name)) != CONFIG_ERR_SUCCESS)
+    return (ret);
 
   if (state_data->authentication_type_initialized)
     {

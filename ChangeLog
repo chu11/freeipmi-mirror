@@ -2,6 +2,8 @@
 
 	* common/src/configtool/: Support 'veryslowcommit' workaround in
 	config tools for very slow BMCs.
+
+	* bmc-config/: Fix multi-channel corner cases.
 	
 2010-08-03  Albert Chu <chu11@llnl.gov>
 
