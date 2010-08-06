@@ -1251,10 +1251,7 @@ _ipmi_dump_rmcpplus_packet (int fd,
     }
 
   if (pkt_len <= indx)
-    {
-      rv = 0;
-      goto cleanup;
-    }
+    goto out;
 
   /* Dump rmcpplus session header */
 
@@ -1280,10 +1277,7 @@ _ipmi_dump_rmcpplus_packet (int fd,
   indx += obj_len;
 
   if (pkt_len <= indx)
-    {
-      rv = 0;
-      goto cleanup;
-    }
+    goto out;
 
   /* achu: If the packet is really messed up, dump the packet in raw form */
   if ((payload_type != IPMI_PAYLOAD_TYPE_IPMI
@@ -1408,10 +1402,7 @@ _ipmi_dump_rmcpplus_packet (int fd,
   indx += ipmi_payload_len;
 
   if (pkt_len <= indx)
-    {
-      rv = 0;
-      goto cleanup;
-    }
+    goto out;
 
   /* Dump trailer */
 
@@ -1470,6 +1461,7 @@ _ipmi_dump_rmcpplus_packet (int fd,
       goto cleanup;
     }
 
+ out:
 #if WITH_RAWDUMPS
   /* For those vendors that get confused when they see the nice output
    * and want the hex output
