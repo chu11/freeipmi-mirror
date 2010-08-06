@@ -4,7 +4,7 @@ Albert Chu
 chu11@llnl.gov
 
 The following is a list of the common OEM documentation requirements
-that are needed for OEM support in FreeIPMI.
+that are needed for full OEM support in FreeIPMI.
 
 IPMI OEM Command Extensions/Additions
 -------------------------------------
