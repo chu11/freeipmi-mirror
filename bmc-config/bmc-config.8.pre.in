@@ -72,7 +72,8 @@ Comments throughout the checked out file will give instructions on how
 to configure the fields.
 The 
 .B bmc-config.conf(5)
-also provides additional information on the meaning of different fields.
+manpage also provides additional information on the meaning of
+different fields.
 .LP
 For users with large clusters or sets of nodes, you may wish to use
 the same configuration file for all nodes.  The one problem with this
@@ -90,12 +91,12 @@ The
 .B UserN:Password 
 fields (where N is a number) cannot be checked out on some systems,
 therefore the checked out value will always be blank.
-
+.LP
 The
 .B UserN:Enable_User
 field (where N is a number) cannot be checked out on older IPMI
 systems, therefore the checked out value will sometime be blank.
-
+.LP
 The 
 .B UserN:Lan_Session_Limit 
 and 
@@ -110,7 +111,7 @@ users may choose to ignore it.  This field is considered optional by
 IPMI standards, and may result in errors when attempting to configure
 it to a non-zero value.  If errors to occur, setting the value back to
 0 should resolve problems.
-
+.LP
 The fields 
 .B Lan_Conf:IP_Address 
 and 
@@ -119,30 +120,30 @@ cannot be committed in parallel via hostrange support.  Each machine
 must be configured with a unique IP Address and MAC Address tuple,
 therefore we disallow this configuration in
 .B bmc-config.
-
+.LP
 On some motherboards,
 .B Lan_Conf:MAC_Address
 may be read only and the MAC address is automatically configured.
-
+.LP
 On some motherboards,
 .B Lan_Conf:MAC_Address
 may be read only and the MAC address is configured via an OEM command.  See
 .B ipmi-oem(8)
 to see if OEM configuration for your motherboard is supported.
-
+.LP
 On some motherboards, a number of user configuration fields cannot be
 read or configured until after a non-null username or non-null
 password is configured.  In some of these cases, an appropriate output
 in the config file will indicate this situation.  However, not all
 motherboard corner cases may be detected.  Users may wish to play
 around with the ordering of fields to work around these problems.
-
+.LP
 On some motherboards, OEM Authentication in
 .B Lan_Conf_Auth
 cannot be enabled.  However, the default motherboard settings have
 these fields enabled.  Users are advised to disable all OEM
 Authentication in this section.
-
+.LP
 On some motherboards, multiple channels may exist for either LAN or
 Serial IPMI communication.  If multiple channels exist, configuration
 of both channels can be viewed and ultimately configured by running
