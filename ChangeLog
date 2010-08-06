@@ -1,6 +1,8 @@
 2010-08-06  Albert Chu <chu11@llnl.gov>
 
 	* Fix SOL_Retry_Count validation bug.
+
+	* ipmipower/src/: Fix workaround flag config output corner case.
 	
 2010-08-06  Albert Chu <chu11@llnl.gov>
 

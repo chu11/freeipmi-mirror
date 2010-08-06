@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.120 2010-02-08 22:02:31 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.121 2010-08-06 18:38:37 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -797,6 +797,14 @@ _cmd_config (void)
   _workarounds_strcat (strbuf,
                        IPMI_TOOL_WORKAROUND_FLAGS_SUN_2_0_SESSION,
                        IPMI_TOOL_WORKAROUND_FLAGS_SUN_2_0_SESSION_STR,
+                       &is_first);
+  _workarounds_strcat (strbuf,
+                       IPMI_TOOL_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE,
+                       IPMI_TOOL_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE_STR,
+                       &is_first);
+  _workarounds_strcat (strbuf,
+                       IPMI_TOOL_WORKAROUND_FLAGS_NON_EMPTY_INTEGRITY_CHECK_VALUE,
+                       IPMI_TOOL_WORKAROUND_FLAGS_NON_EMPTY_INTEGRITY_CHECK_VALUE_STR,
                        &is_first);
 
   ipmipower_cbuf_printf (ttyout,
