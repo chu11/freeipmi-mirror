@@ -128,6 +128,12 @@ _get_sol_channel_number_for_channel (bmc_config_state_data_t *state_data,
 
   assert (state_data);
 
+  if (state_data->prog_data->args->config_args.common.tool_specific_workaround_flags & IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_SOL_CHANNEL_ASSUME_LAN_CHANNEL)
+    {
+      _sol_channel_number_save (state_data, lan_channel_number, lan_channel_number);
+      goto out;
+    }
+
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_sol_configuration_parameters_sol_payload_channel_rs)))
     {
       pstdout_fprintf (state_data->pstate,

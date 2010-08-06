@@ -160,6 +160,14 @@ Channels 1 and 3 respectively.
 #include <@top_srcdir@/common/man/manpage-common-workaround-heading-text.man>
 #include <@top_srcdir@/common/man/manpage-common-workaround-text.man>
 #include <@top_srcdir@/common/man/manpage-common-workaround-config-tool.man>
+.LP
+"solchannelassumelanchannel" - This workaround will force
+.B bmc-config
+to assume that the channel used SOL is identical to the channel used
+for LAN.  On some motherboards, the SOL channel is reported
+incorrectly, leading to incorrect configuration.  Most notably, this
+problem has come up when attempting to configure multiple channels.
+Issue observed on Intel S5500WBV/Penguin Relion 700.
 .SH "EXAMPLES"
 .B # bmc-config --checkout 
 .PP

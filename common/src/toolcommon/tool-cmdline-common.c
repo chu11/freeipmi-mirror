@@ -229,6 +229,9 @@ parse_workaround_flags (const char *str,
                && !strcasecmp (tok, IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_VERY_SLOW_COMMIT_STR))
         (*tool_specific_workaround_flags) |= IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_VERY_SLOW_COMMIT;
       else if (tool_specific_workaround_flags
+               && !strcasecmp (tok, IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_SOL_CHANNEL_ASSUME_LAN_CHANNEL_STR))
+        (*tool_specific_workaround_flags) |= IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_SOL_CHANNEL_ASSUME_LAN_CHANNEL;
+      else if (tool_specific_workaround_flags
                && !strcasecmp (tok, IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_IGNORE_STATE_FLAG_STR))
         (*tool_specific_workaround_flags) |= IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_IGNORE_STATE_FLAG;
       else

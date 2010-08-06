@@ -47,6 +47,7 @@ o bmc-config
   - Support --lan-channel-number.
   - Support --serial-channel-number.
   - Support --sol-channel-number.
+  - Support 'solchannelassumelanchannel' workaround.
   - Show verbose-only sections in --list.
   - Do not output section comments if key-pair specified on command line.
   - Allow checkout of sections/key-pairs if specified on command line,
