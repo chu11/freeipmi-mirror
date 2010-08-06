@@ -62,7 +62,7 @@ For the record, I have nothing against the companies and these issues.
 I am just as prone to programming bugs as they are.  The IPMI
 specification is gigantic and mistakes will happen.  I expect some
 design decisions were made for time to release, cost, customer needs,
-etc. too.  This is more documentation for historical purposes, people
+etc. too.  This documentation is more for historical purposes, people
 searching for information, and to document the difficulty of
 developing portable IPMI code.
 
