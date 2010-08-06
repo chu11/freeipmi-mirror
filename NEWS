@@ -123,6 +123,25 @@ o nagios_ipmi_sensors.pl
 o nagios_ipmimonitoring.pl
   - Removed.  Superseded by nagios_ipmi_sensors.pl.
 
+FreeIPMI 0.8.8 - 07/20/10
+-------------------------
+o Support Supermicro 'get-bmc-services-status' and
+  'set-bmc-services-status' in ipmi-oem.
+o Support bmc-watchdog 'ignorestateflag' workaround around more issues.
+o Support Open Session Privilege Workaround around more related
+  compliance issues.
+o Fix bmc-watchdog --version option.
+o Fix legacy workaround corner case in channel detection for Intel nodes.
+o Support Quanta reset-to-defaults command in ipmi-oem.
+o Modify ipmiconsole protocol to not deactivate SOL protocol is SOL is
+  already deactivated.
+o Modify ipmiconsole protocol to not error out under several malformed
+  packet scenarios.
+o Fix ipmiping/rmcpping command line parsing corner case.
+o Minor documentation updates.
+o Minor error message output fixes.
+o Support --without-random-device configure option for some embedded systems.
+
 FreeIPMI 0.8.7 - 06/17/10
 -------------------------
 o Support Supermicro X8DTG OEM sensors.
