@@ -293,6 +293,7 @@ fi
 %dir %{_includedir}/freeipmi/interface
 %dir %{_includedir}/freeipmi/interpret
 %dir %{_includedir}/freeipmi/locate
+%dir %{_includedir}/freeipmi/payload
 %dir %{_includedir}/freeipmi/record-format
 %dir %{_includedir}/freeipmi/sdr-cache
 %dir %{_includedir}/freeipmi/sdr-parse
@@ -314,6 +315,7 @@ fi
 %{_includedir}/freeipmi/interface/*.h
 %{_includedir}/freeipmi/interpret/*.h
 %{_includedir}/freeipmi/locate/*.h
+%{_includedir}/freeipmi/payload/*.h
 %{_includedir}/freeipmi/record-format/*.h
 %{_includedir}/freeipmi/sdr-cache/*.h
 %{_includedir}/freeipmi/sdr-parse/*.h
