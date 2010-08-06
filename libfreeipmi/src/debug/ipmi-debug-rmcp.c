@@ -163,6 +163,23 @@ ipmi_dump_rmcp_packet (int fd,
       goto cleanup;
     }
 
+
+#if WITH_RAWDUMPS
+  /* For those vendors that get confused when they see the nice output
+   * and want the hex output
+   */
+  if (ipmi_dump_hex (fd,
+                     prefix,
+                     hdr,
+		     trlr,
+		     pkt,
+		     pkt_len) < 0)
+    {
+      ERRNO_TRACE (errno);
+      goto cleanup;
+    }
+#endif
+  
   rv = 0;
  cleanup:
   fiid_obj_destroy (obj_rmcp_hdr);

@@ -1,5 +1,9 @@
 2010-08-05  Albert Chu <chu11@llnl.gov>
 
+	* Support --enable-rawdumps compile option.
+	
+2010-08-05  Albert Chu <chu11@llnl.gov>
+
 	* common/src/configtool/: Support 'veryslowcommit' workaround in
 	config tools for very slow BMCs.
 

@@ -564,7 +564,7 @@ _sel_entry_dump (ipmi_sel_parse_ctx_t ctx, struct ipmi_sel_parse_entry *sel_pars
       goto cleanup;
     }
 
-#if 0
+#if WITH_RAWDUMPS
   /* For those vendors that get confused when they see the nice output
    * and want the hex output
    */
@@ -575,7 +575,7 @@ _sel_entry_dump (ipmi_sel_parse_ctx_t ctx, struct ipmi_sel_parse_entry *sel_pars
 		     sel_parse_entry->sel_event_record,
 		     sel_parse_entry->sel_event_record_len) < 0)
     {
-      ERRNO_TRACE (errno);
+      SEL_PARSE_ERRNO_TO_SEL_PARSE_ERRNUM (ctx, errno);
       goto cleanup;
     }
 #endif

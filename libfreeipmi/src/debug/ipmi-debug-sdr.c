@@ -325,7 +325,7 @@ ipmi_dump_sdr_record (int fd,
       goto cleanup;
     }
 
-#if 0
+#if WITH_RAWDUMPS
   /* For those vendors that get confused when they see the nice output
    * and want the hex output
    */

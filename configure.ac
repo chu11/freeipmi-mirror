@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.9.1.alpha7],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.205 2010-07-29 20:20:49 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.206 2010-08-06 17:06:29 chu11 Exp $])
 
 dnl We require a modern autoconf and automake
 AC_PREREQ([2.57])
@@ -268,6 +268,13 @@ else
    WITH_DEBUG=0
 fi
 AC_SUBST(WITH_DEBUG)
+
+dnl Allow advanced developers to compile with raw dumping
+AC_ARG_ENABLE(rawdumps,
+	      AC_HELP_STRING([--enable-rawdumps], [output raw packet dumps when debugging]))
+if test "x${enable_rawdumps}" = "xyes"; then
+   AC_DEFINE([WITH_RAWDUMPS], [1], [Define if you want raw dumps])
+fi
 
 dnl Option to disable installing init.d scripts
 AC_ARG_ENABLE(init-scripts,
