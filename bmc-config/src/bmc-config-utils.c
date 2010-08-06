@@ -197,7 +197,7 @@ load_sol_channel_numbers (bmc_config_state_data_t *state_data)
    * channels
    */
 
-  if (state_data->lan_channel_numbers_count > 1)
+  if (state_data->lan_channel_numbers_count > 0)
     {
       for (channelindex = 0; channelindex < state_data->lan_channel_numbers_count; channelindex++)
         {
@@ -205,9 +205,9 @@ load_sol_channel_numbers (bmc_config_state_data_t *state_data)
 						   state_data->lan_channel_numbers[channelindex]) == CONFIG_ERR_FATAL_ERROR)
 	    return (CONFIG_ERR_FATAL_ERROR);
         }
+      state_data->sol_channel_numbers_loaded++;
     }
 
-  state_data->sol_channel_numbers_loaded++;
   return (CONFIG_ERR_SUCCESS);
 }
 

@@ -3,6 +3,8 @@
 	* freeipmi.spec.in: Update for payload dir.
 
 	* Fix --enable-rawumps corner cases.
+
+	* Fix SOL single-channel corner case.
 	
 2010-08-05  Albert Chu <chu11@llnl.gov>
 
