@@ -85,6 +85,132 @@ load_serial_channel_numbers (bmc_config_state_data_t *state_data)
   return (CONFIG_ERR_SUCCESS);
 }
 
+static void
+_sol_channel_number_save (bmc_config_state_data_t *state_data,
+			  uint8_t lan_channel_number,
+			  uint8_t sol_channel_number)
+{
+  unsigned int i;
+  int found = 0;
+
+  assert (state_data);
+  assert (state_data->sol_channel_numbers_count < CHANNEL_NUMBERS_MAX);
+
+  for (i = 0; i < state_data->sol_channel_numbers_count; i++)
+    {
+      if (state_data->sol_channel_numbers_sol_channel[i] == sol_channel_number)
+	{
+	  found++;
+	  break;
+	}
+    }
+
+  if (!found)
+    {
+      state_data->sol_channel_numbers_unique[state_data->sol_channel_numbers_unique_count] = sol_channel_number;
+      state_data->sol_channel_numbers_unique_count++;
+    }
+
+  state_data->sol_channel_numbers_lan_channel[state_data->sol_channel_numbers_count] = lan_channel_number;
+  state_data->sol_channel_numbers_sol_channel[state_data->sol_channel_numbers_count] = sol_channel_number;
+  state_data->sol_channel_numbers_count++;
+
+}
+
+config_err_t
+_get_sol_channel_number_for_channel (bmc_config_state_data_t *state_data,
+				     uint8_t lan_channel_number)
+{
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  config_err_t ret;
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint64_t val;
+
+  assert (state_data);
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_sol_configuration_parameters_sol_payload_channel_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_sol_configuration_parameters_sol_payload_channel (state_data->ipmi_ctx,
+                                                                     lan_channel_number,
+                                                                     IPMI_GET_SOL_PARAMETER,
+                                                                     CONFIG_SET_SELECTOR,
+                                                                     CONFIG_BLOCK_SELECTOR,
+                                                                     obj_cmd_rs) < 0)
+    {
+      /* This parameter is optional, if its not supported, assume LAN channel */
+      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+          && (ipmi_check_completion_code (obj_cmd_rs,
+                                          IPMI_COMP_CODE_SET_SOL_PARAMETER_NOT_SUPPORTED) == 1))
+        {
+	  _sol_channel_number_save (state_data, lan_channel_number, lan_channel_number);
+          goto out;
+        }
+
+      if (state_data->prog_data->args->config_args.common.debug)
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_cmd_get_sol_configuration_parameters_sol_payload_channel: %s\n",
+                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      
+      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+                                                  obj_cmd_rs,
+                                                  &ret))
+        rv = ret;
+      
+      goto cleanup;
+    }
+
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "payload_channel",
+                    &val) < 0)
+    {
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  _sol_channel_number_save (state_data, lan_channel_number, val);
+
+ out:
+  rv = CONFIG_ERR_SUCCESS;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
+config_err_t
+load_sol_channel_numbers (bmc_config_state_data_t *state_data)
+{
+  unsigned int channelindex;
+
+  assert (state_data);
+  
+  /* There's a lot of trickery here.  Even if motherboard specifies
+   * multiple LAN channels, they could map to a fewer number of SOL
+   * channels.  So we need to calculate the number of unique SOL
+   * channels
+   */
+
+  if (state_data->lan_channel_numbers_count > 1)
+    {
+      for (channelindex = 0; channelindex < state_data->lan_channel_numbers_count; channelindex++)
+        {
+  	  if (_get_sol_channel_number_for_channel (state_data,
+						   state_data->lan_channel_numbers[channelindex]) == CONFIG_ERR_FATAL_ERROR)
+	    return (CONFIG_ERR_FATAL_ERROR);
+        }
+    }
+
+  state_data->sol_channel_numbers_loaded++;
+  return (CONFIG_ERR_SUCCESS);
+}
+
 config_err_t
 get_lan_channel_number (bmc_config_state_data_t *state_data,
 			const char *section_name,
@@ -209,100 +335,6 @@ get_serial_channel_number (bmc_config_state_data_t *state_data,
   return (rv);
 }
 
-static void
-_sol_channel_number_save (bmc_config_state_data_t *state_data,
-			  uint8_t lan_channel_number,
-			  uint8_t sol_channel_number)
-{
-  assert (state_data);
-  assert (state_data->sol_channel_numbers_count < CHANNEL_NUMBERS_MAX);
-
-  state_data->sol_channel_numbers_lan_channel[state_data->sol_channel_numbers_count] = lan_channel_number;
-  state_data->sol_channel_numbers_sol_channel[state_data->sol_channel_numbers_count] = sol_channel_number;
-  state_data->sol_channel_numbers_count++;
-}
-
-config_err_t
-_get_sol_channel_number_for_channel (bmc_config_state_data_t *state_data,
-				     uint8_t lan_channel_number,
-				     uint8_t *channel_number)
-{
-  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
-  config_err_t ret;
-  fiid_obj_t obj_cmd_rs = NULL;
-  uint64_t val;
-  int i;
-
-  assert (state_data);
-  assert (channel_number);
-
-  for (i = 0; i < state_data->sol_channel_numbers_count; i++)
-    {
-      if (state_data->sol_channel_numbers_lan_channel[i] == lan_channel_number)
-	{
-	  (*channel_number) = state_data->sol_channel_numbers_sol_channel[i];
-	  goto out;
-	}
-    }
-
-  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_sol_configuration_parameters_sol_payload_channel_rs)))
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_create: %s\n",
-                       strerror (errno));
-      goto cleanup;
-    }
-
-  if (ipmi_cmd_get_sol_configuration_parameters_sol_payload_channel (state_data->ipmi_ctx,
-                                                                     lan_channel_number,
-                                                                     IPMI_GET_SOL_PARAMETER,
-                                                                     CONFIG_SET_SELECTOR,
-                                                                     CONFIG_BLOCK_SELECTOR,
-                                                                     obj_cmd_rs) < 0)
-    {
-      /* This parameter is optional, if its not supported, assume LAN channel */
-      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
-          && (ipmi_check_completion_code (obj_cmd_rs,
-                                          IPMI_COMP_CODE_SET_SOL_PARAMETER_NOT_SUPPORTED) == 1))
-        {
-	  _sol_channel_number_save (state_data, lan_channel_number, lan_channel_number);
-          (*channel_number) = lan_channel_number;
-          goto out;
-        }
-
-      if (state_data->prog_data->args->config_args.common.debug)
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "ipmi_cmd_get_sol_configuration_parameters_sol_payload_channel: %s\n",
-                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
-      
-      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
-        rv = ret;
-      
-      goto cleanup;
-    }
-
-  if (FIID_OBJ_GET (obj_cmd_rs,
-                    "payload_channel",
-                    &val) < 0)
-    {
-      rv = CONFIG_ERR_NON_FATAL_ERROR;
-      goto cleanup;
-    }
-
-  _sol_channel_number_save (state_data, lan_channel_number, val);
-  (*channel_number) = val;
-
- out:
-  rv = CONFIG_ERR_SUCCESS;
- cleanup:
-  fiid_obj_destroy (obj_cmd_rs);
-  return (rv);
-}
-
 config_err_t
 get_sol_channel_number (bmc_config_state_data_t *state_data,
 			const char *section_name,
@@ -310,33 +342,49 @@ get_sol_channel_number (bmc_config_state_data_t *state_data,
 {
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
-  uint8_t lan_channel_number;
-  char *ptr;
 
   assert (state_data);
   /* section_name can be NULL if want to force IPMI search */
   assert (channel_number);
 
-  if (section_name
-      && (ptr = stristr (section_name, "Channel_")))
-    lan_channel_number = atoi (ptr + strlen ("Channel_"));
-  else
+  /* For multi-channel cases, channel will be in the section name */
+
+  if (section_name)
     {
-      if ((ret = get_lan_channel_number (state_data, section_name, &lan_channel_number)) != CONFIG_ERR_SUCCESS)
+      char *ptr;
+
+      /* Sections with a channel number at the end of the section name */
+      if ((ptr = stristr (section_name, "Channel_")))
 	{
-	  rv = ret;
-	  goto cleanup;
+	  (*channel_number) = atoi (ptr + strlen ("Channel_"));
+	  return (CONFIG_ERR_SUCCESS);
 	}
     }
 
-  if ((ret = _get_sol_channel_number_for_channel (state_data,
-						  lan_channel_number,
-						  channel_number)) != CONFIG_ERR_SUCCESS)
-    {
-      rv = ret;
-      goto cleanup;
-    }
+  /* for single-channel, channel is first one found */
 
+  if (!state_data->prog_data->args->config_args.sol_channel_number_set)
+    {
+      if (!state_data->sol_channel_numbers_loaded)
+	{
+	  if ((ret = load_sol_channel_numbers (state_data)) != CONFIG_ERR_SUCCESS)
+	    {
+	      rv = ret;
+	      goto cleanup;
+	    }
+	}
+      
+      if (!state_data->sol_channel_numbers_count)
+	{
+	  rv = CONFIG_ERR_NON_FATAL_ERROR;
+	  goto cleanup;
+	}
+      
+      (*channel_number) = state_data->sol_channel_numbers_unique[0];
+    }
+  else
+    (*channel_number) = state_data->prog_data->args->config_args.sol_channel_number;
+  
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
   return (rv);

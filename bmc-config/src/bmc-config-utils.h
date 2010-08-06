@@ -25,6 +25,8 @@ config_err_t load_lan_channel_numbers (bmc_config_state_data_t *state_data);
 
 config_err_t load_serial_channel_numbers (bmc_config_state_data_t *state_data);
 
+config_err_t load_sol_channel_numbers (bmc_config_state_data_t *state_data);
+
 config_err_t get_lan_channel_number (bmc_config_state_data_t *state_data,
 				     const char *section_name,
 				     uint8_t *channel_number);

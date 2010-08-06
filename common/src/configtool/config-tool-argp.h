@@ -47,6 +47,7 @@ enum config_argp_option_keys
     CONFIG_ARGP_VERBOSE_KEY = 'v',
     CONFIG_ARGP_LAN_CHANNEL_NUMBER_KEY = 200,
     CONFIG_ARGP_SERIAL_CHANNEL_NUMBER_KEY = 201,
+    CONFIG_ARGP_SOL_CHANNEL_NUMBER_KEY = 202,
   };
 
 #define CONFIG_ARGP_COMMON_OPTIONS                                                        \
@@ -74,6 +75,10 @@ enum config_argp_option_keys
 #define CONFIG_ARGP_SERIAL_CHANNEL_OPTION                                                 \
   { "serial-channel-number", CONFIG_ARGP_SERIAL_CHANNEL_NUMBER_KEY, "NUMBER", 0,          \
       "Use a specific Serial Channel Number.", 40}
+
+#define CONFIG_ARGP_SOL_CHANNEL_OPTION                                                    \
+  { "sol-channel-number", CONFIG_ARGP_SOL_CHANNEL_NUMBER_KEY, "NUMBER", 0,                \
+      "Use a specific SOL Channel Number.", 40}
 
 /* legacy short-option */
 #define CONFIG_ARGP_COMMON_OPTIONS_LEGACY                \

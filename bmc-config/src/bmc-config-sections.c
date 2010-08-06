@@ -125,6 +125,9 @@ bmc_config_sections_create (bmc_config_state_data_t *state_data)
   if (load_serial_channel_numbers (state_data) == CONFIG_ERR_FATAL_ERROR)
     return (NULL);
 
+  if (load_sol_channel_numbers (state_data) == CONFIG_ERR_FATAL_ERROR)
+    return (NULL);
+
   if (_get_number_of_users (state_data, &number_of_users) != CONFIG_ERR_SUCCESS)
     {
       pstdout_fprintf (state_data->pstate,
@@ -155,6 +158,18 @@ bmc_config_sections_create (bmc_config_state_data_t *state_data)
     {
       state_data->serial_base_config_flags = 0;
       state_data->serial_channel_config_flags = CONFIG_DO_NOT_CHECKOUT;
+    }
+
+  if (state_data->prog_data->args->config_args.verbose_count
+      && state_data->sol_channel_numbers_unique_count > 1)
+    {
+      state_data->sol_base_config_flags = CONFIG_DO_NOT_CHECKOUT;
+      state_data->sol_channel_config_flags = 0;
+    }
+  else
+    {
+      state_data->sol_base_config_flags = 0;
+      state_data->sol_channel_config_flags = CONFIG_DO_NOT_CHECKOUT;
     }
 
   /* User Section(s) */
@@ -375,18 +390,18 @@ bmc_config_sections_create (bmc_config_state_data_t *state_data)
   /* SOL_Conf Section(s) */
 
   if (!(section = bmc_config_sol_conf_section_get (state_data,
-						   state_data->lan_base_config_flags,
+						   state_data->sol_base_config_flags,
 						   -1)))
     goto cleanup;
   if (config_section_append (&sections, section) < 0)
     goto cleanup;
 
-  if (state_data->lan_channel_numbers_count > 1)
+  if (state_data->sol_channel_numbers_unique_count > 1)
     {
-      for (channelindex = 0; channelindex < state_data->lan_channel_numbers_count; channelindex++)
+      for (channelindex = 0; channelindex < state_data->sol_channel_numbers_unique_count; channelindex++)
         {
           if (!(section = bmc_config_sol_conf_section_get (state_data,
-							   state_data->lan_channel_config_flags,
+							   state_data->sol_channel_config_flags,
 							   channelindex)))
             goto cleanup;
           if (config_section_append (&sections, section) < 0)

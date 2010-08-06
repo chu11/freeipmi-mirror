@@ -5,7 +5,7 @@
 
 	* bmc-config/: Fix multi-channel corner cases.
 
-	* common/man/: Update  very verbose description case in config tools.
+	* common/man/: Update very verbose description case in config tools.
 	
 2010-08-03  Albert Chu <chu11@llnl.gov>
 

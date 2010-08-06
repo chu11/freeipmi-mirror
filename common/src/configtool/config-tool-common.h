@@ -135,6 +135,8 @@ struct config_arguments
   int lan_channel_number_set;
   uint8_t serial_channel_number;
   int serial_channel_number_set;
+  uint8_t sol_channel_number;
+  int sol_channel_number_set;
   struct config_keypair *keypairs;
   struct config_section_str *section_strs;
 };

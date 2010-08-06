@@ -52,6 +52,8 @@ init_config_args (struct config_arguments *config_args)
   config_args->lan_channel_number_set = 0;
   config_args->serial_channel_number = 0;
   config_args->serial_channel_number_set = 0;
+  config_args->sol_channel_number = 0;
+  config_args->sol_channel_number_set = 0;
   config_args->keypairs = NULL;
   config_args->section_strs = NULL;
 }
@@ -190,6 +192,11 @@ config_parse_opt (int key,
       _config_parse_channel_number (arg,
                                     &(config_args->serial_channel_number),
                                     &(config_args->serial_channel_number_set));
+      break;
+    case CONFIG_ARGP_SOL_CHANNEL_NUMBER_KEY:
+      _config_parse_channel_number (arg,
+                                    &(config_args->sol_channel_number),
+                                    &(config_args->sol_channel_number_set));
       break;
     default:
       return (ARGP_ERR_UNKNOWN);

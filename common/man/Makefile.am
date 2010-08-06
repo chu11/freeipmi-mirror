@@ -42,6 +42,7 @@ EXTRA_DIST = \
 	manpage-common-config-tool-options-very-verbose.man \
 	manpage-common-config-tool-options-lan-channel-number.man \
 	manpage-common-config-tool-options-serial-channel-number.man \
+	manpage-common-config-tool-options-sol-channel-number.man \
 	manpage-common-config-tool-general-use.man \
 	manpage-common-troubleshooting.man \
 	manpage-common-troubleshooting-lan-only.man \

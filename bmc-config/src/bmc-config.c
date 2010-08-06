@@ -70,6 +70,8 @@ _bmc_config_state_data_init (bmc_config_state_data_t *state_data)
   state_data->serial_channel_numbers_loaded = 0;
 
   state_data->sol_channel_numbers_count = 0;
+  state_data->sol_channel_numbers_unique_count = 0;
+  state_data->sol_channel_numbers_loaded = 0;
 }
 
 static int

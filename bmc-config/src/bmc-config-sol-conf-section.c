@@ -1367,8 +1367,8 @@ bmc_config_sol_conf_section_get (bmc_config_state_data_t *state_data,
 						       NULL,
 						       config_flags,
 						       channel_index,
-						       state_data->lan_channel_numbers,
-						       state_data->lan_channel_numbers_count)))
+						       state_data->sol_channel_numbers_unique,
+						       state_data->sol_channel_numbers_unique_count)))
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,

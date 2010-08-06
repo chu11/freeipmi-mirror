@@ -102,6 +102,8 @@ typedef struct bmc_config_state_data
   unsigned int lan_channel_config_flags;
   unsigned int serial_base_config_flags;
   unsigned int serial_channel_config_flags;
+  unsigned int sol_base_config_flags;
+  unsigned int sol_channel_config_flags;
 
   /* For channel reading */
   uint8_t lan_channel_numbers[CHANNEL_NUMBERS_MAX];
@@ -115,6 +117,9 @@ typedef struct bmc_config_state_data
   uint8_t sol_channel_numbers_lan_channel[CHANNEL_NUMBERS_MAX];
   uint8_t sol_channel_numbers_sol_channel[CHANNEL_NUMBERS_MAX];
   unsigned int sol_channel_numbers_count;
+  uint8_t sol_channel_numbers_unique[CHANNEL_NUMBERS_MAX];
+  unsigned int sol_channel_numbers_unique_count;
+  unsigned int sol_channel_numbers_loaded;
 } bmc_config_state_data_t;
 
 #endif /* _BMC_CONFIG_H_ */
