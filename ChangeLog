@@ -1,6 +1,7 @@
 2010-08-06  Albert Chu <chu11@llnl.gov>
 
-	* ipmi-sel/: Cleanup and re-format a bit.
+	* ipmi-sel/ipmi-sel.8.pre.in, ipmi-fru/ipmi-fru.8.pre.in: Cleanup
+	and re-format a bit.
 	
 2010-08-06  Albert Chu <chu11@llnl.gov>
 

@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmi-fru.8.pre.in,v 1.46 2010-04-27 20:59:23 chu11 Exp $
+.\"$Id: ipmi-fru.8.pre.in,v 1.47 2010-08-06 23:55:21 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2007 The Regents of the University of California.
@@ -32,7 +32,10 @@ ipmi-fru \- display FRU information
 [\fIOPTION\fR...]
 .SH "DESCRIPTION"
 .B Ipmi-fru
-displays Field Replaceable Unit (FRU) Information.
+displays Field Replaceable Unit (FRU) Information.  The FRU may hold a
+variety of information, such as device information, hardware
+information, serial numbers, and part numbers.
+
 #include <@top_srcdir@/common/man/manpage-common-table-of-contents.man>
 #include <@top_srcdir@/common/man/manpage-common-general-options-header.man>
 #include <@top_srcdir@/common/man/manpage-common-driver.man>
