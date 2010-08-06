@@ -140,10 +140,7 @@ _ipmi_dump_lan_packet (int fd,
     }
 
   if (pkt_len <= indx)
-    {
-      rv = 0;
-      goto cleanup;
-    }
+    goto out;
 
   /* Dump session header */
   /* Output of session header depends on the auth code */
@@ -176,8 +173,7 @@ _ipmi_dump_lan_packet (int fd,
           ERRNO_TRACE (errno);
           goto cleanup;
         }
-      rv = 0;
-      goto cleanup;
+      goto out;
     }
 
   if (FIID_OBJ_GET (obj_session_hdr,
@@ -217,8 +213,7 @@ _ipmi_dump_lan_packet (int fd,
           ERRNO_TRACE (errno);
           goto cleanup;
         }
-      rv = 0;
-      goto cleanup;
+      goto out;
     }
 
   if ((len = fiid_obj_set_data (obj_session_hdr,
@@ -242,10 +237,7 @@ _ipmi_dump_lan_packet (int fd,
     }
 
   if (pkt_len <= indx)
-    {
-      rv = 0;
-      goto cleanup;
-    }
+    goto out;
 
   /* Dump message header */
 
@@ -282,10 +274,7 @@ _ipmi_dump_lan_packet (int fd,
     }
 
   if (pkt_len <= indx)
-    {
-      rv = 0;
-      goto cleanup;
-    }
+    goto out;
 
   /* Dump command data */
 
@@ -363,10 +352,7 @@ _ipmi_dump_lan_packet (int fd,
     }
 
   if (pkt_len <= indx)
-    {
-      rv = 0;
-      goto cleanup;
-    }
+    goto out;
 
   /* Dump trailer */
 
@@ -388,6 +374,9 @@ _ipmi_dump_lan_packet (int fd,
       ERRNO_TRACE (errno);
       goto cleanup;
     }
+
+  if (pkt_len <= indx)
+    goto out;
 
   /* Dump unexpected stuff */
 
@@ -427,6 +416,7 @@ _ipmi_dump_lan_packet (int fd,
       goto cleanup;
     }
 
+ out:
 #if WITH_RAWDUMPS
   /* For those vendors that get confused when they see the nice output
    * and want the hex output
