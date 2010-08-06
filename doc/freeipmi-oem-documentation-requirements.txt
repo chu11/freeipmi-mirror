@@ -3,8 +3,8 @@ IPMI OEM additions/extensions documentation requirements
 Albert Chu
 chu11@llnl.gov
 
-The following is a list of the common OEM documentation that is
-required for OEM support in FreeIPMI.
+The following is a list of the common OEM documentation requirements
+that are needed for OEM support in FreeIPMI.
 
 IPMI OEM Command Extensions/Additions
 -------------------------------------
@@ -19,9 +19,8 @@ extensions/additions necessary to help manage the system.
 Examples include:
  
 OEM commands for configuring the hardware for IPMI.  For example,
-configuring the ethernet port to be shared, dedicated, w/ failover
-(ipmi-oem's Inventec's get/set-nic-mode commands are an example of
-this).
+configuring the ethernet port to be shared or dedicated (ipmi-oem's
+Inventec's get/set-nic-mode commands are an example of this).
 
 OEM commands for retrieving motherboard specific information.  For
 example, OEM commands for reading firmware versions (ipmi-oem's
