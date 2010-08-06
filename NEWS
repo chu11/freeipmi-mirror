@@ -7,6 +7,7 @@ o Revert 'Open Session Privilege Workaround' changes in 0.8.8, were unnecessary.
 o Fix daylight savings bug when configuring BMC times in bmc-device.
 o Support 'veryslowcommit' workaround for config tools to work around
   very slow BMCs.
+o Support --enable-rawdumps compile option.
 
 FreeIPMI 0.8.8 - 07/20/10
 -------------------------
