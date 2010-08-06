@@ -580,6 +580,11 @@ Intel S5500WBV/Penguin Relion 700: Setting Non-volatile settings also
 changes Volatile settings for channel configuration.  No current
 resolution.
 
+Intel S5500WBV/Penguin Relion 700: Multiple LAN Channels exist,
+however when asking the BMC what SOL Channels there are, it indicates
+only 1.  Generally speaking, this need not be a bug.  However, for
+this particular motherboard it is.  No current resolution.
+
 ipmi-pef-config
 ---------------
 
