@@ -2,6 +2,8 @@
 
 	* Support --enable-rawdumps compile option.
 	
+	* Fix --enable-rawumps corner cases.
+
 2010-08-05  Albert Chu <chu11@llnl.gov>
 
 	* common/src/configtool/: Support 'veryslowcommit' workaround in
