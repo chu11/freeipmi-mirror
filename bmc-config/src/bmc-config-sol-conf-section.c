@@ -1438,7 +1438,7 @@ bmc_config_sol_conf_section_get (bmc_config_state_data_t *state_data,
                               0,
                               sol_retry_count_checkout,
                               sol_retry_count_commit,
-                              config_number_range_one_byte) < 0)
+                              config_number_range_three_bits) < 0)
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,

@@ -1,5 +1,9 @@
 2010-08-06  Albert Chu <chu11@llnl.gov>
 
+	* Fix SOL_Retry_Count validation bug.
+	
+2010-08-06  Albert Chu <chu11@llnl.gov>
+
 	* freeipmi.spec.in: Update for payload dir.
 
 	* Fix --enable-rawumps corner cases.
