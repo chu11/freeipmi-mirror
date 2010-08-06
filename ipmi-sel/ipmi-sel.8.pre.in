@@ -15,12 +15,6 @@ does not inform the user if an event is particularly good or bad, just
 that the event occurred.  Users may wish to use the
 \fB\-\-output\-event\-state\fR option to output the analyzed state.
 
-Some timestamps in the SEL may report a date of 1-Jan-1970.  This
-timestamp is not necessarily incorrect.  It usually indicates a
-hardware event that occurred before a timestamp in firmware has been
-initialized.  For example, certain hardware components will have their
-internal clocks reset during a power cycle.
-
 #include <@top_srcdir@/common/man/manpage-common-table-of-contents.man>
 To perform some advanced SEL management, please see
 .B bmc-device(8).
@@ -176,6 +170,18 @@ motherboards.
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-options.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-localhost.man>
 #include <@top_srcdir@/common/man/manpage-common-troubleshooting.man>
+
+.SH "IPMI-SEL TROUBLESHOOTING"
+Some timestamps in the SEL may report a date of 1-Jan-1970.  This
+timestamp is not necessarily incorrect.  It usually indicates a
+hardware event that occurred before a timestamp in firmware has been
+initialized.  For example, certain hardware components will have their
+internal clocks reset during a power cycle.
+.LP
+However, if the internal clock of the SEL appears to be regularly
+incorrect, you may need to set the SEL time.  This can be done using
+.B bmc-device(8).
+
 #include <@top_srcdir@/common/man/manpage-common-workaround-heading-text.man>
 #include <@top_srcdir@/common/man/manpage-common-workaround-text.man>
 .LP
