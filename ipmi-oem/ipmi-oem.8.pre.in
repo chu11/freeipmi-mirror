@@ -399,7 +399,7 @@ This OEM command will display additional OEM authentication settings.
 (See \fIset\-authentication\-config\fR below for description on
 outputs.)  Command confirmed to work on Inventec 5441/5442 (Dell
 Xanadu II/III).
-TP
+.TP
 .B set-authentication-config \fIKEY=VALUE ...\fR
 This OEM command will set additional OEM authentication settings on
 the IPMI card.  The possible keys and values are
