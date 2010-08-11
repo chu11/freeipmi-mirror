@@ -63,7 +63,7 @@ _config_default (void)
 #ifndef NDEBUG
   conf.debug = IPMIDETECTD_DEBUG_DEFAULT;
 #endif /* NDEBUG */
-  conf.config_file = IPMIDETECTD_CONFIG_FILE_DEFAULT;
+  conf.config_file = NULL;
   conf.ipmiping_period = IPMIDETECTD_IPMIPING_PERIOD;
   conf.ipmidetectd_server_port = IPMIDETECTD_SERVER_PORT_DEFAULT;
 
@@ -211,6 +211,7 @@ _config_file_parse (void)
       },
     };
   conffile_t cf = NULL;
+  int legacy_file_loaded = 0;
   int num;
 
   if (!(cf = conffile_handle_create ()))
@@ -220,19 +221,42 @@ _config_file_parse (void)
     }
 
   num = sizeof (options)/sizeof (struct conffile_option);
-  if (conffile_parse (cf, conf.config_file, options, num, NULL, 0, 0) < 0)
+
+  /* Try legacy file first */
+  if (!conf.config_file)
     {
-      char buf[CONFFILE_MAX_ERRMSGLEN];
+      if (!conffile_parse (cf,
+                           IPMIDETECTD_CONFIG_FILE_LEGACY,
+                           options,
+                           num,
+                           NULL,
+                           0,
+                           0))
+        legacy_file_loaded++;
+    }
 
-      /* Its not an error if the default configuration file doesn't exist */
-      if (!strcmp (conf.config_file, IPMIDETECTD_CONFIG_FILE_DEFAULT)
-          && conffile_errnum (cf) == CONFFILE_ERR_EXIST)
-        goto cleanup;
-
-      if (conffile_errmsg (cf, buf, CONFFILE_MAX_ERRMSGLEN) < 0)
-        IPMIDETECTD_EXIT (("conffile_parse: %d", conffile_errnum (cf)));
-      else
-        IPMIDETECTD_EXIT (("conffile_parse: %s", buf));
+  if (!legacy_file_loaded)
+    {
+      if (conffile_parse (cf,
+                          conf.config_file ? conf.config_file : IPMIDETECTD_CONFIG_FILE_DEFAULT,
+                          options,
+                          num,
+                          NULL,
+                          0,
+                          0) < 0)
+        {
+          char buf[CONFFILE_MAX_ERRMSGLEN];
+          
+          /* Its not an error if the default configuration file doesn't exist */
+          if (!strcmp (conf.config_file, IPMIDETECTD_CONFIG_FILE_DEFAULT)
+              && conffile_errnum (cf) == CONFFILE_ERR_EXIST)
+            goto cleanup;
+          
+          if (conffile_errmsg (cf, buf, CONFFILE_MAX_ERRMSGLEN) < 0)
+            IPMIDETECTD_EXIT (("conffile_parse: %d", conffile_errnum (cf)));
+          else
+            IPMIDETECTD_EXIT (("conffile_parse: %s", buf));
+        }
     }
 
  cleanup:

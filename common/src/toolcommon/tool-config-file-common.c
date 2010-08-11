@@ -4065,6 +4065,7 @@ config_file_parse (const char *filename,
   conffile_t cf = NULL;
   int rv = -1;
   int options_len;
+  int legacy_file_loaded = 0;
 
   assert ((!support
            || (((support & CONFIG_FILE_INBAND)
@@ -4359,45 +4360,61 @@ config_file_parse (const char *filename,
       goto cleanup;
     }
 
-  /* FREEIPMI_CONFIG_FILE_DEFAULT defined in config.h */
+  /* Try legacy file first */
   if (!filename)
-    filename = FREEIPMI_CONFIG_FILE_DEFAULT;
-
-  if (conffile_parse (cf,
-                      filename,
-                      config_file_options,
-                      config_file_options_len,
-                      NULL,
-                      0,
-                      0) < 0)
     {
-      char buf[CONFFILE_MAX_ERRMSGLEN];
-
-      /* don't exit, but return (-1) */
-      if (conffile_errnum (cf) == CONFFILE_ERR_EXIST
-          && no_error_if_not_found)
-        goto cleanup;
-
-      /* Its not an error if the default configuration file doesn't exist */
-      if (!strcmp (filename, FREEIPMI_CONFIG_FILE_DEFAULT)
-          && conffile_errnum (cf) == CONFFILE_ERR_EXIST)
-        goto out;
-
-      if (conffile_errmsg (cf, buf, CONFFILE_MAX_ERRMSGLEN) < 0)
+      if (!conffile_parse (cf,
+                           FREEIPMI_CONFIG_FILE_LEGACY,
+                           config_file_options,
+                           config_file_options_len,
+                           NULL,
+                           0,
+                           0))
+        legacy_file_loaded++;
+    }
+  
+  if (!legacy_file_loaded)
+    {
+      /* FREEIPMI_CONFIG_FILE_DEFAULT defined in config.h */
+      if (!filename)
+        filename = FREEIPMI_CONFIG_FILE_DEFAULT;
+      
+      if (conffile_parse (cf,
+                          filename,
+                          config_file_options,
+                          config_file_options_len,
+                          NULL,
+                          0,
+                          0) < 0)
         {
-          fprintf (stderr, "conffile_parse: %d\n", conffile_errnum (cf));
-          exit (1);
-        }
-      else
-        {
-          if (CONFFILE_IS_PARSE_ERR (conffile_errnum (cf))
-              || conffile_errnum (cf) == CONFFILE_ERR_EXIST
-              || conffile_errnum (cf) == CONFFILE_ERR_OPEN
-              || conffile_errnum (cf) == CONFFILE_ERR_READ)
-            fprintf (stderr, "Config File Error: %s\n", buf);
+          char buf[CONFFILE_MAX_ERRMSGLEN];
+          
+          /* don't exit, but return (-1) */
+          if (conffile_errnum (cf) == CONFFILE_ERR_EXIST
+              && no_error_if_not_found)
+            goto cleanup;
+          
+          /* Its not an error if the default configuration file doesn't exist */
+          if (!strcmp (filename, FREEIPMI_CONFIG_FILE_DEFAULT)
+              && conffile_errnum (cf) == CONFFILE_ERR_EXIST)
+            goto out;
+          
+          if (conffile_errmsg (cf, buf, CONFFILE_MAX_ERRMSGLEN) < 0)
+            {
+              fprintf (stderr, "conffile_parse: %d\n", conffile_errnum (cf));
+              exit (1);
+            }
           else
-            fprintf (stderr, "conffile_parse: %s\n", buf);
-          exit (1);
+            {
+              if (CONFFILE_IS_PARSE_ERR (conffile_errnum (cf))
+                  || conffile_errnum (cf) == CONFFILE_ERR_EXIST
+                  || conffile_errnum (cf) == CONFFILE_ERR_OPEN
+                  || conffile_errnum (cf) == CONFFILE_ERR_READ)
+                fprintf (stderr, "Config File Error: %s\n", buf);
+              else
+                fprintf (stderr, "conffile_parse: %s\n", buf);
+              exit (1);
+            }
         }
     }
 

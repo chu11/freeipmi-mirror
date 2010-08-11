@@ -1,6 +1,7 @@
 2010-08-11  Albert Chu <chu11@llnl.gov>
 
-	* Move config files to /etc/freeipmi/.
+	* Move config files to /etc/freeipmi/.  Support legacy config
+	files.
 	
 2010-08-11  Albert Chu <chu11@llnl.gov>
 
