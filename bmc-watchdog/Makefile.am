@@ -15,8 +15,6 @@ DISTCLEANFILES = $(MANS_CPP) $(MANS_CPP:%=%.pre) .deps/*.P
 #  following and add `chk' to the EXTRA_DIST list
 #TESTS=chk
 
-BMCWATCHDOGLOGdir = $(localstatedir)/log/$(PACKAGE)
-
 EXTRA_DIST = bmc-watchdog.init bmc-watchdog.logrotate bmc-watchdog.sysconfig
 
 install-data-local: $(INSTALL_INIT_SCRIPTS) $(INSTALL_LOGROTATE_CONFIG) \
@@ -33,7 +31,7 @@ install-logrotate-config:
 	$(INSTALL) -m 444 $(srcdir)/bmc-watchdog.logrotate $(DESTDIR)$(sysconfdir)/logrotate.d/bmc-watchdog
 
 install-logdir:
-	$(INSTALL) -m 755 -d $(DESTDIR)$(BMCWATCHDOGLOGdir)
+	$(INSTALL) -m 755 -d $(DESTDIR)$(localstatedir)/log/$(PACKAGE)
 
 uninstall-local:
 	$(RM) -f $(DESTDIR)$(sysconfdir)/init.d/bmc-watchdog
