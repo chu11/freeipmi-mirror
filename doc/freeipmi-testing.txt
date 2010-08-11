@@ -1367,7 +1367,6 @@ Test)
 If a user has been disabled due to excess Bad Passwords, ensure an
 event message has been generated to indicate this.
 
-
 Misc: ARP
 ---------
 
@@ -1398,3 +1397,12 @@ Configure ARP Responses Off.
 Verify (probably with tcpdump or an equivalent network sniffer) that
 ARP Responses are disabled and not responding to ARP requests.
 
+Test)
+
+Configure both Gratuitous ARPs and ARP Responses Off
+
+Verify that IPMI over LAN still functions if you manually insert the
+remote MAC address into your local ARP cache.  
+
+In Linux, 'arp -s <hostname> <mac_addr>' adds the MAC address to the
+local ARP cache.
