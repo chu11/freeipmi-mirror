@@ -58,8 +58,6 @@
 #include "tool-common.h"
 #include "tool-config-file-common.h"
 
-#define IPMICONSOLE_CONFIG_FILE_DEFAULT "/etc/ipmiconsole.conf"
-
 const char *argp_program_version =
   "ipmiconsole - " PACKAGE_VERSION "\n"
   "Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.\n"
@@ -166,7 +164,7 @@ _ipmiconsole_config_file_parse (struct ipmiconsole_arguments *cmd_args)
   if (!cmd_args->common.config_file)
     {
       /* try legacy file first */
-      if (!config_file_parse (IPMICONSOLE_CONFIG_FILE_DEFAULT,
+      if (!config_file_parse (IPMICONSOLE_CONFIG_FILE_LEGACY,
                               1,         /* do not exit if file not found */
                               &(cmd_args->common),
                               NULL,

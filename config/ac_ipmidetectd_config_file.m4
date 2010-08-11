@@ -11,6 +11,6 @@ AC_DEFUN([AC_IPMIDETECTD_CONFIG_FILE],
 
   AC_DEFINE_UNQUOTED([IPMIDETECTD_CONFIG_FILE_DEFAULT], 
                      ["$IPMIDETECTD_CONFIG_FILE_DEFAULT"], 
-                     [Define default ipmidetectd config_file.])
+                     [Define default ipmidetectd config file.])
   AC_SUBST(IPMIDETECTD_CONFIG_FILE_DEFAULT)
 ])

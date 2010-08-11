@@ -16,9 +16,10 @@ CLEANFILES = $(MANS_CPP) *~
 
 DISTCLEANFILES = $(MANS_CPP) $(MANS_CPP:%=%.pre) .deps/*.P
 
-EXTRA_DIST = ipmidetectd.init ipmidetectd.conf
+EXTRA_DIST = ipmidetectd.init ipmidetectd.conf ipmidetect.conf
 
 install-data-local: $(INSTALL_INIT_SCRIPTS)
+	$(INSTALL) -m 644 $(srcdir)/ipmidetect.conf $(DESTDIR)$(sysconfdir)/ipmidetect.conf
 	$(INSTALL) -m 644 $(srcdir)/ipmidetectd.conf $(DESTDIR)$(sysconfdir)/ipmidetectd.conf
 
 install-init-scripts:
@@ -27,4 +28,5 @@ install-init-scripts:
 
 uninstall-local:
 	$(RM) -f $(DESTDIR)$(sysconfdir)/init.d/ipmidetectd
+	$(RM) -f $(DESTDIR)$(sysconfdir)/ipmidetect.conf
 	$(RM) -f $(DESTDIR)$(sysconfdir)/ipmidetectd.conf

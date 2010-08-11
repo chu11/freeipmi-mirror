@@ -289,6 +289,7 @@ _set_boot_flags (ipmi_chassis_config_state_data_t *state_data,
    */
 
   if (ipmi_cmd_set_system_boot_options_boot_flags (state_data->ipmi_ctx,
+                                                   IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_UNLOCKED,
                                                    data->bios_boot_type,
                                                    data->boot_flags_persistent,
                                                    IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_VALID,
@@ -851,22 +852,61 @@ lock_out_sleep_button_commit (const char *section_name,
 }
 
 static config_err_t
-chassis_boot_flags_post (const char *section_name,
-                         void *arg)
+_set_system_boot_options_BMC_boot_flag_valid_bit_clearing (ipmi_chassis_config_state_data_t *state_data)
 {
-  ipmi_chassis_config_state_data_t *state_data;
-  uint8_t boot_info_acknowledge = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_INFO_UNACKNOWLEDGE;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   fiid_obj_t obj_cmd_rs = NULL;
 
-  assert (section_name);
-  assert (arg);
+  assert (state_data);
 
-  state_data = (ipmi_chassis_config_state_data_t *)arg;
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_system_boot_options_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
 
-  /* Following should be called to inform remaining chassis subsystems
-   * that a boot configuration change has taken place.
-   */
+  if (ipmi_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing (state_data->ipmi_ctx,
+                                                                         IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_UNLOCKED,
+                                                                         IPMI_CHASSIS_BOOT_OPTIONS_DONT_CLEAR_VALID_BIT,
+                                                                         IPMI_CHASSIS_BOOT_OPTIONS_DONT_CLEAR_VALID_BIT,
+                                                                         IPMI_CHASSIS_BOOT_OPTIONS_DONT_CLEAR_VALID_BIT,
+                                                                         IPMI_CHASSIS_BOOT_OPTIONS_DONT_CLEAR_VALID_BIT,
+                                                                         IPMI_CHASSIS_BOOT_OPTIONS_DONT_CLEAR_VALID_BIT,
+                                                                         obj_cmd_rs) < 0)
+    {
+      config_err_t ret;
+      
+      if (state_data->prog_data->args->config_args.common.debug)
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_cmd_set_system_boot_options_boot_info_acknowledge: %s\n",
+                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      
+      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+                                                  obj_cmd_rs,
+                                                  &ret))
+        rv = ret;
+      
+      goto cleanup;
+    }
+  
+  rv = CONFIG_ERR_SUCCESS;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv); 
+}
+
+static config_err_t
+_set_system_boot_options_boot_info_acknowledge (ipmi_chassis_config_state_data_t *state_data)
+{
+  uint8_t boot_info_acknowledge = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_INFO_UNACKNOWLEDGE;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  fiid_obj_t obj_cmd_rs = NULL;
+  
+  assert (state_data);
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_system_boot_options_rs)))
     {
@@ -878,6 +918,7 @@ chassis_boot_flags_post (const char *section_name,
     }
 
   if (ipmi_cmd_set_system_boot_options_boot_info_acknowledge (state_data->ipmi_ctx,
+                                                              IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_UNLOCKED,
                                                               &boot_info_acknowledge,
                                                               &boot_info_acknowledge,
                                                               &boot_info_acknowledge,
@@ -892,18 +933,60 @@ chassis_boot_flags_post (const char *section_name,
                          stderr,
                          "ipmi_cmd_set_system_boot_options_boot_info_acknowledge: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
-
+      
       if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
                                                   obj_cmd_rs,
                                                   &ret))
         rv = ret;
-
+      
       goto cleanup;
     }
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
+static config_err_t
+chassis_boot_flags_post (const char *section_name,
+                         void *arg)
+{
+  ipmi_chassis_config_state_data_t *state_data;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  config_err_t ret;
+
+  assert (section_name);
+  assert (arg);
+
+  state_data = (ipmi_chassis_config_state_data_t *)arg;
+
+  /* Following should be called to ensure system keeps the
+   * configuration permanent
+   */
+
+  if ((ret = _set_system_boot_options_BMC_boot_flag_valid_bit_clearing (state_data)) == CONFIG_ERR_FATAL_ERROR)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ret != CONFIG_ERR_SUCCESS)
+    rv = ret;
+
+  /* Following should be called to inform remaining chassis subsystems
+   * that a boot configuration change has taken place.
+   */
+
+  if ((ret = _set_system_boot_options_boot_info_acknowledge (state_data)) == CONFIG_ERR_FATAL_ERROR)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (rv == CONFIG_ERR_FATAL_ERROR)
+    rv = CONFIG_ERR_SUCCESS;
+ cleanup:
   return (rv);
 }
 

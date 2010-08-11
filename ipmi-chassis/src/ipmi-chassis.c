@@ -1525,6 +1525,7 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
   bios_shared_mode_override = val;
 
   if (ipmi_cmd_set_system_boot_options_boot_flags (state_data->ipmi_ctx,
+                                                   IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_UNLOCKED,
                                                    bios_boot_type,
                                                    boot_flags_persistent,
                                                    boot_flags_valid,
@@ -1552,6 +1553,7 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
     }
 
   if (ipmi_cmd_set_system_boot_options_boot_info_acknowledge (state_data->ipmi_ctx,
+                                                              IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_UNLOCKED,
                                                               &boot_info_acknowledge,
                                                               &boot_info_acknowledge,
                                                               &boot_info_acknowledge,

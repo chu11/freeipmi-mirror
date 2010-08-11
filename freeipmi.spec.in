@@ -172,6 +172,7 @@ fi
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/freeipmi_interpret_sel.conf
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/freeipmi_interpret_sensor.conf
 %attr(0600,root,root) %config(noreplace) %{_sysconfdir}/freeipmi.conf
+%attr(0600,root,root) %config(noreplace) %{_sysconfdir}/ipmidetect.conf
 %doc %{_datadir}/doc/%{name}/AUTHORS
 %doc %{_datadir}/doc/%{name}/COPYING
 %doc %{_datadir}/doc/%{name}/ChangeLog
@@ -347,10 +348,11 @@ fi
 %{_mandir}/man8/ipmidetectd.8*
 
 %changelog
-* Tue Dec 29 2009 Albert Chu <chu11@llnl.gov> 0.9.0
+* Wed Aug 11 2010 Albert Chu <chu11@llnl.gov> 0.9.0
 - Add interpret sub-library.
 - Support new interpret config files.
 - Support new ipmi_monitoring*.h files.
+- Support new config files.
 
 * Wed Sep 30 2009 Albert Chu <chu11@llnl.gov> 0.8.0
 - Update for dcmi.

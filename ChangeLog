@@ -1,3 +1,30 @@
+2010-08-11  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/: Support Chassis Boot Option Boot Initiator Info
+	and Boot Initiator Mailbox.
+
+	* libfreeipmi/: Re-work Chassis Boot Option configs to support
+	valid/invalid parameter config on parameters.
+
+	* ipmi-chassis-config/: Set don't clear valid bits after setting
+	boot flags.
+
+	* config/ac_ipmipower_config_file.m4: New file.
+
+	* config/ac_ipmiconsole_config_file.m4: New file.
+
+	* configure.ac: Calculate ipmipower.conf and ipmiconsole.conf
+	legacy conf files via configure.
+
+	* ipmipower/, ipmiconsole/: Use macros from autoconf instead of
+	hard defined default conf locations.
+
+	* ipmidetect/ipmidetect.conf: Add example file.
+
+	* freeipmi.spec.in: Update appropriately for distribution changes.
+
+	* Various code cleanup.
+	
 2010-08-09  Albert Chu <chu11@llnl.gov>
 
 	* Convert Repo to Subversion.

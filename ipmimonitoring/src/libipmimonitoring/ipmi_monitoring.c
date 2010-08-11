@@ -368,7 +368,7 @@ ipmi_monitoring_ctx_sensor_config_file (ipmi_monitoring_ctx_t c,
     {
       /* legacy */
       if (ipmi_interpret_load_sensor_config (c->interpret_ctx,
-                                             IPMI_MONITORING_SENSOR_CONFIG_FILE_DEFAULT) < 0)
+                                             IPMI_MONITORING_SENSOR_CONFIG_FILE_LEGACY) < 0)
         {
           if (ipmi_interpret_ctx_errnum (c->interpret_ctx) != IPMI_INTERPRET_ERR_SENSOR_CONFIG_FILE_DOES_NOT_EXIST)
             {

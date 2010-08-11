@@ -330,18 +330,19 @@ _read_conffile (ipmidetect_t handle, struct ipmidetect_config *conf)
   if (conffile_parse (cf, IPMIDETECT_CONFIG_FILE_DEFAULT, options, num, NULL, 0, 0) < 0)
     {
       /* Not an error if the configuration file does not exist */
-      if (conffile_errnum (cf) != CONFFILE_ERR_EXIST) {
-    int errnum = conffile_errnum (cf);
-    if (CONFFILE_IS_PARSE_ERR (errnum))
-      handle->errnum = IPMIDETECT_ERR_CONF_PARSE;
-    else if (errnum == CONFFILE_ERR_OUTMEM)
-      handle->errnum = IPMIDETECT_ERR_OUT_OF_MEMORY;
-    else
-      handle->errnum = IPMIDETECT_ERR_CONF_INTERNAL;
-    goto cleanup;
-      }
+      if (conffile_errnum (cf) != CONFFILE_ERR_EXIST)
+        {
+          int errnum = conffile_errnum (cf);
+          if (CONFFILE_IS_PARSE_ERR (errnum))
+            handle->errnum = IPMIDETECT_ERR_CONF_PARSE;
+          else if (errnum == CONFFILE_ERR_OUTMEM)
+            handle->errnum = IPMIDETECT_ERR_OUT_OF_MEMORY;
+          else
+            handle->errnum = IPMIDETECT_ERR_CONF_INTERNAL;
+          goto cleanup;
+        }
     }
-
+  
   rv = 0;
  cleanup:
   (void)conffile_handle_destroy (cf);

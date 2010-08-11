@@ -107,6 +107,13 @@ extern "C" {
 #define IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_SOFT_RESET                               0x0A
 #define IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_POWER_UP_VIA_RTC                         0x0B
 
+#define IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_UNLOCKED                   0x0
+#define IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_INVALID_LOCKED                   0x1
+
+#define IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_VALID(__value)    \
+  (((__value) == IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_UNLOCKED \
+    || (__value) == IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_INVALID_LOCKED) ? 1 : 0)
+
 #define IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_INVALID                         0x00
 #define IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_VALID                           0x01
 
@@ -238,6 +245,8 @@ extern "C" {
 
 #define IPMI_CHASSIS_BOOT_OPTIONS_DEVICE_INSTANCE_SELECTOR_INTERNAL_BITMASK 0x10 
 
+#define IPMI_CHASSIS_BOOT_OPTIONS_BLOCK_DATA_LEN_MAX 16
+
 /* 
  * fill* functions return 0 on success, -1 on error.
  *
@@ -272,6 +281,8 @@ extern fiid_template_t tmpl_cmd_set_system_boot_options_service_partition_scan_r
 extern fiid_template_t tmpl_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing_rq;
 extern fiid_template_t tmpl_cmd_set_system_boot_options_boot_info_acknowledge_rq;
 extern fiid_template_t tmpl_cmd_set_system_boot_options_boot_flags_rq;
+extern fiid_template_t tmpl_cmd_set_system_boot_options_boot_initiator_info_rq;
+extern fiid_template_t tmpl_cmd_set_system_boot_options_boot_initiator_mailbox_rq;
 
 extern fiid_template_t tmpl_cmd_get_system_boot_options_rq;
 extern fiid_template_t tmpl_cmd_get_system_boot_options_rs;
@@ -281,6 +292,8 @@ extern fiid_template_t tmpl_cmd_get_system_boot_options_service_partition_scan_r
 extern fiid_template_t tmpl_cmd_get_system_boot_options_BMC_boot_flag_valid_bit_clearing_rs;
 extern fiid_template_t tmpl_cmd_get_system_boot_options_boot_info_acknowledge_rs;
 extern fiid_template_t tmpl_cmd_get_system_boot_options_boot_flags_rs;
+extern fiid_template_t tmpl_cmd_get_system_boot_options_boot_initiator_info_rs;
+extern fiid_template_t tmpl_cmd_get_system_boot_options_boot_initiator_mailbox_rs;
 
 extern fiid_template_t tmpl_cmd_get_power_on_hours_counter_rq;
 extern fiid_template_t tmpl_cmd_get_power_on_hours_counter_rs;
@@ -311,35 +324,42 @@ int fill_cmd_set_power_cycle_interval (uint8_t interval,
 int fill_cmd_get_system_restart_cause (fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_set_system_boot_options (uint8_t parameter_selector,
+                                      uint8_t parameter_valid,
                                       const void *configuration_parameter_data,
                                       unsigned int configuration_parameter_data_len,
                                       fiid_obj_t obj_cmd_rq);
 
-int fill_cmd_set_system_boot_options_set_in_progress (uint8_t state,
+int fill_cmd_set_system_boot_options_set_in_progress (uint8_t parameter_valid,
+                                                      uint8_t state,
                                                       fiid_obj_t obj_cmd_rq);
 
-int fill_cmd_set_system_boot_options_service_partition_selector (uint8_t service_partition_selector,
+int fill_cmd_set_system_boot_options_service_partition_selector (uint8_t parameter_valid,
+                                                                 uint8_t service_partition_selector,
                                                                  fiid_obj_t obj_cmd_rq);
 
-int fill_cmd_set_system_boot_options_service_partition_scan (uint8_t service_partition_discovered,
+int fill_cmd_set_system_boot_options_service_partition_scan (uint8_t parameter_valid,
+                                                             uint8_t service_partition_discovered,
                                                              uint8_t service_partition_scan,
                                                              fiid_obj_t obj_cmd_rq);
 
-int fill_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing (uint8_t dont_clear_on_power_up,
+int fill_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing (uint8_t parameter_valid,
+                                                                       uint8_t dont_clear_on_power_up,
                                                                        uint8_t dont_clear_on_pushbutton_or_soft_reset,
                                                                        uint8_t dont_clear_on_watchdog_timeout,
                                                                        uint8_t dont_clear_on_chassis_control,
                                                                        uint8_t dont_clear_on_PEF,
                                                                        fiid_obj_t obj_cmd_rq);
 
-int fill_cmd_set_system_boot_options_boot_info_acknowledge (const uint8_t *bios_or_post_handled_boot_info,
+int fill_cmd_set_system_boot_options_boot_info_acknowledge (uint8_t parameter_valid,
+                                                            const uint8_t *bios_or_post_handled_boot_info,
                                                             const uint8_t *os_loader_handled_boot_info,
                                                             const uint8_t *os_or_service_partition_handled_boot_info,
                                                             const uint8_t *sms_handled_boot_info,
                                                             const uint8_t *oem_handled_boot_info,
                                                             fiid_obj_t obj_cmd_rq);
 
-int fill_cmd_set_system_boot_options_boot_flags (uint8_t bios_boot_type,
+int fill_cmd_set_system_boot_options_boot_flags (uint8_t parameter_valid,
+                                                 uint8_t bios_boot_type,
                                                  uint8_t boot_flags_persistent,
                                                  uint8_t boot_flags_valid,
                                                  uint8_t lock_out_reset_button,
@@ -357,6 +377,18 @@ int fill_cmd_set_system_boot_options_boot_flags (uint8_t bios_boot_type,
                                                  uint8_t bios_shared_mode_override,
                                                  uint8_t device_instance_selector,
                                                  fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_set_system_boot_options_boot_initiator_info (uint8_t parameter_valid,
+                                                          uint8_t boot_source_channel_number,
+                                                          uint32_t session_id,
+                                                          uint32_t boot_info_timestamp,
+                                                          fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_set_system_boot_options_boot_initiator_mailbox (uint8_t parameter_valid,
+                                                             uint8_t set_selector,
+                                                             const void *block_data,
+                                                             unsigned int block_data_length,
+                                                             fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_get_system_boot_options (uint8_t parameter_selector,
                                       uint8_t set_selector,

@@ -26,6 +26,7 @@
 
 #include "freeipmi/cmds/ipmi-chassis-cmds.h"
 #include "freeipmi/fiid/fiid.h"
+#include "freeipmi/spec/ipmi-channel-spec.h"
 #include "freeipmi/spec/ipmi-chassis-boot-options-parameter-spec.h"
 #include "freeipmi/spec/ipmi-cmd-spec.h"
 
@@ -311,6 +312,29 @@ fiid_template_t tmpl_cmd_set_system_boot_options_boot_flags_rq =
     { 0, "", 0}
   };
 
+fiid_template_t tmpl_cmd_set_system_boot_options_boot_initiator_info_rq =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 7, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "parameter_valid", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "boot_source.channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "boot_source.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 32, "session_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 32, "boot_info_timestamp", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
+/* achu: 16 bytes per block, 16*8 = 128 bits */
+fiid_template_t tmpl_cmd_set_system_boot_options_boot_initiator_mailbox_rq =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 7, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "parameter_valid", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "set_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 128, "block_data", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
+    { 0, "", 0}
+  };
+
 fiid_template_t tmpl_cmd_get_system_boot_options_rq =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -442,6 +466,35 @@ fiid_template_t tmpl_cmd_get_system_boot_options_boot_flags_rs =
     { 4, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 5, "device_instance_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 3, "reserved3", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0},
+  };
+
+fiid_template_t tmpl_cmd_get_system_boot_options_boot_initiator_info_rs =
+     {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 4, "parameter_version", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 7, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "parameter_valid", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "boot_source.channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "boot_source.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 32, "session_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 32, "boot_info_timestamp", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0},
+  };
+
+/* achu: 16 bytes per block, 16*8 = 128 bits */
+fiid_template_t tmpl_cmd_get_system_boot_options_boot_initiator_mailbox_rs =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 4, "parameter_version", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 7, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "parameter_valid", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "set_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 128, "block_data", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
     { 0, "", 0},
   };
 
@@ -670,12 +723,14 @@ fill_cmd_get_system_restart_cause (fiid_obj_t obj_cmd_rq)
 
 int
 fill_cmd_set_system_boot_options (uint8_t parameter_selector,
+                                  uint8_t parameter_valid,
                                   const void *configuration_parameter_data,
                                   unsigned int configuration_parameter_data_len,
                                   fiid_obj_t obj_cmd_rq)
 {
   if ((!IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_SELECTOR_VALID (parameter_selector)
        && !IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_SELECTOR_IS_OEM (parameter_selector))
+      || !IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_VALID (parameter_valid)
       || !configuration_parameter_data
       || !configuration_parameter_data_len
       || !fiid_obj_valid (obj_cmd_rq))
@@ -693,7 +748,7 @@ fill_cmd_set_system_boot_options (uint8_t parameter_selector,
   FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SYSTEM_BOOT_OPTIONS);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", parameter_selector);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_valid", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_UNLOCKED);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_valid", parameter_valid);
 
   FILL_FIID_OBJ_SET_DATA (obj_cmd_rq,
                           "configuration_parameter_data",
@@ -703,10 +758,12 @@ fill_cmd_set_system_boot_options (uint8_t parameter_selector,
 }
 
 int
-fill_cmd_set_system_boot_options_set_in_progress (uint8_t state,
+fill_cmd_set_system_boot_options_set_in_progress (uint8_t parameter_valid,
+                                                  uint8_t state,
                                                   fiid_obj_t obj_cmd_rq)
 {
-  if (!IPMI_CHASSIS_BOOT_OPTIONS_SET_IN_PROGRESS_VALID (state)
+  if (!IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_VALID (parameter_valid)
+      || !IPMI_CHASSIS_BOOT_OPTIONS_SET_IN_PROGRESS_VALID (state)
       || !fiid_obj_valid (obj_cmd_rq))
     {
       SET_ERRNO (EINVAL);
@@ -724,7 +781,7 @@ fill_cmd_set_system_boot_options_set_in_progress (uint8_t state,
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SYSTEM_BOOT_OPTIONS);
 
   FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_SET_IN_PROGRESS);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_valid", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_UNLOCKED);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_valid", parameter_valid);
 
   FILL_FIID_OBJ_SET (obj_cmd_rq, "state", state);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
@@ -733,10 +790,12 @@ fill_cmd_set_system_boot_options_set_in_progress (uint8_t state,
 }
 
 int
-fill_cmd_set_system_boot_options_service_partition_selector (uint8_t service_partition_selector,
+fill_cmd_set_system_boot_options_service_partition_selector (uint8_t parameter_valid,
+                                                             uint8_t service_partition_selector,
                                                              fiid_obj_t obj_cmd_rq)
 {
-  if (!fiid_obj_valid (obj_cmd_rq))
+  if (!IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_VALID (parameter_valid)
+      || !fiid_obj_valid (obj_cmd_rq))
     {
       SET_ERRNO (EINVAL);
       return (-1);
@@ -753,7 +812,7 @@ fill_cmd_set_system_boot_options_service_partition_selector (uint8_t service_par
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SYSTEM_BOOT_OPTIONS);
 
   FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_SERVICE_PARTITION_SELECTOR);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_valid", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_UNLOCKED);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_valid", parameter_valid);
 
   FILL_FIID_OBJ_SET (obj_cmd_rq, "service_partition_selector", service_partition_selector);
 
@@ -761,11 +820,13 @@ fill_cmd_set_system_boot_options_service_partition_selector (uint8_t service_par
 }
 
 int
-fill_cmd_set_system_boot_options_service_partition_scan (uint8_t service_partition_discovered,
+fill_cmd_set_system_boot_options_service_partition_scan (uint8_t parameter_valid,
+                                                         uint8_t service_partition_discovered,
                                                          uint8_t service_partition_scan,
                                                          fiid_obj_t obj_cmd_rq)
 {
-  if (!IPMI_CHASSIS_BOOT_OPTIONS_SERVICE_PARTITION_DISCOVERED_VALID (service_partition_discovered)
+  if (!IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_VALID (parameter_valid)
+      || !IPMI_CHASSIS_BOOT_OPTIONS_SERVICE_PARTITION_DISCOVERED_VALID (service_partition_discovered)
       || !IPMI_CHASSIS_BOOT_OPTIONS_SERVICE_PARTITION_SCAN_VALID (service_partition_scan)
       || !fiid_obj_valid (obj_cmd_rq))
     {
@@ -784,7 +845,7 @@ fill_cmd_set_system_boot_options_service_partition_scan (uint8_t service_partiti
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SYSTEM_BOOT_OPTIONS);
 
   FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_SERVICE_PARTITION_SCAN);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_valid", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_UNLOCKED);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_valid", parameter_valid);
   
   FILL_FIID_OBJ_SET (obj_cmd_rq, "service_partition_discovered", service_partition_discovered);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "service_partition_scan", service_partition_scan);
@@ -794,14 +855,16 @@ fill_cmd_set_system_boot_options_service_partition_scan (uint8_t service_partiti
 }
 
 int
-fill_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing (uint8_t dont_clear_on_power_up,
+fill_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing (uint8_t parameter_valid,
+                                                                   uint8_t dont_clear_on_power_up,
                                                                    uint8_t dont_clear_on_pushbutton_reset_soft_reset,
                                                                    uint8_t dont_clear_on_watchdog_timeout,
                                                                    uint8_t dont_clear_on_chassis_control,
                                                                    uint8_t dont_clear_on_PEF,
                                                                    fiid_obj_t obj_cmd_rq)
 {
-  if (!IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT_VALID (dont_clear_on_power_up)
+  if (!IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_VALID (parameter_valid)
+      || !IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT_VALID (dont_clear_on_power_up)
       || !IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT_VALID (dont_clear_on_pushbutton_reset_soft_reset)
       || !IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT_VALID (dont_clear_on_watchdog_timeout)
       || !IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT_VALID (dont_clear_on_chassis_control)
@@ -821,7 +884,7 @@ fill_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing (uint8_t dont_
   FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SYSTEM_BOOT_OPTIONS);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_BMC_BOOT_FLAG_VALID_BIT_CLEARING);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_valid", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_UNLOCKED);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_valid", parameter_valid);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "dont_clear_valid_bit_on_power_up_via_power_pushbutton_or_wake_event", dont_clear_on_power_up);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "dont_clear_valid_bit_on_pushbutton_reset_soft_reset", dont_clear_on_pushbutton_reset_soft_reset);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "dont_clear_valid_bit_on_reset_power_cycle_caused_by_watchdog_timeout", dont_clear_on_watchdog_timeout);
@@ -833,15 +896,17 @@ fill_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing (uint8_t dont_
 }
 
 int
-fill_cmd_set_system_boot_options_boot_info_acknowledge (const uint8_t *bios_or_post_handled_boot_info,
+fill_cmd_set_system_boot_options_boot_info_acknowledge (uint8_t parameter_valid,
+                                                        const uint8_t *bios_or_post_handled_boot_info,
                                                         const uint8_t *os_loader_handled_boot_info,
                                                         const uint8_t *os_or_service_partition_handled_boot_info,
                                                         const uint8_t *sms_handled_boot_info,
                                                         const uint8_t *oem_handled_boot_info,
                                                         fiid_obj_t obj_cmd_rq)
 {
-  if ((bios_or_post_handled_boot_info
-       && !IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (*bios_or_post_handled_boot_info))
+  if (!IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_VALID (parameter_valid)
+      || (bios_or_post_handled_boot_info
+          && !IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (*bios_or_post_handled_boot_info))
       || (os_loader_handled_boot_info
           && !IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (*os_loader_handled_boot_info))
       || (os_or_service_partition_handled_boot_info
@@ -866,7 +931,7 @@ fill_cmd_set_system_boot_options_boot_info_acknowledge (const uint8_t *bios_or_p
 
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SYSTEM_BOOT_OPTIONS);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_BOOT_INFO_ACKNOWLEDGE);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_valid", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_UNLOCKED);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_valid", parameter_valid);
 
   if (bios_or_post_handled_boot_info)
     {
@@ -931,7 +996,8 @@ fill_cmd_set_system_boot_options_boot_info_acknowledge (const uint8_t *bios_or_p
 }
 
 int
-fill_cmd_set_system_boot_options_boot_flags (uint8_t bios_boot_type,
+fill_cmd_set_system_boot_options_boot_flags (uint8_t parameter_valid,
+                                             uint8_t bios_boot_type,
                                              uint8_t boot_flags_persistent,
                                              uint8_t boot_flags_valid,
                                              uint8_t lock_out_reset_button,
@@ -950,7 +1016,8 @@ fill_cmd_set_system_boot_options_boot_flags (uint8_t bios_boot_type,
                                              uint8_t device_instance_selector,
                                              fiid_obj_t obj_cmd_rq)
 {
-  if (!IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (boot_flags_valid)
+  if (!IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_VALID (parameter_valid)
+      || !IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (boot_flags_valid)
       || !IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (boot_flags_persistent)
       || !IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (cmos_clear)
       || !IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BIOS_BOOT_TYPE_VALID (bios_boot_type)
@@ -982,7 +1049,7 @@ fill_cmd_set_system_boot_options_boot_flags (uint8_t bios_boot_type,
   FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SYSTEM_BOOT_OPTIONS);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_BOOT_FLAGS);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_valid", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_UNLOCKED);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_valid", parameter_valid);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "bios_boot_type", bios_boot_type);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "boot_flags_persistent", boot_flags_persistent);
@@ -1004,6 +1071,71 @@ fill_cmd_set_system_boot_options_boot_flags (uint8_t bios_boot_type,
   FILL_FIID_OBJ_SET (obj_cmd_rq, "device_instance_selector", device_instance_selector); 
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved3", 0);
 
+  return (0);
+}
+
+int
+fill_cmd_set_system_boot_options_boot_initiator_info (uint8_t parameter_valid,
+                                                      uint8_t boot_source_channel_number,
+                                                      uint32_t session_id,
+                                                      uint32_t boot_info_timestamp,
+                                                      fiid_obj_t obj_cmd_rq)
+{
+  if (!IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_VALID (parameter_valid)
+      || !IPMI_CHANNEL_NUMBER_VALID (boot_source_channel_number)
+      || !fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_system_boot_options_boot_initiator_info_rq) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SYSTEM_BOOT_OPTIONS);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_BOOT_INITIATOR_INFO);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_valid", parameter_valid);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "boot_source.channel_number", boot_source_channel_number);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "boot_source.reserved", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "session_id", session_id);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "boot_info_timestamp", boot_info_timestamp);
+
+  return (0);
+}
+
+int
+fill_cmd_set_system_boot_options_boot_initiator_mailbox (uint8_t parameter_valid,
+                                                         uint8_t set_selector,
+                                                         const void *block_data,
+                                                         unsigned int block_data_length,
+                                                         fiid_obj_t obj_cmd_rq)
+{
+  if (!IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_VALID (parameter_valid)
+      || block_data_length > IPMI_CHASSIS_BOOT_OPTIONS_BLOCK_DATA_LEN_MAX
+      || !fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+  
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_system_boot_options_boot_initiator_mailbox_rq) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+  
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SYSTEM_BOOT_OPTIONS);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_BOOT_INITIATOR_MAILBOX);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_valid", parameter_valid);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "set_selector", set_selector);
+  if (block_data && block_data_length)
+    FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, "block_data", block_data, block_data_length);
+  
   return (0);
 }
 

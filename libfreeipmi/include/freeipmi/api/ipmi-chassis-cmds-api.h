@@ -70,15 +70,18 @@ int ipmi_cmd_get_system_restart_cause (ipmi_ctx_t ctx,
 
 int ipmi_cmd_set_system_boot_options (ipmi_ctx_t ctx,
                                       uint8_t parameter_selector,
+                                      uint8_t parameter_valid,
                                       const void *configuration_parameter_data,
                                       unsigned int configuration_parameter_data_len,
                                       fiid_obj_t obj_cmd_rs);
 
 int ipmi_cmd_set_system_boot_options_set_in_progress (ipmi_ctx_t ctx,
+                                                      uint8_t parameter_valid,
                                                       uint8_t state,
                                                       fiid_obj_t obj_cmd_rs);
 
 int ipmi_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing (ipmi_ctx_t ctx,
+                                                                       uint8_t parameter_valid,
                                                                        uint8_t dont_clear_on_power_up,
                                                                        uint8_t dont_clear_on_pushbutton_reset_soft_reset,
                                                                        uint8_t dont_clear_on_watchdog_timeout,
@@ -87,6 +90,7 @@ int ipmi_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing (ipmi_ctx_
                                                                        fiid_obj_t obj_cmd_rs);
 
 int ipmi_cmd_set_system_boot_options_boot_info_acknowledge (ipmi_ctx_t ctx,
+                                                            uint8_t parameter_valid,
                                                             const uint8_t *bios_or_post_handled_boot_info,
                                                             const uint8_t *os_loader_handled_boot_info,
                                                             const uint8_t *os_or_service_partition_handled_boot_info,
@@ -95,6 +99,7 @@ int ipmi_cmd_set_system_boot_options_boot_info_acknowledge (ipmi_ctx_t ctx,
                                                             fiid_obj_t obj_cmd_rs);
 
 int ipmi_cmd_set_system_boot_options_boot_flags (ipmi_ctx_t ctx,
+                                                 uint8_t parameter_valid,
                                                  uint8_t bios_boot_type,
                                                  uint8_t boot_flags_persistent,
                                                  uint8_t boot_flags_valid,
@@ -113,6 +118,20 @@ int ipmi_cmd_set_system_boot_options_boot_flags (ipmi_ctx_t ctx,
                                                  uint8_t bios_shared_mode_override,
                                                  uint8_t device_instance_selector,
                                                  fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_set_system_boot_options_boot_initiator_info (ipmi_ctx_t ctx,
+                                                          uint8_t parameter_valid,
+                                                          uint8_t boot_source_channel_number,
+                                                          uint32_t session_id,
+                                                          uint32_t boot_info_timestamp,
+                                                          fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_set_system_boot_options_boot_initiator_mailbox (ipmi_ctx_t ctx,
+                                                             uint8_t parameter_valid,
+                                                             uint8_t set_selector,
+                                                             const void *block_data,
+                                                             unsigned int block_data_length,
+                                                             fiid_obj_t obj_cmd_rs);
 
 int ipmi_cmd_get_system_boot_options (ipmi_ctx_t ctx,
                                       uint8_t parameter_selector,
@@ -149,6 +168,16 @@ int ipmi_cmd_get_system_boot_options_boot_flags (ipmi_ctx_t ctx,
                                                  uint8_t set_selector,
                                                  uint8_t block_selector,
                                                  fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_get_system_boot_options_boot_initiator_info (ipmi_ctx_t ctx,
+                                                          uint8_t set_selector,
+                                                          uint8_t block_selector,
+                                                          fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_get_system_boot_options_boot_initiator_mailbox (ipmi_ctx_t ctx,
+                                                             uint8_t set_selector,
+                                                             uint8_t block_selector,
+                                                             fiid_obj_t obj_cmd_rs);
 
 int ipmi_cmd_get_power_on_hours_counter (ipmi_ctx_t ctx,
                                          fiid_obj_t obj_cmd_rs);

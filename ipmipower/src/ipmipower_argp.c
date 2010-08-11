@@ -52,8 +52,6 @@
 #include "tool-cmdline-common.h"
 #include "tool-config-file-common.h"
 
-#define IPMIPOWER_CONFIG_FILE_DEFAULT "/etc/ipmipower.conf"
-
 extern struct ipmipower_connection *ics;
 
 const char *argp_program_version =
@@ -303,7 +301,7 @@ _ipmipower_config_file_parse (struct ipmipower_arguments *cmd_args)
   /* try legacy file first */
   if (!cmd_args->common.config_file)
     {
-      if (!config_file_parse (IPMIPOWER_CONFIG_FILE_DEFAULT,
+      if (!config_file_parse (IPMIPOWER_CONFIG_FILE_LEGACY,
                               1,         /* do not exit if file not found */
                               &(cmd_args->common),
                               NULL,
