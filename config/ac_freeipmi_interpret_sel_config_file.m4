@@ -5,7 +5,7 @@
 AC_DEFUN([AC_INTERPRET_SEL_CONFIG_FILE],
 [
 # Must expand nested unquoting
-  INTERPRET_SEL_CONFIG_FILE_DEFAULT_TMP1="`eval echo ${sysconfdir}/freeipmi_interpret_sel.conf`"
+  INTERPRET_SEL_CONFIG_FILE_DEFAULT_TMP1="`eval echo $FREEIPMI_SYSCONFDIR/freeipmi_interpret_sel.conf`"
   INTERPRET_SEL_CONFIG_FILE_DEFAULT_TMP2="`echo $INTERPRET_SEL_CONFIG_FILE_DEFAULT_TMP1 | sed 's/^NONE/$ac_default_prefix/'`"
   INTERPRET_SEL_CONFIG_FILE_DEFAULT="`eval echo $INTERPRET_SEL_CONFIG_FILE_DEFAULT_TMP2`"
 

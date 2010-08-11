@@ -1,5 +1,9 @@
 2010-08-11  Albert Chu <chu11@llnl.gov>
 
+	* Move config files to /etc/freeipmi/.
+	
+2010-08-11  Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/: Support Chassis Boot Option Boot Initiator Info
 	and Boot Initiator Mailbox.
 
