@@ -1,6 +1,8 @@
 2010-08-12  Albert Chu <chu11@llnl.gov>
 
 	* ipmimonitoring/: Update examples and library comments.
+
+	* ipmidetect/ipmidetectd.init: Fix for /etc/freeipmi/
 	
 2010-08-11  Albert Chu <chu11@llnl.gov>
 

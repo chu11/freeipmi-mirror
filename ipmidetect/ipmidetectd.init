@@ -14,7 +14,7 @@
 ### END INIT INFO
 
 IPMIDETECTD=/usr/sbin/ipmidetectd
-IPMIDETECTD_CONF=/etc/ipmidetectd.conf
+IPMIDETECTD_CONF=/etc/freeipmi/ipmidetectd.conf
 LOCKFILE=/var/lock/subsys/ipmidetectd
 
 [ -f $IPMIDETECTD ] || exit 5
