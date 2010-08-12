@@ -1,3 +1,7 @@
+2010-08-12  Albert Chu <chu11@llnl.gov>
+
+	* ipmimonitoring/: Update examples and library comments.
+	
 2010-08-11  Albert Chu <chu11@llnl.gov>
 
 	* Move config files to /etc/freeipmi/.  Support legacy config

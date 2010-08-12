@@ -245,6 +245,7 @@ _ipmimonitoring (struct ipmi_monitoring_ipmi_config *ipmi_config)
         }
     }
 
+  /* Must call otherwise only default interpretations ever used */
   if (sensor_config_file)
     {
       if (ipmi_monitoring_ctx_sensor_config_file (ctx,
@@ -256,7 +257,16 @@ _ipmimonitoring (struct ipmi_monitoring_ipmi_config *ipmi_config)
           goto cleanup;
         }
     }
-  
+  else
+    {
+      if (ipmi_monitoring_ctx_sensor_config_file (ctx, NULL) < 0)
+        {
+          fprintf (stderr,
+                   "ipmi_monitoring_ctx_sensor_config_file: %s\n",
+                   ipmi_monitoring_ctx_errormsg (ctx));
+          goto cleanup;
+        }
+    } 
 
   if (reread_sdr_cache)
     sensor_reading_flags |= IPMI_MONITORING_SENSOR_READING_FLAGS_REREAD_SDR_CACHE;

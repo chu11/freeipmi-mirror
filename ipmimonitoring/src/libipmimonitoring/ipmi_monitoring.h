@@ -479,6 +479,9 @@ char *ipmi_monitoring_ctx_errormsg (ipmi_monitoring_ctx_t c);
  * sel_config_file is specified, the default sel configuration
  * file will be read and parsed.
  *
+ * If this function is never called, only the default
+ * libipmimonitoring interpretations will be used.
+ *
  * Returns 0 on success, -1 on error
  */
 int ipmi_monitoring_ctx_sel_config_file (ipmi_monitoring_ctx_t c,
@@ -491,6 +494,9 @@ int ipmi_monitoring_ctx_sel_config_file (ipmi_monitoring_ctx_t c,
  * rules stored in a specific sensor configuration file.  If NULL
  * sensor_config_file is specified, the default sensor configuration
  * file will be read and parsed.
+ *
+ * If this function is never called, only the default
+ * libipmimonitoring interpretations will be used.
  *
  * Returns 0 on success, -1 on error
  */

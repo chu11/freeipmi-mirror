@@ -247,10 +247,21 @@ _ipmimonitoring (struct ipmi_monitoring_ipmi_config *ipmi_config)
         }
     }
 
+  /* Must call otherwise only default interpretations ever used */
   if (sel_config_file)
     {
       if (ipmi_monitoring_ctx_sel_config_file (ctx,
                                                sel_config_file) < 0)
+        {
+          fprintf (stderr,
+                   "ipmi_monitoring_ctx_sel_config_file: %s\n",
+                   ipmi_monitoring_ctx_errormsg (ctx));
+          goto cleanup;
+        }
+    }
+  else
+    {
+      if (ipmi_monitoring_ctx_sel_config_file (ctx, NULL) < 0)
         {
           fprintf (stderr,
                    "ipmi_monitoring_ctx_sel_config_file: %s\n",
