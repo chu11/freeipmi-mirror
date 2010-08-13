@@ -178,13 +178,13 @@ _get_led_name (ipmi_oem_state_data_t *state_data,
   assert (led_name_len);
 
    if (oem_data->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_IBM
-       && oem_data->product_id == IPMI_OEM_IBM_PRODUCT_ID_X3455)
+       && oem_data->product_id == IPMI_IBM_PRODUCT_ID_X3455)
      {
        if (led_id == IPMI_OEM_IBM_LED_X3455_LOCATION)
          led_id_str = "Location";
      }
    else if (oem_data->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_IBM
-            && oem_data->product_id == IPMI_OEM_IBM_PRODUCT_ID_X3755)
+            && oem_data->product_id == IPMI_IBM_PRODUCT_ID_X3755)
      {
        if (led_id == IPMI_OEM_IBM_LED_X3755_CPU)
          led_id_str = "CPU";
