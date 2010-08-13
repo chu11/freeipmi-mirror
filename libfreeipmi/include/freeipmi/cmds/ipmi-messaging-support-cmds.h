@@ -124,6 +124,9 @@ extern "C" {
   (((__val) == IPMI_GET_SYSTEM_INFO_PARAMETER       \
     || (__val) == IPMI_GET_SYSTEM_INFO_PARAMETER_REVISION_ONLY) ? 1 : 0)
 
+#define IPMI_SYSTEM_INFO_PARAMETERS_NO_SET_SELECTOR                            0x0
+#define IPMI_SYSTEM_INFO_PARAMETERS_NO_BLOCK_SELECTOR                          0x0
+
 #define IPMI_SYSTEM_INFO_PARAMETERS_SET_COMPLETE                              0x00
 #define IPMI_SYSTEM_INFO_PARAMETERS_SET_IN_PROGRESS                           0x01
 #define IPMI_SYSTEM_INFO_PARAMETERS_SET_COMMIT_WRITE                          0x02

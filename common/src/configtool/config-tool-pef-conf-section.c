@@ -82,8 +82,8 @@ _get_pef_control (pstdout_state_t pstate,
 
   if (ipmi_cmd_get_pef_configuration_parameters_pef_control (ipmi_ctx,
                                                              IPMI_GET_PEF_PARAMETER,
-                                                             CONFIG_SET_SELECTOR,
-                                                             CONFIG_BLOCK_SELECTOR,
+                                                             IPMI_PEF_CONFIGURATION_PARAMETERS_NO_SET_SELECTOR,
+                                                             IPMI_PEF_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                              obj_cmd_rs) < 0)
     {
       config_err_t ret;
@@ -431,8 +431,8 @@ _get_pef_action_global_control (pstdout_state_t pstate,
 
   if (ipmi_cmd_get_pef_configuration_parameters_pef_action_global_control (ipmi_ctx,
                                                                            IPMI_GET_PEF_PARAMETER,
-                                                                           CONFIG_SET_SELECTOR,
-                                                                           CONFIG_BLOCK_SELECTOR,
+                                                                           IPMI_PEF_CONFIGURATION_PARAMETERS_NO_SET_SELECTOR,
+                                                                           IPMI_PEF_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                                            obj_cmd_rs) < 0)
     {
       config_err_t ret;
@@ -904,8 +904,8 @@ pef_startup_delay_checkout (pstdout_state_t pstate,
 
   if (ipmi_cmd_get_pef_configuration_parameters_pef_startup_delay (ipmi_ctx,
                                                                    IPMI_GET_PEF_PARAMETER,
-                                                                   CONFIG_SET_SELECTOR,
-                                                                   CONFIG_BLOCK_SELECTOR,
+                                                                   IPMI_PEF_CONFIGURATION_PARAMETERS_NO_SET_SELECTOR,
+                                                                   IPMI_PEF_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                                    obj_cmd_rs) < 0)
     {
       config_err_t ret;
@@ -1021,8 +1021,8 @@ pef_alert_startup_delay_checkout (pstdout_state_t pstate,
 
   if (ipmi_cmd_get_pef_configuration_parameters_pef_alert_startup_delay (ipmi_ctx,
                                                                          IPMI_GET_PEF_PARAMETER,
-                                                                         CONFIG_SET_SELECTOR,
-                                                                         CONFIG_BLOCK_SELECTOR,
+                                                                         IPMI_PEF_CONFIGURATION_PARAMETERS_NO_SET_SELECTOR,
+                                                                         IPMI_PEF_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                                          obj_cmd_rs) < 0)
     {
       config_err_t ret;

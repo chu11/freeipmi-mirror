@@ -27,6 +27,9 @@ extern "C" {
 #include <freeipmi/fiid/fiid.h>
 #include <freeipmi/spec/ipmi-sensor-types-spec.h>
 
+#define IPMI_PEF_CONFIGURATION_PARAMETERS_NO_SET_SELECTOR                            0x0
+#define IPMI_PEF_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR                          0x0
+
 #define IPMI_PEF_CONFIGURATION_PARAMETERS_SET_COMPLETE                              0x00
 #define IPMI_PEF_CONFIGURATION_PARAMETERS_SET_IN_PROGRESS                           0x01
 #define IPMI_PEF_CONFIGURATION_PARAMETERS_SET_COMMIT_WRITE                          0x02

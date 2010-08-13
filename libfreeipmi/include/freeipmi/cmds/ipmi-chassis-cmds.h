@@ -114,6 +114,9 @@ extern "C" {
   (((__value) == IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_UNLOCKED \
     || (__value) == IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_INVALID_LOCKED) ? 1 : 0)
 
+#define IPMI_CHASSIS_BOOT_OPTIONS_NO_SET_SELECTOR                            0x0
+#define IPMI_CHASSIS_BOOT_OPTIONS_NO_BLOCK_SELECTOR                          0x0
+
 #define IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_INVALID                         0x00
 #define IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_VALID                           0x01
 

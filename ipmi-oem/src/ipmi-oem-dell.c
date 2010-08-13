@@ -322,8 +322,8 @@ _get_dell_system_info_short_string (ipmi_oem_state_data_t *state_data,
   if (ipmi_cmd_get_system_info_parameters (state_data->ipmi_ctx,
                                            IPMI_GET_SYSTEM_INFO_PARAMETER,
                                            parameter_selector,
-                                           0,
-                                           IPMI_SYSTEM_INFO_NO_BLOCK_SELECTOR,
+                                           IPMI_SYSTEM_INFO_PARAMETERS_NO_SET_SELECTOR,
+                                           IPMI_SYSTEM_INFO_PARAMETERS_NO_BLOCK_SELECTOR,
                                            obj_cmd_rs) < 0)
     {
       pstdout_fprintf (state_data->pstate,
@@ -422,7 +422,7 @@ _get_dell_system_info_long_string (ipmi_oem_state_data_t *state_data,
                                            IPMI_GET_SYSTEM_INFO_PARAMETER,
                                            parameter_selector,
                                            set_selector,
-                                           IPMI_SYSTEM_INFO_NO_BLOCK_SELECTOR,
+                                           IPMI_SYSTEM_INFO_PARAMETERS_NO_BLOCK_SELECTOR,
                                            obj_cmd_rs) < 0)
     {
       pstdout_fprintf (state_data->pstate,
@@ -509,7 +509,7 @@ _get_dell_system_info_long_string (ipmi_oem_state_data_t *state_data,
                                                IPMI_GET_SYSTEM_INFO_PARAMETER,
                                                parameter_selector,
                                                set_selector,
-                                               IPMI_SYSTEM_INFO_NO_BLOCK_SELECTOR,
+                                               IPMI_SYSTEM_INFO_PARAMETERS_NO_BLOCK_SELECTOR,
                                                obj_cmd_rs) < 0)
         {
           pstdout_fprintf (state_data->pstate,
@@ -626,7 +626,7 @@ _get_dell_system_info_idrac_info (ipmi_oem_state_data_t *state_data,
                                            IPMI_GET_SYSTEM_INFO_PARAMETER,
                                            IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_IDRAC_INFO,
                                            0x02,
-                                           IPMI_SYSTEM_INFO_NO_BLOCK_SELECTOR,
+                                           IPMI_SYSTEM_INFO_PARAMETERS_NO_BLOCK_SELECTOR,
                                            obj_cmd_rs) < 0)
     {
       if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
@@ -698,8 +698,8 @@ _get_dell_system_info_10g_mac_addresses (ipmi_oem_state_data_t *state_data)
   if (ipmi_cmd_get_system_info_parameters (state_data->ipmi_ctx,
                                            IPMI_GET_SYSTEM_INFO_PARAMETER,
                                            IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_EMBEDDED_NICS_MAC_ADDRESSES,
-                                           0,
-                                           IPMI_SYSTEM_INFO_NO_BLOCK_SELECTOR,
+                                           IPMI_SYSTEM_INFO_PARAMETERS_NO_SET_SELECTOR,
+                                           IPMI_SYSTEM_INFO_PARAMETERS_NO_BLOCK_SELECTOR,
                                            obj_cmd_rs) < 0)
     {
       pstdout_fprintf (state_data->pstate,
@@ -4182,8 +4182,8 @@ ipmi_oem_dell_get_power_consumption_statistics (ipmi_oem_state_data_t *state_dat
   if (ipmi_cmd_get_system_info_parameters (state_data->ipmi_ctx,
                                            IPMI_GET_SYSTEM_INFO_PARAMETER,
                                            system_info_parameter,
-                                           0,
-                                           IPMI_SYSTEM_INFO_NO_BLOCK_SELECTOR,
+                                           IPMI_SYSTEM_INFO_PARAMETERS_NO_SET_SELECTOR,
+                                           IPMI_SYSTEM_INFO_PARAMETERS_NO_BLOCK_SELECTOR,
                                            obj_cmd_rs) < 0)
     {
       pstdout_fprintf (state_data->pstate,
@@ -4447,8 +4447,8 @@ _get_power_capacity (ipmi_oem_state_data_t *state_data,
   if (ipmi_cmd_get_system_info_parameters (state_data->ipmi_ctx,
                                            IPMI_GET_SYSTEM_INFO_PARAMETER,
                                            IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_POWER_CAPACITY,
-                                           0,
-                                           IPMI_SYSTEM_INFO_NO_BLOCK_SELECTOR,
+                                           IPMI_SYSTEM_INFO_PARAMETERS_NO_SET_SELECTOR,
+                                           IPMI_SYSTEM_INFO_PARAMETERS_NO_BLOCK_SELECTOR,
                                            obj_cmd_rs) < 0)
     {
       pstdout_fprintf (state_data->pstate,

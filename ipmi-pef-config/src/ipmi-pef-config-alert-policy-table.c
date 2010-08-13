@@ -74,7 +74,7 @@ _get_alert_policy_table (struct ipmi_pef_config_state_data *state_data,
   if (ipmi_cmd_get_pef_configuration_parameters_alert_policy_table (state_data->ipmi_ctx,
                                                                     IPMI_GET_PEF_PARAMETER,
                                                                     alert_policy_entry_number,
-                                                                    CONFIG_BLOCK_SELECTOR,
+                                                                    IPMI_PEF_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                                     obj_cmd_rs) < 0)
     {
       config_err_t ret;

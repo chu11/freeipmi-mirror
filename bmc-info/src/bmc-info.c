@@ -670,7 +670,7 @@ display_system_info_common (bmc_info_state_data_t *state_data,
   if (func_cmd_first_set (state_data->ipmi_ctx,
                           IPMI_GET_SYSTEM_INFO_PARAMETER,
                           set_selector,
-                          IPMI_SYSTEM_INFO_NO_BLOCK_SELECTOR,
+                          IPMI_SYSTEM_INFO_PARAMETERS_NO_BLOCK_SELECTOR,
                           obj_cmd_first_set_rs) < 0)
     {
       if (!state_data->prog_data->args->get_system_info
@@ -751,7 +751,7 @@ display_system_info_common (bmc_info_state_data_t *state_data,
       if (func_cmd (state_data->ipmi_ctx,
                     IPMI_GET_SYSTEM_INFO_PARAMETER,
                     set_selector,
-                    IPMI_SYSTEM_INFO_NO_BLOCK_SELECTOR,
+                    IPMI_SYSTEM_INFO_PARAMETERS_NO_BLOCK_SELECTOR,
                     obj_cmd_rs) < 0)
         {
           if (!state_data->prog_data->args->get_system_info

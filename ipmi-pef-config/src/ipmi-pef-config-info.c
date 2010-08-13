@@ -222,8 +222,8 @@ pef_info (ipmi_pef_config_state_data_t *state_data)
 
       if (ipmi_cmd_get_pef_configuration_parameters_number_of_event_filters (state_data->ipmi_ctx,
                                                                              IPMI_GET_PEF_PARAMETER,
-                                                                             CONFIG_SET_SELECTOR,
-                                                                             CONFIG_BLOCK_SELECTOR,
+                                                                             IPMI_PEF_CONFIGURATION_PARAMETERS_NO_SET_SELECTOR,
+                                                                             IPMI_PEF_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                                              obj_cmd_rs) < 0)
         {
           if (state_data->prog_data->args->config_args.common.debug)
@@ -266,8 +266,8 @@ pef_info (ipmi_pef_config_state_data_t *state_data)
 
       if (ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries (state_data->ipmi_ctx,
                                                                                     IPMI_GET_PEF_PARAMETER,
-                                                                                    CONFIG_SET_SELECTOR,
-                                                                                    CONFIG_BLOCK_SELECTOR,
+                                                                                    IPMI_PEF_CONFIGURATION_PARAMETERS_NO_SET_SELECTOR,
+                                                                                    IPMI_PEF_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                                                     obj_cmd_rs) < 0)
         {
           if (state_data->prog_data->args->config_args.common.debug)
@@ -310,8 +310,8 @@ pef_info (ipmi_pef_config_state_data_t *state_data)
 
       if (ipmi_cmd_get_pef_configuration_parameters_number_of_alert_strings (state_data->ipmi_ctx,
                                                                              IPMI_GET_PEF_PARAMETER,
-                                                                             CONFIG_SET_SELECTOR,
-                                                                             CONFIG_BLOCK_SELECTOR,
+                                                                             IPMI_PEF_CONFIGURATION_PARAMETERS_NO_SET_SELECTOR,
+                                                                             IPMI_PEF_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                                              obj_cmd_rs) < 0)
         {
           if (state_data->prog_data->args->config_args.common.debug)

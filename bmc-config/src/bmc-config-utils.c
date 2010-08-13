@@ -146,8 +146,8 @@ _get_sol_channel_number_for_channel (bmc_config_state_data_t *state_data,
   if (ipmi_cmd_get_sol_configuration_parameters_sol_payload_channel (state_data->ipmi_ctx,
                                                                      lan_channel_number,
                                                                      IPMI_GET_SOL_PARAMETER,
-                                                                     CONFIG_SET_SELECTOR,
-                                                                     CONFIG_BLOCK_SELECTOR,
+                                                                     IPMI_SOL_CONFIGURATION_PARAMETERS_NO_SET_SELECTOR,
+                                                                     IPMI_SOL_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                                      obj_cmd_rs) < 0)
     {
       /* This parameter is optional, if its not supported, assume LAN channel */

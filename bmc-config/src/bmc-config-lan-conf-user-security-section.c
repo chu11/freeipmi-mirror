@@ -77,8 +77,8 @@ _get_bad_password_threshold (bmc_config_state_data_t *state_data,
   if (ipmi_cmd_get_lan_configuration_parameters_bad_password_threshold (state_data->ipmi_ctx,
                                                                         channel_number,
                                                                         IPMI_GET_LAN_PARAMETER,
-                                                                        CONFIG_SET_SELECTOR,
-                                                                        CONFIG_BLOCK_SELECTOR,
+                                                                        IPMI_LAN_CONFIGURATION_PARAMETERS_NO_SET_SELECTOR,
+                                                                        IPMI_LAN_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                                         obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)

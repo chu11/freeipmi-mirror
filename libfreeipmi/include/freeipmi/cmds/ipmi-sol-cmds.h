@@ -26,6 +26,9 @@ extern "C" {
 #include <stdint.h>
 #include <freeipmi/fiid/fiid.h>
 
+#define IPMI_SOL_CONFIGURATION_PARAMETERS_NO_SET_SELECTOR                            0x0
+#define IPMI_SOL_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR                          0x0
+
 #define IPMI_SOL_CONFIGURATION_PARAMETERS_SET_COMPLETE                              0x00
 #define IPMI_SOL_CONFIGURATION_PARAMETERS_SET_IN_PROGRESS                           0x01
 #define IPMI_SOL_CONFIGURATION_PARAMETERS_SET_COMMIT_WRITE                          0x02

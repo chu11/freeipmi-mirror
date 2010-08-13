@@ -41,9 +41,6 @@ extern "C" {
   (((__parameter_selector) >= IPMI_SYSTEM_INFO_PARAMETER_OEM_MIN \
     && ((__parameter_selector) - 1) <= (IPMI_SYSTEM_INFO_PARAMETER_OEM_MAX - 1)) ? 1 : 0)
 
-#define IPMI_SYSTEM_INFO_NO_SET_SELECTOR                                    0x0
-#define IPMI_SYSTEM_INFO_NO_BLOCK_SELECTOR                                  0x0
-
 #ifdef __cplusplus
 }
 #endif

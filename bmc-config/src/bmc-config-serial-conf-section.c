@@ -83,8 +83,8 @@ _get_connection_mode (bmc_config_state_data_t *state_data,
   if (ipmi_cmd_get_serial_modem_configuration_connection_mode (state_data->ipmi_ctx,
                                                                channel_number,
                                                                IPMI_GET_SERIAL_MODEM_PARAMETER,
-                                                               CONFIG_SET_SELECTOR,
-                                                               CONFIG_BLOCK_SELECTOR,
+                                                               IPMI_SERIAL_MODEM_CONFIGURATION_PARAMETERS_NO_SET_SELECTOR,
+                                                               IPMI_SERIAL_MODEM_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                                obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
@@ -437,8 +437,8 @@ page_blackout_interval_checkout (const char *section_name,
   if (ipmi_cmd_get_serial_modem_configuration_page_blackout_interval (state_data->ipmi_ctx,
                                                                       channel_number,
                                                                       IPMI_GET_SERIAL_MODEM_PARAMETER,
-                                                                      CONFIG_SET_SELECTOR,
-                                                                      CONFIG_BLOCK_SELECTOR,
+                                                                      IPMI_SERIAL_MODEM_CONFIGURATION_PARAMETERS_NO_SET_SELECTOR,
+                                                                      IPMI_SERIAL_MODEM_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                                       obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
@@ -571,8 +571,8 @@ call_retry_interval_checkout (const char *section_name,
   if (ipmi_cmd_get_serial_modem_configuration_call_retry_interval (state_data->ipmi_ctx,
                                                                    channel_number,
                                                                    IPMI_GET_SERIAL_MODEM_PARAMETER,
-                                                                   CONFIG_SET_SELECTOR,
-                                                                   CONFIG_BLOCK_SELECTOR,
+                                                                   IPMI_SERIAL_MODEM_CONFIGURATION_PARAMETERS_NO_SET_SELECTOR,
+                                                                   IPMI_SERIAL_MODEM_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                                    obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
@@ -700,8 +700,8 @@ _get_ipmi_messaging_comm_settings (bmc_config_state_data_t *state_data,
   if (ipmi_cmd_get_serial_modem_configuration_ipmi_messaging_comm_settings (state_data->ipmi_ctx,
                                                                             channel_number,
                                                                             IPMI_GET_SERIAL_MODEM_PARAMETER,
-                                                                            CONFIG_SET_SELECTOR,
-                                                                            CONFIG_BLOCK_SELECTOR,
+                                                                            IPMI_SERIAL_MODEM_CONFIGURATION_PARAMETERS_NO_SET_SELECTOR,
+                                                                            IPMI_SERIAL_MODEM_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                                             obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
