@@ -39,14 +39,14 @@
 
 #define IPMI_OEM_SUPERMICRO_STRING_MAX 128
 
-#define IPMI_SUPERMICRO_SUB_COMMAND_BMC_SERVICES 0xF0
+#define IPMI_OEM_SUPERMICRO_SUB_COMMAND_BMC_SERVICES 0xF0
 
-#define IPMI_SUPERMICRO_BMC_SERVICES_ACTION_DISABLE  0x00
-#define IPMI_SUPERMICRO_BMC_SERVICES_ACTION_ENABLE   0x01
-#define IPMI_SUPERMICRO_BMC_SERVICES_ACTION_STATUS   0x02
+#define IPMI_OEM_SUPERMICRO_BMC_SERVICES_ACTION_DISABLE  0x00
+#define IPMI_OEM_SUPERMICRO_BMC_SERVICES_ACTION_ENABLE   0x01
+#define IPMI_OEM_SUPERMICRO_BMC_SERVICES_ACTION_STATUS   0x02
 
-#define IPMI_SUPERMICRO_BMC_SERVICES_STATUS_DISABLED 0x00
-#define IPMI_SUPERMICRO_BMC_SERVICES_STATUS_ENABLED  0x01
+#define IPMI_OEM_SUPERMICRO_BMC_SERVICES_STATUS_DISABLED 0x00
+#define IPMI_OEM_SUPERMICRO_BMC_SERVICES_STATUS_ENABLED  0x01
 
 int
 ipmi_oem_supermicro_extra_firmware_info (ipmi_oem_state_data_t *state_data)
@@ -246,8 +246,8 @@ ipmi_oem_supermicro_get_bmc_services_status (ipmi_oem_state_data_t *state_data)
    */
 
   bytes_rq[0] = IPMI_CMD_OEM_SUPERMICRO_GENERIC_EXTENSION;
-  bytes_rq[1] = IPMI_SUPERMICRO_SUB_COMMAND_BMC_SERVICES;
-  bytes_rq[2] = IPMI_SUPERMICRO_BMC_SERVICES_ACTION_STATUS;
+  bytes_rq[1] = IPMI_OEM_SUPERMICRO_SUB_COMMAND_BMC_SERVICES;
+  bytes_rq[2] = IPMI_OEM_SUPERMICRO_BMC_SERVICES_ACTION_STATUS;
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
@@ -273,9 +273,9 @@ ipmi_oem_supermicro_get_bmc_services_status (ipmi_oem_state_data_t *state_data)
                                                    NULL) < 0)
     goto cleanup;
 
-  if (bytes_rs[2] == IPMI_SUPERMICRO_BMC_SERVICES_STATUS_DISABLED)
+  if (bytes_rs[2] == IPMI_OEM_SUPERMICRO_BMC_SERVICES_STATUS_DISABLED)
     pstdout_printf (state_data->pstate, "disabled\n");
-  else if (bytes_rs[2] == IPMI_SUPERMICRO_BMC_SERVICES_STATUS_ENABLED)
+  else if (bytes_rs[2] == IPMI_OEM_SUPERMICRO_BMC_SERVICES_STATUS_ENABLED)
     pstdout_printf (state_data->pstate, "enabled\n");
   else
     pstdout_fprintf (state_data->pstate,
@@ -331,12 +331,12 @@ ipmi_oem_supermicro_set_bmc_services_status (ipmi_oem_state_data_t *state_data)
    */
 
   bytes_rq[0] = IPMI_CMD_OEM_SUPERMICRO_GENERIC_EXTENSION;
-  bytes_rq[1] = IPMI_SUPERMICRO_SUB_COMMAND_BMC_SERVICES;
+  bytes_rq[1] = IPMI_OEM_SUPERMICRO_SUB_COMMAND_BMC_SERVICES;
 
   if (!strcasecmp (state_data->prog_data->args->oem_options[0], "enable"))
-    bytes_rq[2] = IPMI_SUPERMICRO_BMC_SERVICES_ACTION_ENABLE;
+    bytes_rq[2] = IPMI_OEM_SUPERMICRO_BMC_SERVICES_ACTION_ENABLE;
   else /* !strcasecmp (state_data->prog_data->args->oem_options[0], "disable") */
-    bytes_rq[2] = IPMI_SUPERMICRO_BMC_SERVICES_ACTION_DISABLE;
+    bytes_rq[2] = IPMI_OEM_SUPERMICRO_BMC_SERVICES_ACTION_DISABLE;
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
