@@ -96,6 +96,7 @@ o libfreeipmi
   - Support more IPMI templates.
   - Fix some API differences from spec.
   - Fix some template bugs/typos.
+  - Rename number of macros for consistency to IPMI spec.
 o libipmimonitoring
   - Add SEL monitoring support to libipmimonitoring.
   - Re-architect to support all defined IPMI sensor types.

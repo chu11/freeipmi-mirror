@@ -139,9 +139,9 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
     {
     case SET_BOOT_FLAGS_BOOT_TYPE_KEY:
       if (!strcasecmp (arg, "pc-compatible"))
-        value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_TYPE_PC_COMPATIBLE;
+        value = IPMI_SYSTEM_BOOT_OPTION_BOOT_FLAG_BOOT_TYPE_PC_COMPATIBLE;
       else if (!strcasecmp (arg, "efi"))
-        value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_TYPE_EFI;
+        value = IPMI_SYSTEM_BOOT_OPTION_BOOT_FLAG_BOOT_TYPE_EFI;
       else
         {
           fprintf (stderr, "invalid value for boot-type\n");
@@ -154,9 +154,9 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
 
     case SET_BOOT_FLAGS_LOCK_OUT_RESET_BUTTON_KEY:
       if (!strcasecmp (arg, "yes"))
-        value = IPMI_CHASSIS_BOOT_OPTIONS_ENABLE;
+        value = IPMI_SYSTEM_BOOT_OPTION_ENABLE;
       else if (!strcasecmp (arg, "no"))
-        value = IPMI_CHASSIS_BOOT_OPTIONS_DISABLE;
+        value = IPMI_SYSTEM_BOOT_OPTION_DISABLE;
       else
         {
           fprintf (stderr, "invalid value for lock-out-reset-button\n");
@@ -169,9 +169,9 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
 
     case SET_BOOT_FLAGS_SCREEN_BLANK_KEY:
       if (!strcasecmp (arg, "yes"))
-        value = IPMI_CHASSIS_BOOT_OPTIONS_ENABLE;
+        value = IPMI_SYSTEM_BOOT_OPTION_ENABLE;
       else if (!strcasecmp (arg, "no"))
-        value = IPMI_CHASSIS_BOOT_OPTIONS_DISABLE;
+        value = IPMI_SYSTEM_BOOT_OPTION_DISABLE;
       else
         {
           fprintf (stderr, "invalid value for blank-screen\n");
@@ -186,23 +186,23 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
       /* achu: many legacy inputs are preserved */
       if (!strcasecmp (arg, "no-override")
           || !strcasecmp (arg, "none")) /* legacy */
-        value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_NO_OVERRIDE;
+        value = IPMI_SYSTEM_BOOT_OPTION_BOOT_FLAG_BOOT_DEVICE_NO_OVERRIDE;
       else if (!strcasecmp (arg, "pxe"))
-        value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_FORCE_PXE;
+        value = IPMI_SYSTEM_BOOT_OPTION_BOOT_FLAG_BOOT_DEVICE_FORCE_PXE;
       else if (!strcasecmp (arg, "hard-drive")
                || !strcasecmp (arg, "disk")) /* legacy */
-        value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_FORCE_HARD_DRIVE;
+        value = IPMI_SYSTEM_BOOT_OPTION_BOOT_FLAG_BOOT_DEVICE_FORCE_HARD_DRIVE;
       else if (!strcasecmp (arg, "hard-drive-safe")
                || !strcasecmp (arg, "disk-safe")) /* legacy */
-        value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_FORCE_HARD_DRIVE_SAFE_MODE;
+        value = IPMI_SYSTEM_BOOT_OPTION_BOOT_FLAG_BOOT_DEVICE_FORCE_HARD_DRIVE_SAFE_MODE;
       else if (!strcasecmp (arg, "diag"))
-        value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_FORCE_DIAGNOSTIC_PARTITION;
+        value = IPMI_SYSTEM_BOOT_OPTION_BOOT_FLAG_BOOT_DEVICE_FORCE_DIAGNOSTIC_PARTITION;
       else if (!strcasecmp (arg, "cd-dvd"))
-        value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_FORCE_CD_DVD;
+        value = IPMI_SYSTEM_BOOT_OPTION_BOOT_FLAG_BOOT_DEVICE_FORCE_CD_DVD;
       else if (!strcasecmp (arg, "bios"))
-        value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_FORCE_BIOS_SETUP;
+        value = IPMI_SYSTEM_BOOT_OPTION_BOOT_FLAG_BOOT_DEVICE_FORCE_BIOS_SETUP;
       else if (!strcasecmp (arg, "floppy"))
-        value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_FORCE_FLOPPY_REMOVEABLE_MEDIA;
+        value = IPMI_SYSTEM_BOOT_OPTION_BOOT_FLAG_BOOT_DEVICE_FORCE_FLOPPY_REMOVEABLE_MEDIA;
       else
         {
           fprintf (stderr, "invalid value for boot-device\n");
@@ -215,9 +215,9 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
 
     case SET_BOOT_FLAGS_LOCK_KEYBOARD_KEY:
       if (!strcasecmp (arg, "yes"))
-        value = IPMI_CHASSIS_BOOT_OPTIONS_ENABLE;
+        value = IPMI_SYSTEM_BOOT_OPTION_ENABLE;
       else if (!strcasecmp (arg, "no"))
-        value = IPMI_CHASSIS_BOOT_OPTIONS_DISABLE;
+        value = IPMI_SYSTEM_BOOT_OPTION_DISABLE;
       else
         {
           fprintf (stderr, "invalid value for lock-keyboard\n");
@@ -230,9 +230,9 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
 
     case SET_BOOT_FLAGS_CMOS_CLEAR_KEY:
       if (!strcasecmp (arg, "yes"))
-        value = IPMI_CHASSIS_BOOT_OPTIONS_ENABLE;
+        value = IPMI_SYSTEM_BOOT_OPTION_ENABLE;
       else if (!strcasecmp (arg, "no"))
-        value = IPMI_CHASSIS_BOOT_OPTIONS_DISABLE;
+        value = IPMI_SYSTEM_BOOT_OPTION_DISABLE;
       else
         {
           fprintf (stderr, "invalid value for clear-cmos\n");
@@ -245,11 +245,11 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
 
     case SET_BOOT_FLAGS_CONSOLE_REDIRECTION_KEY:
       if (!strcasecmp (arg, "default"))
-        value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_CONSOLE_REDIRECTION_DEFAULT;
+        value = IPMI_SYSTEM_BOOT_OPTION_BOOT_FLAG_CONSOLE_REDIRECTION_DEFAULT;
       else if (!strcasecmp (arg, "suppress"))
-        value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_CONSOLE_REDIRECTION_SUPPRESS;
+        value = IPMI_SYSTEM_BOOT_OPTION_BOOT_FLAG_CONSOLE_REDIRECTION_SUPPRESS;
       else if (!strcasecmp (arg, "enable"))
-        value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_CONSOLE_REDIRECTION_ENABLE;
+        value = IPMI_SYSTEM_BOOT_OPTION_BOOT_FLAG_CONSOLE_REDIRECTION_ENABLE;
       else
         {
           fprintf (stderr, "invalid value for console-redirection\n");
@@ -262,9 +262,9 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
 
     case SET_BOOT_FLAGS_USER_PASSWORD_BYPASS_KEY:
       if (!strcasecmp (arg, "yes"))
-        value = IPMI_CHASSIS_BOOT_OPTIONS_ENABLE;
+        value = IPMI_SYSTEM_BOOT_OPTION_ENABLE;
       else if (!strcasecmp (arg, "no"))
-        value = IPMI_CHASSIS_BOOT_OPTIONS_DISABLE;
+        value = IPMI_SYSTEM_BOOT_OPTION_DISABLE;
       else
         {
           fprintf (stderr, "invalid value for user-password-bypass\n");
@@ -277,9 +277,9 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
 
     case SET_BOOT_FLAGS_FORCE_PROGRESS_EVENT_TRAPS_KEY:
       if (!strcasecmp (arg, "yes"))
-        value = IPMI_CHASSIS_BOOT_OPTIONS_ENABLE;
+        value = IPMI_SYSTEM_BOOT_OPTION_ENABLE;
       else if (!strcasecmp (arg, "no"))
-        value = IPMI_CHASSIS_BOOT_OPTIONS_DISABLE;
+        value = IPMI_SYSTEM_BOOT_OPTION_DISABLE;
       else
         {
           fprintf (stderr, "invalid value for force-progress-event-traps\n");
@@ -292,11 +292,11 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
 
     case SET_BOOT_FLAGS_FIRMWARE_BIOS_VERBOSITY_KEY:
       if (!strcasecmp (arg, "quiet"))
-        value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_FIRMWARE_BIOS_VERBOSITY_QUIET;
+        value = IPMI_SYSTEM_BOOT_OPTION_BOOT_FLAG_FIRMWARE_BIOS_VERBOSITY_QUIET;
       else if (!strcasecmp (arg, "default"))
-        value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_FIRMWARE_BIOS_VERBOSITY_DEFAULT;
+        value = IPMI_SYSTEM_BOOT_OPTION_BOOT_FLAG_FIRMWARE_BIOS_VERBOSITY_DEFAULT;
       else if (!strcasecmp (arg, "verbose"))
-        value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_FIRMWARE_BIOS_VERBOSITY_VERBOSE;
+        value = IPMI_SYSTEM_BOOT_OPTION_BOOT_FLAG_FIRMWARE_BIOS_VERBOSITY_VERBOSE;
       else
         {
           fprintf (stderr, "invalid value for firmware verbosity\n");

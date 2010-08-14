@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_SYSTEM_INFO_PARAMETER_SPEC_H
-#define _IPMI_SYSTEM_INFO_PARAMETER_SPEC_H
+#ifndef _IPMI_SYSTEM_INFO_PARAMETERS_SPEC_H
+#define _IPMI_SYSTEM_INFO_PARAMETERS_SPEC_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -44,4 +44,4 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
-#endif /* _IPMI_SYSTEM_INFO_PARAMETER_SPEC_H */
+#endif /* _IPMI_SYSTEM_INFO_PARAMETERS_SPEC_H */

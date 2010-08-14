@@ -29,7 +29,7 @@
 #include "freeipmi/fiid/fiid.h"
 #include "freeipmi/spec/ipmi-channel-spec.h"
 #include "freeipmi/spec/ipmi-cmd-spec.h"
-#include "freeipmi/spec/ipmi-lan-parameter-spec.h"
+#include "freeipmi/spec/ipmi-lan-configuration-parameters-spec.h"
 #include "freeipmi/spec/ipmi-privilege-level-spec.h"
 
 #include "libcommon/ipmi-fiid-util.h"
@@ -742,8 +742,8 @@ fill_cmd_set_lan_configuration_parameters (uint8_t channel_number,
                                            fiid_obj_t obj_cmd_rq)
 {
   if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
-      || (!IPMI_LAN_PARAMETER_SELECTOR_VALID (parameter_selector)
-          && !IPMI_LAN_PARAMETER_SELECTOR_IS_OEM (parameter_selector))
+      || (!IPMI_LAN_CONFIGURATION_PARAMETER_SELECTOR_VALID (parameter_selector)
+          && !IPMI_LAN_CONFIGURATION_PARAMETER_SELECTOR_IS_OEM (parameter_selector))
       || !configuration_parameter_data
       || !configuration_parameter_data_len
       || !fiid_obj_valid (obj_cmd_rq))
@@ -798,7 +798,7 @@ fill_cmd_set_lan_configuration_parameters_set_in_progress (uint8_t channel_numbe
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_PARAMETER_SET_IN_PROGRESS);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_CONFIGURATION_PARAMETER_SET_IN_PROGRESS);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "state", state);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
   return (0);
@@ -875,7 +875,7 @@ fill_cmd_set_lan_configuration_parameters_authentication_type_enables (uint8_t c
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_PARAMETER_AUTHENTICATION_TYPE_ENABLES);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_CONFIGURATION_PARAMETER_AUTHENTICATION_TYPE_ENABLES);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "callback_level.none", callback_level_none);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "callback_level.md2", callback_level_md2);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "callback_level.md5", callback_level_md5);
@@ -920,9 +920,9 @@ _fill_lan_ip (uint8_t parameter_selector,
               uint32_t ip_address,
               fiid_obj_t obj_cmd_rq)
 {
-  assert ((parameter_selector == IPMI_LAN_PARAMETER_IP_ADDRESS
-           || parameter_selector == IPMI_LAN_PARAMETER_DEFAULT_GATEWAY_ADDRESS
-           || parameter_selector == IPMI_LAN_PARAMETER_BACKUP_GATEWAY_ADDRESS)
+  assert ((parameter_selector == IPMI_LAN_CONFIGURATION_PARAMETER_IP_ADDRESS
+           || parameter_selector == IPMI_LAN_CONFIGURATION_PARAMETER_DEFAULT_GATEWAY_ADDRESS
+           || parameter_selector == IPMI_LAN_CONFIGURATION_PARAMETER_BACKUP_GATEWAY_ADDRESS)
           && IPMI_CHANNEL_NUMBER_VALID (channel_number)
           && fiid_obj_valid (obj_cmd_rq));
 
@@ -954,7 +954,7 @@ fill_cmd_set_lan_configuration_parameters_ip_address (uint8_t channel_number,
       return (-1);
     }
 
-  return (_fill_lan_ip (IPMI_LAN_PARAMETER_IP_ADDRESS,
+  return (_fill_lan_ip (IPMI_LAN_CONFIGURATION_PARAMETER_IP_ADDRESS,
                         channel_number,
                         ip_address,
                         obj_cmd_rq));
@@ -983,7 +983,7 @@ fill_cmd_set_lan_configuration_parameters_ip_address_source (uint8_t channel_num
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_PARAMETER_IP_ADDRESS_SOURCE);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_CONFIGURATION_PARAMETER_IP_ADDRESS_SOURCE);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "ip_address_source", ip_address_source);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
 
@@ -996,9 +996,9 @@ _fill_lan_mac_address (uint8_t parameter_selector,
                        uint64_t mac_address,
                        fiid_obj_t obj_cmd_rq)
 {
-  assert ((parameter_selector == IPMI_LAN_PARAMETER_MAC_ADDRESS
-           || parameter_selector == IPMI_LAN_PARAMETER_DEFAULT_GATEWAY_MAC_ADDRESS
-           || parameter_selector == IPMI_LAN_PARAMETER_BACKUP_GATEWAY_MAC_ADDRESS)
+  assert ((parameter_selector == IPMI_LAN_CONFIGURATION_PARAMETER_MAC_ADDRESS
+           || parameter_selector == IPMI_LAN_CONFIGURATION_PARAMETER_DEFAULT_GATEWAY_MAC_ADDRESS
+           || parameter_selector == IPMI_LAN_CONFIGURATION_PARAMETER_BACKUP_GATEWAY_MAC_ADDRESS)
           && IPMI_CHANNEL_NUMBER_VALID (channel_number)
           && fiid_obj_valid (obj_cmd_rq));
 
@@ -1030,7 +1030,7 @@ fill_cmd_set_lan_configuration_parameters_mac_address (uint8_t channel_number,
       return (-1);
     }
 
-  return (_fill_lan_mac_address (IPMI_LAN_PARAMETER_MAC_ADDRESS,
+  return (_fill_lan_mac_address (IPMI_LAN_CONFIGURATION_PARAMETER_MAC_ADDRESS,
                                  channel_number,
                                  mac_address,
                                  obj_cmd_rq));
@@ -1058,7 +1058,7 @@ fill_cmd_set_lan_configuration_parameters_subnet_mask (uint8_t channel_number,
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_PARAMETER_SUBNET_MASK);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_CONFIGURATION_PARAMETER_SUBNET_MASK);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "subnet_mask", subnet_mask);
 
   return (0);
@@ -1089,7 +1089,7 @@ fill_cmd_set_lan_configuration_parameters_bmc_generated_arp_control (uint8_t cha
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_PARAMETER_BMC_GENERATED_ARP_CONTROL);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_CONFIGURATION_PARAMETER_BMC_GENERATED_ARP_CONTROL);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "bmc_generated_gratuitous_arps", bmc_generated_gratuitous_arps);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "bmc_generated_arp_responses", bmc_generated_arp_responses);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
@@ -1119,7 +1119,7 @@ fill_cmd_set_lan_configuration_parameters_gratuitous_arp_interval (uint8_t chann
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_PARAMETER_GRATUITOUS_ARP_INTERVAL);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_CONFIGURATION_PARAMETER_GRATUITOUS_ARP_INTERVAL);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "gratuitous_arp_interval", gratuitous_arp_interval);
 
   return (0);
@@ -1143,7 +1143,7 @@ fill_cmd_set_lan_configuration_parameters_default_gateway_address (uint8_t chann
       return (-1);
     }
 
-  return (_fill_lan_ip (IPMI_LAN_PARAMETER_DEFAULT_GATEWAY_ADDRESS,
+  return (_fill_lan_ip (IPMI_LAN_CONFIGURATION_PARAMETER_DEFAULT_GATEWAY_ADDRESS,
                         channel_number,
                         ip_address,
                         obj_cmd_rq));
@@ -1167,7 +1167,7 @@ fill_cmd_set_lan_configuration_parameters_default_gateway_mac_address (uint8_t c
       return (-1);
     }
 
-  return (_fill_lan_mac_address (IPMI_LAN_PARAMETER_DEFAULT_GATEWAY_MAC_ADDRESS,
+  return (_fill_lan_mac_address (IPMI_LAN_CONFIGURATION_PARAMETER_DEFAULT_GATEWAY_MAC_ADDRESS,
                                  channel_number,
                                  mac_address,
                                  obj_cmd_rq));
@@ -1191,7 +1191,7 @@ fill_cmd_set_lan_configuration_parameters_backup_gateway_address (uint8_t channe
       return (-1);
     }
 
-  return (_fill_lan_ip (IPMI_LAN_PARAMETER_BACKUP_GATEWAY_ADDRESS,
+  return (_fill_lan_ip (IPMI_LAN_CONFIGURATION_PARAMETER_BACKUP_GATEWAY_ADDRESS,
                         channel_number,
                         ip_address,
                         obj_cmd_rq));
@@ -1215,7 +1215,7 @@ fill_cmd_set_lan_configuration_parameters_backup_gateway_mac_address (uint8_t ch
       return (-1);
     }
 
-  return (_fill_lan_mac_address (IPMI_LAN_PARAMETER_BACKUP_GATEWAY_MAC_ADDRESS,
+  return (_fill_lan_mac_address (IPMI_LAN_CONFIGURATION_PARAMETER_BACKUP_GATEWAY_MAC_ADDRESS,
                                  channel_number,
                                  mac_address,
                                  obj_cmd_rq));
@@ -1251,7 +1251,7 @@ fill_cmd_set_lan_configuration_parameters_community_string (uint8_t channel_numb
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_PARAMETER_COMMUNITY_STRING);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_CONFIGURATION_PARAMETER_COMMUNITY_STRING);
 
   /* achu: community_string should be zero extended */
   memset (buf, '\0', IPMI_MAX_COMMUNITY_STRING_LENGTH);
@@ -1293,7 +1293,7 @@ fill_cmd_set_lan_configuration_parameters_destination_type (uint8_t channel_numb
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_PARAMETER_DESTINATION_TYPE);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_CONFIGURATION_PARAMETER_DESTINATION_TYPE);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "destination_selector", destination_selector);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "destination_type", destination_type);
@@ -1334,7 +1334,7 @@ fill_cmd_set_lan_configuration_parameters_destination_addresses (uint8_t channel
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_PARAMETER_DESTINATION_ADDRESSES);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_CONFIGURATION_PARAMETER_DESTINATION_ADDRESSES);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "destination_selector", destination_selector);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved3", 0);
@@ -1371,7 +1371,7 @@ fill_cmd_set_lan_configuration_parameters_vlan_id (uint8_t channel_number,
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_PARAMETER_VLAN_ID);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_CONFIGURATION_PARAMETER_VLAN_ID);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "vlan_id", vlan_id);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "vlan_id_enable", vlan_id_enable);
@@ -1401,7 +1401,7 @@ fill_cmd_set_lan_configuration_parameters_vlan_priority (uint8_t channel_number,
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_PARAMETER_VLAN_PRIORITY);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_CONFIGURATION_PARAMETER_VLAN_PRIORITY);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "vlan_priority", vlan_priority);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "unspecified", 0);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
@@ -1478,7 +1478,7 @@ fill_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privil
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_PARAMETER_RMCPPLUS_MESSAGING_CIPHER_SUITE_PRIVILEGE_LEVELS);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_CONFIGURATION_PARAMETER_RMCPPLUS_MESSAGING_CIPHER_SUITE_PRIVILEGE_LEVELS);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_1", maximum_privilege_for_cipher_suite_1);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_2", maximum_privilege_for_cipher_suite_2);
@@ -1526,7 +1526,7 @@ fill_cmd_set_lan_configuration_parameters_bad_password_threshold (uint8_t channe
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_PARAMETER_BAD_PASSWORD_THRESHOLD);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_CONFIGURATION_PARAMETER_BAD_PASSWORD_THRESHOLD);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "user_disabled_event_message", user_disabled_event_message);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "bad_password_threshold_number", bad_password_threshold_number);
@@ -1546,8 +1546,8 @@ fill_cmd_get_lan_configuration_parameters (uint8_t channel_number,
 {
   if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
       || !IPMI_GET_LAN_PARAMETER_VALID (get_parameter)
-      || (!IPMI_LAN_PARAMETER_SELECTOR_VALID (parameter_selector)
-          && !IPMI_LAN_PARAMETER_SELECTOR_IS_OEM (parameter_selector))
+      || (!IPMI_LAN_CONFIGURATION_PARAMETER_SELECTOR_VALID (parameter_selector)
+          && !IPMI_LAN_CONFIGURATION_PARAMETER_SELECTOR_IS_OEM (parameter_selector))
       || !fiid_obj_valid (obj_cmd_rq))
     {
       SET_ERRNO (EINVAL);

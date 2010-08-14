@@ -27,8 +27,8 @@
 #include "freeipmi/cmds/ipmi-chassis-cmds.h"
 #include "freeipmi/fiid/fiid.h"
 #include "freeipmi/spec/ipmi-channel-spec.h"
-#include "freeipmi/spec/ipmi-chassis-boot-options-parameter-spec.h"
 #include "freeipmi/spec/ipmi-cmd-spec.h"
+#include "freeipmi/spec/ipmi-system-boot-option-parameters-spec.h"
 
 #include "libcommon/ipmi-fiid-util.h"
 #include "libcommon/ipmi-fill-util.h"
@@ -728,9 +728,9 @@ fill_cmd_set_system_boot_options (uint8_t parameter_selector,
                                   unsigned int configuration_parameter_data_len,
                                   fiid_obj_t obj_cmd_rq)
 {
-  if ((!IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_SELECTOR_VALID (parameter_selector)
-       && !IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_SELECTOR_IS_OEM (parameter_selector))
-      || !IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_VALID (parameter_valid)
+  if ((!IPMI_SYSTEM_BOOT_OPTION_PARAMETER_SELECTOR_VALID (parameter_selector)
+       && !IPMI_SYSTEM_BOOT_OPTION_PARAMETER_SELECTOR_IS_OEM (parameter_selector))
+      || !IPMI_SYSTEM_BOOT_OPTIONS_PARAMETER_VALID_VALID (parameter_valid)
       || !configuration_parameter_data
       || !configuration_parameter_data_len
       || !fiid_obj_valid (obj_cmd_rq))
@@ -762,8 +762,8 @@ fill_cmd_set_system_boot_options_set_in_progress (uint8_t parameter_valid,
                                                   uint8_t state,
                                                   fiid_obj_t obj_cmd_rq)
 {
-  if (!IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_VALID (parameter_valid)
-      || !IPMI_CHASSIS_BOOT_OPTIONS_SET_IN_PROGRESS_VALID (state)
+  if (!IPMI_SYSTEM_BOOT_OPTIONS_PARAMETER_VALID_VALID (parameter_valid)
+      || !IPMI_SYSTEM_BOOT_OPTION_SET_IN_PROGRESS_VALID (state)
       || !fiid_obj_valid (obj_cmd_rq))
     {
       SET_ERRNO (EINVAL);
@@ -780,7 +780,7 @@ fill_cmd_set_system_boot_options_set_in_progress (uint8_t parameter_valid,
 
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SYSTEM_BOOT_OPTIONS);
 
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_SET_IN_PROGRESS);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SYSTEM_BOOT_OPTION_PARAMETER_SET_IN_PROGRESS);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_valid", parameter_valid);
 
   FILL_FIID_OBJ_SET (obj_cmd_rq, "state", state);
@@ -794,7 +794,7 @@ fill_cmd_set_system_boot_options_service_partition_selector (uint8_t parameter_v
                                                              uint8_t service_partition_selector,
                                                              fiid_obj_t obj_cmd_rq)
 {
-  if (!IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_VALID (parameter_valid)
+  if (!IPMI_SYSTEM_BOOT_OPTIONS_PARAMETER_VALID_VALID (parameter_valid)
       || !fiid_obj_valid (obj_cmd_rq))
     {
       SET_ERRNO (EINVAL);
@@ -811,7 +811,7 @@ fill_cmd_set_system_boot_options_service_partition_selector (uint8_t parameter_v
 
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SYSTEM_BOOT_OPTIONS);
 
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_SERVICE_PARTITION_SELECTOR);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SYSTEM_BOOT_OPTION_PARAMETER_SERVICE_PARTITION_SELECTOR);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_valid", parameter_valid);
 
   FILL_FIID_OBJ_SET (obj_cmd_rq, "service_partition_selector", service_partition_selector);
@@ -825,9 +825,9 @@ fill_cmd_set_system_boot_options_service_partition_scan (uint8_t parameter_valid
                                                          uint8_t service_partition_scan,
                                                          fiid_obj_t obj_cmd_rq)
 {
-  if (!IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_VALID (parameter_valid)
-      || !IPMI_CHASSIS_BOOT_OPTIONS_SERVICE_PARTITION_DISCOVERED_VALID (service_partition_discovered)
-      || !IPMI_CHASSIS_BOOT_OPTIONS_SERVICE_PARTITION_SCAN_VALID (service_partition_scan)
+  if (!IPMI_SYSTEM_BOOT_OPTIONS_PARAMETER_VALID_VALID (parameter_valid)
+      || !IPMI_SYSTEM_BOOT_OPTION_SERVICE_PARTITION_DISCOVERED_VALID (service_partition_discovered)
+      || !IPMI_SYSTEM_BOOT_OPTION_SERVICE_PARTITION_SCAN_VALID (service_partition_scan)
       || !fiid_obj_valid (obj_cmd_rq))
     {
       SET_ERRNO (EINVAL);
@@ -844,7 +844,7 @@ fill_cmd_set_system_boot_options_service_partition_scan (uint8_t parameter_valid
   
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SYSTEM_BOOT_OPTIONS);
 
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_SERVICE_PARTITION_SCAN);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SYSTEM_BOOT_OPTION_PARAMETER_SERVICE_PARTITION_SCAN);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_valid", parameter_valid);
   
   FILL_FIID_OBJ_SET (obj_cmd_rq, "service_partition_discovered", service_partition_discovered);
@@ -863,12 +863,12 @@ fill_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing (uint8_t param
                                                                    uint8_t dont_clear_on_PEF,
                                                                    fiid_obj_t obj_cmd_rq)
 {
-  if (!IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_VALID (parameter_valid)
-      || !IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT_VALID (dont_clear_on_power_up)
-      || !IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT_VALID (dont_clear_on_pushbutton_reset_soft_reset)
-      || !IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT_VALID (dont_clear_on_watchdog_timeout)
-      || !IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT_VALID (dont_clear_on_chassis_control)
-      || !IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT_VALID (dont_clear_on_PEF)
+  if (!IPMI_SYSTEM_BOOT_OPTIONS_PARAMETER_VALID_VALID (parameter_valid)
+      || !IPMI_SYSTEM_BOOT_OPTION_CLEAR_VALID_BIT_VALID (dont_clear_on_power_up)
+      || !IPMI_SYSTEM_BOOT_OPTION_CLEAR_VALID_BIT_VALID (dont_clear_on_pushbutton_reset_soft_reset)
+      || !IPMI_SYSTEM_BOOT_OPTION_CLEAR_VALID_BIT_VALID (dont_clear_on_watchdog_timeout)
+      || !IPMI_SYSTEM_BOOT_OPTION_CLEAR_VALID_BIT_VALID (dont_clear_on_chassis_control)
+      || !IPMI_SYSTEM_BOOT_OPTION_CLEAR_VALID_BIT_VALID (dont_clear_on_PEF)
       || !fiid_obj_valid (obj_cmd_rq))
     {
       SET_ERRNO (EINVAL);
@@ -883,7 +883,7 @@ fill_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing (uint8_t param
 
   FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SYSTEM_BOOT_OPTIONS);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_BMC_BOOT_FLAG_VALID_BIT_CLEARING);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SYSTEM_BOOT_OPTION_PARAMETER_BMC_BOOT_FLAG_VALID_BIT_CLEARING);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_valid", parameter_valid);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "dont_clear_valid_bit_on_power_up_via_power_pushbutton_or_wake_event", dont_clear_on_power_up);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "dont_clear_valid_bit_on_pushbutton_reset_soft_reset", dont_clear_on_pushbutton_reset_soft_reset);
@@ -904,17 +904,17 @@ fill_cmd_set_system_boot_options_boot_info_acknowledge (uint8_t parameter_valid,
                                                         const uint8_t *oem_handled_boot_info,
                                                         fiid_obj_t obj_cmd_rq)
 {
-  if (!IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_VALID (parameter_valid)
+  if (!IPMI_SYSTEM_BOOT_OPTIONS_PARAMETER_VALID_VALID (parameter_valid)
       || (bios_or_post_handled_boot_info
-          && !IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (*bios_or_post_handled_boot_info))
+          && !IPMI_SYSTEM_BOOT_OPTION_ENABLE_VALID (*bios_or_post_handled_boot_info))
       || (os_loader_handled_boot_info
-          && !IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (*os_loader_handled_boot_info))
+          && !IPMI_SYSTEM_BOOT_OPTION_ENABLE_VALID (*os_loader_handled_boot_info))
       || (os_or_service_partition_handled_boot_info
-          && !IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (*os_or_service_partition_handled_boot_info))
+          && !IPMI_SYSTEM_BOOT_OPTION_ENABLE_VALID (*os_or_service_partition_handled_boot_info))
       || (sms_handled_boot_info
-          && !IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (*sms_handled_boot_info))
+          && !IPMI_SYSTEM_BOOT_OPTION_ENABLE_VALID (*sms_handled_boot_info))
       || (oem_handled_boot_info
-          && !IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (*oem_handled_boot_info))
+          && !IPMI_SYSTEM_BOOT_OPTION_ENABLE_VALID (*oem_handled_boot_info))
       || !fiid_obj_valid (obj_cmd_rq))
     {
       SET_ERRNO (EINVAL);
@@ -930,67 +930,67 @@ fill_cmd_set_system_boot_options_boot_info_acknowledge (uint8_t parameter_valid,
   FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
 
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SYSTEM_BOOT_OPTIONS);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_BOOT_INFO_ACKNOWLEDGE);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SYSTEM_BOOT_OPTION_PARAMETER_BOOT_INFO_ACKNOWLEDGE);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_valid", parameter_valid);
 
   if (bios_or_post_handled_boot_info)
     {
-      FILL_FIID_OBJ_SET (obj_cmd_rq, "enable_write_bit_0", IPMI_CHASSIS_BOOT_OPTIONS_ENABLE);
+      FILL_FIID_OBJ_SET (obj_cmd_rq, "enable_write_bit_0", IPMI_SYSTEM_BOOT_OPTION_ENABLE);
       FILL_FIID_OBJ_SET (obj_cmd_rq, "bios_or_post_handled_boot_info", *bios_or_post_handled_boot_info);
     }
   else
     {
-      FILL_FIID_OBJ_SET (obj_cmd_rq, "enable_write_bit_0", IPMI_CHASSIS_BOOT_OPTIONS_DISABLE);
-      FILL_FIID_OBJ_SET (obj_cmd_rq, "bios_or_post_handled_boot_info", IPMI_CHASSIS_BOOT_OPTIONS_BOOT_INFO_UNACKNOWLEDGE);
+      FILL_FIID_OBJ_SET (obj_cmd_rq, "enable_write_bit_0", IPMI_SYSTEM_BOOT_OPTION_DISABLE);
+      FILL_FIID_OBJ_SET (obj_cmd_rq, "bios_or_post_handled_boot_info", IPMI_SYSTEM_BOOT_OPTION_BOOT_INFO_UNACKNOWLEDGE);
     }
 
   if (os_loader_handled_boot_info)
     {
-      FILL_FIID_OBJ_SET (obj_cmd_rq, "enable_write_bit_1", IPMI_CHASSIS_BOOT_OPTIONS_ENABLE);
+      FILL_FIID_OBJ_SET (obj_cmd_rq, "enable_write_bit_1", IPMI_SYSTEM_BOOT_OPTION_ENABLE);
       FILL_FIID_OBJ_SET (obj_cmd_rq, "os_loader_handled_boot_info", *os_loader_handled_boot_info);
     }
   else
     {
-      FILL_FIID_OBJ_SET (obj_cmd_rq, "enable_write_bit_1", IPMI_CHASSIS_BOOT_OPTIONS_DISABLE);
-      FILL_FIID_OBJ_SET (obj_cmd_rq, "os_loader_handled_boot_info", IPMI_CHASSIS_BOOT_OPTIONS_BOOT_INFO_UNACKNOWLEDGE);
+      FILL_FIID_OBJ_SET (obj_cmd_rq, "enable_write_bit_1", IPMI_SYSTEM_BOOT_OPTION_DISABLE);
+      FILL_FIID_OBJ_SET (obj_cmd_rq, "os_loader_handled_boot_info", IPMI_SYSTEM_BOOT_OPTION_BOOT_INFO_UNACKNOWLEDGE);
     }
 
   if (os_or_service_partition_handled_boot_info)
     {
-      FILL_FIID_OBJ_SET (obj_cmd_rq, "enable_write_bit_2", IPMI_CHASSIS_BOOT_OPTIONS_ENABLE);
+      FILL_FIID_OBJ_SET (obj_cmd_rq, "enable_write_bit_2", IPMI_SYSTEM_BOOT_OPTION_ENABLE);
       FILL_FIID_OBJ_SET (obj_cmd_rq, "os_or_service_partition_handled_boot_info", *os_or_service_partition_handled_boot_info);
     }
   else
     {
-      FILL_FIID_OBJ_SET (obj_cmd_rq, "enable_write_bit_2", IPMI_CHASSIS_BOOT_OPTIONS_DISABLE);
-      FILL_FIID_OBJ_SET (obj_cmd_rq, "os_or_service_partition_handled_boot_info", IPMI_CHASSIS_BOOT_OPTIONS_BOOT_INFO_UNACKNOWLEDGE);
+      FILL_FIID_OBJ_SET (obj_cmd_rq, "enable_write_bit_2", IPMI_SYSTEM_BOOT_OPTION_DISABLE);
+      FILL_FIID_OBJ_SET (obj_cmd_rq, "os_or_service_partition_handled_boot_info", IPMI_SYSTEM_BOOT_OPTION_BOOT_INFO_UNACKNOWLEDGE);
     }
 
   if (sms_handled_boot_info)
     {
-      FILL_FIID_OBJ_SET (obj_cmd_rq, "enable_write_bit_3", IPMI_CHASSIS_BOOT_OPTIONS_ENABLE);
+      FILL_FIID_OBJ_SET (obj_cmd_rq, "enable_write_bit_3", IPMI_SYSTEM_BOOT_OPTION_ENABLE);
       FILL_FIID_OBJ_SET (obj_cmd_rq, "sms_handled_boot_info", *sms_handled_boot_info);
     }
   else
     {
-      FILL_FIID_OBJ_SET (obj_cmd_rq, "enable_write_bit_3", IPMI_CHASSIS_BOOT_OPTIONS_DISABLE);
-      FILL_FIID_OBJ_SET (obj_cmd_rq, "sms_handled_boot_info", IPMI_CHASSIS_BOOT_OPTIONS_BOOT_INFO_UNACKNOWLEDGE);
+      FILL_FIID_OBJ_SET (obj_cmd_rq, "enable_write_bit_3", IPMI_SYSTEM_BOOT_OPTION_DISABLE);
+      FILL_FIID_OBJ_SET (obj_cmd_rq, "sms_handled_boot_info", IPMI_SYSTEM_BOOT_OPTION_BOOT_INFO_UNACKNOWLEDGE);
     }
 
   if (oem_handled_boot_info)
     {
-      FILL_FIID_OBJ_SET (obj_cmd_rq, "enable_write_bit_4", IPMI_CHASSIS_BOOT_OPTIONS_ENABLE);
+      FILL_FIID_OBJ_SET (obj_cmd_rq, "enable_write_bit_4", IPMI_SYSTEM_BOOT_OPTION_ENABLE);
       FILL_FIID_OBJ_SET (obj_cmd_rq, "oem_handled_boot_info", *oem_handled_boot_info);
     }
   else
     {
-      FILL_FIID_OBJ_SET (obj_cmd_rq, "enable_write_bit_4", IPMI_CHASSIS_BOOT_OPTIONS_DISABLE);
-      FILL_FIID_OBJ_SET (obj_cmd_rq, "oem_handled_boot_info", IPMI_CHASSIS_BOOT_OPTIONS_BOOT_INFO_UNACKNOWLEDGE);
+      FILL_FIID_OBJ_SET (obj_cmd_rq, "enable_write_bit_4", IPMI_SYSTEM_BOOT_OPTION_DISABLE);
+      FILL_FIID_OBJ_SET (obj_cmd_rq, "oem_handled_boot_info", IPMI_SYSTEM_BOOT_OPTION_BOOT_INFO_UNACKNOWLEDGE);
     }
 
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "enable_write_bit_5", IPMI_CHASSIS_BOOT_OPTIONS_ENABLE);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "enable_write_bit_6", IPMI_CHASSIS_BOOT_OPTIONS_ENABLE);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "enable_write_bit_7", IPMI_CHASSIS_BOOT_OPTIONS_ENABLE);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "enable_write_bit_5", IPMI_SYSTEM_BOOT_OPTION_ENABLE);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "enable_write_bit_6", IPMI_SYSTEM_BOOT_OPTION_ENABLE);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "enable_write_bit_7", IPMI_SYSTEM_BOOT_OPTION_ENABLE);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0x7);
   return (0);
 }
@@ -1016,24 +1016,24 @@ fill_cmd_set_system_boot_options_boot_flags (uint8_t parameter_valid,
                                              uint8_t device_instance_selector,
                                              fiid_obj_t obj_cmd_rq)
 {
-  if (!IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_VALID (parameter_valid)
-      || !IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (boot_flags_valid)
-      || !IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (boot_flags_persistent)
-      || !IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (cmos_clear)
-      || !IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BIOS_BOOT_TYPE_VALID (bios_boot_type)
-      || !IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (lock_keyboard)
-      || !IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_VALID (boot_device)
-      || !IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (screen_blank)
-      || !IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (lock_out_reset_button)
-      || !IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (lock_out_via_power_button)
-      || !IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_FIRMWARE_BIOS_VERBOSITY_VALID (firmware_bios_verbosity)
-      || !IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (force_progress_event_traps)
-      || !IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (user_password_bypass)
-      || !IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (lock_out_sleep_button)
-      || !IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_CONSOLE_REDIRECTION_VALID (console_redirection)
-      || !IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (bios_shared_mode_override)
-      || !IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAGS_BIOS_MUX_CONTROL_OVERRIDE_VALID (bios_mux_control_override)
-      || !IPMI_CHASSIS_BOOT_OPTIONS_DEVICE_INSTANCE_SELECTOR_VALID (device_instance_selector)
+  if (!IPMI_SYSTEM_BOOT_OPTIONS_PARAMETER_VALID_VALID (parameter_valid)
+      || !IPMI_SYSTEM_BOOT_OPTION_ENABLE_VALID (boot_flags_valid)
+      || !IPMI_SYSTEM_BOOT_OPTION_ENABLE_VALID (boot_flags_persistent)
+      || !IPMI_SYSTEM_BOOT_OPTION_ENABLE_VALID (cmos_clear)
+      || !IPMI_SYSTEM_BOOT_OPTION_BOOT_FLAG_BIOS_BOOT_TYPE_VALID (bios_boot_type)
+      || !IPMI_SYSTEM_BOOT_OPTION_ENABLE_VALID (lock_keyboard)
+      || !IPMI_SYSTEM_BOOT_OPTION_BOOT_FLAG_BOOT_DEVICE_VALID (boot_device)
+      || !IPMI_SYSTEM_BOOT_OPTION_ENABLE_VALID (screen_blank)
+      || !IPMI_SYSTEM_BOOT_OPTION_ENABLE_VALID (lock_out_reset_button)
+      || !IPMI_SYSTEM_BOOT_OPTION_ENABLE_VALID (lock_out_via_power_button)
+      || !IPMI_SYSTEM_BOOT_OPTION_BOOT_FLAG_FIRMWARE_BIOS_VERBOSITY_VALID (firmware_bios_verbosity)
+      || !IPMI_SYSTEM_BOOT_OPTION_ENABLE_VALID (force_progress_event_traps)
+      || !IPMI_SYSTEM_BOOT_OPTION_ENABLE_VALID (user_password_bypass)
+      || !IPMI_SYSTEM_BOOT_OPTION_ENABLE_VALID (lock_out_sleep_button)
+      || !IPMI_SYSTEM_BOOT_OPTION_BOOT_FLAG_CONSOLE_REDIRECTION_VALID (console_redirection)
+      || !IPMI_SYSTEM_BOOT_OPTION_ENABLE_VALID (bios_shared_mode_override)
+      || !IPMI_SYSTEM_BOOT_OPTION_BOOT_FLAGS_BIOS_MUX_CONTROL_OVERRIDE_VALID (bios_mux_control_override)
+      || !IPMI_SYSTEM_BOOT_OPTION_DEVICE_INSTANCE_SELECTOR_VALID (device_instance_selector)
       || !fiid_obj_valid (obj_cmd_rq))
     {
       SET_ERRNO (EINVAL);
@@ -1048,7 +1048,7 @@ fill_cmd_set_system_boot_options_boot_flags (uint8_t parameter_valid,
 
   FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SYSTEM_BOOT_OPTIONS);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_BOOT_FLAGS);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SYSTEM_BOOT_OPTION_PARAMETER_BOOT_FLAGS);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_valid", parameter_valid);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "bios_boot_type", bios_boot_type);
@@ -1081,7 +1081,7 @@ fill_cmd_set_system_boot_options_boot_initiator_info (uint8_t parameter_valid,
                                                       uint32_t boot_info_timestamp,
                                                       fiid_obj_t obj_cmd_rq)
 {
-  if (!IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_VALID (parameter_valid)
+  if (!IPMI_SYSTEM_BOOT_OPTIONS_PARAMETER_VALID_VALID (parameter_valid)
       || !IPMI_CHANNEL_NUMBER_VALID (boot_source_channel_number)
       || !fiid_obj_valid (obj_cmd_rq))
     {
@@ -1097,7 +1097,7 @@ fill_cmd_set_system_boot_options_boot_initiator_info (uint8_t parameter_valid,
 
   FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SYSTEM_BOOT_OPTIONS);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_BOOT_INITIATOR_INFO);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SYSTEM_BOOT_OPTION_PARAMETER_BOOT_INITIATOR_INFO);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_valid", parameter_valid);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "boot_source.channel_number", boot_source_channel_number);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "boot_source.reserved", 0);
@@ -1114,8 +1114,8 @@ fill_cmd_set_system_boot_options_boot_initiator_mailbox (uint8_t parameter_valid
                                                          unsigned int block_data_length,
                                                          fiid_obj_t obj_cmd_rq)
 {
-  if (!IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_VALID (parameter_valid)
-      || block_data_length > IPMI_CHASSIS_BOOT_OPTIONS_BLOCK_DATA_LEN_MAX
+  if (!IPMI_SYSTEM_BOOT_OPTIONS_PARAMETER_VALID_VALID (parameter_valid)
+      || block_data_length > IPMI_SYSTEM_BOOT_OPTION_BLOCK_DATA_LEN_MAX
       || !fiid_obj_valid (obj_cmd_rq))
     {
       SET_ERRNO (EINVAL);
@@ -1130,7 +1130,7 @@ fill_cmd_set_system_boot_options_boot_initiator_mailbox (uint8_t parameter_valid
   
   FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SYSTEM_BOOT_OPTIONS);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_BOOT_INITIATOR_MAILBOX);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SYSTEM_BOOT_OPTION_PARAMETER_BOOT_INITIATOR_MAILBOX);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_valid", parameter_valid);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "set_selector", set_selector);
   if (block_data && block_data_length)
@@ -1145,8 +1145,8 @@ fill_cmd_get_system_boot_options (uint8_t parameter_selector,
                                   uint8_t block_selector,
                                   fiid_obj_t obj_cmd_rq)
 {
-  if ((!IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_SELECTOR_VALID (parameter_selector)
-       && !IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_SELECTOR_IS_OEM (parameter_selector))
+  if ((!IPMI_SYSTEM_BOOT_OPTION_PARAMETER_SELECTOR_VALID (parameter_selector)
+       && !IPMI_SYSTEM_BOOT_OPTION_PARAMETER_SELECTOR_IS_OEM (parameter_selector))
       || !fiid_obj_valid (obj_cmd_rq))
     {
       SET_ERRNO (EINVAL);

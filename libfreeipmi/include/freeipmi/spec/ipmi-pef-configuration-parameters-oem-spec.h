@@ -16,25 +16,16 @@
  * 
  */
 
-#ifndef _IPMI_LAN_PARAMETER_OEM_SPEC_H
-#define _IPMI_LAN_PARAMETER_OEM_SPEC_H 1
+#ifndef IPMI_PEF_CONFIGURATION_PARAMETERS_OEM_SPEC_H
+#define IPMI_PEF_CONFIGURATION_PARAMETERS_OEM_SPEC_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/* 
- * Dell
- */
-
-/*
- * Dell Xanadu II
- */
-
-#define IPMI_LAN_PARAMETER_OEM_DELL_DHCP_RETRY 192
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* _IPMI_LAN_PARAMETER_SPEC_H */
+#endif

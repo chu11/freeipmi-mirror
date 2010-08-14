@@ -33,7 +33,7 @@
 #include "freeipmi/spec/ipmi-channel-spec.h"
 #include "freeipmi/spec/ipmi-ipmb-lun-spec.h"
 #include "freeipmi/spec/ipmi-netfn-spec.h"
-#include "freeipmi/spec/ipmi-pef-parameter-spec.h"
+#include "freeipmi/spec/ipmi-pef-configuration-parameters-spec.h"
 
 #include "ipmi-api-defs.h"
 #include "ipmi-api-trace.h"
@@ -168,8 +168,8 @@ ipmi_cmd_set_pef_configuration_parameters (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if  ((!IPMI_PEF_PARAMETER_SELECTOR_VALID (parameter_selector)
-        && !IPMI_PEF_PARAMETER_SELECTOR_IS_OEM (parameter_selector))
+  if  ((!IPMI_PEF_CONFIGURATION_PARAMETER_SELECTOR_VALID (parameter_selector)
+        && !IPMI_PEF_CONFIGURATION_PARAMETER_SELECTOR_IS_OEM (parameter_selector))
        || !configuration_parameter_data
        || !configuration_parameter_data_len
        || !fiid_obj_valid (obj_cmd_rs))
@@ -919,8 +919,8 @@ ipmi_cmd_get_pef_configuration_parameters (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if ((!IPMI_PEF_PARAMETER_SELECTOR_VALID (parameter_selector)
-       && !IPMI_PEF_PARAMETER_SELECTOR_IS_OEM (parameter_selector))
+  if ((!IPMI_PEF_CONFIGURATION_PARAMETER_SELECTOR_VALID (parameter_selector)
+       && !IPMI_PEF_CONFIGURATION_PARAMETER_SELECTOR_IS_OEM (parameter_selector))
       || !IPMI_GET_PEF_PARAMETER_VALID (get_parameter)
       || !fiid_obj_valid (obj_cmd_rs))
     {
@@ -1003,7 +1003,7 @@ ipmi_cmd_get_pef_configuration_parameters_set_in_progress (ipmi_ctx_t ctx,
       goto cleanup;
     }
 
-  if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_PARAMETER_SET_IN_PROGRESS,
+  if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_CONFIGURATION_PARAMETER_SET_IN_PROGRESS,
                                                  get_parameter,
                                                  set_selector,
                                                  block_selector,
@@ -1065,7 +1065,7 @@ ipmi_cmd_get_pef_configuration_parameters_pef_control (ipmi_ctx_t ctx,
       goto cleanup;
     }
 
-  if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_PARAMETER_PEF_CONTROL,
+  if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_CONFIGURATION_PARAMETER_PEF_CONTROL,
                                                  get_parameter,
                                                  set_selector,
                                                  block_selector,
@@ -1127,7 +1127,7 @@ ipmi_cmd_get_pef_configuration_parameters_pef_action_global_control (ipmi_ctx_t 
       goto cleanup;
     }
 
-  if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_PARAMETER_PEF_ACTION_GLOBAL_CONTROL,
+  if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_CONFIGURATION_PARAMETER_PEF_ACTION_GLOBAL_CONTROL,
                                                  get_parameter,
                                                  set_selector,
                                                  block_selector,
@@ -1189,7 +1189,7 @@ ipmi_cmd_get_pef_configuration_parameters_pef_startup_delay (ipmi_ctx_t ctx,
       goto cleanup;
     }
 
-  if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_PARAMETER_PEF_STARTUP_DELAY,
+  if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_CONFIGURATION_PARAMETER_PEF_STARTUP_DELAY,
                                                  get_parameter,
                                                  set_selector,
                                                  block_selector,
@@ -1251,7 +1251,7 @@ ipmi_cmd_get_pef_configuration_parameters_pef_alert_startup_delay (ipmi_ctx_t ct
       goto cleanup;
     }
 
-  if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_PARAMETER_PEF_ALERT_STARTUP_DELAY,
+  if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_CONFIGURATION_PARAMETER_PEF_ALERT_STARTUP_DELAY,
                                                  get_parameter,
                                                  set_selector,
                                                  block_selector,
@@ -1313,7 +1313,7 @@ ipmi_cmd_get_pef_configuration_parameters_number_of_event_filters (ipmi_ctx_t ct
       goto cleanup;
     }
 
-  if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_PARAMETER_NUMBER_OF_EVENT_FILTERS,
+  if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_CONFIGURATION_PARAMETER_NUMBER_OF_EVENT_FILTERS,
                                                  get_parameter,
                                                  set_selector,
                                                  block_selector,
@@ -1375,7 +1375,7 @@ ipmi_cmd_get_pef_configuration_parameters_event_filter_table (ipmi_ctx_t ctx,
       goto cleanup;
     }
 
-  if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_PARAMETER_EVENT_FILTER_TABLE,
+  if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_CONFIGURATION_PARAMETER_EVENT_FILTER_TABLE,
                                                  get_parameter,
                                                  set_selector,
                                                  block_selector,
@@ -1437,7 +1437,7 @@ ipmi_cmd_get_pef_configuration_parameters_event_filter_table_data1_ (ipmi_ctx_t 
       goto cleanup;
     }
 
-  if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_PARAMETER_EVENT_FILTER_TABLE_DATA_1,
+  if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_CONFIGURATION_PARAMETER_EVENT_FILTER_TABLE_DATA_1,
                                                  get_parameter,
                                                  set_selector,
                                                  block_selector,
@@ -1499,7 +1499,7 @@ ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries (ipmi_c
       goto cleanup;
     }
 
-  if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_PARAMETER_NUMBER_OF_ALERT_POLICY_ENTRIES,
+  if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_CONFIGURATION_PARAMETER_NUMBER_OF_ALERT_POLICY_ENTRIES,
                                                  get_parameter,
                                                  set_selector,
                                                  block_selector,
@@ -1561,7 +1561,7 @@ ipmi_cmd_get_pef_configuration_parameters_number_of_alert_strings (ipmi_ctx_t ct
       goto cleanup;
     }
 
-  if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_PARAMETER_NUMBER_OF_ALERT_STRINGS,
+  if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_CONFIGURATION_PARAMETER_NUMBER_OF_ALERT_STRINGS,
                                                  get_parameter,
                                                  set_selector,
                                                  block_selector,
@@ -1623,7 +1623,7 @@ ipmi_cmd_get_pef_configuration_parameters_alert_string_keys (ipmi_ctx_t ctx,
       goto cleanup;
     }
 
-  if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_PARAMETER_ALERT_STRING_KEYS,
+  if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_CONFIGURATION_PARAMETER_ALERT_STRING_KEYS,
                                                  get_parameter,
                                                  set_selector,
                                                  block_selector,
@@ -1685,7 +1685,7 @@ ipmi_cmd_get_pef_configuration_parameters_alert_string (ipmi_ctx_t ctx,
       goto cleanup;
     }
 
-  if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_PARAMETER_ALERT_STRINGS,
+  if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_CONFIGURATION_PARAMETER_ALERT_STRINGS,
                                                  get_parameter,
                                                  set_selector,
                                                  block_selector,
@@ -1747,7 +1747,7 @@ ipmi_cmd_get_pef_configuration_parameters_alert_policy_table (ipmi_ctx_t ctx,
       goto cleanup;
     }
 
-  if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_PARAMETER_ALERT_POLICY_TABLE,
+  if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_CONFIGURATION_PARAMETER_ALERT_POLICY_TABLE,
                                                  get_parameter,
                                                  set_selector,
                                                  block_selector,

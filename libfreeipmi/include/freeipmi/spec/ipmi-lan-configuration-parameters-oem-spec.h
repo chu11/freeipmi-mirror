@@ -16,26 +16,25 @@
  * 
  */
 
-#ifndef _IPMI_SOL_PARAMETER_OEM_SPEC_H
-#define _IPMI_SOL_PARAMETER_OEM_SPEC_H
+#ifndef _IPMI_LAN_CONFIGURATION_PARAMETERS_OEM_SPEC_H
+#define _IPMI_LAN_CONFIGURATION_PARAMETERS_OEM_SPEC_H 1
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/*******************************************
- * Dell                                    *
- *******************************************/
+/* 
+ * Dell
+ */
 
 /*
  * Dell Xanadu II
- * Dell Xanadu III
  */
 
-#define IPMI_SOL_PARAMETER_OEM_DELL_SOL_TIMEOUT 192
+#define IPMI_LAN_CONFIGURATION_PARAMETER_OEM_DELL_DHCP_RETRY 192
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* _IPMI_SOL_PARAMETER_SPEC_H */
+#endif /* _IPMI_LAN_CONFIGURATION_PARAMETERS_SPEC_H */

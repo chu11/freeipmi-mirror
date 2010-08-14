@@ -48,7 +48,7 @@
 #include "freeipmi/spec/ipmi-ipmb-lun-spec.h"
 #include "freeipmi/spec/ipmi-netfn-spec.h"
 #include "freeipmi/spec/ipmi-privilege-level-spec.h"
-#include "freeipmi/spec/ipmi-system-info-parameter-spec.h"
+#include "freeipmi/spec/ipmi-system-info-parameters-spec.h"
 
 #include "ipmi-api-defs.h"
 #include "ipmi-api-trace.h"

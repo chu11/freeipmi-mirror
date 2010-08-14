@@ -33,7 +33,7 @@
 #include "freeipmi/spec/ipmi-channel-spec.h"
 #include "freeipmi/spec/ipmi-ipmb-lun-spec.h"
 #include "freeipmi/spec/ipmi-netfn-spec.h"
-#include "freeipmi/spec/ipmi-serial-modem-parameter-spec.h"
+#include "freeipmi/spec/ipmi-serial-modem-configuration-parameters-spec.h"
 
 #include "ipmi-api-defs.h"
 #include "ipmi-api-trace.h"
@@ -531,7 +531,7 @@ ipmi_cmd_get_serial_modem_configuration_set_in_progress (ipmi_ctx_t ctx,
 
   if (fill_cmd_get_serial_modem_configuration (channel_number,
                                                get_parameter,
-                                               IPMI_SERIAL_MODEM_PARAMETER_SET_IN_PROGRESS,
+                                               IPMI_SERIAL_MODEM_CONFIGURATION_PARAMETER_SET_IN_PROGRESS,
                                                set_selector,
                                                block_selector,
                                                obj_cmd_rq) < 0)
@@ -596,7 +596,7 @@ ipmi_cmd_get_serial_modem_configuration_connection_mode (ipmi_ctx_t ctx,
 
   if (fill_cmd_get_serial_modem_configuration (channel_number,
                                                get_parameter,
-                                               IPMI_SERIAL_MODEM_PARAMETER_CONNECTION_MODE,
+                                               IPMI_SERIAL_MODEM_CONFIGURATION_PARAMETER_CONNECTION_MODE,
                                                set_selector,
                                                block_selector,
                                                obj_cmd_rq) < 0)
@@ -661,7 +661,7 @@ ipmi_cmd_get_serial_modem_configuration_ipmi_messaging_comm_settings (ipmi_ctx_t
 
   if (fill_cmd_get_serial_modem_configuration (channel_number,
                                                get_parameter,
-                                               IPMI_SERIAL_MODEM_PARAMETER_IPMI_MESSAGING_COMM_SETTINGS,
+                                               IPMI_SERIAL_MODEM_CONFIGURATION_PARAMETER_IPMI_MESSAGING_COMM_SETTINGS,
                                                set_selector,
                                                block_selector,
                                                obj_cmd_rq) < 0)
@@ -726,7 +726,7 @@ ipmi_cmd_get_serial_modem_configuration_call_retry_interval (ipmi_ctx_t ctx,
 
   if (fill_cmd_get_serial_modem_configuration (channel_number,
                                                get_parameter,
-                                               IPMI_SERIAL_MODEM_PARAMETER_CALL_RETRY_INTERVAL,
+                                               IPMI_SERIAL_MODEM_CONFIGURATION_PARAMETER_CALL_RETRY_INTERVAL,
                                                set_selector,
                                                block_selector,
                                                obj_cmd_rq) < 0)
@@ -791,7 +791,7 @@ ipmi_cmd_get_serial_modem_configuration_page_blackout_interval (ipmi_ctx_t ctx,
 
   if (fill_cmd_get_serial_modem_configuration (channel_number,
                                                get_parameter,
-                                               IPMI_SERIAL_MODEM_PARAMETER_PAGE_BLACKOUT_INTERVAL,
+                                               IPMI_SERIAL_MODEM_CONFIGURATION_PARAMETER_PAGE_BLACKOUT_INTERVAL,
                                                set_selector,
                                                block_selector,
                                                obj_cmd_rq) < 0)

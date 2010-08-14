@@ -76,8 +76,8 @@ _get_boot_flags (ipmi_chassis_config_state_data_t *state_data,
     }
 
   if (ipmi_cmd_get_system_boot_options_boot_flags (state_data->ipmi_ctx,
-                                                   IPMI_CHASSIS_BOOT_OPTIONS_NO_SET_SELECTOR,
-                                                   IPMI_CHASSIS_BOOT_OPTIONS_NO_BLOCK_SELECTOR,
+                                                   IPMI_SYSTEM_BOOT_OPTIONS_NO_SET_SELECTOR,
+                                                   IPMI_SYSTEM_BOOT_OPTIONS_NO_BLOCK_SELECTOR,
                                                    obj_cmd_rs) < 0)
     {
       config_err_t ret;
@@ -289,10 +289,10 @@ _set_boot_flags (ipmi_chassis_config_state_data_t *state_data,
    */
 
   if (ipmi_cmd_set_system_boot_options_boot_flags (state_data->ipmi_ctx,
-                                                   IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_UNLOCKED,
+                                                   IPMI_SYSTEM_BOOT_OPTIONS_PARAMETER_VALID_UNLOCKED,
                                                    data->bios_boot_type,
                                                    data->boot_flags_persistent,
-                                                   IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_VALID,
+                                                   IPMI_SYSTEM_BOOT_OPTION_BOOT_FLAG_VALID,
                                                    data->lock_out_reset_button,
                                                    data->screen_blank,
                                                    data->boot_device,
@@ -869,12 +869,12 @@ _set_system_boot_options_BMC_boot_flag_valid_bit_clearing (ipmi_chassis_config_s
     }
 
   if (ipmi_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing (state_data->ipmi_ctx,
-                                                                         IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_UNLOCKED,
-                                                                         IPMI_CHASSIS_BOOT_OPTIONS_DONT_CLEAR_VALID_BIT,
-                                                                         IPMI_CHASSIS_BOOT_OPTIONS_DONT_CLEAR_VALID_BIT,
-                                                                         IPMI_CHASSIS_BOOT_OPTIONS_DONT_CLEAR_VALID_BIT,
-                                                                         IPMI_CHASSIS_BOOT_OPTIONS_DONT_CLEAR_VALID_BIT,
-                                                                         IPMI_CHASSIS_BOOT_OPTIONS_DONT_CLEAR_VALID_BIT,
+                                                                         IPMI_SYSTEM_BOOT_OPTIONS_PARAMETER_VALID_UNLOCKED,
+                                                                         IPMI_SYSTEM_BOOT_OPTION_DONT_CLEAR_VALID_BIT,
+                                                                         IPMI_SYSTEM_BOOT_OPTION_DONT_CLEAR_VALID_BIT,
+                                                                         IPMI_SYSTEM_BOOT_OPTION_DONT_CLEAR_VALID_BIT,
+                                                                         IPMI_SYSTEM_BOOT_OPTION_DONT_CLEAR_VALID_BIT,
+                                                                         IPMI_SYSTEM_BOOT_OPTION_DONT_CLEAR_VALID_BIT,
                                                                          obj_cmd_rs) < 0)
     {
       config_err_t ret;
@@ -902,7 +902,7 @@ _set_system_boot_options_BMC_boot_flag_valid_bit_clearing (ipmi_chassis_config_s
 static config_err_t
 _set_system_boot_options_boot_info_acknowledge (ipmi_chassis_config_state_data_t *state_data)
 {
-  uint8_t boot_info_acknowledge = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_INFO_UNACKNOWLEDGE;
+  uint8_t boot_info_acknowledge = IPMI_SYSTEM_BOOT_OPTION_BOOT_INFO_UNACKNOWLEDGE;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   fiid_obj_t obj_cmd_rs = NULL;
   
@@ -918,7 +918,7 @@ _set_system_boot_options_boot_info_acknowledge (ipmi_chassis_config_state_data_t
     }
 
   if (ipmi_cmd_set_system_boot_options_boot_info_acknowledge (state_data->ipmi_ctx,
-                                                              IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_UNLOCKED,
+                                                              IPMI_SYSTEM_BOOT_OPTIONS_PARAMETER_VALID_UNLOCKED,
                                                               &boot_info_acknowledge,
                                                               &boot_info_acknowledge,
                                                               &boot_info_acknowledge,

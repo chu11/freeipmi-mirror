@@ -5477,7 +5477,7 @@ ipmi_oem_dell_get_sol_inactivity_timeout (ipmi_oem_state_data_t *state_data)
   if (ipmi_cmd_get_sol_configuration_parameters (state_data->ipmi_ctx,
                                                  lan_channel_number,
                                                  IPMI_GET_SOL_PARAMETER,
-                                                 IPMI_SOL_PARAMETER_OEM_DELL_SOL_TIMEOUT,
+                                                 IPMI_SOL_CONFIGURATION_PARAMETER_OEM_DELL_SOL_TIMEOUT,
                                                  0,
                                                  0,
                                                  obj_cmd_rs) < 0)
@@ -5597,7 +5597,7 @@ ipmi_oem_dell_set_sol_inactivity_timeout (ipmi_oem_state_data_t *state_data)
 
   if (ipmi_cmd_set_sol_configuration_parameters (state_data->ipmi_ctx,
                                                  lan_channel_number,
-                                                 IPMI_SOL_PARAMETER_OEM_DELL_SOL_TIMEOUT,
+                                                 IPMI_SOL_CONFIGURATION_PARAMETER_OEM_DELL_SOL_TIMEOUT,
                                                  configuration_parameter_data,
                                                  2,
                                                  obj_cmd_rs) < 0)

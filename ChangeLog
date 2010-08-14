@@ -2,6 +2,9 @@
 
 	* ipmi-oem/: Various code consistency cleanup.
 
+	* libfreeipmi/include/freeipmi/spec/: Various filename and macro
+	name changes for consistency to IPMI spec.
+	
 	* Various code cleanup.
 	
 2010-08-12  Albert Chu <chu11@llnl.gov>

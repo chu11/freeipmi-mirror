@@ -16,15 +16,26 @@
  * 
  */
 
-#ifndef _IPMI_SERIAL_MODEM_PARAMETER_OEM_SPEC_H
-#define _IPMI_SERIAL_MODEM_PARAMETER_OEM_SPEC_H
+#ifndef _IPMI_SOL_PARAMETER_OEM_SPEC_H
+#define _IPMI_SOL_PARAMETER_OEM_SPEC_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+/*******************************************
+ * Dell                                    *
+ *******************************************/
+
+/*
+ * Dell Xanadu II
+ * Dell Xanadu III
+ */
+
+#define IPMI_SOL_CONFIGURATION_PARAMETER_OEM_DELL_SOL_TIMEOUT 192
+
 #ifdef __cplusplus
 }
 #endif
 
-#endif
+#endif /* _IPMI_SOL_PARAMETER_SPEC_H */

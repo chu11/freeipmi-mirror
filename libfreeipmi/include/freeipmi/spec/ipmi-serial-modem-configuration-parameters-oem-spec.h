@@ -16,13 +16,12 @@
  * 
  */
 
-#ifndef IPMI_PEF_PARAMETER_OEM_SPEC_H
-#define IPMI_PEF_PARAMETER_OEM_SPEC_H
+#ifndef _IPMI_SERIAL_MODEM_CONFIGURATION_PARAMETERS_OEM_SPEC_H
+#define _IPMI_SERIAL_MODEM_CONFIGURATION_PARAMETERS_OEM_SPEC_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
 
 #ifdef __cplusplus
 }
