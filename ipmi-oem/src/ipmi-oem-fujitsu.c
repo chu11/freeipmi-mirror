@@ -223,6 +223,23 @@
 #define IPMI_OEM_FUJITSU_ERROR_LED_CSS_BLINK_GEL_ON    7
 #define IPMI_OEM_FUJITSU_ERROR_LED_CSS_BLINK_GEL_BLINK 8
 
+/* achu: one byte field, so max is 255 */
+#define IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH 255
+
+#define IPMI_OEM_FUJITSU_CSS_BITMASK      0x80
+#define IPMI_OEM_FUJITSU_CSS_SHIFT        7
+
+#define IPMI_OEM_FUJITSU_SEVERITY_BITMASK 0x70
+#define IPMI_OEM_FUJITSU_SEVERITY_SHIFT   4
+
+#define IPMI_OEM_FUJITSU_CSS_COMPONENT    1
+#define IPMI_OEM_FUJITSU_NO_CSS_COMPONENT 0
+
+#define IPMI_OEM_FUJITSU_SEVERITY_INFORMATIONAL 0
+#define IPMI_OEM_FUJITSU_SEVERITY_MINOR         1
+#define IPMI_OEM_FUJITSU_SEVERITY_MAJOR         2
+#define IPMI_OEM_FUJITSU_SEVERITY_CRITICAL      3
+
 static int
 _ipmi_oem_get_power_source (ipmi_oem_state_data_t *state_data,
                             uint8_t command_specifier,
@@ -1290,3 +1307,210 @@ ipmi_oem_fujitsu_get_error_led (ipmi_oem_state_data_t *state_data)
  cleanup:
   return (rv);
 }
+
+int
+ipmi_oem_fujitsu_get_sel_entry_long_text (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  int rs_len;
+  uint16_t sel_record_id;
+  uint16_t actual_record_id;
+  uint32_t timestamp;
+  uint8_t css;
+  uint8_t severity;
+  time_t timetmp;
+  struct tm time_tm;
+  char time_buf[IPMI_OEM_TIME_BUFLEN + 1];
+  char string_buf[IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH + 1];
+  uint8_t data_length = UCHAR_MAX;
+  uint8_t offset = 0;
+  uint8_t component_length = 0;
+  char *css_str = NULL;
+  char *severity_str = NULL;
+  char *ptr = NULL;
+  int rv = -1;
+
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 1);
+  
+  errno = 0;
+  
+  sel_record_id = strtoul (state_data->prog_data->args->oem_options[0], &ptr, 0);
+  if (errno || ptr[0] != '\0')
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[0]);
+      goto cleanup;
+    }
+
+  memset (string_buf, '\0', IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH + 1);
+
+  /* Fujitsu OEM
+   * 
+   * http://manuals.ts.fujitsu.com/file/4390/irmc_s2-ug-en.pdf
+   *
+   * Request
+   *
+   * 0x2E - OEM network function
+   * 0xF5 - OEM cmd
+   * 0x?? - Fujitsu IANA (LSB first)
+   * 0x?? - Fujitsu IANA
+   * 0x?? - Fujitsu IANA
+   * 0x43 - Command Specifier
+   * 0x?? - Record ID (LSB first)
+   * 0x?? - Record ID ; 0x0000 = "first record", 0xFFFF = "last record"
+   * 0x?? - Offset (in response SEL text)
+   * 0x?? - MaxResponseDataSize (size of converted SEL data 16:n in response, maximum is 100)
+   *
+   * Response
+   *
+   * 0xF5 - OEM cmd
+   * 0x?? - Completion code
+   * 0x?? - Fujitsu IANA (LSB first)
+   * 0x?? - Fujitsu IANA
+   * 0x?? - Fujitsu IANA
+   * 0x?? - Next Record ID (LSB)
+   * 0x?? - Next Record ID (MSB)
+   * 0x?? - Actual Record ID (LSB)
+   * 0x?? - Actual Record ID (MSB)
+   * 0x?? - Record type
+   * 0x?? - timestamp (LSB first)
+   * 0x?? - timestamp
+   * 0x?? - timestamp
+   * 0x?? - timestamp
+   * 0x?? - severity   
+   *      bit 7   - CSS component
+   *              - 0 - No CSS component
+   *              - 1 - CSS component
+   *      bit 6-4 - 000 = INFORMATIONAL
+   *                001 = MINOR
+   *                010 = MAJOR
+   *                011 = CRITICAL
+   *                1xx = unknown
+   *      bit 3-0 - reserved
+   * 0x?? - data length (of the whole text)
+   * 0x?? - converted SEL data
+   *      - requested number of bytes starting at requested offset (MaxResponseDataSize-1 bytes of data)
+   * 0x00 - trailing '\0' character
+   */
+     
+  while (offset < data_length)
+    {
+      bytes_rq[0] = IPMI_CMD_OEM_FUJITSU_SYSTEM;
+      bytes_rq[1] = (IPMI_IANA_ENTERPRISE_ID_FUJITSU & 0x0000FF);
+      bytes_rq[2] = (IPMI_IANA_ENTERPRISE_ID_FUJITSU & 0x00FF00) >> 8;
+      bytes_rq[3] = (IPMI_IANA_ENTERPRISE_ID_FUJITSU & 0xFF0000) >> 16;
+      bytes_rq[4] = IPMI_OEM_FUJITSU_COMMAND_SPECIFIER_GET_SEL_ENTRY_LONG_TEXT;
+      bytes_rq[5] = (sel_record_id & 0x00FF);
+      bytes_rq[6] = (sel_record_id & 0xFF00) >> 8;
+      bytes_rq[7] = offset;
+      bytes_rq[8] = UCHAR_MAX;
+      
+      if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                                  0, /* lun */
+                                  IPMI_NET_FN_OEM_GROUP_RQ, /* network function */
+                                  bytes_rq, /* data */
+                                  9, /* num bytes */
+                                  bytes_rs,
+                                  IPMI_OEM_MAX_BYTES)) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_cmd_raw: %s\n",
+                           ipmi_ctx_errormsg (state_data->ipmi_ctx));
+          goto cleanup;
+        }
+      
+      if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                       bytes_rs,
+                                                       rs_len,
+                                                       17,
+                                                       IPMI_CMD_OEM_FUJITSU_SYSTEM,
+                                                       IPMI_NET_FN_OEM_GROUP_RS,
+                                                       NULL) < 0)
+        goto cleanup;
+  
+      /* achu: assume a lot of this will be the same not matter how many times we loop */
+      
+      actual_record_id = bytes_rs[7];
+      actual_record_id |= (bytes_rs[8] << 8);
+      
+      timestamp = bytes_rs[10];
+      timestamp |= (bytes_rs[11] << 8);
+      timestamp |= (bytes_rs[12] << 16);
+      timestamp |= (bytes_rs[13] << 24);
+      
+      css = (bytes_rs[14] & IPMI_OEM_FUJITSU_CSS_BITMASK);
+      css >>= IPMI_OEM_FUJITSU_CSS_SHIFT;
+
+      severity = (bytes_rs[14] & IPMI_OEM_FUJITSU_SEVERITY_BITMASK);
+      severity >>= IPMI_OEM_FUJITSU_SEVERITY_SHIFT;
+      
+      data_length = bytes_rs[15];
+      
+      component_length = (rs_len - 16);
+  
+      /* achu: truncate if there is overflow */
+      if (offset + component_length > IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH)
+        memcpy (string_buf + offset,
+                &bytes_rs[16],
+                IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH - offset);
+      else
+        memcpy (string_buf + offset,
+                &bytes_rs[16],
+                component_length);
+      
+      offset += component_length;
+    }
+  
+  if (css == IPMI_OEM_FUJITSU_CSS_COMPONENT)
+    css_str = "CSS Component";
+
+  if (severity == IPMI_OEM_FUJITSU_SEVERITY_INFORMATIONAL)
+    severity_str = "INFORMATIONAL";
+  else if (severity == IPMI_OEM_FUJITSU_SEVERITY_MINOR)
+    severity_str = "MINOR";
+  else if (severity == IPMI_OEM_FUJITSU_SEVERITY_MAJOR)
+    severity_str = "MAJOR";
+  else if (severity == IPMI_OEM_FUJITSU_SEVERITY_CRITICAL)
+    severity_str = "CRITICAL";
+  else
+    severity_str = "Unknown Severity";
+
+  /* Posix says individual calls need not clear/set all portions of
+   * 'struct tm', thus passing 'struct tm' between functions could
+   * have issues.  So we need to memset.
+   */
+  memset (&time_tm, '\0', sizeof(struct tm));
+
+  timetmp = timestamp;
+  localtime_r (&timetmp, &time_tm);
+  memset (time_buf, '\0', IPMI_OEM_TIME_BUFLEN + 1);
+  strftime (time_buf, IPMI_OEM_TIME_BUFLEN, "%b-%d-%Y | %H:%M:%S", &time_tm);
+
+  if (css_str)
+    pstdout_printf (state_data->pstate,
+                    "%u | %s | %s ; %s ; %s\n",
+                    actual_record_id,
+                    time_buf,
+                    css_str,
+                    severity_str,
+                    string_buf);
+  else
+    pstdout_printf (state_data->pstate,
+                    "%u | %s | %s ; %s\n",
+                    actual_record_id,
+                    time_buf,
+                    severity_str,
+                    string_buf);
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+

@@ -1,3 +1,16 @@
+2010-08-17  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-oem/: Re-format Fujitsu get-sel-entry-long-text for
+	consistency to remaining ipmi-oem code.  Re-work to go through
+	multiple iterations.
+
+	* Add manpage entry for Fujitsu get-sel-entry-long-text OEM
+	command.
+
+2010-08-17  Dan Lukes <dan@obluda.cz>
+
+	* ipmi-oem/: Support Fujitsu get-sel-entry-long-text OEM command.
+	
 2010-08-13  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/: Various code consistency cleanup.

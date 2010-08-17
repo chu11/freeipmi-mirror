@@ -36,4 +36,6 @@ int ipmi_oem_fujitsu_set_identify_led (ipmi_oem_state_data_t *state_data);
 
 int ipmi_oem_fujitsu_get_error_led (ipmi_oem_state_data_t *state_data);
 
+int ipmi_oem_fujitsu_get_sel_entry_long_text (ipmi_oem_state_data_t *state_data);
+
 #endif

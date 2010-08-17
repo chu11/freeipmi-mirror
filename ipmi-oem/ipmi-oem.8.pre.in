@@ -334,6 +334,15 @@ confirmed to work on Fujitsu RX100 S5.
 .B get-error-led
 This OEM command will get the current error LED status.  Command
 confirmed to work on Fujitsu RX100 S5.
+.TP
+.B get-sel-entry-long-text \fIsel_record_id\fR
+This OEM command will retrieve the Fujitsu specific string
+interpreation of a SEL record.  This command may be useful for
+interpreting Fujitsu OEM hex codes found in the SEL.  A specific SEL
+record ID must be specified.  Please see
+.B ipmi-sel(8),
+for retrieving SEL records.  Command confirmed to work on Fujitsu
+RX100 S5.
 .RE
 .TP
 .B IBM
