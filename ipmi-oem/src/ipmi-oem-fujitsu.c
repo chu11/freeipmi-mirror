@@ -1457,15 +1457,19 @@ ipmi_oem_fujitsu_get_sel_entry_long_text (ipmi_oem_state_data_t *state_data)
   
       /* achu: truncate if there is overflow */
       if (offset + component_length > IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH)
-        memcpy (string_buf + offset,
-                &bytes_rs[16],
-                IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH - offset);
+        {
+          memcpy (string_buf + offset,
+                  &bytes_rs[16],
+                  IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH - offset);
+          offset = IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH;
+        }
       else
-        memcpy (string_buf + offset,
-                &bytes_rs[16],
-                component_length);
-      
-      offset += component_length;
+        {
+          memcpy (string_buf + offset,
+                  &bytes_rs[16],
+                  component_length);
+          offset += component_length;
+        }
     }
   
   if (css == IPMI_OEM_FUJITSU_CSS_COMPONENT)
