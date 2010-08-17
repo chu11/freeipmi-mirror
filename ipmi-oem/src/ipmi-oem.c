@@ -431,6 +431,13 @@ struct ipmi_oem_command oem_fujitsu[] =
       ipmi_oem_fujitsu_get_error_led
     },
     {
+      "get-sel-entry-long-text",
+      "<sel_record_id>",
+      1,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_fujitsu_get_sel_entry_long_text
+    },
+    {
       NULL,
       NULL,
       0,
