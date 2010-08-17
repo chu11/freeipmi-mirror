@@ -1030,7 +1030,8 @@ _calculate_authentication_code_len (uint8_t integrity_algorithm)
   assert ((integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE
            || integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96
            || integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128
-           || integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128));
+           || integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128
+           || integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA256_128));
 
   if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE)
     authentication_code_len = 0;
@@ -1038,8 +1039,10 @@ _calculate_authentication_code_len (uint8_t integrity_algorithm)
     authentication_code_len = IPMI_HMAC_SHA1_96_AUTHENTICATION_CODE_LENGTH;
   else if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128)
     authentication_code_len = IPMI_HMAC_MD5_128_AUTHENTICATION_CODE_LENGTH;
-  else /* IPMI_INTEGRITY_ALGORITHM_MD5_128 */
+  else if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128)
     authentication_code_len = IPMI_MD5_128_AUTHENTICATION_CODE_LENGTH;
+  else if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA256_128)
+    authentication_code_len = IPMI_HMAC_SHA256_128_AUTHENTICATION_CODE_LENGTH;
 
   return (authentication_code_len);
 }
@@ -1064,7 +1067,8 @@ _construct_session_trlr_authentication_code (uint8_t integrity_algorithm,
 
   assert ((integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96
            || integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128
-           || integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128)
+           || integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128
+           || integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA256_128)
           && !(integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128
                && authentication_code_data
                && authentication_code_data_len > IPMI_2_0_MAX_PASSWORD_LENGTH)
@@ -1126,12 +1130,19 @@ _construct_session_trlr_authentication_code (uint8_t integrity_algorithm,
       expected_digest_len = IPMI_HMAC_MD5_DIGEST_LENGTH;
       copy_digest_len = IPMI_HMAC_MD5_128_AUTHENTICATION_CODE_LENGTH;
     }
-  else
+  else if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128)
     {
       hash_algorithm = IPMI_CRYPT_HASH_MD5;
       hash_flags = 0;
       expected_digest_len = MD5_DIGEST_LENGTH;
       copy_digest_len = IPMI_MD5_128_AUTHENTICATION_CODE_LENGTH;
+    }
+  else if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA256_128)
+    {
+      hash_algorithm = IPMI_CRYPT_HASH_SHA256;
+      hash_flags = IPMI_CRYPT_HASH_FLAGS_HMAC;
+      expected_digest_len = IPMI_HMAC_SHA256_DIGEST_LENGTH;
+      copy_digest_len = IPMI_HMAC_SHA256_128_AUTHENTICATION_CODE_LENGTH;
     }
 
   if ((crypt_digest_len = ipmi_crypt_hash_digest_len (hash_algorithm)) < 0)
@@ -1354,7 +1365,8 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
           && payload_authenticated == IPMI_PAYLOAD_FLAG_AUTHENTICATED
           && !(integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96
                || integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128
-               || integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128))
+               || integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128
+               || integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA256_128))
       || (confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_NONE
           && payload_encrypted != IPMI_PAYLOAD_FLAG_UNENCRYPTED))
     {
@@ -2379,7 +2391,8 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
           && payload_authenticated == IPMI_PAYLOAD_FLAG_AUTHENTICATED
           && !(integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96
                || integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128
-               || integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128))
+               || integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128
+               || integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA256_128))
       || (confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_NONE
           && payload_encrypted != IPMI_PAYLOAD_FLAG_UNENCRYPTED)
       || !ipmi_payload_len)
@@ -2516,8 +2529,10 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
         authentication_code_len = IPMI_HMAC_SHA1_96_AUTHENTICATION_CODE_LENGTH;
       else if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128)
         authentication_code_len = IPMI_HMAC_MD5_128_AUTHENTICATION_CODE_LENGTH;
-      else /* IPMI_INTEGRITY_ALGORITHM_MD5_128 */
+      else if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128)
         authentication_code_len = IPMI_MD5_128_AUTHENTICATION_CODE_LENGTH;
+      else if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA256_128)
+        authentication_code_len = IPMI_HMAC_SHA256_128_AUTHENTICATION_CODE_LENGTH;
 
       if ((pad_length_field_len = fiid_template_field_len_bytes (tmpl_rmcpplus_session_trlr, "pad_length")) < 0)
         {

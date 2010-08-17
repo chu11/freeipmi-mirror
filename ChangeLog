@@ -1,3 +1,7 @@
+2010-08-17  Holger Liebig <holger.liebig@ts.fujitsu.com>
+
+	* Add SHA256 support globally.
+	
 2010-08-17  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/: Re-format Fujitsu get-sel-entry-long-text for

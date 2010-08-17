@@ -131,6 +131,8 @@ ipmi_crypt_hash (unsigned int hash_algorithm,
 
   if (hash_algorithm == IPMI_CRYPT_HASH_SHA1)
     gcry_md_algorithm = GCRY_MD_SHA1;
+  else if (hash_algorithm == IPMI_CRYPT_HASH_SHA256)
+    gcry_md_algorithm = GCRY_MD_SHA256;
   else
     gcry_md_algorithm = GCRY_MD_MD5;
 
@@ -221,6 +223,8 @@ ipmi_crypt_hash_digest_len (unsigned int hash_algorithm)
 
   if (hash_algorithm == IPMI_CRYPT_HASH_SHA1)
     gcry_md_algorithm = GCRY_MD_SHA1;
+  else if (hash_algorithm == IPMI_CRYPT_HASH_SHA256)
+    gcry_md_algorithm = GCRY_MD_SHA256;
   else
     gcry_md_algorithm = GCRY_MD_MD5;
 

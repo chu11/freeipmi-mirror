@@ -3710,6 +3710,18 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
               goto cleanup;
             }
         }
+      else if (ctx->io.outofband.authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA256
+               && keybuf_len == (IPMI_HMAC_SHA256_DIGEST_LENGTH + 1))
+        {
+          if (fiid_obj_set_data (obj_cmd_rs,
+                                 "key_exchange_authentication_code",
+                                 keybuf,
+                                 IPMI_HMAC_SHA256_DIGEST_LENGTH) < 0)
+            {
+              API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
+              goto cleanup;
+            }
+        }
     }
 
   /* IPMI Workaround (achu)

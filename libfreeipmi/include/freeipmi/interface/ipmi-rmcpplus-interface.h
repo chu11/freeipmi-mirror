@@ -84,7 +84,7 @@ extern "C" {
 #define IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE           0x00
 #define IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1      0x01
 #define IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5       0x02
-#define IPMI_AUTHENTICATION_ALGOIRTHM_RAKP_HMAC_SHA256    0x03
+#define IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA256    0x03
 /* C0h - FFh - OEM */
 /* all other reserved */
 
@@ -92,12 +92,13 @@ extern "C" {
   (((__algorithm) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE         \
     || (__algorithm) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1 \
     || (__algorithm) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5  \
-    || (__algorithm) == IPMI_AUTHENTICATION_ALGOIRTHM_RAKP_HMAC_SHA256) ? 1 : 0)
+    || (__algorithm) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA256) ? 1 : 0)
 
 #define IPMI_AUTHENTICATION_ALGORITHM_SUPPORTED(__algorithm)         \
   (((__algorithm) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE         \
     || (__algorithm) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1 \
-    || (__algorithm) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5) ? 1 : 0)
+    || (__algorithm) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5  \
+    || (__algorithm) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA256) ? 1 : 0)
 
 /****************************************
 * IPMI 2.0 Integrity Algorithm Numbers *
@@ -121,7 +122,8 @@ extern "C" {
   (((__algorithm) == IPMI_INTEGRITY_ALGORITHM_NONE            \
     || (__algorithm) == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96 \
     || (__algorithm) == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128 \
-    || (__algorithm) == IPMI_INTEGRITY_ALGORITHM_MD5_128) ? 1 : 0)
+    || (__algorithm) == IPMI_INTEGRITY_ALGORITHM_MD5_128      \
+    || (__algorithm) == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA256_128) ? 1 : 0)
 
 /**********************************************
 * IPMI 2.0 Confidentiality Algorithm Numbers *
@@ -178,14 +180,16 @@ extern "C" {
 #define IPMI_HMAC_MD5_DIGEST_LENGTH                       16
 #define IPMI_MD5_DIGEST_LENGTH                            16
 #define IPMI_HMAC_SHA1_96_DIGEST_LENGTH                   12
+#define IPMI_HMAC_SHA256_DIGEST_LENGTH                    32
 
 #define IPMI_HMAC_SHA1_96_AUTHENTICATION_CODE_LENGTH      12
 #define IPMI_HMAC_MD5_128_AUTHENTICATION_CODE_LENGTH      16
 #define IPMI_MD5_128_AUTHENTICATION_CODE_LENGTH           16
+#define IPMI_HMAC_SHA256_128_AUTHENTICATION_CODE_LENGTH   16
 
-/* Refer to table 22-19 */
+/* Refer to table 22-19, Errata 4 adds SHA256 */
 #define IPMI_CIPHER_SUITE_ID_MIN                          0
-#define IPMI_CIPHER_SUITE_ID_MAX                          14
+#define IPMI_CIPHER_SUITE_ID_MAX                          17
 
 /* 
  * fill* functions return 0 on success, -1 on error.
