@@ -62,25 +62,25 @@
 
 /* achu: all named from doc except 'lan' configuration id, which I assumed names */
 
-#define IPMI_OEM_EXTENDED_CONFIGURATION_ID_NIC                      0x02
-#define IPMI_OEM_EXTENDED_CONFIGURATION_ID_SOL                      0x03
-#define IPMI_OEM_EXTENDED_CONFIGURATION_ID_SECURITY                 0x04
-#define IPMI_OEM_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION 0x0C
-#define IPMI_OEM_EXTENDED_CONFIGURATION_ID_FIRMWARE_LOG             0x0E
-#define IPMI_OEM_EXTENDED_CONFIGURATION_ID_FIRMWARE_INFORMATION     0x0F
-#define IPMI_OEM_EXTENDED_CONFIGURATION_ID_FIRMWARE_UPDATE          0x10
-#define IPMI_OEM_EXTENDED_CONFIGURATION_ID_POWER_MANAGEMENT         0x11
+#define IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_NIC                      0x02
+#define IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_SOL                      0x03
+#define IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_SECURITY                 0x04
+#define IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION 0x0C
+#define IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_FIRMWARE_LOG             0x0E
+#define IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_FIRMWARE_INFORMATION     0x0F
+#define IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_FIRMWARE_UPDATE          0x10
+#define IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_POWER_MANAGEMENT         0x11
 
 /* nic status - 1 byte, 0 = shared, 1 = dedicated
  */
-#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_NIC_MODE 0x01
+#define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_NIC_MODE 0x01
 
 /* sol idle timeout - 2 bytes, ls byte first, 0h = no timeout, default = 01h
  *
  * telnet/ssh redirect enable - 1 byte, 0 = disable, 1 = enabled 
  */
-#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_SOL_SOL_IDLE_TIMEOUT           0x01
-#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_SOL_TELNET_SSH_REDIRECT_ENABLE 0x02
+#define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_SOL_SOL_IDLE_TIMEOUT           0x01
+#define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_SOL_TELNET_SSH_REDIRECT_ENABLE 0x02
 
 /* service disabled - 1 byte, bitmask
  *                  - 0x01 = all service except IPMI are disabled
@@ -95,10 +95,10 @@
  *
  * lockout time - 2 bytes, in seconds, 0 = disable, default = 3600
  */
-#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_SECURITY_SERVICE_DISABLED            0x01
-#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_SECURITY_MAX_AUTHENTICATION_FAILURES 0x02
-#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_SECURITY_LOCKOUT_WINDOW              0x03
-#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_SECURITY_LOCKOUT_TIME                0x04
+#define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_SECURITY_SERVICE_DISABLED            0x01
+#define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_SECURITY_MAX_AUTHENTICATION_FAILURES 0x02
+#define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_SECURITY_LOCKOUT_WINDOW              0x03
+#define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_SECURITY_LOCKOUT_TIME                0x04
 
 /* web server enabled - 1 byte, 0 = false, 1 = true (default)
  *
@@ -112,12 +112,12 @@
  *
  * https port num - 2 bytes, default 443
  */
-#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_WEB_SERVER_ENABLED  0x01
-#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_MAX_WEB_SESSIONS    0x02
-#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_ACTIVE_WEB_SESSIONS 0x03
-#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_WEB_SERVER_TIMEOUT  0x04
-#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_HTTP_PORT_NUM       0x05
-#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_HTTPS_PORT_NUM      0x06
+#define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_WEB_SERVER_ENABLED  0x01
+#define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_MAX_WEB_SESSIONS    0x02
+#define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_ACTIVE_WEB_SESSIONS 0x03
+#define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_WEB_SERVER_TIMEOUT  0x04
+#define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_HTTP_PORT_NUM       0x05
+#define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_HTTPS_PORT_NUM      0x06
 
 /* entity - 1 byte (read only)
  *
@@ -129,11 +129,11 @@
  *
  * update date / time - 3 bytes, from 0:00 1/1/08, lsbyte first
  */
-#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_LOG_ENTITY            0x01
-#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_LOG_FIRMWARE_VERSION  0x02
-#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_LOG_BRANCH            0x03
-#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_LOG_BUILD_INFORMATION 0x04
-#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_LOG_UPDATE_DATE_TIME  0x05
+#define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_LOG_ENTITY            0x01
+#define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_LOG_FIRMWARE_VERSION  0x02
+#define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_LOG_BRANCH            0x03
+#define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_LOG_BUILD_INFORMATION 0x04
+#define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_LOG_UPDATE_DATE_TIME  0x05
 
 /* name - 1-16 bytes (read only)
  *
@@ -150,20 +150,20 @@
  * build information - 1-16 bytes (read only) 
  *
  */
-#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_NAME              0x01
-#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_DESCRIPTION       0x02
-#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_ENTITY            0x03
-#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_PRODUCT_INFO      0x04
-#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_FIRMWARE_VERSION  0x05
-#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_BRANCH            0x06
-#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_BUILD_INFORMATION 0x07
+#define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_NAME              0x01
+#define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_DESCRIPTION       0x02
+#define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_ENTITY            0x03
+#define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_PRODUCT_INFO      0x04
+#define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_FIRMWARE_VERSION  0x05
+#define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_BRANCH            0x06
+#define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_BUILD_INFORMATION 0x07
 
-#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_NAME_LEN              16
-#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_DESCRIPTION_LEN       256
-#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_PRODUCT_INFO_LEN      64
-#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_FIRMWARE_VERSION_LEN  16
-#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_BRANCH_LEN            16
-#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_BUILD_INFORMATION_LEN 16
+#define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_NAME_LEN              16
+#define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_DESCRIPTION_LEN       256
+#define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_PRODUCT_INFO_LEN      64
+#define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_FIRMWARE_VERSION_LEN  16
+#define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_BRANCH_LEN            16
+#define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_BUILD_INFORMATION_LEN 16
 
 /* remote update enable - 1 byte, ??
  *
@@ -178,16 +178,16 @@
  *
  * delay time - 1 byte, in seconds, 0h = immediate, ffh = random between 5 and 10
  */
-#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_REMOTE_UPDATE_ENABLE 0x01
-#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_PROTOCOL             0x02
-#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_URI                  0x03
-#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_CONNECTION_RETRY     0x04
-#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_RETRY_INTERVAL       0x05
-#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_DELAY_TIME           0x06
+#define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_REMOTE_UPDATE_ENABLE 0x01
+#define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_PROTOCOL             0x02
+#define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_URI                  0x03
+#define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_CONNECTION_RETRY     0x04
+#define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_RETRY_INTERVAL       0x05
+#define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_DELAY_TIME           0x06
 
-#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_RETRY_INTERVAL_INCREMENTS 5
+#define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_RETRY_INTERVAL_INCREMENTS 5
 
-#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_URI_LEN 256
+#define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_URI_LEN 256
 
 /* power management enable - 1 byte, bit 7: 0 = disable, 1 = enable, reset reserved
  *
@@ -201,73 +201,73 @@
  *
  * maximum power on delay - 2 bytes
  */
-#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_POWER_MANAGEMENT_ENABLE      0x01
-#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_POWER_STAGGERING_AC_RECOVERY 0x02
-#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_POWER_ON_DELAY               0x03
-#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_MINIMUM_POWER_ON_DELAY       0x04
-#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_MAXIMUM_POWER_ON_DELAY       0x05
+#define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_POWER_MANAGEMENT_ENABLE      0x01
+#define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_POWER_STAGGERING_AC_RECOVERY 0x02
+#define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_POWER_ON_DELAY               0x03
+#define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_MINIMUM_POWER_ON_DELAY       0x04
+#define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_MAXIMUM_POWER_ON_DELAY       0x05
 
-#define IPMI_OEM_SET_SELECTOR   0x0
-#define IPMI_OEM_BLOCK_SELECTOR 0x0
+#define IPMI_OEM_INVENTEC_SET_SELECTOR   0x0
+#define IPMI_OEM_INVENTEC_BLOCK_SELECTOR 0x0
 
-#define IPMI_OEM_MAX_MACADDRLEN 24
+#define IPMI_OEM_INVENTEC_MAX_MACADDRLEN 24
 
-#define IPMI_OEM_EXTENDED_CONFIG_READ_ALL_BYTES           0xFF
+#define IPMI_OEM_INVENTEC_EXTENDED_CONFIG_READ_ALL_BYTES           0xFF
 
-#define IPMI_OEM_EXTENDED_CONFIG_NIC_MODE_SHARED    0x00
-#define IPMI_OEM_EXTENDED_CONFIG_NIC_MODE_DEDICATED 0x01
+#define IPMI_OEM_INVENTEC_EXTENDED_CONFIG_NIC_MODE_SHARED    0x00
+#define IPMI_OEM_INVENTEC_EXTENDED_CONFIG_NIC_MODE_DEDICATED 0x01
 
-#define IPMI_OEM_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_ENABLE_ALL   0x00
-#define IPMI_OEM_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_ALL  0x01
-#define IPMI_OEM_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_KVM  0x02
-#define IPMI_OEM_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_HTTP 0x04
-#define IPMI_OEM_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_SSH  0x08
+#define IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_ENABLE_ALL   0x00
+#define IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_ALL  0x01
+#define IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_KVM  0x02
+#define IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_HTTP 0x04
+#define IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_SSH  0x08
 
 /* DPNM = Dynamic Power Node Management */
-#define IPMI_OEM_EXTENDED_CONFIG_POWER_MANAGEMENT_ENABLE_DPNM_BITMASK 0x80
-#define IPMI_OEM_EXTENDED_CONFIG_POWER_MANAGEMENT_ENABLE_DPNM_SHIFT   7
-#define IPMI_OEM_EXTENDED_CONFIG_POWER_MANAGEMENT_ENABLE_DPNM_ENABLE  1
-#define IPMI_OEM_EXTENDED_CONFIG_POWER_MANAGEMENT_ENABLE_DPNM_DISABLE 0
+#define IPMI_OEM_INVENTEC_EXTENDED_CONFIG_POWER_MANAGEMENT_ENABLE_DPNM_BITMASK 0x80
+#define IPMI_OEM_INVENTEC_EXTENDED_CONFIG_POWER_MANAGEMENT_ENABLE_DPNM_SHIFT   7
+#define IPMI_OEM_INVENTEC_EXTENDED_CONFIG_POWER_MANAGEMENT_ENABLE_DPNM_ENABLE  1
+#define IPMI_OEM_INVENTEC_EXTENDED_CONFIG_POWER_MANAGEMENT_ENABLE_DPNM_DISABLE 0
 
-#define IPMI_OEM_EXTENDED_CONFIG_POWER_STAGGERING_AC_RECOVERY_IMMEDIATE    0x00
-#define IPMI_OEM_EXTENDED_CONFIG_POWER_STAGGERING_AC_RECOVERY_AUTO         0x01
-#define IPMI_OEM_EXTENDED_CONFIG_POWER_STAGGERING_AC_RECOVERY_USER_DEFINED 0x02
+#define IPMI_OEM_INVENTEC_EXTENDED_CONFIG_POWER_STAGGERING_AC_RECOVERY_IMMEDIATE    0x00
+#define IPMI_OEM_INVENTEC_EXTENDED_CONFIG_POWER_STAGGERING_AC_RECOVERY_AUTO         0x01
+#define IPMI_OEM_INVENTEC_EXTENDED_CONFIG_POWER_STAGGERING_AC_RECOVERY_USER_DEFINED 0x02
 
-#define IPMI_OEM_EXTENDED_CONFIG_FIRMWARE_INFORMATION_ENTITY_BMC         0
-#define IPMI_OEM_EXTENDED_CONFIG_FIRMWARE_INFORMATION_ENTITY_SYSTEM_BIOS 1
-#define IPMI_OEM_EXTENDED_CONFIG_FIRMWARE_INFORMATION_ENTITY_PDB         2
-#define IPMI_OEM_EXTENDED_CONFIG_FIRMWARE_INFORMATION_ENTITY_FCB         3
+#define IPMI_OEM_INVENTEC_EXTENDED_CONFIG_FIRMWARE_INFORMATION_ENTITY_BMC         0
+#define IPMI_OEM_INVENTEC_EXTENDED_CONFIG_FIRMWARE_INFORMATION_ENTITY_SYSTEM_BIOS 1
+#define IPMI_OEM_INVENTEC_EXTENDED_CONFIG_FIRMWARE_INFORMATION_ENTITY_PDB         2
+#define IPMI_OEM_INVENTEC_EXTENDED_CONFIG_FIRMWARE_INFORMATION_ENTITY_FCB         3
 
-#define IPMI_OEM_EXTENDED_CONFIG_FIRMWARE_UPDATE_PROTOCOL_BITMASK_TFTP  0x01
-#define IPMI_OEM_EXTENDED_CONFIG_FIRMWARE_UPDATE_PROTOCOL_BITMASK_FTP   0x02
-#define IPMI_OEM_EXTENDED_CONFIG_FIRMWARE_UPDATE_PROTOCOL_BITMASK_HTTP  0x04
+#define IPMI_OEM_INVENTEC_EXTENDED_CONFIG_FIRMWARE_UPDATE_PROTOCOL_BITMASK_TFTP  0x01
+#define IPMI_OEM_INVENTEC_EXTENDED_CONFIG_FIRMWARE_UPDATE_PROTOCOL_BITMASK_FTP   0x02
+#define IPMI_OEM_INVENTEC_EXTENDED_CONFIG_FIRMWARE_UPDATE_PROTOCOL_BITMASK_HTTP  0x04
 
-#define IPMI_OEM_EXTENDED_CONFIG_FIRMWARE_UPDATE_DELAY_TIME_RANDOM 0xFF
+#define IPMI_OEM_INVENTEC_EXTENDED_CONFIG_FIRMWARE_UPDATE_DELAY_TIME_RANDOM 0xFF
 
-#define IPMI_OEM_UPDATE_FIRMWARE_INTERFACE_SYSTEM_INTERFACE 0x00
-#define IPMI_OEM_UPDATE_FIRMWARE_INTERFACE_NETWORKING       0x01
-#define IPMI_OEM_UPDATE_FIRMWARE_INTERFACE_USB              0x02
+#define IPMI_OEM_INVENTEC_UPDATE_FIRMWARE_INTERFACE_SYSTEM_INTERFACE 0x00
+#define IPMI_OEM_INVENTEC_UPDATE_FIRMWARE_INTERFACE_NETWORKING       0x01
+#define IPMI_OEM_INVENTEC_UPDATE_FIRMWARE_INTERFACE_USB              0x02
 
-#define IPMI_OEM_UPDATE_FIRMWARE_UPDATE_TYPE_BITMASK 0x80
-#define IPMI_OEM_UPDATE_FIRMWARE_UPDATE_TYPE_SHIFT   7
+#define IPMI_OEM_INVENTEC_UPDATE_FIRMWARE_UPDATE_TYPE_BITMASK 0x80
+#define IPMI_OEM_INVENTEC_UPDATE_FIRMWARE_UPDATE_TYPE_SHIFT   7
 
-#define IPMI_OEM_UPDATE_FIRMWARE_UPDATE_TYPE_FORCE_UPDATE  1
-#define IPMI_OEM_UPDATE_FIRMWARE_UPDATE_TYPE_NORMAL_UPDATE 0
+#define IPMI_OEM_INVENTEC_UPDATE_FIRMWARE_UPDATE_TYPE_FORCE_UPDATE  1
+#define IPMI_OEM_INVENTEC_UPDATE_FIRMWARE_UPDATE_TYPE_NORMAL_UPDATE 0
 
-#define IPMI_OEM_UPDATE_FIRMWARE_OEM_DELL_CONFIG_PRESERVE   0x00
-#define IPMI_OEM_UPDATE_FIRMWARE_OEM_DELL_CONFIG_NOPRESERVE 0x01
+#define IPMI_OEM_INVENTEC_UPDATE_FIRMWARE_OEM_DELL_CONFIG_PRESERVE   0x00
+#define IPMI_OEM_INVENTEC_UPDATE_FIRMWARE_OEM_DELL_CONFIG_NOPRESERVE 0x01
 
-#define IPMI_OEM_GET_UPDATE_STATUS_TRANSMITTING_IMAGE          0x00
-#define IPMI_OEM_GET_UPDATE_STATUS_VALIDATING_IMAGE            0x01
-#define IPMI_OEM_GET_UPDATE_STATUS_PROGRAMMING                 0x02
-#define IPMI_OEM_GET_UPDATE_STATUS_READY_TO_ACCEPT_IMAGE       0x03
-#define IPMI_OEM_GET_UPDATE_STATUS_GENERAL_ERROR               0x80
-#define IPMI_OEM_GET_UPDATE_STATUS_CANNOT_ESTABLISH_CONNECTION 0x81
-#define IPMI_OEM_GET_UPDATE_STATUS_PATH_NOT_FOUND              0x82
-#define IPMI_OEM_GET_UPDATE_STATUS_TRANSMISSION_ABORT          0x83
-#define IPMI_OEM_GET_UPDATE_STATUS_CHECKSUM_ERROR              0x84
-#define IPMI_OEM_GET_UPDATE_STATUS_INCORRECT_PLATFORM          0x85
-#define IPMI_OEM_GET_UPDATE_STATUS_COMPLETED                   0xFF
+#define IPMI_OEM_INVENTEC_GET_UPDATE_STATUS_TRANSMITTING_IMAGE          0x00
+#define IPMI_OEM_INVENTEC_GET_UPDATE_STATUS_VALIDATING_IMAGE            0x01
+#define IPMI_OEM_INVENTEC_GET_UPDATE_STATUS_PROGRAMMING                 0x02
+#define IPMI_OEM_INVENTEC_GET_UPDATE_STATUS_READY_TO_ACCEPT_IMAGE       0x03
+#define IPMI_OEM_INVENTEC_GET_UPDATE_STATUS_GENERAL_ERROR               0x80
+#define IPMI_OEM_INVENTEC_GET_UPDATE_STATUS_CANNOT_ESTABLISH_CONNECTION 0x81
+#define IPMI_OEM_INVENTEC_GET_UPDATE_STATUS_PATH_NOT_FOUND              0x82
+#define IPMI_OEM_INVENTEC_GET_UPDATE_STATUS_TRANSMISSION_ABORT          0x83
+#define IPMI_OEM_INVENTEC_GET_UPDATE_STATUS_CHECKSUM_ERROR              0x84
+#define IPMI_OEM_INVENTEC_GET_UPDATE_STATUS_INCORRECT_PLATFORM          0x85
+#define IPMI_OEM_INVENTEC_GET_UPDATE_STATUS_COMPLETED                   0xFF
 
 #define IPMI_OEM_INVENTEC_RESTORE_TO_DEFAULTS_RESTORE_FLAG_RESTORE_PARAMETERS_NOT_INCLUDED_BELOW 0x7
 #define IPMI_OEM_INVENTEC_RESTORE_TO_DEFAULTS_RESTORE_FLAG_REMAINING_PARAMETERS_STAY_WHAT_IT_IS  0x0
@@ -282,11 +282,11 @@
 #define IPMI_OEM_INVENTEC_GET_RESTORE_STATUS_RESTORE_IN_PROGRESS 0x00
 #define IPMI_OEM_INVENTEC_GET_RESTORE_STATUS_RESTORE_COMPLETE    0x01
 
-#define IPMI_OEM_EEPROM_AT24C256N_SLAVE_ADDRESS 0x53
-#define IPMI_OEM_EEPROM_AT24C256N_BUS_ID        2
-#define IPMI_OEM_EEPROM_AT24C256N_ADDRESS_MIN   0x0000
-#define IPMI_OEM_EEPROM_AT24C256N_ADDRESS_MAX   0x7FFF
-#define IPMI_OEM_EEPROM_AT24C256N_CLEAR_BYTE    0xFF
+#define IPMI_OEM_INVENTEC_EEPROM_AT24C256N_SLAVE_ADDRESS 0x53
+#define IPMI_OEM_INVENTEC_EEPROM_AT24C256N_BUS_ID        2
+#define IPMI_OEM_INVENTEC_EEPROM_AT24C256N_ADDRESS_MIN   0x0000
+#define IPMI_OEM_INVENTEC_EEPROM_AT24C256N_ADDRESS_MAX   0x7FFF
+#define IPMI_OEM_INVENTEC_EEPROM_AT24C256N_CLEAR_BYTE    0xFF
 
 #define IPMI_OEM_BUFLEN 1024
 
@@ -404,7 +404,7 @@ _ipmi_oem_inventec_get_extended_config_value (ipmi_oem_state_data_t *state_data,
   bytes_rq[4] = 0x00;
   bytes_rq[5] = 0x00;
   bytes_rq[6] = 0x00;
-  bytes_rq[7] = IPMI_OEM_EXTENDED_CONFIG_READ_ALL_BYTES;
+  bytes_rq[7] = IPMI_OEM_INVENTEC_EXTENDED_CONFIG_READ_ALL_BYTES;
   
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
@@ -506,7 +506,7 @@ _ipmi_oem_inventec_get_extended_config_string (ipmi_oem_state_data_t *state_data
   bytes_rq[4] = 0x00;
   bytes_rq[5] = 0x00;
   bytes_rq[6] = 0x00;
-  bytes_rq[7] = IPMI_OEM_EXTENDED_CONFIG_READ_ALL_BYTES;
+  bytes_rq[7] = IPMI_OEM_INVENTEC_EXTENDED_CONFIG_READ_ALL_BYTES;
   
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
@@ -762,18 +762,18 @@ ipmi_oem_inventec_get_nic_mode (ipmi_oem_state_data_t *state_data)
    */
 
   if (_ipmi_oem_inventec_get_extended_config_value (state_data,
-                                                    IPMI_OEM_EXTENDED_CONFIGURATION_ID_NIC,
-                                                    IPMI_OEM_EXTENDED_ATTRIBUTE_ID_NIC_MODE,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_NIC,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_NIC_MODE,
                                                     1,
                                                     &tmpvalue) < 0)
     goto cleanup;
 
   switch (tmpvalue)
     {
-    case IPMI_OEM_EXTENDED_CONFIG_NIC_MODE_SHARED:
+    case IPMI_OEM_INVENTEC_EXTENDED_CONFIG_NIC_MODE_SHARED:
       pstdout_printf (state_data->pstate, "shared\n");
       break;
-    case IPMI_OEM_EXTENDED_CONFIG_NIC_MODE_DEDICATED:
+    case IPMI_OEM_INVENTEC_EXTENDED_CONFIG_NIC_MODE_DEDICATED:
       pstdout_printf (state_data->pstate, "dedicated\n");
       break;
     default:
@@ -828,13 +828,13 @@ ipmi_oem_inventec_set_nic_mode (ipmi_oem_state_data_t *state_data)
    */
 
   if (!strcasecmp (state_data->prog_data->args->oem_options[0], "shared"))
-    mode = IPMI_OEM_EXTENDED_CONFIG_NIC_MODE_SHARED;
+    mode = IPMI_OEM_INVENTEC_EXTENDED_CONFIG_NIC_MODE_SHARED;
   else
-    mode = IPMI_OEM_EXTENDED_CONFIG_NIC_MODE_DEDICATED;
+    mode = IPMI_OEM_INVENTEC_EXTENDED_CONFIG_NIC_MODE_DEDICATED;
 
   if (_ipmi_oem_inventec_set_extended_config_value (state_data,
-                                                    IPMI_OEM_EXTENDED_CONFIGURATION_ID_NIC,
-                                                    IPMI_OEM_EXTENDED_ATTRIBUTE_ID_NIC_MODE,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_NIC,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_NIC_MODE,
                                                     1,
                                                     (uint32_t)mode) < 0)
     goto cleanup;
@@ -848,7 +848,7 @@ int
 ipmi_oem_inventec_get_mac_address (ipmi_oem_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  char mac_address_str[IPMI_OEM_MAX_MACADDRLEN+1];
+  char mac_address_str[IPMI_OEM_INVENTEC_MAX_MACADDRLEN+1];
   uint8_t mac_address_bytes[6];
   uint8_t lan_channel_number;
   int rv = -1;
@@ -884,8 +884,8 @@ ipmi_oem_inventec_get_mac_address (ipmi_oem_state_data_t *state_data)
   if (ipmi_cmd_get_lan_configuration_parameters_mac_address (state_data->ipmi_ctx,
                                                              lan_channel_number,
                                                              IPMI_GET_LAN_PARAMETER,
-                                                             IPMI_OEM_SET_SELECTOR,
-                                                             IPMI_OEM_BLOCK_SELECTOR,
+                                                             IPMI_OEM_INVENTEC_SET_SELECTOR,
+                                                             IPMI_OEM_INVENTEC_BLOCK_SELECTOR,
                                                              obj_cmd_rs) < 0)
     {
       pstdout_fprintf (state_data->pstate,
@@ -907,9 +907,9 @@ ipmi_oem_inventec_get_mac_address (ipmi_oem_state_data_t *state_data)
       goto cleanup;
     }
   
-  memset (mac_address_str, '\0', IPMI_OEM_MAX_MACADDRLEN+1);
+  memset (mac_address_str, '\0', IPMI_OEM_INVENTEC_MAX_MACADDRLEN+1);
   snprintf (mac_address_str,
-            IPMI_OEM_MAX_MACADDRLEN,
+            IPMI_OEM_INVENTEC_MAX_MACADDRLEN,
             "%02X:%02X:%02X:%02X:%02X:%02X",
             mac_address_bytes[0],
             mac_address_bytes[1],
@@ -1037,8 +1037,8 @@ _inventec_get_bmc_services (ipmi_oem_state_data_t *state_data,
   assert (services);
 
   if (_ipmi_oem_inventec_get_extended_config_value (state_data,
-                                                    IPMI_OEM_EXTENDED_CONFIGURATION_ID_SECURITY,
-                                                    IPMI_OEM_EXTENDED_ATTRIBUTE_ID_SECURITY_SERVICE_DISABLED,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_SECURITY,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_SECURITY_SERVICE_DISABLED,
                                                     1,
                                                     &tmpvalue) < 0)
     goto cleanup;
@@ -1068,16 +1068,16 @@ ipmi_oem_inventec_get_bmc_services (ipmi_oem_state_data_t *state_data)
        * set.  I'm assuming if the "all" bit is set, there is no need
        * to output anything else.
        */
-      if (services & IPMI_OEM_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_ALL)
+      if (services & IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_ALL)
         {
           pstdout_printf (state_data->pstate, "All services except IPMI disabled\n");
           goto out;
         }
-      if (services & IPMI_OEM_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_KVM)
+      if (services & IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_KVM)
         pstdout_printf (state_data->pstate, "KVM/Virtual Storage disabled\n");
-      if (services & IPMI_OEM_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_HTTP)
+      if (services & IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_HTTP)
         pstdout_printf (state_data->pstate, "HTTP/HTTPS disabled\n");
-      if (services & IPMI_OEM_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_SSH)
+      if (services & IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_SSH)
         pstdout_printf (state_data->pstate, "SSH/Telnet disabled\n");
     }
   else
@@ -1132,51 +1132,51 @@ ipmi_oem_inventec_set_bmc_services (ipmi_oem_state_data_t *state_data)
   if (!strcasecmp (state_data->prog_data->args->oem_options[1], "all"))
     {
       if (enable)
-        services = IPMI_OEM_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_ENABLE_ALL;
+        services = IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_ENABLE_ALL;
       else
-        services = IPMI_OEM_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_ALL;
+        services = IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_ALL;
     }
   else
     {
       if (_inventec_get_bmc_services (state_data, &services) < 0)
         goto cleanup;
 
-      if (enable && (services & IPMI_OEM_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_ALL))
+      if (enable && (services & IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_ALL))
         {
           /* clear out "all" bit, and replace with remaining bits */
-          services &= (~IPMI_OEM_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_ALL);
-          services |= IPMI_OEM_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_KVM;
-          services |= IPMI_OEM_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_HTTP;
-          services |= IPMI_OEM_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_SSH;
+          services &= (~IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_ALL);
+          services |= IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_KVM;
+          services |= IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_HTTP;
+          services |= IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_SSH;
         }
 
       if (!strcasecmp (state_data->prog_data->args->oem_options[1], "kvm"))
         {
           if (enable)
-            services &= (~IPMI_OEM_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_KVM);
+            services &= (~IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_KVM);
           else
-            services |= IPMI_OEM_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_KVM;
+            services |= IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_KVM;
         }
       else if (!strcasecmp (state_data->prog_data->args->oem_options[1], "http"))
         {
           if (enable)
-            services &= (~IPMI_OEM_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_HTTP);
+            services &= (~IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_HTTP);
           else
-            services |= IPMI_OEM_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_HTTP;
+            services |= IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_HTTP;
         }
       else /* !strcasecmp (state_data->prog_data->args->oem_options[1], "ssh") */
         {
           if (enable)
-            services &= (~IPMI_OEM_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_SSH);
+            services &= (~IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_SSH);
           else
-            services |= IPMI_OEM_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_SSH;
+            services |= IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_SSH;
         }
     }
 
 
   if (_ipmi_oem_inventec_set_extended_config_value (state_data,
-                                                    IPMI_OEM_EXTENDED_CONFIGURATION_ID_SECURITY,
-                                                    IPMI_OEM_EXTENDED_ATTRIBUTE_ID_SECURITY_SERVICE_DISABLED,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_SECURITY,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_SECURITY_SERVICE_DISABLED,
                                                     1,
                                                     (uint32_t)services) < 0)
     goto cleanup;
@@ -1199,24 +1199,24 @@ ipmi_oem_inventec_get_authentication_config (ipmi_oem_state_data_t *state_data)
   assert (!state_data->prog_data->args->oem_options_count);
 
   if (_ipmi_oem_inventec_get_extended_config_value (state_data,
-                                                    IPMI_OEM_EXTENDED_CONFIGURATION_ID_SECURITY,
-                                                    IPMI_OEM_EXTENDED_ATTRIBUTE_ID_SECURITY_MAX_AUTHENTICATION_FAILURES,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_SECURITY,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_SECURITY_MAX_AUTHENTICATION_FAILURES,
                                                     1,
                                                     &tmpvalue) < 0)
     goto cleanup;
   maxauthenticationfailures = tmpvalue;
   
   if (_ipmi_oem_inventec_get_extended_config_value (state_data,
-                                                    IPMI_OEM_EXTENDED_CONFIGURATION_ID_SECURITY,
-                                                    IPMI_OEM_EXTENDED_ATTRIBUTE_ID_SECURITY_LOCKOUT_WINDOW,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_SECURITY,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_SECURITY_LOCKOUT_WINDOW,
                                                     2,
                                                     &tmpvalue) < 0)
     goto cleanup;
   lockoutwindow = tmpvalue;
   
   if (_ipmi_oem_inventec_get_extended_config_value (state_data,
-                                                    IPMI_OEM_EXTENDED_CONFIGURATION_ID_SECURITY,
-                                                    IPMI_OEM_EXTENDED_ATTRIBUTE_ID_SECURITY_LOCKOUT_TIME,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_SECURITY,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_SECURITY_LOCKOUT_TIME,
                                                     2,
                                                     &tmpvalue) < 0)
     goto cleanup;
@@ -1276,8 +1276,8 @@ ipmi_oem_inventec_set_authentication_config (ipmi_oem_state_data_t *state_data)
             goto cleanup;
 
           if (_ipmi_oem_inventec_set_extended_config_value (state_data,
-                                                            IPMI_OEM_EXTENDED_CONFIGURATION_ID_SECURITY,
-                                                            IPMI_OEM_EXTENDED_ATTRIBUTE_ID_SECURITY_MAX_AUTHENTICATION_FAILURES,
+                                                            IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_SECURITY,
+                                                            IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_SECURITY_MAX_AUTHENTICATION_FAILURES,
                                                             1,
                                                             (uint32_t)maxauthenticationfailures) < 0)
             goto cleanup;
@@ -1288,8 +1288,8 @@ ipmi_oem_inventec_set_authentication_config (ipmi_oem_state_data_t *state_data)
             goto cleanup;
           
           if (_ipmi_oem_inventec_set_extended_config_value (state_data,
-                                                            IPMI_OEM_EXTENDED_CONFIGURATION_ID_SECURITY,
-                                                            IPMI_OEM_EXTENDED_ATTRIBUTE_ID_SECURITY_LOCKOUT_WINDOW,
+                                                            IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_SECURITY,
+                                                            IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_SECURITY_LOCKOUT_WINDOW,
                                                             2,
                                                             (uint32_t)lockoutwindow) < 0)
             goto cleanup;
@@ -1300,8 +1300,8 @@ ipmi_oem_inventec_set_authentication_config (ipmi_oem_state_data_t *state_data)
             goto cleanup;
           
           if (_ipmi_oem_inventec_set_extended_config_value (state_data,
-                                                            IPMI_OEM_EXTENDED_CONFIGURATION_ID_SECURITY,
-                                                            IPMI_OEM_EXTENDED_ATTRIBUTE_ID_SECURITY_LOCKOUT_TIME,
+                                                            IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_SECURITY,
+                                                            IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_SECURITY_LOCKOUT_TIME,
                                                             2,
                                                             (uint32_t)lockouttime) < 0)
             goto cleanup;
@@ -1367,48 +1367,48 @@ ipmi_oem_inventec_get_web_server_config (ipmi_oem_state_data_t *state_data)
    */
 
   if (_ipmi_oem_inventec_get_extended_config_value (state_data,
-                                                    IPMI_OEM_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
-                                                    IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_WEB_SERVER_ENABLED,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_WEB_SERVER_ENABLED,
                                                     1,
                                                     &tmpvalue) < 0)
     goto cleanup;
   webserverenabled = tmpvalue;
   
   if (_ipmi_oem_inventec_get_extended_config_value (state_data,
-                                                    IPMI_OEM_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
-                                                    IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_MAX_WEB_SESSIONS,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_MAX_WEB_SESSIONS,
                                                     1,
                                                     &tmpvalue) < 0)
     goto cleanup;
   maxwebsessions = tmpvalue;
   
   if (_ipmi_oem_inventec_get_extended_config_value (state_data,
-                                                    IPMI_OEM_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
-                                                    IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_ACTIVE_WEB_SESSIONS,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_ACTIVE_WEB_SESSIONS,
                                                     1,
                                                     &tmpvalue) < 0)
     goto cleanup;
   activewebsessions = tmpvalue;
   
   if (_ipmi_oem_inventec_get_extended_config_value (state_data,
-                                                    IPMI_OEM_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
-                                                    IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_WEB_SERVER_TIMEOUT,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_WEB_SERVER_TIMEOUT,
                                                     4,
                                                     &tmpvalue) < 0)
     goto cleanup;
   webservertimeout = tmpvalue;
   
   if (_ipmi_oem_inventec_get_extended_config_value (state_data,
-                                                    IPMI_OEM_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
-                                                    IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_HTTP_PORT_NUM,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_HTTP_PORT_NUM,
                                                     2,
                                                     &tmpvalue) < 0)
     goto cleanup;
   httpportnum = tmpvalue;
   
   if (_ipmi_oem_inventec_get_extended_config_value (state_data,
-                                                    IPMI_OEM_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
-                                                    IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_HTTPS_PORT_NUM,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_HTTPS_PORT_NUM,
                                                     2,
                                                     &tmpvalue) < 0)
     goto cleanup;
@@ -1507,8 +1507,8 @@ ipmi_oem_inventec_set_web_server_config (ipmi_oem_state_data_t *state_data)
             goto cleanup;
 
           if (_ipmi_oem_inventec_set_extended_config_value (state_data,
-                                                            IPMI_OEM_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
-                                                            IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_WEB_SERVER_ENABLED,
+                                                            IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
+                                                            IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_WEB_SERVER_ENABLED,
                                                             1,
                                                             (uint32_t)webserverenabled) < 0)
             goto cleanup;
@@ -1519,8 +1519,8 @@ ipmi_oem_inventec_set_web_server_config (ipmi_oem_state_data_t *state_data)
             goto cleanup;
           
           if (_ipmi_oem_inventec_set_extended_config_value (state_data,
-                                                            IPMI_OEM_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
-                                                            IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_WEB_SERVER_TIMEOUT,
+                                                            IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
+                                                            IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_WEB_SERVER_TIMEOUT,
                                                             4,
                                                             webservertimeout) < 0)
             goto cleanup;
@@ -1531,8 +1531,8 @@ ipmi_oem_inventec_set_web_server_config (ipmi_oem_state_data_t *state_data)
             goto cleanup;
           
           if (_ipmi_oem_inventec_set_extended_config_value (state_data,
-                                                            IPMI_OEM_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
-                                                            IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_HTTP_PORT_NUM,
+                                                            IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
+                                                            IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_HTTP_PORT_NUM,
                                                             2,
                                                             (uint32_t)httpportnumber) < 0)
             goto cleanup;
@@ -1543,8 +1543,8 @@ ipmi_oem_inventec_set_web_server_config (ipmi_oem_state_data_t *state_data)
             goto cleanup;
           
           if (_ipmi_oem_inventec_set_extended_config_value (state_data,
-                                                            IPMI_OEM_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
-                                                            IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_HTTPS_PORT_NUM,
+                                                            IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
+                                                            IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_HTTPS_PORT_NUM,
                                                             2,
                                                             (uint32_t)httpsportnumber) < 0)
             goto cleanup;
@@ -1585,43 +1585,43 @@ ipmi_oem_inventec_get_power_management_config (ipmi_oem_state_data_t *state_data
   assert (!state_data->prog_data->args->oem_options_count);
 
   if (_ipmi_oem_inventec_get_extended_config_value (state_data,
-                                                    IPMI_OEM_EXTENDED_CONFIGURATION_ID_POWER_MANAGEMENT,
-                                                    IPMI_OEM_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_POWER_MANAGEMENT_ENABLE,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_POWER_MANAGEMENT,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_POWER_MANAGEMENT_ENABLE,
                                                     1,
                                                     &tmpvalue) < 0)
     goto cleanup;
   powermanagementenable = tmpvalue;
 
-  dpnmpowermanagement = (powermanagementenable & IPMI_OEM_EXTENDED_CONFIG_POWER_MANAGEMENT_ENABLE_DPNM_BITMASK);
-  dpnmpowermanagement >>= IPMI_OEM_EXTENDED_CONFIG_POWER_MANAGEMENT_ENABLE_DPNM_SHIFT;
+  dpnmpowermanagement = (powermanagementenable & IPMI_OEM_INVENTEC_EXTENDED_CONFIG_POWER_MANAGEMENT_ENABLE_DPNM_BITMASK);
+  dpnmpowermanagement >>= IPMI_OEM_INVENTEC_EXTENDED_CONFIG_POWER_MANAGEMENT_ENABLE_DPNM_SHIFT;
   
   if (_ipmi_oem_inventec_get_extended_config_value (state_data,
-                                                    IPMI_OEM_EXTENDED_CONFIGURATION_ID_POWER_MANAGEMENT,
-                                                    IPMI_OEM_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_POWER_STAGGERING_AC_RECOVERY,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_POWER_MANAGEMENT,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_POWER_STAGGERING_AC_RECOVERY,
                                                     1,
                                                     &tmpvalue) < 0)
     goto cleanup;
   powerstaggeringacrecovery = tmpvalue;
   
   if (_ipmi_oem_inventec_get_extended_config_value (state_data,
-                                                    IPMI_OEM_EXTENDED_CONFIGURATION_ID_POWER_MANAGEMENT,
-                                                    IPMI_OEM_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_POWER_ON_DELAY,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_POWER_MANAGEMENT,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_POWER_ON_DELAY,
                                                     2,
                                                     &tmpvalue) < 0)
     goto cleanup;
   powerondelay = tmpvalue;
 
   if (_ipmi_oem_inventec_get_extended_config_value (state_data,
-                                                    IPMI_OEM_EXTENDED_CONFIGURATION_ID_POWER_MANAGEMENT,
-                                                    IPMI_OEM_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_MINIMUM_POWER_ON_DELAY,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_POWER_MANAGEMENT,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_MINIMUM_POWER_ON_DELAY,
                                                     2,
                                                     &tmpvalue) < 0)
     goto cleanup;
   minpowerondelay = tmpvalue; 
 
   if (_ipmi_oem_inventec_get_extended_config_value (state_data,
-                                                    IPMI_OEM_EXTENDED_CONFIGURATION_ID_POWER_MANAGEMENT,
-                                                    IPMI_OEM_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_MAXIMUM_POWER_ON_DELAY,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_POWER_MANAGEMENT,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_MAXIMUM_POWER_ON_DELAY,
                                                     2,
                                                     &tmpvalue) < 0)
     goto cleanup;
@@ -1631,13 +1631,13 @@ ipmi_oem_inventec_get_power_management_config (ipmi_oem_state_data_t *state_data
 		  "DPNM Power Management        : %s\n",
 		  (dpnmpowermanagement) ? "Enabled" : "Disabled");
   
-  if (powerstaggeringacrecovery == IPMI_OEM_EXTENDED_CONFIG_POWER_STAGGERING_AC_RECOVERY_IMMEDIATE)
+  if (powerstaggeringacrecovery == IPMI_OEM_INVENTEC_EXTENDED_CONFIG_POWER_STAGGERING_AC_RECOVERY_IMMEDIATE)
     pstdout_printf (state_data->pstate,
                     "Power Staggering AC Recovery : Immediate\n");
-  else if (powerstaggeringacrecovery == IPMI_OEM_EXTENDED_CONFIG_POWER_STAGGERING_AC_RECOVERY_AUTO)
+  else if (powerstaggeringacrecovery == IPMI_OEM_INVENTEC_EXTENDED_CONFIG_POWER_STAGGERING_AC_RECOVERY_AUTO)
     pstdout_printf (state_data->pstate,
                     "Power Staggering AC Recovery : Auto\n");
-  else if (powerstaggeringacrecovery == IPMI_OEM_EXTENDED_CONFIG_POWER_STAGGERING_AC_RECOVERY_USER_DEFINED)
+  else if (powerstaggeringacrecovery == IPMI_OEM_INVENTEC_EXTENDED_CONFIG_POWER_STAGGERING_AC_RECOVERY_USER_DEFINED)
     pstdout_printf (state_data->pstate,
                     "Power Staggering AC Recovery : User Defined\n");
   else
@@ -1701,11 +1701,11 @@ ipmi_oem_inventec_set_power_management_config (ipmi_oem_state_data_t *state_data
           if (ipmi_oem_parse_enable (state_data, i, value, &dpnmpowermanagement) < 0)
             goto cleanup;
 
-          powermanagementenable |= (dpnmpowermanagement << IPMI_OEM_EXTENDED_CONFIG_POWER_MANAGEMENT_ENABLE_DPNM_SHIFT);
+          powermanagementenable |= (dpnmpowermanagement << IPMI_OEM_INVENTEC_EXTENDED_CONFIG_POWER_MANAGEMENT_ENABLE_DPNM_SHIFT);
           
           if (_ipmi_oem_inventec_set_extended_config_value (state_data,
-                                                            IPMI_OEM_EXTENDED_CONFIGURATION_ID_POWER_MANAGEMENT,
-                                                            IPMI_OEM_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_POWER_MANAGEMENT_ENABLE,
+                                                            IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_POWER_MANAGEMENT,
+                                                            IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_POWER_MANAGEMENT_ENABLE,
                                                             1,
                                                             (uint32_t)powermanagementenable) < 0)
             goto cleanup;
@@ -1726,15 +1726,15 @@ ipmi_oem_inventec_set_power_management_config (ipmi_oem_state_data_t *state_data
             }
 
           if (!strcasecmp (value, "immediate"))
-            powerstaggeringacrecovery = IPMI_OEM_EXTENDED_CONFIG_POWER_STAGGERING_AC_RECOVERY_IMMEDIATE;
+            powerstaggeringacrecovery = IPMI_OEM_INVENTEC_EXTENDED_CONFIG_POWER_STAGGERING_AC_RECOVERY_IMMEDIATE;
           else if (!strcasecmp (value, "auto"))
-            powerstaggeringacrecovery = IPMI_OEM_EXTENDED_CONFIG_POWER_STAGGERING_AC_RECOVERY_AUTO;
+            powerstaggeringacrecovery = IPMI_OEM_INVENTEC_EXTENDED_CONFIG_POWER_STAGGERING_AC_RECOVERY_AUTO;
           else /* !strcasecmp (value, "user")) */
-            powerstaggeringacrecovery = IPMI_OEM_EXTENDED_CONFIG_POWER_STAGGERING_AC_RECOVERY_USER_DEFINED;
+            powerstaggeringacrecovery = IPMI_OEM_INVENTEC_EXTENDED_CONFIG_POWER_STAGGERING_AC_RECOVERY_USER_DEFINED;
 
           if (_ipmi_oem_inventec_set_extended_config_value (state_data,
-                                                            IPMI_OEM_EXTENDED_CONFIGURATION_ID_POWER_MANAGEMENT,
-                                                            IPMI_OEM_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_POWER_STAGGERING_AC_RECOVERY,
+                                                            IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_POWER_MANAGEMENT,
+                                                            IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_POWER_STAGGERING_AC_RECOVERY,
                                                             1,
                                                             (uint32_t)powerstaggeringacrecovery) < 0)
             goto cleanup;
@@ -1745,8 +1745,8 @@ ipmi_oem_inventec_set_power_management_config (ipmi_oem_state_data_t *state_data
             goto cleanup;
           
           if (_ipmi_oem_inventec_set_extended_config_value (state_data,
-                                                            IPMI_OEM_EXTENDED_CONFIGURATION_ID_POWER_MANAGEMENT,
-                                                            IPMI_OEM_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_POWER_ON_DELAY,
+                                                            IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_POWER_MANAGEMENT,
+                                                            IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_POWER_ON_DELAY,
                                                             2,
                                                             (uint32_t)powerondelay) < 0)
             goto cleanup;
@@ -1757,8 +1757,8 @@ ipmi_oem_inventec_set_power_management_config (ipmi_oem_state_data_t *state_data
             goto cleanup;
           
           if (_ipmi_oem_inventec_set_extended_config_value (state_data,
-                                                            IPMI_OEM_EXTENDED_CONFIGURATION_ID_POWER_MANAGEMENT,
-                                                            IPMI_OEM_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_MAXIMUM_POWER_ON_DELAY,
+                                                            IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_POWER_MANAGEMENT,
+                                                            IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_MAXIMUM_POWER_ON_DELAY,
                                                             2,
                                                             (uint32_t)maxpowerondelay) < 0)
             goto cleanup;
@@ -1791,7 +1791,7 @@ ipmi_oem_inventec_get_firmware_update_config (ipmi_oem_state_data_t *state_data)
   uint32_t tmpvalue;
   uint8_t remote_update_enable;
   uint8_t protocol;
-  char uri[IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_URI_LEN + 1];
+  char uri[IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_URI_LEN + 1];
   uint8_t connection_retry;
   uint8_t retry_interval;
   uint8_t delay_time;
@@ -1800,50 +1800,50 @@ ipmi_oem_inventec_get_firmware_update_config (ipmi_oem_state_data_t *state_data)
   assert (state_data);
   assert (!state_data->prog_data->args->oem_options_count);
 
-  memset (uri, '\0', IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_URI + 1);
+  memset (uri, '\0', IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_URI + 1);
 
   if (_ipmi_oem_inventec_get_extended_config_value (state_data,
-                                                    IPMI_OEM_EXTENDED_CONFIGURATION_ID_FIRMWARE_UPDATE,
-                                                    IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_REMOTE_UPDATE_ENABLE,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_FIRMWARE_UPDATE,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_REMOTE_UPDATE_ENABLE,
                                                     1,
                                                     &tmpvalue) < 0)
     goto cleanup;
   remote_update_enable = tmpvalue;
   
   if (_ipmi_oem_inventec_get_extended_config_value (state_data,
-                                                    IPMI_OEM_EXTENDED_CONFIGURATION_ID_FIRMWARE_UPDATE,
-                                                    IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_PROTOCOL,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_FIRMWARE_UPDATE,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_PROTOCOL,
                                                     1,
                                                     &tmpvalue) < 0)
     goto cleanup;
   protocol = tmpvalue;
 
   if (_ipmi_oem_inventec_get_extended_config_string (state_data,
-                                                     IPMI_OEM_EXTENDED_CONFIGURATION_ID_FIRMWARE_UPDATE,
-                                                     IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_URI,
+                                                     IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_FIRMWARE_UPDATE,
+                                                     IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_URI,
                                                      uri,
-                                                     IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_URI_LEN) < 0)
+                                                     IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_URI_LEN) < 0)
     goto cleanup;
   
   if (_ipmi_oem_inventec_get_extended_config_value (state_data,
-                                                    IPMI_OEM_EXTENDED_CONFIGURATION_ID_FIRMWARE_UPDATE,
-                                                    IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_CONNECTION_RETRY,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_FIRMWARE_UPDATE,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_CONNECTION_RETRY,
                                                     1,
                                                     &tmpvalue) < 0)
     goto cleanup;
   connection_retry = tmpvalue;
   
   if (_ipmi_oem_inventec_get_extended_config_value (state_data,
-                                                    IPMI_OEM_EXTENDED_CONFIGURATION_ID_FIRMWARE_UPDATE,
-                                                    IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_RETRY_INTERVAL,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_FIRMWARE_UPDATE,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_RETRY_INTERVAL,
                                                     1,
                                                     &tmpvalue) < 0)
     goto cleanup;
   retry_interval = tmpvalue;
   
   if (_ipmi_oem_inventec_get_extended_config_value (state_data,
-                                                    IPMI_OEM_EXTENDED_CONFIGURATION_ID_FIRMWARE_UPDATE,
-                                                    IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_DELAY_TIME,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_FIRMWARE_UPDATE,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_DELAY_TIME,
                                                     1,
                                                     &tmpvalue) < 0)
     goto cleanup;
@@ -1855,15 +1855,15 @@ ipmi_oem_inventec_get_firmware_update_config (ipmi_oem_state_data_t *state_data)
  
   pstdout_printf (state_data->pstate,
                   "Protocol TFTP    : %s\n",
-                  (protocol & IPMI_OEM_EXTENDED_CONFIG_FIRMWARE_UPDATE_PROTOCOL_BITMASK_TFTP) ? "Supported" : "Not Supported");
+                  (protocol & IPMI_OEM_INVENTEC_EXTENDED_CONFIG_FIRMWARE_UPDATE_PROTOCOL_BITMASK_TFTP) ? "Supported" : "Not Supported");
  
   pstdout_printf (state_data->pstate,
                   "Protocol FTP     : %s\n",
-                  (protocol & IPMI_OEM_EXTENDED_CONFIG_FIRMWARE_UPDATE_PROTOCOL_BITMASK_FTP) ? "Supported" : "Not Supported");
+                  (protocol & IPMI_OEM_INVENTEC_EXTENDED_CONFIG_FIRMWARE_UPDATE_PROTOCOL_BITMASK_FTP) ? "Supported" : "Not Supported");
  
   pstdout_printf (state_data->pstate,
                   "Protocol HTTP    : %s\n",
-                  (protocol & IPMI_OEM_EXTENDED_CONFIG_FIRMWARE_UPDATE_PROTOCOL_BITMASK_HTTP) ? "Supported" : "Not Supported");
+                  (protocol & IPMI_OEM_INVENTEC_EXTENDED_CONFIG_FIRMWARE_UPDATE_PROTOCOL_BITMASK_HTTP) ? "Supported" : "Not Supported");
  
   /* First char will be a separator, don't bother outputting if necessary */
   if (uri[0] == 0x1C
@@ -1885,9 +1885,9 @@ ipmi_oem_inventec_get_firmware_update_config (ipmi_oem_state_data_t *state_data)
   /* is in 5 second increments */
   pstdout_printf (state_data->pstate,
                   "Retry Interval   : %u seconds\n",
-                  retry_interval * IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_RETRY_INTERVAL_INCREMENTS);
+                  retry_interval * IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_RETRY_INTERVAL_INCREMENTS);
  
-  if (delay_time == IPMI_OEM_EXTENDED_CONFIG_FIRMWARE_UPDATE_DELAY_TIME_RANDOM)
+  if (delay_time == IPMI_OEM_INVENTEC_EXTENDED_CONFIG_FIRMWARE_UPDATE_DELAY_TIME_RANDOM)
     pstdout_printf (state_data->pstate,
                     "Delay Time       : random\n",
                     delay_time);
@@ -1905,7 +1905,7 @@ int
 ipmi_oem_inventec_set_firmware_update_config (ipmi_oem_state_data_t *state_data)
 {
   uint8_t remote_update_enable = 0;
-  char uri[IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_URI_LEN + 1];
+  char uri[IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_URI_LEN + 1];
   uint8_t connection_retry = 0;
   uint8_t retry_interval = 0;
   uint8_t delay_time = 0;
@@ -1943,8 +1943,8 @@ ipmi_oem_inventec_set_firmware_update_config (ipmi_oem_state_data_t *state_data)
             goto cleanup;
           
           if (_ipmi_oem_inventec_set_extended_config_value (state_data,
-                                                            IPMI_OEM_EXTENDED_CONFIGURATION_ID_FIRMWARE_UPDATE,
-                                                            IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_REMOTE_UPDATE_ENABLE,
+                                                            IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_FIRMWARE_UPDATE,
+                                                            IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_REMOTE_UPDATE_ENABLE,
                                                             1,
                                                             (uint32_t)remote_update_enable) < 0)
             goto cleanup;
@@ -1976,7 +1976,7 @@ ipmi_oem_inventec_set_firmware_update_config (ipmi_oem_state_data_t *state_data)
           
           /* - 1 for separator unit */
           if (strlen (value) < min_required
-              || strlen (value) > (IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_URI_LEN - 1))
+              || strlen (value) > (IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_URI_LEN - 1))
             {
               pstdout_fprintf (state_data->pstate,
                                stderr,
@@ -1994,8 +1994,8 @@ ipmi_oem_inventec_set_firmware_update_config (ipmi_oem_state_data_t *state_data)
           memcpy (&uri[1], value, value_len);
 
           if (_ipmi_oem_inventec_set_extended_config_string (state_data,
-                                                             IPMI_OEM_EXTENDED_CONFIGURATION_ID_FIRMWARE_UPDATE,
-                                                             IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_URI,
+                                                             IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_FIRMWARE_UPDATE,
+                                                             IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_URI,
                                                              uri,
                                                              value_len + 1) < 0)
             goto cleanup;
@@ -2006,8 +2006,8 @@ ipmi_oem_inventec_set_firmware_update_config (ipmi_oem_state_data_t *state_data)
             goto cleanup;
 
           if (_ipmi_oem_inventec_set_extended_config_value (state_data,
-                                                            IPMI_OEM_EXTENDED_CONFIGURATION_ID_FIRMWARE_UPDATE,
-                                                            IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_CONNECTION_RETRY,
+                                                            IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_FIRMWARE_UPDATE,
+                                                            IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_CONNECTION_RETRY,
                                                             1,
                                                             (uint32_t)connection_retry) < 0)
             goto cleanup;
@@ -2019,15 +2019,15 @@ ipmi_oem_inventec_set_firmware_update_config (ipmi_oem_state_data_t *state_data)
                                                  value,
                                                  &tmpvalue,
                                                  0,
-                                                 UCHAR_MAX * IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_RETRY_INTERVAL_INCREMENTS) < 0)
+                                                 UCHAR_MAX * IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_RETRY_INTERVAL_INCREMENTS) < 0)
             goto cleanup;
 
           /* retry interval is in 5 second increments */
-          retry_interval = tmpvalue / IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_RETRY_INTERVAL_INCREMENTS;
+          retry_interval = tmpvalue / IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_RETRY_INTERVAL_INCREMENTS;
 
           if (_ipmi_oem_inventec_set_extended_config_value (state_data,
-                                                            IPMI_OEM_EXTENDED_CONFIGURATION_ID_FIRMWARE_UPDATE,
-                                                            IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_RETRY_INTERVAL,
+                                                            IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_FIRMWARE_UPDATE,
+                                                            IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_RETRY_INTERVAL,
                                                             1,
                                                             (uint32_t)retry_interval) < 0)
             goto cleanup;
@@ -2035,7 +2035,7 @@ ipmi_oem_inventec_set_firmware_update_config (ipmi_oem_state_data_t *state_data)
       else if (!strcasecmp (key, "delaytime"))
         {
           if (!strcasecmp (value, "random"))
-            delay_time = IPMI_OEM_EXTENDED_CONFIG_FIRMWARE_UPDATE_DELAY_TIME_RANDOM;
+            delay_time = IPMI_OEM_INVENTEC_EXTENDED_CONFIG_FIRMWARE_UPDATE_DELAY_TIME_RANDOM;
           else
             {
               if (ipmi_oem_parse_unsigned_int_range (state_data,
@@ -2049,8 +2049,8 @@ ipmi_oem_inventec_set_firmware_update_config (ipmi_oem_state_data_t *state_data)
             }
 
           if (_ipmi_oem_inventec_set_extended_config_value (state_data,
-                                                            IPMI_OEM_EXTENDED_CONFIGURATION_ID_FIRMWARE_UPDATE,
-                                                            IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_DELAY_TIME,
+                                                            IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_FIRMWARE_UPDATE,
+                                                            IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_DELAY_TIME,
                                                             1,
                                                             (uint32_t)delay_time) < 0)
             goto cleanup;
@@ -2082,74 +2082,74 @@ int
 ipmi_oem_inventec_get_firmware_information (ipmi_oem_state_data_t *state_data)
 {
   uint32_t tmpvalue;
-  char name[IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_NAME_LEN + 1];
-  char description[IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_DESCRIPTION_LEN + 1];
+  char name[IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_NAME_LEN + 1];
+  char description[IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_DESCRIPTION_LEN + 1];
   uint8_t entity;
   char *entity_str = NULL;
-  char product_info[IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_PRODUCT_INFO_LEN + 1];
-  char firmware_version[IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_FIRMWARE_VERSION_LEN + 1];
-  char branch[IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_BRANCH_LEN + 1];
-  char build_information[IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_BUILD_INFORMATION_LEN + 1];
+  char product_info[IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_PRODUCT_INFO_LEN + 1];
+  char firmware_version[IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_FIRMWARE_VERSION_LEN + 1];
+  char branch[IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_BRANCH_LEN + 1];
+  char build_information[IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_BUILD_INFORMATION_LEN + 1];
   int rv = -1;
 
   assert (state_data);
   assert (!state_data->prog_data->args->oem_options_count);
 
-  memset (name, '\0', IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_NAME_LEN + 1);
-  memset (description, '\0', IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_DESCRIPTION_LEN + 1);
-  memset (product_info, '\0', IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_PRODUCT_INFO_LEN + 1);
-  memset (firmware_version, '\0', IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_FIRMWARE_VERSION_LEN + 1);
-  memset (branch, '\0', IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_BRANCH_LEN + 1);
-  memset (build_information, '\0', IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_BUILD_INFORMATION_LEN + 1);
+  memset (name, '\0', IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_NAME_LEN + 1);
+  memset (description, '\0', IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_DESCRIPTION_LEN + 1);
+  memset (product_info, '\0', IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_PRODUCT_INFO_LEN + 1);
+  memset (firmware_version, '\0', IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_FIRMWARE_VERSION_LEN + 1);
+  memset (branch, '\0', IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_BRANCH_LEN + 1);
+  memset (build_information, '\0', IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_BUILD_INFORMATION_LEN + 1);
 
   if (_ipmi_oem_inventec_get_extended_config_string (state_data,
-                                                     IPMI_OEM_EXTENDED_CONFIGURATION_ID_FIRMWARE_INFORMATION,
-                                                     IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_NAME,
+                                                     IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_FIRMWARE_INFORMATION,
+                                                     IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_NAME,
                                                      name,
-                                                     IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_NAME_LEN) < 0)
+                                                     IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_NAME_LEN) < 0)
     goto cleanup;
 
   if (_ipmi_oem_inventec_get_extended_config_string (state_data,
-                                                     IPMI_OEM_EXTENDED_CONFIGURATION_ID_FIRMWARE_INFORMATION,
-                                                     IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_DESCRIPTION,
+                                                     IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_FIRMWARE_INFORMATION,
+                                                     IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_DESCRIPTION,
                                                      description,
-                                                     IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_DESCRIPTION_LEN) < 0)
+                                                     IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_DESCRIPTION_LEN) < 0)
     goto cleanup;
 
   if (_ipmi_oem_inventec_get_extended_config_value (state_data,
-                                                    IPMI_OEM_EXTENDED_CONFIGURATION_ID_FIRMWARE_INFORMATION,
-                                                    IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_ENTITY,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_FIRMWARE_INFORMATION,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_ENTITY,
                                                     1,
                                                     &tmpvalue) < 0)
     goto cleanup;
   entity = tmpvalue;
 
   if (_ipmi_oem_inventec_get_extended_config_string (state_data,
-                                                     IPMI_OEM_EXTENDED_CONFIGURATION_ID_FIRMWARE_INFORMATION,
-                                                     IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_PRODUCT_INFO,
+                                                     IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_FIRMWARE_INFORMATION,
+                                                     IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_PRODUCT_INFO,
                                                      product_info,
-                                                     IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_PRODUCT_INFO_LEN) < 0)
+                                                     IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_PRODUCT_INFO_LEN) < 0)
     goto cleanup;
  
   if (_ipmi_oem_inventec_get_extended_config_string (state_data,
-                                                     IPMI_OEM_EXTENDED_CONFIGURATION_ID_FIRMWARE_INFORMATION,
-                                                     IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_FIRMWARE_VERSION,
+                                                     IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_FIRMWARE_INFORMATION,
+                                                     IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_FIRMWARE_VERSION,
                                                      firmware_version,
-                                                     IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_FIRMWARE_VERSION_LEN) < 0)
+                                                     IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_FIRMWARE_VERSION_LEN) < 0)
     goto cleanup;
 
   if (_ipmi_oem_inventec_get_extended_config_string (state_data,
-                                                     IPMI_OEM_EXTENDED_CONFIGURATION_ID_FIRMWARE_INFORMATION,
-                                                     IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_BRANCH,
+                                                     IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_FIRMWARE_INFORMATION,
+                                                     IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_BRANCH,
                                                      branch,
-                                                     IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_BRANCH_LEN) < 0)
+                                                     IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_BRANCH_LEN) < 0)
     goto cleanup;
 
   if (_ipmi_oem_inventec_get_extended_config_string (state_data,
-                                                     IPMI_OEM_EXTENDED_CONFIGURATION_ID_FIRMWARE_INFORMATION,
-                                                     IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_BUILD_INFORMATION,
+                                                     IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_FIRMWARE_INFORMATION,
+                                                     IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_BUILD_INFORMATION,
                                                      build_information,
-                                                     IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_BUILD_INFORMATION_LEN) < 0)
+                                                     IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_BUILD_INFORMATION_LEN) < 0)
     goto cleanup;
 
   pstdout_printf (state_data->pstate,
@@ -2160,13 +2160,13 @@ ipmi_oem_inventec_get_firmware_information (ipmi_oem_state_data_t *state_data)
                   "Controller Description : %s\n",
                   description);
 
-  if (entity == IPMI_OEM_EXTENDED_CONFIG_FIRMWARE_INFORMATION_ENTITY_BMC)
+  if (entity == IPMI_OEM_INVENTEC_EXTENDED_CONFIG_FIRMWARE_INFORMATION_ENTITY_BMC)
     entity_str = "BMC";
-  else if (entity == IPMI_OEM_EXTENDED_CONFIG_FIRMWARE_INFORMATION_ENTITY_SYSTEM_BIOS)
+  else if (entity == IPMI_OEM_INVENTEC_EXTENDED_CONFIG_FIRMWARE_INFORMATION_ENTITY_SYSTEM_BIOS)
     entity_str = "System (BIOS)";
-  else if (entity == IPMI_OEM_EXTENDED_CONFIG_FIRMWARE_INFORMATION_ENTITY_PDB)
+  else if (entity == IPMI_OEM_INVENTEC_EXTENDED_CONFIG_FIRMWARE_INFORMATION_ENTITY_PDB)
     entity_str = "PDB";
-  else if (entity == IPMI_OEM_EXTENDED_CONFIG_FIRMWARE_INFORMATION_ENTITY_FCB)
+  else if (entity == IPMI_OEM_INVENTEC_EXTENDED_CONFIG_FIRMWARE_INFORMATION_ENTITY_FCB)
     entity_str = "FCB";
   else
     entity_str = "Unrecognized";
@@ -2290,9 +2290,9 @@ ipmi_oem_inventec_update_firmware (ipmi_oem_state_data_t *state_data)
 
           /* has to be atleast 1 char after what the prefix */
           if (!strcasecmp (value, "preserve"))
-            config_value = IPMI_OEM_UPDATE_FIRMWARE_OEM_DELL_CONFIG_PRESERVE;
+            config_value = IPMI_OEM_INVENTEC_UPDATE_FIRMWARE_OEM_DELL_CONFIG_PRESERVE;
           else /* !strcasecmp (value, "nopreserve") */
-            config_value = IPMI_OEM_UPDATE_FIRMWARE_OEM_DELL_CONFIG_NOPRESERVE;
+            config_value = IPMI_OEM_INVENTEC_UPDATE_FIRMWARE_OEM_DELL_CONFIG_NOPRESERVE;
         }
       else
         {
@@ -2319,10 +2319,10 @@ ipmi_oem_inventec_update_firmware (ipmi_oem_state_data_t *state_data)
   if (!strcasecmp (state_data->prog_data->args->oem_options[0], "tftp")
       || !strcasecmp (state_data->prog_data->args->oem_options[0], "ftp")
       || !strcasecmp (state_data->prog_data->args->oem_options[0], "http"))
-    bytes_rq[1] = IPMI_OEM_UPDATE_FIRMWARE_INTERFACE_NETWORKING;
+    bytes_rq[1] = IPMI_OEM_INVENTEC_UPDATE_FIRMWARE_INTERFACE_NETWORKING;
   
-  bytes_rq[2] = IPMI_OEM_UPDATE_FIRMWARE_UPDATE_TYPE_NORMAL_UPDATE;
-  bytes_rq[2] <<= IPMI_OEM_UPDATE_FIRMWARE_UPDATE_TYPE_SHIFT;
+  bytes_rq[2] = IPMI_OEM_INVENTEC_UPDATE_FIRMWARE_UPDATE_TYPE_NORMAL_UPDATE;
+  bytes_rq[2] <<= IPMI_OEM_INVENTEC_UPDATE_FIRMWARE_UPDATE_TYPE_SHIFT;
 
   rq_len = 3;
 
@@ -2421,75 +2421,75 @@ ipmi_oem_inventec_update_firmware (ipmi_oem_state_data_t *state_data)
 
       update_status = bytes_rs[2];
 
-      if (update_status == IPMI_OEM_GET_UPDATE_STATUS_GENERAL_ERROR)
+      if (update_status == IPMI_OEM_INVENTEC_GET_UPDATE_STATUS_GENERAL_ERROR)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
                            "General Error\n");
           goto cleanup;
         }
-      else if (update_status == IPMI_OEM_GET_UPDATE_STATUS_CANNOT_ESTABLISH_CONNECTION)
+      else if (update_status == IPMI_OEM_INVENTEC_GET_UPDATE_STATUS_CANNOT_ESTABLISH_CONNECTION)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
                            "Cannot Establish Connection\n");
           goto cleanup;
         }
-      else if (update_status == IPMI_OEM_GET_UPDATE_STATUS_PATH_NOT_FOUND)
+      else if (update_status == IPMI_OEM_INVENTEC_GET_UPDATE_STATUS_PATH_NOT_FOUND)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
                            "Path Not Found\n");
           goto cleanup;
         }
-      else if (update_status == IPMI_OEM_GET_UPDATE_STATUS_TRANSMISSION_ABORT)
+      else if (update_status == IPMI_OEM_INVENTEC_GET_UPDATE_STATUS_TRANSMISSION_ABORT)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
                            "Transmission Abort\n");
           goto cleanup;
         }
-      else if (update_status == IPMI_OEM_GET_UPDATE_STATUS_CHECKSUM_ERROR)
+      else if (update_status == IPMI_OEM_INVENTEC_GET_UPDATE_STATUS_CHECKSUM_ERROR)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
                            "Checksum Error\n");
           goto cleanup;
         }
-      else if (update_status == IPMI_OEM_GET_UPDATE_STATUS_INCORRECT_PLATFORM)
+      else if (update_status == IPMI_OEM_INVENTEC_GET_UPDATE_STATUS_INCORRECT_PLATFORM)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
                            "Incorrect Platform\n");
           goto cleanup;
         }
-      else if (update_status == IPMI_OEM_GET_UPDATE_STATUS_COMPLETED)
+      else if (update_status == IPMI_OEM_INVENTEC_GET_UPDATE_STATUS_COMPLETED)
         break;
 
       if (state_data->prog_data->args->verbose_count)
         {
-          if (update_status == IPMI_OEM_GET_UPDATE_STATUS_TRANSMITTING_IMAGE
+          if (update_status == IPMI_OEM_INVENTEC_GET_UPDATE_STATUS_TRANSMITTING_IMAGE
               && !transmitting_image_output)
             {
               pstdout_printf (state_data->pstate,
                               "Transmitting Image\n");
               transmitting_image_output++;
             }
-          else if (update_status == IPMI_OEM_GET_UPDATE_STATUS_VALIDATING_IMAGE
+          else if (update_status == IPMI_OEM_INVENTEC_GET_UPDATE_STATUS_VALIDATING_IMAGE
                    && !validating_image_output)
             {
               pstdout_printf (state_data->pstate,
                               "Validating Image\n");
               validating_image_output++;
             }
-          else if (update_status == IPMI_OEM_GET_UPDATE_STATUS_PROGRAMMING
+          else if (update_status == IPMI_OEM_INVENTEC_GET_UPDATE_STATUS_PROGRAMMING
                    && !programming_output)
             {
               pstdout_printf (state_data->pstate,
                               "Programming\n");
               programming_output++;
             }
-          else if (update_status == IPMI_OEM_GET_UPDATE_STATUS_READY_TO_ACCEPT_IMAGE
+          else if (update_status == IPMI_OEM_INVENTEC_GET_UPDATE_STATUS_READY_TO_ACCEPT_IMAGE
                    && !ready_to_accept_image)
             {
               pstdout_printf (state_data->pstate,
@@ -2823,16 +2823,16 @@ _ipmi_oem_inventec_read_eeprom_at24c256n (ipmi_oem_state_data_t *state_data)
       goto cleanup;
     }
   
-  while (read_count <= IPMI_OEM_EEPROM_AT24C256N_ADDRESS_MAX)
+  while (read_count <= IPMI_OEM_INVENTEC_EEPROM_AT24C256N_ADDRESS_MAX)
     {
       data_rq[0] = (read_count & 0xFF00) >> 8;
       data_rq[1] = (read_count & 0x00FF);
       
       if (ipmi_cmd_master_write_read (state_data->ipmi_ctx,
                                       IPMI_BUS_TYPE_PRIVATE,
-                                      IPMI_OEM_EEPROM_AT24C256N_BUS_ID,
+                                      IPMI_OEM_INVENTEC_EEPROM_AT24C256N_BUS_ID,
                                       0,
-                                      IPMI_OEM_EEPROM_AT24C256N_SLAVE_ADDRESS,
+                                      IPMI_OEM_INVENTEC_EEPROM_AT24C256N_SLAVE_ADDRESS,
                                       1,
                                       data_rq,
                                       2,
@@ -2950,17 +2950,17 @@ _ipmi_oem_inventec_clear_eeprom_at24c256n (ipmi_oem_state_data_t *state_data)
   if (state_data->prog_data->args->verbose_count)
     fprintf (stderr, "%u%%\r", percent);
 
-  while (count <= IPMI_OEM_EEPROM_AT24C256N_ADDRESS_MAX)
+  while (count <= IPMI_OEM_INVENTEC_EEPROM_AT24C256N_ADDRESS_MAX)
     {
       data_rq[0] = (count & 0xFF00) >> 8;
       data_rq[1] = (count & 0x00FF);
-      data_rq[2] = IPMI_OEM_EEPROM_AT24C256N_CLEAR_BYTE;
+      data_rq[2] = IPMI_OEM_INVENTEC_EEPROM_AT24C256N_CLEAR_BYTE;
 
       if (ipmi_cmd_master_write_read (state_data->ipmi_ctx,
                                       IPMI_BUS_TYPE_PRIVATE,
-                                      IPMI_OEM_EEPROM_AT24C256N_BUS_ID,
+                                      IPMI_OEM_INVENTEC_EEPROM_AT24C256N_BUS_ID,
                                       0,
-                                      IPMI_OEM_EEPROM_AT24C256N_SLAVE_ADDRESS,
+                                      IPMI_OEM_INVENTEC_EEPROM_AT24C256N_SLAVE_ADDRESS,
                                       0,
                                       data_rq,
                                       3,
@@ -2975,7 +2975,7 @@ _ipmi_oem_inventec_clear_eeprom_at24c256n (ipmi_oem_state_data_t *state_data)
 
       if (state_data->prog_data->args->verbose_count)
         {
-          if ((unsigned int)(((double)count/IPMI_OEM_EEPROM_AT24C256N_ADDRESS_MAX) * 100) > percent)
+          if ((unsigned int)(((double)count/IPMI_OEM_INVENTEC_EEPROM_AT24C256N_ADDRESS_MAX) * 100) > percent)
             {
               fprintf (stderr, "%u%%\r", percent);
               percent++;

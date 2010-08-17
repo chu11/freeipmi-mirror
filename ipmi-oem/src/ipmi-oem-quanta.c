@@ -164,24 +164,24 @@
 #define IPMI_OEM_QUANTA_GET_RESTORE_STATUS_RESTORE_IN_PROGRESS 0x00
 #define IPMI_OEM_QUANTA_GET_RESTORE_STATUS_RESTORE_COMPLETE    0x01
 
-#define IPMI_QUANTA_PROCESSOR_TYPE_CELERON        0x00
-#define IPMI_QUANTA_PROCESSOR_TYPE_PENTIUM_3      0x01
-#define IPMI_QUANTA_PROCESSOR_TYPE_PENTIUM_4      0x02
-#define IPMI_QUANTA_PROCESSOR_TYPE_XEON           0x03
-#define IPMI_QUANTA_PROCESSOR_TYPE_PRESTONIA      0x04
-#define IPMI_QUANTA_PROCESSOR_TYPE_NOCONA         0x05
-#define IPMI_QUANTA_PROCESSOR_TYPE_OPTERON        0x06
-#define IPMI_QUANTA_PROCESSOR_TYPE_DEMPSEY        0x07
-#define IPMI_QUANTA_PROCESSOR_TYPE_CLOVERTOWN     0x08
-#define IPMI_QUANTA_PROCESSOR_TYPE_TIGERTON       0x09
-#define IPMI_QUANTA_PROCESSOR_TYPE_DUNNINGTON     0x0A
+#define IPMI_OEM_QUANTA_PROCESSOR_TYPE_CELERON        0x00
+#define IPMI_OEM_QUANTA_PROCESSOR_TYPE_PENTIUM_3      0x01
+#define IPMI_OEM_QUANTA_PROCESSOR_TYPE_PENTIUM_4      0x02
+#define IPMI_OEM_QUANTA_PROCESSOR_TYPE_XEON           0x03
+#define IPMI_OEM_QUANTA_PROCESSOR_TYPE_PRESTONIA      0x04
+#define IPMI_OEM_QUANTA_PROCESSOR_TYPE_NOCONA         0x05
+#define IPMI_OEM_QUANTA_PROCESSOR_TYPE_OPTERON        0x06
+#define IPMI_OEM_QUANTA_PROCESSOR_TYPE_DEMPSEY        0x07
+#define IPMI_OEM_QUANTA_PROCESSOR_TYPE_CLOVERTOWN     0x08
+#define IPMI_OEM_QUANTA_PROCESSOR_TYPE_TIGERTON       0x09
+#define IPMI_OEM_QUANTA_PROCESSOR_TYPE_DUNNINGTON     0x0A
 /* achu: listed as "Hapertown" in spec, assuming typo */
-#define IPMI_QUANTA_PROCESSOR_TYPE_HARPERTOWN     0x0B
-#define IPMI_QUANTA_PROCESSOR_TYPE_WOLFDALE_DP    0x0C
-#define IPMI_QUANTA_PROCESSOR_TYPE_NEHALEM_EP     0x0D
-#define IPMI_QUANTA_PROCESSOR_TYPE_WESTMERE_EP    0x0E
+#define IPMI_OEM_QUANTA_PROCESSOR_TYPE_HARPERTOWN     0x0B
+#define IPMI_OEM_QUANTA_PROCESSOR_TYPE_WOLFDALE_DP    0x0C
+#define IPMI_OEM_QUANTA_PROCESSOR_TYPE_NEHALEM_EP     0x0D
+#define IPMI_OEM_QUANTA_PROCESSOR_TYPE_WESTMERE_EP    0x0E
 /* 0x0F-0xFE - Reserved */
-#define IPMI_QUANTA_PROCESSOR_TYPE_NO_CPU_PRESENT 0xFF
+#define IPMI_OEM_QUANTA_PROCESSOR_TYPE_NO_CPU_PRESENT 0xFF
 
 int
 ipmi_oem_quanta_reset_to_defaults (ipmi_oem_state_data_t *state_data)
@@ -447,42 +447,42 @@ ipmi_oem_quanta_get_processor_information (ipmi_oem_state_data_t *state_data)
 
       processor_mhz = (bytes_rs[3] | (bytes_rs[4] << 8));
 
-      if (processor_type == IPMI_QUANTA_PROCESSOR_TYPE_NO_CPU_PRESENT)
+      if (processor_type == IPMI_OEM_QUANTA_PROCESSOR_TYPE_NO_CPU_PRESENT)
 	pstdout_printf (state_data->pstate,
 			"Processor %u: No CPU Present\n",
                         processor_index);
       else
 	{
-	  if (processor_type == IPMI_QUANTA_PROCESSOR_TYPE_CELERON)
+	  if (processor_type == IPMI_OEM_QUANTA_PROCESSOR_TYPE_CELERON)
 	    processor_type_str = "Celeron";
-	  else if (processor_type == IPMI_QUANTA_PROCESSOR_TYPE_PENTIUM_3)
+	  else if (processor_type == IPMI_OEM_QUANTA_PROCESSOR_TYPE_PENTIUM_3)
 	    processor_type_str = "Pentium 3";
-	  else if (processor_type == IPMI_QUANTA_PROCESSOR_TYPE_PENTIUM_4)
+	  else if (processor_type == IPMI_OEM_QUANTA_PROCESSOR_TYPE_PENTIUM_4)
 	    processor_type_str = "Pentium 4";
-	  else if (processor_type == IPMI_QUANTA_PROCESSOR_TYPE_XEON)
+	  else if (processor_type == IPMI_OEM_QUANTA_PROCESSOR_TYPE_XEON)
 	    processor_type_str = "Xeon";
-	  else if (processor_type == IPMI_QUANTA_PROCESSOR_TYPE_PRESTONIA)
+	  else if (processor_type == IPMI_OEM_QUANTA_PROCESSOR_TYPE_PRESTONIA)
 	    processor_type_str = "Prestonia";
-	  else if (processor_type == IPMI_QUANTA_PROCESSOR_TYPE_NOCONA)
+	  else if (processor_type == IPMI_OEM_QUANTA_PROCESSOR_TYPE_NOCONA)
 	    processor_type_str = "Nocona";
-	  else if (processor_type == IPMI_QUANTA_PROCESSOR_TYPE_OPTERON)
+	  else if (processor_type == IPMI_OEM_QUANTA_PROCESSOR_TYPE_OPTERON)
 	    processor_type_str = "Opteron";
-	  else if (processor_type == IPMI_QUANTA_PROCESSOR_TYPE_DEMPSEY)
+	  else if (processor_type == IPMI_OEM_QUANTA_PROCESSOR_TYPE_DEMPSEY)
 	    processor_type_str = "Dempsey";
-	  else if (processor_type == IPMI_QUANTA_PROCESSOR_TYPE_CLOVERTOWN)
+	  else if (processor_type == IPMI_OEM_QUANTA_PROCESSOR_TYPE_CLOVERTOWN)
 	    processor_type_str = "Clovertown";
-	  else if (processor_type == IPMI_QUANTA_PROCESSOR_TYPE_TIGERTON)
+	  else if (processor_type == IPMI_OEM_QUANTA_PROCESSOR_TYPE_TIGERTON)
 	    processor_type_str = "Tigerton";
-	  else if (processor_type == IPMI_QUANTA_PROCESSOR_TYPE_DUNNINGTON)
+	  else if (processor_type == IPMI_OEM_QUANTA_PROCESSOR_TYPE_DUNNINGTON)
 	    processor_type_str = "Dunnington";
-	  else if (processor_type == IPMI_QUANTA_PROCESSOR_TYPE_HARPERTOWN)
+	  else if (processor_type == IPMI_OEM_QUANTA_PROCESSOR_TYPE_HARPERTOWN)
 	    processor_type_str = "Harpertown";
-	  else if (processor_type == IPMI_QUANTA_PROCESSOR_TYPE_WOLFDALE_DP)
+	  else if (processor_type == IPMI_OEM_QUANTA_PROCESSOR_TYPE_WOLFDALE_DP)
 	    /* achu: listed as "WolfDale-Dp" in spec, I don't like that output */
 	    processor_type_str = "Wolfdale-DP";
-	  else if (processor_type == IPMI_QUANTA_PROCESSOR_TYPE_NEHALEM_EP)
+	  else if (processor_type == IPMI_OEM_QUANTA_PROCESSOR_TYPE_NEHALEM_EP)
 	    processor_type_str = "Nehalem-EP";
-          else if (processor_type == IPMI_QUANTA_PROCESSOR_TYPE_WESTMERE_EP)
+          else if (processor_type == IPMI_OEM_QUANTA_PROCESSOR_TYPE_WESTMERE_EP)
             processor_type_str = "Westmere-EP";
 	  else      
 	    processor_type_str = "Unknown Processor";
