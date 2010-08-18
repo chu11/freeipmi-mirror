@@ -23,10 +23,12 @@
 
 #define IPMI_CRYPT_HASH_SHA1             0x00
 #define IPMI_CRYPT_HASH_MD5              0x01
+#define IPMI_CRYPT_HASH_SHA256           0x02
 
 #define IPMI_CRYPT_HASH_ALGORITHM_VALID(__hash_algorithm)       \
   (((__hash_algorithm) == IPMI_CRYPT_HASH_SHA1                  \
-    || (__hash_algorithm) == IPMI_CRYPT_HASH_MD5) ? 1 : 0)
+    || (__hash_algorithm) == IPMI_CRYPT_HASH_MD5                \
+    || (__hash_algorithm) == IPMI_CRYPT_HASH_SHA256) ? 1 : 0)
 
 #define IPMI_CRYPT_HASH_FLAGS_HMAC       0x01
 

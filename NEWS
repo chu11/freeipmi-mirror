@@ -10,6 +10,7 @@ o Fix daylight savings bug when configuring BMC times in bmc-device.
 o Support 'veryslowcommit' workaround for config tools to work around
   very slow BMCs.
 o Support --enable-rawdumps compile option.
+o Support SHA256 in IPMI 2.0.
 o Other minor bug fixes.
 
 FreeIPMI 0.8.8 - 07/20/10
