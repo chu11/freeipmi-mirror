@@ -27,65 +27,83 @@ extern "C" {
 #include <freeipmi/interface/ipmi-rmcpplus-interface.h>
 
 #define IPMI_CIPHER_SUITE_COMBINATION_VALID(__a, __i, __c)             \
+  /* Cipher Suite 0 */                                                 \
   ((((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE                  \
      && (__i) == IPMI_INTEGRITY_ALGORITHM_NONE                         \
      && (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE)                  \
+    /* Cipher Suite 1 */                                               \
     || ((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1          \
         && ((__i) == IPMI_INTEGRITY_ALGORITHM_NONE                     \
             && (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE))          \
+    /* Cipher Suite 2-5 */                                             \
     || ((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1          \
         && ((__i) == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96             \
             && ((__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE           \
                 || (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128 \
                 || (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_XRC4_128    \
                 || (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_XRC4_40)))  \
+    /* Cipher Suite 6 */                                               \
     || ((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5           \
         && ((__i) == IPMI_INTEGRITY_ALGORITHM_NONE                     \
             && (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE))          \
+    /* Cipher Suite 7-10 */                                            \
     || ((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5           \
         && ((__i) == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128             \
             && ((__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE           \
                 || (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128 \
                 || (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_XRC4_128    \
                 || (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_XRC4_40)))  \
+    /* Cipher Suite 11-14 */                                           \
     || ((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5           \
         && ((__i) == IPMI_INTEGRITY_ALGORITHM_MD5_128                  \
             && ((__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE           \
                 || (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128 \
                 || (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_XRC4_128    \
                 || (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_XRC4_40)))  \
-    /* Cipher Suite 17 (SHA256) */                                     \
+    /* XXX: Errata 4 defines SHA256 but not cipher suite IDs */        \
+    /* Cipher Suite 17 confirmed via DCMI 1.1 specification */         \
+    /* Cipher Suite 15-19 */                                           \
     || ((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA256        \
         && ((__i) == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA256_128          \
             && ((__c) == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128))) ) ? 1 : 0)
 
 #define IPMI_CIPHER_SUITE_COMBINATION_SUPPORTED(__a, __i, __c)            \
+  /* Cipher Suite 0 */                                                    \
   ((((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE                     \
      && (__i) == IPMI_INTEGRITY_ALGORITHM_NONE                            \
      && (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE)                     \
+    /* Cipher Suite 1 */                                                  \
     || ((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1             \
         && ((__i) == IPMI_INTEGRITY_ALGORITHM_NONE                        \
             && (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE))             \
+    /* Cipher Suite 2-3 */                                                \
     || ((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1             \
         && ((__i) == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96                \
             && ((__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE              \
                 || (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128))) \
+    /* Cipher Suite 6 */                                                  \
     || ((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5              \
         && ((__i) == IPMI_INTEGRITY_ALGORITHM_NONE                        \
             && (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE))             \
+    /* Cipher Suite 7-8 */                                                \
     || ((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5              \
         && ((__i) == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128                \
             && ((__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE              \
                 || (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128))) \
+    /* Cipher Suite 11-12 */                                              \
     || ((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5              \
         && ((__i) == IPMI_INTEGRITY_ALGORITHM_MD5_128                     \
             && ((__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE              \
                 || (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128))) \
-    /* Cipher Suite 17 (SHA256) */                                        \
+    /* XXX: Errata 4 defines SHA256 but not cipher suite IDs */           \
+    /* Cipher Suite 17 confirmed via DCMI 1.1 specification */            \
+    /* Cipher Suite 17 */                                                 \
     || ((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA256           \
         && ((__i) == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA256_128             \
             && ((__c) == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128)))) ? 1 : 0)
 
+/* XXX: Errata 4 defines SHA256 but not cipher suite IDs */
+/* Cipher Suite 17 confirmed via DCMI 1.1 specification */
 /* To avoid gcc warnings, add +1 in comparison */
 /* achu: no macros here, cipher suite ids are numbers */
 #define IPMI_CIPHER_SUITE_ID_SUPPORTED(__id) \

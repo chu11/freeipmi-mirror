@@ -1029,6 +1029,8 @@ _dump_rmcpplus_session_trlr (int fd,
     authentication_code_len = IPMI_HMAC_MD5_128_AUTHENTICATION_CODE_LENGTH;
   else if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128)
     authentication_code_len = IPMI_MD5_128_AUTHENTICATION_CODE_LENGTH;
+  else if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA256_128)
+    authentication_code_len = IPMI_HMAC_SHA256_128_AUTHENTICATION_CODE_LENGTH;
   else
     authentication_code_len = 0; /* just in case IPMI implementation is bogus */
 

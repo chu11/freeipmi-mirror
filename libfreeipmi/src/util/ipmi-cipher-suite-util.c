@@ -38,9 +38,13 @@ ipmi_cipher_suite_id_to_algorithms (uint8_t cipher_suite_id,
 {
   uint8_t a, i, c;
 
+  /* XXX - Errata 4 defines SHA256 but not cipher suite IDs */
+  /* Cipher Suite 17 confirmed via DCMI 1.1 specification */
+
   /* To avoid gcc warnings, add +1 to comparison */
-  if (!((cipher_suite_id + 1) >= 1
-        && cipher_suite_id <= 17))
+  if (!(((cipher_suite_id + 1) >= 1
+         && cipher_suite_id <= 14)
+        || cipher_suite_id == 17))
     {
       SET_ERRNO (EINVAL);
       return (-1);
@@ -52,7 +56,7 @@ ipmi_cipher_suite_id_to_algorithms (uint8_t cipher_suite_id,
     a = IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1;
   else if (cipher_suite_id >= 6 && cipher_suite_id <= 14)
     a = IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5;
-  else if (cipher_suite_id == 17)
+  else /* cipher_suite_id == 17 */
     a = IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA256;
 
   if (cipher_suite_id == 0
@@ -63,9 +67,9 @@ ipmi_cipher_suite_id_to_algorithms (uint8_t cipher_suite_id,
     i = IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96;
   else if (cipher_suite_id >= 7 && cipher_suite_id <= 10)
     i = IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128;
-  else if(cipher_suite_id >= 11 && cipher_suite_id <= 14)
+  else if (cipher_suite_id >= 11 && cipher_suite_id <= 14)
     i = IPMI_INTEGRITY_ALGORITHM_MD5_128;
-  else if(cipher_suite_id == 17)
+  else /* cipher_suite_id == 17 */
     i = IPMI_INTEGRITY_ALGORITHM_HMAC_SHA256_128;
 
   if (cipher_suite_id == 0
@@ -84,9 +88,9 @@ ipmi_cipher_suite_id_to_algorithms (uint8_t cipher_suite_id,
            || cipher_suite_id == 9
            || cipher_suite_id == 13)
     c = IPMI_CONFIDENTIALITY_ALGORITHM_XRC4_128;
-  else if (cipher_suite_id == 5
-           || cipher_suite_id == 10
-           || cipher_suite_id == 14)
+  else /* cipher_suite_id == 5
+          || cipher_suite_id == 10
+          || cipher_suite_id == 14 */
     c = IPMI_CONFIDENTIALITY_ALGORITHM_XRC4_40;
 
   if (authentication_algorithm)

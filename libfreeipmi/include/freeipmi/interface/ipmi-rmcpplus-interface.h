@@ -111,6 +111,7 @@ extern "C" {
 #define IPMI_INTEGRITY_ALGORITHM_HMAC_SHA256_128          0x04
 /* C0h - FFh - OEM */
 /* all other reserved */
+
 #define IPMI_INTEGRITY_ALGORITHM_VALID(__algorithm)           \
   (((__algorithm) == IPMI_INTEGRITY_ALGORITHM_NONE            \
     || (__algorithm) == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96 \
@@ -187,7 +188,9 @@ extern "C" {
 #define IPMI_MD5_128_AUTHENTICATION_CODE_LENGTH           16
 #define IPMI_HMAC_SHA256_128_AUTHENTICATION_CODE_LENGTH   16
 
-/* Refer to table 22-19, Errata 4 adds SHA256 */
+/* Refer to table 22-19 */
+/* XXX - Errata 4 defines SHA256 but not cipher suite IDs */
+/* Cipher Suite 17 confirmed via DCMI 1.1 specification */
 #define IPMI_CIPHER_SUITE_ID_MIN                          0
 #define IPMI_CIPHER_SUITE_ID_MAX                          17
 

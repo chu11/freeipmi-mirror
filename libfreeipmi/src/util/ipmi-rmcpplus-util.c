@@ -111,7 +111,7 @@ ipmi_calculate_sik (uint8_t authentication_algorithm,
       hash_flags = IPMI_CRYPT_HASH_FLAGS_HMAC;
       expected_digest_len = IPMI_HMAC_MD5_DIGEST_LENGTH;
     }
-  else if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA256)
+  else /* IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA256 */
     {
       hash_algorithm = IPMI_CRYPT_HASH_SHA256;
       hash_flags = IPMI_CRYPT_HASH_FLAGS_HMAC;
@@ -389,7 +389,7 @@ _ipmi_calculate_k (uint8_t authentication_algorithm,
                                         k_len,
                                         constant,
                                         constant_len));
-  else if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA256)
+  else /* IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA256 */
     return (_calculate_k_rakp_hmac_sha256 (sik_key,
                                         sik_key_len,
                                         k,
@@ -751,7 +751,7 @@ ipmi_calculate_rakp_3_key_exchange_authentication_code (uint8_t authentication_a
       hash_algorithm = IPMI_CRYPT_HASH_MD5;
       hash_flags = IPMI_CRYPT_HASH_FLAGS_HMAC;
     }
-  else if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA256)
+  else /* IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA256 */
     {
       if (key_exchange_authentication_code_len < IPMI_HMAC_SHA256_DIGEST_LENGTH)
         {
@@ -1315,14 +1315,14 @@ ipmi_rmcpplus_check_packet_session_authentication_code (uint8_t integrity_algori
       expected_digest_len = IPMI_HMAC_MD5_DIGEST_LENGTH;
       compare_digest_len = IPMI_HMAC_MD5_128_AUTHENTICATION_CODE_LENGTH;
     }
-  else  if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128)
+  else if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128)
     {
       hash_algorithm = IPMI_CRYPT_HASH_MD5;
       hash_flags = 0;
       expected_digest_len = IPMI_MD5_DIGEST_LENGTH;
       compare_digest_len = IPMI_MD5_128_AUTHENTICATION_CODE_LENGTH;
     }
-  else if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA256_128)
+  else /* IPMI_INTEGRITY_ALGORITHM_HMAC_SHA256_128 */
     {
       hash_algorithm = IPMI_CRYPT_HASH_SHA256;
       hash_flags = IPMI_CRYPT_HASH_FLAGS_HMAC;
