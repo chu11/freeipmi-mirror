@@ -1,4 +1,4 @@
-2010-08-17  Albert Chu <chu11@llnl.gov>
+2010-08-18  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/debug/,
 	common/man/manpage-common-cipher-suite-id-details.man: Add SHA256
@@ -6,7 +6,7 @@
 
 	* Variety of mods to remove compiler warnings.
 
-2010-08-17  Holger Liebig <holger.liebig@ts.fujitsu.com>
+2010-08-18  Holger Liebig <holger.liebig@ts.fujitsu.com>
 
 	* Add SHA256 support globally.
 	
