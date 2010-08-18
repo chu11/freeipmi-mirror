@@ -1397,7 +1397,7 @@ _cb_sel_oem_record_parse (conffile_t cf,
 
   if (!strcasecmp (optionname, "IPMI_OEM_Timestamped_Record"))
     {
-      if (data->stringlist_len != 9)
+      if (data->stringlist_len != 10)
         conffile_seterrnum (cf, CONFFILE_ERR_PARSE_ARG_MISSING);
       oem_data_count = IPMI_SEL_OEM_DATA_TIMESTAMPED_BYTES;
     }
@@ -1926,22 +1926,22 @@ ipmi_interpret_sel_config_parse (ipmi_interpret_ctx_t ctx,
   config_file_options[config_file_options_len].optionname = "IPMI_OEM_Timestamped_Record";
   config_file_options[config_file_options_len].option_type = CONFFILE_OPTION_LIST_STRING;
   config_file_options[config_file_options_len].option_type_arg = 10;
-  config_file_options[config_file_options_len].callback_func = _cb_sel_oem_sensor_parse;
+  config_file_options[config_file_options_len].callback_func = _cb_sel_oem_record_parse;
   config_file_options[config_file_options_len].max_count = -1;
   config_file_options[config_file_options_len].required_count = 0;
   config_file_options[config_file_options_len].count_ptr = &sel_oem_timestamped_flag;
-  config_file_options[config_file_options_len].option_ptr = &ctx->interpret_sel.sel_oem_sensor_config;
+  config_file_options[config_file_options_len].option_ptr = &ctx->interpret_sel.sel_oem_record_config;
   config_file_options[config_file_options_len].option_data = 0;
   config_file_options_len++;
 
   config_file_options[config_file_options_len].optionname = "IPMI_OEM_Non_Timestamped_Record";
   config_file_options[config_file_options_len].option_type = CONFFILE_OPTION_LIST_STRING;
   config_file_options[config_file_options_len].option_type_arg = 17;
-  config_file_options[config_file_options_len].callback_func = _cb_sel_oem_sensor_parse;
+  config_file_options[config_file_options_len].callback_func = _cb_sel_oem_record_parse;
   config_file_options[config_file_options_len].max_count = -1;
   config_file_options[config_file_options_len].required_count = 0;
   config_file_options[config_file_options_len].count_ptr = &sel_oem_non_timestamped_flag;
-  config_file_options[config_file_options_len].option_ptr = &ctx->interpret_sel.sel_oem_sensor_config;
+  config_file_options[config_file_options_len].option_ptr = &ctx->interpret_sel.sel_oem_record_config;
   config_file_options[config_file_options_len].option_data = 0;
   config_file_options_len++;
 

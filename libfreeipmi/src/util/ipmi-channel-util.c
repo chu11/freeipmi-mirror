@@ -243,7 +243,6 @@ ipmi_get_channel_numbers (ipmi_ctx_t ctx,
   uint8_t special_channel_number = 0;
   int rv = -1;
   int ret;
-  int i;
 
   /* XXX channel medium type check? - OEM channels 0-0xFF possible, so skip */
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
