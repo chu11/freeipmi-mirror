@@ -19,7 +19,7 @@
 	* Add manpage entry for Fujitsu get-sel-entry-long-text OEM
 	command.
 
-2010-08-17  Dan Lukes <dan@obluda.cz>
+2010-08-17  Dan Lukes <dan+freeipmi@obluda.cz>
 
 	* ipmi-oem/: Support Fujitsu get-sel-entry-long-text OEM command.
 	
