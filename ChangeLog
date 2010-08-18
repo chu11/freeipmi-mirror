@@ -1,5 +1,16 @@
 2010-08-18  Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/: Tweak Fujitsu get-sel-entry-long-text based on
+	comments by Holger Liebig.  Other minor tweaks for code
+	consistency.
+
+2010-08-18  Dan Lukes <dan+freeipmi@obluda.cz>
+
+	* ipmi-oem/: Fix for bugs in Fujitsu get-sel-entry-long-text OEM
+	command.
+
+2010-08-18  Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/src/debug/,
 	common/man/manpage-common-cipher-suite-id-details.man: Add SHA256
 	support.
