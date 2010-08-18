@@ -1,3 +1,8 @@
+2010-08-18  Albert Chu <chu11@llnl.gov>
+
+	* ipmimonitoring/src/ipmimonitoring/ipmimonitoring.c: Set
+	workaround flags appropriately for protocol type.
+	
 2010-08-17  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/: Re-format Fujitsu get-sel-entry-long-text for

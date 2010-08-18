@@ -4,6 +4,7 @@ o In ipmi-sel and ipmimonitoring, workaround Supermicro H8QME SEL
   compliance issues in ipmi-sel.
 o In ipmi-sel, do not report error if SEL is empty.
 o Support Fujitsu 'get-sel-entry-long-text' in ipmi-oem.
+o Fix workaround flags bug in ipmimonitoring.
 o Revert 'Open Session Privilege Workaround' changes in 0.8.8, were unnecessary.
 o Fix daylight savings bug when configuring BMC times in bmc-device.
 o Support 'veryslowcommit' workaround for config tools to work around
