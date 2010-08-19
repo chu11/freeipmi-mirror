@@ -75,3 +75,6 @@ force-dependency-check:
 install-exec-hook:
 	$(install_sh) -d -m 755 $(DESTDIR)$(sbindir)
 	$(LN_S) $(sbindir)/ipmi-pef-config $(DESTDIR)$(sbindir)/pef-config
+
+uninstall-hook:
+	$(RM) $(DESTDIR)$(sbindir)/pef-config
