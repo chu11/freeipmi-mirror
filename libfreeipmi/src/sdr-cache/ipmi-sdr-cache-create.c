@@ -65,6 +65,10 @@
 
 #define IPMI_SDR_CACHE_MAX_RESERVATION_ID_RETRY 4
 
+/* achu: bytes to read start = 16 specifically chosen to 16 because it
+ * appears most motherboards can handle 16.  Many cannot handle larger
+ * numbers like 32.
+ */
 #define IPMI_SDR_CACHE_BYTES_TO_READ_START      16
 #define IPMI_SDR_CACHE_BYTES_TO_READ_DECREMENT  4
 
