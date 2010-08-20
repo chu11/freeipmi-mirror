@@ -1,3 +1,9 @@
+2010-08-20  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/api/ipmi-lan-session-common.c
+	(_ipmi_lan_2_0_cmd_wrapper_verify_packet): Fix error check corner
+	case.
+	
 2010-08-18  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/: Tweak Fujitsu get-sel-entry-long-text based on
