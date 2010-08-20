@@ -1,4 +1,4 @@
-FreeIPMI 0.8.9 - XX/XX/10
+FreeIPMI 0.8.9 - 08/20/10
 -------------------------
 o In ipmi-sel and ipmimonitoring, workaround Supermicro H8QME SEL
   compliance issues in ipmi-sel.
