@@ -81,6 +81,12 @@ The following options are specific to
 \fB\-\-get\-dcmi\-capability\-info\fR
 Get DCMI capability information.
 .TP
+\fB\-\-get\-asset\-tag\fR
+Get asset tag.
+.TP
+\fB\-\-get\-dcmi\-sensor\-info\fR
+Get DCMI sensor information.
+.TP
 \fB\-\-get\-system\-power\-statistics\fR
 Get system power statistics.
 .TP
@@ -124,12 +130,6 @@ the \fB\-\-set\-power\-limit\fR option.
 .TP
 \fB\-\-activate\-deactivate\-power\-limit\fR=\fIOPERATION\fR
 Activate or deactivate power limit.  Allowed values: ACTIVATE, DEACTIVATE.
-.TP
-\fB\-\-get\-asset\-tag\fR
-Get asset tag.
-.TP
-\fB\-\-get\-dcmi\-sensor\-info\fR
-Get DCMI sensor information.
 #include <@top_srcdir@/common/man/manpage-common-interpret-oem-data.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-options-header.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-buffer.man>

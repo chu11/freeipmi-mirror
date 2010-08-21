@@ -1,5 +1,10 @@
 2010-08-20  Albert Chu <chu11@llnl.gov>
 
+	* Support DCMI 1.1 Specification.  Re-org various code for
+	consistency to DCMI 1.1 specification organization.
+	
+2010-08-20  Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/src/api/ipmi-lan-session-common.c
 	(_ipmi_lan_2_0_cmd_wrapper_verify_packet): Fix error check corner
 	case.

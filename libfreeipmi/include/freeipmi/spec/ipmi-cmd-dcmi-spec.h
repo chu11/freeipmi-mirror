@@ -46,13 +46,16 @@
 extern "C" {
 #endif
 
-#define IPMI_CMD_DCMI_GET_DCMI_CAPABILITIY_INFO        0x01
-#define IPMI_CMD_DCMI_GET_POWER_READING                0x02
-#define IPMI_CMD_DCMI_GET_POWER_LIMIT                  0x03
-#define IPMI_CMD_DCMI_SET_POWER_LIMIT                  0x04
-#define IPMI_CMD_DCMI_ACTIVATE_DEACTIVATE_POWER_LIMIT  0x05
-#define IPMI_CMD_DCMI_GET_ASSET_TAG                    0x06
-#define IPMI_CMD_DCMI_GET_DCMI_SENSOR_INFO             0x07
+#define IPMI_CMD_DCMI_GET_DCMI_CAPABILITIY_INFO                   0x01
+#define IPMI_CMD_DCMI_GET_POWER_READING                           0x02
+#define IPMI_CMD_DCMI_GET_POWER_LIMIT                             0x03
+#define IPMI_CMD_DCMI_SET_POWER_LIMIT                             0x04
+#define IPMI_CMD_DCMI_ACTIVATE_DEACTIVATE_POWER_LIMIT             0x05
+#define IPMI_CMD_DCMI_GET_ASSET_TAG                               0x06
+#define IPMI_CMD_DCMI_GET_DCMI_SENSOR_INFO                        0x07
+#define IPMI_CMD_DCMI_SET_ASSET_TAG                               0x08
+#define IPMI_CMD_DCMI_GET_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING 0x09
+#define IPMI_CMD_DCMI_SET_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING 0x0A
 
 #ifdef __cplusplus
 }

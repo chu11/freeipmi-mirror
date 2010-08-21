@@ -73,7 +73,11 @@ extern "C" {
 #define IPMI_DCMI_TIME_DURATION_UNITS_HOURS   0x02
 #define IPMI_DCMI_TIME_DURATION_UNITS_DAYS    0x03
 
-#define IPMI_DCMI_ASSET_TAG_NUMBER_OF_BYTES_TO_READ_MAX 16
+#define IPMI_DCMI_ASSET_TAG_NUMBER_OF_BYTES_TO_READ_MAX  16
+#define IPMI_DCMI_ASSET_TAG_NUMBER_OF_BYTES_TO_WRITE_MAX 16
+
+#define IPMI_DCMI_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_NUMBER_OF_BYTES_TO_READ_MAX  16
+#define IPMI_DCMI_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_NUMBER_OF_BYTES_TO_WRITE_MAX 16
 
 #define IPMI_DCMI_ENTITY_ID_INLET_TEMPERATURE     0x40
 #define IPMI_DCMI_ENTITY_ID_CPU_TEMPERATURE       0x41
@@ -150,6 +154,16 @@ extern fiid_template_t tmpl_cmd_dcmi_get_dcmi_capability_info_mandatory_platform
 extern fiid_template_t tmpl_cmd_dcmi_get_dcmi_capability_info_optional_platform_attributes_rs;
 extern fiid_template_t tmpl_cmd_dcmi_get_dcmi_capability_info_manageability_access_attributes_rs;
 extern fiid_template_t tmpl_cmd_dcmi_get_dcmi_capability_info_enhanced_system_power_statistics_attributes_rs;
+extern fiid_template_t tmpl_cmd_dcmi_get_asset_tag_rq;
+extern fiid_template_t tmpl_cmd_dcmi_get_asset_tag_rs;
+extern fiid_template_t tmpl_cmd_dcmi_set_asset_tag_rq;
+extern fiid_template_t tmpl_cmd_dcmi_set_asset_tag_rs;
+extern fiid_template_t tmpl_cmd_dcmi_get_management_controller_identifier_string_rq;
+extern fiid_template_t tmpl_cmd_dcmi_get_management_controller_identifier_string_rs;
+extern fiid_template_t tmpl_cmd_dcmi_set_management_controller_identifier_string_rq;
+extern fiid_template_t tmpl_cmd_dcmi_set_management_controller_identifier_string_rs;
+extern fiid_template_t tmpl_cmd_dcmi_get_dcmi_sensor_info_rq;
+extern fiid_template_t tmpl_cmd_dcmi_get_dcmi_sensor_info_rs;
 extern fiid_template_t tmpl_cmd_dcmi_get_power_reading_rq;
 extern fiid_template_t tmpl_cmd_dcmi_get_power_reading_rs;
 extern fiid_template_t tmpl_cmd_dcmi_get_power_limit_rq;
@@ -158,14 +172,36 @@ extern fiid_template_t tmpl_cmd_dcmi_set_power_limit_rq;
 extern fiid_template_t tmpl_cmd_dcmi_set_power_limit_rs;
 extern fiid_template_t tmpl_cmd_dcmi_activate_deactivate_power_limit_rq;
 extern fiid_template_t tmpl_cmd_dcmi_activate_deactivate_power_limit_rs;
-extern fiid_template_t tmpl_cmd_dcmi_get_asset_tag_rq;
-extern fiid_template_t tmpl_cmd_dcmi_get_asset_tag_rs;
-extern fiid_template_t tmpl_cmd_dcmi_get_dcmi_sensor_info_rq;
-extern fiid_template_t tmpl_cmd_dcmi_get_dcmi_sensor_info_rs;
 
 int fill_cmd_dcmi_get_dcmi_capability_info (uint8_t parameter_selector,
                                             fiid_obj_t obj_cmd_rq);
 
+int fill_cmd_dcmi_get_asset_tag (uint8_t offset_to_read,
+                                 uint8_t number_of_bytes_to_read,
+                                 fiid_obj_t obj_cmd_rq);
+  
+int fill_cmd_dcmi_set_asset_tag (uint8_t offset_to_write,
+                                 uint8_t number_of_bytes_to_write,
+                                 const void *data,
+                                 unsigned int data_len,
+                                 fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_dcmi_get_management_controller_identifier_string (uint8_t offset_to_read,
+                                                               uint8_t number_of_bytes_to_read,
+                                                               fiid_obj_t obj_cmd_rq);
+  
+int fill_cmd_dcmi_set_management_controller_identifier_string (uint8_t offset_to_write,
+                                                               uint8_t number_of_bytes_to_write,
+                                                               const void *data,
+                                                               unsigned int data_len,
+                                                               fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_dcmi_get_dcmi_sensor_info (uint8_t sensor_type,
+                                        uint8_t entity_id,
+                                        uint8_t entity_instance,
+                                        uint8_t entity_instance_start,
+                                        fiid_obj_t obj_cmd_rq);
+  
 int fill_cmd_dcmi_get_power_reading (uint8_t mode,
                                      uint8_t mode_attributes,
                                      fiid_obj_t obj_cmd_rq);
@@ -181,16 +217,6 @@ int fill_cmd_dcmi_set_power_limit (uint8_t exception_actions,
 int fill_cmd_dcmi_activate_deactivate_power_limit (uint8_t power_limit_activation,
                                                    fiid_obj_t obj_cmd_rq);
 
-int fill_cmd_dcmi_get_asset_tag (uint8_t offset_to_read,
-                                 uint8_t number_of_bytes_to_read,
-                                 fiid_obj_t obj_cmd_rq);
-  
-int fill_cmd_dcmi_get_dcmi_sensor_info (uint8_t sensor_type,
-                                        uint8_t entity_id,
-                                        uint8_t entity_instance,
-                                        uint8_t entity_instance_start,
-                                        fiid_obj_t obj_cmd_rq);
-  
 #ifdef __cplusplus
 }
 #endif

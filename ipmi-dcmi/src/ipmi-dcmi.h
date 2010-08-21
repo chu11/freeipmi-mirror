@@ -37,17 +37,17 @@
 enum ipmi_dcmi_argp_option_keys
   {
     GET_DCMI_CAPABILITY_INFO = 160,
-    GET_SYSTEM_POWER_STATISTICS = 161,
-    GET_ENHANCED_SYSTEM_POWER_STATISTICS = 162,
-    GET_POWER_LIMIT = 163,
-    SET_POWER_LIMIT = 164,
-    EXCEPTION_ACTIONS = 165,
-    POWER_LIMIT_REQUESTED = 166,
-    CORRECTION_TIME_LIMIT = 167,
-    STATISTICS_SAMPLING_PERIOD = 168,
-    ACTIVATE_DEACTIVATE_POWER_LIMIT = 169,
-    GET_ASSET_TAG = 170,
-    GET_DCMI_SENSOR_INFO = 171,
+    GET_ASSET_TAG = 161,
+    GET_DCMI_SENSOR_INFO = 162,
+    GET_SYSTEM_POWER_STATISTICS = 163,
+    GET_ENHANCED_SYSTEM_POWER_STATISTICS = 164,
+    GET_POWER_LIMIT = 165,
+    SET_POWER_LIMIT = 166,
+    EXCEPTION_ACTIONS = 167,
+    POWER_LIMIT_REQUESTED = 168,
+    CORRECTION_TIME_LIMIT = 169,
+    STATISTICS_SAMPLING_PERIOD = 170,
+    ACTIVATE_DEACTIVATE_POWER_LIMIT = 171,
     INTERPRET_OEM_DATA_KEY = 172,
   };
 
@@ -56,6 +56,8 @@ struct ipmi_dcmi_arguments
   struct common_cmd_args common;
   struct hostrange_cmd_args hostrange;
   int get_dcmi_capability_info;
+  int get_asset_tag;
+  int get_dcmi_sensor_info;
   int get_system_power_statistics;
   int get_enhanced_system_power_statistics;
   int get_power_limit;
@@ -70,8 +72,6 @@ struct ipmi_dcmi_arguments
   uint16_t statistics_sampling_period_arg;
   int activate_deactivate_power_limit;
   uint8_t activate_deactivate_power_limit_arg;
-  int get_asset_tag;
-  int get_dcmi_sensor_info;
   int interpret_oem_data;
 };
 

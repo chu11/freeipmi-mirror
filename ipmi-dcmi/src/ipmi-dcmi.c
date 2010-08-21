@@ -1004,6 +1004,298 @@ get_dcmi_capability_info (ipmi_dcmi_state_data_t *state_data)
 }
 
 static int
+get_asset_tag (ipmi_dcmi_state_data_t *state_data)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t asset_tag_data[IPMI_DCMI_MAX_ASSET_TAG_LENGTH + 1];
+  int asset_tag_data_len;
+  unsigned int asset_tag_data_offset = 0;
+  uint8_t total_asset_tag_length = 0;
+  uint8_t bytes_to_read = IPMI_DCMI_ASSET_TAG_NUMBER_OF_BYTES_TO_READ_MAX;
+  ipmi_fru_parse_ctx_t fru_parse_ctx = NULL;
+  int rv = -1;
+
+  assert (state_data);
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_dcmi_get_asset_tag_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  memset (asset_tag_data, '\0', IPMI_DCMI_MAX_ASSET_TAG_LENGTH + 1);
+
+  while (1)
+    {
+      uint64_t val;
+
+      if (!asset_tag_data_offset
+          || ((total_asset_tag_length - asset_tag_data_offset) >= IPMI_DCMI_ASSET_TAG_NUMBER_OF_BYTES_TO_READ_MAX))
+        bytes_to_read = IPMI_DCMI_ASSET_TAG_NUMBER_OF_BYTES_TO_READ_MAX;
+      else 
+        bytes_to_read = total_asset_tag_length - asset_tag_data_offset;
+      
+      if (ipmi_cmd_dcmi_get_asset_tag (state_data->ipmi_ctx,
+                                       asset_tag_data_offset,
+                                       bytes_to_read,
+                                       obj_cmd_rs) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_cmd_dcmi_get_asset_tag: %s\n",
+                           ipmi_ctx_errormsg (state_data->ipmi_ctx));
+          goto cleanup;
+        }
+
+      if (FIID_OBJ_GET (obj_cmd_rs,
+                        "total_asset_tag_length",
+                        &val) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_get: 'total_asset_tag_length': %s\n",
+                           fiid_obj_errormsg (obj_cmd_rs));
+          goto cleanup;
+        }
+      total_asset_tag_length = val;
+
+      if (!total_asset_tag_length)
+        break;
+
+      if ((asset_tag_data_len = fiid_obj_get_data (obj_cmd_rs,
+                                                   "data",
+                                                   asset_tag_data + asset_tag_data_offset,
+                                                   IPMI_DCMI_MAX_ASSET_TAG_LENGTH - asset_tag_data_offset)) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_get_data: 'data': %s\n",
+                           fiid_obj_errormsg (obj_cmd_rs));
+          goto cleanup;
+        }
+      asset_tag_data_offset += asset_tag_data_len;
+
+      if (asset_tag_data_offset >= total_asset_tag_length)
+        break;
+    }
+
+  /* HLiebig:
+   *
+   * Output as simple English/Latin-1 string, nothing is specified in the 
+   * DCMI 1.0 spec. 
+   *
+   * achu:
+   *
+   * Spec suggests it is not encoded as FRU string, but this is not the case.
+   */
+  if (total_asset_tag_length)
+    pstdout_printf (state_data->pstate,
+                    "%s\n",
+                    asset_tag_data);
+
+  rv = 0;
+ cleanup:
+  ipmi_fru_parse_ctx_destroy (fru_parse_ctx);
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
+static char *
+_entity_string (uint8_t entity_id)
+{
+  assert (IPMI_DCMI_ENTITY_ID_VALID (entity_id));
+
+  if (entity_id == IPMI_DCMI_ENTITY_ID_INLET_TEMPERATURE)
+    return IPMI_DCMI_ENTITY_ID_INLET_TEMPERATURE_STR;
+  else if (entity_id == IPMI_DCMI_ENTITY_ID_CPU_TEMPERATURE)
+    return IPMI_DCMI_ENTITY_ID_CPU_TEMPERATURE_STR;
+  else
+    return IPMI_DCMI_ENTITY_ID_BASEBOARD_TEMPERATURE_STR;
+}
+
+static int
+_sensor_info_output (ipmi_dcmi_state_data_t *state_data,
+                     uint8_t sensor_type,
+                     uint8_t entity_id)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t entity_instance_start = 0x01; /* starts at 1, not 0 */
+  unsigned int total_entity_instances_parsed = 0;
+  int rv = -1;
+
+  assert (state_data);
+  assert (IPMI_SENSOR_TYPE_VALID (sensor_type));
+  assert (IPMI_DCMI_ENTITY_ID_VALID (entity_id));
+  
+  pstdout_printf (state_data->pstate,
+                  "%s SDR Record IDs\n",
+                  _entity_string (entity_id));
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_dcmi_get_dcmi_sensor_info_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  while (1)
+    {
+      uint64_t val;
+      uint8_t total_number_of_available_instances;
+      uint8_t number_of_record_ids_in_this_response;
+      uint8_t sdr_record_ids[IPMI_DCMI_MAX_RECORD_IDS_BUFLEN];
+      int sdr_record_ids_len;
+      int i;
+
+      fiid_obj_clear (obj_cmd_rs);
+
+      if (ipmi_cmd_dcmi_get_dcmi_sensor_info (state_data->ipmi_ctx,
+                                              sensor_type,
+                                              entity_id,
+                                              IPMI_DCMI_ENTITY_INSTANCE_ALL,
+                                              entity_instance_start,
+                                              obj_cmd_rs) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_cmd_dcmi_get_dcmi_sensor_info: %s\n",
+                           ipmi_ctx_errormsg (state_data->ipmi_ctx));
+          goto cleanup;
+        }
+
+      if (FIID_OBJ_GET (obj_cmd_rs,
+                        "total_number_of_available_instances",
+                        &val) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_get: 'total_number_of_available_instances': %s\n",
+                           fiid_obj_errormsg (obj_cmd_rs));
+          goto cleanup;
+        }
+      total_number_of_available_instances = val;
+
+      if (!total_number_of_available_instances)
+        break;
+
+      if (FIID_OBJ_GET (obj_cmd_rs,
+                        "number_of_record_ids_in_this_response",
+                        &val) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_get: 'number_of_record_ids_in_this_response': %s\n",
+                           fiid_obj_errormsg (obj_cmd_rs));
+          goto cleanup;
+        }
+      number_of_record_ids_in_this_response = val;
+
+      if (!number_of_record_ids_in_this_response)
+        break;
+
+      if ((sdr_record_ids_len = fiid_obj_get_data (obj_cmd_rs,
+                                                   "sdr_record_ids",
+                                                   sdr_record_ids,
+                                                   IPMI_DCMI_MAX_RECORD_IDS_BUFLEN)) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_get_data: 'sdr_record_ids': %s\n",
+                           fiid_obj_errormsg (obj_cmd_rs));
+          goto cleanup;
+        }
+      
+      if (sdr_record_ids_len % 2)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "invalid sdr_record_ids length returned: %u\n",
+                           sdr_record_ids_len);
+          goto cleanup;
+        }
+
+      if (number_of_record_ids_in_this_response != (sdr_record_ids_len / 2))
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "invalid sdr_record_ids returned: %u != %u\n",
+                           number_of_record_ids_in_this_response,
+                           (sdr_record_ids_len / 2));
+          goto cleanup;
+        }
+
+      for (i = 0; i < (sdr_record_ids_len / 2); i += 2)
+        {
+          uint16_t record_id = 0;
+          
+          record_id |= sdr_record_ids[0];
+          record_id |= (sdr_record_ids[1] << 8);
+          
+          pstdout_printf (state_data->pstate,
+                          "%u\n",
+                          record_id);
+          total_entity_instances_parsed++;
+        }
+      
+      /* achu: entity IDs are returned sequentially?  If not, I'm not
+       * sure how this API can even work, you wouldn't know where to
+       * start the next time around.  Hopefully this is a correct
+       * assumption
+       */
+      /* HLiebig: Note: Intel simply increments the offset by 8 (max number of 
+       * SDR Id's per response.
+       * See dcmitool from www.intel.com/go/DCMI (a modified ipmitool)
+       */
+  
+      entity_instance_start += number_of_record_ids_in_this_response;
+
+      if (total_entity_instances_parsed >= total_number_of_available_instances)
+        break;
+    }
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
+static int
+get_dcmi_sensor_info (ipmi_dcmi_state_data_t *state_data)
+{
+  int rv = -1;
+
+  assert (state_data);
+
+  if (_sensor_info_output (state_data,
+                           IPMI_SENSOR_TYPE_TEMPERATURE,
+                           IPMI_DCMI_ENTITY_ID_INLET_TEMPERATURE) < 0)
+    goto cleanup;
+
+  pstdout_printf (state_data->pstate, "\n");
+
+  if (_sensor_info_output (state_data,
+                           IPMI_SENSOR_TYPE_TEMPERATURE,
+                           IPMI_DCMI_ENTITY_ID_CPU_TEMPERATURE) < 0)
+    goto cleanup;
+  
+  pstdout_printf (state_data->pstate, "\n");
+
+  if (_sensor_info_output (state_data,
+                           IPMI_SENSOR_TYPE_TEMPERATURE,
+                           IPMI_DCMI_ENTITY_ID_BASEBOARD_TEMPERATURE) < 0)
+    goto cleanup;
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+static int
 _output_power_statistics (ipmi_dcmi_state_data_t *state_data,
                           uint8_t mode,
                           uint8_t mode_attributes)
@@ -1647,298 +1939,6 @@ activate_deactivate_power_limit (ipmi_dcmi_state_data_t *state_data)
 }
 
 static int
-get_asset_tag (ipmi_dcmi_state_data_t *state_data)
-{
-  fiid_obj_t obj_cmd_rs = NULL;
-  uint8_t asset_tag_data[IPMI_DCMI_MAX_ASSET_TAG_LENGTH + 1];
-  int asset_tag_data_len;
-  unsigned int asset_tag_data_offset = 0;
-  uint8_t total_asset_tag_length = 0;
-  uint8_t bytes_to_read = IPMI_DCMI_ASSET_TAG_NUMBER_OF_BYTES_TO_READ_MAX;
-  ipmi_fru_parse_ctx_t fru_parse_ctx = NULL;
-  int rv = -1;
-
-  assert (state_data);
-
-  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_dcmi_get_asset_tag_rs)))
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_create: %s\n",
-                       strerror (errno));
-      goto cleanup;
-    }
-
-  memset (asset_tag_data, '\0', IPMI_DCMI_MAX_ASSET_TAG_LENGTH + 1);
-
-  while (1)
-    {
-      uint64_t val;
-
-      if (!asset_tag_data_offset
-          || ((total_asset_tag_length - asset_tag_data_offset) >= IPMI_DCMI_ASSET_TAG_NUMBER_OF_BYTES_TO_READ_MAX))
-        bytes_to_read = IPMI_DCMI_ASSET_TAG_NUMBER_OF_BYTES_TO_READ_MAX;
-      else 
-        bytes_to_read = total_asset_tag_length - asset_tag_data_offset;
-      
-      if (ipmi_cmd_dcmi_get_asset_tag (state_data->ipmi_ctx,
-                                       asset_tag_data_offset,
-                                       bytes_to_read,
-                                       obj_cmd_rs) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "ipmi_cmd_dcmi_get_asset_tag: %s\n",
-                           ipmi_ctx_errormsg (state_data->ipmi_ctx));
-          goto cleanup;
-        }
-
-      if (FIID_OBJ_GET (obj_cmd_rs,
-                        "total_asset_tag_length",
-                        &val) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "fiid_obj_get: 'total_asset_tag_length': %s\n",
-                           fiid_obj_errormsg (obj_cmd_rs));
-          goto cleanup;
-        }
-      total_asset_tag_length = val;
-
-      if (!total_asset_tag_length)
-        break;
-
-      if ((asset_tag_data_len = fiid_obj_get_data (obj_cmd_rs,
-                                                   "data",
-                                                   asset_tag_data + asset_tag_data_offset,
-                                                   IPMI_DCMI_MAX_ASSET_TAG_LENGTH - asset_tag_data_offset)) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "fiid_obj_get_data: 'data': %s\n",
-                           fiid_obj_errormsg (obj_cmd_rs));
-          goto cleanup;
-        }
-      asset_tag_data_offset += asset_tag_data_len;
-
-      if (asset_tag_data_offset >= total_asset_tag_length)
-        break;
-    }
-
-  /* HLiebig:
-   *
-   * Output as simple English/Latin-1 string, nothing is specified in the 
-   * DCMI 1.0 spec. 
-   *
-   * achu:
-   *
-   * Spec suggests it is not encoded as FRU string, but this is not the case.
-   */
-  if (total_asset_tag_length)
-    pstdout_printf (state_data->pstate,
-                    "%s\n",
-                    asset_tag_data);
-
-  rv = 0;
- cleanup:
-  ipmi_fru_parse_ctx_destroy (fru_parse_ctx);
-  fiid_obj_destroy (obj_cmd_rs);
-  return (rv);
-}
-
-static char *
-_entity_string (uint8_t entity_id)
-{
-  assert (IPMI_DCMI_ENTITY_ID_VALID (entity_id));
-
-  if (entity_id == IPMI_DCMI_ENTITY_ID_INLET_TEMPERATURE)
-    return IPMI_DCMI_ENTITY_ID_INLET_TEMPERATURE_STR;
-  else if (entity_id == IPMI_DCMI_ENTITY_ID_CPU_TEMPERATURE)
-    return IPMI_DCMI_ENTITY_ID_CPU_TEMPERATURE_STR;
-  else
-    return IPMI_DCMI_ENTITY_ID_BASEBOARD_TEMPERATURE_STR;
-}
-
-static int
-_sensor_info_output (ipmi_dcmi_state_data_t *state_data,
-                     uint8_t sensor_type,
-                     uint8_t entity_id)
-{
-  fiid_obj_t obj_cmd_rs = NULL;
-  uint8_t entity_instance_start = 0x01; /* starts at 1, not 0 */
-  unsigned int total_entity_instances_parsed = 0;
-  int rv = -1;
-
-  assert (state_data);
-  assert (IPMI_SENSOR_TYPE_VALID (sensor_type));
-  assert (IPMI_DCMI_ENTITY_ID_VALID (entity_id));
-  
-  pstdout_printf (state_data->pstate,
-                  "%s SDR Record IDs\n",
-                  _entity_string (entity_id));
-
-  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_dcmi_get_dcmi_sensor_info_rs)))
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_create: %s\n",
-                       strerror (errno));
-      goto cleanup;
-    }
-
-  while (1)
-    {
-      uint64_t val;
-      uint8_t total_number_of_available_instances;
-      uint8_t number_of_record_ids_in_this_response;
-      uint8_t sdr_record_ids[IPMI_DCMI_MAX_RECORD_IDS_BUFLEN];
-      int sdr_record_ids_len;
-      int i;
-
-      fiid_obj_clear (obj_cmd_rs);
-
-      if (ipmi_cmd_dcmi_get_dcmi_sensor_info (state_data->ipmi_ctx,
-                                              sensor_type,
-                                              entity_id,
-                                              IPMI_DCMI_ENTITY_INSTANCE_ALL,
-                                              entity_instance_start,
-                                              obj_cmd_rs) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "ipmi_cmd_dcmi_get_dcmi_sensor_info: %s\n",
-                           ipmi_ctx_errormsg (state_data->ipmi_ctx));
-          goto cleanup;
-        }
-
-      if (FIID_OBJ_GET (obj_cmd_rs,
-                        "total_number_of_available_instances",
-                        &val) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "fiid_obj_get: 'total_number_of_available_instances': %s\n",
-                           fiid_obj_errormsg (obj_cmd_rs));
-          goto cleanup;
-        }
-      total_number_of_available_instances = val;
-
-      if (!total_number_of_available_instances)
-        break;
-
-      if (FIID_OBJ_GET (obj_cmd_rs,
-                        "number_of_record_ids_in_this_response",
-                        &val) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "fiid_obj_get: 'number_of_record_ids_in_this_response': %s\n",
-                           fiid_obj_errormsg (obj_cmd_rs));
-          goto cleanup;
-        }
-      number_of_record_ids_in_this_response = val;
-
-      if (!number_of_record_ids_in_this_response)
-        break;
-
-      if ((sdr_record_ids_len = fiid_obj_get_data (obj_cmd_rs,
-                                                   "sdr_record_ids",
-                                                   sdr_record_ids,
-                                                   IPMI_DCMI_MAX_RECORD_IDS_BUFLEN)) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "fiid_obj_get_data: 'sdr_record_ids': %s\n",
-                           fiid_obj_errormsg (obj_cmd_rs));
-          goto cleanup;
-        }
-      
-      if (sdr_record_ids_len % 2)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "invalid sdr_record_ids length returned: %u\n",
-                           sdr_record_ids_len);
-          goto cleanup;
-        }
-
-      if (number_of_record_ids_in_this_response != (sdr_record_ids_len / 2))
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "invalid sdr_record_ids returned: %u != %u\n",
-                           number_of_record_ids_in_this_response,
-                           (sdr_record_ids_len / 2));
-          goto cleanup;
-        }
-
-      for (i = 0; i < (sdr_record_ids_len / 2); i += 2)
-        {
-          uint16_t record_id = 0;
-          
-          record_id |= sdr_record_ids[0];
-          record_id |= (sdr_record_ids[1] << 8);
-          
-          pstdout_printf (state_data->pstate,
-                          "%u\n",
-                          record_id);
-          total_entity_instances_parsed++;
-        }
-      
-      /* achu: entity IDs are returned sequentially?  If not, I'm not
-       * sure how this API can even work, you wouldn't know where to
-       * start the next time around.  Hopefully this is a correct
-       * assumption
-       */
-      /* HLiebig: Note: Intel simply increments the offset by 8 (max number of 
-       * SDR Id's per response.
-       * See dcmitool from www.intel.com/go/DCMI (a modified ipmitool)
-       */
-  
-      entity_instance_start += number_of_record_ids_in_this_response;
-
-      if (total_entity_instances_parsed >= total_number_of_available_instances)
-        break;
-    }
-
-  rv = 0;
- cleanup:
-  fiid_obj_destroy (obj_cmd_rs);
-  return (rv);
-}
-
-static int
-get_dcmi_sensor_info (ipmi_dcmi_state_data_t *state_data)
-{
-  int rv = -1;
-
-  assert (state_data);
-
-  if (_sensor_info_output (state_data,
-                           IPMI_SENSOR_TYPE_TEMPERATURE,
-                           IPMI_DCMI_ENTITY_ID_INLET_TEMPERATURE) < 0)
-    goto cleanup;
-
-  pstdout_printf (state_data->pstate, "\n");
-
-  if (_sensor_info_output (state_data,
-                           IPMI_SENSOR_TYPE_TEMPERATURE,
-                           IPMI_DCMI_ENTITY_ID_CPU_TEMPERATURE) < 0)
-    goto cleanup;
-  
-  pstdout_printf (state_data->pstate, "\n");
-
-  if (_sensor_info_output (state_data,
-                           IPMI_SENSOR_TYPE_TEMPERATURE,
-                           IPMI_DCMI_ENTITY_ID_BASEBOARD_TEMPERATURE) < 0)
-    goto cleanup;
-
-  rv = 0;
- cleanup:
-  return (rv);
-}
-
-static int
 run_cmd_args (ipmi_dcmi_state_data_t *state_data)
 {
   struct ipmi_dcmi_arguments *args;
@@ -1965,6 +1965,12 @@ run_cmd_args (ipmi_dcmi_state_data_t *state_data)
   if (args->get_enhanced_system_power_statistics)
     return (get_enhanced_system_power_statistics (state_data));
 
+  if (args->get_asset_tag)
+    return (get_asset_tag (state_data));
+
+  if (args->get_dcmi_sensor_info)
+    return (get_dcmi_sensor_info (state_data));
+
   if (args->get_power_limit)
     return (get_power_limit (state_data));
 
@@ -1973,12 +1979,6 @@ run_cmd_args (ipmi_dcmi_state_data_t *state_data)
 
   if (args->activate_deactivate_power_limit)
     return (activate_deactivate_power_limit (state_data));
-
-  if (args->get_asset_tag)
-    return (get_asset_tag (state_data));
-
-  if (args->get_dcmi_sensor_info)
-    return (get_dcmi_sensor_info (state_data));
 
   rv = 0;
  cleanup:

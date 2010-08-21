@@ -74,28 +74,28 @@ static struct argp_option cmdline_options[] =
     ARGP_COMMON_OPTIONS_DEBUG,
     { "get-dcmi-capability-info", GET_DCMI_CAPABILITY_INFO, NULL, 0,
       "Get DCMI capability information.", 30},
-    { "get-system-power-statistics", GET_SYSTEM_POWER_STATISTICS, NULL, 0,
-      "Get system power statistics.", 31},
-    { "get-enhanced-system-power-statistics", GET_ENHANCED_SYSTEM_POWER_STATISTICS, NULL, 0,
-      "Get enhanced system power statistics.", 32},
-    { "get-power-limit", GET_POWER_LIMIT, NULL, 0,
-      "Get power limit information.", 33},
-    { "set-power-limit", SET_POWER_LIMIT, NULL, 0,
-      "Set power limit configuration.", 34},
-    { "exception-actions", EXCEPTION_ACTIONS, "BITMASK", 0,
-      "Specify exception actions for set power limit configuration.", 35},
-    { "power-limit-requested", POWER_LIMIT_REQUESTED, "WATTS", 0,
-      "Specify power limit for set power limit configuration.", 36},
-    { "correction-time-limit", CORRECTION_TIME_LIMIT, "MILLISECONDS", 0,
-      "Specify correction time limit for set power limit configuration.", 37},
-    { "statistics-sampling-period", STATISTICS_SAMPLING_PERIOD, "SECONDS", 0,
-      "Specify management application statistics sampling period for set power limit configuration.", 38},
-    { "activate-deactivate-power-limit", ACTIVATE_DEACTIVATE_POWER_LIMIT, "ACTION", 0,
-      "Activate or deactivate power limit.", 39},
     { "get-asset-tag", GET_ASSET_TAG, NULL, 0,
-      "Get asset tag.", 40},
+      "Get asset tag.", 31},
     { "get-dcmi-sensor-info", GET_DCMI_SENSOR_INFO, NULL, 0,
-      "Get DCMI sensor information.", 41},
+      "Get DCMI sensor information.", 32},
+    { "get-system-power-statistics", GET_SYSTEM_POWER_STATISTICS, NULL, 0,
+      "Get system power statistics.", 33},
+    { "get-enhanced-system-power-statistics", GET_ENHANCED_SYSTEM_POWER_STATISTICS, NULL, 0,
+      "Get enhanced system power statistics.", 34},
+    { "get-power-limit", GET_POWER_LIMIT, NULL, 0,
+      "Get power limit information.", 35},
+    { "set-power-limit", SET_POWER_LIMIT, NULL, 0,
+      "Set power limit configuration.", 36},
+    { "exception-actions", EXCEPTION_ACTIONS, "BITMASK", 0,
+      "Specify exception actions for set power limit configuration.", 37},
+    { "power-limit-requested", POWER_LIMIT_REQUESTED, "WATTS", 0,
+      "Specify power limit for set power limit configuration.", 38},
+    { "correction-time-limit", CORRECTION_TIME_LIMIT, "MILLISECONDS", 0,
+      "Specify correction time limit for set power limit configuration.", 39},
+    { "statistics-sampling-period", STATISTICS_SAMPLING_PERIOD, "SECONDS", 0,
+      "Specify management application statistics sampling period for set power limit configuration.", 40},
+    { "activate-deactivate-power-limit", ACTIVATE_DEACTIVATE_POWER_LIMIT, "ACTION", 0,
+      "Activate or deactivate power limit.", 41},
     { "interpret-oem-data", INTERPRET_OEM_DATA_KEY, NULL, 0,
       "Attempt to interpret OEM data.", 42},
     { NULL, 0, NULL, 0, NULL, 0}
@@ -126,6 +126,12 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     {
     case GET_DCMI_CAPABILITY_INFO:
       cmd_args->get_dcmi_capability_info++;
+      break;
+    case GET_ASSET_TAG:
+      cmd_args->get_asset_tag++;
+      break;
+    case GET_DCMI_SENSOR_INFO:
+      cmd_args->get_dcmi_sensor_info++;
       break;
     case GET_SYSTEM_POWER_STATISTICS:
       cmd_args->get_system_power_statistics++;
@@ -221,12 +227,6 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
         }
       cmd_args->activate_deactivate_power_limit++;
       break;
-    case GET_ASSET_TAG:
-      cmd_args->get_asset_tag++;
-      break;
-    case GET_DCMI_SENSOR_INFO:
-      cmd_args->get_dcmi_sensor_info++;
-      break;
     case INTERPRET_OEM_DATA_KEY:
       cmd_args->interpret_oem_data = 1;
       break;
@@ -276,13 +276,13 @@ static void
 _ipmi_dcmi_args_validate (struct ipmi_dcmi_arguments *cmd_args)
 {
   if (!cmd_args->get_dcmi_capability_info
+      && !cmd_args->get_asset_tag
+      && !cmd_args->get_dcmi_sensor_info
       && !cmd_args->get_system_power_statistics
       && !cmd_args->get_enhanced_system_power_statistics
       && !cmd_args->get_power_limit
       && !cmd_args->set_power_limit
-      && !cmd_args->activate_deactivate_power_limit
-      && !cmd_args->get_asset_tag
-      && !cmd_args->get_dcmi_sensor_info)
+      && !cmd_args->activate_deactivate_power_limit)
     {
       fprintf (stderr,
                "No command specified.\n");
@@ -290,13 +290,13 @@ _ipmi_dcmi_args_validate (struct ipmi_dcmi_arguments *cmd_args)
     }
   
   if ((cmd_args->get_dcmi_capability_info
+       + cmd_args->get_asset_tag
+       + cmd_args->get_dcmi_sensor_info
        + cmd_args->get_system_power_statistics
        + cmd_args->get_enhanced_system_power_statistics
        + cmd_args->get_power_limit
        + cmd_args->set_power_limit
-       + cmd_args->activate_deactivate_power_limit
-       + cmd_args->get_asset_tag
-       + cmd_args->get_dcmi_sensor_info) > 1)
+       + cmd_args->activate_deactivate_power_limit) > 1)
     {
       fprintf (stderr,
                "Multiple commands specified.\n");
@@ -322,6 +322,8 @@ ipmi_dcmi_argp_parse (int argc, char **argv, struct ipmi_dcmi_arguments *cmd_arg
   init_hostrange_cmd_args (&(cmd_args->hostrange));
   
   cmd_args->get_dcmi_capability_info = 0;
+  cmd_args->get_asset_tag = 0;
+  cmd_args->get_dcmi_sensor_info = 0;
   cmd_args->get_system_power_statistics = 0;
   cmd_args->get_enhanced_system_power_statistics = 0;
   cmd_args->get_power_limit = 0;
@@ -331,8 +333,6 @@ ipmi_dcmi_argp_parse (int argc, char **argv, struct ipmi_dcmi_arguments *cmd_arg
   cmd_args->correction_time_limit = 0;
   cmd_args->statistics_sampling_period = 0;
   cmd_args->activate_deactivate_power_limit = 0;
-  cmd_args->get_asset_tag = 0;
-  cmd_args->get_dcmi_sensor_info = 0;
   cmd_args->interpret_oem_data = 0;
 
   argp_parse (&cmdline_config_file_argp,

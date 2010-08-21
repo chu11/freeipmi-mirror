@@ -93,6 +93,7 @@ o libfreeipmi
   - 'sel-parse' library now does not require valid ipmi_ctx.
     Functions performing ipmi communication will simply error.
   - Rework 'intel20' workaround to not allow a non two-part authentication.
+  - Add DCMI 1.1 support.
   - Support more IPMI templates.
   - Fix some API differences from spec.
   - Fix some template bugs/typos.
