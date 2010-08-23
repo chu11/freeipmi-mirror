@@ -59,8 +59,6 @@
 
 #define IPMI_DCMI_ROLLING_AVERAGE_TIME_PERIOD_BUFLEN 4096
 
-#define IPMI_DCMI_MAX_ASSET_TAG_LENGTH  512
-
 #define IPMI_DCMI_MAX_RECORD_IDS_BUFLEN 1024
 
 #define IPMI_DCMI_ERROR_BUFLEN          1024
@@ -1008,11 +1006,10 @@ get_asset_tag (ipmi_dcmi_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t asset_tag_data[IPMI_DCMI_MAX_ASSET_TAG_LENGTH + 1];
-  int asset_tag_data_len;
-  unsigned int asset_tag_data_offset = 0;
+  int data_len;
+  unsigned int offset = 0;
   uint8_t total_asset_tag_length = 0;
   uint8_t bytes_to_read = IPMI_DCMI_ASSET_TAG_NUMBER_OF_BYTES_TO_READ_MAX;
-  ipmi_fru_parse_ctx_t fru_parse_ctx = NULL;
   int rv = -1;
 
   assert (state_data);
@@ -1032,14 +1029,14 @@ get_asset_tag (ipmi_dcmi_state_data_t *state_data)
     {
       uint64_t val;
 
-      if (!asset_tag_data_offset
-          || ((total_asset_tag_length - asset_tag_data_offset) >= IPMI_DCMI_ASSET_TAG_NUMBER_OF_BYTES_TO_READ_MAX))
+      if (!offset
+          || ((total_asset_tag_length - offset) >= IPMI_DCMI_ASSET_TAG_NUMBER_OF_BYTES_TO_READ_MAX))
         bytes_to_read = IPMI_DCMI_ASSET_TAG_NUMBER_OF_BYTES_TO_READ_MAX;
       else 
-        bytes_to_read = total_asset_tag_length - asset_tag_data_offset;
+        bytes_to_read = total_asset_tag_length - offset;
       
       if (ipmi_cmd_dcmi_get_asset_tag (state_data->ipmi_ctx,
-                                       asset_tag_data_offset,
+                                       offset,
                                        bytes_to_read,
                                        obj_cmd_rs) < 0)
         {
@@ -1065,10 +1062,10 @@ get_asset_tag (ipmi_dcmi_state_data_t *state_data)
       if (!total_asset_tag_length)
         break;
 
-      if ((asset_tag_data_len = fiid_obj_get_data (obj_cmd_rs,
-                                                   "data",
-                                                   asset_tag_data + asset_tag_data_offset,
-                                                   IPMI_DCMI_MAX_ASSET_TAG_LENGTH - asset_tag_data_offset)) < 0)
+      if ((data_len = fiid_obj_get_data (obj_cmd_rs,
+                                         "data",
+                                         asset_tag_data + offset,
+                                         IPMI_DCMI_MAX_ASSET_TAG_LENGTH - offset)) < 0)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
@@ -1076,9 +1073,9 @@ get_asset_tag (ipmi_dcmi_state_data_t *state_data)
                            fiid_obj_errormsg (obj_cmd_rs));
           goto cleanup;
         }
-      asset_tag_data_offset += asset_tag_data_len;
+      offset += data_len;
 
-      if (asset_tag_data_offset >= total_asset_tag_length)
+      if (offset >= total_asset_tag_length)
         break;
     }
 
@@ -1089,7 +1086,7 @@ get_asset_tag (ipmi_dcmi_state_data_t *state_data)
    *
    * achu:
    *
-   * Spec suggests it is not encoded as FRU string, but this is not the case.
+   * Spec suggests it is encoded as FRU string, but this is not the case.
    */
   if (total_asset_tag_length)
     pstdout_printf (state_data->pstate,
@@ -1098,7 +1095,279 @@ get_asset_tag (ipmi_dcmi_state_data_t *state_data)
 
   rv = 0;
  cleanup:
-  ipmi_fru_parse_ctx_destroy (fru_parse_ctx);
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
+static int
+set_asset_tag (ipmi_dcmi_state_data_t *state_data)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  unsigned int offset = 0;
+  char data_buf[IPMI_DCMI_MAX_ASSET_TAG_LENGTH + 1];
+  unsigned int data_len = IPMI_DCMI_MAX_ASSET_TAG_LENGTH;
+  uint8_t bytes_to_write = IPMI_DCMI_ASSET_TAG_NUMBER_OF_BYTES_TO_WRITE_MAX;
+  int rv = -1;
+
+  assert (state_data);
+
+  /* achu:
+   *
+   * DCMI 1.1 spec is unclear, I am assuming the
+   * "total_asset_tag_length_written" is the number of bytes just
+   * written.
+   *
+   * I am assuming we need to clear the entire buffer, so we write the
+   * full buffer, NUL byte extended.
+   */
+
+  memset (data_buf, '\0', IPMI_DCMI_MAX_ASSET_TAG_LENGTH + 1);
+
+  memcpy (data_buf,
+          state_data->prog_data->args->set_asset_tag_arg,
+          strlen (state_data->prog_data->args->set_asset_tag_arg));
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_dcmi_set_asset_tag_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  while (1)
+    {
+      uint64_t val;
+
+      if (!offset
+          || ((data_len - offset) >= IPMI_DCMI_ASSET_TAG_NUMBER_OF_BYTES_TO_WRITE_MAX))
+        bytes_to_write = IPMI_DCMI_ASSET_TAG_NUMBER_OF_BYTES_TO_WRITE_MAX;
+      else 
+        bytes_to_write = data_len - offset;
+      
+      if (ipmi_cmd_dcmi_set_asset_tag (state_data->ipmi_ctx,
+                                       offset,
+                                       bytes_to_write,
+                                       data_buf,
+                                       data_len,
+                                       obj_cmd_rs) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_cmd_dcmi_set_asset_tag: %s\n",
+                           ipmi_ctx_errormsg (state_data->ipmi_ctx));
+          goto cleanup;
+        }
+
+      if (FIID_OBJ_GET (obj_cmd_rs,
+                        "total_asset_tag_length_written",
+                        &val) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_get: 'total_asset_tag_length': %s\n",
+                           fiid_obj_errormsg (obj_cmd_rs));
+          goto cleanup;
+        }
+
+      /* make sure response is reasonable, some vendors may return the
+       * max length of the internal buffer.  If we get an unreasonable
+       * number, just assume bytes_to_write is what is added to the
+       * offset.
+       */
+      if (val > bytes_to_write)
+        offset += bytes_to_write;
+      else
+        offset += val;
+
+      if (offset >= data_len)
+        break;
+    }
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
+static int
+get_management_controller_identifier_string (ipmi_dcmi_state_data_t *state_data)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t management_controller_identifier_string_data[IPMI_DCMI_MAX_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_LENGTH + 1];
+  int data_len;
+  unsigned int offset = 0;
+  uint8_t total_length = 0;
+  uint8_t bytes_to_read = IPMI_DCMI_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_NUMBER_OF_BYTES_TO_READ_MAX;
+  int rv = -1;
+
+  assert (state_data);
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_dcmi_get_management_controller_identifier_string_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  memset (management_controller_identifier_string_data, '\0', IPMI_DCMI_MAX_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_LENGTH + 1);
+
+  while (1)
+    {
+      uint64_t val;
+
+      if (!offset
+          || ((total_length - offset) >= IPMI_DCMI_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_NUMBER_OF_BYTES_TO_READ_MAX))
+        bytes_to_read = IPMI_DCMI_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_NUMBER_OF_BYTES_TO_READ_MAX;
+      else 
+        bytes_to_read = total_length - offset;
+      
+      if (ipmi_cmd_dcmi_get_management_controller_identifier_string (state_data->ipmi_ctx,
+                                       offset,
+                                       bytes_to_read,
+                                       obj_cmd_rs) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_cmd_dcmi_get_management_controller_identifier_string: %s\n",
+                           ipmi_ctx_errormsg (state_data->ipmi_ctx));
+          goto cleanup;
+        }
+
+      if (FIID_OBJ_GET (obj_cmd_rs,
+                        "total_length",
+                        &val) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_get: 'total_length': %s\n",
+                           fiid_obj_errormsg (obj_cmd_rs));
+          goto cleanup;
+        }
+      total_length = val;
+
+      if (!total_length)
+        break;
+
+      if ((data_len = fiid_obj_get_data (obj_cmd_rs,
+                                         "data",
+                                         management_controller_identifier_string_data + offset,
+                                         IPMI_DCMI_MAX_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_LENGTH - offset)) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_get_data: 'data': %s\n",
+                           fiid_obj_errormsg (obj_cmd_rs));
+          goto cleanup;
+        }
+      offset += data_len;
+
+      if (offset >= total_length)
+        break;
+    }
+
+  if (total_length)
+    pstdout_printf (state_data->pstate,
+                    "%s\n",
+                    management_controller_identifier_string_data);
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
+static int
+set_management_controller_identifier_string (ipmi_dcmi_state_data_t *state_data)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  unsigned int offset = 0;
+  char data_buf[IPMI_DCMI_MAX_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_LENGTH + 1];
+  unsigned int data_len = IPMI_DCMI_MAX_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_LENGTH;
+  uint8_t bytes_to_write = IPMI_DCMI_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_NUMBER_OF_BYTES_TO_WRITE_MAX;
+  int rv = -1;
+
+  assert (state_data);
+
+  /* achu:
+   *
+   * DCMI 1.1 spec is unclear, I am assuming the
+   * "total_length_written" is the number of bytes just
+   * written.
+   *
+   * I am assuming we need to clear the entire buffer, so we write the
+   * full buffer, NUL byte extended.
+   */
+
+  memset (data_buf, '\0', IPMI_DCMI_MAX_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_LENGTH + 1);
+
+  memcpy (data_buf,
+          state_data->prog_data->args->set_management_controller_identifier_string_arg,
+          strlen (state_data->prog_data->args->set_management_controller_identifier_string_arg));
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_dcmi_set_management_controller_identifier_string_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  while (1)
+    {
+      uint64_t val;
+
+      if (!offset
+          || ((data_len - offset) >= IPMI_DCMI_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_NUMBER_OF_BYTES_TO_WRITE_MAX))
+        bytes_to_write = IPMI_DCMI_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_NUMBER_OF_BYTES_TO_WRITE_MAX;
+      else 
+        bytes_to_write = data_len - offset;
+      
+      if (ipmi_cmd_dcmi_set_management_controller_identifier_string (state_data->ipmi_ctx,
+                                                                     offset,
+                                                                     bytes_to_write,
+                                                                     data_buf,
+                                                                     data_len,
+                                                                     obj_cmd_rs) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_cmd_dcmi_set_management_controller_identifier_string: %s\n",
+                           ipmi_ctx_errormsg (state_data->ipmi_ctx));
+          goto cleanup;
+        }
+
+      if (FIID_OBJ_GET (obj_cmd_rs,
+                        "total_length_written",
+                        &val) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_get: 'total_management_controller_identifier_string_length': %s\n",
+                           fiid_obj_errormsg (obj_cmd_rs));
+          goto cleanup;
+        }
+
+      /* make sure response is reasonable, some vendors may return the
+       * max length of the internal buffer.  If we get an unreasonable
+       * number, just assume bytes_to_write is what is added to the
+       * offset.
+       */
+      if (val > bytes_to_write)
+        offset += bytes_to_write;
+      else
+        offset += val;
+
+      if (offset >= data_len)
+        break;
+    }
+
+  rv = 0;
+ cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
@@ -1967,6 +2236,15 @@ run_cmd_args (ipmi_dcmi_state_data_t *state_data)
 
   if (args->get_asset_tag)
     return (get_asset_tag (state_data));
+
+  if (args->set_asset_tag)
+    return (set_asset_tag (state_data));
+
+  if (args->get_management_controller_identifier_string)
+    return (get_management_controller_identifier_string (state_data));
+
+  if (args->set_management_controller_identifier_string)
+    return (set_management_controller_identifier_string (state_data));
 
   if (args->get_dcmi_sensor_info)
     return (get_dcmi_sensor_info (state_data));

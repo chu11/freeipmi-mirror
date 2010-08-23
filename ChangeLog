@@ -1,5 +1,11 @@
 2010-08-23  Albert Chu <chu11@llnl.gov>
 
+	* ipmi-dcmi/: Support --set-asset-tag,
+	--get-management-controller-identifier-string, and
+	--set-management-controller-identifier-string.
+	
+2010-08-23  Albert Chu <chu11@llnl.gov>
+
 	* bmc-watchdog/, bmc-device/: Fix some documentation
 	typos/inconsistencies.
 	

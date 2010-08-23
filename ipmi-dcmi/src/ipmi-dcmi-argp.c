@@ -76,28 +76,34 @@ static struct argp_option cmdline_options[] =
       "Get DCMI capability information.", 30},
     { "get-asset-tag", GET_ASSET_TAG, NULL, 0,
       "Get asset tag.", 31},
+    { "set-asset-tag", SET_ASSET_TAG, "STRING", 0,
+      "Set asset tag.", 32},
+    { "get-management-controller-identifier-string", GET_ASSET_TAG, NULL, 0,
+      "Get management controller identifier string.", 33},
+    { "set-management-controller-identifier-string", SET_ASSET_TAG, "STRING", 0,
+      "Set management controller identifier string.", 34},
     { "get-dcmi-sensor-info", GET_DCMI_SENSOR_INFO, NULL, 0,
-      "Get DCMI sensor information.", 32},
+      "Get DCMI sensor information.", 35},
     { "get-system-power-statistics", GET_SYSTEM_POWER_STATISTICS, NULL, 0,
-      "Get system power statistics.", 33},
+      "Get system power statistics.", 36},
     { "get-enhanced-system-power-statistics", GET_ENHANCED_SYSTEM_POWER_STATISTICS, NULL, 0,
-      "Get enhanced system power statistics.", 34},
+      "Get enhanced system power statistics.", 37},
     { "get-power-limit", GET_POWER_LIMIT, NULL, 0,
-      "Get power limit information.", 35},
+      "Get power limit information.", 38},
     { "set-power-limit", SET_POWER_LIMIT, NULL, 0,
-      "Set power limit configuration.", 36},
+      "Set power limit configuration.", 39},
     { "exception-actions", EXCEPTION_ACTIONS, "BITMASK", 0,
-      "Specify exception actions for set power limit configuration.", 37},
+      "Specify exception actions for set power limit configuration.", 40},
     { "power-limit-requested", POWER_LIMIT_REQUESTED, "WATTS", 0,
-      "Specify power limit for set power limit configuration.", 38},
+      "Specify power limit for set power limit configuration.", 41},
     { "correction-time-limit", CORRECTION_TIME_LIMIT, "MILLISECONDS", 0,
-      "Specify correction time limit for set power limit configuration.", 39},
+      "Specify correction time limit for set power limit configuration.", 42},
     { "statistics-sampling-period", STATISTICS_SAMPLING_PERIOD, "SECONDS", 0,
-      "Specify management application statistics sampling period for set power limit configuration.", 40},
+      "Specify management application statistics sampling period for set power limit configuration.", 43},
     { "activate-deactivate-power-limit", ACTIVATE_DEACTIVATE_POWER_LIMIT, "ACTION", 0,
-      "Activate or deactivate power limit.", 41},
+      "Activate or deactivate power limit.", 44},
     { "interpret-oem-data", INTERPRET_OEM_DATA_KEY, NULL, 0,
-      "Attempt to interpret OEM data.", 42},
+      "Attempt to interpret OEM data.", 45},
     { NULL, 0, NULL, 0, NULL, 0}
   };
 
@@ -129,6 +135,27 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       break;
     case GET_ASSET_TAG:
       cmd_args->get_asset_tag++;
+      break;
+    case SET_ASSET_TAG:
+      cmd_args->set_asset_tag++;
+      cmd_args->set_asset_tag_arg = arg;
+      if (strlen (cmd_args->set_asset_tag_arg) > IPMI_DCMI_MAX_ASSET_TAG_LENGTH)
+        {
+          fprintf (stderr, "asset tag invalid length\n");
+          exit (1);
+        }
+      break;
+    case GET_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING:
+      cmd_args->get_management_controller_identifier_string++;
+      break;
+    case SET_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING:
+      cmd_args->set_management_controller_identifier_string++;
+      cmd_args->set_management_controller_identifier_string_arg = arg;
+      if (strlen (cmd_args->set_management_controller_identifier_string_arg) > IPMI_DCMI_MAX_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_LENGTH)
+        {
+          fprintf (stderr, "management controller identifier string invalid length\n");
+          exit (1);
+        }
       break;
     case GET_DCMI_SENSOR_INFO:
       cmd_args->get_dcmi_sensor_info++;
@@ -277,6 +304,9 @@ _ipmi_dcmi_args_validate (struct ipmi_dcmi_arguments *cmd_args)
 {
   if (!cmd_args->get_dcmi_capability_info
       && !cmd_args->get_asset_tag
+      && !cmd_args->set_asset_tag
+      && !cmd_args->get_management_controller_identifier_string
+      && !cmd_args->set_management_controller_identifier_string
       && !cmd_args->get_dcmi_sensor_info
       && !cmd_args->get_system_power_statistics
       && !cmd_args->get_enhanced_system_power_statistics
@@ -291,6 +321,9 @@ _ipmi_dcmi_args_validate (struct ipmi_dcmi_arguments *cmd_args)
   
   if ((cmd_args->get_dcmi_capability_info
        + cmd_args->get_asset_tag
+       + cmd_args->set_asset_tag
+       + cmd_args->get_management_controller_identifier_string
+       + cmd_args->set_management_controller_identifier_string
        + cmd_args->get_dcmi_sensor_info
        + cmd_args->get_system_power_statistics
        + cmd_args->get_enhanced_system_power_statistics
@@ -323,6 +356,11 @@ ipmi_dcmi_argp_parse (int argc, char **argv, struct ipmi_dcmi_arguments *cmd_arg
   
   cmd_args->get_dcmi_capability_info = 0;
   cmd_args->get_asset_tag = 0;
+  cmd_args->set_asset_tag = 0;
+  cmd_args->set_asset_tag_arg = NULL;
+  cmd_args->get_management_controller_identifier_string = 0;
+  cmd_args->set_management_controller_identifier_string = 0;
+  cmd_args->set_management_controller_identifier_string_arg = NULL;
   cmd_args->get_dcmi_sensor_info = 0;
   cmd_args->get_system_power_statistics = 0;
   cmd_args->get_enhanced_system_power_statistics = 0;

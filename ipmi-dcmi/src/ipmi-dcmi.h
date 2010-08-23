@@ -38,17 +38,20 @@ enum ipmi_dcmi_argp_option_keys
   {
     GET_DCMI_CAPABILITY_INFO = 160,
     GET_ASSET_TAG = 161,
-    GET_DCMI_SENSOR_INFO = 162,
-    GET_SYSTEM_POWER_STATISTICS = 163,
-    GET_ENHANCED_SYSTEM_POWER_STATISTICS = 164,
-    GET_POWER_LIMIT = 165,
-    SET_POWER_LIMIT = 166,
-    EXCEPTION_ACTIONS = 167,
-    POWER_LIMIT_REQUESTED = 168,
-    CORRECTION_TIME_LIMIT = 169,
-    STATISTICS_SAMPLING_PERIOD = 170,
-    ACTIVATE_DEACTIVATE_POWER_LIMIT = 171,
-    INTERPRET_OEM_DATA_KEY = 172,
+    SET_ASSET_TAG = 162,
+    GET_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING = 163,
+    SET_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING = 164,
+    GET_DCMI_SENSOR_INFO = 165,
+    GET_SYSTEM_POWER_STATISTICS = 166,
+    GET_ENHANCED_SYSTEM_POWER_STATISTICS = 167,
+    GET_POWER_LIMIT = 168,
+    SET_POWER_LIMIT = 169,
+    EXCEPTION_ACTIONS = 170,
+    POWER_LIMIT_REQUESTED = 171,
+    CORRECTION_TIME_LIMIT = 172,
+    STATISTICS_SAMPLING_PERIOD = 173,
+    ACTIVATE_DEACTIVATE_POWER_LIMIT = 174,
+    INTERPRET_OEM_DATA_KEY = 175,
   };
 
 struct ipmi_dcmi_arguments
@@ -57,6 +60,11 @@ struct ipmi_dcmi_arguments
   struct hostrange_cmd_args hostrange;
   int get_dcmi_capability_info;
   int get_asset_tag;
+  int set_asset_tag;
+  char *set_asset_tag_arg;
+  int get_management_controller_identifier_string;
+  int set_management_controller_identifier_string;
+  char *set_management_controller_identifier_string_arg;
   int get_dcmi_sensor_info;
   int get_system_power_statistics;
   int get_enhanced_system_power_statistics;

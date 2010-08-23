@@ -16,6 +16,7 @@ o Support new 'interpret' sub-library in libfreeipmi.
 o Move all config files to /etc/freeipmi/.  Support legacy config
   files for backwards compatibility.
 o Various documentation updates.
+o Update to support DCMI 1.1.
 o Update all licensing information to GPLv3.
 
 Tools - Detailed Enhancements/Changes/Fixes
@@ -41,6 +42,10 @@ o ipmi-sel
   - Support --exclude-date-range option.
   - Alter OEM record output to align with columns by outputting "N/A"
     in appropriate fields and putting manufacturer ID in event output.
+o ipmi-dcmi
+  - Support --set-asset-tag option.
+  - Support --get-management-controller-identifier-string option.
+  - Support --set-management-controller-identifier-string option.
 o ipmiconsole
   - Rework 'intel20' workaround to not allow a non two-part authentication.
 o ipmipower
