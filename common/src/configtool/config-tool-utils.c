@@ -334,23 +334,23 @@ config_ipv4_address_string2int (pstdout_state_t pstate,
 {
   unsigned int b1, b2, b3, b4;
   uint64_t val;
-  int rv;
+  int ret;
 
   assert (src && dest);
 
-  if ((rv = sscanf (src,
-                    "%u.%u.%u.%u",
-                    &b1,
-                    &b2,
-                    &b3,
-                    &b4)) < 0)
+  if ((ret = sscanf (src,
+                     "%u.%u.%u.%u",
+                     &b1,
+                     &b2,
+                     &b3,
+                     &b4)) < 0)
     {
       PSTDOUT_PERROR (pstate,
                       "sscanf");
       return (-1);
     }
 
-  if (rv != 4)
+  if (ret != 4)
     {
       PSTDOUT_FPRINTF (pstate,
                        stderr,
@@ -376,25 +376,25 @@ config_mac_address_string2int (pstdout_state_t pstate,
 {
   unsigned int b1, b2, b3, b4, b5, b6;
   uint64_t val;
-  int rv;
+  int ret;
 
   assert (src && dest);
 
-  if ((rv = sscanf (src,
-                    "%02X:%02X:%02X:%02X:%02X:%02X",
-                    &b1,
-                    &b2,
-                    &b3,
-                    &b4,
-                    &b5,
-                    &b6)) < 0)
+  if ((ret = sscanf (src,
+                     "%02X:%02X:%02X:%02X:%02X:%02X",
+                     &b1,
+                     &b2,
+                     &b3,
+                     &b4,
+                     &b5,
+                     &b6)) < 0)
     {
       PSTDOUT_PERROR (pstate,
                       "sscanf");
       return (-1);
     }
 
-  if (rv != 6)
+  if (ret != 6)
     {
       PSTDOUT_FPRINTF (pstate,
                        stderr,
