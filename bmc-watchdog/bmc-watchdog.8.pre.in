@@ -120,7 +120,7 @@ These options are generic and can be used by any command.
 \fB\-D\fR \fIIPMIDRIVER\fR, \fB\-\-driver\-type\fR=\fIIPMIDRIVER\fR 
 Specify the driver type to use instead of doing an auto selection.
 The currently available inband drivers are KCS, SSIF, OPENIPMI, and
-SUNBMC (SUNBMC is currently experimental).
+SUNBMC.
 #include <@top_srcdir@/common/man/manpage-common-inband.man>
 .TP
 \fB\-f\fR \fIFILE\fR, \fB\-\-logfile\fR=\fIFILE\fR
