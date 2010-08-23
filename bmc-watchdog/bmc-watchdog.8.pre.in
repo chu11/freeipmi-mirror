@@ -123,7 +123,7 @@ The currently available inband drivers are KCS, SSIF, OPENIPMI, and
 SUNBMC (SUNBMC is currently experimental).
 #include <@top_srcdir@/common/man/manpage-common-inband.man>
 .TP
-\fB\-f\fR \fISTRING\fR, \fB\-\-logfile\fR=\fIFILE\fR
+\fB\-f\fR \fIFILE\fR, \fB\-\-logfile\fR=\fIFILE\fR
 Specify an alternate logfile from the default of
 /var/log/freeipmi/bmc-watchdog.log.
 .TP
