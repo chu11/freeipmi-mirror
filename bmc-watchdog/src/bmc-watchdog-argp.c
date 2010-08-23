@@ -192,16 +192,16 @@ _usage (struct bmc_watchdog_arguments *cmd_args)
 
   fprintf (stderr,
            "OPTIONS:\n"
-           "  -D STRING  --driver-type=IPMIDRIVER             Specify IPMI driver type.\n"
-           "             --disable-auto-probe                 Do not probe driver for default settings.\n"
-           "             --driver-address=DRIVER-ADDRESS      Specify driver address.\n"
-           "             --driver-device=DEVICE               Specify driver device path.\n"
-           "             --register-spacing=REGISTER-SPACING  Specify driver register spacing.\n"
-           "  -f STRING  --logfile=FILE                       Specify an alternate logfile\n"
-           "             --config-file=FILE                   Specify an alternate config file\n"
-           "  -n         --no-logging                         Turn off all logging\n"
-           "  -?         --help                               Output help menu.\n"
-           "  -V         --version                            Output version.\n");
+           "  -D IPMIDRIVER  --driver-type=IPMIDRIVER             Specify IPMI driver type.\n"
+           "                 --disable-auto-probe                 Do not probe driver for default settings.\n"
+           "                 --driver-address=DRIVER-ADDRESS      Specify driver address.\n"
+           "                 --driver-device=DEVICE               Specify driver device path.\n"
+           "                 --register-spacing=REGISTER-SPACING  Specify driver register spacing.\n"
+           "  -f FILE        --logfile=FILE                       Specify an alternate logfile\n"
+           "                 --config-file=FILE                   Specify an alternate config file\n"
+           "  -n             --no-logging                         Turn off all logging\n"
+           "  -?             --help                               Output help menu.\n"
+           "  -V             --version                            Output version.\n");
 
   fprintf (stderr,
            "             --debug                              Turn on debugging.\n");

@@ -115,16 +115,16 @@ Get BT interface capabilities.
 \fB\-\-get\-bmc\-global\-enables\fR
 Get BMC Global Enables.
 .TP
-\fB\-\-set\-system\-firmware\-version\fR=\fISTR\fR
+\fB\-\-set\-system\-firmware\-version\fR=\fISTRING\fR
 Set System Firmware Version.
 .TP
-\fB\-\-set\-system\-name\fR=\fISTR\fR
+\fB\-\-set\-system\-name\fR=\fISTRING\fR
 Set System Name.
 .TP
-\fB\-\-set\-primary\-operating\-system\-name\fR=\fISTR\fR
+\fB\-\-set\-primary\-operating\-system\-name\fR=\fISTRING\fR
 Set Primary Operating System Name.
 .TP
-\fB\-\-set\-operating\-system\-name\fR=\fISTR\fR
+\fB\-\-set\-operating\-system\-name\fR=\fISTRING\fR
 Set Operating System Name.
 .TP
 \fB\-\-verbose\fR
