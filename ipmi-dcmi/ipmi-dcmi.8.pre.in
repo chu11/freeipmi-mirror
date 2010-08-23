@@ -84,6 +84,15 @@ Get DCMI capability information.
 \fB\-\-get\-asset\-tag\fR
 Get asset tag.
 .TP
+\fB\-\-set\-asset\-tag\fR=\fISTRING\fR
+Set asset tag.
+.TP
+\fB\-\-get\-management\-controller\-identifier\-string\fR
+Get management controller identifier string tag.
+.TP
+\fB\-\-set\-management\-controller\-identifier\-string\fR=\fISTRING\fR
+Set management controller identifier string tag.
+.TP
 \fB\-\-get\-dcmi\-sensor\-info\fR
 Get DCMI sensor information.
 .TP
