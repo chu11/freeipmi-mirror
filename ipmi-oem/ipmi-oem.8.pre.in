@@ -425,15 +425,12 @@ each enabled user is reset to 0.  Multiple key=value pairs may be
 specified.  If no key=value pairs are specifed, available pairs are
 output.  Command confirmed to work on Inventec 5441/5442 (Dell Xanadu
 II/III).
-.if 0 \{
-.TP
 .B get-account-status
 This OEM command will output the current account status of users on
 the BMC.  This command is particularly usefor for determinining which
 users in the system may have been locked out via authentication
 failurs configured via \fIset\-authentication\-config\fR.  Command
 confirmed to work on Inventec 5441/5442 (Dell Xanadu II/III).
-\}
 .if 0 \{
 .TP
 .B get-dns-config
