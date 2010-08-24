@@ -538,8 +538,6 @@ struct ipmi_oem_command oem_inventec[] =
       IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
       ipmi_oem_inventec_set_authentication_config
     },
-#if 0
-    /* works - but cannot report account status correctly */
     {
       "get-account-status",
       NULL,
@@ -547,7 +545,6 @@ struct ipmi_oem_command oem_inventec[] =
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_inventec_get_account_status
     },
-#endif
 #if 0
 /* basics appear to work, but untested due to other infracture/information needed */
     {

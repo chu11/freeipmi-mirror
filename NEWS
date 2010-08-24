@@ -1,5 +1,6 @@
 FreeIPMI 0.8.10 - 08/20/10
 --------------------------
+o Support Inventec 'get-account-status' in ipmi-oem.
 o Fix help output corner cases in ipmi-oem.
 o Other minor documentation/bug fixes.
 
