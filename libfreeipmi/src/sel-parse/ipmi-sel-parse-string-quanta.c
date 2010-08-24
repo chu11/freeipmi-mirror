@@ -100,7 +100,7 @@ ipmi_sel_parse_output_quanta_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
 
   /* OEM Interpretation
    *
-   * Quanta S99Q/Dell TS12-TY
+   * Quanta S99Q/Dell FS12-TY
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_QUANTA
       && ctx->product_id == IPMI_QUANTA_PRODUCT_ID_S99Q)
@@ -184,7 +184,7 @@ ipmi_sel_parse_output_quanta_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
 
   /* OEM Interpretation
    *
-   * Quanta S99Q/Dell TS12-TY
+   * Quanta S99Q/Dell FS12-TY
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_QUANTA
       && ctx->product_id == IPMI_QUANTA_PRODUCT_ID_S99Q)

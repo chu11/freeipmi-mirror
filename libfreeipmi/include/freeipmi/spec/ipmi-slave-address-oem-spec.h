@@ -41,7 +41,7 @@ extern "C" {
  *******************************************/
 
 /*
- * Quanta S99Q/Dell TS12-TY
+ * Quanta S99Q/Dell FS12-TY
  */
 /* achu: not official names, named based on use context */
 #define IPMI_GENERATOR_ID_OEM_QUANTA_ERROR           0x01
