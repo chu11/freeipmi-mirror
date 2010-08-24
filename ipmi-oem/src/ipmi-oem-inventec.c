@@ -65,6 +65,8 @@
 #define IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_NIC                      0x02
 #define IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_SOL                      0x03
 #define IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_SECURITY                 0x04
+#define IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_ACCOUNT_STATUS           0x05
+#define IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_DNS                      0x06
 #define IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION 0x0C
 #define IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_FIRMWARE_LOG             0x0E
 #define IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_FIRMWARE_INFORMATION     0x0F
@@ -99,6 +101,52 @@
 #define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_SECURITY_MAX_AUTHENTICATION_FAILURES 0x02
 #define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_SECURITY_LOCKOUT_WINDOW              0x03
 #define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_SECURITY_LOCKOUT_TIME                0x04
+
+/* number of user - 1 byte, read only
+ *
+ * number of enabled user - 1 byte, read only
+ *
+ * user name - 1-17 bytes, read only
+ *
+ * account status - 1 byte
+ *                - 0x00 - status unspecified
+ *                - 0x01 - enabled via set user password
+ *                - 0x02 - disabled via set user password
+ *                - 0x03 - user id is lockout
+ */
+#define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_ACCOUNT_STATUS_NUMBER_OF_USER         0x01
+#define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_ACCOUNT_STATUS_NUMBER_OF_ENABLED_USER 0x02
+#define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_ACCOUNT_STATUS_USER_NAME              0x03
+#define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_ACCOUNT_STATUS_ACCOUNT_STATUS         0x04
+
+/* DNS DHCP enable - 1 byte, 0 - false, 1 - true
+ * - DNS server IP addresses should be assigned from DHCP server
+ *
+ * DNS Server1 - 4 bytes
+ * - IP address for DNS server 1, read only if DNS DHCP Enable and DHCP are enabled
+ *
+ * DNS Server2 - 4 bytes
+ * - IP address for DNS server 2, read only if DNS DHCP Enable and DHCP are enabled
+ *
+ * DNS Register BMC - 0 - false, 1 - true
+ * - Enable registering the BMC host name on the DNS server
+ *
+ * DNS BMC Host Name - 1-64 bytes
+ * - Specifies the DNS BMC host name, read only if DNS Register BMC is TRUE.
+ *
+ * DNS Domain Name DHCP Enable - 1 byte
+ * - DNS domain name should be assigned from DHCP
+ *
+ * DNS Domain Name - 1-256 bytes
+ * - DNS domain name string, read only if DNS Domain Name DHCP Enable is TRUE
+ */
+#define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_DNS_DNS_DHCP_ENABLE             0x01
+#define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_DNS_DNS_SERVER1                 0x02
+#define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_DNS_DNS_SERVER2                 0x03
+#define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_DNS_DNS_REGISTER_BMC            0x04
+#define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_DNS_DNS_BMC_HOST_NAME           0x05
+#define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_DNS_DNS_DOMAIN_NAME_DHCP_ENABLE 0x06
+#define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_DNS_DNS_DOMAIN_NAME             0x07
 
 /* web server enabled - 1 byte, 0 = false, 1 = true (default)
  *
@@ -222,6 +270,14 @@
 #define IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_KVM  0x02
 #define IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_HTTP 0x04
 #define IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_SSH  0x08
+
+#define IPMI_OEM_INVENTEC_EXTENDED_CONFIG_ACCOUNT_STATUS_UNSPECIFIED 0x00
+#define IPMI_OEM_INVENTEC_EXTENDED_CONFIG_ACCOUNT_STATUS_ENABLED     0x01
+#define IPMI_OEM_INVENTEC_EXTENDED_CONFIG_ACCOUNT_STATUS_DISABLED    0x02
+#define IPMI_OEM_INVENTEC_EXTENDED_CONFIG_ACCOUNT_STATUS_LOCKOUT     0x03
+
+#define IPMI_OEM_INVENTEC_EXTENDED_CONFIG_DNS_DNS_BMC_HOST_NAME_MAX 64
+#define IPMI_OEM_INVENTEC_EXTENDED_CONFIG_DNS_DNS_DOMAIN_NAME_MAX   256
 
 /* DPNM = Dynamic Power Node Management */
 #define IPMI_OEM_INVENTEC_EXTENDED_CONFIG_POWER_MANAGEMENT_ENABLE_DPNM_BITMASK 0x80
@@ -370,7 +426,7 @@ _ipmi_oem_inventec_get_extended_config_value (ipmi_oem_state_data_t *state_data,
 
   /* Inventec 5441/5442 OEM
    *
-   * Get Web Server Configuration Request
+   * Get Extended Configuration Request
    *
    * 0x30 - OEM network function
    * 0x02 - OEM cmd
@@ -382,7 +438,7 @@ _ipmi_oem_inventec_get_extended_config_value (ipmi_oem_state_data_t *state_data,
    * 0x00 = Data Offset - MSB (unused here??)
    * 0xFF - Bytes to read (0xFF = all)
    * 
-   * Get Web Server Configuration Response
+   * Get Extended Configuration Response
    *
    * 0x02 - OEM cmd
    * 0x?? - Completion Code
@@ -452,11 +508,12 @@ _ipmi_oem_inventec_get_extended_config_value (ipmi_oem_state_data_t *state_data,
 }
 
 #if 0
-/* waiting for verification from Dell */
+/* presently unused */
 static int
 _ipmi_oem_inventec_get_extended_config_string (ipmi_oem_state_data_t *state_data,
                                                uint8_t configuration_id,
                                                uint8_t attribute_id,
+                                               uint8_t index,
                                                char *buf,
                                                unsigned int buflen)
 {
@@ -472,19 +529,19 @@ _ipmi_oem_inventec_get_extended_config_string (ipmi_oem_state_data_t *state_data
 
   /* Inventec 5441/5442 OEM
    *
-   * Get Web Server Configuration Request
+   * Get Extended Configuration Request
    *
    * 0x30 - OEM network function
    * 0x02 - OEM cmd
    * 0x?? - Reservation ID
    * 0x?? - Configuration ID
    * 0x?? - Attribute ID
-   * 0x00 - Index (unused here??)
+   * 0x00 - Index
    * 0x00 - Data Offset - LSB (unused here??)
    * 0x00 = Data Offset - MSB (unused here??)
    * 0xFF - Bytes to read (0xFF = all)
    * 
-   * Get Web Server Configuration Response
+   * Get Extended Configuration Response
    *
    * 0x02 - OEM cmd
    * 0x?? - Completion Code
@@ -503,7 +560,7 @@ _ipmi_oem_inventec_get_extended_config_string (ipmi_oem_state_data_t *state_data
   bytes_rq[1] = reservation_id;
   bytes_rq[2] = configuration_id;
   bytes_rq[3] = attribute_id;
-  bytes_rq[4] = 0x00;
+  bytes_rq[4] = index;
   bytes_rq[5] = 0x00;
   bytes_rq[6] = 0x00;
   bytes_rq[7] = IPMI_OEM_INVENTEC_EXTENDED_CONFIG_READ_ALL_BYTES;
@@ -572,7 +629,7 @@ _ipmi_oem_inventec_set_extended_config_value (ipmi_oem_state_data_t *state_data,
 
   /* Inventec 5441/5442 OEM
    *
-   * Set Web Server Configuration Request
+   * Set Extended Configuration Request
    *
    * 0x30 - OEM network function
    * 0x03 - OEM cmd
@@ -585,7 +642,7 @@ _ipmi_oem_inventec_set_extended_config_value (ipmi_oem_state_data_t *state_data,
    * 0x01 - In progress bit (0x00 in progress, 0x01 - last config in this request)
    * bytes ... 
    * 
-   * Set Web Server Configuration Response
+   * Set Extended Configuration Response
    *
    * 0x03 - OEM cmd
    * 0x?? - Completion Code
@@ -650,11 +707,12 @@ _ipmi_oem_inventec_set_extended_config_value (ipmi_oem_state_data_t *state_data,
 }
 
 #if 0
-/* waiting for verification from Dell */
+/* presently unused */
 static int
 _ipmi_oem_inventec_set_extended_config_string (ipmi_oem_state_data_t *state_data,
                                                uint8_t configuration_id,
                                                uint8_t attribute_id,
+                                               uint8_t index,
                                                char *buf,
                                                unsigned int buflen)
 {
@@ -669,7 +727,7 @@ _ipmi_oem_inventec_set_extended_config_string (ipmi_oem_state_data_t *state_data
 
   /* Inventec 5441/5442 OEM
    *
-   * Set Web Server Configuration Request
+   * Set Extended Configuration Request
    *
    * 0x30 - OEM network function
    * 0x03 - OEM cmd
@@ -682,7 +740,7 @@ _ipmi_oem_inventec_set_extended_config_string (ipmi_oem_state_data_t *state_data
    * 0x01 - In progress bit (0x00 in progress, 0x01 - last config in this request)
    * bytes ... 
    * 
-   * Set Web Server Configuration Response
+   * Set Extended Configuration Response
    *
    * 0x03 - OEM cmd
    * 0x?? - Completion Code
@@ -697,7 +755,7 @@ _ipmi_oem_inventec_set_extended_config_string (ipmi_oem_state_data_t *state_data
   bytes_rq[1] = reservation_id;
   bytes_rq[2] = configuration_id;
   bytes_rq[3] = attribute_id;
-  bytes_rq[4] = 0x00;
+  bytes_rq[4] = index;
   bytes_rq[5] = 0x00;
   bytes_rq[6] = 0x00;
   bytes_rq[7] = 0x01;
@@ -1326,6 +1384,411 @@ ipmi_oem_inventec_set_authentication_config (ipmi_oem_state_data_t *state_data)
   return (rv);
 }
 
+#if 0
+/* works - but cannot report account status correctly */
+int
+ipmi_oem_inventec_get_account_status (ipmi_oem_state_data_t *state_data)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint32_t tmpvalue;
+  uint8_t lan_channel_number;
+  uint8_t number_of_users;
+  uint64_t val;
+  char user_name[IPMI_MAX_USER_NAME_LENGTH + 1];
+  unsigned int i;
+  int rv = -1;
+
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+
+  /* achu:
+   *
+   * IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_ACCOUNT_STATUS_NUMBER_OF_USER
+   * returns the number of enabled/disabled users, not the total,
+   * which is not what we need in this function.
+   */
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_user_access_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  if (ipmi_get_channel_number (state_data->ipmi_ctx,
+                               IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3,
+                               &lan_channel_number) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_get_channel_number: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+  
+  if (ipmi_cmd_get_user_access (state_data->ipmi_ctx,
+                                lan_channel_number,
+                                1, /* user_id number - any will do for this call */
+                                obj_cmd_rs) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_get_user_access: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "max_channel_user_ids",
+                    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "FIID_OBJ_GET: 'max_channel_user_ids': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+
+  number_of_users = val;
+  
+  pstdout_printf (state_data->pstate,
+                  "Username         | Status\n");
+  
+  for (i = 0; i < number_of_users; i++)
+    {
+      uint8_t account_status;
+      char *account_status_str = NULL;
+
+      memset (user_name, '\0', IPMI_MAX_USER_NAME_LENGTH + 1);
+
+      if (_ipmi_oem_inventec_get_extended_config_string (state_data,
+                                                         IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_ACCOUNT_STATUS,
+                                                         IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_ACCOUNT_STATUS_USER_NAME,
+                                                         i + 1,
+                                                         user_name,
+                                                         IPMI_MAX_USER_NAME_LENGTH) < 0)
+        goto cleanup;
+
+      /* if not the first user id - but username is empty, skip output */
+      if (i && !strlen (user_name))
+        continue;
+
+      if (_ipmi_oem_inventec_get_extended_config_value (state_data,
+                                                        IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_ACCOUNT_STATUS,
+                                                        IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_ACCOUNT_STATUS_ACCOUNT_STATUS,
+                                                        1,
+                                                        &tmpvalue) < 0)
+        goto cleanup;
+      account_status = tmpvalue;
+
+      if (account_status == IPMI_OEM_INVENTEC_EXTENDED_CONFIG_ACCOUNT_STATUS_UNSPECIFIED)
+        account_status_str = "Unspecified";
+      else if (account_status == IPMI_OEM_INVENTEC_EXTENDED_CONFIG_ACCOUNT_STATUS_ENABLED)
+        account_status_str = "Enabled";
+      else if (account_status == IPMI_OEM_INVENTEC_EXTENDED_CONFIG_ACCOUNT_STATUS_DISABLED)
+        account_status_str = "Disabled";
+      else 
+        account_status_str = "LockOut";
+
+      pstdout_printf (state_data->pstate,
+                      "%-16s | %s\n",
+                      user_name,
+                      account_status_str);
+    }
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+#endif
+
+#if 0
+/* basics appear to work, but untested due to other infracture/information needed */
+int
+ipmi_oem_inventec_get_dns_config (ipmi_oem_state_data_t *state_data)
+{
+  uint32_t tmpvalue;
+  uint8_t dnsdhcpenable;
+  uint32_t dnsserver1;
+  uint32_t dnsserver2;
+  uint8_t dnsregisterbmc;
+  char dnsbmchostname[IPMI_OEM_INVENTEC_EXTENDED_CONFIG_DNS_DNS_BMC_HOST_NAME_MAX + 1];
+  uint8_t dnsdomainnamedhcpenable;
+  char dnsdomainname[IPMI_OEM_INVENTEC_EXTENDED_CONFIG_DNS_DNS_DOMAIN_NAME_MAX + 1];
+  int rv = -1;
+
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+
+  memset (dnsbmchostname, '\0', IPMI_OEM_INVENTEC_EXTENDED_CONFIG_DNS_DNS_BMC_HOST_NAME_MAX + 1);
+  memset (dnsdomainname, '\0', IPMI_OEM_INVENTEC_EXTENDED_CONFIG_DNS_DNS_DOMAIN_NAME_MAX + 1);
+
+  if (_ipmi_oem_inventec_get_extended_config_value (state_data,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_DNS,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_DNS_DNS_DHCP_ENABLE,
+                                                    1,
+                                                    &tmpvalue) < 0)
+    goto cleanup;
+  dnsdhcpenable = tmpvalue;
+
+  if (_ipmi_oem_inventec_get_extended_config_value (state_data,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_DNS,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_DNS_DNS_SERVER1,
+                                                    4,
+                                                    &tmpvalue) < 0)
+    goto cleanup;
+   dnsserver1 = tmpvalue;
+
+  if (_ipmi_oem_inventec_get_extended_config_value (state_data,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_DNS,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_DNS_DNS_SERVER2,
+                                                    4,
+                                                    &tmpvalue) < 0)
+    goto cleanup;
+   dnsserver2 = tmpvalue;
+  
+  if (_ipmi_oem_inventec_get_extended_config_value (state_data,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_DNS,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_DNS_DNS_REGISTER_BMC,
+                                                    1,
+                                                    &tmpvalue) < 0)
+    goto cleanup;
+  dnsregisterbmc = tmpvalue;
+
+  if (_ipmi_oem_inventec_get_extended_config_string (state_data,
+                                                     IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_DNS,
+                                                     IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_DNS_DNS_BMC_HOST_NAME,
+                                                     0,
+                                                     dnsbmchostname,
+                                                     IPMI_OEM_INVENTEC_EXTENDED_CONFIG_DNS_DNS_BMC_HOST_NAME_MAX) < 0)
+    goto cleanup;
+
+  if (_ipmi_oem_inventec_get_extended_config_value (state_data,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_DNS,
+                                                    IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_DNS_DNS_DOMAIN_NAME_DHCP_ENABLE,
+                                                    1,
+                                                    &tmpvalue) < 0)
+    goto cleanup;
+  dnsdomainnamedhcpenable = tmpvalue;
+
+  if (_ipmi_oem_inventec_get_extended_config_string (state_data,
+                                                     IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_DNS,
+                                                     IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_DNS_DNS_DOMAIN_NAME,
+                                                     0,
+                                                     dnsdomainname,
+                                                     IPMI_OEM_INVENTEC_EXTENDED_CONFIG_DNS_DNS_DOMAIN_NAME_MAX) < 0)
+    goto cleanup;
+
+  pstdout_printf (state_data->pstate,
+		  "DNS DHCP             : %s\n",
+		  (dnsdhcpenable) ? "Enabled" : "Disabled");
+
+  pstdout_printf (state_data->pstate,
+                  "DNS Server 1         : %u.%u.%u.%u\n",
+                  (dnsserver1 & 0x000000FF),
+                  (dnsserver1 & 0x0000FF00) >> 8,
+                  (dnsserver1 & 0x00FF0000) >> 16,
+                  (dnsserver1 & 0xFF000000) >> 24);
+
+  pstdout_printf (state_data->pstate,
+                  "DNS Server 2         : %u.%u.%u.%u\n",
+                  (dnsserver2 & 0x000000FF),
+                  (dnsserver2 & 0x0000FF00) >> 8,
+                  (dnsserver2 & 0x00FF0000) >> 16,
+                  (dnsserver2 & 0xFF000000) >> 24);
+
+  pstdout_printf (state_data->pstate,
+		  "DNS Register BMC     : %s\n",
+		  (dnsdomainnamedhcpenable) ? "Enabled" : "Disabled");
+
+  pstdout_printf (state_data->pstate,
+                  "DNS BMC Host Name    : %s\n",
+                  dnsbmchostname);
+  
+  pstdout_printf (state_data->pstate,
+		  "DNS Domain Name DHCP : %s\n",
+		  (dnsdomainnamedhcpenable) ? "Enabled" : "Disabled");
+
+  pstdout_printf (state_data->pstate,
+                  "DNS Domain Name      : %s\n",
+                  dnsdomainname);
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
+ipmi_oem_inventec_set_dns_config (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t dnsdhcpenable = 0;
+  uint32_t dnsserver1 = 0;
+  uint32_t dnsserver2 = 0;
+  uint8_t dnsregisterbmc = 0;
+  char dnsbmchostname[IPMI_OEM_INVENTEC_EXTENDED_CONFIG_DNS_DNS_BMC_HOST_NAME_MAX + 1];
+  uint8_t dnsdomainnamedhcpenable = 0;
+  char dnsdomainname[IPMI_OEM_INVENTEC_EXTENDED_CONFIG_DNS_DNS_DOMAIN_NAME_MAX + 1];
+  int rv = -1;
+  int i;
+
+  assert (state_data);
+
+  memset (dnsbmchostname, '\0', IPMI_OEM_INVENTEC_EXTENDED_CONFIG_DNS_DNS_BMC_HOST_NAME_MAX + 1);
+  memset (dnsdomainname, '\0', IPMI_OEM_INVENTEC_EXTENDED_CONFIG_DNS_DNS_DOMAIN_NAME_MAX + 1);
+
+  if (!state_data->prog_data->args->oem_options_count)
+    {
+      pstdout_printf (state_data->pstate,
+		      "Option: dnsdhcp=enable|disable\n"
+                      "Option: dnsserver1=ipaddress\n"
+                      "Option: dnsserver2=ipaddress\n"
+		      "Option: dnsregisterbmc=enable|disable\n"
+                      "Option: dnsbmchostname=string\n"
+		      "Option: dnsdomainnamedhcp=enable|disable\n"
+                      "Option: dnsdomainname=string\n");
+      return (0); 
+    }
+
+  for (i = 0; i < state_data->prog_data->args->oem_options_count; i++)
+    {
+      char *key = NULL;
+      char *value = NULL;
+      
+      if (ipmi_oem_parse_key_value (state_data,
+                                    i,
+                                    &key,
+                                    &value) < 0)
+        goto cleanup;
+
+      if (!strcasecmp (key, "dnsdhcp"))
+        {
+          if (ipmi_oem_parse_enable (state_data, i, value, &dnsdhcpenable) < 0)
+            goto cleanup;
+          
+          
+          if (_ipmi_oem_inventec_set_extended_config_value (state_data,
+                                                            IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_DNS,
+                                                            IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_DNS_DNS_DHCP_ENABLE,
+                                                            1,
+                                                            (uint32_t)dnsdhcpenable) < 0)
+            goto cleanup;
+        }
+      else if (!strcasecmp (key, "dnsserver1"))
+        {
+          if (ipmi_oem_parse_ip_address (state_data, i, value, &dnsserver1) < 0)
+            goto cleanup;
+          
+          
+          if (_ipmi_oem_inventec_set_extended_config_value (state_data,
+                                                            IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_DNS,
+                                                            IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_DNS_DNS_SERVER1,
+                                                            4,
+                                                            (uint32_t)dnsserver1) < 0)
+            goto cleanup;
+        }
+      else if (!strcasecmp (key, "dnsserver2"))
+        {
+          if (ipmi_oem_parse_ip_address (state_data, i, value, &dnsserver2) < 0)
+            goto cleanup;
+          
+          
+          if (_ipmi_oem_inventec_set_extended_config_value (state_data,
+                                                            IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_DNS,
+                                                            IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_DNS_DNS_SERVER2,
+                                                            4,
+                                                            (uint32_t)dnsserver2) < 0)
+            goto cleanup;
+        }
+      else if (!strcasecmp (key, "dnsregisterbmc"))
+        {
+          if (ipmi_oem_parse_enable (state_data, i, value, &dnsregisterbmc) < 0)
+            goto cleanup;
+          
+          
+          if (_ipmi_oem_inventec_set_extended_config_value (state_data,
+                                                            IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_DNS,
+                                                            IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_DNS_DNS_REGISTER_BMC,
+                                                            1,
+                                                            (uint32_t)dnsregisterbmc) < 0)
+            goto cleanup;
+        }
+      else if (!strcasecmp (key, "dnsbmchostname"))
+        {
+          uint8_t string_length = 0;
+
+          if (ipmi_oem_parse_string (state_data,
+                                     i,
+                                     value,
+                                     &string_length,
+                                     dnsbmchostname,
+                                     IPMI_OEM_INVENTEC_EXTENDED_CONFIG_DNS_DNS_BMC_HOST_NAME_MAX) < 0)
+            goto cleanup;
+          
+          if (_ipmi_oem_inventec_set_extended_config_string (state_data,
+                                                             IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_DNS,
+                                                             IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_DNS_DNS_BMC_HOST_NAME,
+                                                             0,
+                                                             dnsbmchostname,
+                                                             (unsigned int)string_length) < 0)
+            goto cleanup;
+        }
+      else if (!strcasecmp (key, "dnsdomainnamedhcp"))
+        {
+          if (ipmi_oem_parse_enable (state_data, i, value, &dnsdomainnamedhcpenable) < 0)
+            goto cleanup;
+          
+          
+          if (_ipmi_oem_inventec_set_extended_config_value (state_data,
+                                                            IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_DNS,
+                                                            IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_DNS_DNS_DOMAIN_NAME_DHCP_ENABLE,
+                                                            1,
+                                                            (uint32_t)dnsdomainnamedhcpenable) < 0)
+            goto cleanup;
+        }
+      else if (!strcasecmp (key, "dnsdomainname"))
+        {
+          uint8_t string_length = 0;
+
+          if (ipmi_oem_parse_string (state_data,
+                                     i,
+                                     value,
+                                     &string_length,
+                                     dnsdomainname,
+                                     IPMI_OEM_INVENTEC_EXTENDED_CONFIG_DNS_DNS_DOMAIN_NAME_MAX) < 0)
+            goto cleanup;
+          
+          if (_ipmi_oem_inventec_set_extended_config_string (state_data,
+                                                             IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_DNS,
+                                                             IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_DNS_DNS_DOMAIN_NAME,
+                                                             0,
+                                                             dnsdomainname,
+                                                             (unsigned int)string_length) < 0)
+            goto cleanup;
+        }
+      else
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "%s:%s invalid OEM option argument '%s' : invalid key\n",
+                           state_data->prog_data->args->oem_id,
+                           state_data->prog_data->args->oem_command,
+                           state_data->prog_data->args->oem_options[i]);
+          goto cleanup;
+        }
+
+      free (key);
+      free (value);
+    }
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+#endif
+
 int
 ipmi_oem_inventec_get_web_server_config (ipmi_oem_state_data_t *state_data)
 {
@@ -1821,6 +2284,7 @@ ipmi_oem_inventec_get_firmware_update_config (ipmi_oem_state_data_t *state_data)
   if (_ipmi_oem_inventec_get_extended_config_string (state_data,
                                                      IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_FIRMWARE_UPDATE,
                                                      IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_URI,
+                                                     0,
                                                      uri,
                                                      IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_URI_LEN) < 0)
     goto cleanup;
@@ -2105,6 +2569,7 @@ ipmi_oem_inventec_get_firmware_information (ipmi_oem_state_data_t *state_data)
   if (_ipmi_oem_inventec_get_extended_config_string (state_data,
                                                      IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_FIRMWARE_INFORMATION,
                                                      IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_NAME,
+                                                     0,
                                                      name,
                                                      IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_NAME_LEN) < 0)
     goto cleanup;
@@ -2112,6 +2577,7 @@ ipmi_oem_inventec_get_firmware_information (ipmi_oem_state_data_t *state_data)
   if (_ipmi_oem_inventec_get_extended_config_string (state_data,
                                                      IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_FIRMWARE_INFORMATION,
                                                      IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_DESCRIPTION,
+                                                     0,
                                                      description,
                                                      IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_DESCRIPTION_LEN) < 0)
     goto cleanup;
@@ -2127,6 +2593,7 @@ ipmi_oem_inventec_get_firmware_information (ipmi_oem_state_data_t *state_data)
   if (_ipmi_oem_inventec_get_extended_config_string (state_data,
                                                      IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_FIRMWARE_INFORMATION,
                                                      IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_PRODUCT_INFO,
+                                                     0,
                                                      product_info,
                                                      IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_PRODUCT_INFO_LEN) < 0)
     goto cleanup;
@@ -2134,6 +2601,7 @@ ipmi_oem_inventec_get_firmware_information (ipmi_oem_state_data_t *state_data)
   if (_ipmi_oem_inventec_get_extended_config_string (state_data,
                                                      IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_FIRMWARE_INFORMATION,
                                                      IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_FIRMWARE_VERSION,
+                                                     0,
                                                      firmware_version,
                                                      IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_FIRMWARE_VERSION_LEN) < 0)
     goto cleanup;
@@ -2141,6 +2609,7 @@ ipmi_oem_inventec_get_firmware_information (ipmi_oem_state_data_t *state_data)
   if (_ipmi_oem_inventec_get_extended_config_string (state_data,
                                                      IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_FIRMWARE_INFORMATION,
                                                      IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_BRANCH,
+                                                     0,
                                                      branch,
                                                      IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_BRANCH_LEN) < 0)
     goto cleanup;
@@ -2148,6 +2617,7 @@ ipmi_oem_inventec_get_firmware_information (ipmi_oem_state_data_t *state_data)
   if (_ipmi_oem_inventec_get_extended_config_string (state_data,
                                                      IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_FIRMWARE_INFORMATION,
                                                      IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_BUILD_INFORMATION,
+                                                     0,
                                                      build_information,
                                                      IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_BUILD_INFORMATION_LEN) < 0)
     goto cleanup;

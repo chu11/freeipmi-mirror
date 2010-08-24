@@ -108,7 +108,7 @@ struct ipmi_oem_command oem_dell[] =
     {
       "set-ssh-config",
       "KEY=VALUE ...",
-      1,
+      0,
       IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
       ipmi_oem_dell_set_ssh_config
     },
@@ -122,7 +122,7 @@ struct ipmi_oem_command oem_dell[] =
     {
       "set-telnet-config",
       "KEY=VALUE ...",
-      1,
+      0,
       IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
       ipmi_oem_dell_set_telnet_config
     },
@@ -136,7 +136,7 @@ struct ipmi_oem_command oem_dell[] =
     {
       "set-web-server-config",
       "KEY=VALUE ...",
-      1,
+      0,
       IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
       ipmi_oem_dell_set_web_server_config
     },
@@ -534,10 +534,37 @@ struct ipmi_oem_command oem_inventec[] =
     {
       "set-authentication-config",
       "KEY=VALUE ...",
-      1,
+      0,
       IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
       ipmi_oem_inventec_set_authentication_config
     },
+#if 0
+    /* works - but cannot report account status correctly */
+    {
+      "get-account-status",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_inventec_get_account_status
+    },
+#endif
+#if 0
+/* basics appear to work, but untested due to other infracture/information needed */
+    {
+      "get-dns-config",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_inventec_get_dns_config
+    },
+    {
+      "set-dns-config",
+      "KEY=VALUE ...",
+      0,
+      IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
+      ipmi_oem_inventec_set_dns_config
+    },
+#endif
     {
       "get-web-server-config",
       NULL,
@@ -548,7 +575,7 @@ struct ipmi_oem_command oem_inventec[] =
     {
       "set-web-server-config",
       "KEY=VALUE ...",
-      1,
+      0,
       IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
       ipmi_oem_inventec_set_web_server_config
     },
@@ -562,7 +589,7 @@ struct ipmi_oem_command oem_inventec[] =
     {
       "set-power-management-config",
       "KEY=VALUE ...",
-      1,
+      0,
       IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
       ipmi_oem_inventec_set_power_management_config
     },
@@ -578,7 +605,7 @@ struct ipmi_oem_command oem_inventec[] =
     {
       "set-firmware-update-config",
       "KEY=VALUE ...",
-      1,
+      0,
       IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
       ipmi_oem_inventec_set_firmware_update_config
     },

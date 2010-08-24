@@ -33,6 +33,17 @@ int ipmi_oem_inventec_set_bmc_services (ipmi_oem_state_data_t *state_data);
 int ipmi_oem_inventec_get_authentication_config (ipmi_oem_state_data_t *state_data);
 int ipmi_oem_inventec_set_authentication_config (ipmi_oem_state_data_t *state_data);
 
+#if 0
+/* works - but cannot report account status correctly */
+int ipmi_oem_inventec_get_account_status (ipmi_oem_state_data_t *state_data);
+#endif
+
+#if 0
+/* basics appear to work, but untested due to other infracture/information needed */
+int ipmi_oem_inventec_get_dns_config (ipmi_oem_state_data_t *state_data);
+int ipmi_oem_inventec_set_dns_config (ipmi_oem_state_data_t *state_data);
+#endif
+
 int ipmi_oem_inventec_get_web_server_config (ipmi_oem_state_data_t *state_data);
 int ipmi_oem_inventec_set_web_server_config (ipmi_oem_state_data_t *state_data);
 
