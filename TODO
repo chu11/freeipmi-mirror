@@ -34,6 +34,10 @@ log sel events to syslog?
 - could work across cluster?
 - need filtering thingie to remove crud?
 
+dcmi 1.1
+--------
+set asset-tag/management identifier string - spec isn't clear, fix as necessary
+
 general
 -------
 forwarded command support (errata 35b)
