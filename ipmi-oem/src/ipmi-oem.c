@@ -590,6 +590,37 @@ struct ipmi_oem_command oem_inventec[] =
       IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
       ipmi_oem_inventec_set_power_management_config
     },
+    {
+      "get-sol-idle-timeout",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_inventec_get_sol_idle_timeout
+    },
+    {
+      "set-sol-idle-timeout",
+      "<idle-timeout>",
+      1,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_inventec_set_sol_idle_timeout
+    },
+#if 0
+/* cannot verify */
+    {
+      "get-telnet-ssh-redirect-status",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_inventec_get_telnet_ssh_redirect_status
+    },
+    {
+      "set-telnet-ssh-redirect-status",
+      "<enable|disable>",
+      1,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_inventec_set_telnet_ssh_redirect_status
+    },
+#endif
 #if 0
     /* waiting for verification from Dell */
     {

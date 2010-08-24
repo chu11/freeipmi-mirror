@@ -217,11 +217,11 @@
 #define IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_CONFIGURATION_IDLE_TIMEOUT_FIELD_MASK       0x0008
 #define IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_CONFIGURATION_PORT_NUMBER_FIELD_MASK        0x0010
 
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_CONFIGURATION_ALL_FIELD_MASK                \
-  (IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_CONFIGURATION_ENABLE_FIELD_MASK                  \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_CONFIGURATION_MAX_CONNECTIONS_FIELD_MASK       \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_CONFIGURATION_ACTIVE_CONNECTIONS_FIELD_MASK    \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_CONFIGURATION_IDLE_TIMEOUT_FIELD_MASK          \
+#define IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_CONFIGURATION_ALL_FIELD_MASK  \
+  (IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_CONFIGURATION_ENABLE_FIELD_MASK    \
+   | IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_CONFIGURATION_MAX_CONNECTIONS_FIELD_MASK \
+   | IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_CONFIGURATION_ACTIVE_CONNECTIONS_FIELD_MASK \
+   | IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_CONFIGURATION_IDLE_TIMEOUT_FIELD_MASK \
    | IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_CONFIGURATION_PORT_NUMBER_FIELD_MASK);
 
 #define IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_CONFIGURATION_ENABLE_FIELD_MASK          0x0001
@@ -231,12 +231,12 @@
 #define IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_CONFIGURATION_PORT_NUMBER_FIELD_MASK     0x0010
 #define IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_CONFIGURATION_7FLS_BACKSPACE_FIELD_MASK  0x0020
 
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_CONFIGURATION_ALL_FIELD_MASK             \
-  (IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_CONFIGURATION_ENABLE_FIELD_MASK               \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_CONFIGURATION_MAX_SESSIONS_FIELD_MASK       \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_CONFIGURATION_ACTIVE_SESSIONS_FIELD_MASK    \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_CONFIGURATION_SESSION_TIMEOUT_FIELD_MASK    \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_CONFIGURATION_PORT_NUMBER_FIELD_MASK        \
+#define IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_CONFIGURATION_ALL_FIELD_MASK \
+  (IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_CONFIGURATION_ENABLE_FIELD_MASK \
+   | IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_CONFIGURATION_MAX_SESSIONS_FIELD_MASK \
+   | IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_CONFIGURATION_ACTIVE_SESSIONS_FIELD_MASK \
+   | IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_CONFIGURATION_SESSION_TIMEOUT_FIELD_MASK \
+   | IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_CONFIGURATION_PORT_NUMBER_FIELD_MASK \
    | IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_CONFIGURATION_7FLS_BACKSPACE_FIELD_MASK)
 
 #define IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_CONFIGURATION_ENABLE_FIELD_MASK            0x0001
@@ -246,9 +246,9 @@
 #define IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_CONFIGURATION_HTTP_PORT_NUMBER_FIELD_MASK  0x0010
 #define IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_CONFIGURATION_HTTPS_PORT_NUMBER_FIELD_MASK 0x0020
 
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_CONFIGURATION_ALL_FIELD_MASK         \
-  (IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_CONFIGURATION_ENABLE_FIELD_MASK           \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_CONFIGURATION_MAX_SESSIONS_FIELD_MASK   \
+#define IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_CONFIGURATION_ALL_FIELD_MASK \
+  (IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_CONFIGURATION_ENABLE_FIELD_MASK \
+   | IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_CONFIGURATION_MAX_SESSIONS_FIELD_MASK \
    | IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_CONFIGURATION_ACTIVE_SESSIONS_FIELD_MASK \
    | IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_CONFIGURATION_SESSION_TIMEOUT_FIELD_MASK \
    | IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_CONFIGURATION_HTTP_PORT_NUMBER_FIELD_MASK \
@@ -3950,10 +3950,13 @@ ipmi_oem_dell_get_instantaneous_power_consumption_data (ipmi_oem_state_data_t *s
   else
     {
       char *ptr = NULL;
-
+      unsigned int temp;
+      
       errno = 0;
-      bytes_rq[2] = strtoul (state_data->prog_data->args->oem_options[0], &ptr, 10);
-      if (errno || ptr[0] != '\0')
+      temp = strtoul (state_data->prog_data->args->oem_options[0], &ptr, 10);
+      if (errno
+          || temp > UCHAR_MAX
+          || ptr[0] != '\0')
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
@@ -3963,6 +3966,8 @@ ipmi_oem_dell_get_instantaneous_power_consumption_data (ipmi_oem_state_data_t *s
                            state_data->prog_data->args->oem_options[0]);
           goto cleanup;
         }
+
+      bytes_rq[2] = temp;
     }    
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
@@ -4648,6 +4653,7 @@ ipmi_oem_dell_set_power_capacity (ipmi_oem_state_data_t *state_data)
   uint16_t power_capacity;
   uint16_t maximum_power_consumption;
   uint16_t minimum_power_consumption;
+  unsigned int temp;
   char *ptr = NULL;
   int rv = -1;
 
@@ -4693,8 +4699,10 @@ ipmi_oem_dell_set_power_capacity (ipmi_oem_state_data_t *state_data)
     goto cleanup;
 
   errno = 0;
-  power_capacity = strtoul (state_data->prog_data->args->oem_options[0], &ptr, 10);
-  if (errno || ptr[0] != '\0')
+  temp = strtoul (state_data->prog_data->args->oem_options[0], &ptr, 10);
+  if (errno
+      || temp > USHRT_MAX
+      || ptr[0] != '\0')
     {
       pstdout_fprintf (state_data->pstate,
 		       stderr,
@@ -4704,6 +4712,7 @@ ipmi_oem_dell_set_power_capacity (ipmi_oem_state_data_t *state_data)
 		       state_data->prog_data->args->oem_options[0]);
       goto cleanup;
     }
+  power_capacity = temp;
 
   maximum_power_consumption = configuration_parameter_data[3];
   maximum_power_consumption |= (configuration_parameter_data[4] << 8);
@@ -5002,7 +5011,7 @@ ipmi_oem_dell_set_board_id (ipmi_oem_state_data_t *state_data)
   uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
   uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
   uint8_t boardid;
-  long tmp;
+  unsigned int tmp;
   char *ptr;
   int rs_len;
   int rv = -1;
@@ -5010,10 +5019,12 @@ ipmi_oem_dell_set_board_id (ipmi_oem_state_data_t *state_data)
   assert (state_data);
   assert (state_data->prog_data->args->oem_options_count == 1);
 
-  tmp = strtol (state_data->prog_data->args->oem_options[0],
-                &ptr,
-                IPMI_OEM_HEX_BASE);
-  if (tmp < 0
+  errno = 0;
+  
+  tmp = strtoul (state_data->prog_data->args->oem_options[0],
+                 &ptr,
+                 IPMI_OEM_HEX_BASE);
+  if (errno
       || tmp > UCHAR_MAX
       || (*ptr) != '\0')
     {
@@ -5144,7 +5155,7 @@ ipmi_oem_dell_set_fcb_version (ipmi_oem_state_data_t *state_data)
   uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
   uint8_t majorversion;
   uint8_t minorversion;
-  long tmp;
+  unsigned int tmp;
   char *ptr;
   int rs_len;
   int rv = -1;
@@ -5152,10 +5163,12 @@ ipmi_oem_dell_set_fcb_version (ipmi_oem_state_data_t *state_data)
   assert (state_data);
   assert (state_data->prog_data->args->oem_options_count == 2);
 
-  tmp = strtol (state_data->prog_data->args->oem_options[0],
-                &ptr,
-                IPMI_OEM_HEX_BASE);
-  if (tmp < 0
+  errno = 0;
+
+  tmp = strtoul (state_data->prog_data->args->oem_options[0],
+                 &ptr,
+                 IPMI_OEM_HEX_BASE);
+  if (errno
       || tmp > UCHAR_MAX
       || (*ptr) != '\0')
     {
@@ -5169,10 +5182,12 @@ ipmi_oem_dell_set_fcb_version (ipmi_oem_state_data_t *state_data)
     }
   majorversion = tmp;
 
-  tmp = strtol (state_data->prog_data->args->oem_options[1],
-                &ptr,
-                IPMI_OEM_HEX_BASE);
-  if (tmp < 0
+  errno = 0;
+
+  tmp = strtoul (state_data->prog_data->args->oem_options[1],
+                 &ptr,
+                 IPMI_OEM_HEX_BASE);
+  if (errno
       || tmp > UCHAR_MAX
       || (*ptr) != '\0')
     {
@@ -5540,11 +5555,14 @@ ipmi_oem_dell_set_sol_inactivity_timeout (ipmi_oem_state_data_t *state_data)
   if (strcasecmp (state_data->prog_data->args->oem_options[0], "none"))
     {
       char *ptr = NULL;
+      unsigned int temp;
 
       errno = 0;
       
-      sol_inactivity_timeout = strtoul (state_data->prog_data->args->oem_options[0], &ptr, 10);
-      if (errno || ptr[0] != '\0')
+      temp = strtoul (state_data->prog_data->args->oem_options[0], &ptr, 10);
+      if (errno
+          || temp > USHRT_MAX
+          || ptr[0] != '\0')
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
@@ -5554,6 +5572,8 @@ ipmi_oem_dell_set_sol_inactivity_timeout (ipmi_oem_state_data_t *state_data)
                            state_data->prog_data->args->oem_options[0]);
           goto cleanup;
         }
+
+      sol_inactivity_timeout = temp;
     }
   else
     sol_inactivity_timeout = 0;
