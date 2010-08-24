@@ -376,7 +376,7 @@ extern unsigned int ipmi_sensor_type_oem_dell_upgrade_max_index;
  *******************************************/
 
 /*
- * Quanta S99Q/Dell TS12-TY
+ * Quanta S99Q/Dell FS12-TY
  */
 
 #define IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_A0 0x01

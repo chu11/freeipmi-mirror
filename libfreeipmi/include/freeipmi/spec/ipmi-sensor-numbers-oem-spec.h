@@ -90,7 +90,7 @@ extern "C" {
  *******************************************/
 
 /*
- * Quanta S99Q/Dell TS12-TY
+ * Quanta S99Q/Dell FS12-TY
  */
 #define IPMI_SENSOR_NUMBER_OEM_QUANTA_MEMORY              0x60
 #define IPMI_SENSOR_NUMBER_OEM_QUANTA_PCI_SENSORID        0x81

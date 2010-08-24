@@ -1,6 +1,8 @@
 2010-08-24  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/: Fix and support inventec get-account-status.
+
+	* Fix typos: TS12 -> FS12 motherboard.
 	
 2010-08-23  Albert Chu <chu11@llnl.gov>
 
@@ -497,11 +499,11 @@
 2010-05-11  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/spec/: Support Quanta S99Q/Dell
-	TS12-TY OEM commands.
+	FS12-TY OEM commands.
 
-	* ipmi-oem/: Support Quanta S99Q/Dell TS12-TY OEM commands.
+	* ipmi-oem/: Support Quanta S99Q/Dell FS12-TY OEM commands.
 
-	* libfreeipmi/src/sel-parse/: Support Quanta S99Q/Dell TS12-TY OEM
+	* libfreeipmi/src/sel-parse/: Support Quanta S99Q/Dell FS12-TY OEM
 	SEL events.
 
 	* libfreeipmi/, ipmi-oem/: Minor cleanup.

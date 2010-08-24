@@ -81,7 +81,7 @@ extern "C" {
  *******************************************/
 
 /*
- * Quanta S99Q/Dell TS12-TY
+ * Quanta S99Q/Dell FS12-TY
  */
 /* achu: not official names, named based on use context */
 #define IPMI_NET_FN_OEM_QUANTA_GENERIC_RQ 0x30

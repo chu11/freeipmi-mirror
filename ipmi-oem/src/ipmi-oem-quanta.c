@@ -41,7 +41,7 @@
 #include "freeipmi-portability.h"
 #include "pstdout.h"
 
-/* Quanta S99Q/Dell TS12-TY Notes
+/* Quanta S99Q/Dell FS12-TY Notes
  *
  * Update Firmware Request
  *

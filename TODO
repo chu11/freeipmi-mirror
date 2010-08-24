@@ -130,7 +130,7 @@ dell poweredge lcd support
 libfreeipmi
 -----------
 * xRC4 (0.10.1)
-  - on Quanta S99Q/Dell TS12-TY
+  - on Quanta S99Q/Dell FS12-TY
   - will break ABI on libfreeipmi, since API not capable of handling
     data offset in payload and IV knowledge outside of assemble functions.
   - will require fair amount of rework/cleanup.

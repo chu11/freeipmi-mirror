@@ -146,7 +146,7 @@ extern "C" {
  *******************************************/
 
 /*
- * Quanta S99Q/Dell TS12-TY
+ * Quanta S99Q/Dell FS12-TY
  */
 
 /* IPMI_NET_FN_FIRMWARE_RQ / IPMI_NET_FN_FIRMWARE_RS */

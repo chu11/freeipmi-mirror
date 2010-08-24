@@ -81,7 +81,7 @@ extern "C" {
  * Quanta derived
  */
 
-#define IPMI_DELL_PRODUCT_ID_TS12_TY IPMI_QUANTA_PRODUCT_ID_S99Q
+#define IPMI_DELL_PRODUCT_ID_FS12_TY IPMI_QUANTA_PRODUCT_ID_S99Q
 
 /******************************************* 
  * Sun Microsystems                        *
