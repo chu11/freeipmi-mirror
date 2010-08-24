@@ -290,9 +290,9 @@ confirmed to work on Dell Xanadu II.
 This OEM command will retrieve the SOL inactivity timeout.  Command
 confirmed to work on Dell Xanadu II and Dell Xanadu III.
 .TP
-.B set-sol-inactivity-timeout \fIinactivity-timeout\fR
+.B set-sol-inactivity-timeout \fIinactivity\-timeout\fR
 This OEM command will set the SOL inactivity timeout.  The
-\fIinactivity-timeout\fR is one-based, max of 65535, in 1 minute
+\fIinactivity\-timeout\fR is one-based, max of 65535, in 1 minute
 increments (e.g. 1 = 1 minute), 0 or "none" will configure no timeout.
 Command confirmed to work on Dell Xanadu II and Dell Xanadu III.
 .RE
@@ -495,18 +495,25 @@ the minimum and maximum power on delay times.  Multiple key=value
 pairs may be specified.  If no key=value pairs are specifed, available
 pairs are output.  Command confirmed to work on Inventec 5441/5442
 (Dell Xanadu II/III).
+.TP
+.B get-sol-idle-timeout
+This OEM command will get the SOL idle timeout Command confirmed to
+work on Inventec 5441/5442 (Dell Xanadu II/III).
+.TP
+.B set-sol-idle-timeout \fIidle\-timeout\fR
+This OEM command will set the SOL idle timeout.  The
+\fIidle\-timeout\fR is one-based, max of 65535, in 1 minute increments
+(e.g. 1 = 1 minute), 0 or "none" will configure no timeout.  Command
+confirmed to work on Inventec 5441/5442 (Dell Xanadu II/III).
 .if 0 \{
 .TP
-.B restore-to-defaults \fIall|user|lan|sol|serial|pef\fR
-This OEM command will restore certain BMC configuration sections back
-to default values.  The command will spin until the reset is confirmed
-to be complete.  Command confirmed to work on Inventec 5441 (Dell Xanadu II).
-\}
-.if 0 \{
+.B get-telnet-ssh-redirect-status
+This OEM command will get the telnet/SSH redirect status.
+Command confirmed to work on Inventec 5441/5442 (Dell Xanadu II/III).
 .TP
-.B set-system-guid \fIsystemguid\fR
-This OEM command will set the system guid.  Command confirmed to work
-on Inventec 5441 (Dell Xanadu II).
+.B set-telnet-ssh-redirect-status \fIenable|disable\fR
+This OEM command will enable or disable telnet/SSH redirect status.
+Command confirmed to work on Inventec 5441/5442 (Dell Xanadu II/III).
 \}
 .if 0 \{
 .TP
@@ -552,6 +559,19 @@ support, or possibly requirement.  The
 Xanadu II/III.  If the verbose option is set, progress will be output with
 information that is available.  Command confirmed to work on Inventec
 5441/5442 (Dell Xanadu II/III).
+\}
+.if 0 \{
+.TP
+.B restore-to-defaults \fIall|user|lan|sol|serial|pef\fR
+This OEM command will restore certain BMC configuration sections back
+to default values.  The command will spin until the reset is confirmed
+to be complete.  Command confirmed to work on Inventec 5441 (Dell Xanadu II).
+\}
+.if 0 \{
+.TP
+.B set-system-guid \fIsystemguid\fR
+This OEM command will set the system guid.  Command confirmed to work
+on Inventec 5441 (Dell Xanadu II).
 \}
 .TP
 .B read-eeprom \fIat24c256n\fR

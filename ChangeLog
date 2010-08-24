@@ -3,6 +3,11 @@
 	* ipmi-oem/: Fix and support inventec get-account-status.
 
 	* Fix typos: TS12 -> FS12 motherboard.
+
+	* ipmi-oem/: Support Inventec get/set-sol-idle-timeout.  Implement
+	get/set-telnet-ssh-redirect-status.
+
+	* ipmi-oem/: Fix range checking on parameter inputs.
 	
 2010-08-23  Albert Chu <chu11@llnl.gov>
 

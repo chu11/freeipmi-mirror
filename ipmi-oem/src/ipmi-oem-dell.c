@@ -3950,10 +3950,13 @@ ipmi_oem_dell_get_instantaneous_power_consumption_data (ipmi_oem_state_data_t *s
   else
     {
       char *ptr = NULL;
-
+      unsigned int temp;
+      
       errno = 0;
-      bytes_rq[2] = strtoul (state_data->prog_data->args->oem_options[0], &ptr, 10);
-      if (errno || ptr[0] != '\0')
+      temp = strtoul (state_data->prog_data->args->oem_options[0], &ptr, 10);
+      if (errno
+          || temp > UCHAR_MAX
+          || ptr[0] != '\0')
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
@@ -3963,6 +3966,8 @@ ipmi_oem_dell_get_instantaneous_power_consumption_data (ipmi_oem_state_data_t *s
                            state_data->prog_data->args->oem_options[0]);
           goto cleanup;
         }
+
+      bytes_rq[2] = temp;
     }    
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
@@ -4648,6 +4653,7 @@ ipmi_oem_dell_set_power_capacity (ipmi_oem_state_data_t *state_data)
   uint16_t power_capacity;
   uint16_t maximum_power_consumption;
   uint16_t minimum_power_consumption;
+  unsigned int temp;
   char *ptr = NULL;
   int rv = -1;
 
@@ -4693,8 +4699,10 @@ ipmi_oem_dell_set_power_capacity (ipmi_oem_state_data_t *state_data)
     goto cleanup;
 
   errno = 0;
-  power_capacity = strtoul (state_data->prog_data->args->oem_options[0], &ptr, 10);
-  if (errno || ptr[0] != '\0')
+  temp = strtoul (state_data->prog_data->args->oem_options[0], &ptr, 10);
+  if (errno
+      || temp > USHRT_MAX
+      || ptr[0] != '\0')
     {
       pstdout_fprintf (state_data->pstate,
 		       stderr,
@@ -4704,6 +4712,7 @@ ipmi_oem_dell_set_power_capacity (ipmi_oem_state_data_t *state_data)
 		       state_data->prog_data->args->oem_options[0]);
       goto cleanup;
     }
+  power_capacity = temp;
 
   maximum_power_consumption = configuration_parameter_data[3];
   maximum_power_consumption |= (configuration_parameter_data[4] << 8);
@@ -5540,11 +5549,14 @@ ipmi_oem_dell_set_sol_inactivity_timeout (ipmi_oem_state_data_t *state_data)
   if (strcasecmp (state_data->prog_data->args->oem_options[0], "none"))
     {
       char *ptr = NULL;
+      unsigned int temp;
 
       errno = 0;
       
-      sol_inactivity_timeout = strtoul (state_data->prog_data->args->oem_options[0], &ptr, 10);
-      if (errno || ptr[0] != '\0')
+      temp = strtoul (state_data->prog_data->args->oem_options[0], &ptr, 10);
+      if (errno
+          || temp > USHRT_MAX
+          || ptr[0] != '\0')
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
@@ -5554,6 +5566,8 @@ ipmi_oem_dell_set_sol_inactivity_timeout (ipmi_oem_state_data_t *state_data)
                            state_data->prog_data->args->oem_options[0]);
           goto cleanup;
         }
+
+      sol_inactivity_timeout = temp;
     }
   else
     sol_inactivity_timeout = 0;
