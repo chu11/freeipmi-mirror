@@ -8,6 +8,8 @@
 	get/set-telnet-ssh-redirect-status.
 
 	* ipmi-oem/: Fix range checking on parameter inputs.
+
+	* ipmi-oem/: Fix and support Inventec get/set-dns-config.
 	
 2010-08-23  Albert Chu <chu11@llnl.gov>
 

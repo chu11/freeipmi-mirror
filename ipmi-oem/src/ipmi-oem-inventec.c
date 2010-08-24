@@ -135,14 +135,14 @@
  *
  * DNS BMC Host Name - 1-64 bytes
  * - Specifies the DNS BMC host name, read only if DNS Register BMC is TRUE.
- * - XXX: Doc specifies stored as ASCII, motherboard appears to store as p-string
+ * - Stored as P-string
  *
  * DNS Domain Name DHCP Enable - 1 byte
  * - DNS domain name should be assigned from DHCP
  *
  * DNS Domain Name - 1-256 bytes
  * - DNS domain name string, read only if DNS Domain Name DHCP Enable is TRUE
- * - XXX: Doc specifies stored as ASCII, motherboard appears to store as p-string
+ * - Stored as P-string
  */
 #define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_DNS_DNS_DHCP_ENABLE             0x01
 #define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_DNS_DNS_SERVER1                 0x02
@@ -512,8 +512,6 @@ _ipmi_oem_inventec_get_extended_config_value (ipmi_oem_state_data_t *state_data,
   return (rv);
 }
 
-#if 0
-/* presently unused */
 static int
 _ipmi_oem_inventec_get_extended_config_string (ipmi_oem_state_data_t *state_data,
                                                uint8_t configuration_id,
@@ -597,7 +595,22 @@ _ipmi_oem_inventec_get_extended_config_string (ipmi_oem_state_data_t *state_data
   memset (buf, '\0', buflen);
   if ((rs_len - 6) > 0)
     {
-      if ((rs_len - 6) > buflen)
+      uint8_t len;
+
+      /* According to docs - all strings are stored as P-strings */
+      
+      len = bytes_rs[6];
+      
+      if (len != (rs_len - 7))
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "P-string length returned invalid: len = %u, rs_len = %u\n",
+                           len, rs_len);
+          goto cleanup;
+        }
+
+      if ((rs_len - 7) > buflen)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
@@ -605,14 +618,13 @@ _ipmi_oem_inventec_get_extended_config_string (ipmi_oem_state_data_t *state_data
                            rs_len, buflen);
           goto cleanup;
         }
-      memcpy (buf, &bytes_rs[6], rs_len - 6);
+      memcpy (buf, &bytes_rs[7], rs_len - 7);
     }
 
   rv = 0;
  cleanup:
   return (rv);
 }
-#endif
 
 static int
 _ipmi_oem_inventec_set_extended_config_value (ipmi_oem_state_data_t *state_data,
@@ -712,8 +724,6 @@ _ipmi_oem_inventec_set_extended_config_value (ipmi_oem_state_data_t *state_data,
   return (rv);
 }
 
-#if 0
-/* presently unused */
 static int
 _ipmi_oem_inventec_set_extended_config_string (ipmi_oem_state_data_t *state_data,
                                                uint8_t configuration_id,
@@ -765,13 +775,16 @@ _ipmi_oem_inventec_set_extended_config_string (ipmi_oem_state_data_t *state_data
   bytes_rq[5] = 0x00;
   bytes_rq[6] = 0x00;
   bytes_rq[7] = 0x01;
-  memcpy (&bytes_rq[8], buf, buflen);
+  bytes_rq[8] = strlen (buf);
+
+  if (buflen)
+    memcpy (&bytes_rq[9], buf, buflen);
   
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
                               IPMI_NET_FN_OEM_INVENTEC_GENERIC_RQ, /* network function */
                               bytes_rq, /* data */
-                              8 + buflen, /* num bytes */
+                              9 + buflen, /* num bytes */
                               bytes_rs,
                               IPMI_OEM_MAX_BYTES)) < 0)
     {
@@ -795,7 +808,6 @@ _ipmi_oem_inventec_set_extended_config_string (ipmi_oem_state_data_t *state_data
  cleanup:
   return (rv);
 }
-#endif
 
 int
 ipmi_oem_inventec_get_nic_mode (ipmi_oem_state_data_t *state_data)
@@ -1570,8 +1582,6 @@ ipmi_oem_inventec_get_account_status (ipmi_oem_state_data_t *state_data)
   return (rv);
 }
 
-#if 0
-/* basics appear to work, but untested due to other infracture/information needed */
 int
 ipmi_oem_inventec_get_dns_config (ipmi_oem_state_data_t *state_data)
 {
@@ -1669,11 +1679,11 @@ ipmi_oem_inventec_get_dns_config (ipmi_oem_state_data_t *state_data)
                   (dnsserver2 & 0x0000FF00) >> 8,
                   (dnsserver2 & 0x00FF0000) >> 16,
                   (dnsserver2 & 0xFF000000) >> 24);
-
+  
   pstdout_printf (state_data->pstate,
 		  "DNS Register BMC     : %s\n",
 		  (dnsdomainnamedhcpenable) ? "Enabled" : "Disabled");
-
+  
   pstdout_printf (state_data->pstate,
                   "DNS BMC Host Name    : %s\n",
                   dnsbmchostname);
@@ -1681,11 +1691,11 @@ ipmi_oem_inventec_get_dns_config (ipmi_oem_state_data_t *state_data)
   pstdout_printf (state_data->pstate,
 		  "DNS Domain Name DHCP : %s\n",
 		  (dnsdomainnamedhcpenable) ? "Enabled" : "Disabled");
-
+  
   pstdout_printf (state_data->pstate,
                   "DNS Domain Name      : %s\n",
                   dnsdomainname);
-
+  
   rv = 0;
  cleanup:
   return (rv);
@@ -1862,7 +1872,6 @@ ipmi_oem_inventec_set_dns_config (ipmi_oem_state_data_t *state_data)
  cleanup:
   return (rv);
 }
-#endif
 
 int
 ipmi_oem_inventec_get_web_server_config (ipmi_oem_state_data_t *state_data)
