@@ -134,8 +134,6 @@ libfreeipmi
   - will break ABI on libfreeipmi, since API not capable of handling
     data offset in payload and IV knowledge outside of assemble functions.
   - will require fair amount of rework/cleanup.
-* HMAC-SHA-256
-  - on what mobos?
 
 config
 ------
