@@ -1,3 +1,9 @@
+2010-08-24  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-oem/: Implement inventec get-account-status,
+	get-dns-config, and set-dns-config.  Fix variable argument help
+	output bug.
+	
 2010-08-23  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-dcmi/: Support --set-asset-tag,

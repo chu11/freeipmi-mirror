@@ -80,6 +80,11 @@ int ipmi_oem_parse_port (ipmi_oem_state_data_t *state_data,
                          const char *value,
                          uint16_t *port);
 
+int ipmi_oem_parse_ip_address (ipmi_oem_state_data_t *state_data,
+                               unsigned int option_num,
+                               const char *value,
+                               uint32_t *ip_address);
+
 int ipmi_oem_parse_string (ipmi_oem_state_data_t *state_data,
                            unsigned int option_num,
                            const char *value,

@@ -425,6 +425,44 @@ each enabled user is reset to 0.  Multiple key=value pairs may be
 specified.  If no key=value pairs are specifed, available pairs are
 output.  Command confirmed to work on Inventec 5441/5442 (Dell Xanadu
 II/III).
+.if 0 \{
+.TP
+.B get-account-status
+This OEM command will output the current account status of users on
+the BMC.  This command is particularly usefor for determinining which
+users in the system may have been locked out via authentication
+failurs configured via \fIset\-authentication\-config\fR.  Command
+confirmed to work on Inventec 5441/5442 (Dell Xanadu II/III).
+\}
+.if 0 \{
+.TP
+.B get-dns-config
+This OEM command will display additional OEM DNS settings.
+(See \fIset\-dns\-config\fR below for description on
+outputs.)  Command confirmed to work on Inventec 5441/5442 (Dell
+Xanadu II/III).
+.TP
+.B set-dns-config \fIKEY=VALUE ...\fR
+This OEM command will set additional OEM DNS settings on the IPMI
+card.  The possible keys and values are \fIdnsdhcp=enable|disable\fR,
+\fIdnsserver1=ipaddress\fR, \fIdnsserver2=ipaddress\fR,
+\fIdnsregisterbmc=enable|disable\fR, \fIdnsbmchostname=string\fR,
+\fIdnsdomainnamedhcp=enable|disable\fR, and
+\fIdnsdomainname=string\fR.  \fIdnsdhcp\fR specifies if the DNS server
+IP addresses should be assigned from the DHCP server.
+\fIdnsserver1\fR and \fIdnsserver2\fR specify the IP addess for server
+1 and 2 respectively.  These fields are read only if \fIdnsdhcp\fR and
+DHCP are enabled.  \fIdnsregisterbmc\fR specifies if the BMC host name
+is registered via the DNS server.  \fIdnsbmchostname\fR specifies the
+BMC host name.  This field is read only if \fIdnsregisterbmc\fR is
+enabled.  \fIdnsdomainnamedhcp\fR specifies if the DNS domainname
+should be assigned from the DHCP server.  \fIdnsdomainname\fR
+specifies the DNS domain name string.  This field is read only if
+\fIdnsdomainnamedhcp\fR is enabled.  Multiple key=value pairs may be
+specified.  If no key=value pairs are specifed, available pairs are
+output.  Command confirmed to work on Inventec 5441/5442 (Dell Xanadu
+II/III).
+\}
 .TP
 .B get-web-server-config
 This OEM command will get the current web server configuration on the

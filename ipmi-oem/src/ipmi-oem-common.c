@@ -353,6 +353,58 @@ ipmi_oem_parse_unsigned_int_range (ipmi_oem_state_data_t *state_data,
 }
 
 int
+ipmi_oem_parse_ip_address (ipmi_oem_state_data_t *state_data,
+                           unsigned int option_num,
+                           const char *value,
+                           uint32_t *ip_address)
+{
+  unsigned int b1, b2, b3, b4;
+  uint32_t temp;
+  int ret;
+
+  assert (state_data);
+  assert (value);
+  assert (ip_address);
+
+  if ((ret = sscanf (value,
+                     "%u.%u.%u.%u",
+                     &b1,
+                     &b2,
+                     &b3,
+                     &b4)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid IP address '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[option_num]);
+      return (-1);
+    }
+
+  if (ret != 4)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid IP address '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[option_num]);
+      return (-1);
+    }
+
+  temp = 0;
+  temp |= (uint32_t)b1;
+  temp |= ((uint32_t)b2 << 8);
+  temp |= ((uint32_t)b3 << 16);
+  temp |= ((uint32_t)b4 << 24);
+
+  (*ip_address) = temp;
+  return (0);
+
+}
+
+int
 ipmi_oem_parse_string (ipmi_oem_state_data_t *state_data,
                        unsigned int option_num,
                        const char *value,
