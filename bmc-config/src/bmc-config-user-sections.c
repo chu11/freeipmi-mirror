@@ -413,7 +413,9 @@ username_checkout (const char *section_name,
       /*
        * IPMI Workaround (achu)
        *
-       * Discovered on Sun X4140
+       * Discovered on Sun X4140, Inventec 5441/Dell Xanadu II,
+       * Inventec 5442/Dell Xanadu III, Intel S5500WBV/Penguin Relion
+       * 700
        *
        * Get Username and Get User Payload commands fail with CCh =
        * "Invalid data field in request" if a username was not set
