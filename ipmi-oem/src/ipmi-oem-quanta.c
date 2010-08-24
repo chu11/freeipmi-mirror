@@ -392,7 +392,7 @@ ipmi_oem_quanta_get_processor_information (ipmi_oem_state_data_t *state_data)
       if (errno
           || temp > UCHAR_MAX
           || ptr[0] != '\0'
-          || !processor_index_init)
+          || !temp)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
