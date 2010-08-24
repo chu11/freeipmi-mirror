@@ -2398,6 +2398,8 @@ ipmi_oem_inventec_set_sol_idle_timeout (ipmi_oem_state_data_t *state_data)
                            state_data->prog_data->args->oem_options[0]);
           goto cleanup;
         }
+
+      timeout = temp;
     }
   else
     timeout = 0;

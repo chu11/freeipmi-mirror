@@ -385,10 +385,14 @@ ipmi_oem_quanta_get_processor_information (ipmi_oem_state_data_t *state_data)
   if (state_data->prog_data->args->oem_options_count)
     {
       char *ptr = NULL;
+      unsigned int temp;
 
       errno = 0;
-      processor_index_init = strtoul (state_data->prog_data->args->oem_options[0], &ptr, 10);
-      if (errno || ptr[0] != '\0' || !processor_index_init)
+      temp = strtoul (state_data->prog_data->args->oem_options[0], &ptr, 10);
+      if (errno
+          || temp > UCHAR_MAX
+          || ptr[0] != '\0'
+          || !processor_index_init)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
@@ -398,6 +402,8 @@ ipmi_oem_quanta_get_processor_information (ipmi_oem_state_data_t *state_data)
                            state_data->prog_data->args->oem_options[0]);
           goto cleanup;
         }
+      
+      processor_index_init = temp;
 
       processor_index_max = processor_index_init;
     }

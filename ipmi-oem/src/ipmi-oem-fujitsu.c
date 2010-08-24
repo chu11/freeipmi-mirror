@@ -443,10 +443,13 @@ ipmi_oem_fujitsu_get_remote_storage_status (ipmi_oem_state_data_t *state_data)
   assert (state_data);
   assert (state_data->prog_data->args->oem_options_count == 1);
   
+  errno = 0;
+
   tmp = strtol (state_data->prog_data->args->oem_options[0],
                 &ptr,
                 0);
-  if (tmp < 0
+  if (errno
+      || tmp < 0
       || tmp > UCHAR_MAX
       || (*ptr) != '\0')
     {
@@ -836,10 +839,13 @@ ipmi_oem_fujitsu_get_eeprom_version_info (ipmi_oem_state_data_t *state_data)
   assert (state_data);
   assert (state_data->prog_data->args->oem_options_count == 1);
   
+  errno = 0;
+
   tmp = strtol (state_data->prog_data->args->oem_options[0],
                 &ptr,
                 0);
-  if (tmp < 0
+  if (errno
+      || tmp < 0
       || tmp > UCHAR_MAX
       || (*ptr) != '\0')
     {
