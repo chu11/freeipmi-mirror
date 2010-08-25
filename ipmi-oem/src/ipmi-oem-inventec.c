@@ -259,11 +259,6 @@
 #define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_MINIMUM_POWER_ON_DELAY       0x04
 #define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_MAXIMUM_POWER_ON_DELAY       0x05
 
-#define IPMI_OEM_INVENTEC_SET_SELECTOR   0x0
-#define IPMI_OEM_INVENTEC_BLOCK_SELECTOR 0x0
-
-#define IPMI_OEM_INVENTEC_MAX_MACADDRLEN 24
-
 #define IPMI_OEM_INVENTEC_EXTENDED_CONFIG_READ_ALL_BYTES           0xFF
 
 #define IPMI_OEM_INVENTEC_EXTENDED_CONFIG_NIC_MODE_SHARED    0x00
@@ -303,6 +298,8 @@
 #define IPMI_OEM_INVENTEC_EXTENDED_CONFIG_FIRMWARE_UPDATE_PROTOCOL_BITMASK_HTTP  0x04
 
 #define IPMI_OEM_INVENTEC_EXTENDED_CONFIG_FIRMWARE_UPDATE_DELAY_TIME_RANDOM 0xFF
+
+#define IPMI_OEM_INVENTEC_MAX_MACADDRLEN 24
 
 #define IPMI_OEM_INVENTEC_UPDATE_FIRMWARE_INTERFACE_SYSTEM_INTERFACE 0x00
 #define IPMI_OEM_INVENTEC_UPDATE_FIRMWARE_INTERFACE_NETWORKING       0x01
@@ -962,8 +959,8 @@ ipmi_oem_inventec_get_mac_address (ipmi_oem_state_data_t *state_data)
   if (ipmi_cmd_get_lan_configuration_parameters_mac_address (state_data->ipmi_ctx,
                                                              lan_channel_number,
                                                              IPMI_GET_LAN_PARAMETER,
-                                                             IPMI_OEM_INVENTEC_SET_SELECTOR,
-                                                             IPMI_OEM_INVENTEC_BLOCK_SELECTOR,
+                                                             IPMI_LAN_CONFIGURATION_PARAMETERS_NO_SET_SELECTOR,
+                                                             IPMI_LAN_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                              obj_cmd_rs) < 0)
     {
       pstdout_fprintf (state_data->pstate,
