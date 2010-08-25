@@ -425,11 +425,12 @@ each enabled user is reset to 0.  Multiple key=value pairs may be
 specified.  If no key=value pairs are specifed, available pairs are
 output.  Command confirmed to work on Inventec 5441/5442 (Dell Xanadu
 II/III).
+.TP
 .B get-account-status
 This OEM command will output the current account status of users on
 the BMC.  This command is particularly usefor for determinining which
 users in the system may have been locked out via authentication
-failurs configured via \fIset\-authentication\-config\fR.  Command
+failures configured via \fIset\-authentication\-config\fR.  Command
 confirmed to work on Inventec 5441/5442 (Dell Xanadu II/III).
 .TP
 .B get-dns-config
@@ -495,7 +496,7 @@ pairs are output.  Command confirmed to work on Inventec 5441/5442
 (Dell Xanadu II/III).
 .TP
 .B get-sol-idle-timeout
-This OEM command will get the SOL idle timeout Command confirmed to
+This OEM command will get the SOL idle timeout.  Command confirmed to
 work on Inventec 5441/5442 (Dell Xanadu II/III).
 .TP
 .B set-sol-idle-timeout \fIidle\-timeout\fR
@@ -586,6 +587,115 @@ II) for \fIat24c256\fR.
 .TP
 .B Quanta
 .RS
+.TP
+.B get-nic-mode
+This OEM command will determine the current NIC mode as dedicated or
+shared.  Dedicated indicates IPMI is only available on the dedicated
+management port.  Shared indicates IPMI is also available on one of
+the primary ethernet ports.  Command confirmed to work on Quanta S99Q
+(Dell FS12-TY).
+.TP
+.B set-nic-mode \fIdedicated|shared\fR
+This OEM command will set the current NIC mode to dedicated or shared.
+(See \fIget\-nic\-mode\fR above for description on dedicated
+vs. shared mode.)  This OEM command may internally reset the BMC,
+making the BMC unusable for awhile.  Command confirmed to work on
+Quanta S99Q (Dell FS12-TY).
+.TP
+.B get-bmc-services
+This OEM command will display the currently enabled BMC services.
+Command confirmed to work on Quanta S99Q (Dell FS12-TY).
+.TP
+.B set-bmc-services \fIenable|disable\fR \fIall|kvm|http|ssh\fR
+This OEM command will enable or disable other BMC services besides
+IPMI.  \fIall\fR can be specified to enable/disable all services,
+\fIkvm\fR specifies KVM and Virtual Storage, \fIhttp\fR specifies HTTP
+and HTTPS, and \fIssh\fR specifies both SSH and Telnet.  Command
+confirmed to work on Quanta S99Q (Dell FS12-TY).
+.TP
+.B get-account-status
+This OEM command will output the current account status of users on
+the BMC.  This command is particularly usefor for determinining which
+users in the system may have been locked out via authentication
+failures configured via \fIset\-authentication\-config\fR.  Command
+confirmed to work on Quanta S99Q (Dell FS12-TY).
+.TP
+.B get-dns-config
+This OEM command will display additional OEM DNS settings.
+(See \fIset\-dns\-config\fR below for description on
+outputs.)  Command confirmed to work on Quanta S99Q (Dell FS12-TY).
+.TP
+.B set-dns-config \fIKEY=VALUE ...\fR
+This OEM command will set additional OEM DNS settings on the IPMI
+card.  The possible keys and values are \fIdnsdhcp=enable|disable\fR,
+\fIdnsserver1=ipaddress\fR, \fIdnsserver2=ipaddress\fR,
+\fIdnsregisterbmc=enable|disable\fR, \fIdnsbmchostname=string\fR,
+\fIdnsdomainnamedhcp=enable|disable\fR, and
+\fIdnsdomainname=string\fR.  \fIdnsdhcp\fR specifies if the DNS server
+IP addresses should be assigned from the DHCP server.
+\fIdnsserver1\fR and \fIdnsserver2\fR specify the IP addess for server
+1 and 2 respectively.  These fields are read only if \fIdnsdhcp\fR and
+DHCP are enabled.  \fIdnsregisterbmc\fR specifies if the BMC host name
+is registered via the DNS server.  \fIdnsbmchostname\fR specifies the
+BMC host name.  This field is read only if \fIdnsregisterbmc\fR is
+enabled.  \fIdnsdomainnamedhcp\fR specifies if the DNS domainname
+should be assigned from the DHCP server.  \fIdnsdomainname\fR
+specifies the DNS domain name string.  This field is read only if
+\fIdnsdomainnamedhcp\fR is enabled.  Multiple key=value pairs may be
+specified.  If no key=value pairs are specifed, available pairs are
+output.  Command confirmed to work on Quanta S99Q (Dell FS12-TY).
+.TP
+.B get-web-server-config
+This OEM command will get the current web server configuration on the
+IPMI card.  Command confirmed to work on Quanta S99Q (Dell FS12-TY).
+.TP
+.B set-web-server-config \fIKEY=VALUE ...\fR
+This OEM command will set the current web server configuration on the
+IPMI card.  The possible keys and values are
+\fIwebserver=enable|disable\fR, \fIwebservertimeout=seconds\fR,
+\fIhttpportnumber=num\fR, and \fIhttpsportnumber=num\fR.  Multiple
+key=value pairs may be specified.  If no key=value pairs are specifed,
+available pairs are output.  Command confirmed to work on Quanta S99Q
+(Dell FS12-TY).
+.TP
+.B get-power-management-config
+This OEM command will get the current power management configuration
+on the IPMI card.  Command confirmed to work on Quanta S99Q (Dell
+FS12-TY).
+.TP
+.B set-power-management-config \fIKEY=VALUE ...\fR
+This OEM command will set the current power management configuration
+on the IPMI card.  The possible keys and values are
+\fIdpnmpowermanagement=enable|disable\fR,
+\fIpowerstaggeringacrecovery=immediate|auto|user\fR,
+\fIpowerondelay=seconds\fR, and \fImaxpowerondelay=seconds\fR.
+\fIdpnmpowermanagement\fR enables or diables DPNM, Dynamic Power Node
+Management.  For \fIpowerstaggeringacrecovery\fR, \fIimmediate\fR
+specifies no delay, \fIauto\fR generates a delay time between the
+minimum and maximum configured, and \fIuser\fR uses the user defined
+time defined by \fIpowerondelay\fR.  \fIpowerondelay\fR must be within
+the minimum and maximum power on delay times.  Multiple key=value
+pairs may be specified.  If no key=value pairs are specifed, available
+pairs are output.  Command confirmed to work on Quanta S99Q (Dell
+FS12-TY).
+.TP
+.B get-sol-idle-timeout
+This OEM command will get the SOL idle timeout.  Command confirmed to
+work on Quanta S99Q (Dell FS12-TY).
+.TP
+.B set-sol-idle-timeout \fIidle\-timeout\fR
+This OEM command will set the SOL idle timeout.  The
+\fIidle\-timeout\fR is one-based, max of 65535, in 1 minute increments
+(e.g. 1 = 1 minute), 0 or "none" will configure no timeout.  Command
+confirmed to work on Quanta S99Q (Dell FS12-TY).
+.TP
+.B get-telnet-ssh-redirect-status
+This OEM command will get the telnet/SSH redirect status.  Command
+confirmed to work on Quanta S99Q (Dell FS12-TY).
+.TP
+.B set-telnet-ssh-redirect-status \fIenable|disable\fR
+This OEM command will enable or disable telnet/SSH redirect status.
+Command confirmed to work on Quanta S99Q (Dell FS12-TY).
 .TP
 .B reset-to-defaults \fIall|user|lan|sol|serial|pef\fR
 This OEM command will reset certain BMC configuration sections back to
