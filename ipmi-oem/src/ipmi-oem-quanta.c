@@ -435,6 +435,15 @@
 /* 0x0F-0xFE - Reserved */
 #define IPMI_OEM_QUANTA_PROCESSOR_TYPE_NO_CPU_PRESENT 0xFF
 
+#define IPMI_OEM_QUANTA_MAC_ADDRESS_BYTES            6
+
+#define IPMI_OEM_QUANTA_MAC_ADDRESS_BUS_ID           2
+#define IPMI_OEM_QUANTA_MAC_ADDRESS_CHANNEL          0
+#define IPMI_OEM_QUANTA_MAC_ADDRESS_SLAVE_ADDRESS    0x55
+#define IPMI_OEM_QUANTA_MAC_ADDRESS_BASE_OFFSET      0x0000
+#define IPMI_OEM_QUANTA_MAC_ADDRESS_DEDICATED_OFFSET 0x0000
+#define IPMI_OEM_QUANTA_MAC_ADDRESS_SHARED_OFFSET    0x0006
+
 static int
 _quanta_get_reservation (ipmi_oem_state_data_t *state_data,
                          uint8_t *reservation_id)
@@ -2475,4 +2484,280 @@ ipmi_oem_quanta_get_processor_information (ipmi_oem_state_data_t *state_data)
   rv = 0;
  cleanup:
   return (rv);
+}
+
+static int
+_ipmi_oem_quanta_read_mac_address_s99q (ipmi_oem_state_data_t *state_data)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t data_buf[IPMI_OEM_MAX_BYTES];
+  uint8_t data_rq[IPMI_OEM_MAX_BYTES];
+  int data_len;
+  int rv = -1;
+
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 2);
+
+  if (strcasecmp (state_data->prog_data->args->oem_options[1], "shared")
+      && strcasecmp (state_data->prog_data->args->oem_options[1], "dedicated"))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[1]);
+      goto cleanup;
+    }
+
+  /* Uses Master-Read Write Command
+   *
+   * Most addresses provided directly from Dell.
+   *
+   * byte 1 = 5 (channel = 0, bus id = 2, bus-type = 1 = private)
+   * byte 2 = 0xAA (slave address 7 bit = 0x55, lowest bit for r/w, 0b = read, 1b = write)
+   * byte 3 = 0x0C - read count
+   * byte 4/5 - 0x0000 - address to read, msb first
+   * 
+   * response
+   *
+   * byte 1 = comp-code
+   * byte 2-7 = dedicated MAC
+   * byte 8-13 = shared MAC
+   */
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_master_write_read_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  if (fiid_obj_clear (obj_cmd_rs) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_clear: %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+
+  data_rq[0] = (IPMI_OEM_QUANTA_MAC_ADDRESS_BASE_OFFSET & 0xFF00) >> 8;
+  data_rq[1] = (IPMI_OEM_QUANTA_MAC_ADDRESS_BASE_OFFSET & 0x00FF);
+
+  if (ipmi_cmd_master_write_read (state_data->ipmi_ctx,
+                                  IPMI_BUS_TYPE_PRIVATE,
+                                  IPMI_OEM_QUANTA_MAC_ADDRESS_BUS_ID,
+                                  IPMI_OEM_QUANTA_MAC_ADDRESS_CHANNEL,
+                                  IPMI_OEM_QUANTA_MAC_ADDRESS_SLAVE_ADDRESS,
+                                  IPMI_OEM_QUANTA_MAC_ADDRESS_BYTES * 2, /* returns two MACs */
+                                  data_rq,
+                                  2,
+                                  obj_cmd_rs) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_master_write_read: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if ((data_len = fiid_obj_get_data (obj_cmd_rs,
+                                     "data",
+                                     data_buf,
+                                     IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get_data: 'data': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+
+  if (data_len != (IPMI_OEM_QUANTA_MAC_ADDRESS_BYTES * 2))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "invalid bytes returned: %u\n",
+                       data_len);
+      goto cleanup;
+    }
+
+  if (!strcasecmp (state_data->prog_data->args->oem_options[1], "dedicated"))
+    pstdout_printf (state_data->pstate,
+                    "%02X:%02X:%02X:%02X:%02X:%02X\n",
+                    data_buf[0],
+                    data_buf[1],
+                    data_buf[2],
+                    data_buf[3],
+                    data_buf[4],
+                    data_buf[5]);
+  else
+    pstdout_printf (state_data->pstate,
+                    "%02X:%02X:%02X:%02X:%02X:%02X\n",
+                    data_buf[6],
+                    data_buf[7],
+                    data_buf[8],
+                    data_buf[9],
+                    data_buf[10],
+                    data_buf[11]);
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
+int
+ipmi_oem_quanta_read_mac_address (ipmi_oem_state_data_t *state_data)
+{
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 2);
+
+  if (!strcasecmp (state_data->prog_data->args->oem_options[0], "s99q"))
+    return _ipmi_oem_quanta_read_mac_address_s99q (state_data);
+  
+  pstdout_fprintf (state_data->pstate,
+                   stderr,
+                   "%s:%s invalid OEM option argument '%s'\n",
+                   state_data->prog_data->args->oem_id,
+                   state_data->prog_data->args->oem_command,
+                   state_data->prog_data->args->oem_options[0]);
+  return (-1);
+}
+
+static int
+_ipmi_oem_quanta_write_mac_address_s99q (ipmi_oem_state_data_t *state_data)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  unsigned int b1, b2, b3, b4, b5, b6;
+  uint8_t data_rq[IPMI_OEM_MAX_BYTES];
+  int rv = -1;
+
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 3);
+
+  if (strcasecmp (state_data->prog_data->args->oem_options[1], "shared")
+      && strcasecmp (state_data->prog_data->args->oem_options[1], "dedicated"))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[1]);
+      goto cleanup;
+    }
+  
+  if (sscanf (state_data->prog_data->args->oem_options[2],
+              "%02x:%02x:%02x:%02x:%02x:%02x",
+              &b1,
+              &b2,
+              &b3,
+              &b4,
+              &b5,
+              &b6) != 6)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[2]);
+      goto cleanup;
+    }
+
+  /* Uses Master-Read Write Command
+   *
+   * Most addresses provided directly from Dell.
+   *
+   * byte 1 = 5 (channel = 0, bus id = 2, bus-type = 1 = private)
+   * byte 2 = 0xAA (slave address 7 bit = 0x55, lowest bit for r/w, 0b = read, 1b = write)
+   * byte 3 = 0x00 - read count
+   * byte 4/5 - 0x0000 | 0x0006 - address to read, msb first
+   *          - 0x0000 for dedicated
+   *          - 0x0006 for shared
+   * 
+   * response
+   *
+   * byte 1 = comp-code
+   */
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_master_write_read_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  if (fiid_obj_clear (obj_cmd_rs) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_clear: %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+
+  if (!strcasecmp (state_data->prog_data->args->oem_options[1], "dedicated"))
+    {
+      data_rq[0] = (IPMI_OEM_QUANTA_MAC_ADDRESS_DEDICATED_OFFSET & 0xFF00) >> 8;
+      data_rq[1] = (IPMI_OEM_QUANTA_MAC_ADDRESS_DEDICATED_OFFSET & 0x00FF);
+    }
+  else
+    {
+      data_rq[0] = (IPMI_OEM_QUANTA_MAC_ADDRESS_SHARED_OFFSET & 0xFF00) >> 8;
+      data_rq[1] = (IPMI_OEM_QUANTA_MAC_ADDRESS_SHARED_OFFSET & 0x00FF);
+    }
+
+  data_rq[2] = b1;
+  data_rq[3] = b2;
+  data_rq[4] = b3;
+  data_rq[5] = b4;
+  data_rq[6] = b5;
+  data_rq[7] = b6;
+
+  if (ipmi_cmd_master_write_read (state_data->ipmi_ctx,
+                                  IPMI_BUS_TYPE_PRIVATE,
+                                  IPMI_OEM_QUANTA_MAC_ADDRESS_BUS_ID,
+                                  IPMI_OEM_QUANTA_MAC_ADDRESS_CHANNEL,
+                                  IPMI_OEM_QUANTA_MAC_ADDRESS_SLAVE_ADDRESS,
+                                  0,
+                                  data_rq,
+                                  8,
+                                  obj_cmd_rs) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_master_write_read: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
+int
+ipmi_oem_quanta_write_mac_address (ipmi_oem_state_data_t *state_data)
+{
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 3);
+
+  if (!strcasecmp (state_data->prog_data->args->oem_options[0], "s99q"))
+    return _ipmi_oem_quanta_write_mac_address_s99q (state_data);
+  
+  pstdout_fprintf (state_data->pstate,
+                   stderr,
+                   "%s:%s invalid OEM option argument '%s'\n",
+                   state_data->prog_data->args->oem_id,
+                   state_data->prog_data->args->oem_command,
+                   state_data->prog_data->args->oem_options[0]);
+  return (-1);
 }

@@ -709,6 +709,28 @@ This OEM command will determine system processor information.  By
 default, information about each processor will be output.  If a
 \fIprocessor_index\fR is specified, only that specific processor will
 be output.  Command confirmed to work on Quanta S99Q (Dell FS12-TY).
+.TP
+.B read-mac-address \fIs99q\fR \fIdedicated|shared\fR
+This command will read the currently configured dedicated or shared
+MAC address for a specified motherboard.  It will read the MAC address
+directly from the BMC eeprom.  Command confirmed to work on Quanta
+S99Q (Dell FS12-TY) for \fIs99q\fR.
+.TP
+.B write-mac-address \fIs99q\fR \fIdedicated|shared\fR \fIMACADDR\fR
+This OEM command will set the dedicated or shared BMC MAC address for
+a specified motherboard.  It will be written directly to the BMC
+eeprom.  (See \fIget\-nic\-mode\fR above for description on dedicated
+vs. shared mode.)  The BMC MAC address cannot be set through the
+normal IPMI MAC address command (what is used in the
+.B bmc-config(8)
+tool).  The MACADDR should be specified in XX:XX:XX:XX:XX:XX form.  A
+shared BMC MAC address may conflict with normal communication ethernet
+communication on the primary ethernet port.  Users may wish to
+configuration an alternate MAC address instead.  After configuration
+of the MAC address, the BMC must be reset.  This may be accomplished
+by executing a cold-reset with
+.B bmc-device(8).
+Command confirmed to work on Quanta S99Q (Dell FS12-TY) for \fIs99q\fR.
 .RE
 .TP
 .B Sun

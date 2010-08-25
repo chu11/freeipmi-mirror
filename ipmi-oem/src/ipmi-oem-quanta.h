@@ -48,4 +48,7 @@ int ipmi_oem_quanta_reset_to_defaults (ipmi_oem_state_data_t *state_data);
 
 int ipmi_oem_quanta_get_processor_information (ipmi_oem_state_data_t *state_data);
 
+int ipmi_oem_quanta_read_mac_address (ipmi_oem_state_data_t *state_data);
+int ipmi_oem_quanta_write_mac_address (ipmi_oem_state_data_t *state_data);
+
 #endif
