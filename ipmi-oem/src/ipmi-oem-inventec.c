@@ -60,6 +60,28 @@
  * 0x?? - Completion Code
  */
 
+/* achu:
+ *
+ * Much of the Inventec extended configuration support is identical to
+ * the Quanta extended configuration support.  However, there are
+ * subtle differences.  Some extended configuration which is supported
+ * in one may not be supported in the other.
+ *
+ * While duplicating code is usually never good, in this particular
+ * circumstance I will flat out duplicate code under both
+ * motherboards.  I believe it is important to clearly
+ * document/delineate what is supported on what motherboards.
+ *
+ * In addition, I must take future motherboard support into
+ * consideration.  Since these OEM extensions have apparently come
+ * from a "common parent" code (I believe Avocent, but I may be wrong,
+ * because Dell Poweredges are also Avocent based but have completely
+ * different extensions), there may be other motherboards out there
+ * that are tweaked differently as well.  To have a common code base
+ * for all these different motherboards and their slight differences
+ * seems like a bad idea.
+ */
+
 /* achu: all named from doc except 'lan' configuration id, which I assumed names */
 
 #define IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_NIC                      0x02
@@ -2426,8 +2448,6 @@ ipmi_oem_inventec_set_sol_idle_timeout (ipmi_oem_state_data_t *state_data)
   return (rv);
 }
 
-#if 0
-/* cannot verify */
 int
 ipmi_oem_inventec_get_telnet_ssh_redirect_status (ipmi_oem_state_data_t *state_data)
 {
@@ -2492,7 +2512,6 @@ ipmi_oem_inventec_set_telnet_ssh_redirect_status (ipmi_oem_state_data_t *state_d
  cleanup:
   return (rv);
 }
-#endif
 
 #if 0
 /* waiting for verification from Dell */
