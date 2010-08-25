@@ -727,105 +727,105 @@ struct ipmi_oem_command oem_quanta[] =
       NULL,
       0,
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
-      ipmi_oem_inventec_get_nic_mode
+      ipmi_oem_quanta_get_nic_mode
     },
     {
       "set-nic-mode",
       "<dedicated|shared>",
       1,
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
-      ipmi_oem_inventec_set_nic_mode
+      ipmi_oem_quanta_set_nic_mode
     },
     {
       "get-bmc-services",
       NULL,
       0,
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
-      ipmi_oem_inventec_get_bmc_services
+      ipmi_oem_quanta_get_bmc_services
     },
     {
       "set-bmc-services",
       "<enable|disable> <all|kvm|http|ssh>",
       2,
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
-      ipmi_oem_inventec_set_bmc_services
+      ipmi_oem_quanta_set_bmc_services
     },
     {
       "get-account-status",
       NULL,
       0,
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
-      ipmi_oem_inventec_get_account_status
+      ipmi_oem_quanta_get_account_status
     },
     {
       "get-dns-config",
       NULL,
       0,
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
-      ipmi_oem_inventec_get_dns_config
+      ipmi_oem_quanta_get_dns_config
     },
     {
       "set-dns-config",
       "KEY=VALUE ...",
       0,
       IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
-      ipmi_oem_inventec_set_dns_config
+      ipmi_oem_quanta_set_dns_config
     },
     {
       "get-web-server-config",
       NULL,
       0,
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
-      ipmi_oem_inventec_get_web_server_config
+      ipmi_oem_quanta_get_web_server_config
     },
     {
       "set-web-server-config",
       "KEY=VALUE ...",
       0,
       IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
-      ipmi_oem_inventec_set_web_server_config
+      ipmi_oem_quanta_set_web_server_config
     },
     {
       "get-power-management-config",
       NULL,
       0,
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
-      ipmi_oem_inventec_get_power_management_config
+      ipmi_oem_quanta_get_power_management_config
     },
     {
       "set-power-management-config",
       "KEY=VALUE ...",
       0,
       IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
-      ipmi_oem_inventec_set_power_management_config
+      ipmi_oem_quanta_set_power_management_config
     },
     {
       "get-sol-idle-timeout",
       NULL,
       0,
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
-      ipmi_oem_inventec_get_sol_idle_timeout
+      ipmi_oem_quanta_get_sol_idle_timeout
     },
     {
       "set-sol-idle-timeout",
       "<idle-timeout>",
       1,
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
-      ipmi_oem_inventec_set_sol_idle_timeout
+      ipmi_oem_quanta_set_sol_idle_timeout
     },
     {
       "get-telnet-ssh-redirect-status",
       NULL,
       0,
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
-      ipmi_oem_inventec_get_telnet_ssh_redirect_status
+      ipmi_oem_quanta_get_telnet_ssh_redirect_status
     },
     {
       "set-telnet-ssh-redirect-status",
       "<enable|disable>",
       1,
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
-      ipmi_oem_inventec_set_telnet_ssh_redirect_status
+      ipmi_oem_quanta_set_telnet_ssh_redirect_status
     },
     {
       "reset-to-defaults",
@@ -840,6 +840,20 @@ struct ipmi_oem_command oem_quanta[] =
       0,
       IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
       ipmi_oem_quanta_get_processor_information
+    },
+    {
+      "read-mac-address",
+      "<s99q> <dedicated|shared>",
+      2,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_quanta_read_mac_address
+    },
+    {
+      "write-mac-address",
+      "<s99q> <dedicated|shared> <MACADDRESS>",
+      3,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_quanta_write_mac_address
     },
     {
       NULL,

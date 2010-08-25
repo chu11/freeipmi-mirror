@@ -3,7 +3,8 @@
 	* ipmi-oem/: Support Quanta get/set-nic-mode,
 	get/set-bmc-services, get-account-status, get/set-dns-config,
 	get/set-web-server-config, get/set-power-management-config,
-	get/set-sol-idle-timeout, get/set-telnet-ssh-redirect-status.
+	get/set-sol-idle-timeout, get/set-telnet-ssh-redirect-status,
+	read/write-mac-address.
 
 	* ipmi-oem/: Support get/set-telnet-ssh-redirect-status for
 	inventec.
