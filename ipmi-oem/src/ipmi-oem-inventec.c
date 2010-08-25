@@ -2445,8 +2445,6 @@ ipmi_oem_inventec_set_sol_idle_timeout (ipmi_oem_state_data_t *state_data)
   return (rv);
 }
 
-#if 0
-/* cannot verify */
 int
 ipmi_oem_inventec_get_telnet_ssh_redirect_status (ipmi_oem_state_data_t *state_data)
 {
@@ -2511,7 +2509,6 @@ ipmi_oem_inventec_set_telnet_ssh_redirect_status (ipmi_oem_state_data_t *state_d
  cleanup:
   return (rv);
 }
-#endif
 
 #if 0
 /* waiting for verification from Dell */

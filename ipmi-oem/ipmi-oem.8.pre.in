@@ -504,16 +504,14 @@ This OEM command will set the SOL idle timeout.  The
 \fIidle\-timeout\fR is one-based, max of 65535, in 1 minute increments
 (e.g. 1 = 1 minute), 0 or "none" will configure no timeout.  Command
 confirmed to work on Inventec 5441/5442 (Dell Xanadu II/III).
-.if 0 \{
 .TP
 .B get-telnet-ssh-redirect-status
 This OEM command will get the telnet/SSH redirect status.
-Command confirmed to work on Inventec 5441/5442 (Dell Xanadu II/III).
+Command confirmed to work on Inventec 5442 (Dell Xanadu III).
 .TP
 .B set-telnet-ssh-redirect-status \fIenable|disable\fR
 This OEM command will enable or disable telnet/SSH redirect status.
-Command confirmed to work on Inventec 5441/5442 (Dell Xanadu II/III).
-\}
+Command confirmed to work on Inventec 5442 (Dell Xanadu III).
 .if 0 \{
 .TP
 .B get-firmware-update-config

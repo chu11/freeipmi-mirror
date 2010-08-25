@@ -4,6 +4,9 @@
 	get/set-bmc-services, get-account-status, get/set-dns-config,
 	get/set-web-server-config, get/set-power-management-config,
 	get/set-sol-idle-timeout, get/set-telnet-ssh-redirect-status.
+
+	* ipmi-oem/: Support get/set-telnet-ssh-redirect-status for
+	inventec.
 	
 2010-08-24  Albert Chu <chu11@llnl.gov>
 

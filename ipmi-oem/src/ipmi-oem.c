@@ -601,8 +601,6 @@ struct ipmi_oem_command oem_inventec[] =
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_inventec_set_sol_idle_timeout
     },
-#if 0
-/* cannot verify */
     {
       "get-telnet-ssh-redirect-status",
       NULL,
@@ -617,7 +615,6 @@ struct ipmi_oem_command oem_inventec[] =
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_inventec_set_telnet_ssh_redirect_status
     },
-#endif
 #if 0
     /* waiting for verification from Dell */
     {
