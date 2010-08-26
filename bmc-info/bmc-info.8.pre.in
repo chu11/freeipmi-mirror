@@ -57,7 +57,7 @@ Display only channel information.
 #include <@top_srcdir@/common/man/manpage-common-workaround-text.man>
 #include <@top_srcdir@/common/man/manpage-common-oem-interpretation.man>
 .LP
-Intel SR870BN4/Tiger4, Dell Poweredge R610, Dell Poweredge R710
+Dell Poweredge R610, Dell Poweredge R710, Intel SR870BN4/Tiger4
 .SH "EXAMPLES"
 .B # bmc-info
 .PP
