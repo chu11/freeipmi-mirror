@@ -331,7 +331,9 @@ bmc-info:
 When using hostranges, you are probably trying to verify the firmware
 version or hardware type for each BMC in your cluster.  You probably
 want to run bmc-info with the consolidated output (-C) set most of the
-time.
+time.  System GUIDs are also different between systems, so in order to
+limit the amount of different output, you may want to run with the
+--get-device-id option to limit the output.
 
 ipmi-sel:
 
