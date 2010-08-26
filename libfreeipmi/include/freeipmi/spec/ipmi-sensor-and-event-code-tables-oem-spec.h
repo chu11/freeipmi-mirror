@@ -254,6 +254,52 @@ extern unsigned int ipmi_sensor_type_oem_dell_upgrade_max_index;
 #define IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_GENERAL_FAILURE_AFTER_VIDEO             0xFE
 
 /*******************************************
+ * Intel                                    *
+ *******************************************/
+
+/*
+ * Intel S5500WB/Penguin Computing Relion 700
+ */
+
+#define IPMI_OEM_INTEL_EVENT_DATA3_DEVICE_NUMBER_BITMASK   0xF8
+#define IPMI_OEM_INTEL_EVENT_DATA3_DEVICE_NUMBER_SHIFT     3
+
+#define IPMI_OEM_INTEL_EVENT_DATA3_FUNCTION_NUMBER_BITMASK 0x07
+#define IPMI_OEM_INTEL_EVENT_DATA3_FUNCTION_NUMBER_SHIFT   0
+
+/* achu: As far as I can tell, following are neither event/reading
+ * type code generic nor sensor-specific offsets, but for a
+ * combination of:
+ *
+ * IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_FATAL_SENSOR
+ *
+ * and
+ *
+ * IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
+ */
+#define IPMI_OEM_INTEL_SPECIFIC_PCIE_FATAL_SENSOR_DATA_LINK_LAYER_PROTOCOL_ERROR 0x00
+#define IPMI_OEM_INTEL_SPECIFIC_PCIE_FATAL_SENSOR_SURPRISE_LINK_DOWN             0x01
+#define IPMI_OEM_INTEL_SPECIFIC_PCIE_FATAL_SENSOR_UNEXPECTED_COMPLETION_A        0x02
+#define IPMI_OEM_INTEL_SPECIFIC_PCIE_FATAL_SENSOR_UNSUPPORTED_REQUEST            0x03
+#define IPMI_OEM_INTEL_SPECIFIC_PCIE_FATAL_SENSOR_POISONED_TLP                   0x04
+#define IPMI_OEM_INTEL_SPECIFIC_PCIE_FATAL_SENSOR_FLOW_CONTROL_PROTOCOL          0x05
+#define IPMI_OEM_INTEL_SPECIFIC_PCIE_FATAL_SENSOR_COMPLETION_TIMEOUT             0x06
+#define IPMI_OEM_INTEL_SPECIFIC_PCIE_FATAL_SENSOR_COMPLETER_ABORT                0x07
+#define IPMI_OEM_INTEL_SPECIFIC_PCIE_FATAL_SENSOR_RECEIVER_BUFFER_OVERFLOW       0x08
+#define IPMI_OEM_INTEL_SPECIFIC_PCIE_FATAL_SENSOR_ACS_VIOLATION                  0x09
+#define IPMI_OEM_INTEL_SPECIFIC_PCIE_FATAL_SENSOR_MALFORMED_TLP                  0x0A
+#define IPMI_OEM_INTEL_SPECIFIC_PCIE_FATAL_SENSOR_RECEIVED_FATAL_MESSAGE         0x0B
+#define IPMI_OEM_INTEL_SPECIFIC_PCIE_FATAL_SENSOR_UNEXPECTED_COMPLETION_B        0x0C
+#define IPMI_OEM_INTEL_SPECIFIC_PCIE_FATAL_SENSOR_RECEIVED_NON_FATAL_MESSAGE     0x0D
+
+/*
+ * String arrays for above
+ */
+
+extern const char * const ipmi_oem_intel_specific_pci_fatal_sensor[];
+extern unsigned int ipmi_oem_intel_specific_pci_fatal_sensor_max_index;
+
+/*******************************************
  * Inventec                                *
  *******************************************/
 

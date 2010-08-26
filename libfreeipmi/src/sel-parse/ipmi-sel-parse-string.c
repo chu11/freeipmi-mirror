@@ -63,6 +63,7 @@
 #include "ipmi-sel-parse-defs.h"
 #include "ipmi-sel-parse-string.h"
 #include "ipmi-sel-parse-string-dell.h"
+#include "ipmi-sel-parse-string-intel.h"
 #include "ipmi-sel-parse-string-inventec.h"
 #include "ipmi-sel-parse-string-quanta.h"
 #include "ipmi-sel-parse-string-sun.h"
@@ -832,6 +833,19 @@ _output_oem_event_data1_class_oem (ipmi_sel_parse_ctx_t ctx,
   if (ret)
     return (1);
 
+  if ((ret = ipmi_sel_parse_output_intel_event_data1_class_oem (ctx,
+                                                                sel_parse_entry,
+                                                                sel_record_type,
+                                                                tmpbuf,
+                                                                tmpbuflen,
+                                                                flags,
+                                                                wlen,
+                                                                system_event_record_data)) < 0)
+    return (-1);
+  
+  if (ret)
+    return (1);
+
   if ((ret = ipmi_sel_parse_output_inventec_event_data1_class_oem (ctx,
                                                                    sel_parse_entry,
                                                                    sel_record_type,
@@ -1183,6 +1197,19 @@ _output_oem_event_data2_class_oem (ipmi_sel_parse_ctx_t ctx,
   if (ret)
     return (1);
   
+  if ((ret = ipmi_sel_parse_output_intel_event_data2_class_oem (ctx,
+                                                                sel_parse_entry,
+                                                                sel_record_type,
+                                                                tmpbuf,
+                                                                tmpbuflen,
+                                                                flags,
+                                                                wlen,
+                                                                system_event_record_data)) < 0)
+    return (-1);
+  
+  if (ret)
+    return (1);
+
   if ((ret = ipmi_sel_parse_output_inventec_event_data2_class_oem (ctx,
 								   sel_parse_entry,
 								   sel_record_type,
@@ -1746,6 +1773,19 @@ _output_oem_event_data3_class_oem (ipmi_sel_parse_ctx_t ctx,
   if (ret)
     return (1);
   
+  if ((ret = ipmi_sel_parse_output_intel_event_data3_class_oem (ctx,
+                                                                sel_parse_entry,
+                                                                sel_record_type,
+                                                                tmpbuf,
+                                                                tmpbuflen,
+                                                                flags,
+                                                                wlen,
+                                                                system_event_record_data)) < 0)
+    return (-1);
+  
+  if (ret)
+    return (1);
+
   if ((ret = ipmi_sel_parse_output_inventec_event_data3_class_oem (ctx,
 								   sel_parse_entry,
 								   sel_record_type,

@@ -71,6 +71,17 @@ extern "C" {
 #define IPMI_SENSOR_NUMBER_OEM_DELL_MSR_INFO_LOG                                        0x28
 
 /*******************************************
+ * Intel                                   *
+ *******************************************/
+
+/*
+ * Intel S5500WB/Penguin Computing Relion 700
+ */
+
+#define IPMI_SENSOR_NUMBER_OEM_INTEL_PCIE_FATAL_SENSOR       0x04
+#define IPMI_SENSOR_NUMBER_OEM_INTEL_PCIE_CORRECTABLE_SENSOR 0x05
+
+/*******************************************
  * Inventec                                *
  *******************************************/
 
