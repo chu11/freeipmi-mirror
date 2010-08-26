@@ -1907,13 +1907,12 @@ ipmi_get_oem_specific_message (uint32_t manufacturer_id,
    *
    * Intel S5500WB/Penguin Computing Relion 700
    *
-   * Event Reading Type Code = IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_FATAL_SENSOR
-   * Sensor Type = IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
    */
   if (manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL
       && product_id == IPMI_INTEL_PRODUCT_ID_S5500WB)
     {
-      if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_FATAL_SENSOR
+      if ((event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_FATAL_SENSOR
+           || event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_CORRECTABLE_SENSOR)
           && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
         return (_get_event_message (offset,
                                     buf,

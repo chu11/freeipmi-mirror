@@ -261,21 +261,9 @@ extern unsigned int ipmi_sensor_type_oem_dell_upgrade_max_index;
  * Intel S5500WB/Penguin Computing Relion 700
  */
 
-#define IPMI_OEM_INTEL_EVENT_DATA3_DEVICE_NUMBER_BITMASK   0xF8
-#define IPMI_OEM_INTEL_EVENT_DATA3_DEVICE_NUMBER_SHIFT     3
-
-#define IPMI_OEM_INTEL_EVENT_DATA3_FUNCTION_NUMBER_BITMASK 0x07
-#define IPMI_OEM_INTEL_EVENT_DATA3_FUNCTION_NUMBER_SHIFT   0
-
-/* achu: As far as I can tell, following are neither event/reading
- * type code generic nor sensor-specific offsets, but for a
- * combination of:
- *
- * IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_FATAL_SENSOR
- *
- * and
- *
- * IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
+/*
+ * Event Reading Type Code = IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_FATAL_SENSOR
+ * Sensor Type = IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
  */
 #define IPMI_OEM_INTEL_SPECIFIC_PCIE_FATAL_SENSOR_DATA_LINK_LAYER_PROTOCOL_ERROR 0x00
 #define IPMI_OEM_INTEL_SPECIFIC_PCIE_FATAL_SENSOR_SURPRISE_LINK_DOWN             0x01
@@ -293,11 +281,32 @@ extern unsigned int ipmi_sensor_type_oem_dell_upgrade_max_index;
 #define IPMI_OEM_INTEL_SPECIFIC_PCIE_FATAL_SENSOR_RECEIVED_NON_FATAL_MESSAGE     0x0D
 
 /*
+ * Event Reading Type Code = IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_CORRECTABLE_SENSOR
+ * Sensor Type = IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
+ */
+#define IPMI_OEM_INTEL_SPECIFIC_PCIE_CORRECTABLE_SENSOR_RECEIVER_ERROR       0x00
+#define IPMI_OEM_INTEL_SPECIFIC_PCIE_CORRECTABLE_SENSOR_BAD_DLLP             0x01
+#define IPMI_OEM_INTEL_SPECIFIC_PCIE_CORRECTABLE_SENSOR_BAD_TLLP             0x02
+#define IPMI_OEM_INTEL_SPECIFIC_PCIE_CORRECTABLE_SENSOR_REPLAY_NUM_ROLLOVER  0x03
+#define IPMI_OEM_INTEL_SPECIFIC_PCIE_CORRECTABLE_SENSOR_REPLAY_TIMER_TIMEOUT 0x04
+#define IPMI_OEM_INTEL_SPECIFIC_PCIE_CORRECTABLE_SENSOR_ADVISORY_NON_FATAL   0x05
+#define IPMI_OEM_INTEL_SPECIFIC_PCIE_CORRECTABLE_SENSOR_LINK_BW_CHANGED      0x06
+
+#define IPMI_OEM_INTEL_EVENT_DATA3_DEVICE_NUMBER_BITMASK   0xF8
+#define IPMI_OEM_INTEL_EVENT_DATA3_DEVICE_NUMBER_SHIFT     3
+
+#define IPMI_OEM_INTEL_EVENT_DATA3_FUNCTION_NUMBER_BITMASK 0x07
+#define IPMI_OEM_INTEL_EVENT_DATA3_FUNCTION_NUMBER_SHIFT   0
+
+/*
  * String arrays for above
  */
 
 extern const char * const ipmi_oem_intel_specific_pci_fatal_sensor[];
 extern unsigned int ipmi_oem_intel_specific_pci_fatal_sensor_max_index;
+
+extern const char * const ipmi_oem_intel_specific_pci_correctable_sensor[];
+extern unsigned int ipmi_oem_intel_specific_pci_correctable_sensor_max_index;
 
 /*******************************************
  * Inventec                                *
