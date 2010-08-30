@@ -83,6 +83,9 @@ etc.), how inform ipmiconsole, b/c IPMI session could still be alive
 do keepalive-ping w/ NUL char, make sure session still really alive
 - "learn" workarounds function - to figure out workaround flags for user
 load alternate defaults into libipmiconsole
+support simultaneous SOL sessions
+- never tested b/c no motherboard I have supports, but should just work
+- maybe need to have option to not check for currently running session??
 
 hostrange
 ---------
