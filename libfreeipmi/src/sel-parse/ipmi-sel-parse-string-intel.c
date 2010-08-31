@@ -222,6 +222,29 @@ ipmi_sel_parse_output_intel_event_data2_class_oem (ipmi_sel_parse_ctx_t ctx,
       return (1);
     }
   
+  /* OEM Interpretation
+   *
+   * Intel S5500WB/Penguin Computing Relion 700
+   */
+  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL
+      && ctx->product_id == IPMI_INTEL_PRODUCT_ID_S5500WB
+      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
+      && ((system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_QPI_CORRECTABLE_SENSOR
+	   && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QPI_CORRECTABLE_SENSOR)
+	  || (system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_QPI_NON_FATAL_SENSOR
+	      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QPI_NON_FATAL_SENSOR)
+	  || ((system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_QPI_FATAL_SENSOR_A
+	       || system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_QPI_FATAL_SENSOR_B)
+	      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QPI_FATAL_SENSOR)))
+    {
+      snprintf (tmpbuf,
+                tmpbuflen,
+                "Socket %u",
+                system_event_record_data->event_data2);
+
+      return (1);
+    }
+
   return (0);
 }
 

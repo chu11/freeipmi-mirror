@@ -82,6 +82,14 @@ extern "C" {
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_PCIE_FATAL_SENSOR       0x04
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_PCIE_CORRECTABLE_SENSOR 0x05
 
+#define IPMI_SENSOR_NUMBER_OEM_INTEL_QPI_CORRECTABLE_SENSOR  0x06
+#define IPMI_SENSOR_NUMBER_OEM_INTEL_QPI_NON_FATAL_SENSOR    0x07
+/* QPI_FATAL_SENSOR_A and QPI_FATAL_SENSOR_B are identical, they are
+ * logical extensions to provide additional offset values
+ */
+#define IPMI_SENSOR_NUMBER_OEM_INTEL_QPI_FATAL_SENSOR_A      0x17
+#define IPMI_SENSOR_NUMBER_OEM_INTEL_QPI_FATAL_SENSOR_B      0x18
+
 /*******************************************
  * Inventec                                *
  *******************************************/
