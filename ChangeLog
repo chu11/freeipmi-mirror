@@ -1,5 +1,9 @@
 2010-08-31  Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/: Support inventec restore-to-defaults.
+	
+2010-08-31  Albert Chu <chu11@llnl.gov>
+
 	* ipmi-sensors/src/ipmi-sensors-detailed-output.c
 	(_detailed_output_event_enable): Gracefully handle
 	IPMI_COMP_CODE_COMMAND_RESPONSE_COULD_NOT_BE_PROVIDED error.

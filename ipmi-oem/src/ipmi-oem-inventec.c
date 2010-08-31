@@ -3251,8 +3251,6 @@ ipmi_oem_inventec_update_firmware (ipmi_oem_state_data_t *state_data)
 }
 #endif
 
-#if 0
-/* cannot verify */
 int
 ipmi_oem_inventec_restore_to_defaults (ipmi_oem_state_data_t *state_data)
 {
@@ -3326,8 +3324,13 @@ ipmi_oem_inventec_restore_to_defaults (ipmi_oem_state_data_t *state_data)
 
   if (!strcasecmp (state_data->prog_data->args->oem_options[0], "all"))
     {
+#if 0
+      /* achu: Compared to Quanta, if you set this, it doesn't work.
+       * I have no idea why.
+       */
       bytes_rq[1] = IPMI_OEM_INVENTEC_RESTORE_TO_DEFAULTS_RESTORE_FLAG_RESTORE_PARAMETERS_NOT_INCLUDED_BELOW;
       bytes_rq[1] <<= IPMI_OEM_INVENTEC_RESTORE_TO_DEFAULTS_RESTORE_FLAG_SHIFT;
+#endif
       bytes_rq[1] |= IPMI_OEM_INVENTEC_RESTORE_TO_DEFAULTS_USER_ACCOUNTS_BITMASK;
       bytes_rq[1] |= IPMI_OEM_INVENTEC_RESTORE_TO_DEFAULTS_LAN_CONFIGURATION_BITMASK;
       bytes_rq[1] |= IPMI_OEM_INVENTEC_RESTORE_TO_DEFAULTS_SOL_CONFIGURATION_BITMASK;
@@ -3411,7 +3414,6 @@ ipmi_oem_inventec_restore_to_defaults (ipmi_oem_state_data_t *state_data)
  cleanup:
   return (rv);
 }
-#endif
 
 #if 0
 /* cannot verify */
