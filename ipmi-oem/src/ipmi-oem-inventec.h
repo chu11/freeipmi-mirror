@@ -66,10 +66,7 @@ int ipmi_oem_inventec_get_firmware_information (ipmi_oem_state_data_t *state_dat
 int ipmi_oem_inventec_update_firmware (ipmi_oem_state_data_t *state_data);
 #endif
 
-#if 0
-/* cannot verify */
 int ipmi_oem_inventec_restore_to_defaults (ipmi_oem_state_data_t *state_data);
-#endif
 
 #if 0
 /* cannot verify */

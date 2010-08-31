@@ -652,8 +652,6 @@ struct ipmi_oem_command oem_inventec[] =
       ipmi_oem_inventec_update_firmware
     },
 #endif
-#if 0
-    /* cannot verify */
     {
       "restore-to-defaults",
       "<all|user|lan|sol|serial|pef>",
@@ -661,7 +659,6 @@ struct ipmi_oem_command oem_inventec[] =
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_inventec_restore_to_defaults
     },
-#endif
 #if 0
     /* cannot verify */
     {
