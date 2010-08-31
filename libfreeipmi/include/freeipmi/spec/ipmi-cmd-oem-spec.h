@@ -69,15 +69,28 @@ extern "C" {
 #define IPMI_CMD_OEM_DELL_COPY_IMAGE_DATA   0x03
 
 /* IPMI_NET_FN_OEM_DELL_XANADU_RQ / IPMI_NET_FN_OEM_DELL_XANADU_RS */ 
-#define IPMI_CMD_OEM_DELL_SET_WEB_PORT_NUM    0x02
-#define IPMI_CMD_OEM_DELL_GET_WEB_PORT_NUM    0x03
-#define IPMI_CMD_OEM_DELL_SET_BOARD_ID        0x10
-#define IPMI_CMD_OEM_DELL_GET_BOARD_ID        0x11
-#define IPMI_CMD_OEM_DELL_SET_ASSET_TAG       0x12
-#define IPMI_CMD_OEM_DELL_SET_LAN_SOURCE      0x13
-#define IPMI_CMD_OEM_DELL_GET_LAN_SOURCE      0x14
-#define IPMI_CMD_OEM_DELL_SET_FCB_FW_VERSION  0x15
-#define IPMI_CMD_OEM_DELL_GET_FCB_FW_VERSION  0x16
+#define IPMI_CMD_OEM_DELL_SET_WEB_PORT_NUM                0x02
+#define IPMI_CMD_OEM_DELL_GET_WEB_PORT_NUM                0x03
+#define IPMI_CMD_OEM_DELL_SET_BOARD_ID                    0x10
+#define IPMI_CMD_OEM_DELL_GET_BOARD_ID                    0x11
+#define IPMI_CMD_OEM_DELL_SET_ASSET_TAG                   0x12
+#define IPMI_CMD_OEM_DELL_SET_LAN_SOURCE                  0x13
+#define IPMI_CMD_OEM_DELL_GET_LAN_SOURCE                  0x14
+#define IPMI_CMD_OEM_DELL_SET_FCB_FW_VERSION              0x15
+#define IPMI_CMD_OEM_DELL_GET_FCB_FW_VERSION              0x16
+#define IPMI_CMD_OEM_DELL_SET_FAN_CONTROL                 0x61
+#define IPMI_CMD_OEM_DELL_GET_FAN_CONTROL                 0x62
+#define IPMI_CMD_OEM_DELL_SET_FSC_TABLE                   0x63
+#define IPMI_CMD_OEM_DELL_GET_FSC_TABLE                   0x64
+#define IPMI_CMD_OEM_DELL_GET_FCB_SKU_INFO                0x6A
+#define IPMI_CMD_OEM_DELL_GET_FCB_POWER_THROTTLING_STATUS 0x6B
+#define IPMI_CMD_OEM_DELL_OEM_GET_PIC_MODEL               0x70
+#define IPMI_CMD_OEM_DELL_OEM_SET_FLASH_PIN               0x71
+#define IPMI_CMD_OEM_DELL_OEM_GET_FLASH_PIN               0x72
+#define IPMI_CMD_OEM_DELL_OEM_NEW_MASTER_WRITE_READ       0x73
+#define IPMI_CMD_OEM_DELL_SET_POWER_THROTTLING_BEHAVIOR   0xB1
+#define IPMI_CMD_OEM_DELL_GET_POWER_THROTTLING_BEHAVIOR   0xB2
+#define IPMI_CMD_OEM_DELL_GET_PSU_MISMATCH_AND_TYPE       0xB3
 
 /******************************************* 
  * Fujitsu                                 *

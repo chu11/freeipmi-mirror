@@ -1,6 +1,8 @@
 2010-08-31  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/: Support inventec restore-to-defaults.
+
+	* Document more inventec oem additions.
 	
 2010-08-31  Albert Chu <chu11@llnl.gov>
 

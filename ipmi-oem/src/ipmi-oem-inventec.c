@@ -60,6 +60,197 @@
  * 0x?? - Completion Code
  */
 
+/* Inventec 5442 Notes
+ *
+ * Following appear to be too hardware specific, just putting it here
+ * for documentation.
+ *
+ * Set Fan Control Request
+ *
+ * 0x34 - network function
+ * 0x61 - OEM cmd
+ * 0x?? - fan control setting
+ *      0:6 - cuty cycle setting, 0-100
+ *      7 - enabled/disabled fan control ; 0 - disable, 1 - enable
+ *
+ * Set Fan Control Response
+ *
+ * 0x61 - OEM cmd
+ * 0x?? - Completion Code
+ *
+ * Get Fan Control Request
+ *
+ * 0x34 - network function
+ * 0x62 - OEM cmd
+ *
+ * Get Fan Control Response
+ *
+ * 0x62 - OEM cmd
+ * 0x?? - Completion Code
+ * 0x?? - fan control setting
+ *      0:6 - cuty cycle setting, 0-100
+ *      7 - enabled/disabled fan control ; 0 - disable, 1 - enable
+ *
+ * Set FSC Table Request
+ *
+ * 0x34 - network function
+ * 0x63 - OEM cmd
+ * 0x?? - FSC Table Setting
+ *      0:6 - fan table settings
+ *          - 0x80 - 1st FSC fan table (default : 13800 RPM)
+ *          - 0x81 - 2nd FSC fan table (FACEBOOK)
+ *          - 0x82 - 3rd FSC fan table (Oscillation)
+ *          - 0x83 - 4th FSC fan table (Western Geco)
+ *          - 0x84 - 5th FSC fan table (Loki)
+ *
+ * Set FSC Table Response
+ *
+ * 0x63 - OEM cmd
+ * 0x?? - Completion Code
+ *
+ * Get FSC Table Request
+ *
+ * 0x34 - network function
+ * 0x64 - OEM cmd
+ *
+ * Get FSC Table Response
+ *
+ * 0x64 - OEM cmd
+ * 0x?? - Completion Code
+ * 0x?? - FSC Table Setting
+ *      0:6 - fan table settings
+ *          - 0x80 - 1st FSC fan table (default : 13800 RPM)
+ *          - 0x81 - 2nd FSC fan table (FACEBOOK)
+ *          - 0x82 - 3rd FSC fan table (Oscillation)
+ *          - 0x83 - 4th FSC fan table (Western Geco)
+ *          - 0x84 - 5th FSC fan table (Loki)
+ *
+ * Get FCB SKU Info Request
+ *
+ * 0x34 - network function
+ * 0x6A - OEM cmd
+ *
+ * Get FCB SKU Info Response
+ *
+ * 0x6A - OEM cmd
+ * 0x?? - Completion Code
+ * 0x?? - FCB SKU Information
+ *
+ * Get FCB Power Throttling Status Request
+ *
+ * 0x34 - network function
+ * 0x6B - OEM cmd
+ *
+ * Get FCB Power Throttling Status Response
+ * 
+ * 0x6B - OEM cmd
+ * 0x?? - Completion Code
+ * 0x?? - FCB Power Throttling status
+ *
+ * OEM Get PIC Model Request
+ *
+ * 0x34 - network function
+ * 0x70 - OEM cmd
+ *
+ * OEM Get PIC Model Response
+ * 
+ * 0x70 - OEM cmd
+ * 0x?? - Completion Code
+ * 0x?? - PIC model
+ *      0x10 - PIC16
+ *      0x12 - PIC18
+ *
+ * OEM Set Flash Pin Request
+ *
+ * 0x34 - network function
+ * 0x71 - OEM cmd
+ * 0x?? - Pin Number
+ * 0x?? - Value
+ *
+ * OEM Set Flash Pin Response
+ * 
+ * 0x71 - OEM cmd
+ * 0x?? - Completion Code
+ *
+ * OEM Get Flash Pin Request
+ *
+ * 0x34 - network function
+ * 0x72 - OEM cmd
+ * 0x?? - Pin Number
+ *
+ * OEM Get Flash Pin Response
+ * 
+ * 0x72 - OEM cmd
+ * 0x?? - Completion Code
+ * 0x?? - Pin Value
+ *
+ * OEM New Master Write Read Request
+ *
+ * 0x34 - network function
+ * 0x73 - OEM cmd
+ * 0x?? - slave address
+ * 0x?? - read count
+ * 3:52 - data
+ *
+ * OEM New Master Write Read Response
+ * 
+ * 0x73 - OEM cmd
+ * 0x?? - Completion Code
+ * 2:51 - data
+ *
+ * Set Power Throttling Behavior Request
+ *
+ * 0x34 - network function
+ * 0xB1 - OEM cmd
+ * 0x?? - Power Throttling Enable (01h - enable)
+ * 0x?? - Power Capping Enable (01h - enable)
+ * 0x?? - Current Chassi Power Capping Value (low byte)
+ * 0x?? - Current Chassis Power Capping Value (high byte)
+ * 0x?? - Power Capping Max Value (low byte)
+ * 0x?? - Power Capping Max Value (high byte)
+ *
+ * Set Power Throttling Behavior Response
+ * 
+ * 0xB1 - OEM cmd
+ * 0x?? - Completion Code
+ *
+ * Get Power Throttling Behavior Request
+ *
+ * 0x34 - network function
+ * 0xB2 - OEM cmd
+ *
+ * Get Power Throttling Behavior Response
+ * 
+ * 0xB2 - OEM cmd
+ * 0x?? - Completion Code
+ * 0x?? - Power Throttling Enable (01h - enable)
+ * 0x?? - Power Capping Enable (01h - enable)
+ * 0x?? - Current Chassi Power Capping Value (low byte)
+ * 0x?? - Current Chassis Power Capping Value (high byte)
+ * 0x?? - Power Capping Max Value (low byte)
+ * 0x?? - Power Capping Max Value (high byte)
+ *
+ * Get PSU Mismatch and Type Request
+ *
+ * 0x34 - network function
+ * 0xB3 - OEM cmd
+ *
+ * Get PSU Mismatch and Type Response
+ *
+ * 0xB3 - OEM cmd
+ * 0x?? - Completion Code
+ * 0x?? - PSU Mismatch
+ *      - 00h - mismatch
+ *      - 01h - match
+ * 0x?? - PSU Type
+ *      - 0:3 - PSU1 type
+ *      - 4:7 - PSU2 type
+ *      01h = 470 watt
+ *      02h = 750 watt
+ *      03h = 1100 watt
+ *      04h = 1400 watt
+ */
+
 /* achu:
  *
  * Much of the Inventec extended configuration support is identical to
