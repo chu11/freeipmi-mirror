@@ -90,6 +90,8 @@ extern "C" {
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_QPI_FATAL_SENSOR_A      0x17
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_QPI_FATAL_SENSOR_B      0x18
 
+#define IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_POST_ERROR         0x06
+
 /*******************************************
  * Inventec                                *
  *******************************************/

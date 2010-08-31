@@ -75,4 +75,14 @@ int ipmi_sel_parse_output_intel_event_data3_class_oem (ipmi_sel_parse_ctx_t ctx,
                                                        unsigned int *wlen,
                                                        struct ipmi_sel_system_event_record_data *system_event_record_data);
 
+int ipmi_sel_parse_output_intel_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
+							 struct ipmi_sel_parse_entry *sel_parse_entry,
+							 uint8_t sel_record_type,
+							 char *buf,
+							 unsigned int buflen,
+							 unsigned int flags,
+							 unsigned int *wlen,
+							 struct ipmi_sel_system_event_record_data *system_event_record_data,
+							 int *oem_rv);
+
 #endif /* _IPMI_SEL_PARSE_STRING_INTEL_H */

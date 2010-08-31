@@ -2175,6 +2175,20 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
   if (ret)
     return (1);
 
+  if ((ret = ipmi_sel_parse_output_intel_event_data2_event_data3 (ctx,
+								  sel_parse_entry,
+								  sel_record_type,
+								  buf,
+								  buflen,
+								  flags,
+								  wlen,
+								  system_event_record_data,
+								  oem_rv)) < 0)
+    return (-1);
+
+  if (ret)
+    return (1);
+
   if ((ret = ipmi_sel_parse_output_inventec_event_data2_event_data3 (ctx,
 								     sel_parse_entry,
 								     sel_record_type,
