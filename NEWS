@@ -2,6 +2,7 @@ FreeIPMI 0.8.10 - XX/XX/10
 --------------------------
 o Support many new Inventec OEM extensions in ipmi-oem.
 o Support many new Quanta OEM extensions in ipmi-oem.
+o Gracefully handle some errors in ipmi-sensors.
 o Fix various parameter input checks in ipmi-oem.
 o Fix help output corner cases in ipmi-oem.
 o Other minor documentation/bug fixes.

@@ -1,3 +1,9 @@
+2010-08-31  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sensors/src/ipmi-sensors-detailed-output.c
+	(_detailed_output_event_enable): Gracefully handle
+	IPMI_COMP_CODE_COMMAND_RESPONSE_COULD_NOT_BE_PROVIDED error.
+	
 2010-08-25  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/: Support Quanta get/set-nic-mode,
@@ -21,7 +27,7 @@
 	* ipmi-oem/: Fix range checking on parameter inputs.
 
 	* ipmi-oem/: Fix and support Inventec get/set-dns-config.
-	
+
 2010-08-23  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/: Implement inventec get-account-status,
