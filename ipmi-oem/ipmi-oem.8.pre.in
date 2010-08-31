@@ -562,7 +562,10 @@ information that is available.  Command confirmed to work on Inventec
 This OEM command will restore certain BMC configuration sections back
 to default values.  The command will spin until the reset is confirmed
 to be complete.  Command confirmed to work on Inventec 5442 (Dell
-Xanadu III).
+Xanadu III).  After running this command, the BMC must be reset to
+return it to functioning status.  This may be accomplished by
+executing a cold-reset with
+.B bmc-device(8).
 .if 0 \{
 .TP
 .B set-system-guid \fIsystemguid\fR
