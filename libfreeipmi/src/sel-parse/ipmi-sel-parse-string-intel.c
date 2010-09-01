@@ -191,6 +191,25 @@ ipmi_sel_parse_output_intel_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
 	  
 	  return (1);
 	}
+
+      if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+          && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+          && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_MEMORY_ECC_ERROR
+          && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_CORRECTABLE_MEMORY_ERROR
+	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_UNCORRECTABLE_MEMORY_ERROR))
+	{
+	  uint8_t logical_rank;
+	  
+	  logical_rank = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_LOGICAL_RANK_BITMASK);
+	  logical_rank >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_LOGICAL_RANK_SHIFT;
+	  
+	  snprintf (tmpbuf,
+		    tmpbuflen,
+		    "Logical Rank %u",
+		    logical_rank);
+	  
+	  return (1);
+	}
     }
 
   return (0);
@@ -332,16 +351,99 @@ ipmi_sel_parse_output_intel_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
    * Intel S5500WB/Penguin Computing Relion 700
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL
-      && ctx->product_id == IPMI_INTEL_PRODUCT_ID_S5500WB
-      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
-      && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_PCI_SENSOR
-      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
-      && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_PERR
-          || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_SERR))
+      && ctx->product_id == IPMI_INTEL_PRODUCT_ID_S5500WB)
     {
-      _ipmi_sel_parse_output_intel_device_function (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
+      if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_PCI_SENSOR
+	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+	  && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_PERR
+	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_SERR))
+	{
+	  _ipmi_sel_parse_output_intel_device_function (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
+	  
+	  return (1);
+	}
 
-      return (1);
+      if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+          && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+          && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_MEMORY_ECC_ERROR
+          && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_CORRECTABLE_MEMORY_ERROR
+	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_UNCORRECTABLE_MEMORY_ERROR))
+	{
+	  uint8_t processor_socket;
+	  uint8_t channel_number;
+	  uint8_t dimm_slot_id;
+	  char *processor_socket_str;
+	  char *channel_number_str;
+	  char *dimm_slot_id_str;
+	  int channel_number_nice_output_flag = 0;
+	  int dimm_slot_id_nice_output_flag = 0;
+
+	  processor_socket = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_PROCESSOR_SOCKET_BITMASK);
+	  processor_socket >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_PROCESSOR_SOCKET_SHIFT;
+
+	  channel_number = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_CHANNEL_NUMBER_BITMASK);
+	  channel_number >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_CHANNEL_NUMBER_SHIFT;
+
+	  dimm_slot_id = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_DIMM_SLOT_ID_BITMASK);
+	  dimm_slot_id >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_DIMM_SLOT_ID_SHIFT;
+
+	  if (processor_socket == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_PROCESSOR_SOCKET_1)
+	    processor_socket_str = "1";
+	  else if (processor_socket == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_PROCESSOR_SOCKET_2)
+	    processor_socket_str = "2";
+	  else
+	    processor_socket_str = "Unknown";
+
+	  if (channel_number == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_CHANNEL_A)
+	    {
+	      channel_number_str = "A";
+	      channel_number_nice_output_flag++;
+	    }
+	  else if (channel_number == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_CHANNEL_B)
+	    {
+	      channel_number_str = "B";
+	      channel_number_nice_output_flag++;
+	    }
+	  else if (channel_number == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_CHANNEL_C)
+	    {
+	      channel_number_str = "C";
+	      channel_number_nice_output_flag++;
+	    }
+	  else
+	    channel_number_str = "Unknown";
+
+	  if (dimm_slot_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_DIMM_SOCKET_1)
+	    {
+	      dimm_slot_id_str = "1";
+	      dimm_slot_id_nice_output_flag++;
+	    }
+	  else if (dimm_slot_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_DIMM_SOCKET_2)
+	    {
+	      dimm_slot_id_str = "2";
+	      dimm_slot_id_nice_output_flag++;
+	    }
+	  else
+	    dimm_slot_id_str = "Unknown";
+	  
+	  if (channel_number_nice_output_flag && dimm_slot_id_nice_output_flag)
+	    snprintf (tmpbuf,
+		      tmpbuflen,
+		      "Processor Socket = %s, DIMM = %s%s",
+		      processor_socket_str,
+		      channel_number_str,
+		      dimm_slot_id_str);
+	  else
+	    snprintf (tmpbuf,
+		      tmpbuflen,
+		      "Processor Socket = %s, Channel Number = %s, Dimm Slot = %s",
+		      processor_socket_str,
+		      channel_number_str,
+		      dimm_slot_id_str);
+	  
+	  return (1);
+	}
+
     }
 
   return (0);
