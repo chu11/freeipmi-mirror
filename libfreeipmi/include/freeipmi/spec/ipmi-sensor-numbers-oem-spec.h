@@ -92,6 +92,8 @@ extern "C" {
 
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_POST_ERROR         0x06
 
+#define IPMI_SENSOR_NUMBER_OEM_INTEL_MEMORY_PARITY_ERROR     0x14
+
 /*******************************************
  * Inventec                                *
  *******************************************/
