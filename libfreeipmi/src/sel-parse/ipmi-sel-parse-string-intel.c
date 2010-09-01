@@ -68,6 +68,8 @@
 
 #include "freeipmi-portability.h"
 
+#define INTEL_EVENT_BUFFER_LENGTH 4096
+
 /* return (0) - no OEM match
  * return (1) - OEM match
  * return (-1) - error, cleanup and return error
@@ -849,9 +851,9 @@ ipmi_sel_parse_output_intel_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
 	  dimm_slot_id = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_DIMM_SLOT_ID_BITMASK);
 	  dimm_slot_id >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_DIMM_SLOT_ID_SHIFT;
 
-	  if (error_type == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_DATA_PARITY_ERROR)
+	  if (error_type == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_ERROR_TYPE_DATA_PARITY_ERROR)
 	    error_type_str = "Data Parity Error";
-	  else if (error_type == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_ADDRESS_PARITY_ERROR)
+	  else if (error_type == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_ERROR_TYPE_ADDRESS_PARITY_ERROR)
 	    error_type_str = "Address Parity Error";
 	  else
 	    error_type_str = "Unknown";
@@ -931,6 +933,126 @@ ipmi_sel_parse_output_intel_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
 		(*oem_rv) = 1;
 	      else
 		(*oem_rv) = 0;
+	    }
+	  
+	  return (1);
+	}
+
+      if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY
+	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+	  && (system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_RAS_STATUS_INFORMATION_FOR_MEMORY_MIRRORING_MIRRORING_MODE
+	      || system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_RAS_STATUS_INFORMATION_FOR_MEMORY_MIRRORING_SPARING_MODE)
+	  && (system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_REDUNDANCY_FULLY_REDUNDANT
+	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_REDUNDANCY_REDUNDANCY_LOST)
+	  && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
+          && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
+	{
+	  uint8_t domain_instance_type;
+	  uint8_t instance_id;
+
+	  domain_instance_type = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_DOMAIN_INSTANCE_TYPE_BITMASK);
+	  domain_instance_type >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_DOMAIN_INSTANCE_TYPE_SHIFT;
+
+	  instance_id = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_INSTANCE_ID_BITMASK);
+	  instance_id >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_INSTANCE_ID_SHIFT;
+	  
+	  if (domain_instance_type == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_DOMAIN_INSTANCE_TYPE_LOCAL)
+	    {
+	      uint8_t mirroring_domain_local_subinstance;
+	      uint8_t socket_id;
+	      char mirroring_domain_local_subinstance_buf[INTEL_EVENT_BUFFER_LENGTH + 1];
+	      char socket_id_buf[INTEL_EVENT_BUFFER_LENGTH + 1];
+
+	      memset (mirroring_domain_local_subinstance_buf, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
+	      memset (socket_id_buf, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
+
+	      mirroring_domain_local_subinstance = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_LOCAL_MIRRORING_DOMAIN_LOCAL_SUBINSTANCE_BITMASK);
+	      mirroring_domain_local_subinstance >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_LOCAL_MIRRORING_DOMAIN_LOCAL_SUBINSTANCE_SHIFT;
+
+	      socket_id = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_LOCAL_SOCKET_ID_BITMASK);
+	      socket_id >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_LOCAL_SOCKET_ID_SHIFT;
+	      
+	      if (mirroring_domain_local_subinstance != IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_UNUSED_FIELD)
+		{
+		  char *mirroring_domain_local_subinstance_str = NULL;
+
+		  if (mirroring_domain_local_subinstance == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_LOCAL_MIRRORING_DOMAIN_LOCAL_SUBINSTANCE_CHANNEL_0_1)
+		    mirroring_domain_local_subinstance_str = "{Ch0, Ch1}";
+		  else if (mirroring_domain_local_subinstance == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_LOCAL_MIRRORING_DOMAIN_LOCAL_SUBINSTANCE_CHANNEL_0_2)
+		    mirroring_domain_local_subinstance_str = "{Ch0, Ch2}";
+		  else if (mirroring_domain_local_subinstance == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_LOCAL_MIRRORING_DOMAIN_LOCAL_SUBINSTANCE_CHANNEL_1_2)
+		    mirroring_domain_local_subinstance_str = "{Ch1, Ch2}";
+		  else
+		    mirroring_domain_local_subinstance_str = "Unknown";
+
+		  snprintf (mirroring_domain_local_subinstance_buf,
+			    INTEL_EVENT_BUFFER_LENGTH,
+			    ", Subinstance = %s",
+			    mirroring_domain_local_subinstance_str);
+		}
+	      
+	      if (socket_id != IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_UNUSED_FIELD)
+		{
+		  if (socket_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_LOCAL_SOCKET_ID_APPLIES_TO_ALL_SOCKETS)
+		    snprintf (socket_id_buf,
+			      INTEL_EVENT_BUFFER_LENGTH,
+			      ", Applies to all sockets");
+		  else
+		    snprintf (socket_id_buf,
+			      INTEL_EVENT_BUFFER_LENGTH,
+			      ", Applies to Socket ID = %u",
+			      socket_id);
+		}
+
+	      if (ipmi_sel_parse_string_snprintf (buf,
+                                                  buflen,
+                                                  wlen,
+						  "Memory Mirroring Domain Instance Id = %u%s%s",
+						  instance_id,
+						  mirroring_domain_local_subinstance_buf,
+						  socket_id_buf))
+		(*oem_rv) = 1;
+	      else
+                (*oem_rv) = 0;
+	    }
+	  else
+	    {
+	      uint8_t first_socket_id;
+	      uint8_t second_socket_id;
+	      char first_socket_id_buf[INTEL_EVENT_BUFFER_LENGTH + 1];
+	      char second_socket_id_buf[INTEL_EVENT_BUFFER_LENGTH + 1];
+
+	      memset (first_socket_id_buf, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
+	      memset (second_socket_id_buf, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
+
+	      first_socket_id = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_GLOBAL_FIRST_SOCKET_ID_BITMASK);
+	      first_socket_id >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_GLOBAL_FIRST_SOCKET_ID_SHIFT;
+
+	      second_socket_id = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_GLOBAL_SECOND_SOCKET_ID_BITMASK);
+	      second_socket_id >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_GLOBAL_SECOND_SOCKET_ID_SHIFT;
+
+	      if (first_socket_id != IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_UNUSED_FIELD)
+		snprintf (first_socket_id_buf,
+			  INTEL_EVENT_BUFFER_LENGTH,
+			  ", First Socket ID = %u",
+			  first_socket_id);
+
+	      if (second_socket_id != IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_UNUSED_FIELD)
+		snprintf (second_socket_id_buf,
+			  INTEL_EVENT_BUFFER_LENGTH,
+			  ", Second Socket ID = %u",
+			  second_socket_id);
+
+	      if (ipmi_sel_parse_string_snprintf (buf,
+                                                  buflen,
+                                                  wlen,
+						  "Memory Mirroring Domain Instance Id = %u%s%s",
+						  instance_id,
+						  first_socket_id_buf,
+						  second_socket_id_buf))
+                (*oem_rv) = 1;
+              else
+                (*oem_rv) = 0;
 	    }
 	  
 	  return (1);
