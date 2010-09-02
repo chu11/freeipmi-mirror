@@ -377,9 +377,11 @@ ipmi_sel_parse_output_intel_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
 	  uint8_t dimm_slot_id;
 	  char *processor_socket_str;
 	  char *channel_number_str;
+	  char channel_number_char = 0;	/* remove warning */
 	  char *dimm_slot_id_str;
-	  int channel_number_nice_output_flag = 0;
-	  int dimm_slot_id_nice_output_flag = 0;
+	  int processor_socket_valid = 0;
+	  int channel_number_valid = 0;
+	  int dimm_slot_id_valid = 0;
 
 	  processor_socket = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_PROCESSOR_SOCKET_BITMASK);
 	  processor_socket >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_PROCESSOR_SOCKET_SHIFT;
@@ -391,50 +393,64 @@ ipmi_sel_parse_output_intel_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
 	  dimm_slot_id >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_DIMM_SLOT_ID_SHIFT;
 
 	  if (processor_socket == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_PROCESSOR_SOCKET_1)
-	    processor_socket_str = "1";
+	    {
+	      processor_socket_str = "1";
+	      processor_socket_valid++;
+	    }
 	  else if (processor_socket == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_PROCESSOR_SOCKET_2)
-	    processor_socket_str = "2";
+	    {
+	      processor_socket_str = "2";
+	      processor_socket_valid++;
+	    }
 	  else
 	    processor_socket_str = "Unknown";
 
 	  if (channel_number == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_CHANNEL_A)
 	    {
-	      channel_number_str = "A";
-	      channel_number_nice_output_flag++;
+	      channel_number_char = 'A';
+	      channel_number_valid++;
 	    }
 	  else if (channel_number == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_CHANNEL_B)
 	    {
-	      channel_number_str = "B";
-	      channel_number_nice_output_flag++;
+	      channel_number_char = 'B';
+	      channel_number_valid++;
 	    }
 	  else if (channel_number == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_CHANNEL_C)
 	    {
-	      channel_number_str = "C";
-	      channel_number_nice_output_flag++;
+	      channel_number_char = 'C';
+	      channel_number_valid++;
 	    }
 	  else
 	    channel_number_str = "Unknown";
+	  
+	  if (processor_socket_valid && channel_number_valid)
+	    {
+	      /* If we're on socket #2, the DIMMs jump from A-C, to D-F */
+	      if (processor_socket == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_PROCESSOR_SOCKET_2)
+		channel_number_char += 3;
+	    }
 
 	  if (dimm_slot_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_DIMM_SOCKET_1)
 	    {
 	      dimm_slot_id_str = "1";
-	      dimm_slot_id_nice_output_flag++;
+	      dimm_slot_id_valid++;
 	    }
 	  else if (dimm_slot_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_DIMM_SOCKET_2)
 	    {
 	      dimm_slot_id_str = "2";
-	      dimm_slot_id_nice_output_flag++;
+	      dimm_slot_id_valid++;
 	    }
 	  else
 	    dimm_slot_id_str = "Unknown";
 	  
-	  if (channel_number_nice_output_flag && dimm_slot_id_nice_output_flag)
-	    snprintf (tmpbuf,
-		      tmpbuflen,
-		      "Processor Socket = %s, DIMM = %s%s",
-		      processor_socket_str,
-		      channel_number_str,
-		      dimm_slot_id_str);
+	  if (processor_socket_valid && channel_number_valid && dimm_slot_id_valid)
+	    {
+	      snprintf (tmpbuf,
+			tmpbuflen,
+			"DIMM = %c%s",
+			channel_number_char,
+			dimm_slot_id_str);
+	    }
 	  else
 	    snprintf (tmpbuf,
 		      tmpbuflen,
@@ -830,9 +846,11 @@ ipmi_sel_parse_output_intel_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
 	  char *error_type_str;
 	  char *processor_socket_str;
 	  char *channel_number_str;
+	  char channel_number_char = 0;	/* remove warning */
 	  char *dimm_slot_id_str;
-	  int channel_number_nice_output_flag = 0;
-	  int dimm_slot_id_nice_output_flag = 0;
+	  int processor_socket_valid = 0;
+	  int channel_number_valid = 0;
+	  int dimm_slot_id_valid = 0;
   
 	  channel_information_validity = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_CHANNEL_INFORMATION_VALIDITY_BITMASK);
 	  channel_information_validity >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_CHANNEL_INFORMATION_VALIDITY_SHIFT;
@@ -859,29 +877,35 @@ ipmi_sel_parse_output_intel_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
 	  else
 	    error_type_str = "Unknown";
 
-	  if (processor_socket == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_PROCESSOR_SOCKET_1)
-	    processor_socket_str = "1";
-	  else if (processor_socket == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_PROCESSOR_SOCKET_2)
-	    processor_socket_str = "2";
-	  else
-	    processor_socket_str = "Unknown";
+          if (processor_socket == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_PROCESSOR_SOCKET_1)
+            {
+              processor_socket_str = "1";
+              processor_socket_valid++;
+            }
+          else if (processor_socket == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_PROCESSOR_SOCKET_2)
+            {
+              processor_socket_str = "2";
+              processor_socket_valid++;
+            }
+          else
+            processor_socket_str = "Unknown";
 
 	  if (channel_information_validity == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_CHANNEL_INFORMATION_VALID)
 	    {
 	      if (channel_number == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_CHANNEL_A)
 		{
-		  channel_number_str = "A";
-		  channel_number_nice_output_flag++;
+		  channel_number_char = 'A';
+		  channel_number_valid++;
 		}
 	      else if (channel_number == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_CHANNEL_B)
 		{
-		  channel_number_str = "B";
-		  channel_number_nice_output_flag++;
+		  channel_number_char = 'B';
+		  channel_number_valid++;
 		}
 	      else if (channel_number == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_CHANNEL_C)
 		{
-		  channel_number_str = "C";
-		  channel_number_nice_output_flag++;
+		  channel_number_char = 'C';
+		  channel_number_valid++;
 		}
 	      else
 		channel_number_str = "Unknown";
@@ -889,17 +913,24 @@ ipmi_sel_parse_output_intel_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
 	  else
 	    channel_number_str = "Unknown";
 
+	  if (processor_socket_valid && channel_number_valid)
+            {
+              /* If we're on socket #2, the DIMMs jump from A-C, to D-F */
+              if (processor_socket == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_PROCESSOR_SOCKET_2)
+                channel_number_char += 3;
+            }
+
 	  if (dimm_information_validity == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_DIMM_INFORMATION_VALID)
 	    {
 	      if (dimm_slot_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_DIMM_SOCKET_1)
 		{
 		  dimm_slot_id_str = "1";
-		  dimm_slot_id_nice_output_flag++;
+		  dimm_slot_id_valid++;
 		}
 	      else if (dimm_slot_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_DIMM_SOCKET_2)
 		{
 		  dimm_slot_id_str = "2";
-		  dimm_slot_id_nice_output_flag++;
+		  dimm_slot_id_valid++;
 		}
 	      else
 		dimm_slot_id_str = "Unknown";
@@ -907,15 +938,14 @@ ipmi_sel_parse_output_intel_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
 	  else
 	    dimm_slot_id_str = "Unknown";
 	  
-	  if (channel_number_nice_output_flag && dimm_slot_id_nice_output_flag)
+	  if (processor_socket_valid && channel_number_valid && dimm_slot_id_valid)
 	    {
 	      if (ipmi_sel_parse_string_snprintf (buf,
 						  buflen,
 						  wlen,
-						  "Error Type = %s, Processor Socket = %s, DIMM = %s%s",
+						  "Error Type = %s, DIMM = %c%s",
 						  error_type_str,
-						  processor_socket_str,
-						  channel_number_str,
+						  channel_number_char,
 						  dimm_slot_id_str))
 		(*oem_rv) = 1;
 	      else
