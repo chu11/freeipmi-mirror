@@ -1,6 +1,8 @@
 2010-08-XX  Albert Chu <chu11@llnl.gov>
 
 	* Add Intel S5500WB OEM SEL support.
+
+	* Re-arch some sel-parse code for performance.
 	
 2010-08-25  Albert Chu <chu11@llnl.gov>
 

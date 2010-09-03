@@ -79,6 +79,7 @@ ipmi_sel_parse_output_dell_event_data1_class_sensor_specific_discrete (ipmi_sel_
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL);
   assert (sel_parse_entry);
   assert (tmpbuf);
   assert (tmpbuflen);
@@ -95,9 +96,8 @@ ipmi_sel_parse_output_dell_event_data1_class_sensor_specific_discrete (ipmi_sel_
    * Dell Poweredge R610
    * Dell Poweredge R710
    */
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
-          || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
+  if ((ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+       || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
       && (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_SYSTEM_PERFORMANCE_DEGRADATION_STATUS
           || system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING
           || system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_NON_FATAL_ERROR
@@ -139,6 +139,7 @@ ipmi_sel_parse_output_dell_event_data1_class_oem (ipmi_sel_parse_ctx_t ctx,
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL);
   assert (sel_parse_entry);
   assert (tmpbuf);
   assert (tmpbuflen);
@@ -154,9 +155,8 @@ ipmi_sel_parse_output_dell_event_data1_class_oem (ipmi_sel_parse_ctx_t ctx,
    * Dell Poweredge R610
    * Dell Poweredge R710
    */
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
-          || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
+  if ((ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+       || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_DELL_STATUS)
     {
       int ret;
@@ -181,11 +181,10 @@ ipmi_sel_parse_output_dell_event_data1_class_oem (ipmi_sel_parse_ctx_t ctx,
    * Dell Poweredge R610
    * Dell Poweredge R710
    */
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_2900
-          || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_2950
-          || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
-          || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
+  if ((ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_2900
+       || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_2950
+       || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+       || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_DELL_OEM_DIAGNOSTIC_EVENT_DATA
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING)
     {
@@ -218,6 +217,7 @@ ipmi_sel_parse_output_dell_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL);
   assert (sel_parse_entry);
   assert (tmpbuf);
   assert (tmpbuflen);
@@ -232,9 +232,8 @@ ipmi_sel_parse_output_dell_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
    * Dell Poweredge R610
    * Dell Poweredge R710
    */
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
-          || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710))
+  if ((ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+       || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710))
     {
       /* From Dell Engineer and Dell code */
       if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
@@ -483,8 +482,7 @@ ipmi_sel_parse_output_dell_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
    *
    * From Dell Spec and Dell Code
    */
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+  if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
       && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_PRESENCE_DETECTED
           || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_CONFIGURATION_ERROR)
@@ -551,6 +549,7 @@ ipmi_sel_parse_output_dell_event_data2_class_oem (ipmi_sel_parse_ctx_t ctx,
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL);
   assert (sel_parse_entry);
   assert (tmpbuf);
   assert (tmpbuflen);
@@ -571,11 +570,10 @@ ipmi_sel_parse_output_dell_event_data2_class_oem (ipmi_sel_parse_ctx_t ctx,
    * offset_from_event_reading_type_code = register offset 11:8
    * data2 = register offset 0:7
    */
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_2900
-          || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_2950
-          || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
-          || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
+  if ((ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_2900
+       || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_2950
+       || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+       || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_DELL_OEM_DIAGNOSTIC_EVENT_DATA
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING)
     {
@@ -614,6 +612,7 @@ ipmi_sel_parse_output_dell_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL);
   assert (sel_parse_entry);
   assert (tmpbuf);
   assert (tmpbuflen);
@@ -628,9 +627,8 @@ ipmi_sel_parse_output_dell_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
    * Dell Poweredge R610
    * Dell Poweredge R710
    */
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
-          || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710))
+  if ((ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+       || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710))
     {
       /* From Dell Spec */
       if ((system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
@@ -708,8 +706,7 @@ ipmi_sel_parse_output_dell_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
    *
    * From Dell Spec and Dell Code
    */
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+  if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
       && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_PRESENCE_DETECTED
           || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_CONFIGURATION_ERROR)
@@ -750,6 +747,7 @@ ipmi_sel_parse_output_dell_event_data3_class_oem (ipmi_sel_parse_ctx_t ctx,
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL);
   assert (sel_parse_entry);
   assert (tmpbuf);
   assert (tmpbuflen);
@@ -767,11 +765,10 @@ ipmi_sel_parse_output_dell_event_data3_class_oem (ipmi_sel_parse_ctx_t ctx,
    * Dell Poweredge R610
    * Dell Poweredge R710
    */
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_2900
-          || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_2950
-          || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
-          || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
+  if ((ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_2900
+       || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_2950
+       || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+       || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_DELL_OEM_DIAGNOSTIC_EVENT_DATA
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING)
     {
@@ -826,6 +823,7 @@ ipmi_sel_parse_output_dell_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL);
   assert (sel_parse_entry);
   assert (buf);
   assert (buflen);
@@ -840,9 +838,8 @@ ipmi_sel_parse_output_dell_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
    * Dell Poweredge R610
    * Dell Poweredge R710
    */
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
-          || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710))
+  if ((ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+       || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710))
     {
       /* From Dell Engineer and Dell Code */
       /* Note that the normal event_data3 event still occurs here, so need to output that too */
@@ -1341,8 +1338,7 @@ ipmi_sel_parse_output_dell_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
 
 #define IPMI_SENSOR_TYPE_MEMORY_OEM_DELL_VERSION_CHANGE_NUMBER_INVALID 0x1F
 
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && ctx->ipmi_version_major == IPMI_2_0_MAJOR_VERSION
+  if (ctx->ipmi_version_major == IPMI_2_0_MAJOR_VERSION
       && ctx->ipmi_version_minor == IPMI_2_0_MINOR_VERSION
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE
