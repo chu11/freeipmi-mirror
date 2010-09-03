@@ -3,6 +3,9 @@
 	* Add Intel S5500WB OEM SEL support.
 
 	* Re-arch some sel-parse code for performance.
+
+	* libfreeipmi/src/sel-parse/ipmi-sel-parse.c: Fix event_data1
+	parsing bug.
 	
 2010-08-25  Albert Chu <chu11@llnl.gov>
 

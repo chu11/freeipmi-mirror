@@ -54,6 +54,11 @@
 
 #include "freeipmi/interpret/ipmi-interpret.h"
 #include "freeipmi/record-format/ipmi-sel-record-format.h"
+#include "freeipmi/spec/ipmi-event-reading-type-code-oem-spec.h"
+#include "freeipmi/spec/ipmi-iana-enterprise-numbers-spec.h"
+#include "freeipmi/spec/ipmi-product-id-spec.h"
+#include "freeipmi/spec/ipmi-sensor-types-oem-spec.h"
+#include "freeipmi/spec/ipmi-sensor-and-event-code-tables-oem-spec.h"
 
 #include "ipmi-interpret-defs.h"
 #include "ipmi-interpret-trace.h"
@@ -623,6 +628,144 @@ _interpret_config_sel_init (ipmi_interpret_ctx_t ctx,
   return (rv);
 }
 
+static int
+_interpret_sel_oem_sensor_config_create (ipmi_interpret_ctx_t ctx,
+					 uint32_t manufacturer_id,
+					 uint16_t product_id,
+					 uint8_t event_reading_type_code,
+					 uint8_t sensor_type,
+					 struct ipmi_interpret_sel_oem_sensor_config **oem_conf)
+{
+  struct ipmi_interpret_sel_oem_sensor_config *tmp_oem_conf = NULL;
+  char keybuf[IPMI_OEM_HASH_KEY_BUFLEN + 1];
+  int rv = -1;
+
+  assert (ctx);
+  assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
+  assert (ctx->interpret_sel.sel_oem_sensor_config);
+  assert (oem_conf);
+
+  memset (keybuf, '\0', IPMI_OEM_HASH_KEY_BUFLEN + 1);
+
+  snprintf (keybuf,
+            IPMI_OEM_HASH_KEY_BUFLEN,
+            "%u:%u:%u:%u",
+            manufacturer_id,
+            product_id,
+            event_reading_type_code,
+            sensor_type);
+
+  if (!(tmp_oem_conf = (struct ipmi_interpret_sel_oem_sensor_config *)malloc (sizeof (struct ipmi_interpret_sel_oem_sensor_config))))
+    {
+      INTERPRET_SET_ERRNUM (ctx, IPMI_INTERPRET_ERR_OUT_OF_MEMORY);
+      goto cleanup;
+    }
+
+  memset (tmp_oem_conf, '\0', sizeof (struct ipmi_interpret_sel_oem_sensor_config));
+
+  memcpy (tmp_oem_conf->key, keybuf, IPMI_OEM_HASH_KEY_BUFLEN);
+  tmp_oem_conf->manufacturer_id = manufacturer_id;
+  tmp_oem_conf->product_id = product_id;
+  tmp_oem_conf->event_reading_type_code = event_reading_type_code;
+  tmp_oem_conf->sensor_type = sensor_type;
+
+  if (!hash_insert (ctx->interpret_sel.sel_oem_sensor_config,
+                    tmp_oem_conf->key,
+                    tmp_oem_conf))
+    {
+      INTERPRET_SET_ERRNUM (ctx, IPMI_INTERPRET_ERR_INTERNAL_ERROR);
+      goto cleanup;
+    }
+
+  (*oem_conf) = tmp_oem_conf;
+  rv = 0;
+ cleanup:
+  if (rv < 0)
+    free (tmp_oem_conf);
+  return (rv);
+}
+
+int
+_interpret_sel_oem_config_init (ipmi_interpret_ctx_t ctx)
+{
+  struct ipmi_interpret_sel_oem_sensor_config *oem_conf;
+
+  assert (ctx);
+  assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
+  assert (ctx->interpret_sel.sel_oem_sensor_config);
+  assert (ctx->interpret_sel.sel_oem_record_config);
+
+  /* Intel S5500WB/Penguin Computing Relgion 700 Server Platform Services Firmware Health
+   *
+   * Manufacturer ID = 343 (Intel)
+   * Product ID = 62 (S5500WB)
+   * Event/Reading Type Code = 75h (Server Platform Services Firmware Health)
+   * Sensor Type = DCh (Node Manager)
+   */
+  
+  if (_interpret_sel_oem_sensor_config_create (ctx,
+					       IPMI_IANA_ENTERPRISE_ID_INTEL,
+					       IPMI_INTEL_PRODUCT_ID_S5500WB,
+					       IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH,
+					       IPMI_SENSOR_TYPE_OEM_INTEL_NODE_MANAGER,
+					       &oem_conf) < 0)
+    return (-1);
+
+  oem_conf->oem_sensor_data[0].event_direction_any_flag = 1;
+  oem_conf->oem_sensor_data[0].event_direction = 0; /* doesn't matter */
+
+  oem_conf->oem_sensor_data[0].event_data1_any_flag = 0;
+  oem_conf->oem_sensor_data[0].event_data1 = (IPMI_OEM_INTEL_SPECIFIC_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH_EVENT_FIRMWARE_STATUS
+					      | IPMI_SEL_EVENT_DATA_OEM_CODE << 4
+					      | IPMI_SEL_EVENT_DATA_OEM_CODE << 6);
+
+  oem_conf->oem_sensor_data[0].event_data2_any_flag = 1;
+  oem_conf->oem_sensor_data[0].event_data2 = 0; /* doesn't matter */
+
+  oem_conf->oem_sensor_data[0].event_data3_any_flag = 1;
+  oem_conf->oem_sensor_data[0].event_data3 = 0; /* doesn't matter */
+
+  oem_conf->oem_sensor_data[0].sel_state = IPMI_INTERPRET_STATE_WARNING;
+
+  oem_conf->oem_sensor_data_count = 1;
+
+  /* Intel S5500WB/Penguin Computing Relgion 700 Node Manager Health Event
+   *
+   * Manufacturer ID = 343 (Intel)
+   * Product ID = 62 (S5500WB)
+   * Event/Reading Type Code = 73h (Node Manager Health Event)
+   * Sensor Type = DCh (Node Manager)
+   */
+  
+  if (_interpret_sel_oem_sensor_config_create (ctx,
+					       IPMI_IANA_ENTERPRISE_ID_INTEL,
+					       IPMI_INTEL_PRODUCT_ID_S5500WB,
+					       IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_NODE_MANAGER_HEALTH_EVENT,
+					       IPMI_SENSOR_TYPE_OEM_INTEL_NODE_MANAGER,
+					       &oem_conf) < 0)
+    return (-1);
+
+  oem_conf->oem_sensor_data[0].event_direction_any_flag = 1;
+  oem_conf->oem_sensor_data[0].event_direction = 0; /* doesn't matter */
+
+  oem_conf->oem_sensor_data[0].event_data1_any_flag = 0;
+  oem_conf->oem_sensor_data[0].event_data1 = (IPMI_OEM_INTEL_SPECIFIC_NODE_MANAGER_HEALTH_EVENT_SENSOR_NODE_MANAGER
+					      | IPMI_SEL_EVENT_DATA_OEM_CODE << 4
+					      | IPMI_SEL_EVENT_DATA_OEM_CODE << 6);
+
+  oem_conf->oem_sensor_data[0].event_data2_any_flag = 1;
+  oem_conf->oem_sensor_data[0].event_data2 = 0; /* doesn't matter */
+
+  oem_conf->oem_sensor_data[0].event_data3_any_flag = 1;
+  oem_conf->oem_sensor_data[0].event_data3 = 0; /* doesn't matter */
+
+  oem_conf->oem_sensor_data[0].sel_state = IPMI_INTERPRET_STATE_WARNING;
+
+  oem_conf->oem_sensor_data_count = 1;
+
+  return (0);
+}
+
 int
 ipmi_interpret_sel_init (ipmi_interpret_ctx_t ctx)
 {
@@ -931,7 +1074,8 @@ ipmi_interpret_sel_init (ipmi_interpret_ctx_t ctx)
       goto cleanup;
     }
 
-  /* No OEM SEL Records to Initialize right now */
+  if (_interpret_sel_oem_config_init (ctx) < 0)
+    goto cleanup;
 
   rv = 0;
  cleanup:

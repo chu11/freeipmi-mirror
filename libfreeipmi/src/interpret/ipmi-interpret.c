@@ -480,7 +480,6 @@ _get_sel_oem_sensor_state (ipmi_interpret_ctx_t ctx,
 
       for (i = 0; i < oem_conf->oem_sensor_data_count; i++)
 	{
-          
 	  if ((oem_conf->oem_sensor_data[i].event_direction_any_flag
                || oem_conf->oem_sensor_data[i].event_direction == event_direction)
               && (oem_conf->oem_sensor_data[i].event_data1_any_flag

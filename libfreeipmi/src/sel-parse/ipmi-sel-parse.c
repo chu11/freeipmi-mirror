@@ -1558,10 +1558,10 @@ ipmi_sel_parse_read_event_data1 (ipmi_sel_parse_ctx_t ctx, uint8_t *event_data1)
   if (_parse_system_event_common (ctx, &system_event_record_data) < 0)
     return (-1);
 
-  /* note: not a mistake, event_data3 is << 2 and event_data2 is << 4 */
+  /* note: not a mistake, event_data3 is << 4 and event_data2 is << 6, see spec */
   *event_data1 = (system_event_record_data.offset_from_event_reading_type_code
-                  | system_event_record_data.event_data3_flag << 2
-                  | system_event_record_data.event_data2_flag << 4);
+                  | system_event_record_data.event_data3_flag << 4
+                  | system_event_record_data.event_data2_flag << 6);
 
   ctx->errnum = IPMI_SEL_PARSE_ERR_SUCCESS;
   return (0);
@@ -2446,10 +2446,10 @@ ipmi_sel_parse_record_event_data1 (ipmi_sel_parse_ctx_t ctx,
                                          &system_event_record_data) < 0)
     return (-1);
 
-  /* note: not a mistake, event_data3 is << 2 and event_data2 is << 4 */
+  /* note: not a mistake, event_data3 is << 4 and event_data2 is << 6, see spec */
   *event_data1 = (system_event_record_data.offset_from_event_reading_type_code
-                  | system_event_record_data.event_data3_flag << 2
-                  | system_event_record_data.event_data2_flag << 4);
+                  | system_event_record_data.event_data3_flag << 4
+                  | system_event_record_data.event_data2_flag << 6);
 
   ctx->errnum = IPMI_SEL_PARSE_ERR_SUCCESS;
   return (0);
