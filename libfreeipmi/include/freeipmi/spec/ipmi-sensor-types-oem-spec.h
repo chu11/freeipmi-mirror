@@ -40,6 +40,16 @@ extern "C" {
 #define IPMI_SENSOR_TYPE_OEM_DELL_UPGRADE                               0xC4
 
 /*******************************************
+ * Intel                                   *
+ *******************************************/
+
+/*
+ * Intel S5500WB/Penguin Computing Relion 700
+ */
+
+#define IPMI_SENSOR_TYPE_OEM_INTEL_NODE_MANAGER 0xDC
+
+/*******************************************
  * Inventec                                *
  *******************************************/
 

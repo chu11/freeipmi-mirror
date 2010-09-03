@@ -292,12 +292,6 @@ extern unsigned int ipmi_sensor_type_oem_dell_upgrade_max_index;
 #define IPMI_OEM_INTEL_SPECIFIC_PCIE_CORRECTABLE_SENSOR_ADVISORY_NON_FATAL   0x05
 #define IPMI_OEM_INTEL_SPECIFIC_PCIE_CORRECTABLE_SENSOR_LINK_BW_CHANGED      0x06
 
-#define IPMI_OEM_INTEL_EVENT_DATA3_DEVICE_NUMBER_BITMASK   0xF8
-#define IPMI_OEM_INTEL_EVENT_DATA3_DEVICE_NUMBER_SHIFT     3
-
-#define IPMI_OEM_INTEL_EVENT_DATA3_FUNCTION_NUMBER_BITMASK 0x07
-#define IPMI_OEM_INTEL_EVENT_DATA3_FUNCTION_NUMBER_SHIFT   0
-
 /*
  * String arrays for above
  */
@@ -307,6 +301,57 @@ extern unsigned int ipmi_oem_intel_specific_pci_fatal_sensor_max_index;
 
 extern const char * const ipmi_oem_intel_specific_pci_correctable_sensor[];
 extern unsigned int ipmi_oem_intel_specific_pci_correctable_sensor_max_index;
+
+/* Event Reading Type Code = IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH
+ * Sensor Type = IPMI_SENSOR_TYPE_OEM_INTEL_NODE_MANAGER
+ */
+#define IPMI_OEM_INTEL_SPECIFIC_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH_EVENT_FIRMWARE_STATUS 0x00
+
+/* Forced GPIO recovery. Recovery Image loaded due to MGPIO<n>
+ * (default recovery pin is MGPIO1) pin asserted.  Repair action:
+ * Deassert MGPIO1 and reset the ME
+ */
+#define IPMI_OEM_INTEL_SPECIFIC_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_FORCED_GPIO_RECOVER     0x00
+/* Image execution failed. Recovery Image loaded because operational
+ * image is corrupted. This may be either caused by Flash device
+ * corruption or failed upgrade procedure.  Repair action: Either the
+ * Flash device must be replaced (if error is persistent) or the
+ * upgrade procedure must be started again.
+ */
+#define IPMI_OEM_INTEL_SPECIFIC_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_IMAGE_EXECUTION_FAILED  0x01
+/* Flash erase error. Error during Flash erases procedure probably
+ * due to Flash part corruption.  Repair action: The Flash device
+ * must be replaced.
+ */
+#define IPMI_OEM_INTEL_SPECIFIC_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_FLASH_ERASE_ERROR      0x02
+/* Flash corrupted. Error while checking Flash consistency probably
+ * due to Flash part corruption.  Repair action: The Flash device
+ * must be replaced (if error is persistent).
+ */
+#define IPMI_OEM_INTEL_SPECIFIC_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_FLASH_CORRUPTED         0x03
+/* Internal error. Error during firmware execution.  Repair action:
+ * FW Watchdog Timeout Operational image shall be upgraded to other
+ * version or hardware board repair is needed (if error is
+ * persistent).
+ */
+#define IPMI_OEM_INTEL_SPECIFIC_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_INTERNAL_ERROR          0x04
+
+/* Event Reading Type Code = IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_NODE_MANAGER_HEALTH_EVENT
+ * Sensor Type = IPMI_SENSOR_TYPE_OEM_INTEL_NODE_MANAGER
+ */
+#define IPMI_OEM_INTEL_SPECIFIC_NODE_MANAGER_HEALTH_EVENT_SENSOR_NODE_MANAGER 0x02
+
+#define IPMI_OEM_INTEL_SPECIFIC_NODE_MANAGER_HEALTH_EVENT_EVENT_DATA2_DOMAIN_ID_BITMASK 0x0F
+#define IPMI_OEM_INTEL_SPECIFIC_NODE_MANAGER_HEALTH_EVENT_EVENT_DATA2_DOMAIN_ID_SHIFT   0
+
+#define IPMI_OEM_INTEL_SPECIFIC_NODE_MANAGER_HEALTH_EVENT_EVENT_DATA2_ERROR_TYPE_BITMASK 0xF0
+#define IPMI_OEM_INTEL_SPECIFIC_NODE_MANAGER_HEALTH_EVENT_EVENT_DATA2_ERROR_TYPE_SHIFT   4
+
+#define IPMI_OEM_INTEL_SPECIFIC_NODE_MANAGER_HEALTH_EVENT_EVENT_DATA2_ERROR_TYPE_POLICY_MISCONFIGURATION                 0xA
+#define IPMI_OEM_INTEL_SPECIFIC_NODE_MANAGER_HEALTH_EVENT_EVENT_DATA2_ERROR_TYPE_POWER_SENSOR_READING_FAILURE            0xB
+#define IPMI_OEM_INTEL_SPECIFIC_NODE_MANAGER_HEALTH_EVENT_EVENT_DATA2_ERROR_TYPE_INLET_TEMPERATURE_READING_FAILURE       0xC
+#define IPMI_OEM_INTEL_SPECIFIC_NODE_MANAGER_HEALTH_EVENT_EVENT_DATA2_ERROR_TYPE_HOST_COMMUNICATION_ERROR                0xD
+#define IPMI_OEM_INTEL_SPECIFIC_NODE_MANAGER_HEALTH_EVENT_EVENT_DATA2_ERROR_TYPE_REAL_TIME_CLOCK_SYNCHRONIZATION_FAILURE 0xE
 
 #define IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_CHANNEL_INFORMATION_VALIDITY_BITMASK 0x10
 #define IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_CHANNEL_INFORMATION_VALIDITY_SHIFT   4
@@ -377,6 +422,12 @@ extern unsigned int ipmi_oem_intel_specific_pci_correctable_sensor_max_index;
 
 #define IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_INSTANCE_ID_BITMASK 0x0F
 #define IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_INSTANCE_ID_SHIFT   0
+
+#define IPMI_OEM_INTEL_EVENT_DATA3_DEVICE_NUMBER_BITMASK   0xF8
+#define IPMI_OEM_INTEL_EVENT_DATA3_DEVICE_NUMBER_SHIFT     3
+
+#define IPMI_OEM_INTEL_EVENT_DATA3_FUNCTION_NUMBER_BITMASK 0x07
+#define IPMI_OEM_INTEL_EVENT_DATA3_FUNCTION_NUMBER_SHIFT   0
 
 /*
  * http://download.intel.com/support/motherboards/server/s5500wb/sb/s5500wb_tps_r1_7.pdf

@@ -99,6 +99,8 @@ extern "C" {
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_MEMORY_SPARING_RAS_CONFIGURATION_INFORMATION                0x13
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_MEMORY_PARITY_ERROR                                         0x14
 
+#define IPMI_SENSOR_NUMBER_OEM_INTEL_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH                    0x17
+
 /*******************************************
  * Inventec                                *
  *******************************************/
