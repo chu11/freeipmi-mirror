@@ -32,7 +32,7 @@
 #include "ipmi-oem.h"
 #include "ipmi-oem-argp.h"
 #include "ipmi-oem-common.h"
-#include "ipmi-oem-sun.h"
+#include "ipmi-oem-ibm.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
