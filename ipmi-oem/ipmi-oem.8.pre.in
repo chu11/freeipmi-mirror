@@ -353,6 +353,19 @@ This OEM command will get the current LED status.  Command confirmed
 to work on IBM x3755.
 .RE
 .TP
+.B Intel
+.RS
+.TP
+.B restore-configuration
+This OEM command will restore BMC configuration values back to default
+values.  The command will spin until the restore is confirmed to be
+complete.  Command configured to work on Intel S5500WB/Penguin
+Computing Relion 700.  After running this command, the BMC must be
+reset to return it to functioning status.  This may be accomplished by
+executing a cold-reset with
+.B bmc-device(8).
+.RE
+.TP
 .B Inventec
 .RS
 .TP

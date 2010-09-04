@@ -35,6 +35,7 @@
 #include "ipmi-oem-dell.h"
 #include "ipmi-oem-fujitsu.h"
 #include "ipmi-oem-ibm.h"
+#include "ipmi-oem-intel.h"
 #include "ipmi-oem-inventec.h"
 #include "ipmi-oem-quanta.h"
 #include "ipmi-oem-sun.h"
@@ -454,6 +455,24 @@ struct ipmi_oem_command oem_ibm[] =
       0,
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_ibm_get_led
+    },
+    {
+      NULL,
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      NULL
+    },
+  };
+
+struct ipmi_oem_command oem_intel[] =
+  {
+    {
+      "restore-configuration",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_intel_restore_configuration
     },
     {
       NULL,
@@ -916,6 +935,10 @@ struct ipmi_oem_id oem_cb[] =
     {
       "IBM",
       oem_ibm
+    },
+    {
+      "Intel",
+      oem_intel
     },
     {
       "Inventec",
