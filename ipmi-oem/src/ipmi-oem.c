@@ -468,6 +468,13 @@ struct ipmi_oem_command oem_ibm[] =
 struct ipmi_oem_command oem_intel[] =
   {
     {
+      "get-smtp-config",
+      "[channel-number]",
+      0,
+      IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
+      ipmi_oem_intel_get_smtp_config
+    },
+    {
       "restore-configuration",
       NULL,
       0,

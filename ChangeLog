@@ -6,6 +6,9 @@
 
 	* libfreeipmi/src/sel-parse/ipmi-sel-parse.c: Fix event_data1
 	parsing bug.
+
+	* ipmi-oem/: Add Intel restore-configuration, get-smtp-config, and
+	set-smtp-config support.
 	
 2010-08-25  Albert Chu <chu11@llnl.gov>
 
