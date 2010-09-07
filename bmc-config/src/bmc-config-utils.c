@@ -153,7 +153,7 @@ _get_sol_channel_number_for_channel (bmc_config_state_data_t *state_data,
       /* This parameter is optional, if its not supported, assume LAN channel */
       if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
           && (ipmi_check_completion_code (obj_cmd_rs,
-                                          IPMI_COMP_CODE_SET_SOL_PARAMETER_NOT_SUPPORTED) == 1))
+                                          IPMI_COMP_CODE_SET_SOL_CONFIGURATION_PARAMETERS_PARAMETER_NOT_SUPPORTED) == 1))
         {
 	  _sol_channel_number_save (state_data, lan_channel_number, lan_channel_number);
           goto out;

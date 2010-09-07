@@ -532,7 +532,7 @@ _ipmi_kcs_ipmb_recv (ipmi_ctx_t ctx,
 
   if (ipmi_cmd_get_message (ctx, obj_get_cmd_rs) < 0)
     {
-      if (ipmi_check_completion_code (obj_get_cmd_rs, IPMI_COMP_CODE_DATA_NOT_AVAILABLE) == 1)
+      if (ipmi_check_completion_code (obj_get_cmd_rs, IPMI_COMP_CODE_GET_MESSAGE_DATA_NOT_AVAILABLE) == 1)
         API_SET_ERRNUM (ctx, IPMI_ERR_MESSAGE_TIMEOUT);
       else
         API_BAD_RESPONSE_TO_API_ERRNUM (ctx, obj_get_cmd_rs);

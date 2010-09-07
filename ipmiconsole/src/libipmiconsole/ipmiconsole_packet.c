@@ -1746,14 +1746,14 @@ ipmiconsole_calculate_errnum (ipmiconsole_ctx_t c,
           return (0);
         }
       else if (p == IPMICONSOLE_PACKET_TYPE_ACTIVATE_PAYLOAD_RS
-               && (comp_code == IPMI_COMP_CODE_PAYLOAD_ALREADY_ACTIVE_ON_ANOTHER_SESSION
-                   || comp_code == IPMI_COMP_CODE_PAYLOAD_ACTIVATION_LIMIT_REACHED))
+               && (comp_code == IPMI_COMP_CODE_ACTIVATE_PAYLOAD_PAYLOAD_ALREADY_ACTIVE_ON_ANOTHER_SESSION
+                   || comp_code == IPMI_COMP_CODE_ACTIVATE_PAYLOAD_PAYLOAD_ACTIVATION_LIMIT_REACHED))
         {
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SOL_INUSE);
           return (0);
         }
       else if (p == IPMICONSOLE_PACKET_TYPE_ACTIVATE_PAYLOAD_RS
-               && comp_code == IPMI_COMP_CODE_CANNOT_ACTIVATE_PAYLOAD_WITH_ENCRYPTION)
+               && comp_code == IPMI_COMP_CODE_ACTIVATE_PAYLOAD_CANNOT_ACTIVATE_PAYLOAD_WITH_ENCRYPTION)
         {
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SOL_REQUIRES_NO_ENCRYPTION);
           return (0);
@@ -1765,21 +1765,21 @@ ipmiconsole_calculate_errnum (ipmiconsole_ctx_t c,
        * return code always means we need encryption.
        */
       else if (p == IPMICONSOLE_PACKET_TYPE_ACTIVATE_PAYLOAD_RS
-               && (comp_code == IPMI_COMP_CODE_CANNOT_ACTIVATE_PAYLOAD_WITHOUT_ENCRYPTION
+               && (comp_code == IPMI_COMP_CODE_ACTIVATE_PAYLOAD_CANNOT_ACTIVATE_PAYLOAD_WITHOUT_ENCRYPTION
                    || comp_code == IPMI_COMP_CODE_PARAMETER_OUT_OF_RANGE))
         {
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SOL_REQUIRES_ENCRYPTION);
           return (0);
         }
       else if (p == IPMICONSOLE_PACKET_TYPE_ACTIVATE_PAYLOAD_RS
-               && comp_code == IPMI_COMP_CODE_PAYLOAD_TYPE_IS_DISABLED)
+               && comp_code == IPMI_COMP_CODE_ACTIVATE_PAYLOAD_PAYLOAD_TYPE_IS_DISABLED)
         {
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SOL_UNAVAILABLE);
           return (0);
         }
       else if (p == IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RS
-               && (comp_code == IPMI_COMP_CODE_RQ_LEVEL_NOT_AVAILABLE_FOR_USER
-                   || comp_code == IPMI_COMP_CODE_RQ_LEVEL_EXCEEDS_USER_PRIVILEGE_LIMIT))
+               && (comp_code == IPMI_COMP_CODE_SET_SESSION_PRIVILEGE_LEVEL_REQUESTED_LEVEL_NOT_AVAILABLE_FOR_USER
+                   || comp_code == IPMI_COMP_CODE_SET_SESSION_PRIVILEGE_LEVEL_REQUESTED_LEVEL_EXCEEDS_USER_PRIVILEGE_LIMIT))
         {
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED);
           return (0);

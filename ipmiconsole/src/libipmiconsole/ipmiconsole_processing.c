@@ -885,11 +885,11 @@ _receive_packet (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
                 }
               comp_code = val;
 
-              if (comp_code == IPMI_COMP_CODE_PAYLOAD_ALREADY_ACTIVE_ON_ANOTHER_SESSION
-                  || comp_code == IPMI_COMP_CODE_PAYLOAD_TYPE_IS_DISABLED
-                  || comp_code == IPMI_COMP_CODE_PAYLOAD_ACTIVATION_LIMIT_REACHED
-                  || comp_code == IPMI_COMP_CODE_CANNOT_ACTIVATE_PAYLOAD_WITH_ENCRYPTION
-                  || comp_code == IPMI_COMP_CODE_CANNOT_ACTIVATE_PAYLOAD_WITHOUT_ENCRYPTION)
+              if (comp_code == IPMI_COMP_CODE_ACTIVATE_PAYLOAD_PAYLOAD_ALREADY_ACTIVE_ON_ANOTHER_SESSION
+                  || comp_code == IPMI_COMP_CODE_ACTIVATE_PAYLOAD_PAYLOAD_TYPE_IS_DISABLED
+                  || comp_code == IPMI_COMP_CODE_ACTIVATE_PAYLOAD_PAYLOAD_ACTIVATION_LIMIT_REACHED
+                  || comp_code == IPMI_COMP_CODE_ACTIVATE_PAYLOAD_CANNOT_ACTIVATE_PAYLOAD_WITH_ENCRYPTION
+                  || comp_code == IPMI_COMP_CODE_ACTIVATE_PAYLOAD_CANNOT_ACTIVATE_PAYLOAD_WITHOUT_ENCRYPTION)
                 goto accept_packet;
             }
 
@@ -1198,8 +1198,8 @@ _receive_packet (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
             }
           comp_code = val;
 
-          if (comp_code == IPMI_COMP_CODE_PAYLOAD_ALREADY_DEACTIVATED
-              || comp_code == IPMI_COMP_CODE_PAYLOAD_TYPE_IS_DISABLED)
+          if (comp_code == IPMI_COMP_CODE_DEACTIVATE_PAYLOAD_PAYLOAD_ALREADY_DEACTIVATED
+              || comp_code == IPMI_COMP_CODE_DEACTIVATE_PAYLOAD_PAYLOAD_TYPE_IS_DISABLED)
             goto accept_packet;
 
           _receive_packet_data_reset (c);
@@ -2061,8 +2061,8 @@ _check_sol_activated2 (ipmiconsole_ctx_t c)
     }
   comp_code = val;
 
-  if (comp_code == IPMI_COMP_CODE_PAYLOAD_ALREADY_ACTIVE_ON_ANOTHER_SESSION
-      || comp_code == IPMI_COMP_CODE_PAYLOAD_ACTIVATION_LIMIT_REACHED)
+  if (comp_code == IPMI_COMP_CODE_ACTIVATE_PAYLOAD_PAYLOAD_ALREADY_ACTIVE_ON_ANOTHER_SESSION
+      || comp_code == IPMI_COMP_CODE_ACTIVATE_PAYLOAD_PAYLOAD_ACTIVATION_LIMIT_REACHED)
     {
       if (c->config.behavior_flags & IPMICONSOLE_BEHAVIOR_ERROR_ON_SOL_INUSE)
         {
@@ -2073,21 +2073,21 @@ _check_sol_activated2 (ipmiconsole_ctx_t c)
       return (1);
     }
 
-  if (comp_code == IPMI_COMP_CODE_PAYLOAD_TYPE_IS_DISABLED)
+  if (comp_code == IPMI_COMP_CODE_ACTIVATE_PAYLOAD_PAYLOAD_TYPE_IS_DISABLED)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("SOL unavailable"));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SOL_UNAVAILABLE);
       return (-1);
     }
 
-  if (comp_code == IPMI_COMP_CODE_CANNOT_ACTIVATE_PAYLOAD_WITH_ENCRYPTION)
+  if (comp_code == IPMI_COMP_CODE_ACTIVATE_PAYLOAD_CANNOT_ACTIVATE_PAYLOAD_WITH_ENCRYPTION)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("SOL requires no encryption"));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SOL_REQUIRES_NO_ENCRYPTION);
       return (-1);
     }
 
-  if (comp_code == IPMI_COMP_CODE_CANNOT_ACTIVATE_PAYLOAD_WITHOUT_ENCRYPTION)
+  if (comp_code == IPMI_COMP_CODE_ACTIVATE_PAYLOAD_CANNOT_ACTIVATE_PAYLOAD_WITHOUT_ENCRYPTION)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("SOL requires encryption"));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SOL_REQUIRES_ENCRYPTION);

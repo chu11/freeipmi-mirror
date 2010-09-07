@@ -620,8 +620,8 @@ _check_bmc_user_password (bmc_config_state_data_t *state_data,
         }
       comp_code = val;
 
-      if (comp_code == IPMI_COMP_CODE_PASSWORD_TEST_FAILED_PASSWORD_SIZE_CORRECT
-          || comp_code == IPMI_COMP_CODE_PASSWORD_TEST_FAILED_PASSWORD_SIZE_INCORRECT)
+      if (comp_code == IPMI_COMP_CODE_SET_USER_PASSWORD_COMMAND_PASSWORD_TEST_FAILED_PASSWORD_SIZE_CORRECT
+          || comp_code == IPMI_COMP_CODE_SET_USER_PASSWORD_COMMAND_PASSWORD_TEST_FAILED_PASSWORD_SIZE_INCORRECT)
         {
           *is_same = 0;
           goto done;

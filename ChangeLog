@@ -1,3 +1,10 @@
+2010-09-07  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-comp-code-spec.h: Fix
+	macro names for consistency to other parts of FreeIPMI.
+
+	* Adjust remaining code throughout for consistency.
+	
 2010-09-01  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/spec/ipmi-cmd-oem-spec.h: Fix typo

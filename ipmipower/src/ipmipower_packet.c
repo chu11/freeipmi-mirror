@@ -1337,21 +1337,21 @@ ipmipower_packet_errmsg (ipmipower_powercmd_t ip, packet_type_t pkt)
                && comp_code == IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST)
         return (MSG_TYPE_IPMI_2_0_UNAVAILABLE);
       else if (pkt == GET_SESSION_CHALLENGE_RES
-               && (comp_code == IPMI_COMP_CODE_INVALID_USERNAME
-                   || comp_code == IPMI_COMP_CODE_NULL_USERNAME_NOT_ENABLED))
+               && (comp_code == IPMI_COMP_CODE_GET_SESSION_CHALLENGE_INVALID_USERNAME
+                   || comp_code == IPMI_COMP_CODE_GET_SESSION_CHALLENGE_NULL_USERNAME_NOT_ENABLED))
         return (MSG_TYPE_USERNAME_INVALID);
       else if (pkt == ACTIVATE_SESSION_RES
-               && comp_code == IPMI_COMP_CODE_EXCEEDS_PRIVILEGE_LEVEL)
+               && comp_code == IPMI_COMP_CODE_ACTIVATE_SESSION_EXCEEDS_PRIVILEGE_LEVEL)
         return (MSG_TYPE_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED);
       else if (pkt == ACTIVATE_SESSION_RES
-               && (comp_code == IPMI_COMP_CODE_NO_SESSION_SLOT_AVAILABLE
-                   || comp_code == IPMI_COMP_CODE_NO_SLOT_AVAILABLE_FOR_GIVEN_USER
-                   || comp_code == IPMI_COMP_CODE_NO_SLOT_AVAILABLE_TO_SUPPORT_USER))
+               && (comp_code == IPMI_COMP_CODE_ACTIVATE_SESSION_NO_SESSION_SLOT_AVAILABLE
+                   || comp_code == IPMI_COMP_CODE_ACTIVATE_SESSION_NO_SLOT_AVAILABLE_FOR_GIVEN_USER
+                   || comp_code == IPMI_COMP_CODE_ACTIVATE_SESSION_NO_SLOT_AVAILABLE_TO_SUPPORT_USER))
         return (MSG_TYPE_BMC_BUSY);
       else if (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
-               && (comp_code == IPMI_COMP_CODE_RQ_LEVEL_NOT_AVAILABLE_FOR_USER
-                   || comp_code == IPMI_COMP_CODE_RQ_LEVEL_EXCEEDS_USER_PRIVILEGE_LIMIT
-                   || comp_code == IPMI_COMP_CODE_CANNOT_DISABLE_USER_LEVEL_AUTHENTICATION))
+               && (comp_code == IPMI_COMP_CODE_SET_SESSION_PRIVILEGE_LEVEL_REQUESTED_LEVEL_NOT_AVAILABLE_FOR_USER
+                   || comp_code == IPMI_COMP_CODE_SET_SESSION_PRIVILEGE_LEVEL_REQUESTED_LEVEL_EXCEEDS_USER_PRIVILEGE_LIMIT
+                   || comp_code == IPMI_COMP_CODE_SET_SESSION_PRIVILEGE_LEVEL_CANNOT_DISABLE_USER_LEVEL_AUTHENTICATION))
         return (MSG_TYPE_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED);
 #if 0
       /* Should not reach this point, should be handled by other code */

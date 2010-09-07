@@ -1584,8 +1584,8 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
 
   if (!ret)
     {
-      if (ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_INVALID_USERNAME) == 1
-          || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_NULL_USERNAME_NOT_ENABLED) == 1)
+      if (ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_GET_SESSION_CHALLENGE_INVALID_USERNAME) == 1
+          || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_GET_SESSION_CHALLENGE_NULL_USERNAME_NOT_ENABLED) == 1)
         API_SET_ERRNUM (ctx, IPMI_ERR_USERNAME_INVALID);
       else
         API_BAD_RESPONSE_TO_API_ERRNUM (ctx, obj_cmd_rs);
@@ -1666,11 +1666,11 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
 
   if (!ret)
     {
-      if (ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_NO_SESSION_SLOT_AVAILABLE) == 1
-          || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_NO_SLOT_AVAILABLE_FOR_GIVEN_USER) == 1
-          || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_NO_SLOT_AVAILABLE_TO_SUPPORT_USER) == 1)
+      if (ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_ACTIVATE_SESSION_NO_SESSION_SLOT_AVAILABLE) == 1
+          || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_ACTIVATE_SESSION_NO_SLOT_AVAILABLE_FOR_GIVEN_USER) == 1
+          || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_ACTIVATE_SESSION_NO_SLOT_AVAILABLE_TO_SUPPORT_USER) == 1)
         API_SET_ERRNUM (ctx, IPMI_ERR_BMC_BUSY);
-      else if (ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_EXCEEDS_PRIVILEGE_LEVEL) == 1)
+      else if (ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_ACTIVATE_SESSION_EXCEEDS_PRIVILEGE_LEVEL) == 1)
         API_SET_ERRNUM (ctx, IPMI_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED);
       else
         API_BAD_RESPONSE_TO_API_ERRNUM (ctx, obj_cmd_rs);
@@ -1776,8 +1776,8 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
     {
       if (ctx->errnum == IPMI_ERR_BAD_COMPLETION_CODE)
         {
-          if (ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_RQ_LEVEL_NOT_AVAILABLE_FOR_USER) == 1
-              || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_RQ_LEVEL_EXCEEDS_USER_PRIVILEGE_LIMIT) == 1)
+          if (ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_SET_SESSION_PRIVILEGE_LEVEL_REQUESTED_LEVEL_NOT_AVAILABLE_FOR_USER) == 1
+              || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_SET_SESSION_PRIVILEGE_LEVEL_REQUESTED_LEVEL_EXCEEDS_USER_PRIVILEGE_LIMIT) == 1)
             API_SET_ERRNUM (ctx, IPMI_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED);
         }
       ERR_TRACE (ipmi_ctx_strerror (ctx->errnum), ctx->errnum);
@@ -4069,8 +4069,8 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
     {
       if (ctx->errnum == IPMI_ERR_BAD_COMPLETION_CODE)
         {
-          if (ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_RQ_LEVEL_NOT_AVAILABLE_FOR_USER) == 1
-              || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_RQ_LEVEL_EXCEEDS_USER_PRIVILEGE_LIMIT) == 1)
+          if (ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_SET_SESSION_PRIVILEGE_LEVEL_REQUESTED_LEVEL_NOT_AVAILABLE_FOR_USER) == 1
+              || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_SET_SESSION_PRIVILEGE_LEVEL_REQUESTED_LEVEL_EXCEEDS_USER_PRIVILEGE_LIMIT) == 1)
             API_SET_ERRNUM (ctx, IPMI_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED);
         }
       ERR_TRACE (ipmi_ctx_strerror (ctx->errnum), ctx->errnum);
