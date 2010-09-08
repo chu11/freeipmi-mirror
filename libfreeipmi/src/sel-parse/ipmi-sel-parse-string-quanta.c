@@ -89,6 +89,7 @@ ipmi_sel_parse_output_quanta_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_QUANTA);
   assert (sel_parse_entry);
   assert (tmpbuf);
   assert (tmpbuflen);
@@ -102,8 +103,7 @@ ipmi_sel_parse_output_quanta_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
    *
    * Quanta S99Q/Dell FS12-TY
    */
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_QUANTA
-      && ctx->product_id == IPMI_QUANTA_PRODUCT_ID_S99Q)
+  if (ctx->product_id == IPMI_QUANTA_PRODUCT_ID_S99Q)
     {
       if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_QUANTA_ERROR
           && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
@@ -163,16 +163,17 @@ ipmi_sel_parse_output_quanta_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
  */
 int
 ipmi_sel_parse_output_quanta_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
-							 struct ipmi_sel_parse_entry *sel_parse_entry,
-							 uint8_t sel_record_type,
-							 char *tmpbuf,
-							 unsigned int tmpbuflen,
-							 unsigned int flags,
-							 unsigned int *wlen,
-							 struct ipmi_sel_system_event_record_data *system_event_record_data)
+						       struct ipmi_sel_parse_entry *sel_parse_entry,
+						       uint8_t sel_record_type,
+						       char *tmpbuf,
+						       unsigned int tmpbuflen,
+						       unsigned int flags,
+						       unsigned int *wlen,
+						       struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_QUANTA);
   assert (sel_parse_entry);
   assert (tmpbuf);
   assert (tmpbuflen);
@@ -186,8 +187,7 @@ ipmi_sel_parse_output_quanta_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
    *
    * Quanta S99Q/Dell FS12-TY
    */
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_QUANTA
-      && ctx->product_id == IPMI_QUANTA_PRODUCT_ID_S99Q)
+  if (ctx->product_id == IPMI_QUANTA_PRODUCT_ID_S99Q)
     {
       if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_QUANTA_ERROR
           && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY

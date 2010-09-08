@@ -1,3 +1,19 @@
+2010-09-08  Albert Chu <chu11@llnl.gov>
+
+	Merge from intels5500wb branch.
+
+	* Add Intel S5500WB OEM SEL support.
+
+	* Re-arch some sel-parse code for performance.
+
+	* libfreeipmi/src/sel-parse/ipmi-sel-parse.c: Fix event_data1
+	parsing bug.
+
+	* ipmi-oem/: Add Intel restore-configuration, get-smtp-config, and
+	set-smtp-config support.
+
+	* Various minor code fixes.
+
 2010-09-07  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/spec/ipmi-comp-code-spec.h: Fix
@@ -21,7 +37,7 @@
 	* ipmi-sensors/src/ipmi-sensors-detailed-output.c
 	(_detailed_output_event_enable): Gracefully handle
 	IPMI_COMP_CODE_COMMAND_RESPONSE_COULD_NOT_BE_PROVIDED error.
-	
+
 2010-08-25  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/: Support Quanta get/set-nic-mode,

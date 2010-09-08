@@ -353,6 +353,40 @@ This OEM command will get the current LED status.  Command confirmed
 to work on IBM x3755.
 .RE
 .TP
+.B Intel
+.RS
+.TP
+.B get-smtp-config \fI[channel\-number]\fR
+This OEM command will get the current SMTP configuration on the IPMI
+card.  By default, configuration for every LAN channel will be output.
+If a \fIchannel\-number\fR is specified, only that specific channel
+number's configuration will be output.  Command confirmed to work on
+Intel S5500WB/Penguin Computing Relion 700.
+.TP
+.B set-smtp-config \fI[channel\-number]\fR \fIKEY=VALUE ...\fR
+This OEM command will set the current SMTP configuration on the IPMI
+card.  By default, configuration will be done for all LAN channels.
+If a \fIchannel\-number\fR is specified, only that specific channel
+number's configuration will be configured.  The possible keys and
+values are \fIsmtp=enable|disable\fR,
+\fIsmtpserveraddress=ipaddress\fR, \fIsmtpusername=string\fR,
+\fIuserpassword=string\fR, \fIemailaddress=string\fR,
+\fIsubject=string\fR, \fImessagecontent=string\fR,
+\fIsenderemailaddress=string\fR, and \fIsmtphostname=string\fR.
+Multiple key=value pairs may be specified.  If no key=value pairs are
+specifed, available pairs are output.  Command confirmed to work on
+Intel S5500WB/Penguin Computing Relion 700.
+.TP
+.B restore-configuration
+This OEM command will restore BMC configuration values back to default
+values.  The command will spin until the restore is confirmed to be
+complete.  Command configured to work on Intel S5500WB/Penguin
+Computing Relion 700.  After running this command, the BMC must be
+reset to return it to functioning status.  This may be accomplished by
+executing a cold-reset with
+.B bmc-device(8).
+.RE
+.TP
 .B Inventec
 .RS
 .TP
@@ -706,10 +740,10 @@ functioning status.  This may be accomplished by executing a
 cold-reset with
 .B bmc-device(8).
 .TP
-.B get-processor-information \fI[processor-index]\fR
+.B get-processor-information \fI[processor\-index]\fR
 This OEM command will determine system processor information.  By
 default, information about each processor will be output.  If a
-\fIprocessor_index\fR is specified, only that specific processor will
+\fIprocessor\-index\fR is specified, only that specific processor will
 be output.  Command confirmed to work on Quanta S99Q (Dell FS12-TY).
 .TP
 .B read-mac-address \fIs99q\fR \fIdedicated|shared\fR

@@ -545,7 +545,6 @@ _interpret_sensor_oem_config_create (ipmi_interpret_ctx_t ctx,
 				     uint16_t product_id,
 				     uint8_t event_reading_type_code,
 				     uint8_t sensor_type,
-                                     hash_t oem_config,
 				     struct ipmi_interpret_sensor_oem_config **oem_conf)
 {
   struct ipmi_interpret_sensor_oem_config *tmp_oem_conf = NULL;
@@ -554,7 +553,7 @@ _interpret_sensor_oem_config_create (ipmi_interpret_ctx_t ctx,
 
   assert (ctx);
   assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
-  assert (oem_config);
+  assert (ctx->interpret_sensor.sensor_oem_config);
   assert (oem_conf);
 
   memset (keybuf, '\0', IPMI_OEM_HASH_KEY_BUFLEN + 1);
@@ -581,7 +580,9 @@ _interpret_sensor_oem_config_create (ipmi_interpret_ctx_t ctx,
   tmp_oem_conf->event_reading_type_code = event_reading_type_code;
   tmp_oem_conf->sensor_type = sensor_type;
   
-  if (!hash_insert (oem_config, tmp_oem_conf->key, tmp_oem_conf))
+  if (!hash_insert (ctx->interpret_sensor.sensor_oem_config,
+		    tmp_oem_conf->key,
+		    tmp_oem_conf))
     {
       INTERPRET_SET_ERRNUM (ctx, IPMI_INTERPRET_ERR_INTERNAL_ERROR);
       goto cleanup;
@@ -596,20 +597,20 @@ _interpret_sensor_oem_config_create (ipmi_interpret_ctx_t ctx,
 }
 
 static int
-_interpret_sensor_oem_config_init (ipmi_interpret_ctx_t ctx, hash_t oem_config)
+_interpret_sensor_oem_config_init (ipmi_interpret_ctx_t ctx)
 {
   struct ipmi_interpret_sensor_oem_config *oem_conf;
 
   assert (ctx);
   assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
-  assert (oem_config);
+  assert (ctx->interpret_sensor.sensor_oem_config);
 
   /* Dell Poweredge R610/R710 Power Optimized
    *
-   * Manufacturer ID = 674
-   * Product ID = 256
+   * Manufacturer ID = 674 (Dell)
+   * Product ID = 256 (Poweredge)
    * Event/Reading Type Code = 6Fh (Sensor Specific)
-   * Sensor Type = C0h
+   * Sensor Type = C0h (OEM)
    * Bitmask 0x0001 = "Good"
    * Bitmask 0x0002 = "Degraded, other"
    * Bitmask 0x0004 = "Degraded, thermal protection"
@@ -625,7 +626,6 @@ _interpret_sensor_oem_config_init (ipmi_interpret_ctx_t ctx, hash_t oem_config)
 					   IPMI_DELL_PRODUCT_ID_POWEREDGE_R610,
 					   IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC,
 					   IPMI_SENSOR_TYPE_OEM_DELL_SYSTEM_PERFORMANCE_DEGRADATION_STATUS,
-                                           oem_config,
 					   &oem_conf) < 0)
     return (-1);
 
@@ -665,10 +665,10 @@ _interpret_sensor_oem_config_init (ipmi_interpret_ctx_t ctx, hash_t oem_config)
 
   /* Supermicro X8DTH/X8DTG/X8DTU CPU Temperature Sensor
    *
-   * Manufacturer ID = 47488 (not IANA number, special case)
-   * Product ID = 43707
-   * Event/Reading Type Code = 70h
-   * Sensor Type = C0h
+   * Manufacturer ID = 47488 (Supermicro, not IANA number, special case)
+   * Product ID = 43707 (X8DT)
+   * Event/Reading Type Code = 70h (OEM)
+   * Sensor Type = C0h (OEM)
    * Value 0x0000 = "Low"
    * Value 0x0001 = "Medium"
    * Value 0x0002 = "High"
@@ -687,7 +687,6 @@ _interpret_sensor_oem_config_init (ipmi_interpret_ctx_t ctx, hash_t oem_config)
 					   IPMI_SUPERMICRO_PRODUCT_ID_X8DTH,
 					   IPMI_EVENT_READING_TYPE_CODE_OEM_SUPERMICRO_GENERIC,
 					   IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP,
-                                           oem_config,
 					   &oem_conf) < 0)
     return (-1);
 
@@ -967,7 +966,7 @@ ipmi_interpret_sensor_init (ipmi_interpret_ctx_t ctx)
       goto cleanup;
     }
 
-  if (_interpret_sensor_oem_config_init (ctx, ctx->interpret_sensor.sensor_oem_config) < 0)
+  if (_interpret_sensor_oem_config_init (ctx) < 0)
     goto cleanup;
 
   rv = 0;

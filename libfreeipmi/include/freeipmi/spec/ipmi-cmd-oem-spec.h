@@ -127,6 +127,22 @@ extern "C" {
 /* achu: not official names, named based on use context */
 #define IPMI_CMD_OEM_IBM_GET_LED 0xC0
 
+/*******************************************
+ * Intel                                   *
+ *******************************************/
+
+/*
+ * Intel S5500WB/Penguin Computing Relion 700
+ */
+
+/* IPMI_NET_FN_OEM_INTEL_GENERIC_RQ / IPMI_NET_FN_OEM_INTEL_GENERIC_RS */
+#define IPMI_CMD_OEM_INTEL_RESTORE_CONFIGURATION 0x02
+#define IPMI_CMD_OEM_INTEL_SET_FAULT_INDICATION  0x57
+
+/* IPMI_NET_FN_OEM_INTEL_CONFIG_RQ / IPMI_NET_FN_OEM_INTEL_CONFIG_RS */
+#define IPMI_CMD_OEM_INTEL_SET_SMTP_CONFIGURATION 0x37
+#define IPMI_CMD_OEM_INTEL_GET_SMTP_CONFIGURATION 0x38
+
 /******************************************* 
  * Inventec                                *
  *******************************************/

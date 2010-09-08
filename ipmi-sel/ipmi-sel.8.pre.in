@@ -194,9 +194,10 @@ issues on HP DL 380 G5 motherboards.  This option is identical to
 using the \fB\-\-assume\-system\-event\-records\fR option above.
 #include <@top_srcdir@/common/man/manpage-common-oem-interpretation.man>
 .LP
-Inventec 5441/Dell Xanadu II, Inventec 5442/Dell Xanadu III, Dell
-Poweredge 2900, Dell Poweredge 2950, Dell Poweredge R610, Dell
-Poweredge R710, Sun X4140, Quanta S99Q/Dell FS12-TY
+Dell Poweredge 2900, Dell Poweredge 2950, Dell Poweredge R610, Dell
+Poweredge R710, Intel S5500WB/Penguin Computing Relion 700, Inventec
+5441/Dell Xanadu II, Inventec 5442/Dell Xanadu III, Quanta S99Q/Dell
+FS12-TY, Sun X4140,
 .SH "EXAMPLES"
 .B # ipmi-sel 
 .PP

@@ -33,9 +33,38 @@ extern "C" {
  * http://manuals.ts.fujitsu.com/file/4390/irmc_s2-en.pdf
  */
 /* IPMI_CMD_OEM_FUJITSU_BIOS - w/ GET_CPU_INFO Command Specifier */
-#define IPMI_COMP_CODE_OEM_FUJITSU_UNPOPULATED_CPU_SOCKET 0x01
-#define IPMI_COMP_CODE_OEM_FUJITSU_UNPOPULATED_CPU_SOCKET_STR \
+#define IPMI_COMP_CODE_OEM_FUJITSU_BIOS_UNPOPULATED_CPU_SOCKET 0x01
+#define IPMI_COMP_CODE_OEM_FUJITSU_BIOS_UNPOPULATED_CPU_SOCKET_STR \
   "Unpopulated CPU Socket"
+
+/*******************************************
+ * Intel                                   *
+ *******************************************/
+
+/*
+ * Intel S5500WB/Penguin Computing Relion 700
+ */
+
+/* IPMI_CMD_OEM_INTEL_SET_SMTP_CONFIGURATION */
+
+#define IPMI_COMP_CODE_SET_SMTP_CONFIGURATION_PARAMETER_NOT_SUPPORTED                    0x80
+#define IPMI_COMP_CODE_SET_SMTP_CONFIGURATION_PARAMETER_NOT_SUPPORTED_STR \
+  "parameter not supported."
+
+#define IPMI_COMP_CODE_SET_SMTP_CONFIGURATION_WRITE_READ_ONLY_PARAMETER                  0x82
+#define IPMI_COMP_CODE_SET_SMTP_CONFIGURATION_WRITE_READ_ONLY_PARAMETER_STR \
+  "attempt to write read-only parameter"
+
+/* IPMI_CMD_OEM_INTEL_GET_SMTP_CONFIGURATION */
+
+/* achu: document from Intel also sites a "write read-only parameter"
+ * error code, but I assume that is a cut and paste typo.  Shouldn't
+ * be possible for the "get" command
+ */
+
+#define IPMI_COMP_CODE_GET_SMTP_CONFIGURATION_PARAMETER_NOT_SUPPORTED                    0x80
+#define IPMI_COMP_CODE_GET_SMTP_CONFIGURATION_PARAMETER_NOT_SUPPORTED_STR \
+  "parameter not supported."
 
 #ifdef __cplusplus
 }
