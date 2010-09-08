@@ -108,13 +108,13 @@
 #define IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_USER_PASSWORD          0x03
 /* read only */
 #define IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_NUMBER_OF_DESTINATIONS 0x04
-/* max 2 blocks */
+/* max 2 blocks - doc says 64 bytes, but 2 blocks appears to be correct */
 #define IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_EMAIL_ADDRESS          0x05
 /* max 2 blocks */
 #define IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_SUBJECT                0x06
 /* max 4 blocks */
 #define IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_MESSAGE_CONTENT        0x07
-/* max 4 blocks */
+/* max 4 blocks according to doc, but according to firmware max 1 block when you write */
 #define IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_SENDER_EMAIL_ADDRESS   0x08
 /* max 2 blocks */
 #define IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_SMTP_HOST_NAME         0x09
@@ -446,6 +446,15 @@ ipmi_oem_intel_get_smtp_config (ipmi_oem_state_data_t *state_data)
 	  goto cleanup;
 	}
       
+      if (!ret)
+	{
+	  pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_get_channel_numbers: no LAN channels discovered\n",
+                           ipmi_ctx_errormsg (state_data->ipmi_ctx));
+          goto cleanup;
+	}
+
       channel_numbers_count = ret;
     }
 
@@ -539,7 +548,7 @@ ipmi_oem_intel_get_smtp_config (ipmi_oem_state_data_t *state_data)
 
       pstdout_printf (state_data->pstate,
 		      "SMTP                 : %s\n",
-		      (smtpenable = IPMI_OEM_INTEL_SMTP_ENABLE) ? "enabled" : "disabled");
+		      (smtpenable == IPMI_OEM_INTEL_SMTP_ENABLE) ? "enabled" : "disabled");
 
       pstdout_printf (state_data->pstate,
 		      "SMTP Server Address  : %u.%u.%u.%u\n",
@@ -582,30 +591,290 @@ ipmi_oem_intel_get_smtp_config (ipmi_oem_state_data_t *state_data)
   return (rv);
 }
 
+static int
+_set_smtp_configuration_data (ipmi_oem_state_data_t *state_data,
+			      uint8_t channel_number,
+			      uint8_t parameter_selector,
+			      uint8_t set_selector,
+			      uint8_t block_selector,
+			      uint8_t *buf,
+			      unsigned int buflen)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  int rs_len;
+  int rv = -1;
+
+  assert (state_data);
+  assert (IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_VALID (parameter_selector));
+  assert (buf);
+  assert (buflen);
+  assert (buflen <= (IPMI_OEM_MAX_BYTES - 5));
+
+  /* Intel S5500WB/Penguin Computing Relion 700
+   *
+   * Set SMTP Configuration Request
+   *
+   * 0x32 - OEM network function
+   * 0x38 - OEM cmd
+   * 0x?? - channel number
+   * 0x?? - parameter selector
+   * 0x?? - set selector
+   * 0x?? - block selector
+   * 0x?? - 0x?? - configuration data
+   *
+   * Set SMTP Configuration Response
+   *
+   * 0x38 - OEM cmd
+   * 0x?? - Completion Code
+   */
+
+  bytes_rq[0] = IPMI_CMD_OEM_INTEL_SET_SMTP_CONFIGURATION;
+  bytes_rq[1] = channel_number;
+  bytes_rq[2] = parameter_selector;
+  bytes_rq[3] = set_selector;
+  bytes_rq[4] = block_selector;
+  memcpy (&bytes_rq[5], buf, buflen);
+  
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+                              IPMI_NET_FN_OEM_INTEL_CONFIG_RQ, /* network function */
+                              bytes_rq, /* data */
+                              5 + buflen, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+  
+  if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                   bytes_rs,
+                                                   rs_len,
+                                                   2,
+						   IPMI_CMD_OEM_INTEL_GET_SMTP_CONFIGURATION,
+						   IPMI_NET_FN_OEM_INTEL_CONFIG_RS,
+                                                   NULL) < 0)
+    goto cleanup;
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+static int
+_set_smtp_configuration_value (ipmi_oem_state_data_t *state_data,
+			       uint8_t *channel_numbers,
+			       unsigned int channel_numbers_count,
+			       uint8_t parameter_selector,
+			       uint32_t value)
+{
+  uint8_t buf[IPMI_OEM_MAX_BYTES];
+  unsigned int buflen = IPMI_OEM_MAX_BYTES;
+  int rv = -1;
+  unsigned int i;
+
+  assert (state_data);
+  assert (channel_numbers);
+  assert (channel_numbers_count);
+  assert (parameter_selector == IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_ENABLE_SMTP
+	  || parameter_selector == IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_SMTP_SERVER_ADDRESS
+	  || parameter_selector == IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_NUMBER_OF_DESTINATIONS);
+
+  if (parameter_selector == IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_ENABLE_SMTP
+      || parameter_selector == IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_NUMBER_OF_DESTINATIONS)
+    {
+      buf[0] = value;
+      buflen = 1;
+    }
+  else if (parameter_selector == IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_SMTP_SERVER_ADDRESS)
+    {
+      /* MS byte first */
+      buf[0] = (value & 0xFF000000) >> 24;
+      buf[1] = (value & 0x00FF0000) >> 16;
+      buf[2] = (value & 0x0000FF00) >> 8;
+      buf[3] = (value & 0x000000FF);
+      buflen = 4;
+    }
+
+  for (i = 0; i < channel_numbers_count; i++)
+    {
+      if (_set_smtp_configuration_data (state_data,
+					channel_numbers[i],
+					parameter_selector,
+					IPMI_OEM_INTEL_SMTP_CONFIGURATION_NO_SET_SELECTOR,
+					IPMI_OEM_INTEL_SMTP_CONFIGURATION_NO_BLOCK_SELECTOR,
+					buf,
+					buflen) < 0)
+	goto cleanup;
+    }
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+static int
+_set_smtp_configuration_string (ipmi_oem_state_data_t *state_data,
+				uint8_t *channel_numbers,
+				unsigned int channel_numbers_count,
+				uint8_t parameter_selector,
+				char *key,
+				char *string)
+{
+  uint8_t buf[IPMI_OEM_INTEL_SMTP_STRING_LENGTH_MAX];
+  unsigned int max_blocks = 0;
+  int rv = -1;
+  unsigned int i;
+
+  assert (state_data);
+  assert (channel_numbers);
+  assert (channel_numbers_count);
+  assert (parameter_selector == IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_SMTP_USER_NAME
+	  || parameter_selector == IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_USER_PASSWORD
+          || parameter_selector == IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_EMAIL_ADDRESS
+          || parameter_selector == IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_SUBJECT
+          || parameter_selector == IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_MESSAGE_CONTENT
+          || parameter_selector == IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_SENDER_EMAIL_ADDRESS
+          || parameter_selector == IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_SMTP_HOST_NAME);
+  assert (key);
+  assert (string);
+
+  if (parameter_selector == IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_SMTP_USER_NAME)
+    max_blocks = 1;
+  else if (parameter_selector == IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_EMAIL_ADDRESS
+	   || parameter_selector == IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_SUBJECT)
+    max_blocks = 2;
+  else if (parameter_selector == IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_SMTP_HOST_NAME)
+    /* XXX: document indicates 2 blocks, but firmware has errors on > 1 block, so we use 1 block */
+    max_blocks = 1;
+  else if (parameter_selector == IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_SENDER_EMAIL_ADDRESS)
+    /* XXX: document indicates 4 blocks, but firmware has errors on > 1 block, so we use 1 block */
+    max_blocks = 1;
+  else /* parameter_selector == IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_MESSAGE_CONTENT */
+    max_blocks = 4;
+  
+  if (strlen (string) > (max_blocks * IPMI_OEM_INTEL_SMTP_STRING_BLOCK_LENGTH_MAX))
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "value for key %s too long\n",
+		       key);
+      goto cleanup;
+    }
+
+  /* according to docs, must pad 00h to max blocks */
+  memset (buf, '\0', IPMI_OEM_INTEL_SMTP_STRING_LENGTH_MAX);
+  memcpy (buf, string, strlen (string));
+
+  for (i = 0; i < channel_numbers_count; i++)
+    {
+      unsigned int j;
+
+      for (j = 0; j < max_blocks; j++)
+	{
+	  if (_set_smtp_configuration_data (state_data,
+					    channel_numbers[i],
+					    parameter_selector,
+					    IPMI_OEM_INTEL_SMTP_CONFIGURATION_NO_SET_SELECTOR,
+					    j,
+					    buf + j * IPMI_OEM_INTEL_SMTP_STRING_BLOCK_LENGTH_MAX,
+					    IPMI_OEM_INTEL_SMTP_STRING_BLOCK_LENGTH_MAX) < 0)
+	    goto cleanup;
+	}
+    }
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
 int
 ipmi_oem_intel_set_smtp_config (ipmi_oem_state_data_t *state_data)
 {
-#if 0
-  uint8_t webserverenabled = 0;
-  uint32_t webservertimeout = 0;
-  uint16_t httpportnumber = 0;
-  uint16_t httpsportnumber = 0;
+  uint8_t channel_numbers[IPMI_OEM_INTEL_CHANNEL_NUMBERS_MAX];
+  unsigned int channel_numbers_count = 0;
+  uint8_t smtpenable = 0;
+  uint32_t smtpserveraddress = 0;
+  char smtp_user_name[IPMI_OEM_INTEL_SMTP_STRING_LENGTH_MAX + 1];
+  char user_password[IPMI_OEM_INTEL_SMTP_STRING_LENGTH_MAX + 1];
+  char email_address[IPMI_OEM_INTEL_SMTP_STRING_LENGTH_MAX + 1];
+  char subject[IPMI_OEM_INTEL_SMTP_STRING_LENGTH_MAX + 1];
+  char message_content[IPMI_OEM_INTEL_SMTP_STRING_LENGTH_MAX + 1];
+  char sender_email_address[IPMI_OEM_INTEL_SMTP_STRING_LENGTH_MAX + 1];
+  char smtp_host_name[IPMI_OEM_INTEL_SMTP_STRING_LENGTH_MAX + 1];
   int rv = -1;
-  int i;
+  unsigned int i;
+  int load_channel_numbers = 1;
 
   assert (state_data);
 
   if (!state_data->prog_data->args->oem_options_count)
     {
       pstdout_printf (state_data->pstate,
-		      "Option: webserver=enable|disable\n"
-		      "Option: webservertimeout=seconds\n"
-		      "Option: httpportnumber=num\n"
-		      "Option: httpsportnumber=num\n");
+		      "Option: smtp=enable|disable\n"
+		      "Option: smtpserveraddress=ipaddress\n"
+		      "Option: smtpusername=string\n"
+		      "Option: userpassword=string\n"
+		      "Option: emailaddress=string\n"
+		      "Option: subject=string\n"
+		      "Option: messagecontent=string\n"
+		      "Option: senderemailaddress=string\n"
+		      "Option: smtphostname=string\n");
       return (0); 
     }
 
-  for (i = 0; i < state_data->prog_data->args->oem_options_count; i++)
+  /* Check if user selected a channel number */
+  if (state_data->prog_data->args->oem_options_count)
+    {
+      char *ptr = NULL;
+      unsigned int temp;
+
+      errno = 0;
+      temp = strtoul (state_data->prog_data->args->oem_options[0], &ptr, 10);
+      if (!(errno
+	    || temp > UCHAR_MAX
+	    || ptr[0] != '\0'
+	    || !temp))
+        {
+	  channel_numbers[0] = temp;
+	  channel_numbers_count = 1;
+	  load_channel_numbers = 0;
+	}
+    }
+
+  if (load_channel_numbers)
+    {
+      int ret;
+      
+      if ((ret = ipmi_get_channel_numbers (state_data->ipmi_ctx,
+					   IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3,
+					   channel_numbers,
+					   IPMI_OEM_INTEL_CHANNEL_NUMBERS_MAX)) < 0)
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_get_channel_numbers: %s\n",
+			   ipmi_ctx_errormsg (state_data->ipmi_ctx));
+	  goto cleanup;
+	}
+      
+      if (!ret)
+	{
+	  pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_get_channel_numbers: no LAN channels discovered\n",
+                           ipmi_ctx_errormsg (state_data->ipmi_ctx));
+          goto cleanup;
+	}
+
+      channel_numbers_count = ret;
+    }
+ 
+  for (i = (load_channel_numbers ? 0 : 1); i < state_data->prog_data->args->oem_options_count; i++)
     {
       char *key = NULL;
       char *value = NULL;
@@ -616,57 +885,179 @@ ipmi_oem_intel_set_smtp_config (ipmi_oem_state_data_t *state_data)
                                     &value) < 0)
         goto cleanup;
 
-      if (!strcasecmp (key, "webserver"))
+      if (!strcasecmp (key, "smtp"))
         {
-          if (ipmi_oem_parse_enable (state_data, i, value, &webserverenabled) < 0)
+          if (ipmi_oem_parse_enable (state_data, i, value, &smtpenable) < 0)
             goto cleanup;
 
-          if (_ipmi_oem_intel_set_extended_config_value (state_data,
-                                                            IPMI_OEM_INTEL_EXTENDED_CONFIGURATION_ID_SMTP_CONFIGURATION,
-                                                            IPMI_OEM_INTEL_EXTENDED_ATTRIBUTE_ID_SMTP_CONFIGURATION_SMTP_ENABLED,
-                                                            0,
-                                                            1,
-                                                            (uint32_t)webserverenabled) < 0)
-            goto cleanup;
+	  if (_set_smtp_configuration_value (state_data,
+					     channel_numbers,
+					     channel_numbers_count,
+					     IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_ENABLE_SMTP,
+					     smtpenable) < 0)
+	    goto cleanup;
         }
-      else if (!strcasecmp (key, "webservertimeout"))
+      else if (!strcasecmp (key, "smtpserveraddress"))
         {
-          if (ipmi_oem_parse_4_byte_field (state_data, i, value, &webservertimeout) < 0)
+          if (ipmi_oem_parse_ip_address (state_data, i, value, &smtpserveraddress) < 0)
             goto cleanup;
-          
-          if (_ipmi_oem_intel_set_extended_config_value (state_data,
-                                                            IPMI_OEM_INTEL_EXTENDED_CONFIGURATION_ID_SMTP_CONFIGURATION,
-                                                            IPMI_OEM_INTEL_EXTENDED_ATTRIBUTE_ID_SMTP_CONFIGURATION_SMTP_TIMEOUT,
-                                                            0,
-                                                            4,
-                                                            webservertimeout) < 0)
-            goto cleanup;
+
+	  if (_set_smtp_configuration_value (state_data,
+					     channel_numbers,
+					     channel_numbers_count,
+					     IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_SMTP_SERVER_ADDRESS,
+					     smtpserveraddress) < 0)
+	    goto cleanup;
         }
-      else if (!strcasecmp (key, "httpportnumber"))
+      else if (!strcasecmp (key, "smtpusername"))
         {
-          if (ipmi_oem_parse_2_byte_field (state_data, i, value, &httpportnumber) < 0)
-            goto cleanup;
-          
-          if (_ipmi_oem_intel_set_extended_config_value (state_data,
-                                                            IPMI_OEM_INTEL_EXTENDED_CONFIGURATION_ID_SMTP_CONFIGURATION,
-                                                            IPMI_OEM_INTEL_EXTENDED_ATTRIBUTE_ID_SMTP_CONFIGURATION_HTTP_PORT_NUM,
-                                                            0,
-                                                            2,
-                                                            (uint32_t)httpportnumber) < 0)
-            goto cleanup;
+	  uint8_t string_length = 0;
+
+	  if (ipmi_oem_parse_string (state_data,
+				     i,
+				     value, 
+				     &string_length,
+				     smtp_user_name,
+				     IPMI_OEM_INTEL_SMTP_STRING_LENGTH_MAX) < 0)
+	    goto cleanup;
+
+	  if (_set_smtp_configuration_string (state_data,
+					      channel_numbers,
+					      channel_numbers_count,
+					      IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_SMTP_USER_NAME,
+					      key,
+					      smtp_user_name) < 0)
+	    goto cleanup;
         }
-      else if (!strcasecmp (key, "httpsportnumber"))
+      else if (!strcasecmp (key, "userpassword"))
         {
-          if (ipmi_oem_parse_2_byte_field (state_data, i, value, &httpsportnumber) < 0)
-            goto cleanup;
-          
-          if (_ipmi_oem_intel_set_extended_config_value (state_data,
-                                                            IPMI_OEM_INTEL_EXTENDED_CONFIGURATION_ID_SMTP_CONFIGURATION,
-                                                            IPMI_OEM_INTEL_EXTENDED_ATTRIBUTE_ID_SMTP_CONFIGURATION_HTTPS_PORT_NUM,
-                                                            0,
-                                                            2,
-                                                            (uint32_t)httpsportnumber) < 0)
-            goto cleanup;
+	  uint8_t string_length = 0;
+
+	  if (ipmi_oem_parse_string (state_data,
+				     i,
+				     value, 
+				     &string_length,
+				     user_password,
+				     IPMI_OEM_INTEL_SMTP_STRING_LENGTH_MAX) < 0)
+	    goto cleanup;
+
+	  /* clear out buffers for security */
+
+	  memset (value, '\0', strlen (value));
+	  
+	  memset (state_data->prog_data->args->oem_options[i], '\0', strlen (state_data->prog_data->args->oem_options[i]));
+
+	  if (_set_smtp_configuration_string (state_data,
+					      channel_numbers,
+					      channel_numbers_count,
+					      IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_USER_PASSWORD,
+					      key,
+					      user_password) < 0)
+	    goto cleanup;
+
+	  /* clear out buffers for security */
+	  
+	  memset (user_password, '\0', IPMI_OEM_INTEL_SMTP_STRING_LENGTH_MAX + 1);
+        }
+      else if (!strcasecmp (key, "emailaddress"))
+        {
+	  uint8_t string_length = 0;
+
+	  if (ipmi_oem_parse_string (state_data,
+				     i,
+				     value, 
+				     &string_length,
+				     email_address,
+				     IPMI_OEM_INTEL_SMTP_STRING_LENGTH_MAX) < 0)
+	    goto cleanup;
+
+	  if (_set_smtp_configuration_string (state_data,
+					      channel_numbers,
+					      channel_numbers_count,
+					      IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_EMAIL_ADDRESS,
+					      key,
+					      email_address) < 0)
+	    goto cleanup;
+        }
+      else if (!strcasecmp (key, "subject"))
+        {
+	  uint8_t string_length = 0;
+
+	  if (ipmi_oem_parse_string (state_data,
+				     i,
+				     value, 
+				     &string_length,
+				     subject,
+				     IPMI_OEM_INTEL_SMTP_STRING_LENGTH_MAX) < 0)
+	    goto cleanup;
+
+	  if (_set_smtp_configuration_string (state_data,
+					      channel_numbers,
+					      channel_numbers_count,
+					      IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_SUBJECT,
+					      key,
+					      subject) < 0)
+	    goto cleanup;
+        }
+      else if (!strcasecmp (key, "messagecontent"))
+        {
+	  uint8_t string_length = 0;
+
+	  if (ipmi_oem_parse_string (state_data,
+				     i,
+				     value, 
+				     &string_length,
+				     message_content,
+				     IPMI_OEM_INTEL_SMTP_STRING_LENGTH_MAX) < 0)
+	    goto cleanup;
+
+	  if (_set_smtp_configuration_string (state_data,
+					      channel_numbers,
+					      channel_numbers_count,
+					      IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_MESSAGE_CONTENT,
+					      key,
+					      message_content) < 0)
+	    goto cleanup;
+        }
+      else if (!strcasecmp (key, "senderemailaddress"))
+        {
+	  uint8_t string_length = 0;
+
+	  if (ipmi_oem_parse_string (state_data,
+				     i,
+				     value, 
+				     &string_length,
+				     sender_email_address,
+				     IPMI_OEM_INTEL_SMTP_STRING_LENGTH_MAX) < 0)
+	    goto cleanup;
+
+	  if (_set_smtp_configuration_string (state_data,
+					      channel_numbers,
+					      channel_numbers_count,
+					      IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_SENDER_EMAIL_ADDRESS,
+					      key,
+					      sender_email_address) < 0)
+	    goto cleanup;
+        }
+      else if (!strcasecmp (key, "smtphostname"))
+        {
+	  uint8_t string_length = 0;
+
+	  if (ipmi_oem_parse_string (state_data,
+				     i,
+				     value, 
+				     &string_length,
+				     smtp_host_name,
+				     IPMI_OEM_INTEL_SMTP_STRING_LENGTH_MAX) < 0)
+	    goto cleanup;
+
+	  if (_set_smtp_configuration_string (state_data,
+					      channel_numbers,
+					      channel_numbers_count,
+					      IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_SMTP_HOST_NAME,
+					      key,
+					      smtp_host_name) < 0)
+	    goto cleanup;
         }
       else
         {
@@ -686,7 +1077,6 @@ ipmi_oem_intel_set_smtp_config (ipmi_oem_state_data_t *state_data)
   rv = 0;
  cleanup:
   return (rv);
-#endif
 }
 
 int

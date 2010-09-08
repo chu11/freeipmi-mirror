@@ -1348,7 +1348,7 @@ ipmi_oem_inventec_set_authentication_config (ipmi_oem_state_data_t *state_data)
   uint16_t lockoutwindow = 0;
   uint16_t lockouttime = 0;
   int rv = -1;
-  int i;
+  unsigned int i;
 
   assert (state_data);
 
@@ -1731,7 +1731,7 @@ ipmi_oem_inventec_set_dns_config (ipmi_oem_state_data_t *state_data)
   uint8_t dnsdomainnamedhcpenable = 0;
   char dnsdomainname[IPMI_OEM_INVENTEC_EXTENDED_CONFIG_DNS_DNS_DOMAIN_NAME_MAX + 1];
   int rv = -1;
-  int i;
+  unsigned int i;
 
   assert (state_data);
 
@@ -2023,7 +2023,7 @@ ipmi_oem_inventec_set_web_server_config (ipmi_oem_state_data_t *state_data)
   uint16_t httpportnumber = 0;
   uint16_t httpsportnumber = 0;
   int rv = -1;
-  int i;
+  unsigned int i;
 
   assert (state_data);
 
@@ -2252,7 +2252,7 @@ ipmi_oem_inventec_set_power_management_config (ipmi_oem_state_data_t *state_data
   uint16_t powerondelay = 0;
   uint16_t maxpowerondelay = 0;
   int rv = -1;
-  int i;
+  unsigned int i;
 
   assert (state_data);
 
@@ -2644,7 +2644,7 @@ ipmi_oem_inventec_set_firmware_update_config (ipmi_oem_state_data_t *state_data)
   uint8_t delay_time = 0;
   uint32_t tmpvalue = 0;
   int rv = -1;
-  int i;
+  unsigned int i;
 
   assert (state_data);
 
