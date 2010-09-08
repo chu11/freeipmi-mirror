@@ -47,6 +47,8 @@ int ipmi_get_generic_event_message (uint8_t event_reading_type_code,
                                     unsigned int buflen);
 
 /* return length of string written into buffer on success, -1 on error */
+/* this function is for sensor specific messages, sensors with event
+ * reading typo codes of 0x6F */
 int ipmi_get_sensor_type_message (uint8_t sensor_type,
                                   unsigned int offset,
                                   char *buf,
@@ -90,6 +92,8 @@ int ipmi_get_oem_generic_event_message (uint32_t manufacturer_id,
                                         unsigned int buflen);
 
 /* return length of string written into buffer on success, -1 on error */
+/* this function is for sensor specific messages, sensors with event
+ * reading typo codes of 0x6F */
 int ipmi_get_oem_sensor_type_message (uint32_t manufacturer_id,
                                       uint16_t product_id,
                                       uint8_t sensor_type,
@@ -98,6 +102,8 @@ int ipmi_get_oem_sensor_type_message (uint32_t manufacturer_id,
                                       unsigned int buflen);
 
 /* return length of string written into buffer on success, -1 on error */
+/* this function is for string mappings from vendors that are specific
+ * to a event reading typo code and sensor type combination. */
 int ipmi_get_oem_specific_message (uint32_t manufacturer_id,
                                    uint16_t product_id,
                                    uint8_t event_reading_type_code,
