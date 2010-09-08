@@ -1986,7 +1986,7 @@ ipmi_oem_dell_set_ssh_config (ipmi_oem_state_data_t *state_data)
   uint32_t idletimeout = 0;
   uint16_t portnumber = 0;
   int rv = -1;
-  int i;
+  unsigned int i;
 
   /* Dell OEM
    *
@@ -2201,7 +2201,7 @@ ipmi_oem_dell_set_telnet_config (ipmi_oem_state_data_t *state_data)
   uint16_t portnumber = 0;
   uint8_t _7flsenable = 0;
   int rv = -1;
-  int i;
+  unsigned int i;
 
   /* Dell OEM
    *
@@ -2424,7 +2424,7 @@ ipmi_oem_dell_set_web_server_config (ipmi_oem_state_data_t *state_data)
   uint16_t httpportnumber = 0;
   uint16_t httpsportnumber = 0;
   int rv = -1;
-  int i;
+  unsigned int i;
 
   /* Dell OEM
    *
@@ -2882,7 +2882,7 @@ ipmi_oem_dell_set_active_directory_config (ipmi_oem_state_data_t *state_data)
   uint8_t ad_certificate_validation_enable = 0; 
   unsigned int offset = 0;
   int rv = -1;
-  int i;
+  unsigned int i;
 
   /* Dell OEM
    *

@@ -76,6 +76,7 @@ _ipmi_sel_parse_output_sun_event_data3_fru_position_number (ipmi_sel_parse_ctx_t
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_SUN_MICROSYSTEMS);
   assert (tmpbuf);
   assert (tmpbuflen);
   assert (system_event_record_data);
@@ -123,6 +124,7 @@ ipmi_sel_parse_output_sun_event_data3_threshold_oem (ipmi_sel_parse_ctx_t ctx,
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_SUN_MICROSYSTEMS);
   assert (sel_parse_entry);
   assert (tmpbuf);
   assert (tmpbuflen);
@@ -137,8 +139,7 @@ ipmi_sel_parse_output_sun_event_data3_threshold_oem (ipmi_sel_parse_ctx_t ctx,
    * Sun X4140
    */
 
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_SUN_MICROSYSTEMS
-      && ctx->product_id == IPMI_SUN_MICROSYSTEMS_PRODUCT_ID_X4140)
+  if (ctx->product_id == IPMI_SUN_MICROSYSTEMS_PRODUCT_ID_X4140)
     {
       if (_ipmi_sel_parse_output_sun_event_data3_fru_position_number (ctx,
                                                                       tmpbuf,
@@ -171,6 +172,7 @@ ipmi_sel_parse_output_sun_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_SUN_MICROSYSTEMS);
   assert (sel_parse_entry);
   assert (tmpbuf);
   assert (tmpbuflen);
@@ -185,8 +187,7 @@ ipmi_sel_parse_output_sun_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
    * Sun X4140
    */
 
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_SUN_MICROSYSTEMS
-      && ctx->product_id == IPMI_SUN_MICROSYSTEMS_PRODUCT_ID_X4140)
+  if (ctx->product_id == IPMI_SUN_MICROSYSTEMS_PRODUCT_ID_X4140)
     {
       if (_ipmi_sel_parse_output_sun_event_data3_fru_position_number (ctx,
                                                                       tmpbuf,

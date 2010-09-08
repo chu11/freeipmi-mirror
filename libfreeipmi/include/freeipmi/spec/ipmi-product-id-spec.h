@@ -44,11 +44,15 @@ extern "C" {
 #define IPMI_INTEL_PRODUCT_ID_SR870BN4 256
 #define IPMI_INTEL_PRODUCT_ID_TIGER4   IPMI_INTEL_PRODUCT_ID_SR870BN4
 
+#define IPMI_INTEL_PRODUCT_ID_S5500WB  62
+
 /* 
  * Intel derived
  */
 
 #define IPMI_CALIFORNIA_DIGITAL_PRODUCT_ID_6440 IPMI_INTEL_PRODUCT_ID_SR870BN4
+
+#define IPMI_PENGUIN_COMPUTING_PRODUCT_ID_RELION_700 IPMI_INTEL_PRODUCT_ID_S5500WB
 
 /*******************************************
  * IBM                                     *

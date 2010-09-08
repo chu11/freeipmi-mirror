@@ -65,6 +65,21 @@ extern "C" {
 #define IPMI_NET_FN_OEM_IBM_LED_RS 0x3B
 
 /*******************************************
+ * Intel                                   *
+ *******************************************/
+  
+/*
+ * Intel S5500WB/Penguin Computing Relion 700
+ */
+
+/* achu: not official names, named based on use context */
+#define IPMI_NET_FN_OEM_INTEL_GENERIC_RQ 0x30
+#define IPMI_NET_FN_OEM_INTEL_GENERIC_RS 0x31
+
+#define IPMI_NET_FN_OEM_INTEL_CONFIG_RQ 0x32
+#define IPMI_NET_FN_OEM_INTEL_CONFIG_RS 0x33
+
+/*******************************************
  * Inventec                                *
  *******************************************/
 

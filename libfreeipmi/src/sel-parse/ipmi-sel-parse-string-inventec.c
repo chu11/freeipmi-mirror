@@ -89,6 +89,7 @@ ipmi_sel_parse_output_inventec_sensor_name (ipmi_sel_parse_ctx_t ctx,
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC);
   assert (sel_parse_entry);
   assert (buf);
   assert (buflen);
@@ -103,9 +104,8 @@ ipmi_sel_parse_output_inventec_sensor_name (ipmi_sel_parse_ctx_t ctx,
    * Inventec 5441/Dell Xanadu II
    * Inventec 5442/Dell Xanadu III
    */
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
-      && (ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441
-          || ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5442)
+  if ((ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441
+       || ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5442)
       && ((system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INVENTEC_BIOS 
            && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INVENTEC_BIOS
            && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INVENTEC_BIOS
@@ -156,6 +156,7 @@ ipmi_sel_parse_output_inventec_event_data1_class_oem (ipmi_sel_parse_ctx_t ctx,
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC);
   assert (sel_parse_entry);
   assert (tmpbuf);
   assert (tmpbuflen);
@@ -173,9 +174,8 @@ ipmi_sel_parse_output_inventec_event_data1_class_oem (ipmi_sel_parse_ctx_t ctx,
    * from the vendor.  "BMC enabled by BIOS" is simply what
    * occurs, so that's what I'm going to say.
    */
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
-      && (ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441
-          || ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5442)
+  if ((ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441
+       || ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5442)
       && system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INVENTEC_BIOS
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INVENTEC_BIOS
       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INVENTEC_POST_START
@@ -213,6 +213,7 @@ ipmi_sel_parse_output_inventec_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ct
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC);
   assert (sel_parse_entry);
   assert (tmpbuf);
   assert (tmpbuflen);
@@ -234,9 +235,8 @@ ipmi_sel_parse_output_inventec_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ct
    * a rolling window.  Once the logging limit is reached, a system
    * reboot is necessary to reset the counter.
    */
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
-      && (ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441
-          || ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5442)
+  if ((ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441
+       || ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5442)
       && system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INVENTEC_SMI
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INVENTEC_MEMORY
@@ -287,6 +287,7 @@ ipmi_sel_parse_output_inventec_event_data2_class_oem (ipmi_sel_parse_ctx_t ctx,
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC);
   assert (sel_parse_entry);
   assert (tmpbuf);
   assert (tmpbuflen);
@@ -300,9 +301,8 @@ ipmi_sel_parse_output_inventec_event_data2_class_oem (ipmi_sel_parse_ctx_t ctx,
    * Inventec 5441/Dell Xanadu II
    * Inventec 5442/Dell Xanadu III
    */
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
-      && (ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441
-          || ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5442)
+  if ((ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441
+       || ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5442)
       && system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INVENTEC_BIOS
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INVENTEC_BIOS
       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INVENTEC_POST_START
@@ -341,6 +341,7 @@ ipmi_sel_parse_output_inventec_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ct
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC);
   assert (sel_parse_entry);
   assert (tmpbuf);
   assert (tmpbuflen);
@@ -355,8 +356,7 @@ ipmi_sel_parse_output_inventec_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ct
    * Inventec 5441/Dell Xanadu II
    */
 
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
-      && ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441)
+  if (ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441)
     {
       /* achu: Note that the Dimm locations are not in a pattern,
        * this is what the doc says.
@@ -428,8 +428,7 @@ ipmi_sel_parse_output_inventec_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ct
    * Inventec 5442/Dell Xanadu III
    */
 
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
-      && ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5442)
+  if (ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5442)
     {
       if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INVENTEC_SMI
           && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
@@ -517,9 +516,8 @@ ipmi_sel_parse_output_inventec_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ct
    * Inventec 5442/Dell Xanadu III
    */
 
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
-      && (ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441
-          || ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5442))
+  if ((ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441
+       || ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5442))
     {
       if (system_event_record_data->generator_id == IPMI_SLAVE_ADDRESS_BMC
           && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
@@ -571,6 +569,7 @@ ipmi_sel_parse_output_inventec_event_data3_class_oem (ipmi_sel_parse_ctx_t ctx,
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC);
   assert (sel_parse_entry);
   assert (tmpbuf);
   assert (tmpbuflen);
@@ -584,9 +583,8 @@ ipmi_sel_parse_output_inventec_event_data3_class_oem (ipmi_sel_parse_ctx_t ctx,
    * Inventec 5441/Dell Xanadu II
    * Inventec 5442/Dell Xanadu III
    */
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
-      && (ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441
-          || ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5442)
+  if ((ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441
+       || ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5442)
       && system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INVENTEC_BIOS
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INVENTEC_BIOS
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INVENTEC_BIOS
@@ -627,6 +625,7 @@ ipmi_sel_parse_output_inventec_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC);
   assert (sel_parse_entry);
   assert (buf);
   assert (buflen);
@@ -641,14 +640,15 @@ ipmi_sel_parse_output_inventec_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx
    * Inventec 5441/Dell Xanadu II
    * Inventec 5442/Dell Xanadu III
    */
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
-      && (ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441
-          || ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5442))
+  if ((ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441
+       || ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5442))
     {
       if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INVENTEC_POST_ERROR_CODE
           && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
           && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS
-          && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INVENTEC_POST_ERROR_CODE)
+          && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INVENTEC_POST_ERROR_CODE
+	  && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
+	  && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
         {
           uint16_t error_code;
           char *error_code_str = NULL;
