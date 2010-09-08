@@ -337,6 +337,29 @@ _sensor_type_is_oem_interpretable (struct ipmi_sensors_state_data *state_data,
           || sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_UPGRADE))
     return (1);
   
+  /* OEM Interpretation
+   *
+   * Fujitsu iRMC / iRMC S2
+   */
+  if (state_data->oem_data.manufacturer_id == IPMI_IANA_ENTERPRISE_ID_FUJITSU
+      && (state_data->oem_data.product_id >= IPMI_FUJITSU_PRODUCT_ID_MIN
+          && state_data->oem_data.product_id <= IPMI_FUJITSU_PRODUCT_ID_MAX)
+      && (sensor_type == IPMI_SENSOR_TYPE_OEM_FUJITSU_I2C_BUS
+          || sensor_type == IPMI_SENSOR_TYPE_OEM_FUJITSU_SYSTEM_POWER_CONSUMPTION
+          || sensor_type == IPMI_SENSOR_TYPE_OEM_FUJITSU_MEMORY_STATUS
+          || sensor_type == IPMI_SENSOR_TYPE_OEM_FUJITSU_MEMORY_CONFIG
+          || sensor_type == IPMI_SENSOR_TYPE_OEM_FUJITSU_FAN_STATUS
+          || sensor_type == IPMI_SENSOR_TYPE_OEM_FUJITSU_PSU_STATUS
+          || sensor_type == IPMI_SENSOR_TYPE_OEM_FUJITSU_PSU_REDUNDANCY
+          || sensor_type == IPMI_SENSOR_TYPE_OEM_FUJITSU_CONFIG_BACKUP
+          /* These are for events only --begin */
+          || sensor_type == IPMI_SENSOR_TYPE_OEM_FUJITSU_MEMORY
+          || sensor_type == IPMI_SENSOR_TYPE_OEM_FUJITSU_FLASH
+          || sensor_type == IPMI_SENSOR_TYPE_OEM_FUJITSU_EVENT
+          || sensor_type == IPMI_SENSOR_TYPE_OEM_FUJITSU_COMMUNICATION
+          /* These are for events only --end */          
+          ))
+    return (1);
   return (0);
 }
 

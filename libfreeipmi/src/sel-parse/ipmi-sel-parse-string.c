@@ -53,6 +53,8 @@
 #include "freeipmi/spec/ipmi-sensor-types-spec.h"
 #include "freeipmi/spec/ipmi-sensor-units-spec.h"
 #include "freeipmi/spec/ipmi-slave-address-spec.h"
+#include "freeipmi/spec/ipmi-netfn-spec.h"
+#include "freeipmi/spec/ipmi-comp-code-spec.h"
 #include "freeipmi/util/ipmi-iana-enterprise-numbers-util.h"
 #include "freeipmi/util/ipmi-sensor-and-event-code-tables-util.h"
 #include "freeipmi/util/ipmi-sensor-units-util.h"
@@ -63,6 +65,7 @@
 #include "ipmi-sel-parse-defs.h"
 #include "ipmi-sel-parse-string.h"
 #include "ipmi-sel-parse-string-dell.h"
+#include "ipmi-sel-parse-string-fujitsu.h"
 #include "ipmi-sel-parse-string-intel.h"
 #include "ipmi-sel-parse-string-inventec.h"
 #include "ipmi-sel-parse-string-quanta.h"
@@ -580,7 +583,13 @@ _output_sensor_type (ipmi_sel_parse_ctx_t ctx,
   if (sel_parse_get_system_event_record (ctx, sel_parse_entry, &system_event_record_data) < 0)
     return (-1);
   
-  sensor_type_str = ipmi_get_sensor_type_string (system_event_record_data.sensor_type);
+  if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA)
+    sensor_type_str = ipmi_get_oem_sensor_type_string (system_event_record_data.sensor_type,
+                                                       (system_event_record_data.event_type_code & 0x7F), 
+                                                       ctx->manufacturer_id,
+                                                       ctx->product_id);
+  else 
+    sensor_type_str = ipmi_get_sensor_type_string (system_event_record_data.sensor_type);
   
   if (sensor_type_str)
     {
@@ -966,6 +975,29 @@ _output_event_data1 (ipmi_sel_parse_ctx_t ctx,
 	  output_flag++;
 	  break;
 	}
+
+      /* OEM (Sensor) Interpretation
+       *
+       * Fujitsu iRMC / iRMC S2
+       */
+      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA
+      && ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_FUJITSU
+          && (ctx->product_id >= IPMI_FUJITSU_PRODUCT_ID_MIN
+              && ctx->product_id <= IPMI_FUJITSU_PRODUCT_ID_MAX))
+      {
+        ret = ipmi_get_oem_sensor_type_message (ctx->manufacturer_id,
+                                                ctx->product_id,
+                                                system_event_record_data.sensor_type,
+                                                system_event_record_data.offset_from_event_reading_type_code,
+                                                tmpbuf,
+                                                EVENT_BUFFER_LENGTH);
+      
+        if (ret > 0)
+        {
+          output_flag++;
+          break;
+        }
+      }
 
       ret = ipmi_get_sensor_type_message_short (system_event_record_data.sensor_type,
                                                 system_event_record_data.offset_from_event_reading_type_code,
@@ -2786,6 +2818,21 @@ _output_oem (ipmi_sel_parse_ctx_t ctx,
   if ((oem_len = sel_parse_get_oem (ctx, sel_parse_entry, oem_data, SEL_PARSE_BUFFER_LENGTH)) < 0)
     return (-1);
 
+
+  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_FUJITSU
+      && (ctx->product_id >= IPMI_FUJITSU_PRODUCT_ID_MIN 
+        && ctx->product_id <= IPMI_FUJITSU_PRODUCT_ID_MAX)
+        && (sel_oem_fujitsu_get_sel_entry_long_text (ctx,
+                                                      sel_parse_entry,
+                                                      sel_record_type,
+                                                      buf,
+                                                      buflen,
+                                                      flags,
+                                                      wlen) == 0))
+    {
+        return (0);
+    }
+
   if (ipmi_sel_parse_string_snprintf (buf, buflen, wlen, "OEM defined = "))
     return (1);
 
@@ -2916,14 +2963,34 @@ sel_parse_format_record_string (ipmi_sel_parse_ctx_t ctx,
         }
       else if (percent_flag && *fmt == 'e') /* event data1 */
         {
-          if ((ret = _output_event_data1 (ctx,
-                                          &sel_parse_entry,
-                                          sel_record_type,
-                                          buf,
-                                          buflen,
-                                          flags,
-                                          &wlen)) < 0)
-            goto cleanup;
+          /* HLiebig: special case for Fujitsu iRMC / iRMC S2
+           * Try build in event decoding from the BMC with OEM command         
+           */
+          if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_FUJITSU
+            && (ctx->product_id >= IPMI_FUJITSU_PRODUCT_ID_MIN 
+                && ctx->product_id <= IPMI_FUJITSU_PRODUCT_ID_MAX)
+            && ((ret = sel_oem_fujitsu_get_sel_entry_long_text (ctx,
+                                                &sel_parse_entry,
+                                                sel_record_type,
+                                                buf,
+                                                buflen,
+                                                flags,
+                                                &wlen)) == 0))
+            {
+              /* success, wer're done */
+              ;
+            }
+          else /* Failed or different OEM/product, fall through */
+            {
+            if ((ret = _output_event_data1 (ctx,
+                                            &sel_parse_entry,
+                                            sel_record_type,
+                                            buf,
+                                            buflen,
+                                            flags,
+                                            &wlen)) < 0)
+              goto cleanup;
+            }
           if (ret)
             goto out;
           percent_flag = 0;

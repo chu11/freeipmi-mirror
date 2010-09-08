@@ -1,3 +1,7 @@
+2010-XX-XX  Holger Liebig <holger.liebig@ts.fujitsu.com>
+
+	* Add initial Fujitsu OEM sensor and SEL support.
+
 2010-09-08  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/: Remove Intel get/set-smtp-config, does not backport

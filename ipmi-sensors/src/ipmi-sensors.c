@@ -624,6 +624,24 @@ _output_sensor (ipmi_sensors_state_data_t *state_data,
                                           IPMI_SENSORS_NO_EVENT_STRING) < 0)
         goto cleanup;
     }
+  /* 
+   * OEM Interpretation
+   * Fujitsu iRMC S1 / iRMC S2
+   */
+  else if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM
+           && state_data->prog_data->args->interpret_oem_data
+           && state_data->oem_data.manufacturer_id == IPMI_IANA_ENTERPRISE_ID_FUJITSU
+           && (state_data->oem_data.product_id >= IPMI_FUJITSU_PRODUCT_ID_MIN
+               && state_data->oem_data.product_id <= IPMI_FUJITSU_PRODUCT_ID_MAX))
+    {
+      if (get_generic_event_message_list (state_data,
+                                          &event_message_list,
+                                          &event_message_list_len,
+                                          event_reading_type_code,
+                                          sensor_event_bitmask,
+                                          IPMI_SENSORS_NO_EVENT_STRING) < 0)
+        goto cleanup;
+    }
   /* OEM Interpretation
    *
    * Supermicro X8DTH
@@ -739,7 +757,7 @@ _output_sensor (ipmi_sensors_state_data_t *state_data,
       rv = ipmi_sensors_detailed_output (state_data,
                                          sdr_record,
                                          sdr_record_len,
-					 sensor_number_base + shared_sensor_number_offset,
+                                         sensor_number_base + shared_sensor_number_offset,
                                          sensor_reading,
                                          event_message_list,
                                          event_message_list_len);
@@ -813,7 +831,8 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
           /* at this point shouldn't have record id not found error */
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "ipmi_sdr_cache_search_record_id: %s\n",
+                           "ipmi_sdr_cache_search_record_id: 0x%u %s\n",
+                           output_record_ids[i],
                            ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
           goto cleanup;
         }

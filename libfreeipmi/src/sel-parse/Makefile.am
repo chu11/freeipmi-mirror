@@ -9,6 +9,7 @@ noinst_HEADERS = \
 	ipmi-sel-parse-common.h \
 	ipmi-sel-parse-string.h \
 	ipmi-sel-parse-string-dell.h \
+	ipmi-sel-parse-string-fujitsu.h \
 	ipmi-sel-parse-string-intel.h \
 	ipmi-sel-parse-string-inventec.h \
 	ipmi-sel-parse-string-quanta.h \
@@ -32,6 +33,7 @@ libselparse_la_SOURCES = \
 	ipmi-sel-parse-common.c \
 	ipmi-sel-parse-string.c \
 	ipmi-sel-parse-string-dell.c \
+	ipmi-sel-parse-string-fujitsu.c \
 	ipmi-sel-parse-string-intel.c \
 	ipmi-sel-parse-string-inventec.c \
 	ipmi-sel-parse-string-quanta.c \
