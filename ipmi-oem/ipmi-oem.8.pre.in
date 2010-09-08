@@ -356,27 +356,6 @@ to work on IBM x3755.
 .B Intel
 .RS
 .TP
-.B get-smtp-config \fI[channel\-number]\fR
-This OEM command will get the current SMTP configuration on the IPMI
-card.  By default, configuration for every LAN channel will be output.
-If a \fIchannel\-number\fR is specified, only that specific channel
-number's configuration will be output.  Command confirmed to work on
-Intel S5500WB/Penguin Computing Relion 700.
-.TP
-.B set-smtp-config \fI[channel\-number]\fR \fIKEY=VALUE ...\fR
-This OEM command will set the current SMTP configuration on the IPMI
-card.  By default, configuration will be done for all LAN channels.
-If a \fIchannel\-number\fR is specified, only that specific channel
-number's configuration will be configured.  The possible keys and
-values are \fIsmtp=enable|disable\fR,
-\fIsmtpserveraddress=ipaddress\fR, \fIsmtpusername=string\fR,
-\fIuserpassword=string\fR, \fIemailaddress=string\fR,
-\fIsubject=string\fR, \fImessagecontent=string\fR,
-\fIsenderemailaddress=string\fR, and \fIsmtphostname=string\fR.
-Multiple key=value pairs may be specified.  If no key=value pairs are
-specifed, available pairs are output.  Command confirmed to work on
-Intel S5500WB/Penguin Computing Relion 700.
-.TP
 .B restore-configuration
 This OEM command will restore BMC configuration values back to default
 values.  The command will spin until the restore is confirmed to be

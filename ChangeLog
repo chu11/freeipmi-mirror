@@ -1,5 +1,10 @@
 2010-09-08  Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/: Remove Intel get/set-smtp-config, does not backport
+	to 0.8.0 line due to multi-channel support on newer FreeIPMI.
+	
+2010-09-08  Albert Chu <chu11@llnl.gov>
+
 	Merge from intels5500wb branch.
 
 	* Add Intel S5500WB OEM SEL support.
