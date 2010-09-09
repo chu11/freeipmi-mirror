@@ -1,6 +1,9 @@
 2010-XX-XX  Albert Chu <chu11@llnl.gov>
 
 	* Code cleanup for consistency to FreeIPMI code style.
+
+	* Re-work OEM SEL interpretations to not call Fujitsu Get SEL
+	Entry Long Text for every event.
 	
 2010-XX-XX  Holger Liebig <holger.liebig@ts.fujitsu.com>
 
