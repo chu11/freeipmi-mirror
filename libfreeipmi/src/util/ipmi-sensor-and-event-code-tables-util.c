@@ -1820,11 +1820,6 @@ ipmi_get_oem_generic_event_message (uint32_t manufacturer_id,
   return (-1);
 }
 
-/* 
- * HLiebig: TODO: 
- * This should take a sensor_type & event_reading_code combination 
- * It is currently called for sensor specific (0x6F) only.
- */
 int
 ipmi_get_oem_sensor_type_message (uint32_t manufacturer_id,
                                   uint16_t product_id,
@@ -1883,6 +1878,7 @@ ipmi_get_oem_sensor_type_message (uint32_t manufacturer_id,
         }
     }
 
+  /* Holger: XXX: Do these belong in here or down in oem_specific below? */
   /* 
    * OEM Interpretation
    *

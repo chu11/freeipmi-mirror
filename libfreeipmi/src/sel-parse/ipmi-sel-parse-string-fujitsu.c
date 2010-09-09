@@ -109,11 +109,12 @@ static int
 _ipmi_sel_oem_fujitsu_get_sel_entry_long_text (ipmi_sel_parse_ctx_t ctx,
                                                struct ipmi_sel_parse_entry *sel_parse_entry,
                                                char *buf,
-                                               unsigned int buflen)
+                                               unsigned int buflen,
+                                               int include_severity)
 {
   uint8_t bytes_rq[IPMI_OEM_FUJITSU_MAX_BYTES];
   uint8_t bytes_rs[IPMI_OEM_FUJITSU_MAX_BYTES];
-  int rs_len, tmp;
+  int rs_len;
   uint16_t sel_record_id = 0xFFFF;
   uint8_t css = 0;
   uint8_t severity = 0;
@@ -234,6 +235,7 @@ _ipmi_sel_oem_fujitsu_get_sel_entry_long_text (ipmi_sel_parse_ctx_t ctx,
                                   bytes_rs,
                                   IPMI_OEM_FUJITSU_MAX_BYTES)) < 0)
         {
+          SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_IPMI_ERROR);
           goto cleanup;
         }
       
@@ -245,7 +247,7 @@ _ipmi_sel_oem_fujitsu_get_sel_entry_long_text (ipmi_sel_parse_ctx_t ctx,
                 {
                   snprintf (string_buf,
                             IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH,
-                            "[Fujtisu OEM decoding required Administrator privilege]");
+                            "[Fujtisu OEM decoding requires administrator privilege]");
                   goto out;
                 }
               goto cleanup;
@@ -253,7 +255,7 @@ _ipmi_sel_oem_fujitsu_get_sel_entry_long_text (ipmi_sel_parse_ctx_t ctx,
         }
       
       /* Get severity and CSS flag only once */
-      if (offset == 0)
+      if (!offset)
         {
           css = (bytes_rs[14] & IPMI_OEM_FUJITSU_CSS_BITMASK);
           css >>= IPMI_OEM_FUJITSU_CSS_SHIFT;
@@ -264,8 +266,8 @@ _ipmi_sel_oem_fujitsu_get_sel_entry_long_text (ipmi_sel_parse_ctx_t ctx,
       
       data_length = bytes_rs[15];
       
-      bytes_rs[rs_len-1]='\0'; /* just to be sure it's terminated */
-      component_length = strlen((char *)bytes_rs + 16);
+      bytes_rs[rs_len-1] = '\0'; /* just to be sure it's terminated */
+      component_length = strlen ((char *)bytes_rs + 16);
       
       /* achu: truncate if there is overflow */
       if (offset + component_length > IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH)
@@ -287,34 +289,58 @@ _ipmi_sel_oem_fujitsu_get_sel_entry_long_text (ipmi_sel_parse_ctx_t ctx,
   if (css == IPMI_OEM_FUJITSU_CSS_COMPONENT)
     css_str = "CSS Component";
   
-  if (severity == IPMI_OEM_FUJITSU_SEVERITY_INFORMATIONAL)
-    severity_str = "INFORMATIONAL";
-  else if (severity == IPMI_OEM_FUJITSU_SEVERITY_MINOR)
-    severity_str = "MINOR";
-  else if (severity == IPMI_OEM_FUJITSU_SEVERITY_MAJOR)
-    severity_str = "MAJOR";
-  else if (severity == IPMI_OEM_FUJITSU_SEVERITY_CRITICAL)
-    severity_str = "CRITICAL";
+  if (include_severity)
+    {
+      if (severity == IPMI_OEM_FUJITSU_SEVERITY_INFORMATIONAL)
+        severity_str = "INFORMATIONAL";
+      else if (severity == IPMI_OEM_FUJITSU_SEVERITY_MINOR)
+        severity_str = "MINOR";
+      else if (severity == IPMI_OEM_FUJITSU_SEVERITY_MAJOR)
+        severity_str = "MAJOR";
+      else if (severity == IPMI_OEM_FUJITSU_SEVERITY_CRITICAL)
+        severity_str = "CRITICAL";
+      else
+        severity_str = "Unknown Severity";
+      
+      if (css_str)
+        snprintf (string_buf,
+                  IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH,
+                  "%s: %s (%s)",
+                  severity_str,
+                  string_buf,
+                  css_str);
+      else 
+        snprintf (string_buf,
+                  IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH,
+                  "%s: %s",
+                  severity_str,
+                  string_buf);
+    }
   else
-    severity_str = "Unknown Severity";
-  
-  if (css_str != NULL)
-    snprintf (string_buf,
-              IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH,
-              "%s: %s (%s)",
-              severity_str,
-              string_buf,
-              css_str);
-  else 
-    snprintf (buf,
-              IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH,
-              wlen, 
-              "%s: %s",
-              severity_str,
-              string_buf);
+    {
+      if (css_str)
+        snprintf (string_buf,
+                  IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH,
+                  "%s (%s)",
+                  string_buf,
+                  css_str);
+      else
+        snprintf (string_buf,
+                  IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH,
+                  "%s",
+                  string_buf);
+    }
   
  out:
 
+  if (strlen (string_buf) > buflen)
+    {
+      SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_INTERNAL_ERROR);
+      goto cleanup;
+    }
+  
+  memcpy (buf, string_buf, strlen (string_buf));
+  
   rv = 0;
  cleanup:
   return (rv);
@@ -348,7 +374,6 @@ ipmi_sel_parse_output_fujitsu_event_data1_class_sensor_specific_discrete (ipmi_s
   assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (wlen);
   assert (system_event_record_data);
-  /* Holger: XXX: This is true for these sensors?? */
   assert (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC);
 
   /* OEM Interpretation
@@ -386,6 +411,89 @@ ipmi_sel_parse_output_fujitsu_event_data1_class_sensor_specific_discrete (ipmi_s
   return (0);
 }
 
+/* Holger: XXX: below implementation only calls get-long-text if
+ * event-data2 AND event-data3 are OEM extensions
+ *
+ * if there is a possibility of:
+ *
+ * event1-text ; event2-text; OEM event-data3
+ *
+ * or
+ *
+ * event1-text ; OEM event-data2 ; event3-text
+ *
+ * Then we'll need some more callbacks for those specific circumstances
+ */
+
+/* return (0) - no OEM match
+ * return (1) - OEM match
+ * return (-1) - error, cleanup and return error
+ *
+ * in oem_rv, return
+ * 0 - continue on
+ * 1 - buffer full, return full buffer to user
+ */
+int
+ipmi_sel_parse_output_fujitsu_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
+							struct ipmi_sel_parse_entry *sel_parse_entry,
+							uint8_t sel_record_type,
+							char *buf,
+							unsigned int buflen,
+							unsigned int flags,
+							unsigned int *wlen,
+							struct ipmi_sel_system_event_record_data *system_event_record_data,
+							int *oem_rv)
+{
+  assert (ctx);
+  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_FUJITSU);
+  assert (sel_parse_entry);
+  assert (buf);
+  assert (buflen);
+  assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
+  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (wlen);
+  assert (system_event_record_data);
+  assert (oem_rv);
+
+  /* OEM Interpretation
+   *
+   * Fujitsu iRMC / iRMC S2
+   */
+  if ((ctx->product_id >= IPMI_FUJITSU_PRODUCT_ID_MIN
+       && ctx->product_id <= IPMI_FUJITSU_PRODUCT_ID_MAX)
+      && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
+      && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
+    {
+      char selbuf[IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH + 1];
+      
+      memset (selbuf, '\0', IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH + 1);
+      
+      if (_ipmi_sel_oem_fujitsu_get_sel_entry_long_text (ctx,
+                                                         sel_parse_entry,
+                                                         selbuf,
+                                                         IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH,
+                                                         0) < 0)
+        return (-1);
+      
+      if (strlen (selbuf))
+        {
+          if (ipmi_sel_parse_string_snprintf (buf,
+                                              buflen,
+                                              wlen,
+                                              "%s",
+                                              selbuf))
+            (*oem_rv) = 1;
+          else
+            (*oem_rv) = 0;
+          
+          return (1);
+        }
+    }
+
+  return (0);
+}
+
 /* return (0) - no OEM match
  * return (1) - OEM match
  * return (-1) - error, cleanup and return error
@@ -402,7 +510,6 @@ ipmi_sel_parse_output_fujitsu_oem_record_data (ipmi_sel_parse_ctx_t ctx,
                                                unsigned int buflen,
                                                unsigned int flags,
                                                unsigned int *wlen,
-                                               struct ipmi_sel_system_event_record_data *system_event_record_data,
                                                int *oem_rv)
 {
   assert (ctx);
@@ -416,7 +523,6 @@ ipmi_sel_parse_output_fujitsu_oem_record_data (ipmi_sel_parse_ctx_t ctx,
   assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
   assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (wlen);
-  assert (system_event_record_data);
   assert (oem_rv);
 
   /* OEM Interpretation
@@ -427,16 +533,30 @@ ipmi_sel_parse_output_fujitsu_oem_record_data (ipmi_sel_parse_ctx_t ctx,
        && ctx->product_id <= IPMI_FUJITSU_PRODUCT_ID_MAX))
     {
       char selbuf[IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH + 1];
-      int ret;
 
       memset (selbuf, '\0', IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH + 1);
 
-      ret = ipmi_sel_oem_fujitsu_get_sel_entry_long_text (ctx,
-                                                          sel_parse_entry,
-                                                          selbuf,
-                                                          IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH);
-      if (ret >= 0)
-        return (ret);
+      if (_ipmi_sel_oem_fujitsu_get_sel_entry_long_text (ctx,
+                                                         sel_parse_entry,
+                                                         selbuf,
+                                                         IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH,
+                                                         1) < 0)
+        return (-1);
+
+      if (strlen (selbuf))
+        {
+          if (ipmi_sel_parse_string_snprintf (buf,
+                                              buflen,
+                                              wlen,
+                                              "%s",
+                                              selbuf))
+            (*oem_rv) = 1;
+          else
+            (*oem_rv) = 0;
+          
+          return (1);
+        }
     }
 
+  return (0);
 }

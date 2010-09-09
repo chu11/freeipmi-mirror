@@ -40,14 +40,23 @@ int ipmi_sel_parse_output_fujitsu_event_data1_class_sensor_specific_discrete (ip
                                                                               unsigned int *wlen,
                                                                               struct ipmi_sel_system_event_record_data *system_event_record_data);
 
-/* returns 0 on success, 1 on success but w/ truncation, -1 on error */
-int
-ipmi_sel_oem_fujitsu_get_sel_entry_long_text (ipmi_sel_parse_ctx_t ctx,
-                                              struct ipmi_sel_parse_entry *sel_parse_entry,
-                                              uint8_t sel_record_type,
-                                              char *buf,
-                                              unsigned int buflen,
-                                              unsigned int flags,
-                                              unsigned int *wlen);
+int ipmi_sel_parse_output_fujitsu_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
+                                                           struct ipmi_sel_parse_entry *sel_parse_entry,
+                                                           uint8_t sel_record_type,
+                                                           char *buf,
+                                                           unsigned int buflen,
+                                                           unsigned int flags,
+                                                           unsigned int *wlen,
+                                                           struct ipmi_sel_system_event_record_data *system_event_record_data,
+                                                           int *oem_rv);
+
+int ipmi_sel_parse_output_fujitsu_oem_record_data (ipmi_sel_parse_ctx_t ctx,
+                                                   struct ipmi_sel_parse_entry *sel_parse_entry,
+                                                   uint8_t sel_record_type,
+                                                   char *buf,
+                                                   unsigned int buflen,
+                                                   unsigned int flags,
+                                                   unsigned int *wlen,
+                                                   int *oem_rv);
 
 #endif /* _IPMI_SEL_PARSE_STRING_FUJITSU_H */

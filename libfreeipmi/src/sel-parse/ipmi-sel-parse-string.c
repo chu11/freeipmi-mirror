@@ -800,7 +800,12 @@ _output_oem_event_data1_class_sensor_specific_discrete (ipmi_sel_parse_ctx_t ctx
       if (ret)
 	return (1);
     }
-  
+
+  /* Holger: XXX: we're only getting event data for OEM sensor types
+   * in which event-reading-type-code is == 0x6F, is this correct?
+   * May need a new call in _output_oem_event_data1_class_oem() below
+   * if necessary.
+   */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_FUJITSU)
     {
       if ((ret = ipmi_sel_parse_output_fujitsu_event_data1_class_sensor_specific_discrete (ctx,
@@ -972,6 +977,10 @@ _output_event_data1 (ipmi_sel_parse_ctx_t ctx,
        *
        * Dell Poweredge R610
        * Dell Poweredge R710
+       *
+       * achu: This is a special case, event reading type code and
+       * sensor type are non-OEM, Dell added an additional offset not
+       * defined by the IPMI spec.
        */
       if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA
 	  && ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
@@ -1701,9 +1710,9 @@ _output_oem_event_data3_threshold_oem (ipmi_sel_parse_ctx_t ctx,
       
       if (ret)
 	return (1);
-
-      return (0);
     }
+
+  return (0);
 }
 
 /* return (0) - no OEM match
@@ -2243,6 +2252,27 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
 	return (1);
     }
 
+  /* Holger: XXX: Will we need event_data2 only, and event_dat3 only
+   * specific OEM callbcaks too?
+   */
+
+  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_FUJITSU)
+    {
+      if ((ret = ipmi_sel_parse_output_fujitsu_event_data2_event_data3 (ctx,
+                                                                        sel_parse_entry,
+                                                                        sel_record_type,
+                                                                        buf,
+                                                                        buflen,
+                                                                        flags,
+                                                                        wlen,
+                                                                        system_event_record_data,
+                                                                        oem_rv)) < 0)
+	return (-1);
+
+      if (ret)
+	return (1);
+    }
+
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL)
     {
       if ((ret = ipmi_sel_parse_output_intel_event_data2_event_data3 (ctx,
@@ -2768,7 +2798,6 @@ _output_oem_interpreted_record_data (ipmi_sel_parse_ctx_t ctx,
                                      unsigned int tmpbuflen,
                                      unsigned int flags,
                                      unsigned int *wlen,
-                                     struct ipmi_sel_system_event_record_data *system_event_record_data,
                                      int *oem_rv)
 {
   int ret;
@@ -2781,7 +2810,6 @@ _output_oem_interpreted_record_data (ipmi_sel_parse_ctx_t ctx,
   assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
   assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (wlen);
-  assert (system_event_record_data);
   assert (oem_rv);
 
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_FUJITSU)
@@ -2793,7 +2821,6 @@ _output_oem_interpreted_record_data (ipmi_sel_parse_ctx_t ctx,
                                                                 tmpbuflen,
                                                                 flags,
                                                                 wlen,
-                                                                system_event_record_data,
                                                                 oem_rv)) < 0)
 	return (-1);
       
@@ -2845,7 +2872,6 @@ _output_oem_record_data (ipmi_sel_parse_ctx_t ctx,
                                                       buflen,
                                                       flags,
                                                       wlen,
-                                                      &system_event_record_data,
                                                       &oem_rv)) < 0)
         return (-1);
       
@@ -2986,35 +3012,14 @@ sel_parse_format_record_string (ipmi_sel_parse_ctx_t ctx,
         }
       else if (percent_flag && *fmt == 'e') /* event data1 */
         {
-          /* HLiebig: special case for Fujitsu iRMC / iRMC S2
-           * Try build in event decoding from the BMC with OEM command         
-           */
-          if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA
-              && ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_FUJITSU
-              && (ctx->product_id >= IPMI_FUJITSU_PRODUCT_ID_MIN 
-                  && ctx->product_id <= IPMI_FUJITSU_PRODUCT_ID_MAX)
-              && ((ret = ipmi_sel_oem_fujitsu_get_sel_entry_long_text (ctx,
-                                                                       &sel_parse_entry,
-                                                                       sel_record_type,
-                                                                       buf,
-                                                                       buflen,
-                                                                       flags,
-                                                                       &wlen)) == 0))
-            {
-              /* success, wer're done */
-              ;
-            }
-          else
-            {
-              if ((ret = _output_event_data1 (ctx,
-                                              &sel_parse_entry,
-                                              sel_record_type,
-                                              buf,
-                                              buflen,
-                                              flags,
-                                              &wlen)) < 0)
-                goto cleanup;
-            }
+          if ((ret = _output_event_data1 (ctx,
+                                          &sel_parse_entry,
+                                          sel_record_type,
+                                          buf,
+                                          buflen,
+                                          flags,
+                                          &wlen)) < 0)
+            goto cleanup;
           
           if (ret)
             goto out;
