@@ -469,6 +469,7 @@ ipmi_sel_parse_output_fujitsu_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
       
       memset (selbuf, '\0', IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH + 1);
       
+      /* don't output severity since this is not event data 1 */
       if (_ipmi_sel_oem_fujitsu_get_sel_entry_long_text (ctx,
                                                          sel_parse_entry,
                                                          selbuf,
