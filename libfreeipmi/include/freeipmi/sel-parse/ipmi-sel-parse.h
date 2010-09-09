@@ -272,7 +272,7 @@ int ipmi_sel_parse_read_record (ipmi_sel_parse_ctx_t ctx,
  * OUTPUT_NOT_AVAILABLE
  *
  * If a field is not available, do not output an empty string, output
- * "N/A" (must have IGNORE_UNAVAILABLE_FIELD set)
+ * "N/A" (sometimes must have IGNORE_UNAVAILABLE_FIELD set)
  *
  * DATE_USE_SLASH
  *

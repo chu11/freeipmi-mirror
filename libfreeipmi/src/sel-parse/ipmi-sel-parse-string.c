@@ -1693,9 +1693,9 @@ _output_oem_event_data3_threshold_oem (ipmi_sel_parse_ctx_t ctx,
       
       if (ret)
 	return (1);
-
-      return (0);
     }
+
+  return (0);
 }
 
 /* return (0) - no OEM match
