@@ -2823,13 +2823,13 @@ _output_oem (ipmi_sel_parse_ctx_t ctx,
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_FUJITSU
       && (ctx->product_id >= IPMI_FUJITSU_PRODUCT_ID_MIN 
           && ctx->product_id <= IPMI_FUJITSU_PRODUCT_ID_MAX)
-      && (sel_oem_fujitsu_get_sel_entry_long_text (ctx,
-                                                   sel_parse_entry,
-                                                   sel_record_type,
-                                                   buf,
-                                                   buflen,
-                                                   flags,
-                                                   wlen) == 0))
+      && (ipmi_sel_oem_fujitsu_get_sel_entry_long_text (ctx,
+                                                        sel_parse_entry,
+                                                        sel_record_type,
+                                                        buf,
+                                                        buflen,
+                                                        flags,
+                                                        wlen) == 0))
     return (0);
 
   if (ipmi_sel_parse_string_snprintf (buf, buflen, wlen, "OEM defined = "))
@@ -2968,13 +2968,13 @@ sel_parse_format_record_string (ipmi_sel_parse_ctx_t ctx,
           if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_FUJITSU
               && (ctx->product_id >= IPMI_FUJITSU_PRODUCT_ID_MIN 
                   && ctx->product_id <= IPMI_FUJITSU_PRODUCT_ID_MAX)
-              && ((ret = sel_oem_fujitsu_get_sel_entry_long_text (ctx,
-                                                                  &sel_parse_entry,
-                                                                  sel_record_type,
-                                                                  buf,
-                                                                  buflen,
-                                                                  flags,
-                                                                  &wlen)) == 0))
+              && ((ret = ipmi_sel_oem_fujitsu_get_sel_entry_long_text (ctx,
+                                                                       &sel_parse_entry,
+                                                                       sel_record_type,
+                                                                       buf,
+                                                                       buflen,
+                                                                       flags,
+                                                                       &wlen)) == 0))
             {
               /* success, wer're done */
               ;
