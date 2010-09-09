@@ -96,9 +96,7 @@
 #define IPMI_OEM_FUJITSU_SEVERITY_MAJOR         2
 #define IPMI_OEM_FUJITSU_SEVERITY_CRITICAL      3
 
-#ifndef IPMI_OEM_MAX_BYTES
-#define IPMI_OEM_MAX_BYTES      256
-#endif
+#define IPMI_OEM_FUJITSU_MAX_BYTES 256
 
 /*
  * HLiebig: This is a stripped down version of ipmi_oem_fujitsu_get_sel_entry_long_text() 
@@ -107,17 +105,14 @@
  * TX200S3 (iRMC S1)
  * TX120S2/TX300S6 (iRMC S2)
  */
-int
-ipmi_sel_oem_fujitsu_get_sel_entry_long_text (ipmi_sel_parse_ctx_t ctx,
-                                              struct ipmi_sel_parse_entry *sel_parse_entry,
-                                              uint8_t sel_record_type,
-                                              char *buf,
-                                              unsigned int buflen,
-                                              unsigned int flags,
-                                              unsigned int *wlen)
+static int
+_ipmi_sel_oem_fujitsu_get_sel_entry_long_text (ipmi_sel_parse_ctx_t ctx,
+                                               struct ipmi_sel_parse_entry *sel_parse_entry,
+                                               char *buf,
+                                               unsigned int buflen)
 {
-  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
-  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rq[IPMI_OEM_FUJITSU_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_FUJITSU_MAX_BYTES];
   int rs_len, tmp;
   uint16_t sel_record_id = 0xFFFF;
   uint8_t css = 0;
@@ -137,9 +132,6 @@ ipmi_sel_oem_fujitsu_get_sel_entry_long_text (ipmi_sel_parse_ctx_t ctx,
   assert (sel_parse_entry);
   assert (buf);
   assert (buflen);
-  assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
-  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
-  assert (wlen);
 
   /* Get current SEL record ID we are working on */
   if (sel_parse_get_record_header_info (ctx,
@@ -148,6 +140,7 @@ ipmi_sel_oem_fujitsu_get_sel_entry_long_text (ipmi_sel_parse_ctx_t ctx,
                                         NULL) < 0)
     goto cleanup;
 
+  /* Holger: XXX: why this exception?? */
   if (sel_record_id == IPMI_SEL_GET_RECORD_ID_LAST_ENTRY)
     goto cleanup;
 
@@ -239,7 +232,7 @@ ipmi_sel_oem_fujitsu_get_sel_entry_long_text (ipmi_sel_parse_ctx_t ctx,
                                   bytes_rq, /* data */
                                   9, /* num bytes */
                                   bytes_rs,
-                                  IPMI_OEM_MAX_BYTES)) < 0)
+                                  IPMI_OEM_FUJITSU_MAX_BYTES)) < 0)
         {
           goto cleanup;
         }
@@ -250,15 +243,12 @@ ipmi_sel_oem_fujitsu_get_sel_entry_long_text (ipmi_sel_parse_ctx_t ctx,
             {
               if (bytes_rs[1] == IPMI_COMP_CODE_INSUFFICIENT_PRIVILEGE_LEVEL)
                 {
-                  if (ipmi_sel_parse_string_snprintf (buf,
-                                                      buflen,
-                                                      wlen, 
-                                                      "(admin privilege required for full OEM decoding) "))
-                    {
-                      return (1);
-                    }
+                  snprintf (string_buf,
+                            IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH,
+                            "[Fujtisu OEM decoding required Administrator privilege]");
+                  goto out;
                 }
-                goto cleanup;
+              goto cleanup;
             }
         }
       
@@ -309,27 +299,144 @@ ipmi_sel_oem_fujitsu_get_sel_entry_long_text (ipmi_sel_parse_ctx_t ctx,
     severity_str = "Unknown Severity";
   
   if (css_str != NULL)
-    tmp = ipmi_sel_parse_string_snprintf (buf,
-                                          buflen,
-                                          wlen, 
-                                          "%s: %s (%s)",
-                                          severity_str,
-                                          string_buf,
-                                          css_str );
+    snprintf (string_buf,
+              IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH,
+              "%s: %s (%s)",
+              severity_str,
+              string_buf,
+              css_str);
   else 
-    tmp = ipmi_sel_parse_string_snprintf (buf,
-                                          buflen,
-                                          wlen, 
-                                          "%s: %s",
-                                          severity_str,
-                                          string_buf );
-  if (tmp)
-    return (1);
+    snprintf (buf,
+              IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH,
+              wlen, 
+              "%s: %s",
+              severity_str,
+              string_buf);
   
+ out:
+
   rv = 0;
  cleanup:
   return (rv);
 }
 
+/* return (0) - no OEM match
+ * return (1) - OEM match
+ * return (-1) - error, cleanup and return error
+ *
+ * 0 - continue on
+ * 1 - buffer full, return full buffer to user
+ */
+int
+ipmi_sel_parse_output_fujitsu_event_data1_class_sensor_specific_discrete (ipmi_sel_parse_ctx_t ctx,
+                                                                          struct ipmi_sel_parse_entry *sel_parse_entry,
+                                                                          uint8_t sel_record_type,
+                                                                          char *tmpbuf,
+                                                                          unsigned int tmpbuflen,
+                                                                          unsigned int flags,
+                                                                          unsigned int *wlen,
+                                                                          struct ipmi_sel_system_event_record_data *system_event_record_data)
 
+{
+  assert (ctx);
+  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_FUJITSU);
+  assert (sel_parse_entry);
+  assert (tmpbuf);
+  assert (tmpbuflen);
+  assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
+  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (wlen);
+  assert (system_event_record_data);
+  /* Holger: XXX: This is true for these sensors?? */
+  assert (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC);
 
+  /* OEM Interpretation
+   *
+   * Fujitsu iRMC / iRMC S2
+   */
+  if ((ctx->product_id >= IPMI_FUJITSU_PRODUCT_ID_MIN
+       && ctx->product_id <= IPMI_FUJITSU_PRODUCT_ID_MAX)
+      && (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_FUJITSU_I2C_BUS
+          || system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_FUJITSU_SYSTEM_POWER_CONSUMPTION
+          || system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_FUJITSU_MEMORY_STATUS
+          || system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_FUJITSU_MEMORY_CONFIG
+          || system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_FUJITSU_MEMORY
+          || system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_FUJITSU_HW_ERROR
+          || system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_FUJITSU_SYS_ERROR
+          || system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_FUJITSU_FAN_STATUS
+          || system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_FUJITSU_PSU_STATUS
+          || system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_FUJITSU_PSU_REDUNDANCY
+          || system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_FUJITSU_FLASH
+          || system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_FUJITSU_CONFIG_BACKUP))
+    {
+      int ret;
+
+      ret = ipmi_get_oem_sensor_type_message (ctx->manufacturer_id,
+                                              ctx->product_id,
+                                              system_event_record_data->sensor_type,
+                                              system_event_record_data->offset_from_event_reading_type_code,
+                                              tmpbuf,
+                                              tmpbuflen);
+
+      if (ret > 0)
+        return (1);
+    }
+  
+  return (0);
+}
+
+/* return (0) - no OEM match
+ * return (1) - OEM match
+ * return (-1) - error, cleanup and return error
+ *
+ * in oem_rv, return
+ * 0 - continue on
+ * 1 - buffer full, return full buffer to user
+ */
+int
+ipmi_sel_parse_output_fujitsu_oem_record_data (ipmi_sel_parse_ctx_t ctx,
+                                               struct ipmi_sel_parse_entry *sel_parse_entry,
+                                               uint8_t sel_record_type,
+                                               char *buf,
+                                               unsigned int buflen,
+                                               unsigned int flags,
+                                               unsigned int *wlen,
+                                               struct ipmi_sel_system_event_record_data *system_event_record_data,
+                                               int *oem_rv)
+{
+  assert (ctx);
+  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_FUJITSU);
+  assert (ipmi_sel_record_type_class (sel_record_type) == IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD
+          || ipmi_sel_record_type_class (sel_record_type) == IPMI_SEL_RECORD_TYPE_CLASS_NON_TIMESTAMPED_OEM_RECORD);
+  assert (sel_parse_entry);
+  assert (buf);
+  assert (buflen);
+  assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
+  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (wlen);
+  assert (system_event_record_data);
+  assert (oem_rv);
+
+  /* OEM Interpretation
+   *
+   * Fujitsu iRMC / iRMC S2
+   */
+  if ((ctx->product_id >= IPMI_FUJITSU_PRODUCT_ID_MIN
+       && ctx->product_id <= IPMI_FUJITSU_PRODUCT_ID_MAX))
+    {
+      char selbuf[IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH + 1];
+      int ret;
+
+      memset (selbuf, '\0', IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH + 1);
+
+      ret = ipmi_sel_oem_fujitsu_get_sel_entry_long_text (ctx,
+                                                          sel_parse_entry,
+                                                          selbuf,
+                                                          IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH);
+      if (ret >= 0)
+        return (ret);
+    }
+
+}
