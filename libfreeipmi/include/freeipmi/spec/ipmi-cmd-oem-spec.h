@@ -95,39 +95,6 @@ extern "C" {
 #define IPMI_CMD_OEM_FUJITSU_BIOS          0xF1
 #define IPMI_CMD_OEM_FUJITSU_SYSTEM        0xF5
 
-#define IPMI_OEM_FUJITSU_COMMAND_SPECIFIER_GET_SEL_ENTRY_LONG_TEXT      0x43
-#define IPMI_OEM_FUJITSU_COMMAND_SPECIFIER_GET_SEL_ENTRY_TEXT           0x45
-
-/* Fully decoded english version of decoded SEL */
-#define IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH          100
-
-/* (very) Short text to display on 1 line of the optional LCD Panel, 20 characters */
-#define IPMI_OEM_FUJITSU_SEL_ENTRY_TEXT_MAX_STRING_LENGTH                20
-
-/*
- * CSS (Customer Self Service)
- * If the component is marked as CSS, the customer can replace it by himself
- * without a service technican (e.g. Memory DIMM etc.)
- * CSS is combined with the severity information.
- */
-#define IPMI_OEM_FUJITSU_CSS_BITMASK            0x80
-#define IPMI_OEM_FUJITSU_CSS_SHIFT              7
-
-#define IPMI_OEM_FUJITSU_CSS_COMPONENT          1
-#define IPMI_OEM_FUJITSU_NO_CSS_COMPONENT       0
-
-/*
- * Severity of a decoded event. All events should have an assigned severity.
- */
-#define IPMI_OEM_FUJITSU_SEVERITY_BITMASK       0x70
-#define IPMI_OEM_FUJITSU_SEVERITY_SHIFT         4
-
-#define IPMI_OEM_FUJITSU_SEVERITY_INFORMATIONAL 0
-#define IPMI_OEM_FUJITSU_SEVERITY_MINOR         1
-#define IPMI_OEM_FUJITSU_SEVERITY_MAJOR         2
-#define IPMI_OEM_FUJITSU_SEVERITY_CRITICAL      3
-
-
 /* IPMI_NET_FN_FIRMWARE_RQ / IPMI_NET_FN_FIRMWARE_RS */
 #define IPMI_CMD_OEM_FUJITSU_SET_FIRMWARE_SELECTOR 0x04
 #define IPMI_CMD_OEM_FUJITSU_GET_FIRMWARE_SELECTOR 0x05

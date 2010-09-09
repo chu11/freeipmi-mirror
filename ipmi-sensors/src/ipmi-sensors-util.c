@@ -360,6 +360,7 @@ _sensor_type_is_oem_interpretable (struct ipmi_sensors_state_data *state_data,
           /* These are for events only --end */          
           ))
     return (1);
+
   return (0);
 }
 

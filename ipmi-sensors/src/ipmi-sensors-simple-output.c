@@ -150,13 +150,13 @@ _legacy_simple_output_header (ipmi_sensors_state_data_t *state_data,
                                                       sdr_record,
                                                       sdr_record_len,
                                                       &event_reading_type_code) >= 0))
-          sensor_type_string = get_oem_sensor_type_output_string (sensor_type,
-                                             event_reading_type_code,
-                                             state_data->oem_data.manufacturer_id,
-                                             state_data->oem_data.product_id);
+        sensor_type_string = get_oem_sensor_type_output_string (sensor_type,
+                                                                event_reading_type_code,
+                                                                state_data->oem_data.manufacturer_id,
+                                                                state_data->oem_data.product_id);
       else 
-         sensor_type_string = get_sensor_type_output_string (sensor_type);
-
+        sensor_type_string = get_sensor_type_output_string (sensor_type);
+      
       pstdout_printf (state_data->pstate,
                       "%u: %s (%s): ",
                       record_id,
@@ -442,18 +442,18 @@ _simple_output_header (ipmi_sensors_state_data_t *state_data,
                   state_data->column_width.sensor_name,
                   state_data->column_width.sensor_type);
       
-     if ((state_data->prog_data->args->interpret_oem_data)
-         && (ipmi_sdr_parse_event_reading_type_code (state_data->sdr_parse_ctx,
-                                                     sdr_record,
-                                                     sdr_record_len,
-                                                     &event_reading_type_code) >= 0))
-         sensor_type_string = get_oem_sensor_type_output_string (sensor_type,
-                                            event_reading_type_code,
-                                            state_data->oem_data.manufacturer_id,
-                                            state_data->oem_data.product_id);
-     else 
+      if ((state_data->prog_data->args->interpret_oem_data)
+          && (ipmi_sdr_parse_event_reading_type_code (state_data->sdr_parse_ctx,
+                                                      sdr_record,
+                                                      sdr_record_len,
+                                                      &event_reading_type_code) >= 0))
+        sensor_type_string = get_oem_sensor_type_output_string (sensor_type,
+                                                                event_reading_type_code,
+                                                                state_data->oem_data.manufacturer_id,
+                                                                state_data->oem_data.product_id);
+      else 
         sensor_type_string = get_sensor_type_output_string (sensor_type);
-
+      
       pstdout_printf (state_data->pstate,
                       fmt,
                       record_id,

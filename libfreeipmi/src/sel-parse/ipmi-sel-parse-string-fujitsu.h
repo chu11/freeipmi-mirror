@@ -31,15 +31,14 @@
 #include "ipmi-sel-parse-defs.h"
 #include "ipmi-sel-parse-common.h"
 
-/* All required command definitions are in ipmi-cmd-oem-spec.h */
-
-extern int
-sel_oem_fujitsu_get_sel_entry_long_text (ipmi_sel_parse_ctx_t ctx,
-                                          struct ipmi_sel_parse_entry *sel_parse_entry,
-                                          uint8_t sel_record_type /* unused */ ,
-                                          char *buf,
-                                          unsigned int buflen,
-                                          unsigned int flags,
-                                          unsigned int *wlen);
+/* returns 0 on success, 1 on success but w/ truncation, -1 on error */
+int
+ipmi_sel_oem_fujitsu_get_sel_entry_long_text (ipmi_sel_parse_ctx_t ctx,
+                                              struct ipmi_sel_parse_entry *sel_parse_entry,
+                                              uint8_t sel_record_type,
+                                              char *buf,
+                                              unsigned int buflen,
+                                              unsigned int flags,
+                                              unsigned int *wlen);
 
 #endif /* _IPMI_SEL_PARSE_STRING_FUJITSU_H */

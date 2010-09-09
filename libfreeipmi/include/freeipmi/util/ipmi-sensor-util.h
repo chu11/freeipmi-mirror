@@ -31,7 +31,10 @@ int ipmi_get_threshold_message (uint8_t offset, char *buf, unsigned int buflen);
 
 const char *ipmi_get_sensor_type_string (uint8_t sensor_type);
 
-const char *ipmi_get_oem_sensor_type_string (uint8_t sensor_type, uint8_t event_reading_code, uint32_t manufacturer_id, uint16_t product_id);
+const char *ipmi_get_oem_sensor_type_string (uint8_t sensor_type,
+                                             uint8_t event_reading_code,
+                                             uint32_t manufacturer_id,
+                                             uint16_t product_id);
 
 /* b_exponent - sometimes documented as k1 */
 /* r_exponent - sometimes documented as k2 */

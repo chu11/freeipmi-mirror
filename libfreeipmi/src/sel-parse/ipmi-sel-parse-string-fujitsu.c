@@ -60,7 +60,41 @@
 
 #include "freeipmi-portability.h"
 
+/* XXX: achu - duplicated from ipmi-oem.c, no where else appropriate to stick it??? */
+
 /* All required cmd definitions are in ipmi-cmd-oem-spec.h */
+
+#define IPMI_OEM_FUJITSU_COMMAND_SPECIFIER_GET_SEL_ENTRY_LONG_TEXT      0x43
+#define IPMI_OEM_FUJITSU_COMMAND_SPECIFIER_GET_SEL_ENTRY_TEXT           0x45
+
+/* Fully decoded english version of decoded SEL */
+#define IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH          100
+
+/* (very) Short text to display on 1 line of the optional LCD Panel, 20 characters */
+#define IPMI_OEM_FUJITSU_SEL_ENTRY_TEXT_MAX_STRING_LENGTH                20
+
+/*
+ * CSS (Customer Self Service)
+ * If the component is marked as CSS, the customer can replace it by himself
+ * without a service technican (e.g. Memory DIMM etc.)
+ * CSS is combined with the severity information.
+ */
+#define IPMI_OEM_FUJITSU_CSS_BITMASK            0x80
+#define IPMI_OEM_FUJITSU_CSS_SHIFT              7
+
+#define IPMI_OEM_FUJITSU_CSS_COMPONENT          1
+#define IPMI_OEM_FUJITSU_NO_CSS_COMPONENT       0
+
+/*
+ * Severity of a decoded event. All events should have an assigned severity.
+ */
+#define IPMI_OEM_FUJITSU_SEVERITY_BITMASK       0x70
+#define IPMI_OEM_FUJITSU_SEVERITY_SHIFT         4
+
+#define IPMI_OEM_FUJITSU_SEVERITY_INFORMATIONAL 0
+#define IPMI_OEM_FUJITSU_SEVERITY_MINOR         1
+#define IPMI_OEM_FUJITSU_SEVERITY_MAJOR         2
+#define IPMI_OEM_FUJITSU_SEVERITY_CRITICAL      3
 
 #ifndef IPMI_OEM_MAX_BYTES
 #define IPMI_OEM_MAX_BYTES      256
@@ -68,25 +102,24 @@
 
 /*
  * HLiebig: This is a stripped down version of ipmi_oem_fujitsu_get_sel_entry_long_text() 
- * in ipmi-oem\ipmi-oem-fujitsu.c
+ * in ipmi-oem/src/ipmi-oem-fujitsu.c
  * tested against 
  * TX200S3 (iRMC S1)
  * TX120S2/TX300S6 (iRMC S2)
  */
 int
-sel_oem_fujitsu_get_sel_entry_long_text (ipmi_sel_parse_ctx_t ctx,
-                                         struct ipmi_sel_parse_entry *sel_parse_entry,
-                                         uint8_t sel_record_type /* unused */ ,
-                                         char *buf,
-                                         unsigned int buflen,
-                                         unsigned int flags,
-                                         unsigned int *wlen)
+ipmi_sel_oem_fujitsu_get_sel_entry_long_text (ipmi_sel_parse_ctx_t ctx,
+                                              struct ipmi_sel_parse_entry *sel_parse_entry,
+                                              uint8_t sel_record_type,
+                                              char *buf,
+                                              unsigned int buflen,
+                                              unsigned int flags,
+                                              unsigned int *wlen)
 {
   uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
   uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
   int rs_len, tmp;
   uint16_t sel_record_id = 0xFFFF;
-
   uint8_t css = 0;
   uint8_t severity = 0;
   char string_buf[IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH + 1];
@@ -96,25 +129,32 @@ sel_oem_fujitsu_get_sel_entry_long_text (ipmi_sel_parse_ctx_t ctx,
   uint8_t component_length = 0;
   const char *css_str = NULL;
   const char *severity_str = NULL;
-  char *ptr = NULL;
   int rv = -1;
+
+  assert (ctx);
+  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_FUJITSU);
+  assert (sel_parse_entry);
+  assert (buf);
+  assert (buflen);
+  assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
+  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (wlen);
 
   /* Get current SEL record ID we are working on */
   if (sel_parse_get_record_header_info (ctx,
                                         sel_parse_entry,
                                         &sel_record_id,
                                         NULL) < 0)
-    {
-      return (-1);
-    }
+    goto cleanup;
 
-  if (sel_record_id == 0xFFFF)
-    return (-1);
+  if (sel_record_id == IPMI_SEL_GET_RECORD_ID_LAST_ENTRY)
+    goto cleanup;
 
   memset (string_buf, '\0', IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH + 1);
 
   /* Note: Referenced documentation is for iRMC S2 version */
-  if (FUJITSU_PRODUCT_IS_iRMC_S1(ctx->product_id))
+  if (IPMI_FUJITSU_PRODUCT_ID_IS_IRMC_S1 (ctx->product_id))
     {
       /* iRMC S1 has limits */
       max_read_length = 32;
@@ -210,8 +250,10 @@ sel_oem_fujitsu_get_sel_entry_long_text (ipmi_sel_parse_ctx_t ctx,
             {
               if (bytes_rs[1] == IPMI_COMP_CODE_INSUFFICIENT_PRIVILEGE_LEVEL)
                 {
-                  if (ipmi_sel_parse_string_snprintf (buf, buflen, wlen, 
-                                    "(admin privilege required for full OEM decoding) " ))
+                  if (ipmi_sel_parse_string_snprintf (buf,
+                                                      buflen,
+                                                      wlen, 
+                                                      "(admin privilege required for full OEM decoding) "))
                     {
                       return (1);
                     }
@@ -219,21 +261,22 @@ sel_oem_fujitsu_get_sel_entry_long_text (ipmi_sel_parse_ctx_t ctx,
                 goto cleanup;
             }
         }
-
+      
       /* Get severity and CSS flag only once */
-      if (offset == 0) {
+      if (offset == 0)
+        {
           css = (bytes_rs[14] & IPMI_OEM_FUJITSU_CSS_BITMASK);
           css >>= IPMI_OEM_FUJITSU_CSS_SHIFT;
-
+          
           severity = (bytes_rs[14] & IPMI_OEM_FUJITSU_SEVERITY_BITMASK);
           severity >>= IPMI_OEM_FUJITSU_SEVERITY_SHIFT;
-      };
+        }
       
       data_length = bytes_rs[15];
       
       bytes_rs[rs_len-1]='\0'; /* just to be sure it's terminated */
       component_length = strlen((char *)bytes_rs + 16);
-  
+      
       /* achu: truncate if there is overflow */
       if (offset + component_length > IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH)
         {
@@ -253,7 +296,7 @@ sel_oem_fujitsu_get_sel_entry_long_text (ipmi_sel_parse_ctx_t ctx,
   
   if (css == IPMI_OEM_FUJITSU_CSS_COMPONENT)
     css_str = "CSS Component";
-
+  
   if (severity == IPMI_OEM_FUJITSU_SEVERITY_INFORMATIONAL)
     severity_str = "INFORMATIONAL";
   else if (severity == IPMI_OEM_FUJITSU_SEVERITY_MINOR)
@@ -264,22 +307,25 @@ sel_oem_fujitsu_get_sel_entry_long_text (ipmi_sel_parse_ctx_t ctx,
     severity_str = "CRITICAL";
   else
     severity_str = "Unknown Severity";
-
-
+  
   if (css_str != NULL)
-    tmp = ipmi_sel_parse_string_snprintf (buf, buflen, wlen, 
-                        "%s: %s (%s)",
-                        severity_str,
-                        string_buf,
-                        css_str );
+    tmp = ipmi_sel_parse_string_snprintf (buf,
+                                          buflen,
+                                          wlen, 
+                                          "%s: %s (%s)",
+                                          severity_str,
+                                          string_buf,
+                                          css_str );
   else 
-    tmp = ipmi_sel_parse_string_snprintf (buf, buflen, wlen, 
-                        "%s: %s",
-                        severity_str,
-                        string_buf );
+    tmp = ipmi_sel_parse_string_snprintf (buf,
+                                          buflen,
+                                          wlen, 
+                                          "%s: %s",
+                                          severity_str,
+                                          string_buf );
   if (tmp)
     return (1);
-
+  
   rv = 0;
  cleanup:
   return (rv);

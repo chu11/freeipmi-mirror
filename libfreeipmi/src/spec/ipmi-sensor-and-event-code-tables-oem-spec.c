@@ -134,7 +134,18 @@ unsigned int ipmi_sensor_type_oem_dell_upgrade_max_index = 0x01;
  * iRMC S1 / iRMC S2
  */
 
-/* 0xDD */
+/* 0xC0 / IPMI_SENSOR_TYPE_OEM_FUJITSU_I2C_BUS */
+const char * const ipmi_sensor_type_oem_fujitsu_i2c_bus[] =
+  {
+    /* EN 0x00 */	"I2C Bus Error",
+    /* EN 0x01 */	"I2C Bus OK",
+    /* EN 0x02 */	"I2C Bus Disabled",
+    /* EN 0x03 */	"I2C Bus Failed",
+    NULL
+  };
+unsigned int ipmi_sensor_type_oem_fujitsu_i2c_bus_max_index = 0x03;
+
+/* 0xDD / IPMI_SENSOR_TYPE_OEM_FUJITSU_SYSTEM_POWER_CONSUMPTION */
 const char * const ipmi_sensor_type_oem_fujitsu_system_power_consumption[] =
   {
     /* EN 0x00 */	"System Power Consumption within Limit",
@@ -146,7 +157,7 @@ const char * const ipmi_sensor_type_oem_fujitsu_system_power_consumption[] =
 unsigned int ipmi_sensor_type_oem_fujitsu_system_power_consumption_max_index = 0x03;
 
 
-/* 0xDE */
+/* 0xDE / IPMI_SENSOR_TYPE_OEM_FUJITSU_MEMORY_STATUS */
 const char * const ipmi_sensor_type_oem_fujitsu_memory_status[] =
   {
     /* EN 0x00 */	"Empty slot",
@@ -161,7 +172,7 @@ const char * const ipmi_sensor_type_oem_fujitsu_memory_status[] =
   };
 unsigned int ipmi_sensor_type_oem_fujitsu_memory_status_max_index = 0x07;
 
-/* 0xDF */
+/* 0xDF / IPMI_SENSOR_TYPE_OEM_FUJITSU_MEMORY_CONFIG */
 const char * const ipmi_sensor_type_oem_fujitsu_memory_config[] =
   {
     /* EN 0x00 */	"Normal",
@@ -176,7 +187,7 @@ const char * const ipmi_sensor_type_oem_fujitsu_memory_config[] =
   };
 unsigned int ipmi_sensor_type_oem_fujitsu_memory_config_max_index = 0x07;
 
-/* 0xE1 */
+/* 0xE1 / IPMI_SENSOR_TYPE_OEM_FUJITSU_MEMORY */
 const char * const ipmi_sensor_type_oem_fujitsu_memory[] =
   {
     /* EN 0x00 */	"Non Fujitsu memory module detected",
@@ -199,7 +210,7 @@ const char * const ipmi_sensor_type_oem_fujitsu_memory[] =
   };
 unsigned int ipmi_sensor_type_oem_fujitsu_memory_max_index = 0x0F;
 
-/* 0xE3 */
+/* 0xE3 / IPMI_SENSOR_TYPE_OEM_FUJITSU_HW_ERROR */
 const char * const ipmi_sensor_type_oem_fujitsu_hw_error[] =
   {
     /* EN 0x00 */	"TPM Error",
@@ -209,7 +220,7 @@ const char * const ipmi_sensor_type_oem_fujitsu_hw_error[] =
   };
 unsigned int ipmi_sensor_type_oem_fujitsu_hw_error_max_index = 0x02;
 
-/* 0xE4 */
+/* 0xE4 / IPMI_SENSOR_TYPE_OEM_FUJITSU_SYS_ERROR */
 const char * const ipmi_sensor_type_oem_fujitsu_sys_error[] =
   {
     /* EN 0x00 */	"System configuration Data error",
@@ -221,7 +232,7 @@ const char * const ipmi_sensor_type_oem_fujitsu_sys_error[] =
   };
 unsigned int ipmi_sensor_type_oem_fujitsu_sys_error_max_index = 0x04;
 
-/* 0xE6 */
+/* 0xE6 / IPMI_SENSOR_TYPE_OEM_FUJITSU_FAN_STATUS */
 const char * const ipmi_sensor_type_oem_fujitsu_fan_status[] =
   {
     /* EN 0x00 */	"FAN on, running",
@@ -236,7 +247,7 @@ const char * const ipmi_sensor_type_oem_fujitsu_fan_status[] =
   };
 unsigned int ipmi_sensor_type_oem_fujitsu_fan_status_max_index = 0x07;
 
-/* 0xE8 */
+/* 0xE8 / IPMI_SENSOR_TYPE_OEM_FUJITSU_PSU_STATUS */
 const char * const ipmi_sensor_type_oem_fujitsu_psu_status[] =
   {
     /* EN 0x00 */	"Power supply - Not present",
@@ -253,7 +264,7 @@ const char * const ipmi_sensor_type_oem_fujitsu_psu_status[] =
   };
 unsigned int ipmi_sensor_type_oem_fujitsu_psu_status_max_index = 0x09;
 
-/* 0xE9 */
+/* 0xE9 / IPMI_SENSOR_TYPE_OEM_FUJITSU_PSU_REDUNDANCY */
 const char * const ipmi_sensor_type_oem_fujitsu_psu_redundancy[] =
   {
     /* EN 0x00 */	"Power Supply - redundancy present",
@@ -261,7 +272,7 @@ const char * const ipmi_sensor_type_oem_fujitsu_psu_redundancy[] =
   };
 unsigned int ipmi_sensor_type_oem_fujitsu_psu_redundancy_max_index = 0x00;
 
-/* 0xEC */
+/* 0xEC / IPMI_SENSOR_TYPE_OEM_FUJITSU_FLASH */
 const char * const ipmi_sensor_type_oem_fujitsu_flash[] =
   {
     /* EN 0x00 */	"Online firmware flash",
@@ -274,7 +285,7 @@ const char * const ipmi_sensor_type_oem_fujitsu_flash[] =
   };
 unsigned int ipmi_sensor_type_oem_fujitsu_flash_max_index = 0x05;
 
-/* 0xEF */
+/* 0xEF / IPMI_SENSOR_TYPE_OEM_FUJITSU_CONFIG_BACKUP */
 const char * const ipmi_sensor_type_oem_fujitsu_config_backup[] =
   {
     /* EN 0x00 */	"Chassis IDPROM: Motherboard Exchange detected",
@@ -296,17 +307,6 @@ const char * const ipmi_sensor_type_oem_fujitsu_config_backup[] =
     NULL
   };
 unsigned int ipmi_sensor_type_oem_fujitsu_config_backup_max_index = 0x0F;
-
-/* 0xEF */
-const char * const ipmi_sensor_type_oem_fujitsu_i2c_bus[] =
-  {
-    /* EN 0x00 */	"I2C Bus Error",
-    /* EN 0x01 */	"I2C Bus OK",
-    /* EN 0x02 */	"I2C Bus Disabled",
-    /* EN 0x03 */	"I2C Bus Failed",
-    NULL
-  };
-unsigned int ipmi_sensor_type_oem_fujitsu_i2c_bus_max_index = 0x03;
 
 /*****************************
  * OEM Specific              *

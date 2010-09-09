@@ -242,8 +242,6 @@
 #define IPMI_OEM_FUJITSU_SEVERITY_MAJOR         2
 #define IPMI_OEM_FUJITSU_SEVERITY_CRITICAL      3
 
-#define ipmi_oem_min(a,b) ((a) < (b) ? (a) : (b))
-
 static int
 _ipmi_oem_get_power_source (ipmi_oem_state_data_t *state_data,
                             uint8_t command_specifier,
@@ -1370,9 +1368,9 @@ ipmi_oem_fujitsu_get_sel_entry_long_text (ipmi_oem_state_data_t *state_data)
 
   /* HLiebig: Note: Documentation is for iRMC S2 version */
   if ((ipmi_get_oem_data (state_data->pstate,
-                         state_data->ipmi_ctx,
-                         &oem_data) <= 0)
-    || (FUJITSU_PRODUCT_IS_iRMC_S1(oem_data.product_id)))
+                          state_data->ipmi_ctx,
+                          &oem_data) <= 0)
+      || (IPMI_FUJITSU_PRODUCT_ID_IS_IRMC_S1 (oem_data.product_id)))
     {
       max_read_length = 32;
       data_length = 80;

@@ -831,7 +831,7 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
           /* at this point shouldn't have record id not found error */
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "ipmi_sdr_cache_search_record_id: 0x%u %s\n",
+                           "ipmi_sdr_cache_search_record_id: 0x%02X %s\n",
                            output_record_ids[i],
                            ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
           goto cleanup;

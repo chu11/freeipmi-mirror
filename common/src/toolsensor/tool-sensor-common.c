@@ -75,11 +75,17 @@ get_sensor_type_output_string (unsigned int sensor_type)
 }
 
 const char * 
-get_oem_sensor_type_output_string (uint8_t sensor_type, uint8_t event_reading_code, uint32_t manufacturer_id, uint16_t product_id)
+get_oem_sensor_type_output_string (uint8_t sensor_type,
+                                   uint8_t event_reading_code,
+                                   uint32_t manufacturer_id,
+                                   uint16_t product_id)
 {
   const char *sensor_type_str;
 
-  if ((sensor_type_str = ipmi_get_oem_sensor_type_string (sensor_type, event_reading_code, manufacturer_id, product_id)))
+  if ((sensor_type_str = ipmi_get_oem_sensor_type_string (sensor_type,
+                                                          event_reading_code,
+                                                          manufacturer_id,
+                                                          product_id)))
     return (sensor_type_str);
 
   return (UNRECOGNIZED_SENSOR_TYPE);
