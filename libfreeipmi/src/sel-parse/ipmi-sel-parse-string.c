@@ -560,12 +560,12 @@ _output_date (ipmi_sel_parse_ctx_t ctx,
  */
 static int
 _output_sensor_type (ipmi_sel_parse_ctx_t ctx,
-                      struct ipmi_sel_parse_entry *sel_parse_entry,
-                      uint8_t sel_record_type,
-                      char *buf,
-                      unsigned int buflen,
-                      unsigned int flags,
-                      unsigned int *wlen)
+                     struct ipmi_sel_parse_entry *sel_parse_entry,
+                     uint8_t sel_record_type,
+                     char *buf,
+                     unsigned int buflen,
+                     unsigned int flags,
+                     unsigned int *wlen)
 {
   struct ipmi_sel_system_event_record_data system_event_record_data;
   const char *sensor_type_str = NULL;
@@ -735,7 +735,7 @@ _output_sensor_name (ipmi_sel_parse_ctx_t ctx,
   else
     {
       if (flags & IPMI_SEL_PARSE_STRING_FLAGS_LEGACY)
-       { 
+        { 
           if (ipmi_sel_parse_string_snprintf (buf,
                                               buflen,
                                               wlen,
