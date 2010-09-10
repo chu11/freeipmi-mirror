@@ -624,6 +624,7 @@ _output_sensor (ipmi_sensors_state_data_t *state_data,
                                           IPMI_SENSORS_NO_EVENT_STRING) < 0)
         goto cleanup;
     }
+  /* Holger: XXX: Is this necessary?  You didn't update _event_reading_type_code_is_oem_interpretable() */
   /* 
    * OEM Interpretation
    * Fujitsu iRMC S1 / iRMC S2
