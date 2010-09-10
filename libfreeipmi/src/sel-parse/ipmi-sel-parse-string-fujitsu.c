@@ -561,3 +561,67 @@ ipmi_sel_parse_output_fujitsu_oem_record_data (ipmi_sel_parse_ctx_t ctx,
 
   return (0);
 }
+
+/* return (0) - no OEM match
+ * return (1) - OEM match
+ * return (-1) - error, cleanup and return error
+ *
+ * in oem_rv, return
+ * 0 - continue on
+ * 1 - buffer full, return full buffer to user
+ */
+int
+ipmi_sel_parse_output_fujitsu_oem_string (ipmi_sel_parse_ctx_t ctx,
+                                          struct ipmi_sel_parse_entry *sel_parse_entry,
+                                          uint8_t sel_record_type,
+                                          char *buf,
+                                          unsigned int buflen,
+                                          unsigned int flags,
+                                          unsigned int *wlen,
+                                          int *oem_rv)
+{
+  assert (ctx);
+  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_FUJITSU);
+  assert (sel_parse_entry);
+  assert (buf);
+  assert (buflen);
+  assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
+  assert (wlen);
+  assert (oem_rv);
+  
+  /* OEM Interpretation
+   *
+   * Fujitsu iRMC / iRMC S2
+   */
+  if ((ctx->product_id >= IPMI_FUJITSU_PRODUCT_ID_MIN
+       && ctx->product_id <= IPMI_FUJITSU_PRODUCT_ID_MAX))
+    {
+      char selbuf[IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH + 1];
+
+      memset (selbuf, '\0', IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH + 1);
+
+      if (_ipmi_sel_oem_fujitsu_get_sel_entry_long_text (ctx,
+                                                         sel_parse_entry,
+                                                         selbuf,
+                                                         IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH,
+                                                         1) < 0)
+        return (-1);
+
+      if (strlen (selbuf))
+        {
+          if (ipmi_sel_parse_string_snprintf (buf,
+                                              buflen,
+                                              wlen,
+                                              "%s",
+                                              selbuf))
+            (*oem_rv) = 1;
+          else
+            (*oem_rv) = 0;
+          
+          return (1);
+        }
+    }
+
+  return (0);
+}

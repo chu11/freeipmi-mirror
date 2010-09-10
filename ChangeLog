@@ -4,6 +4,8 @@
 
 	* Re-work OEM SEL interpretations to not call Fujitsu Get SEL
 	Entry Long Text for every event.
+
+	* ipmi-sel/: Support --output-oem-event-string.
 	
 2010-XX-XX  Holger Liebig <holger.liebig@ts.fujitsu.com>
 
