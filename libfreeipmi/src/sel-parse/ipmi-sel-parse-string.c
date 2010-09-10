@@ -3070,10 +3070,8 @@ sel_parse_format_record_string (ipmi_sel_parse_ctx_t ctx,
                                           flags,
                                           &wlen)) < 0)
             goto cleanup;
-          
           if (ret)
             goto out;
-
           percent_flag = 0;
         }
       else if (percent_flag && *fmt == 'f') /* event data2  */
