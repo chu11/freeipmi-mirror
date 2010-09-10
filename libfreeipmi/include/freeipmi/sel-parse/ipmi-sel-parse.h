@@ -223,7 +223,7 @@ int ipmi_sel_parse_read_record (ipmi_sel_parse_ctx_t ctx,
  * %k - event direction
  *
  * [1] - if a previous state and a severity state string are available
- * from a discrete sensor, they are concataneted with the defined
+ * from a discrete sensor, they are concatenated with the defined
  * separator in between.
  *
  * [2] - for events where both event data 2 and event data 3 hold data

@@ -556,12 +556,12 @@ _output_date (ipmi_sel_parse_ctx_t ctx,
  */
 static int
 _output_sensor_type (ipmi_sel_parse_ctx_t ctx,
-                      struct ipmi_sel_parse_entry *sel_parse_entry,
-                      uint8_t sel_record_type,
-                      char *buf,
-                      unsigned int buflen,
-                      unsigned int flags,
-                      unsigned int *wlen)
+                     struct ipmi_sel_parse_entry *sel_parse_entry,
+                     uint8_t sel_record_type,
+                     char *buf,
+                     unsigned int buflen,
+                     unsigned int flags,
+                     unsigned int *wlen)
 {
   struct ipmi_sel_system_event_record_data system_event_record_data;
   const char *sensor_type_str = NULL;
@@ -725,21 +725,21 @@ _output_sensor_name (ipmi_sel_parse_ctx_t ctx,
   else
     {
       if (flags & IPMI_SEL_PARSE_STRING_FLAGS_LEGACY)
-       { 
+        { 
           if (ipmi_sel_parse_string_snprintf (buf,
-                         buflen,
-                         wlen,
-                         "#%d",
-                         system_event_record_data.sensor_number))
+                                              buflen,
+                                              wlen,
+                                              "#%d",
+                                              system_event_record_data.sensor_number))
             return (1);
         }
       else
         {
           if (ipmi_sel_parse_string_snprintf (buf,
-                         buflen,
-                         wlen,
-                         "Sensor #%d",
-                         system_event_record_data.sensor_number))
+                                              buflen,
+                                              wlen,
+                                              "Sensor #%d",
+                                              system_event_record_data.sensor_number))
             return (1);
         }
     }
@@ -750,9 +750,6 @@ _output_sensor_name (ipmi_sel_parse_ctx_t ctx,
 /* return (0) - no OEM match
  * return (1) - OEM match
  * return (-1) - error, cleanup and return error
- *
- * 0 - continue on
- * 1 - buffer full, return full buffer to user
  */
 static int
 _output_oem_event_data1_class_sensor_specific_discrete (ipmi_sel_parse_ctx_t ctx,
@@ -800,9 +797,6 @@ _output_oem_event_data1_class_sensor_specific_discrete (ipmi_sel_parse_ctx_t ctx
 /* return (0) - no OEM match
  * return (1) - OEM match
  * return (-1) - error, cleanup and return error
- *
- * 0 - continue on
- * 1 - buffer full, return full buffer to user
  */
 static int
 _output_oem_event_data1_class_oem (ipmi_sel_parse_ctx_t ctx,
@@ -1068,9 +1062,6 @@ _round_double2 (double d)
 /* return (0) - no OEM match
  * return (1) - OEM match
  * return (-1) - error, cleanup and return error
- *
- * 0 - continue on
- * 1 - buffer full, return full buffer to user
  */
 static int
 _output_oem_event_data2_threshold_oem (ipmi_sel_parse_ctx_t ctx,
@@ -1101,9 +1092,6 @@ _output_oem_event_data2_threshold_oem (ipmi_sel_parse_ctx_t ctx,
 /* return (0) - no OEM match
  * return (1) - OEM match
  * return (-1) - error, cleanup and return error
- *
- * 0 - continue on
- * 1 - buffer full, return full buffer to user
  */
 static int
 _output_oem_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
@@ -1198,9 +1186,6 @@ _output_oem_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
 /* return (0) - no OEM match
  * return (1) - OEM match
  * return (-1) - error, cleanup and return error
- *
- * 0 - continue on
- * 1 - buffer full, return full buffer to user
  */
 static int
 _output_oem_event_data2_class_oem (ipmi_sel_parse_ctx_t ctx,
@@ -1628,20 +1613,20 @@ _output_event_data2 (ipmi_sel_parse_ctx_t ctx,
       if (flags & IPMI_SEL_PARSE_STRING_FLAGS_VERBOSE)
         {
           if (ipmi_sel_parse_string_snprintf (buf,
-                         buflen,
-                         wlen,
-                         "Event Data2 = %02Xh (Event Type Code = %02Xh)",
-                         system_event_record_data.event_data2,
-                         system_event_record_data.event_type_code))
+                                              buflen,
+                                              wlen,
+                                              "Event Data2 = %02Xh (Event Type Code = %02Xh)",
+                                              system_event_record_data.event_data2,
+                                              system_event_record_data.event_type_code))
             return (1);
         }
       else
         {
           if (ipmi_sel_parse_string_snprintf (buf,
-                         buflen,
-                         wlen,
-                         "Event Data2 = %02Xh",
-                         system_event_record_data.event_data2))
+                                              buflen,
+                                              wlen,
+                                              "Event Data2 = %02Xh",
+                                              system_event_record_data.event_data2))
             return (1);
         }
     }
@@ -1652,9 +1637,6 @@ _output_event_data2 (ipmi_sel_parse_ctx_t ctx,
 /* return (0) - no OEM match
  * return (1) - OEM match
  * return (-1) - error, cleanup and return error
- *
- * 0 - continue on
- * 1 - buffer full, return full buffer to user
  */
 static int
 _output_oem_event_data3_threshold_oem (ipmi_sel_parse_ctx_t ctx,
@@ -1701,9 +1683,6 @@ _output_oem_event_data3_threshold_oem (ipmi_sel_parse_ctx_t ctx,
 /* return (0) - no OEM match
  * return (1) - OEM match
  * return (-1) - error, cleanup and return error
- *
- * 0 - continue on
- * 1 - buffer full, return full buffer to user
  */
 static int
 _output_oem_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
@@ -1814,9 +1793,6 @@ _output_oem_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
 /* return (0) - no OEM match
  * return (1) - OEM match
  * return (-1) - error, cleanup and return error
- *
- * 0 - continue on
- * 1 - buffer full, return full buffer to user
  */
 static int
 _output_oem_event_data3_class_oem (ipmi_sel_parse_ctx_t ctx,
@@ -2171,20 +2147,20 @@ _output_event_data3 (ipmi_sel_parse_ctx_t ctx,
       if (flags & IPMI_SEL_PARSE_STRING_FLAGS_VERBOSE)
         {
           if (ipmi_sel_parse_string_snprintf (buf,
-                         buflen,
-                         wlen,
-                         "Event Data3 = %02Xh (Event Type Code = %02Xh)",
-                         system_event_record_data.event_data3,
-                         system_event_record_data.event_type_code))
+                                              buflen,
+                                              wlen,
+                                              "Event Data3 = %02Xh (Event Type Code = %02Xh)",
+                                              system_event_record_data.event_data3,
+                                              system_event_record_data.event_type_code))
             return (1);
         }
       else
         {
           if (ipmi_sel_parse_string_snprintf (buf,
-                         buflen,
-                         wlen,
-                         "Event Data3 = %02Xh",
-                         system_event_record_data.event_data3))
+                                              buflen,
+                                              wlen,
+                                              "Event Data3 = %02Xh",
+                                              system_event_record_data.event_data3))
             return (1);
         }
     }
@@ -2346,10 +2322,10 @@ _output_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
 	}
 
       if (ipmi_sel_parse_string_snprintf (buf,
-                     buflen,
-                     wlen,
-                     "%s",
-                     tmpbufdata3))
+                                          buflen,
+                                          wlen,
+                                          "%s",
+                                          tmpbufdata3))
         return (1);
       return (0);
     }
@@ -2574,20 +2550,20 @@ _output_event_data2_previous_state_or_severity (ipmi_sel_parse_ctx_t ctx,
       if (flags & IPMI_SEL_PARSE_STRING_FLAGS_VERBOSE)
         {
           if (ipmi_sel_parse_string_snprintf (buf,
-                         buflen,
-                         wlen,
-                         "Event Data2 = %02Xh (Event Type Code = %02Xh)",
-                         system_event_record_data.event_data2,
-                         system_event_record_data.event_type_code))
+                                              buflen,
+                                              wlen,
+                                              "Event Data2 = %02Xh (Event Type Code = %02Xh)",
+                                              system_event_record_data.event_data2,
+                                              system_event_record_data.event_type_code))
             return (1);
         }
       else
         {
           if (ipmi_sel_parse_string_snprintf (buf,
-                         buflen,
-                         wlen,
-                         "Event Data2 = %02Xh",
-                         system_event_record_data.event_data2))
+                                              buflen,
+                                              wlen,
+                                              "Event Data2 = %02Xh",
+                                              system_event_record_data.event_data2))
             return (1);
         }
     }
@@ -2732,21 +2708,21 @@ _output_manufacturer_id (ipmi_sel_parse_ctx_t ctx,
       if (ret > 0)
         {
           if (ipmi_sel_parse_string_snprintf (buf,
-                         buflen,
-                         wlen,
-                         "Manufacturer ID = %s (%02Xh)",
-                         iana_buf,
-                         manufacturer_id))
+                                              buflen,
+                                              wlen,
+                                              "Manufacturer ID = %s (%02Xh)",
+                                              iana_buf,
+                                              manufacturer_id))
             return (1);
 
         }
       else
         {
           if (ipmi_sel_parse_string_snprintf (buf,
-                         buflen,
-                         wlen,
-                         "Manufacturer ID = %02Xh",
-                         manufacturer_id))
+                                              buflen,
+                                              wlen,
+                                              "Manufacturer ID = %02Xh",
+                                              manufacturer_id))
             return (1);
         }
     }
