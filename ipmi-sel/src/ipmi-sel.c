@@ -1098,6 +1098,8 @@ _normal_output_event (ipmi_sel_state_data_t *state_data, unsigned int flags)
 
   if (state_data->prog_data->args->output_oem_event_strings)
     {
+      unsigned int len;
+
       memset (outbuf, '\0', IPMI_SEL_OUTPUT_BUFLEN+1);
       if ((outbuf_len = ipmi_sel_parse_read_record_string (state_data->sel_parse_ctx,
                                                            "%O",
@@ -1110,7 +1112,9 @@ _normal_output_event (ipmi_sel_state_data_t *state_data, unsigned int flags)
           return (0);
         }
 
-      if (strcmp (outbuf, IPMI_SEL_NA_STRING))
+      len = strlen (outbuf);
+
+      if (len && strcmp (outbuf, IPMI_SEL_NA_STRING))
         read_oem_event_string++;
     }
 
