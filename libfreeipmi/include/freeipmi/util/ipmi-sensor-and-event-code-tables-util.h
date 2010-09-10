@@ -84,6 +84,7 @@ int ipmi_get_event_data3_message (uint8_t sensor_type,
                                   unsigned int buflen);
 
 /* return length of string written into buffer on success, -1 on error */
+/* this function is for OEM event reading type codes */
 int ipmi_get_oem_generic_event_message (uint32_t manufacturer_id,
                                         uint16_t product_id,
                                         uint8_t event_reading_type_code,

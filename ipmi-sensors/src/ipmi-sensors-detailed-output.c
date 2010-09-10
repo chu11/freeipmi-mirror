@@ -725,8 +725,8 @@ _detailed_output_resolution (ipmi_sensors_state_data_t *state_data,
 
 static int
 _detailed_output_accuracy (ipmi_sensors_state_data_t *state_data,
-                            const void *sdr_record,
-                            unsigned int sdr_record_len)
+                           const void *sdr_record,
+                           unsigned int sdr_record_len)
 {
   double *accuracy = NULL;
   int rv = -1;
@@ -737,9 +737,9 @@ _detailed_output_accuracy (ipmi_sensors_state_data_t *state_data,
   assert (state_data->prog_data->args->verbose_count >= 2);
 
   if (ipmi_sdr_parse_accuracy (state_data->sdr_parse_ctx,
-                                sdr_record,
-                                sdr_record_len,
-                                &accuracy) < 0)
+                               sdr_record,
+                               sdr_record_len,
+                               &accuracy) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
