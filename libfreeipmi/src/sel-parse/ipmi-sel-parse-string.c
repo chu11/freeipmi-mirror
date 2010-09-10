@@ -946,6 +946,10 @@ _output_event_data1 (ipmi_sel_parse_ctx_t ctx,
        *
        * Dell Poweredge R610
        * Dell Poweredge R710
+       *
+       * achu: This is a special case, event reading type code and
+       * sensor type are non-OEM, Dell added an additional offset not
+       * defined by the IPMI spec.
        */
       if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA
 	  && ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
@@ -2985,7 +2989,6 @@ sel_parse_format_record_string (ipmi_sel_parse_ctx_t ctx,
             goto cleanup;
           if (ret)
             goto out;
-
           percent_flag = 0;
         }
       else if (percent_flag && *fmt == 'm') /* manufacturer id */
@@ -3000,7 +3003,6 @@ sel_parse_format_record_string (ipmi_sel_parse_ctx_t ctx,
             goto cleanup;
           if (ret)
             goto out;
-
           percent_flag = 0;
         }
       else if (percent_flag && *fmt == 'o') /* oem data */
