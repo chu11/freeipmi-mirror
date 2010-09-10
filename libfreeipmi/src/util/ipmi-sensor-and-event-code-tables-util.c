@@ -1781,7 +1781,6 @@ ipmi_get_event_data3_message (uint8_t sensor_type,
   return (-1);
 }
 
-/* Note: This is for OEM event reading type codes */
 int
 ipmi_get_oem_generic_event_message (uint32_t manufacturer_id,
                                     uint16_t product_id,
