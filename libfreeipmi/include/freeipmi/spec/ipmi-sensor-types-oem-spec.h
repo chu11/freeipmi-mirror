@@ -44,7 +44,16 @@ extern "C" {
  *******************************************/
 
 /*
+ * Intel Node Manager
+ *
+ * http://download.intel.com/support/motherboards/server/s5500wb/sb/s5500wb_tps_1_0.pdf
+ *
+ * For Intel Chips, not just Intel Motherboards.  Confirmed for:
+ *
  * Intel S5500WB/Penguin Computing Relion 700
+ * Inventec 5441/Dell Xanadu II
+ * Inventec 5442/Dell Xanadu III
+ * Quanta S99Q/Dell FS12-TY
  */
 
 #define IPMI_SENSOR_TYPE_OEM_INTEL_NODE_MANAGER 0xDC

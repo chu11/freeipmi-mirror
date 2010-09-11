@@ -63,6 +63,7 @@
 #include "ipmi-sel-parse-defs.h"
 #include "ipmi-sel-parse-string.h"
 #include "ipmi-sel-parse-string-intel.h"
+#include "ipmi-sel-parse-string-intel-node-manager.h"
 #include "ipmi-sel-parse-trace.h"
 #include "ipmi-sel-parse-util.h"
 
@@ -104,6 +105,8 @@ ipmi_sel_parse_output_intel_event_data1_class_oem (ipmi_sel_parse_ctx_t ctx,
    */
   if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S5500WB)
     {
+      int nmret;
+
       if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
 	  && ((system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_PCIE_FATAL_SENSOR
 	       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_FATAL_SENSOR)
@@ -124,28 +127,18 @@ ipmi_sel_parse_output_intel_event_data1_class_oem (ipmi_sel_parse_ctx_t ctx,
 	    return (1);
 	}
 
-      if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INTEL_NODE_MANAGER
-	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH
-	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH
-	  && system_event_record_data->offset_from_event_reading_type_code == IPMI_OEM_INTEL_SPECIFIC_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH_EVENT_FIRMWARE_STATUS)
-	{
-	  snprintf (tmpbuf,
-		    tmpbuflen,
-		    "Firmware Status");
-	  
-	  return (1);
-	}
+      if ((nmret = ipmi_sel_parse_output_intel_node_manager_event_data1_class_oem (ctx,
+                                                                                   sel_parse_entry,
+                                                                                   sel_record_type,
+                                                                                   tmpbuf,
+                                                                                   tmpbuflen,
+                                                                                   flags,
+                                                                                   wlen,
+                                                                                   system_event_record_data)) < 0)
+        return (-1);
 
-      if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INTEL_NODE_MANAGER
-	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_NODE_MANAGER_HEALTH_EVENT
-	  && system_event_record_data->offset_from_event_reading_type_code == IPMI_OEM_INTEL_SPECIFIC_NODE_MANAGER_HEALTH_EVENT_SENSOR_NODE_MANAGER)
-	{
-	  snprintf (tmpbuf,
-		    tmpbuflen,
-		    "Sensor Node Manager");
-	  
-	  return (1);
-	}
+      if (nmret)
+        return (1);
     }
 
   return (0);
@@ -277,6 +270,8 @@ ipmi_sel_parse_output_intel_event_data2_class_oem (ipmi_sel_parse_ctx_t ctx,
    */
   if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S5500WB)
     {
+      int nmret;
+
       if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
 	  && ((system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_PCIE_FATAL_SENSOR
 	       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_FATAL_SENSOR)
@@ -305,72 +300,18 @@ ipmi_sel_parse_output_intel_event_data2_class_oem (ipmi_sel_parse_ctx_t ctx,
 	  return (1);
 	}
 
-      if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INTEL_NODE_MANAGER
-          && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH
-          && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH
-          && system_event_record_data->offset_from_event_reading_type_code == IPMI_OEM_INTEL_SPECIFIC_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH_EVENT_FIRMWARE_STATUS)
-        {
-	  uint8_t health_event;
-	  char *health_event_str;
+      if ((nmret = ipmi_sel_parse_output_intel_node_manager_event_data2_class_oem (ctx,
+                                                                                   sel_parse_entry,
+                                                                                   sel_record_type,
+                                                                                   tmpbuf,
+                                                                                   tmpbuflen,
+                                                                                   flags,
+                                                                                   wlen,
+                                                                                   system_event_record_data)) < 0)
+        return (-1);
 
-	  health_event = system_event_record_data->event_data2;
-
-	  if (health_event == IPMI_OEM_INTEL_SPECIFIC_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_FORCED_GPIO_RECOVER)
- 	    health_event_str = "Forced GPIO recovery";
-	  else if (health_event == IPMI_OEM_INTEL_SPECIFIC_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_IMAGE_EXECUTION_FAILED)
- 	    health_event_str = "Image execution failed";
-	  else if (health_event == IPMI_OEM_INTEL_SPECIFIC_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_FLASH_ERASE_ERROR)
-	    health_event_str = "Flash erase error";
-	  else if (health_event == IPMI_OEM_INTEL_SPECIFIC_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_FLASH_CORRUPTED)
-	    health_event_str = "Flash corrupted";
-	  else if (health_event == IPMI_OEM_INTEL_SPECIFIC_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_INTERNAL_ERROR)
-	    health_event_str = "Internal error";
-	  else
-	    health_event_str = "Unknown";
-
-          snprintf (tmpbuf,
-                    tmpbuflen,
-		    "Health Event = %s",
-		    health_event_str);
-
-          return (1);
-        }
-
-      if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INTEL_NODE_MANAGER
-	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_NODE_MANAGER_HEALTH_EVENT
-	  && system_event_record_data->offset_from_event_reading_type_code == IPMI_OEM_INTEL_SPECIFIC_NODE_MANAGER_HEALTH_EVENT_SENSOR_NODE_MANAGER)
-	{
-	  uint8_t domain_id;
-	  uint8_t error_type;
-	  char *error_type_str;
-
-          domain_id = (system_event_record_data->event_data2 & IPMI_OEM_INTEL_SPECIFIC_NODE_MANAGER_HEALTH_EVENT_EVENT_DATA2_DOMAIN_ID_BITMASK);
-          domain_id >>= IPMI_OEM_INTEL_SPECIFIC_NODE_MANAGER_HEALTH_EVENT_EVENT_DATA2_DOMAIN_ID_SHIFT;
-
-          error_type = (system_event_record_data->event_data2 & IPMI_OEM_INTEL_SPECIFIC_NODE_MANAGER_HEALTH_EVENT_EVENT_DATA2_ERROR_TYPE_BITMASK);
-          error_type >>= IPMI_OEM_INTEL_SPECIFIC_NODE_MANAGER_HEALTH_EVENT_EVENT_DATA2_ERROR_TYPE_SHIFT;
-
-	  if (error_type == IPMI_OEM_INTEL_SPECIFIC_NODE_MANAGER_HEALTH_EVENT_EVENT_DATA2_ERROR_TYPE_POLICY_MISCONFIGURATION)
-	    error_type_str = "Policy Misconfiguration";
-	  else if (error_type == IPMI_OEM_INTEL_SPECIFIC_NODE_MANAGER_HEALTH_EVENT_EVENT_DATA2_ERROR_TYPE_POWER_SENSOR_READING_FAILURE)
-	    error_type_str = "Power Sensor Reading Failure";
-	  else if (error_type == IPMI_OEM_INTEL_SPECIFIC_NODE_MANAGER_HEALTH_EVENT_EVENT_DATA2_ERROR_TYPE_INLET_TEMPERATURE_READING_FAILURE)
-	    error_type_str = "Inlet Temperature Reading Failure";
-	  else if (error_type == IPMI_OEM_INTEL_SPECIFIC_NODE_MANAGER_HEALTH_EVENT_EVENT_DATA2_ERROR_TYPE_HOST_COMMUNICATION_ERROR)
-	    error_type_str = "Host Communication error";
-	  else if (error_type == IPMI_OEM_INTEL_SPECIFIC_NODE_MANAGER_HEALTH_EVENT_EVENT_DATA2_ERROR_TYPE_REAL_TIME_CLOCK_SYNCHRONIZATION_FAILURE)
-	    error_type_str = "Real-time clock synchronization failure";
-	  else
-	    error_type_str = "Unknown";
-
-	  snprintf (tmpbuf,
-                    tmpbuflen,
-                    "Domain ID = %u, Error Type = %s",
-		    domain_id,
-		    error_type_str);
-
-	  return (1);
-	}
+      if (nmret)
+        return (1);
     }
 
   return (0);
@@ -595,6 +536,8 @@ ipmi_sel_parse_output_intel_event_data3_class_oem (ipmi_sel_parse_ctx_t ctx,
    */
   if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S5500WB)
     {
+      int nmret;
+
       if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
 	  && ((system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_PCIE_FATAL_SENSOR
 	       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_FATAL_SENSOR)
@@ -606,57 +549,18 @@ ipmi_sel_parse_output_intel_event_data3_class_oem (ipmi_sel_parse_ctx_t ctx,
 	  return (1);
 	}
 
-      if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INTEL_NODE_MANAGER
-          && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH
-          && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH
-          && system_event_record_data->offset_from_event_reading_type_code == IPMI_OEM_INTEL_SPECIFIC_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH_EVENT_FIRMWARE_STATUS)
-        {
-	  snprintf (tmpbuf,
-		    tmpbuflen,
-		    "Extended error code = %02Xh",
-		    system_event_record_data->event_data3);
-	  
-	  return (1);
-	}
-
-      if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INTEL_NODE_MANAGER
-	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_NODE_MANAGER_HEALTH_EVENT
-	  && system_event_record_data->offset_from_event_reading_type_code == IPMI_OEM_INTEL_SPECIFIC_NODE_MANAGER_HEALTH_EVENT_SENSOR_NODE_MANAGER
-	  && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
-	{
-	  uint8_t error_type;
-
-          error_type = (system_event_record_data->event_data2 & IPMI_OEM_INTEL_SPECIFIC_NODE_MANAGER_HEALTH_EVENT_EVENT_DATA2_ERROR_TYPE_BITMASK);
-          error_type >>= IPMI_OEM_INTEL_SPECIFIC_NODE_MANAGER_HEALTH_EVENT_EVENT_DATA2_ERROR_TYPE_SHIFT;
-
-	  if (error_type == IPMI_OEM_INTEL_SPECIFIC_NODE_MANAGER_HEALTH_EVENT_EVENT_DATA2_ERROR_TYPE_POLICY_MISCONFIGURATION)
-	    {
-	      snprintf (tmpbuf,
-			tmpbuflen,
-			"Policy ID = %u",
-			system_event_record_data->event_data3);
-	      
-	      return (1);
-	    }
-	  else if (error_type == IPMI_OEM_INTEL_SPECIFIC_NODE_MANAGER_HEALTH_EVENT_EVENT_DATA2_ERROR_TYPE_POWER_SENSOR_READING_FAILURE)
-	    {
-	      snprintf (tmpbuf,
-			tmpbuflen,
-			"Power Sensor Address = %02Xh",
-			system_event_record_data->event_data3);
-
-	      return (1);
-	    }
-	  else if (error_type == IPMI_OEM_INTEL_SPECIFIC_NODE_MANAGER_HEALTH_EVENT_EVENT_DATA2_ERROR_TYPE_INLET_TEMPERATURE_READING_FAILURE)
-	    {
-	      snprintf (tmpbuf,
-			tmpbuflen,
-			"Inlet Sensor Address = %02Xh",
-			system_event_record_data->event_data3);
-	      
-	      return (1);
-	    }
-	}
+      if ((nmret = ipmi_sel_parse_output_intel_node_manager_event_data3_class_oem (ctx,
+                                                                                   sel_parse_entry,
+                                                                                   sel_record_type,
+                                                                                   tmpbuf,
+                                                                                   tmpbuflen,
+                                                                                   flags,
+                                                                                   wlen,
+                                                                                   system_event_record_data)) < 0)
+        return (-1);
+      
+      if (nmret)
+        return (1);
     }
   
   return (0);

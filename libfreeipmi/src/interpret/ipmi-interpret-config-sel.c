@@ -695,40 +695,6 @@ _interpret_sel_oem_config_init (ipmi_interpret_ctx_t ctx)
   assert (ctx->interpret_sel.sel_oem_sensor_config);
   assert (ctx->interpret_sel.sel_oem_record_config);
 
-  /* Intel S5500WB/Penguin Computing Relgion 700 Server Platform Services Firmware Health
-   *
-   * Manufacturer ID = 343 (Intel)
-   * Product ID = 62 (S5500WB)
-   * Event/Reading Type Code = 75h (Server Platform Services Firmware Health)
-   * Sensor Type = DCh (Node Manager)
-   */
-  
-  if (_interpret_sel_oem_sensor_config_create (ctx,
-					       IPMI_IANA_ENTERPRISE_ID_INTEL,
-					       IPMI_INTEL_PRODUCT_ID_S5500WB,
-					       IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH,
-					       IPMI_SENSOR_TYPE_OEM_INTEL_NODE_MANAGER,
-					       &oem_conf) < 0)
-    return (-1);
-
-  oem_conf->oem_sensor_data[0].event_direction_any_flag = 1;
-  oem_conf->oem_sensor_data[0].event_direction = 0; /* doesn't matter */
-
-  oem_conf->oem_sensor_data[0].event_data1_any_flag = 0;
-  oem_conf->oem_sensor_data[0].event_data1 = (IPMI_OEM_INTEL_SPECIFIC_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH_EVENT_FIRMWARE_STATUS
-					      | IPMI_SEL_EVENT_DATA_OEM_CODE << 4
-					      | IPMI_SEL_EVENT_DATA_OEM_CODE << 6);
-
-  oem_conf->oem_sensor_data[0].event_data2_any_flag = 1;
-  oem_conf->oem_sensor_data[0].event_data2 = 0; /* doesn't matter */
-
-  oem_conf->oem_sensor_data[0].event_data3_any_flag = 1;
-  oem_conf->oem_sensor_data[0].event_data3 = 0; /* doesn't matter */
-
-  oem_conf->oem_sensor_data[0].sel_state = IPMI_INTERPRET_STATE_WARNING;
-
-  oem_conf->oem_sensor_data_count = 1;
-
   /* Intel S5500WB/Penguin Computing Relgion 700 Node Manager Health Event
    *
    * Manufacturer ID = 343 (Intel)
@@ -749,7 +715,41 @@ _interpret_sel_oem_config_init (ipmi_interpret_ctx_t ctx)
   oem_conf->oem_sensor_data[0].event_direction = 0; /* doesn't matter */
 
   oem_conf->oem_sensor_data[0].event_data1_any_flag = 0;
-  oem_conf->oem_sensor_data[0].event_data1 = (IPMI_OEM_INTEL_SPECIFIC_NODE_MANAGER_HEALTH_EVENT_SENSOR_NODE_MANAGER
+  oem_conf->oem_sensor_data[0].event_data1 = (IPMI_OEM_INTEL_NODE_MANAGER_HEALTH_EVENT_SENSOR_NODE_MANAGER
+					      | IPMI_SEL_EVENT_DATA_OEM_CODE << 4
+					      | IPMI_SEL_EVENT_DATA_OEM_CODE << 6);
+
+  oem_conf->oem_sensor_data[0].event_data2_any_flag = 1;
+  oem_conf->oem_sensor_data[0].event_data2 = 0; /* doesn't matter */
+
+  oem_conf->oem_sensor_data[0].event_data3_any_flag = 1;
+  oem_conf->oem_sensor_data[0].event_data3 = 0; /* doesn't matter */
+
+  oem_conf->oem_sensor_data[0].sel_state = IPMI_INTERPRET_STATE_WARNING;
+
+  oem_conf->oem_sensor_data_count = 1;
+
+  /* Intel S5500WB/Penguin Computing Relgion 700 Server Platform Services Firmware Health
+   *
+   * Manufacturer ID = 343 (Intel)
+   * Product ID = 62 (S5500WB)
+   * Event/Reading Type Code = 75h (Server Platform Services Firmware Health)
+   * Sensor Type = DCh (Node Manager)
+   */
+  
+  if (_interpret_sel_oem_sensor_config_create (ctx,
+					       IPMI_IANA_ENTERPRISE_ID_INTEL,
+					       IPMI_INTEL_PRODUCT_ID_S5500WB,
+					       IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH,
+					       IPMI_SENSOR_TYPE_OEM_INTEL_NODE_MANAGER,
+					       &oem_conf) < 0)
+    return (-1);
+
+  oem_conf->oem_sensor_data[0].event_direction_any_flag = 1;
+  oem_conf->oem_sensor_data[0].event_direction = 0; /* doesn't matter */
+
+  oem_conf->oem_sensor_data[0].event_data1_any_flag = 0;
+  oem_conf->oem_sensor_data[0].event_data1 = (IPMI_OEM_INTEL_NODE_MANAGER_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH_EVENT_FIRMWARE_STATUS
 					      | IPMI_SEL_EVENT_DATA_OEM_CODE << 4
 					      | IPMI_SEL_EVENT_DATA_OEM_CODE << 6);
 

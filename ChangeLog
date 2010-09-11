@@ -1,3 +1,7 @@
+2010-09-XX  Albert Chu <chu11@llnl.gov>
+
+	* Support Intel NM SEL events for all motherboards.
+	
 2010-09-08  Albert Chu <chu11@llnl.gov>
 
 	Merge from intels5500wb branch.
