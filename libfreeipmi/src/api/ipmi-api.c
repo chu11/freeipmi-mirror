@@ -846,7 +846,7 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
       if (locate_info.address_space_id != IPMI_ADDRESS_SPACE_ID_SYSTEM_IO)
         {
           API_SET_ERRNUM (ctx, IPMI_ERR_DEVICE_NOT_SUPPORTED);
-          return (-1);
+          goto cleanup;
         }
 
       if (!(ctx->io.inband.kcs_ctx = ipmi_kcs_ctx_create ()))

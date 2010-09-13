@@ -1,3 +1,8 @@
+2010-09-13  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/api/ipmi-api.c (ipmi_ctx_open_inband): Fix
+	fallthrough error corner case.
+	
 2010-09-08  Albert Chu <chu11@llnl.gov>
 
 	Merge from intels5500wb branch.
