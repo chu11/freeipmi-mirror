@@ -115,11 +115,11 @@ ipmi_sel_parse_output_intel_node_manager_event_data1_class_oem (ipmi_sel_parse_c
     {
       uint8_t node_manager_policy_event;
       
-      node_manager_policy_event = system_event_record_data->offset_from_event_reading_type_code & IPMI_OEM_INTEL_NODE_MANAGER_EXCEPTION_EVENT_EVENT_DATA1_NODE_MANAGER_POLICY_BITMASK;
-      node_manager_policy_event >>= IPMI_OEM_INTEL_NODE_MANAGER_EXCEPTION_EVENT_EVENT_DATA1_NODE_MANAGER_POLICY_SHIFT;
+      node_manager_policy_event = system_event_record_data->offset_from_event_reading_type_code & IPMI_OEM_INTEL_NODE_MANAGER_EXCEPTION_EVENT_EVENT_DATA1_NODE_MANAGER_POLICY_EVENT_BITMASK;
+      node_manager_policy_event >>= IPMI_OEM_INTEL_NODE_MANAGER_EXCEPTION_EVENT_EVENT_DATA1_NODE_MANAGER_POLICY_EVENT_SHIFT;
 
       if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_NODE_MANAGER_EXCEPTION_EVENT
-          && node_manager_policy_event == IPMI_OEM_INTEL_NODE_MANAGER_EXCEPTION_EVENT_EVENT_DATA1_NODE_MANAGER_POLICY_POLICY_CORRECTION_TIME_EXCEEDED)
+          && node_manager_policy_event == IPMI_OEM_INTEL_NODE_MANAGER_EXCEPTION_EVENT_EVENT_DATA1_NODE_MANAGER_POLICY_EVENT_POLICY_CORRECTION_TIME_EXCEEDED)
         {
           snprintf (tmpbuf,
                     tmpbuflen,
@@ -136,6 +136,52 @@ ipmi_sel_parse_output_intel_node_manager_event_data1_class_oem (ipmi_sel_parse_c
                     "Sensor Node Manager");
 	  
           return (1);
+        }
+
+      if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_NODE_MANAGER_OPERATIONAL_CAPABILITIES_CHANGE_EVENT)
+        {
+          uint8_t policy_interface_capability;
+          uint8_t monitoring_capability;
+          uint8_t power_limiting_capability;
+
+          policy_interface_capability = system_event->offset_from_event_reading_type_code & IPMI_OEM_INTEL_NODE_MANAGER_OPERATIONAL_CAPABILITIES_CHANGE_EVENT_EVENT_DATA1_POLICY_INTERFACE_CAPABILITY_BITMASK;
+          policy_interface_capability >>= IPMI_OEM_INTEL_NODE_MANAGER_OPERATIONAL_CAPABILITIES_CHANGE_EVENT_EVENT_DATA1_POLICY_INTERFACE_CAPABILITY_SHIFT;
+
+          monitoring_capability = system_event->offset_from_event_reading_type_code & IPMI_OEM_INTEL_NODE_MANAGER_OPERATIONAL_CAPABILITIES_CHANGE_EVENT_EVENT_DATA1_MONITORING_CAPABILITY_BITMASK;
+          monitoring_capability >>= IPMI_OEM_INTEL_NODE_MANAGER_OPERATIONAL_CAPABILITIES_CHANGE_EVENT_EVENT_DATA1_MONITORING_CAPABILITY_SHIFT;
+
+          power_limiting_capability = system_event->offset_from_event_reading_type_code & IPMI_OEM_INTEL_NODE_MANAGER_OPERATIONAL_CAPABILITIES_CHANGE_EVENT_EVENT_DATA1_POWER_LIMITING_CAPABILITY_BITMASK;
+          power_limiting_capability >>= IPMI_OEM_INTEL_NODE_MANAGER_OPERATIONAL_CAPABILITIES_CHANGE_EVENT_EVENT_DATA1_POWER_LIMITING_CAPABILITY_SHIFT;
+        }
+
+      if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_NODE_MANAGER_ALERT_THRESHOLD_EXCEEDED)
+        {
+          node_manager_policy_event = system_event_record_data->offset_from_event_reading_type_code & IPMI_OEM_INTEL_NODE_MANAGER_ALERT_THRESHOLD_EXCEEDED_EVENT_DATA1_NODE_MANAGER_POLICY_EVENT_BITMASK;
+          node_manager_policy_event >>= IPMI_OEM_INTEL_NODE_MANAGER_ALERT_THRESHOLD_EXCEEDED_EVENT_DATA1_NODE_MANAGER_POLICY_EVENT_SHIFT;
+
+          if (node_manager_policy_event == IPMI_OEM_INTEL_NODE_MANAGER_ALERT_THRESHOLD_EXCEEDED_EVENT_DATA1_NODE_MANAGER_POLICY_EVENT_THRESHOLD_EXCEEDED)
+            {
+              uint8_t threshold_number;
+
+              threshold_number = system_event_record_data->offset_from_event_reading_type_code & IPMI_OEM_INTEL_NODE_MANAGER_ALERT_THRESHOLD_EXCEEDED_EVENT_DATA1_THRESHOLD_NUMBER_BITMASK;
+              threshold_number >>= IPMI_OEM_INTEL_NODE_MANAGER_ALERT_THRESHOLD_EXCEEDED_EVENT_DATA1_THRESHOLD_NUMBER_SHIFT;
+
+              snprintf (tmpbuf,
+                        tmpbuflen,
+                        "Threshold Exceeded, Threshold Number = %u",
+                        threshold_number);
+
+              return (1);
+              
+            }
+          else /* node_manager_policy_event == IPMI_OEM_INTEL_NODE_MANAGER_ALERT_THRESHOLD_EXCEEDED_EVENT_DATA1_NODE_MANAGER_POLICY_EVENT_POLICY_CORRECTION_TIME_EXCEEDED */
+            {
+              snprintf (tmpbuf,
+                        tmpbuflen,
+                        "Policy Correction Time Exceeded");
+
+              return (1);
+            }
         }
 
       if (system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH
@@ -162,13 +208,13 @@ ipmi_sel_parse_output_intel_node_manager_event_data1_class_oem (ipmi_sel_parse_c
  */
 int
 ipmi_sel_parse_output_intel_node_manager_event_data2_class_oem (ipmi_sel_parse_ctx_t ctx,
-                                                   struct ipmi_sel_parse_entry *sel_parse_entry,
-                                                   uint8_t sel_record_type,
-                                                   char *tmpbuf,
-                                                   unsigned int tmpbuflen,
-                                                   unsigned int flags,
-                                                   unsigned int *wlen,
-                                                   struct ipmi_sel_system_event_record_data *system_event_record_data)
+                                                                struct ipmi_sel_parse_entry *sel_parse_entry,
+                                                                uint8_t sel_record_type,
+                                                                char *tmpbuf,
+                                                                unsigned int tmpbuflen,
+                                                                unsigned int flags,
+                                                                unsigned int *wlen,
+                                                                struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
@@ -184,11 +230,11 @@ ipmi_sel_parse_output_intel_node_manager_event_data2_class_oem (ipmi_sel_parse_c
     {
       uint8_t node_manager_policy_event;
       
-      node_manager_policy_event = system_event_record_data->offset_from_event_reading_type_code & IPMI_OEM_INTEL_NODE_MANAGER_EXCEPTION_EVENT_EVENT_DATA1_NODE_MANAGER_POLICY_BITMASK;
-      node_manager_policy_event >>= IPMI_OEM_INTEL_NODE_MANAGER_EXCEPTION_EVENT_EVENT_DATA1_NODE_MANAGER_POLICY_SHIFT;
+      node_manager_policy_event = system_event_record_data->offset_from_event_reading_type_code & IPMI_OEM_INTEL_NODE_MANAGER_EXCEPTION_EVENT_EVENT_DATA1_NODE_MANAGER_POLICY_EVENT_BITMASK;
+      node_manager_policy_event >>= IPMI_OEM_INTEL_NODE_MANAGER_EXCEPTION_EVENT_EVENT_DATA1_NODE_MANAGER_POLICY_EVENT_SHIFT;
 
       if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_NODE_MANAGER_EXCEPTION_EVENT
-          && node_manager_policy_event == IPMI_OEM_INTEL_NODE_MANAGER_EXCEPTION_EVENT_EVENT_DATA1_NODE_MANAGER_POLICY_POLICY_CORRECTION_TIME_EXCEEDED)
+          && node_manager_policy_event == IPMI_OEM_INTEL_NODE_MANAGER_EXCEPTION_EVENT_EVENT_DATA1_NODE_MANAGER_POLICY_EVENT_POLICY_CORRECTION_TIME_EXCEEDED)
         {
           uint8_t domain_id;
           
@@ -234,6 +280,21 @@ ipmi_sel_parse_output_intel_node_manager_event_data2_class_oem (ipmi_sel_parse_c
                     "Domain ID = %u, Error Type = %s",
                     domain_id,
                     error_type_str);
+          
+          return (1);
+        }
+
+      if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_NODE_MANAGER_ALERT_THRESHOLD_EXCEEDED)
+        {
+          uint8_t domain_id;
+          
+          domain_id = (system_event_record_data->event_data2 & IPMI_OEM_INTEL_NODE_MANAGER_ALERT_THRESHOLD_EXCEEDED_EVENT_DATA2_DOMAIN_ID_BITMASK);
+          domain_id >>= IPMI_OEM_INTEL_NODE_MANAGER_ALERT_THRESHOLD_EXCEEDED_EVENT_DATA2_DOMAIN_ID_SHIFT;
+          
+          snprintf (tmpbuf,
+                    tmpbuflen,
+                    "Domain ID = %u",
+                    domain_id);
           
           return (1);
         }
@@ -303,11 +364,11 @@ ipmi_sel_parse_output_intel_node_manager_event_data3_class_oem (ipmi_sel_parse_c
     {
       uint8_t node_manager_policy_event;
       
-      node_manager_policy_event = system_event_record_data->offset_from_event_reading_type_code & IPMI_OEM_INTEL_NODE_MANAGER_EXCEPTION_EVENT_EVENT_DATA1_NODE_MANAGER_POLICY_BITMASK;
-      node_manager_policy_event >>= IPMI_OEM_INTEL_NODE_MANAGER_EXCEPTION_EVENT_EVENT_DATA1_NODE_MANAGER_POLICY_SHIFT;
+      node_manager_policy_event = system_event_record_data->offset_from_event_reading_type_code & IPMI_OEM_INTEL_NODE_MANAGER_EXCEPTION_EVENT_EVENT_DATA1_NODE_MANAGER_POLICY_EVENT_BITMASK;
+      node_manager_policy_event >>= IPMI_OEM_INTEL_NODE_MANAGER_EXCEPTION_EVENT_EVENT_DATA1_NODE_MANAGER_POLICY_EVENT_SHIFT;
 
       if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_NODE_MANAGER_EXCEPTION_EVENT
-          && node_manager_policy_event == IPMI_OEM_INTEL_NODE_MANAGER_EXCEPTION_EVENT_EVENT_DATA1_NODE_MANAGER_POLICY_POLICY_CORRECTION_TIME_EXCEEDED)
+          && node_manager_policy_event == IPMI_OEM_INTEL_NODE_MANAGER_EXCEPTION_EVENT_EVENT_DATA1_NODE_MANAGER_POLICY_EVENT_POLICY_CORRECTION_TIME_EXCEEDED)
         {
           snprintf (tmpbuf,
                     tmpbuflen,
@@ -353,6 +414,16 @@ ipmi_sel_parse_output_intel_node_manager_event_data3_class_oem (ipmi_sel_parse_c
 	      
               return (1);
             }
+        }
+
+      if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_NODE_MANAGER_ALERT_THRESHOLD_EXCEEDED)
+        {
+          snprintf (tmpbuf,
+                    tmpbuflen,
+                    "Policy ID = %u",
+                    system_event_record_data->event_data3);
+          
+          return (1);
         }
 
       if (system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH
