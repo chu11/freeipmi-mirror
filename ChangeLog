@@ -1,5 +1,9 @@
 2010-09-13  Albert Chu <chu11@llnl.gov>
 
+	* Support Intel NM SEL events for all motherboards.
+
+2010-09-13  Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/src/api/ipmi-api.c (ipmi_ctx_open_inband): Fix
 	fallthrough error corner case.
 	
