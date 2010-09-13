@@ -30,6 +30,15 @@
 #include "ipmi-sel-parse-defs.h"
 #include "ipmi-sel-parse-common.h"
 
+int ipmi_sel_parse_output_quanta_event_data1_class_oem (ipmi_sel_parse_ctx_t ctx,
+                                                        struct ipmi_sel_parse_entry *sel_parse_entry,
+                                                        uint8_t sel_record_type,
+                                                        char *tmpbuf,
+                                                        unsigned int tmpbuflen,
+                                                        unsigned int flags,
+                                                        unsigned int *wlen,
+                                                        struct ipmi_sel_system_event_record_data *system_event_record_data);
+
 int ipmi_sel_parse_output_quanta_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
                                                            struct ipmi_sel_parse_entry *sel_parse_entry,
                                                            uint8_t sel_record_type,
@@ -39,13 +48,31 @@ int ipmi_sel_parse_output_quanta_event_data2_discrete_oem (ipmi_sel_parse_ctx_t 
                                                            unsigned int *wlen,
                                                            struct ipmi_sel_system_event_record_data *system_event_record_data);
 
+int ipmi_sel_parse_output_quanta_event_data2_class_oem (ipmi_sel_parse_ctx_t ctx,
+                                                        struct ipmi_sel_parse_entry *sel_parse_entry,
+                                                        uint8_t sel_record_type,
+                                                        char *tmpbuf,
+                                                        unsigned int tmpbuflen,
+                                                        unsigned int flags,
+                                                        unsigned int *wlen,
+                                                        struct ipmi_sel_system_event_record_data *system_event_record_data);
+
 int ipmi_sel_parse_output_quanta_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
-							     struct ipmi_sel_parse_entry *sel_parse_entry,
-							     uint8_t sel_record_type,
-							     char *tmpbuf,
-							     unsigned int tmpbuflen,
-							     unsigned int flags,
-							     unsigned int *wlen,
-							     struct ipmi_sel_system_event_record_data *system_event_record_data);
+                                                           struct ipmi_sel_parse_entry *sel_parse_entry,
+                                                           uint8_t sel_record_type,
+                                                           char *tmpbuf,
+                                                           unsigned int tmpbuflen,
+                                                           unsigned int flags,
+                                                           unsigned int *wlen,
+                                                           struct ipmi_sel_system_event_record_data *system_event_record_data);
+
+int ipmi_sel_parse_output_quanta_event_data3_class_oem (ipmi_sel_parse_ctx_t ctx,
+                                                        struct ipmi_sel_parse_entry *sel_parse_entry,
+                                                        uint8_t sel_record_type,
+                                                        char *tmpbuf,
+                                                        unsigned int tmpbuflen,
+                                                        unsigned int flags,
+                                                        unsigned int *wlen,
+                                                        struct ipmi_sel_system_event_record_data *system_event_record_data);
 
 #endif /* _IPMI_SEL_PARSE_STRING_QUANTA_H */
