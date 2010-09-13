@@ -99,7 +99,20 @@ extern "C" {
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_MEMORY_SPARING_RAS_CONFIGURATION_INFORMATION                0x13
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_MEMORY_PARITY_ERROR                                         0x14
 
-#define IPMI_SENSOR_NUMBER_OEM_INTEL_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH                    0x17
+/*
+ * Intel Node Manager
+ *
+ * http://download.intel.com/support/motherboards/server/s5500wb/sb/s5500wb_tps_1_0.pdf
+ *
+ * For Intel Chips, not just Intel Motherboards.  Confirmed for:
+ *
+ * Intel S5500WB/Penguin Computing Relion 700
+ * Inventec 5441/Dell Xanadu II
+ * Inventec 5442/Dell Xanadu III
+ * Quanta S99Q/Dell FS12-TY
+ */
+
+#define IPMI_SENSOR_NUMBER_OEM_INTEL_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH 0x17
 
 /*******************************************
  * Inventec                                *

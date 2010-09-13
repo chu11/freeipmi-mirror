@@ -56,8 +56,24 @@ extern "C" {
 #define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QPI_NON_FATAL_SENSOR    0x73
 #define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QPI_FATAL_SENSOR        0x74
 
-#define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_NODE_MANAGER_HEALTH_EVENT                0x73
-#define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH 0x75
+/*
+ * Intel Node Manager
+ *
+ * http://download.intel.com/support/motherboards/server/s5500wb/sb/s5500wb_tps_1_0.pdf
+ * 
+ * For Intel Chips, not just Intel Motherboards.  Confirmed for:
+ *
+ * Intel S5500WB/Penguin Computing Relion 700
+ * Inventec 5441/Dell Xanadu II
+ * Inventec 5442/Dell Xanadu III
+ * Quanta S99Q/Dell FS12-TY
+ */
+
+#define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_NODE_MANAGER_EXCEPTION_EVENT                       0x72
+#define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_NODE_MANAGER_HEALTH_EVENT                          0x73
+#define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_NODE_MANAGER_OPERATIONAL_CAPABILITIES_CHANGE_EVENT 0x74
+#define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_NODE_MANAGER_ALERT_THRESHOLD_EXCEEDED              0x72
+#define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH           0x75
 
 /*******************************************
  * Inventec                                *

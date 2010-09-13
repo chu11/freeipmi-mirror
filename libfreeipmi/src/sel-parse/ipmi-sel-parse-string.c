@@ -868,6 +868,22 @@ _output_oem_event_data1_class_oem (ipmi_sel_parse_ctx_t ctx,
 	return (1);
     }
 
+  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_QUANTA)
+    {
+      if ((ret = ipmi_sel_parse_output_quanta_event_data1_class_oem (ctx,
+                                                                     sel_parse_entry,
+                                                                     sel_record_type,
+                                                                     tmpbuf,
+                                                                     tmpbuflen,
+                                                                     flags,
+                                                                     wlen,
+                                                                     system_event_record_data)) < 0)
+	return (-1);
+      
+      if (ret)
+	return (1);
+    }
+
   return (0);
 }
 
@@ -1255,6 +1271,22 @@ _output_oem_event_data2_class_oem (ipmi_sel_parse_ctx_t ctx,
 								       flags,
 								       wlen,
 								       system_event_record_data)) < 0)
+	return (-1);
+      
+      if (ret)
+	return (1);
+    }
+
+  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_QUANTA)
+    {
+      if ((ret = ipmi_sel_parse_output_quanta_event_data2_class_oem (ctx,
+                                                                     sel_parse_entry,
+                                                                     sel_record_type,
+                                                                     tmpbuf,
+                                                                     tmpbuflen,
+                                                                     flags,
+                                                                     wlen,
+                                                                     system_event_record_data)) < 0)
 	return (-1);
       
       if (ret)
@@ -1862,6 +1894,22 @@ _output_oem_event_data3_class_oem (ipmi_sel_parse_ctx_t ctx,
 								       flags,
 								       wlen,
 								       system_event_record_data)) < 0)
+	return (-1);
+      
+      if (ret)
+	return (1);
+    }
+
+  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_QUANTA)
+    {
+      if ((ret = ipmi_sel_parse_output_quanta_event_data3_class_oem (ctx,
+                                                                     sel_parse_entry,
+                                                                     sel_record_type,
+                                                                     tmpbuf,
+                                                                     tmpbuflen,
+                                                                     flags,
+                                                                     wlen,
+                                                                     system_event_record_data)) < 0)
 	return (-1);
       
       if (ret)

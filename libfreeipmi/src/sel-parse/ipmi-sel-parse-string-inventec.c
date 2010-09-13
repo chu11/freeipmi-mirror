@@ -62,6 +62,7 @@
 #include "ipmi-sel-parse-common.h"
 #include "ipmi-sel-parse-defs.h"
 #include "ipmi-sel-parse-string.h"
+#include "ipmi-sel-parse-string-intel-node-manager.h"
 #include "ipmi-sel-parse-string-inventec.h"
 #include "ipmi-sel-parse-trace.h"
 #include "ipmi-sel-parse-util.h"
@@ -174,21 +175,38 @@ ipmi_sel_parse_output_inventec_event_data1_class_oem (ipmi_sel_parse_ctx_t ctx,
    * from the vendor.  "BMC enabled by BIOS" is simply what
    * occurs, so that's what I'm going to say.
    */
-  if ((ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441
-       || ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5442)
-      && system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INVENTEC_BIOS
-      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INVENTEC_BIOS
-      && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INVENTEC_POST_START
-      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INVENTEC_BIOS
-      && !system_event_record_data->offset_from_event_reading_type_code /* no event */
-      && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
-      && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
+  if (ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441
+      || ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5442)
     {
-      snprintf (tmpbuf,
-                tmpbuflen,
-                "BMC enabled by BIOS");
+      int nmret;
 
-      return (1);
+      if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INVENTEC_BIOS
+          && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INVENTEC_BIOS
+          && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INVENTEC_POST_START
+          && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INVENTEC_BIOS
+          && !system_event_record_data->offset_from_event_reading_type_code /* no event */
+          && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
+          && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
+        {
+          snprintf (tmpbuf,
+                    tmpbuflen,
+                    "BMC enabled by BIOS");
+          
+          return (1);
+        }
+
+      if ((nmret = ipmi_sel_parse_output_intel_node_manager_event_data1_class_oem (ctx,
+                                                                                   sel_parse_entry,
+                                                                                   sel_record_type,
+                                                                                   tmpbuf,
+                                                                                   tmpbuflen,
+                                                                                   flags,
+                                                                                   wlen,
+                                                                                   system_event_record_data)) < 0)
+        return (-1);
+
+      if (nmret)
+        return (1);
     }
 
   return (0);
@@ -301,22 +319,39 @@ ipmi_sel_parse_output_inventec_event_data2_class_oem (ipmi_sel_parse_ctx_t ctx,
    * Inventec 5441/Dell Xanadu II
    * Inventec 5442/Dell Xanadu III
    */
-  if ((ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441
-       || ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5442)
-      && system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INVENTEC_BIOS
-      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INVENTEC_BIOS
-      && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INVENTEC_POST_START
-      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INVENTEC_BIOS
-      && !system_event_record_data->offset_from_event_reading_type_code /* no event */
-      && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
-      && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
+  if (ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441
+      || ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5442)
     {
-      snprintf (tmpbuf,
-                tmpbuflen,
-                "BIOS Major Version %X",
-                system_event_record_data->event_data2);
+      int nmret;
 
-      return (1);
+      if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INVENTEC_BIOS
+          && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INVENTEC_BIOS
+          && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INVENTEC_POST_START
+          && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INVENTEC_BIOS
+          && !system_event_record_data->offset_from_event_reading_type_code /* no event */
+          && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
+          && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
+        {
+          snprintf (tmpbuf,
+                    tmpbuflen,
+                    "BIOS Major Version %X",
+                    system_event_record_data->event_data2);
+          
+          return (1);
+        }
+
+      if ((nmret = ipmi_sel_parse_output_intel_node_manager_event_data2_class_oem (ctx,
+                                                                                   sel_parse_entry,
+                                                                                   sel_record_type,
+                                                                                   tmpbuf,
+                                                                                   tmpbuflen,
+                                                                                   flags,
+                                                                                   wlen,
+                                                                                   system_event_record_data)) < 0)
+        return (-1);
+      
+      if (nmret)
+        return (1);
     }
   
   return (0);
@@ -583,22 +618,39 @@ ipmi_sel_parse_output_inventec_event_data3_class_oem (ipmi_sel_parse_ctx_t ctx,
    * Inventec 5441/Dell Xanadu II
    * Inventec 5442/Dell Xanadu III
    */
-  if ((ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441
-       || ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5442)
-      && system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INVENTEC_BIOS
-      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INVENTEC_BIOS
-      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INVENTEC_BIOS
-      && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INVENTEC_POST_START
-      && !system_event_record_data->offset_from_event_reading_type_code /* no event */
-      && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
-      && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
+  if (ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441
+      || ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5442)
     {
-      snprintf (tmpbuf,
-                tmpbuflen,
-                "BIOS Minor Version %02X",
-                system_event_record_data->event_data3);
+      int nmret;
+
+      if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INVENTEC_BIOS
+          && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INVENTEC_BIOS
+          && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INVENTEC_BIOS
+          && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INVENTEC_POST_START
+          && !system_event_record_data->offset_from_event_reading_type_code /* no event */
+          && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
+          && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
+        {
+          snprintf (tmpbuf,
+                    tmpbuflen,
+                    "BIOS Minor Version %02X",
+                    system_event_record_data->event_data3);
       
-      return (1);
+          return (1);
+        }
+
+      if ((nmret = ipmi_sel_parse_output_intel_node_manager_event_data3_class_oem (ctx,
+                                                                                   sel_parse_entry,
+                                                                                   sel_record_type,
+                                                                                   tmpbuf,
+                                                                                   tmpbuflen,
+                                                                                   flags,
+                                                                                   wlen,
+                                                                                   system_event_record_data)) < 0)
+        return (-1);
+
+      if (nmret)
+        return (1);
     }
   
   return (0);
