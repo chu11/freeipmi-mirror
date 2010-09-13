@@ -5,6 +5,8 @@ o Support many new Quanta OEM extensions in ipmi-oem.
 o Support many new Intel OEM extensions in ipmi-oem.
 o Support Intel s5500WB OEM extensions in ipmi-sel.
 o Gracefully handle some errors in ipmi-sensors.
+o Support Intel Node Manager SEL events across Quanta S99Q, Inventec
+  5441, Inventec 5442, and Intel S5500WB motherboards.
 o Fix in-band probing corner case.
 o Fix various parameter input checks in ipmi-oem.
 o Fix help output corner cases in ipmi-oem.
