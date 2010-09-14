@@ -68,24 +68,4 @@ int ipmi_oem_dell_set_power_capacity_status (ipmi_oem_state_data_t *state_data);
 
 int ipmi_oem_dell_get_chassis_identify_status (ipmi_oem_state_data_t *state_data);
 
-int ipmi_oem_dell_get_board_id (ipmi_oem_state_data_t *state_data);
-int ipmi_oem_dell_set_board_id (ipmi_oem_state_data_t *state_data);
-
-int ipmi_oem_dell_get_fcb_version (ipmi_oem_state_data_t *state_data);
-int ipmi_oem_dell_set_fcb_version (ipmi_oem_state_data_t *state_data);
-
-#if 0
-/* cannot verify */
-int ipmi_oem_dell_set_asset_tag (ipmi_oem_state_data_t *state_data);
-#endif
-
-#if 0
-/* cannot verify */
-int ipmi_oem_dell_get_dhcp_retry (ipmi_oem_state_data_t *state_data);
-int ipmi_oem_dell_set_dhcp_retry (ipmi_oem_state_data_t *state_data);
-#endif
-
-int ipmi_oem_dell_get_sol_inactivity_timeout (ipmi_oem_state_data_t *state_data);
-int ipmi_oem_dell_set_sol_inactivity_timeout (ipmi_oem_state_data_t *state_data);
-
 #endif

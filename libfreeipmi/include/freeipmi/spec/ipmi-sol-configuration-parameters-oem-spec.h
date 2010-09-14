@@ -23,16 +23,16 @@
 extern "C" {
 #endif
 
-/*******************************************
- * Dell                                    *
+/******************************************* 
+ * Inventec                                *
  *******************************************/
 
 /*
- * Dell Xanadu II
- * Dell Xanadu III
+ * Inventec 5441/Dell Xanadu II
+ * Inventec 5442/Dell Xanadu III
  */
 
-#define IPMI_SOL_CONFIGURATION_PARAMETER_OEM_DELL_SOL_TIMEOUT 192
+#define IPMI_SOL_CONFIGURATION_PARAMETER_OEM_INVENTEC_SOL_TIMEOUT 192
 
 #ifdef __cplusplus
 }

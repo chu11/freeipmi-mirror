@@ -35,14 +35,6 @@ extern "C" {
 #define IPMI_NET_FN_OEM_DELL_GENERIC_RQ 0x30
 #define IPMI_NET_FN_OEM_DELL_GENERIC_RS 0x31
 
-/*
- * Dell Xanadu II
- * Dell Xanadu III
- */
-/* achu: not official names, named based on use context */
-#define IPMI_NET_FN_OEM_DELL_XANADU_RQ 0x34
-#define IPMI_NET_FN_OEM_DELL_XANADU_RS 0x35
-
 /*******************************************
  * Fujitsu                                 *
  *******************************************/
@@ -90,6 +82,9 @@ extern "C" {
 /* achu: not official names, named based on use context */
 #define IPMI_NET_FN_OEM_INVENTEC_GENERIC_RQ 0x30
 #define IPMI_NET_FN_OEM_INVENTEC_GENERIC_RS 0x31
+
+#define IPMI_NET_FN_OEM_INVENTEC_SPECIFIC_RQ 0x34
+#define IPMI_NET_FN_OEM_INVENTEC_SPECIFIC_RS 0x35
 
 /*******************************************
  * Quanta                                *

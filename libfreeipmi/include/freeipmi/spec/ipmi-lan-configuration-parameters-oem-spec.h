@@ -23,15 +23,16 @@
 extern "C" {
 #endif
 
-/* 
- * Dell
- */
+/******************************************* 
+ * Inventec                                *
+ *******************************************/
 
 /*
- * Dell Xanadu II
+ * Inventec 5441/Dell Xanadu II
+ * Inventec 5442/Dell Xanadu III
  */
 
-#define IPMI_LAN_CONFIGURATION_PARAMETER_OEM_DELL_DHCP_RETRY 192
+#define IPMI_LAN_CONFIGURATION_PARAMETER_OEM_INVENTEC_DHCP_RETRY 192
 
 #ifdef __cplusplus
 }

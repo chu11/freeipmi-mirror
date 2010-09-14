@@ -295,74 +295,83 @@ struct ipmi_oem_command oem_dell[] =
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_dell_get_chassis_identify_status,
     },
+    /* legacy */
     {
       "get-board-id",
       NULL,
       0,
-      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
-      ipmi_oem_dell_get_board_id
+      IPMI_OEM_COMMAND_FLAGS_HIDDEN,
+      ipmi_oem_inventec_get_board_id
     },
+    /* legacy */
     {
       "set-board-id",
       "<boardid>",
       1,
-      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
-      ipmi_oem_dell_set_board_id
+      IPMI_OEM_COMMAND_FLAGS_HIDDEN,
+      ipmi_oem_inventec_set_board_id
     },
+    /* legacy */
     {
       "get-fcb-version",
       NULL,
       0,
-      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
-      ipmi_oem_dell_get_fcb_version
+      IPMI_OEM_COMMAND_FLAGS_HIDDEN,
+      ipmi_oem_inventec_get_fcb_version
     },
+    /* legacy */
     {
       "set-fcb-version",
       "<majorversion> <minorversion>",
       2,
-      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
-      ipmi_oem_dell_set_fcb_version
+      IPMI_OEM_COMMAND_FLAGS_HIDDEN,
+      ipmi_oem_inventec_set_fcb_version
     },
 #if 0
+    /* legacy */
     /* cannot verify */
     {
       "set-asset-tag",
       "<asset-tag>",
       1,
-      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
-      ipmi_oem_dell_set_asset_tag
+      IPMI_OEM_COMMAND_FLAGS_HIDDEN,
+      ipmi_oem_inventec_set_asset_tag
     },
 #endif
 #if 0
+    /* legacy */
     /* cannot verify */
     {
       "get-dhcp-retry",
       NULL,
       0,
-      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
-      ipmi_oem_dell_get_dhcp_retry
+      IPMI_OEM_COMMAND_FLAGS_HIDDEN,
+      ipmi_oem_inventec_get_dhcp_retry
     },
+    /* legacy */
     {
       "set-dhcp-retry",
       "<retry-count> <retry-interval> <retry-timeout>",
       3,
-      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
-      ipmi_oem_dell_set_dhcp_retry
+      IPMI_OEM_COMMAND_FLAGS_HIDDEN,
+      ipmi_oem_inventec_set_dhcp_retry
     },
 #endif
+    /* legacy */
     {
       "get-sol-inactivity-timeout",
       NULL,
       0,
-      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
-      ipmi_oem_dell_get_sol_inactivity_timeout
+      IPMI_OEM_COMMAND_FLAGS_HIDDEN,
+      ipmi_oem_inventec_get_sol_inactivity_timeout
     },
+    /* legacy */
     {
       "set-sol-inactivity-timeout",
       "<inactivity-timeout>",
       1,
-      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
-      ipmi_oem_dell_set_sol_inactivity_timeout
+      IPMI_OEM_COMMAND_FLAGS_HIDDEN,
+      ipmi_oem_inventec_set_sol_inactivity_timeout
     },
     {
       NULL,
@@ -685,6 +694,75 @@ struct ipmi_oem_command oem_inventec[] =
       ipmi_oem_inventec_update_firmware
     },
 #endif
+    {
+      "get-board-id",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_inventec_get_board_id
+    },
+    {
+      "set-board-id",
+      "<boardid>",
+      1,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_inventec_set_board_id
+    },
+    {
+      "get-fcb-version",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_inventec_get_fcb_version
+    },
+    {
+      "set-fcb-version",
+      "<majorversion> <minorversion>",
+      2,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_inventec_set_fcb_version
+    },
+#if 0
+    /* cannot verify */
+    {
+      "set-asset-tag",
+      "<asset-tag>",
+      1,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_inventec_set_asset_tag
+    },
+#endif
+#if 0
+    /* cannot verify */
+    {
+      "get-dhcp-retry",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_inventec_get_dhcp_retry
+    },
+    {
+      "set-dhcp-retry",
+      "<retry-count> <retry-interval> <retry-timeout>",
+      3,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_inventec_set_dhcp_retry
+    },
+#endif
+    {
+      "get-sol-inactivity-timeout",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_inventec_get_sol_inactivity_timeout
+    },
+    {
+      "set-sol-inactivity-timeout",
+      "<inactivity-timeout>",
+      1,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_inventec_set_sol_inactivity_timeout
+    },
     {
       "restore-to-defaults",
       "<all|user|lan|sol|serial|pef>",

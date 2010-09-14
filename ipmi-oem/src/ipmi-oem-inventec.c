@@ -539,6 +539,8 @@
 #define IPMI_OEM_INVENTEC_GET_UPDATE_STATUS_INCORRECT_PLATFORM          0x85
 #define IPMI_OEM_INVENTEC_GET_UPDATE_STATUS_COMPLETED                   0xFF
 
+#define IPMI_OEM_INVENTEC_ASSET_TAG_MAX 10
+
 #define IPMI_OEM_INVENTEC_RESTORE_TO_DEFAULTS_RESTORE_FLAG_RESTORE_PARAMETERS_NOT_INCLUDED_BELOW 0x7
 #define IPMI_OEM_INVENTEC_RESTORE_TO_DEFAULTS_RESTORE_FLAG_REMAINING_PARAMETERS_STAY_WHAT_IT_IS  0x0
 #define IPMI_OEM_INVENTEC_RESTORE_TO_DEFAULTS_RESTORE_FLAG_SHIFT                                 5
@@ -3441,6 +3443,699 @@ ipmi_oem_inventec_update_firmware (ipmi_oem_state_data_t *state_data)
   return (rv);
 }
 #endif
+
+int
+ipmi_oem_inventec_get_board_id (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  int rs_len;
+  int rv = -1;
+
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+
+  /* Inventec 5441/Dell Xanadu II OEM
+   * Inventec 5442/Dell Xanadu III OEM
+   *
+   * Get Board ID Request
+   *
+   * 0x34 - OEM network function
+   * 0x10 - OEM cmd
+   *
+   * Get Board ID Response
+   *
+   * 0x10 - OEM cmd
+   * 0x?? - Completion Code
+   * 0x?? - board id
+   */
+
+  bytes_rq[0] = IPMI_CMD_OEM_INVENTEC_GET_BOARD_ID;
+
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+                              IPMI_NET_FN_OEM_INVENTEC_SPECIFIC_RQ, /* network function */
+                              bytes_rq, /* data */
+                              1, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                   bytes_rs,
+                                                   rs_len,
+                                                   3,
+                                                   IPMI_CMD_OEM_INVENTEC_GET_BOARD_ID,
+                                                   IPMI_NET_FN_OEM_INVENTEC_SPECIFIC_RS,
+                                                   NULL) < 0)
+    goto cleanup;
+
+  pstdout_printf (state_data->pstate,
+                  "%Xh\n",
+                  bytes_rs[2]);
+  
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
+ipmi_oem_inventec_set_board_id (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  uint8_t boardid;
+  unsigned int tmp;
+  char *ptr;
+  int rs_len;
+  int rv = -1;
+
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 1);
+
+  errno = 0;
+  
+  tmp = strtoul (state_data->prog_data->args->oem_options[0],
+                 &ptr,
+                 IPMI_OEM_HEX_BASE);
+  if (errno
+      || tmp > UCHAR_MAX
+      || (*ptr) != '\0')
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[0]);
+      goto cleanup;
+    }
+  boardid = tmp;
+
+  /* Inventec 5441/Dell Xanadu II OEM
+   * Inventec 5442/Dell Xanadu III OEM
+   *
+   * Set Board ID Request
+   *
+   * 0x34 - OEM network function
+   * 0x11 - OEM cmd
+   * 0x?? - board id
+   *
+   * Set Board ID Response
+   *
+   * 0x11 - OEM cmd
+   * 0x?? - Completion Code
+   */
+
+  bytes_rq[0] = IPMI_CMD_OEM_INVENTEC_SET_BOARD_ID;
+  bytes_rq[1] = boardid;
+
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+                              IPMI_NET_FN_OEM_INVENTEC_SPECIFIC_RQ, /* network function */
+                              bytes_rq, /* data */
+                              2, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                   bytes_rs,
+                                                   rs_len,
+                                                   2,
+                                                   IPMI_CMD_OEM_INVENTEC_SET_BOARD_ID,
+                                                   IPMI_NET_FN_OEM_INVENTEC_SPECIFIC_RS,
+                                                   NULL) < 0)
+    goto cleanup;
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
+ipmi_oem_inventec_get_fcb_version (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  int rs_len;
+  int rv = -1;
+
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+
+  /* Inventec 5441/Dell Xanadu II OEM
+   * Inventec 5442/Dell Xanadu III OEM
+   *
+   * Get FCB FW Version Request
+   *
+   * 0x34 - OEM network function
+   * 0x16 - OEM cmd
+   *
+   * Get FCB FW Version Response
+   *
+   * 0x16 - OEM cmd
+   * 0x?? - Completion Code
+   * 0x?? - major version (in hex)
+   * 0x?? - minor version (in hex)
+   */
+
+  bytes_rq[0] = IPMI_CMD_OEM_INVENTEC_GET_FCB_FW_VERSION;
+
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+                              IPMI_NET_FN_OEM_INVENTEC_SPECIFIC_RQ, /* network function */
+                              bytes_rq, /* data */
+                              1, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                   bytes_rs,
+                                                   rs_len,
+                                                   4,
+                                                   IPMI_CMD_OEM_INVENTEC_GET_FCB_FW_VERSION,
+                                                   IPMI_NET_FN_OEM_INVENTEC_SPECIFIC_RS,
+                                                   NULL) < 0)
+    goto cleanup;
+
+  pstdout_printf (state_data->pstate,
+                  "%X.%02X\n",
+                  bytes_rs[2],
+                  bytes_rs[3]);
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
+ipmi_oem_inventec_set_fcb_version (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  uint8_t majorversion;
+  uint8_t minorversion;
+  unsigned int tmp;
+  char *ptr;
+  int rs_len;
+  int rv = -1;
+
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 2);
+
+  errno = 0;
+
+  tmp = strtoul (state_data->prog_data->args->oem_options[0],
+                 &ptr,
+                 IPMI_OEM_HEX_BASE);
+  if (errno
+      || tmp > UCHAR_MAX
+      || (*ptr) != '\0')
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[0]);
+      goto cleanup;
+    }
+  majorversion = tmp;
+
+  errno = 0;
+
+  tmp = strtoul (state_data->prog_data->args->oem_options[1],
+                 &ptr,
+                 IPMI_OEM_HEX_BASE);
+  if (errno
+      || tmp > UCHAR_MAX
+      || (*ptr) != '\0')
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[1]);
+      goto cleanup;
+    }
+  minorversion = tmp;
+
+  /* Inventec 5441/Dell Xanadu II OEM
+   * Inventec 5442/Dell Xanadu III OEM
+   *
+   * Set FCB FW Version Request
+   *
+   * 0x34 - OEM network function
+   * 0x15 - OEM cmd
+   * 0x?? - major version (in hex)
+   * 0x?? - minor version (in hex)
+   *
+   * Set FCB FW Version Response
+   *
+   * 0x15 - OEM cmd
+   * 0x?? - Completion Code
+   */
+
+  bytes_rq[0] = IPMI_CMD_OEM_INVENTEC_SET_FCB_FW_VERSION;
+  bytes_rq[1] = majorversion;
+  bytes_rq[2] = minorversion;
+
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+                              IPMI_NET_FN_OEM_INVENTEC_SPECIFIC_RQ, /* network function */
+                              bytes_rq, /* data */
+                              3, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                   bytes_rs,
+                                                   rs_len,
+                                                   2,
+                                                   IPMI_CMD_OEM_INVENTEC_SET_FCB_FW_VERSION,
+                                                   IPMI_NET_FN_OEM_INVENTEC_SPECIFIC_RS,
+                                                   NULL) < 0)
+    goto cleanup;
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+#if 0
+/* cannot verify */
+int
+ipmi_oem_inventec_set_asset_tag (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  unsigned int asset_tag_len;
+  unsigned int rq_len = 0;
+  int rs_len;
+  int rv = -1;
+  int i;
+  
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 1);
+
+  asset_tag_len = strlen (state_data->prog_data->args->oem_options[0]);
+  if (asset_tag_len > IPMI_OEM_INVENTEC_ASSET_TAG_MAX)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s OEM option argument '%s' invalid length, max %u long\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[0],
+                       IPMI_OEM_INVENTEC_ASSET_TAG_MAX);
+      goto cleanup;
+    }
+  
+  /* Inventec 5441/Dell Xanadu II
+   * Inventec 5442/Dell Xanadu III
+   *
+   * Set Asset Tag Request
+   *
+   * 0x34 - OEM network function
+   * 0x12 - OEM cmd
+   * bytes 1-10: Asset Tag
+   *
+   * Set Asset Tag Response
+   *
+   * 0x12 - OEM cmd
+   * 0x?? - Completion Code
+   * 0x?? - count written
+   */
+
+  bytes_rq[0] = IPMI_CMD_OEM_INVENTEC_SET_ASSET_TAG;
+  rq_len++;
+  for (i = 0; i < asset_tag_len; i++)
+    {
+      bytes_rq[1 + i] = state_data->prog_data->args->oem_options[0][i];
+      rq_len++;
+    }
+
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+                              IPMI_NET_FN_OEM_INVENTEC_SPECIFIC_RQ, /* network function */
+                              bytes_rq, /* data */
+                              rq_len, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+  
+  if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                   bytes_rs,
+                                                   rs_len,
+                                                   2,
+                                                   IPMI_CMD_OEM_INVENTEC_SET_ASSET_TAG,
+                                                   IPMI_NET_FN_OEM_INVENTEC_SPECIFIC_RS,
+                                                   NULL) < 0)
+    goto cleanup;
+  
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+#endif
+
+#if 0
+/* cannot verify */
+
+int
+ipmi_oem_inventec_get_dhcp_retry (ipmi_oem_state_data_t *state_data)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t configuration_parameter_data[IPMI_OEM_MAX_BYTES];
+  uint8_t lan_channel_number;
+  int len;
+  int rv = -1;
+
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+
+  /* Dell Xanadu II OEM
+   *
+   * Uses Get/Set Lan Configuration
+   *
+   * parameter = 192
+   *
+   * Data format
+   *
+   * 1st byte = retry count, 1 based, 0h = no retries, ffh = infinite
+   * 2nd byte = retry interval, 1 based, 10 second increments
+   * 3rd byte = retry timeout, 1 based, 1 minute increments
+   *
+   */
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_lan_configuration_parameters_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  if (ipmi_get_channel_number (state_data->ipmi_ctx,
+                               IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3,
+                               &lan_channel_number) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_get_channel_number: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_lan_configuration_parameters (state_data->ipmi_ctx,
+                                                 lan_channel_number,
+                                                 IPMI_GET_LAN_PARAMETER,
+                                                 IPMI_LAN_PARAMETER_OEM_INVENTEC_DHCP_RETRY,
+                                                 0,
+                                                 0,
+                                                 obj_cmd_rs) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_get_lan_configuration_parameters: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if ((len = fiid_obj_get_data (obj_cmd_rs,
+                                "configuration_parameter_data",
+                                configuration_parameter_data,
+                                IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get_data: 'configuration_parameter_data': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+
+  if (len < 3)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_get_lan_configuration_parameters: invalid buffer length returned: %d\n",
+                       len);
+      goto cleanup;
+    }
+
+  if (!configuration_parameter_data[0])
+    pstdout_printf (state_data->pstate, "Retry Count    : no retries\n");
+  else if (configuration_parameter_data[0] == 0xFF)
+    pstdout_printf (state_data->pstate, "Retry Count    : infinite retries\n");
+  else
+    pstdout_printf (state_data->pstate, "Retry Count    : %u\n", configuration_parameter_data[0]);
+  pstdout_printf (state_data->pstate, "Retry Interval : %u seconds\n", configuration_parameter_data[1] * 10);
+  pstdout_printf (state_data->pstate, "Retry Timeout  : %u minutes\n", configuration_parameter_data[2]);
+                  
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
+int
+ipmi_oem_inventec_set_dhcp_retry (ipmi_oem_state_data_t *state_data)
+{
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 3);
+
+  return (0);
+}
+#endif
+
+int
+ipmi_oem_inventec_get_sol_inactivity_timeout (ipmi_oem_state_data_t *state_data)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t configuration_parameter_data[IPMI_OEM_MAX_BYTES];
+  uint8_t lan_channel_number;
+  uint16_t sol_inactivity_timeout;
+  int len;
+  int rv = -1;
+
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+
+  /* Dell Xanadu II OEM
+   * Dell Xanadu III OEM
+   *
+   * Uses Get/Set SOL Configuration
+   *
+   * parameter = 192
+   *
+   * Data format
+   *
+   * 1st & 2nd byte = inactivity timeout, 1 based, 1 minute
+   * increments, LSbyte first
+   *
+   */
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_sol_configuration_parameters_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  if (ipmi_get_channel_number (state_data->ipmi_ctx,
+                               IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3,
+                               &lan_channel_number) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_get_channel_number: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_sol_configuration_parameters (state_data->ipmi_ctx,
+                                                 lan_channel_number,
+                                                 IPMI_GET_SOL_PARAMETER,
+                                                 IPMI_SOL_CONFIGURATION_PARAMETER_OEM_INVENTEC_SOL_TIMEOUT,
+                                                 0,
+                                                 0,
+                                                 obj_cmd_rs) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_get_sol_configuration_parameters: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if ((len = fiid_obj_get_data (obj_cmd_rs,
+                                "configuration_parameter_data",
+                                configuration_parameter_data,
+                                IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get_data: 'configuration_parameter_data': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+
+  if (len < 2)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_get_sol_configuration_parameters: invalid buffer length returned: %d\n",
+                       len);
+      goto cleanup;
+    }
+
+  sol_inactivity_timeout = 0;
+  sol_inactivity_timeout |= configuration_parameter_data[0];
+  sol_inactivity_timeout |= (configuration_parameter_data[1] << 8);
+
+  if (sol_inactivity_timeout)
+    pstdout_printf (state_data->pstate, "SOL Inactivity Timeout : %u minutes\n", sol_inactivity_timeout);
+  else
+    pstdout_printf (state_data->pstate, "SOL Inactivity Timeout : no timeout\n", sol_inactivity_timeout);
+                  
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
+int
+ipmi_oem_inventec_set_sol_inactivity_timeout (ipmi_oem_state_data_t *state_data)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t configuration_parameter_data[IPMI_OEM_MAX_BYTES];
+  uint8_t lan_channel_number;
+  uint16_t sol_inactivity_timeout = 0;
+  int rv = -1;
+
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 1);
+
+  if (strcasecmp (state_data->prog_data->args->oem_options[0], "none"))
+    {
+      char *ptr = NULL;
+      unsigned int temp;
+
+      errno = 0;
+      
+      temp = strtoul (state_data->prog_data->args->oem_options[0], &ptr, 10);
+      if (errno
+          || temp > USHRT_MAX
+          || ptr[0] != '\0')
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "%s:%s invalid OEM option argument '%s'\n",
+                           state_data->prog_data->args->oem_id,
+                           state_data->prog_data->args->oem_command,
+                           state_data->prog_data->args->oem_options[0]);
+          goto cleanup;
+        }
+
+      sol_inactivity_timeout = temp;
+    }
+  else
+    sol_inactivity_timeout = 0;
+  
+  /* Dell Xanadu II OEM
+   * Dell Xanadu III OEM
+   *
+   * From Dell Provided Docs
+   *
+   * Uses Get/Set SOL Configuration
+   * parameter = 192
+   *
+   * Data format
+   *
+   * 1st & 2nd byte = inactivity timeout, 1 based, 1 minute
+   * increments, LSbyte first
+   *
+   */
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_sol_configuration_parameters_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  if (ipmi_get_channel_number (state_data->ipmi_ctx,
+                               IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3,
+                               &lan_channel_number) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_get_channel_number: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  configuration_parameter_data[0] = sol_inactivity_timeout & 0x00FF;
+  configuration_parameter_data[1] = (sol_inactivity_timeout & 0xFF00) >> 8;
+
+  if (ipmi_cmd_set_sol_configuration_parameters (state_data->ipmi_ctx,
+                                                 lan_channel_number,
+                                                 IPMI_SOL_CONFIGURATION_PARAMETER_OEM_INVENTEC_SOL_TIMEOUT,
+                                                 configuration_parameter_data,
+                                                 2,
+                                                 obj_cmd_rs) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_get_sol_configuration_parameters: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
 
 int
 ipmi_oem_inventec_restore_to_defaults (ipmi_oem_state_data_t *state_data)

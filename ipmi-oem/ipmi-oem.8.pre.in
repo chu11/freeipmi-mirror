@@ -247,54 +247,6 @@ and R710 (Dell 11G Poweredge systems).
 This OEM command will retrieve the current chassis identify (i.e. LED)
 status.  Command confirmed to work on Dell Poweredge 2900, 2950, R610,
 and R710 (Dell 10G and 11G Poweredge systems).
-.TP
-.B get-board-id
-This OEM command can get the board ID.  Command confirmed to work on
-Dell Xanadu II and Dell Xanadu III.
-.TP
-.B set-board-id \fIID\fR
-This OEM command can set the board ID.  Command confirmed to work on
-Dell Xanadu II and Dell Xanadu III.
-.TP
-.B get-fcb-version
-This OEM command can get the fan control board (FCB) version
-number.  Command confirmed to work on Dell Xanadu II and Dell Xanadu III.
-.TP
-.B set-fcb-version \fImajorversion\fR \fIminorversion\fR
-This OEM command can set the fan control board (FCB) version number.
-The \fImajorversion\fR and \fIminorversion\fR must be specified in
-hex.  Command confirmed to work on Dell Xanadu II and Dell Xanadu III.
-.if 0 \{
-.TP
-.B set-asset-tag \fIasset-tag\fR
-This OEM command cat set the asset-tag of the motherboard.  The
-maximum length of the asset tag is 10 bytes.  Command confirmed to
-work on Dell Xanadu II and Dell Xanadu III.
-\}
-.if 0 \{
-.TP
-.B get-dhcp-retry
-This OEM command will retrieve DHCP retry information.
-.TP
-.B set-dhcp-retry \fIretry-count\fR \fIretry-interval\fR \fIretry-timeout\fR
-This OEM command will set DHCP retry information.  The
-\fIretry\-count\fR is one-based, max of 254, 0 or "none" will
-configure no retries, 255 or "infinite" with configure constant
-retries.  The \fIretry\-interval\fR is one-based, in 10 second
-increments (e.g. 1 = 10 seconds).  The \fIretry\-timeout\fR is
-one-based, in 1 minute increments (e.g. 1 = 1 minute).  Command
-confirmed to work on Dell Xanadu II.
-\}
-.TP
-.B get-sol-inactivity-timeout
-This OEM command will retrieve the SOL inactivity timeout.  Command
-confirmed to work on Dell Xanadu II and Dell Xanadu III.
-.TP
-.B set-sol-inactivity-timeout \fIinactivity\-timeout\fR
-This OEM command will set the SOL inactivity timeout.  The
-\fIinactivity\-timeout\fR is one-based, max of 65535, in 1 minute
-increments (e.g. 1 = 1 minute), 0 or "none" will configure no timeout.
-Command confirmed to work on Dell Xanadu II and Dell Xanadu III.
 .RE
 .TP
 .B Fujitsu
@@ -591,6 +543,55 @@ Xanadu II/III.  If the verbose option is set, progress will be output with
 information that is available.  Command confirmed to work on Inventec
 5441/5442 (Dell Xanadu II/III).
 \}
+.TP
+.B get-board-id
+This OEM command can get the board ID.  Command confirmed to work on
+Inventec 5441/5442 (Dell Xanadu II/III).
+.TP
+.B set-board-id \fIID\fR
+This OEM command can set the board ID.  Command confirmed to work on
+Inventec 5441/5442 (Dell Xanadu II/III).
+.TP
+.B get-fcb-version
+This OEM command can get the fan control board (FCB) version number.
+Command confirmed to work on Inventec 5441/5442 (Dell Xanadu II/III).
+.TP
+.B set-fcb-version \fImajorversion\fR \fIminorversion\fR
+This OEM command can set the fan control board (FCB) version number.
+The \fImajorversion\fR and \fIminorversion\fR must be specified in
+hex.  Command confirmed to work on Inventec 5441/5442 (Dell Xanadu
+II/III).
+.if 0 \{
+.TP
+.B set-asset-tag \fIasset-tag\fR
+This OEM command cat set the asset-tag of the motherboard.  The
+maximum length of the asset tag is 10 bytes.  Command confirmed to
+work on Inventec 5441/5442 (Dell Xanadu II/III).
+\}
+.if 0 \{
+.TP
+.B get-dhcp-retry
+This OEM command will retrieve DHCP retry information.
+.TP
+.B set-dhcp-retry \fIretry-count\fR \fIretry-interval\fR \fIretry-timeout\fR
+This OEM command will set DHCP retry information.  The
+\fIretry\-count\fR is one-based, max of 254, 0 or "none" will
+configure no retries, 255 or "infinite" with configure constant
+retries.  The \fIretry\-interval\fR is one-based, in 10 second
+increments (e.g. 1 = 10 seconds).  The \fIretry\-timeout\fR is
+one-based, in 1 minute increments (e.g. 1 = 1 minute).  Command
+confirmed to work on Inventec 5441/Dell Xanadu II.
+\}
+.TP
+.B get-sol-inactivity-timeout
+This OEM command will retrieve the SOL inactivity timeout.  Command
+confirmed to work on Inventec 5441/5442 (Dell Xanadu II/III).
+.TP
+.B set-sol-inactivity-timeout \fIinactivity\-timeout\fR
+This OEM command will set the SOL inactivity timeout.  The
+\fIinactivity\-timeout\fR is one-based, max of 65535, in 1 minute
+increments (e.g. 1 = 1 minute), 0 or "none" will configure no timeout.
+Command confirmed to work on Inventec 5441/5442 (Dell Xanadu II/III).
 .TP
 .B restore-to-defaults \fIall|user|lan|sol|serial|pef\fR
 This OEM command will restore certain BMC configuration sections back
