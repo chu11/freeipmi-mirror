@@ -8,7 +8,7 @@ o Support Intel Node Manager SEL events across Quanta S99Q, Inventec
   5441, Inventec 5442, and Intel S5500WB motherboards.
 o Move some OEM extensions from Dell section to Inventec section in
   ipmi-oem.  Were previously thought to be additions by Dell, but in
-  fact are not.
+  fact are not.  Backwards compatability supported.
 o Gracefully handle some errors in ipmi-sensors.
 o Fix in-band probing corner case.
 o Fix various parameter input checks in ipmi-oem.
