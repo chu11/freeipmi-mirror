@@ -623,6 +623,23 @@ _output_oem_sensor_name (ipmi_sel_parse_ctx_t ctx,
   assert (system_event_record_data);
   assert (oem_rv);
 
+  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL)
+    {
+      if ((ret = ipmi_sel_parse_output_intel_sensor_name (ctx,
+							  sel_parse_entry,
+							  sel_record_type,
+							  buf,
+							  buflen,
+							  flags,
+							  wlen,
+							  system_event_record_data,
+							  oem_rv)) < 0)
+	return (-1);
+      
+      if (ret)
+	return (1);
+    }
+      
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC)
     {
       if ((ret = ipmi_sel_parse_output_inventec_sensor_name (ctx,
@@ -639,7 +656,24 @@ _output_oem_sensor_name (ipmi_sel_parse_ctx_t ctx,
       if (ret)
 	return (1);
     }
+
+  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_QUANTA)
+    {
+      if ((ret = ipmi_sel_parse_output_quanta_sensor_name (ctx,
+							   sel_parse_entry,
+							   sel_record_type,
+							   buf,
+							   buflen,
+							   flags,
+							   wlen,
+							   system_event_record_data,
+							   oem_rv)) < 0)
+	return (-1);
       
+      if (ret)
+	return (1);
+    }
+
   return (0);
 }
 

@@ -88,6 +88,66 @@
  * return (1) - OEM match
  * return (-1) - error, cleanup and return error
  *
+ * in oem_rv, return
+ * 0 - continue on
+ * 1 - buffer full, return full buffer to user
+ */
+int
+ipmi_sel_parse_output_intel_node_manager_sensor_name (ipmi_sel_parse_ctx_t ctx,
+						      struct ipmi_sel_parse_entry *sel_parse_entry,
+						      uint8_t sel_record_type,
+						      char *buf,
+						      unsigned int buflen,
+						      unsigned int flags,
+						      unsigned int *wlen,
+						      struct ipmi_sel_system_event_record_data *system_event_record_data,
+						      int *oem_rv)
+{
+  assert (ctx);
+  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (sel_parse_entry);
+  assert (buf);
+  assert (buflen);
+  assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
+  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (wlen);
+  assert (system_event_record_data);
+  assert (oem_rv);
+
+  if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INTEL_NODE_MANAGER
+      && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH)
+    {
+      /* Server Platform Services Firmware Health */
+      /* On all motherboards with Intel NM support, I've seen
+       *
+       * NM Capabilities
+       * NM Exception
+       * NM Health
+       * NM Threshold
+       *
+       * In the SDR, but not this one.  I don't know why.  Anyways,
+       * I'll use "NM Firmware" as the sensor name.  Seems as good a
+       * choice as any other.
+       */
+      if (ipmi_sel_parse_string_snprintf (buf,
+                                          buflen,
+                                          wlen,
+                                          "NM Firmware"))
+        (*oem_rv) = 1;
+      else
+        (*oem_rv) = 0;
+      
+      return (1);
+    }
+  
+  return (0);
+}
+
+/* return (0) - no OEM match
+ * return (1) - OEM match
+ * return (-1) - error, cleanup and return error
+ *
  * 0 - continue on
  * 1 - buffer full, return full buffer to user
  */

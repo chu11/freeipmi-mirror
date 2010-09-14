@@ -1,3 +1,7 @@
+2010-09-14  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/sel-parse/: Support Intel NM OEM sensor names.
+	
 2010-09-13  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/: Move some OEM commands from Dell to Inventec.  What
