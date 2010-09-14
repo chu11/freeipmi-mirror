@@ -64,6 +64,15 @@ struct ipmi_sel_parse_entry {
   unsigned int sel_event_record_len; /* should always be 16, but just in case */
 };
 
+struct ipmi_sel_oem_intel_node_manager {
+  int node_manager_data_parsed;
+  int node_manager_data_found;
+  uint8_t nm_health_event_sensor_number;
+  uint8_t nm_exception_event_sensor_number;
+  uint8_t nm_operational_capabilities_sensor_number;
+  uint8_t nm_alert_threshold_exceeded_sensor_number;
+};
+
 struct ipmi_sel_parse_ctx {
   uint32_t magic;
   int errnum;
@@ -85,6 +94,8 @@ struct ipmi_sel_parse_ctx {
   struct ipmi_sel_parse_entry *callback_sel_entry;
 
   ipmi_sdr_parse_ctx_t sdr_parse_ctx;
+
+  struct ipmi_sel_oem_intel_node_manager intel_node_manager;
 };
 
 #endif /* _IPMI_SEL_PARSE_DEFS_H */

@@ -1,6 +1,8 @@
 2010-09-14  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/sel-parse/: Support Intel NM OEM sensor names.
+
+	* Probe for Intel NM SDR entry as necessary.
 	
 2010-09-13  Albert Chu <chu11@llnl.gov>
 

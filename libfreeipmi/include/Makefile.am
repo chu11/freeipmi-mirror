@@ -54,6 +54,7 @@ nobase_include_HEADERS = \
 	freeipmi/record-format/ipmi-cipher-suite-record-format.h \
 	freeipmi/record-format/ipmi-fru-information-record-format.h \
 	freeipmi/record-format/ipmi-sdr-record-format.h \
+	freeipmi/record-format/ipmi-sdr-oem-record-format.h \
 	freeipmi/record-format/ipmi-sel-record-format.h \
 	freeipmi/sdr-cache/ipmi-sdr-cache.h \
 	freeipmi/sdr-parse/ipmi-sdr-parse.h \
@@ -127,6 +128,7 @@ nobase_include_HEADERS = \
 	freeipmi/templates/ipmi-cipher-suite-record-format-templates.h \
 	freeipmi/templates/ipmi-fru-information-record-format-templates.h \
 	freeipmi/templates/ipmi-sdr-record-format-templates.h \
+	freeipmi/templates/ipmi-sdr-oem-record-format-templates.h \
 	freeipmi/templates/ipmi-sel-record-format-templates.h \
 	freeipmi/util/ipmi-channel-util.h \
 	freeipmi/util/ipmi-cipher-suite-util.h \
