@@ -4927,9 +4927,6 @@ ipmi_oem_dell_get_chassis_identify_status (ipmi_oem_state_data_t *state_data)
 
   identify_status = bytes_rs[2];
 
-#define IPMI_OEM_DELL_QUERY_CHASSIS_IDENTIFY_STATUS_OFF 0x00
-#define IPMI_OEM_DELL_QUERY_CHASSIS_IDENTIFY_STATUS_ON  0x01
-
   if (identify_status == IPMI_OEM_DELL_QUERY_CHASSIS_IDENTIFY_STATUS_OFF)
     pstdout_printf (state_data->pstate, "Off\n");
   else if (identify_status == IPMI_OEM_DELL_QUERY_CHASSIS_IDENTIFY_STATUS_ON)
