@@ -327,36 +327,6 @@ struct ipmi_oem_command oem_dell[] =
       IPMI_OEM_COMMAND_FLAGS_HIDDEN,
       ipmi_oem_inventec_set_fcb_version
     },
-#if 0
-    /* legacy */
-    /* cannot verify */
-    {
-      "set-asset-tag",
-      "<asset-tag>",
-      1,
-      IPMI_OEM_COMMAND_FLAGS_HIDDEN,
-      ipmi_oem_inventec_set_asset_tag
-    },
-#endif
-#if 0
-    /* legacy */
-    /* cannot verify */
-    {
-      "get-dhcp-retry",
-      NULL,
-      0,
-      IPMI_OEM_COMMAND_FLAGS_HIDDEN,
-      ipmi_oem_inventec_get_dhcp_retry
-    },
-    /* legacy */
-    {
-      "set-dhcp-retry",
-      "<retry-count> <retry-interval> <retry-timeout>",
-      3,
-      IPMI_OEM_COMMAND_FLAGS_HIDDEN,
-      ipmi_oem_inventec_set_dhcp_retry
-    },
-#endif
     /* legacy */
     {
       "get-sol-inactivity-timeout",
