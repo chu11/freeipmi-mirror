@@ -20,9 +20,10 @@ EXTRA_DIST = \
 	manpage-common-config-file.man \
 	manpage-common-workaround-flags.man \
 	manpage-common-workaround-heading-text.man \
-	manpage-common-workaround-text.man \
-	manpage-common-workaround-config-tool.man \
+	manpage-common-workaround-inband-text.man \
+	manpage-common-workaround-outofband-text.man \
 	manpage-common-workaround-sol-only-text.man \
+	manpage-common-workaround-config-tool.man \
 	manpage-common-debug.man \
 	manpage-common-misc.man \
 	manpage-common-hostranged-options-header.man \

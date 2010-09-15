@@ -71,6 +71,55 @@
 
 #define INTEL_EVENT_BUFFER_LENGTH 4096
 
+int
+ipmi_sel_parse_output_intel_sensor_name (ipmi_sel_parse_ctx_t ctx,
+					  struct ipmi_sel_parse_entry *sel_parse_entry,
+					  uint8_t sel_record_type,
+					  char *buf,
+					  unsigned int buflen,
+					  unsigned int flags,
+					  unsigned int *wlen,
+					  struct ipmi_sel_system_event_record_data *system_event_record_data,
+					  int *oem_rv)
+{
+  assert (ctx);
+  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL);
+  assert (sel_parse_entry);
+  assert (buf);
+  assert (buflen);
+  assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
+  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (wlen);
+  assert (system_event_record_data);
+  assert (oem_rv);
+  
+  /* OEM Interpretation
+   *
+   * Intel S5500WB/Penguin Computing Relion 700
+   */
+  if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S5500WB)
+    {
+      int nmret;
+
+      if ((nmret = ipmi_sel_parse_output_intel_node_manager_sensor_name (ctx,
+									 sel_parse_entry,
+									 sel_record_type,
+									 buf,
+									 buflen,
+									 flags,
+									 wlen,
+									 system_event_record_data,
+									 oem_rv)) < 0)
+        return (-1);
+      
+      if (nmret)
+        return (1);      
+    }
+  
+  return (0);
+}
+
 /* return (0) - no OEM match
  * return (1) - OEM match
  * return (-1) - error, cleanup and return error

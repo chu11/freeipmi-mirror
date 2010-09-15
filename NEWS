@@ -9,6 +9,7 @@ o Support Intel Node Manager SEL events across Quanta S99Q, Inventec
 o Move some OEM extensions from Dell section to Inventec section in
   ipmi-oem.  Were previously thought to be additions by Dell, but in
   fact are not.  Backwards compatability supported.
+o Support 'assumeio' inband workaround globally.
 o Gracefully handle some errors in ipmi-sensors.
 o Fix in-band probing corner case.
 o Fix various parameter input checks in ipmi-oem.

@@ -207,6 +207,8 @@ parse_workaround_flags (const char *str,
         (*workaround_flags) |= IPMI_TOOL_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE;
       else if (!strcasecmp (tok, IPMI_TOOL_WORKAROUND_FLAGS_NON_EMPTY_INTEGRITY_CHECK_VALUE_STR))
         (*workaround_flags) |= IPMI_TOOL_WORKAROUND_FLAGS_NON_EMPTY_INTEGRITY_CHECK_VALUE;
+      else if (!strcasecmp (tok, IPMI_TOOL_WORKAROUND_FLAGS_ASSUME_IO_BASE_ADDRESS_STR))
+        (*workaround_flags) |= IPMI_TOOL_WORKAROUND_FLAGS_ASSUME_IO_BASE_ADDRESS;
       else if (tool_specific_workaround_flags
                && !strcasecmp (tok, IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_IGNORE_SOL_PAYLOAD_SIZE_STR))
         (*tool_specific_workaround_flags) |= IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_IGNORE_SOL_PAYLOAD_SIZE;

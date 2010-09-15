@@ -105,34 +105,52 @@ ipmi_sel_parse_output_inventec_sensor_name (ipmi_sel_parse_ctx_t ctx,
    * Inventec 5441/Dell Xanadu II
    * Inventec 5442/Dell Xanadu III
    */
-  if ((ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441
-       || ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5442)
-      && ((system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INVENTEC_BIOS 
-           && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INVENTEC_BIOS
-           && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INVENTEC_BIOS
-           && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INVENTEC_POST_START)
-          || (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INVENTEC_BIOS 
-              && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
-              && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_SYSTEM_EVENT
-              && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INVENTEC_POST_OK)
-          || (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INVENTEC_POST_ERROR_CODE
-              && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
-              && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS
-              && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INVENTEC_POST_ERROR_CODE)
-          || (system_event_record_data->generator_id == IPMI_SLAVE_ADDRESS_BMC
-              && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
-              && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS
-              && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INVENTEC_PORT80_CODE_EVENT)))
+  if (ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441
+      || ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5442)
     {
-      if (ipmi_sel_parse_string_snprintf (buf,
-					  buflen,
-					  wlen,
-					  "BIOS"))
-        (*oem_rv) = 1;
-      else
-        (*oem_rv) = 0;
+      int nmret;
+
+      if (((system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INVENTEC_BIOS 
+	    && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INVENTEC_BIOS
+	    && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INVENTEC_BIOS
+	    && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INVENTEC_POST_START)
+	   || (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INVENTEC_BIOS 
+	       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+	       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_SYSTEM_EVENT
+	       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INVENTEC_POST_OK)
+	   || (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INVENTEC_POST_ERROR_CODE
+	       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+	       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS
+	       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INVENTEC_POST_ERROR_CODE)
+	   || (system_event_record_data->generator_id == IPMI_SLAVE_ADDRESS_BMC
+	       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+	       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS
+	       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INVENTEC_PORT80_CODE_EVENT)))
+	{
+	  if (ipmi_sel_parse_string_snprintf (buf,
+					      buflen,
+					      wlen,
+					      "BIOS"))
+	    (*oem_rv) = 1;
+	  else
+	    (*oem_rv) = 0;
+	
+	  return (1);
+	}
+
+      if ((nmret = ipmi_sel_parse_output_intel_node_manager_sensor_name (ctx,
+									 sel_parse_entry,
+									 sel_record_type,
+									 buf,
+									 buflen,
+									 flags,
+									 wlen,
+									 system_event_record_data,
+									 oem_rv)) < 0)
+        return (-1);
       
-      return (1);
+      if (nmret)
+        return (1);      
     }
   
   return (0);

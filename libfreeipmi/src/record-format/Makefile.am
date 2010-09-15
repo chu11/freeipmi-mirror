@@ -9,6 +9,7 @@ librecordformat_la_CPPFLAGS = \
 
 librecordformat_la_SOURCES = \
 	ipmi-cipher-suite-record-format.c \
-	ipmi-sdr-record-format.c \
 	ipmi-fru-information-record-format.c \
+	ipmi-sdr-record-format.c \
+	ipmi-sdr-oem-record-format.c \
 	ipmi-sel-record-format.c

@@ -267,6 +267,13 @@ passed in. No resolution in FreeIPMI required.  Resolved in IPMItool
 with workaround to detect issue and use input record ID instead of
 output record ID.
 
+Inband IPMI
+-----------
+
+HP ProLiant DL145 G1: The SMBIOS/DMI tables do not properly indicate
+that KCS base address is IO instead of memory-mapped.  Resolved with
+workaround to handle situation.
+
 Misc IPMI
 ---------
 

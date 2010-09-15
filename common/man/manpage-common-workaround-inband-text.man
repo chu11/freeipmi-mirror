@@ -1,0 +1,6 @@
+.LP
+"assumeio" - This workaround option will assume inband interfaces
+communicate with system I/O rather than being memory-mapped.  This
+will work around systems that report invalid base addresses.  Those
+hitting this issue may see "device not supported" or "could not find
+inband device" errors.  Issue observed on HP ProLiant DL145 G1.

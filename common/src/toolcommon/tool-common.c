@@ -205,6 +205,9 @@ ipmi_open (const char *progname,
           goto cleanup;
         }
 
+      if (cmd_args->workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_ASSUME_IO_BASE_ADDRESS)
+        workaround_flags |= IPMI_WORKAROUND_FLAGS_ASSUME_IO_BASE_ADDRESS;
+
       if (cmd_args->driver_type == IPMI_DEVICE_UNKNOWN)
         {
           int ret;

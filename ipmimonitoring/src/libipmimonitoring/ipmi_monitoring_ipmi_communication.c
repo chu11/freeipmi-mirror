@@ -71,6 +71,7 @@ _inband_init (ipmi_monitoring_ctx_t c,
 {
   unsigned int workaround_flags;
   unsigned int flags;
+  unsigned int workaround_flags_mask = (IPMI_MONITORING_WORKAROUND_FLAGS_ASSUME_IO_BASE_ADDRESS);
 
   assert (c);
   assert (c->magic == IPMI_MONITORING_MAGIC);
@@ -82,7 +83,7 @@ _inband_init (ipmi_monitoring_ctx_t c,
                && config->driver_type != IPMI_MONITORING_DRIVER_TYPE_SSIF
                && config->driver_type != IPMI_MONITORING_DRIVER_TYPE_OPENIPMI
                && config->driver_type != IPMI_MONITORING_DRIVER_TYPE_SUNBMC))
-          || (config->workaround_flags)))
+          || (config->workaround_flags & ~workaround_flags_mask)))
     {
       c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
       return (-1);
@@ -91,7 +92,8 @@ _inband_init (ipmi_monitoring_ctx_t c,
   workaround_flags = 0;
   if (config && config->workaround_flags)
     {
-      /* No inband workarounds supported right now */
+      if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_ASSUME_IO_BASE_ADDRESS)
+        workaround_flags |= IPMI_WORKAROUND_FLAGS_ASSUME_IO_BASE_ADDRESS;
     }
 
   if ((_ipmi_monitoring_flags & IPMI_MONITORING_FLAGS_DEBUG)

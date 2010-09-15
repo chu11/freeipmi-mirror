@@ -1154,7 +1154,11 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
             conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES;
         }
     }
-  /* else - no inband workaround flags yet */
+  else
+    {
+      if (args->common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_ASSUME_IO_BASE_ADDRESS)
+        conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_ASSUME_IO_BASE_ADDRESS;
+    }
 
   if ((!args->record_ids_length && !args->ipmimonitoring_sensor_types_length)
       || output_record_ids_ptr)
