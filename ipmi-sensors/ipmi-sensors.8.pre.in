@@ -177,7 +177,8 @@ sensor state configuration file.
 Please see
 .B freeipmi_interpret_sensor.conf(5).
 #include <@top_srcdir@/common/man/manpage-common-workaround-heading-text.man>
-#include <@top_srcdir@/common/man/manpage-common-workaround-text.man>
+#include <@top_srcdir@/common/man/manpage-common-workaround-inband-text.man>
+#include <@top_srcdir@/common/man/manpage-common-workaround-outofband-text.man>
 #include <@top_srcdir@/common/man/manpage-common-oem-interpretation.man>
 .LP
 Dell Poweredge R610, Dell Poweredge R710, Supermicro X8DTH, Supermicro

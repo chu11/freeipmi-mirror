@@ -748,6 +748,7 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
   struct ipmi_locate_info locate_info;
   unsigned int seedp;
   unsigned int temp_flags = 0;
+  unsigned int workaround_flags_mask = (IPMI_WORKAROUND_FLAGS_ASSUME_IO_BASE_ADDRESS);
   unsigned int flags_mask = (IPMI_FLAGS_NONBLOCKING
                              | IPMI_FLAGS_DEBUG_DUMP
                              | IPMI_FLAGS_NO_VALID_CHECK);
@@ -765,7 +766,7 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
        && driver_type != IPMI_DEVICE_SSIF
        && driver_type != IPMI_DEVICE_OPENIPMI
        && driver_type != IPMI_DEVICE_SUNBMC)
-      || workaround_flags
+      || (workaround_flags & ~workaround_flags_mask)
       || (flags & ~flags_mask))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
@@ -841,12 +842,28 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
         }
       ctx->type = driver_type;
 
-      /* At this point we only support SYSTEM_IO, i.e. inb/outb style IO.
-         If we cant find the bass address, we better exit. -- Anand Babu */
-      if (locate_info.address_space_id != IPMI_ADDRESS_SPACE_ID_SYSTEM_IO)
+      /* IPMI Workaround
+       *
+       * Discovered on HP ProLiant DL145 G1
+       *
+       * The system uses KCS w/ an I/O base address, but the bit is
+       * set incorrectly.  Ignore it if specified by the user.
+       */
+      if (!(workaround_flags & IPMI_WORKAROUND_FLAGS_ASSUME_IO_BASE_ADDRESS))
         {
-          API_SET_ERRNUM (ctx, IPMI_ERR_DEVICE_NOT_SUPPORTED);
-          goto cleanup;
+          /* At this point we only support SYSTEM_IO, i.e. inb/outb style IO.
+           * If we cant find the bass address, we better exit.
+           * -- Anand Babu
+           */
+
+          /* achu: IPMI spec indicates KCS is only IO, not Memory
+           * based.  Memory based KCS is not part of IPMI spec
+           */
+          if (locate_info.address_space_id != IPMI_ADDRESS_SPACE_ID_SYSTEM_IO)
+            {
+              API_SET_ERRNUM (ctx, IPMI_ERR_DEVICE_NOT_SUPPORTED);
+              goto cleanup;
+            }
         }
 
       if (!(ctx->io.inband.kcs_ctx = ipmi_kcs_ctx_create ()))

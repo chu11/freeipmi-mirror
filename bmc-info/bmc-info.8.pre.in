@@ -54,7 +54,8 @@ Display only channel information.
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-localhost.man>
 #include <@top_srcdir@/common/man/manpage-common-troubleshooting.man>
 #include <@top_srcdir@/common/man/manpage-common-workaround-heading-text.man>
-#include <@top_srcdir@/common/man/manpage-common-workaround-text.man>
+#include <@top_srcdir@/common/man/manpage-common-workaround-inband-text.man>
+#include <@top_srcdir@/common/man/manpage-common-workaround-outofband-text.man>
 #include <@top_srcdir@/common/man/manpage-common-oem-interpretation.man>
 .LP
 Dell Poweredge R610, Dell Poweredge R710, Intel SR870BN4/Tiger4

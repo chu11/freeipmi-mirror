@@ -1,3 +1,7 @@
+2010-09-15  Albert Chu <chu11@llnl.gov>
+
+	* Support 'assumeio' inband workaround.
+	
 2010-09-14  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/sel-parse/: Support Intel NM OEM sensor names.

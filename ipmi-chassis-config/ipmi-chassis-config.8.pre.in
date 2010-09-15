@@ -82,7 +82,8 @@ always be blank.
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-localhost.man>
 #include <@top_srcdir@/common/man/manpage-common-troubleshooting.man>
 #include <@top_srcdir@/common/man/manpage-common-workaround-heading-text.man>
-#include <@top_srcdir@/common/man/manpage-common-workaround-text.man>
+#include <@top_srcdir@/common/man/manpage-common-workaround-inband-text.man>
+#include <@top_srcdir@/common/man/manpage-common-workaround-outofband-text.man>
 #include <@top_srcdir@/common/man/manpage-common-workaround-config-tool.man>
 .SH "EXAMPLES"
 .B # ipmi-chassis-config --checkout 

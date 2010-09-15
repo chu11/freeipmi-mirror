@@ -57,7 +57,8 @@ Specify a file to read command requests from.
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-localhost.man>
 #include <@top_srcdir@/common/man/manpage-common-troubleshooting.man>
 #include <@top_srcdir@/common/man/manpage-common-workaround-heading-text.man>
-#include <@top_srcdir@/common/man/manpage-common-workaround-text.man>
+#include <@top_srcdir@/common/man/manpage-common-workaround-inband-text.man>
+#include <@top_srcdir@/common/man/manpage-common-workaround-outofband-text.man>
 .SH "EXAMPLES"
 .B # ipmi-raw 0 6 01
 .PP 

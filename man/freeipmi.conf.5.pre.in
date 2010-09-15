@@ -112,9 +112,9 @@ levels are supported: USER, OPERATOR, ADMIN.
 Specify default workaround flags to use.  Multiple workarounds can be
 specified separated by whitespace.  Please see tool manpages for
 details about available workarounds for each tool.  The following
-workarounds are supported: idzero, forcepermsg, unexpectedauth,
-endianseq, authcap, solpayloadsize, solport, intel20, supermicro20,
-sun20.
+workarounds are supported: assumeio, idzero, forcepermsg,
+unexpectedauth, endianseq, authcap, solpayloadsize, solport, intel20,
+supermicro20, sun20.
 
 .SH "SDR OPTIONS"
 The following options are specific to tools that use the sensor 
