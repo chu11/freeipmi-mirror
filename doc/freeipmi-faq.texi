@@ -129,31 +129,38 @@ Corp. are now at Zresearch Inc.)
 @node What operating systems does FreeIPMI run on?, FreeIPMI vs OpenIPMI vs Ipmitool vs Ipmiutil, How did FreeIPMI start?, Top
 @section What operating systems does FreeIPMI run on?
 
-FreeIPMI was originally developed on GNU/Linux.  It has been confirmed to
-be built on most major GNU/Linux distributions such as Redhat, Fedora,
-Suse, and Debian.  FreeIPMI has been ported and confirmed to work on
-atleast FreeBSD, OpenBSD, Solaris, OpenSolaris, and Windows via
-Cygwin.  We imagine it would build cleanly on other GNU/Linux
-distributions and Unix operating systems.  If it doesn't, it should be
-easily portable to them.
+FreeIPMI was originally developed on GNU/Linux.  It has been confirmed
+to be built on most major GNU/Linux distributions such as Redhat,
+Fedora, Suse, and Debian.  FreeIPMI has been ported and confirmed to
+work on atleast FreeBSD, OpenBSD, Solaris, OpenSolaris, and Windows
+via Cygwin.  We imagine it would build cleanly on other operating
+systems.  If it doesn't, it should be easily portable to them.
 
 @node FreeIPMI vs OpenIPMI vs Ipmitool vs Ipmiutil, What is special about FreeIPMI, What operating systems does FreeIPMI run on?, Top
-@section What is the relationship between FreeIPMI, OpenIPMI, Ipmitool, and Ipmiutil? 
+@section What are the differences between FreeIPMI, OpenIPMI, Ipmitool, and Ipmiutil? 
 There are multiple implementations, APIs, interfaces, end user
 requirements, etc. that one can choose when developing IPMI drivers,
-libraries, and tools.  FreeIPMI has taken some different
-approaches than other open-source projects.
+libraries, and tools.  FreeIPMI has taken some different approaches
+than other open-source projects.
+
+The section below points out a number of the reasons why we feel
+FreeIPMI is particularly special compared to the other projects.
+
+The Ipmiutil project has a good chart describing many of the
+differences between the projects:
+@uref{http://ipmiutil.sourceforge.net/docs/ipmisw-compare.htm}.
 
 @node What is special about FreeIPMI, Serial Over LAN (SOL) / Ipmiconsole Setup, FreeIPMI vs OpenIPMI vs Ipmitool vs Ipmiutil, Top
 @section What is special about FreeIPMI compared to other open source IPMI projects?
 
 In our eyes, there are several reasons why FreeIPMI is particularly special.
 
-1) Support for HPC
+1) Support for HPC and large data centers
 
-A number of HPC aspects have been added to the tools and/or are
-supported by other HPC software due to the need for FreeIPMI to work
-on LLNL's GNU/Linux clusters.
+A number of features have been added into the tools to support HPC
+and/or large data centers.  Much of this original support was added to
+support the large cluster environments at Lawrence Livermore National
+Laboratory (LLNL).
 
 Scalable parallel execution of many FreeIPMI tools (ipmi-sensors,
 ipmi-sel, bmc-info, etc.) across a cluster is supported through
@@ -205,7 +212,8 @@ Auxiliary Firmware Revision Information : 38420000h
 
 In the above example, its clear to see that pwopr[2-4] have different
 firmware than pwopr[0-1,5].  More information about hostrange support
-can be found in the document freeipmi-hostrange.txt.
+can be found in the document freeipmi-hostrange.txt
+(@uref{http://www.gnu.org/software/freeipmi/freeipmi-hostrange.txt}).
 
 Ipmipower is capable of scaling to large nodes for cluster support
 and is supported by Powerman (@uref{http://sourceforge.net/projects/powerman})
@@ -222,9 +230,9 @@ readings as well as just reporting them.  It can be used for host
 monitoring IPMI sensor severity on a cluster.  By mapping sensor
 readings into NOMINAL, WARNING, or CRITICAL states, it makes
 monitoring sensors easier across large numbers of nodes.  Skummee
-(@uref{http://sourceforge.net/projects/skummee}) 
-uses libipmimonitoring on LLNL clusters up to 1152 nodes in size.  
-FreeIPMI monitoring plugins
+(@uref{http://sourceforge.net/projects/skummee}) currently uses
+libipmimonitoring to monitoring sensors on LLNL clusters of up to 2000
+nodes in size.  FreeIPMI sensor monitoring plugins
 for Ganglia 
 (@uref{http://ganglia.info/}) 
 and Nagios 
@@ -236,7 +244,10 @@ Ipmi-sel and libipmimonitoring are capable of interpreting system
 event log (SEL) entries as well as just reporting them.  It can be
 used for host monitoring IPMI event severity on a cluster.  By mapping
 events into NOMINAL, WARNING, or CRITICAL states, it makes monitoring
-system events easier across large numbers of nodes.
+system events easier across large numbers of nodes.  Skummee
+(@uref{http://sourceforge.net/projects/skummee}) currently uses
+libipmimonitoring to monitoring the SEL on LLNL clusters of up to 2000
+nodes in size.
 
 The bmc-config, ipmi-chassis-config, ipmi-pef-config,
 ipmi-sensors-config, and configuration file and command-line interface
@@ -254,7 +265,7 @@ temporarily removed for servicing.
 
 FreeIPMI contains support for a number of OEM extensions and OEM
 sensors and/or events.  Ipmi-oem currently supports OEM command
-extensions from Dell, Fujitsu, IBM, Inventec, Quanta, Sun
+extensions from Dell, Fujitsu, IBM, Intel, Inventec, Quanta, Sun
 Microsystems, and Supermicro.  Ipmi-sensors and Ipmi-sel support OEM
 sensors and/or events from Dell, Intel, Inventec, Quanta, Sun
 Microsystems, and Supermicro.
@@ -264,7 +275,7 @@ Microsystems, and Supermicro.
 By implementing various IPMI sub-sections into multiple tools, each
 tool is capable of providing the user with more flexibility and
 ultimately more features in addition to those listed above.  It may
-not be as easy (or architecturally possible) to do in a all-in-one
+not be as easy (or architecturally possible) to do in an all-in-one
 tool.
 
 4) Easy setup
@@ -277,7 +288,6 @@ build/setup/manage any kernel modules/drivers.
 Likewise, by implementing everything in userspace libraries and tools,
 portability to multiple operating systems and architectures should be
 easier.
-
 
 @node Serial Over LAN (SOL) / Ipmiconsole Setup, SSIF Driver Configuration, What is special about FreeIPMI, Top
 @section What setup is needed for Serial over LAN (SOL) or Ipmiconsole
