@@ -776,7 +776,7 @@ Command confirmed to work on Quanta S99Q (Dell FS12-TY) for \fIs99q\fR.
 .B get-led
 This OEM command will output current LED mode.  \fIoff\fR
 indicates the LED is steady off, \fIon\fR indicates the LED is steady
-on, \fIstandby\fR indicates teh LED blinks at a 100ms on, 2900ms off
+on, \fIstandby\fR indicates the LED blinks at a 100ms on, 2900ms off
 rate, \fIslow\fR indicates the LED is blinking at 1Hz, and \fIfast\fR
 indicates the LED is blinking at 4Hz.
 If the verbose option is set, sensor names will be output with their
