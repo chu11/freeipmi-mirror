@@ -276,14 +276,20 @@ By implementing various IPMI sub-sections into multiple tools, each
 tool is capable of providing the user with more flexibility and
 ultimately more features in addition to those listed above.  It may
 not be as easy (or architecturally possible) to do in an all-in-one
-tool.
+tool.  
 
-4) Easy setup
+4) Extra IPMI support
+
+In addition to the features listed above, FreeIPMI also supports the
+Data Center Management Interface, or DCMI, via the FreeIPMI tool
+ipmi-dcmi.
+
+5) Easy setup
 
 By implementing drivers in userspace libraries, there is no need to
 build/setup/manage any kernel modules/drivers.
 
-5) Portability
+6) Portability
 
 Likewise, by implementing everything in userspace libraries and tools,
 portability to multiple operating systems and architectures should be
