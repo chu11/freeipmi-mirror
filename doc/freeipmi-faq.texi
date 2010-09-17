@@ -215,12 +215,13 @@ firmware than pwopr[0-1,5].  More information about hostrange support
 can be found in the document freeipmi-hostrange.txt
 (@uref{http://www.gnu.org/software/freeipmi/freeipmi-hostrange.txt}).
 
-Ipmipower is capable of scaling to large nodes for cluster support
-and is supported by Powerman (@uref{http://sourceforge.net/projects/powerman})
-for scalable power management.  At LLNL, in conjunction with Powerman,
-ipmipower is used for power control on clusters ranging from sizes of
-4 to 1152.  It is capable of power controlling all of the nodes in the
-largest clusters in under a second.
+Ipmipower is capable of scaling to large nodes for cluster support and
+is supported by Powerman
+(@uref{http://sourceforge.net/projects/powerman}) for scalable power
+management.  At LLNL, in conjunction with Powerman, ipmipower is used
+for power control on clusters ranging from sizes of 4 to 2000.  It has
+been used to determine power status or power control LLNL's largest
+clusters in under a second.
 
 Ipmiconsole is currently supported by Conman
 (@uref{http://conman.googlecode.com/}) for scalable console management.
