@@ -121,24 +121,6 @@ extern "C" {
  * issues in which the remote system does not properly report username
  * capabilities, authentication capabilities, or K_g status.
  *
- * IGNORE_SOL_PAYLOAD_SIZE
- *
- * This workaround flag will not check for valid SOL payload sizes and
- * assume a proper set.  It works around remote systems that report
- * invalid IPMI 2.0 SOL payload sizes.
- *
- * IGNORE_SOL_PORT
- *
- * This workaround flag will ignore alternate SOL ports specified
- * during the protocol.  It works around remote systems that report
- * invalid alternate SOL ports.
- *
- * SKIP_SOL_ACTIVATION_STATUS
- *
- * This workaround flag will not check the current activation status
- * of SOL during the protocol setup.  It works around remote systems
- * that do not properly support this command.
- *
  * INTEL_2_0_SESSION
  *
  * This workaround flag will work around several Intel IPMI 2.0
@@ -179,18 +161,36 @@ extern "C" {
  * Suite ID 0.  The integrity check value should be 0 length, however
  * the remote motherboard responds with a non-empty field.
  *
- * Note: The non-logical bitmask order below is set for consistency of
- * masks with libfreeipmi bitmasks.
+ * IGNORE_SOL_PAYLOAD_SIZE
+ *
+ * This workaround flag will not check for valid SOL payload sizes and
+ * assume a proper set.  It works around remote systems that report
+ * invalid IPMI 2.0 SOL payload sizes.
+ *
+ * IGNORE_SOL_PORT
+ *
+ * This workaround flag will ignore alternate SOL ports specified
+ * during the protocol.  It works around remote systems that report
+ * invalid alternate SOL ports.
+ *
+ * SKIP_SOL_ACTIVATION_STATUS
+ *
+ * This workaround flag will not check the current activation status
+ * of SOL during the protocol setup.  It works around remote systems
+ * that do not properly support this command.
+ *
+ * Note: The non-logical bitmask order below is set for future
+ * expansion and matching w/ libfreeipmi.
  */
-#define IPMICONSOLE_WORKAROUND_AUTHENTICATION_CAPABILITIES     0x00000010
-#define IPMICONSOLE_WORKAROUND_IGNORE_SOL_PAYLOAD_SIZE         0x00010000
-#define IPMICONSOLE_WORKAROUND_IGNORE_SOL_PORT                 0x00020000
-#define IPMICONSOLE_WORKAROUND_SKIP_SOL_ACTIVATION_STATUS      0x00040000
-#define IPMICONSOLE_WORKAROUND_INTEL_2_0_SESSION               0x01000000
-#define IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0_SESSION          0x02000000
-#define IPMICONSOLE_WORKAROUND_SUN_2_0_SESSION                 0x04000000
-#define IPMICONSOLE_WORKAROUND_OPEN_SESSION_PRIVILEGE          0x08000000
-#define IPMICONSOLE_WORKAROUND_NON_EMPTY_INTEGRITY_CHECK_VALUE 0x10000000
+#define IPMICONSOLE_WORKAROUND_AUTHENTICATION_CAPABILITIES     0x00000001
+#define IPMICONSOLE_WORKAROUND_INTEL_2_0_SESSION               0x00000002
+#define IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0_SESSION          0x00000004
+#define IPMICONSOLE_WORKAROUND_SUN_2_0_SESSION                 0x00000008
+#define IPMICONSOLE_WORKAROUND_OPEN_SESSION_PRIVILEGE          0x00000010
+#define IPMICONSOLE_WORKAROUND_NON_EMPTY_INTEGRITY_CHECK_VALUE 0x00000020
+#define IPMICONSOLE_WORKAROUND_IGNORE_SOL_PAYLOAD_SIZE         0x01000000
+#define IPMICONSOLE_WORKAROUND_IGNORE_SOL_PORT                 0x02000000
+#define IPMICONSOLE_WORKAROUND_SKIP_SOL_ACTIVATION_STATUS      0x04000000
 
 /*
  * Engine Flags

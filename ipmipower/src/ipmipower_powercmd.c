@@ -284,9 +284,9 @@ ipmipower_powercmd_queue (power_cmd_t cmd, struct ipmipower_connection *ic)
        * instead of a real privilege level.  So we must pass the actual
        * privilege we want to use.
        */
-      if (cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_INTEL_2_0_SESSION
-          || cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_SUN_2_0_SESSION
-          || cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE)
+      if (cmd_args.common.workaround_flags_outofband_2_0 & IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION
+          || cmd_args.common.workaround_flags_outofband_2_0 & IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUN_2_0_SESSION
+          || cmd_args.common.workaround_flags_outofband_2_0 & IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_OPEN_SESSION_PRIVILEGE)
         ip->requested_maximum_privilege_level = cmd_args.common.privilege_level;
       else
         ip->requested_maximum_privilege_level = IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL;
@@ -810,7 +810,7 @@ _recv_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
        * The session sequence numbers for IPMI 1.5 are the wrong endian.
        * So we have to flip the bits to workaround it.
        */
-      if (cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER)
+      if (cmd_args.common.workaround_flags_outofband & IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_BIG_ENDIAN_SEQUENCE_NUMBER)
         {
           uint32_t tmp_session_sequence_number = ip->highest_received_sequence_number;
           
@@ -1352,7 +1352,7 @@ _check_ipmi_1_5_authentication_capabilities (ipmipower_powercmd_t ip,
    * vs. null vs non-null username capabilities. The workaround is to
    * skip these checks.
    */
-  if (!(cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES))
+  if (!(cmd_args.common.workaround_flags_outofband & IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_AUTHENTICATION_CAPABILITIES))
     {
       if ((ret = ipmi_check_authentication_capabilities_username (cmd_args.common.username,
                                                                   cmd_args.common.password,
@@ -1378,7 +1378,7 @@ _check_ipmi_1_5_authentication_capabilities (ipmipower_powercmd_t ip,
    * Authentication capabilities flags are not listed properly in the
    * response.  The workaround is to skip these checks.
    */
-  if (!(cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES))
+  if (!(cmd_args.common.workaround_flags_outofband & IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_AUTHENTICATION_CAPABILITIES))
     {
       if ((ret = ipmi_check_authentication_capabilities_authentication_type (cmd_args.common.authentication_type,
                                                                              ip->obj_authentication_capabilities_res)) < 0)
@@ -1402,7 +1402,7 @@ _check_ipmi_1_5_authentication_capabilities (ipmipower_powercmd_t ip,
    * The remote BMC ignores if permsg authentiction is enabled
    * or disabled.  So we need to force it no matter what.
    */
-  if (!(cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION))
+  if (!(cmd_args.common.workaround_flags_outofband & IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_FORCE_PERMSG_AUTHENTICATION))
     {
       if (!authentication_status_per_message_authentication)
         ip->permsgauth_enabled = 1;
@@ -1452,7 +1452,7 @@ _check_ipmi_2_0_authentication_capabilities (ipmipower_powercmd_t ip)
    *
    * K_g status is reported incorrectly too.  Again, skip the checks.
    */
-  if (!(cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES))
+  if (!(cmd_args.common.workaround_flags_outofband_2_0 & IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_AUTHENTICATION_CAPABILITIES))
     {
       if ((ret = ipmi_check_authentication_capabilities_username (cmd_args.common.username,
                                                                   cmd_args.common.password,
@@ -1517,7 +1517,7 @@ _check_activate_session_authentication_type (ipmipower_powercmd_t ip)
     }
   authentication_type = val;
 
-  if (cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION)
+  if (cmd_args.common.workaround_flags_outofband & IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_FORCE_PERMSG_AUTHENTICATION)
     return (0);
 
   /* IPMI Workaround (achu)
@@ -1596,7 +1596,7 @@ _calculate_cipher_keys (ipmipower_powercmd_t ip)
    * allowed.  "No Null characters (00h) are allowed in the name".
    * Table 13-11 in the IPMI 2.0 spec.
    */
-  if (cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
+  if (cmd_args.common.workaround_flags_outofband_2_0 & IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION)
     {
       memset (username_buf, '\0', IPMI_MAX_USER_NAME_LENGTH+1);
       if (cmd_args.common.username)
@@ -1623,7 +1623,7 @@ _calculate_cipher_keys (ipmipower_powercmd_t ip)
    * password to 16 bytes when generating keys, hashes, etc.  So we
    * have to do the same when generating keys, hashes, etc.
    */
-  if ((cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
+  if ((cmd_args.common.workaround_flags_outofband_2_0 & IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION)
       && ip->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
       && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
     password_len = IPMI_1_5_MAX_PASSWORD_LENGTH;

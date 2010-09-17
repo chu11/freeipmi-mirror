@@ -90,18 +90,25 @@ enum ipmi_driver_type
 };
 typedef enum ipmi_driver_type ipmi_driver_type_t;
 
-#define IPMI_WORKAROUND_FLAGS_DEFAULT                         0x00000000
-#define IPMI_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO          0x00000001 /* IPMI 1.5  only */
-#define IPMI_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION     0x00000002 /* IPMI 1.5  only */
-#define IPMI_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE       0x00000004 /* IPMI 1.5  only */
-#define IPMI_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER      0x00000008 /* IPMI 1.5  only */
-#define IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES     0x00000010 /* IPMI 1.5 and 2.0 */
-#define IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION               0x01000000 /* IPMI 2.0  only */
-#define IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION          0x02000000 /* IPMI 2.0  only */
-#define IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION                 0x04000000 /* IPMI 2.0  only */
-#define IPMI_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE          0x08000000 /* IPMI 2.0  only */
-#define IPMI_WORKAROUND_FLAGS_NON_EMPTY_INTEGRITY_CHECK_VALUE 0x10000000 /* IPMI 2.0  only */
-#define IPMI_WORKAROUND_FLAGS_ASSUME_IO_BASE_ADDRESS          0x00001000 /* Inband Only */
+#define IPMI_WORKAROUND_FLAGS_DEFAULT                                       0x00000000
+
+/* For use w/ ipmi_ctx_open_outofband() */
+#define IPMI_WORKAROUND_FLAGS_OUTOFBAND_AUTHENTICATION_CAPABILITIES         0x00000001
+#define IPMI_WORKAROUND_FLAGS_OUTOFBAND_ACCEPT_SESSION_ID_ZERO              0x00000002
+#define IPMI_WORKAROUND_FLAGS_OUTOFBAND_FORCE_PERMSG_AUTHENTICATION         0x00000004
+#define IPMI_WORKAROUND_FLAGS_OUTOFBAND_CHECK_UNEXPECTED_AUTHCODE           0x00000008
+#define IPMI_WORKAROUND_FLAGS_OUTOFBAND_BIG_ENDIAN_SEQUENCE_NUMBER          0x00000010
+
+/* For use w/ ipmi_ctx_open_outofband_2_0() */
+#define IPMI_WORKAROUND_FLAGS_OUTOFBAND_2_0_AUTHENTICATION_CAPABILITIES     0x00000001
+#define IPMI_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION               0x00000002
+#define IPMI_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUPERMICRO_2_0_SESSION          0x00000004
+#define IPMI_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUN_2_0_SESSION                 0x00000008
+#define IPMI_WORKAROUND_FLAGS_OUTOFBAND_2_0_OPEN_SESSION_PRIVILEGE          0x00000010
+#define IPMI_WORKAROUND_FLAGS_OUTOFBAND_2_0_NON_EMPTY_INTEGRITY_CHECK_VALUE 0x00000020
+
+/* For use w/ ipmi_ctx_open_inband() or ipmi_ctx_find_inband() */
+#define IPMI_WORKAROUND_FLAGS_INBAND_ASSUME_IO_BASE_ADDRESS                 0x00000001
 
 /* NONBLOCKING - for inband only
  *
@@ -132,6 +139,7 @@ int ipmi_ctx_get_flags (ipmi_ctx_t ctx, unsigned int *flags);
 /* for changing flags mid-operation for corner cases */
 int ipmi_ctx_set_flags (ipmi_ctx_t ctx, unsigned int flags);
 
+/* For IPMI 1.5 sessions */
 int ipmi_ctx_open_outofband (ipmi_ctx_t ctx,
                              const char *hostname,
                              const char *username,
@@ -143,6 +151,7 @@ int ipmi_ctx_open_outofband (ipmi_ctx_t ctx,
                              unsigned int workaround_flags,
                              unsigned int flags);
 
+/* For IPMI 2.0 sessions */
 int ipmi_ctx_open_outofband_2_0 (ipmi_ctx_t ctx,
                                  const char *hostname,
                                  const char *username,
@@ -156,6 +165,7 @@ int ipmi_ctx_open_outofband_2_0 (ipmi_ctx_t ctx,
                                  unsigned int workaround_flags,
                                  unsigned int flags);
 
+/* For inband sessions */
 int ipmi_ctx_open_inband (ipmi_ctx_t ctx,
                           ipmi_driver_type_t driver_type,
                           int disable_auto_probe,

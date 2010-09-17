@@ -71,7 +71,7 @@ _inband_init (ipmi_monitoring_ctx_t c,
 {
   unsigned int workaround_flags;
   unsigned int flags;
-  unsigned int workaround_flags_mask = (IPMI_MONITORING_WORKAROUND_FLAGS_ASSUME_IO_BASE_ADDRESS);
+  unsigned int workaround_flags_mask = (IPMI_MONITORING_WORKAROUND_FLAGS_INBAND_ASSUME_IO_BASE_ADDRESS);
 
   assert (c);
   assert (c->magic == IPMI_MONITORING_MAGIC);
@@ -92,8 +92,8 @@ _inband_init (ipmi_monitoring_ctx_t c,
   workaround_flags = 0;
   if (config && config->workaround_flags)
     {
-      if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_ASSUME_IO_BASE_ADDRESS)
-        workaround_flags |= IPMI_WORKAROUND_FLAGS_ASSUME_IO_BASE_ADDRESS;
+      if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_INBAND_ASSUME_IO_BASE_ADDRESS)
+        workaround_flags |= IPMI_WORKAROUND_FLAGS_INBAND_ASSUME_IO_BASE_ADDRESS;
     }
 
   if ((_ipmi_monitoring_flags & IPMI_MONITORING_FLAGS_DEBUG)
@@ -200,11 +200,11 @@ _ipmi_1_5_init (ipmi_monitoring_ctx_t c,
   unsigned int retransmission_timeout_len;
   unsigned int workaround_flags;
   unsigned int flags;
-  unsigned int workaround_flags_mask = (IPMI_MONITORING_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO
-                                        | IPMI_MONITORING_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION
-                                        | IPMI_MONITORING_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE
-                                        | IPMI_MONITORING_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER
-                                        | IPMI_MONITORING_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES);
+  unsigned int workaround_flags_mask = (IPMI_MONITORING_WORKAROUND_FLAGS_PROTOCOL_VERSION_1_5_AUTHENTICATION_CAPABILITIES
+                                        | IPMI_MONITORING_WORKAROUND_FLAGS_PROTOCOL_VERSION_1_5_ACCEPT_SESSION_ID_ZERO
+                                        | IPMI_MONITORING_WORKAROUND_FLAGS_PROTOCOL_VERSION_1_5_FORCE_PERMSG_AUTHENTICATION
+                                        | IPMI_MONITORING_WORKAROUND_FLAGS_PROTOCOL_VERSION_1_5_CHECK_UNEXPECTED_AUTHCODE
+                                        | IPMI_MONITORING_WORKAROUND_FLAGS_PROTOCOL_VERSION_1_5_BIG_ENDIAN_SEQUENCE_NUMBER);
 
   assert (c);
   assert (c->magic == IPMI_MONITORING_MAGIC);
@@ -275,16 +275,16 @@ _ipmi_1_5_init (ipmi_monitoring_ctx_t c,
   workaround_flags = 0;
   if (config && config->workaround_flags)
     {
-      if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO)
-        workaround_flags |= IPMI_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO;
-      if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION)
-        workaround_flags |= IPMI_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION;
-      if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE)
-        workaround_flags |= IPMI_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE;
-      if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER)
-        workaround_flags |= IPMI_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER;
-      if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES)
-        workaround_flags |= IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES;
+      if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_PROTOCOL_VERSION_1_5_ACCEPT_SESSION_ID_ZERO)
+        workaround_flags |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_ACCEPT_SESSION_ID_ZERO;
+      if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_PROTOCOL_VERSION_1_5_FORCE_PERMSG_AUTHENTICATION)
+        workaround_flags |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_FORCE_PERMSG_AUTHENTICATION;
+      if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_PROTOCOL_VERSION_1_5_CHECK_UNEXPECTED_AUTHCODE)
+        workaround_flags |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_CHECK_UNEXPECTED_AUTHCODE;
+      if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_PROTOCOL_VERSION_1_5_BIG_ENDIAN_SEQUENCE_NUMBER)
+        workaround_flags |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_BIG_ENDIAN_SEQUENCE_NUMBER;
+      if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_PROTOCOL_VERSION_1_5_AUTHENTICATION_CAPABILITIES)
+        workaround_flags |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_AUTHENTICATION_CAPABILITIES;
     }
 
   if ((_ipmi_monitoring_flags & IPMI_MONITORING_FLAGS_DEBUG)
@@ -351,12 +351,12 @@ _ipmi_2_0_init (ipmi_monitoring_ctx_t c,
   unsigned int retransmission_timeout_len;
   unsigned int workaround_flags;
   unsigned int flags;
-  unsigned workaround_flags_mask = (IPMI_MONITORING_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES
-                                    | IPMI_MONITORING_WORKAROUND_FLAGS_INTEL_2_0_SESSION
-                                    | IPMI_MONITORING_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION
-                                    | IPMI_MONITORING_WORKAROUND_FLAGS_SUN_2_0_SESSION
-                                    | IPMI_MONITORING_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE
-                                    | IPMI_MONITORING_WORKAROUND_FLAGS_NON_EMPTY_INTEGRITY_CHECK_VALUE);
+  unsigned workaround_flags_mask = (IPMI_MONITORING_WORKAROUND_FLAGS_PROTOCOL_VERSION_2_0_AUTHENTICATION_CAPABILITIES
+                                    | IPMI_MONITORING_WORKAROUND_FLAGS_PROTOCOL_VERSION_2_0_INTEL_2_0_SESSION
+                                    | IPMI_MONITORING_WORKAROUND_FLAGS_PROTOCOL_VERSION_2_0_SUPERMICRO_2_0_SESSION
+                                    | IPMI_MONITORING_WORKAROUND_FLAGS_PROTOCOL_VERSION_2_0_SUN_2_0_SESSION
+                                    | IPMI_MONITORING_WORKAROUND_FLAGS_PROTOCOL_VERSION_2_0_OPEN_SESSION_PRIVILEGE
+                                    | IPMI_MONITORING_WORKAROUND_FLAGS_PROTOCOL_VERSION_2_0_NON_EMPTY_INTEGRITY_CHECK_VALUE);
   assert (c);
   assert (c->magic == IPMI_MONITORING_MAGIC);
   assert (c->ipmi_ctx);
@@ -423,18 +423,18 @@ _ipmi_2_0_init (ipmi_monitoring_ctx_t c,
   workaround_flags = 0;
   if (config && config->workaround_flags)
     {
-      if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES)
-        workaround_flags |= IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES;
-      if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
-        workaround_flags |= IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION;
-      if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION)
-        workaround_flags |= IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION;
-      if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_SUN_2_0_SESSION)
-        workaround_flags |= IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION;
-      if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE)
-        workaround_flags |= IPMI_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE;
-      if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_NON_EMPTY_INTEGRITY_CHECK_VALUE)
-        workaround_flags |= IPMI_WORKAROUND_FLAGS_NON_EMPTY_INTEGRITY_CHECK_VALUE;
+      if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_PROTOCOL_VERSION_2_0_AUTHENTICATION_CAPABILITIES)
+        workaround_flags |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_2_0_AUTHENTICATION_CAPABILITIES;
+      if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_PROTOCOL_VERSION_2_0_INTEL_2_0_SESSION)
+        workaround_flags |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION;
+      if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_PROTOCOL_VERSION_2_0_SUPERMICRO_2_0_SESSION)
+        workaround_flags |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUPERMICRO_2_0_SESSION;
+      if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_PROTOCOL_VERSION_2_0_SUN_2_0_SESSION)
+        workaround_flags |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUN_2_0_SESSION;
+      if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_PROTOCOL_VERSION_2_0_OPEN_SESSION_PRIVILEGE)
+        workaround_flags |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_2_0_OPEN_SESSION_PRIVILEGE;
+      if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_PROTOCOL_VERSION_2_0_NON_EMPTY_INTEGRITY_CHECK_VALUE)
+        workaround_flags |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_2_0_NON_EMPTY_INTEGRITY_CHECK_VALUE;
     }
 
   if ((_ipmi_monitoring_flags & IPMI_MONITORING_FLAGS_DEBUG)

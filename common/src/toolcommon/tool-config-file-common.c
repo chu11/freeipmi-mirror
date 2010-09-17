@@ -59,12 +59,12 @@ struct cmd_args_config
   int privilege_level;
   int privilege_level_set;
   int tool_option_privilege_level_set;
-  unsigned int workaround_flags;
-  int workaround_flags_set;
-  int tool_option_workaround_flags_set;
+  unsigned int workaround_flags_outofband;
+  unsigned int workaround_flags_outofband_2_0;
+  unsigned int workaround_flags_inband;
   unsigned int tool_specific_workaround_flags;
-  int tool_specific_workaround_flags_set;
-  int tool_option_tool_specific_workaround_flags_set;
+  int workaround_flags_set;
+  int tool_option_workaround_flags_set; /* for internal parsing check */
 };
 
 int
@@ -423,28 +423,28 @@ config_file_workaround_flags (conffile_t cf,
   if (cmd_args_config->tool_option_workaround_flags_set)
     return (0);
 
-  cmd_args_config->workaround_flags = 0;
+  cmd_args_config->workaround_flags_outofband = 0;
+  cmd_args_config->workaround_flags_outofband_2_0 = 0;
+  cmd_args_config->workaround_flags_inband = 0;
   cmd_args_config->tool_specific_workaround_flags = 0;
 
   for (i = 0; i < data->stringlist_len; i++)
     {
-      unsigned int tmp1, tmp2;
+      unsigned int tmp1, tmp2, tmp3, tmp4;
 
-      if (parse_workaround_flags (data->stringlist[i], &tmp1, &tmp2) < 0)
+      if (parse_workaround_flags (data->stringlist[i], &tmp1, &tmp2, &tmp3, &tmp4) < 0)
         {
           fprintf (stderr, "Config File Error: invalid value for %s\n", optionname);
           exit (1);
         }
       
-      if (tmp1)
+      if (tmp1 || tmp2 || tmp3 || tmp4)
         {
-          cmd_args_config->workaround_flags |= tmp1;
+          cmd_args_config->workaround_flags_outofband |= tmp1;
+          cmd_args_config->workaround_flags_outofband_2_0 |= tmp2;
+          cmd_args_config->workaround_flags_inband |= tmp3;
+          cmd_args_config->tool_specific_workaround_flags |= tmp4;
           cmd_args_config->workaround_flags_set++;
-        }
-      if (tmp2)
-        {
-          cmd_args_config->tool_specific_workaround_flags |= tmp2;
-          cmd_args_config->tool_specific_workaround_flags_set++;
         }
     }
 
@@ -671,31 +671,29 @@ config_file_tool_option_workaround_flags (conffile_t cf,
 
   cmd_args_config = (struct cmd_args_config *)option_ptr;
 
-  cmd_args_config->workaround_flags = 0;
+  cmd_args_config->workaround_flags_outofband = 0;
+  cmd_args_config->workaround_flags_outofband_2_0 = 0;
+  cmd_args_config->workaround_flags_inband = 0;
+  cmd_args_config->tool_specific_workaround_flags = 0;
 
   for (i = 0; i < data->stringlist_len; i++)
     {
-      unsigned int tmp1, tmp2;
+      unsigned int tmp1, tmp2, tmp3, tmp4;
 
-      if (parse_workaround_flags (data->stringlist[i], &tmp1, &tmp2) < 0)
+      if (parse_workaround_flags (data->stringlist[i], &tmp1, &tmp2, &tmp3, &tmp4) < 0)
         {
           fprintf (stderr, "Config File Error: invalid value for %s\n", optionname);
           exit (1);
         }
       
-      if (tmp1)
+      if (tmp1 || tmp2 || tmp3 || tmp4)
         {
-          cmd_args_config->workaround_flags |= tmp1;
-          cmd_args_config->workaround_flags_set++;
+          cmd_args_config->workaround_flags_outofband |= tmp1;
+          cmd_args_config->workaround_flags_outofband_2_0 |= tmp2;
+          cmd_args_config->workaround_flags_inband |= tmp3;
+          cmd_args_config->tool_specific_workaround_flags |= tmp4;
           cmd_args_config->workaround_flags_set++;
           cmd_args_config->tool_option_workaround_flags_set++;
-        }
-      if (tmp2)
-        {
-          cmd_args_config->tool_specific_workaround_flags |= tmp2;
-          cmd_args_config->tool_specific_workaround_flags_set++;
-          cmd_args_config->tool_specific_workaround_flags_set++;
-          cmd_args_config->tool_option_tool_specific_workaround_flags_set++;
         }
     }
 
@@ -4442,10 +4440,12 @@ config_file_parse (const char *filename,
     cmd_args->privilege_level = cmd_args_config.privilege_level;
 
   if (cmd_args_config.workaround_flags_set)
-    cmd_args->workaround_flags = cmd_args_config.workaround_flags;
-
-  if (cmd_args_config.tool_specific_workaround_flags_set)
-    cmd_args->tool_specific_workaround_flags = cmd_args_config.tool_specific_workaround_flags;
+    {
+      cmd_args->workaround_flags_outofband = cmd_args_config.workaround_flags_outofband;
+      cmd_args->workaround_flags_outofband_2_0 = cmd_args_config.workaround_flags_outofband_2_0;
+      cmd_args->workaround_flags_inband = cmd_args_config.workaround_flags_inband;
+      cmd_args->tool_specific_workaround_flags = cmd_args_config.tool_specific_workaround_flags;
+    }
 
   /* copy tool specific stuff */
 

@@ -97,18 +97,18 @@ ipmi_open (const char *progname,
     {
       if (cmd_args->driver_type == IPMI_DEVICE_LAN_2_0)
         {
-          if (cmd_args->workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES)
-            workaround_flags |= IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES;
-          if (cmd_args->workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
-            workaround_flags |= IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION;
-          if (cmd_args->workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION)
-            workaround_flags |= IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION;
-          if (cmd_args->workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_SUN_2_0_SESSION)
-            workaround_flags |= IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION;
-          if (cmd_args->workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE)
-            workaround_flags |= IPMI_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE;
-          if (cmd_args->workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_NON_EMPTY_INTEGRITY_CHECK_VALUE)
-            workaround_flags |= IPMI_WORKAROUND_FLAGS_NON_EMPTY_INTEGRITY_CHECK_VALUE;
+          if (cmd_args->workaround_flags_outofband_2_0 & IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_AUTHENTICATION_CAPABILITIES)
+            workaround_flags |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_2_0_AUTHENTICATION_CAPABILITIES;
+          if (cmd_args->workaround_flags_outofband_2_0 & IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION)
+            workaround_flags |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION;
+          if (cmd_args->workaround_flags_outofband_2_0 & IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUPERMICRO_2_0_SESSION)
+            workaround_flags |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUPERMICRO_2_0_SESSION;
+          if (cmd_args->workaround_flags_outofband_2_0 & IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUN_2_0_SESSION)
+            workaround_flags |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUN_2_0_SESSION;
+          if (cmd_args->workaround_flags_outofband_2_0 & IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_OPEN_SESSION_PRIVILEGE)
+            workaround_flags |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_2_0_OPEN_SESSION_PRIVILEGE;
+          if (cmd_args->workaround_flags_outofband_2_0 & IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_NON_EMPTY_INTEGRITY_CHECK_VALUE)
+            workaround_flags |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_2_0_NON_EMPTY_INTEGRITY_CHECK_VALUE;
           
           if (ipmi_ctx_open_outofband_2_0 (ipmi_ctx,
                                            hostname,
@@ -149,16 +149,16 @@ ipmi_open (const char *progname,
         }
       else
         {
-          if (cmd_args->workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO)
-            workaround_flags |= IPMI_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO;
-          if (cmd_args->workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION)
-            workaround_flags |= IPMI_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION;
-          if (cmd_args->workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE)
-            workaround_flags |= IPMI_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE;
-          if (cmd_args->workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER)
-            workaround_flags |= IPMI_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER;
-          if (cmd_args->workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES)
-            workaround_flags |= IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES;
+          if (cmd_args->workaround_flags_outofband & IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_ACCEPT_SESSION_ID_ZERO)
+            workaround_flags |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_ACCEPT_SESSION_ID_ZERO;
+          if (cmd_args->workaround_flags_outofband & IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_FORCE_PERMSG_AUTHENTICATION)
+            workaround_flags |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_FORCE_PERMSG_AUTHENTICATION;
+          if (cmd_args->workaround_flags_outofband & IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_CHECK_UNEXPECTED_AUTHCODE)
+            workaround_flags |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_CHECK_UNEXPECTED_AUTHCODE;
+          if (cmd_args->workaround_flags_outofband & IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_BIG_ENDIAN_SEQUENCE_NUMBER)
+            workaround_flags |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_BIG_ENDIAN_SEQUENCE_NUMBER;
+          if (cmd_args->workaround_flags_outofband & IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_AUTHENTICATION_CAPABILITIES)
+            workaround_flags |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_AUTHENTICATION_CAPABILITIES;
 
           if (ipmi_ctx_open_outofband (ipmi_ctx,
                                        hostname,
@@ -205,8 +205,8 @@ ipmi_open (const char *progname,
           goto cleanup;
         }
 
-      if (cmd_args->workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_ASSUME_IO_BASE_ADDRESS)
-        workaround_flags |= IPMI_WORKAROUND_FLAGS_ASSUME_IO_BASE_ADDRESS;
+      if (cmd_args->workaround_flags_inband & IPMI_TOOL_WORKAROUND_FLAGS_INBAND_ASSUME_IO_BASE_ADDRESS)
+        workaround_flags |= IPMI_WORKAROUND_FLAGS_INBAND_ASSUME_IO_BASE_ADDRESS;
 
       if (cmd_args->driver_type == IPMI_DEVICE_UNKNOWN)
         {

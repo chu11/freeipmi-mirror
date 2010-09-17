@@ -69,7 +69,9 @@ struct ipmi_ctx
   uint32_t magic;
 
   ipmi_driver_type_t type;
-  unsigned int workaround_flags;
+  unsigned int workaround_flags_outofband;
+  unsigned int workaround_flags_outofband_2_0;
+  unsigned int workaround_flags_inband;
   unsigned int flags;
 
   uint8_t channel_number;       /* for ipmb */

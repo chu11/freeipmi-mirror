@@ -1,3 +1,10 @@
+2010-09-17  Albert Chu <chu11@llnl.gov>
+
+	* Globally re-architect to split workaround flags into inband,
+	outofband, and outofband 2.0 workaround flags.  Re-architect will
+	save bits for future workarounds and possible future expansion
+	(e.g. protocol 3.0, etc.).
+	
 2010-09-15  Albert Chu <chu11@llnl.gov>
 
 	* Support 'assumeio' inband workaround.

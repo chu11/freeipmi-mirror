@@ -1,4 +1,14 @@
 .LP
+"authcap" - This workaround option will skip early checks for username
+capabilities, authentication capabilities, and K_g support and allow
+IPMI authentication to succeed.  It works around multiple issues in
+which the remote system does not properly report username
+capabilities, authentication capabilities, or K_g status.  Those
+hitting this issue may see "username invalid", "authentication type
+unavailable for attempted privilege level", or "k_g invalid" errors.
+Issue observed on Asus P5M2/P5MT-R/RS162-E4/RX4, Intel SR1520ML/X38ML,
+and Sun Fire 2200/4150/4450 with ELOM.
+.LP
 "idzero" - This workaround option will allow empty session IDs to be
 accepted by the client.  It works around IPMI sessions that report
 empty session IDs to the client.  Those hitting this issue may see
@@ -26,16 +36,6 @@ It works around IPMI 1.5 session sequence numbers that are the wrong
 endian.  Those hitting this issue may see "session timeout" errors.
 Issue observed on some Sun ILOM 1.0/2.0 (depends on service processor
 endian).
-.LP
-"authcap" - This workaround option will skip early checks for username
-capabilities, authentication capabilities, and K_g support and allow
-IPMI authentication to succeed.  It works around multiple issues in
-which the remote system does not properly report username
-capabilities, authentication capabilities, or K_g status.  Those
-hitting this issue may see "username invalid", "authentication type
-unavailable for attempted privilege level", or "k_g invalid" errors.
-Issue observed on Asus P5M2/P5MT-R/RS162-E4/RX4, Intel SR1520ML/X38ML,
-and Sun Fire 2200/4150/4450 with ELOM.
 .LP
 "intel20" - This workaround option will work around several Intel IPMI
 2.0 authentication issues.  The issues covered include padding of

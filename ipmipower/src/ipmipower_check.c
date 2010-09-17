@@ -152,7 +152,7 @@ ipmipower_check_authentication_code (ipmipower_powercmd_t ip,
        * here is our second session-authcode check attempt under these
        * circumstances.
        */
-      if ((cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE)
+      if ((cmd_args.common.workaround_flags_outofband & IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_CHECK_UNEXPECTED_AUTHCODE)
           && !rv
           && check_authcode_retry_flag)
         {
@@ -289,7 +289,7 @@ ipmipower_check_outbound_sequence_number (ipmipower_powercmd_t ip, packet_type_t
    * The session sequence numbers for IPMI 1.5 are the wrong endian.
    * So we have to flip the bits to workaround it.
    */
-  if (cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER)
+  if (cmd_args.common.workaround_flags_outofband & IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_BIG_ENDIAN_SEQUENCE_NUMBER)
     {
       uint32_t tmp_session_sequence_number = session_sequence_number;
 
@@ -443,7 +443,7 @@ ipmipower_check_session_id (ipmipower_powercmd_t ip, packet_type_t pkt)
    * session id is correct if it is equal to zero.
    */
 
-  if ((cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO)
+  if ((cmd_args.common.workaround_flags_outofband & IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_ACCEPT_SESSION_ID_ZERO)
       && !session_id)
     return (1);
 
@@ -780,7 +780,7 @@ ipmipower_check_open_session_response_privilege (ipmipower_powercmd_t ip, packet
    * The Intel's don't work with IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL.
    * So check that we get back what we sent.
    */
-  if (cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
+  if (cmd_args.common.workaround_flags_outofband_2_0 & IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION)
     {
       if (FIID_OBJ_GET (ip->obj_open_session_res,
                         "maximum_privilege_level",
@@ -841,7 +841,7 @@ ipmipower_check_rakp_2_key_exchange_authentication_code (ipmipower_powercmd_t ip
    * Table 13-11 in the IPMI 2.0 spec.
    */
 
-  if (cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
+  if (cmd_args.common.workaround_flags_outofband_2_0 & IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION)
     {
       memset (username_buf, '\0', IPMI_MAX_USER_NAME_LENGTH+1);
       if (cmd_args.common.username)
@@ -855,7 +855,7 @@ ipmipower_check_rakp_2_key_exchange_authentication_code (ipmipower_powercmd_t ip
       username_len = (username) ? strlen (username) : 0;
     }
 
-  if (cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION)
+  if (cmd_args.common.workaround_flags_outofband_2_0 & IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUPERMICRO_2_0_SESSION)
     {
       uint8_t keybuf[IPMIPOWER_PACKET_BUFLEN];
       int keybuf_len;
@@ -933,7 +933,7 @@ ipmipower_check_rakp_2_key_exchange_authentication_code (ipmipower_powercmd_t ip
    * password to 16 bytes when generating keys, hashes, etc.  So we
    * have to do the same when generating keys, hashes, etc.
    */
-  if (cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_INTEL_2_0_SESSION
+  if (cmd_args.common.workaround_flags_outofband_2_0 & IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION
       && ip->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
       && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
     password_len = IPMI_1_5_MAX_PASSWORD_LENGTH;
@@ -978,7 +978,7 @@ ipmipower_check_rakp_2_key_exchange_authentication_code (ipmipower_powercmd_t ip
    * Notes: Cipher suite 1,2,3 are the ones that use HMAC-SHA1 and
    * have the problem.
    */
-  if (cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_SUN_2_0_SESSION
+  if (cmd_args.common.workaround_flags_outofband_2_0 & IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUN_2_0_SESSION
       && (ip->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1))
     {
       uint8_t buf[IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH];
@@ -1071,7 +1071,7 @@ ipmipower_check_rakp_4_integrity_check_value (ipmipower_powercmd_t ip, packet_ty
    * one.  Would have taken me awhile to figure this one out :-)
    */
 
-  if (cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
+  if (cmd_args.common.workaround_flags_outofband_2_0 & IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION)
     {
       if (ip->integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE)
         authentication_algorithm = IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE;
@@ -1123,7 +1123,7 @@ ipmipower_check_rakp_4_integrity_check_value (ipmipower_powercmd_t ip, packet_ty
    * returns with an Integrity Check Value when it should be empty.
    */
 
-  if (cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_NON_EMPTY_INTEGRITY_CHECK_VALUE
+  if (cmd_args.common.workaround_flags_outofband_2_0 & IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_NON_EMPTY_INTEGRITY_CHECK_VALUE
       && !cmd_args.common.cipher_suite_id)
     {
       if (fiid_obj_clear_field (ip->obj_rakp_message_4_res,

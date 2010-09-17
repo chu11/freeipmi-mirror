@@ -102,6 +102,7 @@ o libfreeipmi
     Functions performing ipmi communication will simply error.
   - Rework 'intel20' workaround to not allow a non two-part authentication.
   - Add DCMI 1.1 support.
+  - Split workaround flags for inband, IPMI 1.5, and IPMI 2.0 to save bits.
   - Support more IPMI templates.
   - Fix some API differences from spec.
   - Fix some template bugs/typos.
@@ -123,6 +124,7 @@ o libipmimonitoring
     - Supermicro X8DTH
   - Support IPMI_MONITORING_ERR_SENSOR_CONFIG_FILE_DOES_NOT_EXIST error code.
   - Remove unused IPMI_MONITORING_ERR_CONFIG_FILE_PARSE error code.
+  - Split workaround flags for inband, IPMI 1.5, and IPMI 2.0 to save bits.
 
 Contributions
 -------------
