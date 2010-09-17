@@ -76,7 +76,7 @@ signatures, and the confidentiality algorithm identifies the algorithm
 to use for payload encryption. Defaults to cipher suite ID 3 if not
 specified.  The user should be aware that only cipher suite ids 3, 8,
 and 12 encrypt console payloads.  Console information will be sent in
-the clear an alternate cipher suite id is selected.  The following
+the clear if an alternate cipher suite id is selected.  The following
 cipher suite ids are currently supported:
 #include <@top_srcdir@/common/man/manpage-common-cipher-suite-id-details.man>
 #include <@top_srcdir@/common/man/manpage-common-privilege-level-admin.man>
