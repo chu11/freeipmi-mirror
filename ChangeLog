@@ -19,7 +19,9 @@
 	"suspend/resume payload encryption" packet to tell the BMC to
 	start over again before doing a resend.  Architecturally, this was
 	the part that would have been VERY difficult to implement across
-	FreeIPMI.
+	FreeIPMI as the client would suddenly be required to understand
+	the assemble/disassemble subtleties underneath and send the packet
+	on its own.
 	
 2010-09-17  Albert Chu <chu11@llnl.gov>
 
