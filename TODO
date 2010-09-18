@@ -138,9 +138,30 @@ libfreeipmi
 -----------
 * xRC4 (0.10.1)
   - on Quanta S99Q/Dell FS12-TY
-  - will break ABI on libfreeipmi, since API not capable of handling
-    data offset in payload and IV knowledge outside of assemble functions.
-  - will require fair amount of rework/cleanup.
+  - Began on branches/xrc, from the branch ChangeLog
+----
+
+xRC has been dropped for the time being.  After researching xRC,
+ultimately the current architecture of all of FreeIPMI is ill-suited
+for it.  As a stream based encryption, too much architecture of
+FreeIPMI has been based on individual packets being
+sent/recved/encrypted/decrypted independently of each other.  Most of
+xRC implementation is doable with some hacks.  For example, the
+initialization vector and data offsets could be passed as in/out
+parameters to the assemble/disassemble packet functions.  The Krc
+could be re-generated as needed if the initialization vector had been
+noticed to change (or data offset == 0).  However, the deal break was
+an "out-of-band" requirement for implementation of the suspend/resume
+payload encryption.  In particular, if a packet from the BMC that had
+a new initialization vector was dropped on the network, the client
+would need to send a "suspend/resume payload encryption" packet to
+tell the BMC to start over again before doing a
+resend. Architecturally, this was the part that would have been VERY
+difficult to implement across FreeIPMI as the client would suddenly be
+required to understand the assemble/disassemble subtleties underneath
+and send the packet on its own.
+
+----
 
 config
 ------
