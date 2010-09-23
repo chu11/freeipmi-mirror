@@ -103,6 +103,7 @@ o libfreeipmi
   - Rework 'intel20' workaround to not allow a non two-part authentication.
   - Add DCMI 1.1 support.
   - Split workaround flags for inband, IPMI 1.5, and IPMI 2.0 to save bits.
+  - Improve SDR caching speed.
   - Support more IPMI templates.
   - Fix some API differences from spec.
   - Fix some template bugs/typos.

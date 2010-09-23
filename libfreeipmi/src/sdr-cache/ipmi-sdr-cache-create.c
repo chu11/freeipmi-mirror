@@ -265,6 +265,19 @@ _sdr_cache_get_record (ipmi_sdr_cache_ctx_t ctx,
   assert (reservation_id);
   assert (next_record_id);
 
+  /* achu:
+   *
+   * Below implementation is not the fastest overall.  I could attempt
+   * to read larger chunks of records (possibly all in one packet)
+   * rather than in 16 byte chunks.
+   *
+   * However, so many motherboards are "sensitive" to changes here,
+   * Many motherboards support reading the entire record at once, but
+   * many motherboards do not.  Some motherboards do not allow you to
+   * read in chunks greater than 8 bytes.  I'm just going to leave it
+   * the way it is right now.
+   */
+
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_sdr_rs)))
     {
       SDR_CACHE_ERRNO_TO_SDR_CACHE_ERRNUM (ctx, errno);
@@ -361,6 +374,9 @@ _sdr_cache_get_record (ipmi_sdr_cache_ctx_t ctx,
           goto cleanup;
         }
 
+      /* copy header into buf */
+      memcpy (record_buf, record_header_buf, sdr_record_header_len);
+      offset_into_record += sdr_record_header_len;
       record_length = val + sdr_record_header_length;
     }
 
@@ -422,7 +438,8 @@ _sdr_cache_get_record (ipmi_sdr_cache_ctx_t ctx,
                   reservation_id_retry_count++;
                   continue;
                 }
-              else if  (comp_code == IPMI_COMP_CODE_CANNOT_RETURN_REQUESTED_NUMBER_OF_BYTES
+              else if  ((comp_code == IPMI_COMP_CODE_CANNOT_RETURN_REQUESTED_NUMBER_OF_BYTES
+                         || comp_code == IPMI_COMP_CODE_UNSPECIFIED_ERROR)
                         && bytes_to_read > sdr_record_header_length)
                 {
                   bytes_to_read -= IPMI_SDR_CACHE_BYTES_TO_READ_DECREMENT;
