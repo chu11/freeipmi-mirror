@@ -250,11 +250,13 @@ _sdr_cache_get_record (ipmi_sdr_cache_ctx_t ctx,
   fiid_obj_t obj_cmd_rs = NULL;
   fiid_obj_t obj_sdr_record_header = NULL;
   int sdr_record_header_length = 0;
+  int sdr_record_len = 0;
   unsigned int record_length = 0;
   int rv = -1;
   unsigned int bytes_to_read = IPMI_SDR_CACHE_BYTES_TO_READ_START;
   unsigned int offset_into_record = 0;
   unsigned int reservation_id_retry_count = 0;
+  uint8_t temp_record_buf[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
   uint64_t val;
 
   assert (ctx);
@@ -264,19 +266,6 @@ _sdr_cache_get_record (ipmi_sdr_cache_ctx_t ctx,
   assert (record_buf_len);
   assert (reservation_id);
   assert (next_record_id);
-
-  /* achu:
-   *
-   * Below implementation is not the fastest overall.  I could attempt
-   * to read larger chunks of records (possibly all in one packet)
-   * rather than in 16 byte chunks.
-   *
-   * However, so many motherboards are "sensitive" to changes here,
-   * Many motherboards support reading the entire record at once, but
-   * many motherboards do not.  Some motherboards do not allow you to
-   * read in chunks greater than 8 bytes.  I'm just going to leave it
-   * the way it is right now.
-   */
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_sdr_rs)))
     {
@@ -295,6 +284,89 @@ _sdr_cache_get_record (ipmi_sdr_cache_ctx_t ctx,
       SDR_CACHE_ERRNO_TO_SDR_CACHE_ERRNUM (ctx, errno);
       goto cleanup;
     }
+  
+ /* achu:
+  *
+  * Many motherboards now allow you to read the full SDR record, try
+  * that first.  If it fails for any reason, bail and try to read via
+  * partial reads.
+  */
+ 
+  reservation_id_retry_count = 0;
+  
+  while (!offset_into_record)
+    {
+      if (ipmi_cmd_get_sdr (ipmi_ctx,
+			    *reservation_id,
+			    record_id,
+			    0,
+			    IPMI_SDR_READ_ENTIRE_RECORD_BYTES_TO_READ,
+			    obj_cmd_rs) < 0)
+	{
+          if (ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
+	    {
+              uint8_t comp_code;
+	      
+              if (FIID_OBJ_GET (obj_cmd_rs,
+                                "comp_code",
+                                &val) < 0)
+                {
+                  SDR_CACHE_FIID_OBJECT_ERROR_TO_SDR_CACHE_ERRNUM (ctx, obj_cmd_rs);
+                  goto cleanup;
+                }
+              comp_code = val;
+
+              if (comp_code == IPMI_COMP_CODE_RESERVATION_CANCELLED
+                  && (reservation_id_retry_count < IPMI_SDR_CACHE_MAX_RESERVATION_ID_RETRY))
+                {
+                  if (_sdr_cache_reservation_id (ctx,
+                                                 ipmi_ctx,
+                                                 reservation_id) < 0)
+                    goto cleanup;
+                  reservation_id_retry_count++;
+                  continue;
+                }
+            }
+	  
+	  goto partial_read;
+	}
+  
+      if ((sdr_record_len = fiid_obj_get_data (obj_cmd_rs,
+					       "record_data",
+					       temp_record_buf,
+					       IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH)) < 0)
+	{
+	  SDR_CACHE_FIID_OBJECT_ERROR_TO_SDR_CACHE_ERRNUM (ctx, obj_cmd_rs);
+	  goto cleanup;
+	}
+      
+      if (sdr_record_len < sdr_record_header_length)
+	{
+	  SDR_CACHE_SET_ERRNUM (ctx, IPMI_SDR_CACHE_ERR_IPMI_ERROR);
+	  goto cleanup;
+	}
+  
+      if (sdr_record_len > record_buf_len)
+	{
+	  SDR_CACHE_SET_ERRNUM (ctx, IPMI_SDR_CACHE_ERR_INTERNAL_ERROR);
+	  goto cleanup;
+	}
+  
+      if (FIID_OBJ_GET (obj_cmd_rs,
+			"next_record_id",
+			&val) < 0)
+	{
+	  SDR_CACHE_FIID_OBJECT_ERROR_TO_SDR_CACHE_ERRNUM (ctx, obj_cmd_rs);
+	  goto cleanup;
+	}
+      *next_record_id = val;
+
+      memcpy (record_buf, temp_record_buf, sdr_record_len);
+      offset_into_record += sdr_record_len;
+      goto out;
+    }
+
+ partial_read:
 
   reservation_id_retry_count = 0;
   while (!record_length)
@@ -373,6 +445,12 @@ _sdr_cache_get_record (ipmi_sdr_cache_ctx_t ctx,
           SDR_CACHE_FIID_OBJECT_ERROR_TO_SDR_CACHE_ERRNUM (ctx, obj_sdr_record_header);
           goto cleanup;
         }
+
+      if (sdr_record_header_len > record_buf_len)
+	{
+	  SDR_CACHE_SET_ERRNUM (ctx, IPMI_SDR_CACHE_ERR_INTERNAL_ERROR);
+	  goto cleanup;
+	}
 
       /* copy header into buf */
       memcpy (record_buf, record_header_buf, sdr_record_header_len);
@@ -465,6 +543,7 @@ _sdr_cache_get_record (ipmi_sdr_cache_ctx_t ctx,
       offset_into_record += record_data_len;
     }
 
+ out:
   rv = offset_into_record;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);

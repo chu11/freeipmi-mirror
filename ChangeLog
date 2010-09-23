@@ -1,7 +1,7 @@
 2010-09-23  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/sdr-cache/ipmi-sdr-cache-create.c
-	(_sdr_cache_get_record): Slightly improve SDR caching speed.
+	(_sdr_cache_get_record): Improve SDR caching speed.
 	
 2010-09-17  Albert Chu <chu11@llnl.gov>
 
