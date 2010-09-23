@@ -340,11 +340,9 @@ _sdr_cache_get_record (ipmi_sdr_cache_ctx_t ctx,
 	  goto cleanup;
 	}
       
+      /* Assume this is an "IPMI Error", fall through to partial reads */
       if (sdr_record_len < sdr_record_header_length)
-	{
-	  SDR_CACHE_SET_ERRNUM (ctx, IPMI_SDR_CACHE_ERR_IPMI_ERROR);
-	  goto cleanup;
-	}
+        goto partial_read;
   
       if (sdr_record_len > record_buf_len)
 	{
