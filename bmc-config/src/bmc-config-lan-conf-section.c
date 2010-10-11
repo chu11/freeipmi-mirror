@@ -2027,14 +2027,14 @@ bmc_config_lan_conf_section_get (bmc_config_state_data_t *state_data,
     "and set the appropriate \"IP_Address\", \"MAC_Address\", "
     "\"Subnet_Mask\", etc. for the machine.";
   char *section_name_base_str = "Lan_Conf";
-  unsigned int ipv4_header_parameters_config_flags = 0;
+  unsigned int verbose_option_config_flags = 0;
 
   assert (state_data);
 
-  /* ipv4_header_parameters not checked out by default */
+  /* vlan and ipv4 header parameters not checked out by default */
 
   if (!state_data->prog_data->args->config_args.verbose_count)
-    ipv4_header_parameters_config_flags = CONFIG_DO_NOT_CHECKOUT;
+    verbose_option_config_flags = CONFIG_DO_NOT_CHECKOUT;
 
   if (!(section = config_section_multi_channel_create (state_data->pstate,
 						       section_name_base_str,
@@ -2132,7 +2132,7 @@ bmc_config_lan_conf_section_get (bmc_config_state_data_t *state_data,
                               section,
                               "Vlan_id",
                               "Give valid unsigned number",
-                              0,
+                              verbose_option_config_flags,
                               vlan_id_checkout,
                               vlan_id_commit,
                               vlan_id_validate) < 0)
@@ -2142,7 +2142,7 @@ bmc_config_lan_conf_section_get (bmc_config_state_data_t *state_data,
                               section,
                               "Vlan_Id_Enable",
                               "Possible values: Yes/No",
-                              0,
+                              verbose_option_config_flags,
                               vlan_id_enable_checkout,
                               vlan_id_enable_commit,
                               config_yes_no_validate) < 0)
@@ -2152,7 +2152,7 @@ bmc_config_lan_conf_section_get (bmc_config_state_data_t *state_data,
                               section,
                               "Vlan_Priority",
                               "Give valid unsigned number",
-                              0,
+                              verbose_option_config_flags,
                               vlan_priority_checkout,
                               vlan_priority_commit,
                               config_number_range_one_byte) < 0)
@@ -2162,7 +2162,7 @@ bmc_config_lan_conf_section_get (bmc_config_state_data_t *state_data,
                               section,
                               "IPv4_Header_Time_To_Live",
                               "Give valid hex number",
-                              ipv4_header_parameters_config_flags,
+                              verbose_option_config_flags,
                               ipv4_header_time_to_live_checkout,
                               ipv4_header_time_to_live_commit,
                               config_number_range_one_byte) < 0)
@@ -2172,7 +2172,7 @@ bmc_config_lan_conf_section_get (bmc_config_state_data_t *state_data,
                               section,
                               "IPv4_Header_Flags",
                               "Give valid hex number",
-                              ipv4_header_parameters_config_flags,
+                              verbose_option_config_flags,
                               ipv4_header_flags_checkout,
                               ipv4_header_flags_commit,
                               config_number_range_three_bits) < 0)
@@ -2182,7 +2182,7 @@ bmc_config_lan_conf_section_get (bmc_config_state_data_t *state_data,
                               section,
                               "IPv4_Header_Type_Of_Service",
                               "Give valid hex number",
-                              ipv4_header_parameters_config_flags,
+                              verbose_option_config_flags,
                               ipv4_header_type_of_service_checkout,
                               ipv4_header_type_of_service_commit,
                               config_number_range_four_bits) < 0)
@@ -2192,7 +2192,7 @@ bmc_config_lan_conf_section_get (bmc_config_state_data_t *state_data,
                               section,
                               "IPv4_Header_Precedence",
                               "Give valid hex number",
-                              ipv4_header_parameters_config_flags,
+                              verbose_option_config_flags,
                               ipv4_header_precedence_checkout,
                               ipv4_header_precedence_commit,
                               config_number_range_three_bits) < 0)

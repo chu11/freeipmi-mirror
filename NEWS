@@ -57,6 +57,7 @@ o bmc-config
   - Support --sol-channel-number.
   - Support 'solchannelassumelanchannel' workaround.
   - Support IPv4 header parameter configuration under verbose mode.
+  - Move Vlan configuration to output only on verbose.
   - Show verbose-only sections in --list.
   - Do not output section comments if key-pair specified on command line.
   - Allow checkout of sections/key-pairs if specified on command line,

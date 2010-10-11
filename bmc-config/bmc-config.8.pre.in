@@ -54,8 +54,9 @@ See GENERAL USE below for a description on how most will want to use
 Output verbose information.  When used with \-\-checkout, additional
 uncommon sections and/or fields will be shown.  In
 .B bmc-config,
-this includes checking out Serial Configuration parameters, and
-sections for each channel on a system, if multiple channels exist.
+this includes checking out Serial Configuration parameters, Vlan
+parameters, IPv4 Header parameters, and sections for each channel on a
+system, if multiple channels exist.
 #include <@top_srcdir@/common/man/manpage-common-config-tool-options-very-verbose.man>
 #include <@top_srcdir@/common/man/manpage-common-config-tool-options-lan-channel-number.man>
 #include <@top_srcdir@/common/man/manpage-common-config-tool-options-serial-channel-number.man>
