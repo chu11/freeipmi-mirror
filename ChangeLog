@@ -1,3 +1,7 @@
+2010-10-11 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/: Support LAN ipv4 header parameters configuration.
+	
 2010-09-23  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/sdr-cache/ipmi-sdr-cache-create.c

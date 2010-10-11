@@ -41,7 +41,6 @@ set asset-tag/management identifier string - spec isn't clear, fix as necessary
 general
 -------
 forwarded command support (errata 35b)
-all conf files in /etc/freeipmi/ instead of /etc??
 serial interface? via serial basic mode?  Could just be another interfaace -I
 lan
 - don't increment req on retries, only seq?

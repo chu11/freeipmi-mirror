@@ -174,6 +174,7 @@ extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ip_address_rq;
 extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ip_address_source_rq;
 extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_mac_address_rq;
 extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_subnet_mask_rq;
+extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv4_header_parameters_rq;
 extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_bmc_generated_arp_control_rq;
 extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_gratuitous_arp_interval_rq;
 extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_default_gateway_address_rq;
@@ -198,6 +199,7 @@ extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ip_address_rs;
 extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ip_address_source_rs;
 extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_mac_address_rs;
 extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_subnet_mask_rs;
+extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv4_header_parameters_rs;
 extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_bmc_generated_arp_control_rs;
 extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_gratuitous_arp_interval_rs;
 extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_default_gateway_address_rs;
@@ -274,6 +276,13 @@ int fill_cmd_set_lan_configuration_parameters_mac_address (uint8_t channel_numbe
 int fill_cmd_set_lan_configuration_parameters_subnet_mask (uint8_t channel_number,
                                                            uint32_t subnet_mask,
                                                            fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_set_lan_configuration_parameters_ipv4_header_parameters (uint8_t channel_number,
+                                                                      uint8_t time_to_live,
+                                                                      uint8_t flags,
+                                                                      uint8_t type_of_service,
+                                                                      uint8_t precedence,
+                                                                      fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_set_lan_configuration_parameters_bmc_generated_arp_control (uint8_t channel_number,
                                                                          uint8_t bmc_generated_gratuitous_arps,

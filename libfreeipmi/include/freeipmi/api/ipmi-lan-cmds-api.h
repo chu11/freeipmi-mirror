@@ -91,6 +91,14 @@ int ipmi_cmd_set_lan_configuration_parameters_subnet_mask (ipmi_ctx_t ctx,
                                                            uint32_t subnet_mask,
                                                            fiid_obj_t obj_cmd_rs);
 
+int ipmi_cmd_set_lan_configuration_parameters_ipv4_header_parameters (ipmi_ctx_t ctx,
+                                                                      uint8_t channel_number,
+                                                                      uint8_t time_to_live,
+                                                                      uint8_t flags,
+                                                                      uint8_t type_of_service,
+                                                                      uint8_t precedence,
+                                                                      fiid_obj_t obj_cmd_rs);
+
 int ipmi_cmd_set_lan_configuration_parameters_mac_address (ipmi_ctx_t ctx,
                                                            uint8_t channel_number,
                                                            uint64_t mac_address,
@@ -245,6 +253,13 @@ int ipmi_cmd_get_lan_configuration_parameters_subnet_mask (ipmi_ctx_t ctx,
                                                            uint8_t set_selector,
                                                            uint8_t block_selector,
                                                            fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_get_lan_configuration_parameters_ipv4_header_parameters (ipmi_ctx_t ctx,
+                                                                      uint8_t channel_number,
+                                                                      uint8_t get_parameter,
+                                                                      uint8_t set_selector,
+                                                                      uint8_t block_selector,
+                                                                      fiid_obj_t obj_cmd_rs);
 
 int ipmi_cmd_get_lan_configuration_parameters_bmc_generated_arp_control (ipmi_ctx_t ctx,
                                                                          uint8_t channel_number,

@@ -45,6 +45,14 @@ struct vlan_id
   uint8_t vlan_id_enable;
 };
 
+struct ipv4_header_parameters
+{
+  uint8_t time_to_live;
+  uint8_t flags;
+  uint8_t type_of_service;
+  uint8_t precedence;
+};
+
 static config_err_t
 ip_address_source_checkout (const char *section_name,
                             struct config_keyvalue *kv,
@@ -1653,6 +1661,360 @@ vlan_priority_commit (const char *section_name,
   return (rv);
 }
 
+static config_err_t
+_get_ipv4_header_parameters (bmc_config_state_data_t *state_data,
+                             const char *section_name,
+                             struct ipv4_header_parameters *ihp)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint64_t val;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  config_err_t ret;
+  uint8_t channel_number;
+
+  assert (state_data);
+  assert (section_name);
+  assert (ihp);
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_lan_configuration_parameters_ipv4_header_parameters_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+  
+  if ((ret = get_lan_channel_number (state_data,
+				     section_name,
+				     &channel_number)) != CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+  
+  if (ipmi_cmd_get_lan_configuration_parameters_ipv4_header_parameters (state_data->ipmi_ctx,
+                                                                        channel_number,
+                                                                        IPMI_GET_LAN_PARAMETER,
+                                                                        IPMI_LAN_CONFIGURATION_PARAMETERS_NO_SET_SELECTOR,
+                                                                        IPMI_LAN_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
+                                                                        obj_cmd_rs) < 0)
+    {
+      if (state_data->prog_data->args->config_args.common.debug)
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_cmd_get_lan_configuration_parameters_ipv4_header_parameters: %s\n",
+                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      
+      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+                                                  obj_cmd_rs,
+                                                  &ret))
+        rv = ret;
+      
+      goto cleanup;
+    }
+  
+  if (FIID_OBJ_GET (obj_cmd_rs, "time_to_live", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'time_to_live': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+  ihp->time_to_live = val;
+  
+  if (FIID_OBJ_GET (obj_cmd_rs, "flags", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'flags': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+  ihp->flags = val;
+
+  if (FIID_OBJ_GET (obj_cmd_rs, "type_of_service", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'type_of_service': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+  ihp->type_of_service = val;
+
+  if (FIID_OBJ_GET (obj_cmd_rs, "precedence", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'precedence': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+  ihp->precedence = val;
+
+  rv = CONFIG_ERR_SUCCESS;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
+static config_err_t
+_set_ipv4_header_parameters (bmc_config_state_data_t *state_data,
+                             const char *section_name,
+                             struct ipv4_header_parameters *ihp)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  config_err_t ret;
+  uint8_t channel_number;
+
+  assert (state_data);
+  assert (section_name);
+  assert (ihp);
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_lan_configuration_parameters_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  if ((ret = get_lan_channel_number (state_data,
+				     section_name,
+				     &channel_number)) != CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_set_lan_configuration_parameters_ipv4_header_parameters (state_data->ipmi_ctx,
+                                                                        channel_number,
+                                                                        ihp->time_to_live,
+                                                                        ihp->flags,
+                                                                        ihp->type_of_service,
+                                                                        ihp->precedence,
+                                                                        obj_cmd_rs) < 0)
+    {
+      if (state_data->prog_data->args->config_args.common.debug)
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_cmd_set_lan_configuration_parameters_ipv4_header_parameters: %s\n",
+                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      
+      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+                                                  obj_cmd_rs,
+                                                  &ret))
+        rv = ret;
+      
+      goto cleanup;
+    }
+
+  rv = CONFIG_ERR_SUCCESS;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
+static config_err_t
+ipv4_header_time_to_live_checkout (const char *section_name,
+                                   struct config_keyvalue *kv,
+                                   void *arg)
+{
+  bmc_config_state_data_t *state_data;
+  struct ipv4_header_parameters ihp;
+  config_err_t ret;
+  
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (bmc_config_state_data_t *)arg;
+  
+  if ((ret = _get_ipv4_header_parameters (state_data, section_name, &ihp)) != CONFIG_ERR_SUCCESS)
+    return (ret);
+  
+  if (config_section_update_keyvalue_output_hex (state_data->pstate,
+                                                 kv,
+                                                 ihp.time_to_live) < 0)
+    return (CONFIG_ERR_FATAL_ERROR);
+
+  return (CONFIG_ERR_SUCCESS);
+}
+
+static config_err_t
+ipv4_header_time_to_live_commit (const char *section_name,
+                                 const struct config_keyvalue *kv,
+                                 void *arg)
+{
+  bmc_config_state_data_t *state_data;
+  struct ipv4_header_parameters ihp;
+  config_err_t ret;
+  
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (bmc_config_state_data_t *)arg;
+  
+  if ((ret = _get_ipv4_header_parameters (state_data, section_name, &ihp)) != CONFIG_ERR_SUCCESS)
+    return (ret);
+
+  ihp.time_to_live = strtol (kv->value_input, NULL, 0);
+
+  return (_set_ipv4_header_parameters (state_data, section_name, &ihp));
+}
+
+static config_err_t
+ipv4_header_flags_checkout (const char *section_name,
+                            struct config_keyvalue *kv,
+                            void *arg)
+{
+  bmc_config_state_data_t *state_data;
+  struct ipv4_header_parameters ihp;
+  config_err_t ret;
+  
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (bmc_config_state_data_t *)arg;
+  
+  if ((ret = _get_ipv4_header_parameters (state_data, section_name, &ihp)) != CONFIG_ERR_SUCCESS)
+    return (ret);
+  
+  if (config_section_update_keyvalue_output_hex (state_data->pstate,
+                                                 kv,
+                                                 ihp.flags) < 0)
+    return (CONFIG_ERR_FATAL_ERROR);
+
+  return (CONFIG_ERR_SUCCESS);
+}
+
+static config_err_t
+ipv4_header_flags_commit (const char *section_name,
+                          const struct config_keyvalue *kv,
+                          void *arg)
+{
+  bmc_config_state_data_t *state_data;
+  struct ipv4_header_parameters ihp;
+  config_err_t ret;
+  
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (bmc_config_state_data_t *)arg;
+  
+  if ((ret = _get_ipv4_header_parameters (state_data, section_name, &ihp)) != CONFIG_ERR_SUCCESS)
+    return (ret);
+
+  ihp.flags = strtol (kv->value_input, NULL, 0);
+
+  return (_set_ipv4_header_parameters (state_data, section_name, &ihp));
+}
+
+static config_err_t
+ipv4_header_type_of_service_checkout (const char *section_name,
+                                      struct config_keyvalue *kv,
+                                      void *arg)
+{
+  bmc_config_state_data_t *state_data;
+  struct ipv4_header_parameters ihp;
+  config_err_t ret;
+  
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (bmc_config_state_data_t *)arg;
+  
+  if ((ret = _get_ipv4_header_parameters (state_data, section_name, &ihp)) != CONFIG_ERR_SUCCESS)
+    return (ret);
+  
+  if (config_section_update_keyvalue_output_hex (state_data->pstate,
+                                                 kv,
+                                                 ihp.type_of_service) < 0)
+    return (CONFIG_ERR_FATAL_ERROR);
+
+  return (CONFIG_ERR_SUCCESS);
+}
+
+static config_err_t
+ipv4_header_type_of_service_commit (const char *section_name,
+                                    const struct config_keyvalue *kv,
+                                    void *arg)
+{
+  bmc_config_state_data_t *state_data;
+  struct ipv4_header_parameters ihp;
+  config_err_t ret;
+  
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (bmc_config_state_data_t *)arg;
+  
+  if ((ret = _get_ipv4_header_parameters (state_data, section_name, &ihp)) != CONFIG_ERR_SUCCESS)
+    return (ret);
+
+  ihp.type_of_service = strtol (kv->value_input, NULL, 0);
+
+  return (_set_ipv4_header_parameters (state_data, section_name, &ihp));
+}
+
+static config_err_t
+ipv4_header_precedence_checkout (const char *section_name,
+                                 struct config_keyvalue *kv,
+                                 void *arg)
+{
+  bmc_config_state_data_t *state_data;
+  struct ipv4_header_parameters ihp;
+  config_err_t ret;
+  
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (bmc_config_state_data_t *)arg;
+  
+  if ((ret = _get_ipv4_header_parameters (state_data, section_name, &ihp)) != CONFIG_ERR_SUCCESS)
+    return (ret);
+  
+  if (config_section_update_keyvalue_output_hex (state_data->pstate,
+                                                 kv,
+                                                 ihp.precedence) < 0)
+    return (CONFIG_ERR_FATAL_ERROR);
+
+  return (CONFIG_ERR_SUCCESS);
+}
+
+static config_err_t
+ipv4_header_precedence_commit (const char *section_name,
+                               const struct config_keyvalue *kv,
+                               void *arg)
+{
+  bmc_config_state_data_t *state_data;
+  struct ipv4_header_parameters ihp;
+  config_err_t ret;
+  
+  assert (section_name);
+  assert (kv);
+  assert (arg);
+  
+  state_data = (bmc_config_state_data_t *)arg;
+  
+  if ((ret = _get_ipv4_header_parameters (state_data, section_name, &ihp)) != CONFIG_ERR_SUCCESS)
+    return (ret);
+
+  ihp.precedence = strtol (kv->value_input, NULL, 0);
+
+  return (_set_ipv4_header_parameters (state_data, section_name, &ihp));
+}
+
 struct config_section *
 bmc_config_lan_conf_section_get (bmc_config_state_data_t *state_data,
                                  unsigned int config_flags,
@@ -1665,8 +2027,14 @@ bmc_config_lan_conf_section_get (bmc_config_state_data_t *state_data,
     "and set the appropriate \"IP_Address\", \"MAC_Address\", "
     "\"Subnet_Mask\", etc. for the machine.";
   char *section_name_base_str = "Lan_Conf";
+  unsigned int ipv4_header_parameters_config_flags = 0;
 
   assert (state_data);
+
+  /* ipv4_header_parameters not checked out by default */
+
+  if (!state_data->prog_data->args->config_args.verbose_count)
+    ipv4_header_parameters_config_flags = CONFIG_DO_NOT_CHECKOUT;
 
   if (!(section = config_section_multi_channel_create (state_data->pstate,
 						       section_name_base_str,
@@ -1788,6 +2156,46 @@ bmc_config_lan_conf_section_get (bmc_config_state_data_t *state_data,
                               vlan_priority_checkout,
                               vlan_priority_commit,
                               config_number_range_one_byte) < 0)
+    goto cleanup;
+
+  if (config_section_add_key (state_data->pstate,
+                              section,
+                              "IPv4_Header_Time_To_Live",
+                              "Give valid hex number",
+                              ipv4_header_parameters_config_flags,
+                              ipv4_header_time_to_live_checkout,
+                              ipv4_header_time_to_live_commit,
+                              config_number_range_one_byte) < 0)
+    goto cleanup;
+
+  if (config_section_add_key (state_data->pstate,
+                              section,
+                              "IPv4_Header_Flags",
+                              "Give valid hex number",
+                              ipv4_header_parameters_config_flags,
+                              ipv4_header_flags_checkout,
+                              ipv4_header_flags_commit,
+                              config_number_range_three_bits) < 0)
+    goto cleanup;
+
+  if (config_section_add_key (state_data->pstate,
+                              section,
+                              "IPv4_Header_Type_Of_Service",
+                              "Give valid hex number",
+                              ipv4_header_parameters_config_flags,
+                              ipv4_header_type_of_service_checkout,
+                              ipv4_header_type_of_service_commit,
+                              config_number_range_four_bits) < 0)
+    goto cleanup;
+
+  if (config_section_add_key (state_data->pstate,
+                              section,
+                              "IPv4_Header_Precedence",
+                              "Give valid hex number",
+                              ipv4_header_parameters_config_flags,
+                              ipv4_header_precedence_checkout,
+                              ipv4_header_precedence_commit,
+                              config_number_range_three_bits) < 0)
     goto cleanup;
 
   return (section);

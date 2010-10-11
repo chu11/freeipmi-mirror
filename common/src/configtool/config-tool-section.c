@@ -516,6 +516,28 @@ config_section_update_keyvalue_output_unsigned_int (pstdout_state_t pstate,
 }
 
 int
+config_section_update_keyvalue_output_hex (pstdout_state_t pstate,
+                                           struct config_keyvalue *keyvalue,
+                                           unsigned int value_output)
+{
+  char buf[CONFIG_PARSE_BUFLEN];
+
+  assert (keyvalue);
+  assert (!keyvalue->value_output);
+
+  snprintf (buf, CONFIG_PARSE_BUFLEN, "0x%X", value_output);
+
+  if (!(keyvalue->value_output = strdup (buf)))
+    {
+      PSTDOUT_PERROR (pstate,
+                      "strdup");
+      return (-1);
+    }
+
+  return (0);
+}
+
+int
 config_section_update_keyvalue_output_double (pstdout_state_t pstate,
                                               struct config_keyvalue *keyvalue,
                                               double value_output)

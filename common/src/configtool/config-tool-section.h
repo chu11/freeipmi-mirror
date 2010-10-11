@@ -90,6 +90,10 @@ int config_section_update_keyvalue_output_unsigned_int (pstdout_state_t pstate,
                                                         struct config_keyvalue *keyvalue,
                                                         unsigned int value_output);
 
+int config_section_update_keyvalue_output_hex (pstdout_state_t pstate,
+                                               struct config_keyvalue *keyvalue,
+                                               unsigned int value_output);
+
 int config_section_update_keyvalue_output_double (pstdout_state_t pstate,
                                                   struct config_keyvalue *keyvalue,
                                                   double value_output);
