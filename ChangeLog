@@ -1,6 +1,14 @@
+2010-10-12 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/: Support RMCP port configuration.
+
+	* bmc-config/: Support RMCP port configuration.
+
 2010-10-11 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/: Support LAN ipv4 header parameters configuration.
+
+	* bmc-config/: Support LAN ipv4 header parameters configuration.
 
 	* bmc-config/: Move vlan output to only under verbose mode.
 	
