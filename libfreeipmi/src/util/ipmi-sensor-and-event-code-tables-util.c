@@ -1877,7 +1877,6 @@ ipmi_get_oem_sensor_type_message (uint32_t manufacturer_id,
         }
     }
 
-  /* Holger: XXX: Do these belong in here or down in oem_specific below? */
   /* 
    * OEM Interpretation
    *

@@ -411,20 +411,6 @@ ipmi_sel_parse_output_fujitsu_event_data1_class_sensor_specific_discrete (ipmi_s
   return (0);
 }
 
-/* Holger: XXX: below implementation only calls get-long-text if
- * event-data2 AND event-data3 are OEM extensions
- *
- * if there is a possibility of:
- *
- * event1-text ; event2-text; OEM event-data3
- *
- * or
- *
- * event1-text ; OEM event-data2 ; event3-text
- *
- * Then we'll need some more callbacks for those specific circumstances
- */
-
 /* return (0) - no OEM match
  * return (1) - OEM match
  * return (-1) - error, cleanup and return error

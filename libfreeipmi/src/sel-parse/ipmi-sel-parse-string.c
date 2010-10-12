@@ -801,11 +801,6 @@ _output_oem_event_data1_class_sensor_specific_discrete (ipmi_sel_parse_ctx_t ctx
 	return (1);
     }
 
-  /* Holger: XXX: we're only getting event data for OEM sensor types
-   * in which event-reading-type-code is == 0x6F, is this correct?
-   * May need a new call in _output_oem_event_data1_class_oem() below
-   * if necessary.
-   */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_FUJITSU)
     {
       if ((ret = ipmi_sel_parse_output_fujitsu_event_data1_class_sensor_specific_discrete (ctx,
@@ -2251,10 +2246,6 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
       if (ret)
 	return (1);
     }
-
-  /* Holger: XXX: Will we need event_data2 only, and event_dat3 only
-   * specific OEM callbcaks too?
-   */
 
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_FUJITSU)
     {
