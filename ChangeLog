@@ -1,3 +1,7 @@
+2010-10-13 Albert Chu <chu11@llnl.gov>
+
+	* bmc-config/: Have IPv4 parameters commented out by default.
+	
 2010-10-12 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/: Support RMCP port configuration.
