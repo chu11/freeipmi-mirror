@@ -141,10 +141,6 @@ _ipmi_sel_oem_fujitsu_get_sel_entry_long_text (ipmi_sel_parse_ctx_t ctx,
                                         NULL) < 0)
     goto cleanup;
 
-  /* Holger: XXX: why this exception?? */
-  if (sel_record_id == IPMI_SEL_GET_RECORD_ID_LAST_ENTRY)
-    goto cleanup;
-
   memset (string_buf, '\0', IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH + 1);
 
   /* Note: Referenced documentation is for iRMC S2 version */
