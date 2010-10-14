@@ -1,3 +1,7 @@
+FreeIPMI 0.8.11 - 09/28/10
+--------------------------
+o Other minor documentation/bug fixes.
+
 FreeIPMI 0.8.10 - 09/28/10
 --------------------------
 o Support many new Inventec OEM extensions in ipmi-oem.

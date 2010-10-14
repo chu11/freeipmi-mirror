@@ -1,3 +1,7 @@
+2010-10-14 Albert Chu <chu11@llnl.gov>
+
+	* man/: Update workaround flags options.
+	
 2010-09-15  Albert Chu <chu11@llnl.gov>
 
 	* Support 'assumeio' inband workaround.
