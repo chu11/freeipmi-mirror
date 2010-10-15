@@ -18,7 +18,7 @@ launch the command on other hosts until the command has been executed
 on all hosts specified.
 
 It is utilized at Lawrence Livermore National Laboratory (LLNL) on
-clusters ranging from 4 to 1152 nodes.  Commands are capable of being
+clusters ranging from 4 to 2000 nodes.  Commands are capable of being
 executed across the entire cluster in the matter of seconds rather
 then minutes it would take to execute serially in a shell prompt.
 
