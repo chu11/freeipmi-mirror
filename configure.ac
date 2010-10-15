@@ -114,6 +114,7 @@ AC_CONFIG_FILES([
 	ipmiconsole/ipmiconsole.8.pre
         ipmiconsole/ipmiconsole.conf.5.pre
         ipmiconsole/libipmiconsole.3.pre
+        ipmiconsole/libipmiconsole.conf.5.pre
         ipmiconsole/src/Makefile
 	ipmiconsole/src/libipmiconsole/Makefile
         ipmiconsole/src/ipmiconsole/Makefile
@@ -638,6 +639,7 @@ AC_INTERPRET_SENSOR_CONFIG_FILE
 AC_INTERPRET_SEL_CONFIG_FILE
 AC_IPMIDETECT_CONFIG_FILE
 AC_IPMIDETECTD_CONFIG_FILE
+AC_LIBIPMICONSOLE_CONFIG_FILE
 AC_DONT_CHECK_FOR_ROOT
 
 dnl Checks for things needed in lib argp
