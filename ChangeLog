@@ -1,6 +1,8 @@
 2010-10-14 Albert Chu <chu11@llnl.gov>
 
 	* man/: Update workaround flags options.
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole.h: Fix comment typo.
 	
 2010-10-13 Albert Chu <chu11@llnl.gov>
 

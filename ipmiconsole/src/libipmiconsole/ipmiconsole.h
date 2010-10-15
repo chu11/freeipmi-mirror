@@ -251,7 +251,7 @@ extern "C" {
  * libipmiconsole will attempt to deactivate the earlier SOL session
  * and activate the SOL session under the current one.  This default
  * behavior exists for several reasons, most notably that earlier SOL
- * sessions may have not been able to be deactivate properly.  This
+ * sessions may have not been able to be deactivated properly.  This
  * security flag changes the default behavior to return an error if
  * SOL is already detected as being in use.  If it is detected as in
  * use, the errnum returned from ipmiconsole_ctx_errnum() would be
