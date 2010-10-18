@@ -225,8 +225,14 @@
 #define IPMI_OEM_FUJITSU_ERROR_LED_CSS_BLINK_GEL_ON    7
 #define IPMI_OEM_FUJITSU_ERROR_LED_CSS_BLINK_GEL_BLINK 8
 
-/* achu: one byte field, so max is 255 */
-#define IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH 100
+#define IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_IRMC_S1_MAX_READ_LENGTH 32
+#define IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_IRMC_S2_MAX_READ_LENGTH 100
+
+#define IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_IRMC_S1_MAX_DATA_LENGTH 80
+#define IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_IRMC_S2_MAX_DATA_LENGTH 100
+
+#define IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_READ_LENGTH 100
+#define IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_DATA_LENGTH 100
 
 #define IPMI_OEM_FUJITSU_CSS_BITMASK      0x80
 #define IPMI_OEM_FUJITSU_CSS_SHIFT        7
@@ -1331,8 +1337,8 @@ ipmi_oem_fujitsu_get_sel_entry_long_text (ipmi_oem_state_data_t *state_data)
   time_t timetmp;
   struct tm time_tm;
   char time_buf[IPMI_OEM_TIME_BUFLEN + 1];
-  char string_buf[IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH + 1];
-  uint8_t data_length = UCHAR_MAX;
+  char data_buf[IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_DATA_LENGTH + 1];
+  uint8_t data_length;
   uint8_t offset = 0;
   uint8_t component_length = 0;
   char *css_str = NULL;
@@ -1364,7 +1370,7 @@ ipmi_oem_fujitsu_get_sel_entry_long_text (ipmi_oem_state_data_t *state_data)
 
   sel_record_id = value;
 
-  memset (string_buf, '\0', IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH + 1);
+  memset (data_buf, '\0', IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_DATA_LENGTH + 1);
 
   /* HLiebig: Note: Documentation is for iRMC S2 version */
   if ((ipmi_get_oem_data (state_data->pstate,
@@ -1372,11 +1378,14 @@ ipmi_oem_fujitsu_get_sel_entry_long_text (ipmi_oem_state_data_t *state_data)
                           &oem_data) <= 0)
       || (IPMI_FUJITSU_PRODUCT_ID_IS_IRMC_S1 (oem_data.product_id)))
     {
-      max_read_length = 32;
-      data_length = 80;
+      max_read_length = IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_IRMC_S1_MAX_READ_LENGTH;
+      data_length = IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_IRMC_S1_MAX_DATA_LENGTH;
     }
   else 
-    max_read_length = IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH;
+    {
+      max_read_length = IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_IRMC_S2_MAX_READ_LENGTH;
+      data_length = IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_IRMC_S2_MAX_DATA_LENGTH;
+    }
 
   /* Fujitsu OEM
    * 
@@ -1516,16 +1525,16 @@ ipmi_oem_fujitsu_get_sel_entry_long_text (ipmi_oem_state_data_t *state_data)
       component_length = strlen ((char *)bytes_rs + 16);
   
       /* achu: truncate if there is overflow */
-      if (offset + component_length > IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH)
+      if (offset + component_length > data_length)
         {
-          memcpy (string_buf + offset,
+          memcpy (data_buf + offset,
                   &bytes_rs[16],
-                  IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH - offset);
+                  IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_DATA_LENGTH - offset);
           offset = data_length;
         }
       else
         {
-          memcpy (string_buf + offset,
+          memcpy (data_buf + offset,
                   &bytes_rs[16],
                   component_length);
           offset += component_length;
@@ -1563,7 +1572,7 @@ ipmi_oem_fujitsu_get_sel_entry_long_text (ipmi_oem_state_data_t *state_data)
                     actual_record_id,
                     time_buf,
                     severity_str,
-                    string_buf,
+                    data_buf,
                     css_str);
   else
     pstdout_printf (state_data->pstate,
@@ -1571,7 +1580,7 @@ ipmi_oem_fujitsu_get_sel_entry_long_text (ipmi_oem_state_data_t *state_data)
                     actual_record_id,
                     time_buf,
                     severity_str,
-                    string_buf);
+                    data_buf);
 
   rv = 0;
  cleanup:

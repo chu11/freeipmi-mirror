@@ -67,8 +67,17 @@
 #define IPMI_OEM_FUJITSU_COMMAND_SPECIFIER_GET_SEL_ENTRY_LONG_TEXT      0x43
 #define IPMI_OEM_FUJITSU_COMMAND_SPECIFIER_GET_SEL_ENTRY_TEXT           0x45
 
+#define IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_IRMC_S1_MAX_READ_LENGTH 32
+#define IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_IRMC_S2_MAX_READ_LENGTH 100
+
+#define IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_IRMC_S1_MAX_DATA_LENGTH 80
+#define IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_IRMC_S2_MAX_DATA_LENGTH 100
+
+#define IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_READ_LENGTH 100
+#define IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_DATA_LENGTH 100
+
 /* Fully decoded english version of decoded SEL */
-#define IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH          100
+#define IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH 255
 
 /* (very) Short text to display on 1 line of the optional LCD Panel, 20 characters */
 #define IPMI_OEM_FUJITSU_SEL_ENTRY_TEXT_MAX_STRING_LENGTH                20
@@ -118,6 +127,7 @@ _ipmi_sel_oem_fujitsu_get_sel_entry_long_text (ipmi_sel_parse_ctx_t ctx,
   uint16_t sel_record_id = 0xFFFF;
   uint8_t css = 0;
   uint8_t severity = 0;
+  char data_buf[IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_DATA_LENGTH + 1];
   char string_buf[IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH + 1];
   uint8_t data_length;
   uint8_t max_read_length;
@@ -141,19 +151,20 @@ _ipmi_sel_oem_fujitsu_get_sel_entry_long_text (ipmi_sel_parse_ctx_t ctx,
                                         NULL) < 0)
     goto cleanup;
 
+  memset (data_buf, '\0', IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_DATA_LENGTH + 1);
   memset (string_buf, '\0', IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH + 1);
 
   /* Note: Referenced documentation is for iRMC S2 version */
   if (IPMI_FUJITSU_PRODUCT_ID_IS_IRMC_S1 (ctx->product_id))
     {
       /* iRMC S1 has limits */
-      max_read_length = 32;
-      data_length = 80;
+      max_read_length = IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_IRMC_S1_MAX_READ_LENGTH;
+      data_length = IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_IRMC_S1_MAX_DATA_LENGTH;
     }
   else 
     {
-      max_read_length = IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH;
-      data_length = IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH;
+      max_read_length = IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_IRMC_S2_MAX_READ_LENGTH;
+      data_length = IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_IRMC_S2_MAX_DATA_LENGTH;
     }
 
   /* Fujitsu OEM Command
@@ -241,9 +252,9 @@ _ipmi_sel_oem_fujitsu_get_sel_entry_long_text (ipmi_sel_parse_ctx_t ctx,
             {
               if (bytes_rs[1] == IPMI_COMP_CODE_INSUFFICIENT_PRIVILEGE_LEVEL)
                 {
-                  snprintf (string_buf,
+                  snprintf (data_buf,
                             IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH,
-                            "[Fujtisu OEM decoding requires administrator privilege]");
+                            "[Fujitsu OEM decoding requires administrator privilege]");
                   goto out;
                 }
               goto cleanup;
@@ -266,16 +277,16 @@ _ipmi_sel_oem_fujitsu_get_sel_entry_long_text (ipmi_sel_parse_ctx_t ctx,
       component_length = strlen ((char *)bytes_rs + 16);
       
       /* achu: truncate if there is overflow */
-      if (offset + component_length > IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH)
+      if (offset + component_length > data_length)
         {
-          memcpy (string_buf + offset,
+          memcpy (data_buf + offset,
                   &bytes_rs[16],
-                  IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH - offset);
+                  IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_DATA_LENGTH - offset);
           offset = data_length;
         }
       else
         {
-          memcpy (string_buf + offset,
+          memcpy (data_buf + offset,
                   &bytes_rs[16],
                   component_length);
           offset += component_length;
@@ -303,14 +314,14 @@ _ipmi_sel_oem_fujitsu_get_sel_entry_long_text (ipmi_sel_parse_ctx_t ctx,
                   IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH,
                   "%s: %s (%s)",
                   severity_str,
-                  string_buf,
+                  data_buf,
                   css_str);
       else 
         snprintf (string_buf,
                   IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH,
                   "%s: %s",
                   severity_str,
-                  string_buf);
+                  data_buf);
     }
   else
     {
@@ -318,13 +329,13 @@ _ipmi_sel_oem_fujitsu_get_sel_entry_long_text (ipmi_sel_parse_ctx_t ctx,
         snprintf (string_buf,
                   IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH,
                   "%s (%s)",
-                  string_buf,
+                  data_buf,
                   css_str);
       else
         snprintf (string_buf,
                   IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH,
                   "%s",
-                  string_buf);
+                  data_buf);
     }
   
  out:
