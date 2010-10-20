@@ -1,4 +1,4 @@
-2010-XX-XX  Albert Chu <chu11@llnl.gov>
+2010-10-20  Albert Chu <chu11@llnl.gov>
 
 	* Code cleanup for consistency to FreeIPMI code style.
 
@@ -7,7 +7,7 @@
 
 	* ipmi-sel/: Support --output-oem-event-string.
 	
-2010-XX-XX  Holger Liebig <holger.liebig@ts.fujitsu.com>
+2010-10-20  Holger Liebig <holger.liebig@ts.fujitsu.com>
 
 	* Add initial Fujitsu OEM sensor and SEL support.
 

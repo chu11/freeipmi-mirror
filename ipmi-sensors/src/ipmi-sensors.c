@@ -624,25 +624,6 @@ _output_sensor (ipmi_sensors_state_data_t *state_data,
                                           IPMI_SENSORS_NO_EVENT_STRING) < 0)
         goto cleanup;
     }
-  /* Holger: XXX: Is this necessary?  You didn't update _event_reading_type_code_is_oem_interpretable() */
-  /* 
-   * OEM Interpretation
-   * Fujitsu iRMC S1 / iRMC S2
-   */
-  else if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM
-           && state_data->prog_data->args->interpret_oem_data
-           && state_data->oem_data.manufacturer_id == IPMI_IANA_ENTERPRISE_ID_FUJITSU
-           && (state_data->oem_data.product_id >= IPMI_FUJITSU_PRODUCT_ID_MIN
-               && state_data->oem_data.product_id <= IPMI_FUJITSU_PRODUCT_ID_MAX))
-    {
-      if (get_generic_event_message_list (state_data,
-                                          &event_message_list,
-                                          &event_message_list_len,
-                                          event_reading_type_code,
-                                          sensor_event_bitmask,
-                                          IPMI_SENSORS_NO_EVENT_STRING) < 0)
-        goto cleanup;
-    }
   /* OEM Interpretation
    *
    * Supermicro X8DTH
