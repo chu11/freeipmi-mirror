@@ -27,8 +27,12 @@
 
 #include "freeipmi/util/ipmi-sensor-util.h"
 #include "freeipmi/record-format/ipmi-sdr-record-format.h"
+#include "freeipmi/spec/ipmi-event-reading-type-code-spec.h"
 #include "freeipmi/spec/ipmi-sensor-types-spec.h"
+#include "freeipmi/spec/ipmi-sensor-types-oem-spec.h"
 #include "freeipmi/spec/ipmi-sensor-units-spec.h"
+#include "freeipmi/spec/ipmi-iana-enterprise-numbers-spec.h"
+#include "freeipmi/spec/ipmi-product-id-spec.h"
 
 #include "libcommon/ipmi-trace.h"
 
@@ -74,6 +78,70 @@ ipmi_get_sensor_type_string (uint8_t sensor_type)
 
   return (NULL);
 }
+
+const char *
+ipmi_get_oem_sensor_type_string (uint8_t sensor_type,
+                                 uint8_t event_reading_code,
+                                 uint32_t manufacturer_id,
+                                 uint16_t product_id)
+{
+  if (IPMI_SENSOR_TYPE_VALID (sensor_type))
+    return (ipmi_sensor_types[sensor_type]);
+
+  if (IPMI_SENSOR_TYPE_IS_OEM (sensor_type))
+    {
+      if ((manufacturer_id == IPMI_IANA_ENTERPRISE_ID_FUJITSU)
+          && (product_id >= IPMI_FUJITSU_PRODUCT_ID_MIN
+              && product_id <= IPMI_FUJITSU_PRODUCT_ID_MAX))
+        {
+          if (event_reading_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC) 
+            {
+              switch (sensor_type)
+                {
+                case IPMI_SENSOR_TYPE_OEM_FUJITSU_I2C_BUS:
+                  return ("OEM I2C Bus");
+                case IPMI_SENSOR_TYPE_OEM_FUJITSU_SYSTEM_POWER_CONSUMPTION:
+                  return ("OEM Power Consumption");
+                case IPMI_SENSOR_TYPE_OEM_FUJITSU_MEMORY_STATUS:
+                  return ("OEM Memory Status");
+                case IPMI_SENSOR_TYPE_OEM_FUJITSU_MEMORY_CONFIG:
+                  return ("OEM Memory Config");
+                case IPMI_SENSOR_TYPE_OEM_FUJITSU_MEMORY:
+                  return ("OEM Memory");
+                case IPMI_SENSOR_TYPE_OEM_FUJITSU_FAN_STATUS:
+                  return ("OEM Fan Status");
+                case IPMI_SENSOR_TYPE_OEM_FUJITSU_PSU_STATUS:
+                  return ("OEM PSU Status");
+                case IPMI_SENSOR_TYPE_OEM_FUJITSU_PSU_REDUNDANCY:
+                  return ("OEM PSU Redundancy");
+                case IPMI_SENSOR_TYPE_OEM_FUJITSU_COMMUNICATION:
+                  return ("OEM Communication");
+                case IPMI_SENSOR_TYPE_OEM_FUJITSU_FLASH:
+                  return ("OEM Flash");
+                case IPMI_SENSOR_TYPE_OEM_FUJITSU_EVENT:
+                  return ("OEM Event");
+                case IPMI_SENSOR_TYPE_OEM_FUJITSU_CONFIG_BACKUP:
+                  return ("OEM Config Backup");
+                default:
+                  /* fall into generic case below */
+                  break;
+                }
+            } 
+          else if (event_reading_code == IPMI_EVENT_READING_TYPE_CODE_THRESHOLD)
+            {
+              /* Currently only one combination */
+              if (sensor_type == IPMI_SENSOR_TYPE_OEM_FUJITSU_I2C_BUS)
+                return ("OEM I2C Bus");
+            }
+          
+        }
+      
+      return (ipmi_oem_sensor_type);
+    }
+  
+  return (NULL);
+}
+
 
 int
 ipmi_sensor_decode_value (int8_t r_exponent,

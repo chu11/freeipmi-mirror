@@ -77,6 +77,7 @@ struct sensor_entity_id_counts
 };
 
 const char * get_sensor_type_output_string (unsigned int sensor_type);
+const char * get_oem_sensor_type_output_string (uint8_t sensor_type, uint8_t event_reading_code, uint32_t manufacturer_id, uint16_t product_id);
 
 int get_entity_sensor_name_string (pstdout_state_t pstate,
                                    ipmi_sdr_parse_ctx_t sdr_parse_ctx,

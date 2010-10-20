@@ -1884,6 +1884,98 @@ ipmi_get_oem_sensor_type_message (uint32_t manufacturer_id,
         }
     }
 
+  /* 
+   * OEM Interpretation
+   *
+   * Fujitsu iRMC S1 / iRMC S2
+   *
+   */
+  if (manufacturer_id == IPMI_IANA_ENTERPRISE_ID_FUJITSU
+      && (product_id >= IPMI_FUJITSU_PRODUCT_ID_MIN 
+          && product_id <= IPMI_FUJITSU_PRODUCT_ID_MAX))
+    {
+      switch (sensor_type)
+        {
+        case IPMI_SENSOR_TYPE_OEM_FUJITSU_I2C_BUS:
+          return (_get_event_message (offset,
+                                      buf,
+                                      buflen,
+                                      ipmi_sensor_type_oem_fujitsu_i2c_bus_max_index,
+                                      ipmi_sensor_type_oem_fujitsu_i2c_bus));
+        case IPMI_SENSOR_TYPE_OEM_FUJITSU_SYSTEM_POWER_CONSUMPTION:
+          return (_get_event_message (offset,
+                                      buf,
+                                      buflen,
+                                      ipmi_sensor_type_oem_fujitsu_system_power_consumption_max_index,
+                                      ipmi_sensor_type_oem_fujitsu_system_power_consumption));
+        case IPMI_SENSOR_TYPE_OEM_FUJITSU_MEMORY_STATUS:
+          return (_get_event_message (offset,
+                                      buf,
+                                      buflen,
+                                      ipmi_sensor_type_oem_fujitsu_memory_status_max_index,
+                                      ipmi_sensor_type_oem_fujitsu_memory_status));
+        case IPMI_SENSOR_TYPE_OEM_FUJITSU_MEMORY_CONFIG:
+          return (_get_event_message (offset,
+                                      buf,
+                                      buflen,
+                                      ipmi_sensor_type_oem_fujitsu_memory_config_max_index,
+                                      ipmi_sensor_type_oem_fujitsu_memory_config));
+        case IPMI_SENSOR_TYPE_OEM_FUJITSU_MEMORY:
+          return (_get_event_message (offset,
+                                      buf,
+                                      buflen,
+                                      ipmi_sensor_type_oem_fujitsu_memory_max_index,
+                                      ipmi_sensor_type_oem_fujitsu_memory));
+        case IPMI_SENSOR_TYPE_OEM_FUJITSU_HW_ERROR:
+          return (_get_event_message (offset,
+                                      buf,
+                                      buflen,
+                                      ipmi_sensor_type_oem_fujitsu_hw_error_max_index,
+                                      ipmi_sensor_type_oem_fujitsu_hw_error));
+        case IPMI_SENSOR_TYPE_OEM_FUJITSU_SYS_ERROR:
+          return (_get_event_message (offset,
+                                      buf,
+                                      buflen,
+                                      ipmi_sensor_type_oem_fujitsu_sys_error_max_index,
+                                      ipmi_sensor_type_oem_fujitsu_sys_error));
+        case IPMI_SENSOR_TYPE_OEM_FUJITSU_FAN_STATUS:
+          return (_get_event_message (offset,
+                                      buf,
+                                      buflen,
+                                      ipmi_sensor_type_oem_fujitsu_fan_status_max_index,
+                                      ipmi_sensor_type_oem_fujitsu_fan_status));
+        case IPMI_SENSOR_TYPE_OEM_FUJITSU_PSU_STATUS:
+          return (_get_event_message (offset,
+                                      buf,
+                                      buflen,
+                                      ipmi_sensor_type_oem_fujitsu_psu_status_max_index,
+                                      ipmi_sensor_type_oem_fujitsu_psu_status));
+        case IPMI_SENSOR_TYPE_OEM_FUJITSU_PSU_REDUNDANCY:
+          return (_get_event_message (offset,
+                                      buf,
+                                      buflen,
+                                      ipmi_sensor_type_oem_fujitsu_psu_redundancy_max_index,
+                                      ipmi_sensor_type_oem_fujitsu_psu_redundancy));
+        case IPMI_SENSOR_TYPE_OEM_FUJITSU_FLASH:
+          return (_get_event_message (offset,
+                                      buf,
+                                      buflen,
+                                      ipmi_sensor_type_oem_fujitsu_flash_max_index,
+                                      ipmi_sensor_type_oem_fujitsu_flash));
+        case IPMI_SENSOR_TYPE_OEM_FUJITSU_CONFIG_BACKUP:
+          return (_get_event_message (offset,
+                                      buf,
+                                      buflen,
+                                      ipmi_sensor_type_oem_fujitsu_config_backup_max_index,
+                                      ipmi_sensor_type_oem_fujitsu_config_backup));
+        /* These are reserved */
+        case IPMI_SENSOR_TYPE_OEM_FUJITSU_COMMUNICATION:
+        case IPMI_SENSOR_TYPE_OEM_FUJITSU_EVENT:
+        default:
+          break;
+        }
+    }
+
   SET_ERRNO (EINVAL);
   return (-1);
 }
@@ -2120,14 +2212,32 @@ ipmi_get_event_messages (uint8_t event_reading_type_code,
                   if (IPMI_SENSOR_TYPE_IS_OEM (sensor_type))
                     {
                       if (flags & IPMI_GET_EVENT_MESSAGES_FLAGS_INTERPRET_OEM_DATA
-                          && (manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-                              && (product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
-                                  || product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
-                              && (sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_SYSTEM_PERFORMANCE_DEGRADATION_STATUS
-                                  || sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING
-                                  || sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_NON_FATAL_ERROR
-                                  || sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_FATAL_IO_ERROR
-                                  || sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_UPGRADE)))
+                          && ((manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
+                               && (product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+                                   || product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
+                               && (sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_SYSTEM_PERFORMANCE_DEGRADATION_STATUS
+                                   || sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING
+                                   || sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_NON_FATAL_ERROR
+                                   || sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_FATAL_IO_ERROR
+                                   || sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_UPGRADE))
+                              || (manufacturer_id == IPMI_IANA_ENTERPRISE_ID_FUJITSU
+                                  && (product_id >= IPMI_FUJITSU_PRODUCT_ID_MIN
+                                      && product_id <= IPMI_FUJITSU_PRODUCT_ID_MAX)
+                                  && (sensor_type == IPMI_SENSOR_TYPE_OEM_FUJITSU_I2C_BUS
+                                      || sensor_type == IPMI_SENSOR_TYPE_OEM_FUJITSU_SYSTEM_POWER_CONSUMPTION
+                                      || sensor_type == IPMI_SENSOR_TYPE_OEM_FUJITSU_MEMORY_STATUS
+                                      || sensor_type == IPMI_SENSOR_TYPE_OEM_FUJITSU_MEMORY_CONFIG
+                                      || sensor_type == IPMI_SENSOR_TYPE_OEM_FUJITSU_FAN_STATUS
+                                      || sensor_type == IPMI_SENSOR_TYPE_OEM_FUJITSU_PSU_STATUS
+                                      || sensor_type == IPMI_SENSOR_TYPE_OEM_FUJITSU_PSU_REDUNDANCY
+                                      || sensor_type == IPMI_SENSOR_TYPE_OEM_FUJITSU_CONFIG_BACKUP
+                                      /* These are for events only --begin */
+                                      || sensor_type == IPMI_SENSOR_TYPE_OEM_FUJITSU_MEMORY
+                                      || sensor_type == IPMI_SENSOR_TYPE_OEM_FUJITSU_FLASH
+                                      || sensor_type == IPMI_SENSOR_TYPE_OEM_FUJITSU_EVENT
+                                      || sensor_type == IPMI_SENSOR_TYPE_OEM_FUJITSU_COMMUNICATION
+                                      /* These are for events only --end */
+                                      ))))
                         {
                           len = ipmi_get_oem_sensor_type_message (manufacturer_id,
                                                                   product_id,

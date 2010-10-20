@@ -147,6 +147,8 @@ struct config_file_data_ipmi_sel
   int assume_system_event_records_count;
   int interpret_oem_data;
   int interpret_oem_data_count;
+  int output_oem_event_strings;
+  int output_oem_event_strings_count;
   int entity_sensor_names;
   int entity_sensor_names_count;
   int no_sensor_type_output;

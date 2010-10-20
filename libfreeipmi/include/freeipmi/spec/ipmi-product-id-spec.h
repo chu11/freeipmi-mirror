@@ -37,6 +37,83 @@ extern "C" {
 #define IPMI_DELL_PRODUCT_ID_POWEREDGE_R610 __IPMI_DELL_PRODUCT_ID_POWEREDGE
 #define IPMI_DELL_PRODUCT_ID_POWEREDGE_R710 __IPMI_DELL_PRODUCT_ID_POWEREDGE
 
+/******************************************* 
+ * Fujitsu                                 *
+ *******************************************/
+
+/*
+ * Fujitsu Siemens Computers
+ * Fujitsu Technology Solutions
+ * iRMC S1 / iRMC S2
+ */
+#define IPMI_FUJITSU_PRODUCT_ID_MIN                 0x0200
+#define IPMI_FUJITSU_PRODUCT_ID_MAX                 0x03FF
+
+// iRMC-S1 based systems        
+#define IPMI_FUJITSU_PRODUCT_ID_TX200S3             0x0200
+#define IPMI_FUJITSU_PRODUCT_ID_TX300S3             0x0201
+#define IPMI_FUJITSU_PRODUCT_ID_RX200S3             0x0202
+#define IPMI_FUJITSU_PRODUCT_ID_RX300S3             0x0203
+#define IPMI_FUJITSU_PRODUCT_ID_UNUSEDS3            0x0204
+#define IPMI_FUJITSU_PRODUCT_ID_RX100S4             0x0205
+#define IPMI_FUJITSU_PRODUCT_ID_TX150S5             0x0206
+#define IPMI_FUJITSU_PRODUCT_ID_TX120S1             0x0207
+#define IPMI_FUJITSU_PRODUCT_ID_BX630S2             0x0208
+#define IPMI_FUJITSU_PRODUCT_ID_RX330S1             0x0209
+#define IPMI_FUJITSU_PRODUCT_ID_E230RN1             0x0210
+#define IPMI_FUJITSU_PRODUCT_ID_E230RSL             0x0211
+#define IPMI_FUJITSU_PRODUCT_ID_RX330S1_SHA         0x0212
+#define IPMI_FUJITSU_PRODUCT_ID_BX630S2_SHA         0x0213
+
+#define IPMI_FUJITSU_PRODUCT_ID_IS_IRMC_S1(__product_id)           \
+  (((__product_id) == IPMI_FUJITSU_PRODUCT_ID_TX200S3              \
+    || (__product_id) == IPMI_FUJITSU_PRODUCT_ID_TX300S3           \
+    || (__product_id) == IPMI_FUJITSU_PRODUCT_ID_RX200S3           \
+    || (__product_id) == IPMI_FUJITSU_PRODUCT_ID_RX300S3           \
+    || (__product_id) == IPMI_FUJITSU_PRODUCT_ID_UNUSEDS3          \
+    || (__product_id) == IPMI_FUJITSU_PRODUCT_ID_RX100S4           \
+    || (__product_id) == IPMI_FUJITSU_PRODUCT_ID_TX150S5           \
+    || (__product_id) == IPMI_FUJITSU_PRODUCT_ID_TX120S1           \
+    || (__product_id) == IPMI_FUJITSU_PRODUCT_ID_BX630S2           \
+    || (__product_id) == IPMI_FUJITSU_PRODUCT_ID_RX330S1           \
+    || (__product_id) == IPMI_FUJITSU_PRODUCT_ID_E230RN1           \
+    || (__product_id) == IPMI_FUJITSU_PRODUCT_ID_E230RSL           \
+    || (__product_id) == IPMI_FUJITSU_PRODUCT_ID_RX330S1_SHA       \
+    || (__product_id) == IPMI_FUJITSU_PRODUCT_ID_BX630S2_SHA) ? 1 : 0)
+
+// iRMC-S2 based systems        
+#define IPMI_FUJITSU_PRODUCT_ID_RX600S4             0x0218
+#define IPMI_FUJITSU_PRODUCT_ID_TX200S4             0x0220
+#define IPMI_FUJITSU_PRODUCT_ID_TX300S4             0x0221
+#define IPMI_FUJITSU_PRODUCT_ID_RX200S4             0x0222
+#define IPMI_FUJITSU_PRODUCT_ID_RX300S4             0x0223
+#define IPMI_FUJITSU_PRODUCT_ID_UNUSEDS4            0x0224
+#define IPMI_FUJITSU_PRODUCT_ID_RX100S5             0x0225
+#define IPMI_FUJITSU_PRODUCT_ID_TX150S6             0x0226
+#define IPMI_FUJITSU_PRODUCT_ID_TX120S2             0x0227
+
+#define IPMI_FUJITSU_PRODUCT_ID_TX150S6_64K         0x0233
+#define IPMI_FUJITSU_PRODUCT_ID_TX200S4_64K         0x0234
+#define IPMI_FUJITSU_PRODUCT_ID_TX300S4_64K         0x0235
+
+#define IPMI_FUJITSU_PRODUCT_ID_TX200S5             0x0240
+#define IPMI_FUJITSU_PRODUCT_ID_TX300S5             0x0241
+#define IPMI_FUJITSU_PRODUCT_ID_RX200S5             0x0242
+#define IPMI_FUJITSU_PRODUCT_ID_RX300S5             0x0243
+#define IPMI_FUJITSU_PRODUCT_ID_BX620S5             0x0244
+#define IPMI_FUJITSU_PRODUCT_ID_RX100S6             0x0245
+#define IPMI_FUJITSU_PRODUCT_ID_TX150S7             0x0246
+#define IPMI_FUJITSU_PRODUCT_ID_BX960S1             0x0254
+#define IPMI_FUJITSU_PRODUCT_ID_BX924S1             0x0255
+#define IPMI_FUJITSU_PRODUCT_ID_BX920S1             0x0256
+#define IPMI_FUJITSU_PRODUCT_ID_BX922S1             0x0257
+#define IPMI_FUJITSU_PRODUCT_ID_RX600S5             0x0258
+
+#define IPMI_FUJITSU_PRODUCT_ID_TX200S6             0x0260
+#define IPMI_FUJITSU_PRODUCT_ID_TX300S6             0x0261
+#define IPMI_FUJITSU_PRODUCT_ID_RX200S6             0x0262
+#define IPMI_FUJITSU_PRODUCT_ID_RX300S6             0x0263
+
 /*******************************************
  * Intel                                   *
  *******************************************/

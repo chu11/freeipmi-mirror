@@ -63,7 +63,7 @@ extern "C" {
  *******************************************/
 
 /*
- * Fujitsu RX100 S5
+ * Fujitsu iRMC S1 / iRMC S2
  *
  * http://manuals.ts.fujitsu.com/file/4390/irmc_s2-en.pdf
  */

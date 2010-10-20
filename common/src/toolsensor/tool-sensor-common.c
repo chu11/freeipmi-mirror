@@ -74,6 +74,23 @@ get_sensor_type_output_string (unsigned int sensor_type)
   return (UNRECOGNIZED_SENSOR_TYPE);
 }
 
+const char * 
+get_oem_sensor_type_output_string (uint8_t sensor_type,
+                                   uint8_t event_reading_code,
+                                   uint32_t manufacturer_id,
+                                   uint16_t product_id)
+{
+  const char *sensor_type_str;
+
+  if ((sensor_type_str = ipmi_get_oem_sensor_type_string (sensor_type,
+                                                          event_reading_code,
+                                                          manufacturer_id,
+                                                          product_id)))
+    return (sensor_type_str);
+  
+  return (UNRECOGNIZED_SENSOR_TYPE);
+}
+
 int
 get_entity_sensor_name_string (pstdout_state_t pstate,
                                ipmi_sdr_parse_ctx_t sdr_parse_ctx,

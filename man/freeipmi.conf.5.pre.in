@@ -897,6 +897,11 @@ Specify if
 .B ipmi-sel
 should attempt to interpret OEM data by default or not.
 .TP
+\fBipmi\-sel\-output\-oem\-event\-strings\fR \fIENABLE|DISABLE\fR
+Specify if
+.B ipmi-sel
+should output OEM event strings by default or not.
+.TP
 \fBipmi\-sel\-entity\-sensor\-names\fR \fIENABLE|DISABLE\fR
 Specify if output of sensor names should include entity ids and
 instances by default or not.

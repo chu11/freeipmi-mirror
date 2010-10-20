@@ -247,6 +247,19 @@ int ipmi_sel_parse_read_record (ipmi_sel_parse_ctx_t ctx,
  *
  * %o - oem data in hex
  *
+ * Available in all record types for certain manufacturers
+ *
+ * %O - output an OEM supplied string describing the event. [4]
+ *
+ * [4] On some motherboards, the vendor is capable of supplying a full
+ * string describing the event data, in particular supplying strings
+ * for OEM records and OEM event extensions.  Under the right
+ * conditions, this output option may be used as a potential
+ * replacement for %e, %f, %h, and/or %c.  If an OEM supplied string
+ * is not available, nothing will be output (with the exception of N/A
+ * if the OUTPUT_NOT_AVAILABLE flag is set).  Currently, this output
+ * option supports Fujitsu systems with iRMC S1/iRMC S2.
+ *
  * Misc
  *
  * %% - percent sign

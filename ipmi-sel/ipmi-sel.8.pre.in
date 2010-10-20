@@ -151,6 +151,20 @@ types are system event records and pray for the best.  This option is
 confirmed to work around compliances issues on HP DL 380 G5
 motherboards.
 #include <@top_srcdir@/common/man/manpage-common-interpret-oem-data.man>
+.TP
+\fB\-\-output\-oem\-event\-strings\fR
+Some motherboards support an IPMI OEM extension that returns the
+string output for a system event.  Such string output may be
+beneficial for determining the meaning behind OEM specific events.  This option
+will use the OEM event string to describe all system events in the
+.B ipmi-sel
+output.  This option differs from \fI\-\-interpret\-oem\-data\fR
+option in that all system events will output the vendor supplied event
+string, not just events that are OEM specific.  The event string may
+be very different from the normal FreeIPMI event string output.  If an
+OEM event strings is not available, the default output will be output.
+This option is confirmed to work for Fujitsu iRMC S1 and iRMC S2
+systems.
 #include <@top_srcdir@/common/man/manpage-common-entity-sensor-names.man>
 #include <@top_srcdir@/common/man/manpage-common-no-sensor-type-output.man>
 #include <@top_srcdir@/common/man/manpage-common-comma-separated-output.man>
@@ -196,9 +210,9 @@ using the \fB\-\-assume\-system\-event\-records\fR option above.
 #include <@top_srcdir@/common/man/manpage-common-oem-interpretation.man>
 .LP
 Dell Poweredge 2900, Dell Poweredge 2950, Dell Poweredge R610, Dell
-Poweredge R710, Intel S5500WB/Penguin Computing Relion 700, Inventec
-5441/Dell Xanadu II, Inventec 5442/Dell Xanadu III, Quanta S99Q/Dell
-FS12-TY, Sun X4140,
+Poweredge R710, Fujitsu iRMC S1 and iRMC S2 systems, Intel
+S5500WB/Penguin Computing Relion 700, Inventec 5441/Dell Xanadu II,
+Inventec 5442/Dell Xanadu III, Quanta S99Q/Dell FS12-TY, Sun X4140,
 .SH "EXAMPLES"
 .B # ipmi-sel 
 .PP

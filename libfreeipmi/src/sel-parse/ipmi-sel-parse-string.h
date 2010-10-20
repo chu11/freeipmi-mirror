@@ -32,6 +32,7 @@
 
 #include "ipmi-sel-parse-defs.h"
 
+/* returns 0 on success, 1 on success but w/ truncation */
 int ipmi_sel_parse_string_snprintf (char *buf,
 				    unsigned int buflen,
 				    unsigned int *wlen,

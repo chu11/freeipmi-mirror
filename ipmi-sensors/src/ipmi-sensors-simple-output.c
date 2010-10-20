@@ -129,6 +129,8 @@ _legacy_simple_output_header (ipmi_sensors_state_data_t *state_data,
   else
     {
       uint8_t sensor_type;
+      uint8_t event_reading_type_code;
+      const char * sensor_type_string = NULL;
 
       if (ipmi_sdr_parse_sensor_type (state_data->sdr_parse_ctx,
                                       sdr_record,
@@ -142,11 +144,23 @@ _legacy_simple_output_header (ipmi_sensors_state_data_t *state_data,
           return (-1);
         }
 
+      if ((state_data->prog_data->args->interpret_oem_data)
+          && (ipmi_sdr_parse_event_reading_type_code (state_data->sdr_parse_ctx,
+                                                      sdr_record,
+                                                      sdr_record_len,
+                                                      &event_reading_type_code) >= 0))
+        sensor_type_string = get_oem_sensor_type_output_string (sensor_type,
+                                                                event_reading_type_code,
+                                                                state_data->oem_data.manufacturer_id,
+                                                                state_data->oem_data.product_id);
+      else 
+        sensor_type_string = get_sensor_type_output_string (sensor_type);
+      
       pstdout_printf (state_data->pstate,
                       "%u: %s (%s): ",
                       record_id,
                       id_string,
-                      get_sensor_type_output_string (sensor_type));
+                      sensor_type_string);
     }
 
   return (0);
@@ -349,6 +363,8 @@ _simple_output_header (ipmi_sensors_state_data_t *state_data,
   char id_string[IPMI_SDR_CACHE_MAX_ID_STRING + 1];
   char sensor_name_buf[MAX_ENTITY_ID_SENSOR_NAME_STRING + 1];
   char *sensor_name = NULL;
+  const char *sensor_type_string;
+  uint8_t event_reading_type_code;
 
   assert (state_data);
   assert (sdr_record);
@@ -438,11 +454,23 @@ _simple_output_header (ipmi_sensors_state_data_t *state_data,
                   state_data->column_width.sensor_name,
                   state_data->column_width.sensor_type);
       
+      if ((state_data->prog_data->args->interpret_oem_data)
+          && (ipmi_sdr_parse_event_reading_type_code (state_data->sdr_parse_ctx,
+                                                      sdr_record,
+                                                      sdr_record_len,
+                                                      &event_reading_type_code) >= 0))
+        sensor_type_string = get_oem_sensor_type_output_string (sensor_type,
+                                                                event_reading_type_code,
+                                                                state_data->oem_data.manufacturer_id,
+                                                                state_data->oem_data.product_id);
+      else 
+        sensor_type_string = get_sensor_type_output_string (sensor_type);
+      
       pstdout_printf (state_data->pstate,
                       fmt,
                       record_id,
                       sensor_name,
-                      get_sensor_type_output_string (sensor_type));
+                      sensor_type_string);
     }
 
   if (state_data->prog_data->args->output_sensor_state)

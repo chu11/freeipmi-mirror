@@ -173,7 +173,7 @@ static int
 _detailed_output_header (ipmi_sensors_state_data_t *state_data,
                          const void *sdr_record,
                          unsigned int sdr_record_len,
-			 uint8_t sensor_number,
+                         uint8_t sensor_number,
                          uint8_t record_type,
                          uint16_t record_id)
 {
@@ -183,6 +183,7 @@ _detailed_output_header (ipmi_sensors_state_data_t *state_data,
   uint8_t sensor_owner_id_type, sensor_owner_id;
   uint8_t sensor_owner_lun, channel_number;
   uint8_t entity_id, entity_instance, entity_instance_type;
+  const char *sensor_type_string = NULL;
 
   assert (state_data);
   assert (sdr_record);
@@ -276,9 +277,18 @@ _detailed_output_header (ipmi_sensors_state_data_t *state_data,
   pstdout_printf (state_data->pstate,
                   "ID String: %s\n",
                   id_string);
+
+  if (state_data->prog_data->args->interpret_oem_data)
+    sensor_type_string = get_oem_sensor_type_output_string (sensor_type,
+                                                            event_reading_type_code,
+                                                            state_data->oem_data.manufacturer_id,
+                                                            state_data->oem_data.product_id);
+  else 
+    sensor_type_string = get_sensor_type_output_string (sensor_type);
+
   pstdout_printf (state_data->pstate,
                   "Sensor Type: %s (%Xh)\n",
-                  get_sensor_type_output_string (sensor_type),
+                  sensor_type_string,
                   sensor_type);
   pstdout_printf (state_data->pstate,
                   "Sensor Number: %u\n",
@@ -1436,7 +1446,7 @@ static int
 _detailed_output_full_record (ipmi_sensors_state_data_t *state_data,
                               const void *sdr_record,
                               unsigned int sdr_record_len,
-			      uint8_t sensor_number,
+                              uint8_t sensor_number,
                               uint8_t record_type,
                               uint16_t record_id,
                               double *reading,
@@ -1458,7 +1468,7 @@ _detailed_output_full_record (ipmi_sensors_state_data_t *state_data,
   if (_detailed_output_header (state_data,
                                sdr_record,
                                sdr_record_len,
-			       sensor_number,
+                               sensor_number,
                                record_type,
                                record_id) < 0)
     return (-1);
@@ -2417,7 +2427,7 @@ int
 ipmi_sensors_detailed_output (ipmi_sensors_state_data_t *state_data,
                               const void *sdr_record,
                               unsigned int sdr_record_len,
-			      uint8_t sensor_number,
+                              uint8_t sensor_number,
                               double *reading,
                               int event_message_output_type,
                               uint16_t sensor_event_bitmask,
@@ -2454,7 +2464,7 @@ ipmi_sensors_detailed_output (ipmi_sensors_state_data_t *state_data,
           return (_detailed_output_full_record (state_data,
                                                 sdr_record,
                                                 sdr_record_len,
-						sensor_number,
+                                                sensor_number,
                                                 record_type,
                                                 record_id,
                                                 reading,
@@ -2466,7 +2476,7 @@ ipmi_sensors_detailed_output (ipmi_sensors_state_data_t *state_data,
           return (_detailed_output_compact_record (state_data,
                                                    sdr_record,
                                                    sdr_record_len,
-						   sensor_number,
+                                                   sensor_number,
                                                    record_type,
                                                    record_id,
                                                    event_message_output_type,
@@ -2477,7 +2487,7 @@ ipmi_sensors_detailed_output (ipmi_sensors_state_data_t *state_data,
           return (_detailed_output_event_only_record (state_data,
                                                       sdr_record,
                                                       sdr_record_len,
-						      sensor_number,
+                                                      sensor_number,
                                                       record_type,
                                                       record_id));
         case IPMI_SDR_FORMAT_ENTITY_ASSOCIATION_RECORD:
@@ -2547,7 +2557,7 @@ ipmi_sensors_detailed_output (ipmi_sensors_state_data_t *state_data,
           return (_detailed_output_full_record (state_data,
                                                 sdr_record,
                                                 sdr_record_len,
-						sensor_number,
+                                                sensor_number,
                                                 record_type,
                                                 record_id,
                                                 reading,
@@ -2559,7 +2569,7 @@ ipmi_sensors_detailed_output (ipmi_sensors_state_data_t *state_data,
           return (_detailed_output_compact_record (state_data,
                                                    sdr_record,
                                                    sdr_record_len,
-						   sensor_number,
+                                                   sensor_number,
                                                    record_type,
                                                    record_id,
                                                    event_message_output_type,
@@ -2574,7 +2584,7 @@ ipmi_sensors_detailed_output (ipmi_sensors_state_data_t *state_data,
             return (_detailed_output_event_only_record (state_data,
                                                         sdr_record,
                                                         sdr_record_len,
-							sensor_number,
+                                                        sensor_number,
                                                         record_type,
                                                         record_id));
         default:

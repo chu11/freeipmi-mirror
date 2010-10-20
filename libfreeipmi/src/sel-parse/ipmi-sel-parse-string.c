@@ -53,6 +53,8 @@
 #include "freeipmi/spec/ipmi-sensor-types-spec.h"
 #include "freeipmi/spec/ipmi-sensor-units-spec.h"
 #include "freeipmi/spec/ipmi-slave-address-spec.h"
+#include "freeipmi/spec/ipmi-netfn-spec.h"
+#include "freeipmi/spec/ipmi-comp-code-spec.h"
 #include "freeipmi/util/ipmi-iana-enterprise-numbers-util.h"
 #include "freeipmi/util/ipmi-sensor-and-event-code-tables-util.h"
 #include "freeipmi/util/ipmi-sensor-units-util.h"
@@ -63,6 +65,7 @@
 #include "ipmi-sel-parse-defs.h"
 #include "ipmi-sel-parse-string.h"
 #include "ipmi-sel-parse-string-dell.h"
+#include "ipmi-sel-parse-string-fujitsu.h"
 #include "ipmi-sel-parse-string-intel.h"
 #include "ipmi-sel-parse-string-inventec.h"
 #include "ipmi-sel-parse-string-quanta.h"
@@ -82,6 +85,7 @@
 #define IANA_LENGTH             1024
 #define UNITS_BUFFER_LENGTH     1024
 
+/* returns 0 on success, 1 on success but w/ truncation */
 int
 ipmi_sel_parse_string_snprintf (char *buf,
 				unsigned int buflen,
@@ -580,7 +584,13 @@ _output_sensor_type (ipmi_sel_parse_ctx_t ctx,
   if (sel_parse_get_system_event_record (ctx, sel_parse_entry, &system_event_record_data) < 0)
     return (-1);
   
-  sensor_type_str = ipmi_get_sensor_type_string (system_event_record_data.sensor_type);
+  if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA)
+    sensor_type_str = ipmi_get_oem_sensor_type_string (system_event_record_data.sensor_type,
+                                                       (system_event_record_data.event_type_code & 0x7F), 
+                                                       ctx->manufacturer_id,
+                                                       ctx->product_id);
+  else 
+    sensor_type_str = ipmi_get_sensor_type_string (system_event_record_data.sensor_type);
   
   if (sensor_type_str)
     {
@@ -824,7 +834,23 @@ _output_oem_event_data1_class_sensor_specific_discrete (ipmi_sel_parse_ctx_t ctx
       if (ret)
 	return (1);
     }
-  
+
+  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_FUJITSU)
+    {
+      if ((ret = ipmi_sel_parse_output_fujitsu_event_data1_class_sensor_specific_discrete (ctx,
+                                                                                           sel_parse_entry,
+                                                                                           sel_record_type,
+                                                                                           tmpbuf,
+                                                                                           tmpbuflen,
+                                                                                           flags,
+                                                                                           wlen,
+                                                                                           system_event_record_data)) < 0)
+        return (-1);
+      
+      if (ret)
+        return (1);
+    }
+
   return (0);
 }
 
@@ -2303,6 +2329,23 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
 	return (1);
     }
 
+  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_FUJITSU)
+    {
+      if ((ret = ipmi_sel_parse_output_fujitsu_event_data2_event_data3 (ctx,
+                                                                        sel_parse_entry,
+                                                                        sel_record_type,
+                                                                        buf,
+                                                                        buflen,
+                                                                        flags,
+                                                                        wlen,
+                                                                        system_event_record_data,
+                                                                        oem_rv)) < 0)
+	return (-1);
+
+      if (ret)
+	return (1);
+    }
+
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL)
     {
       if ((ret = ipmi_sel_parse_output_intel_event_data2_event_data3 (ctx,
@@ -2816,18 +2859,63 @@ _output_manufacturer_id (ipmi_sel_parse_ctx_t ctx,
   return (0);
 }
 
+/* return (0) - no OEM match
+ * return (1) - OEM match
+ * return (-1) - error, cleanup and return error
+ */
+static int
+_output_oem_interpreted_record_data (ipmi_sel_parse_ctx_t ctx,
+                                     struct ipmi_sel_parse_entry *sel_parse_entry,
+                                     uint8_t sel_record_type,
+                                     char *tmpbuf,
+                                     unsigned int tmpbuflen,
+                                     unsigned int flags,
+                                     unsigned int *wlen,
+                                     int *oem_rv)
+{
+  int ret;
+
+  assert (ctx);
+  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (sel_parse_entry);
+  assert (tmpbuf);
+  assert (tmpbuflen);
+  assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
+  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (wlen);
+  assert (oem_rv);
+
+  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_FUJITSU)
+    {
+      if ((ret = ipmi_sel_parse_output_fujitsu_oem_record_data (ctx,
+                                                                sel_parse_entry,
+                                                                sel_record_type,
+                                                                tmpbuf,
+                                                                tmpbuflen,
+                                                                flags,
+                                                                wlen,
+                                                                oem_rv)) < 0)
+	return (-1);
+      
+      if (ret)
+	return (1);
+    }
+
+  return (0);
+}
+
 /* return (0) - continue on
  * return (1) - buffer full, return full buffer to user
  * return (-1) - error, cleanup and return error
  */
 static int
-_output_oem (ipmi_sel_parse_ctx_t ctx,
-             struct ipmi_sel_parse_entry *sel_parse_entry,
-             uint8_t sel_record_type,
-             char *buf,
-             unsigned int buflen,
-             unsigned int flags,
-             unsigned int *wlen)
+_output_oem_record_data (ipmi_sel_parse_ctx_t ctx,
+                         struct ipmi_sel_parse_entry *sel_parse_entry,
+                         uint8_t sel_record_type,
+                         char *buf,
+                         unsigned int buflen,
+                         unsigned int flags,
+                         unsigned int *wlen)
 {
   uint8_t oem_data[SEL_PARSE_BUFFER_LENGTH];
   int oem_len;
@@ -2844,6 +2932,25 @@ _output_oem (ipmi_sel_parse_ctx_t ctx,
   if (ipmi_sel_record_type_class (sel_record_type) != IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD
       && ipmi_sel_record_type_class (sel_record_type) != IPMI_SEL_RECORD_TYPE_CLASS_NON_TIMESTAMPED_OEM_RECORD)
     return (_invalid_sel_entry_common (ctx, buf, buflen, flags, wlen));
+
+  if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA)
+    {
+      int ret;
+      int oem_rv = 0;
+      
+      if ((ret = _output_oem_interpreted_record_data (ctx,
+                                                      sel_parse_entry,
+                                                      sel_record_type,
+                                                      buf,
+                                                      buflen,
+                                                      flags,
+                                                      wlen,
+                                                      &oem_rv)) < 0)
+        return (-1);
+      
+      if (ret)
+        return (oem_rv);
+    }
 
   if ((oem_len = sel_parse_get_oem (ctx, sel_parse_entry, oem_data, SEL_PARSE_BUFFER_LENGTH)) < 0)
     return (-1);
@@ -2862,6 +2969,56 @@ _output_oem (ipmi_sel_parse_ctx_t ctx,
         return (1);
     }
 
+  return (0);
+}
+
+/* return (0) - continue on
+ * return (1) - buffer full, return full buffer to user
+ * return (-1) - error, cleanup and return error
+ */
+static int
+_output_oem_string (ipmi_sel_parse_ctx_t ctx,
+                    struct ipmi_sel_parse_entry *sel_parse_entry,
+                    uint8_t sel_record_type,
+                    char *buf,
+                    unsigned int buflen,
+                    unsigned int flags,
+                    unsigned int *wlen)
+{
+  int ret;
+
+  assert (ctx);
+  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (sel_parse_entry);
+  assert (buf);
+  assert (buflen);
+  assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
+  assert (wlen);
+  
+  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_FUJITSU)
+    {
+      int oem_rv = 0;
+      
+      if ((ret = ipmi_sel_parse_output_fujitsu_oem_string (ctx,
+                                                           sel_parse_entry,
+                                                           sel_record_type,
+                                                           buf,
+                                                           buflen,
+                                                           flags,
+                                                           wlen,
+                                                           &oem_rv)) < 0)
+        return (-1);
+      
+      if (ret)
+        return (oem_rv);
+    }
+  
+  if (flags & IPMI_SEL_PARSE_STRING_FLAGS_OUTPUT_NOT_AVAILABLE)
+    {
+      if (ipmi_sel_parse_string_snprintf (buf, buflen, wlen, "%s", NA_STRING))
+        return (1);
+    }
+  
   return (0);
 }
 
@@ -3089,13 +3246,27 @@ sel_parse_format_record_string (ipmi_sel_parse_ctx_t ctx,
         }
       else if (percent_flag && *fmt == 'o') /* oem data */
         {
-          if ((ret = _output_oem (ctx,
-                                  &sel_parse_entry,
-                                  sel_record_type,
-                                  buf,
-                                  buflen,
-                                  flags,
-                                  &wlen)) < 0)
+          if ((ret = _output_oem_record_data (ctx,
+                                              &sel_parse_entry,
+                                              sel_record_type,
+                                              buf,
+                                              buflen,
+                                              flags,
+                                              &wlen)) < 0)
+            goto cleanup;
+          if (ret)
+            goto out;
+          percent_flag = 0;
+        }
+      else if (percent_flag && *fmt == 'O') /* OEM string */
+        {
+          if ((ret = _output_oem_string (ctx,
+                                         &sel_parse_entry,
+                                         sel_record_type,
+                                         buf,
+                                         buflen,
+                                         flags,
+                                         &wlen)) < 0)
             goto cleanup;
           if (ret)
             goto out;
