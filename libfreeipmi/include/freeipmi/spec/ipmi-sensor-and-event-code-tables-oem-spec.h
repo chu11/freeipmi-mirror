@@ -254,6 +254,64 @@ extern unsigned int ipmi_sensor_type_oem_dell_upgrade_max_index;
 #define IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_GENERAL_FAILURE_AFTER_VIDEO             0xFE
 
 /*******************************************
+ * Fujitsu                                 *
+ *******************************************/
+
+/*
+ * Fujitsu Siemens Computers
+ * Fujitsu Technology Solutions
+ * iRMC S1 / iRMC S2
+ */
+
+/* 0xC0 / IPMI_SENSOR_TYPE_OEM_FUJITSU_I2C_BUS*/
+extern const char * const ipmi_sensor_type_oem_fujitsu_i2c_bus[];
+extern unsigned int ipmi_sensor_type_oem_fujitsu_i2c_bus_max_index;
+
+/* 0xDD / IPMI_SENSOR_TYPE_OEM_FUJITSU_SYSTEM_POWER_CONSUMPTION */
+extern const char * const ipmi_sensor_type_oem_fujitsu_system_power_consumption[];
+extern unsigned int ipmi_sensor_type_oem_fujitsu_system_power_consumption_max_index;
+
+/* 0xDE / IPMI_SENSOR_TYPE_OEM_FUJITSU_MEMORY_STATUS */
+extern const char * const ipmi_sensor_type_oem_fujitsu_memory_status[];
+extern unsigned int ipmi_sensor_type_oem_fujitsu_memory_status_max_index;
+
+/* 0xDF / IPMI_SENSOR_TYPE_OEM_FUJITSU_MEMORY_CONFIG */
+extern const char * const ipmi_sensor_type_oem_fujitsu_memory_config[];
+extern unsigned int ipmi_sensor_type_oem_fujitsu_memory_config_max_index;
+
+/* 0xE1 / IPMI_SENSOR_TYPE_OEM_FUJITSU_MEMORY */
+extern const char * const ipmi_sensor_type_oem_fujitsu_memory[];
+extern unsigned int ipmi_sensor_type_oem_fujitsu_memory_max_index;
+
+/* 0xE3 / IPMI_SENSOR_TYPE_OEM_FUJITSU_HW_ERROR */
+extern const char * const ipmi_sensor_type_oem_fujitsu_hw_error[];
+extern unsigned int ipmi_sensor_type_oem_fujitsu_hw_error_max_index;
+
+/* 0xE4 / IPMI_SENSOR_TYPE_OEM_FUJITSU_SYS_ERROR */
+extern const char * const ipmi_sensor_type_oem_fujitsu_sys_error[];
+extern unsigned int ipmi_sensor_type_oem_fujitsu_sys_error_max_index;
+
+/* 0xE6 / IPMI_SENSOR_TYPE_OEM_FUJITSU_FAN_STATUS */
+extern const char * const ipmi_sensor_type_oem_fujitsu_fan_status[];
+extern unsigned int ipmi_sensor_type_oem_fujitsu_fan_status_max_index;
+
+/* 0xE8 / IPMI_SENSOR_TYPE_OEM_FUJITSU_PSU_STATUS */
+extern const char * const ipmi_sensor_type_oem_fujitsu_psu_status[];
+extern unsigned int ipmi_sensor_type_oem_fujitsu_psu_status_max_index;
+
+/* 0xE9 / IPMI_SENSOR_TYPE_OEM_FUJITSU_PSU_REDUNDANCY */
+extern const char * const ipmi_sensor_type_oem_fujitsu_psu_redundancy[];
+extern unsigned int ipmi_sensor_type_oem_fujitsu_psu_redundancy_max_index;
+
+/* 0xEC / IPMI_SENSOR_TYPE_OEM_FUJITSU_FLASH */
+extern const char * const ipmi_sensor_type_oem_fujitsu_flash[];
+extern unsigned int ipmi_sensor_type_oem_fujitsu_flash_max_index;
+
+/* 0xEF / IPMI_SENSOR_TYPE_OEM_FUJITSU_CONFIG_BACKUP */
+extern const char * const ipmi_sensor_type_oem_fujitsu_config_backup[];
+extern unsigned int ipmi_sensor_type_oem_fujitsu_config_backup_max_index;
+
+/*******************************************
  * Intel                                    *
  *******************************************/
 
@@ -786,6 +844,7 @@ extern unsigned int ipmi_oem_intel_specific_pci_correctable_sensor_max_index;
 #define IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP_HIGH          0x02
 #define IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP_OVERHEAT      0x04
 #define IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP_NOT_INSTALLED 0x07
+
 #ifdef __cplusplus
 }
 #endif

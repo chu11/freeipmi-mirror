@@ -49,6 +49,8 @@
 #include "ipmi-oem-common.h"
 #include "ipmi-oem-fujitsu.h"
 
+#include "tool-oem-common.h"
+
 #include "freeipmi-portability.h"
 #include "pstdout.h"
 
@@ -223,8 +225,14 @@
 #define IPMI_OEM_FUJITSU_ERROR_LED_CSS_BLINK_GEL_ON    7
 #define IPMI_OEM_FUJITSU_ERROR_LED_CSS_BLINK_GEL_BLINK 8
 
-/* achu: one byte field, so max is 255 */
-#define IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH 255
+#define IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_IRMC_S1_MAX_READ_LENGTH 32
+#define IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_IRMC_S2_MAX_READ_LENGTH 100
+
+#define IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_IRMC_S1_MAX_DATA_LENGTH 80
+#define IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_IRMC_S2_MAX_DATA_LENGTH 100
+
+#define IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_READ_LENGTH 100
+#define IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_DATA_LENGTH 100
 
 #define IPMI_OEM_FUJITSU_CSS_BITMASK      0x80
 #define IPMI_OEM_FUJITSU_CSS_SHIFT        7
@@ -239,8 +247,6 @@
 #define IPMI_OEM_FUJITSU_SEVERITY_MINOR         1
 #define IPMI_OEM_FUJITSU_SEVERITY_MAJOR         2
 #define IPMI_OEM_FUJITSU_SEVERITY_CRITICAL      3
-
-#define ipmi_oem_min(a,b) ((a) < (b) ? (a) : (b))
 
 static int
 _ipmi_oem_get_power_source (ipmi_oem_state_data_t *state_data,
@@ -1331,14 +1337,16 @@ ipmi_oem_fujitsu_get_sel_entry_long_text (ipmi_oem_state_data_t *state_data)
   time_t timetmp;
   struct tm time_tm;
   char time_buf[IPMI_OEM_TIME_BUFLEN + 1];
-  char string_buf[IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH + 1];
-  uint8_t data_length = UCHAR_MAX;
+  char data_buf[IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_DATA_LENGTH + 1];
+  uint8_t data_length;
   uint8_t offset = 0;
   uint8_t component_length = 0;
   char *css_str = NULL;
   char *severity_str = NULL;
   char *ptr = NULL;
   int rv = -1;
+  uint8_t max_read_length;
+  struct ipmi_oem_data oem_data;
 
   assert (state_data);
   assert (state_data->prog_data->args->oem_options_count == 1);
@@ -1362,7 +1370,22 @@ ipmi_oem_fujitsu_get_sel_entry_long_text (ipmi_oem_state_data_t *state_data)
 
   sel_record_id = value;
 
-  memset (string_buf, '\0', IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH + 1);
+  memset (data_buf, '\0', IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_DATA_LENGTH + 1);
+
+  /* HLiebig: Note: Documentation is for iRMC S2 version */
+  if ((ipmi_get_oem_data (state_data->pstate,
+                          state_data->ipmi_ctx,
+                          &oem_data) <= 0)
+      || (IPMI_FUJITSU_PRODUCT_ID_IS_IRMC_S1 (oem_data.product_id)))
+    {
+      max_read_length = IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_IRMC_S1_MAX_READ_LENGTH;
+      data_length = IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_IRMC_S1_MAX_DATA_LENGTH;
+    }
+  else 
+    {
+      max_read_length = IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_IRMC_S2_MAX_READ_LENGTH;
+      data_length = IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_IRMC_S2_MAX_DATA_LENGTH;
+    }
 
   /* Fujitsu OEM
    * 
@@ -1434,11 +1457,16 @@ ipmi_oem_fujitsu_get_sel_entry_long_text (ipmi_oem_state_data_t *state_data)
    * total length reported in the response."
    */
 
-  bytes_rq[8] = ipmi_oem_min (IPMI_OEM_MAX_BYTES - 17, 64);
+  /* Request partial or complete string, depending on product */
+  bytes_rq[8] = max_read_length;
 
   while (offset < data_length)
     {
       bytes_rq[7] = offset;
+
+      /* BMC checks for boundaries, offset + len has to be <= 80 (iRMC S1) <= 100 (iRMC S2) */ 
+      if (offset + bytes_rq[8] > data_length)
+         bytes_rq[8] = data_length - offset;
       
       if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                                   0, /* lun */
@@ -1497,16 +1525,16 @@ ipmi_oem_fujitsu_get_sel_entry_long_text (ipmi_oem_state_data_t *state_data)
       component_length = strlen ((char *)bytes_rs + 16);
   
       /* achu: truncate if there is overflow */
-      if (offset + component_length > IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH)
+      if (offset + component_length > data_length)
         {
-          memcpy (string_buf + offset,
+          memcpy (data_buf + offset,
                   &bytes_rs[16],
-                  IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH - offset);
+                  IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_DATA_LENGTH - offset);
           offset = data_length;
         }
       else
         {
-          memcpy (string_buf + offset,
+          memcpy (data_buf + offset,
                   &bytes_rs[16],
                   component_length);
           offset += component_length;
@@ -1543,16 +1571,16 @@ ipmi_oem_fujitsu_get_sel_entry_long_text (ipmi_oem_state_data_t *state_data)
                     "%u | %s | %s ; %s ; %s\n",
                     actual_record_id,
                     time_buf,
-                    css_str,
                     severity_str,
-                    string_buf);
+                    data_buf,
+                    css_str);
   else
     pstdout_printf (state_data->pstate,
                     "%u | %s | %s ; %s\n",
                     actual_record_id,
                     time_buf,
                     severity_str,
-                    string_buf);
+                    data_buf);
 
   rv = 0;
  cleanup:

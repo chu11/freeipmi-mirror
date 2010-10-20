@@ -40,6 +40,31 @@ extern "C" {
 #define IPMI_SENSOR_TYPE_OEM_DELL_UPGRADE                               0xC4
 
 /*******************************************
+ * Fujitsu                                 *
+ *******************************************/
+
+/*
+ * Fujitsu Siemens Computers
+ * Fujitsu Technology Solutions
+ * iRMC S1 / iRMC S2
+ */
+
+#define IPMI_SENSOR_TYPE_OEM_FUJITSU_I2C_BUS                    0xC0
+#define IPMI_SENSOR_TYPE_OEM_FUJITSU_SYSTEM_POWER_CONSUMPTION   0xDD // Events only
+#define IPMI_SENSOR_TYPE_OEM_FUJITSU_MEMORY_STATUS              0xDE
+#define IPMI_SENSOR_TYPE_OEM_FUJITSU_MEMORY_CONFIG              0xDF
+#define IPMI_SENSOR_TYPE_OEM_FUJITSU_MEMORY                     0xE1 // Events only
+#define IPMI_SENSOR_TYPE_OEM_FUJITSU_HW_ERROR                   0xE3 // Events only
+#define IPMI_SENSOR_TYPE_OEM_FUJITSU_SYS_ERROR                  0xE4 // Events only
+#define IPMI_SENSOR_TYPE_OEM_FUJITSU_FAN_STATUS                 0xE6
+#define IPMI_SENSOR_TYPE_OEM_FUJITSU_PSU_STATUS                 0xE8
+#define IPMI_SENSOR_TYPE_OEM_FUJITSU_PSU_REDUNDANCY             0xE9
+#define IPMI_SENSOR_TYPE_OEM_FUJITSU_COMMUNICATION              0xEA // Reserved
+#define IPMI_SENSOR_TYPE_OEM_FUJITSU_FLASH                      0xEC // Events only
+#define IPMI_SENSOR_TYPE_OEM_FUJITSU_EVENT                      0xEE // Reserved
+#define IPMI_SENSOR_TYPE_OEM_FUJITSU_CONFIG_BACKUP              0xEF
+
+/*******************************************
  * Intel                                   *
  *******************************************/
 
