@@ -212,9 +212,13 @@ _sensor_reading_corner_case_checks (ipmi_sensor_read_ctx_t ctx,
       return (-1);
     }
   else if ((ipmi_check_completion_code (obj_cmd_rs,
-                                        IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1)
-           || (ipmi_check_completion_code (obj_cmd_rs,
-                                           IPMI_COMP_CODE_COMMAND_ILLEGAL_FOR_SENSOR_OR_RECORD_TYPE) == 1)
+                                        IPMI_COMP_CODE_REQUESTED_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1))
+    {
+      SENSOR_READ_SET_ERRNUM (ctx, IPMI_SENSOR_READ_ERR_SENSOR_READING_UNAVAILABLE);
+      return (-1);
+    }
+  else if ((ipmi_check_completion_code (obj_cmd_rs,
+                                        IPMI_COMP_CODE_COMMAND_ILLEGAL_FOR_SENSOR_OR_RECORD_TYPE) == 1)
            || (ipmi_check_completion_code (obj_cmd_rs,
                                            IPMI_COMP_CODE_PARAMETER_OUT_OF_RANGE) == 1)
            || (ipmi_check_completion_code (obj_cmd_rs,

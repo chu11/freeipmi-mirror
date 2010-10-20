@@ -28,6 +28,8 @@ o ipmi-sensors
   - Support --output-event-bitmask option.
   - Some sensor states may now report 'N/A' if an invalid sensor event
     occurred.
+  - Report 'N/A' instead of 'Unknown' is requested sensor does not exist
+    on motherboard.
   - Support number input for --sensor-types and
     --exclude-sensor-types.
   - The "Unrecognized State" event string is now output as

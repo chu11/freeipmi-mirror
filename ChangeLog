@@ -1,3 +1,14 @@
+2010-10-19 Albert Chu <chu11@llnl.gov>
+
+	* Rename IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT
+	to IPMI_COMP_CODE_REQUESTED_SENSOR_DATA_OR_RECORD_NOT_PRESENT
+	globally.
+
+	* libfreeipmi/src/sensor-read/: For
+	IPMI_COMP_CODE_REQUESTED_SENSOR_DATA_OR_RECORD_NOT_PRESENT
+	completion code, return sensor unavailable rather than sensor
+	cannot be obtained.
+	
 2010-10-14 Albert Chu <chu11@llnl.gov>
 
 	* man/: Update workaround flags options.

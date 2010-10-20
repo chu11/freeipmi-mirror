@@ -742,7 +742,7 @@ ipmi_sel_parse (ipmi_sel_parse_ctx_t ctx,
 	{
           if (ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
               && ipmi_check_completion_code (obj_cmd_rs,
-                                             IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1)
+                                             IPMI_COMP_CODE_REQUESTED_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1)
             {
               /* If the sel is empty it's not really an error */
               goto out;
@@ -786,7 +786,7 @@ ipmi_sel_parse (ipmi_sel_parse_ctx_t ctx,
 	{
           if (ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
               && ipmi_check_completion_code (obj_cmd_rs,
-                                             IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1)
+                                             IPMI_COMP_CODE_REQUESTED_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1)
             {
               /* If the sel is empty it's not really an error */
               goto out;
@@ -849,7 +849,7 @@ ipmi_sel_parse (ipmi_sel_parse_ctx_t ctx,
           if (record_id == IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY
               && ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
               && ipmi_check_completion_code (obj_cmd_rs,
-                                             IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1)
+                                             IPMI_COMP_CODE_REQUESTED_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1)
             {
               /* If the sel is empty it's not really an error */
               goto out;
@@ -858,7 +858,7 @@ ipmi_sel_parse (ipmi_sel_parse_ctx_t ctx,
                    && !parsed_atleast_one_entry
                    && ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
                    && ipmi_check_completion_code (obj_cmd_rs,
-                                                  IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1)
+                                                  IPMI_COMP_CODE_REQUESTED_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1)
             {
               /* user input a starting record id, we didn't find something yet, so iterate until we do */
               next_record_id = record_id + 1;
@@ -990,7 +990,7 @@ ipmi_sel_parse_record_ids (ipmi_sel_parse_ctx_t ctx,
         {
           if (ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
               && ipmi_check_completion_code (obj_cmd_rs,
-                                             IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1)
+                                             IPMI_COMP_CODE_REQUESTED_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1)
             {
               /* record not available, ok continue on */
               continue;
@@ -1943,7 +1943,7 @@ ipmi_sel_parse_delete_sel_entry (ipmi_sel_parse_ctx_t ctx, uint16_t record_id)
                                      obj_cmd_rs) < 0)
         {
           if (ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
-              && (ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1
+              && (ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_REQUESTED_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1
                   || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1))
             {
               SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_NOT_FOUND);
