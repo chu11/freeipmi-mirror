@@ -1,6 +1,7 @@
 FreeIPMI 0.8.11 - 09/28/10
 --------------------------
-o Support Fujitsu iRMC S1 and iRMC S2 OEM extensions ipmi-sel.
+o Support Fujitsu iRMC S1 and iRMC S2 OEM extensions in ipmi-sensors
+  and ipmi-sel.
 o Support --output-oem-event-string in ipmi-sel.
 o Other minor documentation/bug fixes.
 
