@@ -2222,7 +2222,7 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
         }
     }
 
-  if (args->interpret_oem_data)
+  if (args->interpret_oem_data || args->output_oem_event_strings)
     {
       if (ipmi_get_oem_data (state_data->pstate,
                              state_data->ipmi_ctx,
