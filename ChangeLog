@@ -1,3 +1,8 @@
+2010-10-21  Holger Liebig <holger.liebig@ts.fujitsu.com>
+
+	* libfreeipmi/src/sel-parse/ipmi-sel-parse-string-fujitsu.c: Fix
+	error message corner case.
+
 2010-10-20  Albert Chu <chu11@llnl.gov>
 
 	* Code cleanup for consistency to FreeIPMI code style.
