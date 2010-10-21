@@ -252,7 +252,7 @@ _ipmi_sel_oem_fujitsu_get_sel_entry_long_text (ipmi_sel_parse_ctx_t ctx,
             {
               if (bytes_rs[1] == IPMI_COMP_CODE_INSUFFICIENT_PRIVILEGE_LEVEL)
                 {
-                  snprintf (data_buf,
+                  snprintf (string_buf,
                             IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH,
                             "[Fujitsu OEM decoding requires administrator privilege]");
                   goto out;
