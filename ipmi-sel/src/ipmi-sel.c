@@ -1360,10 +1360,33 @@ static int
 _normal_output_oem_data (ipmi_sel_state_data_t *state_data, unsigned int flags)
 {
   char outbuf[IPMI_SEL_OUTPUT_BUFLEN+1];
+  int read_oem_event_string = 0;
   int outbuf_len;
 
   assert (state_data);
   assert (!state_data->prog_data->args->legacy_output);
+
+  if (state_data->prog_data->args->output_oem_event_strings)
+    {
+      unsigned int len;
+      
+      memset (outbuf, '\0', IPMI_SEL_OUTPUT_BUFLEN+1);
+      if ((outbuf_len = ipmi_sel_parse_read_record_string (state_data->sel_parse_ctx,
+                                                           "%O",
+                                                           outbuf,
+                                                           IPMI_SEL_OUTPUT_BUFLEN,
+                                                           flags)) < 0)
+        {
+          if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_read_record_string") < 0)
+            return (-1);
+          return (0);
+        }
+      
+      len = strlen (outbuf);
+      
+      if (len && strcmp (outbuf, IPMI_SEL_NA_STRING))
+        read_oem_event_string++;
+    }
 
   memset (outbuf, '\0', IPMI_SEL_OUTPUT_BUFLEN+1);
   if ((outbuf_len = ipmi_sel_parse_read_record_string (state_data->sel_parse_ctx,
