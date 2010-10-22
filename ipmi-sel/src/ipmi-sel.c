@@ -1216,6 +1216,42 @@ _normal_output_not_available_event_direction (ipmi_sel_state_data_t *state_data,
   return (1);
 }
 
+/* return length written into buffer on success (may be zero)
+ * return (-1) on error
+ */
+static int
+_output_oem_event_strings (ipmi_sel_state_data_t *state_data,
+                           char *outbuf,
+                           unsigned int outbuflen,
+                           unsigned int flags)
+{
+  unsigned int len;
+  int ret;
+
+  assert (state_data);
+  assert (!state_data->prog_data->args->legacy_output);
+
+  if ((ret = ipmi_sel_parse_read_record_string (state_data->sel_parse_ctx,
+                                                "%O",
+                                                outbuf,
+                                                outbuflen,
+                                                flags)) < 0)
+    {
+      if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_read_record_string") < 0)
+        return (-1);
+      return (0);
+    }
+
+  len = strlen (outbuf);
+  
+  /* we don't count N/A as a valid string to be returned */
+  
+  if (len && strcmp (outbuf, IPMI_SEL_NA_STRING))
+    return (ret);
+  
+  return (0);
+}
+
 /* return 1 on success
  * return (0) on non-success, but don't fail
  * return (-1) on error
@@ -1225,7 +1261,7 @@ _normal_output_event (ipmi_sel_state_data_t *state_data, unsigned int flags)
 {
   char fmtbuf[IPMI_SEL_OUTPUT_BUFLEN+1];
   char outbuf[IPMI_SEL_OUTPUT_BUFLEN+1];
-  int outbuf_len;
+  int outbuf_len = 0;
   char *fmt;
   uint8_t event_type_code;
   uint8_t event_data2_flag;
@@ -1243,27 +1279,18 @@ _normal_output_event (ipmi_sel_state_data_t *state_data, unsigned int flags)
 
   if (state_data->prog_data->args->output_oem_event_strings)
     {
-      unsigned int len;
-
       memset (outbuf, '\0', IPMI_SEL_OUTPUT_BUFLEN+1);
-      if ((outbuf_len = ipmi_sel_parse_read_record_string (state_data->sel_parse_ctx,
-                                                           "%O",
-                                                           outbuf,
-                                                           IPMI_SEL_OUTPUT_BUFLEN,
-                                                           flags)) < 0)
-        {
-          if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_read_record_string") < 0)
-            return (-1);
-          return (0);
-        }
+        if ((outbuf_len = _output_oem_event_strings (state_data,
+                                                   outbuf,
+                                                   IPMI_SEL_OUTPUT_BUFLEN,
+                                                   flags)) < 0)
+        return (-1);
 
-      len = strlen (outbuf);
-
-      if (len && strcmp (outbuf, IPMI_SEL_NA_STRING))
+      if (outbuf_len)
         read_oem_event_string++;
     }
 
-  if (!read_oem_event_string)
+  if (!outbuf_len)
     {
       memset (outbuf, '\0', IPMI_SEL_OUTPUT_BUFLEN+1);
       if ((outbuf_len = ipmi_sel_parse_read_record_string (state_data->sel_parse_ctx,
@@ -1464,37 +1491,50 @@ _normal_output_oem_data (ipmi_sel_state_data_t *state_data,
                          unsigned int flags)
 {
   char outbuf[IPMI_SEL_OUTPUT_BUFLEN+1];
-  int outbuf_len;
-
+  int outbuf_len = 0;
+  
   assert (state_data);
   assert (!state_data->prog_data->args->legacy_output);
-
-  memset (outbuf, '\0', IPMI_SEL_OUTPUT_BUFLEN+1);
-  if (state_data->prog_data->args->output_manufacturer_id
-      && record_has_manufacturer_id)
+  
+  if (state_data->prog_data->args->output_oem_event_strings)
     {
-      if ((outbuf_len = ipmi_sel_parse_read_record_string (state_data->sel_parse_ctx,
-                                                           "%m ; %o",
-                                                           outbuf,
-                                                           IPMI_SEL_OUTPUT_BUFLEN,
-                                                           flags)) < 0)
-        {
-          if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_read_record_string") < 0)
-            return (-1);
-          return (0);
-        }
+      memset (outbuf, '\0', IPMI_SEL_OUTPUT_BUFLEN+1);
+      if ((outbuf_len = _output_oem_event_strings (state_data,
+                                                   outbuf,
+                                                   IPMI_SEL_OUTPUT_BUFLEN,
+                                                   flags)) < 0)
+        return (-1);
     }
-  else
+
+  if (!outbuf_len)
     {
-      if ((outbuf_len = ipmi_sel_parse_read_record_string (state_data->sel_parse_ctx,
-                                                           "%o",
-                                                           outbuf,
-                                                           IPMI_SEL_OUTPUT_BUFLEN,
-                                                           flags)) < 0)
+      memset (outbuf, '\0', IPMI_SEL_OUTPUT_BUFLEN+1);
+      if (state_data->prog_data->args->output_manufacturer_id
+          && record_has_manufacturer_id)
         {
-          if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_read_record_string") < 0)
-            return (-1);
-          return (0);
+          if ((outbuf_len = ipmi_sel_parse_read_record_string (state_data->sel_parse_ctx,
+                                                               "%m ; %o",
+                                                               outbuf,
+                                                               IPMI_SEL_OUTPUT_BUFLEN,
+                                                               flags)) < 0)
+            {
+              if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_read_record_string") < 0)
+                return (-1);
+              return (0);
+            }
+        }
+      else
+        {
+          if ((outbuf_len = ipmi_sel_parse_read_record_string (state_data->sel_parse_ctx,
+                                                               "%o",
+                                                               outbuf,
+                                                               IPMI_SEL_OUTPUT_BUFLEN,
+                                                               flags)) < 0)
+            {
+              if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_read_record_string") < 0)
+                return (-1);
+              return (0);
+            }
         }
     }
 
