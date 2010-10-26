@@ -279,7 +279,7 @@ general_usage_example()
    pkt.field_4 = 5;
 
    my_marshall_function(&pkt, buf, 1024);
-   /* then do something with the buffer */
+   my_send_data_function(buf);
 
    len = my_receive_data_function(buf);
    my_unmarshall_function(&pkt, buf, len);
@@ -301,15 +301,15 @@ Cons:
 
 A) Have to deal with endian problems.
 B) Lots of marshalling and unmarshalling code are required for each
-packet type.
+   packet type.
 C) Relatively difficult to deal with optional fields. (You'll need
-flags in the struct to indicate if a field was set/unset, or validate
-the fields via protocol definition knowledge.)
+   flags in the struct to indicate if a field was set/unset, or validate
+   the fields via protocol definition knowledge.)
 D) Relatively difficult to deal with variable length fields. (You'll
-need a length parameter in the struct to indicate the length of a
-field.)
+   need a length parameter in the struct to indicate the length of a
+   field.)
 E) Packet dumps/debugging is relatively poor (you only get hex) or you
-have to create debug functions to handle each packet type.
+   have to create debug functions to handle each packet type.
 
 Method B: Cast a buffer to a packed struct:
 -------------------------------------------
@@ -352,7 +352,7 @@ general_usage_example()
    pkt.field_4 = 5;
 
    my_marshall_function(&pkt, buf, 1024);
-   /* then do something with the buffer */
+   my_send_data_function(buf);
 
    len = my_receive_data_function(buf);
    my_unmarshall_function(&pkt, buf, len);
@@ -373,16 +373,16 @@ E) General usage need not determine field type (e.g. is it an unsigned
 Cons:
 
 A) Have to deal with endian problems.
-B) Have to deal with portability of struct packing techniques (there
-are differences in compilers, but nowadays, this may be
-easier/more portable than I originally believed it to be).
+B) Have to deal with portability of struct packing techniques between
+   different compilers (there are differences in compilers, but nowadays,
+   this may be easier/more portable than I originally believed it to be).
 C) Difficult to deal with optional fields (no flags can be put
-in the struct to indicate if a field was set/unset, can only
-validate the fields via protocol definition knowledge.)
+   in the struct to indicate if a field was set/unset, can only
+   validate the fields via protocol definition knowledge.)
 D) No mechanism to deal with variable length fields (no length
-field can be put in the struct to indicate the field length.)
+   field can be put in the struct to indicate the field length.)
 E) Packet dumps/debugging is relatively poor (you only get hex) or you
-have to create debug functions to handle each packet type.
+   have to create debug functions to handle each packet type.
 
 Our Method C: string_name -> bitmask mapping
 --------------------------------------------
@@ -428,9 +428,10 @@ general_usage_example()
 
    /* "marshall" the packet */
    fiid_obj_get_all(obj, buf, 1024);
-   /* then do something with the buffer */
+   my_send_data_function(buf);
 
    fiid_obj_clear(obj);
+
    len = my_receive_data_function(buf);
 
    /* "unmarshall" the packet */
@@ -446,25 +447,25 @@ Pros:
 
 A) No need to deal with endian problems (handled internally in the API).
 B) No need to deal with struct packing issues (bit shifts are handled
-internally in the API).
+   internally in the API).
 C) Easier to deal with optional fields (For marshalling, don't set a
-field.  For unmarshalling, the api can identify if a field is set or not).
+   field.  For unmarshalling, the api can identify if a field is set or not).
 D) Easier to deal with variable length fields (For marshalling, set
-whatever length you want.  For unmarshalling, the api can identify the
-length of the field read).
+   whatever length you want.  For unmarshalling, the api can identify the
+   length of the field read).
 E) Templates describe the packets exactly.
 F) Easy to do large packet dumps and debug (fields and values easily
-output and identified).
+   output and identified).
 G) Significantly reduce the amount of marshalling, unmarshalling, and
-debug code needed (the API "handles" it all already).
+   debug code needed (the API "handles" it all already).
 
 Cons:
 
 A) Need to learn/use a reasonably large API and learn/use all the
-templates.
+   templates.
 B) Pretty inefficient (lots of string comparisons).
 C) Lots of duplicate templates (relative inability to "inherit"
-structs without #define mangling/hackery).
+   structs without #define mangling/hackery).
 D) General usage code size is increased.
 E) General usage must determine and cast field to appropriate type
    (e.g. is it an unsigned or signed integer).
