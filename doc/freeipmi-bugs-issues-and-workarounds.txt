@@ -768,6 +768,32 @@ an error, but rather a flag.  So the rest of the packet can be
 completely full of legitimate data.  Resolved by handling both
 interpretations.  [INTERPRETATION]
 
+General Issue: The DCMI 1.1 Specification includes new commands to set
+the asset tag and management controller identifier string.  The
+payload to write these strings is:
+
+Byte 1   - Group Extension (DCh)
+Byte 2   - Offset to Write
+Byte 3   - Bytes to Write (max 16)
+Byte 4-N - Data
+
+and the response is:
+
+Byte 1 - Completion Code
+Byte 2 - Group Extension (DCh)
+Byte 3 - Total Length Written
+
+The maximum size for both strings is listed at 64 bytes.
+
+In the spec, it is unclear how this payload is to be used.  It is
+unclear if the "Total Length Written" field is similar to a posix
+write, where <= the bytes passed in may be written.  Or is it an
+indication of the total length of bytes stored?  The management
+identifier string is stated to be NUL terminated, but the asset tag is
+not stated with this requirement.  At present, the assumption is that
+all 64 bytes of the buffer must be overwritten everytime the string is
+modified.  This seems to be the safest approach.
+
 Appendix
 --------
 
