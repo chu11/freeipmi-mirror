@@ -1295,8 +1295,7 @@ set_management_controller_identifier_string (ipmi_dcmi_state_data_t *state_data)
   /* achu:
    *
    * DCMI 1.1 spec is unclear, I am assuming the
-   * "total_length_written" is the number of bytes just
-   * written.
+   * "total_length_written" is the number of bytes just written.
    *
    * I am assuming we need to clear the entire buffer, so we write the
    * full buffer, NUL byte extended.
@@ -1827,17 +1826,17 @@ _get_power_limit (ipmi_dcmi_state_data_t *state_data,
    *
    * The DCMI spec indicates a potential completion code for the "Get
    * Power Limit" command as "No Set Power Limit" (0x80).  FreeIPMI
-   * interpreted this to mean the "Set Power Limit" command was not
-   * available.  Atleast one vendor interpreted this to mean "No Power
-   * Limit Set".  One can consider this an English interpretation
-   * issue of 'No set *POWER LIMIT*' vs. 'No *SET POWER LIMIT*'
-   * (i.e. is "set" a noun or a verb here).  Confounding this issue is
-   * the fact that the example implementation in Intel's DCMItool
-   * implements the former, while the DCMI Conformance test suite
-   * implements the later.  In addition to this, with the later
-   * interpretation, it need not be an indication of an error, but
-   * rather a flag.  So the rest of the packet can be completely full
-   * of legitimate data.
+   * originally interpreted this to mean the "Set Power Limit" command
+   * was not available.  Atleast one vendor interpreted this to mean
+   * "No Power Limit Set".  One can consider this an English
+   * interpretation issue of 'No set POWER LIMIT' vs. 'No SET POWER
+   * LIMIT' (i.e. is "set" a verb or part of a proper noun referencing
+   * the DCMI command).  Confounding this issue is the fact that the
+   * example implementation in Intel's DCMItool implements the former,
+   * while the DCMI Conformance test suite implements the later.  In
+   * addition to this, with the later interpretation, it need not be
+   * an indication of an error, but rather a flag.  So the rest of the
+   * packet can be completely full of legitimate data.
    *
    * So how do we handle this?
    *
@@ -2057,19 +2056,20 @@ set_power_limit (ipmi_dcmi_state_data_t *state_data)
     {
       /* IPMI Workaround/Interpretation
        *
-       * The DCMI spec indicates a potential completion code for the "Get
-       * Power Limit" command as "No Set Power Limit" (0x80).  FreeIPMI
-       * interpreted this to mean the "Set Power Limit" command was not
-       * available.  Atleast one vendor interpreted this to mean "No Power
-       * Limit Set".  One can consider this an English interpretation
-       * issue of 'No set *POWER LIMIT*' vs. 'No *SET POWER LIMIT*'
-       * (i.e. is "set" a noun or a verb here).  Confounding this issue is
-       * the fact that the example implementation in Intel's DCMItool
-       * implements the former, while the DCMI Conformance test suite
-       * implements the later.  In addition to this, with the later
-       * interpretation, it need not be an indication of an error, but
-       * rather a flag.  So the rest of the packet can be completely full
-       * of legitimate data.
+       * The DCMI spec indicates a potential completion code for the
+       * "Get Power Limit" command as "No Set Power Limit" (0x80).
+       * FreeIPMI originally interpreted this to mean the "Set Power
+       * Limit" command was not available.  Atleast one vendor
+       * interpreted this to mean "No Power Limit Set".  One can
+       * consider this an English interpretation issue of 'No set
+       * POWER LIMIT' vs. 'No SET POWER LIMIT' (i.e. is "set" a verb
+       * or part of a proper noun referencing the DCMI command).
+       * Confounding this issue is the fact that the example
+       * implementation in Intel's DCMItool implements the former,
+       * while the DCMI Conformance test suite implements the later.
+       * In addition to this, with the later interpretation, it need
+       * not be an indication of an error, but rather a flag.  So the
+       * rest of the packet can be completely full of legitimate data.
        * 
        * So we will do the following.
        *
