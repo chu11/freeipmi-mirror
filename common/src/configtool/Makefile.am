@@ -15,6 +15,7 @@ noinst_LTLIBRARIES = \
 	libconfigtoolcommon.la
 
 libconfigtoolcommon_la_CPPFLAGS = \
+	-I$(top_srcdir)/common/src/parsecommon \
 	-I$(top_srcdir)/common/src/portability \
 	-I$(top_srcdir)/common/src/toolcommon \
 	-I$(top_srcdir)/common/src/toolhostrange \

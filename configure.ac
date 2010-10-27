@@ -29,6 +29,7 @@ AC_CONFIG_FILES([
         common/src/configtool/Makefile
         common/src/debugutil/Makefile
         common/src/miscutil/Makefile
+        common/src/parsecommon/Makefile
         common/src/pingtool/Makefile
         common/src/portability/Makefile
         common/src/toolcommon/Makefile

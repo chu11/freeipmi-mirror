@@ -31,6 +31,7 @@
 #include <freeipmi/freeipmi.h>
 
 #include "freeipmi-portability.h"
+#include "parse-common.h"
 #include "pstdout.h"
 #include "tool-config-file-common.h"
 #include "tool-common.h"
@@ -62,7 +63,7 @@ struct cmd_args_config
   unsigned int workaround_flags_outofband;
   unsigned int workaround_flags_outofband_2_0;
   unsigned int workaround_flags_inband;
-  unsigned int tool_specific_workaround_flags;
+  unsigned int section_specific_workaround_flags;
   int workaround_flags_set;
   int tool_option_workaround_flags_set; /* for internal parsing check */
 };
@@ -426,7 +427,7 @@ config_file_workaround_flags (conffile_t cf,
   cmd_args_config->workaround_flags_outofband = 0;
   cmd_args_config->workaround_flags_outofband_2_0 = 0;
   cmd_args_config->workaround_flags_inband = 0;
-  cmd_args_config->tool_specific_workaround_flags = 0;
+  cmd_args_config->section_specific_workaround_flags = 0;
 
   for (i = 0; i < data->stringlist_len; i++)
     {
@@ -443,7 +444,7 @@ config_file_workaround_flags (conffile_t cf,
           cmd_args_config->workaround_flags_outofband |= tmp1;
           cmd_args_config->workaround_flags_outofband_2_0 |= tmp2;
           cmd_args_config->workaround_flags_inband |= tmp3;
-          cmd_args_config->tool_specific_workaround_flags |= tmp4;
+          cmd_args_config->section_specific_workaround_flags |= tmp4;
           cmd_args_config->workaround_flags_set++;
         }
     }
@@ -674,7 +675,7 @@ config_file_tool_option_workaround_flags (conffile_t cf,
   cmd_args_config->workaround_flags_outofband = 0;
   cmd_args_config->workaround_flags_outofband_2_0 = 0;
   cmd_args_config->workaround_flags_inband = 0;
-  cmd_args_config->tool_specific_workaround_flags = 0;
+  cmd_args_config->section_specific_workaround_flags = 0;
 
   for (i = 0; i < data->stringlist_len; i++)
     {
@@ -691,7 +692,7 @@ config_file_tool_option_workaround_flags (conffile_t cf,
           cmd_args_config->workaround_flags_outofband |= tmp1;
           cmd_args_config->workaround_flags_outofband_2_0 |= tmp2;
           cmd_args_config->workaround_flags_inband |= tmp3;
-          cmd_args_config->tool_specific_workaround_flags |= tmp4;
+          cmd_args_config->section_specific_workaround_flags |= tmp4;
           cmd_args_config->workaround_flags_set++;
           cmd_args_config->tool_option_workaround_flags_set++;
         }
@@ -4444,7 +4445,7 @@ config_file_parse (const char *filename,
       cmd_args->workaround_flags_outofband = cmd_args_config.workaround_flags_outofband;
       cmd_args->workaround_flags_outofband_2_0 = cmd_args_config.workaround_flags_outofband_2_0;
       cmd_args->workaround_flags_inband = cmd_args_config.workaround_flags_inband;
-      cmd_args->tool_specific_workaround_flags = cmd_args_config.tool_specific_workaround_flags;
+      cmd_args->section_specific_workaround_flags = cmd_args_config.section_specific_workaround_flags;
     }
 
   /* copy tool specific stuff */
