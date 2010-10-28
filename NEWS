@@ -1,4 +1,4 @@
-FreeIPMI 0.8.11 - 09/28/10
+FreeIPMI 0.8.11 - 10/28/10
 --------------------------
 o Support Fujitsu iRMC S1 and iRMC S2 OEM extensions in ipmi-sensors
   and ipmi-sel.

@@ -1,3 +1,9 @@
+2010-10-28  Albert Chu <chu11@llnl.gov>
+
+	* configure.ac: Update for release.
+
+	* Tagged Release-0_8_11.
+	
 2010-10-22  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sel/: Fix corner case with --output-oem-event-strings, did
