@@ -110,20 +110,31 @@
 #define IPMI_PARSE_PRIVILEGE_LEVEL_ADMIN_STR                                  "admin"
 #define IPMI_PARSE_PRIVILEGE_LEVEL_ADMIN_STR2                                 "administrator"
 
+/* returns driver type on success, -1 on error */
 int parse_inband_driver_type (const char *str);
 
+/* returns driver type on success, -1 on error */
 int parse_outofband_driver_type (const char *str);
 
+/* returns driver type on success, -1 on error */
 int parse_driver_type (const char *str);
 
+/* returns authentication type on success, -1 on error */
 int parse_authentication_type (const char *str);
 
+/* returns privilege level on success, -1 on error */
 int parse_privilege_level (const char *str);
 
+/* returns 0 on success, -1 on error, flags set in in/out parameters */
 int parse_workaround_flags (const char *str,
                             unsigned int *workaround_flags_outofband,
                             unsigned int *workaround_flags_outofband_2_0,
                             unsigned int *workaround_flags_inband,
                             unsigned int *tool_specific_workaround_flags);
+
+/* Turn an input string into a 20-byte binary k_g key, length written
+ *  into out on success, -1 on error
+ */
+int parse_kg (void *out, unsigned int outlen, const char *in);
 
 #endif

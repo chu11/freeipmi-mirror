@@ -24,8 +24,6 @@
 #include <stdlib.h>
 #if STDC_HEADERS
 #include <string.h>
-#include <stdarg.h>
-#include <ctype.h>
 #endif /* STDC_HEADERS */
 #if HAVE_UNISTD_H
 #include <unistd.h>
@@ -40,7 +38,6 @@
 #include "tool-common.h"
 
 #include "freeipmi-portability.h"
-#include "parse-common.h"
 
 int
 ipmi_is_root ()
@@ -296,61 +293,6 @@ check_kg_len (const char *in)
     }
 
   return (0);
-}
-
-/* a k_g key is interpreted as ascii text unless it is prefixed with
-   "0x", in which case is it interpreted as hexadecimal */
-int
-parse_kg (void *out, unsigned int outlen, const char *in)
-{
-  char *p, *q;
-  unsigned int i, j;
-  char buf[3] = { 0, 0, 0};
-  int rv = 0;
-
-  assert (out);
-  assert (in);
-  assert (outlen > IPMI_MAX_K_G_LENGTH);
-
-  if (strlen (in) == 0)
-    return (0);
-
-  if (strncasecmp (in, "0x", 2) == 0)
-    {
-      if (strlen (in) > IPMI_MAX_K_G_LENGTH*2+2)
-        return (-1);
-      p = (char *)in + 2;
-      memset (out, 0, IPMI_MAX_K_G_LENGTH);
-      for (i = j = 0; i < strlen (p); i+=2, j++)
-        {
-          if (!isxdigit (p[i])
-              || (p[i+1] && !isxdigit (p[i+1])))
-            return (-1);
-          buf[0] = p[i];
-          if (p[i+1])
-            buf[1] = p[i+1];
-          else
-            buf[1] = 0;
-          buf[2] = '\0';
-          errno = 0;
-          (((uint8_t *)out)[j]) = (uint8_t)strtoul (buf, &q, 16);
-          if (errno
-              || ((p[i+1] && (q != buf + 2))
-                  || (!p[i+1] && (q != buf + 1))))
-            return (-1);
-          rv++;
-        }
-    }
-  else
-    {
-      if (strlen (in) > IPMI_MAX_K_G_LENGTH)
-        return (-1);
-      memset (out, 0, IPMI_MAX_K_G_LENGTH);
-      memcpy (out, in, strlen (in));
-      rv = strlen (in);
-    }
-
-  return (rv);
 }
 
 char *

@@ -23,6 +23,7 @@
 #include <freeipmi/freeipmi.h>
 
 #include "tool-cmdline-common.h"
+#include "parse-common.h"
 
 #define IPMI_OPEN_ERRMSGLEN 1024
 
@@ -38,9 +39,6 @@ ipmi_ctx_t ipmi_open (const char *progname,
 
 /* Check if kg len is decent */
 int check_kg_len (const char *in);
-
-/* Turn an input string into a 20-byte binary k_g key */
-int parse_kg (void *out, unsigned int outlen, const char *in);
 
 /* Turn a 20-byte binary k_g key into an output string */
 char *format_kg (char *out, unsigned int outlen, const void *k_g);
