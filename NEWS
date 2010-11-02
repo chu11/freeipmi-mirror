@@ -1,3 +1,7 @@
+FreeIPMI 0.8.12 - 10/28/10
+--------------------------
+o Fix N/A output corner case in ipmi-sel.
+
 FreeIPMI 0.8.11 - 10/28/10
 --------------------------
 o Support Fujitsu iRMC S1 and iRMC S2 OEM extensions in ipmi-sensors
