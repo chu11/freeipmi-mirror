@@ -1,3 +1,7 @@
+2010-11-02  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sel/: Fix output corner case for N/A outputs.
+	
 2010-10-22  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sel/: Fix corner case with --output-oem-event-strings, did

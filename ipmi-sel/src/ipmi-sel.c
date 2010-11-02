@@ -1270,7 +1270,7 @@ _normal_output_event (ipmi_sel_state_data_t *state_data, unsigned int flags)
   uint8_t event_data3;
   uint8_t sensor_type;
   uint8_t event_data1_offset;
-  int check_for_na = 0;
+  int check_for_half_na = 0;
   int read_oem_event_string = 0;
   int ret;
 
@@ -1409,7 +1409,7 @@ _normal_output_event (ipmi_sel_state_data_t *state_data, unsigned int flags)
        * available or reasonable
        */
       strcat (fmtbuf, "%c");
-      check_for_na++;
+      check_for_half_na++;
     }
   else if (event_data2_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE)
     strcat (fmtbuf, "%f");
@@ -1434,6 +1434,14 @@ output:
       return (0);
     }
 
+  /* If event_data2 and event_data3 flags are valid, it normally
+   * shouldn't be possible that we read "N/A".  However, it happens,
+   * most notably when the event_data2 and / or event_data3 data are
+   * 0xFF.
+   */
+  if (!strcasecmp (outbuf, IPMI_SEL_NA_STRING))
+    outbuf_len = 0;
+
   /* Special case:
    * 
    * It's possible the SEL record event_data2_flag and
@@ -1443,7 +1451,7 @@ output:
    * ; N/A" instead of just "text".  Deal with it appropriately.
    * 
    */
-  if (outbuf_len && check_for_na)
+  if (outbuf_len && check_for_half_na)
     {
       char *na_ptr;
       char *semicolon_ptr;
