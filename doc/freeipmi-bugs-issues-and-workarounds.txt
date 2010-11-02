@@ -52,6 +52,7 @@ Sun Fire 4100 with ILOM
 Tyan S4811 with SMDC daughter card
 Supermicro X6-DHR-1G with BMC2.0 daughter card
 Supermicro X8DTH
+MSI MS-91D2
 
 The remaining motherboards (and subsequent bugs/issues/workarounds)
 listed below are from interaction with users in the community and I
@@ -197,7 +198,7 @@ confirmed to be fixed on newer firmware.
 Supermicro X8DTG: When attempting to authenticate with a disabled
 Cipher Suite ID, a 0Ah status ("Unauthorized role or privelege level
 requested.") is returned instead of 11h ("No Cipher Suite match with
-proposed security algorithms.").  No current resolution.
+proposed security algorithms.").  No current resolution. [NICETOHAVE]
 
 Intel S5500WBV/Penguin Relion 700: Cipher suites 0 fails to
 authenticate.  During the RAKP4 communication, an integrity key is
@@ -210,6 +211,15 @@ stage rather than the privilege used during the RAKP1 stage.  This can
 be problematic if you specify IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL
 during that stage instead of a real privilege level.  Resolved with a
 workaround to handle this specific situation.
+
+MSI MS-91D2: When attempting to authenticate with a disabled Cipher
+Suite ID, a 12h status ("Illegal or Unrecognized parameter.") is
+returned instead of 11h ("No Cipher Suite match with proposed security
+algorithms.").  No current resolution. [NICETOHAVE]
+
+MSI MS-91D2: Disabling a specific cipher suite ID does not prohibit a
+user from continuing to use that cipher suite ID.  No current
+resolution.
 
 Session Issues
 --------------
@@ -413,6 +423,15 @@ resolution.
 
 Intel S5500WBV/Penguin Relion 700: SOL payload sizes are reported
 incorrectly.  Resolved with a workaround to skip payload size checks.
+
+MSI MS-91D2: SOL appears to be allowed regardless of SOL being enabled
+/ disabled or a user being enabled / disabled for SOL access.  No
+current resolution.
+
+MSI MS-91D2: The Activate / Deactivate Payload commands appear to
+require Admin privileges, regardless of how SOL support is configured.
+The IPMI specification indicates privilege requirements for executing
+these commands depends on configuration.  No current resolution.
 
 bmc-config
 ----------
@@ -749,6 +768,13 @@ be stuck on "stopped" regardless if the timer is running or not.
 Subsequent bmc-watchdog functionality is limited.  Resolved with
 workaround to analyze countdown rather than flag for running vs
 stopped state.
+
+bmc-info
+--------
+
+MSI MS-91D2: The Get System Info Parameters command requires
+administrator privileges rather than the defined user level
+privileges.  No current resolution.
 
 ipmi-dcmi
 ---------
