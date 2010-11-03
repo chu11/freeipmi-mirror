@@ -146,6 +146,46 @@ o nagios_ipmi_sensors.pl
 o nagios_ipmimonitoring.pl
   - Removed.  Superseded by nagios_ipmi_sensors.pl.
 
+FreeIPMI 0.8.11 - 10/28/10
+--------------------------
+o Support Fujitsu iRMC S1 and iRMC S2 OEM extensions in ipmi-sensors
+  and ipmi-sel.
+o Support --output-oem-event-string in ipmi-sel.
+o Other minor documentation/bug fixes.
+
+FreeIPMI 0.8.10 - 09/28/10
+--------------------------
+o Support many new Inventec OEM extensions in ipmi-oem.
+o Support many new Quanta OEM extensions in ipmi-oem.
+o Support many new Intel OEM extensions in ipmi-oem.
+o Support Intel s5500WB OEM extensions in ipmi-sel.
+o Support Intel Node Manager SEL events across Quanta S99Q, Inventec
+  5441, Inventec 5442, and Intel S5500WB motherboards.
+o Move some OEM extensions from Dell section to Inventec section in
+  ipmi-oem.  Were previously thought to be additions by Dell, but in
+  fact are not.  Backwards compatability supported.
+o Support 'assumeio' inband workaround globally.
+o Gracefully handle some errors in ipmi-sensors.
+o Fix in-band probing corner case.
+o Fix various parameter input checks in ipmi-oem.
+o Fix help output corner cases in ipmi-oem.
+o Other minor documentation/bug fixes.
+
+FreeIPMI 0.8.9 - 08/20/10
+-------------------------
+o In ipmi-sel and ipmimonitoring, workaround Supermicro H8QME SEL
+  compliance issues in ipmi-sel.
+o In ipmi-sel, do not report error if SEL is empty.
+o Support Fujitsu 'get-sel-entry-long-text' in ipmi-oem.
+o Fix workaround flags bug in ipmimonitoring.
+o Revert 'Open Session Privilege Workaround' changes in 0.8.8, were unnecessary.
+o Fix daylight savings bug when configuring BMC times in bmc-device.
+o Support 'veryslowcommit' workaround for config tools to work around
+  very slow BMCs.
+o Support --enable-rawdumps compile option.
+o Support SHA256 in IPMI 2.0.
+o Other minor bug fixes.
+
 FreeIPMI 0.8.8 - 07/20/10
 -------------------------
 o Support Supermicro 'get-bmc-services-status' and
