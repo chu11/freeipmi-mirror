@@ -374,17 +374,20 @@ _cmd_workaround_flags (char **argv)
 
   if (argv[1])
     {
-      unsigned int tmp1, tmp2, tmp3;
+      unsigned int outofband_flags, outofband_2_0_flags, inband_flags;
 
-      if (parse_workaround_flags (argv[1], &tmp1, &tmp2, &tmp3, NULL) < 0)
+      if (parse_workaround_flags (argv[1],
+                                  &outofband_flags,
+                                  &outofband_2_0_flags,
+                                  &inband_flags, NULL) < 0)
         ipmipower_cbuf_printf (ttyout,
                                "%s invalid workaround flags specified\n",
                                argv[1]);
       else
         {
-          cmd_args.common.workaround_flags_outofband = tmp1;
-          cmd_args.common.workaround_flags_outofband_2_0 = tmp2;
-          cmd_args.common.workaround_flags_inband = tmp3;
+          cmd_args.common.workaround_flags_outofband = outofband_flags;
+          cmd_args.common.workaround_flags_outofband_2_0 = outofband_2_0_flags;
+          cmd_args.common.workaround_flags_inband = inband_flags;
           ipmipower_cbuf_printf (ttyout,
                                  "workaround flags are now %s\n",
                                  argv[1]);

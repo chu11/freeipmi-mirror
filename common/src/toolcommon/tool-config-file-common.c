@@ -431,20 +431,27 @@ _config_file_workaround_flags (conffile_t cf,
 
   for (i = 0; i < data->stringlist_len; i++)
     {
-      unsigned int tmp1, tmp2, tmp3, tmp4;
+      unsigned int outofband_flags, outofband_2_0_flags, inband_flags, section_flags;
 
-      if (parse_workaround_flags (data->stringlist[i], &tmp1, &tmp2, &tmp3, &tmp4) < 0)
+      if (parse_workaround_flags (data->stringlist[i],
+                                  &outofband_flags,
+                                  &outofband_2_0_flags,
+                                  &inband_flags,
+                                  &section_flags) < 0)
         {
           fprintf (stderr, "Config File Error: invalid value for %s\n", optionname);
           exit (1);
         }
       
-      if (tmp1 || tmp2 || tmp3 || tmp4)
+      if (outofband_flags
+          || outofband_2_0_flags
+          || inband_flags
+          || section_flags)
         {
-          cmd_args_config->workaround_flags_outofband |= tmp1;
-          cmd_args_config->workaround_flags_outofband_2_0 |= tmp2;
-          cmd_args_config->workaround_flags_inband |= tmp3;
-          cmd_args_config->section_specific_workaround_flags |= tmp4;
+          cmd_args_config->workaround_flags_outofband |= outofband_flags;
+          cmd_args_config->workaround_flags_outofband_2_0 |= outofband_2_0_flags;
+          cmd_args_config->workaround_flags_inband |= inband_flags;
+          cmd_args_config->section_specific_workaround_flags |= section_flags;
           cmd_args_config->workaround_flags_set++;
         }
     }
@@ -679,20 +686,27 @@ _config_file_tool_option_workaround_flags (conffile_t cf,
 
   for (i = 0; i < data->stringlist_len; i++)
     {
-      unsigned int tmp1, tmp2, tmp3, tmp4;
+      unsigned int outofband_flags, outofband_2_0_flags, inband_flags, section_flags;
 
-      if (parse_workaround_flags (data->stringlist[i], &tmp1, &tmp2, &tmp3, &tmp4) < 0)
+      if (parse_workaround_flags (data->stringlist[i],
+                                  &outofband_flags,
+                                  &outofband_2_0_flags,
+                                  &inband_flags,
+                                  &section_flags) < 0)
         {
           fprintf (stderr, "Config File Error: invalid value for %s\n", optionname);
           exit (1);
         }
       
-      if (tmp1 || tmp2 || tmp3 || tmp4)
+      if (outofband_flags
+          || outofband_2_0_flags
+          || inband_flags
+          || section_flags)
         {
-          cmd_args_config->workaround_flags_outofband |= tmp1;
-          cmd_args_config->workaround_flags_outofband_2_0 |= tmp2;
-          cmd_args_config->workaround_flags_inband |= tmp3;
-          cmd_args_config->section_specific_workaround_flags |= tmp4;
+          cmd_args_config->workaround_flags_outofband |= outofband_flags;
+          cmd_args_config->workaround_flags_outofband_2_0 |= outofband_2_0_flags;
+          cmd_args_config->workaround_flags_inband |= inband_flags;
+          cmd_args_config->section_specific_workaround_flags |= section_flags;
           cmd_args_config->workaround_flags_set++;
           cmd_args_config->tool_option_workaround_flags_set++;
         }
