@@ -530,7 +530,7 @@ ipmiconsole_ctx_create (const char *hostname,
                                     engine_config) < 0)
     goto cleanup;
 
-  /* must be called after ipmiconsole_ctx_config_init() */
+  /* must be called after ipmiconsole_ctx_config_setup() */
   if (ipmiconsole_ctx_debug_setup (c) < 0)
     goto cleanup;
 
