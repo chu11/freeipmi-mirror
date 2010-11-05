@@ -511,7 +511,7 @@ _ipmiconsole_defaults_setup (void)
       },
       {
         "libipmiconsole-context-cipher-suite-id",
-        CONFFILE_OPTION_STRING,
+        CONFFILE_OPTION_INT,
         -1,
         _config_file_cipher_suite_id,
         1,
@@ -522,7 +522,7 @@ _ipmiconsole_defaults_setup (void)
       },
       {
         "libipmiconsole-context-workaround-flags",
-        CONFFILE_OPTION_STRING,
+        CONFFILE_OPTION_LIST_STRING,
         -1,
         _config_file_workaround_flags,
         1,
@@ -610,7 +610,7 @@ _ipmiconsole_defaults_setup (void)
       },
       {
         "libipmiconsole-context-engine-flags",
-        CONFFILE_OPTION_STRING,
+        CONFFILE_OPTION_LIST_STRING,
         -1,
         _config_file_engine_flags,
         1,
@@ -621,7 +621,7 @@ _ipmiconsole_defaults_setup (void)
       },
       {
         "libipmiconsole-context-behavior-flags",
-        CONFFILE_OPTION_STRING,
+        CONFFILE_OPTION_LIST_STRING,
         -1,
         _config_file_behavior_flags,
         1,
@@ -632,7 +632,7 @@ _ipmiconsole_defaults_setup (void)
       },
       {
         "libipmiconsole-context-debug-flags",
-        CONFFILE_OPTION_STRING,
+        CONFFILE_OPTION_LIST_STRING,
         -1,
         _config_file_debug_flags,
         1,
