@@ -220,56 +220,56 @@ common_parse_opt (int key,
       break;
     case ARGP_K_G_KEY:
       {
-    int rv;
-
-    if (cmd_args->k_g_len)
-      {
-        memset (cmd_args->k_g, '\0', IPMI_MAX_K_G_LENGTH + 1);
-        cmd_args->k_g_len = 0;
-      }
-
-    if ((rv = check_kg_len (arg)) < 0)
-      {
-        fprintf (stderr, "k_g too long\n");
-        exit (1);
-      }
-
-    if ((rv = parse_kg (cmd_args->k_g, IPMI_MAX_K_G_LENGTH + 1, arg)) < 0)
-      {
-        fprintf (stderr, "k_g input formatted incorrectly\n");
-        exit (1);
-      }
-    if (rv > 0)
-      cmd_args->k_g_len = rv;
-    n = strlen (arg);
-    __secure_memset (arg, '\0', n);
+        int rv;
+        
+        if (cmd_args->k_g_len)
+          {
+            memset (cmd_args->k_g, '\0', IPMI_MAX_K_G_LENGTH + 1);
+            cmd_args->k_g_len = 0;
+          }
+        
+        if ((rv = check_kg_len (arg)) < 0)
+          {
+            fprintf (stderr, "k_g too long\n");
+            exit (1);
+          }
+        
+        if ((rv = parse_kg (cmd_args->k_g, IPMI_MAX_K_G_LENGTH + 1, arg)) < 0)
+          {
+            fprintf (stderr, "k_g input formatted incorrectly\n");
+            exit (1);
+          }
+        if (rv > 0)
+          cmd_args->k_g_len = rv;
+        n = strlen (arg);
+        __secure_memset (arg, '\0', n);
       }
       break;
     case ARGP_K_G_PROMPT_KEY:
       {
-    int rv;
-
-    if (cmd_args->k_g_len)
-      {
-        memset (cmd_args->k_g, '\0', IPMI_MAX_K_G_LENGTH + 1);
-        cmd_args->k_g_len = 0;
-      }
-
-    arg = getpass ("K_g: ");
-
-    if ((rv = check_kg_len (arg)) < 0)
-      {
-        fprintf (stderr, "k_g too long\n");
-        exit (1);
-      }
-
-    if ((rv = parse_kg (cmd_args->k_g, IPMI_MAX_K_G_LENGTH + 1, arg)) < 0)
-      {
-        fprintf (stderr, "k_g input formatted incorrectly\n");
-        exit (1);
-      }
-    if (rv > 0)
-      cmd_args->k_g_len = rv;
+        int rv;
+        
+        if (cmd_args->k_g_len)
+          {
+            memset (cmd_args->k_g, '\0', IPMI_MAX_K_G_LENGTH + 1);
+            cmd_args->k_g_len = 0;
+          }
+        
+        arg = getpass ("K_g: ");
+        
+        if ((rv = check_kg_len (arg)) < 0)
+          {
+            fprintf (stderr, "k_g too long\n");
+            exit (1);
+          }
+        
+        if ((rv = parse_kg (cmd_args->k_g, IPMI_MAX_K_G_LENGTH + 1, arg)) < 0)
+          {
+            fprintf (stderr, "k_g input formatted incorrectly\n");
+            exit (1);
+          }
+        if (rv > 0)
+          cmd_args->k_g_len = rv;
       }
       break;
       /* ARGP_TIMEOUT_KEY for backwards compatability */
