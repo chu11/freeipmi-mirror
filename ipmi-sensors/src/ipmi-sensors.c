@@ -629,6 +629,7 @@ _output_sensor (ipmi_sensors_state_data_t *state_data,
    * Supermicro X8DTH
    * Supermicro X8DTG
    * Supermicro X8DTU
+   * Supermicro X8DTU-6+ (X8DTU_6PLUS)
    */
   else if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM
            && state_data->prog_data->args->interpret_oem_data
@@ -636,7 +637,8 @@ _output_sensor (ipmi_sensors_state_data_t *state_data,
 	       || state_data->oem_data.manufacturer_id ==  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND)
 	   && (state_data->oem_data.product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTH
                || state_data->oem_data.product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTG
-               || state_data->oem_data.product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTU)
+               || state_data->oem_data.product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTU
+	       || state_data->oem_data.product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTU_6PLUS)
 	   && event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_SUPERMICRO_GENERIC)
     {
       char event_buf[IPMI_SENSORS_OEM_MESSAGE_LENGTH + 1];

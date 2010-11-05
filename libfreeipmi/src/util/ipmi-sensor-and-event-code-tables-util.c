@@ -2043,7 +2043,8 @@ ipmi_get_oem_sensor_event_bitmask_message (uint32_t manufacturer_id,
        || manufacturer_id ==  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND)
       && (product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTH
           || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTG
-          || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTU))
+          || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTU
+          || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTU_6PLUS))
     {
       switch (event_reading_type_code)
 	{
@@ -2078,4 +2079,3 @@ ipmi_get_oem_sensor_event_bitmask_message (uint32_t manufacturer_id,
   SET_ERRNO (EINVAL);
   return (-1);
 }
-
