@@ -1,3 +1,7 @@
+2010-11-05  Albert Chu <chu11@llnl.gov>
+
+	* Support Supermicro X8DTU-6+ OEM sensors.
+	
 2010-11-02  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sel/: Fix output corner case for N/A outputs.
