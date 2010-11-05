@@ -24,8 +24,6 @@
 #include <stdlib.h>
 #if STDC_HEADERS
 #include <string.h>
-#include <stdarg.h>
-#include <ctype.h>
 #endif /* STDC_HEADERS */
 #if HAVE_UNISTD_H
 #include <unistd.h>
@@ -97,17 +95,17 @@ ipmi_open (const char *progname,
     {
       if (cmd_args->driver_type == IPMI_DEVICE_LAN_2_0)
         {
-          if (cmd_args->workaround_flags_outofband_2_0 & IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_AUTHENTICATION_CAPABILITIES)
+          if (cmd_args->workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_AUTHENTICATION_CAPABILITIES)
             workaround_flags |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_2_0_AUTHENTICATION_CAPABILITIES;
-          if (cmd_args->workaround_flags_outofband_2_0 & IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION)
+          if (cmd_args->workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION)
             workaround_flags |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION;
-          if (cmd_args->workaround_flags_outofband_2_0 & IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUPERMICRO_2_0_SESSION)
+          if (cmd_args->workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUPERMICRO_2_0_SESSION)
             workaround_flags |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUPERMICRO_2_0_SESSION;
-          if (cmd_args->workaround_flags_outofband_2_0 & IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUN_2_0_SESSION)
+          if (cmd_args->workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUN_2_0_SESSION)
             workaround_flags |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUN_2_0_SESSION;
-          if (cmd_args->workaround_flags_outofband_2_0 & IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_OPEN_SESSION_PRIVILEGE)
+          if (cmd_args->workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_OPEN_SESSION_PRIVILEGE)
             workaround_flags |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_2_0_OPEN_SESSION_PRIVILEGE;
-          if (cmd_args->workaround_flags_outofband_2_0 & IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_NON_EMPTY_INTEGRITY_CHECK_VALUE)
+          if (cmd_args->workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_NON_EMPTY_INTEGRITY_CHECK_VALUE)
             workaround_flags |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_2_0_NON_EMPTY_INTEGRITY_CHECK_VALUE;
           
           if (ipmi_ctx_open_outofband_2_0 (ipmi_ctx,
@@ -149,15 +147,15 @@ ipmi_open (const char *progname,
         }
       else
         {
-          if (cmd_args->workaround_flags_outofband & IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_ACCEPT_SESSION_ID_ZERO)
+          if (cmd_args->workaround_flags_outofband & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_ACCEPT_SESSION_ID_ZERO)
             workaround_flags |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_ACCEPT_SESSION_ID_ZERO;
-          if (cmd_args->workaround_flags_outofband & IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_FORCE_PERMSG_AUTHENTICATION)
+          if (cmd_args->workaround_flags_outofband & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_FORCE_PERMSG_AUTHENTICATION)
             workaround_flags |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_FORCE_PERMSG_AUTHENTICATION;
-          if (cmd_args->workaround_flags_outofband & IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_CHECK_UNEXPECTED_AUTHCODE)
+          if (cmd_args->workaround_flags_outofband & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_CHECK_UNEXPECTED_AUTHCODE)
             workaround_flags |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_CHECK_UNEXPECTED_AUTHCODE;
-          if (cmd_args->workaround_flags_outofband & IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_BIG_ENDIAN_SEQUENCE_NUMBER)
+          if (cmd_args->workaround_flags_outofband & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_BIG_ENDIAN_SEQUENCE_NUMBER)
             workaround_flags |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_BIG_ENDIAN_SEQUENCE_NUMBER;
-          if (cmd_args->workaround_flags_outofband & IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_AUTHENTICATION_CAPABILITIES)
+          if (cmd_args->workaround_flags_outofband & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_AUTHENTICATION_CAPABILITIES)
             workaround_flags |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_AUTHENTICATION_CAPABILITIES;
 
           if (ipmi_ctx_open_outofband (ipmi_ctx,
@@ -205,7 +203,7 @@ ipmi_open (const char *progname,
           goto cleanup;
         }
 
-      if (cmd_args->workaround_flags_inband & IPMI_TOOL_WORKAROUND_FLAGS_INBAND_ASSUME_IO_BASE_ADDRESS)
+      if (cmd_args->workaround_flags_inband & IPMI_PARSE_WORKAROUND_FLAGS_INBAND_ASSUME_IO_BASE_ADDRESS)
         workaround_flags |= IPMI_WORKAROUND_FLAGS_INBAND_ASSUME_IO_BASE_ADDRESS;
 
       if (cmd_args->driver_type == IPMI_DEVICE_UNKNOWN)
@@ -295,61 +293,6 @@ check_kg_len (const char *in)
     }
 
   return (0);
-}
-
-/* a k_g key is interpreted as ascii text unless it is prefixed with
-   "0x", in which case is it interpreted as hexadecimal */
-int
-parse_kg (void *out, unsigned int outlen, const char *in)
-{
-  char *p, *q;
-  unsigned int i, j;
-  char buf[3] = { 0, 0, 0};
-  int rv = 0;
-
-  assert (out);
-  assert (in);
-  assert (outlen > IPMI_MAX_K_G_LENGTH);
-
-  if (strlen (in) == 0)
-    return (0);
-
-  if (strncasecmp (in, "0x", 2) == 0)
-    {
-      if (strlen (in) > IPMI_MAX_K_G_LENGTH*2+2)
-        return (-1);
-      p = (char *)in + 2;
-      memset (out, 0, IPMI_MAX_K_G_LENGTH);
-      for (i = j = 0; i < strlen (p); i+=2, j++)
-        {
-          if (!isxdigit (p[i])
-              || (p[i+1] && !isxdigit (p[i+1])))
-            return (-1);
-          buf[0] = p[i];
-          if (p[i+1])
-            buf[1] = p[i+1];
-          else
-            buf[1] = 0;
-          buf[2] = '\0';
-          errno = 0;
-          (((uint8_t *)out)[j]) = (uint8_t)strtoul (buf, &q, 16);
-          if (errno
-              || ((p[i+1] && (q != buf + 2))
-                  || (!p[i+1] && (q != buf + 1))))
-            return (-1);
-          rv++;
-        }
-    }
-  else
-    {
-      if (strlen (in) > IPMI_MAX_K_G_LENGTH)
-        return (-1);
-      memset (out, 0, IPMI_MAX_K_G_LENGTH);
-      memcpy (out, in, strlen (in));
-      rv = strlen (in);
-    }
-
-  return (rv);
 }
 
 char *

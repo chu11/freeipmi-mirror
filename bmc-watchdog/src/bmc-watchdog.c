@@ -1932,7 +1932,7 @@ _daemon_cmd (void)
    * delay up to 100 ms before seeing the countdown value change and
    * be reflected in the Get Watchdog Timer command".
    */
-  if (cmd_args.common.tool_specific_workaround_flags & IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_IGNORE_STATE_FLAG)
+  if (cmd_args.common.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IGNORE_STATE_FLAG)
     _sleep (1);
 
   while (shutdown_flag)
@@ -1974,7 +1974,7 @@ _daemon_cmd (void)
        * to have an operational BMC watchdog, it must function without it.
        * We instead look to see if the timer is changing.
        */
-      if (cmd_args.common.tool_specific_workaround_flags & IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_IGNORE_STATE_FLAG)
+      if (cmd_args.common.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IGNORE_STATE_FLAG)
         {
           if (previous_present_countdown_seconds == present_countdown_seconds)
             {
@@ -2007,7 +2007,7 @@ _daemon_cmd (void)
        * we need to reset the previous_present_countdown_seconds to
        * what it is after the timer reset.
        */
-      if (cmd_args.common.tool_specific_workaround_flags & IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_IGNORE_STATE_FLAG)
+      if (cmd_args.common.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IGNORE_STATE_FLAG)
         {
           /* From 27.7 "Internal delays in the BMC may require software to
            * delay up to 100 ms before seeing the countdown value change and

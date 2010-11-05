@@ -36,11 +36,10 @@
 #include <freeipmi/freeipmi.h>
 
 #include "freeipmi-portability.h"
+#include "parse-common.h"
 #include "pstdout.h"
 #include "tool-common.h"
 #include "tool-cmdline-common.h"
-
-#define WORKAROUND_FLAG_BUFLEN 1024
 
 error_t
 cmdline_config_file_parse (int key, char *arg, struct argp_state *state)
@@ -72,193 +71,6 @@ cmdline_config_file_parse (int key, char *arg, struct argp_state *state)
   return (0);
 }
 
-int
-parse_inband_driver_type (const char *str)
-{
-  assert (str);
-
-  if (strcasecmp (str, "kcs") == 0)
-    return (IPMI_DEVICE_KCS);
-  else if (strcasecmp (str, "ssif") == 0)
-    return (IPMI_DEVICE_SSIF);
-  /* support "open" for those that might be used to
-   * ipmitool.
-   */
-  else if (strcasecmp (str, "open") == 0
-           || strcasecmp (str, "openipmi") == 0)
-    return (IPMI_DEVICE_OPENIPMI);
-  /* support "bmc" for those that might be used to
-   * ipmitool.
-   */
-  else if (strcasecmp (str, "bmc") == 0
-           || strcasecmp (str, "sunbmc") == 0)
-    return (IPMI_DEVICE_SUNBMC);
-
-  return (-1);
-}
-
-int
-parse_outofband_driver_type (const char *str)
-{
-  assert (str);
-
-  if (strcasecmp (str, "lan") == 0)
-    return (IPMI_DEVICE_LAN);
-  /* support "lanplus" for those that might be used to ipmitool.
-   * support typo variants to ease.
-   */
-  else if (strcasecmp (str, "lanplus") == 0
-           || strcasecmp (str, "lan_2_0") == 0
-           || strcasecmp (str, "lan20") == 0
-           || strcasecmp (str, "lan_20") == 0
-           || strcasecmp (str, "lan2_0") == 0
-           || strcasecmp (str, "lan2_0") == 0)
-    return (IPMI_DEVICE_LAN_2_0);
-
-  return (-1);
-}
-
-int
-parse_driver_type (const char *str)
-{
-  int ret;
-
-  assert (str);
-
-  if ((ret = parse_inband_driver_type (str)) < 0)
-    ret = parse_outofband_driver_type (str);
-
-  return (ret);
-}
-
-int
-parse_authentication_type (const char *str)
-{
-  assert (str);
-
-  if (strcasecmp (str, IPMI_AUTHENTICATION_TYPE_NONE_STR) == 0)
-    return (IPMI_AUTHENTICATION_TYPE_NONE);
-  /* keep "plain" for backwards compatability */
-  else if (strcasecmp (str, IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY_STR_OLD) == 0
-           || strcasecmp (str, IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY_STR) == 0)
-    return (IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY);
-  else if (strcasecmp (str, IPMI_AUTHENTICATION_TYPE_MD2_STR) == 0)
-    return (IPMI_AUTHENTICATION_TYPE_MD2);
-  else if (strcasecmp (str, IPMI_AUTHENTICATION_TYPE_MD5_STR) == 0)
-    return (IPMI_AUTHENTICATION_TYPE_MD5);
-
-  return (-1);
-}
-
-int
-parse_privilege_level (const char *str)
-{
-  assert (str);
-
-  if (strcasecmp (str, IPMI_PRIVILEGE_LEVEL_USER_STR) == 0)
-    return (IPMI_PRIVILEGE_LEVEL_USER);
-  else if (strcasecmp (str, IPMI_PRIVILEGE_LEVEL_OPERATOR_STR) == 0)
-    return (IPMI_PRIVILEGE_LEVEL_OPERATOR);
-  else if (strcasecmp (str, IPMI_PRIVILEGE_LEVEL_ADMIN_STR) == 0
-           || strcasecmp (str, IPMI_PRIVILEGE_LEVEL_ADMIN_STR2) == 0)
-    return (IPMI_PRIVILEGE_LEVEL_ADMIN);
-
-  return (-1);
-}
-
-int
-parse_workaround_flags (const char *str,
-                        unsigned int *workaround_flags_outofband,
-                        unsigned int *workaround_flags_outofband_2_0,
-                        unsigned int *workaround_flags_inband,
-                        unsigned int *tool_specific_workaround_flags)
-{
-  char buf[WORKAROUND_FLAG_BUFLEN+1];
-  char *tok;
-
-  assert (str);
-  assert (workaround_flags_outofband);
-  assert (workaround_flags_outofband_2_0);
-  assert (workaround_flags_inband);
-
-  memset (buf, '\0', WORKAROUND_FLAG_BUFLEN+1);
-  strncpy (buf, str, WORKAROUND_FLAG_BUFLEN);
-
-  (*workaround_flags_outofband) = 0;
-  (*workaround_flags_outofband_2_0) = 0;
-  (*workaround_flags_inband) = 0;
-  if (tool_specific_workaround_flags)
-    (*tool_specific_workaround_flags) = 0;
-
-  tok = strtok (buf, ",");
-  while (tok)
-    {
-      /* special case, may apply to outofband and outofband_2_0 */
-      if (!strcasecmp (tok, IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_AUTHENTICATION_CAPABILITIES_STR))
-        {
-          (*workaround_flags_outofband) |= IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_AUTHENTICATION_CAPABILITIES;
-          (*workaround_flags_outofband_2_0) |= IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_AUTHENTICATION_CAPABILITIES;
-        }
-      else if (!strcasecmp (tok, IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_ACCEPT_SESSION_ID_ZERO_STR))
-        (*workaround_flags_outofband) |= IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_ACCEPT_SESSION_ID_ZERO;
-      else if (!strcasecmp (tok, IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_FORCE_PERMSG_AUTHENTICATION_STR))
-        (*workaround_flags_outofband) |= IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_FORCE_PERMSG_AUTHENTICATION;
-      else if (!strcasecmp (tok, IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_CHECK_UNEXPECTED_AUTHCODE_STR))
-        (*workaround_flags_outofband) |= IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_CHECK_UNEXPECTED_AUTHCODE;
-      else if (!strcasecmp (tok, IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_BIG_ENDIAN_SEQUENCE_NUMBER_STR))
-        (*workaround_flags_outofband) |= IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_BIG_ENDIAN_SEQUENCE_NUMBER;
-#if 0
-      /* handled above w/ special case */
-      else if (!strcasecmp (tok, IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_AUTHENTICATION_CAPABILITIES_STR))
-        (*workaround_flags_outofband_2_0) |= IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_AUTHENTICATION_CAPABILITIES;
-#endif
-      else if (!strcasecmp (tok, IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION_STR))
-        (*workaround_flags_outofband_2_0) |= IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION;
-      else if (!strcasecmp (tok, IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUPERMICRO_2_0_SESSION_STR))
-        (*workaround_flags_outofband_2_0) |= IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUPERMICRO_2_0_SESSION;
-      else if (!strcasecmp (tok, IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUN_2_0_SESSION_STR))
-        (*workaround_flags_outofband_2_0) |= IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUN_2_0_SESSION;
-      else if (!strcasecmp (tok, IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_OPEN_SESSION_PRIVILEGE_STR))
-        (*workaround_flags_outofband_2_0) |= IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_OPEN_SESSION_PRIVILEGE;
-      else if (!strcasecmp (tok, IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_NON_EMPTY_INTEGRITY_CHECK_VALUE_STR))
-        (*workaround_flags_outofband_2_0) |= IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_NON_EMPTY_INTEGRITY_CHECK_VALUE;
-      else if (!strcasecmp (tok, IPMI_TOOL_WORKAROUND_FLAGS_INBAND_ASSUME_IO_BASE_ADDRESS_STR))
-        (*workaround_flags_inband) |= IPMI_TOOL_WORKAROUND_FLAGS_INBAND_ASSUME_IO_BASE_ADDRESS;
-      else if (tool_specific_workaround_flags
-               && !strcasecmp (tok, IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_IGNORE_SOL_PAYLOAD_SIZE_STR))
-        (*tool_specific_workaround_flags) |= IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_IGNORE_SOL_PAYLOAD_SIZE;
-      else if (tool_specific_workaround_flags
-               && !strcasecmp (tok, IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_IGNORE_SOL_PORT_STR))
-        (*tool_specific_workaround_flags) |= IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_IGNORE_SOL_PORT;
-      else if (tool_specific_workaround_flags
-               && !strcasecmp (tok, IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_SKIP_SOL_ACTIVATION_STATUS_STR))
-        (*tool_specific_workaround_flags) |= IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_SKIP_SOL_ACTIVATION_STATUS;
-      else if (tool_specific_workaround_flags
-               && !strcasecmp (tok, IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_SKIP_CHECKS_STR))
-        (*tool_specific_workaround_flags) |= IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_SKIP_CHECKS;
-      else if (tool_specific_workaround_flags
-               && !strcasecmp (tok, IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_ASSUME_SYSTEM_EVENT_STR))
-        (*tool_specific_workaround_flags) |= IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_ASSUME_SYSTEM_EVENT;
-      else if (tool_specific_workaround_flags
-               && !strcasecmp (tok, IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_SLOW_COMMIT_STR))
-        (*tool_specific_workaround_flags) |= IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_SLOW_COMMIT;
-      else if (tool_specific_workaround_flags
-               && !strcasecmp (tok, IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_VERY_SLOW_COMMIT_STR))
-        (*tool_specific_workaround_flags) |= IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_VERY_SLOW_COMMIT;
-      else if (tool_specific_workaround_flags
-               && !strcasecmp (tok, IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_SOL_CHANNEL_ASSUME_LAN_CHANNEL_STR))
-        (*tool_specific_workaround_flags) |= IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_SOL_CHANNEL_ASSUME_LAN_CHANNEL;
-      else if (tool_specific_workaround_flags
-               && !strcasecmp (tok, IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_IGNORE_STATE_FLAG_STR))
-        (*tool_specific_workaround_flags) |= IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_IGNORE_STATE_FLAG;
-      else
-        return (-1);
-      tok = strtok (NULL, ",");
-    }
-
-  return (0);
-}
-
 /* From David Wheeler's Secure Programming Guide */
 static void *
 __secure_memset (void *s, int c, size_t n)
@@ -282,7 +94,7 @@ common_parse_opt (int key,
 {
   char *ptr;
   int tmp;
-  unsigned int tmp1, tmp2, tmp3, tmp4;
+  unsigned int outofband_flags, outofband_2_0_flags, inband_flags, section_flags;
   int n;
 
   switch (key)
@@ -530,15 +342,19 @@ common_parse_opt (int key,
       /* ignore config option - should have been parsed earlier */
       break;
     case ARGP_WORKAROUND_FLAGS_KEY:
-      if (parse_workaround_flags (arg, &tmp1, &tmp2, &tmp3, &tmp4) < 0)
+      if (parse_workaround_flags (arg,
+                                  &outofband_flags,
+                                  &outofband_2_0_flags,
+                                  &inband_flags,
+                                  &section_flags) < 0)
         {
           fprintf (stderr, "invalid workaround flags\n");
           exit (1);
         }
-      cmd_args->workaround_flags_outofband |= tmp1;
-      cmd_args->workaround_flags_outofband_2_0 |= tmp2;
-      cmd_args->workaround_flags_inband |= tmp3;
-      cmd_args->tool_specific_workaround_flags |= tmp4;
+      cmd_args->workaround_flags_outofband |= outofband_flags;
+      cmd_args->workaround_flags_outofband_2_0 |= outofband_2_0_flags;
+      cmd_args->workaround_flags_inband |= inband_flags;
+      cmd_args->section_specific_workaround_flags |= section_flags;
       break;
     case ARGP_DEBUG_KEY:
       cmd_args->debug++;
@@ -649,7 +465,7 @@ _init_common_cmd_args (struct common_cmd_args *cmd_args)
   cmd_args->workaround_flags_outofband = 0;
   cmd_args->workaround_flags_outofband_2_0 = 0;
   cmd_args->workaround_flags_inband = 0;
-  cmd_args->tool_specific_workaround_flags = 0;
+  cmd_args->section_specific_workaround_flags = 0;
   cmd_args->debug = 0;
 }
 

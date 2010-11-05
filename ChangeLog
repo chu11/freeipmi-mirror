@@ -1,3 +1,10 @@
+2010-11-05 Albert Chu <chu11@llnl.gov>
+
+	* common/src/parsecommon/: New common code library.
+
+	* ipmiconsole/: Support libipmiconsole.conf file.  Support default
+	of 4 threads.  Increase k_g buffer size to max + 1.
+
 2010-11-05  Albert Chu <chu11@llnl.gov>
 
 	* Support Supermicro X8DTU-6+ OEM sensors.

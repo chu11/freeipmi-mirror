@@ -692,7 +692,7 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
        * Table 13-11 in the IPMI 2.0 spec.
        */
       if (pkt == RAKP_MESSAGE_1_REQ
-          && (cmd_args.common.workaround_flags_outofband_2_0 & IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION))
+          && (cmd_args.common.workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION))
         {
           memset (username_buf, '\0', IPMI_MAX_USER_NAME_LENGTH+1);
           if (username)
@@ -1039,7 +1039,7 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
        * same workaround.
        */
 
-      if (cmd_args.common.workaround_flags_outofband_2_0 & IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION)
+      if (cmd_args.common.workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION)
         name_only_lookup = IPMI_USER_NAME_PRIVILEGE_LOOKUP;
       else
         name_only_lookup = ip->name_only_lookup;
@@ -1056,7 +1056,7 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
        * password to 16 bytes when generating keys, hashes, etc.  So we
        * have to do the same when generating keys, hashes, etc.
        */
-      if ((cmd_args.common.workaround_flags_outofband_2_0 & IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION)
+      if ((cmd_args.common.workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION)
           && ip->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
           && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
         password_len = IPMI_1_5_MAX_PASSWORD_LENGTH;

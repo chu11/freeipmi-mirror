@@ -591,7 +591,7 @@ main (int argc, char **argv)
   prog_data.args = &cmd_args;
 
   /* Special case, if user specified workaround via flags instead of option */
-  if (prog_data.args->common.tool_specific_workaround_flags & IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_SKIP_CHECKS)
+  if (prog_data.args->common.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_SKIP_CHECKS)
     prog_data.args->skip_checks = 1;
 
   if ((hosts_count = pstdout_setup (&(prog_data.args->common.hostname),

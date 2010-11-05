@@ -78,6 +78,7 @@
 
 extern List console_engine_ctxs_to_destroy;
 extern pthread_mutex_t console_engine_ctxs_to_destroy_mutex;
+extern struct ipmiconsole_ctx_config default_config;
 
 int
 ipmiconsole_ctx_setup (ipmiconsole_ctx_t c)
@@ -148,15 +149,24 @@ ipmiconsole_ctx_config_setup (ipmiconsole_ctx_t c,
 
   if (ipmi_config->username)
     strcpy (c->config.username, ipmi_config->username);
+  else
+    strcpy (c->config.username, default_config.username);
 
   if (ipmi_config->password)
     strcpy (c->config.password, ipmi_config->password);
+  else
+    strcpy (c->config.password, default_config.password);
 
   /* k_g may contain nulls */
   if (ipmi_config->k_g && ipmi_config->k_g_len)
     {
       memcpy (c->config.k_g, ipmi_config->k_g, ipmi_config->k_g_len);
       c->config.k_g_len = ipmi_config->k_g_len;
+    }
+  else
+    {
+      memcpy (c->config.k_g, default_config.k_g, default_config.k_g_len);
+      c->config.k_g_len = default_config.k_g_len;
     }
 
   if (ipmi_config->privilege_level >= 0)
@@ -169,55 +179,67 @@ ipmiconsole_ctx_config_setup (ipmiconsole_ctx_t c,
         c->config.privilege_level = IPMI_PRIVILEGE_LEVEL_ADMIN;
     }
   else
-    c->config.privilege_level = IPMI_PRIVILEGE_LEVEL_DEFAULT;
+    c->config.privilege_level = default_config.privilege_level;
 
   if (ipmi_config->cipher_suite_id >= IPMI_CIPHER_SUITE_ID_MIN)
     c->config.cipher_suite_id = ipmi_config->cipher_suite_id;
   else
-    c->config.cipher_suite_id = IPMI_CIPHER_SUITE_ID_DEFAULT;
+    c->config.cipher_suite_id = default_config.cipher_suite_id;
 
-  c->config.workaround_flags = ipmi_config->workaround_flags;
+  if (ipmi_config->workaround_flags)
+    c->config.workaround_flags = ipmi_config->workaround_flags;
+  else
+    c->config.workaround_flags = default_config.workaround_flags;
 
   if (protocol_config->session_timeout_len > 0)
     c->config.session_timeout_len = protocol_config->session_timeout_len;
   else
-    c->config.session_timeout_len = IPMICONSOLE_SESSION_TIMEOUT_LENGTH_DEFAULT;
+    c->config.session_timeout_len = default_config.session_timeout_len;
 
   if (protocol_config->retransmission_timeout_len > 0)
     c->config.retransmission_timeout_len = protocol_config->retransmission_timeout_len;
   else
-    c->config.retransmission_timeout_len = IPMICONSOLE_RETRANSMISSION_TIMEOUT_LENGTH_DEFAULT;
+    c->config.retransmission_timeout_len = default_config.retransmission_timeout_len;
 
   if (protocol_config->retransmission_backoff_count > 0)
     c->config.retransmission_backoff_count = protocol_config->retransmission_backoff_count;
   else
-    c->config.retransmission_backoff_count = IPMICONSOLE_RETRANSMISSION_BACKOFF_COUNT_DEFAULT;
+    c->config.retransmission_backoff_count = default_config.retransmission_backoff_count;
 
   if (protocol_config->keepalive_timeout_len > 0)
     c->config.keepalive_timeout_len = protocol_config->keepalive_timeout_len;
   else
-    c->config.keepalive_timeout_len = IPMICONSOLE_KEEPALIVE_TIMEOUT_LENGTH_DEFAULT;
+    c->config.keepalive_timeout_len = default_config.keepalive_timeout_len;
 
   if (protocol_config->retransmission_keepalive_timeout_len > 0)
     c->config.retransmission_keepalive_timeout_len = protocol_config->retransmission_keepalive_timeout_len;
   else
-    c->config.retransmission_keepalive_timeout_len = IPMICONSOLE_RETRANSMISSION_KEEPALIVE_TIMEOUT_LENGTH_DEFAULT;
+    c->config.retransmission_keepalive_timeout_len = default_config.retransmission_keepalive_timeout_len;
 
   if (protocol_config->acceptable_packet_errors_count > 0)
     c->config.acceptable_packet_errors_count = protocol_config->acceptable_packet_errors_count;
   else
-    c->config.acceptable_packet_errors_count = IPMICONSOLE_ACCEPTABLE_PACKET_ERRORS_COUNT_DEFAULT;
+    c->config.acceptable_packet_errors_count = default_config.acceptable_packet_errors_count;
 
   if (protocol_config->maximum_retransmission_count > 0)
     c->config.maximum_retransmission_count = protocol_config->maximum_retransmission_count;
   else
-    c->config.maximum_retransmission_count = IPMICONSOLE_MAXIMUM_RETRANSMISSION_COUNT_DEFAULT;
+    c->config.maximum_retransmission_count = default_config.maximum_retransmission_count;
 
-  c->config.engine_flags = engine_config->engine_flags;
+  if (engine_config->engine_flags)
+    c->config.engine_flags = engine_config->engine_flags;
+  else
+    c->config.engine_flags = default_config.engine_flags;
 
-  c->config.behavior_flags = engine_config->behavior_flags;
-
-  c->config.debug_flags = engine_config->debug_flags;
+  if (engine_config->behavior_flags)
+    c->config.behavior_flags = engine_config->behavior_flags;
+  else
+    c->config.behavior_flags = default_config.behavior_flags;
+  
+  if (engine_config->debug_flags)
+    c->config.debug_flags = engine_config->debug_flags;
+  else
+    c->config.debug_flags = default_config.debug_flags;
 
   /* Data based on Configuration Parameters */
 

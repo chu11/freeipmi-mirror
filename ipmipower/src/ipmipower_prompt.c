@@ -99,8 +99,8 @@ _cmd_driver_type (char **argv)
   else
     ipmipower_cbuf_printf (ttyout,
                            "driver_type must be specified: %s, %s\n",
-                           IPMI_DEVICE_LAN_STR,
-                           IPMI_DEVICE_LAN_2_0_STR);
+                           IPMI_PARSE_DEVICE_LAN_STR,
+                           IPMI_PARSE_DEVICE_LAN_2_0_STR);
 }
 
 static void
@@ -202,7 +202,7 @@ _cmd_password (char **argv)
   if (argv[1] && cmd_args.common.authentication_type == IPMI_AUTHENTICATION_TYPE_NONE)
     ipmipower_cbuf_printf (ttyout,
                            "password cannot be set for authentication_type '%s'\n",
-                           IPMI_AUTHENTICATION_TYPE_NONE_STR);
+                           IPMI_PARSE_AUTHENTICATION_TYPE_NONE_STR);
   else if (!argv[1]
            || (argv[1]
                && ((cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0
@@ -298,10 +298,10 @@ _cmd_authentication_type (char **argv)
   else
     ipmipower_cbuf_printf (ttyout,
                            "authentication_type must be specified: %s, %s, %s, %s\n",
-                           IPMI_AUTHENTICATION_TYPE_NONE_STR,
-                           IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY_STR,
-                           IPMI_AUTHENTICATION_TYPE_MD2_STR,
-                           IPMI_AUTHENTICATION_TYPE_MD5_STR);
+                           IPMI_PARSE_AUTHENTICATION_TYPE_NONE_STR,
+                           IPMI_PARSE_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY_STR,
+                           IPMI_PARSE_AUTHENTICATION_TYPE_MD2_STR,
+                           IPMI_PARSE_AUTHENTICATION_TYPE_MD5_STR);
 }
 
 static void
@@ -362,9 +362,9 @@ _cmd_privilege_level (char **argv)
   else
     ipmipower_cbuf_printf (ttyout,
                            "privilege must be specified: %s, %s, %s\n",
-                           IPMI_PRIVILEGE_LEVEL_USER_STR,
-                           IPMI_PRIVILEGE_LEVEL_OPERATOR_STR,
-                           IPMI_PRIVILEGE_LEVEL_ADMIN_STR);
+                           IPMI_PARSE_PRIVILEGE_LEVEL_USER_STR,
+                           IPMI_PARSE_PRIVILEGE_LEVEL_OPERATOR_STR,
+                           IPMI_PARSE_PRIVILEGE_LEVEL_ADMIN_STR);
 }
 
 static void
@@ -374,17 +374,20 @@ _cmd_workaround_flags (char **argv)
 
   if (argv[1])
     {
-      unsigned int tmp1, tmp2, tmp3;
+      unsigned int outofband_flags, outofband_2_0_flags, inband_flags;
 
-      if (parse_workaround_flags (argv[1], &tmp1, &tmp2, &tmp3, NULL) < 0)
+      if (parse_workaround_flags (argv[1],
+                                  &outofband_flags,
+                                  &outofband_2_0_flags,
+                                  &inband_flags, NULL) < 0)
         ipmipower_cbuf_printf (ttyout,
                                "%s invalid workaround flags specified\n",
                                argv[1]);
       else
         {
-          cmd_args.common.workaround_flags_outofband = tmp1;
-          cmd_args.common.workaround_flags_outofband_2_0 = tmp2;
-          cmd_args.common.workaround_flags_inband = tmp3;
+          cmd_args.common.workaround_flags_outofband = outofband_flags;
+          cmd_args.common.workaround_flags_outofband_2_0 = outofband_2_0_flags;
+          cmd_args.common.workaround_flags_inband = inband_flags;
           ipmipower_cbuf_printf (ttyout,
                                  "workaround flags are now %s\n",
                                  argv[1]);
@@ -393,16 +396,16 @@ _cmd_workaround_flags (char **argv)
   else
     ipmipower_cbuf_printf (ttyout,
                            "workaround_flags must be specified: %s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n",
-                           IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_AUTHENTICATION_CAPABILITIES_STR,
-                           IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_ACCEPT_SESSION_ID_ZERO_STR,
-                           IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_FORCE_PERMSG_AUTHENTICATION_STR,
-                           IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_CHECK_UNEXPECTED_AUTHCODE_STR,
-                           IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_BIG_ENDIAN_SEQUENCE_NUMBER_STR,
-                           IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION_STR,
-                           IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUPERMICRO_2_0_SESSION_STR,
-                           IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUN_2_0_SESSION_STR,
-                           IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_OPEN_SESSION_PRIVILEGE_STR,
-                           IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_NON_EMPTY_INTEGRITY_CHECK_VALUE_STR);
+                           IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_AUTHENTICATION_CAPABILITIES_STR,
+                           IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_ACCEPT_SESSION_ID_ZERO_STR,
+                           IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_FORCE_PERMSG_AUTHENTICATION_STR,
+                           IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_CHECK_UNEXPECTED_AUTHCODE_STR,
+                           IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_BIG_ENDIAN_SEQUENCE_NUMBER_STR,
+                           IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION_STR,
+                           IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUPERMICRO_2_0_SESSION_STR,
+                           IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUN_2_0_SESSION_STR,
+                           IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_OPEN_SESSION_PRIVILEGE_STR,
+                           IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_NON_EMPTY_INTEGRITY_CHECK_VALUE_STR);
 }
 
 static void
@@ -606,9 +609,9 @@ _cmd_config (void)
 
   str = "";
   if (cmd_args.common.driver_type == IPMI_DEVICE_LAN)
-    str = IPMI_DEVICE_LAN_STR;
+    str = IPMI_PARSE_DEVICE_LAN_STR;
   else if (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0)
-    str = IPMI_DEVICE_LAN_2_0_STR;
+    str = IPMI_PARSE_DEVICE_LAN_2_0_STR;
 
   ipmipower_cbuf_printf (ttyout,
                          "Driver_Type:                  %s\n",
@@ -721,13 +724,13 @@ _cmd_config (void)
 
   str = "";
   if (cmd_args.common.authentication_type == IPMI_AUTHENTICATION_TYPE_NONE)
-    str = IPMI_AUTHENTICATION_TYPE_NONE_STR;
+    str = IPMI_PARSE_AUTHENTICATION_TYPE_NONE_STR;
   else if (cmd_args.common.authentication_type == IPMI_AUTHENTICATION_TYPE_MD2)
-    str = IPMI_AUTHENTICATION_TYPE_MD2_STR;
+    str = IPMI_PARSE_AUTHENTICATION_TYPE_MD2_STR;
   else if (cmd_args.common.authentication_type == IPMI_AUTHENTICATION_TYPE_MD5)
-    str = IPMI_AUTHENTICATION_TYPE_MD5_STR;
+    str = IPMI_PARSE_AUTHENTICATION_TYPE_MD5_STR;
   else if (cmd_args.common.authentication_type == IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY)
-    str = IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY_STR;
+    str = IPMI_PARSE_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY_STR;
 
   ipmipower_cbuf_printf (ttyout,
                          "Authentication_Type:          %s\n",
@@ -759,11 +762,11 @@ _cmd_config (void)
 
   str = "";
   if (cmd_args.common.privilege_level == IPMI_PRIVILEGE_LEVEL_USER)
-    str = IPMI_PRIVILEGE_LEVEL_USER_STR;
+    str = IPMI_PARSE_PRIVILEGE_LEVEL_USER_STR;
   else if (cmd_args.common.privilege_level == IPMI_PRIVILEGE_LEVEL_OPERATOR)
-    str = IPMI_PRIVILEGE_LEVEL_OPERATOR_STR;
+    str = IPMI_PARSE_PRIVILEGE_LEVEL_OPERATOR_STR;
   else if (cmd_args.common.privilege_level == IPMI_PRIVILEGE_LEVEL_ADMIN)
-    str = IPMI_PRIVILEGE_LEVEL_ADMIN_STR;
+    str = IPMI_PARSE_PRIVILEGE_LEVEL_ADMIN_STR;
 
   ipmipower_cbuf_printf (ttyout,
                          "Privilege_Level:              %s\n",
@@ -773,58 +776,58 @@ _cmd_config (void)
   is_first = 0;
   _workarounds_strcat (strbuf,
                        cmd_args.common.workaround_flags_outofband,
-                       IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_AUTHENTICATION_CAPABILITIES,
-                       IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_AUTHENTICATION_CAPABILITIES_STR,
+                       IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_AUTHENTICATION_CAPABILITIES,
+                       IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_AUTHENTICATION_CAPABILITIES_STR,
                        &is_first);
   _workarounds_strcat (strbuf,
                        cmd_args.common.workaround_flags_outofband,
-                       IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_ACCEPT_SESSION_ID_ZERO,
-                       IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_ACCEPT_SESSION_ID_ZERO_STR,
+                       IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_ACCEPT_SESSION_ID_ZERO,
+                       IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_ACCEPT_SESSION_ID_ZERO_STR,
                        &is_first);
   _workarounds_strcat (strbuf,
                        cmd_args.common.workaround_flags_outofband,
-                       IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_FORCE_PERMSG_AUTHENTICATION,
-                       IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_FORCE_PERMSG_AUTHENTICATION_STR,
+                       IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_FORCE_PERMSG_AUTHENTICATION,
+                       IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_FORCE_PERMSG_AUTHENTICATION_STR,
                        &is_first);
   _workarounds_strcat (strbuf,
                        cmd_args.common.workaround_flags_outofband,
-                       IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_CHECK_UNEXPECTED_AUTHCODE,
-                       IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_CHECK_UNEXPECTED_AUTHCODE_STR,
+                       IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_CHECK_UNEXPECTED_AUTHCODE,
+                       IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_CHECK_UNEXPECTED_AUTHCODE_STR,
                        &is_first);
   _workarounds_strcat (strbuf,
                        cmd_args.common.workaround_flags_outofband,
-                       IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_BIG_ENDIAN_SEQUENCE_NUMBER,
-                       IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_BIG_ENDIAN_SEQUENCE_NUMBER_STR,
+                       IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_BIG_ENDIAN_SEQUENCE_NUMBER,
+                       IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_BIG_ENDIAN_SEQUENCE_NUMBER_STR,
                        &is_first);
   _workarounds_strcat (strbuf,
                        cmd_args.common.workaround_flags_outofband_2_0,
-                       IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_AUTHENTICATION_CAPABILITIES,
-                       IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_AUTHENTICATION_CAPABILITIES_STR,
+                       IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_AUTHENTICATION_CAPABILITIES,
+                       IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_AUTHENTICATION_CAPABILITIES_STR,
                        &is_first);
   _workarounds_strcat (strbuf,
                        cmd_args.common.workaround_flags_outofband_2_0,
-                       IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION,
-                       IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION_STR,
+                       IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION,
+                       IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION_STR,
                        &is_first);
   _workarounds_strcat (strbuf,
                        cmd_args.common.workaround_flags_outofband_2_0,
-                       IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUPERMICRO_2_0_SESSION,
-                       IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUPERMICRO_2_0_SESSION_STR,
+                       IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUPERMICRO_2_0_SESSION,
+                       IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUPERMICRO_2_0_SESSION_STR,
                        &is_first);
   _workarounds_strcat (strbuf,
                        cmd_args.common.workaround_flags_outofband_2_0,
-                       IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUN_2_0_SESSION,
-                       IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUN_2_0_SESSION_STR,
+                       IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUN_2_0_SESSION,
+                       IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUN_2_0_SESSION_STR,
                        &is_first);
   _workarounds_strcat (strbuf,
                        cmd_args.common.workaround_flags_outofband_2_0,
-                       IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_OPEN_SESSION_PRIVILEGE,
-                       IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_OPEN_SESSION_PRIVILEGE_STR,
+                       IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_OPEN_SESSION_PRIVILEGE,
+                       IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_OPEN_SESSION_PRIVILEGE_STR,
                        &is_first);
   _workarounds_strcat (strbuf,
                        cmd_args.common.workaround_flags_outofband_2_0,
-                       IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_NON_EMPTY_INTEGRITY_CHECK_VALUE,
-                       IPMI_TOOL_WORKAROUND_FLAGS_OUTOFBAND_2_0_NON_EMPTY_INTEGRITY_CHECK_VALUE_STR,
+                       IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_NON_EMPTY_INTEGRITY_CHECK_VALUE,
+                       IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_NON_EMPTY_INTEGRITY_CHECK_VALUE_STR,
                        &is_first);
 
   ipmipower_cbuf_printf (ttyout,

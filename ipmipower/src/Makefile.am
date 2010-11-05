@@ -19,6 +19,7 @@ ipmipower_CPPFLAGS = \
 	-I$(top_srcdir)/common/src/toolhostrange \
 	-I$(top_srcdir)/common/src/debugutil \
 	-I$(top_srcdir)/common/src/miscutil \
+	-I$(top_srcdir)/common/src/parsecommon \
 	-I$(top_srcdir)/common/src/portability \
 	-I$(top_srcdir)/ipmidetect/src/libipmidetect \
 	-I$(top_srcdir)/libfreeipmi/include \
@@ -32,6 +33,7 @@ ipmipower_LDADD = \
 	$(top_builddir)/common/src/toolhostrange/libtoolhostrange.la \
 	$(top_builddir)/common/src/debugutil/libdebugutil.la \
 	$(top_builddir)/common/src/miscutil/libmiscutils.la \
+	$(top_builddir)/common/src/parsecommon/libparsecommon.la \
 	$(top_builddir)/common/src/portability/libfreeipmiportability.la \
 	$(top_builddir)/ipmidetect/src/libipmidetect/libipmidetect.la \
 	$(top_builddir)/libfreeipmi/src/libfreeipmi.la
@@ -60,6 +62,9 @@ $(top_builddir)/common/src/debugutil/libdebugutil.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
 $(top_builddir)/common/src/miscutil/libmiscutils.la : force-dependency-check
+	@cd `dirname $@` && $(MAKE) `basename $@`
+
+$(top_builddir)/common/src/parsecommon/libparsecommon.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
 $(top_builddir)/common/src/portability/libfreeipmiportability.la : force-dependency-check

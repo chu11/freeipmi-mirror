@@ -67,6 +67,8 @@
 #include "ipmiconsole_util.h"
 
 #include "freeipmi-portability.h"
+#include "conffile.h"
+#include "parse-common.h"
 #include "secure.h"
 
 /*
@@ -110,19 +112,606 @@ static char *ipmiconsole_errmsgs[] =
     NULL
   };
 
+#define IPMICONSOLE_ENGINE_CLOSE_FD_STR                  "closefd"
+#define IPMICONSOLE_ENGINE_OUTPUT_ON_SOL_ESTABLISHED_STR "outputonsolestablished"
+#define IPMICONSOLE_ENGINE_LOCK_MEMORY_STR               "lockmemory"
+
+#define IPMICONSOLE_BEHAVIOR_ERROR_ON_SOL_INUSE_STR      "erroronsolinuse"
+#define IPMICONSOLE_BEHAVIOR_DEACTIVATE_ONLY_STR         "deactivateonly"
+
+#define IPMICONSOLE_DEBUG_STDOUT_STR                     "stdout"
+#define IPMICONSOLE_DEBUG_STDERR_STR                     "stderr"
+#define IPMICONSOLE_DEBUG_SYSLOG_STR                     "syslog"
+#define IPMICONSOLE_DEBUG_FILE_STR                       "file"
+#define IPMICONSOLE_DEBUG_IPMI_PACKETS_STR               "ipmipackets"
+
+struct ipmiconsole_ctx_config default_config;
+
+static int
+_config_file_unsigned_int_positive (conffile_t cf,
+                                    struct conffile_data *data,
+                                    char *optionname,
+                                    int option_type,
+                                    void *option_ptr,
+                                    int option_data,
+                                    void *app_ptr,
+                                    int app_data)
+{
+  unsigned int *value;
+
+  assert (data);
+  assert (option_ptr);
+
+  value = (unsigned int *)option_ptr;
+  
+  if (data->intval <= 0)
+    {
+      IPMICONSOLE_DEBUG (("libipmiconsole config file %s invalid", optionname));
+      return (0);
+    }
+
+  *value = (unsigned int)data->intval;
+  return (0);
+}
+
+static int
+_config_file_username (conffile_t cf,
+                       struct conffile_data *data,
+                       char *optionname,
+                       int option_type,
+                       void *option_ptr,
+                       int option_data,
+                       void *app_ptr,
+                       int app_data)
+{
+  assert (data);
+
+  if (strlen (data->string) > IPMI_MAX_USER_NAME_LENGTH)
+    {
+      IPMICONSOLE_DEBUG (("libipmiconsole config file username invalid length"));
+      return (0);
+    }
+
+  strcpy (default_config.username, data->string);
+
+  IPMICONSOLE_DEBUG (("libipmiconsole loaded alternate default username"));
+  return (0);
+}
+
+static int
+_config_file_password (conffile_t cf,
+                       struct conffile_data *data,
+                       char *optionname,
+                       int option_type,
+                       void *option_ptr,
+                       int option_data,
+                       void *app_ptr,
+                       int app_data)
+{
+  assert (data);
+
+  if (strlen (data->string) > IPMI_2_0_MAX_PASSWORD_LENGTH)
+    {
+      IPMICONSOLE_DEBUG (("libipmiconsole config file password invalid length"));
+      return (0);
+    }
+
+  strcpy (default_config.password, data->string);
+
+  IPMICONSOLE_DEBUG (("libipmiconsole loaded alternate default password"));
+  return (0);
+}
+
+static int
+_config_file_k_g (conffile_t cf,
+                       struct conffile_data *data,
+                       char *optionname,
+                       int option_type,
+                       void *option_ptr,
+                       int option_data,
+                       void *app_ptr,
+                       int app_data)
+{
+  int rv;
+
+  assert (data);
+
+  if ((rv = parse_kg (default_config.k_g, IPMI_MAX_K_G_LENGTH + 1, data->string)) < 0)
+    {
+      IPMICONSOLE_DEBUG (("libipmiconsole config file k_g invalid format"));
+      return (0);
+    }
+
+  if (rv > 0)
+    default_config.k_g_len = rv;
+
+  IPMICONSOLE_DEBUG (("libipmiconsole loaded alternate default k_g"));
+  return (0);
+}
+
+static int
+_config_file_privilege_level (conffile_t cf,
+                              struct conffile_data *data,
+                              char *optionname,
+                              int option_type,
+                              void *option_ptr,
+                              int option_data,
+                              void *app_ptr,
+                              int app_data)
+{
+  int tmp;
+
+  assert (data);
+
+  if ((tmp = parse_privilege_level (data->string)) < 0)
+    {
+      IPMICONSOLE_DEBUG (("libipmiconsole config file privilege level invalid"));
+      return (0);
+    }
+
+  default_config.privilege_level = tmp;
+
+  IPMICONSOLE_DEBUG (("libipmiconsole loaded alternate default privilege level"));
+  return (0);
+}
+
+static int
+_config_file_cipher_suite_id (conffile_t cf,
+                              struct conffile_data *data,
+                              char *optionname,
+                              int option_type,
+                              void *option_ptr,
+                              int option_data,
+                              void *app_ptr,
+                              int app_data)
+{
+  assert (data);
+
+  if (data->intval < IPMI_CIPHER_SUITE_ID_MIN
+      || data->intval > IPMI_CIPHER_SUITE_ID_MAX
+      || !IPMI_CIPHER_SUITE_ID_SUPPORTED (data->intval))
+    {
+      IPMICONSOLE_DEBUG (("libipmiconsole config file cipher suite id invalid"));
+      return (0);
+    }
+
+  default_config.cipher_suite_id = data->intval;
+
+  IPMICONSOLE_DEBUG (("libipmiconsole loaded alternate default cipher suite id"));
+  return (0);
+}
+
+
+static int
+_config_file_workaround_flags (conffile_t cf,
+                               struct conffile_data *data,
+                               char *optionname,
+                               int option_type,
+                               void *option_ptr,
+                               int option_data,
+                               void *app_ptr,
+                               int app_data)
+{
+  unsigned int workaround_flags = 0;
+  unsigned int i;
+
+  assert (data);
+
+  for (i = 0; i < data->stringlist_len; i++)
+    {
+      unsigned int outofband_2_0_flags, section_flags;
+
+      if (parse_workaround_flags (data->stringlist[i],
+                                  NULL,
+                                  &outofband_2_0_flags,
+                                  NULL,
+                                  &section_flags) < 0)
+        {
+          IPMICONSOLE_DEBUG (("libipmiconsole config file workaround flag invalid"));
+          return (0);
+        }
+
+      if (outofband_2_0_flags)
+        {
+          if (outofband_2_0_flags & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_AUTHENTICATION_CAPABILITIES)
+            workaround_flags |= IPMICONSOLE_WORKAROUND_AUTHENTICATION_CAPABILITIES;
+          if (outofband_2_0_flags & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION)
+            workaround_flags |= IPMICONSOLE_WORKAROUND_INTEL_2_0_SESSION;
+          if (outofband_2_0_flags & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUPERMICRO_2_0_SESSION)
+            workaround_flags |= IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0_SESSION;
+          if (outofband_2_0_flags & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUN_2_0_SESSION)
+            workaround_flags |= IPMICONSOLE_WORKAROUND_SUN_2_0_SESSION;
+          if (outofband_2_0_flags & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_OPEN_SESSION_PRIVILEGE)
+            workaround_flags |= IPMICONSOLE_WORKAROUND_OPEN_SESSION_PRIVILEGE;
+          if (outofband_2_0_flags & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_NON_EMPTY_INTEGRITY_CHECK_VALUE)
+            workaround_flags |= IPMICONSOLE_WORKAROUND_NON_EMPTY_INTEGRITY_CHECK_VALUE;
+        }
+
+      if (section_flags)
+        {
+          if (section_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IGNORE_SOL_PAYLOAD_SIZE)
+            workaround_flags |= IPMICONSOLE_WORKAROUND_IGNORE_SOL_PAYLOAD_SIZE;
+          if (section_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IGNORE_SOL_PORT)
+            workaround_flags |= IPMICONSOLE_WORKAROUND_IGNORE_SOL_PORT;
+          if (section_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_SKIP_SOL_ACTIVATION_STATUS)
+            workaround_flags |= IPMICONSOLE_WORKAROUND_SKIP_SOL_ACTIVATION_STATUS;
+        }
+    }
+
+  default_config.workaround_flags = workaround_flags;
+
+  IPMICONSOLE_DEBUG (("libipmiconsole loaded alternate default workaround flag"));
+  return (0);
+}
+
+static int
+_config_file_engine_flags (conffile_t cf,
+                           struct conffile_data *data,
+                           char *optionname,
+                           int option_type,
+                           void *option_ptr,
+                           int option_data,
+                           void *app_ptr,
+                           int app_data)
+{
+  unsigned int engine_flags = 0;
+  unsigned int i;
+
+  assert (data);
+
+  for (i = 0; i < data->stringlist_len; i++)
+    {
+      if (!strcasecmp (data->stringlist[i], IPMICONSOLE_ENGINE_CLOSE_FD_STR))
+        engine_flags |= IPMICONSOLE_ENGINE_CLOSE_FD;
+      else if (!strcasecmp (data->stringlist[i], IPMICONSOLE_ENGINE_OUTPUT_ON_SOL_ESTABLISHED_STR))
+        engine_flags |= IPMICONSOLE_ENGINE_OUTPUT_ON_SOL_ESTABLISHED;
+      else if (!strcasecmp (data->stringlist[i], IPMICONSOLE_ENGINE_LOCK_MEMORY_STR))
+        engine_flags |= IPMICONSOLE_ENGINE_LOCK_MEMORY;
+      else
+        IPMICONSOLE_DEBUG (("libipmiconsole config file engine flag invalid"));
+    }
+
+  default_config.engine_flags = engine_flags;
+
+  IPMICONSOLE_DEBUG (("libipmiconsole loaded alternate default engine flag"));
+  return (0);
+}
+
+static int
+_config_file_behavior_flags (conffile_t cf,
+                           struct conffile_data *data,
+                           char *optionname,
+                           int option_type,
+                           void *option_ptr,
+                           int option_data,
+                           void *app_ptr,
+                           int app_data)
+{
+  unsigned int behavior_flags = 0;
+  unsigned int i;
+
+  assert (data);
+
+  for (i = 0; i < data->stringlist_len; i++)
+    {
+      if (!strcasecmp (data->stringlist[i], IPMICONSOLE_BEHAVIOR_ERROR_ON_SOL_INUSE_STR))
+        behavior_flags |= IPMICONSOLE_BEHAVIOR_ERROR_ON_SOL_INUSE;
+      else if (!strcasecmp (data->stringlist[i], IPMICONSOLE_BEHAVIOR_DEACTIVATE_ONLY_STR))
+        behavior_flags |= IPMICONSOLE_BEHAVIOR_DEACTIVATE_ONLY;
+      else
+        IPMICONSOLE_DEBUG (("libipmiconsole config file behavior flag invalid"));
+    }
+
+  default_config.behavior_flags = behavior_flags;
+  
+  IPMICONSOLE_DEBUG (("libipmiconsole loaded alternate default behavior flag"));
+  return (0);
+}
+
+static int
+_config_file_debug_flags (conffile_t cf,
+                           struct conffile_data *data,
+                           char *optionname,
+                           int option_type,
+                           void *option_ptr,
+                           int option_data,
+                           void *app_ptr,
+                           int app_data)
+{
+  unsigned int debug_flags = 0;
+  unsigned int i;
+
+  assert (data);
+
+  for (i = 0; i < data->stringlist_len; i++)
+    {
+      if (!strcasecmp (data->stringlist[i], IPMICONSOLE_DEBUG_STDOUT_STR))
+        debug_flags |= IPMICONSOLE_DEBUG_STDOUT;
+      else if (!strcasecmp (data->stringlist[i], IPMICONSOLE_DEBUG_STDERR_STR))
+        debug_flags |= IPMICONSOLE_DEBUG_STDERR;
+      else if (!strcasecmp (data->stringlist[i], IPMICONSOLE_DEBUG_SYSLOG_STR))
+        debug_flags |= IPMICONSOLE_DEBUG_SYSLOG;
+      else if (!strcasecmp (data->stringlist[i], IPMICONSOLE_DEBUG_FILE_STR))
+        debug_flags |= IPMICONSOLE_DEBUG_FILE;
+      else if (!strcasecmp (data->stringlist[i], IPMICONSOLE_DEBUG_IPMI_PACKETS_STR))
+        debug_flags |= IPMICONSOLE_DEBUG_IPMI_PACKETS;
+      else
+        IPMICONSOLE_DEBUG (("libipmiconsole config file debug flag invalid"));
+    }
+
+  default_config.debug_flags = debug_flags;
+
+  IPMICONSOLE_DEBUG (("libipmiconsole loaded alternate default debug flag"));
+  return (0);
+}
+
+static int
+_ipmiconsole_defaults_setup (void)
+{
+  int libipmiconsole_context_username_count = 0, libipmiconsole_context_password_count = 0,
+    libipmiconsole_context_k_g_count = 0, libipmiconsole_context_privilege_level_count = 0,
+    libipmiconsole_context_cipher_suite_id_count = 0,
+    libipmiconsole_context_workaround_flags_count = 0,
+    libipmiconsole_context_session_timeout_len_count = 0,
+    libipmiconsole_context_retransmission_timeout_len_count = 0,
+    libipmiconsole_context_retransmission_backoff_count_count = 0,
+    libipmiconsole_context_keepalive_timeout_len_count = 0,
+    libipmiconsole_context_retransmission_keepalive_timeout_len_count = 0,
+    libipmiconsole_context_acceptable_packet_errors_count_count = 0,
+    libipmiconsole_context_maximum_retransmission_count_count = 0,
+    libipmiconsole_context_engine_flags_count = 0,
+    libipmiconsole_context_behavior_flags_count = 0,
+    libipmiconsole_context_debug_flags_count = 0;
+
+  struct conffile_option libipmiconsole_options[] =
+    {
+      {
+        "libipmiconsole-context-username",
+        CONFFILE_OPTION_STRING,
+        -1,
+        _config_file_username,
+        1,
+        0,
+        &libipmiconsole_context_username_count,
+        NULL,
+        0,
+      },
+      {
+        "libipmiconsole-context-password",
+        CONFFILE_OPTION_STRING,
+        -1,
+        _config_file_password,
+        1,
+        0,
+        &libipmiconsole_context_password_count,
+        NULL,
+        0,
+      },
+      {
+        "libipmiconsole-context-k_g",
+        CONFFILE_OPTION_STRING,
+        -1,
+        _config_file_k_g,
+        1,
+        0,
+        &libipmiconsole_context_k_g_count,
+        NULL,
+        0,
+      },
+      {
+        "libipmiconsole-context-privilege-level",
+        CONFFILE_OPTION_STRING,
+        -1,
+        _config_file_privilege_level,
+        1,
+        0,
+        &libipmiconsole_context_privilege_level_count,
+        NULL,
+        0,
+      },
+      {
+        "libipmiconsole-context-cipher-suite-id",
+        CONFFILE_OPTION_INT,
+        -1,
+        _config_file_cipher_suite_id,
+        1,
+        0,
+        &libipmiconsole_context_cipher_suite_id_count,
+        NULL,
+        0,
+      },
+      {
+        "libipmiconsole-context-workaround-flags",
+        CONFFILE_OPTION_LIST_STRING,
+        -1,
+        _config_file_workaround_flags,
+        1,
+        0,
+        &libipmiconsole_context_workaround_flags_count,
+        NULL,
+        0,
+      },
+      {
+        "libipmiconsole-context-session-timeout-len",
+        CONFFILE_OPTION_INT,
+        -1,
+        _config_file_unsigned_int_positive,
+        1,
+        0,
+        &libipmiconsole_context_session_timeout_len_count,
+        &(default_config.session_timeout_len),
+        0
+      },
+      {
+        "libipmiconsole-context-retransmission-timeout-len",
+        CONFFILE_OPTION_INT,
+        -1,
+        _config_file_unsigned_int_positive,
+        1,
+        0,
+        &libipmiconsole_context_retransmission_timeout_len_count,
+        &(default_config.retransmission_timeout_len),
+        0
+      },
+      {
+        "libipmiconsole-context-retransmission-backoff-count",
+        CONFFILE_OPTION_INT,
+        -1,
+        _config_file_unsigned_int_positive,
+        1,
+        0,
+        &libipmiconsole_context_retransmission_backoff_count_count,
+        &(default_config.retransmission_backoff_count),
+        0
+      },
+      {
+        "libipmiconsole-context-keepalive-timeout-len",
+        CONFFILE_OPTION_INT,
+        -1,
+        _config_file_unsigned_int_positive,
+        1,
+        0,
+        &libipmiconsole_context_keepalive_timeout_len_count,
+        &(default_config.keepalive_timeout_len),
+        0
+      },
+      {
+        "libipmiconsole-context-retransmission-keepalive-timeout-len",
+        CONFFILE_OPTION_INT,
+        -1,
+        _config_file_unsigned_int_positive,
+        1,
+        0,
+        &libipmiconsole_context_retransmission_keepalive_timeout_len_count,
+        &(default_config.retransmission_keepalive_timeout_len),
+        0
+      },
+      {
+        "libipmiconsole-context-acceptable-packet-errors-count",
+        CONFFILE_OPTION_INT,
+        -1,
+        _config_file_unsigned_int_positive,
+        1,
+        0,
+        &libipmiconsole_context_acceptable_packet_errors_count_count,
+        &(default_config.acceptable_packet_errors_count),
+        0
+      },
+      {
+        "libipmiconsole-context-maximum-retransmission-count",
+        CONFFILE_OPTION_INT,
+        -1,
+        _config_file_unsigned_int_positive,
+        1,
+        0,
+        &libipmiconsole_context_maximum_retransmission_count_count,
+        &(default_config.maximum_retransmission_count),
+        0
+      },
+      {
+        "libipmiconsole-context-engine-flags",
+        CONFFILE_OPTION_LIST_STRING,
+        -1,
+        _config_file_engine_flags,
+        1,
+        0,
+        &libipmiconsole_context_engine_flags_count,
+        NULL,
+        0,
+      },
+      {
+        "libipmiconsole-context-behavior-flags",
+        CONFFILE_OPTION_LIST_STRING,
+        -1,
+        _config_file_behavior_flags,
+        1,
+        0,
+        &libipmiconsole_context_behavior_flags_count,
+        NULL,
+        0,
+      },
+      {
+        "libipmiconsole-context-debug-flags",
+        CONFFILE_OPTION_LIST_STRING,
+        -1,
+        _config_file_debug_flags,
+        1,
+        0,
+        &libipmiconsole_context_debug_flags_count,
+        NULL,
+        0,
+      },
+    };
+
+  conffile_t cf = NULL;
+  int rv = -1;
+  int libipmiconsole_options_len;
+
+  memset (&default_config, '\0', sizeof (struct ipmiconsole_ctx_config));
+
+  /* set base defaults */
+
+  default_config.privilege_level = IPMI_PRIVILEGE_LEVEL_DEFAULT;
+  default_config.cipher_suite_id = IPMI_CIPHER_SUITE_ID_DEFAULT;
+  default_config.session_timeout_len = IPMICONSOLE_SESSION_TIMEOUT_LENGTH_DEFAULT;
+  default_config.retransmission_timeout_len = IPMICONSOLE_RETRANSMISSION_TIMEOUT_LENGTH_DEFAULT;
+  default_config.retransmission_backoff_count = IPMICONSOLE_RETRANSMISSION_BACKOFF_COUNT_DEFAULT;
+  default_config.keepalive_timeout_len = IPMICONSOLE_KEEPALIVE_TIMEOUT_LENGTH_DEFAULT;
+  default_config.retransmission_keepalive_timeout_len = IPMICONSOLE_RETRANSMISSION_KEEPALIVE_TIMEOUT_LENGTH_DEFAULT;
+  default_config.acceptable_packet_errors_count = IPMICONSOLE_ACCEPTABLE_PACKET_ERRORS_COUNT_DEFAULT;
+  default_config.maximum_retransmission_count = IPMICONSOLE_MAXIMUM_RETRANSMISSION_COUNT_DEFAULT;
+
+  if (!(cf = conffile_handle_create ()))
+    {
+      IPMICONSOLE_DEBUG (("conffile_handle_create: %s", strerror (errno)));
+      return (-1);
+    }
+
+  libipmiconsole_options_len = sizeof (libipmiconsole_options) / sizeof (struct conffile_option);
+  if (conffile_parse (cf,
+                      LIBIPMICONSOLE_CONFIG_FILE_DEFAULT,
+                      libipmiconsole_options,
+                      libipmiconsole_options_len,
+                      NULL,
+                      0,
+                      0) < 0)
+    {
+      char buf[CONFFILE_MAX_ERRMSGLEN];
+      
+      /* Its not an error if the default configuration file doesn't exist */
+      if (conffile_errnum (cf) == CONFFILE_ERR_EXIST)
+        goto out;
+      
+      if (conffile_errmsg (cf, buf, CONFFILE_MAX_ERRMSGLEN) < 0)
+        {
+          IPMICONSOLE_DEBUG (("libipmiconsole loaded alternate default debug flag"));
+          goto cleanup;
+        }
+    }
+  
+ out:
+  rv = 0;
+ cleanup:
+  if (cf)
+    conffile_handle_destroy (cf);
+  return (rv);
+}
+
 int
 ipmiconsole_engine_init (unsigned int thread_count, unsigned int debug_flags)
 {
   struct rlimit rlim;
   unsigned int i;
 
-  if (!thread_count
-      || thread_count > IPMICONSOLE_THREAD_COUNT_MAX
+  if (thread_count > IPMICONSOLE_THREAD_COUNT_MAX
       || (debug_flags & ~IPMICONSOLE_DEBUG_MASK))
     {
       errno = EINVAL;
       return (-1);
     }
+
+  if (!thread_count)
+    thread_count = IPMICONSOLE_THREAD_COUNT_DEFAULT;
 
   /* Note: Must be called first before anything else for debugging purposes */
   if (ipmiconsole_debug_setup (debug_flags) < 0)
@@ -147,6 +736,9 @@ ipmiconsole_engine_init (unsigned int thread_count, unsigned int debug_flags)
       rlim.rlim_cur = rlim.rlim_max;
       setrlimit (RLIMIT_NOFILE, &rlim);
     }
+
+  if (_ipmiconsole_defaults_setup () < 0)
+    goto cleanup;
 
   return (0);
 
@@ -530,7 +1122,7 @@ ipmiconsole_ctx_create (const char *hostname,
                                     engine_config) < 0)
     goto cleanup;
 
-  /* must be called after ipmiconsole_ctx_config_init() */
+  /* must be called after ipmiconsole_ctx_config_setup() */
   if (ipmiconsole_ctx_debug_setup (c) < 0)
     goto cleanup;
 
