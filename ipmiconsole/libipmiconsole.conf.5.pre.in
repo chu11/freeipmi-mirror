@@ -8,7 +8,17 @@ configuration file can be used to set alternate default values for the
 .B Libipmiconsole
 library.  The configuration of these defaults may be useful for
 environments in which programs link to libipmiconsole but do not
-support configuration of libipmiconsole parameters.
+support configuration of libipmiconsole parameters.  Users should be ware
+that setting alternate default values into
+.B Libipmiconsole
+will affect all tools that link to the library, such as the
+.B ipmiconsole(8)
+tool.  For users wishing to set alternate defaults to
+.B ipmiconsole(8)
+please use the
+.B freeipmi.conf(5)
+file instead.
+
 .LP
 The configuration file is stored at
 @LIBIPMICONSOLE_CONFIG_FILE_DEFAULT@.
@@ -104,5 +114,5 @@ Copyright \(co 2006-2010 FreeIPMI Core Team.
 #include <@top_srcdir@/common/man/manpage-common-gpl-freeipmi-text.man>
 
 .SH "SEE ALSO"
-libipmiconsole(3)
+freeipmi.conf(5), freeipmi(7), libipmiconsole(3), ipmiconsole(8), 
 #include <@top_srcdir@/common/man/manpage-common-homepage.man>
