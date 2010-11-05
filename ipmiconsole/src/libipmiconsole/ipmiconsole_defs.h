@@ -145,6 +145,8 @@ typedef enum
   ((IPMICONSOLE_PACKET_TYPE_REQUEST (__p)        \
     || IPMICONSOLE_PACKET_TYPE_RESPONSE (__p)) ? 1 : 0)
 
+#define IPMICONSOLE_THREAD_COUNT_DEFAULT                            4
+
 #define IPMICONSOLE_SESSION_TIMEOUT_LENGTH_DEFAULT                  60000
 #define IPMICONSOLE_RETRANSMISSION_TIMEOUT_LENGTH_DEFAULT           500
 #define IPMICONSOLE_RETRANSMISSION_MAX_DEFAULT                      10
@@ -231,7 +233,7 @@ struct ipmiconsole_ctx_config {
   char hostname[MAXHOSTNAMELEN+1];
   char username[IPMI_MAX_USER_NAME_LENGTH+1];
   char password[IPMI_2_0_MAX_PASSWORD_LENGTH+1];
-  uint8_t k_g[IPMI_MAX_K_G_LENGTH];
+  uint8_t k_g[IPMI_MAX_K_G_LENGTH+1];
   unsigned int k_g_len;
   uint8_t privilege_level;
   uint8_t cipher_suite_id;

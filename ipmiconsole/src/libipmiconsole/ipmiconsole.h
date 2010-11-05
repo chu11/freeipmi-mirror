@@ -196,7 +196,7 @@ extern "C" {
  * Engine Flags
  *
  * Utilized with struct ipmiconsole_engine_config below to alter
- * libipmiconsole engine behavior.
+ * libipmiconsole engine behavior. 
  *
  * CLOSE_FD
  *
@@ -306,6 +306,7 @@ typedef enum ipmiconsole_ctx_status ipmiconsole_ctx_status_t;
  * ipmiconsole_ipmi_config
  *
  * IPMI configuration for a connection to a remote IPMI machine.
+ * Defaults can be modified using the libipmiconsole.conf file.
  *
  * username
  *
@@ -383,6 +384,7 @@ struct ipmiconsole_ipmi_config
  * ipmiconsole_protocol_config
  *
  * Configuration information for the IPMI protocol management.
+ * Defaults can be modified using the libipmiconsole.conf file.
  *
  * session_timeout_len
  *
@@ -451,7 +453,8 @@ struct ipmiconsole_protocol_config
  * ipmiconsole_engine_config
  *
  * Configuration information for how the engine should interact with
- * the user or API.
+ * the user or API.  Defaults can be modified using the
+ * libipmiconsole.conf file.
  *
  * engine_flags
  *
@@ -501,7 +504,7 @@ typedef void (*Ipmiconsole_callback)(void *);
  *
  * thread_count
  *
- *   Number of threads the engine will support.
+ *   Number of threads the engine will support.  Pass 0 for default of 4.
  *
  * debug_flags
  *

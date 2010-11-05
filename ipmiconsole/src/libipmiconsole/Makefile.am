@@ -30,6 +30,7 @@ libipmiconsole_la_CFLAGS = $(PTHREAD_CFLAGS)
 libipmiconsole_la_CPPFLAGS = \
 	-I$(top_srcdir)/common/src/debugutil \
 	-I$(top_srcdir)/common/src/miscutil \
+	-I$(top_srcdir)/common/src/parsecommon \
 	-I$(top_srcdir)/common/src/portability \
         -I$(top_srcdir)/libfreeipmi/include \
 	-DWITH_PTHREADS=1 \
@@ -44,6 +45,7 @@ libipmiconsole_la_LDFLAGS = \
 libipmiconsole_la_LIBADD = \
 	$(top_builddir)/common/src/debugutil/libdebugutil.la \
 	$(top_builddir)/common/src/miscutil/libmiscutils.la \
+	$(top_builddir)/common/src/parsecommon/libparsecommon.la \
 	$(top_builddir)/common/src/portability/libfreeipmiportability.la \
 	$(top_builddir)/libfreeipmi/src/libfreeipmi.la
 
