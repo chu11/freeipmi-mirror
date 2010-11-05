@@ -471,10 +471,15 @@ main (int argc, char **argv)
           else
             {
               /* b/c we're exitting */
+              /* achu: it is possible that errnum can equal success.
+               * Most likely scenario is user sets a flag in the
+               * libipmiconsole.conf file that alters the behavior of
+               * what this tool excepts.
+               */
               if (ipmiconsole_ctx_errnum (c) == IPMICONSOLE_ERR_SOL_STOLEN)
                 printf ("\r\n[%s]\r\n",
                         ipmiconsole_ctx_errormsg (c));
-              else
+              else if (ipmiconsole_ctx_errnum (c) != IPMICONSOLE_ERR_SUCCESS)
                 printf ("\r\n[error received]: %s\r\n",
                         ipmiconsole_ctx_errormsg (c));
               goto cleanup;
