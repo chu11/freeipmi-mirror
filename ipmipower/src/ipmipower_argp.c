@@ -351,20 +351,6 @@ _ipmipower_config_file_parse (struct ipmipower_arguments *cmd_args)
 static void
 _ipmipower_args_validate (struct ipmipower_arguments *cmd_args)
 {
-  if (cmd_args->common.driver_type == IPMI_DEVICE_LAN
-      && cmd_args->common.password
-      && strlen (cmd_args->common.password) > IPMI_1_5_MAX_PASSWORD_LENGTH)
-    {
-      fprintf (stderr, "password too long\n");
-      exit (1);
-    }
-
-  if (cmd_args->common.retransmission_timeout > cmd_args->common.session_timeout)
-    {
-      fprintf (stderr, "retransmission timeout larger than session timeout\n");
-      exit (1);
-    }
-
   if (cmd_args->retransmission_wait_timeout > cmd_args->common.session_timeout)
     {
       fprintf (stderr, "retransmission wait timeout larger than session timeout\n");
@@ -434,11 +420,8 @@ ipmipower_argp_parse (int argc, char **argv, struct ipmipower_arguments *cmd_arg
               NULL,
               cmd_args);
 
-  /* achu: don't do these checks, we don't do inband, so checks aren't appropriate
-   * checks will be done in ipmipower_config_check_values().
-   */
-  /* verify_common_cmd_args (&(cmd_args->common)); */
+  /* don't check hostname inputs, ipmipower isn't like most tools */
+  verify_common_cmd_args_outofband (&(cmd_args->common), 0);
   verify_hostrange_cmd_args (&(cmd_args->hostrange));
-
   _ipmipower_args_validate (cmd_args);
 }

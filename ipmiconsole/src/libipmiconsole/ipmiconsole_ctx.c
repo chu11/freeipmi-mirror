@@ -169,6 +169,27 @@ ipmiconsole_ctx_config_setup (ipmiconsole_ctx_t c,
       c->config.k_g_len = default_config.k_g_len;
     }
 
+  if (c->config.k_g_len)
+    {
+      unsigned int i;
+      int all_zeroes = 1;
+
+      /* Special case, check to make sure user didn't input zero as a
+       * k_g key.
+       */
+      for (i = 0; i < IPMI_MAX_K_G_LENGTH; i++)
+        {
+          if (c->config.k_g[i] != 0)
+            {
+              all_zeroes = 0;
+              break;
+            }
+        }
+      
+      if (all_zeroes)
+        c->config.k_g_len = 0;
+    }
+
   if (ipmi_config->privilege_level >= 0)
     {
       if (ipmi_config->privilege_level == IPMICONSOLE_PRIVILEGE_USER)

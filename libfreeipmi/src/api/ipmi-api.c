@@ -626,10 +626,29 @@ ipmi_ctx_open_outofband_2_0 (ipmi_ctx_t ctx,
   ctx->io.outofband.k_g_configured = 0;
   if (k_g && k_g_len)
     {
+      unsigned int i;
+      int all_zeroes = 1;
+
       memcpy (ctx->io.outofband.k_g,
               k_g,
               k_g_len);
+
       ctx->io.outofband.k_g_configured++;
+
+      /* Special case, check to make sure user didn't input zero as a
+       * k_g key.
+       */
+      for (i = 0; i < IPMI_MAX_K_G_LENGTH; i++)
+        {
+          if (k_g[i] != 0)
+            {
+              all_zeroes = 0;
+              break;
+            }
+        }
+      
+      if (all_zeroes)
+        ctx->io.outofband.k_g_configured = 0;
     }
 
   ctx->io.outofband.cipher_suite_id = cipher_suite_id;

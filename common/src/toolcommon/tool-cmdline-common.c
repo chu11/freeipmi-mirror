@@ -521,16 +521,8 @@ free_common_cmd_args (struct common_cmd_args *cmd_args)
 }
 
 void
-verify_common_cmd_args (struct common_cmd_args *cmd_args)
+verify_common_cmd_args_inband (struct common_cmd_args *cmd_args)
 {
-  if ((cmd_args->driver_type == IPMI_DEVICE_LAN
-       || cmd_args->driver_type == IPMI_DEVICE_LAN_2_0)
-      && !cmd_args->hostname)
-    {
-      fprintf (stderr, "hostname not specified\n");
-      exit (1);
-    }
-
   if (cmd_args->driver_device)
     {
       if (access (cmd_args->driver_device, R_OK|W_OK) < 0)
@@ -541,25 +533,66 @@ verify_common_cmd_args (struct common_cmd_args *cmd_args)
         }
     }
 
-  if (cmd_args->hostname)
-    {
-      /* We default to IPMI 1.5 if the user doesn't specify LAN vs. LAN_2_0 */
+}
 
-      if (cmd_args->driver_type != IPMI_DEVICE_LAN_2_0
-          && cmd_args->password
-          && strlen (cmd_args->password) > IPMI_1_5_MAX_PASSWORD_LENGTH)
-        {
-          fprintf (stderr, "password too long\n");
-          exit (1);
-        }
-      /* else, 2_0 password length was checked in argp_parse() previously */
+void
+verify_common_cmd_args_outofband (struct common_cmd_args *cmd_args, int check_hostname)
+{
+  if (check_hostname
+      && (cmd_args->driver_type == IPMI_DEVICE_LAN
+          || cmd_args->driver_type == IPMI_DEVICE_LAN_2_0)
+      && !cmd_args->hostname)
+    {
+      fprintf (stderr, "hostname not specified\n");
+      exit (1);
     }
+
+  /* We default to IPMI 1.5 if the user doesn't specify LAN vs. LAN_2_0 */
+
+  if (((cmd_args->hostname
+        && cmd_args->driver_type == IPMI_DEVICE_UNKNOWN)
+       || cmd_args->driver_type == IPMI_DEVICE_LAN)
+      && cmd_args->password
+      && strlen (cmd_args->password) > IPMI_1_5_MAX_PASSWORD_LENGTH)
+    {
+      fprintf (stderr, "password too long\n");
+      exit (1);
+    }
+  /* else, 2_0 password length was checked in argp_parse() previously */
 
   if (cmd_args->retransmission_timeout > cmd_args->session_timeout)
     {
       fprintf (stderr, "retransmission timeout larger than session timeout\n");
       exit (1);
     }
+
+  if (cmd_args->k_g_len)
+    {
+      unsigned int i;
+      int all_zeroes = 1;
+
+      /* Special case, check to make sure user didn't input zero as a
+       * k_g key.
+       */
+      for (i = 0; i < IPMI_MAX_K_G_LENGTH; i++)
+        {
+          if (cmd_args->k_g[i] != 0)
+            {
+              all_zeroes = 0;
+              break;
+            }
+        }
+      
+      if (all_zeroes)
+        cmd_args->k_g_len = 0;
+    }
+}
+
+void
+verify_common_cmd_args (struct common_cmd_args *cmd_args)
+{
+  verify_common_cmd_args_inband (cmd_args);
+  verify_common_cmd_args_outofband (cmd_args, 1);
 }
 
 void

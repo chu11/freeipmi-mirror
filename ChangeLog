@@ -1,5 +1,22 @@
 2010-11-05 Albert Chu <chu11@llnl.gov>
 
+	* common/src/toolcommon/tool-cmdline-common.h,
+	common/src/toolcommon/tool-cmdline-common.c
+	(verify_common_cmd_args_inband, verify_common_cmd_args_outofband):
+	New functions.
+
+	* common/src/toolcommon/tool-cmdline-common.c
+	(verify_common_cmd_args): Re-arch to use new functions.
+
+	* ipmipower/src/ipmipower_argp.c (_ipmipower_args_validate,
+	ipmipower_argp_parse): Re-arch to use new functions and reduce
+	duplicate code.
+
+	* Globally, support special case handling if user inputs a k_g key
+	of 0.  Is possible with hex input (e.g. -k 0x00).
+	
+2010-11-05 Albert Chu <chu11@llnl.gov>
+
 	* common/src/parsecommon/: New common code library.
 
 	* ipmiconsole/: Support libipmiconsole.conf file.  Support default
