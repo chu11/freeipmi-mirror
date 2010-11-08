@@ -93,7 +93,7 @@ header file for additional information on the library.
 \fBlibipmiconsole\-context\-engine\-flags\fR \fIFLAGS\fR
 Specify default engine flags to use.  Multiple flags can be specified
 separated by whitespace.  The following flags are supported: closefd,
-outputonsolestablished, lockmemory.
+outputonsolestablished, lockmemory, serialkeepalive.
 .TP
 \fBlibipmiconsole\-context\-behavior\-flags\fR \fIFLAGS\fR
 Specify default behavior flags to use.  Multiple flags can be

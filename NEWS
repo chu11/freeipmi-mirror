@@ -16,6 +16,8 @@ o Support new 'interpret' sub-library in libfreeipmi.
 o Support interpretation rules for OEM sensors and events.
 o Move all config files to /etc/freeipmi/.  Support legacy config
   files for backwards compatibility.
+o Support serial keepalive in ipmiconsole to check if serial
+  connection has remained alive across system reboots.
 o Various documentation updates.
 o Update to support DCMI 1.1.
 o Update all licensing information to GPLv3.
@@ -133,6 +135,7 @@ o libipmimonitoring
   - Split workaround flags for inband, IPMI 1.5, and IPMI 2.0 to save bits.
 o libipmiconsole
   - Support libipmiconsole.conf defaults file.
+  - Support serial keepalive to check for loss of serial connection.
 
 Contributions
 -------------
