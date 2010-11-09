@@ -236,7 +236,7 @@ _send_sol_packet_with_character_data (ipmiconsole_ctx_t c,
                            c->session.sol_input_character_data,
                            max_character_send_size)) < 0)
         {
-          IPMICONSOLE_CTX_DEBUG (c, ("scbuf_read: %s", strerror (errno)));
+          IPMICONSOLE_CTX_DEBUG (c, ("scbuf_peek: %s", strerror (errno)));
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
           goto cleanup;
         }
