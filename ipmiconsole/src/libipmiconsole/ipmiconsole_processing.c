@@ -1799,7 +1799,7 @@ _serial_keepalive_timeout (ipmiconsole_ctx_t c)
             {
               IPMICONSOLE_CTX_DEBUG (c, ("scbuf_write: %s", strerror (errno)));
               ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-              goto cleanup;
+              return (-1);
             }
 
           if (n != 1)
