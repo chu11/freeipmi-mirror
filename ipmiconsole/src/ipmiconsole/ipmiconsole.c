@@ -474,7 +474,11 @@ main (int argc, char **argv)
               /* achu: it is possible that errnum can equal success.
                * Most likely scenario is user sets a flag in the
                * libipmiconsole.conf file that alters the behavior of
-               * what this tool excepts.
+               * what this tool expects to happen.  For example, if
+               * user specifies deactivate on the command line, we
+               * know to quit early.  However, if the user does so in
+               * libipmiconsole.conf, we as a tool won't know to
+               * expect it.
                */
               if (ipmiconsole_ctx_errnum (c) == IPMICONSOLE_ERR_SOL_STOLEN)
                 printf ("\r\n[%s]\r\n",
