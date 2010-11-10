@@ -234,10 +234,44 @@ extern "C" {
  * Inform libipmiconsole to lock memory to prevent sensitive
  * information (such as usernames and passwords) to be non-swappable.
  *
+ * SERIAL_KEEPALIVE
+ *
+ * On some motherboards, it's been observed that IPMI connections
+ * between the IPMI client and remote BMC/server can stay alive while
+ * the remote server's internal connection between the BMC and serial
+ * chip can be lost.  The affect is that this loss of the serial
+ * connection will not be noticed by the IPMI client until serial data
+ * is transfered from the client to the BMC and a timeout (or similar
+ * error) is received.  The IPMI client must then reconnect to
+ * restablish the session.
+ *
+ * This is a severe problem for IPMI clients that predominantly log
+ * serial data or display serial output without user interactivity.
+ * From the IPMI client perspective, there is simply no output from
+ * the serial port and no error has actually occurred.
+ * 
+ * This option will inform the libipmiconsole engine to send serial
+ * keepalive packets in addition to the IPMI keepalive packets that
+ * normally keep a connection alive.  The serial keepalive packets are
+ * standard SOL payload packets, but contain a single NUL character in
+ * them.  The single NUL character is to ensure that the underlying
+ * serial receiver is alive and functioning.  Retransmission and
+ * timeouts are handled identically to normal IPMI packets in the code
+ * (e.g. as if somebody typed a character).  The serial keepalive
+ * packets are dispatched if a SOL packet response has not been
+ * received within the length of time of a session timeout.
+ *
+ * This option is highly recommended for IPMI clients that do not have
+ * high user interactivity, as this may discover broken connections
+ * far more quickly.  However, caution should be maintained, as the
+ * NUL character byte may affect the remote system depending on what
+ * input it may or may not be expecting.
+ * 
  */
 #define IPMICONSOLE_ENGINE_CLOSE_FD                  0x00000001
 #define IPMICONSOLE_ENGINE_OUTPUT_ON_SOL_ESTABLISHED 0x00000002
 #define IPMICONSOLE_ENGINE_LOCK_MEMORY               0x00000004
+#define IPMICONSOLE_ENGINE_SERIAL_KEEPALIVE          0x00000008
 
 /*
  * Behavior Flags

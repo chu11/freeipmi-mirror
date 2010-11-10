@@ -462,7 +462,7 @@ _send_sol_packet_generate_break (ipmiconsole_ctx_t c,
  * Returns -1 on error
  */
 static int
-_receive_packet_data_reset (ipmiconsole_ctx_t c)
+_receive_ipmi_packet_data_reset (ipmiconsole_ctx_t c)
 {
   assert (c);
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
@@ -485,7 +485,30 @@ _receive_packet_data_reset (ipmiconsole_ctx_t c)
  * Returns -1 on error
  */
 static int
-_receive_ping_packet_data_reset (ipmiconsole_ctx_t c)
+_receive_sol_packet_data_reset (ipmiconsole_ctx_t c)
+{
+  assert (c);
+  assert (c->magic == IPMICONSOLE_CTX_MAGIC);
+
+  if (_receive_ipmi_packet_data_reset (c) < 0)
+    return (-1);
+
+  if (gettimeofday (&(c->session.last_sol_packet_received), NULL) < 0)
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("gettimeofday: %s", strerror (errno)));
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SYSTEM_ERROR);
+      return (-1);
+    }
+
+  return (0);
+}
+
+/*
+ * Returns 0 on success
+ * Returns -1 on error
+ */
+static int
+_receive_keepalive_packet_data_reset (ipmiconsole_ctx_t c)
 {
   assert (c);
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
@@ -615,7 +638,7 @@ _receive_packet (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
 
       if (!ret)
         {
-          _receive_packet_data_reset (c);
+          _receive_ipmi_packet_data_reset (c);
           ipmiconsole_calculate_errnum (c, *p);
           goto cleanup;
         }
@@ -674,7 +697,7 @@ _receive_packet (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
 
       if (!ret)
         {
-          _receive_packet_data_reset (c);
+          _receive_ipmi_packet_data_reset (c);
           ipmiconsole_calculate_errnum (c, *p);
           goto cleanup;
         }
@@ -707,7 +730,7 @@ _receive_packet (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
 
           if (!ret)
             {
-              _receive_packet_data_reset (c);
+              _receive_ipmi_packet_data_reset (c);
               ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED);
               goto cleanup;
             }
@@ -719,7 +742,7 @@ _receive_packet (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
 
           if (!ret)
             {
-              _receive_packet_data_reset (c);
+              _receive_ipmi_packet_data_reset (c);
 
               /* IPMI Compliance Issue
                *
@@ -743,7 +766,7 @@ _receive_packet (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
 
           if (!ret)
             {
-              _receive_packet_data_reset (c);
+              _receive_ipmi_packet_data_reset (c);
               ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_K_G_INVALID);
               goto cleanup;
             }
@@ -893,7 +916,7 @@ _receive_packet (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
                 goto accept_packet;
             }
 
-          _receive_packet_data_reset (c);
+          _receive_ipmi_packet_data_reset (c);
           ipmiconsole_calculate_errnum (c, *p);
           goto cleanup;
         }
@@ -1202,7 +1225,7 @@ _receive_packet (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
               || comp_code == IPMI_COMP_CODE_DEACTIVATE_PAYLOAD_PAYLOAD_TYPE_IS_DISABLED)
             goto accept_packet;
 
-          _receive_packet_data_reset (c);
+          _receive_ipmi_packet_data_reset (c);
           ipmiconsole_calculate_errnum (c, *p);
           goto cleanup;
         }
@@ -1288,15 +1311,20 @@ _receive_packet (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
     }
 
  accept_packet:
-  /* Special case for ping */
+  /* Special case for keepalive and sol data */
   if (*p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_VERSION_RS)
     {
-      if (_receive_ping_packet_data_reset (c) < 0)
+      if (_receive_keepalive_packet_data_reset (c) < 0)
+        goto cleanup;
+    }
+  else if (*p == IPMICONSOLE_PACKET_TYPE_SOL_PAYLOAD_DATA_RS)
+    {
+      if (_receive_sol_packet_data_reset (c) < 0)
         goto cleanup;
     }
   else
     {
-      if (_receive_packet_data_reset (c) < 0)
+      if (_receive_ipmi_packet_data_reset (c) < 0)
         goto cleanup;
     }
 
@@ -1693,6 +1721,110 @@ _keepalive_timeout (ipmiconsole_ctx_t c)
           /* Note that the protocol_state stays in SOL_SESSION */
           if (_send_ipmi_packet (c, IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_VERSION_RQ) < 0)
             return (-1);
+          return (1);
+        }
+    }
+
+  return (0);
+}
+
+/*
+ * Returns 1 if serial keepalive is necessary
+ * Returns 0 if serial keepalive is not necessary
+ * Returns -1 on error
+ */
+static int
+_serial_keepalive_is_necessary (ipmiconsole_ctx_t c)
+{
+  struct timeval current;
+  struct timeval timeout;
+
+  assert (c);
+  assert (c->magic == IPMICONSOLE_CTX_MAGIC);
+  assert (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION);
+  assert (c->config.engine_flags & IPMICONSOLE_ENGINE_SERIAL_KEEPALIVE);
+
+  timeval_add_ms (&(c->session.last_sol_packet_received), c->config.session_timeout_len, &timeout);
+  if (gettimeofday (&current, NULL) < 0)
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("gettimeofday: %s", strerror (errno)));
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SYSTEM_ERROR);
+      return (-1);
+    }
+
+  if (timeval_gt (&current, &timeout))
+    return (1);
+  else
+    return (0);
+}
+
+/*
+ * Returns  1 if serial keepalive timed out and packet is constructed
+ * Returns  0 if serial keepalive did not time out
+ * Returns -1 on error
+ */
+static int
+_serial_keepalive_timeout (ipmiconsole_ctx_t c)
+{
+  int rv;
+
+  assert (c);
+  assert (c->magic == IPMICONSOLE_CTX_MAGIC);
+  assert (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION);
+  assert (c->config.engine_flags & IPMICONSOLE_ENGINE_SERIAL_KEEPALIVE);
+
+  if ((rv = _serial_keepalive_is_necessary (c)) < 0)
+    return (-1);
+
+  if (rv)
+    {
+      /* Shouldn't reach this point unless the following is true */
+      
+      if (scbuf_is_empty (c->connection.console_remote_console_to_bmc)
+          && !c->session.break_requested
+          && !c->session.console_remote_console_to_bmc_bytes_before_break)
+        {
+          char buf[1] = { '\0' };
+          int secure_malloc_flag;
+          int dropped = 0;
+          int n;
+
+          secure_malloc_flag = (c->config.engine_flags & IPMICONSOLE_ENGINE_LOCK_MEMORY) ? 1 : 0;
+
+          if ((n = scbuf_write (c->connection.console_remote_console_to_bmc,
+                                buf,
+                                1,
+                                &dropped,
+                                secure_malloc_flag)) < 0)
+            {
+              IPMICONSOLE_CTX_DEBUG (c, ("scbuf_write: %s", strerror (errno)));
+              ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
+              return (-1);
+            }
+
+          if (n != 1)
+            {
+              IPMICONSOLE_CTX_DEBUG (c, ("scbuf_write: invalid bytes written; n=%d"));
+              ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
+              return (-1);
+            }
+          
+          if (dropped)
+            {
+              IPMICONSOLE_CTX_DEBUG (c, ("scbuf_write: dropped data: dropped=%d", dropped));
+              ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
+              return (-1);
+            }
+          
+          if (_send_sol_packet_with_character_data (c, 0, 0, 0) < 0)
+            {
+              /* Attempt to close the session cleanly */
+              c->session.close_session_flag++;
+              if (_send_ipmi_packet (c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
+                return (-1);
+              c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
+              return (1);
+            }
           return (1);
         }
     }
@@ -2591,7 +2723,6 @@ _sol_bmc_to_remote_console_packet (ipmiconsole_ctx_t c, int *sol_deactivating_fl
   return (rv);
 }
 
-
 /*
  * Returns 0 on success
  * Returns -1 on error
@@ -3388,7 +3519,7 @@ _process_protocol_state_sol_session_send (ipmiconsole_ctx_t c)
         return (1);
     }
 
-  /* Will handle keepalive retransmits too */
+  /* Will handle retransmits too */
   if ((ret = _keepalive_timeout (c)) < 0)
     {
       /* Attempt to close the session cleanly */
@@ -3401,6 +3532,23 @@ _process_protocol_state_sol_session_send (ipmiconsole_ctx_t c)
 
   if (ret)
     return (1);
+
+  if (c->config.engine_flags & IPMICONSOLE_ENGINE_SERIAL_KEEPALIVE)
+    {
+      /* Retransmits handled by _sol_retransmission_timeout() call above */
+      if ((ret = _serial_keepalive_timeout (c)) < 0)
+        {
+          /* Attempt to close the session cleanly */
+          c->session.close_session_flag++;
+          if (_send_ipmi_packet (c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
+            return (-1);
+          c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
+          return (1);
+        }
+
+      if (ret)
+        return (1);
+    }
 
   return (0);
 }

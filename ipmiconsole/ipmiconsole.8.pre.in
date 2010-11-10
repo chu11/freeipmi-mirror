@@ -102,6 +102,21 @@ earlier SOL sessions may have not been able to be deactivate properly.
 \fB\-\-deactivate\fR
 Deactivate a SOL session if one is detected as being in use and exit.
 .TP
+\fB\-\-serial\-keepalive\fR
+Occasionally send NUL characters to detect inactive serial
+connections.  This option is particularly useful for those who intend
+to run
+.B ipmiconsole
+without much interaction, such as for logging purposes.  While IPMI
+connections may still be alive, some motherboards have exhibited bugs
+in which underlying serial data can no longer be sent/received.  From
+the viewpoint of
+.B ipmiconsole,
+data is simply not be sent out of the remote system and this problem
+is only detected once there is user interaction.  By sending the
+occasional NUL character, the underlying loss of serial data transfer
+can be detected far more quickly.
+.TP
 \fB\-\-lock-memory\fR
 Lock sensitive information (such as usernames and passwords) in
 memory.

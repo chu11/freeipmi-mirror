@@ -345,9 +345,13 @@ main (int argc, char **argv)
   protocol_config.maximum_retransmission_count = -1;
 
   memset (&engine_config, '\0', sizeof (struct ipmiconsole_engine_config));
+
   engine_config.engine_flags = 0;
+  if (cmd_args.serial_keepalive)
+    engine_config.engine_flags |= IPMICONSOLE_ENGINE_SERIAL_KEEPALIVE;
   if (cmd_args.lock_memory)
     engine_config.engine_flags |= IPMICONSOLE_ENGINE_LOCK_MEMORY;
+
   engine_config.behavior_flags = 0;
   if (cmd_args.dont_steal)
     engine_config.behavior_flags |= IPMICONSOLE_BEHAVIOR_ERROR_ON_SOL_INUSE;

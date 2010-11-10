@@ -1086,11 +1086,24 @@ ipmiconsole_ctx_session_setup (ipmiconsole_ctx_t c)
   c->session.addr.sin_port = htons (c->session.console_port);
 
   timeval_clear (&(c->session.last_ipmi_packet_sent));
+
   /* Note:
-   * Initial last_ipmi_packet_received to current time, so session
-   * timeout can be calculated in the beginning if necessary.
+   *
+   * Initial last_ipmi_packet_received and last_sol_packet_received to
+   * current time, so appropriate timeouts can be calculated in the
+   * beginning if necessary.
    */
+
   if (gettimeofday (&(c->session.last_ipmi_packet_received), NULL) < 0)
+    {
+      IPMICONSOLE_DEBUG (("gettimeofday: %s", strerror (errno)));
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SYSTEM_ERROR);
+      return (-1);
+    }
+
+  timeval_clear (&(c->session.last_keepalive_packet_sent));
+
+  if (gettimeofday (&(c->session.last_sol_packet_received), NULL) < 0)
     {
       IPMICONSOLE_DEBUG (("gettimeofday: %s", strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SYSTEM_ERROR);
@@ -1240,10 +1253,6 @@ ipmiconsole_ctx_session_setup (ipmiconsole_ctx_t c)
 
   /* Calculated during the session setup. */
   c->session.max_sol_character_send_size = 0;
-
-  /* SOL Session Maintenance */
-
-  timeval_clear (&(c->session.last_keepalive_packet_sent));
 
   /* Serial Break Maintenance */
   c->session.break_requested = 0;

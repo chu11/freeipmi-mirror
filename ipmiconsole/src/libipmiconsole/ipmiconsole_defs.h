@@ -216,7 +216,8 @@ typedef enum
 #define IPMICONSOLE_ENGINE_MASK                    \
   (IPMICONSOLE_ENGINE_CLOSE_FD                     \
    | IPMICONSOLE_ENGINE_OUTPUT_ON_SOL_ESTABLISHED  \
-   | IPMICONSOLE_ENGINE_LOCK_MEMORY)
+   | IPMICONSOLE_ENGINE_LOCK_MEMORY                \
+   | IPMICONSOLE_ENGINE_SERIAL_KEEPALIVE)
 
 #define IPMICONSOLE_BEHAVIOR_MASK           \
   (IPMICONSOLE_BEHAVIOR_ERROR_ON_SOL_INUSE  \
@@ -331,10 +332,14 @@ struct ipmiconsole_ctx_session {
 
   struct sockaddr_in addr;
 
-  /* Session timeout maintenance */
+  /* Session timeout, retransmission timeout, keepalive timeout maintenance */
   struct timeval last_ipmi_packet_sent;
   struct timeval last_ipmi_packet_received;
+  struct timeval last_keepalive_packet_sent;
 
+  /* Serial keepalive timeout maintenance */
+  struct timeval last_sol_packet_received;
+ 
   /*
    * Protocol State Machine Variables
    */
@@ -381,9 +386,6 @@ struct ipmiconsole_ctx_session {
   uint32_t sol_instances_deactivated_count;
 
   uint8_t max_sol_character_send_size; /* determine during session setup */
-
-  /* SOL Session Maintenance */
-  struct timeval last_keepalive_packet_sent;
 
   /* Serial Break Maintenance */
   int break_requested;
