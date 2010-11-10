@@ -252,11 +252,14 @@ extern "C" {
  * 
  * This option will inform the libipmiconsole engine to send serial
  * keepalive packets in addition to the IPMI keepalive packets that
- * normally keep a connection alive.  The keepalive packets are
- * standard SOL packets, but contain a single NUL character in them.
- * The single NUL character is to ensure that the underlying serial
- * receiver is alive and functioning.  Retransmission and timeouts are
- * handled identically to IPMI keepalive packets.
+ * normally keep a connection alive.  The serial keepalive packets are
+ * standard SOL payload packets, but contain a single NUL character in
+ * them.  The single NUL character is to ensure that the underlying
+ * serial receiver is alive and functioning.  Retransmission and
+ * timeouts are handled identically to normal IPMI packets in the code
+ * (e.g. as if somebody typed a character).  The serial keepalive
+ * packets are dispatched if a SOL packet response has not been
+ * received within the length of time of a session timeout.
  *
  * This option is highly recommended for IPMI clients that do not have
  * high user interactivity, as this may discover broken connections
