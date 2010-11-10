@@ -133,6 +133,7 @@ o libipmimonitoring
   - Split workaround flags for inband, IPMI 1.5, and IPMI 2.0 to save bits.
 o libipmiconsole
   - Support libipmiconsole.conf defaults file.
+  - Support default thread_count of 4 if zero input for thread_count.
 
 Contributions
 -------------
