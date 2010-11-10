@@ -332,10 +332,14 @@ struct ipmiconsole_ctx_session {
 
   struct sockaddr_in addr;
 
-  /* Session timeout maintenance */
+  /* Session timeout, retransmission timeout, keepalive timeout maintenance */
   struct timeval last_ipmi_packet_sent;
   struct timeval last_ipmi_packet_received;
+  struct timeval last_keepalive_packet_sent;
 
+  /* Serial keepalive timeout maintenance */
+  struct timeval last_sol_packet_received;
+ 
   /*
    * Protocol State Machine Variables
    */
@@ -382,9 +386,6 @@ struct ipmiconsole_ctx_session {
   uint32_t sol_instances_deactivated_count;
 
   uint8_t max_sol_character_send_size; /* determine during session setup */
-
-  /* SOL Session Maintenance */
-  struct timeval last_keepalive_packet_sent;
 
   /* Serial Break Maintenance */
   int break_requested;
