@@ -1,7 +1,8 @@
 2010-11-XX Albert Chu <chu11@llnl.gov>
 
-	* ipmiconsole/, ipmiconsole/src/libipmiconsole/: Support serial
-	keepalive.
+	* ipmiconsole/src/libipmiconsole/: Support serial keepalive.
+
+	* ipmiconsole/: Support --serial-keepalive option.
 	
 2010-11-05 Albert Chu <chu11@llnl.gov>
 

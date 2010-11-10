@@ -43,11 +43,12 @@ enum ipmiconsole_argp_option_keys
   {
     DONT_STEAL_KEY = 160,
     DEACTIVATE_KEY = 161,
-    LOCK_MEMORY_KEY = 162,
+    SERIAL_KEEPALIVE_KEY = 162,
+    LOCK_MEMORY_KEY = 163,
     ESCAPE_CHAR_KEY = 'e',
-    DEBUG_KEY = 163,
-    DEBUGFILE_KEY = 164,
-    NORAW_KEY = 165,
+    DEBUG_KEY = 164,
+    DEBUGFILE_KEY = 165,
+    NORAW_KEY = 166,
   };
 
 struct ipmiconsole_arguments
@@ -56,6 +57,7 @@ struct ipmiconsole_arguments
   char escape_char;
   int dont_steal;
   int deactivate;
+  int serial_keepalive;
   int lock_memory;
 #ifndef NDEBUG
   int debugfile;

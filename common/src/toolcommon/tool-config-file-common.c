@@ -3710,6 +3710,17 @@ config_file_parse (const char *filename,
         &(ipmiconsole_data.dont_steal),
         0,
       },
+      {
+        "ipmiconsole-serial-keepalive",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        _config_file_bool,
+        1,
+        0,
+        &(ipmiconsole_data.serial_keepalive_count),
+        &(ipmiconsole_data.serial_keepalive),
+        0,
+      },
       /* legacy - no ipmiconsole prefix */
       {
         "lock-memory",

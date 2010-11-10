@@ -87,13 +87,15 @@ static struct argp_option cmdline_options[] =
       "Do not steal an SOL session if one is already detected as being in use.", 31},
     { "deactivate", DEACTIVATE_KEY, 0, 0,
       "Deactivate a SOL session if one is detected as being in use and exit.", 32},
+    { "serial-keepalive", SERIAL_KEEPALIVE_KEY, 0, 0,
+      "Occasionally send NUL characters to detect inactive serial connections.", 33},
     { "lock-memory", LOCK_MEMORY_KEY, 0, 0,
-      "Lock sensitive information (such as usernames and passwords) in memory.", 33},
+      "Lock sensitive information (such as usernames and passwords) in memory.", 34},
 #ifndef NDEBUG
     { "debugfile", DEBUGFILE_KEY, 0, 0,
-      "Output debugging to the debugfile rather than to standard output.", 34},
+      "Output debugging to the debugfile rather than to standard output.", 35},
     { "noraw", NORAW_KEY, 0, 0,
-      "Don't enter terminal raw mode.", 35},
+      "Don't enter terminal raw mode.", 36},
 #endif
     { NULL, 0, NULL, 0, NULL, 0}
   };
@@ -126,6 +128,9 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       break;
     case DEACTIVATE_KEY:       /* --deactivate */
       cmd_args->deactivate++;
+      break;
+    case SERIAL_KEEPALIVE_KEY:       /* --serial-keepalive */
+      cmd_args->serial_keepalive++;
       break;
     case LOCK_MEMORY_KEY:       /* --lock-memory */
       cmd_args->lock_memory++;
@@ -193,6 +198,8 @@ _ipmiconsole_config_file_parse (struct ipmiconsole_arguments *cmd_args)
     cmd_args->escape_char = config_file_data.escape_char;
   if (config_file_data.dont_steal_count)
     cmd_args->dont_steal = config_file_data.dont_steal;
+  if (config_file_data.serial_keepalive_count)
+    cmd_args->serial_keepalive = config_file_data.serial_keepalive;
   if (config_file_data.lock_memory_count)
     cmd_args->lock_memory = config_file_data.lock_memory;
 }
@@ -211,6 +218,7 @@ ipmiconsole_argp_parse (int argc, char **argv, struct ipmiconsole_arguments *cmd
   cmd_args->escape_char = '&';
   cmd_args->dont_steal = 0;
   cmd_args->deactivate = 0;
+  cmd_args->serial_keepalive = 0;
   cmd_args->lock_memory = 0;
 #ifndef NDEBUG
   cmd_args->debugfile = 0;

@@ -52,6 +52,7 @@ o ipmi-dcmi
   - Support --get-management-controller-identifier-string option.
   - Support --set-management-controller-identifier-string option.
 o ipmiconsole
+  - Support --serial-keepalive option.
   - Rework 'intel20' workaround to not allow a non two-part authentication.
 o ipmipower
   - Rework 'intel20' workaround to not allow a non two-part authentication.
