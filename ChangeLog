@@ -1,4 +1,6 @@
-2010-11-XX Albert Chu <chu11@llnl.gov>
+2010-11-10 Albert Chu <chu11@llnl.gov>
+
+	Branch serialnulping
 
 	* ipmiconsole/src/libipmiconsole/: Support serial keepalive.
 
