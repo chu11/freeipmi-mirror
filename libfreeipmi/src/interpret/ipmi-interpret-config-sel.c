@@ -877,8 +877,6 @@ _interpret_sel_oem_config_intel_node_manager (ipmi_interpret_ctx_t ctx,
 static int
 _interpret_sel_oem_config_init (ipmi_interpret_ctx_t ctx)
 {
-  struct ipmi_interpret_sel_oem_sensor_config *oem_conf;
-
   assert (ctx);
   assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
   assert (ctx->interpret_sel.sel_oem_sensor_config);
