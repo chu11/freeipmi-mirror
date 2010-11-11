@@ -21,7 +21,20 @@
 
 	* ipmiconsole/src/ipmiconsole/: Remove directory, move source to
 	ipmiconsole/src/.
+
+	* libipmidetect/: New directory.
+
+	* ipmidetect/src/libipmidetect/: Remove directory, move source to
+	libipmidetect/.
+
+	* ipmidetectd/: New directory.
+
+	* ipmidetect/src/ipmidetectd/: Remove directory, move source to
+	ipmidetectd/.
 	
+	* ipmidetect/src/ipmidetect/: Remove directory, move source to
+	ipmidetect/src/.
+
 2010-11-11 Albert Chu <chu11@llnl.gov>
 
 	* Create 'ipmi-power' symlink and manpage to link to 'ipmipower'.
