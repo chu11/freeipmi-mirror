@@ -5,6 +5,7 @@ SUBDIRS = \
 	libfreeipmi \
 	libipmiconsole \
 	libipmimonitoring \
+	libipmidetect \
 	man \
 	bmc-config \
 	bmc-info \
@@ -23,6 +24,7 @@ SUBDIRS = \
 	ipmi-locate \
 	ipmiconsole \
 	ipmidetect \
+	ipmidetectd \
 	ipmiping \
 	ipmipower \
 	rmcpping \
