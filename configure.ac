@@ -130,14 +130,13 @@ AC_CONFIG_FILES([
         ipmidetect/src/ipmidetect/Makefile
         ipmidetect/src/ipmidetectd/Makefile
         ipmidetect/src/libipmidetect/Makefile
-	ipmimonitoring/Makefile
-        ipmimonitoring/src/Makefile
-        ipmimonitoring/ipmi_monitoring_sensors.conf.5.pre
-        ipmimonitoring/ipmimonitoring_sensors.conf.5.pre
-        ipmimonitoring/ipmimonitoring.conf.5.pre
-        ipmimonitoring/libipmimonitoring.conf.5.pre
-        ipmimonitoring/libipmimonitoring.3.pre
-        ipmimonitoring/src/libipmimonitoring/Makefile 
+	libipmimonitoring/Makefile
+        libipmimonitoring/src/Makefile
+        libipmimonitoring/ipmi_monitoring_sensors.conf.5.pre
+        libipmimonitoring/ipmimonitoring_sensors.conf.5.pre
+        libipmimonitoring/ipmimonitoring.conf.5.pre
+        libipmimonitoring/libipmimonitoring.conf.5.pre
+        libipmimonitoring/libipmimonitoring.3.pre
         ipmiping/Makefile 
         ipmiping/ipmiping.8.pre
         ipmiping/src/Makefile

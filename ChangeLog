@@ -8,6 +8,11 @@
 
 	* ipmimonitoring/src/examples/: Remove directory, move files to
 	examples/.
+
+	* libipmimonitoring/: New directory.
+
+	* ipmimonitoring/src/libipmimonitoring/: Remove directory, move to
+	libipmimonitoring/.
 	
 2010-11-11 Albert Chu <chu11@llnl.gov>
 

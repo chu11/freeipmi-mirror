@@ -3,6 +3,7 @@ SUBDIRS = \
 	etc \
 	common \
 	libfreeipmi \
+	libipmimonitoring \
 	man \
 	bmc-config \
 	bmc-info \
@@ -21,7 +22,6 @@ SUBDIRS = \
 	ipmi-locate \
 	ipmiconsole \
 	ipmidetect \
-	ipmimonitoring \
 	ipmiping \
 	ipmipower \
 	rmcpping \
