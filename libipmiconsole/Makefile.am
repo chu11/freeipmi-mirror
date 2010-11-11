@@ -1,8 +1,8 @@
 SUBDIRS = src
 
 MANS_CPP = \
-	ipmidetect.8 \
-	ipmidetect.conf.5
+	libipmiconsole.3 \
+	libipmiconsole.conf.5
 
 $(MANS_CPP): $(MANS_CPP:%=%.pre)
 	$(CPP) -C -P -I. $@.pre  $@
@@ -13,11 +13,14 @@ CLEANFILES = $(MANS_CPP) *~
 
 DISTCLEANFILES = $(MANS_CPP) $(MANS_CPP:%=%.pre) .deps/*.P
 
-EXTRA_DIST = ipmidetect.conf
+EXTRA_DIST = libipmiconsole.conf
 
 install-data-local:
 	$(INSTALL) -m 755 -d $(DESTDIR)$(FREEIPMI_SYSCONFDIR)
-	$(INSTALL) -m 644 $(srcdir)/ipmidetect.conf $(DESTDIR)$(IPMIDETECT_CONFIG_FILE_DEFAULT)
+	$(INSTALL) -m 644 $(srcdir)/libipmiconsole.conf $(DESTDIR)$(LIBIPMICONSOLE_CONFIG_FILE_DEFAULT)
 
 uninstall-local:
-	$(RM) -f $(DESTDIR)$(IPMIDETECT_CONFIG_FILE_DEFAULT)
+	$(RM) -f $(DESTDIR)$(LIBIPMICONSOLE_CONFIG_FILE_DEFAULT)
+
+
+

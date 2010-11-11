@@ -3,6 +3,9 @@ SUBDIRS = \
 	etc \
 	common \
 	libfreeipmi \
+	libipmiconsole \
+	libipmimonitoring \
+	libipmidetect \
 	man \
 	bmc-config \
 	bmc-info \
@@ -21,10 +24,11 @@ SUBDIRS = \
 	ipmi-locate \
 	ipmiconsole \
 	ipmidetect \
-	ipmimonitoring \
+	ipmidetectd \
 	ipmiping \
 	ipmipower \
 	rmcpping \
+	examples \
 	contrib
 
 PACKAGE = @PACKAGE@

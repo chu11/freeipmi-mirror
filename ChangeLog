@@ -1,5 +1,42 @@
 2010-11-11 Albert Chu <chu11@llnl.gov>
 
+	Branch 'reorg'.
+
+	* Re-org code base for consistency in code tree.
+
+	* examples/: New directory.
+
+	* ipmimonitoring/src/examples/: Remove directory, move files to
+	examples/.
+
+	* libipmimonitoring/: New directory.
+
+	* ipmimonitoring/src/libipmimonitoring/: Remove directory, move to
+	libipmimonitoring/.
+
+	* libipmiconsole/: New directory.
+
+	* ipmiconsole/src/libipmiconsole/: Remove directory, move to
+	libipmiconsole/.
+
+	* ipmiconsole/src/ipmiconsole/: Remove directory, move source to
+	ipmiconsole/src/.
+
+	* libipmidetect/: New directory.
+
+	* ipmidetect/src/libipmidetect/: Remove directory, move source to
+	libipmidetect/.
+
+	* ipmidetectd/: New directory.
+
+	* ipmidetect/src/ipmidetectd/: Remove directory, move source to
+	ipmidetectd/.
+	
+	* ipmidetect/src/ipmidetect/: Remove directory, move source to
+	ipmidetect/src/.
+
+2010-11-11 Albert Chu <chu11@llnl.gov>
+
 	* Create 'ipmi-power' symlink and manpage to link to 'ipmipower'.
 
 	* Create 'ipmi-ping' symlink and manpage to link to 'ipmiping'.

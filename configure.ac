@@ -40,6 +40,7 @@ AC_CONFIG_FILES([
         contrib/Makefile
         contrib/ganglia/Makefile
         contrib/nagios/Makefile
+        examples/Makefile
         libfreeipmi/Makefile 
         libfreeipmi/libfreeipmi.3.pre
         libfreeipmi/freeipmi_interpret_sensor.conf.5.pre
@@ -64,6 +65,20 @@ AC_CONFIG_FILES([
         libfreeipmi/src/sensor-read/Makefile
         libfreeipmi/src/spec/Makefile
         libfreeipmi/src/util/Makefile
+	libipmiconsole/Makefile
+        libipmiconsole/libipmiconsole.3.pre
+        libipmiconsole/libipmiconsole.conf.5.pre
+	libipmiconsole/src/Makefile
+	libipmimonitoring/Makefile
+        libipmimonitoring/src/Makefile
+        libipmimonitoring/ipmi_monitoring_sensors.conf.5.pre
+        libipmimonitoring/ipmimonitoring_sensors.conf.5.pre
+        libipmimonitoring/ipmimonitoring.conf.5.pre
+        libipmimonitoring/libipmimonitoring.conf.5.pre
+        libipmimonitoring/libipmimonitoring.3.pre
+        libipmidetect/Makefile
+        libipmidetect/libipmidetect.3.pre
+        libipmidetect/src/Makefile
 	bmc-config/Makefile 
  	bmc-config/bmc-config.8.pre 
         bmc-config/bmc-config.conf.5.pre
@@ -114,30 +129,15 @@ AC_CONFIG_FILES([
 	ipmiconsole/Makefile 
 	ipmiconsole/ipmiconsole.8.pre
         ipmiconsole/ipmiconsole.conf.5.pre
-        ipmiconsole/libipmiconsole.3.pre
-        ipmiconsole/libipmiconsole.conf.5.pre
         ipmiconsole/src/Makefile
-	ipmiconsole/src/libipmiconsole/Makefile
-        ipmiconsole/src/ipmiconsole/Makefile
         ipmidetect/Makefile
         ipmidetect/ipmidetect.8.pre
         ipmidetect/ipmidetect.conf.5.pre
-        ipmidetect/ipmidetectd.8.pre
-        ipmidetect/ipmidetectd.conf.5.pre
-        ipmidetect/libipmidetect.3.pre
         ipmidetect/src/Makefile
-        ipmidetect/src/ipmidetect/Makefile
-        ipmidetect/src/ipmidetectd/Makefile
-        ipmidetect/src/libipmidetect/Makefile
-	ipmimonitoring/Makefile
-        ipmimonitoring/src/Makefile
-        ipmimonitoring/ipmi_monitoring_sensors.conf.5.pre
-        ipmimonitoring/ipmimonitoring_sensors.conf.5.pre
-        ipmimonitoring/ipmimonitoring.conf.5.pre
-        ipmimonitoring/libipmimonitoring.conf.5.pre
-        ipmimonitoring/libipmimonitoring.3.pre
-        ipmimonitoring/src/libipmimonitoring/Makefile 
-        ipmimonitoring/src/examples/Makefile
+        ipmidetectd/Makefile
+        ipmidetectd/ipmidetectd.8.pre
+        ipmidetectd/ipmidetectd.conf.5.pre
+        ipmidetectd/src/Makefile
         ipmiping/Makefile 
         ipmiping/ipmiping.8.pre
         ipmiping/src/Makefile
