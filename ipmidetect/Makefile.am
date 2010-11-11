@@ -7,13 +7,13 @@ MANS_CPP = \
 $(MANS_CPP): $(MANS_CPP:%=%.pre)
 	$(CPP) -C -P -I. $@.pre  $@
 
-dist_man_MANS = $(MANS_CPP)
+dist_man_MANS = $(MANS_CPP) ipmi-detect.8
 
 CLEANFILES = $(MANS_CPP) *~
 
 DISTCLEANFILES = $(MANS_CPP) $(MANS_CPP:%=%.pre) .deps/*.P
 
-EXTRA_DIST = ipmidetect.conf
+EXTRA_DIST = ipmidetect.conf ipmi-detect.8
 
 install-data-local:
 	$(INSTALL) -m 755 -d $(DESTDIR)$(FREEIPMI_SYSCONFDIR)

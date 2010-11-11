@@ -30,3 +30,10 @@ $(top_builddir)/libipmidetect/src/libipmidetect.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
 force-dependency-check:
+
+install-exec-hook:
+	$(install_sh) -d -m 755 $(DESTDIR)$(sbindir)
+	$(LN_S) $(sbindir)/ipmidetect $(DESTDIR)$(sbindir)/ipmi-detect
+
+uninstall-hook:
+	$(RM) $(DESTDIR)$(sbindir)/ipmi-detect
