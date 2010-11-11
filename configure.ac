@@ -65,6 +65,16 @@ AC_CONFIG_FILES([
         libfreeipmi/src/sensor-read/Makefile
         libfreeipmi/src/spec/Makefile
         libfreeipmi/src/util/Makefile
+        libipmiconsole/libipmiconsole.3.pre
+        libipmiconsole/libipmiconsole.conf.5.pre
+	libipmiconsole/src/Makefile
+	libipmimonitoring/Makefile
+        libipmimonitoring/src/Makefile
+        libipmimonitoring/ipmi_monitoring_sensors.conf.5.pre
+        libipmimonitoring/ipmimonitoring_sensors.conf.5.pre
+        libipmimonitoring/ipmimonitoring.conf.5.pre
+        libipmimonitoring/libipmimonitoring.conf.5.pre
+        libipmimonitoring/libipmimonitoring.3.pre
 	bmc-config/Makefile 
  	bmc-config/bmc-config.8.pre 
         bmc-config/bmc-config.conf.5.pre
@@ -115,11 +125,7 @@ AC_CONFIG_FILES([
 	ipmiconsole/Makefile 
 	ipmiconsole/ipmiconsole.8.pre
         ipmiconsole/ipmiconsole.conf.5.pre
-        ipmiconsole/libipmiconsole.3.pre
-        ipmiconsole/libipmiconsole.conf.5.pre
         ipmiconsole/src/Makefile
-	ipmiconsole/src/libipmiconsole/Makefile
-        ipmiconsole/src/ipmiconsole/Makefile
         ipmidetect/Makefile
         ipmidetect/ipmidetect.8.pre
         ipmidetect/ipmidetect.conf.5.pre
@@ -130,13 +136,6 @@ AC_CONFIG_FILES([
         ipmidetect/src/ipmidetect/Makefile
         ipmidetect/src/ipmidetectd/Makefile
         ipmidetect/src/libipmidetect/Makefile
-	libipmimonitoring/Makefile
-        libipmimonitoring/src/Makefile
-        libipmimonitoring/ipmi_monitoring_sensors.conf.5.pre
-        libipmimonitoring/ipmimonitoring_sensors.conf.5.pre
-        libipmimonitoring/ipmimonitoring.conf.5.pre
-        libipmimonitoring/libipmimonitoring.conf.5.pre
-        libipmimonitoring/libipmimonitoring.3.pre
         ipmiping/Makefile 
         ipmiping/ipmiping.8.pre
         ipmiping/src/Makefile

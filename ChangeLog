@@ -13,6 +13,14 @@
 
 	* ipmimonitoring/src/libipmimonitoring/: Remove directory, move to
 	libipmimonitoring/.
+
+	* libipmiconsole/: New directory.
+
+	* ipmiconsole/src/libipmiconsole/: Remove directory, move to
+	libipmiconsole/.
+
+	* ipmiconsole/src/ipmiconsole/: Remove directory, move source to
+	ipmiconsole/src/.
 	
 2010-11-11 Albert Chu <chu11@llnl.gov>
 
