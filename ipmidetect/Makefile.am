@@ -15,7 +15,7 @@ DISTCLEANFILES = $(MANS_CPP) $(MANS_CPP:%=%.pre) .deps/*.P
 
 EXTRA_DIST = ipmidetect.conf
 
-install-data-local: $(INSTALL_INIT_SCRIPTS)
+install-data-local:
 	$(INSTALL) -m 755 -d $(DESTDIR)$(FREEIPMI_SYSCONFDIR)
 	$(INSTALL) -m 644 $(srcdir)/ipmidetect.conf $(DESTDIR)$(IPMIDETECT_CONFIG_FILE_DEFAULT)
 
