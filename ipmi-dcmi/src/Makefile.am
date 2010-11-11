@@ -22,7 +22,7 @@ ipmi_dcmi_LDADD = \
 	$(top_builddir)/common/src/miscutil/libmiscutils.la \
 	$(top_builddir)/common/src/parsecommon/libparsecommon.la \
 	$(top_builddir)/common/src/portability/libfreeipmiportability.la \
-	$(top_builddir)/ipmidetect/src/libipmidetect/libipmidetect.la \
+	$(top_builddir)/libipmidetect/src/libipmidetect.la \
 	$(top_builddir)/libfreeipmi/src/libfreeipmi.la
 
 ipmi_dcmi_SOURCES = \
@@ -47,7 +47,7 @@ $(top_builddir)/common/src/parsecommon/libparsecommon.la : force-dependency-chec
 $(top_builddir)/common/src/portability/libfreeipmiportability.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
-$(top_builddir)/ipmidetect/src/libipmidetect/libipmidetect.la : force-dependency-check
+$(top_builddir)/libipmidetect/src/libipmidetect.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
 $(top_builddir)/libfreeipmi/src/libfreeipmi.la : force-dependency-check
