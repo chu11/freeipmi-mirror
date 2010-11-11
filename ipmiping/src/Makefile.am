@@ -28,3 +28,10 @@ $(top_builddir)/libfreeipmi/src/libfreeipmi.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
 force-dependency-check:
+
+install-exec-hook:
+	$(install_sh) -d -m 755 $(DESTDIR)$(sbindir)
+	$(LN_S) $(sbindir)/ipmiping $(DESTDIR)$(sbindir)/ipmi-ping
+
+uninstall-hook:
+	$(RM) $(DESTDIR)$(sbindir)/ipmi-ping

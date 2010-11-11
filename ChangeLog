@@ -1,3 +1,15 @@
+2010-11-11 Albert Chu <chu11@llnl.gov>
+
+	* Create 'ipmi-power' symlink and manpage to link to 'ipmipower'.
+
+	* Create 'ipmi-ping' symlink and manpage to link to 'ipmiping'.
+
+	* Create 'rcmp-ping' symlink and manpage to link to 'rcmpping'.
+	
+	* Create 'ipmi-console' symlink and manpage to link to 'ipmiconsole'.
+
+	* freeipmi.spec.in: Update appropriately for updates/changes.
+	
 2010-11-10 Albert Chu <chu11@llnl.gov>
 
 	Branch serialnulping

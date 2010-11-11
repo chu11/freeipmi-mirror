@@ -47,3 +47,10 @@ $(top_builddir)/ipmiconsole/src/libipmiconsole/libipmiconsole.la : force-depende
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
 force-dependency-check:
+
+install-exec-hook:
+	$(install_sh) -d -m 755 $(DESTDIR)$(sbindir)
+	$(LN_S) $(sbindir)/ipmiconsole $(DESTDIR)$(sbindir)/ipmi-console
+
+uninstall-hook:
+	$(RM) $(DESTDIR)$(sbindir)/ipmi-console

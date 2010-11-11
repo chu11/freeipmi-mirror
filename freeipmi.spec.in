@@ -237,9 +237,13 @@ fi
 %{_sbindir}/ipmi-sensors
 %{_sbindir}/ipmi-sensors-config
 %{_sbindir}/ipmiping
+%{_sbindir}/ipmi-ping
 %{_sbindir}/ipmipower
+%{_sbindir}/ipmi-power
 %{_sbindir}/rmcpping
+%{_sbindir}/rmcp-ping
 %{_sbindir}/ipmiconsole
+%{_sbindir}/ipmi-console
 %{_sbindir}/ipmimonitoring
 %{_sbindir}/ipmi-chassis
 %{_sbindir}/ipmi-chassis-config
@@ -259,10 +263,14 @@ fi
 %{_mandir}/man8/ipmi-sensors.8*
 %{_mandir}/man8/ipmi-sensors-config.8*
 %{_mandir}/man8/ipmiping.8*
+%{_mandir}/man8/ipmi-ping.8*
 %{_mandir}/man8/ipmipower.8*
+%{_mandir}/man8/ipmi-power.8*
 %{_mandir}/man5/ipmipower.conf.5*
 %{_mandir}/man8/rmcpping.8*
+%{_mandir}/man8/rmcp-ping.8*
 %{_mandir}/man8/ipmiconsole.8*
+%{_mandir}/man8/ipmi-console.8*
 %{_mandir}/man5/ipmiconsole.conf.5*
 %{_mandir}/man8/ipmimonitoring.8*
 %{_mandir}/man5/ipmi_monitoring_sensors.conf.5*
@@ -357,6 +365,7 @@ fi
 - Support /etc/freeipmi/ config dir.
 - Support new ipmi_monitoring*.h files.
 - Support new manpages.
+- Support new compatability symlinks/manpages.
 
 * Wed Sep 30 2009 Albert Chu <chu11@llnl.gov> 0.8.0
 - Update for dcmi.
