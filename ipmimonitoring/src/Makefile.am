@@ -1,1 +1,1 @@
-SUBDIRS = libipmimonitoring examples
+SUBDIRS = libipmimonitoring

@@ -40,6 +40,7 @@ AC_CONFIG_FILES([
         contrib/Makefile
         contrib/ganglia/Makefile
         contrib/nagios/Makefile
+        examples/Makefile
         libfreeipmi/Makefile 
         libfreeipmi/libfreeipmi.3.pre
         libfreeipmi/freeipmi_interpret_sensor.conf.5.pre
@@ -137,7 +138,6 @@ AC_CONFIG_FILES([
         ipmimonitoring/libipmimonitoring.conf.5.pre
         ipmimonitoring/libipmimonitoring.3.pre
         ipmimonitoring/src/libipmimonitoring/Makefile 
-        ipmimonitoring/src/examples/Makefile
         ipmiping/Makefile 
         ipmiping/ipmiping.8.pre
         ipmiping/src/Makefile

@@ -25,6 +25,7 @@ SUBDIRS = \
 	ipmiping \
 	ipmipower \
 	rmcpping \
+	examples \
 	contrib
 
 PACKAGE = @PACKAGE@
