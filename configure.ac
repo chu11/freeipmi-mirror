@@ -65,6 +65,7 @@ AC_CONFIG_FILES([
         libfreeipmi/src/sensor-read/Makefile
         libfreeipmi/src/spec/Makefile
         libfreeipmi/src/util/Makefile
+	libipmiconsole/Makefile
         libipmiconsole/libipmiconsole.3.pre
         libipmiconsole/libipmiconsole.conf.5.pre
 	libipmiconsole/src/Makefile
