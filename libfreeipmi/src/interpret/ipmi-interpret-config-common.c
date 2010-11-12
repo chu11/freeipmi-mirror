@@ -101,3 +101,69 @@ ipmi_interpret_config_parse_strtoul (conffile_t cf,
   
   return (0);
 }
+
+int
+ipmi_interpret_config_parse_manufactuer_id_product_id (conffile_t cf,
+                                                       const char *str,
+                                                       uint32_t manufacturer_ids[IPMI_INTERPRET_CONFIG_FILE_ID_MAX],
+                                                       uint16_t product_ids[IPMI_INTERPRET_CONFIG_FILE_ID_MAX],
+                                                       unsigned int *ids_count)
+{
+  char *tmpstr = NULL;
+  char *manufacturer_id_ptr;
+  char *product_id_ptr;
+  int rv = -1;
+  char *lasts;
+
+  assert (cf);
+  assert (str);
+  assert (ids_count);
+
+  (*ids_count) = 0;
+
+  if (!(tmpstr = strdup (str)))
+    {
+      conffile_seterrnum (cf, CONFFILE_ERR_OUTMEM);
+      goto cleanup;
+    }
+
+  manufacturer_id_ptr = strtok_r (tmpstr, ",", &lasts);
+  while (manufacturer_id_ptr && (*ids_count) < IPMI_INTERPRET_CONFIG_FILE_ID_MAX)
+    {
+      char *ptr;
+      uint32_t tmp;
+
+      if (!(ptr = strchr (manufacturer_id_ptr, ':')))
+        {
+          conffile_seterrnum (cf, CONFFILE_ERR_PARSE_ARG_INVALID);
+          goto cleanup;
+        }
+      
+      (*ptr) = '\0';
+      product_id_ptr = ptr + 1;
+      
+      if (ipmi_interpret_config_parse_strtoul (cf,
+                                               manufactuer_id_ptr,
+                                               0x00FFFFFF,  /* 24 bit manufacturer ID */
+                                               &tmp) < 0)
+        goto cleanup;
+      manufacturer_ids[(*ids_count)] = tmp;
+      
+      if (ipmi_interpret_config_parse_strtoul (cf,
+                                               product_id_ptr,
+                                               USHRT_MAX,
+                                               &tmp) < 0)
+        goto cleanup;
+      product_ids[(*ids_count)] = tmp;
+
+      (*ids_count)++;
+
+      tok = strtok_r (NULL, ",", &lasts);
+    }
+
+  rv = 0;
+ cleanup:
+  free (tmpstr);
+  return (rv);
+}
+

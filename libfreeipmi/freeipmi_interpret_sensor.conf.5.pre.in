@@ -962,21 +962,27 @@ Nominal, Critical < Warning).  If no match is found, no sensor state
 is returned for the OEM sensor reading.
 .RS
 .TP
-\fBIPMI_OEM_Bitmask\fR \fIManufacturer-ID\fR \fIProduct-ID\fR \fIEvent-Reading-Type-Code\fR \fISensor-Type\fR \fISensor-Event-Bitmask\fR \fIState\fR
+\fBIPMI_OEM_Bitmask\fR \fIManufacturer-ID\fR:\fIProduct-ID\fR,... \fIEvent-Reading-Type-Code\fR \fISensor-Type\fR \fISensor-Event-Bitmask\fR \fIState\fR
 \fBIPMI_OEM_Bitmask\fR can be used to configure a state interpretation
 for a specific \fIManufacturer-ID\fR, \fIProduct-ID\fR,
 \fIEvent-Reading-Type-Code\fR, and \fISensor-Type\fR combination and a
 specific bitmask of the \fISensor-Event\fR.  The state will be
 accepted as the sensor interpretation if the inputted bitmask ANDed
-with the actual sensor event bitmask reading is true.
+with the actual sensor event bitmask reading is true.  Multiple
+\fIManufacturer-ID\fR and \fIProduct-ID\fR pairs can be input comma
+separated if this particular interpretation exists on multiple
+motherboards.
 .TP
-\fBIPMI_OEM_Value\fR \fIManufacturer-ID\fR \fIProduct-ID\fR \fIEvent-Reading-Type-Code\fR \fISensor-Type\fR \fISensor-Event-Bitmask-Value\fR \fIState\fR
+\fBIPMI_OEM_Value\fR \fIManufacturer-ID\fR:\fIProduct-ID\fR,... \fIEvent-Reading-Type-Code\fR \fISensor-Type\fR \fISensor-Event-Bitmask-Value\fR \fIState\fR
 \fBIPMI_OEM_Value\fR can be used to configure a state interpretation
 for a specific \fIManufacturer-ID\fR, \fIProduct-ID\fR,
 \fIEvent-Reading-Type-Code\fR, and \fISensor-Type\fR combination and a
 specific value for the \fISensor-Event-Bitmask\fR.  The state will be
 accepted as the sensor interpretation if the inputted bitmask value is
-equal to the actual sensor event bitmask reading.
+equal to the actual sensor event bitmask reading.  Multiple
+\fIManufacturer-ID\fR and \fIProduct-ID\fR pairs can be input comma
+separated if this particular interpretation exists on multiple
+motherboards.
 .RE
 
 .SH "FILES"
