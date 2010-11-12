@@ -1803,8 +1803,8 @@ _cb_sel_oem_record_parse (conffile_t cf,
           memset (oem_conf, '\0', sizeof (struct ipmi_interpret_sel_oem_record_config));
           
           memcpy (oem_conf->key, keybuf, IPMI_OEM_HASH_KEY_BUFLEN);
-          oem_conf->manufacturer_id = manufacturer_id;
-          oem_conf->product_id = product_id;
+          oem_conf->manufacturer_id = manufacturer_ids[i];
+          oem_conf->product_id = product_ids[i];
           oem_conf->record_type = record_type;
           
           if (!hash_insert ((*h), oem_conf->key, oem_conf))

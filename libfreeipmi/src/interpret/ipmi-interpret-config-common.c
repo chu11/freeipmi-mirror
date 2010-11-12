@@ -54,6 +54,8 @@
 
 #include "freeipmi/interpret/ipmi-interpret.h"
 
+#include "ipmi-interpret-config-common.h"
+
 #include "freeipmi-portability.h"
 #include "conffile.h"
 
@@ -143,7 +145,7 @@ ipmi_interpret_config_parse_manufactuer_id_product_id (conffile_t cf,
       product_id_ptr = ptr + 1;
       
       if (ipmi_interpret_config_parse_strtoul (cf,
-                                               manufactuer_id_ptr,
+                                               manufacturer_id_ptr,
                                                0x00FFFFFF,  /* 24 bit manufacturer ID */
                                                &tmp) < 0)
         goto cleanup;
@@ -158,7 +160,7 @@ ipmi_interpret_config_parse_manufactuer_id_product_id (conffile_t cf,
 
       (*ids_count)++;
 
-      tok = strtok_r (NULL, ",", &lasts);
+      manufacturer_id_ptr = strtok_r (NULL, ",", &lasts);
     }
 
   rv = 0;
