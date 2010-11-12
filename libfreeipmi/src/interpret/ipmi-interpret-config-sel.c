@@ -1439,18 +1439,18 @@ _cb_sel_parse (conffile_t cf,
   if (data->stringlist_len > 2)
     conffile_seterrnum (cf, CONFFILE_ERR_PARSE_ARG_TOOMANY);
 
- if ((assertion_state = ipmi_interpret_config_parse_state (cf,
-                                                           data->stringlist[0])) < 0)
+  if ((assertion_state = ipmi_interpret_config_parse_state (cf,
+                                                            data->stringlist[0])) < 0)
     return (-1);
 
- if (data->stringlist_len > 1)
-   {
-     if ((deassertion_state = ipmi_interpret_config_parse_state (cf,
-                                                                 data->stringlist[1])) < 0)
-       return (-1);
-   }
- else
-   deassertion_state = assertion_state;
+  if (data->stringlist_len > 1)
+    {
+      if ((deassertion_state = ipmi_interpret_config_parse_state (cf,
+                                                                  data->stringlist[1])) < 0)
+        return (-1);
+    }
+  else
+    deassertion_state = assertion_state;
 
   i = 0;
   config = (struct ipmi_interpret_sel_config **)option_ptr;
@@ -1833,10 +1833,10 @@ _cb_sel_oem_record_parse (conffile_t cf,
 
 static void
 _fill_sel_config_options (struct conffile_option *to_options,
-                      unsigned int *to_options_len,
-                      struct ipmi_interpret_sel_config **from_config,
-                      int *from_config_flags,
-                      unsigned int from_config_len)
+                          unsigned int *to_options_len,
+                          struct ipmi_interpret_sel_config **from_config,
+                          int *from_config_flags,
+                          unsigned int from_config_len)
 {
   unsigned int i;
 
