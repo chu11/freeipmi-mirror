@@ -1222,8 +1222,7 @@ _cb_sensor_oem_parse (conffile_t cf,
 {
   hash_t *h = NULL;
   char keybuf[IPMI_OEM_HASH_KEY_BUFLEN + 1];
-  uint32_t manufacturer_ids[IPMI_INTERPRET_CONFIG_FILE_ID_MAX];
-  uint16_t product_ids[IPMI_INTERPRET_CONFIG_FILE_ID_MAX];
+  struct ipmi_interpret_config_file_ids ids[IPMI_INTERPRET_CONFIG_FILE_MANUFACTURER_ID_MAX];
   unsigned int ids_count = 0;
   uint8_t event_reading_type_code;
   uint8_t sensor_type;
@@ -1233,7 +1232,7 @@ _cb_sensor_oem_parse (conffile_t cf,
   uint32_t tmp;
   struct ipmi_interpret_sensor_oem_config *oem_conf;
   int found = 0;
-  unsigned int i, j;
+  unsigned int i, j, k;
 
   assert (cf);
   assert (data);
@@ -1243,6 +1242,10 @@ _cb_sensor_oem_parse (conffile_t cf,
   h = (hash_t *)option_ptr;
 
   memset (keybuf, '\0', IPMI_OEM_HASH_KEY_BUFLEN + 1);
+
+  memset (ids,
+          '\0',
+          sizeof (struct ipmi_interpret_config_file_ids) * IPMI_INTERPRET_CONFIG_FILE_MANUFACTURER_ID_MAX);
 
   if (data->stringlist_len != 5)
     {
@@ -1255,8 +1258,7 @@ _cb_sensor_oem_parse (conffile_t cf,
   
   if (ipmi_interpret_config_parse_manufactuer_id_product_id (cf,
                                                              data->stringlist[0],
-                                                             manufacturer_ids,
-                                                             product_ids,
+                                                             ids,
                                                              &ids_count) < 0)
     return (-1);
 
@@ -1301,61 +1303,64 @@ _cb_sensor_oem_parse (conffile_t cf,
   
   for (i = 0; i < ids_count; i++)
     {
-      snprintf (keybuf,
-                IPMI_OEM_HASH_KEY_BUFLEN,
-                "%u:%u:%u:%u",
-                manufacturer_ids[i],
-                product_ids[i],
-                event_reading_type_code,
-                sensor_type);
-      
-      if (!(oem_conf = hash_find ((*h), keybuf)))
+      for (j = 0; j < ids[i].product_ids_count; j++)
         {
-          if (!(oem_conf = (struct ipmi_interpret_sensor_oem_config *)malloc (sizeof (struct ipmi_interpret_sensor_oem_config))))
+          snprintf (keybuf,
+                    IPMI_OEM_HASH_KEY_BUFLEN,
+                    "%u:%u:%u:%u",
+                    ids[i].manufacturer_id,
+                    ids[i].product_ids[j],
+                    event_reading_type_code,
+                    sensor_type);
+      
+          if (!(oem_conf = hash_find ((*h), keybuf)))
             {
-              conffile_seterrnum (cf, CONFFILE_ERR_OUTMEM);
+              if (!(oem_conf = (struct ipmi_interpret_sensor_oem_config *)malloc (sizeof (struct ipmi_interpret_sensor_oem_config))))
+                {
+                  conffile_seterrnum (cf, CONFFILE_ERR_OUTMEM);
+                  return (-1);
+                }
+              memset (oem_conf, '\0', sizeof (struct ipmi_interpret_sensor_oem_config));
+              
+              memcpy (oem_conf->key, keybuf, IPMI_OEM_HASH_KEY_BUFLEN);
+              oem_conf->manufacturer_id = ids[i].manufacturer_id;
+              oem_conf->product_id = ids[i].product_ids[j];
+              oem_conf->event_reading_type_code = event_reading_type_code;
+              oem_conf->sensor_type = sensor_type;
+              
+              if (!hash_insert ((*h), oem_conf->key, oem_conf))
+                {
+                  conffile_seterrnum (cf, CONFFILE_ERR_INTERNAL);
+                  free (oem_conf);
+                  return (-1);
+                }
+            }
+          
+          if (oem_conf->oem_state_count >= IPMI_INTERPRET_MAX_BITMASKS)
+            {
+              conffile_seterrnum (cf, CONFFILE_ERR_PARSE_ARG_TOOMANY);
               return (-1);
             }
-          memset (oem_conf, '\0', sizeof (struct ipmi_interpret_sensor_oem_config));
-          
-          memcpy (oem_conf->key, keybuf, IPMI_OEM_HASH_KEY_BUFLEN);
-          oem_conf->manufacturer_id = manufacturer_ids[i];
-          oem_conf->product_id = product_ids[i];
-          oem_conf->event_reading_type_code = event_reading_type_code;
-          oem_conf->sensor_type = sensor_type;
-          
-          if (!hash_insert ((*h), oem_conf->key, oem_conf))
+      
+          /* check for duplicates */
+          for (k = 0; k < oem_conf->oem_state_count; k++)
             {
-              conffile_seterrnum (cf, CONFFILE_ERR_INTERNAL);
-              free (oem_conf);
-              return (-1);
+              if (oem_conf->oem_state[k].oem_state_type == oem_state_type
+                  && oem_conf->oem_state[k].sensor_event_bitmask == sensor_event_bitmask)
+                {
+                  oem_conf->oem_state[k].sensor_state = sensor_state;
+                  found++;
+                  break;
+                }
             }
-        }
       
-      if (oem_conf->oem_state_count >= IPMI_INTERPRET_MAX_BITMASKS)
-        {
-          conffile_seterrnum (cf, CONFFILE_ERR_PARSE_ARG_TOOMANY);
-          return (-1);
-        }
-      
-      /* check for duplicates */
-      for (j = 0; j < oem_conf->oem_state_count; j++)
-        {
-          if (oem_conf->oem_state[j].oem_state_type == oem_state_type
-              && oem_conf->oem_state[j].sensor_event_bitmask == sensor_event_bitmask)
+          if (!found)
             {
-              oem_conf->oem_state[j].sensor_state = sensor_state;
-              found++;
-              break;
+              oem_conf->oem_state[oem_conf->oem_state_count].sensor_event_bitmask = sensor_event_bitmask;
+              oem_conf->oem_state[oem_conf->oem_state_count].sensor_state = sensor_state;
+              oem_conf->oem_state[oem_conf->oem_state_count].oem_state_type = oem_state_type;
+              oem_conf->oem_state_count++;
             }
-        }
-      
-      if (!found)
-        {
-          oem_conf->oem_state[oem_conf->oem_state_count].sensor_event_bitmask = sensor_event_bitmask;
-          oem_conf->oem_state[oem_conf->oem_state_count].sensor_state = sensor_state;
-          oem_conf->oem_state[oem_conf->oem_state_count].oem_state_type = oem_state_type;
-          oem_conf->oem_state_count++;
         }
     }
 

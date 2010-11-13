@@ -27,8 +27,15 @@
 
 #define IPMI_INTERPRET_CONFIG_FILE_OPTIONS_MAX 1024
 
-/* divide by three, because it has to be atleast #:#, 3 chars */
-#define IPMI_INTERPRET_CONFIG_FILE_ID_MAX      (CONFFILE_MAX_ARGLEN/3)
+#define IPMI_INTERPRET_CONFIG_FILE_MANUFACTURER_ID_MAX 64
+
+#define IPMI_INTERPRET_CONFIG_FILE_PRODUCT_ID_MAX      1024
+
+struct ipmi_interpret_config_file_ids {
+  uint32_t manufacturer_id;
+  uint16_t product_ids[IPMI_INTERPRET_CONFIG_FILE_PRODUCT_ID_MAX];
+  unsigned product_ids_count;
+};
 
 int ipmi_interpret_config_parse_state (conffile_t cf,
                                        char *option_string);
@@ -40,8 +47,7 @@ int ipmi_interpret_config_parse_strtoul (conffile_t cf,
 
 int ipmi_interpret_config_parse_manufactuer_id_product_id (conffile_t cf,
                                                            const char *str,
-                                                           uint32_t manufacturer_ids[IPMI_INTERPRET_CONFIG_FILE_ID_MAX],
-                                                           uint16_t product_ids[IPMI_INTERPRET_CONFIG_FILE_ID_MAX],
+                                                           struct ipmi_interpret_config_file_ids ids[IPMI_INTERPRET_CONFIG_FILE_MANUFACTURER_ID_MAX],
                                                            unsigned int *ids_count);
 
 #endif /* ipmi-interpret-config-common.h */

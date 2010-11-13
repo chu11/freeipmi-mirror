@@ -107,15 +107,14 @@ ipmi_interpret_config_parse_strtoul (conffile_t cf,
 int
 ipmi_interpret_config_parse_manufactuer_id_product_id (conffile_t cf,
                                                        const char *str,
-                                                       uint32_t manufacturer_ids[IPMI_INTERPRET_CONFIG_FILE_ID_MAX],
-                                                       uint16_t product_ids[IPMI_INTERPRET_CONFIG_FILE_ID_MAX],
+                                                       struct ipmi_interpret_config_file_ids ids[IPMI_INTERPRET_CONFIG_FILE_MANUFACTURER_ID_MAX],
                                                        unsigned int *ids_count)
 {
   char *tmpstr = NULL;
   char *manufacturer_id_ptr;
-  char *product_id_ptr;
+  char *manufacturer_id_lasts;
+  unsigned int i;
   int rv = -1;
-  char *lasts;
 
   assert (cf);
   assert (str);
@@ -129,9 +128,10 @@ ipmi_interpret_config_parse_manufactuer_id_product_id (conffile_t cf,
       goto cleanup;
     }
 
-  manufacturer_id_ptr = strtok_r (tmpstr, ",", &lasts);
-  while (manufacturer_id_ptr && (*ids_count) < IPMI_INTERPRET_CONFIG_FILE_ID_MAX)
+  manufacturer_id_ptr = strtok_r (tmpstr, ",", &manufacturer_id_lasts);
+  while (manufacturer_id_ptr && (*ids_count) < IPMI_INTERPRET_CONFIG_FILE_MANUFACTURER_ID_MAX)
     {
+      char *product_ids_ptr;
       char *ptr;
       uint32_t tmp;
 
@@ -142,25 +142,97 @@ ipmi_interpret_config_parse_manufactuer_id_product_id (conffile_t cf,
         }
       
       (*ptr) = '\0';
-      product_id_ptr = ptr + 1;
+      product_ids_ptr = ptr + 1;
       
       if (ipmi_interpret_config_parse_strtoul (cf,
                                                manufacturer_id_ptr,
                                                0x00FFFFFF,  /* 24 bit manufacturer ID */
                                                &tmp) < 0)
         goto cleanup;
-      manufacturer_ids[(*ids_count)] = tmp;
+      ids[(*ids_count)].manufacturer_id = tmp;
       
-      if (ipmi_interpret_config_parse_strtoul (cf,
-                                               product_id_ptr,
-                                               USHRT_MAX,
-                                               &tmp) < 0)
-        goto cleanup;
-      product_ids[(*ids_count)] = tmp;
+      if ((ptr = strchr (product_ids_ptr, '-')))
+        {
+          char *product_id1_ptr;
+          char *product_id2_ptr;
+          uint16_t product_id1;
+          uint16_t product_id2;
+          
+          product_id1_ptr = product_ids_ptr;
+          (*ptr) = '\0';
+          product_id2_ptr = ptr + 1;
+
+          if (ipmi_interpret_config_parse_strtoul (cf,
+                                                   product_id1_ptr,
+                                                   USHRT_MAX,
+                                                   &tmp) < 0)
+            goto cleanup;
+          product_id1 = tmp;
+
+          if (ipmi_interpret_config_parse_strtoul (cf,
+                                                   product_id2_ptr,
+                                                   USHRT_MAX,
+                                                   &tmp) < 0)
+            goto cleanup;
+          product_id2 = tmp;
+
+          if (product_id2 > product_id1)
+            {
+              conffile_seterrnum (cf, CONFFILE_ERR_PARSE_ARG_INVALID);
+              return (-1);
+            }
+          
+          if ((product_id2 - product_id1 + 1) > IPMI_INTERPRET_CONFIG_FILE_PRODUCT_ID_MAX)
+            {
+              conffile_seterrnum (cf, CONFFILE_ERR_PARSE_ARG_TOOMANY);
+              return (-1);
+            }
+
+          for (i = 0; i < (product_id2 - product_id1 + 1) ; i++)
+            ids[(*ids_count)].product_ids[i] = product_id1 + i;
+          ids[(*ids_count)].product_ids_count = product_id2 - product_id1 + 1;
+        }
+      else if ((ptr = strchr (product_ids_ptr, '+')))
+        {  
+          unsigned int index = 0;
+
+          while ((ptr = strchr (product_ids_ptr, '+'))
+                 && index < IPMI_INTERPRET_CONFIG_FILE_PRODUCT_ID_MAX)
+            {
+              char *product_id_ptr = product_ids_ptr;
+              uint16_t product_id;
+              
+              (*ptr) = '\0';
+              product_ids_ptr = ptr + 1;
+              
+              if (ipmi_interpret_config_parse_strtoul (cf,
+                                                       product_id_ptr,
+                                                       USHRT_MAX,
+                                                       &tmp) < 0)
+                goto cleanup;
+              product_id = tmp;
+              
+              ids[(*ids_count)].product_ids[index] = product_id;
+              
+              index++;
+            }
+
+          ids[(*ids_count)].product_ids_count = index;
+        }
+      else
+        {
+          if (ipmi_interpret_config_parse_strtoul (cf,
+                                                   product_ids_ptr,
+                                                   USHRT_MAX,
+                                                   &tmp) < 0)
+            goto cleanup;
+          ids[(*ids_count)].product_ids[0] = tmp;
+          ids[(*ids_count)].product_ids_count = 1;
+        }
 
       (*ids_count)++;
 
-      manufacturer_id_ptr = strtok_r (NULL, ",", &lasts);
+      manufacturer_id_ptr = strtok_r (NULL, ",", &manufacturer_id_lasts);
     }
 
   rv = 0;
