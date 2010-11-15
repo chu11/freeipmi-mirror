@@ -176,7 +176,7 @@ ipmi_interpret_config_parse_manufactuer_id_product_id (conffile_t cf,
             goto cleanup;
           product_id2 = tmp;
 
-          if (product_id2 > product_id1)
+          if (product_id1 > product_id2)
             {
               conffile_seterrnum (cf, CONFFILE_ERR_PARSE_ARG_INVALID);
               return (-1);
@@ -195,16 +195,17 @@ ipmi_interpret_config_parse_manufactuer_id_product_id (conffile_t cf,
       else if ((ptr = strchr (product_ids_ptr, '+')))
         {  
           unsigned int index = 0;
+          uint16_t product_id;
 
           while ((ptr = strchr (product_ids_ptr, '+'))
                  && index < IPMI_INTERPRET_CONFIG_FILE_PRODUCT_ID_MAX)
             {
-              char *product_id_ptr = product_ids_ptr;
-              uint16_t product_id;
+              char *product_id_ptr;
               
+              product_id_ptr = product_ids_ptr;
               (*ptr) = '\0';
               product_ids_ptr = ptr + 1;
-              
+
               if (ipmi_interpret_config_parse_strtoul (cf,
                                                        product_id_ptr,
                                                        USHRT_MAX,
@@ -216,6 +217,17 @@ ipmi_interpret_config_parse_manufactuer_id_product_id (conffile_t cf,
               
               index++;
             }
+
+          if (ipmi_interpret_config_parse_strtoul (cf,
+                                                   product_ids_ptr,
+                                                   USHRT_MAX,
+                                                   &tmp) < 0)
+            goto cleanup;
+          product_id = tmp;
+          
+          ids[(*ids_count)].product_ids[index] = product_id;
+          
+          index++;
 
           ids[(*ids_count)].product_ids_count = index;
         }
