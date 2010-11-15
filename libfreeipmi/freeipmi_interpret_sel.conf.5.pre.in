@@ -989,34 +989,46 @@ Defaults to Critical.
 .B IPMI_OEM
 The following configuration options can be used to configure OEM
 system event log events.  Interpretations rules for a specific
-combination of \fIManufacturer-ID\fR, \fIProduct-ID\fR, and
+combination of \fIManufacturer\-ID\fR, \fIProduct\-ID\fR, and
 \fIRecord-Type\fR, are iterated through and the worst resulting sensor
 state is returned (i.e. Warning < Nominal, Critical < Warning).  If no
 match is found, no state is returned for the OEM event.
+
+For each of the configuration options below, \fI<Manufacturer\-ID>\fR
+is the numeric IANA manufacturer ID for the manufacturer in question.
+The \fI<Product\-ID>\fR is one or more numeric IDs representing the
+manufacturer's product.  The \fI<Product\-ID>\fR can be listed as a
+single numeric number (e.g. 1234), a range of IDs separated by a dash
+(e.g. 12-20), or a list of specific product IDs separted by a plus
+(e.g. 12+19+22).  Both the \fIManufacturer\-ID\fR and
+\fIProduct\-ID\fR can be found using
+.B bmc-info(8).
+Multiple \fI<Manufacturer\-ID>\fR and \fI<Product\-ID>\fR pairs can be
+input separated by commas.
 .RS
 .TP
-\fBIPMI_OEM_Sensor_System_Event_Record\fR \fIManufacturer-ID\fR \fIProduct-ID\fR \fIEvent-Reading-Type-Code\fR \fISensor-Type\fR \fIEvent-Direction\fR \fIEventData1\fR \fIEventData2\fR \fIEventData3\fR \fIState\fR
+\fBIPMI_OEM_Sensor_System_Event_Record\fR \fI<Manufacturer\-ID>\fR:\fI<Product\-ID>\fR,... \fIEvent\-Reading\-Type\-Code\fR \fISensor\-Type\fR \fIEvent\-Direction\fR \fIEventData1\fR \fIEventData2\fR \fIEventData3\fR \fIState\fR
 \fBIPMI_OEM_System_Event_Record\fR can be used to configure a state
-interpretation for a specific \fIManufacturer-ID\fR, \fIProduct-ID\fR,
-\fIEvent-Reading-Type-Code\fR, and \fISensor-Type\fR combination, and
-a specific \fIEvent-Direction\fR, \fIEventData1\fR, \fIEventData2\fR, and
-\fIEventData3\fR.  The \fIEvent-Direction\fR field must specify
+interpretation for a specific \fIManufacturer\-ID\fR, \fIProduct\-ID\fR,
+\fIEvent\-Reading\-Type\-Code\fR, and \fISensor\-Type\fR combination, and
+a specific \fIEvent\-Direction\fR, \fIEventData1\fR, \fIEventData2\fR,
+and \fIEventData3\fR.  The \fIEvent\-Direction\fR field must specify
 \fIAssertion\fR, \fIDeassertion\fR, or \fIANY\fR.  Each of the
 \fIEventData\fR fields must specify a hex byte to match or the keyword
 \fIANY\fR to match anything.
 .TP
-\fBIPMI_OEM_Timestamped_Record\fR \fIManufacturer-ID\fR \fIProduct-ID\fR \fIRecord-Type\fR \fIOEMDATA1\fR \fIOEMDATA2\fR \fIOEMDATA3\fR \fIOEMDATA4\fR \fIOEMDATA5\fR \fIOEMDATA6\fR \fIState\fR
+\fBIPMI_OEM_Timestamped_Record\fR \fI<Manufacturer\-ID>\fR:\fI<Product\-ID>\fR,... \fIRecord\-Type\fR \fIOEMDATA1\fR \fIOEMDATA2\fR \fIOEMDATA3\fR \fIOEMDATA4\fR \fIOEMDATA5\fR \fIOEMDATA6\fR \fIState\fR
 \fBIPMI_OEM_Timestamped_Record\fR can be used to configure an
-interpretation for a specific \fIManufacturer-ID\fR, \fIProduct-ID\fR,
-\fIRecord-Type\fR, and OEM data combination.  The \fIRecord-Type\fR
+interpretation for a specific \fIManufacturer\-ID\fR, \fIProduct\-ID\fR,
+\fIRecord\-Type\fR, and OEM data combination.  The \fIRecord\-Type\fR
 must be a legal record type for OEM Timestamped Records (currently
 0xC0-0xDF).  Each of the \fIOEMDATA\fR fields must specify a hex byte
 to match or the keyword \fIANY\fR to match anything.
 .TP
-\fBIPMI_OEM_Non_Timestamped_Record\fR \fIManufacturer-ID\fR \fIProduct-ID\fR \fIRecord-Type\fR \fIOEMDATA1\fR \fIOEMDATA2\fR \fIOEMDATA3\fR \fIOEMDATA4\fR \fIOEMDATA5\fR \fIOEMDATA6\fR \fIOEMDATA7\fR \fIOEMDATA8\fR \fIOEMDATA9\fR \fIOEMDATA10\fR \fIOEMDATA11\fR \fIOEMDATA12\fR \fIOEMDATA13\fR \fIState\fR
+\fBIPMI_OEM_Non_Timestamped_Record\fR \fI<Manufacturer\-ID>\fR:\fI<Product\-ID>\fR,... \fIRecord\-Type\fR \fIOEMDATA1\fR \fIOEMDATA2\fR \fIOEMDATA3\fR \fIOEMDATA4\fR \fIOEMDATA5\fR \fIOEMDATA6\fR \fIOEMDATA7\fR \fIOEMDATA8\fR \fIOEMDATA9\fR \fIOEMDATA10\fR \fIOEMDATA11\fR \fIOEMDATA12\fR \fIOEMDATA13\fR \fIState\fR
 \fBIPMI_OEM_Non_Timestamped_Record\fR can be used to configure an
-interpretation for a specific \fIManufacturer-ID\fR, \fIProduct-ID\fR,
-\fIRecord-Type\fR, and OEM data combination.  The \fIRecord-Type\fR
+interpretation for a specific \fIManufacturer\-ID\fR, \fIProduct\-ID\fR,
+\fIRecord\-Type\fR, and OEM data combination.  The \fIRecord\-Type\fR
 must be a legal record type for OEM Non-Timestamped Records (currently
 0xEO-0xFF).  Each of the \fIOEMDATA\fR fields must specify a hex byte
 to match or the keyword \fIANY\fR to match anything.

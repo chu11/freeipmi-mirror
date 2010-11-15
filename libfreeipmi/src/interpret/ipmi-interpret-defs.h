@@ -36,7 +36,7 @@
   (IPMI_INTERPRET_FLAGS_INTERPRET_OEM_DATA \
    | IPMI_INTERPRET_FLAGS_SEL_ASSUME_SYSTEM_EVENT_RECORDS)
 
-#define IPMI_INTERPRET_MAX_BITMASKS 32
+#define IPMI_INTERPRET_MAX_BITMASKS 16
 
 #define IPMI_INTERPRET_SEL_HASH_SIZE 32
 
@@ -45,7 +45,11 @@
 #define IPMI_OEM_STATE_TYPE_BITMASK 0
 #define IPMI_OEM_STATE_TYPE_VALUE   1
 
-#define IPMI_OEM_HASH_KEY_BUFLEN    128
+/* manufacturing_id:product_id:event_type_code:sensor_type
+ *
+ * Based on value limits, can't be more than 22 bytes
+ */
+#define IPMI_OEM_HASH_KEY_BUFLEN                32
 
 #define IPMI_SEL_OEM_DATA_MAX                   13
 
@@ -53,11 +57,21 @@
 
 #define IPMI_SEL_OEM_DATA_NON_TIMESTAMPED_BYTES 13
 
-#define IPMI_SEL_OEM_SENSOR_MAX                 32
+#define IPMI_SEL_OEM_SENSOR_MAX                 16
 
-#define IPMI_SEL_OEM_RECORD_MAX                 64
+#define IPMI_SEL_OEM_RECORD_MAX                 16
 
 #define IPMI_SEL_OEM_DATA_HEX_BYTE_ANY          "ANY"
+
+/* achu:
+ *
+ * Storing each interpretation rule for every
+ * manufacturer_id:product_id:event_reading_type_code:sensor_type
+ * combination in the hash is memory costly.  The trade off is that it
+ * gives users the ability to adjust the configuration file
+ * specifically for their needs and only for a particular motherboard
+ * they care about.
+ */
 
 struct ipmi_interpret_sensor_config {
   char *option_str;

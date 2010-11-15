@@ -1222,8 +1222,8 @@ _cb_sensor_oem_parse (conffile_t cf,
 {
   hash_t *h = NULL;
   char keybuf[IPMI_OEM_HASH_KEY_BUFLEN + 1];
-  uint32_t manufacturer_id;
-  uint16_t product_id;
+  struct ipmi_interpret_config_file_ids ids[IPMI_INTERPRET_CONFIG_FILE_MANUFACTURER_ID_MAX];
+  unsigned int ids_count = 0;
   uint8_t event_reading_type_code;
   uint8_t sensor_type;
   uint16_t sensor_event_bitmask;
@@ -1232,7 +1232,7 @@ _cb_sensor_oem_parse (conffile_t cf,
   uint32_t tmp;
   struct ipmi_interpret_sensor_oem_config *oem_conf;
   int found = 0;
-  unsigned int i;
+  unsigned int i, j, k;
 
   assert (cf);
   assert (data);
@@ -1243,50 +1243,52 @@ _cb_sensor_oem_parse (conffile_t cf,
 
   memset (keybuf, '\0', IPMI_OEM_HASH_KEY_BUFLEN + 1);
 
-  if (data->stringlist_len != 6)
-    conffile_seterrnum (cf, CONFFILE_ERR_PARSE_ARG_MISSING);
+  memset (ids,
+          '\0',
+          sizeof (struct ipmi_interpret_config_file_ids) * IPMI_INTERPRET_CONFIG_FILE_MANUFACTURER_ID_MAX);
+
+  if (data->stringlist_len != 5)
+    {
+      if (data->stringlist_len < 5)
+        conffile_seterrnum (cf, CONFFILE_ERR_PARSE_ARG_MISSING);
+      else
+        conffile_seterrnum (cf, CONFFILE_ERR_PARSE_ARG_TOOMANY);
+      return (-1);
+    }
   
-  if (ipmi_interpret_config_parse_strtoul (cf,
-                                           data->stringlist[0],
-                                           0x00FFFFFF,	/* 24 bit manufacturer ID */
-                                           &tmp) < 0)
+  if (ipmi_interpret_config_parse_manufactuer_id_product_id (cf,
+                                                             data->stringlist[0],
+                                                             ids,
+                                                             &ids_count) < 0)
     return (-1);
-  manufacturer_id = tmp;
 
   if (ipmi_interpret_config_parse_strtoul (cf,
                                            data->stringlist[1],
-                                           USHRT_MAX,
-                                           &tmp) < 0)
-    return (-1);
-  product_id = tmp;
-
-  if (ipmi_interpret_config_parse_strtoul (cf,
-                                           data->stringlist[2],
                                            UCHAR_MAX,
                                            &tmp) < 0)
     return (-1);
   event_reading_type_code = tmp;
 
   if (ipmi_interpret_config_parse_strtoul (cf,
-                                           data->stringlist[3],
+                                           data->stringlist[2],
                                            UCHAR_MAX,
                                            &tmp) < 0)
     return (-1);
   sensor_type = tmp;
   
   /* achu: sensor event bitmask bit 16 not legal, but we will allow it
-   * b/c perhaps some OEM sensors will breat legality of events, or
+   * b/c perhaps some OEM sensors will break legality of events, or
    * perhaps there is a bug and some vendors need to have the 16th bit
    * matched.
    */
   if (ipmi_interpret_config_parse_strtoul (cf,
-                                           data->stringlist[4],
+                                           data->stringlist[3],
                                            USHRT_MAX,
                                            &tmp) < 0)
     return (-1);
   sensor_event_bitmask = tmp;
 
-  if ((sensor_state = ipmi_interpret_config_parse_state (cf, data->stringlist[5])) < 0)
+  if ((sensor_state = ipmi_interpret_config_parse_state (cf, data->stringlist[4])) < 0)
     return (-1);
   
   if (!strcasecmp (optionname, "IPMI_OEM_Bitmask"))
@@ -1299,61 +1301,67 @@ _cb_sensor_oem_parse (conffile_t cf,
       return (-1);
     }
   
-  snprintf (keybuf,
-	    IPMI_OEM_HASH_KEY_BUFLEN,
-	    "%u:%u:%u:%u",
-	    manufacturer_id,
-	    product_id,
-	    event_reading_type_code,
-	    sensor_type);
-
-  if (!(oem_conf = hash_find ((*h), keybuf)))
+  for (i = 0; i < ids_count; i++)
     {
-      if (!(oem_conf = (struct ipmi_interpret_sensor_oem_config *)malloc (sizeof (struct ipmi_interpret_sensor_oem_config))))
-	{
-	  conffile_seterrnum (cf, CONFFILE_ERR_OUTMEM);
-	  return (-1);
-	}
-      memset (oem_conf, '\0', sizeof (struct ipmi_interpret_sensor_oem_config));
-
-      memcpy (oem_conf->key, keybuf, IPMI_OEM_HASH_KEY_BUFLEN);
-      oem_conf->manufacturer_id = manufacturer_id;
-      oem_conf->product_id = product_id;
-      oem_conf->event_reading_type_code = event_reading_type_code;
-      oem_conf->sensor_type = sensor_type;
-
-      if (!hash_insert ((*h), oem_conf->key, oem_conf))
-	{
-	  conffile_seterrnum (cf, CONFFILE_ERR_INTERNAL);
-	  free (oem_conf);
-	  return (-1);
-	}
-    }
-
-  if (oem_conf->oem_state_count >= IPMI_INTERPRET_MAX_BITMASKS)
-    {
-      conffile_seterrnum (cf, CONFFILE_ERR_PARSE_ARG_TOOMANY);
-      return (-1);
-    }
-
-  /* check for duplicates */
-  for (i = 0; i < oem_conf->oem_state_count; i++)
-    {
-      if (oem_conf->oem_state[i].oem_state_type == oem_state_type
-	  && oem_conf->oem_state[i].sensor_event_bitmask == sensor_event_bitmask)
-	{
-	  oem_conf->oem_state[i].sensor_state = sensor_state;
-	  found++;
-	  break;
-	}
-    }
-
-  if (!found)
-    {
-      oem_conf->oem_state[oem_conf->oem_state_count].sensor_event_bitmask = sensor_event_bitmask;
-      oem_conf->oem_state[oem_conf->oem_state_count].sensor_state = sensor_state;
-      oem_conf->oem_state[oem_conf->oem_state_count].oem_state_type = oem_state_type;
-      oem_conf->oem_state_count++;
+      for (j = 0; j < ids[i].product_ids_count; j++)
+        {
+          snprintf (keybuf,
+                    IPMI_OEM_HASH_KEY_BUFLEN,
+                    "%u:%u:%u:%u",
+                    ids[i].manufacturer_id,
+                    ids[i].product_ids[j],
+                    event_reading_type_code,
+                    sensor_type);
+      
+          if (!(oem_conf = hash_find ((*h), keybuf)))
+            {
+              if (!(oem_conf = (struct ipmi_interpret_sensor_oem_config *)malloc (sizeof (struct ipmi_interpret_sensor_oem_config))))
+                {
+                  conffile_seterrnum (cf, CONFFILE_ERR_OUTMEM);
+                  return (-1);
+                }
+              memset (oem_conf, '\0', sizeof (struct ipmi_interpret_sensor_oem_config));
+              
+              memcpy (oem_conf->key, keybuf, IPMI_OEM_HASH_KEY_BUFLEN);
+              oem_conf->manufacturer_id = ids[i].manufacturer_id;
+              oem_conf->product_id = ids[i].product_ids[j];
+              oem_conf->event_reading_type_code = event_reading_type_code;
+              oem_conf->sensor_type = sensor_type;
+              
+              if (!hash_insert ((*h), oem_conf->key, oem_conf))
+                {
+                  conffile_seterrnum (cf, CONFFILE_ERR_INTERNAL);
+                  free (oem_conf);
+                  return (-1);
+                }
+            }
+          
+          if (oem_conf->oem_state_count >= IPMI_INTERPRET_MAX_BITMASKS)
+            {
+              conffile_seterrnum (cf, CONFFILE_ERR_PARSE_ARG_TOOMANY);
+              return (-1);
+            }
+      
+          /* check for duplicates */
+          for (k = 0; k < oem_conf->oem_state_count; k++)
+            {
+              if (oem_conf->oem_state[k].oem_state_type == oem_state_type
+                  && oem_conf->oem_state[k].sensor_event_bitmask == sensor_event_bitmask)
+                {
+                  oem_conf->oem_state[k].sensor_state = sensor_state;
+                  found++;
+                  break;
+                }
+            }
+      
+          if (!found)
+            {
+              oem_conf->oem_state[oem_conf->oem_state_count].sensor_event_bitmask = sensor_event_bitmask;
+              oem_conf->oem_state[oem_conf->oem_state_count].sensor_state = sensor_state;
+              oem_conf->oem_state[oem_conf->oem_state_count].oem_state_type = oem_state_type;
+              oem_conf->oem_state_count++;
+            }
+        }
     }
 
   return (0);
@@ -1687,7 +1695,7 @@ ipmi_interpret_sensor_config_parse (ipmi_interpret_ctx_t ctx,
 
   config_file_options[config_file_options_len].optionname = "IPMI_OEM_Bitmask";
   config_file_options[config_file_options_len].option_type = CONFFILE_OPTION_LIST_STRING;
-  config_file_options[config_file_options_len].option_type_arg = 6;
+  config_file_options[config_file_options_len].option_type_arg = 5;
   config_file_options[config_file_options_len].callback_func = _cb_sensor_oem_parse;
   config_file_options[config_file_options_len].max_count = -1;
   config_file_options[config_file_options_len].required_count = 0;
@@ -1698,7 +1706,7 @@ ipmi_interpret_sensor_config_parse (ipmi_interpret_ctx_t ctx,
 
   config_file_options[config_file_options_len].optionname = "IPMI_OEM_Value";
   config_file_options[config_file_options_len].option_type = CONFFILE_OPTION_LIST_STRING;
-  config_file_options[config_file_options_len].option_type_arg = 6;
+  config_file_options[config_file_options_len].option_type_arg = 5;
   config_file_options[config_file_options_len].callback_func = _cb_sensor_oem_parse;
   config_file_options[config_file_options_len].max_count = -1;
   config_file_options[config_file_options_len].required_count = 0;

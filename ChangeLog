@@ -1,3 +1,11 @@
+2010-11-12 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/interpret/: Support different format for OEM
+	configuration.  Support multiple manufacturer/product ids to be
+	specified for an interpretation.
+
+	* Support Supermicro X8DTU-6+ OEM sensor interpretations.
+	
 2010-11-11 Albert Chu <chu11@llnl.gov>
 
 	* Create 'ipmi-detect' symlink and manpage to link to 'ipmidetect'.

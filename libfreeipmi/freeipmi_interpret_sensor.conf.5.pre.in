@@ -954,27 +954,39 @@ Defaults to Critical.
 The following configuration options can be used to configure OEM
 specific interpretations.  Users should be aware that both
 \fBIPMI_OEM_Bitmask\fR and \fBIPMI_OEM_Value\fR can be configured for
-an identical \fIManufacturer-ID\fR, \fIProduct-ID\fR,
-\fIEvent-Reading-Type-Code\fR, and \fISensor-Type\fR combination.  All
+an identical \fIManufacturer\-ID\fR, \fIProduct\-ID\fR,
+\fIEvent\-Reading\-Type\-Code\fR, and \fISensor\-Type\fR combination.  All
 interpretations rules for a specific combination are iterated through
 and the worst resulting sensor state is returned (i.e. Warning <
 Nominal, Critical < Warning).  If no match is found, no sensor state
 is returned for the OEM sensor reading.
+
+For each of the configuration options below, \fI<Manufacturer\-ID>\fR
+is the numeric IANA manufacturer ID for the manufacturer in question.
+The \fI<Product\-ID>\fR is one or more numeric IDs representing the
+manufacturer's product.  The \fI<Product\-ID>\fR can be listed as a
+single numeric number (e.g. 1234), a range of IDs separated by a dash
+(e.g. 12-20), or a list of specific product IDs separted by a plus
+(e.g. 12+19+22).  Both the \fIManufacturer\-ID\fR and
+\fIProduct\-ID\fR can be found using
+.B bmc-info(8).
+Multiple \fI<Manufacturer\-ID>\fR and \fI<Product\-ID>\fR pairs can be
+input separated by commas.
 .RS
 .TP
-\fBIPMI_OEM_Bitmask\fR \fIManufacturer-ID\fR \fIProduct-ID\fR \fIEvent-Reading-Type-Code\fR \fISensor-Type\fR \fISensor-Event-Bitmask\fR \fIState\fR
+\fBIPMI_OEM_Bitmask\fR \fI<Manufacturer\-ID>\fR:\fI<Product\-ID>\fR,... \fIEvent\-Reading\-Type\-Code\fR \fISensor\-Type\fR \fISensor\-Event\-Bitmask\fR \fIState\fR
 \fBIPMI_OEM_Bitmask\fR can be used to configure a state interpretation
-for a specific \fIManufacturer-ID\fR, \fIProduct-ID\fR,
-\fIEvent-Reading-Type-Code\fR, and \fISensor-Type\fR combination and a
+for a specific \fIManufacturer\-ID\fR, \fIProduct\-ID\fR,
+\fIEvent\-Reading\-Type\-Code\fR, and \fISensor\-Type\fR combination and a
 specific bitmask of the \fISensor-Event\fR.  The state will be
 accepted as the sensor interpretation if the inputted bitmask ANDed
-with the actual sensor event bitmask reading is true.
+with the actual sensor event bitmask reading is true.  
 .TP
-\fBIPMI_OEM_Value\fR \fIManufacturer-ID\fR \fIProduct-ID\fR \fIEvent-Reading-Type-Code\fR \fISensor-Type\fR \fISensor-Event-Bitmask-Value\fR \fIState\fR
+\fBIPMI_OEM_Value\fR \fI<Manufacturer\-ID>\fR:\fI<Product\-ID>\fR,... \fIEvent\-Reading\-Type\-Code\fR \fISensor\-Type\fR \fISensor\-Event\-Bitmask-Value\fR \fIState\fR
 \fBIPMI_OEM_Value\fR can be used to configure a state interpretation
-for a specific \fIManufacturer-ID\fR, \fIProduct-ID\fR,
-\fIEvent-Reading-Type-Code\fR, and \fISensor-Type\fR combination and a
-specific value for the \fISensor-Event-Bitmask\fR.  The state will be
+for a specific \fIManufacturer\-ID\fR, \fIProduct\-ID\fR,
+\fIEvent\-Reading\-Type\-Code\fR, and \fISensor\-Type\fR combination and a
+specific value for the \fISensor\-Event\-Bitmask\fR.  The state will be
 accepted as the sensor interpretation if the inputted bitmask value is
 equal to the actual sensor event bitmask reading.
 .RE
