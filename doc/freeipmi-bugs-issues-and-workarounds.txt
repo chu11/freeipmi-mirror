@@ -767,7 +767,7 @@ Sun x4100, x4200, x4500: The timer is running/stopped flag appears to
 be stuck on "stopped" regardless if the timer is running or not.
 Subsequent bmc-watchdog functionality is limited.  Resolved with
 workaround to analyze countdown rather than flag for running vs
-stopped state.
+stopped state.  This bug is confirmed to be fixed on newer firmware.
 
 bmc-info
 --------
