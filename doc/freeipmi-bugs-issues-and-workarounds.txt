@@ -77,8 +77,8 @@ Challenge requests from a different source port.
 
 Forgotten/Undocumented Motherboard(s): The only authentication
 supported by the motherboard is an OEM specific authentication.  No
-resolution implemented.  (Al comment: This was a really old Supermicro
-motherboard, but I can't remember which one.)
+resolution implemented.  (Al comment: This was an early Supermicro
+motherboard with IPMI support, but I can't remember which one.)
 
 Intel SE7520JR2 with National Semiconductor PC87431M mBMC: The initial
 outbound sequence number on activate session response is off by one.
@@ -128,8 +128,9 @@ attached to specific privilege levels rather than a maximum privilege
 level limit.  So you can only authenticate at the configured privilege
 level rather than a privilege level <= to it.  Resolved by passing
 IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL during the session establishment
-instead of the specific privilege level.  (Al comment: I think this
-was a really old Tyan motherboard, but I'm not 100% sure.)
+instead of the specific privilege level.  (Al comment: This was an
+early Tyan motherboard with IPMI 2.0 support, but I can't remember
+which one.)
 
 Sun Fire 4100 with ILOM: During a RAKP2 response, the key exchange
 authentication code is the wrong length.  Resolved with a workaround
@@ -291,9 +292,9 @@ Sun Fire 4100 with ILOM: The tag bits for some of the cipher records
 are wrong.  Resolved with a workaround to parse cipher records
 properly.
 
-Supermicro X8DTH: The manufacturer ID specified by the motherboard was
-invalid (i.e. not a valid IANA Enterprise number).  Resolved with
-special workaround to handle this case.
+Supermicro X8DTH, X8DTG, X8DTU: The manufacturer ID specified by the
+motherboard was invalid (i.e. not a valid IANA Enterprise number).
+Resolved with special workaround to handle this case.
 
 Tool Issues
 -----------
@@ -302,8 +303,8 @@ ipmiconsole/libipmiconsole
 --------------------------
 
 Forgotten/Undocumented Motherboard(s): Serial breaks are not supported
-(Al comment: I think this was a really old Tyan motherboard, but I'm
-not 100% sure.)
+(Al comment: This was an early Tyan motherboard with IPMI 2.0 support,
+but I can't remember which one.)
 
 Asus P5M2/P5MT-R/S162-E4/RX4: SOL payload sizes are reported
 incorrectly.  Resolved with a workaround to skip payload size checks.
@@ -640,8 +641,8 @@ best).
 
 Forgotten/Undocumented Motherboard(s): Some FRU data has invalid
 checksums.  Resolved with workaround to ignore the checksum (and pray
-for the best).  (Al comment: I know this was either an Intel Tiger 2
-or Intel Tiger 4 motherboard, but I can't remember which one.)
+for the best).  (Al comment: This was either an Intel Tiger 2 or Intel
+Tiger 4 motherboard, but I can't remember which one.)
 
 Quanta S99Q/Dell FS12-TY: A FRU Chassis Info Area reports an
 unspecified chassis type.  No current resolution.
