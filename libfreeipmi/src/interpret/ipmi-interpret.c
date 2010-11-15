@@ -979,7 +979,8 @@ _get_sensor_oem_state (ipmi_interpret_ctx_t ctx,
 	{
 	  if (oem_conf->oem_state[i].oem_state_type == IPMI_OEM_STATE_TYPE_BITMASK)
 	    {
-	      if (oem_conf->oem_state[i].sensor_event_bitmask & sensor_event_bitmask)
+	      if ((oem_conf->oem_state[i].sensor_event_bitmask & sensor_event_bitmask)
+                  || (!oem_conf->oem_state[i].sensor_event_bitmask && !sensor_event_bitmask))
 		{
 		  if (oem_conf->oem_state[i].sensor_state > (*sensor_state))
 		    (*sensor_state) = oem_conf->oem_state[i].sensor_state;

@@ -980,7 +980,11 @@ for a specific \fIManufacturer\-ID\fR, \fIProduct\-ID\fR,
 \fIEvent\-Reading\-Type\-Code\fR, and \fISensor\-Type\fR combination and a
 specific bitmask of the \fISensor-Event\fR.  The state will be
 accepted as the sensor interpretation if the inputted bitmask ANDed
-with the actual sensor event bitmask reading is true.  
+with the actual sensor event bitmask reading is true.  As a special
+case, the state will be accepted if the inputted bitmask and the
+actual sensor event bitmask are both 0.  In other words, if no events
+happened, an OEM interpretation can be configured for this case by
+inputing a bitmask of 0x0000.
 .TP
 \fBIPMI_OEM_Value\fR \fI<Manufacturer\-ID>\fR:\fI<Product\-ID>\fR,... \fIEvent\-Reading\-Type\-Code\fR \fISensor\-Type\fR \fISensor\-Event\-Bitmask-Value\fR \fIState\fR
 \fBIPMI_OEM_Value\fR can be used to configure a state interpretation
