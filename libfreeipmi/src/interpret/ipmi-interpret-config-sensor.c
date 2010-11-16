@@ -629,39 +629,43 @@ _interpret_sensor_oem_dell_power_optimized (ipmi_interpret_ctx_t ctx)
 					   &oem_conf) < 0)
     return (-1);
 
-  oem_conf->oem_state[0].sensor_event_bitmask = (0x1 << IPMI_SENSOR_TYPE_OEM_DELL_SYSTEM_PERFORMANCE_DEGRADATION_STATUS_GOOD);
+  oem_conf->oem_state[0].sensor_event_bitmask = 0;
   oem_conf->oem_state[0].sensor_state = IPMI_INTERPRET_STATE_NOMINAL;
   oem_conf->oem_state[0].oem_state_type = IPMI_OEM_STATE_TYPE_BITMASK;
 
-  oem_conf->oem_state[1].sensor_event_bitmask = (0x1 << IPMI_SENSOR_TYPE_OEM_DELL_SYSTEM_PERFORMANCE_DEGRADATION_STATUS_DEGRADED_OTHER);
-  oem_conf->oem_state[1].sensor_state = IPMI_INTERPRET_STATE_WARNING;
+  oem_conf->oem_state[1].sensor_event_bitmask = (0x1 << IPMI_SENSOR_TYPE_OEM_DELL_SYSTEM_PERFORMANCE_DEGRADATION_STATUS_GOOD);
+  oem_conf->oem_state[1].sensor_state = IPMI_INTERPRET_STATE_NOMINAL;
   oem_conf->oem_state[1].oem_state_type = IPMI_OEM_STATE_TYPE_BITMASK;
 
-  oem_conf->oem_state[2].sensor_event_bitmask = (0x1 << IPMI_SENSOR_TYPE_OEM_DELL_SYSTEM_PERFORMANCE_DEGRADATION_STATUS_DEGRADED_THERMAL_PROTECTION);
+  oem_conf->oem_state[2].sensor_event_bitmask = (0x1 << IPMI_SENSOR_TYPE_OEM_DELL_SYSTEM_PERFORMANCE_DEGRADATION_STATUS_DEGRADED_OTHER);
   oem_conf->oem_state[2].sensor_state = IPMI_INTERPRET_STATE_WARNING;
   oem_conf->oem_state[2].oem_state_type = IPMI_OEM_STATE_TYPE_BITMASK;
 
-  oem_conf->oem_state[3].sensor_event_bitmask = (0x1 << IPMI_SENSOR_TYPE_OEM_DELL_SYSTEM_PERFORMANCE_DEGRADATION_STATUS_DEGRADED_COOLING_CAPACITY_CHANGE);
+  oem_conf->oem_state[3].sensor_event_bitmask = (0x1 << IPMI_SENSOR_TYPE_OEM_DELL_SYSTEM_PERFORMANCE_DEGRADATION_STATUS_DEGRADED_THERMAL_PROTECTION);
   oem_conf->oem_state[3].sensor_state = IPMI_INTERPRET_STATE_WARNING;
   oem_conf->oem_state[3].oem_state_type = IPMI_OEM_STATE_TYPE_BITMASK;
 
-  oem_conf->oem_state[4].sensor_event_bitmask = (0x1 << IPMI_SENSOR_TYPE_OEM_DELL_SYSTEM_PERFORMANCE_DEGRADATION_STATUS_DEGRADED_POWER_CAPACITY_CHANGE);
+  oem_conf->oem_state[4].sensor_event_bitmask = (0x1 << IPMI_SENSOR_TYPE_OEM_DELL_SYSTEM_PERFORMANCE_DEGRADATION_STATUS_DEGRADED_COOLING_CAPACITY_CHANGE);
   oem_conf->oem_state[4].sensor_state = IPMI_INTERPRET_STATE_WARNING;
   oem_conf->oem_state[4].oem_state_type = IPMI_OEM_STATE_TYPE_BITMASK;
 
-  oem_conf->oem_state[5].sensor_event_bitmask = (0x1 << IPMI_SENSOR_TYPE_OEM_DELL_SYSTEM_PERFORMANCE_DEGRADATION_STATUS_DEGRADED_USER_DEFINED_POWER_CAPACITY);
+  oem_conf->oem_state[5].sensor_event_bitmask = (0x1 << IPMI_SENSOR_TYPE_OEM_DELL_SYSTEM_PERFORMANCE_DEGRADATION_STATUS_DEGRADED_POWER_CAPACITY_CHANGE);
   oem_conf->oem_state[5].sensor_state = IPMI_INTERPRET_STATE_WARNING;
   oem_conf->oem_state[5].oem_state_type = IPMI_OEM_STATE_TYPE_BITMASK;
 
-  oem_conf->oem_state[6].sensor_event_bitmask = (0x1 << IPMI_SENSOR_TYPE_OEM_DELL_SYSTEM_PERFORMANCE_DEGRADATION_STATUS_HALTED_SYSTEM_POWER_EXCEEDS_CAPACITY);
-  oem_conf->oem_state[6].sensor_state = IPMI_INTERPRET_STATE_CRITICAL;
+  oem_conf->oem_state[6].sensor_event_bitmask = (0x1 << IPMI_SENSOR_TYPE_OEM_DELL_SYSTEM_PERFORMANCE_DEGRADATION_STATUS_DEGRADED_USER_DEFINED_POWER_CAPACITY);
+  oem_conf->oem_state[6].sensor_state = IPMI_INTERPRET_STATE_WARNING;
   oem_conf->oem_state[6].oem_state_type = IPMI_OEM_STATE_TYPE_BITMASK;
 
-  oem_conf->oem_state[7].sensor_event_bitmask = (0x1 << IPMI_SENSOR_TYPE_OEM_DELL_SYSTEM_PERFORMANCE_DEGRADATION_STATUS_DEGRADED_SYSTEM_POWER_EXCEEDS_CAPACITY);
-  oem_conf->oem_state[7].sensor_state = IPMI_INTERPRET_STATE_WARNING;
+  oem_conf->oem_state[7].sensor_event_bitmask = (0x1 << IPMI_SENSOR_TYPE_OEM_DELL_SYSTEM_PERFORMANCE_DEGRADATION_STATUS_HALTED_SYSTEM_POWER_EXCEEDS_CAPACITY);
+  oem_conf->oem_state[7].sensor_state = IPMI_INTERPRET_STATE_CRITICAL;
   oem_conf->oem_state[7].oem_state_type = IPMI_OEM_STATE_TYPE_BITMASK;
 
-  oem_conf->oem_state_count = 8;
+  oem_conf->oem_state[8].sensor_event_bitmask = (0x1 << IPMI_SENSOR_TYPE_OEM_DELL_SYSTEM_PERFORMANCE_DEGRADATION_STATUS_DEGRADED_SYSTEM_POWER_EXCEEDS_CAPACITY);
+  oem_conf->oem_state[8].sensor_state = IPMI_INTERPRET_STATE_WARNING;
+  oem_conf->oem_state[8].oem_state_type = IPMI_OEM_STATE_TYPE_BITMASK;
+
+  oem_conf->oem_state_count = 9;
 
   return (0);
 }
