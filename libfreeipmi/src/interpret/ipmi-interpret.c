@@ -72,7 +72,10 @@ static char *ipmi_interpret_errmsgs[] =
   };
 
 /* 16th bit reserved, see Get Sensor Reading command in spec */
-#define IPMI_INTERPRET_MAX_SENSOR_AND_EVENT_OFFSET 15
+#define IPMI_INTERPRET_MAX_SENSOR_AND_EVENT_OFFSET         15
+
+/* upper bits of threshold based sensor can be 1b, may need to ignore them */
+#define IPMI_INTERPRET_THRESHOLD_SENSOR_EVENT_BITMASK_MASK 0x3F
 
 ipmi_interpret_ctx_t
 ipmi_interpret_ctx_create (void)
@@ -887,6 +890,9 @@ _get_threshold_sensor_state (ipmi_interpret_ctx_t ctx,
   
   (*sensor_state) = IPMI_INTERPRET_STATE_NOMINAL;
   
+  /* upper bits may be set to 1b as defined by IPMI spec, ignore them */
+  sensor_event_bitmask &= IPMI_INTERPRET_THRESHOLD_SENSOR_EVENT_BITMASK_MASK;
+
   i = 0;
   while (sensor_config[i] && i < IPMI_INTERPRET_MAX_SENSOR_AND_EVENT_OFFSET)
     {
@@ -901,9 +907,7 @@ _get_threshold_sensor_state (ipmi_interpret_ctx_t ctx,
         sensor_event_bitmask &= ~(0x1 << (i - 1));
       i++;
     }
-  
-  /* remaining bits may be set to 1b as defined by IPMI spec, ignore them */
-  
+   
   return (0);
 }
 
@@ -922,6 +926,9 @@ _get_sensor_state (ipmi_interpret_ctx_t ctx,
 
   (*sensor_state) = IPMI_INTERPRET_STATE_NOMINAL;
 
+  /* ignore 16th bit, as specified in IPMI spec */
+  sensor_event_bitmask &= ~(0x1 << IPMI_INTERPRET_MAX_SENSOR_AND_EVENT_OFFSET);
+
   i = 0;
   while (sensor_config[i] && i < IPMI_INTERPRET_MAX_SENSOR_AND_EVENT_OFFSET)
     {
@@ -936,9 +943,6 @@ _get_sensor_state (ipmi_interpret_ctx_t ctx,
         sensor_event_bitmask &= ~(0x1 << (i - 1));
       i++;
     }
-
-  /* ignore 16th bit, as specified in IPMI spec */
-  sensor_event_bitmask &= ~(0x1 << IPMI_INTERPRET_MAX_SENSOR_AND_EVENT_OFFSET);
 
   /* if any bits still set, they are outside of specification range */
   if (sensor_event_bitmask)
