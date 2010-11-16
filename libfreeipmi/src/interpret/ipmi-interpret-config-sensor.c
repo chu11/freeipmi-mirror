@@ -76,6 +76,7 @@
 
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_threshold_config[] =
   {
+    { "IPMI_Threshold_Sensor_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Threshold_Sensor_At_Or_Below_Lower_Non_Critical_Threshold", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Threshold_Sensor_At_Or_Below_Lower_Critical_Threshold", IPMI_INTERPRET_STATE_CRITICAL},
     { "IPMI_Threshold_Sensor_At_Or_Below_Lower_Non_Recoverable_Threshold", IPMI_INTERPRET_STATE_CRITICAL},
@@ -83,31 +84,35 @@ static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_threshold_confi
     { "IPMI_Threshold_Sensor_At_Or_Above_Upper_Critical_Threshold", IPMI_INTERPRET_STATE_CRITICAL},
     { "IPMI_Threshold_Sensor_At_Or_Above_Upper_Non_Recoverable_Threshold", IPMI_INTERPRET_STATE_CRITICAL},
   };
-static unsigned int ipmi_interpret_sensor_threshold_config_len = 6;
+static unsigned int ipmi_interpret_sensor_threshold_config_len = 7;
 
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_voltage_state_config[] =
   {
+    { "IPMI_Voltage_State_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Voltage_State_Deasserted", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Voltage_State_Asserted", IPMI_INTERPRET_STATE_WARNING},
   };
-static unsigned int ipmi_interpret_sensor_voltage_state_config_len = 2;
+static unsigned int ipmi_interpret_sensor_voltage_state_config_len = 3;
 
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_voltage_performance_config[] =
   {
+    { "IPMI_Voltage_Performance_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Voltage_Performance_Met", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Voltage_Performance_Lags", IPMI_INTERPRET_STATE_CRITICAL},
   };
-static unsigned int ipmi_interpret_sensor_voltage_performance_config_len = 2;
+static unsigned int ipmi_interpret_sensor_voltage_performance_config_len = 3;
 
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_fan_device_present_config[] =
   {
+    { "IPMI_Fan_Device_Present_Device_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Fan_Device_Present_Device_Removed_Device_Absent", IPMI_INTERPRET_STATE_CRITICAL},
     { "IPMI_Fan_Device_Present_Device_Inserted_Device_Present", IPMI_INTERPRET_STATE_NOMINAL},
   };
-static unsigned int ipmi_interpret_sensor_fan_device_present_config_len = 2;
+static unsigned int ipmi_interpret_sensor_fan_device_present_config_len = 3;
 
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_fan_transition_availability_config[] =
   {
+    { "IPMI_Fan_Transition_Availability_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Fan_Transition_Availability_To_Running", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Fan_Transition_Availability_To_In_Test", IPMI_INTERPRET_STATE_WARNING},
     { "IPMI_Fan_Transition_Availability_To_Power_Off", IPMI_INTERPRET_STATE_WARNING},
@@ -118,10 +123,11 @@ static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_fan_transition_
     { "IPMI_Fan_Transition_Availability_To_Power_Save", IPMI_INTERPRET_STATE_WARNING},
     { "IPMI_Fan_Transition_Availability_Install_Error", IPMI_INTERPRET_STATE_CRITICAL},
   };
-static unsigned int ipmi_interpret_sensor_fan_transition_availability_config_len = 9;
+static unsigned int ipmi_interpret_sensor_fan_transition_availability_config_len = 10;
 
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_fan_redundancy_config[] =
   {
+    { "IPMI_Fan_Redundancy_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Fan_Redundancy_Fully_Redundant", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Fan_Redundancy_Redundancy_Lost", IPMI_INTERPRET_STATE_CRITICAL},
     { "IPMI_Fan_Redundancy_Redundancy_Degraded", IPMI_INTERPRET_STATE_WARNING},
@@ -131,10 +137,11 @@ static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_fan_redundancy_
     { "IPMI_Fan_Redundancy_Redundancy_Degraded_From_Fully_Redundant", IPMI_INTERPRET_STATE_WARNING},
     { "IPMI_Fan_Redundancy_Redundancy_Degraded_From_Non_Redundant", IPMI_INTERPRET_STATE_WARNING},
   };
-static unsigned int ipmi_interpret_sensor_fan_redundancy_config_len = 8;
+static unsigned int ipmi_interpret_sensor_fan_redundancy_config_len = 9;
 
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_physical_security_config[] =
   {
+    { "IPMI_Physical_Security_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Physical_Security_General_Chassis_Intrusion", IPMI_INTERPRET_STATE_CRITICAL},
     { "IPMI_Physical_Security_Drive_Bay_Intrusion", IPMI_INTERPRET_STATE_CRITICAL},
     { "IPMI_Physical_Security_IO_Card_Intrusion", IPMI_INTERPRET_STATE_CRITICAL},
@@ -143,10 +150,11 @@ static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_physical_securi
     { "IPMI_Physical_Security_Unauthorized_Dock_Undock", IPMI_INTERPRET_STATE_CRITICAL},
     { "IPMI_Physical_Security_FAN_Area_Intrusion", IPMI_INTERPRET_STATE_CRITICAL},
   };
-static unsigned int ipmi_interpret_sensor_physical_security_config_len = 7;
+static unsigned int ipmi_interpret_sensor_physical_security_config_len = 8;
 
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_platform_security_violation_attempt_config[] =
   {
+    { "IPMI_Platform_Security_Violation_Attempt_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Platform_Security_Violation_Attempt_Secure_Mode_Violation_Attempt", IPMI_INTERPRET_STATE_CRITICAL},
     { "IPMI_Platform_Security_Violation_Attempt_Pre_Boot_Password_Violation_User_Password", IPMI_INTERPRET_STATE_CRITICAL},
     { "IPMI_Platform_Security_Violation_Attempt_Pre_Boot_Password_Violation_Attempt_Setup_Password", IPMI_INTERPRET_STATE_CRITICAL},
@@ -154,10 +162,11 @@ static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_platform_securi
     { "IPMI_Platform_Security_Violation_Attempt_Other_Pre_Boot_Password_Violation", IPMI_INTERPRET_STATE_CRITICAL},
     { "IPMI_Platform_Security_Violation_Attempt_Out_Of_Band_Access_Password_Violation", IPMI_INTERPRET_STATE_CRITICAL},
   };
-static unsigned int ipmi_interpret_sensor_platform_security_violation_attempt_config_len = 6;
+static unsigned int ipmi_interpret_sensor_platform_security_violation_attempt_config_len = 7;
 
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_processor_config[] =
   {
+    { "IPMI_Processor_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Processor_IERR", IPMI_INTERPRET_STATE_CRITICAL},
     { "IPMI_Processor_Thermal_Trip", IPMI_INTERPRET_STATE_CRITICAL},
     { "IPMI_Processor_FRB1_BIST_Failure", IPMI_INTERPRET_STATE_CRITICAL},
@@ -172,17 +181,19 @@ static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_processor_confi
     { "IPMI_Processor_Machine_Check_Exception", IPMI_INTERPRET_STATE_CRITICAL},
     { "IPMI_Processor_Correctable_Machine_Check_Error", IPMI_INTERPRET_STATE_WARNING},
   };
-static unsigned int ipmi_interpret_sensor_processor_config_len = 13;
+static unsigned int ipmi_interpret_sensor_processor_config_len = 14;
 
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_processor_state_config[] =
   {
+    { "IPMI_Processor_State_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Processor_State_Deasserted", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Processor_State_Asserted", IPMI_INTERPRET_STATE_CRITICAL},
   };
-static unsigned int ipmi_interpret_sensor_processor_state_config_len = 2;
+static unsigned int ipmi_interpret_sensor_processor_state_config_len = 3;
 
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_power_supply_config[] =
   {
+    { "IPMI_Power_Supply_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Power_Supply_Presence_Detected", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Power_Supply_Power_Supply_Failure_Detected", IPMI_INTERPRET_STATE_CRITICAL},
     { "IPMI_Power_Supply_Predictive_Failure", IPMI_INTERPRET_STATE_CRITICAL},
@@ -191,17 +202,19 @@ static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_power_supply_co
     { "IPMI_Power_Supply_Power_Supply_Input_Out_Of_Range_But_Present", IPMI_INTERPRET_STATE_CRITICAL},
     { "IPMI_Power_Supply_Configuration_Error", IPMI_INTERPRET_STATE_CRITICAL},
   };
-static unsigned int ipmi_interpret_sensor_power_supply_config_len = 7;
+static unsigned int ipmi_interpret_sensor_power_supply_config_len = 8;
 
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_power_supply_state_config[] =
   {
+    { "IPMI_Power_Supply_State_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Power_Supply_State_Deasserted", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Power_Supply_State_Asserted", IPMI_INTERPRET_STATE_WARNING},
   };
-static unsigned int ipmi_interpret_sensor_power_supply_state_config_len = 2;
+static unsigned int ipmi_interpret_sensor_power_supply_state_config_len = 3;
 
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_power_supply_redundancy_config[] =
   {
+    { "IPMI_Power_Supply_Redundancy_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Power_Supply_Redundancy_Fully_Redundant", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Power_Supply_Redundancy_Redundancy_Lost", IPMI_INTERPRET_STATE_CRITICAL},
     { "IPMI_Power_Supply_Redundancy_Redundancy_Degraded", IPMI_INTERPRET_STATE_WARNING},
@@ -211,10 +224,11 @@ static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_power_supply_re
     { "IPMI_Power_Supply_Redundancy_Redundancy_Degraded_From_Fully_Redundant", IPMI_INTERPRET_STATE_WARNING},
     { "IPMI_Power_Supply_Redundancy_Redundancy_Degraded_From_Non_Redundant", IPMI_INTERPRET_STATE_WARNING},
   };
-static unsigned int ipmi_interpret_sensor_power_supply_redundancy_config_len = 8;
+static unsigned int ipmi_interpret_sensor_power_supply_redundancy_config_len = 9;
 
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_power_unit_config[] =
   {
+    { "IPMI_Power_Unit_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Power_Unit_Power_Off_Power_Down", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Power_Unit_Power_Cycle", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Power_Unit_240VA_Power_Down", IPMI_INTERPRET_STATE_WARNING},
@@ -224,17 +238,19 @@ static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_power_unit_conf
     { "IPMI_Power_Unit_Power_Unit_Failure_Detected", IPMI_INTERPRET_STATE_CRITICAL},
     { "IPMI_Power_Unit_Predictive_Failure", IPMI_INTERPRET_STATE_CRITICAL},
   };
-static unsigned int ipmi_interpret_sensor_power_unit_config_len = 8;
+static unsigned int ipmi_interpret_sensor_power_unit_config_len = 9;
 
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_power_unit_device_present_config[] =
   {
+    { "IPMI_Power_Unit_Device_Present_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Power_Unit_Device_Present_Device_Removed_Device_Absent", IPMI_INTERPRET_STATE_CRITICAL},
     { "IPMI_Power_Unit_Device_Present_Device_Inserted_Device_Present", IPMI_INTERPRET_STATE_NOMINAL},
   };
-static unsigned int ipmi_interpret_sensor_power_unit_device_present_config_len = 2;
+static unsigned int ipmi_interpret_sensor_power_unit_device_present_config_len = 3;
 
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_power_unit_redundancy_config[] =
   {
+    { "IPMI_Power_Unit_Redundancy_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Power_Unit_Redundancy_Fully_Redundant", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Power_Unit_Redundancy_Redundancy_Lost", IPMI_INTERPRET_STATE_CRITICAL},
     { "IPMI_Power_Unit_Redundancy_Redundancy_Degraded", IPMI_INTERPRET_STATE_WARNING},
@@ -244,10 +260,11 @@ static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_power_unit_redu
     { "IPMI_Power_Unit_Redundancy_Redundancy_Degraded_From_Fully_Redundant", IPMI_INTERPRET_STATE_WARNING},
     { "IPMI_Power_Unit_Redundancy_Redundancy_Degraded_From_Non_Redundant", IPMI_INTERPRET_STATE_WARNING},
   };
-static unsigned int ipmi_interpret_sensor_power_unit_redundancy_config_len = 8;
+static unsigned int ipmi_interpret_sensor_power_unit_redundancy_config_len = 9;
 
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_memory_config[] =
   {
+    { "IPMI_Memory_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Memory_Correctable_Memory_Error", IPMI_INTERPRET_STATE_WARNING},
     { "IPMI_Memory_Uncorrectable_Memory_Error", IPMI_INTERPRET_STATE_CRITICAL},
     { "IPMI_Memory_Parity", IPMI_INTERPRET_STATE_CRITICAL},
@@ -260,10 +277,11 @@ static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_memory_config[]
     { "IPMI_Memory_Memory_Automatically_Throttled", IPMI_INTERPRET_STATE_WARNING},
     { "IPMI_Memory_Critical_Overtemperature", IPMI_INTERPRET_STATE_CRITICAL},
   };
-static unsigned int ipmi_interpret_sensor_memory_config_len = 11;
+static unsigned int ipmi_interpret_sensor_memory_config_len = 12;
 
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_drive_slot_config[] =
   {
+    { "IPMI_Drive_Slot_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Drive_Slot_Drive_Presence", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Drive_Slot_Drive_Fault", IPMI_INTERPRET_STATE_CRITICAL},
     { "IPMI_Drive_Slot_Predictive_Failure", IPMI_INTERPRET_STATE_CRITICAL},
@@ -274,39 +292,44 @@ static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_drive_slot_conf
     { "IPMI_Drive_Slot_Rebuild_Remap_In_Progress", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Drive_Slot_Rebuild_Remap_Aborted", IPMI_INTERPRET_STATE_CRITICAL},
   };
-static unsigned int ipmi_interpret_sensor_drive_slot_config_len = 9;
+static unsigned int ipmi_interpret_sensor_drive_slot_config_len = 10;
 
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_drive_slot_state_config[] =
   {
+    { "IPMI_Drive_Slot_State_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Drive_Slot_State_Deasserted", IPMI_INTERPRET_STATE_WARNING},
     { "IPMI_Drive_Slot_State_Asserted", IPMI_INTERPRET_STATE_NOMINAL},
   };
-static unsigned int ipmi_interpret_sensor_drive_slot_state_config_len = 2;
+static unsigned int ipmi_interpret_sensor_drive_slot_state_config_len = 3;
 
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_drive_slot_predictive_failure_config[] =
   {
+    { "IPMI_Drive_Slot_Predictive_Failure_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Drive_Slot_Predictive_Failure_Deasserted", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Drive_Slot_Predictive_Failure_Asserted", IPMI_INTERPRET_STATE_CRITICAL},
   };
-static unsigned int ipmi_interpret_sensor_drive_slot_predictive_failure_config_len = 2;
+static unsigned int ipmi_interpret_sensor_drive_slot_predictive_failure_config_len = 3;
 
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_drive_slot_device_present_config[] =
   {
+    { "IPMI_Drive_Slot_Device_Present_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Drive_Slot_Device_Present_Device_Removed_Device_Absent", IPMI_INTERPRET_STATE_CRITICAL},
     { "IPMI_Drive_Slot_Device_Present_Device_Inserted_Device_Present", IPMI_INTERPRET_STATE_NOMINAL},
   };
-static unsigned int ipmi_interpret_sensor_drive_slot_device_present_config_len = 2;
+static unsigned int ipmi_interpret_sensor_drive_slot_device_present_config_len = 3;
 
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_system_firmware_progress_config[] =
   {
+    { "IPMI_System_Firmware_Progress_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_System_Firmware_Progress_System_Firmware_Error", IPMI_INTERPRET_STATE_CRITICAL},
     { "IPMI_System_Firmware_Progress_System_Firmware_Hang", IPMI_INTERPRET_STATE_CRITICAL},
     { "IPMI_System_Firmware_Progress_System_Firmware_Progress", IPMI_INTERPRET_STATE_NOMINAL},
   };
-static unsigned int ipmi_interpret_sensor_system_firmware_progress_config_len = 3;
+static unsigned int ipmi_interpret_sensor_system_firmware_progress_config_len = 4;
 
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_event_logging_disabled_config[] =
   {
+    { "IPMI_Event_Logging_Disabled_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Event_Logging_Disabled_Correctable_Memory_Error_Logging_Disabled", IPMI_INTERPRET_STATE_CRITICAL},
     { "IPMI_Event_Logging_Disabled_Event_Type_Logging_Disabled", IPMI_INTERPRET_STATE_CRITICAL},
     { "IPMI_Event_Logging_Disabled_Log_Area_Reset_Cleared", IPMI_INTERPRET_STATE_NOMINAL},
@@ -315,10 +338,11 @@ static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_event_logging_d
     { "IPMI_Event_Logging_Disabled_SEL_Almost_Full", IPMI_INTERPRET_STATE_WARNING},
     { "IPMI_Event_Logging_Disabled_Correctable_Machine_Check_Error_Logging_Disabled", IPMI_INTERPRET_STATE_CRITICAL},
   };
-static unsigned int ipmi_interpret_sensor_event_logging_disabled_config_len = 7;
+static unsigned int ipmi_interpret_sensor_event_logging_disabled_config_len = 8;
 
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_system_event_config[] =
   {
+    { "IPMI_System_Event_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_System_Event_System_Reconfigured", IPMI_INTERPRET_STATE_WARNING},
     { "IPMI_System_Event_OEM_System_Boot_Event", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_System_Event_Undetermined_System_Hardware_Failure", IPMI_INTERPRET_STATE_CRITICAL},
@@ -326,10 +350,11 @@ static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_system_event_co
     { "IPMI_System_Event_PEF_Action", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_System_Event_Timestamp_Clock_Sync", IPMI_INTERPRET_STATE_WARNING},
   };
-static unsigned int ipmi_interpret_sensor_system_event_config_len = 6;
+static unsigned int ipmi_interpret_sensor_system_event_config_len = 7;
 
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_critical_interrupt_config[] =
   {
+    { "IPMI_Critical_Interrupt_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Critical_Interrupt_Front_Panel_NMI_Diagnostic_Interrupt", IPMI_INTERPRET_STATE_CRITICAL},
     { "IPMI_Critical_Interrupt_Bus_Timeout", IPMI_INTERPRET_STATE_CRITICAL},
     { "IPMI_Critical_Interrupt_IO_Channel_Check_NMI", IPMI_INTERPRET_STATE_CRITICAL},
@@ -343,61 +368,68 @@ static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_critical_interr
     { "IPMI_Critical_Interrupt_Bus_Fatal_Error", IPMI_INTERPRET_STATE_CRITICAL},
     { "IPMI_Critical_Interrupt_Bus_Degraded", IPMI_INTERPRET_STATE_WARNING},
   };
-static unsigned int ipmi_interpret_sensor_critical_interrupt_config_len = 12;
+static unsigned int ipmi_interpret_sensor_critical_interrupt_config_len = 13;
 
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_button_switch_config[] =
   {
+    { "IPMI_Button_Switch_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Button_Switch_Power_Button_Pressed", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Button_Switch_Sleep_Button_Pressed", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Button_Switch_Reset_Button_Pressed", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Button_Switch_FRU_Latch_Open", IPMI_INTERPRET_STATE_WARNING},
     { "IPMI_Button_Switch_FRU_Service_Request_Button", IPMI_INTERPRET_STATE_WARNING},
   };
-static unsigned int ipmi_interpret_sensor_button_switch_config_len = 5;
+static unsigned int ipmi_interpret_sensor_button_switch_config_len = 6;
 
 /* achu: for a button/switch states, I don't think users really care.
  * So report Nominal for all states.
  */
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_button_switch_state_config[] =
   {
+    { "IPMI_Button_Switch_State_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Button_Switch_State_Deasserted", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Button_Switch_State_Asserted", IPMI_INTERPRET_STATE_NOMINAL},
   };
-static unsigned int ipmi_interpret_sensor_button_switch_state_config_len = 2;
+static unsigned int ipmi_interpret_sensor_button_switch_state_config_len = 3;
 
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_module_board_state_config[] =
   {
+    { "IPMI_Module_Board_State_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Module_Board_State_Deasserted", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Module_Board_State_Asserted", IPMI_INTERPRET_STATE_CRITICAL},
   };
-static unsigned int ipmi_interpret_sensor_module_board_state_config_len = 2;
+static unsigned int ipmi_interpret_sensor_module_board_state_config_len = 3;
 
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_module_board_device_present_config[] =
   {
+    { "IPMI_Module_Board_Device_Present_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Module_Board_Device_Present_Device_Removed_Device_Absent", IPMI_INTERPRET_STATE_CRITICAL},
     { "IPMI_Module_Board_Device_Present_Device_Inserted_Device_Present", IPMI_INTERPRET_STATE_NOMINAL},
   };
-static unsigned int ipmi_interpret_sensor_module_board_device_present_config_len = 2;
+static unsigned int ipmi_interpret_sensor_module_board_device_present_config_len = 3;
 
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_cable_interconnect_config[] =
   {
+    { "IPMI_Cable_Interconnect_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Cable_Interconnect_Is_Connected", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Cable_Interconnect_Configuration_Error", IPMI_INTERPRET_STATE_CRITICAL},
   };
-static unsigned int ipmi_interpret_sensor_cable_interconnect_config_len = 2;
+static unsigned int ipmi_interpret_sensor_cable_interconnect_config_len = 3;
 
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_boot_error_config[] =
   {
+    { "IPMI_Boot_Error_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Boot_Error_No_Bootable_Media", IPMI_INTERPRET_STATE_CRITICAL},
     { "IPMI_Boot_Error_Non_Bootable_Diskette_Left_In_Drive", IPMI_INTERPRET_STATE_CRITICAL},
     { "IPMI_Boot_Error_PXE_Server_Not_Found", IPMI_INTERPRET_STATE_CRITICAL},
     { "IPMI_Boot_Error_Invalid_Boot_Sector", IPMI_INTERPRET_STATE_CRITICAL},
     { "IPMI_Boot_Error_Timeout_Waiting_For_User_Selection_Of_Boot_Source", IPMI_INTERPRET_STATE_WARNING},
   };
-static unsigned int ipmi_interpret_sensor_boot_error_config_len = 5;
+static unsigned int ipmi_interpret_sensor_boot_error_config_len = 6;
 
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_slot_connector_config[] =
   {
+    { "IPMI_Slot_Connector_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Slot_Connector_Fault_Status_Asserted", IPMI_INTERPRET_STATE_CRITICAL},
     { "IPMI_Slot_Connector_Identify_Status_Asserted", IPMI_INTERPRET_STATE_WARNING},
     { "IPMI_Slot_Connector_Slot_Connector_Device_Installed_Attached", IPMI_INTERPRET_STATE_NOMINAL},
@@ -409,10 +441,11 @@ static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_slot_connector_
     { "IPMI_Slot_Connector_Slot_Is_Disabled", IPMI_INTERPRET_STATE_WARNING},
     { "IPMI_Slot_Connector_Slot_Holds_Spare_Device", IPMI_INTERPRET_STATE_NOMINAL},
   };
-static unsigned int ipmi_interpret_sensor_slot_connector_config_len = 10;
+static unsigned int ipmi_interpret_sensor_slot_connector_config_len = 11;
 
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_system_acpi_power_state_config[] =
   {
+    { "IPMI_System_ACPI_Power_State_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_System_ACPI_Power_State_S0_G0", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_System_ACPI_Power_State_S1", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_System_ACPI_Power_State_S2", IPMI_INTERPRET_STATE_NOMINAL},
@@ -429,10 +462,11 @@ static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_system_acpi_pow
     { "IPMI_System_ACPI_Power_State_Unspecified", IPMI_INTERPRET_STATE_CRITICAL},
     { "IPMI_System_ACPI_Power_State_Unknown", IPMI_INTERPRET_STATE_CRITICAL},
   };
-static unsigned int ipmi_interpret_sensor_system_acpi_power_state_config_len = 15;
+static unsigned int ipmi_interpret_sensor_system_acpi_power_state_config_len = 16;
 
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_watchdog2_config[] =
   {
+    { "IPMI_Watchdog2_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Watchdog2_Timer_Expired", IPMI_INTERPRET_STATE_WARNING},
     { "IPMI_Watchdog2_Hard_Reset", IPMI_INTERPRET_STATE_CRITICAL},
     { "IPMI_Watchdog2_Power_Down", IPMI_INTERPRET_STATE_CRITICAL},
@@ -443,25 +477,28 @@ static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_watchdog2_confi
     { "IPMI_Watchdog2_Reserved4", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Watchdog2_Timer_Interrupt", IPMI_INTERPRET_STATE_WARNING},
   };
-static unsigned int ipmi_interpret_sensor_watchdog2_config_len = 9;
+static unsigned int ipmi_interpret_sensor_watchdog2_config_len = 10;
 
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_entity_presence_config[] =
   {
+    { "IPMI_Entity_Presence_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Entity_Presence_Entity_Present", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Entity_Presence_Entity_Absent", IPMI_INTERPRET_STATE_CRITICAL},
     { "IPMI_Entity_Presence_Entity_Disabled", IPMI_INTERPRET_STATE_CRITICAL},
   };
-static unsigned int ipmi_interpret_sensor_entity_presence_config_len = 3;
+static unsigned int ipmi_interpret_sensor_entity_presence_config_len = 4;
 
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_entity_presence_device_present_config[] =
   {
+    { "IPMI_Entity_Presence_Device_Present_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Entity_Presence_Device_Present_Device_Removed_Device_Absent", IPMI_INTERPRET_STATE_CRITICAL},
     { "IPMI_Entity_Presence_Device_Present_Device_Inserted_Device_Present", IPMI_INTERPRET_STATE_NOMINAL},
   };
-static unsigned int ipmi_interpret_sensor_entity_presence_device_present_config_len = 2;
+static unsigned int ipmi_interpret_sensor_entity_presence_device_present_config_len = 3;
 
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_management_subsystem_health_config[] =
   {
+    { "IPMI_Management_Subsystem_Health_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Management_Subsystem_Health_Sensor_Access_Degraded_Or_Unavailable", IPMI_INTERPRET_STATE_CRITICAL},
     { "IPMI_Management_Subsystem_Health_Controller_Access_Degraded_Or_Unavailable", IPMI_INTERPRET_STATE_CRITICAL},
     { "IPMI_Management_Subsystem_Health_Management_Controller_Off_Line", IPMI_INTERPRET_STATE_CRITICAL},
@@ -469,18 +506,20 @@ static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_management_subs
     { "IPMI_Management_Subsystem_Health_Sensor_Failure", IPMI_INTERPRET_STATE_CRITICAL},
     { "IPMI_Management_Subsystem_Health_FRU_Failure", IPMI_INTERPRET_STATE_CRITICAL},
   };
-static unsigned int ipmi_interpret_sensor_management_subsystem_health_config_len = 6;
+static unsigned int ipmi_interpret_sensor_management_subsystem_health_config_len = 7;
 
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_battery_config[] =
   {
+    { "IPMI_Battery_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Battery_Battery_Low", IPMI_INTERPRET_STATE_WARNING},
     { "IPMI_Battery_Battery_Failed", IPMI_INTERPRET_STATE_CRITICAL},
     { "IPMI_Battery_Battery_Presence_Detected", IPMI_INTERPRET_STATE_NOMINAL},
   };
-static unsigned int ipmi_interpret_sensor_battery_config_len = 3;
+static unsigned int ipmi_interpret_sensor_battery_config_len = 4;
 
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_fru_state_config[] =
   {
+    { "IPMI_FRU_State_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_FRU_State_FRU_Not_Installed", IPMI_INTERPRET_STATE_CRITICAL},
     { "IPMI_FRU_State_FRU_Inactive", IPMI_INTERPRET_STATE_CRITICAL},
     { "IPMI_FRU_State_FRU_Activation_Requested", IPMI_INTERPRET_STATE_WARNING},
@@ -490,7 +529,7 @@ static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_fru_state_confi
     { "IPMI_FRU_State_FRU_Deactivation_In_Progress", IPMI_INTERPRET_STATE_WARNING},
     { "IPMI_FRU_State_FRU_Communication_Lost", IPMI_INTERPRET_STATE_CRITICAL},
   };
-static unsigned int ipmi_interpret_sensor_fru_state_config_len = 8;
+static unsigned int ipmi_interpret_sensor_fru_state_config_len = 9;
 
 static int
 _interpret_config_sensor_init (ipmi_interpret_ctx_t ctx,

@@ -890,13 +890,15 @@ _get_threshold_sensor_state (ipmi_interpret_ctx_t ctx,
   i = 0;
   while (sensor_config[i] && i < IPMI_INTERPRET_MAX_SENSOR_AND_EVENT_OFFSET)
     {
-      if (sensor_event_bitmask & (0x1 << i))
+      if ((!i && !sensor_event_bitmask)
+          || (sensor_event_bitmask & (0x1 << (i - 1))))
         {
           if (sensor_config[i]->state > (*sensor_state))
             (*sensor_state) = sensor_config[i]->state;
         }
       
-      sensor_event_bitmask &= ~(0x1 << i);
+      if (i)
+        sensor_event_bitmask &= ~(0x1 << (i - 1));
       i++;
     }
   
@@ -923,13 +925,15 @@ _get_sensor_state (ipmi_interpret_ctx_t ctx,
   i = 0;
   while (sensor_config[i] && i < IPMI_INTERPRET_MAX_SENSOR_AND_EVENT_OFFSET)
     {
-      if (sensor_event_bitmask & (0x1 << i))
+      if ((!i && !sensor_event_bitmask)
+          || (sensor_event_bitmask & (0x1 << (i - 1))))
         {
           if (sensor_config[i]->state > (*sensor_state))
             (*sensor_state) = sensor_config[i]->state;
         }
 
-      sensor_event_bitmask &= ~(0x1 << i);
+      if (i)
+        sensor_event_bitmask &= ~(0x1 << (i - 1));
       i++;
     }
 

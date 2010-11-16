@@ -13,6 +13,7 @@ o Re-architect libipmimonitoring to support all defined IPMI sensor
   types, OEM bitmasks, and OEM interpretations.
 o Add SEL monitoring support to libipmimonitoring.
 o Support new 'interpret' sub-library in libfreeipmi.
+o Support interpretation rules for sensors when no states/events occur.
 o Support interpretation rules for OEM sensors and events.
 o Move all config files to /etc/freeipmi/.  Support legacy config
   files for backwards compatibility.
