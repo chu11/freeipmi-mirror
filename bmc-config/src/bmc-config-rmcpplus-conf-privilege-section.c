@@ -35,6 +35,8 @@
 #include "freeipmi-portability.h"
 #include "pstdout.h"
 
+#define BMC_CONFIG_FIELD_LENGTH_MAX 1024
+
 static config_err_t
 _rmcpplus_cipher_suite_id_privilege_setup (bmc_config_state_data_t *state_data,
 					   const char *section_name)
@@ -57,16 +59,17 @@ _rmcpplus_cipher_suite_id_privilege_setup (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if (state_data->cipher_suite_entry_count
+  if (state_data->cipher_suite_entry_count_set
       && state_data->cipher_suite_id_supported_set
       && state_data->cipher_suite_priv_set
       && state_data->cipher_suite_channel_number == channel_number)
     return (CONFIG_ERR_SUCCESS);
 
   state_data->cipher_suite_entry_count = 0;
+  state_data->cipher_suite_entry_count_set = 0;
   state_data->cipher_suite_id_supported_set = 0;
   state_data->cipher_suite_priv_set = 0;
-  state_data->cipher_suite_channel_number = 0;
+  state_data->cipher_suite_channel_number = channel_number;
 
   if (!state_data->cipher_suite_entry_count_set)
     {
@@ -151,41 +154,15 @@ _rmcpplus_cipher_suite_id_privilege_setup (bmc_config_state_data_t *state_data,
 
       for (i = 0; i < state_data->cipher_suite_entry_count; i++)
         {
-          char *field = NULL;
+          char field[BMC_CONFIG_FIELD_LENGTH_MAX + 1];
 
-          if (i == 0)
-            field = "cipher_suite_id_entry_A";
-          else if (i == 1)
-            field = "cipher_suite_id_entry_B";
-          else if (i == 2)
-            field = "cipher_suite_id_entry_C";
-          else if (i == 3)
-            field = "cipher_suite_id_entry_D";
-          else if (i == 4)
-            field = "cipher_suite_id_entry_E";
-          else if (i == 5)
-            field = "cipher_suite_id_entry_F";
-          else if (i == 6)
-            field = "cipher_suite_id_entry_G";
-          else if (i == 7)
-            field = "cipher_suite_id_entry_H";
-          else if (i == 8)
-            field = "cipher_suite_id_entry_I";
-          else if (i == 9)
-            field = "cipher_suite_id_entry_J";
-          else if (i == 10)
-            field = "cipher_suite_id_entry_K";
-          else if (i == 11)
-            field = "cipher_suite_id_entry_L";
-          else if (i == 12)
-            field = "cipher_suite_id_entry_M";
-          else if (i == 13)
-            field = "cipher_suite_id_entry_N";
-          else if (i == 14)
-            field = "cipher_suite_id_entry_O";
-          else if (i == 15)
-            field = "cipher_suite_id_entry_P";
-
+          memset (field, '\0', BMC_CONFIG_FIELD_LENGTH_MAX + 1);
+          
+          snprintf (field,
+                    BMC_CONFIG_FIELD_LENGTH_MAX,
+                    "cipher_suite_id_entry_%c",
+                    'A' + i);
+          
           if (FIID_OBJ_GET (obj_cmd_id_rs, field, &val) < 0)
             {
               pstdout_fprintf (state_data->pstate,
@@ -236,40 +213,14 @@ _rmcpplus_cipher_suite_id_privilege_setup (bmc_config_state_data_t *state_data,
 
       for (i = 0; i < CIPHER_SUITE_LEN; i++)
         {
-          char *field = NULL;
-
-          if (i == 0)
-            field = "maximum_privilege_for_cipher_suite_1";
-          else if (i == 1)
-            field = "maximum_privilege_for_cipher_suite_2";
-          else if (i == 2)
-            field = "maximum_privilege_for_cipher_suite_3";
-          else if (i == 3)
-            field = "maximum_privilege_for_cipher_suite_4";
-          else if (i == 4)
-            field = "maximum_privilege_for_cipher_suite_5";
-          else if (i == 5)
-            field = "maximum_privilege_for_cipher_suite_6";
-          else if (i == 6)
-            field = "maximum_privilege_for_cipher_suite_7";
-          else if (i == 7)
-            field = "maximum_privilege_for_cipher_suite_8";
-          else if (i == 8)
-            field = "maximum_privilege_for_cipher_suite_9";
-          else if (i == 9)
-            field = "maximum_privilege_for_cipher_suite_10";
-          else if (i == 10)
-            field = "maximum_privilege_for_cipher_suite_11";
-          else if (i == 11)
-            field = "maximum_privilege_for_cipher_suite_12";
-          else if (i == 12)
-            field = "maximum_privilege_for_cipher_suite_13";
-          else if (i == 13)
-            field = "maximum_privilege_for_cipher_suite_14";
-          else if (i == 14)
-            field = "maximum_privilege_for_cipher_suite_15";
-          else if (i == 15)
-            field = "maximum_privilege_for_cipher_suite_16";
+          char field[BMC_CONFIG_FIELD_LENGTH_MAX + 1];
+          
+          memset (field, '\0', BMC_CONFIG_FIELD_LENGTH_MAX + 1);
+          
+          snprintf (field,
+                    BMC_CONFIG_FIELD_LENGTH_MAX,
+                    "maximum_privilege_for_cipher_suite_%d",
+                    i + 1);
 
           if (FIID_OBJ_GET (obj_cmd_priv_rs, field, &val) < 0)
             {
