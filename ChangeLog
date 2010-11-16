@@ -1,6 +1,9 @@
 2010-11-16 Albert Chu <chu11@llnl.gov>
 
 	* bmc-config/: Cleanup cipher suite id loading and caching code.
+
+	* bmc-config/: Support workaround of HP DL145 RMCPplus privilege
+	key configuration.
 	
 2010-11-16 Albert Chu <chu11@llnl.gov>
 

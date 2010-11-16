@@ -37,6 +37,8 @@
 
 #define BMC_CONFIG_FIELD_LENGTH_MAX 1024
 
+#define BMC_CONFIG_PRIVILEGE_LEVEL_UNAVAILABLE 0xFF
+
 static config_err_t
 _rmcpplus_cipher_suite_id_privilege_setup (bmc_config_state_data_t *state_data,
 					   const char *section_name)
@@ -224,14 +226,34 @@ _rmcpplus_cipher_suite_id_privilege_setup (bmc_config_state_data_t *state_data,
 
           if (FIID_OBJ_GET (obj_cmd_priv_rs, field, &val) < 0)
             {
-              pstdout_fprintf (state_data->pstate,
-                               stderr,
-                               "fiid_obj_get: '%s': %s\n",
-                               field,
-                               fiid_obj_errormsg (obj_cmd_priv_rs));
-              goto cleanup;
-            }
+              /* IPMI Workaround (achu)
+               *
+               * HP DL145
+               *
+               * The number of entries returned from a RMCP+ Messaging
+               * Cipher Suite Privilege Levels request is not valid.  Not
+               * only is it not valid, the number of entries does not even
+               * match the number of entries specified by a RMCP+
+               * Messaging Cipher Suite Entry Support Count request.
+               *
+               * Instead, indicate the privilege is illegal and have
+               * the output indicated appropriately for this
+               * situation.
+               */
 
+              if (fiid_obj_errnum (obj_cmd_priv_rs) != FIID_ERR_DATA_NOT_AVAILABLE)
+                {
+                  pstdout_fprintf (state_data->pstate,
+                                   stderr,
+                                   "fiid_obj_get: '%s': %s\n",
+                                   field,
+                                   fiid_obj_errormsg (obj_cmd_priv_rs));
+                  goto cleanup;
+                }
+              else
+                val = BMC_CONFIG_PRIVILEGE_LEVEL_UNAVAILABLE;
+            }
+          
           state_data->cipher_suite_priv[i] = val;
         }
 
@@ -278,13 +300,32 @@ id_checkout (const char *section_name,
 
   if (id_found)
     {
-      if (config_section_update_keyvalue_output (state_data->pstate,
-                                                 kv,
-                                                 rmcpplus_priv_string (privilege)) < 0)
-        return (CONFIG_ERR_FATAL_ERROR);
+      /* achu: see HP DL145 workaround description above in
+       * _rmcpplus_cipher_suite_id_privilege_setup()
+       */
+      if (privilege != BMC_CONFIG_PRIVILEGE_LEVEL_UNAVAILABLE)
+        {
+          if (config_section_update_keyvalue_output (state_data->pstate,
+                                                     kv,
+                                                     rmcpplus_priv_string (privilege)) < 0)
+            return (CONFIG_ERR_FATAL_ERROR);
+        }
+      else
+        {
+          /* output empty string, will match with
+           * CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY flag to
+           * output commented out section.
+           */
+          if (config_section_update_keyvalue_output (state_data->pstate,
+                                                     kv,
+                                                     "") < 0)
+            return (CONFIG_ERR_FATAL_ERROR);
+        }
+
       return (CONFIG_ERR_SUCCESS);
     }
 
+  /* if ID not found, return non-fatal error, will not output at all */
   return (CONFIG_ERR_NON_FATAL_ERROR);
 }
 
@@ -427,7 +468,7 @@ bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_d
                               section,
                               "Maximum_Privilege_Cipher_Suite_Id_0",
                               "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
-                              0,
+                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
                               id_checkout_cb,
                               id_commit_cb,
                               rmcpplus_priv_number_validate) < 0)
@@ -437,7 +478,7 @@ bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_d
                               section,
                               "Maximum_Privilege_Cipher_Suite_Id_1",
                               "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
-                              0,
+                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
                               id_checkout_cb,
                               id_commit_cb,
                               rmcpplus_priv_number_validate) < 0)
@@ -447,7 +488,7 @@ bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_d
                               section,
                               "Maximum_Privilege_Cipher_Suite_Id_2",
                               "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
-                              0,
+                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
                               id_checkout_cb,
                               id_commit_cb,
                               rmcpplus_priv_number_validate) < 0)
@@ -457,7 +498,7 @@ bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_d
                               section,
                               "Maximum_Privilege_Cipher_Suite_Id_3",
                               "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
-                              0,
+                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
                               id_checkout_cb,
                               id_commit_cb,
                               rmcpplus_priv_number_validate) < 0)
@@ -467,7 +508,7 @@ bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_d
                               section,
                               "Maximum_Privilege_Cipher_Suite_Id_4",
                               "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
-                              0,
+                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
                               id_checkout_cb,
                               id_commit_cb,
                               rmcpplus_priv_number_validate) < 0)
@@ -477,7 +518,7 @@ bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_d
                               section,
                               "Maximum_Privilege_Cipher_Suite_Id_5",
                               "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
-                              0,
+                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
                               id_checkout_cb,
                               id_commit_cb,
                               rmcpplus_priv_number_validate) < 0)
@@ -487,7 +528,7 @@ bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_d
                               section,
                               "Maximum_Privilege_Cipher_Suite_Id_6",
                               "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
-                              0,
+                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
                               id_checkout_cb,
                               id_commit_cb,
                               rmcpplus_priv_number_validate) < 0)
@@ -497,7 +538,7 @@ bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_d
                               section,
                               "Maximum_Privilege_Cipher_Suite_Id_7",
                               "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
-                              0,
+                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
                               id_checkout_cb,
                               id_commit_cb,
                               rmcpplus_priv_number_validate) < 0)
@@ -507,7 +548,7 @@ bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_d
                               section,
                               "Maximum_Privilege_Cipher_Suite_Id_8",
                               "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
-                              0,
+                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
                               id_checkout_cb,
                               id_commit_cb,
                               rmcpplus_priv_number_validate) < 0)
@@ -517,7 +558,7 @@ bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_d
                               section,
                               "Maximum_Privilege_Cipher_Suite_Id_9",
                               "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
-                              0,
+                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
                               id_checkout_cb,
                               id_commit_cb,
                               rmcpplus_priv_number_validate) < 0)
@@ -527,7 +568,7 @@ bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_d
                               section,
                               "Maximum_Privilege_Cipher_Suite_Id_10",
                               "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
-                              0,
+                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
                               id_checkout_cb,
                               id_commit_cb,
                               rmcpplus_priv_number_validate) < 0)
@@ -537,7 +578,7 @@ bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_d
                               section,
                               "Maximum_Privilege_Cipher_Suite_Id_11",
                               "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
-                              0,
+                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
                               id_checkout_cb,
                               id_commit_cb,
                               rmcpplus_priv_number_validate) < 0)
@@ -547,7 +588,7 @@ bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_d
                               section,
                               "Maximum_Privilege_Cipher_Suite_Id_12",
                               "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
-                              0,
+                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
                               id_checkout_cb,
                               id_commit_cb,
                               rmcpplus_priv_number_validate) < 0)
@@ -557,7 +598,7 @@ bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_d
                               section,
                               "Maximum_Privilege_Cipher_Suite_Id_13",
                               "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
-                              0,
+                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
                               id_checkout_cb,
                               id_commit_cb,
                               rmcpplus_priv_number_validate) < 0)
@@ -567,7 +608,7 @@ bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_d
                               section,
                               "Maximum_Privilege_Cipher_Suite_Id_14",
                               "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
-                              0,
+                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
                               id_checkout_cb,
                               id_commit_cb,
                               rmcpplus_priv_number_validate) < 0)

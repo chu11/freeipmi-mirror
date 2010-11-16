@@ -612,6 +612,13 @@ however when asking the BMC what SOL Channels there are, it indicates
 only 1.  Generally speaking, this need not be a bug.  However, for
 this particular motherboard it is.  No current resolution.
 
+HP DL145: The number of entries returned from a RMCP+ Messaging Cipher
+Suite Privilege Levels request is not valid.  Not only is it not
+valid, the number of entries does not even match the number of entries
+specified by a RMCP+ Messaging Cipher Suite Entry Support Count
+request.  Resolved with a workaround to not output a privilege if one
+is not available.
+
 ipmi-pef-config
 ---------------
 
