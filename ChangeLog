@@ -1,3 +1,10 @@
+2010-11-16 Albert Chu <chu11@llnl.gov>
+
+	* bmc-config/: Cleanup cipher suite id loading and caching code.
+
+	* bmc-config/: Support workaround of HP DL145 RMCPplus privilege
+	key configuration.
+
 2010-11-05  Albert Chu <chu11@llnl.gov>
 
 	* Support Supermicro X8DTU-6+ OEM sensors.
