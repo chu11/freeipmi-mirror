@@ -45,7 +45,8 @@ log sel events to syslog?
 
 dcmi 1.1
 --------
-set asset-tag/management identifier string - spec isn't clear, fix as necessary
+- set asset-tag/management identifier string - spec isn't clear, fix as necessary
+- 1.1 errata 1 released late in 2010, look for it
 
 general
 -------
