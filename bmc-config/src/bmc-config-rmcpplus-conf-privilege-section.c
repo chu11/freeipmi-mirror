@@ -68,7 +68,7 @@ _rmcpplus_cipher_suite_id_privilege_setup (bmc_config_state_data_t *state_data,
   state_data->cipher_suite_priv_set = 0;
   state_data->cipher_suite_channel_number = 0;
 
-  if (!state_data->cipher_suite_entry_count)
+  if (!state_data->cipher_suite_entry_count_set)
     {
       if (!(obj_cmd_count_rs = fiid_obj_create (tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_support_rs)))
         {
@@ -113,9 +113,11 @@ _rmcpplus_cipher_suite_id_privilege_setup (bmc_config_state_data_t *state_data,
 
       if (state_data->cipher_suite_entry_count > CIPHER_SUITE_LEN)
         state_data->cipher_suite_entry_count = CIPHER_SUITE_LEN;
+
+      state_data->cipher_suite_entry_count_set++;
     }
 
-  if (!state_data->cipher_suite_id_supported_set)
+  if (state_data->cipher_suite_entry_count && !state_data->cipher_suite_id_supported_set)
     {
       if (!(obj_cmd_id_rs = fiid_obj_create (tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entries_rs)))
         {
@@ -200,7 +202,7 @@ _rmcpplus_cipher_suite_id_privilege_setup (bmc_config_state_data_t *state_data,
       state_data->cipher_suite_id_supported_set++;
     }
 
-  if (!state_data->cipher_suite_priv_set)
+  if (state_data->cipher_suite_entry_count && !state_data->cipher_suite_priv_set)
     {
       if (!(obj_cmd_priv_rs = fiid_obj_create (tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels_rs)))
         {

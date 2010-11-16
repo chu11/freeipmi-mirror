@@ -87,6 +87,7 @@ typedef struct bmc_config_state_data
 
   /* achu: caching to make rmcpplus priv go faster */
   uint8_t cipher_suite_entry_count;
+  int cipher_suite_entry_count_set;
   uint8_t cipher_suite_id_supported[CIPHER_SUITE_LEN];
   int cipher_suite_id_supported_set;
   uint8_t cipher_suite_priv[CIPHER_SUITE_LEN];

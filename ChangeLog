@@ -1,5 +1,9 @@
 2010-11-16 Albert Chu <chu11@llnl.gov>
 
+	* bmc-config/: Cleanup cipher suite id loading and caching code.
+	
+2010-11-16 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/src/interpret/: Support ability to configure
 	interpretation when no sensor event occurs, rather than assuming
 	it is always Nominal.
