@@ -413,7 +413,12 @@ id_commit (const char *section_name,
                 }
               else
                 {
-                  rv = CONFIG_ERR_NON_FATAL_ERROR_REQUIRED_FIELD_NOT_FOUND;
+		  pstdout_fprintf (state_data->pstate,
+				   stderr,
+				   "ERROR: '%s:%s' Field Required\n",
+				   section_name,
+				   keyname);
+                  rv = CONFIG_ERR_NON_FATAL_ERROR;
                   goto cleanup;
                 }
             }
