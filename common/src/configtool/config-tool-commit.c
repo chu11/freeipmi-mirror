@@ -118,6 +118,12 @@ config_commit_section (pstdout_state_t pstate,
                                  "ERROR: Failed to commit `%s:%s': Invalid/Unsupported Config\n",
                                  section->section_name,
                                  kv->key->key_name);
+              else if (this_ret == CONFIG_ERR_NON_FATAL_ERROR_REQUIRED_FIELD_NOT_FOUND)
+                PSTDOUT_FPRINTF (pstate,
+                                 stderr,
+                                 "ERROR: Failed to commit `%s:%s': Field Required\n",
+                                 section->section_name,
+                                 kv->key->key_name);
               else
                 PSTDOUT_FPRINTF (pstate,
                                  stderr,

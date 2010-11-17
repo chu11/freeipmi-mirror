@@ -1,3 +1,16 @@
+2010-11-17 Albert Chu <chu11@llnl.gov>
+
+	* common/src/configtool/: Support new
+	CONFIG_ERR_NON_FATAL_ERROR_REQUIRED_FIELD_NOT_FOUND error code.
+
+	* bmc-config/: Fix workaround for HP DL145 RMCPplus privilege
+	key configuration when commiting privilege changes.
+	
+2010-11-17 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-privilege-level-spec.h:
+	Define IPMI_PRIVILEGE_LEVEL_UNSPECIFIED.
+	
 2010-11-16 Albert Chu <chu11@llnl.gov>
 
 	* bmc-config/: Cleanup cipher suite id loading and caching code.
