@@ -35,7 +35,7 @@
 #include "freeipmi-portability.h"
 #include "pstdout.h"
 
-#define BMC_CONFIG_FIELD_LENGTH_MAX 1024
+#define BMC_CONFIG_FIELD_LENGTH_MAX 128
 
 #define BMC_CONFIG_PRIVILEGE_LEVEL_UNAVAILABLE 0xFF
 
@@ -221,7 +221,7 @@ _rmcpplus_cipher_suite_id_privilege_setup (bmc_config_state_data_t *state_data,
           
           snprintf (field,
                     BMC_CONFIG_FIELD_LENGTH_MAX,
-                    "maximum_privilege_for_cipher_suite_%d",
+                    "maximum_privilege_for_cipher_suite_%u",
                     i + 1);
 
           if (FIID_OBJ_GET (obj_cmd_priv_rs, field, &val) < 0)
@@ -342,6 +342,7 @@ id_commit (const char *section_name,
   uint8_t channel_number;
   uint8_t privs[CIPHER_SUITE_LEN];
   uint8_t privilege;
+  unsigned int i;
 
   assert (section_name);
   assert (kv);
@@ -372,6 +373,65 @@ id_commit (const char *section_name,
   memset (privs, '\0', CIPHER_SUITE_LEN);
   memcpy (privs, state_data->cipher_suite_priv, CIPHER_SUITE_LEN);
   privs[id] = privilege;
+  
+  /* IPMI Workaround (achu)
+   *
+   * HP DL145
+   *
+   * See comments above in _rmcpplus_cipher_suite_id_privilege_setup surrounding HP DL145 workaround.
+   *
+   * B/c of the issue above, there may be illegal privilege levels
+   * sitting in the cipher_suite_priv[] array, we need to fill them in
+   * with the values configured by users.
+   *
+   * If the users didn't configure all the entries, they're out of
+   * luck, we need to return an error.
+   */
+  for (i = 0; i < CIPHER_SUITE_LEN; i++)
+    {
+      if (privs[i] == BMC_CONFIG_PRIVILEGE_LEVEL_UNAVAILABLE)
+        {
+          struct config_section *section;
+          struct config_keyvalue *kvtmp;
+          
+          if ((section = config_find_section (state_data->sections,
+                                              section_name)))
+            {
+              char keyname[CONFIG_MAX_KEY_NAME_LEN + 1];
+              
+              memset (keyname, '\0', CONFIG_MAX_KEY_NAME_LEN + 1);
+              
+              snprintf (keyname,
+                        CONFIG_MAX_KEY_NAME_LEN,
+                        "Maximum_Privilege_Cipher_Suite_Id_%u",
+                        i);
+
+              if ((kvtmp = config_find_keyvalue (section, keyname)))
+                {
+                  privilege = rmcpplus_priv_number (kvtmp->value_input);
+                  privs[i] = privilege;
+                }
+              else
+                {
+                  rv = CONFIG_ERR_NON_FATAL_ERROR_REQUIRED_FIELD_NOT_FOUND;
+                  goto cleanup;
+                }
+            }
+          else
+            {
+              /* This is a fatal error, we're already in this section,
+               * it should be findable
+               */
+              if (state_data->prog_data->args->config_args.common.debug)
+                pstdout_fprintf (state_data->pstate,
+                                 stderr,
+                                 "Cannot find section '%s'\n",
+                                 section_name);
+              
+              goto cleanup;
+            }
+        }
+    }
 
   if (ipmi_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels (state_data->ipmi_ctx,
                                                                                                   channel_number,
