@@ -37,7 +37,7 @@
 
 #define BMC_CONFIG_FIELD_LENGTH_MAX 128
 
-#define BMC_CONFIG_PRIVILEGE_LEVEL_UNAVAILABLE 0xFF
+#define BMC_CONFIG_PRIVILEGE_LEVEL_SUPPORTED_BUT_NOT_READABLE 0xFF
 
 static config_err_t
 _rmcpplus_cipher_suite_id_privilege_setup (bmc_config_state_data_t *state_data,
@@ -72,6 +72,9 @@ _rmcpplus_cipher_suite_id_privilege_setup (bmc_config_state_data_t *state_data,
   state_data->cipher_suite_id_supported_set = 0;
   state_data->cipher_suite_priv_set = 0;
   state_data->cipher_suite_channel_number = channel_number;
+
+  memset (state_data->cipher_suite_id_supported, '\0', sizeof (state_data->cipher_suite_id_supported));
+  memset (state_data->cipher_suite_priv, '\0', sizeof (state_data->cipher_suite_priv));
 
   if (!state_data->cipher_suite_entry_count_set)
     {
@@ -226,6 +229,8 @@ _rmcpplus_cipher_suite_id_privilege_setup (bmc_config_state_data_t *state_data,
 
           if (FIID_OBJ_GET (obj_cmd_priv_rs, field, &val) < 0)
             {
+	      int id_found = 0;
+
               /* IPMI Workaround (achu)
                *
                * HP DL145
@@ -240,8 +245,22 @@ _rmcpplus_cipher_suite_id_privilege_setup (bmc_config_state_data_t *state_data,
                * the output indicated appropriately for this
                * situation.
                */
+	      if (fiid_obj_errnum (obj_cmd_priv_rs) == FIID_ERR_DATA_NOT_AVAILABLE)
+		{
+		  unsigned int j;
+		  
+		  for (j = 0; j < state_data->cipher_suite_entry_count; j++)
+		    {
+		      if (state_data->cipher_suite_id_supported[j] == i)
+			{
+			  id_found++;
+			  break;
+			}
+		    }
+		}
 
-              if (fiid_obj_errnum (obj_cmd_priv_rs) != FIID_ERR_DATA_NOT_AVAILABLE)
+              if (fiid_obj_errnum (obj_cmd_priv_rs) != FIID_ERR_DATA_NOT_AVAILABLE
+		  || !id_found)
                 {
                   pstdout_fprintf (state_data->pstate,
                                    stderr,
@@ -251,7 +270,7 @@ _rmcpplus_cipher_suite_id_privilege_setup (bmc_config_state_data_t *state_data,
                   goto cleanup;
                 }
               else
-                val = BMC_CONFIG_PRIVILEGE_LEVEL_UNAVAILABLE;
+                val = BMC_CONFIG_PRIVILEGE_LEVEL_SUPPORTED_BUT_NOT_READABLE;
             }
           
           state_data->cipher_suite_priv[i] = val;
@@ -277,7 +296,8 @@ id_checkout (const char *section_name,
   bmc_config_state_data_t *state_data;
   config_err_t ret;
   uint8_t privilege;
-  int i, id_found = 0;
+  unsigned int i;
+  int id_found = 0;
 
   assert (section_name);
   assert (kv);
@@ -303,7 +323,7 @@ id_checkout (const char *section_name,
       /* achu: see HP DL145 workaround description above in
        * _rmcpplus_cipher_suite_id_privilege_setup()
        */
-      if (privilege != BMC_CONFIG_PRIVILEGE_LEVEL_UNAVAILABLE)
+      if (privilege != BMC_CONFIG_PRIVILEGE_LEVEL_SUPPORTED_BUT_NOT_READABLE)
         {
           if (config_section_update_keyvalue_output (state_data->pstate,
                                                      kv,
@@ -378,7 +398,8 @@ id_commit (const char *section_name,
    *
    * HP DL145
    *
-   * See comments above in _rmcpplus_cipher_suite_id_privilege_setup surrounding HP DL145 workaround.
+   * See comments above in _rmcpplus_cipher_suite_id_privilege_setup
+   * surrounding HP DL145 workaround.
    *
    * B/c of the issue above, there may be illegal privilege levels
    * sitting in the cipher_suite_priv[] array, we need to fill them in
@@ -387,13 +408,14 @@ id_commit (const char *section_name,
    * If the users didn't configure all the entries, they're out of
    * luck, we need to return an error.
    */
+
   for (i = 0; i < CIPHER_SUITE_LEN; i++)
     {
-      if (privs[i] == BMC_CONFIG_PRIVILEGE_LEVEL_UNAVAILABLE)
+      if (privs[i] == BMC_CONFIG_PRIVILEGE_LEVEL_SUPPORTED_BUT_NOT_READABLE)
         {
           struct config_section *section;
           struct config_keyvalue *kvtmp;
-          
+	  	  
           if ((section = config_find_section (state_data->sections,
                                               section_name)))
             {
@@ -408,7 +430,8 @@ id_commit (const char *section_name,
 
               if ((kvtmp = config_find_keyvalue (section, keyname)))
                 {
-                  privilege = rmcpplus_priv_number (kvtmp->value_input);
+		  uint8_t privilege_tmp;
+                  privilege_tmp = rmcpplus_priv_number (kvtmp->value_input);
                   privs[i] = privilege;
                 }
               else
