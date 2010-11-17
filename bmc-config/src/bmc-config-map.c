@@ -149,7 +149,7 @@ rmcpplus_priv_number (const char *string)
   assert (string);
 
   if (same (string, "unused"))
-    return (0);
+    return (IPMI_PRIVILEGE_LEVEL_UNSPECIFIED);
   if (same (string, "callback"))
     return (IPMI_PRIVILEGE_LEVEL_CALLBACK);
   if (same (string, "user"))
