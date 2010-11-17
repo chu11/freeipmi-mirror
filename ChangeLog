@@ -1,5 +1,13 @@
 2010-11-17 Albert Chu <chu11@llnl.gov>
 
+	* Remove CONFIG_ERR_NON_FATAL_ERROR_REQUIRED_FIELD_NOT_FOUND error
+	code, does not function is initially required.
+
+	* bmc-config/: Output error message directly instead of using
+	CONFIG_ERR_NON_FATAL_ERROR_REQUIRED_FIELD_NOT_FOUND.
+	
+2010-11-17 Albert Chu <chu11@llnl.gov>
+
 	* common/src/configtool/: Support new
 	CONFIG_ERR_NON_FATAL_ERROR_REQUIRED_FIELD_NOT_FOUND error code.
 
