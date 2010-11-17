@@ -37,6 +37,8 @@
 
 #define BMC_CONFIG_FIELD_LENGTH_MAX 128
 
+#define BMC_CONFIG_MAX_KEY_NAME_LEN 128
+
 #define BMC_CONFIG_PRIVILEGE_LEVEL_UNAVAILABLE 0xFF
 
 static config_err_t
@@ -381,12 +383,12 @@ id_commit (const char *section_name,
           if ((section = config_find_section (state_data->sections,
                                               section_name)))
             {
-              char keyname[CONFIG_MAX_KEY_NAME_LEN + 1];
+              char keyname[BMC_CONFIG_MAX_KEY_NAME_LEN + 1];
               
-              memset (keyname, '\0', CONFIG_MAX_KEY_NAME_LEN + 1);
+              memset (keyname, '\0', BMC_CONFIG_MAX_KEY_NAME_LEN + 1);
               
               snprintf (keyname,
-                        CONFIG_MAX_KEY_NAME_LEN,
+                        BMC_CONFIG_MAX_KEY_NAME_LEN,
                         "Maximum_Privilege_Cipher_Suite_Id_%u",
                         i);
 
