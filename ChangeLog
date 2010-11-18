@@ -1,5 +1,9 @@
 2010-11-17 Albert Chu <chu11@llnl.gov>
 
+	* bmc-config/: Fix bug in HP DL145 RMCPplus privilege key.
+	
+2010-11-17 Albert Chu <chu11@llnl.gov>
+
 	* Remove CONFIG_ERR_NON_FATAL_ERROR_REQUIRED_FIELD_NOT_FOUND error
 	code, does not function is initially required.
 
