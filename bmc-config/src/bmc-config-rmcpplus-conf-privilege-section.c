@@ -408,10 +408,10 @@ id_commit (const char *section_name,
           if ((section = config_find_section (state_data->sections,
                                               section_name)))
             {
-              char keynametmp[CONFIG_MAX_KEY_NAME_LEN + 1];
+              char keynametmp[BMC_CONFIG_MAX_KEY_NAME_LEN + 1];
               struct config_keyvalue *kvtmp;
               
-              memset (keynametmp, '\0', CONFIG_MAX_KEY_NAME_LEN + 1);
+              memset (keynametmp, '\0', BMC_CONFIG_MAX_KEY_NAME_LEN + 1);
               
               snprintf (keynametmp,
                         BMC_CONFIG_MAX_KEY_NAME_LEN,
@@ -430,7 +430,7 @@ id_commit (const char *section_name,
 				   stderr,
 				   "ERROR: '%s:%s' Field Required\n",
 				   section_name,
-				   keyname);
+				   keynametmp);
                   rv = CONFIG_ERR_NON_FATAL_ERROR;
                   goto cleanup;
                 }
