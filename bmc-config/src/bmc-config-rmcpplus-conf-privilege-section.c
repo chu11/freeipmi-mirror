@@ -423,16 +423,16 @@ id_commit (const char *section_name,
           if ((section = config_find_section (state_data->sections,
                                               section_name)))
             {
-              char keyname[CONFIG_MAX_KEY_NAME_LEN + 1];
+              char keynametmp[CONFIG_MAX_KEY_NAME_LEN + 1];
               
-              memset (keyname, '\0', CONFIG_MAX_KEY_NAME_LEN + 1);
+              memset (keynametmp, '\0', CONFIG_MAX_KEY_NAME_LEN + 1);
               
-              snprintf (keyname,
+              snprintf (keynametmp,
                         CONFIG_MAX_KEY_NAME_LEN,
                         "Maximum_Privilege_Cipher_Suite_Id_%u",
                         i);
 
-              if ((kvtmp = config_find_keyvalue (section, keyname)))
+              if ((kvtmp = config_find_keyvalue (section, keynametmp)))
                 {
 		  uint8_t privilege_tmp;
                   privilege_tmp = rmcpplus_priv_number (kvtmp->value_input);
