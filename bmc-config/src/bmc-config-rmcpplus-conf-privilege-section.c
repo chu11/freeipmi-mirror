@@ -271,7 +271,7 @@ _rmcpplus_cipher_suite_id_privilege_setup (bmc_config_state_data_t *state_data)
 		  if (id_found)
 		    val = BMC_CONFIG_PRIVILEGE_LEVEL_SUPPORTED_BUT_NOT_READABLE;
 		  else
-		    val = IPMI_PRIVILEGE_LEVEL_UNSPECIFIED;
+		    val = 0;	/* unspecified */
 		}
             }
           
