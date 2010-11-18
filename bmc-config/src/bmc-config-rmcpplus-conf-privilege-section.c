@@ -259,8 +259,7 @@ _rmcpplus_cipher_suite_id_privilege_setup (bmc_config_state_data_t *state_data,
 		    }
 		}
 
-              if (fiid_obj_errnum (obj_cmd_priv_rs) != FIID_ERR_DATA_NOT_AVAILABLE
-		  || !id_found)
+              if (fiid_obj_errnum (obj_cmd_priv_rs) != FIID_ERR_DATA_NOT_AVAILABLE)
                 {
                   pstdout_fprintf (state_data->pstate,
                                    stderr,
@@ -270,7 +269,12 @@ _rmcpplus_cipher_suite_id_privilege_setup (bmc_config_state_data_t *state_data,
                   goto cleanup;
                 }
               else
-                val = BMC_CONFIG_PRIVILEGE_LEVEL_SUPPORTED_BUT_NOT_READABLE;
+		{
+		  if (id_found)
+		    val = BMC_CONFIG_PRIVILEGE_LEVEL_SUPPORTED_BUT_NOT_READABLE;
+		  else
+		    val = IPMI_PRIVILEGE_LEVEL_UNSPECIFIED;
+		}
             }
           
           state_data->cipher_suite_priv[i] = val;
