@@ -882,7 +882,7 @@ _set_system_boot_options_BMC_boot_flag_valid_bit_clearing (ipmi_chassis_config_s
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
-                         "ipmi_cmd_set_system_boot_options_boot_info_acknowledge: %s\n",
+                         "ipmi_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
       
       if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
