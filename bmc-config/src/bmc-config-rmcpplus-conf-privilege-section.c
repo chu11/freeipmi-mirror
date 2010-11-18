@@ -418,12 +418,12 @@ id_commit (const char *section_name,
       if (privs[i] == BMC_CONFIG_PRIVILEGE_LEVEL_SUPPORTED_BUT_NOT_READABLE)
         {
           struct config_section *section;
-          struct config_keyvalue *kvtmp;
 	  	  
           if ((section = config_find_section (state_data->sections,
                                               section_name)))
             {
               char keynametmp[CONFIG_MAX_KEY_NAME_LEN + 1];
+              struct config_keyvalue *kvtmp;
               
               memset (keynametmp, '\0', CONFIG_MAX_KEY_NAME_LEN + 1);
               
