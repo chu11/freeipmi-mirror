@@ -444,7 +444,7 @@ id_commit (const char *section_name,
 				   stderr,
 				   "ERROR: '%s:%s' Field Required\n",
 				   section_name,
-				   keyname);
+				   keynametmp);
                   rv = CONFIG_ERR_NON_FATAL_ERROR;
                   goto cleanup;
                 }
