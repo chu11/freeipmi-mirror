@@ -217,7 +217,6 @@ picmg hpm/hpmi.1 standard - defines ipmi firmware update stuff
 ipmi-pef-config
 -----------
 * conf.5 manpage
-* allow oem sensor types as input
 
 ipmi-sensors-config
 -------------------
