@@ -86,15 +86,10 @@ ipmiconsole
 suport other escape codes like w/ &D
 - F1-F12 suggested by user
 "learn" workarounds function - to figure out workaround flags for user
-load alternate defaults into libipmiconsole
-- serial session stolen one way or another (another process, reboot,
-etc.), how inform ipmiconsole, b/c IPMI session could still be alive
-do keepalive-ping w/ NUL char, make sure session still really alive
-- "learn" workarounds function - to figure out workaround flags for user
-load alternate defaults into libipmiconsole
 support simultaneous SOL sessions
 - never tested b/c no motherboard I have supports, but should just work
-- maybe need to have option to not check for currently running session??
+- maybe need to have option to not check for currently running
+  session, and/or mechanism to not disable current session?
 
 hostrange
 ---------
