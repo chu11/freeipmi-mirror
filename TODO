@@ -15,7 +15,6 @@ inband
 
 interpret-lib
 -------------
-handle sensors with no-event, another configurable field?
 handle sensor/sel events outside of spec - configurable in some way?
 
 dist
@@ -183,7 +182,6 @@ sensor reading factors
 - to support non-linear sensors
 check sensor thresholds manually instead of trust flags
 - some mobos seem to set flags incorrectly
-percentage unit in libipmimonitoring
 ipmimonitoring via sensor name
 - deal w/ motherboards with slightly different SDRs
 
