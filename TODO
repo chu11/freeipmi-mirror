@@ -179,6 +179,8 @@ check sensor thresholds manually instead of trust flags
 - some mobos seem to set flags incorrectly
 ipmimonitoring via sensor name
 - deal w/ motherboards with slightly different SDRs
+- but some mobos have sensor name == each other, so what is the purpose?
+- would need to also add sensor number with it??
 
 ipmi-chassis-config
 -------------------
