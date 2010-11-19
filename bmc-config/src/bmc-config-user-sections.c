@@ -279,6 +279,8 @@ _set_user_access (bmc_config_state_data_t *state_data,
   uint8_t channel_number;
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
+  struct config_section *section;
+  struct config_keyvalue *kvtmp;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
 
@@ -306,18 +308,51 @@ _set_user_access (bmc_config_state_data_t *state_data,
     }
 
   /* achu: special case, because the session limit cannot be
-   * retrieved.  So if we're committing, we have to get the pre-loaded
-   * value and commit it each time.
+   * retrieved.  So if we're committing, we have to get the session
+   * limit value and commit it each time.
    */
-  if (stristr (key_name, "Serial"))
+  if ((section = config_find_section (state_data->sections,
+                                      section_name)))
     {
-      if (state_data->serial_user_session_limit_len)
-        ua->session_limit = state_data->serial_user_session_limit[userid-1];
+      char keynametmp[CONFIG_MAX_KEY_NAME_LEN + 1];
+      int channel_flag = 0;
+      int lan_flag = 0;
+
+      memset (keynametmp, '\0', CONFIG_MAX_KEY_NAME_LEN + 1);
+              
+      if (stristr (key_name, "Channel_"))
+        channel_flag++;
+
+      if (stristr (key_name, "Lan"))
+        lan_flag++;
+
+      if (channel_flag)
+        snprintf (keynametmp,
+                  CONFIG_MAX_KEY_NAME_LEN,
+                  "%s_Session_Limit_Channel_%u",
+                  (lan_flag) ? "Lan" : "Serial",
+                  channel_number);
+      else
+        snprintf (keynametmp,
+                  CONFIG_MAX_KEY_NAME_LEN,
+                  "%s_Session_Limit",
+                  (lan_flag) ? "Lan" : "Serial");
+      
+      if ((kvtmp = config_find_keyvalue (section, keynametmp)))
+        ua->session_limit = atoi (kvtmp->value_input);
     }
-  if (stristr (key_name, "Lan"))
+  else
     {
-      if (state_data->lan_user_session_limit_len)
-        ua->session_limit = state_data->lan_user_session_limit[userid-1];
+      /* This is a fatal error, we're already in this section,
+       * it should be findable
+       */
+      if (state_data->prog_data->args->config_args.common.debug)
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "Cannot find section '%s'\n",
+                         section_name);
+      
+      goto cleanup;
     }
 
   if (ipmi_cmd_set_user_access (state_data->ipmi_ctx,

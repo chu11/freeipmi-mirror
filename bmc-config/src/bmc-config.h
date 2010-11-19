@@ -66,12 +66,6 @@ typedef struct bmc_config_state_data
   pstdout_state_t pstate;
   struct config_section *sections;
 
-  /* achu: workaround for IPMI limitation */
-  int lan_user_session_limit_len;
-  uint8_t *lan_user_session_limit;
-  int serial_user_session_limit_len;
-  uint8_t *serial_user_session_limit;
-
   /* achu: workaround for OEM compliance issue, see user section */
   int enable_user_after_password_len;
   bmc_config_enable_user_after_password_t *enable_user_after_password;
