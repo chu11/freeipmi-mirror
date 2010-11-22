@@ -88,8 +88,6 @@ o ipmi-sensors-config
   - Support very-verbose output by specifying -vv.  Move some output
     from verbose output to very verbose output.
 o ipmi-chassis-config
-  - Set Don't Clear Bits on Chassis Configuration so that
-    configuration of boot flags is permanent.
   - Do not output section comments if key-pair specified on command line.
   - Allow checkout of sections/key-pairs if specified on command line,
     even if not available by default.
