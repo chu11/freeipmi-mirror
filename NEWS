@@ -2,6 +2,8 @@ FreeIPMI 0.8.12 - 10/28/10
 --------------------------
 o In bmc-config, workaround RMCP+ Privilege Level configuration
   compliance bugs on HP DL145 servers.
+o In ipmi-chassis-config, after configuring boot flags, set valid bits
+  appropriately.
 o Fix N/A output corner case in ipmi-sel.
 o Support Supermicro X8DTU-6+ motherboard OEM sensors.
 
