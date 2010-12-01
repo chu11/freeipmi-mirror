@@ -365,39 +365,6 @@ ipmi_interpret_load_sensor_config (ipmi_interpret_ctx_t ctx,
 }
 
 static int
-_get_sel_state (ipmi_interpret_ctx_t ctx,
-                uint8_t event_direction,
-                uint8_t offset_from_event_reading_type_code,
-                unsigned int *sel_state,
-                struct ipmi_interpret_sel_config **sel_config)
-{
-  int i = 0;
-
-  assert (ctx);
-  assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
-  assert (sel_state);
-  assert (sel_config);
-
-  (*sel_state) = IPMI_INTERPRET_STATE_UNKNOWN;
-
-  i = 0;
-  while (sel_config[i]
-         && i < offset_from_event_reading_type_code
-         && i < IPMI_INTERPRET_MAX_SENSOR_AND_EVENT_OFFSET)
-    i++;
-
-  if (sel_config[i])
-    {
-      if (event_direction == IPMI_SEL_RECORD_ASSERTION_EVENT)
-        (*sel_state) = sel_config[i]->assertion_state;
-      else
-        (*sel_state) = sel_config[i]->deassertion_state;
-    }
-
-  return (0);
-}
-
-static int
 _get_sel_oem_sensor_state (ipmi_interpret_ctx_t ctx,
                            const void *record_buf,
                            unsigned int record_buflen,
@@ -503,6 +470,52 @@ _get_sel_oem_sensor_state (ipmi_interpret_ctx_t ctx,
     }
   else
     (*sel_state) = IPMI_INTERPRET_STATE_UNKNOWN;
+
+  return (0);
+}
+
+static int
+_get_sel_state (ipmi_interpret_ctx_t ctx,
+                const void *record_buf,
+                unsigned int record_buflen,
+                uint8_t event_reading_type_code,
+                uint8_t sensor_type,
+                uint8_t event_direction,
+                uint8_t offset_from_event_reading_type_code,
+                unsigned int *sel_state,
+                struct ipmi_interpret_sel_config **sel_config)
+{
+  int i = 0;
+
+  assert (ctx);
+  assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
+  assert (record_buf);
+  assert (record_buflen);
+  assert (sel_state);
+  assert (sel_config);
+
+  (*sel_state) = IPMI_INTERPRET_STATE_UNKNOWN;
+
+  i = 0;
+  while (sel_config[i]
+         && i < offset_from_event_reading_type_code
+         && i < IPMI_INTERPRET_MAX_SENSOR_AND_EVENT_OFFSET)
+    i++;
+
+  if (sel_config[i])
+    {
+      if (event_direction == IPMI_SEL_RECORD_ASSERTION_EVENT)
+        (*sel_state) = sel_config[i]->assertion_state;
+      else
+        (*sel_state) = sel_config[i]->deassertion_state;
+    }
+  else if (ctx->flags & IPMI_INTERPRET_FLAGS_INTERPRET_OEM_DATA)
+    return (_get_sel_oem_sensor_state (ctx,
+                                       record_buf,
+                                       record_buflen,
+                                       event_reading_type_code,
+                                       sensor_type,
+                                       sel_state));
 
   return (0);
 }
@@ -674,6 +687,10 @@ ipmi_interpret_sel (ipmi_interpret_ctx_t ctx,
       if (IPMI_EVENT_READING_TYPE_CODE_IS_THRESHOLD (event_reading_type_code))
         {
           if (_get_sel_state (ctx,
+                              record_buf,
+                              record_buflen,
+                              event_reading_type_code,
+                              sensor_type,
                               event_direction,
                               offset_from_event_reading_type_code,
                               sel_state,
@@ -741,6 +758,10 @@ ipmi_interpret_sel (ipmi_interpret_ctx_t ctx,
             }
 
           if (_get_sel_state (ctx,
+                              record_buf,
+                              record_buflen,
+                              event_reading_type_code,
+                              sensor_type,
                               event_direction,
                               offset_from_event_reading_type_code,
                               sel_state,
@@ -829,6 +850,10 @@ ipmi_interpret_sel (ipmi_interpret_ctx_t ctx,
             }
 
           if (_get_sel_state (ctx,
+                              record_buf,
+                              record_buflen,
+                              event_reading_type_code,
+                              sensor_type,
                               event_direction,
                               offset_from_event_reading_type_code,
                               sel_state,
@@ -876,8 +901,10 @@ ipmi_interpret_sel (ipmi_interpret_ctx_t ctx,
 
 static int
 _get_threshold_sensor_state (ipmi_interpret_ctx_t ctx,
-                             uint16_t sensor_event_bitmask,
-                             unsigned int *sensor_state)
+			     uint8_t event_reading_type_code,
+			     uint8_t sensor_type,
+			     uint16_t sensor_event_bitmask,
+			     unsigned int *sensor_state)
 {
   struct ipmi_interpret_sensor_config **sensor_config;
   int i = 0;
@@ -885,11 +912,11 @@ _get_threshold_sensor_state (ipmi_interpret_ctx_t ctx,
   assert (ctx);
   assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
   assert (sensor_state);
-  
+
   sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_threshold_config;
-  
+
   (*sensor_state) = IPMI_INTERPRET_STATE_NOMINAL;
-  
+
   /* upper bits may be set to 1b as defined by IPMI spec, ignore them */
   sensor_event_bitmask &= IPMI_INTERPRET_THRESHOLD_SENSOR_EVENT_BITMASK_MASK;
 
@@ -902,51 +929,11 @@ _get_threshold_sensor_state (ipmi_interpret_ctx_t ctx,
           if (sensor_config[i]->state > (*sensor_state))
             (*sensor_state) = sensor_config[i]->state;
         }
-      
-      if (i)
-        sensor_event_bitmask &= ~(0x1 << (i - 1));
-      i++;
-    }
-   
-  return (0);
-}
-
-static int
-_get_sensor_state (ipmi_interpret_ctx_t ctx,
-                   uint16_t sensor_event_bitmask,
-                   unsigned int *sensor_state,
-                   struct ipmi_interpret_sensor_config **sensor_config)
-{
-  int i = 0;
-
-  assert (ctx);
-  assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
-  assert (sensor_state);
-  assert (sensor_config);
-
-  (*sensor_state) = IPMI_INTERPRET_STATE_NOMINAL;
-
-  /* ignore 16th bit, as specified in IPMI spec */
-  sensor_event_bitmask &= ~(0x1 << IPMI_INTERPRET_MAX_SENSOR_AND_EVENT_OFFSET);
-
-  i = 0;
-  while (sensor_config[i] && i < IPMI_INTERPRET_MAX_SENSOR_AND_EVENT_OFFSET)
-    {
-      if ((!i && !sensor_event_bitmask)
-          || (sensor_event_bitmask & (0x1 << (i - 1))))
-        {
-          if (sensor_config[i]->state > (*sensor_state))
-            (*sensor_state) = sensor_config[i]->state;
-        }
 
       if (i)
         sensor_event_bitmask &= ~(0x1 << (i - 1));
       i++;
     }
-
-  /* if any bits still set, they are outside of specification range */
-  if (sensor_event_bitmask)
-    (*sensor_state) = IPMI_INTERPRET_STATE_UNKNOWN;
 
   return (0);
 }
@@ -1015,6 +1002,58 @@ _get_sensor_oem_state (ipmi_interpret_ctx_t ctx,
   return (0);
 }
 
+static int
+_get_sensor_state (ipmi_interpret_ctx_t ctx,
+                   uint8_t event_reading_type_code,
+                   uint8_t sensor_type,
+                   uint16_t sensor_event_bitmask,
+                   unsigned int *sensor_state,
+                   struct ipmi_interpret_sensor_config **sensor_config)
+{
+  uint16_t sensor_event_bitmask_tmp = sensor_event_bitmask;
+  int i = 0;
+
+  assert (ctx);
+  assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
+  assert (sensor_state);
+  assert (sensor_config);
+
+  (*sensor_state) = IPMI_INTERPRET_STATE_NOMINAL;
+
+  /* ignore 16th bit, as specified in IPMI spec */
+  sensor_event_bitmask_tmp &= ~(0x1 << IPMI_INTERPRET_MAX_SENSOR_AND_EVENT_OFFSET);
+
+  i = 0;
+  while (sensor_config[i] && i < IPMI_INTERPRET_MAX_SENSOR_AND_EVENT_OFFSET)
+    {
+      if ((!i && !sensor_event_bitmask_tmp)
+          || (sensor_event_bitmask_tmp & (0x1 << (i - 1))))
+        {
+          if (sensor_config[i]->state > (*sensor_state))
+            (*sensor_state) = sensor_config[i]->state;
+        }
+
+      if (i)
+        sensor_event_bitmask_tmp &= ~(0x1 << (i - 1));
+      i++;
+    }
+
+  /* if any bits still set, they are outside of specification range */
+  if (sensor_event_bitmask_tmp)
+    {
+      if (ctx->flags & IPMI_INTERPRET_FLAGS_INTERPRET_OEM_DATA)
+        return (_get_sensor_oem_state (ctx,
+                                       event_reading_type_code,
+                                       sensor_type,
+                                       sensor_event_bitmask,
+                                       sensor_state));
+      else
+        (*sensor_state) = IPMI_INTERPRET_STATE_UNKNOWN;
+    }
+
+  return (0);
+}
+
 int
 ipmi_interpret_sensor (ipmi_interpret_ctx_t ctx,
                        uint8_t event_reading_type_code,
@@ -1040,8 +1079,10 @@ ipmi_interpret_sensor (ipmi_interpret_ctx_t ctx,
   if (IPMI_EVENT_READING_TYPE_CODE_IS_THRESHOLD (event_reading_type_code))
     {
       if (_get_threshold_sensor_state (ctx,
-                                       sensor_event_bitmask,
-                                       sensor_state) < 0)
+				       event_reading_type_code,
+				       sensor_type,
+				       sensor_event_bitmask,
+				       sensor_state) < 0)
         goto cleanup;
     }
   else if (IPMI_EVENT_READING_TYPE_CODE_IS_GENERIC (event_reading_type_code))
@@ -1105,6 +1146,8 @@ ipmi_interpret_sensor (ipmi_interpret_ctx_t ctx,
         }
 
       if (_get_sensor_state (ctx,
+                             event_reading_type_code,
+                             sensor_type,
                              sensor_event_bitmask,
                              sensor_state,
                              sensor_config) < 0)
@@ -1175,6 +1218,8 @@ ipmi_interpret_sensor (ipmi_interpret_ctx_t ctx,
         }
 
       if (_get_sensor_state (ctx,
+                             event_reading_type_code,
+                             sensor_type,
                              sensor_event_bitmask,
                              sensor_state,
                              sensor_config) < 0)

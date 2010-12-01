@@ -1,3 +1,8 @@
+2010-11-29 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/interpret/: Support ability to configure
+	interpretation of out of spec sensor events and sel events.
+	
 2010-11-18 Albert Chu <chu11@llnl.gov>
 
 	* bmc-config/: Re-do lan/serial_user_session_limit workaround to

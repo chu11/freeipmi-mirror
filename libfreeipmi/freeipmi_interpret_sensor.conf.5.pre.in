@@ -1098,6 +1098,12 @@ single numeric number (e.g. 1234), a range of IDs separated by a dash
 .B bmc-info(8).
 Multiple \fI<Manufacturer\-ID>\fR and \fI<Product\-ID>\fR pairs can be
 input separated by commas.
+
+The \fIEvent\-Reading\-Type\-Code\fR and \fISensor\-Type\fR need not
+be OEM types.  They may be non-OEM types and used to provide
+interpretation rules for sensors that may be behaving outside the
+standard of the IPMI specification.
+
 .RS
 .TP
 \fBIPMI_OEM_Bitmask\fR \fI<Manufacturer\-ID>\fR:\fI<Product\-ID>\fR,... \fIEvent\-Reading\-Type\-Code\fR \fISensor\-Type\fR \fISensor\-Event\-Bitmask\fR \fIState\fR

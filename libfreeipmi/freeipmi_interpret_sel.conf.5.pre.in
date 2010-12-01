@@ -1009,13 +1009,17 @@ input separated by commas.
 .TP
 \fBIPMI_OEM_Sensor_System_Event_Record\fR \fI<Manufacturer\-ID>\fR:\fI<Product\-ID>\fR,... \fIEvent\-Reading\-Type\-Code\fR \fISensor\-Type\fR \fIEvent\-Direction\fR \fIEventData1\fR \fIEventData2\fR \fIEventData3\fR \fIState\fR
 \fBIPMI_OEM_System_Event_Record\fR can be used to configure a state
-interpretation for a specific \fIManufacturer\-ID\fR, \fIProduct\-ID\fR,
-\fIEvent\-Reading\-Type\-Code\fR, and \fISensor\-Type\fR combination, and
-a specific \fIEvent\-Direction\fR, \fIEventData1\fR, \fIEventData2\fR,
-and \fIEventData3\fR.  The \fIEvent\-Direction\fR field must specify
-\fIAssertion\fR, \fIDeassertion\fR, or \fIANY\fR.  Each of the
-\fIEventData\fR fields must specify a hex byte to match or the keyword
-\fIANY\fR to match anything.
+interpretation for a specific \fIManufacturer\-ID\fR,
+\fIProduct\-ID\fR, \fIEvent\-Reading\-Type\-Code\fR, and
+\fISensor\-Type\fR combination, and a specific \fIEvent\-Direction\fR,
+\fIEventData1\fR, \fIEventData2\fR, and \fIEventData3\fR.  The
+\fIEvent\-Direction\fR field must specify \fIAssertion\fR,
+\fIDeassertion\fR, or \fIANY\fR.  Each of the \fIEventData\fR fields
+must specify a hex byte to match or the keyword \fIANY\fR to match
+anything.  The \fIEvent\-Reading\-Type\-Code\fR and \fISensor\-Type\fR
+need not be OEM types.  They may be non-OEM types and used to provide
+interpretation rules for sensors that may be behaving outside the
+standard of the IPMI specification.
 .TP
 \fBIPMI_OEM_Timestamped_Record\fR \fI<Manufacturer\-ID>\fR:\fI<Product\-ID>\fR,... \fIRecord\-Type\fR \fIOEMDATA1\fR \fIOEMDATA2\fR \fIOEMDATA3\fR \fIOEMDATA4\fR \fIOEMDATA5\fR \fIOEMDATA6\fR \fIState\fR
 \fBIPMI_OEM_Timestamped_Record\fR can be used to configure an

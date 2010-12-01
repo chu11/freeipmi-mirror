@@ -617,8 +617,6 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
 
   if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD)
     {
-     
-
       if (record_type == IPMI_SDR_FORMAT_FULL_SENSOR_RECORD)
         {
           int8_t r_exponent, b_exponent;
