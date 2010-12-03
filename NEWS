@@ -6,7 +6,8 @@ o In ipmi-chassis-config, after configuring boot flags, set valid bits
   appropriately.
 o Fix N/A output corner case in ipmi-sel.
 o Support Supermicro X8DTU-6+ motherboard OEM sensors.
-o Fix FRU date/time bug that did not account for leap years.
+o Fix FRU date/time calculation bug that did not account for leap
+  years.
 
 FreeIPMI 0.8.11 - 10/28/10
 --------------------------
