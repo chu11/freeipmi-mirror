@@ -321,6 +321,9 @@ ipmi_fru_parse_board_info_area (ipmi_fru_parse_ctx_t ctx,
 
   if (mfg_date_time)
     {
+      struct tm tm;
+      time_t t;
+
       /* mfg_date_time is little endian - see spec */
       mfg_date_time_tmp |= areabufptr[area_offset];
       area_offset++;
@@ -332,16 +335,32 @@ ipmi_fru_parse_board_info_area (ipmi_fru_parse_ctx_t ctx,
       /* mfg_date_time is in minutes, so multiple by 60 to get seconds */
       mfg_date_time_tmp *= 60;
 
+      /* Posix says individual calls need not clear/set all portions of
+       * 'struct tm', thus passing 'struct tm' between functions could
+       * have issues.  So we need to memset.
+       */
+      memset (&tm, '\0', sizeof(struct tm));
+
       /* In FRU, epoch is 0:00 hrs 1/1/96
        *
        * So convert into ansi epoch
-       *
-       * 26 years difference in epoch
-       * 365 days/year
-       * etc.
-       *
        */
-      mfg_date_time_tmp += (26 * 365 * 24 * 60 * 60);
+
+      tm.tm_year = 96;          /* years since 1900 */
+      tm.tm_mon = 0;            /* months since January */
+      tm.tm_mday = 1;           /* 1-31 */
+      tm.tm_hour = 0;
+      tm.tm_min = 0;
+      tm.tm_sec = 0;
+      tm.tm_isdst = -1;
+
+      if ((t = mktime (&tm)) == (time_t)-1)
+        {
+          FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_SYSTEM_ERROR);
+          goto cleanup;
+        }
+
+      mfg_date_time_tmp += (uint32_t)t;
       (*mfg_date_time) = mfg_date_time_tmp;
     }
   else

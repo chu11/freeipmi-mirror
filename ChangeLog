@@ -1,3 +1,7 @@
+2010-12-02 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/fru-parse/: Fix leap year calculation bug.
+	
 2010-12-01 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/interpret/: Support ability to configure
