@@ -1,3 +1,7 @@
+2010-12-08 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/: Add initial Intel Node Manager support.
+	
 2010-12-02 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/fru-parse/: Fix leap year calculation bug.

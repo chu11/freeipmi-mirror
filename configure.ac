@@ -57,6 +57,7 @@ AC_CONFIG_FILES([
         libfreeipmi/src/interpret/Makefile
         libfreeipmi/src/libcommon/Makefile
         libfreeipmi/src/locate/Makefile
+        libfreeipmi/src/oem/Makefile
         libfreeipmi/src/payload/Makefile
         libfreeipmi/src/record-format/Makefile
         libfreeipmi/src/sdr-cache/Makefile

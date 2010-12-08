@@ -50,6 +50,7 @@ nobase_include_HEADERS = \
 	freeipmi/interface/ipmi-rmcpplus-interface.h \
 	freeipmi/interpret/ipmi-interpret.h \
 	freeipmi/locate/ipmi-locate.h \
+	freeipmi/oem/ipmi-oem-intel-node-manager.h \
 	freeipmi/payload/ipmi-sol-payload.h \
 	freeipmi/record-format/ipmi-cipher-suite-record-format.h \
 	freeipmi/record-format/ipmi-fru-information-record-format.h \
@@ -111,6 +112,7 @@ nobase_include_HEADERS = \
 	freeipmi/templates/ipmi-fru-inventory-device-cmds-templates.h \
 	freeipmi/templates/ipmi-lan-cmds-templates.h \
 	freeipmi/templates/ipmi-messaging-support-cmds-templates.h \
+	freeipmi/templates/ipmi-oem-intel-node-manager-templates.h \
 	freeipmi/templates/ipmi-pef-and-alerting-cmds-templates.h \
 	freeipmi/templates/ipmi-rmcpplus-support-and-payload-cmds-templates.h \
 	freeipmi/templates/ipmi-sdr-repository-cmds-templates.h \
