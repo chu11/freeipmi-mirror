@@ -96,6 +96,14 @@ typedef struct ipmi_sensors_prog_data
   struct ipmi_sensors_arguments *args;
 } ipmi_sensors_prog_data_t;
 
+struct ipmi_sensors_interpret_oem_data_intel_node_manager {
+  int node_manager_data_found;
+  uint8_t nm_health_event_sensor_number;
+  uint8_t nm_exception_event_sensor_number;
+  uint8_t nm_operational_capabilities_sensor_number;
+  uint8_t nm_alert_threshold_exceeded_sensor_number;
+};
+
 typedef struct ipmi_sensors_state_data
 {
   ipmi_sensors_prog_data_t *prog_data;
@@ -110,6 +118,7 @@ typedef struct ipmi_sensors_state_data
   struct sensor_entity_id_counts entity_id_counts;
   struct sensor_column_width column_width;
   struct ipmi_oem_data oem_data;
+  struct ipmi_sensors_interpret_oem_data_intel_node_manager intel_node_manager;
 } ipmi_sensors_state_data_t;
 
 #endif

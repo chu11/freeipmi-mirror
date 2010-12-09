@@ -33,6 +33,7 @@ o ipmi-sensors
   - Support --output-sensor-state option.
   - Support --sensor-state-config-file option.
   - Support --output-event-bitmask option.
+  - Support Intel Node Manager sensors.
   - Some sensor states may now report 'N/A' if an invalid sensor event
     occurred.
   - Report 'N/A' instead of 'Unknown' is requested sensor does not exist

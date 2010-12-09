@@ -2,6 +2,7 @@ noinst_HEADERS = \
 	ipmi-sensors.h \
 	ipmi-sensors-argp.h \
 	ipmi-sensors-detailed-output.h \
+	ipmi-sensors-oem-intel-node-manager.h \
 	ipmi-sensors-output-common.h \
 	ipmi-sensors-simple-output.h
 
@@ -38,6 +39,7 @@ ipmi_sensors_SOURCES = \
 	ipmi-sensors.c \
 	ipmi-sensors-argp.c \
 	ipmi-sensors-detailed-output.c \
+	ipmi-sensors-oem-intel-node-manager.c \
 	ipmi-sensors-output-common.c \
 	ipmi-sensors-simple-output.c
 

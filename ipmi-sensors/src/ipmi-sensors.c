@@ -43,6 +43,7 @@
 #include "ipmi-sensors-argp.h"
 #include "ipmi-sensors-simple-output.h"
 #include "ipmi-sensors-detailed-output.h"
+#include "ipmi-sensors-oem-intel-node-manager.h"
 #include "ipmi-sensors-output-common.h"
 
 #include "freeipmi-portability.h"
@@ -706,6 +707,148 @@ _calculate_record_ids (ipmi_sensors_state_data_t *state_data,
   return (0);
 }
 
+/* Return 1 if generated message, 0 if not, -1 on error */
+static int
+_intel_nm_oem_event_message (ipmi_sensors_state_data_t *state_data,
+                             const void *sdr_record,
+                             unsigned int sdr_record_len,
+                             uint8_t sensor_reading_raw,
+                             char ***event_message_list,
+                             unsigned int *event_message_list_len)
+{
+  uint8_t sensor_type;
+  uint8_t sensor_number;
+  uint8_t event_reading_type_code;
+  int rv = -1;
+
+  assert (state_data);
+  assert (sdr_record);
+  assert (sdr_record_len);
+  assert (event_message_list);
+  assert (event_message_list_len);
+  assert (state_data->prog_data->args->interpret_oem_data);
+  assert (state_data->intel_node_manager.node_manager_data_found);
+
+  if (ipmi_sdr_parse_sensor_type (state_data->sdr_parse_ctx,
+                                  sdr_record,
+                                  sdr_record_len,
+                                  &sensor_type) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_sdr_parse_sensor_type: %s\n",
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+      goto cleanup;
+    }
+
+  if (ipmi_sdr_parse_sensor_number (state_data->sdr_parse_ctx,
+                                    sdr_record,
+                                    sdr_record_len,
+                                    &sensor_number) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_sdr_parse_sensor_number: %s\n",
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+      goto cleanup;
+    }
+
+  if (ipmi_sdr_parse_event_reading_type_code (state_data->sdr_parse_ctx,
+                                              sdr_record,
+                                              sdr_record_len,
+                                              &event_reading_type_code) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_sdr_parse_event_reading_type_code: %s\n",
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+      goto cleanup;
+    }
+
+  if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_NODE_MANAGER_OPERATIONAL_CAPABILITIES_CHANGE_EVENT
+      && sensor_type == IPMI_SENSOR_TYPE_OEM_INTEL_NODE_MANAGER
+      && state_data->intel_node_manager.nm_operational_capabilities_sensor_number == sensor_number)
+    {
+      uint8_t policy_interface_capability;
+      uint8_t monitoring_capability;
+      uint8_t power_limiting_capability;
+      char policy_interface_capability_str[IPMI_SENSORS_MESSAGE_LENGTH + 1];
+      char monitoring_capability_str[IPMI_SENSORS_MESSAGE_LENGTH + 1];
+      char power_limiting_capability_str[IPMI_SENSORS_MESSAGE_LENGTH + 1];
+      char **tmp_event_message_list = NULL;
+
+      memset (policy_interface_capability_str, '\0', IPMI_SENSORS_MESSAGE_LENGTH + 1);
+      memset (monitoring_capability_str, '\0', IPMI_SENSORS_MESSAGE_LENGTH + 1);
+      memset (power_limiting_capability_str, '\0', IPMI_SENSORS_MESSAGE_LENGTH + 1);
+
+      policy_interface_capability = (sensor_reading_raw & IPMI_OEM_INTEL_NODE_MANAGER_OPERATIONAL_CAPABILITIES_CHANGE_EVENT_EVENT_DATA1_POLICY_INTERFACE_CAPABILITY_BITMASK);
+      policy_interface_capability >>= IPMI_OEM_INTEL_NODE_MANAGER_OPERATIONAL_CAPABILITIES_CHANGE_EVENT_EVENT_DATA1_POLICY_INTERFACE_CAPABILITY_SHIFT;
+
+      monitoring_capability = (sensor_reading_raw & IPMI_OEM_INTEL_NODE_MANAGER_OPERATIONAL_CAPABILITIES_CHANGE_EVENT_EVENT_DATA1_MONITORING_CAPABILITY_BITMASK);
+      monitoring_capability >>= IPMI_OEM_INTEL_NODE_MANAGER_OPERATIONAL_CAPABILITIES_CHANGE_EVENT_EVENT_DATA1_MONITORING_CAPABILITY_SHIFT;
+
+      power_limiting_capability = (sensor_reading_raw & IPMI_OEM_INTEL_NODE_MANAGER_OPERATIONAL_CAPABILITIES_CHANGE_EVENT_EVENT_DATA1_POWER_LIMITING_CAPABILITY_BITMASK);
+      power_limiting_capability >>= IPMI_OEM_INTEL_NODE_MANAGER_OPERATIONAL_CAPABILITIES_CHANGE_EVENT_EVENT_DATA1_POWER_LIMITING_CAPABILITY_SHIFT;
+
+      snprintf (policy_interface_capability_str,
+                IPMI_SENSORS_MESSAGE_LENGTH,
+                "Policy Interface Capability %s",
+                (policy_interface_capability == IPMI_OEM_INTEL_NODE_MANAGER_OPERATIONAL_CAPABILITIES_CHANGE_EVENT_AVAILABLE) ? "Available" : "Not Available");
+
+      snprintf (monitoring_capability_str,
+                IPMI_SENSORS_MESSAGE_LENGTH,
+                "Monitoring Capability %s",
+                (monitoring_capability == IPMI_OEM_INTEL_NODE_MANAGER_OPERATIONAL_CAPABILITIES_CHANGE_EVENT_AVAILABLE) ? "Available" : "Not Available");
+
+      snprintf (power_limiting_capability_str,
+                IPMI_SENSORS_MESSAGE_LENGTH,
+                "Power Limiting Capability %s",
+                (power_limiting_capability == IPMI_OEM_INTEL_NODE_MANAGER_OPERATIONAL_CAPABILITIES_CHANGE_EVENT_AVAILABLE) ? "Available" : "Not Available");
+ 
+      if (!(tmp_event_message_list = (char **) malloc (sizeof (char *) * 4)))
+        {
+          pstdout_perror (state_data->pstate, "malloc");
+          goto cleanup;
+        }
+
+      if (!(tmp_event_message_list[0] = strdup (policy_interface_capability_str)))
+        {
+          pstdout_perror (state_data->pstate, "strdup");
+          free (tmp_event_message_list);
+          goto cleanup;
+        }
+
+      if (!(tmp_event_message_list[1] = strdup (monitoring_capability_str)))
+        {
+          pstdout_perror (state_data->pstate, "strdup");
+          free (tmp_event_message_list[0]);
+          free (tmp_event_message_list);
+          goto cleanup;
+        }
+
+      if (!(tmp_event_message_list[2] = strdup (power_limiting_capability_str)))
+        {
+          pstdout_perror (state_data->pstate, "strdup");
+          free (tmp_event_message_list[1]);
+          free (tmp_event_message_list[0]);
+          free (tmp_event_message_list);
+          goto cleanup;
+        }
+
+      tmp_event_message_list[3] = NULL;
+
+      (*event_message_list) = tmp_event_message_list;
+      (*event_message_list_len) = 3;
+
+      rv = 1;
+    }
+  else
+    rv = 0;
+
+ cleanup:
+  return (rv);
+}
+
 static int
 _get_event_message (ipmi_sensors_state_data_t *state_data,
                     const void *sdr_record,
@@ -887,13 +1030,41 @@ _output_sensor (ipmi_sensors_state_data_t *state_data,
   if (!state_data->prog_data->args->output_event_bitmask
       || state_data->prog_data->args->legacy_output)
     {
-      if (_get_event_message (state_data,
-                              sdr_record,
-                              sdr_record_len,
-                              sensor_event_bitmask,
-                              &event_message_list,
-                              &event_message_list_len) < 0)
-        goto cleanup;
+      int event_msg_generated = 0;
+
+      /* OEM Interpreation
+       *
+       * Handle Intel Node Manager special case
+       */
+      if (state_data->prog_data->args->interpret_oem_data
+          && ((state_data->oem_data.manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL
+               && state_data->oem_data.product_id == IPMI_INTEL_PRODUCT_ID_S5500WB)
+              || (state_data->oem_data.manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
+                  && (state_data->oem_data.product_id == IPMI_INVENTEC_PRODUCT_ID_5441
+                      || state_data->oem_data.product_id == IPMI_INVENTEC_PRODUCT_ID_5442))
+              || (state_data->oem_data.manufacturer_id == IPMI_IANA_ENTERPRISE_ID_QUANTA
+                  && state_data->oem_data.product_id == IPMI_QUANTA_PRODUCT_ID_S99Q))
+          && state_data->intel_node_manager.node_manager_data_found)
+        {
+          if ((event_msg_generated = _intel_nm_oem_event_message (state_data,
+                                                                  sdr_record,
+                                                                  sdr_record_len,
+                                                                  sensor_reading_raw,
+                                                                  &event_message_list,
+                                                                  &event_message_list_len)) < 0)
+            goto cleanup;
+        }
+      
+      if (!event_msg_generated)
+        {
+          if (_get_event_message (state_data,
+                                  sdr_record,
+                                  sdr_record_len,
+                                  sensor_event_bitmask,
+                                  &event_message_list,
+                                  &event_message_list_len) < 0)
+            goto cleanup;
+        }
     }
 
  output:
@@ -959,6 +1130,107 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
                              state_data->ipmi_ctx,
                              &state_data->oem_data) < 0)
         goto cleanup;
+
+      /* OEM Interpretation
+       *
+       * Intel Node Manager
+       *
+       * http://download.intel.com/support/motherboards/server/s5500wb/sb/s5500wb_tps_1_0.pdf
+       * 
+       * For Intel Chips, not just Intel Motherboards.  Confirmed for:
+       *
+       * Intel S5500WB/Penguin Computing Relion 700
+       * Inventec 5441/Dell Xanadu II
+       * Inventec 5442/Dell Xanadu III
+       * Quanta S99Q/Dell FS12-TY
+       *
+       * Below confirms the Intel Node Manager exists.  We must do
+       * this before reading the sensor to determime what type of
+       * sensor it is via the sensor number.
+       */
+      if ((state_data->oem_data.manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL
+           && state_data->oem_data.product_id == IPMI_INTEL_PRODUCT_ID_S5500WB)
+          || (state_data->oem_data.manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
+              && (state_data->oem_data.product_id == IPMI_INVENTEC_PRODUCT_ID_5441
+                  || state_data->oem_data.product_id == IPMI_INVENTEC_PRODUCT_ID_5442))
+          || (state_data->oem_data.manufacturer_id == IPMI_IANA_ENTERPRISE_ID_QUANTA
+              && state_data->oem_data.product_id == IPMI_QUANTA_PRODUCT_ID_S99Q))
+        {
+          uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
+          int sdr_record_len = 0;
+          uint16_t record_count;
+          uint16_t record_id;
+          uint8_t record_type;
+          int ret;
+
+          if (ipmi_sdr_cache_record_count (state_data->sdr_cache_ctx,
+                                           &record_count) < 0)
+            {
+              pstdout_fprintf (state_data->pstate,
+                               stderr,
+                               "ipmi_sdr_cache_record_count: %s\n",
+                               ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
+              goto cleanup;
+            }
+
+          for (i = 0; i < record_count; i++, ipmi_sdr_cache_next (state_data->sdr_cache_ctx))
+            {
+              if ((sdr_record_len = ipmi_sdr_cache_record_read (state_data->sdr_cache_ctx,
+                                                                sdr_record,
+                                                                IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH)) < 0)
+                {
+                  pstdout_fprintf (state_data->pstate,
+                                   stderr,
+                                   "ipmi_sdr_cache_record_read: %s\n",
+                                   ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
+                  goto cleanup;
+                }
+
+              /* Shouldn't be possible */
+              if (!sdr_record_len)
+                continue;
+
+              if (ipmi_sdr_parse_record_id_and_type (state_data->sdr_parse_ctx,
+                                                     sdr_record,
+                                                     sdr_record_len,
+                                                     &record_id,
+                                                     &record_type) < 0)
+                {
+                  pstdout_fprintf (state_data->pstate,
+                                   stderr,
+                                   "ipmi_sdr_parse_record_id_and_type: %s\n",
+                                   ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+                  goto cleanup;
+                }
+              
+              if ((ret = ipmi_sensors_oem_parse_intel_node_manager (state_data,
+                                                                    sdr_record,
+                                                                    sdr_record_len,
+                                                                    NULL,
+                                                                    NULL,
+                                                                    NULL,
+                                                                    &state_data->intel_node_manager.nm_health_event_sensor_number,
+                                                                    &state_data->intel_node_manager.nm_exception_event_sensor_number,
+                                                                    &state_data->intel_node_manager.nm_operational_capabilities_sensor_number,
+                                                                    &state_data->intel_node_manager.nm_alert_threshold_exceeded_sensor_number)) < 0)
+                goto cleanup;
+              
+              if (ret)
+                {
+                  state_data->intel_node_manager.node_manager_data_found = 1;
+                  break;
+                }
+            }
+
+          if (ipmi_sdr_cache_first (state_data->sdr_cache_ctx) < 0)
+            {
+              pstdout_fprintf (state_data->pstate,
+                               stderr,
+                               "ipmi_sdr_cache_first: %s\n",
+                               ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+              goto cleanup;
+            }
+        }
 
       if (args->output_sensor_state)
 	{

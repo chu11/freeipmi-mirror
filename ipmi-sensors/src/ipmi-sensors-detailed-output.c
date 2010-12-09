@@ -31,6 +31,7 @@
 #include <freeipmi/freeipmi.h>
 
 #include "ipmi-sensors.h"
+#include "ipmi-sensors-oem-intel-node-manager.h"
 #include "ipmi-sensors-output-common.h"
 
 #include "freeipmi-portability.h"
@@ -2390,34 +2391,97 @@ _detailed_output_oem_record (ipmi_sensors_state_data_t *state_data,
                                            record_id) < 0)
     return (-1);
 
-
   if (_output_manufacturer_id (state_data,
                                sdr_record,
                                sdr_record_len) < 0)
     return (-1);
 
-  if ((len = ipmi_sdr_parse_oem_data (state_data->sdr_parse_ctx,
-                                      sdr_record,
-                                      sdr_record_len,
-                                      oem_data,
-                                      IPMI_SENSORS_OEM_DATA_LEN)) < 0)
+  /* OEM Interpreation
+   *
+   * Handle Intel Node Manager special case
+   */
+  if (state_data->prog_data->args->interpret_oem_data
+      && ((state_data->oem_data.manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL
+           && state_data->oem_data.product_id == IPMI_INTEL_PRODUCT_ID_S5500WB)
+          || (state_data->oem_data.manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
+              && (state_data->oem_data.product_id == IPMI_INVENTEC_PRODUCT_ID_5441
+                  || state_data->oem_data.product_id == IPMI_INVENTEC_PRODUCT_ID_5442))
+          || (state_data->oem_data.manufacturer_id == IPMI_IANA_ENTERPRISE_ID_QUANTA
+              && state_data->oem_data.product_id == IPMI_QUANTA_PRODUCT_ID_S99Q))
+      && state_data->intel_node_manager.node_manager_data_found)
     {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "ipmi_sdr_parse_oem_data: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
-      return (-1);
+      uint8_t nm_device_slave_address;
+      uint8_t sensor_owner_lun;
+      uint8_t channel_number;
+      uint8_t nm_health_event_sensor_number;
+      uint8_t nm_exception_event_sensor_number;
+      uint8_t nm_operational_capabilities_sensor_number;
+      uint8_t nm_alert_threshold_exceeded_sensor_number;
+      int ret;
+
+      if ((ret = ipmi_sensors_oem_parse_intel_node_manager (state_data,
+                                                            sdr_record,
+                                                            sdr_record_len,
+                                                            &nm_device_slave_address,
+                                                            &sensor_owner_lun,
+                                                            &channel_number,
+                                                            &nm_health_event_sensor_number,
+                                                            &nm_exception_event_sensor_number,
+                                                            &nm_operational_capabilities_sensor_number,
+                                                            &nm_alert_threshold_exceeded_sensor_number)) < 0)
+        return (-1);
+
+      if (!ret)
+        goto oem_normal_output;
+
+      pstdout_printf (state_data->pstate,
+                      "Node Manager Device Slave Address: %Xh\n",
+                      nm_device_slave_address);
+      pstdout_printf (state_data->pstate,
+                      "Sensor Owner LUN: %Xh\n",
+                      sensor_owner_lun);
+      pstdout_printf (state_data->pstate,
+                      "Channel Number: %Xh\n",
+                      channel_number);
+      pstdout_printf (state_data->pstate,
+                      "Node Manager Health Event Sensor Number: %u\n",
+                      nm_health_event_sensor_number);
+      pstdout_printf (state_data->pstate,
+                      "Node Manager Exception Event Sensor Number: %u\n",
+                      nm_exception_event_sensor_number);
+      pstdout_printf (state_data->pstate,
+                      "Node Manager Operational Capabilities Sensor Number: %u\n",
+                      nm_operational_capabilities_sensor_number);
+      pstdout_printf (state_data->pstate,
+                      "Node Manager Alert Threshold Exceeded Sensor Number: %u\n",
+                      nm_alert_threshold_exceeded_sensor_number);
     }
+  else
+    {
+    oem_normal_output:
+      if ((len = ipmi_sdr_parse_oem_data (state_data->sdr_parse_ctx,
+                                          sdr_record,
+                                          sdr_record_len,
+                                          oem_data,
+                                          IPMI_SENSORS_OEM_DATA_LEN)) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_sdr_parse_oem_data: %s\n",
+                           ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+          return (-1);
+        }
 
-  pstdout_printf (state_data->pstate,
-                  "OEM Data: ");
-
-  for (i = 0; i < len; i++)
-    pstdout_printf (state_data->pstate,
-                    "%02X ",
-                    oem_data[i]);
-  pstdout_printf (state_data->pstate, "\n");
-
+      pstdout_printf (state_data->pstate,
+                      "OEM Data: ");
+      
+      for (i = 0; i < len; i++)
+        pstdout_printf (state_data->pstate,
+                        "%02X ",
+                        oem_data[i]);
+      pstdout_printf (state_data->pstate, "\n");
+    }
+      
   pstdout_printf (state_data->pstate, "\n");
 
   return (0);

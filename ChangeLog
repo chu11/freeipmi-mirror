@@ -1,3 +1,7 @@
+2010-12-09 Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sensors/: Support Intel Node Manager sensors.
+	
 2010-12-08 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/: Add initial Intel Node Manager support.
