@@ -1,3 +1,9 @@
+2010-12-13 Albert Chu <chu11@llnl.gov>
+
+	* ipmi-oem/: Support basic Intel Node Manager commands.
+
+	* libfreeipmi/: Code re-org on Intel Node Manager code.
+	
 2010-12-09 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors/: Support Intel Node Manager sensors.

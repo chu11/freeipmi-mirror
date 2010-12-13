@@ -6,6 +6,7 @@ noinst_HEADERS = \
 	ipmi-oem-fujitsu.h \
 	ipmi-oem-ibm.h \
 	ipmi-oem-intel.h \
+	ipmi-oem-intelnm.h \
 	ipmi-oem-inventec.h \
 	ipmi-oem-quanta.h \
 	ipmi-oem-sun.h \
@@ -46,6 +47,7 @@ ipmi_oem_SOURCES = \
 	ipmi-oem-fujitsu.c \
 	ipmi-oem-ibm.c \
 	ipmi-oem-intel.c \
+	ipmi-oem-intelnm.c \
 	ipmi-oem-inventec.c \
 	ipmi-oem-quanta.c \
 	ipmi-oem-sun.c \

@@ -36,6 +36,7 @@ libapi_la_SOURCES = \
 	ipmi-lan-interface-api.c \
 	ipmi-lan-session-common.c \
 	ipmi-messaging-support-cmds-api.c \
+	ipmi-oem-intel-node-manager-cmds-api.c \
 	ipmi-pef-and-alerting-cmds-api.c \
 	ipmi-rmcpplus-support-and-payload-cmds-api.c \
 	ipmi-sel-cmds-api.c \

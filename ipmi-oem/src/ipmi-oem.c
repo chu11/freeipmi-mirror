@@ -36,6 +36,7 @@
 #include "ipmi-oem-fujitsu.h"
 #include "ipmi-oem-ibm.h"
 #include "ipmi-oem-intel.h"
+#include "ipmi-oem-intelnm.h"
 #include "ipmi-oem-inventec.h"
 #include "ipmi-oem-quanta.h"
 #include "ipmi-oem-sun.h"
@@ -466,6 +467,38 @@ struct ipmi_oem_command oem_intel[] =
       0,
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_intel_restore_configuration
+    },
+    {
+      NULL,
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      NULL
+    },
+  };
+
+struct ipmi_oem_command oem_intelnm[] =
+  {
+    {
+      "get-node-manager-statistics",
+      "[domainid=num] [policyid=num]",
+      0,
+      IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
+      ipmi_oem_intelnm_get_node_manager_statistics
+    },
+    {
+      "reset-node-manager-statistics",
+      "[domainid=num] [policyid=num]",
+      0,
+      IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
+      ipmi_oem_intelnm_reset_node_manager_statistics
+    },
+    {
+      "get-node-manager-version",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_intelnm_get_node_manager_version
     },
     {
       NULL,
@@ -998,6 +1031,10 @@ struct ipmi_oem_id oem_cb[] =
     {
       "Intel",
       oem_intel
+    },
+    {
+      "Intelnm",
+      oem_intelnm
     },
     {
       "Inventec",

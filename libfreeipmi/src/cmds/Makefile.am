@@ -16,6 +16,7 @@ libcmds_la_SOURCES = \
 	ipmi-fru-inventory-device-cmds.c \
 	ipmi-lan-cmds.c \
 	ipmi-messaging-support-cmds.c \
+	ipmi-oem-intel-node-manager-cmds.c \
 	ipmi-pef-and-alerting-cmds.c \
 	ipmi-rmcpplus-support-and-payload-cmds.c \
 	ipmi-sdr-repository-cmds.c \

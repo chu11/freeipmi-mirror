@@ -9,7 +9,6 @@ SUBDIRS = \
 	interpret \
 	libcommon \
 	locate \
-	oem \
 	payload \
 	record-format \
 	sdr-cache \
@@ -50,7 +49,6 @@ libfreeipmi_la_LIBADD = \
 	$(top_builddir)/libfreeipmi/src/interpret/libinterpret.la \
 	$(top_builddir)/libfreeipmi/src/libcommon/libcommon.la \
 	$(top_builddir)/libfreeipmi/src/locate/liblocate.la \
-	$(top_builddir)/libfreeipmi/src/oem/liboem.la \
 	$(top_builddir)/libfreeipmi/src/payload/libpayload.la \
 	$(top_builddir)/libfreeipmi/src/record-format/librecordformat.la \
 	$(top_builddir)/libfreeipmi/src/sdr-cache/libsdrcache.la \
@@ -97,9 +95,6 @@ $(top_builddir)/libfreeipmi/src/libcommon/libcommon.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
 $(top_builddir)/libfreeipmi/src/locate/liblocate.la : force-dependency-check
-	@cd `dirname $@` && $(MAKE) `basename $@`
-
-$(top_builddir)/libfreeipmi/src/oem/liboem.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
 $(top_builddir)/libfreeipmi/src/payload/libpayload.la : force-dependency-check

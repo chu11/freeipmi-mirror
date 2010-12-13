@@ -31,6 +31,7 @@ extern "C" {
 #include <freeipmi/api/ipmi-fru-inventory-device-cmds-api.h>
 #include <freeipmi/api/ipmi-lan-cmds-api.h>
 #include <freeipmi/api/ipmi-messaging-support-cmds-api.h>
+#include <freeipmi/api/ipmi-oem-intel-node-manager-cmds-api.h>
 #include <freeipmi/api/ipmi-pef-and-alerting-cmds-api.h>
 #include <freeipmi/api/ipmi-rmcpplus-support-and-payload-cmds-api.h>
 #include <freeipmi/api/ipmi-sdr-repository-cmds-api.h>
@@ -47,6 +48,7 @@ extern "C" {
 #include <freeipmi/cmds/ipmi-fru-inventory-device-cmds.h>
 #include <freeipmi/cmds/ipmi-lan-cmds.h>
 #include <freeipmi/cmds/ipmi-messaging-support-cmds.h>
+#include <freeipmi/cmds/ipmi-oem-intel-node-manager-cmds.h>
 #include <freeipmi/cmds/ipmi-pef-and-alerting-cmds.h>
 #include <freeipmi/cmds/ipmi-rmcpplus-support-and-payload-cmds.h>
 #include <freeipmi/cmds/ipmi-sdr-repository-cmds.h>
@@ -69,7 +71,6 @@ extern "C" {
 #include <freeipmi/interface/rmcp-interface.h>
 #include <freeipmi/interpret/ipmi-interpret.h>
 #include <freeipmi/locate/ipmi-locate.h>
-#include <freeipmi/oem/ipmi-oem-intel-node-manager.h>
 #include <freeipmi/payload/ipmi-sol-payload.h>
 #include <freeipmi/record-format/ipmi-cipher-suite-record-format.h>
 #include <freeipmi/record-format/ipmi-fru-information-record-format.h>

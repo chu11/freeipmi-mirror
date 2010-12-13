@@ -24,7 +24,7 @@
 #include <stdlib.h>
 #include <errno.h>
 
-#include "freeipmi/oem/ipmi-oem-intel-node-manager.h"
+#include "freeipmi/cmds/ipmi-oem-intel-node-manager-cmds.h"
 #include "freeipmi/fiid/fiid.h"
 #include "freeipmi/spec/ipmi-channel-spec.h"
 #include "freeipmi/spec/ipmi-cmd-oem-spec.h"

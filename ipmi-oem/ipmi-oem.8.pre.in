@@ -313,7 +313,7 @@ This OEM command will get the current SMTP configuration on the IPMI
 card.  By default, configuration for every LAN channel will be output.
 If a \fIchannel\-number\fR is specified, only that specific channel
 number's configuration will be output.  Command confirmed to work on
-Intel S5500WB/Penguin Computing Relion 700.
+Intel S5500WB (Penguin Computing Relion 700).
 .TP
 .B set-smtp-config \fI[channel\-number]\fR \fIKEY=VALUE ...\fR
 This OEM command will set the current SMTP configuration on the IPMI
@@ -327,7 +327,7 @@ values are \fIsmtp=enable|disable\fR,
 \fIsenderemailaddress=string\fR, and \fIsmtphostname=string\fR.
 Multiple key=value pairs may be specified.  If no key=value pairs are
 specifed, available pairs are output.  Command confirmed to work on
-Intel S5500WB/Penguin Computing Relion 700.
+Intel S5500WB (Penguin Computing Relion 700).
 .TP
 .B restore-configuration
 This OEM command will restore BMC configuration values back to default
@@ -337,6 +337,38 @@ Computing Relion 700.  After running this command, the BMC must be
 reset to return it to functioning status.  This may be accomplished by
 executing a cold-reset with
 .B bmc-device(8).
+.RE
+.TP
+.B IntelNM (Intel Node Manager)
+.SP
+The following OEM commands operate on Intel chipsets with Node Manager
+support.  They may work on multiple vendors motherboards.
+.SP
+.RS
+.TP
+.B get-node-manager-statistics \fI[domainid=num]\fR \fI[policyid=num]\fR
+This OEM command will output the Intel Node Manager statistics.  The
+user may optionally specify a \fIdomainid\fR or \fIpolicyid\fR.  The
+default \fIdomainid\fR is 0.  If a \fIpolicyid\fR is specified, per
+policy statistics will be output, otherwise global statistics will be
+output.  Command confirmed to work on Intel S5500WB (Penguin Computing
+Relion 700), Inventec 5441/5442 (Dell Xanadu II/III), Quanta S99Q
+(Dell FS12-TY).
+.TP
+.B reset-node-manager-statistics \fI[domainid=num]\fR \fI[policyid=num]\fR
+This OEM command will reset the Intel Node Manager statistics.  The
+user may optionally specify a \fIdomainid\fR or \fIpolicyid\fR.  The
+default \fIdomainid\fR is 0.  If a \fIpolicyid\fR is specified, per
+policy statistics will be reset, otherwise global statistics will be
+reset.  Command confirmed to work on Intel S5500WB (Penguin Computing
+Relion 700), Inventec 5441/5442 (Dell Xanadu II/III), Quanta S99Q
+(Dell FS12-TY).
+.TP
+.B get-node-manager-version
+This OEM command will output the current Intel Node Manager version
+information.  Command confirmed to work on Intel S5500WB (Penguin
+Computing Relion 700), Inventec 5441/5442 (Dell Xanadu II/III), Quanta
+S99Q (Dell FS12-TY).
 .RE
 .TP
 .B Inventec

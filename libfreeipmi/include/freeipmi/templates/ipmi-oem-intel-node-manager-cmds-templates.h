@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_OEM_INTEL_NODE_MANAGER_TEMPLATES_H
-#define _IPMI_OEM_INTEL_NODE_MANAGER_TEMPLATES_H
+#ifndef _IPMI_OEM_INTEL_NODE_MANAGER_CMDS_TEMPLATES_H
+#define _IPMI_OEM_INTEL_NODE_MANAGER_CMDS_TEMPLATES_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -57,7 +57,7 @@ FIID_FIELD_MAKES_PACKET_SUFFICIENT - indicates field or fields are "sufficient" 
 Enable Disable Node Manager Policy Control Request
 --------------------------------------------------
 
-fiid_template_t tmpl_cmd_oem_intel_enable_disable_node_manager_policy_control_rq =
+fiid_template_t tmpl_cmd_oem_intel_node_manager_enable_disable_node_manager_policy_control_rq =
   {
     { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -72,7 +72,7 @@ fiid_template_t tmpl_cmd_oem_intel_enable_disable_node_manager_policy_control_rq
 Enable Disable Node Manager Policy Control Response
 ---------------------------------------------------
 
-fiid_template_t tmpl_cmd_oem_intel_enable_disable_node_manager_policy_control_rs =
+fiid_template_t tmpl_cmd_oem_intel_node_manager_enable_disable_node_manager_policy_control_rs =
   {
     { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
@@ -83,7 +83,7 @@ fiid_template_t tmpl_cmd_oem_intel_enable_disable_node_manager_policy_control_rs
 Set Node Manager Policy Request
 -------------------------------
 
-fiid_template_t tmpl_cmd_oem_intel_set_node_manager_policy_rq =
+fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_rq =
   {
     { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -106,7 +106,7 @@ fiid_template_t tmpl_cmd_oem_intel_set_node_manager_policy_rq =
 Set Node Manager Policy Response
 --------------------------------
 
-fiid_template_t tmpl_cmd_oem_intel_set_node_manager_policy_rs =
+fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_rs =
   {
     { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
@@ -117,7 +117,7 @@ fiid_template_t tmpl_cmd_oem_intel_set_node_manager_policy_rs =
 Get Node Manager Policy Request
 -------------------------------
 
-fiid_template_t tmpl_cmd_oem_intel_get_node_manager_policy_rq =
+fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_policy_rq =
   {
     { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -130,7 +130,7 @@ fiid_template_t tmpl_cmd_oem_intel_get_node_manager_policy_rq =
 Get Node Manager Policy Response
 --------------------------------
 
-fiid_template_t tmpl_cmd_oem_intel_get_node_manager_policy_rs =
+fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_policy_rs =
   {
     { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
@@ -159,7 +159,7 @@ Set Node Manager Alert Thresholds Request
  * threshold is 2 bytes and there is a max of 3, so I list as the
  * entries and make them optional
  */
-fiid_template_t tmpl_cmd_oem_intel_set_node_manager_alert_thresholds_rq =
+fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_thresholds_rq =
   {
     { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -176,7 +176,7 @@ fiid_template_t tmpl_cmd_oem_intel_set_node_manager_alert_thresholds_rq =
 Set Node Manager Alert Thresholds Response
 ------------------------------------------
 
-fiid_template_t tmpl_cmd_oem_intel_set_node_manager_alert_thresholds_rs =
+fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_thresholds_rs =
   {
     { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
@@ -187,7 +187,7 @@ fiid_template_t tmpl_cmd_oem_intel_set_node_manager_alert_thresholds_rs =
 Get Node Manager Alert Thresholds Request
 -----------------------------------------
 
-fiid_template_t tmpl_cmd_oem_intel_get_node_manager_alert_thresholds_rq =
+fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_alert_thresholds_rq =
   {
     { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -204,7 +204,7 @@ Get Node Manager Alert Thresholds Response
  * threshold is 2 bytes and there is a max of 3, so I list the
  * entries and make them optional
  */
-fiid_template_t tmpl_cmd_oem_intel_get_node_manager_alert_thresholds_rs =
+fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_alert_thresholds_rs =
   {
     { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
@@ -223,7 +223,7 @@ Set Node Manager Policy Suspend Periods Request
  * alert threshold is 3 bytes and there is a max of 5, so I list the
  * entries and make them optional
  */
-fiid_template_t tmpl_cmd_oem_intel_set_node_manager_policy_suspend_periods_rq =
+fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_suspend_periods_rq =
   {
     { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -287,7 +287,7 @@ fiid_template_t tmpl_cmd_oem_intel_set_node_manager_policy_suspend_periods_rq =
 Set Node Manager Policy Suspend Periods Response
 ------------------------------------------------
 
-fiid_template_t tmpl_cmd_oem_intel_set_node_manager_policy_suspend_periods_rs =
+fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_suspend_periods_rs =
   {
     { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
@@ -298,7 +298,7 @@ fiid_template_t tmpl_cmd_oem_intel_set_node_manager_policy_suspend_periods_rs =
 Get Node Manager Policy Suspend Periods Request
 -----------------------------------------------
 
-fiid_template_t tmpl_cmd_oem_intel_get_node_manager_policy_suspend_periods_rq =
+fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_policy_suspend_periods_rq =
   {
     { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -311,7 +311,7 @@ fiid_template_t tmpl_cmd_oem_intel_get_node_manager_policy_suspend_periods_rq =
 Get Node Manager Policy Suspend Periods Response
 ------------------------------------------------
 
-fiid_template_t tmpl_cmd_oem_intel_get_node_manager_policy_suspend_periods_rs =
+fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_policy_suspend_periods_rs =
   {
     { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
@@ -373,7 +373,7 @@ fiid_template_t tmpl_cmd_oem_intel_get_node_manager_policy_suspend_periods_rs =
 Reset Node Manager Statistics Request
 -------------------------------------
 
-fiid_template_t tmpl_cmd_oem_intel_reset_node_manager_statistics_rq =
+fiid_template_t tmpl_cmd_oem_intel_node_manager_reset_node_manager_statistics_rq =
   {
     { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -388,7 +388,7 @@ fiid_template_t tmpl_cmd_oem_intel_reset_node_manager_statistics_rq =
 Reset Node Manager Statistics Response
 --------------------------------------
 
-fiid_template_t tmpl_cmd_oem_intel_reset_node_manager_statistics_rs =
+fiid_template_t tmpl_cmd_oem_intel_node_manager_reset_node_manager_statistics_rs =
   {
     { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
@@ -399,7 +399,7 @@ fiid_template_t tmpl_cmd_oem_intel_reset_node_manager_statistics_rs =
 Get Node Manager Statistics Request
 -----------------------------------
 
-fiid_template_t tmpl_cmd_oem_intel_get_node_manager_statistics_rq =
+fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_statistics_rq =
   {
     { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -414,7 +414,7 @@ fiid_template_t tmpl_cmd_oem_intel_get_node_manager_statistics_rq =
 Get Node Manager Statistics Response
 ------------------------------------
 
-fiid_template_t tmpl_cmd_oem_intel_get_node_manager_statistics_rs =
+fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_statistics_rs =
   {
     { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
@@ -436,7 +436,7 @@ fiid_template_t tmpl_cmd_oem_intel_get_node_manager_statistics_rs =
 Get Node Manager Capabilities Request
 -------------------------------------
 
-fiid_template_t tmpl_cmd_oem_intel_get_node_manager_capabilities_rq =
+fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_capabilities_rq =
   {
     { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -451,7 +451,7 @@ fiid_template_t tmpl_cmd_oem_intel_get_node_manager_capabilities_rq =
 Get Node Manager Capabilities Response
 --------------------------------------
 
-fiid_template_t tmpl_cmd_oem_intel_get_node_manager_capabilities_rs =
+fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_capabilities_rs =
   {
     { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
@@ -471,7 +471,7 @@ fiid_template_t tmpl_cmd_oem_intel_get_node_manager_capabilities_rs =
 Get Node Manager Version Request
 --------------------------------
 
-fiid_template_t tmpl_cmd_oem_intel_get_node_manager_version_rq =
+fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_version_rq =
   {
     { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -481,7 +481,7 @@ fiid_template_t tmpl_cmd_oem_intel_get_node_manager_version_rq =
 Get Node Manager Version Response
 ---------------------------------
 
-fiid_template_t tmpl_cmd_oem_intel_get_node_manager_version_rs =
+fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_version_rs =
   {
     { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
@@ -497,7 +497,7 @@ fiid_template_t tmpl_cmd_oem_intel_get_node_manager_version_rs =
 Set Node Manager Power Draw Range Request
 -----------------------------------------
 
-fiid_template_t tmpl_cmd_oem_intel_set_node_manager_power_draw_range_rq =
+fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_power_draw_range_rq =
   {
     { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -511,7 +511,7 @@ fiid_template_t tmpl_cmd_oem_intel_set_node_manager_power_draw_range_rq =
 Set Node Manager Power Draw Range Response
 ------------------------------------------
 
-fiid_template_t tmpl_cmd_oem_intel_set_node_manager_power_draw_range_rs =
+fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_power_draw_range_rs =
   {
     { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
@@ -522,7 +522,7 @@ fiid_template_t tmpl_cmd_oem_intel_set_node_manager_power_draw_range_rs =
 Set Node Manager Alert Destination Request
 ------------------------------------------
 
-fiid_template_t tmpl_cmd_oem_intel_set_node_manager_alert_destination_rq =
+fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_destination_rq =
   {
     { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -538,7 +538,7 @@ fiid_template_t tmpl_cmd_oem_intel_set_node_manager_alert_destination_rq =
 Set Node Manager Alert Destination (IPMB) Request
 -------------------------------------------------
 
-fiid_template_t tmpl_cmd_oem_intel_set_node_manager_alert_destination_ipmb_rq =
+fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_destination_ipmb_rq =
   {
     { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -555,7 +555,7 @@ fiid_template_t tmpl_cmd_oem_intel_set_node_manager_alert_destination_ipmb_rq =
 Set Node Manager Alert Destination (LAN) Request
 ------------------------------------------------
 
-fiid_template_t tmpl_cmd_oem_intel_set_node_manager_alert_destination_lan_rq =
+fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_destination_lan_rq =
   {
     { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -572,7 +572,7 @@ fiid_template_t tmpl_cmd_oem_intel_set_node_manager_alert_destination_lan_rq =
 Set Node Manager Alert Destination Response
 -------------------------------------------
 
-fiid_template_t tmpl_cmd_oem_intel_set_node_manager_alert_destination_rs =
+fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_destination_rs =
   {
     { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
@@ -583,7 +583,7 @@ fiid_template_t tmpl_cmd_oem_intel_set_node_manager_alert_destination_rs =
 Get Node Manager Alert Destination Request
 ------------------------------------------
 
-fiid_template_t tmpl_cmd_oem_intel_get_node_manager_alert_destination_rq =
+fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_alert_destination_rq =
   {
     { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -593,7 +593,7 @@ fiid_template_t tmpl_cmd_oem_intel_get_node_manager_alert_destination_rq =
 Get Node Manager Alert Destination Response
 -------------------------------------------
 
-fiid_template_t tmpl_cmd_oem_intel_get_node_manager_alert_destination_rs =
+fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_alert_destination_rs =
   {
     { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},

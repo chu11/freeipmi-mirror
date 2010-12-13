@@ -97,6 +97,7 @@ o ipmi-chassis-config
     from verbose output to very verbose output.
 o ipmi-oem
   - Support Intel get/set-smtp-config.
+  - Support basic Intel Node Manager OEM commands.
 o ipmimonitoring
   - Removed tool.  Tool is now superseded by ipmi-sensors and the new
     --output-sensor-state option.
