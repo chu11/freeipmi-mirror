@@ -207,11 +207,11 @@ G)
 Details for mapping between technical information and "real life"
 information should be documented.
 
-For example, documents may show how DIMM locations into DIMM 0, DIMM
-1, DIMM2, DIMM 3, etc.  However, no algorithm for mapping this into
-information physically printed on the motherboard (e.g. DIMM A1, DIMM
-A2, DIMM B1, DIMM B2) is not given.  Without it, the information is of
-very little use to those using FreeIPMI to diagnose problems.
+For example, documents may show how to map DIMM locations into DIMM 0,
+DIMM 1, DIMM2, DIMM 3, etc.  However, no algorithm for mapping this
+into information physically printed on the motherboard (e.g. DIMM A1,
+DIMM A2, DIMM B1, DIMM B2) is not given.  Without it, the information
+is of very little use to those using FreeIPMI to diagnose problems.
 
 Other Notes
 -----------
