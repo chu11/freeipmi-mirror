@@ -358,9 +358,13 @@ foreach $line (@IPMI_SENSORS_OUTPUT_LINES)
 
     if (!$no_sensor_readings)
     {
-        if (($type eq "Temperature"
-             || $type eq "Voltage"
-             || $type eq "Fan")
+        if ((($type eq "Temperature"
+	      && ($units eq "C"
+		  || $units eq "F"))
+             || ($type eq "Voltage"
+		 && $units eq "V")
+             || ($type eq "Fan"
+		 && $units eq "RPM"))
             && $reading ne "N/A")
         {
             if ($hostname ne "localhost" && $hostname ne "127.0.0.1")

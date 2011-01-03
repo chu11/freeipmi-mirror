@@ -1,3 +1,9 @@
+2011-01-03 Albert Chu <chu11@llnl.gov>
+
+	* doc/: Fix typos.
+
+	* contrib/ganglia/: Fix temperature, rpm, voltage reporting corner case.
+	
 2010-12-14 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/: Fix Intel Node Manager corner cases.
