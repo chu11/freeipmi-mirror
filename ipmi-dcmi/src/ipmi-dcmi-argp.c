@@ -151,7 +151,8 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case SET_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING:
       cmd_args->set_management_controller_identifier_string++;
       cmd_args->set_management_controller_identifier_string_arg = arg;
-      if (strlen (cmd_args->set_management_controller_identifier_string_arg) > IPMI_DCMI_MAX_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_LENGTH)
+      /* IPMI_DCMI_MAX_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_LENGTH includes NUL char, so subtract 1 in check */
+      if (strlen (cmd_args->set_management_controller_identifier_string_arg) > (IPMI_DCMI_MAX_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_LENGTH - 1))
         {
           fprintf (stderr, "management controller identifier string invalid length\n");
           exit (1);
