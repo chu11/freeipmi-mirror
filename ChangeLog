@@ -1,3 +1,9 @@
+2010-01-11 Albert Chu <chu11@llnl.gov>
+
+	* ipmi-dcmi/, libfreeipmi/include/freeipmi/cmds/ipmi-dcmi-cmds.h,
+	libfreeipmi/src/cmds/ipmi-dcmi-cmds.c: Update asset-tag getting
+	and setting based on 1.1 errata.
+	
 2010-01-10 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-dcmi/, libfreeipmi/include/freeipmi/cmds/ipmi-dcmi-cmds.h,

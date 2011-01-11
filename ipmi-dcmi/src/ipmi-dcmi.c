@@ -1115,9 +1115,19 @@ get_asset_tag (ipmi_dcmi_state_data_t *state_data)
    * Spec suggests it is encoded as FRU string, but this is not the case.
    */
   if (total_asset_tag_length)
-    pstdout_printf (state_data->pstate,
-                    "%s\n",
-                    asset_tag_data);
+    {
+      /* Handle special case UTF-8 encoding w/ BOM prefix */
+      if (asset_tag_data[0] == IPMI_DCMI_ASSET_TAG_UTF8_BOM_BYTE0
+          && asset_tag_data[1] == IPMI_DCMI_ASSET_TAG_UTF8_BOM_BYTE1
+          && asset_tag_data[2] == IPMI_DCMI_ASSET_TAG_UTF8_BOM_BYTE2)
+        pstdout_printf (state_data->pstate,
+                        "%s\n",
+                        &asset_tag_data[3]);
+      else
+        pstdout_printf (state_data->pstate,
+                        "%s\n",
+                        asset_tag_data);
+    }
 
   rv = 0;
  cleanup:
