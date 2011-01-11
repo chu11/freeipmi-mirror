@@ -119,9 +119,9 @@ configuration will be utilized.
 .TP
 \fB\-\-exception\-actions\fR=\fIBITMASK\fR
 Specify exception actions for set power limit configuration.  Special
-case allowable values: HARD_POWER_OFF_SYSTEM.  Other values
-(e.g. 0x02 through 0x10) are OEM dependent.  Used with the
-\fB\-\-set\-power\-limit\fR option.
+case allowable values: NO_ACTION, HARD_POWER_OFF_SYSTEM,
+LOG_EVENT_TO_SEL_ONLY.  Other values (e.g. 0x02 through 0x10) are OEM
+dependent.  Used with the \fB\-\-set\-power\-limit\fR option.
 .TP
 \fB\-\-power\-limit\-requested\fR=\fIWATTS\fR
 Specify power limit for set power limit configuration.  Input is

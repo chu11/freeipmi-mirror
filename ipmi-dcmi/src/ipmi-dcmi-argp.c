@@ -174,9 +174,19 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       break;
     case EXCEPTION_ACTIONS:
       /* special case */
-      if (!strcasecmp (arg, "HARD_POWER_OFF_SYSTEM"))
+      if (!strcasecmp (arg, "NO_ACTION"))
+        {
+          cmd_args->exception_actions_arg = IPMI_DCMI_EXCEPTION_ACTION_NO_ACTION;
+          break;
+        }
+      else if (!strcasecmp (arg, "HARD_POWER_OFF_SYSTEM"))
         {
           cmd_args->exception_actions_arg = IPMI_DCMI_EXCEPTION_ACTION_HARD_POWER_OFF_SYSTEM;
+          break;
+        }
+      else if (!strcasecmp (arg, "LOG_EVENT_TO_SEL_ONLY"))
+        {
+          cmd_args->exception_actions_arg = IPMI_DCMI_EXCEPTION_ACTION_LOG_EVENT_TO_SEL_ONLY;
           break;
         }
       tmp = strtol (arg, &ptr, 0);

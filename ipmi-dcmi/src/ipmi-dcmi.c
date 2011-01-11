@@ -255,48 +255,48 @@ _supported_dcmi_capabilities (ipmi_dcmi_state_data_t *state_data)
     }
 
   if (FIID_OBJ_GET (obj_cmd_rs,
-                    "optional_platform_capabilities.power_management",
+                    "optional_platform_capabilities.power_management_monitoring_support",
                     &val) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get: 'optional_platform_capabilities.power_management': %s\n",
+                       "fiid_obj_get: 'optional_platform_capabilities.power_management_monitoring_support': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
 
   pstdout_printf (state_data->pstate,
-                  "Power Management                                   : %s\n",
-                  val ? "Compliant with DCMI Specification" : "Not Compliant with DCMI Specification");
-
-  if (FIID_OBJ_GET (obj_cmd_rs,
-                    "manageability_access_capabilities.in_band_kcs_channel_available",
-                    &val) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_get: 'manageability_access_capabilities.in_band_kcs_channel_available': %s\n",
-                       fiid_obj_errormsg (obj_cmd_rs));
-      goto cleanup;
-    }
-
-  pstdout_printf (state_data->pstate,
-                  "In-band KCS Channel                                : %s\n",
+                  "Power Management / Monitoring Support              : %s\n",
                   val ? "Available" : "Not present");
 
   if (FIID_OBJ_GET (obj_cmd_rs,
-                    "manageability_access_capabilities.out_of_band_serial_tmode_available",
+                    "manageability_access_capabilities.in_band_system_interface_channel_available",
                     &val) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get: 'manageability_access_capabilities.out_of_band_serial_tmode_available': %s\n",
+                       "fiid_obj_get: 'manageability_access_capabilities.in_band_system_interface_channel_available': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
 
   pstdout_printf (state_data->pstate,
-                  "Out-Of-Band Serial TMODE                           : %s\n",
+                  "In-band System Interface Channel                   : %s\n",
+                  val ? "Available" : "Not present");
+
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "manageability_access_capabilities.serial_tmode_available",
+                    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'manageability_access_capabilities.serial_tmode_available': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+
+  pstdout_printf (state_data->pstate,
+                  "Serial TMODE                                       : %s\n",
                   val ? "Available" : "Not present");
 
   if (FIID_OBJ_GET (obj_cmd_rs,
@@ -430,6 +430,40 @@ _mandatory_platform_attributes (ipmi_dcmi_state_data_t *state_data)
                   "Number of SEL entries                              : %u\n",
                   number_of_sel_entries);
 
+  /* In DCMI v1.1 */
+  if (!(parameter_revision >= 0x02))
+    {
+      if (FIID_OBJ_GET (obj_cmd_rs,
+                        "sel_attributes.record_level_sel_flush_upon_rollover",
+                        &val) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_get: 'sel_attributes.record_level_sel_flush_upon_rollover': %s\n",
+                           fiid_obj_errormsg (obj_cmd_rs));
+          goto cleanup;
+        }
+      
+      pstdout_printf (state_data->pstate,
+                      "Record Level SEL Flush upon Rollover               : %s\n",
+                      val ? "Available" : "Not present");
+
+      if (FIID_OBJ_GET (obj_cmd_rs,
+                        "sel_attributes.entire_sel_flush_upon_rollover",
+                        &val) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_get: 'sel_attributes.entire_sel_flush_upon_rollover': %s\n",
+                           fiid_obj_errormsg (obj_cmd_rs));
+          goto cleanup;
+        }
+      
+      pstdout_printf (state_data->pstate,
+                      "Entire SEL Flush upon Rollover                     : %s\n",
+                      val ? "Available" : "Not present");
+    }
+  
   if (FIID_OBJ_GET (obj_cmd_rs,
                     "sel_attributes.sel_automatic_rollover_enabled",
                     &val) < 0)
@@ -441,14 +475,6 @@ _mandatory_platform_attributes (ipmi_dcmi_state_data_t *state_data)
       goto cleanup;
     }
 
-  /* achu: spec field is "SEL automatic rollover enabled" with 0b =
-   * "Not Present" and 1b = "Available'.  The english doesn't make
-   * sense here.  Does this flag mean "enabled" vs. "disabled" or
-   * "available" vs. "unavailable."
-   *
-   * Since this entire command is more about "what is available",
-   * instead of a "current state", I will assume the later.
-   */
   pstdout_printf (state_data->pstate,
                   "SEL automatic rollover                             : %s\n",
                   val ? "Available" : "Not present");
@@ -1989,13 +2015,17 @@ get_power_limit (ipmi_dcmi_state_data_t *state_data)
 
   */
 
-  if (!exception_actions)
+  if (exception_actions == IPMI_DCMI_EXCEPTION_ACTION_NO_ACTION)
     pstdout_printf (state_data->pstate,
-                    "Exception Actions                                 : None (%Xh)\n",
+                    "Exception Actions                                 : No Action (%Xh)\n",
                     exception_actions);
   else if (exception_actions == IPMI_DCMI_EXCEPTION_ACTION_HARD_POWER_OFF_SYSTEM)
     pstdout_printf (state_data->pstate,
                     "Exception Actions                                 : Hard Power Off system (%Xh)\n",
+                    exception_actions);
+  else if (exception_actions == IPMI_DCMI_EXCEPTION_ACTION_LOG_EVENT_TO_SEL_ONLY)
+    pstdout_printf (state_data->pstate,
+                    "Exception Actions                                 : Log event to SEL only (%Xh)\n",
                     exception_actions);
   else if ((exception_actions >= IPMI_DCMI_EXCEPTION_ACTION_OEM_MIN)
            && (exception_actions <= IPMI_DCMI_EXCEPTION_ACTION_OEM_MAX))

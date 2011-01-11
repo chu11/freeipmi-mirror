@@ -59,8 +59,8 @@ extern "C" {
   ((((__parameter_selector)) >= (IPMI_DCMI_CAPABILITIES_INFO_PARAMETER_SUPPORTED_DCMI_CAPABILITIES) && \
     ((__parameter_selector)) <= (IPMI_DCMI_CAPABILITIES_INFO_PARAMETER_ENHANCED_SYSTEM_POWER_STATISTICS_ATTRIBUTES)) ? 1 : 0)
 
-#define IPMI_DCMI_COMPLIANT_WITH_DCMI_SPECIFICATION       0x1
-#define IPMI_DCMI_NOT_COMPLIANT_WITH_DCMI_SPECIFICATION   0x0
+#define IPMI_DCMI_AVAILABLE   0x1
+#define IPMI_DCMI_NOT_PRESENT 0x0
 
 #define IPMI_DCMI_AVAILABLE          0x1
 #define IPMI_DCMI_AT_LEAST_1_PRESENT 0x1
@@ -111,9 +111,11 @@ extern "C" {
 #define IPMI_DCMI_POWER_READING_STATE_NO_POWER_MEASUREMENT_AVAILABLE 0x0
 
 /* HLiebig: specific value, not a bitmask */
+#define IPMI_DCMI_EXCEPTION_ACTION_NO_ACTION             0x00
 #define IPMI_DCMI_EXCEPTION_ACTION_HARD_POWER_OFF_SYSTEM 0x01
-#define IPMI_DCMI_EXCEPTION_ACTION_OEM_MIN 0x02
-#define IPMI_DCMI_EXCEPTION_ACTION_OEM_MAX 0x10
+#define IPMI_DCMI_EXCEPTION_ACTION_OEM_MIN               0x02
+#define IPMI_DCMI_EXCEPTION_ACTION_OEM_MAX               0x10
+#define IPMI_DCMI_EXCEPTION_ACTION_LOG_EVENT_TO_SEL_ONLY 0x11
 
 /* achu: it's an 8 bit field, why not allow all 8 bitmasks?  Beats
  * me, that's what's in the spec
@@ -131,12 +133,14 @@ extern "C" {
 #define IPMI_DCMI_MANAGEMENT_APPLICATION_STATISTICS_SAMPLING_PERIOD_MAX 0xFFFF
 
 #define IPMI_DCMI_EXCEPTION_ACTION_VALID(__exception_action) \
-  (((__exception_action) == IPMI_DCMI_EXCEPTION_ACTION_HARD_POWER_OFF_SYSTEM \
-    || ((__exception_action) >= 0x02 && (__exception_action) <= 0x10)) ? 1 : 0)
+  (((__exception_action) == IPMI_DCMI_EXCEPTION_ACTION_NO_ACTION        \
+    || (__exception_action) == IPMI_DCMI_EXCEPTION_ACTION_HARD_POWER_OFF_SYSTEM \
+    || ((__exception_action) >= IPMI_DCMI_EXCEPTION_ACTION_OEM_MIN && (__exception_action) <= IPMI_DCMI_EXCEPTION_ACTION_OEM_MAX) \
+    || (__exception_action) == IPMI_DCMI_EXCEPTION_ACTION_HARD_POWER_OFF_SYSTEM) ? 1 : 0)
 
 #define IPMI_DCMI_POWER_LIMIT_ACTIVATION_DEACTIVATE_POWER_LIMIT 0x0
 #define IPMI_DCMI_POWER_LIMIT_ACTIVATION_ACTIVATE_POWER_LIMIT   0x1
-
+  
 #define IPMI_DCMI_POWER_LIMIT_ACTIVATION_VALID(__power_limit_activation) \
   (((__power_limit_activation) == IPMI_DCMI_POWER_LIMIT_ACTIVATION_DEACTIVATE_POWER_LIMIT \
     || (__power_limit_activation) == IPMI_DCMI_POWER_LIMIT_ACTIVATION_ACTIVATE_POWER_LIMIT) ? 1 : 0)

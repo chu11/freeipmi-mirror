@@ -1,3 +1,9 @@
+2010-01-10 Albert Chu <chu11@llnl.gov>
+
+	* ipmi-dcmi/, libfreeipmi/include/freeipmi/cmds/ipmi-dcmi-cmds.h,
+	libfreeipmi/src/cmds/ipmi-dcmi-cmds.c: Various DCMI updates for
+	1.1 spec and 1.1 errata.
+	
 2011-01-03 Albert Chu <chu11@llnl.gov>
 
 	* doc/: Fix typos.
