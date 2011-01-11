@@ -139,6 +139,16 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case SET_ASSET_TAG:
       cmd_args->set_asset_tag++;
       cmd_args->set_asset_tag_arg = arg;
+
+      /* achu: note that the check for the max asset tag length and
+       * the management controller identifier string are different.
+       * The spec is written such that the max length of the asset tag
+       * is 63, while the max length of the management controller
+       * identifier string is 64 w/ a NUL byte included.  That's the
+       * literal wording.  Because that's what they're writing, that's
+       * what I'm programming.
+       */
+
       if (strlen (cmd_args->set_asset_tag_arg) > IPMI_DCMI_MAX_ASSET_TAG_LENGTH)
         {
           fprintf (stderr, "asset tag invalid length\n");
