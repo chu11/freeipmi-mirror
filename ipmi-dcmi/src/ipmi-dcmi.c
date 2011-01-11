@@ -431,7 +431,7 @@ _mandatory_platform_attributes (ipmi_dcmi_state_data_t *state_data)
                   number_of_sel_entries);
 
   /* In DCMI v1.1 */
-  if (!(parameter_revision >= 0x02))
+  if (parameter_revision >= 0x02)
     {
       if (FIID_OBJ_GET (obj_cmd_rs,
                         "sel_attributes.record_level_sel_flush_upon_rollover",
