@@ -1,4 +1,4 @@
 .TP
-\fB\-\-legacy-output\fR
+\fB\-\-legacy\-output\fR
 Output in legacy format.  Newer options may not be applicable to
-leagcy output.
+legacy output.

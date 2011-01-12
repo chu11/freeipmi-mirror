@@ -1,3 +1,7 @@
+2011-01-12 Albert Chu <chu11@llnl.gov>
+
+	* common/man/: Fix some manpage typos.
+	
 2011-01-11 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-dcmi/, libfreeipmi/include/freeipmi/cmds/ipmi-dcmi-cmds.h,
