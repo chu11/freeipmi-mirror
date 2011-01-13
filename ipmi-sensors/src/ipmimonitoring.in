@@ -7,7 +7,7 @@ if [[ "$options" =~ "--legacy-output" ]]; then
 fi
 
 if [[ "$options" =~ "-v" ]]; then
-    options=${options/"--legacy-output"/""}
+    options=${options/"-v"/""}
 else
     options="${options} --ignore-not-available-sensors"
 fi    
