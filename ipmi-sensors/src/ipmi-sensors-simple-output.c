@@ -552,34 +552,29 @@ _ipmimonitoring_legacy_simple_output_compact_record (ipmi_sensors_state_data_t *
                                                    record_id) < 0)
     return (-1);
 
-  if (state_data->prog_data->args->ipmimonitoring_legacy_output)
+  if (state_data->prog_data->args->output_sensor_state)
     {
-      if (state_data->prog_data->args->output_sensor_state)
-        {
-          char *sensor_state_str = NULL;
-          
-          if (ipmi_sensors_get_sensor_state (state_data,
-                                             sdr_record,
-                                             sdr_record_len,
-                                             event_message_output_type,
-                                             sensor_event_bitmask,
-                                             &sensor_state_str) < 0)
-            return (-1);
-          
-          pstdout_printf (state_data->pstate,
-                          " | %s",
-                          sensor_state_str);
-        }
+      char *sensor_state_str = NULL;
       
-      if (!state_data->prog_data->args->quiet_readings)
-        pstdout_printf (state_data->pstate,
-                        " | %s | %s",
-                        IPMIMONITORING_NA_STRING_LEGACY,
-                        IPMIMONITORING_NA_STRING_LEGACY);
-
+      if (ipmi_sensors_get_sensor_state (state_data,
+					 sdr_record,
+					 sdr_record_len,
+					 event_message_output_type,
+					 sensor_event_bitmask,
+					 &sensor_state_str) < 0)
+	return (-1);
+      
       pstdout_printf (state_data->pstate,
-                      " | ");
+		      " | %s",
+		      sensor_state_str);
     }
+  
+  if (state_data->prog_data->args->quiet_readings)
+    return (0);
+
+  pstdout_printf (state_data->pstate,
+		  " | %s | ",
+		  IPMIMONITORING_NA_STRING_LEGACY);
 
   if (ipmi_sensors_output_event_message_list (state_data,
                                               event_message_output_type,

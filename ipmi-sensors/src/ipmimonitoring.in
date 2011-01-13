@@ -6,4 +6,10 @@ if [[ "$options" =~ "--legacy-output" ]]; then
     options=${options/"--legacy-output"/"--ipmimonitoring-legacy-output"}
 fi
 
+if [[ "$options" =~ "-v" ]]; then
+    options=${options/"--legacy-output"/""}
+else
+    options="${options} --ignore-not-available-sensors"
+fi    
+
 exec @IPMIMONITORINGSBINDIR@/ipmi-sensors --output-sensor-state ${options}
