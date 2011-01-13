@@ -101,6 +101,8 @@ o ipmi-oem
 o ipmimonitoring
   - Removed tool.  Tool is now superseded by ipmi-sensors and the new
     --output-sensor-state option.
+  - Legacy output support maintained via
+    --ipmimonitoring-legacy-output option.
 o ipmi-locate
   - Do not output system defaults by default.
   - Support --defaults option.

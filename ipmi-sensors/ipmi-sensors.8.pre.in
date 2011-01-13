@@ -155,6 +155,11 @@ if \fB\-\-output\-sensor\-state\fR not specified.
 #include <@top_srcdir@/common/man/manpage-common-no-header-output.man>
 #include <@top_srcdir@/common/man/manpage-common-non-abbreviated-units.man>
 #include <@top_srcdir@/common/man/manpage-common-legacy-output.man>
+.TP
+\fB\-\-ipmimonitoring\-legacy\-output\fR
+Output legacy format of legacy
+.B ipmimonitoring
+tool.  Newer options may not be applicable to legacy output.
 #include <@top_srcdir@/common/man/manpage-common-sdr-options.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-options-header.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-buffer.man>

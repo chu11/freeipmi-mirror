@@ -56,6 +56,7 @@ enum ipmi_sensors_argp_option_keys
     NO_HEADER_OUTPUT_KEY = 173,
     NON_ABBREVIATED_UNITS_KEY = 174,
     LEGACY_OUTPUT_KEY = 175,
+    IPMIMONITORING_LEGACY_OUTPUT_KEY = 176,
   };
 
 struct ipmi_sensors_arguments
@@ -88,6 +89,7 @@ struct ipmi_sensors_arguments
   int no_header_output;
   int non_abbreviated_units;
   int legacy_output;
+  int ipmimonitoring_legacy_output;
 };
 
 typedef struct ipmi_sensors_prog_data

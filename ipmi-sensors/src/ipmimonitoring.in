@@ -1,3 +1,9 @@
 #!/bin/sh
 
-exec @IPMIMONITORINGSBINDIR@/ipmi-sensors --output-sensor-state "$@"
+options=$@
+
+if [[ "$options" =~ "--legacy-output" ]]; then
+    options=${options/"--legacy-output"/"--ipmimonitoring-legacy-output"}
+fi
+
+exec @IPMIMONITORINGSBINDIR@/ipmi-sensors --output-sensor-state ${options}

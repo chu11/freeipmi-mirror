@@ -1,3 +1,7 @@
+2011-01-13 Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sensors/: Support --ipmimonitoring-legacy-output.
+	
 2011-01-12 Albert Chu <chu11@llnl.gov>
 
 	* common/man/: Fix some manpage typos.

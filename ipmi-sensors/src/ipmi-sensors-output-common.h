@@ -21,9 +21,10 @@
 
 #include "ipmi-sensors.h"
 
-#define IPMI_SENSORS_NA_STRING        "N/A"
-#define IPMI_SENSORS_NA_STRING_LEGACY "NA"
-#define IPMI_SENSORS_NONE_STRING      "NONE"
+#define IPMI_SENSORS_NA_STRING          "N/A"
+#define IPMI_SENSORS_NA_STRING_LEGACY   "NA"
+#define IPMI_SENSORS_NONE_STRING        "NONE"
+#define IPMIMONITORING_NA_STRING_LEGACY "N/A"
 
 #define IPMI_SENSORS_NA_STRING_OUTPUT                    \
   (state_data->prog_data->args->legacy_output ? IPMI_SENSORS_NA_STRING_LEGACY : IPMI_SENSORS_NA_STRING)
