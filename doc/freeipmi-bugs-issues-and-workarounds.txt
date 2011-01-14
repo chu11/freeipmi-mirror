@@ -730,6 +730,9 @@ elected to not return any offset (i.e. no states set or bitmask
 offset when an actual failure occurs.  This results in one of two
 possible "good" scenarios for ipmi-sensors to output. [INTERPRETATION]
 
+Various Motherboards: Event only sensors are listed in the SDR using a
+full or compact SDR record. [NICETOHAVE]
+
 Inventec 5442/Dell Xanadu III: Sensor bridging over IPMI 1.5 fails b/c
 IPMB respones have invalid authentication codes.  This bug is
 confirmed to be fixed on newer firmware.
