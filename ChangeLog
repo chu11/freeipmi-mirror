@@ -1,5 +1,9 @@
 2011-01-18 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-sensors/src/ipmimonitoring.in: Fix portability.
+	
+2011-01-18 Albert Chu <chu11@llnl.gov>
+
 	* ipmipower/src/Makefile.am: Fix build error.
 	
 2011-01-18  Holger Liebig <holger.liebig@ts.fujitsu.com>

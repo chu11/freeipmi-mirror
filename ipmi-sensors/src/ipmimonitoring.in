@@ -1,15 +1,26 @@
 #!/bin/sh
 
-options=$@
+options="--output-sensor-state"
+verboseset=0
 
-if [[ "$options" =~ "--legacy-output" ]]; then
-    options=${options/"--legacy-output"/"--ipmimonitoring-legacy-output"}
+while test $# != 0
+  do
+  case "$1" in
+      --legacy-output)
+	  options="$options --ipmimonitoring-legacy-output"
+	  ;;
+      -v)
+	  verboseset=1
+	  ;;
+      *)
+          options="$options $1"
+	  ;;
+  esac
+  shift
+done
+
+if [ verboseset = 0 ]; then
+    options="$options --ignore-not-available-sensors"
 fi
 
-if [[ "$options" =~ "-v" ]]; then
-    options=${options/"-v"/""}
-else
-    options="${options} --ignore-not-available-sensors"
-fi    
-
-exec @IPMIMONITORINGSBINDIR@/ipmi-sensors --output-sensor-state ${options}
+exec @IPMIMONITORINGSBINDIR@/ipmi-sensors $options
