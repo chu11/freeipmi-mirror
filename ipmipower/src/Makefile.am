@@ -21,7 +21,7 @@ ipmipower_CPPFLAGS = \
 	-I$(top_srcdir)/common/src/miscutil \
 	-I$(top_srcdir)/common/src/parsecommon \
 	-I$(top_srcdir)/common/src/portability \
-	-I$(top_srcdir)/ipmidetect/src/libipmidetect \
+	-I$(top_srcdir)/libipmidetect/src \
 	-I$(top_srcdir)/libfreeipmi/include \
 	-DWITH_LSD_FATAL_ERROR_FUNC=1 \
 	-DWITH_LSD_NOMEM_ERROR_FUNC=1 \
