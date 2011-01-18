@@ -1105,23 +1105,17 @@ get_asset_tag (ipmi_dcmi_state_data_t *state_data)
         break;
     }
 
-  /* HLiebig:
-   *
-   * Output as simple English/Latin-1 string, nothing is specified in the 
-   * DCMI 1.0 spec. 
-   *
-   * achu:
-   *
-   * Spec suggests it is encoded as FRU string, but this is not the case.
-   */
   if (total_asset_tag_length)
     {
       /* Handle special case UTF-8 encoding w/ BOM prefix */
       if (asset_tag_data[0] == IPMI_DCMI_ASSET_TAG_UTF8_BOM_BYTE0
           && asset_tag_data[1] == IPMI_DCMI_ASSET_TAG_UTF8_BOM_BYTE1
           && asset_tag_data[2] == IPMI_DCMI_ASSET_TAG_UTF8_BOM_BYTE2)
+	/* achu: I think this is right for UTF-8 in libc and is
+	 * portable, but I would be some systems won't like this.
+	 */
         pstdout_printf (state_data->pstate,
-                        "%s\n",
+                        "%ls\n",
                         &asset_tag_data[3]);
       else
         pstdout_printf (state_data->pstate,
