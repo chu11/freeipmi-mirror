@@ -1,3 +1,7 @@
+2011-01-18 Albert Chu <chu11@llnl.gov>
+
+	* ipmi-dcmi/: Fix UTF-8 corner case.
+	
 2011-01-13 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors/: Support --ipmimonitoring-legacy-output.
