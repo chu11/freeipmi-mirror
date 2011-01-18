@@ -98,7 +98,8 @@ FreeIPMI is a collection of Intelligent Platform Management
 @acronym{IPMI} system software.  It provides in-band and out-of-band
 software and a development library conforming to the Intelligent
 Platform Management Interface (@acronym{IPMI} v1.5 and v2.0)
-standards.
+standards.  FreeIPMI also supports IPMI-related specifications such as
+the Data Center Management Interface (DCMI) and Intel Node Manager.
 
 @node How did FreeIPMI start?, What operating systems does FreeIPMI run on?, What is FreeIPMI?, Top
 @section How did FreeIPMI start?
