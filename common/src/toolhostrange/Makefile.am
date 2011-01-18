@@ -13,7 +13,7 @@ libtoolhostrange_la_CPPFLAGS = \
 	-D_REENTRANT \
 	-I$(top_srcdir)/common/src/miscutil \
 	-I$(top_srcdir)/common/src/portability \
-	-I$(top_srcdir)/ipmidetect/src/libipmidetect/
+	-I$(top_srcdir)/libipmidetect/src
 
 libtoolhostrange_la_SOURCES = \
 	pstdout.c \

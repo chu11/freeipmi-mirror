@@ -1,3 +1,7 @@
+2011-01-18  Holger Liebig <holger.liebig@ts.fujitsu.com>
+
+	* common/src/toolhostrange/Makefile.am: Fix build error.
+
 2011-01-18 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-dcmi/: Fix UTF-8 corner case.
