@@ -133,7 +133,7 @@ extern "C" {
  *
  * This workaround option will work around several Supermicro IPMI 2.0
  * authentication issues on motherboards w/ Peppercon IPMI firmware.
- * The issues covered include handling * invalid length authentication
+ * The issues covered include handling invalid length authentication
  * codes.
  *
  * SUN_2_0_SESSION
@@ -574,7 +574,7 @@ int ipmiconsole_engine_init (unsigned int thread_count,
  * EOF being returned on the file descriptor.  A proper SOL
  * establishment can be determined via a readable character on the
  * file descriptor.  The use of the OUTPUT_ON_SOL_ESTABLISHED Engine
- * flag above can aid in this.  the CLOSE_FD Engine flag can be set to
+ * flag above can aid in this.  The CLOSE_FD Engine flag can be set to
  * slightly alter this behavior, please see above. On an error,
  * ipmiconsole_ctx_errnum() can be used to determine the specific IPMI
  * related error that occurred.
@@ -657,7 +657,7 @@ void ipmiconsole_engine_teardown (int cleanup_sol_sessions);
 /*
  * ipmiconsole_ctx_create
  *
- * Create a ipmiconsole context.  The context can then be submitted
+ * Create an ipmiconsole context.  The context can then be submitted
  * into the ipmiconsole engine (via ipmiconsole_engine_submit() or
  * ipmiconsole_engine_submit_block()) to establish a SOL session.  The
  * context cannot be submitted to the ipmiconsole engine more than
