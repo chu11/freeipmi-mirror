@@ -1,4 +1,4 @@
-FreeIPMI 0.9.1 - 12/07/09
+FreeIPMI 1.0.1 - 01/20/11
 -------------------------
 
 Major Changes, Additions, and Features
@@ -161,6 +161,13 @@ o nagios_ipmi_sensors.pl
   - New tool to replace nagios_ipmimonitoring.pl.
 o nagios_ipmimonitoring.pl
   - Removed.  Superseded by nagios_ipmi_sensors.pl.
+
+FreeIPMI 0.8.12 - 10/28/10
+--------------------------
+o In bmc-config, workaround RMCP+ Privilege Level configuration bugs
+  on HP DL145 servers.
+o Fix N/A output corner case in ipmi-sel.
+o Support Supermicro X8DTU-6+ motherboard OEM sensors.
 
 FreeIPMI 0.8.11 - 10/28/10
 --------------------------
