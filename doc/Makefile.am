@@ -6,6 +6,7 @@ DISTCLEANFILES = .deps/*.P
 
 EXTRA_DIST = \
 	freeipmi-coding.txt \
+	freeipmi-design.txt \
 	freeipmi-hostrange.txt \
 	freeipmi-libraries.txt \
 	freeipmi-testing.txt \
