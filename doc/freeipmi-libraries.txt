@@ -31,7 +31,7 @@ Utilized by the 'api' subsection and by tools such as ipmipower(8) and
 ipmiconsole(8).
 
 driver - Provides APIs for in-band IPMI communication.  Currently
-supported drivers are KCS, SSIF, and OpenIPMI.  The 'driver'
+supported drivers are KCS, SSIF, OpenIPMI, and sunbmc.  The 'driver'
 subsction is used by tools such as bmc-watchdog(8) and the 'api'
 sub-section.
 
@@ -63,6 +63,10 @@ tools and libraries, such as ipmi-sensors(8) and libipmimonitoring(3).
 locate - Provides an API to probe several standards to find default
 values for in-band IPMI communication.  Utilized by the 'api'
 sub-section and the ipmi-locate(8) tool.
+
+payload - Provides macros, fiid-templates, and information on paylod
+sused in IPMI.  Used predominantly by ipmiconsole(8) and other
+serial-over-LAN (SOL) related code.
 
 record-format - Provides macros, fiid-templates, and information on
 records used in IPMI.  Utilized by the 'sdr-cache' subsection and
@@ -99,9 +103,9 @@ user into a relatively simple file descriptor interface.
 Libipmimonitoring
 -----------------
 
-Libipmimonitoring implements a high level sensor monitoring API for
-IPMI sensors.  An iterator interface is provided that allows the user
-to iterate through sensor values, groups, units, and states.
+Libipmimonitoring implements a high level SEL and sensor monitoring
+API.  An iterator interface is provided that allows the user to
+iterate through sensor values, groups, units, and states.
 
 Libipmidetect
 -------------
