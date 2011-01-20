@@ -39,7 +39,7 @@ communicates with a remote machine's Baseboard Management Controller
 (BMC) to establish a console session.  Before any SOL communication
 can take place, the remote machine's BMC must be configured properly.
 The FreeIPMI tool
-.B bmc-config(1) 
+.B bmc-config(8) 
 may be used to do this configuration.
 .LP
 Often (although not always), console redirection must be also 
