@@ -277,7 +277,7 @@ and configured on the client (see ipmidetectd(8) and
 ipmidetectd.conf(5) for more information).  The ipmidetectd daemon
 regularly ipmipings remote nodes.  The ipmidetect tool and library
 will determine detected vs. undetected ipmi systems based on the most
-recent ipmipings received.
+recent ipmipings received. [1]
 
 > /usr/sbin/ipmidetect
 detected:   6: pwopr[0-5]
@@ -431,3 +431,10 @@ Powerman, so it cannot use the parallel stdout libraries developed.
 It instead emulates the --buffer-output, --consolidate-output, and
 --fanout functionality of the other tools.
 
+Additional Notes
+----------------
+
+[1] Why doesn't FreeIPMI just use whatsup?  Whatsup defines "up" to
+typically mean that an OS up running healthily.  IPMI can operate
+without the OS running, even when the node is "powered off."
+Therefore, an alternate tool had to be developed.
