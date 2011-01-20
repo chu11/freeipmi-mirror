@@ -326,40 +326,6 @@ dependending with the tool.  The following are some suggestions.  They
 are the ways the author thinks most will use the hostrange
 input/output.
 
-bmc-info:
-
-When using hostranges, you are probably trying to verify the firmware
-version or hardware type for each BMC in your cluster.  You probably
-want to run bmc-info with the consolidated output (-C) set most of the
-time.  System GUIDs are also different between systems, so in order to
-limit the amount of different output, you may want to run with the
---get-device-id option to limit the output.
-
-ipmi-sel:
-
-Each node will likely have drastically different ipmi-sel output and a
-massive amount of it.  Therefore buffered or consolidated output will
-not be very useful.  The hostrange input is most useful for gathering
-the SEL output of the entire cluster quickly and out-of-band.  You can
-then grep for some type of error condition you are specifically
-looking for or pipe it into a log monitoring utility.
-
-The hostrange functionality is also very useful to quickly clear the
-SEL logs across the entire cluster.
-
-The --no-header-output option may be useful for reducing output across
-a lot of nodes.  The --sdr-cache-recreate option may be useful to
-gracefully handle errors.
-
-Users may wish to use the --output-sensor-state option w/ ipmi-sel to
-also output the current sensor state.  This option will output
-NOMINAL, WARNING, and CRITICAL states which allow for easy grepping.
-
-ipmi-raw:
-
-The output of ipmi-raw will likely be only 1 long line.  The
-consolidated output is likely what you're interested in using.
-
 ipmi-sensors:
 
 Each node of the cluster will likely have slightly different
@@ -398,6 +364,40 @@ be useful for reducing output across a lot of nodes.  The
 Users may wish to use the --output-sensor-state option w/ ipmi-sensors
 to also output the current sensor state.  This option will output
 NOMINAL, WARNING, and CRITICAL states which allow for easy grepping.
+
+ipmi-sel:
+
+Each node will likely have drastically different ipmi-sel output and a
+massive amount of it.  Therefore buffered or consolidated output will
+not be very useful.  The hostrange input is most useful for gathering
+the SEL output of the entire cluster quickly and out-of-band.  You can
+then grep for some type of error condition you are specifically
+looking for or pipe it into a log monitoring utility.
+
+The hostrange functionality is also very useful to quickly clear the
+SEL logs across the entire cluster.
+
+The --no-header-output option may be useful for reducing output across
+a lot of nodes.  The --sdr-cache-recreate option may be useful to
+gracefully handle errors.
+
+Users may wish to use the --output-event-state option w/ ipmi-sel to
+also output the current sensor state.  This option will output
+NOMINAL, WARNING, and CRITICAL states which allow for easy grepping.
+
+bmc-info:
+
+When using hostranges, you are probably trying to verify the firmware
+version or hardware type for each BMC in your cluster.  You probably
+want to run bmc-info with the consolidated output (-C) set most of the
+time.  System GUIDs are also different between systems, so in order to
+limit the amount of different output, you may want to run with the
+--get-device-id option to limit the output.
+
+ipmi-raw:
+
+The output of ipmi-raw will likely be only 1 long line.  The
+consolidated output is likely what you're interested in using.
 
 bmc-config/ipmi-chassis-config/ipmi-pef-config/ipmi-sensors-config:
 
