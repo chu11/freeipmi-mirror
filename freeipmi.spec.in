@@ -213,6 +213,7 @@ fi
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmidetect.UC
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmi-fru.UC
 %doc %{_datadir}/doc/%{name}/freeipmi-coding.txt
+%doc %{_datadir}/doc/%{name}/freeipmi-design.txt
 %doc %{_datadir}/doc/%{name}/freeipmi-hostrange.txt
 %doc %{_datadir}/doc/%{name}/freeipmi-libraries.txt
 %doc %{_datadir}/doc/%{name}/freeipmi-bugs-issues-and-workarounds.txt
