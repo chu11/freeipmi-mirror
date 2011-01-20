@@ -3,6 +3,11 @@
 	* configure.ac, NEWS: Update for 1.0.1 release.
 
 	* Fix a few more documentation typos.
+
+	* doc/freeipmi-design.txt: New document.
+
+	* doc/freeipmi-coding.txt: Split out information into
+	freeipmi-design.txt, tweak text.
 	
 2011-01-19 Albert Chu <chu11@llnl.gov>
 
