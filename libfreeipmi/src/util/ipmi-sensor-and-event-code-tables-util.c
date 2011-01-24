@@ -2111,7 +2111,8 @@ ipmi_get_event_messages (uint8_t event_reading_type_code,
       || !event_messages_count
       || (flags & ~(IPMI_GET_EVENT_MESSAGES_FLAGS_SHORT
                     | IPMI_GET_EVENT_MESSAGES_FLAGS_INTERPRET_OEM_DATA
-                    | IPMI_GET_EVENT_MESSAGES_FLAGS_SENSOR_READING)))
+                    | IPMI_GET_EVENT_MESSAGES_FLAGS_SENSOR_READING
+		    | IPMI_GET_EVENT_MESSAGES_FLAGS_IGNORE_UNRECOGNIZED_EVENTS)))
     {
       SET_ERRNO (EINVAL);
       return (-1);
@@ -2272,7 +2273,7 @@ ipmi_get_event_messages (uint8_t event_reading_type_code,
                                                           buf,
                                                           EVENT_BUFLEN);
 
-	      if (!(flags & IPMI_GET_EVENT_MESSAGES_FLAG_IGNORE_UNRECOGNIZED_EVENTS))
+	      if (!(flags & IPMI_GET_EVENT_MESSAGES_FLAGS_IGNORE_UNRECOGNIZED_EVENTS))
 		{
 		  if (len < 0)
 		    {

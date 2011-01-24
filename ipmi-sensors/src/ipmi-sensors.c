@@ -907,7 +907,7 @@ _get_event_message (ipmi_sensors_state_data_t *state_data,
     }
 
   if (state_data->prog_data->args->common.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IGNORE_UNRECOGNIZED_EVENTS)
-    flags |= IPMI_GET_EVENT_MESSAGES_FLAG_IGNORE_UNRECOGNIZED_EVENTS;
+    flags |= IPMI_GET_EVENT_MESSAGES_FLAGS_IGNORE_UNRECOGNIZED_EVENTS;
 
   if (ipmi_get_event_messages (event_reading_type_code,
                                sensor_type,
