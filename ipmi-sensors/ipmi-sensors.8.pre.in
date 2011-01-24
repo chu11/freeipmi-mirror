@@ -184,6 +184,15 @@ Please see
 #include <@top_srcdir@/common/man/manpage-common-workaround-heading-text.man>
 #include <@top_srcdir@/common/man/manpage-common-workaround-inband-text.man>
 #include <@top_srcdir@/common/man/manpage-common-workaround-outofband-text.man>
+.LP
+"ignoreunrecognizedevents" - This workaround will ignore unrecognized
+sensor events.  If a sensor event is unrecognized, you will normally
+see an
+.B ipmi-sensors
+output such as 'Unrecognized Event = 0100h'.  This workaround will
+ignore them and not output those events.  In addition, unrecgnized
+events will be ignored when calculating sensor state with
+\fI\-\-output\-sensor\-state\fR
 #include <@top_srcdir@/common/man/manpage-common-oem-interpretation.man>
 .LP
 Dell Poweredge R610, Dell Poweredge R710, Fujitsu iRMC S1 and iRMC S2
