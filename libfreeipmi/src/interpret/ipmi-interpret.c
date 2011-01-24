@@ -1042,12 +1042,25 @@ _get_sensor_state (ipmi_interpret_ctx_t ctx,
   if (sensor_event_bitmask_tmp)
     {
       if (ctx->flags & IPMI_INTERPRET_FLAGS_INTERPRET_OEM_DATA)
-        return (_get_sensor_oem_state (ctx,
-                                       event_reading_type_code,
-                                       sensor_type,
-                                       sensor_event_bitmask,
-                                       sensor_state));
-      else
+	{
+	  unsigned int sensor_state_tmp = IPMI_INTERPRET_STATE_NOMINAL;
+	  
+	  if (_get_sensor_oem_state (ctx,
+				     event_reading_type_code,
+				     sensor_type,
+				     sensor_event_bitmask,
+				     &sensor_state_tmp) < 0)
+	    return (-1);
+
+	  if (ctx->flags & IPMI_INTERPRET_FLAGS_IGNORE_UNRECOGNIZED_EVENTS)
+	    {
+	      if (sensor_state_tmp != IPMI_INTERPRET_STATE_UNKNOWN)
+		(*sensor_state) = sensor_state_tmp;
+	    }
+	  else
+	    (*sensor_state) = sensor_state_tmp;
+	}
+      else if (!(ctx->flags & IPMI_INTERPRET_FLAGS_IGNORE_UNRECOGNIZED_EVENTS))
         (*sensor_state) = IPMI_INTERPRET_STATE_UNKNOWN;
     }
 

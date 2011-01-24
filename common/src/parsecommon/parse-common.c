@@ -233,6 +233,9 @@ parse_workaround_flags (const char *str,
       else if (section_specific_workaround_flags
                && !strcasecmp (tok, IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IGNORE_STATE_FLAG_STR))
         (*section_specific_workaround_flags) |= IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IGNORE_STATE_FLAG;
+      else if (section_specific_workaround_flags
+	       && !strcasecmp (tok, IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IGNORE_UNRECOGNIZED_EVENTS_STR))
+	(*section_specific_workaround_flags) |= IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IGNORE_UNRECOGNIZED_EVENTS;
       else
         return (-1);
       tok = strtok (NULL, ",");

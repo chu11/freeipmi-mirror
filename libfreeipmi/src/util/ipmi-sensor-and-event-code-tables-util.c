@@ -2272,22 +2272,25 @@ ipmi_get_event_messages (uint8_t event_reading_type_code,
                                                           buf,
                                                           EVENT_BUFLEN);
 
-              if (len < 0)
-                {
-                  snprintf (buf,
-                            EVENT_BUFLEN,
-                            "Unrecognized Event = %04Xh",
-                            bitmask);
-                  
-                  if (!(tmp_event_messages[tmp_event_messages_count] = strdup (buf)))
-                    {
-                      SET_ERRNO (ENOMEM);
-                      goto cleanup;
-                    }
+	      if (!(flags & IPMI_GET_EVENT_MESSAGES_FLAG_IGNORE_UNRECOGNIZED_EVENTS))
+		{
+		  if (len < 0)
+		    {
+		      snprintf (buf,
+				EVENT_BUFLEN,
+				"Unrecognized Event = %04Xh",
+				bitmask);
+		      
+		      if (!(tmp_event_messages[tmp_event_messages_count] = strdup (buf)))
+			{
+			  SET_ERRNO (ENOMEM);
+			  goto cleanup;
+			}
 
-                  tmp_event_messages_count++;
-                  continue;
-                }
+		      tmp_event_messages_count++;
+		      continue;
+		    }
+		}
               
               if (len)
                 {

@@ -906,6 +906,9 @@ _get_event_message (ipmi_sensors_state_data_t *state_data,
       flags |= IPMI_GET_EVENT_MESSAGES_FLAGS_INTERPRET_OEM_DATA;
     }
 
+  if (state_data->prog_data->args->common.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IGNORE_UNRECOGNIZED_EVENTS)
+    flags |= IPMI_GET_EVENT_MESSAGES_FLAG_IGNORE_UNRECOGNIZED_EVENTS;
+
   if (ipmi_get_event_messages (event_reading_type_code,
                                sensor_type,
                                sensor_event_bitmask,
@@ -1565,9 +1568,18 @@ _ipmi_sensors (pstdout_state_t pstate,
             }
         }
 
-      if (prog_data->args->interpret_oem_data)
+      if (prog_data->args->interpret_oem_data 
+	  || prog_data->args->common.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IGNORE_UNRECOGNIZED_EVENTS)
 	{
-	  if (ipmi_interpret_ctx_set_flags (state_data.interpret_ctx, IPMI_INTERPRET_FLAGS_INTERPRET_OEM_DATA) < 0)
+	  unsigned int flags = 0;
+
+	  if (prog_data->args->interpret_oem_data)
+	    flags |= IPMI_INTERPRET_FLAGS_INTERPRET_OEM_DATA;
+
+	  if (prog_data->args->common.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IGNORE_UNRECOGNIZED_EVENTS)
+	    flags |= IPMI_INTERPRET_FLAGS_IGNORE_UNRECOGNIZED_EVENTS;
+
+	  if (ipmi_interpret_ctx_set_flags (state_data.interpret_ctx, flags) < 0)
 	    {
 	      pstdout_fprintf (pstate,
 			       stderr,
