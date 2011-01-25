@@ -2273,9 +2273,9 @@ ipmi_get_event_messages (uint8_t event_reading_type_code,
                                                           buf,
                                                           EVENT_BUFLEN);
 
-	      if (!(flags & IPMI_GET_EVENT_MESSAGES_FLAGS_IGNORE_UNRECOGNIZED_EVENTS))
+	      if (len < 0)
 		{
-		  if (len < 0)
+		  if (!(flags & IPMI_GET_EVENT_MESSAGES_FLAGS_IGNORE_UNRECOGNIZED_EVENTS))
 		    {
 		      snprintf (buf,
 				EVENT_BUFLEN,
@@ -2287,10 +2287,12 @@ ipmi_get_event_messages (uint8_t event_reading_type_code,
 			  SET_ERRNO (ENOMEM);
 			  goto cleanup;
 			}
-
+		      
 		      tmp_event_messages_count++;
 		      continue;
 		    }
+		  else
+		    continue;
 		}
               
               if (len)
