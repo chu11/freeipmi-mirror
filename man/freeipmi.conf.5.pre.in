@@ -1029,6 +1029,12 @@ Specify if
 .B ipmi-sensors
 should ignore not-available (i.e. N/A) sensors by default.
 .TP
+\fBipmi\-sensors\-ignore\-unrecognized\-events\fR \fIENABLE|DISABLE\fR
+Specify if
+.B ipmi-sensors
+should ignore unrecognized events (i.e. 'Unrecognized Event') in
+sensors output by default.
+.TP
 \fBipmi\-sensors\-output\-event\-bitmask\fR \fIENABLE|DISABLE\fR
 Specify if
 .B ipmi-sensors

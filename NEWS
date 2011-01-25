@@ -1,6 +1,6 @@
 FreeIPMI 1.0.2 - 01/20/11
 -------------------------
-o Support 'ignoreunrecognizedevents' workaround in ipmi-sensors.
+o Support --ignore-unrecognized-events in ipmi-sensors.
 o Minor documentation updates.
 
 FreeIPMI 1.0.1 - 01/20/11

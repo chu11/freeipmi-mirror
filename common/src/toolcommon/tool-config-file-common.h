@@ -189,6 +189,8 @@ struct config_file_data_ipmi_sensors
   int interpret_oem_data_count;
   int ignore_not_available_sensors;
   int ignore_not_available_sensors_count;
+  int ignore_unrecognized_events;
+  int ignore_unrecognized_events_count;
   int entity_sensor_names;
   int entity_sensor_names_count;
   int output_event_bitmask;

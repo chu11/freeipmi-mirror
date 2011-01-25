@@ -1,7 +1,7 @@
 2011-01-24 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors/, libfreeipmi/: Support ignore unrecognized events
-	workarounds.
+	capability.
 
 2011-01-24 Albert Chu <chu11@llnl.gov>
 
