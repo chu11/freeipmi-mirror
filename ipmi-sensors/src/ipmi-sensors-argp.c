@@ -113,30 +113,32 @@ static struct argp_option cmdline_options[] =
       "Attempt to interpret OEM data.", 46},
     { "ignore-not-available-sensors", IGNORE_NOT_AVAILABLE_SENSORS_KEY, NULL, 0,
       "Ignore not-available (i.e. N/A) sensors.", 47},
+    { "ignore-unrecognized-events", IGNORE_UNRECOGNIZED_EVENTS_KEY, NULL, 0,
+      "Ignore unrecognized events (i.e. 'Unrecognized Event') in sensors output.", 48},
     { "output-event-bitmask", OUTPUT_EVENT_BITMASK_KEY, NULL, 0,
-      "Output event bitmask value instead of the string representation.", 48},
+      "Output event bitmask value instead of the string representation.", 49},
     { "output-sensor-state", OUTPUT_SENSOR_STATE_KEY, NULL, 0,
-      "Output sensor state in output.", 49},
+      "Output sensor state in output.", 50},
     { "sensor-state-config-file", SENSOR_STATE_CONFIG_FILE_KEY, "FILE", 0,
-      "Specify an alternate sensor state configuration file.", 50},
+      "Specify an alternate sensor state configuration file.", 51},
     /* ipmimonitoring legacy support */
     { "sensor-config-file", SENSOR_STATE_CONFIG_FILE_KEY, "FILE", OPTION_HIDDEN,
-      "Specify an alternate sensor state configuration  file.", 51},
+      "Specify an alternate sensor state configuration  file.", 52},
     { "entity-sensor-names", ENTITY_SENSOR_NAMES_KEY, NULL, 0,
-      "Output sensor names with entity ids and instances.", 52},
+      "Output sensor names with entity ids and instances.", 53},
     { "no-sensor-type-output", NO_SENSOR_TYPE_OUTPUT_KEY, 0, 0,
-      "Do not show sensor type output.", 53},
+      "Do not show sensor type output.", 54},
     { "comma-separated-output", COMMA_SEPARATED_OUTPUT_KEY, 0, 0,
-      "Output fields in comma separated format.", 54},
+      "Output fields in comma separated format.", 55},
     { "no-header-output", NO_HEADER_OUTPUT_KEY, 0, 0,
-      "Do not output column headers.", 55},
+      "Do not output column headers.", 56},
     { "non-abbreviated-units", NON_ABBREVIATED_UNITS_KEY, 0, 0,
-      "Output non-abbreviated units (e.g. 'Amps' insetead of 'A').", 56},
+      "Output non-abbreviated units (e.g. 'Amps' insetead of 'A').", 57},
     { "legacy-output", LEGACY_OUTPUT_KEY, 0, 0,
-      "Output in legacy format.", 57},
+      "Output in legacy format.", 58},
     /* ipmimonitoring legacy support */
     { "ipmimonitoring-legacy-output", IPMIMONITORING_LEGACY_OUTPUT_KEY, 0, 0,
-      "Output in ipmimonitoring legacy format.", 57},
+      "Output in ipmimonitoring legacy format.", 58},
     { NULL, 0, NULL, 0, NULL, 0}
   };
 
@@ -293,6 +295,9 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case IGNORE_NOT_AVAILABLE_SENSORS_KEY:
       cmd_args->ignore_not_available_sensors = 1;
       break;
+    case IGNORE_UNRECOGNIZED_EVENTS_KEY:
+      cmd_args->ignore_unrecognized_events = 1;
+      break;
     case OUTPUT_EVENT_BITMASK_KEY:
       cmd_args->output_event_bitmask = 1;
       break;
@@ -425,6 +430,8 @@ _ipmi_sensors_config_file_parse (struct ipmi_sensors_arguments *cmd_args)
     cmd_args->interpret_oem_data = config_file_data.interpret_oem_data;
   if (config_file_data.ignore_not_available_sensors_count)
     cmd_args->ignore_not_available_sensors = config_file_data.ignore_not_available_sensors;
+  if (config_file_data.ignore_unrecognized_events_count)
+    cmd_args->ignore_unrecognized_events = config_file_data.ignore_unrecognized_events;
   if (config_file_data.output_event_bitmask_count)
     cmd_args->output_event_bitmask = config_file_data.output_event_bitmask;
   if (config_file_data.output_sensor_state_count)
@@ -509,6 +516,7 @@ ipmi_sensors_argp_parse (int argc, char **argv, struct ipmi_sensors_arguments *c
   cmd_args->shared_sensors = 0;
   cmd_args->interpret_oem_data = 0;
   cmd_args->ignore_not_available_sensors = 0;
+  cmd_args->ignore_unrecognized_events = 0;
   cmd_args->output_event_bitmask = 0;
   cmd_args->output_sensor_state = 0;
   cmd_args->sensor_state_config_file = NULL;

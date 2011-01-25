@@ -47,16 +47,17 @@ enum ipmi_sensors_argp_option_keys
     SHARED_SENSORS_KEY = 164,
     INTERPRET_OEM_DATA_KEY = 165,
     IGNORE_NOT_AVAILABLE_SENSORS_KEY = 166,
-    OUTPUT_EVENT_BITMASK_KEY = 167,
-    OUTPUT_SENSOR_STATE_KEY = 168,
-    SENSOR_STATE_CONFIG_FILE_KEY = 169,
-    ENTITY_SENSOR_NAMES_KEY = 170,
-    NO_SENSOR_TYPE_OUTPUT_KEY = 171,
-    COMMA_SEPARATED_OUTPUT_KEY = 172,
-    NO_HEADER_OUTPUT_KEY = 173,
-    NON_ABBREVIATED_UNITS_KEY = 174,
-    LEGACY_OUTPUT_KEY = 175,
-    IPMIMONITORING_LEGACY_OUTPUT_KEY = 176,
+    IGNORE_UNRECOGNIZED_EVENTS_KEY = 167,
+    OUTPUT_EVENT_BITMASK_KEY = 168,
+    OUTPUT_SENSOR_STATE_KEY = 169,
+    SENSOR_STATE_CONFIG_FILE_KEY = 170,
+    ENTITY_SENSOR_NAMES_KEY = 171,
+    NO_SENSOR_TYPE_OUTPUT_KEY = 172,
+    COMMA_SEPARATED_OUTPUT_KEY = 173,
+    NO_HEADER_OUTPUT_KEY = 174,
+    NON_ABBREVIATED_UNITS_KEY = 175,
+    LEGACY_OUTPUT_KEY = 176,
+    IPMIMONITORING_LEGACY_OUTPUT_KEY = 177,
   };
 
 struct ipmi_sensors_arguments
@@ -80,6 +81,7 @@ struct ipmi_sensors_arguments
   int shared_sensors;
   int interpret_oem_data;
   int ignore_not_available_sensors;
+  int ignore_unrecognized_events;
   int output_event_bitmask;
   int output_sensor_state;
   char *sensor_state_config_file;
