@@ -62,6 +62,7 @@ release @value{VERSION} of the FreeIPMI.
 * FreeIPMI vs OpenIPMI vs Ipmitool vs Ipmiutil::  
 * What is special about FreeIPMI::  
 * Serial Over LAN (SOL) / Ipmiconsole Setup::
+* Does my system support IPMI?::
 * SSIF Driver Configuration::   
 * x86-64 Compilation::          
 * libgcrypt requirement::          
@@ -297,7 +298,7 @@ Likewise, by implementing everything in userspace libraries and tools,
 portability to multiple operating systems and architectures should be
 easier.
 
-@node Serial Over LAN (SOL) / Ipmiconsole Setup, SSIF Driver Configuration, What is special about FreeIPMI, Top
+@node Serial Over LAN (SOL) / Ipmiconsole Setup, Does my system support IPMI?, What is special about FreeIPMI, Top
 @section What setup is needed for Serial over LAN (SOL) or Ipmiconsole
 
 The setup of Serial-over-LAN (SOL) and/or Ipmiconsole is highly dependent on your motherboard.  However, most motherboards
@@ -326,7 +327,28 @@ provides a pretty good overview of setting of a serial console on
 Linux.  The only difference for setting up a serial console with
 Ipmiconsole or SOL, is the ttySX terminal may need to be changed.
 
-@node SSIF Driver Configuration, x86-64 Compilation, Serial Over LAN (SOL) / Ipmiconsole Setup, Top
+@node Does my system support IPMI?, SSIF Driver Configuration, Serial Over LAN (SOL) / Ipmiconsole Setup, Top
+@section Does my system support IPMI?
+
+Unfortunately, there are no universally defined mechanisms for
+determining if a system supports IPMI.  The following may provide
+hints.
+
+1) FreeIPMI's ipmi-locate can be used to determine if IPMI can be
+found on your system.  Users are cautioned though, the failure to
+discover IPMI via ipmi-locate is not sufficient to disprove that IPMI
+exists on your system.  Your system may not publish such information
+or may expect clients to communicate at default locations.
+
+2) dmidecode may be similarly used to probe for devices that support
+IPMI on your system.  Again, the failure to find an IPMI supported
+device is not sufficient to show lack of IPMI support.
+
+Ultimately, some amount of information from product documents or trial
+and error may be necessary to determine if IPMI is supported on your
+system.
+
+@node SSIF Driver Configuration, x86-64 Compilation, Does my system support IPMI?, Top
 @section SSIF Driver Configuration
 
 FreeIPMI's SSIF driver works on top of kernel'2 i2c device

@@ -86,6 +86,10 @@ wait and try again.
 Please check configuration or specify specific device or driver on the
 command line.
 .LP
+"driver timeout" - The inband driver has timed out communicating to
+the local BMC or service processor.  The BMC or service processor may
+be busy or (worst case) possibly non-functioning.
+.LP
 Please see WORKAROUNDS below to also if there are any vendor specific
 bugs that have been discovered and worked around.
 

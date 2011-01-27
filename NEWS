@@ -1,7 +1,8 @@
 FreeIPMI 1.0.2 - 01/20/11
 -------------------------
 o Support --ignore-unrecognized-events in ipmi-sensors.
-o Minor documentation updates.
+o Clarify error messages in ipmi-locate.
+o Various documentation updates.
 
 FreeIPMI 1.0.1 - 01/20/11
 -------------------------
