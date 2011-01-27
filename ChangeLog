@@ -1,3 +1,19 @@
+2011-01-27 Albert Chu <chu11@llnl.gov>
+
+	Various ipmi-locate fixes based on user comments
+
+	* common/man/manpage-common-troubleshooting.man: Add "driver
+	timeout" error description.
+
+	* ipmi-locate/ipmi-locate.8.pre.in: Add text on how ipmi-locate
+	can be used.
+
+	* doc/freeipmi-faq.texi: Add info on determining if your system
+	has IPMI.
+	
+	* ipmi-locate/src/ipmi-locate.c: Fix error message output for
+	clarity.
+
 2011-01-24 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors/, libfreeipmi/: Support ignore unrecognized events
