@@ -341,8 +341,26 @@ exists on your system.  Your system may not publish such information
 or may expect clients to communicate at default locations.
 
 2) dmidecode may be similarly used to probe for devices that support
-IPMI on your system.  Again, the failure to find an IPMI supported
-device is not sufficient to show lack of IPMI support.
+IPMI on your system.  You may grep for IPMI or specifying the IPMI DMI
+type on the command line.
+
+@example
+# > dmidecode --type 38
+# dmidecode 2.10
+SMBIOS 2.5 present.
+
+Handle 0x0049, DMI type 38, 18 bytes
+IPMI Device Information
+        Interface Type: KCS (Keyboard Control Style)
+        Specification Version: 2.0
+        I2C Slave Address: 0x10
+        NV Storage Device: Not Present
+        Base Address: 0x0000000000000CA2 (I/O)
+        Register Spacing: Successive Byte Boundaries
+@end example
+
+Again, the failure to find an IPMI supported device is not sufficient
+to show lack of IPMI support.
 
 Ultimately, some amount of information from product documents or trial
 and error may be necessary to determine if IPMI is supported on your
