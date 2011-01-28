@@ -547,6 +547,15 @@ display_get_device_guid (bmc_info_state_data_t *state_data)
 
   if (ipmi_cmd_get_device_guid (state_data->ipmi_ctx, obj_cmd_rs) < 0)
     {
+      if (!state_data->prog_data->args->get_device_guid
+          && ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+          && ipmi_check_completion_code (obj_cmd_rs,
+                                         IPMI_COMP_CODE_INVALID_COMMAND) == 1)
+        {
+          rv = 0;
+          goto cleanup;
+        }
+
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_cmd_get_device_guid: %s\n",
