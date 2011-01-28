@@ -1,5 +1,9 @@
 2011-01-27 Albert Chu <chu11@llnl.gov>
 
+	* Support Supermicro X8DTL-3F.
+	
+2011-01-27 Albert Chu <chu11@llnl.gov>
+
 	Various ipmi-locate fixes based on user comments
 
 	* common/man/manpage-common-troubleshooting.man: Add "driver
