@@ -1,3 +1,8 @@
+2011-01-28 Albert Chu <chu11@llnl.gov>
+
+	* doc/freeipmi-faq.texi: Add additional info on determining if
+	your system has IPMI support.
+	
 2011-01-27 Albert Chu <chu11@llnl.gov>
 
 	* bmc-info/: Support motherboards that don't implement Get Device
