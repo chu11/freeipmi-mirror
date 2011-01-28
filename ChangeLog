@@ -1,5 +1,10 @@
 2011-01-28 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/spec/ipmi-comp-code-spec.h: Fix
+	spelling typo.
+	
+2011-01-28 Albert Chu <chu11@llnl.gov>
+
 	* doc/freeipmi-faq.texi: Add additional info on determining if
 	your system has IPMI support.
 	
