@@ -182,6 +182,7 @@ extern "C" {
  * specifically for vendor or vendor changed for themselves.
  */
 #define IPMI_SUPERMICRO_PRODUCT_ID_X8DTU_6PLUS 1549
+#define IPMI_SUPERMICRO_PRODUCT_ID_X8DTL_3F    6
 
 #ifdef __cplusplus
 }
