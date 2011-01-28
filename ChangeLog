@@ -1,5 +1,10 @@
 2011-01-27 Albert Chu <chu11@llnl.gov>
 
+	* bmc-info/: Support motherboards that don't implement Get Device
+	Guid.
+	
+2011-01-27 Albert Chu <chu11@llnl.gov>
+
 	* Support Supermicro X8DTL-3F.
 	
 2011-01-27 Albert Chu <chu11@llnl.gov>
