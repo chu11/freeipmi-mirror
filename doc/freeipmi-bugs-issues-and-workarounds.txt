@@ -789,6 +789,10 @@ MSI MS-91D2: The Get System Info Parameters command requires
 administrator privileges rather than the defined user level
 privileges.  No current resolution.
 
+Supermicro X8DTL-3F: The Get System Info Parameters command returns
+insufficient privilege level (0xD4) even though the privilege level is
+sufficient.  No current resolution.
+
 ipmi-dcmi
 ---------
 
