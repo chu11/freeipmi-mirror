@@ -131,8 +131,8 @@ extern "C" {
   "for the particular channel."
 
 #define IPMI_COMP_CODE_INSUFFICIENT_PRIVILEGE_LEVEL                  0xD4
-#define IPMI_COMP_CODE_INSUFFICIENT_PRIVILEGE_LEVEL_STR                   \
-  "Cannot execute command due to innsufficient privilege level or other " \
+#define IPMI_COMP_CODE_INSUFFICIENT_PRIVILEGE_LEVEL_STR                  \
+  "Cannot execute command due to insufficient privilege level or other " \
   "security-based restriction (e.g. disabled for 'firmware firewall')."
 
 #define IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED               0xD5
