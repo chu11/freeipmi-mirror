@@ -1,3 +1,12 @@
+2011-02-01 Albert Chu <chu11@llnl.gov>
+
+	* bmc-watchdog/src/bmc-watchdog.c (_deamon_cmd_error_exit): Fix
+	typo, rename to 'deamon' to 'daemon'.  Fix elsewhere
+	appropriately.
+
+	* bmc-watchdog/src/bmc-watchdog.c (_daemon_setup, _daemon_cmd):
+	Call _bmclog() and exit(1) instead instead of _err_exit().
+	
 2011-01-28 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/spec/ipmi-comp-code-spec.h: Fix

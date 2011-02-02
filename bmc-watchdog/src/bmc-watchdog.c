@@ -1706,7 +1706,7 @@ _daemon_init ()
 }
 
 static void
-_deamon_cmd_error_exit (char *str, int ret)
+_daemon_cmd_error_exit (char *str, int ret)
 {
   assert (str);
 
@@ -1760,14 +1760,17 @@ _daemon_setup (void)
                                           &initial_countdown_seconds,
                                           NULL)))
         {
-          _deamon_cmd_error_exit ("Get Watchdog Timer", ret);
+          _daemon_cmd_error_exit ("Get Watchdog Timer", ret);
           continue;
         }
       break;
     }
 
   if (timer_state == IPMI_BMC_WATCHDOG_TIMER_TIMER_STATE_RUNNING)
-    _err_exit ("watchdog timer must be stopped before running daemon");
+    {
+      _bmclog ("Error: watchdog timer must be stopped before running daemon");
+      exit (1);
+    }
 
   timer_use = (cmd_args.timer_use) ? cmd_args.timer_use_arg : timer_use;
   log = (cmd_args.log) ? cmd_args.log_arg : log;
@@ -1782,11 +1785,17 @@ _daemon_setup (void)
 
   if ((pre_timeout_interrupt != IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_NONE)
       && (pre_timeout_interval > initial_countdown_seconds))
-    _err_exit ("pre-timeout interval greater than initial countdown seconds");
+    {
+      _bmclog ("Error: pre-timeout interval greater than initial countdown seconds");
+      exit (1);
+    }
   if (cmd_args.reset_period)
     reset_period = cmd_args.reset_period_arg;
   if (reset_period > initial_countdown_seconds)
-    _err_exit ("reset-period interval greater than initial countdown seconds");
+    {
+      _bmclog ("Error: reset-period interval greater than initial countdown seconds");
+      exit (1);
+    }
 
   while (1)
     {
@@ -1805,7 +1814,7 @@ _daemon_setup (void)
                                           (cmd_args.clear_oem) ? 1 : 0,
                                           initial_countdown_seconds)))
         {
-          _deamon_cmd_error_exit ("Set Watchdog Timer", ret);
+          _daemon_cmd_error_exit ("Set Watchdog Timer", ret);
           continue;
         }
       break;
@@ -1817,7 +1826,7 @@ _daemon_setup (void)
       if ((ret = _reset_watchdog_timer_cmd (BMC_WATCHDOG_RETRY_WAIT_TIME,
                                             BMC_WATCHDOG_RETRY_ATTEMPT)))
         {
-          _deamon_cmd_error_exit ("Reset Watchdog Timer", ret);
+          _daemon_cmd_error_exit ("Reset Watchdog Timer", ret);
           continue;
         }
       break;
@@ -1844,7 +1853,7 @@ _daemon_setup (void)
                                             gratuitous_arp,
                                             arp_response)))
             {
-              _deamon_cmd_error_exit ("Suspend BMC ARPs", ret);
+              _daemon_cmd_error_exit ("Suspend BMC ARPs", ret);
               continue;
             }
           break;
@@ -1902,9 +1911,15 @@ _daemon_cmd (void)
     reset_period = cmd_args.reset_period_arg;
 
   if (signal (SIGTERM, _signal_handler) == SIG_ERR)
-    _err_exit ("signal: %s", strerror (errno));
+    {
+      _bmclog ("signal: %s", strerror (errno));
+      exit (1);
+    }
   if (signal (SIGINT, _signal_handler) == SIG_ERR)
-    _err_exit ("signal: %s", strerror (errno));
+    {
+      _bmclog ("signal: %s", strerror (errno));
+      exit (1);
+    }
 
   _bmclog ("starting bmc-watchdog daemon");
 

@@ -5,6 +5,7 @@ o Clarify error messages in ipmi-locate.
 o Support Supermicro X8DTL-3F motherboard OEM sensors.
 o In bmc-info, support motherboards that don't implement Get Device
   Guid.
+o In bmc-watchdog, fix error logging corner case.
 o Various documentation updates.
 
 FreeIPMI 1.0.1 - 01/20/11
