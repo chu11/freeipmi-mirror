@@ -1,3 +1,7 @@
+2011-02-04 Christopher Maestas <cdmaestas@gmail.com> and Albert Chu <chu11@llnl.gov>
+
+	* contrib/ganglia/ganglia_ipmi_sensors.pl: Support new -r option.
+	
 2011-02-01 Albert Chu <chu11@llnl.gov>
 
 	* bmc-watchdog/src/bmc-watchdog.c (_deamon_cmd_error_exit): Fix

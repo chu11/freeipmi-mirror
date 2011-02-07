@@ -37,6 +37,12 @@
 # Options:
 #
 # -h - specify hostname(s) to remotely access (don't specify for inband)
+# -r - specify search and replace substitution expressions (separated by a colon) to
+#      modify a hostname before being passed to gmetric.  This is useful if
+#      the IPMI hostname differs from the desired hostname to input to gmetric.
+#      For example "ipmi:my" would turn "ipmihost4" into "myhost4".  Not specifying
+#      a colon results in a degenerate string removal.  For example,
+#      "-ipmi" would turn "host4-ipmi" into "host4".
 # -S - specify an alternate ipmi-sensors location
 # -s - specify additional ipmi-sensors arguments
 # -G - specify an alternate gmetric location
@@ -48,6 +54,11 @@
 # Environment Variables:
 #
 # IPMI_HOSTS - specify hostname(s) to remotely access (don't specify for inband)
+# IPMI_HOSTS_SUBST - specify search and replace substitution
+#                    expressions (separated by a colon) to modify a
+#                    hostname before being passed to gmetric.  This is
+#                    useful if the IPMI hostname differs from the
+#                    desired hostname to input to gmetric.
 # IPMI_SENSORS_PATH - specify an alternate ipmi-sensors location
 # IPMI_SENSORS_ARGS - specify additional ipmi-sensors arguments
 # GMETRIC_PATH - specify an alternate gmetric location
@@ -112,6 +123,7 @@ my $debug = 0;
 my $no_ganglia = 0;
 
 my $IPMI_HOSTS = undef;
+my $IPMI_HOSTS_SUBST = undef;
 my $IPMI_SENSORS_PATH = "/usr/sbin/ipmi-sensors";
 my $IPMI_SENSORS_ARGS = "";
 my $GMETRIC_PATH = "/usr/bin/gmetric";
@@ -123,12 +135,14 @@ my @IPMI_SENSORS_OUTPUT_LINES;
 my $line;
 
 my $cmd;
+my @subst;
 
 sub usage
 {
     my $prog = $0;
-    print "Usage: $prog [-h <hostname(s)>] [-S <path>] [-s <sensors arguments>] [-G <path>] [-g <arguments>] [-T] [-t] [-d] [-H]\n";
+    print "Usage: $prog [-h <hostname(s)>] [-r <string>] [-S <path>] [-s <sensors arguments>] [-G <path>] [-g <arguments>] [-T] [-t] [-d] [-H]\n";
     print "  -h specify hostname(s) to remotely access\n";
+    print "  -r specify search and replace substitution expressions on the hostname (e.g. 'ipmi:host')\n";
     print "  -S specify an alternate ipmi-sensors path\n";
     print "  -s specify additional ipmi-sensors arguments\n";
     print "  -G specify an alternate gmetric path\n";
@@ -141,7 +155,7 @@ sub usage
     exit 0;
 }
 
-if (!getopts("h:S:s:G:g:TtdDH"))
+if (!getopts("h:r:S:s:G:g:TtdDH"))
 {
     usage();
 }
@@ -154,6 +168,11 @@ if (defined($main::opt_H))
 if (defined($main::opt_h))
 {
     $IPMI_HOSTS = $main::opt_h;
+}
+
+if (defined($main::opt_r))
+{
+    $IPMI_HOSTS_SUBST = $main::opt_r;
 }
 
 if (defined($main::opt_S))
@@ -201,6 +220,11 @@ if ($ENV{"IPMI_HOSTS"})
     $IPMI_HOSTS = $ENV{"IPMI_HOSTS"};
 }
 
+if ($ENV{"IPMI_HOSTS_SUBST"})
+{
+    $IPMI_HOSTS_SUBST = $ENV{"IPMI_HOSTS_SUBST"};
+}
+
 if ($ENV{"IPMI_SENSORS_PATH"})
 {
     $IPMI_SENSORS_PATH = $ENV{"IPMI_SENSORS_PATH"};
@@ -224,6 +248,7 @@ if ($ENV{"GMETRIC_ARGS"})
 if ($debug)
 {
     print "IPMI_HOSTS=$IPMI_HOSTS\n";
+    print "IPMI_HOSTS_SUBST=$IPMI_HOSTS_SUBST\n";
     print "IPMI_SENSORS_PATH=$IPMI_SENSORS_PATH\n";
     print "IPMI_SENSORS_ARGS=$IPMI_SENSORS_ARGS\n";
     print "GMETRIC_PATH=$GMETRIC_PATH\n";
@@ -325,6 +350,11 @@ foreach $line (@IPMI_SENSORS_OUTPUT_LINES)
     $id_string =~ s/ /_/g;
     $id_string =~ s/\//_/g;
     
+    if ($IPMI_HOSTS_SUBST) {
+	@subst = split(/:/, $IPMI_HOSTS_SUBST);
+	$hostname =~ s/$subst[0]/$subst[1]/;
+    }
+
     if ($hostname ne "localhost" && $hostname ne "127.0.0.1")
     {
         my $packet_ip = gethostbyname($hostname);
