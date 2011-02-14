@@ -35,6 +35,10 @@ systems.
 --prefix=/usr --exec-prefix=/usr --sysconfdir=/etc
 --localstatedir=/var --mandir=/usr/share/man
 
+If you install the binaries or libraries in non-standard locations,
+you may have to update your PATH or LD_LIBRARY_PATH environment
+variables.
+
 Your mileage may vary depending on your system.
 
 Building RPMs
