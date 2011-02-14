@@ -578,8 +578,23 @@ _sdr_cache_record_write (ipmi_sdr_cache_ctx_t ctx,
   /* Record Length plus the header bytes should match buflen. */
   if ((((uint8_t)buf[IPMI_SDR_CACHE_SDR_RECORD_LENGTH_INDEX]) + IPMI_SDR_CACHE_SDR_RECORD_HEADER_LENGTH) != buflen)
     {
-      SDR_CACHE_SET_ERRNUM (ctx, IPMI_SDR_CACHE_ERR_CACHE_CREATE_INVALID_RECORD_LENGTH);
-      return (-1);
+      /* 
+       * IPMI Workaround (achu)
+       *
+       * Discovered on HP Proliant DL585G7
+       *
+       * When reading an entire SDR record (using
+       * IPMI_SDR_READ_ENTIRE_RECORD_BYTES_TO_READ), sometimes records
+       * are returned with an excess of bytes.  The following
+       * truncates the buffer length to the correct size.
+       */
+      if ((((uint8_t)buf[IPMI_SDR_CACHE_SDR_RECORD_LENGTH_INDEX]) + IPMI_SDR_CACHE_SDR_RECORD_HEADER_LENGTH) <= buflen)
+	buflen = ((uint8_t)buf[IPMI_SDR_CACHE_SDR_RECORD_LENGTH_INDEX]) + IPMI_SDR_CACHE_SDR_RECORD_HEADER_LENGTH;
+      else
+	{
+	  SDR_CACHE_SET_ERRNUM (ctx, IPMI_SDR_CACHE_ERR_CACHE_CREATE_INVALID_RECORD_LENGTH);
+	  return (-1);
+	}
     }
 
   if (record_ids)
