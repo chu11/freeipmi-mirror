@@ -739,6 +739,11 @@ Inventec 5442/Dell Xanadu III: Sensor bridging over IPMI 1.5 fails b/c
 IPMB respones have invalid authentication codes.  This bug is
 confirmed to be fixed on newer firmware.
 
+HP Proliant DL585G7: When reading an entire SDR record, sometimes
+records are returned with an excess number of bytes.  For example, the
+SDR record is 15 bytes long, but a record of length 20 is returned.
+Resolved with special case handling.
+
 ipmi-sel
 --------
 
