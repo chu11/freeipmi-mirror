@@ -174,6 +174,8 @@ extern "C" {
  * Supermicro                              *
  *******************************************/
 
+#define IPMI_SUPERMICRO_PRODUCT_ID_X7DBR_3     4
+
 #define __IPMI_SUPERMICRO_PRODUCT_ID_X8DT      43707
 #define IPMI_SUPERMICRO_PRODUCT_ID_X8DTH       __IPMI_SUPERMICRO_PRODUCT_ID_X8DT
 #define IPMI_SUPERMICRO_PRODUCT_ID_X8DTG       __IPMI_SUPERMICRO_PRODUCT_ID_X8DT

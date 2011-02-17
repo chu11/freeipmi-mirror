@@ -91,6 +91,7 @@ extern "C" {
  *******************************************/
 
 /*
+ * Supermicro X7DBR-3 (X7DBR_3)
  * Supermicro X8DTH
  * Supermicro X8DTG
  * Supermicro X8DTU

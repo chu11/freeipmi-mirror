@@ -800,25 +800,6 @@ _interpret_sensor_oem_discrete_cpu_temp (ipmi_interpret_ctx_t ctx,
   assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
   assert (ctx->interpret_sensor.sensor_oem_config);
 
-  /* Supermicro X8DTH/X8DTG/X8DTU/X8DT3-LN4F/X8DTU-6+/X8DTL-3F CPU Temperature Sensor
-   *
-   * Manufacturer ID = 47488 (Supermicro, not IANA number, special case)
-   * Product ID = 43707 (X8DTH, X8DTG, X8DTU, X8DT3-LN4F / X8DT3_LN4F), 1549 (X8DTU-6+ / X8DTU_6PLUS), 6 (X8DTL-3F / X8DTL_3F)
-   * Event/Reading Type Code = 70h (OEM)
-   * Sensor Type = C0h (OEM)
-   * Value 0x0000 = "Low"
-   * Value 0x0001 = "Medium"
-   * Value 0x0002 = "High"
-   * Value 0x0004 = "Overheat"
-   * Value 0x0007 = "Not Installed"
-   *
-   * IPMI_OEM_Value 47488 43707 0x70 0xC0 0x0000 Nominal
-   * IPMI_OEM_Value 47488 43707 0x70 0xC0 0x0001 Warning
-   * IPMI_OEM_Value 47488 43707 0x70 0xC0 0x0002 Warning
-   * IPMI_OEM_Value 47488 43707 0x70 0xC0 0x0004 Critical
-   * IPMI_OEM_Value 47488 43707 0x70 0xC0 0x0007 Warning
-   */
-
   if (_interpret_sensor_oem_config_create (ctx,
 					   manufacturer_id,
 					   product_id,
@@ -858,6 +839,24 @@ _interpret_sensor_oem_supermicro (ipmi_interpret_ctx_t ctx)
   assert (ctx);
   assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
   assert (ctx->interpret_sensor.sensor_oem_config);
+
+  /* Supermicro X7DBR-3/X8DTH/X8DTG/X8DTU/X8DT3-LN4F/X8DTU-6+/X8DTL-3F CPU Temperature Sensor
+   *
+   * Manufacturer ID = 10437 (Peppercon, IPMI card manufacturer), 47488 (Supermicro, not IANA number, special case)
+   * Product ID = 4 (X7DBR-3), 43707 (X8DTH, X8DTG, X8DTU, X8DT3-LN4F / X8DT3_LN4F), 1549 (X8DTU-6+ / X8DTU_6PLUS), 6 (X8DTL-3F / X8DTL_3F)
+   * Event/Reading Type Code = 70h (OEM)
+   * Sensor Type = C0h (OEM)
+   * Value 0x0000 = "Low"
+   * Value 0x0001 = "Medium"
+   * Value 0x0002 = "High"
+   * Value 0x0004 = "Overheat"
+   * Value 0x0007 = "Not Installed"
+   */
+
+  if (_interpret_sensor_oem_discrete_cpu_temp (ctx,
+                                               IPMI_IANA_ENTERPRISE_ID_PEPPERCON,
+                                               IPMI_SUPERMICRO_PRODUCT_ID_X7DBR_3) < 0)
+    return (-1);
 
   if (_interpret_sensor_oem_discrete_cpu_temp (ctx,
                                                IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
