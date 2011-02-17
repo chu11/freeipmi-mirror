@@ -598,11 +598,6 @@ Enable_IPMI_Msgs and Privilege_Limit are not changeable via Set User
 Access for some users.  The values are not changeable until a username
 has been set.  No current resolution.  [FUNCTIONAL]
 
-Intel S5500WBV/Penguin Relion 700: Usernames are not reconfigurable
-after they have been set atleast once.  Set User Name command responds
-with error code CCh = 'Invalid data field in Request'.  No current
-resolution.  [FUNCTIONAL]
-
 Intel S5500WBV/Penguin Relion 700: Setting Non-volatile settings also
 changes Volatile settings for channel configuration.  No current
 resolution.

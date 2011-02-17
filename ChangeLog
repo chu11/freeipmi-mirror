@@ -1,5 +1,11 @@
 2011-02-17 Albert Chu <chu11@llnl.gov>
 
+	* bmc-config/src/bmc-config-user-sections.c (username_commit):
+	Handle corner case in which motherboard does not allow
+	configuration of identical username.
+	
+2011-02-17 Albert Chu <chu11@llnl.gov>
+
 	* Support Supermicro X7DBR-3 OEM Sensors.
 	
 2011-02-17 Albert Chu <chu11@llnl.gov>

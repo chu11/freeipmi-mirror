@@ -11,6 +11,8 @@ o Support new -r option in ganglia_ipmi_sensors.pl plugin to modify
   ipmi hostname.
 o Add workaround for SDR caching compliance bug in HP Proliant
   DL585G7.
+o Add workaround for motherboards that do not allow you to configure
+  identical usernames.
 o Various documentation updates.
 
 FreeIPMI 1.0.1 - 01/20/11
