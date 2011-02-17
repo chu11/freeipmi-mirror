@@ -2,7 +2,7 @@ FreeIPMI 1.0.2 - 01/20/11
 -------------------------
 o Support --ignore-unrecognized-events in ipmi-sensors.
 o Clarify error messages in ipmi-locate.
-o Support Supermicro X8DTL-3F motherboard OEM sensors.
+o Support Supermicro X8DTL-3F and X8DT3-LN4F motherboard OEM sensors.
 o In bmc-info, support motherboards that don't implement Get Device
   Guid.
 o In bmc-watchdog, fix error logging corner case.
