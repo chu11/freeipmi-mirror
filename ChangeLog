@@ -1,3 +1,7 @@
+2011-02-17 Albert Chu <chu11@llnl.gov>
+
+	* Support Supermicro X8DT3-LN4F motherboard.
+	
 2011-02-14 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/sdr-cache/ipmi-sdr-cache-create.c

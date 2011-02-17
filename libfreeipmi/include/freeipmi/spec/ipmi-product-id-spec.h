@@ -178,6 +178,7 @@ extern "C" {
 #define IPMI_SUPERMICRO_PRODUCT_ID_X8DTH       __IPMI_SUPERMICRO_PRODUCT_ID_X8DT
 #define IPMI_SUPERMICRO_PRODUCT_ID_X8DTG       __IPMI_SUPERMICRO_PRODUCT_ID_X8DT
 #define IPMI_SUPERMICRO_PRODUCT_ID_X8DTU       __IPMI_SUPERMICRO_PRODUCT_ID_X8DT
+#define IPMI_SUPERMICRO_PRODUCT_ID_X8DT3_LN4F  __IPMI_SUPERMICRO_PRODUCT_ID_X8DT
 /* achu: X8DTU-6+, why not same as above?  Not sure, possibly created
  * specifically for vendor or vendor changed for themselves.
  */
