@@ -293,8 +293,7 @@ if ($debug)
 $IPMI_SENSORS_OUTPUT = `$cmd`;
 if ($? != 0)
 {
-    print "$IPMI_SENSORS_PATH: failed\n";
-    exit(1);
+    print "$IPMI_SENSORS_PATH: exited with error\n";
 }
 
 @IPMI_SENSORS_OUTPUT_LINES = split(/\n/, $IPMI_SENSORS_OUTPUT);
