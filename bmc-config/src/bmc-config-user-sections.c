@@ -525,6 +525,7 @@ username_commit (const char *section_name,
   bmc_config_state_data_t *state_data;
   uint8_t userid;
   fiid_obj_t obj_cmd_rs = NULL;
+  fiid_obj_t obj_get_user_name_cmd_rs = NULL;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
 
   assert (section_name);
@@ -568,6 +569,63 @@ username_commit (const char *section_name,
                          "ipmi_cmd_set_user_name: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
+      /*
+       * IPMI Workaround (achu)
+       *
+       * Discovered on Intel S5500WBV/Penguin Relion 700
+       *
+       * Set username command does not allow duplicate usernames to be
+       * committed.
+       *
+       * If configured username identical to inputted one, don't
+       * output error.
+       */
+      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+          && (ipmi_check_completion_code (obj_cmd_rs,
+                                          IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1))
+        {
+	  char username[IPMI_MAX_USER_NAME_LENGTH+1];
+
+	  memset (username, '\0', IPMI_MAX_USER_NAME_LENGTH+1);
+
+	  if (!(obj_get_user_name_cmd_rs = fiid_obj_create (tmpl_cmd_get_user_name_rs)))
+	    {
+	      pstdout_fprintf (state_data->pstate,
+			       stderr,
+			       "fiid_obj_create: %s\n",
+			       strerror (errno));
+	      goto cleanup;
+	    }
+
+	  if (ipmi_cmd_get_user_name (state_data->ipmi_ctx,
+				      userid,
+				      obj_get_user_name_cmd_rs) < 0)
+	    {
+	      if (state_data->prog_data->args->config_args.common.debug)
+		pstdout_fprintf (state_data->pstate,
+				 stderr,
+				 "ipmi_cmd_get_user_name: %s\n",
+				 ipmi_ctx_errormsg (state_data->ipmi_ctx));
+	      goto error_out;
+	    }
+
+	  if (fiid_obj_get_data (obj_get_user_name_cmd_rs,
+				 "user_name",
+				 username,
+				 IPMI_MAX_USER_NAME_LENGTH) < 0)
+	    {
+	      pstdout_fprintf (state_data->pstate,
+			       stderr,
+			       "fiid_obj_get_data: 'user_name': %s\n",
+			       fiid_obj_errormsg (obj_get_user_name_cmd_rs));
+	      goto cleanup;
+	    }
+	  
+	  if (!strcmp(username, kv->value_input))
+	    goto out;
+        }
+
+    error_out:
       if (config_is_non_fatal_error (state_data->ipmi_ctx,
                                      obj_cmd_rs,
                                      &ret))
@@ -576,9 +634,11 @@ username_commit (const char *section_name,
       goto cleanup;
     }
 
+ out:
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
+  fiid_obj_destroy (obj_get_user_name_cmd_rs);
   return (rv);
 }
 
