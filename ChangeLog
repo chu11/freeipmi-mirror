@@ -1,5 +1,9 @@
 2011-02-17 Albert Chu <chu11@llnl.gov>
 
+	* Support Supermicro X7DBR-3 OEM Sensors.
+	
+2011-02-17 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/src/interpret/: Support Dell Module/Board OEM sensor
 	interpretation.
 	
