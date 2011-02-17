@@ -1,5 +1,10 @@
 2011-02-17 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/src/interpret/: Support Dell Module/Board OEM sensor
+	interpretation.
+	
+2011-02-17 Albert Chu <chu11@llnl.gov>
+
 	* contrib/ganglia/ganglia_ipmi_sensors.pl,
 	contrib/nagios/nagios_ipmi_sensors.pl: Do not exit out if an error
 	occurs, an error could have occurred if one node out of a

@@ -57,6 +57,7 @@
 #include "freeipmi/spec/ipmi-event-reading-type-code-oem-spec.h"
 #include "freeipmi/spec/ipmi-iana-enterprise-numbers-spec.h"
 #include "freeipmi/spec/ipmi-product-id-spec.h"
+#include "freeipmi/spec/ipmi-sensor-types-spec.h"
 #include "freeipmi/spec/ipmi-sensor-types-oem-spec.h"
 #include "freeipmi/spec/ipmi-sensor-and-event-code-tables-oem-spec.h"
 
@@ -705,6 +706,85 @@ _interpret_sensor_oem_dell_power_optimized (ipmi_interpret_ctx_t ctx)
   oem_conf->oem_state[8].oem_state_type = IPMI_OEM_STATE_TYPE_BITMASK;
 
   oem_conf->oem_state_count = 9;
+
+  return (0);
+}
+
+static int
+_interpret_sensor_oem_dell_module_board_status (ipmi_interpret_ctx_t ctx)
+{
+  struct ipmi_interpret_sensor_oem_config *oem_conf;
+
+  assert (ctx);
+  assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
+  assert (ctx->interpret_sensor.sensor_oem_config);
+
+  /* Dell Poweredge R610/R710 Module/Board OEM
+   *
+   * Manufacturer ID = 674 (Dell)
+   * Product ID = 256 (Poweredge)
+   * Event/Reading Type Code = 70h (OEM)
+   * Sensor Type = 15h (Module/Board)
+   * Bitmask 0x0001 = "Absent"
+   * Bitmask 0x0002 = "Standby"
+   * Bitmask 0x0004 = "IPMI Function ready"
+   * Bitmask 0x0008 = "Fully ready"
+   * Bitmask 0x0010 = "Offline"
+   * Bitmask 0x0020 = "Failed"
+   * Bitmask 0x0040 = "Active"
+   * Bitmask 0x0080 = "Booting"
+   * Bitmask 0x0100 = "Write protected"
+   */
+  
+  if (_interpret_sensor_oem_config_create (ctx,
+					   IPMI_IANA_ENTERPRISE_ID_DELL,
+					   IPMI_DELL_PRODUCT_ID_POWEREDGE_R610,
+					   IPMI_EVENT_READING_TYPE_CODE_OEM_DELL_STATUS,
+					   IPMI_SENSOR_TYPE_MODULE_BOARD,
+					   &oem_conf) < 0)
+    return (-1);
+
+  oem_conf->oem_state[0].sensor_event_bitmask = 0;
+  oem_conf->oem_state[0].sensor_state = IPMI_INTERPRET_STATE_NOMINAL;
+  oem_conf->oem_state[0].oem_state_type = IPMI_OEM_STATE_TYPE_BITMASK;
+
+  oem_conf->oem_state[1].sensor_event_bitmask = (0x1 << IPMI_GENERIC_EVENT_READING_TYPE_CODE_OEM_DELL_STATUS_ABSENT);
+  oem_conf->oem_state[1].sensor_state = IPMI_INTERPRET_STATE_CRITICAL;
+  oem_conf->oem_state[1].oem_state_type = IPMI_OEM_STATE_TYPE_BITMASK;
+
+  oem_conf->oem_state[2].sensor_event_bitmask = (0x1 << IPMI_GENERIC_EVENT_READING_TYPE_CODE_OEM_DELL_STATUS_STANDBY);
+  oem_conf->oem_state[2].sensor_state = IPMI_INTERPRET_STATE_NOMINAL;
+  oem_conf->oem_state[2].oem_state_type = IPMI_OEM_STATE_TYPE_BITMASK;
+
+  oem_conf->oem_state[3].sensor_event_bitmask = (0x1 << IPMI_GENERIC_EVENT_READING_TYPE_CODE_OEM_DELL_STATUS_IPMI_FUNCTION_READY);
+  oem_conf->oem_state[3].sensor_state = IPMI_INTERPRET_STATE_NOMINAL;
+  oem_conf->oem_state[3].oem_state_type = IPMI_OEM_STATE_TYPE_BITMASK;
+
+  oem_conf->oem_state[4].sensor_event_bitmask = (0x1 << IPMI_GENERIC_EVENT_READING_TYPE_CODE_OEM_DELL_STATUS_FULLY_READY);
+  oem_conf->oem_state[4].sensor_state = IPMI_INTERPRET_STATE_NOMINAL;
+  oem_conf->oem_state[4].oem_state_type = IPMI_OEM_STATE_TYPE_BITMASK;
+
+  oem_conf->oem_state[5].sensor_event_bitmask = (0x1 << IPMI_GENERIC_EVENT_READING_TYPE_CODE_OEM_DELL_STATUS_OFFLINE);
+  oem_conf->oem_state[5].sensor_state = IPMI_INTERPRET_STATE_WARNING;
+  oem_conf->oem_state[5].oem_state_type = IPMI_OEM_STATE_TYPE_BITMASK;
+
+  oem_conf->oem_state[6].sensor_event_bitmask = (0x1 << IPMI_GENERIC_EVENT_READING_TYPE_CODE_OEM_DELL_STATUS_FAILED);
+  oem_conf->oem_state[6].sensor_state = IPMI_INTERPRET_STATE_CRITICAL;
+  oem_conf->oem_state[6].oem_state_type = IPMI_OEM_STATE_TYPE_BITMASK;
+
+  oem_conf->oem_state[7].sensor_event_bitmask = (0x1 << IPMI_GENERIC_EVENT_READING_TYPE_CODE_OEM_DELL_STATUS_ACTIVE);
+  oem_conf->oem_state[7].sensor_state = IPMI_INTERPRET_STATE_NOMINAL;
+  oem_conf->oem_state[7].oem_state_type = IPMI_OEM_STATE_TYPE_BITMASK;
+
+  oem_conf->oem_state[8].sensor_event_bitmask = (0x1 << IPMI_GENERIC_EVENT_READING_TYPE_CODE_OEM_DELL_STATUS_BOOTING);
+  oem_conf->oem_state[8].sensor_state = IPMI_INTERPRET_STATE_NOMINAL;
+  oem_conf->oem_state[8].oem_state_type = IPMI_OEM_STATE_TYPE_BITMASK;
+
+  oem_conf->oem_state[9].sensor_event_bitmask = (0x1 << IPMI_GENERIC_EVENT_READING_TYPE_CODE_OEM_DELL_STATUS_WRITE_PROTECTED);
+  oem_conf->oem_state[9].sensor_state = IPMI_INTERPRET_STATE_WARNING;
+  oem_conf->oem_state[9].oem_state_type = IPMI_OEM_STATE_TYPE_BITMASK;
+
+  oem_conf->oem_state_count = 10;
 
   return (0);
 }
