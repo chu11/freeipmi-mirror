@@ -1,4 +1,9 @@
 2011-02-18 Albert Chu <chu11@llnl.gov>
+	
+	* common/man/manpage-common-entity-sensor-names.man: Fix
+	formatting error.
+	
+2011-02-18 Albert Chu <chu11@llnl.gov>
 
 	* Overwrite symlinks during make install.
 	
