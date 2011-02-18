@@ -1,3 +1,7 @@
+2011-02-18 Albert Chu <chu11@llnl.gov>
+
+	* Overwrite symlinks during make install.
+	
 2011-02-17 Albert Chu <chu11@llnl.gov>
 
 	* bmc-config/src/bmc-config-user-sections.c (username_commit):

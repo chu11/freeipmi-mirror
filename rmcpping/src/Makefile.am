@@ -31,7 +31,7 @@ force-dependency-check:
 
 install-exec-hook:
 	$(install_sh) -d -m 755 $(DESTDIR)$(sbindir)
-	$(LN_S) $(sbindir)/rmcpping $(DESTDIR)$(sbindir)/rmcp-ping
+	$(LN_S) -f $(sbindir)/rmcpping $(DESTDIR)$(sbindir)/rmcp-ping
 
 uninstall-hook:
 	$(RM) $(DESTDIR)$(sbindir)/rmcp-ping
