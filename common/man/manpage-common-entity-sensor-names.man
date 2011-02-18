@@ -1,5 +1,5 @@
 .TP
-\fB\-\-entity\-sensor\-names
+\fB\-\-entity\-sensor\-names\fR
 Output sensor names prefixed with their entity id and instance number
 when appropriate.  This may be necessary on some motherboards to help
 identify what sensors are referencing.  For example, a motherboard may
