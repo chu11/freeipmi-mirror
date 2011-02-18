@@ -80,7 +80,7 @@ force-dependency-check:
 
 install-exec-hook:
 	$(install_sh) -d -m 755 $(DESTDIR)$(sbindir)
-	$(LN_S) $(sbindir)/ipmipower $(DESTDIR)$(sbindir)/ipmi-power
+	$(LN_S) -f $(sbindir)/ipmipower $(DESTDIR)$(sbindir)/ipmi-power
 
 uninstall-hook:
 	$(RM) $(DESTDIR)$(sbindir)/ipmi-power

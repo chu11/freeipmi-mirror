@@ -31,7 +31,7 @@ force-dependency-check:
 
 install-exec-hook:
 	$(install_sh) -d -m 755 $(DESTDIR)$(sbindir)
-	$(LN_S) $(sbindir)/ipmiping $(DESTDIR)$(sbindir)/ipmi-ping
+	$(LN_S) -f $(sbindir)/ipmiping $(DESTDIR)$(sbindir)/ipmi-ping
 
 uninstall-hook:
 	$(RM) $(DESTDIR)$(sbindir)/ipmi-ping
