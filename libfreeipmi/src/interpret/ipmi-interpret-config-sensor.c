@@ -719,7 +719,7 @@ _interpret_sensor_oem_dell_module_board_status (ipmi_interpret_ctx_t ctx)
   assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
   assert (ctx->interpret_sensor.sensor_oem_config);
 
-  /* Dell Poweredge R610/R710 Module/Board OEM
+  /* Dell Poweredge R210 Module/Board OEM
    *
    * Manufacturer ID = 674 (Dell)
    * Product ID = 256 (Poweredge)
@@ -884,6 +884,9 @@ _interpret_sensor_oem_config_init (ipmi_interpret_ctx_t ctx)
   assert (ctx->interpret_sensor.sensor_oem_config);
 
   if (_interpret_sensor_oem_dell_power_optimized (ctx) < 0)
+    return (-1);
+
+  if (_interpret_sensor_oem_dell_module_board_status (ctx) < 0)
     return (-1);
 
   if (_interpret_sensor_oem_supermicro (ctx) < 0)

@@ -1,3 +1,10 @@
+2011-02-21 Albert Chu <chu11@llnl.gov>
+
+	* Documentation Dell Poweredge R210 OEM sensor.
+
+	* libfreeipmi/src/interpret/ipmi-interpret-config-sensor.c: Fix
+	Dell OEM default bug.
+	
 2011-02-18 Albert Chu <chu11@llnl.gov>
 	
 	* common/man/manpage-common-entity-sensor-names.man: Fix
