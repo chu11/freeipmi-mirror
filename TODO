@@ -55,6 +55,8 @@ lan
 - don't increment req on retries, only seq?
 - dunno, atleast put comments on code as to why we do this
 consider moving #defines to #enums globally for easier debugging w/ gdb
+ssif userspace implementation
+- see ipmiutil for example
 
 ipmi-fru/bmc-device
 -------------------
