@@ -1,3 +1,7 @@
+2011-02-24 Albert Chu <chu11@llnl.gov>
+
+	* ipmi-oem/src/ipmi-oem-intel.c: Fix portability bug to Solaris 10.
+	
 2011-02-21 Albert Chu <chu11@llnl.gov>
 
 	* Documentation Dell Poweredge R210 OEM sensor.

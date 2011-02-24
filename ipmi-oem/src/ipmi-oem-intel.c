@@ -38,6 +38,7 @@
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
+#include <limits.h>		/* UCHAR_MAX */
 #include <assert.h>
 
 #include <freeipmi/freeipmi.h>
