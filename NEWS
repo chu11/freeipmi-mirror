@@ -1,5 +1,9 @@
 FreeIPMI 1.0.2 - 02/22/11
 -------------------------
+o Fix Solaris build bug.
+
+FreeIPMI 1.0.2 - 02/22/11
+-------------------------
 o Support --ignore-unrecognized-events in ipmi-sensors.
 o Clarify error messages in ipmi-locate.
 o Support Supermicro X7DBR-3, X8DTL-3F, X8DT3-LN4F motherboard OEM
