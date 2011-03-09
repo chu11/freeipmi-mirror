@@ -581,9 +581,12 @@ int ipmiconsole_engine_init (unsigned int thread_count,
  *
  * C) Specify a callback function.  The callback function specified as
  * a parameter below will be called directly after a SOL session has
- * been established or an error has occurred.  Within those callback
- * functions, ipmiconsole_ctx_status() can be used to determine which
- * has occurred.
+ * been established or a session establishment error has occurred
+ * (e.g. SOL not supported, authentication error, etc.).  Within those
+ * callback functions, ipmiconsole_ctx_status() can be used to
+ * determine which has occurred.  This callback will be called by the
+ * engine thread, therefore users may need to protect their
+ * application's shared data.
  *
  * Due to the non-blocking semantics of this function, it is possible
  * that multiple errors could occur simultaneously and the errnum
