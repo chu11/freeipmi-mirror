@@ -994,6 +994,11 @@ __ipmiconsole_ctx_connection_cleanup (ipmiconsole_ctx_t c, int session_submitted
    * move this around.
    */
 
+  /* achu: See note in ipmiconsole_defs.h about the
+   * c->session_submitted flag.  That flag is only used in API land
+   * for the user to know if a session was submitted or not.
+   */
+
   if (!session_submitted)
     return;
 
