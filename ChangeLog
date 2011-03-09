@@ -1,3 +1,10 @@
+2011-03-08 Albert Chu <chu11@llnl.gov>
+
+	* libipmiconsole/src/ipmiconsole_engine.c,
+	libipmiconsole/src/ipmiconsole_garbage_collector.c: Add
+	mutex/conditional to protect against theoretical race between
+	engine and garbage collector on teardown.
+	
 2011-02-24 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/src/ipmi-oem-intel.c: Fix portability bug to Solaris 10.
