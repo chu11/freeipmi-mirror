@@ -812,6 +812,9 @@ ipmiconsole_engine_submit (ipmiconsole_ctx_t c,
     {
       IPMICONSOLE_DEBUG (("pthread_mutex_unlock: %s", strerror (perr)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
+      /* don't go to cleanup, b/c the engine will call
+       * ipmiconsole_ctx_connection_cleanup_session_not_submitted().
+       */
       goto cleanup_ctx_fds_only;
     }
 
@@ -1027,6 +1030,9 @@ ipmiconsole_engine_submit_block (ipmiconsole_ctx_t c)
     {
       IPMICONSOLE_DEBUG (("pthread_mutex_lock: %s", strerror (perr)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
+      /* don't go to cleanup, b/c the engine will call
+       * ipmiconsole_ctx_connection_cleanup_session_not_submitted().
+       */
       goto cleanup_ctx_fds_only;
     }
 
@@ -1040,6 +1046,9 @@ ipmiconsole_engine_submit_block (ipmiconsole_ctx_t c)
     {
       IPMICONSOLE_DEBUG (("pthread_mutex_unlock: %s", strerror (perr)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
+      /* don't go to cleanup, b/c the engine will call
+       * ipmiconsole_ctx_connection_cleanup_session_not_submitted().
+       */
       goto cleanup_ctx_fds_only;
     }
 
