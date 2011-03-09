@@ -4,6 +4,8 @@
 	libipmiconsole/src/ipmiconsole_garbage_collector.c: Add
 	mutex/conditional to protect against theoretical race between
 	engine and garbage collector on teardown.
+
+	* configure.ac: Increment library revision.
 	
 2011-02-24 Albert Chu <chu11@llnl.gov>
 
