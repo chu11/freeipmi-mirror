@@ -108,6 +108,10 @@ List console_engine_ctxs_to_destroy = NULL;
 pthread_mutex_t console_engine_ctxs_to_destroy_mutex = PTHREAD_MUTEX_INITIALIZER;
 int garbage_collector_notifier[2];
 
+extern int garbage_collector_active;
+extern pthread_mutex_t garbage_collector_active_mutex;
+extern pthread_cond_t garbage_collector_active_cond;
+
 /* See comments below in _poll_setup(). */
 static int dummy_fd = -1;
 
@@ -155,6 +159,31 @@ _ipmiconsole_garbage_collector_create (void)
   /* Who cares if this fails */
   if ((perr = pthread_attr_destroy (&attr)))
     IPMICONSOLE_DEBUG (("pthread_attr_destroy: %s", strerror (perr)));
+
+  if ((perr = pthread_mutex_lock (&garbage_collector_active_mutex)))
+    {
+      IPMICONSOLE_DEBUG (("pthread_mutex_lock: %s", strerror (perr)));
+      errno = perr;
+      goto cleanup;
+    }
+
+  while (!garbage_collector_active)
+    {
+      if ((perr = pthread_cond_wait (&garbage_collector_active_cond,
+				     &garbage_collector_active_mutex)))
+	{
+	  IPMICONSOLE_DEBUG (("pthread_cond_wait: %s", strerror (perr)));
+	  errno = perr;
+	  goto cleanup;
+	}
+    }
+
+  if ((perr = pthread_mutex_unlock (&garbage_collector_active_mutex)))
+    {
+      IPMICONSOLE_DEBUG (("pthread_mutex_unlock: %s", strerror (perr)));
+      errno = perr;
+      goto cleanup;
+    }
 
   rv = 0;
  cleanup:
@@ -1400,10 +1429,6 @@ ipmiconsole_engine_cleanup (int cleanup_sol_sessions)
       goto engine_cleanup;
     }
 
-  /* "Interrupt" the garbage collector and tell it to quit */
-  if (write (garbage_collector_notifier[1], "1", 1) < 0)
-    IPMICONSOLE_DEBUG (("write: %s", strerror (errno)));
-
   while (console_engine_thread_count)
     {
       if ((perr = pthread_mutex_unlock (&console_engine_thread_count_mutex)))
@@ -1429,6 +1454,32 @@ ipmiconsole_engine_cleanup (int cleanup_sol_sessions)
       goto engine_cleanup;
     }
 
+  /* "Interrupt" the garbage collector and tell it to quit */
+  if (write (garbage_collector_notifier[1], "1", 1) < 0)
+    IPMICONSOLE_DEBUG (("write: %s", strerror (errno)));
+
+  if ((perr = pthread_mutex_lock (&garbage_collector_active_mutex)))
+    {
+      IPMICONSOLE_DEBUG (("pthread_mutex_lock: %s", strerror (perr)));
+      goto engine_cleanup;
+    }
+
+  while (garbage_collector_active)
+    {
+      if ((perr = pthread_cond_wait (&garbage_collector_active_cond,
+				     &garbage_collector_active_mutex)))
+	{
+	  IPMICONSOLE_DEBUG (("pthread_cond_wait: %s", strerror (perr)));
+	  goto engine_cleanup;
+	}
+    }
+
+  if ((perr = pthread_mutex_unlock (&garbage_collector_active_mutex)))
+    {
+      IPMICONSOLE_DEBUG (("pthread_mutex_unlock: %s", strerror (perr)));
+      goto engine_cleanup;
+    }
+
  engine_cleanup:
   for (i = 0; i < IPMICONSOLE_THREAD_COUNT_MAX; i++)
     {
@@ -1447,13 +1498,19 @@ ipmiconsole_engine_cleanup (int cleanup_sol_sessions)
   /* ignore potential error, cleanup path */
   close (garbage_collector_notifier[1]);
 
-  /* Note: logic with garbage collector thread ensures it won't race
-   * here, so no need to grab the mutex.
-   *
-   * XXX: Presumably this could race w/ API code.  We assume the user
-   * is bright enough not to call engine_teardown() and still be
-   * trying to run around accessing contexts and random pointers.
+  /* achu: The engine threads have been torn down, all the contexts
+   * managed by those threads have been moved to
+   * console_engine_ctxs_to_destroy, and the garbage collector has
+   * been shut down.  So we don't need to lock w/ the
+   * console_engine_ctxs_to_destroy_mutex.
+   * 
+   * This list destruction could race w/ API code b/c the user could
+   * still be running around trying to use the contexts post
+   * engine_teardown() (e.g. calling ipmiconsole_ctx_destroy() after
+   * calling ipmiconsole_engine_teardown()).  We assume the user won't
+   * do this.
    */
+
   list_destroy (console_engine_ctxs_to_destroy);
   console_engine_ctxs_to_destroy = NULL;
 

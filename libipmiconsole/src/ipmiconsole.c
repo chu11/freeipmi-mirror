@@ -1283,6 +1283,10 @@ ipmiconsole_ctx_destroy (ipmiconsole_ctx_t c)
     {
       int perr;
 
+      /* achu: fds cleanup will not race with engine polling, b/c the
+       * garbage collection will not complete until the flags set
+       * below are set.
+       */
       ipmiconsole_ctx_fds_cleanup (c);
 
       if ((perr = pthread_mutex_lock (&(c->signal.destroyed_mutex))) != 0)

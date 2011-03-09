@@ -63,11 +63,41 @@ extern List console_engine_ctxs_to_destroy;
 extern pthread_mutex_t console_engine_ctxs_to_destroy_mutex;
 extern int garbage_collector_notifier[2];
 
+/*
+ * When the engine is in teardown, there is a tiny race condition that
+ * is possible for the garbage collector to still be running while the
+ * engine is being torn down.  This set of variables is to protect
+ * against that situation.
+ */
+
+int garbage_collector_active = 0;
+pthread_mutex_t garbage_collector_active_mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_cond_t garbage_collector_active_cond = PTHREAD_COND_INITIALIZER;
+
 #define IPMICONSOLE_GARBAGE_COLLECTOR_SPIN_TIME 30
 
 void *
 ipmiconsole_garbage_collector (void *arg)
 {
+  int perr;
+
+  assert (!garbage_collector_active);
+
+  /* What do we do if a mutex lock/unlock fails here?  Ignore for
+   * now.
+   */
+  
+  if ((perr = pthread_mutex_lock (&garbage_collector_active_mutex)))
+    IPMICONSOLE_DEBUG (("pthread_mutex_lock: %s", strerror (perr)));
+  
+  garbage_collector_active++;
+  
+  if ((perr = pthread_cond_signal(&garbage_collector_active_cond)))
+    IPMICONSOLE_DEBUG (("pthread_cond_signal: %s", strerror (perr)));
+
+  if ((perr = pthread_mutex_unlock (&garbage_collector_active_mutex)) != 0)
+    IPMICONSOLE_DEBUG (("pthread_mutex_unlock: %s", strerror (perr)));
+ 
   while (1)
     {
       ListIterator itr = NULL;
@@ -151,6 +181,17 @@ ipmiconsole_garbage_collector (void *arg)
       if (itr)
         list_iterator_destroy (itr);
     }
+
+  if ((perr = pthread_mutex_lock (&garbage_collector_active_mutex)))
+    IPMICONSOLE_DEBUG (("pthread_mutex_lock: %s", strerror (perr)));
+
+  garbage_collector_active = 0;
+
+  if ((perr = pthread_cond_signal(&garbage_collector_active_cond)))
+    IPMICONSOLE_DEBUG (("pthread_cond_signal: %s", strerror (perr)));
+
+  if ((perr = pthread_mutex_unlock (&garbage_collector_active_mutex)) != 0)
+    IPMICONSOLE_DEBUG (("pthread_mutex_unlock: %s", strerror (perr)));
 
   return (NULL);
 }
