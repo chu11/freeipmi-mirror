@@ -1,3 +1,10 @@
+2011-03-09 Albert Chu <chu11@llnl.gov>
+
+	* libipmiconsole/src/ipmiconsole_ctx.c
+	(__ipmiconsole_ctx_connection_cleanup): Only call the callback if
+	an error occurred during a session submission, not if an error
+	occurred in API land.
+	
 2011-03-08 Albert Chu <chu11@llnl.gov>
 
 	* libipmiconsole/src/ipmiconsole_engine.c,

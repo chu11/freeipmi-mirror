@@ -1,5 +1,6 @@
 FreeIPMI 1.0.2 - 02/22/11
 -------------------------
+o Fix libipmiconsole callback semantics.
 o Fix potential race in libipmiconsole during engine teardown.
 o Fix Solaris build bug.
 

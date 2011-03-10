@@ -874,9 +874,15 @@ __ipmiconsole_ctx_connection_cleanup (ipmiconsole_ctx_t c, int session_submitted
     IPMICONSOLE_DEBUG (("pthread_mutex_unlock: %s", strerror (perr)));
 
   /* only call the callback if it's an initial SOL error and blocking
-   * was not requested
+   * was not requested and the session was submitted.  We do not want
+   * to call the callback if an error happened in API land and we are
+   * calling in via
+   * ipmiconsole_ctx_connection_cleanup_session_not_submitted().
    */
-  if (status_initial && !blocking_requested && c->non_blocking.callback)
+  if (status_initial
+      && !blocking_requested
+      && session_submitted
+      && c->non_blocking.callback)
     (*(c->non_blocking.callback))(c->non_blocking.callback_arg);
 
   /* Under default circumstances, close only the ipmiconsole_fd so
@@ -992,6 +998,14 @@ __ipmiconsole_ctx_connection_cleanup (ipmiconsole_ctx_t c, int session_submitted
 
   /* If the session was never submitted (i.e. error in API land), don't
    * move this around.
+   */
+
+  /* achu: See note in ipmiconsole_defs.h about the
+   * c->session_submitted flag.  That flag is only used in API land
+   * for the user to know if a session was submitted or not.  The
+   * session_submitted flag passed into this function is the "real"
+   * one that is known by the engine, and is not dependent on any race
+   * conditions with the API level.
    */
 
   if (!session_submitted)

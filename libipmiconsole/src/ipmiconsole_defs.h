@@ -516,7 +516,7 @@ struct ipmiconsole_ctx {
    * successfully.  Does not indicate any state of success/failure for
    * either blocking or non-blocking submissions.  Primary used as a
    * flag so other functions such as ipmiconsole_ctx_fd() and
-   * ipmiconsole_generate_breate() know that they are capable of
+   * ipmiconsole_generate_break() know that they are capable of
    * moving on.
    *
    * Note, does not require a mutex.  Only a flag used in API-land.
