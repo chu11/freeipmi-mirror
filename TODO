@@ -247,6 +247,12 @@ merge all libs into one?  would aid debian packaging.
 - make .so-naming consistent?
 - merge all except libipmidetect?
 
+libipmiconsole
+--------------
+engine_submit() - try and move initialization/setup code into engine
+to reduce time spent in engine_submit(), this is the core loop used by
+conman and other console software.
+
 contribs
 --------
 module for snmptrapd to parse ipmi traps
