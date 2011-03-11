@@ -376,10 +376,10 @@ _cmd_workaround_flags (char **argv)
     {
       unsigned int outofband_flags, outofband_2_0_flags, inband_flags;
 
-      if (parse_workaround_flags (argv[1],
-                                  &outofband_flags,
-                                  &outofband_2_0_flags,
-                                  &inband_flags, NULL) < 0)
+      if (parse_workaround_flags_tool (argv[1],
+				       &outofband_flags,
+				       &outofband_2_0_flags,
+				       &inband_flags, NULL) < 0)
         ipmipower_cbuf_printf (ttyout,
                                "%s invalid workaround flags specified\n",
                                argv[1]);
@@ -395,7 +395,8 @@ _cmd_workaround_flags (char **argv)
     }
   else
     ipmipower_cbuf_printf (ttyout,
-                           "workaround_flags must be specified: %s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n",
+                           "workaround_flags must be specified: %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n",
+			   IPMI_PARSE_WORKAROUND_FLAGS_NONE_STR,
                            IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_AUTHENTICATION_CAPABILITIES_STR,
                            IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_ACCEPT_SESSION_ID_ZERO_STR,
                            IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_FORCE_PERMSG_AUTHENTICATION_STR,
@@ -799,11 +800,14 @@ _cmd_config (void)
                        IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_BIG_ENDIAN_SEQUENCE_NUMBER,
                        IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_BIG_ENDIAN_SEQUENCE_NUMBER_STR,
                        &is_first);
+  /* This is a duplicate of the IPMI 1.5 version */
+#if 0
   _workarounds_strcat (strbuf,
                        cmd_args.common.workaround_flags_outofband_2_0,
                        IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_AUTHENTICATION_CAPABILITIES,
                        IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_AUTHENTICATION_CAPABILITIES_STR,
                        &is_first);
+#endif
   _workarounds_strcat (strbuf,
                        cmd_args.common.workaround_flags_outofband_2_0,
                        IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION,

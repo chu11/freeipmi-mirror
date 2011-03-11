@@ -434,10 +434,10 @@ _config_file_workaround_flags (conffile_t cf,
       unsigned int outofband_flags, outofband_2_0_flags, inband_flags, section_flags;
 
       if (parse_workaround_flags (data->stringlist[i],
-                                  &outofband_flags,
-                                  &outofband_2_0_flags,
-                                  &inband_flags,
-                                  &section_flags) < 0)
+				  &outofband_flags,
+				  &outofband_2_0_flags,
+				  &inband_flags,
+				  &section_flags) < 0)
         {
           fprintf (stderr, "Config File Error: invalid value for %s\n", optionname);
           exit (1);

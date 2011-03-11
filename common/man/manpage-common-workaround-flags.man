@@ -1,5 +1,7 @@
 .TP
 \fB\-W\fR \fIWORKAROUNDS\fR, \fB\-\-workaround\-flags\fR=\fIWORKAROUNDS\fR
 Specify workarounds to vendor compliance issues.  Multiple workarounds
-can be specified separated by commas.  See WORKAROUNDS below for a
-list of available workarounds.
+can be specified separated by commas.  A special command line flag of
+"none", will indicate no workarounds (may be useful for overriding
+configured defaults).  See WORKAROUNDS below for a list of available
+workarounds.

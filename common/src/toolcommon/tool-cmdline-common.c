@@ -342,19 +342,19 @@ common_parse_opt (int key,
       /* ignore config option - should have been parsed earlier */
       break;
     case ARGP_WORKAROUND_FLAGS_KEY:
-      if (parse_workaround_flags (arg,
-                                  &outofband_flags,
-                                  &outofband_2_0_flags,
-                                  &inband_flags,
-                                  &section_flags) < 0)
+      if (parse_workaround_flags_tool (arg,
+				       &outofband_flags,
+				       &outofband_2_0_flags,
+				       &inband_flags,
+				       &section_flags) < 0)
         {
           fprintf (stderr, "invalid workaround flags\n");
           exit (1);
         }
-      cmd_args->workaround_flags_outofband |= outofband_flags;
-      cmd_args->workaround_flags_outofband_2_0 |= outofband_2_0_flags;
-      cmd_args->workaround_flags_inband |= inband_flags;
-      cmd_args->section_specific_workaround_flags |= section_flags;
+      cmd_args->workaround_flags_outofband = outofband_flags;
+      cmd_args->workaround_flags_outofband_2_0 = outofband_2_0_flags;
+      cmd_args->workaround_flags_inband = inband_flags;
+      cmd_args->section_specific_workaround_flags = section_flags;
       break;
     case ARGP_DEBUG_KEY:
       cmd_args->debug++;

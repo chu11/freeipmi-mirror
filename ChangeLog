@@ -1,3 +1,22 @@
+2011-03-11 Albert Chu <chu11@llnl.gov>
+
+	* common/src/parsecommon/parse-common.h,
+	common/src/parsecommon/parse-common.c,
+	common/src/toolcommon/tool-cmdline-common.c: Support ability to
+	configure "none" workaround flags.  May be useful for overriding
+	workaround flags configured in freeipmi.conf.
+
+	* common/src/toolcommon/tool-cmdline-common.c (common_parse_opt):
+	Fix bug in which workaround flags on the command line may not
+	overwrite config file workaround flags.
+
+	* ipmipower/src/ipmipower_prompt.c (_cmd_workaround_flags):
+	Support ability to reconfigure workaround flags to 'none' via
+	ipmipower prompt.
+	
+	* ipmipower/src/ipmipower_prompt.c (_cmd_config): Fix
+	workaround-flags config output bug.
+
 2011-03-10 Albert Chu <chu11@llnl.gov>
 
 	* bmc-info/: Handle additional error conditions within Get System
