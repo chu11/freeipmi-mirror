@@ -132,12 +132,13 @@ parse_privilege_level (const char *str)
   return (-1);
 }
 
-int
-parse_workaround_flags (const char *str,
-                        unsigned int *workaround_flags_outofband,
-                        unsigned int *workaround_flags_outofband_2_0,
-                        unsigned int *workaround_flags_inband,
-                        unsigned int *section_specific_workaround_flags)
+static int
+_parse_workaround_flags (const char *str,
+			 unsigned int *workaround_flags_outofband,
+			 unsigned int *workaround_flags_outofband_2_0,
+			 unsigned int *workaround_flags_inband,
+			 unsigned int *section_specific_workaround_flags,
+			 int command_line_flag)
 {
   char buf[WORKAROUND_FLAG_BUFLEN+1];
   char *tok;
@@ -162,6 +163,20 @@ parse_workaround_flags (const char *str,
   tok = strtok (buf, ",");
   while (tok)
     {
+      if (command_line_flag
+	  && !strcasecmp (tok, IPMI_PARSE_WORKAROUND_FLAGS_NONE_STR))
+	{
+	  if (workaround_flags_outofband)
+	    (*workaround_flags_outofband) = 0;
+	  if (workaround_flags_outofband_2_0)
+	    (*workaround_flags_outofband_2_0) = 0;
+	  if (workaround_flags_inband)
+	    (*workaround_flags_inband) = 0;
+	  if (section_specific_workaround_flags)
+	    (*section_specific_workaround_flags) = 0;
+	  break;
+	}
+      
       /* special case, may apply to outofband and outofband_2_0 */
       if (!strcasecmp (tok, IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_AUTHENTICATION_CAPABILITIES_STR))
         {
@@ -239,6 +254,36 @@ parse_workaround_flags (const char *str,
     }
 
   return (0);
+}
+
+int
+parse_workaround_flags (const char *str,
+			unsigned int *workaround_flags_outofband,
+			unsigned int *workaround_flags_outofband_2_0,
+			unsigned int *workaround_flags_inband,
+			unsigned int *section_specific_workaround_flags)
+{
+  return (_parse_workaround_flags (str,
+				   workaround_flags_outofband,
+				   workaround_flags_outofband_2_0,
+				   workaround_flags_inband,
+				   section_specific_workaround_flags,
+				   0));
+}
+
+int
+parse_workaround_flags_tool (const char *str,
+			     unsigned int *workaround_flags_outofband,
+			     unsigned int *workaround_flags_outofband_2_0,
+			     unsigned int *workaround_flags_inband,
+			     unsigned int *section_specific_workaround_flags)
+{
+  return (_parse_workaround_flags (str,
+				   workaround_flags_outofband,
+				   workaround_flags_outofband_2_0,
+				   workaround_flags_inband,
+				   section_specific_workaround_flags,
+				   1));
 }
 
 /* a k_g key is interpreted as ascii text unless it is prefixed with

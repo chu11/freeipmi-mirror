@@ -40,6 +40,8 @@
 
 #define IPMI_PARSE_WORKAROUND_FLAGS_DEFAULT                                       0x00000000
 
+#define IPMI_PARSE_WORKAROUND_FLAGS_NONE                                          IPMI_PARSE_WORKAROUND_FLAGS_DEFAULT
+
 #define IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_AUTHENTICATION_CAPABILITIES         0x00000001
 #define IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_ACCEPT_SESSION_ID_ZERO              0x00000002
 #define IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_FORCE_PERMSG_AUTHENTICATION         0x00000004
@@ -54,6 +56,8 @@
 #define IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_NON_EMPTY_INTEGRITY_CHECK_VALUE 0x00000020
 
 #define IPMI_PARSE_WORKAROUND_FLAGS_INBAND_ASSUME_IO_BASE_ADDRESS                 0x00000001
+
+#define IPMI_PARSE_WORKAROUND_FLAGS_NONE_STR                                          "none"
 
 #define IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_AUTHENTICATION_CAPABILITIES_STR         "authcap"
 #define IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_ACCEPT_SESSION_ID_ZERO_STR              "idzero"
@@ -131,6 +135,14 @@ int parse_workaround_flags (const char *str,
                             unsigned int *workaround_flags_outofband_2_0,
                             unsigned int *workaround_flags_inband,
                             unsigned int *tool_specific_workaround_flags);
+
+/* returns 0 on success, -1 on error, flags set in in/out parameters */
+/* specifically should be called by tools for user input situations and not libraries */
+int parse_workaround_flags_tool (const char *str,
+				 unsigned int *workaround_flags_outofband,
+				 unsigned int *workaround_flags_outofband_2_0,
+				 unsigned int *workaround_flags_inband,
+				 unsigned int *tool_specific_workaround_flags);
 
 /* Turn an input string into a 20-byte binary k_g key, length written
  *  into out on success, -1 on error
