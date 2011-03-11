@@ -1,3 +1,8 @@
+2011-03-10 Albert Chu <chu11@llnl.gov>
+
+	* bmc-info/: Handle additional error conditions within Get System
+	Info Parameter calls.
+	
 2011-03-09 Albert Chu <chu11@llnl.gov>
 
 	* libipmiconsole/src/ipmiconsole_ctx.c
