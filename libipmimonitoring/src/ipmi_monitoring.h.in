@@ -31,6 +31,26 @@
 extern "C" {
 #endif
 
+/*
+ * Libipmimonitoring version
+ *
+ * MAJOR - Incremented when interfaces are changed or removed.
+ *         Interfaces may be binary incompatible.  When incremented, MINOR
+ *         and PATCH are zeroed.
+ *
+ * MINOR - Incremented when interfaces are added.  Interfaces are
+ *         binary compatible with older minor versions.  When incremented,
+ *         PATCH is zeroed.
+ *
+ * PATCH - Incremented when interfaces are not changed.  Typically
+ *         incremented due to bug fixes or minor features.  Interfaces are
+ *         forward and backward compatible to other PATCH versions.
+ */
+
+#define LIBIPMIMONITORING_VERSION_MAJOR @LIBIPMIMONITORING_VERSION_MAJOR@
+#define LIBIPMIMONITORING_VERSION_MINOR @LIBIPMIMONITORING_VERSION_MINOR@
+#define LIBIPMIMONITORING_VERSION_PATCH @LIBIPMIMONITORING_VERSION_PATCH@
+
 enum ipmi_monitoring_error_codes
   {
     IPMI_MONITORING_ERR_SUCCESS                             = 0,

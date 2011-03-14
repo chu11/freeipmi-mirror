@@ -5,6 +5,7 @@ o Support ability to set "none" workaround flags on the command line
   and in tools.
 o Fix libipmiconsole callback semantics.
 o Fix potential race in libipmiconsole during engine teardown.
+o Add library version macros to all libraries.
 o Fix Solaris build bug.
 o Fix config output bug in ipmipower.
 
