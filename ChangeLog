@@ -1,3 +1,8 @@
+2011-03-14 Albert Chu <chu11@llnl.gov>
+
+	* Support library version numbers in libfreeipmi, libipmiconsole,
+	libipmidetect, and libipmimonitoring.
+	
 2011-03-11 Albert Chu <chu11@llnl.gov>
 
 	* common/src/parsecommon/parse-common.h,

@@ -1,5 +1,5 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_INIT([freeipmi],[1.0.1],[freeipmi-devel@gnu.org])
+AC_INIT([freeipmi],[1.0.3],[freeipmi-devel@gnu.org])
 AC_REVISION([$Id: configure.ac,v 1.208 2010-08-06 21:02:29 chu11 Exp $])
 
 dnl We require a modern autoconf and automake
@@ -46,6 +46,7 @@ AC_CONFIG_FILES([
         libfreeipmi/freeipmi_interpret_sensor.conf.5.pre
         libfreeipmi/freeipmi_interpret_sel.conf.5.pre
         libfreeipmi/include/Makefile 
+	libfreeipmi/include/freeipmi/freeipmi.h
 	libfreeipmi/src/Makefile 
         libfreeipmi/src/api/Makefile
         libfreeipmi/src/cmds/Makefile
@@ -69,8 +70,10 @@ AC_CONFIG_FILES([
         libipmiconsole/libipmiconsole.3.pre
         libipmiconsole/libipmiconsole.conf.5.pre
 	libipmiconsole/src/Makefile
+	libipmiconsole/src/ipmiconsole.h
 	libipmimonitoring/Makefile
         libipmimonitoring/src/Makefile
+	libipmimonitoring/src/ipmi_monitoring.h
         libipmimonitoring/ipmi_monitoring_sensors.conf.5.pre
         libipmimonitoring/ipmimonitoring_sensors.conf.5.pre
         libipmimonitoring/ipmimonitoring.conf.5.pre
@@ -79,6 +82,7 @@ AC_CONFIG_FILES([
         libipmidetect/Makefile
         libipmidetect/libipmidetect.3.pre
         libipmidetect/src/Makefile
+	libipmidetect/src/ipmidetect.h
 	bmc-config/Makefile 
  	bmc-config/bmc-config.8.pre 
         bmc-config/bmc-config.conf.5.pre
@@ -153,7 +157,7 @@ AC_CONFIG_FILES([
 ISODATE=`date +%Y-%m-%d`
 AC_SUBST([ISODATE])
 
-# libfreeipmi versioning
+# libfreeipmi libtool versioning
 #
 # If library source code has changed at all increment rev
 # (current:rev:age) = (current:rev+1:age)
@@ -174,7 +178,27 @@ AC_SUBST([LIBFREEIPMI_VERSION])
 LIBFREEIPMI_VERSION_INFO=$LIBFREEIPMI_CURRENT:$LIBFREEIPMI_REVISION:$LIBFREEIPMI_AGE
 AC_SUBST([LIBFREEIPMI_VERSION_INFO])
 
-# libipmiconsole versioning
+# libfreeipmi versioning macros
+#
+# MAJOR - Incremented when interfaces are changed or removed.
+#         Interfaces may be binary incompatible.  When incremented, MINOR and
+#         PATCH are zeroed.
+# MINOR - Incremented when interfaces are added.  Interfaces are
+#         binary compatible with older minor versions.  When incremented,
+#         PATCH is zeroed.
+# PATCH - Incremented when interfaces are not changed.  Typically
+#         incremented due to bug fixes or minor features.  Interfaces are
+#         forward and backward compatible to other PATCH versions.
+
+LIBFREEIPMI_VERSION_MAJOR=1
+LIBFREEIPMI_VERSION_MINOR=0
+LIBFREEIPMI_VERSION_PATCH=1
+
+AC_SUBST(LIBFREEIPMI_VERSION_MAJOR)
+AC_SUBST(LIBFREEIPMI_VERSION_MINOR)
+AC_SUBST(LIBFREEIPMI_VERSION_PATCH)
+
+# libipmiconsole libtool versioning
 #
 # If library source code has changed at all increment rev
 # (current:rev:age) = (current:rev+1:age)
@@ -192,7 +216,28 @@ LIBIPMICONSOLE_AGE=1
 LIBIPMICONSOLE_VERSION_INFO=$LIBIPMICONSOLE_CURRENT:$LIBIPMICONSOLE_REVISION:$LIBIPMICONSOLE_AGE
 AC_SUBST([LIBIPMICONSOLE_VERSION_INFO])
 
-# libipmimonitoring versioning
+# libipmiconsole versioning macros
+#
+# MAJOR - Incremented when interfaces are changed or removed.
+#         Interfaces may be binary incompatible.  When incremented, MINOR and
+#         PATCH are zeroed.
+# MINOR - Incremented when interfaces are added.  Interfaces are
+#         binary compatible with older minor versions.  When incremented,
+#         PATCH is zeroed.
+# PATCH - Incremented when interfaces are not changed.  Typically
+#         incremented due to bug fixes or minor features.  Interfaces are
+#         forward and backward compatible to other PATCH versions.
+#
+
+LIBIPMICONSOLE_VERSION_MAJOR=1
+LIBIPMICONSOLE_VERSION_MINOR=0
+LIBIPMICONSOLE_VERSION_PATCH=1
+
+AC_SUBST(LIBIPMICONSOLE_VERSION_MAJOR)
+AC_SUBST(LIBIPMICONSOLE_VERSION_MINOR)
+AC_SUBST(LIBIPMICONSOLE_VERSION_PATCH)
+
+# libipmimonitoring libtool versioning
 #
 # If library source code has changed at all increment rev
 # (current:rev:age) = (current:rev+1:age)
@@ -210,7 +255,28 @@ LIBIPMIMONITORING_AGE=0
 LIBIPMIMONITORING_VERSION_INFO=$LIBIPMIMONITORING_CURRENT:$LIBIPMIMONITORING_REVISION:$LIBIPMIMONITORING_AGE
 AC_SUBST([LIBIPMIMONITORING_VERSION_INFO])
 
-# libipmidetect versioning
+# libipmimonitoring versioning macros
+#
+# MAJOR - Incremented when interfaces are changed or removed.
+#         Interfaces may be binary incompatible.  When incremented, MINOR and
+#         PATCH are zeroed.
+# MINOR - Incremented when interfaces are added.  Interfaces are
+#         binary compatible with older minor versions.  When incremented,
+#         PATCH is zeroed.
+# PATCH - Incremented when interfaces are not changed.  Typically
+#         incremented due to bug fixes or minor features.  Interfaces are
+#         forward and backward compatible to other PATCH versions.
+#
+
+LIBIPMIMONITORING_VERSION_MAJOR=1
+LIBIPMIMONITORING_VERSION_MINOR=0
+LIBIPMIMONITORING_VERSION_PATCH=0
+
+AC_SUBST(LIBIPMIMONITORING_VERSION_MAJOR)
+AC_SUBST(LIBIPMIMONITORING_VERSION_MINOR)
+AC_SUBST(LIBIPMIMONITORING_VERSION_PATCH)
+
+# libipmidetect libtool versioning
 #
 # If library source code has changed at all increment rev
 # (current:rev:age) = (current:rev+1:age)
@@ -227,6 +293,27 @@ LIBIPMIDETECT_REVISION=0
 LIBIPMIDETECT_AGE=0
 LIBIPMIDETECT_VERSION_INFO=$LIBIPMIDETECT_CURRENT:$LIBIPMIDETECT_REVISION:$LIBIPMIDETECT_AGE
 AC_SUBST([LIBIPMIDETECT_VERSION_INFO])
+
+# libipmidetect versioning macros
+#
+# MAJOR - Incremented when interfaces are changed or removed.
+#         Interfaces may be binary incompatible.  When incremented, MINOR and
+#         PATCH are zeroed.
+# MINOR - Incremented when interfaces are added.  Interfaces are
+#         binary compatible with older minor versions.  When incremented,
+#         PATCH is zeroed.
+# PATCH - Incremented when interfaces are not changed.  Typically
+#         incremented due to bug fixes or minor features.  Interfaces are
+#         forward and backward compatible to other PATCH versions.
+#
+
+LIBIPMIDETECT_VERSION_MAJOR=1
+LIBIPMIDETECT_VERSION_MINOR=0
+LIBIPMIDETECT_VERSION_PATCH=0
+
+AC_SUBST(LIBIPMIDETECT_VERSION_MAJOR)
+AC_SUBST(LIBIPMIDETECT_VERSION_MINOR)
+AC_SUBST(LIBIPMIDETECT_VERSION_PATCH)
 
 AC_CANONICAL_HOST
 

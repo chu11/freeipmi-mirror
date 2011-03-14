@@ -35,6 +35,26 @@ extern "C" {
 #include <freeipmi/freeipmi.h>
 
 /*
+ * Libipmiconsole version
+ *
+ * MAJOR - Incremented when interfaces are changed or removed.
+ *         Interfaces may be binary incompatible.  When incremented, MINOR
+ *         and PATCH are zeroed.
+ *
+ * MINOR - Incremented when interfaces are added.  Interfaces are
+ *         binary compatible with older minor versions.  When incremented,
+ *         PATCH is zeroed.
+ *
+ * PATCH - Incremented when interfaces are not changed.  Typically
+ *         incremented due to bug fixes or minor features.  Interfaces are
+ *         forward and backward compatible to other PATCH versions.
+ */
+
+#define LIBIPMICONSOLE_VERSION_MAJOR @LIBIPMICONSOLE_VERSION_MAJOR@
+#define LIBIPMICONSOLE_VERSION_MINOR @LIBIPMICONSOLE_VERSION_MINOR@
+#define LIBIPMICONSOLE_VERSION_PATCH @LIBIPMICONSOLE_VERSION_PATCH@
+
+/*
  * IPMI Console Error Codes
  */
 #define IPMICONSOLE_ERR_SUCCESS                               0
