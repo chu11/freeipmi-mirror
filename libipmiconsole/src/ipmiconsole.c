@@ -1112,7 +1112,8 @@ ipmiconsole_ctx_create (const char *hostname,
       return (NULL);
     }
 
-  if (engine_config->engine_flags & IPMICONSOLE_ENGINE_LOCK_MEMORY)
+  if (engine_config->engine_flags != IPMICONSOLE_ENGINE_DEFAULT
+      && engine_config->engine_flags & IPMICONSOLE_ENGINE_LOCK_MEMORY)
     {
       if (!(c = (ipmiconsole_ctx_t)secure_malloc (sizeof (struct ipmiconsole_ctx))))
         {
@@ -1170,7 +1171,8 @@ ipmiconsole_ctx_create (const char *hostname,
   /* Note: use engine_config->engine_flags not c->config.engine_flags,
    * b/c we don't know where we failed earlier.
    */
-  if (engine_config->engine_flags & IPMICONSOLE_ENGINE_LOCK_MEMORY)
+  if (engine_config->engine_flags != IPMICONSOLE_ENGINE_DEFAULT
+      && engine_config->engine_flags & IPMICONSOLE_ENGINE_LOCK_MEMORY)
     secure_free (c, sizeof (struct ipmiconsole_ctx));
   else
     free (c);
