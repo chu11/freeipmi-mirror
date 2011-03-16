@@ -568,7 +568,8 @@ typedef void (*Ipmiconsole_callback)(void *);
  * Initialize the ipmiconsole engine.  Engine threads will be created
  * which will manage SOL sessions for the user.  This function must be
  * called before ipmi console contexts can be submitted into the
- * engine.
+ * engine.  This call will also parse and load alternate defaults from
+ * the libipmiconsole.conf defaults file.
  *
  * Parameters:
  *
@@ -582,7 +583,8 @@ typedef void (*Ipmiconsole_callback)(void *);
  *   not) be output. Pass 0 for default of no debugging.
  *
  * Returns 0 on success, -1 on error.  On error errno will be set to
- * indicate error.
+ * indicate error.  Possible errnos are ENOMEM if memory cannot be
+ * allocated.
  */
 int ipmiconsole_engine_init (unsigned int thread_count,
                              unsigned int debug_flags);
@@ -725,7 +727,10 @@ void ipmiconsole_engine_teardown (int cleanup_sol_sessions);
  *   definition above.
  *
  * Returns ctx on success, NULL on error.  On error errno will be set to
- * indicate error.
+ * indicate error.  Possible errnos are EINVAL on invalid input,
+ * ENOMEM if memory cannot be allocated, EMFILE if process file
+ * descriptors limits have been reached, and EAGAIN if
+ * ipmiconsole_engine_init() has not yet been called.
  */
 ipmiconsole_ctx_t ipmiconsole_ctx_create (const char *hostname,
                                           struct ipmiconsole_ipmi_config *ipmi_config,

@@ -1112,8 +1112,17 @@ ipmiconsole_ctx_create (const char *hostname,
       return (NULL);
     }
 
-  if (engine_config->engine_flags != IPMICONSOLE_ENGINE_DEFAULT
-      && engine_config->engine_flags & IPMICONSOLE_ENGINE_LOCK_MEMORY)
+  /* If engine is not setup, the default_config is not yet known */
+  if (!ipmiconsole_engine_is_setup ())
+    {
+      IPMICONSOLE_DEBUG (("engine not initialized"));
+      errno = EAGAIN;
+      return (NULL);
+    }
+
+  if ((engine_config->engine_flags != IPMICONSOLE_ENGINE_DEFAULT
+       && engine_config->engine_flags & IPMICONSOLE_ENGINE_LOCK_MEMORY)
+      || default_config.engine_flags & IPMICONSOLE_ENGINE_LOCK_MEMORY)
     {
       if (!(c = (ipmiconsole_ctx_t)secure_malloc (sizeof (struct ipmiconsole_ctx))))
         {
@@ -1129,6 +1138,10 @@ ipmiconsole_ctx_create (const char *hostname,
           return (NULL);
         }
     }
+
+  /* XXX: Should move much of this to engine_submit, to make context
+   * creation faster for console concentrators
+   */
 
   if (ipmiconsole_ctx_setup (c) < 0)
     goto cleanup;
@@ -1171,8 +1184,9 @@ ipmiconsole_ctx_create (const char *hostname,
   /* Note: use engine_config->engine_flags not c->config.engine_flags,
    * b/c we don't know where we failed earlier.
    */
-  if (engine_config->engine_flags != IPMICONSOLE_ENGINE_DEFAULT
-      && engine_config->engine_flags & IPMICONSOLE_ENGINE_LOCK_MEMORY)
+  if ((engine_config->engine_flags != IPMICONSOLE_ENGINE_DEFAULT
+       && engine_config->engine_flags & IPMICONSOLE_ENGINE_LOCK_MEMORY)
+      || default_config.engine_flags & IPMICONSOLE_ENGINE_LOCK_MEMORY)
     secure_free (c, sizeof (struct ipmiconsole_ctx));
   else
     free (c);
