@@ -144,9 +144,6 @@ _parse_workaround_flags (const char *str,
   char *tok;
 
   assert (str);
-  assert (workaround_flags_outofband);
-  assert (workaround_flags_outofband_2_0);
-  assert (workaround_flags_inband);
 
   memset (buf, '\0', WORKAROUND_FLAG_BUFLEN+1);
   strncpy (buf, str, WORKAROUND_FLAG_BUFLEN);
