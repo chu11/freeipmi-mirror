@@ -3,6 +3,8 @@ FreeIPMI 1.0.2 - 02/22/11
 o Support additional error handling in bmc-info.
 o Support ability to set "none" workaround flags on the command line
   and in tools.
+o In libipmiconsole, force ipmiconsole_engine_init() to be called
+  before ipmiconsole_ctx_create().
 o Fix libipmiconsole callback semantics.
 o Fix libipmiconsole bugs in overriding standard defaults vs. config
   file defaults.
