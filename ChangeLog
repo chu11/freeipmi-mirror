@@ -6,6 +6,8 @@
 	* libipmiconsole/: Fix bug where an empty string k_g key (e.g. "")
 	would not overwrite the default k_g key specified in a config
 	file.
+
+	* common/src/parsecommon/: Fix assert corner case.
 	
 2011-03-14 Albert Chu <chu11@llnl.gov>
 
