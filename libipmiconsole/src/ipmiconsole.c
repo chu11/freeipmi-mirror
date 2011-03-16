@@ -707,7 +707,8 @@ ipmiconsole_engine_init (unsigned int thread_count, unsigned int debug_flags)
   unsigned int i;
 
   if (thread_count > IPMICONSOLE_THREAD_COUNT_MAX
-      || (debug_flags & ~IPMICONSOLE_DEBUG_MASK))
+      || (debug_flags != IPMICONSOLE_DEBUG_DEFAULT
+	  && debug_flags & ~IPMICONSOLE_DEBUG_MASK))
     {
       errno = EINVAL;
       return (-1);
@@ -1097,10 +1098,14 @@ ipmiconsole_ctx_create (const char *hostname,
               && ipmi_config->privilege_level != IPMICONSOLE_PRIVILEGE_ADMIN))
       || (ipmi_config->cipher_suite_id >= IPMI_CIPHER_SUITE_ID_MIN
           && !IPMI_CIPHER_SUITE_ID_SUPPORTED (ipmi_config->cipher_suite_id))
-      || (ipmi_config->workaround_flags & ~IPMICONSOLE_WORKAROUND_MASK)
-      || (engine_config->engine_flags & ~IPMICONSOLE_ENGINE_MASK)
-      || (engine_config->behavior_flags & ~IPMICONSOLE_BEHAVIOR_MASK)
-      || (engine_config->debug_flags & ~IPMICONSOLE_DEBUG_MASK))
+      || (ipmi_config->workaround_flags != IPMICONSOLE_WORKAROUND_DEFAULT
+	  && ipmi_config->workaround_flags & ~IPMICONSOLE_WORKAROUND_MASK)
+      || (engine_config->engine_flags != IPMICONSOLE_ENGINE_DEFAULT
+	  && engine_config->engine_flags & ~IPMICONSOLE_ENGINE_MASK)
+      || (engine_config->behavior_flags != IPMICONSOLE_BEHAVIOR_DEFAULT
+	  && engine_config->behavior_flags & ~IPMICONSOLE_BEHAVIOR_MASK)
+      || (engine_config->debug_flags != IPMICONSOLE_DEBUG_DEFAULT
+	  && engine_config->debug_flags & ~IPMICONSOLE_DEBUG_MASK))
     {
       IPMICONSOLE_DEBUG (("invalid input parameters"));
       errno = EINVAL;

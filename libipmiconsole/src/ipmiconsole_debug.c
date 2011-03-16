@@ -67,9 +67,14 @@ static pthread_mutex_t console_file_debug_mutex = PTHREAD_MUTEX_INITIALIZER;
 int
 ipmiconsole_debug_setup (uint32_t debug_flags)
 {
-  assert (!(debug_flags & ~IPMICONSOLE_DEBUG_MASK));
+  assert (debug_flags == IPMICONSOLE_DEBUG_DEFAULT
+	  || !(debug_flags & ~IPMICONSOLE_DEBUG_MASK));
 
-  console_debug_flags = debug_flags;
+  if (debug_flags == IPMICONSOLE_DEBUG_DEFAULT)
+    console_debug_flags = 0;
+  else
+    console_debug_flags = debug_flags;
+
   if (console_debug_flags & IPMICONSOLE_DEBUG_FILE)
     {
       char filename[MAXPATHLEN];
