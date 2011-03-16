@@ -1,3 +1,12 @@
+2011-03-15 Albert Chu <chu11@llnl.gov>
+
+	* libipmiconsole/: Slightly alter mechanism for selecting standard
+	defaults vs. config file defaults.
+
+	* libipmiconsole/: Fix bug where an empty string k_g key (e.g. "")
+	would not overwrite the default k_g key specified in a config
+	file.
+	
 2011-03-14 Albert Chu <chu11@llnl.gov>
 
 	* Support library version numbers in libfreeipmi, libipmiconsole,

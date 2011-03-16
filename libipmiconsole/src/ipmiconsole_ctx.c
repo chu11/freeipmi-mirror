@@ -158,10 +158,19 @@ ipmiconsole_ctx_config_setup (ipmiconsole_ctx_t c,
     strcpy (c->config.password, default_config.password);
 
   /* k_g may contain nulls */
-  if (ipmi_config->k_g && ipmi_config->k_g_len)
+  /* don't load defaults if k_g is not NULL */
+  if (ipmi_config->k_g)
     {
-      memcpy (c->config.k_g, ipmi_config->k_g, ipmi_config->k_g_len);
-      c->config.k_g_len = ipmi_config->k_g_len;
+      if (ipmi_config->k_g_len)
+	{
+	  memcpy (c->config.k_g, ipmi_config->k_g, ipmi_config->k_g_len);
+	  c->config.k_g_len = ipmi_config->k_g_len;
+	}
+      else
+	{
+	  memset (c->config.k_g, '\0', IPMI_MAX_K_G_LENGTH + 1);
+	  c->config.k_g_len = 0;
+	}
     }
   else
     {
@@ -207,7 +216,7 @@ ipmiconsole_ctx_config_setup (ipmiconsole_ctx_t c,
   else
     c->config.cipher_suite_id = default_config.cipher_suite_id;
 
-  if (ipmi_config->workaround_flags)
+  if (ipmi_config->workaround_flags != IPMICONSOLE_WORKAROUND_DEFAULT)
     c->config.workaround_flags = ipmi_config->workaround_flags;
   else
     c->config.workaround_flags = default_config.workaround_flags;
@@ -247,17 +256,17 @@ ipmiconsole_ctx_config_setup (ipmiconsole_ctx_t c,
   else
     c->config.maximum_retransmission_count = default_config.maximum_retransmission_count;
 
-  if (engine_config->engine_flags)
+  if (engine_config->engine_flags != IPMICONSOLE_ENGINE_DEFAULT)
     c->config.engine_flags = engine_config->engine_flags;
   else
     c->config.engine_flags = default_config.engine_flags;
 
-  if (engine_config->behavior_flags)
+  if (engine_config->behavior_flags != IPMICONSOLE_BEHAVIOR_DEFAULT)
     c->config.behavior_flags = engine_config->behavior_flags;
   else
     c->config.behavior_flags = default_config.behavior_flags;
   
-  if (engine_config->debug_flags)
+  if (engine_config->debug_flags != IPMICONSOLE_DEBUG_DEFAULT)
     c->config.debug_flags = engine_config->debug_flags;
   else
     c->config.debug_flags = default_config.debug_flags;
