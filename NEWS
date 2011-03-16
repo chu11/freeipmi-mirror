@@ -4,6 +4,8 @@ o Support additional error handling in bmc-info.
 o Support ability to set "none" workaround flags on the command line
   and in tools.
 o Fix libipmiconsole callback semantics.
+o Fix libipmiconsole bugs in overriding standard defaults vs. config
+  file defaults.
 o Fix potential race in libipmiconsole during engine teardown.
 o Add library version macros to all libraries.
 o Fix Solaris build bug.
