@@ -1,3 +1,22 @@
+FreeIPMI 1.0.2 - 02/22/11
+-------------------------
+o Support --ignore-unrecognized-events in ipmi-sensors.
+o Clarify error messages in ipmi-locate.
+o Support Supermicro X7DBR-3, X8DTL-3F, X8DT3-LN4F motherboard OEM
+  sensors.
+o Support Dell Module/Board OEM sensor interpretation on Poweredge
+  R210 motherboards.
+o In bmc-info, support motherboards that don't implement Get Device
+  Guid.
+o In bmc-watchdog, fix error logging corner case.
+o Support new -r option in ganglia_ipmi_sensors.pl plugin to modify
+  ipmi hostname.
+o Add workaround for SDR caching compliance bug in HP Proliant
+  DL585G7.
+o In bmc-config, add workaround for motherboards that do not allow you
+  to configure identical usernames.
+o Various documentation updates.
+
 FreeIPMI 1.0.1 - 01/20/11
 -------------------------
 
