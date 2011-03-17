@@ -110,6 +110,8 @@ extern "C" {
  * SYSLOG       - Output debugging to the Syslog
  * FILE         - Output debugging to the default debug file
  * IPMI_PACKETS - Dump IPMI Packets too
+ * DEFAULT      - Informs library to use default, may it be standard
+ *                or configured via libipmiconsole.conf.
  */
 #define IPMICONSOLE_DEBUG_STDOUT           0x00000001
 #define IPMICONSOLE_DEBUG_STDERR           0x00000002
@@ -200,6 +202,11 @@ extern "C" {
  * of SOL during the protocol setup.  It works around remote systems
  * that do not properly support this command.
  *
+ * DEFAULT
+ *
+ * Informs library to use default, may it be the standard default or
+ * a default configured via libipmiconsole.conf.
+ *
  * Note: The non-logical bitmask order below is set for future
  * expansion and matching w/ libfreeipmi.
  */
@@ -289,6 +296,10 @@ extern "C" {
  * NUL character byte may affect the remote system depending on what
  * input it may or may not be expecting.
  * 
+ * DEFAULT
+ *
+ * Informs library to use default, may it be the standard default or
+ * a default configured via libipmiconsole.conf.
  */
 #define IPMICONSOLE_ENGINE_CLOSE_FD                  0x00000001
 #define IPMICONSOLE_ENGINE_OUTPUT_ON_SOL_ESTABLISHED 0x00000002
@@ -318,6 +329,11 @@ extern "C" {
  *
  * Only attempt to deactivate the SOL session.  If an SOL session is
  * not active, do nothing.
+ *
+ * DEFAULT
+ *
+ * Informs library to use default, may it be the standard default or
+ * a default configured via libipmiconsole.conf.
  */
 #define IPMICONSOLE_BEHAVIOR_ERROR_ON_SOL_INUSE 0x00000001
 #define IPMICONSOLE_BEHAVIOR_DEACTIVATE_ONLY    0x00000002
