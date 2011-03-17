@@ -1,4 +1,8 @@
-2011-03-15 Albert Chu <chu11@llnl.gov>
+2011-03-16 Albert Chu <chu11@llnl.gov>
+
+	* Support package version number macros in libfreeipmi.
+	
+2011-03-16 Albert Chu <chu11@llnl.gov>
 
 	* libipmiconsole/: Slightly alter mechanism for selecting standard
 	defaults vs. config file defaults.
