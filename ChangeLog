@@ -1,3 +1,7 @@
+2011-03-22 Albert Chu <chu11@llnl.gov>
+
+	* Support package version string in libfreeipmi.
+	
 2011-03-16 Albert Chu <chu11@llnl.gov>
 
 	* Support package version number macros in libfreeipmi.
