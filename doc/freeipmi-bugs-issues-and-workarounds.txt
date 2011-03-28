@@ -739,6 +739,12 @@ records are returned with an excess number of bytes.  For example, the
 SDR record is 15 bytes long, but a record of length 20 is returned.
 Resolved with special case handling.
 
+HP Proliant DL380 G7: SDR records for some sensors give conflicting
+information.  The event/reading type code indicates a discrete sensor,
+while the analog data format indicates an analog/threshold based
+sensor.  Subsequently sensor output in IPMItool conflicts with
+FreeIPMI output.  It is unknown what is the output is supposed to be.
+
 ipmi-sel
 --------
 
