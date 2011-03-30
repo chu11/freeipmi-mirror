@@ -8,14 +8,14 @@ chu11@llnl.gov
 1) Introduction with Pdsh
 -------------------------
 
-Much of the hostrange input/output in FreeIPMI is based on the tool
-pdsh (http://pdsh.sourceforge.net).  Pdsh is a parallel shell utility
-which allows you to execute an arbitrary command across a cluster.
-Algorithmically, pdsh creates a sliding window of threads, each which
-generates a remote shell using an underlying 'rcmd" functionality
-(such as rcmd(3) or ssh(1)).  As threads complete, the new threads
-launch the command on other hosts until the command has been executed
-on all hosts specified.
+Much of the hostrange input/output in FreeIPMI is modeled off the
+input/output in the tool pdsh (http://pdsh.sourceforge.net).  Pdsh is
+a parallel shell utility which allows you to execute an arbitrary
+command across a cluster.  Algorithmically, pdsh creates a sliding
+window of threads, each which generates a remote shell using an
+underlying 'rcmd" functionality (such as rcmd(3) or ssh(1)).  As
+threads complete, the new threads launch the command on other hosts
+until the command has been executed on all hosts specified.
 
 It is utilized at Lawrence Livermore National Laboratory (LLNL) on
 clusters ranging from 4 to 2000 nodes.  Commands are capable of being
