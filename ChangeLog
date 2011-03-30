@@ -1,3 +1,7 @@
+2011-03-29 Albert Chu <chu11@llnl.gov>
+
+	* doc/freeipmi-hostrange.txt: Fix some English.
+	
 2011-03-22 Albert Chu <chu11@llnl.gov>
 
 	* Support package version string in libfreeipmi.
