@@ -691,7 +691,7 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
        *
        * SDR records for some sensors give conflicting information.  A
        * threshold based sensor lists an event/reading type code for a
-       * discrete sensor.  The the analog data format indicates an
+       * discrete sensor.  The analog data format indicates an
        * analog/threshold based sensor, however no threshold limits
        * for the sensor are listed in the SDR.
        *
