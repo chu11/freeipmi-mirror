@@ -740,10 +740,26 @@ SDR record is 15 bytes long, but a record of length 20 is returned.
 Resolved with special case handling.
 
 HP Proliant DL380 G7: SDR records for some sensors give conflicting
-information.  The event/reading type code indicates a discrete sensor,
-while the analog data format indicates an analog/threshold based
-sensor.  Subsequently sensor output in IPMItool conflicts with
-FreeIPMI output.  It is unknown what is the output is supposed to be.
+information.  A threshold based sensor lists an event/reading type
+code for a discrete sensor.  The the analog data format indicates an
+analog/threshold based sensor, however no threshold limits for the
+sensor are listed in the SDR.  Ipmi-sensors subsequently reports
+discrete states without an actual sensor reading (e.g. 100 Watts).
+Resolved with workaround to handle unique case.  (Special note: This
+was discovered when FreeIPMI and IPMItool sensor output mismatched.
+IPMItool had opposite issues, where it did output the sensor reading,
+but reported incorrect/invalid discrete states.)  IMO, a SDR record
+that indicates a threshold reading w/ a discrete event/reading type
+code should be illegal.  While it is not explicitly stated in the IPMI
+specification, it's is very strongly implied.
+
+General Issue: The analog data format lists 4 possible conditions: 00b
+= unsigned, 01b = 1's complement, 10b = 2's complement, 11b = does not
+return analog reading.  This strongly suggests that any SDR entry that
+does not report an analog reading should set this field to 11b.
+However, text below states, "If neither thresholds nor analog reading
+are provided, this field should be written as 00h."  Some vendors
+subsequently set this field to 00b or 11b for non-analog sensors.
 
 ipmi-sel
 --------

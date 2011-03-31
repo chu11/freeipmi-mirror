@@ -190,6 +190,13 @@ Please see
 #include <@top_srcdir@/common/man/manpage-common-workaround-heading-text.man>
 #include <@top_srcdir@/common/man/manpage-common-workaround-inband-text.man>
 #include <@top_srcdir@/common/man/manpage-common-workaround-outofband-text.man>
+.LP
+"discretereading" - This workaround option will allow sensor readings
+to be read even if the event/reading type code for the sensor is not
+valid.  This option works around poorly defined (and arguably illegal)
+SDR records that list non-discrete sensor expectations along with
+discrete state conditions.  This option is confirmed to work around
+issues on HP Proliant DL380 G7.
 #include <@top_srcdir@/common/man/manpage-common-oem-interpretation.man>
 .LP
 Dell Poweredge R210, Dell Poweredge R610, Dell Poweredge R710, Fujitsu

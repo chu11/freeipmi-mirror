@@ -41,6 +41,7 @@
 #include "freeipmi/spec/ipmi-channel-spec.h"
 #include "freeipmi/spec/ipmi-comp-code-spec.h"
 #include "freeipmi/spec/ipmi-slave-address-spec.h"
+#include "freeipmi/spec/ipmi-sensor-units-spec.h"
 #include "freeipmi/util/ipmi-sensor-and-event-code-tables-util.h"
 #include "freeipmi/util/ipmi-sensor-util.h"
 #include "freeipmi/util/ipmi-util.h"
@@ -681,8 +682,118 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
       rv = 1;
     }
   else if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_GENERIC_DISCRETE
-           || event_reading_type_code_class ==  IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE
-           || event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM)
+           || event_reading_type_code_class ==  IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE)
+    {
+      /*
+       * IPMI Workaround (achu)
+       *
+       * Discovered on HP Proliant DL380 G7
+       *
+       * SDR records for some sensors give conflicting information.  A
+       * threshold based sensor lists an event/reading type code for a
+       * discrete sensor.  The the analog data format indicates an
+       * analog/threshold based sensor, however no threshold limits
+       * for the sensor are listed in the SDR.
+       *
+       * To deal with this, if the analog data format and units
+       * strongly suggest that a reading should occur with this
+       * sensor, get the reading and return it.
+       *
+       * Note that this can only occur for full records, since
+       * decoding data does not exist in compact records.
+       */
+      if (ctx->flags & IPMI_SENSOR_READ_FLAGS_DISCRETE_READING
+	  && record_type == IPMI_SDR_FORMAT_FULL_SENSOR_RECORD)
+	{
+          int8_t r_exponent, b_exponent;
+          int16_t m, b;
+          uint8_t linearization, analog_data_format;
+	  uint8_t sensor_units_percentage;
+	  uint8_t sensor_units_modifier;
+	  uint8_t sensor_units_rate;
+	  uint8_t sensor_base_unit_type;
+	  uint8_t sensor_modifier_unit_type;
+
+          if (ipmi_sdr_parse_sensor_decoding_data (ctx->sdr_parse_ctx,
+                                                   sdr_record,
+                                                   sdr_record_len,
+                                                   &r_exponent,
+                                                   &b_exponent,
+                                                   &m,
+                                                   &b,
+                                                   &linearization,
+                                                   &analog_data_format) < 0)
+            {
+              SENSOR_READ_SET_ERRNUM (ctx, IPMI_SENSOR_READ_ERR_SDR_ENTRY_ERROR);
+              goto cleanup;
+            }
+
+	  if (ipmi_sdr_parse_sensor_units (ctx->sdr_parse_ctx,
+					   sdr_record,
+					   sdr_record_len,
+					   &sensor_units_percentage,
+					   &sensor_units_modifier,
+					   &sensor_units_rate,
+					   &sensor_base_unit_type,
+					   &sensor_modifier_unit_type) < 0)
+	    {
+              SENSOR_READ_SET_ERRNUM (ctx, IPMI_SENSOR_READ_ERR_SDR_ENTRY_ERROR);
+	      goto cleanup;
+	    }
+
+          /* if the sensor is not analog, this is normal expected
+	   * case, fallthrough to normal expectations
+           */
+          if (!IPMI_SDR_ANALOG_DATA_FORMAT_VALID (analog_data_format))
+            {
+	      rv = 1;
+	      goto cleanup;
+            }
+
+	  /* if the sensor units are not specified, this is the normal expected
+	   * case, fallthrough to normal expectations
+	   */
+	  if (sensor_units_percentage != IPMI_SDR_PERCENTAGE_YES
+	      && sensor_base_unit_type == IPMI_SENSOR_UNIT_UNSPECIFIED)
+	    {
+	      rv = 1;
+	      goto cleanup;
+	    }
+
+          /* if the sensor is non-linear, I just don't know what to do,
+           * let the tool figure out what to output.
+           */
+          if (!IPMI_SDR_LINEARIZATION_IS_LINEAR (linearization))
+            {
+              SENSOR_READ_SET_ERRNUM (ctx, IPMI_SENSOR_READ_ERR_SENSOR_NON_LINEAR);
+              rv = 0;
+              goto cleanup;
+            }
+
+          if (!(tmp_sensor_reading = (double *)malloc (sizeof (double))))
+            {
+              SENSOR_READ_SET_ERRNUM (ctx, IPMI_SENSOR_READ_ERR_OUT_OF_MEMORY);
+              goto cleanup;
+            }
+
+          if (ipmi_sensor_decode_value (r_exponent,
+                                        b_exponent,
+                                        m,
+                                        b,
+                                        linearization,
+                                        analog_data_format,
+                                        local_sensor_reading_raw,
+                                        tmp_sensor_reading) < 0)
+            {
+              SENSOR_READ_SET_ERRNUM (ctx, IPMI_SENSOR_READ_ERR_INTERNAL_ERROR);
+              goto cleanup;
+            }
+
+          *sensor_reading = tmp_sensor_reading;
+	}
+      rv = 1;
+    }
+  else if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM)
     /* nothing to do, sensor_event_bitmask already set */
     rv = 1;
   else

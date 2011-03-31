@@ -856,25 +856,59 @@ _simple_output_full_record (ipmi_sensors_state_data_t *state_data,
     case IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE:
     case IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM:
     default:
-
       if (!state_data->prog_data->args->quiet_readings)
         {
-          memset (fmt, '\0', IPMI_SENSORS_FMT_BUFLEN + 1);
+	  if (state_data->prog_data->args->common.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_DISCRETE_READING
+	      && reading)
+	    {
+	      char sensor_units_buf[IPMI_SENSORS_UNITS_BUFLEN+1];
 
-          if (state_data->prog_data->args->comma_separated_output)
-            snprintf (fmt,
-                      IPMI_SENSORS_FMT_BUFLEN,
-                      ",%%s,%%s,");
-          else
-            snprintf (fmt,
-                      IPMI_SENSORS_FMT_BUFLEN,
-                      " | %%-10s | %%-%ds | ",
-                      state_data->column_width.sensor_units);
-          
-          pstdout_printf (state_data->pstate,
-                          fmt,
-                          IPMI_SENSORS_NA_STRING,
-                          IPMI_SENSORS_NA_STRING);
+	      memset (sensor_units_buf, '\0', IPMI_SENSORS_UNITS_BUFLEN+1);
+	      if (get_sensor_units_output_string (state_data->pstate,
+						  state_data->sdr_parse_ctx,
+						  sdr_record,
+						  sdr_record_len,
+						  sensor_units_buf,
+						  IPMI_SENSORS_UNITS_BUFLEN,
+						  state_data->prog_data->args->non_abbreviated_units) < 0)
+		goto cleanup;
+	      
+	      memset (fmt, '\0', IPMI_SENSORS_FMT_BUFLEN + 1);
+
+	      if (state_data->prog_data->args->comma_separated_output)
+		snprintf (fmt,
+			  IPMI_SENSORS_FMT_BUFLEN,
+			  ",%%.2f,%%s,");
+	      else
+		snprintf (fmt,
+			  IPMI_SENSORS_FMT_BUFLEN,
+			  " | %%-10.2f | %%-%ds | ",
+			  state_data->column_width.sensor_units);
+		  
+	      pstdout_printf (state_data->pstate,
+			      fmt,
+			      _round_double2 (*reading),
+			      sensor_units_buf);
+	    }
+	  else
+	    {
+	      memset (fmt, '\0', IPMI_SENSORS_FMT_BUFLEN + 1);
+
+	      if (state_data->prog_data->args->comma_separated_output)
+		snprintf (fmt,
+			  IPMI_SENSORS_FMT_BUFLEN,
+			  ",%%s,%%s,");
+	      else
+		snprintf (fmt,
+			  IPMI_SENSORS_FMT_BUFLEN,
+			  " | %%-10s | %%-%ds | ",
+			  state_data->column_width.sensor_units);
+	      
+	      pstdout_printf (state_data->pstate,
+			      fmt,
+			      IPMI_SENSORS_NA_STRING,
+			      IPMI_SENSORS_NA_STRING);
+	    }
         }
       else
         {
