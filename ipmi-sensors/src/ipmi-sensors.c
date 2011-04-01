@@ -1515,6 +1515,17 @@ _ipmi_sensors (pstdout_state_t pstate,
                              "ipmi_sensor_read_ctx_set_flags: %s\n",
                              ipmi_sensor_read_ctx_strerror (ipmi_sensor_read_ctx_errnum (state_data.sensor_read_ctx)));
         }
+
+      if (state_data.prog_data->args->common.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_DISCRETE_READING)
+	{
+          /* Don't error out, if this fails we can still continue */
+          if (ipmi_sensor_read_ctx_set_flags (state_data.sensor_read_ctx,
+                                              IPMI_SENSOR_READ_FLAGS_DISCRETE_READING) < 0)
+            pstdout_fprintf (pstate,
+                             stderr,
+                             "ipmi_sensor_read_ctx_set_flags: %s\n",
+                             ipmi_sensor_read_ctx_strerror (ipmi_sensor_read_ctx_errnum (state_data.sensor_read_ctx)));
+	}
     }
 
   if (prog_data->args->output_sensor_state)

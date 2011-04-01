@@ -1,3 +1,9 @@
+FreeIPMI 1.0.4 - 03/29/11
+-------------------------
+o Support "discretereading" workaround in ipmi-sensors and associated
+  libraries.
+
+
 FreeIPMI 1.0.3 - 03/29/11
 -------------------------
 o Support additional error handling in bmc-info.
