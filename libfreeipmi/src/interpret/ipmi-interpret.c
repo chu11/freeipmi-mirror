@@ -699,7 +699,14 @@ ipmi_interpret_sel (ipmi_interpret_ctx_t ctx,
         }
       else if (IPMI_EVENT_READING_TYPE_CODE_IS_GENERIC (event_reading_type_code))
         {
+
           if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
+              && sensor_type == IPMI_SENSOR_TYPE_TEMPERATURE)
+            sel_config = ctx->interpret_sel.ipmi_interpret_sel_temperature_state_config;
+          else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_LIMIT
+              && sensor_type == IPMI_SENSOR_TYPE_TEMPERATURE)
+            sel_config = ctx->interpret_sel.ipmi_interpret_sel_temperature_limit_config;
+          else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
               && sensor_type == IPMI_SENSOR_TYPE_VOLTAGE)
             sel_config = ctx->interpret_sel.ipmi_interpret_sel_voltage_state_config;
           else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_PERFORMANCE
@@ -1101,7 +1108,13 @@ ipmi_interpret_sensor (ipmi_interpret_ctx_t ctx,
   else if (IPMI_EVENT_READING_TYPE_CODE_IS_GENERIC (event_reading_type_code))
     {
       if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
-          && sensor_type == IPMI_SENSOR_TYPE_VOLTAGE)
+          && sensor_type == IPMI_SENSOR_TYPE_TEMPERATURE)
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_temperature_state_config;
+      else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_LIMIT
+	       && sensor_type == IPMI_SENSOR_TYPE_TEMPERATURE)
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_temperature_limit_config;
+      else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
+	       && sensor_type == IPMI_SENSOR_TYPE_VOLTAGE)
         sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_voltage_state_config;
       else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_PERFORMANCE
                && sensor_type == IPMI_SENSOR_TYPE_VOLTAGE)

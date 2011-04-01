@@ -87,6 +87,22 @@ static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_threshold_confi
   };
 static unsigned int ipmi_interpret_sensor_threshold_config_len = 7;
 
+static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_temperature_state_config[] =
+  {
+    { "IPMI_Temperature_State_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_Temperature_State_Deasserted", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_Temperature_State_Asserted", IPMI_INTERPRET_STATE_WARNING},
+  };
+static unsigned int ipmi_interpret_sensor_temperature_state_config_len = 3;
+
+static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_temperature_limit_config[] =
+  {
+    { "IPMI_Temperature_Limit_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_Temperature_Limit_Not_Exceeded", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_Temperature_Limit_Exceeded", IPMI_INTERPRET_STATE_CRITICAL},
+  };
+static unsigned int ipmi_interpret_sensor_temperature_limit_config_len = 3;
+
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_voltage_state_config[] =
   {
     { "IPMI_Voltage_State_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
@@ -910,6 +926,18 @@ ipmi_interpret_sensor_init (ipmi_interpret_ctx_t ctx)
     goto cleanup;
 
   if (_interpret_config_sensor_init (ctx,
+                                     &ctx->interpret_sensor.ipmi_interpret_sensor_temperature_state_config,
+                                     ipmi_interpret_sensor_temperature_state_config,
+                                     ipmi_interpret_sensor_temperature_state_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_config_sensor_init (ctx,
+                                     &ctx->interpret_sensor.ipmi_interpret_sensor_temperature_limit_config,
+                                     ipmi_interpret_sensor_temperature_limit_config,
+                                     ipmi_interpret_sensor_temperature_limit_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_config_sensor_init (ctx,
                                      &ctx->interpret_sensor.ipmi_interpret_sensor_voltage_state_config,
                                      ipmi_interpret_sensor_voltage_state_config,
                                      ipmi_interpret_sensor_voltage_state_config_len) < 0)
@@ -1182,6 +1210,12 @@ ipmi_interpret_sensor_destroy (ipmi_interpret_ctx_t ctx)
 
   _interpret_config_sensor_destroy (ctx,
                                     ctx->interpret_sensor.ipmi_interpret_sensor_threshold_config);
+
+  _interpret_config_sensor_destroy (ctx,
+                                    ctx->interpret_sensor.ipmi_interpret_sensor_temperature_state_config);
+
+  _interpret_config_sensor_destroy (ctx,
+                                    ctx->interpret_sensor.ipmi_interpret_sensor_temperature_limit_config);
 
   _interpret_config_sensor_destroy (ctx,
                                     ctx->interpret_sensor.ipmi_interpret_sensor_voltage_state_config);
@@ -1535,6 +1569,8 @@ ipmi_interpret_sensor_config_parse (ipmi_interpret_ctx_t ctx,
                                     const char *sensor_config_file)
 {
   int ipmi_interpret_sensor_threshold_flags[ipmi_interpret_sensor_threshold_config_len];
+  int ipmi_interpret_sensor_temperature_state_flags[ipmi_interpret_sensor_temperature_state_config_len];
+  int ipmi_interpret_sensor_temperature_limit_flags[ipmi_interpret_sensor_temperature_limit_config_len];
   int ipmi_interpret_sensor_voltage_state_flags[ipmi_interpret_sensor_voltage_state_config_len];
   int ipmi_interpret_sensor_voltage_performance_flags[ipmi_interpret_sensor_voltage_performance_config_len];
   int ipmi_interpret_sensor_fan_device_present_flags[ipmi_interpret_sensor_fan_device_present_config_len];
@@ -1594,6 +1630,18 @@ ipmi_interpret_sensor_config_parse (ipmi_interpret_ctx_t ctx,
                                ctx->interpret_sensor.ipmi_interpret_sensor_threshold_config,
                                ipmi_interpret_sensor_threshold_flags,
                                ipmi_interpret_sensor_threshold_config_len);
+
+  _fill_sensor_config_options (config_file_options,
+                               &config_file_options_len,
+                               ctx->interpret_sensor.ipmi_interpret_sensor_temperature_state_config,
+                               ipmi_interpret_sensor_temperature_state_flags,
+                               ipmi_interpret_sensor_temperature_state_config_len);
+
+  _fill_sensor_config_options (config_file_options,
+                               &config_file_options_len,
+                               ctx->interpret_sensor.ipmi_interpret_sensor_temperature_limit_config,
+                               ipmi_interpret_sensor_temperature_limit_flags,
+                               ipmi_interpret_sensor_temperature_limit_config_len);
 
   _fill_sensor_config_options (config_file_options,
                                &config_file_options_len,
