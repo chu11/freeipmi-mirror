@@ -1,3 +1,19 @@
+FreeIPMI 1.0.3 - 03/29/11
+-------------------------
+o Support additional error handling in bmc-info.
+o Support ability to set "none" workaround flags on the command line
+  and in tools.
+o In libipmiconsole, force ipmiconsole_engine_init() to be called
+  before ipmiconsole_ctx_create().
+o Fix libipmiconsole callback semantics.
+o Fix libipmiconsole bugs in overriding standard defaults vs. config
+  file defaults.
+o Fix potential race in libipmiconsole during engine teardown.
+o Add package version macros to libfreeipmi.
+o Add library version macros to all libraries.
+o Fix Solaris build bug.
+o Fix config output bug in ipmipower.
+
 FreeIPMI 1.0.2 - 02/22/11
 -------------------------
 o Support --ignore-unrecognized-events in ipmi-sensors.
