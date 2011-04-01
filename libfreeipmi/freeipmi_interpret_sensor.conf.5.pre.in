@@ -96,6 +96,36 @@ Defaults to Critical.
 Defaults to Critical.
 .RE
 .TP
+.B IPMI_Temperature_State
+The following states correspond to Temperature sensors that report an
+assertion or deassertion.
+.RS
+.TP
+\fBIPMI_Temperature_State_No_Event\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Temperature_State_Deasserted\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Temperature_State_Asserted\fR
+Defaults to Warning.
+.RE
+.TP
+.B IPMI_Temperature_Limit
+The following states correspond to Temperature sensors that report on
+limits.
+.RS
+.TP
+\fBIPMI_Temperature_Limit_No_Event\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Temperature_Limit_Not_Exceeded\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Temperature_Limit_Exceeded\fR
+Defaults to Critical.
+.RE
+.TP
 .B IPMI_Voltage_State
 The following states correspond to Voltage sensors that report an
 assertion or deassertion.

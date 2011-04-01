@@ -129,6 +129,8 @@ struct ipmi_interpret_sel_oem_record_config {
 
 struct ipmi_interpret_sel {
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_threshold_config;
+  struct ipmi_interpret_sel_config **ipmi_interpret_sel_temperature_state_config;
+  struct ipmi_interpret_sel_config **ipmi_interpret_sel_temperature_limit_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_voltage_state_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_voltage_performance_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_fan_device_present_config;
@@ -198,6 +200,8 @@ struct ipmi_interpret_sensor_oem_config {
 
 struct ipmi_interpret_sensor {
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_threshold_config;
+  struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_temperature_state_config;
+  struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_temperature_limit_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_voltage_state_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_voltage_performance_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_fan_device_present_config;

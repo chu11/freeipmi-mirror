@@ -91,6 +91,20 @@ static struct ipmi_interpret_sel_config ipmi_interpret_sel_threshold_config[] =
   };
 static unsigned int ipmi_interpret_sel_threshold_config_len = 12;
 
+static struct ipmi_interpret_sel_config ipmi_interpret_sel_temperature_state_config[] =
+  {
+    { "IPMI_Temperature_State_Deasserted", IPMI_INTERPRET_STATE_NOMINAL, IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_Temperature_State_Asserted", IPMI_INTERPRET_STATE_WARNING, IPMI_INTERPRET_STATE_WARNING},
+  };
+static unsigned int ipmi_interpret_sel_temperature_state_config_len = 2;
+
+static struct ipmi_interpret_sel_config ipmi_interpret_sel_temperature_limit_config[] =
+  {
+    { "IPMI_Temperature_Limit_Not_Exceeded", IPMI_INTERPRET_STATE_NOMINAL, IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_Temperature_Limit_Exceeded", IPMI_INTERPRET_STATE_CRITICAL, IPMI_INTERPRET_STATE_CRITICAL},
+  };
+static unsigned int ipmi_interpret_sel_temperature_limit_config_len = 2;
+
 static struct ipmi_interpret_sel_config ipmi_interpret_sel_voltage_state_config[] =
   {
     { "IPMI_Voltage_State_Deasserted", IPMI_INTERPRET_STATE_NOMINAL, IPMI_INTERPRET_STATE_NOMINAL},
@@ -937,6 +951,18 @@ ipmi_interpret_sel_init (ipmi_interpret_ctx_t ctx)
                                   &ctx->interpret_sel.ipmi_interpret_sel_threshold_config,
                                   ipmi_interpret_sel_threshold_config,
                                   ipmi_interpret_sel_threshold_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_config_sel_init (ctx,
+                                  &ctx->interpret_sel.ipmi_interpret_sel_temperature_state_config,
+                                  ipmi_interpret_sel_temperature_state_config,
+                                  ipmi_interpret_sel_temperature_state_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_config_sel_init (ctx,
+                                  &ctx->interpret_sel.ipmi_interpret_sel_temperature_limit_config,
+                                  ipmi_interpret_sel_temperature_limit_config,
+                                  ipmi_interpret_sel_temperature_limit_config_len) < 0)
     goto cleanup;
 
   if (_interpret_config_sel_init (ctx,
@@ -1896,6 +1922,8 @@ ipmi_interpret_sel_config_parse (ipmi_interpret_ctx_t ctx,
                                  const char *sel_config_file)
 {
   int ipmi_interpret_sel_threshold_flags[ipmi_interpret_sel_threshold_config_len];
+  int ipmi_interpret_sel_temperature_state_flags[ipmi_interpret_sel_temperature_state_config_len];
+  int ipmi_interpret_sel_temperature_limit_flags[ipmi_interpret_sel_temperature_limit_config_len];
   int ipmi_interpret_sel_voltage_state_flags[ipmi_interpret_sel_voltage_state_config_len];
   int ipmi_interpret_sel_voltage_performance_flags[ipmi_interpret_sel_voltage_performance_config_len];
   int ipmi_interpret_sel_fan_device_present_flags[ipmi_interpret_sel_fan_device_present_config_len];
@@ -1964,6 +1992,18 @@ ipmi_interpret_sel_config_parse (ipmi_interpret_ctx_t ctx,
                             ctx->interpret_sel.ipmi_interpret_sel_threshold_config,
                             ipmi_interpret_sel_threshold_flags,
                             ipmi_interpret_sel_threshold_config_len);
+
+  _fill_sel_config_options (config_file_options,
+                            &config_file_options_len,
+                            ctx->interpret_sel.ipmi_interpret_sel_temperature_state_config,
+                            ipmi_interpret_sel_temperature_state_flags,
+                            ipmi_interpret_sel_temperature_state_config_len);
+
+  _fill_sel_config_options (config_file_options,
+                            &config_file_options_len,
+                            ctx->interpret_sel.ipmi_interpret_sel_temperature_limit_config,
+                            ipmi_interpret_sel_temperature_limit_flags,
+                            ipmi_interpret_sel_temperature_limit_config_len);
 
   _fill_sel_config_options (config_file_options,
                             &config_file_options_len,
