@@ -1243,6 +1243,7 @@ _ipmi_monitoring_sensor_readings_flags_common (ipmi_monitoring_ctx_t c,
                                                struct ipmi_monitoring_ipmi_config *config,
                                                unsigned int sensor_reading_flags)
 {
+  unsigned int sensor_read_ctx_flags = 0;
   int rv = -1;
 
   assert (c);
@@ -1257,8 +1258,14 @@ _ipmi_monitoring_sensor_readings_flags_common (ipmi_monitoring_ctx_t c,
     }
 
   if (sensor_reading_flags & IPMI_MONITORING_SENSOR_READING_FLAGS_BRIDGE_SENSORS)
+    sensor_read_ctx_flags |= IPMI_SENSOR_READ_FLAGS_BRIDGE_SENSORS;
+
+  if (sensor_reading_flags & IPMI_MONITORING_SENSOR_READING_FLAGS_DISCRETE_READING)
+    sensor_read_ctx_flags |= IPMI_SENSOR_READ_FLAGS_DISCRETE_READING;
+
+  if (sensor_read_ctx_flags)
     {
-      if (ipmi_sensor_read_ctx_set_flags (c->sensor_read_ctx, IPMI_SENSOR_READ_FLAGS_BRIDGE_SENSORS) < 0)
+      if (ipmi_sensor_read_ctx_set_flags (c->sensor_read_ctx, sensor_read_ctx_flags) < 0)
         {
           IPMI_MONITORING_DEBUG (("ipmi_sensor_read_ctx_set_flags: %s", ipmi_sensor_read_ctx_errormsg (c->sensor_read_ctx)));
           c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;

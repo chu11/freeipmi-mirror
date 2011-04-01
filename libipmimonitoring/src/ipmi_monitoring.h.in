@@ -272,6 +272,12 @@ enum ipmi_monitoring_sel_flags
  * INTERPRET_OEM_DATA - Attempt to interpret OEM data if read.
  *
  * SHARED_SENSORS - Iterate through shared sensors if found
+ *
+ * DISCRETE_READING - Allow sensor readings to be read even if the event/reading type
+ *                    code for the sensor is not valid.  This option works around
+ *                    poorly defined (and arguably illegal) SDR records that list
+ *                    non-discrete sensor expectations along with discrete state
+ *                    conditions.
  */
 enum ipmi_monitoring_sensor_reading_flags
   {
@@ -280,6 +286,7 @@ enum ipmi_monitoring_sensor_reading_flags
     IPMI_MONITORING_SENSOR_READING_FLAGS_BRIDGE_SENSORS                   = 0x00000004,
     IPMI_MONITORING_SENSOR_READING_FLAGS_INTERPRET_OEM_DATA               = 0x00000008,
     IPMI_MONITORING_SENSOR_READING_FLAGS_SHARED_SENSORS                   = 0x00000010,
+    IPMI_MONITORING_SENSOR_READING_FLAGS_DISCRETE_READING                 = 0x00000020,
     IPMI_MONITORING_SENSOR_READING_FLAGS_IGNORE_UNREADABLE_SENSORS        = 0x00000002, /* legacy macro */
   };
 

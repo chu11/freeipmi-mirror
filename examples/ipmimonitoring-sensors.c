@@ -100,6 +100,7 @@ int ignore_non_interpretable_sensors = 1;
 int bridge_sensors = 0;
 int interpret_oem_data = 0;
 int shared_sensors = 0;
+int discrete_reading = 0;
 
 /* Initialization flags
  * 
@@ -282,6 +283,9 @@ _ipmimonitoring (struct ipmi_monitoring_ipmi_config *ipmi_config)
 
   if (shared_sensors)
     sensor_reading_flags |= IPMI_MONITORING_SENSOR_READING_FLAGS_SHARED_SENSORS;
+
+  if (discrete_reading)
+    sensor_reading_flags |= IPMI_MONITORING_SENSOR_READING_FLAGS_DISCRETE_READING;
 
   if (!record_ids_length && !sensor_types_length)
     {
