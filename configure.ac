@@ -347,11 +347,19 @@ elif test "x${enable_trace}" = "x" ; then
      enable_trace=no
 fi
 
+AC_ARG_ENABLE([profiling],
+              AC_HELP_STRING([--enable-profiling], [turn on profiling]))
+if test "x${enable_profiling}" = "x" ; then
+     enable_profiling=no
+fi
+
 dnl Turn off all optimizations when debugging
 AC_ARG_ENABLE(debug,
               AC_HELP_STRING([--enable-debug], [turn on debugging]))
 if test "x${enable_debug}" = "xyes"; then
-   if test "$GCC" = "yes"; then 
+   if test "$GCC" = "yes" && test "x${enable_profiling}" = "xyes"; then 
+      CFLAGS="$CFLAGS -ggdb -Wall -pg"
+   elif test "$GCC" = "yes" && test "x${enable_profiling}" = "xno"; then 
       CFLAGS="$CFLAGS -ggdb -Wall"
    elif test "$ac_cv_prog_cc_g" = "yes"; then
       CFLAGS="$CFLAGS -g"
