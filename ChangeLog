@@ -1,6 +1,6 @@
 2011-04-05 Albert Chu <chu11@llnl.gov>
 
-	* libfreeipmi/src/drivers/: Support SPIN_SLEEP option for faster
+	* libfreeipmi/src/drivers/: Support SPIN_POLL option for faster
 	inband IPMI under certain circumstances.  Timeout after a
 	consistent time rather than a poll-attempted guess.
 	

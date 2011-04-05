@@ -140,7 +140,7 @@
 
 #define IPMI_KCS_FLAGS_MASK \
   (IPMI_KCS_FLAGS_NONBLOCKING \
-   | IPMI_KCS_FLAGS_SPIN_SLEEP)
+   | IPMI_KCS_FLAGS_SPIN_POLL)
 
 #define IPMI_KCS_MICROSECONDS_IN_SECOND 1000000
 
@@ -624,7 +624,7 @@ _ipmi_kcs_sleep (ipmi_kcs_ctx_t ctx, struct timeval *start)
       return (-1);
     }
 
-  if (!(ctx->flags & IPMI_KCS_FLAGS_SPIN_SLEEP))
+  if (!(ctx->flags & IPMI_KCS_FLAGS_SPIN_POLL))
     usleep (ctx->poll_interval);
   else
     {

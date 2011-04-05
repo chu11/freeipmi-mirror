@@ -46,13 +46,14 @@ extern "C" {
 
 /* NONBLOCKING - if busy, IPMI_KCS_ERR_BUSY will be returned.
  *
- * SPIN_SLEEP - when polling, internally spin instead of calling OS
- * sleep routine.  If polling intervals are small, may improve inband
- * performance by removing context switches and OS timer granularity.
+ * SPIN_POLL - when polling, internally spin instead of putting
+ * process to sleep.  If polling intervals are small, may improve
+ * inband performance by removing context switches and OS timer
+ * granularity.
  */
 #define IPMI_KCS_FLAGS_DEFAULT       0x00000000
 #define IPMI_KCS_FLAGS_NONBLOCKING   0x00000001
-#define IPMI_KCS_FLAGS_SPIN_SLEEP    0x00000002
+#define IPMI_KCS_FLAGS_SPIN_POLL    0x00000002
 
 typedef struct ipmi_kcs_ctx *ipmi_kcs_ctx_t;
 
