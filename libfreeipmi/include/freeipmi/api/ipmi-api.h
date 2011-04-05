@@ -30,7 +30,7 @@ extern "C" {
 /* ERROR CODE NOTES
  *
  * IPMI_ERR_MESSAGE_TIMEOUT
-
+ *
  * message timeout is typical of bridging commands.  The
  * session/connection has not timed out and is fine, but a
  * bridging command could not get its bridged response back in a
