@@ -71,7 +71,8 @@ _inband_init (ipmi_monitoring_ctx_t c,
 {
   unsigned int workaround_flags;
   unsigned int flags;
-  unsigned int workaround_flags_mask = (IPMI_MONITORING_WORKAROUND_FLAGS_INBAND_ASSUME_IO_BASE_ADDRESS);
+  unsigned int workaround_flags_mask = (IPMI_MONITORING_WORKAROUND_FLAGS_INBAND_ASSUME_IO_BASE_ADDRESS
+					| IPMI_MONITORING_WORKAROUND_FLAGS_INBAND_SPIN_POLL);
 
   assert (c);
   assert (c->magic == IPMI_MONITORING_MAGIC);
@@ -94,6 +95,9 @@ _inband_init (ipmi_monitoring_ctx_t c,
     {
       if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_INBAND_ASSUME_IO_BASE_ADDRESS)
         workaround_flags |= IPMI_WORKAROUND_FLAGS_INBAND_ASSUME_IO_BASE_ADDRESS;
+
+      if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_INBAND_SPIN_POLL)
+        workaround_flags |= IPMI_WORKAROUND_FLAGS_INBAND_SPIN_POLL;
     }
 
   if ((_ipmi_monitoring_flags & IPMI_MONITORING_FLAGS_DEBUG)

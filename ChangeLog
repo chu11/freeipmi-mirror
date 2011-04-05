@@ -7,7 +7,7 @@
 	* libfreeipmi/src/api/ipmi-api.c: Adjust default polling interval
 	for KCS.
 
-	* Support "spinpoll" workaround for all tools.
+	* Support "spinpoll" workaround for all tools and libipmimonitoring.
 	
 2011-04-01 Albert Chu <chu11@llnl.gov>
 
