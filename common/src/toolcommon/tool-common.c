@@ -206,6 +206,9 @@ ipmi_open (const char *progname,
       if (cmd_args->workaround_flags_inband & IPMI_PARSE_WORKAROUND_FLAGS_INBAND_ASSUME_IO_BASE_ADDRESS)
         workaround_flags |= IPMI_WORKAROUND_FLAGS_INBAND_ASSUME_IO_BASE_ADDRESS;
 
+      if (cmd_args->workaround_flags_inband & IPMI_PARSE_WORKAROUND_FLAGS_INBAND_SPIN_POLL)
+        workaround_flags |= IPMI_WORKAROUND_FLAGS_INBAND_SPIN_POLL;
+
       if (cmd_args->driver_type == IPMI_DEVICE_UNKNOWN)
         {
           int ret;

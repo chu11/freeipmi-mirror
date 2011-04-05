@@ -247,6 +247,7 @@ enum ipmi_monitoring_workaround_flags
 
     /* For use w/ an In-band driver */
     IPMI_MONITORING_WORKAROUND_FLAGS_INBAND_ASSUME_IO_BASE_ADDRESS                        = 0x00000001,
+    IPMI_MONITORING_WORKAROUND_FLAGS_INBAND_SPIN_POLL                                     = 0x00000002,	
   };
   
 /* REREAD_SDR_CACHE - Re-read the SDR cache

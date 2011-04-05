@@ -218,6 +218,9 @@ _parse_workaround_flags (const char *str,
       else if (workaround_flags_outofband_2_0
                && !strcasecmp (tok, IPMI_PARSE_WORKAROUND_FLAGS_INBAND_ASSUME_IO_BASE_ADDRESS_STR))
         (*workaround_flags_inband) |= IPMI_PARSE_WORKAROUND_FLAGS_INBAND_ASSUME_IO_BASE_ADDRESS;
+      else if (workaround_flags_outofband_2_0
+               && !strcasecmp (tok, IPMI_PARSE_WORKAROUND_FLAGS_INBAND_SPIN_POLL_STR))
+        (*workaround_flags_inband) |= IPMI_PARSE_WORKAROUND_FLAGS_INBAND_SPIN_POLL;
       else if (section_specific_workaround_flags
                && !strcasecmp (tok, IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IGNORE_SOL_PAYLOAD_SIZE_STR))
         (*section_specific_workaround_flags) |= IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IGNORE_SOL_PAYLOAD_SIZE;

@@ -30,7 +30,7 @@ extern "C" {
 /* ERROR CODE NOTES
  *
  * IPMI_ERR_MESSAGE_TIMEOUT
-
+ *
  * message timeout is typical of bridging commands.  The
  * session/connection has not timed out and is fine, but a
  * bridging command could not get its bridged response back in a
@@ -109,6 +109,7 @@ typedef enum ipmi_driver_type ipmi_driver_type_t;
 
 /* For use w/ ipmi_ctx_open_inband() or ipmi_ctx_find_inband() */
 #define IPMI_WORKAROUND_FLAGS_INBAND_ASSUME_IO_BASE_ADDRESS                 0x00000001
+#define IPMI_WORKAROUND_FLAGS_INBAND_SPIN_POLL                              0x00000002
 
 /* NONBLOCKING - for inband only
  *
