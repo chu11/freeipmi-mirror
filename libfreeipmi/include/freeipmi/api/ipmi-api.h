@@ -109,6 +109,7 @@ typedef enum ipmi_driver_type ipmi_driver_type_t;
 
 /* For use w/ ipmi_ctx_open_inband() or ipmi_ctx_find_inband() */
 #define IPMI_WORKAROUND_FLAGS_INBAND_ASSUME_IO_BASE_ADDRESS                 0x00000001
+#define IPMI_WORKAROUND_FLAGS_INBAND_SPIN_POLL                              0x00000002
 
 /* NONBLOCKING - for inband only
  *

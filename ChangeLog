@@ -3,6 +3,11 @@
 	* libfreeipmi/src/drivers/: Support SPIN_POLL option for faster
 	inband IPMI under certain circumstances.  Timeout after a
 	consistent time rather than a poll-attempted guess.
+
+	* libfreeipmi/src/api/ipmi-api.c: Adjust default polling interval
+	for KCS.
+
+	* Support "spinpoll" workaround for all tools.
 	
 2011-04-01 Albert Chu <chu11@llnl.gov>
 

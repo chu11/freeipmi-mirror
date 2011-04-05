@@ -90,7 +90,7 @@
 
 #define IPMI_SESSION_TIMEOUT         20000
 #define IPMI_RETRANSMISSION_TIMEOUT  1000
-#define IPMI_POLL_INTERVAL_USECS     50
+#define IPMI_POLL_INTERVAL_USECS     10
 
 #define GETHOSTBYNAME_AUX_BUFLEN     1024
 extern int h_errno;
@@ -767,7 +767,8 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
   struct ipmi_locate_info locate_info;
   unsigned int seedp;
   unsigned int temp_flags = 0;
-  unsigned int workaround_flags_mask = (IPMI_WORKAROUND_FLAGS_INBAND_ASSUME_IO_BASE_ADDRESS);
+  unsigned int workaround_flags_mask = (IPMI_WORKAROUND_FLAGS_INBAND_ASSUME_IO_BASE_ADDRESS
+					| IPMI_WORKAROUND_FLAGS_INBAND_SPIN_POLL);
   unsigned int flags_mask = (IPMI_FLAGS_NONBLOCKING
                              | IPMI_FLAGS_DEBUG_DUMP
                              | IPMI_FLAGS_NO_VALID_CHECK);
@@ -914,6 +915,9 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
 
       if (ctx->flags & IPMI_FLAGS_NONBLOCKING)
         temp_flags |= IPMI_KCS_FLAGS_NONBLOCKING;
+
+      if (ctx->workaround_flags_inband & IPMI_WORKAROUND_FLAGS_INBAND_SPIN_POLL)
+	temp_flags |= IPMI_KCS_FLAGS_SPIN_POLL;
 
       if (ipmi_kcs_ctx_set_flags (ctx->io.inband.kcs_ctx, temp_flags) < 0)
         {
