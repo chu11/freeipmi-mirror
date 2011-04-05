@@ -33,6 +33,16 @@
 #if HAVE_FCNTL_H
 #include <fcntl.h>
 #endif /* HAVE_FCNTL_H */
+#if TIME_WITH_SYS_TIME
+#include <sys/time.h>
+#include <time.h>
+#else /* !TIME_WITH_SYS_TIME */
+#if HAVE_SYS_TIME_H
+#include <sys/time.h>
+#else /* !HAVE_SYS_TIME_H */
+#include <time.h>
+#endif /* !HAVE_SYS_TIME_H */
+#endif  /* !TIME_WITH_SYS_TIME */
 #include <limits.h>
 #include <assert.h>
 #include <errno.h>
@@ -51,15 +61,8 @@
 
 #define IPMI_KCS_SLEEP_USECS                  0x01
 
-/* The point is to limit the poll attempts so the code eventually
- * returns to the user if they input bad hex addresses, BMC is dead,
- * etc.  It's not the best mechanism in the world, but it's better
- * than the current implementation.
- *
- * 100,000 seems like a good number.
- */
-
-#define IPMI_KCS_POLL_ATTEMPTS            100000
+/* timeout after 60 seconds */
+#define IPMI_KCS_TIMEOUT_USECS                60000000
 
 #define IPMI_KCS_SMS_REGISTER_SPACING_DEFAULT 1
 /* KCS Interface Status Register Bits */
@@ -135,7 +138,11 @@
 
 #define IPMI_KCS_CTX_MAGIC 0xabbaadda
 
-#define IPMI_KCS_FLAGS_MASK IPMI_KCS_FLAGS_NONBLOCKING
+#define IPMI_KCS_FLAGS_MASK \
+  (IPMI_KCS_FLAGS_NONBLOCKING \
+   | IPMI_KCS_FLAGS_SPIN_SLEEP)
+
+#define IPMI_KCS_MICROSECONDS_IN_SECOND 1000000
 
 #if defined(__FreeBSD__)
 # include <machine/cpufunc.h>
@@ -526,6 +533,108 @@ _ipmi_kcs_get_status (ipmi_kcs_ctx_t ctx)
   return (_INB (IPMI_KCS_REG_STATUS (ctx->driver_address, ctx->register_spacing)));
 }
 
+static unsigned long
+_ipmi_kcs_timeval_diff (struct timeval *start, struct timeval *end)
+{
+  unsigned long t;
+
+  assert (start);
+  assert (end);
+
+  if (end->tv_sec == start->tv_sec)
+    t = end->tv_usec - start->tv_usec;
+  else
+    {
+      t = (end->tv_sec - start->tv_sec - 1) * IPMI_KCS_MICROSECONDS_IN_SECOND;
+      t += (IPMI_KCS_MICROSECONDS_IN_SECOND - start->tv_usec);
+      t += end->tv_usec;
+    }
+  
+  return (t);
+}
+
+static int
+_ipmi_kcs_spin_sleep (ipmi_kcs_ctx_t ctx)
+{
+  struct timeval spinstart;
+  struct timeval spinend;
+
+  assert (ctx);
+  assert (ctx->magic == IPMI_KCS_CTX_MAGIC);
+
+  /* achu: There is probably something better than this, but
+   * this is cheap and simple and I can't find any research
+   * that there is something substantially superior to this.
+   */
+
+  if (gettimeofday (&spinstart, NULL) < 0)
+    {
+      KCS_SET_ERRNUM (ctx, IPMI_KCS_ERR_SYSTEM_ERROR);
+      return (-1);
+    }
+  
+  while (1)
+    {
+      unsigned long t;
+      
+      if (gettimeofday (&spinend, NULL) < 0)
+	{
+	  KCS_SET_ERRNUM (ctx, IPMI_KCS_ERR_SYSTEM_ERROR);
+	  return (-1);
+	}
+
+      t = _ipmi_kcs_timeval_diff (&spinstart, &spinend);
+
+      if (t > ctx->poll_interval)
+	break;
+    }
+
+  return (0);
+}
+
+static int
+_ipmi_kcs_sleep (ipmi_kcs_ctx_t ctx, struct timeval *start)
+{
+  struct timeval end;
+  unsigned long t;
+
+  assert (ctx);
+  assert (ctx->magic == IPMI_KCS_CTX_MAGIC);
+  assert (start);
+
+  /* achu: Why calculate a timeout this way?  Why not via
+   * timeout/poll_interval, and count the loops?  OS timer
+   * granularity is the issue.  Another way is via posix realtime
+   * timers, but handling signals in this part of the code is sort
+   * of sketchy.  This is perhaps not the most efficient, but is
+   * safe and portable.
+   */
+
+  if (gettimeofday (&end, NULL) < 0)
+    {
+      KCS_SET_ERRNUM (ctx, IPMI_KCS_ERR_SYSTEM_ERROR);
+      return (-1);
+    }
+
+  t = _ipmi_kcs_timeval_diff (start, &end);
+
+  if (t > IPMI_KCS_TIMEOUT_USECS)
+    {
+      KCS_SET_ERRNUM (ctx, IPMI_KCS_ERR_DRIVER_TIMEOUT);
+      return (-1);
+    }
+
+  if (!(ctx->flags & IPMI_KCS_FLAGS_SPIN_SLEEP))
+    usleep (ctx->poll_interval);
+  else
+    {
+      if (_ipmi_kcs_spin_sleep (ctx) < 0)
+	return (-1);
+    }
+  
+  return (0);
+}
+
 /*
  * Wait for IBF (In-Bound Flag) to clear, signalling BMC has
  * read the command.
@@ -533,21 +642,24 @@ _ipmi_kcs_get_status (ipmi_kcs_ctx_t ctx)
 static int
 _ipmi_kcs_wait_for_ibf_clear (ipmi_kcs_ctx_t ctx)
 {
-  unsigned int poll_attempts = 0;
+  struct timeval start;
 
   assert (ctx);
   assert (ctx->magic == IPMI_KCS_CTX_MAGIC);
 
-  while ((_ipmi_kcs_get_status (ctx) & IPMI_KCS_STATUS_REG_IBF)
-         && poll_attempts <= IPMI_KCS_POLL_ATTEMPTS)
+  if (gettimeofday (&start, NULL) < 0)
     {
-      usleep (ctx->poll_interval);
-      poll_attempts++;
+      KCS_SET_ERRNUM (ctx, IPMI_KCS_ERR_SYSTEM_ERROR);
+      return (-1);
     }
 
-  if (poll_attempts <= IPMI_KCS_POLL_ATTEMPTS)
-    return (0);
-  return (-1);
+  while (_ipmi_kcs_get_status (ctx) & IPMI_KCS_STATUS_REG_IBF)
+    {
+      if (_ipmi_kcs_sleep (ctx, &start) < 0)
+	return (-1);
+    }
+
+  return (0);
 }
 
 /*
@@ -558,21 +670,24 @@ _ipmi_kcs_wait_for_ibf_clear (ipmi_kcs_ctx_t ctx)
 static int
 _ipmi_kcs_wait_for_obf_set (ipmi_kcs_ctx_t ctx)
 {
-  unsigned int poll_attempts = 0;
+  struct timeval start;
 
   assert (ctx);
   assert (ctx->magic == IPMI_KCS_CTX_MAGIC);
 
-  while ((!(_ipmi_kcs_get_status (ctx) & IPMI_KCS_STATUS_REG_OBF))
-         && (poll_attempts <= IPMI_KCS_POLL_ATTEMPTS))
+  if (gettimeofday (&start, NULL) < 0)
     {
-      usleep (ctx->poll_interval);
-      poll_attempts++;
+      KCS_SET_ERRNUM (ctx, IPMI_KCS_ERR_SYSTEM_ERROR);
+      return (-1);
     }
 
-  if (poll_attempts <= IPMI_KCS_POLL_ATTEMPTS)
-    return (0);
-  return (-1);
+  while (!(_ipmi_kcs_get_status (ctx) & IPMI_KCS_STATUS_REG_OBF))
+    {
+      if (_ipmi_kcs_sleep (ctx, &start) < 0)
+	return (-1);
+    }
+
+  return (0);
 }
 
 /*
@@ -728,20 +843,14 @@ ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
   lock_flag++;
 
   if (_ipmi_kcs_wait_for_ibf_clear (ctx) < 0)
-    {
-      KCS_SET_ERRNUM (ctx, IPMI_KCS_ERR_DRIVER_TIMEOUT);
-      goto cleanup;
-    }
+    goto cleanup;
 
   _ipmi_kcs_clear_obf (ctx);
 
   _ipmi_kcs_start_write (ctx);
 
   if (_ipmi_kcs_wait_for_ibf_clear (ctx) < 0)
-    {
-      KCS_SET_ERRNUM (ctx, IPMI_KCS_ERR_DRIVER_TIMEOUT);
-      goto cleanup;
-    }
+    goto cleanup;
 
   if (!_ipmi_kcs_test_if_state (ctx, IPMI_KCS_STATE_WRITE))
     {
@@ -758,10 +867,7 @@ ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
       _ipmi_kcs_write_byte (ctx, *p);
 
       if (_ipmi_kcs_wait_for_ibf_clear (ctx) < 0)
-        {
-          KCS_SET_ERRNUM (ctx, IPMI_KCS_ERR_DRIVER_TIMEOUT);
-          goto cleanup;
-        }
+	goto cleanup;
 
       if (!_ipmi_kcs_test_if_state (ctx, IPMI_KCS_STATE_WRITE))
         {
@@ -776,10 +882,7 @@ ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
   _ipmi_kcs_end_write (ctx);
 
   if (_ipmi_kcs_wait_for_ibf_clear (ctx) < 0)
-    {
-      KCS_SET_ERRNUM (ctx, IPMI_KCS_ERR_DRIVER_TIMEOUT);
-      goto cleanup;
-    }
+    goto cleanup;
 
   if (!_ipmi_kcs_test_if_state (ctx, IPMI_KCS_STATE_WRITE))
     {
@@ -847,10 +950,7 @@ ipmi_kcs_read (ipmi_kcs_ctx_t ctx,
     }
 
   if (_ipmi_kcs_wait_for_ibf_clear (ctx) < 0)
-    {
-      KCS_SET_ERRNUM (ctx, IPMI_KCS_ERR_DRIVER_TIMEOUT);
-      goto cleanup;
-    }
+    goto cleanup;
 
   if (!_ipmi_kcs_test_if_state (ctx, IPMI_KCS_STATE_READ))
     {
@@ -862,10 +962,7 @@ ipmi_kcs_read (ipmi_kcs_ctx_t ctx,
     {
       char c;
       if (_ipmi_kcs_wait_for_obf_set (ctx) < 0)
-        {
-          KCS_SET_ERRNUM (ctx, IPMI_KCS_ERR_DRIVER_TIMEOUT);
-          goto cleanup;
-        }
+	goto cleanup;
       c = _ipmi_kcs_read_byte (ctx);
       if (count < buf_len)
         {
@@ -874,20 +971,14 @@ ipmi_kcs_read (ipmi_kcs_ctx_t ctx,
         }
       _ipmi_kcs_read_next (ctx);
       if (_ipmi_kcs_wait_for_ibf_clear (ctx) < 0)
-        {
-          KCS_SET_ERRNUM (ctx, IPMI_KCS_ERR_DRIVER_TIMEOUT);
-          goto cleanup;
-        }
+	goto cleanup;
     }
 
   if (_ipmi_kcs_test_if_state (ctx, IPMI_KCS_STATE_IDLE))
     {
       /* Clean up */
       if (_ipmi_kcs_wait_for_obf_set (ctx) < 0)
-        {
-          KCS_SET_ERRNUM (ctx, IPMI_KCS_ERR_DRIVER_TIMEOUT);
-          goto cleanup;
-        }
+	goto cleanup;
       _ipmi_kcs_read_byte (ctx); /* toss it, ACK */
     }
   else
