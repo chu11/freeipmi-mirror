@@ -53,7 +53,7 @@ extern "C" {
  */
 #define IPMI_KCS_FLAGS_DEFAULT       0x00000000
 #define IPMI_KCS_FLAGS_NONBLOCKING   0x00000001
-#define IPMI_KCS_FLAGS_SPIN_POLL    0x00000002
+#define IPMI_KCS_FLAGS_SPIN_POLL     0x00000002
 
 typedef struct ipmi_kcs_ctx *ipmi_kcs_ctx_t;
 
