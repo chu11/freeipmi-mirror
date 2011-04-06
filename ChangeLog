@@ -1,3 +1,7 @@
+2011-04-06 Albert Chu <chu11@llnl.gov>
+
+	* Add Intel SR1625 OEM sensor interpretation.
+	
 2011-04-05 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/drivers/: Support SPIN_POLL option for faster
