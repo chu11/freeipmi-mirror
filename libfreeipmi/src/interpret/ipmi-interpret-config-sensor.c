@@ -59,6 +59,7 @@
 #include "freeipmi/spec/ipmi-product-id-spec.h"
 #include "freeipmi/spec/ipmi-sensor-types-spec.h"
 #include "freeipmi/spec/ipmi-sensor-types-oem-spec.h"
+#include "freeipmi/spec/ipmi-sensor-and-event-code-tables-spec.h"
 #include "freeipmi/spec/ipmi-sensor-and-event-code-tables-oem-spec.h"
 
 #include "ipmi-interpret-defs.h"
@@ -893,6 +894,50 @@ _interpret_sensor_oem_supermicro (ipmi_interpret_ctx_t ctx)
 }
 
 static int
+_interpret_sensor_oem_intel_smi_timeout (ipmi_interpret_ctx_t ctx)
+{
+  struct ipmi_interpret_sensor_oem_config *oem_conf;
+
+  assert (ctx);
+  assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
+  assert (ctx->interpret_sensor.sensor_oem_config);
+
+  /* Intel SR1625 SMI Timeout
+   *
+   * Manufacturer ID = 343 (Intel)
+   * Product ID = 62
+   * Event/Reading Type Code = 3h (State Asserted/Deasserted)
+   * Sensor Type = F3h (OEM)
+   * Bitmask 0x0001 = "State Deasserted"
+   * Bitmask 0x0002 = "State Asserted"
+   */
+  
+  if (_interpret_sensor_oem_config_create (ctx,
+					   IPMI_IANA_ENTERPRISE_ID_INTEL,
+					   IPMI_INTEL_PRODUCT_ID_SR1625,
+					   IPMI_EVENT_READING_TYPE_CODE_STATE,
+					   IPMI_SENSOR_TYPE_OEM_INTEL_SMI_TIMEOUT,
+					   &oem_conf) < 0)
+    return (-1);
+
+  oem_conf->oem_state[0].sensor_event_bitmask = 0;
+  oem_conf->oem_state[0].sensor_state = IPMI_INTERPRET_STATE_NOMINAL;
+  oem_conf->oem_state[0].oem_state_type = IPMI_OEM_STATE_TYPE_BITMASK;
+
+  oem_conf->oem_state[1].sensor_event_bitmask = (0x1 << IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_DEASSERTED);
+  oem_conf->oem_state[1].sensor_state = IPMI_INTERPRET_STATE_NOMINAL;
+  oem_conf->oem_state[1].oem_state_type = IPMI_OEM_STATE_TYPE_BITMASK;
+
+  oem_conf->oem_state[2].sensor_event_bitmask = (0x1 << IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED);
+  oem_conf->oem_state[2].sensor_state = IPMI_INTERPRET_STATE_CRITICAL;
+  oem_conf->oem_state[2].oem_state_type = IPMI_OEM_STATE_TYPE_BITMASK;
+
+  oem_conf->oem_state_count = 3;
+
+  return (0);
+}
+
+static int
 _interpret_sensor_oem_config_init (ipmi_interpret_ctx_t ctx)
 {
   assert (ctx);
@@ -906,6 +951,9 @@ _interpret_sensor_oem_config_init (ipmi_interpret_ctx_t ctx)
     return (-1);
 
   if (_interpret_sensor_oem_supermicro (ctx) < 0)
+    return (-1);
+
+  if (_interpret_sensor_oem_intel_smi_timeout (ctx) < 0)
     return (-1);
 
   return (0);

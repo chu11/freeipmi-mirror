@@ -69,6 +69,13 @@ extern "C" {
  *******************************************/
 
 /*
+ * Intel S5500WB
+ * Intel SR1625
+ */
+
+#define IPMI_SENSOR_TYPE_OEM_INTEL_SMI_TIMEOUT                  0xF3
+
+/*
  * Intel Node Manager
  *
  * http://download.intel.com/support/motherboards/server/s5500wb/sb/s5500wb_tps_1_0.pdf
