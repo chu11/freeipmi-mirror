@@ -757,6 +757,19 @@ ipmi_interpret_sel (ipmi_interpret_ctx_t ctx,
           else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_PRESENT
                    && sensor_type == IPMI_SENSOR_TYPE_ENTITY_PRESENCE)
             sel_config = ctx->interpret_sel.ipmi_interpret_sel_entity_presence_device_present_config;
+          else if (ctx->flags & IPMI_INTERPRET_FLAGS_INTERPRET_OEM_DATA
+                   && IPMI_SENSOR_TYPE_IS_OEM (sensor_type))
+            {
+              if (_get_sel_oem_sensor_state (ctx,
+                                             record_buf,
+                                             record_buflen,
+                                             event_reading_type_code,
+                                             sensor_type,
+                                             sel_state) < 0)
+                goto cleanup;
+              rv = 0;
+              goto cleanup;
+            }
           else
             {
               (*sel_state) = IPMI_INTERPRET_STATE_UNKNOWN;
@@ -1164,6 +1177,18 @@ ipmi_interpret_sensor (ipmi_interpret_ctx_t ctx,
       else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_PRESENT
                && sensor_type == IPMI_SENSOR_TYPE_ENTITY_PRESENCE)
         sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_entity_presence_device_present_config;
+      else if (ctx->flags & IPMI_INTERPRET_FLAGS_INTERPRET_OEM_DATA
+	       && IPMI_SENSOR_TYPE_IS_OEM (sensor_type))
+	{
+	  if (_get_sensor_oem_state (ctx,
+				     event_reading_type_code,
+				     sensor_type,
+				     sensor_event_bitmask,
+				     sensor_state) < 0)
+	    goto cleanup;
+          rv = 0;
+          goto cleanup;
+	}
       else
         {
           (*sensor_state) = IPMI_INTERPRET_STATE_UNKNOWN;

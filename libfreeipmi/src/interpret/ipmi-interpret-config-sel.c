@@ -54,10 +54,12 @@
 
 #include "freeipmi/interpret/ipmi-interpret.h"
 #include "freeipmi/record-format/ipmi-sel-record-format.h"
+#include "freeipmi/spec/ipmi-event-reading-type-code-spec.h"
 #include "freeipmi/spec/ipmi-event-reading-type-code-oem-spec.h"
 #include "freeipmi/spec/ipmi-iana-enterprise-numbers-spec.h"
 #include "freeipmi/spec/ipmi-product-id-spec.h"
 #include "freeipmi/spec/ipmi-sensor-types-oem-spec.h"
+#include "freeipmi/spec/ipmi-sensor-and-event-code-tables-spec.h"
 #include "freeipmi/spec/ipmi-sensor-and-event-code-tables-oem-spec.h"
 
 #include "ipmi-interpret-defs.h"
@@ -889,6 +891,79 @@ _interpret_sel_oem_config_intel_node_manager (ipmi_interpret_ctx_t ctx,
 }
 
 static int
+_interpret_sel_oem_config_intel_smi_timeout (ipmi_interpret_ctx_t ctx)
+{
+  struct ipmi_interpret_sel_oem_sensor_config *oem_conf;
+
+  assert (ctx);
+  assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
+  assert (ctx->interpret_sel.sel_oem_sensor_config);
+  assert (ctx->interpret_sel.sel_oem_record_config);
+
+  /* Intel SR1625/S5500WB SMI Timeout
+   *
+   * Manufacturer ID = 343 (Intel)                                                                              
+   * Product ID = 62 (Intel SR1625, S5500WB)                                                             
+   * Event/Reading Type Code = 3h (State Asserted/Deasserted)
+   * Sensor Type = F3h (OEM)                                                                                 
+   * EventData1 0x00 = "State Deasserted"
+   * EventData2 0x01 = "State Asserted"
+   */
+  
+  /* From Intel
+   *
+   * The BMC supports an SMI timeout sensor (sensor type OEM (F3h),
+   * event type Discrete (03h)) that asserts if the SMI signal has
+   * been asserted for more than 90 seconds. A continuously asserted
+   * SMI signal is an indication that the BIOS cannot service the
+   * condition that caused the SMI. This is usually because that
+   * condition prevents the BIOS from running. When an SMI timeout
+   * occurs, the BMC asserts the SMI timeout sensor and logs a SEL
+   * event for that sensor. The BMC will also reset the system.
+   */
+
+  if (_interpret_sel_oem_sensor_config_create (ctx,
+					       IPMI_IANA_ENTERPRISE_ID_INTEL,
+					       IPMI_INTEL_PRODUCT_ID_SR1625,
+					       IPMI_EVENT_READING_TYPE_CODE_STATE,
+					       IPMI_SENSOR_TYPE_OEM_INTEL_SMI_TIMEOUT,
+					       &oem_conf) < 0)
+    return (-1);
+
+  oem_conf->oem_sensor_data[0].event_direction_any_flag = 1;
+  oem_conf->oem_sensor_data[0].event_direction = 0; /* doesn't matter */
+
+  oem_conf->oem_sensor_data[0].event_data1_any_flag = 0;
+  oem_conf->oem_sensor_data[0].event_data1 = IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_DEASSERTED;
+
+  oem_conf->oem_sensor_data[0].event_data2_any_flag = 1;
+  oem_conf->oem_sensor_data[0].event_data2 = 0; /* doesn't matter */
+
+  oem_conf->oem_sensor_data[0].event_data3_any_flag = 1;
+  oem_conf->oem_sensor_data[0].event_data3 = 0; /* doesn't matter */
+
+  oem_conf->oem_sensor_data[0].sel_state = IPMI_INTERPRET_STATE_NOMINAL;
+
+  oem_conf->oem_sensor_data[1].event_direction_any_flag = 1;
+  oem_conf->oem_sensor_data[1].event_direction = 0; /* doesn't matter */
+
+  oem_conf->oem_sensor_data[1].event_data1_any_flag = 0;
+  oem_conf->oem_sensor_data[1].event_data1 = IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED;
+
+  oem_conf->oem_sensor_data[1].event_data2_any_flag = 1;
+  oem_conf->oem_sensor_data[1].event_data2 = 0; /* doesn't matter */
+
+  oem_conf->oem_sensor_data[1].event_data3_any_flag = 1;
+  oem_conf->oem_sensor_data[1].event_data3 = 0; /* doesn't matter */
+
+  oem_conf->oem_sensor_data[1].sel_state = IPMI_INTERPRET_STATE_CRITICAL;
+
+  oem_conf->oem_sensor_data_count = 2;
+
+  return (0);
+}
+
+static int
 _interpret_sel_oem_config_init (ipmi_interpret_ctx_t ctx)
 {
   assert (ctx);
@@ -934,6 +1009,9 @@ _interpret_sel_oem_config_init (ipmi_interpret_ctx_t ctx)
   if (_interpret_sel_oem_config_intel_node_manager (ctx,
                                                     IPMI_IANA_ENTERPRISE_ID_QUANTA,
                                                     IPMI_QUANTA_PRODUCT_ID_S99Q) < 0)
+    return (-1);
+
+  if (_interpret_sel_oem_config_intel_smi_timeout (ctx) < 0)
     return (-1);
   
   return (0);
