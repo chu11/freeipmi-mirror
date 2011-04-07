@@ -5,6 +5,7 @@ o Support "discretereading" workaround in ipmi-sensors and associated
 o Support "spinpoll" workaround/performance optimization in tools and
   libraries.
 o Support additional sensor/SEL interpretations.
+o Fix bug in libipmimonitoring to allow additional OEM interpretations.
 
 FreeIPMI 1.0.3 - 03/29/11
 -------------------------
