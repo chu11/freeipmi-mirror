@@ -912,6 +912,18 @@ _interpret_sensor_oem_intel_smi_timeout (ipmi_interpret_ctx_t ctx)
    * Bitmask 0x0002 = "State Asserted"
    */
   
+  /* From Intel
+   *
+   * The BMC supports an SMI timeout sensor (sensor type OEM (F3h),
+   * event type Discrete (03h)) that asserts if the SMI signal has
+   * been asserted for more than 90 seconds. A continuously asserted
+   * SMI signal is an indication that the BIOS cannot service the
+   * condition that caused the SMI. This is usually because that
+   * condition prevents the BIOS from running. When an SMI timeout
+   * occurs, the BMC asserts the SMI timeout sensor and logs a SEL
+   * event for that sensor. The BMC will also reset the system.
+   */
+
   if (_interpret_sensor_oem_config_create (ctx,
 					   IPMI_IANA_ENTERPRISE_ID_INTEL,
 					   IPMI_INTEL_PRODUCT_ID_SR1625,
