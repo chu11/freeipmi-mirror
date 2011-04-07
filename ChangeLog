@@ -1,3 +1,7 @@
+2011-04-07 Albert Chu <chu11@llnl.gov>
+
+	* Add Intel SR1625/S5500WB OEM SEL interpration.
+	
 2011-04-06 Albert Chu <chu11@llnl.gov>
 
 	* Add Intel SR1625 OEM sensor interpretation.
