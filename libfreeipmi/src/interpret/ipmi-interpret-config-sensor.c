@@ -902,10 +902,10 @@ _interpret_sensor_oem_intel_smi_timeout (ipmi_interpret_ctx_t ctx)
   assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
   assert (ctx->interpret_sensor.sensor_oem_config);
 
-  /* Intel SR1625 SMI Timeout
+  /* Intel SR1625/S5500WB SMI Timeout
    *
    * Manufacturer ID = 343 (Intel)
-   * Product ID = 62
+   * Product ID = 62 (Intel SR1625, S5500WB)
    * Event/Reading Type Code = 3h (State Asserted/Deasserted)
    * Sensor Type = F3h (OEM)
    * Bitmask 0x0001 = "State Deasserted"
