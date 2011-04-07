@@ -1,6 +1,10 @@
 2011-04-07 Albert Chu <chu11@llnl.gov>
 
 	* Add Intel SR1625/S5500WB OEM SEL interpration.
+
+	* libfreeipmi/src/interpret/ipmi-interpret.c: Support
+	interpretations of OEM sensor types w/ generic event/reading type
+	codes.
 	
 2011-04-06 Albert Chu <chu11@llnl.gov>
 
