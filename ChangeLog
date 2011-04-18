@@ -1,3 +1,8 @@
+2011-04-18 Albert Chu <chu11@llnl.gov>
+
+	* libipmiconsole/src/ipmiconsole.h: Update comments to show
+	support for cipher suite id 17.
+	
 2011-04-07 Albert Chu <chu11@llnl.gov>
 
 	* Add Intel SR1625/S5500WB OEM SEL interpration.
