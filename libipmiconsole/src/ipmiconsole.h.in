@@ -891,7 +891,7 @@ int ipmiconsole_cipher_suite_id_is_valid (int cipher_suite_id);
  * would result in libipmiconsole using a default value, is considered
  * an invalid input here.
  *
- * Returns 1 if cipher suite id is valid, 0 if it is not.
+ * Returns 1 if workaround flags are valid, 0 if they are not.
  */
 int ipmiconsole_workaround_flags_is_valid (unsigned int workaround_flags);
 
