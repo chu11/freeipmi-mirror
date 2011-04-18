@@ -1344,3 +1344,68 @@ ipmiconsole_ctx_destroy (ipmiconsole_ctx_t c)
   ipmiconsole_ctx_blocking_cleanup (c);
   ipmiconsole_ctx_cleanup (c);
 }
+
+int
+ipmiconsole_username_is_valid (const char *username)
+{
+  if (!username)
+    return (0);
+
+  if (strlen (username) > IPMI_MAX_USER_NAME_LENGTH)
+    return (0);
+
+  return (1);
+}
+
+int
+ipmiconsole_password_is_valid (const char *password)
+{
+  if (!password)
+    return (0);
+
+  if (strlen (password) > IPMI_2_0_MAX_PASSWORD_LENGTH)
+    return (0);
+
+  return (1);
+}
+
+int
+ipmiconsole_k_g_is_valid (const unsigned char *k_g, unsigned int k_g_len)
+{
+  if (!k_g)
+    return (0);
+
+  if (k_g_len > IPMI_MAX_K_G_LENGTH)
+    return (0);
+
+  return (1);
+}
+
+int
+ipmiconsole_privilege_level_is_valid (int privilege_level)
+{
+  if (privilege_level != IPMICONSOLE_PRIVILEGE_USER
+      && privilege_level != IPMICONSOLE_PRIVILEGE_OPERATOR
+      && privilege_level != IPMICONSOLE_PRIVILEGE_ADMIN)
+    return (0);
+
+  return (1);
+}
+
+int
+ipmiconsole_cipher_suite_id_is_valid (int cipher_suite_id)
+{
+  if (!IPMI_CIPHER_SUITE_ID_SUPPORTED (cipher_suite_id))
+    return (0);
+
+  return (1);
+}
+
+int
+ipmiconsole_workaround_flags_is_valid (unsigned int workaround_flags)
+{
+  if (workaround_flags & ~IPMICONSOLE_WORKAROUND_MASK)
+    return (0);
+
+  return (1);
+}
