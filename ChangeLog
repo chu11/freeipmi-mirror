@@ -1,5 +1,10 @@
 2011-04-18 Albert Chu <chu11@llnl.gov>
 
+	* libipmiconsole/: Support convenience functions for determining
+	whether user inputs are valid or not.
+	
+2011-04-18 Albert Chu <chu11@llnl.gov>
+
 	* libipmiconsole/src/ipmiconsole.h: Update comments to show
 	support for cipher suite id 17.
 	
