@@ -865,7 +865,7 @@ Appendix
 [CONFIG-1]
 
 To see a discussion on why this implementation is poor, please see
-"Configuration tool callback design" in the freeipmi-coding.txt
+"Configuration tool callback design" in the freeipmi-design.txt
 document.
 
 [FUNCTIONAL]
