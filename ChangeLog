@@ -1,3 +1,9 @@
+2011-04-21 Albert Chu <chu11@llnl.gov>
+
+	* NEWS, configure.ac: Update for release.
+
+	* Tagged Release-1_0_4.
+	
 2011-04-18 Albert Chu <chu11@llnl.gov>
 
 	* libipmiconsole/: Support convenience functions for determining
