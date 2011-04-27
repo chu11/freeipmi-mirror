@@ -1,3 +1,7 @@
+FreeIPMI 1.0.5 - 04/21/11
+-------------------------
+o Various minor bug fixes.
+
 FreeIPMI 1.0.4 - 04/21/11
 -------------------------
 o Support "discretereading" workaround in ipmi-sensors and associated

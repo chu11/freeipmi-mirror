@@ -88,11 +88,11 @@ static void hash_node_free (struct hash_node *node);
 
 #if 0
 static struct hash_node *hash_free_list = NULL;
-#endif
 
 #if WITH_PTHREADS
 static pthread_mutex_t hash_free_lock = PTHREAD_MUTEX_INITIALIZER;
 #endif /* WITH_PTHREADS */
+#endif
 
 
 /*****************************************************************************
@@ -402,8 +402,8 @@ hash_node_alloc (void)
     struct hash_node *p = NULL;
 
     assert (HASH_ALLOC > 0);
-    lsd_mutex_lock (&hash_free_lock);
 #if 0
+    lsd_mutex_lock (&hash_free_lock);
     if (!hash_free_list) {
         if ((hash_free_list = malloc (HASH_ALLOC * sizeof (*p)))) {
             for (i = 0; i < HASH_ALLOC - 1; i++)
@@ -418,11 +418,11 @@ hash_node_alloc (void)
     else {
         errno = ENOMEM;
     }
+    lsd_mutex_unlock (&hash_free_lock);
 #else
     if (!(p = malloc (sizeof(*p))))
         errno = ENOMEM;
 #endif
-    lsd_mutex_unlock (&hash_free_lock);
     return (p);
 }
 
@@ -434,13 +434,13 @@ hash_node_free (struct hash_node *node)
  */
     assert (node != NULL);
     memset (node, 0, sizeof (*node));
-    lsd_mutex_lock (&hash_free_lock);
 #if 0
+    lsd_mutex_lock (&hash_free_lock);
     node->next = hash_free_list;
     hash_free_list = node;
+    lsd_mutex_unlock (&hash_free_lock);
 #else
     free (node);
 #endif
-    lsd_mutex_unlock (&hash_free_lock);
     return;
 }
