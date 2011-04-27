@@ -1,3 +1,7 @@
+2011-04-27 Albert Chu <chu11@llnl.gov>
+
+	* common/src/miscutil/: Remove unnecessary locking calls.
+	
 2011-04-18 Albert Chu <chu11@llnl.gov>
 
 	* libipmiconsole/: Support convenience functions for determining
