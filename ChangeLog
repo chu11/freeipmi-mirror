@@ -1,3 +1,8 @@
+2011-05-04 Albert Chu <chu11@llnl.gov>
+
+	* Update documents and comments with additional motherboard
+	workaround information.
+	
 2011-04-27 Albert Chu <chu11@llnl.gov>
 
 	* common/src/miscutil/: Remove unnecessary locking calls.
