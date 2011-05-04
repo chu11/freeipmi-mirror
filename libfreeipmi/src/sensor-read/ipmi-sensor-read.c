@@ -688,6 +688,7 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
        * IPMI Workaround (achu)
        *
        * Discovered on HP Proliant DL380 G7
+       * Discovered on HP ProLiant ML310 G5
        *
        * SDR records for some sensors give conflicting information.  A
        * threshold based sensor lists an event/reading type code for a
