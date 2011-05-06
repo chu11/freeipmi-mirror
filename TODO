@@ -1,5 +1,3 @@
-Priorities for 0.10.1 marked below (search for 0.10.1)
-
 oem
 ---
 handle firmware version too??
@@ -102,7 +100,7 @@ if user inputs hostname of localhost, do inband not outofband?
 
 config tools
 ------------
-collapse into one allmight tool? ipmi-config (0.10.1)
+collapse into one allmight tool? ipmi-config
 - user must pick section
 - bmc, pef, sensor, chassis, all
 - makes more extensible in the future
@@ -116,6 +114,16 @@ collapse into one allmight tool? ipmi-config (0.10.1)
     Also would make code ugly as hell to make all duplicate sections.
     should do database of what sections go to what categories
 - --lan-channel for pick one?
+
+fiid
+----
+rearch for speed to not use strings, use macros + strings in internal.
+So something like:
+
+{1, FOO_MACRO, "FIELD_NAME", FLAGS}
+
+so avoid string compares for get/set/compare/etc., but have available
+for debug output.
 
 bmc-config
 ----------
@@ -141,7 +149,7 @@ dell poweredge lcd support
 
 libfreeipmi
 -----------
-* xRC4 (0.10.1)
+* xRC4
   - on Quanta S99Q/Dell FS12-TY
   - Began on branches/xrc, from the branch ChangeLog
 ----
