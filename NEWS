@@ -1,5 +1,6 @@
 FreeIPMI 1.0.5 - 04/21/11
 -------------------------
+o Fix command line parsing bugs in ipmi-dcmi.
 o Various minor bug fixes.
 
 FreeIPMI 1.0.4 - 04/21/11
