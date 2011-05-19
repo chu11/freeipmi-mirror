@@ -1,3 +1,8 @@
+2011-05-18  Albert Chu <chu11@llnl.gov>
+
+	* bmc-config/bmc-config.8.pre.in: Add additional troubleshooting
+	information.
+	
 2011-05-12  Holger Liebig <holger.liebig@ts.fujitsu.com>
 
 	* ipmi-dcmi/src/ipmi-dcmi-argp.c: Fix command line parsing bug.

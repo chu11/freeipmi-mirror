@@ -153,6 +153,12 @@ be suffixed appropriately with the word \fIChannel\fR and the channel
 number.  For example, you might see a \fILan_Conf_Channel_1\fR and
 \fILan_Conf_Channel_3\fR, where you can configure LAN configuration on
 Channels 1 and 3 respectively.
+.LP
+On some motherboards, configuration changes will not be "absorbed" by
+the system until the motherboard is hard-reset.  This can be accomplished
+by physically powering off and on the system (e.g. button push), or it can be
+accomplished through a cold-reset.  A cold-reset can be executed via
+.B bmc-device.
 
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-main.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-threads.man>
@@ -207,5 +213,5 @@ Copyright \(co 2003-2010 FreeIPMI Core Team.
 #include <@top_srcdir@/common/man/manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
 bmc-config.conf(5), freeipmi(7), ipmi-chassis-config(8),
-ipmi-pef-config(8), ipmi-sensors-config(8)
+ipmi-pef-config(8), ipmi-sensors-config(8), bmc-device(8)
 #include <@top_srcdir@/common/man/manpage-common-homepage.man>
