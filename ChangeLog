@@ -1,3 +1,9 @@
+2011-05-24  Holger Liebig <holger.liebig@ts.fujitsu.com>
+
+	* ipmi-dcmi/src/ipmi-dcmi.c: Fix asset tag/string identifier
+	overwriting bug.  Update to handle setting asset tag and
+	management identifier string according to DCMI v1.5 spec.
+
 2011-05-18  Albert Chu <chu11@llnl.gov>
 
 	* bmc-config/bmc-config.8.pre.in: Add additional troubleshooting
