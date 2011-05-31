@@ -52,6 +52,7 @@
 #include "freeipmi/cmds/ipmi-dcmi-cmds.h"
 #include "freeipmi/fiid/fiid.h"
 #include "freeipmi/spec/ipmi-cmd-dcmi-spec.h"
+#include "freeipmi/spec/ipmi-entity-ids-spec.h"
 #include "freeipmi/spec/ipmi-netfn-spec.h"
 #include "freeipmi/spec/ipmi-sensor-types-spec.h"
 
@@ -188,6 +189,45 @@ fiid_template_t tmpl_cmd_dcmi_get_dcmi_capability_info_enhanced_system_power_sta
     { 8, "parameter_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8, "number_of_supported_rolling_average_time_periods", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 2048, "rolling_average_time_periods", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
+    { 0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_dcmi_set_dcmi_configuration_parameters_rq =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "group_extension_identification", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "set_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1024, "configuration_parameter_data", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_VARIABLE},
+    { 0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_dcmi_set_dcmi_configuration_parameters_rs =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8, "group_extension_identification", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_dcmi_get_dcmi_configuration_parameters_rq =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "group_extension_identification", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "set_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},   
+    { 0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_dcmi_get_dcmi_configuration_parameters_rs =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8, "group_extension_identification", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "dcmi_specification_conformance.major_version", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "dcmi_specification_conformance.minor_version", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "parameter_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1024, "parameter_data", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_VARIABLE},
     { 0, "", 0}
   };
 
@@ -395,6 +435,81 @@ fiid_template_t tmpl_cmd_dcmi_activate_deactivate_power_limit_rs =
     { 0, "", 0}
   };
 
+fiid_template_t tmpl_cmd_dcmi_get_thermal_limit_rq =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "group_extension_identification", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "entity_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "entity_instance", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_dcmi_get_thermal_limit_rs =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8, "group_extension_identification", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "temperature_limit", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 5, "exception_actions.reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "exception_actions.log_event_to_sel_only", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "exception_actions.hard_power_off_system_and_log_event", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "exception_actions.reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 16, "exception_time", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_dcmi_set_thermal_limit_rq =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "group_extension_identification", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "entity_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "entity_instance", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "temperature_limit", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 5, "exception_actions.reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "exception_actions.log_event_to_sel_only", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "exception_actions.hard_power_off_system_and_log_event", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "exception_actions.reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 16, "exception_time", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_dcmi_set_thermal_limit_rs =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8, "group_extension_identification", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_dcmi_get_temperature_reading_rq =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "group_extension_identification", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "sensor_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "entity_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "entity_instance", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "entity_instance_start", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_dcmi_get_temperature_reading_rs =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8, "group_extension_identification", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "total_number_of_available_instances", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "number_of_sets_of_temperature_data", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "temperature1", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, /* signed 8 bit int */
+    { 8, "temperature2", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, /* signed 8 bit int */
+    { 8, "temperature3", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, /* signed 8 bit int */
+    { 8, "temperature4", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, /* signed 8 bit int */
+    { 8, "temperature5", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, /* signed 8 bit int */
+    { 8, "temperature6", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, /* signed 8 bit int */
+    { 8, "temperature7", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, /* signed 8 bit int */
+    { 8, "temperature8", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, /* signed 8 bit int */
+    { 0, "", 0}
+  };
+
 /* 
  * Fill Functions
  */
@@ -420,6 +535,68 @@ fill_cmd_dcmi_get_dcmi_capability_info (uint8_t parameter_selector,
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_DCMI_GET_DCMI_CAPABILITY_INFO);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "group_extension_identification", IPMI_NET_FN_GROUP_EXTENSION_IDENTIFICATION_DCMI);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", parameter_selector);
+  
+  return (0);
+}
+
+int
+fill_cmd_dcmi_set_dcmi_configuration_parameters (uint8_t parameter_selector,
+						 uint8_t set_selector,
+						 const void *configuration_parameter_data,
+						 unsigned int configuration_parameter_data_len,
+						 fiid_obj_t obj_cmd_rq)
+{
+  if (!IPMI_DCMI_CONFIGURATION_PARAMETER_SELECTOR_VALID (parameter_selector)
+      || !configuration_parameter_data
+      || !configuration_parameter_data_len
+      || !fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_dcmi_set_dcmi_configuration_parameters_rq) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_DCMI_SET_DCMI_CONFIGURATION_PARAMETERS);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "group_extension_identification", IPMI_NET_FN_GROUP_EXTENSION_IDENTIFICATION_DCMI);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", parameter_selector);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "set_selector", set_selector);
+  FILL_FIID_OBJ_SET_DATA (obj_cmd_rq,
+                          "configuration_parameter_data",
+                          configuration_parameter_data,
+                          configuration_parameter_data_len);
+
+  return (0);
+}
+
+int
+fill_cmd_dcmi_get_dcmi_configuration_parameters (uint8_t parameter_selector,
+						 uint8_t set_selector,
+						 fiid_obj_t obj_cmd_rq)
+{
+  if (!IPMI_DCMI_CONFIGURATION_PARAMETER_SELECTOR_VALID (parameter_selector)
+      || !fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_dcmi_get_dcmi_configuration_parameters_rq) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_DCMI_GET_DCMI_CONFIGURATION_PARAMETERS);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "group_extension_identification", IPMI_NET_FN_GROUP_EXTENSION_IDENTIFICATION_DCMI);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", parameter_selector);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "set_selector", set_selector);
   
   return (0);
 }
@@ -557,9 +734,11 @@ fill_cmd_dcmi_get_dcmi_sensor_info (uint8_t sensor_type,
                                     uint8_t entity_instance_start,
                                     fiid_obj_t obj_cmd_rq)
 {
-  /* achu: only entity id's listed in the spec, or all possible entity IDs? */
   if (sensor_type != IPMI_SENSOR_TYPE_TEMPERATURE
-      || !IPMI_DCMI_ENTITY_ID_VALID(entity_id)
+      || (!IPMI_DCMI_ENTITY_ID_VALID(entity_id)
+	  && entity_id != IPMI_ENTITY_ID_PROCESSOR
+	  && entity_id != IPMI_ENTITY_ID_SYSTEM_BOARD
+	  && entity_id != IPMI_ENTITY_ID_AIR_INLET_B)
       || !fiid_obj_valid (obj_cmd_rq))
     {
       SET_ERRNO (EINVAL);
@@ -692,3 +871,107 @@ fill_cmd_dcmi_activate_deactivate_power_limit (uint8_t power_limit_activation,
 
   return (0);
 }
+
+int
+fill_cmd_dcmi_get_thermal_limit (uint8_t entity_id,
+				 uint8_t entity_instance,
+				 fiid_obj_t obj_cmd_rq)
+{
+  if ((entity_id != IPMI_DCMI_ENTITY_ID_INLET_TEMPERATURE
+       && entity_id != IPMI_ENTITY_ID_AIR_INLET_B)
+      || !fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_dcmi_get_thermal_limit_rq) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_DCMI_GET_THERMAL_LIMIT);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "group_extension_identification", IPMI_NET_FN_GROUP_EXTENSION_IDENTIFICATION_DCMI);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "entity_id", entity_id);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "entity_instance", entity_instance);
+
+  return (0);
+}
+
+int
+fill_cmd_dcmi_set_thermal_limit (uint8_t entity_id,
+				 uint8_t entity_instance,
+				 uint8_t temperature_limit,
+				 uint8_t exception_actions_log_event_to_sel_only,
+				 uint8_t exception_actions_hard_power_off_system_and_log_event,
+				 uint16_t exception_time,
+				 fiid_obj_t obj_cmd_rq)
+{
+  if ((entity_id != IPMI_DCMI_ENTITY_ID_INLET_TEMPERATURE
+       && entity_id != IPMI_ENTITY_ID_AIR_INLET_B)
+      || !IPMI_DCMI_EXCEPTION_ACTION_BIT_VALID (exception_actions_log_event_to_sel_only)
+      || !IPMI_DCMI_EXCEPTION_ACTION_BIT_VALID (exception_actions_hard_power_off_system_and_log_event)
+      || !fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_dcmi_set_thermal_limit_rq) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_DCMI_SET_THERMAL_LIMIT);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "group_extension_identification", IPMI_NET_FN_GROUP_EXTENSION_IDENTIFICATION_DCMI);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "entity_id", entity_id);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "entity_instance", entity_instance);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "temperature_limit", temperature_limit);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "exception_actions.reserved1", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "exception_actions.log_event_to_sel_only", exception_actions_log_event_to_sel_only);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "exception_actions.hard_power_off_system_and_log_event", exception_actions_hard_power_off_system_and_log_event);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "exception_actions.reserved2", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "exception_time", exception_time);
+
+  return (0);
+}
+
+int
+fill_cmd_dcmi_get_temperature_reading (uint8_t sensor_type,
+				       uint8_t entity_id,
+				       uint8_t entity_instance,
+				       uint8_t entity_instance_start,
+				       fiid_obj_t obj_cmd_rq)
+{
+  if (sensor_type != IPMI_SENSOR_TYPE_TEMPERATURE
+      || (!IPMI_DCMI_ENTITY_ID_VALID(entity_id)
+	  && entity_id != IPMI_ENTITY_ID_PROCESSOR
+	  && entity_id != IPMI_ENTITY_ID_SYSTEM_BOARD
+	  && entity_id != IPMI_ENTITY_ID_AIR_INLET_B)
+      || !fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_dcmi_get_temperature_reading_rq) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_DCMI_GET_TEMPERATURE_READING);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "group_extension_identification", IPMI_NET_FN_GROUP_EXTENSION_IDENTIFICATION_DCMI);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "sensor_type", sensor_type);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "entity_id", entity_id);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "entity_instance", entity_instance);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "entity_instance_start", entity_instance_start);
+
+  return (0);
+}
+

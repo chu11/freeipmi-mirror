@@ -1,3 +1,7 @@
+2011-XX-XX  Albert Chu <chu11@llnl.gov>
+
+	* Update for additions in DCMI v1.5 specification.
+	
 2011-05-31  Albert Chu <chu11@llnl.gov>
 
 	* Fix typo globally, IPMI_CMD_DCMI_GET_DCMI_CAPABILITIY_INFO to

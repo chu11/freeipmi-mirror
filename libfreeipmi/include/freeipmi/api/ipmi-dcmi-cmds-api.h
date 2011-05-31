@@ -77,6 +77,18 @@ int ipmi_cmd_dcmi_get_dcmi_capability_info_manageability_access_attributes (ipmi
 int ipmi_cmd_dcmi_get_dcmi_capability_info_enhanced_system_power_statistics_attributes (ipmi_ctx_t ctx,
                                                                                         fiid_obj_t obj_cmd_rs);
 
+int ipmi_cmd_dcmi_set_dcmi_configuration_parameters (ipmi_ctx_t ctx,
+						     uint8_t parameter_selector,
+						     uint8_t set_selector,
+						     const void *configuration_parameter_data,
+						     unsigned int configuration_parameter_data_len,
+						     fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_dcmi_get_dcmi_configuration_parameters (ipmi_ctx_t ctx,
+						     uint8_t parameter_selector,
+						     uint8_t set_selector,
+						     fiid_obj_t obj_cmd_rs);
+
 int ipmi_cmd_dcmi_get_asset_tag (ipmi_ctx_t ctx,
                                  uint8_t offset_to_read,
                                  uint8_t number_of_bytes_to_read,
@@ -126,6 +138,27 @@ int ipmi_cmd_dcmi_set_power_limit (ipmi_ctx_t ctx,
 int ipmi_cmd_dcmi_activate_deactivate_power_limit (ipmi_ctx_t ctx,
                                                    uint8_t power_limit_activation,
                                                    fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_dcmi_get_thermal_limit (ipmi_ctx_t ctx,
+				     uint8_t entity_id,
+				     uint8_t entity_instance,
+				     fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_dcmi_set_thermal_limit (ipmi_ctx_t ctx,
+				     uint8_t entity_id,
+				     uint8_t entity_instance,
+				     uint8_t temperature_limit,
+				     uint8_t exception_actions_log_event_to_sel_only,
+				     uint8_t exception_actions_hard_power_off_system_and_log_event,
+				     uint16_t exception_time,
+				     fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_dcmi_get_temperature_reading (ipmi_ctx_t ctx,
+					   uint8_t sensor_type,
+					   uint8_t entity_id,
+					   uint8_t entity_instance,
+					   uint8_t entity_instance_start,
+					   fiid_obj_t obj_cmd_rs);
 
 #ifdef __cplusplus
 }

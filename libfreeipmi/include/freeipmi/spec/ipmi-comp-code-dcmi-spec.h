@@ -66,6 +66,25 @@ extern "C" {
 #define IPMI_COMP_CODE_DCMI_STATISTICS_REPORTING_PERIOD_OUT_OF_RANGE_STR \
   "Statistics Reporting Period out of range"
 
+/* IPMI_CMD_DCMI_GET_ASSET_TAG */
+
+#define IPMI_COMP_CODE_DCMI_ENCODING_TYPE_IN_FRU_IS_BINARY_UNSPECIFIED                  0x80
+#define IPMI_COMP_CODE_DCMI_ENCODING_TYPE_IN_FRU_IS_BINARY_UNSPECIFIED_STR \
+  "Encoding type in FRU is binary / unspecified"
+
+#define IPMI_COMP_CODE_DCMI_ENCODING_TYPE_IN_FRU_IS_BCD_PLUS                            0x81
+#define IPMI_COMP_CODE_DCMI_ENCODING_TYPE_IN_FRU_IS_BCD_PLUS_STR \
+  "Encoding type in FRU is BCD Plus"
+
+#define IPMI_COMP_CODE_DCMI_ENCODING_TYPE_IN_FRU_IS_6BIT_ASCII_PACKED                   0x82
+#define IPMI_COMP_CODE_DCMI_ENCODING_TYPE_IN_FRU_IS_6BIT_ASCII_PACKED_STR \
+  "Encoding type in FRU is 6-bit ASCII Packed"
+
+#define IPMI_COMP_CODE_DCMI_ENCODING_TYPE_IN_FRU_IS_SET_TO_ASCII_LATIN1_NOT_ENGLISH     0x83
+#define IPMI_COMP_CODE_DCMI_ENCODING_TYPE_IN_FRU_IS_SET_TO_ASCII_LATIN1_NOT_ENGLISH_STR \
+  "Encoding type in FRU is set to ASCII+Latin1 but language code is " \
+  "not set to English (indicating data is 2-byte UNICODE)"
+
 #ifdef __cplusplus
 }
 #endif

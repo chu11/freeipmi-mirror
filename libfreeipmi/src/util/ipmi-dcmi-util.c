@@ -80,6 +80,22 @@ ipmi_cmd_dcmi_str (uint8_t cmd)
       return "Get Asset Tag";
     case IPMI_CMD_DCMI_GET_DCMI_SENSOR_INFO:
       return "Get DCMI Sensor Info";
+    case IPMI_CMD_DCMI_SET_ASSET_TAG:
+      return "Set Asset Tag";
+    case IPMI_CMD_DCMI_GET_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING:
+      return "Get Management Controller Identifier String";
+    case IPMI_CMD_DCMI_SET_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING:
+      return "Set Management Controller Identifier String";
+    case IPMI_CMD_DCMI_SET_THERMAL_LIMIT:
+      return "Set Thermal Limit";
+    case IPMI_CMD_DCMI_GET_THERMAL_LIMIT:
+      return "Get Thermal Limit";
+    case IPMI_CMD_DCMI_GET_TEMPERATURE_READING:
+      return "Set Temperature Reading";
+    case IPMI_CMD_DCMI_SET_DCMI_CONFIGURATION_PARAMETERS:
+      return "Set DCMI Configuration Parameters";
+    case IPMI_CMD_DCMI_GET_DCMI_CONFIGURATION_PARAMETERS:
+      return "Get DCMI Configuration Parameters";
     default:
       return "Unknown";
     }

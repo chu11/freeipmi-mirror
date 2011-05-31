@@ -57,6 +57,7 @@
 #include "freeipmi/fiid/fiid.h"
 #include "freeipmi/spec/ipmi-cmd-dcmi-spec.h"
 #include "freeipmi/spec/ipmi-comp-code-dcmi-spec.h"
+#include "freeipmi/spec/ipmi-entity-ids-spec.h"
 #include "freeipmi/spec/ipmi-ipmb-lun-spec.h"
 #include "freeipmi/spec/ipmi-netfn-spec.h"
 #include "freeipmi/spec/ipmi-sensor-types-spec.h"
@@ -401,6 +402,130 @@ ipmi_cmd_dcmi_get_dcmi_capability_info_enhanced_system_power_statistics_attribut
 }
 
 int
+ipmi_cmd_dcmi_set_dcmi_configuration_parameters (ipmi_ctx_t ctx,
+						 uint8_t parameter_selector,
+						 uint8_t set_selector,
+						 const void *configuration_parameter_data,
+						 unsigned int configuration_parameter_data_len,
+						 fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  int rv = -1;
+
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if (!IPMI_DCMI_CONFIGURATION_PARAMETER_SELECTOR_VALID (parameter_selector)
+      || !configuration_parameter_data
+      || !configuration_parameter_data_len
+      || !fiid_obj_valid (obj_cmd_rs))
+    {
+      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_dcmi_set_dcmi_configuration_parameters_rs) < 0)
+    {
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
+      return (-1);
+    }
+
+  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_dcmi_set_dcmi_configuration_parameters_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (fill_cmd_dcmi_set_dcmi_configuration_parameters (parameter_selector,
+						       set_selector,
+						       configuration_parameter_data,
+						       configuration_parameter_data_len,
+						       obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (api_ipmi_cmd (ctx,
+                    IPMI_BMC_IPMB_LUN_BMC,
+                    IPMI_NET_FN_GROUP_EXTENSION_RQ,
+                    obj_cmd_rq,
+                    obj_cmd_rs) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      goto cleanup;
+    }
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rq);
+  return (rv);
+}
+
+int
+ipmi_cmd_dcmi_get_dcmi_configuration_parameters (ipmi_ctx_t ctx,
+						 uint8_t parameter_selector,
+						 uint8_t set_selector,
+						 fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  int rv = -1;
+
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if (!IPMI_DCMI_CONFIGURATION_PARAMETER_SELECTOR_VALID (parameter_selector)
+      || !fiid_obj_valid (obj_cmd_rs))
+    {
+      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_dcmi_get_dcmi_configuration_parameters_rs) < 0)
+    {
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
+      return (-1);
+    }
+
+  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_dcmi_get_dcmi_configuration_parameters_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (fill_cmd_dcmi_get_dcmi_configuration_parameters (parameter_selector,
+						       set_selector,
+						       obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (api_ipmi_cmd (ctx,
+                    IPMI_BMC_IPMB_LUN_BMC,
+                    IPMI_NET_FN_GROUP_EXTENSION_RQ,
+                    obj_cmd_rq,
+                    obj_cmd_rs) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      goto cleanup;
+    }
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rq);
+  return (rv);
+}
+
+int
 ipmi_cmd_dcmi_get_asset_tag (ipmi_ctx_t ctx,
                              uint8_t offset_to_read,
                              uint8_t number_of_bytes_to_read,
@@ -667,9 +792,11 @@ ipmi_cmd_dcmi_get_dcmi_sensor_info (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  /* achu: only entity id's listed in the spec, or all possible entity IDs? */
   if (sensor_type != IPMI_SENSOR_TYPE_TEMPERATURE
-      || !IPMI_DCMI_ENTITY_ID_VALID(entity_id)
+      || (!IPMI_DCMI_ENTITY_ID_VALID(entity_id)
+	  && entity_id != IPMI_ENTITY_ID_PROCESSOR
+	  && entity_id != IPMI_ENTITY_ID_SYSTEM_BOARD
+	  && entity_id != IPMI_ENTITY_ID_AIR_INLET_B)
       || !fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
@@ -927,6 +1054,203 @@ ipmi_cmd_dcmi_activate_deactivate_power_limit (ipmi_ctx_t ctx,
 
   if (fill_cmd_dcmi_activate_deactivate_power_limit (power_limit_activation,
                                                      obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (api_ipmi_cmd (ctx,
+                    IPMI_BMC_IPMB_LUN_BMC,
+                    IPMI_NET_FN_GROUP_EXTENSION_RQ,
+                    obj_cmd_rq,
+                    obj_cmd_rs) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      goto cleanup;
+    }
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rq);
+  return (rv);
+}
+
+int
+ipmi_cmd_dcmi_get_thermal_limit (ipmi_ctx_t ctx,
+				 uint8_t entity_id,
+				 uint8_t entity_instance,
+				 fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  int rv = -1;
+
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if ((entity_id != IPMI_DCMI_ENTITY_ID_INLET_TEMPERATURE
+       && entity_id != IPMI_ENTITY_ID_AIR_INLET_B)
+      || !fiid_obj_valid (obj_cmd_rs))
+    {
+      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_dcmi_get_thermal_limit_rs) < 0)
+    {
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
+      return (-1);
+    }
+
+  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_dcmi_get_thermal_limit_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (fill_cmd_dcmi_get_thermal_limit (entity_id,
+				       entity_instance,
+				       obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (api_ipmi_cmd (ctx,
+                    IPMI_BMC_IPMB_LUN_BMC,
+                    IPMI_NET_FN_GROUP_EXTENSION_RQ,
+                    obj_cmd_rq,
+                    obj_cmd_rs) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      goto cleanup;
+    }
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rq);
+  return (rv);
+}
+
+int
+ipmi_cmd_dcmi_set_thermal_limit (ipmi_ctx_t ctx,
+				 uint8_t entity_id,
+				 uint8_t entity_instance,
+				 uint8_t temperature_limit,
+				 uint8_t exception_actions_log_event_to_sel_only,
+				 uint8_t exception_actions_hard_power_off_system_and_log_event,
+				 uint16_t exception_time,
+				 fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  int rv = -1;
+
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if ((entity_id != IPMI_DCMI_ENTITY_ID_INLET_TEMPERATURE
+       && entity_id != IPMI_ENTITY_ID_AIR_INLET_B)
+      || !IPMI_DCMI_EXCEPTION_ACTION_BIT_VALID (exception_actions_log_event_to_sel_only)
+      || !IPMI_DCMI_EXCEPTION_ACTION_BIT_VALID (exception_actions_hard_power_off_system_and_log_event)
+      || !fiid_obj_valid (obj_cmd_rs))
+    {
+      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
+  
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_dcmi_set_thermal_limit_rs) < 0)
+    {
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
+      return (-1);
+    }
+
+  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_dcmi_set_thermal_limit_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (fill_cmd_dcmi_set_thermal_limit (entity_id,
+				       entity_instance,
+				       temperature_limit,
+				       exception_actions_log_event_to_sel_only,
+				       exception_actions_hard_power_off_system_and_log_event,
+				       exception_time,
+				       obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (api_ipmi_cmd (ctx,
+                    IPMI_BMC_IPMB_LUN_BMC,
+                    IPMI_NET_FN_GROUP_EXTENSION_RQ,
+                    obj_cmd_rq,
+                    obj_cmd_rs) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      goto cleanup;
+    }
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rq);
+  return (rv);
+}
+
+int
+ipmi_cmd_dcmi_get_temperature_reading (ipmi_ctx_t ctx,
+				       uint8_t sensor_type,
+				       uint8_t entity_id,
+				       uint8_t entity_instance,
+				       uint8_t entity_instance_start,
+				       fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  int rv = -1;
+
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if (sensor_type != IPMI_SENSOR_TYPE_TEMPERATURE
+      || (!IPMI_DCMI_ENTITY_ID_VALID(entity_id)
+	  && entity_id != IPMI_ENTITY_ID_PROCESSOR
+	  && entity_id != IPMI_ENTITY_ID_SYSTEM_BOARD
+	  && entity_id != IPMI_ENTITY_ID_AIR_INLET_B)
+      || !fiid_obj_valid (obj_cmd_rs))
+    {
+      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
+  
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_dcmi_get_temperature_reading_rs) < 0)
+    {
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
+      return (-1);
+    }
+  
+  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_dcmi_get_temperature_reading_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+  
+  if (fill_cmd_dcmi_get_temperature_reading (sensor_type,
+					     entity_id,
+					     entity_instance,
+					     entity_instance_start,
+					     obj_cmd_rq) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
