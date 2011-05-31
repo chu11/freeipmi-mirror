@@ -417,7 +417,7 @@ fill_cmd_dcmi_get_dcmi_capability_info (uint8_t parameter_selector,
     }
 
   FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_DCMI_GET_DCMI_CAPABILITIY_INFO);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_DCMI_GET_DCMI_CAPABILITY_INFO);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "group_extension_identification", IPMI_NET_FN_GROUP_EXTENSION_IDENTIFICATION_DCMI);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", parameter_selector);
   

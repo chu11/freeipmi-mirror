@@ -1,3 +1,8 @@
+2011-05-31  Albert Chu <chu11@llnl.gov>
+
+	* Fix typo globally, IPMI_CMD_DCMI_GET_DCMI_CAPABILITIY_INFO to
+	IPMI_CMD_DCMI_GET_DCMI_CAPABILITY_INFO.
+
 2011-05-24  Holger Liebig <holger.liebig@ts.fujitsu.com>
 
 	* ipmi-dcmi/src/ipmi-dcmi.c: Fix asset tag/string identifier

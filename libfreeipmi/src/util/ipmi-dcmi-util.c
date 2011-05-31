@@ -66,7 +66,7 @@ ipmi_cmd_dcmi_str (uint8_t cmd)
 {
   switch (cmd)
     {
-    case IPMI_CMD_DCMI_GET_DCMI_CAPABILITIY_INFO:
+    case IPMI_CMD_DCMI_GET_DCMI_CAPABILITY_INFO:
       return "Get DCMI Capability Info";
     case IPMI_CMD_DCMI_GET_POWER_READING:
       return "Get Power Reading";

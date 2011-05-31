@@ -46,7 +46,7 @@
 extern "C" {
 #endif
 
-#define IPMI_CMD_DCMI_GET_DCMI_CAPABILITIY_INFO                   0x01
+#define IPMI_CMD_DCMI_GET_DCMI_CAPABILITY_INFO                    0x01
 #define IPMI_CMD_DCMI_GET_POWER_READING                           0x02
 #define IPMI_CMD_DCMI_GET_POWER_LIMIT                             0x03
 #define IPMI_CMD_DCMI_SET_POWER_LIMIT                             0x04
