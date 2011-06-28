@@ -83,6 +83,22 @@ extern "C" {
   ((((__parameter_selector)) >= (IPMI_DCMI_CONFIGURATION_PARAMETER_ACTIVATE_DHCP) && \
     ((__parameter_selector)) <= (IPMI_DCMI_CONFIGURATION_PARAMETER_DHCP_TIMING_3)) ? 1 : 0)
 
+#define IPMI_DCMI_DHCP_ACTIVATE 0x01
+
+#define IPMI_DCMI_DHCP_RANDOM_BACK_OFF_ENABLE  0x01
+#define IPMI_DCMI_DHCP_RANDOM_BACK_OFF_DISABLE 0x00
+
+#define IPMI_DCMI_DHCP_RANDOM_BACK_OFF_VALID(__val) \
+  ((((__val)) == IPMI_DCMI_DHCP_RANDOM_BACK_OFF_ENABLE && \
+    ((__val)) == IPMI_DCMI_DHCP_RANDOM_BACK_OFF_DISABLE) ? 1 : 0)
+
+#define IPMI_DCMI_DHCP_INCLUDE_OPTION        0x01
+#define IPMI_DCMI_DHCP_DO_NOT_INCLUDE_OPTION 0x00
+
+#define IPMI_DCMI_DHCP_INCLUDE_OPTION_VALID(__val) \
+  ((((__val)) == IPMI_DCMI_DHCP_INCLUDE_OPTION && \
+    ((__val)) == IPMI_DCMI_DHCP_DO_NOT_INCLUDE_OPTION) ? 1 : 0)
+
 #define IPMI_DCMI_ASSET_TAG_NUMBER_OF_BYTES_TO_READ_MAX  16
 #define IPMI_DCMI_ASSET_TAG_NUMBER_OF_BYTES_TO_WRITE_MAX 16
 
@@ -188,8 +204,17 @@ extern fiid_template_t tmpl_cmd_dcmi_get_dcmi_capability_info_manageability_acce
 extern fiid_template_t tmpl_cmd_dcmi_get_dcmi_capability_info_enhanced_system_power_statistics_attributes_rs;
 extern fiid_template_t tmpl_cmd_dcmi_set_dcmi_configuration_parameters_rq;
 extern fiid_template_t tmpl_cmd_dcmi_set_dcmi_configuration_parameters_rs;
+extern fiid_template_t tmpl_cmd_dcmi_set_dcmi_configuration_parameters_activate_dhcp_rq;
+extern fiid_template_t tmpl_cmd_dcmi_set_dcmi_configuration_parameters_discovery_configuration_rq;
+extern fiid_template_t tmpl_cmd_dcmi_set_dcmi_configuration_parameters_dhcp_timing_1_rq;
+extern fiid_template_t tmpl_cmd_dcmi_set_dcmi_configuration_parameters_dhcp_timing_2_rq;
+extern fiid_template_t tmpl_cmd_dcmi_set_dcmi_configuration_parameters_dhcp_timing_3_rq;
 extern fiid_template_t tmpl_cmd_dcmi_get_dcmi_configuration_parameters_rq;
 extern fiid_template_t tmpl_cmd_dcmi_get_dcmi_configuration_parameters_rs;
+extern fiid_template_t tmpl_cmd_dcmi_get_dcmi_configuration_parameters_discovery_configuration_rs;
+extern fiid_template_t tmpl_cmd_dcmi_get_dcmi_configuration_parameters_dhcp_timing_1_rs;
+extern fiid_template_t tmpl_cmd_dcmi_get_dcmi_configuration_parameters_dhcp_timing_2_rs;
+extern fiid_template_t tmpl_cmd_dcmi_get_dcmi_configuration_parameters_dhcp_timing_3_rs;
 extern fiid_template_t tmpl_cmd_dcmi_get_asset_tag_rq;
 extern fiid_template_t tmpl_cmd_dcmi_get_asset_tag_rs;
 extern fiid_template_t tmpl_cmd_dcmi_set_asset_tag_rq;
