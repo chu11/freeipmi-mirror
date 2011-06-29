@@ -679,6 +679,150 @@ fill_cmd_dcmi_set_dcmi_configuration_parameters (uint8_t parameter_selector,
 }
 
 int
+fill_cmd_dcmi_set_dcmi_configuration_parameters_activate_dhcp (uint8_t set_selector,
+							       uint8_t activate,
+							       fiid_obj_t obj_cmd_rq)
+{
+  /* technically, user can input anything for activate, but only 0x01 will do anything */
+  if (!fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_dcmi_set_dcmi_configuration_parameters_activate_dhcp_rq) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_DCMI_SET_DCMI_CONFIGURATION_PARAMETERS);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "group_extension_identification", IPMI_NET_FN_GROUP_EXTENSION_IDENTIFICATION_DCMI);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_DCMI_CONFIGURATION_PARAMETER_ACTIVATE_DHCP);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "set_selector", set_selector);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "activate", activate);
+
+  return (0);
+}
+
+int
+fill_cmd_dcmi_set_dcmi_configuration_parameters_discovery_configuration (uint8_t set_selector,
+									 uint8_t option_12,
+									 uint8_t option_60_with_option_43,
+									 uint8_t random_back_off,
+									 fiid_obj_t obj_cmd_rq)
+{
+  if (IPMI_DCMI_DHCP_INCLUDE_OPTION_VALID (option_12)
+      || IPMI_DCMI_DHCP_INCLUDE_OPTION_VALID (option_60_with_option_43)
+      || !IPMI_DCMI_DHCP_RANDOM_BACK_OFF_VALID (random_back_off)
+      || !fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_dcmi_set_dcmi_configuration_parameters_discovery_configuration_rq) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_DCMI_SET_DCMI_CONFIGURATION_PARAMETERS);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "group_extension_identification", IPMI_NET_FN_GROUP_EXTENSION_IDENTIFICATION_DCMI);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_DCMI_CONFIGURATION_PARAMETER_DISCOVERY_CONFIGURATION);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "set_selector", set_selector);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "option_12", option_12);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "option_60_with_option_43", option_60_with_option_43);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "random_back_off", random_back_off);
+
+  return (0);
+}
+
+int
+fill_cmd_dcmi_set_dcmi_configuration_parameters_dhcp_timing_1 (uint8_t set_selector,
+							       uint8_t initial_timeout_interval,
+							       fiid_obj_t obj_cmd_rq)
+{
+  if (!fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_dcmi_set_dcmi_configuration_parameters_dhcp_timing_1_rq) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_DCMI_SET_DCMI_CONFIGURATION_PARAMETERS);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "group_extension_identification", IPMI_NET_FN_GROUP_EXTENSION_IDENTIFICATION_DCMI);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_DCMI_CONFIGURATION_PARAMETER_DHCP_TIMING_1);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "set_selector", set_selector);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "initial_timeout_interval", initial_timeout_interval);
+
+  return (0);
+}
+
+int
+fill_cmd_dcmi_set_dcmi_configuration_parameters_dhcp_timing_2 (uint8_t set_selector,
+							       uint16_t server_contact_timeout_interval,
+							       fiid_obj_t obj_cmd_rq)
+{
+  if (!fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_dcmi_set_dcmi_configuration_parameters_dhcp_timing_2_rq) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_DCMI_SET_DCMI_CONFIGURATION_PARAMETERS);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "group_extension_identification", IPMI_NET_FN_GROUP_EXTENSION_IDENTIFICATION_DCMI);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_DCMI_CONFIGURATION_PARAMETER_DHCP_TIMING_2);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "set_selector", set_selector);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "server_contact_timeout_interval", server_contact_timeout_interval);
+
+  return (0);
+}
+
+int
+fill_cmd_dcmi_set_dcmi_configuration_parameters_dhcp_timing_3 (uint8_t set_selector,
+							       uint16_t server_contact_retry_interval,
+							       fiid_obj_t obj_cmd_rq)
+{
+  if (!fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_dcmi_set_dcmi_configuration_parameters_dhcp_timing_3_rq) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_DCMI_SET_DCMI_CONFIGURATION_PARAMETERS);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "group_extension_identification", IPMI_NET_FN_GROUP_EXTENSION_IDENTIFICATION_DCMI);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_DCMI_CONFIGURATION_PARAMETER_DHCP_TIMING_3);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "set_selector", set_selector);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "server_contact_retry_interval", server_contact_retry_interval);
+
+  return (0);
+}
+
+int
 fill_cmd_dcmi_get_dcmi_configuration_parameters (uint8_t parameter_selector,
 						 uint8_t set_selector,
 						 fiid_obj_t obj_cmd_rq)

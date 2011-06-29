@@ -85,19 +85,19 @@ extern "C" {
 
 #define IPMI_DCMI_DHCP_ACTIVATE 0x01
 
-#define IPMI_DCMI_DHCP_RANDOM_BACK_OFF_ENABLE  0x01
-#define IPMI_DCMI_DHCP_RANDOM_BACK_OFF_DISABLE 0x00
-
-#define IPMI_DCMI_DHCP_RANDOM_BACK_OFF_VALID(__val) \
-  ((((__val)) == IPMI_DCMI_DHCP_RANDOM_BACK_OFF_ENABLE && \
-    ((__val)) == IPMI_DCMI_DHCP_RANDOM_BACK_OFF_DISABLE) ? 1 : 0)
-
 #define IPMI_DCMI_DHCP_INCLUDE_OPTION        0x01
 #define IPMI_DCMI_DHCP_DO_NOT_INCLUDE_OPTION 0x00
 
 #define IPMI_DCMI_DHCP_INCLUDE_OPTION_VALID(__val) \
   ((((__val)) == IPMI_DCMI_DHCP_INCLUDE_OPTION && \
     ((__val)) == IPMI_DCMI_DHCP_DO_NOT_INCLUDE_OPTION) ? 1 : 0)
+
+#define IPMI_DCMI_DHCP_RANDOM_BACK_OFF_ENABLE  0x01
+#define IPMI_DCMI_DHCP_RANDOM_BACK_OFF_DISABLE 0x00
+
+#define IPMI_DCMI_DHCP_RANDOM_BACK_OFF_VALID(__val) \
+  ((((__val)) == IPMI_DCMI_DHCP_RANDOM_BACK_OFF_ENABLE && \
+    ((__val)) == IPMI_DCMI_DHCP_RANDOM_BACK_OFF_DISABLE) ? 1 : 0)
 
 #define IPMI_DCMI_ASSET_TAG_NUMBER_OF_BYTES_TO_READ_MAX  16
 #define IPMI_DCMI_ASSET_TAG_NUMBER_OF_BYTES_TO_WRITE_MAX 16
@@ -248,6 +248,29 @@ int fill_cmd_dcmi_set_dcmi_configuration_parameters (uint8_t parameter_selector,
 						     const void *configuration_parameter_data,
 						     unsigned int configuration_parameter_data_len,
 						     fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_dcmi_set_dcmi_configuration_parameters_activate_dhcp (uint8_t set_selector,
+								   uint8_t activate,
+								   fiid_obj_t obj_cmd_rq);
+
+
+int fill_cmd_dcmi_set_dcmi_configuration_parameters_discovery_configuration (uint8_t set_selector,
+									     uint8_t option_12,
+									     uint8_t option_60_with_option_43,
+									     uint8_t random_back_off,
+									     fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_dcmi_set_dcmi_configuration_parameters_dhcp_timing_1 (uint8_t set_selector,
+								   uint8_t initial_timeout_interval,
+								   fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_dcmi_set_dcmi_configuration_parameters_dhcp_timing_2 (uint8_t set_selector,
+								   uint16_t server_contact_timeout_interval,
+								   fiid_obj_t obj_cmd_rq);
+  
+int fill_cmd_dcmi_set_dcmi_configuration_parameters_dhcp_timing_3 (uint8_t set_selector,
+								   uint16_t server_contact_retry_interval,
+								   fiid_obj_t obj_cmd_rq);
   
 int fill_cmd_dcmi_get_dcmi_configuration_parameters (uint8_t parameter_selector,
 						     uint8_t set_selector,
