@@ -6,7 +6,7 @@ Albert Chu
 chu11@llnl.gov
 
 The following is a short summary of the libraries and APIs available for
-use in FreeIPMI.  
+use in FreeIPMI.
 
 Libfreeipmi
 -----------
@@ -116,4 +116,20 @@ for detecting whe nodes are removed from a cluster for servicing, so
 that IPMI applications can avoid unnecessary timeouts.  The library
 interacts with the ipmidetectd(8) daemon.
 
+pkg-config support
+------------------
 
+FreeIPMI provides pkg-config support for all the above libraries.
+
+You can thus use the standard configure macros:
+
+	PKG_CHECK_MODULES(FREEIPMI, libfreeipmi, HAVE_LIBFREEIPMI="yes", HAVE_LIBFREEIPMI="no")
+
+Or use direct pkg-config calls:
+
+	CFLAGS	+= $(shell pkg-config --cflags libfreeipmi)
+	LIBS 	+= $(shell pkg-config --libs libfreeipmi)
+
+
+For more information, refer to pkg-config documentation:
+http://www.freedesktop.org/wiki/Software/pkg-config

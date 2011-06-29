@@ -1,3 +1,7 @@
+2011-06-28  Arnaud Quette <arnaud.quette@free.fr>
+
+	* Add pkg-config support for all FreeIPMI libraries.
+
 2011-05-31  Albert Chu <chu11@llnl.gov>
 
 	* Fix typo globally, IPMI_CMD_DCMI_GET_DCMI_CAPABILITIY_INFO to

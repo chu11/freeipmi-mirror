@@ -53,6 +53,7 @@ AC_CONFIG_FILES([
         libfreeipmi/libfreeipmi.3.pre
         libfreeipmi/freeipmi_interpret_sensor.conf.5.pre
         libfreeipmi/freeipmi_interpret_sel.conf.5.pre
+        libfreeipmi/libfreeipmi.pc
         libfreeipmi/include/Makefile 
 	libfreeipmi/include/freeipmi/freeipmi.h
 	libfreeipmi/src/Makefile 
@@ -77,6 +78,7 @@ AC_CONFIG_FILES([
 	libipmiconsole/Makefile
         libipmiconsole/libipmiconsole.3.pre
         libipmiconsole/libipmiconsole.conf.5.pre
+        libipmiconsole/libipmiconsole.pc
 	libipmiconsole/src/Makefile
 	libipmiconsole/src/ipmiconsole.h
 	libipmimonitoring/Makefile
@@ -87,8 +89,10 @@ AC_CONFIG_FILES([
         libipmimonitoring/ipmimonitoring.conf.5.pre
         libipmimonitoring/libipmimonitoring.conf.5.pre
         libipmimonitoring/libipmimonitoring.3.pre
+        libipmimonitoring/libipmimonitoring.pc
         libipmidetect/Makefile
         libipmidetect/libipmidetect.3.pre
+        libipmidetect/libipmidetect.pc
         libipmidetect/src/Makefile
 	libipmidetect/src/ipmidetect.h
 	bmc-config/Makefile 
@@ -783,5 +787,32 @@ if test x"${ac_with_random_device}" = xyes; then
    AC_CHECK_FILE([/dev/urandom], AC_DEFINE([HAVE_DEVURANDOM], [1], [Define that you found /dev/urandom]))
    AC_CHECK_FILE([/dev/random], AC_DEFINE([HAVE_DEVRANDOM], [1], [Define that you found /dev/urandom]))
 fi
+
+
+dnl Option to install pkg-config support files
+
+pkgconfigdir='${libdir}/pkgconfig'
+AC_MSG_CHECKING(whether to install pkg-config *.pc files)
+AC_ARG_WITH(pkgconfig-dir,
+	AS_HELP_STRING([--with-pkgconfig-dir=PATH], [where to install pkg-config *.pc files (EPREFIX/lib/pkgconfig)]),
+[
+	case "${withval}" in
+	yes|auto)
+		;;
+	no)
+		pkgconfigdir=""
+		;;
+	*)
+		pkgconfigdir="${withval}"
+		;;
+	esac
+], [])
+if test -n "${pkgconfigdir}"; then
+	AC_MSG_RESULT(using ${pkgconfigdir})
+else
+	AC_MSG_RESULT(no)
+fi
+AM_CONDITIONAL(WITH_PKG_CONFIG, test -n "${pkgconfigdir}")
+AC_SUBST(pkgconfigdir)
 
 AC_OUTPUT
