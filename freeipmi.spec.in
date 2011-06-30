@@ -224,6 +224,7 @@ fi
 %{_libdir}/libfreeipmi*so.*
 %{_libdir}/libipmidetect*so.*
 %{_libdir}/libipmimonitoring.so.*
+%{_libdir}/pkgconfig/*
 %{_localstatedir}/lib/*
 %{_sbindir}/bmc-config
 %{_sbindir}/bmc-info
@@ -362,6 +363,9 @@ fi
 %{_mandir}/man8/ipmidetectd.8*
 
 %changelog
+* Wed Jun 29 2011 Albert Chu <chu11@llnl.gov> 1.0.4
+- Add pkgconfig files.
+
 * Fri Nov 5 2010 Albert Chu <chu11@llnl.gov> 0.9.0
 - Add interpret sub-library.
 - Support new config files.
