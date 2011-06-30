@@ -1,3 +1,7 @@
+
+# include directory for aclocal
+ACLOCAL_AMFLAGS = -I config
+
 SUBDIRS = \
 	doc \
 	etc \

@@ -1,3 +1,18 @@
+2011-06-29  Arnaud Quette <arnaud.quette@free.fr>
+
+	* configure.ac, Makefile.am: fix m4 macro reference for libtoolize.
+	This allows to call the system provided 'autoreconf' instead of autogen.sh
+
+2011-06-29  Arnaud Quette <arnaud.quette@free.fr>
+
+	* configure.ac: fix indentation inconsistencies, remove extraneous spaces
+	and escape single quotes that break some color highlighting systems.
+
+2011-06-30  Arnaud Quette <arnaud.quette@free.fr>
+
+	* configure.ac: add AM_PROG_CC_C_O, needed for per-target flags
+	  (ipmipower/src/Makefile.am and ipmipower/src/argv.c)
+
 2011-06-29  Albert Chu <chu11@llnl.gov>
 
 	* freeipmi.spec.in: Add pkg-config files.
