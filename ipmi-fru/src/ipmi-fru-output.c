@@ -66,9 +66,6 @@ _output_field (ipmi_fru_state_data_t *state_data,
 {
   char strbuf[IPMI_FRU_PARSE_AREA_STRING_MAX + 1];
   unsigned int strbuflen = IPMI_FRU_PARSE_AREA_STRING_MAX;
-  assert (state_data);
-  assert (field);
-  assert (str);
 
   assert (state_data);
   assert (field);
