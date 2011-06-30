@@ -1,4 +1,4 @@
-FreeIPMI 1.0.5 - 04/21/11
+FreeIPMI 1.0.5 - 06/30/11
 -------------------------
 o Fix various issues in ipmi-dcmi, including command line parsing
   bugs, asset tag/string identifier overwriting, and fix assumptions
