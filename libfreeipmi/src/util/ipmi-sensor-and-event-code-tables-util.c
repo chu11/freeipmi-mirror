@@ -2041,6 +2041,7 @@ ipmi_get_oem_event_bitmask_message (uint32_t manufacturer_id,
    * Supermicro X8DT3-LN4F (X8DT3_LN4F)
    * Supermicro X8DTU-6+ (X8DTU_6PLUS)
    * Supermicro X8DTL-3F (X8DTL_3F)
+   * Supermicro X8SIL-F  (X8SIL_F)
    *
    * Event Reading Type Code = IPMI_EVENT_READING_TYPE_CODE_OEM_SUPERMICRO_GENERIC
    * Sensor Type = IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP
@@ -2061,7 +2062,8 @@ ipmi_get_oem_event_bitmask_message (uint32_t manufacturer_id,
 	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTU
 	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DT3_LN4F
 	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTU_6PLUS
-	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTL_3F)))
+	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTL_3F
+	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8SIL_F)))
     {
       switch (event_reading_type_code)
 	{
@@ -2328,6 +2330,7 @@ ipmi_get_event_messages (uint8_t event_reading_type_code,
    * Supermicro X8DT3-LN4F (X8DT3_LN4F)
    * Supermicro X8DTU-6+ (X8DTU_6PLUS)
    * Supermicro X8DTL-3F (X8DTU_3F)
+   * Supermicro X8SIL-F (X8SIL_F)
    *
    * Note: Early Supermicro motherboards used the "Peppercon" Manufacturer ID
    */
@@ -2342,7 +2345,8 @@ ipmi_get_event_messages (uint8_t event_reading_type_code,
 		       || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTU
 		       || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DT3_LN4F
 		       || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTU_6PLUS
-		       || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTL_3F)))
+		       || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTL_3F
+		       || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8SIL_F)))
            && event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_SUPERMICRO_GENERIC)
     {
       len = ipmi_get_oem_event_bitmask_message (manufacturer_id,
