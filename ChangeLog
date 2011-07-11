@@ -1,3 +1,7 @@
+2011-07-11  Albert Chu <chu11@llnl.gov>
+
+	* Support Supermicro X8SIL-F OEM Sensors.
+	
 2011-06-30  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-fru/src/ipmi-fru-output.c (_output_field): Remove cut and
