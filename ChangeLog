@@ -1,3 +1,7 @@
+2011-07-20  Arnaud Quette <arnaud.quette@free.fr>
+
+	* ipmi-fru/src/ipmi-fru-output.c: Fix typo.
+	
 2011-07-11  Albert Chu <chu11@llnl.gov>
 
 	* Support Supermicro X8SIL-F OEM Sensors.
