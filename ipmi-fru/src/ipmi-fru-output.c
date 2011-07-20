@@ -556,10 +556,10 @@ ipmi_fru_output_power_supply_information (ipmi_fru_state_data_t *state_data,
                   "  FRU Power Supply High End Input Voltage 2: %u mV\n",
                   high_end_input_voltage_range_2);
   pstdout_printf (state_data->pstate,
-                  "  FRU Power Supply Low End Acceptable Frequencey: %u Hz\n",
+                  "  FRU Power Supply Low End Acceptable Frequency: %u Hz\n",
                   low_end_input_frequency_range);
   pstdout_printf (state_data->pstate,
-                  "  FRU Power Supply High End Acceptable Frequencey: %u Hz\n",
+                  "  FRU Power Supply High End Acceptable Frequency: %u Hz\n",
                   high_end_input_frequency_range);
   pstdout_printf (state_data->pstate,
                   "  FRU Power Supply A/C Dropout Tolerance: %u ms\n",
