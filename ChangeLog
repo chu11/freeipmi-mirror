@@ -1,3 +1,7 @@
+2011-08-09  Albert Chu <chu11@llnl.gov>
+
+	* bmc-watchdog/bmc-watchdog.logrotate: Reduce logrotate output spam.
+	
 2011-07-20  Arnaud Quette <arnaud.quette@free.fr>
 
 	* ipmi-fru/src/ipmi-fru-output.c: Fix typo.

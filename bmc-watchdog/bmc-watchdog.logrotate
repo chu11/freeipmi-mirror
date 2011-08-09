@@ -11,6 +11,6 @@
   nomail
   notifempty
   postrotate
-  /etc/init.d/bmc-watchdog condrestart
+  /etc/init.d/bmc-watchdog condrestart > /dev/null 2>&1 || true
   endscript
 }
