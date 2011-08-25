@@ -1,5 +1,6 @@
 FreeIPMI 1.0.6 - 06/30/11
 -------------------------
+o Support 'ignorescanningdisabled' workaround in ipmi-sensors.
 o Support Supermicro X8SIL-F motherboard OEM sensors.
 o Update bmc-watchdog logrotate script to reduce unnecessary output.
 o Fix ipmi-fru output typo.
