@@ -29,7 +29,7 @@ issues on the most recent motherboard I worked on.  Possible
 bugs/compliance issues on other manufacturer's motherboards may be
 masked by workarounds added to earlier motherboards.
 
-I have worked extensively on:
+I have worked extensively on or had significant access to:
 
 Intel SR870BR2/Tiger 2
 Intel SR870BN4/Tiger 4
@@ -44,7 +44,7 @@ Intel S5500WBV/Penguin Relion 700
 Supermicro X8DTG
 Supermicro X8DTU
 
-I have had some short term access to the following:
+I have had some short term or partial access to the following:
 
 Intel SE7520AF2 with Intel Server Management Module (Professional
 Edition)
@@ -53,6 +53,8 @@ Tyan S4811 with SMDC daughter card
 Supermicro X6-DHR-1G with BMC2.0 daughter card
 Supermicro X8DTH
 MSI MS-91D2
+Dell Poweredge 2900
+Dell Poweredge 2950
 
 The remaining motherboards (and subsequent bugs/issues/workarounds)
 listed below are from interaction with users in the community and I
@@ -760,6 +762,11 @@ does not report an analog reading should set this field to 11b.
 However, text below states, "If neither thresholds nor analog reading
 are provided, this field should be written as 00h."  Some vendors
 subsequently set this field to 00b or 11b for non-analog sensors.
+
+Dell Poweredge 2900, Dell Poweredge 2950, Dell Poweredge R410: Some
+sensors report that their sensor scanning is disabled, even though the
+sensor is actually not.  Resolved with workaround to handle unique
+case.
 
 ipmi-sel
 --------

@@ -532,19 +532,22 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
       goto cleanup;
     }
 
-  if (FIID_OBJ_GET (obj_cmd_rs,
-                    "sensor_scanning",
-                    &val) < 0)
+  if (!(ctx->flags & IPMI_SENSOR_READ_FLAGS_IGNORE_SCANNING_DISABLED))
     {
-      SENSOR_READ_FIID_OBJECT_ERROR_TO_SENSOR_READ_ERRNUM (ctx, obj_cmd_rs);
-      goto cleanup;
-    }
-  sensor_scanning = val;
-
-  if (sensor_scanning == IPMI_SENSOR_SCANNING_ON_THIS_SENSOR_DISABLE)
-    {
-      SENSOR_READ_SET_ERRNUM (ctx, IPMI_SENSOR_READ_ERR_SENSOR_SCANNING_DISABLED);
-      goto cleanup;
+      if (FIID_OBJ_GET (obj_cmd_rs,
+			"sensor_scanning",
+			&val) < 0)
+	{
+	  SENSOR_READ_FIID_OBJECT_ERROR_TO_SENSOR_READ_ERRNUM (ctx, obj_cmd_rs);
+	  goto cleanup;
+	}
+      sensor_scanning = val;
+      
+      if (sensor_scanning == IPMI_SENSOR_SCANNING_ON_THIS_SENSOR_DISABLE)
+	{
+	  SENSOR_READ_SET_ERRNUM (ctx, IPMI_SENSOR_READ_ERR_SENSOR_SCANNING_DISABLED);
+	  goto cleanup;
+	}
     }
 
   /* achu:
