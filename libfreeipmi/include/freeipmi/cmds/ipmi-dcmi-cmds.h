@@ -73,6 +73,32 @@ extern "C" {
 #define IPMI_DCMI_TIME_DURATION_UNITS_HOURS   0x02
 #define IPMI_DCMI_TIME_DURATION_UNITS_DAYS    0x03
 
+#define IPMI_DCMI_CONFIGURATION_PARAMETER_ACTIVATE_DHCP           0x01
+#define IPMI_DCMI_CONFIGURATION_PARAMETER_DISCOVERY_CONFIGURATION 0x02
+#define IPMI_DCMI_CONFIGURATION_PARAMETER_DHCP_TIMING_1           0x03
+#define IPMI_DCMI_CONFIGURATION_PARAMETER_DHCP_TIMING_2           0x04
+#define IPMI_DCMI_CONFIGURATION_PARAMETER_DHCP_TIMING_3           0x05
+
+#define IPMI_DCMI_CONFIGURATION_PARAMETER_SELECTOR_VALID(__parameter_selector) \
+  ((((__parameter_selector)) >= (IPMI_DCMI_CONFIGURATION_PARAMETER_ACTIVATE_DHCP) && \
+    ((__parameter_selector)) <= (IPMI_DCMI_CONFIGURATION_PARAMETER_DHCP_TIMING_3)) ? 1 : 0)
+
+#define IPMI_DCMI_DHCP_ACTIVATE 0x01
+
+#define IPMI_DCMI_DHCP_INCLUDE_OPTION        0x01
+#define IPMI_DCMI_DHCP_DO_NOT_INCLUDE_OPTION 0x00
+
+#define IPMI_DCMI_DHCP_INCLUDE_OPTION_VALID(__val) \
+  ((((__val)) == IPMI_DCMI_DHCP_INCLUDE_OPTION && \
+    ((__val)) == IPMI_DCMI_DHCP_DO_NOT_INCLUDE_OPTION) ? 1 : 0)
+
+#define IPMI_DCMI_DHCP_RANDOM_BACK_OFF_ENABLE  0x01
+#define IPMI_DCMI_DHCP_RANDOM_BACK_OFF_DISABLE 0x00
+
+#define IPMI_DCMI_DHCP_RANDOM_BACK_OFF_VALID(__val) \
+  ((((__val)) == IPMI_DCMI_DHCP_RANDOM_BACK_OFF_ENABLE && \
+    ((__val)) == IPMI_DCMI_DHCP_RANDOM_BACK_OFF_DISABLE) ? 1 : 0)
+
 #define IPMI_DCMI_ASSET_TAG_NUMBER_OF_BYTES_TO_READ_MAX  16
 #define IPMI_DCMI_ASSET_TAG_NUMBER_OF_BYTES_TO_WRITE_MAX 16
 
@@ -116,11 +142,20 @@ extern "C" {
 #define IPMI_DCMI_POWER_READING_STATE_NO_POWER_MEASUREMENT_AVAILABLE 0x0
 
 /* HLiebig: specific value, not a bitmask */
+/* With power limit commands */
 #define IPMI_DCMI_EXCEPTION_ACTION_NO_ACTION             0x00
 #define IPMI_DCMI_EXCEPTION_ACTION_HARD_POWER_OFF_SYSTEM 0x01
 #define IPMI_DCMI_EXCEPTION_ACTION_OEM_MIN               0x02
 #define IPMI_DCMI_EXCEPTION_ACTION_OEM_MAX               0x10
 #define IPMI_DCMI_EXCEPTION_ACTION_LOG_EVENT_TO_SEL_ONLY 0x11
+
+/* With thermal limit commands */
+#define IPMI_DCMI_EXCEPTION_ACTION_BIT_ON  1
+#define IPMI_DCMI_EXCEPTION_ACTION_BIT_OFF 0
+
+#define IPMI_DCMI_EXCEPTION_ACTION_BIT_VALID(__bit) \
+  (((__bit) == IPMI_DCMI_EXCEPTION_ACTION_BIT_ON \
+    || (__bit) == IPMI_DCMI_EXCEPTION_ACTION_BIT_OFF) ? 1 : 0)
 
 /* achu: it's an 8 bit field, why not allow all 8 bitmasks?  Beats
  * me, that's what's in the spec
@@ -167,6 +202,19 @@ extern fiid_template_t tmpl_cmd_dcmi_get_dcmi_capability_info_mandatory_platform
 extern fiid_template_t tmpl_cmd_dcmi_get_dcmi_capability_info_optional_platform_attributes_rs;
 extern fiid_template_t tmpl_cmd_dcmi_get_dcmi_capability_info_manageability_access_attributes_rs;
 extern fiid_template_t tmpl_cmd_dcmi_get_dcmi_capability_info_enhanced_system_power_statistics_attributes_rs;
+extern fiid_template_t tmpl_cmd_dcmi_set_dcmi_configuration_parameters_rq;
+extern fiid_template_t tmpl_cmd_dcmi_set_dcmi_configuration_parameters_rs;
+extern fiid_template_t tmpl_cmd_dcmi_set_dcmi_configuration_parameters_activate_dhcp_rq;
+extern fiid_template_t tmpl_cmd_dcmi_set_dcmi_configuration_parameters_discovery_configuration_rq;
+extern fiid_template_t tmpl_cmd_dcmi_set_dcmi_configuration_parameters_dhcp_timing_1_rq;
+extern fiid_template_t tmpl_cmd_dcmi_set_dcmi_configuration_parameters_dhcp_timing_2_rq;
+extern fiid_template_t tmpl_cmd_dcmi_set_dcmi_configuration_parameters_dhcp_timing_3_rq;
+extern fiid_template_t tmpl_cmd_dcmi_get_dcmi_configuration_parameters_rq;
+extern fiid_template_t tmpl_cmd_dcmi_get_dcmi_configuration_parameters_rs;
+extern fiid_template_t tmpl_cmd_dcmi_get_dcmi_configuration_parameters_discovery_configuration_rs;
+extern fiid_template_t tmpl_cmd_dcmi_get_dcmi_configuration_parameters_dhcp_timing_1_rs;
+extern fiid_template_t tmpl_cmd_dcmi_get_dcmi_configuration_parameters_dhcp_timing_2_rs;
+extern fiid_template_t tmpl_cmd_dcmi_get_dcmi_configuration_parameters_dhcp_timing_3_rs;
 extern fiid_template_t tmpl_cmd_dcmi_get_asset_tag_rq;
 extern fiid_template_t tmpl_cmd_dcmi_get_asset_tag_rs;
 extern fiid_template_t tmpl_cmd_dcmi_set_asset_tag_rq;
@@ -185,9 +233,48 @@ extern fiid_template_t tmpl_cmd_dcmi_set_power_limit_rq;
 extern fiid_template_t tmpl_cmd_dcmi_set_power_limit_rs;
 extern fiid_template_t tmpl_cmd_dcmi_activate_deactivate_power_limit_rq;
 extern fiid_template_t tmpl_cmd_dcmi_activate_deactivate_power_limit_rs;
+extern fiid_template_t tmpl_cmd_dcmi_get_thermal_limit_rq;
+extern fiid_template_t tmpl_cmd_dcmi_get_thermal_limit_rs;
+extern fiid_template_t tmpl_cmd_dcmi_set_thermal_limit_rq;
+extern fiid_template_t tmpl_cmd_dcmi_set_thermal_limit_rs;
+extern fiid_template_t tmpl_cmd_dcmi_get_temperature_reading_rq;
+extern fiid_template_t tmpl_cmd_dcmi_get_temperature_reading_rs;
 
 int fill_cmd_dcmi_get_dcmi_capability_info (uint8_t parameter_selector,
                                             fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_dcmi_set_dcmi_configuration_parameters (uint8_t parameter_selector,
+						     uint8_t set_selector,
+						     const void *configuration_parameter_data,
+						     unsigned int configuration_parameter_data_len,
+						     fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_dcmi_set_dcmi_configuration_parameters_activate_dhcp (uint8_t set_selector,
+								   uint8_t activate,
+								   fiid_obj_t obj_cmd_rq);
+
+
+int fill_cmd_dcmi_set_dcmi_configuration_parameters_discovery_configuration (uint8_t set_selector,
+									     uint8_t option_12,
+									     uint8_t option_60_with_option_43,
+									     uint8_t random_back_off,
+									     fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_dcmi_set_dcmi_configuration_parameters_dhcp_timing_1 (uint8_t set_selector,
+								   uint8_t initial_timeout_interval,
+								   fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_dcmi_set_dcmi_configuration_parameters_dhcp_timing_2 (uint8_t set_selector,
+								   uint16_t server_contact_timeout_interval,
+								   fiid_obj_t obj_cmd_rq);
+  
+int fill_cmd_dcmi_set_dcmi_configuration_parameters_dhcp_timing_3 (uint8_t set_selector,
+								   uint16_t server_contact_retry_interval,
+								   fiid_obj_t obj_cmd_rq);
+  
+int fill_cmd_dcmi_get_dcmi_configuration_parameters (uint8_t parameter_selector,
+						     uint8_t set_selector,
+						     fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_dcmi_get_asset_tag (uint8_t offset_to_read,
                                  uint8_t number_of_bytes_to_read,
@@ -229,6 +316,24 @@ int fill_cmd_dcmi_set_power_limit (uint8_t exception_actions,
 
 int fill_cmd_dcmi_activate_deactivate_power_limit (uint8_t power_limit_activation,
                                                    fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_dcmi_get_thermal_limit (uint8_t entity_id,
+				     uint8_t entity_instance,
+				     fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_dcmi_set_thermal_limit (uint8_t entity_id,
+				     uint8_t entity_instance,
+				     uint8_t temperature_limit,
+				     uint8_t exception_actions_log_event_to_sel_only,
+				     uint8_t exception_actions_hard_power_off_system_and_log_event,
+				     uint16_t exception_time,
+				     fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_dcmi_get_temperature_reading (uint8_t sensor_type,
+					   uint8_t entity_id,
+					   uint8_t entity_instance,
+					   uint8_t entity_instance_start,
+					   fiid_obj_t obj_cmd_rq);
 
 #ifdef __cplusplus
 }
