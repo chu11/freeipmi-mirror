@@ -857,10 +857,12 @@ _interpret_sensor_oem_supermicro (ipmi_interpret_ctx_t ctx)
   assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
   assert (ctx->interpret_sensor.sensor_oem_config);
 
-  /* Supermicro X7DBR-3/X8DTH/X8DTG/X8DTU/X8DT3-LN4F/X8DTU-6+/X8DTL-3F CPU Temperature Sensor
+  /* Supermicro CPU Temperature Sensor
+   * X7DBR-3/X8DTH/X8DTG/X8DTU/X8DT3-LN4F/X8DTU-6+/X8DTL-3F/X8SIL-F/X9SCL/X9SCM
    *
    * Manufacturer ID = 10437 (Peppercon, IPMI card manufacturer), 47488 (Supermicro, not IANA number, special case)
-   * Product ID = 4 (X7DBR-3), 43707 (X8DTH, X8DTG, X8DTU, X8DT3-LN4F / X8DT3_LN4F), 1549 (X8DTU-6+ / X8DTU_6PLUS), 6 (X8DTL-3F / X8DTL_3F), 1541 (X8SIL-F)
+   * Product ID = 4 (X7DBR-3), 43707 (X8DTH, X8DTG, X8DTU, X8DT3-LN4F / X8DT3_LN4F), 1549 (X8DTU-6+ / X8DTU_6PLUS),
+   *              6 (X8DTL-3F / X8DTL_3F), 1541 (X8SIL-F), 1572 (X9SCL, X9SCM)
    * Event/Reading Type Code = 70h (OEM)
    * Sensor Type = C0h (OEM)
    * Value 0x0000 = "Low"
@@ -895,6 +897,11 @@ _interpret_sensor_oem_supermicro (ipmi_interpret_ctx_t ctx)
                                                IPMI_SUPERMICRO_PRODUCT_ID_X8SIL_F) < 0)
     return (-1);
 
+  if (_interpret_sensor_oem_discrete_cpu_temp (ctx,
+                                               IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
+                                               __IPMI_SUPERMICRO_PRODUCT_ID_X9SC) < 0)
+    return (-1);
+  
   return (0);
 }
 

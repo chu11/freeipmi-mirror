@@ -1,5 +1,9 @@
 2011-08-29  Albert Chu <chu11@llnl.gov>
 
+	* Support Supermicro X9SCL and X9SCM OEM sensors.
+	
+2011-08-29  Albert Chu <chu11@llnl.gov>
+
 	* Merge from branch dcmiupdate.  Make additions in DCMI v1.5 specification.
 
 2011-08-25  Albert Chu <chu11@llnl.gov>
