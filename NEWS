@@ -1,6 +1,7 @@
 FreeIPMI 1.1.1 - XX/XX/11
 -------------------------
-o Fix macro typos.
+o Update libfreeipmi for DCMI 1.5 additions.
+o Fix macro name typos.
 
 
 FreeIPMI 1.0.3 - 03/29/11
