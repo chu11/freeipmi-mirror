@@ -1,4 +1,4 @@
-FreeIPMI 1.0.6 - 06/30/11
+FreeIPMI 1.0.6 - 09/01/11
 -------------------------
 o Support 'ignorescanningdisabled' workaround in ipmi-sensors.
 o Support Supermicro X8SIL-F, X9SCL, and X9SCM motherboard OEM sensors.
