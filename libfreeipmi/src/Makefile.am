@@ -26,7 +26,6 @@ endif
 lib_LTLIBRARIES = libfreeipmi.la
 
 libfreeipmi_la_LDFLAGS = \
-	-module \
 	-version-info @LIBFREEIPMI_VERSION_INFO@ $(VERSION_FLAGS) \
 	$(OTHER_FLAGS) \
 	-lm 

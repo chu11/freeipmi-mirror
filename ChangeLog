@@ -1,3 +1,9 @@
+2011-09-06  Diego Elio Petten <flameeyes@flameeyes.eu>
+
+	* libfreeipmi/src/Makefile.am: The -module option is used to tell
+	libtool that the library is not to be used to link against, but
+	only loaded at runtime, which is not the case for this library.
+
 2011-08-29  Albert Chu <chu11@llnl.gov>
 
 	* Support Supermicro X9SCL and X9SCM OEM sensors.
