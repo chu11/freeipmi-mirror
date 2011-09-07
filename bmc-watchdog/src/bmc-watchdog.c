@@ -98,6 +98,8 @@
     *(__val) = __temp;                                                  \
   } while (0)
 
+#define BMC_WATCHDOG_PIDFILE BMC_WATCHDOG_LOCALSTATEDIR "/run/bmc-watchdog.pid"
+
 struct bmc_watchdog_arguments cmd_args;
 
 /* program name */
@@ -1677,6 +1679,10 @@ _daemon_init ()
     {
       unsigned int i;
       pid_t pid;
+      FILE *pidfile;
+
+      if ( (pidfile = fopen(BMC_WATCHDOG_PIDFILE, "w")) == NULL )
+        _err_exit ("fopen: %s", strerror (errno));
 
       if ((pid = fork ()) < 0)
         _err_exit ("fork: %s", strerror (errno));
@@ -1690,8 +1696,13 @@ _daemon_init ()
 
       if ((pid = fork ()) < 0)
         _err_exit ("fork: %s", strerror (errno));
-      if (pid)
+      if (pid) {
+        /* write the 2nd child PID to the pidfile */
+        fprintf(pidfile, "%u\n", pid);
+        fclose(pidfile);
+
         exit (0);                   /* 1st child terminates */
+      }
 
       if (chdir ("/") < 0)
         _err_exit ("chdir: %s", strerror (errno));

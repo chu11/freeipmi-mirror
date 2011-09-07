@@ -10,7 +10,8 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/common/src/portability \
 	-I$(top_srcdir)/libfreeipmi/include \
 	-D_GNU_SOURCE \
-	-D_REENTRANT
+	-D_REENTRANT \
+	-DBMC_WATCHDOG_LOCALSTATEDIR='"$(localstatedir)"'
 
 sbin_PROGRAMS = bmc-watchdog
 

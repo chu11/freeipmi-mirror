@@ -1,6 +1,7 @@
 FreeIPMI 1.0.7 - 09/01/11
 -------------------------
-o Suppot dynamic linking in libfreeipmi.
+o Support dynamic linking in libfreeipmi.
+o Output pidfile in bmc-watchdog to support easier init script killing.
 
 FreeIPMI 1.0.6 - 09/01/11
 -------------------------
