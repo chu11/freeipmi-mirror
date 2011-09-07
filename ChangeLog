@@ -1,4 +1,4 @@
-2011-09-06  Diego Elio Petten <flameeyes@flameeyes.eu>
+2011-09-06  Diego Elio Pettenò <flameeyes@flameeyes.eu>
 
 	* libfreeipmi/src/Makefile.am: The -module option is used to tell
 	libtool that the library is not to be used to link against, but
