@@ -340,6 +340,20 @@ static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_power_unit_redu
   };
 static unsigned int ipmi_interpret_sensor_power_unit_redundancy_config_len = 9;
 
+static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_cooling_device_redundancy_config[] =
+  {
+    { "IPMI_Cooling_Device_Redundancy_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_Cooling_Device_Redundancy_Fully_Redundant", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_Cooling_Device_Redundancy_Redundancy_Lost", IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_Cooling_Device_Redundancy_Redundancy_Degraded", IPMI_INTERPRET_STATE_WARNING},
+    { "IPMI_Cooling_Device_Redundancy_Non_Redundant_Sufficient_Resources_From_Redundant", IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_Cooling_Device_Redundancy_Non_Redundant_Sufficient_Resources_From_Insufficient_Redundancy", IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_Cooling_Device_Redundancy_Non_Redundant_Insufficient_Resources", IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_Cooling_Device_Redundancy_Redundancy_Degraded_From_Fully_Redundant", IPMI_INTERPRET_STATE_WARNING},
+    { "IPMI_Cooling_Device_Redundancy_Redundancy_Degraded_From_Non_Redundant", IPMI_INTERPRET_STATE_WARNING},
+  };
+static unsigned int ipmi_interpret_sensor_cooling_device_redundancy_config_len = 9;
+
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_memory_config[] =
   {
     { "IPMI_Memory_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
@@ -1184,6 +1198,12 @@ ipmi_interpret_sensor_init (ipmi_interpret_ctx_t ctx)
     goto cleanup;
 
   if (_interpret_config_sensor_init (ctx,
+                                     &ctx->interpret_sensor.ipmi_interpret_sensor_cooling_device_redundancy_config,
+                                     ipmi_interpret_sensor_cooling_device_redundancy_config,
+                                     ipmi_interpret_sensor_cooling_device_redundancy_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_config_sensor_init (ctx,
                                      &ctx->interpret_sensor.ipmi_interpret_sensor_memory_config,
                                      ipmi_interpret_sensor_memory_config,
                                      ipmi_interpret_sensor_memory_config_len) < 0)
@@ -1429,6 +1449,9 @@ ipmi_interpret_sensor_destroy (ipmi_interpret_ctx_t ctx)
 
   _interpret_config_sensor_destroy (ctx,
                                     ctx->interpret_sensor.ipmi_interpret_sensor_power_unit_redundancy_config);
+
+  _interpret_config_sensor_destroy (ctx,
+                                    ctx->interpret_sensor.ipmi_interpret_sensor_cooling_device_redundancy_config);
 
   _interpret_config_sensor_destroy (ctx,
                                     ctx->interpret_sensor.ipmi_interpret_sensor_memory_config);
@@ -1758,6 +1781,7 @@ ipmi_interpret_sensor_config_parse (ipmi_interpret_ctx_t ctx,
   int ipmi_interpret_sensor_power_unit_flags[ipmi_interpret_sensor_power_unit_config_len];
   int ipmi_interpret_sensor_power_unit_device_present_flags[ipmi_interpret_sensor_power_unit_device_present_config_len];
   int ipmi_interpret_sensor_power_unit_redundancy_flags[ipmi_interpret_sensor_power_unit_redundancy_config_len];
+  int ipmi_interpret_sensor_cooling_device_redundancy_flags[ipmi_interpret_sensor_cooling_device_redundancy_config_len];
   int ipmi_interpret_sensor_memory_flags[ipmi_interpret_sensor_memory_config_len];
   int ipmi_interpret_sensor_drive_slot_flags[ipmi_interpret_sensor_drive_slot_config_len];
   int ipmi_interpret_sensor_drive_slot_state_flags[ipmi_interpret_sensor_drive_slot_state_config_len];
@@ -1928,6 +1952,12 @@ ipmi_interpret_sensor_config_parse (ipmi_interpret_ctx_t ctx,
                                ctx->interpret_sensor.ipmi_interpret_sensor_power_unit_redundancy_config,
                                ipmi_interpret_sensor_power_unit_redundancy_flags,
                                ipmi_interpret_sensor_power_unit_redundancy_config_len);
+
+  _fill_sensor_config_options (config_file_options,
+                               &config_file_options_len,
+                               ctx->interpret_sensor.ipmi_interpret_sensor_cooling_device_redundancy_config,
+                               ipmi_interpret_sensor_cooling_device_redundancy_flags,
+                               ipmi_interpret_sensor_cooling_device_redundancy_config_len);
 
   _fill_sensor_config_options (config_file_options,
                                &config_file_options_len,

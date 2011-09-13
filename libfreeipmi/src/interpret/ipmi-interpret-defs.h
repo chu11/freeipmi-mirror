@@ -150,6 +150,7 @@ struct ipmi_interpret_sel {
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_power_unit_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_power_unit_device_present_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_power_unit_redundancy_config;
+  struct ipmi_interpret_sel_config **ipmi_interpret_sel_cooling_device_redundancy_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_memory_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_drive_slot_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_drive_slot_state_config;
@@ -225,6 +226,7 @@ struct ipmi_interpret_sensor {
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_power_unit_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_power_unit_device_present_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_power_unit_redundancy_config;
+  struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_cooling_device_redundancy_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_memory_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_drive_slot_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_drive_slot_state_config;
