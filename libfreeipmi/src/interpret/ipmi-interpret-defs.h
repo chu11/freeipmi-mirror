@@ -131,8 +131,11 @@ struct ipmi_interpret_sel {
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_threshold_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_temperature_state_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_temperature_limit_config;
+  struct ipmi_interpret_sel_config **ipmi_interpret_sel_temperature_transition_severity_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_voltage_state_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_voltage_performance_config;
+  struct ipmi_interpret_sel_config **ipmi_interpret_sel_voltage_transition_severity_config;
+  struct ipmi_interpret_sel_config **ipmi_interpret_sel_fan_transition_severity_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_fan_device_present_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_fan_transition_availability_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_fan_redundancy_config;
@@ -142,6 +145,7 @@ struct ipmi_interpret_sel {
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_processor_state_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_power_supply_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_power_supply_state_config;
+  struct ipmi_interpret_sel_config **ipmi_interpret_sel_power_supply_transition_severity_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_power_supply_redundancy_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_power_unit_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_power_unit_device_present_config;
@@ -202,8 +206,11 @@ struct ipmi_interpret_sensor {
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_threshold_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_temperature_state_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_temperature_limit_config;
+  struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_temperature_transition_severity_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_voltage_state_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_voltage_performance_config;
+  struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_voltage_transition_severity_config;
+  struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_fan_transition_severity_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_fan_device_present_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_fan_transition_availability_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_fan_redundancy_config;
@@ -213,6 +220,7 @@ struct ipmi_interpret_sensor {
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_processor_state_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_power_supply_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_power_supply_state_config;
+  struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_power_supply_transition_severity_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_power_supply_redundancy_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_power_unit_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_power_unit_device_present_config;
