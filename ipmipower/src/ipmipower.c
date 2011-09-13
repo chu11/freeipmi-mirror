@@ -354,6 +354,14 @@ _poll_loop (int non_interactive)
 {
   int nfds = 0;
   struct pollfd *pfds = NULL;
+  int extra_fds;
+
+  /* number of fds for stdin and stdout we'll need when polling
+   *
+   * Right now, always poll stdout.  When non-interactive,
+   * don't need stdin
+   */
+  extra_fds = 1 + (non_interactive ? 0 : 1);
 
   while (non_interactive || ipmipower_prompt_process_cmdline ())
     {
@@ -396,13 +404,12 @@ _poll_loop (int non_interactive)
        */
 
       /* Has the number of hosts changed? */
-      if (nfds != (ics_len*2) + 3)
+      if (nfds != (ics_len*2) + extra_fds)
         {
           /* The "*2" is for each host's two fds, one for ipmi
-           * (ipmi_fd) and one for rmcp (ping_fd).  The "+2" is for
-           * stdin and stdout.
+           * (ipmi_fd) and one for rmcp (ping_fd).
            */
-          nfds = (ics_len*2) + 2;
+          nfds = (ics_len*2) + extra_fds;
           free (pfds);
 
           if (!(pfds = (struct pollfd *)malloc (nfds * sizeof (struct pollfd))))
@@ -431,9 +438,12 @@ _poll_loop (int non_interactive)
             pfds[i*2+1].events |= POLLOUT;
         }
 
-      pfds[nfds-2].fd = STDIN_FILENO;
-      pfds[nfds-2].events = POLLIN;
-      pfds[nfds-2].revents = 0;
+      if (!non_interactive)
+	{
+	  pfds[nfds-2].fd = STDIN_FILENO;
+	  pfds[nfds-2].events = POLLIN;
+	  pfds[nfds-2].revents = 0;
+	}
       pfds[nfds-1].fd = STDOUT_FILENO;
       if (!cbuf_is_empty (ttyout))
         pfds[nfds-1].events = POLLOUT;
@@ -478,7 +488,7 @@ _poll_loop (int non_interactive)
             }
         }
 
-      if (pfds[nfds-2].revents & POLLIN)
+      if (!non_interactive && (pfds[nfds-2].revents & POLLIN))
         {
           int n, dropped = 0;
 
@@ -504,6 +514,7 @@ _poll_loop (int non_interactive)
           if (dropped)
             IPMIPOWER_DEBUG (("cbuf_write_from_fd: read dropped %d bytes", dropped));
         }
+
       if (!cbuf_is_empty (ttyout) && (pfds[nfds-1].revents & POLLOUT))
         {
           if (cbuf_read_to_fd (ttyout, STDOUT_FILENO, -1) < 0)
