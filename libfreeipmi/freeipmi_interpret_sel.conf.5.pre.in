@@ -132,6 +132,39 @@ Defaults to Nominal.
 Defaults to Critical.
 .RE
 .TP
+.B IPMI_Temperature_Transition_Severity
+The following states correspond to Temperature sensor events that
+report on device severity.
+.RS
+.TP
+\fBIPMI_Temperature_Transition_Severity_Transition_To_OK\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Temperature_Transition_Severity_Transition_To_Non_Critical_From_OK\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Temperature_Transition_Severity_Transition_To_Critical_From_Less_Severe\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Temperature_Transition_Severity_Transition_To_Non_Recoverable_From_Less_Severe\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Temperature_Transition_Severity_Transition_To_Non_Critical_From_More_Severe\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Temperature_Transition_Severity_Transition_To_Critical_From_Non_Recoverable\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Temperature_Transition_Severity_Transition_To_Non_Recoverable\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Temperature_Transition_Severity_Monitor\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Temperature_Transition_Severity_Informational\fR
+Defaults to Nominal.
+.RE
+.TP
 .B IPMI_Voltage_State
 The following states correspond to Voltage sensor events that report an
 assertion or deassertion.
@@ -154,6 +187,72 @@ Defaults to Nominal/Nominal.
 .TP
 \fBIPMI_Voltage_Performance_Lags\fR
 Defaults to Critical/Warning.
+.RE
+.TP
+.B IPMI_Voltage_Transition_Severity
+The following states correspond to Voltage sensor events that
+report on device severity.
+.RS
+.TP
+\fBIPMI_Voltage_Transition_Severity_Transition_To_OK\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Voltage_Transition_Severity_Transition_To_Non_Critical_From_OK\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Voltage_Transition_Severity_Transition_To_Critical_From_Less_Severe\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Voltage_Transition_Severity_Transition_To_Non_Recoverable_From_Less_Severe\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Voltage_Transition_Severity_Transition_To_Non_Critical_From_More_Severe\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Voltage_Transition_Severity_Transition_To_Critical_From_Non_Recoverable\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Voltage_Transition_Severity_Transition_To_Non_Recoverable\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Voltage_Transition_Severity_Monitor\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Voltage_Transition_Severity_Informational\fR
+Defaults to Nominal.
+.RE
+.TP
+.B IPMI_Fan_Transition_Severity
+The following states correspond to Fan sensor events that
+report on device severity.
+.RS
+.TP
+\fBIPMI_Fan_Transition_Severity_Transition_To_OK\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Fan_Transition_Severity_Transition_To_Non_Critical_From_OK\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Fan_Transition_Severity_Transition_To_Critical_From_Less_Severe\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Fan_Transition_Severity_Transition_To_Non_Recoverable_From_Less_Severe\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Fan_Transition_Severity_Transition_To_Non_Critical_From_More_Severe\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Fan_Transition_Severity_Transition_To_Critical_From_Non_Recoverable\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Fan_Transition_Severity_Transition_To_Non_Recoverable\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Fan_Transition_Severity_Monitor\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Fan_Transition_Severity_Informational\fR
+Defaults to Nominal.
 .RE
 .TP
 .B IPMI_Fan_Device_Present
@@ -378,6 +477,39 @@ Defaults to Critical.
 Defaults to Nominal.
 .RE
 .TP
+.B IPMI_Power_Supply_Transition_Severity
+The following states correspond to Power Supply sensor events that
+report on device severity.
+.RS
+.TP
+\fBIPMI_Power_Supply_Transition_Severity_Transition_To_OK\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Power_Supply_Transition_Severity_Transition_To_Non_Critical_From_OK\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Power_Supply_Transition_Severity_Transition_To_Critical_From_Less_Severe\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Power_Supply_Transition_Severity_Transition_To_Non_Recoverable_From_Less_Severe\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Power_Supply_Transition_Severity_Transition_To_Non_Critical_From_More_Severe\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Power_Supply_Transition_Severity_Transition_To_Critical_From_Non_Recoverable\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Power_Supply_Transition_Severity_Transition_To_Non_Recoverable\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Power_Supply_Transition_Severity_Monitor\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Power_Supply_Transition_Severity_Informational\fR
+Defaults to Nominal.
+.RE
+.TP
 .B IPMI_Power_Supply_Redundancy
 The following states correspond to Power Supply sensor events that report on
 redundancy.
@@ -477,6 +609,36 @@ Defaults to Critical/Warning.
 Defaults to Warning/Warning.
 .TP
 \fBIPMI_Power_Unit_Redundancy_Redundancy_Degraded_From_Non_Redundant\fR
+Defaults to Warning/Warning.
+.RE
+.TP
+.B IPMI_Cooling_Device_Redundancy
+The following states correspond to Cooling Device sensor events that report on
+redundancy.
+.RS
+.TP
+\fBIPMI_Cooling_Device_Redundancy_Fully_Redundant\fR
+Defaults to Nominal/Nominal.
+.TP
+\fBIPMI_Cooling_Device_Redundancy_Redundancy_Lost\fR
+Defaults to Critical/Warning.
+.TP
+\fBIPMI_Cooling_Device_Redundancy_Redundancy_Degraded\fR
+Defaults to Warning/Warning.
+.TP
+\fBIPMI_Cooling_Device_Redundancy_Non_Redundant_Sufficient_Resources_From_Redundant\fR
+Defaults to Critical/Warning.
+.TP
+\fBIPMI_Cooling_Device_Redundancy_Non_Redundant_Sufficient_Resources_From_Insufficient_Redundancy\fR
+Defaults to Critical/Warning.
+.TP
+\fBIPMI_Cooling_Device_Redundancy_Non_Redundant_Insufficient_Resources\fR
+Defaults to Critical/Warning.
+.TP
+\fBIPMI_Cooling_Device_Redundancy_Redundancy_Degraded_From_Fully_Redundant\fR
+Defaults to Warning/Warning.
+.TP
+\fBIPMI_Cooling_Device_Redundancy_Redundancy_Degraded_From_Non_Redundant\fR
 Defaults to Warning/Warning.
 .RE
 .TP

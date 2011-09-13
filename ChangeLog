@@ -2,6 +2,8 @@
 
 	* libfreeipmi/src/interpret/: Support cooling device redundancy
 	interpretation.
+
+	* man/: Update manpages for new interpret configuration options.
 	
 2011-09-12  Albert Chu <chu11@llnl.gov>
 
