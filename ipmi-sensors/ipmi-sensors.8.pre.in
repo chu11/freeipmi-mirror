@@ -206,6 +206,18 @@ motherboard if sensors are listed as "N/A" even if they should be
 available.  This option is confirmed to work around issues on Dell
 Poweredge 2900, Dell Poweredge 2950, Dell Poweredge R410, and Dell
 Poweredge R610 motherboards.
+.LP
+"assumebmcowner" - This workaround option will allow sensor readings
+to be read if the sensor owner is the BMC, but the reported sensor
+owner is not the BMC.  Typically, sensors owned by a non-BMC sensor
+owner must be bridged (e.g. with the \fB\-\-bridge\-sensors\fR
+option), however if the non-BMC sensor owner is invalid, bridging
+fails.  This option works around motherboards that incorrectly report
+an non-BMC sensor owner by always assuming the sensor owner is the
+BMC.  This may problem may exist on your motherboard if sensors are
+listed as "N/A" even if they should be available. This option is
+confirmed to work around issues on Fujitsu RX300 and Fujitsu RX300S2
+motherboards.
 #include <@top_srcdir@/common/man/manpage-common-oem-interpretation.man>
 .LP
 Dell Poweredge R210, Dell Poweredge R610, Dell Poweredge R710, Fujitsu

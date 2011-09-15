@@ -1,5 +1,11 @@
 2011-09-15  Albert Chu <chu11@llnl.gov>
 
+	* ipmi-sensors/, libfreeipmi/src/sensor-read/,
+	libfreeipmi/include/freeipmi/sensor-read/,
+	common/src/parsecommon/: Support new "assumebmcowner" workaround.
+	
+2011-09-15  Albert Chu <chu11@llnl.gov>
+
 	* ipmi-sensors/ipmi-sensors.8.pre.in: Fix some text.  Remove
 	experimental tag from --bridge-sensors option.
 

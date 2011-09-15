@@ -116,7 +116,7 @@ workarounds are supported: assumeio, spinpoll, idzero, forcepermsg,
 unexpectedauth, endianseq, authcap, intel20, supermicro20, sun20,
 opensesspriv, integritycheckvalue, solpayloadsize, solport, solstatus,
 skipchecks, assumesystemevent, discretereading,
-ignorescanningdisabled, slowcommit, veryslowcommit,
+ignorescanningdisabled, assumebmcowner, slowcommit, veryslowcommit,
 solchannelassumelanchannel, ignorestateflag.
 
 .SH "SDR OPTIONS"
