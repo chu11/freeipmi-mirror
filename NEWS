@@ -11,6 +11,7 @@ o Support dynamic linking in libfreeipmi.
 o Output pidfile in bmc-watchdog to support easier init script killing.
 o Do not poll stdin in ipmipower when operating in non-interactive mode.
 o Fix various debug dumping bugs.
+o Support IGNORE_SCANNING_DISABLED workaround in libipmimonitoring.
 
 FreeIPMI 1.0.6 - 09/01/11
 -------------------------
