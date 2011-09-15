@@ -1,3 +1,8 @@
+2011-09-14  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/debug/ipmi-debug.c (ipmi_dump_hex): Output
+	correct byte length of hex array.
+	
 2011-09-13  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/: Do not poll stdin when operating in non-interactive
