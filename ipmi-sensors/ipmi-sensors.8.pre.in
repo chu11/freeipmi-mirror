@@ -204,7 +204,8 @@ is disabled.  This option works around motherboards that incorrectly
 indicate sensors as disabled.  This may problem may exist on your
 motherboard if sensors are listed as "N/A" even if they should be
 available.  This option is confirmed to work around issues on Dell
-Poweredge 2900, Dell Poweredge 2950, and Dell Poweredge R410.
+Poweredge 2900, Dell Poweredge 2950, Dell Poweredge R410, and Dell
+Poweredge R610.
 #include <@top_srcdir@/common/man/manpage-common-oem-interpretation.man>
 .LP
 Dell Poweredge R210, Dell Poweredge R610, Dell Poweredge R710, Fujitsu
