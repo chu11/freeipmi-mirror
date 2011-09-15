@@ -114,8 +114,8 @@ List sensor types.
 \fB\-b\fR, \fB\-\-bridge\-sensors\fR
 By default, sensors readings are not attempted for sensors on non-BMC
 owners.  By setting this option, sensor requests can be bridged to
-non-BMC owners to obtain sensor readings (experimental).  Bridging may
-not work on some interfaces/driver types.
+non-BMC owners to obtain sensor readings.  Bridging may not work on
+some interfaces/driver types.
 .TP
 \fB\-\-shared\-sensors\fR
 Some sensors share the same sensor data record (SDR).  This is
@@ -196,7 +196,7 @@ to be read even if the event/reading type code for the sensor is not
 valid.  This option works around poorly defined (and arguably illegal)
 SDR records that list non-discrete sensor expectations along with
 discrete state conditions.  This option is confirmed to work around
-issues on HP Proliant DL380 G7 and HP ProLiant ML310 G5.
+issues on HP Proliant DL380 G7 and HP ProLiant ML310 G5 motherboards.
 .LP
 "ignorescanningdisabled" - This workaround option will allow sensor
 readings to be read even if the sensor scanning bit indicates a sensor
@@ -205,7 +205,7 @@ indicate sensors as disabled.  This may problem may exist on your
 motherboard if sensors are listed as "N/A" even if they should be
 available.  This option is confirmed to work around issues on Dell
 Poweredge 2900, Dell Poweredge 2950, Dell Poweredge R410, and Dell
-Poweredge R610.
+Poweredge R610 motherboards.
 #include <@top_srcdir@/common/man/manpage-common-oem-interpretation.man>
 .LP
 Dell Poweredge R210, Dell Poweredge R610, Dell Poweredge R710, Fujitsu
