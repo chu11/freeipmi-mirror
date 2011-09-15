@@ -532,6 +532,15 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
       goto cleanup;
     }
 
+  /* IPMI Workaround
+   *
+   * Discovered on Dell Poweredge 2900
+   * Discovered on Dell Poweredge 2950
+   * Discovered on Dell Poweredge R410
+   * Discovered on Dell Poweredge R610
+   * 
+   * On some motherboards, the sensor scanning bit is invalid for sensors. 
+   */
   if (!(ctx->flags & IPMI_SENSOR_READ_FLAGS_IGNORE_SCANNING_DISABLED))
     {
       if (FIID_OBJ_GET (obj_cmd_rs,
