@@ -2,6 +2,12 @@
 
 	* libfreeipmi/src/debug/ipmi-debug.c (ipmi_dump_hex): Output
 	correct byte length of hex array.
+
+	* libfreeipmi/src/api/ipmi-api.c (ipmi_cmd_raw): Fix debug dump
+	output corner case.
+
+	* libfreeipmi/src/api/ipmi-api.c (ipmi_cmd_raw_ipmb): Add debug
+	dump support for special case drivers.
 	
 2011-09-13  Albert Chu <chu11@llnl.gov>
 
