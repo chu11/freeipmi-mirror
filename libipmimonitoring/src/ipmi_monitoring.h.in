@@ -279,6 +279,10 @@ enum ipmi_monitoring_sel_flags
  *                    poorly defined (and arguably illegal) SDR records that list
  *                    non-discrete sensor expectations along with discrete state
  *                    conditions.
+ *
+ * IGNORE_SCANNING_DISABLED - Ignore the scanning disabled bit and read sensors
+ *                            no matter what.  This option works around motherboards
+ *                            that incorrectly indicate sensors as disabled.
  */
 enum ipmi_monitoring_sensor_reading_flags
   {
@@ -288,6 +292,7 @@ enum ipmi_monitoring_sensor_reading_flags
     IPMI_MONITORING_SENSOR_READING_FLAGS_INTERPRET_OEM_DATA               = 0x00000008,
     IPMI_MONITORING_SENSOR_READING_FLAGS_SHARED_SENSORS                   = 0x00000010,
     IPMI_MONITORING_SENSOR_READING_FLAGS_DISCRETE_READING                 = 0x00000020,
+    IPMI_MONITORING_SENSOR_READING_FLAGS_IGNORE_SCANNING_DISABLED         = 0x00000040,	
     IPMI_MONITORING_SENSOR_READING_FLAGS_IGNORE_UNREADABLE_SENSORS        = 0x00000002, /* legacy macro */
   };
 

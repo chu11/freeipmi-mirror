@@ -1263,6 +1263,9 @@ _ipmi_monitoring_sensor_readings_flags_common (ipmi_monitoring_ctx_t c,
   if (sensor_reading_flags & IPMI_MONITORING_SENSOR_READING_FLAGS_DISCRETE_READING)
     sensor_read_ctx_flags |= IPMI_SENSOR_READ_FLAGS_DISCRETE_READING;
 
+  if (sensor_reading_flags & IPMI_MONITORING_SENSOR_READING_FLAGS_IGNORE_SCANNING_DISABLED)
+    sensor_read_ctx_flags |= IPMI_SENSOR_READ_FLAGS_IGNORE_SCANNING_DISABLED;
+
   if (sensor_read_ctx_flags)
     {
       if (ipmi_sensor_read_ctx_set_flags (c->sensor_read_ctx, sensor_read_ctx_flags) < 0)
