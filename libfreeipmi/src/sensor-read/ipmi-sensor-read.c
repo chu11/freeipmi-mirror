@@ -487,22 +487,40 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
       goto cleanup;
     }
 
-  if (slave_address == IPMI_SLAVE_ADDRESS_BMC)
+  /* IPMI Workaround
+   *
+   * Discovered on Fujitsu RX300
+   * Discovered on Fujitsu RX300S2
+   * 
+   * On some motherboards, the sensor owner is invalid.  The sensor
+   * owner as atually the BMC.
+   */
+  if (!(ctx->flags & IPMI_SENSOR_READ_FLAGS_ASSUME_BMC_OWNER))
     {
-      if (_get_sensor_reading (ctx,
-                               sensor_number,
-                               obj_cmd_rs) < 0)
-        goto cleanup;
+      if (slave_address == IPMI_SLAVE_ADDRESS_BMC)
+	{
+	  if (_get_sensor_reading (ctx,
+				   sensor_number,
+				   obj_cmd_rs) < 0)
+	    goto cleanup;
+	}
+      else
+	{
+	  if (_get_sensor_reading_ipmb (ctx,
+					slave_address,
+					sensor_owner_lun,
+					channel_number,
+					sensor_number,
+					obj_cmd_rs) < 0)
+	    goto cleanup;
+	}
     }
   else
     {
-      if (_get_sensor_reading_ipmb (ctx,
-                                    slave_address,
-                                    sensor_owner_lun,
-                                    channel_number,
-                                    sensor_number,
-                                    obj_cmd_rs) < 0)
-        goto cleanup;
+      if (_get_sensor_reading (ctx,
+			       sensor_number,
+			       obj_cmd_rs) < 0)
+	goto cleanup;
     }
 
   /* 

@@ -7,6 +7,7 @@ o Support many new sensor state and sel event interpretations.  New
   - fan transition severity  
   - power supply transition severity
   - cooling device redundancy
+o Support 'assumebmcowner' workaround in ipmi-sensors.
 o Support dynamic linking in libfreeipmi.
 o Output pidfile in bmc-watchdog to support easier init script killing.
 o Do not poll stdin in ipmipower when operating in non-interactive mode.

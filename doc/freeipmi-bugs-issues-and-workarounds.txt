@@ -766,7 +766,12 @@ subsequently set this field to 00b or 11b for non-analog sensors.
 Dell Poweredge 2900, Dell Poweredge 2950, Dell Poweredge R410, Dell
 Poweredge R610: Some sensors report that their sensor scanning is
 disabled, even though the sensor is actually not.  Resolved with
-workaround to handle unique case.
+workaround to ignore the sensor scanning bit.
+
+Fujitsu RX300, Fujitsu RX300S2: Some sensors report a non-BMC sensor
+owner and thus require bridging.  However, the sensor owner is
+invalid, thus bridging fails.  Resolved with a workaround to assume
+the BMC is the sensor owner.
 
 ipmi-sel
 --------

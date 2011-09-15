@@ -58,6 +58,7 @@ extern "C" {
 #define IPMI_SENSOR_READ_FLAGS_BRIDGE_SENSORS                       0x0001
 #define IPMI_SENSOR_READ_FLAGS_DISCRETE_READING                     0x0002
 #define IPMI_SENSOR_READ_FLAGS_IGNORE_SCANNING_DISABLED             0x0004
+#define IPMI_SENSOR_READ_FLAGS_ASSUME_BMC_OWNER                     0x0008
 
 typedef struct ipmi_sensor_read_ctx *ipmi_sensor_read_ctx_t;
 
