@@ -335,7 +335,7 @@ ipmi_dump_hex (int fd,
         }
     }
 
-  if (ipmi_debug_dprintf (fd, "[  HEX DUMP ..... ] = %s[%2uB]\n", "HEX", BITS_ROUND_BYTES (buf_len)) < 0)
+  if (ipmi_debug_dprintf (fd, "[  HEX DUMP ..... ] = %s[%2uB]\n", "HEX", buf_len) < 0)
     {
       ERRNO_TRACE (errno);
       goto cleanup;

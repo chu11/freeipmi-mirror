@@ -10,6 +10,7 @@ o Support many new sensor state and sel event interpretations.  New
 o Support dynamic linking in libfreeipmi.
 o Output pidfile in bmc-watchdog to support easier init script killing.
 o Do not poll stdin in ipmipower when operating in non-interactive mode.
+o Fix minor debug dumping bug.
 
 FreeIPMI 1.0.6 - 09/01/11
 -------------------------
