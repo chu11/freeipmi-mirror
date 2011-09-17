@@ -19,7 +19,7 @@ AC_CONFIG_AUX_DIR([config])
 dnl Locate the sources.
 AC_CONFIG_SRCDIR([ChangeLog.0])
 
-AM_INIT_AUTOMAKE([tar-ustar 1.9])
+AM_INIT_AUTOMAKE([tar-ustar subdir-objects 1.9])
 
 dnl create a config.h file
 AM_CONFIG_HEADER([config/config.h])
@@ -96,28 +96,18 @@ AC_CONFIG_FILES([
         libipmidetect/libipmidetect.pc
         libipmidetect/src/Makefile
         libipmidetect/src/ipmidetect.h
-        bmc-config/Makefile
         bmc-config/bmc-config.8.pre
         bmc-config/bmc-config.conf.5.pre
-        bmc-config/src/Makefile
-        bmc-device/Makefile
         bmc-device/bmc-device.8.pre
-        bmc-device/src/Makefile
-        bmc-info/Makefile
         bmc-info/bmc-info.8.pre
-        bmc-info/src/Makefile
         bmc-watchdog/Makefile 
         bmc-watchdog/bmc-watchdog.8.pre
         bmc-watchdog/src/Makefile
-        ipmi-chassis/Makefile
         ipmi-chassis/ipmi-chassis.8.pre
-        ipmi-chassis/src/Makefile
         ipmi-chassis-config/Makefile 
         ipmi-chassis-config/ipmi-chassis-config.8.pre
         ipmi-chassis-config/src/Makefile
-        ipmi-dcmi/Makefile
         ipmi-dcmi/ipmi-dcmi.8.pre
-        ipmi-dcmi/src/Makefile
         ipmi-fru/Makefile
         ipmi-fru/ipmi-fru.8.pre
         ipmi-fru/src/Makefile
@@ -130,12 +120,8 @@ AC_CONFIG_FILES([
         ipmi-pef-config/Makefile
         ipmi-pef-config/ipmi-pef-config.8.pre
         ipmi-pef-config/src/Makefile
-        ipmi-raw/Makefile
         ipmi-raw/ipmi-raw.8.pre
-        ipmi-raw/src/Makefile
-        ipmi-sel/Makefile
         ipmi-sel/ipmi-sel.8.pre
-        ipmi-sel/src/Makefile
         ipmi-sensors/Makefile
         ipmi-sensors/ipmi-sensors.8.pre
         ipmi-sensors/src/Makefile
@@ -143,10 +129,8 @@ AC_CONFIG_FILES([
         ipmi-sensors-config/Makefile
         ipmi-sensors-config/ipmi-sensors-config.8.pre
         ipmi-sensors-config/src/Makefile
-        ipmiconsole/Makefile
         ipmiconsole/ipmiconsole.8.pre
         ipmiconsole/ipmiconsole.conf.5.pre
-        ipmiconsole/src/Makefile
         ipmidetect/Makefile
         ipmidetect/ipmidetect.8.pre
         ipmidetect/ipmidetect.conf.5.pre
@@ -155,16 +139,12 @@ AC_CONFIG_FILES([
         ipmidetectd/ipmidetectd.8.pre
         ipmidetectd/ipmidetectd.conf.5.pre
         ipmidetectd/src/Makefile
-        ipmiping/Makefile
-        ipmiping/ipmiping.8.pre
-        ipmiping/src/Makefile
         ipmipower/Makefile 
         ipmipower/ipmipower.8.pre
         ipmipower/ipmipower.conf.5.pre
         ipmipower/src/Makefile
-        rmcpping/Makefile
+        ipmiping/ipmiping.8.pre
         rmcpping/rmcpping.8.pre
-        rmcpping/src/Makefile
         freeipmi.spec])
 
 ISODATE=`date +%Y-%m-%d`
