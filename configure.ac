@@ -145,7 +145,6 @@ AC_CONFIG_FILES([
         ipmi-sensors-config/src/Makefile
         ipmiconsole/Makefile
         ipmiconsole/ipmiconsole.8.pre
-        ipmiconsole/ipmiconsole.conf.5.pre
         ipmiconsole/src/Makefile
         ipmidetect/Makefile
         ipmidetect/ipmidetect.8.pre
@@ -160,7 +159,6 @@ AC_CONFIG_FILES([
         ipmiping/src/Makefile
         ipmipower/Makefile 
         ipmipower/ipmipower.8.pre
-        ipmipower/ipmipower.conf.5.pre
         ipmipower/src/Makefile
         rmcpping/Makefile
         rmcpping/rmcpping.8.pre

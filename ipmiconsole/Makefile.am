@@ -1,13 +1,12 @@
 SUBDIRS = src
 
 MANS_CPP = \
-	ipmiconsole.8 \
-	ipmiconsole.conf.5
+	ipmiconsole.8
 
 $(MANS_CPP): $(MANS_CPP:%=%.pre)
 	$(CPP) -C -P -I. $@.pre  $@
 
-dist_man_MANS = $(MANS_CPP) ipmi-console.8
+dist_man_MANS = $(MANS_CPP) ipmi-console.8 ipmiconsole.conf.5
 
 CLEANFILES = $(MANS_CPP) *~
 
