@@ -280,7 +280,6 @@ MANS_CPP = \
 	ipmi-raw/ipmi-raw.8 \
 	ipmi-sel/ipmi-sel.8 \
 	ipmiconsole/ipmiconsole.8 \
-	ipmiconsole/ipmiconsole.conf.5 \
 	ipmiping/ipmiping.8 \
 	rmcpping/rmcpping.8
 
@@ -290,6 +289,7 @@ $(MANS_CPP): $(MANS_CPP:%=%.pre)
 dist_man_MANS = \
 	$(MANS_CPP) \
 	ipmiconsole/ipmi-console.8 \
+	ipmiconsole/ipmiconsole.conf.5 \
 	ipmiping/ipmi-ping.8 \
 	rmcpping/rmcp-ping.8
 
