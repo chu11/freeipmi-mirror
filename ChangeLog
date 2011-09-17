@@ -1,3 +1,14 @@
+2011-09-16  Albert Chu <chu11@llnl.gov>
+
+	* ipmipower/ipmipower.conf.5.pre.in,
+	ipmiconsole/ipmiconsole.conf.5.pre.in: Remove files.
+
+	* ipmipower/ipmipower.conf.5, ipmiconsole/ipmiconsole.conf.5: New
+	files.
+
+	* configure.ac, ipmipower/Makefile.am, ipmiconsole/Makefile.am:
+	Adjust.
+	
 2011-09-15  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors/, libfreeipmi/src/sensor-read/,
