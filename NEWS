@@ -3,6 +3,30 @@ FreeIPMI 1.1.1 - XX/XX/11
 o Update libfreeipmi for DCMI 1.5 additions.
 o Fix macro name typos.
 
+FreeIPMI 1.0.6 - 09/01/11
+-------------------------
+o Support 'ignorescanningdisabled' workaround in ipmi-sensors.
+o Support Supermicro X8SIL-F, X9SCL, and X9SCM motherboard OEM sensors.
+o Update bmc-watchdog logrotate script to reduce unnecessary output.
+o Fix ipmi-fru output typo.
+
+FreeIPMI 1.0.5 - 06/30/11
+-------------------------
+o Fix various issues in ipmi-dcmi, including command line parsing
+  bugs, asset tag/string identifier overwriting, and fix assumptions
+  based on new information in v1.5 errata.
+o Support pkg-config files for libraries.
+o Various documentation updates.
+
+FreeIPMI 1.0.4 - 04/21/11
+-------------------------
+o Support "discretereading" workaround in ipmi-sensors and associated
+  libraries.
+o Support "spinpoll" workaround/performance optimization in tools and
+  libraries.
+o Support additional sensor/SEL interpretations for Intel motherboards.
+o Add convenience input checking functions to libipmiconsole.
+o Fix bug in libipmimonitoring to allow additional OEM interpretations.
 
 FreeIPMI 1.0.3 - 03/29/11
 -------------------------
