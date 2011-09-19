@@ -11,12 +11,9 @@ SUBDIRS = \
 	libipmidetect \
 	man \
 	bmc-watchdog \
-	ipmi-chassis-config \
 	ipmi-fru \
 	ipmi-oem \
-	ipmi-pef-config \
 	ipmi-sensors \
-	ipmi-sensors-config \
 	ipmi-locate \
 	ipmidetect \
 	ipmidetectd \
@@ -79,9 +76,12 @@ sbin_PROGRAMS = \
 	bmc-device/src/bmc-device \
 	bmc-info/src/bmc-info \
 	ipmi-chassis/src/ipmi-chassis \
+	ipmi-chassis-config/src/ipmi-chassis-config \
 	ipmi-dcmi/src/ipmi-dcmi \
+	ipmi-pef-config/src/ipmi-pef-config \
 	ipmi-raw/src/ipmi-raw \
 	ipmi-sel/src/ipmi-sel \
+	ipmi-sensors-config/src/ipmi-sensors-config \
 	ipmiconsole/src/ipmiconsole \
 	ipmiping/src/ipmiping \
 	rmcpping/src/rmcpping
@@ -106,24 +106,24 @@ PINGTOOLCOMMON_LDADD = \
 	$(top_builddir)/libfreeipmi/src/libfreeipmi.la
 
 TOOLCOMMON_CPPFLAGS = \
-        -I$(top_srcdir)/common/src/toolcommon \
-        -I$(top_srcdir)/common/src/toolhostrange \
-        -I$(top_srcdir)/common/src/miscutil \
-        -I$(top_srcdir)/common/src/parsecommon \
-        -I$(top_srcdir)/common/src/portability \
-        -I$(top_srcdir)/libfreeipmi/include \
+        -I$(top_builddir)/common/src/toolcommon \
+        -I$(top_builddir)/common/src/toolhostrange \
+        -I$(top_builddir)/common/src/miscutil \
+        -I$(top_builddir)/common/src/parsecommon \
+        -I$(top_builddir)/common/src/portability \
+        -I$(top_builddir)/libfreeipmi/include \
         -D_GNU_SOURCE \
         -D_REENTRANT 
 
 CONFIGTOOLCOMMON_CPPFLAGS = \
 	$(TOOLCOMMON_CPPFLAGS) \
-	-I$(top_srcdir)/common/src/configtool
+	-I$(top_builddir)/common/src/configtool
 
 PINGTOOLCOMMON_CPPFLAGS = \
-	-I$(top_srcdir)/common/src/pingtool \
-	-I$(top_srcdir)/common/src/debugutil \
-	-I$(top_srcdir)/common/src/portability \
-	-I$(top_srcdir)/libfreeipmi/include \
+	-I$(top_builddir)/common/src/pingtool \
+	-I$(top_builddir)/common/src/debugutil \
+	-I$(top_builddir)/common/src/portability \
+	-I$(top_builddir)/libfreeipmi/include \
 	-D_GNU_SOURCE
 
 bmc_config_src_bmc_config_SOURCES = \
@@ -198,6 +198,27 @@ ipmi_chassis_src_ipmi_chassis_SOURCES = \
 ipmi_chassis_src_ipmi_chassis_LDADD = $(TOOLCOMMON_LDADD)
 ipmi_chassis_src_ipmi_chassis_CPPFLAGS = $(TOOLCOMMON_CPPFLAGS)
 
+ipmi_chassis_config_src_ipmi_chassis_config_SOURCES = \
+	ipmi-chassis-config/src/ipmi-chassis-config.c \
+	ipmi-chassis-config/src/ipmi-chassis-config.h \
+	ipmi-chassis-config/src/ipmi-chassis-config-argp.c \
+	ipmi-chassis-config/src/ipmi-chassis-config-argp.h \
+	ipmi-chassis-config/src/ipmi-chassis-config-boot-flags.c \
+	ipmi-chassis-config/src/ipmi-chassis-config-boot-flags.h \
+	ipmi-chassis-config/src/ipmi-chassis-config-front-panel-buttons.c \
+	ipmi-chassis-config/src/ipmi-chassis-config-front-panel-buttons.h \
+	ipmi-chassis-config/src/ipmi-chassis-config-map.c \
+	ipmi-chassis-config/src/ipmi-chassis-config-map.h \
+	ipmi-chassis-config/src/ipmi-chassis-config-power-conf.c \
+	ipmi-chassis-config/src/ipmi-chassis-config-power-conf.h \
+	ipmi-chassis-config/src/ipmi-chassis-config-sections.c \
+	ipmi-chassis-config/src/ipmi-chassis-config-sections.h \
+	ipmi-chassis-config/src/ipmi-chassis-config-validate.c \
+	ipmi-chassis-config/src/ipmi-chassis-config-validate.h
+
+ipmi_chassis_config_src_ipmi_chassis_config_LDADD = $(CONFIGTOOLCOMMON_LDADD)
+ipmi_chassis_config_src_ipmi_chassis_config_CPPFLAGS = $(CONFIGTOOLCOMMON_CPPFLAGS)
+
 ipmi_dcmi_src_ipmi_dcmi_SOURCES = \
         ipmi-dcmi/src/ipmi-dcmi.c \
         ipmi-dcmi/src/ipmi-dcmi.h \
@@ -209,8 +230,39 @@ ipmi_dcmi_src_ipmi_dcmi_LDADD = \
 	$(TOOLCOMMON_LDADD)
 
 ipmi_dcmi_src_ipmi_dcmi_CPPFLAGS = \
-        -I$(top_srcdir)/common/src/tooloem \
+        -I$(top_builddir)/common/src/tooloem \
 	$(TOOLCOMMON_CPPFLAGS)
+
+ipmi_pef_config_src_ipmi_pef_config_SOURCES = \
+	ipmi-pef-config/src/ipmi-pef-config.c \
+	ipmi-pef-config/src/ipmi-pef-config.h \
+	ipmi-pef-config/src/ipmi-pef-config-alert-policy-table.c \
+	ipmi-pef-config/src/ipmi-pef-config-alert-policy-table.h \
+	ipmi-pef-config/src/ipmi-pef-config-alert-string.c \
+	ipmi-pef-config/src/ipmi-pef-config-alert-string.h \
+	ipmi-pef-config/src/ipmi-pef-config-argp.c \
+	ipmi-pef-config/src/ipmi-pef-config-argp.h \
+	ipmi-pef-config/src/ipmi-pef-config-community-string.c \
+	ipmi-pef-config/src/ipmi-pef-config-community-string.h \
+	ipmi-pef-config/src/ipmi-pef-config-event-filter-table.c \
+	ipmi-pef-config/src/ipmi-pef-config-event-filter-table.h \
+	ipmi-pef-config/src/ipmi-pef-config-info.c \
+	ipmi-pef-config/src/ipmi-pef-config-info.h \
+	ipmi-pef-config/src/ipmi-pef-config-lan-alert-destination.c \
+	ipmi-pef-config/src/ipmi-pef-config-lan-alert-destination.h \
+	ipmi-pef-config/src/ipmi-pef-config-map.c \
+	ipmi-pef-config/src/ipmi-pef-config-map.h \
+	ipmi-pef-config/src/ipmi-pef-config-pef-conf-section.c \
+	ipmi-pef-config/src/ipmi-pef-config-pef-conf-section.h \
+	ipmi-pef-config/src/ipmi-pef-config-sections.c \
+	ipmi-pef-config/src/ipmi-pef-config-sections.h \
+	ipmi-pef-config/src/ipmi-pef-config-validate.c \
+	ipmi-pef-config/src/ipmi-pef-config-validate.h \
+	ipmi-pef-config/src/ipmi-pef-config-utils.c \
+	ipmi-pef-config/src/ipmi-pef-config-utils.h
+
+ipmi_pef_config_src_ipmi_pef_config_LDADD = $(CONFIGTOOLCOMMON_LDADD)
+ipmi_pef_config_src_ipmi_pef_config_CPPFLAGS = $(CONFIGTOOLCOMMON_CPPFLAGS)
 
 ipmi_raw_src_ipmi_raw_SOURCES = \
         ipmi-raw/src/ipmi-raw.c \
@@ -234,10 +286,34 @@ ipmi_sel_src_ipmi_sel_LDADD = \
 	$(TOOLCOMMON_LDADD)
 
 ipmi_sel_src_ipmi_sel_CPPFLAGS = \
-        -I$(top_srcdir)/common/src/tooloem \
-        -I$(top_srcdir)/common/src/toolsdr \
-        -I$(top_srcdir)/common/src/toolsensor \
+        -I$(top_builddir)/common/src/tooloem \
+        -I$(top_builddir)/common/src/toolsdr \
+        -I$(top_builddir)/common/src/toolsensor \
 	$(TOOLCOMMON_CPPFLAGS)
+
+ipmi_sensors_config_src_ipmi_sensors_config_SOURCES = \
+	ipmi-sensors-config/src/ipmi-sensors-config.c \
+	ipmi-sensors-config/src/ipmi-sensors-config.h \
+	ipmi-sensors-config/src/ipmi-sensors-config-argp.c \
+	ipmi-sensors-config/src/ipmi-sensors-config-argp.h \
+	ipmi-sensors-config/src/ipmi-sensors-config-discrete-section.c \
+	ipmi-sensors-config/src/ipmi-sensors-config-discrete-section.h \
+	ipmi-sensors-config/src/ipmi-sensors-config-threshold-section.c \
+	ipmi-sensors-config/src/ipmi-sensors-config-threshold-section.h \
+	ipmi-sensors-config/src/ipmi-sensors-config-sections.c \
+	ipmi-sensors-config/src/ipmi-sensors-config-sections.h \
+	ipmi-sensors-config/src/ipmi-sensors-config-sensor-event-enable-common.c \
+	ipmi-sensors-config/src/ipmi-sensors-config-sensor-event-enable-common.h \
+	ipmi-sensors-config/src/ipmi-sensors-config-utils.c \
+	ipmi-sensors-config/src/ipmi-sensors-config-utils.h
+
+ipmi_sensors_config_src_ipmi_sensors_config_LDADD = \
+        $(top_builddir)/common/src/toolsdr/libtoolsdr.la \
+	$(CONFIGTOOLCOMMON_LDADD)
+
+ipmi_sensors_config_src_ipmi_sensors_config_CPPFLAGS = \
+        -I$(top_builddir)/common/src/toolsdr \
+	$(CONFIGTOOLCOMMON_CPPFLAGS)
 
 ipmiconsole_src_ipmiconsole_SOURCES = \
         ipmiconsole/src/ipmiconsole.c \
@@ -253,12 +329,12 @@ ipmiconsole_src_ipmiconsole_LDADD = \
         $(top_builddir)/libipmiconsole/src/libipmiconsole.la
 
 ipmiconsole_src_ipmiconsole_CPPFLAGS = \
-        -I$(top_srcdir)/common/src/toolcommon \
-        -I$(top_srcdir)/common/src/miscutil \
-        -I$(top_srcdir)/common/src/parsecommon \
-        -I$(top_srcdir)/common/src/portability \
-        -I$(top_srcdir)/libfreeipmi/include \
-        -I$(top_srcdir)/libipmiconsole/src/ \
+        -I$(top_builddir)/common/src/toolcommon \
+        -I$(top_builddir)/common/src/miscutil \
+        -I$(top_builddir)/common/src/parsecommon \
+        -I$(top_builddir)/common/src/portability \
+        -I$(top_builddir)/libfreeipmi/include \
+        -I$(top_builddir)/libipmiconsole/src/ \
         -D_GNU_SOURCE \
         -D_REENTRANT
 
@@ -276,9 +352,12 @@ MANS_CPP = \
 	bmc-device/bmc-device.8 \
 	bmc-info/bmc-info.8 \
 	ipmi-chassis/ipmi-chassis.8 \
+	ipmi-chassis-config/ipmi-chassis-config.8 \
 	ipmi-dcmi/ipmi-dcmi.8 \
+	ipmi-pef-config/ipmi-pef-config.8 \
 	ipmi-raw/ipmi-raw.8 \
 	ipmi-sel/ipmi-sel.8 \
+	ipmi-sensors-config/ipmi-sensors-config.8 \
 	ipmiconsole/ipmiconsole.8 \
 	ipmiping/ipmiping.8 \
 	rmcpping/rmcpping.8
@@ -286,12 +365,16 @@ MANS_CPP = \
 $(MANS_CPP): $(MANS_CPP:%=%.pre)
 	$(CPP) -C -P -I. $@.pre  $@
 
-dist_man_MANS = \
-	$(MANS_CPP) \
+MANS_NOCPP = \
+	ipmi-pef-config/pef-config.8 \
 	ipmiconsole/ipmi-console.8 \
 	ipmiconsole/ipmiconsole.conf.5 \
 	ipmiping/ipmi-ping.8 \
 	rmcpping/rmcp-ping.8
+
+dist_man_MANS = \
+	$(MANS_CPP) \
+	$(MANS_NOCPP)
 
 CLEANFILES = $(MANS_CPP) *~
 
@@ -299,5 +382,18 @@ DISTCLEANFILES = $(MANS_CPP) $(MANS_CPP:%=%.pre) .deps/*.P
 
 EXTRA_DIST = \
 	$(EXTRA) \
-	$(MANS_CPP) \
+	$(MANS_NOCPP) \
 	freeipmi.spec
+
+install-exec-hook:
+	$(install_sh) -d -m 755 $(DESTDIR)$(sbindir)
+	$(LN_S) -f $(sbindir)/ipmi-pef-config $(DESTDIR)$(sbindir)/pef-config
+	$(LN_S) -f $(sbindir)/ipmiconsole $(DESTDIR)$(sbindir)/ipmi-console
+	$(LN_S) -f $(sbindir)/ipmiping $(DESTDIR)$(sbindir)/ipmi-ping
+	$(LN_S) -f $(sbindir)/rmcpping $(DESTDIR)$(sbindir)/rmcp-ping
+
+uninstall-hook:
+	$(RM) $(DESTDIR)$(sbindir)/pef-config
+	$(RM) $(DESTDIR)$(sbindir)/ipmi-console
+	$(RM) $(DESTDIR)$(sbindir)/ipmi-ping
+	$(RM) $(DESTDIR)$(sbindir)/rmcp-ping

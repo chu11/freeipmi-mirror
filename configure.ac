@@ -104,9 +104,7 @@ AC_CONFIG_FILES([
         bmc-watchdog/bmc-watchdog.8.pre
         bmc-watchdog/src/Makefile
         ipmi-chassis/ipmi-chassis.8.pre
-        ipmi-chassis-config/Makefile 
         ipmi-chassis-config/ipmi-chassis-config.8.pre
-        ipmi-chassis-config/src/Makefile
         ipmi-dcmi/ipmi-dcmi.8.pre
         ipmi-fru/Makefile
         ipmi-fru/ipmi-fru.8.pre
@@ -117,18 +115,14 @@ AC_CONFIG_FILES([
         ipmi-oem/Makefile
         ipmi-oem/ipmi-oem.8.pre
         ipmi-oem/src/Makefile
-        ipmi-pef-config/Makefile
         ipmi-pef-config/ipmi-pef-config.8.pre
-        ipmi-pef-config/src/Makefile
         ipmi-raw/ipmi-raw.8.pre
         ipmi-sel/ipmi-sel.8.pre
         ipmi-sensors/Makefile
         ipmi-sensors/ipmi-sensors.8.pre
         ipmi-sensors/src/Makefile
         ipmi-sensors/src/ipmimonitoring
-        ipmi-sensors-config/Makefile
         ipmi-sensors-config/ipmi-sensors-config.8.pre
-        ipmi-sensors-config/src/Makefile
         ipmiconsole/ipmiconsole.8.pre
         ipmidetect/Makefile
         ipmidetect/ipmidetect.8.pre
