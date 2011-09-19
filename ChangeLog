@@ -1,5 +1,9 @@
 2011-09-19  Albert Chu <chu11@llnl.gov>
 
+	* ipmi-dcmi/: Handle additional error codes for optional portions.
+	
+2011-09-19  Albert Chu <chu11@llnl.gov>
+
 	* Support Supermicro X8DTN+-F OEM sensors.
 	
 2011-09-16  Albert Chu <chu11@llnl.gov>
