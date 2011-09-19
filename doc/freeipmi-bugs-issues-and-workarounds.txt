@@ -771,7 +771,8 @@ workaround to ignore the sensor scanning bit.
 Fujitsu RX300, Fujitsu RX300S2: Some sensors report a non-BMC sensor
 owner and thus require bridging.  However, the sensor owner is
 invalid, thus bridging fails.  Resolved with a workaround to assume
-the BMC is the sensor owner.
+the BMC is the sensor owner.  This bug is confirmed to be fixed on
+newer firmware.
 
 ipmi-sel
 --------
