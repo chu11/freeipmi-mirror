@@ -836,7 +836,17 @@ extern unsigned int ipmi_oem_intel_specific_pci_correctable_sensor_max_index;
  *******************************************/
 
 /*
- * Supermicro X7DBR-3 (X7DBR_3), X8DTH, X8DTG, X8DTU, X8DT3-LN4F, X8DTU-6+ (X8DTU_6PLUS), X8DTL-3F (X8DTL_3F), X8SIL-F (X8SIL_F)
+ * Supermicro X7DBR-3 (X7DBR_3)
+ * Supermicro X8DTH
+ * Supermicro X8DTG
+ * Supermicro X8DTU
+ * Supermicro X8DT3-LN4F (X8DT3_LN4F)
+ * Supermicro X8DTU-6+ (X8DTU_6PLUS)
+ * Supermicro X8DTL-3F (X8DTL_3F)
+ * Supermicro X8SIL-F  (X8SIL_F)
+ * Supermicro X9SCL
+ * Supermicro X9SCM
+ * Supermicro X8DTN+-F (X8DTNPLUS_F)
  */
 /* achu: not official names, named based on use context */
 #define IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP_LOW           0x00

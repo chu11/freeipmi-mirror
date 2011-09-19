@@ -110,10 +110,13 @@ extern "C" {
  * Supermicro X8DTH
  * Supermicro X8DTG
  * Supermicro X8DTU
- * Supermicro X8DT3-LN4F
+ * Supermicro X8DT3-LN4F (X8DT3_LN4F)
  * Supermicro X8DTU-6+ (X8DTU_6PLUS)
  * Supermicro X8DTL-3F (X8DTL_3F)
  * Supermicro X8SIL-F  (X8SIL_F)
+ * Supermicro X9SCL
+ * Supermicro X9SCM
+ * Supermicro X8DTN+-F (X8DTNPLUS_F)
  */
 /* achu: not official names, named based on use context */
 #define IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP 0xC0 
