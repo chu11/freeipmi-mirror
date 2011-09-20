@@ -92,11 +92,15 @@ extern "C" {
 
 /*
  * Supermicro X7DBR-3 (X7DBR_3)
+ * Supermicro X7DB8
+ * Supermicro X8DTN
+ * Supermicro X7SBI-LN4 (X7SBI_LN4)
  * Supermicro X8DTH
  * Supermicro X8DTG
  * Supermicro X8DTU
  * Supermicro X8DT3-LN4F (X8DT3_LN4F)
  * Supermicro X8DTU-6+ (X8DTU_6PLUS)
+ * Supermicro X8DTL
  * Supermicro X8DTL-3F (X8DTL_3F)
  * Supermicro X8SIL-F  (X8SIL_F)
  * Supermicro X9SCL
