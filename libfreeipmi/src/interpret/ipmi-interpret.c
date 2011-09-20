@@ -719,6 +719,9 @@ ipmi_interpret_sel (ipmi_interpret_ctx_t ctx,
                    && sensor_type == IPMI_SENSOR_TYPE_VOLTAGE)
             sel_config = ctx->interpret_sel.ipmi_interpret_sel_voltage_transition_severity_config;
           else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY
+                   && sensor_type == IPMI_SENSOR_TYPE_CURRENT)
+            sel_config = ctx->interpret_sel.ipmi_interpret_sel_current_transition_severity_config;
+          else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY
                    && sensor_type == IPMI_SENSOR_TYPE_FAN)
             sel_config = ctx->interpret_sel.ipmi_interpret_sel_fan_transition_severity_config;
           else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_PRESENT
@@ -751,6 +754,9 @@ ipmi_interpret_sel (ipmi_interpret_ctx_t ctx,
           else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY
                    && sensor_type == IPMI_SENSOR_TYPE_COOLING_DEVICE)
             sel_config = ctx->interpret_sel.ipmi_interpret_sel_cooling_device_redundancy_config;
+          else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY
+                   && sensor_type == IPMI_SENSOR_TYPE_MEMORY)
+            sel_config = ctx->interpret_sel.ipmi_interpret_sel_memory_redundancy_config;
           else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
                    && sensor_type == IPMI_SENSOR_TYPE_DRIVE_SLOT)
             sel_config = ctx->interpret_sel.ipmi_interpret_sel_drive_slot_state_config;
@@ -761,6 +767,9 @@ ipmi_interpret_sel (ipmi_interpret_ctx_t ctx,
                    && sensor_type == IPMI_SENSOR_TYPE_DRIVE_SLOT)
             sel_config = ctx->interpret_sel.ipmi_interpret_sel_drive_slot_device_present_config;
           else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
+              && sensor_type == IPMI_SENSOR_TYPE_SYSTEM_EVENT)
+            sel_config = ctx->interpret_sel.ipmi_interpret_sel_system_event_state_config;
+          else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
                    && sensor_type == IPMI_SENSOR_TYPE_BUTTON_SWITCH)
             sel_config = ctx->interpret_sel.ipmi_interpret_sel_button_switch_state_config;
           else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
@@ -769,6 +778,9 @@ ipmi_interpret_sel (ipmi_interpret_ctx_t ctx,
           else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_PRESENT
                    && sensor_type == IPMI_SENSOR_TYPE_MODULE_BOARD)
             sel_config = ctx->interpret_sel.ipmi_interpret_sel_module_board_device_present_config;
+          else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY
+              && sensor_type == IPMI_SENSOR_TYPE_CHIP_SET)
+            sel_config = ctx->interpret_sel.ipmi_interpret_sel_chip_set_transition_severity_config;
           else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_PRESENT
                    && sensor_type == IPMI_SENSOR_TYPE_ENTITY_PRESENCE)
             sel_config = ctx->interpret_sel.ipmi_interpret_sel_entity_presence_device_present_config;
@@ -1154,6 +1166,9 @@ ipmi_interpret_sensor (ipmi_interpret_ctx_t ctx,
                && sensor_type == IPMI_SENSOR_TYPE_VOLTAGE)
         sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_voltage_transition_severity_config;
       else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY
+               && sensor_type == IPMI_SENSOR_TYPE_CURRENT)
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_current_transition_severity_config;
+      else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY
                && sensor_type == IPMI_SENSOR_TYPE_FAN)
         sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_fan_transition_severity_config;
       else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_PRESENT
@@ -1186,6 +1201,9 @@ ipmi_interpret_sensor (ipmi_interpret_ctx_t ctx,
       else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY
                && sensor_type == IPMI_SENSOR_TYPE_COOLING_DEVICE)
         sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_cooling_device_redundancy_config;
+      else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY
+               && sensor_type == IPMI_SENSOR_TYPE_MEMORY)
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_memory_redundancy_config;
       else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
                && sensor_type == IPMI_SENSOR_TYPE_DRIVE_SLOT)
         sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_drive_slot_state_config;
@@ -1196,6 +1214,9 @@ ipmi_interpret_sensor (ipmi_interpret_ctx_t ctx,
                && sensor_type == IPMI_SENSOR_TYPE_DRIVE_SLOT)
         sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_drive_slot_device_present_config;
       else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
+          && sensor_type == IPMI_SENSOR_TYPE_SYSTEM_EVENT)
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_system_event_state_config;
+      else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
                && sensor_type == IPMI_SENSOR_TYPE_BUTTON_SWITCH)
         sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_button_switch_state_config;
       else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
@@ -1204,6 +1225,9 @@ ipmi_interpret_sensor (ipmi_interpret_ctx_t ctx,
       else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_PRESENT
                && sensor_type == IPMI_SENSOR_TYPE_MODULE_BOARD)
         sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_module_board_device_present_config;
+      else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY
+	       && sensor_type == IPMI_SENSOR_TYPE_CHIP_SET)
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_chip_set_transition_severity_config;
       else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_PRESENT
                && sensor_type == IPMI_SENSOR_TYPE_ENTITY_PRESENCE)
         sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_entity_presence_device_present_config;

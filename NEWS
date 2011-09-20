@@ -1,12 +1,7 @@
 FreeIPMI 1.0.7 - 09/01/11
 -------------------------
-o Support many new sensor state and sel event interpretations.  New
-  interpretations include:
-  - temperature transition severity
-  - voltage transition severity
-  - fan transition severity  
-  - power supply transition severity
-  - cooling device redundancy
+o Support many new sensor state and sel event interpretations.
+o Fix parsing bugs for freeipmi_interpret_sel.conf.
 o Support 'assumebmcowner' workaround in ipmi-sensors.
 o Support dynamic linking in libfreeipmi.
 o Output pidfile in bmc-watchdog to support easier init script killing.

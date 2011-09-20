@@ -1,6 +1,13 @@
 2011-09-20  Albert Chu <chu11@llnl.gov>
 
 	* Fix use of new interpret library interpretation rules.
+
+	* libfreeipmi/src/interpret/: Support chip set transition
+	severity, current severity, memory redundancy, and system event
+	state interpretations.
+
+	* libfreeipmi/src/interpret/ipmi-interpret-config-sel.c
+	(_cb_sel_parse): Fix parse corner case.
 	
 2011-09-20  Albert Chu <chu11@llnl.gov>
 

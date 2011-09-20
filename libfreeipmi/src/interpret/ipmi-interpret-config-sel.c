@@ -149,6 +149,20 @@ static struct ipmi_interpret_sel_config ipmi_interpret_sel_voltage_transition_se
   };
 static unsigned int ipmi_interpret_sel_voltage_transition_severity_config_len = 9;
 
+static struct ipmi_interpret_sel_config ipmi_interpret_sel_current_transition_severity_config[] =
+  {
+    { "IPMI_Current_Transition_Severity_Transition_To_OK", IPMI_INTERPRET_STATE_NOMINAL, IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_Current_Transition_Severity_Transition_To_Non_Critical_From_OK", IPMI_INTERPRET_STATE_WARNING, IPMI_INTERPRET_STATE_WARNING},
+    { "IPMI_Current_Transition_Severity_Transition_To_Critical_From_Less_Severe", IPMI_INTERPRET_STATE_CRITICAL, IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_Current_Transition_Severity_Transition_To_Non_Recoverable_From_Less_Severe", IPMI_INTERPRET_STATE_CRITICAL, IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_Current_Transition_Severity_Transition_To_Non_Critical_From_More_Severe", IPMI_INTERPRET_STATE_WARNING, IPMI_INTERPRET_STATE_WARNING},
+    { "IPMI_Current_Transition_Severity_Transition_To_Critical_From_Non_Recoverable", IPMI_INTERPRET_STATE_CRITICAL, IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_Current_Transition_Severity_Transition_To_Non_Recoverable", IPMI_INTERPRET_STATE_CRITICAL, IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_Current_Transition_Severity_Monitor", IPMI_INTERPRET_STATE_WARNING, IPMI_INTERPRET_STATE_WARNING},
+    { "IPMI_Current_Transition_Severity_Informational", IPMI_INTERPRET_STATE_NOMINAL, IPMI_INTERPRET_STATE_NOMINAL},
+  };
+static unsigned int ipmi_interpret_sel_current_transition_severity_config_len = 9;
+
 static struct ipmi_interpret_sel_config ipmi_interpret_sel_fan_transition_severity_config[] =
   {
     { "IPMI_Fan_Transition_Severity_Transition_To_OK", IPMI_INTERPRET_STATE_NOMINAL, IPMI_INTERPRET_STATE_NOMINAL},
@@ -353,6 +367,19 @@ static struct ipmi_interpret_sel_config ipmi_interpret_sel_memory_config[] =
   };
 static unsigned int ipmi_interpret_sel_memory_config_len = 11;
 
+static struct ipmi_interpret_sel_config ipmi_interpret_sel_memory_redundancy_config[] =
+  {
+    { "IPMI_Memory_Redundancy_Fully_Redundant", IPMI_INTERPRET_STATE_NOMINAL, IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_Memory_Redundancy_Redundancy_Lost", IPMI_INTERPRET_STATE_CRITICAL, IPMI_INTERPRET_STATE_WARNING},
+    { "IPMI_Memory_Redundancy_Redundancy_Degraded", IPMI_INTERPRET_STATE_WARNING, IPMI_INTERPRET_STATE_WARNING},
+    { "IPMI_Memory_Redundancy_Non_Redundant_Sufficient_Resources_From_Redundant", IPMI_INTERPRET_STATE_CRITICAL, IPMI_INTERPRET_STATE_WARNING},
+    { "IPMI_Memory_Redundancy_Non_Redundant_Sufficient_Resources_From_Insufficient_Redundancy", IPMI_INTERPRET_STATE_CRITICAL, IPMI_INTERPRET_STATE_WARNING},
+    { "IPMI_Memory_Redundancy_Non_Redundant_Insufficient_Resources", IPMI_INTERPRET_STATE_CRITICAL, IPMI_INTERPRET_STATE_WARNING},
+    { "IPMI_Memory_Redundancy_Redundancy_Degraded_From_Fully_Redundant", IPMI_INTERPRET_STATE_WARNING, IPMI_INTERPRET_STATE_WARNING},
+    { "IPMI_Memory_Redundancy_Redundancy_Degraded_From_Non_Redundant", IPMI_INTERPRET_STATE_WARNING, IPMI_INTERPRET_STATE_WARNING},
+  };
+static unsigned int ipmi_interpret_sel_memory_redundancy_config_len = 8;
+
 static struct ipmi_interpret_sel_config ipmi_interpret_sel_drive_slot_config[] =
   {
     { "IPMI_Drive_Slot_Drive_Presence", IPMI_INTERPRET_STATE_NOMINAL, IPMI_INTERPRET_STATE_NOMINAL},
@@ -419,6 +446,13 @@ static struct ipmi_interpret_sel_config ipmi_interpret_sel_system_event_config[]
   };
 static unsigned int ipmi_interpret_sel_system_event_config_len = 6;
 
+static struct ipmi_interpret_sel_config ipmi_interpret_sel_system_event_state_config[] =
+  {
+    { "IPMI_System_Event_State_Deasserted", IPMI_INTERPRET_STATE_NOMINAL, IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_System_Event_State_Asserted", IPMI_INTERPRET_STATE_WARNING, IPMI_INTERPRET_STATE_WARNING},
+  };
+static unsigned int ipmi_interpret_sel_system_event_state_config_len = 2;
+
 static struct ipmi_interpret_sel_config ipmi_interpret_sel_critical_interrupt_config[] =
   {
     { "IPMI_Critical_Interrupt_Front_Panel_NMI_Diagnostic_Interrupt", IPMI_INTERPRET_STATE_CRITICAL, IPMI_INTERPRET_STATE_CRITICAL},
@@ -456,13 +490,6 @@ static struct ipmi_interpret_sel_config ipmi_interpret_sel_button_switch_state_c
   };
 static unsigned int ipmi_interpret_sel_button_switch_state_config_len = 2;
 
-static struct ipmi_interpret_sel_config ipmi_interpret_sel_chip_set_config[] =
-  {
-    { "IPMI_Chip_Set_Soft_Power_Control_Failure", IPMI_INTERPRET_STATE_CRITICAL, IPMI_INTERPRET_STATE_CRITICAL},
-    { "IPMI_Chip_Set_Thermal_Trip", IPMI_INTERPRET_STATE_CRITICAL, IPMI_INTERPRET_STATE_CRITICAL},
-  };
-static unsigned int ipmi_interpret_sel_chip_set_config_len = 2;
-
 static struct ipmi_interpret_sel_config ipmi_interpret_sel_module_board_state_config[] =
   {
     { "IPMI_Module_Board_State_Deasserted", IPMI_INTERPRET_STATE_NOMINAL, IPMI_INTERPRET_STATE_NOMINAL},
@@ -476,6 +503,27 @@ static struct ipmi_interpret_sel_config ipmi_interpret_sel_module_board_device_p
     { "IPMI_Module_Board_Device_Present_Device_Inserted_Device_Present", IPMI_INTERPRET_STATE_NOMINAL, IPMI_INTERPRET_STATE_NOMINAL},
   };
 static unsigned int ipmi_interpret_sel_module_board_device_present_config_len = 2;
+
+static struct ipmi_interpret_sel_config ipmi_interpret_sel_chip_set_config[] =
+  {
+    { "IPMI_Chip_Set_Soft_Power_Control_Failure", IPMI_INTERPRET_STATE_CRITICAL, IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_Chip_Set_Thermal_Trip", IPMI_INTERPRET_STATE_CRITICAL, IPMI_INTERPRET_STATE_CRITICAL},
+  };
+static unsigned int ipmi_interpret_sel_chip_set_config_len = 2;
+
+static struct ipmi_interpret_sel_config ipmi_interpret_sel_chip_set_transition_severity_config[] =
+  {
+    { "IPMI_Chip_Set_Transition_Severity_Transition_To_OK", IPMI_INTERPRET_STATE_NOMINAL, IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_Chip_Set_Transition_Severity_Transition_To_Non_Critical_From_OK", IPMI_INTERPRET_STATE_WARNING, IPMI_INTERPRET_STATE_WARNING},
+    { "IPMI_Chip_Set_Transition_Severity_Transition_To_Critical_From_Less_Severe", IPMI_INTERPRET_STATE_CRITICAL, IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_Chip_Set_Transition_Severity_Transition_To_Non_Recoverable_From_Less_Severe", IPMI_INTERPRET_STATE_CRITICAL, IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_Chip_Set_Transition_Severity_Transition_To_Non_Critical_From_More_Severe", IPMI_INTERPRET_STATE_WARNING, IPMI_INTERPRET_STATE_WARNING},
+    { "IPMI_Chip_Set_Transition_Severity_Transition_To_Critical_From_Non_Recoverable", IPMI_INTERPRET_STATE_CRITICAL, IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_Chip_Set_Transition_Severity_Transition_To_Non_Recoverable", IPMI_INTERPRET_STATE_CRITICAL, IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_Chip_Set_Transition_Severity_Monitor", IPMI_INTERPRET_STATE_WARNING, IPMI_INTERPRET_STATE_WARNING},
+    { "IPMI_Chip_Set_Transition_Severity_Informational", IPMI_INTERPRET_STATE_NOMINAL, IPMI_INTERPRET_STATE_NOMINAL},
+  };
+static unsigned int ipmi_interpret_sel_chip_set_transition_severity_config_len = 9;
 
 static struct ipmi_interpret_sel_config ipmi_interpret_sel_cable_interconnect_config[] =
   {
@@ -1137,6 +1185,12 @@ ipmi_interpret_sel_init (ipmi_interpret_ctx_t ctx)
     goto cleanup;
 
   if (_interpret_config_sel_init (ctx,
+                                  &ctx->interpret_sel.ipmi_interpret_sel_current_transition_severity_config,
+                                  ipmi_interpret_sel_current_transition_severity_config,
+                                  ipmi_interpret_sel_current_transition_severity_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_config_sel_init (ctx,
                                   &ctx->interpret_sel.ipmi_interpret_sel_fan_transition_severity_config,
                                   ipmi_interpret_sel_fan_transition_severity_config,
                                   ipmi_interpret_sel_fan_transition_severity_config_len) < 0)
@@ -1239,6 +1293,12 @@ ipmi_interpret_sel_init (ipmi_interpret_ctx_t ctx)
     goto cleanup;
 
   if (_interpret_config_sel_init (ctx,
+                                  &ctx->interpret_sel.ipmi_interpret_sel_memory_redundancy_config,
+                                  ipmi_interpret_sel_memory_redundancy_config,
+                                  ipmi_interpret_sel_memory_redundancy_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_config_sel_init (ctx,
                                   &ctx->interpret_sel.ipmi_interpret_sel_drive_slot_config,
                                   ipmi_interpret_sel_drive_slot_config,
                                   ipmi_interpret_sel_drive_slot_config_len) < 0)
@@ -1281,6 +1341,12 @@ ipmi_interpret_sel_init (ipmi_interpret_ctx_t ctx)
     goto cleanup;
 
   if (_interpret_config_sel_init (ctx,
+                                  &ctx->interpret_sel.ipmi_interpret_sel_system_event_state_config,
+                                  ipmi_interpret_sel_system_event_state_config,
+                                  ipmi_interpret_sel_system_event_state_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_config_sel_init (ctx,
                                   &ctx->interpret_sel.ipmi_interpret_sel_critical_interrupt_config,
                                   ipmi_interpret_sel_critical_interrupt_config,
                                   ipmi_interpret_sel_critical_interrupt_config_len) < 0)
@@ -1299,12 +1365,6 @@ ipmi_interpret_sel_init (ipmi_interpret_ctx_t ctx)
     goto cleanup;
 
   if (_interpret_config_sel_init (ctx,
-                                  &ctx->interpret_sel.ipmi_interpret_sel_chip_set_config,
-                                  ipmi_interpret_sel_chip_set_config,
-                                  ipmi_interpret_sel_chip_set_config_len) < 0)
-    goto cleanup;
-
-  if (_interpret_config_sel_init (ctx,
                                   &ctx->interpret_sel.ipmi_interpret_sel_module_board_state_config,
                                   ipmi_interpret_sel_module_board_state_config,
                                   ipmi_interpret_sel_module_board_state_config_len) < 0)
@@ -1315,6 +1375,19 @@ ipmi_interpret_sel_init (ipmi_interpret_ctx_t ctx)
                                   ipmi_interpret_sel_module_board_device_present_config,
                                   ipmi_interpret_sel_module_board_device_present_config_len) < 0)
     goto cleanup;
+
+  if (_interpret_config_sel_init (ctx,
+                                  &ctx->interpret_sel.ipmi_interpret_sel_chip_set_config,
+                                  ipmi_interpret_sel_chip_set_config,
+                                  ipmi_interpret_sel_chip_set_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_config_sel_init (ctx,
+                                  &ctx->interpret_sel.ipmi_interpret_sel_chip_set_transition_severity_config,
+                                  ipmi_interpret_sel_chip_set_transition_severity_config,
+                                  ipmi_interpret_sel_chip_set_transition_severity_config_len) < 0)
+    goto cleanup;
+
 
   if (_interpret_config_sel_init (ctx,
                                   &ctx->interpret_sel.ipmi_interpret_sel_cable_interconnect_config,
@@ -1492,6 +1565,9 @@ ipmi_interpret_sel_destroy (ipmi_interpret_ctx_t ctx)
                                  ctx->interpret_sel.ipmi_interpret_sel_voltage_transition_severity_config);
 
   _interpret_config_sel_destroy (ctx,
+                                 ctx->interpret_sel.ipmi_interpret_sel_current_transition_severity_config);
+
+  _interpret_config_sel_destroy (ctx,
                                  ctx->interpret_sel.ipmi_interpret_sel_fan_transition_severity_config);
 
   _interpret_config_sel_destroy (ctx,
@@ -1543,6 +1619,9 @@ ipmi_interpret_sel_destroy (ipmi_interpret_ctx_t ctx)
                                  ctx->interpret_sel.ipmi_interpret_sel_memory_config);
 
   _interpret_config_sel_destroy (ctx,
+                                 ctx->interpret_sel.ipmi_interpret_sel_memory_redundancy_config);
+
+  _interpret_config_sel_destroy (ctx,
                                  ctx->interpret_sel.ipmi_interpret_sel_drive_slot_config);
 
   _interpret_config_sel_destroy (ctx,
@@ -1564,6 +1643,9 @@ ipmi_interpret_sel_destroy (ipmi_interpret_ctx_t ctx)
                                  ctx->interpret_sel.ipmi_interpret_sel_system_event_config);
 
   _interpret_config_sel_destroy (ctx,
+                                 ctx->interpret_sel.ipmi_interpret_sel_system_event_state_config);
+
+  _interpret_config_sel_destroy (ctx,
                                  ctx->interpret_sel.ipmi_interpret_sel_critical_interrupt_config);
 
   _interpret_config_sel_destroy (ctx,
@@ -1577,6 +1659,12 @@ ipmi_interpret_sel_destroy (ipmi_interpret_ctx_t ctx)
 
   _interpret_config_sel_destroy (ctx,
                                  ctx->interpret_sel.ipmi_interpret_sel_module_board_device_present_config);
+
+  _interpret_config_sel_destroy (ctx,
+                                 ctx->interpret_sel.ipmi_interpret_sel_chip_set_config);
+
+  _interpret_config_sel_destroy (ctx,
+                                 ctx->interpret_sel.ipmi_interpret_sel_chip_set_transition_severity_config);
 
   _interpret_config_sel_destroy (ctx,
                                  ctx->interpret_sel.ipmi_interpret_sel_cable_interconnect_config);
@@ -1657,12 +1745,15 @@ _cb_sel_parse (conffile_t cf,
   assert (optionname);
   assert (option_ptr);
 
-  if (data->stringlist_len != 1)
+  if (data->stringlist_len < 1)
     {
-      if (data->stringlist_len < 1)
-        conffile_seterrnum (cf, CONFFILE_ERR_PARSE_ARG_MISSING);
-      else
-        conffile_seterrnum (cf, CONFFILE_ERR_PARSE_ARG_TOOMANY);
+      conffile_seterrnum (cf, CONFFILE_ERR_PARSE_ARG_MISSING);
+      return (-1);
+    }
+
+  if (data->stringlist_len > 2)
+    {
+      conffile_seterrnum (cf, CONFFILE_ERR_PARSE_ARG_TOOMANY);
       return (-1);
     }
 
@@ -2126,6 +2217,7 @@ ipmi_interpret_sel_config_parse (ipmi_interpret_ctx_t ctx,
   int ipmi_interpret_sel_voltage_state_flags[ipmi_interpret_sel_voltage_state_config_len];
   int ipmi_interpret_sel_voltage_performance_flags[ipmi_interpret_sel_voltage_performance_config_len];
   int ipmi_interpret_sel_voltage_transition_severity_flags[ipmi_interpret_sel_voltage_transition_severity_config_len];
+  int ipmi_interpret_sel_current_transition_severity_flags[ipmi_interpret_sel_current_transition_severity_config_len];
   int ipmi_interpret_sel_fan_transition_severity_flags[ipmi_interpret_sel_fan_transition_severity_config_len];
   int ipmi_interpret_sel_fan_device_present_flags[ipmi_interpret_sel_fan_device_present_config_len];
   int ipmi_interpret_sel_fan_transition_availability_flags[ipmi_interpret_sel_fan_transition_availability_config_len];
@@ -2143,6 +2235,7 @@ ipmi_interpret_sel_config_parse (ipmi_interpret_ctx_t ctx,
   int ipmi_interpret_sel_power_unit_redundancy_flags[ipmi_interpret_sel_power_unit_redundancy_config_len];
   int ipmi_interpret_sel_cooling_device_redundancy_flags[ipmi_interpret_sel_cooling_device_redundancy_config_len];
   int ipmi_interpret_sel_memory_flags[ipmi_interpret_sel_memory_config_len];
+  int ipmi_interpret_sel_memory_redundancy_flags[ipmi_interpret_sel_memory_redundancy_config_len];
   int ipmi_interpret_sel_drive_slot_flags[ipmi_interpret_sel_drive_slot_config_len];
   int ipmi_interpret_sel_drive_slot_state_flags[ipmi_interpret_sel_drive_slot_state_config_len];
   int ipmi_interpret_sel_drive_slot_predictive_failure_flags[ipmi_interpret_sel_drive_slot_predictive_failure_config_len];
@@ -2150,12 +2243,14 @@ ipmi_interpret_sel_config_parse (ipmi_interpret_ctx_t ctx,
   int ipmi_interpret_sel_system_firmware_progress_flags[ipmi_interpret_sel_system_firmware_progress_config_len];
   int ipmi_interpret_sel_event_logging_disabled_flags[ipmi_interpret_sel_event_logging_disabled_config_len];
   int ipmi_interpret_sel_system_event_flags[ipmi_interpret_sel_system_event_config_len];
+  int ipmi_interpret_sel_system_event_state_flags[ipmi_interpret_sel_system_event_state_config_len];
   int ipmi_interpret_sel_critical_interrupt_flags[ipmi_interpret_sel_critical_interrupt_config_len];
   int ipmi_interpret_sel_button_switch_flags[ipmi_interpret_sel_button_switch_config_len];
   int ipmi_interpret_sel_button_switch_state_flags[ipmi_interpret_sel_button_switch_state_config_len];
-  int ipmi_interpret_sel_chip_set_flags[ipmi_interpret_sel_chip_set_config_len];
   int ipmi_interpret_sel_module_board_state_flags[ipmi_interpret_sel_module_board_state_config_len];
   int ipmi_interpret_sel_module_board_device_present_flags[ipmi_interpret_sel_module_board_device_present_config_len];
+  int ipmi_interpret_sel_chip_set_flags[ipmi_interpret_sel_chip_set_config_len];
+  int ipmi_interpret_sel_chip_set_transition_severity_flags[ipmi_interpret_sel_chip_set_transition_severity_config_len];
   int ipmi_interpret_sel_cable_interconnect_flags[ipmi_interpret_sel_cable_interconnect_config_len];
   int ipmi_interpret_sel_system_boot_initiated_flags[ipmi_interpret_sel_system_boot_initiated_config_len];
   int ipmi_interpret_sel_boot_error_flags[ipmi_interpret_sel_boot_error_config_len];
@@ -2231,6 +2326,12 @@ ipmi_interpret_sel_config_parse (ipmi_interpret_ctx_t ctx,
                             ctx->interpret_sel.ipmi_interpret_sel_voltage_transition_severity_config,
                             ipmi_interpret_sel_voltage_transition_severity_flags,
                             ipmi_interpret_sel_voltage_transition_severity_config_len);
+
+  _fill_sel_config_options (config_file_options,
+                            &config_file_options_len,
+                            ctx->interpret_sel.ipmi_interpret_sel_current_transition_severity_config,
+                            ipmi_interpret_sel_current_transition_severity_flags,
+                            ipmi_interpret_sel_current_transition_severity_config_len);
 
   _fill_sel_config_options (config_file_options,
                             &config_file_options_len,
@@ -2336,6 +2437,12 @@ ipmi_interpret_sel_config_parse (ipmi_interpret_ctx_t ctx,
 
   _fill_sel_config_options (config_file_options,
                             &config_file_options_len,
+                            ctx->interpret_sel.ipmi_interpret_sel_memory_redundancy_config,
+                            ipmi_interpret_sel_memory_redundancy_flags,
+                            ipmi_interpret_sel_memory_redundancy_config_len);
+
+  _fill_sel_config_options (config_file_options,
+                            &config_file_options_len,
                             ctx->interpret_sel.ipmi_interpret_sel_drive_slot_config,
                             ipmi_interpret_sel_drive_slot_flags,
                             ipmi_interpret_sel_drive_slot_config_len);
@@ -2378,6 +2485,12 @@ ipmi_interpret_sel_config_parse (ipmi_interpret_ctx_t ctx,
 
   _fill_sel_config_options (config_file_options,
                             &config_file_options_len,
+                            ctx->interpret_sel.ipmi_interpret_sel_system_event_state_config,
+                            ipmi_interpret_sel_system_event_state_flags,
+                            ipmi_interpret_sel_system_event_state_config_len);
+
+  _fill_sel_config_options (config_file_options,
+                            &config_file_options_len,
                             ctx->interpret_sel.ipmi_interpret_sel_critical_interrupt_config,
                             ipmi_interpret_sel_critical_interrupt_flags,
                             ipmi_interpret_sel_critical_interrupt_config_len);
@@ -2396,12 +2509,6 @@ ipmi_interpret_sel_config_parse (ipmi_interpret_ctx_t ctx,
 
   _fill_sel_config_options (config_file_options,
                             &config_file_options_len,
-                            ctx->interpret_sel.ipmi_interpret_sel_chip_set_config,
-                            ipmi_interpret_sel_chip_set_flags,
-                            ipmi_interpret_sel_chip_set_config_len);
-
-  _fill_sel_config_options (config_file_options,
-                            &config_file_options_len,
                             ctx->interpret_sel.ipmi_interpret_sel_module_board_state_config,
                             ipmi_interpret_sel_module_board_state_flags,
                             ipmi_interpret_sel_module_board_state_config_len);
@@ -2411,6 +2518,18 @@ ipmi_interpret_sel_config_parse (ipmi_interpret_ctx_t ctx,
                             ctx->interpret_sel.ipmi_interpret_sel_module_board_device_present_config,
                             ipmi_interpret_sel_module_board_device_present_flags,
                             ipmi_interpret_sel_module_board_device_present_config_len);
+
+  _fill_sel_config_options (config_file_options,
+                            &config_file_options_len,
+                            ctx->interpret_sel.ipmi_interpret_sel_chip_set_config,
+                            ipmi_interpret_sel_chip_set_flags,
+                            ipmi_interpret_sel_chip_set_config_len);
+
+  _fill_sel_config_options (config_file_options,
+                            &config_file_options_len,
+                            ctx->interpret_sel.ipmi_interpret_sel_chip_set_transition_severity_config,
+                            ipmi_interpret_sel_chip_set_transition_severity_flags,
+                            ipmi_interpret_sel_chip_set_transition_severity_config_len);
 
   _fill_sel_config_options (config_file_options,
                             &config_file_options_len,
