@@ -608,10 +608,23 @@ _optional_platform_attributes (ipmi_dcmi_state_data_t *state_data)
   if (ipmi_cmd_dcmi_get_dcmi_capability_info_optional_platform_attributes (state_data->ipmi_ctx,
                                                                            obj_cmd_rs) < 0)
     {
-      /* this optional parameter is not supported */
+      /* IPMI Workaround?
+       *
+       * Technically, I believe this should be mandatory, as this is
+       * not listed as optional in the DCMI spec (enhanced system
+       * power statistics attributes is the only one that is
+       * optional).  However, this parameter specifically lists
+       * attributes for optional parts of DCMI.
+       *
+       * This has been seen as non-implemented on atleast two
+       * motherboards (one undocumented motherboard and also the Intel
+       * S2600JF/Appro 512X).
+       */
       if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
-          && ipmi_check_completion_code (obj_cmd_rs,
-                                         IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED) == 1)
+          && ((ipmi_check_completion_code (obj_cmd_rs,
+					   IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED) == 1)
+	      || (ipmi_check_completion_code (obj_cmd_rs,
+					      IPMI_COMP_CODE_REQUESTED_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1)))
         {
           rv = 0;
           goto cleanup;
@@ -701,7 +714,7 @@ _manageability_access_attributes (ipmi_dcmi_state_data_t *state_data)
 
   if (ipmi_cmd_dcmi_get_dcmi_capability_info_manageability_access_attributes (state_data->ipmi_ctx,
                                                                               obj_cmd_rs) < 0)
-    {
+    {     
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_cmd_dcmi_get_dcmi_capability_info_manageability_access_attributes: %s\n",
@@ -804,6 +817,17 @@ _get_enhanced_system_power_statistics_attributes (ipmi_dcmi_state_data_t *state_
   if (ipmi_cmd_dcmi_get_dcmi_capability_info_enhanced_system_power_statistics_attributes (state_data->ipmi_ctx,
                                                                                           obj_cmd_rs) < 0)
     {
+      /* this optional parameter is not supported */
+      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+          && ((ipmi_check_completion_code (obj_cmd_rs,
+					   IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED) == 1)
+	      || (ipmi_check_completion_code (obj_cmd_rs,
+					      IPMI_COMP_CODE_REQUESTED_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1)))
+        {
+          rv = 0;
+          goto cleanup;
+        }
+
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_cmd_dcmi_get_dcmi_capability_info_enhanced_system_power_statistics_attributes: %s\n",
