@@ -2035,11 +2035,15 @@ ipmi_get_oem_event_bitmask_message (uint32_t manufacturer_id,
   /* OEM Interpretation
    *
    * Supermicro X7DBR-3 (X7DBR_3)
+   * Supermicro X7DB8
+   * Supermicro X8DTN
+   * Supermicro X7SBI-LN4 (X7SBI_LN4)
    * Supermicro X8DTH
    * Supermicro X8DTG
    * Supermicro X8DTU
    * Supermicro X8DT3-LN4F (X8DT3_LN4F)
    * Supermicro X8DTU-6+ (X8DTU_6PLUS)
+   * Supermicro X8DTL
    * Supermicro X8DTL-3F (X8DTL_3F)
    * Supermicro X8SIL-F  (X8SIL_F)
    * Supermicro X9SCL
@@ -2055,9 +2059,13 @@ ipmi_get_oem_event_bitmask_message (uint32_t manufacturer_id,
    * - 7 = Not Installed
    *
    * Note: Early Supermicro motherboards used the "Peppercon" Manufacturer ID
+   * Note: Some Supermicro motherboards are rebranded with random manufacturer IDs
    */
   if ((manufacturer_id == IPMI_IANA_ENTERPRISE_ID_PEPPERCON
-       && product_id == IPMI_SUPERMICRO_PRODUCT_ID_X7DBR_3)
+       && (product_id == IPMI_SUPERMICRO_PRODUCT_ID_X7DBR_3
+	   || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X7DB8
+	   || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTN
+	   || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X7SBI_LN4))
       || ((manufacturer_id == IPMI_IANA_ENTERPRISE_ID_SUPERMICRO
 	   || manufacturer_id ==  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND)
 	  && (product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTH
@@ -2065,11 +2073,15 @@ ipmi_get_oem_event_bitmask_message (uint32_t manufacturer_id,
 	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTU
 	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DT3_LN4F
 	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTU_6PLUS
+	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTL
 	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTL_3F
 	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8SIL_F
 	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCL
 	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCM
-	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTNPLUS_F)))
+	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTNPLUS_F))
+      || (manufacturer_id == IPMI_IANA_ENTERPRISE_ID_MAGNUM_TECHNOLOGIES
+	  && (product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTL
+	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X7SBI_LN4_B)))
     {
       switch (event_reading_type_code)
 	{
@@ -2330,23 +2342,31 @@ ipmi_get_event_messages (uint8_t event_reading_type_code,
   /* OEM Interpretation
    *
    * Supermicro X7DBR-3 (X7DBR_3)
+   * Supermicro X7DB8
+   * Supermicro X8DTN
+   * Supermicro X7SBI-LN4 (X7SBI_LN4)
    * Supermicro X8DTH
    * Supermicro X8DTG
    * Supermicro X8DTU
    * Supermicro X8DT3-LN4F (X8DT3_LN4F)
    * Supermicro X8DTU-6+ (X8DTU_6PLUS)
-   * Supermicro X8DTL-3F (X8DTU_3F)
-   * Supermicro X8SIL-F (X8SIL_F)
+   * Supermicro X8DTL
+   * Supermicro X8DTL-3F (X8DTL_3F)
+   * Supermicro X8SIL-F  (X8SIL_F)
    * Supermicro X9SCL
    * Supermicro X9SCM
    * Supermicro X8DTN+-F (X8DTNPLUS_F)
    *
    * Note: Early Supermicro motherboards used the "Peppercon" Manufacturer ID
+   * Note: Some Supermicro motherboards are rebranded with random manufacturer IDs
    */
   else if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM
            && flags & IPMI_GET_EVENT_MESSAGES_FLAGS_INTERPRET_OEM_DATA
-           && ((manufacturer_id == IPMI_IANA_ENTERPRISE_ID_PEPPERCON
-		&& product_id == IPMI_SUPERMICRO_PRODUCT_ID_X7DBR_3)
+	   && ((manufacturer_id == IPMI_IANA_ENTERPRISE_ID_PEPPERCON
+		&& (product_id == IPMI_SUPERMICRO_PRODUCT_ID_X7DBR_3
+		    || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X7DB8
+		    || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTN
+		    || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X7SBI_LN4))
 	       || ((manufacturer_id == IPMI_IANA_ENTERPRISE_ID_SUPERMICRO
 		    || manufacturer_id ==  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND)
 		   && (product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTH
@@ -2354,11 +2374,15 @@ ipmi_get_event_messages (uint8_t event_reading_type_code,
 		       || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTU
 		       || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DT3_LN4F
 		       || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTU_6PLUS
+		       || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTL
 		       || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTL_3F
 		       || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8SIL_F
 		       || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCL
 		       || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCM
-		       || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTNPLUS_F)))
+		       || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTNPLUS_F))
+	       || (manufacturer_id == IPMI_IANA_ENTERPRISE_ID_MAGNUM_TECHNOLOGIES
+		   && (product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTL
+		       || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X7SBI_LN4_B)))
            && event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_SUPERMICRO_GENERIC)
     {
       len = ipmi_get_oem_event_bitmask_message (manufacturer_id,
@@ -2368,7 +2392,7 @@ ipmi_get_event_messages (uint8_t event_reading_type_code,
                                                 event_bitmask,
                                                 buf,
                                                 EVENT_BUFLEN);
-
+      
       if (len)
         {
           if (!(tmp_event_messages[tmp_event_messages_count] = strdup (buf)))

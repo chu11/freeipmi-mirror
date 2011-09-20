@@ -12,7 +12,8 @@ o Support dynamic linking in libfreeipmi.
 o Output pidfile in bmc-watchdog to support easier init script killing.
 o Do not poll stdin in ipmipower when operating in non-interactive mode.
 o Support IGNORE_SCANNING_DISABLED workaround in libipmimonitoring.
-o Support Supermicro X8DTN+-F motherboard OEM sensors.
+o Support Supermicro OEM sensors on X7DB8, X8DTN, X7SBI-LN4, X8DTL,
+  and X8DTN+-F motherboards.
 o Fix handling error codes in optional parts of ipmi-dcmi.
 o Fix various debug dumping bugs.
 o Minor documentation and manpage updates.
