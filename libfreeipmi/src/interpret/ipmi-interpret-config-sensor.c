@@ -990,7 +990,6 @@ _interpret_sensor_oem_supermicro (ipmi_interpret_ctx_t ctx)
    *                   5593 (Magnum Technologies, rebranded Supermicro board)
    * Product ID = 4 (X7DBR-3, X7DB8, X8DTN, X7SBI-LN4 / X7SBI_LN4), 43707 (X8DTH, X8DTG, X8DTU, X8DT3-LN4F / X8DT3_LN4F), 1549 (X8DTU-6+ / X8DTU_6PLUS),
    *              6 (X8DTL, X8DTL-3F / X8DTL_3F), 1541 (X8SIL-F), 1572 (X9SCL, X9SCM), 1551 (X8DTN+-F / X8DTNPLUS_F)
-   *              4404 (X7SBI-LN4 / X7SBI_LN4 / X7SBI_LN4_B rebranded)
    * Event/Reading Type Code = 70h (OEM)
    * Sensor Type = C0h (OEM)
    * Value 0x0000 = "Low"
@@ -1039,12 +1038,7 @@ _interpret_sensor_oem_supermicro (ipmi_interpret_ctx_t ctx)
                                                IPMI_IANA_ENTERPRISE_ID_MAGNUM_TECHNOLOGIES,
                                                __IPMI_SUPERMICRO_PRODUCT_ID_X8DTL) < 0)
     return (-1);
-
-  if (_interpret_sensor_oem_discrete_cpu_temp (ctx,
-                                               IPMI_IANA_ENTERPRISE_ID_MAGNUM_TECHNOLOGIES,
-                                               IPMI_SUPERMICRO_PRODUCT_ID_X7SBI_LN4_B) < 0)
-    return (-1);
-  
+ 
   return (0);
 }
 
