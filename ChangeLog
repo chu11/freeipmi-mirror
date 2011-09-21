@@ -2,6 +2,8 @@
 
 	* Remove Magnum X7SBI-LN4 sensor interpretation, not needed.
 
+	* Support Supermicro X8SIE OEM sensors.
+
 2011-09-20  Albert Chu <chu11@llnl.gov>
 
 	* Fix use of new interpret library interpretation rules.
