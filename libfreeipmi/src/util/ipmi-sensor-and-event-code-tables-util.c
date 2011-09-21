@@ -2080,8 +2080,7 @@ ipmi_get_oem_event_bitmask_message (uint32_t manufacturer_id,
 	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCM
 	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTNPLUS_F))
       || (manufacturer_id == IPMI_IANA_ENTERPRISE_ID_MAGNUM_TECHNOLOGIES
-	  && (product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTL
-	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X7SBI_LN4_B)))
+	  && product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTL))
     {
       switch (event_reading_type_code)
 	{
@@ -2381,8 +2380,7 @@ ipmi_get_event_messages (uint8_t event_reading_type_code,
 		       || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCM
 		       || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTNPLUS_F))
 	       || (manufacturer_id == IPMI_IANA_ENTERPRISE_ID_MAGNUM_TECHNOLOGIES
-		   && (product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTL
-		       || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X7SBI_LN4_B)))
+		   && product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTL))
            && event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_SUPERMICRO_GENERIC)
     {
       len = ipmi_get_oem_event_bitmask_message (manufacturer_id,
