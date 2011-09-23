@@ -85,10 +85,6 @@ AC_CONFIG_FILES([
         libipmimonitoring/Makefile
         libipmimonitoring/src/Makefile
         libipmimonitoring/src/ipmi_monitoring.h
-        libipmimonitoring/ipmi_monitoring_sensors.conf.5.pre
-        libipmimonitoring/ipmimonitoring_sensors.conf.5.pre
-        libipmimonitoring/ipmimonitoring.conf.5.pre
-        libipmimonitoring/libipmimonitoring.conf.5.pre
         libipmimonitoring/libipmimonitoring.3.pre
         libipmimonitoring/libipmimonitoring.pc
         libipmidetect/Makefile
