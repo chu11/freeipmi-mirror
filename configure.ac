@@ -100,9 +100,7 @@ AC_CONFIG_FILES([
         bmc-config/bmc-config.conf.5.pre
         bmc-device/bmc-device.8.pre
         bmc-info/bmc-info.8.pre
-        bmc-watchdog/Makefile 
         bmc-watchdog/bmc-watchdog.8.pre
-        bmc-watchdog/src/Makefile
         ipmi-chassis/ipmi-chassis.8.pre
         ipmi-chassis-config/ipmi-chassis-config.8.pre
         ipmi-dcmi/ipmi-dcmi.8.pre
@@ -112,24 +110,16 @@ AC_CONFIG_FILES([
         ipmi-pef-config/ipmi-pef-config.8.pre
         ipmi-raw/ipmi-raw.8.pre
         ipmi-sel/ipmi-sel.8.pre
-        ipmi-sensors/Makefile
         ipmi-sensors/ipmi-sensors.8.pre
-        ipmi-sensors/src/Makefile
         ipmi-sensors/src/ipmimonitoring
         ipmi-sensors-config/ipmi-sensors-config.8.pre
         ipmiconsole/ipmiconsole.8.pre
-        ipmidetect/Makefile
         ipmidetect/ipmidetect.8.pre
         ipmidetect/ipmidetect.conf.5.pre
-        ipmidetect/src/Makefile
-        ipmidetectd/Makefile
         ipmidetectd/ipmidetectd.8.pre
         ipmidetectd/ipmidetectd.conf.5.pre
-        ipmidetectd/src/Makefile
-        ipmipower/Makefile 
-        ipmipower/ipmipower.8.pre
-        ipmipower/src/Makefile
         ipmiping/ipmiping.8.pre
+        ipmipower/ipmipower.8.pre
         rmcpping/rmcpping.8.pre
         freeipmi.spec])
 

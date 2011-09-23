@@ -10,11 +10,6 @@ SUBDIRS = \
 	libipmimonitoring \
 	libipmidetect \
 	man \
-	bmc-watchdog \
-	ipmi-sensors \
-	ipmidetect \
-	ipmidetectd \
-	ipmipower \
 	examples \
 	contrib
 
@@ -72,6 +67,7 @@ sbin_PROGRAMS = \
 	bmc-config/src/bmc-config \
 	bmc-device/src/bmc-device \
 	bmc-info/src/bmc-info \
+	bmc-watchdog/src/bmc-watchdog \
 	ipmi-chassis/src/ipmi-chassis \
 	ipmi-chassis-config/src/ipmi-chassis-config \
 	ipmi-dcmi/src/ipmi-dcmi \
@@ -79,21 +75,31 @@ sbin_PROGRAMS = \
 	ipmi-locate/src/ipmi-locate \
 	ipmi-oem/src/ipmi-oem \
 	ipmi-pef-config/src/ipmi-pef-config \
+	ipmipower/src/ipmipower \
 	ipmi-raw/src/ipmi-raw \
 	ipmi-sel/src/ipmi-sel \
+	ipmi-sensors/src/ipmi-sensors \
 	ipmi-sensors-config/src/ipmi-sensors-config \
 	ipmiconsole/src/ipmiconsole \
+	ipmidetect/src/ipmidetect \
+	ipmidetectd/src/ipmidetectd \
 	ipmiping/src/ipmiping \
 	rmcpping/src/rmcpping
 
-TOOLBASE_CPPFLAGS = \
-        -I$(top_builddir)/common/src/toolcommon \
+sbin_SCRIPTS = \
+	ipmi-sensors/src/ipmimonitoring
+
+BASE_CPPFLAGS = \
         -I$(top_builddir)/common/src/miscutil \
-        -I$(top_builddir)/common/src/parsecommon \
         -I$(top_builddir)/common/src/portability \
         -I$(top_builddir)/libfreeipmi/include \
         -D_GNU_SOURCE \
         -D_REENTRANT 
+
+TOOLBASE_CPPFLAGS = \
+        -I$(top_builddir)/common/src/toolcommon \
+        -I$(top_builddir)/common/src/parsecommon \
+	$(BASE_CPPFLAGS)
 
 TOOLCOMMON_CPPFLAGS = \
 	-I$(top_builddir)/common/src/toolhostrange \
@@ -110,12 +116,15 @@ PINGTOOLCOMMON_CPPFLAGS = \
 	-I$(top_builddir)/libfreeipmi/include \
 	-D_GNU_SOURCE
 
-TOOLBASE_LDADD = \
-	$(top_builddir)/common/src/toolcommon/libtoolcommon.la \
+BASE_LDADD = \
 	$(top_builddir)/common/src/miscutil/libmiscutils.la \
 	$(top_builddir)/common/src/parsecommon/libparsecommon.la \
 	$(top_builddir)/common/src/portability/libfreeipmiportability.la \
 	$(top_builddir)/libfreeipmi/src/libfreeipmi.la
+
+TOOLBASE_LDADD = \
+	$(top_builddir)/common/src/toolcommon/libtoolcommon.la \
+	$(BASE_LDADD)
 
 TOOLCOMMON_LDADD = \
 	$(top_builddir)/common/src/toolhostrange/libtoolhostrange.la \
@@ -203,6 +212,21 @@ bmc_info_src_bmc_info_SOURCES = \
 	bmc-info/src/bmc-info.h \
 	bmc-info/src/bmc-info-argp.c \
 	bmc-info/src/bmc-info-argp.h
+
+bmc_watchdog_src_bmc_watchdog_CPPFLAGS = \
+	-I$(top_builddir)/common/src/debugutil \
+	-DBMC_WATCHDOG_LOCALSTATEDIR='"$(localstatedir)"' \
+	$(TOOLBASE_CPPFLAGS)
+
+bmc_watchdog_src_bmc_watchdog_LDADD = \
+	$(top_builddir)/common/src/debugutil/libdebugutil.la \
+	$(TOOLBASE_LDADD)
+
+bmc_watchdog_src_bmc_watchdog_SOURCES = \
+	bmc-watchdog/src/bmc-watchdog.c \
+	bmc-watchdog/src/bmc-watchdog.h \
+	bmc-watchdog/src/bmc-watchdog-argp.c \
+	bmc-watchdog/src/bmc-watchdog-argp.h
 
 ipmi_chassis_src_ipmi_chassis_CPPFLAGS = \
 	$(TOOLCOMMON_CPPFLAGS)
@@ -386,6 +410,32 @@ ipmi_sel_src_ipmi_sel_SOURCES = \
 	ipmi-sel/src/ipmi-sel-argp.c \
 	ipmi-sel/src/ipmi-sel-argp.h
 
+ipmi_sensors_src_ipmi_sensors_CPPFLAGS = \
+	-I$(top_builddir)/common/src/tooloem \
+	-I$(top_builddir)/common/src/toolsdr \
+	-I$(top_builddir)/common/src/toolsensor \
+	$(TOOLCOMMON_CPPFLAGS)
+
+ipmi_sensors_src_ipmi_sensors_LDADD = \
+	$(top_builddir)/common/src/tooloem/libtooloem.la \
+	$(top_builddir)/common/src/toolsdr/libtoolsdr.la \
+	$(top_builddir)/common/src/toolsensor/libtoolsensor.la \
+	$(TOOLCOMMON_LDADD)
+
+ipmi_sensors_src_ipmi_sensors_SOURCES = \
+	ipmi-sensors/src/ipmi-sensors.c \
+	ipmi-sensors/src/ipmi-sensors.h \
+	ipmi-sensors/src/ipmi-sensors-argp.c \
+	ipmi-sensors/src/ipmi-sensors-argp.h \
+	ipmi-sensors/src/ipmi-sensors-detailed-output.c \
+	ipmi-sensors/src/ipmi-sensors-detailed-output.h \
+	ipmi-sensors/src/ipmi-sensors-oem-intel-node-manager.c \
+	ipmi-sensors/src/ipmi-sensors-oem-intel-node-manager.h \
+	ipmi-sensors/src/ipmi-sensors-output-common.c \
+	ipmi-sensors/src/ipmi-sensors-output-common.h \
+	ipmi-sensors/src/ipmi-sensors-simple-output.c \
+	ipmi-sensors/src/ipmi-sensors-simple-output.h
+
 ipmi_sensors_config_src_ipmi_sensors_config_CPPFLAGS = \
 	-I$(top_builddir)/common/src/toolsdr \
 	$(CONFIGTOOLCOMMON_CPPFLAGS)
@@ -424,19 +474,91 @@ ipmiconsole_src_ipmiconsole_SOURCES = \
 	ipmiconsole/src/ipmiconsole-argp.c \
 	ipmiconsole/src/ipmiconsole-argp.h
 
-ipmiping_src_ipmiping_CPPFLAGS = $(PINGTOOLCOMMON_CPPFLAGS)
-ipmiping_src_ipmiping_LDADD = $(PINGTOOLCOMMON_LDADD)
-ipmiping_src_ipmiping_SOURCES = ipmiping/src/ipmiping.c
+ipmidetect_src_ipmidetect_CPPFLAGS = \
+	$(BASE_CPPFLAGS) \
+	-I$(top_builddir)/libipmidetect/src/
 
-rmcpping_src_rmcpping_CPPFLAGS = $(PINGTOOLCOMMON_CPPFLAGS)
-rmcpping_src_rmcpping_LDADD = $(PINGTOOLCOMMON_LDADD)
-rmcpping_src_rmcpping_SOURCES = rmcpping/src/rmcpping.c
+ipmidetect_src_ipmidetect_LDADD = \
+	$(BASE_LDADD) \
+	$(top_builddir)/libipmidetect/src/libipmidetect.la
+
+ipmidetect_src_ipmidetect_SOURCES = \
+	ipmidetect/src/ipmidetect.c
+
+ipmidetectd_src_ipmidetectd_CPPFLAGS = \
+	$(BASE_CPPFLAGS)
+
+ipmidetectd_src_ipmidetectd_LDADD = \
+	$(BASE_LDADD)
+
+ipmidetectd_src_ipmidetectd_SOURCES = \
+	ipmidetectd/src/debug.c \
+	ipmidetectd/src/debug.h \
+	ipmidetectd/src/ipmidetectd.c \
+	ipmidetectd/src/ipmidetectd.h \
+	ipmidetectd/src/ipmidetectd_config.c \
+	ipmidetectd/src/ipmidetectd_config.h \
+	ipmidetectd/src/ipmidetectd_loop.c \
+	ipmidetectd/src/ipmidetectd_loop.h
+
+ipmiping_src_ipmiping_CPPFLAGS = \
+	$(PINGTOOLCOMMON_CPPFLAGS)
+
+ipmiping_src_ipmiping_LDADD = \
+	$(PINGTOOLCOMMON_LDADD)
+
+ipmiping_src_ipmiping_SOURCES = \
+	ipmiping/src/ipmiping.c
+
+ipmipower_src_ipmipower_CPPFLAGS = \
+	$(TOOLCOMMON_CPPFLAGS) \
+	-I$(top_builddir)/common/src/debugutil
+
+ipmipower_src_ipmipower_LDADD = \
+	$(TOOLCOMMON_LDADD) \
+	$(top_builddir)/common/src/debugutil/libdebugutil.la
+
+ipmipower_src_ipmipower_SOURCES = \
+	ipmipower/src/argv.c \
+	ipmipower/src/argv.h \
+	ipmipower/src/ipmipower.c \
+	ipmipower/src/ipmipower.h \
+	ipmipower/src/ipmipower_argp.c \
+	ipmipower/src/ipmipower_argp.h \
+	ipmipower/src/ipmipower_check.c \
+	ipmipower/src/ipmipower_check.h \
+	ipmipower/src/ipmipower_connection.c \
+	ipmipower/src/ipmipower_connection.h \
+	ipmipower/src/ipmipower_error.c \
+	ipmipower/src/ipmipower_error.h \
+	ipmipower/src/ipmipower_output.c \
+	ipmipower/src/ipmipower_output.h \
+	ipmipower/src/ipmipower_packet.c \
+	ipmipower/src/ipmipower_packet.h \
+	ipmipower/src/ipmipower_ping.c \
+	ipmipower/src/ipmipower_ping.h \
+	ipmipower/src/ipmipower_powercmd.c \
+	ipmipower/src/ipmipower_powercmd.h \
+	ipmipower/src/ipmipower_prompt.c \
+	ipmipower/src/ipmipower_prompt.h \
+	ipmipower/src/ipmipower_util.c \
+	ipmipower/src/ipmipower_util.h
+
+rmcpping_src_rmcpping_CPPFLAGS = \
+	$(PINGTOOLCOMMON_CPPFLAGS)
+
+rmcpping_src_rmcpping_LDADD = \
+	$(PINGTOOLCOMMON_LDADD)
+
+rmcpping_src_rmcpping_SOURCES = \
+	rmcpping/src/rmcpping.c
 
 MANS_CPP = \
 	bmc-config/bmc-config.8 \
 	bmc-config/bmc-config.conf.5 \
 	bmc-device/bmc-device.8 \
 	bmc-info/bmc-info.8 \
+	bmc-watchdog/bmc-watchdog.8 \
 	ipmi-chassis/ipmi-chassis.8 \
 	ipmi-chassis-config/ipmi-chassis-config.8 \
 	ipmi-dcmi/ipmi-dcmi.8 \
@@ -446,9 +568,15 @@ MANS_CPP = \
 	ipmi-pef-config/ipmi-pef-config.8 \
 	ipmi-raw/ipmi-raw.8 \
 	ipmi-sel/ipmi-sel.8 \
+	ipmi-sensors/ipmi-sensors.8 \
 	ipmi-sensors-config/ipmi-sensors-config.8 \
 	ipmiconsole/ipmiconsole.8 \
+	ipmidetect/ipmidetect.8 \
+	ipmidetect/ipmidetect.conf.5 \
+	ipmidetectd/ipmidetectd.8 \
+	ipmidetectd/ipmidetectd.conf.5 \
 	ipmiping/ipmiping.8 \
+	ipmipower/ipmipower.8 \
 	rmcpping/rmcpping.8
 
 $(MANS_CPP): $(MANS_CPP:%=%.pre)
@@ -456,9 +584,13 @@ $(MANS_CPP): $(MANS_CPP:%=%.pre)
 
 MANS_NOCPP = \
 	ipmi-pef-config/pef-config.8 \
+	ipmi-sensors/ipmimonitoring.8 \
 	ipmiconsole/ipmi-console.8 \
 	ipmiconsole/ipmiconsole.conf.5 \
+	ipmidetect/ipmi-detect.8 \
 	ipmiping/ipmi-ping.8 \
+	ipmipower/ipmi-power.8 \
+	ipmipower/ipmipower.conf.5 \
 	rmcpping/rmcp-ping.8
 
 dist_man_MANS = \
@@ -472,12 +604,48 @@ DISTCLEANFILES = $(MANS_CPP) $(MANS_CPP:%=%.pre) .deps/*.P
 EXTRA_DIST = \
 	$(EXTRA) \
 	$(MANS_NOCPP) \
+	bmc-watchdog/bmc-watchdog.init \
+	bmc-watchdog/bmc-watchdog.logrotate \
+	bmc-watchdog/bmc-watchdog.sysconfig \
+	ipmidetect/ipmidetect.conf \
+	ipmidetectd/ipmidetectd.init \
+	ipmidetectd/ipmidetectd.conf \
+	ipmi-sensors/src/ipmimonitoring \
 	freeipmi.spec
+
+install-data-local: $(INSTALL_INIT_SCRIPTS) $(INSTALL_LOGROTATE_CONFIG) $(INSTALL_LOGDIR)
+	$(INSTALL) -m 755 -d $(DESTDIR)$(FREEIPMI_SYSCONFDIR)
+	$(INSTALL) -m 644 ipmidetct/ipmidetect.conf $(DESTDIR)$(IPMIDETECT_CONFIG_FILE_DEFAULT)
+	$(INSTALL) -m 755 -d $(DESTDIR)$(FREEIPMI_SYSCONFDIR)
+	$(INSTALL) -m 644 ipmidetectd/ipmidetectd.conf $(DESTDIR)$(IPMIDETECTD_CONFIG_FILE_DEFAULT)
+
+install-init-scripts:
+	$(INSTALL) -m 755 -d $(DESTDIR)$(sysconfdir)/init.d
+	$(INSTALL) -m 755 bmc-watchdog//bmc-watchdog.init $(DESTDIR)$(sysconfdir)/init.d/bmc-watchdog
+	$(INSTALL) -m 755 ipmidetectd/ipmidetectd.init $(DESTDIR)$(sysconfdir)/init.d/ipmidetectd
+	$(INSTALL) -m 755 -d $(DESTDIR)/$(sysconfdir)/sysconfig
+	$(INSTALL) -m 444 bmc-watchdog//bmc-watchdog.sysconfig $(DESTDIR)$(sysconfdir)/sysconfig/bmc-watchdog
+
+install-logrotate-config:
+	$(INSTALL) -m 755 -d $(DESTDIR)$(sysconfdir)/logrotate.d
+	$(INSTALL) -m 444 bmc-watchdog//bmc-watchdog.logrotate $(DESTDIR)$(sysconfdir)/logrotate.d/bmc-watchdog
+
+install-logdir:
+	$(INSTALL) -m 755 -d $(DESTDIR)$(localstatedir)/log/$(PACKAGE)
+
+uninstall-local:
+	$(RM) -f $(DESTDIR)$(sysconfdir)/init.d/bmc-watchdog
+	$(RM) -f $(DESTDIR)$(sysconfdir)/logrotate.d/bmc-watchdog
+	$(RM) -f $(DESTDIR)$(sysconfdir)/sysconfig/bmc-watchdog
+	$(RM) -f $(DESTDIR)$(sysconfdir)/init.d/ipmidetectd
+	$(RM) -f $(DESTDIR)$(IPMIDETECT_CONFIG_FILE_DEFAULT)
+	$(RM) -f $(DESTDIR)$(IPMIDETECTD_CONFIG_FILE_DEFAULT)
 
 install-exec-hook:
 	$(install_sh) -d -m 755 $(DESTDIR)$(sbindir)
 	$(LN_S) -f $(sbindir)/ipmi-pef-config $(DESTDIR)$(sbindir)/pef-config
 	$(LN_S) -f $(sbindir)/ipmiconsole $(DESTDIR)$(sbindir)/ipmi-console
+	$(LN_S) -f $(sbindir)/ipmipower $(DESTDIR)$(sbindir)/ipmi-power
 	$(LN_S) -f $(sbindir)/ipmiping $(DESTDIR)$(sbindir)/ipmi-ping
 	$(LN_S) -f $(sbindir)/rmcpping $(DESTDIR)$(sbindir)/rmcp-ping
 
@@ -485,4 +653,5 @@ uninstall-hook:
 	$(RM) $(DESTDIR)$(sbindir)/pef-config
 	$(RM) $(DESTDIR)$(sbindir)/ipmi-console
 	$(RM) $(DESTDIR)$(sbindir)/ipmi-ping
+	$(RM) $(DESTDIR)$(sbindir)/ipmi-power
 	$(RM) $(DESTDIR)$(sbindir)/rmcp-ping
