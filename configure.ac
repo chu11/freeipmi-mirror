@@ -106,15 +106,9 @@ AC_CONFIG_FILES([
         ipmi-chassis/ipmi-chassis.8.pre
         ipmi-chassis-config/ipmi-chassis-config.8.pre
         ipmi-dcmi/ipmi-dcmi.8.pre
-        ipmi-fru/Makefile
         ipmi-fru/ipmi-fru.8.pre
-        ipmi-fru/src/Makefile
-        ipmi-locate/Makefile
         ipmi-locate/ipmi-locate.8.pre
-        ipmi-locate/src/Makefile
-        ipmi-oem/Makefile
         ipmi-oem/ipmi-oem.8.pre
-        ipmi-oem/src/Makefile
         ipmi-pef-config/ipmi-pef-config.8.pre
         ipmi-raw/ipmi-raw.8.pre
         ipmi-sel/ipmi-sel.8.pre
