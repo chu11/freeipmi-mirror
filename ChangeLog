@@ -1,3 +1,53 @@
+2011-09-23  Albert Chu <chu11@llnl.gov>
+	
+	* ipmipower/ipmipower.conf.5, ipmiconsole/ipmiconsole.conf.5:
+	Remove headers.
+
+	* libipmimonitoring/ipmi_monitoring_sensors.conf.5,
+	libipmimonitoring/ipmimonitoring.conf.5,
+	libipmimonitoring/ipmimonitoring_sensors.conf.5,
+	libipmimonitoring/libipmimonitoring.conf.5: New files.
+
+	* libipmimonitoring/ipmi_monitoring_sensors.conf.5.pre.in,
+	libipmimonitoring/ipmimonitoring.conf.5.pre.in,
+	libipmimonitoring/ipmimonitoring_sensors.conf.5.pre.in,
+	libipmimonitoring/libipmimonitoring.conf.5.pre.in: Remove files.
+	
+	* configure.ac, libipmimonitoring/Makefile.am: Adjust.
+
+2011-09-22  Dave Love <fx@gnu.org>
+
+	* bmc-device/bmc-device.8.pre.in: Fix typos.
+	
+2011-09-21  Albert Chu <chu11@llnl.gov>
+
+	* Remove Magnum X7SBI-LN4 sensor interpretation, not needed.
+
+	* Support Supermicro X8SIE OEM sensors.
+
+2011-09-20  Albert Chu <chu11@llnl.gov>
+
+	* Fix use of new interpret library interpretation rules.
+
+	* libfreeipmi/src/interpret/: Support chip set transition
+	severity, current severity, memory redundancy, and system event
+	state interpretations.
+
+	* libfreeipmi/src/interpret/ipmi-interpret-config-sel.c
+	(_cb_sel_parse): Fix parse corner case.
+	
+2011-09-20  Albert Chu <chu11@llnl.gov>
+
+	* Support Supermicro X7DB8, X8DTN, X7SBI-LN4, X8DTL OEM sensors.
+	
+2011-09-19  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-dcmi/: Handle additional error codes for optional portions.
+	
+2011-09-19  Albert Chu <chu11@llnl.gov>
+
+	* Support Supermicro X8DTN+-F OEM sensors.
+	
 2011-09-16  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/ipmipower.conf.5.pre.in,

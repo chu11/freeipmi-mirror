@@ -278,6 +278,15 @@ capture lan and do inband, maybe useful if you have dedicated port
 that can't be seen by the network, and you don't have enough switch
 ports to have both plugged up to the network.
 
+python/perl bindings?
+---------------------
+for libipmimonitoring
+for libfreeipmi?
+ 
+libfreeipmi
+-----------
+create more libipmimonitoring like APIs for FRU and other parts?
+
 PmBus functionality
 -------------------
 pmbus.org

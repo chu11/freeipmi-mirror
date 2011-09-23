@@ -148,11 +148,11 @@ Increase verbosity in output.
 .PP
 Perform a cold reset.
 .PP
-.B # ipmi-dcmi -h ahost -u myusername -p mypassword --cold-reset
+.B # bmc-device -h ahost -u myusername -p mypassword --cold-reset
 .PP
 Perform a cold reset of a remote machine using IPMI over LAN.
 .PP
-.B # ipmi-dcmi -h mycluster[0-127] -u myusername -p mypassword --cold-reset
+.B # bmc-device -h mycluster[0-127] -u myusername -p mypassword --cold-reset
 .PP
 Perform a cold reset across a cluster using IPMI over LAN.
 .PP
