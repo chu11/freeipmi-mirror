@@ -46,17 +46,17 @@ Often (although not always), console redirection must be also
 be configured properly in the BIOS and/or operating system.  Both must
 be configured to redirect console traffic out the appropriate COM port.
 
-#include <common/man/manpage-common-table-of-contents.man>
-#include <common/man/manpage-common-general-options-header.man>
-#include <common/man/manpage-common-outofband-hostname.man>
+#include <manpage-common-table-of-contents.man>
+#include <manpage-common-general-options-header.man>
+#include <manpage-common-outofband-hostname.man>
 .TP
 \fB\-u\fR, \fB\-\-username\fR=\fIUSERNAME\fR
 Specify the username to use when authenticating with the remote host.
 If not specified, a null (i.e. anonymous) username is assumed.  The
 user must a high enough privilege to establish a SOL session and have
 SOL session abilities.
-#include <common/man/manpage-common-outofband-password.man>
-#include <common/man/manpage-common-outofband-k-g.man>
+#include <manpage-common-outofband-password.man>
+#include <manpage-common-outofband-k-g.man>
 .TP
 \fB\-\-session-timeout\fR=\fIMILLISECONDS\fR
 Specify the session timeout in milliseconds.  Defaults to 60000
@@ -78,12 +78,12 @@ specified.  The user should be aware that only cipher suite ids 3, 8,
 and 12 encrypt console payloads.  Console information will be sent in
 the clear if an alternate cipher suite id is selected.  The following
 cipher suite ids are currently supported:
-#include <common/man/manpage-common-cipher-suite-id-details.man>
-#include <common/man/manpage-common-privilege-level-admin.man>
-#include <common/man/manpage-common-config-file.man>
-#include <common/man/manpage-common-workaround-flags.man>
-#include <common/man/manpage-common-debug.man>
-#include <common/man/manpage-common-misc.man>
+#include <manpage-common-cipher-suite-id-details.man>
+#include <manpage-common-privilege-level-admin.man>
+#include <manpage-common-config-file.man>
+#include <manpage-common-workaround-flags.man>
+#include <manpage-common-debug.man>
+#include <manpage-common-misc.man>
 .SH "IPMICONSOLE OPTIONS"
 The following options are specific to
 .B Ipmiconsole.
@@ -151,7 +151,7 @@ Send a DEL character.
 .I &&
 Send a single escape character.
 
-#include <common/man/manpage-common-troubleshooting-lan-only.man>
+#include <manpage-common-troubleshooting-lan-only.man>
 
 .SH "IPMICONSOLE TROUBLESHOOTING"
 The following are common issues for given error messages specifically
@@ -209,9 +209,9 @@ combination of different cipher suites, privileges, etc. to resolve
 the problem.  Please see the WORKAROUNDS section below for possible
 workarounds too.
 
-#include <common/man/manpage-common-workaround-heading-text.man>
-#include <common/man/manpage-common-workaround-sol-only-text.man>
-#include <common/man/manpage-common-known-issues.man>
+#include <manpage-common-workaround-heading-text.man>
+#include <manpage-common-workaround-sol-only-text.man>
+#include <manpage-common-known-issues.man>
 .LP
 Some motherboards define an OEM SOL inactivity timeout for SOL
 sessions.  If SOL sessions stay inactive for long periods of time,
@@ -234,7 +234,7 @@ place to handle this.  The session must be closed and restarted.
 .PP
 Establish a console sesssion with a remote host.
 .PP
-#include <common/man/manpage-common-known-issues.man>
+#include <manpage-common-known-issues.man>
 
 .if @WITH_DEBUG@ \{
 
@@ -252,12 +252,12 @@ Core dumps are enabled.
 Before placing ipmiconsole in a production system, it is recommended
 that the program be compiled with debugging turned off.
 \}
-#include <common/man/manpage-common-reporting-bugs.man>
+#include <manpage-common-reporting-bugs.man>
 .SH COPYRIGHT
 Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
 .br
 Copyright (C) 2006-2007 The Regents of the University of California.
-#include <common/man/manpage-common-gpl-program-text.man>
+#include <manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
 freeipmi.conf(5), freeipmi(7), bmc-config(8)
-#include <common/man/manpage-common-homepage.man>
+#include <manpage-common-homepage.man>

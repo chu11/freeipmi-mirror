@@ -82,13 +82,13 @@ List nodes in newline separated list
 \fB\-s\fR, \fB\-\-space\fR
 List nodes in space separated list
 .LP
-#include <common/man/manpage-common-hostranged-text-main.man>
-#include <common/man/manpage-common-reporting-bugs.man>
+#include <manpage-common-hostranged-text-main.man>
+#include <manpage-common-reporting-bugs.man>
 .SH COPYRIGHT
 Copyright (C) 2007-2010 Lawrence Livermore National Security, LLC.
 .br
 Copyright (C) 2007 The Regents of the University of California.
-#include <common/man/manpage-common-gpl-program-text.man>
+#include <manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
 libipmidetect(3), ipmidetect.conf(5), ipmidetectd(8)
-#include <common/man/manpage-common-homepage.man>
+#include <manpage-common-homepage.man>

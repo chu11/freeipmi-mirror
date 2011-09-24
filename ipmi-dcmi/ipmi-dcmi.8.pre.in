@@ -56,24 +56,24 @@ and
 .B bmc-config(8)
 for configuration.
 
-#include <common/man/manpage-common-table-of-contents.man>
-#include <common/man/manpage-common-general-options-header.man>
-#include <common/man/manpage-common-driver.man>
-#include <common/man/manpage-common-inband.man>
-#include <common/man/manpage-common-outofband-hostname-hostranged.man>
-#include <common/man/manpage-common-outofband-username-admin.man>
-#include <common/man/manpage-common-outofband-password.man>
-#include <common/man/manpage-common-outofband-k-g.man>
-#include <common/man/manpage-common-outofband-session-timeout.man>
-#include <common/man/manpage-common-outofband-retransmission-timeout.man>
-#include <common/man/manpage-common-authentication-type.man>
-#include <common/man/manpage-common-cipher-suite-id-main.man>
-#include <common/man/manpage-common-cipher-suite-id-details.man>
-#include <common/man/manpage-common-privilege-level-admin.man>
-#include <common/man/manpage-common-config-file.man>
-#include <common/man/manpage-common-workaround-flags.man>
-#include <common/man/manpage-common-debug.man>
-#include <common/man/manpage-common-misc.man>
+#include <manpage-common-table-of-contents.man>
+#include <manpage-common-general-options-header.man>
+#include <manpage-common-driver.man>
+#include <manpage-common-inband.man>
+#include <manpage-common-outofband-hostname-hostranged.man>
+#include <manpage-common-outofband-username-admin.man>
+#include <manpage-common-outofband-password.man>
+#include <manpage-common-outofband-k-g.man>
+#include <manpage-common-outofband-session-timeout.man>
+#include <manpage-common-outofband-retransmission-timeout.man>
+#include <manpage-common-authentication-type.man>
+#include <manpage-common-cipher-suite-id-main.man>
+#include <manpage-common-cipher-suite-id-details.man>
+#include <manpage-common-privilege-level-admin.man>
+#include <manpage-common-config-file.man>
+#include <manpage-common-workaround-flags.man>
+#include <manpage-common-debug.man>
+#include <manpage-common-misc.man>
 .SH "IPMI-DCMI OPTIONS"
 The following options are specific to
 .B Ipmi-dcmi.
@@ -139,22 +139,22 @@ the \fB\-\-set\-power\-limit\fR option.
 .TP
 \fB\-\-activate\-deactivate\-power\-limit\fR=\fIOPERATION\fR
 Activate or deactivate power limit.  Allowed values: ACTIVATE, DEACTIVATE.
-#include <common/man/manpage-common-interpret-oem-data.man>
-#include <common/man/manpage-common-hostranged-options-header.man>
-#include <common/man/manpage-common-hostranged-buffer.man>
-#include <common/man/manpage-common-hostranged-consolidate.man>
-#include <common/man/manpage-common-hostranged-fanout.man>
-#include <common/man/manpage-common-hostranged-eliminate.man>
-#include <common/man/manpage-common-hostranged-always-prefix.man>
-#include <common/man/manpage-common-hostranged-text-main.man>
-#include <common/man/manpage-common-hostranged-text-threads.man>
-#include <common/man/manpage-common-hostranged-text-options.man>
-#include <common/man/manpage-common-hostranged-text-localhost.man>
-#include <common/man/manpage-common-troubleshooting.man>
-#include <common/man/manpage-common-workaround-heading-text.man>
-#include <common/man/manpage-common-workaround-inband-text.man>
-#include <common/man/manpage-common-workaround-outofband-text.man>
-#include <common/man/manpage-common-oem-interpretation.man>
+#include <manpage-common-interpret-oem-data.man>
+#include <manpage-common-hostranged-options-header.man>
+#include <manpage-common-hostranged-buffer.man>
+#include <manpage-common-hostranged-consolidate.man>
+#include <manpage-common-hostranged-fanout.man>
+#include <manpage-common-hostranged-eliminate.man>
+#include <manpage-common-hostranged-always-prefix.man>
+#include <manpage-common-hostranged-text-main.man>
+#include <manpage-common-hostranged-text-threads.man>
+#include <manpage-common-hostranged-text-options.man>
+#include <manpage-common-hostranged-text-localhost.man>
+#include <manpage-common-troubleshooting.man>
+#include <manpage-common-workaround-heading-text.man>
+#include <manpage-common-workaround-inband-text.man>
+#include <manpage-common-workaround-outofband-text.man>
+#include <manpage-common-oem-interpretation.man>
 .LP
 Currently None
 .SH "EXAMPLES"
@@ -170,12 +170,12 @@ Get power limit of a remote machine using IPMI over LAN.
 .PP
 Get power limit across a cluster using IPMI over LAN.
 .PP
-#include <common/man/manpage-common-known-issues.man>
-#include <common/man/manpage-common-reporting-bugs.man>
+#include <manpage-common-known-issues.man>
+#include <manpage-common-reporting-bugs.man>
 .SH "COPYRIGHT"
 Copyright (C) 2009-2010 Lawrence Livermore National Security, LLC.
-#include <common/man/manpage-common-gpl-program-text.man>
+#include <manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
 freeipmi(7), bmc-config(8), ipmi-chassis(8), ipmi-sel(8),
 ipmi-sensors(8), ipmiconsole(8), ipmipower(8)
-#include <common/man/manpage-common-homepage.man>
+#include <manpage-common-homepage.man>

@@ -32,29 +32,29 @@ the appropriate sensor state.  Sensors need not always report a sensor
 event.  When a sensor event is not present, "OK" is typically
 reported.
 
-#include <common/man/manpage-common-table-of-contents.man>
+#include <manpage-common-table-of-contents.man>
 To perform IPMI sensor configuration, please see
 .B ipmi-sensors-config(8).
 To perform some advanced SDR management, please see
 .B bmc-device(8).
 
-#include <common/man/manpage-common-general-options-header.man>
-#include <common/man/manpage-common-driver.man>
-#include <common/man/manpage-common-inband.man>
-#include <common/man/manpage-common-outofband-hostname-hostranged.man>
-#include <common/man/manpage-common-outofband-username-operator.man>
-#include <common/man/manpage-common-outofband-password.man>
-#include <common/man/manpage-common-outofband-k-g.man>
-#include <common/man/manpage-common-outofband-session-timeout.man>
-#include <common/man/manpage-common-outofband-retransmission-timeout.man>
-#include <common/man/manpage-common-authentication-type.man>
-#include <common/man/manpage-common-cipher-suite-id-main.man>
-#include <common/man/manpage-common-cipher-suite-id-details.man>
-#include <common/man/manpage-common-privilege-level-operator.man>
-#include <common/man/manpage-common-config-file.man>
-#include <common/man/manpage-common-workaround-flags.man>
-#include <common/man/manpage-common-debug.man>
-#include <common/man/manpage-common-misc.man>
+#include <manpage-common-general-options-header.man>
+#include <manpage-common-driver.man>
+#include <manpage-common-inband.man>
+#include <manpage-common-outofband-hostname-hostranged.man>
+#include <manpage-common-outofband-username-operator.man>
+#include <manpage-common-outofband-password.man>
+#include <manpage-common-outofband-k-g.man>
+#include <manpage-common-outofband-session-timeout.man>
+#include <manpage-common-outofband-retransmission-timeout.man>
+#include <manpage-common-authentication-type.man>
+#include <manpage-common-cipher-suite-id-main.man>
+#include <manpage-common-cipher-suite-id-details.man>
+#include <manpage-common-privilege-level-operator.man>
+#include <manpage-common-config-file.man>
+#include <manpage-common-workaround-flags.man>
+#include <manpage-common-debug.man>
+#include <manpage-common-misc.man>
 .SH "IPMI-SENSORS OPTIONS"
 The following options are specific to
 .B Ipmi-sensors.
@@ -125,7 +125,7 @@ this format is utilized for multiple active sensors, or the user
 simply has interest in seeing the permutation of entries shared by a
 SDR entry.  By setting this option, each sensor number shared by a
 record will be iterated over and output.
-#include <common/man/manpage-common-interpret-oem-data.man>
+#include <manpage-common-interpret-oem-data.man>
 .TP
 \fB\-\-ignore\-not\-available\-sensors\fR
 Ignore not-available (i.e. N/A) sensors in output.
@@ -155,29 +155,29 @@ previously output by
 \fB\-\-sensor\-state\-config\-file\fR=\fIFILE\fR
 Specify an alternate sensor state configuration file.  Option ignored
 if \fB\-\-output\-sensor\-state\fR not specified.
-#include <common/man/manpage-common-entity-sensor-names.man>
-#include <common/man/manpage-common-no-sensor-type-output.man>
-#include <common/man/manpage-common-comma-separated-output.man>
-#include <common/man/manpage-common-no-header-output.man>
-#include <common/man/manpage-common-non-abbreviated-units.man>
-#include <common/man/manpage-common-legacy-output.man>
+#include <manpage-common-entity-sensor-names.man>
+#include <manpage-common-no-sensor-type-output.man>
+#include <manpage-common-comma-separated-output.man>
+#include <manpage-common-no-header-output.man>
+#include <manpage-common-non-abbreviated-units.man>
+#include <manpage-common-legacy-output.man>
 .TP
 \fB\-\-ipmimonitoring\-legacy\-output\fR
 Output legacy format of legacy
 .B ipmimonitoring
 tool.  Newer options may not be applicable to legacy output.
-#include <common/man/manpage-common-sdr-options.man>
-#include <common/man/manpage-common-hostranged-options-header.man>
-#include <common/man/manpage-common-hostranged-buffer.man>
-#include <common/man/manpage-common-hostranged-consolidate.man>
-#include <common/man/manpage-common-hostranged-fanout.man>
-#include <common/man/manpage-common-hostranged-eliminate.man>
-#include <common/man/manpage-common-hostranged-always-prefix.man>
-#include <common/man/manpage-common-hostranged-text-main.man>
-#include <common/man/manpage-common-hostranged-text-threads.man>
-#include <common/man/manpage-common-hostranged-text-options.man>
-#include <common/man/manpage-common-hostranged-text-localhost.man>
-#include <common/man/manpage-common-troubleshooting.man>
+#include <manpage-common-sdr-options.man>
+#include <manpage-common-hostranged-options-header.man>
+#include <manpage-common-hostranged-buffer.man>
+#include <manpage-common-hostranged-consolidate.man>
+#include <manpage-common-hostranged-fanout.man>
+#include <manpage-common-hostranged-eliminate.man>
+#include <manpage-common-hostranged-always-prefix.man>
+#include <manpage-common-hostranged-text-main.man>
+#include <manpage-common-hostranged-text-threads.man>
+#include <manpage-common-hostranged-text-options.man>
+#include <manpage-common-hostranged-text-localhost.man>
+#include <manpage-common-troubleshooting.man>
 .SH "IPMI-SENSORS TROUBLESHOOTING"
 The following are common issues for given error messages specifically
 for
@@ -187,9 +187,9 @@ for
 sensor state configuration file.
 Please see
 .B freeipmi_interpret_sensor.conf(5).
-#include <common/man/manpage-common-workaround-heading-text.man>
-#include <common/man/manpage-common-workaround-inband-text.man>
-#include <common/man/manpage-common-workaround-outofband-text.man>
+#include <manpage-common-workaround-heading-text.man>
+#include <manpage-common-workaround-inband-text.man>
+#include <manpage-common-workaround-outofband-text.man>
 .LP
 "discretereading" - This workaround option will allow sensor readings
 to be read even if the event/reading type code for the sensor is not
@@ -218,7 +218,7 @@ BMC.  This may problem may exist on your motherboard if sensors are
 listed as "N/A" even if they should be available. This option is
 confirmed to work around issues on Fujitsu RX300 and Fujitsu RX300S2
 motherboards.
-#include <common/man/manpage-common-oem-interpretation.man>
+#include <manpage-common-oem-interpretation.man>
 .LP
 Dell Poweredge R210, Dell Poweredge R610, Dell Poweredge R710, Fujitsu
 iRMC S1 and iRMC S2 systems, Supermicro X7DBR-3, Supermicro X7DB8,
@@ -251,18 +251,18 @@ Show all sensors on a remote machine using IPMI over LAN.
 .PP
 Show all sensors across a cluster using IPMI over LAN.
 .PP
-#include <common/man/manpage-common-known-issues.man>
+#include <manpage-common-known-issues.man>
 .LP
 Some sensors may be output as not available (i.e. N/A) because the
 owner of the sensor is not the BMC.  To attempt to bridge sensors
 and access sensors not on the BMC, users may wish to try the \fB\-b\fR
 or \fB\-\-bridge\-sensors\fR options.
 
-#include <common/man/manpage-common-reporting-bugs.man>
+#include <manpage-common-reporting-bugs.man>
 .SH "COPYRIGHT"
 Copyright \(co 2003-2010 FreeIPMI Core Team.  
-#include <common/man/manpage-common-gpl-program-text.man>
+#include <manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
 freeipmi(7), bmc-config(8), bmc-device(8), ipmi-sensors-config(8),
 freeipmi_interpret_sensor.conf(5)
-#include <common/man/manpage-common-homepage.man>
+#include <manpage-common-homepage.man>
