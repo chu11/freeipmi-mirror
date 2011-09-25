@@ -58,24 +58,6 @@ AC_CONFIG_FILES([
         libfreeipmi/include/Makefile 
         libfreeipmi/include/freeipmi/freeipmi.h
         libfreeipmi/src/Makefile 
-        libfreeipmi/src/api/Makefile
-        libfreeipmi/src/cmds/Makefile
-        libfreeipmi/src/debug/Makefile
-        libfreeipmi/src/driver/Makefile
-        libfreeipmi/src/fiid/Makefile
-        libfreeipmi/src/fru-parse/Makefile
-        libfreeipmi/src/interface/Makefile
-        libfreeipmi/src/interpret/Makefile
-        libfreeipmi/src/libcommon/Makefile
-        libfreeipmi/src/locate/Makefile
-        libfreeipmi/src/payload/Makefile
-        libfreeipmi/src/record-format/Makefile
-        libfreeipmi/src/sdr-cache/Makefile
-        libfreeipmi/src/sdr-parse/Makefile
-        libfreeipmi/src/sel-parse/Makefile
-        libfreeipmi/src/sensor-read/Makefile
-        libfreeipmi/src/spec/Makefile
-        libfreeipmi/src/util/Makefile
         libipmiconsole/Makefile
         libipmiconsole/libipmiconsole.3.pre
         libipmiconsole/libipmiconsole.conf.5.pre
