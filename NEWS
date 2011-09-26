@@ -12,6 +12,7 @@ o Support Supermicro OEM sensors on X7DB8, X8DTN, X7SBI-LN4, X8DTL,
 o Fix handling error codes in optional parts of ipmi-dcmi.
 o Fix various debug dumping bugs.
 o Fix ipmimonitoring script install bug on some systems.
+o Fix symbol global vs. locals in libipmimonitoring.
 o Minor documentation and manpage updates.
 
 FreeIPMI 1.0.6 - 09/01/11
