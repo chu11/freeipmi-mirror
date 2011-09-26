@@ -135,7 +135,6 @@ AC_CONFIG_FILES([
         ipmi-sensors/Makefile
         ipmi-sensors/ipmi-sensors.8.pre
         ipmi-sensors/src/Makefile
-        ipmi-sensors/src/ipmimonitoring
         ipmi-sensors-config/Makefile
         ipmi-sensors-config/ipmi-sensors-config.8.pre
         ipmi-sensors-config/src/Makefile
@@ -754,13 +753,6 @@ AC_CHECK_DECLS([program_invocation_name, program_invocation_short_name],
 dnl Check for variables
 
 dnl Macro definitions
-
-dnl Misc substitutions
-dnl Must expand nested unquoting
-IPMIMONITORINGSBINDIR_TMP1="`eval echo ${sbindir}`"
-IPMIMONITORINGSBINDIR_TMP2="`echo $IPMIMONITORINGSBINDIR_TMP1 | sed 's/^NONE/$ac_default_prefix/'`"
-IPMIMONITORINGSBINDIR="`eval echo $IPMIMONITORINGSBINDIR_TMP2`"
-AC_SUBST([IPMIMONITORINGSBINDIR])
 
 dnl Check for random number paths
 

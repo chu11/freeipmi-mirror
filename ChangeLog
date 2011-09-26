@@ -1,3 +1,18 @@
+2011-09-26  Diego Elio Pettenò <flameeyes@flameeyes.eu>
+
+	* configure.ac, ipmi-sensors/src/Makefile.am: ipmimonitoring is
+	generated referring to /usr/local even if configured with
+	--prefix=/usr . This was caused by the broken expansion of the
+	sbin path in configure.ac.
+
+	To resolve the issue, this change no longer consider
+	ipmimonitoring to be expanded by configure itself, but is rather
+	processed at build time with sed so that make takes care of the
+	expansion.
+
+	The file is also not distributed (since it needs to be regenerated
+	depending on configure options), but its sources are.
+		
 2011-09-23  Albert Chu <chu11@llnl.gov>
 	
 	* ipmipower/ipmipower.conf.5, ipmiconsole/ipmiconsole.conf.5:
