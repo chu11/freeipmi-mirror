@@ -79,6 +79,6 @@ $(top_builddir)/libfreeipmi/src/libfreeipmi.la : force-dependency-check
 
 force-dependency-check:
 
-DISTCLEANFILES = ipmimonitoring
+CLEANFILES = ipmimonitoring
 
 EXTRA_DIST = ipmimonitoring.in
