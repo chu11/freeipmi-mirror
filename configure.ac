@@ -51,21 +51,15 @@ AC_CONFIG_FILES([
         libfreeipmi/include/Makefile 
         libfreeipmi/include/freeipmi/freeipmi.h
         libfreeipmi/src/Makefile 
-        libipmiconsole/Makefile
         libipmiconsole/libipmiconsole.3.pre
         libipmiconsole/libipmiconsole.conf.5.pre
         libipmiconsole/libipmiconsole.pc
-        libipmiconsole/src/Makefile
         libipmiconsole/src/ipmiconsole.h
-        libipmimonitoring/Makefile
-        libipmimonitoring/src/Makefile
         libipmimonitoring/src/ipmi_monitoring.h
         libipmimonitoring/libipmimonitoring.3.pre
         libipmimonitoring/libipmimonitoring.pc
-        libipmidetect/Makefile
         libipmidetect/libipmidetect.3.pre
         libipmidetect/libipmidetect.pc
-        libipmidetect/src/Makefile
         libipmidetect/src/ipmidetect.h
         bmc-config/bmc-config.8.pre
         bmc-config/bmc-config.conf.5.pre

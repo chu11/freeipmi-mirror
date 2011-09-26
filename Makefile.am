@@ -6,9 +6,6 @@ SUBDIRS = \
 	etc \
 	common \
 	libfreeipmi \
-	libipmiconsole \
-	libipmimonitoring \
-	libipmidetect \
 	man \
 	examples \
 	contrib
@@ -543,7 +540,7 @@ ipmipower_src_ipmipower_SOURCES = \
 	ipmipower/src/ipmipower_prompt.h \
 	ipmipower/src/ipmipower_util.c \
 	ipmipower/src/ipmipower_util.h
-
+ 
 rmcpping_src_rmcpping_CPPFLAGS = \
 	$(PINGTOOLCOMMON_CPPFLAGS)
 
@@ -552,6 +549,130 @@ rmcpping_src_rmcpping_LDADD = \
 
 rmcpping_src_rmcpping_SOURCES = \
 	rmcpping/src/rmcpping.c
+
+if WITH_GNU_LD
+LIBIPMICONSOLE_VERSION_SCRIPT = $(top_srcdir)/libipmiconsole/src/ipmiconsole.map
+LIBIPMICONSOLE_OTHER_FLAGS = -Wl,--version-script=$(LIBIPMICONSOLE_VERSION_SCRIPT)
+LIBIPMIDETECT_VERSION_SCRIPT = $(top_srcdir)/libipmidetect/src/ipmidetect.map
+LIBIPMIDETECT_OTHER_FLAGS = -Wl,--version-script=$(LIBIPMIDETECT_VERSION_SCRIPT)
+LIBIPMIMONITORING_VERSION_SCRIPT = $(top_srcdir)/libipmimonitoring/src/ipmimonitoring.map
+LIBIPMIMONITORING_OTHER_FLAGS = -Wl,--version-script=$(LIBIPMIMONITORING_VERSION_SCRIPT)
+endif
+
+if WITH_PKG_CONFIG
+pkgconfig_DATA = \
+	libipmiconsole/libipmiconsole.pc \
+	libipmidetect/libipmidetect.pc \
+	libipmimonitoring/libipmimonitoring.pc
+endif
+
+include_HEADERS = \
+	libipmiconsole/src/ipmiconsole.h \
+	libipmidetect/src/ipmidetect.h \
+	libipmimonitoring/src/ipmi_monitoring.h \
+	libipmimonitoring/src/ipmi_monitoring_bitmasks.h \
+	libipmimonitoring/src/ipmi_monitoring_offsets.h
+
+lib_LTLIBRARIES = \
+	libipmiconsole/src/libipmiconsole.la \
+	libipmidetect/src/libipmidetect.la \
+	libipmimonitoring/src/libipmimonitoring.la
+
+libipmiconsole_src_libipmiconsole_la_CFLAGS = \
+	$(PTHREAD_CFLAGS)
+
+libipmiconsole_src_libipmiconsole_la_CPPFLAGS = \
+	-I$(top_srcdir)/common/src/debugutil \
+	-I$(top_srcdir)/common/src/miscutil \
+	-I$(top_srcdir)/common/src/parsecommon \
+	-I$(top_srcdir)/common/src/portability \
+        -I$(top_srcdir)/libfreeipmi/include \
+	-DWITH_PTHREADS=1 \
+	-D_GNU_SOURCE \
+	-D_REENTRANT
+
+libipmiconsole_src_libipmiconsole_la_LDFLAGS = \
+	$(PTHREAD_LIBS) \
+	-version-info @LIBIPMICONSOLE_VERSION_INFO@ \
+	$(LIBIPMICONSOLE_OTHER_FLAGS)
+
+libipmiconsole_src_libipmiconsole_la_LIBADD = \
+	$(top_builddir)/common/src/debugutil/libdebugutil.la \
+	$(top_builddir)/common/src/miscutil/libmiscutils.la \
+	$(top_builddir)/common/src/parsecommon/libparsecommon.la \
+	$(top_builddir)/common/src/portability/libfreeipmiportability.la \
+	$(top_builddir)/libfreeipmi/src/libfreeipmi.la
+
+libipmiconsole_src_libipmiconsole_la_SOURCES = \
+	libipmiconsole/src/ipmiconsole.c \
+	libipmiconsole/src/ipmiconsole_checks.c \
+	libipmiconsole/src/ipmiconsole_checks.h \
+	libipmiconsole/src/ipmiconsole_ctx.c \
+	libipmiconsole/src/ipmiconsole_ctx.h \
+	libipmiconsole/src/ipmiconsole_debug.c \
+	libipmiconsole/src/ipmiconsole_debug.h \
+	libipmiconsole/src/ipmiconsole_defs.h \
+	libipmiconsole/src/ipmiconsole_garbage_collector.c \
+	libipmiconsole/src/ipmiconsole_garbage_collector.h \
+	libipmiconsole/src/ipmiconsole_engine.c \
+	libipmiconsole/src/ipmiconsole_engine.h \
+	libipmiconsole/src/ipmiconsole_packet.c \
+	libipmiconsole/src/ipmiconsole_packet.h \
+	libipmiconsole/src/ipmiconsole_processing.c \
+	libipmiconsole/src/ipmiconsole_processing.h \
+	libipmiconsole/src/ipmiconsole_util.c \
+	libipmiconsole/src/ipmiconsole_util.h \
+	libipmiconsole/src/scbuf.c \
+	libipmiconsole/src/scbuf.h
+
+libipmidetect_src_libipmidetect_la_CPPFLAGS = \
+	-I$(top_srcdir)/common/src/miscutil \
+	-I$(top_srcdir)/common/src/portability \
+	-D_GNU_SOURCE \
+	-D_REENTRANT
+
+libipmidetect_src_libipmidetect_la_LDFLAGS = \
+	-version-info @LIBIPMIDETECT_VERSION_INFO@ \
+	$(LIBIPMIDETECT_OTHER_FLAGS)
+
+libipmidetect_src_libipmidetect_la_LIBADD = \
+	$(top_builddir)/common/src/miscutil/libmiscutils.la \
+	$(top_builddir)/common/src/portability/libfreeipmiportability.la
+
+libipmidetect_src_libipmidetect_la_SOURCES = \
+	libipmidetect/src/ipmidetect.c
+
+libipmimonitoring_src_libipmimonitoring_la_CPPFLAGS = \
+	-I$(top_srcdir)/common/src/miscutil \
+	-I$(top_srcdir)/common/src/portability \
+	-I$(top_srcdir)/libfreeipmi/include \
+	-D_GNU_SOURCE \
+	-D_REENTRANT
+
+libipmimonitoring_src_libipmimonitoring_la_LDFLAGS = \
+	-version-info @LIBIPMIMONITORING_VERSION_INFO@ \
+	$(OTHER_FLAGS)
+
+libipmimonitoring_src_libipmimonitoring_la_LIBADD = \
+	$(top_builddir)/common/src/miscutil/libmiscutils.la \
+	$(top_builddir)/common/src/portability/libfreeipmiportability.la \
+	$(top_builddir)/libfreeipmi/src/libfreeipmi.la
+
+libipmimonitoring_src_libipmimonitoring_la_SOURCES = \
+	libipmimonitoring/src/ipmi_monitoring.c \
+	libipmimonitoring/src/ipmi_monitoring_debug.c \
+	libipmimonitoring/src/ipmi_monitoring_debug.h \
+	libipmimonitoring/src/ipmi_monitoring_defs.h \
+	libipmimonitoring/src/ipmi_monitoring_ipmi_communication.c \
+	libipmimonitoring/src/ipmi_monitoring_ipmi_communication.h \
+	libipmimonitoring/src/ipmi_monitoring_parse_common.c \
+	libipmimonitoring/src/ipmi_monitoring_parse_common.h \
+	libipmimonitoring/src/ipmi_monitoring_sdr_cache.c \
+	libipmimonitoring/src/ipmi_monitoring_sdr_cache.h \
+	libipmimonitoring/src/ipmi_monitoring_sel.c \
+	libipmimonitoring/src/ipmi_monitoring_sel.h \
+	libipmimonitoring/src/ipmi_monitoring_sensor_reading.c \
+	libipmimonitoring/src/ipmi_monitoring_sensor_reading.h
 
 MANS_CPP = \
 	bmc-config/bmc-config.8 \
@@ -577,7 +698,11 @@ MANS_CPP = \
 	ipmidetectd/ipmidetectd.conf.5 \
 	ipmiping/ipmiping.8 \
 	ipmipower/ipmipower.8 \
-	rmcpping/rmcpping.8
+	rmcpping/rmcpping.8 \
+	libipmiconsole/libipmiconsole.3 \
+	libipmiconsole/libipmiconsole.conf.5 \
+	libipmidetect/libipmidetect.3 \
+	libipmimonitoring/libipmimonitoring.3
 
 $(MANS_CPP): $(MANS_CPP:%=%.pre)
 	$(CPP) -C -P -I$(top_srcdir)/common/man $@.pre  $@
@@ -591,7 +716,11 @@ MANS_NOCPP = \
 	ipmiping/ipmi-ping.8 \
 	ipmipower/ipmi-power.8 \
 	ipmipower/ipmipower.conf.5 \
-	rmcpping/rmcp-ping.8
+	rmcpping/rmcp-ping.8 \
+	libipmimonitoring/ipmi_monitoring_sensors.conf.5 \
+	libipmimonitoring/ipmimonitoring_sensors.conf.5 \
+	libipmimonitoring/ipmimonitoring.conf.5 \
+	libipmimonitoring/libipmimonitoring.conf.5
 
 dist_man_MANS = \
 	$(MANS_CPP) \
@@ -611,13 +740,18 @@ EXTRA_DIST = \
 	ipmidetectd/ipmidetectd.init \
 	ipmidetectd/ipmidetectd.conf \
 	ipmi-sensors/src/ipmimonitoring \
-	freeipmi.spec
+	freeipmi.spec \
+	libipmiconsole/libipmiconsole.conf \
+	libipmiconsole/src/ipmiconsole.map \
+	libipmidetect/src/ipmidetect.map \
+	libipmimonitoring/src/ipmimonitoring.map
 
 install-data-local: $(INSTALL_INIT_SCRIPTS) $(INSTALL_LOGROTATE_CONFIG) $(INSTALL_LOGDIR)
 	$(INSTALL) -m 755 -d $(DESTDIR)$(FREEIPMI_SYSCONFDIR)
+	$(INSTALL) -m 755 -d $(DESTDIR)$(IPMI_MONITORING_SDR_CACHE_DIR)
 	$(INSTALL) -m 644 $(top_srcdir)/ipmidetect/ipmidetect.conf $(DESTDIR)$(IPMIDETECT_CONFIG_FILE_DEFAULT)
-	$(INSTALL) -m 755 -d $(DESTDIR)$(FREEIPMI_SYSCONFDIR)
 	$(INSTALL) -m 644 $(top_srcdir)/ipmidetectd/ipmidetectd.conf $(DESTDIR)$(IPMIDETECTD_CONFIG_FILE_DEFAULT)
+	$(INSTALL) -m 644 $(top_srcdir)/libipmiconsole/libipmiconsole.conf $(DESTDIR)$(LIBIPMICONSOLE_CONFIG_FILE_DEFAULT)
 
 install-init-scripts:
 	$(INSTALL) -m 755 -d $(DESTDIR)$(sysconfdir)/init.d
@@ -632,6 +766,7 @@ install-logrotate-config:
 
 install-logdir:
 	$(INSTALL) -m 755 -d $(DESTDIR)$(localstatedir)/log/$(PACKAGE)
+	$(INSTALL) -m 755 -d $(DESTDIR)$(localstatedir)/log/ipmiconsole
 
 uninstall-local:
 	$(RM) -f $(DESTDIR)$(sysconfdir)/init.d/bmc-watchdog
@@ -640,6 +775,7 @@ uninstall-local:
 	$(RM) -f $(DESTDIR)$(sysconfdir)/init.d/ipmidetectd
 	$(RM) -f $(DESTDIR)$(IPMIDETECT_CONFIG_FILE_DEFAULT)
 	$(RM) -f $(DESTDIR)$(IPMIDETECTD_CONFIG_FILE_DEFAULT)
+	$(RM) -f $(DESTDIR)$(LIBIPMICONSOLE_CONFIG_FILE_DEFAULT)
 
 install-exec-hook:
 	$(install_sh) -d -m 755 $(DESTDIR)$(sbindir)
