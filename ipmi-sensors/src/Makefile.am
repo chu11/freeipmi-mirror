@@ -43,6 +43,10 @@ ipmi_sensors_SOURCES = \
 	ipmi-sensors-output-common.c \
 	ipmi-sensors-simple-output.c
 
+ipmimonitoring: ipmimonitoring.in
+	sed -e 's:@IPMIMONITORINGSBINDIR@:$(sbindir):' $< > $@
+	chmod +x ipmimonitoring
+
 $(top_builddir)/common/src/toolcommon/libtoolcommon.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
@@ -75,4 +79,6 @@ $(top_builddir)/libfreeipmi/src/libfreeipmi.la : force-dependency-check
 
 force-dependency-check:
 
-EXTRA_DIST = ipmimonitoring
+DISTCLEANFILES = ipmimonitoring
+
+EXTRA_DIST = ipmimonitoring.in
