@@ -3,6 +3,9 @@
 	* libipmiconsole/src/Makefile.am: Fix logdir creation bug, should
 	not hardcode /var for localstatedir.
 
+	* libipmimonitoring/src/Makefile.am: Properly hide local library
+	symbols.
+
 2011-09-26  Diego Elio Pettenò <flameeyes@flameeyes.eu>
 
 	* configure.ac, ipmi-sensors/src/Makefile.am: ipmimonitoring is

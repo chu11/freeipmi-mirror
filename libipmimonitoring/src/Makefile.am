@@ -4,6 +4,11 @@
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
 
+if WITH_GNU_LD
+VERSION_SCRIPT = $(srcdir)/ipmimonitoring.map
+OTHER_FLAGS = -Wl,--version-script=$(VERSION_SCRIPT)
+endif
+
 noinst_HEADERS = \
 	ipmi_monitoring_debug.h \
 	ipmi_monitoring_defs.h \
