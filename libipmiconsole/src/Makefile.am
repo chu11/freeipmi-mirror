@@ -78,6 +78,6 @@ force-dependency-check:
 install-data-hook: $(INSTALL_LOGDIR)
 
 install-logdir:
-	$(INSTALL) -m 755 -d $(DESTDIR)var/log/ipmiconsole
+	$(INSTALL) -m 755 -d $(DESTDIR)$(localstatedir)/log/ipmiconsole
 
 EXTRA_DIST = ipmiconsole.map
