@@ -83,9 +83,6 @@ sbin_PROGRAMS = \
 	ipmiping/src/ipmiping \
 	rmcpping/src/rmcpping
 
-sbin_SCRIPTS = \
-	ipmi-sensors/src/ipmimonitoring
-
 BASE_CPPFLAGS = \
         -I$(top_srcdir)/common/src/miscutil \
         -I$(top_srcdir)/common/src/portability \
@@ -550,6 +547,13 @@ rmcpping_src_rmcpping_LDADD = \
 rmcpping_src_rmcpping_SOURCES = \
 	rmcpping/src/rmcpping.c
 
+sbin_SCRIPTS = \
+	ipmi-sensors/src/ipmimonitoring
+
+ipmi-sensors/src/ipmimonitoring: ipmi-sensors/src/ipmimonitoring.in
+	sed -e 's:@IPMIMONITORINGSBINDIR@:$(sbindir):' $< > $@
+	chmod +x ipmi-sensors/src/ipmimonitoring
+
 if WITH_GNU_LD
 LIBIPMICONSOLE_VERSION_SCRIPT = $(top_srcdir)/libipmiconsole/src/ipmiconsole.map
 LIBIPMICONSOLE_OTHER_FLAGS = -Wl,--version-script=$(LIBIPMICONSOLE_VERSION_SCRIPT)
@@ -726,9 +730,14 @@ dist_man_MANS = \
 	$(MANS_CPP) \
 	$(MANS_NOCPP)
 
-CLEANFILES = $(MANS_CPP) *~
+CLEANFILES = \
+	ipmi-sensors/src/ipmimonitoring \
+	$(MANS_CPP) *~
 
-DISTCLEANFILES = $(MANS_CPP) $(MANS_CPP:%=%.pre) .deps/*.P
+DISTCLEANFILES = \
+	$(MANS_CPP) \
+	$(MANS_CPP:%=%.pre) \
+	.deps/*.P
 
 EXTRA_DIST = \
 	$(EXTRA) \
@@ -739,7 +748,7 @@ EXTRA_DIST = \
 	ipmidetect/ipmidetect.conf \
 	ipmidetectd/ipmidetectd.init \
 	ipmidetectd/ipmidetectd.conf \
-	ipmi-sensors/src/ipmimonitoring \
+	ipmi-sensors/src/ipmimonitoring.in \
 	freeipmi.spec \
 	libipmiconsole/libipmiconsole.conf \
 	libipmiconsole/src/ipmiconsole.map \

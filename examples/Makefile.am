@@ -18,7 +18,7 @@ ipmimonitoring_sensors_SOURCES = \
 	ipmimonitoring-sensors.c
 
 $(top_builddir)/libipmimonitoring/src/libipmimonitoring.la : force-dependency-check
-	@cd `dirname $@` && $(MAKE) `basename $@`
+	@cd $(top_builddir) && $(MAKE) libipmimonitoring/src/libipmimonitoring.la
 
 force-dependency-check:
 
