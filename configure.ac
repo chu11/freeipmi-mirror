@@ -35,17 +35,10 @@ AC_CONFIG_FILES([
         common/Makefile 
         common/man/Makefile 
         common/src/Makefile
-        common/src/configtool/Makefile
         common/src/debugutil/Makefile
         common/src/miscutil/Makefile
         common/src/parsecommon/Makefile
-        common/src/pingtool/Makefile
         common/src/portability/Makefile
-        common/src/toolcommon/Makefile
-        common/src/toolhostrange/Makefile
-        common/src/tooloem/Makefile
-        common/src/toolsdr/Makefile
-        common/src/toolsensor/Makefile
         contrib/Makefile
         contrib/ganglia/Makefile
         contrib/nagios/Makefile
