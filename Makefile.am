@@ -1,8 +1,7 @@
-# include directory for aclocal
-ACLOCAL_AMFLAGS = -I config
-
 PACKAGE = @PACKAGE@
 VERSION = @VERSION@
+
+ACLOCAL_AMFLAGS = -I config
 
 SUBDIRS = \
 	libfreeipmi
@@ -555,16 +554,18 @@ ipmi-sensors/src/ipmimonitoring: ipmi-sensors/src/ipmimonitoring.in
 	chmod +x ipmi-sensors/src/ipmimonitoring
 
 if WITH_GNU_LD
+LIBFREEIPMI_VERSION_SCRIPT = $(top_srcdir)/libfreeipmi/src/freeipmi.map
+
 LIBIPMICONSOLE_VERSION_SCRIPT = $(top_srcdir)/libipmiconsole/src/ipmiconsole.map
-LIBIPMICONSOLE_OTHER_FLAGS = -Wl,--version-script=$(LIBIPMICONSOLE_VERSION_SCRIPT)
+
 LIBIPMIDETECT_VERSION_SCRIPT = $(top_srcdir)/libipmidetect/src/ipmidetect.map
-LIBIPMIDETECT_OTHER_FLAGS = -Wl,--version-script=$(LIBIPMIDETECT_VERSION_SCRIPT)
+
 LIBIPMIMONITORING_VERSION_SCRIPT = $(top_srcdir)/libipmimonitoring/src/ipmimonitoring.map
-LIBIPMIMONITORING_OTHER_FLAGS = -Wl,--version-script=$(LIBIPMIMONITORING_VERSION_SCRIPT)
 endif
 
 if WITH_PKG_CONFIG
 pkgconfig_DATA = \
+	libfreeipmi/libfreeipmi.pc \
 	libipmiconsole/libipmiconsole.pc \
 	libipmidetect/libipmidetect.pc \
 	libipmimonitoring/libipmimonitoring.pc
@@ -578,9 +579,225 @@ include_HEADERS = \
 	libipmimonitoring/src/ipmi_monitoring_offsets.h
 
 lib_LTLIBRARIES = \
+	libfreeipmi/src/libfreeipmi.la \
 	libipmiconsole/src/libipmiconsole.la \
 	libipmidetect/src/libipmidetect.la \
 	libipmimonitoring/src/libipmimonitoring.la
+
+# achu
+#
+# IPMI_DEBUG_IPCKEY is so we can do inband development without the
+# real ipckey being installed.
+
+libfreeipmi_src_libfreeipmi_la_CPPFLAGS = \
+	-I$(top_srcdir)/common/src/debugutil \
+	-I$(top_srcdir)/common/src/miscutil \
+	-I$(top_srcdir)/common/src/portability \
+	-I$(top_srcdir)/libfreeipmi/include \
+	-I$(top_srcdir)/libfreeipmi/src \
+	-DIPMI_IPCKEY=\"$(localstatedir)/lib/$(PACKAGE_NAME)/ipckey\" \
+	-DIPMI_DEBUG_IPCKEY=\"$(top_builddir)/libfreeipmi/src/ipmi-semaphores.h\" \
+	-D_GNU_SOURCE \
+	-D_REENTRANT
+
+libfreeipmi_src_libfreeipmi_la_LDFLAGS = \
+	-version-info @LIBFREEIPMI_VERSION_INFO@ \
+	-Wl,--version-script=$(LIBFREEIPMI_VERSION_SCRIPT) \
+	@GCRYPT_LIBS@ \
+	-lm 
+
+libfreeipmi_src_libfreeipmi_la_LIBADD = \
+	$(top_builddir)/common/src/debugutil/libdebugutil.la \
+	$(top_builddir)/common/src/miscutil/libmiscutil.la \
+	$(top_builddir)/common/src/portability/libportability.la
+
+libfreeipmi_src_libfreeipmi_la_SOURCES = \
+	libfreeipmi/src/api/ipmi-api.c \
+	libfreeipmi/src/api/ipmi-api-defs.h \
+	libfreeipmi/src/api/ipmi-api-trace.h \
+	libfreeipmi/src/api/ipmi-api-util.c \
+	libfreeipmi/src/api/ipmi-api-util.h \
+	libfreeipmi/src/api/ipmi-chassis-cmds-api.c \
+	libfreeipmi/src/api/ipmi-dcmi-cmds-api.c \
+	libfreeipmi/src/api/ipmi-device-global-cmds-api.c \
+	libfreeipmi/src/api/ipmi-event-cmds-api.c \
+	libfreeipmi/src/api/ipmi-fru-inventory-device-cmds-api.c \
+	libfreeipmi/src/api/ipmi-lan-cmds-api.c \
+	libfreeipmi/src/api/ipmi-lan-interface-api.c \
+	libfreeipmi/src/api/ipmi-lan-interface-api.h \
+	libfreeipmi/src/api/ipmi-lan-session-common.c \
+	libfreeipmi/src/api/ipmi-lan-session-common.h \
+	libfreeipmi/src/api/ipmi-kcs-driver-api.c \
+	libfreeipmi/src/api/ipmi-kcs-driver-api.h \
+	libfreeipmi/src/api/ipmi-messaging-support-cmds-api.c \
+	libfreeipmi/src/api/ipmi-oem-intel-node-manager-cmds-api.c \
+	libfreeipmi/src/api/ipmi-openipmi-driver-api.c \
+	libfreeipmi/src/api/ipmi-openipmi-driver-api.h \
+	libfreeipmi/src/api/ipmi-pef-and-alerting-cmds-api.c \
+	libfreeipmi/src/api/ipmi-rmcpplus-support-and-payload-cmds-api.c \
+	libfreeipmi/src/api/ipmi-sel-cmds-api.c \
+	libfreeipmi/src/api/ipmi-sdr-repository-cmds-api.c \
+	libfreeipmi/src/api/ipmi-sensor-cmds-api.c \
+	libfreeipmi/src/api/ipmi-serial-modem-cmds-api.c \
+	libfreeipmi/src/api/ipmi-sol-cmds-api.c \
+	libfreeipmi/src/api/ipmi-ssif-driver-api.c \
+	libfreeipmi/src/api/ipmi-ssif-driver-api.h \
+	libfreeipmi/src/api/ipmi-sunbmc-driver-api.c \
+	libfreeipmi/src/api/ipmi-sunbmc-driver-api.h \
+	libfreeipmi/src/cmds/ipmi-bmc-watchdog-timer-cmds.c \
+	libfreeipmi/src/cmds/ipmi-chassis-cmds.c \
+	libfreeipmi/src/cmds/ipmi-dcmi-cmds.c \
+	libfreeipmi/src/cmds/ipmi-device-global-cmds.c \
+	libfreeipmi/src/cmds/ipmi-event-cmds.c \
+	libfreeipmi/src/cmds/ipmi-fru-inventory-device-cmds.c \
+	libfreeipmi/src/cmds/ipmi-lan-cmds.c \
+	libfreeipmi/src/cmds/ipmi-messaging-support-cmds.c \
+	libfreeipmi/src/cmds/ipmi-oem-intel-node-manager-cmds.c \
+	libfreeipmi/src/cmds/ipmi-pef-and-alerting-cmds.c \
+	libfreeipmi/src/cmds/ipmi-rmcpplus-support-and-payload-cmds.c \
+	libfreeipmi/src/cmds/ipmi-sdr-repository-cmds.c \
+	libfreeipmi/src/cmds/ipmi-sel-cmds.c \
+	libfreeipmi/src/cmds/ipmi-sensor-cmds.c \
+	libfreeipmi/src/cmds/ipmi-serial-modem-cmds.c \
+	libfreeipmi/src/cmds/ipmi-sol-cmds.c \
+	libfreeipmi/src/cmds/rmcp-cmds.c \
+	libfreeipmi/src/debug/ipmi-debug.c \
+	libfreeipmi/src/debug/ipmi-debug-common.c \
+	libfreeipmi/src/debug/ipmi-debug-common.h \
+	libfreeipmi/src/debug/ipmi-debug-inband.c \
+	libfreeipmi/src/debug/ipmi-debug-lan.c \
+	libfreeipmi/src/debug/ipmi-debug-rmcp.c \
+	libfreeipmi/src/debug/ipmi-debug-rmcpplus.c \
+	libfreeipmi/src/debug/ipmi-debug-sdr.c \
+	libfreeipmi/src/driver/freeipmi_bmc_intf.h \
+	libfreeipmi/src/driver/ipmi-driver-trace.h \
+	libfreeipmi/src/driver/ipmi-kcs-driver.c \
+	libfreeipmi/src/driver/ipmi-openipmi-driver.c \
+	libfreeipmi/src/driver/ipmi-sunbmc-driver.c \
+	libfreeipmi/src/driver/ipmi-semaphores.c \
+	libfreeipmi/src/driver/ipmi-semaphores.h \
+	libfreeipmi/src/driver/ipmi-ssif-driver.c \
+	libfreeipmi/src/fiid/fiid.c \
+	libfreeipmi/src/fru-parse/ipmi-fru-parse.c \
+	libfreeipmi/src/fru-parse/ipmi-fru-parse-common.c \
+	libfreeipmi/src/fru-parse/ipmi-fru-parse-common.h \
+	libfreeipmi/src/fru-parse/ipmi-fru-parse-data.c \
+	libfreeipmi/src/fru-parse/ipmi-fru-parse-defs.h \
+	libfreeipmi/src/fru-parse/ipmi-fru-parse-trace.h \
+	libfreeipmi/src/fru-parse/ipmi-fru-parse-util.c \
+	libfreeipmi/src/fru-parse/ipmi-fru-parse-util.h \
+	libfreeipmi/src/interface/ipmi-ipmb-interface.c \
+	libfreeipmi/src/interface/ipmi-kcs-interface.c \
+	libfreeipmi/src/interface/ipmi-lan-interface.c \
+	libfreeipmi/src/interface/ipmi-rmcpplus-interface.c \
+	libfreeipmi/src/interface/rmcp-interface.c \
+	libfreeipmi/src/interpret/ipmi-interpret.c \
+	libfreeipmi/src/interpret/ipmi-interpret-defs.h \
+	libfreeipmi/src/interpret/ipmi-interpret-config-common.c \
+	libfreeipmi/src/interpret/ipmi-interpret-config-common.h \
+	libfreeipmi/src/interpret/ipmi-interpret-config-sel.c \
+	libfreeipmi/src/interpret/ipmi-interpret-config-sel.h \
+	libfreeipmi/src/interpret/ipmi-interpret-config-sensor.c \
+	libfreeipmi/src/interpret/ipmi-interpret-config-sensor.h \
+	libfreeipmi/src/interpret/ipmi-interpret-trace.h \
+	libfreeipmi/src/interpret/ipmi-interpret-util.c \
+	libfreeipmi/src/interpret/ipmi-interpret-util.h \
+	libfreeipmi/src/libcommon/ipmi-bit-ops.c \
+	libfreeipmi/src/libcommon/ipmi-bit-ops.h \
+	libfreeipmi/src/libcommon/ipmi-crypt.c \
+	libfreeipmi/src/libcommon/ipmi-crypt.h \
+	libfreeipmi/src/libcommon/ipmi-fiid-util.c \
+	libfreeipmi/src/libcommon/ipmi-fiid-util.h \
+	libfreeipmi/src/libcommon/ipmi-fill-util.h \
+	libfreeipmi/src/libcommon/ipmi-md2.c \
+	libfreeipmi/src/libcommon/ipmi-md2.h \
+	libfreeipmi/src/libcommon/ipmi-md5.c \
+	libfreeipmi/src/libcommon/ipmi-md5.h \
+	libfreeipmi/src/libcommon/ipmi-trace.h \
+	libfreeipmi/src/locate/ipmi-locate.c \
+	libfreeipmi/src/locate/ipmi-locate-acpi-spmi.c \
+	libfreeipmi/src/locate/ipmi-locate-defs.h \
+	libfreeipmi/src/locate/ipmi-locate-defaults.c \
+	libfreeipmi/src/locate/ipmi-locate-dmidecode.c \
+	libfreeipmi/src/locate/ipmi-locate-pci.c \
+	libfreeipmi/src/locate/ipmi-locate-smbios.c \
+	libfreeipmi/src/locate/ipmi-locate-trace.h \
+	libfreeipmi/src/locate/ipmi-locate-util.c \
+	libfreeipmi/src/locate/ipmi-locate-util.h \
+	libfreeipmi/src/payload/ipmi-sol-payload.c \
+	libfreeipmi/src/record-format/ipmi-cipher-suite-record-format.c \
+	libfreeipmi/src/record-format/ipmi-fru-information-record-format.c \
+	libfreeipmi/src/record-format/ipmi-sdr-record-format.c \
+	libfreeipmi/src/record-format/ipmi-sdr-oem-record-format.c \
+	libfreeipmi/src/record-format/ipmi-sel-record-format.c \
+	libfreeipmi/src/sdr-cache/ipmi-sdr-cache.c \
+	libfreeipmi/src/sdr-cache/ipmi-sdr-cache-common.c \
+	libfreeipmi/src/sdr-cache/ipmi-sdr-cache-common.h \
+	libfreeipmi/src/sdr-cache/ipmi-sdr-cache-create.c \
+	libfreeipmi/src/sdr-cache/ipmi-sdr-cache-defs.h \
+	libfreeipmi/src/sdr-cache/ipmi-sdr-cache-delete.c \
+	libfreeipmi/src/sdr-cache/ipmi-sdr-cache-read.c \
+	libfreeipmi/src/sdr-cache/ipmi-sdr-cache-trace.h \
+	libfreeipmi/src/sdr-cache/ipmi-sdr-cache-util.c \
+	libfreeipmi/src/sdr-cache/ipmi-sdr-cache-util.h \
+	libfreeipmi/src/sdr-parse/ipmi-sdr-parse.c \
+	libfreeipmi/src/sdr-parse/ipmi-sdr-parse-defs.h \
+	libfreeipmi/src/sdr-parse/ipmi-sdr-parse-trace.h \
+	libfreeipmi/src/sdr-parse/ipmi-sdr-parse-util.c \
+	libfreeipmi/src/sdr-parse/ipmi-sdr-parse-util.h \
+	libfreeipmi/src/sel-parse/ipmi-sel-parse.c \
+	libfreeipmi/src/sel-parse/ipmi-sel-parse-common.c \
+	libfreeipmi/src/sel-parse/ipmi-sel-parse-common.h \
+	libfreeipmi/src/sel-parse/ipmi-sel-parse-defs.h \
+	libfreeipmi/src/sel-parse/ipmi-sel-parse-string.c \
+	libfreeipmi/src/sel-parse/ipmi-sel-parse-string.h \
+	libfreeipmi/src/sel-parse/ipmi-sel-parse-string-dell.c \
+	libfreeipmi/src/sel-parse/ipmi-sel-parse-string-dell.h \
+	libfreeipmi/src/sel-parse/ipmi-sel-parse-string-fujitsu.c \
+	libfreeipmi/src/sel-parse/ipmi-sel-parse-string-fujitsu.h \
+	libfreeipmi/src/sel-parse/ipmi-sel-parse-string-intel.c \
+	libfreeipmi/src/sel-parse/ipmi-sel-parse-string-intel.h \
+	libfreeipmi/src/sel-parse/ipmi-sel-parse-string-intel-node-manager.c \
+	libfreeipmi/src/sel-parse/ipmi-sel-parse-string-intel-node-manager.h \
+	libfreeipmi/src/sel-parse/ipmi-sel-parse-string-inventec.c \
+	libfreeipmi/src/sel-parse/ipmi-sel-parse-string-inventec.h \
+	libfreeipmi/src/sel-parse/ipmi-sel-parse-string-quanta.c \
+	libfreeipmi/src/sel-parse/ipmi-sel-parse-string-quanta.h \
+	libfreeipmi/src/sel-parse/ipmi-sel-parse-string-sun.c \
+	libfreeipmi/src/sel-parse/ipmi-sel-parse-string-sun.h \
+	libfreeipmi/src/sel-parse/ipmi-sel-parse-trace.h \
+	libfreeipmi/src/sel-parse/ipmi-sel-parse-util.c \
+	libfreeipmi/src/sel-parse/ipmi-sel-parse-util.h \
+	libfreeipmi/src/sensor-read/ipmi-sensor-read.c \
+	libfreeipmi/src/sensor-read/ipmi-sensor-read-defs.h \
+	libfreeipmi/src/sensor-read/ipmi-sensor-read-trace.h \
+	libfreeipmi/src/sensor-read/ipmi-sensor-read-util.c \
+	libfreeipmi/src/sensor-read/ipmi-sensor-read-util.h \
+	libfreeipmi/src/spec/ipmi-device-types-spec.c \
+	libfreeipmi/src/spec/ipmi-entity-ids-spec.c \
+	libfreeipmi/src/spec/ipmi-fru-chassis-types-spec.c \
+	libfreeipmi/src/spec/ipmi-fru-language-codes-spec.c \
+	libfreeipmi/src/spec/ipmi-iana-enterprise-numbers-spec.c \
+	libfreeipmi/src/spec/ipmi-sensor-and-event-code-tables-spec.c \
+	libfreeipmi/src/spec/ipmi-sensor-and-event-code-tables-oem-spec.c \
+	libfreeipmi/src/spec/ipmi-sensor-types-spec.c \
+	libfreeipmi/src/spec/ipmi-sensor-units-spec.c \
+	libfreeipmi/src/util/ipmi-channel-util.c \
+	libfreeipmi/src/util/ipmi-cipher-suite-util.c \
+	libfreeipmi/src/util/ipmi-dcmi-util.c \
+	libfreeipmi/src/util/ipmi-device-types-util.c \
+	libfreeipmi/src/util/ipmi-error-util.c \
+	libfreeipmi/src/util/ipmi-error-dcmi-util.c \
+	libfreeipmi/src/util/ipmi-iana-enterprise-numbers-util.c \
+	libfreeipmi/src/util/ipmi-ipmb-util.c \
+	libfreeipmi/src/util/ipmi-lan-util.c \
+	libfreeipmi/src/util/ipmi-outofband-util.c \
+	libfreeipmi/src/util/ipmi-rmcpplus-util.c \
+	libfreeipmi/src/util/ipmi-sensor-and-event-code-tables-util.c \
+	libfreeipmi/src/util/ipmi-sensor-util.c \
+	libfreeipmi/src/util/ipmi-sensor-units-util.c \
+	libfreeipmi/src/util/ipmi-util.c \
+	libfreeipmi/src/util/rmcp-util.c
 
 libipmiconsole_src_libipmiconsole_la_CFLAGS = \
 	$(PTHREAD_CFLAGS)
@@ -598,7 +815,7 @@ libipmiconsole_src_libipmiconsole_la_CPPFLAGS = \
 libipmiconsole_src_libipmiconsole_la_LDFLAGS = \
 	$(PTHREAD_LIBS) \
 	-version-info @LIBIPMICONSOLE_VERSION_INFO@ \
-	$(LIBIPMICONSOLE_OTHER_FLAGS)
+	-Wl,--version-script=$(LIBIPMICONSOLE_VERSION_SCRIPT)
 
 libipmiconsole_src_libipmiconsole_la_LIBADD = \
 	$(top_builddir)/common/src/debugutil/libdebugutil.la \
@@ -637,7 +854,7 @@ libipmidetect_src_libipmidetect_la_CPPFLAGS = \
 
 libipmidetect_src_libipmidetect_la_LDFLAGS = \
 	-version-info @LIBIPMIDETECT_VERSION_INFO@ \
-	$(LIBIPMIDETECT_OTHER_FLAGS)
+	-Wl,--version-script=$(LIBIPMIDETECT_VERSION_SCRIPT)
 
 libipmidetect_src_libipmidetect_la_LIBADD = \
 	$(top_builddir)/common/src/miscutil/libmiscutil.la \
@@ -655,7 +872,7 @@ libipmimonitoring_src_libipmimonitoring_la_CPPFLAGS = \
 
 libipmimonitoring_src_libipmimonitoring_la_LDFLAGS = \
 	-version-info @LIBIPMIMONITORING_VERSION_INFO@ \
-	$(OTHER_FLAGS)
+	-Wl,--version-script=$(LIBIPMIMONITORING_VERSION_SCRIPT)
 
 libipmimonitoring_src_libipmimonitoring_la_LIBADD = \
 	$(top_builddir)/common/src/miscutil/libmiscutil.la \
@@ -933,6 +1150,9 @@ MANS_CPP = \
 	man/freeipmi.7 \
 	man/freeipmi.conf.5 \
 	rmcpping/rmcpping.8 \
+	libfreeipmi/freeipmi_interpret_sel.conf.5 \
+	libfreeipmi/freeipmi_interpret_sensor.conf.5 \
+	libfreeipmi/libfreeipmi.3 \
 	libipmiconsole/libipmiconsole.3 \
 	libipmiconsole/libipmiconsole.conf.5 \
 	libipmidetect/libipmidetect.3 \
@@ -1051,6 +1271,10 @@ EXTRA_DIST = \
 	ipmidetectd/ipmidetectd.init \
 	ipmidetectd/ipmidetectd.conf \
 	ipmi-sensors/src/ipmimonitoring.in \
+	libfreeipmi/freeipmi_interpret_sel.conf \
+	libfreeipmi/freeipmi_interpret_sensor.conf \
+	libfreeipmi/ipckey \
+	libfreeipmi/src/freeipmi.map \
 	libipmiconsole/libipmiconsole.conf \
 	libipmiconsole/src/ipmiconsole.map \
 	libipmidetect/src/ipmidetect.map \
@@ -1059,9 +1283,13 @@ EXTRA_DIST = \
 install-data-local: $(INSTALL_INIT_SCRIPTS) $(INSTALL_LOGROTATE_CONFIG) $(INSTALL_LOGDIR)
 	$(INSTALL) -m 755 -d $(DESTDIR)$(FREEIPMI_SYSCONFDIR)
 	$(INSTALL) -m 755 -d $(DESTDIR)$(IPMI_MONITORING_SDR_CACHE_DIR)
+	$(INSTALL) -m 755 -d $(DESTDIR)$(localstatedir)/lib/$(PACKAGE_NAME)
 	$(INSTALL) -m 644 $(top_srcdir)/etc/freeipmi.conf $(DESTDIR)$(FREEIPMI_CONFIG_FILE_DEFAULT)
 	$(INSTALL) -m 644 $(top_srcdir)/ipmidetect/ipmidetect.conf $(DESTDIR)$(IPMIDETECT_CONFIG_FILE_DEFAULT)
 	$(INSTALL) -m 644 $(top_srcdir)/ipmidetectd/ipmidetectd.conf $(DESTDIR)$(IPMIDETECTD_CONFIG_FILE_DEFAULT)
+	$(INSTALL) -m 644 $(top_srcdir)/libfreeipmi/freeipmi_interpret_sel.conf $(DESTDIR)$(INTERPRET_SEL_CONFIG_FILE_DEFAULT)
+	$(INSTALL) -m 644 $(top_srcdir)/libfreeipmi/freeipmi_interpret_sensor.conf $(DESTDIR)$(INTERPRET_SENSOR_CONFIG_FILE_DEFAULT)
+	$(INSTALL) -m 644 $(top_srcdir)/libfreeipmi/ipckey $(DESTDIR)$(localstatedir)/lib/$(PACKAGE_NAME)/ipckey
 	$(INSTALL) -m 644 $(top_srcdir)/libipmiconsole/libipmiconsole.conf $(DESTDIR)$(LIBIPMICONSOLE_CONFIG_FILE_DEFAULT)
 
 install-init-scripts:
@@ -1088,6 +1316,9 @@ uninstall-local:
 	$(RM) -f $(DESTDIR)$(sysconfdir)/init.d/ipmidetectd
 	$(RM) -f $(DESTDIR)$(sysconfdir)/logrotate.d/bmc-watchdog
 	$(RM) -f $(DESTDIR)$(sysconfdir)/sysconfig/bmc-watchdog
+	$(RM) -f $(DESTDIR)$(INTERPRET_SEL_CONFIG_FILE_DEFAULT)
+	$(RM) -f $(DESTDIR)$(INTERPRET_SENSOR_CONFIG_FILE_DEFAULT)
+	$(RM) -f $(DESTDIR)$(localstatedir)/lib/$(PACKAGE_NAME)/ipckey
 
 install-exec-hook:
 	$(install_sh) -d -m 755 $(DESTDIR)$(sbindir)

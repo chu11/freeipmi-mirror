@@ -36,7 +36,6 @@ AC_CONFIG_FILES([
         libfreeipmi/libfreeipmi.pc
         libfreeipmi/include/Makefile 
         libfreeipmi/include/freeipmi/freeipmi.h
-        libfreeipmi/src/Makefile 
         libipmiconsole/libipmiconsole.3.pre
         libipmiconsole/libipmiconsole.conf.5.pre
         libipmiconsole/libipmiconsole.pc
