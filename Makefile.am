@@ -3,10 +3,8 @@ ACLOCAL_AMFLAGS = -I config
 
 SUBDIRS = \
 	doc \
-	etc \
 	common \
 	libfreeipmi \
-	man \
 	examples \
 	contrib
 
@@ -702,6 +700,8 @@ MANS_CPP = \
 	ipmidetectd/ipmidetectd.conf.5 \
 	ipmiping/ipmiping.8 \
 	ipmipower/ipmipower.8 \
+	man/freeipmi.7 \
+	man/freeipmi.conf.5 \
 	rmcpping/rmcpping.8 \
 	libipmiconsole/libipmiconsole.3 \
 	libipmiconsole/libipmiconsole.conf.5 \
@@ -758,6 +758,7 @@ EXTRA_DIST = \
 install-data-local: $(INSTALL_INIT_SCRIPTS) $(INSTALL_LOGROTATE_CONFIG) $(INSTALL_LOGDIR)
 	$(INSTALL) -m 755 -d $(DESTDIR)$(FREEIPMI_SYSCONFDIR)
 	$(INSTALL) -m 755 -d $(DESTDIR)$(IPMI_MONITORING_SDR_CACHE_DIR)
+	$(INSTALL) -m 644 $(top_srcdir)/etc/freeipmi.conf $(DESTDIR)$(FREEIPMI_CONFIG_FILE_DEFAULT)
 	$(INSTALL) -m 644 $(top_srcdir)/ipmidetect/ipmidetect.conf $(DESTDIR)$(IPMIDETECT_CONFIG_FILE_DEFAULT)
 	$(INSTALL) -m 644 $(top_srcdir)/ipmidetectd/ipmidetectd.conf $(DESTDIR)$(IPMIDETECTD_CONFIG_FILE_DEFAULT)
 	$(INSTALL) -m 644 $(top_srcdir)/libipmiconsole/libipmiconsole.conf $(DESTDIR)$(LIBIPMICONSOLE_CONFIG_FILE_DEFAULT)
@@ -778,13 +779,14 @@ install-logdir:
 	$(INSTALL) -m 755 -d $(DESTDIR)$(localstatedir)/log/ipmiconsole
 
 uninstall-local:
-	$(RM) -f $(DESTDIR)$(sysconfdir)/init.d/bmc-watchdog
-	$(RM) -f $(DESTDIR)$(sysconfdir)/logrotate.d/bmc-watchdog
-	$(RM) -f $(DESTDIR)$(sysconfdir)/sysconfig/bmc-watchdog
-	$(RM) -f $(DESTDIR)$(sysconfdir)/init.d/ipmidetectd
+	$(RM) -f $(DESTDIR)$(FREEIPMI_CONFIG_FILE_DEFAULT)
 	$(RM) -f $(DESTDIR)$(IPMIDETECT_CONFIG_FILE_DEFAULT)
 	$(RM) -f $(DESTDIR)$(IPMIDETECTD_CONFIG_FILE_DEFAULT)
 	$(RM) -f $(DESTDIR)$(LIBIPMICONSOLE_CONFIG_FILE_DEFAULT)
+	$(RM) -f $(DESTDIR)$(sysconfdir)/init.d/bmc-watchdog
+	$(RM) -f $(DESTDIR)$(sysconfdir)/init.d/ipmidetectd
+	$(RM) -f $(DESTDIR)$(sysconfdir)/logrotate.d/bmc-watchdog
+	$(RM) -f $(DESTDIR)$(sysconfdir)/sysconfig/bmc-watchdog
 
 install-exec-hook:
 	$(install_sh) -d -m 755 $(DESTDIR)$(sbindir)

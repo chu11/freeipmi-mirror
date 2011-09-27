@@ -28,13 +28,9 @@ dnl define output files
 AC_CONFIG_FILES([
         Makefile 
         doc/Makefile 
-        etc/Makefile
-        man/Makefile
         man/freeipmi.conf.5.pre
         man/freeipmi.7.pre
         common/Makefile 
-        common/man/Makefile 
-        common/src/Makefile
         contrib/Makefile
         contrib/ganglia/Makefile
         contrib/nagios/Makefile
