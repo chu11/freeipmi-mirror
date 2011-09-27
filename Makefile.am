@@ -5,10 +5,7 @@ PACKAGE = @PACKAGE@
 VERSION = @VERSION@
 
 SUBDIRS = \
-	doc \
-	libfreeipmi \
-	examples \
-	contrib
+	libfreeipmi
 
 FREEIPMI_DOCS = \
 	ChangeLog \
@@ -49,13 +46,19 @@ FREEIPMI_DOCS = \
 	DISCLAIMER.ipmimonitoring.UC \
 	DISCLAIMER.pstdout.UC \
 	DISCLAIMER.ipmidetect.UC \
-	DISCLAIMER.ipmi-fru.UC
+	DISCLAIMER.ipmi-fru.UC \
+	doc/freeipmi-coding.txt \
+	doc/freeipmi-design.txt \
+	doc/freeipmi-hostrange.txt \
+	doc/freeipmi-libraries.txt \
+	doc/freeipmi-testing.txt \
+	doc/freeipmi-bugs-issues-and-workarounds.txt \
+	doc/freeipmi-oem-documentation-requirements.txt
 
 docdir   = $(datadir)/doc/$(PACKAGE)
 doc_DATA = $(FREEIPMI_DOCS)
 
-uninstall-extra:
-	$(docdir)
+info_TEXINFOS = doc/freeipmi-faq.texi
 
 sbin_PROGRAMS = \
 	bmc-config/src/bmc-config \
@@ -871,6 +874,42 @@ common_src_toolsensor_libtoolsensor_la_SOURCES = \
 	common/src/toolsensor/tool-sensor-common.c \
 	common/src/toolsensor/tool-sensor-common.h
 
+noinst_PROGRAMS = \
+	examples/ipmimonitoring-sel \
+	examples/ipmimonitoring-sensors
+
+#EXAMPLE_FILES = \
+#	examples/ipmimonitoring-sel.c \
+#	examples/ipmimonitoring-sensors.c
+
+examples_ipmimonitoring_sel_CPPFLAGS = \
+	-I$(top_srcdir)/libipmimonitoring/src/ \
+	-D_GNU_SOURCE \
+	-D_REENTRANT
+
+examples_ipmimonitoring_sel_LDADD = \
+	$(top_builddir)/libipmimonitoring/src/libipmimonitoring.la
+ 
+examples_ipmimonitoring_sel_SOURCES = \
+	examples/ipmimonitoring-sel.c
+
+examples_ipmimonitoring_sensors_CPPFLAGS = \
+	-I$(top_srcdir)/libipmimonitoring/src/ \
+	-D_GNU_SOURCE \
+	-D_REENTRANT
+
+examples_ipmimonitoring_sensors_LDADD = \
+	$(top_builddir)/libipmimonitoring/src/libipmimonitoring.la
+ 
+examples_ipmimonitoring_sensors_SOURCES = \
+	examples/ipmimonitoring-sensors.c
+
+CONTRIB_FILES = \
+	contrib/ganglia/README \
+	contrib/ganglia/ganglia_ipmi_sensors.pl \
+	contrib/nagios/README \
+	contrib/nagios/nagios_ipmi_sensors.pl
+
 MANS_CPP = \
 	bmc-config/bmc-config.8 \
 	bmc-config/bmc-config.conf.5 \
@@ -1003,7 +1042,10 @@ DISTCLEANFILES = \
 	.deps/*.P
 
 EXTRA_DIST = \
+	freeipmi.spec \
 	$(FREEIPMI_DOCS) \
+	$(EXAMPLE_FILES) \
+	$(CONTRIB_FILES) \
 	$(MANS_NOCPP) \
 	$(MANS_COMMON) \
 	bmc-watchdog/bmc-watchdog.init \
@@ -1013,7 +1055,6 @@ EXTRA_DIST = \
 	ipmidetectd/ipmidetectd.init \
 	ipmidetectd/ipmidetectd.conf \
 	ipmi-sensors/src/ipmimonitoring.in \
-	freeipmi.spec \
 	libipmiconsole/libipmiconsole.conf \
 	libipmiconsole/src/ipmiconsole.map \
 	libipmidetect/src/ipmidetect.map \
@@ -1068,3 +1109,6 @@ uninstall-hook:
 	$(RM) $(DESTDIR)$(sbindir)/ipmi-ping
 	$(RM) $(DESTDIR)$(sbindir)/ipmi-power
 	$(RM) $(DESTDIR)$(sbindir)/rmcp-ping
+
+uninstall-extra:
+	$(docdir)

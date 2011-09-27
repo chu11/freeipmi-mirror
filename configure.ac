@@ -27,13 +27,8 @@ AM_CONFIG_HEADER([config/config.h])
 dnl define output files
 AC_CONFIG_FILES([
         Makefile 
-        doc/Makefile 
         man/freeipmi.conf.5.pre
         man/freeipmi.7.pre
-        contrib/Makefile
-        contrib/ganglia/Makefile
-        contrib/nagios/Makefile
-        examples/Makefile
         libfreeipmi/Makefile 
         libfreeipmi/libfreeipmi.3.pre
         libfreeipmi/freeipmi_interpret_sensor.conf.5.pre
