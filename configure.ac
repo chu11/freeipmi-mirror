@@ -30,7 +30,6 @@ AC_CONFIG_FILES([
         doc/Makefile 
         man/freeipmi.conf.5.pre
         man/freeipmi.7.pre
-        common/Makefile 
         contrib/Makefile
         contrib/ganglia/Makefile
         contrib/nagios/Makefile

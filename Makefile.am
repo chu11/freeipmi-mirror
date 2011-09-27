@@ -1,17 +1,16 @@
 # include directory for aclocal
 ACLOCAL_AMFLAGS = -I config
 
+PACKAGE = @PACKAGE@
+VERSION = @VERSION@
+
 SUBDIRS = \
 	doc \
-	common \
 	libfreeipmi \
 	examples \
 	contrib
 
-PACKAGE = @PACKAGE@
-VERSION = @VERSION@
-
-EXTRA = \
+FREEIPMI_DOCS = \
 	ChangeLog \
 	ChangeLog.0 \
 	AUTHORS \
@@ -53,7 +52,7 @@ EXTRA = \
 	DISCLAIMER.ipmi-fru.UC
 
 docdir   = $(datadir)/doc/$(PACKAGE)
-doc_DATA = $(EXTRA)
+doc_DATA = $(FREEIPMI_DOCS)
 
 uninstall-extra:
 	$(docdir)
@@ -676,6 +675,202 @@ libipmimonitoring_src_libipmimonitoring_la_SOURCES = \
 	libipmimonitoring/src/ipmi_monitoring_sensor_reading.c \
 	libipmimonitoring/src/ipmi_monitoring_sensor_reading.h
 
+noinst_LTLIBRARIES = \
+	common/src/configtool/libconfigtoolcommon.la \
+	common/src/debugutil/libdebugutil.la \
+	common/src/miscutil/libmiscutil.la \
+	common/src/parsecommon/libparsecommon.la \
+	common/src/pingtool/libpingtoolcommon.la \
+	common/src/portability/libportability.la \
+	common/src/toolcommon/libtoolcommon.la \
+	common/src/toolhostrange/libtoolhostrange.la \
+	common/src/tooloem/libtooloem.la \
+	common/src/toolsdr/libtoolsdr.la \
+	common/src/toolsensor/libtoolsensor.la
+
+common_src_configtool_libconfigtoolcommon_la_CPPFLAGS = \
+	-I$(top_srcdir)/common/src/parsecommon \
+	-I$(top_srcdir)/common/src/portability \
+	-I$(top_srcdir)/common/src/toolcommon \
+	-I$(top_srcdir)/common/src/toolhostrange \
+	-I$(top_srcdir)/libfreeipmi/include \
+	-D_GNU_SOURCE \
+	-D_REENTRANT
+
+common_src_configtool_libconfigtoolcommon_la_SOURCES = \
+	common/src/configtool/config-tool-argp.c \
+	common/src/configtool/config-tool-argp.h \
+	common/src/configtool/config-tool-comment.c \
+	common/src/configtool/config-tool-comment.h \
+	common/src/configtool/config-tool-commit.c \
+	common/src/configtool/config-tool-commit.h \
+	common/src/configtool/config-tool-common.h \
+	common/src/configtool/config-tool-checkout.c \
+	common/src/configtool/config-tool-checkout.h \
+	common/src/configtool/config-tool-diff.c \
+	common/src/configtool/config-tool-diff.h \
+	common/src/configtool/config-tool-parse.c \
+	common/src/configtool/config-tool-parse.h \
+	common/src/configtool/config-tool-pef-conf-section.c \
+	common/src/configtool/config-tool-pef-conf-section.h \
+	common/src/configtool/config-tool-section.c \
+	common/src/configtool/config-tool-section.h \
+	common/src/configtool/config-tool-utils.c \
+	common/src/configtool/config-tool-utils.h \
+	common/src/configtool/config-tool-validate.c \
+	common/src/configtool/config-tool-validate.h
+
+common_src_debugutil_libdebugutil_la_CPPFLAGS = \
+	-I$(top_srcdir)/common/src \
+	-I$(top_srcdir)/common/src/portability \
+	-I$(top_srcdir)/libfreeipmi/include \
+	-D_GNU_SOURCE \
+	-D_REENTRANT
+
+common_src_debugutil_libdebugutil_la_SOURCES = \
+        common/src/debugutil/debug-util.c \
+        common/src/debugutil/debug-util.h
+
+common_src_miscutil_libmiscutil_la_CPPFLAGS = \
+	-D_GNU_SOURCE \
+	-D_REENTRANT
+
+common_src_miscutil_libmiscutil_la_SOURCES = \
+	common/src/miscutil/cbuf.c \
+	common/src/miscutil/cbuf.h \
+	common/src/miscutil/conffile.c \
+	common/src/miscutil/conffile.h \
+	common/src/miscutil/error.c \
+	common/src/miscutil/error.h \
+	common/src/miscutil/fd.c \
+	common/src/miscutil/fd.h \
+	common/src/miscutil/hash.c \
+	common/src/miscutil/hash.h \
+	common/src/miscutil/hostlist.c \
+	common/src/miscutil/hostlist.h \
+	common/src/miscutil/list.c \
+	common/src/miscutil/list.h \
+	common/src/miscutil/secure.c \
+	common/src/miscutil/secure.h \
+	common/src/miscutil/thread.c \
+	common/src/miscutil/thread.h \
+	common/src/miscutil/timeval.c \
+	common/src/miscutil/timeval.h
+
+common_src_parsecommon_libparsecommon_la_CPPFLAGS = \
+	-I$(top_srcdir)/common/src/portability \
+	-I$(top_srcdir)/libfreeipmi/include \
+	-D_GNU_SOURCE \
+	-D_REENTRANT
+
+common_src_parsecommon_libparsecommon_la_SOURCES = \
+	common/src/parsecommon/parse-common.c \
+	common/src/parsecommon/parse-common.h
+
+common_src_pingtool_libpingtoolcommon_la_CPPFLAGS = \
+	-I$(top_srcdir)/common/src/portability \
+	-I$(top_srcdir)/common/src/toolcommon \
+	-I$(top_srcdir)/libfreeipmi/include \
+	-D_GNU_SOURCE
+
+common_src_pingtool_libpingtoolcommon_la_SOURCES = \
+	common/src/pingtool/ping-tool-common.c \
+	common/src/pingtool/ping-tool-common.h
+
+common_src_portability_libportability_la_CPPFLAGS = \
+	-D_GNU_SOURCE \
+	-D_REENTRANT
+
+if WITH_FREEIPMI_ARGP
+FREEIPMI_ARG_SOURCES = \
+	common/src/portability/freeipmi-argp.h \
+	common/src/portability/freeipmi-argp-ba.c \
+	common/src/portability/freeipmi-argp-eexst.c \
+	common/src/portability/freeipmi-argp-fmtstream.c \
+	common/src/portability/freeipmi-argp-fmtstream.h \
+	common/src/portability/freeipmi-argp-namefrob.h \
+	common/src/portability/freeipmi-argp-help.c \
+	common/src/portability/freeipmi-argp-parse.c \
+	common/src/portability/freeipmi-argp-pv.c \
+	common/src/portability/freeipmi-argp-pvh.c
+endif
+
+common_src_portability_libportability_la_SOURCES = \
+	common/src/portability/freeipmi-portability.c \
+	common/src/portability/freeipmi-portability.h \
+	$(FREEIPMI_ARG_SOURCES)
+
+common_src_toolcommon_libtoolcommon_la_CPPFLAGS = \
+	-I$(top_srcdir)/common/src/miscutil \
+	-I$(top_srcdir)/common/src/parsecommon \
+	-I$(top_srcdir)/common/src/portability \
+	-I$(top_srcdir)/common/src/toolhostrange \
+	-I$(top_srcdir)/common/src/toolsdr \
+	-I$(top_srcdir)/common/src/toolsensor \
+	-I$(top_srcdir)/libfreeipmi/include \
+	-D_GNU_SOURCE \
+	-D_REENTRANT
+
+common_src_toolcommon_libtoolcommon_la_SOURCES = \
+	common/src/toolcommon/tool-common.c \
+	common/src/toolcommon/tool-common.h \
+	common/src/toolcommon/tool-config-file-common.c \
+	common/src/toolcommon/tool-config-file-common.h \
+	common/src/toolcommon/tool-cmdline-common.c \
+	common/src/toolcommon/tool-cmdline-common.h
+
+common_src_toolhostrange_libtoolhostrange_la_CPPFLAGS = \
+	-I$(top_srcdir)/common/src/miscutil \
+	-I$(top_srcdir)/common/src/portability \
+	-I$(top_srcdir)/libipmidetect/src \
+	-D_GNU_SOURCE \
+	-D_REENTRANT
+
+common_src_toolhostrange_libtoolhostrange_la_LDFLAGS = \
+	$(PTHREAD_LIBS)
+
+common_src_toolhostrange_libtoolhostrange_la_SOURCES = \
+	common/src/toolhostrange/pstdout.c \
+	common/src/toolhostrange/pstdout.h \
+	common/src/toolhostrange/tool-hostrange-common.c \
+	common/src/toolhostrange/tool-hostrange-common.h
+
+common_src_tooloem_libtooloem_la_CPPFLAGS = \
+	-I$(top_srcdir)/common/src/portability \
+	-I$(top_srcdir)/common/src/toolhostrange \
+	-I$(top_srcdir)/libfreeipmi/include  \
+	-D_GNU_SOURCE \
+	-D_REENTRANT
+
+common_src_tooloem_libtooloem_la_SOURCES = \
+	common/src/tooloem/tool-oem-common.c \
+	common/src/tooloem/tool-oem-common.h
+
+common_src_toolsdr_libtoolsdr_la_CPPFLAGS = \
+	-I$(top_srcdir)/common/src/miscutil \
+	-I$(top_srcdir)/common/src/portability \
+	-I$(top_srcdir)/common/src/toolhostrange \
+	-I$(top_srcdir)/libfreeipmi/include  \
+	-D_GNU_SOURCE \
+	-D_REENTRANT
+
+common_src_toolsdr_libtoolsdr_la_SOURCES = \
+	common/src/toolsdr/tool-sdr-cache-common.c \
+	common/src/toolsdr/tool-sdr-cache-common.h
+
+common_src_toolsensor_libtoolsensor_la_CPPFLAGS = \
+	-I$(top_srcdir)/common/src/miscutil \
+	-I$(top_srcdir)/common/src/portability \
+	-I$(top_srcdir)/common/src/toolhostrange \
+	-I$(top_srcdir)/common/src/toolsdr \
+	-I$(top_srcdir)/libfreeipmi/include \
+	-D_GNU_SOURCE \
+	-D_REENTRANT
+
+common_src_toolsensor_libtoolsensor_la_SOURCES = \
+	common/src/toolsensor/tool-sensor-common.c \
+	common/src/toolsensor/tool-sensor-common.h
+
 MANS_CPP = \
 	bmc-config/bmc-config.8 \
 	bmc-config/bmc-config.conf.5 \
@@ -708,9 +903,6 @@ MANS_CPP = \
 	libipmidetect/libipmidetect.3 \
 	libipmimonitoring/libipmimonitoring.3
 
-$(MANS_CPP): $(MANS_CPP:%=%.pre)
-	$(CPP) -C -P -I$(top_srcdir)/common/man $@.pre  $@
-
 MANS_NOCPP = \
 	ipmi-pef-config/pef-config.8 \
 	ipmi-sensors/ipmimonitoring.8 \
@@ -726,6 +918,77 @@ MANS_NOCPP = \
 	libipmimonitoring/ipmimonitoring.conf.5 \
 	libipmimonitoring/libipmimonitoring.conf.5
 
+MANS_COMMON = \
+	man/manpage-common-general-options-header.man \
+	man/manpage-common-driver.man \
+	man/manpage-common-inband.man \
+	man/manpage-common-outofband-hostname.man \
+	man/manpage-common-outofband-hostname-hostranged.man \
+	man/manpage-common-outofband-username-user.man \
+	man/manpage-common-outofband-username-operator.man \
+	man/manpage-common-outofband-username-admin.man \
+	man/manpage-common-outofband-password.man \
+	man/manpage-common-outofband-k-g.man \
+	man/manpage-common-outofband-session-timeout.man \
+	man/manpage-common-outofband-retransmission-timeout.man \
+	man/manpage-common-authentication-type.man \
+	man/manpage-common-cipher-suite-id-main.man \
+	man/manpage-common-cipher-suite-id-details.man \
+	man/manpage-common-privilege-level-user.man \
+	man/manpage-common-privilege-level-operator.man \
+	man/manpage-common-privilege-level-admin.man \
+	man/manpage-common-config-file.man \
+	man/manpage-common-workaround-flags.man \
+	man/manpage-common-workaround-heading-text.man \
+	man/manpage-common-workaround-inband-text.man \
+	man/manpage-common-workaround-outofband-text.man \
+	man/manpage-common-workaround-sol-only-text.man \
+	man/manpage-common-workaround-config-tool.man \
+	man/manpage-common-debug.man \
+	man/manpage-common-misc.man \
+	man/manpage-common-hostranged-options-header.man \
+	man/manpage-common-hostranged-buffer.man \
+	man/manpage-common-hostranged-consolidate.man \
+	man/manpage-common-hostranged-fanout.man \
+	man/manpage-common-hostranged-eliminate.man \
+	man/manpage-common-hostranged-always-prefix.man \
+	man/manpage-common-hostranged-text-main.man \
+	man/manpage-common-hostranged-text-options.man \
+	man/manpage-common-hostranged-text-localhost.man \
+	man/manpage-common-hostranged-text-threads.man \
+	man/manpage-common-sdr-options.man \
+	man/manpage-common-ignore-sdr-cache.man \
+	man/manpage-common-config-tool-options.man \
+	man/manpage-common-config-tool-options-verbose.man \
+	man/manpage-common-config-tool-options-very-verbose.man \
+	man/manpage-common-config-tool-options-lan-channel-number.man \
+	man/manpage-common-config-tool-options-serial-channel-number.man \
+	man/manpage-common-config-tool-options-sol-channel-number.man \
+	man/manpage-common-config-tool-general-use.man \
+	man/manpage-common-troubleshooting.man \
+	man/manpage-common-troubleshooting-lan-only.man \
+	man/manpage-common-known-issues.man \
+	man/manpage-common-known-issues-ping.man \
+	man/manpage-common-reporting-bugs.man \
+	man/manpage-common-gpl-library-text.man \
+	man/manpage-common-gpl-program-text.man \
+	man/manpage-common-gpl-freeipmi-text.man \
+	man/manpage-common-ping-options.man \
+	man/manpage-common-ping-origin.man \
+	man/manpage-common-table-of-contents.man \
+	man/manpage-common-homepage.man \
+	man/manpage-common-interpret-oem-data.man \
+	man/manpage-common-oem-interpretation.man \
+	man/manpage-common-entity-sensor-names.man \
+	man/manpage-common-no-sensor-type-output.man \
+	man/manpage-common-comma-separated-output.man \
+	man/manpage-common-no-header-output.man \
+	man/manpage-common-non-abbreviated-units.man \
+	man/manpage-common-legacy-output.man
+
+$(MANS_CPP): $(MANS_CPP:%=%.pre)
+	$(CPP) -C -P -I$(top_srcdir)/common/man $@.pre  $@
+
 dist_man_MANS = \
 	$(MANS_CPP) \
 	$(MANS_NOCPP)
@@ -740,8 +1003,9 @@ DISTCLEANFILES = \
 	.deps/*.P
 
 EXTRA_DIST = \
-	$(EXTRA) \
+	$(FREEIPMI_DOCS) \
 	$(MANS_NOCPP) \
+	$(MANS_COMMON) \
 	bmc-watchdog/bmc-watchdog.init \
 	bmc-watchdog/bmc-watchdog.logrotate \
 	bmc-watchdog/bmc-watchdog.sysconfig \
