@@ -878,10 +878,6 @@ noinst_PROGRAMS = \
 	examples/ipmimonitoring-sel \
 	examples/ipmimonitoring-sensors
 
-#EXAMPLE_FILES = \
-#	examples/ipmimonitoring-sel.c \
-#	examples/ipmimonitoring-sensors.c
-
 examples_ipmimonitoring_sel_CPPFLAGS = \
 	-I$(top_srcdir)/libipmimonitoring/src/ \
 	-D_GNU_SOURCE \
@@ -958,72 +954,72 @@ MANS_NOCPP = \
 	libipmimonitoring/libipmimonitoring.conf.5
 
 MANS_COMMON = \
-	man/manpage-common-general-options-header.man \
-	man/manpage-common-driver.man \
-	man/manpage-common-inband.man \
-	man/manpage-common-outofband-hostname.man \
-	man/manpage-common-outofband-hostname-hostranged.man \
-	man/manpage-common-outofband-username-user.man \
-	man/manpage-common-outofband-username-operator.man \
-	man/manpage-common-outofband-username-admin.man \
-	man/manpage-common-outofband-password.man \
-	man/manpage-common-outofband-k-g.man \
-	man/manpage-common-outofband-session-timeout.man \
-	man/manpage-common-outofband-retransmission-timeout.man \
-	man/manpage-common-authentication-type.man \
-	man/manpage-common-cipher-suite-id-main.man \
-	man/manpage-common-cipher-suite-id-details.man \
-	man/manpage-common-privilege-level-user.man \
-	man/manpage-common-privilege-level-operator.man \
-	man/manpage-common-privilege-level-admin.man \
-	man/manpage-common-config-file.man \
-	man/manpage-common-workaround-flags.man \
-	man/manpage-common-workaround-heading-text.man \
-	man/manpage-common-workaround-inband-text.man \
-	man/manpage-common-workaround-outofband-text.man \
-	man/manpage-common-workaround-sol-only-text.man \
-	man/manpage-common-workaround-config-tool.man \
-	man/manpage-common-debug.man \
-	man/manpage-common-misc.man \
-	man/manpage-common-hostranged-options-header.man \
-	man/manpage-common-hostranged-buffer.man \
-	man/manpage-common-hostranged-consolidate.man \
-	man/manpage-common-hostranged-fanout.man \
-	man/manpage-common-hostranged-eliminate.man \
-	man/manpage-common-hostranged-always-prefix.man \
-	man/manpage-common-hostranged-text-main.man \
-	man/manpage-common-hostranged-text-options.man \
-	man/manpage-common-hostranged-text-localhost.man \
-	man/manpage-common-hostranged-text-threads.man \
-	man/manpage-common-sdr-options.man \
-	man/manpage-common-ignore-sdr-cache.man \
-	man/manpage-common-config-tool-options.man \
-	man/manpage-common-config-tool-options-verbose.man \
-	man/manpage-common-config-tool-options-very-verbose.man \
-	man/manpage-common-config-tool-options-lan-channel-number.man \
-	man/manpage-common-config-tool-options-serial-channel-number.man \
-	man/manpage-common-config-tool-options-sol-channel-number.man \
-	man/manpage-common-config-tool-general-use.man \
-	man/manpage-common-troubleshooting.man \
-	man/manpage-common-troubleshooting-lan-only.man \
-	man/manpage-common-known-issues.man \
-	man/manpage-common-known-issues-ping.man \
-	man/manpage-common-reporting-bugs.man \
-	man/manpage-common-gpl-library-text.man \
-	man/manpage-common-gpl-program-text.man \
-	man/manpage-common-gpl-freeipmi-text.man \
-	man/manpage-common-ping-options.man \
-	man/manpage-common-ping-origin.man \
-	man/manpage-common-table-of-contents.man \
-	man/manpage-common-homepage.man \
-	man/manpage-common-interpret-oem-data.man \
-	man/manpage-common-oem-interpretation.man \
-	man/manpage-common-entity-sensor-names.man \
-	man/manpage-common-no-sensor-type-output.man \
-	man/manpage-common-comma-separated-output.man \
-	man/manpage-common-no-header-output.man \
-	man/manpage-common-non-abbreviated-units.man \
-	man/manpage-common-legacy-output.man
+	common/man/manpage-common-general-options-header.man \
+	common/man/manpage-common-driver.man \
+	common/man/manpage-common-inband.man \
+	common/man/manpage-common-outofband-hostname.man \
+	common/man/manpage-common-outofband-hostname-hostranged.man \
+	common/man/manpage-common-outofband-username-user.man \
+	common/man/manpage-common-outofband-username-operator.man \
+	common/man/manpage-common-outofband-username-admin.man \
+	common/man/manpage-common-outofband-password.man \
+	common/man/manpage-common-outofband-k-g.man \
+	common/man/manpage-common-outofband-session-timeout.man \
+	common/man/manpage-common-outofband-retransmission-timeout.man \
+	common/man/manpage-common-authentication-type.man \
+	common/man/manpage-common-cipher-suite-id-main.man \
+	common/man/manpage-common-cipher-suite-id-details.man \
+	common/man/manpage-common-privilege-level-user.man \
+	common/man/manpage-common-privilege-level-operator.man \
+	common/man/manpage-common-privilege-level-admin.man \
+	common/man/manpage-common-config-file.man \
+	common/man/manpage-common-workaround-flags.man \
+	common/man/manpage-common-workaround-heading-text.man \
+	common/man/manpage-common-workaround-inband-text.man \
+	common/man/manpage-common-workaround-outofband-text.man \
+	common/man/manpage-common-workaround-sol-only-text.man \
+	common/man/manpage-common-workaround-config-tool.man \
+	common/man/manpage-common-debug.man \
+	common/man/manpage-common-misc.man \
+	common/man/manpage-common-hostranged-options-header.man \
+	common/man/manpage-common-hostranged-buffer.man \
+	common/man/manpage-common-hostranged-consolidate.man \
+	common/man/manpage-common-hostranged-fanout.man \
+	common/man/manpage-common-hostranged-eliminate.man \
+	common/man/manpage-common-hostranged-always-prefix.man \
+	common/man/manpage-common-hostranged-text-main.man \
+	common/man/manpage-common-hostranged-text-options.man \
+	common/man/manpage-common-hostranged-text-localhost.man \
+	common/man/manpage-common-hostranged-text-threads.man \
+	common/man/manpage-common-sdr-options.man \
+	common/man/manpage-common-ignore-sdr-cache.man \
+	common/man/manpage-common-config-tool-options.man \
+	common/man/manpage-common-config-tool-options-verbose.man \
+	common/man/manpage-common-config-tool-options-very-verbose.man \
+	common/man/manpage-common-config-tool-options-lan-channel-number.man \
+	common/man/manpage-common-config-tool-options-serial-channel-number.man \
+	common/man/manpage-common-config-tool-options-sol-channel-number.man \
+	common/man/manpage-common-config-tool-general-use.man \
+	common/man/manpage-common-troubleshooting.man \
+	common/man/manpage-common-troubleshooting-lan-only.man \
+	common/man/manpage-common-known-issues.man \
+	common/man/manpage-common-known-issues-ping.man \
+	common/man/manpage-common-reporting-bugs.man \
+	common/man/manpage-common-gpl-library-text.man \
+	common/man/manpage-common-gpl-program-text.man \
+	common/man/manpage-common-gpl-freeipmi-text.man \
+	common/man/manpage-common-ping-options.man \
+	common/man/manpage-common-ping-origin.man \
+	common/man/manpage-common-table-of-contents.man \
+	common/man/manpage-common-homepage.man \
+	common/man/manpage-common-interpret-oem-data.man \
+	common/man/manpage-common-oem-interpretation.man \
+	common/man/manpage-common-entity-sensor-names.man \
+	common/man/manpage-common-no-sensor-type-output.man \
+	common/man/manpage-common-comma-separated-output.man \
+	common/man/manpage-common-no-header-output.man \
+	common/man/manpage-common-non-abbreviated-units.man \
+	common/man/manpage-common-legacy-output.man
 
 $(MANS_CPP): $(MANS_CPP:%=%.pre)
 	$(CPP) -C -P -I$(top_srcdir)/common/man $@.pre  $@
@@ -1044,13 +1040,13 @@ DISTCLEANFILES = \
 EXTRA_DIST = \
 	freeipmi.spec \
 	$(FREEIPMI_DOCS) \
-	$(EXAMPLE_FILES) \
 	$(CONTRIB_FILES) \
 	$(MANS_NOCPP) \
 	$(MANS_COMMON) \
 	bmc-watchdog/bmc-watchdog.init \
 	bmc-watchdog/bmc-watchdog.logrotate \
 	bmc-watchdog/bmc-watchdog.sysconfig \
+	etc/freeipmi.conf \
 	ipmidetect/ipmidetect.conf \
 	ipmidetectd/ipmidetectd.init \
 	ipmidetectd/ipmidetectd.conf \
