@@ -217,17 +217,17 @@ libfreeipmi_la_SOURCES = \
 
 libfreeipmi_la_LIBADD = \
 	$(top_builddir)/common/src/debugutil/libdebugutil.la \
-	$(top_builddir)/common/src/miscutil/libmiscutils.la \
-	$(top_builddir)/common/src/portability/libfreeipmiportability.la
+	$(top_builddir)/common/src/miscutil/libmiscutil.la \
+	$(top_builddir)/common/src/portability/libportability.la
 
 $(top_builddir)/common/src/debugutil/libdebugutil.la : force-dependency-check
-	@cd `dirname $@` && $(MAKE) `basename $@`
+	@cd $(top_builddir) && $(MAKE) common/src/debugutil/libdebugutil.la
 
-$(top_builddir)/common/src/miscutil/libmiscutils.la : force-dependency-check
-	@cd `dirname $@` && $(MAKE) `basename $@`
+$(top_builddir)/common/src/miscutil/libmiscutil.la : force-dependency-check
+	@cd $(top_builddir) && $(MAKE) common/src/miscutil/libmiscutil.la
 
-$(top_builddir)/common/src/portability/libfreeipmiportability.la : force-dependency-check
-	@cd `dirname $@` && $(MAKE) `basename $@`
+$(top_builddir)/common/src/portability/libportability.la : force-dependency-check
+	@cd $(top_builddir) && $(MAKE) common/src/portability/libportability.la
 
 force-dependency-check:
 

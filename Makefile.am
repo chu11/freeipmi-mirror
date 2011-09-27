@@ -111,9 +111,9 @@ PINGTOOLCOMMON_CPPFLAGS = \
 	-D_GNU_SOURCE
 
 BASE_LDADD = \
-	$(top_builddir)/common/src/miscutil/libmiscutils.la \
+	$(top_builddir)/common/src/miscutil/libmiscutil.la \
 	$(top_builddir)/common/src/parsecommon/libparsecommon.la \
-	$(top_builddir)/common/src/portability/libfreeipmiportability.la \
+	$(top_builddir)/common/src/portability/libportability.la \
 	$(top_builddir)/libfreeipmi/src/libfreeipmi.la
 
 TOOLBASE_LDADD = \
@@ -132,7 +132,7 @@ CONFIGTOOLCOMMON_LDADD = \
 PINGTOOLCOMMON_LDADD = \
 	$(top_builddir)/common/src/pingtool/libpingtoolcommon.la \
 	$(top_builddir)/common/src/debugutil/libdebugutil.la \
-	$(top_builddir)/common/src/portability/libfreeipmiportability.la \
+	$(top_builddir)/common/src/portability/libportability.la \
 	$(top_builddir)/libfreeipmi/src/libfreeipmi.la
 
 bmc_config_src_bmc_config_CPPFLAGS = \
@@ -602,9 +602,9 @@ libipmiconsole_src_libipmiconsole_la_LDFLAGS = \
 
 libipmiconsole_src_libipmiconsole_la_LIBADD = \
 	$(top_builddir)/common/src/debugutil/libdebugutil.la \
-	$(top_builddir)/common/src/miscutil/libmiscutils.la \
+	$(top_builddir)/common/src/miscutil/libmiscutil.la \
 	$(top_builddir)/common/src/parsecommon/libparsecommon.la \
-	$(top_builddir)/common/src/portability/libfreeipmiportability.la \
+	$(top_builddir)/common/src/portability/libportability.la \
 	$(top_builddir)/libfreeipmi/src/libfreeipmi.la
 
 libipmiconsole_src_libipmiconsole_la_SOURCES = \
@@ -640,8 +640,8 @@ libipmidetect_src_libipmidetect_la_LDFLAGS = \
 	$(LIBIPMIDETECT_OTHER_FLAGS)
 
 libipmidetect_src_libipmidetect_la_LIBADD = \
-	$(top_builddir)/common/src/miscutil/libmiscutils.la \
-	$(top_builddir)/common/src/portability/libfreeipmiportability.la
+	$(top_builddir)/common/src/miscutil/libmiscutil.la \
+	$(top_builddir)/common/src/portability/libportability.la
 
 libipmidetect_src_libipmidetect_la_SOURCES = \
 	libipmidetect/src/ipmidetect.c
@@ -658,8 +658,8 @@ libipmimonitoring_src_libipmimonitoring_la_LDFLAGS = \
 	$(OTHER_FLAGS)
 
 libipmimonitoring_src_libipmimonitoring_la_LIBADD = \
-	$(top_builddir)/common/src/miscutil/libmiscutils.la \
-	$(top_builddir)/common/src/portability/libfreeipmiportability.la \
+	$(top_builddir)/common/src/miscutil/libmiscutil.la \
+	$(top_builddir)/common/src/portability/libportability.la \
 	$(top_builddir)/libfreeipmi/src/libfreeipmi.la
 
 libipmimonitoring_src_libipmimonitoring_la_SOURCES = \

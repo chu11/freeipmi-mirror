@@ -1,12 +1,10 @@
-SUBDIRS = \
-	debugutil \
-	miscutil \
-	parsecommon \
-	portability
-
 noinst_LTLIBRARIES = \
 	configtool/libconfigtoolcommon.la \
+	debugutil/libdebugutil.la \
+	miscutil/libmiscutil.la \
+	parsecommon/libparsecommon.la \
 	pingtool/libpingtoolcommon.la \
+	portability/libportability.la \
 	toolcommon/libtoolcommon.la \
 	toolhostrange/libtoolhostrange.la \
 	tooloem/libtooloem.la \
@@ -45,6 +43,53 @@ configtool_libconfigtoolcommon_la_SOURCES = \
 	configtool/config-tool-validate.c \
 	configtool/config-tool-validate.h
 
+debugutil_libdebugutil_la_CPPFLAGS = \
+	-I$(top_srcdir)/common/src \
+	-I$(top_srcdir)/common/src/portability \
+	-I$(top_srcdir)/libfreeipmi/include \
+	-D_GNU_SOURCE \
+	-D_REENTRANT
+
+debugutil_libdebugutil_la_SOURCES = \
+        debugutil/debug-util.c \
+        debugutil/debug-util.h
+
+miscutil_libmiscutil_la_CPPFLAGS = \
+	-D_GNU_SOURCE \
+	-D_REENTRANT
+
+miscutil_libmiscutil_la_SOURCES = \
+	miscutil/cbuf.c \
+	miscutil/cbuf.h \
+	miscutil/conffile.c \
+	miscutil/conffile.h \
+	miscutil/error.c \
+	miscutil/error.h \
+	miscutil/fd.c \
+	miscutil/fd.h \
+	miscutil/hash.c \
+	miscutil/hash.h \
+	miscutil/hostlist.c \
+	miscutil/hostlist.h \
+	miscutil/list.c \
+	miscutil/list.h \
+	miscutil/secure.c \
+	miscutil/secure.h \
+	miscutil/thread.c \
+	miscutil/thread.h \
+	miscutil/timeval.c \
+	miscutil/timeval.h
+
+parsecommon_libparsecommon_la_CPPFLAGS = \
+	-I$(top_srcdir)/common/src/portability \
+	-I$(top_srcdir)/libfreeipmi/include \
+	-D_GNU_SOURCE \
+	-D_REENTRANT
+
+parsecommon_libparsecommon_la_SOURCES = \
+	parsecommon/parse-common.c \
+	parsecommon/parse-common.h
+
 pingtool_libpingtoolcommon_la_CPPFLAGS = \
 	-I$(top_srcdir)/common/src/portability \
 	-I$(top_srcdir)/common/src/toolcommon \
@@ -54,6 +99,29 @@ pingtool_libpingtoolcommon_la_CPPFLAGS = \
 pingtool_libpingtoolcommon_la_SOURCES = \
 	pingtool/ping-tool-common.c \
 	pingtool/ping-tool-common.h
+
+portability_libportability_la_CPPFLAGS = \
+	-D_GNU_SOURCE \
+	-D_REENTRANT
+
+if WITH_FREEIPMI_ARGP
+FREEIPMI_ARG_SOURCES = \
+	portability/freeipmi-argp.h \
+	portability/freeipmi-argp-ba.c \
+	portability/freeipmi-argp-eexst.c \
+	portability/freeipmi-argp-fmtstream.c \
+	portability/freeipmi-argp-fmtstream.h \
+	portability/freeipmi-argp-namefrob.h \
+	portability/freeipmi-argp-help.c \
+	portability/freeipmi-argp-parse.c \
+	portability/freeipmi-argp-pv.c \
+	portability/freeipmi-argp-pvh.c
+endif
+
+portability_libportability_la_SOURCES = \
+	portability/freeipmi-portability.c \
+	portability/freeipmi-portability.h \
+	$(FREEIPMI_ARG_SOURCES)
 
 toolcommon_libtoolcommon_la_CPPFLAGS = \
 	-I$(top_srcdir)/common/src/miscutil \

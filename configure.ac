@@ -35,10 +35,6 @@ AC_CONFIG_FILES([
         common/Makefile 
         common/man/Makefile 
         common/src/Makefile
-        common/src/debugutil/Makefile
-        common/src/miscutil/Makefile
-        common/src/parsecommon/Makefile
-        common/src/portability/Makefile
         contrib/Makefile
         contrib/ganglia/Makefile
         contrib/nagios/Makefile
