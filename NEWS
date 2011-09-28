@@ -1,4 +1,4 @@
-FreeIPMI 1.0.7 - 09/01/11
+FreeIPMI 1.0.7 - 09/28/11
 -------------------------
 o Support many new sensor state and sel event interpretations.
 o Fix parsing bugs for freeipmi_interpret_sel.conf.
