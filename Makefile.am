@@ -3,9 +3,6 @@ VERSION = @VERSION@
 
 ACLOCAL_AMFLAGS = -I config
 
-SUBDIRS = \
-	libfreeipmi
-
 FREEIPMI_DOCS = \
 	ChangeLog \
 	ChangeLog.0 \
@@ -583,6 +580,228 @@ lib_LTLIBRARIES = \
 	libipmiconsole/src/libipmiconsole.la \
 	libipmidetect/src/libipmidetect.la \
 	libipmimonitoring/src/libipmimonitoring.la
+
+libfreeipmiincludedir = $(includedir)/freeipmi
+
+libfreeipmiinclude_HEADERS = \
+	libfreeipmi/include/freeipmi/freeipmi.h
+
+libfreeipmiincludeapidir = $(includedir)/freeipmi/api
+
+libfreeipmiincludeapi_HEADERS = \
+	libfreeipmi/include/freeipmi/api/ipmi-api.h \
+	libfreeipmi/include/freeipmi/api/ipmi-chassis-cmds-api.h \
+	libfreeipmi/include/freeipmi/api/ipmi-dcmi-cmds-api.h \
+	libfreeipmi/include/freeipmi/api/ipmi-device-global-cmds-api.h \
+	libfreeipmi/include/freeipmi/api/ipmi-event-cmds-api.h \
+	libfreeipmi/include/freeipmi/api/ipmi-fru-inventory-device-cmds-api.h \
+	libfreeipmi/include/freeipmi/api/ipmi-lan-cmds-api.h \
+	libfreeipmi/include/freeipmi/api/ipmi-messaging-support-cmds-api.h \
+	libfreeipmi/include/freeipmi/api/ipmi-oem-intel-node-manager-cmds-api.h \
+	libfreeipmi/include/freeipmi/api/ipmi-pef-and-alerting-cmds-api.h \
+	libfreeipmi/include/freeipmi/api/ipmi-rmcpplus-support-and-payload-cmds-api.h \
+	libfreeipmi/include/freeipmi/api/ipmi-sdr-repository-cmds-api.h \
+	libfreeipmi/include/freeipmi/api/ipmi-sensor-cmds-api.h \
+	libfreeipmi/include/freeipmi/api/ipmi-sel-cmds-api.h \
+	libfreeipmi/include/freeipmi/api/ipmi-serial-modem-cmds-api.h \
+	libfreeipmi/include/freeipmi/api/ipmi-sol-cmds-api.h
+
+libfreeipmiincludecmdsdir = $(includedir)/freeipmi/cmds
+
+libfreeipmiincludecmds_HEADERS = \
+	libfreeipmi/include/freeipmi/cmds/ipmi-bmc-watchdog-timer-cmds.h \
+	libfreeipmi/include/freeipmi/cmds/ipmi-chassis-cmds.h \
+	libfreeipmi/include/freeipmi/cmds/ipmi-dcmi-cmds.h \
+	libfreeipmi/include/freeipmi/cmds/ipmi-dcmi-oem-cmds.h \
+	libfreeipmi/include/freeipmi/cmds/ipmi-device-global-cmds.h \
+	libfreeipmi/include/freeipmi/cmds/ipmi-event-cmds.h \
+	libfreeipmi/include/freeipmi/cmds/ipmi-fru-inventory-device-cmds.h \
+	libfreeipmi/include/freeipmi/cmds/ipmi-lan-cmds.h \
+	libfreeipmi/include/freeipmi/cmds/ipmi-messaging-support-cmds.h \
+	libfreeipmi/include/freeipmi/cmds/ipmi-oem-intel-node-manager-cmds.h \
+	libfreeipmi/include/freeipmi/cmds/ipmi-pef-and-alerting-cmds.h \
+	libfreeipmi/include/freeipmi/cmds/ipmi-rmcpplus-support-and-payload-cmds.h \
+	libfreeipmi/include/freeipmi/cmds/ipmi-sdr-repository-cmds.h \
+	libfreeipmi/include/freeipmi/cmds/ipmi-sel-cmds.h \
+	libfreeipmi/include/freeipmi/cmds/ipmi-sensor-cmds.h \
+	libfreeipmi/include/freeipmi/cmds/ipmi-serial-modem-cmds.h \
+	libfreeipmi/include/freeipmi/cmds/ipmi-sol-cmds.h \
+	libfreeipmi/include/freeipmi/cmds/rmcp-cmds.h
+
+libfreeipmiincludedebugdir = $(includedir)/freeipmi/debug
+
+libfreeipmiincludedebug_HEADERS = \
+	libfreeipmi/include/freeipmi/debug/ipmi-debug.h
+
+libfreeipmiincludedriverdir = $(includedir)/freeipmi/driver
+
+libfreeipmiincludedriver_HEADERS = \
+	libfreeipmi/include/freeipmi/driver/ipmi-kcs-driver.h \
+	libfreeipmi/include/freeipmi/driver/ipmi-openipmi-driver.h \
+	libfreeipmi/include/freeipmi/driver/ipmi-sunbmc-driver.h \
+	libfreeipmi/include/freeipmi/driver/ipmi-ssif-driver.h
+
+libfreeipmiincludefiiddir = $(includedir)/freeipmi/fiid
+
+libfreeipmiincludefiid_HEADERS = \
+	libfreeipmi/include/freeipmi/fiid/fiid.h
+
+libfreeipmiincludefruparsedir = $(includedir)/freeipmi/fru-parse
+
+libfreeipmiincludefruparse_HEADERS = \
+	libfreeipmi/include/freeipmi/fru-parse/ipmi-fru-parse.h
+
+libfreeipmiincludeinterfacedir = $(includedir)/freeipmi/interface
+
+libfreeipmiincludeinterface_HEADERS = \
+	libfreeipmi/include/freeipmi/interface/rmcp-interface.h \
+	libfreeipmi/include/freeipmi/interface/ipmi-ipmb-interface.h \
+	libfreeipmi/include/freeipmi/interface/ipmi-kcs-interface.h \
+	libfreeipmi/include/freeipmi/interface/ipmi-lan-interface.h \
+	libfreeipmi/include/freeipmi/interface/ipmi-rmcpplus-interface.h
+
+libfreeipmiincludeinterpretdir = $(includedir)/freeipmi/interpret
+
+libfreeipmiincludeinterpret_HEADERS = \
+	libfreeipmi/include/freeipmi/interpret/ipmi-interpret.h
+
+libfreeipmiincludelocatedir = $(includedir)/freeipmi/locate
+
+libfreeipmiincludelocate_HEADERS = \
+	libfreeipmi/include/freeipmi/locate/ipmi-locate.h
+
+libfreeipmiincludepayloaddir = $(includedir)/freeipmi/payload
+
+libfreeipmiincludepayload_HEADERS = \
+	libfreeipmi/include/freeipmi/payload/ipmi-sol-payload.h
+
+libfreeipmiincluderecordformatdir = $(includedir)/freeipmi/record-format
+
+libfreeipmiincluderecordformat_HEADERS = \
+	libfreeipmi/include/freeipmi/record-format/ipmi-cipher-suite-record-format.h \
+	libfreeipmi/include/freeipmi/record-format/ipmi-fru-information-record-format.h \
+	libfreeipmi/include/freeipmi/record-format/ipmi-sdr-record-format.h \
+	libfreeipmi/include/freeipmi/record-format/ipmi-sdr-oem-record-format.h \
+	libfreeipmi/include/freeipmi/record-format/ipmi-sel-record-format.h
+
+libfreeipmiincludesdrcachedir = $(includedir)/freeipmi/sdr-cache
+
+libfreeipmiincludesdrcache_HEADERS = \
+	libfreeipmi/include/freeipmi/sdr-cache/ipmi-sdr-cache.h
+
+libfreeipmiincludesdrparsedir = $(includedir)/freeipmi/sdr-parse
+
+libfreeipmiincludesdrparse_HEADERS = \
+	libfreeipmi/include/freeipmi/sdr-parse/ipmi-sdr-parse.h
+
+libfreeipmiincludeselparsedir = $(includedir)/freeipmi/sel-parse
+
+libfreeipmiincludeselparse_HEADERS = \
+	libfreeipmi/include/freeipmi/sel-parse/ipmi-sel-parse.h
+
+libfreeipmiincludesensorreaddir = $(includedir)/freeipmi/sensor-read
+
+libfreeipmiincludesensorread_HEADERS = \
+	libfreeipmi/include/freeipmi/sensor-read/ipmi-sensor-read.h
+
+libfreeipmiincludespecdir = $(includedir)/freeipmi/spec
+
+libfreeipmiincludespec_HEADERS = \
+	libfreeipmi/include/freeipmi/spec/ipmi-authentication-type-spec.h \
+	libfreeipmi/include/freeipmi/spec/ipmi-channel-spec.h \
+	libfreeipmi/include/freeipmi/spec/ipmi-cmd-spec.h \
+	libfreeipmi/include/freeipmi/spec/ipmi-cmd-dcmi-spec.h \
+	libfreeipmi/include/freeipmi/spec/ipmi-cmd-oem-spec.h \
+	libfreeipmi/include/freeipmi/spec/ipmi-comp-code-spec.h \
+	libfreeipmi/include/freeipmi/spec/ipmi-comp-code-dcmi-spec.h \
+	libfreeipmi/include/freeipmi/spec/ipmi-comp-code-oem-spec.h \
+	libfreeipmi/include/freeipmi/spec/ipmi-device-types-spec.h \
+	libfreeipmi/include/freeipmi/spec/ipmi-device-types-oem-spec.h \
+	libfreeipmi/include/freeipmi/spec/ipmi-entity-ids-spec.h \
+	libfreeipmi/include/freeipmi/spec/ipmi-event-reading-type-code-spec.h \
+	libfreeipmi/include/freeipmi/spec/ipmi-event-reading-type-code-oem-spec.h \
+	libfreeipmi/include/freeipmi/spec/ipmi-fru-chassis-types-spec.h \
+	libfreeipmi/include/freeipmi/spec/ipmi-fru-language-codes-spec.h \
+	libfreeipmi/include/freeipmi/spec/ipmi-iana-enterprise-numbers-spec.h \
+	libfreeipmi/include/freeipmi/spec/ipmi-ipmb-lun-spec.h \
+	libfreeipmi/include/freeipmi/spec/ipmi-lan-configuration-parameters-spec.h \
+	libfreeipmi/include/freeipmi/spec/ipmi-lan-configuration-parameters-oem-spec.h \
+	libfreeipmi/include/freeipmi/spec/ipmi-netfn-spec.h \
+	libfreeipmi/include/freeipmi/spec/ipmi-netfn-oem-spec.h \
+	libfreeipmi/include/freeipmi/spec/ipmi-pef-configuration-parameters-spec.h \
+	libfreeipmi/include/freeipmi/spec/ipmi-pef-configuration-parameters-oem-spec.h \
+	libfreeipmi/include/freeipmi/spec/ipmi-privilege-level-spec.h \
+	libfreeipmi/include/freeipmi/spec/ipmi-product-id-spec.h \
+	libfreeipmi/include/freeipmi/spec/ipmi-rmcpplus-status-spec.h \
+	libfreeipmi/include/freeipmi/spec/ipmi-sensor-and-event-code-tables-spec.h \
+	libfreeipmi/include/freeipmi/spec/ipmi-sensor-and-event-code-tables-oem-spec.h \
+	libfreeipmi/include/freeipmi/spec/ipmi-sensor-numbers-oem-spec.h \
+	libfreeipmi/include/freeipmi/spec/ipmi-sensor-types-spec.h \
+	libfreeipmi/include/freeipmi/spec/ipmi-sensor-types-oem-spec.h \
+	libfreeipmi/include/freeipmi/spec/ipmi-sensor-units-spec.h \
+	libfreeipmi/include/freeipmi/spec/ipmi-serial-modem-configuration-parameters-spec.h \
+	libfreeipmi/include/freeipmi/spec/ipmi-serial-modem-configuration-parameters-oem-spec.h \
+	libfreeipmi/include/freeipmi/spec/ipmi-slave-address-spec.h \
+	libfreeipmi/include/freeipmi/spec/ipmi-slave-address-oem-spec.h \
+	libfreeipmi/include/freeipmi/spec/ipmi-sol-configuration-parameters-spec.h \
+	libfreeipmi/include/freeipmi/spec/ipmi-sol-configuration-parameters-oem-spec.h \
+	libfreeipmi/include/freeipmi/spec/ipmi-system-boot-option-parameters-spec.h \
+	libfreeipmi/include/freeipmi/spec/ipmi-system-boot-option-parameters-oem-spec.h \
+	libfreeipmi/include/freeipmi/spec/ipmi-system-info-parameters-spec.h \
+	libfreeipmi/include/freeipmi/spec/ipmi-system-info-parameters-oem-spec.h \
+	libfreeipmi/include/freeipmi/spec/ipmi-system-software-id-spec.h
+
+libfreeipmiincludetemplatesdir = $(includedir)/freeipmi/templates
+
+libfreeipmiincludetemplates_HEADERS = \
+	libfreeipmi/include/freeipmi/templates/ipmi-bmc-watchdog-timer-cmds-templates.h \
+	libfreeipmi/include/freeipmi/templates/ipmi-chassis-cmds-templates.h \
+	libfreeipmi/include/freeipmi/templates/ipmi-dcmi-cmds-templates.h \
+	libfreeipmi/include/freeipmi/templates/ipmi-device-global-cmds-templates.h \
+	libfreeipmi/include/freeipmi/templates/ipmi-event-cmds-templates.h \
+	libfreeipmi/include/freeipmi/templates/ipmi-fru-inventory-device-cmds-templates.h \
+	libfreeipmi/include/freeipmi/templates/ipmi-lan-cmds-templates.h \
+	libfreeipmi/include/freeipmi/templates/ipmi-messaging-support-cmds-templates.h \
+	libfreeipmi/include/freeipmi/templates/ipmi-oem-intel-node-manager-cmds-templates.h \
+	libfreeipmi/include/freeipmi/templates/ipmi-pef-and-alerting-cmds-templates.h \
+	libfreeipmi/include/freeipmi/templates/ipmi-rmcpplus-support-and-payload-cmds-templates.h \
+	libfreeipmi/include/freeipmi/templates/ipmi-sdr-repository-cmds-templates.h \
+	libfreeipmi/include/freeipmi/templates/ipmi-sel-cmds-templates.h \
+	libfreeipmi/include/freeipmi/templates/ipmi-sensor-cmds-templates.h \
+	libfreeipmi/include/freeipmi/templates/ipmi-serial-modem-cmds-templates.h \
+	libfreeipmi/include/freeipmi/templates/ipmi-sol-cmds-templates.h \
+	libfreeipmi/include/freeipmi/templates/ipmi-sol-payload-templates.h \
+	libfreeipmi/include/freeipmi/templates/rmcp-cmds-templates.h \
+	libfreeipmi/include/freeipmi/templates/ipmi-ipmb-interface-templates.h \
+	libfreeipmi/include/freeipmi/templates/ipmi-kcs-interface-templates.h \
+	libfreeipmi/include/freeipmi/templates/ipmi-lan-interface-templates.h \
+	libfreeipmi/include/freeipmi/templates/ipmi-rmcpplus-interface-templates.h \
+	libfreeipmi/include/freeipmi/templates/rmcp-interface-templates.h \
+	libfreeipmi/include/freeipmi/templates/ipmi-cipher-suite-record-format-templates.h \
+	libfreeipmi/include/freeipmi/templates/ipmi-fru-information-record-format-templates.h \
+	libfreeipmi/include/freeipmi/templates/ipmi-sdr-record-format-templates.h \
+	libfreeipmi/include/freeipmi/templates/ipmi-sdr-oem-record-format-templates.h \
+	libfreeipmi/include/freeipmi/templates/ipmi-sel-record-format-templates.h
+
+libfreeipmiincludeutildir = $(includedir)/freeipmi/util
+
+libfreeipmiincludeutil_HEADERS = \
+	libfreeipmi/include/freeipmi/util/ipmi-channel-util.h \
+	libfreeipmi/include/freeipmi/util/ipmi-cipher-suite-util.h \
+	libfreeipmi/include/freeipmi/util/ipmi-device-types-util.h \
+	libfreeipmi/include/freeipmi/util/ipmi-error-util.h \
+	libfreeipmi/include/freeipmi/util/ipmi-error-dcmi-util.h \
+	libfreeipmi/include/freeipmi/util/ipmi-iana-enterprise-numbers-util.h \
+	libfreeipmi/include/freeipmi/util/ipmi-ipmb-util.h \
+	libfreeipmi/include/freeipmi/util/ipmi-lan-util.h \
+	libfreeipmi/include/freeipmi/util/ipmi-outofband-util.h \
+	libfreeipmi/include/freeipmi/util/ipmi-rmcpplus-util.h \
+	libfreeipmi/include/freeipmi/util/ipmi-sensor-and-event-code-tables-util.h \
+	libfreeipmi/include/freeipmi/util/ipmi-sensor-util.h \
+	libfreeipmi/include/freeipmi/util/ipmi-sensor-units-util.h \
+	libfreeipmi/include/freeipmi/util/ipmi-util.h \
+	libfreeipmi/include/freeipmi/util/ipmi-dcmi-util.h \
+	libfreeipmi/include/freeipmi/util/rmcp-util.h
 
 # achu
 #

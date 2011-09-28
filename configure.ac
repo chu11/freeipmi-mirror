@@ -29,12 +29,10 @@ AC_CONFIG_FILES([
         Makefile 
         man/freeipmi.conf.5.pre
         man/freeipmi.7.pre
-        libfreeipmi/Makefile 
         libfreeipmi/libfreeipmi.3.pre
         libfreeipmi/freeipmi_interpret_sensor.conf.5.pre
         libfreeipmi/freeipmi_interpret_sel.conf.5.pre
         libfreeipmi/libfreeipmi.pc
-        libfreeipmi/include/Makefile 
         libfreeipmi/include/freeipmi/freeipmi.h
         libipmiconsole/libipmiconsole.3.pre
         libipmiconsole/libipmiconsole.conf.5.pre
