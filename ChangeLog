@@ -1,3 +1,7 @@
+2011-10-06  Albert Chu <chu11@llnl.gov>
+
+	* Document HP Itegrity rx3600 workaround.
+	
 2011-09-23  Albert Chu <chu11@llnl.gov>
 
 	* libipmiconsole/src/Makefile.am: Fix logdir creation bug, should

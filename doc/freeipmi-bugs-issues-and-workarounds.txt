@@ -764,9 +764,9 @@ are provided, this field should be written as 00h."  Some vendors
 subsequently set this field to 00b or 11b for non-analog sensors.
 
 Dell Poweredge 2900, Dell Poweredge 2950, Dell Poweredge R410, Dell
-Poweredge R610: Some sensors report that their sensor scanning is
-disabled, even though the sensor is actually not.  Resolved with
-workaround to ignore the sensor scanning bit.
+Poweredge R610, HP Integrity rx3600: Some sensors report that their sensor
+scanning is disabled, even though the sensor is actually not.
+Resolved with workaround to ignore the sensor scanning bit.
 
 Fujitsu RX300, Fujitsu RX300S2: Some sensors report a non-BMC sensor
 owner and thus require bridging.  However, the sensor owner is

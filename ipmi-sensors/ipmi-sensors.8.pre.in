@@ -204,8 +204,8 @@ is disabled.  This option works around motherboards that incorrectly
 indicate sensors as disabled.  This may problem may exist on your
 motherboard if sensors are listed as "N/A" even if they should be
 available.  This option is confirmed to work around issues on Dell
-Poweredge 2900, Dell Poweredge 2950, Dell Poweredge R410, and Dell
-Poweredge R610 motherboards.
+Poweredge 2900, Dell Poweredge 2950, Dell Poweredge R410, Dell
+Poweredge R610, and HP Integrity rx3600 motherboards.
 .LP
 "assumebmcowner" - This workaround option will allow sensor readings
 to be read if the sensor owner is the BMC, but the reported sensor
