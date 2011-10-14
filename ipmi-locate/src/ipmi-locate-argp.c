@@ -35,7 +35,7 @@
 
 const char *argp_program_version =
   "ipmi-locate - " PACKAGE_VERSION "\n"
-  "Copyright (C) 2003-2011 FreeIPMI Core Team\n"
+  "Copyright (C) 2005-2011 FreeIPMI Core Team\n"
   "This program is free software; you may redistribute it under the terms of\n"
   "the GNU General Public License.  This program has absolutely no warranty.";
 

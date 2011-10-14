@@ -1,6 +1,8 @@
 2011-10-13  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-locate/src/ipmi-locate.h: Fix typo.
+
+	* ipmi-locate/src/ipmi-locate-argp.c: Fix copyright year typo.
 	
 2011-10-13  Albert Chu <chu11@llnl.gov>
 
