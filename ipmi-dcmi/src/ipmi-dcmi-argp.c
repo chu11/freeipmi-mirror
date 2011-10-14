@@ -1,7 +1,7 @@
 /*****************************************************************************\
  *  $Id: ipmi-dcmi-argp.c,v 1.10 2010-05-17 17:42:45 chu11 Exp $
  *****************************************************************************
- *  Copyright (C) 2009-2010 Lawrence Livermore National Security, LLC.
+ *  Copyright (C) 2009-2011 Lawrence Livermore National Security, LLC.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
  *  Written by Albert Chu <chu11@llnl.gov>
  *  LLNL-CODE-413270
@@ -48,7 +48,7 @@
 
 const char *argp_program_version =
   "ipmi-dcmi - " PACKAGE_VERSION "\n"
-  "Copyright (C) 2009-2010 FreeIPMI Core Team\n"
+  "Copyright (C) 2009-2011 FreeIPMI Core Team\n"
   "This program is free software; you may redistribute it under the terms of\n"
   "the GNU General Public License.  This program has absolutely no warranty.";
 
