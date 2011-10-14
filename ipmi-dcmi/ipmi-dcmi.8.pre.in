@@ -1,7 +1,7 @@
 .\"#############################################################################
 .\"$Id: ipmi-dcmi.8.pre.in,v 1.8 2010-02-08 22:02:30 chu11 Exp $
 .\"#############################################################################
-.\"  Copyright (C) 2009-2010 Lawrence Livermore National Security, LLC.
+.\"  Copyright (C) 2009-2011 Lawrence Livermore National Security, LLC.
 .\"  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
 .\"  Written by Albert Chu <chu11@llnl.gov>
 .\"  LLNL-CODE-413270
@@ -173,7 +173,7 @@ Get power limit across a cluster using IPMI over LAN.
 #include <@top_srcdir@/common/man/manpage-common-known-issues.man>
 #include <@top_srcdir@/common/man/manpage-common-reporting-bugs.man>
 .SH "COPYRIGHT"
-Copyright (C) 2009-2010 Lawrence Livermore National Security, LLC.
+Copyright (C) 2009-2011 Lawrence Livermore National Security, LLC.
 #include <@top_srcdir@/common/man/manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
 freeipmi(7), bmc-config(8), ipmi-chassis(8), ipmi-sel(8),
