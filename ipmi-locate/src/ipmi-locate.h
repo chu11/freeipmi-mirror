@@ -16,12 +16,12 @@
  * 
  */
 
-#ifndef _BMC_INFO_H
-#define _BMC_INFO_H
+#ifndef _IPMI_LOCATE_H
+#define _IPMI_LOCATE_H
 
 #include <freeipmi/freeipmi.h>
 
-enum bmc_info_argp_option_keys
+enum ipmi_locate_argp_option_keys
   {
     DEFAULTS_KEY = 160,
   };
