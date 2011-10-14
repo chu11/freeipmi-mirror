@@ -16,8 +16,17 @@
  * 
  */
 
-#ifndef _IPMI_LOCATE_H
-#define _IPMI_LOCATE_H
+/* file is named ipmi-locate_.h to differentiate itself from the
+ * library ipmi-locate.h.
+ *
+ * I am scared of the portability of the #include_next directive, so
+ * that's why I'm doing it this way.
+ */
+
+/* file is "ipmi-locate_.h", so double underscore */
+
+#ifndef _IPMI_LOCATE__H
+#define _IPMI_LOCATE__H
 
 #include <freeipmi/freeipmi.h>
 

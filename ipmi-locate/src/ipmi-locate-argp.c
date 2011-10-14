@@ -28,7 +28,7 @@
 #include "freeipmi-argp.h"
 #endif /* !HAVE_ARGP_H */
 
-#include "ipmi-locate.h"
+#include "ipmi-locate_.h"
 #include "ipmi-locate-argp.h"
 
 #include "freeipmi-portability.h"

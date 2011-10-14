@@ -3,6 +3,10 @@
 	* ipmi-locate/src/ipmi-locate.h: Fix typo.
 
 	* ipmi-locate/src/ipmi-locate-argp.c: Fix copyright year typo.
+
+	* ipmi-locate/src/ipmi-locate_.h: Renamed from ipmi-locate.h.
+	Done for code consistency to how ipmiconsole handles its
+	ipmiconsole_.h.
 	
 2011-10-13  Albert Chu <chu11@llnl.gov>
 
