@@ -126,6 +126,9 @@ AC_CONFIG_FILES([
         ipmi-pef-config/Makefile
         ipmi-pef-config/ipmi-pef-config.8.pre
         ipmi-pef-config/src/Makefile
+        ipmi-pet/Makefile
+        ipmi-pet/ipmi-pet.8.pre
+        ipmi-pet/src/Makefile
         ipmi-raw/Makefile
         ipmi-raw/ipmi-raw.8.pre
         ipmi-raw/src/Makefile

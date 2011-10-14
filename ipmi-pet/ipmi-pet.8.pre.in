@@ -1,0 +1,31 @@
+.TH IPMI-PET 8 "@ISODATE@" "IPMI-PET version @PACKAGE_VERSION@" "System Commands"
+.SH "NAME"
+IPMI \- IPMI Platform Event Trap Interpreter
+.SH "SYNOPSIS"
+.B ipmi-pet
+[\fIOPTION\fR...] [HEX BYTES...]
+.SH "DESCRIPTION"
+.B Ipmi-pet
+interprets hex bytes for a platform event trap and outputs a string
+representing its contents.
+.B Ipmi-pet
+is commonly used in conjunction with an SNMP trap daemon to intrepret
+the results from an IPMI PET trap captured by the daemon.
+.SH "IPMI-PET OPTIONS"
+The following options are specific to
+.B Ipmi-pet.
+.TP
+\fB\-v\fR, \fB\-\-verbose\fR
+Increase verbosity in output to include additional output.
+#include <@top_srcdir@/common/man/manpage-common-interpret-oem-data.man>
+#include <@top_srcdir@/common/man/manpage-common-oem-interpretation.man>
+.LP
+Currently None
+#include <@top_srcdir@/common/man/manpage-common-misc.man>
+#include <@top_srcdir@/common/man/manpage-common-reporting-bugs.man>
+.SH "COPYRIGHT"
+Copyright \(co 2005-2010 FreeIPMI Core Team
+#include <@top_srcdir@/common/man/manpage-common-gpl-program-text.man>
+.SH "SEE ALSO"
+freeipmi(7)
+#include <@top_srcdir@/common/man/manpage-common-homepage.man>
