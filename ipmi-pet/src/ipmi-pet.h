@@ -26,13 +26,34 @@
 enum ipmi_pet_argp_option_keys
   {
     VERBOSE_KEY = 'v',
-    INTERPRET_OEM_DATA_KEY = 160,
+    CMD_FILE_KEY = 160,
+    OUTPUT_EVENT_STATE_KEY = 161,
+    EVENT_STATE_CONFIG_FILE_KEY = 162,
+    INTERPRET_OEM_DATA_KEY = 163,
+    ENTITY_SENSOR_NAMES_KEY = 164,
+    NO_SENSOR_TYPE_OUTPUT_KEY = 165,
+    COMMA_SEPARATED_OUTPUT_KEY = 166,
+    NO_HEADER_OUTPUT_KEY = 167,
+    NON_ABBREVIATED_UNITS_KEY = 168,
   };
 
 struct ipmi_pet_arguments
 {
   struct common_cmd_args common;
+  struct sdr_cmd_args sdr;
+  int verbose_count;
+  char *cmd_file;
+  int output_event_state;
+  char *event_state_config_file;
   int interpret_oem_data;
+  int entity_sensor_names;
+  int no_sensor_type_output;
+  int comma_separated_output;
+  int no_header_output;
+  int non_abbreviated_units;
+  long arg_max;
+  uint8_t *cmd;
+  int cmd_length;
 };
 
 typedef struct ipmi_pet_prog_data
@@ -44,6 +65,8 @@ typedef struct ipmi_pet_prog_data
 typedef struct ipmi_pet_state_data
 {
   ipmi_pet_prog_data_t *prog_data;
+  ipmi_ctx_t ipmi_ctx;
+  char *hostname;
   ipmi_sdr_cache_ctx_t sdr_cache_ctx;
   ipmi_sdr_parse_ctx_t sdr_parse_ctx;
   ipmi_interpret_ctx_t interpret_ctx;

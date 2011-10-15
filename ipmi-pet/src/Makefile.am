@@ -7,6 +7,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/common/src/tooloem \
 	-I$(top_srcdir)/common/src/toolsdr \
 	-I$(top_srcdir)/common/src/toolsensor \
+	-I$(top_srcdir)/common/src/toolhostrange \
 	-I$(top_srcdir)/common/src/miscutil \
 	-I$(top_srcdir)/common/src/parsecommon \
 	-I$(top_srcdir)/common/src/portability \
@@ -21,6 +22,7 @@ ipmi_pet_LDADD = \
 	$(top_builddir)/common/src/tooloem/libtooloem.la \
 	$(top_builddir)/common/src/toolsdr/libtoolsdr.la \
 	$(top_builddir)/common/src/toolsensor/libtoolsensor.la \
+	$(top_builddir)/common/src/toolhostrange/libtoolhostrange.la \
 	$(top_builddir)/common/src/miscutil/libmiscutils.la \
 	$(top_builddir)/common/src/parsecommon/libparsecommon.la \
 	$(top_builddir)/common/src/portability/libfreeipmiportability.la \
@@ -31,6 +33,9 @@ ipmi_pet_SOURCES = \
 	ipmi-pet-argp.c
 
 $(top_builddir)/common/src/toolcommon/libtoolcommon.la : force-dependency-check
+	@cd `dirname $@` && $(MAKE) `basename $@`
+
+$(top_builddir)/common/src/toolhostrange/libtoolhostrange.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
 $(top_builddir)/common/src/tooloem/libtooloem.la : force-dependency-check
