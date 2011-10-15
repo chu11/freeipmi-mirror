@@ -33,7 +33,7 @@
 
 #include <freeipmi/freeipmi.h>
 
-#include "ipmi-locate.h"
+#include "ipmi-locate_.h"
 #include "ipmi-locate-argp.h"
 
 #include "freeipmi-portability.h"
