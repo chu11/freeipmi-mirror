@@ -1,5 +1,10 @@
 2011-10-17  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/src/util/ipmi-sensor-and-event-code-tables-util.c (get_management_subsystem_health_event_data2_message):
+	Fix corner case output bug.
+	
+2011-10-17  Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/src/sdr-cache/ipmi-sdr-cache-read.c (ipmi_sdr_cache_search_sensor),
 	libfreeipmi/src/sdr-cache/ipmi-sdr-cache-defs.h: Fix corner case
 	where invalid SDR record could be loaded if shared sensors are
