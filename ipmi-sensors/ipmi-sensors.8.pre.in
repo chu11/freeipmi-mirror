@@ -221,11 +221,12 @@ motherboards.
 #include <@top_srcdir@/common/man/manpage-common-oem-interpretation.man>
 .LP
 Dell Poweredge R210, Dell Poweredge R610, Dell Poweredge R710, Fujitsu
-iRMC S1 and iRMC S2 systems, Supermicro X7DBR-3, Supermicro X7DB8,
-Supermicro X8DTN, Supermicro X7SBI-LN4, Supermicro X8DTH, Supermicro
-X8DTG, Supermicro X8DTU, Supermicro X8DT3-LN4F, Supermicro X8DTU-6+,
-Supermicro X8DTL, Supermicro X8DTL-3F, Supermicro X8SIL-F, Supermicro
-X9SCL, Supermicro X9SCM, Supermicro X8DTN+-F, Supermicro X8SIE
+iRMC S1 and iRMC S2 systems, Intel S2600JF/Appro 512X, Supermicro
+X7DBR-3, Supermicro X7DB8, Supermicro X8DTN, Supermicro X7SBI-LN4,
+Supermicro X8DTH, Supermicro X8DTG, Supermicro X8DTU, Supermicro
+X8DT3-LN4F, Supermicro X8DTU-6+, Supermicro X8DTL, Supermicro
+X8DTL-3F, Supermicro X8SIL-F, Supermicro X9SCL, Supermicro X9SCM,
+Supermicro X8DTN+-F, Supermicro X8SIE
 .SH "EXAMPLES"
 .B # ipmi-sensors 
 .PP

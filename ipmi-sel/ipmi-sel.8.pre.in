@@ -211,8 +211,9 @@ using the \fB\-\-assume\-system\-event\-records\fR option above.
 .LP
 Dell Poweredge 2900, Dell Poweredge 2950, Dell Poweredge R610, Dell
 Poweredge R710, Fujitsu iRMC S1 and iRMC S2 systems, Intel
-S5500WB/Penguin Computing Relion 700, Inventec 5441/Dell Xanadu II,
-Inventec 5442/Dell Xanadu III, Quanta S99Q/Dell FS12-TY, Sun X4140,
+S5500WB/Penguin Computing Relion 700, Intel S2600JF/Appro 512X,
+Inventec 5441/Dell Xanadu II, Inventec 5442/Dell Xanadu III, Quanta
+S99Q/Dell FS12-TY, Sun X4140,
 .SH "EXAMPLES"
 .B # ipmi-sel 
 .PP
