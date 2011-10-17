@@ -1,5 +1,10 @@
 2011-10-17  Albert Chu <chu11@llnl.gov>
 
+	* ipmi-sel/, libfreeipmi/src/sel-parse/: Fix the assumesystemevent
+	workaround.
+	
+2011-10-17  Albert Chu <chu11@llnl.gov>
+
 	* Support Intel Node Manager sensor/SEL events for Intel
 	S2600JF/Appro 512X.
 	

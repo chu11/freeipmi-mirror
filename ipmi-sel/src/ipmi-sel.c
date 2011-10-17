@@ -662,9 +662,10 @@ _legacy_normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
   /* IPMI Workaround
    *
    * HP DL 380 G5
+   * Intel S2600JF/Appro 512X
    *
-   * Motherboard is reporting SEL Records of record type 0x00, which
-   * is not a valid record type.
+   * Motherboard is reporting invalid SEL Records types (0x00 on HP DL
+   * 380 G5, 0x03 on Intel S2600JF/Appro 512X)
    */
   if (state_data->prog_data->args->assume_system_event_records
       && (!IPMI_SEL_RECORD_TYPE_VALID (record_type)))
@@ -1666,9 +1667,10 @@ _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
   /* IPMI Workaround
    *
    * HP DL 380 G5
+   * Intel S2600JF/Appro 512X
    *
-   * Motherboard is reporting SEL Records of record type 0x00, which
-   * is not a valid record type.
+   * Motherboard is reporting invalid SEL Records types (0x00 on HP DL
+   * 380 G5, 0x03 on Intel S2600JF/Appro 512X)
    */
   if (state_data->prog_data->args->assume_system_event_records
       && (!IPMI_SEL_RECORD_TYPE_VALID (record_type)))
@@ -1919,9 +1921,10 @@ _sel_parse_callback (ipmi_sel_parse_ctx_t ctx, void *callback_data)
   /* IPMI Workaround
    *
    * HP DL 380 G5
+   * Intel S2600JF/Appro 512X
    *
-   * Motherboard is reporting SEL Records of record type 0x00, which
-   * is not a valid record type.
+   * Motherboard is reporting invalid SEL Records types (0x00 on HP DL
+   * 380 G5, 0x03 on Intel S2600JF/Appro 512X)
    */
   if (state_data->prog_data->args->assume_system_event_records
       && (!IPMI_SEL_RECORD_TYPE_VALID (record_type)))
@@ -2609,6 +2612,8 @@ _ipmi_sel (pstdout_state_t pstate,
   /* Special case, just flush, don't do SEL stuff */
   if (!prog_data->args->sdr.flush_cache)
     {
+      unsigned int flags = 0;
+
       if (!(state_data.sel_parse_ctx = ipmi_sel_parse_ctx_create (state_data.ipmi_ctx,
                                                                   prog_data->args->sdr.ignore_sdr_cache ? NULL : state_data.sdr_cache_ctx)))
         {
@@ -2617,24 +2622,29 @@ _ipmi_sel (pstdout_state_t pstate,
         }
 
       if (state_data.prog_data->args->common.debug)
+	flags |= IPMI_SEL_PARSE_FLAGS_DEBUG_DUMP;
+
+      if (state_data.prog_data->args->assume_system_event_records)
+	flags |= IPMI_SEL_PARSE_FLAGS_ASSUME_SYTEM_EVENT_RECORDS;
+
+      if (flags)
         {
           /* Don't error out, if this fails we can still continue */
-          if (ipmi_sel_parse_ctx_set_flags (state_data.sel_parse_ctx,
-                                            IPMI_SEL_PARSE_FLAGS_DEBUG_DUMP) < 0)
+          if (ipmi_sel_parse_ctx_set_flags (state_data.sel_parse_ctx, flags) < 0)
             pstdout_fprintf (pstate,
                              stderr,
                              "ipmi_sel_parse_ctx_set_flags: %s\n",
                              ipmi_sel_parse_ctx_errormsg (state_data.sel_parse_ctx));
-
-          if (hostname)
-            {
-              if (ipmi_sel_parse_ctx_set_debug_prefix (state_data.sel_parse_ctx,
-                                                       hostname) < 0)
-                pstdout_fprintf (pstate,
-                                 stderr,
-                                 "ipmi_sel_parse_ctx_set_debug_prefix: %s\n",
-                                 ipmi_sel_parse_ctx_errormsg (state_data.sel_parse_ctx));
-            }
+	}
+      
+      if (state_data.prog_data->args->common.debug && hostname)
+	{
+	  if (ipmi_sel_parse_ctx_set_debug_prefix (state_data.sel_parse_ctx,
+						   hostname) < 0)
+	    pstdout_fprintf (pstate,
+			     stderr,
+			     "ipmi_sel_parse_ctx_set_debug_prefix: %s\n",
+			     ipmi_sel_parse_ctx_errormsg (state_data.sel_parse_ctx));
         }
     }
 
