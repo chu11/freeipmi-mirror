@@ -5,6 +5,8 @@
 	where invalid SDR record could be loaded if shared sensors are
 	utilized on event only records.
 
+	* configure.ac: Update library revision numbers appropriately.
+
 2011-10-14  Albert Chu <chu11@llnl.gov>
 
 	* NEWS, configure.ac: Update for release.
