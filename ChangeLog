@@ -1,3 +1,10 @@
+2011-10-17  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/sdr-cache/ipmi-sdr-cache-read.c (ipmi_sdr_cache_search_sensor),
+	libfreeipmi/src/sdr-cache/ipmi-sdr-cache-defs.h: Fix corner case
+	where invalid SDR record could be loaded if shared sensors are
+	utilized on event only records.
+
 2011-10-14  Albert Chu <chu11@llnl.gov>
 
 	* etc/freeipmi.conf: Fix example/doc consistency.

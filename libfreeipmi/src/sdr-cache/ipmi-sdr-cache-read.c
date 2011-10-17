@@ -505,8 +505,18 @@ ipmi_sdr_cache_search_sensor (ipmi_sdr_cache_ctx_t ctx, uint8_t sensor_number, u
             {
               uint8_t share_count;
               
-              share_count = ptr[IPMI_SDR_CACHE_SDR_RECORD_COMPACT_SHARE_COUNT];
-              share_count >>= IPMI_SDR_CACHE_SDR_RECORD_COMPACT_SHARE_COUNT_SHIFT;
+	      if (record_type_current == IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD)
+		{
+		  share_count = ptr[IPMI_SDR_CACHE_SDR_RECORD_COMPACT_SHARE_COUNT];
+		  share_count &= IPMI_SDR_CACHE_SDR_RECORD_COMPACT_SHARE_COUNT_BITMASK;
+		  share_count >>= IPMI_SDR_CACHE_SDR_RECORD_COMPACT_SHARE_COUNT_SHIFT;
+		}
+	      else
+		{
+		  share_count = ptr[IPMI_SDR_CACHE_SDR_RECORD_EVENT_SHARE_COUNT];
+		  share_count &= IPMI_SDR_CACHE_SDR_RECORD_EVENT_SHARE_COUNT_BITMASK;
+		  share_count >>= IPMI_SDR_CACHE_SDR_RECORD_EVENT_SHARE_COUNT_SHIFT;
+		}
               
               /* IPMI spec gives the following example:
                *
