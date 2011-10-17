@@ -2,6 +2,10 @@ FreeIPMI 1.0.8 - 09/28/11
 -------------------------
 o Fix corner case in which invalid SDR entry could be loaded when
   shared sensors exist on event only records.
+o Fix several event output corner cases.
+o Support Intel Node Manager sensor/SEL events for Intel S2600JF/Appro
+  512X.
+o Fix 'assumesystemevent' workaround for ipmi-sel.
 
 FreeIPMI 1.0.7 - 09/28/11
 -------------------------

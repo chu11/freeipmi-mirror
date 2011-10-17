@@ -124,6 +124,8 @@ extern "C" {
 #define IPMI_INTEL_PRODUCT_ID_S5500WB  62
 #define IPMI_INTEL_PRODUCT_ID_SR1625   62
 
+#define IPMI_INTEL_PRODUCT_ID_S2600JF  77
+
 /* 
  * Intel derived
  */
@@ -131,6 +133,8 @@ extern "C" {
 #define IPMI_CALIFORNIA_DIGITAL_PRODUCT_ID_6440 IPMI_INTEL_PRODUCT_ID_SR870BN4
 
 #define IPMI_PENGUIN_COMPUTING_PRODUCT_ID_RELION_700 IPMI_INTEL_PRODUCT_ID_S5500WB
+
+#define IPMI_APPRO_PRODUCT_ID_512X IPMI_INTEL_PRODUCT_ID_S2600JF
 
 /*******************************************
  * IBM                                     *

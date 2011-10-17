@@ -177,6 +177,10 @@ sel_parse_get_record_header_info (ipmi_sel_parse_ctx_t ctx,
           goto cleanup;
         }
       (*record_type) = val;
+
+      if (ctx->flags & IPMI_SEL_PARSE_FLAGS_ASSUME_SYTEM_EVENT_RECORDS
+	  && !IPMI_SEL_RECORD_TYPE_VALID ((*record_type)))
+	(*record_type) = IPMI_SEL_RECORD_TYPE_SYSTEM_EVENT_RECORD;
     }
 
   rv = 0;
@@ -206,7 +210,6 @@ sel_parse_get_timestamp (ipmi_sel_parse_ctx_t ctx,
       ctx->errnum = IPMI_SEL_PARSE_ERR_INVALID_SEL_ENTRY;
       goto cleanup;
     }
-
 
   if (sel_parse_get_record_header_info (ctx,
                                         sel_parse_entry,

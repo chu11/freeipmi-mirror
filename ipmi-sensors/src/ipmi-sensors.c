@@ -1041,7 +1041,8 @@ _output_sensor (ipmi_sensors_state_data_t *state_data,
        */
       if (state_data->prog_data->args->interpret_oem_data
           && ((state_data->oem_data.manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL
-               && state_data->oem_data.product_id == IPMI_INTEL_PRODUCT_ID_S5500WB)
+               && (state_data->oem_data.product_id == IPMI_INTEL_PRODUCT_ID_S5500WB
+		   || state_data->oem_data.product_id == IPMI_INTEL_PRODUCT_ID_S2600JF))
               || (state_data->oem_data.manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
                   && (state_data->oem_data.product_id == IPMI_INVENTEC_PRODUCT_ID_5441
                       || state_data->oem_data.product_id == IPMI_INVENTEC_PRODUCT_ID_5442))
@@ -1143,6 +1144,7 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
        * For Intel Chips, not just Intel Motherboards.  Confirmed for:
        *
        * Intel S5500WB/Penguin Computing Relion 700
+       * Intel S2600JF/Appro 512X
        * Inventec 5441/Dell Xanadu II
        * Inventec 5442/Dell Xanadu III
        * Quanta S99Q/Dell FS12-TY
@@ -1152,7 +1154,8 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
        * sensor it is via the sensor number.
        */
       if ((state_data->oem_data.manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL
-           && state_data->oem_data.product_id == IPMI_INTEL_PRODUCT_ID_S5500WB)
+           && (state_data->oem_data.product_id == IPMI_INTEL_PRODUCT_ID_S5500WB
+	       || state_data->oem_data.product_id == IPMI_INTEL_PRODUCT_ID_S2600JF))
           || (state_data->oem_data.manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
               && (state_data->oem_data.product_id == IPMI_INVENTEC_PRODUCT_ID_5441
                   || state_data->oem_data.product_id == IPMI_INVENTEC_PRODUCT_ID_5442))

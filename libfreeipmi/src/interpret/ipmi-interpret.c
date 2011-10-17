@@ -179,6 +179,8 @@ ipmi_interpret_ctx_get_flags (ipmi_interpret_ctx_t ctx, unsigned int *flags)
 int
 ipmi_interpret_ctx_set_flags (ipmi_interpret_ctx_t ctx, unsigned int flags)
 {
+  unsigned int tmpflags = 0;
+
   if (!ctx || ctx->magic != IPMI_INTERPRET_CTX_MAGIC)
     {
       ERR_TRACE (ipmi_interpret_ctx_errormsg (ctx), ipmi_interpret_ctx_errnum (ctx));
@@ -191,6 +193,16 @@ ipmi_interpret_ctx_set_flags (ipmi_interpret_ctx_t ctx, unsigned int flags)
       return (-1);
     }
 
+  if (flags & IPMI_INTERPRET_FLAGS_SEL_ASSUME_SYSTEM_EVENT_RECORDS)
+    tmpflags |= IPMI_SEL_PARSE_FLAGS_ASSUME_SYTEM_EVENT_RECORDS;
+
+  
+  if (ipmi_sel_parse_ctx_set_flags (ctx->sel_parse_ctx, tmpflags) < 0)
+    {
+      INTERPRET_SEL_PARSE_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_parse_ctx);
+      return (-1);
+    }
+  
   ctx->flags = flags;
   ctx->errnum = IPMI_INTERPRET_ERR_SUCCESS;
   return (0);
