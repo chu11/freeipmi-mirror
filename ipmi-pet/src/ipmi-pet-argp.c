@@ -53,9 +53,9 @@ const char *argp_program_bug_address =
   "<" PACKAGE_BUGREPORT ">";
 
 static char cmdline_doc[] =
-  "ipmi-pet - IPMI probing utility";
+  "ipmi-pet - IPMI Platform Event Trap Interpreter";
 
-static char cmdline_args_doc[] = "";
+static char cmdline_args_doc[] = "[SPECIFIC TRAP] [VARIABLE BINDING HEX BYTES ...]";
 
 static struct argp_option cmdline_options[] =
   {

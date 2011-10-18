@@ -3,14 +3,23 @@
 IPMI \- IPMI Platform Event Trap Interpreter
 .SH "SYNOPSIS"
 .B ipmi-pet
-[\fIOPTION\fR...] [HEX BYTES...]
+[\fIOPTION\fR...] [SPECIFIC TRAP] [VARIABLE BINDING HEX BYTES ...]
 .SH "DESCRIPTION"
 .B Ipmi-pet
-interprets hex bytes for a platform event trap and outputs a string
+interprets hex bytes from a platform event trap (PET) and outputs a string
 representing its contents.
 .B Ipmi-pet
 is commonly used in conjunction with an SNMP trap daemon to intrepret
 the results from an IPMI PET trap captured by the daemon.
+.TP
+While an IPMI session is not required to interpret a PET, data from
+the sensor data repository (SDR) is required to properly interpret
+sensor names and other information in the PET.  IPMI session
+configuration below, such as driver, hostname, username, etc. should
+be configured to load the SDR of the appropriate host.  If the
+\fB\-\-ignore\-sdr\-cache\fR option is specified, an SDR will not be
+loaded, an IPMI session will not be required, and the PET will be
+interpreted as best as possible given no SDR.
 #include <@top_srcdir@/common/man/manpage-common-general-options-header.man>
 #include <@top_srcdir@/common/man/manpage-common-driver.man>
 #include <@top_srcdir@/common/man/manpage-common-inband.man>
@@ -57,6 +66,7 @@ if \fB\-\-output\-event\-state\fR not specified.
 #include <@top_srcdir@/common/man/manpage-common-no-header-output.man>
 #include <@top_srcdir@/common/man/manpage-common-non-abbreviated-units.man>
 #include <@top_srcdir@/common/man/manpage-common-sdr-options.man>
+#include <@top_srcdir@/common/man/manpage-common-ignore-sdr-cache.man>
 #include <@top_srcdir@/common/man/manpage-common-oem-interpretation.man>
 .LP
 Currently None
