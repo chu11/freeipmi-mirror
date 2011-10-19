@@ -118,7 +118,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       if (errno
           || ptr[0] != '\0')
         {
-          fprintf (stderr, "invalid channel number\n");
+          fprintf (stderr, "invalid slave address\n");
           exit (1);
         }
       cmd_args->slave_address_arg = (uint8_t) value;
@@ -165,7 +165,15 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
         
 	if (cmd_args->cmd_length < IPMI_RAW_MAX_ARGS)
 	  {
-	    value = strtol (arg, (char **) NULL, 16);
+	    ptr = NULL;
+	    errno = 0;
+	    value = strtol (arg, &ptr, 16);
+	    if (errno
+		|| ptr[0] != '\0')
+	      {
+		fprintf (stderr, "invalid hex byte argument\n");
+		exit (1);
+	      }
 	    cmd_args->cmd[cmd_args->cmd_length++] = (uint8_t) value;
 	  }
 	else
