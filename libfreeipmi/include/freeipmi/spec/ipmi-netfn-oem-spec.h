@@ -62,6 +62,7 @@ extern "C" {
   
 /*
  * Intel S5500WB/Penguin Computing Relion 700
+ * Intel S2600JF/Appro 512X
  */
 
 /* achu: not official names, named based on use context */

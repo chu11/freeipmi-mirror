@@ -1,5 +1,5 @@
 noinst_HEADERS = \
-	ipmi-locate.h \
+	ipmi-locate_.h \
 	ipmi-locate-argp.h
 
 AM_CPPFLAGS = \

@@ -47,6 +47,7 @@ extern "C" {
 
 #define IPMI_SEL_PARSE_FLAGS_DEFAULT                              0x0000
 #define IPMI_SEL_PARSE_FLAGS_DEBUG_DUMP                           0x0001
+#define IPMI_SEL_PARSE_FLAGS_ASSUME_SYTEM_EVENT_RECORDS           0x0002
 
 #define IPMI_SEL_PARSE_STRING_FLAGS_DEFAULT                       0x0000
 #define IPMI_SEL_PARSE_STRING_FLAGS_VERBOSE                       0x0001

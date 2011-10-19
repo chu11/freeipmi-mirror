@@ -593,8 +593,12 @@ get_management_subsystem_health_event_data2_message (unsigned int offset, uint8_
 
   assert (buf && buflen);
 
-  if (offset == IPMI_SENSOR_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH_SENSOR_FAILURE)
-    rv = _snprintf (buf, buflen, "Sensor Number #%d", event_data2);
+  if (offset == IPMI_SENSOR_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH_SENSOR_ACCESS_DEGRADED_OR_UNAVAILABLE
+      || offset == IPMI_SENSOR_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH_SENSOR_FAILURE)
+    {
+      rv = _snprintf (buf, buflen, "Sensor Number #%d", event_data2);
+      return (rv);
+    }
   else if (offset == IPMI_SENSOR_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH_FRU_FAILURE)
     {
       fiid_template_t tmpl_event_data2 =

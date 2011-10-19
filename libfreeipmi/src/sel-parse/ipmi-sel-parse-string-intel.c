@@ -97,8 +97,10 @@ ipmi_sel_parse_output_intel_sensor_name (ipmi_sel_parse_ctx_t ctx,
   /* OEM Interpretation
    *
    * Intel S5500WB/Penguin Computing Relion 700
+   * Intel S2600JF/Appro 512X
    */
-  if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S5500WB)
+  if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S5500WB
+      || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600JF)
     {
       int nmret;
 
@@ -154,8 +156,6 @@ ipmi_sel_parse_output_intel_event_data1_class_oem (ipmi_sel_parse_ctx_t ctx,
    */
   if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S5500WB)
     {
-      int nmret;
-
       if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
 	  && ((system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_PCIE_FATAL_SENSOR
 	       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_FATAL_SENSOR)
@@ -175,6 +175,17 @@ ipmi_sel_parse_output_intel_event_data1_class_oem (ipmi_sel_parse_ctx_t ctx,
 	  if (ret > 0)
 	    return (1);
 	}
+    }
+
+  /* OEM Interpretation
+   *
+   * Intel S5500WB/Penguin Computing Relion 700
+   * Intel S2600JF/Appro 512X
+   */
+  if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S5500WB
+      || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600JF)
+    {
+      int nmret;
 
       if ((nmret = ipmi_sel_parse_output_intel_node_manager_event_data1_class_oem (ctx,
                                                                                    sel_parse_entry,
@@ -185,7 +196,7 @@ ipmi_sel_parse_output_intel_event_data1_class_oem (ipmi_sel_parse_ctx_t ctx,
                                                                                    wlen,
                                                                                    system_event_record_data)) < 0)
         return (-1);
-
+      
       if (nmret)
         return (1);
     }
@@ -319,8 +330,6 @@ ipmi_sel_parse_output_intel_event_data2_class_oem (ipmi_sel_parse_ctx_t ctx,
    */
   if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S5500WB)
     {
-      int nmret;
-
       if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
 	  && ((system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_PCIE_FATAL_SENSOR
 	       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_FATAL_SENSOR)
@@ -348,6 +357,17 @@ ipmi_sel_parse_output_intel_event_data2_class_oem (ipmi_sel_parse_ctx_t ctx,
 	  
 	  return (1);
 	}
+    }
+
+  /* OEM Interpretation
+   *
+   * Intel S5500WB/Penguin Computing Relion 700
+   * Intel S2600JF/Appro 512X
+   */
+  if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S5500WB
+      || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600JF)
+    {
+      int nmret;
 
       if ((nmret = ipmi_sel_parse_output_intel_node_manager_event_data2_class_oem (ctx,
                                                                                    sel_parse_entry,
@@ -585,8 +605,6 @@ ipmi_sel_parse_output_intel_event_data3_class_oem (ipmi_sel_parse_ctx_t ctx,
    */
   if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S5500WB)
     {
-      int nmret;
-
       if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
 	  && ((system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_PCIE_FATAL_SENSOR
 	       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_FATAL_SENSOR)
@@ -597,6 +615,17 @@ ipmi_sel_parse_output_intel_event_data3_class_oem (ipmi_sel_parse_ctx_t ctx,
 	  
 	  return (1);
 	}
+    }
+
+  /* OEM Interpretation
+   *
+   * Intel S5500WB/Penguin Computing Relion 700
+   * Intel S2600JF/Appro 512X
+   */
+  if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S5500WB
+      || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600JF)
+    {
+      int nmret;
 
       if ((nmret = ipmi_sel_parse_output_intel_node_manager_event_data3_class_oem (ctx,
                                                                                    sel_parse_entry,
