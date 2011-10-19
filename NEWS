@@ -6,7 +6,9 @@ o Fix several event output corner cases.
 o Support Intel Node Manager sensor/SEL events for Intel S2600JF/Appro
   512X.
 o Fix 'assumesystemevent' workaround for ipmi-sel.
-o Fix ipmi-raw allocation bug on newer systems, such as RHEL6.
+o Fix ipmi-raw and ipmi-oem allocation bug on newer systems, such as
+  RHEL6.
+o Other minor bug fixes.
 
 FreeIPMI 1.0.7 - 09/28/11
 -------------------------

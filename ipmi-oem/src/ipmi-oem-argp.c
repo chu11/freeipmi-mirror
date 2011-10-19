@@ -25,15 +25,11 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
-#if HAVE_UNISTD_H
-#include <unistd.h>
-#endif /* HAVE_UNISTD_H */
 #if HAVE_ARGP_H
 #include <argp.h>
 #else /* !HAVE_ARGP_H */
 #include "freeipmi-argp.h"
 #endif /* !HAVE_ARGP_H */
-#include <limits.h>
 #include <errno.h>
 
 #include "ipmi-oem.h"
@@ -126,7 +122,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           }
         else
           {
-            if (cmd_args->oem_options_count < cmd_args->arg_max)
+            if (cmd_args->oem_options_count < IPMI_OEM_MAX_ARGS)
               {
                 if (!(cmd_args->oem_options[cmd_args->oem_options_count] = strdup (arg)))
                   {
@@ -136,6 +132,11 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
                 cmd_args->oem_options_count++;
                 break;
               }
+	    else
+	      {
+		fprintf (stderr, "Too many arguments specified\n");
+		exit (1);
+	      }
           }
         break;
       }
@@ -190,21 +191,9 @@ ipmi_oem_argp_parse (int argc, char **argv, struct ipmi_oem_arguments *cmd_args)
   cmd_args->verbose_count = 0;
   cmd_args->oem_id = NULL;
   cmd_args->oem_command = NULL;
-  errno = 0;
-  if ((cmd_args->arg_max = sysconf (_SC_ARG_MAX)) <= 0)
-    {
-      if (errno)
-        {
-          perror ("sysconf");
-          exit (1);
-        }
-      cmd_args->arg_max = LONG_MAX;
-    }
-  if (!(cmd_args->oem_options = (char **)calloc (cmd_args->arg_max, sizeof (char *))))
-    {
-      perror ("calloc");
-      exit (1);
-    }
+  memset (cmd_args->oem_options,
+	  '\0',
+	  sizeof (char *) * IPMI_OEM_MAX_ARGS);
   cmd_args->oem_options_count = 0;
 
   argp_parse (&cmdline_config_file_argp,

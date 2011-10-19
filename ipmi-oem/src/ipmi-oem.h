@@ -24,6 +24,9 @@
 #include "tool-cmdline-common.h"
 #include "pstdout.h"
 
+/* seems like a nice size */
+#define IPMI_OEM_MAX_ARGS 1024
+
 enum ipmi_sensors_argp_option_keys
   {
     LIST_KEY = 'L',
@@ -39,9 +42,8 @@ struct ipmi_oem_arguments
   int verbose_count;
   char *oem_id;
   char *oem_command;
-  char **oem_options;
+  char *oem_options[IPMI_OEM_MAX_ARGS];
   unsigned int oem_options_count;
-  long arg_max;
 };
 
 typedef struct ipmi_oem_prog_data
