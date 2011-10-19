@@ -1,3 +1,7 @@
+2011-10-19  Albert Chu <chu11@llnl.gov>
+
+	* Document Intel S2600JF/Appro 512X IPMI bugs.
+	
 2011-10-18  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-raw/, ipmi-oem/: Fix allocation bug due to much larger

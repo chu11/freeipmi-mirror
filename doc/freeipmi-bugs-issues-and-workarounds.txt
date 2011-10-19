@@ -55,6 +55,7 @@ Supermicro X8DTH
 MSI MS-91D2
 Dell Poweredge 2900
 Dell Poweredge 2950
+Intel S2600JF/Appro 512X
 
 The remaining motherboards (and subsequent bugs/issues/workarounds)
 listed below are from interaction with users in the community and I
@@ -223,6 +224,13 @@ algorithms.").  No current resolution. [NICETOHAVE]
 MSI MS-91D2: Disabling a specific cipher suite ID does not prohibit a
 user from continuing to use that cipher suite ID.  No current
 resolution.
+
+Intel S2600JF/Appro 512X: The remote BMC incorrectly calculates keys
+using the privilege specified in the open session stage rather than
+the privilege used during the RAKP1 stage.  This can be problematic if
+you specify IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL during that stage
+instead of a real privilege level.  Resolved with a workaround to
+handle this specific situation.
 
 Session Issues
 --------------
@@ -435,6 +443,12 @@ MSI MS-91D2: The Activate / Deactivate Payload commands appear to
 require Admin privileges, regardless of how SOL support is configured.
 The IPMI specification indicates privilege requirements for executing
 these commands depends on configuration.  No current resolution.
+
+Intel S2600JF/Appro 512X: When a SOL session is closed by another
+session, the initial SOL session is not given a "SOL is deactivating"
+flag in a BMC to Remote Console packet.  Not a severe issue, since the
+SOL session will eventually time out, but it isn't clean.  This bug is
+confirmed to be fixed on newer firmware.
 
 bmc-config
 ----------
