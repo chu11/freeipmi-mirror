@@ -163,8 +163,16 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
               }
           }
         
-        value = strtol (arg, (char **) NULL, 16);
-        cmd_args->cmd[cmd_args->cmd_length++] = (uint8_t) value;
+	if (cmd_args->cmd_length < IPMI_RAW_MAX_ARGS)
+	  {
+	    value = strtol (arg, (char **) NULL, 16);
+	    cmd_args->cmd[cmd_args->cmd_length++] = (uint8_t) value;
+	  }
+	else
+	  {
+	    fprintf (stderr, "Too many arguments specified\n");
+	    exit (1);
+	  }
         
         break;
       }

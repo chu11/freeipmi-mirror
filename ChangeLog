@@ -1,7 +1,11 @@
 2011-10-18  Albert Chu <chu11@llnl.gov>
 
-	* ipmi-raw/: Fix allocation bug due to much larger _SC_ARG_MAX on
-	RHEL6.  Assume max args is 65536 * 2.
+	* ipmi-raw/, ipmi-oem/: Fix allocation bug due to much larger
+	_SC_ARG_MAX on RHEL6.  Assume max args appropriately for each
+	tool.
+
+	* ipmi-raw/, ipmi-oem/: Output error when excess arguments
+	specified.
 	
 2011-10-17  Albert Chu <chu11@llnl.gov>
 
