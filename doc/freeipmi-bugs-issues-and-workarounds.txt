@@ -214,7 +214,8 @@ calculates keys using the privilege specified in the open session
 stage rather than the privilege used during the RAKP1 stage.  This can
 be problematic if you specify IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL
 during that stage instead of a real privilege level.  Resolved with a
-workaround to handle this specific situation.
+workaround to handle this specific situation.  Due to legacy issues,
+vendor has elected to not fix this bug.
 
 MSI MS-91D2: When attempting to authenticate with a disabled Cipher
 Suite ID, a 12h status ("Illegal or Unrecognized parameter.") is
