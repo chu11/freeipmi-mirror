@@ -1,5 +1,10 @@
 2011-10-19  Albert Chu <chu11@llnl.gov>
 
+	* ipmi-raw/src/ipmi-raw-argp.c: Fix error message.  Check raw byte
+	inputs for correctness.
+	
+2011-10-19  Albert Chu <chu11@llnl.gov>
+
 	* Document Intel S2600JF/Appro 512X IPMI bugs.
 	
 2011-10-18  Albert Chu <chu11@llnl.gov>
