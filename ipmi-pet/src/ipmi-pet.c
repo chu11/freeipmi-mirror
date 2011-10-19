@@ -73,7 +73,7 @@ run_cmd_args (ipmi_pet_state_data_t *state_data)
   if (args->sdr.flush_cache)
     return (_flush_cache (state_data));
   
-  if (args->cmd_length)
+  if (args->variable_bindings_length)
     {
 #if 0
       if (ipmi_pet_cmdline (state_data) < 0)

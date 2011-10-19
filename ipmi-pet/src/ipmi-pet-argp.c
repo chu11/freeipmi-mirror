@@ -25,15 +25,11 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
-#if HAVE_UNISTD_H
-#include <unistd.h>
-#endif /* HAVE_UNISTD_H */
 #if HAVE_ARGP_H
 #include <argp.h>
 #else /* !HAVE_ARGP_H */
 #include "freeipmi-argp.h"
 #endif /* !HAVE_ARGP_H */
-#include <limits.h>
 #include <errno.h>
 
 #include "ipmi-pet.h"
@@ -150,7 +146,25 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       {
         unsigned int i;
         long value;
-        
+	char *ptr = NULL;
+
+	if (!cmd_args->specific_trap_set)
+	  {
+	    unsigned long tmp;
+
+	    errno = 0;
+	    tmp = strtoul (arg, &ptr, 0);
+	    if (errno
+		|| ptr[0] != '\0')
+	      {
+		fprintf (stderr, "invalid specific trap argument\n");
+		exit (1);
+	      }
+	    
+	    cmd_args->specific_trap = tmp;
+	    cmd_args->specific_trap_set = 1;
+	  }
+	
         if (strlen (arg) >= 2)
           {
             if (strncmp (arg, "0x", 2) == 0)
@@ -159,7 +173,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
         
         if (*arg == '\0')
           {
-            fprintf (stderr, "invalid hex byte argument\n");
+            fprintf (stderr, "invalid variable binding hex byte argument\n");
             exit (1);
           }
         
@@ -167,19 +181,26 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           {
             if (i >= 2)
               {
-                fprintf (stderr, "invalid hex byte argument\n");
+                fprintf (stderr, "invalid variable binding hex byte argument\n");
                 exit (1);
               }
             
             if (!isxdigit (arg[i]))
               {
-                fprintf (stderr, "invalid hex byte argument\n");
+                fprintf (stderr, "invalid variable binding hex byte argument\n");
                 exit (1);
               }
           }
         
-        value = strtol (arg, (char **) NULL, 16);
-        cmd_args->cmd[cmd_args->cmd_length++] = (uint8_t) value;
+	errno = 0;
+        value = strtol (arg, &ptr, 16);
+	if (errno
+	    || !ptr[0] != '\0')
+	  {
+	    fprintf (stderr, "invalid variable binding hex byte argument\n");
+	    exit (1);
+	  }
+        cmd_args->variable_bindings[cmd_args->variable_bindings_length++] = (uint8_t) value;
         
         break;
       }
@@ -234,6 +255,12 @@ _ipmi_pet_config_file_parse (struct ipmi_pet_arguments *cmd_args)
     cmd_args->non_abbreviated_units = config_file_data.non_abbreviated_units;
 }
 
+static void
+_ipmi_pet_args_validate (struct ipmi_pet_arguments *cmd_args)
+{
+  /* XXX check lengths & stuff */
+}
+
 void
 ipmi_pet_argp_parse (int argc, char **argv, struct ipmi_pet_arguments *cmd_args)
 {
@@ -249,23 +276,13 @@ ipmi_pet_argp_parse (int argc, char **argv, struct ipmi_pet_arguments *cmd_args)
   cmd_args->comma_separated_output = 0;
   cmd_args->no_header_output = 0;
   cmd_args->non_abbreviated_units = 0;
-  errno = 0;
-  if ((cmd_args->arg_max = sysconf (_SC_ARG_MAX)) <= 0)
-    {
-      if (errno)
-        {
-          perror ("sysconf");
-          exit (1);
-        }
-      cmd_args->arg_max = LONG_MAX;
-    }
-  if (!(cmd_args->cmd = calloc (cmd_args->arg_max, sizeof (uint8_t))))
-    {
-      perror ("calloc");
-      exit (1);
-    }
-  cmd_args->cmd_length = 0;
-
+  cmd_args->specific_trap = 0;
+  cmd_args->specific_trap_set = 0;
+  memset (cmd_args->variable_bindings,
+          '\0',
+          sizeof (char *) * IPMI_PET_MAX_ARGS);
+  cmd_args->variable_bindings_length = 0;
+  
   argp_parse (&cmdline_config_file_argp,
               argc,
               argv,
@@ -284,5 +301,6 @@ ipmi_pet_argp_parse (int argc, char **argv, struct ipmi_pet_arguments *cmd_args)
 
   verify_common_cmd_args (&(cmd_args->common));
   verify_sdr_cmd_args (&(cmd_args->sdr));
+  _ipmi_pet_args_validate (cmd_args);
 }
 

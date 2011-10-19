@@ -23,6 +23,9 @@
 
 #include "tool-cmdline-common.h"
 
+/* seems like a nice size */
+#define IPMI_PET_MAX_ARGS 1024
+
 enum ipmi_pet_argp_option_keys
   {
     VERBOSE_KEY = 'v',
@@ -51,9 +54,10 @@ struct ipmi_pet_arguments
   int comma_separated_output;
   int no_header_output;
   int non_abbreviated_units;
-  long arg_max;
-  uint8_t *cmd;
-  int cmd_length;
+  uint32_t specific_trap;
+  int specific_trap_set;
+  uint8_t variable_bindings[IPMI_PET_MAX_ARGS];
+  int variable_bindings_length;
 };
 
 typedef struct ipmi_pet_prog_data

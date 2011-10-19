@@ -8,10 +8,18 @@ IPMI \- IPMI Platform Event Trap Interpreter
 .B Ipmi-pet
 interprets hex bytes from a platform event trap (PET) and outputs a string
 representing its contents.
+
 .B Ipmi-pet
 is commonly used in conjunction with an SNMP trap daemon to intrepret
-the results from an IPMI PET trap captured by the daemon.
-.TP
+the results from an IPMI PET trap captured by the daemon.  While
+.B ipmi-pet
+could be called directly from such a daemon, typically a script is called
+to parse the SNMP daemon's output and convert it into a form that can be input
+into
+.B ipmi-pet.
+If the SNMP daemon does not output a SNMPv1 \fIspecific trap\fR on its
+own, it is typically output as the last element of the OID in SNMPv2.
+
 While an IPMI session is not required to interpret a PET, data from
 the sensor data repository (SDR) is required to properly interpret
 sensor names and other information in the PET.  IPMI session
@@ -19,7 +27,10 @@ configuration below, such as driver, hostname, username, etc. should
 be configured to load the SDR of the appropriate host.  If the
 \fB\-\-ignore\-sdr\-cache\fR option is specified, an SDR will not be
 loaded, an IPMI session will not be required, and the PET will be
-interpreted as best as possible given no SDR.
+interpreted as best as possible given no SDR (the output will be
+similar to
+.B ipmi-sel
+when \fB\-\-ignore\-sdr\-cache\fR is specified).
 #include <@top_srcdir@/common/man/manpage-common-general-options-header.man>
 #include <@top_srcdir@/common/man/manpage-common-driver.man>
 #include <@top_srcdir@/common/man/manpage-common-inband.man>
