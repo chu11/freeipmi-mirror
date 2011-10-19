@@ -24,6 +24,9 @@
 #include "tool-cmdline-common.h"
 #include "pstdout.h"
 
+/* IPMI 2.0 Payload is 2 bytes, so we'll assume that size * 2 for good measure */
+#define IPMI_RAW_MAX_ARGS (65536*2)
+
 enum ipmi_raw_argp_option_keys
   {
     CHANNEL_NUMBER_KEY = 160,
@@ -40,8 +43,7 @@ struct ipmi_raw_arguments
   int slave_address;
   uint8_t slave_address_arg;
   char *cmd_file;
-  long arg_max;
-  uint8_t *cmd;
+  uint8_t cmd[IPMI_RAW_MAX_ARGS];
   int cmd_length;
 };
 

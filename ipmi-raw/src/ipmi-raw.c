@@ -70,7 +70,7 @@ ipmi_raw_cmdline (ipmi_raw_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (!(bytes_rs = calloc (state_data->prog_data->args->arg_max, sizeof (uint8_t))))
+  if (!(bytes_rs = calloc (IPMI_RAW_MAX_ARGS, sizeof (uint8_t))))
     {
       pstdout_perror (state_data->pstate, "calloc");
       goto cleanup;
@@ -87,7 +87,7 @@ ipmi_raw_cmdline (ipmi_raw_state_data_t *state_data)
                                        &bytes_rq[2],
                                        send_len - 2,
                                        bytes_rs,
-                                       state_data->prog_data->args->arg_max)) < 0)
+                                       IPMI_RAW_MAX_ARGS)) < 0)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
@@ -104,7 +104,7 @@ ipmi_raw_cmdline (ipmi_raw_state_data_t *state_data)
                                   &bytes_rq[2],
                                   send_len - 2,
                                   bytes_rs,
-                                  state_data->prog_data->args->arg_max)) < 0)
+                                  IPMI_RAW_MAX_ARGS)) < 0)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
@@ -275,7 +275,7 @@ ipmi_raw_stream (ipmi_raw_state_data_t *state_data, FILE *stream)
           goto end_loop;
         }
 
-      if (!(bytes_rs = calloc (state_data->prog_data->args->arg_max, sizeof (uint8_t))))
+      if (!(bytes_rs = calloc (IPMI_RAW_MAX_ARGS, sizeof (uint8_t))))
         {
           pstdout_perror (state_data->pstate, "calloc");
           goto cleanup;
@@ -292,7 +292,7 @@ ipmi_raw_stream (ipmi_raw_state_data_t *state_data, FILE *stream)
                                            &bytes_rq[2],
                                            send_len - 2,
                                            bytes_rs,
-                                           state_data->prog_data->args->arg_max)) < 0)
+                                           IPMI_RAW_MAX_ARGS)) < 0)
             {
               pstdout_fprintf (state_data->pstate,
                                stderr,
@@ -309,7 +309,7 @@ ipmi_raw_stream (ipmi_raw_state_data_t *state_data, FILE *stream)
                                       &bytes_rq[2],
                                       send_len - 2,
                                       bytes_rs,
-                                      state_data->prog_data->args->arg_max)) < 0)
+                                      IPMI_RAW_MAX_ARGS)) < 0)
             {
               pstdout_fprintf (state_data->pstate,
                                stderr,

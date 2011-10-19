@@ -1,3 +1,8 @@
+2011-10-18  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-raw/: Fix allocation bug due to much larger _SC_ARG_MAX on
+	RHEL6.  Assume max args is 65536 * 2.
+	
 2011-10-17  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sel/, libfreeipmi/src/sel-parse/: Fix the assumesystemevent
