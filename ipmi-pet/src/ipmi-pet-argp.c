@@ -146,16 +146,16 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       {
         unsigned int i;
         long value;
-	char *ptr = NULL;
+	char *endptr = NULL;
 
 	if (!cmd_args->specific_trap_set)
 	  {
 	    unsigned long tmp;
 
 	    errno = 0;
-	    tmp = strtoul (arg, &ptr, 0);
+	    tmp = strtoul (arg, &endptr, 0);
 	    if (errno
-		|| ptr[0] != '\0')
+		|| endptr[0] != '\0')
 	      {
 		fprintf (stderr, "invalid specific trap argument\n");
 		exit (1);
@@ -193,9 +193,9 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           }
         
 	errno = 0;
-        value = strtol (arg, &ptr, 16);
+        value = strtol (arg, &endptr, 16);
 	if (errno
-	    || !ptr[0] != '\0')
+	    || !endptr[0] != '\0')
 	  {
 	    fprintf (stderr, "invalid variable binding hex byte argument\n");
 	    exit (1);
