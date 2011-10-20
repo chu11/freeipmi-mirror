@@ -70,6 +70,14 @@ ipmi_raw_cmdline (ipmi_raw_state_data_t *state_data)
       goto cleanup;
     }
 
+  if (!IPMI_NET_FN_RQ_VALID (bytes_rq[1]))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "Invalid netfn value\n");
+      goto cleanup;
+    }
+  
   if (!(bytes_rs = calloc (IPMI_RAW_MAX_ARGS, sizeof (uint8_t))))
     {
       pstdout_perror (state_data->pstate, "calloc");
@@ -284,6 +292,15 @@ ipmi_raw_stream (ipmi_raw_state_data_t *state_data, FILE *stream)
                            line_count);
           goto end_loop;
         }
+
+      if (!IPMI_NET_FN_RQ_VALID (bytes_rq[1]))
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "Invalid netfn value on line %d\n",
+			   line_count);
+	  goto end_loop;
+	}
 
       if (!(bytes_rs = calloc (IPMI_RAW_MAX_ARGS, sizeof (uint8_t))))
         {

@@ -1,5 +1,11 @@
 2011-10-19  Albert Chu <chu11@llnl.gov>
 
+	* ipmi-raw/src/ipmi-raw.c: Check for valid netfn request input.
+
+	* libfreeipmi/src/api/: Check for valid netfn request input on raw functions.
+	
+2011-10-19  Albert Chu <chu11@llnl.gov>
+
 	* ipmi-raw/src/ipmi-raw-argp.c: Fix error message.  Check raw byte
 	inputs for correctness.
 
