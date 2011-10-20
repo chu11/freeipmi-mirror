@@ -1,4 +1,4 @@
-2011-10-20  Albert Chu <chu11@llnl.gov>
+2011-10-19  Albert Chu <chu11@llnl.gov>
 
 	* Global cleanup, consistently and correctly check for errors when
 	calling strtol, strtoul, strtod, etc.
