@@ -150,7 +150,7 @@ cmdline_parse (int key,
                struct argp_state *state)
 {
   struct ipmipower_arguments *cmd_args = state->input;
-  char *ptr;
+  char *endptr;
   error_t ret;
   int tmp = 0;
 
@@ -207,8 +207,10 @@ cmdline_parse (int key,
       /* RETRY_WAIT_TIMEOUT for backwards compatability */
     case RETRY_WAIT_TIMEOUT_KEY:
     case RETRANSMISSION_WAIT_TIMEOUT_KEY:       /* --retransmission-wait-timeout */
-      tmp = strtol (arg, &ptr, 10);
-      if (ptr != (arg + strlen (arg))
+      errno = 0;
+      tmp = strtol (arg, &endptr, 10);
+      if (errno
+	  || endptr[0] != '\0'
           || tmp <= 0)
         {
           fprintf (stderr, "retransmission wait timeout length invalid");
@@ -219,8 +221,10 @@ cmdline_parse (int key,
       /* RETRY_BACKOFF_COUNT for backwards compatability */
     case RETRY_BACKOFF_COUNT_KEY:
     case RETRANSMISSION_BACKOFF_COUNT_KEY:       /* --retransmission-backoff-count */
-      tmp = strtol (arg, &ptr, 10);
-      if (ptr != (arg + strlen (arg))
+      errno = 0;
+      tmp = strtol (arg, &endptr, 10);
+      if (errno
+	  || endptr[0] != '\0'
           || tmp <= 0)
         {
           fprintf (stderr, "retransmission backoff count invalid");
@@ -229,8 +233,10 @@ cmdline_parse (int key,
       cmd_args->retransmission_backoff_count = tmp;
       break;
     case PING_INTERVAL_KEY:       /* --ping-interval */
-      tmp = strtol (arg, &ptr, 10);
-      if (ptr != (arg + strlen (arg))
+      errno = 0;
+      tmp = strtol (arg, &endptr, 10);
+      if (errno
+	  || endptr[0] != '\0'
           || tmp < 0)
         {
           fprintf (stderr, "ping interval length invalid");
@@ -239,8 +245,10 @@ cmdline_parse (int key,
       cmd_args->ping_interval = tmp;
       break;
     case PING_TIMEOUT_KEY:       /* --ping-timeout */
-      tmp = strtol (arg, &ptr, 10);
-      if (ptr != (arg + strlen (arg))
+      errno = 0;
+      tmp = strtol (arg, &endptr, 10);
+      if (errno
+	  || endptr[0] != '\0'
           || tmp < 0)
         {
           fprintf (stderr, "ping timeout length invalid");
@@ -249,8 +257,10 @@ cmdline_parse (int key,
       cmd_args->ping_timeout = tmp;
       break;
     case PING_PACKET_COUNT_KEY:       /* --ping-packet-count */
-      tmp = strtol (arg, &ptr, 10);
-      if (ptr != (arg + strlen (arg))
+      errno = 0;
+      tmp = strtol (arg, &endptr, 10);
+      if (errno
+	  || endptr[0] != '\0'
           || tmp < 0)
         {
           fprintf (stderr, "ping packet count invalid");
@@ -259,8 +269,10 @@ cmdline_parse (int key,
       cmd_args->ping_packet_count = tmp;
       break;
     case PING_PERCENT_KEY:       /* --ping-percent */
-      tmp = strtol (arg, &ptr, 10);
-      if (ptr != (arg + strlen (arg))
+      errno = 0;
+      tmp = strtol (arg, &endptr, 10);
+      if (errno
+	  || endptr[0] != '\0'
           || tmp < 0)
         {
           fprintf (stderr, "ping percent invalid");
@@ -269,8 +281,10 @@ cmdline_parse (int key,
       cmd_args->ping_percent = tmp;
       break;
     case PING_CONSEC_COUNT_KEY:       /* --ping-consec-count */
-      tmp = strtol (arg, &ptr, 10);
-      if (ptr != (arg + strlen (arg))
+      errno = 0;
+      tmp = strtol (arg, &endptr, 10);
+      if (errno
+	  || endptr[0] != '\0'
           || tmp < 0)
         {
           fprintf (stderr, "ping consec count invalid");

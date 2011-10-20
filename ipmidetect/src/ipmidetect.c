@@ -230,7 +230,7 @@ _cmdline_parse (int argc, char **argv)
 {
   int c, index;
   char soptions[IPMIDETECT_OPTIONS_LEN+1];
-  char *ptr;
+  char *endptr;
 
 #if HAVE_GETOPT_LONG
   struct option loptions[IPMIDETECT_LONG_OPTIONS_LEN+1] =
@@ -273,8 +273,10 @@ _cmdline_parse (int argc, char **argv)
         hostname = optarg;
         break;
       case 'p':
-        port = strtol (optarg, &ptr, 10);
-        if (ptr != (optarg + strlen (optarg)))
+	errno = 0;
+        port = strtol (optarg, &endptr, 10);
+	if (errno
+	    || endptr[0] != '\0')
           err_exit ("invalid port specified");
         break;
       case 'u':

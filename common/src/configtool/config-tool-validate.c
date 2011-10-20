@@ -61,9 +61,11 @@ config_check_number_range (const char *value,
 
   assert (value);
 
+  errno = 0;
   conv = strtol (value, &endptr, 0);
 
-  if (*endptr)
+  if (errno
+      || endptr[0] != '\0')
     return (CONFIG_VALIDATE_INVALID_VALUE);
 
   if (conv < min || conv > max)

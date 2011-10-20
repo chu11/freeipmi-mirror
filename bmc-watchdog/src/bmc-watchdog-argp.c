@@ -39,6 +39,7 @@
 #else /* !HAVE_ARGP_H */
 #include "freeipmi-argp.h"
 #endif /* !HAVE_ARGP_H */
+#include <errno.h>
 
 #include "bmc-watchdog.h"
 #include "bmc-watchdog-argp.h"
@@ -291,7 +292,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 {
   struct bmc_watchdog_arguments *cmd_args = state->input;
   error_t ret;
-  char *ptr;
+  char *endptr;
   int tmp;
 
   switch (key)
@@ -331,8 +332,10 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       break;
     case TIMER_USE_KEY:
       cmd_args->timer_use++;
-      tmp = strtol (arg, &ptr, 10);
-      if ((ptr != (arg + strlen (arg)))
+      errno = 0;
+      tmp = strtol (arg, &endptr, 10);
+      if (errno
+	  || endptr[0] != '\0'
           || !IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_VALID (tmp))
         {
           fprintf (stderr, "invalid timer use\n");
@@ -342,8 +345,10 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       break;
     case STOP_TIMER_KEY:
       cmd_args->stop_timer++;
-      tmp = strtol (arg, &ptr, 10);
-      if ((ptr != (arg + strlen (arg)))
+      errno = 0;
+      tmp = strtol (arg, &endptr, 10);
+      if (errno
+	  || endptr[0] != '\0'
           || !IPMI_BMC_WATCHDOG_TIMER_STOP_TIMER_VALID (tmp))
         {
           fprintf (stderr, "invalid stop timer value\n");
@@ -353,8 +358,10 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       break;
     case LOG_KEY:
       cmd_args->log++;
-      tmp = strtol (arg, &ptr, 10);
-      if ((ptr != (arg + strlen (arg)))
+      errno = 0;
+      tmp = strtol (arg, &endptr, 10);
+      if (errno
+	  || endptr[0] != '\0'
           || !IPMI_BMC_WATCHDOG_TIMER_LOG_VALID (tmp))
         {
           fprintf (stderr, "invalid log value\n");
@@ -364,8 +371,10 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       break;
     case TIMEOUT_ACTION_KEY:
       cmd_args->timeout_action++;
-      tmp = strtol (arg, &ptr, 10);
-      if ((ptr != (arg + strlen (arg)))
+      errno = 0;
+      tmp = strtol (arg, &endptr, 10);
+      if (errno
+	  || endptr[0] != '\0'
           || !IPMI_BMC_WATCHDOG_TIMER_TIMEOUT_ACTION_VALID (tmp))
         {
           fprintf (stderr, "invalid timeout action value\n");
@@ -375,8 +384,10 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       break;
     case PRE_TIMEOUT_INTERRUPT_KEY:
       cmd_args->pre_timeout_interrupt++;
-      tmp = strtol (arg, &ptr, 10);
-      if ((ptr != (arg + strlen (arg)))
+      errno = 0;
+      tmp = strtol (arg, &endptr, 10);
+      if (errno
+	  || endptr[0] != '\0'
           || !IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_VALID (tmp))
         {
           fprintf (stderr, "invalid pre timeout interrupt value\n");
@@ -386,8 +397,10 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       break;
     case PRE_TIMEOUT_INTERVAL_KEY:
       cmd_args->pre_timeout_interval++;
-      tmp = strtol (arg, &ptr, 10);
-      if (ptr != (arg + strlen (arg)))
+      errno = 0;
+      tmp = strtol (arg, &endptr, 10);
+      if (errno
+	  || endptr[0] != '\0')
         {
           fprintf (stderr, "invalid pre timeout interval\n");
           exit (1);
@@ -417,8 +430,10 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       break;
     case INITIAL_COUNTDOWN_KEY:
       cmd_args->initial_countdown_seconds++;
-      tmp = strtol (arg, &ptr, 10);
-      if (ptr != (arg + strlen (arg)))
+      errno = 0;
+      tmp = strtol (arg, &endptr, 10);
+      if (errno
+	  || endptr[0] != '\0')
         {
           fprintf (stderr, "invalid initial countdown\n");
           exit (1);
@@ -444,8 +459,10 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       break;
     case GRATUITOUS_ARP_KEY:
       cmd_args->gratuitous_arp++;
-      tmp = strtol (arg, &ptr, 10);
-      if ((ptr != (arg + strlen (arg)))
+      errno = 0;
+      tmp = strtol (arg, &endptr, 10);
+      if (errno
+	  || endptr[0] != '\0'
           || !IPMI_BMC_GENERATED_GRATUITOUS_ARP_VALID (tmp))
         {
           fprintf (stderr, "invalid gratuitous arp value\n");
@@ -455,8 +472,10 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       break;
     case ARP_RESPONSE_KEY:
       cmd_args->arp_response++;
-      tmp = strtol (arg, &ptr, 10);
-      if ((ptr != (arg + strlen (arg)))
+      errno = 0;
+      tmp = strtol (arg, &endptr, 10);
+      if (errno
+	  || endptr[0] != '\0'
           || !IPMI_BMC_GENERATED_ARP_RESPONSE_VALID (tmp))
         {
           fprintf (stderr, "invalid arp response value\n");
@@ -466,8 +485,10 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       break;
     case RESET_PERIOD_KEY:
       cmd_args->reset_period++;
-      tmp = strtol (arg, &ptr, 10);
-      if (ptr != (arg + strlen (arg)))
+      errno = 0;
+      tmp = strtol (arg, &endptr, 10);
+      if (errno
+	  || endptr[0] != '\0')
         {
           fprintf (stderr, "invalid reset period\n");
           exit (1);

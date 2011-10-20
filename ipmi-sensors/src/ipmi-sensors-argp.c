@@ -158,7 +158,7 @@ static error_t
 cmdline_parse (int key, char *arg, struct argp_state *state)
 {
   struct ipmi_sensors_arguments *cmd_args = state->input;
-  char *ptr;
+  char *endptr;
   char *tok;
   int value;
   error_t ret;
@@ -180,20 +180,17 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       tok = strtok (arg, " ,");
       while (tok && cmd_args->record_ids_length < MAX_SENSOR_RECORD_IDS)
         {
-          value = 0;
-          ptr = NULL;
           errno = 0;
-
           if (!strcasecmp (tok, SENSOR_PARSE_ALL_STRING))
             {
               cmd_args->record_ids_length = 0;
               break;
             }
 
-          value = strtol (tok, &ptr, 10);
+          value = strtol (tok, &endptr, 10);
 
           if (errno
-              || ptr[0] != '\0'
+              || endptr[0] != '\0'
               || value < 0
               || value < IPMI_SDR_RECORD_ID_FIRST
               || value > IPMI_SDR_RECORD_ID_LAST)
@@ -211,20 +208,17 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       tok = strtok (arg, " ,");
       while (tok && cmd_args->exclude_record_ids_length < MAX_SENSOR_RECORD_IDS)
         {
-          value = 0;
-          ptr = NULL;
           errno = 0;
-
           if (!strcasecmp (tok, SENSOR_PARSE_NONE_STRING))
             {
               cmd_args->exclude_record_ids_length = 0;
               break;
             }
 
-          value = strtol (tok, &ptr, 10);
+          value = strtol (tok, &endptr, 10);
 
           if (errno
-              || ptr[0] != '\0'
+              || endptr[0] != '\0'
               || value < 0
               || value < IPMI_SDR_RECORD_ID_FIRST
               || value > IPMI_SDR_RECORD_ID_LAST)

@@ -1200,6 +1200,7 @@ generator_id_byte_1_commit (const char *section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
+  /* previously checked for correctness, so no error check */
   eft.generator_id_byte_1 = strtol (kv->value_input, NULL, 0);
 
 
@@ -1256,6 +1257,7 @@ generator_id_byte_2_commit (const char *section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
+  /* previously checked for correctness, so no error check */
   eft.generator_id_byte_2 = strtol (kv->value_input, NULL, 0);
 
   return (_set_event_filter_table (state_data,
@@ -1329,6 +1331,7 @@ sensor_type_commit (const char *section_name,
   num = sensor_type_number (kv->value_input);
   
   if (num < 0)
+    /* previously checked for correctness, so no error check */
     eft.sensor_type = strtol (kv->value_input, NULL, 0);
   else
     eft.sensor_type = num;
@@ -1386,6 +1389,7 @@ sensor_number_commit (const char *section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
+  /* previously checked for correctness, so no error check */
   eft.sensor_number = strtol (kv->value_input, NULL, 0);
 
   return (_set_event_filter_table (state_data,
@@ -1441,6 +1445,7 @@ event_trigger_commit (const char *section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
+  /* previously checked for correctness, so no error check */
   eft.event_trigger = strtol (kv->value_input, NULL, 0);
 
   return (_set_event_filter_table (state_data,
@@ -1496,6 +1501,7 @@ event_data1_offset_mask_commit (const char *section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
+  /* previously checked for correctness, so no error check */
   eft.event_data1_offset_mask = strtol (kv->value_input, NULL, 0);
 
   return (_set_event_filter_table (state_data,
@@ -1551,6 +1557,7 @@ event_data1_and_mask_commit (const char *section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
+  /* previously checked for correctness, so no error check */
   eft.event_data1_and_mask = strtol (kv->value_input, NULL, 0);
 
   return (_set_event_filter_table (state_data,
@@ -1606,6 +1613,7 @@ event_data1_compare1_commit (const char *section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
+  /* previously checked for correctness, so no error check */
   eft.event_data1_compare1 = strtol (kv->value_input, NULL, 0);
 
   return (_set_event_filter_table (state_data,
@@ -1661,6 +1669,7 @@ event_data1_compare2_commit (const char *section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
+  /* previously checked for correctness, so no error check */
   eft.event_data1_compare2 = strtol (kv->value_input, NULL, 0);
 
   return (_set_event_filter_table (state_data,
@@ -1716,6 +1725,7 @@ event_data2_and_mask_commit (const char *section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
+  /* previously checked for correctness, so no error check */
   eft.event_data2_and_mask = strtol (kv->value_input, NULL, 0);
 
   return (_set_event_filter_table (state_data,
@@ -1771,6 +1781,7 @@ event_data2_compare1_commit (const char *section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
+  /* previously checked for correctness, so no error check */
   eft.event_data2_compare1 = strtol (kv->value_input, NULL, 0);
 
   return (_set_event_filter_table (state_data,
@@ -1826,6 +1837,7 @@ event_data2_compare2_commit (const char *section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
+  /* previously checked for correctness, so no error check */
   eft.event_data2_compare2 = strtol (kv->value_input, NULL, 0);
 
   return (_set_event_filter_table (state_data,
@@ -1881,6 +1893,7 @@ event_data3_and_mask_commit (const char *section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
+  /* previously checked for correctness, so no error check */
   eft.event_data3_and_mask = strtol (kv->value_input, NULL, 0);
 
   return (_set_event_filter_table (state_data,
@@ -1936,6 +1949,7 @@ event_data3_compare1_commit (const char *section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
+  /* previously checked for correctness, so no error check */
   eft.event_data3_compare1 = strtol (kv->value_input, NULL, 0);
 
   return (_set_event_filter_table (state_data,
@@ -1991,6 +2005,7 @@ event_data3_compare2_commit (const char *section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
+  /* previously checked for correctness, so no error check */
   eft.event_data3_compare2 = strtol (kv->value_input, NULL, 0);
 
   return (_set_event_filter_table (state_data,

@@ -135,6 +135,7 @@ string2bytes (ipmi_raw_state_data_t *state_data,
   const char delim[] = " \t\f\v\r\n";
   char *str = NULL;
   char *ptr = NULL;
+  char *endptr = NULL;
   char *token = NULL;
   int count = 0;
   unsigned int i = 0;
@@ -215,7 +216,16 @@ string2bytes (ipmi_raw_state_data_t *state_data,
             }
         }
 
-      value = strtol (token, (char **) NULL, 16);
+      errno = 0;
+      value = strtol (token, &endptr, 16);
+      if (errno
+	  || endptr[0] != '\0')
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "invalid input\n");
+	  goto cleanup;
+	}
       (*buf)[count++] = (unsigned char) value;
     }
 

@@ -2062,14 +2062,14 @@ ipmi_oem_quanta_set_sol_idle_timeout (ipmi_oem_state_data_t *state_data)
   if (strcasecmp (state_data->prog_data->args->oem_options[0], "none"))
     {
       unsigned int temp;
-      char *ptr = NULL;
+      char *endptr = NULL;
       
       errno = 0;
       
-      temp = strtoul (state_data->prog_data->args->oem_options[0], &ptr, 10);
+      temp = strtoul (state_data->prog_data->args->oem_options[0], &endptr, 10);
       if (errno
-          || temp > USHRT_MAX
-          || ptr[0] != '\0')
+          || endptr[0] != '\0'
+          || temp > USHRT_MAX)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
@@ -2364,14 +2364,14 @@ ipmi_oem_quanta_get_processor_information (ipmi_oem_state_data_t *state_data)
 
   if (state_data->prog_data->args->oem_options_count)
     {
-      char *ptr = NULL;
+      char *endptr = NULL;
       unsigned int temp;
 
       errno = 0;
-      temp = strtoul (state_data->prog_data->args->oem_options[0], &ptr, 10);
+      temp = strtoul (state_data->prog_data->args->oem_options[0], &endptr, 10);
       if (errno
+          || endptr[0] != '\0'
           || temp > UCHAR_MAX
-          || ptr[0] != '\0'
           || !temp)
         {
           pstdout_fprintf (state_data->pstate,

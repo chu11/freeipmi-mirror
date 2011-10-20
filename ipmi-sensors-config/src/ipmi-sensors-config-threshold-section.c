@@ -26,6 +26,7 @@
 #include <string.h>
 #endif /* STDC_HEADERS */
 #include <assert.h>
+#include <errno.h>
 
 #include "ipmi-sensors-config.h"
 #include "ipmi-sensors-config-sensor-event-enable-common.h"
@@ -201,8 +202,10 @@ _decode_value_raw (ipmi_sensors_config_state_data_t *state_data,
       goto cleanup;
     }
 
+  errno = 0;
   threshold_value = strtod (threshold_input, &ptr);
-  if (*ptr != '\0')
+  if (errno
+      || ptr[0] != '\0')
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf (state_data->pstate,
@@ -969,9 +972,10 @@ threshold_validate (const char *section_name,
   assert (value);
   assert (arg);
 
+  errno = 0;
   conv = strtod (value, &endptr);
-
-  if (*endptr)
+  if (errno
+      || endptr[0] != '\0')
     return (CONFIG_VALIDATE_INVALID_VALUE);
 
   return (_floating_point_in_range (section_name,
@@ -995,9 +999,10 @@ threshold_validate_positive (const char *section_name,
   assert (value);
   assert (arg);
 
+  errno = 0;
   conv = strtod (value, &endptr);
-
-  if (*endptr)
+  if (errno
+      || endptr[0] != '\0')
     return (CONFIG_VALIDATE_INVALID_VALUE);
 
   if (conv < 0.0)
@@ -1027,9 +1032,10 @@ hysteresis_threshold_validate (const char *section_name,
   if (!strcasecmp (value, "None"))
     return (CONFIG_VALIDATE_VALID_VALUE);
 
+  errno = 0;
   conv = strtod (value, &endptr);
-
-  if (*endptr)
+  if (errno
+      || endptr[0] != '\0')
     return (CONFIG_VALIDATE_INVALID_VALUE);
 
   return (_floating_point_in_range (section_name,
@@ -1056,9 +1062,10 @@ hysteresis_threshold_validate_positive (const char *section_name,
   if (!strcasecmp (value, "None"))
     return (CONFIG_VALIDATE_VALID_VALUE);
 
+  errno = 0;
   conv = strtod (value, &endptr);
-
-  if (*endptr)
+  if (errno
+      || endptr[0] != '\0')
     return (CONFIG_VALIDATE_INVALID_VALUE);
 
   if (conv < 0.0)

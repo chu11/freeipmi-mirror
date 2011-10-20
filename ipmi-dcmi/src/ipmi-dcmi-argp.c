@@ -38,6 +38,7 @@
 #else /* !HAVE_ARGP_H */
 #include "freeipmi-argp.h"
 #endif /* !HAVE_ARGP_H */
+#include <errno.h>
 
 #include "ipmi-dcmi.h"
 #include "ipmi-dcmi-argp.h"
@@ -124,7 +125,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 {
   struct ipmi_dcmi_arguments *cmd_args = state->input;
   error_t ret;
-  char *ptr = NULL;
+  char *endptr = NULL;
   int tmp;
   long long lltmp;
 
@@ -200,8 +201,10 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           cmd_args->exception_actions_arg = IPMI_DCMI_EXCEPTION_ACTION_LOG_EVENT_TO_SEL_ONLY;
           break;
         }
-      tmp = strtol (arg, &ptr, 0);
-      if (*ptr != '\0')
+      errno = 0;
+      tmp = strtol (arg, &endptr, 0);
+      if (errno
+	  || endptr[0] != '\0')
         {
           fprintf (stderr, "invalid value for exception actions\n");
           exit (1);
@@ -216,8 +219,10 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       cmd_args->exception_actions++;
       break;
     case POWER_LIMIT_REQUESTED:
-      tmp = strtol (arg, &ptr, 10);
-      if (*ptr != '\0')
+      errno = 0;
+      tmp = strtol (arg, &endptr, 10);
+      if (errno
+	  || endptr[0] != '\0')
         {
           fprintf (stderr, "invalid value for power limit requested\n");
           exit (1);
@@ -232,8 +237,10 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       cmd_args->power_limit_requested++;
       break;
     case CORRECTION_TIME_LIMIT:
-      lltmp = strtoll (arg, &ptr, 10);
-      if (*ptr != '\0')
+      errno = 0;
+      lltmp = strtoll (arg, &endptr, 10);
+      if (errno
+	  || endptr[0] != '\0')
         {
           fprintf (stderr, "invalid value for correction time limit\n");
           exit (1);
@@ -248,8 +255,10 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       cmd_args->correction_time_limit++;
       break;
     case STATISTICS_SAMPLING_PERIOD:
-      tmp = strtol (arg, &ptr, 10);
-      if (*ptr != '\0')
+      errno = 0;
+      tmp = strtol (arg, &endptr, 10);
+      if (errno
+	  || endptr[0] != '\0')
         {
           fprintf (stderr, "invalid value for statistics sampling period\n");
           exit (1);

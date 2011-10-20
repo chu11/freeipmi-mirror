@@ -2602,14 +2602,14 @@ ipmi_oem_inventec_set_sol_idle_timeout (ipmi_oem_state_data_t *state_data)
   if (strcasecmp (state_data->prog_data->args->oem_options[0], "none"))
     {
       unsigned int temp;
-      char *ptr = NULL;
+      char *endptr = NULL;
       
       errno = 0;
       
-      temp = strtoul (state_data->prog_data->args->oem_options[0], &ptr, 10);
+      temp = strtoul (state_data->prog_data->args->oem_options[0], &endptr, 10);
       if (errno
-          || temp > USHRT_MAX
-          || ptr[0] != '\0')
+          || endptr[0] != '\0'
+          || temp > USHRT_MAX)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
@@ -3512,7 +3512,7 @@ ipmi_oem_inventec_set_board_id (ipmi_oem_state_data_t *state_data)
   uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
   uint8_t boardid;
   unsigned int tmp;
-  char *ptr;
+  char *endptr;
   int rs_len;
   int rv = -1;
 
@@ -3522,11 +3522,11 @@ ipmi_oem_inventec_set_board_id (ipmi_oem_state_data_t *state_data)
   errno = 0;
   
   tmp = strtoul (state_data->prog_data->args->oem_options[0],
-                 &ptr,
+                 &endptr,
                  IPMI_OEM_HEX_BASE);
   if (errno
-      || tmp > UCHAR_MAX
-      || (*ptr) != '\0')
+      || endptr[0] != '\0'
+      || tmp > UCHAR_MAX)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -3656,7 +3656,7 @@ ipmi_oem_inventec_set_fcb_version (ipmi_oem_state_data_t *state_data)
   uint8_t majorversion;
   uint8_t minorversion;
   unsigned int tmp;
-  char *ptr;
+  char *endptr;
   int rs_len;
   int rv = -1;
 
@@ -3666,11 +3666,11 @@ ipmi_oem_inventec_set_fcb_version (ipmi_oem_state_data_t *state_data)
   errno = 0;
 
   tmp = strtoul (state_data->prog_data->args->oem_options[0],
-                 &ptr,
+                 &endptr,
                  IPMI_OEM_HEX_BASE);
   if (errno
-      || tmp > UCHAR_MAX
-      || (*ptr) != '\0')
+      || endptr[0] != '\0'
+      || tmp > UCHAR_MAX)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -3685,11 +3685,11 @@ ipmi_oem_inventec_set_fcb_version (ipmi_oem_state_data_t *state_data)
   errno = 0;
 
   tmp = strtoul (state_data->prog_data->args->oem_options[1],
-                 &ptr,
+                 &endptr,
                  IPMI_OEM_HEX_BASE);
   if (errno
-      || tmp > UCHAR_MAX
-      || (*ptr) != '\0')
+      || endptr[0] != '\0'
+      || tmp > UCHAR_MAX)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -4055,15 +4055,15 @@ ipmi_oem_inventec_set_sol_inactivity_timeout (ipmi_oem_state_data_t *state_data)
 
   if (strcasecmp (state_data->prog_data->args->oem_options[0], "none"))
     {
-      char *ptr = NULL;
+      char *endptr = NULL;
       unsigned int temp;
 
       errno = 0;
       
-      temp = strtoul (state_data->prog_data->args->oem_options[0], &ptr, 10);
+      temp = strtoul (state_data->prog_data->args->oem_options[0], &endptr, 10);
       if (errno
-          || temp > USHRT_MAX
-          || ptr[0] != '\0')
+	  || endptr[0] != '\0'
+          || temp > USHRT_MAX)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
@@ -4359,6 +4359,7 @@ ipmi_oem_inventec_set_system_guid (ipmi_oem_state_data_t *state_data)
   for (i = 0; i < IPMI_SYSTEM_GUID_LENGTH; i++)
     {
       char strbuf[IPMI_OEM_BUFLEN];
+      char *endptr;
       long val;
       
       /* achu: there *must* be something faster than this, I just
@@ -4368,12 +4369,32 @@ ipmi_oem_inventec_set_system_guid (ipmi_oem_state_data_t *state_data)
 
       memset (strbuf, '\0', IPMI_OEM_BUFLEN);
       strbuf[0] = state_data->prog_data->args->oem_options[0][i];
-      val = strtol (strbuf, NULL, IPMI_OEM_HEX_BASE);
+      errno = 0; 
+      val = strtol (strbuf, &endptr, IPMI_OEM_HEX_BASE);
+      if (errno
+	  || endptr[0] != '\0')
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "strtol: invalid string '%s'\n",
+			   strbuf);
+	  goto cleanup;
+	}
       bytes_rq[1 + i] |= (val & 0x0F);
 
       memset (strbuf, '\0', IPMI_OEM_BUFLEN);
       strbuf[0] = state_data->prog_data->args->oem_options[0][i + 1];
-      val = strtol (strbuf, NULL, IPMI_OEM_HEX_BASE);
+      errno = 0; 
+      val = strtol (strbuf, &endptr, IPMI_OEM_HEX_BASE);
+      if (errno
+	  || endptr[0] != '\0')
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "strtol: invalid string '%s'\n",
+			   strbuf);
+	  goto cleanup;
+	}
       bytes_rq[1 + i] |= ((val << 4) & 0xF0);
     }
 

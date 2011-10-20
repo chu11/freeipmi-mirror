@@ -91,18 +91,17 @@ static error_t
 cmdline_parse (int key, char *arg, struct argp_state *state)
 {
   struct ipmi_raw_arguments *cmd_args = state->input;
-  char *ptr;
+  char *endptr;
   int value;
   error_t ret;
 
   switch (key)
     {
     case CHANNEL_NUMBER_KEY:
-      ptr = NULL;
       errno = 0;
-      value = strtol (arg, &ptr, 0);
+      value = strtol (arg, &endptr, 0);
       if (errno
-          || ptr[0] != '\0'
+          || endptr[0] != '\0'
           || !IPMI_CHANNEL_NUMBER_VALID (value))
         {
           fprintf (stderr, "invalid channel number\n");
@@ -112,11 +111,10 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       cmd_args->channel_number = 1;
       break;
     case SLAVE_ADDRESS_KEY:
-      ptr = NULL;
       errno = 0;
-      value = strtol (arg, &ptr, 0);
+      value = strtol (arg, &endptr, 0);
       if (errno
-          || ptr[0] != '\0')
+          || endptr[0] != '\0')
         {
           fprintf (stderr, "invalid slave address\n");
           exit (1);
@@ -165,11 +163,10 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
         
 	if (cmd_args->cmd_length < IPMI_RAW_MAX_ARGS)
 	  {
-	    ptr = NULL;
 	    errno = 0;
-	    value = strtol (arg, &ptr, 16);
+	    value = strtol (arg, &endptr, 16);
 	    if (errno
-		|| ptr[0] != '\0')
+		|| endptr[0] != '\0')
 	      {
 		fprintf (stderr, "invalid hex byte argument\n");
 		exit (1);

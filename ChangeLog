@@ -1,3 +1,8 @@
+2011-10-20  Albert Chu <chu11@llnl.gov>
+
+	* Global cleanup, consistently and correctly check for errors when
+	calling strtol, strtoul, strtod, etc.
+	
 2011-10-19  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-raw/src/ipmi-raw-argp.c: Fix error message.  Check raw byte

@@ -1863,6 +1863,7 @@ ipv4_header_time_to_live_commit (const char *section_name,
   if ((ret = _get_ipv4_header_parameters (state_data, section_name, &ihp)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
+  /* previously checked for correctness, so no error check */
   ihp.time_to_live = strtol (kv->value_input, NULL, 0);
 
   return (_set_ipv4_header_parameters (state_data, section_name, &ihp));
@@ -1912,6 +1913,7 @@ ipv4_header_flags_commit (const char *section_name,
   if ((ret = _get_ipv4_header_parameters (state_data, section_name, &ihp)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
+  /* previously checked for correctness, so no error check */
   ihp.flags = strtol (kv->value_input, NULL, 0);
 
   return (_set_ipv4_header_parameters (state_data, section_name, &ihp));
@@ -1961,6 +1963,7 @@ ipv4_header_type_of_service_commit (const char *section_name,
   if ((ret = _get_ipv4_header_parameters (state_data, section_name, &ihp)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
+  /* previously checked for correctness, so no error check */
   ihp.type_of_service = strtol (kv->value_input, NULL, 0);
 
   return (_set_ipv4_header_parameters (state_data, section_name, &ihp));
@@ -2010,6 +2013,7 @@ ipv4_header_precedence_commit (const char *section_name,
   if ((ret = _get_ipv4_header_parameters (state_data, section_name, &ihp)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
+  /* previously checked for correctness, so no error check */
   ihp.precedence = strtol (kv->value_input, NULL, 0);
 
   return (_set_ipv4_header_parameters (state_data, section_name, &ihp));

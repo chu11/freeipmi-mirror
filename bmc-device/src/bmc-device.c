@@ -1042,6 +1042,7 @@ parse_hex_byte (bmc_device_state_data_t *state_data,
                 uint8_t *to,
                 char *str)
 {
+  char *endptr;
   int i;
 
   assert (state_data);
@@ -1085,7 +1086,17 @@ parse_hex_byte (bmc_device_state_data_t *state_data,
         }
     }
 
-  (*to) = strtol (from, (char **) NULL, 16);
+  errno = 0;
+  (*to) = strtol (from, &endptr, 16);
+  if (errno
+      || endptr[0] != '\0')
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "invalid hex byte argument for %s\n",
+		       str);
+      return (-1);
+    }
 
   return (0);
 }

@@ -165,7 +165,7 @@ _read_record_list (int *flag,
                    unsigned int *record_list_length,
                    char *arg)
 {
-  char *ptr;
+  char *endptr;
   char *tok;
   int value;
 
@@ -178,14 +178,11 @@ _read_record_list (int *flag,
   tok = strtok (arg, " ,");
   while (tok && (*record_list_length) < IPMI_SEL_MAX_RECORD)
     {
-      value = 0;
-      ptr = NULL;
       errno = 0;
-
-      value = strtol (tok, &ptr, 10);
+      value = strtol (tok, &endptr, 10);
 
       if (errno
-          || ptr[0] != '\0'
+          || endptr[0] != '\0'
           || value < 0
           || value <= IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY
           || value >= IPMI_SEL_GET_RECORD_ID_LAST_ENTRY)
@@ -206,7 +203,7 @@ _read_record_id_range (int *flag,
                        uint16_t *range2,
                        char *arg)
 {
-  char *ptr;
+  char *endptr;
   char *range_str = NULL;
   char *start_ptr = NULL;
   char *range1_str = NULL;
@@ -239,13 +236,11 @@ _read_record_id_range (int *flag,
   *start_ptr = '\0';
   range1_str = range_str;
 
-  value = 0;
-  ptr = NULL;
   errno = 0;
-  value = strtol (range1_str, &ptr, 10);
+  value = strtol (range1_str, &endptr, 10);
 
   if (errno
-      || ptr[0] != '\0'
+      || endptr[0] != '\0'
       || value < 0
       || value <= IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY
       || value >= IPMI_SEL_GET_RECORD_ID_LAST_ENTRY)
@@ -256,13 +251,11 @@ _read_record_id_range (int *flag,
 
   (*range1) = value;
 
-  value = 0;
-  ptr = NULL;
   errno = 0;
-  value = strtol (range2_str, &ptr, 10);
+  value = strtol (range2_str, &endptr, 10);
 
   if (errno
-      || ptr[0] != '\0'
+      || endptr[0] != '\0'
       || value < 0
       || value <= IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY
       || value >= IPMI_SEL_GET_RECORD_ID_LAST_ENTRY)
@@ -482,7 +475,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 {
   struct ipmi_sel_arguments *cmd_args = state->input;
   error_t ret;
-  char *ptr;
+  char *endptr;
   char *tok;
   int value;
 
@@ -566,13 +559,11 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       cmd_args->list_sensor_types = 1;
       break;
     case TAIL_KEY:
-      value = 0;
-      ptr = NULL;
       errno = 0;
-      value = strtol (arg, &ptr, 10);
+      value = strtol (arg, &endptr, 10);
       
       if (errno
-          || ptr[0] != '\0'
+          || endptr[0] != '\0'
           || value <= 0
           || value <= IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY
           || value >= IPMI_SEL_GET_RECORD_ID_LAST_ENTRY)

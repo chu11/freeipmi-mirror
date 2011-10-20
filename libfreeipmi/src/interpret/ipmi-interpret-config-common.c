@@ -83,7 +83,7 @@ ipmi_interpret_config_parse_strtoul (conffile_t cf,
                                      uint32_t max,
                                      uint32_t *value)
 {
-  char *ptr = NULL;
+  char *endptr = NULL;
   
   assert (cf);
   assert (str);
@@ -91,10 +91,10 @@ ipmi_interpret_config_parse_strtoul (conffile_t cf,
   
   errno = 0;
 
-  (*value) = strtoul (str, &ptr, 0);
+  (*value) = strtoul (str, &endptr, 0);
 
   if (errno
-      || (*ptr) != '\0'
+      || endptr[0] != '\0'
       || (*value) > max)
     {
       conffile_seterrnum (cf, CONFFILE_ERR_PARSE_ARG_INVALID);

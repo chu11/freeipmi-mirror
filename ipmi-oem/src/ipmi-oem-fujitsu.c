@@ -443,7 +443,7 @@ ipmi_oem_fujitsu_get_remote_storage_status (ipmi_oem_state_data_t *state_data)
   char *storage_status_str;
   char *storage_type_str;
   long tmp;
-  char *ptr;
+  char *endptr;
   int rv = -1;
 
   assert (state_data);
@@ -452,12 +452,12 @@ ipmi_oem_fujitsu_get_remote_storage_status (ipmi_oem_state_data_t *state_data)
   errno = 0;
 
   tmp = strtol (state_data->prog_data->args->oem_options[0],
-                &ptr,
+                &endptr,
                 0);
   if (errno
+      || endptr[0] != '\0'
       || tmp < 0
-      || tmp > UCHAR_MAX
-      || (*ptr) != '\0')
+      || tmp > UCHAR_MAX)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -839,7 +839,7 @@ ipmi_oem_fujitsu_get_eeprom_version_info (ipmi_oem_state_data_t *state_data)
   uint8_t aux_booter_revision_major;
   uint8_t aux_booter_revision_minor;
   long tmp;
-  char *ptr;
+  char *endptr;
   int rv = -1;
 
   assert (state_data);
@@ -848,12 +848,12 @@ ipmi_oem_fujitsu_get_eeprom_version_info (ipmi_oem_state_data_t *state_data)
   errno = 0;
 
   tmp = strtol (state_data->prog_data->args->oem_options[0],
-                &ptr,
+                &endptr,
                 0);
   if (errno
+      || endptr[0] != '\0'
       || tmp < 0
-      || tmp > UCHAR_MAX
-      || (*ptr) != '\0')
+      || tmp > UCHAR_MAX)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -1343,7 +1343,7 @@ ipmi_oem_fujitsu_get_sel_entry_long_text (ipmi_oem_state_data_t *state_data)
   uint8_t component_length = 0;
   char *css_str = NULL;
   char *severity_str = NULL;
-  char *ptr = NULL;
+  char *endptr = NULL;
   int rv = -1;
   uint8_t max_read_length;
   struct ipmi_oem_data oem_data;
@@ -1353,9 +1353,9 @@ ipmi_oem_fujitsu_get_sel_entry_long_text (ipmi_oem_state_data_t *state_data)
   
   errno = 0;
   
-  value = strtol (state_data->prog_data->args->oem_options[0], &ptr, 0);
+  value = strtol (state_data->prog_data->args->oem_options[0], &endptr, 0);
   if (errno
-      || ptr[0] != '\0'
+      || endptr[0] != '\0'
       || value < IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY
       || value > IPMI_SEL_GET_RECORD_ID_LAST_ENTRY)
     {
