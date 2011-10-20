@@ -255,12 +255,6 @@ _ipmi_pet_config_file_parse (struct ipmi_pet_arguments *cmd_args)
     cmd_args->non_abbreviated_units = config_file_data.non_abbreviated_units;
 }
 
-static void
-_ipmi_pet_args_validate (struct ipmi_pet_arguments *cmd_args)
-{
-  /* XXX check lengths & stuff */
-}
-
 void
 ipmi_pet_argp_parse (int argc, char **argv, struct ipmi_pet_arguments *cmd_args)
 {
@@ -301,6 +295,5 @@ ipmi_pet_argp_parse (int argc, char **argv, struct ipmi_pet_arguments *cmd_args)
 
   verify_common_cmd_args (&(cmd_args->common));
   verify_sdr_cmd_args (&(cmd_args->sdr));
-  _ipmi_pet_args_validate (cmd_args);
 }
 

@@ -6,8 +6,10 @@ IPMI \- IPMI Platform Event Trap Interpreter
 [\fIOPTION\fR...] [SPECIFIC TRAP] [VARIABLE BINDING HEX BYTES ...]
 .SH "DESCRIPTION"
 .B Ipmi-pet
-interprets hex bytes from a platform event trap (PET) and outputs a string
-representing its contents.
+interprets hex bytes from a platform event trap (PET) and outputs a
+string representing its contents.  Hex values may be input on the
+command line, a file via the \fB\-\-file\fR option, or via stdin if
+neither of the previous are specified.
 
 .B Ipmi-pet
 is commonly used in conjunction with an SNMP trap daemon to intrepret
