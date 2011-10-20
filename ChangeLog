@@ -2,6 +2,8 @@
 
 	* ipmi-sel/, ipmi-sensors/: Remove unnecessary includes, add
 	appropriate ones.
+
+	* bmc-info/: Various code cleanup, use macros when appropriate.
 	
 2011-10-19  Albert Chu <chu11@llnl.gov>
 

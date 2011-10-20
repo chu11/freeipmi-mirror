@@ -55,6 +55,8 @@ typedef struct channel_info
 
 #define BMC_INFO_IANA_STRING_MAX 1024
 
+#define BMC_INFO_BUFLEN 1024
+
 typedef int (*Bmc_info_system_info_first_set)(ipmi_ctx_t ctx,
                                               uint8_t get_parameter,
                                               uint8_t set_selector,
@@ -529,7 +531,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
 static int
 display_get_device_guid (bmc_info_state_data_t *state_data)
 {
-  uint8_t guidbuf[1024];
+  uint8_t guidbuf[BMC_INFO_BUFLEN];
   fiid_obj_t obj_cmd_rs = NULL;
   int len;
   int rv = -1;
@@ -566,7 +568,7 @@ display_get_device_guid (bmc_info_state_data_t *state_data)
   if ((len = fiid_obj_get_data (obj_cmd_rs,
                                 "guid",
                                 guidbuf,
-                                1024)) < 0)
+                                BMC_INFO_BUFLEN)) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -575,7 +577,7 @@ display_get_device_guid (bmc_info_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (len < 16)
+  if (len < IPMI_SYSTEM_GUID_LENGTH)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
