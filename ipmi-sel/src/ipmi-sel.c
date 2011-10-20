@@ -642,7 +642,7 @@ _get_system_event_record_info (ipmi_sel_state_data_t *state_data,
 static int
 _legacy_normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
 {
-  char fmtbuf[IPMI_SEL_OUTPUT_BUFLEN+1];
+  char fmtbuf[IPMI_SEL_FMT_BUFLEN+1];
   char outbuf[IPMI_SEL_OUTPUT_BUFLEN+1];
   char *fmt;
   int outbuf_len;
@@ -1260,7 +1260,7 @@ _output_oem_event_strings (ipmi_sel_state_data_t *state_data,
 static int
 _normal_output_event (ipmi_sel_state_data_t *state_data, unsigned int flags)
 {
-  char fmtbuf[IPMI_SEL_OUTPUT_BUFLEN+1];
+  char fmtbuf[IPMI_SEL_FMT_BUFLEN+1];
   char outbuf[IPMI_SEL_OUTPUT_BUFLEN+1];
   int outbuf_len = 0;
   char *fmt;
@@ -1358,7 +1358,7 @@ _normal_output_event (ipmi_sel_state_data_t *state_data, unsigned int flags)
    * would be separated by a semi-colon
    */
 
-  memset (fmtbuf, '\0', IPMI_SEL_OUTPUT_BUFLEN+1);
+  memset (fmtbuf, '\0', IPMI_SEL_FMT_BUFLEN+1);
 
   if (state_data->prog_data->args->interpret_oem_data)
     {
@@ -1460,7 +1460,7 @@ output:
       if ((na_ptr = strstr (outbuf, IPMI_SEL_NA_STRING))
           && (semicolon_ptr = strstr (outbuf, IPMI_SEL_EVENT_SEPARATOR)))
         {
-          memset (fmtbuf, '\0', IPMI_SEL_OUTPUT_BUFLEN+1);
+          memset (fmtbuf, '\0', IPMI_SEL_FMT_BUFLEN+1);
 
           if (na_ptr < semicolon_ptr)
             strcat (fmtbuf, "%h");
