@@ -35,6 +35,7 @@
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
+#include "tool-sdr-cache-common.h"
 #include "tool-sensor-common.h"
 
 #define IPMI_SENSORS_FMT_BUFLEN 1024
