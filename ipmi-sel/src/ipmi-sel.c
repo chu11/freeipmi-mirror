@@ -59,8 +59,6 @@
 
 #define IPMI_SEL_EVENT_SEPARATOR " ; "
 
-#define IPMI_SEL_AVG_SENSOR_NAME_LENGTH 16
-
 static int
 _display_sel_info (ipmi_sel_state_data_t *state_data)
 {
@@ -2204,13 +2202,9 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
         }
       else
         {
-          /* Ignoring the SDR cache, gotta make some guesses */
-          state_data->column_width.sensor_name = IPMI_SEL_AVG_SENSOR_NAME_LENGTH;
-          state_data->column_width.sensor_type = strlen (ipmi_sensor_types[IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS]);
-          if (state_data->prog_data->args->non_abbreviated_units)
-            state_data->column_width.sensor_units = strlen (ipmi_sensor_units[IPMI_SENSOR_UNIT_DEGREES_C]);
-          else
-            state_data->column_width.sensor_units = strlen (ipmi_sensor_units[IPMI_SENSOR_UNIT_RPM]);
+	  if (calculate_column_widths_ignored_sdr_cache (state_data->prog_data->args->non_abbreviated_units,
+							 &(state_data->column_width)) < 0)
+	    goto cleanup;
         }
 
       /* Record IDs for SEL entries are calculated a bit differently */

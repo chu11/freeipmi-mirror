@@ -22,6 +22,9 @@
 #include <freeipmi/freeipmi.h>
 
 #include "tool-cmdline-common.h"
+#include "tool-oem-common.h"
+#include "tool-sdr-cache-common.h"
+#include "tool-sensor-common.h"
 
 /* seems like a nice size */
 #define IPMI_PET_MAX_ARGS 1024
@@ -73,7 +76,12 @@ typedef struct ipmi_pet_state_data
   char *hostname;
   ipmi_sdr_cache_ctx_t sdr_cache_ctx;
   ipmi_sdr_parse_ctx_t sdr_parse_ctx;
+  ipmi_sel_parse_ctx_t sel_parse_ctx;
   ipmi_interpret_ctx_t interpret_ctx;
+  int output_headers;
+  struct sensor_entity_id_counts entity_id_counts;
+  struct sensor_column_width column_width;
+  struct ipmi_oem_data oem_data;
 } ipmi_pet_state_data_t;
 
 #endif

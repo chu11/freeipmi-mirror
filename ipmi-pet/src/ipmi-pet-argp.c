@@ -63,7 +63,8 @@ static struct argp_option cmdline_options[] =
     ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL,
     ARGP_COMMON_OPTIONS_CONFIG_FILE,
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
-    ARGP_COMMON_HOSTRANGED_OPTIONS,
+    ARGP_COMMON_SDR_OPTIONS,
+    ARGP_COMMON_IGNORE_SDR_OPTIONS,
     ARGP_COMMON_OPTIONS_DEBUG,
     { "verbose",    VERBOSE_KEY,    0, 0,
       "Increase verbosity in output.", 30},
@@ -145,15 +146,14 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case ARGP_KEY_ARG:
       {
         unsigned int i;
+	unsigned long uvalue;
         long value;
 	char *endptr = NULL;
 
 	if (!cmd_args->specific_trap_set)
 	  {
-	    unsigned long tmp;
-
 	    errno = 0;
-	    tmp = strtoul (arg, &endptr, 0);
+	    uvalue = strtoul (arg, &endptr, 0);
 	    if (errno
 		|| endptr[0] != '\0')
 	      {
@@ -161,7 +161,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 		exit (1);
 	      }
 	    
-	    cmd_args->specific_trap = tmp;
+	    cmd_args->specific_trap = uvalue;
 	    cmd_args->specific_trap_set = 1;
 	  }
 	

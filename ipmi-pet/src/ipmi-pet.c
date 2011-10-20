@@ -44,6 +44,264 @@
 #include "tool-sdr-cache-common.h"
 #include "tool-sensor-common.h"
 
+#define IPMI_PET_FMT_BUFLEN    4096
+
+#define IPMI_PLATFORM_EVENT_TRAP_MIN_VARIABLE_BINDINGS_LENGTH 47
+#define IPMI_PLATFORM_EVENT_TRAP_MAX_VARIABLE_BINDINGS_LENGTH 110
+
+static int
+_ipmi_pet_init (ipmi_pet_state_data_t *state_data)
+{
+  struct ipmi_pet_arguments *args;
+  int rv = -1;
+ 
+  assert (state_data);
+
+  if (!args->sdr.ignore_sdr_cache)
+    {
+      struct sensor_entity_id_counts *entity_ptr = NULL;
+
+      if (args->entity_sensor_names)
+	{
+	  if (calculate_entity_id_counts (NULL,
+					  state_data->sdr_cache_ctx,
+					  state_data->sdr_parse_ctx,
+					  &(state_data->entity_id_counts)) < 0)
+	    goto cleanup;
+	  
+	  entity_ptr = &(state_data->entity_id_counts);
+	}
+      
+      if (calculate_column_widths (NULL,
+				   state_data->sdr_cache_ctx,
+				   state_data->sdr_parse_ctx,
+				   NULL,
+				   0,
+				   NULL,
+				   0,
+				   state_data->prog_data->args->non_abbreviated_units,
+				   (entity_ptr) ? 1 : 0, /* shared_sensors */
+				   1, /* count_event_only_records */
+				   0, /* count_device_locator_records */
+				   0, /* count_oem_records */
+				   entity_ptr,
+				   &(state_data->column_width)) < 0)
+	goto cleanup;
+    }
+  else
+    {
+      if (calculate_column_widths_ignored_sdr_cache (state_data->prog_data->args->non_abbreviated_units,
+						     &(state_data->column_width)) < 0)
+	goto cleanup;
+    }
+
+  if (args->interpret_oem_data)
+    {
+      if (ipmi_get_oem_data (NULL,
+                             state_data->ipmi_ctx,
+                             &state_data->oem_data) < 0)
+        goto cleanup;
+
+      if (ipmi_sel_parse_ctx_set_manufacturer_id (state_data->sel_parse_ctx,
+                                                  state_data->oem_data.manufacturer_id) < 0)
+        {
+          fprintf (stderr,
+		   "ipmi_sel_parse_ctx_set_manufacturer_id: %s\n",
+		   ipmi_sel_parse_ctx_errormsg (state_data->sel_parse_ctx));
+          goto cleanup;
+        }
+      
+      if (ipmi_sel_parse_ctx_set_product_id (state_data->sel_parse_ctx,
+                                             state_data->oem_data.product_id) < 0)
+        {
+          fprintf (stderr,
+		   "ipmi_sel_parse_ctx_set_product_id: %s\n",
+		   ipmi_sel_parse_ctx_errormsg (state_data->sel_parse_ctx));
+          goto cleanup;
+        }
+      
+      if (args->output_event_state)
+        {
+          if (ipmi_interpret_ctx_set_manufacturer_id (state_data->interpret_ctx,
+                                                      state_data->oem_data.manufacturer_id) < 0)
+            {
+              fprintf (stderr,
+		       "ipmi_interpret_ctx_set_manufacturer_id: %s\n",
+		       ipmi_interpret_ctx_errormsg (state_data->interpret_ctx));
+              goto cleanup;
+            }
+	  
+          if (ipmi_interpret_ctx_set_product_id (state_data->interpret_ctx,
+                                                 state_data->oem_data.product_id) < 0)
+            {
+              fprintf (stderr,
+		       "ipmi_interpret_ctx_set_product_id: %s\n",
+		       ipmi_interpret_ctx_errormsg (state_data->interpret_ctx));
+              goto cleanup;
+            }
+        }
+    }
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+
+static int
+_ipmi_pet_output_headers (ipmi_pet_state_data_t *state_data)
+{
+  int rv = -1;
+
+  assert (state_data);
+
+  if (!state_data->prog_data->args->no_header_output
+      && !state_data->output_headers)
+    {
+      if (state_data->prog_data->args->comma_separated_output)
+        {
+          if (state_data->prog_data->args->no_sensor_type_output)
+            printf ("Date,Time,%s",
+		    SENSORS_HEADER_NAME_STR);
+          else
+            printf ("Date,Time,%s,%s",
+		    SENSORS_HEADER_NAME_STR,
+		    SENSORS_HEADER_TYPE_STR);
+	  
+          if (state_data->prog_data->args->output_event_state)
+            printf (",%s",
+		    SENSORS_HEADER_STATE_STR);
+	  
+          if (state_data->prog_data->args->verbose_count >= 1)
+            printf (",Event Direction");
+          
+          printf (",Event");
+          
+          printf ("\n");
+        }
+      else
+        {          
+	  char fmt[IPMI_PET_FMT_BUFLEN+1];
+
+          memset (fmt, '\0', IPMI_PET_FMT_BUFLEN + 1);
+
+          if (state_data->prog_data->args->no_sensor_type_output)
+            {
+              snprintf (fmt,
+                        IPMI_PET_FMT_BUFLEN,
+                        "Date        | Time     | %%-%ds",
+                        state_data->column_width.sensor_name);
+              
+              printf (fmt,
+		      SENSORS_HEADER_NAME_STR);
+            }
+          else
+            {
+              snprintf (fmt,
+                        IPMI_PET_FMT_BUFLEN,
+                        "Date        | Time     | %%-%ds | %%-%ds",
+                        state_data->column_width.sensor_name,
+                        state_data->column_width.sensor_type);
+              
+              printf (fmt,
+		      SENSORS_HEADER_NAME_STR,
+		      SENSORS_HEADER_TYPE_STR);
+            }
+          
+          if (state_data->prog_data->args->output_event_state)
+            printf (" | %s   ",
+		    SENSORS_HEADER_STATE_STR);
+	  
+          if (state_data->prog_data->args->verbose_count >= 1)
+            printf (" | Event Direction  ");
+          
+          printf (" | Event");
+          
+          printf ("\n");
+        }
+
+      state_data->output_headers++;
+    }
+
+  rv = 0;
+  return (rv);
+}
+
+static int
+_ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
+{
+  struct ipmi_pet_arguments *args;
+  int rv = -1;
+
+  assert (state_data);
+  assert (state_data->prog_data->args->specific_trap_set);
+  assert (state_data->prog_data->args->variable_bindings);
+  assert (state_data->prog_data->args->variable_bindings_length);
+  
+  args = state_data->prog_data->args;
+  
+  if (state_data->prog_data->args->variable_bindings_length >= IPMI_PLATFORM_EVENT_TRAP_MIN_VARIABLE_BINDINGS_LENGTH
+      && state_data->prog_data->args->variable_bindings_length <= IPMI_PLATFORM_EVENT_TRAP_MAX_VARIABLE_BINDINGS_LENGTH)
+    {
+      fprintf (stderr,
+	       "Invalid number of variable binding bytes\n");
+      goto cleanup;
+    }
+
+#if 0
+  if (!(bytes_rs = calloc (IPMI_PET_MAX_ARGS, sizeof (uint8_t))))
+    {
+      perror ("calloc");
+      goto cleanup;
+    }
+
+  if (state_data->prog_data->args->channel_number
+      && state_data->prog_data->args->slave_address)
+    {
+      if ((rs_len = ipmi_cmd_raw_ipmb (state_data->ipmi_ctx,
+                                       state_data->prog_data->args->channel_number_arg,
+                                       state_data->prog_data->args->slave_address_arg,
+                                       bytes_rq[0],
+                                       bytes_rq[1],
+                                       &bytes_rq[2],
+                                       send_len - 2,
+                                       bytes_rs,
+                                       IPMI_RAW_MAX_ARGS)) < 0)
+        {
+          fprintf (stderr,
+                           "ipmi_cmd_raw_ipmb: %s\n",
+                           ipmi_ctx_errormsg (state_data->ipmi_ctx));
+          goto cleanup;
+        }
+    }
+  else
+    {
+      if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                                  bytes_rq[0],
+                                  bytes_rq[1],
+                                  &bytes_rq[2],
+                                  send_len - 2,
+                                  bytes_rs,
+                                  IPMI_RAW_MAX_ARGS)) < 0)
+        {
+          fprintf (stderr,
+                           "ipmi_cmd_raw: %s\n",
+                           ipmi_ctx_errormsg (state_data->ipmi_ctx));
+          goto cleanup;
+        }
+    }
+  
+  printf ("rcvd: ");
+  for (i = 0; i < rs_len; i++)
+    printf ("%02X ", bytes_rs[i]);
+  printf ("\n");
+#endif
+  
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
 static int
 _flush_cache (ipmi_pet_state_data_t *state_data)
 {
@@ -75,10 +333,9 @@ run_cmd_args (ipmi_pet_state_data_t *state_data)
   
   if (args->variable_bindings_length)
     {
-#if 0
-      if (ipmi_pet_cmdline (state_data) < 0)
+      if (_ipmi_pet_cmdline (state_data) < 0)
         goto cleanup;
-#endif
+
       return (0);
     }
 
@@ -94,7 +351,7 @@ run_cmd_args (ipmi_pet_state_data_t *state_data)
     infile = stdin;
 
 #if 0
-  if (ipmi_pet_stream (state_data, infile) < 0)
+  if (_ipmi_pet_stream (state_data, infile) < 0)
     goto cleanup;
 #endif
 
@@ -164,6 +421,27 @@ _ipmi_pet (ipmi_pet_prog_data_t *prog_data)
       perror ("ipmi_sdr_parse_ctx_create()");
       exit_code = EXIT_FAILURE;
       goto cleanup;
+    }
+
+  /* Special case, just flush, don't do SEL stuff */
+  if (!prog_data->args->sdr.flush_cache)
+    {
+      if (!(state_data.sel_parse_ctx = ipmi_sel_parse_ctx_create (state_data.ipmi_ctx,
+                                                                  prog_data->args->sdr.ignore_sdr_cache ? NULL : state_data.sdr_cache_ctx)))
+        {
+          perror ("ipmi_sel_parse_ctx_create()");
+          goto cleanup;
+        }
+      
+      if (state_data.prog_data->args->common.debug
+	  && prog_data->args->common.hostname)
+        {
+          if (ipmi_sel_parse_ctx_set_debug_prefix (state_data.sel_parse_ctx,
+                                                   prog_data->args->common.hostname) < 0)
+            fprintf (stderr,
+		     "ipmi_sel_parse_ctx_set_debug_prefix: %s\n",
+		     ipmi_sel_parse_ctx_errormsg (state_data.sel_parse_ctx));
+        }
     }
 
   if (prog_data->args->output_event_state)

@@ -1,6 +1,12 @@
 2011-xx-xx  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-pet/: New tool.
+
+	* common/src/toolsensor/tool-sensor-common.h,
+	common/src/toolsensor/tool-sensor-common.c (calculate_column_widths_ignored_sdr_cache):
+	New function.
+
+	* ipmi-sel/: Update to use new convenience functions.
 	
 2011-10-17  Albert Chu <chu11@llnl.gov>
 
