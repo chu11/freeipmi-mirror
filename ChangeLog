@@ -2,7 +2,10 @@
 
 	* ipmi-raw/src/ipmi-raw-argp.c: Fix error message.  Check raw byte
 	inputs for correctness.
-	
+
+	* ipmi-raw/src/ipmi-raw.c (string2bytes): Check for input errors
+	on input streams.
+		
 2011-10-19  Albert Chu <chu11@llnl.gov>
 
 	* Document Intel S2600JF/Appro 512X IPMI bugs.
