@@ -1,5 +1,9 @@
 2011-10-21  Albert Chu <chu11@llnl.gov>
 
+	* ipmi-raw/src/: Use unsigned int for cmd_length.
+	
+2011-10-21  Albert Chu <chu11@llnl.gov>
+
 	* bmc-info/: Output GUID w/ lower case hex characters, as defined
 	in Wired for Management spec.
 	

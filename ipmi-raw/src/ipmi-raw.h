@@ -44,7 +44,7 @@ struct ipmi_raw_arguments
   uint8_t slave_address_arg;
   char *cmd_file;
   uint8_t cmd[IPMI_RAW_MAX_ARGS];
-  int cmd_length;
+  unsigned int cmd_length;
 };
 
 typedef struct ipmi_raw_prog_data
