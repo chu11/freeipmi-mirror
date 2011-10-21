@@ -1,3 +1,8 @@
+2011-10-21  Albert Chu <chu11@llnl.gov>
+
+	* bmc-info/: Output GUID w/ lower case hex characters, as defined
+	in Wired for Management spec.
+	
 2011-10-20  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sel/, ipmi-sensors/: Remove unnecessary includes, add

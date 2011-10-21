@@ -592,13 +592,14 @@ display_get_device_guid (bmc_info_state_data_t *state_data)
    *
    * For output format details see Appendix 1 "String Representation
    * of UUIDs" in the above document.  Note that the output is
-   * supposed to be output in most significant byte order.
+   * supposed to be output in most significant byte order and hex
+   * characters are to be output lower case.
    */
   if (!state_data->prog_data->args->get_device_guid)
     pstdout_printf (state_data->pstate, "GUID : ");
 
   pstdout_printf (state_data->pstate,
-                  "%02X%02X%02X%02X-%02X%02X-%02X%02X-%02X%02X-%02X%02X%02X%02X%02X%02X\n",
+                  "%02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x-%02x%02x%02x%02x%02x%02x\n",
                   guidbuf[15],  /* time low */
                   guidbuf[14],
                   guidbuf[13],
