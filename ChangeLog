@@ -1,6 +1,8 @@
 2011-10-21  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-raw/src/: Use unsigned int for cmd_length.
+
+	* common/src/miscutil/conffile.c: Update to latest version.
 	
 2011-10-21  Albert Chu <chu11@llnl.gov>
 
