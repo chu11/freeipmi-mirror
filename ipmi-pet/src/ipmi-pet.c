@@ -122,6 +122,15 @@ _ipmi_pet_init (ipmi_pet_state_data_t *state_data)
   if (!args->sdr.ignore_sdr_cache)
     {
       struct sensor_entity_id_counts *entity_ptr = NULL;
+      
+      if (sdr_cache_create_and_load (state_data->sdr_cache_ctx,
+                                     NULL,
+                                     state_data->ipmi_ctx,
+                                     args->sdr.quiet_cache,
+                                     args->sdr.sdr_cache_recreate,
+                                     state_data->hostname,
+                                     args->sdr.sdr_cache_directory) < 0)
+        goto cleanup;
 
       if (args->entity_sensor_names)
 	{
@@ -157,7 +166,7 @@ _ipmi_pet_init (ipmi_pet_state_data_t *state_data)
 	goto cleanup;
     }
 
-  if (args->interpret_oem_data)
+  if (args->interpret_oem_data && !args->sdr.ignore_sdr_cache)
     {
       if (ipmi_get_oem_data (NULL,
                              state_data->ipmi_ctx,
@@ -337,16 +346,16 @@ _normal_output_date_and_time (ipmi_pet_state_data_t *state_data,
   if (state_data->prog_data->args->comma_separated_output)
     {
       if (outbuf_len)
-        printf (",%s", outbuf);
+        printf ("%s", outbuf);
       else
-        printf (",%s", IPMI_PET_NA_STRING);
+        printf ("%s", IPMI_PET_NA_STRING);
     }
   else
     {
       if (outbuf_len)
-        printf (" | %-11s", outbuf);
+        printf ("%-11s", outbuf);
       else
-        printf (" | %-11s", IPMI_PET_NA_STRING);
+        printf ("%-11s", IPMI_PET_NA_STRING);
     }
 
   memset (outbuf, '\0', IPMI_PET_OUTPUT_BUFLEN+1);
@@ -1014,8 +1023,8 @@ _ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
   
   args = state_data->prog_data->args;
 
-  if (args->variable_bindings_length >= IPMI_PLATFORM_EVENT_TRAP_MIN_VARIABLE_BINDINGS_LENGTH
-      && args->variable_bindings_length <= IPMI_PLATFORM_EVENT_TRAP_MAX_VARIABLE_BINDINGS_LENGTH)
+  if (!(args->variable_bindings_length >= IPMI_PLATFORM_EVENT_TRAP_MIN_VARIABLE_BINDINGS_LENGTH
+	&& args->variable_bindings_length <= IPMI_PLATFORM_EVENT_TRAP_MAX_VARIABLE_BINDINGS_LENGTH))
     {
       fprintf (stderr,
 	       "Invalid number of variable binding bytes\n");
@@ -1477,7 +1486,8 @@ _ipmi_pet (ipmi_pet_prog_data_t *prog_data)
   state_data.hostname = prog_data->args->common.hostname;
 
   /* Special case, just flush, don't do an IPMI connection */
-  if (!prog_data->args->sdr.flush_cache)
+  if (!prog_data->args->sdr.flush_cache
+      || !prog_data->args->sdr.ignore_sdr_cache)
     {
       if (!(state_data.ipmi_ctx = ipmi_open (prog_data->progname,
                                              prog_data->args->common.hostname,

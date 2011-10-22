@@ -105,6 +105,7 @@ static error_t
 cmdline_parse (int key, char *arg, struct argp_state *state)
 {
   struct ipmi_pet_arguments *cmd_args = state->input;
+  error_t ret;
 
   switch (key)
     {
@@ -127,6 +128,9 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           perror ("strdup");
           exit (1);
         }
+      break;
+    case INTERPRET_OEM_DATA_KEY:
+      cmd_args->interpret_oem_data = 1;
       break;
     case ENTITY_SENSOR_NAMES_KEY:
       cmd_args->entity_sensor_names = 1;
@@ -163,11 +167,12 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 	    
 	    cmd_args->specific_trap = uvalue;
 	    cmd_args->specific_trap_set = 1;
+	    break;
 	  }
 	
         if (strlen (arg) >= 2)
           {
-            if (strncmp (arg, "0x", 2) == 0)
+            if (!strncmp (arg, "0x", 2))
               arg+=2;
           }
         
@@ -195,7 +200,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 	errno = 0;
         value = strtol (arg, &endptr, 16);
 	if (errno
-	    || !endptr[0] != '\0')
+	    || endptr[0] != '\0')
 	  {
 	    fprintf (stderr, "invalid variable binding hex byte argument\n");
 	    exit (1);
@@ -207,7 +212,10 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case ARGP_KEY_END:
       break;
     default:
-      return (ARGP_ERR_UNKNOWN);
+      ret = common_parse_opt (key, arg, &(cmd_args->common));
+      if (ret == ARGP_ERR_UNKNOWN)
+        ret = sdr_parse_opt (key, arg, &(cmd_args->sdr));
+      return (ret);
     }
 
   return (0);
@@ -274,7 +282,7 @@ ipmi_pet_argp_parse (int argc, char **argv, struct ipmi_pet_arguments *cmd_args)
   cmd_args->specific_trap_set = 0;
   memset (cmd_args->variable_bindings,
           '\0',
-          sizeof (char *) * IPMI_PET_MAX_ARGS);
+          sizeof (uint8_t) * IPMI_PET_MAX_ARGS);
   cmd_args->variable_bindings_length = 0;
   
   argp_parse (&cmdline_config_file_argp,
