@@ -60,7 +60,7 @@ struct ipmi_pet_arguments
   uint32_t specific_trap;
   int specific_trap_set;
   uint8_t variable_bindings[IPMI_PET_MAX_ARGS];
-  int variable_bindings_length;
+  unsigned int variable_bindings_length;
 };
 
 typedef struct ipmi_pet_prog_data
