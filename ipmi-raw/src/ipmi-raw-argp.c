@@ -136,7 +136,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
         
         if (strlen (arg) >= 2)
           {
-            if (strncmp (arg, "0x", 2) == 0)
+            if (!strncmp (arg, "0x", 2))
               arg+=2;
           }
         
