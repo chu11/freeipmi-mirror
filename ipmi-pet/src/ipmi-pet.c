@@ -28,6 +28,16 @@
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
+#if TIME_WITH_SYS_TIME
+#include <sys/time.h>
+#include <time.h>
+#else  /* !TIME_WITH_SYS_TIME */
+#if HAVE_SYS_TIME_H
+#include <sys/time.h>
+#else /* !HAVE_SYS_TIME_H */
+#include <time.h>
+#endif  /* !HAVE_SYS_TIME_H */
+#endif /* !TIME_WITH_SYS_TIME */
 #include <assert.h>
 #include <errno.h>
 
@@ -329,6 +339,24 @@ _normal_output_date_and_time (ipmi_pet_state_data_t *state_data,
       else
         printf (" | %-8s", IPMI_PET_NA_STRING);
     }
+
+  return (1);
+}
+
+
+/* return 1 on success
+ * return (0) on non-success, but don't fail
+ * return (-1) on error
+ */
+static int
+_normal_output_not_available_date_and_time (ipmi_pet_state_data_t *state_data)
+{
+  assert (state_data);
+
+  if (state_data->prog_data->args->comma_separated_output)
+    printf (",%s,%s", IPMI_PET_NA_STRING, IPMI_PET_NA_STRING);
+  else
+    printf (" | %-11s | %-8s", IPMI_PET_NA_STRING, IPMI_PET_NA_STRING);
 
   return (1);
 }
@@ -927,6 +955,23 @@ _normal_output_event (ipmi_pet_state_data_t *state_data,
   return (1);
 }
                                        
+/* return 1 on success
+ * return (0) on non-success, but don't fail
+ * return (-1) on error
+ */
+static int
+_normal_output_not_available_event (ipmi_pet_state_data_t *state_data, unsigned int flags)
+{
+  assert (state_data);
+
+  if (state_data->prog_data->args->comma_separated_output)
+    printf (",%s", IPMI_PET_NA_STRING);
+  else
+    printf (" | %s", IPMI_PET_NA_STRING);
+
+  return (1);
+}
+
 static int
 _ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
 {
@@ -938,7 +983,7 @@ _ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
   uint8_t event_offset;
   uint8_t guid[IPMI_SYSTEM_GUID_LENGTH];
   uint32_t localtimestamp;
-  uint16_t utcoffset;
+  int16_t utcoffset;
   uint8_t event_severity;
   uint8_t sensor_device;
   uint8_t sensor_number;
@@ -1007,9 +1052,48 @@ _ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
   localtimestamp <<= 8;
   localtimestamp |= args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_LOCAL_TIMESTAMP_INDEX_START + 3];
 
-  utcoffset = args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_UTC_OFFSET_INDEX_START];
-  utcoffset <<= 8;
-  utcoffset |= args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_UTC_OFFSET_INDEX_START + 1];
+  if (localtimestamp != IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_LOCAL_TIMESTAMP_UNSPECIFIED)
+    {
+      struct tm tm;
+      time_t t;
+
+      utcoffset = args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_UTC_OFFSET_INDEX_START];
+      utcoffset <<= 8;
+      utcoffset |= args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_UTC_OFFSET_INDEX_START + 1];
+      
+      if (utcoffset != IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_UTC_OFFSET_UNSPECIFIED)
+	{
+	  /* utcoffset is in minutes, multiply by 60 to get seconds */
+	  localtimestamp += utcoffset * 60;
+	}
+      
+      /* Posix says individual calls need not clear/set all portions of
+       * 'struct tm', thus passing 'struct tm' between functions could
+       * have issues.  So we need to memset.
+       */
+      memset (&tm, '\0', sizeof(struct tm));
+      
+      /* In FRU, epoch is 0:00 hrs 1/1/98
+       *
+       * So convert into ansi epoch
+       */
+      
+      tm.tm_year = 98;          /* years since 1900 */
+      tm.tm_mon = 0;            /* months since January */
+      tm.tm_mday = 1;           /* 1-31 */
+      tm.tm_hour = 0;
+      tm.tm_min = 0;
+      tm.tm_sec = 0;
+      tm.tm_isdst = -1;
+      
+      if ((t = mktime (&tm)) == (time_t)-1)
+	{
+	  fprintf (stderr, "Invalid timestamp indicated\n");
+	  goto cleanup;
+	}
+      
+      localtimestamp += (uint32_t)t;
+    }
 
   event_severity = args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_EVENT_SEVERITY_INDEX];
 
@@ -1246,47 +1330,51 @@ _ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (!(sel_system_event_record_event_fields = fiid_obj_create (tmpl_sel_system_event_record_event_fields)))
+  /* Double check */
+  if (event_offset != IPMI_PLATFORM_EVENT_TRAP_SPECIFIC_TRAP_EVENT_OFFSET_UNSPECIFIED)
     {
-      fprintf (stderr,
-	       "fiid_obj_create: %s\n",
-	       strerror (errno));
-      goto cleanup;
-    }
+      if (!(sel_system_event_record_event_fields = fiid_obj_create (tmpl_sel_system_event_record_event_fields)))
+	{
+	  fprintf (stderr,
+		   "fiid_obj_create: %s\n",
+		   strerror (errno));
+	  goto cleanup;
+	}
   
-  if ((sel_record_len = fiid_obj_set_all (sel_system_event_record_event_fields,
-                                          sel_record,
-                                          IPMI_SEL_RECORD_MAX_RECORD_LENGTH)) < 0)
-    {
-      fprintf (stderr,
-               "fiid_obj_set_all: %s\n",
-               fiid_obj_errormsg (sel_system_event_record));
-      goto cleanup;
+      if ((sel_record_len = fiid_obj_set_all (sel_system_event_record_event_fields,
+					      sel_record,
+					      IPMI_SEL_RECORD_MAX_RECORD_LENGTH)) < 0)
+	{
+	  fprintf (stderr,
+		   "fiid_obj_set_all: %s\n",
+		   fiid_obj_errormsg (sel_system_event_record));
+	  goto cleanup;
+	}
+      
+      if (FIID_OBJ_GET (sel_system_event_record_event_fields,
+			"offset_from_event_reading_type_code",
+			&val) < 0)
+	{
+	  fprintf (stderr,
+		   "fiid_obj_get: 'offset_from_event_reading_type_code': %s\n",
+		   fiid_obj_errormsg (sel_system_event_record_event_fields));
+	  goto cleanup;
+	}
+      event_offset_test = val;
+      
+      /* The event offset specified in the specific trap does not match the event_data1 data
+       *
+       * Not much I can really do, one of them is valid and one isn't.
+       * For now, just document bug.
+       */
+      if (event_offset != event_offset_test)
+	{
+	  if (state_data->prog_data->args->common.debug)
+	    fprintf (stderr,
+		     "Invalid PET data input: event_offset and event_data1 inconsistent\n");
+	}
     }
 
-  if (FIID_OBJ_GET (sel_system_event_record_event_fields,
-                    "offset_from_event_reading_type_code",
-                    &val) < 0)
-    {
-      fprintf (stderr,
-	       "fiid_obj_get: 'offset_from_event_reading_type_code': %s\n",
-	       fiid_obj_errormsg (sel_system_event_record_event_fields));
-      goto cleanup;
-    }
-  event_offset_test = val;
-
-  /* The event offset specified in the specific trap does not match the event_data1 data
-   *
-   * Not much I can really do, one of them is valid and one isn't.
-   * For now, just document bug.
-   */
-  if (event_offset != event_offset_test)
-    {
-      if (state_data->prog_data->args->common.debug)
-        fprintf (stderr,
-		 "Invalid PET data input: event_offset and event_data1 inconsistent\n");
-    }
-  
   flags = IPMI_SEL_PARSE_STRING_FLAGS_IGNORE_UNAVAILABLE_FIELD;
   flags |= IPMI_SEL_PARSE_STRING_FLAGS_OUTPUT_NOT_AVAILABLE;
   flags |= IPMI_SEL_PARSE_STRING_FLAGS_DATE_MONTH_STRING;
@@ -1297,11 +1385,19 @@ _ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
   if (state_data->prog_data->args->interpret_oem_data)
     flags |= IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA;
   
-  if ((ret = _normal_output_date_and_time (state_data,
-					   sel_record,
-					   IPMI_SEL_RECORD_MAX_RECORD_LENGTH,
-					   flags)) < 0)
-    goto cleanup;
+  if (localtimestamp != IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_LOCAL_TIMESTAMP_UNSPECIFIED)
+    {
+      if ((ret = _normal_output_date_and_time (state_data,
+					       sel_record,
+					       IPMI_SEL_RECORD_MAX_RECORD_LENGTH,
+					       flags)) < 0)
+	goto cleanup;
+    }
+  else
+    {
+      if ((ret = _normal_output_not_available_date_and_time (state_data)) < 0)
+	goto cleanup;
+    }
 
   if (!ret)
     goto newline_out;
@@ -1339,11 +1435,20 @@ _ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
 	goto newline_out;
     }
   
-  if ((ret = _normal_output_event (state_data,
-				   sel_record,
-				   IPMI_SEL_RECORD_MAX_RECORD_LENGTH,
-				   flags)) < 0)
-    goto cleanup;
+  if (event_offset != IPMI_PLATFORM_EVENT_TRAP_SPECIFIC_TRAP_EVENT_OFFSET_UNSPECIFIED)
+    {
+      if ((ret = _normal_output_event (state_data,
+				       sel_record,
+				       IPMI_SEL_RECORD_MAX_RECORD_LENGTH,
+				       flags)) < 0)
+	goto cleanup;
+    }
+  else
+    {
+      if ((ret = _normal_output_not_available_event (state_data,
+						     flags)) < 0)
+	goto cleanup;
+    }
   
   if (!ret)
     goto newline_out;
