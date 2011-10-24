@@ -1,3 +1,7 @@
+2011-10-24  Albert Chu <chu11@llnl.gov>
+
+	* Update documentation with OEM support information.
+	
 2011-10-21  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-raw/src/: Use unsigned int for cmd_length.
