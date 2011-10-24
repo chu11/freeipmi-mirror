@@ -1,5 +1,9 @@
 2011-10-24  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/src/fru-parse/ipmi-fru-parse-data.c: Add forgotten headers.
+	
+2011-10-24  Albert Chu <chu11@llnl.gov>
+
 	* Update documentation with OEM support information.
 	
 2011-10-21  Albert Chu <chu11@llnl.gov>
