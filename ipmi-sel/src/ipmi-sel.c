@@ -876,7 +876,7 @@ _normal_output_date_and_time (ipmi_sel_state_data_t *state_data, unsigned int fl
  * return (-1) on error
  */
 static int
-_normal_output_not_available_date_and_time (ipmi_sel_state_data_t *state_data, unsigned int flags)
+_normal_output_not_available_date_and_time (ipmi_sel_state_data_t *state_data)
 {
   assert (state_data);
   assert (!state_data->prog_data->args->legacy_output);
@@ -1061,7 +1061,7 @@ _normal_output_sensor_name_and_type (ipmi_sel_state_data_t *state_data, unsigned
  * return (-1) on error
  */
 static int
-_normal_output_not_available_sensor_name_and_type (ipmi_sel_state_data_t *state_data, unsigned int flags)
+_normal_output_not_available_sensor_name_and_type (ipmi_sel_state_data_t *state_data)
 {
   char fmt[IPMI_SEL_FMT_BUFLEN + 1];
 
@@ -1203,7 +1203,7 @@ _normal_output_event_direction (ipmi_sel_state_data_t *state_data, unsigned int 
  * return (-1) on error
  */
 static int
-_normal_output_not_available_event_direction (ipmi_sel_state_data_t *state_data, unsigned int flags)
+_normal_output_not_available_event_direction (ipmi_sel_state_data_t *state_data)
 {
   assert (state_data);
   assert (!state_data->prog_data->args->legacy_output);
@@ -1735,7 +1735,7 @@ _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
       if (!ret)
         goto newline_out;
 
-      if ((ret = _normal_output_not_available_sensor_name_and_type (state_data, flags)) < 0)
+      if ((ret = _normal_output_not_available_sensor_name_and_type (state_data)) < 0)
         goto cleanup;
 
       if (!ret)
@@ -1752,7 +1752,7 @@ _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
 
       if (state_data->prog_data->args->verbose_count >= 1)
         {
-          if ((ret = _normal_output_not_available_event_direction (state_data, flags)) < 0)
+          if ((ret = _normal_output_not_available_event_direction (state_data)) < 0)
             goto cleanup;
 
           if (!ret)
@@ -1773,13 +1773,13 @@ _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
       if (!ret)
         goto out;
 
-      if ((ret = _normal_output_not_available_date_and_time (state_data, flags)) < 0)
+      if ((ret = _normal_output_not_available_date_and_time (state_data)) < 0)
         goto cleanup;
 
       if (!ret)
         goto newline_out;
 
-      if ((ret = _normal_output_not_available_sensor_name_and_type (state_data, flags)) < 0)
+      if ((ret = _normal_output_not_available_sensor_name_and_type (state_data)) < 0)
         goto cleanup;
 
       if (!ret)
@@ -1796,7 +1796,7 @@ _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
 
       if (state_data->prog_data->args->verbose_count >= 1)
         {
-          if ((ret = _normal_output_not_available_event_direction (state_data, flags)) < 0)
+          if ((ret = _normal_output_not_available_event_direction (state_data)) < 0)
             goto cleanup;
 
           if (!ret)

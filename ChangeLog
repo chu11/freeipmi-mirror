@@ -1,6 +1,8 @@
 2011-10-24  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/fru-parse/ipmi-fru-parse-data.c: Add forgotten headers.
+
+	* ipmi-sel/: Code cleanup, do not pass unnecessary parameters to functions.
 	
 2011-10-24  Albert Chu <chu11@llnl.gov>
 
