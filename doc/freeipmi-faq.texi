@@ -288,8 +288,8 @@ tool.
 
 In addition to the features listed above, FreeIPMI also supports
 specifications related to IPMI.  The Data Center Management Interface,
-or DCMI, via the FreeIPMI tool ipmi-dcmi and some aspects of the Intel
-Node
+or DCMI, is supported via the FreeIPMI tool ipmi-dcmi.  Some aspects
+of the Intel Power Node Manager are supported in ipmi-oem.
 
 5) Easy setup
 
