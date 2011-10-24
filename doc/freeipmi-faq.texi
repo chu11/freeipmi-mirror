@@ -286,9 +286,10 @@ tool.
 
 4) Extra IPMI support
 
-In addition to the features listed above, FreeIPMI also supports the
-Data Center Management Interface, or DCMI, via the FreeIPMI tool
-ipmi-dcmi.
+In addition to the features listed above, FreeIPMI also supports
+specifications related to IPMI.  The Data Center Management Interface,
+or DCMI, via the FreeIPMI tool ipmi-dcmi and some aspects of the Intel
+Node
 
 5) Easy setup
 
