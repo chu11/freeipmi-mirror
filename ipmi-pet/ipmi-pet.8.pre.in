@@ -60,12 +60,28 @@ Increase verbosity in output to include additional output.
 \fB\-\-file\fR=\fICMD\-FILE\fR
 Specify a file to read PET hex bytes from instead of command line.
 .TP
+\fB\-\-output\-event\-severity\fR
+Output event severity in output.  This will add an additional output
+of an event severity.  The outputs may be Monitor, Information, OK,
+Non-critical condition, Critical condition, or Non-recoverable
+condition.  This differs from the output of
+\fB\-\-output\-event\-state\fR, as event severity is not interpreted,
+it is a value reported in the SNMP trap.  However, not all events may
+report a severity, or some manufacturers may not support the report of
+a severity.
+.TP
 \fB\-\-output\-event\-state\fR
 Output event state in output.  This will add an additional output
-reporting if an event should be viewed as NOMINAL, WARNING, or CRITICAL.
-The event state is an interpreted value based on the configuration
-file @INTERPRET_SEL_CONFIG_FILE_DEFAULT@ and the event direction.
-See
+reporting if an event should be viewed as NOMINAL, WARNING, or
+CRITICAL.  This differs from the output of
+\fB\-\-output\-event\-severity\fR, as this output is an interpreted
+value that will be interpreted identically to the
+\fB\-\-output\-event\-state\fR output in
+.B ipmi-sel(8).
+As long as an event interpretation is supported, all events will have
+outputted state.  The event state is an interpreted value based on the
+configuration file @INTERPRET_SEL_CONFIG_FILE_DEFAULT@ and the event
+direction.  See
 .B freeipmi_interpret_sel.conf(5)
 for more information.
 .TP
@@ -111,5 +127,6 @@ TODO
 Copyright \(co 2011 FreeIPMI Core Team
 #include <@top_srcdir@/common/man/manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
-freeipmi(7), ipmi-pef-config(8), freeipmi_interpret_sel.conf(5)
+freeipmi(7), bmc-info(8), ipmi-pef-config(8), ipmi-sel(8),
+freeipmi_interpret_sel.conf(5)
 #include <@top_srcdir@/common/man/manpage-common-homepage.man>

@@ -811,6 +811,11 @@ manpage for available workarounds.
 Specify default verbose count to use for
 .B ipmi-pet(8).
 .TP
+\fBipmi\-pet\-output\-event\-severity\fR \fIENABLE|DISABLE\fR
+Specify if
+.B ipmi-pet
+should output the event severity state by default.
+.TP
 \fBipmi\-pet\-output\-event\-state\fR \fIENABLE|DISABLE\fR
 Specify if
 .B ipmi-pet

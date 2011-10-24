@@ -128,6 +128,8 @@ struct config_file_data_ipmi_pet
 {
   int verbose_count;
   int verbose_count_count;
+  int output_event_severity;
+  int output_event_severity_count;
   int output_event_state;
   int output_event_state_count;
   char *event_state_config_file;

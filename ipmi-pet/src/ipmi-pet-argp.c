@@ -71,26 +71,28 @@ static struct argp_option cmdline_options[] =
       "Increase verbosity in output.", 30},
     { "file", CMD_FILE_KEY, "CMD-FILE", 0,
       "Specify a file to read PET bytes from.", 31},
+    { "output-event-severity", OUTPUT_EVENT_SEVERITY_KEY, 0, 0,
+      "Output event severity in output.", 32},
     { "output-event-state", OUTPUT_EVENT_STATE_KEY, 0, 0,
-      "Output event state in output.", 32},
+      "Output event state in output.", 33},
     { "event-state-config-file", EVENT_STATE_CONFIG_FILE_KEY, "FILE", 0,
-      "Specify an alternate event state configuration file.", 33},
+      "Specify an alternate event state configuration file.", 34},
     { "manufacturer-id", MANUFACTURER_ID_KEY, "NUMBER", 0,
-      "Specify a specific manufacturer id to assume.", 34},
+      "Specify a specific manufacturer id to assume.", 35},
     { "product-id", PRODUCT_ID_KEY, "NUMBER", 0,
-      "Specify a specific product id to assume.", 35},
+      "Specify a specific product id to assume.", 36},
     { "interpret-oem-data", INTERPRET_OEM_DATA_KEY, NULL, 0,
-      "Attempt to interpret OEM data.", 36},
+      "Attempt to interpret OEM data.", 37},
     { "entity-sensor-names", ENTITY_SENSOR_NAMES_KEY, NULL, 0,
-      "Output sensor names with entity ids and instances.", 37},
+      "Output sensor names with entity ids and instances.", 38},
     { "no-sensor-type-output", NO_SENSOR_TYPE_OUTPUT_KEY, 0, 0,
-      "Do not show sensor type output.", 38},
+      "Do not show sensor type output.", 39},
     { "comma-separated-output", COMMA_SEPARATED_OUTPUT_KEY, 0, 0,
-      "Output fields in comma separated format.", 39},
+      "Output fields in comma separated format.", 40},
     { "no-header-output", NO_HEADER_OUTPUT_KEY, 0, 0,
-      "Do not output column headers.", 40},
+      "Do not output column headers.", 41},
     { "non-abbreviated-units", NON_ABBREVIATED_UNITS_KEY, 0, 0,
-      "Output non-abbreviated units (e.g. 'Amps' instead of 'A').", 41},
+      "Output non-abbreviated units (e.g. 'Amps' instead of 'A').", 42},
     { NULL, 0, NULL, 0, NULL, 0}
   };
 
@@ -125,6 +127,9 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           perror ("strdup");
           exit (1);
         }
+      break;
+    case OUTPUT_EVENT_SEVERITY_KEY:
+      cmd_args->output_event_severity = 1;
       break;
     case OUTPUT_EVENT_STATE_KEY:
       cmd_args->output_event_state = 1;
@@ -278,6 +283,8 @@ _ipmi_pet_config_file_parse (struct ipmi_pet_arguments *cmd_args)
 
   if (config_file_data.verbose_count_count)
     cmd_args->verbose_count = config_file_data.verbose_count;
+  if (config_file_data.output_event_severity_count)
+    cmd_args->output_event_severity = config_file_data.output_event_severity;
   if (config_file_data.output_event_state_count)
     cmd_args->output_event_state = config_file_data.output_event_state;
   if (config_file_data.event_state_config_file_count)
@@ -316,6 +323,7 @@ ipmi_pet_argp_parse (int argc, char **argv, struct ipmi_pet_arguments *cmd_args)
   init_sdr_cmd_args (&(cmd_args->sdr));
   cmd_args->verbose_count = 0;
   cmd_args->cmd_file = NULL;
+  cmd_args->output_event_severity = 0;
   cmd_args->output_event_state = 0;
   cmd_args->event_state_config_file = NULL;
   cmd_args->manufacturer_id = 0;

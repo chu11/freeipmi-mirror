@@ -62,6 +62,8 @@
 
 #define IPMI_PET_EVENT_SEPARATOR " ; "
 
+#define IPMI_PET_EVENT_SEVERITY_HEADER "Severity"
+
 static int
 _ipmi_pet_init (ipmi_pet_state_data_t *state_data)
 {
@@ -198,9 +200,11 @@ _ipmi_pet_output_headers (ipmi_pet_state_data_t *state_data)
 		    SENSORS_HEADER_NAME_STR,
 		    SENSORS_HEADER_TYPE_STR);
 	  
+	  if (state_data->prog_data->args->output_event_severity)
+	    printf (",%s", IPMI_PET_EVENT_SEVERITY_HEADER);
+
           if (state_data->prog_data->args->output_event_state)
-            printf (",%s",
-		    SENSORS_HEADER_STATE_STR);
+            printf (",%s", SENSORS_HEADER_STATE_STR);
 	  
           if (state_data->prog_data->args->verbose_count >= 1)
             printf (",Event Direction");
@@ -220,8 +224,7 @@ _ipmi_pet_output_headers (ipmi_pet_state_data_t *state_data)
                         "Date        | Time     | %%-%ds",
                         state_data->column_width.sensor_name);
               
-              printf (fmt,
-		      SENSORS_HEADER_NAME_STR);
+              printf (fmt, SENSORS_HEADER_NAME_STR);
             }
           else
             {
@@ -236,9 +239,11 @@ _ipmi_pet_output_headers (ipmi_pet_state_data_t *state_data)
 		      SENSORS_HEADER_TYPE_STR);
             }
           
+	  if (state_data->prog_data->args->output_event_severity)
+	    printf (" | %-25s", IPMI_PET_EVENT_SEVERITY_HEADER);
+
           if (state_data->prog_data->args->output_event_state)
-            printf (" | %s   ",
-		    SENSORS_HEADER_STATE_STR);
+            printf (" | %s   ", SENSORS_HEADER_STATE_STR);
 	  
           if (state_data->prog_data->args->verbose_count >= 1)
             printf (" | Event Direction  ");
@@ -548,6 +553,55 @@ _normal_output_sensor_name_and_type (ipmi_pet_state_data_t *state_data,
   return (1);
 }
                         
+/* return 1 on success
+ * return (0) on non-success, but don't fail
+ * return (-1) on error
+ */
+static int
+_normal_output_event_severity (ipmi_pet_state_data_t *state_data,
+			       uint8_t event_severity,
+			       unsigned int flags)
+{
+  char *str = NULL;
+
+  assert (state_data);
+  
+  switch (event_severity)
+    {
+    case IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_EVENT_SEVERITY_UNSPECIFIED:
+      str = IPMI_PET_NA_STRING;
+      break;
+    case IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_EVENT_SEVERITY_MONITOR:
+      str = "Monitor";
+      break;
+    case IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_EVENT_SEVERITY_INFORMATION:
+      str = "Information";
+      break;
+    case IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_EVENT_SEVERITY_OK:
+      str = "Ok";
+      break;
+    case IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_EVENT_SEVERITY_NON_CRITICAL_CONDITION:
+      str = "Non-critical condition";
+      break;
+    case IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_EVENT_SEVERITY_CRITICAL_CONDITION:
+      str = "Critical condition";
+      break;
+    case IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_EVENT_SEVERITY_NON_RECOVERABLE_CONDITION:
+      str = "Non-recoverable condition";
+      break;
+    default:
+      str = "Unspecified";
+      break;
+    }
+  
+  if (state_data->prog_data->args->comma_separated_output)
+    printf (",%s", str);
+  else
+    printf (" | %-25s", str);
+
+  return (1);
+}
+
 /* return 1 on success
  * return (0) on non-success, but don't fail
  * return (-1) on error
@@ -1419,6 +1473,17 @@ _ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
   
   if (!ret)
     goto newline_out;
+
+  if (state_data->prog_data->args->output_event_severity)
+    {
+      if ((ret = _normal_output_event_severity (state_data,
+						event_severity,
+						flags)) < 0)
+	goto cleanup;
+      
+      if (!ret)
+	goto newline_out;
+    }
 
   if (state_data->prog_data->args->output_event_state)
     {
