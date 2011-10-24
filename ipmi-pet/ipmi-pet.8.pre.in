@@ -72,6 +72,23 @@ for more information.
 \fB\-\-event\-state\-config\-file\fR=\fIFILE\fR
 Specify an alternate event state configuration file.  Option ignored
 if \fB\-\-output\-event\-state\fR not specified.
+.TP
+\fB\-\-manufacturer\-id\fR=\fINUMBER\FR
+Specify a specific manufacturer id to assume.  Useful if the
+manufacturer id cannot be determined by IPMI access to the machine
+that generated the SNMP trap, but you wish to specify
+\fB\-\-interpret\-oem\-data\fR.  The manufacturer id of a motherboard
+can be determined with
+.B bmc-info(8).
+If this option is specified, so must \fB\-\-product\-id\fR.
+.TP
+\fB\-\-product\-id\fR=\fINUMBER\FR
+Specify a specific product id to assume.  Useful if the product id
+cannot be determined by IPMI access to the machine that generated the
+SNMP trap, but you wish to specify \fB\-\-interpret\-oem\-data\fR.
+The product id of a motherboard can be determined with
+.B bmc-info(8).
+If this option is specified, so must \fB\-\-manufacturer\-id\fR.
 #include <@top_srcdir@/common/man/manpage-common-interpret-oem-data.man>
 #include <@top_srcdir@/common/man/manpage-common-entity-sensor-names.man>
 #include <@top_srcdir@/common/man/manpage-common-no-sensor-type-output.man>

@@ -30,6 +30,7 @@
 #else /* !HAVE_ARGP_H */
 #include "freeipmi-argp.h"
 #endif /* !HAVE_ARGP_H */
+#include <limits.h>
 #include <errno.h>
 
 #include "ipmi-pet.h"
@@ -74,18 +75,22 @@ static struct argp_option cmdline_options[] =
       "Output event state in output.", 32},
     { "event-state-config-file", EVENT_STATE_CONFIG_FILE_KEY, "FILE", 0,
       "Specify an alternate event state configuration file.", 33},
+    { "manufacturer-id", MANUFACTURER_ID_KEY, "NUMBER", 0,
+      "Specify a specific manufacturer id to assume.", 34},
+    { "product-id", PRODUCT_ID_KEY, "NUMBER", 0,
+      "Specify a specific product id to assume.", 35},
     { "interpret-oem-data", INTERPRET_OEM_DATA_KEY, NULL, 0,
-      "Attempt to interpret OEM data.", 34},
+      "Attempt to interpret OEM data.", 36},
     { "entity-sensor-names", ENTITY_SENSOR_NAMES_KEY, NULL, 0,
-      "Output sensor names with entity ids and instances.", 35},
+      "Output sensor names with entity ids and instances.", 37},
     { "no-sensor-type-output", NO_SENSOR_TYPE_OUTPUT_KEY, 0, 0,
-      "Do not show sensor type output.", 36},
+      "Do not show sensor type output.", 38},
     { "comma-separated-output", COMMA_SEPARATED_OUTPUT_KEY, 0, 0,
-      "Output fields in comma separated format.", 37},
+      "Output fields in comma separated format.", 39},
     { "no-header-output", NO_HEADER_OUTPUT_KEY, 0, 0,
-      "Do not output column headers.", 38},
+      "Do not output column headers.", 40},
     { "non-abbreviated-units", NON_ABBREVIATED_UNITS_KEY, 0, 0,
-      "Output non-abbreviated units (e.g. 'Amps' instead of 'A').", 39},
+      "Output non-abbreviated units (e.g. 'Amps' instead of 'A').", 41},
     { NULL, 0, NULL, 0, NULL, 0}
   };
 
@@ -105,6 +110,8 @@ static error_t
 cmdline_parse (int key, char *arg, struct argp_state *state)
 {
   struct ipmi_pet_arguments *cmd_args = state->input;
+  char *endptr;
+  unsigned long tmp;
   error_t ret;
 
   switch (key)
@@ -128,6 +135,32 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           perror ("strdup");
           exit (1);
         }
+      break;
+    case MANUFACTURER_ID_KEY:
+      errno = 0;
+      tmp = strtoul (arg, &endptr, 10);
+      if (errno
+          || endptr[0] != '\0'
+	  || !tmp)
+        {
+          fprintf (stderr, "invalid manufacturer id: %lu\n", tmp);
+          exit (1);
+        }
+      cmd_args->manufacturer_id = tmp;
+      cmd_args->manufacturer_id_set = 1;
+      break;
+    case PRODUCT_ID_KEY:
+      errno = 0;
+      tmp = strtoul (arg, &endptr, 10);
+      if (errno
+          || endptr[0] != '\0'
+	  || tmp > USHRT_MAX)
+        {
+          fprintf (stderr, "invalid product id: %lu\n", tmp);
+          exit (1);
+        }
+      cmd_args->product_id = tmp;
+      cmd_args->product_id_set = 1;
       break;
     case INTERPRET_OEM_DATA_KEY:
       cmd_args->interpret_oem_data = 1;
@@ -263,6 +296,19 @@ _ipmi_pet_config_file_parse (struct ipmi_pet_arguments *cmd_args)
     cmd_args->non_abbreviated_units = config_file_data.non_abbreviated_units;
 }
 
+static void
+_ipmi_pet_args_validate (struct ipmi_pet_arguments *cmd_args)
+{
+  if ((cmd_args->manufacturer_id_set
+       && !cmd_args->product_id_set)
+      || (!cmd_args->manufacturer_id_set
+          && cmd_args->product_id_set))
+    {
+      fprintf (stderr, "must specify both manufacturer id and product id\n");
+      exit (1);
+    }
+}
+
 void
 ipmi_pet_argp_parse (int argc, char **argv, struct ipmi_pet_arguments *cmd_args)
 {
@@ -272,6 +318,10 @@ ipmi_pet_argp_parse (int argc, char **argv, struct ipmi_pet_arguments *cmd_args)
   cmd_args->cmd_file = NULL;
   cmd_args->output_event_state = 0;
   cmd_args->event_state_config_file = NULL;
+  cmd_args->manufacturer_id = 0;
+  cmd_args->manufacturer_id_set = 0;
+  cmd_args->product_id = 0;
+  cmd_args->product_id_set = 0;
   cmd_args->interpret_oem_data = 0;
   cmd_args->entity_sensor_names = 0;
   cmd_args->no_sensor_type_output = 0;
@@ -303,5 +353,6 @@ ipmi_pet_argp_parse (int argc, char **argv, struct ipmi_pet_arguments *cmd_args)
 
   verify_common_cmd_args (&(cmd_args->common));
   verify_sdr_cmd_args (&(cmd_args->sdr));
+  _ipmi_pet_args_validate (cmd_args);
 }
 

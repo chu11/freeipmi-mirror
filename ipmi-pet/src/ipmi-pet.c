@@ -119,51 +119,60 @@ _ipmi_pet_init (ipmi_pet_state_data_t *state_data)
 	goto cleanup;
     }
 
-  if (args->interpret_oem_data && !args->sdr.ignore_sdr_cache)
+  if (args->interpret_oem_data)
     {
-      if (ipmi_get_oem_data (NULL,
-                             state_data->ipmi_ctx,
-                             &state_data->oem_data) < 0)
-        goto cleanup;
+      if (!args->manufacturer_id_set
+	  && !args->product_id_set)
+	{
+	  if (ipmi_get_oem_data (NULL,
+				 state_data->ipmi_ctx,
+				 &state_data->oem_data) < 0)
+	    goto cleanup;
+	}
+      else
+	{
+	  state_data->oem_data.manufacturer_id = args->manufacturer_id;
+	  state_data->oem_data.product_id = args->product_id;
+	}
 
       if (ipmi_sel_parse_ctx_set_manufacturer_id (state_data->sel_parse_ctx,
-                                                  state_data->oem_data.manufacturer_id) < 0)
-        {
-          fprintf (stderr,
+						  state_data->oem_data.manufacturer_id) < 0)
+	{
+	  fprintf (stderr,
 		   "ipmi_sel_parse_ctx_set_manufacturer_id: %s\n",
 		   ipmi_sel_parse_ctx_errormsg (state_data->sel_parse_ctx));
-          goto cleanup;
-        }
+	  goto cleanup;
+	}
       
       if (ipmi_sel_parse_ctx_set_product_id (state_data->sel_parse_ctx,
-                                             state_data->oem_data.product_id) < 0)
-        {
-          fprintf (stderr,
+					     state_data->oem_data.product_id) < 0)
+	{
+	  fprintf (stderr,
 		   "ipmi_sel_parse_ctx_set_product_id: %s\n",
 		   ipmi_sel_parse_ctx_errormsg (state_data->sel_parse_ctx));
-          goto cleanup;
-        }
+	  goto cleanup;
+	}
       
       if (args->output_event_state)
-        {
-          if (ipmi_interpret_ctx_set_manufacturer_id (state_data->interpret_ctx,
-                                                      state_data->oem_data.manufacturer_id) < 0)
-            {
-              fprintf (stderr,
+	{
+	  if (ipmi_interpret_ctx_set_manufacturer_id (state_data->interpret_ctx,
+						      state_data->oem_data.manufacturer_id) < 0)
+	    {
+	      fprintf (stderr,
 		       "ipmi_interpret_ctx_set_manufacturer_id: %s\n",
 		       ipmi_interpret_ctx_errormsg (state_data->interpret_ctx));
-              goto cleanup;
-            }
+	      goto cleanup;
+	    }
 	  
-          if (ipmi_interpret_ctx_set_product_id (state_data->interpret_ctx,
-                                                 state_data->oem_data.product_id) < 0)
-            {
-              fprintf (stderr,
+	  if (ipmi_interpret_ctx_set_product_id (state_data->interpret_ctx,
+						 state_data->oem_data.product_id) < 0)
+	    {
+	      fprintf (stderr,
 		       "ipmi_interpret_ctx_set_product_id: %s\n",
 		       ipmi_interpret_ctx_errormsg (state_data->interpret_ctx));
-              goto cleanup;
-            }
-        }
+	      goto cleanup;
+	    }
+	}
     }
 
   rv = 0;
@@ -1535,7 +1544,10 @@ _ipmi_pet (ipmi_pet_prog_data_t *prog_data)
 
   /* Special case, just flush, don't do an IPMI connection */
   if (!prog_data->args->sdr.flush_cache
-      || !prog_data->args->sdr.ignore_sdr_cache)
+      && (!prog_data->args->sdr.ignore_sdr_cache
+	  || (prog_data->args->interpret_oem_data
+	      && !prog_data->args->manufacturer_id_set
+	      && !prog_data->args->product_id_set)))
     {
       if (!(state_data.ipmi_ctx = ipmi_open (prog_data->progname,
                                              prog_data->args->common.hostname,

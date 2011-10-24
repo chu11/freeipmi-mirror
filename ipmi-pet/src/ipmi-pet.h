@@ -35,12 +35,14 @@ enum ipmi_pet_argp_option_keys
     CMD_FILE_KEY = 160,
     OUTPUT_EVENT_STATE_KEY = 161,
     EVENT_STATE_CONFIG_FILE_KEY = 162,
-    INTERPRET_OEM_DATA_KEY = 163,
-    ENTITY_SENSOR_NAMES_KEY = 164,
-    NO_SENSOR_TYPE_OUTPUT_KEY = 165,
-    COMMA_SEPARATED_OUTPUT_KEY = 166,
-    NO_HEADER_OUTPUT_KEY = 167,
-    NON_ABBREVIATED_UNITS_KEY = 168,
+    MANUFACTURER_ID_KEY = 163,
+    PRODUCT_ID_KEY = 164,
+    INTERPRET_OEM_DATA_KEY = 165,
+    ENTITY_SENSOR_NAMES_KEY = 166,
+    NO_SENSOR_TYPE_OUTPUT_KEY = 167,
+    COMMA_SEPARATED_OUTPUT_KEY = 168,
+    NO_HEADER_OUTPUT_KEY = 169,
+    NON_ABBREVIATED_UNITS_KEY = 170,
   };
 
 struct ipmi_pet_arguments
@@ -51,6 +53,10 @@ struct ipmi_pet_arguments
   char *cmd_file;
   int output_event_state;
   char *event_state_config_file;
+  uint32_t manufacturer_id;
+  int manufacturer_id_set;
+  uint16_t product_id;
+  int product_id_set;
   int interpret_oem_data;
   int entity_sensor_names;
   int no_sensor_type_output;
