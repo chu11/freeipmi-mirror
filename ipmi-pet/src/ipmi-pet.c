@@ -1257,56 +1257,6 @@ _ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
   for (i = 0; i < IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_OEM_CUSTOM_FIELDS_LENGTH; i++)
     oem_custom[i] = args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_OEM_CUSTOM_FIELDS_INDEX_START + i];
 
-  if (args->specific_trap_na_specified
-      || event_offset != IPMI_PLATFORM_EVENT_TRAP_SPECIFIC_TRAP_EVENT_OFFSET_UNSPECIFIED)
-    {
-      if (!(sel_system_event_record_event_fields = fiid_obj_create (tmpl_sel_system_event_record_event_fields)))
-	{
-	  fprintf (stderr,
-		   "fiid_obj_create: %s\n",
-		   strerror (errno));
-	  goto cleanup;
-	}
-  
-      if ((sel_record_len = fiid_obj_set_all (sel_system_event_record_event_fields,
-					      sel_record,
-					      IPMI_SEL_RECORD_MAX_RECORD_LENGTH)) < 0)
-	{
-	  fprintf (stderr,
-		   "fiid_obj_set_all: %s\n",
-		   fiid_obj_errormsg (sel_system_event_record));
-	  goto cleanup;
-	}
-      
-      if (FIID_OBJ_GET (sel_system_event_record_event_fields,
-			"offset_from_event_reading_type_code",
-			&val) < 0)
-	{
-	  fprintf (stderr,
-		   "fiid_obj_get: 'offset_from_event_reading_type_code': %s\n",
-		   fiid_obj_errormsg (sel_system_event_record_event_fields));
-	  goto cleanup;
-	}
-      event_offset_test = val;
-
-      /* determine event_offset from event data1 */
-      if (args->specific_trap_na_specified)
-	event_offset = event_offset_test;
-      else
-	{
-	  /* If the event offset specified in the specific trap does not
-	   * match the event_data1 data, not much I can really do, one of them is valid and one isn't.
-	   * For now, just document bug.
-	   */
-	  if (event_offset != event_offset_test)
-	    {
-	      if (state_data->prog_data->args->common.debug)
-		fprintf (stderr,
-			 "Invalid PET data input: event_offset and event_data1 inconsistent\n");
-	    }
-	}
-    }
-
   if (args->specific_trap_na_specified)
     {
       if (!args->sdr.ignore_sdr_cache)
@@ -1324,7 +1274,7 @@ _ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
 		  fprintf (stderr,
 			   "ipmi_sdr_cache_search_record_id: %s\n",
 			   ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
-		  return (-1);
+		  goto cleanup;
 		}
 	    }
 	  
@@ -1335,7 +1285,7 @@ _ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
               fprintf (stderr,
 		       "ipmi_sdr_cache_record_read: %s\n",
 		       ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
-              return (-1);
+              goto cleanup;
             }
 	  
           /* Shouldn't be possible */
@@ -1351,7 +1301,7 @@ _ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
               fprintf (stderr,
 		       "ipmi_sdr_parse_record_id_and_type: %s\n",
 		       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
-              return (-1);
+              goto cleanup;
             }
 
 	  if (record_type != IPMI_SDR_FORMAT_FULL_SENSOR_RECORD
@@ -1367,7 +1317,7 @@ _ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
 	      fprintf (stderr,
 		       "ipmi_sdr_parse_sensor_type: %s\n",
 		       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
-	      return (-1);
+	      goto cleanup;
 	    }
 
 	  if (ipmi_sdr_parse_event_reading_type_code (state_data->sdr_parse_ctx,
@@ -1378,7 +1328,7 @@ _ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
 	      fprintf (stderr,
 		       "ipmi_sdr_parse_event_reading_type_code: %s\n",
 		       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
-	      return (-1);
+	      goto cleanup;
 	    }
 	}
       else
@@ -1584,6 +1534,56 @@ _ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
                "Invalid length SEL record: %u\n",
 	       sel_record_len);
       goto cleanup;
+    }
+
+  if (args->specific_trap_na_specified
+      || event_offset != IPMI_PLATFORM_EVENT_TRAP_SPECIFIC_TRAP_EVENT_OFFSET_UNSPECIFIED)
+    {
+      if (!(sel_system_event_record_event_fields = fiid_obj_create (tmpl_sel_system_event_record_event_fields)))
+	{
+	  fprintf (stderr,
+		   "fiid_obj_create: %s\n",
+		   strerror (errno));
+	  goto cleanup;
+	}
+  
+      if ((sel_record_len = fiid_obj_set_all (sel_system_event_record_event_fields,
+					      sel_record,
+					      IPMI_SEL_RECORD_MAX_RECORD_LENGTH)) < 0)
+	{
+	  fprintf (stderr,
+		   "fiid_obj_set_all: %s\n",
+		   fiid_obj_errormsg (sel_system_event_record));
+	  goto cleanup;
+	}
+      
+      if (FIID_OBJ_GET (sel_system_event_record_event_fields,
+			"offset_from_event_reading_type_code",
+			&val) < 0)
+	{
+	  fprintf (stderr,
+		   "fiid_obj_get: 'offset_from_event_reading_type_code': %s\n",
+		   fiid_obj_errormsg (sel_system_event_record_event_fields));
+	  goto cleanup;
+	}
+      event_offset_test = val;
+
+      /* determine event_offset from event data1 */
+      if (args->specific_trap_na_specified)
+	event_offset = event_offset_test;
+      else
+	{
+	  /* If the event offset specified in the specific trap does not
+	   * match the event_data1 data, not much I can really do, one of them is valid and one isn't.
+	   * For now, just document bug.
+	   */
+	  if (event_offset != event_offset_test)
+	    {
+	      if (state_data->prog_data->args->common.debug)
+		fprintf (stderr,
+			 "Invalid PET data input: event_offset and event_data1 inconsistent\n");
+	    }
+	}
     }
 
   flags = IPMI_SEL_PARSE_STRING_FLAGS_IGNORE_UNAVAILABLE_FIELD;
