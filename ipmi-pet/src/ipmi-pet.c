@@ -62,7 +62,10 @@
 
 #define IPMI_PET_EVENT_SEPARATOR " ; "
 
-#define IPMI_PET_EVENT_SEVERITY_HEADER "Severity"
+#define IPMI_PET_GUID_HEADER            "GUID"
+#define IPMI_PET_MANUFACTURER_ID_HEADER "Manufacturer ID"
+#define IPMI_PET_SYSTEM_ID_HEADER       "System ID"
+#define IPMI_PET_EVENT_SEVERITY_HEADER  "Severity"
 
 struct ipmi_pet_trap_data
 {
@@ -587,7 +590,14 @@ _ipmi_pet_output_headers (ipmi_pet_state_data_t *state_data)
 		    SENSORS_HEADER_NAME_STR,
 		    SENSORS_HEADER_TYPE_STR);
 	  
-	  if (state_data->prog_data->args->output_event_severity)
+	  if (state_data->prog_data->args->verbose_count >= 2)
+	    printf (",%s,%s,%s",
+		    IPMI_PET_GUID_HEADER,
+		    IPMI_PET_MANUFACTURER_ID_HEADER,
+		    IPMI_PET_SYSTEM_ID_HEADER);
+
+	  if (state_data->prog_data->args->output_event_severity
+	      || state_data->prog_data->args->verbose_count >= 1)
 	    printf (",%s", IPMI_PET_EVENT_SEVERITY_HEADER);
 
           if (state_data->prog_data->args->output_event_state)
@@ -625,8 +635,15 @@ _ipmi_pet_output_headers (ipmi_pet_state_data_t *state_data)
 		      SENSORS_HEADER_NAME_STR,
 		      SENSORS_HEADER_TYPE_STR);
             }
-          
-	  if (state_data->prog_data->args->output_event_severity)
+
+	  if (state_data->prog_data->args->verbose_count >= 2)
+	    printf (" | %-36s | %-25s | %s",
+		    IPMI_PET_GUID_HEADER,
+		    IPMI_PET_MANUFACTURER_ID_HEADER,
+		    IPMI_PET_SYSTEM_ID_HEADER);
+
+	  if (state_data->prog_data->args->output_event_severity
+	      || state_data->prog_data->args->verbose_count >= 1)
 	    printf (" | %-25s", IPMI_PET_EVENT_SEVERITY_HEADER);
 
           if (state_data->prog_data->args->output_event_state)
@@ -993,6 +1010,97 @@ _normal_output_not_available_sensor_type (ipmi_pet_state_data_t *state_data)
  * return (-1) on error
  */
 static int
+_normal_output_guid_manufacturer_id_system_id (ipmi_pet_state_data_t *state_data,
+					       struct ipmi_pet_trap_data *data)
+{
+  char fmt[IPMI_PET_FMT_BUFLEN + 1];
+  char outbuf[IPMI_PET_OUTPUT_BUFLEN+1];
+  int iana_available;
+
+  assert (state_data);
+  assert (data);
+  assert (state_data->prog_data->args->verbose_count >= 2);
+  
+  /* Output format for guid from "Wired for Management Specification",
+   * Appendex 1 "String Representation of UUIDs" in the above
+   * document.  Note that the output is supposed to be output in most
+   * significant byte order.
+   */
+
+  memset (fmt, '\0', IPMI_PET_FMT_BUFLEN + 1);
+  if (state_data->prog_data->args->comma_separated_output)
+    snprintf (fmt,
+              IPMI_PET_FMT_BUFLEN,
+              ",%%02x%%02x%%02x%%02x-%%02x%%02x-%%02x%%02x-%%02x%%02x-%%02x%%02x%%02x%%02x%%02x%%02x");
+  else
+    snprintf (fmt,
+              IPMI_PET_FMT_BUFLEN,
+              " | %%02x%%02x%%02x%%02x-%%02x%%02x-%%02x%%02x-%%02x%%02x-%%02x%%02x%%02x%%02x%%02x%%02x");
+  
+  printf (fmt,
+	  data->guid[0],  /* time low */
+	  data->guid[1],
+	  data->guid[2],
+	  data->guid[3],
+	  data->guid[4],  /* time mid */
+	  data->guid[5],
+	  data->guid[6],   /* time high and version */
+	  data->guid[7],
+	  data->guid[8],   /* clock seq high and reserved - comes before clock seq low */
+	  data->guid[9],   /* clock seq low */
+	  data->guid[10],   /* node */
+	  data->guid[11],
+	  data->guid[12],
+	  data->guid[13],
+	  data->guid[14],
+	  data->guid[15]);
+  
+  /* if iana_available == 0 means no string, < 0 means bad manufacturer id
+   * either way, output just the number
+   */
+
+  memset (outbuf, '\0', IPMI_PET_OUTPUT_BUFLEN + 1);
+  iana_available = ipmi_iana_enterprise_numbers_string (data->manufacturer_id,
+							outbuf,
+							IPMI_PET_OUTPUT_BUFLEN);
+
+  memset (fmt, '\0', IPMI_PET_FMT_BUFLEN + 1);
+
+  if (iana_available > 0)
+    {
+      if (state_data->prog_data->args->comma_separated_output)
+	snprintf (fmt,
+		  IPMI_PET_FMT_BUFLEN,
+		  ",%%s,%%u");
+      else
+	snprintf (fmt,
+		  IPMI_PET_FMT_BUFLEN,
+		  " | %%-25s | %%-9u");
+
+      printf (fmt, outbuf, data->system_id);
+    }
+  else
+    {
+      if (state_data->prog_data->args->comma_separated_output)
+	snprintf (fmt,
+		  IPMI_PET_FMT_BUFLEN,
+		  ",%%u,%%u");
+      else
+	snprintf (fmt,
+		  IPMI_PET_FMT_BUFLEN,
+		  " | %%-25u | %%-9u");
+
+      printf (fmt, data->manufacturer_id, data->system_id);
+    }
+
+  return (1);
+}
+
+/* return 1 on success
+ * return (0) on non-success, but don't fail
+ * return (-1) on error
+ */
+static int
 _normal_output_event_severity (ipmi_pet_state_data_t *state_data,
 			       uint8_t event_severity,
 			       unsigned int flags)
@@ -1000,7 +1108,9 @@ _normal_output_event_severity (ipmi_pet_state_data_t *state_data,
   char *str = NULL;
 
   assert (state_data);
-  
+  assert (state_data->prog_data->args->output_event_severity
+	  || state_data->prog_data->args->verbose_count >= 1);
+
   switch (event_severity)
     {
     case IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_EVENT_SEVERITY_UNSPECIFIED:
@@ -1734,7 +1844,17 @@ _ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
 	goto newline_out;
     }
 
-  if (state_data->prog_data->args->output_event_severity)
+  if (state_data->prog_data->args->verbose_count >= 2)
+    {
+      if ((ret = _normal_output_guid_manufacturer_id_system_id (state_data, &data)) < 0)
+	goto cleanup;
+
+      if (!ret)
+	goto newline_out;
+    }
+
+  if (state_data->prog_data->args->output_event_severity
+      || state_data->prog_data->args->verbose_count >= 1)
     {
       if ((ret = _normal_output_event_severity (state_data,
 						data.event_severity,
@@ -1744,7 +1864,7 @@ _ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
       if (!ret)
 	goto newline_out;
     }
-
+  
   if (state_data->prog_data->args->output_event_state)
     {
       if ((ret = _normal_output_event_state (state_data,
