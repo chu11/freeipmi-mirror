@@ -194,6 +194,13 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 
 	if (!cmd_args->specific_trap_set)
 	  {
+	    if (!strcasecmp (arg, "NA"))
+	      {
+		cmd_args->specific_trap_na_specified = 1;
+		cmd_args->specific_trap_set = 1;
+		break;
+	      }
+
 	    errno = 0;
 	    uvalue = strtoul (arg, &endptr, 0);
 	    if (errno
@@ -337,6 +344,7 @@ ipmi_pet_argp_parse (int argc, char **argv, struct ipmi_pet_arguments *cmd_args)
   cmd_args->no_header_output = 0;
   cmd_args->non_abbreviated_units = 0;
   cmd_args->specific_trap = 0;
+  cmd_args->specific_trap_na_specified = 0;
   cmd_args->specific_trap_set = 0;
   memset (cmd_args->variable_bindings,
           '\0',

@@ -66,6 +66,7 @@ struct ipmi_pet_arguments
   int no_header_output;
   int non_abbreviated_units;
   uint32_t specific_trap;
+  int specific_trap_na_specified;
   int specific_trap_set;
   uint8_t variable_bindings[IPMI_PET_MAX_ARGS];
   unsigned int variable_bindings_length;

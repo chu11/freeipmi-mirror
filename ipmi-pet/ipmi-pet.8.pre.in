@@ -19,8 +19,6 @@ could be called directly from such a daemon, typically a script is called
 to parse the SNMP daemon's output and convert it into a form that can be input
 into
 .B ipmi-pet.
-If the SNMP daemon does not output a SNMPv1 \fIspecific trap\fR on its
-own, it is typically output as the last element of the OID in SNMPv2.
 
 While an IPMI session is not required to interpret a PET, data from
 the sensor data repository (SDR) is required to properly interpret
@@ -33,6 +31,16 @@ interpreted as best as possible given no SDR (the output will be
 similar to
 .B ipmi-sel
 when \fB\-\-ignore\-sdr\-cache\fR is specified).
+
+If the SNMP daemon does not output a SNMPv1 \fIspecific trap\fR on its
+own, it is typically output as the last element of the OID in SNMPv2.
+If for some reason a \fIspecific trap\fR cannot be determined, the
+value of \fINA\fR may be input for the \fIspecific trap\fR to indicate
+it is not available.
+.B Ipmi-pet
+will output as much as possible with the information given.  Some of
+the information can be retrieved from the variable bindings and SDR.
+
 #include <@top_srcdir@/common/man/manpage-common-general-options-header.man>
 #include <@top_srcdir@/common/man/manpage-common-driver.man>
 #include <@top_srcdir@/common/man/manpage-common-inband.man>
