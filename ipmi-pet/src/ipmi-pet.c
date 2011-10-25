@@ -64,6 +64,28 @@
 
 #define IPMI_PET_EVENT_SEVERITY_HEADER "Severity"
 
+struct ipmi_pet_trap_data
+{
+  uint8_t sensor_type;
+  int sensor_type_cant_be_determined;
+  uint8_t event_type;
+  int event_type_cant_be_determined;
+  uint8_t event_direction;
+  uint8_t event_offset;
+  uint8_t guid[IPMI_SYSTEM_GUID_LENGTH];
+  uint32_t localtimestamp;
+  int16_t utcoffset;
+  uint8_t event_severity;
+  uint8_t sensor_device;
+  uint8_t sensor_number;
+  uint8_t entity;
+  uint8_t entity_instance;
+  uint8_t event_data[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_EVENT_DATA_LENGTH];
+  uint32_t manufacturer_id;
+  uint16_t system_id;
+  uint8_t oem_custom[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_OEM_CUSTOM_FIELDS_LENGTH];
+};
+
 static int
 _ipmi_pet_init (ipmi_pet_state_data_t *state_data)
 {
@@ -179,6 +201,337 @@ _ipmi_pet_init (ipmi_pet_state_data_t *state_data)
 
   rv = 0;
  cleanup:
+  return (rv);
+}
+
+static int
+_ipmi_pet_parse_trap_data (ipmi_pet_state_data_t *state_data, struct ipmi_pet_trap_data *data)
+{
+  struct ipmi_pet_arguments *args;
+  int rv = -1;
+  int i;
+
+  assert (state_data);
+  assert (data);
+
+  args = state_data->prog_data->args;
+
+  if (!args->specific_trap_na_specified)
+    {
+      uint32_t value;
+
+      value = args->specific_trap & IPMI_PLATFORM_EVENT_TRAP_SPECIFIC_TRAP_SENSOR_TYPE_MASK;
+      value >>= IPMI_PLATFORM_EVENT_TRAP_SPECIFIC_TRAP_SENSOR_TYPE_SHIFT;
+      data->sensor_type = value;
+      
+      value = args->specific_trap & IPMI_PLATFORM_EVENT_TRAP_SPECIFIC_TRAP_EVENT_TYPE_MASK;
+      value >>= IPMI_PLATFORM_EVENT_TRAP_SPECIFIC_TRAP_EVENT_TYPE_SHIFT;
+      data->event_type = value;
+  
+      value = args->specific_trap & IPMI_PLATFORM_EVENT_TRAP_SPECIFIC_TRAP_EVENT_DIRECTION_MASK;
+      value >>= IPMI_PLATFORM_EVENT_TRAP_SPECIFIC_TRAP_EVENT_DIRECTION_SHIFT;
+      data->event_direction = value;
+      
+      value = args->specific_trap & IPMI_PLATFORM_EVENT_TRAP_SPECIFIC_TRAP_EVENT_OFFSET_MASK;
+      value >>= IPMI_PLATFORM_EVENT_TRAP_SPECIFIC_TRAP_EVENT_OFFSET_SHIFT;
+      data->event_offset = value;  
+    }
+
+  for (i = 0; i < IPMI_SYSTEM_GUID_LENGTH; i++)
+    data->guid[i] = args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_GUID_INDEX_START + i];
+  
+  data->localtimestamp = args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_LOCAL_TIMESTAMP_INDEX_START];
+  data->localtimestamp <<= 8;
+  data->localtimestamp |= args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_LOCAL_TIMESTAMP_INDEX_START + 1];
+  data->localtimestamp <<= 8;
+  data->localtimestamp |= args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_LOCAL_TIMESTAMP_INDEX_START + 2];
+  data->localtimestamp <<= 8;
+  data->localtimestamp |= args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_LOCAL_TIMESTAMP_INDEX_START + 3];
+
+  if (data->localtimestamp != IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_LOCAL_TIMESTAMP_UNSPECIFIED)
+    {
+      struct tm tm;
+      time_t t;
+
+      data->utcoffset = args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_UTC_OFFSET_INDEX_START];
+      data->utcoffset <<= 8;
+      data->utcoffset |= args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_UTC_OFFSET_INDEX_START + 1];
+      
+      if (data->utcoffset != IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_UTC_OFFSET_UNSPECIFIED)
+	{
+	  /* utcoffset is in minutes, multiply by 60 to get seconds */
+	  data->localtimestamp += data->utcoffset * 60;
+	}
+      
+      /* Posix says individual calls need not clear/set all portions of
+       * 'struct tm', thus passing 'struct tm' between functions could
+       * have issues.  So we need to memset.
+       */
+      memset (&tm, '\0', sizeof(struct tm));
+      
+      /* In PET, epoch is 0:00 hrs 1/1/98
+       *
+       * So convert into ansi epoch
+       */
+      
+      tm.tm_year = 98;          /* years since 1900 */
+      tm.tm_mon = 0;            /* months since January */
+      tm.tm_mday = 1;           /* 1-31 */
+      tm.tm_hour = 0;
+      tm.tm_min = 0;
+      tm.tm_sec = 0;
+      tm.tm_isdst = -1;
+      
+      if ((t = mktime (&tm)) == (time_t)-1)
+	{
+	  fprintf (stderr, "Invalid timestamp indicated\n");
+	  goto cleanup;
+	}
+      
+      data->localtimestamp += (uint32_t)t;
+    }
+
+  data->event_severity = args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_EVENT_SEVERITY_INDEX];
+
+  data->sensor_device = args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_SENSOR_DEVICE_INDEX];
+
+  data->sensor_number = args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_SENSOR_NUMBER_INDEX];
+
+  data->entity = args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_ENTITY_INDEX];
+
+  data->entity_instance = args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_ENTITY_INSTANCE_INDEX];
+
+  for (i = 0; i < IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_EVENT_DATA_LENGTH; i++)
+    data->event_data[i] = args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_EVENT_DATA_INDEX_START + i];
+
+  data->manufacturer_id = args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_MANUFACTURER_ID_INDEX_START];
+  data->manufacturer_id <<= 8;
+  data->manufacturer_id |= args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_MANUFACTURER_ID_INDEX_START + 1];
+  data->manufacturer_id <<= 8;
+  data->manufacturer_id |= args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_MANUFACTURER_ID_INDEX_START + 2];
+  data->manufacturer_id <<= 8;
+  data->manufacturer_id |= args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_MANUFACTURER_ID_INDEX_START + 3];
+  
+  data->system_id = args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_SYSTEM_ID_INDEX_START];
+  data->system_id <<= 8;
+  data->system_id |= args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_SYSTEM_ID_INDEX_START + 1];
+
+  for (i = 0; i < IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_OEM_CUSTOM_FIELDS_LENGTH; i++)
+    data->oem_custom[i] = args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_OEM_CUSTOM_FIELDS_INDEX_START + i];
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+static int
+_ipmi_pet_form_sel_record (ipmi_pet_state_data_t *state_data,
+			   struct ipmi_pet_trap_data *data,
+			   uint8_t *sel_record,
+			   unsigned int sel_record_len)
+{
+  fiid_obj_t sel_system_event_record = NULL;
+  int rv = -1;
+
+  assert (state_data);
+  assert (data);
+  assert (sel_record);
+  assert (sel_record_len);
+
+  if (!(sel_system_event_record = fiid_obj_create (tmpl_sel_system_event_record)))
+    {
+      fprintf (stderr,
+	       "fiid_obj_create: %s\n",
+	       strerror (errno));
+      goto cleanup;
+    }
+
+  /* Don't care about this field, just set 0 */
+  if (fiid_obj_set (sel_system_event_record,
+                    "record_id",
+                    0) < 0)
+    {
+      fprintf (stderr,
+	       "fiid_obj_set: 'record_id': %s\n",
+	       fiid_obj_errormsg (sel_system_event_record));
+      goto cleanup;
+    }
+
+  if (fiid_obj_set (sel_system_event_record,
+                    "record_type",
+                    IPMI_SEL_RECORD_TYPE_SYSTEM_EVENT_RECORD) < 0)
+    {
+      fprintf (stderr,
+	       "fiid_obj_set: 'record_type': %s\n",
+	       fiid_obj_errormsg (sel_system_event_record));
+      goto cleanup;
+    }
+
+  if (fiid_obj_set (sel_system_event_record,
+                    "timestamp",
+                    data->localtimestamp) < 0)
+    {
+      fprintf (stderr,
+	       "fiid_obj_set: 'timestamp': %s\n",
+	       fiid_obj_errormsg (sel_system_event_record));
+      goto cleanup;
+    }
+
+  /* Need just the high order bit here */
+  if (fiid_obj_set (sel_system_event_record,
+                    "generator_id.id_type",
+                    (data->sensor_device >> 7)) < 0)
+    {
+      fprintf (stderr,
+	       "fiid_obj_set: 'generator_id.id_type': %s\n",
+	       fiid_obj_errormsg (sel_system_event_record));
+      goto cleanup;
+    }
+
+  if (fiid_obj_set (sel_system_event_record,
+                    "generator_id.id",
+                    data->sensor_device) < 0)
+    {
+      fprintf (stderr,
+	       "fiid_obj_set: 'generator_id.id': %s\n",
+	       fiid_obj_errormsg (sel_system_event_record));
+      goto cleanup;
+    }
+
+  /* Don't care about this field, just set 0 */
+  if (fiid_obj_set (sel_system_event_record,
+                    "ipmb_device_lun",
+                    0) < 0)
+    {
+      fprintf (stderr,
+	       "fiid_obj_set: 'ipmb_device_lun': %s\n",
+	       fiid_obj_errormsg (sel_system_event_record));
+      goto cleanup;
+    }
+
+  /* Don't care about this field, just set 0 */
+  if (fiid_obj_set (sel_system_event_record,
+                    "reserved",
+                    0) < 0)
+    {
+      fprintf (stderr,
+	       "fiid_obj_set: 'reserved': %s\n",
+	       fiid_obj_errormsg (sel_system_event_record));
+      goto cleanup;
+    }
+
+  /* Don't care about this field, just set 0 */
+  if (fiid_obj_set (sel_system_event_record,
+                    "channel_number",
+                    0) < 0)
+    {
+      fprintf (stderr,
+	       "fiid_obj_set: 'channel_number': %s\n",
+	       fiid_obj_errormsg (sel_system_event_record));
+      goto cleanup;
+    }
+
+  if (fiid_obj_set (sel_system_event_record,
+                    "event_message_format_version",
+                    IPMI_V1_5_EVENT_MESSAGE_FORMAT) < 0)
+    {
+      fprintf (stderr,
+               "fiid_obj_set: 'event_message_format_version': %s\n",
+               fiid_obj_errormsg (sel_system_event_record));
+      goto cleanup;
+    }
+
+  if (fiid_obj_set (sel_system_event_record,
+                    "sensor_type",
+                    data->sensor_type_cant_be_determined ? IPMI_SENSOR_TYPE_RESERVED : data->sensor_type) < 0)
+    {
+      fprintf (stderr,
+               "fiid_obj_set: 'sensor_type': %s\n",
+               fiid_obj_errormsg (sel_system_event_record));
+      goto cleanup;
+    }
+
+  if (fiid_obj_set (sel_system_event_record,
+                    "sensor_number",
+                    data->sensor_number) < 0)
+    {
+      fprintf (stderr,
+               "fiid_obj_set: 'sensor_number': %s\n",
+               fiid_obj_errormsg (sel_system_event_record));
+      goto cleanup;
+    }
+
+  if (fiid_obj_set (sel_system_event_record,
+                    "event_type_code",
+                    data->event_type_cant_be_determined ? IPMI_EVENT_READING_TYPE_CODE_UNSPECIFIED : data->event_type) < 0)
+    {
+      fprintf (stderr,
+               "fiid_obj_set: 'event_type_code': %s\n",
+               fiid_obj_errormsg (sel_system_event_record));
+      goto cleanup;
+    }
+
+  if (fiid_obj_set (sel_system_event_record,
+                    "event_dir",
+                    data->event_direction) < 0)
+    {
+      fprintf (stderr,
+               "fiid_obj_set: 'event_dir': %s\n",
+               fiid_obj_errormsg (sel_system_event_record));
+      goto cleanup;
+    }
+
+  if (fiid_obj_set (sel_system_event_record,
+                    "event_data1",
+                    data->event_data[0]) < 0)
+    {
+      fprintf (stderr,
+               "fiid_obj_set: 'event_data1': %s\n",
+               fiid_obj_errormsg (sel_system_event_record));
+      goto cleanup;
+    }
+
+  if (fiid_obj_set (sel_system_event_record,
+                    "event_data2",
+                    data->event_data[1]) < 0)
+    {
+      fprintf (stderr,
+               "fiid_obj_set: 'event_data2': %s\n",
+               fiid_obj_errormsg (sel_system_event_record));
+      goto cleanup;
+    }
+
+  if (fiid_obj_set (sel_system_event_record,
+                    "event_data3",
+                    data->event_data[2]) < 0)
+    {
+      fprintf (stderr,
+               "fiid_obj_set: 'event_data3': %s\n",
+               fiid_obj_errormsg (sel_system_event_record));
+      goto cleanup;
+    }
+
+  if ((sel_record_len = fiid_obj_get_all (sel_system_event_record,
+					  sel_record,
+					  IPMI_SEL_RECORD_MAX_RECORD_LENGTH)) < 0)
+    {
+      fprintf (stderr,
+               "fiid_obj_get_all: %s\n",
+               fiid_obj_errormsg (sel_system_event_record));
+      goto cleanup;
+    }
+  
+  if (sel_record_len != IPMI_SEL_RECORD_MAX_RECORD_LENGTH)
+    {
+      fprintf (stderr,
+               "Invalid length SEL record: %u\n",
+	       sel_record_len);
+      goto cleanup;
+    }
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (sel_system_event_record);
   return (rv);
 }
 
@@ -1105,40 +1458,22 @@ static int
 _ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
 {
   struct ipmi_pet_arguments *args;
-  uint32_t value;
-  uint8_t sensor_type;
-  uint8_t event_type;
-  uint8_t event_direction;
-  uint8_t event_offset;
-  uint8_t guid[IPMI_SYSTEM_GUID_LENGTH];
-  uint32_t localtimestamp;
-  int16_t utcoffset;
-  uint8_t event_severity;
-  uint8_t sensor_device;
-  uint8_t sensor_number;
-  uint8_t entity;
-  uint8_t entity_instance;
-  uint8_t event_data[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_EVENT_DATA_LENGTH];
-  uint32_t manufacturer_id;
-  uint16_t system_id;
-  uint8_t oem_custom[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_OEM_CUSTOM_FIELDS_LENGTH];
-  fiid_obj_t sel_system_event_record = NULL;
+  struct ipmi_pet_trap_data data;
   fiid_obj_t sel_system_event_record_event_fields = NULL;
   uint8_t event_offset_test;
   uint8_t sel_record[IPMI_SEL_RECORD_MAX_RECORD_LENGTH];
   unsigned int flags = 0;
   uint64_t val;
   int sel_record_len;
-  int event_type_cant_be_determined = 0;
-  int sensor_type_cant_be_determined = 0;
   int rv = -1;
   int ret;
-  int i;
 
   assert (state_data);
   assert (state_data->prog_data->args->specific_trap_set);
   assert (state_data->prog_data->args->variable_bindings);
   assert (state_data->prog_data->args->variable_bindings_length);
+  
+  memset (&data, '\0', sizeof (struct ipmi_pet_trap_data));
   
   args = state_data->prog_data->args;
 
@@ -1155,107 +1490,9 @@ _ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
 
   if (_ipmi_pet_output_headers (state_data) < 0)
     goto cleanup;
-
-  if (!args->specific_trap_na_specified)
-    {
-      value = args->specific_trap & IPMI_PLATFORM_EVENT_TRAP_SPECIFIC_TRAP_SENSOR_TYPE_MASK;
-      value >>= IPMI_PLATFORM_EVENT_TRAP_SPECIFIC_TRAP_SENSOR_TYPE_SHIFT;
-      sensor_type = value;
-      
-      value = args->specific_trap & IPMI_PLATFORM_EVENT_TRAP_SPECIFIC_TRAP_EVENT_TYPE_MASK;
-      value >>= IPMI_PLATFORM_EVENT_TRAP_SPECIFIC_TRAP_EVENT_TYPE_SHIFT;
-      event_type = value;
-      
-      value = args->specific_trap & IPMI_PLATFORM_EVENT_TRAP_SPECIFIC_TRAP_EVENT_DIRECTION_MASK;
-      value >>= IPMI_PLATFORM_EVENT_TRAP_SPECIFIC_TRAP_EVENT_DIRECTION_SHIFT;
-      event_direction = value;
-      
-      value = args->specific_trap & IPMI_PLATFORM_EVENT_TRAP_SPECIFIC_TRAP_EVENT_OFFSET_MASK;
-      value >>= IPMI_PLATFORM_EVENT_TRAP_SPECIFIC_TRAP_EVENT_OFFSET_SHIFT;
-      event_offset = value;  
-    }
-
-  for (i = 0; i < IPMI_SYSTEM_GUID_LENGTH; i++)
-    guid[i] = args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_GUID_INDEX_START + i];
-  
-  localtimestamp = args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_LOCAL_TIMESTAMP_INDEX_START];
-  localtimestamp <<= 8;
-  localtimestamp |= args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_LOCAL_TIMESTAMP_INDEX_START + 1];
-  localtimestamp <<= 8;
-  localtimestamp |= args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_LOCAL_TIMESTAMP_INDEX_START + 2];
-  localtimestamp <<= 8;
-  localtimestamp |= args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_LOCAL_TIMESTAMP_INDEX_START + 3];
-
-  if (localtimestamp != IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_LOCAL_TIMESTAMP_UNSPECIFIED)
-    {
-      struct tm tm;
-      time_t t;
-
-      utcoffset = args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_UTC_OFFSET_INDEX_START];
-      utcoffset <<= 8;
-      utcoffset |= args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_UTC_OFFSET_INDEX_START + 1];
-      
-      if (utcoffset != IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_UTC_OFFSET_UNSPECIFIED)
-	{
-	  /* utcoffset is in minutes, multiply by 60 to get seconds */
-	  localtimestamp += utcoffset * 60;
-	}
-      
-      /* Posix says individual calls need not clear/set all portions of
-       * 'struct tm', thus passing 'struct tm' between functions could
-       * have issues.  So we need to memset.
-       */
-      memset (&tm, '\0', sizeof(struct tm));
-      
-      /* In FRU, epoch is 0:00 hrs 1/1/98
-       *
-       * So convert into ansi epoch
-       */
-      
-      tm.tm_year = 98;          /* years since 1900 */
-      tm.tm_mon = 0;            /* months since January */
-      tm.tm_mday = 1;           /* 1-31 */
-      tm.tm_hour = 0;
-      tm.tm_min = 0;
-      tm.tm_sec = 0;
-      tm.tm_isdst = -1;
-      
-      if ((t = mktime (&tm)) == (time_t)-1)
-	{
-	  fprintf (stderr, "Invalid timestamp indicated\n");
-	  goto cleanup;
-	}
-      
-      localtimestamp += (uint32_t)t;
-    }
-
-  event_severity = args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_EVENT_SEVERITY_INDEX];
-
-  sensor_device = args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_SENSOR_DEVICE_INDEX];
-
-  sensor_number = args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_SENSOR_NUMBER_INDEX];
-
-  entity = args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_ENTITY_INDEX];
-
-  entity_instance = args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_ENTITY_INSTANCE_INDEX];
-
-  for (i = 0; i < IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_EVENT_DATA_LENGTH; i++)
-    event_data[i] = args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_EVENT_DATA_INDEX_START + i];
-
-  manufacturer_id = args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_MANUFACTURER_ID_INDEX_START];
-  manufacturer_id <<= 8;
-  manufacturer_id |= args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_MANUFACTURER_ID_INDEX_START + 1];
-  manufacturer_id <<= 8;
-  manufacturer_id |= args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_MANUFACTURER_ID_INDEX_START + 2];
-  manufacturer_id <<= 8;
-  manufacturer_id |= args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_MANUFACTURER_ID_INDEX_START + 3];
-  
-  system_id = args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_SYSTEM_ID_INDEX_START];
-  system_id <<= 8;
-  system_id |= args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_SYSTEM_ID_INDEX_START + 1];
-
-  for (i = 0; i < IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_OEM_CUSTOM_FIELDS_LENGTH; i++)
-    oem_custom[i] = args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_OEM_CUSTOM_FIELDS_INDEX_START + i];
+ 
+  if (_ipmi_pet_parse_trap_data (state_data, &data) < 0)
+    goto cleanup;
 
   if (args->specific_trap_na_specified)
     {
@@ -1265,7 +1502,9 @@ _ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
 	  int sdr_record_len = 0;
 	  uint8_t record_type;
 
-	  if (ipmi_sdr_cache_search_sensor (state_data->sdr_cache_ctx, sensor_number, sensor_device) < 0)
+	  if (ipmi_sdr_cache_search_sensor (state_data->sdr_cache_ctx,
+					    data.sensor_number,
+					    data.sensor_device) < 0)
 	    {
 	      if (ipmi_sdr_cache_ctx_errnum (state_data->sdr_cache_ctx) == IPMI_SDR_CACHE_ERR_NOT_FOUND)
 		goto cant_be_determined;
@@ -1312,18 +1551,18 @@ _ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
 	  if (ipmi_sdr_parse_sensor_type (state_data->sdr_parse_ctx,
 					  sdr_record,
 					  sdr_record_len,
-					  &sensor_type) < 0)
+					  &data.sensor_type) < 0)
 	    {
 	      fprintf (stderr,
 		       "ipmi_sdr_parse_sensor_type: %s\n",
 		       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
 	      goto cleanup;
 	    }
-
+	  
 	  if (ipmi_sdr_parse_event_reading_type_code (state_data->sdr_parse_ctx,
 						      sdr_record,
 						      sdr_record_len,
-						      &event_type) < 0)
+						      &data.event_type) < 0)
 	    {
 	      fprintf (stderr,
 		       "ipmi_sdr_parse_event_reading_type_code: %s\n",
@@ -1335,8 +1574,8 @@ _ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
 	{
 	cant_be_determined:
 	  /* Can't determine this stuff */
-	  event_type_cant_be_determined = 1;
-	  sensor_type_cant_be_determined = 1;
+	  data.event_type_cant_be_determined = 1;
+	  data.sensor_type_cant_be_determined = 1;
 	}
     }
 
@@ -1345,199 +1584,14 @@ _ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
    * outputting information.
    */
 
-  if (!(sel_system_event_record = fiid_obj_create (tmpl_sel_system_event_record)))
-    {
-      fprintf (stderr,
-	       "fiid_obj_create: %s\n",
-	       strerror (errno));
-      goto cleanup;
-    }
-
-  /* Don't care about this field, just set 0 */
-  if (fiid_obj_set (sel_system_event_record,
-                    "record_id",
-                    0) < 0)
-    {
-      fprintf (stderr,
-	       "fiid_obj_set: 'record_id': %s\n",
-	       fiid_obj_errormsg (sel_system_event_record));
-      goto cleanup;
-    }
-
-  if (fiid_obj_set (sel_system_event_record,
-                    "record_type",
-                    IPMI_SEL_RECORD_TYPE_SYSTEM_EVENT_RECORD) < 0)
-    {
-      fprintf (stderr,
-	       "fiid_obj_set: 'record_type': %s\n",
-	       fiid_obj_errormsg (sel_system_event_record));
-      goto cleanup;
-    }
-
-  if (fiid_obj_set (sel_system_event_record,
-                    "timestamp",
-                    localtimestamp) < 0)
-    {
-      fprintf (stderr,
-	       "fiid_obj_set: 'timestamp': %s\n",
-	       fiid_obj_errormsg (sel_system_event_record));
-      goto cleanup;
-    }
-
-  /* Need just the high order bit here */
-  if (fiid_obj_set (sel_system_event_record,
-                    "generator_id.id_type",
-                    (sensor_device >> 7)) < 0)
-    {
-      fprintf (stderr,
-	       "fiid_obj_set: 'generator_id.id_type': %s\n",
-	       fiid_obj_errormsg (sel_system_event_record));
-      goto cleanup;
-    }
-
-  if (fiid_obj_set (sel_system_event_record,
-                    "generator_id.id",
-                    sensor_device) < 0)
-    {
-      fprintf (stderr,
-	       "fiid_obj_set: 'generator_id.id': %s\n",
-	       fiid_obj_errormsg (sel_system_event_record));
-      goto cleanup;
-    }
-
-  /* Don't care about this field, just set 0 */
-  if (fiid_obj_set (sel_system_event_record,
-                    "ipmb_device_lun",
-                    0) < 0)
-    {
-      fprintf (stderr,
-	       "fiid_obj_set: 'ipmb_device_lun': %s\n",
-	       fiid_obj_errormsg (sel_system_event_record));
-      goto cleanup;
-    }
-
-  /* Don't care about this field, just set 0 */
-  if (fiid_obj_set (sel_system_event_record,
-                    "reserved",
-                    0) < 0)
-    {
-      fprintf (stderr,
-	       "fiid_obj_set: 'reserved': %s\n",
-	       fiid_obj_errormsg (sel_system_event_record));
-      goto cleanup;
-    }
-
-  /* Don't care about this field, just set 0 */
-  if (fiid_obj_set (sel_system_event_record,
-                    "channel_number",
-                    0) < 0)
-    {
-      fprintf (stderr,
-	       "fiid_obj_set: 'channel_number': %s\n",
-	       fiid_obj_errormsg (sel_system_event_record));
-      goto cleanup;
-    }
-
-  if (fiid_obj_set (sel_system_event_record,
-                    "event_message_format_version",
-                    IPMI_V1_5_EVENT_MESSAGE_FORMAT) < 0)
-    {
-      fprintf (stderr,
-               "fiid_obj_set: 'event_message_format_version': %s\n",
-               fiid_obj_errormsg (sel_system_event_record));
-      goto cleanup;
-    }
-
-  if (fiid_obj_set (sel_system_event_record,
-                    "sensor_type",
-                    sensor_type_cant_be_determined ? IPMI_SENSOR_TYPE_RESERVED : sensor_type) < 0)
-    {
-      fprintf (stderr,
-               "fiid_obj_set: 'sensor_type': %s\n",
-               fiid_obj_errormsg (sel_system_event_record));
-      goto cleanup;
-    }
-
-  if (fiid_obj_set (sel_system_event_record,
-                    "sensor_number",
-                    sensor_number) < 0)
-    {
-      fprintf (stderr,
-               "fiid_obj_set: 'sensor_number': %s\n",
-               fiid_obj_errormsg (sel_system_event_record));
-      goto cleanup;
-    }
-
-  if (fiid_obj_set (sel_system_event_record,
-                    "event_type_code",
-                    event_type_cant_be_determined ? IPMI_EVENT_READING_TYPE_CODE_UNSPECIFIED : event_type) < 0)
-    {
-      fprintf (stderr,
-               "fiid_obj_set: 'event_type_code': %s\n",
-               fiid_obj_errormsg (sel_system_event_record));
-      goto cleanup;
-    }
-
-  if (fiid_obj_set (sel_system_event_record,
-                    "event_dir",
-                    event_direction) < 0)
-    {
-      fprintf (stderr,
-               "fiid_obj_set: 'event_dir': %s\n",
-               fiid_obj_errormsg (sel_system_event_record));
-      goto cleanup;
-    }
-
-  if (fiid_obj_set (sel_system_event_record,
-                    "event_data1",
-                    event_data[0]) < 0)
-    {
-      fprintf (stderr,
-               "fiid_obj_set: 'event_data1': %s\n",
-               fiid_obj_errormsg (sel_system_event_record));
-      goto cleanup;
-    }
-
-  if (fiid_obj_set (sel_system_event_record,
-                    "event_data2",
-                    event_data[1]) < 0)
-    {
-      fprintf (stderr,
-               "fiid_obj_set: 'event_data2': %s\n",
-               fiid_obj_errormsg (sel_system_event_record));
-      goto cleanup;
-    }
-
-  if (fiid_obj_set (sel_system_event_record,
-                    "event_data3",
-                    event_data[2]) < 0)
-    {
-      fprintf (stderr,
-               "fiid_obj_set: 'event_data3': %s\n",
-               fiid_obj_errormsg (sel_system_event_record));
-      goto cleanup;
-    }
-
-  if ((sel_record_len = fiid_obj_get_all (sel_system_event_record,
-					  sel_record,
-					  IPMI_SEL_RECORD_MAX_RECORD_LENGTH)) < 0)
-    {
-      fprintf (stderr,
-               "fiid_obj_get_all: %s\n",
-               fiid_obj_errormsg (sel_system_event_record));
-      goto cleanup;
-    }
-  
-  if (sel_record_len != IPMI_SEL_RECORD_MAX_RECORD_LENGTH)
-    {
-      fprintf (stderr,
-               "Invalid length SEL record: %u\n",
-	       sel_record_len);
-      goto cleanup;
-    }
+  if (_ipmi_pet_form_sel_record (state_data,
+				 &data,
+				 sel_record,
+				 IPMI_SEL_RECORD_MAX_RECORD_LENGTH) < 0)
+    goto cleanup;
 
   if (args->specific_trap_na_specified
-      || event_offset != IPMI_PLATFORM_EVENT_TRAP_SPECIFIC_TRAP_EVENT_OFFSET_UNSPECIFIED)
+      || data.event_offset != IPMI_PLATFORM_EVENT_TRAP_SPECIFIC_TRAP_EVENT_OFFSET_UNSPECIFIED)
     {
       if (!(sel_system_event_record_event_fields = fiid_obj_create (tmpl_sel_system_event_record_event_fields)))
 	{
@@ -1553,7 +1607,7 @@ _ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
 	{
 	  fprintf (stderr,
 		   "fiid_obj_set_all: %s\n",
-		   fiid_obj_errormsg (sel_system_event_record));
+		   fiid_obj_errormsg (sel_system_event_record_event_fields));
 	  goto cleanup;
 	}
       
@@ -1570,14 +1624,14 @@ _ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
 
       /* determine event_offset from event data1 */
       if (args->specific_trap_na_specified)
-	event_offset = event_offset_test;
+	data.event_offset = event_offset_test;
       else
 	{
 	  /* If the event offset specified in the specific trap does not
 	   * match the event_data1 data, not much I can really do, one of them is valid and one isn't.
 	   * For now, just document bug.
 	   */
-	  if (event_offset != event_offset_test)
+	  if (data.event_offset != event_offset_test)
 	    {
 	      if (state_data->prog_data->args->common.debug)
 		fprintf (stderr,
@@ -1589,14 +1643,14 @@ _ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
   flags = IPMI_SEL_PARSE_STRING_FLAGS_IGNORE_UNAVAILABLE_FIELD;
   flags |= IPMI_SEL_PARSE_STRING_FLAGS_OUTPUT_NOT_AVAILABLE;
   flags |= IPMI_SEL_PARSE_STRING_FLAGS_DATE_MONTH_STRING;
-  if (state_data->prog_data->args->verbose_count >= 2)
+  if (state_data->prog_data->args->verbose_count >= 3)
     flags |= IPMI_SEL_PARSE_STRING_FLAGS_VERBOSE;
   if (state_data->prog_data->args->non_abbreviated_units)
     flags |= IPMI_SEL_PARSE_STRING_FLAGS_NON_ABBREVIATED_UNITS;
   if (state_data->prog_data->args->interpret_oem_data)
     flags |= IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA;
   
-  if (localtimestamp != IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_LOCAL_TIMESTAMP_UNSPECIFIED)
+  if (data.localtimestamp != IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_LOCAL_TIMESTAMP_UNSPECIFIED)
     {
       if ((ret = _normal_output_date_and_time (state_data,
 					       sel_record,
@@ -1624,7 +1678,7 @@ _ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
 
   if (!state_data->prog_data->args->no_sensor_type_output)
     {
-      if (sensor_type_cant_be_determined)
+      if (data.sensor_type_cant_be_determined)
 	{
 	  if ((ret = _normal_output_not_available_sensor_type (state_data)) < 0)
 	    goto cleanup;	  
@@ -1645,7 +1699,7 @@ _ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
   if (state_data->prog_data->args->output_event_severity)
     {
       if ((ret = _normal_output_event_severity (state_data,
-						event_severity,
+						data.event_severity,
 						flags)) < 0)
 	goto cleanup;
       
@@ -1686,9 +1740,9 @@ _ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
   if (!ret)
     goto newline_out;
 
-  if (event_offset != IPMI_PLATFORM_EVENT_TRAP_SPECIFIC_TRAP_EVENT_OFFSET_UNSPECIFIED)
+  if (data.event_offset != IPMI_PLATFORM_EVENT_TRAP_SPECIFIC_TRAP_EVENT_OFFSET_UNSPECIFIED)
     {
-      if (event_type_cant_be_determined)
+      if (data.event_type_cant_be_determined)
 	{
 	  if ((ret = _normal_output_not_available_event (state_data)) < 0)
 	    goto cleanup;
@@ -1716,7 +1770,6 @@ _ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
   printf ("\n");
   rv = 0;
  cleanup:
-  fiid_obj_destroy (sel_system_event_record);
   fiid_obj_destroy (sel_system_event_record_event_fields);
   return (rv);
 }
