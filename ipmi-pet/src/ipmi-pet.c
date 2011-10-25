@@ -166,11 +166,13 @@ _ipmi_pet_oem_setup (ipmi_pet_state_data_t *state_data, struct ipmi_pet_trap_dat
     {
       /* Three ways to get manufacturer-id/product-id (in order of preference).
        *
-       * 1) User input - takes priority
+       * 1) User input - takes highest priority
        *
-       * 2) IPMI connection - preferred if user doesn't input
+       * 2) Trap data - takes priority over IPMI connection because
+       * maybe running on alternate machine.  But only use/assume if
+       * manufacturer_id/product_id looks ok.
        *
-       * 3) Trap data - this is last, as it is the least trust worthy
+       * 3) IPMI connection
        */
 
       if (args->manufacturer_id_set
@@ -181,7 +183,15 @@ _ipmi_pet_oem_setup (ipmi_pet_state_data_t *state_data, struct ipmi_pet_trap_dat
 	}
       else
 	{
-	  if (!args->sdr.ignore_sdr_cache)
+	  /* achu: I assume vendors that don't support will likely
+	   * fill in manufacturer_id with something bogus
+	   */
+	  if (IPMI_IANA_ENTERPRISE_ID_RECOGNIZED (data->manufacturer_id))
+	    {
+	      state_data->oem_data.manufacturer_id = data->manufacturer_id;
+	      state_data->oem_data.product_id = data->system_id;
+	    }
+	  else if (!args->sdr.ignore_sdr_cache)
 	    {
 	      if (ipmi_get_oem_data (NULL,
 				     state_data->ipmi_ctx,
@@ -190,6 +200,9 @@ _ipmi_pet_oem_setup (ipmi_pet_state_data_t *state_data, struct ipmi_pet_trap_dat
 	    }
 	  else
 	    {
+	      /* Eventually will lead to output of number for
+	       * manufacturer id instead of string
+	       */
 	      state_data->oem_data.manufacturer_id = data->manufacturer_id;
 	      state_data->oem_data.product_id = data->system_id;
 	    }
