@@ -143,21 +143,55 @@ _ipmi_pet_init (ipmi_pet_state_data_t *state_data)
 	goto cleanup;
     }
 
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+static int
+_ipmi_pet_oem_setup (ipmi_pet_state_data_t *state_data, struct ipmi_pet_trap_data *data)
+{
+  struct ipmi_pet_arguments *args;
+  int rv = -1;
+ 
+  assert (state_data);
+  assert (data);
+
+  args = state_data->prog_data->args;
+
   if (args->interpret_oem_data)
     {
-      if (!args->manufacturer_id_set
-	  && !args->product_id_set)
-	{
-	  if (ipmi_get_oem_data (NULL,
-				 state_data->ipmi_ctx,
-				 &state_data->oem_data) < 0)
-	    goto cleanup;
-	}
-      else
+      /* Three ways to get manufacturer-id/product-id (in order of preference).
+       *
+       * 1) User input - takes priority
+       *
+       * 2) IPMI connection - preferred if user doesn't input
+       *
+       * 3) Trap data - this is last, as it is the least trust worthy
+       */
+
+      if (args->manufacturer_id_set
+	  && args->product_id_set)
 	{
 	  state_data->oem_data.manufacturer_id = args->manufacturer_id;
 	  state_data->oem_data.product_id = args->product_id;
 	}
+      else
+	{
+	  if (!args->sdr.ignore_sdr_cache)
+	    {
+	      if (ipmi_get_oem_data (NULL,
+				     state_data->ipmi_ctx,
+				     &state_data->oem_data) < 0)
+		goto cleanup;
+	    }
+	  else
+	    {
+	      state_data->oem_data.manufacturer_id = data->manufacturer_id;
+	      state_data->oem_data.product_id = data->system_id;
+	    }
+	}
+
 
       if (ipmi_sel_parse_ctx_set_manufacturer_id (state_data->sel_parse_ctx,
 						  state_data->oem_data.manufacturer_id) < 0)
@@ -1494,6 +1528,10 @@ _ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
   if (_ipmi_pet_parse_trap_data (state_data, &data) < 0)
     goto cleanup;
 
+  /* call after parse trap data */
+  if (_ipmi_pet_oem_setup (state_data, &data) < 0)
+    goto cleanup;
+
   if (args->specific_trap_na_specified)
     {
       if (!args->sdr.ignore_sdr_cache)
@@ -1847,10 +1885,7 @@ _ipmi_pet (ipmi_pet_prog_data_t *prog_data)
 
   /* Special case, just flush, don't do an IPMI connection */
   if (!prog_data->args->sdr.flush_cache
-      && (!prog_data->args->sdr.ignore_sdr_cache
-	  || (prog_data->args->interpret_oem_data
-	      && !prog_data->args->manufacturer_id_set
-	      && !prog_data->args->product_id_set)))
+      && !prog_data->args->sdr.ignore_sdr_cache)
     {
       if (!(state_data.ipmi_ctx = ipmi_open (prog_data->progname,
                                              prog_data->args->common.hostname,

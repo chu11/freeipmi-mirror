@@ -26,11 +26,12 @@ sensor names and other information in the PET.  IPMI session
 configuration below, such as driver, hostname, username, etc. should
 be configured to load the SDR of the appropriate host.  If the
 \fB\-\-ignore\-sdr\-cache\fR option is specified, an SDR will not be
-loaded, an IPMI session will not be required, and the PET will be
-interpreted as best as possible given no SDR (the output will be
-similar to
-.B ipmi-sel
-when \fB\-\-ignore\-sdr\-cache\fR is specified).
+loaded, and an IPMI session will not be required.  The PET will be
+interpreted as best as possible given no SDR.  The
+\fB\-\-ignore\-sdr\-cache\fR option may affect other options such as
+\fB\-\-interpret\-oem\-data\fR too.  Some options, such as
+\fB\-\-manufacturer\-id\fR and \fB\-\-product\-id\fR may alleviate
+some of these issues.
 
 If the SNMP daemon does not output a SNMPv1 \fIspecific trap\fR on its
 own, it is typically output as the last element of the OID in SNMPv2.
@@ -38,8 +39,9 @@ If for some reason a \fIspecific trap\fR cannot be determined, the
 value of \fINA\fR may be input for the \fIspecific trap\fR to indicate
 it is not available.
 .B Ipmi-pet
-will output as much as possible with the information given.  Some of
-the information can be retrieved from the variable bindings and SDR.
+will output as much as possible based on the variable bindings
+information.  Some of the specific trap information may be obtained
+via SDR information.
 
 #include <@top_srcdir@/common/man/manpage-common-general-options-header.man>
 #include <@top_srcdir@/common/man/manpage-common-driver.man>
@@ -61,9 +63,23 @@ the information can be retrieved from the variable bindings and SDR.
 .SH "IPMI-PET OPTIONS"
 The following options are specific to
 .B Ipmi-pet.
+
+
 .TP
-\fB\-v\fR, \fB\-\-verbose\fR
-Increase verbosity in output to include additional output.
+\fB\-v\fR
+Output verbose output.  This option will output event direction.
+.TP
+\fB\-vv\fR
+Output very verbose output.  This option will output additional
+information available in the trap, such as GUID, manufacturer ID,
+system ID, and additional OEM information provided.
+.TP
+\fB\-vvv\fR
+Output very very verbose output.  This option will output additional
+information than verbose output.  Most notably it will output
+additional hex codes to given information on ambiguous events.  For
+example, it will output Generator ID hex codes for sensors without
+names.
 .TP
 \fB\-\-file\fR=\fICMD\-FILE\fR
 Specify a file to read PET hex bytes from instead of command line.
@@ -98,18 +114,17 @@ Specify an alternate event state configuration file.  Option ignored
 if \fB\-\-output\-event\-state\fR not specified.
 .TP
 \fB\-\-manufacturer\-id\fR=\fINUMBER\FR
-Specify a specific manufacturer id to assume.  Useful if the
-manufacturer id cannot be determined by IPMI access to the machine
-that generated the SNMP trap, but you wish to specify
-\fB\-\-interpret\-oem\-data\fR.  The manufacturer id of a motherboard
-can be determined with
+Specify a specific manufacturer id to assume.  Useful if you wish to
+specify \fB\-\-interpret\-oem\-data\fR, but the manufacturer id cannot
+be determined by IPMI access or is not available in the SNMP trap.
+The manufacturer id of a motherboard can be determined with
 .B bmc-info(8).
 If this option is specified, so must \fB\-\-product\-id\fR.
 .TP
 \fB\-\-product\-id\fR=\fINUMBER\FR
-Specify a specific product id to assume.  Useful if the product id
-cannot be determined by IPMI access to the machine that generated the
-SNMP trap, but you wish to specify \fB\-\-interpret\-oem\-data\fR.
+Specify a specific product id to assume.  Useful if you wish to
+specify \fB\-\-interpret\-oem\-data\fR, but the product id cannot
+be determined by IPMI access or is not available in the SNMP trap.
 The product id of a motherboard can be determined with
 .B bmc-info(8).
 If this option is specified, so must \fB\-\-manufacturer\-id\fR.
