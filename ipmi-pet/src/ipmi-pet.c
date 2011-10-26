@@ -1884,11 +1884,11 @@ _ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
 						     flags)) < 0)
 	    goto cleanup;
 	}
+
+      if (!ret)
+	goto newline_out;
     }
   
-  if (!ret)
-    goto newline_out;
-
   if (data.event_offset != IPMI_PLATFORM_EVENT_TRAP_SPECIFIC_TRAP_EVENT_OFFSET_UNSPECIFIED)
     {
       if (data.event_type_cant_be_determined)
@@ -1914,8 +1914,7 @@ _ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
 
   if (!ret)
     goto newline_out;
-  
-  
+
  newline_out:
   printf ("\n");
   rv = 0;
