@@ -147,12 +147,6 @@ ipmi_fru_parse_ctx_create (ipmi_ctx_t ipmi_ctx)
 {
   struct ipmi_fru_parse_ctx *ctx = NULL;
 
-  if (!ipmi_ctx)
-    {
-      SET_ERRNO (EINVAL);
-      return (NULL);
-    }
- 
   if (!(ctx = (ipmi_fru_parse_ctx_t)malloc (sizeof (struct ipmi_fru_parse_ctx))))
     {
       ERRNO_TRACE (errno);
@@ -376,6 +370,7 @@ _read_fru_data (ipmi_fru_parse_ctx_t ctx,
 
   assert (ctx);
   assert (ctx->magic == IPMI_FRU_PARSE_CTX_MAGIC);
+  assert (ctx->ipmi_ctx);
   assert (frubuf);
   assert (frubuflen);
   assert (fru_read_bytes <= frubuflen);
@@ -520,6 +515,12 @@ ipmi_fru_parse_open_device_id (ipmi_fru_parse_ctx_t ctx, uint8_t fru_device_id)
   if (!ctx || ctx->magic != IPMI_FRU_PARSE_CTX_MAGIC)
     {
       ERR_TRACE (ipmi_fru_parse_ctx_errormsg (ctx), ipmi_fru_parse_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if (!ctx->ipmi_ctx)
+    {
+      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_IPMI_ERROR);
       return (-1);
     }
 
@@ -752,6 +753,7 @@ _parse_multirecord_header (ipmi_fru_parse_ctx_t ctx,
 
   assert (ctx);
   assert (ctx->magic == IPMI_FRU_PARSE_CTX_MAGIC);
+  assert (ctx->ipmi_ctx);
   assert (record_type_id
           || record_format_version
           || end_of_list
@@ -979,6 +981,7 @@ _read_info_area_data (ipmi_fru_parse_ctx_t ctx,
 
   assert (ctx);
   assert (ctx->magic == IPMI_FRU_PARSE_CTX_MAGIC);
+  assert (ctx->ipmi_ctx);
   assert (area_type);
   assert (area_length);
   assert (areabuf);
@@ -1160,6 +1163,7 @@ _read_multirecord_area_data (ipmi_fru_parse_ctx_t ctx,
 
   assert (ctx);
   assert (ctx->magic == IPMI_FRU_PARSE_CTX_MAGIC);
+  assert (ctx->ipmi_ctx);
   assert (area_type);
   assert (area_length);
   assert (areabuf);
@@ -1265,6 +1269,12 @@ ipmi_fru_parse_read_data_area (ipmi_fru_parse_ctx_t ctx,
   if (!ctx || ctx->magic != IPMI_FRU_PARSE_CTX_MAGIC)
     {
       ERR_TRACE (ipmi_fru_parse_ctx_errormsg (ctx), ipmi_fru_parse_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if (!ctx->ipmi_ctx)
+    {
+      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_IPMI_ERROR);
       return (-1);
     }
 

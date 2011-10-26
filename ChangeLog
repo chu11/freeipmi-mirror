@@ -13,6 +13,9 @@
 
 	* ipmi-sel/: Update to use new convenience functions.
 
+	* libfreeipmi/src/fru-parse/,
+	libfreeipmi/include/freeipmi/fru-parse/ipmi-fru-parse.h: Allow
+	creation of FRU ctx with NULL ipmi_ctx.
 	
 2011-10-17  Albert Chu <chu11@llnl.gov>
 

@@ -84,6 +84,7 @@ struct ipmi_pet_trap_data
   uint8_t entity;
   uint8_t entity_instance;
   uint8_t event_data[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_EVENT_DATA_LENGTH];
+  uint8_t language_code;
   uint32_t manufacturer_id;
   uint16_t system_id;
   uint8_t oem_custom[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_OEM_CUSTOM_FIELDS_LENGTH];
@@ -354,6 +355,8 @@ _ipmi_pet_parse_trap_data (ipmi_pet_state_data_t *state_data, struct ipmi_pet_tr
 
   for (i = 0; i < IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_EVENT_DATA_LENGTH; i++)
     data->event_data[i] = args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_EVENT_DATA_INDEX_START + i];
+
+  data->language_code =  args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_LANGUAGE_CODE_INDEX];
 
   data->manufacturer_id = args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_MANUFACTURER_ID_INDEX_START];
   data->manufacturer_id <<= 8;
@@ -1603,46 +1606,112 @@ static int
 _normal_output_oem_custom (ipmi_pet_state_data_t *state_data,
 			   struct ipmi_pet_trap_data *data)
 {
-#if 0
-  char fmt[IPMI_PET_FMT_BUFLEN + 1];
   char outbuf[IPMI_PET_OUTPUT_BUFLEN+1];
+  unsigned int outbuflen = 0;
   unsigned int index = 0;
+  int rv = -1;
 
   assert (state_data);
   assert (data);
   assert (state_data->prog_data->args->verbose_count >= 1);
 
-  while (index < data->
-         && areabufptr[area_offset] != IPMI_FRU_SENTINEL_VALUE)
+  memset (outbuf, '\0', IPMI_PET_OUTPUT_BUFLEN + 1);
+
+  while (index < data->oem_custom_length
+         && data->oem_custom[index] != IPMI_FRU_SENTINEL_VALUE)
     {
-      ipmi_fru_parse_field_t *field_ptr = NULL;
+      char tmpbuf[IPMI_PET_OUTPUT_BUFLEN+1];
+      unsigned int tmpbuflen = IPMI_PET_OUTPUT_BUFLEN;
+      uint8_t type_length;
+      uint8_t type_code;
+      uint8_t number_of_data_bytes;
 
-      if (product_custom_fields && product_custom_fields_len)
-        {
-          if (custom_fields_index < product_custom_fields_len)
-            field_ptr = &product_custom_fields[custom_fields_index];
-          else
-            {
-              FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_OVERFLOW);
-              goto cleanup;
-            }
-        }
+      memset (tmpbuf, '\0', IPMI_PET_OUTPUT_BUFLEN + 1);
 
-      if (_parse_type_length (ctx,
-                              areabufptr,
-                              areabuflen,
-                              area_offset,
-                              &number_of_data_bytes,
-                              field_ptr) < 0)
-        goto cleanup;
+      type_length = data->oem_custom[index];
+      type_code = (type_length & IPMI_FRU_TYPE_LENGTH_TYPE_CODE_MASK) >> IPMI_FRU_TYPE_LENGTH_TYPE_CODE_SHIFT;
+      number_of_data_bytes = type_length & IPMI_FRU_TYPE_LENGTH_NUMBER_OF_DATA_BYTES_MASK;
 
-      area_offset += 1;          /* type/length byte */
-      area_offset += number_of_data_bytes;
-      custom_fields_index++;
+      /* Special Case: This shouldn't be a length of 0x01 (see type/length
+       * byte format in FRU Information Storage Definition).
+       */
+      if (type_code == IPMI_FRU_TYPE_LENGTH_TYPE_CODE_LANGUAGE_CODE
+	  && number_of_data_bytes == 0x01)
+	{
+	  if (state_data->prog_data->args->common.debug)
+	    fprintf (stderr,
+		     "Invalid OEM custom data: length invalid\n");
+	  break;
+	}
+
+      if ((index + 1 + number_of_data_bytes) > data->oem_custom_length)
+	{
+	  if (state_data->prog_data->args->common.debug)
+	    fprintf (stderr,
+		     "Invalid OEM custom data: length exceeds input\n");
+	  break;
+	}
+
+      if (ipmi_fru_parse_type_length_field_to_string (state_data->fru_parse_ctx,
+						      &data->oem_custom[index],
+						      number_of_data_bytes + 1,
+						      data->language_code,
+						      tmpbuf,
+						      &tmpbuflen) < 0)
+	{
+	  if (ipmi_fru_parse_ctx_errnum (state_data->fru_parse_ctx) == IPMI_FRU_PARSE_ERR_FRU_INFORMATION_INCONSISTENT
+	      || ipmi_fru_parse_ctx_errnum (state_data->fru_parse_ctx) == IPMI_FRU_PARSE_ERR_FRU_LANGUAGE_CODE_NOT_SUPPORTED
+	      || ipmi_fru_parse_ctx_errnum (state_data->fru_parse_ctx) == IPMI_FRU_PARSE_ERR_FRU_INVALID_BCD_ENCODING)
+	    {
+	      if (state_data->prog_data->args->common.debug)
+		fprintf (stderr,
+			 "Invalid OEM Custom Field: %s\n",
+			 ipmi_fru_parse_ctx_errormsg (state_data->fru_parse_ctx));
+	      break;
+	    }
+	  
+	  fprintf (stderr,
+		   "ipmi_fru_parse_type_length_field_to_string: %s\n",
+		   ipmi_fru_parse_ctx_errormsg (state_data->fru_parse_ctx));
+	  goto cleanup;
+	}
+
+      if (tmpbuflen)
+	{
+	  if (outbuflen)
+	    {
+	      if ((outbuflen + 3) > IPMI_PET_OUTPUT_BUFLEN)
+		{
+		  if (state_data->prog_data->args->common.debug)
+		    fprintf (stderr, "OEM Custom Overflow\n");
+		  break;
+		}
+	      
+	      strcat (outbuf, " ; ");
+	      outbuflen += 3;
+	    }
+
+	  if ((outbuflen + tmpbuflen) > IPMI_PET_OUTPUT_BUFLEN)
+	    {
+	      if (state_data->prog_data->args->common.debug)
+		fprintf (stderr, "OEM Custom Overflow\n");
+	      break;
+	    }
+	  
+	  strcat (outbuf, tmpbuf);
+	  outbuflen += tmpbuflen;
+	}
+      
+      index += 1;          /* type/length byte */
+      index += number_of_data_bytes;
     }
-#endif
 
-  return (1);
+  if (outbuflen)
+    printf (" ; %s", outbuf);
+
+  rv = 1;
+ cleanup:
+  return (rv);
 }
 
 static int
@@ -1971,6 +2040,15 @@ _ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
   if (!ret)
     goto newline_out;
 
+  if (state_data->prog_data->args->verbose_count >= 1)
+    {
+      if ((ret = _normal_output_oem_custom (state_data, &data)) < 0)
+	goto cleanup;
+
+      if (!ret)
+	goto newline_out;
+    }
+
  newline_out:
   printf ("\n");
   rv = 0;
@@ -2120,6 +2198,13 @@ _ipmi_pet (ipmi_pet_prog_data_t *prog_data)
 		     "ipmi_sel_parse_ctx_set_debug_prefix: %s\n",
 		     ipmi_sel_parse_ctx_errormsg (state_data.sel_parse_ctx));
         }
+
+      /* Only for outputting type/length fields */
+      if (!(state_data.fru_parse_ctx = ipmi_fru_parse_ctx_create (NULL)))
+        {
+          perror ("ipmi_fru_parse_ctx_create()");
+          goto cleanup;
+        }
     }
 
   if (prog_data->args->output_event_state)
@@ -2193,6 +2278,10 @@ _ipmi_pet (ipmi_pet_prog_data_t *prog_data)
 
   exit_code = 0;
  cleanup:
+  if (state_data.fru_parse_ctx)
+    ipmi_fru_parse_ctx_destroy (state_data.fru_parse_ctx);
+  if (state_data.sel_parse_ctx)
+    ipmi_sel_parse_ctx_destroy (state_data.sel_parse_ctx);
   if (state_data.sdr_cache_ctx)
     ipmi_sdr_cache_ctx_destroy (state_data.sdr_cache_ctx);
   if (state_data.sdr_parse_ctx)

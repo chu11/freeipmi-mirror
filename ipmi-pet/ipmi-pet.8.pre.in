@@ -63,16 +63,15 @@ via SDR information.
 .SH "IPMI-PET OPTIONS"
 The following options are specific to
 .B Ipmi-pet.
-
-
 .TP
 \fB\-v\fR
-Output verbose output.  This option will output event direction.
+Output verbose output.  This option will output event direction and
+OEM custom messages from the trap.
 .TP
 \fB\-vv\fR
 Output very verbose output.  This option will output additional
 information available in the trap, such as GUID, manufacturer ID,
-system ID, and additional OEM information provided.
+and system ID.
 .TP
 \fB\-vvv\fR
 Output very very verbose output.  This option will output additional
