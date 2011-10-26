@@ -87,6 +87,7 @@ struct ipmi_pet_trap_data
   uint32_t manufacturer_id;
   uint16_t system_id;
   uint8_t oem_custom[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_OEM_CUSTOM_FIELDS_LENGTH];
+  unsigned int oem_custom_length;
 };
 
 static int
@@ -366,8 +367,13 @@ _ipmi_pet_parse_trap_data (ipmi_pet_state_data_t *state_data, struct ipmi_pet_tr
   data->system_id <<= 8;
   data->system_id |= args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_SYSTEM_ID_INDEX_START + 1];
 
-  for (i = 0; i < IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_OEM_CUSTOM_FIELDS_LENGTH; i++)
-    data->oem_custom[i] = args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_OEM_CUSTOM_FIELDS_INDEX_START + i];
+  for (i = 0;
+       (IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_OEM_CUSTOM_FIELDS_INDEX_START + i) < args->variable_bindings_length;
+       i++)
+    {
+      data->oem_custom[i] = args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_OEM_CUSTOM_FIELDS_INDEX_START + i];
+      data->oem_custom_length++;
+    }
 
   rv = 0;
  cleanup:
@@ -1585,6 +1591,56 @@ _normal_output_not_available_event (ipmi_pet_state_data_t *state_data)
     printf (",%s", IPMI_PET_NA_STRING);
   else
     printf (" | %s", IPMI_PET_NA_STRING);
+
+  return (1);
+}
+
+/* return 1 on success
+ * return (0) on non-success, but don't fail
+ * return (-1) on error
+ */
+static int
+_normal_output_oem_custom (ipmi_pet_state_data_t *state_data,
+			   struct ipmi_pet_trap_data *data)
+{
+#if 0
+  char fmt[IPMI_PET_FMT_BUFLEN + 1];
+  char outbuf[IPMI_PET_OUTPUT_BUFLEN+1];
+  unsigned int index = 0;
+
+  assert (state_data);
+  assert (data);
+  assert (state_data->prog_data->args->verbose_count >= 1);
+
+  while (index < data->
+         && areabufptr[area_offset] != IPMI_FRU_SENTINEL_VALUE)
+    {
+      ipmi_fru_parse_field_t *field_ptr = NULL;
+
+      if (product_custom_fields && product_custom_fields_len)
+        {
+          if (custom_fields_index < product_custom_fields_len)
+            field_ptr = &product_custom_fields[custom_fields_index];
+          else
+            {
+              FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_OVERFLOW);
+              goto cleanup;
+            }
+        }
+
+      if (_parse_type_length (ctx,
+                              areabufptr,
+                              areabuflen,
+                              area_offset,
+                              &number_of_data_bytes,
+                              field_ptr) < 0)
+        goto cleanup;
+
+      area_offset += 1;          /* type/length byte */
+      area_offset += number_of_data_bytes;
+      custom_fields_index++;
+    }
+#endif
 
   return (1);
 }
