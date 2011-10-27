@@ -18,6 +18,12 @@ inband
 interpret-lib
 -------------
 handle sensor/sel events outside of spec - configurable in some way?
+handle sensor/sel events differently for different sensors on same
+motherboard
+- e.g.
+SENSORFAULT | State Deasserted
+SENSOROK    | State Asserted
+- need mechanism to specify record ids???
 
 dist
 ----
