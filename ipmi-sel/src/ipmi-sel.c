@@ -1832,7 +1832,7 @@ _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
 
       if (!state_data->prog_data->args->no_sensor_type_output)
 	{
-	  if ((ret = _normal_output_not_available_sensor_type (state_data, flags)) < 0)
+	  if ((ret = _normal_output_not_available_sensor_type (state_data)) < 0)
 	    goto cleanup;
 	  
 	  if (!ret)
