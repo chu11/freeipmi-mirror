@@ -3653,7 +3653,8 @@ ipmi_oem_dell_power_supply_info (ipmi_oem_state_data_t *state_data)
                                  state_data->prog_data->args->sdr.quiet_cache,
                                  state_data->prog_data->args->sdr.sdr_cache_recreate,
                                  state_data->hostname,
-                                 state_data->prog_data->args->sdr.sdr_cache_directory) < 0)
+                                 state_data->prog_data->args->sdr.sdr_cache_directory,
+                                 state_data->prog_data->args->sdr.sdr_cache_file) < 0)
     goto cleanup;
 
   if (calculate_entity_id_counts (state_data->pstate,
@@ -3947,14 +3948,14 @@ ipmi_oem_dell_get_instantaneous_power_consumption_data (ipmi_oem_state_data_t *s
     bytes_rq[2] = IPMI_OEM_DELL_POWER_CONSUMPTION_ENTITY_INSTANCE_ALL;
   else
     {
-      char *ptr = NULL;
+      char *endptr = NULL;
       unsigned int temp;
       
       errno = 0;
-      temp = strtoul (state_data->prog_data->args->oem_options[0], &ptr, 10);
+      temp = strtoul (state_data->prog_data->args->oem_options[0], &endptr, 10);
       if (errno
-          || temp > UCHAR_MAX
-          || ptr[0] != '\0')
+          || endptr[0] != '\0'
+          || temp > UCHAR_MAX)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
@@ -4652,7 +4653,7 @@ ipmi_oem_dell_set_power_capacity (ipmi_oem_state_data_t *state_data)
   uint16_t maximum_power_consumption;
   uint16_t minimum_power_consumption;
   unsigned int temp;
-  char *ptr = NULL;
+  char *endptr = NULL;
   int rv = -1;
 
   assert (state_data);
@@ -4697,10 +4698,10 @@ ipmi_oem_dell_set_power_capacity (ipmi_oem_state_data_t *state_data)
     goto cleanup;
 
   errno = 0;
-  temp = strtoul (state_data->prog_data->args->oem_options[0], &ptr, 10);
+  temp = strtoul (state_data->prog_data->args->oem_options[0], &endptr, 10);
   if (errno
-      || temp > USHRT_MAX
-      || ptr[0] != '\0')
+      || endptr[0] != '\0'
+      || temp > USHRT_MAX)
     {
       pstdout_fprintf (state_data->pstate,
 		       stderr,

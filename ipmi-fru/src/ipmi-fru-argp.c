@@ -42,6 +42,7 @@
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
+#include <errno.h>
 
 #include "ipmi-fru.h"
 #include "ipmi-fru-argp.h"
@@ -107,14 +108,15 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 {
   struct ipmi_fru_arguments *cmd_args = state->input;
   error_t ret;
-  char *ptr;
+  char *endptr;
   int tmp;
 
   switch (key)
     {
     case DEVICE_ID_KEY:
-      tmp = strtol (arg, &ptr, 0);
-      if (ptr != (arg + strlen (arg)))
+      tmp = strtol (arg, &endptr, 0);
+      if (errno
+	  || endptr[0] != '\0')
         {
           fprintf (stderr, "invalid device id\n");
           exit (1);

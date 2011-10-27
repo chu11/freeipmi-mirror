@@ -413,7 +413,8 @@ _find_sensor (ipmi_oem_state_data_t *state_data,
                                  1, /* quiet_cache */
                                  0, /* sdr_cache_recreate */
                                  state_data->hostname,
-                                 state_data->prog_data->args->sdr.sdr_cache_directory) < 0)
+                                 state_data->prog_data->args->sdr.sdr_cache_directory,
+                                 state_data->prog_data->args->sdr.sdr_cache_file) < 0)
     goto cleanup;
 
   if (ipmi_sdr_cache_record_count (tmp_sdr_cache_ctx, &record_count) < 0)
@@ -518,7 +519,8 @@ ipmi_oem_ibm_get_led (ipmi_oem_state_data_t *state_data)
                                  state_data->prog_data->args->sdr.quiet_cache,
                                  state_data->prog_data->args->sdr.sdr_cache_recreate,
                                  state_data->hostname,
-                                 state_data->prog_data->args->sdr.sdr_cache_directory) < 0)
+                                 state_data->prog_data->args->sdr.sdr_cache_directory,
+                                 state_data->prog_data->args->sdr.sdr_cache_file) < 0)
     goto cleanup;
 
   if (calculate_column_widths (state_data->pstate,

@@ -63,15 +63,16 @@ _config_parse_channel_number (char *arg,
                               uint8_t *channel_number,
                               int *channel_number_set)
 {
-  char *ptr;
+  char *endptr;
   int tmp;
 
   assert (arg);
   assert (channel_number);
   assert (channel_number_set);
 
-  tmp = strtol (arg, &ptr, 0);
-  if (ptr != (arg + strlen (arg)))
+  tmp = strtol (arg, &endptr, 0);
+  if (errno
+      || endptr[0] != '\0')
     {
       fprintf (stderr, "invalid channel number\n");
       exit (1);

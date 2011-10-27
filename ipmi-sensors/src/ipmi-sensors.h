@@ -23,7 +23,6 @@
 
 #include "tool-cmdline-common.h"
 #include "tool-oem-common.h"
-#include "tool-sdr-cache-common.h"
 #include "tool-sensor-common.h"
 #include "pstdout.h"
 

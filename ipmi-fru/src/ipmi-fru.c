@@ -61,7 +61,8 @@ _flush_cache (ipmi_fru_state_data_t *state_data)
                              state_data->pstate,
                              state_data->prog_data->args->sdr.quiet_cache,
                              state_data->hostname,
-                             state_data->prog_data->args->sdr.sdr_cache_directory) < 0)
+                             state_data->prog_data->args->sdr.sdr_cache_directory,
+                             state_data->prog_data->args->sdr.sdr_cache_file) < 0)
     return (-1);
 
   return (0);
@@ -284,7 +285,8 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
                                      args->sdr.quiet_cache,
                                      args->sdr.sdr_cache_recreate,
                                      state_data->hostname,
-                                     args->sdr.sdr_cache_directory) < 0)
+                                     args->sdr.sdr_cache_directory,
+                                     args->sdr.sdr_cache_file) < 0)
         goto cleanup;
 
       if (ipmi_sdr_cache_record_count (state_data->sdr_cache_ctx, &record_count) < 0)

@@ -380,7 +380,8 @@ _flush_cache (ipmi_sel_state_data_t *state_data)
                              state_data->pstate,
                              state_data->prog_data->args->sdr.quiet_cache,
                              state_data->hostname,
-                             state_data->prog_data->args->sdr.sdr_cache_directory) < 0)
+			     state_data->prog_data->args->sdr.sdr_cache_directory,
+			     state_data->prog_data->args->sdr.sdr_cache_file) < 0)
     return (-1);
 
   return (0);
@@ -640,7 +641,7 @@ _get_system_event_record_info (ipmi_sel_state_data_t *state_data,
 static int
 _legacy_normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
 {
-  char fmtbuf[IPMI_SEL_OUTPUT_BUFLEN+1];
+  char fmtbuf[IPMI_SEL_FMT_BUFLEN+1];
   char outbuf[IPMI_SEL_OUTPUT_BUFLEN+1];
   char *fmt;
   int outbuf_len;
@@ -874,7 +875,7 @@ _normal_output_date_and_time (ipmi_sel_state_data_t *state_data, unsigned int fl
  * return (-1) on error
  */
 static int
-_normal_output_not_available_date_and_time (ipmi_sel_state_data_t *state_data, unsigned int flags)
+_normal_output_not_available_date_and_time (ipmi_sel_state_data_t *state_data)
 {
   assert (state_data);
   assert (!state_data->prog_data->args->legacy_output);
@@ -1025,7 +1026,7 @@ _normal_output_sensor_name (ipmi_sel_state_data_t *state_data, unsigned int flag
  * return (-1) on error
  */
 static int
-_normal_output_not_available_sensor_name (ipmi_sel_state_data_t *state_data, unsigned int flags)
+_normal_output_not_available_sensor_name (ipmi_sel_state_data_t *state_data)
 {
   char fmt[IPMI_SEL_FMT_BUFLEN + 1];
 
@@ -1102,7 +1103,7 @@ _normal_output_sensor_type (ipmi_sel_state_data_t *state_data, unsigned int flag
  * return (-1) on error
  */
 static int
-_normal_output_not_available_sensor_type (ipmi_sel_state_data_t *state_data, unsigned int flags)
+_normal_output_not_available_sensor_type (ipmi_sel_state_data_t *state_data)
 {
   char fmt[IPMI_SEL_FMT_BUFLEN + 1];
 
@@ -1229,7 +1230,7 @@ _normal_output_event_direction (ipmi_sel_state_data_t *state_data, unsigned int 
  * return (-1) on error
  */
 static int
-_normal_output_not_available_event_direction (ipmi_sel_state_data_t *state_data, unsigned int flags)
+_normal_output_not_available_event_direction (ipmi_sel_state_data_t *state_data)
 {
   assert (state_data);
   assert (!state_data->prog_data->args->legacy_output);
@@ -1286,7 +1287,7 @@ _output_oem_event_strings (ipmi_sel_state_data_t *state_data,
 static int
 _normal_output_event (ipmi_sel_state_data_t *state_data, unsigned int flags)
 {
-  char fmtbuf[IPMI_SEL_OUTPUT_BUFLEN+1];
+  char fmtbuf[IPMI_SEL_FMT_BUFLEN+1];
   char outbuf[IPMI_SEL_OUTPUT_BUFLEN+1];
   int outbuf_len = 0;
   char *fmt;
@@ -1384,7 +1385,7 @@ _normal_output_event (ipmi_sel_state_data_t *state_data, unsigned int flags)
    * would be separated by a semi-colon
    */
 
-  memset (fmtbuf, '\0', IPMI_SEL_OUTPUT_BUFLEN+1);
+  memset (fmtbuf, '\0', IPMI_SEL_FMT_BUFLEN+1);
 
   if (state_data->prog_data->args->interpret_oem_data)
     {
@@ -1486,7 +1487,7 @@ output:
       if ((na_ptr = strstr (outbuf, IPMI_SEL_NA_STRING))
           && (semicolon_ptr = strstr (outbuf, IPMI_SEL_EVENT_SEPARATOR)))
         {
-          memset (fmtbuf, '\0', IPMI_SEL_OUTPUT_BUFLEN+1);
+          memset (fmtbuf, '\0', IPMI_SEL_FMT_BUFLEN+1);
 
           if (na_ptr < semicolon_ptr)
             strcat (fmtbuf, "%h");
@@ -1770,7 +1771,7 @@ _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
       if (!ret)
         goto newline_out;
 
-      if ((ret = _normal_output_not_available_sensor_name (state_data, flags)) < 0)
+      if ((ret = _normal_output_not_available_sensor_name (state_data)) < 0)
         goto cleanup;
 
       if (!ret)
@@ -1778,7 +1779,7 @@ _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
 
       if (!state_data->prog_data->args->no_sensor_type_output)
 	{
-	  if ((ret = _normal_output_not_available_sensor_type (state_data, flags)) < 0)
+	  if ((ret = _normal_output_not_available_sensor_type (state_data)) < 0)
 	    goto cleanup;
 	  
 	  if (!ret)
@@ -1796,7 +1797,7 @@ _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
 
       if (state_data->prog_data->args->verbose_count >= 1)
         {
-          if ((ret = _normal_output_not_available_event_direction (state_data, flags)) < 0)
+          if ((ret = _normal_output_not_available_event_direction (state_data)) < 0)
             goto cleanup;
 
           if (!ret)
@@ -1817,13 +1818,13 @@ _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
       if (!ret)
         goto out;
 
-      if ((ret = _normal_output_not_available_date_and_time (state_data, flags)) < 0)
+      if ((ret = _normal_output_not_available_date_and_time (state_data)) < 0)
         goto cleanup;
 
       if (!ret)
         goto newline_out;
 
-      if ((ret = _normal_output_not_available_sensor_name (state_data, flags)) < 0)
+      if ((ret = _normal_output_not_available_sensor_name (state_data)) < 0)
         goto cleanup;
 
       if (!ret)
@@ -1849,7 +1850,7 @@ _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
 
       if (state_data->prog_data->args->verbose_count >= 1)
         {
-          if ((ret = _normal_output_not_available_event_direction (state_data, flags)) < 0)
+          if ((ret = _normal_output_not_available_event_direction (state_data)) < 0)
             goto cleanup;
 
           if (!ret)
@@ -2164,7 +2165,8 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
                                      args->sdr.quiet_cache,
                                      args->sdr.sdr_cache_recreate,
                                      state_data->hostname,
-                                     args->sdr.sdr_cache_directory) < 0)
+                                     args->sdr.sdr_cache_directory,
+                                     args->sdr.sdr_cache_file) < 0)
         goto cleanup;
     }
 

@@ -92,7 +92,7 @@ common_parse_opt (int key,
                   char *arg,
                   struct common_cmd_args *cmd_args)
 {
-  char *ptr;
+  char *endptr;
   int tmp;
   unsigned int outofband_flags, outofband_2_0_flags, inband_flags, section_flags;
   int n;
@@ -125,9 +125,9 @@ common_parse_opt (int key,
       break;
     case ARGP_DRIVER_ADDRESS_KEY:
       errno = 0;
-      tmp = strtol (arg, &ptr, 0);
-      if (ptr != (arg + strlen (arg))
-          || errno
+      tmp = strtol (arg, &endptr, 0);
+      if (errno
+	  || endptr[0] != '\0'
           || tmp <= 0)
         {
           fprintf (stderr, "invalid driver address\n");
@@ -146,9 +146,9 @@ common_parse_opt (int key,
       break;
     case ARGP_REGISTER_SPACING_KEY:
       errno = 0;
-      tmp = strtol (arg, &ptr, 0);
-      if (ptr != (arg + strlen (arg))
-          || errno
+      tmp = strtol (arg, &endptr, 0);
+      if (errno
+	  || endptr[0] != '\0'
           || tmp <= 0)
         {
           fprintf (stderr, "invalid register spacing\n");
@@ -276,9 +276,9 @@ common_parse_opt (int key,
     case ARGP_TIMEOUT_KEY:
     case ARGP_SESSION_TIMEOUT_KEY:
       errno = 0;
-      tmp = strtol (arg, &ptr, 0);
-      if (ptr != (arg + strlen (arg))
-          || errno
+      tmp = strtol (arg, &endptr, 0);
+      if (errno
+	  || endptr[0] != '\0'
           || tmp <= 0)
         {
           fprintf (stderr, "invalid session timeout\n");
@@ -290,9 +290,9 @@ common_parse_opt (int key,
     case ARGP_RETRY_TIMEOUT_KEY:
     case ARGP_RETRANSMISSION_TIMEOUT_KEY:
       errno = 0;
-      tmp = strtol (arg, &ptr, 0);
-      if (ptr != (arg + strlen (arg))
-          || errno
+      tmp = strtol (arg, &endptr, 0);
+      if (errno
+	  || endptr[0] != '\0'
           || tmp <= 0)
         {
           fprintf (stderr, "invalid retransmission timeout\n");
@@ -312,9 +312,9 @@ common_parse_opt (int key,
       break;
     case ARGP_CIPHER_SUITE_ID_KEY:
       errno = 0;
-      tmp = strtol (arg, &ptr, 0);
-      if (ptr != (arg + strlen (arg))
-          || errno
+      tmp = strtol (arg, &endptr, 0);
+      if (errno
+	  || endptr[0] != '\0'
           || tmp < IPMI_CIPHER_SUITE_ID_MIN
           || tmp > IPMI_CIPHER_SUITE_ID_MAX
           || !IPMI_CIPHER_SUITE_ID_SUPPORTED (tmp))
@@ -388,6 +388,15 @@ sdr_parse_opt (int key,
           exit (1);
         }
       break;
+    case ARGP_SDR_CACHE_FILE_KEY:
+      if (sdr_cmd_args->sdr_cache_file)
+        free (sdr_cmd_args->sdr_cache_file);
+      if (!(sdr_cmd_args->sdr_cache_file = strdup (arg)))
+        {
+          perror ("strdup");
+          exit (1);
+        }
+      break;
     case ARGP_SDR_CACHE_RECREATE_KEY:
       sdr_cmd_args->sdr_cache_recreate = 1;
       break;
@@ -406,7 +415,7 @@ hostrange_parse_opt (int key,
                      char *arg,
                      struct hostrange_cmd_args *hostrange_cmd_args)
 {
-  char *ptr;
+  char *endptr;
   int tmp;
 
   switch (key)
@@ -418,8 +427,9 @@ hostrange_parse_opt (int key,
       hostrange_cmd_args->consolidate_output = 1;
       break;
     case ARGP_FANOUT_KEY:
-      tmp = strtol (arg, &ptr, 10);
-      if ((ptr != (arg + strlen (arg)))
+      tmp = strtol (arg, &endptr, 10);
+      if (errno
+	  || endptr[0] != '\0'
           || (tmp < PSTDOUT_FANOUT_MIN)
           || (tmp > PSTDOUT_FANOUT_MAX))
         {
@@ -601,6 +611,7 @@ init_sdr_cmd_args (struct sdr_cmd_args *sdr_cmd_args)
   sdr_cmd_args->flush_cache = 0;
   sdr_cmd_args->quiet_cache = 0;
   sdr_cmd_args->sdr_cache_directory = NULL;
+  sdr_cmd_args->sdr_cache_file = NULL;
   sdr_cmd_args->sdr_cache_recreate = 0;
   sdr_cmd_args->ignore_sdr_cache = 0;
 }

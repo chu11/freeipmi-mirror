@@ -6,7 +6,9 @@ ipmi-raw \- execute IPMI commands by hex values
 [\fIOPTION\fR...] [\fI<lun> <netfn> COMMAND-HEX-BYTES\fR...]
 .SH "DESCRIPTION"
 .B Ipmi-raw
-is used to execute IPMI commands by hex values.
+is used to execute IPMI commands by hex values.  Hex values may be
+input on the command line, a file via the \fB\-\-file\fR option, or
+via stdin if neither of the previous are specified.
 #include <@top_srcdir@/common/man/manpage-common-table-of-contents.man>
 #include <@top_srcdir@/common/man/manpage-common-general-options-header.man>
 #include <@top_srcdir@/common/man/manpage-common-driver.man>

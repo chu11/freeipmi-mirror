@@ -129,7 +129,8 @@ _ipmi_sensors_config (pstdout_state_t pstate,
                                  NULL,
                                  state_data.prog_data->args->sdr.quiet_cache,
                                  hostname,
-                                 state_data.prog_data->args->sdr.sdr_cache_directory) < 0)
+                                 state_data.prog_data->args->sdr.sdr_cache_directory,
+				 state_data.prog_data->args->sdr.sdr_cache_file) < 0)
         {
           exit_code = EXIT_FAILURE;
           goto cleanup;
@@ -144,7 +145,8 @@ _ipmi_sensors_config (pstdout_state_t pstate,
                                  prog_data->args->sdr.quiet_cache,
                                  prog_data->args->sdr.sdr_cache_recreate,
                                  hostname,
-                                 prog_data->args->sdr.sdr_cache_directory) < 0)
+                                 prog_data->args->sdr.sdr_cache_directory,
+                                 prog_data->args->sdr.sdr_cache_file) < 0)
     {
       exit_code = EXIT_FAILURE;
       goto cleanup;

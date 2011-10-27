@@ -80,7 +80,7 @@ ipmi_sdr_cache_open (ipmi_sdr_cache_ctx_t ctx,
       return (-1);
     }
 
-  if (!ipmi_ctx || !filename)
+  if (!filename)
     {
       SDR_CACHE_SET_ERRNUM (ctx, IPMI_SDR_CACHE_ERR_PARAMETERS);
       return (-1);
@@ -176,20 +176,23 @@ ipmi_sdr_cache_open (ipmi_sdr_cache_ctx_t ctx,
   ctx->most_recent_erase_timestamp |= ((uint32_t)most_recent_erase_timestamp_buf[2] & 0xFF) << 16;
   ctx->most_recent_erase_timestamp |= ((uint32_t)most_recent_erase_timestamp_buf[3] & 0xFF) << 24;
 
-  if (ipmi_sdr_cache_info (ctx,
-                           ipmi_ctx,
-                           &sdr_version,
-                           &record_count,
-                           &most_recent_addition_timestamp,
-                           &most_recent_erase_timestamp) < 0)
-    goto cleanup;
-
-  if (ctx->sdr_version != sdr_version
-      || ctx->most_recent_addition_timestamp != most_recent_addition_timestamp
-      || ctx->most_recent_erase_timestamp != most_recent_erase_timestamp)
+  if (ipmi_ctx)
     {
-      SDR_CACHE_SET_ERRNUM (ctx, IPMI_SDR_CACHE_ERR_CACHE_OUT_OF_DATE);
-      goto cleanup;
+      if (ipmi_sdr_cache_info (ctx,
+			       ipmi_ctx,
+			       &sdr_version,
+			       &record_count,
+			       &most_recent_addition_timestamp,
+			       &most_recent_erase_timestamp) < 0)
+	goto cleanup;
+
+      if (ctx->sdr_version != sdr_version
+	  || ctx->most_recent_addition_timestamp != most_recent_addition_timestamp
+	  || ctx->most_recent_erase_timestamp != most_recent_erase_timestamp)
+	{
+	  SDR_CACHE_SET_ERRNUM (ctx, IPMI_SDR_CACHE_ERR_CACHE_OUT_OF_DATE);
+	  goto cleanup;
+	}
     }
 
   ctx->current_offset = ctx->records_start_offset;

@@ -311,11 +311,13 @@ _cmd_cipher_suite_id (char **argv)
 
   if (argv[1])
     {
-      char *ptr;
+      char *endptr;
       int tmp;
 
-      tmp = strtol (argv[1], &ptr, 10);
-      if (ptr != (argv[1] + strlen (argv[1]))
+      errno = 0;
+      tmp = strtol (argv[1], &endptr, 10);
+      if (errno
+	  || endptr[0] != '\0'
           || tmp < IPMI_CIPHER_SUITE_ID_MIN
           || tmp > IPMI_CIPHER_SUITE_ID_MAX)
         ipmipower_cbuf_printf (ttyout,
@@ -907,9 +909,13 @@ _cmd_set_unsigned_int (char **argv,
                            str);
   else
     {
-      char *ptr;
-      unsigned int temp = strtoul (argv[1], &ptr, 10);
-      if (ptr != (argv[1] + strlen (argv[1])))
+      char *endptr;
+      unsigned int temp;
+
+      errno = 0;
+      temp = strtoul (argv[1], &endptr, 10);
+      if (errno
+	  || endptr[0] != '\0')
         ipmipower_cbuf_printf (ttyout,
                                "invalid %s input\n",
                                str);
@@ -944,9 +950,13 @@ _cmd_set_unsigned_int_ranged (char **argv,
                            str);
   else
     {
-      char *ptr;
-      int temp = strtol (argv[1], &ptr, 10);
-      if (ptr != (argv[1] + strlen (argv[1])))
+      char *endptr;
+      int temp;
+
+      errno = 0;
+      temp = strtol (argv[1], &endptr, 10);
+      if (errno
+	  || endptr[0] != '\0')
         ipmipower_cbuf_printf (ttyout,
                                "invalid %s input\n",
                                str);

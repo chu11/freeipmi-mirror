@@ -17,6 +17,71 @@
 	libfreeipmi/include/freeipmi/fru-parse/ipmi-fru-parse.h: Allow
 	creation of FRU ctx with NULL ipmi_ctx.
 	
+2011-10-27  Albert Chu <chu11@llnl.gov>
+
+	* Support new --sdr-cache-file option globally.
+	
+2011-10-27  Albert Chu <chu11@llnl.gov>
+
+	* common/src/toolsdr/: Code cleanup, make internal functions static.
+	
+2011-10-24  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/fru-parse/ipmi-fru-parse-data.c: Add forgotten headers.
+
+	* ipmi-sel/: Code cleanup, do not pass unnecessary parameters to functions.
+	
+2011-10-24  Albert Chu <chu11@llnl.gov>
+
+	* Update documentation with OEM support information.
+	
+2011-10-21  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-raw/src/: Use unsigned int for cmd_length.
+
+	* common/src/miscutil/conffile.c: Update to latest version.
+	
+2011-10-21  Albert Chu <chu11@llnl.gov>
+
+	* bmc-info/: Output GUID w/ lower case hex characters, as defined
+	in Wired for Management spec.
+	
+2011-10-20  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sel/, ipmi-sensors/: Remove unnecessary includes, add
+	appropriate ones.
+
+	* bmc-info/: Various code cleanup, use macros when appropriate.
+	
+2011-10-19  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-raw/src/ipmi-raw.c: Check for valid netfn request input.
+
+	* libfreeipmi/src/api/: Check for valid netfn request input on raw functions.
+	
+2011-10-19  Albert Chu <chu11@llnl.gov>
+
+	* Global cleanup, consistently and correctly check for errors when
+	calling strtol, strtoul, strtod, etc.
+	
+2011-10-19  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-raw/src/ipmi-raw-argp.c: Fix error message.  Check raw byte
+	inputs for correctness.
+	
+2011-10-19  Albert Chu <chu11@llnl.gov>
+
+	* Document Intel S2600JF/Appro 512X IPMI bugs.
+	
+2011-10-18  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-raw/, ipmi-oem/: Fix allocation bug due to much larger
+	_SC_ARG_MAX on RHEL6.  Assume max args appropriately for each
+	tool.
+
+	* ipmi-raw/, ipmi-oem/: Output error when excess arguments
+	specified.
+	
 2011-10-17  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sel/, libfreeipmi/src/sel-parse/: Fix the assumesystemevent

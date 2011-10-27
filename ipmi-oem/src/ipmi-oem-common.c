@@ -221,8 +221,8 @@ ipmi_oem_parse_1_byte_field (ipmi_oem_state_data_t *state_data,
   temp = strtoul (value, &ptr, 10);
   
   if (errno
-      || temp > UCHAR_MAX
-      || ptr[0] != '\0')
+      || ptr[0] != '\0'
+      || temp > UCHAR_MAX)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -255,8 +255,8 @@ ipmi_oem_parse_2_byte_field (ipmi_oem_state_data_t *state_data,
   temp = strtoul (value, &ptr, 10);
   
   if (errno
-      || temp > USHRT_MAX
-      || ptr[0] != '\0')
+      || ptr[0] != '\0'
+      || temp > USHRT_MAX)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,

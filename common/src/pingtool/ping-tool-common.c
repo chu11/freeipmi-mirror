@@ -213,7 +213,7 @@ _cmdline_parse (int argc,
                 unsigned int max_sequence_number,
                 const char *options)
 {
-  char *ptr;
+  char *endptr;
   int c;
 
   /* Turn off error messages */
@@ -236,15 +236,15 @@ _cmdline_parse (int argc,
             ipmi_ping_err_exit ("invalid version");
           break;
         case 'c':
-          _count = strtol (optarg, &ptr, 10);
-          if (ptr != (optarg + strlen (optarg)))
+          _count = strtol (optarg, &endptr, 10);
+	  if (errno || endptr[0] != '\0')
             ipmi_ping_err_exit ("count argument invalid");
           if (!_count)
             ipmi_ping_err_exit ("count must be > 0");
           break;
         case 'i':
-          _interval = strtol (optarg, &ptr, 10);
-          if (ptr != (optarg + strlen (optarg)))
+          _interval = strtol (optarg, &endptr, 10);
+	  if (errno || endptr[0] != '\0')
             ipmi_ping_err_exit ("interval argument invalid");
           if (!_interval)
             ipmi_ping_err_exit ("interval must be > 0");
@@ -253,8 +253,8 @@ _cmdline_parse (int argc,
           _interface = optarg;
           break;
         case 't':
-          _timeout = strtol (optarg, &ptr, 10);
-          if (ptr != (optarg + strlen (optarg)))
+          _timeout = strtol (optarg, &endptr, 10);
+	  if (errno || endptr[0] != '\0')
             ipmi_ping_err_exit ("timeout argument invalid");
           if (!_timeout)
             ipmi_ping_err_exit ("timeout must be > 0");
@@ -263,8 +263,8 @@ _cmdline_parse (int argc,
           _verbose++;
           break;
         case 's':
-          _initial_sequence_number = strtol (optarg, &ptr, 10);
-          if (ptr != (optarg + strlen (optarg)))
+          _initial_sequence_number = strtol (optarg, &endptr, 10);
+	  if (errno || endptr[0] != '\0')
             ipmi_ping_err_exit ("initial sequence number invalid");
           if (_initial_sequence_number < min_sequence_number
               || _initial_sequence_number > max_sequence_number)

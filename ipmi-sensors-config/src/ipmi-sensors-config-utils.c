@@ -25,6 +25,7 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#include <errno.h>
 #include <assert.h>
 
 #include "ipmi-sensors-config-utils.h"
@@ -145,6 +146,7 @@ get_sdr_record (ipmi_sensors_config_state_data_t *state_data,
   uint16_t record_id;
   char *str = NULL;
   char *ptr;
+  char *endptr;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   int len;
 
@@ -173,8 +175,10 @@ get_sdr_record (ipmi_sensors_config_state_data_t *state_data,
 
   *ptr = '\0';
 
-  record_id = strtoul (str, &ptr,0);
-  if (*ptr != '\0')
+  errno = 0;
+  record_id = strtoul (str, &endptr,0);
+  if (errno
+      || endptr[0] != '\0')
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf (state_data->pstate,

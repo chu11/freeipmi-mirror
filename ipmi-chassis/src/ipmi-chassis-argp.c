@@ -30,6 +30,7 @@
 #else /* !HAVE_ARGP_H */
 #include "freeipmi-argp.h"
 #endif /* !HAVE_ARGP_H */
+#include <errno.h>
 
 #include <freeipmi/freeipmi.h>
 
@@ -318,7 +319,7 @@ static error_t
 cmdline_parse (int key, char *arg, struct argp_state *state)
 {
   error_t ret;
-  char *ptr = NULL;
+  char *endptr = NULL;
   struct ipmi_chassis_arguments *cmd_args = state->input;
   int tmp;
 
@@ -372,8 +373,10 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
         }
       else
         {
-          tmp = strtol (arg, &ptr, 10);
-          if (*ptr != '\0')
+	  errno = 0;
+          tmp = strtol (arg, &endptr, 10);
+	  if (errno
+	      || endptr[0] != '\0')
             {
               fprintf (stderr, "invalid value for chassis-identify\n");
               exit (1);
@@ -409,8 +412,10 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       break;
 
     case SET_POWER_CYCLE_INTERVAL_KEY:
-      tmp = strtol (arg, &ptr, 10);
-      if (*ptr != '\0')
+      errno = 0;
+      tmp = strtol (arg, &endptr, 10);
+      if (errno
+	  || endptr[0] != '\0')
         {
           fprintf (stderr, "invalid value for power cycle interval\n");
           exit (1);

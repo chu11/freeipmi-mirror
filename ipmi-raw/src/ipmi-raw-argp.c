@@ -25,15 +25,11 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
-#if HAVE_UNISTD_H
-#include <unistd.h>
-#endif /* HAVE_UNISTD_H */
 #if HAVE_ARGP_H
 #include <argp.h>
 #else /* !HAVE_ARGP_H */
 #include "freeipmi-argp.h"
 #endif /* !HAVE_ARGP_H */
-#include <limits.h>
 #include <errno.h>
 
 #include "ipmi-raw.h"
@@ -95,18 +91,17 @@ static error_t
 cmdline_parse (int key, char *arg, struct argp_state *state)
 {
   struct ipmi_raw_arguments *cmd_args = state->input;
-  char *ptr;
+  char *endptr;
   int value;
   error_t ret;
 
   switch (key)
     {
     case CHANNEL_NUMBER_KEY:
-      ptr = NULL;
       errno = 0;
-      value = strtol (arg, &ptr, 0);
+      value = strtol (arg, &endptr, 0);
       if (errno
-          || ptr[0] != '\0'
+          || endptr[0] != '\0'
           || !IPMI_CHANNEL_NUMBER_VALID (value))
         {
           fprintf (stderr, "invalid channel number\n");
@@ -116,13 +111,12 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       cmd_args->channel_number = 1;
       break;
     case SLAVE_ADDRESS_KEY:
-      ptr = NULL;
       errno = 0;
-      value = strtol (arg, &ptr, 0);
+      value = strtol (arg, &endptr, 0);
       if (errno
-          || ptr[0] != '\0')
+          || endptr[0] != '\0')
         {
-          fprintf (stderr, "invalid channel number\n");
+          fprintf (stderr, "invalid slave address\n");
           exit (1);
         }
       cmd_args->slave_address_arg = (uint8_t) value;
@@ -142,7 +136,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
         
         if (strlen (arg) >= 2)
           {
-            if (strncmp (arg, "0x", 2) == 0)
+            if (!strncmp (arg, "0x", 2))
               arg+=2;
           }
         
@@ -167,8 +161,23 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
               }
           }
         
-        value = strtol (arg, (char **) NULL, 16);
-        cmd_args->cmd[cmd_args->cmd_length++] = (uint8_t) value;
+	if (cmd_args->cmd_length < IPMI_RAW_MAX_ARGS)
+	  {
+	    errno = 0;
+	    value = strtol (arg, &endptr, 16);
+	    if (errno
+		|| endptr[0] != '\0')
+	      {
+		fprintf (stderr, "invalid hex byte argument\n");
+		exit (1);
+	      }
+	    cmd_args->cmd[cmd_args->cmd_length++] = (uint8_t) value;
+	  }
+	else
+	  {
+	    fprintf (stderr, "Too many arguments specified\n");
+	    exit (1);
+	  }
         
         break;
       }
@@ -223,21 +232,7 @@ ipmi_raw_argp_parse (int argc, char **argv, struct ipmi_raw_arguments *cmd_args)
   cmd_args->channel_number = 0;
   cmd_args->slave_address = 0;
   cmd_args->cmd_file = NULL;
-  errno = 0;
-  if ((cmd_args->arg_max = sysconf (_SC_ARG_MAX)) <= 0)
-    {
-      if (errno)
-        {
-          perror ("sysconf");
-          exit (1);
-        }
-      cmd_args->arg_max = LONG_MAX;
-    }
-  if (!(cmd_args->cmd = calloc (cmd_args->arg_max, sizeof (uint8_t))))
-    {
-      perror ("calloc");
-      exit (1);
-    }
+  memset (cmd_args->cmd, '\0', sizeof (uint8_t) * IPMI_RAW_MAX_ARGS);
   cmd_args->cmd_length = 0;
 
   argp_parse (&cmdline_config_file_argp,

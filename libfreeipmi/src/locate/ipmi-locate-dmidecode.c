@@ -493,12 +493,23 @@ ipmi_locate_dmidecode_get_device_info (ipmi_locate_ctx_t ctx,
     }
 
   fp = 0;
-  while ((fgets (linebuf, sizeof (linebuf) - 1, efi_systab)) != NULL)
+  while ((fgets (linebuf, sizeof (linebuf) - 1, efi_systab)))
     {
       char *addr = memchr (linebuf, '=', strlen (linebuf));
       *(addr++) = '\0';
-      if (strcmp (linebuf, "SMBIOS") == 0)
-        fp = strtoul (addr, NULL, 0);
+      if (!strcmp (linebuf, "SMBIOS"))
+	{
+	  char *endptr;
+	  
+	  errno = 0;
+	  fp = strtoul (addr, &endptr, 0);
+	  if (errno
+	      || endptr[0] != '\0')
+	    {
+	      LOCATE_SET_ERRNUM (ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
+	      return (-1);
+	    }
+	}
     }
   fclose (efi_systab);
 

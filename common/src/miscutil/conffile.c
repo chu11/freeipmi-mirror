@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: conffile.c,v 1.5 2010-02-03 00:43:13 chu11 Exp $
+ *  $Id: conffile.c,v 1.39 2010-02-02 00:01:53 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2011 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -42,6 +42,7 @@
 #endif /* HAVE_FCNTL_H */
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <errno.h>
 
 #include "conffile.h"
 #include "fd.h"
@@ -616,15 +617,17 @@ _parseline(conffile_t cf, char *linebuf, int linebuflen)
             data.boolval = 0;
     }
     else if (option->option_type == CONFFILE_OPTION_INT) {
+        errno = 0;
         data.intval = strtol(args[0], &ptr, 0);
-        if ((args[0] + strlen(args[0])) != ptr) {
+        if (errno || (args[0] + strlen(args[0])) != ptr) {
             cf->errnum = CONFFILE_ERR_PARSE_ARG_INVALID;
             return -1;
         }
     }
     else if (option->option_type == CONFFILE_OPTION_DOUBLE) {
+        errno = 0;
         data.doubleval = strtod(args[0], &ptr);
-        if ((args[0] + strlen(args[0])) != ptr) {
+        if (errno || (args[0] + strlen(args[0])) != ptr) {
             cf->errnum = CONFFILE_ERR_PARSE_ARG_INVALID;
             return -1;
         }
@@ -636,8 +639,9 @@ _parseline(conffile_t cf, char *linebuf, int linebuflen)
     else if (option->option_type == CONFFILE_OPTION_LIST_INT) {
         int i;
         for (i = 0; i < numargs; i++) {
+	    errno = 0;
             data.intlist[i] = strtol(args[i], &ptr, 0);
-            if ((args[i] + strlen(args[i])) != ptr) {
+            if (errno || (args[i] + strlen(args[i])) != ptr) {
                 cf->errnum = CONFFILE_ERR_PARSE_ARG_INVALID;
                 return -1;
             }
@@ -647,8 +651,9 @@ _parseline(conffile_t cf, char *linebuf, int linebuflen)
     else if (option->option_type == CONFFILE_OPTION_LIST_DOUBLE) {
         int i;
         for (i = 0; i < numargs; i++) {
+	    errno = 0;
             data.doublelist[i] = strtod(args[i], &ptr);
-            if ((args[i] + strlen(args[i])) != ptr) {
+            if (errno || (args[i] + strlen(args[i])) != ptr) {
                 cf->errnum = CONFFILE_ERR_PARSE_ARG_INVALID;
                 return -1;
             }
