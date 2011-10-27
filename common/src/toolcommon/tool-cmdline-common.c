@@ -388,6 +388,15 @@ sdr_parse_opt (int key,
           exit (1);
         }
       break;
+    case ARGP_SDR_CACHE_FILE_KEY:
+      if (sdr_cmd_args->sdr_cache_file)
+        free (sdr_cmd_args->sdr_cache_file);
+      if (!(sdr_cmd_args->sdr_cache_file = strdup (arg)))
+        {
+          perror ("strdup");
+          exit (1);
+        }
+      break;
     case ARGP_SDR_CACHE_RECREATE_KEY:
       sdr_cmd_args->sdr_cache_recreate = 1;
       break;
@@ -602,6 +611,7 @@ init_sdr_cmd_args (struct sdr_cmd_args *sdr_cmd_args)
   sdr_cmd_args->flush_cache = 0;
   sdr_cmd_args->quiet_cache = 0;
   sdr_cmd_args->sdr_cache_directory = NULL;
+  sdr_cmd_args->sdr_cache_file = NULL;
   sdr_cmd_args->sdr_cache_recreate = 0;
   sdr_cmd_args->ignore_sdr_cache = 0;
 }

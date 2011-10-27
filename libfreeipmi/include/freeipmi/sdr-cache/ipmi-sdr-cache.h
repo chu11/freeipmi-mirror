@@ -124,7 +124,10 @@ int ipmi_sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
                            Sdr_Create_Callback create_callback,
                            void *create_callback_data);
 
-/* SDR Cache Reading Functions */
+/* SDR Cache Reading Functions
+ * - ipmi_ctx is optional
+ * - if ipmi_ctx is specified, timestamps/version of the SDR will be checked for out-of-dateness
+ */
 int ipmi_sdr_cache_open (ipmi_sdr_cache_ctx_t ctx,
                          ipmi_ctx_t ipmi_ctx,
                          const char *filename);

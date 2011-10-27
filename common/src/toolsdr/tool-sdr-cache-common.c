@@ -37,6 +37,7 @@
 #ifdef HAVE_NETDB_H
 #include <netdb.h>              /* MAXHOSTNAMELEN Solaris */
 #endif /* HAVE_NETDB_H */
+#include <libgen.h>
 #include <assert.h>
 #include <errno.h>
 
@@ -307,10 +308,10 @@ static int
 _sdr_cache_get_cache_filename (pstdout_state_t pstate,
 			       const char *hostname,
 			       const char *cache_dir,
+			       const char *cache_file,
 			       char *buf,
 			       unsigned int buflen)
 {
-  char hostnamebuf[MAXHOSTNAMELEN+1];
   char sdrcachebuf[MAXPATHLEN+1];
   char *ptr;
   int ret;
@@ -318,39 +319,101 @@ _sdr_cache_get_cache_filename (pstdout_state_t pstate,
   assert (buf);
   assert (buflen);
 
-  memset (hostnamebuf, '\0', MAXHOSTNAMELEN+1);
-  if (gethostname (hostnamebuf, MAXHOSTNAMELEN) < 0)
-    snprintf (hostnamebuf, MAXHOSTNAMELEN, "localhost");
-
-  /* shorten hostname if necessary */
-  if ((ptr = strchr (hostnamebuf, '.')))
-    *ptr = '\0';
-
-  if (_sdr_cache_get_cache_directory (pstate,
-				      cache_dir,
-				      sdrcachebuf,
-				      MAXPATHLEN) < 0)
-    return (-1);
-
-  if ((ret = snprintf (buf,
-                       buflen,
-                       "%s/%s-%s.%s",
-                       sdrcachebuf,
-                       SDR_CACHE_FILENAME_PREFIX,
-                       hostnamebuf,
-                       hostname ? hostname : "localhost")) < 0)
-
+  if (!cache_file)
     {
-      PSTDOUT_PERROR (pstate, "snprintf");
-      return (-1);
+      char hostnamebuf[MAXHOSTNAMELEN+1];
+
+      memset (hostnamebuf, '\0', MAXHOSTNAMELEN+1);
+      if (gethostname (hostnamebuf, MAXHOSTNAMELEN) < 0)
+	snprintf (hostnamebuf, MAXHOSTNAMELEN, "localhost");
+
+      /* shorten hostname if necessary */
+      if ((ptr = strchr (hostnamebuf, '.')))
+	*ptr = '\0';
+      
+      if (_sdr_cache_get_cache_directory (pstate,
+					  cache_dir,
+					  sdrcachebuf,
+					  MAXPATHLEN) < 0)
+	return (-1);
+
+      if ((ret = snprintf (buf,
+			   buflen,
+			   "%s/%s-%s.%s",
+			   sdrcachebuf,
+			   SDR_CACHE_FILENAME_PREFIX,
+			   hostnamebuf,
+			   hostname ? hostname : "localhost")) < 0)
+	
+	{
+	  PSTDOUT_PERROR (pstate, "snprintf");
+	  return (-1);
+	}
+
+      if (ret >= buflen)
+	{
+	  PSTDOUT_FPRINTF (pstate,
+			   stderr,
+			   "snprintf invalid bytes written\n");
+	  return (-1);
+	}
     }
-
-  if (ret >= buflen)
+  else
     {
-      PSTDOUT_FPRINTF (pstate,
-                       stderr,
-                       "snprintf invalid bytes written\n");
-      return (-1);
+      if (strlen (cache_file) > (MAXPATHLEN - 1))
+        {
+          PSTDOUT_FPRINTF (pstate,
+                           stderr,
+                           "internal overflow error\n");
+          return (-1);
+        }
+      
+      if (access (cache_file, R_OK) < 0)
+        {
+	  if (errno != ENOENT)
+	    {
+	      PSTDOUT_FPRINTF (pstate,
+			       stderr,
+			       "Cannot access cache file: %s\n",
+			       cache_file);
+	      return (-1);
+	    }
+	  else
+	    {
+	      /* File doesn't exist, do checks for directory */
+	      char cachedirbuf[MAXPATHLEN+1];
+	      char *cachedirptr;
+	      strcpy (cachedirbuf, cache_file);
+
+	      cachedirptr = dirname (cachedirbuf);
+	      
+	      if (_sdr_cache_get_cache_directory (pstate,
+						  cachedirptr,
+						  sdrcachebuf,
+						  MAXPATHLEN) < 0)
+		return (-1);
+
+	    }
+        }
+      
+      if ((ret = snprintf (buf,
+                           buflen,
+			   "%s",
+			   cache_file)) < 0)
+
+        {
+          PSTDOUT_PERROR (pstate, "snprintf");
+          return (-1);
+        }
+
+      if (ret >= buflen)
+        {
+          PSTDOUT_FPRINTF (pstate,
+                           stderr,
+                           "snprintf invalid bytes written\n");
+          return (-1);
+	}
+
     }
 
   return (0);
@@ -463,7 +526,8 @@ _sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
 		   int quiet_cache,
 		   int sdr_cache_recreate,
 		   const char *hostname,
-		   const char *cache_dir)
+		   const char *cache_dir,
+		   const char *cache_file)
 {
   char cachefilenamebuf[MAXPATHLEN+1];
   int count = 0;
@@ -480,6 +544,7 @@ _sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
   if (_sdr_cache_get_cache_filename (pstate,
 				     hostname,
 				     cache_dir,
+				     cache_file,
 				     cachefilenamebuf,
 				     MAXPATHLEN) < 0)
     goto cleanup;
@@ -534,7 +599,8 @@ sdr_cache_create_and_load (ipmi_sdr_cache_ctx_t ctx,
                            int quiet_cache,
                            int sdr_cache_recreate,
                            const char *hostname,
-                           const char *cache_dir)
+                           const char *cache_dir,
+			   const char *cache_file)
 {
   char cachefilenamebuf[MAXPATHLEN+1];
   int rv = -1;
@@ -545,12 +611,15 @@ sdr_cache_create_and_load (ipmi_sdr_cache_ctx_t ctx,
   if (_sdr_cache_get_cache_filename (pstate,
 				     hostname,
 				     cache_dir,
+				     cache_file,
 				     cachefilenamebuf,
 				     MAXPATHLEN) < 0)
     goto cleanup;
 
+  /* If user specifies cache file, don't check timestamps, just load it */
+
   if (ipmi_sdr_cache_open (ctx,
-                           ipmi_ctx,
+                           cache_file ? NULL : ipmi_ctx,
                            cachefilenamebuf) < 0)
     {
       if (ipmi_sdr_cache_ctx_errnum (ctx) != IPMI_SDR_CACHE_ERR_CACHE_READ_CACHE_DOES_NOT_EXIST
@@ -598,11 +667,12 @@ sdr_cache_create_and_load (ipmi_sdr_cache_ctx_t ctx,
 			     quiet_cache,
 			     sdr_cache_recreate,
 			     hostname,
-			     cache_dir) < 0)
+			     cache_dir,
+			     cache_file) < 0)
         goto cleanup;
 
       if (ipmi_sdr_cache_open (ctx,
-                               ipmi_ctx,
+			       cache_file ? NULL : ipmi_ctx,
                                cachefilenamebuf) < 0)
         {
           PSTDOUT_FPRINTF (pstate,
@@ -624,7 +694,8 @@ sdr_cache_flush_cache (ipmi_sdr_cache_ctx_t ctx,
                        pstdout_state_t pstate,
                        int quiet_cache,
                        const char *hostname,
-                       const char *cache_dir)
+                       const char *cache_dir,
+		       const char *cache_file)
 {
   char cachefilenamebuf[MAXPATHLEN+1];
   int rv = -1;
@@ -635,13 +706,14 @@ sdr_cache_flush_cache (ipmi_sdr_cache_ctx_t ctx,
   if (_sdr_cache_get_cache_filename (pstate,
 				     hostname,
 				     cache_dir,
+				     cache_file,
 				     cachefilenamebuf,
 				     MAXPATHLEN) < 0)
     goto cleanup;
 
   if (!quiet_cache)
     PSTDOUT_PRINTF (pstate, "Flushing cache: %s\n", cachefilenamebuf);
-
+  
   if (ipmi_sdr_cache_delete (ctx, cachefilenamebuf) < 0)
     {
       PSTDOUT_FPRINTF (pstate,
@@ -650,7 +722,7 @@ sdr_cache_flush_cache (ipmi_sdr_cache_ctx_t ctx,
                        ipmi_sdr_cache_ctx_errormsg (ctx));
       goto cleanup;
     }
-
+  
   rv = 0;
  cleanup:
   return (rv);

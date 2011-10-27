@@ -19,6 +19,10 @@ Specify an alternate directory for sensor data repository (SDR) caches
 to be stored or read from.  Defaults to the home directory if not
 specified.
 .TP
+\fB\-\-sdr\-cache\-file\fR=\fIFILE\fR
+Specify a specific sensor data repository (SDR) cache file to be
+stored or read from.
+.TP
 \fB\-\-sdr-cache-recreate\fR
 If the SDR cache is out of date or invalid, automatically recreate the
 sensor data repository (SDR) cache.  This option may be useful for

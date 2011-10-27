@@ -66,14 +66,15 @@ enum argp_common_option_keys
     ARGP_FLUSH_CACHE_KEY = 'f',
     ARGP_QUIET_CACHE_KEY = 'Q',
     ARGP_SDR_CACHE_DIRECTORY_KEY = 146,
-    ARGP_SDR_CACHE_RECREATE_KEY = 147,
-    ARGP_IGNORE_SDR_CACHE_KEY = 148,
+    ARGP_SDR_CACHE_FILE_KEY = 147,
+    ARGP_SDR_CACHE_RECREATE_KEY = 148,
+    ARGP_IGNORE_SDR_CACHE_KEY = 149,
     /* hostrange options */
     ARGP_BUFFER_OUTPUT_KEY = 'B',
     ARGP_CONSOLIDATE_OUTPUT_KEY = 'C',
     ARGP_FANOUT_KEY = 'F',
     ARGP_ELIMINATE_KEY = 'E',
-    ARGP_ALWAYS_PREFIX_KEY = 149,
+    ARGP_ALWAYS_PREFIX_KEY = 150,
   };
 
 /*
@@ -176,28 +177,30 @@ enum argp_common_option_keys
       "Do not output information about cache creation/deletion.", 19},                                          \
   { "sdr-cache-directory", ARGP_SDR_CACHE_DIRECTORY_KEY, "DIRECTORY", 0,                                        \
       "Specify an alternate directory for sensor data repository (SDR) caches to be stored or read from.", 20}, \
+  { "sdr-cache-file", ARGP_SDR_CACHE_FILE_KEY, "FILE", 0,                                                       \
+      "Specify a specific file for the sensor data repository (SDR) cache to be stored or read from.", 21},     \
   { "sdr-cache-recreate", ARGP_SDR_CACHE_RECREATE_KEY,  0, 0,                                                   \
-      "Recreate sensor data repository (SDR) cache if cache is out of date or invalid.", 21}
+      "Recreate sensor data repository (SDR) cache if cache is out of date or invalid.", 22}
 
 #define ARGP_COMMON_IGNORE_SDR_OPTIONS                                                                          \
   { "ignore-sdr-cache", ARGP_IGNORE_SDR_CACHE_KEY, 0, 0,                                                        \
-      "Ignore all SDR cache related processing.", 22}
+      "Ignore all SDR cache related processing.", 23}
 
 #define ARGP_COMMON_HOSTRANGED_OPTIONS                                                                          \
   { "buffer-output", ARGP_BUFFER_OUTPUT_KEY, 0, 0,                                                              \
-      "Buffer hostranged output.", 23},                                                                         \
+      "Buffer hostranged output.", 24},                                                                         \
   { "consolidate-output", ARGP_CONSOLIDATE_OUTPUT_KEY, 0, 0,                                                    \
-      "Consolidate hostranged output.", 24},                                                                    \
+      "Consolidate hostranged output.", 25},                                                                    \
   { "fanout", ARGP_FANOUT_KEY, "NUM", 0,                                                                        \
-      "Specify multiple host fanout.", 25},                                                                     \
+      "Specify multiple host fanout.", 26},                                                                     \
   { "eliminate", ARGP_ELIMINATE_KEY, 0, 0,                                                                      \
-      "Eliminate undetected nodes.", 26},                                                                       \
+      "Eliminate undetected nodes.", 27},                                                                       \
   { "always-prefix", ARGP_ALWAYS_PREFIX_KEY, 0, 0,                                                              \
-      "Always prefix output.", 27}
+      "Always prefix output.", 28}
 
 #define ARGP_COMMON_OPTIONS_DEBUG                                                                               \
   { "debug",     ARGP_DEBUG_KEY, 0, 0,                                                                          \
-      "Turn on debugging.", 28}
+      "Turn on debugging.", 29}
 
 struct common_cmd_args
 {
@@ -230,6 +233,7 @@ struct sdr_cmd_args
   int flush_cache;
   int quiet_cache;
   char *sdr_cache_directory;
+  char *sdr_cache_file;
   int sdr_cache_recreate;
   int ignore_sdr_cache;
 };

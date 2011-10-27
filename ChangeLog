@@ -1,5 +1,9 @@
 2011-10-27  Albert Chu <chu11@llnl.gov>
 
+	* Support new --sdr-cache-file option globally.
+	
+2011-10-27  Albert Chu <chu11@llnl.gov>
+
 	* common/src/toolsdr/: Code cleanup, make internal functions static.
 	
 2011-10-24  Albert Chu <chu11@llnl.gov>

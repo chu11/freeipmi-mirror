@@ -1100,7 +1100,8 @@ _flush_cache (ipmi_oem_state_data_t *state_data)
                              state_data->pstate,
                              state_data->prog_data->args->sdr.quiet_cache,
                              state_data->hostname,
-                             state_data->prog_data->args->sdr.sdr_cache_directory) < 0)
+                             state_data->prog_data->args->sdr.sdr_cache_directory,
+                             state_data->prog_data->args->sdr.sdr_cache_file) < 0)
     return (-1);
   
   return (0);
