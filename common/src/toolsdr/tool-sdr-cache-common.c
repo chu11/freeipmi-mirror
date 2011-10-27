@@ -263,11 +263,11 @@ _get_config_directory (pstdout_state_t pstate,
   return (0);
 }
 
-int
-sdr_cache_get_cache_directory (pstdout_state_t pstate,
-                               const char *cache_dir,
-                               char *buf,
-                               unsigned int buflen)
+static int
+_sdr_cache_get_cache_directory (pstdout_state_t pstate,
+				const char *cache_dir,
+				char *buf,
+				unsigned int buflen)
 {
   char tbuf[MAXPATHLEN+1];
   int ret;
@@ -303,12 +303,12 @@ sdr_cache_get_cache_directory (pstdout_state_t pstate,
   return (0);
 }
 
-int
-sdr_cache_get_cache_filename (pstdout_state_t pstate,
-                              const char *hostname,
-                              const char *cache_dir,
-                              char *buf,
-                              unsigned int buflen)
+static int
+_sdr_cache_get_cache_filename (pstdout_state_t pstate,
+			       const char *hostname,
+			       const char *cache_dir,
+			       char *buf,
+			       unsigned int buflen)
 {
   char hostnamebuf[MAXHOSTNAMELEN+1];
   char sdrcachebuf[MAXPATHLEN+1];
@@ -326,10 +326,10 @@ sdr_cache_get_cache_filename (pstdout_state_t pstate,
   if ((ptr = strchr (hostnamebuf, '.')))
     *ptr = '\0';
 
-  if (sdr_cache_get_cache_directory (pstate,
-                                     cache_dir,
-                                     sdrcachebuf,
-                                     MAXPATHLEN) < 0)
+  if (_sdr_cache_get_cache_directory (pstate,
+				      cache_dir,
+				      sdrcachebuf,
+				      MAXPATHLEN) < 0)
     return (-1);
 
   if ((ret = snprintf (buf,
@@ -385,10 +385,10 @@ _setup_sdr_cache_directory (pstdout_state_t pstate,
       return (-1);
     }
 
-  if (sdr_cache_get_cache_directory (pstate,
-                                     cache_dir,
-                                     cachebuf,
-                                     MAXPATHLEN) < 0)
+  if (_sdr_cache_get_cache_directory (pstate,
+				      cache_dir,
+				      cachebuf,
+				      MAXPATHLEN) < 0)
     return (-1);
 
   errno = 0;
@@ -433,17 +433,17 @@ _sdr_cache_create_callback (uint8_t sdr_version,
            record_id);
 }
 
-int
-sdr_cache_create_directory (pstdout_state_t pstate,
-                            const char *cache_dir)
+static int
+_sdr_cache_create_directory (pstdout_state_t pstate,
+			     const char *cache_dir)
 {
   char cachedirectorybuf[MAXPATHLEN+1];
   struct stat buf;
 
-  if (sdr_cache_get_cache_directory (pstate,
-                                     cache_dir,
-                                     cachedirectorybuf,
-                                     MAXPATHLEN) < 0)
+  if (_sdr_cache_get_cache_directory (pstate,
+				      cache_dir,
+				      cachedirectorybuf,
+				      MAXPATHLEN) < 0)
     return (-1);
 
   if (stat (cachedirectorybuf, &buf) < 0)
@@ -457,13 +457,13 @@ sdr_cache_create_directory (pstdout_state_t pstate,
 }
 
 int
-sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
-                  pstdout_state_t pstate,
-                  ipmi_ctx_t ipmi_ctx,
-                  int quiet_cache,
-                  int sdr_cache_recreate,
-                  const char *hostname,
-                  const char *cache_dir)
+_sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
+		   pstdout_state_t pstate,
+		   ipmi_ctx_t ipmi_ctx,
+		   int quiet_cache,
+		   int sdr_cache_recreate,
+		   const char *hostname,
+		   const char *cache_dir)
 {
   char cachefilenamebuf[MAXPATHLEN+1];
   int count = 0;
@@ -473,15 +473,15 @@ sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
   assert (ctx);
   assert (ipmi_ctx);
 
-  if (sdr_cache_create_directory (pstate, cache_dir) < 0)
+  if (_sdr_cache_create_directory (pstate, cache_dir) < 0)
     goto cleanup;
 
   memset (cachefilenamebuf, '\0', MAXPATHLEN+1);
-  if (sdr_cache_get_cache_filename (pstate,
-                                    hostname,
-                                    cache_dir,
-                                    cachefilenamebuf,
-                                    MAXPATHLEN) < 0)
+  if (_sdr_cache_get_cache_filename (pstate,
+				     hostname,
+				     cache_dir,
+				     cachefilenamebuf,
+				     MAXPATHLEN) < 0)
     goto cleanup;
 
   /* pstdout library can't handle \r, its the responsibility of
@@ -542,11 +542,11 @@ sdr_cache_create_and_load (ipmi_sdr_cache_ctx_t ctx,
   assert (ctx);
 
   memset (cachefilenamebuf, '\0', MAXPATHLEN+1);
-  if (sdr_cache_get_cache_filename (pstate,
-                                    hostname,
-                                    cache_dir,
-                                    cachefilenamebuf,
-                                    MAXPATHLEN) < 0)
+  if (_sdr_cache_get_cache_filename (pstate,
+				     hostname,
+				     cache_dir,
+				     cachefilenamebuf,
+				     MAXPATHLEN) < 0)
     goto cleanup;
 
   if (ipmi_sdr_cache_open (ctx,
@@ -592,13 +592,13 @@ sdr_cache_create_and_load (ipmi_sdr_cache_ctx_t ctx,
            || ipmi_sdr_cache_ctx_errnum (ctx) == IPMI_SDR_CACHE_ERR_CACHE_OUT_OF_DATE)
           && sdr_cache_recreate))
     {
-      if (sdr_cache_create (ctx,
-                            pstate,
-                            ipmi_ctx,
-                            quiet_cache,
-                            sdr_cache_recreate,
-                            hostname,
-                            cache_dir) < 0)
+      if (_sdr_cache_create (ctx,
+			     pstate,
+			     ipmi_ctx,
+			     quiet_cache,
+			     sdr_cache_recreate,
+			     hostname,
+			     cache_dir) < 0)
         goto cleanup;
 
       if (ipmi_sdr_cache_open (ctx,
@@ -632,11 +632,11 @@ sdr_cache_flush_cache (ipmi_sdr_cache_ctx_t ctx,
   assert (ctx);
 
   memset (cachefilenamebuf, '\0', MAXPATHLEN+1);
-  if (sdr_cache_get_cache_filename (pstate,
-                                    hostname,
-                                    cache_dir,
-                                    cachefilenamebuf,
-                                    MAXPATHLEN) < 0)
+  if (_sdr_cache_get_cache_filename (pstate,
+				     hostname,
+				     cache_dir,
+				     cachefilenamebuf,
+				     MAXPATHLEN) < 0)
     goto cleanup;
 
   if (!quiet_cache)

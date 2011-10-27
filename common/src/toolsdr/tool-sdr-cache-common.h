@@ -29,31 +29,6 @@
 #define IPMI_SDR_CACHE_MAX_ID_STRING         16
 #define IPMI_SDR_CACHE_MAX_DEVICE_ID_STRING  16
 
-/* For sdr_cache_get_cache_directory: pstate can be NULL if we aren't
- * yet threaded
- */
-int sdr_cache_get_cache_directory (pstdout_state_t pstate,
-                                   const char *cache_dir,
-                                   char *buf,
-                                   unsigned int buflen);
-
-int sdr_cache_get_cache_filename (pstdout_state_t pstate,
-                                  const char *hostname,
-                                  const char *cache_dir,
-                                  char *buf,
-                                  unsigned int buflen);
-
-int sdr_cache_create_directory (pstdout_state_t pstate,
-                                const char *cache_dir);
-
-int sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
-                      pstdout_state_t pstate,
-                      ipmi_ctx_t ipmi_ctx,
-                      int quiet_cache,
-                      int sdr_cache_recreate,
-                      const char *hostname,
-                      const char *cache_dir);
-
 int sdr_cache_create_and_load (ipmi_sdr_cache_ctx_t ctx,
                                pstdout_state_t pstate,
                                ipmi_ctx_t ipmi_ctx,
