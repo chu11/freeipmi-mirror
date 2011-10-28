@@ -1965,13 +1965,13 @@ _ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
 		  else
 		    goto cant_do_entity_id_check;
 		}
-		  else
-		    {
-		      fprintf (stderr,
-			       "ipmi_sdr_cache_search_record_id: %s\n",
-			       ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
-		      goto cleanup;
-		    }
+	      else
+		{
+		  fprintf (stderr,
+			   "ipmi_sdr_cache_search_record_id: %s\n",
+			   ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
+		  goto cleanup;
+		}
 	    }
 	}
 
