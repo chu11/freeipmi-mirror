@@ -11,8 +11,9 @@
 	common/src/toolsensor/tool-sensor-common.c (calculate_column_widths_ignored_sdr_cache,
 	get_entity_id_string): New functions.
 
-	* common/src/toolsensor/tool-sensor-common.c (get_entity_sensor_name_string):
-	Update to use new common functions.
+	* common/src/toolsdr/tool-sdr-cache-common.h,
+	common/src/toolsdr/tool-sdr-cache-common.c (ipmi_sdr_cache_search_sensor_wrapper):
+	Write new common function.
 
 	* ipmi-sel/: Update to use new convenience functions.
 

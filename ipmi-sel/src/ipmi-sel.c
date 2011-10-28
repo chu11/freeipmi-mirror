@@ -929,33 +929,18 @@ _normal_output_sensor_name (ipmi_sel_state_data_t *state_data, unsigned int flag
        * this, but sel-parse lib doesn't iterate over the cache, so
        * it's ok.  If we need to later, we'll open a new sdr_cache
        */
-      if (ipmi_sdr_cache_search_sensor (state_data->sdr_cache_ctx,
-                                        sensor_number,
-                                        generator_id) < 0)
+      if (ipmi_sdr_cache_search_sensor_wrapper (state_data->sdr_cache_ctx,
+						sensor_number,
+						generator_id) < 0)
         {
-          /* IPMI Workaround (achu)
-           *
-           * Discovered on Supermicro H8QME with SIMSO daughter card.
-           *
-           * The slave address is reportedly incorrectly by having the
-           * generator_id be shifted over by one.  This is a special
-           * "try again" corner case.
-           */
-          if (ipmi_sdr_cache_ctx_errnum (state_data->sdr_cache_ctx) == IPMI_SDR_CACHE_ERR_NOT_FOUND
-              && (generator_id == (IPMI_SLAVE_ADDRESS_BMC << 1)))
-            {
-              if (!ipmi_sdr_cache_search_sensor (state_data->sdr_cache_ctx,
-                                                 sensor_number,
-                                                 (generator_id >> 1)))
-                goto fall_through;
-              /* else fall through to normal error path */
-            }
-          
+	  if (state_data->prog_data->args->common.debug)
+	    pstdout_fprintf (state_data->pstate,
+			     stderr,
+			     "ipmi_sdr_cache_search_sensor: %s\n",
+			     ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
           goto normal_sensor_output;
         }
 
-    fall_through:
-      
       if ((sdr_record_len = ipmi_sdr_cache_record_read (state_data->sdr_cache_ctx,
                                                         sdr_record,
                                                         IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH)) < 0)

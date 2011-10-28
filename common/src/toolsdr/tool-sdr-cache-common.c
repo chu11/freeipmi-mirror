@@ -727,3 +727,40 @@ sdr_cache_flush_cache (ipmi_sdr_cache_ctx_t ctx,
  cleanup:
   return (rv);
 }
+
+int
+ipmi_sdr_cache_search_sensor_wrapper (ipmi_sdr_cache_ctx_t ctx,
+				      uint8_t sensor_number,
+				      uint8_t generator_id)
+{
+  int rv;
+
+  assert (ctx);
+  
+  if ((rv = ipmi_sdr_cache_search_sensor (ctx,
+					  sensor_number,
+					  generator_id)) < 0)
+    {
+      /* IPMI Workaround (achu)                                                                              
+       *                                                                                                     
+       * Discovered on Supermicro H8QME with SIMSO daughter card.                                            
+       *                                                                                                     
+       * The slave address is reportedly incorrectly by having the                                           
+       * generator_id be shifted over by one.  This is a special                                             
+       * "try again" corner case.                                                                            
+       */
+      if (ipmi_sdr_cache_ctx_errnum (ctx) == IPMI_SDR_CACHE_ERR_NOT_FOUND
+	  && (generator_id == (IPMI_SLAVE_ADDRESS_BMC << 1)))
+	{
+	  if (!ipmi_sdr_cache_search_sensor (ctx,
+					     sensor_number,
+					     (generator_id >> 1)))
+	    return (0);
+	  /* else fall through to normal error case */
+	}
+      
+      return (rv);
+    }
+  
+  return (rv);
+}

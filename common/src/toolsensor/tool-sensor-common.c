@@ -1365,3 +1365,4 @@ calculate_column_widths_ignored_sdr_cache (unsigned int non_abbreviated_units,
 
   return (0);
 }
+

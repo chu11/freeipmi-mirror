@@ -45,4 +45,9 @@ int sdr_cache_flush_cache (ipmi_sdr_cache_ctx_t ctx,
                            const char *cache_dir,
 			   const char *cache_file);
 
+/* wrapper for ipmi_sdr_cache_search_sensor, handles some additional special workarounds */
+int ipmi_sdr_cache_search_sensor_wrapper (ipmi_sdr_cache_ctx_t ctx,
+					  uint8_t sensor_number,
+					  uint8_t generator_id);
+
 #endif

@@ -140,5 +140,4 @@ int calculate_column_widths (pstdout_state_t pstate,
 int calculate_column_widths_ignored_sdr_cache (unsigned int non_abbreviated_units,
 					       struct sensor_column_width *column_width);
 					       
-
 #endif
