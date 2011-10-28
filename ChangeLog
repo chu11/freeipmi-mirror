@@ -8,8 +8,11 @@
 	* common/src/toolcommon/: Update tool common function appropriately for new tool.
 
 	* common/src/toolsensor/tool-sensor-common.h,
-	common/src/toolsensor/tool-sensor-common.c (calculate_column_widths_ignored_sdr_cache):
-	New function.
+	common/src/toolsensor/tool-sensor-common.c (calculate_column_widths_ignored_sdr_cache,
+	get_entity_id_string): New functions.
+
+	* common/src/toolsensor/tool-sensor-common.c (get_entity_sensor_name_string):
+	Update to use new common functions.
 
 	* ipmi-sel/: Update to use new convenience functions.
 
@@ -28,6 +31,10 @@
 
 	* common/src/toolsensor/tool-sensor-common.c (get_entity_sensor_name_string):
 	Use new library function.
+
+	* ipmi-sel/src/ipmi-sel.c (_normal_output_sensor_name_and_type):
+	Code cleanup, split function into _normal_output_sensor_name and
+	_normal_output_sensor_type.  Update code accordingly.
 	
 2011-10-27  Albert Chu <chu11@llnl.gov>
 

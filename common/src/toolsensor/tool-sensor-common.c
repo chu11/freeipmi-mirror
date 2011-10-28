@@ -107,7 +107,7 @@ get_entity_sensor_name_string (pstdout_state_t pstate,
   char device_id_string[IPMI_SDR_CACHE_MAX_DEVICE_ID_STRING + 1];
   char *id_string_ptr = NULL;
   uint8_t entity_id, entity_instance, entity_instance_type;
-  char *entity_id_str;
+  const char *entity_id_str;
   uint16_t record_id;
   uint8_t record_type;
 
