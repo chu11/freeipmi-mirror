@@ -9,6 +9,10 @@
 
 	* common/src/toolsensor/tool-sensor-common.c (get_entity_sensor_name_string):
 	Use new library function.
+
+	* ipmi-sel/src/ipmi-sel.c (_normal_output_sensor_name_and_type):
+	Code cleanup, split function into _normal_output_sensor_name and
+	_normal_output_sensor_type.  Update code accordingly.
 	
 2011-10-27  Albert Chu <chu11@llnl.gov>
 
