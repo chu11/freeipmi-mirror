@@ -903,14 +903,6 @@ _normal_output_sensor_name (ipmi_pet_state_data_t *state_data,
       if (!outbuf_len)
         goto normal_sensor_output;
     }
-  else if (state_data->prog_data->args->entity_sensor_names
-	   && state_data->prog_data->args->sdr.ignore_sdr_cache
-	   && data->entity != IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_ENTITY_UNSPECIFIED
-	   && data->entity_instance != IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_ENTITY_INSTANCE_UNSPECIFIED)
-    {
-      /* We'll try our best without the SDR */
-      /* XXX XXX XXX TODO XXX XXX XXX */
-    }
   else
     {
     normal_sensor_output:
@@ -1779,14 +1771,38 @@ _ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
 					    data.sensor_number,
 					    data.sensor_device) < 0)
 	    {
-	      if (ipmi_sdr_cache_ctx_errnum (state_data->sdr_cache_ctx) == IPMI_SDR_CACHE_ERR_NOT_FOUND)
-		goto cant_be_determined;
-	      else
+	      /* IPMI Workaround (achu)
+	       *
+	       * Discovered on Supermicro H8QME with SIMSO daughter card.
+	       *
+	       * The slave address is reportedly incorrectly by having the
+	       * generator_id be shifted over by one.  This is a special
+	       * "try again" corner case.
+	       */
+	      if (ipmi_sdr_cache_ctx_errnum (state_data->sdr_cache_ctx) == IPMI_SDR_CACHE_ERR_NOT_FOUND
+		  && (data.sensor_device == (IPMI_SLAVE_ADDRESS_BMC << 1)))
 		{
-		  fprintf (stderr,
-			   "ipmi_sdr_cache_search_record_id: %s\n",
-			   ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
-		  goto cleanup;
+		  if (ipmi_sdr_cache_search_sensor (state_data->sdr_cache_ctx,
+						    data.sensor_number,
+						    (data.sensor_device >> 1)) < 0)
+		    {
+		      if (ipmi_sdr_cache_ctx_errnum (state_data->sdr_cache_ctx) == IPMI_SDR_CACHE_ERR_NOT_FOUND)
+			{
+			  fprintf (stderr,
+				   "ipmi_sdr_cache_search_record_id: %s\n",
+				   ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
+			  goto cleanup;
+			}
+		      else
+			goto cant_be_determined;
+		    }
+		  else
+		    {
+		      fprintf (stderr,
+			       "ipmi_sdr_cache_search_record_id: %s\n",
+			       ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
+		      goto cleanup;
+		    }
 		}
 	    }
 	  
@@ -1912,6 +1928,99 @@ _ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
 	    }
 	}
     }
+
+  if (data.entity != IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_ENTITY_UNSPECIFIED
+      && !args->sdr.ignore_sdr_cache)
+    {
+      uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
+      int sdr_record_len = 0;
+      uint8_t entity_id, entity_instance;
+      
+      if (ipmi_sdr_cache_search_sensor (state_data->sdr_cache_ctx,
+					data.sensor_number,
+					data.sensor_device) < 0)
+	{
+	  /* IPMI Workaround (achu)
+	   *
+	   * Discovered on Supermicro H8QME with SIMSO daughter card.
+	   *
+	   * The slave address is reportedly incorrectly by having the
+	   * generator_id be shifted over by one.  This is a special
+	   * "try again" corner case.
+	   */
+	  if (ipmi_sdr_cache_ctx_errnum (state_data->sdr_cache_ctx) == IPMI_SDR_CACHE_ERR_NOT_FOUND
+	      && (data.sensor_device == (IPMI_SLAVE_ADDRESS_BMC << 1)))
+	    {
+	      if (ipmi_sdr_cache_search_sensor (state_data->sdr_cache_ctx,
+						data.sensor_number,
+						(data.sensor_device >> 1)) < 0)
+		{
+		  if (ipmi_sdr_cache_ctx_errnum (state_data->sdr_cache_ctx) == IPMI_SDR_CACHE_ERR_NOT_FOUND)
+		    {
+		      fprintf (stderr,
+			       "ipmi_sdr_cache_search_record_id: %s\n",
+			       ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
+		      goto cleanup;
+		    }
+		  else
+		    goto cant_do_entity_id_check;
+		}
+		  else
+		    {
+		      fprintf (stderr,
+			       "ipmi_sdr_cache_search_record_id: %s\n",
+			       ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
+		      goto cleanup;
+		    }
+	    }
+	}
+
+      if ((sdr_record_len = ipmi_sdr_cache_record_read (state_data->sdr_cache_ctx,
+							sdr_record,
+							IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH)) < 0)
+	{
+	  fprintf (stderr,
+		   "ipmi_sdr_cache_record_read: %s\n",
+		   ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
+	  goto cleanup;
+	}
+      
+      /* Shouldn't be possible */
+      if (!sdr_record_len)
+	goto cant_be_determined;
+
+      if (ipmi_sdr_parse_entity_id_instance_type (state_data->sdr_parse_ctx,
+						  sdr_record,
+						  sdr_record_len,
+						  &entity_id,
+						  &entity_instance,
+						  NULL) < 0)
+	{
+	  fprintf (stderr,
+		   "ipmi_sdr_parse_entity_id_instance_type: %s\n",
+		   ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+	  goto cleanup;
+	}
+
+      if (entity_id != data.entity)
+	{
+	  if (state_data->prog_data->args->common.debug)
+	    fprintf (stderr,
+		     "Invalid PET data input: entity id inconsistent to SDR data\n");
+	}
+
+      if (data.entity_instance != IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_ENTITY_INSTANCE_UNSPECIFIED)
+	{
+	  if (entity_instance != data.entity_instance)
+	    {
+	      if (state_data->prog_data->args->common.debug)
+		fprintf (stderr,
+			 "Invalid PET data input: entity instance inconsistent to SDR data\n");
+	    }
+	}
+    }
+
+ cant_do_entity_id_check:
 
   flags = IPMI_SEL_PARSE_STRING_FLAGS_IGNORE_UNAVAILABLE_FIELD;
   flags |= IPMI_SEL_PARSE_STRING_FLAGS_OUTPUT_NOT_AVAILABLE;
