@@ -1135,35 +1135,6 @@ _normal_output_not_available_sensor_type (ipmi_sel_state_data_t *state_data)
  * return (-1) on error
  */
 static int
-_normal_output_not_available_sensor_type (ipmi_sel_state_data_t *state_data)
-{
-  char fmt[IPMI_SEL_FMT_BUFLEN + 1];
-
-  assert (state_data);
-  assert (!state_data->prog_data->args->no_sensor_type_output);
-  assert (!state_data->prog_data->args->legacy_output);
-
-  memset (fmt, '\0', IPMI_SEL_FMT_BUFLEN + 1);
-  if (state_data->prog_data->args->comma_separated_output)
-    snprintf (fmt,
-	      IPMI_SEL_FMT_BUFLEN,
-	      ",%%s");
-  else
-    snprintf (fmt,
-	      IPMI_SEL_FMT_BUFLEN,
-	      " | %%-%ds",
-	      state_data->column_width.sensor_type);
-  
-  pstdout_printf (state_data->pstate, fmt, IPMI_SEL_NA_STRING);
-
-  return (1);
-}
-
-/* return 1 on success
- * return (0) on non-success, but don't fail
- * return (-1) on error
- */
-static int
 _normal_output_event_state (ipmi_sel_state_data_t *state_data, unsigned int flags)
 {
   uint8_t record_data[IPMI_SEL_RECORD_MAX_RECORD_LENGTH];
