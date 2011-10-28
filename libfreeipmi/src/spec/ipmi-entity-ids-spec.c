@@ -171,3 +171,7 @@ const char *const ipmi_entity_ids_pretty[] =
     "System Board",             /* equivalent to 0x07, see errata */
     NULL
   };
+
+const char *const ipmi_entity_id_chassis_specific = "Chassis Specific";
+const char *const ipmi_entity_id_board_set_specific = "Board-Set Specific";
+const char *const ipmi_entity_id_oem_system_integrator = "OEM System Integrator";
