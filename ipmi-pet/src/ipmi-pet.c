@@ -903,6 +903,14 @@ _normal_output_sensor_name (ipmi_pet_state_data_t *state_data,
       if (!outbuf_len)
         goto normal_sensor_output;
     }
+  else if (state_data->prog_data->args->entity_sensor_names
+	   && state_data->prog_data->args->sdr.ignore_sdr_cache
+	   && data->entity != IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_ENTITY_UNSPECIFIED
+	   && data->entity_instance != IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_ENTITY_INSTANCE_UNSPECIFIED)
+    {
+      /* We'll try our best without the SDR */
+      /* XXX XXX XXX TODO XXX XXX XXX */
+    }
   else
     {
     normal_sensor_output:
