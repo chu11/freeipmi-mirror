@@ -855,11 +855,14 @@ _normal_output_sensor_name (ipmi_pet_state_data_t *state_data,
                                                 sensor_number,
                                                 generator_id) < 0)
         {
-          if (state_data->prog_data->args->common.debug)
-            fprintf (stderr,
-		     "ipmi_sdr_cache_search_sensor: %s\n",
-		     ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
-          goto normal_sensor_output;
+	  if (ipmi_sdr_cache_ctx_errnum (state_data->sdr_cache_ctx) != IPMI_SDR_CACHE_ERR_NOT_FOUND)
+	    {
+	      if (state_data->prog_data->args->common.debug)
+		fprintf (stderr,
+			 "ipmi_sdr_cache_search_sensor: %s\n",
+			 ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
+	    }
+	  goto normal_sensor_output;
         }
       
       if ((sdr_record_len = ipmi_sdr_cache_record_read (state_data->sdr_cache_ctx,
@@ -1757,9 +1760,10 @@ _ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
 	    {
 	      if (ipmi_sdr_cache_ctx_errnum (state_data->sdr_cache_ctx) != IPMI_SDR_CACHE_ERR_NOT_FOUND)
 		{
-		  fprintf (stderr,
-			   "ipmi_sdr_cache_search_record_id: %s\n",
-			   ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
+		  if (state_data->prog_data->args->common.debug)
+		    fprintf (stderr,
+			     "ipmi_sdr_cache_search_record_id: %s\n",
+			     ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
 		  goto cleanup;
 		}
 	      else
