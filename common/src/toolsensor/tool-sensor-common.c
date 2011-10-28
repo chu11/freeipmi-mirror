@@ -105,7 +105,7 @@ get_entity_sensor_name_string (pstdout_state_t pstate,
   char device_id_string[IPMI_SDR_CACHE_MAX_DEVICE_ID_STRING + 1];
   char *id_string_ptr = NULL;
   uint8_t entity_id, entity_instance, entity_instance_type;
-  char *entity_id_str;
+  const char *entity_id_str;
   uint16_t record_id;
   uint8_t record_type;
 
@@ -193,16 +193,7 @@ get_entity_sensor_name_string (pstdout_state_t pstate,
       return (-1);
     }
 
-  if (IPMI_ENTITY_ID_VALID (entity_id))
-    entity_id_str = (char *)ipmi_entity_ids_pretty[entity_id];
-  else if (IPMI_ENTITY_ID_IS_CHASSIS_SPECIFIC (entity_id))
-    entity_id_str = "Chassis Specific";
-  else if (IPMI_ENTITY_ID_IS_BOARD_SET_SPECIFIC (entity_id))
-    entity_id_str = "Board-Set Specific";
-  else if (IPMI_ENTITY_ID_IS_OEM_SYSTEM_INTEGRATOR_DEFINED (entity_id))
-    entity_id_str = "OEM System Integrator";
-  else
-    entity_id_str = "OEM Entity"; /* vendor screwed up, assume it's an OEM entity id */
+  entity_id_str = ipmi_get_entity_id_string (entity_id);
 
   /* a few special cases, for entity_ids are special, the vendor has
    * specifically stated there is no "entity" associated with this sdr
