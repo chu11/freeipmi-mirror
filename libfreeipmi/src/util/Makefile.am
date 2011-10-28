@@ -12,6 +12,7 @@ libutil_la_SOURCES = \
 	ipmi-channel-util.c \
 	ipmi-cipher-suite-util.c \
 	ipmi-device-types-util.c \
+	ipmi-entity-ids-util.c \
 	ipmi-error-util.c \
 	ipmi-error-dcmi-util.c \
 	ipmi-iana-enterprise-numbers-util.c \

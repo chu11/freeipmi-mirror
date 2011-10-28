@@ -121,6 +121,9 @@ extern "C" {
     && ((__entity_id - 1) <= (IPMI_ENTITY_ID_OEM_SYSTEM_INTEGRATOR_DEFINED_MAX - 1))) ? 1 : 0)
 
 extern const char *const ipmi_entity_ids[];
+extern const char *const ipmi_entity_id_chassis_specific;
+extern const char *const ipmi_entity_id_board_set_specific;
+extern const char *const ipmi_entity_id_oem_system_integrator;
 
 /* properly capitalize, for some entries if entity has an "or" or "/" remove it and pick one element, etc. */
 extern const char *const ipmi_entity_ids_pretty[];

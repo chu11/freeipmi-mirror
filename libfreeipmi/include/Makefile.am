@@ -136,6 +136,7 @@ nobase_include_HEADERS = \
 	freeipmi/util/ipmi-channel-util.h \
 	freeipmi/util/ipmi-cipher-suite-util.h \
 	freeipmi/util/ipmi-device-types-util.h \
+	freeipmi/util/ipmi-entity-ids-util.h \
 	freeipmi/util/ipmi-error-util.h \
 	freeipmi/util/ipmi-error-dcmi-util.h \
 	freeipmi/util/ipmi-iana-enterprise-numbers-util.h \

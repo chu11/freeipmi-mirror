@@ -1,3 +1,15 @@
+2011-10-28  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-entity-ids-spec.h,
+	libfreeipmi/src/spec/ipmi-entity-ids-spec.c: Add new defines for
+	non-standard entity ids to model sensor types code.
+
+	* libfreeipmi/include/freeipmi/util/ipmi-entity-ids-util.h,
+	libfreeipmi/src/util/ipmi-entity-ids-util.c: New file.
+
+	* common/src/toolsensor/tool-sensor-common.c (get_entity_sensor_name_string):
+	Use new library function.
+	
 2011-10-27  Albert Chu <chu11@llnl.gov>
 
 	* Support new --sdr-cache-file option globally.

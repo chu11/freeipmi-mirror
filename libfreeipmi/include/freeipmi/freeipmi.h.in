@@ -127,6 +127,7 @@ extern "C" {
 #include <freeipmi/util/ipmi-channel-util.h>
 #include <freeipmi/util/ipmi-cipher-suite-util.h>
 #include <freeipmi/util/ipmi-device-types-util.h>
+#include <freeipmi/util/ipmi-entity-ids-util.h>
 #include <freeipmi/util/ipmi-error-util.h>
 #include <freeipmi/util/ipmi-error-dcmi-util.h>
 #include <freeipmi/util/ipmi-iana-enterprise-numbers-util.h>
