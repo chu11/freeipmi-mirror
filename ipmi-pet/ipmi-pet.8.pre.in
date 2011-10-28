@@ -24,14 +24,16 @@ While an IPMI session is not required to interpret a PET, data from
 the sensor data repository (SDR) is required to properly interpret
 sensor names and other information in the PET.  IPMI session
 configuration below, such as driver, hostname, username, etc. should
-be configured to load the SDR of the appropriate host.  If the
-\fB\-\-ignore\-sdr\-cache\fR option is specified, an SDR will not be
-loaded, and an IPMI session will not be required.  The PET will be
-interpreted as best as possible given no SDR.  The
-\fB\-\-ignore\-sdr\-cache\fR option may affect other options such as
-\fB\-\-interpret\-oem\-data\fR too.  Some options, such as
-\fB\-\-manufacturer\-id\fR and \fB\-\-product\-id\fR may alleviate
-some of these issues.
+be configured to load the SDR of the host where the trap originated.
+If this is difficult to perform, it may be wise to cache and load a
+specific SDR cache using the \fB\-\-sdr\-cache\-file\fR option.
+If the SDR is difficult to obtain, the \fB\-\-ignore\-sdr\-cache\fR
+option can be specified so that an SDR will not be loaded, and an IPMI
+session will not be required.  The PET will be interpreted as best as
+possible given no SDR.  The \fB\-\-ignore\-sdr\-cache\fR option may
+affect other options such as \fB\-\-interpret\-oem\-data\fR too.  Some
+options, such as \fB\-\-manufacturer\-id\fR and \fB\-\-product\-id\fR
+may alleviate some of these issues.
 
 If the SNMP daemon does not output a SNMPv1 \fIspecific trap\fR on its
 own, it is typically output as the last element of the OID in SNMPv2.
