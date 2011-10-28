@@ -99,7 +99,10 @@ typedef struct ipmi_fru_parse_field ipmi_fru_parse_field_t;
 
 typedef struct ipmi_fru_parse_ctx *ipmi_fru_parse_ctx_t;
 
-/* FRU Parse Context Functions */
+/* FRU Parse Context Functions
+ * - ipmi_ctx assumes ipmi opened and ready to go
+ * - ipmi_ctx is optional, if NULL ctx cannot be for FRU reading, only parsing records
+ */
 ipmi_fru_parse_ctx_t ipmi_fru_parse_ctx_create (ipmi_ctx_t ipmi_ctx);
 void ipmi_fru_parse_ctx_destroy (ipmi_fru_parse_ctx_t ctx);
 int ipmi_fru_parse_ctx_errnum (ipmi_fru_parse_ctx_t ctx);

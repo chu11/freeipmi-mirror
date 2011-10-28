@@ -13,6 +13,10 @@
 	* ipmi-sel/src/ipmi-sel.c (_normal_output_sensor_name_and_type):
 	Code cleanup, split function into _normal_output_sensor_name and
 	_normal_output_sensor_type.  Update code accordingly.
+
+        * libfreeipmi/src/fru-parse/,
+        libfreeipmi/include/freeipmi/fru-parse/ipmi-fru-parse.h: Allow
+        creation of FRU ctx with NULL ipmi_ctx.
 	
 2011-10-27  Albert Chu <chu11@llnl.gov>
 
