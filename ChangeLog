@@ -14,6 +14,8 @@
 	* common/src/toolsdr/tool-sdr-cache-common.h,
 	common/src/toolsdr/tool-sdr-cache-common.c (ipmi_sdr_cache_search_sensor_wrapper): Write new common function.
 
+	* common/src/toolevent/: New common library.
+
 	* ipmi-sel/: Update to use new convenience functions.
 
 2011-10-31  Albert Chu <chu11@llnl.gov>
