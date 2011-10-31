@@ -81,4 +81,15 @@ int event_output_not_available_sensor_type (pstdout_state_t pstate,
 					    struct sensor_column_width *column_width,
 					    int comma_separated_output);
 
+int event_output_event_direction (pstdout_state_t pstate,
+				  ipmi_sel_parse_ctx_t sel_parse_ctx,
+				  uint8_t *sel_record,
+				  unsigned int sel_record_len,
+				  int comma_separated_output,
+				  int debug,
+				  unsigned int flags);
+
+int event_output_not_available_event_direction (pstdout_state_t pstate,
+						int comma_separated_output);
+
 #endif

@@ -1025,41 +1025,17 @@ _normal_output_event_state (ipmi_sel_state_data_t *state_data, unsigned int flag
 static int
 _normal_output_event_direction (ipmi_sel_state_data_t *state_data, unsigned int flags)
 {
-  char outbuf[EVENT_OUTPUT_BUFLEN+1];
-  int outbuf_len;
-
   assert (state_data);
   assert (!state_data->prog_data->args->legacy_output);
   assert (state_data->prog_data->args->verbose_count >= 1);
 
-  memset (outbuf, '\0', EVENT_OUTPUT_BUFLEN+1);
-  if ((outbuf_len = ipmi_sel_parse_read_record_string (state_data->sel_parse_ctx,
-                                                       "%k",
-                                                       outbuf,
-                                                       EVENT_OUTPUT_BUFLEN,
-                                                       flags)) < 0)
-    {
-      if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_read_record_string") < 0)
-        return (-1);
-      return (0);
-    }
-
-  if (state_data->prog_data->args->comma_separated_output)
-    {
-      if (outbuf_len)
-        pstdout_printf (state_data->pstate, ",%s", outbuf);
-      else
-        pstdout_printf (state_data->pstate, ",%s", EVENT_NA_STRING);
-    }
-  else
-    {
-      if (outbuf_len)
-        pstdout_printf (state_data->pstate, " | %-17s", outbuf);
-      else
-        pstdout_printf (state_data->pstate, " | %-17s", EVENT_NA_STRING);
-    }
-
-  return (1);
+  return (event_output_event_direction (state_data->pstate,
+					state_data->sel_parse_ctx,
+					NULL,
+					0,
+					state_data->prog_data->args->comma_separated_output,
+					state_data->prog_data->args->common.debug,
+					flags));
 }
 
 /* return 1 on success
@@ -1073,12 +1049,8 @@ _normal_output_not_available_event_direction (ipmi_sel_state_data_t *state_data)
   assert (!state_data->prog_data->args->legacy_output);
   assert (state_data->prog_data->args->verbose_count >= 1);
 
-  if (state_data->prog_data->args->comma_separated_output)
-    pstdout_printf (state_data->pstate, ",%s", EVENT_NA_STRING);
-  else
-    pstdout_printf (state_data->pstate, " | %-17s", EVENT_NA_STRING);
-
-  return (1);
+  return (event_output_not_available_event_direction (state_data->pstate,
+						      state_data->prog_data->args->comma_separated_output));
 }
 
 /* return length written into buffer on success (may be zero)

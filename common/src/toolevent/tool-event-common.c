@@ -299,7 +299,6 @@ event_output_sensor_name (pstdout_state_t pstate,
       memset (outbuf, '\0', EVENT_OUTPUT_BUFLEN+1);
       if (sel_record && sel_record_len)
 	{
-	  memset (outbuf, '\0', EVENT_OUTPUT_BUFLEN+1);
 	  if ((outbuf_len = ipmi_sel_parse_format_record_string (sel_parse_ctx,
 								 "%s",
 								 sel_record,
@@ -403,20 +402,43 @@ event_output_sensor_type (pstdout_state_t pstate,
   assert (column_width);
 
   memset (outbuf, '\0', EVENT_OUTPUT_BUFLEN+1);
-  if ((outbuf_len = ipmi_sel_parse_read_record_string (sel_parse_ctx,
-                                                       "%T",
-                                                       outbuf,
-                                                       EVENT_OUTPUT_BUFLEN,
-                                                       flags)) < 0)
+  if (sel_record && sel_record_len)
     {
-      if (_sel_parse_err_handle (pstate,
-				 sel_parse_ctx,
-				 sel_record,
-				 sel_record_len,
-				 debug,
-				 "ipmi_sel_parse_read_record_string") < 0)
-	return (-1);
-      return (0);
+      if ((outbuf_len = ipmi_sel_parse_format_record_string (sel_parse_ctx,
+							     "%T",
+							     sel_record,
+							     sel_record_len,
+							     outbuf,
+							     EVENT_OUTPUT_BUFLEN,
+							     flags)) < 0)
+	{
+	  if (_sel_parse_err_handle (pstate,
+				     sel_parse_ctx,
+				     sel_record,
+				     sel_record_len,
+				     debug,
+				     "ipmi_sel_parse_format_record_string") < 0)
+	    return (-1);
+	  return (0);
+	}
+    }
+  else
+    {
+      if ((outbuf_len = ipmi_sel_parse_read_record_string (sel_parse_ctx,
+							   "%T",
+							   outbuf,
+							   EVENT_OUTPUT_BUFLEN,
+							   flags)) < 0)
+	{
+	  if (_sel_parse_err_handle (pstate,
+				     sel_parse_ctx,
+				     NULL,
+				     0,
+				     debug,
+				     "ipmi_sel_parse_read_record_string") < 0)
+	    return (-1);
+	  return (0);
+	}
     }
   
   if (outbuf_len > column_width->sensor_type)
@@ -447,7 +469,7 @@ event_output_not_available_sensor_type (pstdout_state_t pstate,
 					int comma_separated_output)
 {
   char fmt[EVENT_FMT_BUFLEN + 1];
-  
+
   assert (column_width);
   
   memset (fmt, '\0', EVENT_FMT_BUFLEN + 1);
@@ -463,5 +485,89 @@ event_output_not_available_sensor_type (pstdout_state_t pstate,
   
   PSTDOUT_PRINTF (pstate, fmt, EVENT_NA_STRING);
 
+  return (1);
+}
+
+int
+event_output_event_direction (pstdout_state_t pstate,
+			      ipmi_sel_parse_ctx_t sel_parse_ctx,
+			      uint8_t *sel_record,
+			      unsigned int sel_record_len,
+			      int comma_separated_output,
+			      int debug,
+			      unsigned int flags)
+{
+  char outbuf[EVENT_OUTPUT_BUFLEN+1];
+  int outbuf_len;
+
+  assert (sel_parse_ctx);
+  
+  memset (outbuf, '\0', EVENT_OUTPUT_BUFLEN+1);
+  if (sel_record && sel_record_len)
+    {
+      if ((outbuf_len = ipmi_sel_parse_format_record_string (sel_parse_ctx,
+							     "%k",
+							     sel_record,
+							     sel_record_len,
+							     outbuf,
+							     EVENT_OUTPUT_BUFLEN,
+							     flags)) < 0)
+	{
+	  if (_sel_parse_err_handle (pstate,
+				     sel_parse_ctx,
+				     sel_record,
+				     sel_record_len,
+				     debug,
+				     "ipmi_sel_parse_format_record_string") < 0)
+	    return (-1);
+	  return (0);
+	}
+    }
+  else
+    {
+      if ((outbuf_len = ipmi_sel_parse_read_record_string (sel_parse_ctx,
+							   "%k",
+							   outbuf,
+							   EVENT_OUTPUT_BUFLEN,
+							   flags)) < 0)
+	{
+	  if (_sel_parse_err_handle (pstate,
+				     sel_parse_ctx,
+				     NULL,
+				     0,
+				     debug,
+				     "ipmi_sel_parse_read_record_string") < 0)
+	    return (-1);
+	  return (0);
+	}
+    }
+  
+  if (comma_separated_output)
+    {
+      if (outbuf_len)
+        PSTDOUT_PRINTF (pstate, ",%s", outbuf);
+      else
+        PSTDOUT_PRINTF (pstate, ",%s", EVENT_NA_STRING);
+    }
+  else
+    {
+      if (outbuf_len)
+        PSTDOUT_PRINTF (pstate, " | %-17s", outbuf);
+      else
+        PSTDOUT_PRINTF (pstate, " | %-17s", EVENT_NA_STRING);
+    }
+
+  return (1);
+}
+
+int
+event_output_not_available_event_direction (pstdout_state_t pstate,
+					    int comma_separated_output)
+{
+  if (comma_separated_output)
+    PSTDOUT_PRINTF (pstate, ",%s", EVENT_NA_STRING);
+  else
+    PSTDOUT_PRINTF (pstate, " | %-17s", EVENT_NA_STRING);
+  
   return (1);
 }
