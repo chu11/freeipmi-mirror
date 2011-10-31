@@ -807,7 +807,7 @@ _normal_output_record_id (ipmi_sel_state_data_t *state_data, unsigned int flags)
  * return (-1) on error
  */
 static int
-_normal_output_date_and_time (ipmi_sel_state_data_t *state_data, unsigned int flags)
+_normal_output_date (ipmi_sel_state_data_t *state_data, unsigned int flags)
 {
   char outbuf[IPMI_SEL_OUTPUT_BUFLEN+1];
   int outbuf_len;
@@ -841,6 +841,40 @@ _normal_output_date_and_time (ipmi_sel_state_data_t *state_data, unsigned int fl
       else
         pstdout_printf (state_data->pstate, " | %-11s", IPMI_SEL_NA_STRING);
     }
+
+  return (1);
+}
+
+/* return 1 on success
+ * return (0) on non-success, but don't fail
+ * return (-1) on error
+ */
+static int
+_normal_output_not_available_date (ipmi_sel_state_data_t *state_data)
+{
+  assert (state_data);
+  assert (!state_data->prog_data->args->legacy_output);
+
+  if (state_data->prog_data->args->comma_separated_output)
+    pstdout_printf (state_data->pstate, ",%s", IPMI_SEL_NA_STRING);
+  else
+    pstdout_printf (state_data->pstate, " | %-11s", IPMI_SEL_NA_STRING);
+
+  return (1);
+}
+
+/* return 1 on success
+ * return (0) on non-success, but don't fail
+ * return (-1) on error
+ */
+static int
+_normal_output_time (ipmi_sel_state_data_t *state_data, unsigned int flags)
+{
+  char outbuf[IPMI_SEL_OUTPUT_BUFLEN+1];
+  int outbuf_len;
+
+  assert (state_data);
+  assert (!state_data->prog_data->args->legacy_output);
 
   memset (outbuf, '\0', IPMI_SEL_OUTPUT_BUFLEN+1);
   if ((outbuf_len = ipmi_sel_parse_read_record_string (state_data->sel_parse_ctx,
@@ -877,15 +911,15 @@ _normal_output_date_and_time (ipmi_sel_state_data_t *state_data, unsigned int fl
  * return (-1) on error
  */
 static int
-_normal_output_not_available_date_and_time (ipmi_sel_state_data_t *state_data)
+_normal_output_not_available_time (ipmi_sel_state_data_t *state_data)
 {
   assert (state_data);
   assert (!state_data->prog_data->args->legacy_output);
 
   if (state_data->prog_data->args->comma_separated_output)
-    pstdout_printf (state_data->pstate, ",%s,%s", IPMI_SEL_NA_STRING, IPMI_SEL_NA_STRING);
+    pstdout_printf (state_data->pstate, ",%s", IPMI_SEL_NA_STRING);
   else
-    pstdout_printf (state_data->pstate, " | %-11s | %-8s", IPMI_SEL_NA_STRING, IPMI_SEL_NA_STRING);
+    pstdout_printf (state_data->pstate, " | %-8s", IPMI_SEL_NA_STRING);
 
   return (1);
 }
@@ -1714,7 +1748,13 @@ _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
       if (!ret)
         goto out;
 
-      if ((ret = _normal_output_date_and_time (state_data, flags)) < 0)
+      if ((ret = _normal_output_date (state_data, flags)) < 0)
+        goto cleanup;
+
+      if (!ret)
+        goto newline_out;
+
+      if ((ret = _normal_output_time (state_data, flags)) < 0)
         goto cleanup;
 
       if (!ret)
@@ -1767,7 +1807,13 @@ _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
       if (!ret)
         goto out;
 
-      if ((ret = _normal_output_date_and_time (state_data, flags)) < 0)
+      if ((ret = _normal_output_date (state_data, flags)) < 0)
+        goto cleanup;
+
+      if (!ret)
+        goto newline_out;
+
+      if ((ret = _normal_output_time (state_data, flags)) < 0)
         goto cleanup;
 
       if (!ret)
@@ -1820,7 +1866,13 @@ _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
       if (!ret)
         goto out;
 
-      if ((ret = _normal_output_not_available_date_and_time (state_data)) < 0)
+      if ((ret = _normal_output_not_available_date (state_data)) < 0)
+        goto cleanup;
+
+      if (!ret)
+        goto newline_out;
+
+      if ((ret = _normal_output_not_available_time (state_data)) < 0)
         goto cleanup;
 
       if (!ret)

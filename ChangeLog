@@ -1,3 +1,9 @@
+2011-10-31  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sel/src/ipmi-sel.c (_normal_output_date_and_time)
+	(_normal_output_not_available_date_and_time): Split into date and
+	time specific functions.  Adjust other code appropriately.
+	
 2011-10-28  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/spec/ipmi-entity-ids-spec.h,
