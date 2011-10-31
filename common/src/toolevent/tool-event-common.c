@@ -384,3 +384,84 @@ event_output_not_available_sensor_name (pstdout_state_t pstate,
 
   return (1);
 }
+
+int
+event_output_sensor_type (pstdout_state_t pstate,
+			  ipmi_sel_parse_ctx_t sel_parse_ctx,
+			  uint8_t *sel_record,
+			  unsigned int sel_record_len,
+			  struct sensor_column_width *column_width,
+			  int comma_separated_output,
+			  int debug,
+			  unsigned int flags)
+{
+  char fmt[EVENT_FMT_BUFLEN + 1];
+  char outbuf[EVENT_OUTPUT_BUFLEN+1];
+  int outbuf_len;
+
+  assert (sel_parse_ctx);
+  assert (column_width);
+
+  memset (outbuf, '\0', EVENT_OUTPUT_BUFLEN+1);
+  if ((outbuf_len = ipmi_sel_parse_read_record_string (sel_parse_ctx,
+                                                       "%T",
+                                                       outbuf,
+                                                       EVENT_OUTPUT_BUFLEN,
+                                                       flags)) < 0)
+    {
+      if (_sel_parse_err_handle (pstate,
+				 sel_parse_ctx,
+				 sel_record,
+				 sel_record_len,
+				 debug,
+				 "ipmi_sel_parse_read_record_string") < 0)
+	return (-1);
+      return (0);
+    }
+  
+  if (outbuf_len > column_width->sensor_type)
+    column_width->sensor_type = outbuf_len;
+  
+  memset (fmt, '\0', EVENT_FMT_BUFLEN + 1);
+  if (comma_separated_output)
+    snprintf (fmt,
+              EVENT_FMT_BUFLEN,
+              ",%%s");
+  else
+    snprintf (fmt,
+              EVENT_FMT_BUFLEN,
+              " | %%-%ds",
+              column_width->sensor_type);
+
+  if (outbuf_len)
+    PSTDOUT_PRINTF (pstate, fmt, outbuf);
+  else
+    PSTDOUT_PRINTF (pstate, fmt, EVENT_NA_STRING);
+  
+  return (1);
+}
+
+int
+event_output_not_available_sensor_type (pstdout_state_t pstate,
+					struct sensor_column_width *column_width,
+					int comma_separated_output)
+{
+  char fmt[EVENT_FMT_BUFLEN + 1];
+  
+  assert (column_width);
+  
+  memset (fmt, '\0', EVENT_FMT_BUFLEN + 1);
+  if (comma_separated_output)
+    snprintf (fmt,
+              EVENT_FMT_BUFLEN,
+              ",%%s");
+  else
+    snprintf (fmt,
+              EVENT_FMT_BUFLEN,
+              " | %%-%ds",
+              column_width->sensor_type);
+  
+  PSTDOUT_PRINTF (pstate, fmt, EVENT_NA_STRING);
+
+  return (1);
+}
