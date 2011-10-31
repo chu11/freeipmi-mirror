@@ -759,9 +759,9 @@ _output_not_available_date (ipmi_pet_state_data_t *state_data)
   assert (state_data);
 
   if (state_data->prog_data->args->comma_separated_output)
-    printf (",%s", EVENT_NA_STRING);
+    printf ("%s", EVENT_NA_STRING);
   else
-    printf (" | %-11s", EVENT_NA_STRING);
+    printf ("%-11s", EVENT_NA_STRING);
 
   return (1);
 }
