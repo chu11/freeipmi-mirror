@@ -31,6 +31,21 @@
 #define EVENT_NA_STRING        "N/A"
 #define EVENT_OUTPUT_SEPARATOR " ; "
 
+/* All output functions
+ * return 1 on success
+ * return (0) on non-success, but don't fail
+ * return (-1) on error
+ */
 
+int event_output_time (pstdout_state_t pstate,
+		       ipmi_sel_parse_ctx_t sel_parse_ctx,
+		       uint8_t *sel_record,
+		       unsigned int sel_record_len,
+		       int comma_separated_output,
+		       int debug,
+		       unsigned int flags);
 				       
+int event_output_not_available_time (pstdout_state_t pstate,
+				     int comma_separated_output);
+
 #endif
