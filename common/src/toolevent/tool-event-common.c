@@ -32,6 +32,7 @@
 #include <freeipmi/freeipmi.h>
 
 #include "tool-event-common.h"
+#include "tool-sdr-cache-common.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
@@ -72,9 +73,6 @@ _sel_parse_err_handle (pstdout_state_t pstate,
                    ipmi_sel_parse_ctx_errormsg (sel_parse_ctx));
   return (-1);
 }
-
-
-/* struct sensor_column_width *column_width */
 
 int
 event_output_time (pstdout_state_t pstate,
@@ -156,6 +154,233 @@ event_output_not_available_time (pstdout_state_t pstate,
     PSTDOUT_PRINTF (pstate, ",%s", EVENT_NA_STRING);
   else
     PSTDOUT_PRINTF (pstate, " | %-8s", EVENT_NA_STRING);
+
+  return (1);
+}
+
+int
+event_output_sensor_name (pstdout_state_t pstate,
+			  ipmi_sel_parse_ctx_t sel_parse_ctx,
+			  ipmi_sdr_cache_ctx_t sdr_cache_ctx,
+			  ipmi_sdr_parse_ctx_t sdr_parse_ctx,
+			  uint8_t *sel_record,
+			  unsigned int sel_record_len,
+			  struct sensor_entity_id_counts *entity_id_counts,
+			  struct sensor_column_width *column_width,
+			  struct sdr_cmd_args *sdr,
+			  int entity_sensor_names,
+			  int comma_separated_output,
+			  int debug,
+			  unsigned int flags)
+{
+  char fmt[EVENT_FMT_BUFLEN + 1];
+  char outbuf[EVENT_OUTPUT_BUFLEN+1];
+  int outbuf_len;
+
+  assert (sel_parse_ctx);
+  assert (sdr_cache_ctx);
+  assert (sdr_parse_ctx);
+  assert (column_width);
+
+  if (entity_sensor_names
+      && !sdr->ignore_sdr_cache)
+    {
+      uint8_t sensor_number, generator_id;
+      uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
+      int sdr_record_len = 0;
+
+      if (sel_record && sel_record_len)
+	{
+	  if (ipmi_sel_parse_record_generator_id (sel_parse_ctx,
+						  sel_record,
+						  sel_record_len,
+						  &generator_id) < 0)
+	    {
+	      if (_sel_parse_err_handle (pstate,
+					 sel_parse_ctx,
+					 sel_record,
+					 sel_record_len,
+					 debug,
+					 "ipmi_sel_parse_record_generator_id") < 0)
+		return (-1);
+	      return (0);
+	    }
+	  
+	  if (ipmi_sel_parse_record_sensor_number (sel_parse_ctx,
+						   sel_record,
+						   sel_record_len,
+						   &sensor_number) < 0)
+	    {
+	      if (_sel_parse_err_handle (pstate,
+					 sel_parse_ctx,
+					 sel_record,
+					 sel_record_len,
+					 debug,
+					 "ipmi_sel_parse_record_sensor_number") < 0)
+		return (-1);
+	      return (0);
+	    }
+	}
+      else
+	{
+	  if (ipmi_sel_parse_read_generator_id (sel_parse_ctx,
+						&generator_id) < 0)
+	    {
+	      if (_sel_parse_err_handle (pstate,
+					 sel_parse_ctx,
+					 NULL,
+					 0,
+					 debug,
+					 "ipmi_sel_parse_read_generator_id") < 0)
+		return (-1);
+	      return (0);
+	    }
+	  
+	  if (ipmi_sel_parse_read_sensor_number (sel_parse_ctx,
+						 &sensor_number) < 0)
+	    {
+	      if (_sel_parse_err_handle (pstate,
+					 sel_parse_ctx,
+					 NULL,
+					 0,
+					 debug,
+					 "ipmi_sel_parse_read_sensor_number") < 0)
+		return (-1);
+	      return (0);
+	    }
+	}
+
+      /* achu: really shouldn't do this, b/c sel-parse library uses                                              
+       * this, but sel-parse lib doesn't iterate over the cache, so                                              
+       * it's ok.  If we need to later, we'll open a new sdr_cache                                               
+       */
+      if (ipmi_sdr_cache_search_sensor_wrapper (sdr_cache_ctx,
+                                                sensor_number,
+                                                generator_id) < 0)
+        {
+          if (debug)
+            PSTDOUT_FPRINTF (pstate,
+                             stderr,
+                             "ipmi_sdr_cache_search_sensor: %s\n",
+                             ipmi_sdr_cache_ctx_errormsg (sdr_cache_ctx));
+          goto normal_sensor_output;
+        }
+
+      if ((sdr_record_len = ipmi_sdr_cache_record_read (sdr_cache_ctx,
+                                                        sdr_record,
+                                                        IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH)) < 0)
+        {
+          PSTDOUT_FPRINTF (pstate,
+                           stderr,
+                           "ipmi_sdr_cache_record_read: %s\n",
+                           ipmi_sdr_cache_ctx_errormsg (sdr_cache_ctx));
+          return (-1);
+        }
+
+      memset (outbuf, '\0', EVENT_OUTPUT_BUFLEN+1);
+      if (get_entity_sensor_name_string (pstate,
+                                         sdr_parse_ctx,
+                                         sdr_record,
+                                         sdr_record_len,
+                                         entity_id_counts,
+                                         &sensor_number,
+                                         outbuf,
+                                         EVENT_OUTPUT_BUFLEN) < 0)
+        return (-1);
+      
+      outbuf_len = strlen (outbuf);
+      if (!outbuf_len)
+        goto normal_sensor_output;
+    }
+  else
+    {
+    normal_sensor_output:
+
+      memset (outbuf, '\0', EVENT_OUTPUT_BUFLEN+1);
+      if (sel_record && sel_record_len)
+	{
+	  memset (outbuf, '\0', EVENT_OUTPUT_BUFLEN+1);
+	  if ((outbuf_len = ipmi_sel_parse_format_record_string (sel_parse_ctx,
+								 "%s",
+								 sel_record,
+								 sel_record_len,
+								 outbuf,
+								 EVENT_OUTPUT_BUFLEN,
+								 flags)) < 0)
+	    {
+	      if (_sel_parse_err_handle (pstate,
+                                         sel_parse_ctx,
+                                         sel_record,
+					 sel_record_len,
+                                         debug,
+					 "ipmi_sel_parse_format_record_string") < 0)
+		return (-1);
+	      return (0);
+	    }
+	}
+      else
+	{
+	  if ((outbuf_len = ipmi_sel_parse_read_record_string (sel_parse_ctx,
+							       "%s",
+							       outbuf,
+							       EVENT_OUTPUT_BUFLEN,
+							       flags)) < 0)
+	    {
+	      if (_sel_parse_err_handle (pstate,
+                                         sel_parse_ctx,
+                                         NULL,
+                                         0,
+                                         debug,
+					 "ipmi_sel_parse_read_record_string") < 0)
+		return (-1);
+	      return (0);
+	    }
+	}
+    }
+
+  if (outbuf_len > column_width->sensor_name)
+    column_width->sensor_name = outbuf_len;
+
+  memset (fmt, '\0', EVENT_FMT_BUFLEN + 1);
+  if (comma_separated_output)
+    snprintf (fmt,
+              EVENT_FMT_BUFLEN,
+              ",%%s");
+  else
+    snprintf (fmt,
+              EVENT_FMT_BUFLEN,
+              " | %%-%ds",
+              column_width->sensor_name);
+
+  if (outbuf_len)
+    PSTDOUT_PRINTF (pstate, fmt, outbuf);
+  else
+    PSTDOUT_PRINTF (pstate, fmt, EVENT_NA_STRING);
+
+  return (1);
+}
+
+int
+event_output_not_available_sensor_name (pstdout_state_t pstate,
+					struct sensor_column_width *column_width,
+					int comma_separated_output)
+{
+  char fmt[EVENT_FMT_BUFLEN + 1];
+
+  assert (column_width);
+
+  memset (fmt, '\0', EVENT_FMT_BUFLEN + 1);
+  if (comma_separated_output)
+    snprintf (fmt,
+              EVENT_FMT_BUFLEN,
+              ",%%s");
+  else
+    snprintf (fmt,
+              EVENT_FMT_BUFLEN,
+              " | %%-%ds",
+              column_width->sensor_name);
+
+  PSTDOUT_PRINTF (pstate, fmt, EVENT_NA_STRING);
 
   return (1);
 }

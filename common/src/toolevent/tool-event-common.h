@@ -24,6 +24,8 @@
 
 #include <freeipmi/freeipmi.h>
 
+#include "tool-cmdline-common.h"
+#include "tool-sensor-common.h"
 #include "pstdout.h"
 
 #define EVENT_FMT_BUFLEN       4096
@@ -47,5 +49,23 @@ int event_output_time (pstdout_state_t pstate,
 				       
 int event_output_not_available_time (pstdout_state_t pstate,
 				     int comma_separated_output);
+
+int event_output_sensor_name (pstdout_state_t pstate,
+			      ipmi_sel_parse_ctx_t sel_parse_ctx,
+			      ipmi_sdr_cache_ctx_t sdr_cache_ctx,
+			      ipmi_sdr_parse_ctx_t sdr_parse_ctx,
+			      uint8_t *sel_record,
+			      unsigned int sel_record_len,
+			      struct sensor_entity_id_counts *entity_id_counts,
+			      struct sensor_column_width *column_width,
+			      struct sdr_cmd_args *sdr,
+			      int entity_sensor_names,
+			      int comma_separated_output,
+			      int debug,
+			      unsigned int flags);
+
+int event_output_not_available_sensor_name (pstdout_state_t pstate,
+					    struct sensor_column_width *column_width,
+					    int comma_separated_output);
 
 #endif
