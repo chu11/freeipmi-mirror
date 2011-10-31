@@ -704,10 +704,10 @@ _sel_parse_err_handle (ipmi_pet_state_data_t *state_data, char *func)
  * return (-1) on error
  */
 static int
-_output_date_and_time (ipmi_pet_state_data_t *state_data,
-		       uint8_t *sel_record,
-		       unsigned int sel_record_len,
-		       unsigned int flags)
+_output_date (ipmi_pet_state_data_t *state_data,
+	      uint8_t *sel_record,
+	      unsigned int sel_record_len,
+	      unsigned int flags)
 {
   char outbuf[EVENT_OUTPUT_BUFLEN+1];
   int outbuf_len;
@@ -744,6 +744,44 @@ _output_date_and_time (ipmi_pet_state_data_t *state_data,
       else
         printf ("%-11s", EVENT_NA_STRING);
     }
+
+  return (1);
+}
+
+
+/* return 1 on success
+ * return (0) on non-success, but don't fail
+ * return (-1) on error
+ */
+static int
+_output_not_available_date (ipmi_pet_state_data_t *state_data)
+{
+  assert (state_data);
+
+  if (state_data->prog_data->args->comma_separated_output)
+    printf (",%s", EVENT_NA_STRING);
+  else
+    printf (" | %-11s", EVENT_NA_STRING);
+
+  return (1);
+}
+
+/* return 1 on success
+ * return (0) on non-success, but don't fail
+ * return (-1) on error
+ */
+static int
+_output_time (ipmi_pet_state_data_t *state_data,
+	      uint8_t *sel_record,
+	      unsigned int sel_record_len,
+	      unsigned int flags)
+{
+  char outbuf[EVENT_OUTPUT_BUFLEN+1];
+  int outbuf_len;
+
+  assert (state_data);
+  assert (sel_record);
+  assert (sel_record_len);
 
   memset (outbuf, '\0', EVENT_OUTPUT_BUFLEN+1);
   if ((outbuf_len = ipmi_sel_parse_format_record_string (state_data->sel_parse_ctx,
@@ -783,14 +821,14 @@ _output_date_and_time (ipmi_pet_state_data_t *state_data,
  * return (-1) on error
  */
 static int
-_output_not_available_date_and_time (ipmi_pet_state_data_t *state_data)
+_output_not_available_time (ipmi_pet_state_data_t *state_data)
 {
   assert (state_data);
 
   if (state_data->prog_data->args->comma_separated_output)
-    printf (",%s,%s", EVENT_NA_STRING, EVENT_NA_STRING);
+    printf (",%s", EVENT_NA_STRING);
   else
-    printf (" | %-11s | %-8s", EVENT_NA_STRING, EVENT_NA_STRING);
+    printf (" | %-8s", EVENT_NA_STRING);
 
   return (1);
 }
@@ -1967,20 +2005,39 @@ _ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
   
   if (data.localtimestamp != IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_LOCAL_TIMESTAMP_UNSPECIFIED)
     {
-      if ((ret = _output_date_and_time (state_data,
-					sel_record,
-					IPMI_SEL_RECORD_MAX_RECORD_LENGTH,
-					flags)) < 0)
+      if ((ret = _output_date (state_data,
+			       sel_record,
+			       IPMI_SEL_RECORD_MAX_RECORD_LENGTH,
+			       flags)) < 0)
 	goto cleanup;
+
+      if (!ret)
+	goto newline_out;
+
+      if ((ret = _output_time (state_data,
+			       sel_record,
+			       IPMI_SEL_RECORD_MAX_RECORD_LENGTH,
+			       flags)) < 0)
+	goto cleanup;
+
+      if (!ret)
+	goto newline_out;
     }
   else
     {
-      if ((ret = _output_not_available_date_and_time (state_data)) < 0)
+      if ((ret = _output_not_available_date (state_data)) < 0)
 	goto cleanup;
+
+      if (!ret)
+	goto newline_out;
+
+      if ((ret = _output_not_available_time (state_data)) < 0)
+	goto cleanup;
+
+      if (!ret)
+	goto newline_out;
     }
 
-  if (!ret)
-    goto newline_out;
   
   if ((ret = _output_sensor_name (state_data,
 				  sel_record,
