@@ -704,10 +704,10 @@ _sel_parse_err_handle (ipmi_pet_state_data_t *state_data, char *func)
  * return (-1) on error
  */
 static int
-_normal_output_date_and_time (ipmi_pet_state_data_t *state_data,
-			      uint8_t *sel_record,
-			      unsigned int sel_record_len,
-			      unsigned int flags)
+_output_date_and_time (ipmi_pet_state_data_t *state_data,
+		       uint8_t *sel_record,
+		       unsigned int sel_record_len,
+		       unsigned int flags)
 {
   char outbuf[EVENT_OUTPUT_BUFLEN+1];
   int outbuf_len;
@@ -783,7 +783,7 @@ _normal_output_date_and_time (ipmi_pet_state_data_t *state_data,
  * return (-1) on error
  */
 static int
-_normal_output_not_available_date_and_time (ipmi_pet_state_data_t *state_data)
+_output_not_available_date_and_time (ipmi_pet_state_data_t *state_data)
 {
   assert (state_data);
 
@@ -800,10 +800,10 @@ _normal_output_not_available_date_and_time (ipmi_pet_state_data_t *state_data)
  * return (-1) on error
  */
 static int
-_normal_output_sensor_name (ipmi_pet_state_data_t *state_data,
-			    uint8_t *sel_record,
-			    unsigned int sel_record_len,
-			    unsigned int flags)
+_output_sensor_name (ipmi_pet_state_data_t *state_data,
+		     uint8_t *sel_record,
+		     unsigned int sel_record_len,
+		     unsigned int flags)
 {
   char fmt[EVENT_FMT_BUFLEN + 1];
   char outbuf[EVENT_OUTPUT_BUFLEN+1];
@@ -929,10 +929,10 @@ _normal_output_sensor_name (ipmi_pet_state_data_t *state_data,
  * return (-1) on error
  */
 static int
-_normal_output_sensor_type (ipmi_pet_state_data_t *state_data,
-			    uint8_t *sel_record,
-			    unsigned int sel_record_len,
-			    unsigned int flags)
+_output_sensor_type (ipmi_pet_state_data_t *state_data,
+		     uint8_t *sel_record,
+		     unsigned int sel_record_len,
+		     unsigned int flags)
 {
   char fmt[EVENT_FMT_BUFLEN + 1];
   char outbuf[EVENT_OUTPUT_BUFLEN+1];
@@ -984,7 +984,7 @@ _normal_output_sensor_type (ipmi_pet_state_data_t *state_data,
  * return (-1) on error
  */
 static int
-_normal_output_not_available_sensor_type (ipmi_pet_state_data_t *state_data)
+_output_not_available_sensor_type (ipmi_pet_state_data_t *state_data)
 {
   char fmt[EVENT_FMT_BUFLEN + 1];
 
@@ -1013,8 +1013,8 @@ _normal_output_not_available_sensor_type (ipmi_pet_state_data_t *state_data)
  * return (-1) on error
  */
 static int
-_normal_output_guid_manufacturer_id_system_id (ipmi_pet_state_data_t *state_data,
-					       struct ipmi_pet_trap_data *data)
+_output_guid_manufacturer_id_system_id (ipmi_pet_state_data_t *state_data,
+					struct ipmi_pet_trap_data *data)
 {
   char fmt[EVENT_FMT_BUFLEN + 1];
   char outbuf[EVENT_OUTPUT_BUFLEN+1];
@@ -1104,9 +1104,9 @@ _normal_output_guid_manufacturer_id_system_id (ipmi_pet_state_data_t *state_data
  * return (-1) on error
  */
 static int
-_normal_output_event_severity (ipmi_pet_state_data_t *state_data,
-			       uint8_t event_severity,
-			       unsigned int flags)
+_output_event_severity (ipmi_pet_state_data_t *state_data,
+			uint8_t event_severity,
+			unsigned int flags)
 {
   char *str = NULL;
 
@@ -1155,10 +1155,10 @@ _normal_output_event_severity (ipmi_pet_state_data_t *state_data,
  * return (-1) on error
  */
 static int
-_normal_output_event_state (ipmi_pet_state_data_t *state_data,
-			    uint8_t *sel_record,
-			    unsigned int sel_record_len,
-			    unsigned int flags)
+_output_event_state (ipmi_pet_state_data_t *state_data,
+		     uint8_t *sel_record,
+		     unsigned int sel_record_len,
+		     unsigned int flags)
 {
   unsigned int sel_state;
   char *sel_state_str = NULL;
@@ -1201,10 +1201,10 @@ _normal_output_event_state (ipmi_pet_state_data_t *state_data,
  * return (-1) on error
  */
 static int
-_normal_output_event_direction (ipmi_pet_state_data_t *state_data,
-				uint8_t *sel_record,
-				unsigned int sel_record_len,
-				unsigned int flags)
+_output_event_direction (ipmi_pet_state_data_t *state_data,
+			 uint8_t *sel_record,
+			 unsigned int sel_record_len,
+			 unsigned int flags)
 {
   char outbuf[EVENT_OUTPUT_BUFLEN+1];
   int outbuf_len;
@@ -1251,7 +1251,7 @@ _normal_output_event_direction (ipmi_pet_state_data_t *state_data,
  * return (-1) on error
  */
 static int
-_normal_output_not_available_event_direction (ipmi_pet_state_data_t *state_data)
+_output_not_available_event_direction (ipmi_pet_state_data_t *state_data)
 {
   assert (state_data);
   assert (state_data->prog_data->args->verbose_count >= 1);
@@ -1350,11 +1350,11 @@ _get_system_event_record_info (ipmi_pet_state_data_t *state_data,
  * return (-1) on error
  */
 static int
-_normal_output_event (ipmi_pet_state_data_t *state_data,
-		      uint8_t *sel_record,
-		      unsigned int sel_record_len,
-		      unsigned int flags,
-		      struct ipmi_pet_trap_data *data)
+_output_event (ipmi_pet_state_data_t *state_data,
+	       uint8_t *sel_record,
+	       unsigned int sel_record_len,
+	       unsigned int flags,
+	       struct ipmi_pet_trap_data *data)
 {
   char fmtbuf[EVENT_OUTPUT_BUFLEN+1];
   char outbuf[EVENT_OUTPUT_BUFLEN+1];
@@ -1567,7 +1567,7 @@ _normal_output_event (ipmi_pet_state_data_t *state_data,
  * return (-1) on error
  */
 static int
-_normal_output_not_available_event (ipmi_pet_state_data_t *state_data)
+_output_not_available_event (ipmi_pet_state_data_t *state_data)
 {
   assert (state_data);
 
@@ -1584,8 +1584,8 @@ _normal_output_not_available_event (ipmi_pet_state_data_t *state_data)
  * return (-1) on error
  */
 static int
-_normal_output_oem_custom (ipmi_pet_state_data_t *state_data,
-			   struct ipmi_pet_trap_data *data)
+_output_oem_custom (ipmi_pet_state_data_t *state_data,
+		    struct ipmi_pet_trap_data *data)
 {
   char outbuf[EVENT_OUTPUT_BUFLEN+1];
   unsigned int outbuflen = 0;
@@ -1967,25 +1967,25 @@ _ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
   
   if (data.localtimestamp != IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_LOCAL_TIMESTAMP_UNSPECIFIED)
     {
-      if ((ret = _normal_output_date_and_time (state_data,
-					       sel_record,
-					       IPMI_SEL_RECORD_MAX_RECORD_LENGTH,
-					       flags)) < 0)
+      if ((ret = _output_date_and_time (state_data,
+					sel_record,
+					IPMI_SEL_RECORD_MAX_RECORD_LENGTH,
+					flags)) < 0)
 	goto cleanup;
     }
   else
     {
-      if ((ret = _normal_output_not_available_date_and_time (state_data)) < 0)
+      if ((ret = _output_not_available_date_and_time (state_data)) < 0)
 	goto cleanup;
     }
 
   if (!ret)
     goto newline_out;
   
-  if ((ret = _normal_output_sensor_name (state_data,
-					 sel_record,
-					 IPMI_SEL_RECORD_MAX_RECORD_LENGTH,
-					 flags)) < 0)
+  if ((ret = _output_sensor_name (state_data,
+				  sel_record,
+				  IPMI_SEL_RECORD_MAX_RECORD_LENGTH,
+				  flags)) < 0)
     goto cleanup;
   
   if (!ret)
@@ -1995,15 +1995,15 @@ _ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
     {
       if (data.sensor_type_cant_be_determined)
 	{
-	  if ((ret = _normal_output_not_available_sensor_type (state_data)) < 0)
+	  if ((ret = _output_not_available_sensor_type (state_data)) < 0)
 	    goto cleanup;	  
 	}
       else
 	{
-	  if ((ret = _normal_output_sensor_type (state_data,
-						 sel_record,
-						 IPMI_SEL_RECORD_MAX_RECORD_LENGTH,
-						 flags)) < 0)
+	  if ((ret = _output_sensor_type (state_data,
+					  sel_record,
+					  IPMI_SEL_RECORD_MAX_RECORD_LENGTH,
+					  flags)) < 0)
 	    goto cleanup;
 	}
 
@@ -2013,7 +2013,7 @@ _ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
 
   if (state_data->prog_data->args->verbose_count >= 2)
     {
-      if ((ret = _normal_output_guid_manufacturer_id_system_id (state_data, &data)) < 0)
+      if ((ret = _output_guid_manufacturer_id_system_id (state_data, &data)) < 0)
 	goto cleanup;
 
       if (!ret)
@@ -2023,9 +2023,9 @@ _ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
   if (state_data->prog_data->args->output_event_severity
       || state_data->prog_data->args->verbose_count >= 1)
     {
-      if ((ret = _normal_output_event_severity (state_data,
-						data.event_severity,
-						flags)) < 0)
+      if ((ret = _output_event_severity (state_data,
+					 data.event_severity,
+					 flags)) < 0)
 	goto cleanup;
       
       if (!ret)
@@ -2034,10 +2034,10 @@ _ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
   
   if (state_data->prog_data->args->output_event_state)
     {
-      if ((ret = _normal_output_event_state (state_data,
-					     sel_record,
-					     IPMI_SEL_RECORD_MAX_RECORD_LENGTH,
-					     flags)) < 0)
+      if ((ret = _output_event_state (state_data,
+				      sel_record,
+				      IPMI_SEL_RECORD_MAX_RECORD_LENGTH,
+				      flags)) < 0)
 	goto cleanup;
 
       if (!ret)
@@ -2049,15 +2049,15 @@ _ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
       if (args->specific_trap_na_specified
 	  && args->sdr.ignore_sdr_cache)
 	{
-	  if ((ret = _normal_output_not_available_event_direction (state_data)) < 0)
+	  if ((ret = _output_not_available_event_direction (state_data)) < 0)
 	    goto cleanup;
 	}
       else
 	{
-	  if ((ret = _normal_output_event_direction (state_data,
-						     sel_record,
-						     IPMI_SEL_RECORD_MAX_RECORD_LENGTH,
-						     flags)) < 0)
+	  if ((ret = _output_event_direction (state_data,
+					      sel_record,
+					      IPMI_SEL_RECORD_MAX_RECORD_LENGTH,
+					      flags)) < 0)
 	    goto cleanup;
 	}
 
@@ -2069,22 +2069,22 @@ _ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
     {
       if (data.event_type_cant_be_determined)
 	{
-	  if ((ret = _normal_output_not_available_event (state_data)) < 0)
+	  if ((ret = _output_not_available_event (state_data)) < 0)
 	    goto cleanup;
 	}
       else
 	{
-	  if ((ret = _normal_output_event (state_data,
-					   sel_record,
-					   IPMI_SEL_RECORD_MAX_RECORD_LENGTH,
-					   flags,
-					   &data)) < 0)
+	  if ((ret = _output_event (state_data,
+				    sel_record,
+				    IPMI_SEL_RECORD_MAX_RECORD_LENGTH,
+				    flags,
+				    &data)) < 0)
 	    goto cleanup;
 	}
     }
   else
     {
-      if ((ret = _normal_output_not_available_event (state_data)) < 0)
+      if ((ret = _output_not_available_event (state_data)) < 0)
 	goto cleanup;
     }
 
@@ -2093,7 +2093,7 @@ _ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
 
   if (state_data->prog_data->args->verbose_count >= 1)
     {
-      if ((ret = _normal_output_oem_custom (state_data, &data)) < 0)
+      if ((ret = _output_oem_custom (state_data, &data)) < 0)
 	goto cleanup;
 
       if (!ret)
