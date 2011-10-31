@@ -26,5 +26,11 @@
 
 #include "pstdout.h"
 
+#define EVENT_FMT_BUFLEN       4096
+#define EVENT_OUTPUT_BUFLEN    4096
+#define EVENT_NA_STRING        "N/A"
+#define EVENT_OUTPUT_SEPARATOR " ; "
+
+
 				       
 #endif

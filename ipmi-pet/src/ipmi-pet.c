@@ -55,14 +55,6 @@
 #include "tool-sdr-cache-common.h"
 #include "tool-sensor-common.h"
 
-#define IPMI_PET_FMT_BUFLEN      4096
-
-#define IPMI_PET_OUTPUT_BUFLEN   4096
-
-#define IPMI_PET_NA_STRING       "N/A"
-
-#define IPMI_PET_EVENT_SEPARATOR " ; "
-
 #define IPMI_PET_GUID_HEADER            "GUID"
 #define IPMI_PET_MANUFACTURER_ID_HEADER "Manufacturer ID"
 #define IPMI_PET_SYSTEM_ID_HEADER       "System ID"
@@ -634,14 +626,14 @@ _ipmi_pet_output_headers (ipmi_pet_state_data_t *state_data)
         }
       else
         {          
-	  char fmt[IPMI_PET_FMT_BUFLEN+1];
+	  char fmt[EVENT_FMT_BUFLEN+1];
 
-          memset (fmt, '\0', IPMI_PET_FMT_BUFLEN + 1);
+          memset (fmt, '\0', EVENT_FMT_BUFLEN + 1);
 
           if (state_data->prog_data->args->no_sensor_type_output)
             {
               snprintf (fmt,
-                        IPMI_PET_FMT_BUFLEN,
+                        EVENT_FMT_BUFLEN,
                         "Date        | Time     | %%-%ds",
                         state_data->column_width.sensor_name);
               
@@ -650,7 +642,7 @@ _ipmi_pet_output_headers (ipmi_pet_state_data_t *state_data)
           else
             {
               snprintf (fmt,
-                        IPMI_PET_FMT_BUFLEN,
+                        EVENT_FMT_BUFLEN,
                         "Date        | Time     | %%-%ds | %%-%ds",
                         state_data->column_width.sensor_name,
                         state_data->column_width.sensor_type);
@@ -717,20 +709,20 @@ _normal_output_date_and_time (ipmi_pet_state_data_t *state_data,
 			      unsigned int sel_record_len,
 			      unsigned int flags)
 {
-  char outbuf[IPMI_PET_OUTPUT_BUFLEN+1];
+  char outbuf[EVENT_OUTPUT_BUFLEN+1];
   int outbuf_len;
 
   assert (state_data);
   assert (sel_record);
   assert (sel_record_len);
 
-  memset (outbuf, '\0', IPMI_PET_OUTPUT_BUFLEN+1);
+  memset (outbuf, '\0', EVENT_OUTPUT_BUFLEN+1);
   if ((outbuf_len = ipmi_sel_parse_format_record_string (state_data->sel_parse_ctx,
 							 "%d",
 							 sel_record,
 							 sel_record_len,
 							 outbuf,
-							 IPMI_PET_OUTPUT_BUFLEN,
+							 EVENT_OUTPUT_BUFLEN,
 							 flags)) < 0)
     {
       if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_format_record_string") < 0)
@@ -743,23 +735,23 @@ _normal_output_date_and_time (ipmi_pet_state_data_t *state_data,
       if (outbuf_len)
         printf ("%s", outbuf);
       else
-        printf ("%s", IPMI_PET_NA_STRING);
+        printf ("%s", EVENT_NA_STRING);
     }
   else
     {
       if (outbuf_len)
         printf ("%-11s", outbuf);
       else
-        printf ("%-11s", IPMI_PET_NA_STRING);
+        printf ("%-11s", EVENT_NA_STRING);
     }
 
-  memset (outbuf, '\0', IPMI_PET_OUTPUT_BUFLEN+1);
+  memset (outbuf, '\0', EVENT_OUTPUT_BUFLEN+1);
   if ((outbuf_len = ipmi_sel_parse_format_record_string (state_data->sel_parse_ctx,
 							 "%t",
 							 sel_record,
                                                          sel_record_len,
 							 outbuf,
-							 IPMI_PET_OUTPUT_BUFLEN,
+							 EVENT_OUTPUT_BUFLEN,
 							 flags)) < 0)
     {
       if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_format_record_string") < 0)
@@ -772,14 +764,14 @@ _normal_output_date_and_time (ipmi_pet_state_data_t *state_data,
       if (outbuf_len)
         printf (",%s", outbuf);
       else
-        printf (",%s", IPMI_PET_NA_STRING);
+        printf (",%s", EVENT_NA_STRING);
     }
   else
     {
       if (outbuf_len)
         printf (" | %-8s", outbuf);
       else
-        printf (" | %-8s", IPMI_PET_NA_STRING);
+        printf (" | %-8s", EVENT_NA_STRING);
     }
 
   return (1);
@@ -796,9 +788,9 @@ _normal_output_not_available_date_and_time (ipmi_pet_state_data_t *state_data)
   assert (state_data);
 
   if (state_data->prog_data->args->comma_separated_output)
-    printf (",%s,%s", IPMI_PET_NA_STRING, IPMI_PET_NA_STRING);
+    printf (",%s,%s", EVENT_NA_STRING, EVENT_NA_STRING);
   else
-    printf (" | %-11s | %-8s", IPMI_PET_NA_STRING, IPMI_PET_NA_STRING);
+    printf (" | %-11s | %-8s", EVENT_NA_STRING, EVENT_NA_STRING);
 
   return (1);
 }
@@ -813,8 +805,8 @@ _normal_output_sensor_name (ipmi_pet_state_data_t *state_data,
 			    unsigned int sel_record_len,
 			    unsigned int flags)
 {
-  char fmt[IPMI_PET_FMT_BUFLEN + 1];
-  char outbuf[IPMI_PET_OUTPUT_BUFLEN+1];
+  char fmt[EVENT_FMT_BUFLEN + 1];
+  char outbuf[EVENT_OUTPUT_BUFLEN+1];
   int outbuf_len;
 
   assert (state_data);
@@ -876,7 +868,7 @@ _normal_output_sensor_name (ipmi_pet_state_data_t *state_data,
           return (-1);
         }
 
-      memset (outbuf, '\0', IPMI_PET_OUTPUT_BUFLEN+1);
+      memset (outbuf, '\0', EVENT_OUTPUT_BUFLEN+1);
       if (get_entity_sensor_name_string (NULL,
                                          state_data->sdr_parse_ctx,
                                          sdr_record,
@@ -884,7 +876,7 @@ _normal_output_sensor_name (ipmi_pet_state_data_t *state_data,
                                          &(state_data->entity_id_counts),
                                          &sensor_number,
                                          outbuf,
-                                         IPMI_PET_OUTPUT_BUFLEN) < 0)
+                                         EVENT_OUTPUT_BUFLEN) < 0)
         return (-1);
 
       outbuf_len = strlen (outbuf);
@@ -895,13 +887,13 @@ _normal_output_sensor_name (ipmi_pet_state_data_t *state_data,
     {
     normal_sensor_output:
 
-      memset (outbuf, '\0', IPMI_PET_OUTPUT_BUFLEN+1);
+      memset (outbuf, '\0', EVENT_OUTPUT_BUFLEN+1);
       if ((outbuf_len = ipmi_sel_parse_format_record_string (state_data->sel_parse_ctx,
 							     "%s",
 							     sel_record,
 							     sel_record_len,
 							     outbuf,
-							     IPMI_PET_OUTPUT_BUFLEN,
+							     EVENT_OUTPUT_BUFLEN,
 							     flags)) < 0)
         {
           if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_format_record_string") < 0)
@@ -913,21 +905,21 @@ _normal_output_sensor_name (ipmi_pet_state_data_t *state_data,
   if (outbuf_len > state_data->column_width.sensor_name)
     state_data->column_width.sensor_name = outbuf_len;
 
-  memset (fmt, '\0', IPMI_PET_FMT_BUFLEN + 1);
+  memset (fmt, '\0', EVENT_FMT_BUFLEN + 1);
   if (state_data->prog_data->args->comma_separated_output)
     snprintf (fmt,
-              IPMI_PET_FMT_BUFLEN,
+              EVENT_FMT_BUFLEN,
               ",%%s");
   else
     snprintf (fmt,
-              IPMI_PET_FMT_BUFLEN,
+              EVENT_FMT_BUFLEN,
               " | %%-%ds",
               state_data->column_width.sensor_name);
 
   if (outbuf_len)
     printf (fmt, outbuf);
   else
-    printf (fmt, IPMI_PET_NA_STRING);
+    printf (fmt, EVENT_NA_STRING);
 
   return (1);
 }
@@ -942,8 +934,8 @@ _normal_output_sensor_type (ipmi_pet_state_data_t *state_data,
 			    unsigned int sel_record_len,
 			    unsigned int flags)
 {
-  char fmt[IPMI_PET_FMT_BUFLEN + 1];
-  char outbuf[IPMI_PET_OUTPUT_BUFLEN+1];
+  char fmt[EVENT_FMT_BUFLEN + 1];
+  char outbuf[EVENT_OUTPUT_BUFLEN+1];
   int outbuf_len;
 
   assert (state_data);
@@ -951,13 +943,13 @@ _normal_output_sensor_type (ipmi_pet_state_data_t *state_data,
   assert (sel_record);
   assert (sel_record_len);
   
-  memset (outbuf, '\0', IPMI_PET_OUTPUT_BUFLEN+1);
+  memset (outbuf, '\0', EVENT_OUTPUT_BUFLEN+1);
   if ((outbuf_len = ipmi_sel_parse_format_record_string (state_data->sel_parse_ctx,
 							 "%T",
 							 sel_record,
 							 sel_record_len,
 							 outbuf,
-							 IPMI_PET_OUTPUT_BUFLEN,
+							 EVENT_OUTPUT_BUFLEN,
 							 flags)) < 0)
     {
       if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_format_record_string") < 0)
@@ -968,21 +960,21 @@ _normal_output_sensor_type (ipmi_pet_state_data_t *state_data,
   if (outbuf_len > state_data->column_width.sensor_type)
     state_data->column_width.sensor_type = outbuf_len;
   
-  memset (fmt, '\0', IPMI_PET_FMT_BUFLEN + 1);
+  memset (fmt, '\0', EVENT_FMT_BUFLEN + 1);
   if (state_data->prog_data->args->comma_separated_output)
     snprintf (fmt,
-	      IPMI_PET_FMT_BUFLEN,
+	      EVENT_FMT_BUFLEN,
 	      ",%%s");
   else
     snprintf (fmt,
-	      IPMI_PET_FMT_BUFLEN,
+	      EVENT_FMT_BUFLEN,
 	      " | %%-%ds",
 	      state_data->column_width.sensor_type);
   
   if (outbuf_len)
     printf (fmt, outbuf);
   else
-    printf (fmt, IPMI_PET_NA_STRING);
+    printf (fmt, EVENT_NA_STRING);
   
   return (1);
 }
@@ -994,23 +986,23 @@ _normal_output_sensor_type (ipmi_pet_state_data_t *state_data,
 static int
 _normal_output_not_available_sensor_type (ipmi_pet_state_data_t *state_data)
 {
-  char fmt[IPMI_PET_FMT_BUFLEN + 1];
+  char fmt[EVENT_FMT_BUFLEN + 1];
 
   assert (state_data);
   assert (!state_data->prog_data->args->no_sensor_type_output);
 
-  memset (fmt, '\0', IPMI_PET_FMT_BUFLEN + 1);
+  memset (fmt, '\0', EVENT_FMT_BUFLEN + 1);
   if (state_data->prog_data->args->comma_separated_output)
     snprintf (fmt,
-              IPMI_PET_FMT_BUFLEN,
+              EVENT_FMT_BUFLEN,
               ",%%s");
   else
     snprintf (fmt,
-              IPMI_PET_FMT_BUFLEN,
+              EVENT_FMT_BUFLEN,
               " | %%-%ds",
               state_data->column_width.sensor_type);
 
-  printf (fmt, IPMI_PET_NA_STRING);
+  printf (fmt, EVENT_NA_STRING);
 
   return (1);
 }
@@ -1024,8 +1016,8 @@ static int
 _normal_output_guid_manufacturer_id_system_id (ipmi_pet_state_data_t *state_data,
 					       struct ipmi_pet_trap_data *data)
 {
-  char fmt[IPMI_PET_FMT_BUFLEN + 1];
-  char outbuf[IPMI_PET_OUTPUT_BUFLEN+1];
+  char fmt[EVENT_FMT_BUFLEN + 1];
+  char outbuf[EVENT_OUTPUT_BUFLEN+1];
   int iana_available;
 
   assert (state_data);
@@ -1038,14 +1030,14 @@ _normal_output_guid_manufacturer_id_system_id (ipmi_pet_state_data_t *state_data
    * significant byte order.
    */
 
-  memset (fmt, '\0', IPMI_PET_FMT_BUFLEN + 1);
+  memset (fmt, '\0', EVENT_FMT_BUFLEN + 1);
   if (state_data->prog_data->args->comma_separated_output)
     snprintf (fmt,
-              IPMI_PET_FMT_BUFLEN,
+              EVENT_FMT_BUFLEN,
               ",%%02x%%02x%%02x%%02x-%%02x%%02x-%%02x%%02x-%%02x%%02x-%%02x%%02x%%02x%%02x%%02x%%02x");
   else
     snprintf (fmt,
-              IPMI_PET_FMT_BUFLEN,
+              EVENT_FMT_BUFLEN,
               " | %%02x%%02x%%02x%%02x-%%02x%%02x-%%02x%%02x-%%02x%%02x-%%02x%%02x%%02x%%02x%%02x%%02x");
   
   printf (fmt,
@@ -1070,22 +1062,22 @@ _normal_output_guid_manufacturer_id_system_id (ipmi_pet_state_data_t *state_data
    * either way, output just the number
    */
 
-  memset (outbuf, '\0', IPMI_PET_OUTPUT_BUFLEN + 1);
+  memset (outbuf, '\0', EVENT_OUTPUT_BUFLEN + 1);
   iana_available = ipmi_iana_enterprise_numbers_string (data->manufacturer_id,
 							outbuf,
-							IPMI_PET_OUTPUT_BUFLEN);
+							EVENT_OUTPUT_BUFLEN);
 
-  memset (fmt, '\0', IPMI_PET_FMT_BUFLEN + 1);
+  memset (fmt, '\0', EVENT_FMT_BUFLEN + 1);
 
   if (iana_available > 0)
     {
       if (state_data->prog_data->args->comma_separated_output)
 	snprintf (fmt,
-		  IPMI_PET_FMT_BUFLEN,
+		  EVENT_FMT_BUFLEN,
 		  ",%%s,%%u");
       else
 	snprintf (fmt,
-		  IPMI_PET_FMT_BUFLEN,
+		  EVENT_FMT_BUFLEN,
 		  " | %%-25s | %%-9u");
 
       printf (fmt, outbuf, data->system_id);
@@ -1094,11 +1086,11 @@ _normal_output_guid_manufacturer_id_system_id (ipmi_pet_state_data_t *state_data
     {
       if (state_data->prog_data->args->comma_separated_output)
 	snprintf (fmt,
-		  IPMI_PET_FMT_BUFLEN,
+		  EVENT_FMT_BUFLEN,
 		  ",%%u,%%u");
       else
 	snprintf (fmt,
-		  IPMI_PET_FMT_BUFLEN,
+		  EVENT_FMT_BUFLEN,
 		  " | %%-25u | %%-9u");
 
       printf (fmt, data->manufacturer_id, data->system_id);
@@ -1125,7 +1117,7 @@ _normal_output_event_severity (ipmi_pet_state_data_t *state_data,
   switch (event_severity)
     {
     case IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_EVENT_SEVERITY_UNSPECIFIED:
-      str = IPMI_PET_NA_STRING;
+      str = EVENT_NA_STRING;
       break;
     case IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_EVENT_SEVERITY_MONITOR:
       str = "Monitor";
@@ -1194,7 +1186,7 @@ _normal_output_event_state (ipmi_pet_state_data_t *state_data,
   else if (sel_state == IPMI_INTERPRET_STATE_CRITICAL)
     sel_state_str = "Critical";
   else
-    sel_state_str = IPMI_PET_NA_STRING;
+    sel_state_str = EVENT_NA_STRING;
 
   if (state_data->prog_data->args->comma_separated_output)
     printf (",%s", sel_state_str);
@@ -1214,7 +1206,7 @@ _normal_output_event_direction (ipmi_pet_state_data_t *state_data,
 				unsigned int sel_record_len,
 				unsigned int flags)
 {
-  char outbuf[IPMI_PET_OUTPUT_BUFLEN+1];
+  char outbuf[EVENT_OUTPUT_BUFLEN+1];
   int outbuf_len;
 
   assert (state_data);
@@ -1222,13 +1214,13 @@ _normal_output_event_direction (ipmi_pet_state_data_t *state_data,
   assert (sel_record_len);
   assert (state_data->prog_data->args->verbose_count >= 1);
 
-  memset (outbuf, '\0', IPMI_PET_OUTPUT_BUFLEN+1);
+  memset (outbuf, '\0', EVENT_OUTPUT_BUFLEN+1);
   if ((outbuf_len = ipmi_sel_parse_format_record_string (state_data->sel_parse_ctx,
 							 "%k",
 							 sel_record,
 							 sel_record_len,
 							 outbuf,
-							 IPMI_PET_OUTPUT_BUFLEN,
+							 EVENT_OUTPUT_BUFLEN,
 							 flags)) < 0)
     {
       if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_format_record_string") < 0)
@@ -1241,14 +1233,14 @@ _normal_output_event_direction (ipmi_pet_state_data_t *state_data,
       if (outbuf_len)
         printf (",%s", outbuf);
       else
-        printf (",%s", IPMI_PET_NA_STRING);
+        printf (",%s", EVENT_NA_STRING);
     }
   else
     {
       if (outbuf_len)
         printf (" | %-17s", outbuf);
       else
-        printf (" | %-17s", IPMI_PET_NA_STRING);
+        printf (" | %-17s", EVENT_NA_STRING);
     }
 
   return (1);
@@ -1265,9 +1257,9 @@ _normal_output_not_available_event_direction (ipmi_pet_state_data_t *state_data)
   assert (state_data->prog_data->args->verbose_count >= 1);
 
   if (state_data->prog_data->args->comma_separated_output)
-    printf (",%s", IPMI_PET_NA_STRING);
+    printf (",%s", EVENT_NA_STRING);
   else
-    printf (" | %-17s", IPMI_PET_NA_STRING);
+    printf (" | %-17s", EVENT_NA_STRING);
 
   return (1);
 }
@@ -1364,8 +1356,8 @@ _normal_output_event (ipmi_pet_state_data_t *state_data,
 		      unsigned int flags,
 		      struct ipmi_pet_trap_data *data)
 {
-  char fmtbuf[IPMI_PET_OUTPUT_BUFLEN+1];
-  char outbuf[IPMI_PET_OUTPUT_BUFLEN+1];
+  char fmtbuf[EVENT_OUTPUT_BUFLEN+1];
+  char outbuf[EVENT_OUTPUT_BUFLEN+1];
   int outbuf_len = 0;
   char *fmt;
   uint8_t event_type_code;
@@ -1381,13 +1373,13 @@ _normal_output_event (ipmi_pet_state_data_t *state_data,
   assert (sel_record_len);
   assert (data);
 
-  memset (outbuf, '\0', IPMI_PET_OUTPUT_BUFLEN+1);
+  memset (outbuf, '\0', EVENT_OUTPUT_BUFLEN+1);
   if ((outbuf_len = ipmi_sel_parse_format_record_string (state_data->sel_parse_ctx,
 							 "%e",
 							 sel_record,
 							 sel_record_len,
 							 outbuf,
-							 IPMI_PET_OUTPUT_BUFLEN,
+							 EVENT_OUTPUT_BUFLEN,
 							 flags)) < 0)
     {
       if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_format_record_string") < 0)
@@ -1400,14 +1392,14 @@ _normal_output_event (ipmi_pet_state_data_t *state_data,
       if (outbuf_len)
         printf (",%s", outbuf);
       else
-        printf (",%s", IPMI_PET_NA_STRING);
+        printf (",%s", EVENT_NA_STRING);
     }
   else
     {
       if (outbuf_len)
         printf (" | %s", outbuf);
       else
-        printf (" | %s", IPMI_PET_NA_STRING);
+        printf (" | %s", EVENT_NA_STRING);
     }
 
   if ((ret = _get_system_event_record_info (state_data,
@@ -1428,7 +1420,7 @@ _normal_output_event (ipmi_pet_state_data_t *state_data,
    * would be separated by a semi-colon
    */
 
-  memset (fmtbuf, '\0', IPMI_PET_OUTPUT_BUFLEN+1);
+  memset (fmtbuf, '\0', EVENT_OUTPUT_BUFLEN+1);
 
   if (state_data->prog_data->args->interpret_oem_data)
     {
@@ -1499,13 +1491,13 @@ _normal_output_event (ipmi_pet_state_data_t *state_data,
 
   fmt = fmtbuf;
 
-  memset (outbuf, '\0', IPMI_PET_OUTPUT_BUFLEN+1);
+  memset (outbuf, '\0', EVENT_OUTPUT_BUFLEN+1);
   if ((outbuf_len = ipmi_sel_parse_format_record_string (state_data->sel_parse_ctx,
 							 fmt,
 							 sel_record,
 							 sel_record_len,
 							 outbuf,
-							 IPMI_PET_OUTPUT_BUFLEN,
+							 EVENT_OUTPUT_BUFLEN,
 							 flags)) < 0)
     {
       if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_format_record_string") < 0)
@@ -1518,7 +1510,7 @@ _normal_output_event (ipmi_pet_state_data_t *state_data,
    * most notably when the event_data2 and / or event_data3 data are
    * 0xFF.
    */
-  if (!strcasecmp (outbuf, IPMI_PET_NA_STRING))
+  if (!strcasecmp (outbuf, EVENT_NA_STRING))
     outbuf_len = 0;
 
   /* Special case:
@@ -1535,10 +1527,10 @@ _normal_output_event (ipmi_pet_state_data_t *state_data,
       char *na_ptr;
       char *semicolon_ptr;
 
-      if ((na_ptr = strstr (outbuf, IPMI_PET_NA_STRING))
-          && (semicolon_ptr = strstr (outbuf, IPMI_PET_EVENT_SEPARATOR)))
+      if ((na_ptr = strstr (outbuf, EVENT_NA_STRING))
+          && (semicolon_ptr = strstr (outbuf, EVENT_OUTPUT_SEPARATOR)))
         {
-          memset (fmtbuf, '\0', IPMI_PET_OUTPUT_BUFLEN+1);
+          memset (fmtbuf, '\0', EVENT_OUTPUT_BUFLEN+1);
 
           if (na_ptr < semicolon_ptr)
             strcat (fmtbuf, "%h");
@@ -1547,13 +1539,13 @@ _normal_output_event (ipmi_pet_state_data_t *state_data,
 
           fmt = fmtbuf;
           
-          memset (outbuf, '\0', IPMI_PET_OUTPUT_BUFLEN+1);
+          memset (outbuf, '\0', EVENT_OUTPUT_BUFLEN+1);
           if ((outbuf_len = ipmi_sel_parse_format_record_string (state_data->sel_parse_ctx,
 								 fmt,
 								 sel_record,
 								 sel_record_len,
 								 outbuf,
-								 IPMI_PET_OUTPUT_BUFLEN,
+								 EVENT_OUTPUT_BUFLEN,
 								 flags)) < 0)
             {
               if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_format_record_string") < 0)
@@ -1580,9 +1572,9 @@ _normal_output_not_available_event (ipmi_pet_state_data_t *state_data)
   assert (state_data);
 
   if (state_data->prog_data->args->comma_separated_output)
-    printf (",%s", IPMI_PET_NA_STRING);
+    printf (",%s", EVENT_NA_STRING);
   else
-    printf (" | %s", IPMI_PET_NA_STRING);
+    printf (" | %s", EVENT_NA_STRING);
 
   return (1);
 }
@@ -1595,7 +1587,7 @@ static int
 _normal_output_oem_custom (ipmi_pet_state_data_t *state_data,
 			   struct ipmi_pet_trap_data *data)
 {
-  char outbuf[IPMI_PET_OUTPUT_BUFLEN+1];
+  char outbuf[EVENT_OUTPUT_BUFLEN+1];
   unsigned int outbuflen = 0;
   unsigned int index = 0;
   int rv = -1;
@@ -1604,18 +1596,18 @@ _normal_output_oem_custom (ipmi_pet_state_data_t *state_data,
   assert (data);
   assert (state_data->prog_data->args->verbose_count >= 1);
 
-  memset (outbuf, '\0', IPMI_PET_OUTPUT_BUFLEN + 1);
+  memset (outbuf, '\0', EVENT_OUTPUT_BUFLEN + 1);
 
   while (index < data->oem_custom_length
          && data->oem_custom[index] != IPMI_FRU_SENTINEL_VALUE)
     {
-      char tmpbuf[IPMI_PET_OUTPUT_BUFLEN+1];
-      unsigned int tmpbuflen = IPMI_PET_OUTPUT_BUFLEN;
+      char tmpbuf[EVENT_OUTPUT_BUFLEN+1];
+      unsigned int tmpbuflen = EVENT_OUTPUT_BUFLEN;
       uint8_t type_length;
       uint8_t type_code;
       uint8_t number_of_data_bytes;
 
-      memset (tmpbuf, '\0', IPMI_PET_OUTPUT_BUFLEN + 1);
+      memset (tmpbuf, '\0', EVENT_OUTPUT_BUFLEN + 1);
 
       type_length = data->oem_custom[index];
       type_code = (type_length & IPMI_FRU_TYPE_LENGTH_TYPE_CODE_MASK) >> IPMI_FRU_TYPE_LENGTH_TYPE_CODE_SHIFT;
@@ -1669,7 +1661,7 @@ _normal_output_oem_custom (ipmi_pet_state_data_t *state_data,
 	{
 	  if (outbuflen)
 	    {
-	      if ((outbuflen + 3) > IPMI_PET_OUTPUT_BUFLEN)
+	      if ((outbuflen + 3) > EVENT_OUTPUT_BUFLEN)
 		{
 		  if (state_data->prog_data->args->common.debug)
 		    fprintf (stderr, "OEM Custom Overflow\n");
@@ -1680,7 +1672,7 @@ _normal_output_oem_custom (ipmi_pet_state_data_t *state_data,
 	      outbuflen += 3;
 	    }
 
-	  if ((outbuflen + tmpbuflen) > IPMI_PET_OUTPUT_BUFLEN)
+	  if ((outbuflen + tmpbuflen) > EVENT_OUTPUT_BUFLEN)
 	    {
 	      if (state_data->prog_data->args->common.debug)
 		fprintf (stderr, "OEM Custom Overflow\n");
