@@ -42,6 +42,7 @@ AC_CONFIG_FILES([
         common/src/pingtool/Makefile
         common/src/portability/Makefile
         common/src/toolcommon/Makefile
+        common/src/toolevent/Makefile
         common/src/toolhostrange/Makefile
         common/src/tooloem/Makefile
         common/src/toolsdr/Makefile

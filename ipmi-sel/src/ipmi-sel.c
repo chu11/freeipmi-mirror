@@ -46,6 +46,7 @@
 #include "pstdout.h"
 #include "tool-common.h"
 #include "tool-cmdline-common.h"
+#include "tool-event-common.h"
 #include "tool-hostrange-common.h"
 #include "tool-oem-common.h"
 #include "tool-sdr-cache-common.h"
