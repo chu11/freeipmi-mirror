@@ -152,8 +152,6 @@ int
 event_output_not_available_time (pstdout_state_t pstate,
 				 int comma_separated_output)
 {
-  assert (state_data);
-
   if (comma_separated_output)
     PSTDOUT_PRINTF (pstate, ",%s", EVENT_NA_STRING);
   else
