@@ -280,7 +280,14 @@ ipmi_raw_stream (ipmi_raw_state_data_t *state_data, FILE *stream)
           break;
         }
       line_count++;
-
+      
+      /* On invalid inputs, we exit instead of goto end loop.
+       *
+       * We could continue and read the next line, but the assumption
+       * is that the user is writing a script of some sort to perform
+       * a set of tasks.  We do not want to continue the set of tasks
+       * if one in the middle is invalid.
+       */
       if (string2bytes (state_data, line, &bytes_rq, &send_len) < 0)
         goto cleanup;
 
