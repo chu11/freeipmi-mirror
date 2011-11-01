@@ -1730,6 +1730,7 @@ _ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
   return (rv);
 }
 
+/* returns -1 on fatal error, 0 on non-fatal error, 1 on success */
 static int
 _ipmi_pet_parse (ipmi_pet_state_data_t *state_data,
 		 const char *line,
@@ -1786,6 +1787,7 @@ _ipmi_pet_parse (ipmi_pet_state_data_t *state_data,
 	      || endptr[0] != '\0')
 	    {
 	      fprintf (stderr, "invalid specific trap argument on line %u\n", line_count);
+	      rv = 0;
 	      goto cleanup;
 	    }
 	  
@@ -1803,6 +1805,7 @@ _ipmi_pet_parse (ipmi_pet_state_data_t *state_data,
       if (*token == '\0')
 	{
 	  fprintf (stderr, "invalid variable binding hex byte argument on line %u\n", line_count);
+	  rv = 0;
 	  goto cleanup;
 	}
 
@@ -1811,12 +1814,14 @@ _ipmi_pet_parse (ipmi_pet_state_data_t *state_data,
 	  if (i >= 2)
 	    {
 	      fprintf (stderr, "invalid variable binding hex byte argument on line %u\n", line_count);
+	      rv = 0;
 	      goto cleanup;
 	    }
             
 	  if (!isxdigit (token[i]))
 	    {
 	      fprintf (stderr, "invalid variable binding hex byte argument on line %u\n", line_count);
+	      rv = 0;
 	      goto cleanup;
 	    }
 	}
@@ -1829,6 +1834,7 @@ _ipmi_pet_parse (ipmi_pet_state_data_t *state_data,
 	      || endptr[0] != '\0')
 	    {
 	      fprintf (stderr, "invalid variable binding hex byte argument on line %u\n", line_count);
+	      rv = 0;
 	      goto cleanup;
 	    }
 	  input->variable_bindings[input->variable_bindings_length++] = (uint8_t) value;
@@ -1836,11 +1842,22 @@ _ipmi_pet_parse (ipmi_pet_state_data_t *state_data,
       else
 	{
 	  fprintf (stderr, "Too many arguments specified on line %u\n", line_count);
+	  rv = 0;
 	  goto cleanup;
 	}
     }
 
-  rv = 0;
+  if (!(input->variable_bindings_length >= IPMI_PLATFORM_EVENT_TRAP_MIN_VARIABLE_BINDINGS_LENGTH
+	&& input->variable_bindings_length <= IPMI_PLATFORM_EVENT_TRAP_MAX_VARIABLE_BINDINGS_LENGTH))
+    {
+      fprintf (stderr,
+	       "Invalid number of variable binding bytes on line %u\n",
+	       line_count);
+      rv = 0;
+      goto cleanup;
+    }
+  
+  rv = 1;
  cleanup:
   if (str)
     free (str);
@@ -1855,6 +1872,7 @@ _ipmi_pet_stream (ipmi_pet_state_data_t *state_data, FILE *stream)
   size_t n = 0;
   unsigned int line_count = 0;
   int rv = -1;
+  int ret;
 
   assert (state_data);
   assert (stream);
@@ -1875,17 +1893,17 @@ _ipmi_pet_stream (ipmi_pet_state_data_t *state_data, FILE *stream)
         }
       line_count++;
 
-      if (_ipmi_pet_parse (state_data, line, &input, line_count) < 0)
+      /* On invalid inputs, we could exit.  However, we assume the
+       * user is inputting a large stream of traps, possibly after
+       * parsing it from a log or something.  So we just output an
+       * error and continue on with trap interpretations when there is
+       * an invalid input.
+       */
+      if ((ret = _ipmi_pet_parse (state_data, line, &input, line_count)) < 0)
 	goto cleanup;
 
-      if (!(input.variable_bindings_length >= IPMI_PLATFORM_EVENT_TRAP_MIN_VARIABLE_BINDINGS_LENGTH
-	    && input.variable_bindings_length <= IPMI_PLATFORM_EVENT_TRAP_MAX_VARIABLE_BINDINGS_LENGTH))
-	{
-	  fprintf (stderr,
-		   "Invalid number of variable binding bytes on line %u\n",
-		   line_count);
-	  goto end_loop;
-	}
+      if (!ret)
+	goto end_loop;
      
       if (_ipmi_pet_output_headers (state_data) < 0)
 	goto cleanup;
