@@ -12,6 +12,7 @@ libtoolevent_la_CPPFLAGS = \
 	-I$(top_srcdir)/common/src/portability \
 	-I$(top_srcdir)/common/src/toolcommon \
 	-I$(top_srcdir)/common/src/toolhostrange \
+	-I$(top_srcdir)/common/src/tooloem \
 	-I$(top_srcdir)/common/src/toolsdr \
 	-I$(top_srcdir)/common/src/toolsensor \
 	-I$(top_srcdir)/libfreeipmi/include 

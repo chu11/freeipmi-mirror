@@ -1191,212 +1191,20 @@ _output_event (ipmi_pet_state_data_t *state_data,
 	       unsigned int flags,
 	       struct ipmi_pet_trap_data *data)
 {
-  char fmtbuf[EVENT_OUTPUT_BUFLEN+1];
-  char outbuf[EVENT_OUTPUT_BUFLEN+1];
-  int outbuf_len = 0;
-  char *fmt;
-  uint8_t event_type_code;
-  uint8_t event_data2_flag;
-  uint8_t event_data3_flag;
-  uint8_t event_data2;
-  uint8_t event_data3;
-  int check_for_half_na = 0;
-  int ret;
-
   assert (state_data);
   assert (sel_record);
   assert (sel_record_len);
   assert (data);
 
-  memset (outbuf, '\0', EVENT_OUTPUT_BUFLEN+1);
-  if ((outbuf_len = ipmi_sel_parse_format_record_string (state_data->sel_parse_ctx,
-							 "%e",
-							 sel_record,
-							 sel_record_len,
-							 outbuf,
-							 EVENT_OUTPUT_BUFLEN,
-							 flags)) < 0)
-    {
-      if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_format_record_string") < 0)
-	return (-1);
-      return (0);
-    }
-
-  if (state_data->prog_data->args->comma_separated_output)
-    {
-      if (outbuf_len)
-        printf (",%s", outbuf);
-      else
-        printf (",%s", EVENT_NA_STRING);
-    }
-  else
-    {
-      if (outbuf_len)
-        printf (" | %s", outbuf);
-      else
-        printf (" | %s", EVENT_NA_STRING);
-    }
-
-  if ((ret = event_data_info (NULL,
+  return (event_output_event (NULL,
 			      state_data->sel_parse_ctx,
 			      sel_record,
 			      sel_record_len,
+			      &state_data->oem_data,
+			      state_data->prog_data->args->interpret_oem_data,
+			      state_data->prog_data->args->comma_separated_output,
 			      state_data->prog_data->args->common.debug,
-			      &event_type_code,
-			      &event_data2_flag,
-			      &event_data3_flag,
-			      &event_data2,
-			      &event_data3)) < 0)
-    return (-1);
-
-  if (!ret)
-    return (0);
-  
-  /* note: previously set sel parse library separator to " ; "
-   * so some places where there could be two outputs
-   * would be separated by a semi-colon
-   */
-
-  memset (fmtbuf, '\0', EVENT_OUTPUT_BUFLEN+1);
-
-  if (state_data->prog_data->args->interpret_oem_data)
-    {
-      uint8_t generator_id;
-      uint8_t sensor_number;
-
-      if (ipmi_sel_parse_record_generator_id (state_data->sel_parse_ctx,
-					      sel_record,
-					      sel_record_len,
-					      &generator_id) < 0)
-        {
-          if (_sel_parse_err_handle (state_data,
-                                     "ipmi_sel_parse_record_generator_id") < 0)
-            return (-1);
-        }
-
-      if (ipmi_sel_parse_record_sensor_number (state_data->sel_parse_ctx,
-					       sel_record,
-					       sel_record_len,
-					       &sensor_number) < 0)
-        {
-          if (_sel_parse_err_handle (state_data,
-                                     "ipmi_sel_parse_record_sensor_number") < 0)
-            return (-1);
-        }
-    
-      /* OEM Interpretation
-       * 
-       * Dell Poweredge 2900
-       * Dell Poweredge 2950
-       * Dell Poweredge R610
-       * Dell Poweredge R710
-       *
-       * Unique condition, event_data2_flag and event_data3_flag are
-       * listed as "unspecified", so we need to handle this as a
-       * special case.
-       */
-      if (state_data->oem_data.manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-          && (state_data->oem_data.product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_2900
-              || state_data->oem_data.product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_2950
-              || state_data->oem_data.product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
-              || state_data->oem_data.product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
-          && data->sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING
-          && data->event_type == IPMI_EVENT_READING_TYPE_CODE_OEM_DELL_OEM_DIAGNOSTIC_EVENT_DATA)
-        {
-          strcat (fmtbuf, "%f ; %h");
-          goto output;
-        }
-    }
-
-  if (event_data2_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE
-      && event_data3_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE)
-    {
-      /* will effectively output "%f ; %h" if combined output not
-       * available or reasonable
-       */
-      strcat (fmtbuf, "%c");
-      check_for_half_na++;
-    }
-  else if (event_data2_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE)
-    strcat (fmtbuf, "%f");
-  else if (event_data3_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE)
-    strcat (fmtbuf, "%h");
-  else
-    goto out;
-
- output:
-
-  fmt = fmtbuf;
-
-  memset (outbuf, '\0', EVENT_OUTPUT_BUFLEN+1);
-  if ((outbuf_len = ipmi_sel_parse_format_record_string (state_data->sel_parse_ctx,
-							 fmt,
-							 sel_record,
-							 sel_record_len,
-							 outbuf,
-							 EVENT_OUTPUT_BUFLEN,
-							 flags)) < 0)
-    {
-      if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_format_record_string") < 0)
-        return (-1);
-      return (0);
-    }
-
-  /* If event_data2 and event_data3 flags are valid, it normally
-   * shouldn't be possible that we read "N/A".  However, it happens,
-   * most notably when the event_data2 and / or event_data3 data are
-   * 0xFF.
-   */
-  if (!strcasecmp (outbuf, EVENT_NA_STRING))
-    outbuf_len = 0;
-
-  /* Special case:
-   * 
-   * It's possible the SEL record event_data2_flag and
-   * event_data3_flag are bad, and you get a N/A output anyways
-   * (perhaps b/c the event_data2 or event_data3 data is unspecified).
-   * If this is the case you can get a strange: "N/A ; text" or "text
-   * ; N/A" instead of just "text".  Deal with it appropriately.
-   * 
-   */
-  if (outbuf_len && check_for_half_na)
-    {
-      char *na_ptr;
-      char *semicolon_ptr;
-
-      if ((na_ptr = strstr (outbuf, EVENT_NA_STRING))
-          && (semicolon_ptr = strstr (outbuf, EVENT_OUTPUT_SEPARATOR)))
-        {
-          memset (fmtbuf, '\0', EVENT_OUTPUT_BUFLEN+1);
-
-          if (na_ptr < semicolon_ptr)
-            strcat (fmtbuf, "%h");
-          else
-            strcat (fmtbuf, "%f");
-
-          fmt = fmtbuf;
-          
-          memset (outbuf, '\0', EVENT_OUTPUT_BUFLEN+1);
-          if ((outbuf_len = ipmi_sel_parse_format_record_string (state_data->sel_parse_ctx,
-								 fmt,
-								 sel_record,
-								 sel_record_len,
-								 outbuf,
-								 EVENT_OUTPUT_BUFLEN,
-								 flags)) < 0)
-            {
-              if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_format_record_string") < 0)
-                return (-1);
-              return (0);
-            }
-        }
-    }
-
-  if (outbuf_len)
-    printf (" ; %s", outbuf);
-
- out:
-  return (1);
+			      flags));
 }
                                        
 /* return 1 on success
@@ -1407,13 +1215,9 @@ static int
 _output_not_available_event (ipmi_pet_state_data_t *state_data)
 {
   assert (state_data);
-
-  if (state_data->prog_data->args->comma_separated_output)
-    printf (",%s", EVENT_NA_STRING);
-  else
-    printf (" | %s", EVENT_NA_STRING);
-
-  return (1);
+  
+  return (event_output_not_available_event (NULL,
+					    state_data->prog_data->args->comma_separated_output));
 }
 
 /* return 1 on success
