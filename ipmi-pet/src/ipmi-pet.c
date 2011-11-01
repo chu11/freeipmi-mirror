@@ -1025,40 +1025,19 @@ _output_event_state (ipmi_pet_state_data_t *state_data,
 		     unsigned int sel_record_len,
 		     unsigned int flags)
 {
-  unsigned int sel_state;
-  char *sel_state_str = NULL;
-
   assert (state_data);
   assert (sel_record);
   assert (sel_record_len);
   assert (state_data->prog_data->args->output_event_state);
 
-  if (ipmi_interpret_sel (state_data->interpret_ctx,
-                          sel_record,
-                          sel_record_len,
-                          &sel_state) < 0)
-    {
-      fprintf (stderr,
-	       "ipmi_interpret_sel: %s\n",
-	       ipmi_interpret_ctx_errormsg (state_data->interpret_ctx));
-      return (-1);
-    }
-
-  if (sel_state == IPMI_INTERPRET_STATE_NOMINAL)
-    sel_state_str = "Nominal";
-  else if (sel_state == IPMI_INTERPRET_STATE_WARNING)
-    sel_state_str = "Warning";
-  else if (sel_state == IPMI_INTERPRET_STATE_CRITICAL)
-    sel_state_str = "Critical";
-  else
-    sel_state_str = EVENT_NA_STRING;
-
-  if (state_data->prog_data->args->comma_separated_output)
-    printf (",%s", sel_state_str);
-  else
-    printf (" | %-8s", sel_state_str);
-
-  return (1);
+  return (event_output_event_state (NULL,
+				    state_data->sel_parse_ctx,
+				    state_data->interpret_ctx,
+				    sel_record,
+				    sel_record_len,
+				    state_data->prog_data->args->comma_separated_output,
+				    state_data->prog_data->args->common.debug,
+				    flags));
 }
                   
 /* return 1 on success

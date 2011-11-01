@@ -911,51 +911,18 @@ _normal_output_not_available_sensor_type (ipmi_sel_state_data_t *state_data)
 static int
 _normal_output_event_state (ipmi_sel_state_data_t *state_data, unsigned int flags)
 {
-  uint8_t record_data[IPMI_SEL_RECORD_MAX_RECORD_LENGTH];
-  int record_data_len;
-  unsigned int sel_state;
-  char *sel_state_str = NULL;
-
   assert (state_data);
   assert (!state_data->prog_data->args->legacy_output);
   assert (state_data->prog_data->args->output_event_state);
-
-  if ((record_data_len = ipmi_sel_parse_read_record (state_data->sel_parse_ctx,
-                                                     record_data,
-                                                     IPMI_SEL_RECORD_MAX_RECORD_LENGTH)) < 0)
-    {
-      if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_read_record") < 0)
-        return (-1);
-      return (0);
-    }
-
-  if (ipmi_interpret_sel (state_data->interpret_ctx,
-                          record_data,
-                          record_data_len,
-                          &sel_state) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "ipmi_interpret_sel: %s\n",
-                       ipmi_interpret_ctx_errormsg (state_data->interpret_ctx));
-      return (-1);
-    }
-
-  if (sel_state == IPMI_INTERPRET_STATE_NOMINAL)
-    sel_state_str = "Nominal";
-  else if (sel_state == IPMI_INTERPRET_STATE_WARNING)
-    sel_state_str = "Warning";
-  else if (sel_state == IPMI_INTERPRET_STATE_CRITICAL)
-    sel_state_str = "Critical";
-  else
-    sel_state_str = EVENT_NA_STRING;
-
-  if (state_data->prog_data->args->comma_separated_output)
-    pstdout_printf (state_data->pstate, ",%s", sel_state_str);
-  else
-    pstdout_printf (state_data->pstate, " | %-8s", sel_state_str);
-
-  return (1);
+  
+  return (event_output_event_state (state_data->pstate,
+				    state_data->sel_parse_ctx,
+				    state_data->interpret_ctx,
+				    NULL,
+				    0,
+				    state_data->prog_data->args->comma_separated_output,
+				    state_data->prog_data->args->common.debug,
+				    flags));
 }
 
 /* return 1 on success

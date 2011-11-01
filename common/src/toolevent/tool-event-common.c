@@ -148,7 +148,14 @@ event_data_info (pstdout_state_t pstate,
       if ((sel_record_buf_len = ipmi_sel_parse_read_record (sel_parse_ctx,
 							    sel_record_buf,
 							    IPMI_SEL_RECORD_MAX_RECORD_LENGTH)) < 0)
-	return (-1);
+	{
+	  if (_sel_parse_err_handle (pstate,
+				     sel_parse_ctx,
+				     debug,
+				     "ipmi_sel_parse_read_record") < 0)
+	    return (-1);
+	  return (0);
+	}
       
       if (!sel_record_buf_len)
 	return (0);
@@ -585,6 +592,81 @@ event_output_not_available_sensor_type (pstdout_state_t pstate,
               column_width->sensor_type);
   
   PSTDOUT_PRINTF (pstate, fmt, EVENT_NA_STRING);
+
+  return (1);
+}
+
+int
+event_output_event_state (pstdout_state_t pstate,
+			  ipmi_sel_parse_ctx_t sel_parse_ctx,
+			  ipmi_interpret_ctx_t interpret_ctx,
+			  uint8_t *sel_record,
+			  unsigned int sel_record_len,
+			  int comma_separated_output,
+			  int debug,
+			  unsigned int flags)
+{
+  uint8_t sel_record_buf[IPMI_SEL_RECORD_MAX_RECORD_LENGTH];
+  int sel_record_buf_len;
+  uint8_t *sel_record_ptr;
+  unsigned int sel_record_ptr_len;
+  unsigned int sel_state;
+  char *sel_state_str = NULL;
+  
+  assert (sel_parse_ctx);
+  assert (interpret_ctx);
+
+  if (!sel_record || !sel_record_len)
+    {
+      if ((sel_record_buf_len = ipmi_sel_parse_read_record (sel_parse_ctx,
+							    sel_record_buf,
+							    IPMI_SEL_RECORD_MAX_RECORD_LENGTH)) < 0)
+	{
+	  if (_sel_parse_err_handle (pstate,
+				     sel_parse_ctx,
+				     debug,
+				     "ipmi_sel_parse_read_record") < 0)
+	    return (-1);
+	  return (0);
+	}
+ 
+      if (!sel_record_buf_len)
+	return (0);
+
+      sel_record_ptr = sel_record_buf;
+      sel_record_ptr_len = sel_record_buf_len;
+    }
+  else
+    {
+      sel_record_ptr = sel_record;
+      sel_record_ptr_len = sel_record_len;
+    }
+
+  if (ipmi_interpret_sel (interpret_ctx,
+			  sel_record_ptr,
+			  sel_record_ptr_len,
+                          &sel_state) < 0)
+    {
+      PSTDOUT_FPRINTF (pstate,
+                       stderr,
+                       "ipmi_interpret_sel: %s\n",
+                       ipmi_interpret_ctx_errormsg (interpret_ctx));
+      return (-1);
+    }
+
+  if (sel_state == IPMI_INTERPRET_STATE_NOMINAL)
+    sel_state_str = "Nominal";
+  else if (sel_state == IPMI_INTERPRET_STATE_WARNING)
+    sel_state_str = "Warning";
+  else if (sel_state == IPMI_INTERPRET_STATE_CRITICAL)
+    sel_state_str = "Critical";
+  else
+    sel_state_str = EVENT_NA_STRING;
+
+  if (comma_separated_output)
+    PSTDOUT_PRINTF (pstate, ",%s", sel_state_str);
+  else
+    PSTDOUT_PRINTF (pstate, " | %-8s", sel_state_str);
 
   return (1);
 }
