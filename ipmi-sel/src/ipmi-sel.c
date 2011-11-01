@@ -564,73 +564,6 @@ _hex_output (ipmi_sel_state_data_t *state_data)
   return (rv);
 }
 
-/* return 1 on success
- * return (0) on non-success, but don't fail
- * return (-1) on error
- */
-static int
-_get_system_event_record_info (ipmi_sel_state_data_t *state_data,
-                               uint8_t *event_type_code,
-                               uint8_t *event_data2_flag,
-                               uint8_t *event_data3_flag,
-                               uint8_t *event_data2,
-                               uint8_t *event_data3)
-{
-  assert (state_data);
-  assert (event_type_code);
-  assert (event_data2_flag);
-  assert (event_data3_flag);
-  assert (event_data2);
-  assert (event_data3);
-
-  if (ipmi_sel_parse_read_event_type_code (state_data->sel_parse_ctx,
-                                           event_type_code) < 0)
-    {
-      if (_sel_parse_err_handle (state_data,
-                                 "ipmi_sel_parse_read_event_type_code") < 0)
-        return (-1);
-      return (0);
-    }
-
-  if (ipmi_sel_parse_read_event_data1_event_data2_flag (state_data->sel_parse_ctx,
-                                                        event_data2_flag) < 0)
-    {
-      if (_sel_parse_err_handle (state_data,
-                                 "ipmi_sel_parse_read_event_data1_event_data2_flag") < 0)
-        return (-1);
-      return (0);
-    }
-
-  if (ipmi_sel_parse_read_event_data1_event_data3_flag (state_data->sel_parse_ctx,
-                                                        event_data3_flag) < 0)
-    {
-      if (_sel_parse_err_handle (state_data,
-                                 "ipmi_sel_parse_read_event_data1_event_data3_flag") < 0)
-        return (-1);
-      return (0);
-    }
-
-  if (ipmi_sel_parse_read_event_data2 (state_data->sel_parse_ctx,
-                                       event_data2) < 0)
-    {
-      if (_sel_parse_err_handle (state_data,
-                                 "ipmi_sel_parse_read_event_data2") < 0)
-        return (-1);
-      return (0);
-    }
-
-  if (ipmi_sel_parse_read_event_data3 (state_data->sel_parse_ctx,
-                                       event_data3) < 0)
-    {
-      if (_sel_parse_err_handle (state_data,
-                                 "ipmi_sel_parse_read_event_data3") < 0)
-        return (-1);
-      return (0);
-    }
-
-  return (1);
-}
-
 static int
 _legacy_normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
 {
@@ -672,12 +605,16 @@ _legacy_normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
       uint8_t event_data2;
       uint8_t event_data3;
 
-      if ((ret = _get_system_event_record_info (state_data,
-                                                &event_type_code,
-                                                &event_data2_flag,
-                                                &event_data3_flag,
-                                                &event_data2,
-                                                &event_data3)) < 0)
+      if ((ret = event_data_info (state_data->pstate,
+				  state_data->sel_parse_ctx,
+				  NULL,
+				  0,
+				  state_data->prog_data->args->common.debug,
+				  &event_type_code,
+				  &event_data2_flag,
+				  &event_data3_flag,
+				  &event_data2,
+				  &event_data3)) < 0)
         goto cleanup;
 
       if (!ret)
@@ -1159,12 +1096,16 @@ _normal_output_event (ipmi_sel_state_data_t *state_data, unsigned int flags)
         pstdout_printf (state_data->pstate, " | %s", EVENT_NA_STRING);
     }
   
-  if ((ret = _get_system_event_record_info (state_data,
-                                            &event_type_code,
-                                            &event_data2_flag,
-                                            &event_data3_flag,
-                                            &event_data2,
-                                            &event_data3)) < 0)
+  if ((ret = event_data_info (state_data->pstate,
+			      state_data->sel_parse_ctx,
+			      NULL,
+			      0,
+			      state_data->prog_data->args->common.debug,
+			      &event_type_code,
+			      &event_data2_flag,
+			      &event_data3_flag,
+			      &event_data2,
+			      &event_data3)) < 0)
     return (-1);
 
   if (!ret)

@@ -1237,14 +1237,16 @@ _output_event (ipmi_pet_state_data_t *state_data,
         printf (" | %s", EVENT_NA_STRING);
     }
 
-  if ((ret = _get_system_event_record_info (state_data,
-					    sel_record,
-					    sel_record_len,
-                                            &event_type_code,
-                                            &event_data2_flag,
-                                            &event_data3_flag,
-                                            &event_data2,
-                                            &event_data3)) < 0)
+  if ((ret = event_data_info (NULL,
+			      state_data->sel_parse_ctx,
+			      sel_record,
+			      sel_record_len,
+			      state_data->prog_data->args->common.debug,
+			      &event_type_code,
+			      &event_data2_flag,
+			      &event_data3_flag,
+			      &event_data2,
+			      &event_data3)) < 0)
     return (-1);
 
   if (!ret)
