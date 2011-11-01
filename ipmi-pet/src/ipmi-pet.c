@@ -60,6 +60,14 @@
 #define IPMI_PET_SYSTEM_ID_HEADER       "System ID"
 #define IPMI_PET_EVENT_SEVERITY_HEADER  "Severity"
 
+struct ipmi_pet_input
+{
+  uint32_t specific_trap;
+  int specific_trap_na_specified;
+  uint8_t variable_bindings[IPMI_PLATFORM_EVENT_TRAP_MAX_VARIABLE_BINDINGS_LENGTH];
+  unsigned int variable_bindings_length;
+};
+
 struct ipmi_pet_trap_data
 {
   uint8_t sensor_type;
@@ -83,6 +91,22 @@ struct ipmi_pet_trap_data
   uint8_t oem_custom[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_OEM_CUSTOM_FIELDS_LENGTH];
   unsigned int oem_custom_length;
 };
+
+static int
+_flush_cache (ipmi_pet_state_data_t *state_data)
+{
+  assert (state_data);
+  
+  if (sdr_cache_flush_cache (state_data->sdr_cache_ctx,
+                             NULL,
+                             state_data->prog_data->args->sdr.quiet_cache,
+                             state_data->hostname,
+                             state_data->prog_data->args->sdr.sdr_cache_directory,
+                             state_data->prog_data->args->sdr.sdr_cache_file) < 0)
+    return (-1);
+  
+  return (0);
+}
 
 static int
 _ipmi_pet_init (ipmi_pet_state_data_t *state_data)
@@ -142,6 +166,15 @@ _ipmi_pet_init (ipmi_pet_state_data_t *state_data)
 	goto cleanup;
     }
 
+  if (args->interpret_oem_data
+      && !args->sdr.ignore_sdr_cache)
+    {
+      if (ipmi_get_oem_data (NULL,
+			     state_data->ipmi_ctx,
+			     &state_data->oem_data) < 0)
+	goto cleanup;
+    }
+
   rv = 0;
  cleanup:
   return (rv);
@@ -160,6 +193,9 @@ _ipmi_pet_oem_setup (ipmi_pet_state_data_t *state_data, struct ipmi_pet_trap_dat
 
   if (args->interpret_oem_data)
     {
+      uint32_t manufacturer_id;
+      uint16_t product_id;
+
       /* Three ways to get manufacturer-id/product-id (in order of preference).
        *
        * 1) User input - takes highest priority
@@ -174,8 +210,8 @@ _ipmi_pet_oem_setup (ipmi_pet_state_data_t *state_data, struct ipmi_pet_trap_dat
       if (args->manufacturer_id_set
 	  && args->product_id_set)
 	{
-	  state_data->oem_data.manufacturer_id = args->manufacturer_id;
-	  state_data->oem_data.product_id = args->product_id;
+	  manufacturer_id = args->manufacturer_id;
+	  product_id = args->product_id;
 	}
       else
 	{
@@ -184,29 +220,26 @@ _ipmi_pet_oem_setup (ipmi_pet_state_data_t *state_data, struct ipmi_pet_trap_dat
 	   */
 	  if (IPMI_IANA_ENTERPRISE_ID_RECOGNIZED (data->manufacturer_id))
 	    {
-	      state_data->oem_data.manufacturer_id = data->manufacturer_id;
-	      state_data->oem_data.product_id = data->system_id;
+	      manufacturer_id = data->manufacturer_id;
+	      product_id = data->system_id;
 	    }
 	  else if (!args->sdr.ignore_sdr_cache)
 	    {
-	      if (ipmi_get_oem_data (NULL,
-				     state_data->ipmi_ctx,
-				     &state_data->oem_data) < 0)
-		goto cleanup;
+	      manufacturer_id = state_data->oem_data.manufacturer_id;
+	      product_id = state_data->oem_data.product_id;
 	    }
 	  else
 	    {
 	      /* Eventually will lead to output of number for
 	       * manufacturer id instead of string
 	       */
-	      state_data->oem_data.manufacturer_id = data->manufacturer_id;
-	      state_data->oem_data.product_id = data->system_id;
+	      manufacturer_id = data->manufacturer_id;
+	      product_id = data->system_id;
 	    }
 	}
 
-
       if (ipmi_sel_parse_ctx_set_manufacturer_id (state_data->sel_parse_ctx,
-						  state_data->oem_data.manufacturer_id) < 0)
+						  manufacturer_id) < 0)
 	{
 	  fprintf (stderr,
 		   "ipmi_sel_parse_ctx_set_manufacturer_id: %s\n",
@@ -215,7 +248,7 @@ _ipmi_pet_oem_setup (ipmi_pet_state_data_t *state_data, struct ipmi_pet_trap_dat
 	}
       
       if (ipmi_sel_parse_ctx_set_product_id (state_data->sel_parse_ctx,
-					     state_data->oem_data.product_id) < 0)
+					     product_id) < 0)
 	{
 	  fprintf (stderr,
 		   "ipmi_sel_parse_ctx_set_product_id: %s\n",
@@ -226,7 +259,7 @@ _ipmi_pet_oem_setup (ipmi_pet_state_data_t *state_data, struct ipmi_pet_trap_dat
       if (args->output_event_state)
 	{
 	  if (ipmi_interpret_ctx_set_manufacturer_id (state_data->interpret_ctx,
-						      state_data->oem_data.manufacturer_id) < 0)
+						      manufacturer_id) < 0)
 	    {
 	      fprintf (stderr,
 		       "ipmi_interpret_ctx_set_manufacturer_id: %s\n",
@@ -235,7 +268,7 @@ _ipmi_pet_oem_setup (ipmi_pet_state_data_t *state_data, struct ipmi_pet_trap_dat
 	    }
 	  
 	  if (ipmi_interpret_ctx_set_product_id (state_data->interpret_ctx,
-						 state_data->oem_data.product_id) < 0)
+						 product_id) < 0)
 	    {
 	      fprintf (stderr,
 		       "ipmi_interpret_ctx_set_product_id: %s\n",
@@ -251,57 +284,60 @@ _ipmi_pet_oem_setup (ipmi_pet_state_data_t *state_data, struct ipmi_pet_trap_dat
 }
 
 static int
-_ipmi_pet_parse_trap_data (ipmi_pet_state_data_t *state_data, struct ipmi_pet_trap_data *data)
+_ipmi_pet_parse_trap_data (ipmi_pet_state_data_t *state_data,
+			   struct ipmi_pet_input *input,
+			   struct ipmi_pet_trap_data *data)
 {
   struct ipmi_pet_arguments *args;
   int rv = -1;
   int i;
 
   assert (state_data);
+  assert (input);
   assert (data);
 
   args = state_data->prog_data->args;
 
-  if (!args->specific_trap_na_specified)
+  if (!input->specific_trap_na_specified)
     {
       uint32_t value;
 
-      value = args->specific_trap & IPMI_PLATFORM_EVENT_TRAP_SPECIFIC_TRAP_SENSOR_TYPE_MASK;
+      value = input->specific_trap & IPMI_PLATFORM_EVENT_TRAP_SPECIFIC_TRAP_SENSOR_TYPE_MASK;
       value >>= IPMI_PLATFORM_EVENT_TRAP_SPECIFIC_TRAP_SENSOR_TYPE_SHIFT;
       data->sensor_type = value;
       
-      value = args->specific_trap & IPMI_PLATFORM_EVENT_TRAP_SPECIFIC_TRAP_EVENT_TYPE_MASK;
+      value = input->specific_trap & IPMI_PLATFORM_EVENT_TRAP_SPECIFIC_TRAP_EVENT_TYPE_MASK;
       value >>= IPMI_PLATFORM_EVENT_TRAP_SPECIFIC_TRAP_EVENT_TYPE_SHIFT;
       data->event_type = value;
   
-      value = args->specific_trap & IPMI_PLATFORM_EVENT_TRAP_SPECIFIC_TRAP_EVENT_DIRECTION_MASK;
+      value = input->specific_trap & IPMI_PLATFORM_EVENT_TRAP_SPECIFIC_TRAP_EVENT_DIRECTION_MASK;
       value >>= IPMI_PLATFORM_EVENT_TRAP_SPECIFIC_TRAP_EVENT_DIRECTION_SHIFT;
       data->event_direction = value;
       
-      value = args->specific_trap & IPMI_PLATFORM_EVENT_TRAP_SPECIFIC_TRAP_EVENT_OFFSET_MASK;
+      value = input->specific_trap & IPMI_PLATFORM_EVENT_TRAP_SPECIFIC_TRAP_EVENT_OFFSET_MASK;
       value >>= IPMI_PLATFORM_EVENT_TRAP_SPECIFIC_TRAP_EVENT_OFFSET_SHIFT;
       data->event_offset = value;  
     }
 
   for (i = 0; i < IPMI_SYSTEM_GUID_LENGTH; i++)
-    data->guid[i] = args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_GUID_INDEX_START + i];
+    data->guid[i] = input->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_GUID_INDEX_START + i];
   
-  data->localtimestamp = args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_LOCAL_TIMESTAMP_INDEX_START];
+  data->localtimestamp = input->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_LOCAL_TIMESTAMP_INDEX_START];
   data->localtimestamp <<= 8;
-  data->localtimestamp |= args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_LOCAL_TIMESTAMP_INDEX_START + 1];
+  data->localtimestamp |= input->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_LOCAL_TIMESTAMP_INDEX_START + 1];
   data->localtimestamp <<= 8;
-  data->localtimestamp |= args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_LOCAL_TIMESTAMP_INDEX_START + 2];
+  data->localtimestamp |= input->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_LOCAL_TIMESTAMP_INDEX_START + 2];
   data->localtimestamp <<= 8;
-  data->localtimestamp |= args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_LOCAL_TIMESTAMP_INDEX_START + 3];
+  data->localtimestamp |= input->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_LOCAL_TIMESTAMP_INDEX_START + 3];
 
   if (data->localtimestamp != IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_LOCAL_TIMESTAMP_UNSPECIFIED)
     {
       struct tm tm;
       time_t t;
 
-      data->utcoffset = args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_UTC_OFFSET_INDEX_START];
+      data->utcoffset = input->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_UTC_OFFSET_INDEX_START];
       data->utcoffset <<= 8;
-      data->utcoffset |= args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_UTC_OFFSET_INDEX_START + 1];
+      data->utcoffset |= input->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_UTC_OFFSET_INDEX_START + 1];
       
       if (data->utcoffset != IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_UTC_OFFSET_UNSPECIFIED)
 	{
@@ -337,38 +373,38 @@ _ipmi_pet_parse_trap_data (ipmi_pet_state_data_t *state_data, struct ipmi_pet_tr
       data->localtimestamp += (uint32_t)t;
     }
 
-  data->event_severity = args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_EVENT_SEVERITY_INDEX];
+  data->event_severity = input->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_EVENT_SEVERITY_INDEX];
 
-  data->sensor_device = args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_SENSOR_DEVICE_INDEX];
+  data->sensor_device = input->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_SENSOR_DEVICE_INDEX];
 
-  data->sensor_number = args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_SENSOR_NUMBER_INDEX];
+  data->sensor_number = input->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_SENSOR_NUMBER_INDEX];
 
-  data->entity = args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_ENTITY_INDEX];
+  data->entity = input->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_ENTITY_INDEX];
 
-  data->entity_instance = args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_ENTITY_INSTANCE_INDEX];
+  data->entity_instance = input->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_ENTITY_INSTANCE_INDEX];
 
   for (i = 0; i < IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_EVENT_DATA_LENGTH; i++)
-    data->event_data[i] = args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_EVENT_DATA_INDEX_START + i];
+    data->event_data[i] = input->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_EVENT_DATA_INDEX_START + i];
 
-  data->language_code =  args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_LANGUAGE_CODE_INDEX];
+  data->language_code =  input->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_LANGUAGE_CODE_INDEX];
 
-  data->manufacturer_id = args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_MANUFACTURER_ID_INDEX_START];
+  data->manufacturer_id = input->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_MANUFACTURER_ID_INDEX_START];
   data->manufacturer_id <<= 8;
-  data->manufacturer_id |= args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_MANUFACTURER_ID_INDEX_START + 1];
+  data->manufacturer_id |= input->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_MANUFACTURER_ID_INDEX_START + 1];
   data->manufacturer_id <<= 8;
-  data->manufacturer_id |= args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_MANUFACTURER_ID_INDEX_START + 2];
+  data->manufacturer_id |= input->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_MANUFACTURER_ID_INDEX_START + 2];
   data->manufacturer_id <<= 8;
-  data->manufacturer_id |= args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_MANUFACTURER_ID_INDEX_START + 3];
+  data->manufacturer_id |= input->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_MANUFACTURER_ID_INDEX_START + 3];
   
-  data->system_id = args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_SYSTEM_ID_INDEX_START];
+  data->system_id = input->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_SYSTEM_ID_INDEX_START];
   data->system_id <<= 8;
-  data->system_id |= args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_SYSTEM_ID_INDEX_START + 1];
+  data->system_id |= input->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_SYSTEM_ID_INDEX_START + 1];
 
   for (i = 0;
-       (IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_OEM_CUSTOM_FIELDS_INDEX_START + i) < args->variable_bindings_length;
+       (IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_OEM_CUSTOM_FIELDS_INDEX_START + i) < input->variable_bindings_length;
        i++)
     {
-      data->oem_custom[i] = args->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_OEM_CUSTOM_FIELDS_INDEX_START + i];
+      data->oem_custom[i] = input->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_OEM_CUSTOM_FIELDS_INDEX_START + i];
       data->oem_custom_length++;
     }
 
@@ -1235,7 +1271,8 @@ _output_oem_custom (ipmi_pet_state_data_t *state_data,
 }
 
 static int
-_ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
+_ipmi_pet_process (ipmi_pet_state_data_t *state_data,
+		   struct ipmi_pet_input *input)
 {
   struct ipmi_pet_arguments *args;
   struct ipmi_pet_trap_data data;
@@ -1245,40 +1282,24 @@ _ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
   unsigned int flags = 0;
   uint64_t val;
   int sel_record_len;
-  int rv = -1;
   int ret;
+  int rv = -1;
 
   assert (state_data);
-  assert (state_data->prog_data->args->specific_trap_set);
-  assert (state_data->prog_data->args->variable_bindings);
-  assert (state_data->prog_data->args->variable_bindings_length);
+  assert (input);
   
   memset (&data, '\0', sizeof (struct ipmi_pet_trap_data));
-  
+
   args = state_data->prog_data->args;
 
-  if (!(args->variable_bindings_length >= IPMI_PLATFORM_EVENT_TRAP_MIN_VARIABLE_BINDINGS_LENGTH
-	&& args->variable_bindings_length <= IPMI_PLATFORM_EVENT_TRAP_MAX_VARIABLE_BINDINGS_LENGTH))
-    {
-      fprintf (stderr,
-	       "Invalid number of variable binding bytes\n");
-      goto cleanup;
-    }
-
-  if (_ipmi_pet_init (state_data) < 0)
-    goto cleanup;
-
-  if (_ipmi_pet_output_headers (state_data) < 0)
-    goto cleanup;
- 
-  if (_ipmi_pet_parse_trap_data (state_data, &data) < 0)
+  if (_ipmi_pet_parse_trap_data (state_data, input, &data) < 0)
     goto cleanup;
 
   /* call after parse trap data */
   if (_ipmi_pet_oem_setup (state_data, &data) < 0)
     goto cleanup;
 
-  if (args->specific_trap_na_specified)
+  if (input->specific_trap_na_specified)
     {
       if (!args->sdr.ignore_sdr_cache)
 	{
@@ -1375,7 +1396,7 @@ _ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
 				 IPMI_SEL_RECORD_MAX_RECORD_LENGTH) < 0)
     goto cleanup;
 
-  if (args->specific_trap_na_specified
+  if (input->specific_trap_na_specified
       || data.event_offset != IPMI_PLATFORM_EVENT_TRAP_SPECIFIC_TRAP_EVENT_OFFSET_UNSPECIFIED)
     {
       if (!(sel_system_event_record_event_fields = fiid_obj_create (tmpl_sel_system_event_record_event_fields)))
@@ -1408,7 +1429,7 @@ _ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
       event_offset_test = val;
 
       /* determine event_offset from event data1 */
-      if (args->specific_trap_na_specified)
+      if (input->specific_trap_na_specified)
 	data.event_offset = event_offset_test;
       else
 	{
@@ -1604,7 +1625,7 @@ _ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
   
   if (state_data->prog_data->args->verbose_count >= 1)
     {
-      if (args->specific_trap_na_specified
+      if (input->specific_trap_na_specified
 	  && args->sdr.ignore_sdr_cache)
 	{
 	  if ((ret = _output_not_available_event_direction (state_data)) < 0)
@@ -1667,20 +1688,291 @@ _ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
 }
 
 static int
-_flush_cache (ipmi_pet_state_data_t *state_data)
+_ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
 {
+  struct ipmi_pet_arguments *args;
+  struct ipmi_pet_input input;
+  int rv = -1;
+
   assert (state_data);
+  assert (state_data->prog_data->args->specific_trap_set);
+  assert (state_data->prog_data->args->variable_bindings);
+  assert (state_data->prog_data->args->variable_bindings_length);
+    
+  args = state_data->prog_data->args;
+
+  if (!(args->variable_bindings_length >= IPMI_PLATFORM_EVENT_TRAP_MIN_VARIABLE_BINDINGS_LENGTH
+	&& args->variable_bindings_length <= IPMI_PLATFORM_EVENT_TRAP_MAX_VARIABLE_BINDINGS_LENGTH))
+    {
+      fprintf (stderr,
+	       "Invalid number of variable binding bytes\n");
+      goto cleanup;
+    }
   
-  if (sdr_cache_flush_cache (state_data->sdr_cache_ctx,
-                             NULL,
-                             state_data->prog_data->args->sdr.quiet_cache,
-                             state_data->hostname,
-                             state_data->prog_data->args->sdr.sdr_cache_directory,
-                             state_data->prog_data->args->sdr.sdr_cache_file) < 0)
-    return (-1);
+  if (_ipmi_pet_init (state_data) < 0)
+    goto cleanup;
   
-  return (0);
+  if (_ipmi_pet_output_headers (state_data) < 0)
+    goto cleanup;
+  
+  input.specific_trap = args->specific_trap;
+  input.specific_trap_na_specified = args->specific_trap_na_specified;
+  memcpy (input.variable_bindings,
+	  args->variable_bindings,
+	  args->variable_bindings_length);
+  input.variable_bindings_length = args->variable_bindings_length;
+
+  if (_ipmi_pet_process (state_data, &input) < 0)
+    goto cleanup;
+
+  rv = 0;
+ cleanup:
+  return (rv);
 }
+
+#if 0
+static int
+string2bytes (ipmi_raw_state_data_t *state_data,
+              const char *line,
+              unsigned char **buf,
+              unsigned int *len)
+{
+  const char delim[] = " \t\f\v\r\n";
+  char *str = NULL;
+  char *ptr = NULL;
+  char *endptr = NULL;
+  char *token = NULL;
+  int count = 0;
+  unsigned int i = 0;
+  unsigned int l = 0;
+  long value = 0;
+  int rv = -1;
+
+  assert (state_data);
+  assert (line);
+  assert (buf);
+  assert (len);
+
+  *buf = NULL;
+  *len = 0;
+
+  for (i = 0, count = 0; line[i]; i++)
+    {
+      if (strchr ((const char*)delim, line[i]))
+        count++;
+    }
+  count++;
+
+  if (!(*buf = calloc ((strlen (line) - count), 1)))
+    {
+      pstdout_perror (state_data->pstate, "calloc");
+      goto cleanup;
+    }
+
+  if (!(str = (char *) strdup (line)))
+    {
+      pstdout_perror (state_data->pstate, "strdup");
+      goto cleanup;
+    }
+  ptr = str;
+  count = 0;
+  while (1)
+    {
+      token = strsep (&ptr, delim);
+      if (token == NULL)
+        break;
+      if (strcmp (token, "") == 0)
+        continue;
+
+      l = strlen (token);
+
+      if (l >= 2)
+        {
+          if (strncmp (token, "0x", 2) == 0)
+            {
+              token+=2;
+              if (*token == '\0')
+                {
+                  pstdout_fprintf (state_data->pstate,
+                                   stderr,
+                                   "invalid input\n");
+                  goto cleanup;
+                }
+              l = strlen (token);
+            }
+        }
+
+      if (l > 2)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "invalid input\n");
+          goto cleanup;
+        }
+
+      for (i = 0; i < l; i++)
+        {
+          if (isxdigit (token[i]) == 0)
+            {
+              pstdout_fprintf (state_data->pstate,
+                               stderr,
+                               "invalid input\n");
+              goto cleanup;
+            }
+        }
+
+      errno = 0;
+      value = strtol (token, &endptr, 16);
+      if (errno
+          || endptr[0] != '\0')
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "invalid input\n");
+          goto cleanup;
+        }
+      (*buf)[count++] = (unsigned char) value;
+    }
+
+  *len = count;
+  rv = 0;
+
+ cleanup:
+  if (rv < 0)
+    {
+      if (*buf)
+        free (*buf);
+      *buf = NULL;
+      *len = 0;
+    }
+  if (str)
+    free (str);
+  return (rv);
+}
+
+static int
+_ipmi_pet_stream (ipmi_pet_state_data_t *state_data, FILE *stream)
+{
+  struct ipmi_raw_arguments *args;
+  char *line = NULL;
+  unsigned int line_count = 0;
+  size_t n = 0;
+
+  assert (state_data);
+  assert (stream);
+
+  args = state_data->prog_data->args;
+
+  while (1)
+    {
+      if (getline (&line, &n, stream) < 0)
+        {
+          /* perror ("getline()"); */
+          break;
+        }
+      line_count++;
+
+      if (string2bytes (state_data, line, &bytes_rq, &send_len) < 0)
+        goto cleanup;
+
+      if (send_len <= 2)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "Invalid number of hex bytes on line %d\n",
+                           line_count);
+          goto end_loop;
+        }
+
+      if (!IPMI_NET_FN_RQ_VALID (bytes_rq[1]))
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "Invalid netfn value on line %d\n",
+                           line_count);
+          goto end_loop;
+        }
+
+      if (!(bytes_rs = calloc (IPMI_RAW_MAX_ARGS, sizeof (uint8_t))))
+        {
+          pstdout_perror (state_data->pstate, "calloc");
+          goto cleanup;
+        }
+  
+      if (state_data->prog_data->args->channel_number
+          && state_data->prog_data->args->slave_address)
+        {
+          if ((rs_len = ipmi_cmd_raw_ipmb (state_data->ipmi_ctx,
+                                           state_data->prog_data->args->channel_number_arg,
+                                           state_data->prog_data->args->slave_address_arg,
+                                           bytes_rq[0],
+                                           bytes_rq[1],
+                                           &bytes_rq[2],
+                                           send_len - 2,
+                                           bytes_rs,
+                                           IPMI_RAW_MAX_ARGS)) < 0)
+            {
+              pstdout_fprintf (state_data->pstate,
+                               stderr,
+                               "ipmi_cmd_raw_ipmb: %s\n",
+                               ipmi_ctx_errormsg (state_data->ipmi_ctx));
+              goto end_loop;
+            }
+        }
+      else
+        {
+          if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                                      bytes_rq[0],
+                                      bytes_rq[1],
+                                      &bytes_rq[2],
+                                      send_len - 2,
+                                      bytes_rs,
+                                      IPMI_RAW_MAX_ARGS)) < 0)
+            {
+              pstdout_fprintf (state_data->pstate,
+                               stderr,
+                               "ipmi_cmd_raw: %s\n",
+                               ipmi_ctx_errormsg (state_data->ipmi_ctx));
+              goto end_loop;
+            }
+        }
+
+      pstdout_printf (state_data->pstate, "rcvd: ");
+      for (i = 0; i < rs_len; i++)
+        pstdout_printf (state_data->pstate, "%02X ", bytes_rs[i]);
+      pstdout_printf (state_data->pstate, "\n");
+
+    end_loop:
+      if (line)
+        {
+          free (line);
+          line = NULL;
+        }
+      n = 0;
+      if (bytes_rq)
+        {
+          free (bytes_rq);
+          bytes_rq = NULL;
+        }
+      if (bytes_rs)
+        {
+          free (bytes_rs);
+          bytes_rs = NULL;
+        }
+      send_len = 0;
+    }
+
+  rv = 0;
+ cleanup:
+  if (line)
+    free (line);
+  if (bytes_rq)
+    free (bytes_rq);
+  if (bytes_rs)
+    free (bytes_rs);
+  return (rv);
+}
+#endif
 
 static int
 run_cmd_args (ipmi_pet_state_data_t *state_data)
