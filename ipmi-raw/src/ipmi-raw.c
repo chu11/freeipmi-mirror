@@ -156,6 +156,7 @@ string2bytes (ipmi_raw_state_data_t *state_data,
   assert (line);
   assert (buf);
   assert (len);
+  assert (line_count);
 
   *buf = NULL;
   *len = 0;
