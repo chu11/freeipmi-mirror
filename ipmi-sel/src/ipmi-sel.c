@@ -1116,20 +1116,20 @@ _normal_output_event (ipmi_sel_state_data_t *state_data, unsigned int flags)
   if (state_data->prog_data->args->output_oem_event_strings)
     {
       memset (outbuf, '\0', EVENT_OUTPUT_BUFLEN+1);
-        if ((outbuf_len = _output_oem_event_strings (state_data,
-                                                   outbuf,
-                                                   EVENT_OUTPUT_BUFLEN,
-                                                   flags)) < 0)
-        return (-1);
-	
-	if (outbuf_len)
-	  {
-	    if (state_data->prog_data->args->comma_separated_output)
-	      pstdout_printf (state_data->pstate, ",%s", outbuf);
-	    else
-	      pstdout_printf (state_data->pstate, " | %s", outbuf);
-	    goto out;
-	  }
+      if ((outbuf_len = _output_oem_event_strings (state_data,
+						   outbuf,
+						   EVENT_OUTPUT_BUFLEN,
+						   flags)) < 0)
+	return (-1);
+      
+      if (outbuf_len)
+	{
+	  if (state_data->prog_data->args->comma_separated_output)
+	    pstdout_printf (state_data->pstate, ",%s", outbuf);
+	  else
+	    pstdout_printf (state_data->pstate, " | %s", outbuf);
+	  goto out;
+	}
     }
   
   memset (outbuf, '\0', EVENT_OUTPUT_BUFLEN+1);
