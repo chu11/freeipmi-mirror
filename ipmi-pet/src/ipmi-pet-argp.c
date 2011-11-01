@@ -242,15 +242,23 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
               }
           }
         
-	errno = 0;
-        value = strtol (arg, &endptr, 16);
-	if (errno
-	    || endptr[0] != '\0')
-	  {
-	    fprintf (stderr, "invalid variable binding hex byte argument\n");
-	    exit (1);
-	  }
-        cmd_args->variable_bindings[cmd_args->variable_bindings_length++] = (uint8_t) value;
+	if (cmd_args->variable_bindings_length < IPMI_PET_MAX_ARGS)
+          {
+	    errno = 0;
+	    value = strtol (arg, &endptr, 16);
+	    if (errno
+		|| endptr[0] != '\0')
+	      {
+		fprintf (stderr, "invalid variable binding hex byte argument\n");
+		exit (1);
+	      }
+	    cmd_args->variable_bindings[cmd_args->variable_bindings_length++] = (uint8_t) value;
+          }
+        else
+          {
+            fprintf (stderr, "Too many arguments specified\n");
+            exit (1);
+          }
         
         break;
       }
