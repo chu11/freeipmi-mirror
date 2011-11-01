@@ -1,6 +1,7 @@
 2011-11-01  Albert Chu <chu11@llnl.gov>
 
-	* ipmi-raw/src/ipmi-raw.c: Code cleanup.
+	* ipmi-raw/src/ipmi-raw.c: Code cleanup.  Output line numbers when
+	there is an error on file/stdin input.
 	
 2011-10-31  Albert Chu <chu11@llnl.gov>
 

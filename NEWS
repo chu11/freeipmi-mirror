@@ -5,6 +5,8 @@ o Support new --sdr-cache-file option specify specific SDR cache file
 o Update libfreeipmi for DCMI 1.5 additions.
 o Update libfreeipmi fru-parse sub-library to support FRU parsing
   without an IPMI connection.
+o In ipmi-raw, for file/stdin input, output line number when there is
+  an error.
 o Fix macro name typos.
 
 FreeIPMI 1.0.6 - 09/01/11
