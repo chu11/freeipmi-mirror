@@ -179,19 +179,21 @@ string2bytes (ipmi_raw_state_data_t *state_data,
     }
   ptr = str;
   count = 0;
+
   while (1)
     {
       token = strsep (&ptr, delim);
-      if (token == NULL)
+      if (!token)
         break;
-      if (strcmp (token, "") == 0)
+
+      if (!strcmp (token, ""))
         continue;
 
       l = strlen (token);
 
       if (l >= 2)
         {
-          if (strncmp (token, "0x", 2) == 0)
+          if (!strncmp (token, "0x", 2))
             {
               token+=2;
               if (*token == '\0')
@@ -215,7 +217,7 @@ string2bytes (ipmi_raw_state_data_t *state_data,
 
       for (i = 0; i < l; i++)
         {
-          if (isxdigit (token[i]) == 0)
+          if (!isxdigit (token[i]))
             {
               pstdout_fprintf (state_data->pstate,
                                stderr,
