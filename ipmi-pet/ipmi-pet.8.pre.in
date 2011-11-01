@@ -83,7 +83,8 @@ example, it will output Generator ID hex codes for sensors without
 names.
 .TP
 \fB\-\-file\fR=\fICMD\-FILE\fR
-Specify a file to read PET hex bytes from instead of command line.
+Specify a file to read PET specific trap and variable bindings hex
+from instead of command line.
 .TP
 \fB\-\-output\-event\-severity\fR
 Output event severity in output.  This will add an additional output
