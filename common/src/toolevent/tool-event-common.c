@@ -86,7 +86,7 @@ _sel_parse_record_string (pstdout_state_t pstate,
   if (sel_record && sel_record_len)
     {
       if ((*outbuf_len = ipmi_sel_parse_format_record_string (sel_parse_ctx,
-							      "%t",
+							      fmt,
 							      sel_record,
 							      sel_record_len,
 							      outbuf,
@@ -104,7 +104,7 @@ _sel_parse_record_string (pstdout_state_t pstate,
   else
     {
       if ((*outbuf_len = ipmi_sel_parse_read_record_string (sel_parse_ctx,
-							    "%t",
+							    fmt,
 							    outbuf,
 							    EVENT_OUTPUT_BUFLEN,
 							    flags)) < 0)
@@ -748,7 +748,6 @@ event_output_event (pstdout_state_t pstate,
   uint8_t event_type_code;
   uint8_t event_data2_flag;
   uint8_t event_data3_flag;
-  uint8_t event_data1_offset;
   int check_for_half_na = 0;
   int ret;
 
@@ -785,8 +784,8 @@ event_output_event (pstdout_state_t pstate,
 
   if ((ret = event_data_info (pstate,
 			      sel_parse_ctx,
-			      NULL,
-			      0,
+			      sel_record,
+			      sel_record_len,
 			      debug,
 			      NULL,
 			      NULL,
