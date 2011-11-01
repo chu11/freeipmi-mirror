@@ -297,7 +297,7 @@ _ipmi_pet_parse_trap_data (ipmi_pet_state_data_t *state_data,
   assert (data);
 
   args = state_data->prog_data->args;
-
+  
   if (!input->specific_trap_na_specified)
     {
       uint32_t value;
@@ -1730,121 +1730,118 @@ _ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
   return (rv);
 }
 
-#if 0
 static int
-string2bytes (ipmi_raw_state_data_t *state_data,
-              const char *line,
-              unsigned char **buf,
-              unsigned int *len)
+_ipmi_pet_parse (ipmi_pet_state_data_t *state_data,
+		 const char *line,
+		 struct ipmi_pet_input *input,
+		 unsigned int line_count)
 {
   const char delim[] = " \t\f\v\r\n";
   char *str = NULL;
   char *ptr = NULL;
-  char *endptr = NULL;
   char *token = NULL;
-  int count = 0;
-  unsigned int i = 0;
-  unsigned int l = 0;
-  long value = 0;
+  int specific_trap_parsed = 0;
   int rv = -1;
 
   assert (state_data);
   assert (line);
-  assert (buf);
-  assert (len);
-
-  *buf = NULL;
-  *len = 0;
-
-  for (i = 0, count = 0; line[i]; i++)
-    {
-      if (strchr ((const char*)delim, line[i]))
-        count++;
-    }
-  count++;
-
-  if (!(*buf = calloc ((strlen (line) - count), 1)))
-    {
-      pstdout_perror (state_data->pstate, "calloc");
-      goto cleanup;
-    }
+  assert (input);
+  assert (line_count);
 
   if (!(str = (char *) strdup (line)))
     {
-      pstdout_perror (state_data->pstate, "strdup");
+      perror ("strdup");
       goto cleanup;
     }
   ptr = str;
-  count = 0;
+
+  memset (input, '\0', sizeof (struct ipmi_pet_input));
+
   while (1)
     {
+      unsigned int i;
+      unsigned long uvalue;
+      long value;
+      char *endptr = NULL;
+
       token = strsep (&ptr, delim);
-      if (token == NULL)
+      if (!token)
         break;
-      if (strcmp (token, "") == 0)
+
+      if (!strcmp (token, ""))
         continue;
 
-      l = strlen (token);
+      if (!specific_trap_parsed)
+	{
+	  if (!strcasecmp (token, "NA"))
+	    {
+	      input->specific_trap_na_specified = 1;
+	      specific_trap_parsed++;
+	      continue;
+	    }
+	  
+	  errno = 0;
+	  uvalue = strtoul (token, &endptr, 0);
+	  if (errno
+	      || endptr[0] != '\0')
+	    {
+	      fprintf (stderr, "invalid specific trap argument on line %u\n", line_count);
+	      goto cleanup;
+	    }
+	  
+	  input->specific_trap = uvalue;
+	  specific_trap_parsed++;
+	  continue;
+	}
 
-      if (l >= 2)
-        {
-          if (strncmp (token, "0x", 2) == 0)
-            {
-              token+=2;
-              if (*token == '\0')
-                {
-                  pstdout_fprintf (state_data->pstate,
-                                   stderr,
-                                   "invalid input\n");
-                  goto cleanup;
-                }
-              l = strlen (token);
-            }
-        }
+      if (strlen (token) >= 2)
+	{
+	  if (!strncmp (token, "0x", 2))
+	    token+=2;
+	}
 
-      if (l > 2)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "invalid input\n");
-          goto cleanup;
-        }
+      if (*token == '\0')
+	{
+	  fprintf (stderr, "invalid variable binding hex byte argument on line %u\n", line_count);
+	  goto cleanup;
+	}
 
-      for (i = 0; i < l; i++)
-        {
-          if (isxdigit (token[i]) == 0)
-            {
-              pstdout_fprintf (state_data->pstate,
-                               stderr,
-                               "invalid input\n");
-              goto cleanup;
-            }
-        }
+      for (i = 0; token[i] != '\0'; i++)
+	{
+	  if (i >= 2)
+	    {
+	      fprintf (stderr, "invalid variable binding hex byte argument on line %u\n", line_count);
+	      goto cleanup;
+	    }
+            
+	  if (!isxdigit (token[i]))
+	    {
+	      fprintf (stderr, "invalid variable binding hex byte argument on line %u\n", line_count);
+	      goto cleanup;
+	    }
+	}
 
-      errno = 0;
-      value = strtol (token, &endptr, 16);
-      if (errno
-          || endptr[0] != '\0')
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "invalid input\n");
-          goto cleanup;
-        }
-      (*buf)[count++] = (unsigned char) value;
+      if (input->variable_bindings_length < IPMI_PLATFORM_EVENT_TRAP_MAX_VARIABLE_BINDINGS_LENGTH)
+	{
+	  errno = 0;
+	  value = strtol (token, &endptr, 16);
+	  if (errno
+	      || endptr[0] != '\0')
+	    {
+	      fprintf (stderr, "invalid variable binding hex byte argument on line %u\n", line_count);
+	      goto cleanup;
+	    }
+	  input->variable_bindings[input->variable_bindings_length++] = (uint8_t) value;
+	}
+      else
+	{
+	  fprintf (stderr, "Too many arguments specified on line %u\n", line_count);
+	  goto cleanup;
+	}
     }
 
-  *len = count;
   rv = 0;
-
  cleanup:
-  if (rv < 0)
-    {
-      if (*buf)
-        free (*buf);
-      *buf = NULL;
-      *len = 0;
-    }
   if (str)
     free (str);
   return (rv);
@@ -1853,18 +1850,24 @@ string2bytes (ipmi_raw_state_data_t *state_data,
 static int
 _ipmi_pet_stream (ipmi_pet_state_data_t *state_data, FILE *stream)
 {
-  struct ipmi_raw_arguments *args;
+  struct ipmi_pet_arguments *args;
   char *line = NULL;
-  unsigned int line_count = 0;
   size_t n = 0;
+  unsigned int line_count = 0;
+  int rv = -1;
 
   assert (state_data);
   assert (stream);
 
   args = state_data->prog_data->args;
 
+  if (_ipmi_pet_init (state_data) < 0)
+    goto cleanup;
+  
   while (1)
     {
+      struct ipmi_pet_input input;
+
       if (getline (&line, &n, stream) < 0)
         {
           /* perror ("getline()"); */
@@ -1872,107 +1875,39 @@ _ipmi_pet_stream (ipmi_pet_state_data_t *state_data, FILE *stream)
         }
       line_count++;
 
-      if (string2bytes (state_data, line, &bytes_rq, &send_len) < 0)
-        goto cleanup;
+      if (_ipmi_pet_parse (state_data, line, &input, line_count) < 0)
+	goto cleanup;
 
-      if (send_len <= 2)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "Invalid number of hex bytes on line %d\n",
-                           line_count);
-          goto end_loop;
-        }
+      if (!(input.variable_bindings_length >= IPMI_PLATFORM_EVENT_TRAP_MIN_VARIABLE_BINDINGS_LENGTH
+	    && input.variable_bindings_length <= IPMI_PLATFORM_EVENT_TRAP_MAX_VARIABLE_BINDINGS_LENGTH))
+	{
+	  fprintf (stderr,
+		   "Invalid number of variable binding bytes on line %u\n",
+		   line_count);
+	  goto end_loop;
+	}
+     
+      if (_ipmi_pet_output_headers (state_data) < 0)
+	goto cleanup;
 
-      if (!IPMI_NET_FN_RQ_VALID (bytes_rq[1]))
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "Invalid netfn value on line %d\n",
-                           line_count);
-          goto end_loop;
-        }
-
-      if (!(bytes_rs = calloc (IPMI_RAW_MAX_ARGS, sizeof (uint8_t))))
-        {
-          pstdout_perror (state_data->pstate, "calloc");
-          goto cleanup;
-        }
-  
-      if (state_data->prog_data->args->channel_number
-          && state_data->prog_data->args->slave_address)
-        {
-          if ((rs_len = ipmi_cmd_raw_ipmb (state_data->ipmi_ctx,
-                                           state_data->prog_data->args->channel_number_arg,
-                                           state_data->prog_data->args->slave_address_arg,
-                                           bytes_rq[0],
-                                           bytes_rq[1],
-                                           &bytes_rq[2],
-                                           send_len - 2,
-                                           bytes_rs,
-                                           IPMI_RAW_MAX_ARGS)) < 0)
-            {
-              pstdout_fprintf (state_data->pstate,
-                               stderr,
-                               "ipmi_cmd_raw_ipmb: %s\n",
-                               ipmi_ctx_errormsg (state_data->ipmi_ctx));
-              goto end_loop;
-            }
-        }
-      else
-        {
-          if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
-                                      bytes_rq[0],
-                                      bytes_rq[1],
-                                      &bytes_rq[2],
-                                      send_len - 2,
-                                      bytes_rs,
-                                      IPMI_RAW_MAX_ARGS)) < 0)
-            {
-              pstdout_fprintf (state_data->pstate,
-                               stderr,
-                               "ipmi_cmd_raw: %s\n",
-                               ipmi_ctx_errormsg (state_data->ipmi_ctx));
-              goto end_loop;
-            }
-        }
-
-      pstdout_printf (state_data->pstate, "rcvd: ");
-      for (i = 0; i < rs_len; i++)
-        pstdout_printf (state_data->pstate, "%02X ", bytes_rs[i]);
-      pstdout_printf (state_data->pstate, "\n");
-
+      if (_ipmi_pet_process (state_data, &input) < 0)
+	goto cleanup;
+      
     end_loop:
       if (line)
-        {
-          free (line);
-          line = NULL;
-        }
+	{
+	  free (line);
+	  line = NULL;
+	}
       n = 0;
-      if (bytes_rq)
-        {
-          free (bytes_rq);
-          bytes_rq = NULL;
-        }
-      if (bytes_rs)
-        {
-          free (bytes_rs);
-          bytes_rs = NULL;
-        }
-      send_len = 0;
     }
-
+  
   rv = 0;
  cleanup:
   if (line)
     free (line);
-  if (bytes_rq)
-    free (bytes_rq);
-  if (bytes_rs)
-    free (bytes_rs);
   return (rv);
 }
-#endif
 
 static int
 run_cmd_args (ipmi_pet_state_data_t *state_data)
@@ -2007,10 +1942,8 @@ run_cmd_args (ipmi_pet_state_data_t *state_data)
   else
     infile = stdin;
 
-#if 0
   if (_ipmi_pet_stream (state_data, infile) < 0)
     goto cleanup;
-#endif
 
   rv = 0;
  cleanup:
