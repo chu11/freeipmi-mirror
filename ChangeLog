@@ -18,6 +18,11 @@
 
 	* ipmi-sel/: Update to use new convenience functions.
 
+2011-11-01  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-raw/src/ipmi-raw.c: Code cleanup.  Output line numbers when
+	there is an error on file/stdin input.
+	
 2011-10-31  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sel/src/ipmi-sel.c (_normal_output_date_and_time)
