@@ -189,6 +189,8 @@ and send the packet on its own.
 config
 ------
 config file - support workarounds/etc. for heterogenous cluster?
+workaround-flags BLAH hosts[1-3]
+workaround-flags FOO  hosts[5-9]
 
 sensors/monitoring
 ------------------
