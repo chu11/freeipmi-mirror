@@ -1,5 +1,6 @@
 FreeIPMI 1.1.1 - XX/XX/11
 -------------------------
+o Support new tool ipmi-pet, tool to parse/interpret platform event traps.
 o Support new --sdr-cache-file option specify specific SDR cache file
   in all tools.
 o Update libfreeipmi for DCMI 1.5 additions.

@@ -74,6 +74,7 @@ extern "C" {
 #include <freeipmi/payload/ipmi-sol-payload.h>
 #include <freeipmi/record-format/ipmi-cipher-suite-record-format.h>
 #include <freeipmi/record-format/ipmi-fru-information-record-format.h>
+#include <freeipmi/record-format/ipmi-platform-event-trap-record-format.h>
 #include <freeipmi/record-format/ipmi-sdr-record-format.h>
 #include <freeipmi/record-format/ipmi-sdr-oem-record-format.h>
 #include <freeipmi/record-format/ipmi-sel-record-format.h>

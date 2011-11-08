@@ -6,6 +6,7 @@ SUBDIRS = \
 	pingtool \
 	portability \
 	toolcommon \
+	toolevent \
 	toolhostrange \
 	tooloem \
 	toolsdr \

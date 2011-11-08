@@ -45,6 +45,10 @@ extern "C" {
   (((__iana_enterprise_id + 1) >= (0 + 1)                   \
     && (__iana_enterprise_id) <= 34214) ? 1 : 0)
 
+#define IPMI_IANA_ENTERPRISE_ID_RECOGNIZED(__iana_enterprise_id) \
+  (IPMI_IANA_ENTERPRISE_ID_VALID((__iana_enterprise_id)) \
+   || (__iana_enterprise_id) == IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND)
+
 /* Some fields can be NULL if they were not assigned/removed by IANA */
 /* consider using ipmi_iana_enerprise_numbers_string() function to
  * handle some workaround situations this array will not have.

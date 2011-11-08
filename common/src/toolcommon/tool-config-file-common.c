@@ -1113,6 +1113,11 @@ config_file_parse (const char *filename,
     ipmi_pef_config_cipher_suite_id_count = 0, ipmi_pef_config_privilege_level_count = 0,
     ipmi_pef_config_workaround_flags_count = 0;
 
+  int ipmi_pet_username_count = 0, ipmi_pet_password_count = 0,
+    ipmi_pet_k_g_count = 0, ipmi_pet_authentication_type_count = 0,
+    ipmi_pet_cipher_suite_id_count = 0, ipmi_pet_privilege_level_count = 0,
+    ipmi_pet_workaround_flags_count = 0;
+
   int ipmi_raw_username_count = 0, ipmi_raw_password_count = 0,
     ipmi_raw_k_g_count = 0, ipmi_raw_authentication_type_count = 0,
     ipmi_raw_cipher_suite_id_count = 0, ipmi_raw_privilege_level_count = 0,
@@ -1166,6 +1171,9 @@ config_file_parse (const char *filename,
 
   struct config_file_data_ipmi_pef_config ipmi_pef_config_data;
   struct config_file_data_ipmi_pef_config *ipmi_pef_config_data_ptr;
+
+  struct config_file_data_ipmi_pet ipmi_pet_data;
+  struct config_file_data_ipmi_pet *ipmi_pet_data_ptr;
 
   struct config_file_data_ipmi_sel ipmi_sel_data;
   struct config_file_data_ipmi_sel *ipmi_sel_data_ptr;
@@ -2562,6 +2570,200 @@ config_file_parse (const char *filename,
         &ipmi_raw_workaround_flags_count,
         &cmd_args_config,
         0
+      },
+    };
+
+  /*
+   * Ipmi-pet
+   */
+  struct conffile_option ipmi_pet_options[] =
+    {
+      {
+        "ipmi-pet-username",
+        CONFFILE_OPTION_STRING,
+        -1,
+        _config_file_tool_option_username,
+        1,
+        0,
+        &ipmi_pet_username_count,
+        &cmd_args_config,
+        0,
+      },
+      {
+        "ipmi-pet-password",
+        CONFFILE_OPTION_STRING,
+        -1,
+        _config_file_tool_option_password,
+        1,
+        0,
+        &ipmi_pet_password_count,
+        &cmd_args_config,
+        0,
+      },
+      {
+        "ipmi-pet-k_g",
+        CONFFILE_OPTION_STRING,
+        -1,
+        _config_file_tool_option_k_g,
+        1,
+        0,
+        &ipmi_pet_k_g_count,
+        &cmd_args_config,
+        0,
+      },
+      {
+        "ipmi-pet-authentication-type",
+        CONFFILE_OPTION_STRING,
+        -1,
+        _config_file_tool_option_authentication_type,
+        1,
+        0,
+        &ipmi_pet_authentication_type_count,
+        &cmd_args_config,
+        0,
+      },
+      {
+        "ipmi-pet-cipher-suite-id",
+        CONFFILE_OPTION_INT,
+        -1,
+        _config_file_tool_option_cipher_suite_id,
+        1,
+        0,
+        &ipmi_pet_cipher_suite_id_count,
+        &cmd_args_config,
+        0,
+      },
+      {
+        "ipmi-pet-privilege-level",
+        CONFFILE_OPTION_STRING,
+        -1,
+        _config_file_tool_option_privilege_level,
+        1,
+        0,
+        &ipmi_pet_privilege_level_count,
+        &cmd_args_config,
+        0,
+      },
+      {
+        "ipmi-pet-workaround-flags",
+        CONFFILE_OPTION_LIST_STRING,
+        -1,
+        _config_file_tool_option_workaround_flags,
+        1,
+        0,
+        &ipmi_pet_workaround_flags_count,
+        &cmd_args_config,
+        0
+      },
+      {
+        "ipmi-pet-verbose-count",
+        CONFFILE_OPTION_INT,
+        -1,
+        _config_file_non_negative_int,
+        1,
+        0,
+        &(ipmi_pet_data.verbose_count_count),
+        &(ipmi_pet_data.verbose_count),
+        0,
+      },
+      {
+        "ipmi-pet-output-output-event-severity",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        _config_file_bool,
+        1,
+        0,
+        &(ipmi_pet_data.output_event_severity_count),
+        &(ipmi_pet_data.output_event_severity),
+        0,
+      },
+      {
+        "ipmi-pet-output-output-event-state",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        _config_file_bool,
+        1,
+        0,
+        &(ipmi_pet_data.output_event_state_count),
+        &(ipmi_pet_data.output_event_state),
+        0,
+      },
+      {
+        "ipmi-pet-event-state-config-file",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        _config_file_string,
+        1,
+        0,
+        &(ipmi_pet_data.event_state_config_file_count),
+        &(ipmi_pet_data.event_state_config_file),
+        0,
+      },
+      {
+        "ipmi-pet-interpret-oem-data",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        _config_file_bool,
+        1,
+        0,
+        &(ipmi_pet_data.interpret_oem_data_count),
+        &(ipmi_pet_data.interpret_oem_data),
+        0,
+      },
+      {
+        "ipmi-pet-entity-sensor-names",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        _config_file_bool,
+        1,
+        0,
+        &(ipmi_pet_data.entity_sensor_names_count),
+        &(ipmi_pet_data.entity_sensor_names),
+        0,
+      },
+      {
+        "ipmi-pet-no-sensor-type-output",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        _config_file_bool,
+        1,
+        0,
+        &(ipmi_pet_data.no_sensor_type_output_count),
+        &(ipmi_pet_data.no_sensor_type_output),
+        0,
+      },
+      {
+        "ipmi-pet-comma-separated-output",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        _config_file_bool,
+        1,
+        0,
+        &(ipmi_pet_data.comma_separated_output_count),
+        &(ipmi_pet_data.comma_separated_output),
+        0,
+      },
+      {
+        "ipmi-pet-no-header-output",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        _config_file_bool,
+        1,
+        0,
+        &(ipmi_pet_data.no_header_output_count),
+        &(ipmi_pet_data.no_header_output),
+        0,
+      },
+      {
+        "ipmi-pet-non-abbreviated-units",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        _config_file_bool,
+        1,
+        0,
+        &(ipmi_pet_data.non_abbreviated_units_count),
+        &(ipmi_pet_data.non_abbreviated_units),
+        0,
       },
     };
 
@@ -4142,6 +4344,7 @@ config_file_parse (const char *filename,
               || ((tool_support & CONFIG_FILE_TOOL_IPMI_FRU) && tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMI_OEM) && tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMI_PEF_CONFIG) && tool_data)
+              || ((tool_support & CONFIG_FILE_TOOL_IPMI_PET) && tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMI_RAW) && !tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMI_SEL) && tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMI_SENSORS) && tool_data)
@@ -4328,6 +4531,17 @@ config_file_parse (const char *filename,
 
   config_file_options_len += options_len;
 
+  options_len = sizeof (ipmi_pet_options)/sizeof (struct conffile_option);
+  if (!(tool_support & CONFIG_FILE_TOOL_IPMI_PET))
+    _ignore_options (ipmi_pet_options, options_len);
+
+  _copy_options (config_file_options,
+                 config_file_options_len,
+                 ipmi_pet_options,
+                 options_len);
+
+  config_file_options_len += options_len;
+
   options_len = sizeof (ipmi_raw_options)/sizeof (struct conffile_option);
   if (!(tool_support & CONFIG_FILE_TOOL_IPMI_RAW))
     _ignore_options (ipmi_raw_options, options_len);
@@ -4404,6 +4618,7 @@ config_file_parse (const char *filename,
   memset (&ipmi_fru_data, '\0', sizeof (struct config_file_data_ipmi_fru));
   memset (&ipmi_oem_data, '\0', sizeof (struct config_file_data_ipmi_oem));
   memset (&ipmi_pef_config_data, '\0', sizeof (struct config_file_data_ipmi_pef_config));
+  memset (&ipmi_pet_data, '\0', sizeof (struct config_file_data_ipmi_pet));
   memset (&ipmi_sel_data, '\0', sizeof (struct config_file_data_ipmi_sel));
   memset (&ipmi_sensors_data, '\0', sizeof (struct config_file_data_ipmi_sensors));
   memset (&ipmi_sensors_config_data, '\0', sizeof (struct config_file_data_ipmi_sensors_config));
@@ -4563,6 +4778,13 @@ config_file_parse (const char *filename,
       memcpy (ipmi_pef_config_data_ptr,
               &ipmi_pef_config_data,
               sizeof (struct config_file_data_ipmi_pef_config));
+    }
+  else if (tool_support & CONFIG_FILE_TOOL_IPMI_PET)
+    {
+      ipmi_pet_data_ptr = (struct config_file_data_ipmi_pet *)tool_data;
+      memcpy (ipmi_pet_data_ptr,
+              &ipmi_pet_data,
+              sizeof (struct config_file_data_ipmi_pet));
     }
   else if (tool_support & CONFIG_FILE_TOOL_IPMI_SEL)
     {

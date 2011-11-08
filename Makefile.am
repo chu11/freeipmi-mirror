@@ -21,6 +21,7 @@ SUBDIRS = \
 	ipmi-fru \
 	ipmi-oem \
 	ipmi-pef-config \
+	ipmi-pet \
 	ipmi-raw \
 	ipmi-sel \
 	ipmi-sensors \

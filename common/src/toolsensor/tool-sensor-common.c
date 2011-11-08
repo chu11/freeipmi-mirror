@@ -49,6 +49,8 @@
 
 #define SENSOR_CHARS_IN_ALPHA  26
 
+#define SENSORS_SENSOR_NAME_LENGTH 16
+
 static void
 _str_replace_char (char *str, char chr, char with)
 {
@@ -1346,3 +1348,21 @@ calculate_column_widths (pstdout_state_t pstate,
   ipmi_sdr_cache_first (sdr_cache_ctx);
   return (rv);
 }
+
+int
+calculate_column_widths_ignored_sdr_cache (unsigned int non_abbreviated_units,
+					   struct sensor_column_width *column_width)
+{
+  assert (column_width);
+
+  /* Ignoring the SDR cache?  Gotta make some guesses */
+  column_width->sensor_name = SENSORS_SENSOR_NAME_LENGTH;
+  column_width->sensor_type = strlen (ipmi_sensor_types[IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS]);
+  if (non_abbreviated_units)
+    column_width->sensor_units = strlen (ipmi_sensor_units[IPMI_SENSOR_UNIT_DEGREES_C]);
+  else
+    column_width->sensor_units = strlen (ipmi_sensor_units[IPMI_SENSOR_UNIT_RPM]);
+
+  return (0);
+}
+

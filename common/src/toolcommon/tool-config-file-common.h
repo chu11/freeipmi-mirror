@@ -43,12 +43,13 @@
 #define CONFIG_FILE_TOOL_IPMI_FRU            0x00000080
 #define CONFIG_FILE_TOOL_IPMI_OEM            0x00000100
 #define CONFIG_FILE_TOOL_IPMI_PEF_CONFIG     0x00000200
-#define CONFIG_FILE_TOOL_IPMI_RAW            0x00000400
-#define CONFIG_FILE_TOOL_IPMI_SEL            0x00000800
-#define CONFIG_FILE_TOOL_IPMI_SENSORS        0x00001000
-#define CONFIG_FILE_TOOL_IPMI_SENSORS_CONFIG 0x00002000
-#define CONFIG_FILE_TOOL_IPMICONSOLE         0x00004000
-#define CONFIG_FILE_TOOL_IPMIPOWER           0x00008000
+#define CONFIG_FILE_TOOL_IPMI_PET            0x00000400
+#define CONFIG_FILE_TOOL_IPMI_RAW            0x00000800
+#define CONFIG_FILE_TOOL_IPMI_SEL            0x00001000
+#define CONFIG_FILE_TOOL_IPMI_SENSORS        0x00002000
+#define CONFIG_FILE_TOOL_IPMI_SENSORS_CONFIG 0x00004000
+#define CONFIG_FILE_TOOL_IPMICONSOLE         0x00008000
+#define CONFIG_FILE_TOOL_IPMIPOWER           0x00010000
 
 /* achu:
  *
@@ -121,6 +122,30 @@ struct config_file_data_ipmi_pef_config
 {
   int verbose_count;
   int verbose_count_count;
+};
+
+struct config_file_data_ipmi_pet
+{
+  int verbose_count;
+  int verbose_count_count;
+  int output_event_severity;
+  int output_event_severity_count;
+  int output_event_state;
+  int output_event_state_count;
+  char *event_state_config_file;
+  int event_state_config_file_count;
+  int interpret_oem_data;
+  int interpret_oem_data_count;
+  int entity_sensor_names;
+  int entity_sensor_names_count;
+  int no_sensor_type_output;
+  int no_sensor_type_output_count;
+  int comma_separated_output;
+  int comma_separated_output_count;
+  int no_header_output;
+  int no_header_output_count;
+  int non_abbreviated_units;
+  int non_abbreviated_units_count;
 };
 
 struct config_file_data_ipmi_sel

@@ -747,6 +747,106 @@ manpage for available workarounds.
 Specify default verbose count to use for
 .B ipmi-pef-config(8).
 
+.SH "IPMI-PET OPTIONS"
+The following options are specific to 
+.B ipmi-pet(8).
+They will be ignored by other tools.
+.TP
+\fBipmi\-pet\-username\fR \fIUSERNAME\fR
+Specify the default username to use for
+.B ipmi-pet(8).
+If specified, will override the general option 
+\fBusername\fR 
+above.
+.TP
+\fBipmi\-pet\-password\fR \fIPASSWORD\fR
+Specify the default password to use for
+.B ipmi-pet(8).
+If specified, will override the general option 
+\fBpassword\fR 
+above.
+.TP
+\fBipmi\-pet\-k_g\fR \fIstr\fR
+Specify the default BMC key (K_g) to use for
+.B ipmi-pet(8).  
+If specified, will override the general option 
+\fBk_g\fR 
+above.  Prefix with '0x' to enter the key in hex.
+.TP
+\fBipmi\-pet\-authentication\-type\fR \fIAUTHENTICATION\-TYPE\fR
+Specify the default authentication type to use for
+.B ipmi-pet(8).  
+If specified, will override the general option 
+\fBauthentication-type\fR 
+above.  The following authentication types are supported: NONE,
+STRAIGHT_PASSWORD_KEY, MD2, and MD5.
+.TP
+\fBipmi\-pet\-cipher\-suite\-id\fR \fICIPHER\-SUITE\-ID\fR
+Specify the default cipher suite id to use for
+.B ipmi-pet(8).
+If specified, will override the general option 
+\fBcipher-suite-id\fR 
+above.  The following cipher suite ids are supported: 0, 1, 2, 3, 6,
+7, 8, 11, 12.
+.TP
+\fBipmi\-pet\-privilege\-level\fR \fIPRIVILEGE\-LEVEL\fR
+Specify the default privilege type to use for
+.B ipmi-pet(8).
+If specified, will override the general option 
+\fBprivilege-level\fR 
+above.  The following privilege levels are supported: USER, OPERATOR,
+ADMIN.
+.TP
+\fBipmi\-pet\-workaround\-flags\fR \fIWORKAROUNDS\fR
+Specify default workaround flags to use for
+.B ipmi-pet(8).  
+If specified, will override the general options
+\fBworkaround\-flags\fR
+above.  Multiple workarounds can be specified separated by whitespace.
+Please see 
+.B ipmi-pet(8) 
+manpage for available workarounds.
+.TP
+\fBipmi\-pet\-verbose\-count\fR \fICOUNT\fR
+Specify default verbose count to use for
+.B ipmi-pet(8).
+.TP
+\fBipmi\-pet\-output\-event\-severity\fR \fIENABLE|DISABLE\fR
+Specify if
+.B ipmi-pet
+should output the event severity state by default.
+.TP
+\fBipmi\-pet\-output\-event\-state\fR \fIENABLE|DISABLE\fR
+Specify if
+.B ipmi-pet
+should output the event state state by default.
+.TP
+\fBipmi\-pet\-event\-state\-config\-file\fR \fIFILE\fR
+Specify the default event state configuration file.
+.TP
+\fBipmi\-pet\-interpret\-oem\-data\fR \fIENABLE|DISABLE\fR
+Specify if
+.B ipmi-pet
+should attempt to interpret OEM data by default or not.
+.TP
+\fBipmi\-pet\-entity\-sensor\-names\fR \fIENABLE|DISABLE\fR
+Specify if output of sensor names should include entity ids and
+instances by default or not.
+.TP
+\fBipmi\-pet\-no\-sensor\-type\-output\fR \fIENABLE|DISABLE\fR
+Specify if output of the sensor type should be output by default or
+not.
+.TP
+\fBipmi\-pet\-comma\-separated\-output\fR \fIENABLE|DISABLE\fR
+Specify if output should be comma separated by default or not.
+.TP
+\fBipmi\-pet\-no\-header\-output\fR \fIENABLE|DISABLE\fR
+Specify if column headers should be output by default or not.
+.TP
+\fBipmi\-pet\-non\-abbreviated\-units\fR \fIENABLE|DISABLE\fR
+Specify if output should have units abbreviated by default or not.
+
+
 .SH "IPMI-RAW OPTIONS"
 The following options are specific to 
 .B ipmi-raw(8).

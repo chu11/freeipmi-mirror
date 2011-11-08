@@ -810,7 +810,7 @@ ipmi_sel_parse (ipmi_sel_parse_ctx_t ctx,
         }
       
       sel_parse_entry->sel_event_record_len = len;
-      
+     
       _sel_entry_dump (ctx, sel_parse_entry);
       
       /* achu: should come before list_append to avoid having a freed entry on the list */

@@ -1,3 +1,26 @@
+2011-11-08  Albert Chu <chu11@llnl.gov>
+
+	Merge branch ipmipet.
+
+	* ipmi-pet/: New tool.
+
+	* libfreeipmi/include/freeipmi/record-format/ipmi-platform-event-trap-record-format.h:
+	New file.
+
+	* common/src/toolcommon/: Update tool common function appropriately for new tool.
+
+	* common/src/toolsensor/tool-sensor-common.h,
+	common/src/toolsensor/tool-sensor-common.c (calculate_column_widths_ignored_sdr_cache,
+	get_entity_id_string): New functions.
+
+	* common/src/toolsdr/tool-sdr-cache-common.h,
+	common/src/toolsdr/tool-sdr-cache-common.c (ipmi_sdr_cache_search_sensor_wrapper):
+	Write new common function.
+
+	* common/src/toolevent/: New common library.
+
+	* ipmi-sel/: Update to use new convenience functions.
+
 2011-11-01  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-raw/src/ipmi-raw.c: Code cleanup.  Output line numbers when

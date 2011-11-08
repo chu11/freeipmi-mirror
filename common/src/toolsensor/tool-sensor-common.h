@@ -137,4 +137,7 @@ int calculate_column_widths (pstdout_state_t pstate,
                              struct sensor_entity_id_counts *entity_id_counts,
                              struct sensor_column_width *column_width);
 
+int calculate_column_widths_ignored_sdr_cache (unsigned int non_abbreviated_units,
+					       struct sensor_column_width *column_width);
+					       
 #endif
