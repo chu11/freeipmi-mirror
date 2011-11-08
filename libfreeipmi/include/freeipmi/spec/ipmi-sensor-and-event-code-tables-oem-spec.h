@@ -853,6 +853,7 @@ extern unsigned int ipmi_oem_intel_specific_pci_correctable_sensor_max_index;
  * Supermicro X9SCM
  * Supermicro X8DTN+-F (X8DTNPLUS_F)
  * Supermicro X8SIE
+ * Supermicro X9SCA-F-O (X9SCA_F_O)
  */
 /* achu: not official names, named based on use context */
 #define IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP_LOW           0x00
