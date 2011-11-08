@@ -107,6 +107,7 @@ extern "C" {
  * Supermicro X9SCM
  * Supermicro X8DTN+-F (X8DTNPLUS_F)
  * Supermicro X8SIE
+ * Supermicro X9SCA-F-O (X9SCA_F_O)
  */
 
 /* achu: not official names, named based on use context */

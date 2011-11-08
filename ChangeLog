@@ -1,3 +1,7 @@
+2011-11-08  Albert Chu <chu11@llnl.gov>
+
+	* Support Supermicro X9SCA-F-O OEM sensors.
+
 2011-10-26  Albert Chu <chu11@llnl.gov>
 
 	* NEWS, configure.ac: Update for release.

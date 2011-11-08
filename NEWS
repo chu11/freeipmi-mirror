@@ -1,3 +1,7 @@
+FreeIPMI 1.0.9 - 10/27/11
+-------------------------
+o Support Supermicro OEM sensors on X9SCA-F-O motherboards.
+
 FreeIPMI 1.0.8 - 10/27/11
 -------------------------
 o Fix corner case in which invalid SDR entry could be loaded when
