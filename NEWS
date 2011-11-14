@@ -1,6 +1,8 @@
 FreeIPMI 1.0.9 - 10/27/11
 -------------------------
 o Support Supermicro OEM sensors on X9SCA-F-O motherboards.
+o Support Supermicro OEM sensors on X9SCM-F motherboards with
+  newer firmware.
 
 FreeIPMI 1.0.8 - 10/27/11
 -------------------------
