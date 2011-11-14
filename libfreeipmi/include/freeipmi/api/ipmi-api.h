@@ -111,17 +111,17 @@ typedef enum ipmi_driver_type ipmi_driver_type_t;
 #define IPMI_WORKAROUND_FLAGS_INBAND_ASSUME_IO_BASE_ADDRESS                 0x00000001
 #define IPMI_WORKAROUND_FLAGS_INBAND_SPIN_POLL                              0x00000002
 
-/* NONBLOCKING - for inband only
+/* NONBLOCKING - for inband only, do no block if device busy 
  *
  * DEBUG_DUMP - for all interfaces
-
+ *
  * NO_VALID_CHECK - do not check if IPMI response packets are valid
  * (i.e. all required fields set).  Useful to workaround non-compliant
  * motherboards.
  */
 
 #define IPMI_FLAGS_DEFAULT        0x00000000
-#define IPMI_FLAGS_NONBLOCKING    0x00000001
+#define IPMI_FLAGS_UNCONNECTED    0x00000002
 #define IPMI_FLAGS_DEBUG_DUMP     0x00000010
 #define IPMI_FLAGS_NO_VALID_CHECK 0x00000100
 

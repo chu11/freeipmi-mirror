@@ -1,5 +1,9 @@
 2011-11-14  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/api/ipmi-api.h: Update documentation.
+	
+2011-11-14  Albert Chu <chu11@llnl.gov>
+
 	* Add contrib/pet/petalert.pl script from Kaiwang
 	Chen (kaiwang.chen AT gmail.com).
 	
