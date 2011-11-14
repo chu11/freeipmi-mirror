@@ -1,5 +1,10 @@
 2011-11-14  Albert Chu <chu11@llnl.gov>
 
+	* Add contrib/pet/petalert.pl script from Kaiwang
+	Chen (kaiwang.chen AT gmail.com).
+	
+2011-11-14  Albert Chu <chu11@llnl.gov>
+
 	* Support Supermicro X9SCM-F IANA change.
 	
 2011-11-08  Albert Chu <chu11@llnl.gov>

@@ -1,2 +1,2 @@
-SUBDIRS = ganglia nagios
+SUBDIRS = ganglia nagios pet
 

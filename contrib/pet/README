@@ -1,0 +1,11 @@
+petalert.pl
+-----------------------
+
+This is a snmptrapd handler script to alert when Platform Event Traps
+(PET) occur.  It was written because traptoemail distributed with
+net-snmp-5.3.2.2 is incapable of handling multi-line hexstrings and
+restricted to email alert.
+
+Kaiwang Chen
+kaiwang.chen@gmail.com
+
