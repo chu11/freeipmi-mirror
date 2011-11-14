@@ -50,6 +50,7 @@ AC_CONFIG_FILES([
         contrib/Makefile
         contrib/ganglia/Makefile
         contrib/nagios/Makefile
+	contrib/pet/Makefile
         examples/Makefile
         libfreeipmi/Makefile 
         libfreeipmi/libfreeipmi.3.pre
