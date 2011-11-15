@@ -111,8 +111,16 @@ typedef enum ipmi_driver_type ipmi_driver_type_t;
 #define IPMI_WORKAROUND_FLAGS_INBAND_ASSUME_IO_BASE_ADDRESS                 0x00000001
 #define IPMI_WORKAROUND_FLAGS_INBAND_SPIN_POLL                              0x00000002
 
-/* NONBLOCKING - for inband only, do no block if device busy 
+/* NONBLOCKING - for inband only, do no block if device busy.
  *
+ * NOSESSION - for outofband only, do not create an IPMI session.
+ * Useful for the few IPMI payloads that do not require a session for
+ * an IPMI command to be sent (e.g. Get Channel Authentication
+ * Capabilities, Get System GUID, PET Acknowledge).  Can only be set
+ * during opening, not later using ipmi_ctx_set_flags().  If set, you
+ * cannot call most IPMI payload functions, only those few that send
+ * data without a session.
+ * 
  * DEBUG_DUMP - for all interfaces
  *
  * NO_VALID_CHECK - do not check if IPMI response packets are valid
@@ -121,7 +129,8 @@ typedef enum ipmi_driver_type ipmi_driver_type_t;
  */
 
 #define IPMI_FLAGS_DEFAULT        0x00000000
-#define IPMI_FLAGS_UNCONNECTED    0x00000002
+#define IPMI_FLAGS_NONBLOCKING    0x00000001
+#define IPMI_FLAGS_NOSESSION      0x00000002
 #define IPMI_FLAGS_DEBUG_DUMP     0x00000010
 #define IPMI_FLAGS_NO_VALID_CHECK 0x00000100
 

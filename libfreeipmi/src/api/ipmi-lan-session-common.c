@@ -1433,6 +1433,12 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
   if (_ipmi_lan_rq_seq_init (ctx) < 0)
     goto cleanup;
 
+  if (ctx->flags & IPMI_FLAGS_NOSESSION)
+    {
+      ctx->io.outofband.authentication_type = IPMI_AUTHENTICATION_TYPE_NONE;
+      goto out;
+    }
+
   if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_get_channel_authentication_capabilities_rq)))
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
@@ -1799,6 +1805,7 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
       goto cleanup;
     }
 
+ out:
   rv = 0;
  cleanup:
   fiid_obj_destroy (obj_cmd_rq);

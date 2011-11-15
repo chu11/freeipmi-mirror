@@ -8,12 +8,10 @@ o Update libfreeipmi fru-parse sub-library to support FRU parsing
   without an IPMI connection.
 o In ipmi-raw, for file/stdin input, output line number when there is
   an error.
-o 
-o Fix macro name typos.
-
-Contributions
--------------
+o In libfreeipmi, support IPMI_FLAGS_NOSESSION flag to open a context
+  for IPMI communication w/o establishing a session.
 o Add petalert.pl contribution from Kaiwang Chen (kaiwang.chen AT gmail DOT com)
+o Fix macro name typos.
 
 FreeIPMI 1.0.6 - 09/01/11
 -------------------------

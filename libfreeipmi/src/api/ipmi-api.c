@@ -210,6 +210,7 @@ int
 ipmi_ctx_set_flags (ipmi_ctx_t ctx, unsigned int flags)
 {
   unsigned int flags_mask = (IPMI_FLAGS_NONBLOCKING
+			     | IPMI_FLAGS_NOSESSION
                              | IPMI_FLAGS_DEBUG_DUMP
                              | IPMI_FLAGS_NO_VALID_CHECK);
 
@@ -223,6 +224,20 @@ ipmi_ctx_set_flags (ipmi_ctx_t ctx, unsigned int flags)
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
+    }
+
+  /* Some flags are only configurable at creation time, cannot be
+   * changed mid-session.
+   */
+  if (ctx->type != IPMI_DEVICE_UNKNOWN)
+    {
+      flags_mask = IPMI_FLAGS_NOSESSION;
+      
+      if ((ctx->flags & flags_mask) != (flags & flags_mask))
+	{
+	  API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
+	  return (-1);
+	}
     }
 
   ctx->flags = flags;
@@ -413,7 +428,8 @@ ipmi_ctx_open_outofband (ipmi_ctx_t ctx,
                                         | IPMI_WORKAROUND_FLAGS_OUTOFBAND_FORCE_PERMSG_AUTHENTICATION
                                         | IPMI_WORKAROUND_FLAGS_OUTOFBAND_CHECK_UNEXPECTED_AUTHCODE
                                         | IPMI_WORKAROUND_FLAGS_OUTOFBAND_BIG_ENDIAN_SEQUENCE_NUMBER);
-  unsigned int flags_mask = (IPMI_FLAGS_DEBUG_DUMP
+  unsigned int flags_mask = (IPMI_FLAGS_NOSESSION
+			     | IPMI_FLAGS_DEBUG_DUMP
                              | IPMI_FLAGS_NO_VALID_CHECK);
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
@@ -1377,6 +1393,13 @@ ipmi_cmd (ipmi_ctx_t ctx,
       return (-1);
     }
 
+  if (ctx->flags & IPMI_FLAGS_NOSESSION
+      && ctx->type != IPMI_DEVICE_LAN)
+    {
+      API_SET_ERRNUM (ctx, IPMI_ERR_DEVICE_NOT_OPEN);
+      return (-1);
+    }
+
   if (ctx->type != IPMI_DEVICE_LAN
       && ctx->type != IPMI_DEVICE_LAN_2_0
       && ctx->type != IPMI_DEVICE_KCS
@@ -1574,6 +1597,12 @@ ipmi_cmd_ipmb (ipmi_ctx_t ctx,
       return (-1);
     }
 
+  if (ctx->flags & IPMI_FLAGS_NOSESSION)
+    {
+      API_SET_ERRNUM (ctx, IPMI_ERR_DEVICE_NOT_OPEN);
+      return (-1);
+    }
+
   if (ctx->type != IPMI_DEVICE_LAN
       && ctx->type != IPMI_DEVICE_LAN_2_0
       && ctx->type != IPMI_DEVICE_KCS
@@ -1761,6 +1790,12 @@ ipmi_cmd_raw (ipmi_ctx_t ctx,
       return (-1);
     }
 
+  if (ctx->flags & IPMI_FLAGS_NOSESSION)
+    {
+      API_SET_ERRNUM (ctx, IPMI_ERR_DEVICE_NOT_OPEN);
+      return (-1);
+    }
+
   if (ctx->type != IPMI_DEVICE_LAN
       && ctx->type != IPMI_DEVICE_LAN_2_0
       && ctx->type != IPMI_DEVICE_KCS
@@ -1916,6 +1951,12 @@ ipmi_cmd_raw_ipmb (ipmi_ctx_t ctx,
     }
 
   if (ctx->type == IPMI_DEVICE_UNKNOWN)
+    {
+      API_SET_ERRNUM (ctx, IPMI_ERR_DEVICE_NOT_OPEN);
+      return (-1);
+    }
+
+  if (ctx->flags & IPMI_FLAGS_NOSESSION)
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_DEVICE_NOT_OPEN);
       return (-1);

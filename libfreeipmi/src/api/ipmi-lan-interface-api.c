@@ -59,6 +59,7 @@ ipmi_lan_cmd (ipmi_ctx_t ctx,
 {
   uint8_t authentication_type;
   unsigned int internal_workaround_flags = 0;
+  int ret;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -101,22 +102,39 @@ ipmi_lan_cmd (ipmi_ctx_t ctx,
                                        &authentication_type,
                                        &internal_workaround_flags);
 
-  /* if auth type NONE, still pass password.  Needed for
-   * check_unexpected_authcode workaround
-   */
-  return (ipmi_lan_cmd_wrapper (ctx,
-                                internal_workaround_flags,
-                                ctx->lun,
+  if (ctx->flags & IPMI_FLAGS_NOSESSION)
+    ret = ipmi_lan_cmd_wrapper (ctx,
+				internal_workaround_flags,
+				ctx->lun,
                                 ctx->net_fn,
-                                authentication_type,
-                                1,
-                                &(ctx->io.outofband.session_sequence_number),
-                                ctx->io.outofband.session_id,
-                                &(ctx->io.outofband.rq_seq),
-                                ctx->io.outofband.password,
-                                IPMI_1_5_MAX_PASSWORD_LENGTH,
-                                obj_cmd_rq,
-                                obj_cmd_rs));
+				IPMI_AUTHENTICATION_TYPE_NONE,
+				0,
+				NULL,
+				0,
+				&(ctx->io.outofband.rq_seq),
+				NULL,
+				0,
+				obj_cmd_rq,
+                                obj_cmd_rs);
+  else
+    /* if auth type NONE, still pass password.  Needed for
+     * check_unexpected_authcode workaround
+     */
+    ret = ipmi_lan_cmd_wrapper (ctx,
+				internal_workaround_flags,
+				ctx->lun,
+				ctx->net_fn,
+				authentication_type,
+				1,
+				&(ctx->io.outofband.session_sequence_number),
+				ctx->io.outofband.session_id,
+				&(ctx->io.outofband.rq_seq),
+				ctx->io.outofband.password,
+				IPMI_1_5_MAX_PASSWORD_LENGTH,
+				obj_cmd_rq,
+				obj_cmd_rs);
+
+  return (ret);
 }
 
 int
