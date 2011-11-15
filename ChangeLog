@@ -1,6 +1,9 @@
 2011-11-15  Albert Chu <chu11@llnl.gov>
 
 	* Support IPMI_FLAGS_NOSESSION in libfreeipmi.
+
+	* libfreeipmi/include/freeipmi/record-format/ipmi-platform-event-trap-record-format.h:
+	Support macros for sequence number.
 	
 2011-11-15  Albert Chu <chu11@llnl.gov>
 
