@@ -150,6 +150,7 @@ int ipmi_ctx_get_flags (ipmi_ctx_t ctx, unsigned int *flags);
 int ipmi_ctx_set_flags (ipmi_ctx_t ctx, unsigned int flags);
 
 /* For IPMI 1.5 sessions */
+/* For session_timeout and retransmission_timeout, specify 0 for default */
 int ipmi_ctx_open_outofband (ipmi_ctx_t ctx,
                              const char *hostname,
                              const char *username,
@@ -162,6 +163,7 @@ int ipmi_ctx_open_outofband (ipmi_ctx_t ctx,
                              unsigned int flags);
 
 /* For IPMI 2.0 sessions */
+/* For session_timeout and retransmission_timeout, specify 0 for default */
 int ipmi_ctx_open_outofband_2_0 (ipmi_ctx_t ctx,
                                  const char *hostname,
                                  const char *username,
