@@ -1,6 +1,8 @@
 2011-11-14  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/api/ipmi-api.h: Update documentation.
+
+	* libfreeipmi/src/api/ipmi-lan-session-common.c: Code cleanup.
 	
 2011-11-14  Albert Chu <chu11@llnl.gov>
 

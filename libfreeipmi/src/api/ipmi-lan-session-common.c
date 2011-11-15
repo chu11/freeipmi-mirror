@@ -1388,6 +1388,25 @@ ipmi_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
   return (rv);
 }
 
+static int
+_ipmi_lan_rq_seq_init (ipmi_ctx_t ctx)
+{
+  unsigned int seedp;
+
+  assert (ctx
+          && ctx->magic == IPMI_CTX_MAGIC
+          && ctx->io.outofband.sockfd
+	  && (ctx->type == IPMI_DEVICE_LAN
+	      || ctx->type == IPMI_DEVICE_LAN_2_0));
+
+  /* Random number generation */
+  seedp = (unsigned int) clock () + (unsigned int) time (NULL);
+  srand (seedp);
+
+  ctx->io.outofband.rq_seq = (uint8_t)((double)(IPMI_LAN_REQUESTER_SEQUENCE_NUMBER_MAX) * (rand ()/(RAND_MAX + 1.0)));
+  return (0);
+}
+
 int
 ipmi_lan_open_session (ipmi_ctx_t ctx)
 {
@@ -1397,7 +1416,6 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
   uint32_t temp_session_id = 0;
   uint8_t challenge_string[IPMI_CHALLENGE_STRING_LENGTH];
   uint32_t initial_outbound_sequence_number = 0;
-  unsigned int seedp;
   char *tmp_username_ptr = NULL;
   char *tmp_password_ptr = NULL;
   int ret, rv = -1;
@@ -1412,11 +1430,8 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
           && IPMI_1_5_AUTHENTICATION_TYPE_VALID (ctx->io.outofband.authentication_type)
           && IPMI_PRIVILEGE_LEVEL_VALID (ctx->io.outofband.privilege_level));
 
-  /* Random number generation */
-  seedp = (unsigned int) clock () + (unsigned int) time (NULL);
-  srand (seedp);
-
-  ctx->io.outofband.rq_seq = (double)(IPMI_LAN_REQUESTER_SEQUENCE_NUMBER_MAX) * (rand ()/(RAND_MAX + 1.0));
+  if (ipmi_lan_rq_seq_init (ctx) < 0)
+    goto cleanup;
 
   if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_get_channel_authentication_capabilities_rq)))
     {
@@ -3181,7 +3196,6 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
   char *tmp_password_ptr = NULL;
   void *tmp_k_g_ptr = NULL;
   int ret, rv = -1;
-  unsigned int seedp;
   uint64_t val;
 
   assert (ctx
@@ -3199,16 +3213,13 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
           && ctx->io.outofband.confidentiality_key_ptr == ctx->io.outofband.confidentiality_key
           && ctx->io.outofband.confidentiality_key_len == IPMI_MAX_CONFIDENTIALITY_KEY_LENGTH);
 
-  /* Random number generation */
-  seedp = (unsigned int) clock () + (unsigned int) time (NULL);
-  srand (seedp);
+  if (ipmi_lan_rq_seq_init (ctx) < 0)
+    goto cleanup;
 
   /* Unlike IPMI 1.5, there is no initial sequence number negotiation, so we don't
    * start at a random sequence number.
    */
   ctx->io.outofband.session_sequence_number = 1;
-
-  ctx->io.outofband.rq_seq = (uint8_t)((double)(IPMI_LAN_REQUESTER_SEQUENCE_NUMBER_MAX) * (rand ()/(RAND_MAX + 1.0)));
 
   if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_get_channel_authentication_capabilities_rq)))
     {
