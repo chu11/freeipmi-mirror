@@ -1430,7 +1430,7 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
           && IPMI_1_5_AUTHENTICATION_TYPE_VALID (ctx->io.outofband.authentication_type)
           && IPMI_PRIVILEGE_LEVEL_VALID (ctx->io.outofband.privilege_level));
 
-  if (ipmi_lan_rq_seq_init (ctx) < 0)
+  if (_ipmi_lan_rq_seq_init (ctx) < 0)
     goto cleanup;
 
   if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_get_channel_authentication_capabilities_rq)))
@@ -3213,7 +3213,7 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
           && ctx->io.outofband.confidentiality_key_ptr == ctx->io.outofband.confidentiality_key
           && ctx->io.outofband.confidentiality_key_len == IPMI_MAX_CONFIDENTIALITY_KEY_LENGTH);
 
-  if (ipmi_lan_rq_seq_init (ctx) < 0)
+  if (_ipmi_lan_rq_seq_init (ctx) < 0)
     goto cleanup;
 
   /* Unlike IPMI 1.5, there is no initial sequence number negotiation, so we don't
