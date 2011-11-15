@@ -1,3 +1,7 @@
+2011-11-15  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-pet/ipmi-pet.8.pre.in: Add examples.
+
 2011-11-15  Kaiwang Chen <kaiwang.chen@gmail.com>
 
 	* contrib/pet/petalert.pl: Support various new features.
