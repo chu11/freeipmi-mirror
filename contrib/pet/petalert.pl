@@ -112,7 +112,10 @@ $0 [OPTIONS] -- [ALERT_SPECIFIC_OPTIONS] ALERT_SPECIFIC_ARGS
   OPTIONS
     -m
     --mode  {traphandle|embperl} 
-                Specify mode of execution
+                Specify mode of execution. Required.
+    -o
+    --trapoid  OID
+                Sets trapoid in embperl mode, or defaults to "all".
     -c
     --sdrcache  sdr_cache_config 
                 Specify the sdr cache configuration file.
@@ -120,8 +123,8 @@ $0 [OPTIONS] -- [ALERT_SPECIFIC_OPTIONS] ALERT_SPECIFIC_ARGS
     --log  log_file
                 Specify logging file
     -n
-    --alert  {mail|nagios|nsca|MODULE}
-                Specify alert method.
+    --alert  {mail|nagios|nsca|noop|MODULE}
+                Specify alert method. Defaults to "noop".
 
   ALERT SPECIFIC OPTIONS AND ARGS
   email
@@ -136,11 +139,12 @@ $0 [OPTIONS] -- [ALERT_SPECIFIC_OPTIONS] ALERT_SPECIFIC_ARGS
                 Sets the email for Net:SNMP to be used on the From: line.
                 Defaults to "root".
     to_addresses
-                Sets where you want Net::SNMP to send the email to. 
+                Sets where you want Net::SNMP to send the email to. Required.
     
   nagios
     command_file
                 Sets Nagios external command file, a named pipe (FIFO).
+                Required.
 
   nsca
     --prog send_nsca
@@ -215,7 +219,10 @@ sub decode_pet {
     @x = <$fh>;
     close $fh;
   }
-  else { logger("warn", "decoder failure: $!") }
+  else {
+    logger("warn", "decoder failure: $!");
+    return;
+  }
   chomp(@x);
 
   logger("decode", "output ", \@x);
@@ -243,7 +250,7 @@ sub pettime {
   $year -= 1900;
   my %m = (
     Jan => 0, Feb =>  1, Mar =>  2, Apr => 3, May =>  4, Jun =>  5,
-    Jul => 6, Aug =>  7, Sep =>  8, Oct => 9, Nov => 11, Dec => 12,
+    Jul => 6, Aug =>  7, Sep =>  8, Oct => 9, Nov => 10, Dec => 11,
   );
   if (exists $m{$mon}) { $mon = $m{$mon} }
   else {
@@ -361,6 +368,9 @@ sub process {
       $event = decode_pet($specific, $v->[1], $sdrcache);
     }
   }
+
+  # invalid events cease here
+  return unless $event;
 
   alert($pdu_info, $uptime, $event);
   return;
@@ -610,7 +620,7 @@ sub process_args {
     }
   }
   unless ($opts{'quiet'}) {
-    print STDERR "logging to $log_filename, use -q to suppress this tip\n";
+    print STDERR "petalert.pl is logging to $log_filename, use -q to suppress this tip\n";
   }
 
   # comma-separted debug tokens
@@ -639,15 +649,21 @@ sub process_args {
   if ($opts{'mode'} eq 'embperl') {
     unless (exists $opts{trapoid}) {
       $opts{trapoid} = "all";
-      logger("argv", "trapoid defaults to all");
+      logger("argv", "no trapoid specified, defaults to all");
     }
     require NetSNMP::TrapReceiver;
   }
   elsif ($opts{'mode'} eq 'traphandle') {
   }
   else {
-    print STDERR "Unknown mode to execute: $opts{mode}\n";
+    print STDERR "Unknown operation mode: $opts{mode}\n";
     usage();
+  }
+
+  # alert method defaults to no-op
+  unless (exists $opts{'alert'}) {
+    $opts{'alert'} = 'noop';
+    logger("argv", "no alert method specified, defaults to noop");
   }
 
   # alert methods

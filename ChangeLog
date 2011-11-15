@@ -1,13 +1,17 @@
+2011-11-15  Kaiwang Chen <kaiwang.chen@gmail.com>
+
+	* contrib/pet/petalert.pl: Support various new features.
+	
 2011-11-14  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/api/ipmi-api.h: Update documentation.
 
 	* libfreeipmi/src/api/ipmi-lan-session-common.c: Code cleanup.
 	
-2011-11-14  Albert Chu <chu11@llnl.gov>
+2011-11-14  Kaiwang Chen <kaiwang.chen@gmail.com>
 
 	* Add contrib/pet/petalert.pl script from Kaiwang
-	Chen (kaiwang.chen AT gmail.com).
+	Chen (kaiwang.chen AT gmail DOT com).
 	
 2011-11-14  Albert Chu <chu11@llnl.gov>
 
