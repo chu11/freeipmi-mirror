@@ -122,25 +122,15 @@ config_keypair_parse_string (const char *str,
 
   rv = 0;
  cleanup:
-  if (str_temp)
-    free (str_temp);
+  free (str_temp);
   if (rv < 0)
     {
-      if (*section_name)
-        {
-          free (*section_name);
-          *section_name = NULL;
-        }
-      if (*key_name)
-        {
-          free (*key_name);
-          *key_name = NULL;
-        }
-      if (*value)
-        {
-          free (*value);
-          *value = NULL;
-        }
+      free (*section_name);
+      *section_name = NULL;
+      free (*key_name);
+      *key_name = NULL;
+      free (*value);
+      *value = NULL;
     }
   return (rv);
 }
@@ -236,8 +226,7 @@ config_keypair_create (const char *section_name,
   return (keypair);
 
  cleanup:
-  if (keypair)
-    config_keypair_destroy (keypair);
+  config_keypair_destroy (keypair);
   return (NULL);
 }
 
@@ -246,12 +235,9 @@ config_keypair_destroy (struct config_keypair *keypair)
 {
   if (keypair)
     {
-      if (keypair->section_name)
-        free (keypair->section_name);
-      if (keypair->key_name)
-        free (keypair->key_name);
-      if (keypair->value_input)
-        free (keypair->value_input);
+      free (keypair->section_name);
+      free (keypair->key_name);
+      free (keypair->value_input);
       free (keypair);
     }
 }
@@ -321,8 +307,7 @@ config_section_str_destroy (struct config_section_str *section_str)
 {
   if (section_str)
     {
-      if (section_str->section_name)
-        free (section_str->section_name);
+      free (section_str->section_name);
       free (section_str);
     }
 }

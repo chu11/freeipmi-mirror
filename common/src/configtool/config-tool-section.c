@@ -122,8 +122,7 @@ config_section_create (pstdout_state_t pstate,
   return (section);
 
  cleanup:
-  if (section)
-    config_section_destroy (section);
+  config_section_destroy (section);
   return (NULL);
 }
 
@@ -203,8 +202,7 @@ config_section_multi_channel_create (pstdout_state_t pstate,
   return (section);
 
  cleanup:
-  if (section)
-    config_section_destroy (section);
+  config_section_destroy (section);
   return (NULL);
 }
 
@@ -213,10 +211,8 @@ _config_key_destroy (struct config_key *key)
 {
   if (key)
     {
-      if (key->key_name)
-        free (key->key_name);
-      if (key->description)
-        free (key->description);
+      free (key->key_name);
+      free (key->description);
       free (key);
     }
 }
@@ -226,10 +222,8 @@ _config_keyvalue_destroy (struct config_keyvalue *keyvalue)
 {
   if (keyvalue)
     {
-      if (keyvalue->value_input)
-        free (keyvalue->value_input);
-      if (keyvalue->value_output)
-        free (keyvalue->value_output);
+      free (keyvalue->value_input);
+      free (keyvalue->value_output);
       free (keyvalue);
     }
 }
@@ -239,14 +233,9 @@ config_section_destroy (struct config_section *section)
 {
   if (section)
     {
-      if (section->section_name)
-        free (section->section_name);
-
-      if (section->section_comment_section_name)
-        free (section->section_comment_section_name);
-
-      if (section->section_comment)
-        free (section->section_comment);
+      free (section->section_name);
+      free (section->section_comment_section_name);
+      free (section->section_comment);
 
       while (section->keys)
         {
@@ -321,6 +310,7 @@ config_section_add_key (pstdout_state_t pstate,
     section->keys = k;
 
   return (0);
+
  cleanup:
   _config_key_destroy (k);
   return (-1);
@@ -458,8 +448,7 @@ config_section_update_keyvalue_input (pstdout_state_t pstate,
       /* overwrite values, user can specify something else on the
        * command line
        */
-      if (keyvalue->value_input)
-        free (keyvalue->value_input);
+      free (keyvalue->value_input);
 
       if (!(keyvalue->value_input = strdup (value_input)))
         {

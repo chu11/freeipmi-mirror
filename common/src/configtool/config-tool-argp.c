@@ -118,8 +118,7 @@ config_parse_opt (int key,
         config_args->action = -1;
       break;
     case CONFIG_ARGP_FILENAME_KEY:
-      if (config_args->filename) /* If specified more than once */
-        free (config_args->filename);
+      free (config_args->filename);
       if (!(config_args->filename = strdup (arg)))
         {
           perror ("strdup");
@@ -149,16 +148,9 @@ config_parse_opt (int key,
           /* error printed in function call */
           exit (1);
         }
-      if (section_name)
-        free (section_name);
-      section_name = NULL;
-      if (key_name)
-        free (key_name);
-      key_name = NULL;
-      if (value)
-        free (value);
-      value = NULL;
-      kp = NULL;
+      free (section_name);
+      free (key_name);
+      free (value);
       break;
     case CONFIG_ARGP_SECTIONS_KEY:
       if (!(sstr = config_section_str_create (arg)))
