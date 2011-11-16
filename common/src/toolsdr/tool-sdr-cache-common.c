@@ -85,7 +85,7 @@ _get_home_directory (pstdout_state_t pstate,
 
   if (!(tbuf = malloc (tbuf_len)))
     {
-      PSTDOUT_PERROR (pstate, "alloca");
+      PSTDOUT_PERROR (pstate, "malloc");
       goto cleanup;
     }
 
@@ -182,8 +182,7 @@ _get_home_directory (pstdout_state_t pstate,
 
   rv = 0;
  cleanup:
-  if (tbuf)
-    free (tbuf);
+  free (tbuf);
   return (0);
 }
 

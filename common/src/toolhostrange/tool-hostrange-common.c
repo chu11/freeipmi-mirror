@@ -149,8 +149,7 @@ eliminate_nodes (char **hosts)
     hostlist_destroy (hl);
   if (hlnew)
     hostlist_destroy (hlnew);
-  if (host)
-    free (host);
+  free (host);
   return (rv);
 }
 

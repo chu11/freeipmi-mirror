@@ -918,6 +918,8 @@ _ipmiconsole_engine (void *arg)
       int spin_wait_flag = 0;
       char buf[IPMICONSOLE_PIPE_BUFLEN];
 
+      memset (&poll_data, '\0', sizeof (struct _ipmiconsole_poll_data));
+
       if ((perr = pthread_mutex_lock (&console_engine_teardown_mutex)))
         {
           /* This is one of the only truly "fatal" conditions */
@@ -941,8 +943,6 @@ _ipmiconsole_engine (void *arg)
           IPMICONSOLE_DEBUG (("pthread_mutex_unlock: %s", strerror (perr)));
           teardown_flag = 1;
         }
-
-      memset (&poll_data, '\0', sizeof (struct _ipmiconsole_poll_data));
 
       /* Notes:
        *
@@ -1173,18 +1173,8 @@ _ipmiconsole_engine (void *arg)
           /* XXX: Is this portable? */
           usleep (IPMICONSOLE_SPIN_WAIT_TIME);
         }
-      if (poll_data.pfds)
-        {
-          free (poll_data.pfds);
-          poll_data.pfds = NULL;
-        }
-      if (poll_data.pfds_ctxs)
-        {
-          free (poll_data.pfds_ctxs);
-          poll_data.pfds_ctxs = NULL;
-        }
-      poll_data.ctxs_len = 0;
-      poll_data.pfds_index = 0;
+      free (poll_data.pfds);
+      free (poll_data.pfds_ctxs);
     }
 
   /* No way to return error, so just continue on even if there is a failure */
