@@ -114,6 +114,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
   switch (key)
     {
     case DEVICE_ID_KEY:
+      errno = 0;
       tmp = strtol (arg, &endptr, 0);
       if (errno
 	  || endptr[0] != '\0')
