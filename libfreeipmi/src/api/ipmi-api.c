@@ -286,22 +286,22 @@ _ipmi_inband_free (ipmi_ctx_t ctx)
   assert (ctx);
   assert (ctx->magic == IPMI_CTX_MAGIC);
 
-  if (ctx->type == IPMI_DEVICE_KCS && ctx->io.inband.kcs_ctx)
+  if (ctx->type == IPMI_DEVICE_KCS)
     {
       ipmi_kcs_ctx_destroy (ctx->io.inband.kcs_ctx);
       ctx->io.inband.kcs_ctx = NULL;
     }
-  if (ctx->type == IPMI_DEVICE_SSIF && ctx->io.inband.ssif_ctx)
+  if (ctx->type == IPMI_DEVICE_SSIF)
     {
       ipmi_ssif_ctx_destroy (ctx->io.inband.ssif_ctx);
       ctx->io.inband.ssif_ctx = NULL;
     }
-  if (ctx->type == IPMI_DEVICE_OPENIPMI && ctx->io.inband.openipmi_ctx)
+  if (ctx->type == IPMI_DEVICE_OPENIPMI)
     {
       ipmi_openipmi_ctx_destroy (ctx->io.inband.openipmi_ctx);
       ctx->io.inband.openipmi_ctx = NULL;
     }
-  if (ctx->type == IPMI_DEVICE_SUNBMC && ctx->io.inband.sunbmc_ctx)
+  if (ctx->type == IPMI_DEVICE_SUNBMC)
     {
       ipmi_sunbmc_ctx_destroy (ctx->io.inband.sunbmc_ctx);
       ctx->io.inband.sunbmc_ctx = NULL;

@@ -293,8 +293,7 @@ _init_kcs_ipmi (void)
 
   rv = 0;
  cleanup:
-  if (locate_ctx)
-    ipmi_locate_ctx_destroy (locate_ctx);
+  ipmi_locate_ctx_destroy (locate_ctx);
   return (rv);
 }
 
@@ -372,8 +371,7 @@ _init_ssif_ipmi (void)
 
   rv = 0;
  cleanup:
-  if (locate_ctx)
-    ipmi_locate_ctx_destroy (locate_ctx);
+  ipmi_locate_ctx_destroy (locate_ctx);
   return (rv);
 }
 
@@ -539,8 +537,7 @@ _init_ipmi (void)
     }
 
  out:
-  if (locate_ctx)
-    ipmi_locate_ctx_destroy (locate_ctx);
+  ipmi_locate_ctx_destroy (locate_ctx);
   return (0);
 }
 
@@ -2173,14 +2170,10 @@ main (int argc, char **argv)
   else
     _err_exit ("internal error, command not set");
 
-  if (kcs_ctx)
-    ipmi_kcs_ctx_destroy (kcs_ctx);
-  if (ssif_ctx)
-    ipmi_ssif_ctx_destroy (ssif_ctx);
-  if (openipmi_ctx)
-    ipmi_openipmi_ctx_destroy (openipmi_ctx);
-  if (sunbmc_ctx)
-    ipmi_sunbmc_ctx_destroy (sunbmc_ctx);
+  ipmi_kcs_ctx_destroy (kcs_ctx);
+  ipmi_ssif_ctx_destroy (ssif_ctx);
+  ipmi_openipmi_ctx_destroy (openipmi_ctx);
+  ipmi_sunbmc_ctx_destroy (sunbmc_ctx);
   if (logfile_fd >= 0)
     {
       if (close (logfile_fd) < 0)
