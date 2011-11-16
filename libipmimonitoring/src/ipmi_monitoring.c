@@ -141,15 +141,6 @@ ipmi_monitoring_init (unsigned int flags, int *errnum)
 }
 
 static void
-_init_ctx (ipmi_monitoring_ctx_t c)
-{
-  assert (c);
-  assert (c->magic == IPMI_MONITORING_MAGIC);
-
-  c->sdr_cache_ctx = NULL;
-}
-
-static void
 _destroy_sel_record (void *x)
 {
   struct ipmi_monitoring_sel_record *record;
@@ -193,11 +184,7 @@ _destroy_ctx (ipmi_monitoring_ctx_t c)
   assert (c);
   assert (c->magic == IPMI_MONITORING_MAGIC);
 
-  if (c->interpret_ctx)
-    {
-      ipmi_interpret_ctx_destroy (c->interpret_ctx);
-      c->interpret_ctx = NULL;
-    }
+  ipmi_interpret_ctx_destroy (c->interpret_ctx);
     
   /* Note: destroy iterator first */
   if (c->sel_records_itr)
@@ -262,12 +249,10 @@ ipmi_monitoring_ctx_create (void)
   if (!(c->sensor_readings = list_create ((ListDelF)_destroy_sensor_reading)))
     goto cleanup;
 
-  _init_ctx (c);
   return (c);
 
  cleanup:
-  if (c)
-    _destroy_ctx (c);
+  _destroy_ctx (c);
   return (NULL);
 }
 

@@ -114,8 +114,7 @@ ipmi_sensor_read_ctx_create (ipmi_ctx_t ipmi_ctx)
  cleanup:
   if (ctx)
     {
-      if (ctx->sdr_parse_ctx)
-        ipmi_sdr_parse_ctx_destroy (ctx->sdr_parse_ctx);
+      ipmi_sdr_parse_ctx_destroy (ctx->sdr_parse_ctx);
       free (ctx);
     }
   return (NULL);

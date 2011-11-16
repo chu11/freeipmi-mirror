@@ -266,12 +266,9 @@ ipmi_open (const char *progname,
 
   return (ipmi_ctx);
 
- cleanup:
-  if (ipmi_ctx)
-    {
-      ipmi_ctx_close (ipmi_ctx);
-      ipmi_ctx_destroy (ipmi_ctx);
-    }
+ cleanup: 
+  ipmi_ctx_close (ipmi_ctx);
+  ipmi_ctx_destroy (ipmi_ctx);
   return (NULL);
 }
 

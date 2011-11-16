@@ -117,8 +117,7 @@ ipmi_sel_parse_ctx_create (ipmi_ctx_t ipmi_ctx, ipmi_sdr_cache_ctx_t sdr_cache_c
     {
       if (ctx->sel_entries)
         list_destroy (ctx->sel_entries);
-      if (ctx->sdr_parse_ctx)
-        ipmi_sdr_parse_ctx_destroy (ctx->sdr_parse_ctx);
+      ipmi_sdr_parse_ctx_destroy (ctx->sdr_parse_ctx);
       free (ctx);
     }
   return (NULL);

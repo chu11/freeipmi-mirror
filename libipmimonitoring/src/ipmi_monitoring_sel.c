@@ -65,11 +65,8 @@ _sel_cleanup (ipmi_monitoring_ctx_t c)
   assert (c);
   assert (c->magic == IPMI_MONITORING_MAGIC);
 
-  if (c->sel_parse_ctx)
-    {
-      ipmi_sel_parse_ctx_destroy (c->sel_parse_ctx);
-      c->sel_parse_ctx = NULL;
-    }
+  ipmi_sel_parse_ctx_destroy (c->sel_parse_ctx);
+  c->sel_parse_ctx = NULL;
 }
 
 int

@@ -55,16 +55,10 @@ _sensor_reading_cleanup (ipmi_monitoring_ctx_t c)
   assert (c);
   assert (c->magic == IPMI_MONITORING_MAGIC);
 
-  if (c->sensor_read_ctx)
-    {
-      ipmi_sensor_read_ctx_destroy (c->sensor_read_ctx);
-      c->sensor_read_ctx = NULL;
-    }
-  if (c->sdr_parse_ctx)
-    {
-      ipmi_sdr_parse_ctx_destroy (c->sdr_parse_ctx);
-      c->sdr_parse_ctx = NULL;
-    }
+  ipmi_sensor_read_ctx_destroy (c->sensor_read_ctx);
+  c->sensor_read_ctx = NULL;
+  ipmi_sdr_parse_ctx_destroy (c->sdr_parse_ctx);
+  c->sdr_parse_ctx = NULL;
 }
 
 int

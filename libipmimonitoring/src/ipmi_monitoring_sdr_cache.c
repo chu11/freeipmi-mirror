@@ -101,6 +101,8 @@ _ipmi_monitoring_sdr_cache_filename (ipmi_monitoring_ctx_t c,
   assert (buf);
   assert (buflen);
 
+  memset (buf, '\0', buflen);
+
   if (c->sdr_cache_directory_set)
     dir = c->sdr_cache_directory;
   else
@@ -190,7 +192,6 @@ _ipmi_monitoring_sdr_cache_filename (ipmi_monitoring_ctx_t c,
               IPMI_MONITORING_SDR_CACHE_FILENAME,
               hostname);
 
-  memset (buf, '\0', buflen);
   snprintf (buf,
             buflen - 1,
             "%s/%s",
@@ -272,6 +273,8 @@ ipmi_monitoring_sdr_cache_load (ipmi_monitoring_ctx_t c,
   assert (c->magic == IPMI_MONITORING_MAGIC);
   assert (c->ipmi_ctx);
 
+  memset (filename, '\0', MAXPATHLEN + 1);
+
   if (_ipmi_monitoring_sdr_cache_filename (c, hostname, filename, MAXPATHLEN + 1) < 0)
     goto cleanup;
 
@@ -340,13 +343,10 @@ ipmi_monitoring_sdr_cache_load (ipmi_monitoring_ctx_t c,
   return (0);
 
  cleanup:
-  if (c->sdr_cache_ctx)
-    {
-      if (strlen (filename))
-        ipmi_sdr_cache_delete (c->sdr_cache_ctx, filename);
-      ipmi_sdr_cache_ctx_destroy (c->sdr_cache_ctx);
-      c->sdr_cache_ctx = NULL;
-    }
+  if (strlen (filename))
+    ipmi_sdr_cache_delete (c->sdr_cache_ctx, filename);
+  ipmi_sdr_cache_ctx_destroy (c->sdr_cache_ctx);
+  c->sdr_cache_ctx = NULL;
   return (-1);
 }
 
@@ -356,12 +356,9 @@ ipmi_monitoring_sdr_cache_unload (ipmi_monitoring_ctx_t c)
   assert (c);
   assert (c->magic == IPMI_MONITORING_MAGIC);
 
-  if (c->sdr_cache_ctx)
-    {
-      ipmi_sdr_cache_close (c->sdr_cache_ctx);
-      ipmi_sdr_cache_ctx_destroy (c->sdr_cache_ctx);
-      c->sdr_cache_ctx = NULL;
-    }
+  ipmi_sdr_cache_close (c->sdr_cache_ctx);
+  ipmi_sdr_cache_ctx_destroy (c->sdr_cache_ctx);
+  c->sdr_cache_ctx = NULL;
   return (0);
 }
 
@@ -386,10 +383,7 @@ ipmi_monitoring_sdr_cache_flush (ipmi_monitoring_ctx_t c,
   return (0);
 
  cleanup:
-  if (c->sdr_cache_ctx)
-    {
-      ipmi_sdr_cache_ctx_destroy (c->sdr_cache_ctx);
-      c->sdr_cache_ctx = NULL;
-    }
+  ipmi_sdr_cache_ctx_destroy (c->sdr_cache_ctx);
+  c->sdr_cache_ctx = NULL;
   return (-1);
 }

@@ -57,12 +57,9 @@ _ipmi_communication_cleanup (ipmi_monitoring_ctx_t c)
   assert (c);
   assert (c->magic == IPMI_MONITORING_MAGIC);
 
-  if (c->ipmi_ctx)
-    {
-      ipmi_ctx_close (c->ipmi_ctx);
-      ipmi_ctx_destroy (c->ipmi_ctx);
-      c->ipmi_ctx = NULL;
-    }
+  ipmi_ctx_close (c->ipmi_ctx);
+  ipmi_ctx_destroy (c->ipmi_ctx);
+  c->ipmi_ctx = NULL;
 }
 
 static int
