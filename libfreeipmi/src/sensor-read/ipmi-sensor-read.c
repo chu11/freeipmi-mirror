@@ -833,9 +833,6 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   if (rv <= 0)
-    {
-      if (tmp_sensor_reading)
-        free (tmp_sensor_reading);
-    }
+    free (tmp_sensor_reading);
   return (rv);
 }

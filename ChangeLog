@@ -1,5 +1,9 @@
 2011-11-15  Albert Chu <chu11@llnl.gov>
 
+	* Code cleanup: Remmove unnecessary if checks for free() globally.
+	
+2011-11-15  Albert Chu <chu11@llnl.gov>
+
 	* Support IPMI_FLAGS_NOSESSION in libfreeipmi.
 
 	* libfreeipmi/include/freeipmi/record-format/ipmi-platform-event-trap-record-format.h:

@@ -435,18 +435,12 @@ _detailed_output_thresholds (ipmi_sensors_state_data_t *state_data,
 
   rv = 0;
  cleanup:
-  if (lower_non_critical_threshold)
-    free (lower_non_critical_threshold);
-  if (lower_critical_threshold)
-    free (lower_critical_threshold);
-  if (lower_non_recoverable_threshold)
-    free (lower_non_recoverable_threshold);
-  if (upper_non_critical_threshold)
-    free (upper_non_critical_threshold);
-  if (upper_critical_threshold)
-    free (upper_critical_threshold);
-  if (upper_non_recoverable_threshold)
-    free (upper_non_recoverable_threshold);
+  free (lower_non_critical_threshold);
+  free (lower_critical_threshold);
+  free (lower_non_recoverable_threshold);
+  free (upper_non_critical_threshold);
+  free (upper_critical_threshold);
+  free (upper_non_recoverable_threshold);
   return (rv);
 }
 
@@ -571,16 +565,11 @@ _detailed_output_sensor_reading_ranges (ipmi_sensors_state_data_t *state_data,
 
   rv = 0;
  cleanup:
-  if (nominal_reading)
-    free (nominal_reading);
-  if (normal_maximum)
-    free (normal_maximum);
-  if (normal_minimum)
-    free (normal_minimum);
-  if (sensor_maximum_reading)
-    free (sensor_maximum_reading);
-  if (sensor_minimum_reading)
-    free (sensor_minimum_reading);
+  free (nominal_reading);
+  free (normal_maximum);
+  free (normal_minimum);
+  free (sensor_maximum_reading);
+  free (sensor_minimum_reading);
   return (rv);
 }
 
@@ -671,8 +660,7 @@ _detailed_output_tolerance (ipmi_sensors_state_data_t *state_data,
 
   rv = 0;
  cleanup:
-  if (tolerance)
-    free (tolerance);
+  free (tolerance);
   return (rv);
 }
 
@@ -771,8 +759,7 @@ _detailed_output_accuracy (ipmi_sensors_state_data_t *state_data,
   
   rv = 0;
  cleanup:
-  if (accuracy)
-    free (accuracy);
+  free (accuracy);
   return (rv);
 }
 

@@ -303,18 +303,12 @@ _legacy_simple_output_full_record (ipmi_sensors_state_data_t *state_data,
 
   rv = 0;
  cleanup:
-  if (lower_non_critical_threshold)
-    free (lower_non_critical_threshold);
-  if (upper_non_critical_threshold)
-    free (upper_non_critical_threshold);
-  if (lower_critical_threshold)
-    free (lower_critical_threshold);
-  if (upper_critical_threshold)
-    free (upper_critical_threshold);
-  if (lower_non_recoverable_threshold)
-    free (lower_non_recoverable_threshold);
-  if (upper_non_recoverable_threshold)
-    free (upper_non_recoverable_threshold);
+  free (lower_non_critical_threshold);
+  free (upper_non_critical_threshold);
+  free (lower_critical_threshold);
+  free (upper_critical_threshold);
+  free (lower_non_recoverable_threshold);
+  free (upper_non_recoverable_threshold);
   return (rv);
 }
 

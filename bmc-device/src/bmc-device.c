@@ -1107,7 +1107,7 @@ platform_event (bmc_device_state_data_t *state_data)
   struct bmc_device_arguments *args;
   fiid_obj_t obj_cmd_get_channel_info_rs = NULL;
   fiid_obj_t obj_cmd_rs = NULL;
-  char *platform_event_arg_cpy;
+  char *platform_event_arg_cpy = NULL;
   char *str_args[BMC_DEVICE_MAX_EVENT_ARGS];
   unsigned int num_str_args = 0;
   char *str_ptr;
@@ -1309,8 +1309,7 @@ platform_event (bmc_device_state_data_t *state_data)
 
   rv = 0;
  cleanup:
-  if (platform_event_arg_cpy)
-    free (platform_event_arg_cpy);
+  free (platform_event_arg_cpy);
   fiid_obj_destroy (obj_cmd_get_channel_info_rs);
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);

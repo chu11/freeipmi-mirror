@@ -1102,8 +1102,7 @@ _output_sensor (ipmi_sensors_state_data_t *state_data,
     }
 
  cleanup:
-  if (sensor_reading)
-    free (sensor_reading);
+  free (sensor_reading);
   if (event_message_list)
     {
       unsigned int j;

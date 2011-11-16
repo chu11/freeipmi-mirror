@@ -2578,6 +2578,8 @@ _sensor_decode_value (ipmi_sdr_parse_ctx_t ctx,
   assert (ctx->magic == IPMI_SDR_PARSE_CTX_MAGIC);
   assert (value_ptr);
 
+  *value_ptr = NULL;
+
   if (ipmi_sensor_decode_value (r_exponent,
                                 b_exponent,
                                 m,
@@ -2884,16 +2886,11 @@ ipmi_sdr_parse_sensor_reading_ranges (ipmi_sdr_parse_ctx_t ctx,
   fiid_obj_destroy (obj_sdr_record);
   if (rv < 0)
     {
-      if (tmp_nominal_reading)
-        free (tmp_nominal_reading);
-      if (tmp_normal_maximum)
-        free (tmp_normal_maximum);
-      if (tmp_normal_minimum)
-        free (tmp_normal_minimum);
-      if (tmp_sensor_maximum_reading)
-        free (tmp_sensor_maximum_reading);
-      if (tmp_sensor_minimum_reading)
-        free (tmp_sensor_minimum_reading);
+      free (tmp_nominal_reading);
+      free (tmp_normal_maximum);
+      free (tmp_normal_minimum);
+      free (tmp_sensor_maximum_reading);
+      free (tmp_sensor_minimum_reading);
     }
   return (rv);
 }
@@ -3131,18 +3128,12 @@ ipmi_sdr_parse_thresholds (ipmi_sdr_parse_ctx_t ctx,
   fiid_obj_destroy (obj_sdr_record);
   if (rv < 0)
     {
-      if (tmp_lower_non_critical_threshold)
-        free (tmp_lower_non_critical_threshold);
-      if (tmp_lower_critical_threshold)
-        free (tmp_lower_critical_threshold);
-      if (tmp_lower_non_recoverable_threshold)
-        free (tmp_lower_non_recoverable_threshold);
-      if (tmp_upper_non_critical_threshold)
-        free (tmp_upper_non_critical_threshold);
-      if (tmp_upper_critical_threshold)
-        free (tmp_upper_critical_threshold);
-      if (tmp_upper_non_recoverable_threshold)
-        free (tmp_upper_non_recoverable_threshold);
+      free (tmp_lower_non_critical_threshold);
+      free (tmp_lower_critical_threshold);
+      free (tmp_lower_non_recoverable_threshold);
+      free (tmp_upper_non_critical_threshold);
+      free (tmp_upper_critical_threshold);
+      free (tmp_upper_non_recoverable_threshold);
     }
   return (rv);
 }
@@ -3382,10 +3373,7 @@ ipmi_sdr_parse_tolerance (ipmi_sdr_parse_ctx_t ctx,
  cleanup:
   fiid_obj_destroy (obj_sdr_record);
   if (rv < 0)
-    {
-      if (tmp_tolerance)
-        free (tmp_tolerance);
-    }
+    free (tmp_tolerance);
   return (rv);
 }
 
@@ -3484,10 +3472,7 @@ ipmi_sdr_parse_accuracy (ipmi_sdr_parse_ctx_t ctx,
  cleanup:
   fiid_obj_destroy (obj_sdr_record);
   if (rv < 0)
-    {
-      if (tmp_accuracy)
-        free (tmp_accuracy);
-    }
+    free (tmp_accuracy);
   return (rv);
 }
 

@@ -928,18 +928,12 @@ ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
   fiid_obj_destroy (obj_cmd_rs);
   if (rv < 0)
     {
-      if (tmp_lower_non_critical_threshold)
-        free (tmp_lower_non_critical_threshold);
-      if (tmp_lower_critical_threshold)
-        free (tmp_lower_critical_threshold);
-      if (tmp_lower_non_recoverable_threshold)
-        free (tmp_lower_non_recoverable_threshold);
-      if (tmp_upper_non_critical_threshold)
-        free (tmp_upper_non_critical_threshold);
-      if (tmp_upper_critical_threshold)
-        free (tmp_upper_critical_threshold);
-      if (tmp_upper_non_recoverable_threshold)
-        free (tmp_upper_non_recoverable_threshold);
+      free (tmp_lower_non_critical_threshold);
+      free (tmp_lower_critical_threshold);
+      free (tmp_lower_non_recoverable_threshold);
+      free (tmp_upper_non_critical_threshold);
+      free (tmp_upper_critical_threshold);
+      free (tmp_upper_non_recoverable_threshold);
     }
   return (rv);
 }
