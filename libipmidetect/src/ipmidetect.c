@@ -367,7 +367,7 @@ _read_conffile (ipmidetect_t handle, struct ipmidetect_config *conf)
   
   rv = 0;
  cleanup:
-  (void)conffile_handle_destroy (cf);
+  conffile_handle_destroy (cf);
   return (rv);
 }
 

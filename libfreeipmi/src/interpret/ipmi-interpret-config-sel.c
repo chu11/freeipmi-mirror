@@ -2707,7 +2707,6 @@ ipmi_interpret_sel_config_parse (ipmi_interpret_ctx_t ctx,
   
   rv = 0;
  cleanup:
-  if (cf)
-    conffile_handle_destroy (cf);
+  conffile_handle_destroy (cf);
   return (rv);
 }

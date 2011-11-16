@@ -695,8 +695,7 @@ _ipmiconsole_defaults_setup (void)
  out:
   rv = 0;
  cleanup:
-  if (cf)
-    conffile_handle_destroy (cf);
+  conffile_handle_destroy (cf);
   return (rv);
 }
 
