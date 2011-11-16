@@ -38,20 +38,6 @@
 #include "tool-cmdline-common.h"
 #include "tool-hostrange-common.h"
 
-static void
-_ipmi_pef_config_state_data_init (ipmi_pef_config_state_data_t *state_data)
-{
-  assert (state_data);
-
-  memset (state_data, '\0', sizeof (ipmi_pef_config_state_data_t));
-  state_data->prog_data = NULL;
-  state_data->ipmi_ctx = NULL;
-  state_data->sections = NULL;
-  
-  state_data->lan_channel_numbers_count = 0;
-  state_data->lan_channel_numbers_loaded = 0;
-}
-
 static int
 _ipmi_pef_config (pstdout_state_t pstate,
                   const char *hostname,
@@ -67,7 +53,7 @@ _ipmi_pef_config (pstdout_state_t pstate,
 
   prog_data = (ipmi_pef_config_prog_data_t *) arg;
 
-  _ipmi_pef_config_state_data_init (&state_data);
+  memset (&state_data, '\0', sizeof (ipmi_pef_config_state_data_t));
   state_data.prog_data = prog_data;
   state_data.pstate = pstate;
 

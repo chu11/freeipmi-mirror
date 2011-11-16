@@ -38,17 +38,6 @@
 #include "tool-hostrange-common.h"
 #include "tool-sdr-cache-common.h"
 
-static void
-_ipmi_sensors_config_state_data_init (ipmi_sensors_config_state_data_t *state_data)
-{
-  assert (state_data);
-
-  memset (state_data, '\0', sizeof (ipmi_sensors_config_state_data_t));
-  state_data->prog_data = NULL;
-  state_data->ipmi_ctx = NULL;
-  state_data->sections = NULL;
-}
-
 static int
 _ipmi_sensors_config (pstdout_state_t pstate,
                       const char *hostname,
@@ -64,7 +53,7 @@ _ipmi_sensors_config (pstdout_state_t pstate,
 
   prog_data = (ipmi_sensors_config_prog_data_t *) arg;
 
-  _ipmi_sensors_config_state_data_init (&state_data);
+  memset (&state_data, '\0', sizeof (ipmi_sensors_config_state_data_t));
   state_data.prog_data = prog_data;
   state_data.pstate = pstate;
 

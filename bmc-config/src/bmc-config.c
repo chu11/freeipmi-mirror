@@ -38,38 +38,6 @@
 #include "tool-cmdline-common.h"
 #include "tool-hostrange-common.h"
 
-static void
-_bmc_config_state_data_init (bmc_config_state_data_t *state_data)
-{
-  assert (state_data);
-
-  memset (state_data, '\0', sizeof (bmc_config_state_data_t));
-  state_data->prog_data = NULL;
-  state_data->ipmi_ctx = NULL;
-  state_data->sections = NULL;
-
-  state_data->enable_user_after_password_len = 0;
-  state_data->enable_user_after_password = NULL;
-
-  state_data->authentication_type_initialized = 0;
-  state_data->authentication_type_channel_number = 0;
-
-  state_data->cipher_suite_entry_count = 0;
-  state_data->cipher_suite_entry_count_set = 0;
-  state_data->cipher_suite_id_supported_set = 0;
-  state_data->cipher_suite_priv_set = 0;
-  state_data->cipher_suite_channel_number = 0;
-
-  state_data->lan_channel_numbers_count = 0;
-  state_data->lan_channel_numbers_loaded = 0;
-  state_data->serial_channel_numbers_count = 0;
-  state_data->serial_channel_numbers_loaded = 0;
-
-  state_data->sol_channel_numbers_count = 0;
-  state_data->sol_channel_numbers_unique_count = 0;
-  state_data->sol_channel_numbers_loaded = 0;
-}
-
 static int
 _bmc_config (pstdout_state_t pstate,
              const char *hostname,
@@ -85,7 +53,7 @@ _bmc_config (pstdout_state_t pstate,
 
   prog_data = (bmc_config_prog_data_t *)arg;
 
-  _bmc_config_state_data_init (&state_data);
+  memset (&state_data, '\0', sizeof (bmc_config_state_data_t));
   state_data.prog_data = prog_data;
   state_data.pstate = pstate;
 

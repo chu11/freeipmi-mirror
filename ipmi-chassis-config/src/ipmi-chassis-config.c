@@ -37,22 +37,6 @@
 #include "tool-cmdline-common.h"
 #include "tool-hostrange-common.h"
 
-static void
-_ipmi_chassis_config_state_data_init (ipmi_chassis_config_state_data_t *state_data)
-{
-  assert (state_data);
-
-  memset (state_data, '\0', sizeof (ipmi_chassis_config_state_data_t));
-  state_data->prog_data = NULL;
-  state_data->ipmi_ctx = NULL;
-  state_data->sections = NULL;
-
-  state_data->front_panel_enable_standby_button_for_entering_standby_initialized = 0;
-  state_data->front_panel_enable_diagnostic_interrupt_button_initialized = 0;
-  state_data->front_panel_enable_reset_button_initialized = 0;
-  state_data->front_panel_enable_power_off_button_for_power_off_only_initialized = 0;
-}
-
 static int
 _ipmi_chassis_config (pstdout_state_t pstate,
                       const char *hostname,
@@ -68,7 +52,7 @@ _ipmi_chassis_config (pstdout_state_t pstate,
 
   prog_data = (ipmi_chassis_config_prog_data_t *) arg;
 
-  _ipmi_chassis_config_state_data_init (&state_data);
+  memset (&state_data, '\0', sizeof (ipmi_chassis_config_state_data_t));
   state_data.prog_data = prog_data;
   state_data.pstate = pstate;
 
