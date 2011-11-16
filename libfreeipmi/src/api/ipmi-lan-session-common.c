@@ -82,6 +82,8 @@ struct socket_to_close {
   struct socket_to_close *next;
 };
 
+#define IPMI_PKT_PAD 1024
+
 void
 ipmi_lan_cmd_get_session_parameters (ipmi_ctx_t ctx,
                                      uint8_t *authentication_type,
@@ -512,7 +514,7 @@ _ipmi_lan_cmd_send (ipmi_ctx_t ctx,
     }
 
   /* variable based on authentication, etc. 1024 extra is enough */
-  pkt_len = cmd_len + 1024;
+  pkt_len = cmd_len + IPMI_PKT_PAD;
 
   if (!(pkt = malloc (pkt_len)))
     {
@@ -592,8 +594,7 @@ _ipmi_lan_cmd_send (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  if (pkt)
-    free (pkt);
+  free (pkt);
   return (rv);
 }
 
@@ -2146,7 +2147,7 @@ _ipmi_lan_2_0_cmd_send (ipmi_ctx_t ctx,
     }
 
   /* variable based on authentication, etc. 1024 extra is enough */
-  pkt_len = cmd_len + 1024;
+  pkt_len = cmd_len + IPMI_PKT_PAD;
 
   if (!(pkt = malloc (pkt_len)))
     {
@@ -2251,8 +2252,7 @@ _ipmi_lan_2_0_cmd_send (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  if (pkt)
-    free (pkt);
+  free (pkt);
   return (0);
 }
 

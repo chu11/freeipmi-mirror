@@ -227,11 +227,7 @@ ipmi_openipmi_ctx_destroy (ipmi_openipmi_ctx_t ctx)
 
   ctx->magic = ~IPMI_OPENIPMI_CTX_MAGIC;
   ctx->errnum = IPMI_OPENIPMI_ERR_SUCCESS;
-  if (ctx->driver_device)
-    {
-      free (ctx->driver_device);
-      ctx->driver_device = NULL;
-    }
+  free (ctx->driver_device);
   /* ignore potential error, destroy path */
   close (ctx->device_fd);
   free (ctx);
@@ -318,8 +314,7 @@ ipmi_openipmi_ctx_set_driver_device (ipmi_openipmi_ctx_t ctx, const char *driver
       return (-1);
     }
 
-  if (ctx->driver_device)
-    free (ctx->driver_device);
+  free (ctx->driver_device);
   ctx->driver_device = NULL;
 
   if (!(ctx->driver_device = strdup (driver_device)))

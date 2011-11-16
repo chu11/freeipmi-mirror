@@ -482,8 +482,7 @@ ipmi_ssif_ctx_create (void)
  cleanup:
   if (ctx)
     {
-      if (ctx->driver_device)
-        free (ctx->driver_device);
+      free (ctx->driver_device);
       free (ctx);
     }
   return (NULL);
@@ -497,8 +496,7 @@ ipmi_ssif_ctx_destroy (ipmi_ssif_ctx_t ctx)
 
   ctx->magic = ~IPMI_SSIF_CTX_MAGIC;
   ctx->errnum = IPMI_SSIF_ERR_SUCCESS;
-  if (ctx->driver_device)
-    free (ctx->driver_device);
+  free (ctx->driver_device);
   /* ignore potential error, destroy path */
   close (ctx->device_fd);
   free (ctx);
@@ -605,8 +603,7 @@ ipmi_ssif_ctx_set_driver_device (ipmi_ssif_ctx_t ctx, const char *driver_device)
       return (-1);
     }
 
-  if (ctx->driver_device)
-    free (ctx->driver_device);
+  free (ctx->driver_device);
   ctx->driver_device = NULL;
 
   if (!(ctx->driver_device = strdup (driver_device)))
@@ -878,8 +875,7 @@ _ipmi_ssif_cmd_write (ipmi_ssif_ctx_t ctx,
   rv = 0;
  cleanup:
   fiid_obj_destroy (obj_hdr);
-  if (pkt)
-    free (pkt);
+  free (pkt);
   return (rv);
 }
 
@@ -962,8 +958,7 @@ _ipmi_ssif_cmd_read (ipmi_ssif_ctx_t ctx,
  cleanup:
   fiid_template_free (tmpl);
   fiid_obj_destroy (obj_hdr);
-  if (pkt)
-    free (pkt);
+  free (pkt);
   return (rv);
 }
 

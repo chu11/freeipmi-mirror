@@ -877,8 +877,7 @@ ipmi_lan_sendto (int s,
   
   rv = (bytes_sent - pad_len);
  cleanup:
-  if (_buf)
-    free (_buf);
+  free (_buf);
   return (rv);
 }
 

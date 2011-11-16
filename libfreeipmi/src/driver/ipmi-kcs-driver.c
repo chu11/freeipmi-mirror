@@ -286,8 +286,7 @@ ipmi_kcs_ctx_create (void)
   return (ctx);
 
  cleanup:
-  if (ctx)
-    free (ctx);
+  free (ctx);
   return (NULL);
 }
 
@@ -1076,8 +1075,7 @@ _ipmi_kcs_cmd_write (ipmi_kcs_ctx_t ctx,
   rv = 0;
  cleanup:
   fiid_obj_destroy (obj_hdr);
-  if (pkt)
-    free (pkt);
+  free (pkt);
   return (rv);
 }
 
@@ -1160,8 +1158,7 @@ _ipmi_kcs_cmd_read (ipmi_kcs_ctx_t ctx,
  cleanup:
   fiid_template_free (tmpl);
   fiid_obj_destroy (obj_hdr);
-  if (pkt)
-    free (pkt);
+  free (pkt);
   return (rv);
 }
 

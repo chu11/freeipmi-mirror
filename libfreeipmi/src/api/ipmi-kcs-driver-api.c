@@ -254,8 +254,7 @@ _kcs_cmd_write (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  if (pkt)
-    free (pkt);
+  free (pkt);
   return (rv);
 }
 
@@ -344,8 +343,7 @@ _kcs_cmd_read (ipmi_ctx_t ctx,
   
   rv = 0;
  cleanup:
-  if (pkt)
-    free (pkt);
+  free (pkt);
   fiid_template_free (tmpl);
   return (rv);
 }

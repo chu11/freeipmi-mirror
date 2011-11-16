@@ -704,8 +704,7 @@ FIID_TEMPLATE_COMPARE (fiid_template_t tmpl1,
 void
 fiid_template_free (fiid_field_t *tmpl_dynamic)
 {
-  if (tmpl_dynamic)
-    free (tmpl_dynamic);
+  free (tmpl_dynamic);
 }
 
 static int
@@ -912,10 +911,8 @@ fiid_obj_create (fiid_template_t tmpl)
  cleanup:
   if (obj)
     {
-      if (obj->data)
-        free (obj->data);
-      if (obj->field_data)
-        free (obj->field_data);
+      free (obj->data);
+      free (obj->field_data);
       free (obj);
     }
 
@@ -977,10 +974,8 @@ fiid_obj_dup (fiid_obj_t src_obj)
  cleanup:
   if (dest_obj)
     {
-      if (dest_obj->data)
-        free (dest_obj->data);
-      if (dest_obj->field_data)
-        free (dest_obj->field_data);
+      free (dest_obj->data);
+      free (dest_obj->field_data);
       free (dest_obj);
     }
   return (NULL);
@@ -1030,8 +1025,7 @@ fiid_obj_copy (fiid_obj_t src_obj, fiid_template_t alt_tmpl)
  cleanup:
   if (dest_obj)
     fiid_obj_destroy (dest_obj);
-  if (databuf)
-    free (databuf);
+  free (databuf);
   return (NULL);
 }
 
@@ -1794,8 +1788,7 @@ fiid_obj_set (fiid_obj_t obj,
   return (0);
 
  cleanup:
-  if (temp_data)
-    free (temp_data);
+  free (temp_data);
   return (-1);
 }
 
