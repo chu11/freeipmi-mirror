@@ -91,7 +91,8 @@ data.  In some circumstances, this may be useful to inform a remote
 system that a trap was received and parsed.  If specified, a hostname
 must be specified via \fI\-h\fR or \fI\-\-hostname\fR to inform
 .B ipmi-pet
-where to send the acknowledge to.
+where to send the acknowledge to.  When this option is specified, the
+SDR cache is not loaded and is not required.
 .TP
 \fB\-\-file\fR=\fICMD\-FILE\fR
 Specify a file to read PET specific trap and variable bindings hex
