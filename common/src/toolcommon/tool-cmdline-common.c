@@ -493,16 +493,6 @@ init_common_cmd_args_admin (struct common_cmd_args *cmd_args)
 }
 
 void
-free_common_cmd_args (struct common_cmd_args *cmd_args)
-{
-  free (cmd_args->driver_device);
-  free (cmd_args->hostname);
-  free (cmd_args->username);
-  free (cmd_args->password);
-  free (cmd_args->config_file);
-}
-
-void
 verify_common_cmd_args_inband (struct common_cmd_args *cmd_args)
 {
   if (cmd_args->driver_device)
@@ -589,12 +579,6 @@ init_sdr_cmd_args (struct sdr_cmd_args *sdr_cmd_args)
 }
 
 void
-free_sdr_cmd_args (struct sdr_cmd_args *sdr_cmd_args)
-{
-  free (sdr_cmd_args->sdr_cache_directory);
-}
-
-void
 verify_sdr_cmd_args (struct sdr_cmd_args *sdr_cmd_args)
 {
   if (sdr_cmd_args->sdr_cache_directory)
@@ -616,12 +600,6 @@ init_hostrange_cmd_args (struct hostrange_cmd_args *hostrange_cmd_args)
   hostrange_cmd_args->fanout = 0;
   hostrange_cmd_args->eliminate = 0;
   hostrange_cmd_args->always_prefix = 0;
-}
-
-void
-free_hostrange_cmd_args (struct hostrange_cmd_args *hostrange_cmd_args)
-{
-  /* nothing right now */
 }
 
 void
