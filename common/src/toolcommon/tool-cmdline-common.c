@@ -496,15 +496,10 @@ void
 free_common_cmd_args (struct common_cmd_args *cmd_args)
 {
   free (cmd_args->driver_device);
-  cmd_args->driver_device = NULL;
   free (cmd_args->hostname);
-  cmd_args->hostname = NULL;
   free (cmd_args->username);
-  cmd_args->username = NULL;
   free (cmd_args->password);
-  cmd_args->password = NULL;
   free (cmd_args->config_file);
-  cmd_args->config_file = NULL;
 }
 
 void
@@ -597,7 +592,6 @@ void
 free_sdr_cmd_args (struct sdr_cmd_args *sdr_cmd_args)
 {
   free (sdr_cmd_args->sdr_cache_directory);
-  sdr_cmd_args->sdr_cache_directory = NULL;
 }
 
 void
