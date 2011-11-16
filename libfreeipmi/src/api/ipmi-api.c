@@ -2100,9 +2100,11 @@ _ipmi_outofband_close (ipmi_ctx_t ctx)
   /* No need to set errnum - if the anything in close session
    * fails, session will eventually timeout anyways
    */
-
-  if (ipmi_lan_close_session (ctx) < 0)
-    goto cleanup;
+  if (!(ctx->flags & IPMI_FLAGS_NOSESSION))
+    {
+      if (ipmi_lan_close_session (ctx) < 0)
+	goto cleanup;
+    }
 
  cleanup:
   /* ignore potential error, destroy path */
