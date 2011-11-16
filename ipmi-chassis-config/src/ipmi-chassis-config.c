@@ -335,15 +335,11 @@ _ipmi_chassis_config (pstdout_state_t pstate,
 
   exit_code = 0;
  cleanup:
-  if (state_data.ipmi_ctx)
-    {
-      ipmi_ctx_close (state_data.ipmi_ctx);
-      ipmi_ctx_destroy (state_data.ipmi_ctx);
-    }
+  ipmi_ctx_close (state_data.ipmi_ctx);
+  ipmi_ctx_destroy (state_data.ipmi_ctx);
+  config_sections_destroy (state_data.sections);
   if (file_opened)
     fclose (fp);
-  if (state_data.sections)
-    config_sections_destroy (state_data.sections);
   return (exit_code);
 }
 

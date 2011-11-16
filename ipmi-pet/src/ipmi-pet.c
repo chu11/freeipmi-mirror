@@ -2310,19 +2310,12 @@ _ipmi_pet (ipmi_pet_prog_data_t *prog_data)
 
   exit_code = 0;
  cleanup:
-  if (state_data.fru_parse_ctx)
-    ipmi_fru_parse_ctx_destroy (state_data.fru_parse_ctx);
-  if (state_data.sel_parse_ctx)
-    ipmi_sel_parse_ctx_destroy (state_data.sel_parse_ctx);
-  if (state_data.sdr_cache_ctx)
-    ipmi_sdr_cache_ctx_destroy (state_data.sdr_cache_ctx);
-  if (state_data.sdr_parse_ctx)
-    ipmi_sdr_parse_ctx_destroy (state_data.sdr_parse_ctx);
-  if (state_data.ipmi_ctx)
-    {
-      ipmi_ctx_close (state_data.ipmi_ctx);
-      ipmi_ctx_destroy (state_data.ipmi_ctx);
-    }
+  ipmi_fru_parse_ctx_destroy (state_data.fru_parse_ctx);
+  ipmi_sel_parse_ctx_destroy (state_data.sel_parse_ctx);
+  ipmi_sdr_cache_ctx_destroy (state_data.sdr_cache_ctx);
+  ipmi_sdr_parse_ctx_destroy (state_data.sdr_parse_ctx);
+  ipmi_ctx_close (state_data.ipmi_ctx);
+  ipmi_ctx_destroy (state_data.ipmi_ctx);
   return (exit_code);
 }
 

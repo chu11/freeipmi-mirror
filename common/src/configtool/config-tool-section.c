@@ -56,14 +56,11 @@ config_section_append (struct config_section **sections,
 void
 config_sections_destroy (struct config_section *sections)
 {
-  if (sections)
+  while (sections)
     {
-      while (sections)
-        {
-          struct config_section *sections_next = sections->next;
-          config_section_destroy (sections);
-          sections = sections_next;
-        }
+      struct config_section *sections_next = sections->next;
+      config_section_destroy (sections);
+      sections = sections_next;
     }
 }
 
