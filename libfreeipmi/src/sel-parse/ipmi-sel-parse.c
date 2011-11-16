@@ -157,10 +157,8 @@ ipmi_sel_parse_ctx_destroy (ipmi_sel_parse_ctx_t ctx)
       return;
     }
 
-  if (ctx->debug_prefix)
-    free (ctx->debug_prefix);
-  if (ctx->separator)
-    free (ctx->separator);
+  free (ctx->debug_prefix);
+  free (ctx->separator);
   _sel_entries_clear (ctx);
   list_destroy (ctx->sel_entries);
   ipmi_sdr_parse_ctx_destroy (ctx->sdr_parse_ctx);
@@ -364,11 +362,8 @@ ipmi_sel_parse_ctx_set_debug_prefix (ipmi_sel_parse_ctx_t ctx, const char *debug
       return (-1);
     }
 
-  if (ctx->debug_prefix)
-    {
-      free (ctx->debug_prefix);
-      ctx->debug_prefix = NULL;
-    }
+  free (ctx->debug_prefix);
+  ctx->debug_prefix = NULL;
 
   if (debug_prefix)
     {
@@ -405,11 +400,8 @@ ipmi_sel_parse_ctx_set_separator (ipmi_sel_parse_ctx_t ctx, const char *separato
       return (-1);
     }
 
-  if (ctx->separator)
-    {
-      free (ctx->separator);
-      ctx->separator = NULL;
-    }
+  free (ctx->separator);
+  ctx->separator = NULL;
 
   if (separator)
     {
@@ -776,8 +768,6 @@ ipmi_sel_parse (ipmi_sel_parse_ctx_t ctx,
   /* special case, need only get the last record */
   if (record_id_start == IPMI_SEL_GET_RECORD_ID_LAST_ENTRY)
     {
-      sel_parse_entry = NULL;
-
       if (_get_sel_entry (ctx,
                           obj_cmd_rs,
                           &reservation_id,
@@ -838,8 +828,6 @@ ipmi_sel_parse (ipmi_sel_parse_ctx_t ctx,
        record_id <= record_id_last && record_id != IPMI_SEL_GET_RECORD_ID_LAST_ENTRY;
        record_id = next_record_id)
     {
-      sel_parse_entry = NULL;
-
       if (_get_sel_entry (ctx,
                           obj_cmd_rs,
                           &reservation_id,
@@ -931,8 +919,7 @@ ipmi_sel_parse (ipmi_sel_parse_ctx_t ctx,
   ctx->errnum = IPMI_SEL_PARSE_ERR_SUCCESS;
  cleanup:
   ctx->callback_sel_entry = NULL;
-  if (sel_parse_entry)
-    free (sel_parse_entry);
+  free (sel_parse_entry);
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
@@ -980,8 +967,6 @@ ipmi_sel_parse_record_ids (ipmi_sel_parse_ctx_t ctx,
 
   for (i = 0; i < record_ids_len; i++)
     {
-      sel_parse_entry = NULL;
-
       if (_get_sel_entry (ctx,
                           obj_cmd_rs,
                           &reservation_id,
@@ -1050,8 +1035,7 @@ ipmi_sel_parse_record_ids (ipmi_sel_parse_ctx_t ctx,
   ctx->errnum = IPMI_SEL_PARSE_ERR_SUCCESS;
  cleanup:
   ctx->callback_sel_entry = NULL;
-  if (sel_parse_entry)
-    free (sel_parse_entry);
+  free (sel_parse_entry);
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }

@@ -51,8 +51,7 @@ cmdline_config_file_parse (int key, char *arg, struct argp_state *state)
       /* ARGP_CONFIG_KEY for backwards compatability */
     case ARGP_CONFIG_KEY:
     case ARGP_CONFIG_FILE_KEY:
-      if (cmd_args->config_file)
-        free (cmd_args->config_file);
+      free (cmd_args->config_file);
       if (!(cmd_args->config_file = strdup (arg)))
         {
           perror ("strdup");
@@ -136,8 +135,7 @@ common_parse_opt (int key,
       cmd_args->driver_address = tmp;
       break;
     case ARGP_DRIVER_DEVICE_KEY:
-      if (cmd_args->driver_device)
-        free (cmd_args->driver_device);
+      free (cmd_args->driver_device);
       if (!(cmd_args->driver_device = strdup (arg)))
         {
           perror ("strdup");
@@ -157,8 +155,7 @@ common_parse_opt (int key,
       cmd_args->register_spacing = tmp;
       break;
     case ARGP_HOSTNAME_KEY:
-      if (cmd_args->hostname)
-        free (cmd_args->hostname);
+      free (cmd_args->hostname);
       if (!(cmd_args->hostname = strdup (arg)))
         {
           perror ("strdup");
@@ -173,8 +170,7 @@ common_parse_opt (int key,
         }
       else
         {
-          if (cmd_args->username)
-            free (cmd_args->username);
+	  free (cmd_args->username);
           if (!(cmd_args->username = strdup (arg)))
             {
               perror ("strdup");
@@ -192,8 +188,7 @@ common_parse_opt (int key,
         }
       else
         {
-          if (cmd_args->password)
-            free (cmd_args->password);
+	  free (cmd_args->password);
           if (!(cmd_args->password = strdup (arg)))
             {
               perror ("strdup");
@@ -204,8 +199,7 @@ common_parse_opt (int key,
       __secure_memset (arg, '\0', n);
       break;
     case ARGP_PASSWORD_PROMPT_KEY:
-      if (cmd_args->password)
-        free (cmd_args->password);
+      free (cmd_args->password);
       arg = getpass ("Password: ");
       if (arg && strlen (arg) > IPMI_2_0_MAX_PASSWORD_LENGTH)
         {
@@ -380,8 +374,7 @@ sdr_parse_opt (int key,
       sdr_cmd_args->quiet_cache = 1;
       break;
     case ARGP_SDR_CACHE_DIRECTORY_KEY:
-      if (sdr_cmd_args->sdr_cache_directory)
-        free (sdr_cmd_args->sdr_cache_directory);
+      free (sdr_cmd_args->sdr_cache_directory);
       if (!(sdr_cmd_args->sdr_cache_directory = strdup (arg)))
         {
           perror ("strdup");
@@ -389,8 +382,7 @@ sdr_parse_opt (int key,
         }
       break;
     case ARGP_SDR_CACHE_FILE_KEY:
-      if (sdr_cmd_args->sdr_cache_file)
-        free (sdr_cmd_args->sdr_cache_file);
+      free (sdr_cmd_args->sdr_cache_file);
       if (!(sdr_cmd_args->sdr_cache_file = strdup (arg)))
         {
           perror ("strdup");
@@ -503,31 +495,16 @@ init_common_cmd_args_admin (struct common_cmd_args *cmd_args)
 void
 free_common_cmd_args (struct common_cmd_args *cmd_args)
 {
-  if (cmd_args->driver_device)
-    {
-      free (cmd_args->driver_device);
-      cmd_args->driver_device = NULL;
-    }
-  if (cmd_args->hostname)
-    {
-      free (cmd_args->hostname);
-      cmd_args->hostname = NULL;
-    }
-  if (cmd_args->username)
-    {
-      free (cmd_args->username);
-      cmd_args->username = NULL;
-    }
-  if (cmd_args->password)
-    {
-      free (cmd_args->password);
-      cmd_args->password = NULL;
-    }
-  if (cmd_args->config_file)
-    {
-      free (cmd_args->config_file);
-      cmd_args->config_file = NULL;
-    }
+  free (cmd_args->driver_device);
+  cmd_args->driver_device = NULL;
+  free (cmd_args->hostname);
+  cmd_args->hostname = NULL;
+  free (cmd_args->username);
+  cmd_args->username = NULL;
+  free (cmd_args->password);
+  cmd_args->password = NULL;
+  free (cmd_args->config_file);
+  cmd_args->config_file = NULL;
 }
 
 void
@@ -619,11 +596,8 @@ init_sdr_cmd_args (struct sdr_cmd_args *sdr_cmd_args)
 void
 free_sdr_cmd_args (struct sdr_cmd_args *sdr_cmd_args)
 {
-  if (sdr_cmd_args->sdr_cache_directory)
-    {
-      free (sdr_cmd_args->sdr_cache_directory);
-      sdr_cmd_args->sdr_cache_directory = NULL;
-    }
+  free (sdr_cmd_args->sdr_cache_directory);
+  sdr_cmd_args->sdr_cache_directory = NULL;
 }
 
 void

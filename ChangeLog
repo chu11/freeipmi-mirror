@@ -1,6 +1,8 @@
 2011-11-15  Albert Chu <chu11@llnl.gov>
 
-	* Code cleanup: Remmove unnecessary if checks for free() globally.
+	* Code cleanup and minor fixes.  Remmove unnecessary if checks for
+	free() globally.  Remove excessive initializations.  Fix minor
+	bugs.
 	
 2011-11-15  Albert Chu <chu11@llnl.gov>
 

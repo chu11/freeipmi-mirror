@@ -327,7 +327,6 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
         }
     }
 
-
   if (args->device_id_set && args->device_id == IPMI_FRU_DEVICE_ID_DEFAULT)
     {
       if (_output_fru (state_data,

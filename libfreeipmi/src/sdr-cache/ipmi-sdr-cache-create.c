@@ -904,8 +904,7 @@ ipmi_sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
       /* ignore potential error, cleanup path */
       close (fd);
     }
-  if (record_ids)
-    free (record_ids);
+  free (record_ids);
   ipmi_sdr_cache_init_ctx (ctx);
   return (rv);
 }

@@ -174,9 +174,7 @@ ipmi_fru_parse_ctx_destroy (ipmi_fru_parse_ctx_t ctx)
       return;
     }
 
-  if (ctx->debug_prefix)
-    free (ctx->debug_prefix);
-
+  free (ctx->debug_prefix);
   ctx->magic = ~IPMI_FRU_PARSE_CTX_MAGIC;
   free (ctx);
 }
@@ -337,11 +335,8 @@ ipmi_fru_parse_ctx_set_debug_prefix (ipmi_fru_parse_ctx_t ctx, const char *debug
       return (-1);
     }
   
-  if (ctx->debug_prefix)
-    {
-      free (ctx->debug_prefix);
-      ctx->debug_prefix = NULL;
-    }
+  free (ctx->debug_prefix);
+  ctx->debug_prefix = NULL;
 
   if (debug_prefix)
     {

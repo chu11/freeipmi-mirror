@@ -112,8 +112,7 @@ ipmi_sdr_cache_ctx_destroy (ipmi_sdr_cache_ctx_t ctx)
 
   ctx->magic = ~IPMI_SDR_CACHE_CTX_MAGIC;
   ctx->operation = IPMI_SDR_CACHE_OPERATION_UNINITIALIZED;
-  if (ctx->debug_prefix)
-    free (ctx->debug_prefix);
+  free (ctx->debug_prefix);
   free (ctx);
 }
 
@@ -205,11 +204,8 @@ ipmi_sdr_cache_ctx_set_debug_prefix (ipmi_sdr_cache_ctx_t ctx, const char *debug
       return (-1);
     }
 
-  if (ctx->debug_prefix)
-    {
-      free (ctx->debug_prefix);
-      ctx->debug_prefix = NULL;
-    }
+  free (ctx->debug_prefix);
+  ctx->debug_prefix = NULL;
 
   if (debug_prefix)
     {
