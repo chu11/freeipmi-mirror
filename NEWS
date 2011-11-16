@@ -13,6 +13,37 @@ o In libfreeipmi, support IPMI_FLAGS_NOSESSION flag to open a context
 o Add petalert.pl contribution from Kaiwang Chen (kaiwang.chen AT gmail DOT com)
 o Fix macro name typos.
 
+FreeIPMI 1.0.8 - 10/27/11
+-------------------------
+o Fix corner case in which invalid SDR entry could be loaded when
+  shared sensors exist on event only records.
+o Fix several event output corner cases.
+o Fix 'assumesystemevent' workaround for ipmi-sel.
+o Fix ipmi-raw and ipmi-oem allocation bug on newer systems, such as
+  RHEL6.
+o Support Intel Node Manager sensor/SEL events for Intel S2600JF/Appro
+  512X.
+o Document workarounds for Intel S2600JF/Appro 512X.
+o Per definition, output GUID w/ lower case characters in bmc-info.
+o Other minor bug fixes.
+
+FreeIPMI 1.0.7 - 09/28/11
+-------------------------
+o Support many new sensor state and sel event interpretations.
+o Fix parsing bugs for freeipmi_interpret_sel.conf.
+o Support 'assumebmcowner' workaround in ipmi-sensors.
+o Support dynamic linking in libfreeipmi.
+o Output pidfile in bmc-watchdog to support easier init script killing.
+o Do not poll stdin in ipmipower when operating in non-interactive mode.
+o Support IGNORE_SCANNING_DISABLED workaround in libipmimonitoring.
+o Support Supermicro OEM sensors on X7DB8, X8DTN, X7SBI-LN4, X8DTL,
+  X8DTN+-F, and X8SIE motherboards.
+o Fix handling error codes in optional parts of ipmi-dcmi.
+o Fix various debug dumping bugs.
+o Fix ipmimonitoring script install bug on some systems.
+o Fix symbol global vs. locals in libipmimonitoring.
+o Minor documentation and manpage updates.
+
 FreeIPMI 1.0.6 - 09/01/11
 -------------------------
 o Support 'ignorescanningdisabled' workaround in ipmi-sensors.
