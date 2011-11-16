@@ -174,14 +174,11 @@ config_keypair_append (struct config_keypair **keypairs,
 void
 config_keypairs_destroy (struct config_keypair *keypairs)
 {
-  if (keypairs)
+  while (keypairs)
     {
-      while (keypairs)
-        {
-          struct config_keypair *kp_next = keypairs->next;
-          config_keypair_destroy (keypairs);
-          keypairs = kp_next;
-        }
+      struct config_keypair *kp_next = keypairs->next;
+      config_keypair_destroy (keypairs);
+      keypairs = kp_next;
     }
 }
 
