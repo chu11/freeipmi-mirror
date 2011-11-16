@@ -273,7 +273,7 @@ ipmipower_connection_array_create (const char *hostname, unsigned int *len)
   int index = 0;
   hostlist_t hl = NULL;
   hostlist_iterator_t itr = NULL;
-  struct ipmipower_connection *ics;
+  struct ipmipower_connection *ics = NULL;
   int size = sizeof (struct ipmipower_connection);
   int hl_count;
   int errcount = 0;

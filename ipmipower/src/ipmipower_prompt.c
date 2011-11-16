@@ -110,11 +110,8 @@ _cmd_hostname (char **argv)
 
   if (!argv[1])
     {
-      if (cmd_args.common.hostname)
-        {
-          free (cmd_args.common.hostname);
-          cmd_args.common.hostname = NULL;
-        }
+      free (cmd_args.common.hostname);
+      cmd_args.common.hostname = NULL;
 
       ipmipower_connection_array_destroy (ics, ics_len);
       ics = NULL;
@@ -138,12 +135,9 @@ _cmd_hostname (char **argv)
                                    strerror (errno));
           return;
         }
-
-      if (cmd_args.common.hostname)
-        {
-          free (cmd_args.common.hostname);
-          cmd_args.common.hostname = NULL;
-        }
+      
+      free (cmd_args.common.hostname);
+      cmd_args.common.hostname = NULL;
 
       ipmipower_connection_array_destroy (ics, ics_len);
       ics = icsPtr;
@@ -171,11 +165,8 @@ _cmd_username (char **argv)
   if (!argv[1]
       || (argv[1] && strlen (argv[1]) <= IPMI_MAX_USER_NAME_LENGTH))
     {
-      if (cmd_args.common.username)
-        {
-          free (cmd_args.common.username);
-          cmd_args.common.username = NULL;
-        }
+      free (cmd_args.common.username);
+      cmd_args.common.username = NULL;
 
       if (argv[1])
         {
@@ -210,11 +201,8 @@ _cmd_password (char **argv)
                    || (cmd_args.common.driver_type == IPMI_DEVICE_LAN
                        && strlen (argv[1]) <= IPMI_1_5_MAX_PASSWORD_LENGTH))))
     {
-      if (cmd_args.common.password)
-        {
-          free (cmd_args.common.password);
-          cmd_args.common.password = NULL;
-        }
+      free (cmd_args.common.password);
+      cmd_args.common.password = NULL;
 
       if (argv[1])
         {
