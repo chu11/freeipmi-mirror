@@ -2468,8 +2468,7 @@ ipmi_get_event_messages (uint8_t event_reading_type_code,
   return (0);
 
  cleanup:
-  if (tmp_event_messages_ptr)
-    free (tmp_event_messages_ptr);
+  free (tmp_event_messages_ptr);
   for (i = 0; i < tmp_event_messages_count; i++)
     free (tmp_event_messages[i]);
   return (-1);

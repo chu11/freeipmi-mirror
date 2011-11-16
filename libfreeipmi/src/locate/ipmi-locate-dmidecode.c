@@ -276,7 +276,7 @@ _dmi_table (ipmi_locate_ctx_t ctx,
             ipmi_interface_type_t type,
             struct ipmi_locate_info *locate_info)
 {
-  fipmiu8 *buf;
+  fipmiu8 *buf = NULL;
   fipmiu8 *data;
   int i = 0;
   int rv = -1;
@@ -284,7 +284,7 @@ _dmi_table (ipmi_locate_ctx_t ctx,
   assert (ctx);
   assert (ctx->magic == IPMI_LOCATE_CTX_MAGIC);
 
-  if ((buf = _mem_chunk (ctx, base, len, devmem)) == NULL)
+  if (!(buf = _mem_chunk (ctx, base, len, devmem)))
     return (-1);
 
   data = buf;
@@ -463,7 +463,7 @@ ipmi_locate_dmidecode_get_device_info (ipmi_locate_ctx_t ctx,
   const char *filename;
   char linebuf[64];
 #endif /* USE_EFI */
-  fipmiu8 *buf;
+  fipmiu8 *buf = NULL;
   int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_LOCATE_CTX_MAGIC)

@@ -1824,8 +1824,7 @@ _ipmi_pet_parse (ipmi_pet_state_data_t *state_data,
   
   rv = 1;
  cleanup:
-  if (str)
-    free (str);
+  free (str);
   return (rv);
 }
 

@@ -314,8 +314,7 @@ ipmi_lan_check_session_authentication_code (fiid_obj_t obj_lan_session_hdr_rs,
     rv = 0;
 
  cleanup:
-  if (buf)
-    free (buf);
+  free (buf);
   secure_memset (authentication_code_recv, '\0', IPMI_1_5_MAX_PASSWORD_LENGTH);
   secure_memset (authentication_code_calc, '\0', IPMI_1_5_MAX_PASSWORD_LENGTH);
   secure_memset (pwbuf, '\0', IPMI_1_5_MAX_PASSWORD_LENGTH);
@@ -682,10 +681,8 @@ ipmi_lan_check_checksum (fiid_obj_t obj_lan_msg_hdr,
 
   rv = 1;
  cleanup:
-  if (buf1)
-    free (buf1);
-  if (buf2)
-    free (buf2);
+  free (buf1);
+  free (buf2);
   return (rv);
 }
 

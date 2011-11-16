@@ -973,8 +973,7 @@ _ipmi_acpi_get_rsdp (ipmi_locate_ctx_t ctx,
     }
 
  cleanup:
-  if (memdata)
-    free (memdata);
+  free (memdata);
   return (-1);
 }
 
@@ -1022,6 +1021,8 @@ _ipmi_acpi_get_table (ipmi_locate_ctx_t ctx,
   assert (signature);
   assert (acpi_table);
   assert (acpi_table_length);
+
+  *acpi_table = NULL;
 
   if ((len = fiid_template_field_len_bytes (tmpl_acpi_table_hdr, "signature")) < 0)
     {
@@ -1125,12 +1126,9 @@ _ipmi_acpi_get_table (ipmi_locate_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  if (table_signature)
-    free (table_signature);
-  if (acpi_table_buf)
-    free (acpi_table_buf);
-  if (table)
-    free (table);
+  free (table_signature);
+  free (acpi_table_buf);
+  free (table);
   fiid_obj_destroy (obj_acpi_table_hdr);
   return (rv);
 }
@@ -1206,6 +1204,8 @@ _ipmi_acpi_get_firmware_table (ipmi_locate_ctx_t ctx,
   assert (sign_table_data);
   assert (sign_table_data_length);
   assert (fiid_obj_template_compare (obj_acpi_table_hdr, tmpl_acpi_table_hdr) == 1);
+
+  *sign_table_data = NULL;
 
   if ((acpi_table_hdr_length = fiid_template_len_bytes (tmpl_acpi_table_hdr)) < 0)
     {
@@ -1342,9 +1342,6 @@ _ipmi_acpi_get_firmware_table (ipmi_locate_ctx_t ctx,
       acpi_table_length = 0;
     }
 
-  free (rsdt_xsdt_table);
-  rsdt_xsdt_table = NULL;
-
   if (!acpi_table)
     {
       LOCATE_SET_ERRNUM (ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
@@ -1364,10 +1361,8 @@ _ipmi_acpi_get_firmware_table (ipmi_locate_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  if (acpi_table)
-    free (acpi_table);
-  if (rsdt_xsdt_table)
-    free (rsdt_xsdt_table);
+  free (acpi_table);
+  free (rsdt_xsdt_table);
   fiid_obj_destroy (obj_table);
   fiid_obj_destroy (obj_acpi_rsdp_descriptor);
   return (rv);
@@ -1473,8 +1468,7 @@ _ipmi_acpi_get_spmi_table (ipmi_locate_ctx_t ctx,
     }
 
  cleanup:
-  if (table_data)
-    free (table_data);
+  free (table_data);
   return (rv);
 }
 

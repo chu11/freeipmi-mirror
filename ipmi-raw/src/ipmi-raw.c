@@ -129,8 +129,7 @@ ipmi_raw_cmdline (ipmi_raw_state_data_t *state_data)
   
   rv = 0;
  cleanup:
-  if (bytes_rs)
-    free (bytes_rs);
+  free (bytes_rs);
   return (rv);
 }
 
@@ -251,13 +250,11 @@ string2bytes (ipmi_raw_state_data_t *state_data,
  cleanup:
   if (rv < 0)
     {
-      if (*buf)
-        free (*buf);
+      free (*buf);
       *buf = NULL;
       *len = 0;
     }
-  if (str)
-    free (str);
+  free (str);
   return (rv);
 }
 
@@ -367,33 +364,21 @@ ipmi_raw_stream (ipmi_raw_state_data_t *state_data, FILE *stream)
       pstdout_printf (state_data->pstate, "\n");
 
     end_loop:
-      if (line)
-        {
-          free (line);
-          line = NULL;
-        }
-      n = 0;
-      if (bytes_rq)
-        {
-          free (bytes_rq);
-          bytes_rq = NULL;
-        }
-      if (bytes_rs)
-        {
-          free (bytes_rs);
-          bytes_rs = NULL;
-        }
+      free (line);
+      line = NULL;
+      free (bytes_rq);
+      bytes_rq = NULL;
+      free (bytes_rs);
+      bytes_rs = NULL;
       send_len = 0;
+      n = 0;
     }
 
   rv = 0;
  cleanup:
-  if (line)
-    free (line);
-  if (bytes_rq)
-    free (bytes_rq);
-  if (bytes_rs)
-    free (bytes_rs);
+  free (line);
+  free (bytes_rq);
+  free (bytes_rs);
   return (rv);
 }
 

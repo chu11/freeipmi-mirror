@@ -191,9 +191,7 @@ ipmi_ipmb_check_checksum (uint8_t rq_addr,
 
   rv = 1;
  cleanup:
-  if (buf1)
-    free (buf1);
-  if (buf2)
-    free (buf2);
+  free (buf1);
+  free (buf2);
   return (rv);
 }

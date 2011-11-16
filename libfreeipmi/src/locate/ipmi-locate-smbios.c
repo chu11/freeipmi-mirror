@@ -511,7 +511,6 @@ ipmi_locate_smbios_get_device_info (ipmi_locate_ctx_t ctx,
   return (0);
 
  cleanup:
-  if (bufp)
-    free (bufp);
+  free (bufp);
   return (-1);
 }
