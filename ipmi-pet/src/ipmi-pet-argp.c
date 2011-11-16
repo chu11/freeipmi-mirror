@@ -69,30 +69,32 @@ static struct argp_option cmdline_options[] =
     ARGP_COMMON_OPTIONS_DEBUG,
     { "verbose",    VERBOSE_KEY,    0, 0,
       "Increase verbosity in output.", 30},
+    { "pet-acknowledge", PET_ACKNOWLEDGE_KEY, 0, 0,
+      "Send PET acknowledge using inputted trap data instead of outputting data.", 31},
     { "file", CMD_FILE_KEY, "CMD-FILE", 0,
-      "Specify a file to read PET bytes from.", 31},
+      "Specify a file to read PET bytes from.", 32},
     { "output-event-severity", OUTPUT_EVENT_SEVERITY_KEY, 0, 0,
-      "Output event severity in output.", 32},
+      "Output event severity in output.", 33},
     { "output-event-state", OUTPUT_EVENT_STATE_KEY, 0, 0,
-      "Output event state in output.", 33},
+      "Output event state in output.", 34},
     { "event-state-config-file", EVENT_STATE_CONFIG_FILE_KEY, "FILE", 0,
-      "Specify an alternate event state configuration file.", 34},
+      "Specify an alternate event state configuration file.", 35},
     { "manufacturer-id", MANUFACTURER_ID_KEY, "NUMBER", 0,
-      "Specify a specific manufacturer id to assume.", 35},
+      "Specify a specific manufacturer id to assume.", 36},
     { "product-id", PRODUCT_ID_KEY, "NUMBER", 0,
-      "Specify a specific product id to assume.", 36},
+      "Specify a specific product id to assume.", 37},
     { "interpret-oem-data", INTERPRET_OEM_DATA_KEY, NULL, 0,
-      "Attempt to interpret OEM data.", 37},
+      "Attempt to interpret OEM data.", 38},
     { "entity-sensor-names", ENTITY_SENSOR_NAMES_KEY, NULL, 0,
-      "Output sensor names with entity ids and instances.", 38},
+      "Output sensor names with entity ids and instances.", 39},
     { "no-sensor-type-output", NO_SENSOR_TYPE_OUTPUT_KEY, 0, 0,
-      "Do not show sensor type output.", 39},
+      "Do not show sensor type output.", 40},
     { "comma-separated-output", COMMA_SEPARATED_OUTPUT_KEY, 0, 0,
-      "Output fields in comma separated format.", 40},
+      "Output fields in comma separated format.", 41},
     { "no-header-output", NO_HEADER_OUTPUT_KEY, 0, 0,
-      "Do not output column headers.", 41},
+      "Do not output column headers.", 42},
     { "non-abbreviated-units", NON_ABBREVIATED_UNITS_KEY, 0, 0,
-      "Output non-abbreviated units (e.g. 'Amps' instead of 'A').", 42},
+      "Output non-abbreviated units (e.g. 'Amps' instead of 'A').", 43},
     { NULL, 0, NULL, 0, NULL, 0}
   };
 
@@ -120,6 +122,9 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     {
     case VERBOSE_KEY:
       cmd_args->verbose_count++;
+      break;
+    case PET_ACKNOWLEDGE_KEY:
+      cmd_args->pet_acknowledge++;
       break;
     case CMD_FILE_KEY:
       if (!(cmd_args->cmd_file = strdup (arg)))
@@ -321,12 +326,19 @@ _ipmi_pet_config_file_parse (struct ipmi_pet_arguments *cmd_args)
 static void
 _ipmi_pet_args_validate (struct ipmi_pet_arguments *cmd_args)
 {
+  if (cmd_args->pet_acknowledge
+      && !cmd_args->common.hostname)
+    {
+      fprintf (stderr, "Must specify hostname if PET acknowledge specified\n");
+      exit (1);
+    }
+
   if ((cmd_args->manufacturer_id_set
        && !cmd_args->product_id_set)
       || (!cmd_args->manufacturer_id_set
           && cmd_args->product_id_set))
     {
-      fprintf (stderr, "must specify both manufacturer id and product id\n");
+      fprintf (stderr, "Must specify both manufacturer id and product id\n");
       exit (1);
     }
 }
@@ -337,6 +349,7 @@ ipmi_pet_argp_parse (int argc, char **argv, struct ipmi_pet_arguments *cmd_args)
   init_common_cmd_args_operator (&(cmd_args->common));
   init_sdr_cmd_args (&(cmd_args->sdr));
   cmd_args->verbose_count = 0;
+  cmd_args->pet_acknowledge = 0;
   cmd_args->cmd_file = NULL;
   cmd_args->output_event_severity = 0;
   cmd_args->output_event_state = 0;

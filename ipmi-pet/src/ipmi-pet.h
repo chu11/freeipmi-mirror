@@ -32,18 +32,19 @@
 enum ipmi_pet_argp_option_keys
   {
     VERBOSE_KEY = 'v',
-    CMD_FILE_KEY = 160,
-    OUTPUT_EVENT_SEVERITY_KEY = 161,
-    OUTPUT_EVENT_STATE_KEY = 162,
-    EVENT_STATE_CONFIG_FILE_KEY = 163,
-    MANUFACTURER_ID_KEY = 164,
-    PRODUCT_ID_KEY = 165,
-    INTERPRET_OEM_DATA_KEY = 166,
-    ENTITY_SENSOR_NAMES_KEY = 167,
-    NO_SENSOR_TYPE_OUTPUT_KEY = 168,
-    COMMA_SEPARATED_OUTPUT_KEY = 169,
-    NO_HEADER_OUTPUT_KEY = 170,
-    NON_ABBREVIATED_UNITS_KEY = 171,
+    PET_ACKNOWLEDGE_KEY = 160,
+    CMD_FILE_KEY = 161,
+    OUTPUT_EVENT_SEVERITY_KEY = 162,
+    OUTPUT_EVENT_STATE_KEY = 163,
+    EVENT_STATE_CONFIG_FILE_KEY = 164,
+    MANUFACTURER_ID_KEY = 165,
+    PRODUCT_ID_KEY = 166,
+    INTERPRET_OEM_DATA_KEY = 167,
+    ENTITY_SENSOR_NAMES_KEY = 168,
+    NO_SENSOR_TYPE_OUTPUT_KEY = 169,
+    COMMA_SEPARATED_OUTPUT_KEY = 170,
+    NO_HEADER_OUTPUT_KEY = 171,
+    NON_ABBREVIATED_UNITS_KEY = 172,
   };
 
 struct ipmi_pet_arguments
@@ -51,6 +52,7 @@ struct ipmi_pet_arguments
   struct common_cmd_args common;
   struct sdr_cmd_args sdr;
   int verbose_count;
+  int pet_acknowledge;
   char *cmd_file;
   int output_event_severity;
   int output_event_state;

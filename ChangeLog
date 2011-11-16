@@ -4,6 +4,8 @@
 
 	* libfreeipmi/include/freeipmi/record-format/ipmi-platform-event-trap-record-format.h:
 	Support macros for sequence number.
+
+	* Support --pet-acknowledge in ipmi-pet.
 	
 2011-11-15  Albert Chu <chu11@llnl.gov>
 
