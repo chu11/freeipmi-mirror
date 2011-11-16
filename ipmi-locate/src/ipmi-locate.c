@@ -541,8 +541,7 @@ main (int argc, char **argv)
   if (cmd_args.defaults)
     defaults_display (ctx);
 
-  if (ctx)
-    ipmi_locate_ctx_destroy (ctx);
+  ipmi_locate_ctx_destroy (ctx);
   return (0);
 }
 

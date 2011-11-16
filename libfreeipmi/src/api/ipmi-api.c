@@ -1117,14 +1117,12 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
       goto cleanup;
     }
 
-  if (locate_ctx)
-    ipmi_locate_ctx_destroy (locate_ctx);
+  ipmi_locate_ctx_destroy (locate_ctx);
   ctx->errnum = IPMI_ERR_SUCCESS;
   return (0);
 
  cleanup:
-  if (locate_ctx)
-    ipmi_locate_ctx_destroy (locate_ctx);
+  ipmi_locate_ctx_destroy (locate_ctx);
   _ipmi_inband_free (ctx);
   ctx->type = IPMI_DEVICE_UNKNOWN;
   return (-1);
@@ -1379,8 +1377,7 @@ ipmi_ctx_find_inband (ipmi_ctx_t ctx,
     (*driver_type) = ctx->type;
   ctx->errnum = IPMI_ERR_SUCCESS;
  cleanup:
-  if (locate_ctx)
-    ipmi_locate_ctx_destroy (locate_ctx);
+  ipmi_locate_ctx_destroy (locate_ctx);
   return (rv);
 }
 
