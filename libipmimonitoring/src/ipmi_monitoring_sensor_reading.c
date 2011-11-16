@@ -202,8 +202,7 @@ _store_sensor_reading (ipmi_monitoring_ctx_t c,
   return (0);
 
  cleanup:
-  if (s)
-    free (s);
+  free (s);
   return (-1);
 }
 
@@ -266,8 +265,7 @@ _store_unreadable_sensor_reading (ipmi_monitoring_ctx_t c,
   return (0);
 
  cleanup:
-  if (s)
-    free (s);
+  free (s);
   return (-1);
 }
 

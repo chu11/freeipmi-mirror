@@ -158,9 +158,7 @@ _destroy_sel_record (void *x)
 
   record = (struct ipmi_monitoring_sel_record *)x;
 
-  if (record->event_offset_string)
-    free (record->event_offset_string);
-
+  free (record->event_offset_string);
   free (record);
 }
 

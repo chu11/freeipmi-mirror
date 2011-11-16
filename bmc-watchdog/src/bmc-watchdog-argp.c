@@ -319,8 +319,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       cmd_args->daemon++;
       break;
     case LOGFILE_KEY:
-      if (cmd_args->logfile)
-        free (cmd_args->logfile);
+      free (cmd_args->logfile);
       if (!(cmd_args->logfile = strdup (arg)))
         {
           perror ("strdup");

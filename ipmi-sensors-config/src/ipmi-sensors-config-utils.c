@@ -217,7 +217,6 @@ get_sdr_record (ipmi_sensors_config_state_data_t *state_data,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  if (str)
-    free (str);
+  free (str);
   return (rv);
 }

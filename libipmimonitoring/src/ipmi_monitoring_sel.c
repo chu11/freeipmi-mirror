@@ -646,8 +646,7 @@ _store_sel_record (ipmi_monitoring_ctx_t c, unsigned int sel_flags)
  cleanup:
   if (s)
     {
-      if (s->event_offset_string)
-        free (s->event_offset_string);
+      free (s->event_offset_string);
       free (s);
     }
   return (-1);
@@ -903,7 +902,6 @@ ipmi_monitoring_get_sel (ipmi_monitoring_ctx_t c,
 
   rv = 0;
  cleanup:
-  if (record_ids_tmp)
-    free (record_ids_tmp);
+  free (record_ids_tmp);
   return (rv);
 }

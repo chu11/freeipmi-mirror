@@ -477,8 +477,7 @@ alert_string_commit (const char *section_name,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  if (alert_string_buf)
-    free (alert_string_buf);
+  free (alert_string_buf);
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 

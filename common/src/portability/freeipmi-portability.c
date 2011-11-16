@@ -156,10 +156,8 @@ freeipmi_stristr (const char *s1, const char *s2)
     rv = ((char *)s1 + (ptr - s1cpy));
 
  cleanup:
-  if (s1cpy)
-    free (s1cpy);
-  if (s2cpy)
-    free (s2cpy);
+  free (s1cpy);
+  free (s2cpy);
   return (rv);
 }
 #endif /* !HAVE_STRISTR */
