@@ -162,8 +162,7 @@ _pstdout_consolidated_data_create(const char *hostname, const char *output)
     {
       if (cdata->h)
         hostlist_destroy(cdata->h);
-      if (cdata->output)
-        free(cdata->output);
+      free(cdata->output);
       free(cdata);
     }
   return NULL;
@@ -179,8 +178,7 @@ _pstdout_consolidated_data_destroy(void *x)
   cdata = (struct pstdout_consolidated_data *)x;
   if (cdata->h)
     hostlist_destroy(cdata->h);
-  if (cdata->output)
-    free(cdata->output);
+  free(cdata->output);
   free(cdata);
 }
 
@@ -686,10 +684,8 @@ _pstdout_print(pstdout_state_t pstate,
 	  /* Don't change error code, just move on */
 	}
     }
-  if (buf)
-    free(buf);
-  if (linebuf)
-    free(linebuf);
+  free(buf);
+  free(linebuf);
   return rv;
 }
 
@@ -1029,10 +1025,8 @@ _pstdout_state_cleanup(pstdout_state_t pstate)
     cbuf_destroy(pstate->p_stdout);
   if (pstate->p_stderr)
     cbuf_destroy(pstate->p_stderr);
-  if (pstate->buffer_stdout)
-    free(pstate->buffer_stdout);
-  if (pstate->buffer_stderr)
-    free(pstate->buffer_stderr);
+  free(pstate->buffer_stdout);
+  free(pstate->buffer_stderr);
   memset(pstate, '\0', sizeof(struct pstdout_state));
 }
 
@@ -1494,8 +1488,7 @@ pstdout_launch(const char *hostnames, Pstdout_Thread pstdout_func, void *arg)
         {
           if (tdata[i])
             {
-              if (tdata[i]->hostname)
-                free(tdata[i]->hostname);
+	      free(tdata[i]->hostname);
               pthread_attr_destroy(&(tdata[i]->attr));
               free(tdata[i]);
             }
@@ -1506,8 +1499,7 @@ pstdout_launch(const char *hostnames, Pstdout_Thread pstdout_func, void *arg)
     hostlist_iterator_destroy(hitr);
   if (h)
     hostlist_destroy(h);
-  if (host)
-    free(host);
+  free(host);
   if ((rc = pthread_mutex_unlock(&pstdout_launch_mutex)))
     {
       if (pstdout_debug_flags & PSTDOUT_DEBUG_STANDARD)
