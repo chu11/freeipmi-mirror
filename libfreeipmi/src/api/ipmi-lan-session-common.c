@@ -990,7 +990,10 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
 
       if (ret)
         {
-          API_SET_ERRNUM (ctx, IPMI_ERR_SESSION_TIMEOUT);
+	  if (ctx->flags & IPMI_FLAGS_NOSESSION)
+	    API_SET_ERRNUM (ctx, IPMI_ERR_MESSAGE_TIMEOUT);
+	  else
+	    API_SET_ERRNUM (ctx, IPMI_ERR_SESSION_TIMEOUT);
           break;
         }
 
