@@ -126,8 +126,7 @@ ipmi_oem_parse_key_value (ipmi_oem_state_data_t *state_data,
    
   if (!(tempstr = strdup (state_data->prog_data->args->oem_options[option_num])))
     {
-      pstdout_perror (state_data->pstate,
-                      "strdup");
+      pstdout_perror (state_data->pstate, "strdup");
       goto cleanup;
     }
    
@@ -148,15 +147,13 @@ ipmi_oem_parse_key_value (ipmi_oem_state_data_t *state_data,
 
   if (!(tempkey = strdup (tempstr)))
     {
-      pstdout_perror (state_data->pstate,
-                      "strdup");
+      pstdout_perror (state_data->pstate, "strdup");
       goto cleanup;
     }
 
   if (!(tempvalue = strdup (tempptr)))
     {
-      pstdout_perror (state_data->pstate,
-                      "strdup");
+      pstdout_perror (state_data->pstate, "strdup");
       goto cleanup; 
     }
   

@@ -327,8 +327,7 @@ config_ipv4_address_string2int (pstdout_state_t pstate,
                      &b3,
                      &b4)) < 0)
     {
-      PSTDOUT_PERROR (pstate,
-                      "sscanf");
+      PSTDOUT_PERROR (pstate, "sscanf");
       return (-1);
     }
 
@@ -371,8 +370,7 @@ config_mac_address_string2int (pstdout_state_t pstate,
                      &b5,
                      &b6)) < 0)
     {
-      PSTDOUT_PERROR (pstate,
-                      "sscanf");
+      PSTDOUT_PERROR (pstate, "sscanf");
       return (-1);
     }
 

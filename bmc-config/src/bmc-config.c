@@ -92,8 +92,7 @@ _bmc_config (pstdout_state_t pstate,
 
           if (!(fp = fopen (prog_data->args->config_args.filename, "w")))
             {
-              pstdout_perror (pstate,
-                              "fopen");
+              pstdout_perror (pstate, "fopen");
               exit_code = EXIT_FAILURE;
               goto cleanup;
             }
@@ -110,8 +109,7 @@ _bmc_config (pstdout_state_t pstate,
         {
           if (!(fp = fopen (prog_data->args->config_args.filename, "r")))
             {
-              pstdout_perror (pstate,
-                              "fopen");
+              pstdout_perror (pstate, "fopen");
               exit_code = EXIT_FAILURE;
               goto cleanup;
             }
@@ -259,8 +257,7 @@ _bmc_config (pstdout_state_t pstate,
               
               if (!(state_data.enable_user_after_password = (bmc_config_enable_user_after_password_t *)malloc (datasize)))
                 {
-                  pstdout_perror (pstate,
-                                  "malloc");
+                  pstdout_perror (pstate, "malloc");
                   goto cleanup;
                 }
               state_data.enable_user_after_password_len = user_count;

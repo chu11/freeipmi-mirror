@@ -79,16 +79,14 @@ config_section_create (pstdout_state_t pstate,
 
   if (!(section = (struct config_section *)malloc (sizeof (struct config_section))))
     {
-      PSTDOUT_PERROR (pstate,
-                      "malloc");
+      PSTDOUT_PERROR (pstate, "malloc");
       goto cleanup;
     }
   memset (section, '\0', sizeof (struct config_section));
 
   if (!(section->section_name = strdup (section_name)))
     {
-      PSTDOUT_PERROR (pstate,
-                      "strdup");
+      PSTDOUT_PERROR (pstate, "strdup");
       goto cleanup;
     }
 
@@ -96,8 +94,7 @@ config_section_create (pstdout_state_t pstate,
     {
       if (!(section->section_comment_section_name = strdup (section_comment_section_name)))
         {
-          PSTDOUT_PERROR (pstate,
-                          "strdup");
+          PSTDOUT_PERROR (pstate, "strdup");
           goto cleanup;
         }
     }
@@ -106,8 +103,7 @@ config_section_create (pstdout_state_t pstate,
     {
       if (!(section->section_comment = strdup (section_comment)))
         {
-          PSTDOUT_PERROR (pstate,
-                          "strdup");
+          PSTDOUT_PERROR (pstate, "strdup");
           goto cleanup;
         }
     }
@@ -273,22 +269,19 @@ config_section_add_key (pstdout_state_t pstate,
 
   if (!(k = (struct config_key *)malloc (sizeof (struct config_key))))
     {
-      PSTDOUT_PERROR (pstate,
-                      "malloc");
+      PSTDOUT_PERROR (pstate, "malloc");
       goto cleanup;
     }
   memset (k, '\0', sizeof (struct config_key));
 
   if (!(k->key_name = strdup (key_name)))
     {
-      PSTDOUT_PERROR (pstate,
-                      "strdup");
+      PSTDOUT_PERROR (pstate, "strdup");
       goto cleanup;
     }
   if (!(k->description = strdup (description)))
     {
-      PSTDOUT_PERROR (pstate,
-                      "strdup");
+      PSTDOUT_PERROR (pstate, "strdup");
       goto cleanup;
     }
   k->flags = flags;
@@ -385,8 +378,7 @@ config_section_add_keyvalue (pstdout_state_t pstate,
 
   if (!(kv = malloc (sizeof (struct config_keyvalue))))
     {
-      PSTDOUT_PERROR (pstate,
-                      "malloc");
+      PSTDOUT_PERROR (pstate, "malloc");
       goto cleanup;
     }
   memset (kv, '\0', sizeof (struct config_keyvalue));
@@ -398,8 +390,7 @@ config_section_add_keyvalue (pstdout_state_t pstate,
     {
       if (!(kv->value_input = strdup (value_input)))
         {
-          PSTDOUT_PERROR (pstate,
-                          "strdup");
+          PSTDOUT_PERROR (pstate, "strdup");
           goto cleanup;
         }
     }
@@ -408,8 +399,7 @@ config_section_add_keyvalue (pstdout_state_t pstate,
     {
       if (!(kv->value_output = strdup (value_output)))
         {
-          PSTDOUT_PERROR (pstate,
-                          "strdup");
+          PSTDOUT_PERROR (pstate, "strdup");
           goto cleanup;
         }
     }
@@ -449,8 +439,7 @@ config_section_update_keyvalue_input (pstdout_state_t pstate,
 
       if (!(keyvalue->value_input = strdup (value_input)))
         {
-          PSTDOUT_PERROR (pstate,
-                          "strdup");
+          PSTDOUT_PERROR (pstate, "strdup");
           return (-1);
         }
     }
@@ -470,8 +459,7 @@ config_section_update_keyvalue_output (pstdout_state_t pstate,
     {
       if (!(keyvalue->value_output = strdup (value_output)))
         {
-          PSTDOUT_PERROR (pstate,
-                          "strdup");
+          PSTDOUT_PERROR (pstate, "strdup");
           return (-1);
         }
     }
@@ -493,8 +481,7 @@ config_section_update_keyvalue_output_unsigned_int (pstdout_state_t pstate,
 
   if (!(keyvalue->value_output = strdup (buf)))
     {
-      PSTDOUT_PERROR (pstate,
-                      "strdup");
+      PSTDOUT_PERROR (pstate, "strdup");
       return (-1);
     }
 
@@ -515,8 +502,7 @@ config_section_update_keyvalue_output_hex (pstdout_state_t pstate,
 
   if (!(keyvalue->value_output = strdup (buf)))
     {
-      PSTDOUT_PERROR (pstate,
-                      "strdup");
+      PSTDOUT_PERROR (pstate, "strdup");
       return (-1);
     }
 
@@ -537,8 +523,7 @@ config_section_update_keyvalue_output_double (pstdout_state_t pstate,
 
   if (!(keyvalue->value_output = strdup (buf)))
     {
-      PSTDOUT_PERROR (pstate,
-                      "strdup");
+      PSTDOUT_PERROR (pstate, "strdup");
       return (-1);
     }
 

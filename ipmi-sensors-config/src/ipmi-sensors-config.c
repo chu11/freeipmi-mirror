@@ -77,8 +77,7 @@ _ipmi_sensors_config (pstdout_state_t pstate,
 
   if (!(state_data.sdr_cache_ctx = ipmi_sdr_cache_ctx_create ()))
     {
-      pstdout_perror (pstate,
-                      "ipmi_sdr_cache_ctx_create()");
+      pstdout_perror (pstate, "ipmi_sdr_cache_ctx_create()");
       exit_code = EXIT_FAILURE;
       goto cleanup;
     }
@@ -106,8 +105,7 @@ _ipmi_sensors_config (pstdout_state_t pstate,
 
   if (!(state_data.sdr_parse_ctx = ipmi_sdr_parse_ctx_create ()))
     {
-      pstdout_perror (pstate,
-                      "ipmi_sdr_parse_ctx_create()");
+      pstdout_perror (pstate, "ipmi_sdr_parse_ctx_create()");
       exit_code = EXIT_FAILURE;
       goto cleanup;
     }
@@ -162,8 +160,7 @@ _ipmi_sensors_config (pstdout_state_t pstate,
 
           if (!(fp = fopen (prog_data->args->config_args.filename, "w")))
             {
-              pstdout_perror (pstate,
-                              "fopen");
+              pstdout_perror (pstate, "fopen");
               exit_code = EXIT_FAILURE;
               goto cleanup;
             }
@@ -180,8 +177,7 @@ _ipmi_sensors_config (pstdout_state_t pstate,
         {
           if (!(fp = fopen (prog_data->args->config_args.filename, "r")))
             {
-              pstdout_perror (pstate,
-                              "fopen");
+              pstdout_perror (pstate, "fopen");
               exit_code = EXIT_FAILURE;
               goto cleanup;
             }

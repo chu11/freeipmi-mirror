@@ -428,8 +428,7 @@ alert_string_commit (const char *section_name,
 
   if (!(alert_string_buf = (uint8_t *)malloc (alert_string_buf_len)))
     {
-      pstdout_perror (state_data->pstate,
-                      "strdup");
+      pstdout_perror (state_data->pstate, "malloc");
       goto cleanup;
     }
   memset (alert_string_buf, '\0', alert_string_buf_len);
