@@ -3,6 +3,8 @@
 	* Continued code cleanup.  Remove unnecessary null checks.
 	Remove excessive/unnecessary initializations.  Fix minor bugs.
 	Fix code inconsistency styles.  Remove unused functions.
+
+	* Update additional documentation about new ipmi-pet tool.
 	
 2011-11-15  Albert Chu <chu11@llnl.gov>
 

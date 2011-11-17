@@ -205,6 +205,10 @@ Ipmi-pef-config
 
 A tool to configure Platform Event Filtering (PEF) information.
 
+Ipmi-pet
+
+A tool to parse and interpret Platform Event Traps (PET).
+
 Ipmi-sensors-config
 
 A tool to configure IPMI sensors.  Supports configuration of sensor
