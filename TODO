@@ -124,6 +124,11 @@ collapse into one allmight tool? ipmi-config
     Also would make code ugly as hell to make all duplicate sections.
     should do database of what sections go to what categories
 - --lan-channel for pick one?
+-- new configs
+- intel node manager
+- dcmi
+- oems
+- system info
 
 fiid
 ----
