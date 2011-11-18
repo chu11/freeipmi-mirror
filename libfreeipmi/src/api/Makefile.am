@@ -31,6 +31,7 @@ libapi_la_SOURCES = \
 	ipmi-dcmi-cmds-api.c \
 	ipmi-device-global-cmds-api.c \
 	ipmi-event-cmds-api.c \
+	ipmi-firmware-firewall-command-discovery-cmds-api.c \
 	ipmi-fru-inventory-device-cmds-api.c \
 	ipmi-lan-cmds-api.c \
 	ipmi-lan-interface-api.c \

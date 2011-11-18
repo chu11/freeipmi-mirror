@@ -9,6 +9,7 @@ nobase_include_HEADERS = \
 	freeipmi/api/ipmi-dcmi-cmds-api.h \
 	freeipmi/api/ipmi-device-global-cmds-api.h \
 	freeipmi/api/ipmi-event-cmds-api.h \
+	freeipmi/api/ipmi-firmware-firewall-command-discovery-cmds-api.h \
 	freeipmi/api/ipmi-fru-inventory-device-cmds-api.h \
 	freeipmi/api/ipmi-lan-cmds-api.h \
 	freeipmi/api/ipmi-messaging-support-cmds-api.h \

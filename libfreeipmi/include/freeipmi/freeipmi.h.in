@@ -28,6 +28,7 @@ extern "C" {
 #include <freeipmi/api/ipmi-dcmi-cmds-api.h>
 #include <freeipmi/api/ipmi-device-global-cmds-api.h>
 #include <freeipmi/api/ipmi-event-cmds-api.h>
+#include <freeipmi/api/ipmi-firmware-firewall-command-discovery-cmds-api.h>
 #include <freeipmi/api/ipmi-fru-inventory-device-cmds-api.h>
 #include <freeipmi/api/ipmi-lan-cmds-api.h>
 #include <freeipmi/api/ipmi-messaging-support-cmds-api.h>
