@@ -239,6 +239,27 @@ ipmi_completion_code_strerror_r (uint8_t cmd,
         case IPMI_NET_FN_APP_RS:
           switch (cmd)
             {
+	    case IPMI_CMD_SET_COMMAND_ENABLES:
+              switch (comp_code)
+                {
+                case IPMI_COMP_CODE_SET_COMMAND_ENABLES_ATTMPT_TO_ENABLE_AN_UNSUPPORTED_OR_UNCONFIGURABLE_COMMAND:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_SET_COMMAND_ENABLES_ATTMPT_TO_ENABLE_AN_UNSUPPORTED_OR_UNCONFIGURABLE_COMMAND_STR);
+                }
+              break;
+	    case IPMI_CMD_SET_COMMAND_SUB_FUNCTION_ENABLES:
+              switch (comp_code)
+                {
+                case IPMI_COMP_CODE_SET_COMMAND_SUB_FUNCTION_ENABLES_ATTMPT_TO_ENABLE_AN_UNSUPPORTED_OR_UNCONFIGURABLE_COMMAND:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_SET_COMMAND_SUB_FUNCTION_ENABLES_ATTMPT_TO_ENABLE_AN_UNSUPPORTED_OR_UNCONFIGURABLE_COMMAND_STR);
+                }
+              break;
+	    case IPMI_CMD_GET_COMMAND_SUB_FUNCTION_ENABLES:
+              switch (comp_code)
+                {
+                case IPMI_COMP_CODE_GET_COMMAND_SUB_FUNCTION_ENABLES_ATTMPT_TO_ENABLE_AN_UNSUPPORTED_OR_UNCONFIGURABLE_COMMAND:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_GET_COMMAND_SUB_FUNCTION_ENABLES_ATTMPT_TO_ENABLE_AN_UNSUPPORTED_OR_UNCONFIGURABLE_COMMAND_STR);
+                }
+              break;
             case IPMI_CMD_RESET_WATCHDOG_TIMER:
               switch (comp_code)
                 {

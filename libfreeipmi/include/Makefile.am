@@ -26,6 +26,7 @@ nobase_include_HEADERS = \
 	freeipmi/cmds/ipmi-dcmi-oem-cmds.h \
 	freeipmi/cmds/ipmi-device-global-cmds.h \
 	freeipmi/cmds/ipmi-event-cmds.h \
+	freeipmi/cmds/ipmi-firmware-firewall-command-discovery-cmds.h \
 	freeipmi/cmds/ipmi-fru-inventory-device-cmds.h \
 	freeipmi/cmds/ipmi-lan-cmds.h \
 	freeipmi/cmds/ipmi-messaging-support-cmds.h \

@@ -13,6 +13,7 @@ libcmds_la_SOURCES = \
 	ipmi-dcmi-cmds.c \
 	ipmi-device-global-cmds.c \
 	ipmi-event-cmds.c \
+	ipmi-firmware-firewall-command-discovery-cmds.c \
 	ipmi-fru-inventory-device-cmds.c \
 	ipmi-lan-cmds.c \
 	ipmi-messaging-support-cmds.c \

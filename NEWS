@@ -3,13 +3,15 @@ FreeIPMI 1.1.1 - XX/XX/11
 o Support new tool ipmi-pet, tool to parse/interpret platform event traps.
 o Support new --sdr-cache-file option specify specific SDR cache file
   in all tools.
+o In ipmi-raw, for file/stdin input, output line number when there is
+  an error.
 o Update libfreeipmi for DCMI 1.5 additions.
 o Update libfreeipmi fru-parse sub-library to support FRU parsing
   without an IPMI connection.
-o In ipmi-raw, for file/stdin input, output line number when there is
-  an error.
 o In libfreeipmi, support IPMI_FLAGS_NOSESSION flag to open a context
   for IPMI communication w/o establishing a session.
+o In libfreeipmi, add support for IPMI firmware firewall and command
+  discovery payloads.
 o Add petalert.pl contribution from Kaiwang Chen (kaiwang.chen AT gmail DOT com)
 o Fix macro name typos.
 
