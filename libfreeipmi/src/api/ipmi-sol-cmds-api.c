@@ -30,10 +30,8 @@
 #include "freeipmi/api/ipmi-sol-cmds-api.h"
 #include "freeipmi/cmds/ipmi-sol-cmds.h"
 #include "freeipmi/fiid/fiid.h"
-#include "freeipmi/spec/ipmi-channel-spec.h"
 #include "freeipmi/spec/ipmi-ipmb-lun-spec.h"
 #include "freeipmi/spec/ipmi-netfn-spec.h"
-#include "freeipmi/spec/ipmi-privilege-level-spec.h"
 #include "freeipmi/spec/ipmi-sol-configuration-parameters-spec.h"
 
 #include "ipmi-api-defs.h"
@@ -61,12 +59,8 @@ ipmi_cmd_set_sol_configuration_parameters (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
-      || (!IPMI_SOL_CONFIGURATION_PARAMETER_SELECTOR_VALID (parameter_selector)
-          && !IPMI_SOL_CONFIGURATION_PARAMETER_SELECTOR_IS_OEM (parameter_selector))
-      || !configuration_parameter_data
-      || !configuration_parameter_data_len
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -126,9 +120,8 @@ ipmi_cmd_set_sol_configuration_parameters_set_in_progress (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
-      || !IPMI_SOL_CONFIGURATION_PARAMETERS_SET_IN_PROGRESS_VALID (state)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -186,9 +179,8 @@ ipmi_cmd_set_sol_configuration_parameters_sol_enable (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
-      || !IPMI_SOL_SOL_ENABLE_VALID (sol_enable)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -248,11 +240,8 @@ ipmi_cmd_set_sol_configuration_parameters_sol_authentication (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
-      || !IPMI_PRIVILEGE_LEVEL_VALID (sol_privilege_level)
-      || !IPMI_SOL_FORCE_SOL_PAYLOAD_AUTHENTICATION_VALID (force_sol_payload_authentication)
-      || !IPMI_SOL_FORCE_SOL_PAYLOAD_ENCRYPTION_VALID (force_sol_payload_encryption)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -313,8 +302,8 @@ ipmi_cmd_set_sol_configuration_parameters_character_accumulate_interval_and_send
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -374,8 +363,8 @@ ipmi_cmd_set_sol_configuration_parameters_sol_retry (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -434,9 +423,8 @@ ipmi_cmd_set_sol_configuration_parameters_sol_non_volatile_bit_rate (ipmi_ctx_t 
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
-      || !IPMI_SOL_BIT_RATE_VALID (bit_rate)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -494,9 +482,8 @@ ipmi_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
-      || !IPMI_SOL_BIT_RATE_VALID (bit_rate)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -554,8 +541,8 @@ ipmi_cmd_set_sol_configuration_parameters_sol_payload_port_number (ipmi_ctx_t ct
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -616,11 +603,8 @@ ipmi_cmd_get_sol_configuration_parameters (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
-      || !IPMI_GET_SOL_PARAMETER_VALID (get_parameter)
-      || (!IPMI_SOL_CONFIGURATION_PARAMETER_SELECTOR_VALID (parameter_selector)
-          && !IPMI_SOL_CONFIGURATION_PARAMETER_SELECTOR_IS_OEM (parameter_selector))
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -683,9 +667,8 @@ ipmi_cmd_get_sol_configuration_parameters_set_in_progress (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
-      || !IPMI_GET_SOL_PARAMETER_VALID (get_parameter)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -748,9 +731,8 @@ ipmi_cmd_get_sol_configuration_parameters_sol_enable (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
-      || !IPMI_GET_SOL_PARAMETER_VALID (get_parameter)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -813,9 +795,8 @@ ipmi_cmd_get_sol_configuration_parameters_sol_authentication (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
-      || !IPMI_GET_SOL_PARAMETER_VALID (get_parameter)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -878,9 +859,8 @@ ipmi_cmd_get_sol_configuration_parameters_character_accumulate_interval_and_send
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
-      || !IPMI_GET_SOL_PARAMETER_VALID (get_parameter)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -943,9 +923,8 @@ ipmi_cmd_get_sol_configuration_parameters_sol_retry (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
-      || !IPMI_GET_SOL_PARAMETER_VALID (get_parameter)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -1008,9 +987,8 @@ ipmi_cmd_get_sol_configuration_parameters_sol_non_volatile_bit_rate (ipmi_ctx_t 
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
-      || !IPMI_GET_SOL_PARAMETER_VALID (get_parameter)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -1073,9 +1051,8 @@ ipmi_cmd_get_sol_configuration_parameters_sol_volatile_bit_rate (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
-      || !IPMI_GET_SOL_PARAMETER_VALID (get_parameter)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -1138,9 +1115,8 @@ ipmi_cmd_get_sol_configuration_parameters_sol_payload_channel (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
-      || !IPMI_GET_SOL_PARAMETER_VALID (get_parameter)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -1203,9 +1179,8 @@ ipmi_cmd_get_sol_configuration_parameters_sol_payload_port_number (ipmi_ctx_t ct
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
-      || !IPMI_GET_SOL_PARAMETER_VALID (get_parameter)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);

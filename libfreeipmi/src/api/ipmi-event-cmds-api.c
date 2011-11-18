@@ -30,7 +30,6 @@
 #include "freeipmi/api/ipmi-event-cmds-api.h"
 #include "freeipmi/cmds/ipmi-event-cmds.h"
 #include "freeipmi/fiid/fiid.h"
-#include "freeipmi/record-format/ipmi-sel-record-format.h"
 #include "freeipmi/spec/ipmi-ipmb-lun-spec.h"
 #include "freeipmi/spec/ipmi-netfn-spec.h"
 
@@ -57,8 +56,8 @@ ipmi_cmd_set_event_receiver (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_BMC_LUN_VALID (event_receiver_lun)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -238,11 +237,8 @@ ipmi_cmd_platform_event (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  /* b/c OEM codes are allowed here, don't really need to check for
-   * a lot of correct input.  Anything is allowed in many cases.
-   */
-  if (!IPMI_SEL_RECORD_EVENT_DIRECTION_VALID (event_dir)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);

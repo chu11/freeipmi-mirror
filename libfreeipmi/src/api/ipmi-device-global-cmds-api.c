@@ -217,13 +217,8 @@ ipmi_cmd_set_acpi_power_state (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_ACPI_SET_SYSTEM_POWER_STATE_VALID (set_system_power_state)
-      || (set_system_power_state == IPMI_ACPI_SET_SYSTEM_POWER_STATE_SET_SYSTEM_POWER_STATE
-          && !IPMI_ACPI_SYSTEM_POWER_STATE_VALID (system_power_state_enumeration))
-      || !IPMI_ACPI_SET_DEVICE_POWER_STATE_VALID (set_device_power_state)
-      || (set_device_power_state == IPMI_ACPI_SET_DEVICE_POWER_STATE_SET_DEVICE_POWER_STATE
-          && !IPMI_ACPI_DEVICE_POWER_STATE_VALID (device_power_state_enumeration))
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);

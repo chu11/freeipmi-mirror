@@ -1,5 +1,9 @@
 2011-11-18  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/src/api/: Remove duplicate parameter checks.
+	
+2011-11-18  Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/: Add support for IPMI firmware firewall and command
 	discovery payloads.  Perform some code cleanup.
 	

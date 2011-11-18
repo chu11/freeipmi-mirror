@@ -59,8 +59,8 @@ ipmi_cmd_set_sensor_hysteresis (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (hysteresis_mask != IPMI_SENSOR_HYSTERESIS_MASK
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -121,8 +121,8 @@ ipmi_cmd_get_sensor_hysteresis (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (hysteresis_mask != IPMI_SENSOR_HYSTERESIS_MASK
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -308,10 +308,8 @@ ipmi_cmd_set_sensor_event_enable (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_SENSOR_EVENT_MESSAGE_ACTION_VALID (event_message_action)
-      || !IPMI_SENSOR_SCANNING_ON_THIS_SENSOR_VALID (scanning_on_this_sensor)
-      || !IPMI_SENSOR_ALL_EVENT_MESSAGES_VALID (all_event_messages)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -399,34 +397,8 @@ ipmi_cmd_set_sensor_event_enable_threshold (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_SENSOR_EVENT_MESSAGE_ACTION_VALID (event_message_action)
-      || !IPMI_SENSOR_SCANNING_ON_THIS_SENSOR_VALID (scanning_on_this_sensor)
-      || !IPMI_SENSOR_ALL_EVENT_MESSAGES_VALID (all_event_messages)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (assertion_event_lower_non_critical_going_low)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (assertion_event_lower_non_critical_going_high)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (assertion_event_lower_critical_going_low)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (assertion_event_lower_critical_going_high)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (assertion_event_lower_non_recoverable_going_low)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (assertion_event_lower_non_recoverable_going_high)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (assertion_event_upper_non_critical_going_low)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (assertion_event_upper_non_critical_going_high)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (assertion_event_upper_critical_going_low)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (assertion_event_upper_critical_going_high)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (assertion_event_upper_non_recoverable_going_low)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (assertion_event_upper_non_recoverable_going_high)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_lower_non_critical_going_low)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_lower_non_critical_going_high)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_lower_critical_going_low)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_lower_critical_going_high)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_lower_non_recoverable_going_low)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_lower_non_recoverable_going_high)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_upper_non_critical_going_low)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_upper_non_critical_going_high)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_upper_critical_going_low)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_upper_critical_going_high)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_upper_non_recoverable_going_low)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_upper_non_recoverable_going_high)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -542,44 +514,12 @@ ipmi_cmd_set_sensor_event_enable_discrete (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_SENSOR_EVENT_MESSAGE_ACTION_VALID (event_message_action)
-      || !IPMI_SENSOR_SCANNING_ON_THIS_SENSOR_VALID (scanning_on_this_sensor)
-      || !IPMI_SENSOR_ALL_EVENT_MESSAGES_VALID (all_event_messages)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (assertion_event_state_bit_0)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (assertion_event_state_bit_1)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (assertion_event_state_bit_2)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (assertion_event_state_bit_3)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (assertion_event_state_bit_4)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (assertion_event_state_bit_5)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (assertion_event_state_bit_6)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (assertion_event_state_bit_7)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (assertion_event_state_bit_8)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (assertion_event_state_bit_9)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (assertion_event_state_bit_10)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (assertion_event_state_bit_11)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (assertion_event_state_bit_12)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (assertion_event_state_bit_13)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (assertion_event_state_bit_14)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_state_bit_0)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_state_bit_1)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_state_bit_2)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_state_bit_3)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_state_bit_4)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_state_bit_5)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_state_bit_6)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_state_bit_7)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_state_bit_8)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_state_bit_9)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_state_bit_10)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_state_bit_11)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_state_bit_12)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_state_bit_13)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_state_bit_14)
-      || !fiid_obj_valid (obj_cmd_rs))
-  {
-    API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-    return (-1);
-  }
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
+    {
+      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
 
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
                                  tmpl_cmd_set_sensor_event_enable_rs) < 0)

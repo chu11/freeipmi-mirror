@@ -30,7 +30,6 @@
 #include "freeipmi/api/ipmi-serial-modem-cmds-api.h"
 #include "freeipmi/cmds/ipmi-serial-modem-cmds.h"
 #include "freeipmi/fiid/fiid.h"
-#include "freeipmi/spec/ipmi-channel-spec.h"
 #include "freeipmi/spec/ipmi-ipmb-lun-spec.h"
 #include "freeipmi/spec/ipmi-netfn-spec.h"
 #include "freeipmi/spec/ipmi-serial-modem-configuration-parameters-spec.h"
@@ -60,12 +59,8 @@ ipmi_cmd_set_serial_modem_configuration (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
-      || (!IPMI_SERIAL_PARAMETER_SELECTOR_VALID (parameter_selector)
-          && !IPMI_SERIAL_PARAMETER_SELECTOR_IS_OEM (parameter_selector))
-      || !configuration_parameter_data
-      || !configuration_parameter_data_len
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -125,9 +120,8 @@ ipmi_cmd_set_serial_modem_configuration_set_in_progress (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
-      || !IPMI_SERIAL_MODEM_CONFIGURATION_PARAMETERS_SET_IN_PROGRESS_VALID (state)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -188,12 +182,8 @@ ipmi_cmd_set_serial_modem_configuration_connection_mode (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
-      || !IPMI_BASIC_MODE_VALID (basic_mode)
-      || !IPMI_PPP_MODE_VALID (ppp_mode)
-      || !IPMI_TERMINAL_MODE_VALID (terminal_mode)
-      || !IPMI_CONNECT_MODE_VALID (connect_mode)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -256,11 +246,8 @@ ipmi_cmd_set_serial_modem_configuration_ipmi_messaging_comm_settings (ipmi_ctx_t
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
-      || !IPMI_DTR_HANGUP_VALID (dtr_hangup)
-      || !IPMI_FLOW_CONTROL_VALID (flow_control)
-      || !IPMI_BIT_RATE_VALID (bit_rate)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -320,8 +307,8 @@ ipmi_cmd_set_serial_modem_configuration_page_blackout_interval (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -379,8 +366,8 @@ ipmi_cmd_set_serial_modem_configuration_call_retry_interval (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -441,11 +428,8 @@ ipmi_cmd_get_serial_modem_configuration (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
-      || !IPMI_GET_SERIAL_MODEM_PARAMETER_VALID (get_parameter)
-      || (!IPMI_SERIAL_PARAMETER_SELECTOR_VALID (parameter_selector)
-          && !IPMI_SERIAL_PARAMETER_SELECTOR_IS_OEM (parameter_selector))
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -508,9 +492,8 @@ ipmi_cmd_get_serial_modem_configuration_set_in_progress (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
-      || !IPMI_GET_SERIAL_MODEM_PARAMETER_VALID (get_parameter)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -573,9 +556,8 @@ ipmi_cmd_get_serial_modem_configuration_connection_mode (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
-      || !IPMI_GET_SERIAL_MODEM_PARAMETER_VALID (get_parameter)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -638,9 +620,8 @@ ipmi_cmd_get_serial_modem_configuration_ipmi_messaging_comm_settings (ipmi_ctx_t
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
-      || !IPMI_GET_SERIAL_MODEM_PARAMETER_VALID (get_parameter)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -703,9 +684,8 @@ ipmi_cmd_get_serial_modem_configuration_call_retry_interval (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
-      || !IPMI_GET_SERIAL_MODEM_PARAMETER_VALID (get_parameter)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -768,9 +748,8 @@ ipmi_cmd_get_serial_modem_configuration_page_blackout_interval (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
-      || !IPMI_GET_SERIAL_MODEM_PARAMETER_VALID (get_parameter)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);

@@ -31,8 +31,6 @@
 #include "freeipmi/cmds/ipmi-oem-intel-node-manager-cmds.h"
 #include "freeipmi/fiid/fiid.h"
 #include "freeipmi/spec/ipmi-channel-spec.h"
-#include "freeipmi/spec/ipmi-cmd-oem-spec.h"
-#include "freeipmi/spec/ipmi-comp-code-oem-spec.h"
 #include "freeipmi/spec/ipmi-ipmb-lun-spec.h"
 #include "freeipmi/spec/ipmi-netfn-spec.h"
 #include "freeipmi/spec/ipmi-slave-address-spec.h"
@@ -64,11 +62,8 @@ ipmi_cmd_oem_intel_node_manager_enable_disable_node_manager_policy_control (ipmi
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (target_channel_number)
-      || !IPMI_BMC_LUN_VALID (target_lun)
-      || !IPMI_OEM_INTEL_NODE_MANAGER_POLICY_ENABLE_DISABLE_VALID (policy_enable_disable)
-      || !IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domain_id)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -158,15 +153,8 @@ ipmi_cmd_oem_intel_node_manager_set_node_manager_policy (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (target_channel_number)
-      || !IPMI_BMC_LUN_VALID (target_lun)
-      || !IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domain_id)
-      || !IPMI_OEM_INTEL_NODE_MANAGER_POLICY_ENABLED_VALID (policy_enabled)
-      || !IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_VALID (policy_trigger_type)
-      || !IPMI_OEM_INTEL_NODE_MANAGER_POLICY_CONFIGURATION_ACTION_VALID (policy_configuration_action)
-      || !IPMI_OEM_INTEL_NODE_MANAGER_POLICY_EXCEPTION_ACTION_VALID (policy_exception_actions_send_alert)
-      || !IPMI_OEM_INTEL_NODE_MANAGER_POLICY_EXCEPTION_ACTION_VALID (policy_exception_actions_shutdown_system)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -255,10 +243,8 @@ ipmi_cmd_oem_intel_node_manager_get_node_manager_policy (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (target_channel_number)
-      || !IPMI_BMC_LUN_VALID (target_lun)
-      || !IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domain_id)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -341,10 +327,8 @@ ipmi_cmd_oem_intel_node_manager_set_node_manager_alert_thresholds (ipmi_ctx_t ct
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (target_channel_number)
-      || !IPMI_BMC_LUN_VALID (target_lun)
-      || !IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domain_id)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -427,10 +411,8 @@ ipmi_cmd_oem_intel_node_manager_get_node_manager_alert_thresholds (ipmi_ctx_t ct
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (target_channel_number)
-      || !IPMI_BMC_LUN_VALID (target_lun)
-      || !IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domain_id)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -555,145 +537,8 @@ ipmi_cmd_oem_intel_node_manager_set_node_manager_policy_suspend_periods (ipmi_ct
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (target_channel_number)
-      || !IPMI_BMC_LUN_VALID (target_lun)
-      || !IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domain_id)
-      || !((!policy1_suspend_start_time
-            && !policy1_suspend_stop_time
-            && !policy1_suspend_period_recurrence_monday
-            && !policy1_suspend_period_recurrence_tuesday
-            && !policy1_suspend_period_recurrence_wednesday
-            && !policy1_suspend_period_recurrence_thursday
-            && !policy1_suspend_period_recurrence_friday
-            && !policy1_suspend_period_recurrence_saturday
-            && !policy1_suspend_period_recurrence_sunday)
-           || (policy1_suspend_start_time
-               && policy1_suspend_stop_time
-               && policy1_suspend_period_recurrence_monday
-               && policy1_suspend_period_recurrence_tuesday
-               && policy1_suspend_period_recurrence_wednesday
-               && policy1_suspend_period_recurrence_thursday
-               && policy1_suspend_period_recurrence_friday
-               && policy1_suspend_period_recurrence_saturday
-               && policy1_suspend_period_recurrence_sunday
-               && IPMI_OEM_INTEL_NODE_MANAGER_POLICY_SUSPEND_START_TIME_VALID (*policy1_suspend_start_time)
-               && IPMI_OEM_INTEL_NODE_MANAGER_POLICY_SUSPEND_STOP_TIME_VALID (*policy1_suspend_stop_time)
-               && IPMI_OEM_INTEL_NODE_MANAGER_SUSPEND_PERIOD_VALID (*policy1_suspend_period_recurrence_monday)
-               && IPMI_OEM_INTEL_NODE_MANAGER_SUSPEND_PERIOD_VALID (*policy1_suspend_period_recurrence_tuesday)
-               && IPMI_OEM_INTEL_NODE_MANAGER_SUSPEND_PERIOD_VALID (*policy1_suspend_period_recurrence_wednesday)
-               && IPMI_OEM_INTEL_NODE_MANAGER_SUSPEND_PERIOD_VALID (*policy1_suspend_period_recurrence_thursday)
-               && IPMI_OEM_INTEL_NODE_MANAGER_SUSPEND_PERIOD_VALID (*policy1_suspend_period_recurrence_friday)
-               && IPMI_OEM_INTEL_NODE_MANAGER_SUSPEND_PERIOD_VALID (*policy1_suspend_period_recurrence_saturday)
-               && IPMI_OEM_INTEL_NODE_MANAGER_SUSPEND_PERIOD_VALID (*policy1_suspend_period_recurrence_sunday)))
-      || !((!policy2_suspend_start_time
-            && !policy2_suspend_stop_time
-            && !policy2_suspend_period_recurrence_monday
-            && !policy2_suspend_period_recurrence_tuesday
-            && !policy2_suspend_period_recurrence_wednesday
-            && !policy2_suspend_period_recurrence_thursday
-            && !policy2_suspend_period_recurrence_friday
-            && !policy2_suspend_period_recurrence_saturday
-            && !policy2_suspend_period_recurrence_sunday)
-           || (policy2_suspend_start_time
-               && policy2_suspend_stop_time
-               && policy2_suspend_period_recurrence_monday
-               && policy2_suspend_period_recurrence_tuesday
-               && policy2_suspend_period_recurrence_wednesday
-               && policy2_suspend_period_recurrence_thursday
-               && policy2_suspend_period_recurrence_friday
-               && policy2_suspend_period_recurrence_saturday
-               && policy2_suspend_period_recurrence_sunday
-               && IPMI_OEM_INTEL_NODE_MANAGER_POLICY_SUSPEND_START_TIME_VALID (*policy2_suspend_start_time)
-               && IPMI_OEM_INTEL_NODE_MANAGER_POLICY_SUSPEND_STOP_TIME_VALID (*policy2_suspend_stop_time)
-               && IPMI_OEM_INTEL_NODE_MANAGER_SUSPEND_PERIOD_VALID (*policy2_suspend_period_recurrence_monday)
-               && IPMI_OEM_INTEL_NODE_MANAGER_SUSPEND_PERIOD_VALID (*policy2_suspend_period_recurrence_tuesday)
-               && IPMI_OEM_INTEL_NODE_MANAGER_SUSPEND_PERIOD_VALID (*policy2_suspend_period_recurrence_wednesday)
-               && IPMI_OEM_INTEL_NODE_MANAGER_SUSPEND_PERIOD_VALID (*policy2_suspend_period_recurrence_thursday)
-               && IPMI_OEM_INTEL_NODE_MANAGER_SUSPEND_PERIOD_VALID (*policy2_suspend_period_recurrence_friday)
-               && IPMI_OEM_INTEL_NODE_MANAGER_SUSPEND_PERIOD_VALID (*policy2_suspend_period_recurrence_saturday)
-               && IPMI_OEM_INTEL_NODE_MANAGER_SUSPEND_PERIOD_VALID (*policy2_suspend_period_recurrence_sunday)))
-      || !((!policy3_suspend_start_time
-            && !policy3_suspend_stop_time
-            && !policy3_suspend_period_recurrence_monday
-            && !policy3_suspend_period_recurrence_tuesday
-            && !policy3_suspend_period_recurrence_wednesday
-            && !policy3_suspend_period_recurrence_thursday
-            && !policy3_suspend_period_recurrence_friday
-            && !policy3_suspend_period_recurrence_saturday
-            && !policy3_suspend_period_recurrence_sunday)
-           || (policy3_suspend_start_time
-               && policy3_suspend_stop_time
-               && policy3_suspend_period_recurrence_monday
-               && policy3_suspend_period_recurrence_tuesday
-               && policy3_suspend_period_recurrence_wednesday
-               && policy3_suspend_period_recurrence_thursday
-               && policy3_suspend_period_recurrence_friday
-               && policy3_suspend_period_recurrence_saturday
-               && policy3_suspend_period_recurrence_sunday
-               && IPMI_OEM_INTEL_NODE_MANAGER_POLICY_SUSPEND_START_TIME_VALID (*policy3_suspend_start_time)
-               && IPMI_OEM_INTEL_NODE_MANAGER_POLICY_SUSPEND_STOP_TIME_VALID (*policy3_suspend_stop_time)
-               && IPMI_OEM_INTEL_NODE_MANAGER_SUSPEND_PERIOD_VALID (*policy3_suspend_period_recurrence_monday)
-               && IPMI_OEM_INTEL_NODE_MANAGER_SUSPEND_PERIOD_VALID (*policy3_suspend_period_recurrence_tuesday)
-               && IPMI_OEM_INTEL_NODE_MANAGER_SUSPEND_PERIOD_VALID (*policy3_suspend_period_recurrence_wednesday)
-               && IPMI_OEM_INTEL_NODE_MANAGER_SUSPEND_PERIOD_VALID (*policy3_suspend_period_recurrence_thursday)
-               && IPMI_OEM_INTEL_NODE_MANAGER_SUSPEND_PERIOD_VALID (*policy3_suspend_period_recurrence_friday)
-               && IPMI_OEM_INTEL_NODE_MANAGER_SUSPEND_PERIOD_VALID (*policy3_suspend_period_recurrence_saturday)
-               && IPMI_OEM_INTEL_NODE_MANAGER_SUSPEND_PERIOD_VALID (*policy3_suspend_period_recurrence_sunday)))
-      || !((!policy4_suspend_start_time
-            && !policy4_suspend_stop_time
-            && !policy4_suspend_period_recurrence_monday
-            && !policy4_suspend_period_recurrence_tuesday
-            && !policy4_suspend_period_recurrence_wednesday
-            && !policy4_suspend_period_recurrence_thursday
-            && !policy4_suspend_period_recurrence_friday
-            && !policy4_suspend_period_recurrence_saturday
-            && !policy4_suspend_period_recurrence_sunday)
-           || (policy4_suspend_start_time
-               && policy4_suspend_stop_time
-               && policy4_suspend_period_recurrence_monday
-               && policy4_suspend_period_recurrence_tuesday
-               && policy4_suspend_period_recurrence_wednesday
-               && policy4_suspend_period_recurrence_thursday
-               && policy4_suspend_period_recurrence_friday
-               && policy4_suspend_period_recurrence_saturday
-               && policy4_suspend_period_recurrence_sunday
-               && IPMI_OEM_INTEL_NODE_MANAGER_POLICY_SUSPEND_START_TIME_VALID (*policy4_suspend_start_time)
-               && IPMI_OEM_INTEL_NODE_MANAGER_POLICY_SUSPEND_STOP_TIME_VALID (*policy4_suspend_stop_time)
-               && IPMI_OEM_INTEL_NODE_MANAGER_SUSPEND_PERIOD_VALID (*policy4_suspend_period_recurrence_monday)
-               && IPMI_OEM_INTEL_NODE_MANAGER_SUSPEND_PERIOD_VALID (*policy4_suspend_period_recurrence_tuesday)
-               && IPMI_OEM_INTEL_NODE_MANAGER_SUSPEND_PERIOD_VALID (*policy4_suspend_period_recurrence_wednesday)
-               && IPMI_OEM_INTEL_NODE_MANAGER_SUSPEND_PERIOD_VALID (*policy4_suspend_period_recurrence_thursday)
-               && IPMI_OEM_INTEL_NODE_MANAGER_SUSPEND_PERIOD_VALID (*policy4_suspend_period_recurrence_friday)
-               && IPMI_OEM_INTEL_NODE_MANAGER_SUSPEND_PERIOD_VALID (*policy4_suspend_period_recurrence_saturday)
-               && IPMI_OEM_INTEL_NODE_MANAGER_SUSPEND_PERIOD_VALID (*policy4_suspend_period_recurrence_sunday)))
-      || !((!policy5_suspend_start_time
-            && !policy5_suspend_stop_time
-            && !policy5_suspend_period_recurrence_monday
-            && !policy5_suspend_period_recurrence_tuesday
-            && !policy5_suspend_period_recurrence_wednesday
-            && !policy5_suspend_period_recurrence_thursday
-            && !policy5_suspend_period_recurrence_friday
-            && !policy5_suspend_period_recurrence_saturday
-            && !policy5_suspend_period_recurrence_sunday)
-           || (policy5_suspend_start_time
-               && policy5_suspend_stop_time
-               && policy5_suspend_period_recurrence_monday
-               && policy5_suspend_period_recurrence_tuesday
-               && policy5_suspend_period_recurrence_wednesday
-               && policy5_suspend_period_recurrence_thursday
-               && policy5_suspend_period_recurrence_friday
-               && policy5_suspend_period_recurrence_saturday
-               && policy5_suspend_period_recurrence_sunday
-               && IPMI_OEM_INTEL_NODE_MANAGER_POLICY_SUSPEND_START_TIME_VALID (*policy5_suspend_start_time)
-               && IPMI_OEM_INTEL_NODE_MANAGER_POLICY_SUSPEND_STOP_TIME_VALID (*policy5_suspend_stop_time)
-               && IPMI_OEM_INTEL_NODE_MANAGER_SUSPEND_PERIOD_VALID (*policy5_suspend_period_recurrence_monday)
-               && IPMI_OEM_INTEL_NODE_MANAGER_SUSPEND_PERIOD_VALID (*policy5_suspend_period_recurrence_tuesday)
-               && IPMI_OEM_INTEL_NODE_MANAGER_SUSPEND_PERIOD_VALID (*policy5_suspend_period_recurrence_wednesday)
-               && IPMI_OEM_INTEL_NODE_MANAGER_SUSPEND_PERIOD_VALID (*policy5_suspend_period_recurrence_thursday)
-               && IPMI_OEM_INTEL_NODE_MANAGER_SUSPEND_PERIOD_VALID (*policy5_suspend_period_recurrence_friday)
-               && IPMI_OEM_INTEL_NODE_MANAGER_SUSPEND_PERIOD_VALID (*policy5_suspend_period_recurrence_saturday)
-               && IPMI_OEM_INTEL_NODE_MANAGER_SUSPEND_PERIOD_VALID (*policy5_suspend_period_recurrence_sunday)))
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -818,10 +663,8 @@ ipmi_cmd_oem_intel_node_manager_get_node_manager_policy_suspend_periods (ipmi_ct
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (target_channel_number)
-      || !IPMI_BMC_LUN_VALID (target_lun)
-      || !IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domain_id)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -902,11 +745,8 @@ ipmi_cmd_oem_intel_node_manager_reset_node_manager_statistics (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (target_channel_number)
-      || !IPMI_BMC_LUN_VALID (target_lun)
-      || !IPMI_OEM_INTEL_NODE_MANAGER_RESET_MODE_VALID (mode)
-      || !IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domain_id)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -988,11 +828,8 @@ ipmi_cmd_oem_intel_node_manager_get_node_manager_statistics (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (target_channel_number)
-      || !IPMI_BMC_LUN_VALID (target_lun)
-      || !IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_VALID (mode)
-      || !IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domain_id)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -1074,12 +911,8 @@ ipmi_cmd_oem_intel_node_manager_get_node_manager_capabilities (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (target_channel_number)
-      || !IPMI_BMC_LUN_VALID (target_lun)
-      || !IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domain_id)
-      || !IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_VALID (policy_trigger_type)
-      || !IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TYPE_VALID (policy_type)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -1158,9 +991,8 @@ ipmi_cmd_oem_intel_node_manager_get_node_manager_version (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (target_channel_number)
-      || !IPMI_BMC_LUN_VALID (target_lun)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -1239,10 +1071,8 @@ ipmi_cmd_oem_intel_node_manager_set_node_manager_power_draw_range (ipmi_ctx_t ct
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (target_channel_number)
-      || !IPMI_BMC_LUN_VALID (target_lun)
-      || !IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domain_id)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -1326,13 +1156,8 @@ ipmi_cmd_oem_intel_node_manager_set_node_manager_alert_destination (ipmi_ctx_t c
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (target_channel_number)
-      || !IPMI_BMC_LUN_VALID (target_lun)
-      || !IPMI_CHANNEL_NUMBER_VALID (channel_number)
-      || !IPMI_OEM_INTEL_NODE_MANAGER_DESTINATION_INFORMATION_OPERATION_VALID (destination_information_operation)
-      || !IPMI_OEM_INTEL_NODE_MANAGER_ALERT_STRING_SELECTOR_VALID (alert_string_selector)
-      || !IPMI_OEM_INTEL_NODE_MANAGER_SEND_ALERT_STRING_VALID (send_alert_string)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -1418,13 +1243,8 @@ ipmi_cmd_oem_intel_node_manager_set_node_manager_alert_destination_ipmb (ipmi_ct
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (target_channel_number)
-      || !IPMI_BMC_LUN_VALID (target_lun)
-      || !IPMI_CHANNEL_NUMBER_VALID (channel_number)
-      || !IPMI_OEM_INTEL_NODE_MANAGER_DESTINATION_INFORMATION_OPERATION_VALID (destination_information_operation)
-      || !IPMI_OEM_INTEL_NODE_MANAGER_ALERT_STRING_SELECTOR_VALID (alert_string_selector)
-      || !IPMI_OEM_INTEL_NODE_MANAGER_SEND_ALERT_STRING_VALID (send_alert_string)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -1510,13 +1330,8 @@ ipmi_cmd_oem_intel_node_manager_set_node_manager_alert_destination_lan (ipmi_ctx
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (target_channel_number)
-      || !IPMI_BMC_LUN_VALID (target_lun)
-      || !IPMI_CHANNEL_NUMBER_VALID (channel_number)
-      || !IPMI_OEM_INTEL_NODE_MANAGER_DESTINATION_INFORMATION_OPERATION_VALID (destination_information_operation)
-      || !IPMI_OEM_INTEL_NODE_MANAGER_ALERT_STRING_SELECTOR_VALID (alert_string_selector)
-      || !IPMI_OEM_INTEL_NODE_MANAGER_SEND_ALERT_STRING_VALID (send_alert_string)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -1597,9 +1412,8 @@ ipmi_cmd_oem_intel_node_manager_get_node_manager_alert_destination (ipmi_ctx_t c
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (target_channel_number)
-      || !IPMI_BMC_LUN_VALID (target_lun)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);

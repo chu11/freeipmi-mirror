@@ -338,8 +338,8 @@ ipmi_cmd_clear_sel (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_SEL_CLEAR_OPERATION_VALID (operation)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -505,8 +505,8 @@ ipmi_cmd_get_auxiliary_log_status (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_AUXILIARY_LOG_TYPE_VALID (log_type)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -564,10 +564,8 @@ ipmi_cmd_set_auxiliary_log_status (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_AUXILIARY_LOG_TYPE_VALID (log_type)
-      || !log_data
-      || !log_data_len
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);

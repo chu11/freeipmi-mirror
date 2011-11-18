@@ -58,6 +58,8 @@ api_set_api_errnum_by_errno (ipmi_ctx_t ctx, int __errno)
     ctx->errnum = IPMI_ERR_IPMI_ERROR;
   else if (__errno == ECONNREFUSED)
     ctx->errnum = IPMI_ERR_IPMI_ERROR;
+  else if (__errno == EINVAL)
+    ctx->errnum = IPMI_ERR_PARAMETERS;
   else
     ctx->errnum = IPMI_ERR_INTERNAL_ERROR;
 }

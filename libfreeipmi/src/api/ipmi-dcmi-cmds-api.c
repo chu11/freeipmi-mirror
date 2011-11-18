@@ -55,12 +55,8 @@
 #include "freeipmi/api/ipmi-dcmi-cmds-api.h"
 #include "freeipmi/cmds/ipmi-dcmi-cmds.h"
 #include "freeipmi/fiid/fiid.h"
-#include "freeipmi/spec/ipmi-cmd-dcmi-spec.h"
-#include "freeipmi/spec/ipmi-comp-code-dcmi-spec.h"
-#include "freeipmi/spec/ipmi-entity-ids-spec.h"
 #include "freeipmi/spec/ipmi-ipmb-lun-spec.h"
 #include "freeipmi/spec/ipmi-netfn-spec.h"
-#include "freeipmi/spec/ipmi-sensor-types-spec.h"
 
 #include "ipmi-api-defs.h"
 #include "ipmi-api-trace.h"
@@ -84,8 +80,8 @@ ipmi_cmd_dcmi_get_dcmi_capability_info (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_DCMI_CAPABILITIES_INFO_PARAMETER_SELECTOR_VALID (parameter_selector)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -418,10 +414,8 @@ ipmi_cmd_dcmi_set_dcmi_configuration_parameters (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_DCMI_CONFIGURATION_PARAMETER_SELECTOR_VALID (parameter_selector)
-      || !configuration_parameter_data
-      || !configuration_parameter_data_len
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -780,8 +774,8 @@ ipmi_cmd_dcmi_get_dcmi_configuration_parameters (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_DCMI_CONFIGURATION_PARAMETER_SELECTOR_VALID (parameter_selector)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -1067,8 +1061,8 @@ ipmi_cmd_dcmi_get_asset_tag (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (number_of_bytes_to_read > IPMI_DCMI_ASSET_TAG_NUMBER_OF_BYTES_TO_READ_MAX
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -1128,11 +1122,8 @@ ipmi_cmd_dcmi_set_asset_tag (ipmi_ctx_t ctx,
       return (-1);
     }
   
-  if (number_of_bytes_to_write > IPMI_DCMI_ASSET_TAG_NUMBER_OF_BYTES_TO_WRITE_MAX
-      || !data
-      || !data_len
-      || number_of_bytes_to_write > data_len
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -1192,8 +1183,8 @@ ipmi_cmd_dcmi_get_management_controller_identifier_string (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (number_of_bytes_to_read > IPMI_DCMI_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_NUMBER_OF_BYTES_TO_READ_MAX
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -1253,11 +1244,8 @@ ipmi_cmd_dcmi_set_management_controller_identifier_string (ipmi_ctx_t ctx,
       return (-1);
     }
   
-  if (number_of_bytes_to_write > IPMI_DCMI_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_NUMBER_OF_BYTES_TO_WRITE_MAX
-      || !data
-      || !data_len
-      || number_of_bytes_to_write > data_len
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -1319,12 +1307,8 @@ ipmi_cmd_dcmi_get_dcmi_sensor_info (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (sensor_type != IPMI_SENSOR_TYPE_TEMPERATURE
-      || (!IPMI_DCMI_ENTITY_ID_VALID(entity_id)
-	  && entity_id != IPMI_ENTITY_ID_PROCESSOR
-	  && entity_id != IPMI_ENTITY_ID_SYSTEM_BOARD
-	  && entity_id != IPMI_ENTITY_ID_AIR_INLET_B)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -1384,8 +1368,8 @@ ipmi_cmd_dcmi_get_power_reading (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_DCMI_POWER_READING_MODE_VALID (mode)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -1499,8 +1483,8 @@ ipmi_cmd_dcmi_set_power_limit (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_DCMI_EXCEPTION_ACTION_VALID (exception_actions)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -1559,8 +1543,8 @@ ipmi_cmd_dcmi_activate_deactivate_power_limit (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_DCMI_POWER_LIMIT_ACTIVATION_VALID (power_limit_activation)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -1617,9 +1601,8 @@ ipmi_cmd_dcmi_get_thermal_limit (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if ((entity_id != IPMI_DCMI_ENTITY_ID_INLET_TEMPERATURE
-       && entity_id != IPMI_ENTITY_ID_AIR_INLET_B)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -1681,11 +1664,8 @@ ipmi_cmd_dcmi_set_thermal_limit (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if ((entity_id != IPMI_DCMI_ENTITY_ID_INLET_TEMPERATURE
-       && entity_id != IPMI_ENTITY_ID_AIR_INLET_B)
-      || !IPMI_DCMI_EXCEPTION_ACTION_BIT_VALID (exception_actions_log_event_to_sel_only)
-      || !IPMI_DCMI_EXCEPTION_ACTION_BIT_VALID (exception_actions_hard_power_off_system_and_log_event)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -1749,12 +1729,8 @@ ipmi_cmd_dcmi_get_temperature_reading (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (sensor_type != IPMI_SENSOR_TYPE_TEMPERATURE
-      || (!IPMI_DCMI_ENTITY_ID_VALID(entity_id)
-	  && entity_id != IPMI_ENTITY_ID_PROCESSOR
-	  && entity_id != IPMI_ENTITY_ID_SYSTEM_BOARD
-	  && entity_id != IPMI_ENTITY_ID_AIR_INLET_B)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);

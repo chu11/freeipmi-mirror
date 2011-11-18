@@ -30,7 +30,6 @@
 #include "freeipmi/api/ipmi-pef-and-alerting-cmds-api.h"
 #include "freeipmi/cmds/ipmi-pef-and-alerting-cmds.h"
 #include "freeipmi/fiid/fiid.h"
-#include "freeipmi/spec/ipmi-channel-spec.h"
 #include "freeipmi/spec/ipmi-ipmb-lun-spec.h"
 #include "freeipmi/spec/ipmi-netfn-spec.h"
 #include "freeipmi/spec/ipmi-pef-configuration-parameters-spec.h"
@@ -168,11 +167,8 @@ ipmi_cmd_set_pef_configuration_parameters (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if  ((!IPMI_PEF_CONFIGURATION_PARAMETER_SELECTOR_VALID (parameter_selector)
-        && !IPMI_PEF_CONFIGURATION_PARAMETER_SELECTOR_IS_OEM (parameter_selector))
-       || !configuration_parameter_data
-       || !configuration_parameter_data_len
-       || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -230,8 +226,8 @@ ipmi_cmd_set_pef_configuration_parameters_set_in_progress (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if  (!IPMI_PEF_CONFIGURATION_PARAMETERS_SET_IN_PROGRESS_VALID (state)
-       || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if  (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -290,10 +286,8 @@ ipmi_cmd_set_pef_configuration_parameters_pef_control (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if  (!IPMI_PEF_EVENT_MESSAGES_VALID (pef_event_messages)
-       || !IPMI_PEF_STARTUP_DELAY_VALID (pef_startup_delay)
-       || !IPMI_PEF_ALERT_STARTUP_DELAY_VALID (pef_alert_startup_delay)
-       || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if  (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -357,12 +351,8 @@ ipmi_cmd_set_pef_configuration_parameters_pef_action_global_control (ipmi_ctx_t 
       return (-1);
     }
 
-  if (!IPMI_PEF_POWER_DOWN_ACTION_VALID (power_down_action)
-      || !IPMI_PEF_RESET_ACTION_VALID (reset_action)
-      || !IPMI_PEF_POWER_CYCLE_ACTION_VALID (power_cycle_action)
-      || !IPMI_PEF_OEM_ACTION_VALID (oem_action)
-      || !IPMI_PEF_DIAGNOSTIC_INTERRUPT_VALID (diagnostic_interrupt)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -562,17 +552,8 @@ ipmi_cmd_set_pef_configuration_parameters_event_filter_table (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_FILTER_CONFIGURATION_FILTER_TYPE_VALID (filter_configuration_type)
-      || !IPMI_FILTER_CONFIGURATION_FILTER_VALID (filter_configuration_filter)
-      || !IPMI_EVENT_FILTER_ACTION_ALERT_VALID (event_filter_action_alert)
-      || !IPMI_EVENT_FILTER_ACTION_POWER_OFF_VALID (event_filter_action_power_off)
-      || !IPMI_EVENT_FILTER_ACTION_RESET_VALID (event_filter_action_reset)
-      || !IPMI_EVENT_FILTER_ACTION_POWER_CYCLE_VALID (event_filter_action_power_cycle)
-      || !IPMI_EVENT_FILTER_ACTION_OEM_VALID (event_filter_action_oem)
-      || !IPMI_EVENT_FILTER_ACTION_DIAGNOSTIC_INTERRUPT_VALID (event_filter_action_diagnostic_interrupt)
-      || !IPMI_EVENT_FILTER_ACTION_GROUP_CONTROL_OPERATION_VALID (event_filter_action_group_control_operation)
-      || !IPMI_EVENT_SEVERITY_VALID (event_severity)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -657,9 +638,8 @@ ipmi_cmd_set_pef_configuration_parameters_event_filter_table_data1_ (ipmi_ctx_t 
       return (-1);
     }
 
-  if (!IPMI_FILTER_CONFIGURATION_FILTER_TYPE_VALID (filter_configuration_type)
-      || !IPMI_FILTER_CONFIGURATION_FILTER_VALID (filter_configuration_filter)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -724,10 +704,8 @@ ipmi_cmd_set_pef_configuration_parameters_alert_policy_table (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_ALERT_POLICY_TABLE_POLICY_TYPE_VALID (policy_type)
-      || !IPMI_ALERT_POLICY_ENABLED_DISABLED_VALID (policy_enabled)
-      || !IPMI_EVENT_SPECIFIC_ALERT_STRING_VALID (event_specific_alert_string)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -792,8 +770,8 @@ ipmi_cmd_set_pef_configuration_parameters_alert_string_keys (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_STRING_SELECTOR_VALID (string_selector)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -854,10 +832,8 @@ ipmi_cmd_set_pef_configuration_parameters_alert_strings (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_STRING_SELECTOR_VALID (string_selector)
-      || !string_data_len
-      || !IPMI_PEF_ALERT_STRINGS_BLOCK_SIZE_VALID (string_data_len)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -919,10 +895,8 @@ ipmi_cmd_get_pef_configuration_parameters (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if ((!IPMI_PEF_CONFIGURATION_PARAMETER_SELECTOR_VALID (parameter_selector)
-       && !IPMI_PEF_CONFIGURATION_PARAMETER_SELECTOR_IS_OEM (parameter_selector))
-      || !IPMI_GET_PEF_PARAMETER_VALID (get_parameter)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -983,8 +957,8 @@ ipmi_cmd_get_pef_configuration_parameters_set_in_progress (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_GET_PEF_PARAMETER_VALID (get_parameter)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -1045,8 +1019,8 @@ ipmi_cmd_get_pef_configuration_parameters_pef_control (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_GET_PEF_PARAMETER_VALID (get_parameter)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -1107,8 +1081,8 @@ ipmi_cmd_get_pef_configuration_parameters_pef_action_global_control (ipmi_ctx_t 
       return (-1);
     }
 
-  if (!IPMI_GET_PEF_PARAMETER_VALID (get_parameter)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -1169,8 +1143,8 @@ ipmi_cmd_get_pef_configuration_parameters_pef_startup_delay (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_GET_PEF_PARAMETER_VALID (get_parameter)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -1231,8 +1205,8 @@ ipmi_cmd_get_pef_configuration_parameters_pef_alert_startup_delay (ipmi_ctx_t ct
       return (-1);
     }
 
-  if (!IPMI_GET_PEF_PARAMETER_VALID (get_parameter)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -1293,8 +1267,8 @@ ipmi_cmd_get_pef_configuration_parameters_number_of_event_filters (ipmi_ctx_t ct
       return (-1);
     }
 
-  if (!IPMI_GET_PEF_PARAMETER_VALID (get_parameter)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -1355,8 +1329,8 @@ ipmi_cmd_get_pef_configuration_parameters_event_filter_table (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_GET_PEF_PARAMETER_VALID (get_parameter)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -1417,8 +1391,8 @@ ipmi_cmd_get_pef_configuration_parameters_event_filter_table_data1_ (ipmi_ctx_t 
       return (-1);
     }
 
-  if (!IPMI_GET_PEF_PARAMETER_VALID (get_parameter)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -1479,8 +1453,8 @@ ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries (ipmi_c
       return (-1);
     }
 
-  if (!IPMI_GET_PEF_PARAMETER_VALID (get_parameter)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -1541,8 +1515,8 @@ ipmi_cmd_get_pef_configuration_parameters_number_of_alert_strings (ipmi_ctx_t ct
       return (-1);
     }
 
-  if (!IPMI_GET_PEF_PARAMETER_VALID (get_parameter)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -1603,8 +1577,8 @@ ipmi_cmd_get_pef_configuration_parameters_alert_string_keys (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_GET_PEF_PARAMETER_VALID (get_parameter)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -1665,8 +1639,8 @@ ipmi_cmd_get_pef_configuration_parameters_alert_string (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_GET_PEF_PARAMETER_VALID (get_parameter)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -1727,8 +1701,8 @@ ipmi_cmd_get_pef_configuration_parameters_alert_policy_table (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_GET_PEF_PARAMETER_VALID (get_parameter)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -1789,8 +1763,8 @@ ipmi_cmd_set_last_processed_event_id (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_SET_RECORD_ID_FOR_LAST_RECORD_PROCESSED_VALID (set_record_id_for_last_record)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -1904,12 +1878,8 @@ ipmi_cmd_alert_immediate (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
-      || !IPMI_ALERT_IMMEDIATE_OPERATION_VALID (operation)
-      || !IPMI_STRING_SELECTOR_VALID (string_selector)
-      || !IPMI_SEND_ALERT_STRING_VALID (send_alert_string)
-      || !IPMI_CHANNEL_NUMBER_VALID (channel_number)
-      || !fiid_obj_valid (obj_cmd_rs)) ;
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs)) ;
 
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
                                  tmpl_cmd_alert_immediate_rs) < 0)

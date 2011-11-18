@@ -30,7 +30,6 @@
 #include "freeipmi/api/ipmi-firmware-firewall-command-discovery-cmds-api.h"
 #include "freeipmi/cmds/ipmi-firmware-firewall-command-discovery-cmds.h"
 #include "freeipmi/fiid/fiid.h"
-#include "freeipmi/spec/ipmi-channel-spec.h"
 #include "freeipmi/spec/ipmi-ipmb-lun-spec.h"
 #include "freeipmi/spec/ipmi-netfn-spec.h"
 
@@ -56,8 +55,8 @@ ipmi_cmd_get_netfn_support (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -117,11 +116,8 @@ ipmi_cmd_get_command_support (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
-      || !IPMI_NET_FN_VALID (net_fn)
-      || !IPMI_FIRMWARE_FIREWALL_COMMAND_DISCOVERY_OPERATION_VALID (operation)
-      || !IPMI_BMC_LUN_VALID (lun)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -185,10 +181,8 @@ ipmi_cmd_get_command_sub_function_support (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
-      || !IPMI_NET_FN_VALID (net_fn)
-      || !IPMI_BMC_LUN_VALID (lun)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -254,11 +248,8 @@ ipmi_cmd_get_configurable_commands (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
-      || !IPMI_NET_FN_VALID (net_fn)
-      || !IPMI_FIRMWARE_FIREWALL_COMMAND_DISCOVERY_OPERATION_VALID (operation)
-      || !IPMI_BMC_LUN_VALID (lun)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -322,10 +313,8 @@ ipmi_cmd_get_configurable_command_sub_functions (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
-      || !IPMI_NET_FN_VALID (net_fn)
-      || !IPMI_BMC_LUN_VALID (lun)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -391,13 +380,8 @@ ipmi_cmd_set_command_enables (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
-      || !IPMI_NET_FN_VALID (net_fn)
-      || !IPMI_FIRMWARE_FIREWALL_COMMAND_DISCOVERY_OPERATION_VALID (operation)
-      || !IPMI_BMC_LUN_VALID (lun)
-      || !enable_disable_bitmask
-      || enable_disable_bitmask_len < IPMI_FIRMWARE_FIREWALL_COMMAND_DISCOVERY_ENABLE_DISABLE_BITMASK_LEN
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -463,11 +447,8 @@ ipmi_cmd_get_command_enables (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
-      || !IPMI_NET_FN_VALID (net_fn)
-      || !IPMI_FIRMWARE_FIREWALL_COMMAND_DISCOVERY_OPERATION_VALID (operation)
-      || !IPMI_BMC_LUN_VALID (lun)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -532,14 +513,8 @@ ipmi_cmd_set_command_sub_function_enables (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
-      || !IPMI_NET_FN_VALID (net_fn)
-      || (net_fn == IPMI_NET_FN_GROUP_EXTENSION_RQ
-          || net_fn == IPMI_NET_FN_GROUP_EXTENSION_RS
-          || net_fn == IPMI_NET_FN_OEM_GROUP_RQ
-          || net_fn == IPMI_NET_FN_OEM_GROUP_RS)
-      || !IPMI_BMC_LUN_VALID (lun)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -606,11 +581,8 @@ ipmi_cmd_set_command_sub_function_enables_defining_body_code (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
-      || (net_fn != IPMI_NET_FN_GROUP_EXTENSION_RQ
-          && net_fn != IPMI_NET_FN_GROUP_EXTENSION_RS)
-      || !IPMI_BMC_LUN_VALID (lun)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -678,11 +650,8 @@ ipmi_cmd_set_command_sub_function_enables_oem_iana (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
-      || (net_fn != IPMI_NET_FN_OEM_GROUP_RQ
-          && net_fn != IPMI_NET_FN_OEM_GROUP_RS)
-      || !IPMI_BMC_LUN_VALID (lun)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -748,10 +717,8 @@ ipmi_cmd_get_command_sub_function_enables (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
-      || !IPMI_NET_FN_VALID (net_fn)
-      || !IPMI_BMC_LUN_VALID (lun)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -813,10 +780,8 @@ ipmi_cmd_get_oem_netfn_iana_support (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
-      || (net_fn != IPMI_NET_FN_GROUP_EXTENSION_RQ
-          && net_fn != IPMI_NET_FN_OEM_GROUP_RQ)
-      || !fiid_obj_valid (obj_cmd_rs))
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
