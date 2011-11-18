@@ -113,6 +113,7 @@ nobase_include_HEADERS = \
 	freeipmi/templates/ipmi-dcmi-cmds-templates.h \
 	freeipmi/templates/ipmi-device-global-cmds-templates.h \
 	freeipmi/templates/ipmi-event-cmds-templates.h \
+	freeipmi/templates/ipmi-firmware-firewall-command-discovery-cmds-templates.h \
 	freeipmi/templates/ipmi-fru-inventory-device-cmds-templates.h \
 	freeipmi/templates/ipmi-lan-cmds-templates.h \
 	freeipmi/templates/ipmi-messaging-support-cmds-templates.h \

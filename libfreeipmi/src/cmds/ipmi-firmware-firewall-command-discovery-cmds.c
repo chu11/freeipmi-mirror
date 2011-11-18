@@ -324,7 +324,6 @@ fiid_template_t tmpl_cmd_get_oem_netfn_iana_support_rs =
     { 2, "lun2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 2, "lun3", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 24, "net_fn_data", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
-
     { 0, "", 0}
   };
 
