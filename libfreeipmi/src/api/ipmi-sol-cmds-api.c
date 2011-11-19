@@ -585,14 +585,15 @@ ipmi_cmd_set_sol_configuration_parameters_sol_payload_port_number (ipmi_ctx_t ct
   return (rv);
 }
 
-int
-ipmi_cmd_get_sol_configuration_parameters (ipmi_ctx_t ctx,
-                                           uint8_t channel_number,
-                                           uint8_t get_parameter,
-                                           uint8_t parameter_selector,
-                                           uint8_t set_selector,
-                                           uint8_t block_selector,
-                                           fiid_obj_t obj_cmd_rs)
+static int
+_ipmi_cmd_get_sol_configuration_parameters_common (ipmi_ctx_t ctx,
+						   uint8_t channel_number,
+						   uint8_t get_parameter,
+						   uint8_t set_selector,
+						   uint8_t block_selector,
+						   fiid_obj_t obj_cmd_rs,
+						   fiid_field_t *tmpl_cmd_rs_expected,
+						   uint8_t parameter_selector)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int rv = -1;
@@ -609,9 +610,8 @@ ipmi_cmd_get_sol_configuration_parameters (ipmi_ctx_t ctx,
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
-
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
-                                 tmpl_cmd_get_sol_configuration_parameters_rs) < 0)
+  
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs, tmpl_cmd_rs_expected) < 0)
     {
       API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
@@ -651,6 +651,31 @@ ipmi_cmd_get_sol_configuration_parameters (ipmi_ctx_t ctx,
 }
 
 int
+ipmi_cmd_get_sol_configuration_parameters (ipmi_ctx_t ctx,
+                                           uint8_t channel_number,
+                                           uint8_t get_parameter,
+                                           uint8_t parameter_selector,
+                                           uint8_t set_selector,
+                                           uint8_t block_selector,
+                                           fiid_obj_t obj_cmd_rs)
+{
+  if (_ipmi_cmd_get_sol_configuration_parameters_common (ctx,
+							 channel_number,
+							 get_parameter,
+							 set_selector,
+							 block_selector,
+							 obj_cmd_rs,
+							 tmpl_cmd_get_sol_configuration_parameters_rs,
+							 parameter_selector) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  return (0);
+}
+
+int
 ipmi_cmd_get_sol_configuration_parameters_set_in_progress (ipmi_ctx_t ctx,
                                                            uint8_t channel_number,
                                                            uint8_t get_parameter,
@@ -658,60 +683,20 @@ ipmi_cmd_get_sol_configuration_parameters_set_in_progress (ipmi_ctx_t ctx,
                                                            uint8_t block_selector,
                                                            fiid_obj_t obj_cmd_rs)
 {
-  fiid_obj_t obj_cmd_rq = NULL;
-  int rv = -1;
-
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+  if (_ipmi_cmd_get_sol_configuration_parameters_common (ctx,
+							 channel_number,
+							 get_parameter,
+							 set_selector,
+							 block_selector,
+							 obj_cmd_rs,
+							 tmpl_cmd_get_sol_configuration_parameters_set_in_progress_rs,
+							 IPMI_SOL_CONFIGURATION_PARAMETER_SET_IN_PROGRESS) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
     }
 
-  /* remaining parameter checks in fill function */
-  if (!fiid_obj_valid (obj_cmd_rs))
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
-                                 tmpl_cmd_get_sol_configuration_parameters_set_in_progress_rs) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
-      return (-1);
-    }
-
-  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_get_sol_configuration_parameters_rq)))
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (fill_cmd_get_sol_configuration_parameters (channel_number,
-                                                 get_parameter,
-                                                 IPMI_SOL_CONFIGURATION_PARAMETER_SET_IN_PROGRESS,
-                                                 set_selector,
-                                                 block_selector,
-                                                 obj_cmd_rq) < 0)
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (api_ipmi_cmd (ctx,
-                    IPMI_BMC_IPMB_LUN_BMC,
-                    IPMI_NET_FN_TRANSPORT_RQ,
-                    obj_cmd_rq,
-                    obj_cmd_rs) < 0)
-    {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
-      goto cleanup;
-    }
-
-  rv = 0;
- cleanup:
-  fiid_obj_destroy (obj_cmd_rq);
-  return (rv);
+  return (0);
 }
 
 int
@@ -722,60 +707,20 @@ ipmi_cmd_get_sol_configuration_parameters_sol_enable (ipmi_ctx_t ctx,
                                                       uint8_t block_selector,
                                                       fiid_obj_t obj_cmd_rs)
 {
-  fiid_obj_t obj_cmd_rq = NULL;
-  int rv = -1;
-
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+  if (_ipmi_cmd_get_sol_configuration_parameters_common (ctx,
+							 channel_number,
+							 get_parameter,
+							 set_selector,
+							 block_selector,
+							 obj_cmd_rs,
+							 tmpl_cmd_get_sol_configuration_parameters_sol_enable_rs,
+							 IPMI_SOL_CONFIGURATION_PARAMETER_SOL_ENABLE) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
     }
 
-  /* remaining parameter checks in fill function */
-  if (!fiid_obj_valid (obj_cmd_rs))
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
-                                 tmpl_cmd_get_sol_configuration_parameters_sol_enable_rs) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
-      return (-1);
-    }
-
-  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_get_sol_configuration_parameters_rq)))
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (fill_cmd_get_sol_configuration_parameters (channel_number,
-                                                 get_parameter,
-                                                 IPMI_SOL_CONFIGURATION_PARAMETER_SOL_ENABLE,
-                                                 set_selector,
-                                                 block_selector,
-                                                 obj_cmd_rq) < 0)
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (api_ipmi_cmd (ctx,
-                    IPMI_BMC_IPMB_LUN_BMC,
-                    IPMI_NET_FN_TRANSPORT_RQ,
-                    obj_cmd_rq,
-                    obj_cmd_rs) < 0)
-    {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
-      goto cleanup;
-    }
-
-  rv = 0;
- cleanup:
-  fiid_obj_destroy (obj_cmd_rq);
-  return (rv);
+  return (0);
 }
 
 int
@@ -786,442 +731,162 @@ ipmi_cmd_get_sol_configuration_parameters_sol_authentication (ipmi_ctx_t ctx,
                                                               uint8_t block_selector,
                                                               fiid_obj_t obj_cmd_rs)
 {
-  fiid_obj_t obj_cmd_rq = NULL;
-  int rv = -1;
-
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+  if (_ipmi_cmd_get_sol_configuration_parameters_common (ctx,
+							 channel_number,
+							 get_parameter,
+							 set_selector,
+							 block_selector,
+							 obj_cmd_rs,
+							 tmpl_cmd_get_sol_configuration_parameters_sol_authentication_rs,
+							 IPMI_SOL_CONFIGURATION_PARAMETER_SOL_AUTHENTICATION) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
     }
 
-  /* remaining parameter checks in fill function */
-  if (!fiid_obj_valid (obj_cmd_rs))
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
-                                 tmpl_cmd_get_sol_configuration_parameters_sol_authentication_rs) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
-      return (-1);
-    }
-
-  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_get_sol_configuration_parameters_rq)))
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (fill_cmd_get_sol_configuration_parameters (channel_number,
-                                                 get_parameter,
-                                                 IPMI_SOL_CONFIGURATION_PARAMETER_SOL_AUTHENTICATION,
-                                                 set_selector,
-                                                 block_selector,
-                                                 obj_cmd_rq) < 0)
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (api_ipmi_cmd (ctx,
-                    IPMI_BMC_IPMB_LUN_BMC,
-                    IPMI_NET_FN_TRANSPORT_RQ,
-                    obj_cmd_rq,
-                    obj_cmd_rs) < 0)
-    {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
-      goto cleanup;
-    }
-
-  rv = 0;
- cleanup:
-  fiid_obj_destroy (obj_cmd_rq);
-  return (rv);
+  return (0);
 }
 
 int
 ipmi_cmd_get_sol_configuration_parameters_character_accumulate_interval_and_send_threshold (ipmi_ctx_t ctx,
-                                                                                            uint8_t channel_number,
-                                                                                            uint8_t get_parameter,
-                                                                                            uint8_t set_selector,
-                                                                                            uint8_t block_selector,
-                                                                                            fiid_obj_t obj_cmd_rs)
+											    uint8_t channel_number,
+											    uint8_t get_parameter,
+											    uint8_t set_selector,
+											    uint8_t block_selector,
+											    fiid_obj_t obj_cmd_rs)
 {
-  fiid_obj_t obj_cmd_rq = NULL;
-  int rv = -1;
-
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+  if (_ipmi_cmd_get_sol_configuration_parameters_common (ctx,
+							 channel_number,
+							 get_parameter,
+							 set_selector,
+							 block_selector,
+							 obj_cmd_rs,
+							 tmpl_cmd_get_sol_configuration_parameters_character_accumulate_interval_and_send_threshold_rs,
+							 IPMI_SOL_CONFIGURATION_PARAMETER_CHARACTER_ACCUMULATE_INTERVAL_AND_SEND_THRESHOLD) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
     }
 
-  /* remaining parameter checks in fill function */
-  if (!fiid_obj_valid (obj_cmd_rs))
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
-                                 tmpl_cmd_get_sol_configuration_parameters_character_accumulate_interval_and_send_threshold_rs) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
-      return (-1);
-    }
-
-  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_get_sol_configuration_parameters_rq)))
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (fill_cmd_get_sol_configuration_parameters (channel_number,
-                                                 get_parameter,
-                                                 IPMI_SOL_CONFIGURATION_PARAMETER_CHARACTER_ACCUMULATE_INTERVAL_AND_SEND_THRESHOLD,
-                                                 set_selector,
-                                                 block_selector,
-                                                 obj_cmd_rq) < 0)
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (api_ipmi_cmd (ctx,
-                    IPMI_BMC_IPMB_LUN_BMC,
-                    IPMI_NET_FN_TRANSPORT_RQ,
-                    obj_cmd_rq,
-                    obj_cmd_rs) < 0)
-    {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
-      goto cleanup;
-    }
-
-  rv = 0;
- cleanup:
-  fiid_obj_destroy (obj_cmd_rq);
-  return (rv);
+  return (0);
 }
 
 int
 ipmi_cmd_get_sol_configuration_parameters_sol_retry (ipmi_ctx_t ctx,
-                                                     uint8_t channel_number,
-                                                     uint8_t get_parameter,
-                                                     uint8_t set_selector,
-                                                     uint8_t block_selector,
-                                                     fiid_obj_t obj_cmd_rs)
+						     uint8_t channel_number,
+						     uint8_t get_parameter,
+						     uint8_t set_selector,
+						     uint8_t block_selector,
+						     fiid_obj_t obj_cmd_rs)
 {
-  fiid_obj_t obj_cmd_rq = NULL;
-  int rv = -1;
-
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+  if (_ipmi_cmd_get_sol_configuration_parameters_common (ctx,
+							 channel_number,
+							 get_parameter,
+							 set_selector,
+							 block_selector,
+							 obj_cmd_rs,
+							 tmpl_cmd_get_sol_configuration_parameters_sol_retry_rs,
+							 IPMI_SOL_CONFIGURATION_PARAMETER_SOL_RETRY) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
     }
 
-  /* remaining parameter checks in fill function */
-  if (!fiid_obj_valid (obj_cmd_rs))
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
-                                 tmpl_cmd_get_sol_configuration_parameters_sol_retry_rs) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
-      return (-1);
-    }
-
-  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_get_sol_configuration_parameters_rq)))
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (fill_cmd_get_sol_configuration_parameters (channel_number,
-                                                 get_parameter,
-                                                 IPMI_SOL_CONFIGURATION_PARAMETER_SOL_RETRY,
-                                                 set_selector,
-                                                 block_selector,
-                                                 obj_cmd_rq) < 0)
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (api_ipmi_cmd (ctx,
-                    IPMI_BMC_IPMB_LUN_BMC,
-                    IPMI_NET_FN_TRANSPORT_RQ,
-                    obj_cmd_rq,
-                    obj_cmd_rs) < 0)
-    {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
-      goto cleanup;
-    }
-
-  rv = 0;
- cleanup:
-  fiid_obj_destroy (obj_cmd_rq);
-  return (rv);
+  return (0);
 }
 
 int
 ipmi_cmd_get_sol_configuration_parameters_sol_non_volatile_bit_rate (ipmi_ctx_t ctx,
-                                                                     uint8_t channel_number,
-                                                                     uint8_t get_parameter,
-                                                                     uint8_t set_selector,
-                                                                     uint8_t block_selector,
-                                                                     fiid_obj_t obj_cmd_rs)
+								     uint8_t channel_number,
+								     uint8_t get_parameter,
+								     uint8_t set_selector,
+								     uint8_t block_selector,
+								     fiid_obj_t obj_cmd_rs)
 {
-  fiid_obj_t obj_cmd_rq = NULL;
-  int rv = -1;
-
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+  if (_ipmi_cmd_get_sol_configuration_parameters_common (ctx,
+							 channel_number,
+							 get_parameter,
+							 set_selector,
+							 block_selector,
+							 obj_cmd_rs,
+							 tmpl_cmd_get_sol_configuration_parameters_sol_non_volatile_bit_rate_rs,
+							 IPMI_SOL_CONFIGURATION_PARAMETER_SOL_NON_VOLATILE_BIT_RATE) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
     }
 
-  /* remaining parameter checks in fill function */
-  if (!fiid_obj_valid (obj_cmd_rs))
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
-                                 tmpl_cmd_get_sol_configuration_parameters_sol_non_volatile_bit_rate_rs) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
-      return (-1);
-    }
-
-  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_get_sol_configuration_parameters_rq)))
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (fill_cmd_get_sol_configuration_parameters (channel_number,
-                                                 get_parameter,
-                                                 IPMI_SOL_CONFIGURATION_PARAMETER_SOL_NON_VOLATILE_BIT_RATE,
-                                                 set_selector,
-                                                 block_selector,
-                                                 obj_cmd_rq) < 0)
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (api_ipmi_cmd (ctx,
-                    IPMI_BMC_IPMB_LUN_BMC,
-                    IPMI_NET_FN_TRANSPORT_RQ,
-                    obj_cmd_rq,
-                    obj_cmd_rs) < 0)
-    {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
-      goto cleanup;
-    }
-
-  rv = 0;
- cleanup:
-  fiid_obj_destroy (obj_cmd_rq);
-  return (rv);
+  return (0);
 }
 
 int
 ipmi_cmd_get_sol_configuration_parameters_sol_volatile_bit_rate (ipmi_ctx_t ctx,
-                                                                 uint8_t channel_number,
-                                                                 uint8_t get_parameter,
-                                                                 uint8_t set_selector,
-                                                                 uint8_t block_selector,
-                                                                 fiid_obj_t obj_cmd_rs)
+								 uint8_t channel_number,
+								 uint8_t get_parameter,
+								 uint8_t set_selector,
+								 uint8_t block_selector,
+								 fiid_obj_t obj_cmd_rs)
 {
-  fiid_obj_t obj_cmd_rq = NULL;
-  int rv = -1;
-
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+  if (_ipmi_cmd_get_sol_configuration_parameters_common (ctx,
+							 channel_number,
+							 get_parameter,
+							 set_selector,
+							 block_selector,
+							 obj_cmd_rs,
+							 tmpl_cmd_get_sol_configuration_parameters_sol_volatile_bit_rate_rs,
+							 IPMI_SOL_CONFIGURATION_PARAMETER_SOL_VOLATILE_BIT_RATE) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
     }
 
-  /* remaining parameter checks in fill function */
-  if (!fiid_obj_valid (obj_cmd_rs))
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
-                                 tmpl_cmd_get_sol_configuration_parameters_sol_volatile_bit_rate_rs) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
-      return (-1);
-    }
-
-  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_get_sol_configuration_parameters_rq)))
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (fill_cmd_get_sol_configuration_parameters (channel_number,
-                                                 get_parameter,
-                                                 IPMI_SOL_CONFIGURATION_PARAMETER_SOL_VOLATILE_BIT_RATE,
-                                                 set_selector,
-                                                 block_selector,
-                                                 obj_cmd_rq) < 0)
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (api_ipmi_cmd (ctx,
-                    IPMI_BMC_IPMB_LUN_BMC,
-                    IPMI_NET_FN_TRANSPORT_RQ,
-                    obj_cmd_rq,
-                    obj_cmd_rs) < 0)
-    {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
-      goto cleanup;
-    }
-
-  rv = 0;
- cleanup:
-  fiid_obj_destroy (obj_cmd_rq);
-  return (rv);
+  return (0);
 }
 
 int
 ipmi_cmd_get_sol_configuration_parameters_sol_payload_channel (ipmi_ctx_t ctx,
-                                                               uint8_t channel_number,
-                                                               uint8_t get_parameter,
-                                                               uint8_t set_selector,
-                                                               uint8_t block_selector,
-                                                               fiid_obj_t obj_cmd_rs)
+							       uint8_t channel_number,
+							       uint8_t get_parameter,
+							       uint8_t set_selector,
+							       uint8_t block_selector,
+							       fiid_obj_t obj_cmd_rs)
 {
-  fiid_obj_t obj_cmd_rq = NULL;
-  int rv = -1;
-
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+  if (_ipmi_cmd_get_sol_configuration_parameters_common (ctx,
+							 channel_number,
+							 get_parameter,
+							 set_selector,
+							 block_selector,
+							 obj_cmd_rs,
+							 tmpl_cmd_get_sol_configuration_parameters_sol_payload_channel_rs,
+							 IPMI_SOL_CONFIGURATION_PARAMETER_SOL_PAYLOAD_CHANNEL) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
     }
 
-  /* remaining parameter checks in fill function */
-  if (!fiid_obj_valid (obj_cmd_rs))
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
-                                 tmpl_cmd_get_sol_configuration_parameters_sol_payload_channel_rs) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
-      return (-1);
-    }
-
-  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_get_sol_configuration_parameters_rq)))
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (fill_cmd_get_sol_configuration_parameters (channel_number,
-                                                 get_parameter,
-                                                 IPMI_SOL_CONFIGURATION_PARAMETER_SOL_PAYLOAD_CHANNEL,
-                                                 set_selector,
-                                                 block_selector,
-                                                 obj_cmd_rq) < 0)
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (api_ipmi_cmd (ctx,
-                    IPMI_BMC_IPMB_LUN_BMC,
-                    IPMI_NET_FN_TRANSPORT_RQ,
-                    obj_cmd_rq,
-                    obj_cmd_rs) < 0)
-    {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
-      goto cleanup;
-    }
-
-  rv = 0;
- cleanup:
-  fiid_obj_destroy (obj_cmd_rq);
-  return (rv);
+  return (0);
 }
 
 int
 ipmi_cmd_get_sol_configuration_parameters_sol_payload_port_number (ipmi_ctx_t ctx,
-                                                                   uint8_t channel_number,
-                                                                   uint8_t get_parameter,
-                                                                   uint8_t set_selector,
-                                                                   uint8_t block_selector,
-                                                                   fiid_obj_t obj_cmd_rs)
+								   uint8_t channel_number,
+								   uint8_t get_parameter,
+								   uint8_t set_selector,
+								   uint8_t block_selector,
+								   fiid_obj_t obj_cmd_rs)
 {
-  fiid_obj_t obj_cmd_rq = NULL;
-  int rv = -1;
-
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+  if (_ipmi_cmd_get_sol_configuration_parameters_common (ctx,
+							 channel_number,
+							 get_parameter,
+							 set_selector,
+							 block_selector,
+							 obj_cmd_rs,
+							 tmpl_cmd_get_sol_configuration_parameters_sol_payload_port_number_rs,
+							 IPMI_SOL_CONFIGURATION_PARAMETER_SOL_PAYLOAD_PORT_NUMBER) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
     }
 
-  /* remaining parameter checks in fill function */
-  if (!fiid_obj_valid (obj_cmd_rs))
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
-                                 tmpl_cmd_get_sol_configuration_parameters_sol_payload_port_number_rs) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
-      return (-1);
-    }
-
-  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_get_sol_configuration_parameters_rq)))
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (fill_cmd_get_sol_configuration_parameters (channel_number,
-                                                 get_parameter,
-                                                 IPMI_SOL_CONFIGURATION_PARAMETER_SOL_PAYLOAD_PORT_NUMBER,
-                                                 set_selector,
-                                                 block_selector,
-                                                 obj_cmd_rq) < 0)
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (api_ipmi_cmd (ctx,
-                    IPMI_BMC_IPMB_LUN_BMC,
-                    IPMI_NET_FN_TRANSPORT_RQ,
-                    obj_cmd_rq,
-                    obj_cmd_rs) < 0)
-    {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
-      goto cleanup;
-    }
-
-  rv = 0;
- cleanup:
-  fiid_obj_destroy (obj_cmd_rq);
-  return (rv);
+  return (0);
 }

@@ -878,13 +878,14 @@ ipmi_cmd_set_pef_configuration_parameters_alert_strings (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int
-ipmi_cmd_get_pef_configuration_parameters (ipmi_ctx_t ctx,
-                                           uint8_t parameter_selector,
-                                           uint8_t get_parameter,
-                                           uint8_t set_selector,
-                                           uint8_t block_selector,
-                                           fiid_obj_t obj_cmd_rs)
+static int
+_ipmi_cmd_get_pef_configuration_parameters_common (ipmi_ctx_t ctx,
+						   uint8_t get_parameter,
+						   uint8_t set_selector,
+						   uint8_t block_selector,
+						   fiid_obj_t obj_cmd_rs,
+						   fiid_field_t *tmpl_cmd_rs_expected,
+						   uint8_t parameter_selector)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int rv = -1;
@@ -902,8 +903,7 @@ ipmi_cmd_get_pef_configuration_parameters (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
-                                 tmpl_cmd_get_pef_configuration_parameters_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs, tmpl_cmd_rs_expected) < 0)
     {
       API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
@@ -942,65 +942,48 @@ ipmi_cmd_get_pef_configuration_parameters (ipmi_ctx_t ctx,
 }
 
 int
+ipmi_cmd_get_pef_configuration_parameters (ipmi_ctx_t ctx,
+                                           uint8_t parameter_selector,
+                                           uint8_t get_parameter,
+                                           uint8_t set_selector,
+                                           uint8_t block_selector,
+                                           fiid_obj_t obj_cmd_rs)
+{
+  if (_ipmi_cmd_get_pef_configuration_parameters_common (ctx,
+							 get_parameter,
+							 set_selector,
+							 block_selector,
+							 obj_cmd_rs,
+							 tmpl_cmd_get_pef_configuration_parameters_rs,
+							 parameter_selector) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  return (0);
+}
+
+int
 ipmi_cmd_get_pef_configuration_parameters_set_in_progress (ipmi_ctx_t ctx,
                                                            uint8_t get_parameter,
                                                            uint8_t set_selector,
                                                            uint8_t block_selector,
                                                            fiid_obj_t obj_cmd_rs)
 {
-  fiid_obj_t obj_cmd_rq = NULL;
-  int rv = -1;
-
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+  if (_ipmi_cmd_get_pef_configuration_parameters_common (ctx,
+							 get_parameter,
+							 set_selector,
+							 block_selector,
+							 obj_cmd_rs,
+							 tmpl_cmd_get_pef_configuration_parameters_set_in_progress_rs,
+							 IPMI_PEF_CONFIGURATION_PARAMETER_SET_IN_PROGRESS) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
     }
 
-  /* remaining parameter checks in fill function */
-  if (!fiid_obj_valid (obj_cmd_rs))
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
-                                 tmpl_cmd_get_pef_configuration_parameters_set_in_progress_rs) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
-      return (-1);
-    }
-
-  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_get_pef_configuration_parameters_rq)))
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_CONFIGURATION_PARAMETER_SET_IN_PROGRESS,
-                                                 get_parameter,
-                                                 set_selector,
-                                                 block_selector,
-                                                 obj_cmd_rq) < 0)
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (api_ipmi_cmd (ctx,
-                    IPMI_BMC_IPMB_LUN_BMC,
-                    IPMI_NET_FN_SENSOR_EVENT_RQ,
-                    obj_cmd_rq,
-                    obj_cmd_rs) < 0)
-    {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
-      goto cleanup;
-    }
-
-  rv = 0;
- cleanup:
-  fiid_obj_destroy (obj_cmd_rq);
-  return (rv);
+  return (0);
 }
 
 int
@@ -1010,59 +993,19 @@ ipmi_cmd_get_pef_configuration_parameters_pef_control (ipmi_ctx_t ctx,
                                                        uint8_t block_selector,
                                                        fiid_obj_t obj_cmd_rs)
 {
-  fiid_obj_t obj_cmd_rq = NULL;
-  int rv = -1;
-
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+  if (_ipmi_cmd_get_pef_configuration_parameters_common (ctx,
+							 get_parameter,
+							 set_selector,
+							 block_selector,
+							 obj_cmd_rs,
+							 tmpl_cmd_get_pef_configuration_parameters_pef_control_rs,
+							 IPMI_PEF_CONFIGURATION_PARAMETER_PEF_CONTROL) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
     }
 
-  /* remaining parameter checks in fill function */
-  if (!fiid_obj_valid (obj_cmd_rs))
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
-                                 tmpl_cmd_get_pef_configuration_parameters_pef_control_rs) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
-      return (-1);
-    }
-
-  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_get_pef_configuration_parameters_rq)))
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_CONFIGURATION_PARAMETER_PEF_CONTROL,
-                                                 get_parameter,
-                                                 set_selector,
-                                                 block_selector,
-                                                 obj_cmd_rq) < 0)
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (api_ipmi_cmd (ctx,
-                    IPMI_BMC_IPMB_LUN_BMC,
-                    IPMI_NET_FN_SENSOR_EVENT_RQ,
-                    obj_cmd_rq,
-                    obj_cmd_rs) < 0)
-    {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
-      goto cleanup;
-    }
-
-  rv = 0;
- cleanup:
-  fiid_obj_destroy (obj_cmd_rq);
-  return (rv);
+  return (0);
 }
 
 int
@@ -1072,59 +1015,19 @@ ipmi_cmd_get_pef_configuration_parameters_pef_action_global_control (ipmi_ctx_t 
                                                                      uint8_t block_selector,
                                                                      fiid_obj_t obj_cmd_rs)
 {
-  fiid_obj_t obj_cmd_rq = NULL;
-  int rv = -1;
-
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+  if (_ipmi_cmd_get_pef_configuration_parameters_common (ctx,
+							 get_parameter,
+							 set_selector,
+							 block_selector,
+							 obj_cmd_rs,
+							 tmpl_cmd_get_pef_configuration_parameters_pef_action_global_control_rs,
+							 IPMI_PEF_CONFIGURATION_PARAMETER_PEF_ACTION_GLOBAL_CONTROL) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
     }
 
-  /* remaining parameter checks in fill function */
-  if (!fiid_obj_valid (obj_cmd_rs))
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
-                                 tmpl_cmd_get_pef_configuration_parameters_pef_action_global_control_rs) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
-      return (-1);
-    }
-
-  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_get_pef_configuration_parameters_rq)))
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_CONFIGURATION_PARAMETER_PEF_ACTION_GLOBAL_CONTROL,
-                                                 get_parameter,
-                                                 set_selector,
-                                                 block_selector,
-                                                 obj_cmd_rq) < 0)
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (api_ipmi_cmd (ctx,
-                    IPMI_BMC_IPMB_LUN_BMC,
-                    IPMI_NET_FN_SENSOR_EVENT_RQ,
-                    obj_cmd_rq,
-                    obj_cmd_rs) < 0)
-    {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
-      goto cleanup;
-    }
-
-  rv = 0;
- cleanup:
-  fiid_obj_destroy (obj_cmd_rq);
-  return (rv);
+  return (0);
 }
 
 int
@@ -1134,59 +1037,19 @@ ipmi_cmd_get_pef_configuration_parameters_pef_startup_delay (ipmi_ctx_t ctx,
                                                              uint8_t block_selector,
                                                              fiid_obj_t obj_cmd_rs)
 {
-  fiid_obj_t obj_cmd_rq = NULL;
-  int rv = -1;
-
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+  if (_ipmi_cmd_get_pef_configuration_parameters_common (ctx,
+							 get_parameter,
+							 set_selector,
+							 block_selector,
+							 obj_cmd_rs,
+							 tmpl_cmd_get_pef_configuration_parameters_pef_startup_delay_rs,
+							 IPMI_PEF_CONFIGURATION_PARAMETER_PEF_STARTUP_DELAY) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
     }
 
-  /* remaining parameter checks in fill function */
-  if (!fiid_obj_valid (obj_cmd_rs))
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
-                                 tmpl_cmd_get_pef_configuration_parameters_pef_startup_delay_rs) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
-      return (-1);
-    }
-
-  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_get_pef_configuration_parameters_rq)))
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_CONFIGURATION_PARAMETER_PEF_STARTUP_DELAY,
-                                                 get_parameter,
-                                                 set_selector,
-                                                 block_selector,
-                                                 obj_cmd_rq) < 0)
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (api_ipmi_cmd (ctx,
-                    IPMI_BMC_IPMB_LUN_BMC,
-                    IPMI_NET_FN_SENSOR_EVENT_RQ,
-                    obj_cmd_rq,
-                    obj_cmd_rs) < 0)
-    {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
-      goto cleanup;
-    }
-
-  rv = 0;
- cleanup:
-  fiid_obj_destroy (obj_cmd_rq);
-  return (rv);
+  return (0);
 }
 
 int
@@ -1196,59 +1059,19 @@ ipmi_cmd_get_pef_configuration_parameters_pef_alert_startup_delay (ipmi_ctx_t ct
                                                                    uint8_t block_selector,
                                                                    fiid_obj_t obj_cmd_rs)
 {
-  fiid_obj_t obj_cmd_rq = NULL;
-  int rv = -1;
-
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+  if (_ipmi_cmd_get_pef_configuration_parameters_common (ctx,
+							 get_parameter,
+							 set_selector,
+							 block_selector,
+							 obj_cmd_rs,
+							 tmpl_cmd_get_pef_configuration_parameters_pef_alert_startup_delay_rs,
+							 IPMI_PEF_CONFIGURATION_PARAMETER_PEF_ALERT_STARTUP_DELAY) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
     }
 
-  /* remaining parameter checks in fill function */
-  if (!fiid_obj_valid (obj_cmd_rs))
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
-                                 tmpl_cmd_get_pef_configuration_parameters_pef_alert_startup_delay_rs) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
-      return (-1);
-    }
-
-  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_get_pef_configuration_parameters_rq)))
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_CONFIGURATION_PARAMETER_PEF_ALERT_STARTUP_DELAY,
-                                                 get_parameter,
-                                                 set_selector,
-                                                 block_selector,
-                                                 obj_cmd_rq) < 0)
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (api_ipmi_cmd (ctx,
-                    IPMI_BMC_IPMB_LUN_BMC,
-                    IPMI_NET_FN_SENSOR_EVENT_RQ,
-                    obj_cmd_rq,
-                    obj_cmd_rs) < 0)
-    {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
-      goto cleanup;
-    }
-
-  rv = 0;
- cleanup:
-  fiid_obj_destroy (obj_cmd_rq);
-  return (rv);
+  return (0);
 }
 
 int
@@ -1258,59 +1081,19 @@ ipmi_cmd_get_pef_configuration_parameters_number_of_event_filters (ipmi_ctx_t ct
                                                                    uint8_t block_selector,
                                                                    fiid_obj_t obj_cmd_rs)
 {
-  fiid_obj_t obj_cmd_rq = NULL;
-  int rv = -1;
-
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+  if (_ipmi_cmd_get_pef_configuration_parameters_common (ctx,
+							 get_parameter,
+							 set_selector,
+							 block_selector,
+							 obj_cmd_rs,
+							 tmpl_cmd_get_pef_configuration_parameters_number_of_event_filters_rs,
+							 IPMI_PEF_CONFIGURATION_PARAMETER_NUMBER_OF_EVENT_FILTERS) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
     }
 
-  /* remaining parameter checks in fill function */
-  if (!fiid_obj_valid (obj_cmd_rs))
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
-                                 tmpl_cmd_get_pef_configuration_parameters_number_of_event_filters_rs) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
-      return (-1);
-    }
-
-  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_get_pef_configuration_parameters_rq)))
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_CONFIGURATION_PARAMETER_NUMBER_OF_EVENT_FILTERS,
-                                                 get_parameter,
-                                                 set_selector,
-                                                 block_selector,
-                                                 obj_cmd_rq) < 0)
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (api_ipmi_cmd (ctx,
-                    IPMI_BMC_IPMB_LUN_BMC,
-                    IPMI_NET_FN_SENSOR_EVENT_RQ,
-                    obj_cmd_rq,
-                    obj_cmd_rs) < 0)
-    {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
-      goto cleanup;
-    }
-
-  rv = 0;
- cleanup:
-  fiid_obj_destroy (obj_cmd_rq);
-  return (rv);
+  return (0);
 }
 
 int
@@ -1320,59 +1103,19 @@ ipmi_cmd_get_pef_configuration_parameters_event_filter_table (ipmi_ctx_t ctx,
                                                               uint8_t block_selector,
                                                               fiid_obj_t obj_cmd_rs)
 {
-  fiid_obj_t obj_cmd_rq = NULL;
-  int rv = -1;
-
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+  if (_ipmi_cmd_get_pef_configuration_parameters_common (ctx,
+							 get_parameter,
+							 set_selector,
+							 block_selector,
+							 obj_cmd_rs,
+							 tmpl_cmd_get_pef_configuration_parameters_event_filter_table_rs,
+							 IPMI_PEF_CONFIGURATION_PARAMETER_EVENT_FILTER_TABLE) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
     }
 
-  /* remaining parameter checks in fill function */
-  if (!fiid_obj_valid (obj_cmd_rs))
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
-                                 tmpl_cmd_get_pef_configuration_parameters_event_filter_table_rs) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
-      return (-1);
-    }
-
-  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_get_pef_configuration_parameters_rq)))
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_CONFIGURATION_PARAMETER_EVENT_FILTER_TABLE,
-                                                 get_parameter,
-                                                 set_selector,
-                                                 block_selector,
-                                                 obj_cmd_rq) < 0)
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (api_ipmi_cmd (ctx,
-                    IPMI_BMC_IPMB_LUN_BMC,
-                    IPMI_NET_FN_SENSOR_EVENT_RQ,
-                    obj_cmd_rq,
-                    obj_cmd_rs) < 0)
-    {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
-      goto cleanup;
-    }
-
-  rv = 0;
- cleanup:
-  fiid_obj_destroy (obj_cmd_rq);
-  return (rv);
+  return (0);
 }
 
 int
@@ -1382,59 +1125,19 @@ ipmi_cmd_get_pef_configuration_parameters_event_filter_table_data1_ (ipmi_ctx_t 
                                                                      uint8_t block_selector,
                                                                      fiid_obj_t obj_cmd_rs)
 {
-  fiid_obj_t obj_cmd_rq = NULL;
-  int rv = -1;
-
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+  if (_ipmi_cmd_get_pef_configuration_parameters_common (ctx,
+							 get_parameter,
+							 set_selector,
+							 block_selector,
+							 obj_cmd_rs,
+							 tmpl_cmd_get_pef_configuration_parameters_event_filter_table_data1_rs,
+							 IPMI_PEF_CONFIGURATION_PARAMETER_EVENT_FILTER_TABLE_DATA_1) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
     }
 
-  /* remaining parameter checks in fill function */
-  if (!fiid_obj_valid (obj_cmd_rs))
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
-                                 tmpl_cmd_get_pef_configuration_parameters_event_filter_table_data1_rs) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
-      return (-1);
-    }
-
-  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_get_pef_configuration_parameters_rq)))
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_CONFIGURATION_PARAMETER_EVENT_FILTER_TABLE_DATA_1,
-                                                 get_parameter,
-                                                 set_selector,
-                                                 block_selector,
-                                                 obj_cmd_rq) < 0)
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (api_ipmi_cmd (ctx,
-                    IPMI_BMC_IPMB_LUN_BMC,
-                    IPMI_NET_FN_SENSOR_EVENT_RQ,
-                    obj_cmd_rq,
-                    obj_cmd_rs) < 0)
-    {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
-      goto cleanup;
-    }
-
-  rv = 0;
- cleanup:
-  fiid_obj_destroy (obj_cmd_rq);
-  return (rv);
+  return (0);
 }
 
 int
@@ -1444,59 +1147,19 @@ ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries (ipmi_c
                                                                           uint8_t block_selector,
                                                                           fiid_obj_t obj_cmd_rs)
 {
-  fiid_obj_t obj_cmd_rq = NULL;
-  int rv = -1;
-
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+  if (_ipmi_cmd_get_pef_configuration_parameters_common (ctx,
+							 get_parameter,
+							 set_selector,
+							 block_selector,
+							 obj_cmd_rs,
+							 tmpl_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries_rs,
+							 IPMI_PEF_CONFIGURATION_PARAMETER_NUMBER_OF_ALERT_POLICY_ENTRIES) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
     }
 
-  /* remaining parameter checks in fill function */
-  if (!fiid_obj_valid (obj_cmd_rs))
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
-                                 tmpl_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries_rs) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
-      return (-1);
-    }
-
-  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_get_pef_configuration_parameters_rq)))
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_CONFIGURATION_PARAMETER_NUMBER_OF_ALERT_POLICY_ENTRIES,
-                                                 get_parameter,
-                                                 set_selector,
-                                                 block_selector,
-                                                 obj_cmd_rq) < 0)
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (api_ipmi_cmd (ctx,
-                    IPMI_BMC_IPMB_LUN_BMC,
-                    IPMI_NET_FN_SENSOR_EVENT_RQ,
-                    obj_cmd_rq,
-                    obj_cmd_rs) < 0)
-    {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
-      goto cleanup;
-    }
-
-  rv = 0;
- cleanup:
-  fiid_obj_destroy (obj_cmd_rq);
-  return (rv);
+  return (0);
 }
 
 int
@@ -1506,59 +1169,19 @@ ipmi_cmd_get_pef_configuration_parameters_number_of_alert_strings (ipmi_ctx_t ct
                                                                    uint8_t block_selector,
                                                                    fiid_obj_t obj_cmd_rs)
 {
-  fiid_obj_t obj_cmd_rq = NULL;
-  int rv = -1;
-
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+  if (_ipmi_cmd_get_pef_configuration_parameters_common (ctx,
+							 get_parameter,
+							 set_selector,
+							 block_selector,
+							 obj_cmd_rs,
+							 tmpl_cmd_get_pef_configuration_parameters_number_of_alert_strings_rs,
+							 IPMI_PEF_CONFIGURATION_PARAMETER_NUMBER_OF_ALERT_STRINGS) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
     }
 
-  /* remaining parameter checks in fill function */
-  if (!fiid_obj_valid (obj_cmd_rs))
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
-                                 tmpl_cmd_get_pef_configuration_parameters_number_of_alert_strings_rs) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
-      return (-1);
-    }
-
-  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_get_pef_configuration_parameters_rq)))
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_CONFIGURATION_PARAMETER_NUMBER_OF_ALERT_STRINGS,
-                                                 get_parameter,
-                                                 set_selector,
-                                                 block_selector,
-                                                 obj_cmd_rq) < 0)
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (api_ipmi_cmd (ctx,
-                    IPMI_BMC_IPMB_LUN_BMC,
-                    IPMI_NET_FN_SENSOR_EVENT_RQ,
-                    obj_cmd_rq,
-                    obj_cmd_rs) < 0)
-    {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
-      goto cleanup;
-    }
-
-  rv = 0;
- cleanup:
-  fiid_obj_destroy (obj_cmd_rq);
-  return (rv);
+  return (0);
 }
 
 int
@@ -1568,59 +1191,19 @@ ipmi_cmd_get_pef_configuration_parameters_alert_string_keys (ipmi_ctx_t ctx,
                                                              uint8_t block_selector,
                                                              fiid_obj_t obj_cmd_rs)
 {
-  fiid_obj_t obj_cmd_rq = NULL;
-  int rv = -1;
-
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+  if (_ipmi_cmd_get_pef_configuration_parameters_common (ctx,
+							 get_parameter,
+							 set_selector,
+							 block_selector,
+							 obj_cmd_rs,
+							 tmpl_cmd_get_pef_configuration_parameters_alert_string_keys_rs,
+							 IPMI_PEF_CONFIGURATION_PARAMETER_ALERT_STRING_KEYS) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
     }
 
-  /* remaining parameter checks in fill function */
-  if (!fiid_obj_valid (obj_cmd_rs))
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
-                                 tmpl_cmd_get_pef_configuration_parameters_alert_string_keys_rs) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
-      return (-1);
-    }
-
-  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_get_pef_configuration_parameters_rq)))
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_CONFIGURATION_PARAMETER_ALERT_STRING_KEYS,
-                                                 get_parameter,
-                                                 set_selector,
-                                                 block_selector,
-                                                 obj_cmd_rq) < 0)
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (api_ipmi_cmd (ctx,
-                    IPMI_BMC_IPMB_LUN_BMC,
-                    IPMI_NET_FN_SENSOR_EVENT_RQ,
-                    obj_cmd_rq,
-                    obj_cmd_rs) < 0)
-    {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
-      goto cleanup;
-    }
-
-  rv = 0;
- cleanup:
-  fiid_obj_destroy (obj_cmd_rq);
-  return (rv);
+  return (0);
 }
 
 int
@@ -1630,59 +1213,19 @@ ipmi_cmd_get_pef_configuration_parameters_alert_string (ipmi_ctx_t ctx,
                                                         uint8_t block_selector,
                                                         fiid_obj_t obj_cmd_rs)
 {
-  fiid_obj_t obj_cmd_rq = NULL;
-  int rv = -1;
-
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+  if (_ipmi_cmd_get_pef_configuration_parameters_common (ctx,
+							 get_parameter,
+							 set_selector,
+							 block_selector,
+							 obj_cmd_rs,
+							 tmpl_cmd_get_pef_configuration_parameters_alert_strings_rs,
+							 IPMI_PEF_CONFIGURATION_PARAMETER_ALERT_STRINGS) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
     }
 
-  /* remaining parameter checks in fill function */
-  if (!fiid_obj_valid (obj_cmd_rs))
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
-                                 tmpl_cmd_get_pef_configuration_parameters_alert_strings_rs) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
-      return (-1);
-    }
-
-  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_get_pef_configuration_parameters_rq)))
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_CONFIGURATION_PARAMETER_ALERT_STRINGS,
-                                                 get_parameter,
-                                                 set_selector,
-                                                 block_selector,
-                                                 obj_cmd_rq) < 0)
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (api_ipmi_cmd (ctx,
-                    IPMI_BMC_IPMB_LUN_BMC,
-                    IPMI_NET_FN_SENSOR_EVENT_RQ,
-                    obj_cmd_rq,
-                    obj_cmd_rs) < 0)
-    {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
-      goto cleanup;
-    }
-
-  rv = 0;
- cleanup:
-  fiid_obj_destroy (obj_cmd_rq);
-  return (rv);
+  return (0);
 }
 
 int
@@ -1692,61 +1235,20 @@ ipmi_cmd_get_pef_configuration_parameters_alert_policy_table (ipmi_ctx_t ctx,
                                                               uint8_t block_selector,
                                                               fiid_obj_t obj_cmd_rs)
 {
-  fiid_obj_t obj_cmd_rq = NULL;
-  int rv = -1;
-
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+  if (_ipmi_cmd_get_pef_configuration_parameters_common (ctx,
+							 get_parameter,
+							 set_selector,
+							 block_selector,
+							 obj_cmd_rs,
+							 tmpl_cmd_get_pef_configuration_parameters_alert_policy_table_rs,
+							 IPMI_PEF_CONFIGURATION_PARAMETER_ALERT_POLICY_TABLE) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
     }
 
-  /* remaining parameter checks in fill function */
-  if (!fiid_obj_valid (obj_cmd_rs))
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
-                                 tmpl_cmd_get_pef_configuration_parameters_alert_policy_table_rs) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
-      return (-1);
-    }
-
-  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_get_pef_configuration_parameters_rq)))
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_CONFIGURATION_PARAMETER_ALERT_POLICY_TABLE,
-                                                 get_parameter,
-                                                 set_selector,
-                                                 block_selector,
-                                                 obj_cmd_rq) < 0)
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (api_ipmi_cmd (ctx,
-                    IPMI_BMC_IPMB_LUN_BMC,
-                    IPMI_NET_FN_SENSOR_EVENT_RQ,
-                    obj_cmd_rq,
-                    obj_cmd_rs) < 0)
-    {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
-      goto cleanup;
-    }
-
-  rv = 0;
- cleanup:
-  fiid_obj_destroy (obj_cmd_rq);
-  return (rv);
+  return (0);
 }
-
 
 int
 ipmi_cmd_set_last_processed_event_id (ipmi_ctx_t ctx,
