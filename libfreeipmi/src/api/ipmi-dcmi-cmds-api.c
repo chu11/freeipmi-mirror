@@ -66,10 +66,11 @@
 
 #include "freeipmi-portability.h"
 
-int
-ipmi_cmd_dcmi_get_dcmi_capability_info (ipmi_ctx_t ctx,
-                                        uint8_t parameter_selector,
-                                        fiid_obj_t obj_cmd_rs)
+static int
+_ipmi_cmd_dcmi_get_dcmi_capability_info_common (ipmi_ctx_t ctx,
+						fiid_obj_t obj_cmd_rs,
+						fiid_field_t *tmpl_cmd_rs_expected,
+						uint8_t parameter_selector)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int rv = -1;
@@ -87,8 +88,7 @@ ipmi_cmd_dcmi_get_dcmi_capability_info (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
-                                 tmpl_cmd_dcmi_get_dcmi_capability_info_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs, tmpl_cmd_rs_expected) < 0)
     {
       API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
@@ -123,278 +123,100 @@ ipmi_cmd_dcmi_get_dcmi_capability_info (ipmi_ctx_t ctx,
 }
 
 int
+ipmi_cmd_dcmi_get_dcmi_capability_info (ipmi_ctx_t ctx,
+                                        uint8_t parameter_selector,
+                                        fiid_obj_t obj_cmd_rs)
+{
+  if (_ipmi_cmd_dcmi_get_dcmi_capability_info_common (ctx,
+						      obj_cmd_rs,
+						      tmpl_cmd_dcmi_get_dcmi_capability_info_rs,
+						      parameter_selector) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  return (0);
+}
+
+int
 ipmi_cmd_dcmi_get_dcmi_capability_info_supported_dcmi_capabilities (ipmi_ctx_t ctx,
                                                                     fiid_obj_t obj_cmd_rs)
 {
-  fiid_obj_t obj_cmd_rq = NULL;
-  int rv = -1;
-
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+  if (_ipmi_cmd_dcmi_get_dcmi_capability_info_common (ctx,
+						      obj_cmd_rs,
+						      tmpl_cmd_dcmi_get_dcmi_capability_info_supported_dcmi_capabilities_rs,
+						      IPMI_DCMI_CAPABILITIES_INFO_PARAMETER_SUPPORTED_DCMI_CAPABILITIES) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
     }
 
-  if (!fiid_obj_valid (obj_cmd_rs))
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
-                                 tmpl_cmd_dcmi_get_dcmi_capability_info_supported_dcmi_capabilities_rs) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
-      return (-1);
-    }
-
-  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_dcmi_get_dcmi_capability_info_rq)))
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (fill_cmd_dcmi_get_dcmi_capability_info (IPMI_DCMI_CAPABILITIES_INFO_PARAMETER_SUPPORTED_DCMI_CAPABILITIES,
-                                              obj_cmd_rq) < 0)
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (api_ipmi_cmd (ctx,
-                    IPMI_BMC_IPMB_LUN_BMC,
-                    IPMI_NET_FN_GROUP_EXTENSION_RQ,
-                    obj_cmd_rq,
-                    obj_cmd_rs) < 0)
-    {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
-      goto cleanup;
-    }
-
-  rv = 0;
- cleanup:
-  fiid_obj_destroy (obj_cmd_rq);
-  return (rv);
+  return (0);
 }
 
 int
 ipmi_cmd_dcmi_get_dcmi_capability_info_mandatory_platform_attributes (ipmi_ctx_t ctx,
                                                                       fiid_obj_t obj_cmd_rs)
 {
-  fiid_obj_t obj_cmd_rq = NULL;
-  int rv = -1;
-
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+  if (_ipmi_cmd_dcmi_get_dcmi_capability_info_common (ctx,
+						      obj_cmd_rs,
+						      tmpl_cmd_dcmi_get_dcmi_capability_info_mandatory_platform_attributes_rs,
+						      IPMI_DCMI_CAPABILITIES_INFO_PARAMETER_MANDATORY_PLATFORM_ATTRIBUTES) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
     }
 
-  if (!fiid_obj_valid (obj_cmd_rs))
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
-                                 tmpl_cmd_dcmi_get_dcmi_capability_info_mandatory_platform_attributes_rs) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
-      return (-1);
-    }
-
-  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_dcmi_get_dcmi_capability_info_rq)))
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (fill_cmd_dcmi_get_dcmi_capability_info (IPMI_DCMI_CAPABILITIES_INFO_PARAMETER_MANDATORY_PLATFORM_ATTRIBUTES,
-                                              obj_cmd_rq) < 0)
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (api_ipmi_cmd (ctx,
-                    IPMI_BMC_IPMB_LUN_BMC,
-                    IPMI_NET_FN_GROUP_EXTENSION_RQ,
-                    obj_cmd_rq,
-                    obj_cmd_rs) < 0)
-    {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
-      goto cleanup;
-    }
-
-  rv = 0;
- cleanup:
-  fiid_obj_destroy (obj_cmd_rq);
-  return (rv);
+  return (0);
 }
 
 int
 ipmi_cmd_dcmi_get_dcmi_capability_info_optional_platform_attributes (ipmi_ctx_t ctx,
                                                                      fiid_obj_t obj_cmd_rs)
 {
-  fiid_obj_t obj_cmd_rq = NULL;
-  int rv = -1;
-
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+  if (_ipmi_cmd_dcmi_get_dcmi_capability_info_common (ctx,
+						      obj_cmd_rs,
+						      tmpl_cmd_dcmi_get_dcmi_capability_info_optional_platform_attributes_rs,
+						      IPMI_DCMI_CAPABILITIES_INFO_PARAMETER_OPTIONAL_PLATFORM_ATTRIBUTES) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
     }
 
-  if (!fiid_obj_valid (obj_cmd_rs))
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
-                                 tmpl_cmd_dcmi_get_dcmi_capability_info_optional_platform_attributes_rs) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
-      return (-1);
-    }
-
-  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_dcmi_get_dcmi_capability_info_rq)))
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (fill_cmd_dcmi_get_dcmi_capability_info (IPMI_DCMI_CAPABILITIES_INFO_PARAMETER_OPTIONAL_PLATFORM_ATTRIBUTES,
-                                              obj_cmd_rq) < 0)
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (api_ipmi_cmd (ctx,
-                    IPMI_BMC_IPMB_LUN_BMC,
-                    IPMI_NET_FN_GROUP_EXTENSION_RQ,
-                    obj_cmd_rq,
-                    obj_cmd_rs) < 0)
-    {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
-      goto cleanup;
-    }
-
-  rv = 0;
- cleanup:
-  fiid_obj_destroy (obj_cmd_rq);
-  return (rv);
+  return (0);
 }
 
 int
 ipmi_cmd_dcmi_get_dcmi_capability_info_manageability_access_attributes (ipmi_ctx_t ctx,
                                                                         fiid_obj_t obj_cmd_rs)
 {
-  fiid_obj_t obj_cmd_rq = NULL;
-  int rv = -1;
-
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+  if (_ipmi_cmd_dcmi_get_dcmi_capability_info_common (ctx,
+						      obj_cmd_rs,
+						      tmpl_cmd_dcmi_get_dcmi_capability_info_manageability_access_attributes_rs,
+						      IPMI_DCMI_CAPABILITIES_INFO_PARAMETER_MANAGEABILITY_ACCESS_ATTRIBUTES) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
     }
 
-  if (!fiid_obj_valid (obj_cmd_rs))
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
-                                 tmpl_cmd_dcmi_get_dcmi_capability_info_manageability_access_attributes_rs) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
-      return (-1);
-    }
-
-  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_dcmi_get_dcmi_capability_info_rq)))
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (fill_cmd_dcmi_get_dcmi_capability_info (IPMI_DCMI_CAPABILITIES_INFO_PARAMETER_MANAGEABILITY_ACCESS_ATTRIBUTES,
-                                              obj_cmd_rq) < 0)
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (api_ipmi_cmd (ctx,
-                    IPMI_BMC_IPMB_LUN_BMC,
-                    IPMI_NET_FN_GROUP_EXTENSION_RQ,
-                    obj_cmd_rq,
-                    obj_cmd_rs) < 0)
-    {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
-      goto cleanup;
-    }
-
-  rv = 0;
- cleanup:
-  fiid_obj_destroy (obj_cmd_rq);
-  return (rv);
+  return (0);
 }
 
 int
 ipmi_cmd_dcmi_get_dcmi_capability_info_enhanced_system_power_statistics_attributes (ipmi_ctx_t ctx,
                                                                                     fiid_obj_t obj_cmd_rs)
 {
-  fiid_obj_t obj_cmd_rq = NULL;
-  int rv = -1;
-
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+  if (_ipmi_cmd_dcmi_get_dcmi_capability_info_common (ctx,
+						      obj_cmd_rs,
+						      tmpl_cmd_dcmi_get_dcmi_capability_info_enhanced_system_power_statistics_attributes_rs,
+						      IPMI_DCMI_CAPABILITIES_INFO_PARAMETER_ENHANCED_SYSTEM_POWER_STATISTICS_ATTRIBUTES) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
-    }
-
-  if (!fiid_obj_valid (obj_cmd_rs))
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
-                                 tmpl_cmd_dcmi_get_dcmi_capability_info_enhanced_system_power_statistics_attributes_rs) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
-      return (-1);
-    }
-
-  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_dcmi_get_dcmi_capability_info_rq)))
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (fill_cmd_dcmi_get_dcmi_capability_info (IPMI_DCMI_CAPABILITIES_INFO_PARAMETER_ENHANCED_SYSTEM_POWER_STATISTICS_ATTRIBUTES,
-                                              obj_cmd_rq) < 0)
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
     }
   
-  if (api_ipmi_cmd (ctx,
-                    IPMI_BMC_IPMB_LUN_BMC,
-                    IPMI_NET_FN_GROUP_EXTENSION_RQ,
-                    obj_cmd_rq,
-                    obj_cmd_rs) < 0)
-    {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
-      goto cleanup;
-    }
-
-  rv = 0;
- cleanup:
-  fiid_obj_destroy (obj_cmd_rq);
-  return (rv);
+  return (0);
 }
 
 int

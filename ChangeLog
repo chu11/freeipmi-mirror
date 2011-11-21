@@ -1,5 +1,9 @@
 2011-11-18  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/src/api/: Common function code cleanup.
+	
+2011-11-18  Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/src/api/: Remove duplicate parameter checks.  Write
 	common functions for variety of code.
 	
