@@ -1,6 +1,8 @@
 2011-11-18  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/api/: Common function code cleanup.
+
+	* libfreeipmi/src/spec/: Update iana numbers list.
 	
 2011-11-18  Albert Chu <chu11@llnl.gov>
 
