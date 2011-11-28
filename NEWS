@@ -15,6 +15,12 @@ o In libfreeipmi, add support for IPMI firmware firewall and command
 o Add petalert.pl contribution from Kaiwang Chen (kaiwang.chen AT gmail DOT com)
 o Fix macro name typos.
 
+FreeIPMI 1.0.9 - 11/21/11
+-------------------------
+o Support Supermicro OEM sensors on X9SCA-F-O motherboards.
+o Support Supermicro OEM sensors on X9SCM-F motherboards with
+  newer firmware.
+
 FreeIPMI 1.0.8 - 10/27/11
 -------------------------
 o Fix corner case in which invalid SDR entry could be loaded when
