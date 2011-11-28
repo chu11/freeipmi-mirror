@@ -1,3 +1,9 @@
+2011-11-28  Albert Chu <chu11@llnl.gov>
+
+	* bmc-watchdog/src/bmc-watchdog.c (_daemon_cmd_error_exit)
+	(_daemon_cmd_error_noexit): Do not assume semaphore deleted on
+	EINVAL.
+	
 2011-11-18  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/api/: Common function code cleanup.

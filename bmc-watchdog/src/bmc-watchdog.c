@@ -1722,7 +1722,7 @@ _daemon_cmd_error_exit (char *str, int ret)
     {
       if (errno == EAGAIN || errno == EBUSY)
         _bmclog ("%s: BMC Busy", str);
-      else if (errno == EINVAL || errno == EIDRM)
+      else if (errno == EIDRM)
         {
           /* Assume semaphore was deleted for some strange reason */
           _bmclog ("%s: semaphore deleted: %s", str, strerror (errno));
@@ -1886,7 +1886,7 @@ _daemon_cmd_error_noexit (char *str, int ret)
     {
       if (errno == EAGAIN || errno == EBUSY)
         _bmclog ("%s Error: BMC Busy", str);
-      else if (errno == EINVAL || errno == EIDRM)
+      else if (errno == EIDRM)
         {
           /* Assume semaphore was deleted for some strange reason */
           _bmclog ("%s: semaphore deleted: %s", str, strerror (errno));
