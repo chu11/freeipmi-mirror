@@ -631,6 +631,9 @@ specified by a RMCP+ Messaging Cipher Suite Entry Support Count
 request.  Resolved with a workaround to not output a privilege if one
 is not available.
 
+Intel S2600JF/Appro 512X: Cipher suite privilege levels are not
+configurable.  The cipher suite entry count is 0.
+
 ipmi-pef-config
 ---------------
 
