@@ -506,8 +506,8 @@ it on the website here:
 
 Most of the FreeIPMI tools and libraries have flags to workaround a
 large number of IPMI compliance bugs found on motherboards.  Please
-see the appropriate tool manpages or header files for details on the
-workarounds available and for what motherboards.
+see the appropriate tool manpages or library header files for details
+on the workarounds available and for what motherboards.
 
 If you believe there is a compliance issue on your motherboard that
 has not yet been implemented, please contact the maintainers on the
