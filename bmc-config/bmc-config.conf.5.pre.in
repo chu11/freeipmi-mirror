@@ -34,6 +34,7 @@ Various configuration options from
 have been left out or skipped because it is considered unnecessary.
 Future versions of this manpage will try to include more information.
 .LP
+.nf
      Section User1
      	## Give username
      	## Username                                  NULL
@@ -228,6 +229,7 @@ Future versions of this manpage will try to include more information.
      	## Possible Values: Off_State_AC_Apply/Restore_State_AC_Apply/On_State_AC_Apply
      	Power_Restore_Policy                         Restore_State_Ac_Apply
      EndSection
+.fi
 
 .SH "Section User1, User2, ..."
 The \fIUser\fR sections of the BMC configuration file are for username

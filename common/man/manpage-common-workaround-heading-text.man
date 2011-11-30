@@ -15,3 +15,7 @@ not exhibit the same problems.  Different vendors may license their
 firmware from the same IPMI firmware developer, so it may be
 worthwhile to try workarounds listed below even if your motherboard is
 not listed.
+.LP
+If you believe your hardware has an additional compliance issue that
+needs a workaround to be implemented, please contact the FreeIPMI
+maintainers on <freeipmi\-users@gnu.org> or <freeipmi\-devel@gnu.org>.
