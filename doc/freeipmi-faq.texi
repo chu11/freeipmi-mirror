@@ -144,8 +144,8 @@ Fedora, Suse, and Debian.  FreeIPMI has been ported and confirmed to
 work on atleast FreeBSD, OpenBSD, Solaris, OpenSolaris, and Windows
 via Cygwin.  We imagine it would build cleanly on other operating
 systems.  If it doesn't, it should be easily portable to them.  Please
-contact the maintainers on the @email{freeipmi-users@@gnu.org} or
-@email{freeipmi-devel@@gnu.org} mailing lists.
+contact the maintainers on the @email{freeipmi-devel@@gnu.org} mailing
+lists.
 
 @node FreeIPMI vs OpenIPMI vs Ipmitool vs Ipmiutil, What is special about FreeIPMI?, What operating systems does FreeIPMI run on?, Top
 @section FreeIPMI vs OpenIPMI vs Ipmitool vs Ipmiutil
@@ -539,6 +539,6 @@ website here:
 @node I still need help!, , How do I program with the FreeIPMI libraries?, Top
 @section I still need help!
 
-Please help, please inform the maintainers on the @email{freeipmi-users@@gnu.org} mailing list.
+For help, please email the @email{freeipmi-users@@gnu.org} mailing list.
 
 @bye
