@@ -1,3 +1,7 @@
+2011-11-30  Albert Chu <chu11@llnl.gov>
+
+	* Various documentation updates.
+	
 2011-11-28  Albert Chu <chu11@llnl.gov>
 
 	* bmc-watchdog/src/bmc-watchdog.c (_daemon_cmd_error_exit)

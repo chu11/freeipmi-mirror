@@ -59,14 +59,21 @@ release @value{VERSION} of the FreeIPMI.
 * What is FreeIPMI?::       
 * How did FreeIPMI start?::           
 * What operating systems does FreeIPMI run on?::
-* FreeIPMI vs OpenIPMI vs Ipmitool vs Ipmiutil::  
-* What is special about FreeIPMI::  
-* Serial Over LAN (SOL) / Ipmiconsole Setup::
+* FreeIPMI vs OpenIPMI vs Ipmitool vs Ipmiutil::
+* What is special about FreeIPMI?::  
 * Does my system support IPMI?::
-* SSIF Driver Configuration::   
-* x86-64 Compilation::          
+* How do I compile FreeIPMI?::
 * libgcrypt requirement::          
+* x86-64 Compilation::          
 * Installing FreeIPMI on FreeBSD::
+* What setup is needed for FreeIPMI to communicate over LAN?::
+* What setup is needed for Serial over LAN (SOL) or Ipmiconsole?::
+* SSIF Driver Configuration::   
+* Why is the IPMI kernel driver faster than the KCS driver?::
+* Why are there so many IPMI compliance bugs?::
+* How do I get around an IPMI compliance bug on my motherboard?::
+* How do I program with the FreeIPMI libraries?::
+* I still need help!:: 
 @end menu
 
 @c Output the table of contents at the beginning.
@@ -136,10 +143,13 @@ to be built on most major GNU/Linux distributions such as Redhat,
 Fedora, Suse, and Debian.  FreeIPMI has been ported and confirmed to
 work on atleast FreeBSD, OpenBSD, Solaris, OpenSolaris, and Windows
 via Cygwin.  We imagine it would build cleanly on other operating
-systems.  If it doesn't, it should be easily portable to them.
+systems.  If it doesn't, it should be easily portable to them.  Please
+contact the maintainers on the @email{freeipmi-users@@gnu.org} or
+@email{freeipmi-devel@@gnu.org} mailing lists.
 
-@node FreeIPMI vs OpenIPMI vs Ipmitool vs Ipmiutil, What is special about FreeIPMI, What operating systems does FreeIPMI run on?, Top
-@section What are the differences between FreeIPMI, OpenIPMI, Ipmitool, and Ipmiutil? 
+@node FreeIPMI vs OpenIPMI vs Ipmitool vs Ipmiutil, What is special about FreeIPMI?, What operating systems does FreeIPMI run on?, Top
+@section FreeIPMI vs OpenIPMI vs Ipmitool vs Ipmiutil
+
 There are multiple implementations, APIs, interfaces, end user
 requirements, etc. that one can choose when developing IPMI drivers,
 libraries, and tools.  FreeIPMI has taken some different approaches
@@ -152,8 +162,8 @@ The Ipmiutil project has a good chart describing many of the
 differences between the projects:
 @uref{http://ipmiutil.sourceforge.net/docs/ipmisw-compare.htm}.
 
-@node What is special about FreeIPMI, Serial Over LAN (SOL) / Ipmiconsole Setup, FreeIPMI vs OpenIPMI vs Ipmitool vs Ipmiutil, Top
-@section What is special about FreeIPMI compared to other open source IPMI projects?
+@node What is special about FreeIPMI?, Does my system support IPMI?, FreeIPMI vs OpenIPMI vs Ipmitool vs Ipmiutil, Top
+@section What is special about FreeIPMI?
 
 In our eyes, there are several reasons why FreeIPMI is particularly special.
 
@@ -302,36 +312,7 @@ Likewise, by implementing everything in userspace libraries and tools,
 portability to multiple operating systems and architectures should be
 easier.
 
-@node Serial Over LAN (SOL) / Ipmiconsole Setup, Does my system support IPMI?, What is special about FreeIPMI, Top
-@section What setup is needed for Serial over LAN (SOL) or Ipmiconsole
-
-The setup of Serial-over-LAN (SOL) and/or Ipmiconsole is highly dependent on your motherboard.  However, most motherboards
-require the following:
-
-1) Adjust the BIOS COM port for serial redirection over SOL instead of
-the normal serial port and set the appropriate baud rate.  If you do
-not know which port is the SOL port, you may need to play around and
-guess.  It is likely a non-default setting, since many manufacturers
-may still assume the default redirection is out of the normal serial
-port.  If you do not have a serial port on your motherboard, this part
-can probably be skipped.
-
-2) Configure IPMI on the motherboard to use SOL.  Many motherboards
-may have this enabled by default, however you may wish to verify with
-FreeIPMI's bmc-config.  More information can be found in the
-bmc-config.conf(5) manpage on the settings.  However, the key settings
-are to enable SOL on the system, enable SOL for individual users, and
-select the appropriate baud.  On many motherboards, the selected baud
-must match what is configured in the BIOS.
-
-3) Adjust your operating systems serial console settings to use the
-appropriate COM port.  For Linux, the following guide
-(@uref{http://www.vanemery.com/Linux/Serial/serial-console.html})
-provides a pretty good overview of setting of a serial console on
-Linux.  The only difference for setting up a serial console with
-Ipmiconsole or SOL, is the ttySX terminal may need to be changed.
-
-@node Does my system support IPMI?, SSIF Driver Configuration, Serial Over LAN (SOL) / Ipmiconsole Setup, Top
+@node Does my system support IPMI?, How do I compile FreeIPMI?, What is special about FreeIPMI?, Top
 @section Does my system support IPMI?
 
 Unfortunately, there are no universally defined mechanisms for
@@ -370,7 +351,88 @@ Ultimately, some amount of information from product documents or trial
 and error may be necessary to determine if IPMI is supported on your
 system.
 
-@node SSIF Driver Configuration, x86-64 Compilation, Does my system support IPMI?, Top
+@node How do I compile FreeIPMI?, libgcrypt requirement, Does my system support IPMI?, Top
+@section How do I compile FreeIPMI?
+
+Please see the README.build instructions provided with FreeIPMI or on
+the FreeIPMI website's documentation (@uref{http://www.gnu.org/software/freeipmi/README.build}).
+
+@node libgcrypt requirement, x86-64 Compilation, How do I compile FreeIPMI?, Top
+@section libgcrypt requirement
+
+FreeIPMI requires the libgcrypt library to be installed for a variety
+of encryption requirements in IPMI 2.0.  If you are building FreeIPMI
+and receive a 'libgcrypt required to build libfreeipmi' error, please
+install libgcrypt.  For Linux users, this may require the install of
+the libgcrypt-devel package as well.  For those who do not need IPMI
+2.0 encryption, FreeIPMI may be built without it by specifying
+--without-encryption when executing configure.
+
+@node x86-64 Compilation, Installing FreeIPMI on FreeBSD, libgcrypt requirement, Top
+@section x86-64 Compilation
+
+By default, FreeIPMI's build autotools (e.g. configure) should detect
+if you are on a 64 bit system and should build against 64 bit
+libraries.  However, some multi-architecture installs (e.g. you have
+32 bit and 64 bit libraries installed) may lead to builds and installs
+of 32 bit instead of 64 bit.  For those noticing this, pass libdir
+appropriately to the configure script to workaround this
+problem. (e.g. --libdir=/usr/lib64)
+
+Example:
+@example
+  # ./configure  --prefix=/usr --libdir=/usr/lib64
+@end example
+
+@node Installing FreeIPMI on FreeBSD, What setup is needed for FreeIPMI to communicate over LAN?, x86-64 Compilation, Top
+@section Installing FreeIPMI on FreeBSD
+
+You can install a binary package of freeipmi or use the port,
+located in ports/sysutils/freeipmi, to build it from the source. See
+ports(7) and 'Packages and Ports' section
+(@uref{http://www.freebsd.org/doc/en_US.ISO8859-1/books/handbook/ports.html})
+in The FreeBSD Handbook.
+
+Please contact port maintainer (MAINTAINER line in the port's Makefile),
+if you have problems building from the port.
+
+@node What setup is needed for FreeIPMI to communicate over LAN?, What setup is needed for Serial over LAN (SOL) or Ipmiconsole?, Installing FreeIPMI on FreeBSD, Top
+@section What setup is needed for FreeIPMI to communicate over LAN?
+
+Please see the bmc-config.conf(5) manpage provided with FreeIPMI for
+details, or you can read it on the FreeIPMI website's documentation
+(@uref{http://www.gnu.org/software/freeipmi/manpages/man5/bmc-config.conf.5.html}).
+
+@node What setup is needed for Serial over LAN (SOL) or Ipmiconsole?, SSIF Driver Configuration, What setup is needed for FreeIPMI to communicate over LAN?, Top
+@section What setup is needed for Serial over LAN (SOL) or Ipmiconsole?
+
+The setup of Serial-over-LAN (SOL) and/or Ipmiconsole is highly dependent on your motherboard.  However, most motherboards
+require the following:
+
+1) Adjust the BIOS COM port for serial redirection over SOL instead of
+the normal serial port and set the appropriate baud rate.  If you do
+not know which port is the SOL port, you may need to play around and
+guess.  It is likely a non-default setting, since many manufacturers
+may still assume the default redirection is out of the normal serial
+port.  If you do not have a serial port on your motherboard, this part
+can probably be skipped.
+
+2) Configure IPMI on the motherboard to use SOL.  Many motherboards
+may have this enabled by default, however you may wish to verify with
+FreeIPMI's bmc-config.  More information can be found in the
+bmc-config.conf(5) manpage on the settings.  However, the key settings
+are to enable SOL on the system, enable SOL for individual users, and
+select the appropriate baud.  On many motherboards, the selected baud
+must match what is configured in the BIOS.
+
+3) Adjust your operating systems serial console settings to use the
+appropriate COM port.  For Linux, the following guide
+(@uref{http://www.vanemery.com/Linux/Serial/serial-console.html})
+provides a pretty good overview of setting of a serial console on
+Linux.  The only difference for setting up a serial console with
+Ipmiconsole or SOL, is the ttySX terminal may need to be changed.
+
+@node SSIF Driver Configuration, Why is the IPMI kernel driver faster than the KCS driver?, What setup is needed for Serial over LAN (SOL) or Ipmiconsole?, Top
 @section SSIF Driver Configuration
 
 FreeIPMI's SSIF driver works on top of kernel'2 i2c device
@@ -408,43 +470,75 @@ BMC address Locator:
     Usual values for record 08h -> 0x400
 @end example
 
-@node x86-64 Compilation, libgcrypt requirement, SSIF Driver Configuration, Top
-@section x86-64 Compilation
+@node Why is the IPMI kernel driver faster than the KCS driver?, Why are there so many IPMI compliance bugs?, SSIF Driver Configuration, Top
+@section Why is the IPMI kernel driver faster than the KCS driver?
 
-By default, FreeIPMI's build autotools (e.g. configure) should detect
-if you are on a 64 bit system and should build against 64 bit
-libraries.  However, some multi-architecture installs (e.g. you have
-32 bit and 64 bit libraries installed) may lead to builds and installs
-of 32 bit instead of 64 bit.  For those noticing this, pass libdir
-appropriately to the configure script to workaround this
-problem. (e.g. --libdir=/usr/lib64)
+Internally the IPMI kernel driver chooses to spin while polling for a
+response from the base management controller (BMC) while the KCS
+driver elects to sleep between poll attempts.  An operating system's
+scheduler granularity may be larger than the time it takes to perform
+a IPMI transaction, thus the wall clock time of the KCS driver is far
+worse than the IPMI kernel driver.  FreeIPMI's KCS driver implements
+the sleep between poll attempts because it is believed to provide
+better overall system use.  To force the KCS driver to have similar
+wall clock response time to the IPMI kernel driver, users can specify
+the 'spinpoll' workaround.
 
-Example:
-@example
-  # ./configure  --prefix=/usr --libdir=/usr/lib64
-@end example
+@node Why are there so many IPMI compliance bugs?, How do I get around an IPMI compliance bug on my motherboard?, Why is the IPMI kernel driver faster than the KCS driver?, Top
+@section Why are there so many IPMI compliance bugs? 
 
-@node libgcrypt requirement, Installing FreeIPMI on FreeBSD, x86-64 Compilation, Top
-@section libgcrypt requirement
+The IPMI specification is very large.  At last check, the IPMI
+specification was 601 pages.  This does not count the various side
+specifications related to IPMI, including DCMI, PET, FRU, and the
+various OEM extension specifications (e.g. Intel Node Manager).  Many
+sections of text can be ambiguous.  Many components of IPMI are
+optional and aren't required to be implemented.  There is some leeway
+for implementation interpretation as well.  Ultimately, bugs will
+happen.  In all fairness, FreeIPMI has had bugs too.
 
-FreeIPMI requires the libgcrypt library to be installed for a variety
-of encryption requirements in IPMI 2.0.  If you are building FreeIPMI
-and receive a 'libgcrypt required to build libfreeipmi' error, please
-install libgcrypt.  For Linux users, this may require the install of
-the libgcrypt-devel package as well.  For those who do not need IPMI
-2.0 encryption, FreeIPMI may be built without it by specifying
---without-encryption when executing configure.
+A number of the IPMI compliance bugs found by FreeIPMI are documented
+in the freeipmi-bugs-issues-and-workarounds.txt document (you can find
+it on the website here:
+@uref{http://www.gnu.org/software/freeipmi/freeipmi-bugs-issues-and-workarounds.txt}).
 
-@node Installing FreeIPMI on FreeBSD, , libgcrypt requirement, Top
-@section Installing FreeIPMI on FreeBSD
+@node How do I get around an IPMI compliance bug on my motherboard?, How do I program with the FreeIPMI libraries?, Why are there so many IPMI compliance bugs?, Top
+@section How do I get around an IPMI compliance bug on my motherboard?
 
-You can install a binary package of freeipmi or use the port,
-located in ports/sysutils/freeipmi, to build it from the source. See
-ports(7) and 'Packages and Ports' section
-(@uref{http://www.freebsd.org/doc/en_US.ISO8859-1/books/handbook/ports.html})
-in The FreeBSD Handbook.
+Most of the FreeIPMI tools and libraries have flags to workaround a
+large number of IPMI compliance bugs found on motherboards.  Please
+see the appropriate tool manpages or header files for details on the
+workarounds available and for what motherboards.
 
-Please contact port maintainer (MAINTAINER line in the port's Makefile),
-if you have problems building from the port.
+If you believe there is a compliance issue on your motherboard that
+has not yet been implemented, please contact the maintainers on the
+@email{freeipmi-devel@@gnu.org} mailing list.
+
+@node How do I program with the FreeIPMI libraries?, I still need help!, How do I get around an IPMI compliance bug on my motherboard?, Top
+@section How do I program with the FreeIPMI libraries?
+
+If you are looking for a high level library to do Serial-over-LAN
+(SOL) or IPMI sensor/SEL monitoring, you may wish to look at the
+libipmiconsole and libipmimonitoring libraries.  These libraries
+attempt to abstract a large amount of the underlying IPMI detail from
+developers.  The majority of the documentation can be found in the
+header files.  Some examples can be found in the documentation and the
+FreeIPMI tools that use them.
+
+The libfreeipmi library is the core library used by other FreeIPMI
+libraries and tools.  However, it is quite detailed in regards to the
+IPMI specification and many components of the library will be quite
+confusing to those unfamiliar with the finer details of the IPMI
+specification.  It is recommended most use the higher level libraries
+described above.
+
+A more detailed description of the available FreeIPMI libraries can be
+found in the freeipmi-libraries.txt document (you can find it on the
+website here:
+@uref{http://www.gnu.org/software/freeipmi/freeipmi-libraries.txt}).
+
+@node I still need help!, , How do I program with the FreeIPMI libraries?, Top
+@section I still need help!
+
+Please help, please inform the maintainers on the @email{freeipmi-users@@gnu.org} mailing list.
 
 @bye

@@ -92,4 +92,6 @@ be busy or (worst case) possibly non-functioning.
 .LP
 Please see WORKAROUNDS below to also if there are any vendor specific
 bugs that have been discovered and worked around.
-
+.LP
+For additional support, please e-mail the <freeipmi\-users@gnu.org>
+mailing list.
