@@ -68,12 +68,13 @@ release @value{VERSION} of the FreeIPMI.
 * Installing FreeIPMI on FreeBSD::
 * What setup is needed for FreeIPMI to communicate over LAN?::
 * What setup is needed for Serial over LAN (SOL) or Ipmiconsole?::
+* Do I need to install or configure a driver to perform IPMI inband?:: 
 * SSIF Driver Configuration::   
 * Why is the IPMI kernel driver faster than the KCS driver?::
 * Why are there so many IPMI compliance bugs?::
 * How do I get around an IPMI compliance bug on my motherboard?::
 * How do I program with the FreeIPMI libraries?::
-* I still need help!:: 
+* Where can I get additional help or support?:: 
 @end menu
 
 @c Output the table of contents at the beginning.
@@ -403,7 +404,7 @@ Please see the bmc-config.conf(5) manpage provided with FreeIPMI for
 details, or you can read it on the FreeIPMI website's documentation
 (@uref{http://www.gnu.org/software/freeipmi/manpages/man5/bmc-config.conf.5.html}).
 
-@node What setup is needed for Serial over LAN (SOL) or Ipmiconsole?, SSIF Driver Configuration, What setup is needed for FreeIPMI to communicate over LAN?, Top
+@node What setup is needed for Serial over LAN (SOL) or Ipmiconsole?, Do I need to install or configure a driver to perform IPMI inband?, What setup is needed for FreeIPMI to communicate over LAN?, Top
 @section What setup is needed for Serial over LAN (SOL) or Ipmiconsole?
 
 The setup of Serial-over-LAN (SOL) and/or Ipmiconsole is highly dependent on your motherboard.  However, most motherboards
@@ -432,7 +433,18 @@ provides a pretty good overview of setting of a serial console on
 Linux.  The only difference for setting up a serial console with
 Ipmiconsole or SOL, is the ttySX terminal may need to be changed.
 
-@node SSIF Driver Configuration, Why is the IPMI kernel driver faster than the KCS driver?, What setup is needed for Serial over LAN (SOL) or Ipmiconsole?, Top
+@node Do I need to install or configure a driver to perform IPMI inband?, Why is the IPMI kernel driver faster than the KCS driver?, What setup is needed for Serial over LAN (SOL) or Ipmiconsole?, Top 
+@section Do I need to install or configure a driver to perform IPMI inband?
+
+For most people the answer is no.
+
+FreeIPMI includes a userspace driver that works on most motherboards without any driver installation, loading, or configuration required.  FreeIPMI also includes support of a Linux SSIF driver through the SSIF device (i.e. /dev/i2c-0), the OpenIPMI Linux kernel driver (i.e. /dev/ipmi0), and the Sun/Solaris BMC driver (i.e. /dev/bmc).  If you communicate through one of these mechanisms, the appropriate drivers for them should be loaded.  Most systems should automatically load the appropriate drivers you need.  
+
+Under most scenarios, the FreeIPMI tools should automatically discover which in-band interface to use and the proper settings to use.  Some motherboards may require you to determine alternate configurations for addresses, paths, etc. on your own and pass them as command line options to the tools.
+
+Every system is different and your situation may differ.  Please see your manufacturer instructions.
+
+@node SSIF Driver Configuration, Why is the IPMI kernel driver faster than the KCS driver?, Do I need to install or configure a driver to perform IPMI inband?, Top
 @section SSIF Driver Configuration
 
 FreeIPMI's SSIF driver works on top of kernel'2 i2c device
@@ -469,6 +481,7 @@ BMC address Locator:
     Usual values for record 06h -> 0x42
     Usual values for record 08h -> 0x400
 @end example
+
 
 @node Why is the IPMI kernel driver faster than the KCS driver?, Why are there so many IPMI compliance bugs?, SSIF Driver Configuration, Top
 @section Why is the IPMI kernel driver faster than the KCS driver?
@@ -513,7 +526,7 @@ If you believe there is a compliance issue on your motherboard that
 has not yet been implemented, please contact the maintainers on the
 @email{freeipmi-devel@@gnu.org} mailing list.
 
-@node How do I program with the FreeIPMI libraries?, I still need help!, How do I get around an IPMI compliance bug on my motherboard?, Top
+@node How do I program with the FreeIPMI libraries?, Where can I get additional help or support?, How do I get around an IPMI compliance bug on my motherboard?, Top
 @section How do I program with the FreeIPMI libraries?
 
 If you are looking for a high level library to do Serial-over-LAN
@@ -536,8 +549,8 @@ found in the freeipmi-libraries.txt document (you can find it on the
 website here:
 @uref{http://www.gnu.org/software/freeipmi/freeipmi-libraries.txt}).
 
-@node I still need help!, , How do I program with the FreeIPMI libraries?, Top
-@section I still need help!
+@node Where can I get additional help or support?, , How do I program with the FreeIPMI libraries?, Top
+@section Where can I get additional help or support?
 
 For help, please email the @email{freeipmi-users@@gnu.org} mailing list.
 
