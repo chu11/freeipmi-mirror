@@ -1459,7 +1459,7 @@ equal to the actual sensor event bitmask reading.
 
 #include <@top_srcdir@/common/man/manpage-common-reporting-bugs.man>
 .SH "COPYRIGHT"
-Copyright (C) 2007-2011 Lawrence Livermore National Security, LLC.
+Copyright (C) 2007-2012 Lawrence Livermore National Security, LLC.
 #include <@top_srcdir@/common/man/manpage-common-gpl-library-text.man>
 
 .SH "SEE ALSO"

@@ -10,7 +10,7 @@
 
 @copying
 This manual is for FreeIPMI (version @value{VERSION}, @value{UPDATED}).
-Copyright @copyright{} 2006-2011 FreeIPMI Core Team
+Copyright @copyright{} 2006-2012 FreeIPMI Core Team
 
 @quotation
 Permission is granted to copy, distribute and/or modify this document
@@ -26,7 +26,7 @@ Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
 @end direntry
 
 @ifinfo
-Copyright @copyright{} 2003-2011 FreeIPMI Core Team.
+Copyright @copyright{} 2003-2012 FreeIPMI Core Team.
 
 
 @end ifinfo
@@ -40,7 +40,7 @@ Copyright @copyright{} 2003-2011 FreeIPMI Core Team.
 
 @page
 @vskip 0pt plus 1filll
-Copyright @copyright{} 2003-2011 FreeIPMI Core Team
+Copyright @copyright{} 2003-2012 FreeIPMI Core Team
 
 @insertcopying
 @end titlepage

@@ -209,7 +209,7 @@ Commit all configuration values from bmc-data-updt.conf and key 'lan_conf_misc:g
 #include <@top_srcdir@/common/man/manpage-common-known-issues.man>
 #include <@top_srcdir@/common/man/manpage-common-reporting-bugs.man>
 .SH "COPYRIGHT"
-Copyright \(co 2003-2011 FreeIPMI Core Team.  
+Copyright \(co 2003-2012 FreeIPMI Core Team.  
 #include <@top_srcdir@/common/man/manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
 bmc-config.conf(5), freeipmi(7), ipmi-chassis-config(8),

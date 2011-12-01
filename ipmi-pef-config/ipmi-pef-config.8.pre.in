@@ -119,7 +119,7 @@ Commit all configuration values from the pef-data1.conf file.
 #include <@top_srcdir@/common/man/manpage-common-known-issues.man>
 #include <@top_srcdir@/common/man/manpage-common-reporting-bugs.man>
 .SH "COPYRIGHT"
-Copyright \(co 2007-2011 FreeIPMI Core Team.  
+Copyright \(co 2007-2012 FreeIPMI Core Team.  
 #include <@top_srcdir@/common/man/manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
 freeipmi(7), bmc-config(8), ipmi-sensors-config(8),
