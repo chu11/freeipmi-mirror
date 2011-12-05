@@ -86,7 +86,9 @@ Poweredge R610, and Dell Poweredge R710 motherboards.
 #include <@top_srcdir@/common/man/manpage-common-troubleshooting.man>
 #include <@top_srcdir@/common/man/manpage-common-workaround-heading-text.man>
 #include <@top_srcdir@/common/man/manpage-common-workaround-inband-text.man>
-#include <@top_srcdir@/common/man/manpage-common-workaround-outofband-text.man>
+#include <@top_srcdir@/common/man/manpage-common-workaround-outofband-common-text.man>
+#include <@top_srcdir@/common/man/manpage-common-workaround-outofband-15-text.man>
+#include <@top_srcdir@/common/man/manpage-common-workaround-outofband-20-text.man>
 .LP
 "skipchecks" - This workaround option will skip FRU checksum checks.
 Some FRUs have incorrect checksums, but the FRU data is correct.

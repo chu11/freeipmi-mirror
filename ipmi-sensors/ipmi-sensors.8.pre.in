@@ -189,7 +189,9 @@ Please see
 .B freeipmi_interpret_sensor.conf(5).
 #include <@top_srcdir@/common/man/manpage-common-workaround-heading-text.man>
 #include <@top_srcdir@/common/man/manpage-common-workaround-inband-text.man>
-#include <@top_srcdir@/common/man/manpage-common-workaround-outofband-text.man>
+#include <@top_srcdir@/common/man/manpage-common-workaround-outofband-common-text.man>
+#include <@top_srcdir@/common/man/manpage-common-workaround-outofband-15-text.man>
+#include <@top_srcdir@/common/man/manpage-common-workaround-outofband-20-text.man>
 .LP
 "discretereading" - This workaround option will allow sensor readings
 to be read even if the event/reading type code for the sensor is not

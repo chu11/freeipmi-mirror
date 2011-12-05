@@ -157,7 +157,9 @@ Get power on hours (POH) counter.
 #include <@top_srcdir@/common/man/manpage-common-troubleshooting.man>
 #include <@top_srcdir@/common/man/manpage-common-workaround-heading-text.man>
 #include <@top_srcdir@/common/man/manpage-common-workaround-inband-text.man>
-#include <@top_srcdir@/common/man/manpage-common-workaround-outofband-text.man>
+#include <@top_srcdir@/common/man/manpage-common-workaround-outofband-common-text.man>
+#include <@top_srcdir@/common/man/manpage-common-workaround-outofband-15-text.man>
+#include <@top_srcdir@/common/man/manpage-common-workaround-outofband-20-text.man>
 .SH "EXAMPLES"
 .B # ipmi-chassis --get-status
 .PP

@@ -1,5 +1,11 @@
 2011-12-02  Albert Chu <chu11@llnl.gov>
 
+	* common/man/: Various code re-org and cleanup.
+
+	* Fix up manpages for easier future maintenance.
+	
+2011-12-02  Albert Chu <chu11@llnl.gov>
+
 	* ipmi-pet/src/: Fix warning.
 	
 2011-12-02  Albert Chu <chu11@llnl.gov>

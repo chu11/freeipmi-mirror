@@ -1,17 +1,7 @@
 .LP
-"authcap" - This workaround option will skip early checks for username
-capabilities, authentication capabilities, and K_g support and allow
-IPMI authentication to succeed.  It works around multiple issues in
-which the remote system does not properly report username
-capabilities, authentication capabilities, or K_g status.  Those
-hitting this issue may see "username invalid", "authentication type
-unavailable for attempted privilege level", or "k_g invalid" errors.
-Issue observed on Asus P5M2/P5MT-R/RS162-E4/RX4, Intel SR1520ML/X38ML,
-and Sun Fire 2200/4150/4450 with ELOM.
-.LP
 "intel20" - This workaround option will work around several Intel IPMI
 2.0 authentication issues.  The issues covered include padding of
-usernames and password truncation if the authentication algorithm is
+usernames, and password truncation if the authentication algorithm is
 HMAC-MD5-128.  Those hitting this issue may see "username invalid",
 "password invalid", or "k_g invalid" errors.  Issue observed on Intel
 SE7520AF2 with Intel Server Management Module (Professional Edition).
@@ -38,9 +28,9 @@ keys instead of the privilege level sent during the RAKP1 connection
 stage.  Those hitting this issue may see "password invalid", "k_g
 invalid", or "bad rmcpplus status code" errors.  Issue observed on Sun
 Fire 4100/4200/4500 with ILOM, Inventec 5441/Dell Xanadu II,
-Supermicro X8DTH, Supermicro X8DTG, and Intel S5500WBV/Penguin Relion
-700.  This workaround is automatically triggered with the "sun20"
-workaround.
+Supermicro X8DTH, Supermicro X8DTG, Intel S5500WBV/Penguin Relion 700,
+and Intel S2600JF/Appro 512X.  This workaround is automatically
+triggered with the "sun20" workaround.
 .LP
 "integritycheckvalue" - This workaround option will work around an
 invalid integrity check value during an IPMI 2.0 session establishment
@@ -49,22 +39,3 @@ length, however the remote motherboard responds with a non-empty
 field.  Those hitting this issue may see "k_g invalid" errors.  Issue
 observed on Supermicro X8DTG, Supermicro X8DTU, and Intel
 S5500WBV/Penguin Relion 700.
-.LP
-"solpayloadsize" - This workaround option will not check for valid SOL
-payload sizes and assume a proper set.  It works around remote systems
-that report invalid IPMI 2.0 SOL payload sizes.  Those hitting this
-issue may see "BMC Implementation" errors.  Issue observed on Asus
-P5M2/RS162-E4/RX4, Intel SR1520ML/X38ML, Inventec 5441/Dell Xanadu II,
-Sun x4100, Supermicro X8DTH, Supermicro X8DTG, and Supermicro X8DTU.
-.LP
-"solport" - This workaround option will ignore alternate SOL ports
-specified during the protocol.  It works around remote systems that
-report invalid alternate SOL ports.  Those hitting this issue may see
-"connection timeout" errors.  Issue observed on Asus P5MT-R and
-Supermicro X8DTH-iF.
-.LP
-"solstatus" - This workaround option will not check the current
-activation status of SOL during the protocol setup.  It works around
-remote systems that do not properly support this command.  Those
-hitting this issue may see "BMC Error" errors.  Issue observed on
-Supermicro X8SIL-F.

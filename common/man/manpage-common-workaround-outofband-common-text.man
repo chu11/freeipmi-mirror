@@ -1,0 +1,10 @@
+.LP
+"authcap" - This workaround option will skip early checks for username
+capabilities, authentication capabilities, and K_g support and allow
+IPMI authentication to succeed.  It works around multiple issues in
+which the remote system does not properly report username
+capabilities, authentication capabilities, or K_g status.  Those
+hitting this issue may see "username invalid", "authentication type
+unavailable for attempted privilege level", or "k_g invalid" errors.
+Issue observed on Asus P5M2/P5MT-R/RS162-E4/RX4, Intel SR1520ML/X38ML,
+and Sun Fire 2200/4150/4450 with ELOM.

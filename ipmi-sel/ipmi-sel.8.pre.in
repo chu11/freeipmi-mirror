@@ -198,7 +198,9 @@ incorrect, you may need to set the SEL time.  This can be done using
 
 #include <@top_srcdir@/common/man/manpage-common-workaround-heading-text.man>
 #include <@top_srcdir@/common/man/manpage-common-workaround-inband-text.man>
-#include <@top_srcdir@/common/man/manpage-common-workaround-outofband-text.man>
+#include <@top_srcdir@/common/man/manpage-common-workaround-outofband-common-text.man>
+#include <@top_srcdir@/common/man/manpage-common-workaround-outofband-15-text.man>
+#include <@top_srcdir@/common/man/manpage-common-workaround-outofband-20-text.man>
 .LP
 "assumesystemevent" - This workaround option will assume invalid SEL
 record types are system event records.  Records may be formatted

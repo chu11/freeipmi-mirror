@@ -1,0 +1,28 @@
+.LP
+"idzero" - This workaround option will allow empty session IDs to be
+accepted by the client.  It works around IPMI sessions that report
+empty session IDs to the client.  Those hitting this issue may see
+"session timeout" errors.  Issue observed on Tyan S2882 with M3289
+BMC.
+.LP
+"unexpectedauth" - This workaround option will allow unexpected
+non-null authcodes to be checked as though they were expected.  It
+works around an issue when packets contain non-null authentication
+data when they should be null due to disabled per-message
+authentication.  Those hitting this issue may see "session timeout"
+errors.  Issue observed on Dell PowerEdge 2850,SC1425.  Confirmed
+fixed on newer firmware.
+.LP
+"forcepermsg" - This workaround option will force per-message
+authentication to be used no matter what is advertised by the remote
+system.  It works around an issue when per-message authentication is
+advertised as disabled on the remote system, but it is actually
+required for the protocol.  Those hitting this issue may see "session
+timeout" errors.  Issue observed on IBM eServer 325.
+.LP
+"endianseq" - This workaround option will flip the endian of the
+session sequence numbers to allow the session to continue properly.
+It works around IPMI 1.5 session sequence numbers that are the wrong
+endian.  Those hitting this issue may see "session timeout" errors.
+Issue observed on some Sun ILOM 1.0/2.0 (depends on service processor
+endian).

@@ -90,7 +90,9 @@ See GENERAL USE below for a description on how most will want to use
 #include <@top_srcdir@/common/man/manpage-common-troubleshooting.man>
 #include <@top_srcdir@/common/man/manpage-common-workaround-heading-text.man>
 #include <@top_srcdir@/common/man/manpage-common-workaround-inband-text.man>
-#include <@top_srcdir@/common/man/manpage-common-workaround-outofband-text.man>
+#include <@top_srcdir@/common/man/manpage-common-workaround-outofband-common-text.man>
+#include <@top_srcdir@/common/man/manpage-common-workaround-outofband-15-text.man>
+#include <@top_srcdir@/common/man/manpage-common-workaround-outofband-20-text.man>
 #include <@top_srcdir@/common/man/manpage-common-workaround-config-tool.man>
 .SH "EXAMPLES"
 .B # ipmi-sensors-config --checkout 
