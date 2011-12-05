@@ -7,6 +7,10 @@
 	* Remove warnings when "compiling" manpages.
 
 	* Fix compile warnings.
+
+	* ipmi-pet/: Adjust ipmi-pet to look more like remaining FreeIPMI
+	manpages.
+	
 	
 2011-12-02  Albert Chu <chu11@llnl.gov>
 
