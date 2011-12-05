@@ -5,7 +5,7 @@ MANS_CPP = \
 	ipmidetect.conf.5
 
 $(MANS_CPP): $(MANS_CPP:%=%.pre)
-	$(CPP) -C -P -I. $@.pre  $@
+	$(CPP) -w -C -P -I. $@.pre  $@
 
 dist_man_MANS = $(MANS_CPP) ipmi-detect.8
 

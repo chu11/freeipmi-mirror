@@ -3,6 +3,8 @@
 	* common/man/: Various code re-org and cleanup.
 
 	* Fix up manpages for easier future maintenance.
+
+	* Remove warnings when "compiling" manpages.
 	
 2011-12-02  Albert Chu <chu11@llnl.gov>
 
