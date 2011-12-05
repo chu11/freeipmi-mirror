@@ -345,7 +345,8 @@ _ipmi_pet_parse_trap_data (ipmi_pet_state_data_t *state_data,
       data->utcoffset <<= 8;
       data->utcoffset |= input->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_UTC_OFFSET_INDEX_START + 1];
       
-      if (data->utcoffset != IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_UTC_OFFSET_UNSPECIFIED)
+      /* utcoffset signed & unspecified 0xffff, cast to remove warnings */
+      if ((uint16_t)data->utcoffset != IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_UTC_OFFSET_UNSPECIFIED)
 	{
 	  /* utcoffset is in minutes, multiply by 60 to get seconds */
 	  data->localtimestamp += data->utcoffset * 60;

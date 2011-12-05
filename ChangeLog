@@ -1,5 +1,9 @@
 2011-12-02  Albert Chu <chu11@llnl.gov>
 
+	* ipmi-pet/src/: Fix warning.
+	
+2011-12-02  Albert Chu <chu11@llnl.gov>
+
 	* Update IANA Enterprise validity macro.
 	
 2011-12-01  Albert Chu <chu11@llnl.gov>
