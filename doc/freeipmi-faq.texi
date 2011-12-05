@@ -433,7 +433,7 @@ provides a pretty good overview of setting of a serial console on
 Linux.  The only difference for setting up a serial console with
 Ipmiconsole or SOL, is the ttySX terminal may need to be changed.
 
-@node Do I need to install or configure a driver to perform IPMI inband?, Why is the IPMI kernel driver faster than the KCS driver?, What setup is needed for Serial over LAN (SOL) or Ipmiconsole?, Top 
+@node Do I need to install or configure a driver to perform IPMI inband?, SSIF Driver Configuration, What setup is needed for Serial over LAN (SOL) or Ipmiconsole?, Top 
 @section Do I need to install or configure a driver to perform IPMI inband?
 
 For most people the answer is no.
