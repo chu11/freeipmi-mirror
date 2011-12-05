@@ -5,6 +5,8 @@
 	* Fix up manpages for easier future maintenance.
 
 	* Remove warnings when "compiling" manpages.
+
+	* Fix compile warnings.
 	
 2011-12-02  Albert Chu <chu11@llnl.gov>
 

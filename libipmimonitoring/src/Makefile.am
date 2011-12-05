@@ -26,6 +26,7 @@ libipmimonitoring_la_CPPFLAGS = \
 	-I$(top_srcdir)/common/src/miscutil \
 	-I$(top_srcdir)/common/src/portability \
 	-I$(top_srcdir)/libfreeipmi/include \
+	-D_GNU_SOURCE \
 	-D_REENTRANT
 
 libipmimonitoring_la_LDFLAGS = \
