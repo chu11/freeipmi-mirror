@@ -1,18 +1,3 @@
-.SH "GENERAL TROUBLESHOOTING"
-Most often, IPMI problems are due to configuration problems.  Inband
-IPMI problems are typically caused by improperly configured drivers or
-non-standard BMCs.  IPMI over LAN problems involve a misconfiguration
-of the remote machine's BMC.  Double check to make sure the following
-are configured properly in the remote machine's BMC: IP address, MAC
-address, subnet mask, username, user enablement, user privilege,
-password, LAN privilege, LAN enablement, and allowed authentication
-type(s).  For IPMI 2.0 connections, double check to make sure the
-cipher suite privilege(s) and K_g key are configured properly.  The
-.B bmc-config(8)
-tool can be used to check and/or change these configuration
-settings.
-.LP
-The following are common issues for given error messages:
 .LP
 "username invalid" - The username entered (or a NULL username if none
 was entered) is not available on the remote machine.  It may also be
@@ -68,30 +53,3 @@ verify configuration and connectivity.
 If this error occurs often, you may wish to increase the
 retransmission timeout.  Some remote BMCs are considerably slower than
 others.
-.LP
-"device not found" - The specified device could not be found.  Please
-check configuration or inputs and try again.
-.LP
-"driver timeout" - Communication with the driver or device has timed
-out.  Please try again.
-.LP
-"message timeout" - Communication with the driver or device has timed
-out.  Please try again.
-.LP
-"BMC busy" - The BMC is currently busy.  It may be processing
-information or have too many simultaneous sessions to manage.  Please
-wait and try again.
-.LP
-"could not find inband device" - An inband device could not be found.
-Please check configuration or specify specific device or driver on the
-command line.
-.LP
-"driver timeout" - The inband driver has timed out communicating to
-the local BMC or service processor.  The BMC or service processor may
-be busy or (worst case) possibly non-functioning.
-.LP
-Please see WORKAROUNDS below to also if there are any vendor specific
-bugs that have been discovered and worked around.
-.LP
-For additional support, please e-mail the <freeipmi\-users@gnu.org>
-mailing list.

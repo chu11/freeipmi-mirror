@@ -1,0 +1,21 @@
+.LP
+"device not found" - The specified device could not be found.  Please
+check configuration or inputs and try again.
+.LP
+"driver timeout" - Communication with the driver or device has timed
+out.  Please try again.
+.LP
+"message timeout" - Communication with the driver or device has timed
+out.  Please try again.
+.LP
+"BMC busy" - The BMC is currently busy.  It may be processing
+information or have too many simultaneous sessions to manage.  Please
+wait and try again.
+.LP
+"could not find inband device" - An inband device could not be found.
+Please check configuration or specify specific device or driver on the
+command line.
+.LP
+"driver timeout" - The inband driver has timed out communicating to
+the local BMC or service processor.  The BMC or service processor may
+be busy or (worst case) possibly non-functioning.

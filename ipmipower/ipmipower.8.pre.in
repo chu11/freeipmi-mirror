@@ -377,12 +377,17 @@ Determine the power status of foo[0-2] with non-null username and password
 Hard reset nodes foo[0-2] with non-null username and password
         ipmipower -h foo[0-2] -u foo -p bar --reset
 
-#include <@top_srcdir@/common/man/manpage-common-troubleshooting-lan-only.man>
+#include <@top_srcdir@/common/man/manpage-common-troubleshooting-heading-start.man>
+#include <@top_srcdir@/common/man/manpage-common-troubleshooting-heading-outofband.man>
+#include <@top_srcdir@/common/man/manpage-common-troubleshooting-heading-end.man>
+#include <@top_srcdir@/common/man/manpage-common-troubleshooting-outofband.man>
 
 .SH "IPMIPOWER TROUBLESHOOTING"
 When powering on a powered off machine, the client must have a means
 by which to resolve the MAC address of the remote machine's ethernet
-card.  This is typically done in one of two ways.
+card.  While most modern IPMI solutions support the ability to ARP and
+resolve addresses when the machine is powered off, some older machines
+do not.  This is typically solved in one of two ways:
 .LP
 1) Enable gratuitous ARPs on the remote machine.  The remote machine
 will send out a gratuitous ARP, which advertises the ethernet IP and
@@ -395,18 +400,6 @@ unnecessary traffic.
 cache.  This is the more common approach on large clusters.
 .LP
 Other methods are listed in the IPMI specification.
-.LP
-If 
-.B ipmipower 
-is running a tad slow when running a power control command on the
-commandline (compared to running a power control command in
-interactive mode), hostname IP resolution may be slowing the startup
-code down.  Hostname resolution tuning may help make
-.B ipmipower 
-execute faster on the commandline.  This performance problem should
-not matter when running in interactive mode or with
-.B powerman, 
-since it is a one-time setup cost.
 
 #include <@top_srcdir@/common/man/manpage-common-workaround-heading-text.man>
 #include <@top_srcdir@/common/man/manpage-common-workaround-outofband-common-text.man>

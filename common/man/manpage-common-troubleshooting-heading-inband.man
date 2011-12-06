@@ -1,0 +1,3 @@
+.LP
+Inband IPMI problems are typically caused by improperly configured
+drivers or non-standard BMCs.

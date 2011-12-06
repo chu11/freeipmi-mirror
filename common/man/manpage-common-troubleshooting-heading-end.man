@@ -1,0 +1,8 @@
+.LP
+In addition to the troubleshooting tips below, please see WORKAROUNDS
+below to also if there are any vendor specific bugs that have been
+discovered and worked around.
+.LP
+Listed below are many of the common issues for error messages.
+For additional support, please e-mail the <freeipmi\-users@gnu.org>
+mailing list.

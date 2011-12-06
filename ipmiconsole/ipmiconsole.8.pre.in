@@ -151,11 +151,12 @@ Send a DEL character.
 .I &&
 Send a single escape character.
 
-#include <@top_srcdir@/common/man/manpage-common-troubleshooting-lan-only.man>
-
+#include <@top_srcdir@/common/man/manpage-common-troubleshooting-heading-start.man>
+#include <@top_srcdir@/common/man/manpage-common-troubleshooting-heading-outofband.man>
+#include <@top_srcdir@/common/man/manpage-common-troubleshooting-heading-end.man>
+#include <@top_srcdir@/common/man/manpage-common-troubleshooting-outofband.man>
 .SH "IPMICONSOLE TROUBLESHOOTING"
-The following are common issues for given error messages specifically
-for 
+The following are common issues for error messages in
 .B ipmiconsole.
 .LP
 "SOL unavailable" - SOL is not configured for use on the remote BMC.

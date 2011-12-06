@@ -154,7 +154,12 @@ Get power on hours (POH) counter.
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-threads.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-options.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-localhost.man>
-#include <@top_srcdir@/common/man/manpage-common-troubleshooting.man>
+#include <@top_srcdir@/common/man/manpage-common-troubleshooting-heading-start.man>
+#include <@top_srcdir@/common/man/manpage-common-troubleshooting-heading-outofband.man>
+#include <@top_srcdir@/common/man/manpage-common-troubleshooting-heading-inband.man>
+#include <@top_srcdir@/common/man/manpage-common-troubleshooting-heading-end.man>
+#include <@top_srcdir@/common/man/manpage-common-troubleshooting-outofband.man>
+#include <@top_srcdir@/common/man/manpage-common-troubleshooting-inband.man>
 #include <@top_srcdir@/common/man/manpage-common-workaround-heading-text.man>
 #include <@top_srcdir@/common/man/manpage-common-workaround-inband-text.man>
 #include <@top_srcdir@/common/man/manpage-common-workaround-outofband-common-text.man>

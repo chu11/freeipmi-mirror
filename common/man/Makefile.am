@@ -47,6 +47,12 @@ EXTRA_DIST = \
 	manpage-common-config-tool-options-serial-channel-number.man \
 	manpage-common-config-tool-options-sol-channel-number.man \
 	manpage-common-config-tool-general-use.man \
+	manpage-common-troubleshooting-heading-end.man \
+	manpage-common-troubleshooting-heading-inband.man \
+	manpage-common-troubleshooting-heading-outofband.man \
+	manpage-common-troubleshooting-heading-start.man \
+	manpage-common-troubleshooting-inband.man \
+	manpage-common-troubleshooting-outofband.man \
 	manpage-common-troubleshooting.man \
 	manpage-common-troubleshooting-lan-only.man \
 	manpage-common-known-issues.man \
