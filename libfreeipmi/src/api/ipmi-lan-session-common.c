@@ -598,20 +598,15 @@ _ipmi_lan_cmd_send (ipmi_ctx_t ctx,
   return (rv);
 }
 
-/* return receive length on success, 0 on no/bad packet, -1 on error */
+/* return receive length on success, 0 on no packet, -1 on error */
 static int
 _ipmi_lan_cmd_recv (ipmi_ctx_t ctx,
                     void *pkt,
                     unsigned int pkt_len,
-                    unsigned int retransmission_count,
-                    uint8_t cmd, /* for debug dumping */
-                    uint8_t net_fn, /* for debug dumping */
-		    uint8_t group_extension, /* for debug dumping */
-                    fiid_obj_t obj_cmd_rs)
+                    unsigned int retransmission_count)
 {
   struct timeval recv_starttime;
   int recv_len = 0;
-  int ret;
 
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC
@@ -619,8 +614,7 @@ _ipmi_lan_cmd_recv (ipmi_ctx_t ctx,
               || ctx->type == IPMI_DEVICE_LAN_2_0)
           && ctx->io.outofband.sockfd
           && pkt
-          && pkt_len
-          && fiid_obj_valid (obj_cmd_rs));
+          && pkt_len);
 
   if (gettimeofday (&recv_starttime, NULL) < 0)
     {
@@ -707,30 +701,6 @@ _ipmi_lan_cmd_recv (ipmi_ctx_t ctx,
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       return (-1);
     }
-
-  if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP && recv_len)
-    _ipmi_lan_dump_rs (ctx,
-                       pkt,
-                       recv_len,
-                       cmd,
-                       net_fn,
-		       group_extension,
-                       obj_cmd_rs);
-
-  if ((ret = unassemble_ipmi_lan_pkt (pkt,
-                                      recv_len,
-                                      ctx->io.outofband.rs.obj_rmcp_hdr,
-                                      ctx->io.outofband.rs.obj_lan_session_hdr,
-                                      ctx->io.outofband.rs.obj_lan_msg_hdr,
-                                      obj_cmd_rs,
-                                      ctx->io.outofband.rs.obj_lan_msg_trlr)) < 0)
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      return (-1);
-    }
-
-  if (!ret)
-    return (0); /* resend the request */
 
   return (recv_len);
 }
@@ -998,16 +968,11 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
           break;
         }
 
-      /* its ok to use the "request" net_fn, dump code doesn't care */
       memset (pkt, '\0', IPMI_MAX_PKT_LEN);
       if ((recv_len = _ipmi_lan_cmd_recv (ctx,
                                           pkt,
                                           IPMI_MAX_PKT_LEN,
-                                          retransmission_count,
-                                          cmd, /* for debug dumping */
-                                          net_fn, /* for debug dumping */
-					  group_extension,  /* for debug dumping */
-                                          obj_cmd_rs)) < 0)
+                                          retransmission_count)) < 0)
         break;
 
       if (!recv_len)
@@ -1102,27 +1067,52 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
 
       /* else received a packet */
 
-      if ((ret = _ipmi_lan_cmd_wrapper_verify_packet (ctx,
-                                                      internal_workaround_flags,
-                                                      authentication_type,
-                                                      check_authentication_code,
-                                                      session_sequence_number,
-                                                      session_id,
-                                                      rq_seq,
-                                                      password,
-                                                      password_len,
-                                                      obj_cmd_rs)) < 0)
-        goto cleanup;
+      /* its ok to use the "request" net_fn, dump code doesn't care */
+      if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
+	_ipmi_lan_dump_rs (ctx,
+			   pkt,
+			   recv_len,
+			   cmd,
+			   net_fn,
+			   group_extension,
+			   obj_cmd_rs);
 
+      if ((ret = unassemble_ipmi_lan_pkt (pkt,
+					  recv_len,
+					  ctx->io.outofband.rs.obj_rmcp_hdr,
+					  ctx->io.outofband.rs.obj_lan_session_hdr,
+					  ctx->io.outofband.rs.obj_lan_msg_hdr,
+					  obj_cmd_rs,
+					  ctx->io.outofband.rs.obj_lan_msg_trlr)) < 0)
+	{
+	  API_ERRNO_TO_API_ERRNUM (ctx, errno);
+	  return (-1);
+	}
+  
       if (!ret)
-        continue;
-
+	continue;
+  
+      if ((ret = _ipmi_lan_cmd_wrapper_verify_packet (ctx,
+						      internal_workaround_flags,
+						      authentication_type,
+						      check_authentication_code,
+						      session_sequence_number,
+						      session_id,
+						      rq_seq,
+						      password,
+						      password_len,
+						      obj_cmd_rs)) < 0)
+	goto cleanup;
+      
+      if (!ret)
+	continue;
+      
       if (gettimeofday (&(ctx->io.outofband.last_received), NULL) < 0)
-        {
-          API_ERRNO_TO_API_ERRNUM (ctx, errno);
-          goto cleanup;
-        }
-
+	{
+	  API_ERRNO_TO_API_ERRNUM (ctx, errno);
+	  return (-1);
+	}
+      
       rv = 0;
       break;
     }
@@ -1316,18 +1306,13 @@ ipmi_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
           break;
         }
 
-      /* its ok to use the "request" net_fn, dump code doesn't care */
       memset (pkt, '\0', IPMI_MAX_PKT_LEN);
       if ((recv_len = _ipmi_lan_cmd_recv (ctx,
                                           pkt,
                                           IPMI_MAX_PKT_LEN,
-                                          retransmission_count,
-                                          cmd, /* for debug dumping */
-                                          ctx->net_fn, /* for debug dumping */
-					  group_extension,  /* for debug dumping */
-                                          obj_cmd_rs)) < 0)
+                                          retransmission_count)) < 0)
         break;
-
+      
       if (!recv_len)
         {
           retransmission_count++;
@@ -1351,6 +1336,31 @@ ipmi_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
         }
 
       /* else received a packet */
+
+      /* its ok to use the "request" net_fn, dump code doesn't care */
+      if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
+	_ipmi_lan_dump_rs (ctx,
+			   pkt,
+			   recv_len,
+			   cmd,
+			   ctx->net_fn,
+			   group_extension,
+			   obj_cmd_rs);
+
+      if ((ret = unassemble_ipmi_lan_pkt (pkt,
+					  recv_len,
+					  ctx->io.outofband.rs.obj_rmcp_hdr,
+					  ctx->io.outofband.rs.obj_lan_session_hdr,
+					  ctx->io.outofband.rs.obj_lan_msg_hdr,
+					  obj_cmd_rs,
+					  ctx->io.outofband.rs.obj_lan_msg_trlr)) < 0)
+	{
+	  API_ERRNO_TO_API_ERRNUM (ctx, errno);
+	  return (-1);
+	}
+
+      if (!ret)
+	continue;
 
       ipmi_lan_cmd_get_session_parameters (ctx,
                                            &authentication_type,
@@ -2256,7 +2266,7 @@ _ipmi_lan_2_0_cmd_send (ipmi_ctx_t ctx,
   return (0);
 }
 
-/* return receive length on success, 0 on no/bad packet, -1 on error */
+/* return receive length on success, 0 on no packet, -1 on error */
 static int
 _ipmi_lan_2_0_cmd_recv (ipmi_ctx_t ctx,
                         uint8_t authentication_algorithm,
@@ -2268,15 +2278,10 @@ _ipmi_lan_2_0_cmd_recv (ipmi_ctx_t ctx,
                         unsigned int confidentiality_key_len,
                         void *pkt,
                         unsigned int pkt_len,
-                        unsigned int retransmission_count,
-                        uint8_t cmd, /* for debug dumping */
-                        uint8_t net_fn, /* for debug dumping */
-			uint8_t group_extension, /* for debug dumping */
-                        fiid_obj_t obj_cmd_rs)
+                        unsigned int retransmission_count)
 {
   struct timeval recv_starttime;
   int recv_len = 0;
-  int ret;
 
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC
@@ -2285,8 +2290,7 @@ _ipmi_lan_2_0_cmd_recv (ipmi_ctx_t ctx,
           && IPMI_INTEGRITY_ALGORITHM_SUPPORTED (integrity_algorithm)
           && IPMI_CONFIDENTIALITY_ALGORITHM_SUPPORTED (confidentiality_algorithm)
           && pkt
-          && pkt_len
-          && fiid_obj_valid (obj_cmd_rs));
+          && pkt_len);
 
   if (gettimeofday (&recv_starttime, NULL) < 0)
     {
@@ -2375,46 +2379,6 @@ _ipmi_lan_2_0_cmd_recv (ipmi_ctx_t ctx,
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       return (-1);
     }
-
-  if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP && recv_len)
-    _ipmi_lan_2_0_dump_rs (ctx,
-                           authentication_algorithm,
-                           integrity_algorithm,
-                           confidentiality_algorithm,
-                           integrity_key,
-                           integrity_key_len,
-                           confidentiality_key,
-                           confidentiality_key_len,
-                           pkt,
-                           recv_len,
-                           cmd,
-                           net_fn,
-			   group_extension,
-                           obj_cmd_rs);
-
-  if ((ret = unassemble_ipmi_rmcpplus_pkt (authentication_algorithm,
-                                           integrity_algorithm,
-                                           confidentiality_algorithm,
-                                           integrity_key,
-                                           integrity_key_len,
-                                           confidentiality_key,
-                                           confidentiality_key_len,
-                                           pkt,
-                                           recv_len,
-                                           ctx->io.outofband.rs.obj_rmcp_hdr,
-                                           ctx->io.outofband.rs.obj_rmcpplus_session_hdr,
-                                           ctx->io.outofband.rs.obj_rmcpplus_payload,
-                                           ctx->io.outofband.rs.obj_lan_msg_hdr,
-                                           obj_cmd_rs,
-                                           ctx->io.outofband.rs.obj_lan_msg_trlr,
-                                           ctx->io.outofband.rs.obj_rmcpplus_session_trlr)) < 0)
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      return (-1);
-    }
-
-  if (!ret)
-    return (0); /* resend the request */
 
   return (recv_len);
 }
@@ -2898,11 +2862,7 @@ ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
                                               confidentiality_key_len,
                                               pkt,
                                               IPMI_MAX_PKT_LEN,
-                                              retransmission_count,
-                                              cmd, /* for debug dumping */
-                                              net_fn, /* for debug dumping */
-					      group_extension, /* for debug dumping */
-                                              obj_cmd_rs)) < 0)
+                                              retransmission_count)) < 0)
         break;
 
       if (!recv_len)
@@ -2970,6 +2930,46 @@ ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
         }
 
       /* else received a packet */
+
+      if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
+	_ipmi_lan_2_0_dump_rs (ctx,
+			       authentication_algorithm,
+			       integrity_algorithm,
+			       confidentiality_algorithm,
+			       integrity_key,
+			       integrity_key_len,
+			       confidentiality_key,
+			       confidentiality_key_len,
+			       pkt,
+			       recv_len,
+			       cmd,
+			       net_fn,
+			       group_extension,
+			       obj_cmd_rs);
+
+      if ((ret = unassemble_ipmi_rmcpplus_pkt (authentication_algorithm,
+					       integrity_algorithm,
+					       confidentiality_algorithm,
+					       integrity_key,
+					       integrity_key_len,
+					       confidentiality_key,
+					       confidentiality_key_len,
+					       pkt,
+					       recv_len,
+					       ctx->io.outofband.rs.obj_rmcp_hdr,
+					       ctx->io.outofband.rs.obj_rmcpplus_session_hdr,
+					       ctx->io.outofband.rs.obj_rmcpplus_payload,
+					       ctx->io.outofband.rs.obj_lan_msg_hdr,
+					       obj_cmd_rs,
+					       ctx->io.outofband.rs.obj_lan_msg_trlr,
+					       ctx->io.outofband.rs.obj_rmcpplus_session_trlr)) < 0)
+	{
+	  API_ERRNO_TO_API_ERRNUM (ctx, errno);
+	  return (-1);
+	}
+      
+      if (!ret)
+	continue;
 
       if ((ret = _ipmi_lan_2_0_cmd_wrapper_verify_packet (ctx,
                                                           payload_type,
@@ -3101,11 +3101,7 @@ ipmi_lan_2_0_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
                                               ctx->io.outofband.confidentiality_key_len,
                                               pkt,
                                               IPMI_MAX_PKT_LEN,
-                                              retransmission_count,
-                                              cmd, /* for debug dumping */
-                                              ctx->net_fn, /* for debug dumping */
-					      group_extension, /* for debug dumping */
-                                              obj_cmd_rs)) < 0)
+                                              retransmission_count)) < 0)
         {
           rv = -1;
           break;
@@ -3135,6 +3131,46 @@ ipmi_lan_2_0_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
 
       /* else received a packet */
 
+      if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
+	_ipmi_lan_2_0_dump_rs (ctx,
+			       ctx->io.outofband.authentication_algorithm,
+			       ctx->io.outofband.integrity_algorithm,
+			       ctx->io.outofband.confidentiality_algorithm,
+			       ctx->io.outofband.integrity_key_ptr,
+			       ctx->io.outofband.integrity_key_len,
+			       ctx->io.outofband.confidentiality_key_ptr,
+			       ctx->io.outofband.confidentiality_key_len,
+			       pkt,
+			       recv_len,
+			       cmd,
+			       ctx->net_fn,
+			       group_extension,
+			       obj_cmd_rs);
+
+      if ((ret = unassemble_ipmi_rmcpplus_pkt (ctx->io.outofband.authentication_algorithm,
+					       ctx->io.outofband.integrity_algorithm,
+					       ctx->io.outofband.confidentiality_algorithm,
+					       ctx->io.outofband.integrity_key_ptr,
+					       ctx->io.outofband.integrity_key_len,
+					       ctx->io.outofband.confidentiality_key_ptr,
+					       ctx->io.outofband.confidentiality_key_len,
+					       pkt,
+					       recv_len,
+					       ctx->io.outofband.rs.obj_rmcp_hdr,
+					       ctx->io.outofband.rs.obj_rmcpplus_session_hdr,
+					       ctx->io.outofband.rs.obj_rmcpplus_payload,
+					       ctx->io.outofband.rs.obj_lan_msg_hdr,
+					       obj_cmd_rs,
+					       ctx->io.outofband.rs.obj_lan_msg_trlr,
+					       ctx->io.outofband.rs.obj_rmcpplus_session_trlr)) < 0)
+	{
+	  API_ERRNO_TO_API_ERRNUM (ctx, errno);
+	  return (-1);
+	}
+      
+      if (!ret)
+	continue;
+
       ipmi_lan_2_0_cmd_get_session_parameters (ctx,
                                                &payload_authenticated,
                                                &payload_encrypted);
@@ -3150,7 +3186,6 @@ ipmi_lan_2_0_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
                                                           ctx->io.outofband.integrity_key_len,
                                                           strlen (ctx->io.outofband.password) ? ctx->io.outofband.password : NULL,
                                                           strlen (ctx->io.outofband.password),
-
                                                           obj_cmd_rs,
                                                           pkt,
                                                           recv_len)) < 0)

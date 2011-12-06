@@ -1,3 +1,8 @@
+2011-12-06  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/api: Re-arch LAN code to timeout on malformed
+	packets rather than do an immediate retry.
+
 2011-12-05  Kaiwang Chen <kaiwang.chen@gmail.com>
 
 	* ipmi-pet/src/ipmi-pet.c (_ipmi_pet_parse_trap_data): Pass raw
