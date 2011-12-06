@@ -79,6 +79,9 @@ int unassemble_ipmi_lan_pkt (const void *pkt,
                              fiid_obj_t obj_lan_msg_trlr);
 
 /* returns length sent on success, -1 on error */
+/* Compared to system sendto(), handles several IPMI padding issues,
+ * should be used in favor for system sendto().
+ */
 ssize_t ipmi_lan_sendto (int s,
                          const void *buf,
                          size_t len,
@@ -87,6 +90,7 @@ ssize_t ipmi_lan_sendto (int s,
                          socklen_t tolen);
 
 /* returns length received on success, 0 on orderly shutdown, -1 on error */
+/* A few extra error checks, but nearly identical to system recvfrom() */
 ssize_t ipmi_lan_recvfrom (int s,
                            void *buf,
                            size_t len,
