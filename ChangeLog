@@ -10,7 +10,8 @@
 
 	* ipmi-pet/: Adjust ipmi-pet to look more like remaining FreeIPMI
 	manpages.
-	
+
+	* Various manpage doc updates.
 	
 2011-12-02  Albert Chu <chu11@llnl.gov>
 
