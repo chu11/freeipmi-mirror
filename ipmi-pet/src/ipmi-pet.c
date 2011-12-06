@@ -78,6 +78,7 @@ struct ipmi_pet_trap_data
   uint8_t event_offset;
   uint8_t guid[IPMI_SYSTEM_GUID_LENGTH];
   uint16_t sequence_number;
+  uint32_t localtimestamp_raw;
   uint32_t localtimestamp;
   int16_t utcoffset;
   uint8_t event_source_type;
@@ -328,13 +329,15 @@ _ipmi_pet_parse_trap_data (ipmi_pet_state_data_t *state_data,
   data->sequence_number <<= 8;
   data->sequence_number |= input->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_SEQUENCE_NUMBER_INDEX_START + 1];
 
-  data->localtimestamp = input->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_LOCAL_TIMESTAMP_INDEX_START];
-  data->localtimestamp <<= 8;
-  data->localtimestamp |= input->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_LOCAL_TIMESTAMP_INDEX_START + 1];
-  data->localtimestamp <<= 8;
-  data->localtimestamp |= input->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_LOCAL_TIMESTAMP_INDEX_START + 2];
-  data->localtimestamp <<= 8;
-  data->localtimestamp |= input->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_LOCAL_TIMESTAMP_INDEX_START + 3];
+  data->localtimestamp_raw = input->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_LOCAL_TIMESTAMP_INDEX_START];
+  data->localtimestamp_raw <<= 8;
+  data->localtimestamp_raw |= input->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_LOCAL_TIMESTAMP_INDEX_START + 1];
+  data->localtimestamp_raw <<= 8;
+  data->localtimestamp_raw |= input->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_LOCAL_TIMESTAMP_INDEX_START + 2];
+  data->localtimestamp_raw <<= 8;
+  data->localtimestamp_raw |= input->variable_bindings[IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_LOCAL_TIMESTAMP_INDEX_START + 3];
+
+  data->localtimestamp = data->localtimestamp_raw;
 
   if (data->localtimestamp != IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_LOCAL_TIMESTAMP_UNSPECIFIED)
     {
@@ -1884,7 +1887,7 @@ _ipmi_pet_acknowledge (ipmi_pet_state_data_t *state_data, FILE *stream)
 
       if (ipmi_cmd_pet_acknowledge (state_data->ipmi_ctx,
 				    data.sequence_number,
-				    data.localtimestamp,
+				    data.localtimestamp_raw,
 				    data.event_source_type,
 				    data.sensor_device,
 				    data.sensor_number,
@@ -1931,7 +1934,7 @@ _ipmi_pet_acknowledge (ipmi_pet_state_data_t *state_data, FILE *stream)
 	  
 	  if (ipmi_cmd_pet_acknowledge (state_data->ipmi_ctx,
 					data.sequence_number,
-					data.localtimestamp,
+					data.localtimestamp_raw,
 					data.event_source_type,
 					data.sensor_device,
 					data.sensor_number,

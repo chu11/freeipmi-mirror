@@ -1,4 +1,9 @@
-2011-12-02  Albert Chu <chu11@llnl.gov>
+2011-12-05  Kaiwang Chen <kaiwang.chen@gmail.com>
+
+	* ipmi-pet/src/ipmi-pet.c (_ipmi_pet_parse_trap_data): Pass raw
+	localtimestamp, not locally adjusted timestamp.
+
+2011-12-05  Albert Chu <chu11@llnl.gov>
 
 	* common/man/: Various code re-org and cleanup.
 
@@ -13,7 +18,7 @@
 
 	* Various manpage doc updates.
 	
-2011-12-02  Albert Chu <chu11@llnl.gov>
+2011-12-05  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-pet/src/: Fix warning.
 	
