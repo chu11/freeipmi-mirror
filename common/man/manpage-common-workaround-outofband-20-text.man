@@ -1,26 +1,26 @@
 .LP
-"intel20" - This workaround flag will work around several Intel IPMI
+\fIintel20\fR - This workaround flag will work around several Intel IPMI
 2.0 authentication issues.  The issues covered include padding of
 usernames, and password truncation if the authentication algorithm is
 HMAC-MD5-128.  Those hitting this issue may see "username invalid",
 "password invalid", or "k_g invalid" errors.  Issue observed on Intel
 SE7520AF2 with Intel Server Management Module (Professional Edition).
 .LP
-"supermicro20" - This workaround flag will work around several
+\fIsupermicro20\fR - This workaround flag will work around several
 Supermicro IPMI 2.0 authentication issues on motherboards w/ Peppercon
 IPMI firmware.  The issues covered include handling invalid length
 authentication codes.  Those hitting this issue may see "password
 invalid" errors.  Issue observed on Supermicro H8QME with SIMSO
 daughter card.  Confirmed fixed on newerver firmware.
 .LP
-"sun20" - This workaround flag will work work around several Sun IPMI
+\fIsun20\fR - This workaround flag will work work around several Sun IPMI
 2.0 authentication issues.  The issues covered include invalid
 lengthed hash keys, improperly hashed keys, and invalid cipher suite
 records.  Those hitting this issue may see "password invalid" or "bmc
 error" errors.  Issue observed on Sun Fire 4100/4200/4500 with ILOM.
 This workaround automatically includes the "opensesspriv" workaround.
 .LP
-"opensesspriv" - This workaround flag will slightly alter FreeIPMI's
+\fIopensesspriv\fR - This workaround flag will slightly alter FreeIPMI's
 IPMI 2.0 connection protocol to workaround an invalid hashing
 algorithm used by the remote system.  The privilege level sent during
 the Open Session stage of an IPMI 2.0 connection is used for hashing
@@ -32,7 +32,7 @@ Supermicro X8DTH, Supermicro X8DTG, Intel S5500WBV/Penguin Relion 700,
 and Intel S2600JF/Appro 512X.  This workaround is automatically
 triggered with the "sun20" workaround.
 .LP
-"integritycheckvalue" - This workaround flag will work around an
+\fIintegritycheckvalue\fR - This workaround flag will work around an
 invalid integrity check value during an IPMI 2.0 session establishment
 when using Cipher Suite ID 0.  The integrity check value should be 0
 length, however the remote motherboard responds with a non-empty

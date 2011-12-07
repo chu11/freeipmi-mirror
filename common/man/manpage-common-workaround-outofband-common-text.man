@@ -1,5 +1,5 @@
 .LP
-"authcap" - This workaround flag will skip early checks for username
+\fIauthcap\fR - This workaround flag will skip early checks for username
 capabilities, authentication capabilities, and K_g support and allow
 IPMI authentication to succeed.  It works around multiple issues in
 which the remote system does not properly report username

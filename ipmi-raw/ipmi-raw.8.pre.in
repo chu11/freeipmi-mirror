@@ -68,6 +68,7 @@ Specify a file to read command requests from.
 #include <@top_srcdir@/common/man/manpage-common-workaround-outofband-common-text.man>
 #include <@top_srcdir@/common/man/manpage-common-workaround-outofband-15-text.man>
 #include <@top_srcdir@/common/man/manpage-common-workaround-outofband-20-text.man>
+#include <@top_srcdir@/common/man/manpage-common-workaround-extra-text.man>
 .SH "EXAMPLES"
 .B # ipmi-raw 0 6 01
 .PP 

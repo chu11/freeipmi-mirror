@@ -213,13 +213,14 @@ event interpretation configuration file.  Please see
 #include <@top_srcdir@/common/man/manpage-common-workaround-outofband-15-text.man>
 #include <@top_srcdir@/common/man/manpage-common-workaround-outofband-20-text.man>
 .LP
-"assumesystemevent" - This workaround option will assume invalid SEL
+\fIassumesystemevent\fR - This workaround option will assume invalid SEL
 record types are system event records.  Records may be formatted
 correctly but report invalid record types.  Those hitting this issue
 may see "Unknown SEL Record Type" errors.  Output may be unknown, pray
 for the best.  This option is confirmed to work around compliances
 issues on HP DL 380 G5 motherboards.  This option is identical to
 using the \fB\-\-assume\-system\-event\-records\fR option above.
+#include <@top_srcdir@/common/man/manpage-common-workaround-extra-text.man>
 #include <@top_srcdir@/common/man/manpage-common-oem-interpretation.man>
 .LP
 Dell Poweredge 2900, Dell Poweredge 2950, Dell Poweredge R610, Dell

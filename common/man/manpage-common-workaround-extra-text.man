@@ -1,0 +1,7 @@
+.LP
+No IPMI 1.5 Support - Some motherboards that support IPMI 2.0 have
+been found to not support IPMI 1.5.  Those hitting this issue may see
+"ipmi 2.0 unavailable" or "connection timeout" errors.  This issue can
+be worked around by using IPMI 2.0 instead of IPMI 1.5 by specifying
+\fB\-\-driver\-address\fR=\fILAN_2_0\fR.  Issue observed on HP
+Proliant DL 145.

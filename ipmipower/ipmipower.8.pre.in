@@ -405,6 +405,7 @@ Other methods are listed in the IPMI specification.
 #include <@top_srcdir@/common/man/manpage-common-workaround-outofband-common-text.man>
 #include <@top_srcdir@/common/man/manpage-common-workaround-outofband-15-text.man>
 #include <@top_srcdir@/common/man/manpage-common-workaround-outofband-20-text.man>
+#include <@top_srcdir@/common/man/manpage-common-workaround-extra-text.man>
 #include <@top_srcdir@/common/man/manpage-common-known-issues.man>
 .LP
 IPMI specifications do not require BMCs to perform a power control

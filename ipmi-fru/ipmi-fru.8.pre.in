@@ -95,12 +95,13 @@ Poweredge R610, and Dell Poweredge R710 motherboards.
 #include <@top_srcdir@/common/man/manpage-common-workaround-outofband-15-text.man>
 #include <@top_srcdir@/common/man/manpage-common-workaround-outofband-20-text.man>
 .LP
-"skipchecks" - This workaround option will skip FRU checksum checks.
+\fIskipchecks\fR - This workaround option will skip FRU checksum checks.
 Some FRUs have incorrect checksums, but the FRU data is correct.
 Output may be unknown, pray for the best.  This option is confirmed to
 work around compliances issues on Inventec 5441/Dell Xanadu II, Dell
 Poweredge R610, and Dell Poweredge R710 motherboards.  This option is
 identical to using the \fB\-\-skip\-checks\fR option above.
+#include <@top_srcdir@/common/man/manpage-common-workaround-extra-text.man>
 #include <@top_srcdir@/common/man/manpage-common-oem-interpretation.man>
 .LP
 Currently None

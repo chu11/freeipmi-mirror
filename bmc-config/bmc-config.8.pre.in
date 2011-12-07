@@ -175,6 +175,7 @@ accomplished through a cold-reset.  A cold-reset can be executed via
 #include <@top_srcdir@/common/man/manpage-common-workaround-outofband-common-text.man>
 #include <@top_srcdir@/common/man/manpage-common-workaround-outofband-15-text.man>
 #include <@top_srcdir@/common/man/manpage-common-workaround-outofband-20-text.man>
+#include <@top_srcdir@/common/man/manpage-common-workaround-extra-text.man>
 #include <@top_srcdir@/common/man/manpage-common-workaround-config-tool.man>
 .LP
 "solchannelassumelanchannel" - This workaround will force

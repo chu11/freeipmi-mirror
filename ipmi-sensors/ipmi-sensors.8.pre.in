@@ -193,14 +193,14 @@ sensor interpretation configuration file.  Please see
 #include <@top_srcdir@/common/man/manpage-common-workaround-outofband-15-text.man>
 #include <@top_srcdir@/common/man/manpage-common-workaround-outofband-20-text.man>
 .LP
-"discretereading" - This workaround option will allow sensor readings
+\fIdiscretereading\fR - This workaround option will allow sensor readings
 to be read even if the event/reading type code for the sensor is not
 valid.  This option works around poorly defined (and arguably illegal)
 SDR records that list non-discrete sensor expectations along with
 discrete state conditions.  This option is confirmed to work around
 issues on HP Proliant DL380 G7 and HP ProLiant ML310 G5 motherboards.
 .LP
-"ignorescanningdisabled" - This workaround option will allow sensor
+\fIignorescanningdisabled\fR - This workaround option will allow sensor
 readings to be read even if the sensor scanning bit indicates a sensor
 is disabled.  This option works around motherboards that incorrectly
 indicate sensors as disabled.  This may problem may exist on your
@@ -209,7 +209,7 @@ available.  This option is confirmed to work around issues on Dell
 Poweredge 2900, Dell Poweredge 2950, Dell Poweredge R410, Dell
 Poweredge R610, and HP Integrity rx3600 motherboards.
 .LP
-"assumebmcowner" - This workaround option will allow sensor readings
+\fIassumebmcowner\fR - This workaround option will allow sensor readings
 to be read if the sensor owner is the BMC, but the reported sensor
 owner is not the BMC.  Typically, sensors owned by a non-BMC sensor
 owner must be bridged (e.g. with the \fB\-\-bridge\-sensors\fR
@@ -220,6 +220,7 @@ BMC.  This may problem may exist on your motherboard if sensors are
 listed as "N/A" even if they should be available. This option is
 confirmed to work around issues on Fujitsu RX300 and Fujitsu RX300S2
 motherboards.
+#include <@top_srcdir@/common/man/manpage-common-workaround-extra-text.man>
 #include <@top_srcdir@/common/man/manpage-common-oem-interpretation.man>
 .LP
 Dell Poweredge R210, Dell Poweredge R610, Dell Poweredge R710, Fujitsu

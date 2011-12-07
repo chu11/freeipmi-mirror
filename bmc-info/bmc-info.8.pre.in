@@ -63,6 +63,7 @@ Display only channel information.
 #include <@top_srcdir@/common/man/manpage-common-workaround-outofband-common-text.man>
 #include <@top_srcdir@/common/man/manpage-common-workaround-outofband-15-text.man>
 #include <@top_srcdir@/common/man/manpage-common-workaround-outofband-20-text.man>
+#include <@top_srcdir@/common/man/manpage-common-workaround-extra-text.man>
 #include <@top_srcdir@/common/man/manpage-common-oem-interpretation.man>
 .LP
 Dell Poweredge R610, Dell Poweredge R710, Intel SR870BN4/Tiger4
