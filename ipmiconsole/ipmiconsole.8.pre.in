@@ -213,7 +213,26 @@ workarounds too.
 #include <@top_srcdir@/common/man/manpage-common-workaround-heading-text.man>
 #include <@top_srcdir@/common/man/manpage-common-workaround-outofband-common-text.man>
 #include <@top_srcdir@/common/man/manpage-common-workaround-outofband-20-text.man>
-#include <@top_srcdir@/common/man/manpage-common-workaround-sol-text.man>
+.LP
+\fIsolpayloadsize\fR - This workaround flag will not check for valid
+SOL payload sizes and assume a proper set.  It works around remote
+systems that report invalid IPMI 2.0 SOL payload sizes.  Those hitting
+this issue may see "BMC Implementation" errors.  Issue observed on
+Asus P5M2/RS162-E4/RX4, Intel SR1520ML/X38ML, Inventec 5441/Dell
+Xanadu II, Sun x4100, Supermicro X8DTH, Supermicro X8DTG, and
+Supermicro X8DTU.
+.LP
+\fIsolport\fR - This workaround flag will ignore alternate SOL ports
+specified during the protocol.  It works around remote systems that
+report invalid alternate SOL ports.  Those hitting this issue may see
+"connection timeout" errors.  Issue observed on Asus P5MT-R and
+Supermicro X8DTH-iF.
+.LP
+\fIsolstatus\fR - This workaround flag will not check the current
+activation status of SOL during the protocol setup.  It works around
+remote systems that do not properly support this command.  Those
+hitting this issue may see "BMC Error" errors.  Issue observed on
+Supermicro X8SIL-F.
 #include <@top_srcdir@/common/man/manpage-common-known-issues.man>
 .LP
 Some motherboards define an OEM SOL inactivity timeout for SOL
