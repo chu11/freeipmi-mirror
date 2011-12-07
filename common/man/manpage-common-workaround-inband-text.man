@@ -1,11 +1,11 @@
 .LP
-"assumeio" - This workaround option will assume inband interfaces
+"assumeio" - This workaround flag will assume inband interfaces
 communicate with system I/O rather than being memory-mapped.  This
 will work around systems that report invalid base addresses.  Those
 hitting this issue may see "device not supported" or "could not find
 inband device" errors.  Issue observed on HP ProLiant DL145 G1.
 .LP
-"spinpoll" - This workaround option will inform some inband drivers
+"spinpoll" - This workaround flag will inform some inband drivers
 (most notably the KCS driver) to spin while polling rather than
 putting the process to sleep.  This may significantly improve the wall
 clock running time of tools because an operating system scheduler's
