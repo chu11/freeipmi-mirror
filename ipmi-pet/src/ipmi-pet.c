@@ -1841,6 +1841,7 @@ _ipmi_pet_acknowledge (ipmi_pet_state_data_t *state_data, FILE *stream)
   uint32_t event_data;
   fiid_obj_t obj_cmd_rs = NULL;
   char *line = NULL;
+  unsigned int ctx_flags_orig;
   int rv = -1;
 
   assert (state_data);
@@ -1855,6 +1856,25 @@ _ipmi_pet_acknowledge (ipmi_pet_state_data_t *state_data, FILE *stream)
     {
       perror ("fiid_obj_create");
       goto cleanup;
+    }
+
+  if (args->common.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_MALFORMED_ACK)
+    {
+      if (ipmi_ctx_get_flags (state_data->ipmi_ctx, &ctx_flags_orig) < 0)
+	{
+	  fprintf (stderr,
+                   "ipmi_ctx_get_flags: %s\n",
+                   ipmi_ctx_errormsg (state_data->ipmi_ctx));
+	  goto cleanup;
+	}
+      
+      if (ipmi_ctx_set_flags (state_data->ipmi_ctx, ctx_flags_orig | IPMI_FLAGS_NO_VALID_CHECK) < 0)
+	{
+	  fprintf (stderr,
+                   "ipmi_ctx_set_flags: %s\n",
+                   ipmi_ctx_errormsg (state_data->ipmi_ctx));
+	  goto cleanup;
+	}
     }
 
   if (args->variable_bindings_length)
@@ -1951,6 +1971,17 @@ _ipmi_pet_acknowledge (ipmi_pet_state_data_t *state_data, FILE *stream)
 	  free (line);
 	  line = NULL;
 	  n = 0;
+	}
+    }
+
+  if (args->common.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_MALFORMED_ACK)
+    {
+      if (ipmi_ctx_set_flags (state_data->ipmi_ctx, ctx_flags_orig) < 0)
+	{
+	  fprintf (stderr,
+                   "ipmi_ctx_set_flags: %s\n",
+                   ipmi_ctx_errormsg (state_data->ipmi_ctx));
+	  goto cleanup;
 	}
     }
 

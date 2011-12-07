@@ -890,6 +890,12 @@ not stated with this requirement.  At present, the assumption is that
 all 64 bytes of the buffer must be overwritten everytime the string is
 modified.  This seems to be the safest approach.
 
+ipmi-pet
+--------
+
+Dell Poweredge R610: Responses from a PET Acknowledge are invalid and
+malformed.  The payload is short by one byte.
+
 Appendix
 --------
 
