@@ -281,8 +281,8 @@ Errors are logged to the bmc-watchdog log.
 #include <@top_srcdir@/common/man/manpage-common-workaround-heading-text.man>
 #include <@top_srcdir@/common/man/manpage-common-workaround-inband-text.man>
 .LP
-"ignorestateflag" - This workaround option will ignore the BMC timer
-state flag (indicating if the timer is running or stopped) when
+\fIignorestateflag\fR - This workaround option will ignore the BMC
+timer state flag (indicating if the timer is running or stopped) when
 running in daemon mode.  On some BMCs, the flag is broken and will
 never report that a BMC timer is running, even if it is.  The
 workaround will take notice of changes in the countdown seconds to
