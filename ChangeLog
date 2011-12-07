@@ -1,3 +1,7 @@
+2011-12-05  Kaiwang Chen <kaiwang.chen@gmail.com>
+
+	* contrib/pet/petalert.pl: Support PET acknowledge option.
+
 2011-12-07  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-pet/: Support "malformedack" workaround option.

@@ -72,6 +72,10 @@
 #
 # ChangeLog
 #
+# * Wed 7  Dec 2011 kaiwang.chen@gmail.com
+# - Add --ack support
+# - capture exit code of helper
+#
 # * Mon 14 Nov 2011 kaiwang.chen@gmail.com
 # - complete rewritten, supports embperl mode and additional alert methods
 #
@@ -113,6 +117,8 @@ $0 [OPTIONS] -- [ALERT_SPECIFIC_OPTIONS] ALERT_SPECIFIC_ARGS
     -m
     --mode  {traphandle|embperl} 
                 Specify mode of execution. Required.
+    --ack
+                Acknowledge the trap before alert.
     -o
     --trapoid  OID
                 Sets trapoid in embperl mode, or defaults to "all".
@@ -218,6 +224,10 @@ sub decode_pet {
   if (open my $fh, "-|", $ipmi_pet, @o) {
     @x = <$fh>;
     close $fh;
+    if ($? >> 8) {
+      logger("warn", "decode failure with CHILD_ERROR: $?");
+      return;
+    }
   }
   else {
     logger("warn", "decoder failure: $!");
@@ -239,6 +249,30 @@ sub decode_pet {
   }
   logger("decode", "event ", \%event);
   return \%event;
+}
+
+sub ack_pet {
+  my ($specific, $event_hexstring, $host) = @_;
+
+  my $ipmi_pet = "/usr/sbin/ipmi-pet";
+  my @o = qw(--pet-acknowledge -h);
+  push @o, $host;
+  push @o, $specific;
+  $event_hexstring =~ s/[^ 0-9a-fA-F]//g; # sanity check
+  push @o, split /\s+/, $event_hexstring;
+
+  my @x = ();
+  logger("ack", "command line ", [$ipmi_pet, \@o]);
+  if (open my $fh, "-|", $ipmi_pet, @o) {
+    @x = <$fh>;
+    close $fh;
+    if ($? >> 8) {
+      logger("warn", "ackhelper failure with CHILD_ERROR: $?");
+    }
+  }
+  else {
+    logger("warn", "ackhelper failure: $!");
+  }
 }
 
 # ipmi-pet localtime to calendar time
@@ -362,6 +396,10 @@ sub process {
   for my $v (@{$varbindings}) {
     if ($v->[0] =~ /^\Q$event_oid\E$/) {
       my $ip = extract_ip($pdu_info->{receivedfrom});
+      if ($opts{ack}) {
+        ack_pet($specific, $v->[1], $ip);
+      }
+
       my $sdrcache = resolve_sdrcache($ip);
   
       # decode octet hex string
@@ -604,7 +642,8 @@ sub resolve_sdrcache {
 # process and verify args
 sub process_args {
   # parse global ARGV for this package
-  GetOptions(\%opts, 'help!', 'quiet!', 'mode|m=s', 'trapoid|o=s', 'sdrcache|c=s', 'log|f=s', 'Debug|D=s', 'alert|n=s');
+  GetOptions(\%opts, 'help!', 'quiet!', 'mode|m=s', 'ack!', 
+    'trapoid|o=s', 'sdrcache|c=s', 'log|f=s', 'Debug|D=s', 'alert|n=s');
 
   if ($opts{'help'}) {
     usage();
