@@ -48,6 +48,7 @@
 #include "freeipmi/api/ipmi-messaging-support-cmds-api.h"
 #include "freeipmi/debug/ipmi-debug.h"
 #include "freeipmi/fiid/fiid.h"
+#include "freeipmi/interface/ipmi-interface.h"
 #include "freeipmi/interface/ipmi-ipmb-interface.h"
 #include "freeipmi/interface/ipmi-lan-interface.h"
 #include "freeipmi/interface/ipmi-rmcpplus-interface.h"
@@ -555,7 +556,8 @@ _ipmi_lan_cmd_send (ipmi_ctx_t ctx,
                                          password,
                                          password_len,
                                          pkt,
-                                         pkt_len)) < 0)
+                                         pkt_len,
+					 IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
@@ -1083,7 +1085,8 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
 					  ctx->io.outofband.rs.obj_lan_session_hdr,
 					  ctx->io.outofband.rs.obj_lan_msg_hdr,
 					  obj_cmd_rs,
-					  ctx->io.outofband.rs.obj_lan_msg_trlr)) < 0)
+					  ctx->io.outofband.rs.obj_lan_msg_trlr,
+					  IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
 	{
 	  API_ERRNO_TO_API_ERRNUM (ctx, errno);
 	  return (-1);
@@ -1184,7 +1187,8 @@ _ipmi_cmd_send_ipmb (ipmi_ctx_t ctx,
 
   if (assemble_ipmi_ipmb_msg (obj_ipmb_msg_hdr_rq,
                               obj_cmd_rq,
-                              obj_ipmb_msg_rq) < 0)
+                              obj_ipmb_msg_rq,
+			      IPMI_INTERFACE_FLAGS_DEFAULT) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
@@ -1353,7 +1357,8 @@ ipmi_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
 					  ctx->io.outofband.rs.obj_lan_session_hdr,
 					  ctx->io.outofband.rs.obj_lan_msg_hdr,
 					  obj_cmd_rs,
-					  ctx->io.outofband.rs.obj_lan_msg_trlr)) < 0)
+					  ctx->io.outofband.rs.obj_lan_msg_trlr,
+					  IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
 	{
 	  API_ERRNO_TO_API_ERRNUM (ctx, errno);
 	  return (-1);
@@ -2216,7 +2221,8 @@ _ipmi_lan_2_0_cmd_send (ipmi_ctx_t ctx,
                                               obj_cmd_rq,
                                               ctx->io.outofband.rq.obj_rmcpplus_session_trlr,
                                               pkt,
-                                              pkt_len)) < 0)
+                                              pkt_len,
+					      IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
@@ -2962,7 +2968,8 @@ ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
 					       ctx->io.outofband.rs.obj_lan_msg_hdr,
 					       obj_cmd_rs,
 					       ctx->io.outofband.rs.obj_lan_msg_trlr,
-					       ctx->io.outofband.rs.obj_rmcpplus_session_trlr)) < 0)
+					       ctx->io.outofband.rs.obj_rmcpplus_session_trlr,
+					       IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
 	{
 	  API_ERRNO_TO_API_ERRNUM (ctx, errno);
 	  return (-1);
@@ -3162,7 +3169,8 @@ ipmi_lan_2_0_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
 					       ctx->io.outofband.rs.obj_lan_msg_hdr,
 					       obj_cmd_rs,
 					       ctx->io.outofband.rs.obj_lan_msg_trlr,
-					       ctx->io.outofband.rs.obj_rmcpplus_session_trlr)) < 0)
+					       ctx->io.outofband.rs.obj_rmcpplus_session_trlr,
+					       IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
 	{
 	  API_ERRNO_TO_API_ERRNUM (ctx, errno);
 	  return (-1);

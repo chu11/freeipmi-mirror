@@ -34,6 +34,7 @@
 #include "freeipmi/driver/ipmi-ssif-driver.h"
 #include "freeipmi/debug/ipmi-debug.h"
 #include "freeipmi/fiid/fiid.h"
+#include "freeipmi/interface/ipmi-interface.h"
 #include "freeipmi/interface/ipmi-kcs-interface.h"
 #include "freeipmi/spec/ipmi-netfn-spec.h"
 
@@ -190,7 +191,8 @@ _ssif_cmd_write (ipmi_ctx_t ctx,
   if ((send_len = assemble_ipmi_kcs_pkt (ctx->io.inband.rq.obj_hdr,
                                          obj_cmd_rq,
                                          pkt,
-                                         pkt_len)) < 0)
+                                         pkt_len,
+					 IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
@@ -284,7 +286,8 @@ _ssif_cmd_read (ipmi_ctx_t ctx,
   if ((ret = unassemble_ipmi_kcs_pkt (pkt,
                                       read_len,
                                       ctx->io.inband.rs.obj_hdr,
-                                      obj_cmd_rs)) < 0)
+                                      obj_cmd_rs,
+				      IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;

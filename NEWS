@@ -10,6 +10,8 @@ o Update libfreeipmi fru-parse sub-library to support FRU parsing
   without an IPMI connection.
 o In libfreeipmi, support IPMI_FLAGS_NOSESSION flag to open a context
   for IPMI communication w/o establishing a session.
+o In libfreeipmi, support IPMI_FLAGS_NO_LEGAL_CHECK flag, to
+  workaround motherboards to may return illegal IPMI packets.
 o In libfreeipmi, add support for IPMI firmware firewall and command
   discovery payloads.
 o Add petalert.pl contribution from Kaiwang Chen (kaiwang.chen AT gmail DOT com)

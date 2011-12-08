@@ -67,7 +67,8 @@ int assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
                            const void *authentication_code_data,
                            unsigned int authentication_code_data_len,
                            void *pkt,
-                           unsigned int pkt_len);
+                           unsigned int pkt_len,
+			   unsigned int flags);
 
 /* returns 1 if fully unparsed, 0 if not, -1 on error */
 int unassemble_ipmi_lan_pkt (const void *pkt,
@@ -76,7 +77,8 @@ int unassemble_ipmi_lan_pkt (const void *pkt,
                              fiid_obj_t obj_lan_session_hdr,
                              fiid_obj_t obj_lan_msg_hdr,
                              fiid_obj_t obj_cmd,
-                             fiid_obj_t obj_lan_msg_trlr);
+                             fiid_obj_t obj_lan_msg_trlr,
+			     unsigned int flags);
 
 /* returns length sent on success, -1 on error */
 /* Compared to system sendto(), handles several IPMI padding issues,

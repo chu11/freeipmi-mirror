@@ -31,6 +31,7 @@
 
 #include "freeipmi/cmds/ipmi-messaging-support-cmds.h"
 #include "freeipmi/fiid/fiid.h"
+#include "freeipmi/interface/ipmi-interface.h"
 #include "freeipmi/interface/ipmi-lan-interface.h"
 #include "freeipmi/interface/rmcp-interface.h"
 #include "freeipmi/spec/ipmi-authentication-type-spec.h"
@@ -255,7 +256,8 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
                        const void *authentication_code_data,
                        unsigned int authentication_code_data_len,
                        void *pkt,
-                       unsigned int pkt_len)
+                       unsigned int pkt_len,
+		       unsigned int flags)
 {
   uint8_t authentication_type;
   uint64_t val;
@@ -272,13 +274,15 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
   uint8_t pwbuf[IPMI_1_5_MAX_PASSWORD_LENGTH];
   uint8_t checksum;
   int len, rv = -1;
+  unsigned int flags_mask = 0;
 
   if (!fiid_obj_valid (obj_rmcp_hdr)
       || !fiid_obj_valid (obj_lan_session_hdr)
       || !fiid_obj_valid (obj_lan_msg_hdr)
       || !fiid_obj_valid (obj_cmd)
       || (authentication_code_data && authentication_code_data_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
-      || !pkt)
+      || !pkt
+      || (flags & ~flags_mask))
     {
       SET_ERRNO (EINVAL);
       return (-1);
@@ -605,20 +609,23 @@ unassemble_ipmi_lan_pkt (const void *pkt,
                          fiid_obj_t obj_lan_session_hdr,
                          fiid_obj_t obj_lan_msg_hdr,
                          fiid_obj_t obj_cmd,
-                         fiid_obj_t obj_lan_msg_trlr)
+                         fiid_obj_t obj_lan_msg_trlr,
+			 unsigned int flags)
 {
   uint8_t authentication_type;
   unsigned int indx = 0;
   unsigned int obj_cmd_len;
   int obj_lan_msg_trlr_len, len;
   uint64_t val;
+  unsigned int flags_mask = (IPMI_INTERFACE_FLAGS_NO_LEGAL_CHECK);
 
   if (!pkt
       || !fiid_obj_valid (obj_rmcp_hdr)
       || !fiid_obj_valid (obj_lan_session_hdr)
       || !fiid_obj_valid (obj_lan_msg_hdr)
       || !fiid_obj_valid (obj_cmd)
-      || !fiid_obj_valid (obj_lan_msg_trlr))
+      || !fiid_obj_valid (obj_lan_msg_trlr)
+      || (flags & ~flags_mask))
     {
       SET_ERRNO (EINVAL);
       return (-1);
@@ -807,7 +814,7 @@ unassemble_ipmi_lan_pkt (const void *pkt,
   if (FIID_OBJ_PACKET_VALID (obj_rmcp_hdr) == 1
       && FIID_OBJ_PACKET_VALID (obj_lan_session_hdr) == 1
       && FIID_OBJ_PACKET_VALID (obj_lan_msg_hdr) == 1
-      && FIID_OBJ_PACKET_SUFFICIENT (obj_cmd) == 1
+      && ((flags & IPMI_INTERFACE_FLAGS_NO_LEGAL_CHECK) || FIID_OBJ_PACKET_SUFFICIENT (obj_cmd) == 1)
       && FIID_OBJ_PACKET_VALID (obj_lan_msg_trlr) == 1)
     return (1);
 

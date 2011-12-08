@@ -170,19 +170,21 @@ AC_SUBST([ISODATE])
 
 # libfreeipmi libtool versioning
 #
-# If library source code has changed at all increment rev
-# (current:rev:age) = (current:rev+1:age)
+# If the library source code has changed at all since the last update,
+# then increment c:r: c:r+1:).
 #
-# If any interfaces have been added,removed, or changed increment current
-#  and set rev = 0;
+# If any interfaces have been added, removed, or changed since the
+# last update, increment current, and set revision to 0.
 #
-# If any interfaces have been added increment age
+# If any interfaces have been added since the last public release,
+# then increment age.
 #
-# If any interfaces have been removed, set age = 0
+# If any interfaces have been removed or changed since the last public
+# release, then set age to 0.
 #
-LIBFREEIPMI_CURRENT=11
-LIBFREEIPMI_REVISION=2
-LIBFREEIPMI_AGE=1
+LIBFREEIPMI_CURRENT=12
+LIBFREEIPMI_REVISION=0
+LIBFREEIPMI_AGE=0
 
 LIBFREEIPMI_VERSION=$LIBFREEIPMI_CURRENT.$LIBFREEIPMI_REVISION.$LIBFREEIPMI_AGE
 AC_SUBST([LIBFREEIPMI_VERSION])
@@ -201,9 +203,9 @@ AC_SUBST([LIBFREEIPMI_VERSION_INFO])
 #         incremented due to bug fixes or minor features.  Interfaces are
 #         forward and backward compatible to other PATCH versions.
 
-LIBFREEIPMI_VERSION_MAJOR=1
+LIBFREEIPMI_VERSION_MAJOR=2
 LIBFREEIPMI_VERSION_MINOR=0
-LIBFREEIPMI_VERSION_PATCH=2
+LIBFREEIPMI_VERSION_PATCH=0
 
 AC_SUBST(LIBFREEIPMI_VERSION_MAJOR)
 AC_SUBST(LIBFREEIPMI_VERSION_MINOR)
@@ -211,15 +213,17 @@ AC_SUBST(LIBFREEIPMI_VERSION_PATCH)
 
 # libipmiconsole libtool versioning
 #
-# If library source code has changed at all increment rev
-# (current:rev:age) = (current:rev+1:age)
+# If the library source code has changed at all since the last update,
+# then increment c:r: c:r+1:).
 #
-# If any interfaces have been added,removed, or changed increment current
-#  and set rev = 0;
+# If any interfaces have been added, removed, or changed since the
+# last update, increment current, and set revision to 0.
 #
-# If any interfaces have been added increment age
+# If any interfaces have been added since the last public release,
+# then increment age.
 #
-# If any interfaces have been removed, set age = 0
+# If any interfaces have been removed or changed since the last public
+# release, then set age to 0.
 #
 LIBIPMICONSOLE_CURRENT=4
 LIBIPMICONSOLE_REVISION=0
@@ -250,15 +254,17 @@ AC_SUBST(LIBIPMICONSOLE_VERSION_PATCH)
 
 # libipmimonitoring libtool versioning
 #
-# If library source code has changed at all increment rev
-# (current:rev:age) = (current:rev+1:age)
+# If the library source code has changed at all since the last update,
+# then increment c:r: c:r+1:).
 #
-# If any interfaces have been added,removed, or changed increment current
-#  and set rev = 0;
+# If any interfaces have been added, removed, or changed since the
+# last update, increment current, and set revision to 0.
 #
-# If any interfaces have been added increment age
+# If any interfaces have been added since the last public release,
+# then increment age.
 #
-# If any interfaces have been removed, set age = 0
+# If any interfaces have been removed or changed since the last public
+# release, then set age to 0.
 #
 LIBIPMIMONITORING_CURRENT=5
 LIBIPMIMONITORING_REVISION=1
@@ -289,15 +295,17 @@ AC_SUBST(LIBIPMIMONITORING_VERSION_PATCH)
 
 # libipmidetect libtool versioning
 #
-# If library source code has changed at all increment rev
-# (current:rev:age) = (current:rev+1:age)
+# If the library source code has changed at all since the last update,
+# then increment c:r: c:r+1:).
 #
-# If any interfaces have been added,removed, or changed increment current
-#  and set rev = 0;
+# If any interfaces have been added, removed, or changed since the
+# last update, increment current, and set revision to 0.
 #
-# If any interfaces have been added increment age
+# If any interfaces have been added since the last public release,
+# then increment age.
 #
-# If any interfaces have been removed, set age = 0
+# If any interfaces have been removed or changed since the last public
+# release, then set age to 0.
 #
 LIBIPMIDETECT_CURRENT=0
 LIBIPMIDETECT_REVISION=0

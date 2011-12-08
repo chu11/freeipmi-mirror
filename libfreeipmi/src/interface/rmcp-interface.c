@@ -28,6 +28,7 @@
 #include <errno.h>
 
 #include "freeipmi/interface/rmcp-interface.h"
+#include "freeipmi/interface/ipmi-interface.h"
 #include "freeipmi/fiid/fiid.h"
 
 #include "libcommon/ipmi-fill-util.h"
@@ -88,14 +89,17 @@ int
 assemble_rmcp_pkt (fiid_obj_t obj_rmcp_hdr,
                    fiid_obj_t obj_cmd,
                    void *pkt,
-                   unsigned int pkt_len)
+                   unsigned int pkt_len,
+		   unsigned int flags)
 {
   int obj_cmd_len, obj_rmcp_hdr_len;
+  unsigned int flags_mask = 0;
 
   if (!fiid_obj_valid (obj_rmcp_hdr)
       || !fiid_obj_valid (obj_cmd)
       || !pkt
-      || !pkt_len)
+      || !pkt_len
+      || (flags & ~flags_mask))
     {
       SET_ERRNO (EINVAL);
       return (-1);
@@ -158,14 +162,17 @@ int
 unassemble_rmcp_pkt (const void *pkt,
                      unsigned int pkt_len,
                      fiid_obj_t obj_rmcp_hdr,
-                     fiid_obj_t obj_cmd)
+                     fiid_obj_t obj_cmd,
+		     unsigned int flags)
 {
   unsigned int indx = 0;
   int len;
+  unsigned int flags_mask = (IPMI_INTERFACE_FLAGS_NO_LEGAL_CHECK);
 
   if (!pkt
       || !fiid_obj_valid (obj_rmcp_hdr)
-      || !fiid_obj_valid (obj_cmd))
+      || !fiid_obj_valid (obj_cmd)
+      || (flags & ~flags_mask))
     {
       SET_ERRNO (EINVAL);
       return (-1);
@@ -211,7 +218,7 @@ unassemble_rmcp_pkt (const void *pkt,
   indx += len;
 
   if (FIID_OBJ_PACKET_VALID (obj_rmcp_hdr) == 1
-      && FIID_OBJ_PACKET_SUFFICIENT (obj_cmd) == 1)
+      && ((flags & IPMI_INTERFACE_FLAGS_NO_LEGAL_CHECK) || FIID_OBJ_PACKET_SUFFICIENT (obj_cmd) == 1))
     return (1);
 
   return (0);

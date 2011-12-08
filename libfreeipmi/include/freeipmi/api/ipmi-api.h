@@ -123,9 +123,22 @@ typedef enum ipmi_driver_type ipmi_driver_type_t;
  * 
  * DEBUG_DUMP - for all interfaces
  *
- * NO_VALID_CHECK - do not check if IPMI response packets are valid
+ * NO_VALID_CHECK - do not check if IPMI response payloads are valid
  * (i.e. all required fields set).  Useful to workaround non-compliant
- * motherboards.
+ * motherboards.  For example, if an IPMI payload did not return a
+ * required flag in the payload, an error would be returned.  The
+ * error might possibly be a session timeout, as no valid response
+ * packet was ever received.  This flag would skip the checks for
+ * valid fields and return the packet to the user.
+ *
+ * NO_LEGAL_CHECK - do no check if IPMI response payloads have
+ * sufficient data (i.e. completion code fields) to be legal.  Useful
+ * to work around non-compliant motherboards.  This flag is ignores
+ * the legality of IPMI payloads greater than the NO_VALID_CHECK
+ * option.  For example, NO_VALID_CHECK would still return an error if
+ * an IPMI payload did not return a completion code in an IPMI
+ * response.  The NO_LEGAL_CHECK would return such a packet to the
+ * user without an error.
  */
 
 #define IPMI_FLAGS_DEFAULT        0x00000000
@@ -133,6 +146,7 @@ typedef enum ipmi_driver_type ipmi_driver_type_t;
 #define IPMI_FLAGS_NOSESSION      0x00000002
 #define IPMI_FLAGS_DEBUG_DUMP     0x00000010
 #define IPMI_FLAGS_NO_VALID_CHECK 0x00000100
+#define IPMI_FLAGS_NO_LEGAL_CHECK 0x00000200
 
 typedef struct ipmi_ctx *ipmi_ctx_t;
 

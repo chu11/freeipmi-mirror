@@ -171,7 +171,8 @@ ipmipower_ping_process_pings (int *timeout)
           if ((len = assemble_rmcp_pkt (rmcp_hdr,
                                         rmcp_ping,
                                         buf,
-                                        IPMIPOWER_PACKET_BUFLEN)) < 0)
+                                        IPMIPOWER_PACKET_BUFLEN,
+					IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
             {
               IPMIPOWER_ERROR (("assemble_rmcp_pkt: %s", strerror (errno)));
               exit (1);
@@ -273,7 +274,8 @@ ipmipower_ping_process_pings (int *timeout)
           if ((ret = unassemble_rmcp_pkt (buf,
                                           len,
                                           rmcp_hdr,
-                                          rmcp_pong)) < 0)
+                                          rmcp_pong,
+					  IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
             {
               IPMIPOWER_ERROR (("unassemble_rmcp_pkt: %s", strerror (errno)));
               exit (1);

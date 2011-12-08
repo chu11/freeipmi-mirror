@@ -29,6 +29,7 @@
 #include <errno.h>
 
 #include "freeipmi/interface/ipmi-kcs-interface.h"
+#include "freeipmi/interface/ipmi-interface.h"
 #include "freeipmi/fiid/fiid.h"
 #include "freeipmi/spec/ipmi-ipmb-lun-spec.h"
 #include "freeipmi/spec/ipmi-netfn-spec.h"
@@ -76,14 +77,17 @@ int
 assemble_ipmi_kcs_pkt (fiid_obj_t obj_kcs_hdr,
                        fiid_obj_t obj_cmd,
                        void *pkt,
-                       unsigned int pkt_len)
+                       unsigned int pkt_len,
+		       unsigned int flags)
 {
   int obj_cmd_len, obj_kcs_hdr_len;
   unsigned int utmp;
+  unsigned int flags_mask = 0;
 
   if (!fiid_obj_valid (obj_kcs_hdr)
       || !fiid_obj_valid (obj_cmd)
-      || !pkt)
+      || !pkt
+      || (flags & ~flags_mask))
     {
       SET_ERRNO (EINVAL);
       return (-1);
@@ -154,14 +158,17 @@ int
 unassemble_ipmi_kcs_pkt (const void *pkt,
                          unsigned int pkt_len,
                          fiid_obj_t obj_kcs_hdr,
-                         fiid_obj_t obj_cmd)
+                         fiid_obj_t obj_cmd,
+			 unsigned int flags)
 {
   unsigned int indx = 0;
   int len;
+  unsigned int flags_mask = (IPMI_INTERFACE_FLAGS_NO_LEGAL_CHECK);
 
   if (!pkt
       || !fiid_obj_valid (obj_kcs_hdr)
-      || !fiid_obj_valid (obj_cmd))
+      || !fiid_obj_valid (obj_cmd)
+      || (flags & ~flags_mask))
     {
       SET_ERRNO (EINVAL);
       return (-1);
@@ -207,7 +214,7 @@ unassemble_ipmi_kcs_pkt (const void *pkt,
   indx += len;
 
   if (FIID_OBJ_PACKET_VALID (obj_kcs_hdr) == 1
-      && FIID_OBJ_PACKET_SUFFICIENT (obj_cmd) == 1)
+      && ((flags & IPMI_INTERFACE_FLAGS_NO_LEGAL_CHECK) || FIID_OBJ_PACKET_SUFFICIENT (obj_cmd) == 1))
     return (1);
 
   return (0);

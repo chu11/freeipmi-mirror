@@ -47,6 +47,7 @@ nobase_include_HEADERS = \
 	freeipmi/driver/ipmi-ssif-driver.h \
 	freeipmi/fiid/fiid.h \
 	freeipmi/fru-parse/ipmi-fru-parse.h \
+	freeipmi/interface/ipmi-interface.h \
 	freeipmi/interface/rmcp-interface.h \
 	freeipmi/interface/ipmi-ipmb-interface.h \
 	freeipmi/interface/ipmi-kcs-interface.h \

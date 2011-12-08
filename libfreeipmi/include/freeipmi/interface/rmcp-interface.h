@@ -80,13 +80,15 @@ int fill_rmcp_hdr_asf (fiid_obj_t obj_rmcp_hdr);
 int assemble_rmcp_pkt (fiid_obj_t obj_rmcp_hdr,
                        fiid_obj_t obj_cmd,
                        void *pkt,
-                       unsigned int pkt_len);
+                       unsigned int pkt_len,
+		       unsigned int flags);
 
 /* returns 1 if fully unparsed, 0 if not, -1 on error */
 int unassemble_rmcp_pkt (const void *pkt,
                          unsigned int pkt_len,
                          fiid_obj_t obj_rmcp_hdr,
-                         fiid_obj_t obj_cmd);
+                         fiid_obj_t obj_cmd,
+			 unsigned int flags);
 
 #ifdef __cplusplus
 }

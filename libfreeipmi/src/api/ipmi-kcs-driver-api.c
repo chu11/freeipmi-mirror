@@ -35,6 +35,7 @@
 #include "freeipmi/debug/ipmi-debug.h"
 #include "freeipmi/driver/ipmi-kcs-driver.h"
 #include "freeipmi/fiid/fiid.h"
+#include "freeipmi/interface/ipmi-interface.h"
 #include "freeipmi/interface/ipmi-ipmb-interface.h"
 #include "freeipmi/interface/ipmi-kcs-interface.h"
 #include "freeipmi/util/ipmi-ipmb-util.h"
@@ -231,7 +232,8 @@ _kcs_cmd_write (ipmi_ctx_t ctx,
   if ((send_len = assemble_ipmi_kcs_pkt (ctx->io.inband.rq.obj_hdr,
                                          obj_cmd_rq,
                                          pkt,
-                                         pkt_len)) < 0)
+                                         pkt_len,
+					 IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
@@ -328,7 +330,8 @@ _kcs_cmd_read (ipmi_ctx_t ctx,
   if ((ret = unassemble_ipmi_kcs_pkt (pkt,
                                       read_len,
                                       ctx->io.inband.rs.obj_hdr,
-                                      obj_cmd_rs)) < 0)
+                                      obj_cmd_rs,
+				      IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
@@ -457,7 +460,8 @@ _ipmi_kcs_ipmb_send (ipmi_ctx_t ctx,
 
   if (assemble_ipmi_ipmb_msg (obj_ipmb_msg_hdr_rq,
                               obj_cmd_rq,
-                              obj_ipmb_msg_rq) < 0)
+                              obj_ipmb_msg_rq,
+			      IPMI_INTERFACE_FLAGS_DEFAULT) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
@@ -557,7 +561,8 @@ _ipmi_kcs_ipmb_recv (ipmi_ctx_t ctx,
   if (unassemble_ipmi_ipmb_msg (obj_ipmb_msg_rs,
                                 obj_ipmb_msg_hdr_rs,
                                 obj_cmd_rs,
-                                obj_ipmb_msg_trlr) < 0)
+                                obj_ipmb_msg_trlr,
+				IPMI_INTERFACE_FLAGS_DEFAULT) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;

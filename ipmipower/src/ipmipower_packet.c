@@ -394,7 +394,8 @@ ipmipower_packet_store (ipmipower_powercmd_t ip,
                                          ip->obj_lan_session_hdr_res,
                                          ip->obj_lan_msg_hdr_res,
                                          obj,
-                                         ip->obj_lan_msg_trlr_res)) < 0)
+                                         ip->obj_lan_msg_trlr_res,
+					 IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
         {
           IPMIPOWER_ERROR (("unassemble_ipmi_lan_pkt: %s", strerror (errno)));
           exit (1);
@@ -421,7 +422,8 @@ ipmipower_packet_store (ipmipower_powercmd_t ip,
                                                   ip->obj_lan_msg_hdr_res,
                                                   obj,
                                                   ip->obj_lan_msg_trlr_res,
-                                                  ip->obj_rmcpplus_session_trlr_res)) < 0)
+                                                  ip->obj_rmcpplus_session_trlr_res,
+						  IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
             {
               IPMIPOWER_ERROR (("unassemble_ipmi_rmcpplus_pkt: %s", strerror (errno)));
               exit (1);
@@ -444,7 +446,8 @@ ipmipower_packet_store (ipmipower_powercmd_t ip,
                                                   ip->obj_lan_msg_hdr_res,
                                                   obj,
                                                   ip->obj_lan_msg_trlr_res,
-                                                  ip->obj_rmcpplus_session_trlr_res)) < 0)
+                                                  ip->obj_rmcpplus_session_trlr_res,
+						  IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
             {
               IPMIPOWER_ERROR (("unassemble_ipmi_rmcpplus_pkt: %s", strerror (errno)));
               exit (1);
@@ -524,7 +527,8 @@ _ipmi_1_5_packet_create (ipmipower_powercmd_t ip,
                                     authentication_code_data,
                                     authentication_code_data_len,
                                     buf,
-                                    buflen)) < 0)
+                                    buflen,
+				    IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
     {
       IPMIPOWER_ERROR (("assemble_ipmi_lan_pkt: %s", strerror (errno)));
       exit (1);
@@ -634,7 +638,8 @@ _ipmi_2_0_packet_create (ipmipower_powercmd_t ip,
                                          obj_cmd_req,
                                          ip->obj_rmcpplus_session_trlr_req,
                                          buf,
-                                         buflen)) < 0)
+                                         buflen,
+					 IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
     {
       IPMIPOWER_ERROR (("assemble_ipmi_rmcpplus_pkt: %s", strerror (errno)));
       exit (1);

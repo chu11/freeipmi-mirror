@@ -1868,7 +1868,7 @@ _ipmi_pet_acknowledge (ipmi_pet_state_data_t *state_data, FILE *stream)
 	  goto cleanup;
 	}
       
-      if (ipmi_ctx_set_flags (state_data->ipmi_ctx, ctx_flags_orig | IPMI_FLAGS_NO_VALID_CHECK) < 0)
+      if (ipmi_ctx_set_flags (state_data->ipmi_ctx, ctx_flags_orig | IPMI_FLAGS_NO_LEGAL_CHECK) < 0)
 	{
 	  fprintf (stderr,
                    "ipmi_ctx_set_flags: %s\n",

@@ -48,6 +48,7 @@
 #include <errno.h>
 
 #include "freeipmi/driver/ipmi-kcs-driver.h"
+#include "freeipmi/interface/ipmi-interface.h"
 #include "freeipmi/interface/ipmi-kcs-interface.h"
 #include "freeipmi/spec/ipmi-ipmb-lun-spec.h"
 #include "freeipmi/spec/ipmi-netfn-spec.h"
@@ -1063,7 +1064,8 @@ _ipmi_kcs_cmd_write (ipmi_kcs_ctx_t ctx,
   if (assemble_ipmi_kcs_pkt (obj_hdr,
                              obj_cmd_rq,
                              pkt,
-                             pkt_len) < 0)
+                             pkt_len,
+			     IPMI_INTERFACE_FLAGS_DEFAULT) < 0)
     {
       KCS_SET_ERRNUM (ctx, IPMI_KCS_ERR_INTERNAL_ERROR);
       goto cleanup;
@@ -1141,7 +1143,8 @@ _ipmi_kcs_cmd_read (ipmi_kcs_ctx_t ctx,
   if ((ret = unassemble_ipmi_kcs_pkt (pkt,
                                       read_len,
                                       obj_hdr,
-                                      obj_cmd_rs)) < 0)
+                                      obj_cmd_rs,
+				      IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
     {
       KCS_SET_ERRNUM (ctx, IPMI_KCS_ERR_INTERNAL_ERROR);
       goto cleanup;

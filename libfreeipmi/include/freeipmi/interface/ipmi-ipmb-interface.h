@@ -56,13 +56,15 @@ int fill_ipmb_msg_hdr (uint8_t rs_addr,
 /* returns length written to obj_ipmb_msg on success, -1 on error */
 int assemble_ipmi_ipmb_msg (fiid_obj_t obj_ipmb_msg_hdr,
                             fiid_obj_t obj_cmd,
-                            fiid_obj_t obj_ipmb_msg);
+                            fiid_obj_t obj_ipmb_msg,
+			    unsigned int flags);
 
 /* returns 1 if fully unparsed, 0 if not, -1 on error */
 int unassemble_ipmi_ipmb_msg (fiid_obj_t obj_ipmb_msg,
                               fiid_obj_t obj_ipmb_msg_hdr,
                               fiid_obj_t obj_cmd,
-                              fiid_obj_t obj_ipmb_msg_trlr);
+                              fiid_obj_t obj_ipmb_msg_trlr,
+			      unsigned int flags);
 
 #ifdef __cplusplus
 }

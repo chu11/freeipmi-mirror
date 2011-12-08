@@ -121,7 +121,8 @@ createpacket (const char *destination,
                                     NULL,
                                     0,
                                     buf,
-                                    buflen)) < 0)
+                                    buflen,
+				    IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
     ipmi_ping_err_exit ("assemble_ipmi_lan_pkt: %s", strerror (errno));
 
   if (debug)
@@ -236,7 +237,8 @@ parsepacket (const char *destination,
                                       obj_lan_session_hdr,
                                       obj_lan_msg_hdr,
                                       obj_cmd,
-                                      obj_lan_msg_trlr)) < 0)
+                                      obj_lan_msg_trlr,
+				      IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
     ipmi_ping_err_exit ("unassemble_ipmi_lan_pkt: %s", strerror (errno));
 
   if (!ret)

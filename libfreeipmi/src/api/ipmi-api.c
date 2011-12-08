@@ -212,7 +212,8 @@ ipmi_ctx_set_flags (ipmi_ctx_t ctx, unsigned int flags)
   unsigned int flags_mask = (IPMI_FLAGS_NONBLOCKING
 			     | IPMI_FLAGS_NOSESSION
                              | IPMI_FLAGS_DEBUG_DUMP
-                             | IPMI_FLAGS_NO_VALID_CHECK);
+                             | IPMI_FLAGS_NO_VALID_CHECK
+			     | IPMI_FLAGS_NO_LEGAL_CHECK);
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -442,7 +443,8 @@ ipmi_ctx_open_outofband (ipmi_ctx_t ctx,
                                         | IPMI_WORKAROUND_FLAGS_OUTOFBAND_BIG_ENDIAN_SEQUENCE_NUMBER);
   unsigned int flags_mask = (IPMI_FLAGS_NOSESSION
 			     | IPMI_FLAGS_DEBUG_DUMP
-                             | IPMI_FLAGS_NO_VALID_CHECK);
+                             | IPMI_FLAGS_NO_VALID_CHECK
+			     | IPMI_FLAGS_NO_LEGAL_CHECK);
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -584,7 +586,8 @@ ipmi_ctx_open_outofband_2_0 (ipmi_ctx_t ctx,
                                         | IPMI_WORKAROUND_FLAGS_OUTOFBAND_2_0_OPEN_SESSION_PRIVILEGE
 					| IPMI_WORKAROUND_FLAGS_OUTOFBAND_2_0_NON_EMPTY_INTEGRITY_CHECK_VALUE);
   unsigned int flags_mask = (IPMI_FLAGS_DEBUG_DUMP
-                             | IPMI_FLAGS_NO_VALID_CHECK);
+                             | IPMI_FLAGS_NO_VALID_CHECK
+			     | IPMI_FLAGS_NO_LEGAL_CHECK);
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -799,7 +802,8 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
 					| IPMI_WORKAROUND_FLAGS_INBAND_SPIN_POLL);
   unsigned int flags_mask = (IPMI_FLAGS_NONBLOCKING
                              | IPMI_FLAGS_DEBUG_DUMP
-                             | IPMI_FLAGS_NO_VALID_CHECK);
+                             | IPMI_FLAGS_NO_VALID_CHECK
+			     | IPMI_FLAGS_NO_LEGAL_CHECK);
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {

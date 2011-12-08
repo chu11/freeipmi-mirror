@@ -315,7 +315,8 @@ _ipmi_ping_build (struct ipmidetectd_info *info, uint8_t *buf, unsigned int bufl
                                     NULL,
                                     0,
                                     buf,
-                                    buflen)) < 0)
+                                    buflen,
+				    IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
     IPMIDETECTD_EXIT (("assemble_ipmi_lan_pkt: %s", strerror (errno)));
 
 #if 0

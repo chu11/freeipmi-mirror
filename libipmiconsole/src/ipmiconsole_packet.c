@@ -621,7 +621,8 @@ _ipmi_1_5_packet_assemble (ipmiconsole_ctx_t c,
                                         authentication_code_data,
                                         authentication_code_data_len,
                                         buf,
-                                        buflen)) < 0)
+                                        buflen,
+					IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("assemble_ipmi_lan_pkt: p = %d; %s", p, strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
@@ -740,7 +741,8 @@ _ipmi_2_0_packet_assemble (ipmiconsole_ctx_t c,
                                              obj_cmd_rq,
                                              c->connection.obj_rmcpplus_session_trlr_rq,
                                              buf,
-                                             buflen)) < 0)
+                                             buflen,
+					     IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("assemble_ipmi_rmcpplus_pkt: p = %d; %s", p, strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
@@ -1506,7 +1508,8 @@ ipmiconsole_packet_unassemble (ipmiconsole_ctx_t c,
                                               c->connection.obj_lan_session_hdr_rs,
                                               c->connection.obj_lan_msg_hdr_rs,
                                               obj_cmd,
-                                              c->connection.obj_lan_msg_trlr_rs)) < 0)
+                                              c->connection.obj_lan_msg_trlr_rs,
+					      IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
         {
           IPMICONSOLE_CTX_DEBUG (c, ("unassemble_ipmi_lan_pkt: %s", strerror (errno)));
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
@@ -1567,7 +1570,8 @@ ipmiconsole_packet_unassemble (ipmiconsole_ctx_t c,
                                                        c->connection.obj_lan_msg_hdr_rs,
                                                        obj_cmd,
                                                        c->connection.obj_lan_msg_trlr_rs,
-                                                       c->connection.obj_rmcpplus_session_trlr_rs)) < 0)
+                                                       c->connection.obj_rmcpplus_session_trlr_rs,
+						       IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
             {
               IPMICONSOLE_CTX_DEBUG (c, ("unassemble_ipmi_rmcpplus_pkt: %s", strerror (errno)));
               ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
@@ -1636,7 +1640,8 @@ ipmiconsole_packet_unassemble (ipmiconsole_ctx_t c,
                                                        c->connection.obj_lan_msg_hdr_rs,
                                                        obj_cmd,
                                                        c->connection.obj_lan_msg_trlr_rs,
-                                                       c->connection.obj_rmcpplus_session_trlr_rs)) < 0)
+                                                       c->connection.obj_rmcpplus_session_trlr_rs,
+						       IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
             {
               IPMICONSOLE_CTX_DEBUG (c, ("unassemble_ipmi_rmcpplus_pkt: %s", strerror (errno)));
               ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);

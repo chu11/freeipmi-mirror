@@ -1,4 +1,8 @@
-2011-12-05  Kaiwang Chen <kaiwang.chen@gmail.com>
+2011-12-07  Albert Chu <chu11@llnl.gov>
+
+	* Support IPMI_FLAGS_NO_LEGAL_CHECK flag in libfreeipmi.
+
+2011-12-07  Kaiwang Chen <kaiwang.chen@gmail.com>
 
 	* contrib/pet/petalert.pl: Support PET acknowledge option.
 

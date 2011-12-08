@@ -50,6 +50,7 @@
 #include <assert.h>
 
 #include "freeipmi/driver/ipmi-ssif-driver.h"
+#include "freeipmi/interface/ipmi-interface.h"
 #include "freeipmi/interface/ipmi-kcs-interface.h"
 #include "freeipmi/spec/ipmi-ipmb-lun-spec.h"
 #include "freeipmi/spec/ipmi-netfn-spec.h"
@@ -863,7 +864,8 @@ _ipmi_ssif_cmd_write (ipmi_ssif_ctx_t ctx,
   if (assemble_ipmi_kcs_pkt (obj_hdr,
                              obj_cmd_rq,
                              pkt,
-                             pkt_len) < 0)
+                             pkt_len,
+			     IPMI_INTERFACE_FLAGS_DEFAULT) < 0)
     {
       SSIF_SET_ERRNUM (ctx, IPMI_SSIF_ERR_INTERNAL_ERROR);
       goto cleanup;
@@ -941,7 +943,8 @@ _ipmi_ssif_cmd_read (ipmi_ssif_ctx_t ctx,
   if ((ret = unassemble_ipmi_kcs_pkt (pkt,
                                       read_len,
                                       obj_hdr,
-                                      obj_cmd_rs)) < 0)
+                                      obj_cmd_rs,
+				      IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
     {
       SSIF_SET_ERRNUM (ctx, IPMI_SSIF_ERR_INTERNAL_ERROR);
       goto cleanup;

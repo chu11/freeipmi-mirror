@@ -33,6 +33,7 @@
 #include "freeipmi/cmds/ipmi-messaging-support-cmds.h"
 #include "freeipmi/cmds/ipmi-sol-cmds.h"
 #include "freeipmi/fiid/fiid.h"
+#include "freeipmi/interface/ipmi-interface.h"
 #include "freeipmi/interface/ipmi-lan-interface.h"
 #include "freeipmi/interface/rmcp-interface.h"
 #include "freeipmi/payload/ipmi-sol-payload.h"
@@ -1239,7 +1240,8 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
                             fiid_obj_t obj_cmd,
                             fiid_obj_t obj_rmcpplus_session_trlr,
                             void *pkt,
-                            unsigned int pkt_len)
+                            unsigned int pkt_len,
+			    unsigned int flags)
 {
   unsigned int indx = 0;
   int obj_rmcp_hdr_len, obj_len, oem_iana_len, oem_payload_id_len, payload_len, len, rv = -1;
@@ -1249,6 +1251,7 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
   fiid_obj_t obj_rmcpplus_payload = NULL;
   fiid_obj_t obj_session_hdr_temp = NULL;
   fiid_obj_t obj_rmcpplus_session_trlr_temp = NULL;
+  unsigned int flags_mask = 0;
 
   /* achu: obj_lan_msg_hdr only needed for payload type IPMI
    *
@@ -1267,7 +1270,8 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
       || !fiid_obj_valid (obj_rmcpplus_session_hdr)
       || !fiid_obj_valid (obj_cmd)
       || !pkt
-      || !pkt_len)
+      || !pkt_len
+      || (flags & ~flags_mask))
     {
       SET_ERRNO (EINVAL);
       return (-1);
@@ -2153,7 +2157,8 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
                               fiid_obj_t obj_lan_msg_hdr,
                               fiid_obj_t obj_cmd,
                               fiid_obj_t obj_lan_msg_trlr,
-                              fiid_obj_t obj_rmcpplus_session_trlr)
+                              fiid_obj_t obj_rmcpplus_session_trlr,
+			      unsigned int flags)
 {
   unsigned int indx = 0;
   int obj_rmcp_hdr_len, obj_len;
@@ -2162,6 +2167,7 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
   uint16_t ipmi_payload_len;
   int ret, check_session_trlr_valid = 0;
   uint64_t val;
+  unsigned int flags_mask = (IPMI_INTERFACE_FLAGS_NO_LEGAL_CHECK);
 
   /* achu: obj_lan_msg_hdr & trlr only needed for payload type IPMI
    *
@@ -2177,7 +2183,8 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
       || !fiid_obj_valid (obj_rmcp_hdr)
       || !fiid_obj_valid (obj_rmcpplus_session_hdr)
       || !fiid_obj_valid (obj_rmcpplus_payload)
-      || !fiid_obj_valid (obj_cmd))
+      || !fiid_obj_valid (obj_cmd)
+      || (flags & ~flags_mask))
     {
       SET_ERRNO (EINVAL);
       return (-1);
@@ -2621,7 +2628,7 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
           && FIID_OBJ_PACKET_VALID (obj_rmcpplus_session_hdr) == 1
           && FIID_OBJ_PACKET_VALID (obj_rmcpplus_payload) == 1
           && FIID_OBJ_PACKET_VALID (obj_lan_msg_hdr) == 1
-          && FIID_OBJ_PACKET_SUFFICIENT (obj_cmd) == 1
+	  && ((flags & IPMI_INTERFACE_FLAGS_NO_LEGAL_CHECK) || FIID_OBJ_PACKET_SUFFICIENT (obj_cmd) == 1)
           && FIID_OBJ_PACKET_VALID (obj_lan_msg_trlr) == 1
           && (!check_session_trlr_valid
               || FIID_OBJ_PACKET_VALID (obj_rmcpplus_session_trlr) == 1))
@@ -2632,7 +2639,7 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
       if (FIID_OBJ_PACKET_VALID (obj_rmcp_hdr) == 1
           && FIID_OBJ_PACKET_VALID (obj_rmcpplus_session_hdr) == 1
           && FIID_OBJ_PACKET_VALID (obj_rmcpplus_payload) == 1
-          && FIID_OBJ_PACKET_SUFFICIENT (obj_cmd) == 1
+	  && ((flags & IPMI_INTERFACE_FLAGS_NO_LEGAL_CHECK) || FIID_OBJ_PACKET_SUFFICIENT (obj_cmd) == 1)
           && (!check_session_trlr_valid
               || FIID_OBJ_PACKET_VALID (obj_rmcpplus_session_trlr) == 1))
         return (1);

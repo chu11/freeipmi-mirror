@@ -33,6 +33,7 @@
 
 #include "freeipmi/cmds/ipmi-messaging-support-cmds.h"
 #include "freeipmi/fiid/fiid.h"
+#include "freeipmi/interface/ipmi-interface.h"
 #include "freeipmi/interface/ipmi-ipmb-interface.h"
 #include "freeipmi/spec/ipmi-ipmb-lun-spec.h"
 #include "freeipmi/spec/ipmi-netfn-spec.h"
@@ -139,7 +140,8 @@ fill_ipmb_msg_hdr (uint8_t rs_addr,
 int
 assemble_ipmi_ipmb_msg (fiid_obj_t obj_ipmb_msg_hdr,
                         fiid_obj_t obj_cmd,
-                        fiid_obj_t obj_ipmb_msg)
+                        fiid_obj_t obj_ipmb_msg,
+			unsigned int flags)
 {
   uint8_t buf[IPMB_MAX_LEN+1];
   unsigned int indx = 0;
@@ -149,10 +151,12 @@ assemble_ipmi_ipmb_msg (fiid_obj_t obj_ipmb_msg_hdr,
   fiid_obj_t obj_ipmb_msg_trlr = NULL;
   uint8_t checksum;
   int len, rv = -1;
+  unsigned int flags_mask = 0;
 
   if (!fiid_obj_valid (obj_ipmb_msg_hdr)
       || !fiid_obj_valid (obj_cmd)
-      || !fiid_obj_valid (obj_ipmb_msg))
+      || !fiid_obj_valid (obj_ipmb_msg)
+      || (flags & ~flags_mask))
     {
       SET_ERRNO (EINVAL);
       return (-1);
@@ -279,17 +283,20 @@ int
 unassemble_ipmi_ipmb_msg (fiid_obj_t obj_ipmb_msg,
                           fiid_obj_t obj_ipmb_msg_hdr,
                           fiid_obj_t obj_cmd,
-                          fiid_obj_t obj_ipmb_msg_trlr)
+                          fiid_obj_t obj_ipmb_msg_trlr,
+			  unsigned int flags)
 {
   uint8_t buf[IPMB_MAX_LEN+1];
   int buf_len, obj_ipmb_msg_trlr_len, len;
   unsigned int indx = 0;
   unsigned int ipmb_msg_len;
+  unsigned int flags_mask = (IPMI_INTERFACE_FLAGS_NO_LEGAL_CHECK);
 
   if (!fiid_obj_valid (obj_ipmb_msg)
       || !fiid_obj_valid (obj_ipmb_msg_hdr)
       || !fiid_obj_valid (obj_cmd)
-      || !fiid_obj_valid (obj_ipmb_msg_trlr))
+      || !fiid_obj_valid (obj_ipmb_msg_trlr)
+      || (flags & ~flags_mask))
     {
       SET_ERRNO (EINVAL);
       return (-1);
@@ -383,7 +390,7 @@ unassemble_ipmi_ipmb_msg (fiid_obj_t obj_ipmb_msg,
   indx += len;
   
   if (FIID_OBJ_PACKET_VALID (obj_ipmb_msg_hdr) == 1
-      && FIID_OBJ_PACKET_SUFFICIENT (obj_cmd) == 1
+      && ((flags & IPMI_INTERFACE_FLAGS_NO_LEGAL_CHECK) || FIID_OBJ_PACKET_SUFFICIENT (obj_cmd) == 1)
       && FIID_OBJ_PACKET_VALID (obj_ipmb_msg_trlr) == 1)
     return (1);
 
