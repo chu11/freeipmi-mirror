@@ -1,3 +1,8 @@
+2011-12-09  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/api/: Fix completion code check corner case with
+	IPMI_FLAGS_NO_LEGAL_CHECK.
+
 2011-12-09  Kaiwang Chen <kaiwang.chen@gmail.com>
 
 	* libfreeipmi/src/api/: Fix bug with IPMI_FLAGS_NO_LEGAL_CHECK

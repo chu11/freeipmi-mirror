@@ -25,6 +25,7 @@
 #ifdef STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#include <assert.h>
 #include <errno.h>
 
 #include "freeipmi/api/ipmi-api.h"
@@ -224,37 +225,46 @@ api_set_api_errnum_by_sunbmc_errnum (ipmi_ctx_t ctx, int sunbmc_errnum)
     ctx->errnum = IPMI_ERR_INTERNAL_ERROR;
 }
 
-int
-api_ipmi_cmd (ipmi_ctx_t ctx,
-              uint8_t lun,
-              uint8_t net_fn,
-              fiid_obj_t obj_cmd_rq,
-              fiid_obj_t obj_cmd_rs)
+static int
+_api_ipmi_cmd_post (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
 {
   int ret;
 
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
-    return (-1);
+  assert (ctx
+	  && ctx->magic == IPMI_CTX_MAGIC
+	  && fiid_obj_valid (obj_cmd_rs));
 
-  /* Note: ctx->errnum set in call to ipmi_cmd() */
-  if (ipmi_cmd (ctx,
-                lun,
-                net_fn,
-                obj_cmd_rq,
-                obj_cmd_rs) < 0)
-    return (-1);
+  if (ctx->flags & IPMI_FLAGS_NO_LEGAL_CHECK)
+    {
+      uint64_t val;
+
+      /* Do not check completion code if data not available
+       * (i.e. FIID_ERR_DATA_NOT_AVAILABLE completion code).
+       *
+       * Fallthrough to normal error if it's an alternate fiid error
+       * (invalid packet, field not found, etc.)
+       */
+      
+      if (fiid_obj_get (obj_cmd_rs, "comp_code", &val) < 0)
+	{
+	  if (fiid_obj_errnum (obj_cmd_rs) == FIID_ERR_DATA_NOT_AVAILABLE)
+	    goto skip_comp_code_check;
+	}
+    }
 
   if ((ret = ipmi_check_completion_code_success (obj_cmd_rs)) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       return (-1);
     }
-
+  
   if (!ret)
     {
       API_BAD_RESPONSE_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
+
+ skip_comp_code_check:
 
   if (!(ctx->flags & IPMI_FLAGS_NO_VALID_CHECK)
       && !(ctx->flags & IPMI_FLAGS_NO_LEGAL_CHECK))
@@ -276,6 +286,27 @@ api_ipmi_cmd (ipmi_ctx_t ctx,
 }
 
 int
+api_ipmi_cmd (ipmi_ctx_t ctx,
+              uint8_t lun,
+              uint8_t net_fn,
+              fiid_obj_t obj_cmd_rq,
+              fiid_obj_t obj_cmd_rs)
+{
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    return (-1);
+
+  /* Note: ctx->errnum set in call to ipmi_cmd() */
+  if (ipmi_cmd (ctx,
+                lun,
+                net_fn,
+                obj_cmd_rq,
+                obj_cmd_rs) < 0)
+    return (-1);
+
+  return (_api_ipmi_cmd_post (ctx, obj_cmd_rs));
+}
+
+int
 api_ipmi_cmd_ipmb (ipmi_ctx_t ctx,
                    uint8_t channel_number,
                    uint8_t rs_addr,
@@ -284,8 +315,6 @@ api_ipmi_cmd_ipmb (ipmi_ctx_t ctx,
                    fiid_obj_t obj_cmd_rq,
                    fiid_obj_t obj_cmd_rs)
 {
-  int ret;
-
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     return (-1);
 
@@ -299,33 +328,5 @@ api_ipmi_cmd_ipmb (ipmi_ctx_t ctx,
                      obj_cmd_rs) < 0)
     return (-1);
 
-  if ((ret = ipmi_check_completion_code_success (obj_cmd_rs)) < 0)
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      return (-1);
-    }
-
-  if (!ret)
-    {
-      API_BAD_RESPONSE_TO_API_ERRNUM (ctx, obj_cmd_rs);
-      return (-1);
-    }
-
-  if (!(ctx->flags & IPMI_FLAGS_NO_VALID_CHECK)
-      && !(ctx->flags & IPMI_FLAGS_NO_LEGAL_CHECK))
-    {
-      if ((ret = fiid_obj_packet_valid (obj_cmd_rs)) < 0)
-        {
-          API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
-          return (-1);
-        }
-      
-      if (!ret)
-        {
-          API_SET_ERRNUM (ctx, IPMI_ERR_IPMI_ERROR);
-          return (-1);
-        }
-    }
-
-  return (0);
+  return (_api_ipmi_cmd_post (ctx, obj_cmd_rs));
 }

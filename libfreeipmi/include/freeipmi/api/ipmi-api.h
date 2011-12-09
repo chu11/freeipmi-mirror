@@ -139,8 +139,7 @@ typedef enum ipmi_driver_type ipmi_driver_type_t;
  * an IPMI payload did not return a completion code in an IPMI
  * response.  The NO_LEGAL_CHECK would return such a packet to the
  * user without an error.  If the payload did not return a completion
- * code, the completion code would not be checked as well and a
- * successful completion will be assumed.
+ * code, the completion code will not be checked for.
  */
 
 #define IPMI_FLAGS_DEFAULT        0x00000000
