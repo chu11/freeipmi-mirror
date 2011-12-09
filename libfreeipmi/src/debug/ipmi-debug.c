@@ -191,8 +191,7 @@ ipmi_obj_dump (int fd,
 
   rv = 0;
  cleanup:
-  if (iter)
-    fiid_iterator_destroy (iter);
+  fiid_iterator_destroy (iter);
   return (rv);
 }
 
