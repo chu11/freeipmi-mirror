@@ -896,6 +896,7 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
   uint8_t cmd = 0;             /* used for debugging */
   uint8_t group_extension = 0; /* used for debugging */
   uint64_t val;
+  unsigned int intf_flags = IPMI_INTERFACE_FLAGS_DEFAULT;
 
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC
@@ -909,6 +910,9 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
           && fiid_obj_valid (obj_cmd_rq)
           && fiid_obj_packet_valid (obj_cmd_rq) == 1
           && fiid_obj_valid (obj_cmd_rs));
+
+  if (ctx->flags & IPMI_FLAGS_NO_LEGAL_CHECK)
+    intf_flags |= IPMI_INTERFACE_FLAGS_NO_LEGAL_CHECK;
 
   if (!ctx->io.outofband.last_received.tv_sec
       && !ctx->io.outofband.last_received.tv_usec)
@@ -1086,7 +1090,7 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
 					  ctx->io.outofband.rs.obj_lan_msg_hdr,
 					  obj_cmd_rs,
 					  ctx->io.outofband.rs.obj_lan_msg_trlr,
-					  IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
+					  intf_flags)) < 0)
 	{
 	  API_ERRNO_TO_API_ERRNUM (ctx, errno);
 	  return (-1);
@@ -1247,6 +1251,7 @@ ipmi_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
   uint8_t group_extension = 0; /* used for debugging */
   uint8_t rq_seq_orig;
   uint64_t val;
+  unsigned int intf_flags = IPMI_INTERFACE_FLAGS_DEFAULT;
 
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC
@@ -1256,6 +1261,9 @@ ipmi_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
           && fiid_obj_valid (obj_cmd_rq)
           && fiid_obj_packet_valid (obj_cmd_rq) == 1
           && fiid_obj_valid (obj_cmd_rs));
+
+  if (ctx->flags & IPMI_FLAGS_NO_LEGAL_CHECK)
+    intf_flags |= IPMI_INTERFACE_FLAGS_NO_LEGAL_CHECK;
 
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
     {
@@ -1358,7 +1366,7 @@ ipmi_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
 					  ctx->io.outofband.rs.obj_lan_msg_hdr,
 					  obj_cmd_rs,
 					  ctx->io.outofband.rs.obj_lan_msg_trlr,
-					  IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
+					  intf_flags)) < 0)
 	{
 	  API_ERRNO_TO_API_ERRNUM (ctx, errno);
 	  return (-1);
@@ -2769,6 +2777,7 @@ ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
   uint8_t cmd = 0;             /* used for debugging */
   uint8_t group_extension = 0; /* used for debugging */
   uint64_t val;
+  unsigned int intf_flags = IPMI_INTERFACE_FLAGS_DEFAULT;
 
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC
@@ -2789,6 +2798,9 @@ ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
           && fiid_obj_valid (obj_cmd_rq)
           && fiid_obj_packet_valid (obj_cmd_rq) == 1
           && fiid_obj_valid (obj_cmd_rs));
+
+  if (ctx->flags & IPMI_FLAGS_NO_LEGAL_CHECK)
+    intf_flags |= IPMI_INTERFACE_FLAGS_NO_LEGAL_CHECK;
 
   if (!ctx->io.outofband.last_received.tv_sec
       && !ctx->io.outofband.last_received.tv_usec)
@@ -2969,7 +2981,7 @@ ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
 					       obj_cmd_rs,
 					       ctx->io.outofband.rs.obj_lan_msg_trlr,
 					       ctx->io.outofband.rs.obj_rmcpplus_session_trlr,
-					       IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
+					       intf_flags)) < 0)
 	{
 	  API_ERRNO_TO_API_ERRNUM (ctx, errno);
 	  return (-1);
@@ -3034,6 +3046,7 @@ ipmi_lan_2_0_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
   uint8_t group_extension = 0; /* used for debugging */
   uint8_t rq_seq_orig;
   uint64_t val;
+  unsigned int intf_flags = IPMI_INTERFACE_FLAGS_DEFAULT;
 
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC
@@ -3042,6 +3055,9 @@ ipmi_lan_2_0_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
           && fiid_obj_valid (obj_cmd_rq)
           && fiid_obj_packet_valid (obj_cmd_rq) == 1
           && fiid_obj_valid (obj_cmd_rs));
+
+  if (ctx->flags & IPMI_FLAGS_NO_LEGAL_CHECK)
+    intf_flags |= IPMI_INTERFACE_FLAGS_NO_LEGAL_CHECK;
 
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
     {
@@ -3170,7 +3186,7 @@ ipmi_lan_2_0_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
 					       obj_cmd_rs,
 					       ctx->io.outofband.rs.obj_lan_msg_trlr,
 					       ctx->io.outofband.rs.obj_rmcpplus_session_trlr,
-					       IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
+					       intf_flags)) < 0)
 	{
 	  API_ERRNO_TO_API_ERRNUM (ctx, errno);
 	  return (-1);

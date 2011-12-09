@@ -271,10 +271,14 @@ _kcs_cmd_read (ipmi_ctx_t ctx,
   int hdr_len, cmd_len, read_len;
   fiid_field_t *tmpl = NULL;
   int ret, rv = -1;
+  unsigned int intf_flags = IPMI_INTERFACE_FLAGS_DEFAULT;
 
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC
           && fiid_obj_valid (obj_cmd_rs));
+
+  if (ctx->flags & IPMI_FLAGS_NO_LEGAL_CHECK)
+    intf_flags |= IPMI_INTERFACE_FLAGS_NO_LEGAL_CHECK;
 
   if ((hdr_len = fiid_template_len_bytes (tmpl_hdr_kcs)) < 0)
     {
@@ -331,7 +335,7 @@ _kcs_cmd_read (ipmi_ctx_t ctx,
                                       read_len,
                                       ctx->io.inband.rs.obj_hdr,
                                       obj_cmd_rs,
-				      IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
+				      intf_flags)) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
@@ -513,6 +517,7 @@ _ipmi_kcs_ipmb_recv (ipmi_ctx_t ctx,
   fiid_obj_t obj_ipmb_msg_rs = NULL;
   fiid_obj_t obj_get_cmd_rs = NULL;
   int len, rv = -1;
+  unsigned int intf_flags = IPMI_INTERFACE_FLAGS_DEFAULT;
 
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC
@@ -520,6 +525,9 @@ _ipmi_kcs_ipmb_recv (ipmi_ctx_t ctx,
           && fiid_obj_valid (obj_ipmb_msg_hdr_rs)
           && fiid_obj_valid (obj_ipmb_msg_trlr)
           && fiid_obj_valid (obj_cmd_rs));
+
+  if (ctx->flags & IPMI_FLAGS_NO_LEGAL_CHECK)
+    intf_flags |= IPMI_INTERFACE_FLAGS_NO_LEGAL_CHECK;
 
   if (!(obj_ipmb_msg_rs = fiid_obj_create (tmpl_ipmb_msg)))
     {
@@ -562,7 +570,7 @@ _ipmi_kcs_ipmb_recv (ipmi_ctx_t ctx,
                                 obj_ipmb_msg_hdr_rs,
                                 obj_cmd_rs,
                                 obj_ipmb_msg_trlr,
-				IPMI_INTERFACE_FLAGS_DEFAULT) < 0)
+				intf_flags) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;

@@ -1,4 +1,9 @@
-2011-12-07  Albert Chu <chu11@llnl.gov>
+2011-12-09  Kaiwang Chen <kaiwang.chen@gmail.com>
+
+	* libfreeipmi/src/api/: Fix bug with IPMI_FLAGS_NO_LEGAL_CHECK
+	use.
+	
+2011-12-08  Albert Chu <chu11@llnl.gov>
 
 	* Support IPMI_FLAGS_NO_LEGAL_CHECK flag in libfreeipmi.
 

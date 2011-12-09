@@ -230,10 +230,14 @@ _ssif_cmd_read (ipmi_ctx_t ctx,
   int hdr_len, cmd_len, read_len;
   fiid_field_t *tmpl = NULL;
   int ret, rv = -1;
+  unsigned int intf_flags = IPMI_INTERFACE_FLAGS_DEFAULT;
   
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC
           && fiid_obj_valid (obj_cmd_rs));
+
+  if (ctx->flags & IPMI_FLAGS_NO_LEGAL_CHECK)
+    intf_flags |= IPMI_INTERFACE_FLAGS_NO_LEGAL_CHECK;
 
   if ((hdr_len = fiid_template_len_bytes (tmpl_hdr_kcs)) < 0)
     {
@@ -287,7 +291,7 @@ _ssif_cmd_read (ipmi_ctx_t ctx,
                                       read_len,
                                       ctx->io.inband.rs.obj_hdr,
                                       obj_cmd_rs,
-				      IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
+				      intf_flags)) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
