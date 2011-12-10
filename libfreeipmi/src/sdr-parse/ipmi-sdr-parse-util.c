@@ -25,6 +25,7 @@
 #ifdef STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#include <assert.h>
 #include <errno.h>
 
 #include "freeipmi/sdr-parse/ipmi-sdr-parse.h"
@@ -39,8 +40,7 @@
 void
 sdr_parse_set_sdr_parse_errnum_by_errno (ipmi_sdr_parse_ctx_t ctx, int __errno)
 {
-  if (!ctx || ctx->magic != IPMI_SDR_PARSE_CTX_MAGIC)
-    return;
+  assert (ctx && ctx->magic == IPMI_SDR_PARSE_CTX_MAGIC);
 
   if (__errno == 0)
     ctx->errnum = IPMI_SDR_PARSE_ERR_SUCCESS;
@@ -53,8 +53,7 @@ sdr_parse_set_sdr_parse_errnum_by_errno (ipmi_sdr_parse_ctx_t ctx, int __errno)
 void
 sdr_parse_set_sdr_parse_errnum_by_fiid_object (ipmi_sdr_parse_ctx_t ctx, fiid_obj_t obj)
 {
-  if (!ctx || ctx->magic != IPMI_SDR_PARSE_CTX_MAGIC)
-    return;
+  assert (ctx && ctx->magic == IPMI_SDR_PARSE_CTX_MAGIC);
 
   if (fiid_obj_errnum (obj) == FIID_ERR_SUCCESS)
     ctx->errnum = IPMI_SDR_PARSE_ERR_SUCCESS;

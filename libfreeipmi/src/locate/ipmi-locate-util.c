@@ -25,6 +25,7 @@
 #ifdef STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#include <assert.h>
 #include <errno.h>
 
 #include "freeipmi/locate/ipmi-locate.h"
@@ -39,8 +40,7 @@
 void
 locate_set_locate_errnum_by_errno (ipmi_locate_ctx_t ctx, int __errno)
 {
-  if (!ctx || ctx->magic != IPMI_LOCATE_CTX_MAGIC)
-    return;
+  assert (ctx && ctx->magic == IPMI_LOCATE_CTX_MAGIC);
 
   if (__errno == 0)
     ctx->errnum = IPMI_LOCATE_ERR_SUCCESS;
@@ -59,8 +59,7 @@ locate_set_locate_errnum_by_errno (ipmi_locate_ctx_t ctx, int __errno)
 void
 locate_set_locate_errnum_by_fiid_object (ipmi_locate_ctx_t ctx, fiid_obj_t obj)
 {
-  if (!ctx || ctx->magic != IPMI_LOCATE_CTX_MAGIC)
-    return;
+  assert (ctx && ctx->magic == IPMI_LOCATE_CTX_MAGIC);
 
   if (fiid_obj_errnum (obj) == FIID_ERR_SUCCESS)
     ctx->errnum = IPMI_LOCATE_ERR_SUCCESS;

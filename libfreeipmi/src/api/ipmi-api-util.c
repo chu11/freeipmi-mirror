@@ -46,8 +46,7 @@
 void
 api_set_api_errnum_by_errno (ipmi_ctx_t ctx, int __errno)
 {
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
-    return;
+  assert (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
   if (__errno == 0)
     ctx->errnum = IPMI_ERR_SUCCESS;
@@ -68,8 +67,7 @@ api_set_api_errnum_by_errno (ipmi_ctx_t ctx, int __errno)
 void
 api_set_api_errnum_by_fiid_object (ipmi_ctx_t ctx, fiid_obj_t obj)
 {
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
-    return;
+  assert (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
   if (fiid_obj_errnum (obj) == FIID_ERR_SUCCESS)
     ctx->errnum = IPMI_ERR_SUCCESS;
@@ -91,8 +89,7 @@ api_set_api_errnum_by_fiid_object (ipmi_ctx_t ctx, fiid_obj_t obj)
 void
 api_set_api_errnum_by_bad_response (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
 {
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
-    return;
+  assert (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
   /* IPMI_COMP_CODE_COMMAND_TIMEOUT, assumes it's a IPMB or command
    * specific timeout, so set to "MESSAGE_TIMEOUT" so user can
@@ -116,8 +113,7 @@ api_set_api_errnum_by_bad_response (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
 void
 api_set_api_errnum_by_locate_errnum (ipmi_ctx_t ctx, int locate_errnum)
 {
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
-    return;
+  assert (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
   if (locate_errnum == IPMI_LOCATE_ERR_SUCCESS)
     ctx->errnum = IPMI_ERR_SUCCESS;
@@ -134,8 +130,7 @@ api_set_api_errnum_by_locate_errnum (ipmi_ctx_t ctx, int locate_errnum)
 void
 api_set_api_errnum_by_kcs_errnum (ipmi_ctx_t ctx, int kcs_errnum)
 {
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
-    return;
+  assert (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
   if (kcs_errnum == IPMI_KCS_ERR_SUCCESS)
     ctx->errnum = IPMI_ERR_SUCCESS;
@@ -158,8 +153,7 @@ api_set_api_errnum_by_kcs_errnum (ipmi_ctx_t ctx, int kcs_errnum)
 void
 api_set_api_errnum_by_ssif_errnum (ipmi_ctx_t ctx, int ssif_errnum)
 {
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
-    return;
+  assert (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
   if (ssif_errnum == IPMI_SSIF_ERR_SUCCESS)
     ctx->errnum = IPMI_ERR_SUCCESS;
@@ -182,8 +176,7 @@ api_set_api_errnum_by_ssif_errnum (ipmi_ctx_t ctx, int ssif_errnum)
 void
 api_set_api_errnum_by_openipmi_errnum (ipmi_ctx_t ctx, int openipmi_errnum)
 {
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
-    return;
+  assert (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
   if (openipmi_errnum == IPMI_OPENIPMI_ERR_SUCCESS)
     ctx->errnum = IPMI_ERR_SUCCESS;
@@ -204,8 +197,7 @@ api_set_api_errnum_by_openipmi_errnum (ipmi_ctx_t ctx, int openipmi_errnum)
 void
 api_set_api_errnum_by_sunbmc_errnum (ipmi_ctx_t ctx, int sunbmc_errnum)
 {
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
-    return;
+  assert (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
   if (sunbmc_errnum == IPMI_SUNBMC_ERR_SUCCESS)
     ctx->errnum = IPMI_ERR_SUCCESS;
@@ -292,8 +284,7 @@ api_ipmi_cmd (ipmi_ctx_t ctx,
               fiid_obj_t obj_cmd_rq,
               fiid_obj_t obj_cmd_rs)
 {
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
-    return (-1);
+  assert (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
   /* Note: ctx->errnum set in call to ipmi_cmd() */
   if (ipmi_cmd (ctx,
@@ -315,8 +306,7 @@ api_ipmi_cmd_ipmb (ipmi_ctx_t ctx,
                    fiid_obj_t obj_cmd_rq,
                    fiid_obj_t obj_cmd_rs)
 {
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
-    return (-1);
+  assert (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
   /* Note: ctx->errnum set in call to ipmi_cmd_ipmb() */
   if (ipmi_cmd_ipmb (ctx,
