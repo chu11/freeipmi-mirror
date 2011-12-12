@@ -1,2 +1,6 @@
-SUBDIRS = ganglia nagios pet
+SUBDIRS = \
+	ganglia \
+	libipmimonitoring \
+	nagios \
+	pet
 

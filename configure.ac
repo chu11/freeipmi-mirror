@@ -49,9 +49,9 @@ AC_CONFIG_FILES([
         common/src/toolsensor/Makefile
         contrib/Makefile
         contrib/ganglia/Makefile
+	contrib/libipmimonitoring/Makefile
         contrib/nagios/Makefile
 	contrib/pet/Makefile
-        examples/Makefile
         libfreeipmi/Makefile 
         libfreeipmi/libfreeipmi.3.pre
         libfreeipmi/freeipmi_interpret_sensor.conf.5.pre

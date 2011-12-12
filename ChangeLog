@@ -1,3 +1,7 @@
+2011-12-12  Albert Chu <chu11@llnl.gov>
+
+	* examples/: Remove directory.  Move files into contrib/libipmimonitoring.
+
 2011-12-12  Kaiwang Chen <kaiwang.chen@gmail.com>
 
 	* libfreeipmi/src/api/ipmi-api-util.c (_api_ipmi_cmd_post): Fix
