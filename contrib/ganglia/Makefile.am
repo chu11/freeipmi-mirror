@@ -5,3 +5,7 @@
 ##*****************************************************************************
 
 EXTRA_DIST = README ganglia_ipmi_sensors.pl
+
+docdir = $(datadir)/doc/$(PACKAGE)/contrib/ganglia
+
+doc_DATA = $(EXTRA_DIST)

@@ -23,3 +23,7 @@ $(top_builddir)/libipmimonitoring/src/libipmimonitoring.la : force-dependency-ch
 force-dependency-check:
 
 EXTRA_DIST = ipmimonitoring-sel.c ipmimonitoring-sensors.c
+
+docdir = $(datadir)/doc/$(PACKAGE)/contrib/libipmimonitoring
+
+doc_DATA = $(EXTRA_DIST)

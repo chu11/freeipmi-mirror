@@ -5,3 +5,7 @@
 ##*****************************************************************************
 
 EXTRA_DIST = README petalert.pl
+
+docdir = $(datadir)/doc/$(PACKAGE)/contrib/pet
+
+doc_DATA = $(EXTRA_DIST)

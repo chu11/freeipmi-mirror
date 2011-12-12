@@ -5,3 +5,7 @@
 ##*****************************************************************************
 
 EXTRA_DIST = README nagios_ipmi_sensors.pl
+
+docdir = $(datadir)/doc/$(PACKAGE)/contrib/nagios
+
+doc_DATA = $(EXTRA_DIST)

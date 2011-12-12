@@ -2,6 +2,10 @@
 
 	* examples/: Remove directory.  Move files into contrib/libipmimonitoring.
 
+	* Install contribs into doc/contrib/
+
+	* freeipmi.spec.in: Fixup for recent changes.
+
 2011-12-12  Kaiwang Chen <kaiwang.chen@gmail.com>
 
 	* libfreeipmi/src/api/ipmi-api-util.c (_api_ipmi_cmd_post): Fix
