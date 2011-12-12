@@ -237,7 +237,7 @@ _api_ipmi_cmd_post (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
        * (invalid packet, field not found, etc.)
        */
       
-      if (fiid_obj_get (obj_cmd_rs, "comp_code", &val) < 0)
+      if (FIID_OBJ_GET (obj_cmd_rs, "comp_code", &val) < 0)
 	{
 	  if (fiid_obj_errnum (obj_cmd_rs) == FIID_ERR_DATA_NOT_AVAILABLE)
 	    goto skip_comp_code_check;

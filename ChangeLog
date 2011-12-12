@@ -1,3 +1,8 @@
+2011-12-12  Kaiwang Chen <kaiwang.chen@gmail.com>
+
+	* libfreeipmi/src/api/ipmi-api-util.c (_api_ipmi_cmd_post): Fix
+	corner case bug.
+
 2011-12-09  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/api/: Fix completion code check corner case with
