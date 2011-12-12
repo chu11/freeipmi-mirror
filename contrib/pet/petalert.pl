@@ -72,6 +72,9 @@
 #
 # ChangeLog
 #
+# * Sun 11 Dec 2011 kaiwang.chen@gmail.com
+# - Add -W to pass workaround flags to ipmi-pet
+#
 # * Wed 7  Dec 2011 kaiwang.chen@gmail.com
 # - Add --ack support
 # - capture exit code of helper
@@ -119,6 +122,9 @@ $0 [OPTIONS] -- [ALERT_SPECIFIC_OPTIONS] ALERT_SPECIFIC_ARGS
                 Specify mode of execution. Required.
     --ack
                 Acknowledge the trap before alert.
+    -W
+    --workaround
+                Sets workaround flags for ipmi-pet to acknowledge the trap.
     -o
     --trapoid  OID
                 Sets trapoid in embperl mode, or defaults to "all".
@@ -252,11 +258,14 @@ sub decode_pet {
 }
 
 sub ack_pet {
-  my ($specific, $event_hexstring, $host) = @_;
+  my ($specific, $event_hexstring, $host, $workaround) = @_;
 
   my $ipmi_pet = "/usr/sbin/ipmi-pet";
-  my @o = qw(--pet-acknowledge -h);
-  push @o, $host;
+  my @o = qw(--pet-acknowledge);
+  if ($workaround) {
+    push @o, "-W", $workaround;
+  }
+  push @o, "-h", $host;
   push @o, $specific;
   $event_hexstring =~ s/[^ 0-9a-fA-F]//g; # sanity check
   push @o, split /\s+/, $event_hexstring;
@@ -397,7 +406,7 @@ sub process {
     if ($v->[0] =~ /^\Q$event_oid\E$/) {
       my $ip = extract_ip($pdu_info->{receivedfrom});
       if ($opts{ack}) {
-        ack_pet($specific, $v->[1], $ip);
+        ack_pet($specific, $v->[1], $ip, $opts{workaround});
       }
 
       my $sdrcache = resolve_sdrcache($ip);
@@ -642,7 +651,7 @@ sub resolve_sdrcache {
 # process and verify args
 sub process_args {
   # parse global ARGV for this package
-  GetOptions(\%opts, 'help!', 'quiet!', 'mode|m=s', 'ack!', 
+  GetOptions(\%opts, 'help!', 'quiet!', 'mode|m=s', 'ack!', 'workaround|W=s',
     'trapoid|o=s', 'sdrcache|c=s', 'log|f=s', 'Debug|D=s', 'alert|n=s');
 
   if ($opts{'help'}) {

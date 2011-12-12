@@ -3,6 +3,8 @@
 	* libfreeipmi/src/api/ipmi-api-util.c (_api_ipmi_cmd_post): Fix
 	corner case bug.
 
+	* contrib/pet/petalert.pl: Support workaround option.
+
 2011-12-09  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/api/: Fix completion code check corner case with
