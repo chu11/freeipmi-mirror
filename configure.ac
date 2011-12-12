@@ -30,7 +30,6 @@ AC_CONFIG_FILES([
         doc/Makefile 
         etc/Makefile
         common/Makefile 
-        common/man/Makefile 
         common/src/Makefile
         common/src/configtool/Makefile
         common/src/debugutil/Makefile

@@ -32,29 +32,29 @@ the appropriate sensor state.  Sensors need not always report a sensor
 event.  When a sensor event is not present, "OK" is typically
 reported.
 
-#include <@top_srcdir@/common/man/manpage-common-table-of-contents.man>
+#include <@top_srcdir@/man/manpage-common-table-of-contents.man>
 To perform IPMI sensor configuration, please see
 .B ipmi-sensors-config(8).
 To perform some advanced SDR management, please see
 .B bmc-device(8).
 
-#include <@top_srcdir@/common/man/manpage-common-general-options-header.man>
-#include <@top_srcdir@/common/man/manpage-common-driver.man>
-#include <@top_srcdir@/common/man/manpage-common-inband.man>
-#include <@top_srcdir@/common/man/manpage-common-outofband-hostname-hostranged.man>
-#include <@top_srcdir@/common/man/manpage-common-outofband-username-operator.man>
-#include <@top_srcdir@/common/man/manpage-common-outofband-password.man>
-#include <@top_srcdir@/common/man/manpage-common-outofband-k-g.man>
-#include <@top_srcdir@/common/man/manpage-common-outofband-session-timeout.man>
-#include <@top_srcdir@/common/man/manpage-common-outofband-retransmission-timeout.man>
-#include <@top_srcdir@/common/man/manpage-common-authentication-type.man>
-#include <@top_srcdir@/common/man/manpage-common-cipher-suite-id-main.man>
-#include <@top_srcdir@/common/man/manpage-common-cipher-suite-id-details.man>
-#include <@top_srcdir@/common/man/manpage-common-privilege-level-operator.man>
-#include <@top_srcdir@/common/man/manpage-common-config-file.man>
-#include <@top_srcdir@/common/man/manpage-common-workaround-flags.man>
-#include <@top_srcdir@/common/man/manpage-common-debug.man>
-#include <@top_srcdir@/common/man/manpage-common-misc.man>
+#include <@top_srcdir@/man/manpage-common-general-options-header.man>
+#include <@top_srcdir@/man/manpage-common-driver.man>
+#include <@top_srcdir@/man/manpage-common-inband.man>
+#include <@top_srcdir@/man/manpage-common-outofband-hostname-hostranged.man>
+#include <@top_srcdir@/man/manpage-common-outofband-username-operator.man>
+#include <@top_srcdir@/man/manpage-common-outofband-password.man>
+#include <@top_srcdir@/man/manpage-common-outofband-k-g.man>
+#include <@top_srcdir@/man/manpage-common-outofband-session-timeout.man>
+#include <@top_srcdir@/man/manpage-common-outofband-retransmission-timeout.man>
+#include <@top_srcdir@/man/manpage-common-authentication-type.man>
+#include <@top_srcdir@/man/manpage-common-cipher-suite-id-main.man>
+#include <@top_srcdir@/man/manpage-common-cipher-suite-id-details.man>
+#include <@top_srcdir@/man/manpage-common-privilege-level-operator.man>
+#include <@top_srcdir@/man/manpage-common-config-file.man>
+#include <@top_srcdir@/man/manpage-common-workaround-flags.man>
+#include <@top_srcdir@/man/manpage-common-debug.man>
+#include <@top_srcdir@/man/manpage-common-misc.man>
 .SH "IPMI-SENSORS OPTIONS"
 The following options are specific to
 .B Ipmi-sensors.
@@ -125,7 +125,7 @@ this format is utilized for multiple active sensors, or the user
 simply has interest in seeing the permutation of entries shared by a
 SDR entry.  By setting this option, each sensor number shared by a
 record will be iterated over and output.
-#include <@top_srcdir@/common/man/manpage-common-interpret-oem-data.man>
+#include <@top_srcdir@/man/manpage-common-interpret-oem-data.man>
 .TP
 \fB\-\-ignore\-not\-available\-sensors\fR
 Ignore not-available (i.e. N/A) sensors in output.
@@ -155,43 +155,43 @@ previously output by
 \fB\-\-sensor\-state\-config\-file\fR=\fIFILE\fR
 Specify an alternate sensor state configuration file.  Option ignored
 if \fB\-\-output\-sensor\-state\fR not specified.
-#include <@top_srcdir@/common/man/manpage-common-entity-sensor-names.man>
-#include <@top_srcdir@/common/man/manpage-common-no-sensor-type-output.man>
-#include <@top_srcdir@/common/man/manpage-common-comma-separated-output.man>
-#include <@top_srcdir@/common/man/manpage-common-no-header-output.man>
-#include <@top_srcdir@/common/man/manpage-common-non-abbreviated-units.man>
-#include <@top_srcdir@/common/man/manpage-common-legacy-output.man>
+#include <@top_srcdir@/man/manpage-common-entity-sensor-names.man>
+#include <@top_srcdir@/man/manpage-common-no-sensor-type-output.man>
+#include <@top_srcdir@/man/manpage-common-comma-separated-output.man>
+#include <@top_srcdir@/man/manpage-common-no-header-output.man>
+#include <@top_srcdir@/man/manpage-common-non-abbreviated-units.man>
+#include <@top_srcdir@/man/manpage-common-legacy-output.man>
 .TP
 \fB\-\-ipmimonitoring\-legacy\-output\fR
 Output legacy format of legacy
 .B ipmimonitoring
 tool.  Newer options may not be applicable to legacy output.
-#include <@top_srcdir@/common/man/manpage-common-sdr-options.man>
-#include <@top_srcdir@/common/man/manpage-common-hostranged-options-header.man>
-#include <@top_srcdir@/common/man/manpage-common-hostranged-buffer.man>
-#include <@top_srcdir@/common/man/manpage-common-hostranged-consolidate.man>
-#include <@top_srcdir@/common/man/manpage-common-hostranged-fanout.man>
-#include <@top_srcdir@/common/man/manpage-common-hostranged-eliminate.man>
-#include <@top_srcdir@/common/man/manpage-common-hostranged-always-prefix.man>
-#include <@top_srcdir@/common/man/manpage-common-hostranged-text-main.man>
-#include <@top_srcdir@/common/man/manpage-common-hostranged-text-threads.man>
-#include <@top_srcdir@/common/man/manpage-common-hostranged-text-options.man>
-#include <@top_srcdir@/common/man/manpage-common-hostranged-text-localhost.man>
-#include <@top_srcdir@/common/man/manpage-common-troubleshooting-heading-start.man>
-#include <@top_srcdir@/common/man/manpage-common-troubleshooting-heading-outofband.man>
-#include <@top_srcdir@/common/man/manpage-common-troubleshooting-heading-inband.man>
-#include <@top_srcdir@/common/man/manpage-common-troubleshooting-heading-end.man>
-#include <@top_srcdir@/common/man/manpage-common-troubleshooting-outofband.man>
-#include <@top_srcdir@/common/man/manpage-common-troubleshooting-inband.man>
+#include <@top_srcdir@/man/manpage-common-sdr-options.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-options-header.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-buffer.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-consolidate.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-fanout.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-eliminate.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-always-prefix.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-text-main.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-text-threads.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-text-options.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-text-localhost.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-heading-start.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-heading-outofband.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-heading-inband.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-heading-end.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-outofband.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-inband.man>
 .LP
 "sensor config file parse error" - A parse error was found in the
 sensor interpretation configuration file.  Please see
 .B freeipmi_interpret_sensor.conf(5).
-#include <@top_srcdir@/common/man/manpage-common-workaround-heading-text.man>
-#include <@top_srcdir@/common/man/manpage-common-workaround-inband-text.man>
-#include <@top_srcdir@/common/man/manpage-common-workaround-outofband-common-text.man>
-#include <@top_srcdir@/common/man/manpage-common-workaround-outofband-15-text.man>
-#include <@top_srcdir@/common/man/manpage-common-workaround-outofband-20-text.man>
+#include <@top_srcdir@/man/manpage-common-workaround-heading-text.man>
+#include <@top_srcdir@/man/manpage-common-workaround-inband-text.man>
+#include <@top_srcdir@/man/manpage-common-workaround-outofband-common-text.man>
+#include <@top_srcdir@/man/manpage-common-workaround-outofband-15-text.man>
+#include <@top_srcdir@/man/manpage-common-workaround-outofband-20-text.man>
 .LP
 \fIdiscretereading\fR - This workaround option will allow sensor readings
 to be read even if the event/reading type code for the sensor is not
@@ -220,8 +220,8 @@ BMC.  This may problem may exist on your motherboard if sensors are
 listed as "N/A" even if they should be available. This option is
 confirmed to work around issues on Fujitsu RX300 and Fujitsu RX300S2
 motherboards.
-#include <@top_srcdir@/common/man/manpage-common-workaround-extra-text.man>
-#include <@top_srcdir@/common/man/manpage-common-oem-interpretation.man>
+#include <@top_srcdir@/man/manpage-common-workaround-extra-text.man>
+#include <@top_srcdir@/man/manpage-common-oem-interpretation.man>
 .LP
 Dell Poweredge R210, Dell Poweredge R610, Dell Poweredge R710, Fujitsu
 iRMC S1 and iRMC S2 systems, Intel S5500WB/Penguin Computing Relion
@@ -256,18 +256,18 @@ Show all sensors on a remote machine using IPMI over LAN.
 .PP
 Show all sensors across a cluster using IPMI over LAN.
 .PP
-#include <@top_srcdir@/common/man/manpage-common-known-issues.man>
+#include <@top_srcdir@/man/manpage-common-known-issues.man>
 .LP
 Some sensors may be output as not available (i.e. N/A) because the
 owner of the sensor is not the BMC.  To attempt to bridge sensors
 and access sensors not on the BMC, users may wish to try the \fB\-b\fR
 or \fB\-\-bridge\-sensors\fR options.
 
-#include <@top_srcdir@/common/man/manpage-common-reporting-bugs.man>
+#include <@top_srcdir@/man/manpage-common-reporting-bugs.man>
 .SH "COPYRIGHT"
 Copyright \(co 2003-2012 FreeIPMI Core Team.  
-#include <@top_srcdir@/common/man/manpage-common-gpl-program-text.man>
+#include <@top_srcdir@/man/manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
 freeipmi(7), bmc-config(8), bmc-device(8), ipmi-sensors-config(8),
 freeipmi_interpret_sensor.conf(5)
-#include <@top_srcdir@/common/man/manpage-common-homepage.man>
+#include <@top_srcdir@/man/manpage-common-homepage.man>

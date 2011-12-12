@@ -46,17 +46,17 @@ Often (although not always), console redirection must be also
 be configured properly in the BIOS and/or operating system.  Both must
 be configured to redirect console traffic out the appropriate COM port.
 
-#include <@top_srcdir@/common/man/manpage-common-table-of-contents.man>
-#include <@top_srcdir@/common/man/manpage-common-general-options-header.man>
-#include <@top_srcdir@/common/man/manpage-common-outofband-hostname.man>
+#include <@top_srcdir@/man/manpage-common-table-of-contents.man>
+#include <@top_srcdir@/man/manpage-common-general-options-header.man>
+#include <@top_srcdir@/man/manpage-common-outofband-hostname.man>
 .TP
 \fB\-u\fR, \fB\-\-username\fR=\fIUSERNAME\fR
 Specify the username to use when authenticating with the remote host.
 If not specified, a null (i.e. anonymous) username is assumed.  The
 user must a high enough privilege to establish a SOL session and have
 SOL session abilities.
-#include <@top_srcdir@/common/man/manpage-common-outofband-password.man>
-#include <@top_srcdir@/common/man/manpage-common-outofband-k-g.man>
+#include <@top_srcdir@/man/manpage-common-outofband-password.man>
+#include <@top_srcdir@/man/manpage-common-outofband-k-g.man>
 .TP
 \fB\-\-session-timeout\fR=\fIMILLISECONDS\fR
 Specify the session timeout in milliseconds.  Defaults to 60000
@@ -78,12 +78,12 @@ specified.  The user should be aware that only cipher suite ids 3, 8,
 and 12 encrypt console payloads.  Console information will be sent in
 the clear if an alternate cipher suite id is selected.  The following
 cipher suite ids are currently supported:
-#include <@top_srcdir@/common/man/manpage-common-cipher-suite-id-details.man>
-#include <@top_srcdir@/common/man/manpage-common-privilege-level-admin.man>
-#include <@top_srcdir@/common/man/manpage-common-config-file.man>
-#include <@top_srcdir@/common/man/manpage-common-workaround-flags.man>
-#include <@top_srcdir@/common/man/manpage-common-debug.man>
-#include <@top_srcdir@/common/man/manpage-common-misc.man>
+#include <@top_srcdir@/man/manpage-common-cipher-suite-id-details.man>
+#include <@top_srcdir@/man/manpage-common-privilege-level-admin.man>
+#include <@top_srcdir@/man/manpage-common-config-file.man>
+#include <@top_srcdir@/man/manpage-common-workaround-flags.man>
+#include <@top_srcdir@/man/manpage-common-debug.man>
+#include <@top_srcdir@/man/manpage-common-misc.man>
 .SH "IPMICONSOLE OPTIONS"
 The following options are specific to
 .B Ipmiconsole.
@@ -151,10 +151,10 @@ Send a DEL character.
 .I &&
 Send a single escape character.
 
-#include <@top_srcdir@/common/man/manpage-common-troubleshooting-heading-start.man>
-#include <@top_srcdir@/common/man/manpage-common-troubleshooting-heading-outofband.man>
-#include <@top_srcdir@/common/man/manpage-common-troubleshooting-heading-end.man>
-#include <@top_srcdir@/common/man/manpage-common-troubleshooting-outofband.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-heading-start.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-heading-outofband.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-heading-end.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-outofband.man>
 .SH "IPMICONSOLE TROUBLESHOOTING"
 The following are common issues for error messages in
 .B ipmiconsole.
@@ -210,9 +210,9 @@ combination of different cipher suites, privileges, etc. to resolve
 the problem.  Please see the WORKAROUNDS section below for possible
 workarounds too.
 
-#include <@top_srcdir@/common/man/manpage-common-workaround-heading-text.man>
-#include <@top_srcdir@/common/man/manpage-common-workaround-outofband-common-text.man>
-#include <@top_srcdir@/common/man/manpage-common-workaround-outofband-20-text.man>
+#include <@top_srcdir@/man/manpage-common-workaround-heading-text.man>
+#include <@top_srcdir@/man/manpage-common-workaround-outofband-common-text.man>
+#include <@top_srcdir@/man/manpage-common-workaround-outofband-20-text.man>
 .LP
 \fIsolpayloadsize\fR - This workaround flag will not check for valid
 SOL payload sizes and assume a proper set.  It works around remote
@@ -233,7 +233,7 @@ activation status of SOL during the protocol setup.  It works around
 remote systems that do not properly support this command.  Those
 hitting this issue may see "BMC Error" errors.  Issue observed on
 Supermicro X8SIL-F.
-#include <@top_srcdir@/common/man/manpage-common-known-issues.man>
+#include <@top_srcdir@/man/manpage-common-known-issues.man>
 .LP
 Some motherboards define an OEM SOL inactivity timeout for SOL
 sessions.  If SOL sessions stay inactive for long periods of time,
@@ -256,7 +256,7 @@ place to handle this.  The session must be closed and restarted.
 .PP
 Establish a console sesssion with a remote host.
 .PP
-#include <@top_srcdir@/common/man/manpage-common-known-issues.man>
+#include <@top_srcdir@/man/manpage-common-known-issues.man>
 
 .if @WITH_DEBUG@ \{
 
@@ -274,12 +274,12 @@ Core dumps are enabled.
 Before placing ipmiconsole in a production system, it is recommended
 that the program be compiled with debugging turned off.
 \}
-#include <@top_srcdir@/common/man/manpage-common-reporting-bugs.man>
+#include <@top_srcdir@/man/manpage-common-reporting-bugs.man>
 .SH COPYRIGHT
 Copyright (C) 2007-2012 Lawrence Livermore National Security, LLC.
 .br
 Copyright (C) 2006-2007 The Regents of the University of California.
-#include <@top_srcdir@/common/man/manpage-common-gpl-program-text.man>
+#include <@top_srcdir@/man/manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
 freeipmi.conf(5), freeipmi(7), bmc-config(8)
-#include <@top_srcdir@/common/man/manpage-common-homepage.man>
+#include <@top_srcdir@/man/manpage-common-homepage.man>

@@ -15,27 +15,27 @@ does not inform the user if an event is particularly good or bad, just
 that the event occurred.  Users may wish to use the
 \fB\-\-output\-event\-state\fR option to output the analyzed state.
 
-#include <@top_srcdir@/common/man/manpage-common-table-of-contents.man>
+#include <@top_srcdir@/man/manpage-common-table-of-contents.man>
 To perform some advanced SEL management, please see
 .B bmc-device(8).
 
-#include <@top_srcdir@/common/man/manpage-common-general-options-header.man>
-#include <@top_srcdir@/common/man/manpage-common-driver.man>
-#include <@top_srcdir@/common/man/manpage-common-inband.man>
-#include <@top_srcdir@/common/man/manpage-common-outofband-hostname-hostranged.man>
-#include <@top_srcdir@/common/man/manpage-common-outofband-username-user.man>
-#include <@top_srcdir@/common/man/manpage-common-outofband-password.man>
-#include <@top_srcdir@/common/man/manpage-common-outofband-k-g.man>
-#include <@top_srcdir@/common/man/manpage-common-outofband-session-timeout.man>
-#include <@top_srcdir@/common/man/manpage-common-outofband-retransmission-timeout.man>
-#include <@top_srcdir@/common/man/manpage-common-authentication-type.man>
-#include <@top_srcdir@/common/man/manpage-common-cipher-suite-id-main.man>
-#include <@top_srcdir@/common/man/manpage-common-cipher-suite-id-details.man>
-#include <@top_srcdir@/common/man/manpage-common-privilege-level-operator.man>
-#include <@top_srcdir@/common/man/manpage-common-config-file.man>
-#include <@top_srcdir@/common/man/manpage-common-workaround-flags.man>
-#include <@top_srcdir@/common/man/manpage-common-debug.man>
-#include <@top_srcdir@/common/man/manpage-common-misc.man>
+#include <@top_srcdir@/man/manpage-common-general-options-header.man>
+#include <@top_srcdir@/man/manpage-common-driver.man>
+#include <@top_srcdir@/man/manpage-common-inband.man>
+#include <@top_srcdir@/man/manpage-common-outofband-hostname-hostranged.man>
+#include <@top_srcdir@/man/manpage-common-outofband-username-user.man>
+#include <@top_srcdir@/man/manpage-common-outofband-password.man>
+#include <@top_srcdir@/man/manpage-common-outofband-k-g.man>
+#include <@top_srcdir@/man/manpage-common-outofband-session-timeout.man>
+#include <@top_srcdir@/man/manpage-common-outofband-retransmission-timeout.man>
+#include <@top_srcdir@/man/manpage-common-authentication-type.man>
+#include <@top_srcdir@/man/manpage-common-cipher-suite-id-main.man>
+#include <@top_srcdir@/man/manpage-common-cipher-suite-id-details.man>
+#include <@top_srcdir@/man/manpage-common-privilege-level-operator.man>
+#include <@top_srcdir@/man/manpage-common-config-file.man>
+#include <@top_srcdir@/man/manpage-common-workaround-flags.man>
+#include <@top_srcdir@/man/manpage-common-debug.man>
+#include <@top_srcdir@/man/manpage-common-misc.man>
 .SH "IPMI-SEL OPTIONS"
 The following options are specific to
 .B Ipmi-sel.
@@ -150,7 +150,7 @@ formatted correctly.  Use this option to assume these invalid record
 types are system event records and pray for the best.  This option is
 confirmed to work around compliances issues on HP DL 380 G5
 motherboards.
-#include <@top_srcdir@/common/man/manpage-common-interpret-oem-data.man>
+#include <@top_srcdir@/man/manpage-common-interpret-oem-data.man>
 .TP
 \fB\-\-output\-oem\-event\-strings\fR
 Some motherboards support an IPMI OEM extension that returns the
@@ -165,30 +165,30 @@ be very different from the normal FreeIPMI event string output.  If an
 OEM event strings is not available, the default output will be output.
 This option is confirmed to work for Fujitsu iRMC S1 and iRMC S2
 systems.
-#include <@top_srcdir@/common/man/manpage-common-entity-sensor-names.man>
-#include <@top_srcdir@/common/man/manpage-common-no-sensor-type-output.man>
-#include <@top_srcdir@/common/man/manpage-common-comma-separated-output.man>
-#include <@top_srcdir@/common/man/manpage-common-no-header-output.man>
-#include <@top_srcdir@/common/man/manpage-common-non-abbreviated-units.man>
-#include <@top_srcdir@/common/man/manpage-common-legacy-output.man>
-#include <@top_srcdir@/common/man/manpage-common-sdr-options.man>
-#include <@top_srcdir@/common/man/manpage-common-ignore-sdr-cache.man>
-#include <@top_srcdir@/common/man/manpage-common-hostranged-options-header.man>
-#include <@top_srcdir@/common/man/manpage-common-hostranged-buffer.man>
-#include <@top_srcdir@/common/man/manpage-common-hostranged-consolidate.man>
-#include <@top_srcdir@/common/man/manpage-common-hostranged-fanout.man>
-#include <@top_srcdir@/common/man/manpage-common-hostranged-eliminate.man>
-#include <@top_srcdir@/common/man/manpage-common-hostranged-always-prefix.man>
-#include <@top_srcdir@/common/man/manpage-common-hostranged-text-main.man>
-#include <@top_srcdir@/common/man/manpage-common-hostranged-text-threads.man>
-#include <@top_srcdir@/common/man/manpage-common-hostranged-text-options.man>
-#include <@top_srcdir@/common/man/manpage-common-hostranged-text-localhost.man>
-#include <@top_srcdir@/common/man/manpage-common-troubleshooting-heading-start.man>
-#include <@top_srcdir@/common/man/manpage-common-troubleshooting-heading-outofband.man>
-#include <@top_srcdir@/common/man/manpage-common-troubleshooting-heading-inband.man>
-#include <@top_srcdir@/common/man/manpage-common-troubleshooting-heading-end.man>
-#include <@top_srcdir@/common/man/manpage-common-troubleshooting-outofband.man>
-#include <@top_srcdir@/common/man/manpage-common-troubleshooting-inband.man>
+#include <@top_srcdir@/man/manpage-common-entity-sensor-names.man>
+#include <@top_srcdir@/man/manpage-common-no-sensor-type-output.man>
+#include <@top_srcdir@/man/manpage-common-comma-separated-output.man>
+#include <@top_srcdir@/man/manpage-common-no-header-output.man>
+#include <@top_srcdir@/man/manpage-common-non-abbreviated-units.man>
+#include <@top_srcdir@/man/manpage-common-legacy-output.man>
+#include <@top_srcdir@/man/manpage-common-sdr-options.man>
+#include <@top_srcdir@/man/manpage-common-ignore-sdr-cache.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-options-header.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-buffer.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-consolidate.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-fanout.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-eliminate.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-always-prefix.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-text-main.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-text-threads.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-text-options.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-text-localhost.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-heading-start.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-heading-outofband.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-heading-inband.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-heading-end.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-outofband.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-inband.man>
 .SH "IPMI-SEL TROUBLESHOOTING"
 Some timestamps in the SEL may report a date of 1-Jan-1970, the epoch
 for SEL timestamps.  This timestamp is not necessarily incorrect.  It
@@ -207,11 +207,11 @@ The following are common issues for error messages in
 event interpretation configuration file.  Please see
 .B freeipmi_interpret_sel.conf(5).
 
-#include <@top_srcdir@/common/man/manpage-common-workaround-heading-text.man>
-#include <@top_srcdir@/common/man/manpage-common-workaround-inband-text.man>
-#include <@top_srcdir@/common/man/manpage-common-workaround-outofband-common-text.man>
-#include <@top_srcdir@/common/man/manpage-common-workaround-outofband-15-text.man>
-#include <@top_srcdir@/common/man/manpage-common-workaround-outofband-20-text.man>
+#include <@top_srcdir@/man/manpage-common-workaround-heading-text.man>
+#include <@top_srcdir@/man/manpage-common-workaround-inband-text.man>
+#include <@top_srcdir@/man/manpage-common-workaround-outofband-common-text.man>
+#include <@top_srcdir@/man/manpage-common-workaround-outofband-15-text.man>
+#include <@top_srcdir@/man/manpage-common-workaround-outofband-20-text.man>
 .LP
 \fIassumesystemevent\fR - This workaround option will assume invalid SEL
 record types are system event records.  Records may be formatted
@@ -220,8 +220,8 @@ may see "Unknown SEL Record Type" errors.  Output may be unknown, pray
 for the best.  This option is confirmed to work around compliances
 issues on HP DL 380 G5 motherboards.  This option is identical to
 using the \fB\-\-assume\-system\-event\-records\fR option above.
-#include <@top_srcdir@/common/man/manpage-common-workaround-extra-text.man>
-#include <@top_srcdir@/common/man/manpage-common-oem-interpretation.man>
+#include <@top_srcdir@/man/manpage-common-workaround-extra-text.man>
+#include <@top_srcdir@/man/manpage-common-oem-interpretation.man>
 .LP
 Dell Poweredge 2900, Dell Poweredge 2950, Dell Poweredge R610, Dell
 Poweredge R710, Fujitsu iRMC S1 and iRMC S2 systems, Intel
@@ -253,11 +253,11 @@ Delete all SEL entries on the local machine.
 .PP
 Delete SEL entries in the range 12 to 42 on the local machine.
 .PP
-#include <@top_srcdir@/common/man/manpage-common-known-issues.man>
-#include <@top_srcdir@/common/man/manpage-common-reporting-bugs.man>
+#include <@top_srcdir@/man/manpage-common-known-issues.man>
+#include <@top_srcdir@/man/manpage-common-reporting-bugs.man>
 .SH "COPYRIGHT"
 Copyright \(co 2003-2012 FreeIPMI Core Team.  
-#include <@top_srcdir@/common/man/manpage-common-gpl-program-text.man>
+#include <@top_srcdir@/man/manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
 freeipmi(7), bmc-config(8), bmc-device(8), freeipmi_interpret_sel.conf(5)
-#include <@top_srcdir@/common/man/manpage-common-homepage.man>
+#include <@top_srcdir@/man/manpage-common-homepage.man>

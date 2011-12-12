@@ -133,13 +133,13 @@ stderr, syslog, file, ipmipackets.
 .SH "FILES"
 @LIBIPMICONSOLE_CONFIG_FILE_DEFAULT@
 
-#include <@top_srcdir@/common/man/manpage-common-reporting-bugs.man>
+#include <@top_srcdir@/man/manpage-common-reporting-bugs.man>
 .SH COPYRIGHT
 Copyright (C) 2007-2012 Lawrence Livermore National Security, LLC.
 .br
 Copyright (C) 2006-2007 The Regents of the University of California.
-#include <@top_srcdir@/common/man/manpage-common-gpl-freeipmi-text.man>
+#include <@top_srcdir@/man/manpage-common-gpl-freeipmi-text.man>
 
 .SH "SEE ALSO"
 freeipmi.conf(5), freeipmi(7), libipmiconsole(3), ipmiconsole(8), 
-#include <@top_srcdir@/common/man/manpage-common-homepage.man>
+#include <@top_srcdir@/man/manpage-common-homepage.man>

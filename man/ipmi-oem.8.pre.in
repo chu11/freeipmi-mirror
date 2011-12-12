@@ -22,35 +22,35 @@ particular hardware revisions and/or firmware revisions of
 motherboards.  The extensions may or may not function for other lines of
 motherboards from the same manufacturer.
 
-#include <@top_srcdir@/common/man/manpage-common-table-of-contents.man>
-#include <@top_srcdir@/common/man/manpage-common-general-options-header.man>
-#include <@top_srcdir@/common/man/manpage-common-driver.man>
-#include <@top_srcdir@/common/man/manpage-common-inband.man>
-#include <@top_srcdir@/common/man/manpage-common-outofband-hostname-hostranged.man>
+#include <@top_srcdir@/man/manpage-common-table-of-contents.man>
+#include <@top_srcdir@/man/manpage-common-general-options-header.man>
+#include <@top_srcdir@/man/manpage-common-driver.man>
+#include <@top_srcdir@/man/manpage-common-inband.man>
+#include <@top_srcdir@/man/manpage-common-outofband-hostname-hostranged.man>
 .TP
 \fB\-u\fR \fIUSERNAME\fR, \fB\-\-username\fR=\fIUSERNAME\fR
 Specify the username to use when authenticating with the remote host.
 If not specified, a null (i.e. anonymous) username is assumed.  The
 required user privilege will depend on the oem commands executed.
-#include <@top_srcdir@/common/man/manpage-common-outofband-password.man>
-#include <@top_srcdir@/common/man/manpage-common-outofband-k-g.man>
-#include <@top_srcdir@/common/man/manpage-common-outofband-session-timeout.man>
-#include <@top_srcdir@/common/man/manpage-common-outofband-retransmission-timeout.man>
-#include <@top_srcdir@/common/man/manpage-common-authentication-type.man>
-#include <@top_srcdir@/common/man/manpage-common-cipher-suite-id-main.man>
-#include <@top_srcdir@/common/man/manpage-common-cipher-suite-id-details.man>
-#include <@top_srcdir@/common/man/manpage-common-privilege-level-admin.man>
-#include <@top_srcdir@/common/man/manpage-common-config-file.man>
-#include <@top_srcdir@/common/man/manpage-common-workaround-flags.man>
-#include <@top_srcdir@/common/man/manpage-common-debug.man>
-#include <@top_srcdir@/common/man/manpage-common-misc.man>
-#include <@top_srcdir@/common/man/manpage-common-sdr-options.man>
-#include <@top_srcdir@/common/man/manpage-common-hostranged-options-header.man>
-#include <@top_srcdir@/common/man/manpage-common-hostranged-buffer.man>
-#include <@top_srcdir@/common/man/manpage-common-hostranged-consolidate.man>
-#include <@top_srcdir@/common/man/manpage-common-hostranged-fanout.man>
-#include <@top_srcdir@/common/man/manpage-common-hostranged-eliminate.man>
-#include <@top_srcdir@/common/man/manpage-common-hostranged-always-prefix.man>
+#include <@top_srcdir@/man/manpage-common-outofband-password.man>
+#include <@top_srcdir@/man/manpage-common-outofband-k-g.man>
+#include <@top_srcdir@/man/manpage-common-outofband-session-timeout.man>
+#include <@top_srcdir@/man/manpage-common-outofband-retransmission-timeout.man>
+#include <@top_srcdir@/man/manpage-common-authentication-type.man>
+#include <@top_srcdir@/man/manpage-common-cipher-suite-id-main.man>
+#include <@top_srcdir@/man/manpage-common-cipher-suite-id-details.man>
+#include <@top_srcdir@/man/manpage-common-privilege-level-admin.man>
+#include <@top_srcdir@/man/manpage-common-config-file.man>
+#include <@top_srcdir@/man/manpage-common-workaround-flags.man>
+#include <@top_srcdir@/man/manpage-common-debug.man>
+#include <@top_srcdir@/man/manpage-common-misc.man>
+#include <@top_srcdir@/man/manpage-common-sdr-options.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-options-header.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-buffer.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-consolidate.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-fanout.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-eliminate.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-always-prefix.man>
 .SH "IPMI-OEM OPTIONS"
 The following options are specific to
 .B Ipmi-oem.
@@ -851,27 +851,27 @@ BMC.  This command can be used to enable or disable non-IPMI services
 such as ssh, http, https, and vnc.  Command confirmed to work on
 Supermicro X8DTG.
 .RE
-#include <@top_srcdir@/common/man/manpage-common-hostranged-text-main.man>
-#include <@top_srcdir@/common/man/manpage-common-hostranged-text-threads.man>
-#include <@top_srcdir@/common/man/manpage-common-hostranged-text-options.man>
-#include <@top_srcdir@/common/man/manpage-common-hostranged-text-localhost.man>
-#include <@top_srcdir@/common/man/manpage-common-troubleshooting-heading-start.man>
-#include <@top_srcdir@/common/man/manpage-common-troubleshooting-heading-outofband.man>
-#include <@top_srcdir@/common/man/manpage-common-troubleshooting-heading-inband.man>
-#include <@top_srcdir@/common/man/manpage-common-troubleshooting-heading-end.man>
-#include <@top_srcdir@/common/man/manpage-common-troubleshooting-outofband.man>
-#include <@top_srcdir@/common/man/manpage-common-troubleshooting-inband.man>
-#include <@top_srcdir@/common/man/manpage-common-workaround-heading-text.man>
-#include <@top_srcdir@/common/man/manpage-common-workaround-inband-text.man>
-#include <@top_srcdir@/common/man/manpage-common-workaround-outofband-common-text.man>
-#include <@top_srcdir@/common/man/manpage-common-workaround-outofband-15-text.man>
-#include <@top_srcdir@/common/man/manpage-common-workaround-outofband-20-text.man>
-#include <@top_srcdir@/common/man/manpage-common-workaround-extra-text.man>
-#include <@top_srcdir@/common/man/manpage-common-known-issues.man>
-#include <@top_srcdir@/common/man/manpage-common-reporting-bugs.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-text-main.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-text-threads.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-text-options.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-text-localhost.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-heading-start.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-heading-outofband.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-heading-inband.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-heading-end.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-outofband.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-inband.man>
+#include <@top_srcdir@/man/manpage-common-workaround-heading-text.man>
+#include <@top_srcdir@/man/manpage-common-workaround-inband-text.man>
+#include <@top_srcdir@/man/manpage-common-workaround-outofband-common-text.man>
+#include <@top_srcdir@/man/manpage-common-workaround-outofband-15-text.man>
+#include <@top_srcdir@/man/manpage-common-workaround-outofband-20-text.man>
+#include <@top_srcdir@/man/manpage-common-workaround-extra-text.man>
+#include <@top_srcdir@/man/manpage-common-known-issues.man>
+#include <@top_srcdir@/man/manpage-common-reporting-bugs.man>
 .SH "COPYRIGHT"
 Copyright \(co 2008-2012 FreeIPMI Core Team
-#include <@top_srcdir@/common/man/manpage-common-gpl-program-text.man>
+#include <@top_srcdir@/man/manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
 freeipmi(7), bmc-config(8), bmc-device(8), ipmi-raw(8)
-#include <@top_srcdir@/common/man/manpage-common-homepage.man>
+#include <@top_srcdir@/man/manpage-common-homepage.man>

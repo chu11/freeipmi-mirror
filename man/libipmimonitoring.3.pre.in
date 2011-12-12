@@ -58,13 +58,13 @@ for more information on configuring sensor and system event interpretations.
 .SH "FILES"
 @IPMI_MONITORING_SDR_CACHE_DIR@
 
-#include <@top_srcdir@/common/man/manpage-common-reporting-bugs.man>
+#include <@top_srcdir@/man/manpage-common-reporting-bugs.man>
 
 .SH COPYRIGHT
 Copyright (C) 2007-2012 Lawrence Livermore National Security, LLC.
 .br
 Copyright (C) 2006-2007 The Regents of the University of California.
-#include <@top_srcdir@/common/man/manpage-common-gpl-library-text.man>
+#include <@top_srcdir@/man/manpage-common-gpl-library-text.man>
 .SH "SEE ALSO"
 freeipmi_interpret_sel.conf(5), freeipmi_interpret_sensors.conf(5)
-#include <@top_srcdir@/common/man/manpage-common-homepage.man>
+#include <@top_srcdir@/man/manpage-common-homepage.man>

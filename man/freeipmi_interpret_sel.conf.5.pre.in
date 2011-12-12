@@ -1335,11 +1335,11 @@ to match or the keyword \fIANY\fR to match anything.
 .SH "FILES"
 @INTERPRET_SEL_CONFIG_FILE_DEFAULT@
 
-#include <@top_srcdir@/common/man/manpage-common-reporting-bugs.man>
+#include <@top_srcdir@/man/manpage-common-reporting-bugs.man>
 .SH "COPYRIGHT"
 Copyright (C) 2007-2012 Lawrence Livermore National Security, LLC.
-#include <@top_srcdir@/common/man/manpage-common-gpl-library-text.man>
+#include <@top_srcdir@/man/manpage-common-gpl-library-text.man>
 
 .SH "SEE ALSO"
 libfreeipmi(3), libipmimonitoring(3), ipmi-sel(8)
-#include <@top_srcdir@/common/man/manpage-common-homepage.man>
+#include <@top_srcdir@/man/manpage-common-homepage.man>

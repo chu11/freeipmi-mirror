@@ -28,27 +28,27 @@ or
 tools respectively.  For some OEM specific configurations, please see
 .B ipmi-oem(8).
 
-#include <@top_srcdir@/common/man/manpage-common-table-of-contents.man>
+#include <@top_srcdir@/man/manpage-common-table-of-contents.man>
 See GENERAL USE below for a description on how most will want to use
 .B Bmc-config.
-#include <@top_srcdir@/common/man/manpage-common-general-options-header.man>
-#include <@top_srcdir@/common/man/manpage-common-driver.man>
-#include <@top_srcdir@/common/man/manpage-common-inband.man>
-#include <@top_srcdir@/common/man/manpage-common-outofband-hostname-hostranged.man>
-#include <@top_srcdir@/common/man/manpage-common-outofband-username-admin.man>
-#include <@top_srcdir@/common/man/manpage-common-outofband-password.man>
-#include <@top_srcdir@/common/man/manpage-common-outofband-k-g.man>
-#include <@top_srcdir@/common/man/manpage-common-outofband-session-timeout.man>
-#include <@top_srcdir@/common/man/manpage-common-outofband-retransmission-timeout.man>
-#include <@top_srcdir@/common/man/manpage-common-authentication-type.man>
-#include <@top_srcdir@/common/man/manpage-common-cipher-suite-id-main.man>
-#include <@top_srcdir@/common/man/manpage-common-cipher-suite-id-details.man>
-#include <@top_srcdir@/common/man/manpage-common-privilege-level-admin.man>
-#include <@top_srcdir@/common/man/manpage-common-config-file.man>
-#include <@top_srcdir@/common/man/manpage-common-workaround-flags.man>
-#include <@top_srcdir@/common/man/manpage-common-debug.man>
-#include <@top_srcdir@/common/man/manpage-common-misc.man>
-#include <@top_srcdir@/common/man/manpage-common-config-tool-options.man>
+#include <@top_srcdir@/man/manpage-common-general-options-header.man>
+#include <@top_srcdir@/man/manpage-common-driver.man>
+#include <@top_srcdir@/man/manpage-common-inband.man>
+#include <@top_srcdir@/man/manpage-common-outofband-hostname-hostranged.man>
+#include <@top_srcdir@/man/manpage-common-outofband-username-admin.man>
+#include <@top_srcdir@/man/manpage-common-outofband-password.man>
+#include <@top_srcdir@/man/manpage-common-outofband-k-g.man>
+#include <@top_srcdir@/man/manpage-common-outofband-session-timeout.man>
+#include <@top_srcdir@/man/manpage-common-outofband-retransmission-timeout.man>
+#include <@top_srcdir@/man/manpage-common-authentication-type.man>
+#include <@top_srcdir@/man/manpage-common-cipher-suite-id-main.man>
+#include <@top_srcdir@/man/manpage-common-cipher-suite-id-details.man>
+#include <@top_srcdir@/man/manpage-common-privilege-level-admin.man>
+#include <@top_srcdir@/man/manpage-common-config-file.man>
+#include <@top_srcdir@/man/manpage-common-workaround-flags.man>
+#include <@top_srcdir@/man/manpage-common-debug.man>
+#include <@top_srcdir@/man/manpage-common-misc.man>
+#include <@top_srcdir@/man/manpage-common-config-tool-options.man>
 .TP
 \fB\-v\fR, \fB\-\-verbose\fR
 Output verbose information.  When used with \-\-checkout, additional
@@ -57,17 +57,17 @@ uncommon sections and/or fields will be shown.  In
 this includes checking out Serial Configuration parameters, Vlan
 parameters, IPv4 Header parameters, RMCP port, and sections for each
 channel on a system, if multiple channels exist.
-#include <@top_srcdir@/common/man/manpage-common-config-tool-options-very-verbose.man>
-#include <@top_srcdir@/common/man/manpage-common-config-tool-options-lan-channel-number.man>
-#include <@top_srcdir@/common/man/manpage-common-config-tool-options-serial-channel-number.man>
-#include <@top_srcdir@/common/man/manpage-common-config-tool-options-sol-channel-number.man>
-#include <@top_srcdir@/common/man/manpage-common-hostranged-options-header.man>
-#include <@top_srcdir@/common/man/manpage-common-hostranged-buffer.man>
-#include <@top_srcdir@/common/man/manpage-common-hostranged-consolidate.man>
-#include <@top_srcdir@/common/man/manpage-common-hostranged-fanout.man>
-#include <@top_srcdir@/common/man/manpage-common-hostranged-eliminate.man>
-#include <@top_srcdir@/common/man/manpage-common-hostranged-always-prefix.man>
-#include <@top_srcdir@/common/man/manpage-common-config-tool-general-use.man>
+#include <@top_srcdir@/man/manpage-common-config-tool-options-very-verbose.man>
+#include <@top_srcdir@/man/manpage-common-config-tool-options-lan-channel-number.man>
+#include <@top_srcdir@/man/manpage-common-config-tool-options-serial-channel-number.man>
+#include <@top_srcdir@/man/manpage-common-config-tool-options-sol-channel-number.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-options-header.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-buffer.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-consolidate.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-fanout.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-eliminate.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-always-prefix.man>
+#include <@top_srcdir@/man/manpage-common-config-tool-general-use.man>
 .LP
 Comments throughout the checked out file will give instructions on how
 to configure the fields.
@@ -160,23 +160,23 @@ by physically powering off and on the system (e.g. button push), or it can be
 accomplished through a cold-reset.  A cold-reset can be executed via
 .B bmc-device.
 
-#include <@top_srcdir@/common/man/manpage-common-hostranged-text-main.man>
-#include <@top_srcdir@/common/man/manpage-common-hostranged-text-threads.man>
-#include <@top_srcdir@/common/man/manpage-common-hostranged-text-options.man>
-#include <@top_srcdir@/common/man/manpage-common-hostranged-text-localhost.man>
-#include <@top_srcdir@/common/man/manpage-common-troubleshooting-heading-start.man>
-#include <@top_srcdir@/common/man/manpage-common-troubleshooting-heading-outofband.man>
-#include <@top_srcdir@/common/man/manpage-common-troubleshooting-heading-inband.man>
-#include <@top_srcdir@/common/man/manpage-common-troubleshooting-heading-end.man>
-#include <@top_srcdir@/common/man/manpage-common-troubleshooting-outofband.man>
-#include <@top_srcdir@/common/man/manpage-common-troubleshooting-inband.man>
-#include <@top_srcdir@/common/man/manpage-common-workaround-heading-text.man>
-#include <@top_srcdir@/common/man/manpage-common-workaround-inband-text.man>
-#include <@top_srcdir@/common/man/manpage-common-workaround-outofband-common-text.man>
-#include <@top_srcdir@/common/man/manpage-common-workaround-outofband-15-text.man>
-#include <@top_srcdir@/common/man/manpage-common-workaround-outofband-20-text.man>
-#include <@top_srcdir@/common/man/manpage-common-workaround-extra-text.man>
-#include <@top_srcdir@/common/man/manpage-common-workaround-config-tool.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-text-main.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-text-threads.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-text-options.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-text-localhost.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-heading-start.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-heading-outofband.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-heading-inband.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-heading-end.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-outofband.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-inband.man>
+#include <@top_srcdir@/man/manpage-common-workaround-heading-text.man>
+#include <@top_srcdir@/man/manpage-common-workaround-inband-text.man>
+#include <@top_srcdir@/man/manpage-common-workaround-outofband-common-text.man>
+#include <@top_srcdir@/man/manpage-common-workaround-outofband-15-text.man>
+#include <@top_srcdir@/man/manpage-common-workaround-outofband-20-text.man>
+#include <@top_srcdir@/man/manpage-common-workaround-extra-text.man>
+#include <@top_srcdir@/man/manpage-common-workaround-config-tool.man>
 .LP
 "solchannelassumelanchannel" - This workaround will force
 .B bmc-config
@@ -214,12 +214,12 @@ Commit key 'lan_conf_misc:gratuitous_arp_interval' of value '4'.
 .PP
 Commit all configuration values from bmc-data-updt.conf and key 'lan_conf_misc:gratuitous_arp_interval' of value '4'.
 .PP
-#include <@top_srcdir@/common/man/manpage-common-known-issues.man>
-#include <@top_srcdir@/common/man/manpage-common-reporting-bugs.man>
+#include <@top_srcdir@/man/manpage-common-known-issues.man>
+#include <@top_srcdir@/man/manpage-common-reporting-bugs.man>
 .SH "COPYRIGHT"
 Copyright \(co 2003-2012 FreeIPMI Core Team.  
-#include <@top_srcdir@/common/man/manpage-common-gpl-program-text.man>
+#include <@top_srcdir@/man/manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
 bmc-config.conf(5), freeipmi(7), ipmi-chassis-config(8),
 ipmi-pef-config(8), ipmi-sensors-config(8), bmc-device(8)
-#include <@top_srcdir@/common/man/manpage-common-homepage.man>
+#include <@top_srcdir@/man/manpage-common-homepage.man>
