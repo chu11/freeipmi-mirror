@@ -23,8 +23,8 @@ include_HEADERS = ipmi_monitoring.h ipmi_monitoring_bitmasks.h ipmi_monitoring_o
 lib_LTLIBRARIES = libipmimonitoring.la
 
 libipmimonitoring_la_CPPFLAGS = \
-	-I$(top_srcdir)/common/src/miscutil \
-	-I$(top_srcdir)/common/src/portability \
+	-I$(top_srcdir)/common/miscutil \
+	-I$(top_srcdir)/common/portability \
 	-I$(top_srcdir)/libfreeipmi/include \
 	-D_GNU_SOURCE \
 	-D_REENTRANT
@@ -34,8 +34,8 @@ libipmimonitoring_la_LDFLAGS = \
 	$(OTHER_FLAGS)
 
 libipmimonitoring_la_LIBADD = \
-	$(top_builddir)/common/src/miscutil/libmiscutils.la \
-	$(top_builddir)/common/src/portability/libfreeipmiportability.la \
+	$(top_builddir)/common/miscutil/libmiscutils.la \
+	$(top_builddir)/common/portability/libfreeipmiportability.la \
 	$(top_builddir)/libfreeipmi/src/libfreeipmi.la
 
 libipmimonitoring_la_SOURCES = \
@@ -47,10 +47,10 @@ libipmimonitoring_la_SOURCES = \
 	ipmi_monitoring_sel.c \
 	ipmi_monitoring_sensor_reading.c
 
-$(top_builddir)/common/src/miscutil/libmiscutils.la : force-dependency-check
+$(top_builddir)/common/miscutil/libmiscutils.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
-$(top_builddir)/common/src/portability/libfreeipmiportability.la : force-dependency-check
+$(top_builddir)/common/portability/libfreeipmiportability.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
 $(top_builddir)/libfreeipmi/src/libfreeipmi.la : force-dependency-check

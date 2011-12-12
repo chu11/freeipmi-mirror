@@ -4,7 +4,7 @@ noinst_HEADERS = \
 noinst_LTLIBRARIES = libdebug.la
 
 libdebug_la_CPPFLAGS = \
-	-I$(top_srcdir)/common/src/portability \
+	-I$(top_srcdir)/common/portability \
 	-I$(top_srcdir)/libfreeipmi/include \
 	-I$(top_srcdir)/libfreeipmi/src \
 	-D_GNU_SOURCE \

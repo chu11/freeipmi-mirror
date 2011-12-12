@@ -13,7 +13,7 @@ noinst_LTLIBRARIES = libdriver.la
 libdriver_la_CPPFLAGS = \
 	-I$(top_srcdir)/libfreeipmi/include \
 	-I$(top_srcdir)/libfreeipmi/src \
-	-I$(top_srcdir)/common/src/portability \
+	-I$(top_srcdir)/common/portability \
 	-DIPMI_IPCKEY=\"$(localstatedir)/lib/$(PACKAGE_NAME)/ipckey\" \
 	-DIPMI_DEBUG_IPCKEY=\"$(top_builddir)/libfreeipmi/src/ipmi-semaphores.h\" \
 	-D_GNU_SOURCE \

@@ -28,10 +28,10 @@ lib_LTLIBRARIES = libipmiconsole.la
 libipmiconsole_la_CFLAGS = $(PTHREAD_CFLAGS)
 
 libipmiconsole_la_CPPFLAGS = \
-	-I$(top_srcdir)/common/src/debugutil \
-	-I$(top_srcdir)/common/src/miscutil \
-	-I$(top_srcdir)/common/src/parsecommon \
-	-I$(top_srcdir)/common/src/portability \
+	-I$(top_srcdir)/common/debugutil \
+	-I$(top_srcdir)/common/miscutil \
+	-I$(top_srcdir)/common/parsecommon \
+	-I$(top_srcdir)/common/portability \
         -I$(top_srcdir)/libfreeipmi/include \
 	-DWITH_PTHREADS=1 \
 	-D_GNU_SOURCE \
@@ -43,10 +43,10 @@ libipmiconsole_la_LDFLAGS = \
 	$(OTHER_FLAGS)
 
 libipmiconsole_la_LIBADD = \
-	$(top_builddir)/common/src/debugutil/libdebugutil.la \
-	$(top_builddir)/common/src/miscutil/libmiscutils.la \
-	$(top_builddir)/common/src/parsecommon/libparsecommon.la \
-	$(top_builddir)/common/src/portability/libfreeipmiportability.la \
+	$(top_builddir)/common/debugutil/libdebugutil.la \
+	$(top_builddir)/common/miscutil/libmiscutils.la \
+	$(top_builddir)/common/parsecommon/libparsecommon.la \
+	$(top_builddir)/common/portability/libfreeipmiportability.la \
 	$(top_builddir)/libfreeipmi/src/libfreeipmi.la
 
 libipmiconsole_la_SOURCES = \
@@ -61,13 +61,13 @@ libipmiconsole_la_SOURCES = \
 	ipmiconsole_processing.c \
 	ipmiconsole_util.c
 
-$(top_builddir)/common/src/debugutil/libdebugutil.la : force-dependency-check
+$(top_builddir)/common/debugutil/libdebugutil.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
-$(top_builddir)/common/src/miscutil/libmiscutils.la : force-dependency-check
+$(top_builddir)/common/miscutil/libmiscutils.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
-$(top_builddir)/common/src/portability/libfreeipmiportability.la : force-dependency-check
+$(top_builddir)/common/portability/libfreeipmiportability.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
 $(top_builddir)/libfreeipmi/src/libfreeipmi.la : force-dependency-check

@@ -2,7 +2,9 @@
 
 	Giant re-org of code.
 
-	* All manpages now stored in man/.
+	* Store all manpages stored in man/.
+
+	* move common/src libs to common/.
 	
 2011-12-12  Albert Chu <chu11@llnl.gov>
 

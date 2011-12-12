@@ -9,10 +9,10 @@ noinst_HEADERS = \
 	ipmiconsole-argp.h
 
 AM_CPPFLAGS = \
-	-I$(top_srcdir)/common/src/toolcommon \
-	-I$(top_srcdir)/common/src/miscutil \
-	-I$(top_srcdir)/common/src/parsecommon \
-	-I$(top_srcdir)/common/src/portability \
+	-I$(top_srcdir)/common/toolcommon \
+	-I$(top_srcdir)/common/miscutil \
+	-I$(top_srcdir)/common/parsecommon \
+	-I$(top_srcdir)/common/portability \
 	-I$(top_srcdir)/libfreeipmi/include \
 	-I$(top_srcdir)/libipmiconsole/src/ \
 	-D_GNU_SOURCE \
@@ -21,26 +21,26 @@ AM_CPPFLAGS = \
 sbin_PROGRAMS = ipmiconsole
 
 ipmiconsole_LDADD = \
-	$(top_builddir)/common/src/toolcommon/libtoolcommon.la \
-	$(top_builddir)/common/src/miscutil/libmiscutils.la \
-	$(top_builddir)/common/src/parsecommon/libparsecommon.la \
-	$(top_builddir)/common/src/portability/libfreeipmiportability.la \
+	$(top_builddir)/common/toolcommon/libtoolcommon.la \
+	$(top_builddir)/common/miscutil/libmiscutils.la \
+	$(top_builddir)/common/parsecommon/libparsecommon.la \
+	$(top_builddir)/common/portability/libfreeipmiportability.la \
 	$(top_builddir)/libipmiconsole/src/libipmiconsole.la
 
 ipmiconsole_SOURCES = \
 	ipmiconsole.c \
 	ipmiconsole-argp.c
 
-$(top_builddir)/common/src/toolcommon/libtoolcommon.la : force-dependency-check
+$(top_builddir)/common/toolcommon/libtoolcommon.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
-$(top_builddir)/common/src/miscutil/libmiscutils.la : force-dependency-check
+$(top_builddir)/common/miscutil/libmiscutils.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
-$(top_builddir)/common/src/parsecommon/libparsecommon.la : force-dependency-check
+$(top_builddir)/common/parsecommon/libparsecommon.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
-$(top_builddir)/common/src/portability/libfreeipmiportability.la : force-dependency-check
+$(top_builddir)/common/portability/libfreeipmiportability.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
 $(top_builddir)/libipmiconsole/src/libipmiconsole.la : force-dependency-check

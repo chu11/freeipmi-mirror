@@ -15,10 +15,10 @@ noinst_LTLIBRARIES = \
 	libconfigtoolcommon.la
 
 libconfigtoolcommon_la_CPPFLAGS = \
-	-I$(top_srcdir)/common/src/parsecommon \
-	-I$(top_srcdir)/common/src/portability \
-	-I$(top_srcdir)/common/src/toolcommon \
-	-I$(top_srcdir)/common/src/toolhostrange \
+	-I$(top_srcdir)/common/parsecommon \
+	-I$(top_srcdir)/common/portability \
+	-I$(top_srcdir)/common/toolcommon \
+	-I$(top_srcdir)/common/toolhostrange \
 	-I$(top_srcdir)/libfreeipmi/include
 
 libconfigtoolcommon_la_SOURCES = \

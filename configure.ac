@@ -30,19 +30,18 @@ AC_CONFIG_FILES([
         doc/Makefile 
         etc/Makefile
         common/Makefile 
-        common/src/Makefile
-        common/src/configtool/Makefile
-        common/src/debugutil/Makefile
-        common/src/miscutil/Makefile
-        common/src/parsecommon/Makefile
-        common/src/pingtool/Makefile
-        common/src/portability/Makefile
-        common/src/toolcommon/Makefile
-        common/src/toolevent/Makefile
-        common/src/toolhostrange/Makefile
-        common/src/tooloem/Makefile
-        common/src/toolsdr/Makefile
-        common/src/toolsensor/Makefile
+        common/configtool/Makefile
+        common/debugutil/Makefile
+        common/miscutil/Makefile
+        common/parsecommon/Makefile
+        common/pingtool/Makefile
+        common/portability/Makefile
+        common/toolcommon/Makefile
+        common/toolevent/Makefile
+        common/toolhostrange/Makefile
+        common/tooloem/Makefile
+        common/toolsdr/Makefile
+        common/toolsensor/Makefile
         contrib/Makefile
         contrib/ganglia/Makefile
 	contrib/libipmimonitoring/Makefile

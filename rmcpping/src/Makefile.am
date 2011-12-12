@@ -1,27 +1,27 @@
 sbin_PROGRAMS = rmcpping
 
 AM_CPPFLAGS = \
-	-I$(top_srcdir)/common/src/pingtool \
-	-I$(top_srcdir)/common/src/debugutil \
-	-I$(top_srcdir)/common/src/portability \
+	-I$(top_srcdir)/common/pingtool \
+	-I$(top_srcdir)/common/debugutil \
+	-I$(top_srcdir)/common/portability \
 	-I$(top_srcdir)/libfreeipmi/include \
 	-D_GNU_SOURCE
 
 rmcpping_LDADD = \
-	$(top_builddir)/common/src/pingtool/libpingtoolcommon.la \
-	$(top_builddir)/common/src/debugutil/libdebugutil.la \
-	$(top_builddir)/common/src/portability/libfreeipmiportability.la \
+	$(top_builddir)/common/pingtool/libpingtoolcommon.la \
+	$(top_builddir)/common/debugutil/libdebugutil.la \
+	$(top_builddir)/common/portability/libfreeipmiportability.la \
 	$(top_builddir)/libfreeipmi/src/libfreeipmi.la
 
 rmcpping_SOURCES = rmcpping.c
 
-$(top_builddir)/common/src/pingtool/libpingtoolcommon.la : force-dependency-check
+$(top_builddir)/common/pingtool/libpingtoolcommon.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
-$(top_builddir)/common/src/debugutil/libdebugutil.la : force-dependency-check
+$(top_builddir)/common/debugutil/libdebugutil.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
-$(top_builddir)/common/src/portability/libfreeipmiportability.la : force-dependency-check
+$(top_builddir)/common/portability/libfreeipmiportability.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
 $(top_builddir)/libfreeipmi/src/libfreeipmi.la : force-dependency-check

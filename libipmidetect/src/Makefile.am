@@ -14,24 +14,24 @@ include_HEADERS = ipmidetect.h
 lib_LTLIBRARIES = libipmidetect.la 
 
 libipmidetect_la_CPPFLAGS = \
-	-I$(top_srcdir)/common/src/miscutil \
-	-I$(top_srcdir)/common/src/portability
+	-I$(top_srcdir)/common/miscutil \
+	-I$(top_srcdir)/common/portability
 
 libipmidetect_la_LDFLAGS = \
 	-version-info @LIBIPMIDETECT_VERSION_INFO@ \
 	$(OTHER_FLAGS)
 
 libipmidetect_la_LIBADD = \
-	$(top_builddir)/common/src/miscutil/libmiscutils.la \
-	$(top_builddir)/common/src/portability/libfreeipmiportability.la
+	$(top_builddir)/common/miscutil/libmiscutils.la \
+	$(top_builddir)/common/portability/libfreeipmiportability.la
 
 libipmidetect_la_SOURCES = \
 	ipmidetect.c
 
-$(top_builddir)/common/src/miscutil/libmiscutils.la : force-dependency-check
+$(top_builddir)/common/miscutil/libmiscutils.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
-$(top_builddir)/common/src/portability/libfreeipmiportability.la : force-dependency-check
+$(top_builddir)/common/portability/libfreeipmiportability.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
 force-dependency-check:

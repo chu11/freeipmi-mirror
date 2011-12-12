@@ -7,8 +7,8 @@ noinst_LTLIBRARIES = \
 libtooloem_la_CPPFLAGS = \
 	-D_GNU_SOURCE \
 	-D_REENTRANT \
-	-I$(top_srcdir)/common/src/portability \
-	-I$(top_srcdir)/common/src/toolhostrange \
+	-I$(top_srcdir)/common/portability \
+	-I$(top_srcdir)/common/toolhostrange \
 	-I$(top_srcdir)/libfreeipmi/include 
 
 libtooloem_la_SOURCES = \

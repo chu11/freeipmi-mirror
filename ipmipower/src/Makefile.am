@@ -15,12 +15,12 @@ noinst_HEADERS = \
 sbin_PROGRAMS = ipmipower
 
 ipmipower_CPPFLAGS = \
-	-I$(top_srcdir)/common/src/toolcommon \
-	-I$(top_srcdir)/common/src/toolhostrange \
-	-I$(top_srcdir)/common/src/debugutil \
-	-I$(top_srcdir)/common/src/miscutil \
-	-I$(top_srcdir)/common/src/parsecommon \
-	-I$(top_srcdir)/common/src/portability \
+	-I$(top_srcdir)/common/toolcommon \
+	-I$(top_srcdir)/common/toolhostrange \
+	-I$(top_srcdir)/common/debugutil \
+	-I$(top_srcdir)/common/miscutil \
+	-I$(top_srcdir)/common/parsecommon \
+	-I$(top_srcdir)/common/portability \
 	-I$(top_srcdir)/libipmidetect/src \
 	-I$(top_srcdir)/libfreeipmi/include \
 	-DWITH_LSD_FATAL_ERROR_FUNC=1 \
@@ -29,12 +29,12 @@ ipmipower_CPPFLAGS = \
 	-D_REENTRANT
 
 ipmipower_LDADD = \
-	$(top_builddir)/common/src/toolcommon/libtoolcommon.la \
-	$(top_builddir)/common/src/toolhostrange/libtoolhostrange.la \
-	$(top_builddir)/common/src/debugutil/libdebugutil.la \
-	$(top_builddir)/common/src/miscutil/libmiscutils.la \
-	$(top_builddir)/common/src/parsecommon/libparsecommon.la \
-	$(top_builddir)/common/src/portability/libfreeipmiportability.la \
+	$(top_builddir)/common/toolcommon/libtoolcommon.la \
+	$(top_builddir)/common/toolhostrange/libtoolhostrange.la \
+	$(top_builddir)/common/debugutil/libdebugutil.la \
+	$(top_builddir)/common/miscutil/libmiscutils.la \
+	$(top_builddir)/common/parsecommon/libparsecommon.la \
+	$(top_builddir)/common/portability/libfreeipmiportability.la \
 	$(top_builddir)/libipmidetect/src/libipmidetect.la \
 	$(top_builddir)/libfreeipmi/src/libfreeipmi.la
 
@@ -52,22 +52,22 @@ ipmipower_SOURCES = \
 	ipmipower_prompt.c \
 	ipmipower_util.c
  
-$(top_builddir)/common/src/toolcommon/libtoolcommon.la : force-dependency-check
+$(top_builddir)/common/toolcommon/libtoolcommon.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
-$(top_builddir)/common/src/toolhostrange/libtoolhostrange.la : force-dependency-check
+$(top_builddir)/common/toolhostrange/libtoolhostrange.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
-$(top_builddir)/common/src/debugutil/libdebugutil.la : force-dependency-check
+$(top_builddir)/common/debugutil/libdebugutil.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
-$(top_builddir)/common/src/miscutil/libmiscutils.la : force-dependency-check
+$(top_builddir)/common/miscutil/libmiscutils.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
-$(top_builddir)/common/src/parsecommon/libparsecommon.la : force-dependency-check
+$(top_builddir)/common/parsecommon/libparsecommon.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
-$(top_builddir)/common/src/portability/libfreeipmiportability.la : force-dependency-check
+$(top_builddir)/common/portability/libfreeipmiportability.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
 $(top_builddir)/libipmidetect/src/libipmidetect.la : force-dependency-check

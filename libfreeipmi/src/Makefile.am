@@ -35,9 +35,9 @@ libfreeipmi_la_CPPFLAGS = \
 	-D_REENTRANT
 
 libfreeipmi_la_LIBADD = \
-	$(top_builddir)/common/src/debugutil/libdebugutil.la \
-	$(top_builddir)/common/src/miscutil/libmiscutils.la \
-	$(top_builddir)/common/src/portability/libfreeipmiportability.la \
+	$(top_builddir)/common/debugutil/libdebugutil.la \
+	$(top_builddir)/common/miscutil/libmiscutils.la \
+	$(top_builddir)/common/portability/libfreeipmiportability.la \
 	$(top_builddir)/libfreeipmi/src/api/libapi.la \
 	$(top_builddir)/libfreeipmi/src/cmds/libcmds.la \
 	$(top_builddir)/libfreeipmi/src/debug/libdebug.la \
@@ -57,13 +57,13 @@ libfreeipmi_la_LIBADD = \
 	$(top_builddir)/libfreeipmi/src/spec/libspec.la \
 	$(top_builddir)/libfreeipmi/src/util/libutil.la
 
-$(top_builddir)/common/src/debugutil/libdebugutil.la : force-dependency-check
+$(top_builddir)/common/debugutil/libdebugutil.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
-$(top_builddir)/common/src/miscutil/libmiscutils.la : force-dependency-check
+$(top_builddir)/common/miscutil/libmiscutils.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
-$(top_builddir)/common/src/portability/libfreeipmiportability.la : force-dependency-check
+$(top_builddir)/common/portability/libfreeipmiportability.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
 $(top_builddir)/libfreeipmi/src/api/libapi.la : force-dependency-check
