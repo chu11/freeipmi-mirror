@@ -1,5 +1,11 @@
 2011-12-12  Albert Chu <chu11@llnl.gov>
 
+	Giant re-org of code.
+
+	* All manpages now stored in man/.
+	
+2011-12-12  Albert Chu <chu11@llnl.gov>
+
 	* examples/: Remove directory.  Move files into contrib/libipmimonitoring.
 
 	* Install contribs into doc/contrib/

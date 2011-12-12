@@ -1,18 +1,5 @@
 SUBDIRS = src
 
-MANS_CPP = \
-	ipmidetectd.8 \
-	ipmidetectd.conf.5
-
-$(MANS_CPP): $(MANS_CPP:%=%.pre)
-	$(CPP) -w -C -P -I. $@.pre  $@
-
-dist_man_MANS = $(MANS_CPP)
-
-CLEANFILES = $(MANS_CPP) *~
-
-DISTCLEANFILES = $(MANS_CPP) $(MANS_CPP:%=%.pre) .deps/*.P
-
 EXTRA_DIST = ipmidetectd.init ipmidetectd.conf
 
 install-data-local: $(INSTALL_INIT_SCRIPTS)

@@ -29,9 +29,6 @@ AC_CONFIG_FILES([
         Makefile 
         doc/Makefile 
         etc/Makefile
-        man/Makefile
-        man/freeipmi.conf.5.pre
-        man/freeipmi.7.pre
         common/Makefile 
         common/man/Makefile 
         common/src/Makefile
@@ -53,9 +50,6 @@ AC_CONFIG_FILES([
         contrib/nagios/Makefile
 	contrib/pet/Makefile
         libfreeipmi/Makefile 
-        libfreeipmi/libfreeipmi.3.pre
-        libfreeipmi/freeipmi_interpret_sensor.conf.5.pre
-        libfreeipmi/freeipmi_interpret_sel.conf.5.pre
         libfreeipmi/libfreeipmi.pc
         libfreeipmi/include/Makefile 
         libfreeipmi/include/freeipmi/freeipmi.h
@@ -79,89 +73,95 @@ AC_CONFIG_FILES([
         libfreeipmi/src/spec/Makefile
         libfreeipmi/src/util/Makefile
         libipmiconsole/Makefile
-        libipmiconsole/libipmiconsole.3.pre
-        libipmiconsole/libipmiconsole.conf.5.pre
         libipmiconsole/libipmiconsole.pc
         libipmiconsole/src/Makefile
         libipmiconsole/src/ipmiconsole.h
         libipmimonitoring/Makefile
         libipmimonitoring/src/Makefile
         libipmimonitoring/src/ipmi_monitoring.h
-        libipmimonitoring/libipmimonitoring.3.pre
         libipmimonitoring/libipmimonitoring.pc
         libipmidetect/Makefile
-        libipmidetect/libipmidetect.3.pre
         libipmidetect/libipmidetect.pc
         libipmidetect/src/Makefile
         libipmidetect/src/ipmidetect.h
+        man/Makefile
+        man/bmc-config.8.pre
+        man/bmc-config.conf.5.pre
+        man/bmc-device.8.pre
+        man/bmc-info.8.pre
+        man/bmc-watchdog.8.pre
+        man/freeipmi.conf.5.pre
+        man/freeipmi.7.pre
+        man/ipmi-chassis.8.pre
+        man/ipmi-chassis-config.8.pre
+	man/ipmi-dcmi.8.pre
+	man/ipmi-fru.8.pre
+	man/ipmi-locate.8.pre
+	man/ipmi-oem.8.pre
+	man/ipmi-pef-config.8.pre
+	man/ipmi-pet.8.pre
+	man/ipmi-raw.8.pre
+	man/ipmi-sel.8.pre
+	man/ipmi-sensors.8.pre
+	man/ipmi-sensors-config.8.pre
+	man/ipmiconsole.8.pre
+	man/ipmidetect.8.pre
+	man/ipmidetect.conf.5.pre
+	man/ipmidetectd.8.pre
+	man/ipmidetectd.conf.5.pre
+	man/ipmiping.8.pre
+	man/ipmipower.8.pre
+        man/libfreeipmi.3.pre
+        man/freeipmi_interpret_sensor.conf.5.pre
+        man/freeipmi_interpret_sel.conf.5.pre
+        man/libipmiconsole.3.pre
+        man/libipmiconsole.conf.5.pre
+        man/libipmidetect.3.pre
+        man/libipmimonitoring.3.pre
+	man/rmcpping.8.pre
         bmc-config/Makefile
-        bmc-config/bmc-config.8.pre
-        bmc-config/bmc-config.conf.5.pre
         bmc-config/src/Makefile
         bmc-device/Makefile
-        bmc-device/bmc-device.8.pre
         bmc-device/src/Makefile
         bmc-info/Makefile
-        bmc-info/bmc-info.8.pre
         bmc-info/src/Makefile
         bmc-watchdog/Makefile 
-        bmc-watchdog/bmc-watchdog.8.pre
         bmc-watchdog/src/Makefile
         ipmi-chassis/Makefile
-        ipmi-chassis/ipmi-chassis.8.pre
         ipmi-chassis/src/Makefile
         ipmi-chassis-config/Makefile 
-        ipmi-chassis-config/ipmi-chassis-config.8.pre
         ipmi-chassis-config/src/Makefile
         ipmi-dcmi/Makefile
-        ipmi-dcmi/ipmi-dcmi.8.pre
         ipmi-dcmi/src/Makefile
         ipmi-fru/Makefile
-        ipmi-fru/ipmi-fru.8.pre
         ipmi-fru/src/Makefile
         ipmi-locate/Makefile
-        ipmi-locate/ipmi-locate.8.pre
         ipmi-locate/src/Makefile
         ipmi-oem/Makefile
-        ipmi-oem/ipmi-oem.8.pre
         ipmi-oem/src/Makefile
         ipmi-pef-config/Makefile
-        ipmi-pef-config/ipmi-pef-config.8.pre
         ipmi-pef-config/src/Makefile
         ipmi-pet/Makefile
-        ipmi-pet/ipmi-pet.8.pre
         ipmi-pet/src/Makefile
         ipmi-raw/Makefile
-        ipmi-raw/ipmi-raw.8.pre
         ipmi-raw/src/Makefile
         ipmi-sel/Makefile
-        ipmi-sel/ipmi-sel.8.pre
         ipmi-sel/src/Makefile
         ipmi-sensors/Makefile
-        ipmi-sensors/ipmi-sensors.8.pre
         ipmi-sensors/src/Makefile
         ipmi-sensors-config/Makefile
-        ipmi-sensors-config/ipmi-sensors-config.8.pre
         ipmi-sensors-config/src/Makefile
         ipmiconsole/Makefile
-        ipmiconsole/ipmiconsole.8.pre
         ipmiconsole/src/Makefile
         ipmidetect/Makefile
-        ipmidetect/ipmidetect.8.pre
-        ipmidetect/ipmidetect.conf.5.pre
         ipmidetect/src/Makefile
         ipmidetectd/Makefile
-        ipmidetectd/ipmidetectd.8.pre
-        ipmidetectd/ipmidetectd.conf.5.pre
         ipmidetectd/src/Makefile
         ipmiping/Makefile
-        ipmiping/ipmiping.8.pre
         ipmiping/src/Makefile
         ipmipower/Makefile 
-        ipmipower/ipmipower.8.pre
         ipmipower/src/Makefile
         rmcpping/Makefile
-        rmcpping/rmcpping.8.pre
         rmcpping/src/Makefile
         freeipmi.spec])
 

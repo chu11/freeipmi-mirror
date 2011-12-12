@@ -1,19 +1,8 @@
 SUBDIRS = include src 
 
-MANS_CPP = freeipmi_interpret_sel.conf.5 freeipmi_interpret_sensor.conf.5  libfreeipmi.3
-
-$(MANS_CPP): $(MANS_CPP:%=%.pre)
-	$(CPP) -w -C -P -I. $@.pre  $@
-
-dist_man_MANS = $(MANS_CPP)
-
 if WITH_PKG_CONFIG
 pkgconfig_DATA = libfreeipmi.pc
 endif
-
-CLEANFILES = $(MANS_CPP) *~
-
-DISTCLEANFILES = $(MANS_CPP) $(MANS_CPP:%=%.pre) .deps/*.P
 
 EXTRA_DIST = freeipmi_interpret_sel.conf freeipmi_interpret_sensor.conf ipckey
 
