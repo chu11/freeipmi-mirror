@@ -53,8 +53,6 @@ EXTRA_DIST = \
 	manpage-common-troubleshooting-heading-start.man \
 	manpage-common-troubleshooting-inband.man \
 	manpage-common-troubleshooting-outofband.man \
-	manpage-common-troubleshooting.man \
-	manpage-common-troubleshooting-lan-only.man \
 	manpage-common-known-issues.man \
 	manpage-common-known-issues-ping.man \
 	manpage-common-reporting-bugs.man \
