@@ -134,17 +134,11 @@ AC_CONFIG_FILES([
         ipmi-sensors/Makefile
         ipmi-sensors-config/Makefile
         ipmiconsole/Makefile
-        ipmiconsole/src/Makefile
         ipmidetect/Makefile
-        ipmidetect/src/Makefile
         ipmidetectd/Makefile
-        ipmidetectd/src/Makefile
         ipmiping/Makefile
-        ipmiping/src/Makefile
         ipmipower/Makefile 
-        ipmipower/src/Makefile
         rmcpping/Makefile
-        rmcpping/src/Makefile
         freeipmi.spec])
 
 ISODATE=`date +%Y-%m-%d`

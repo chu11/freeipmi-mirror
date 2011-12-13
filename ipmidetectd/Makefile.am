@@ -1,1 +1,41 @@
-SUBDIRS = src
+##*****************************************************************************
+## $Id: Makefile.am,v 1.11 2008-09-17 22:56:04 chu11 Exp $
+##*****************************************************************************
+## Process this file with automake to produce Makefile.in.
+##*****************************************************************************
+
+sbin_PROGRAMS = ipmidetectd
+
+ipmidetectd_CPPFLAGS = \
+	-I$(top_srcdir)/common/miscutil \
+	-I$(top_srcdir)/common/portability \
+	-I$(top_srcdir)/libfreeipmi/include \
+	-D_GNU_SOURCE \
+	-D_REENTRANT
+
+ipmidetectd_LDADD = \
+	$(top_builddir)/common/miscutil/libmiscutils.la \
+	$(top_builddir)/common/portability/libfreeipmiportability.la \
+	$(top_builddir)/libfreeipmi/src/libfreeipmi.la
+
+ipmidetectd_SOURCES = \
+	debug.c \
+	debug.h \
+	ipmidetectd.c \
+	ipmidetectd.h \
+	ipmidetectd_config.c \
+	ipmidetectd_config.h \
+	ipmidetectd_loop.c \
+	ipmidetectd_loop.h
+
+$(top_builddir)/common/miscutil/libmiscutils.la : force-dependency-check
+	@cd `dirname $@` && $(MAKE) `basename $@`
+
+$(top_builddir)/common/portability/libfreeipmiportability.la : force-dependency-check
+	@cd `dirname $@` && $(MAKE) `basename $@`
+
+$(top_builddir)/libfreeipmi/src/libfreeipmi.la : force-dependency-check
+	@cd `dirname $@` && $(MAKE) `basename $@`
+
+force-dependency-check:
+
