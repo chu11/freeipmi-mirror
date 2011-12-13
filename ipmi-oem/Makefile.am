@@ -22,7 +22,7 @@ ipmi_oem_LDADD = \
 	$(top_builddir)/common/miscutil/libmiscutils.la \
 	$(top_builddir)/common/parsecommon/libparsecommon.la \
 	$(top_builddir)/common/portability/libfreeipmiportability.la \
-	$(top_builddir)/libipmidetect/src/libipmidetect.la \
+	$(top_builddir)/libipmidetect/libipmidetect.la \
 	$(top_builddir)/libfreeipmi/src/libfreeipmi.la
 
 ipmi_oem_SOURCES = \
@@ -75,7 +75,7 @@ $(top_builddir)/common/parsecommon/libparsecommon.la : force-dependency-check
 $(top_builddir)/common/portability/libfreeipmiportability.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
-$(top_builddir)/libipmidetect/src/libipmidetect.la : force-dependency-check
+$(top_builddir)/libipmidetect/libipmidetect.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
 $(top_builddir)/libfreeipmi/src/libfreeipmi.la : force-dependency-check

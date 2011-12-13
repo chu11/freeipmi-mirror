@@ -9,14 +9,14 @@ sbin_PROGRAMS = ipmidetect
 ipmidetect_CPPFLAGS = \
 	-I$(top_srcdir)/common/miscutil \
 	-I$(top_srcdir)/common/portability \
-	-I$(top_srcdir)/libipmidetect/src/ \
+	-I$(top_srcdir)/libipmidetect/ \
 	-D_GNU_SOURCE \
 	-D_REENTRANT
 
 ipmidetect_LDADD = \
 	$(top_builddir)/common/miscutil/libmiscutils.la \
 	$(top_builddir)/common/portability/libfreeipmiportability.la \
-	$(top_builddir)/libipmidetect/src/libipmidetect.la
+	$(top_builddir)/libipmidetect/libipmidetect.la
 
 ipmidetect_SOURCES = ipmidetect.c
 
@@ -26,7 +26,7 @@ $(top_builddir)/common/miscutil/libmiscutils.la : force-dependency-check
 $(top_builddir)/common/portability/libfreeipmiportability.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
-$(top_builddir)/libipmidetect/src/libipmidetect.la : force-dependency-check
+$(top_builddir)/libipmidetect/libipmidetect.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
 force-dependency-check:

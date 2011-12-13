@@ -59,7 +59,7 @@ $(top_builddir)/common/parsecommon/libparsecommon.la : force-dependency-check
 $(top_builddir)/common/portability/libfreeipmiportability.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
-$(top_builddir)/libipmidetect/src/libipmidetect.la : force-dependency-check
+$(top_builddir)/libipmidetect/libipmidetect.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
 $(top_builddir)/libfreeipmi/src/libfreeipmi.la : force-dependency-check

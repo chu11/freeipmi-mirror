@@ -26,9 +26,12 @@ AM_CONFIG_HEADER([config/config.h])
 
 dnl define output files
 AC_CONFIG_FILES([
+	freeipmi.spec
         Makefile 
-        doc/Makefile 
-        etc/Makefile
+        bmc-config/Makefile
+        bmc-device/Makefile
+        bmc-info/Makefile
+        bmc-watchdog/Makefile 
         common/Makefile 
         common/configtool/Makefile
         common/debugutil/Makefile
@@ -47,6 +50,25 @@ AC_CONFIG_FILES([
 	contrib/libipmimonitoring/Makefile
         contrib/nagios/Makefile
 	contrib/pet/Makefile
+        doc/Makefile 
+        etc/Makefile
+        ipmi-chassis/Makefile
+        ipmi-chassis-config/Makefile 
+        ipmi-dcmi/Makefile
+        ipmi-fru/Makefile
+        ipmi-locate/Makefile
+        ipmi-oem/Makefile
+        ipmi-pef-config/Makefile
+        ipmi-pet/Makefile
+        ipmi-raw/Makefile
+        ipmi-sel/Makefile
+        ipmi-sensors/Makefile
+        ipmi-sensors-config/Makefile
+        ipmiconsole/Makefile
+        ipmidetect/Makefile
+        ipmidetectd/Makefile
+        ipmiping/Makefile
+        ipmipower/Makefile 
         libfreeipmi/Makefile 
         libfreeipmi/libfreeipmi.pc
         libfreeipmi/include/Makefile 
@@ -71,17 +93,14 @@ AC_CONFIG_FILES([
         libfreeipmi/src/spec/Makefile
         libfreeipmi/src/util/Makefile
         libipmiconsole/Makefile
+        libipmiconsole/ipmiconsole.h
         libipmiconsole/libipmiconsole.pc
-        libipmiconsole/src/Makefile
-        libipmiconsole/src/ipmiconsole.h
-        libipmimonitoring/Makefile
-        libipmimonitoring/src/Makefile
-        libipmimonitoring/src/ipmi_monitoring.h
-        libipmimonitoring/libipmimonitoring.pc
         libipmidetect/Makefile
+        libipmidetect/ipmidetect.h
         libipmidetect/libipmidetect.pc
-        libipmidetect/src/Makefile
-        libipmidetect/src/ipmidetect.h
+        libipmimonitoring/Makefile
+        libipmimonitoring/ipmi_monitoring.h
+        libipmimonitoring/libipmimonitoring.pc
         man/Makefile
         man/bmc-config.8.pre
         man/bmc-config.conf.5.pre
@@ -117,29 +136,7 @@ AC_CONFIG_FILES([
         man/libipmidetect.3.pre
         man/libipmimonitoring.3.pre
 	man/rmcpping.8.pre
-        bmc-config/Makefile
-        bmc-device/Makefile
-        bmc-info/Makefile
-        bmc-watchdog/Makefile 
-        ipmi-chassis/Makefile
-        ipmi-chassis-config/Makefile 
-        ipmi-dcmi/Makefile
-        ipmi-fru/Makefile
-        ipmi-locate/Makefile
-        ipmi-oem/Makefile
-        ipmi-pef-config/Makefile
-        ipmi-pet/Makefile
-        ipmi-raw/Makefile
-        ipmi-sel/Makefile
-        ipmi-sensors/Makefile
-        ipmi-sensors-config/Makefile
-        ipmiconsole/Makefile
-        ipmidetect/Makefile
-        ipmidetectd/Makefile
-        ipmiping/Makefile
-        ipmipower/Makefile 
-        rmcpping/Makefile
-        freeipmi.spec])
+        rmcpping/Makefile])
 
 ISODATE=`date +%Y-%m-%d`
 AC_SUBST([ISODATE])
