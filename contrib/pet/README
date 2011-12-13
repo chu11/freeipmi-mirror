@@ -9,14 +9,14 @@ restricted to email alert.
 This script operates in two modes, traphandle or embperl.  When in 
 traphandle mode, it concatenates the quoted hex string into one long line, 
 then builds structures to resemble embperl mode. Both modes then invokes 
-helper decoder, ipmi-pet(8) from freeipmi, parses the output and alerts
+helper decoder, ipmi-pet(8) from FreeIPMI, parses the output and alerts
 in given way like email, nagios external command, etc.
 
 
 1. REQUIREMENTS
 
-freeipmi-1.0.1 and above is required for the script to function. Both 
-freeipmi and the script imply Unix-like system, notably Linux; Windows 
+freeipmi-1.1.1 and above is required for the script to function. Both 
+FreeIPMI and the script imply Unix-like system, notably GNU/Linux; Windows 
 is not supported as of this writing, Dec 13, 2011.
 
 Net-SNMP 5.3.2.2 and above is required to make a complete alerting solution. 
@@ -77,7 +77,7 @@ to snmptrapd options.
 
 You have to enable PET on IPMI nodes as well, including LAN access, PEF 
 alerting, community, alert policy and destination. You may use bmc-config 
-and pef-config from freeipmi to do those configuration. See "IPMI NODES".
+and pef-config from FreeIPMI to do those configuration. See "IPMI NODES".
 
 You might wish to set up PTR records for IPMI nodes, otherwise, snmptrapd 
 reports <UNKNOWN> to traphandle and the script will fall back to use ip.
@@ -156,7 +156,7 @@ Then simply copy the cache to where referred to by sdr cache config.
 
 For PET to be generated, configurations on IPMI nodes have to be done, 
 including LAN access, PEF alerting, trap community, alert policy and 
-destination. You may use bmc-config and pef-config from freeipmi to do those 
+destination. You may use bmc-config and pef-config from FreeIPMI to do those 
 configuration.
 
 However, before doing configurations and facing unexpected firmware issues, 
@@ -186,7 +186,7 @@ ending of each line, that's the way snmptrapd(8) works.
 4.1 NODE CONFIGURATION
 
 You'd better save your customization, if any, before changing anything. Guys 
-with factory default settings feel free to go on. Freeipmi is outstanding 
+with factory default settings feel free to go on. FreeIPMI is outstanding 
 with its ability to save your overall customization with --checkout option; 
 there are several config programs, of which only bmc-config(8) and 
 pef-config(8) are needed in this senario.

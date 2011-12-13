@@ -7,7 +7,7 @@
 # This script operates in two modes, traphandle or embperl.  When in 
 # traphandle mode, it concatenates the quoted hex string into one long line, 
 # then builds structures to resemble embperl mode. Both modes then invokes 
-# helper decoder, ipmi-pet(8) from freeipmi, parses the output and alerts
+# helper decoder, ipmi-pet(8) from FreeIPMI, parses the output and alerts
 # in given way like email, nagios external command, etc. See README for 
 # a simple tutorial.
 #
@@ -19,7 +19,7 @@
 # * Mon 12 Dec 2011 kaiwang.chen@gmail.com
 # - Remove nsca support because snmptrapd is meant to run on the Nagios host
 # - Fix nagios external command file support
-# - Map freeipmi Nominal state to Nagios OK
+# - Map FreeIPMI Nominal state to Nagios OK
 # - Fix Net::SMTP typos and options handling
 # - Remove USAGE section, please refer to README
 #
