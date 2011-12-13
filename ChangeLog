@@ -4,7 +4,11 @@
 
 	* Store all manpages stored in man/.
 
-	* move common/src libs to common/.
+	* Store all /etc appropriate files in etc/.
+
+	* Move common/src libs to common/.
+
+	* Update all Makefiles and configure.ac appropriately for changes.
 	
 2011-12-12  Albert Chu <chu11@llnl.gov>
 
