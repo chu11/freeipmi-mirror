@@ -1,17 +1,38 @@
-SUBDIRS = src
-
-MANS_CPP = \
-	libipmidetect.3
-
-$(MANS_CPP): $(MANS_CPP:%=%.pre)
-	$(CPP) -w -C -P -I. $@.pre  $@
-
-dist_man_MANS = $(MANS_CPP)
-
 if WITH_PKG_CONFIG
 pkgconfig_DATA = libipmidetect.pc
 endif
 
-CLEANFILES = $(MANS_CPP) *~
+if WITH_GNU_LD
+VERSION_SCRIPT = $(srcdir)/ipmidetect.map
+OTHER_FLAGS = -Wl,--version-script=$(VERSION_SCRIPT)
+endif
 
-DISTCLEANFILES = $(MANS_CPP) $(MANS_CPP:%=%.pre) .deps/*.P
+include_HEADERS = ipmidetect.h
+
+lib_LTLIBRARIES = libipmidetect.la 
+
+libipmidetect_la_CPPFLAGS = \
+	-I$(top_srcdir)/common/miscutil \
+	-I$(top_srcdir)/common/portability
+
+libipmidetect_la_LDFLAGS = \
+	-version-info @LIBIPMIDETECT_VERSION_INFO@ \
+	$(OTHER_FLAGS)
+
+libipmidetect_la_LIBADD = \
+	$(top_builddir)/common/miscutil/libmiscutils.la \
+	$(top_builddir)/common/portability/libfreeipmiportability.la
+
+libipmidetect_la_SOURCES = \
+	ipmidetect.c
+
+$(top_builddir)/common/miscutil/libmiscutils.la : force-dependency-check
+	@cd `dirname $@` && $(MAKE) `basename $@`
+
+$(top_builddir)/common/portability/libfreeipmiportability.la : force-dependency-check
+	@cd `dirname $@` && $(MAKE) `basename $@`
+
+force-dependency-check:
+
+EXTRA_DIST = ipmidetect.map
+

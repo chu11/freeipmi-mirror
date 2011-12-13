@@ -295,6 +295,7 @@ fi
 %{_mandir}/man7/freeipmi.7*
 %{_mandir}/man5/libipmiconsole.conf.5*
 %dir %{_localstatedir}/cache/ipmimonitoringsdrcache
+%dir %{_localstatedir}/log/freeipmi
 
 %files devel
 %defattr(-,root,root)
@@ -355,7 +356,6 @@ fi
 %config(noreplace) %{_sysconfdir}/logrotate.d/bmc-watchdog
 %{_sbindir}/bmc-watchdog
 %{_mandir}/man8/bmc-watchdog.8*
-%dir %{_localstatedir}/log/freeipmi
 
 %files ipmidetectd
 %defattr(-,root,root)
@@ -368,6 +368,7 @@ fi
 %changelog
 * Mon Dec 12 2011 Albert Chu <chu11@llnl.gov> 1.1.1
 - Add contrib and ipmi-pet files.
+- Make main package own logdir.
 
 * Wed Jun 29 2011 Albert Chu <chu11@llnl.gov> 1.0.4
 - Add pkgconfig files.

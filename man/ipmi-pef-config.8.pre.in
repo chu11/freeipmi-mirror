@@ -1,0 +1,135 @@
+.TH IPMI-PEF-CONFIG 8 "@ISODATE@" "ipmi-pef-config @PACKAGE_VERSION@" "System Commands"
+.SH "NAME"
+ipmi-pef-config \- configure PEF values
+.SH "SYNOPSIS"
+.B ipmi-pef-config
+[\fIOPTION\fR...]
+.SH "DESCRIPTION"
+.B Ipmi-pef-config
+is a Platform Event Filtering (PEF) configuration utility.  
+This configuration tool is for advanced IPMI users and
+generally not-required for IPMI to function.  Most IPMI users
+will not need to use this tool.
+
+For configuration of general BMC parameters, sensors, or chassis,
+please see the
+.B bmc-config(8),
+.B ipmi-sensors-config(8),
+and
+.B ipmi-chassis-config(8)
+tools respectively.  For some OEM specific configurations, please see
+.B ipmi-oem(8).
+#include <@top_srcdir@/man/manpage-common-table-of-contents.man>
+See GENERAL USE below for a description on how most will want to use
+.B Ipmi-pef-config.
+#include <@top_srcdir@/man/manpage-common-general-options-header.man>
+#include <@top_srcdir@/man/manpage-common-driver.man>
+#include <@top_srcdir@/man/manpage-common-inband.man>
+#include <@top_srcdir@/man/manpage-common-outofband-hostname-hostranged.man>
+#include <@top_srcdir@/man/manpage-common-outofband-username-admin.man>
+#include <@top_srcdir@/man/manpage-common-outofband-password.man>
+#include <@top_srcdir@/man/manpage-common-outofband-k-g.man>
+#include <@top_srcdir@/man/manpage-common-outofband-session-timeout.man>
+#include <@top_srcdir@/man/manpage-common-outofband-retransmission-timeout.man>
+#include <@top_srcdir@/man/manpage-common-authentication-type.man>
+#include <@top_srcdir@/man/manpage-common-cipher-suite-id-main.man>
+#include <@top_srcdir@/man/manpage-common-cipher-suite-id-details.man>
+#include <@top_srcdir@/man/manpage-common-privilege-level-admin.man>
+#include <@top_srcdir@/man/manpage-common-config-file.man>
+#include <@top_srcdir@/man/manpage-common-workaround-flags.man>
+#include <@top_srcdir@/man/manpage-common-debug.man>
+#include <@top_srcdir@/man/manpage-common-misc.man>
+.SH "IPMI-PEF-CONFIG OPTIONS"
+The following options are specific to
+.B Ipmi-pef-config.
+.TP
+\fB\-i\fR, \fB\-\-info\fR
+Show general information about PEF configuration.
+#include <@top_srcdir@/man/manpage-common-config-tool-options.man>
+.TP
+\fB\-v\fR, \fB\-\-verbose\fR
+Output verbose information.  When used with \-\-checkout, additional
+uncommon sections and/or fields will be shown.  In
+.B ipmi-pef-config,
+this includes checking out sections for each channel on a system, if
+multiple channels exist.
+#include <@top_srcdir@/man/manpage-common-config-tool-options-very-verbose.man>
+#include <@top_srcdir@/man/manpage-common-config-tool-options-lan-channel-number.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-options-header.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-buffer.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-consolidate.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-fanout.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-eliminate.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-always-prefix.man>
+#include <@top_srcdir@/man/manpage-common-config-tool-general-use.man>
+.SH "EDITING THE CHECKOUT FILE"
+Options for editing fields in the checkout file are usually listed in
+a comment above the field.  When there are to many options to make it
+practical, they are listed here in the MAN page.
+.TP
+\fBSensor_Type Options\fR 
+Reserved, Temperature, Voltage, Current, Fan, Physical_Security,
+Platform_Security_Violation_Attempt, Processor, Power_Supply,
+Power_Unit, Cooling_Device, Other_Units_Based_Sensor, Memory,
+Drive_Slot, Post_Memory_Resize, System_Firmware_Progress,
+Event_Logging_Disabled, Watchdog1, System_Event, Critical_Interrupt,
+Button_Switch, Module_Board, Microcontroller_Coprocessor, Add_In_Card,
+Chassis, Chip_Set, Other_FRU, Cable_Interconnect, Terminator,
+System_Boot_Initiated, Boot_Error, OS_Boot, OS_Critical_Stop,
+Slot_Connector, System_ACPI_Power_State, Watchdog2, Platform_Alert,
+Entity_Presence, Monitor_Asic_IC, Lan, Management_Subsystem_Health,
+Battery, Session_Audit, Version_Change, FRU_State, and Any
+
+.SH "IPMI-PEF-CONFIG SPECIAL CASE CONFIGURATION INFORMATION"
+On some motherboards, multiple channels may exist for LAN IPMI
+communication.  If multiple channels exist, configuration of both
+channels can be viewed and ultimately configured by running
+\fI\-\-checkout\fR under verbose mode.  Each section name will be
+suffixed appropriately with the word \fIChannel\fR and the channel
+number.  For example, you might see a \fICommunity_String_Channel_1\fR
+and \fICommunity_String_Channel_3\fR, where you can configure the
+Community String on Channels 1 and 3 respectively.
+
+#include <@top_srcdir@/man/manpage-common-hostranged-text-main.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-text-threads.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-text-options.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-text-localhost.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-heading-start.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-heading-outofband.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-heading-inband.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-heading-end.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-outofband.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-inband.man>
+#include <@top_srcdir@/man/manpage-common-workaround-heading-text.man>
+#include <@top_srcdir@/man/manpage-common-workaround-inband-text.man>
+#include <@top_srcdir@/man/manpage-common-workaround-outofband-common-text.man>
+#include <@top_srcdir@/man/manpage-common-workaround-outofband-15-text.man>
+#include <@top_srcdir@/man/manpage-common-workaround-outofband-20-text.man>
+#include <@top_srcdir@/man/manpage-common-workaround-extra-text.man>
+#include <@top_srcdir@/man/manpage-common-workaround-config-tool.man>
+.SH "EXAMPLES"
+.B # ipmi-pef-config --checkout
+.PP
+Output all configuration information to the console.
+.PP
+.B # ipmi-pef-config --checkout --filename=pef-data1.conf
+.PP
+Store all configuration information in pef-data1.conf.
+.PP
+.B # ipmi-pef-config --diff --filename=pef-data2.conf
+.PP
+Show all difference between the current configuration and the pef-data2.conf file.
+.PP
+.B # ipmi-pef-config --commit --filename=pef-data1.conf
+.PP
+Commit all configuration values from the pef-data1.conf file.
+.PP
+#include <@top_srcdir@/man/manpage-common-known-issues.man>
+#include <@top_srcdir@/man/manpage-common-reporting-bugs.man>
+.SH "COPYRIGHT"
+Copyright \(co 2007-2012 FreeIPMI Core Team.  
+#include <@top_srcdir@/man/manpage-common-gpl-program-text.man>
+.SH "SEE ALSO"
+freeipmi(7), bmc-config(8), ipmi-sensors-config(8),
+ipmi-chassis-config(8)
+#include <@top_srcdir@/man/manpage-common-homepage.man>

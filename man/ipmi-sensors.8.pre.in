@@ -1,0 +1,273 @@
+.TH IPMI-SENSORS 8 "@ISODATE@" "IPMI Sensors version @PACKAGE_VERSION@" "System Commands"
+.SH "NAME"
+ipmi-sensors \- display IPMI sensor information
+.SH "SYNOPSIS"
+.B ipmi-sensors
+[\fIOPTION\fR...]
+.SH "DESCRIPTION"
+.B Ipmi-sensors
+displays current readings of sensors and sensor data repository (SDR)
+information.  The default display outputs each sensor's record id,
+sensor name, sensor type name, sensor reading (if appropriate), and
+the current sensor event.  More verbose information can be found using
+the verbose options specified below.
+
+.B Ipmi-sensors
+does not inform the user if a problem exists with a particular sensor
+because sensor readings and events are not analyzed by default. Users
+may wish to use the \fB\-\-output\-sensor\-state\fR option to output
+the analyzed sensor state.
+
+Some sensors may have a sensor reading or sensor event of "N/A" if
+the information is unavailable.  This is typical of a sensor that
+is not enabled or not owned by a BMC.  Please see
+\fB\-\-bridge\-sensors\fR option below to deal with sensors not owned
+by a BMC.  Sensors may output a sensor event of "Unknown" if the
+sensor reading cannot be read.  This is typical of a sensor that is
+busy or a reading that cannot be calculated.  If sensors report
+"Unrecognized State", it is indicative of an unkown sensor type,
+typically an OEM sensor.  If the sensor OEM interpretation is
+available, the \fB\-\-intepret\-oem\-data\fR may be able to report
+the appropriate sensor state.  Sensors need not always report a sensor
+event.  When a sensor event is not present, "OK" is typically
+reported.
+
+#include <@top_srcdir@/man/manpage-common-table-of-contents.man>
+To perform IPMI sensor configuration, please see
+.B ipmi-sensors-config(8).
+To perform some advanced SDR management, please see
+.B bmc-device(8).
+
+#include <@top_srcdir@/man/manpage-common-general-options-header.man>
+#include <@top_srcdir@/man/manpage-common-driver.man>
+#include <@top_srcdir@/man/manpage-common-inband.man>
+#include <@top_srcdir@/man/manpage-common-outofband-hostname-hostranged.man>
+#include <@top_srcdir@/man/manpage-common-outofband-username-operator.man>
+#include <@top_srcdir@/man/manpage-common-outofband-password.man>
+#include <@top_srcdir@/man/manpage-common-outofband-k-g.man>
+#include <@top_srcdir@/man/manpage-common-outofband-session-timeout.man>
+#include <@top_srcdir@/man/manpage-common-outofband-retransmission-timeout.man>
+#include <@top_srcdir@/man/manpage-common-authentication-type.man>
+#include <@top_srcdir@/man/manpage-common-cipher-suite-id-main.man>
+#include <@top_srcdir@/man/manpage-common-cipher-suite-id-details.man>
+#include <@top_srcdir@/man/manpage-common-privilege-level-operator.man>
+#include <@top_srcdir@/man/manpage-common-config-file.man>
+#include <@top_srcdir@/man/manpage-common-workaround-flags.man>
+#include <@top_srcdir@/man/manpage-common-debug.man>
+#include <@top_srcdir@/man/manpage-common-misc.man>
+.SH "IPMI-SENSORS OPTIONS"
+The following options are specific to
+.B Ipmi-sensors.
+.TP
+\fB\-v\fR, \fB\-\-verbose\fR
+Output verbose sensor output.  This option will output additional
+information about sensors such as thresholds, ranges, numbers, and
+event/reading type codes.
+.TP
+\fB\-vv\fR
+Output very verbose sensor output.  This option will output more
+additional information than the verbose option such as information
+about events, other sensor types, and oem sensors.
+.TP
+\fB\-i\fR, \fB\-\-sdr\-info\fR
+Show sensor data repository (SDR) information
+.TP
+\fB\-q\fR, \fB\-\-quiet-readings\fR
+Do not output sensor reading values by default.  This option is
+particularly useful if you want to use hostranged output across a
+cluster and want to consolidate the output.
+.TP
+\fB\-r\fR \fIRECORD\-IDS\-LIST\fR, \fB\-\-record\-ids\fR=\fIRECORD\-IDS\-LIST\fR
+Specify sensors to show by record id.  Multiple record ids can be
+separated by commas or spaces.  If both \fB\-\-record\-ids\fR and
+\fB\-\-sensor\-types\fR are specified, \fB\-\-record\-ids\fR takes
+precedence.  A special command line record id of "all", will indicate
+all record ids should be shown (may be useful for overriding
+configured defaults).
+.TP
+\fB\-R\fR \fIRECORD\-IDS\-LIST\fR, \fB\-\-exclude\-record\-ids\fR=\fIRECORD\-IDS\-LIST\fR
+Specify sensors to not show by record id.  Multiple record ids can be
+separated by commas or spaces.  A special command line record id of
+"none", will indicate no record ids should be excluded (may be useful
+for overriding configured defaults).
+.TP
+\fB\-t\fR \fISENSOR\-TYPE\-LIST\fR, \fB\-\-sensor\-types\fR=\fISENSOR\-TYPE\-LIST\fR
+Specify sensor types to show outputs for.  Multiple types can
+be separated by commas or spaces.  If both \fB\-\-record\-ids\fR and
+\fB\-\-sensor\-types\fR are specified, \fB\-\-record\-ids\fR takes precedence.
+A special command line type of "all", will indicate all types should
+be shown (may be useful for overriding configured defaults).  Users
+may specify sensor types by string (see \fB\-\-list\-sensor\-types\fR
+below) or by number (decimal or hex).
+.TP
+\fB\-T\fR \fISENSOR\-TYPE\-LIST\fR, \fB\-\-exclude\-sensor\-types\fR=\fISENSOR\-TYPE\-LIST\fR
+Specify sensor types to not show outputs for.  Multiple types
+can be eparated by commas or spaces.  A special command line type of
+"none", will indicate no types should be excluded (may be useful for
+overriding configured defaults).  Users may specify sensor types by
+string (see \fB\-\-list\-sensor\-types\fR below) or by number (decimal
+or hex).
+.TP
+\fB\-L\fR, \fB\-\-list\-sensor\-types\fR
+List sensor types.
+.TP
+\fB\-b\fR, \fB\-\-bridge\-sensors\fR
+By default, sensors readings are not attempted for sensors on non-BMC
+owners.  By setting this option, sensor requests can be bridged to
+non-BMC owners to obtain sensor readings.  Bridging may not work on
+some interfaces/driver types.
+.TP
+\fB\-\-shared\-sensors\fR
+Some sensors share the same sensor data record (SDR).  This is
+typically utilized for system event log (SEL) entries and not for
+sensor readings.  However, there may be some motherboards in which
+this format is utilized for multiple active sensors, or the user
+simply has interest in seeing the permutation of entries shared by a
+SDR entry.  By setting this option, each sensor number shared by a
+record will be iterated over and output.
+#include <@top_srcdir@/man/manpage-common-interpret-oem-data.man>
+.TP
+\fB\-\-ignore\-not\-available\-sensors\fR
+Ignore not-available (i.e. N/A) sensors in output.
+.TP
+\fB\-\-ignore\-unrecognized\-events\fR
+Ignore unrecognized sensor events.  This will suppress output of
+unrecognized events, typically shown as 'Unrecognized Event = XXXXh'
+in output.  In addition, unrecognized events will be ignored when
+calculating sensor state with \fI\-\-output\-sensor\-state\fR below.
+.TP
+\fB\-\-output\-event\-bitmask\fR
+Output event bitmask value instead of the string representation.
+.TP
+\fB\-\-output\-sensor\-state\fR
+Output sensor state in output.  This will add an additional output
+reporting if a sensor is in a NOMINAL, WARNING, or CRITICAL state.
+The sensor state is an interpreted value based on the current sensor
+event.  The sensor state interpretations are determined by the
+configuration file @INTERPRET_SENSOR_CONFIG_FILE_DEFAULT@.
+See
+.B freeipmi_interpret_sensor.conf(5)
+for more information.
+This option gives identical output to the sensor state
+previously output by
+.B ipmimonitoring(8).
+.TP
+\fB\-\-sensor\-state\-config\-file\fR=\fIFILE\fR
+Specify an alternate sensor state configuration file.  Option ignored
+if \fB\-\-output\-sensor\-state\fR not specified.
+#include <@top_srcdir@/man/manpage-common-entity-sensor-names.man>
+#include <@top_srcdir@/man/manpage-common-no-sensor-type-output.man>
+#include <@top_srcdir@/man/manpage-common-comma-separated-output.man>
+#include <@top_srcdir@/man/manpage-common-no-header-output.man>
+#include <@top_srcdir@/man/manpage-common-non-abbreviated-units.man>
+#include <@top_srcdir@/man/manpage-common-legacy-output.man>
+.TP
+\fB\-\-ipmimonitoring\-legacy\-output\fR
+Output legacy format of legacy
+.B ipmimonitoring
+tool.  Newer options may not be applicable to legacy output.
+#include <@top_srcdir@/man/manpage-common-sdr-options.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-options-header.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-buffer.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-consolidate.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-fanout.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-eliminate.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-always-prefix.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-text-main.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-text-threads.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-text-options.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-text-localhost.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-heading-start.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-heading-outofband.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-heading-inband.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-heading-end.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-outofband.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-inband.man>
+.LP
+"sensor config file parse error" - A parse error was found in the
+sensor interpretation configuration file.  Please see
+.B freeipmi_interpret_sensor.conf(5).
+#include <@top_srcdir@/man/manpage-common-workaround-heading-text.man>
+#include <@top_srcdir@/man/manpage-common-workaround-inband-text.man>
+#include <@top_srcdir@/man/manpage-common-workaround-outofband-common-text.man>
+#include <@top_srcdir@/man/manpage-common-workaround-outofband-15-text.man>
+#include <@top_srcdir@/man/manpage-common-workaround-outofband-20-text.man>
+.LP
+\fIdiscretereading\fR - This workaround option will allow sensor readings
+to be read even if the event/reading type code for the sensor is not
+valid.  This option works around poorly defined (and arguably illegal)
+SDR records that list non-discrete sensor expectations along with
+discrete state conditions.  This option is confirmed to work around
+issues on HP Proliant DL380 G7 and HP ProLiant ML310 G5 motherboards.
+.LP
+\fIignorescanningdisabled\fR - This workaround option will allow sensor
+readings to be read even if the sensor scanning bit indicates a sensor
+is disabled.  This option works around motherboards that incorrectly
+indicate sensors as disabled.  This may problem may exist on your
+motherboard if sensors are listed as "N/A" even if they should be
+available.  This option is confirmed to work around issues on Dell
+Poweredge 2900, Dell Poweredge 2950, Dell Poweredge R410, Dell
+Poweredge R610, and HP Integrity rx3600 motherboards.
+.LP
+\fIassumebmcowner\fR - This workaround option will allow sensor readings
+to be read if the sensor owner is the BMC, but the reported sensor
+owner is not the BMC.  Typically, sensors owned by a non-BMC sensor
+owner must be bridged (e.g. with the \fB\-\-bridge\-sensors\fR
+option), however if the non-BMC sensor owner is invalid, bridging
+fails.  This option works around motherboards that incorrectly report
+an non-BMC sensor owner by always assuming the sensor owner is the
+BMC.  This may problem may exist on your motherboard if sensors are
+listed as "N/A" even if they should be available. This option is
+confirmed to work around issues on Fujitsu RX300 and Fujitsu RX300S2
+motherboards.
+#include <@top_srcdir@/man/manpage-common-workaround-extra-text.man>
+#include <@top_srcdir@/man/manpage-common-oem-interpretation.man>
+.LP
+Dell Poweredge R210, Dell Poweredge R610, Dell Poweredge R710, Fujitsu
+iRMC S1 and iRMC S2 systems, Intel S5500WB/Penguin Computing Relion
+700, Intel S2600JF/Appro 512X, Supermicro X7DBR-3, Supermicro X7DB8,
+Supermicro X8DTN, Supermicro X7SBI-LN4, Supermicro X8DTH, Supermicro
+X8DTG, Supermicro X8DTU, Supermicro X8DT3-LN4F, Supermicro X8DTU-6+,
+Supermicro X8DTL, Supermicro X8DTL-3F, Supermicro X8SIL-F, Supermicro
+X9SCL, Supermicro X9SCM, Supermicro X8DTN+-F, Supermicro X8SIE,
+Supermicro X9SCA-F-O.
+.SH "EXAMPLES"
+.B # ipmi-sensors 
+.PP
+Show all sensors and readings on the local machine.
+.PP
+.B # ipmi-sensors --verbose
+.PP
+Show verbose sensors and readings on the local machine.
+.PP
+.B # ipmi-sensors --record-ids="7,11,102"
+.PP
+Show sensor record ids 7, 11, and 102 on the local machine.
+.PP
+.B # ipmi-sensors --sensor-types=fan
+.PP
+Show all sensors of type fan on the local machine.
+.PP
+.B # ipmi-sensors -h ahost -u myusername -p mypassword
+.PP
+Show all sensors on a remote machine using IPMI over LAN.
+.PP
+.B # ipmi-sensors -h mycluster[0-127] -u myusername -p mypassword
+.PP
+Show all sensors across a cluster using IPMI over LAN.
+.PP
+#include <@top_srcdir@/man/manpage-common-known-issues.man>
+.LP
+Some sensors may be output as not available (i.e. N/A) because the
+owner of the sensor is not the BMC.  To attempt to bridge sensors
+and access sensors not on the BMC, users may wish to try the \fB\-b\fR
+or \fB\-\-bridge\-sensors\fR options.
+
+#include <@top_srcdir@/man/manpage-common-reporting-bugs.man>
+.SH "COPYRIGHT"
+Copyright \(co 2003-2012 FreeIPMI Core Team.  
+#include <@top_srcdir@/man/manpage-common-gpl-program-text.man>
+.SH "SEE ALSO"
+freeipmi(7), bmc-config(8), bmc-device(8), ipmi-sensors-config(8),
+freeipmi_interpret_sensor.conf(5)
+#include <@top_srcdir@/man/manpage-common-homepage.man>

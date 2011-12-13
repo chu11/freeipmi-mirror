@@ -1,0 +1,71 @@
+.\"#############################################################################
+.\"$Id: ipmidetectd.conf.5.pre.in,v 1.15 2010-02-08 22:02:30 chu11 Exp $
+.\"#############################################################################
+.\"  Copyright (C) 2007-2012 Lawrence Livermore National Security, LLC.
+.\"  Copyright (C) 2007 The Regents of the University of California.
+.\"  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
+.\"  Written by Albert Chu <chu11@llnl.gov>
+.\"  UCRL-CODE-228523
+.\"
+.\"  This file is part of Ipmidetect, tools and libraries for detecting
+.\"  IPMI nodes in a cluster. For details, see http://www.llnl.gov/linux/.
+.\"
+.\"  Ipmidetect is free software; you can redistribute it and/or modify it under
+.\"  the terms of the GNU General Public License as published by the Free
+.\"  Software Foundation; either version 3 of the License, or (at your option)
+.\"  any later version.
+.\"
+.\"  Ipmidetect is distributed in the hope that it will be useful, but WITHOUT
+.\"  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+.\"  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+.\"  for more details.
+.\"
+.\"  You should have received a copy of the GNU General Public License along
+.\"  with Ipmidetect.  If not, see <http://www.gnu.org/licenses/>.
+.\"#############################################################################
+.TH ipmidetectd.conf 5 "@ISODATE@" "ipmidetectd.conf @VERSION@" "ipmidetectd.conf"
+.SH "NAME"
+ipmidetectd.conf \- ipmidetectd configuration file
+.SH "DESCRIPTION"
+The 
+.B ipmidetectd
+configuration file configures the 
+.B ipmidetectd
+daemon.
+.LP
+The default configuration file loaded is @IPMIDETECTD_CONFIG_FILE_DEFAULT@. 
+.LP
+The configuration options that can be specified in the configuration
+file are listed below.  Each configuration option must be listed on a
+separate line.  Arguments for an option are separated by any amount of
+whitespace.  Multiple arguments are also separated by whitespace.
+Comments can be marked by using the pound sign ("#") character, and
+lines can be continued on the next using backslash ("\\").
+
+.SH "IPMIDETECTD CONFIGURATION OPTIONS"
+.TP
+.TP
+.I ipmiping_period num
+Specify the period time in milliseconds that IPMI pings should be
+regularly sent out.  Default is 15000.
+.TP 
+.I ipmidetectd_server_port port
+Specify the alternate default port the ipmidetectd server should listen
+for requests off of.  Default is 9225.
+.TP 
+.I host string
+Specify a host or IP address the ipmidetectd daemon should send IPMI
+pings to.  Can be specified as many times as necessary.  Can accept host ranges
+as input.  See HOSTRANGED SUPPORT
+.B ipmidetect(8)
+for information on ranged formats.
+.SH "FILES"
+@IPMIDETECTD_CONFIG_FILE_DEFAULT@
+#include <@top_srcdir@/man/manpage-common-reporting-bugs.man>
+.SH COPYRIGHT
+Copyright (C) 2007-2012 Lawrence Livermore National Security, LLC.
+.br
+Copyright (C) 2007 The Regents of the University of California.
+.SH "SEE ALSO"
+ipmidetectd(8), ipmidetect(8)
+#include <@top_srcdir@/man/manpage-common-homepage.man>

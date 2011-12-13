@@ -1,0 +1,70 @@
+.\"############################################################################
+.\"  $Id: libipmimonitoring.3.pre.in,v 1.23 2010-03-22 17:15:31 chu11 Exp $
+.\"############################################################################
+.\"  Copyright (C) 2007-2012 Lawrence Livermore National Security, LLC.
+.\"  Copyright (C) 2006-2007 The Regents of the University of California.
+.\"  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
+.\"  Written by Albert Chu <chu11@llnl.gov>
+.\"  UCRL-CODE-222073
+.\"  
+.\"  This file is part of Ipmimonitoring, an IPMI sensor monitoring
+.\"  library.  For details, see http://www.llnl.gov/linux/.
+.\"  
+.\"  Ipmimonitoring is free software; you can redistribute it and/or modify it under
+.\"  the terms of the GNU General Public License as published by the Free
+.\"  Software Foundation; either version 3 of the License, or (at your option)
+.\"  any later version.
+.\"  
+.\"  Ipmimonitoring is distributed in the hope that it will be useful, but WITHOUT ANY
+.\"  WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+.\"  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+.\"  details.
+.\"  
+.\"  You should have received a copy of the GNU General Public License along
+.\"  with Ipmimonitoring.  If not, see <http://www.gnu.org/licenses/>.
+.\"############################################################################
+.TH LIBIPMIMONITORING 3 "December 2006" "LLNL" "LIBIPMIMONITORING"
+.SH "NAME"
+libipmimonitoring \- a library for IPMI system event and sensor monitoring
+.SH "SYNOPSIS"
+.B #include <ipmi_monitoring.h>
+.br
+.SH "DESCRIPTION"
+The 
+.B Libipmimonitoring 
+implements a high level sensor and system event monitoring API.  For
+system events, an iterator interface is provided that allows the user
+to iterate through system events, types, states, and more.  For
+sensors, an iterator and callback interface is provided that allows
+the user to iterate through sensor values, types, units, states, and
+more.
+.LP
+In order to improve efficiency, SDR data will be cached on the host.
+By default it is cached in @IPMI_MONITORING_SDR_CACHE_DIR@.
+.LP
+Interpretation rules for system events and sensors are guided by
+.B libfreeipmi(3)'s
+interpretation library.  Configuration of the interpretation rules can
+be configurd via the configuration file
+@INTERPRET_SEL_CONFIG_FILE_DEFAULT@.
+and
+@INTERPRET_SENSOR_CONFIG_FILE_DEFAULT@
+See
+.B freeipmi_interpret_sel.conf(5)
+and
+.B freeipmi_interpret_sensor.conf(5)
+for more information on configuring sensor and system event interpretations.
+
+.SH "FILES"
+@IPMI_MONITORING_SDR_CACHE_DIR@
+
+#include <@top_srcdir@/man/manpage-common-reporting-bugs.man>
+
+.SH COPYRIGHT
+Copyright (C) 2007-2012 Lawrence Livermore National Security, LLC.
+.br
+Copyright (C) 2006-2007 The Regents of the University of California.
+#include <@top_srcdir@/man/manpage-common-gpl-library-text.man>
+.SH "SEE ALSO"
+freeipmi_interpret_sel.conf(5), freeipmi_interpret_sensors.conf(5)
+#include <@top_srcdir@/man/manpage-common-homepage.man>

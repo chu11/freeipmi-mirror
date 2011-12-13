@@ -1,0 +1,65 @@
+.\"#############################################################################
+.\"$Id: ipmidetect.conf.5.pre.in,v 1.13 2010-02-08 22:02:30 chu11 Exp $
+.\"#############################################################################
+.\"  Copyright (C) 2007-2012 Lawrence Livermore National Security, LLC.
+.\"  Copyright (C) 2007 The Regents of the University of California.
+.\"  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
+.\"  Written by Albert Chu <chu11@llnl.gov>
+.\"  UCRL-CODE-228523
+.\"
+.\"  This file is part of Ipmidetect, tools and libraries for detecting
+.\"  IPMI nodes in a cluster. For details, see http://www.llnl.gov/linux/.
+.\"
+.\"  Ipmidetect is free software; you can redistribute it and/or modify it under
+.\"  the terms of the GNU General Public License as published by the Free
+.\"  Software Foundation; either version 3 of the License, or (at your option)
+.\"  any later version.
+.\"
+.\"  Ipmidetect is distributed in the hope that it will be useful, but WITHOUT
+.\"  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+.\"  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+.\"  for more details.
+.\"
+.\"  You should have received a copy of the GNU General Public License along
+.\"  with Ipmidetect.  If not, see <http://www.gnu.org/licenses/>.
+.\"############################################################################
+.TH IPMIDETECT.CONF 5 "@ISODATE@" "LLNL" "LIBIPMIDETECT"
+.SH "NAME"
+ipmidetect.conf \- specify alternate default values for the ipmidetect library
+.SH "DESCRIPTION"
+Through a configuration file, system administrators may override the
+default values used in the 
+.BR ipmidetect_load_data(3)
+API function. 
+.LP
+The configuration file is stored at @IPMIDETECT_CONFIG_FILE_DEFAULT@.
+
+.SH "CONFIGURATION OPTIONS"
+The following are a list of configuration options that can be
+specified in the configuration file.  Each configuration option must
+be listed on a separate line.  Arguments for an option are separated
+by any amount of whitespace.  Multiple arguments are also separated by
+whitespace.  Comments can be marked by using the pound sign ("#")
+character, and lines can be continued on the next using backslash
+("\\").
+
+.TP
+.I hostnames host1 host2 host3 ...
+Specify the hostname of the server to reach.  Multiple hostnames can
+be listed up to a maximum of 8.
+.TP
+.I port num
+Specify the port.
+.TP
+.I timeout_len seconds
+Specify the timeout length in seconds.
+.SH "FILES"
+@IPMIDETECT_CONFIG_FILE_DEFAULT@
+#include <@top_srcdir@/man/manpage-common-reporting-bugs.man>
+.SH COPYRIGHT
+Copyright (C) 2007-2012 Lawrence Livermore National Security, LLC.
+.br
+Copyright (C) 2007 The Regents of the University of California.
+.SH "SEE ALSO"
+libipmidetect(3), ipmidetect(8)
+#include <@top_srcdir@/man/manpage-common-homepage.man>

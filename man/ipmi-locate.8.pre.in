@@ -1,0 +1,27 @@
+.TH IPMI-LOCATE 8 "@ISODATE@" "IPMI Locate version @PACKAGE_VERSION@" "System Commands"
+.SH "NAME"
+IPMI \- IPMI probing utility
+.SH "SYNOPSIS"
+.B ipmi-locate
+[\fIOPTION\fR...]
+.SH "DESCRIPTION"
+.B Ipmi-locate
+probes and displays information about a BMC device, such as device
+addresses or IPMI version support.
+.B Ipmi-locate
+is sometimes used to determine if IPMI can be found on your system.
+Users are cautioned though, the failure to discover IPMI via
+.B Ipmi-locate
+is not sufficient to disprove that IPMI exists on your
+system.  Your system may not publish such information or may expect
+clients to communicate at default locations.
+
+.SH "OPTIONS"
+#include <@top_srcdir@/man/manpage-common-misc.man>
+#include <@top_srcdir@/man/manpage-common-reporting-bugs.man>
+.SH "COPYRIGHT"
+Copyright \(co 2005-2012 FreeIPMI Core Team
+#include <@top_srcdir@/man/manpage-common-gpl-program-text.man>
+.SH "SEE ALSO"
+freeipmi(7)
+#include <@top_srcdir@/man/manpage-common-homepage.man>

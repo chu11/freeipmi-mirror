@@ -1,12 +1,49 @@
-SUBDIRS = src
+sbin_PROGRAMS = ipmi-raw
 
-MANS_CPP = ipmi-raw.8
+ipmi_raw_CPPFLAGS = \
+	-I$(top_srcdir)/common/toolcommon \
+	-I$(top_srcdir)/common/toolhostrange \
+	-I$(top_srcdir)/common/miscutil \
+	-I$(top_srcdir)/common/parsecommon \
+	-I$(top_srcdir)/common/portability \
+	-I$(top_srcdir)/libfreeipmi/include \
+	-D_GNU_SOURCE \
+	-D_REENTRANT 
 
-$(MANS_CPP): $(MANS_CPP:%=%.pre)
-	$(CPP) -w -C -P -I. $@.pre  $@
+ipmi_raw_LDADD = \
+	$(top_builddir)/common/toolcommon/libtoolcommon.la \
+	$(top_builddir)/common/toolhostrange/libtoolhostrange.la \
+	$(top_builddir)/common/miscutil/libmiscutils.la \
+	$(top_builddir)/common/parsecommon/libparsecommon.la \
+	$(top_builddir)/common/portability/libfreeipmiportability.la \
+	$(top_builddir)/libipmidetect/libipmidetect.la \
+	$(top_builddir)/libfreeipmi/libfreeipmi.la
 
-dist_man_MANS = $(MANS_CPP)
+ipmi_raw_SOURCES = \
+	ipmi-raw.c \
+	ipmi-raw.h \
+	ipmi-raw-argp.c \
+	ipmi-raw-argp.h
 
-CLEANFILES = $(MANS_CPP) *~
+$(top_builddir)/common/toolcommon/libtoolcommon.la : force-dependency-check
+	@cd `dirname $@` && $(MAKE) `basename $@`
 
-DISTCLEANFILES = $(MANS_CPP) $(MANS_CPP:%=%.pre) .deps/*.P
+$(top_builddir)/common/toolhostrange/libtoolhostrange.la : force-dependency-check
+	@cd `dirname $@` && $(MAKE) `basename $@`
+
+$(top_builddir)/common/miscutil/libmiscutils.la : force-dependency-check
+	@cd `dirname $@` && $(MAKE) `basename $@`
+
+$(top_builddir)/common/parsecommon/libparsecommon.la : force-dependency-check
+	@cd `dirname $@` && $(MAKE) `basename $@`
+
+$(top_builddir)/common/portability/libfreeipmiportability.la : force-dependency-check
+	@cd `dirname $@` && $(MAKE) `basename $@`
+
+$(top_builddir)/libipmidetect/libipmidetect.la : force-dependency-check
+	@cd `dirname $@` && $(MAKE) `basename $@`
+
+$(top_builddir)/libfreeipmi/libfreeipmi.la : force-dependency-check
+	@cd `dirname $@` && $(MAKE) `basename $@`
+
+force-dependency-check:

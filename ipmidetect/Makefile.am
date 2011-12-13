@@ -1,23 +1,39 @@
-SUBDIRS = src
+##*****************************************************************************
+## $Id: Makefile.am,v 1.11 2008-09-17 22:56:04 chu11 Exp $
+##*****************************************************************************
+## Process this file with automake to produce Makefile.in.
+##*****************************************************************************
 
-MANS_CPP = \
-	ipmidetect.8 \
-	ipmidetect.conf.5
+sbin_PROGRAMS = ipmidetect
 
-$(MANS_CPP): $(MANS_CPP:%=%.pre)
-	$(CPP) -w -C -P -I. $@.pre  $@
+ipmidetect_CPPFLAGS = \
+	-I$(top_srcdir)/common/miscutil \
+	-I$(top_srcdir)/common/portability \
+	-I$(top_srcdir)/libipmidetect/ \
+	-D_GNU_SOURCE \
+	-D_REENTRANT
 
-dist_man_MANS = $(MANS_CPP) ipmi-detect.8
+ipmidetect_LDADD = \
+	$(top_builddir)/common/miscutil/libmiscutils.la \
+	$(top_builddir)/common/portability/libfreeipmiportability.la \
+	$(top_builddir)/libipmidetect/libipmidetect.la
 
-CLEANFILES = $(MANS_CPP) *~
+ipmidetect_SOURCES = ipmidetect.c
 
-DISTCLEANFILES = $(MANS_CPP) $(MANS_CPP:%=%.pre) .deps/*.P
+$(top_builddir)/common/miscutil/libmiscutils.la : force-dependency-check
+	@cd `dirname $@` && $(MAKE) `basename $@`
 
-EXTRA_DIST = ipmidetect.conf ipmi-detect.8
+$(top_builddir)/common/portability/libfreeipmiportability.la : force-dependency-check
+	@cd `dirname $@` && $(MAKE) `basename $@`
 
-install-data-local:
-	$(INSTALL) -m 755 -d $(DESTDIR)$(FREEIPMI_SYSCONFDIR)
-	$(INSTALL) -m 644 $(srcdir)/ipmidetect.conf $(DESTDIR)$(IPMIDETECT_CONFIG_FILE_DEFAULT)
+$(top_builddir)/libipmidetect/libipmidetect.la : force-dependency-check
+	@cd `dirname $@` && $(MAKE) `basename $@`
 
-uninstall-local:
-	$(RM) -f $(DESTDIR)$(IPMIDETECT_CONFIG_FILE_DEFAULT)
+force-dependency-check:
+
+install-exec-hook:
+	$(install_sh) -d -m 755 $(DESTDIR)$(sbindir)
+	$(LN_S) -f $(sbindir)/ipmidetect $(DESTDIR)$(sbindir)/ipmi-detect
+
+uninstall-hook:
+	$(RM) $(DESTDIR)$(sbindir)/ipmi-detect

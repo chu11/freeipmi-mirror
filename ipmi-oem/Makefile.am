@@ -1,12 +1,84 @@
-SUBDIRS = src
+sbin_PROGRAMS = ipmi-oem
 
-MANS_CPP = ipmi-oem.8
+ipmi_oem_CPPFLAGS = \
+	-I$(top_srcdir)/common/toolcommon \
+	-I$(top_srcdir)/common/toolhostrange \
+	-I$(top_srcdir)/common/tooloem \
+	-I$(top_srcdir)/common/toolsdr \
+	-I$(top_srcdir)/common/toolsensor \
+	-I$(top_srcdir)/common/miscutil \
+	-I$(top_srcdir)/common/parsecommon \
+	-I$(top_srcdir)/common/portability \
+	-I$(top_srcdir)/libfreeipmi/include \
+	-D_GNU_SOURCE \
+	-D_REENTRANT 
 
-$(MANS_CPP): $(MANS_CPP:%=%.pre)
-	$(CPP) -w -C -P -I. $@.pre  $@
+ipmi_oem_LDADD = \
+	$(top_builddir)/common/toolcommon/libtoolcommon.la \
+	$(top_builddir)/common/toolhostrange/libtoolhostrange.la \
+	$(top_builddir)/common/tooloem/libtooloem.la \
+	$(top_builddir)/common/toolsdr/libtoolsdr.la \
+	$(top_builddir)/common/toolsensor/libtoolsensor.la \
+	$(top_builddir)/common/miscutil/libmiscutils.la \
+	$(top_builddir)/common/parsecommon/libparsecommon.la \
+	$(top_builddir)/common/portability/libfreeipmiportability.la \
+	$(top_builddir)/libipmidetect/libipmidetect.la \
+	$(top_builddir)/libfreeipmi/libfreeipmi.la
 
-dist_man_MANS = $(MANS_CPP)
+ipmi_oem_SOURCES = \
+	ipmi-oem.c \
+	ipmi-oem.h \
+	ipmi-oem-argp.c \
+	ipmi-oem-argp.h \
+	ipmi-oem-common.c \
+	ipmi-oem-common.h \
+	ipmi-oem-dell.c \
+	ipmi-oem-dell.h \
+	ipmi-oem-fujitsu.c \
+	ipmi-oem-fujitsu.h \
+	ipmi-oem-ibm.c \
+	ipmi-oem-ibm.h \
+	ipmi-oem-intel.c \
+	ipmi-oem-intel.h \
+	ipmi-oem-intelnm.c \
+	ipmi-oem-intelnm.h \
+	ipmi-oem-inventec.c \
+	ipmi-oem-inventec.h \
+	ipmi-oem-quanta.c \
+	ipmi-oem-quanta.h \
+	ipmi-oem-sun.c \
+	ipmi-oem-sun.h \
+	ipmi-oem-supermicro.c \
+	ipmi-oem-supermicro.h
 
-CLEANFILES = $(MANS_CPP) *~
+$(top_builddir)/common/toolcommon/libtoolcommon.la : force-dependency-check
+	@cd `dirname $@` && $(MAKE) `basename $@`
 
-DISTCLEANFILES = $(MANS_CPP) $(MANS_CPP:%=%.pre) .deps/*.P
+$(top_builddir)/common/toolhostrange/libtoolhostrange.la : force-dependency-check
+	@cd `dirname $@` && $(MAKE) `basename $@`
+
+$(top_builddir)/common/tooloem/libtooloem.la : force-dependency-check
+	@cd `dirname $@` && $(MAKE) `basename $@`
+
+$(top_builddir)/common/toolsdr/libtoolsdr.la : force-dependency-check
+	@cd `dirname $@` && $(MAKE) `basename $@`
+
+$(top_builddir)/common/toolsensor/libtoolsensor.la : force-dependency-check
+	@cd `dirname $@` && $(MAKE) `basename $@`
+
+$(top_builddir)/common/miscutil/libmiscutils.la : force-dependency-check
+	@cd `dirname $@` && $(MAKE) `basename $@`
+
+$(top_builddir)/common/parsecommon/libparsecommon.la : force-dependency-check
+	@cd `dirname $@` && $(MAKE) `basename $@`
+
+$(top_builddir)/common/portability/libfreeipmiportability.la : force-dependency-check
+	@cd `dirname $@` && $(MAKE) `basename $@`
+
+$(top_builddir)/libipmidetect/libipmidetect.la : force-dependency-check
+	@cd `dirname $@` && $(MAKE) `basename $@`
+
+$(top_builddir)/libfreeipmi/libfreeipmi.la : force-dependency-check
+	@cd `dirname $@` && $(MAKE) `basename $@`
+
+force-dependency-check:

@@ -1,5 +1,19 @@
 2011-12-12  Albert Chu <chu11@llnl.gov>
 
+	Giant re-org of code.
+
+	* Store all manpages stored in man/.
+
+	* Store all /etc appropriate files in etc/.
+
+	* Move common/src libs to common/.
+
+	* Remove many src directories, move sources up a directory.
+
+	* Various Makefile cleanups.
+	
+2011-12-12  Albert Chu <chu11@llnl.gov>
+
 	* examples/: Remove directory.  Move files into contrib/libipmimonitoring.
 
 	* Install contribs into doc/contrib/

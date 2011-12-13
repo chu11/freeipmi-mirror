@@ -1,0 +1,285 @@
+.\"#############################################################################
+.\"$Id: ipmiconsole.8.pre.in,v 1.52 2010-06-30 21:56:36 chu11 Exp $
+.\"#############################################################################
+.\"  Copyright (C) 2007-2012 Lawrence Livermore National Security, LLC.
+.\"  Copyright (C) 2006-2007 The Regents of the University of California.
+.\"  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
+.\"  Written by Albert Chu <chu11@llnl.gov>
+.\"  UCRL-CODE-221226
+.\"  
+.\"  This file is part of Ipmiconsole, a set of IPMI 2.0 SOL librarie
+.\"  and utilities.  For details, see http://www.llnl.gov/linux/.
+.\"
+.\"  Ipmiconsole is free software; you can redistribute it and/or modify it under
+.\"  the terms of the GNU General Public License as published by the Free
+.\"  Software Foundation; either version 3 of the License, or (at your option)
+.\"  any later version.
+.\"  
+.\"  Ipmiconsole is distributed in the hope that it will be useful, but WITHOUT 
+.\"  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
+.\"  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License 
+.\"  for more details.
+.\"  
+.\"  You should have received a copy of the GNU General Public License along
+.\"  with Ipmiconsole.  If not, see <http://www.gnu.org/licenses/>.
+.\"############################################################################
+.TH ipmiconsole 8 "@ISODATE@" "ipmiconsole @PACKAGE_VERSION@" "System Commands"
+.SH "NAME"
+ipmiconsole \- IPMI console utility
+.SH "SYNOPSIS"
+.B ipmiconsole
+[\fIOPTION\fR...]
+.SH "DESCRIPTION"
+.B ipmiconsole
+is a Serial-over-LAN (SOL) console utility.  It can be used to establish
+console sessions to remote machines using the IPMI 2.0 SOL protocol.
+
+.B Ipmiconsole 
+communicates with a remote machine's Baseboard Management Controller
+(BMC) to establish a console session.  Before any SOL communication
+can take place, the remote machine's BMC must be configured properly.
+The FreeIPMI tool
+.B bmc-config(8) 
+may be used to do this configuration.
+.LP
+Often (although not always), console redirection must be also 
+be configured properly in the BIOS and/or operating system.  Both must
+be configured to redirect console traffic out the appropriate COM port.
+
+#include <@top_srcdir@/man/manpage-common-table-of-contents.man>
+#include <@top_srcdir@/man/manpage-common-general-options-header.man>
+#include <@top_srcdir@/man/manpage-common-outofband-hostname.man>
+.TP
+\fB\-u\fR, \fB\-\-username\fR=\fIUSERNAME\fR
+Specify the username to use when authenticating with the remote host.
+If not specified, a null (i.e. anonymous) username is assumed.  The
+user must a high enough privilege to establish a SOL session and have
+SOL session abilities.
+#include <@top_srcdir@/man/manpage-common-outofband-password.man>
+#include <@top_srcdir@/man/manpage-common-outofband-k-g.man>
+.TP
+\fB\-\-session-timeout\fR=\fIMILLISECONDS\fR
+Specify the session timeout in milliseconds.  Defaults to 60000
+milliseconds (60 seconds) if not specified.
+.TP
+\fB\-\-retransmission-timeout\fR=\fIMILLISECONDS\fR
+Specify the packet retransmission timeout in milliseconds.  Defaults
+to 500 milliseconds (0.5 seconds) if not specified.
+.TP
+\fB\-I\fR, \fB\-\-cipher\-suite-id\fR=\fICIPHER-SUITE-ID\fR
+Specify the IPMI 2.0 cipher suite ID to use. The Cipher Suite ID
+identifies a set of authentication, integrity, and confidentiality
+algorithms to use for IPMI 2.0 communication. The authentication
+algorithm identifies the algorithm to use for session setup, the
+integrity algorithm identifies the algorithm to use for session packet
+signatures, and the confidentiality algorithm identifies the algorithm
+to use for payload encryption. Defaults to cipher suite ID 3 if not
+specified.  The user should be aware that only cipher suite ids 3, 8,
+and 12 encrypt console payloads.  Console information will be sent in
+the clear if an alternate cipher suite id is selected.  The following
+cipher suite ids are currently supported:
+#include <@top_srcdir@/man/manpage-common-cipher-suite-id-details.man>
+#include <@top_srcdir@/man/manpage-common-privilege-level-admin.man>
+#include <@top_srcdir@/man/manpage-common-config-file.man>
+#include <@top_srcdir@/man/manpage-common-workaround-flags.man>
+#include <@top_srcdir@/man/manpage-common-debug.man>
+#include <@top_srcdir@/man/manpage-common-misc.man>
+.SH "IPMICONSOLE OPTIONS"
+The following options are specific to
+.B Ipmiconsole.
+.TP
+\fB\-e\fR \fICHAR\fR, \fB\-\-escape-char\fR=\fICHAR\fR
+Specify an alternate escape character (default char '&').
+.TP
+\fB\-\-dont-steal\fR
+Do not steal an SOL session if one is already detected as being in
+use.  Under most circumstances, if SOL is detected as being in use,
+.B ipmiconsole
+will attempt to steal the SOL session away from the previous session.
+This default behavior exists for several reasons, most notably that
+earlier SOL sessions may have not been able to be deactivate properly.
+.TP
+\fB\-\-deactivate\fR
+Deactivate a SOL session if one is detected as being in use and exit.
+.TP
+\fB\-\-serial\-keepalive\fR
+Occasionally send NUL characters to detect inactive serial
+connections.  This option is particularly useful for those who intend
+to run
+.B ipmiconsole
+without much interaction, such as for logging purposes.  While IPMI
+connections may still be alive, some motherboards have exhibited bugs
+in which underlying serial data can no longer be sent/received.  From
+the viewpoint of
+.B ipmiconsole,
+data is simply not be sent out of the remote system and this problem
+is only detected once there is user interaction.  By sending the
+occasional NUL character, the underlying loss of serial data transfer
+can be detected far more quickly.
+.TP
+\fB\-\-lock-memory\fR
+Lock sensitive information (such as usernames and passwords) in
+memory.
+.if @WITH_DEBUG@ \{
+.TP
+\fB\-\-debugfile\fR
+Output debugging to the debugfile rather than to standard output.
+.TP
+\fB\-\-noraw\fR
+Don't enter terminal raw mode.
+\}
+.LP
+
+.SH "ESCAPE CHARACTERS"
+The following escape sequences are supported.  The default supported
+escape character is '&', but can be changed with the 
+\fB\-e\fR
+option.
+.TP
+.I &?
+Display a list of currently available escape sequences.
+.TP
+.I &.
+Terminate the connection.
+.TP
+.I &B
+Send a "serial-break" to the remote console.
+.TP
+.I &D
+Send a DEL character.
+.TP
+.I &&
+Send a single escape character.
+
+#include <@top_srcdir@/man/manpage-common-troubleshooting-heading-start.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-heading-outofband.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-heading-end.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-outofband.man>
+.SH "IPMICONSOLE TROUBLESHOOTING"
+The following are common issues for error messages in
+.B ipmiconsole.
+.LP
+"SOL unavailable" - SOL is not configured for use on the remote BMC.
+It may be not configured in general or for the specific user
+specified.  Authenticating with a different user may be sufficient,
+however the IPMI protocol does not reveal detail on what is not
+configured on the remote BMC.
+.LP
+"SOL in use" - SOL is already in use on the remote BMC.  If you do not
+specify the
+.I --dont-steal
+option, 
+.B ipmiconsole
+will attempt to steal the SOL session away from the other session.
+.LP
+"SOL session stolen" - Your SOL session has been stolen by another
+session.  You may wish to try and steal the session back by reconnecting.
+.LP
+"SOL requires encryption" - SOL requires a cipher suite id that
+includes encryption.  Please try to use cipher suite id 3, 8, or 12.
+It may also be possible the encryption requirements are not configured
+correctly on the remote BMC.
+.LP
+"SOL requires no encryption" - SOL requires a cipher suite id that
+does not use encryption.  Please try to use cipher suite id 0, 1, 2,
+6, 7, or 11.  It may also be possible the encryption requirements are
+not configured correctly on the remote BMC.
+.LP
+"BMC Implementation" - The BMC on the remote machine has a severe
+problem in its implementation.  Please see the WORKAROUNDS section
+below for possible workarounds.  If additional vendor workarounds are
+required, please contact the authors.
+.LP
+"excess retransmissions sent" - An excessive number of retransmissions
+of SOL packets has occurred and 
+.B ipmiconsole
+has given up.  This may be due to network issues or SOL issues.  Some
+of the same issues involved with "connection timeout" or "session
+timeout" errors may be involved.  Please try to reconnect.
+.LP
+"excess errors received" - An excessive number of SOL packet errors
+has occurred and 
+.B ipmiconsole
+has given up.  This may be due to network issues or SOL issues.
+Please try to reconnect.
+.LP
+"BMC Error" - This error usually means a vendor SOL implementation
+requires a combination of authentication, encryption, privilege,
+etc. that have not been met by the user's choices.  Please try a
+combination of different cipher suites, privileges, etc. to resolve
+the problem.  Please see the WORKAROUNDS section below for possible
+workarounds too.
+
+#include <@top_srcdir@/man/manpage-common-workaround-heading-text.man>
+#include <@top_srcdir@/man/manpage-common-workaround-outofband-common-text.man>
+#include <@top_srcdir@/man/manpage-common-workaround-outofband-20-text.man>
+.LP
+\fIsolpayloadsize\fR - This workaround flag will not check for valid
+SOL payload sizes and assume a proper set.  It works around remote
+systems that report invalid IPMI 2.0 SOL payload sizes.  Those hitting
+this issue may see "BMC Implementation" errors.  Issue observed on
+Asus P5M2/RS162-E4/RX4, Intel SR1520ML/X38ML, Inventec 5441/Dell
+Xanadu II, Sun x4100, Supermicro X8DTH, Supermicro X8DTG, and
+Supermicro X8DTU.
+.LP
+\fIsolport\fR - This workaround flag will ignore alternate SOL ports
+specified during the protocol.  It works around remote systems that
+report invalid alternate SOL ports.  Those hitting this issue may see
+"connection timeout" errors.  Issue observed on Asus P5MT-R and
+Supermicro X8DTH-iF.
+.LP
+\fIsolstatus\fR - This workaround flag will not check the current
+activation status of SOL during the protocol setup.  It works around
+remote systems that do not properly support this command.  Those
+hitting this issue may see "BMC Error" errors.  Issue observed on
+Supermicro X8SIL-F.
+#include <@top_srcdir@/man/manpage-common-known-issues.man>
+.LP
+Some motherboards define an OEM SOL inactivity timeout for SOL
+sessions.  If SOL sessions stay inactive for long periods of time,
+.B ipmiconsole
+sessions may be abruptly closed, most likely resulting in session
+timeout errors.  Please see OEM notes for information on modifying
+this parameter if you wish for sessions to stay active longer.
+.SH "SPECIFIC HARDWARE NOTES"
+Intel SR1520ML/X38ML: After a reboot, the SOL session appears to
+"disconnect" from the motherboard but stay alive.  
+Character data input from the 
+.B ipmiconsole
+client is accepted by the remote machine, but no character data or
+console data is ever sent back from the remote machine.  The SOL
+session is subsequently useless.  There is currently no workaround in
+place to handle this.  The session must be closed and restarted.
+
+.SH "EXAMPLES"
+.B # ipmiconsole -h ahost -u myusername -p mypassword
+.PP
+Establish a console sesssion with a remote host.
+.PP
+#include <@top_srcdir@/man/manpage-common-known-issues.man>
+
+.if @WITH_DEBUG@ \{
+
+This version of ipmiconsole was compiled with debugging.  When compiled
+with debugging,
+.B ipmiconsole 
+is insecure.  The following were intentionally
+left in
+.B ipmiconsole
+for debugging purposes:
+
+.IP o 2
+Core dumps are enabled.
+
+Before placing ipmiconsole in a production system, it is recommended
+that the program be compiled with debugging turned off.
+\}
+#include <@top_srcdir@/man/manpage-common-reporting-bugs.man>
+.SH COPYRIGHT
+Copyright (C) 2007-2012 Lawrence Livermore National Security, LLC.
+.br
+Copyright (C) 2006-2007 The Regents of the University of California.
+#include <@top_srcdir@/man/manpage-common-gpl-program-text.man>
+.SH "SEE ALSO"
+freeipmi.conf(5), freeipmi(7), bmc-config(8)
+#include <@top_srcdir@/man/manpage-common-homepage.man>

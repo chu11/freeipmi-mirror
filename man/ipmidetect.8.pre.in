@@ -1,0 +1,94 @@
+.\"#############################################################################
+.\"$Id: ipmidetect.8.pre.in,v 1.17 2010-06-30 21:56:36 chu11 Exp $
+.\"#############################################################################
+.\"  Copyright (C) 2007-2012 Lawrence Livermore National Security, LLC.
+.\"  Copyright (C) 2007 The Regents of the University of California.
+.\"  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
+.\"  Written by Albert Chu <chu11@llnl.gov>
+.\"  UCRL-CODE-228523
+.\"
+.\"  This file is part of Ipmidetect, tools and libraries for detecting
+.\"  IPMI nodes in a cluster. For details, see http://www.llnl.gov/linux/.
+.\"
+.\"  Ipmidetect is free software; you can redistribute it and/or modify it under
+.\"  the terms of the GNU General Public License as published by the Free
+.\"  Software Foundation; either version 3 of the License, or (at your option)
+.\"  any later version.
+.\"
+.\"  Ipmidetect is distributed in the hope that it will be useful, but WITHOUT
+.\"  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+.\"  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+.\"  for more details.
+.\"
+.\"  You should have received a copy of the GNU General Public License along
+.\"  with Ipmidetect.  If not, see <http://www.gnu.org/licenses/>.
+.\"############################################################################
+.TH Ipmidetect 8 "@ISODATE@" "Ipmidetect @VERSION@" "Ipmidetect"
+.SH "NAME"
+ipmidetect \- list detected and/or undetected IPMI interfaces in a cluster
+.SH "SYNOPSIS"
+.B ipmidetect
+[\fIOPTION\fR...] [\fINODES\fR...]
+.br
+.SH "DESCRIPTION"
+.B ipmidetect
+lists which IPMI nodes have been detected or undetected in a cluster.
+This information is provided by the
+.B libipmidetect(3)
+library
+and
+.B ipmidetectd(8)
+daemon.
+.LP
+.B ipmidetect
+will output the status of each IPMI node configured with
+.B ipmidetectd(8)
+unless they are specified on the command line.  If the first node
+listed is "-", nodes will be read in from standard input.  The nodes
+can be listed in hostrange format, comma separated lists, or space
+separated lists.  See the section below on HOSTRANGED SUPPORT for
+instructions on how to list hosts in range format.  The hostnames
+listed must be the shortened names of hostnames.
+
+.SH "OPTIONS"
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help and exit
+.TP
+\fB\-v\fR, \fB\-\-version\fR
+Print version and exit
+.TP
+\fB\-o\fR \fISTRING\fR, \fB\-\-hostname\fR=\fISTRING\fR
+server hostname (default=localhost)
+.TP
+\fB\-p\fR \fIINT\fR, \fB\-\-port\fR=\fIINT\fR
+server port (default=8649)
+.TP
+\fB\-d\fR, \fB\-\-detected\fR
+List only detected nodes
+.TP
+\fB\-u\fR, \fB\-\-undetected\fR
+List only undetected nodes
+.TP
+\fB\-q\fR, \fB\-\-hostrange\fR
+List nodes in hostrange format (default)
+.TP
+\fB\-c\fR, \fB\-\-comma\fR
+List nodes in comma separated list
+.TP
+\fB\-n\fR, \fB\-\-newline\fR
+List nodes in newline separated list
+.TP
+\fB\-s\fR, \fB\-\-space\fR
+List nodes in space separated list
+.LP
+#include <@top_srcdir@/man/manpage-common-hostranged-text-main.man>
+#include <@top_srcdir@/man/manpage-common-reporting-bugs.man>
+.SH COPYRIGHT
+Copyright (C) 2007-2012 Lawrence Livermore National Security, LLC.
+.br
+Copyright (C) 2007 The Regents of the University of California.
+#include <@top_srcdir@/man/manpage-common-gpl-program-text.man>
+.SH "SEE ALSO"
+libipmidetect(3), ipmidetect.conf(5), ipmidetectd(8)
+#include <@top_srcdir@/man/manpage-common-homepage.man>

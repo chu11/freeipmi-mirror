@@ -1,14 +1,37 @@
-SUBDIRS = src
+sbin_PROGRAMS = ipmiping
 
-MANS_CPP = ipmiping.8
+ipmiping_CPPFLAGS = \
+	-I$(top_srcdir)/common/pingtool \
+	-I$(top_srcdir)/common/debugutil \
+	-I$(top_srcdir)/common/portability \
+	-I$(top_srcdir)/libfreeipmi/include \
+	-D_GNU_SOURCE
 
-$(MANS_CPP): $(MANS_CPP:%=%.pre)
-	$(CPP) -w -C -P -I. $@.pre  $@
+ipmiping_LDADD = \
+	$(top_builddir)/common/pingtool/libpingtoolcommon.la \
+	$(top_builddir)/common/debugutil/libdebugutil.la \
+	$(top_builddir)/common/portability/libfreeipmiportability.la \
+	$(top_builddir)/libfreeipmi/libfreeipmi.la
 
-dist_man_MANS = $(MANS_CPP) ipmi-ping.8
+ipmiping_SOURCES = ipmiping.c
 
-CLEANFILES = $(MANS_CPP) *~
+$(top_builddir)/common/pingtool/libpingtoolcommon.la : force-dependency-check
+	@cd `dirname $@` && $(MAKE) `basename $@`
 
-DISTCLEANFILES = $(MANS_CPP) $(MANS_CPP:%=%.pre) .deps/*.P
+$(top_builddir)/common/debugutil/libdebugutil.la : force-dependency-check
+	@cd `dirname $@` && $(MAKE) `basename $@`
 
-EXTRA_DIST = ipmi-ping.8
+$(top_builddir)/common/portability/libfreeipmiportability.la : force-dependency-check
+	@cd `dirname $@` && $(MAKE) `basename $@`
+
+$(top_builddir)/libfreeipmi/libfreeipmi.la : force-dependency-check
+	@cd `dirname $@` && $(MAKE) `basename $@`
+
+force-dependency-check:
+
+install-exec-hook:
+	$(install_sh) -d -m 755 $(DESTDIR)$(sbindir)
+	$(LN_S) -f $(sbindir)/ipmiping $(DESTDIR)$(sbindir)/ipmi-ping
+
+uninstall-hook:
+	$(RM) $(DESTDIR)$(sbindir)/ipmi-ping

@@ -1,28 +1,41 @@
-SUBDIRS = src
+##*****************************************************************************
+## $Id: Makefile.am,v 1.11 2008-09-17 22:56:04 chu11 Exp $
+##*****************************************************************************
+## Process this file with automake to produce Makefile.in.
+##*****************************************************************************
 
-MANS_CPP = \
-	ipmidetectd.8 \
-	ipmidetectd.conf.5
+sbin_PROGRAMS = ipmidetectd
 
-$(MANS_CPP): $(MANS_CPP:%=%.pre)
-	$(CPP) -w -C -P -I. $@.pre  $@
+ipmidetectd_CPPFLAGS = \
+	-I$(top_srcdir)/common/miscutil \
+	-I$(top_srcdir)/common/portability \
+	-I$(top_srcdir)/libfreeipmi/include \
+	-D_GNU_SOURCE \
+	-D_REENTRANT
 
-dist_man_MANS = $(MANS_CPP)
+ipmidetectd_LDADD = \
+	$(top_builddir)/common/miscutil/libmiscutils.la \
+	$(top_builddir)/common/portability/libfreeipmiportability.la \
+	$(top_builddir)/libfreeipmi/libfreeipmi.la
 
-CLEANFILES = $(MANS_CPP) *~
+ipmidetectd_SOURCES = \
+	debug.c \
+	debug.h \
+	ipmidetectd.c \
+	ipmidetectd.h \
+	ipmidetectd_config.c \
+	ipmidetectd_config.h \
+	ipmidetectd_loop.c \
+	ipmidetectd_loop.h
 
-DISTCLEANFILES = $(MANS_CPP) $(MANS_CPP:%=%.pre) .deps/*.P
+$(top_builddir)/common/miscutil/libmiscutils.la : force-dependency-check
+	@cd `dirname $@` && $(MAKE) `basename $@`
 
-EXTRA_DIST = ipmidetectd.init ipmidetectd.conf
+$(top_builddir)/common/portability/libfreeipmiportability.la : force-dependency-check
+	@cd `dirname $@` && $(MAKE) `basename $@`
 
-install-data-local: $(INSTALL_INIT_SCRIPTS)
-	$(INSTALL) -m 755 -d $(DESTDIR)$(FREEIPMI_SYSCONFDIR)
-	$(INSTALL) -m 644 $(srcdir)/ipmidetectd.conf $(DESTDIR)$(IPMIDETECTD_CONFIG_FILE_DEFAULT)
+$(top_builddir)/libfreeipmi/libfreeipmi.la : force-dependency-check
+	@cd `dirname $@` && $(MAKE) `basename $@`
 
-install-init-scripts:
-	$(INSTALL) -m 755 -d $(DESTDIR)$(sysconfdir)/init.d
-	$(INSTALL) -m 755 $(srcdir)/ipmidetectd.init $(DESTDIR)$(sysconfdir)/init.d/ipmidetectd
+force-dependency-check:
 
-uninstall-local:
-	$(RM) -f $(DESTDIR)$(sysconfdir)/init.d/ipmidetectd
-	$(RM) -f $(DESTDIR)$(IPMIDETECTD_CONFIG_FILE_DEFAULT)

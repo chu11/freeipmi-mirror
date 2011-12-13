@@ -86,7 +86,13 @@ CLEANFILES =
 
 DISTCLEANFILES = .deps/*.P
 
+install-data-local: $(INSTALL_LOGDIR)
+
+install-logdir:
+	$(INSTALL) -m 755 -d $(DESTDIR)$(localstatedir)/log/$(PACKAGE)
+
 uninstall-extra:
 	$(docdir)
 
 EXTRA_DIST = $(EXTRA) freeipmi.spec
+
