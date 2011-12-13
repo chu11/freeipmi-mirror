@@ -42,9 +42,11 @@ The FreeIPMI tool
 .B bmc-config(8) 
 may be used to do this configuration.
 .LP
-Often (although not always), console redirection must be also 
-be configured properly in the BIOS and/or operating system.  Both must
-be configured to redirect console traffic out the appropriate COM port.
+Often (although not always), console redirection must be also be
+configured properly in the BIOS and/or operating system.  Both must be
+configured to redirect console traffic out the appropriate COM port.
+Please see your motherboard and OS documentation for instructions on
+proper setup.
 
 #include <@top_srcdir@/man/manpage-common-table-of-contents.man>
 #include <@top_srcdir@/man/manpage-common-general-options-header.man>
