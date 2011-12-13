@@ -1,3 +1,9 @@
+2011-12-13  Kaiwang Chen <kaiwang.chen@gmail.com>
+
+	* contrib/pet/check_rmcpping, contrib/pet/ipminodes.cfg: New files.
+
+	* contrib/pet/: Significant doc updates.
+
 2011-12-13  Albert Chu <chu11@llnl.gov>
 
 	* Minor documentation updates.

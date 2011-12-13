@@ -4,7 +4,7 @@
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
 
-EXTRA_DIST = README petalert.pl
+EXTRA_DIST = README petalert.pl check_rmcpping  ipminodes.cfg
 
 docdir = $(datadir)/doc/$(PACKAGE)/contrib/pet
 

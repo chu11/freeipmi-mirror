@@ -8,69 +8,20 @@
 # traphandle mode, it concatenates the quoted hex string into one long line, 
 # then builds structures to resemble embperl mode. Both modes then invokes 
 # helper decoder, ipmi-pet(8) from freeipmi, parses the output and alerts
-# in given way like email, nagios external command, nsca, etc.
+# in given way like email, nagios external command, etc. See README for 
+# a simple tutorial.
 #
 # This script is tested on Dell PowerEdge 1950 and PowerEdge R610 servers. 
-# Feel free to adjust to meet your need. It's BSD-licensed. See __DATA__
-# at the end of file for an example copy of traphandle input.
-#
-# USAGE
-#
-# (Note backslash-newline concatenates adjacent lines, so put them in one)
-# 
-# Put two lines like these in your snmptrapd.conf file:
-#
-#   traphandle .1.3.6.1.4.1.3183.1.1 /usr/bin/petalert.pl --mode=traphandle \
-#     --alert=email --sdrcache SDRCONF -- -f FROM -s SMTPSERVER ADDRESSES
-#   authCommunity execute COMMUNITY_STRING
-#
-# Or, if you prefer embedded perl, 
-#
-#   perl do "/usr/bin/petalert.pl";
-#   perl IpmiPET::main(qw(--mode=embperl --trapoid=OID --sdrcache=SDRCONF \
-#     --alert=email -- -s SMTPSERVER -f FROM ADDRESSES));
-#
-# where:
-#     only --mode is required, see "petalert.pl -h".
-#
-# Bad news is that you have to use numeric representation, so in addition 
-# add " -Of -On " to snmptrapd options.
-#
-# You have to enable PET on IPMI nodes as well, including LAN access, PEF 
-# alerting, community, alert policy and destination. You may use bmc-config 
-# and pef-config from freeipmi to do those configuration.
-#
-# You might wish to set up PTR records for IPMI nodes, otherwise, snmptrapd 
-# reports <UNKNOWN> to traphandle and the script will fall back to use ip.
-#
-#
-# SDR CACHE FILE MAPPING
-# 
-# Notice the underlying helper program ipmi-pet(8) normally depends on some 
-# sdr cache file, either preinitialized or created on demand. If no credential 
-# is supplied, ipmi-pet(8) simply assumes localhost and creates sdr cache 
-# which is usually ~/.freeipmi/sdr-cache/sdr-cache-<hostname>.localhost. 
-# You may wish to supply preinitialized ones, then use -c sdrmapping.conf to
-# associate with IPMI nodes. 
-#
-# The sdr cache config syntax is: every unindented line starts an sdr cache
-# file, followed by any number of indented lines of IPMI nodes. Every IPMI 
-# node line may consist of multiple nodes delimited by whitespaces. Comments 
-# follow Shell-style, trailing whitespaces are trimmed, empty lines skipped.
-#
-# For example,
-# |/path/to/sdr-cache-file-1
-# |  10.2.3.10    # comment
-# |
-# |/path/to/sdr-cache-file-2
-# |  10.2.3.4           # one node
-# |  10.2.3.5  10.2.3.6 # two nodes
-# |  10.2.3.[7-9]       # trhee nodes in range form
-# |  
-# ^-- this is the beginning of lines
-#
+# Feel free to adjust to meet your need. It's BSD-licensed.
 #
 # ChangeLog
+#
+# * Mon 12 Dec 2011 kaiwang.chen@gmail.com
+# - Remove nsca support because snmptrapd is meant to run on the Nagios host
+# - Fix nagios external command file support
+# - Map freeipmi Nominal state to Nagios OK
+# - Fix Net::SMTP typos and options handling
+# - Remove USAGE section, please refer to README
 #
 # * Sun 11 Dec 2011 kaiwang.chen@gmail.com
 # - Add -W to pass workaround flags to ipmi-pet
@@ -135,33 +86,32 @@ $0 [OPTIONS] -- [ALERT_SPECIFIC_OPTIONS] ALERT_SPECIFIC_ARGS
     --log  log_file
                 Specify logging file
     -n
-    --alert  {mail|nagios|nsca|noop|MODULE}
+    --alert  {mail|nagios|noop|MODULE}
                 Specify alert method. Defaults to "noop".
 
   ALERT SPECIFIC OPTIONS AND ARGS
   email
     --prog  mailer
-                Sets mailer. If not specified, falls back to Net::SNMP.
+                Sets mailer. If not specified, falls back to Net::SMTP.
     mailer_options_and_args
 
     --server smtp_server
-                Sets the smtpserver for Net::SNMP to send the mail through.
+                Sets the smtpserver for Net::SMTP to send the mail through.
                 Defaults to "localhost".
     --from from_address
                 Sets the email for Net:SNMP to be used on the From: line.
                 Defaults to "root".
     to_addresses
-                Sets where you want Net::SNMP to send the email to. Required.
+                Sets where you want Net::SMTP to send the email to. Required.
     
   nagios
+    --host  {fqdn|short|conf}
+                Sets host in nagios external commands. Defaults to short (first component).
+    --service
+                Sets service in nagios external commands. Defaults to PET.
     command_file
                 Sets Nagios external command file, a named pipe (FIFO).
                 Required.
-
-  nsca
-    --prog send_nsca
-                Sets path to send_nsca binary.
-    send_nsca_options_and_args
 
   noop          Yes, it is a no-op.
 
@@ -313,10 +263,11 @@ sub nagios_check {
   if    ($state eq "WARNING")  {$code = 1}
   elsif ($state eq "CRITICAL") {$code = 2}
   elsif ($state eq "OK")       {$code = 0}
+  elsif ($state eq "NOMINAL")  {$code = 0; $state = "OK"}
   else                         {$code = 3; $state = "UNKNOWN"}
 
   my $plugin_output = join(" ", $state, "-", map { defined $_ ? $_ : "" } @{%{$event}}{qw(Name Type Event_Direction Event)});
-  $plugin_output =~ tr/\n/_/;
+  $plugin_output =~ tr/\n\t;|/@:/;
 
   return ($code, $plugin_output);
 }
@@ -517,7 +468,7 @@ sub alert {
       }
     }
     else {
-      logger("alert", "mail by Net::SNMP ", [$alert_opts{'server'},$alert_opts{'from'}, \@ARGV]);
+      logger("alert", "mail by Net::SMTP ", [$alert_opts{'server'},$alert_opts{'from'}, \@ARGV]);
       eval {
         my $message = Net::SMTP->new($alert_opts{'server'}) || die "ERROR: can't talk to server $alert_opts{'server'}\n";
         $message->mail($alert_opts{'from'});
@@ -533,15 +484,24 @@ sub alert {
     }
   }
   elsif ($opts{'alert'} eq 'nagios') {
-    my $command_file = shift @ARGV;
+    my $command_file = $ARGV[0];
     logger("alert", "nagios external command file is $command_file");
 
     if (open NAGIOS, ">>", $command_file) {
       my $t = pettime($event);
       my ($code,$plugin_output) = nagios_check($event);
+      my ($nagios_host, $nagios_service);
+      if ($alert_opts{host} eq 'fqdn') { $nagios_host = $pdu_info->{hostname} }
+      elsif ($alert_opts{host} eq 'short') {
+        ($nagios_host) = ($pdu_info->{hostname} =~ m/([^.]+)/)
+      }
+      else { # TODO
+        $nagios_host = "<UNKOWN>";
+      }
+      $nagios_service = $alert_opts{service};
 
       # http://nagios.sourceforge.net/docs/3_0/extcommands.html
-      my $cmd = "[$t] PROCESS_SERVICE_CHECK_RESULT;$pdu_info->{hostname};IPMI;$code;$plugin_output";
+      my $cmd = "[$t] PROCESS_SERVICE_CHECK_RESULT;$nagios_host;$nagios_service;$code;$plugin_output";
       logger("alert", "nagios command is", $cmd);
 
       print NAGIOS "$cmd\n";
@@ -549,23 +509,6 @@ sub alert {
     }
     else {
       logger("warn", "nagios failure with $command_file: $!");
-    }
-  }
-  elsif ($opts{'alert'} eq 'nsca') {
-    logger("alert", "nsca invoked with ", [$alert_prog, \@ARGV]);
-
-    if (open NSCA, "|-", $alert_prog, @ARGV) {
-      my ($code,$plugin_output) = nagios_check($event);
-
-      # http://nagios.sourceforge.net/download/contrib/documentation/misc/NSCA_Setup.pdf
-      my $cmd = "$pdu_info->{hostname}\tIPMI\t$code\t$plugin_output";
-      logger("alert", "send_nsca command is ", $cmd);
-
-      print NSCA "$cmd\n";
-      close NSCA;
-    }
-    else {
-      logger("warn", "nsca failure with $alert_prog @ARGV: $!");
     }
   }
   elsif ($opts{'alert'} eq 'noop') {
@@ -726,22 +669,19 @@ sub process_args {
     }
     # or use perl module
     else {
-      GetOptions(\%alert_opts, "--server=s", "--from=s");
+      GetOptions(\%alert_opts, "server=s", "from=s");
       require Net::SMTP;
     }
   }
   elsif ($opts{'alert'} eq 'nagios') {
+    GetOptions(\%alert_opts, "host|H=s", "service|S=s");
+    $alert_opts{host} ||= "short";
+    $alert_opts{service} ||= "PET";
+    if ($alert_opts{host} ne "fqdn" && $alert_opts{host} ne "short") { # TODO
+      die "nagios host mapping not implemented yet\n";
+    }
     unless ($ARGV[0] && -w $ARGV[0]) {
       die "nagios external command file[$ARGV[0]] is not writable\n";
-    }
-  }
-  elsif ($opts{'alert'} eq 'nsca') {
-    if ($ARGV[0] && $ARGV[0] eq "--prog") {
-      shift @ARGV;
-      $alert_prog = shift @ARGV;
-      unless (-x $alert_prog) {
-        die "nsca helper[$alert_prog] is not executable\n";
-      }
     }
   }
   elsif ($opts{'alert'} eq 'noop') {
@@ -786,16 +726,3 @@ sub main {
 if ( !caller ) { exit main(@ARGV); }
 
 1;
-__END__
-
-__DATA__
-pet.example.com
-UDP: [10.2.3.4]:32768
-.1.3.6.1.2.1.1.3.0 60:5:11:46.26
-.1.3.6.1.6.3.1.1.4.1.0 .1.3.6.1.4.1.3183.1.1.0.356096
-.1.3.6.1.4.1.3183.1.1.1 "44 45 4C 4C 50 00 10 59 80 43 B2 C0 4F 33 33 58 
-00 42 19 EE AB 64 FF FF 20 20 00 41 73 18 00 80 
-01 FF 00 00 00 00 00 19 00 00 02 A2 01 00 C1 "
-.1.3.6.1.6.3.18.1.3.0 10.2.3.4
-.1.3.6.1.6.3.18.1.4.0 "public"
-.1.3.6.1.6.3.1.1.4.3.0 .1.3.6.1.4.1.3183.1.1
