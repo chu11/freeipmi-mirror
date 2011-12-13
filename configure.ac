@@ -19,7 +19,7 @@ AC_CONFIG_AUX_DIR([config])
 dnl Locate the sources.
 AC_CONFIG_SRCDIR([ChangeLog.0])
 
-AM_INIT_AUTOMAKE([tar-ustar 1.9])
+AM_INIT_AUTOMAKE([tar-ustar subdir-objects 1.9])
 
 dnl create a config.h file
 AM_CONFIG_HEADER([config/config.h])
@@ -73,24 +73,6 @@ AC_CONFIG_FILES([
         libfreeipmi/libfreeipmi.pc
         libfreeipmi/include/Makefile 
         libfreeipmi/include/freeipmi/freeipmi.h
-        libfreeipmi/api/Makefile
-        libfreeipmi/cmds/Makefile
-        libfreeipmi/debug/Makefile
-        libfreeipmi/driver/Makefile
-        libfreeipmi/fiid/Makefile
-        libfreeipmi/fru-parse/Makefile
-        libfreeipmi/interface/Makefile
-        libfreeipmi/interpret/Makefile
-        libfreeipmi/libcommon/Makefile
-        libfreeipmi/locate/Makefile
-        libfreeipmi/payload/Makefile
-        libfreeipmi/record-format/Makefile
-        libfreeipmi/sdr-cache/Makefile
-        libfreeipmi/sdr-parse/Makefile
-        libfreeipmi/sel-parse/Makefile
-        libfreeipmi/sensor-read/Makefile
-        libfreeipmi/spec/Makefile
-        libfreeipmi/util/Makefile
         libipmiconsole/Makefile
         libipmiconsole/ipmiconsole.h
         libipmiconsole/libipmiconsole.pc
