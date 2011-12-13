@@ -34,7 +34,7 @@ libipmimonitoring_la_LDFLAGS = \
 libipmimonitoring_la_LIBADD = \
 	$(top_builddir)/common/miscutil/libmiscutils.la \
 	$(top_builddir)/common/portability/libfreeipmiportability.la \
-	$(top_builddir)/libfreeipmi/src/libfreeipmi.la
+	$(top_builddir)/libfreeipmi/libfreeipmi.la
 
 libipmimonitoring_la_SOURCES = \
 	ipmi_monitoring.c \
@@ -51,7 +51,7 @@ $(top_builddir)/common/miscutil/libmiscutils.la : force-dependency-check
 $(top_builddir)/common/portability/libfreeipmiportability.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
-$(top_builddir)/libfreeipmi/src/libfreeipmi.la : force-dependency-check
+$(top_builddir)/libfreeipmi/libfreeipmi.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
 force-dependency-check:

@@ -17,7 +17,7 @@ bmc_watchdog_LDADD = \
 	$(top_builddir)/common/miscutil/libmiscutils.la \
 	$(top_builddir)/common/parsecommon/libparsecommon.la \
 	$(top_builddir)/common/portability/libfreeipmiportability.la \
-	$(top_builddir)/libfreeipmi/src/libfreeipmi.la
+	$(top_builddir)/libfreeipmi/libfreeipmi.la
 
 bmc_watchdog_SOURCES = \
 	bmc-watchdog.c \
@@ -40,7 +40,7 @@ $(top_builddir)/common/parsecommon/libparsecommon.la : force-dependency-check
 $(top_builddir)/common/portability/libfreeipmiportability.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
-$(top_builddir)/libfreeipmi/src/libfreeipmi.la : force-dependency-check
+$(top_builddir)/libfreeipmi/libfreeipmi.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
 force-dependency-check:

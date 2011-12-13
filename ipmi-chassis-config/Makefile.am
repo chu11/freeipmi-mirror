@@ -19,7 +19,7 @@ ipmi_chassis_config_LDADD = \
 	$(top_builddir)/common/parsecommon/libparsecommon.la \
 	$(top_builddir)/common/portability/libfreeipmiportability.la \
 	$(top_builddir)/libipmidetect/libipmidetect.la \
-	$(top_builddir)/libfreeipmi/src/libfreeipmi.la
+	$(top_builddir)/libfreeipmi/libfreeipmi.la
 
 ipmi_chassis_config_SOURCES = \
 	ipmi-chassis-config.c \
@@ -60,7 +60,7 @@ $(top_builddir)/common/portability/libfreeipmiportability.la : force-dependency-
 $(top_builddir)/libipmidetect/libipmidetect.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
-$(top_builddir)/libfreeipmi/src/libfreeipmi.la : force-dependency-check
+$(top_builddir)/libfreeipmi/libfreeipmi.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
 force-dependency-check:

@@ -73,25 +73,24 @@ AC_CONFIG_FILES([
         libfreeipmi/libfreeipmi.pc
         libfreeipmi/include/Makefile 
         libfreeipmi/include/freeipmi/freeipmi.h
-        libfreeipmi/src/Makefile 
-        libfreeipmi/src/api/Makefile
-        libfreeipmi/src/cmds/Makefile
-        libfreeipmi/src/debug/Makefile
-        libfreeipmi/src/driver/Makefile
-        libfreeipmi/src/fiid/Makefile
-        libfreeipmi/src/fru-parse/Makefile
-        libfreeipmi/src/interface/Makefile
-        libfreeipmi/src/interpret/Makefile
-        libfreeipmi/src/libcommon/Makefile
-        libfreeipmi/src/locate/Makefile
-        libfreeipmi/src/payload/Makefile
-        libfreeipmi/src/record-format/Makefile
-        libfreeipmi/src/sdr-cache/Makefile
-        libfreeipmi/src/sdr-parse/Makefile
-        libfreeipmi/src/sel-parse/Makefile
-        libfreeipmi/src/sensor-read/Makefile
-        libfreeipmi/src/spec/Makefile
-        libfreeipmi/src/util/Makefile
+        libfreeipmi/api/Makefile
+        libfreeipmi/cmds/Makefile
+        libfreeipmi/debug/Makefile
+        libfreeipmi/driver/Makefile
+        libfreeipmi/fiid/Makefile
+        libfreeipmi/fru-parse/Makefile
+        libfreeipmi/interface/Makefile
+        libfreeipmi/interpret/Makefile
+        libfreeipmi/libcommon/Makefile
+        libfreeipmi/locate/Makefile
+        libfreeipmi/payload/Makefile
+        libfreeipmi/record-format/Makefile
+        libfreeipmi/sdr-cache/Makefile
+        libfreeipmi/sdr-parse/Makefile
+        libfreeipmi/sel-parse/Makefile
+        libfreeipmi/sensor-read/Makefile
+        libfreeipmi/spec/Makefile
+        libfreeipmi/util/Makefile
         libipmiconsole/Makefile
         libipmiconsole/ipmiconsole.h
         libipmiconsole/libipmiconsole.pc
