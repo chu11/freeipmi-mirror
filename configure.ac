@@ -122,29 +122,17 @@ AC_CONFIG_FILES([
         bmc-info/Makefile
         bmc-watchdog/Makefile 
         ipmi-chassis/Makefile
-        ipmi-chassis/src/Makefile
         ipmi-chassis-config/Makefile 
-        ipmi-chassis-config/src/Makefile
         ipmi-dcmi/Makefile
-        ipmi-dcmi/src/Makefile
         ipmi-fru/Makefile
-        ipmi-fru/src/Makefile
         ipmi-locate/Makefile
-        ipmi-locate/src/Makefile
         ipmi-oem/Makefile
-        ipmi-oem/src/Makefile
         ipmi-pef-config/Makefile
-        ipmi-pef-config/src/Makefile
         ipmi-pet/Makefile
-        ipmi-pet/src/Makefile
         ipmi-raw/Makefile
-        ipmi-raw/src/Makefile
         ipmi-sel/Makefile
-        ipmi-sel/src/Makefile
         ipmi-sensors/Makefile
-        ipmi-sensors/src/Makefile
         ipmi-sensors-config/Makefile
-        ipmi-sensors-config/src/Makefile
         ipmiconsole/Makefile
         ipmiconsole/src/Makefile
         ipmidetect/Makefile
