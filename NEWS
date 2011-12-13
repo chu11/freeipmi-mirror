@@ -17,6 +17,11 @@ o In libfreeipmi, add support for IPMI firmware firewall and command
 o Add petalert.pl contribution from Kaiwang Chen (kaiwang.chen AT gmail DOT com)
 o Fix macro name typos.
 
+FreeIPMI 1.0.10 - 12/13/11
+--------------------------
+o Clarify bmc-watchdog error messages.
+o Various documentation updates.
+
 FreeIPMI 1.0.9 - 11/21/11
 -------------------------
 o Support Supermicro OEM sensors on X9SCA-F-O motherboards.
