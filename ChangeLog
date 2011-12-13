@@ -9,6 +9,8 @@
 	* Move common/src libs to common/.
 
 	* Update all Makefiles and configure.ac appropriately for changes.
+
+	* Remove many src directories, move sources up a directory.
 	
 2011-12-12  Albert Chu <chu11@llnl.gov>
 

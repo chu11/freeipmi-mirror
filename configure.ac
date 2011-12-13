@@ -118,13 +118,9 @@ AC_CONFIG_FILES([
         man/libipmimonitoring.3.pre
 	man/rmcpping.8.pre
         bmc-config/Makefile
-        bmc-config/src/Makefile
         bmc-device/Makefile
-        bmc-device/src/Makefile
         bmc-info/Makefile
-        bmc-info/src/Makefile
         bmc-watchdog/Makefile 
-        bmc-watchdog/src/Makefile
         ipmi-chassis/Makefile
         ipmi-chassis/src/Makefile
         ipmi-chassis-config/Makefile 
