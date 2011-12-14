@@ -14,7 +14,7 @@ ipmidetectd_CPPFLAGS = \
 	-D_REENTRANT
 
 ipmidetectd_LDADD = \
-	$(top_builddir)/common/miscutil/libmiscutils.la \
+	$(top_builddir)/common/miscutil/libmiscutil.la \
 	$(top_builddir)/common/portability/libfreeipmiportability.la \
 	$(top_builddir)/libfreeipmi/libfreeipmi.la
 
@@ -28,7 +28,7 @@ ipmidetectd_SOURCES = \
 	ipmidetectd_loop.c \
 	ipmidetectd_loop.h
 
-$(top_builddir)/common/miscutil/libmiscutils.la : force-dependency-check
+$(top_builddir)/common/miscutil/libmiscutil.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
 $(top_builddir)/common/portability/libfreeipmiportability.la : force-dependency-check

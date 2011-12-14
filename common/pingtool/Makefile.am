@@ -1,13 +1,13 @@
-noinst_HEADERS = \
-	ping-tool-common.h
-
 noinst_LTLIBRARIES = \
-	libpingtoolcommon.la
+	libpingtool.la
 
-libpingtoolcommon_la_CPPFLAGS = \
+libpingtool_la_CPPFLAGS = \
 	-I$(top_srcdir)/common/portability \
 	-I$(top_srcdir)/common/toolcommon \
-	-I$(top_srcdir)/libfreeipmi/include
+	-I$(top_srcdir)/libfreeipmi/include \
+	-D_GNU_SOURCE \
+	-D_REENTRANT
 
-libpingtoolcommon_la_SOURCES = \
-	ping-tool-common.c
+libpingtool_la_SOURCES = \
+	ping-tool-common.c \
+	ping-tool-common.h

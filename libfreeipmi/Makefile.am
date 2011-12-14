@@ -35,7 +35,7 @@ libfreeipmi_la_LDFLAGS = \
 
 libfreeipmi_la_LIBADD = \
 	$(top_builddir)/common/debugutil/libdebugutil.la \
-	$(top_builddir)/common/miscutil/libmiscutils.la \
+	$(top_builddir)/common/miscutil/libmiscutil.la \
 	$(top_builddir)/common/portability/libfreeipmiportability.la
 
 libfreeipmi_la_SOURCES = \
@@ -232,7 +232,7 @@ libfreeipmi_la_SOURCES = \
 $(top_builddir)/common/debugutil/libdebugutil.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
-$(top_builddir)/common/miscutil/libmiscutils.la : force-dependency-check
+$(top_builddir)/common/miscutil/libmiscutil.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
 $(top_builddir)/common/portability/libfreeipmiportability.la : force-dependency-check

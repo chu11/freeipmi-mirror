@@ -12,10 +12,10 @@ ipmi_chassis_config_CPPFLAGS = \
 	-D_REENTRANT
 
 ipmi_chassis_config_LDADD = \
-	$(top_builddir)/common/configtool/libconfigtoolcommon.la \
+	$(top_builddir)/common/configtool/libconfigtool.la \
 	$(top_builddir)/common/toolcommon/libtoolcommon.la \
 	$(top_builddir)/common/toolhostrange/libtoolhostrange.la \
-	$(top_builddir)/common/miscutil/libmiscutils.la \
+	$(top_builddir)/common/miscutil/libmiscutil.la \
 	$(top_builddir)/common/parsecommon/libparsecommon.la \
 	$(top_builddir)/common/portability/libfreeipmiportability.la \
 	$(top_builddir)/libipmidetect/libipmidetect.la \
@@ -39,7 +39,7 @@ ipmi_chassis_config_SOURCES = \
 	ipmi-chassis-config-validate.c \
 	ipmi-chassis-config-validate.h
 
-$(top_builddir)/common/configtool/libconfigtoolcommon.la : force-dependency-check
+$(top_builddir)/common/configtool/libconfigtool.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
 $(top_builddir)/common/toolcommon/libtoolcommon.la : force-dependency-check
@@ -48,7 +48,7 @@ $(top_builddir)/common/toolcommon/libtoolcommon.la : force-dependency-check
 $(top_builddir)/common/toolhostrange/libtoolhostrange.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
-$(top_builddir)/common/miscutil/libmiscutils.la : force-dependency-check
+$(top_builddir)/common/miscutil/libmiscutil.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
 $(top_builddir)/common/parsecommon/libparsecommon.la : force-dependency-check

@@ -4,6 +4,8 @@
 
 	* contrib/, libfreeipmi/: Remove most subdir Makefiles.
 
+	* Various Makefile.am cleanup.
+
 2011-12-13  Kaiwang Chen <kaiwang.chen@gmail.com>
 
 	* contrib/pet/check_rmcpping, contrib/pet/ipminodes.cfg: New files.
