@@ -6,6 +6,8 @@
 
 	* Various Makefile.am cleanup.
 
+	* freeipmi.spec.in: Move libipmimonitoring contrib into devel package.
+
 2011-12-13  Kaiwang Chen <kaiwang.chen@gmail.com>
 
 	* contrib/pet/check_rmcpping, contrib/pet/ipminodes.cfg: New files.
