@@ -46,10 +46,6 @@ AC_CONFIG_FILES([
         common/toolsdr/Makefile
         common/toolsensor/Makefile
         contrib/Makefile
-        contrib/ganglia/Makefile
-	contrib/libipmimonitoring/Makefile
-        contrib/nagios/Makefile
-	contrib/pet/Makefile
         doc/Makefile 
         etc/Makefile
         ipmi-chassis/Makefile

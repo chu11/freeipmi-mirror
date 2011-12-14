@@ -2,7 +2,7 @@
 
 	Build system rework.
 
-	* libfreeipmi/: Remove most subdir Makefiles.
+	* contrib/, libfreeipmi/: Remove most subdir Makefiles.
 
 2011-12-13  Kaiwang Chen <kaiwang.chen@gmail.com>
 
