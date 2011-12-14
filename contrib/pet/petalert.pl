@@ -16,6 +16,9 @@
 #
 # ChangeLog
 #
+# * Wed 14 Dec 2011 kaiwang.chen@gmail.com
+# - Add performance logging support with 'perf' token
+#
 # * Mon 12 Dec 2011 kaiwang.chen@gmail.com
 # - Remove nsca support because snmptrapd is meant to run on the Nagios host
 # - Fix nagios external command file support
@@ -41,6 +44,35 @@
 # * Sun 06 Nov 2011 kaiwang.chen@gmail.com
 # - Inital version
 
+package IpmiPET::Perf;
+use Time::HiRes qw(tv_interval gettimeofday);
+sub new {
+  bless {
+    _elapsed => 0,
+  }, __PACKAGE__;
+}
+sub start { shift->{_start} = [gettimeofday] }
+sub stop {
+  my ($obj,$name) = @_;
+  my $t1 = [gettimeofday];
+  my $t = tv_interval($obj->{_start}, $t1);
+  $obj->{_elapsed} += $t;
+  if ($name) { 
+    $obj->{_laps}{$name} = $t;
+  }
+  return $t;
+}
+sub reset {
+  my ($obj) = @_;
+  $obj->{_elapsed} = 0;
+  if ($obj->{_start}) { delete $obj->{_start} }
+  if ($obj->{_laps}) { delete $obj->{_laps} }
+}
+sub elapsed { shift->{_elapsed} }
+sub laps { shift->{_laps} }
+1;
+
+
 package IpmiPET;
 
 use strict;
@@ -59,6 +91,9 @@ my $alert_prog = ""; # when use external program to alert
 # logger
 my $log_filename = "/var/log/petalert.log";
 my %logger_token = ('warn' => 1); # always warn
+
+# performance ticker
+my $perf;
 
 
 sub usage {
@@ -304,7 +339,9 @@ sub my_receiver {
   unless (exists $pdu_info->{hostname}) {
     use Socket;
     my $ip = extract_ip($pdu_info->{receivedfrom});
+    $perf->start;
     $pdu_info->{hostname} = gethostbyaddr(inet_aton($ip), AF_INET) || $ip;
+    $perf->stop("resolv");
   }
 
   # do cleanup before processing; values are untouched if -OQ, see snmpcmd(1)
@@ -323,6 +360,9 @@ sub my_receiver {
   logger("embperl", "input after cleanup is ", \@_);
 
   process($pdu_info, $varbindings);
+  my $laps = $perf->laps;
+  logger("perf", join(", ", map { $_ . "=" . $laps->{$_} } keys %{$laps}));
+  $perf->reset;
 }
 
 # you got it..
@@ -357,7 +397,9 @@ sub process {
     if ($v->[0] =~ /^\Q$event_oid\E$/) {
       my $ip = extract_ip($pdu_info->{receivedfrom});
       if ($opts{ack}) {
+        $perf->start;
         ack_pet($specific, $v->[1], $ip, $opts{workaround});
+        $perf->stop("ack");
       }
 
       my $sdrcache = resolve_sdrcache($ip);
@@ -447,6 +489,10 @@ sub handle_trap {
   my ($pdu_info, $varbindings) = get_from_stdin(\@stdin);
   logger("traphandle", "got pdu_info and varbindings ", [$pdu_info,$varbindings]);
   process($pdu_info, $varbindings);
+
+  my $laps = $perf->laps;
+  logger("perf", join(", ", map { $_ . "=" . $laps->{$_} } keys %{$laps}));
+  $perf->reset;
 }
 
 # alert dispatcher
@@ -459,6 +505,7 @@ sub alert {
 
     if ($alert_prog) {
       logger("alert", "mailer invoked with ", [$alert_prog,\@ARGV]);
+      $perf->start;
       if (open MAILER, "|-", $alert_prog, @ARGV) {
         print MAILER $data;
         close MAILER;
@@ -466,9 +513,11 @@ sub alert {
       else {
         logger("warn", "Unable to alert through mailer[$alert_prog @ARGV]: $!");
       }
+      $perf->stop("mailer");
     }
     else {
       logger("alert", "mail by Net::SMTP ", [$alert_opts{'server'},$alert_opts{'from'}, \@ARGV]);
+      $perf->start;
       eval {
         my $message = Net::SMTP->new($alert_opts{'server'}) || die "ERROR: can't talk to server $alert_opts{'server'}\n";
         $message->mail($alert_opts{'from'});
@@ -478,6 +527,7 @@ sub alert {
         $message->dataend();
         $message->quit;
       };
+      $perf->stop("netsmtp");
       if ($@) {
         logger("warn", "alert mail failure ", $@);
       }
@@ -487,6 +537,7 @@ sub alert {
     my $command_file = $ARGV[0];
     logger("alert", "nagios external command file is $command_file");
 
+    $perf->start;
     if (open NAGIOS, ">>", $command_file) {
       my $t = pettime($event);
       my ($code,$plugin_output) = nagios_check($event);
@@ -510,6 +561,7 @@ sub alert {
     else {
       logger("warn", "nagios failure with $command_file: $!");
     }
+    $perf->stop("nagios");
   }
   elsif ($opts{'alert'} eq 'noop') {
     logger('alert', 'noop alert selected');
@@ -705,6 +757,7 @@ sub process_args {
 sub main {
   @ARGV = @_;  # set global ARGV for this package
   process_args();
+  $perf = IpmiPET::Perf->new;
   if ($opts{'mode'} eq 'traphandle') {
     logger("main", "running as traphandle");
     handle_trap();

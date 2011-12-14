@@ -1,3 +1,7 @@
+2011-12-14  Kaiwang Chen <kaiwang.chen@gmail.com>
+
+	* contrib/pet/: Support 'perf' token option.
+
 2011-12-13  Albert Chu <chu11@llnl.gov>
 
 	Build system rework.

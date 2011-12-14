@@ -91,7 +91,7 @@ See BUGS. So in a acknowlege setup, it might be like this:
 
   perl do "/usr/share/doc/freeipmi/contrib/pet/petalert.pl";
   perl IpmiPET::main(qw(--mode=embperl --trapoid=OID --sdrcache=SDRCONF \
-    --ack -D malformedack \
+    --ack -W malformedack \
     --alert=email -- -s SMTPSERVER -f FROM ADDRESSES));
 
 2.2 NAGIOS INTEGRATION
@@ -242,6 +242,17 @@ Section Alert_Policy_1
     Event_Specific_Alert_String              No
 EndSection
 EOF
+
+Notice pef-config(8) could be used out of band once IPMI LAN access is OK, 
+which means you no longer need to logon the host to do further configuration. 
+
+# pef-config -h 10.2.3.4 -u root -P --diff <<EOF
+...
+EOF
+Password: 
+
+In addition, FreeIPMI is featured by configuring many hosts in one run, see 
+"HOSTRANGED SUPPORT" of pef-config(8) and others from FreeIPMI.
 
 When you are sure about the changes, use --commit to apply. Then you can use 
 bmc-config to generate a software generated platform event:
