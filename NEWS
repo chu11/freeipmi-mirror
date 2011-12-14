@@ -14,7 +14,7 @@ o In libfreeipmi, support IPMI_FLAGS_NO_LEGAL_CHECK flag, to
   workaround motherboards to may return illegal IPMI packets.
 o In libfreeipmi, add support for IPMI firmware firewall and command
   discovery payloads.
-o Add petalert.pl contribution from Kaiwang Chen (kaiwang.chen AT gmail DOT com)
+o Add petalert.pl contribution.
 o Fix macro name typos.
 
 FreeIPMI 1.0.10 - 12/13/11
