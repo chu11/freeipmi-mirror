@@ -175,6 +175,8 @@ fi
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/freeipmi/freeipmi_interpret_sensor.conf
 %attr(0600,root,root) %config(noreplace) %{_sysconfdir}/freeipmi/ipmidetect.conf
 %attr(0600,root,root) %config(noreplace) %{_sysconfdir}/freeipmi/libipmiconsole.conf
+%doc %{_infodir}/*
+%dir %{_datadir}/doc/%{name}
 %doc %{_datadir}/doc/%{name}/AUTHORS
 %doc %{_datadir}/doc/%{name}/COPYING
 %doc %{_datadir}/doc/%{name}/ChangeLog
@@ -186,7 +188,6 @@ fi
 %doc %{_datadir}/doc/%{name}/README.build
 %doc %{_datadir}/doc/%{name}/README.openipmi
 %doc %{_datadir}/doc/%{name}/TODO
-%doc %{_infodir}/*
 %doc %{_datadir}/doc/%{name}/COPYING.ipmiping
 %doc %{_datadir}/doc/%{name}/COPYING.ipmipower
 %doc %{_datadir}/doc/%{name}/COPYING.ipmiconsole
@@ -219,8 +220,13 @@ fi
 %doc %{_datadir}/doc/%{name}/freeipmi-bugs-issues-and-workarounds.txt
 %doc %{_datadir}/doc/%{name}/freeipmi-testing.txt
 %doc %{_datadir}/doc/%{name}/freeipmi-oem-documentation-requirements.txt
-%doc %{_datadir}/doc/%{name}/contrib/*
-%dir %{_datadir}/doc/%{name}
+%dir %{_datadir}/doc/%{name}/contrib
+%dir %{_datadir}/doc/%{name}/contrib/ganglia
+%doc %{_datadir}/doc/%{name}/contrib/ganglia/*
+%dir %{_datadir}/doc/%{name}/contrib/nagios
+%doc %{_datadir}/doc/%{name}/contrib/nagios/*
+%dir %{_datadir}/doc/%{name}/contrib/pet
+%doc %{_datadir}/doc/%{name}/contrib/pet/*
 %{_libdir}/libipmiconsole*so.*
 %{_libdir}/libfreeipmi*so.*
 %{_libdir}/libipmidetect*so.*
@@ -299,6 +305,8 @@ fi
 
 %files devel
 %defattr(-,root,root)
+%dir %{_datadir}/doc/%{name}/contrib/libipmimonitoring
+%doc %{_datadir}/doc/%{name}/contrib/libipmimonitoring/*
 %{_libdir}/libipmiconsole.so
 %{_libdir}/libfreeipmi.so
 %{_libdir}/libipmidetect.so
