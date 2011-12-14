@@ -2,6 +2,9 @@
 
 	* contrib/pet/README: Fix some text and formatting.
 
+	* libfreeipmi/src/util/pimi-sensor-and-event-code-tables-util.c (_supermicro_oem_temp_level_sensor_supported):
+	Common function for common code.
+
 2011-12-14  Kaiwang Chen <kaiwang.chen@gmail.com>
 
 	* contrib/pet/: Support 'perf' token option.
