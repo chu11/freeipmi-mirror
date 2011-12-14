@@ -21,7 +21,7 @@ ipmi_oem_LDADD = \
 	$(top_builddir)/common/toolsensor/libtoolsensor.la \
 	$(top_builddir)/common/miscutil/libmiscutil.la \
 	$(top_builddir)/common/parsecommon/libparsecommon.la \
-	$(top_builddir)/common/portability/libfreeipmiportability.la \
+	$(top_builddir)/common/portability/libportability.la \
 	$(top_builddir)/libipmidetect/libipmidetect.la \
 	$(top_builddir)/libfreeipmi/libfreeipmi.la
 
@@ -72,7 +72,7 @@ $(top_builddir)/common/miscutil/libmiscutil.la : force-dependency-check
 $(top_builddir)/common/parsecommon/libparsecommon.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
-$(top_builddir)/common/portability/libfreeipmiportability.la : force-dependency-check
+$(top_builddir)/common/portability/libportability.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
 $(top_builddir)/libipmidetect/libipmidetect.la : force-dependency-check

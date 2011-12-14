@@ -10,7 +10,7 @@ rmcpping_CPPFLAGS = \
 rmcpping_LDADD = \
 	$(top_builddir)/common/pingtool/libpingtool.la \
 	$(top_builddir)/common/debugutil/libdebugutil.la \
-	$(top_builddir)/common/portability/libfreeipmiportability.la \
+	$(top_builddir)/common/portability/libportability.la \
 	$(top_builddir)/libfreeipmi/libfreeipmi.la
 
 rmcpping_SOURCES = rmcpping.c
@@ -21,7 +21,7 @@ $(top_builddir)/common/pingtool/libpingtool.la : force-dependency-check
 $(top_builddir)/common/debugutil/libdebugutil.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
-$(top_builddir)/common/portability/libfreeipmiportability.la : force-dependency-check
+$(top_builddir)/common/portability/libportability.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
 $(top_builddir)/libfreeipmi/libfreeipmi.la : force-dependency-check

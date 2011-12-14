@@ -15,7 +15,7 @@ ipmiconsole_LDADD = \
 	$(top_builddir)/common/toolcommon/libtoolcommon.la \
 	$(top_builddir)/common/miscutil/libmiscutil.la \
 	$(top_builddir)/common/parsecommon/libparsecommon.la \
-	$(top_builddir)/common/portability/libfreeipmiportability.la \
+	$(top_builddir)/common/portability/libportability.la \
 	$(top_builddir)/libipmiconsole/libipmiconsole.la
 
 ipmiconsole_SOURCES = \
@@ -33,7 +33,7 @@ $(top_builddir)/common/miscutil/libmiscutil.la : force-dependency-check
 $(top_builddir)/common/parsecommon/libparsecommon.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
-$(top_builddir)/common/portability/libfreeipmiportability.la : force-dependency-check
+$(top_builddir)/common/portability/libportability.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
 $(top_builddir)/libipmiconsole/libipmiconsole.la : force-dependency-check
