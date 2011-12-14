@@ -148,17 +148,16 @@ For example,
 
 3.1 SDR CACHE INITIALIZATION
 
-The sdr cache file could be initialized by ipmi-sel(8) as
+The sdr cache file can be initialized by ipmi-sel(8) and the
+--sdr-cache-file option.
 
-# ipmi-sel -h 10.2.3.4 -u root -P
+# ipmi-sel -h 10.2.3.4 -u root -P --sdr-cache-file=/path/to/sdr-cache-file-X
 Password: 
-Caching SDR repository information: /root/.freeipmi/sdr-cache/sdr-cache-foo.10.2.3.4
+Caching SDR repository information: /path/to/sdr-cache-file-X
 Caching SDR record 125 of 125 (current record ID 125) 
 ID  | Date        | Time     | Name             | Type                     | Event
 1   | Dec-12-2011 | 16:41:51 | SEL              | Event Logging Disabled   | Log Area Reset/Cleared
 ...
-
-Then simply copy the cache to where referred to by sdr cache config.
 
 
 4. IPMI NODES
