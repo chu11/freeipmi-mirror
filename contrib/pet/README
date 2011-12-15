@@ -266,6 +266,7 @@ further configuration.
 EOF
 Password: 
 
+bmc-config(8) works out of band as well with the same prerequisite.
 In addition, FreeIPMI is featured by configuring many hosts in one
 run, see "HOSTRANGED SUPPORT" of ipmi-pef-config(8) and others from
 FreeIPMI.
@@ -276,8 +277,8 @@ can use bmc-config to generate a software generated platform event:
 # bmc-device --platform-event="41 04 05 73 6f assertion 80 01 ff"
 
 You should get notified about the event a few seconds later, otherwise
-check vendor rules. If the node is Dell PowerEdge R610, you have to
-make a catch-all filter for the software generated event,
+check vendor rules. If the node is Dell PowerEdge R610 or 1950, you 
+have to make a catch-all filter for the software generated event,
 
 # ipmi-pef-config --commit <<EOF
 Section Event_Filter_40
@@ -394,7 +395,24 @@ PowerEdge R610 don't match software generated events. You need to make
 a catch-all filter rule to report those events. However, hardware
 gernerated events are not subject to such limitation. To verify this
 situation, open the case to generate a hardware generated intrusion
-event. Dell PowerEdge 1950 with BMC already has a catch-all rule.
+event. Dell PowerEdge 1950 with BMC has similiar problem. The 
+difference is that 1950 has 31 filter rules, so you don't worry about
+overwriting an existent one.
+
+It's spotted that Dell PowerEdge 1950 with BMC refuses to disable PEF 
+messages once enabled. It accepts "Enable_PEF_Event_Messages Yes" and 
+logs PEF actions, but ignores "Enable_PEF_Event_Messages No". Not 
+sure whether it's firmware issue or ipmi-pef-config(8) related. Not 
+verified across hardware reset yet.
+
+It's spotted that Dell PowerEdge 1950 with BMC suffers clock drift, 
+remarkably SEL timestamps. bmc-device(8) from FreeIPMI could be used 
+to adjust SEL time and SDR repository time,
+# bmc-device --set-sdr-repository-time=now
+# bmc-device --set-sel-time=now
+Notice that 'now' refers to current timestamp on the host where the
+commands are issued. bmc-device(8) works out of band, so simply issue
+the commands on a host where clock is synchronized.
 
 It's spotted that iDRAC Express on Dell PowerEdge R610 generates two
 traps per hardware event. Notice session id from the two traps differ,
