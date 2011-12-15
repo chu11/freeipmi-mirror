@@ -399,12 +399,6 @@ event. Dell PowerEdge 1950 with BMC has similiar problem. The
 difference is that 1950 has 31 filter rules, so you don't worry about
 overwriting an existent one.
 
-It's spotted that Dell PowerEdge 1950 with BMC refuses to disable PEF 
-messages once enabled. It accepts "Enable_PEF_Event_Messages Yes" and 
-logs PEF actions, but ignores "Enable_PEF_Event_Messages No". Not 
-sure whether it's firmware issue or ipmi-pef-config(8) related. Not 
-verified across hardware reset yet.
-
 It's spotted that Dell PowerEdge 1950 with BMC suffers clock drift, 
 remarkably SEL timestamps. bmc-device(8) from FreeIPMI could be used 
 to adjust SEL time and SDR repository time,

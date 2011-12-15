@@ -666,7 +666,7 @@ fill_cmd_set_pef_configuration_parameters_pef_control (uint8_t pef,
   FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_PEF_CONFIGURATION_PARAMETER_PEF_CONTROL);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "pef", pef);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "pef_event_messages", pef);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "pef_event_messages", pef_event_messages);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "pef_startup_delay", pef_startup_delay);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "pef_alert_startup_delay", pef_alert_startup_delay);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
