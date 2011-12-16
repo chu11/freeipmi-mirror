@@ -16,6 +16,10 @@
 #
 # ChangeLog
 #
+# * Fri 16 Dec 2011 kaiwang.chen@gmail.com
+# - Re-add nsca support.
+# - Protect against hex string for traphandle missing ending whitespace.
+#
 # * Wed 14 Dec 2011 kaiwang.chen@gmail.com
 # - Add performance logging support with 'perf' token
 #
@@ -121,7 +125,7 @@ $0 [OPTIONS] -- [ALERT_SPECIFIC_OPTIONS] ALERT_SPECIFIC_ARGS
     --log  log_file
                 Specify logging file
     -n
-    --alert  {mail|nagios|noop|MODULE}
+    --alert  {mail|nagios|nsca|noop|MODULE}
                 Specify alert method. Defaults to "noop".
 
   ALERT SPECIFIC OPTIONS AND ARGS
@@ -140,13 +144,22 @@ $0 [OPTIONS] -- [ALERT_SPECIFIC_OPTIONS] ALERT_SPECIFIC_ARGS
                 Sets where you want Net::SMTP to send the email to. Required.
     
   nagios
-    --host  {fqdn|short|conf}
+    --host  {fqdn|short}
                 Sets host in nagios external commands. Defaults to short (first component).
     --service
                 Sets service in nagios external commands. Defaults to PET.
     command_file
                 Sets Nagios external command file, a named pipe (FIFO).
                 Required.
+  nsca
+    --prog  send_nsca
+                Sets path to send_nsca binary, required.
+    --host  {fqdn|short}
+                Sets host for the passive check. Defaults to short (first component).
+    --service
+                Sets service for the passive check. Defaults to PET.
+    -- send_nsca_options_and_args
+                Pass options and args through to send_nsca binary.
 
   noop          Yes, it is a no-op.
 
@@ -207,7 +220,8 @@ sub decode_pet {
   my @o = qw(-v -v --output-event-severity --output-event-state --interpret-oem-data --comma-separated-output);
   if ($sdrcache) { push @o, "--sdr-cache-file", $sdrcache }
   push @o, $specific;
-  $event_hexstring =~ s/[^ 0-9a-fA-F]//g; # sanity check
+  $event_hexstring =~ tr/0-9a-fA-F/ /cs; # sanity check
+  $event_hexstring =~ s/^\s+//; # in case of (split/\s+/)[0] being ""
   push @o, split /\s+/, $event_hexstring;
 
   my @x = ();
@@ -252,7 +266,8 @@ sub ack_pet {
   }
   push @o, "-h", $host;
   push @o, $specific;
-  $event_hexstring =~ s/[^ 0-9a-fA-F]//g; # sanity check
+  $event_hexstring =~ tr/0-9a-fA-F/ /cs; # sanity check
+  $event_hexstring =~ s/^\s+//; # in case of (split/\s+/)[0] being ""
   push @o, split /\s+/, $event_hexstring;
 
   my @x = ();
@@ -306,6 +321,14 @@ sub nagios_check {
 
   return ($code, $plugin_output);
 }
+sub nagios_host {
+  my ($pdu_info, $opt) = @_;
+  my $h = $pdu_info->{hostname};
+  if ($opt eq 'short') {
+    ($h) = ($pdu_info->{hostname} =~ m/([^.]+)/);
+  }
+  return $h;
+}
 
 # assemble SMTP DATA, http://cr.yp.to/smtp/mail.html
 # TODO return encoded data
@@ -349,9 +372,7 @@ sub my_receiver {
     $_->[1] =~ s/^OID: //;
     $_->[1] =~ s/^IpAddress: //;
     $_->[1] =~ s/^STRING: //;
-    if ($_->[1] =~ s/^Hex-STRING: //) {
-      $_->[1] =~ tr/\n//;
-    }
+    $_->[1] =~ s/^Hex-STRING: //;
     if ($_->[1] =~ s/^Timeticks: //) {
       $_->[1] =~ s/^\(\d+\) //;
       $_->[1] =~ s/ days, /:/;
@@ -449,9 +470,9 @@ sub get_from_stdin {
   my $more = 0;
   my $line = "";
   for (@{$stdin}) {
-      chomp;
       if ($more == 0 && $line) {
-          ($oid, $value) = ($line =~ /([^\s]+)\s+(.*)/);
+          $line =~ s/\n\Z//s;
+          ($oid, $value) = ($line =~ /([^\s]+)\s+(.*)/s);
           $line = "";
           push @varbindings, [$oid, $value, "="];
       }
@@ -471,14 +492,18 @@ sub get_from_stdin {
           $more = $more == 1 ? 0 : 1;
       }
   
-      $line .= $_;
+      $line .= "$_\n";
   }
   if ($line) {
-      ($oid, $value) = ($line =~ /([^\s]+)\s+(.*)/);
+      $line =~ s/\n\Z//s;
+      ($oid, $value) = ($line =~ /([^\s]+)\s+(.*)/s);
       $line = "";
       push @varbindings, [$oid, $value];
   }
 
+  # Notice the assembled varbindings slightly differs from that in embperl. 
+  # For instance, hex string is surrounded by doubly quote, and never
+  # prefixed by "Hex-STRING: ".
   return (\%pdu_info, \@varbindings);
 }
 
@@ -491,7 +516,7 @@ sub handle_trap {
   process($pdu_info, $varbindings);
 
   my $laps = $perf->laps;
-  logger("perf", join(", ", map { $_ . "=" . $laps->{$_} } keys %{$laps}));
+  logger("perf", join(", ", map { sprintf '%s=%f', $_,$laps->{$_} } keys %{$laps}));
   $perf->reset;
 }
 
@@ -537,24 +562,17 @@ sub alert {
     my $command_file = $ARGV[0];
     logger("alert", "nagios external command file is $command_file");
 
+    my $t = pettime($event);
+    my ($code,$plugin_output) = nagios_check($event);
+    my $nagios_host = nagios_host($pdu_info, $alert_opts{host});
+    my $nagios_service = $alert_opts{service};
+
+    # http://nagios.sourceforge.net/docs/3_0/extcommands.html
+    my $cmd = "[$t] PROCESS_SERVICE_CHECK_RESULT;$nagios_host;$nagios_service;$code;$plugin_output";
+    logger("alert", "nagios command is", $cmd);
+
     $perf->start;
     if (open NAGIOS, ">>", $command_file) {
-      my $t = pettime($event);
-      my ($code,$plugin_output) = nagios_check($event);
-      my ($nagios_host, $nagios_service);
-      if ($alert_opts{host} eq 'fqdn') { $nagios_host = $pdu_info->{hostname} }
-      elsif ($alert_opts{host} eq 'short') {
-        ($nagios_host) = ($pdu_info->{hostname} =~ m/([^.]+)/)
-      }
-      else { # TODO
-        $nagios_host = "<UNKOWN>";
-      }
-      $nagios_service = $alert_opts{service};
-
-      # http://nagios.sourceforge.net/docs/3_0/extcommands.html
-      my $cmd = "[$t] PROCESS_SERVICE_CHECK_RESULT;$nagios_host;$nagios_service;$code;$plugin_output";
-      logger("alert", "nagios command is", $cmd);
-
       print NAGIOS "$cmd\n";
       close NAGIOS;
     }
@@ -562,6 +580,30 @@ sub alert {
       logger("warn", "nagios failure with $command_file: $!");
     }
     $perf->stop("nagios");
+  }
+  elsif ($opts{'alert'} eq 'nsca') {
+    logger("alert", "send_nsca invoked as ", [$alert_prog, \@ARGV]);
+
+    my ($code,$plugin_output) = nagios_check($event);
+    my $nagios_host = nagios_host($pdu_info, $alert_opts{host});
+    my $nagios_service = $alert_opts{service};
+
+    # http://nagios.sourceforge.net/download/contrib/documentation/misc/NSCA_Setup.pdf
+    my $cmd= "$nagios_host\t$nagios_service\t$code\t$plugin_output";
+    logger("alert", "nsca command is", $cmd);
+
+    $perf->start;
+    if (open NSCA, "|-", $alert_prog, @ARGV) {
+      print NSCA "$cmd\n";
+      close NSCA;
+      if ($? >> 8) {
+        logger("warn", "nsca failure with CHILD_ERROR: $?");
+      }
+    }
+    else {
+      logger("warn", "nsca failure: $!");
+    }
+    $perf->stop("nsca");
   }
   elsif ($opts{'alert'} eq 'noop') {
     logger('alert', 'noop alert selected');
@@ -725,16 +767,20 @@ sub process_args {
       require Net::SMTP;
     }
   }
-  elsif ($opts{'alert'} eq 'nagios') {
-    GetOptions(\%alert_opts, "host|H=s", "service|S=s");
+  elsif ($opts{'alert'} eq 'nagios' || $opts{'alert'} eq 'nsca') {
+    GetOptions(\%alert_opts, "prog=s", "host|H=s", "service|S=s");
     $alert_opts{host} ||= "short";
     $alert_opts{service} ||= "PET";
     if ($alert_opts{host} ne "fqdn" && $alert_opts{host} ne "short") { # TODO
-      die "nagios host mapping not implemented yet\n";
+      die "Unknown host mapping $alert_opts{host}\n";
     }
-    unless ($ARGV[0] && -w $ARGV[0]) {
+    if ($opts{'alert'} eq 'nagios' && !($ARGV[0] && -w $ARGV[0])) {
       die "nagios external command file[$ARGV[0]] is not writable\n";
     }
+    if ($opts{'alert'} eq 'nsca' && ! $alert_opts{prog}) {
+      die "send_nsca binary is not set\n";
+    }
+    $alert_prog = $alert_opts{prog} || "";
   }
   elsif ($opts{'alert'} eq 'noop') {
   }

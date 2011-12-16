@@ -10,7 +10,7 @@ This script operates in two modes, traphandle or embperl.  When in
 traphandle mode, it concatenates the quoted hex string into one long
 line, then builds structures to resemble embperl mode. Both modes then
 invokes helper decoder, ipmi-pet(8) from FreeIPMI, parses the output
-and alerts in given way like email, nagios external command, etc.
+and alerts in given way like email, nagios external command, nsca, etc.
 
 
 1. REQUIREMENTS
@@ -107,7 +107,7 @@ Nagios monitoring system could be plugged into by writing to its
 external command file as passive check. See ipminodes.cfg and
 check_rmcping for related Nagios configuration.
 
-Then petalert.pl in snmptrapd.conf should be:
+Assuming Nagios process is local, use:
 
   perl do "/usr/share/doc/freeipmi/contrib/pet/petalert.pl";
   perl IpmiPET::main(qw(--mode=embperl --trapoid=OID --sdrcache=SDRCONF \
@@ -116,6 +116,19 @@ Then petalert.pl in snmptrapd.conf should be:
 where "-H short" means if 10.2.3.4 resolves to foo.example.com, Nagios
 passive check gets foo as host; use "-H fqdn" to pass foo.example.com
 to Nagios. In addition, "-S PET" sets service description.
+
+If Nagios process is on remote host, normally you turns to NSCA which
+consists of NSCA daemon on the Nagios host and the send_nsca client 
+program. To alert by send_nsca,
+
+  perl do "/usr/share/doc/freeipmi/contrib/pet/petalert.pl";
+  perl IpmiPET::main(qw(--mode=embperl --trapoid=OID --sdrcache=SDRCONF \
+    --alert=nsca -- --prog /usr/bin/send_nsca -H short -S PET \
+    -- -H NAGIOS_HOST -c SEND_NSCA_CONF));
+
+Notice the unattached -- appears two times in the configuration line
+separating three steps of arguments processing, namely generic args, 
+alert specific args, and external helper args.
 
 
 3. SDR CACHE FILE MAPPING
@@ -191,7 +204,6 @@ Then normally you will get a notification about the test input. Notice
 that the three-line octet string "44 45 ... C1 " includes one
 whitespace at the ending of each line, that's the way snmptrapd(8)
 works.
-
 
 4.1 NODE CONFIGURATION
 
@@ -369,6 +381,10 @@ snmptrapd(8) itself allows for logging of traps into syslog which
 requires log permission, see "ACCESS CONTROL" from snmptrapd.conf for
 more information.
 
+NSCA daemon logs to syslog, set "debug=1" in nsca.cfg to get detailed
+connection handling. Nagios is also able to log to syslog, set 
+"use_syslog=1" in nagios.cfg to help debugging alert.
+
 
 6. PET TRAFFIC
 
@@ -419,7 +435,8 @@ timeout error "ipmi_cmd_pet_acknowledge: message timeout". You may use
 '-W malformedack', which is simply passed through, to instruct the
 underlying helper ipmi-pet(8) to disable such detection and to
 immediately return. Timeout hurts snmptrapd because slow handler
-hinders the main loop.
+hinders the main loop. To discover potential time consuming cases, 
+use "-D perf" and observe the log.
 
 It's spotted that some DNS servers return "localhost" on private ip
 addresses rather than NXDOMAIN, in this case, snmptrapd(8) passes

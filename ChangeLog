@@ -1,3 +1,8 @@
+2011-12-16  Kaiwang Chen <kaiwang.chen@gmail.com>
+
+	* contrib/pet/petalert.pl, contrib/pet/README: Support and
+	document NSCA.
+
 2011-12-15  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/cmds/libfreeipmi/cmds/ipmi-pef-and-alerting-cmds.c (fill_cmd_set_pef_configuration_parameters_pef_control):
