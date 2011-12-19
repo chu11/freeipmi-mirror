@@ -761,7 +761,7 @@ Resolved with special case handling.
 
 HP Proliant DL380 G7, HP ProLiant ML310 G5: SDR records for some
 sensors give conflicting information.  A threshold based sensor lists
-an event/reading type code for a discrete sensor.  The the analog data
+an event/reading type code for a discrete sensor.  The analog data
 format indicates an analog/threshold based sensor, however no
 threshold limits for the sensor are listed in the SDR.  Ipmi-sensors
 subsequently reports discrete states without an actual sensor reading
