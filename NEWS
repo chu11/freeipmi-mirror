@@ -12,9 +12,13 @@ o In libfreeipmi, support IPMI_FLAGS_NOSESSION flag to open a context
   for IPMI communication w/o establishing a session.
 o In libfreeipmi, support IPMI_FLAGS_NO_LEGAL_CHECK flag, to
   workaround motherboards to may return illegal IPMI packets.
+o In libfreeipmi, support IPMI_FLAGS_IGNORE_AUTHENTICATION_CODE flag,
+  to workaround specific situations where motherboards return
+  incorrectly generated authentication codes.
 o In libfreeipmi, add support for IPMI firmware firewall and command
   discovery payloads.
 o In ipmi-pef-config, fix configuration bug for Enable_PEF_Event_Messages.
+o In ipmi-sensors, support 'ignoreauthcode' workaround option.
 o Add petalert.pl contribution.
 o Fix macro name typos.
 

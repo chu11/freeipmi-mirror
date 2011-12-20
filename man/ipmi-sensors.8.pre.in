@@ -219,6 +219,21 @@ an non-BMC sensor owner by always assuming the sensor owner is the
 BMC.  This problem may exist on your motherboard if sensors are listed
 as "N/A" even if they should be available. This option is confirmed to
 work around issues on Fujitsu RX300 and Fujitsu RX300S2 motherboards.
+.LP
+\fIignoreauthcode\fR - This workaround option will allow sensor
+readings to be read if the remote machine is invalidly calculating
+authentication codes (i.e. authentication hashes) when communicating
+over LAN.  This problem may exist on your system if the error "session
+timeout" errors or there is an appearance of a hang.  Users are
+cautioned on the use of this option, as it removes an authentication
+check verifying the validity of a packet.  However, in most
+organizations, this is unlikely to be a security issue.  The ignoring
+of authentication packets is only limited to the period in which
+sensor readings are done, and not for any portion of the session
+authentication or session teardown.  This option is confirmed to work
+on Inventec 5441/Dell Xanadu II and Inventec 5442/Dell Xanadu III.
+(Note: On the above systems, this issue has only been observed when
+the \fB\-\-bridge\-sensors\fR is used.)
 #include <@top_srcdir@/man/manpage-common-workaround-extra-text.man>
 #include <@top_srcdir@/man/manpage-common-oem-interpretation.man>
 .LP

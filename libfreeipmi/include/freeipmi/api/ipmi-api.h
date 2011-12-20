@@ -140,14 +140,19 @@ typedef enum ipmi_driver_type ipmi_driver_type_t;
  * response.  The NO_LEGAL_CHECK would return such a packet to the
  * user without an error.  If the payload did not return a completion
  * code, the completion code will not be checked for.
+ *
+ * IGNORE_AUTHENTICATION_CODE - for IPMI 1.5 packets, do not check the
+ * authentication code on response packets.  Useful to workaround
+ * around non-compliant motherboards implementing invalid code/hashes.
  */
 
-#define IPMI_FLAGS_DEFAULT        0x00000000
-#define IPMI_FLAGS_NONBLOCKING    0x00000001
-#define IPMI_FLAGS_NOSESSION      0x00000002
-#define IPMI_FLAGS_DEBUG_DUMP     0x00000010
-#define IPMI_FLAGS_NO_VALID_CHECK 0x00000100
-#define IPMI_FLAGS_NO_LEGAL_CHECK 0x00000200
+#define IPMI_FLAGS_DEFAULT                    0x00000000
+#define IPMI_FLAGS_NONBLOCKING                0x00000001
+#define IPMI_FLAGS_NOSESSION                  0x00000002
+#define IPMI_FLAGS_DEBUG_DUMP                 0x00000010
+#define IPMI_FLAGS_NO_VALID_CHECK             0x00000100
+#define IPMI_FLAGS_NO_LEGAL_CHECK             0x00000200
+#define IPMI_FLAGS_IGNORE_AUTHENTICATION_CODE 0x00000400
 
 typedef struct ipmi_ctx *ipmi_ctx_t;
 

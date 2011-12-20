@@ -1122,6 +1122,7 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
   unsigned int output_record_ids[MAX_SENSOR_RECORD_IDS];
   unsigned int output_record_ids_length = 0;
   unsigned int i;
+  unsigned int ctx_flags_orig;
   int rv = -1;
 
   assert (state_data);
@@ -1272,6 +1273,27 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
                              &output_record_ids_length) < 0)
     return (-1);
 
+  if (state_data->prog_data->args->common.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IGNORE_AUTH_CODE)
+    {
+      if (ipmi_ctx_get_flags (state_data->ipmi_ctx, &ctx_flags_orig) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_ctx_get_flags: %s\n",
+			   ipmi_ctx_errormsg (state_data->ipmi_ctx));
+          goto cleanup;
+        }
+      
+      if (ipmi_ctx_set_flags (state_data->ipmi_ctx, ctx_flags_orig | IPMI_FLAGS_IGNORE_AUTHENTICATION_CODE) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_ctx_set_flags: %s\n",
+			   ipmi_ctx_errormsg (state_data->ipmi_ctx));
+          goto cleanup;
+        }
+    }
+
   for (i = 0; i < output_record_ids_length; i++)
     {
       uint8_t record_type;
@@ -1385,6 +1407,18 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
                               sensor_number_base,
                               0) < 0)
             goto cleanup;
+        }
+    }
+
+  if (state_data->prog_data->args->common.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IGNORE_AUTH_CODE)
+    {
+      if (ipmi_ctx_set_flags (state_data->ipmi_ctx, ctx_flags_orig) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_ctx_set_flags: %s\n",
+			   ipmi_ctx_errormsg (state_data->ipmi_ctx));
+          goto cleanup;
         }
     }
 

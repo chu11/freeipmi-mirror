@@ -782,7 +782,7 @@ _ipmi_lan_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
       goto cleanup;
     }
 
-  if (check_authentication_code)
+  if (check_authentication_code && !(ctx->flags & IPMI_FLAGS_IGNORE_AUTHENTICATION_CODE))
     {
       if ((ret = ipmi_lan_check_session_authentication_code (ctx->io.outofband.rs.obj_lan_session_hdr,
                                                              ctx->io.outofband.rs.obj_lan_msg_hdr,
