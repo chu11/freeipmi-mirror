@@ -560,11 +560,11 @@ ipmi_sel_parse_output_intel_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
    * Quanta QSSC-S4R/Appro GB812X-CN
    * (Quanta motherboard maintains Intel manufacturer ID) 
    */
-  if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S5500WB)
+  if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_QUANTA_QSSC_S4R)
     {
       if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY
 	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
-	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_RAS_STATE_INFORMATION_FOR_MEMORY_MIRRORING_MIRRORING_MODE
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_QUANTA_QSSC_S4R_RAS_STATE_INFORMATION_FOR_MEMORY_MIRRORING_MIRRORING_MODE
 	  && (system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_REDUNDANCY_FULLY_REDUNDANT
 	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_REDUNDANCY_REDUNDANCY_LOST))
 	{
@@ -573,49 +573,49 @@ ipmi_sel_parse_output_intel_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
 	  char *domain_instance_str;
 	  char *instance_id_str;
 
-	  domain_instance_type = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DOMAIN_INSTANCE_TYPE_BITMASK);
-	  domain_instance_type >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DOMAIN_INSTANCE_TYPE_SHIFT;
+	  domain_instance_type = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MIRRORING_DOMAIN_INSTANCE_TYPE_BITMASK);
+	  domain_instance_type >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MIRRORING_DOMAIN_INSTANCE_TYPE_SHIFT;
 	  
-	  instance_id = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_INSTANCE_ID_BITMASK);
-	  instance_id >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_INSTANCE_ID_SHIFT;
+	  instance_id = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MIRRORING_INSTANCE_ID_BITMASK);
+	  instance_id >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MIRRORING_INSTANCE_ID_SHIFT;
 
-	  if (domain_instance_type == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DOMAIN_INSTANCE_TYPE_LOCAL_MEMORY_MIRRORING_INTRA_SOCKET)
-	    domain_instance_str = "Local memory mirroring domain instance";
-	  else if (domain_instance_type == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DOMAIN_INSTANCE_TYPE_GLOBAL_MEMORY_MIRRORING_INTER_SOCKET)
-	    domain_instance_str = "Global memory mirroring domain instance";
+	  if (domain_instance_type == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MIRRORING_DOMAIN_INSTANCE_TYPE_LOCAL_MEMORY_MIRRORING_INTRA_SOCKET)
+	    domain_instance_str = "Local memory mirroring";
+	  else if (domain_instance_type == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MIRRORING_DOMAIN_INSTANCE_TYPE_GLOBAL_MEMORY_MIRRORING_INTER_SOCKET)
+	    domain_instance_str = "Global memory mirroring";
 	  else
 	    domain_instance_str = "Unknown";
 
-	  if (instance_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_INSTANCE_ID_1_2)
+	  if (instance_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MIRRORING_INSTANCE_ID_1_2)
 	    instance_id_str = "{MEM1_SLOT, MEM2_SLOT}";
-	  else if (instance_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_INSTANCE_ID_3_4)
+	  else if (instance_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MIRRORING_INSTANCE_ID_3_4)
 	    instance_id_str = "{MEM3_SLOT, MEM4_SLOT}";
-	  else if (instance_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_INSTANCE_ID_5_6)
+	  else if (instance_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MIRRORING_INSTANCE_ID_5_6)
 	    instance_id_str = "{MEM5_SLOT, MEM6_SLOT}";
-	  else if (instance_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_INSTANCE_ID_7_8)
+	  else if (instance_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MIRRORING_INSTANCE_ID_7_8)
 	    instance_id_str = "{MEM7_SLOT, MEM8_SLOT}";
-	  else if (instance_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_INSTANCE_ID_1_4)
+	  else if (instance_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MIRRORING_INSTANCE_ID_1_4)
 	    instance_id_str = "{MEM1_SLOT, MEM4_SLOT}";
-	  else if (instance_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_INSTANCE_ID_3_2)
+	  else if (instance_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MIRRORING_INSTANCE_ID_3_2)
 	    instance_id_str = "{MEM3_SLOT, MEM2_SLOT}";
-	  else if (instance_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_INSTANCE_ID_5_8)
+	  else if (instance_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MIRRORING_INSTANCE_ID_5_8)
 	    instance_id_str = "{MEM5_SLOT, MEM8_SLOT}";
-	  else if (instance_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_INSTANCE_ID_7_6)
+	  else if (instance_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MIRRORING_INSTANCE_ID_7_6)
 	    instance_id_str = "{MEM7_SLOT, MEM6_SLOT}";
-	  else if (instance_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_INSTANCE_ID_1_3)
+	  else if (instance_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MIRRORING_INSTANCE_ID_1_3)
 	    instance_id_str = "{MEM1_SLOT, MEM3_SLOT}";
-	  else if (instance_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_INSTANCE_ID_2_4)
+	  else if (instance_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MIRRORING_INSTANCE_ID_2_4)
 	    instance_id_str = "{MEM2_SLOT, MEM4_SLOT}";
-	  else if (instance_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_INSTANCE_ID_5_7)
+	  else if (instance_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MIRRORING_INSTANCE_ID_5_7)
 	    instance_id_str = "{MEM5_SLOT, MEM7_SLOT}";
-	  else if (instance_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_INSTANCE_ID_6_8)
+	  else if (instance_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MIRRORING_INSTANCE_ID_6_8)
 	    instance_id_str = "{MEM6_SLOT, MEM8_SLOT}";
 	  else
 	    instance_id_str = "Unknown";
 	  
 	  snprintf (tmpbuf,
 		    tmpbuflen,
-		    "%s, %s",
+		    "Domain Instance = %s, Instance = %s",
 		    domain_instance_str,
 		    instance_id_str);
 	  
@@ -1270,6 +1270,104 @@ ipmi_sel_parse_output_intel_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
 	  
 	  return (1);
 	}
+    }
+
+  /* OEM Interpretation
+   *
+   * Quanta QSSC-S4R/Appro GB812X-CN
+   * (Quanta motherboard maintains Intel manufacturer ID) 
+   */
+  if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_QUANTA_QSSC_S4R)
+    {
+      if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY
+	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_QUANTA_QSSC_S4R_RAS_STATE_INFORMATION_FOR_MEMORY_MIRRORING_SPARING_MODE
+	  && (system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_REDUNDANCY_FULLY_REDUNDANT
+	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_REDUNDANCY_REDUNDANCY_LOST))
+	{
+	  uint8_t domain_instance_type;
+	  uint8_t sparing_type;
+	  char *domain_instance_str;
+	  char *sparing_type_str;
+	  char sparing_type_buf[INTEL_EVENT_BUFFER_LENGTH + 1];
+	  uint8_t index_of_spared_memory_board;
+	  char index_of_spared_memory_board_buf[INTEL_EVENT_BUFFER_LENGTH + 1];
+	  uint8_t spared_dimm_information;
+	  char *spared_dimm_information_str;
+	  char spared_dimm_information_buf[INTEL_EVENT_BUFFER_LENGTH + 1];
+
+	  memset (sparing_type_buf, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
+	  memset (index_of_spared_memory_board_buf, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
+	  memset (spared_dimm_information_buf, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
+
+	  domain_instance_type = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_SPARING_DOMAIN_INSTANCE_TYPE_BITMASK);
+	  domain_instance_type >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_SPARING_DOMAIN_INSTANCE_TYPE_SHIFT;
+	  
+	  sparing_type = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_SPARING_TYPE_BITMASK);
+	  sparing_type >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_SPARING_TYPE_SHIFT;
+
+	  index_of_spared_memory_board = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_INDEX_OF_SPARED_MEMORY_BOARD_BITMASK);
+	  index_of_spared_memory_board >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_INDEX_OF_SPARED_MEMORY_BOARD_SHIFT;
+
+	  spared_dimm_information = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_SPARED_DIMM_INFORMATION_BITMASK);
+	  spared_dimm_information >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_SPARED_DIMM_INFORMATION_SHIFT;
+
+	  if (domain_instance_type == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_SPARING_DOMAIN_INSTANCE_TYPE_LOCAL_MEMORY_SPARING)
+	    {
+	      domain_instance_str = "Local memory sparing";
+
+	      if (sparing_type == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_SPARING_DOMAIN_INSTANCE_TYPE_LOCAL_MEMORY_SPARING_SPARING_TYPE_DIMM_SPARING)
+		sparing_type_str = "DIMM Sparing";
+	      else if (sparing_type == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_SPARING_DOMAIN_INSTANCE_TYPE_LOCAL_MEMORY_SPARING_SPARING_TYPE_RANK_SPARING)
+		sparing_type_str = "Rank Sparing";
+	      else
+		sparing_type_str = "Unknown";
+
+	      snprintf (sparing_type_buf,
+			INTEL_EVENT_BUFFER_LENGTH,
+			", Sparing Type = %s",
+			sparing_type_str);
+
+	      if (spared_dimm_information == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_SPARED_DIMM_INFORMATION_LOCAL_SPARING_DIMM_1B_LOCKSTEP_DIMM_1D)
+		spared_dimm_information_str = "DIMM_1B lock steep with DIMM 1D";
+	      else if (spared_dimm_information == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_SPARED_DIMM_INFORMATION_LOCAL_SPARING_DIMM_1A_LOCKSTEP_DIMM_1C)
+		spared_dimm_information_str = "DIMM_1B lock steep with DIMM 1D";
+	      else if (spared_dimm_information == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_SPARED_DIMM_INFORMATION_LOCAL_SPARING_DIMM_2B_LOCKSTEP_DIMM_2D)
+		spared_dimm_information_str = "DIMM_1B lock steep with DIMM 1D";
+	      else if (spared_dimm_information == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_SPARED_DIMM_INFORMATION_LOCAL_SPARING_DIMM_2A_LOCKSTEP_DIMM_2C)
+		spared_dimm_information_str = "DIMM_1B lock steep with DIMM 1D";
+	      else
+		spared_dimm_information_str = "Unknown";
+
+	      snprintf (spared_dimm_information_buf,
+                        INTEL_EVENT_BUFFER_LENGTH,
+                        ", Spared DIMM Information = %s",
+                        spared_dimm_information_str);
+	    }
+	  else if (domain_instance_type == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_SPARING_DOMAIN_INSTANCE_TYPE_GLOBAL_MEMORY_SPARING)
+	    domain_instance_str = "Global memory sparing";
+	  else
+	    domain_instance_str = "Unknown";
+	  
+	  snprintf (index_of_spared_memory_board_buf,
+		    INTEL_EVENT_BUFFER_LENGTH,
+		    ", Spared Memory Board = %u",
+		    index_of_spared_memory_board);
+
+	  if (ipmi_sel_parse_string_snprintf (buf,
+					      buflen,
+					      wlen,
+					      "Domain Instance = %s%s%s%s",
+					      domain_instance_str,
+					      sparing_type_buf,
+					      index_of_spared_memory_board_buf,
+					      spared_dimm_information_buf))
+	    (*oem_rv) = 1;
+	  else
+	    (*oem_rv) = 0;
+	  
+	  return (1);
+	}     
     }
 
   return (0);
