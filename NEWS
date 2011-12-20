@@ -1,13 +1,19 @@
 FreeIPMI 1.1.1 - XX/XX/11
 -------------------------
+
+Tools
+-----
 o Support new tool ipmi-pet, tool to parse/interpret platform event traps.
 o Support new --sdr-cache-file option specify specific SDR cache file
-  in all tools.
+  in all SDR related tools (ipmi-sensors, ipmi-sel, ipmi-fru, etc.).
 o In ipmi-raw, for file/stdin input, output line number when there is
   an error.
 o In ipmi-pef-config, fix configuration bug for Enable_PEF_Event_Messages.
 o In ipmi-sensors, support 'ignoreauthcode' workaround option.
 o In ipmi-fru, do not consider a busy device a fatal error. 
+  
+Libraries
+---------
 o Update libfreeipmi for DCMI 1.5 additions.
 o Update libfreeipmi fru-parse sub-library to support FRU parsing
   without an IPMI connection.
@@ -22,8 +28,12 @@ o In libfreeipmi fru-parse sub-library, support
   IPMI_FRU_PARSE_ERR_DEVICE_BUSY error code.
 o In libfreeipmi, add support for IPMI firmware firewall and command
   discovery payloads.
-o Add petalert.pl contribution.
-o Fix macro name typos.
+o Fix various macro names (typos, invalid naming, etc.)
+
+Contributions
+-------------
+o petalert.pl
+  - snmptrapd handler script to alert when Platform Event Traps (PET) occur.
 
 FreeIPMI 1.0.10 - 12/13/11
 --------------------------
