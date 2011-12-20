@@ -1,7 +1,11 @@
 2011-12-20  Albert Chu <chu11@llnl.gov>
 
-	* Update documentation for Quanta QSSC-S4R/Appro GB812X-CN
+	* Branch Release-1_1_0_branch for FreeIPMI 1.1.0 stable branch 
 	
+2011-12-20  Albert Chu <chu11@llnl.gov>
+
+	* Update documentation for Quanta QSSC-S4R/Appro GB812X-CN
+
 2011-12-19  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/fru-parse/: Support IPMI_FRU_PARSE_ERR_DEVICE_BUSY error code.
@@ -9,14 +13,14 @@
 	* ipmi-fru/: Do not consider a busy device a fatal error.
 
 	* Document Appro GB812X-CN IPMI compliance issues.
-	
+
 2011-12-19  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/: Support IPMI_FLAGS_IGNORE_AUTHENTICATION_CODE
 	workaround flag.
 
 	* ipmi-sensors/: Support 'ignoreauthcode' workaround flag.
-	
+
 2011-12-16  Kaiwang Chen <kaiwang.chen@gmail.com>
 
 	* contrib/pet/petalert.pl, contrib/pet/README: Support and
@@ -63,7 +67,7 @@
 	* Minor documentation updates.
 
 	* Minor packaging fixes to fix distcheck.
-	
+
 2011-12-12  Albert Chu <chu11@llnl.gov>
 
 	Giant re-org of code.
