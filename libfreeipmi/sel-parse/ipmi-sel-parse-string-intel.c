@@ -655,6 +655,7 @@ ipmi_sel_parse_output_intel_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
 	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_UNCORRECTABLE_MEMORY_ERROR))
 	{
 	  uint8_t memory_board;
+	  uint8_t memory_board_str;
 	  uint8_t dimm_slot;
 	  char *dimm_slot_str;
  
@@ -663,6 +664,25 @@ ipmi_sel_parse_output_intel_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
 
 	  dimm_slot = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DIMM_SLOT_BITMASK);
 	  dimm_slot >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DIMM_SLOT_SHIFT;
+
+	  if (memory_board == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MEMORY_BOARD_MEM1_SLOT)
+	    memory_board_str = "MEM1_SLOT";
+	  else if (memory_board == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MEMORY_BOARD_MEM2_SLOT)
+	    memory_board_str = "MEM2_SLOT";
+	  else if (memory_board == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MEMORY_BOARD_MEM3_SLOT)
+	    memory_board_str = "MEM3_SLOT";
+	  else if (memory_board == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MEMORY_BOARD_MEM4_SLOT)
+	    memory_board_str = "MEM4_SLOT";
+	  else if (memory_board == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MEMORY_BOARD_MEM5_SLOT)
+	    memory_board_str = "MEM5_SLOT";
+	  else if (memory_board == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MEMORY_BOARD_MEM6_SLOT)
+	    memory_board_str = "MEM6_SLOT";
+	  else if (memory_board == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MEMORY_BOARD_MEM7_SLOT)
+	    memory_board_str = "MEM7_SLOT";
+	  else if (memory_board == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MEMORY_BOARD_MEM8_SLOT)
+	    memory_board_str = "MEM8_SLOT";
+	  else
+	    memory_board_str = "Unknown";
 
 	  if (dimm_slot == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DIMM_SLOT_1B)
 	    dimm_slot_str = "DIMM_1/B";
@@ -685,9 +705,9 @@ ipmi_sel_parse_output_intel_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
 
 	  snprintf (tmpbuf,
                     tmpbuflen,
-		    "Memory Board = %u, DIMM Slot = %s",
-		    memory_board,
-		    dimm_slot);
+		    "Memory Board = %s, DIMM Slot = %s",
+		    memory_board_str,
+		    dimm_slot_str);
 
 	  return (1);
 	}
