@@ -287,6 +287,32 @@ ipmi_sel_parse_output_intel_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
 	}
     }
 
+  /* OEM Interpretation
+   *
+   * Quanta QSSC-S4R/Appro GB812X-CN
+   * (Quanta motherboard maintains Intel manufacturer ID) 
+   */
+  if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_QUANTA_QSSC_S4R)
+    {
+      if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_QUANTA_QSSC_S4R_MEMORY_ECC_ERROR
+	  && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_CORRECTABLE_MEMORY_ERROR)
+	{
+	  uint8_t count_of_correctable_ecc_error;
+
+	  count_of_correctable_ecc_error = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_COUNT_OF_CORRECTABLE_ECC_ERROR_BITMASK);
+	  count_of_correctable_ecc_error >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_COUNT_OF_CORRECTABLE_ECC_ERROR_SHIFT;
+
+	  snprintf (tmpbuf,
+                    tmpbuflen,
+                    "Correctable ECC Error Count = %u",
+		    count_of_correctable_ecc_error);
+
+	  return (1);
+	}
+    }
+
   return (0);
 }
 
@@ -621,6 +647,51 @@ ipmi_sel_parse_output_intel_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
 	  
 	  return (1);
 	}     
+
+      if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_QUANTA_QSSC_S4R_MEMORY_ECC_ERROR
+	  && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_CORRECTABLE_MEMORY_ERROR
+	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_UNCORRECTABLE_MEMORY_ERROR))
+	{
+	  uint8_t memory_board;
+	  uint8_t dimm_slot;
+	  char *dimm_slot_str;
+ 
+	  memory_board = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MEMORY_BOARD_BITMASK);
+	  memory_board >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MEMORY_BOARD_SHIFT;
+
+	  dimm_slot = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DIMM_SLOT_BITMASK);
+	  dimm_slot >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DIMM_SLOT_SHIFT;
+
+	  if (dimm_slot == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DIMM_SLOT_1B)
+	    dimm_slot_str = "DIMM_1/B";
+	  else if (dimm_slot == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DIMM_SLOT_1A)
+	    dimm_slot_str = "DIMM_1/A";
+	  else if (dimm_slot == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DIMM_SLOT_2B)
+	    dimm_slot_str = "DIMM_2/B";
+	  else if (dimm_slot == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DIMM_SLOT_2A)
+	    dimm_slot_str = "DIMM_2/A";
+	  else if (dimm_slot == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DIMM_SLOT_1D)
+	    dimm_slot_str = "DIMM_1/D";
+	  else if (dimm_slot == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DIMM_SLOT_1C)
+	    dimm_slot_str = "DIMM_1/C";
+	  else if (dimm_slot == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DIMM_SLOT_2D)
+	    dimm_slot_str = "DIMM_2/D";
+	  else if (dimm_slot == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DIMM_SLOT_2C)
+	    dimm_slot_str = "DIMM_2/C";
+	  else
+	    dimm_slot_str = "Unknown";
+
+	  snprintf (tmpbuf,
+                    tmpbuflen,
+		    "Memory Board = %u, DIMM Slot = %s",
+		    memory_board,
+		    dimm_slot);
+
+	  return (1);
+	}
+
     }
   
   return (0);
