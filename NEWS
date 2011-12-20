@@ -5,6 +5,9 @@ o Support new --sdr-cache-file option specify specific SDR cache file
   in all tools.
 o In ipmi-raw, for file/stdin input, output line number when there is
   an error.
+o In ipmi-pef-config, fix configuration bug for Enable_PEF_Event_Messages.
+o In ipmi-sensors, support 'ignoreauthcode' workaround option.
+o In ipmi-fru, do not consider a busy device a fatal error. 
 o Update libfreeipmi for DCMI 1.5 additions.
 o Update libfreeipmi fru-parse sub-library to support FRU parsing
   without an IPMI connection.
@@ -15,10 +18,10 @@ o In libfreeipmi, support IPMI_FLAGS_NO_LEGAL_CHECK flag, to
 o In libfreeipmi, support IPMI_FLAGS_IGNORE_AUTHENTICATION_CODE flag,
   to workaround specific situations where motherboards return
   incorrectly generated authentication codes.
+o In libfreeipmi fru-parse sub-library, support
+  IPMI_FRU_PARSE_ERR_DEVICE_BUSY error code.
 o In libfreeipmi, add support for IPMI firmware firewall and command
   discovery payloads.
-o In ipmi-pef-config, fix configuration bug for Enable_PEF_Event_Messages.
-o In ipmi-sensors, support 'ignoreauthcode' workaround option.
 o Add petalert.pl contribution.
 o Fix macro name typos.
 

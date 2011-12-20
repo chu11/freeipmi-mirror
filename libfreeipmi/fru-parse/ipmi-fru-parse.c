@@ -105,10 +105,11 @@ static char *ipmi_fru_parse_errmsgs[] =
     "FRU sentinel value not found",       /* 21 */
     "buffer too small to hold result",    /* 22 */
     "out of memory",                      /* 23 */
-    "internal IPMI error",                /* 24 */
-    "internal system error",              /* 25 */
-    "internal error",                     /* 26 */
-    "errnum out of range",                /* 27 */
+    "device busy",                        /* 24 */
+    "internal IPMI error",                /* 25 */
+    "internal system error",              /* 26 */
+    "internal error",                     /* 27 */
+    "errnum out of range",                /* 28 */
     NULL
   };
 
@@ -422,6 +423,17 @@ _read_fru_data (ipmi_fru_parse_ctx_t ctx,
               FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_NO_FRU_INFORMATION);
               goto cleanup;
             }
+
+	  /* Consider the device busy only if we haven't read any data
+	   * yet.  If it's busy later, we'll assume there's a real
+	   * error/issue going on.
+	   */
+	  if (!num_bytes_read
+	      && ipmi_check_completion_code (fru_read_data_rs, IPMI_COMP_CODE_READ_FRU_DATA_FRU_DEVICE_BUSY) == 1)
+	    {
+	      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_DEVICE_BUSY);
+	      goto cleanup;
+	    }
 
           FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_IPMI_ERROR);
           goto cleanup;

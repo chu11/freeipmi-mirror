@@ -149,7 +149,7 @@ _output_fru (ipmi_fru_state_data_t *state_data,
           
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "ipmi_fru_parse_open_device_id: %s\n",
+                           "ipmi_fru_parse_read_data_area: %s\n",
                            ipmi_fru_parse_ctx_errormsg (state_data->fru_parse_ctx));
           goto cleanup;
         }
