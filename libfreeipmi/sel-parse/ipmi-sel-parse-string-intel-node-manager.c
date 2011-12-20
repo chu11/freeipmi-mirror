@@ -403,9 +403,6 @@ ipmi_sel_parse_output_intel_node_manager_sensor_name (ipmi_sel_parse_ctx_t ctx,
 /* return (0) - no OEM match
  * return (1) - OEM match
  * return (-1) - error, cleanup and return error
- *
- * 0 - continue on
- * 1 - buffer full, return full buffer to user
  */
 int
 ipmi_sel_parse_output_intel_node_manager_event_data1_class_oem (ipmi_sel_parse_ctx_t ctx,
@@ -530,9 +527,6 @@ ipmi_sel_parse_output_intel_node_manager_event_data1_class_oem (ipmi_sel_parse_c
 /* return (0) - no OEM match
  * return (1) - OEM match
  * return (-1) - error, cleanup and return error
- *
- * 0 - continue on
- * 1 - buffer full, return full buffer to user
  */
 int
 ipmi_sel_parse_output_intel_node_manager_event_data2_class_oem (ipmi_sel_parse_ctx_t ctx,
@@ -675,9 +669,6 @@ ipmi_sel_parse_output_intel_node_manager_event_data2_class_oem (ipmi_sel_parse_c
 /* return (0) - no OEM match
  * return (1) - OEM match
  * return (-1) - error, cleanup and return error
- *
- * 0 - continue on
- * 1 - buffer full, return full buffer to user
  */
 int
 ipmi_sel_parse_output_intel_node_manager_event_data3_class_oem (ipmi_sel_parse_ctx_t ctx,
