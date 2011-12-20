@@ -1,3 +1,8 @@
+2011-12-21  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/: Support Quanta QSSC-S4R/Appro GB812X-CN OEM SEL
+	Events.
+	
 2011-12-20  Albert Chu <chu11@llnl.gov>
 
 	* Update documentation for Quanta QSSC-S4R/Appro GB812X-CN

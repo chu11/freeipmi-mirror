@@ -100,6 +100,13 @@ extern "C" {
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_MEMORY_PARITY_ERROR                                         0x14
 
 /*
+ * Quanta QSSC-S4R/Appro GB812X-CN
+ * (Quanta motherboard maintains Intel manufacturer ID)
+ */
+#define IPMI_SENSOR_NUMBER_OEM_INTEL_RAS_STATE_INFORMATION_FOR_MEMORY_MIRRORING_MIRRORING_MODE  0x01
+
+
+/*
  * Intel Node Manager
  *
  * http://download.intel.com/support/motherboards/server/s5500wb/sb/s5500wb_tps_1_0.pdf

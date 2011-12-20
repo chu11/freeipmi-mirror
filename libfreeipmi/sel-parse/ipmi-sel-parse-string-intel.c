@@ -553,9 +553,76 @@ ipmi_sel_parse_output_intel_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
 	  
 	  return (1);
 	}
-
     }
 
+  /* OEM Interpretation
+   *
+   * Quanta QSSC-S4R/Appro GB812X-CN
+   * (Quanta motherboard maintains Intel manufacturer ID) 
+   */
+  if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S5500WB)
+    {
+      if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY
+	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_RAS_STATE_INFORMATION_FOR_MEMORY_MIRRORING_MIRRORING_MODE
+	  && (system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_REDUNDANCY_FULLY_REDUNDANT
+	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_REDUNDANCY_REDUNDANCY_LOST))
+	{
+	  uint8_t domain_instance_type;
+	  uint8_t instance_id;
+	  char *domain_instance_str;
+	  char *instance_id_str;
+
+	  domain_instance_type = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DOMAIN_INSTANCE_TYPE_BITMASK);
+	  domain_instance_type >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DOMAIN_INSTANCE_TYPE_SHIFT;
+	  
+	  instance_id = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_INSTANCE_ID_BITMASK);
+	  instance_id >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_INSTANCE_ID_SHIFT;
+
+	  if (domain_instance_type == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DOMAIN_INSTANCE_TYPE_LOCAL_MEMORY_MIRRORING_INTRA_SOCKET)
+	    domain_instance_str = "Local memory mirroring domain instance";
+	  else if (domain_instance_type == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DOMAIN_INSTANCE_TYPE_GLOBAL_MEMORY_MIRRORING_INTER_SOCKET)
+	    domain_instance_str = "Global memory mirroring domain instance";
+	  else
+	    domain_instance_str = "Unknown";
+
+	  if (instance_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_INSTANCE_ID_1_2)
+	    instance_id_str = "{MEM1_SLOT, MEM2_SLOT}";
+	  else if (instance_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_INSTANCE_ID_3_4)
+	    instance_id_str = "{MEM3_SLOT, MEM4_SLOT}";
+	  else if (instance_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_INSTANCE_ID_5_6)
+	    instance_id_str = "{MEM5_SLOT, MEM6_SLOT}";
+	  else if (instance_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_INSTANCE_ID_7_8)
+	    instance_id_str = "{MEM7_SLOT, MEM8_SLOT}";
+	  else if (instance_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_INSTANCE_ID_1_4)
+	    instance_id_str = "{MEM1_SLOT, MEM4_SLOT}";
+	  else if (instance_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_INSTANCE_ID_3_2)
+	    instance_id_str = "{MEM3_SLOT, MEM2_SLOT}";
+	  else if (instance_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_INSTANCE_ID_5_8)
+	    instance_id_str = "{MEM5_SLOT, MEM8_SLOT}";
+	  else if (instance_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_INSTANCE_ID_7_6)
+	    instance_id_str = "{MEM7_SLOT, MEM6_SLOT}";
+	  else if (instance_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_INSTANCE_ID_1_3)
+	    instance_id_str = "{MEM1_SLOT, MEM3_SLOT}";
+	  else if (instance_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_INSTANCE_ID_2_4)
+	    instance_id_str = "{MEM2_SLOT, MEM4_SLOT}";
+	  else if (instance_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_INSTANCE_ID_5_7)
+	    instance_id_str = "{MEM5_SLOT, MEM7_SLOT}";
+	  else if (instance_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_INSTANCE_ID_6_8)
+	    instance_id_str = "{MEM6_SLOT, MEM8_SLOT}";
+	  else
+	    instance_id_str = "Unknown";
+	  
+	  snprintf (tmpbuf,
+		    tmpbuflen,
+		    "%s, %s",
+		    domain_instance_str,
+		    instance_id_str);
+	  
+	  return (1);
+	}     
+    }
+  
   return (0);
 }
 
