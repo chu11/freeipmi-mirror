@@ -1,3 +1,7 @@
+2011-12-20  Albert Chu <chu11@llnl.gov>
+
+	* Update documentation for Quanta QSSC-S4R/Appro GB812X-CN
+	
 2011-12-19  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/fru-parse/: Support IPMI_FRU_PARSE_ERR_DEVICE_BUSY error code.

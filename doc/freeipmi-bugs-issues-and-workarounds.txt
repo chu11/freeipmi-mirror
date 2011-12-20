@@ -56,7 +56,7 @@ MSI MS-91D2
 Dell Poweredge 2900
 Dell Poweredge 2950
 Intel S2600JF/Appro 512X
-Appro GB812X-CN
+Quanta QSSC-S4R/Appro GB812X-CN
 
 The remaining motherboards (and subsequent bugs/issues/workarounds)
 listed below are from interaction with users in the community and I
@@ -234,12 +234,12 @@ you specify IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL during that stage
 instead of a real privilege level.  Resolved with a workaround to
 handle this specific situation.
 
-Appro GB812X-CN: The remote BMC incorrectly calculates keys
-using the privilege specified in the open session stage rather than
-the privilege used during the RAKP1 stage.  This can be problematic if
-you specify IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL during that stage
-instead of a real privilege level.  Resolved with a workaround to
-handle this specific situation.
+Quanta QSSC-S4R//Appro GB812X-CN: The remote BMC incorrectly
+calculates keys using the privilege specified in the open session
+stage rather than the privilege used during the RAKP1 stage.  This can
+be problematic if you specify IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL
+during that stage instead of a real privilege level.  Resolved with a
+workaround to handle this specific situation.
 
 Session Issues
 --------------
@@ -459,14 +459,14 @@ flag in a BMC to Remote Console packet.  Not a severe issue, since the
 SOL session will eventually time out, but it isn't clean.  This bug is
 confirmed to be fixed on newer firmware.
 
-Appro GB812X-CN: When a SOL session is closed by another session, the
-initial SOL session is not given a "SOL is deactivating" flag in a BMC
-to Remote Console packet.  Not a severe issue, since the SOL session
-will eventually time out, but it isn't clean.  This bug is confirmed
-to be fixed on newer firmware.
+Quanta QSSC-S4R//Appro GB812X-CN: When a SOL session is closed by
+another session, the initial SOL session is not given a "SOL is
+deactivating" flag in a BMC to Remote Console packet.  Not a severe
+issue, since the SOL session will eventually time out, but it isn't
+clean.  This bug is confirmed to be fixed on newer firmware.
 
-Appro GB812X-CN: SOL payload sizes are reported incorrectly.  Resolved
-with a workaround to skip payload size checks.
+Quanta QSSC-S4R/Appro GB812X-CN: SOL payload sizes are reported
+incorrectly.  Resolved with a workaround to skip payload size checks.
 
 bmc-config
 ----------
