@@ -3,6 +3,8 @@
 	* libfreeipmi/fru-parse/: Support IPMI_FRU_PARSE_ERR_DEVICE_BUSY error code.
 
 	* ipmi-fru/: Do not consider a busy device a fatal error.
+
+	* Document Appro GB812X-CN IPMI compliance issues.
 	
 2011-12-19  Albert Chu <chu11@llnl.gov>
 
