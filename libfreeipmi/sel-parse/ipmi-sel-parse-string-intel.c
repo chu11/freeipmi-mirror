@@ -150,8 +150,11 @@ ipmi_sel_parse_output_intel_event_data1_class_oem (ipmi_sel_parse_ctx_t ctx,
   /* OEM Interpretation
    *
    * Intel S5500WB/Penguin Computing Relion 700
+   * Quanta QSSC-S4R/Appro GB812X-CN
+   * (Quanta motherboard maintains Intel manufacturer ID) 
    */
-  if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S5500WB)
+  if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S5500WB
+      || ctx->product_id == IPMI_INTEL_PRODUCT_ID_QUANTA_QSSC_S4R)
     {
       if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
 	  && ((system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_PCIE_FATAL_SENSOR
@@ -332,8 +335,11 @@ ipmi_sel_parse_output_intel_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
   /* OEM Interpretation
    *
    * Intel S5500WB/Penguin Computing Relion 700
+   * Quanta QSSC-S4R/Appro GB812X-CN
+   * (Quanta motherboard maintains Intel manufacturer ID)
    */
-  if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S5500WB)
+  if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S5500WB
+      || ctx->product_id == IPMI_INTEL_PRODUCT_ID_QUANTA_QSSC_S4R)
     {
       if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
 	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_PCI_SENSOR
@@ -345,7 +351,14 @@ ipmi_sel_parse_output_intel_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
 	  
 	  return (1);
 	}
+    }
 
+  /* OEM Interpretation
+   *
+   * Intel S5500WB/Penguin Computing Relion 700
+   */
+  if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S5500WB)
+    {
       if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
           && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
           && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_MEMORY_ECC_ERROR
@@ -478,8 +491,11 @@ ipmi_sel_parse_output_intel_event_data2_class_oem (ipmi_sel_parse_ctx_t ctx,
   /* OEM Interpretation
    *
    * Intel S5500WB/Penguin Computing Relion 700
+   * Quanta QSSC-S4R/Appro GB812X-CN
+   * (Quanta motherboard maintains Intel manufacturer ID)
    */
-  if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S5500WB)
+  if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S5500WB
+      || ctx->product_id == IPMI_INTEL_PRODUCT_ID_QUANTA_QSSC_S4R)
     {
       if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
 	  && ((system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_PCIE_FATAL_SENSOR
@@ -491,7 +507,14 @@ ipmi_sel_parse_output_intel_event_data2_class_oem (ipmi_sel_parse_ctx_t ctx,
 	  
 	  return (1);
 	}
-  
+    }
+
+  /* OEM Interpretation
+   *
+   * Intel S5500WB/Penguin Computing Relion 700
+   */
+  if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S5500WB)
+    {
       if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
 	  && ((system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_QPI_CORRECTABLE_SENSOR
 	       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QPI_CORRECTABLE_SENSOR)
@@ -736,8 +759,11 @@ ipmi_sel_parse_output_intel_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
   /* OEM Interpretation
    *
    * Intel S5500WB/Penguin Computing Relion 700
+   * Quanta QSSC-S4R/Appro GB812X-CN
+   * * (Quanta motherboard maintains Intel manufacturer ID)
    */
-  if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S5500WB)
+  if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S5500WB
+      || ctx->product_id == IPMI_INTEL_PRODUCT_ID_QUANTA_QSSC_S4R)
     {
       if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
 	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_PCI_SENSOR
@@ -749,7 +775,14 @@ ipmi_sel_parse_output_intel_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
 	  
 	  return (1);
 	}
+    }
 
+  /* OEM Interpretation
+   *
+   * Intel S5500WB/Penguin Computing Relion 700
+   */
+  if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S5500WB)
+    {
       if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
           && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
           && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_MEMORY_ECC_ERROR
@@ -1047,8 +1080,11 @@ ipmi_sel_parse_output_intel_event_data3_class_oem (ipmi_sel_parse_ctx_t ctx,
   /* OEM Interpretation
    *
    * Intel S5500WB/Penguin Computing Relion 700
+   * Quanta QSSC-S4R/Appro GB812X-CN
+   * (Quanta motherboard maintains Intel manufacturer ID)
    */
-  if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S5500WB)
+  if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S5500WB
+      || ctx->product_id == IPMI_INTEL_PRODUCT_ID_QUANTA_QSSC_S4R)
     {
       if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
 	  && ((system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_PCIE_FATAL_SENSOR

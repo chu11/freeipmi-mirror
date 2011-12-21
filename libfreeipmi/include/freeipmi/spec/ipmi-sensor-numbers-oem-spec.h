@@ -76,11 +76,17 @@ extern "C" {
 
 /*
  * Intel S5500WB/Penguin Computing Relion 700
+ * Quanta QSSC-S4R/Appro GB812X-CN
+ * (Quanta motherboard maintains Intel manufacturer ID)
  */
 
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_PCI_SENSOR              0x03
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_PCIE_FATAL_SENSOR       0x04
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_PCIE_CORRECTABLE_SENSOR 0x05
+
+/*
+ * Intel S5500WB/Penguin Computing Relion 700
+ */
 
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_QPI_CORRECTABLE_SENSOR  0x06
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_QPI_NON_FATAL_SENSOR    0x07

@@ -48,16 +48,21 @@ extern "C" {
 
 /*
  * Intel S5500WB/Penguin Computing Relion 700
+ * Quanta QSSC-S4R/Appro GB812X-CN
+ * (Quanta motherboard maintains Intel manufacturer ID)
  */
 
 #define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_FATAL_SENSOR       0x70
 #define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_CORRECTABLE_SENSOR 0x71
+
+/*
+ * Intel S5500WB/Penguin Computing Relion 700
+ */
 #define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QPI_CORRECTABLE_SENSOR  0x72
 #define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QPI_NON_FATAL_SENSOR    0x73
 #define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QPI_FATAL_SENSOR        0x74
 
-/* OEM Interpretation
- *
+/* 
  * Quanta QSSC-S4R/Appro GB812X-CN
  * (Quanta motherboard maintains Intel manufacturer ID)
  */

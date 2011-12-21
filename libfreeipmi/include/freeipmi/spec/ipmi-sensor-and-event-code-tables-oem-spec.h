@@ -317,6 +317,8 @@ extern unsigned int ipmi_sensor_type_oem_fujitsu_config_backup_max_index;
 
 /*
  * Intel S5500WB/Penguin Computing Relion 700
+ * Quanta QSSC-S4R/Appro GB812X-CN
+ * (Quanta motherboard maintains Intel manufacturer ID)
  */
 
 /*
@@ -325,10 +327,12 @@ extern unsigned int ipmi_sensor_type_oem_fujitsu_config_backup_max_index;
  */
 #define IPMI_OEM_INTEL_SPECIFIC_PCIE_FATAL_SENSOR_DATA_LINK_LAYER_PROTOCOL_ERROR 0x00
 #define IPMI_OEM_INTEL_SPECIFIC_PCIE_FATAL_SENSOR_SURPRISE_LINK_DOWN             0x01
+/* achu: Quanta QSSC-S4R/Appro GB812X-CN, "Completer", assume typo */
 #define IPMI_OEM_INTEL_SPECIFIC_PCIE_FATAL_SENSOR_UNEXPECTED_COMPLETION_A        0x02
 #define IPMI_OEM_INTEL_SPECIFIC_PCIE_FATAL_SENSOR_UNSUPPORTED_REQUEST            0x03
 #define IPMI_OEM_INTEL_SPECIFIC_PCIE_FATAL_SENSOR_POISONED_TLP                   0x04
 #define IPMI_OEM_INTEL_SPECIFIC_PCIE_FATAL_SENSOR_FLOW_CONTROL_PROTOCOL          0x05
+/* achu: Quanta QSSC-S4R/Appro GB812X-CN, "Completer", assume typo */
 #define IPMI_OEM_INTEL_SPECIFIC_PCIE_FATAL_SENSOR_COMPLETION_TIMEOUT             0x06
 #define IPMI_OEM_INTEL_SPECIFIC_PCIE_FATAL_SENSOR_COMPLETER_ABORT                0x07
 #define IPMI_OEM_INTEL_SPECIFIC_PCIE_FATAL_SENSOR_RECEIVER_BUFFER_OVERFLOW       0x08
@@ -359,6 +363,10 @@ extern unsigned int ipmi_oem_intel_specific_pci_fatal_sensor_max_index;
 
 extern const char * const ipmi_oem_intel_specific_pci_correctable_sensor[];
 extern unsigned int ipmi_oem_intel_specific_pci_correctable_sensor_max_index;
+
+/*
+ * Intel S5500WB/Penguin Computing Relion 700
+ */
 
 #define IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_CHANNEL_INFORMATION_VALIDITY_BITMASK 0x10
 #define IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_CHANNEL_INFORMATION_VALIDITY_SHIFT   4
@@ -714,6 +722,9 @@ extern unsigned int ipmi_oem_intel_specific_pci_correctable_sensor_max_index;
 #define IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_ERROR_SUB_CODE_SHIFT   0
 
 /* When IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_EVENT_SPECIAL_CODE_MEMORY_HOT_PLUG_GENERIC_INITIALIZATION_ERROR occurs */  
+/* BIST = Built in Self-Test */
+/* SPD = Serial Presence Detect */
+/* CLTT = Closed Loop Thermal Throttling */ 
 #define IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_ERROR_SUB_CODE_MEMORY_BIST_ERROR                  1
 #define IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_ERROR_SUB_CODE_SPD_ERROR                          2
 #define IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_ERROR_SUB_CODE_CLTT_CONFIGURATION_ERROR           3
