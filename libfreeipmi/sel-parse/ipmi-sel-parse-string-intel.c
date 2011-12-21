@@ -198,6 +198,85 @@ ipmi_sel_parse_output_intel_event_data1_class_oem (ipmi_sel_parse_ctx_t ctx,
         return (1);
     }
 
+
+  /* OEM Interpretation
+   *
+   * Quanta QSSC-S4R/Appro GB812X-CN
+   * (Quanta motherboard maintains Intel manufacturer ID) 
+   */
+  if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_QUANTA_QSSC_S4R)
+    {
+      if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QUANTA_QSSC_S4R_CORRECTABLE_ERROR
+	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_QUANTA_QSSC_S4R_SMI_LINK_CRC_ERROR_PERSISTENT)
+	{
+	  char *event_msg_str = NULL;
+	  
+	  if (system_event_record_data->offset_from_event_reading_type_code == IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_CORRECTABLE_MEMORY_ERROR_PERSISTENT_RECOVERABLE_ERROR)
+	    event_msg_str = "Persistent Recoverable Error";
+	  else if (system_event_record_data->offset_from_event_reading_type_code == IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_CORRECTABLE_MEMORY_ERROR_PERSISTENT_PARITY_ALERT)
+	    event_msg_str = "Persistent Parity Alert";
+	  else if (system_event_record_data->offset_from_event_reading_type_code == IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_CORRECTABLE_MEMORY_ERROR_PERSISTENT_PARITY_STATUS)
+	    event_msg_str = "Persistent Parity Status";
+	  else if (system_event_record_data->offset_from_event_reading_type_code == IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_CORRECTABLE_MEMORY_ERROR_SMI_LINK_LANE_FAIL_OVER_EVENT)
+	    event_msg_str = "SMI Link Lane Fail Over (LFO) Event";
+	    
+	    if (event_msg_str)
+	      {
+		snprintf (tmpbuf,
+			  tmpbuflen,
+			  "%s",
+			  event_msg_str);
+		
+		return (1);
+	      }
+	}
+
+      if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QUANTA_QSSC_S4R_UNCORRECTABLE_ERROR
+	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_QUANTA_QSSC_S4R_SMI_LINK_CRC_ERROR_UNCORRECTABLE)
+	{
+	  char *event_msg_str = NULL;
+
+	  if (system_event_record_data->offset_from_event_reading_type_code == IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_UNCORRECTABLE_MEMORY_ERROR_UNCORRECTABLE_CRC_ERROR)
+	    event_msg_str = "Uncorrectable CRC Error";
+	  else if (system_event_record_data->offset_from_event_reading_type_code == IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_UNCORRECTABLE_MEMORY_ERROR_UNCORRECTABLE_ALERT_FRAME)
+	    event_msg_str = "Uncorrectable Alert Frame";
+	    
+	    if (event_msg_str)
+	      {
+		snprintf (tmpbuf,
+			  tmpbuflen,
+			  "%s",
+			  event_msg_str);
+		
+		return (1);
+	      }
+	}
+
+      if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QUANTA_QSSC_S4R_CORRECTABLE_ERROR
+	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_QUANTA_QSSC_S4R_PATROL_SCRUB_ERROR)
+	{
+	  char *event_msg_str = NULL;
+
+	  if (system_event_record_data->offset_from_event_reading_type_code == IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_CORRECTABLE_MEMORY_ERROR_CORRECTABLE_RROR)
+	    event_msg_str = "Correctable Error";
+	  else if (system_event_record_data->offset_from_event_reading_type_code == IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_CORRECTABLE_MEMORY_ERROR_UNCORRECTABLE_ERROR)
+	    event_msg_str = "Uncorrectable Error";
+	    
+	    if (event_msg_str)
+	      {
+		snprintf (tmpbuf,
+			  tmpbuflen,
+			  "%s",
+			  event_msg_str);
+		
+		return (1);
+	      }
+	}
+    }
+
   return (0);
 }
 
