@@ -1148,7 +1148,7 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
        * Inventec 5441/Dell Xanadu II
        * Inventec 5442/Dell Xanadu III
        * Quanta S99Q/Dell FS12-TY
-       * Quanta QSSC-S4R/Appro GB812X-CN
+       * Quanta QSSC-S4R/Appro GB812X-CN (maintains Intel manufacturer ID)
        *
        * Below confirms the Intel Node Manager exists.  We must do
        * this before reading the sensor to determime what type of
