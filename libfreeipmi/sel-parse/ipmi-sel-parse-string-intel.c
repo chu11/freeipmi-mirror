@@ -449,7 +449,7 @@ _ipmi_sel_parse_output_intel_quanta_qssc_s4r_memory_board (ipmi_sel_parse_ctx_t 
 							   struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   uint8_t memory_board;
-  uint8_t memory_board_str;
+  char *memory_board_str;
 
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
@@ -753,6 +753,9 @@ ipmi_sel_parse_output_intel_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
 	  char memory_board_buf[INTEL_EVENT_BUFFER_LENGTH + 1];
 	  char dimm_slot_buf[INTEL_EVENT_BUFFER_LENGTH + 1];
 	  
+	  memset (memory_board_buf, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
+	  memset (dimm_slot_buf, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
+
 	  _ipmi_sel_parse_output_intel_quanta_qssc_s4r_memory_board (ctx,
 								     memory_board_buf,
 								     INTEL_EVENT_BUFFER_LENGTH,
@@ -1435,7 +1438,9 @@ ipmi_sel_parse_output_intel_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
 	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
 	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_QUANTA_QSSC_S4R_RAS_STATE_INFORMATION_FOR_MEMORY_MIRRORING_SPARING_MODE
 	  && (system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_REDUNDANCY_FULLY_REDUNDANT
-	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_REDUNDANCY_REDUNDANCY_LOST))
+	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_REDUNDANCY_REDUNDANCY_LOST)
+	  && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
+	  && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
 	{
 	  uint8_t domain_instance_type;
 	  uint8_t sparing_type;
@@ -1520,6 +1525,79 @@ ipmi_sel_parse_output_intel_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
 	  
 	  return (1);
 	}     
+
+      if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_QUANTA_QSSC_S4R_MEMORY_MISMATCH_CONFIGURATION_ERROR
+	  && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_CONFIGURATION_ERROR
+	  && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
+	  && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
+	{
+	  /* achu: I have no idea what SMI Link# Valid is for, there is no SMI link data in this SEL event
+	   * Is it a typo.  Do they mean memory board?  It's mostly here for documentation.
+	   */
+	  uint8_t smi_link_valid;
+	  uint8_t dimm_slot_valid;
+	  uint8_t error_type;
+	  char *error_type_str;
+	  char memory_board_buf[INTEL_EVENT_BUFFER_LENGTH + 1];
+	  char dimm_slot_buf[INTEL_EVENT_BUFFER_LENGTH + 1];
+	  
+	  memset (memory_board_buf, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
+	  memset (dimm_slot_buf, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
+ 
+	  smi_link_valid = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_SMI_LINK_VALID_BITMASK);
+	  smi_link_valid >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_SMI_LINK_VALID_SHIFT;
+
+	  dimm_slot_valid = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_DIMM_SLOT_VALID_BITMASK);
+	  dimm_slot_valid >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_DIMM_SLOT_VALID_SHIFT;
+
+	  error_type = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_ERROR_TYPE_BITMASK);
+	  error_type >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_ERROR_TYPE_SHIFT;
+
+	  if (error_type == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_ERROR_TYPE_MIRROR)
+	    error_type_str = "Mirror";
+	  else if (error_type == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_ERROR_TYPE_SPARE)
+	    error_type_str = "Spare";
+	  else if (error_type == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_ERROR_TYPE_INTERLEAVE)
+	    error_type_str = "Interleave";
+	  else if (error_type == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_ERROR_TYPE_HEMISPHERE)
+	    error_type_str = "Hemisphere";
+	  else if (error_type == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_ERROR_TYPE_POPULATION)
+	    error_type_str = "Population";
+	  else if (error_type == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_ERROR_TYPE_DEVICE_MISMATCH)
+	    error_type_str = "Device Mismatch";
+	  else
+	    error_type_str = "Unknown";
+
+	  _ipmi_sel_parse_output_intel_quanta_qssc_s4r_memory_board (ctx,
+								     memory_board_buf,
+								     INTEL_EVENT_BUFFER_LENGTH,
+								     flags,
+								     system_event_record_data);
+	  
+	  /* Technically Intel docs do not say 0 vs. 1 for true vs. false.  Gotta guess */
+	  if (dimm_slot_valid)
+	    _ipmi_sel_parse_output_intel_quanta_qssc_s4r_dimm_slot (ctx,
+								    dimm_slot_buf,
+								    INTEL_EVENT_BUFFER_LENGTH,
+								    flags,
+								    system_event_record_data);
+
+	  if (ipmi_sel_parse_string_snprintf (buf,
+					      buflen,
+					      wlen,
+					      "Error Type = %s, %s%s%s",
+					      error_type_str,
+					      memory_board_buf,
+					      dimm_slot_valid ? ", " : "",
+					      dimm_slot_buf))
+	    (*oem_rv) = 1;
+	  else
+	    (*oem_rv) = 0;
+	  
+	  return (1);
+	}
     }
 
   return (0);
