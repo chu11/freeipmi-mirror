@@ -11,6 +11,7 @@ o In ipmi-raw, for file/stdin input, output line number when there is
 o In ipmi-pef-config, fix configuration bug for Enable_PEF_Event_Messages.
 o In ipmi-sensors, support 'ignoreauthcode' workaround option.
 o In ipmi-fru, do not consider a busy device a fatal error. 
+o In ipmi-sel, fix several OEM specific event output bugs.
   
 Libraries
 ---------
