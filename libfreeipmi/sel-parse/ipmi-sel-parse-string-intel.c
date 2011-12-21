@@ -564,7 +564,7 @@ _ipmi_sel_parse_output_intel_quanta_qssc_s4r_memory_board (ipmi_sel_parse_ctx_t 
 
   snprintf (tmpbuf,
 	    tmpbuflen,
-	    "Memory Board = %s",
+	    "%s",
 	    memory_board_str);
 }
 
@@ -612,8 +612,44 @@ _ipmi_sel_parse_output_intel_quanta_qssc_s4r_dimm_slot (ipmi_sel_parse_ctx_t ctx
   
   snprintf (tmpbuf,
 	    tmpbuflen,
-	    "DIMM Slot = %s",
+	    "%s",
 	    dimm_slot_str);
+}
+
+static void
+_ipmi_sel_parse_output_intel_quanta_qssc_s4r_smi_link (ipmi_sel_parse_ctx_t ctx,
+							char *tmpbuf,
+							unsigned int tmpbuflen,
+							unsigned int flags,
+							struct ipmi_sel_system_event_record_data *system_event_record_data)
+{
+  uint8_t smi_link;
+  char *smi_link_str;
+
+  assert (ctx);
+  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL);
+  assert (tmpbuf);
+  assert (tmpbuflen);
+  assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
+  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (system_event_record_data);
+  assert (system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
+  
+  smi_link = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_SMI_LINK_BITMASK);
+  smi_link >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_SMI_LINK_SHIFT;
+
+  if (smi_link == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_SMI_LINK_0)
+    smi_link_str = "SMI_LINK0";
+  else if (smi_link == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_SMI_LINK_1)
+    smi_link_str = "SMI_LINK1";
+  else
+    smi_link_str = "Unknown";
+  
+  snprintf (tmpbuf,
+	    tmpbuflen,
+	    "%s",
+	    smi_link_str);
 }
 
 /* return (0) - no OEM match
@@ -823,18 +859,23 @@ ipmi_sel_parse_output_intel_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
 	  return (1);
 	}     
 
-      if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
-	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
-	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_QUANTA_QSSC_S4R_MEMORY_ECC_ERROR
-	  && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_CORRECTABLE_MEMORY_ERROR
-	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_UNCORRECTABLE_MEMORY_ERROR))
+      if ((system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+	   && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+	   && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_QUANTA_QSSC_S4R_MEMORY_ECC_ERROR
+	   && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_CORRECTABLE_MEMORY_ERROR
+	       || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_UNCORRECTABLE_MEMORY_ERROR))
+	  || (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QUANTA_QSSC_S4R_CORRECTABLE_ERROR
+	      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+	      && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_QUANTA_QSSC_S4R_PATROL_SCRUB_ERROR
+	      && (system_event_record_data->offset_from_event_reading_type_code == IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_CORRECTABLE_MEMORY_ERROR_CORRECTABLE_RROR
+		  || system_event_record_data->offset_from_event_reading_type_code == IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_CORRECTABLE_MEMORY_ERROR_UNCORRECTABLE_ERROR))) 
 	{
 	  char memory_board_buf[INTEL_EVENT_BUFFER_LENGTH + 1];
 	  char dimm_slot_buf[INTEL_EVENT_BUFFER_LENGTH + 1];
 	  
 	  memset (memory_board_buf, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
 	  memset (dimm_slot_buf, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
-
+	  
 	  _ipmi_sel_parse_output_intel_quanta_qssc_s4r_memory_board (ctx,
 								     memory_board_buf,
 								     INTEL_EVENT_BUFFER_LENGTH,
@@ -852,9 +893,50 @@ ipmi_sel_parse_output_intel_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
 		    "Memory Board = %s, DIMM Slot = %s",
 		    memory_board_buf,
 		    dimm_slot_buf);
+	  
+	  return (1);
+	}
+
+      if ((system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QUANTA_QSSC_S4R_CORRECTABLE_ERROR
+	   && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+	   && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_QUANTA_QSSC_S4R_SMI_LINK_CRC_ERROR_PERSISTENT
+	   && (system_event_record_data->offset_from_event_reading_type_code == IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_CORRECTABLE_MEMORY_ERROR_PERSISTENT_RECOVERABLE_ERROR
+	       || system_event_record_data->offset_from_event_reading_type_code == IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_CORRECTABLE_MEMORY_ERROR_PERSISTENT_PARITY_ALERT
+	       || system_event_record_data->offset_from_event_reading_type_code == IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_CORRECTABLE_MEMORY_ERROR_PERSISTENT_PARITY_STATUS
+	       || system_event_record_data->offset_from_event_reading_type_code == IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_CORRECTABLE_MEMORY_ERROR_SMI_LINK_LANE_FAIL_OVER_EVENT))
+	  || (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QUANTA_QSSC_S4R_UNCORRECTABLE_ERROR
+	      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+	      && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_QUANTA_QSSC_S4R_SMI_LINK_CRC_ERROR_UNCORRECTABLE
+	      && (system_event_record_data->offset_from_event_reading_type_code == IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_UNCORRECTABLE_MEMORY_ERROR_UNCORRECTABLE_CRC_ERROR
+		  || system_event_record_data->offset_from_event_reading_type_code == IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_UNCORRECTABLE_MEMORY_ERROR_UNCORRECTABLE_ALERT_FRAME)))
+	{
+	  char memory_board_buf[INTEL_EVENT_BUFFER_LENGTH + 1];
+	  char smi_link_buf[INTEL_EVENT_BUFFER_LENGTH + 1];
+	  
+	  memset (memory_board_buf, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
+	  memset (smi_link_buf, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
+	  
+	  _ipmi_sel_parse_output_intel_quanta_qssc_s4r_memory_board (ctx,
+								     memory_board_buf,
+								     INTEL_EVENT_BUFFER_LENGTH,
+								     flags,
+								     system_event_record_data);
+
+	  _ipmi_sel_parse_output_intel_quanta_qssc_s4r_smi_link (ctx,
+								 smi_link_buf,
+								 INTEL_EVENT_BUFFER_LENGTH,
+								 flags,
+								 system_event_record_data);
+	  
+	  snprintf (tmpbuf,
+                    tmpbuflen,
+		    "Memory Board = %s, SMI Link = %s",
+		    memory_board_buf,
+		    smi_link_buf);
 
 	  return (1);
 	}
+
     }
   
   return (0);
@@ -1666,10 +1748,10 @@ ipmi_sel_parse_output_intel_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
 	  if (ipmi_sel_parse_string_snprintf (buf,
 					      buflen,
 					      wlen,
-					      "Error Type = %s, %s%s%s",
+					      "Error Type = %s, Memory Board = %s%s%s",
 					      error_type_str,
 					      memory_board_buf,
-					      dimm_slot_valid ? ", " : "",
+					      dimm_slot_valid ? ", DIMM Slot = " : "",
 					      dimm_slot_buf))
 	    (*oem_rv) = 1;
 	  else
