@@ -1159,6 +1159,7 @@ ipmi_sel_parse_output_intel_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
 	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
 	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS
 	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_POST_ERROR
+	  && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_SYSTEM_FIRMWARE_ERROR
 	  && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
 	  && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
 	{
@@ -1205,7 +1206,7 @@ ipmi_sel_parse_output_intel_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
 	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PASSWORDS_CLEARED_BY_JUMPER)
 	    error_code_str = "Passwords cleared by jumper";
 	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PASSWORD_CLEAR_JUMPER_IS_SET)
-	    error_code_str = "Password clear Jumper is Set";
+	    error_code_str = "Password clear jumper is set";
 	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PROCESSOR_01_UNABLE_TO_APPLY_MICROCODE_UPDATE)
 	    error_code_str = "Processor 01 unable to apply microcode update";
 	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PROCESSOR_02_UNABLE_TO_APPLY_MICROCODE_UPDATE)
@@ -1862,6 +1863,109 @@ ipmi_sel_parse_output_intel_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
 	  else
 	    (*oem_rv) = 0;
 	  
+	  return (1);
+	}
+
+      if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_BIOS_SMI_HANDLER
+	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_POST_ERROR
+	  && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_SYSTEM_FIRMWARE_ERROR
+	  && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
+	  && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
+	{
+	  uint16_t error_code;
+	  char *error_code_str = NULL;
+          
+	  error_code = system_event_record_data->event_data2;
+	  error_code |= (system_event_record_data->event_data3 << 8);
+          
+	  if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_CMOS_DATE_TIME_NOT_SET)
+	    error_code_str = "CMOS Date/Time not set";
+	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_PASSWORD_CHECK_FAILED)
+	    error_code_str = "Password check failed";
+	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_KEYBOARD_LOCKED_ERROR)
+	    error_code_str = "Keyboard locked error";
+	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_KEYBOARD_STUCK_KEY_ERROR)
+	    error_code_str = "Keyboard stuck key error";
+	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_THE_SAS_RAID_FIRMWARE_CANNOT_RUN_PROPERLY)
+	    error_code_str = "The SAS RAID firmware can not run properly. The user should attempt to reflash the firmware";
+	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_PCI_PARITY_ERROR)
+	    error_code_str = "PCI Parity Error (PERR)";
+	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_PCI_RESOURCE_CONFLICT_ERROR)
+	    error_code_str = "PCI resource conflict error";
+	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_PCI_OUT_OF_RESOURCES_ERROR)
+	    error_code_str = "PCI out of resources error";
+	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_PROCESSOR_CACHE_SIZE_MISMATCH_DETECTED)
+	    error_code_str = "Processor cache size mismatch detected";
+	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_PROCESSOR_STEPPING_MISMATCH)
+	    error_code_str = "Processor stepping mismatch";
+	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_PROCESSOR_FAMILY_MISMATCH_DETECTED)
+	    error_code_str = "Processor family mismatch detected";
+	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_PROCESSOR_INTEL_QPI_SPEED_MISMATCH)
+	    error_code_str = "Processor Intel(R) QPI speed mismatch";
+	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_PROCESSOR_AND_CHIPSET_STEPPING_CONFIGURATION_IS_UNSUPPORTED)
+	    error_code_str = "Processor and chipset stepping configuration is unsupported";
+	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_CMOS_NVRAM_CONFIGURATION_CLEARED)
+	    error_code_str = "CMOS/NVRAM configuration cleared";
+	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_PASSWORDS_CLEARED_BY_JUMPER)
+	    error_code_str = "Passwords cleared by jumper";
+	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_PASSWORD_CLEAR_JUMPER_IS_SET)
+	    error_code_str = "Password clear jumper is set";
+	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_PROCESSOR_DISABLED)
+ 	    error_code_str = "Processor Disabled";
+	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_FRB_3_TIMEOUT)
+ 	    error_code_str = "Processor FRB-3 timeout";
+	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_PROCESSOR_01_UNABLE_TO_APPLY_MICROCODE_UPDATE)
+	    error_code_str = "Processor 01 unable to apply microcode update";
+	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_PROCESSOR_02_UNABLE_TO_APPLY_MICROCODE_UPDATE)
+	    error_code_str = "Processor 02 unable to apply microcode update";
+	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_PROCESSOR_03_UNABLE_TO_APPLY_MICROCODE_UPDATE)
+	    error_code_str = "Processor 03 unable to apply microcode update";
+	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_PROCESSOR_04_UNABLE_TO_APPLY_MICROCODE_UPDATE)
+	    error_code_str = "Processor 04 unable to apply microcode update";
+	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_PROCESSOR_BUILD_IN_SELF_TEST_FAILURE)
+	    error_code_str = "Processor Build-In Self Test (BIST) failure";
+	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_PROCESSOR_MICROCODE_UPDATE_NOT_FOUND)
+	    error_code_str = "Processor microcode update not found";
+	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_WATCHDOG_TIMER_FAILED_ON_LAST_BOOT)
+	    error_code_str = "Watchdog timer failed on last boot";
+	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_OS_BOOT_WATCHDOG_TIMER_FAILURE)
+	    error_code_str = "OS boot watchdog timer failure";
+	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_BASEBOARD_MANAGEMENT_CONTROLLER_FAILED_SELF_TEST)
+	    error_code_str = "Baseboard Management Controller failed self-test";
+	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_BASEBOARD_MANAGEMENT_CONTROLLER_FAILED_TO_RESPOND)
+	    error_code_str = "Baseboard Management Controller failed to respond";
+	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_BASEBOARD_MANAGEMENT_CONTROLLER_IN_UPDATE_MODE)
+	    error_code_str = "Baseboard Management Controller in update mode";
+	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_BASEBOARD_MANAGEMENT_CONTROLLER_SENSOR_DATA_RECORD_EMPTY)
+	    error_code_str = "Baseboard Management Controller Sensor Data Record empty";
+	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_BASEBOARD_MANAGEMENT_CONTROLLER_SYSTEM_EVENT_LOG_FULL)
+	    error_code_str = "Baseboard Management Controller System event log full";
+	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_CHIPSET_RECLAIM_OF_NON_CRITICAL_VARIABLES_COMPLETE)
+	    error_code_str = "Chipset Reclaim of non critical variables complete";
+	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TPM_DEVICE_NOT_DETECTED)
+	    error_code_str = "TPM device not detected";
+	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TPM_DEVICE_MISSING_OR_NOT_RESPONDING)
+	    error_code_str = "TPM device missing or not responding";
+	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TPM_DEVICE_FAILURE)
+	    error_code_str = "TPM device failure";
+	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TPM_DEVICE_FAILED_SELF_TEST)
+	    error_code_str = "TPM device failed self test";
+	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_MEMORY_WAS_NOT_CONFIGURED_FOR_THE_SELECTED_MEMORY_RAS_CONFIGURATION)
+	    error_code_str = "Memory was not configured for the selected Memory RAS configuration";
+	  else
+	    error_code_str = "Undefined Post Error";
+
+	  if (ipmi_sel_parse_string_snprintf (buf,
+					      buflen,
+					      wlen,
+					      "%s",
+					      error_code_str))
+	    (*oem_rv) = 1;
+	  else
+	    (*oem_rv) = 0;
+      
 	  return (1);
 	}
     }
