@@ -98,9 +98,12 @@ ipmi_sel_parse_output_intel_sensor_name (ipmi_sel_parse_ctx_t ctx,
    *
    * Intel S5500WB/Penguin Computing Relion 700
    * Intel S2600JF/Appro 512X
+   * Quanta QSSC-S4R/Appro GB812X-CN
+   * (Quanta motherboard maintains Intel manufacturer ID)
    */
   if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S5500WB
-      || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600JF)
+      || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600JF
+      || ctx->product_id == IPMI_INTEL_PRODUCT_ID_QUANTA_QSSC_S4R)
     {
       int nmret;
 
@@ -181,9 +184,12 @@ ipmi_sel_parse_output_intel_event_data1_class_oem (ipmi_sel_parse_ctx_t ctx,
    *
    * Intel S5500WB/Penguin Computing Relion 700
    * Intel S2600JF/Appro 512X
+   * Quanta QSSC-S4R/Appro GB812X-CN
+   * (Quanta motherboard maintains Intel manufacturer ID)
    */
   if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S5500WB
-      || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600JF)
+      || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600JF
+      || ctx->product_id == IPMI_INTEL_PRODUCT_ID_QUANTA_QSSC_S4R)
     {
       int nmret;
 
@@ -530,9 +536,12 @@ ipmi_sel_parse_output_intel_event_data2_class_oem (ipmi_sel_parse_ctx_t ctx,
    *
    * Intel S5500WB/Penguin Computing Relion 700
    * Intel S2600JF/Appro 512X
+   * Quanta QSSC-S4R/Appro GB812X-CN
+   * (Quanta motherboard maintains Intel manufacturer ID)
    */
   if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S5500WB
-      || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600JF)
+      || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600JF
+      || ctx->product_id == IPMI_INTEL_PRODUCT_ID_QUANTA_QSSC_S4R)
     {
       int nmret;
 
@@ -1101,9 +1110,12 @@ ipmi_sel_parse_output_intel_event_data3_class_oem (ipmi_sel_parse_ctx_t ctx,
    *
    * Intel S5500WB/Penguin Computing Relion 700
    * Intel S2600JF/Appro 512X
+   * Quanta QSSC-S4R/Appro GB812X-CN
+   * (Quanta motherboard maintains Intel manufacturer ID)
    */
   if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S5500WB
-      || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600JF)
+      || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600JF
+      || ctx->product_id == IPMI_INTEL_PRODUCT_ID_QUANTA_QSSC_S4R)
     {
       int nmret;
 
@@ -1883,7 +1895,7 @@ ipmi_sel_parse_output_intel_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
 	  uint16_t error_code;
 	  char *error_code_str = NULL;
 	  char error_code_buf[INTEL_EVENT_BUFFER_LENGTH + 1];
-	  uint8_t error_code_type;
+	  uint16_t error_code_type;
 
 	  memset (error_code_buf, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
 
@@ -1969,9 +1981,9 @@ ipmi_sel_parse_output_intel_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
 	    error_code_str = "Memory was not configured for the selected Memory RAS configuration";
 	  else if (error_code_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY)
 	    {
-	      uint8_t memory_error_code;
-	      uint8_t cpu_socket;
-	      uint8_t dimm_slot;
+	      uint16_t memory_error_code;
+	      uint16_t cpu_socket;
+	      uint16_t dimm_slot;
 	      char *memory_error_code_str;
  	      char *cpu_socket_str;
  	      char *dimm_slot_str;
