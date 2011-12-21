@@ -33,6 +33,10 @@ asf
 ---
 support asf base protocol stuff in addition to IPMI?
 
+libfreeipmi/sel-parse, ipmi-sensors
+-----------------------------------
+re-org?  Need to split into individual mobo files?  Getting big.
+
 ipmi-sel
 --------
 binary search like mechanism to make --display faster
