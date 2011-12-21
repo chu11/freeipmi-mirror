@@ -6,7 +6,7 @@
 2011-12-21  Albert Chu <chu11@llnl.gov>
 
 	* Update/fix/remove OEM extension download links
-
+	
 2011-12-20  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/util/ipmi-sensor-and-event-code-tables-util.c (ipmi_get_oem_specific_message):
@@ -16,11 +16,11 @@
 	libfreeipmi/include/freeipmi/spec/ipmi-slave-address-oem-spec.h:
 	Remove IPMI_GENERATOR_ID_OEM_INTEL_BIOS_POST macro, which was only
 	supposed to be an example in Intel documentation.
-
+	
 2011-12-20  Albert Chu <chu11@llnl.gov>
 
 	* Branch Release-1_1_0_branch for FreeIPMI 1.1.0 stable branch 
-
+	
 2011-12-20  Albert Chu <chu11@llnl.gov>
 
 	* Update documentation for Quanta QSSC-S4R/Appro GB812X-CN
