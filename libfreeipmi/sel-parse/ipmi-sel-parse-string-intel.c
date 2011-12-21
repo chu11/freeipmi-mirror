@@ -639,6 +639,29 @@ _ipmi_sel_parse_output_intel_quanta_qssc_s4r_memory_board (ipmi_sel_parse_ctx_t 
 	    memory_board_str);
 }
 
+static char *
+_ipmi_sel_parse_output_intel_quanta_qssc_s4r_dimm_slot_str (uint8_t dimm_slot)
+{
+  if (dimm_slot == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DIMM_SLOT_1B)
+    return "DIMM_1/B";
+  else if (dimm_slot == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DIMM_SLOT_1A)
+    return "DIMM_1/A";
+  else if (dimm_slot == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DIMM_SLOT_2B)
+    return "DIMM_2/B";
+  else if (dimm_slot == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DIMM_SLOT_2A)
+    return "DIMM_2/A";
+  else if (dimm_slot == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DIMM_SLOT_1D)
+    return "DIMM_1/D";
+  else if (dimm_slot == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DIMM_SLOT_1C)
+    return "DIMM_1/C";
+  else if (dimm_slot == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DIMM_SLOT_2D)
+    return "DIMM_2/D";
+  else if (dimm_slot == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DIMM_SLOT_2C)
+    return "DIMM_2/C";
+  else
+    return "Unknown";
+}
+
 static void
 _ipmi_sel_parse_output_intel_quanta_qssc_s4r_dimm_slot (ipmi_sel_parse_ctx_t ctx,
 							char *tmpbuf,
@@ -662,25 +685,8 @@ _ipmi_sel_parse_output_intel_quanta_qssc_s4r_dimm_slot (ipmi_sel_parse_ctx_t ctx
   dimm_slot = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DIMM_SLOT_BITMASK);
   dimm_slot >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DIMM_SLOT_SHIFT;
 
-  if (dimm_slot == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DIMM_SLOT_1B)
-    dimm_slot_str = "DIMM_1/B";
-  else if (dimm_slot == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DIMM_SLOT_1A)
-    dimm_slot_str = "DIMM_1/A";
-  else if (dimm_slot == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DIMM_SLOT_2B)
-    dimm_slot_str = "DIMM_2/B";
-  else if (dimm_slot == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DIMM_SLOT_2A)
-    dimm_slot_str = "DIMM_2/A";
-  else if (dimm_slot == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DIMM_SLOT_1D)
-    dimm_slot_str = "DIMM_1/D";
-  else if (dimm_slot == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DIMM_SLOT_1C)
-    dimm_slot_str = "DIMM_1/C";
-  else if (dimm_slot == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DIMM_SLOT_2D)
-    dimm_slot_str = "DIMM_2/D";
-  else if (dimm_slot == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DIMM_SLOT_2C)
-    dimm_slot_str = "DIMM_2/C";
-  else
-    dimm_slot_str = "Unknown";
-  
+  dimm_slot_str = _ipmi_sel_parse_output_intel_quanta_qssc_s4r_dimm_slot_str (dimm_slot);
+ 
   snprintf (tmpbuf,
 	    tmpbuflen,
 	    "%s",
@@ -1876,10 +1882,17 @@ ipmi_sel_parse_output_intel_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
 	{
 	  uint16_t error_code;
 	  char *error_code_str = NULL;
-          
+	  char error_code_buf[INTEL_EVENT_BUFFER_LENGTH + 1];
+	  uint8_t error_code_type;
+
+	  memset (error_code_buf, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
+
 	  error_code = system_event_record_data->event_data2;
 	  error_code |= (system_event_record_data->event_data3 << 8);
-          
+
+	  error_code_type = (error_code & IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_BITMASK);
+	  error_code_type >>= IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_SHIFT;
+
 	  if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_CMOS_DATE_TIME_NOT_SET)
 	    error_code_str = "CMOS Date/Time not set";
 	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_PASSWORD_CHECK_FAILED)
@@ -1954,6 +1967,63 @@ ipmi_sel_parse_output_intel_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
 	    error_code_str = "TPM device failed self test";
 	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_MEMORY_WAS_NOT_CONFIGURED_FOR_THE_SELECTED_MEMORY_RAS_CONFIGURATION)
 	    error_code_str = "Memory was not configured for the selected Memory RAS configuration";
+	  else if (error_code_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY)
+	    {
+	      uint8_t memory_error_code;
+	      uint8_t cpu_socket;
+	      uint8_t dimm_slot;
+	      char *memory_error_code_str;
+ 	      char *cpu_socket_str;
+ 	      char *dimm_slot_str;
+
+	      memory_error_code = (error_code & IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY_ERROR_CODE_BITMASK);
+	      memory_error_code >>= IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY_ERROR_CODE_SHIFT;
+	      
+	      cpu_socket = (error_code & IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY_CPU_SOCKET_BITMASK);
+	      cpu_socket >>= IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY_CPU_SOCKET_SHIFT;
+	      
+	      dimm_slot = (error_code & IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY_DIMM_SLOT_BITMASK);
+	      dimm_slot >>= IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY_DIMM_SLOT_SHIFT;
+	      
+	      if (memory_error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY_ERROR_CODE_MEMORY_INVALID_TYPE_ERROR)
+		memory_error_code_str = "Memory invalid type error";
+	      else if (memory_error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY_ERROR_CODE_MEMORY_DISABLED)
+		memory_error_code_str = "Memory disabled";
+	      else if (memory_error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY_ERROR_CODE_MEMORY_MISMATCH_ERROR)
+		memory_error_code_str = "Memory mismatch error";
+	      else if (memory_error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY_ERROR_CODE_MEMORY_TRAINING_ERROR)
+		memory_error_code_str = "Memory Training Failed";
+	      else if (memory_error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY_ERROR_CODE_TOO_MANY_DIMM_TYPES)
+		memory_error_code_str = "Too many DIMM Types";
+	      else if (memory_error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY_ERROR_CODE_MEMORY_BIST_FAILED)
+		memory_error_code_str = "Memory BIST Failed";
+	      else if (memory_error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY_ERROR_CODE_SPD_FAILED)
+		memory_error_code_str = "SPD Failed";
+	      else
+		memory_error_code_str = "Unknown Memory Failure";
+	      
+	      if (cpu_socket == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY_CPU_SOCKET_1)
+		cpu_socket_str = "CPU_1";
+	      else if (cpu_socket == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY_CPU_SOCKET_2)
+		cpu_socket_str = "CPU_2";
+	      else if (cpu_socket == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY_CPU_SOCKET_3)
+		cpu_socket_str = "CPU_3";
+	      else if (cpu_socket == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY_CPU_SOCKET_4)
+		cpu_socket_str = "CPU_4";
+	      else
+		cpu_socket_str = "Unknown CPU Socket";
+	      
+	      dimm_slot_str = _ipmi_sel_parse_output_intel_quanta_qssc_s4r_dimm_slot_str (dimm_slot);
+	      
+	      snprintf (error_code_buf,
+			INTEL_EVENT_BUFFER_LENGTH,
+			"%s, CPU Socket = %s, DIMM Slot = %s",
+			memory_error_code_str,
+			cpu_socket_str,
+			dimm_slot_str);
+
+	      error_code_str = error_code_buf;
+	    }
 	  else
 	    error_code_str = "Undefined Post Error";
 
