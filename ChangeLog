@@ -1,5 +1,10 @@
 2011-12-20  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/util/ipmi-sensor-and-event-code-tables-util.c (ipmi_get_oem_specific_message):
+	Fix bug loading incorrect tables.
+	
+2011-12-20  Albert Chu <chu11@llnl.gov>
+
 	* Branch Release-1_1_0_branch for FreeIPMI 1.1.0 stable branch 
 	
 2011-12-20  Albert Chu <chu11@llnl.gov>
