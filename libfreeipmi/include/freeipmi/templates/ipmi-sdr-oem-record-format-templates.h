@@ -42,8 +42,6 @@ FIID_FIELD_LENGTH_VARIABLE - field length is variable for the number of bits lis
 /*
  * Intel Node Manager
  *
- * http://download.intel.com/support/motherboards/server/s5500wb/sb/s5500wb_tps_1_0.pdf
- * 
  * For Intel Chips, not just Intel Motherboards.  Confirmed for:
  *
  * Intel S5500WB/Penguin Computing Relion 700

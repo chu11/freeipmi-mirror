@@ -1140,8 +1140,6 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
        *
        * Intel Node Manager
        *
-       * http://download.intel.com/support/motherboards/server/s5500wb/sb/s5500wb_tps_1_0.pdf
-       * 
        * For Intel Chips, not just Intel Motherboards.  Confirmed for:
        *
        * Intel S5500WB/Penguin Computing Relion 700
