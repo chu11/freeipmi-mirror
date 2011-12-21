@@ -2390,7 +2390,9 @@ _detailed_output_oem_record (ipmi_sensors_state_data_t *state_data,
    */
   if (state_data->prog_data->args->interpret_oem_data
       && ((state_data->oem_data.manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL
-           && state_data->oem_data.product_id == IPMI_INTEL_PRODUCT_ID_S5500WB)
+           && (state_data->oem_data.product_id == IPMI_INTEL_PRODUCT_ID_S5500WB
+	       || state_data->oem_data.product_id == IPMI_INTEL_PRODUCT_ID_S2600JF
+	       || state_data->oem_data.product_id == IPMI_INTEL_PRODUCT_ID_QUANTA_QSSC_S4R))
           || (state_data->oem_data.manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
               && (state_data->oem_data.product_id == IPMI_INVENTEC_PRODUCT_ID_5441
                   || state_data->oem_data.product_id == IPMI_INVENTEC_PRODUCT_ID_5442))
@@ -2406,7 +2408,7 @@ _detailed_output_oem_record (ipmi_sensors_state_data_t *state_data,
       uint8_t nm_operational_capabilities_sensor_number;
       uint8_t nm_alert_threshold_exceeded_sensor_number;
       int ret;
-
+      
       if ((ret = ipmi_sensors_oem_parse_intel_node_manager (state_data,
                                                             sdr_record,
                                                             sdr_record_len,
