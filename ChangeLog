@@ -3,6 +3,9 @@
 	* libfreeipmi/: Support Quanta QSSC-S4R/Appro GB812X-CN OEM SEL
 	Events.
 
+	* ipmi-sensors/: Re-organize code for future growth.  Most
+	notably, split up OEM extensions into individual vendor files.
+
 2011-12-21  Albert Chu <chu11@llnl.gov>
 
 	* Update/fix/remove OEM extension download links
