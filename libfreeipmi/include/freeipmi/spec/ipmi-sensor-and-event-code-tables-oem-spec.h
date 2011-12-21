@@ -437,7 +437,10 @@ extern unsigned int ipmi_oem_intel_specific_pci_correctable_sensor_max_index;
 #define IPMI_OEM_INTEL_EVENT_DATA3_FUNCTION_NUMBER_SHIFT   0
 
 /*
- * http://download.intel.com/support/motherboards/server/s5500wb/sb/s5500wb_tps_r1_7.pdf
+ *
+ * Intel Server Board S5500WB Technical Product Specification
+ *
+ * http://download.intel.com/support/motherboards/server/s5500wb/sb/s5500wb_tps_r1_8.pdf
  */
 
 #define IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_CMOS_DATE_TIME_NOT_SET                                                             0x0012
@@ -568,8 +571,6 @@ extern unsigned int ipmi_oem_intel_specific_pci_correctable_sensor_max_index;
 
 /*
  * Intel Node Manager
- *
- * http://download.intel.com/support/motherboards/server/s5500wb/sb/s5500wb_tps_1_0.pdf
  *
  * For Intel Chips, not just Intel Motherboards.  Confirmed for:
  *

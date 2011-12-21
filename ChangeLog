@@ -1,3 +1,7 @@
+2011-12-21  Albert Chu <chu11@llnl.gov>
+
+	* Update/fix/remove OEM extension download links
+	
 2011-12-20  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/util/ipmi-sensor-and-event-code-tables-util.c (ipmi_get_oem_specific_message):
