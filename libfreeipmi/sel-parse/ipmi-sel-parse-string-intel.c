@@ -390,6 +390,61 @@ ipmi_sel_parse_output_intel_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
 
 	  return (1);
 	}
+
+      if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_SLOT_CONNECTOR
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_QUANTA_QSSC_S4R_MEMORY_BOARD_STATE
+	  && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_SLOT_CONNECTOR_FAULT_STATUS_ASSERTED)
+	{
+	  uint8_t event_special_code;
+	  char *event_special_code_str; 
+	  uint8_t error_sub_code;
+	  char *error_sub_code_str = NULL;
+
+	  event_special_code = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_EVENT_SPECIAL_CODE_BITMASK);
+	  event_special_code >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_EVENT_SPECIAL_CODE_SHIFT;
+	  
+	  error_sub_code = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_ERROR_SUB_CODE_BITMASK);
+	  error_sub_code >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_ERROR_SUB_CODE_SHIFT;
+	  
+	  if (event_special_code == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_EVENT_SPECIAL_CODE_INVALID_INFORMATION)
+	    event_special_code_str = "Invalid Information"; 
+	  else if (event_special_code == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_EVENT_SPECIAL_CODE_MEMORY_BOARD_HOT_REPLACED_WITH_MISMATCHED_OR_FAULTY_MEMORY)
+	    event_special_code_str = "Memory Board hot-replaced with mismatched or faulty memory";
+	  else if (event_special_code == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_EVENT_SPECIAL_CODE_MEMORY_HOT_PLUG_GENERIC_INITIALIZATION_ERROR)
+	    event_special_code_str = "Memory Hot-plug generic initialization error";
+	  else if (event_special_code == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_EVENT_SPECIAL_CODE_MEMORY_HOT_PLUG_TIMEOUT)
+	    event_special_code_str = "Memory Hot-plug Timeout";
+	  else if (event_special_code == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_EVENT_SPECIAL_CODE_USER_INITIATED_CANCELATION)
+	    event_special_code_str = "User-initiated cancelation";
+	  else
+	    event_special_code_str = "Unknown";
+
+	  if (event_special_code == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_EVENT_SPECIAL_CODE_MEMORY_HOT_PLUG_GENERIC_INITIALIZATION_ERROR)
+	    {
+	      if (error_sub_code == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_ERROR_SUB_CODE_MEMORY_BIST_ERROR)
+		error_sub_code_str = "Memory BIST Error";
+	      else if (error_sub_code == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_ERROR_SUB_CODE_SPD_ERROR)
+		error_sub_code_str = "SPD Error";
+	      else if (error_sub_code == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_ERROR_SUB_CODE_CLTT_CONFIGURATION_ERROR)
+		error_sub_code_str = "CLTT Configuration Error";
+	      else if (error_sub_code == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_ERROR_SUB_CODE_POPULATION_RULE_ERROR)
+		error_sub_code_str = "Population Rule Error";
+	      else if (error_sub_code == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_ERROR_SUB_CODE_MISMATCHED_DIMM_ERROR)
+		error_sub_code_str = "Mismatched DIMM Error";
+	      else if (error_sub_code == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_ERROR_SUB_CODE_OTHER_MEMORY_INITIALIZATION_ERRORS)
+		error_sub_code_str = "Other Memory Initialization Errors";
+	    }
+	  
+	  snprintf (tmpbuf,
+                    tmpbuflen,
+                    "Event Special Code = %s%s%s",
+		    event_special_code_str,
+		    error_sub_code_str ? ", Error Sub Code = " : "",
+		    error_sub_code_str);
+	  
+	  return (1);
+	}
     }
 
   return (0);
@@ -937,6 +992,28 @@ ipmi_sel_parse_output_intel_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
 	  return (1);
 	}
 
+      if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+          && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_SLOT_CONNECTOR
+          && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_QUANTA_QSSC_S4R_MEMORY_BOARD_STATE
+          && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_SLOT_CONNECTOR_FAULT_STATUS_ASSERTED)
+        {
+          char memory_board_buf[INTEL_EVENT_BUFFER_LENGTH + 1];
+
+	  memset (memory_board_buf, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
+
+	  _ipmi_sel_parse_output_intel_quanta_qssc_s4r_memory_board (ctx,
+                                                                     memory_board_buf,
+                                                                     INTEL_EVENT_BUFFER_LENGTH,
+                                                                     flags,
+                                                                     system_event_record_data);
+	  
+	  snprintf (tmpbuf,
+                    tmpbuflen,
+                    "Memory Board = %s",
+                    memory_board_buf);
+
+          return (1);
+	}
     }
   
   return (0);
