@@ -2,6 +2,11 @@
 
 	* libfreeipmi/util/ipmi-sensor-and-event-code-tables-util.c (ipmi_get_oem_specific_message):
 	Fix bug loading incorrect tables.
+
+	* libfreeipmi/sel-parse/ipmi-sel-parse-string-intel.c (ipmi_sel_parse_output_intel_event_data2_event_data),
+	libfreeipmi/include/freeipmi/spec/ipmi-slave-address-oem-spec.h:
+	Remove IPMI_GENERATOR_ID_OEM_INTEL_BIOS_POST macro, which was only
+	supposed to be an example in Intel documentation.
 	
 2011-12-20  Albert Chu <chu11@llnl.gov>
 
