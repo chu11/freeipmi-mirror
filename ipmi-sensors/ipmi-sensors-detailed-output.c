@@ -47,7 +47,6 @@
 #define IPMI_SENSORS_DEVICE_TYPE_BUFLEN  1024
 
 #define IPMI_SENSORS_IANA_LEN            1024
-#define IPMI_SENSORS_OEM_DATA_LEN        1024
 
 static char *
 _get_record_type_string (ipmi_sensors_state_data_t *state_data,
@@ -2367,6 +2366,7 @@ _detailed_output_oem_record (ipmi_sensors_state_data_t *state_data,
                              uint8_t record_type,
                              uint16_t record_id)
 {
+  uint32_t manufacturer_id;
   uint8_t oem_data[IPMI_SENSORS_OEM_DATA_LEN];
   int len = 0;
   int i;
@@ -2386,42 +2386,16 @@ _detailed_output_oem_record (ipmi_sensors_state_data_t *state_data,
                                sdr_record_len) < 0)
     return (-1);
 
-  if (state_data->prog_data->args->interpret_oem_data)
+  if (ipmi_sdr_parse_manufacturer_id (state_data->sdr_parse_ctx,
+                                      sdr_record,
+                                      sdr_record_len,
+                                      &manufacturer_id) < 0)
     {
-      int ret;
-
-      if (state_data->oem_data.manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL)
-	{
-	  if ((ret = ipmi_sensors_oem_intel_output_oem_record (state_data,
-							       sdr_record,
-							       sdr_record_len)) < 0)
-	    return (-1);
-
-	  if (ret)
-	    goto out;
-	}
-
-      if (state_data->oem_data.manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC)
-	{
-	  if ((ret = ipmi_sensors_oem_inventec_output_oem_record (state_data,
-								  sdr_record,
-								  sdr_record_len)) < 0)
-	    return (-1);
-
-	  if (ret)
-	    goto out;
-	}
-
-      if (state_data->oem_data.manufacturer_id == IPMI_IANA_ENTERPRISE_ID_QUANTA)
-	{
-	  if ((ret = ipmi_sensors_oem_quanta_output_oem_record (state_data,
-								sdr_record,
-								sdr_record_len)) < 0)
-	    return (-1);
-
-	  if (ret)
-	    goto out;
-	}
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_sdr_parse_manufacturer_id: %s\n",
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+      return (-1);
     }
 
   if ((len = ipmi_sdr_parse_oem_data (state_data->sdr_parse_ctx,
@@ -2435,6 +2409,53 @@ _detailed_output_oem_record (ipmi_sensors_state_data_t *state_data,
 		       "ipmi_sdr_parse_oem_data: %s\n",
 		       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
       return (-1);
+    }
+
+  if (len && state_data->prog_data->args->interpret_oem_data)
+    {
+      int ret;
+
+      if (state_data->oem_data.manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL)
+	{
+	  if ((ret = ipmi_sensors_oem_intel_output_oem_record (state_data,
+							       sdr_record,
+							       sdr_record_len,
+							       manufacturer_id,
+							       oem_data,
+							       len)) < 0)
+	    return (-1);
+
+	  if (ret)
+	    goto out;
+	}
+
+      if (state_data->oem_data.manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC)
+	{
+	  if ((ret = ipmi_sensors_oem_inventec_output_oem_record (state_data,
+								  sdr_record,
+								  sdr_record_len,
+								  manufacturer_id,
+								  oem_data,
+								  len)) < 0)
+	    return (-1);
+
+	  if (ret)
+	    goto out;
+	}
+
+      if (state_data->oem_data.manufacturer_id == IPMI_IANA_ENTERPRISE_ID_QUANTA)
+	{
+	  if ((ret = ipmi_sensors_oem_quanta_output_oem_record (state_data,
+								sdr_record,
+								sdr_record_len,
+								manufacturer_id,
+								oem_data,
+								len)) < 0)
+	    return (-1);
+
+	  if (ret)
+	    goto out;
+	}
     }
 
   pstdout_printf (state_data->pstate,

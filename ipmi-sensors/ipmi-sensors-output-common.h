@@ -21,6 +21,8 @@
 
 #include "ipmi-sensors.h"
 
+#define IPMI_SENSORS_OEM_DATA_LEN       1024
+
 #define IPMI_SENSORS_NA_STRING          "N/A"
 #define IPMI_SENSORS_NA_STRING_LEGACY   "NA"
 #define IPMI_SENSORS_NONE_STRING        "NONE"
