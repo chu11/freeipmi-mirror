@@ -1135,6 +1135,16 @@ _interpret_sel_oem_config_init (ipmi_interpret_ctx_t ctx)
                                                     IPMI_QUANTA_PRODUCT_ID_S99Q) < 0)
     return (-1);
 
+  /* Quanta QSSC-S4R/Appro GB812X-CN (Quanta motherboard maintains Intel manufacturer ID)
+   *
+   * Manufacturer ID = 343 (Intel)
+   * Product ID = 64 (Quanta QSSC-S4R)
+   */
+  if (_interpret_sel_oem_config_intel_node_manager (ctx,
+                                                    IPMI_IANA_ENTERPRISE_ID_INTEL,
+                                                    IPMI_INTEL_PRODUCT_ID_QUANTA_QSSC_S4R) < 0)
+    return (-1);
+
   if (_interpret_sel_oem_config_intel_smi_timeout (ctx) < 0)
     return (-1);
   
