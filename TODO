@@ -29,6 +29,10 @@ dist
 ----
 not dist out manpages?
 
+performance
+----------
+sel-parse,oem code, else if instead of if, if, if
+
 asf
 ---
 support asf base protocol stuff in addition to IPMI?
