@@ -255,6 +255,18 @@ Defaults to Warning.
 Defaults to Nominal.
 .RE
 .TP
+.B IPMI_Fan_State
+The following states correspond to Fan sensor events that report an
+assertion or deassertion.
+.RS
+.TP
+\fBIPMI_Fan_State_Deasserted\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Fan_State_Asserted\fR
+Defaults to Warning.
+.RE
+.TP
 .B IPMI_Fan_Transition_Severity
 The following states correspond to Fan sensor events that
 report on device severity.

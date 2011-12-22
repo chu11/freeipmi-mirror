@@ -119,6 +119,7 @@ extern "C" {
  * Inventec 5441/Dell Xanadu II
  * Inventec 5442/Dell Xanadu III
  * Quanta S99Q/Dell FS12-TY
+ * Quanta QSSC-S4R/Appro GB812X-CN
  */
 
 /* IPMI_NET_FN_OEM_GROUP_RQ / IPMI_NET_FN_OEM_GROUP_RS */

@@ -36,4 +36,12 @@ int ipmi_sensors_oem_parse_intel_node_manager (ipmi_sensors_state_data_t *state_
                                                uint8_t *nm_operational_capabilities_sensor_number,
                                                uint8_t *node_manager_alert_threshold_exceeded_sensor_number);
 
+/* return (0) - no OEM match
+ * return (1) - OEM match
+ * return (-1) - error, cleanup and return error
+ */
+int ipmi_sensors_oem_intel_node_manager_output_oem_record (ipmi_sensors_state_data_t *state_data,
+							   const void *sdr_record,
+							   unsigned int sdr_record_len);
+
 #endif

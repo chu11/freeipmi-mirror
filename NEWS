@@ -11,6 +11,7 @@ o In ipmi-raw, for file/stdin input, output line number when there is
 o In ipmi-pef-config, fix configuration bug for Enable_PEF_Event_Messages.
 o In ipmi-sensors, support 'ignoreauthcode' workaround option.
 o In ipmi-fru, do not consider a busy device a fatal error. 
+o In ipmi-sel, support Quanta QSSC-S4R/Appro GB812X-CN OEM SEL events.
 o In ipmi-sel, fix several OEM specific event output bugs.
   
 Libraries
@@ -29,6 +30,8 @@ o In libfreeipmi fru-parse sub-library, support
   IPMI_FRU_PARSE_ERR_DEVICE_BUSY error code.
 o In libfreeipmi, add support for IPMI firmware firewall and command
   discovery payloads.
+o In libfreeipmi, support Quanta QSSC-S4R/Appro GB812X-CN OEM SEL
+  events.
 o Fix various macro names (typos, invalid naming, etc.)
 
 Contributions

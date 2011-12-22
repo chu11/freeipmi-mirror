@@ -124,6 +124,9 @@ extern "C" {
 #define IPMI_INTEL_PRODUCT_ID_S5500WB  62
 #define IPMI_INTEL_PRODUCT_ID_SR1625   62
 
+/* Quanta motherboard, but listed under a Intel manufacturer ID, why?? */
+#define IPMI_INTEL_PRODUCT_ID_QUANTA_QSSC_S4R 64
+
 #define IPMI_INTEL_PRODUCT_ID_S2600JF  77
 
 /* 
@@ -135,6 +138,8 @@ extern "C" {
 #define IPMI_PENGUIN_COMPUTING_PRODUCT_ID_RELION_700 IPMI_INTEL_PRODUCT_ID_S5500WB
 
 #define IPMI_APPRO_PRODUCT_ID_512X IPMI_INTEL_PRODUCT_ID_S2600JF
+
+#define IPMI_APPRO_PRODUCT_ID_QG812X_CN IPMI_INTEL_PRODUCT_ID_QUANTA_QSSC_S4R
 
 /*******************************************
  * IBM                                     *

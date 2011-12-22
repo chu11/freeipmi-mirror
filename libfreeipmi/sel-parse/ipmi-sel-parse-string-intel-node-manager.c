@@ -79,6 +79,7 @@
  * Inventec 5441/Dell Xanadu II
  * Inventec 5442/Dell Xanadu III
  * Quanta S99Q/Dell FS12-TY
+ * Quanta QSSC-S4R/Appro GB812X-CN
  *
  * Should be called from ipmi-sel-parse-string-VENDOR.c files, not
  * from ipmi-sel-parse-string.c.
