@@ -136,6 +136,7 @@ struct ipmi_interpret_sel {
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_voltage_performance_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_voltage_transition_severity_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_current_transition_severity_config;
+  struct ipmi_interpret_sel_config **ipmi_interpret_sel_fan_state_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_fan_transition_severity_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_fan_device_present_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_fan_transition_availability_config;
@@ -216,6 +217,7 @@ struct ipmi_interpret_sensor {
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_voltage_performance_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_voltage_transition_severity_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_current_transition_severity_config;
+  struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_fan_state_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_fan_transition_severity_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_fan_device_present_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_fan_transition_availability_config;

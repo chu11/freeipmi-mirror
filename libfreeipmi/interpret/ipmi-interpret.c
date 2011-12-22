@@ -733,6 +733,9 @@ ipmi_interpret_sel (ipmi_interpret_ctx_t ctx,
           else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY
                    && sensor_type == IPMI_SENSOR_TYPE_CURRENT)
             sel_config = ctx->interpret_sel.ipmi_interpret_sel_current_transition_severity_config;
+          else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
+		   && sensor_type == IPMI_SENSOR_TYPE_FAN)
+            sel_config = ctx->interpret_sel.ipmi_interpret_sel_fan_state_config;
           else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY
                    && sensor_type == IPMI_SENSOR_TYPE_FAN)
             sel_config = ctx->interpret_sel.ipmi_interpret_sel_fan_transition_severity_config;
@@ -1180,6 +1183,9 @@ ipmi_interpret_sensor (ipmi_interpret_ctx_t ctx,
       else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY
                && sensor_type == IPMI_SENSOR_TYPE_CURRENT)
         sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_current_transition_severity_config;
+      else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
+          && sensor_type == IPMI_SENSOR_TYPE_FAN)
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_fan_state_config;
       else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY
                && sensor_type == IPMI_SENSOR_TYPE_FAN)
         sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_fan_transition_severity_config;
