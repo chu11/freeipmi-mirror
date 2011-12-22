@@ -941,9 +941,9 @@ _interpret_sensor_oem_dell_module_board_status (ipmi_interpret_ctx_t ctx)
 }
 
 static int
-_interpret_sensor_oem_discrete_cpu_temp (ipmi_interpret_ctx_t ctx,
-                                         uint32_t manufacturer_id,
-                                         uint16_t product_id)
+_interpret_sensor_oem_supermicro_discrete_cpu_temp (ipmi_interpret_ctx_t ctx,
+						    uint32_t manufacturer_id,
+						    uint16_t product_id)
 {
   struct ipmi_interpret_sensor_oem_config *oem_conf;
 
@@ -1009,59 +1009,59 @@ _interpret_sensor_oem_supermicro (ipmi_interpret_ctx_t ctx)
    * Value 0x0007 = "Not Installed"
    */
 
-  if (_interpret_sensor_oem_discrete_cpu_temp (ctx,
-                                               IPMI_IANA_ENTERPRISE_ID_SUPERMICRO,
-					       __IPMI_SUPERMICRO_PRODUCT_ID_X9SC) < 0)
+  if (_interpret_sensor_oem_supermicro_discrete_cpu_temp (ctx,
+							  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO,
+							  __IPMI_SUPERMICRO_PRODUCT_ID_X9SC) < 0)
     return (-1);
 
-  if (_interpret_sensor_oem_discrete_cpu_temp (ctx,
-                                               IPMI_IANA_ENTERPRISE_ID_PEPPERCON,
-                                               __IPMI_SUPERMICRO_PRODUCT_ID_FOUR) < 0)
+  if (_interpret_sensor_oem_supermicro_discrete_cpu_temp (ctx,
+							  IPMI_IANA_ENTERPRISE_ID_PEPPERCON,
+							  __IPMI_SUPERMICRO_PRODUCT_ID_FOUR) < 0)
     return (-1);
 
-  if (_interpret_sensor_oem_discrete_cpu_temp (ctx,
-                                               IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
-                                               __IPMI_SUPERMICRO_PRODUCT_ID_X8DT) < 0)
+  if (_interpret_sensor_oem_supermicro_discrete_cpu_temp (ctx,
+							  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
+							  __IPMI_SUPERMICRO_PRODUCT_ID_X8DT) < 0)
     return (-1);
   
-  if (_interpret_sensor_oem_discrete_cpu_temp (ctx,
-                                               IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
-                                               IPMI_SUPERMICRO_PRODUCT_ID_X8DTU_6PLUS) < 0)
+  if (_interpret_sensor_oem_supermicro_discrete_cpu_temp (ctx,
+							  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
+							  IPMI_SUPERMICRO_PRODUCT_ID_X8DTU_6PLUS) < 0)
     return (-1);
   
-  if (_interpret_sensor_oem_discrete_cpu_temp (ctx,
-                                               IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
-                                               __IPMI_SUPERMICRO_PRODUCT_ID_X8DTL) < 0)
+  if (_interpret_sensor_oem_supermicro_discrete_cpu_temp (ctx,
+							  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
+							  __IPMI_SUPERMICRO_PRODUCT_ID_X8DTL) < 0)
     return (-1);
   
-  if (_interpret_sensor_oem_discrete_cpu_temp (ctx,
-                                               IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
-                                               IPMI_SUPERMICRO_PRODUCT_ID_X8SIL_F) < 0)
+  if (_interpret_sensor_oem_supermicro_discrete_cpu_temp (ctx,
+							  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
+							  IPMI_SUPERMICRO_PRODUCT_ID_X8SIL_F) < 0)
     return (-1);
 
-  if (_interpret_sensor_oem_discrete_cpu_temp (ctx,
-                                               IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
-                                               __IPMI_SUPERMICRO_PRODUCT_ID_X9SC) < 0)
+  if (_interpret_sensor_oem_supermicro_discrete_cpu_temp (ctx,
+							  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
+							  __IPMI_SUPERMICRO_PRODUCT_ID_X9SC) < 0)
     return (-1);
 
-  if (_interpret_sensor_oem_discrete_cpu_temp (ctx,
-                                               IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
-                                               IPMI_SUPERMICRO_PRODUCT_ID_X8DTNPLUS_F) < 0)
+  if (_interpret_sensor_oem_supermicro_discrete_cpu_temp (ctx,
+							  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
+							  IPMI_SUPERMICRO_PRODUCT_ID_X8DTNPLUS_F) < 0)
     return (-1);
 
-  if (_interpret_sensor_oem_discrete_cpu_temp (ctx,
-                                               IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
-                                               IPMI_SUPERMICRO_PRODUCT_ID_X8SIE) < 0)
+  if (_interpret_sensor_oem_supermicro_discrete_cpu_temp (ctx,
+							  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
+							  IPMI_SUPERMICRO_PRODUCT_ID_X8SIE) < 0)
     return (-1);
 
-  if (_interpret_sensor_oem_discrete_cpu_temp (ctx,
-                                               IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
-                                               IPMI_SUPERMICRO_PRODUCT_ID_X9SCA_F_O) < 0)
+  if (_interpret_sensor_oem_supermicro_discrete_cpu_temp (ctx,
+							  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
+							  IPMI_SUPERMICRO_PRODUCT_ID_X9SCA_F_O) < 0)
     return (-1);
 
-  if (_interpret_sensor_oem_discrete_cpu_temp (ctx,
-                                               IPMI_IANA_ENTERPRISE_ID_MAGNUM_TECHNOLOGIES,
-                                               __IPMI_SUPERMICRO_PRODUCT_ID_X8DTL) < 0)
+  if (_interpret_sensor_oem_supermicro_discrete_cpu_temp (ctx,
+							  IPMI_IANA_ENTERPRISE_ID_MAGNUM_TECHNOLOGIES,
+							  __IPMI_SUPERMICRO_PRODUCT_ID_X8DTL) < 0)
     return (-1);
  
   return (0);
