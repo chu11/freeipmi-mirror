@@ -826,9 +826,9 @@ _interpret_sel_oem_sensor_config_create (ipmi_interpret_ctx_t ctx,
 }
 
 static int
-_interpret_sel_oem_config_intel_node_manager (ipmi_interpret_ctx_t ctx,
-                                              uint32_t manufacturer_id,
-                                              uint16_t product_id)
+_interpret_sel_oem_config_intel_node_manager_wrapper (ipmi_interpret_ctx_t ctx,
+						      uint32_t manufacturer_id,
+						      uint16_t product_id)
 {
   struct ipmi_interpret_sel_oem_sensor_config *oem_conf;
 
@@ -1015,6 +1015,67 @@ _interpret_sel_oem_config_intel_node_manager (ipmi_interpret_ctx_t ctx,
 }
 
 static int
+_interpret_sel_oem_config_intel_node_manager (ipmi_interpret_ctx_t ctx)
+{
+  assert (ctx);
+  assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
+  assert (ctx->interpret_sel.sel_oem_sensor_config);
+  assert (ctx->interpret_sel.sel_oem_record_config);
+
+  /* Intel S5500WB/Penguin Computing Relion 700
+   *
+   * Manufacturer ID = 343 (Intel)
+   * Product ID = 62 (S5500WB)
+   */
+  if (_interpret_sel_oem_config_intel_node_manager_wrapper (ctx,
+							    IPMI_IANA_ENTERPRISE_ID_INTEL,
+							    IPMI_INTEL_PRODUCT_ID_S5500WB) < 0)
+    return (-1);
+
+  /* Inventec 5441/Dell Xanadu II
+   *
+   * Manufacturer ID = 20569 (Inventec)
+   * Product ID = 51 (5441)
+   */
+  if (_interpret_sel_oem_config_intel_node_manager_wrapper (ctx,
+							    IPMI_IANA_ENTERPRISE_ID_INVENTEC,
+							    IPMI_INVENTEC_PRODUCT_ID_5441) < 0)
+    return (-1);
+
+  /* Inventec 5442/Dell Xanadu III
+   *
+   * Manufacturer ID = 20569 (Inventec)
+   * Product ID = 52 (5442)
+   */
+  if (_interpret_sel_oem_config_intel_node_manager_wrapper (ctx,
+							    IPMI_IANA_ENTERPRISE_ID_INVENTEC,
+							    IPMI_INVENTEC_PRODUCT_ID_5442) < 0)
+    return (-1);
+
+  /* Quanta S99Q/Dell FS12-TY
+   *
+   * Manufacturer ID = 7244 (Quanta)
+   * Product ID = 21401 (S99Q)
+   */
+  if (_interpret_sel_oem_config_intel_node_manager_wrapper (ctx,
+							    IPMI_IANA_ENTERPRISE_ID_QUANTA,
+							    IPMI_QUANTA_PRODUCT_ID_S99Q) < 0)
+    return (-1);
+
+  /* Quanta QSSC-S4R/Appro GB812X-CN (Quanta motherboard maintains Intel manufacturer ID)
+   *
+   * Manufacturer ID = 343 (Intel)
+   * Product ID = 64 (Quanta QSSC-S4R)
+   */
+  if (_interpret_sel_oem_config_intel_node_manager_wrapper (ctx,
+							    IPMI_IANA_ENTERPRISE_ID_INTEL,
+							    IPMI_INTEL_PRODUCT_ID_QUANTA_QSSC_S4R) < 0)
+    return (-1);
+
+  return (0);
+}
+
+static int
 _interpret_sel_oem_config_intel_smi_timeout (ipmi_interpret_ctx_t ctx)
 {
   struct ipmi_interpret_sel_oem_sensor_config *oem_conf;
@@ -1088,6 +1149,22 @@ _interpret_sel_oem_config_intel_smi_timeout (ipmi_interpret_ctx_t ctx)
 }
 
 static int
+_interpret_sensor_oem_intel (ipmi_interpret_ctx_t ctx)
+{
+  assert (ctx);
+  assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
+  assert (ctx->interpret_sensor.sensor_oem_config);
+
+  if (_interpret_sel_oem_config_intel_node_manager (ctx) < 0)
+    return (-1);
+
+  if (_interpret_sensor_oem_intel_smi_timeout (ctx) < 0)
+    return (-1);
+
+  return (0);
+}
+
+static int
 _interpret_sel_oem_config_init (ipmi_interpret_ctx_t ctx)
 {
   assert (ctx);
@@ -1095,57 +1172,7 @@ _interpret_sel_oem_config_init (ipmi_interpret_ctx_t ctx)
   assert (ctx->interpret_sel.sel_oem_sensor_config);
   assert (ctx->interpret_sel.sel_oem_record_config);
 
-  /* Intel S5500WB/Penguin Computing Relion 700
-   *
-   * Manufacturer ID = 343 (Intel)
-   * Product ID = 62 (S5500WB)
-   */
-  if (_interpret_sel_oem_config_intel_node_manager (ctx,
-                                                    IPMI_IANA_ENTERPRISE_ID_INTEL,
-                                                    IPMI_INTEL_PRODUCT_ID_S5500WB) < 0)
-    return (-1);
-
-  /* Inventec 5441/Dell Xanadu II
-   *
-   * Manufacturer ID = 20569 (Inventec)
-   * Product ID = 51 (5441)
-   */
-  if (_interpret_sel_oem_config_intel_node_manager (ctx,
-                                                    IPMI_IANA_ENTERPRISE_ID_INVENTEC,
-                                                    IPMI_INVENTEC_PRODUCT_ID_5441) < 0)
-    return (-1);
-
-  /* Inventec 5442/Dell Xanadu III
-   *
-   * Manufacturer ID = 20569 (Inventec)
-   * Product ID = 52 (5442)
-   */
-  if (_interpret_sel_oem_config_intel_node_manager (ctx,
-                                                    IPMI_IANA_ENTERPRISE_ID_INVENTEC,
-                                                    IPMI_INVENTEC_PRODUCT_ID_5442) < 0)
-    return (-1);
-
-  /* Quanta S99Q/Dell FS12-TY
-   *
-   * Manufacturer ID = 7244 (Quanta)
-   * Product ID = 21401 (S99Q)
-   */
-  if (_interpret_sel_oem_config_intel_node_manager (ctx,
-                                                    IPMI_IANA_ENTERPRISE_ID_QUANTA,
-                                                    IPMI_QUANTA_PRODUCT_ID_S99Q) < 0)
-    return (-1);
-
-  /* Quanta QSSC-S4R/Appro GB812X-CN (Quanta motherboard maintains Intel manufacturer ID)
-   *
-   * Manufacturer ID = 343 (Intel)
-   * Product ID = 64 (Quanta QSSC-S4R)
-   */
-  if (_interpret_sel_oem_config_intel_node_manager (ctx,
-                                                    IPMI_IANA_ENTERPRISE_ID_INTEL,
-                                                    IPMI_INTEL_PRODUCT_ID_QUANTA_QSSC_S4R) < 0)
-    return (-1);
-
-  if (_interpret_sel_oem_config_intel_smi_timeout (ctx) < 0)
+  if (_interpret_sel_oem_intel (ctx) < 0)
     return (-1);
   
   return (0);
