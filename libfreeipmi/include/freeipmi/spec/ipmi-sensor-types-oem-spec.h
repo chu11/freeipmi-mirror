@@ -71,9 +71,17 @@ extern "C" {
 /*
  * Intel S5500WB
  * Intel SR1625
+ * Quanta QSSC-S4R/Appro GB812X-CN
+ * (Quanta motherboard maintains Intel manufacturer ID)
  */
 
 #define IPMI_SENSOR_TYPE_OEM_INTEL_SMI_TIMEOUT                  0xF3
+
+/*
+ * Quanta QSSC-S4R/Appro GB812X-CN
+ * (Quanta motherboard maintains Intel manufacturer ID)
+ */
+#define IPMI_SENSOR_TYPE_OEM_INTEL_POWER_THROTTLED              0xF3
 
 /*
  * Intel Node Manager
@@ -85,6 +93,7 @@ extern "C" {
  * Inventec 5441/Dell Xanadu II
  * Inventec 5442/Dell Xanadu III
  * Quanta S99Q/Dell FS12-TY
+ * Quanta QSSC-S4R/Appro GB812X-CN
  */
 
 #define IPMI_SENSOR_TYPE_OEM_INTEL_NODE_MANAGER 0xDC

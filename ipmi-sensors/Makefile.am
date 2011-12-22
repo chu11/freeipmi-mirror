@@ -34,8 +34,14 @@ ipmi_sensors_SOURCES = \
 	ipmi-sensors-argp.h \
 	ipmi-sensors-detailed-output.c \
 	ipmi-sensors-detailed-output.h \
+	ipmi-sensors-oem-intel.c \
+	ipmi-sensors-oem-intel.h \
 	ipmi-sensors-oem-intel-node-manager.c \
 	ipmi-sensors-oem-intel-node-manager.h \
+	ipmi-sensors-oem-inventec.c \
+	ipmi-sensors-oem-inventec.h \
+	ipmi-sensors-oem-quanta.c \
+	ipmi-sensors-oem-quanta.h \
 	ipmi-sensors-output-common.c \
 	ipmi-sensors-output-common.h \
 	ipmi-sensors-simple-output.c \

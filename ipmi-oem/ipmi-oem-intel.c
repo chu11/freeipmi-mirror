@@ -101,6 +101,62 @@
  * 0x?? - Completion Code
  */
 
+/* Quanta QSSC-S4R/Appro GB812X-CN
+ * (Quanta motherboard maintains Intel manufacturer ID)
+ *
+ * Set Fan Control Configuration Command
+ *
+ * Should really only be used by the BIOS, documented here.
+ *
+ * Set Fan Control Configuration Request
+ *
+ * 0x?? - OEM network function not indicated
+ * 0x89 - OEM cmd
+ * 0x?? - fan profile to enable
+ *      - 0 - Fan profile 0 (default)
+ *      - 1 - Fan profile 1
+ *      - 2 - Fan profile 2
+ *      - 3 - Fan profile 3
+ *      - 4 - Fan profile 4 
+ *      - 5 - Fan profile 5 (not valid for QSSC-S4R)
+ *      - 6 - Fan profile 6 (not valid for QSSC-S4R)
+ *      - 7 - Fan profile 7 (not valid for QSSC-S4R)
+ *      - 0xff - none specified (do not change current setting)
+ * 0x?? - flags
+ *      - [7:3] reserved
+ *      - [2] - Memory temp sensor and memory throttling configuration status
+ *            - 0 - not started or in progress
+ *            - 1 - completed
+ *      = [1:0] Memory Throttling Mode
+ *            - 0 - Non supported
+ *            - 1 - Open-loop thermal throttlig (OTT) (not supported for QSSC-S4R)
+ *            - 2 - Close-loop thermal throttling (CLTT)
+ *            - 3 - None specified (do not change current setting)
+ * 0x?? - Memory Device Group ID
+ *      - 0 - cpu #1 group              
+ *      - 1 - cpu #2 group              
+ *      - 2 - cpu #3 group             
+ *      - 3 - cpu #4 group             
+ *      - 0xff - none specified
+ *
+ * bytes 4-11 - memory device presence bit map
+ *      - 64-bit map forindicating the presence of a memory temp
+ *        sensor for devices in the specified group ID.  Byte order is
+ *        LSByte first.  Setting a bit to 1 indicates that the
+ *        associated device is present and its temperature shoulde be
+ *        monitored.  Device enumeration corresponds to bit-position
+ *        in the bit-mask.  Valid only if Memory Device Group ID field
+ *        is not set to FFh.
+ *      - For QSSC S4R - 31:0 presence of DIMM temp device
+ *                     - 39:32 presence of memory buffer (Mill Brook) temp device
+ *                     - 63:40 - reserved
+ *
+ * Set Fan Control Configuration Response
+ *
+ * 0x89 - OEM cmd
+ * 0x?? - Completion Code
+ */
+
 #define IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_ENABLE_SMTP            0x00
 /* MS byte first */
 #define IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_SMTP_SERVER_ADDRESS    0x01

@@ -1036,14 +1036,15 @@ _output_sensor (ipmi_sensors_state_data_t *state_data,
     {
       int event_msg_generated = 0;
 
-      /* OEM Interpreation
+      /* OEM Interpretation
        *
        * Handle Intel Node Manager special case
        */
       if (state_data->prog_data->args->interpret_oem_data
           && ((state_data->oem_data.manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL
                && (state_data->oem_data.product_id == IPMI_INTEL_PRODUCT_ID_S5500WB
-		   || state_data->oem_data.product_id == IPMI_INTEL_PRODUCT_ID_S2600JF))
+		   || state_data->oem_data.product_id == IPMI_INTEL_PRODUCT_ID_S2600JF
+		   || state_data->oem_data.product_id == IPMI_INTEL_PRODUCT_ID_QUANTA_QSSC_S4R))
               || (state_data->oem_data.manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
                   && (state_data->oem_data.product_id == IPMI_INVENTEC_PRODUCT_ID_5441
                       || state_data->oem_data.product_id == IPMI_INVENTEC_PRODUCT_ID_5442))
@@ -1147,6 +1148,7 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
        * Inventec 5441/Dell Xanadu II
        * Inventec 5442/Dell Xanadu III
        * Quanta S99Q/Dell FS12-TY
+       * Quanta QSSC-S4R/Appro GB812X-CN (maintains Intel manufacturer ID)
        *
        * Below confirms the Intel Node Manager exists.  We must do
        * this before reading the sensor to determime what type of
@@ -1154,7 +1156,8 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
        */
       if ((state_data->oem_data.manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL
            && (state_data->oem_data.product_id == IPMI_INTEL_PRODUCT_ID_S5500WB
-	       || state_data->oem_data.product_id == IPMI_INTEL_PRODUCT_ID_S2600JF))
+	       || state_data->oem_data.product_id == IPMI_INTEL_PRODUCT_ID_S2600JF
+	       || state_data->oem_data.product_id == IPMI_INTEL_PRODUCT_ID_QUANTA_QSSC_S4R))
           || (state_data->oem_data.manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
               && (state_data->oem_data.product_id == IPMI_INVENTEC_PRODUCT_ID_5441
                   || state_data->oem_data.product_id == IPMI_INVENTEC_PRODUCT_ID_5442))

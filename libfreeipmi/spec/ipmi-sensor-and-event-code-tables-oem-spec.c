@@ -318,6 +318,8 @@ unsigned int ipmi_sensor_type_oem_fujitsu_config_backup_max_index = 0x0F;
 
 /*
  * Intel S5500WB/Penguin Computing Relion 700
+ * Quanta QSSC-S4R/Appro GB812X-CN                                                                                                                                      
+ * (Quanta motherboard maintains Intel manufacturer ID)          
  */
 
 const char * const ipmi_oem_intel_specific_pci_fatal_sensor[] =

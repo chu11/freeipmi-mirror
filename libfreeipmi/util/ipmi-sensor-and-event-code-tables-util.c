@@ -2002,10 +2002,12 @@ ipmi_get_oem_specific_message (uint32_t manufacturer_id,
   /* OEM Interpretation
    *
    * Intel S5500WB/Penguin Computing Relion 700
-   *
+   * Quanta QSSC-S4R/Appro GB812X-CN
+   * (Quanta motherboard maintains Intel manufacturer ID)
    */
   if (manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL
-      && product_id == IPMI_INTEL_PRODUCT_ID_S5500WB)
+      && (product_id == IPMI_INTEL_PRODUCT_ID_S5500WB
+	  || product_id == IPMI_INTEL_PRODUCT_ID_QUANTA_QSSC_S4R))
     {
       if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_FATAL_SENSOR
           && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)

@@ -163,6 +163,13 @@ static struct ipmi_interpret_sel_config ipmi_interpret_sel_current_transition_se
   };
 static unsigned int ipmi_interpret_sel_current_transition_severity_config_len = 9;
 
+static struct ipmi_interpret_sel_config ipmi_interpret_sel_fan_state_config[] =
+  {
+    { "IPMI_Fan_State_Deasserted", IPMI_INTERPRET_STATE_NOMINAL, IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_Fan_State_Asserted", IPMI_INTERPRET_STATE_WARNING, IPMI_INTERPRET_STATE_WARNING},
+  };
+static unsigned int ipmi_interpret_sel_fan_state_config_len = 2;
+
 static struct ipmi_interpret_sel_config ipmi_interpret_sel_fan_transition_severity_config[] =
   {
     { "IPMI_Fan_Transition_Severity_Transition_To_OK", IPMI_INTERPRET_STATE_NOMINAL, IPMI_INTERPRET_STATE_NOMINAL},
@@ -819,9 +826,9 @@ _interpret_sel_oem_sensor_config_create (ipmi_interpret_ctx_t ctx,
 }
 
 static int
-_interpret_sel_oem_config_intel_node_manager (ipmi_interpret_ctx_t ctx,
-                                              uint32_t manufacturer_id,
-                                              uint16_t product_id)
+_interpret_sel_oem_intel_node_manager_wrapper (ipmi_interpret_ctx_t ctx,
+					       uint32_t manufacturer_id,
+					       uint16_t product_id)
 {
   struct ipmi_interpret_sel_oem_sensor_config *oem_conf;
 
@@ -1008,7 +1015,70 @@ _interpret_sel_oem_config_intel_node_manager (ipmi_interpret_ctx_t ctx,
 }
 
 static int
-_interpret_sel_oem_config_intel_smi_timeout (ipmi_interpret_ctx_t ctx)
+_interpret_sel_oem_intel_node_manager (ipmi_interpret_ctx_t ctx)
+{
+  assert (ctx);
+  assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
+  assert (ctx->interpret_sel.sel_oem_sensor_config);
+  assert (ctx->interpret_sel.sel_oem_record_config);
+
+  /* Intel S5500WB/Penguin Computing Relion 700
+   *
+   * Manufacturer ID = 343 (Intel)
+   * Product ID = 62 (S5500WB)
+   */
+  if (_interpret_sel_oem_intel_node_manager_wrapper (ctx,
+						     IPMI_IANA_ENTERPRISE_ID_INTEL,
+						     IPMI_INTEL_PRODUCT_ID_S5500WB) < 0)
+    return (-1);
+
+  /* Inventec 5441/Dell Xanadu II
+   *
+   * Manufacturer ID = 20569 (Inventec)
+   * Product ID = 51 (5441)
+   */
+  if (_interpret_sel_oem_intel_node_manager_wrapper (ctx,
+						     IPMI_IANA_ENTERPRISE_ID_INVENTEC,
+						     IPMI_INVENTEC_PRODUCT_ID_5441) < 0)
+    return (-1);
+
+  /* Inventec 5442/Dell Xanadu III
+   *
+   * Manufacturer ID = 20569 (Inventec)
+   * Product ID = 52 (5442)
+   */
+  if (_interpret_sel_oem_intel_node_manager_wrapper (ctx,
+						     IPMI_IANA_ENTERPRISE_ID_INVENTEC,
+						     IPMI_INVENTEC_PRODUCT_ID_5442) < 0)
+    return (-1);
+
+  /* Quanta S99Q/Dell FS12-TY
+   *
+   * Manufacturer ID = 7244 (Quanta)
+   * Product ID = 21401 (S99Q)
+   */
+  if (_interpret_sel_oem_intel_node_manager_wrapper (ctx,
+						     IPMI_IANA_ENTERPRISE_ID_QUANTA,
+						     IPMI_QUANTA_PRODUCT_ID_S99Q) < 0)
+    return (-1);
+
+  /* Quanta QSSC-S4R/Appro GB812X-CN (Quanta motherboard maintains Intel manufacturer ID)
+   *
+   * Manufacturer ID = 343 (Intel)
+   * Product ID = 64 (Quanta QSSC-S4R)
+   */
+  if (_interpret_sel_oem_intel_node_manager_wrapper (ctx,
+						     IPMI_IANA_ENTERPRISE_ID_INTEL,
+						     IPMI_INTEL_PRODUCT_ID_QUANTA_QSSC_S4R) < 0)
+    return (-1);
+
+  return (0);
+}
+
+static int
+_interpret_sel_oem_intel_smi_timeout_power_throttled_wrapper (ipmi_interpret_ctx_t ctx,
+							      uint32_t manufacturer_id,
+							      uint16_t product_id)
 {
   struct ipmi_interpret_sel_oem_sensor_config *oem_conf;
 
@@ -1017,31 +1087,9 @@ _interpret_sel_oem_config_intel_smi_timeout (ipmi_interpret_ctx_t ctx)
   assert (ctx->interpret_sel.sel_oem_sensor_config);
   assert (ctx->interpret_sel.sel_oem_record_config);
 
-  /* Intel SR1625/S5500WB SMI Timeout
-   *
-   * Manufacturer ID = 343 (Intel)                                                                              
-   * Product ID = 62 (Intel SR1625, S5500WB)                                                             
-   * Event/Reading Type Code = 3h (State Asserted/Deasserted)
-   * Sensor Type = F3h (OEM)                                                                                 
-   * EventData1 0x00 = "State Deasserted"
-   * EventData2 0x01 = "State Asserted"
-   */
-  
-  /* From Intel
-   *
-   * The BMC supports an SMI timeout sensor (sensor type OEM (F3h),
-   * event type Discrete (03h)) that asserts if the SMI signal has
-   * been asserted for more than 90 seconds. A continuously asserted
-   * SMI signal is an indication that the BIOS cannot service the
-   * condition that caused the SMI. This is usually because that
-   * condition prevents the BIOS from running. When an SMI timeout
-   * occurs, the BMC asserts the SMI timeout sensor and logs a SEL
-   * event for that sensor. The BMC will also reset the system.
-   */
-
   if (_interpret_sel_oem_sensor_config_create (ctx,
-					       IPMI_IANA_ENTERPRISE_ID_INTEL,
-					       IPMI_INTEL_PRODUCT_ID_SR1625,
+					       manufacturer_id,
+					       product_id,
 					       IPMI_EVENT_READING_TYPE_CODE_STATE,
 					       IPMI_SENSOR_TYPE_OEM_INTEL_SMI_TIMEOUT,
 					       &oem_conf) < 0)
@@ -1081,6 +1129,76 @@ _interpret_sel_oem_config_intel_smi_timeout (ipmi_interpret_ctx_t ctx)
 }
 
 static int
+_interpret_sel_oem_intel_smi_timeout_power_throttled (ipmi_interpret_ctx_t ctx)
+{
+
+  assert (ctx);
+  assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
+  assert (ctx->interpret_sel.sel_oem_sensor_config);
+  assert (ctx->interpret_sel.sel_oem_record_config);
+
+  /* Intel SMI Timeout
+   * Intel SR1625/S5500WB 
+   * Quanta QSSC-S4R/Appro GB812X-CN (Quanta motherboard maintains Intel manufacturer ID)
+   *
+   * and
+   *
+   * Intel Power Throttled
+   * Quanta QSSC-S4R/Appro GB812X-CN (Quanta motherboard maintains Intel manufacturer ID)
+   *
+   * Manufacturer ID = 343 (Intel)                                                                              
+   * Product ID = 62 (Intel SR1625, S5500WB), 64 (Quanta QSSC-S4R)
+   * Event/Reading Type Code = 3h (State Asserted/Deasserted)
+   * Sensor Type = F3h (OEM)                                                                                 
+   * EventData1 0x00 = "State Deasserted"
+   * EventData2 0x01 = "State Asserted"
+   */
+  
+  /* From Intel
+   *
+   * The BMC supports an SMI timeout sensor (sensor type OEM (F3h),
+   * event type Discrete (03h)) that asserts if the SMI signal has
+   * been asserted for more than 90 seconds. A continuously asserted
+   * SMI signal is an indication that the BIOS cannot service the
+   * condition that caused the SMI. This is usually because that
+   * condition prevents the BIOS from running. When an SMI timeout
+   * occurs, the BMC asserts the SMI timeout sensor and logs a SEL
+   * event for that sensor. The BMC will also reset the system.
+   */
+
+  /* Intel SR1625/S5500WB */
+  if (_interpret_sel_oem_intel_smi_timeout_power_throttled_wrapper (ctx,
+								    IPMI_IANA_ENTERPRISE_ID_INTEL,
+								    IPMI_INTEL_PRODUCT_ID_SR1625) < 0)
+    return (-1);
+			
+  /* Quanta QSSC-S4R/Appro GB812X-CN */
+  if (_interpret_sel_oem_intel_smi_timeout_power_throttled_wrapper (ctx,
+								    IPMI_IANA_ENTERPRISE_ID_INTEL,
+								    IPMI_INTEL_PRODUCT_ID_QUANTA_QSSC_S4R) < 0)
+    return (-1);
+
+  return (0);
+}
+
+static int
+_interpret_sel_oem_intel (ipmi_interpret_ctx_t ctx)
+{
+  assert (ctx);
+  assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
+  assert (ctx->interpret_sel.sel_oem_sensor_config);
+  assert (ctx->interpret_sel.sel_oem_record_config);
+
+  if (_interpret_sel_oem_intel_node_manager (ctx) < 0)
+    return (-1);
+
+  if (_interpret_sel_oem_intel_smi_timeout_power_throttled (ctx) < 0)
+    return (-1);
+
+  return (0);
+}
+
+static int
 _interpret_sel_oem_config_init (ipmi_interpret_ctx_t ctx)
 {
   assert (ctx);
@@ -1088,47 +1206,7 @@ _interpret_sel_oem_config_init (ipmi_interpret_ctx_t ctx)
   assert (ctx->interpret_sel.sel_oem_sensor_config);
   assert (ctx->interpret_sel.sel_oem_record_config);
 
-  /* Intel S5500WB/Penguin Computing Relion 700
-   *
-   * Manufacturer ID = 343 (Intel)
-   * Product ID = 62 (S5500WB)
-   */
-  if (_interpret_sel_oem_config_intel_node_manager (ctx,
-                                                    IPMI_IANA_ENTERPRISE_ID_INTEL,
-                                                    IPMI_INTEL_PRODUCT_ID_S5500WB) < 0)
-    return (-1);
-
-  /* Inventec 5441/Dell Xanadu II
-   *
-   * Manufacturer ID = 20569 (Inventec)
-   * Product ID = 51 (5441)
-   */
-  if (_interpret_sel_oem_config_intel_node_manager (ctx,
-                                                    IPMI_IANA_ENTERPRISE_ID_INVENTEC,
-                                                    IPMI_INVENTEC_PRODUCT_ID_5441) < 0)
-    return (-1);
-
-  /* Inventec 5442/Dell Xanadu III
-   *
-   * Manufacturer ID = 20569 (Inventec)
-   * Product ID = 52 (5442)
-   */
-  if (_interpret_sel_oem_config_intel_node_manager (ctx,
-                                                    IPMI_IANA_ENTERPRISE_ID_INVENTEC,
-                                                    IPMI_INVENTEC_PRODUCT_ID_5442) < 0)
-    return (-1);
-
-  /* Quanta S99Q/Dell FS12-TY
-   *
-   * Manufacturer ID = 7244 (Quanta)
-   * Product ID = 21401 (S99Q)
-   */
-  if (_interpret_sel_oem_config_intel_node_manager (ctx,
-                                                    IPMI_IANA_ENTERPRISE_ID_QUANTA,
-                                                    IPMI_QUANTA_PRODUCT_ID_S99Q) < 0)
-    return (-1);
-
-  if (_interpret_sel_oem_config_intel_smi_timeout (ctx) < 0)
+  if (_interpret_sel_oem_intel (ctx) < 0)
     return (-1);
   
   return (0);
@@ -1188,6 +1266,12 @@ ipmi_interpret_sel_init (ipmi_interpret_ctx_t ctx)
                                   &ctx->interpret_sel.ipmi_interpret_sel_current_transition_severity_config,
                                   ipmi_interpret_sel_current_transition_severity_config,
                                   ipmi_interpret_sel_current_transition_severity_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_config_sel_init (ctx,
+                                  &ctx->interpret_sel.ipmi_interpret_sel_fan_state_config,
+                                  ipmi_interpret_sel_fan_state_config,
+                                  ipmi_interpret_sel_fan_state_config_len) < 0)
     goto cleanup;
 
   if (_interpret_config_sel_init (ctx,
@@ -1566,6 +1650,9 @@ ipmi_interpret_sel_destroy (ipmi_interpret_ctx_t ctx)
 
   _interpret_config_sel_destroy (ctx,
                                  ctx->interpret_sel.ipmi_interpret_sel_current_transition_severity_config);
+
+  _interpret_config_sel_destroy (ctx,
+                                 ctx->interpret_sel.ipmi_interpret_sel_fan_state_config);
 
   _interpret_config_sel_destroy (ctx,
                                  ctx->interpret_sel.ipmi_interpret_sel_fan_transition_severity_config);
@@ -2218,6 +2305,7 @@ ipmi_interpret_sel_config_parse (ipmi_interpret_ctx_t ctx,
   int ipmi_interpret_sel_voltage_performance_flags[ipmi_interpret_sel_voltage_performance_config_len];
   int ipmi_interpret_sel_voltage_transition_severity_flags[ipmi_interpret_sel_voltage_transition_severity_config_len];
   int ipmi_interpret_sel_current_transition_severity_flags[ipmi_interpret_sel_current_transition_severity_config_len];
+  int ipmi_interpret_sel_fan_state_flags[ipmi_interpret_sel_fan_state_config_len];
   int ipmi_interpret_sel_fan_transition_severity_flags[ipmi_interpret_sel_fan_transition_severity_config_len];
   int ipmi_interpret_sel_fan_device_present_flags[ipmi_interpret_sel_fan_device_present_config_len];
   int ipmi_interpret_sel_fan_transition_availability_flags[ipmi_interpret_sel_fan_transition_availability_config_len];
@@ -2332,6 +2420,12 @@ ipmi_interpret_sel_config_parse (ipmi_interpret_ctx_t ctx,
                             ctx->interpret_sel.ipmi_interpret_sel_current_transition_severity_config,
                             ipmi_interpret_sel_current_transition_severity_flags,
                             ipmi_interpret_sel_current_transition_severity_config_len);
+
+  _fill_sel_config_options (config_file_options,
+                            &config_file_options_len,
+                            ctx->interpret_sel.ipmi_interpret_sel_fan_state_config,
+                            ipmi_interpret_sel_fan_state_flags,
+                            ipmi_interpret_sel_fan_state_config_len);
 
   _fill_sel_config_options (config_file_options,
                             &config_file_options_len,
