@@ -71,9 +71,17 @@ extern "C" {
 /*
  * Intel S5500WB
  * Intel SR1625
+ * Quanta QSSC-S4R/Appro GB812X-CN
+ * (Quanta motherboard maintains Intel manufacturer ID)
  */
 
 #define IPMI_SENSOR_TYPE_OEM_INTEL_SMI_TIMEOUT                  0xF3
+
+/*
+ * Quanta QSSC-S4R/Appro GB812X-CN
+ * (Quanta motherboard maintains Intel manufacturer ID)
+ */
+#define IPMI_SENSOR_TYPE_OEM_INTEL_POWER_THROTTLED              0xF3
 
 /*
  * Intel Node Manager

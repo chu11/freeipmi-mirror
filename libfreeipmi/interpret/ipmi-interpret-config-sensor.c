@@ -1096,7 +1096,9 @@ _interpret_sensor_oem_supermicro (ipmi_interpret_ctx_t ctx)
 }
 
 static int
-_interpret_sensor_oem_intel_smi_timeout (ipmi_interpret_ctx_t ctx)
+_interpret_sensor_oem_intel_smi_timeout_power_throttled_wrapper (ipmi_interpret_ctx_t ctx,
+								 uint32_t manufacturer_id,
+								 uint16_t product_id)
 {
   struct ipmi_interpret_sensor_oem_config *oem_conf;
 
@@ -1104,10 +1106,50 @@ _interpret_sensor_oem_intel_smi_timeout (ipmi_interpret_ctx_t ctx)
   assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
   assert (ctx->interpret_sensor.sensor_oem_config);
 
-  /* Intel SR1625/S5500WB SMI Timeout
+  if (_interpret_sensor_oem_config_create (ctx,
+					   manufacturer_id,
+					   product_id,
+					   IPMI_EVENT_READING_TYPE_CODE_STATE,
+					   IPMI_SENSOR_TYPE_OEM_INTEL_SMI_TIMEOUT,
+					   &oem_conf) < 0)
+    return (-1);
+  
+  oem_conf->oem_state[0].sensor_event_bitmask = 0;
+  oem_conf->oem_state[0].sensor_state = IPMI_INTERPRET_STATE_NOMINAL;
+  oem_conf->oem_state[0].oem_state_type = IPMI_OEM_STATE_TYPE_BITMASK;
+
+  oem_conf->oem_state[1].sensor_event_bitmask = (0x1 << IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_DEASSERTED);
+  oem_conf->oem_state[1].sensor_state = IPMI_INTERPRET_STATE_NOMINAL;
+  oem_conf->oem_state[1].oem_state_type = IPMI_OEM_STATE_TYPE_BITMASK;
+
+  oem_conf->oem_state[2].sensor_event_bitmask = (0x1 << IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED);
+  oem_conf->oem_state[2].sensor_state = IPMI_INTERPRET_STATE_CRITICAL;
+  oem_conf->oem_state[2].oem_state_type = IPMI_OEM_STATE_TYPE_BITMASK;
+
+  oem_conf->oem_state_count = 3;
+  
+  return (0);
+}
+						 
+
+static int
+_interpret_sensor_oem_intel_smi_timeout_power_throttled (ipmi_interpret_ctx_t ctx)
+{
+  assert (ctx);
+  assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
+  assert (ctx->interpret_sensor.sensor_oem_config);
+
+  /* Intel SMI Timeout
+   * Intel SR1625/S5500WB
+   * Quanta QSSC-S4R/Appro GB812X-CN (Quanta motherboard maintains Intel manufacturer ID)
+   *
+   * and
+   *
+   * Intel Power Throttled
+   * Quanta QSSC-S4R/Appro GB812X-CN (Quanta motherboard maintains Intel manufacturer ID)
    *
    * Manufacturer ID = 343 (Intel)
-   * Product ID = 62 (Intel SR1625, S5500WB)
+   * Product ID = 62 (Intel SR1625, S5500WB), 64 (Quanta QSSC-S4R)
    * Event/Reading Type Code = 3h (State Asserted/Deasserted)
    * Sensor Type = F3h (OEM)
    * Bitmask 0x0001 = "State Deasserted"
@@ -1126,27 +1168,17 @@ _interpret_sensor_oem_intel_smi_timeout (ipmi_interpret_ctx_t ctx)
    * event for that sensor. The BMC will also reset the system.
    */
 
-  if (_interpret_sensor_oem_config_create (ctx,
-					   IPMI_IANA_ENTERPRISE_ID_INTEL,
-					   IPMI_INTEL_PRODUCT_ID_SR1625,
-					   IPMI_EVENT_READING_TYPE_CODE_STATE,
-					   IPMI_SENSOR_TYPE_OEM_INTEL_SMI_TIMEOUT,
-					   &oem_conf) < 0)
+  /* Intel SR1625/S5500WB */
+  if (_interpret_sensor_oem_intel_smi_timeout_power_throttled_wrapper (ctx,
+								       IPMI_IANA_ENTERPRISE_ID_INTEL,
+								       IPMI_INTEL_PRODUCT_ID_SR1625) < 0)
     return (-1);
 
-  oem_conf->oem_state[0].sensor_event_bitmask = 0;
-  oem_conf->oem_state[0].sensor_state = IPMI_INTERPRET_STATE_NOMINAL;
-  oem_conf->oem_state[0].oem_state_type = IPMI_OEM_STATE_TYPE_BITMASK;
-
-  oem_conf->oem_state[1].sensor_event_bitmask = (0x1 << IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_DEASSERTED);
-  oem_conf->oem_state[1].sensor_state = IPMI_INTERPRET_STATE_NOMINAL;
-  oem_conf->oem_state[1].oem_state_type = IPMI_OEM_STATE_TYPE_BITMASK;
-
-  oem_conf->oem_state[2].sensor_event_bitmask = (0x1 << IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED);
-  oem_conf->oem_state[2].sensor_state = IPMI_INTERPRET_STATE_CRITICAL;
-  oem_conf->oem_state[2].oem_state_type = IPMI_OEM_STATE_TYPE_BITMASK;
-
-  oem_conf->oem_state_count = 3;
+  /* Quanta QSSC-S4R/Appro GB812X-CN */
+  if (_interpret_sensor_oem_intel_smi_timeout_power_throttled_wrapper (ctx,
+								       IPMI_IANA_ENTERPRISE_ID_INTEL,
+								       IPMI_INTEL_PRODUCT_ID_QUANTA_QSSC_S4R) < 0)
+    return (-1);
 
   return (0);
 }
@@ -1158,7 +1190,7 @@ _interpret_sensor_oem_intel (ipmi_interpret_ctx_t ctx)
   assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
   assert (ctx->interpret_sensor.sensor_oem_config);
 
-  if (_interpret_sensor_oem_intel_smi_timeout (ctx) < 0)
+  if (_interpret_sensor_oem_intel_smi_timeout_power_throttled (ctx) < 0)
     return (-1);
 
   return (0);
