@@ -24,7 +24,7 @@ motherboard
 SENSORFAULT | State Deasserted
 SENSOROK    | State Asserted
 - need mechanism to specify record ids???
-ARGHH - some OEM sensors maybe dependent on sensor number too or generator ID.  ARGH!
+some OEM sensors maybe dependent on sensor number too or generator ID.  ARGH!
 
 
 
