@@ -28,8 +28,14 @@ extern "C" {
  *******************************************/
   
 /*
+ * Dell Poweredge 2900
+ * Dell Poweredge 2950
  * Dell Poweredge R610
  * Dell Poweredge R710
+ * Dell Poweredge M600
+ * Dell Poweredge M610
+ * Dell Poweredge M610X
+ * Dell Poweredge M910
  */
 
 #define IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_LCD_STRING                           0xC1
