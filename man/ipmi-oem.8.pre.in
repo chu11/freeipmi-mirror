@@ -78,12 +78,13 @@ This OEM command can retrieve the motherboard system information.
 Valid keys are \fIguid\fR, \fIasset\-tag\fR, \fIservice\-tag\fR,
 \fIchassis\-service\-tag\fR, \fIchassis\-related\-service\-tag\fR,
 \fIboard\-revision\fR, \fIplatform\-model\-name\fR,
-\fIslot\-number\fR, \fIidrac\-info\fR, \fIidrac\-ipv4\-url\fR,
-\fIidrac\-gui\-webserver\-control\fR, \fIcmc\-ipv4\-url\fR,
-\fImac\-addresses\fR.  Command confirmed to work on Dell Poweredge
-2900, 2950, R610, R710, M600, M610, M610X, and M910 (Dell 10G and 11G
-Poweredge systems).  However, system information may not be readable
-or available on every system.
+\fIslot\-number\fR, \fIsystem\-revision\fR, \fIidrac\-info\fR,
+\fIidrac\-ipv4\-url\fR, \fIidrac\-gui\-webserver\-control\fR,
+\fIcmc\-ipv4\-url\fR, \fIcmc\-ipv6\-info\fR, \fIcmc\-ipv6\-url\fR,
+\fIipv6\-snmp\-info\fR, \fImac\-addresses\fR.  Command confirmed to
+work on Dell Poweredge 2900, 2950, R610, R710, M600, M610, M610X, and
+M910 (Dell 10G and 11G Poweredge systems).  However, system
+information may not be readable or available on every system.
 .TP
 .B get-nic-selection
 This OEM command will determine the current NIC selection for IPMI as

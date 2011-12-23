@@ -111,6 +111,8 @@
 #define IPMI_OEM_DELL_SYSTEM_INFO_CMC_IPV6_INFO_AUTOCONFIGURATION_DISABLED 0
 #define IPMI_OEM_DELL_SYSTEM_INFO_CMC_IPV6_INFO_AUTOCONFIGURATION_ENABLED  1
 
+#define IPMI_OEM_DELL_SYSTEM_INFO_IPV6_SNMP_TRAP_DESTINATION_ADDRESS_MIN_LEN 6
+
 #define IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_TYPE_BITMASK 0x30
 #define IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_TYPE_SHIFT   4
 
@@ -519,7 +521,7 @@ _get_dell_system_info_long_string (ipmi_oem_state_data_t *state_data,
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "ipmi_cmd_get_system_info_parameters: invalid string type returned: %Xh\n",
+                       "Cannot handle non-ASCII encoding: %Xh\n",
                        configuration_parameter_data[0]);
       goto cleanup;
     }
@@ -871,7 +873,7 @@ _get_dell_system_info_idrac_info (ipmi_oem_state_data_t *state_data,
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "ipmi_cmd_get_system_info_parameters: invalid string type returned: %Xh\n",
+                       "Cannot handle non-ASCII encoding: %Xh\n",
                        configuration_parameter_data[0]);
       goto cleanup;
     }
@@ -1059,8 +1061,8 @@ _output_dell_system_info_cmc_ipv6_info (ipmi_oem_state_data_t *state_data)
    *
    * Uses Get System Info command
    *
-   * iDRAC Info Parameter = 0xF2
-   * iDRAC Info Set Selector = ... see below ...
+   * CMC IPv6 Info Parameter = 0xF2
+   * CMC IPv6 Info Set Selector = ... see below ...
    *
    * Parameter data response formatted:
    *
@@ -1180,7 +1182,7 @@ _output_dell_system_info_cmc_ipv6_info (ipmi_oem_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "ipmi_cmd_get_system_info_parameters: invalid string type returned: %Xh\n",
+                       "Cannot handle non-ASCII encoding: %Xh\n",
                        configuration_parameter_data[0]);
       goto cleanup;
     }
@@ -1209,6 +1211,262 @@ _output_dell_system_info_cmc_ipv6_info (ipmi_oem_state_data_t *state_data)
 		  "IPv6 Address      : %s\n",
 		  ipv6_str_buf);
 
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
+static int
+_output_dell_system_info_snmp_ipv6_info (ipmi_oem_state_data_t *state_data)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t configuration_parameter_data[IPMI_OEM_MAX_BYTES];
+  uint8_t ipv6_snmp_trap_destination_addresses[IPMI_OEM_MAX_BYTES];
+  unsigned int ipv6_snmp_trap_destination_addresses_len = 0;
+  uint8_t string_encoding;
+  uint8_t data_length;
+  uint8_t destination_type;
+  uint8_t alert_ack_timeout;
+  uint8_t retries;
+  char *destination_type_str;
+  char ipv6_str_buf[IPMI_OEM_STR_BUFLEN + 1];
+  int len;
+  int rv = -1;
+  int i;
+
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 1);
+
+  /* Dell Poweredge OEM
+   *
+   * From Dell Provided Docs
+   *
+   * Uses Get System Info command
+   *
+   * IPv6 SNMP Trap Destination Addresses Parameter = 0xF0
+   * IPv6 SNMP Trap Destination Addresses Set Selector = ... see below ...
+   *
+   * Parameter data response formatted:
+   *
+   * Each block first byte is set-selector.  Not counting that, the
+   * total block of data is.
+   *
+   * 1st byte
+   * - 7:4 - reserved
+   * - 3:0 - string encoding, 0 = printable ascii  
+   * 2nd byte - string length
+   * 3rd byte - destination type
+   * - bit 0 - 0 = disabled, 1 = enabled
+   * - bit 7:1 - reserved
+   * 4th byte - alert ack timeout
+   * - bit 0 - 0 = disabled, 1 = enabled
+   * - bit 7:1 - reserved
+   * 5th byte - retries
+   * bytes 6-N - IPv6 string (max 39 bytes)
+   *
+   * set selector 0 = bytes 1-16
+   * set selector 1 = bytes 17-32
+   * etc.
+   */
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_system_info_parameters_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+  
+  if (ipmi_cmd_get_system_info_parameters (state_data->ipmi_ctx,
+					   IPMI_GET_SYSTEM_INFO_PARAMETER,
+					   IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_IPV6_SNMP_TRAP_DESTINATION_ADDRESS,
+					   0,
+					   IPMI_SYSTEM_INFO_PARAMETERS_NO_BLOCK_SELECTOR,
+					   obj_cmd_rs) < 0)
+    {
+      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+	  && (ipmi_check_completion_code (obj_cmd_rs,
+					  IPMI_COMP_CODE_GET_SYSTEM_INFO_PARAMETERS_PARAMETER_NOT_SUPPORTED) == 1))
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "%s:%s '%s' option not supported on this system\n",
+			   state_data->prog_data->args->oem_id,
+			   state_data->prog_data->args->oem_command,
+			   state_data->prog_data->args->oem_options[0]);
+	  goto cleanup;
+	}
+      
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "ipmi_cmd_get_system_info_parameters: %s\n",
+		       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if ((len = fiid_obj_get_data (obj_cmd_rs,
+                                "configuration_parameter_data",
+                                configuration_parameter_data,
+                                IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get_data: 'configuration_parameter_data': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+
+  if (!len)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "%s:%s possibly not supported, no information available for reading\n",
+		       state_data->prog_data->args->oem_id,
+		       state_data->prog_data->args->oem_command);
+      goto cleanup;
+    }
+
+  if (len < 3)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_get_system_info_parameters: invalid buffer length returned: %d\n",
+                       len);
+      goto cleanup;
+    }
+
+  /* configuration_parameter_data[0] is the set selector, we don't care */
+
+  string_encoding = (configuration_parameter_data[1] & IPMI_OEM_DELL_SYSTEM_INFO_STRING_ENCODING_BITMASK);
+  string_encoding >>= IPMI_OEM_DELL_SYSTEM_INFO_STRING_ENCODING_SHIFT;
+
+  if (string_encoding != IPMI_SYSTEM_INFO_ENCODING_ASCII_LATIN1)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "Cannot handle non-ASCII encoding: %Xh\n",
+                       configuration_parameter_data[0]);
+      goto cleanup;
+    }
+
+  data_length = configuration_parameter_data[2];
+
+  if (!data_length)
+    goto out;
+
+  memcpy (&ipv6_snmp_trap_destination_addresses[ipv6_snmp_trap_destination_addresses_len],
+	  configuration_parameter_data + 1,	/* remove set selector */
+	  len - 1);
+      
+  ipv6_snmp_trap_destination_addresses_len += (len - 1);
+
+  /* + 2 for string encoding and data length fields, aren't accounted
+   * for in Dell's OEM count
+   */
+  for (i = 1; i <  (data_length + 2) / 16; i++)
+    {
+      if (ipmi_cmd_get_system_info_parameters (state_data->ipmi_ctx,
+					       IPMI_GET_SYSTEM_INFO_PARAMETER,
+					       IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_IPV6_SNMP_TRAP_DESTINATION_ADDRESS,
+					       i,
+					       IPMI_SYSTEM_INFO_PARAMETERS_NO_BLOCK_SELECTOR,
+					       obj_cmd_rs) < 0)
+	{
+	  if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+	      && (ipmi_check_completion_code (obj_cmd_rs,
+					      IPMI_COMP_CODE_GET_SYSTEM_INFO_PARAMETERS_PARAMETER_NOT_SUPPORTED) == 1))
+	    {
+	      pstdout_fprintf (state_data->pstate,
+			       stderr,
+			       "%s:%s '%s' option not supported on this system\n",
+			       state_data->prog_data->args->oem_id,
+			       state_data->prog_data->args->oem_command,
+			       state_data->prog_data->args->oem_options[0]);
+	      goto cleanup;
+	    }
+	  
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_cmd_get_system_info_parameters: %s\n",
+			   ipmi_ctx_errormsg (state_data->ipmi_ctx));
+	  goto cleanup;
+	}
+      
+      if ((len = fiid_obj_get_data (obj_cmd_rs,
+				    "configuration_parameter_data",
+				    configuration_parameter_data,
+				    IPMI_OEM_MAX_BYTES)) < 0)
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "fiid_obj_get_data: 'configuration_parameter_data': %s\n",
+			   fiid_obj_errormsg (obj_cmd_rs));
+	  goto cleanup;
+	}
+      
+      if (!len)
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_cmd_get_system_info_parameters: invalid buffer length returned: %d\n",
+			   len);
+	  goto cleanup;
+	}
+      
+      memcpy (&ipv6_snmp_trap_destination_addresses[ipv6_snmp_trap_destination_addresses_len],
+	      configuration_parameter_data + 1,	/* remove set selector */
+	      len - 1);
+      
+      ipv6_snmp_trap_destination_addresses_len += (len - 1);
+    }
+
+  if (ipv6_snmp_trap_destination_addresses_len < IPMI_OEM_DELL_SYSTEM_INFO_IPV6_SNMP_TRAP_DESTINATION_ADDRESS_MIN_LEN)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "ipmi_cmd_get_system_info_parameters: invalid data length returned: %u\n",
+		       ipv6_snmp_trap_destination_addresses_len);
+      goto cleanup;
+    }
+
+  destination_type = ipv6_snmp_trap_destination_addresses[2];
+  alert_ack_timeout = ipv6_snmp_trap_destination_addresses[3];
+  retries = ipv6_snmp_trap_destination_addresses[4];
+
+  if (destination_type == IPMI_DESTINATION_TYPE_PET_TRAP_DESTINATION)
+    destination_type_str = "PET Trap destination";
+  else if (destination_type == IPMI_DESTINATION_TYPE_OEM1)
+    destination_type_str = "OEM 1";
+  else if (destination_type == IPMI_DESTINATION_TYPE_OEM2)
+    destination_type_str = "OEM 2";
+  else
+    destination_type_str = "Unknown";
+
+  pstdout_printf (state_data->pstate,
+		  "Destination Type          : %u s\n",
+		  destination_type_str);
+
+  pstdout_printf (state_data->pstate,
+		  "Alert Acknowledge Timeout : %u s\n",
+		  alert_ack_timeout);
+
+  pstdout_printf (state_data->pstate,
+		  "Retries                   : %u\n",
+		  retries);
+
+  memset (ipv6_str_buf, '\0', IPMI_OEM_STR_BUFLEN + 1);
+
+  memcpy (ipv6_str_buf,
+	  &ipv6_snmp_trap_destination_addresses[5],
+	  (data_length - 3));
+
+  pstdout_printf (state_data->pstate,
+		  "IPv6 Address              : %s\n",
+		  ipv6_str_buf);
+
+ out:
   rv = 0;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
@@ -1484,12 +1742,14 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
 		      "Option: board-revision\n"
 		      "Option: platform-model-name\n"
 		      "Option: slot-number\n"
+		      "Option: system-revision\n"
 		      "Option: idrac-info\n"
 		      "Option: idrac-ipv4-url\n"
 		      "Option: idrac-gui-webserver-control\n"
 		      "Option: cmc-ipv4-url\n"
 		      "Option: cmc-ipv6-info\n"
 		      "Option: cmc-ipv6-url\n"
+		      "Option: snmp-ipv6-info\n"
                       "Option: mac-addresses\n");
       return (0);
     }
@@ -1511,12 +1771,14 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
       && strcasecmp (state_data->prog_data->args->oem_options[0], "product-name") /* legacy */
       && strcasecmp (state_data->prog_data->args->oem_options[0], "platform-model-name")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "slot-number")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "system-revision")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "idrac-info")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "idrac-ipv4-url")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "idrac-gui-webserver-control")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "cmc-ipv4-url")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "cmc-ipv6-info")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "cmc-ipv6-url")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "snmp-ipv6-info")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "mac-addresses"))
     {
       pstdout_fprintf (state_data->pstate,
@@ -1597,6 +1859,12 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
    *
    * Format #6)
    *
+   * IPv6 SNMP Trap Destination Addresses = 0xF0
+   *
+   * See format in _output_dell_system_info_snmp_ipv6_info()
+   *
+   * Format #7)
+   *
    * Dell 10G systems, mac-addresses = 0xCB
    *
    * Parameter data response formatted:
@@ -1604,7 +1872,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
    * 1st byte = number of NICs
    * ? bytes = MAC address of NICS, number of NICS * 6 total bytes
    *
-   * Format #7)
+   * Format #8)
    *
    * Dell 11G systems, mac-addresses = 0xDA
    * + 2 extra bytes
@@ -1835,6 +2103,11 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
       pstdout_printf (state_data->pstate,
 		      "%s\n",
 		      string);
+    }
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "snmp-ipv6-info"))
+    {
+      if (_output_dell_system_info_snmp_ipv6_info (state_data) < 0)
+	goto cleanup;
     }
   else /* (!strcasecmp (state_data->prog_data->args->oem_options[0], "mac-addresses")) */
     {
