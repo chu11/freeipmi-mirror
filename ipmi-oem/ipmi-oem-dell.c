@@ -1191,6 +1191,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
 		      "Option: idrac-ipv4-url\n"
 		      "Option: idrac-gui-webserver-control\n"
 		      "Option: cmc-ipv4-url\n"
+		      "Option: cmc-ipv6-url\n"
                       "Option: mac-addresses\n");
       return (0);
     }
@@ -1216,6 +1217,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
       && strcasecmp (state_data->prog_data->args->oem_options[0], "idrac-ipv4-url")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "idrac-gui-webserver-control")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "cmc-ipv4-url")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "cmc-ipv6-url")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "mac-addresses"))
     {
       pstdout_fprintf (state_data->pstate,
@@ -1258,6 +1260,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
    * slot number = 0xDC
    * iDRAC IPv4 URL = 0xDE
    * CMC IPv4 URL = 0xE0
+   * CMC IPv6 URL = 0xF3
    *
    * Parameter data response formatted:
    *
@@ -1501,6 +1504,18 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
     {
       if (_get_dell_system_info_long_string (state_data,
                                              IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_CMD_IPV4_URL,
+                                             string,
+                                             IPMI_OEM_DELL_MAX_BYTES) < 0)
+        goto cleanup;
+      
+      pstdout_printf (state_data->pstate,
+		      "%s\n",
+		      string);
+    }
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "cmc-ipv6-url"))
+    {
+      if (_get_dell_system_info_long_string (state_data,
+                                             IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_CMC_IPV6_URL,
                                              string,
                                              IPMI_OEM_DELL_MAX_BYTES) < 0)
         goto cleanup;

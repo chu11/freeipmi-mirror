@@ -1,8 +1,8 @@
 2011-12-22  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/: Add Dell get-system-info 'slot-number', 'idrac-info',
-	'idrac-ipv4-url', 'idrac-gui-webserver-control', 'cmc-ipv4-url'.
-	keys.  Support 12G mac addresses.
+	'idrac-ipv4-url', 'idrac-gui-webserver-control',
+	'cmc-ipv4-url'. 'cmc-ipv6-url' keys.  Support 12G mac addresses.
 	
 2011-12-22  Albert Chu <chu11@llnl.gov>
 
