@@ -1156,7 +1156,8 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
    * Format #2)
    *
    * platform-model-name parameter = 0xD1
-   * iDRAC IPv4 URL
+   * slot number = 0xDC
+   * iDRAC IPv4 URL = 0xDE
    *
    * Parameter data response formatted:
    *
@@ -1174,7 +1175,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
    *
    * Format #3)
    *
-   * iDRAC info
+   * iDRAC info = 0xDD
    *
    * See format in _get_dell_system_info_idrac_info().
    * 
