@@ -2035,6 +2035,20 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
 		      "%s\n",
 		      string);
     }
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "system-revision"))
+    {
+      if (_get_dell_system_info_bytes (state_data,
+				       IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_SYSTEM_REVISION,
+				       bytes,
+				       IPMI_OEM_DELL_MAX_BYTES,
+				       1,
+				       &bytes_len) < 0)
+        goto cleanup;
+
+      pstdout_printf (state_data->pstate,
+		      "%u\n",
+		      bytes[0]);
+    }
   else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "idrac-info"))
     {
       if (_output_dell_system_info_idrac_info (state_data) < 0)
