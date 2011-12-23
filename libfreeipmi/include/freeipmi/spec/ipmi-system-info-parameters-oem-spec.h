@@ -58,6 +58,7 @@ extern "C" {
 #define IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_POWER_STAGGERING_AC_RECOVERY         0xD8
 /* achu: this one is taken from code, is correct name? */
 #define IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_11G_MAC_ADDRESSES                    0xDA
+#define IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_12G_MAC_ADDRESSES                    IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_11G_MAC_ADDRESSES
 /* achu: this one is through reverse engineering, is correct name? */ 
 #define IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_SLOT_NUMBER                          0xDC
 #define IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_IDRAC_INFO                           0xDD

@@ -85,6 +85,9 @@
 #define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_11G_MONOLITHIC 0x0A
 #define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_11G_MODULAR    0x0B
 #define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_MASER_LITE_BMC 0x0D
+/* From ipmitool, http://ipmitool.sourceforge.net/ */
+#define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_12G_MONOLITHIC 0x10
+#define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_12G_MODULAR    0x11
 
 #define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_WEB_GUI_SERVER_CONTROL_DISABLED 0x00
 #define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_WEB_GUI_SERVER_CONTROL_ENABLED  0x01
@@ -126,7 +129,7 @@
 
 #define IPMI_OEM_DELL_MAC_ADDRESS_LENGTH             6
 
-#define IPMI_OEM_DELL_11G_MAC_ADDRESS_LENGTH         8 
+#define IPMI_OEM_DELL_11G_OR_12G_MAC_ADDRESS_LENGTH         8 
 
 #define IPMI_OEM_DELL_TOKEN_ID_NIC_LINK_SETTING_GROUP    0x02
 #define IPMI_OEM_DELL_TOKEN_ID_RAC_USER_PRIVILEGE        0x04
@@ -705,6 +708,8 @@ _get_dell_system_info_idrac_info (ipmi_oem_state_data_t *state_data,
    * - 0x0A - 11G monolithic
    * - 0x0B - 11g modular
    * - 0x0D - maser lite
+   * - 0x10 - 12g monolothic
+   * - 0x11 - 12g modular
    *
    * set selector 0 = bytes 1-16
    * set selector 1 = bytes 17-32
@@ -912,6 +917,10 @@ _output_dell_system_info_idrac_info (ipmi_oem_state_data_t *state_data)
     idrac_type_str = "Dell Poweredge 11G (Modular)";
   else if (idrac_type == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_MASER_LITE_BMC)
     idrac_type_str = "Maser Lite BMC";
+  else if (idrac_type == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_12G_MONOLITHIC)
+    idrac_type_str = "Dell Poweredge 12G (Monolithic)";
+  else if (idrac_type == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_12G_MODULAR)
+    idrac_type_str = "Dell Poweredge 12G (Modular)";
   else
     idrac_type_str = "Unknown";
 
@@ -1009,7 +1018,7 @@ _output_dell_system_info_10g_mac_addresses (ipmi_oem_state_data_t *state_data)
 }
 
 static int
-_output_dell_system_info_11g_mac_addresses (ipmi_oem_state_data_t *state_data)
+_output_dell_system_info_11g_or_12g_mac_addresses (ipmi_oem_state_data_t *state_data)
 {
   uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
   uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
@@ -1077,7 +1086,7 @@ _output_dell_system_info_11g_mac_addresses (ipmi_oem_state_data_t *state_data)
   /* see record format below in ipmi_oem_dell_get_system_info(), record length = 8 */
   pstdout_printf (state_data->pstate,
 		  "NIC Number\tMAC Address\t\tNIC Status\n");
-  for (i = 0; i < (total_bytes / IPMI_OEM_DELL_11G_MAC_ADDRESS_LENGTH); i++)
+  for (i = 0; i < (total_bytes / IPMI_OEM_DELL_11G_OR_12G_MAC_ADDRESS_LENGTH); i++)
     {
       uint8_t mac_type;
       
@@ -1086,8 +1095,8 @@ _output_dell_system_info_11g_mac_addresses (ipmi_oem_state_data_t *state_data)
       bytes_rq[2] = IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_11G_MAC_ADDRESSES; /* parameter selector */
       bytes_rq[3] = 0x00;		/* set selector */
       bytes_rq[4] = 0x00;		/* block selector */
-      bytes_rq[5] = i * IPMI_OEM_DELL_11G_MAC_ADDRESS_LENGTH; /* offset */
-      bytes_rq[6] = IPMI_OEM_DELL_11G_MAC_ADDRESS_LENGTH; /* length */
+      bytes_rq[5] = i * IPMI_OEM_DELL_11G_OR_12G_MAC_ADDRESS_LENGTH; /* offset */
+      bytes_rq[6] = IPMI_OEM_DELL_11G_OR_12G_MAC_ADDRESS_LENGTH; /* length */
       
       if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
 				  0, /* lun */
@@ -1104,7 +1113,7 @@ _output_dell_system_info_11g_mac_addresses (ipmi_oem_state_data_t *state_data)
 	  goto cleanup;
 	}
       
-      /* 11 = IPMI_OEM_DELL_11G_MAC_ADDRESS_LENGTH + 3 (for cmd, completion code, parameter revision) */
+      /* 11 = IPMI_OEM_DELL_11G_OR_12G_MAC_ADDRESS_LENGTH + 3 (for cmd, completion code, parameter revision) */
       if (ipmi_oem_check_response_and_completion_code (state_data,
 						       bytes_rs,
 						       rs_len,
@@ -1522,11 +1531,13 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
 	      if (_output_dell_system_info_10g_mac_addresses (state_data) < 0)
 		goto cleanup;
 	    }
-	  /* iDRAC 11g */
+	  /* iDRAC 11g or iDRAC 12g */
 	  else if (idrac_type == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_11G_MONOLITHIC
-		   || idrac_type == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_11G_MODULAR)
+		   || idrac_type == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_11G_MODULAR
+		   || idrac_type == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_12G_MONOLITHIC
+		   || idrac_type == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_12G_MODULAR)
 	    {
-	      if (_output_dell_system_info_11g_mac_addresses (state_data) < 0)
+	      if (_output_dell_system_info_11g_or_12g_mac_addresses (state_data) < 0)
 		goto cleanup;
 	    }
 	  else
