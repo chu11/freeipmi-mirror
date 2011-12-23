@@ -1,10 +1,10 @@
 2011-12-22  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/ipmi-oem-dell.c: Add Dell get-system-info
-	'slot-number', 'system-revision', 'idrac-info', 'idrac-ipv4-url',
-	'idrac-gui-webserver-control', 'cmc-ipv4-url', 'cmc-ipv6-info',
-	'cmc-ipv6-url', 'snmp-ipv6-info' keys.  Support 12G mac addresses.
-	Support better error messages.
+	'slot-number', 'system-revision', 'embedded-video-status',
+	'idrac-info', 'idrac-ipv4-url', 'idrac-gui-webserver-control',
+	'cmc-ipv4-url', 'cmc-ipv6-info', 'cmc-ipv6-url', 'snmp-ipv6-info'
+	keys.  Support 12G mac addresses.  Support better error messages.
 	
 2011-12-22  Albert Chu <chu11@llnl.gov>
 

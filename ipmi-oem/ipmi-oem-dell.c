@@ -95,6 +95,9 @@
 #define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_WEB_GUI_SERVER_CONTROL_DISABLED 0x00
 #define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_WEB_GUI_SERVER_CONTROL_ENABLED  0x01
 
+#define IPMI_OEM_DELL_SYSTEM_INFO_EMBEDDED_VIDEO_STATUS_DISABLED 0x00
+#define IPMI_OEM_DELL_SYSTEM_INFO_EMBEDDED_VIDEO_STATUS_ENABLED  0x01
+
 #define IPMI_OEM_DELL_SYSTEM_INFO_CMC_IPV6_INFO_MIN_LEN 57
 
 #define IPMI_OEM_DELL_SYSTEM_INFO_CMC_IPV6_INFO_IPV6_ADDRESS_STRING_LENGTH 39
@@ -1743,6 +1746,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
 		      "Option: platform-model-name\n"
 		      "Option: slot-number\n"
 		      "Option: system-revision\n"
+		      "Option: embedded-video-status\n"
 		      "Option: idrac-info\n"
 		      "Option: idrac-ipv4-url\n"
 		      "Option: idrac-gui-webserver-control\n"
@@ -1772,6 +1776,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
       && strcasecmp (state_data->prog_data->args->oem_options[0], "platform-model-name")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "slot-number")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "system-revision")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "embedded-video-status")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "idrac-info")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "idrac-ipv4-url")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "idrac-gui-webserver-control")
@@ -2049,6 +2054,29 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
 		      "%u\n",
 		      bytes[0]);
     }
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "embedded-video-status"))
+    {
+      char *embedded_video_status_str;
+
+      if (_get_dell_system_info_bytes (state_data,
+				       IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_EMBEDDED_VIDEO_STATUS,
+				       bytes,
+				       IPMI_OEM_DELL_MAX_BYTES,
+				       1,
+				       &bytes_len) < 0)
+        goto cleanup;
+
+      if (bytes[0] == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_WEB_GUI_SERVER_CONTROL_DISABLED)
+	embedded_video_status_str = "Disabled";
+      else if (bytes[0] == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_WEB_GUI_SERVER_CONTROL_ENABLED)
+	embedded_video_status_str = "Enabled";
+      else
+	embedded_video_status_str = "Unknown";
+
+      pstdout_printf (state_data->pstate,
+		      "%s\n",
+		      embedded_video_status_str);
+    }
   else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "idrac-info"))
     {
       if (_output_dell_system_info_idrac_info (state_data) < 0)
@@ -2086,7 +2114,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
 	idrac_web_gui_server_control_str = "Unknown";
       
       pstdout_printf (state_data->pstate,
-		      "iDRAC GUI/Webserver Control : %s\n",
+		      "%s\n",
 		      idrac_web_gui_server_control_str);
     }
   else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "cmc-ipv4-url"))
