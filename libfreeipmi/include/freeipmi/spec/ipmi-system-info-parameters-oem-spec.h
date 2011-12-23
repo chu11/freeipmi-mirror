@@ -52,8 +52,9 @@ extern "C" {
 #define IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_11G_MAC_ADDRESSES                    0xDA
 #define IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_IDRAC_INFO                           0xDD
 #define IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_IDRAC_IPV4_URL                       0xDE
-#define IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_CMD_IPV4_URL                         0xE0
-#define IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_GUI_WEBSERVER_CONTROL                0xE1
+/* CMC = Chassis Management Controller */
+#define IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_CMC_IPV4_URL                         0xE0
+#define IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_IDRAC_GUI_WEBSERVER_CONTROL          0xE1
 #define IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_PLATFORM_SPECIFIC_DEVICE_INFORMATION 0xE3
 #define IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_LCD_STATUS                           0xE7
 /* achu: this one is taken from code, is correct name? */
