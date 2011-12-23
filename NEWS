@@ -15,6 +15,7 @@ o In ipmi-sel, fix several OEM specific event output bugs.
 o In ipmi-pef-config, fix configuration bug for Enable_PEF_Event_Messages.
 o In ipmi-raw, for file/stdin input, output line number when there is
   an error.
+o In ipmi-oem, support many new options to Dell get-system-info.
   
 Libraries
 ---------
