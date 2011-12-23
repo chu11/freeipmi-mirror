@@ -78,7 +78,8 @@ This OEM command can retrieve the motherboard system information.
 Valid keys are \fIguid\fR, \fIasset\-tag\fR, \fIservice\-tag\fR,
 \fIchassis\-service\-tag\fR, \fIchassis\-related\-service\-tag\fR,
 \fIboard\-revision\fR, \fIplatform\-model\-name\fR,
-\fIslot\-number\fR, \fIidrac\-info\fR, \fIidrac\-ipv4\-url\fR
+\fIslot\-number\fR, \fIidrac\-info\fR, \fIidrac\-ipv4\-url\fR,
+\fIidrac\-gui\-webserver\-control\fR, \fIcmc\-ipv4\-url\fR,
 \fImac\-addresses\fR.  Command confirmed to work on Dell Poweredge
 2900, 2950, R610, R710, M600, M610, M610X, and M910 (Dell 10G and 11G
 Poweredge systems).  However, system information may not be readable

@@ -86,6 +86,9 @@
 #define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_11G_MODULAR    0x0B
 #define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_MASER_LITE_BMC 0x0D
 
+#define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_WEB_GUI_SERVER_CONTROL_DISABLED 0x00
+#define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_WEB_GUI_SERVER_CONTROL_ENABLED  0x01
+
 #define IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_TYPE_BITMASK 0x30
 #define IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_TYPE_SHIFT   4
 
@@ -563,6 +566,87 @@ _get_dell_system_info_long_string (ipmi_oem_state_data_t *state_data,
     }
 
  out:
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
+static int
+_get_dell_system_info_bytes (ipmi_oem_state_data_t *state_data,
+			     uint8_t parameter_selector,
+			     uint8_t *bytes,
+			     unsigned int bytes_len,
+			     unsigned int minimum_bytes_expected,
+			     unsigned int *bytes_len_ret)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t configuration_parameter_data[IPMI_OEM_MAX_BYTES];
+  int len;
+  int rv = -1;
+
+  assert (state_data);
+  assert (bytes);
+  assert (bytes_len);
+  assert (minimum_bytes_expected);
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_system_info_parameters_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_system_info_parameters (state_data->ipmi_ctx,
+                                           IPMI_GET_SYSTEM_INFO_PARAMETER,
+                                           parameter_selector,
+					   IPMI_SYSTEM_INFO_PARAMETERS_NO_SET_SELECTOR,
+                                           IPMI_SYSTEM_INFO_PARAMETERS_NO_BLOCK_SELECTOR,
+                                           obj_cmd_rs) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_get_system_info_parameters: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+  
+  if ((len = fiid_obj_get_data (obj_cmd_rs,
+                                "configuration_parameter_data",
+                                configuration_parameter_data,
+                                IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get_data: 'configuration_parameter_data': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+  
+  if (len < minimum_bytes_expected)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "ipmi_cmd_get_system_info_parameters: invalid buffer length returned: %d\n",
+		       len);
+      goto cleanup;
+    }
+
+  if (len > bytes_len)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "Internal buffer overflow\n");
+      goto cleanup;
+    }
+  
+  memcpy (bytes, configuration_parameter_data, len);
+  
+  if (bytes_len_ret)
+    (*bytes_len_ret) = len;
+
   rv = 0;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
@@ -1077,6 +1161,8 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
 {
   char string[IPMI_OEM_DELL_MAX_BYTES+1];
   unsigned int string_len = 0;
+  uint8_t bytes[IPMI_OEM_DELL_MAX_BYTES+1];
+  unsigned int bytes_len = 0;
   int rv = -1;
 
   assert (state_data);
@@ -1094,6 +1180,8 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
 		      "Option: slot-number\n"
 		      "Option: idrac-info\n"
 		      "Option: idrac-ipv4-url\n"
+		      "Option: idrac-gui-webserver-control\n"
+		      "Option: cmc-ipv4-url\n"
                       "Option: mac-addresses\n");
       return (0);
     }
@@ -1117,6 +1205,8 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
       && strcasecmp (state_data->prog_data->args->oem_options[0], "slot-number")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "idrac-info")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "idrac-ipv4-url")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "idrac-gui-webserver-control")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "cmc-ipv4-url")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "mac-addresses"))
     {
       pstdout_fprintf (state_data->pstate,
@@ -1158,6 +1248,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
    * platform-model-name parameter = 0xD1
    * slot number = 0xDC
    * iDRAC IPv4 URL = 0xDE
+   * CMC IPv4 URL = 0xE0
    *
    * Parameter data response formatted:
    *
@@ -1178,8 +1269,14 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
    * iDRAC info = 0xDD
    *
    * See format in _get_dell_system_info_idrac_info().
-   * 
+   *
    * Format #4)
+   * 
+   * iDRAC GUI/Webserver Control = 0xE1
+   *
+   * 1st byte - 0x00 = Disabled, 0x01 = Enabled
+   *
+   * Format #5)
    *
    * Dell 10G systems, mac-addresses = 0xCB
    *
@@ -1188,7 +1285,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
    * 1st byte = number of NICs
    * ? bytes = MAC address of NICS, number of NICS * 6 total bytes
    *
-   * Format #5)
+   * Format #6)
    *
    * Dell 11G systems, mac-addresses = 0xDA
    * + 2 extra bytes
@@ -1360,6 +1457,41 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
     {
       if (_get_dell_system_info_long_string (state_data,
                                              IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_IDRAC_IPV4_URL,
+                                             string,
+                                             IPMI_OEM_DELL_MAX_BYTES) < 0)
+        goto cleanup;
+      
+      pstdout_printf (state_data->pstate,
+		      "%s\n",
+		      string);
+    }
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "idrac-gui-webserver-control"))
+    {
+      char *idrac_web_gui_server_control_str;
+ 
+      if (_get_dell_system_info_bytes (state_data,
+				       IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_GUI_WEBSERVER_CONTROL,
+				       bytes,
+				       IPMI_OEM_DELL_MAX_BYTES,
+				       1,
+				       &bytes_len) < 0)
+        goto cleanup;
+
+      if (bytes[0] == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_WEB_GUI_SERVER_CONTROL_DISABLED)
+	idrac_web_gui_server_control_str = "Disabled";
+      else if (bytes[1] == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_WEB_GUI_SERVER_CONTROL_ENABLED)
+	idrac_web_gui_server_control_str = "Enabled";
+      else
+	idrac_web_gui_server_control_str = "Unknown";
+      
+      pstdout_printf (state_data->pstate,
+		      "iDRAC GUI/Webserver Control : %s\n",
+		      idrac_web_gui_server_control_str);
+    }
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "cmc-ipv4-url"))
+    {
+      if (_get_dell_system_info_long_string (state_data,
+                                             IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_CMD_IPV4_URL,
                                              string,
                                              IPMI_OEM_DELL_MAX_BYTES) < 0)
         goto cleanup;
