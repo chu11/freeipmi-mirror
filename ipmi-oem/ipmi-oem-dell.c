@@ -1091,7 +1091,9 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
 		      "Option: chassis-related-service-tag\n"
 		      "Option: board-revision\n"
 		      "Option: platform-model-name\n"
-		      "Option: idracinfo\n"
+		      "Option: slot-number\n"
+		      "Option: idrac-info\n"
+		      "Option: idrac-ipv4-url\n"
                       "Option: mac-addresses\n");
       return (0);
     }
@@ -1112,7 +1114,9 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
       && strcasecmp (state_data->prog_data->args->oem_options[0], "board-revision")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "product-name") /* legacy */
       && strcasecmp (state_data->prog_data->args->oem_options[0], "platform-model-name")
-      && strcasecmp (state_data->prog_data->args->oem_options[0], "idracinfo")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "slot-number")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "idrac-info")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "idrac-ipv4-url")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "mac-addresses"))
     {
       pstdout_fprintf (state_data->pstate,
@@ -1151,7 +1155,8 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
    *
    * Format #2)
    *
-   * product-name parameter = 0xD1
+   * platform-model-name parameter = 0xD1
+   * iDRAC IPv4 URL
    *
    * Parameter data response formatted:
    *
@@ -1332,12 +1337,35 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
       pstdout_printf (state_data->pstate,
 		      "%s\n",
 		      string);
-
     }
-  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "idracinfo"))
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "slot-number"))
+    {
+      if (_get_dell_system_info_long_string (state_data,
+                                             IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_SLOT_NUMBER,
+                                             string,
+                                             IPMI_OEM_DELL_MAX_BYTES) < 0)
+        goto cleanup;
+      
+      pstdout_printf (state_data->pstate,
+		      "%s\n",
+		      string);
+    }
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "idrac-info"))
     {
       if (_output_dell_system_info_idrac_info (state_data) < 0)
 	goto cleanup;
+    }
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "idrac-ipv4-url"))
+    {
+      if (_get_dell_system_info_long_string (state_data,
+                                             IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_IDRAC_IPV4_URL,
+                                             string,
+                                             IPMI_OEM_DELL_MAX_BYTES) < 0)
+        goto cleanup;
+      
+      pstdout_printf (state_data->pstate,
+		      "%s\n",
+		      string);
     }
   else /* (!strcasecmp (state_data->prog_data->args->oem_options[0], "mac-addresses")) */
     {
