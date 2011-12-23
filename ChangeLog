@@ -1,5 +1,9 @@
 2011-12-22  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/spec/ipmi-system-info-parameters-oem-spec.h: Fix macro names.
+	
+2011-12-22  Albert Chu <chu11@llnl.gov>
+
 	Merge branch qsscs4r.
  
 	* libfreeipmi/sel-parse/, libfreeipmi/interpret/: Support Quanta
