@@ -337,6 +337,7 @@ _get_dell_system_info_short_string (ipmi_oem_state_data_t *state_data,
   assert (state_data);
   assert (string);
   assert (string_len);
+  assert (state_data->prog_data->args->oem_options_count == 1);
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_system_info_parameters_rs)))
     {
@@ -354,6 +355,19 @@ _get_dell_system_info_short_string (ipmi_oem_state_data_t *state_data,
                                            IPMI_SYSTEM_INFO_PARAMETERS_NO_BLOCK_SELECTOR,
                                            obj_cmd_rs) < 0)
     {
+      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+	  && (ipmi_check_completion_code (obj_cmd_rs,
+					  IPMI_COMP_CODE_GET_SYSTEM_INFO_PARAMETERS_PARAMETER_NOT_SUPPORTED) == 1))
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "%s:%s '%s' option not supported on this system\n",
+			   state_data->prog_data->args->oem_id,
+			   state_data->prog_data->args->oem_command,
+			   state_data->prog_data->args->oem_options[0]);
+	  goto cleanup;
+	}
+      
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_cmd_get_system_info_parameters: %s\n",
@@ -437,6 +451,7 @@ _get_dell_system_info_long_string (ipmi_oem_state_data_t *state_data,
   assert (state_data);
   assert (string);
   assert (string_len);
+  assert (state_data->prog_data->args->oem_options_count == 1);
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_system_info_parameters_rs)))
     {
@@ -454,6 +469,19 @@ _get_dell_system_info_long_string (ipmi_oem_state_data_t *state_data,
                                            IPMI_SYSTEM_INFO_PARAMETERS_NO_BLOCK_SELECTOR,
                                            obj_cmd_rs) < 0)
     {
+      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+	  && (ipmi_check_completion_code (obj_cmd_rs,
+					  IPMI_COMP_CODE_GET_SYSTEM_INFO_PARAMETERS_PARAMETER_NOT_SUPPORTED) == 1))
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "%s:%s '%s' option not supported on this system\n",
+			   state_data->prog_data->args->oem_id,
+			   state_data->prog_data->args->oem_command,
+			   state_data->prog_data->args->oem_options[0]);
+	  goto cleanup;
+	}
+
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_cmd_get_system_info_parameters: %s\n",
@@ -615,6 +643,7 @@ _get_dell_system_info_bytes (ipmi_oem_state_data_t *state_data,
   assert (bytes);
   assert (bytes_len);
   assert (minimum_bytes_expected);
+  assert (state_data->prog_data->args->oem_options_count == 1);
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_system_info_parameters_rs)))
     {
@@ -632,6 +661,19 @@ _get_dell_system_info_bytes (ipmi_oem_state_data_t *state_data,
                                            IPMI_SYSTEM_INFO_PARAMETERS_NO_BLOCK_SELECTOR,
                                            obj_cmd_rs) < 0)
     {
+      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+	  && (ipmi_check_completion_code (obj_cmd_rs,
+					  IPMI_COMP_CODE_GET_SYSTEM_INFO_PARAMETERS_PARAMETER_NOT_SUPPORTED) == 1))
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "%s:%s '%s' option not supported on this system\n",
+			   state_data->prog_data->args->oem_id,
+			   state_data->prog_data->args->oem_command,
+			   state_data->prog_data->args->oem_options[0]);
+	  goto cleanup;
+	}
+
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_cmd_get_system_info_parameters: %s\n",
@@ -789,6 +831,16 @@ _get_dell_system_info_idrac_info (ipmi_oem_state_data_t *state_data,
       
       if (!len)
 	{
+	  if (!idrac_info_len)
+	    {
+	      pstdout_fprintf (state_data->pstate,
+			       stderr,
+			       "%s:%s possibly not supported, no information available for reading\n",
+			       state_data->prog_data->args->oem_id,
+			       state_data->prog_data->args->oem_command);
+	      goto cleanup;
+	    }
+
 	  pstdout_fprintf (state_data->pstate,
 			   stderr,
 			   "ipmi_cmd_get_system_info_parameters: invalid buffer length returned: %d\n",
@@ -805,11 +857,10 @@ _get_dell_system_info_idrac_info (ipmi_oem_state_data_t *state_data,
 
   if (idrac_info_len < IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_MIN_LEN)
     {
-      if (state_data->prog_data->args->common.debug)
-	pstdout_fprintf (state_data->pstate,
-			 stderr,
-			 "ipmi_cmd_get_system_info_parameters: invalid buffer length returned: %d\n",
-			 len);
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "ipmi_cmd_get_system_info_parameters: invalid data length returned: %u\n",
+		       idrac_info_len);
       goto cleanup;
     }
 
@@ -911,20 +962,33 @@ _output_dell_system_info_idrac_info (ipmi_oem_state_data_t *state_data)
   char *dhcp_or_static_str;
   char *idrac_type_str;
   int rv = -1;
+  int ret;
 
   assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 1);
 
   memset (ip_address_buf, '\0', IPMI_OEM_STR_BUFLEN + 1);
   memset (idrac_firmware_version_buf, '\0', IPMI_OEM_STR_BUFLEN + 1);
 
-  if (_get_dell_system_info_idrac_info (state_data,
-					&dhcp_or_static,
-					ip_address_buf,
-					IPMI_OEM_STR_BUFLEN,
-					idrac_firmware_version_buf,
-					IPMI_OEM_STR_BUFLEN,
-					&idrac_type) < 0)
+  if ((ret = _get_dell_system_info_idrac_info (state_data,
+					       &dhcp_or_static,
+					       ip_address_buf,
+					       IPMI_OEM_STR_BUFLEN,
+					       idrac_firmware_version_buf,
+					       IPMI_OEM_STR_BUFLEN,
+					       &idrac_type)) < 0)
     goto cleanup;
+
+  if (!ret)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "%s:%s '%s' option not supported on this system\n",
+		       state_data->prog_data->args->oem_id,
+		       state_data->prog_data->args->oem_command,
+		       state_data->prog_data->args->oem_options[0]);
+      goto cleanup;
+    }
 
   pstdout_printf (state_data->pstate,
 		  "IP Address             : %s\n",
@@ -987,6 +1051,7 @@ _output_dell_system_info_cmc_ipv6_info (ipmi_oem_state_data_t *state_data)
   int i;
 
   assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 1);
 
   /* Dell Poweredge OEM
    *
@@ -1041,6 +1106,19 @@ _output_dell_system_info_cmc_ipv6_info (ipmi_oem_state_data_t *state_data)
 					       IPMI_SYSTEM_INFO_PARAMETERS_NO_BLOCK_SELECTOR,
 					       obj_cmd_rs) < 0)
 	{
+	  if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+	      && (ipmi_check_completion_code (obj_cmd_rs,
+					      IPMI_COMP_CODE_GET_SYSTEM_INFO_PARAMETERS_PARAMETER_NOT_SUPPORTED) == 1))
+	    {
+	      pstdout_fprintf (state_data->pstate,
+			       stderr,
+			       "%s:%s '%s' option not supported on this system\n",
+			       state_data->prog_data->args->oem_id,
+			       state_data->prog_data->args->oem_command,
+			       state_data->prog_data->args->oem_options[0]);
+	      goto cleanup;
+	    }
+	  
 	  pstdout_fprintf (state_data->pstate,
 			   stderr,
 			   "ipmi_cmd_get_system_info_parameters: %s\n",
@@ -1062,6 +1140,16 @@ _output_dell_system_info_cmc_ipv6_info (ipmi_oem_state_data_t *state_data)
       
       if (!len)
 	{
+	  if (!cmc_ipv6_info_len)
+	    {
+	      pstdout_fprintf (state_data->pstate,
+			       stderr,
+			       "%s:%s possibly not supported, no information available for reading\n",
+			       state_data->prog_data->args->oem_id,
+			       state_data->prog_data->args->oem_command);
+	      goto cleanup;
+	    }
+
 	  pstdout_fprintf (state_data->pstate,
 			   stderr,
 			   "ipmi_cmd_get_system_info_parameters: invalid buffer length returned: %d\n",
@@ -1078,11 +1166,10 @@ _output_dell_system_info_cmc_ipv6_info (ipmi_oem_state_data_t *state_data)
 
   if (cmc_ipv6_info_len < IPMI_OEM_DELL_SYSTEM_INFO_CMC_IPV6_INFO_MIN_LEN)
     {
-      if (state_data->prog_data->args->common.debug)
-	pstdout_fprintf (state_data->pstate,
-			 stderr,
-			 "ipmi_cmd_get_system_info_parameters: invalid buffer length returned: %d\n",
-			 len);
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "ipmi_cmd_get_system_info_parameters: invalid data length returned: %u\n",
+		       cmc_ipv6_info_len);
       goto cleanup;
     }
 
@@ -1139,6 +1226,7 @@ _output_dell_system_info_10g_mac_addresses (ipmi_oem_state_data_t *state_data)
   int rv = -1;
 
   assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 1);
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_system_info_parameters_rs)))
     {
@@ -1156,6 +1244,19 @@ _output_dell_system_info_10g_mac_addresses (ipmi_oem_state_data_t *state_data)
                                            IPMI_SYSTEM_INFO_PARAMETERS_NO_BLOCK_SELECTOR,
                                            obj_cmd_rs) < 0)
     {
+      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+	  && (ipmi_check_completion_code (obj_cmd_rs,
+					  IPMI_COMP_CODE_GET_SYSTEM_INFO_PARAMETERS_PARAMETER_NOT_SUPPORTED) == 1))
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "%s:%s '%s' option not supported on this system\n",
+			   state_data->prog_data->args->oem_id,
+			   state_data->prog_data->args->oem_command,
+			   state_data->prog_data->args->oem_options[0]);
+	  goto cleanup;
+	}
+      
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_cmd_get_system_info_parameters: %s\n",
@@ -1223,6 +1324,7 @@ _output_dell_system_info_11g_or_12g_mac_addresses (ipmi_oem_state_data_t *state_
   int rv = -1;
 
   assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 1);
 
   /* see info below in ipmi_oem_dell_get_system_info() for packet
    * format.  We cannot use normal Get System Info b/c Dell hacked it
@@ -1396,7 +1498,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "%s:%s please specify only get-system-info KEY\n");
+                       "%s:%s please specify one get-system-info KEY\n");
       goto cleanup;
     }
 
@@ -4774,6 +4876,19 @@ ipmi_oem_dell_get_power_consumption_statistics (ipmi_oem_state_data_t *state_dat
                                            IPMI_SYSTEM_INFO_PARAMETERS_NO_BLOCK_SELECTOR,
                                            obj_cmd_rs) < 0)
     {
+      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+	  && (ipmi_check_completion_code (obj_cmd_rs,
+					  IPMI_COMP_CODE_GET_SYSTEM_INFO_PARAMETERS_PARAMETER_NOT_SUPPORTED) == 1))
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "%s:%s '%s' option not supported on this system\n",
+			   state_data->prog_data->args->oem_id,
+			   state_data->prog_data->args->oem_command,
+			   state_data->prog_data->args->oem_options[0]);
+	  goto cleanup;
+	}
+
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_cmd_get_system_info_parameters: %s\n",
@@ -5037,6 +5152,18 @@ _get_power_capacity (ipmi_oem_state_data_t *state_data,
                                            IPMI_SYSTEM_INFO_PARAMETERS_NO_BLOCK_SELECTOR,
                                            obj_cmd_rs) < 0)
     {
+      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+	  && (ipmi_check_completion_code (obj_cmd_rs,
+					  IPMI_COMP_CODE_GET_SYSTEM_INFO_PARAMETERS_PARAMETER_NOT_SUPPORTED) == 1))
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "%s:%s option not supported on this system\n",
+			   state_data->prog_data->args->oem_id,
+			   state_data->prog_data->args->oem_command);
+	  goto cleanup;
+	}
+
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_cmd_get_system_info_parameters: %s\n",
