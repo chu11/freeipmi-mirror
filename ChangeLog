@@ -1,5 +1,9 @@
 2011-12-22  Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/: Add Dell get-system-info 'idracinfo' key.
+	
+2011-12-22  Albert Chu <chu11@llnl.gov>
+
 	Merge branch qsscs4r.
  
 	* libfreeipmi/sel-parse/, libfreeipmi/interpret/: Support Quanta

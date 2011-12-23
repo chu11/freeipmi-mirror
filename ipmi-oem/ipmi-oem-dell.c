@@ -39,6 +39,7 @@
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
+#include <arpa/inet.h>
 #include <limits.h>
 #include <assert.h>
 
@@ -69,11 +70,15 @@
 /* 256 b/c length is 8 bit field */
 #define IPMI_OEM_DELL_MAX_BYTES 256
 
+#define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_MIN_LEN 41
+
 #define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IP_ADDRESS_FORMAT_IPV4 0x00
 #define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IP_ADDRESS_FORMAT_IPV6 0x01
 
 #define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IP_ADDRESS_CONFIG_DHCP   0x00
 #define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IP_ADDRESS_CONFIG_STATIC 0x01
+
+#define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_FIRMWARE_VERSION_STRING_LENGTH 20
 
 #define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_10G            0x08
 #define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_CMC            0x09
@@ -567,12 +572,20 @@ _get_dell_system_info_long_string (ipmi_oem_state_data_t *state_data,
 /* returns 1 on success, 0 on not supported, -1 on error */
 static int
 _get_dell_system_info_idrac_info (ipmi_oem_state_data_t *state_data,
+				  uint8_t *dhcp_or_static,
+				  char *ip_address_buf,
+				  unsigned int ip_address_buflen,
+				  char *idrac_firmware_version_buf,
+				  unsigned int idrac_firmware_version_buflen,
                                   uint8_t *idrac_type)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t configuration_parameter_data[IPMI_OEM_MAX_BYTES];
+  uint8_t idrac_info[IPMI_OEM_MAX_BYTES];
+  unsigned int idrac_info_len = 0;
   int len;
   int rv = -1;
+  int i;
 
   assert (state_data);
   assert (idrac_type);
@@ -588,6 +601,9 @@ _get_dell_system_info_idrac_info (ipmi_oem_state_data_t *state_data,
    *
    * Parameter data response formatted:
    *
+   * Each block first byte is set-selector.  Not counting that, the
+   * total block of data is.
+   *
    * 1st byte - string type
    * 2nd byte - string length
    * 3rd byte - IP address format
@@ -595,8 +611,9 @@ _get_dell_system_info_idrac_info (ipmi_oem_state_data_t *state_data,
    * - 0x01 - IPv6
    * 4th byte - DHCP or static
    * - 0x00 - dhcp
-   * - 0x00 - static
+   * - 0x01 - static
    * bytes 5-20 - IP address
+   * - achu: seems to be stored binary, not ascii.  Why??
    * bytes 21-40 - IDRAC firmware version
    * byte 41 - idrac type
    * - 0x08 - 10G
@@ -619,52 +636,137 @@ _get_dell_system_info_idrac_info (ipmi_oem_state_data_t *state_data,
       goto cleanup;
     }
   
-  /* Do set selector 2, we only care about the idrac type */
-  if (ipmi_cmd_get_system_info_parameters (state_data->ipmi_ctx,
-                                           IPMI_GET_SYSTEM_INFO_PARAMETER,
-                                           IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_IDRAC_INFO,
-                                           0x02,
-                                           IPMI_SYSTEM_INFO_PARAMETERS_NO_BLOCK_SELECTOR,
-                                           obj_cmd_rs) < 0)
+  for (i = 0; i < 3; i++)
     {
-      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
-          && (ipmi_check_completion_code (obj_cmd_rs,
-                                          IPMI_COMP_CODE_GET_SYSTEM_INFO_PARAMETERS_PARAMETER_NOT_SUPPORTED) == 1))
+      if (ipmi_cmd_get_system_info_parameters (state_data->ipmi_ctx,
+					       IPMI_GET_SYSTEM_INFO_PARAMETER,
+					       IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_IDRAC_INFO,
+					       i,
+					       IPMI_SYSTEM_INFO_PARAMETERS_NO_BLOCK_SELECTOR,
+					       obj_cmd_rs) < 0)
 	{
-	  rv = 0;
+	  if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+	      && (ipmi_check_completion_code (obj_cmd_rs,
+					      IPMI_COMP_CODE_GET_SYSTEM_INFO_PARAMETERS_PARAMETER_NOT_SUPPORTED) == 1))
+	    {
+	      rv = 0;
+	      goto cleanup;
+	    }
+	  
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_cmd_get_system_info_parameters: %s\n",
+			   ipmi_ctx_errormsg (state_data->ipmi_ctx));
+	  goto cleanup;
+	}
+      
+      if ((len = fiid_obj_get_data (obj_cmd_rs,
+				    "configuration_parameter_data",
+				    configuration_parameter_data,
+				    IPMI_OEM_MAX_BYTES)) < 0)
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "fiid_obj_get_data: 'configuration_parameter_data': %s\n",
+			   fiid_obj_errormsg (obj_cmd_rs));
+	  goto cleanup;
+	}
+      
+      if (!len)
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_cmd_get_system_info_parameters: invalid buffer length returned: %d\n",
+			   len);
 	  goto cleanup;
 	}
 
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "ipmi_cmd_get_system_info_parameters: %s\n",
-                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
-      goto cleanup;
+      memcpy (&idrac_info[idrac_info_len],
+	      configuration_parameter_data + 1,	/* remove set selector */
+	      len - 1);
+
+      idrac_info_len += (len - 1);
     }
 
-  if ((len = fiid_obj_get_data (obj_cmd_rs,
-                                "configuration_parameter_data",
-                                configuration_parameter_data,
-                                IPMI_OEM_MAX_BYTES)) < 0)
+  if (idrac_info_len < IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_MIN_LEN)
     {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_get_data: 'configuration_parameter_data': %s\n",
-                       fiid_obj_errormsg (obj_cmd_rs));
+      if (state_data->prog_data->args->common.debug)
+	pstdout_fprintf (state_data->pstate,
+			 stderr,
+			 "ipmi_cmd_get_system_info_parameters: invalid buffer length returned: %d\n",
+			 len);
       goto cleanup;
     }
 
-  if (len < 1)
+  if (dhcp_or_static)
+    (*dhcp_or_static) = idrac_info[3];
+
+  if (ip_address_buf && ip_address_buflen)
     {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "ipmi_cmd_get_system_info_parameters: invalid buffer length returned: %d\n",
-                       len);
-      goto cleanup;
-    }
+      uint8_t ip_address_format;
 
-  /* idrac type in set selector 2 happens to be index 9 */
-  (*idrac_type) = configuration_parameter_data[9];
+      ip_address_format = idrac_info[2];
+
+      if (ip_address_format == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IP_ADDRESS_FORMAT_IPV4)
+	{
+	  uint32_t ip_address;
+
+	  ip_address = idrac_info[4];
+	  ip_address |= (idrac_info[5] << 8);
+	  ip_address |= (idrac_info[6] << 16);
+	  ip_address |= (idrac_info[7] << 24);
+	  
+	  if (!inet_ntop (AF_INET, &ip_address, ip_address_buf, ip_address_buflen))
+	    {
+	      pstdout_fprintf (state_data->pstate,
+			       stderr,
+			       "inet_ntop: %s\n",
+			       strerror (errno));
+	      goto cleanup;
+	    }
+	}
+      else if (ip_address_format == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IP_ADDRESS_FORMAT_IPV6)
+	{
+	  uint32_t ip_address[4];
+
+	  ip_address[0] = idrac_info[4];
+	  ip_address[0] |= (idrac_info[5] << 8);
+	  ip_address[0] |= (idrac_info[6] << 16);
+	  ip_address[0] |= (idrac_info[7] << 24);
+	  ip_address[1] = idrac_info[8];
+	  ip_address[1] |= (idrac_info[9] << 8);
+	  ip_address[1] |= (idrac_info[10] << 16);
+	  ip_address[1] |= (idrac_info[11] << 24);
+	  ip_address[2] = idrac_info[12];
+	  ip_address[2] |= (idrac_info[13] << 8);
+	  ip_address[2] |= (idrac_info[14] << 16);
+	  ip_address[2] |= (idrac_info[15] << 24);
+	  ip_address[3] = idrac_info[16];
+	  ip_address[3] |= (idrac_info[17] << 8);
+	  ip_address[3] |= (idrac_info[18] << 16);
+	  ip_address[3] |= (idrac_info[19] << 24);
+
+	  if (!inet_ntop (AF_INET6, ip_address, ip_address_buf, ip_address_buflen))
+	    {
+	      pstdout_fprintf (state_data->pstate,
+			       stderr,
+			       "inet_ntop: %s\n",
+			       strerror (errno));
+	      goto cleanup;
+	    }
+	}
+      else
+	memset (ip_address_buf, '\0', ip_address_buflen);
+    } 
+
+  if (idrac_firmware_version_buf
+      && idrac_firmware_version_buflen
+      && idrac_firmware_version_buflen >= IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_FIRMWARE_VERSION_STRING_LENGTH)
+    memcpy (idrac_firmware_version_buf,
+	    &idrac_info[20],
+	    IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_FIRMWARE_VERSION_STRING_LENGTH);
+  
+  (*idrac_type) = idrac_info[40];
 
   rv = 1;
  cleanup:
@@ -673,7 +775,73 @@ _get_dell_system_info_idrac_info (ipmi_oem_state_data_t *state_data,
 }
 
 static int
-_get_dell_system_info_10g_mac_addresses (ipmi_oem_state_data_t *state_data)
+_output_dell_system_info_idrac_info (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t dhcp_or_static;
+  char ip_address_buf[IPMI_OEM_STR_BUFLEN + 1]; 
+  char idrac_firmware_version_buf[IPMI_OEM_STR_BUFLEN + 1];
+  uint8_t idrac_type;
+  char *dhcp_or_static_str;
+  char *idrac_type_str;
+  int rv = -1;
+
+  assert (state_data);
+
+  memset (ip_address_buf, '\0', IPMI_OEM_STR_BUFLEN + 1);
+  memset (idrac_firmware_version_buf, '\0', IPMI_OEM_STR_BUFLEN + 1);
+
+  if (_get_dell_system_info_idrac_info (state_data,
+					&dhcp_or_static,
+					ip_address_buf,
+					IPMI_OEM_STR_BUFLEN,
+					idrac_firmware_version_buf,
+					IPMI_OEM_STR_BUFLEN,
+					&idrac_type) < 0)
+    goto cleanup;
+
+  pstdout_printf (state_data->pstate,
+		  "IP Address             : %s\n",
+		  ip_address_buf);
+
+  if (dhcp_or_static == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IP_ADDRESS_CONFIG_DHCP)
+    dhcp_or_static_str = "DHCP";
+  else if (dhcp_or_static == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IP_ADDRESS_CONFIG_STATIC)
+    dhcp_or_static_str = "Static";
+  else
+    dhcp_or_static_str = "Unknown";
+
+  pstdout_printf (state_data->pstate,
+		  "IP Configuration       : %s\n",
+		  dhcp_or_static_str);
+
+  pstdout_printf (state_data->pstate,
+		  "iDRAC Firmware Version : %s\n",
+		  idrac_firmware_version_buf);
+
+  if (idrac_type == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_10G)
+    idrac_type_str = "Dell Poweredge 10G";
+  else if (idrac_type == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_CMC)
+    idrac_type_str = "Dell Chassis Management Controller ";
+  else if (idrac_type == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_11G_MONOLITHIC)
+    idrac_type_str = "Dell Poweredge 11G (Monolithic)";
+  else if (idrac_type == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_11G_MODULAR)
+    idrac_type_str = "Dell Poweredge 11G (Modular)";
+  else if (idrac_type == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_MASER_LITE_BMC)
+    idrac_type_str = "Maser Lite BMC";
+  else
+    idrac_type_str = "Unknown";
+
+  pstdout_printf (state_data->pstate,
+		  "iDRAC Type             : %s\n",
+		  idrac_type_str);
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+static int
+_output_dell_system_info_10g_mac_addresses (ipmi_oem_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t number_of_nics;
@@ -757,7 +925,7 @@ _get_dell_system_info_10g_mac_addresses (ipmi_oem_state_data_t *state_data)
 }
 
 static int
-_get_dell_system_info_11g_mac_addresses (ipmi_oem_state_data_t *state_data)
+_output_dell_system_info_11g_mac_addresses (ipmi_oem_state_data_t *state_data)
 {
   uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
   uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
@@ -923,6 +1091,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
 		      "Option: chassis-related-service-tag\n"
 		      "Option: board-revision\n"
 		      "Option: platform-model-name\n"
+		      "Option: idracinfo\n"
                       "Option: mac-addresses\n");
       return (0);
     }
@@ -943,6 +1112,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
       && strcasecmp (state_data->prog_data->args->oem_options[0], "board-revision")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "product-name") /* legacy */
       && strcasecmp (state_data->prog_data->args->oem_options[0], "platform-model-name")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "idracinfo")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "mac-addresses"))
     {
       pstdout_fprintf (state_data->pstate,
@@ -999,6 +1169,12 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
    *
    * Format #3)
    *
+   * iDRAC info
+   *
+   * See format in _get_dell_system_info_idrac_info().
+   * 
+   * Format #4)
+   *
    * Dell 10G systems, mac-addresses = 0xCB
    *
    * Parameter data response formatted:
@@ -1006,7 +1182,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
    * 1st byte = number of NICs
    * ? bytes = MAC address of NICS, number of NICS * 6 total bytes
    *
-   * Format #4)
+   * Format #5)
    *
    * Dell 11G systems, mac-addresses = 0xDA
    * + 2 extra bytes
@@ -1158,12 +1334,23 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
 		      string);
 
     }
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "idracinfo"))
+    {
+      if (_output_dell_system_info_idrac_info (state_data) < 0)
+	goto cleanup;
+    }
   else /* (!strcasecmp (state_data->prog_data->args->oem_options[0], "mac-addresses")) */
     {
       uint8_t idrac_type = 0;
       int ret;
       
-      if ((ret = _get_dell_system_info_idrac_info (state_data, &idrac_type)) < 0)
+      if ((ret = _get_dell_system_info_idrac_info (state_data,
+						   NULL,
+						   NULL,
+						   0,
+						   NULL,
+						   0,
+						   &idrac_type)) < 0)
 	goto cleanup;
 
       if (ret)
@@ -1171,14 +1358,14 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
 	  /* iDRAC 10g */
 	  if (idrac_type == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_10G)
 	    {
-	      if (_get_dell_system_info_10g_mac_addresses (state_data) < 0)
+	      if (_output_dell_system_info_10g_mac_addresses (state_data) < 0)
 		goto cleanup;
 	    }
 	  /* iDRAC 11g */
 	  else if (idrac_type == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_11G_MONOLITHIC
 		   || idrac_type == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_11G_MODULAR)
 	    {
-	      if (_get_dell_system_info_11g_mac_addresses (state_data) < 0)
+	      if (_output_dell_system_info_11g_mac_addresses (state_data) < 0)
 		goto cleanup;
 	    }
 	  else
@@ -1193,7 +1380,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
       else
 	{
 	  /* assume iDRAC 10g */
-	  if (_get_dell_system_info_10g_mac_addresses (state_data) < 0)
+	  if (_output_dell_system_info_10g_mac_addresses (state_data) < 0)
 	    goto cleanup;
 	}
 
