@@ -36,6 +36,8 @@ extern "C" {
  * Dell Poweredge M610
  * Dell Poweredge M610X
  * Dell Poweredge M910
+ *
+ * Support of below varies by system.
  */
 
 #define IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_LCD_STRING                           0xC1
