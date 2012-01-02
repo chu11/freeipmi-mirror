@@ -253,9 +253,10 @@ and R710 (Dell 10G and 11G Poweredge systems).
 This OEM command will perform a power control action on a PCIe slot.
 The only native power control operator available is the \fItoggle\fR
 option.  The \fIon\fR, \fIoff\fR, and \fIstatus\fR options are
-emulated through additional calls to read the current PCIe slot watt
-sensor readings.  The PCIe slot number can range from 1 to 16.
-Command confirmed to work on Dell Poweredge C410x.
+emulated through the reading of PCIe slot watt sensor readings
+(requiring \fBipmi\-oem\fR to read the system SDR).  The PCIe slot
+number can range from 1 to 16.  Command confirmed to work on Dell
+Poweredge C410x.
 .TP
 .B Fujitsu
 .RS
