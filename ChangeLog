@@ -1,3 +1,7 @@
+2012-01-03  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-oem/: Support Dell C410x OEM extension slot-power-control.
+	
 2011-12-22  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/spec/ipmi-system-info-parameters-oem-spec.h: Fix macro names.
