@@ -29,6 +29,8 @@ some OEM sensors maybe dependent on sensor number too or generator ID.  ARGH!
 ipmi-sensors
 ------------
 how to select specific shared sensor on commad line, can't do normally 
+- i.e. perhaps need to do record-id and something else, like
+  -r 5.2 to indicate record id 5 and offset 2.
 
 dist
 ----
