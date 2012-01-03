@@ -353,7 +353,7 @@ struct ipmi_oem_command oem_dell[] =
     },
     {
       "slot-power-control",
-      "<platform-model> <toggle|on|off|status> <slot-number>",
+      "<platform-model> <on|off|status> <slot-number>",
       3,
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_dell_slot_power_control,
