@@ -4945,35 +4945,19 @@ ipmi_oem_dell_get_chassis_identify_status (ipmi_oem_state_data_t *state_data)
   return (rv);
 }
 
-int
-ipmi_oem_dell_slot_power_toggle (ipmi_oem_state_data_t *state_data)
+static int
+_ipmi_oem_dell_do_slot_power_toggle (ipmi_oem_state_data_t *state_data,
+				     unsigned int slot_number)
 {
   uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
   uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
-  char *endptr = NULL;
-  unsigned int slot_number;
   int rs_len;
   int rv = -1;
-  
+
   assert (state_data);
-  assert (state_data->prog_data->args->oem_options_count == 1);
-  
-  errno = 0;
-  slot_number = strtoul (state_data->prog_data->args->oem_options[0], &endptr, 10);
-  if (errno
-      || endptr[0] != '\0'
-      || slot_number < IPMI_OEM_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MIN
-      || slot_number > IPMI_OEM_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MAX)
-    {
-      pstdout_fprintf (state_data->pstate,
-		       stderr,
-		       "%s:%s invalid OEM option argument '%s'\n",
-		       state_data->prog_data->args->oem_id,
-		       state_data->prog_data->args->oem_command,
-		       state_data->prog_data->args->oem_options[0]);
-      goto cleanup;
-    }
-  
+  assert (slot_number >= IPMI_OEM_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MIN
+	  && slot_number <= IPMI_OEM_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MAX);
+
   /* Dell Poweredge OEM
    *
    * From Dell Provided Docs
@@ -5002,12 +4986,12 @@ ipmi_oem_dell_slot_power_toggle (ipmi_oem_state_data_t *state_data)
    * 0xF0 - OEM cmd
    * 0x?? - Completion Code
    */
-
+  
   bytes_rq[0] = IPMI_CMD_OEM_DELL_SLOT_POWER_CONTROL;
   bytes_rq[1] = 0;
   bytes_rq[2] = 0;
   bytes_rq[(slot_number - 1) / 8] = 0x1 << ((slot_number - 1) % 8);
-      
+  
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
 			      0, /* lun */
 			      IPMI_NET_FN_OEM_DELL_GENERIC_RQ, /* network function */
@@ -5022,7 +5006,7 @@ ipmi_oem_dell_slot_power_toggle (ipmi_oem_state_data_t *state_data)
 		       ipmi_ctx_errormsg (state_data->ipmi_ctx));
       goto cleanup;
     }
-      
+  
   if (ipmi_oem_check_response_and_completion_code (state_data,
 						   bytes_rs,
 						   rs_len,
@@ -5038,13 +5022,44 @@ ipmi_oem_dell_slot_power_toggle (ipmi_oem_state_data_t *state_data)
 }
 
 int
-ipmi_oem_dell_slot_power_control (ipmi_oem_state_data_t *state_data)
+ipmi_oem_dell_slot_power_toggle (ipmi_oem_state_data_t *state_data)
 {
-  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
-  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
   char *endptr = NULL;
   unsigned int slot_number;
-  int rs_len;
+  int rv = -1;
+
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 1);
+  
+  errno = 0;
+  slot_number = strtoul (state_data->prog_data->args->oem_options[0], &endptr, 10);
+  if (errno
+      || endptr[0] != '\0'
+      || slot_number < IPMI_OEM_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MIN
+      || slot_number > IPMI_OEM_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MAX)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "%s:%s invalid OEM option argument '%s'\n",
+		       state_data->prog_data->args->oem_id,
+		       state_data->prog_data->args->oem_command,
+		       state_data->prog_data->args->oem_options[0]);
+      goto cleanup;
+    }
+  
+  if (_ipmi_oem_dell_do_slot_power_toggle (state_data, slot_number) < 0)
+    goto cleanup;
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
+ipmi_oem_dell_slot_power_control (ipmi_oem_state_data_t *state_data)
+{
+  char *endptr = NULL;
+  unsigned int slot_number;
   uint16_t record_count;
   unsigned int sensor_found = 0;
   uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
@@ -5228,66 +5243,25 @@ ipmi_oem_dell_slot_power_control (ipmi_oem_state_data_t *state_data)
   else
     slot_power_on_flag = 1;
 
-  /* XXX FINISH UP THIS STUFF using slot_power_on_flag and depending on power action */
-
-  /* Dell Poweredge OEM
-   *
-   * From Dell Provided Docs
-   *
-   * Note that only power toggle is supported natively.  On/off/status
-   * are not natively supported.  They will be calculated using sensor
-   * readings.
-   * 
-   * Slot Power Control Request
-   *
-   * 0x30 - OEM network function
-   * 0xF0 - OEM cmd
-   * 0x?? - bit 0 - slot 1
-   *      - bit 1 - slot 2
-   *      - ...
-   *      - bit 7 - slot 8
-   * 0x?? - bit 0 - slot 9
-   *      - bit 1 - slot 10
-   *      - ...
-   *      - bit 7 - slot 16
-   *
-   * only should do one slot at a time
-   *
-   * Slot Power Control Response
-   *
-   * 0xF0 - OEM cmd
-   * 0x?? - Completion Code
-   */
-
-  bytes_rq[0] = IPMI_CMD_OEM_DELL_SLOT_POWER_CONTROL;
-  bytes_rq[1] = 0;
-  bytes_rq[2] = 0;
-  bytes_rq[(slot_number - 1) / 8] = 0x1 << ((slot_number - 1) % 8);
-      
-  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
-			      0, /* lun */
-			      IPMI_NET_FN_OEM_DELL_GENERIC_RQ, /* network function */
-			      bytes_rq, /* data */
-			      3, /* num bytes */
-			      bytes_rs,
-			      IPMI_OEM_MAX_BYTES)) < 0)
+  if (!strcasecmp (state_data->prog_data->args->oem_options[1], "status"))
     {
-      pstdout_fprintf (state_data->pstate,
-		       stderr,
-		       "ipmi_cmd_raw: %s\n",
-		       ipmi_ctx_errormsg (state_data->ipmi_ctx));
-      goto cleanup;
+      pstdout_printf (state_data->pstate,
+		      "%s\n",
+		      slot_power_on_flag ? "on" : "off");
+      goto out;
     }
-      
-  if (ipmi_oem_check_response_and_completion_code (state_data,
-						   bytes_rs,
-						   rs_len,
-						   2,
-						   IPMI_CMD_OEM_DELL_SLOT_POWER_CONTROL,
-						   IPMI_NET_FN_OEM_DELL_GENERIC_RS,
-						   NULL) < 0)
+  
+  /* don't do power toggle if situation not right for it */
+  if ((!strcasecmp (state_data->prog_data->args->oem_options[1], "on")
+       && slot_power_on_flag)
+      || (!strcasecmp (state_data->prog_data->args->oem_options[1], "off")
+	  && !slot_power_on_flag))
+    goto out;
+  
+  if (_ipmi_oem_dell_do_slot_power_toggle (state_data, slot_number) < 0)
     goto cleanup;
   
+ out:  
   rv = 0;
  cleanup:
   ipmi_sensor_read_ctx_destroy (sensor_read_ctx);
