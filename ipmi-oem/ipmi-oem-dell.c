@@ -39,6 +39,7 @@
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
+#include <math.h>
 #include <limits.h>
 #include <assert.h>
 
@@ -291,6 +292,9 @@
 
 #define IPMI_OEM_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MIN 1
 #define IPMI_OEM_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MAX 16
+
+/* relatively small, we're not looking for something super accurate */
+#define IPMI_OEM_DELL_ZERO_DEGREE_EPSILON 0.01
 
 /* Will call ipmi_cmd_get_system_info_parameters only once, b/c field
  * requested is defined by OEM to be < 16 bytes in length
@@ -4942,7 +4946,7 @@ ipmi_oem_dell_get_chassis_identify_status (ipmi_oem_state_data_t *state_data)
 }
 
 int
-ipmi_oem_dell_slot_power_control (ipmi_oem_state_data_t *state_data)
+ipmi_oem_dell_slot_power_toggle (ipmi_oem_state_data_t *state_data)
 {
   uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
   uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
@@ -4952,24 +4956,10 @@ ipmi_oem_dell_slot_power_control (ipmi_oem_state_data_t *state_data)
   int rv = -1;
   
   assert (state_data);
-  assert (state_data->prog_data->args->oem_options_count == 2);
-
-  if (strcasecmp (state_data->prog_data->args->oem_options[0], "toggle")
-      && strcasecmp (state_data->prog_data->args->oem_options[0], "on")
-      && strcasecmp (state_data->prog_data->args->oem_options[0], "off")
-      && strcasecmp (state_data->prog_data->args->oem_options[0], "status"))
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "%s:%s invalid OEM option argument '%s'\n",
-                       state_data->prog_data->args->oem_id,
-                       state_data->prog_data->args->oem_command,
-                       state_data->prog_data->args->oem_options[0]);
-      goto cleanup;
-    }
-
+  assert (state_data->prog_data->args->oem_options_count == 1);
+  
   errno = 0;
-  slot_number = strtoul (state_data->prog_data->args->oem_options[1], &endptr, 10);
+  slot_number = strtoul (state_data->prog_data->args->oem_options[0], &endptr, 10);
   if (errno
       || endptr[0] != '\0'
       || slot_number < IPMI_OEM_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MIN
@@ -4980,7 +4970,7 @@ ipmi_oem_dell_slot_power_control (ipmi_oem_state_data_t *state_data)
 		       "%s:%s invalid OEM option argument '%s'\n",
 		       state_data->prog_data->args->oem_id,
 		       state_data->prog_data->args->oem_command,
-		       state_data->prog_data->args->oem_options[1]);
+		       state_data->prog_data->args->oem_options[0]);
       goto cleanup;
     }
   
@@ -5013,39 +5003,294 @@ ipmi_oem_dell_slot_power_control (ipmi_oem_state_data_t *state_data)
    * 0x?? - Completion Code
    */
 
-  if (!strcasecmp (state_data->prog_data->args->oem_options[0], "toggle"))
+  bytes_rq[0] = IPMI_CMD_OEM_DELL_SLOT_POWER_CONTROL;
+  bytes_rq[1] = 0;
+  bytes_rq[2] = 0;
+  bytes_rq[(slot_number - 1) / 8] = 0x1 << ((slot_number - 1) % 8);
+      
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+			      0, /* lun */
+			      IPMI_NET_FN_OEM_DELL_GENERIC_RQ, /* network function */
+			      bytes_rq, /* data */
+			      3, /* num bytes */
+			      bytes_rs,
+			      IPMI_OEM_MAX_BYTES)) < 0)
     {
-      bytes_rq[0] = IPMI_CMD_OEM_DELL_SLOT_POWER_CONTROL;
-      bytes_rq[1] = 0;
-      bytes_rq[2] = 0;
-      bytes_rq[(slot_number - 1) / 8] = 0x1 << ((slot_number - 1) % 8);
-      
-      if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
-				  0, /* lun */
-				  IPMI_NET_FN_OEM_DELL_GENERIC_RQ, /* network function */
-				  bytes_rq, /* data */
-				  3, /* num bytes */
-				  bytes_rs,
-				  IPMI_OEM_MAX_BYTES)) < 0)
-	{
-	  pstdout_fprintf (state_data->pstate,
-			   stderr,
-			   "ipmi_cmd_raw: %s\n",
-			   ipmi_ctx_errormsg (state_data->ipmi_ctx));
-	  goto cleanup;
-	}
-      
-      if (ipmi_oem_check_response_and_completion_code (state_data,
-						       bytes_rs,
-						       rs_len,
-						       2,
-						       IPMI_CMD_OEM_DELL_SLOT_POWER_CONTROL,
-						       IPMI_NET_FN_OEM_DELL_GENERIC_RS,
-						       NULL) < 0)
-	goto cleanup;
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "ipmi_cmd_raw: %s\n",
+		       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
     }
+      
+  if (ipmi_oem_check_response_and_completion_code (state_data,
+						   bytes_rs,
+						   rs_len,
+						   2,
+						   IPMI_CMD_OEM_DELL_SLOT_POWER_CONTROL,
+						   IPMI_NET_FN_OEM_DELL_GENERIC_RS,
+						   NULL) < 0)
+    goto cleanup;
   
   rv = 0;
  cleanup:
+  return (rv);
+}
+
+int
+ipmi_oem_dell_slot_power_control (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  char *endptr = NULL;
+  unsigned int slot_number;
+  int rs_len;
+  uint16_t record_count;
+  unsigned int sensor_found = 0;
+  uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
+  int sdr_record_len = 0;
+  ipmi_sensor_read_ctx_t sensor_read_ctx = NULL;
+  double *sensor_reading = NULL;
+  uint16_t sensor_reading_bitmask;
+  int slot_power_on_flag;
+  unsigned int i;
+  int rv = -1;
+  
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 3);
+  
+  if (strcasecmp (state_data->prog_data->args->oem_options[0], "c410x"))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[0]);
+      goto cleanup;
+    }
+  
+  if (strcasecmp (state_data->prog_data->args->oem_options[1], "on")
+      && strcasecmp (state_data->prog_data->args->oem_options[1], "off")
+      && strcasecmp (state_data->prog_data->args->oem_options[1], "status"))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[1]);
+      goto cleanup;
+    }
+
+  errno = 0;
+  slot_number = strtoul (state_data->prog_data->args->oem_options[2], &endptr, 10);
+  if (errno
+      || endptr[0] != '\0'
+      || slot_number < IPMI_OEM_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MIN
+      || slot_number > IPMI_OEM_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MAX)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "%s:%s invalid OEM option argument '%s'\n",
+		       state_data->prog_data->args->oem_id,
+		       state_data->prog_data->args->oem_command,
+		       state_data->prog_data->args->oem_options[2]);
+      goto cleanup;
+    }
+  
+  if (!(sensor_read_ctx = ipmi_sensor_read_ctx_create (state_data->ipmi_ctx)))
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "ipmi_sensor_read_ctx_create: %s\n",
+		       strerror (errno));
+      goto cleanup;
+    }
+        
+  if (sdr_cache_create_and_load (state_data->sdr_cache_ctx,
+				 state_data->pstate,
+				 state_data->ipmi_ctx,
+				 state_data->prog_data->args->sdr.quiet_cache,
+				 state_data->prog_data->args->sdr.sdr_cache_recreate,
+				 state_data->hostname,
+				 state_data->prog_data->args->sdr.sdr_cache_directory,
+				 state_data->prog_data->args->sdr.sdr_cache_file) < 0)
+    goto cleanup;
+  
+  if (ipmi_sdr_cache_record_count (state_data->sdr_cache_ctx, &record_count) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "ipmi_sdr_cache_record_count: %s\n",
+		       ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
+      goto cleanup;
+    }
+  
+  for (i = 0; i < record_count; i++, ipmi_sdr_cache_next (state_data->sdr_cache_ctx))
+    {
+      uint16_t record_id;
+      uint8_t record_type;
+      
+      if ((sdr_record_len = ipmi_sdr_cache_record_read (state_data->sdr_cache_ctx,
+							sdr_record,
+							IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH)) < 0)
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_sdr_cache_record_read: %s\n",
+			   ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
+	  goto cleanup;
+	}
+      
+      if (ipmi_sdr_parse_record_id_and_type (state_data->sdr_parse_ctx,
+					     sdr_record,
+					     sdr_record_len,
+					     &record_id,
+					     &record_type) < 0)
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_sdr_parse_record_id_and_type: %s\n",
+			   ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+	  goto cleanup;
+	}
+      
+      if (!strcasecmp (state_data->prog_data->args->oem_options[0], "c410x"))
+	{
+	  uint8_t sensor_number;
+	  
+	  if (record_type != IPMI_SDR_FORMAT_FULL_SENSOR_RECORD)
+	    continue;
+	  
+	  if (ipmi_sdr_parse_sensor_number (state_data->sdr_parse_ctx,
+					    sdr_record,
+					    sdr_record_len,
+					    &sensor_number) < 0)
+	    {
+	      pstdout_fprintf (state_data->pstate,
+			       stderr,
+			       "ipmi_sdr_parse_sensor_number: %s\n",
+			       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+	      goto cleanup;
+	    }
+	  
+	  /* sensor numbers for these slots range from 0x50 to 0x5F */
+	  if (sensor_number == (IPMI_SENSOR_NUMBER_OEM_DELL_C410X_PCIE_1_WATT + (slot_number - 1)))
+	    {
+	      sensor_found = 1;
+	      break;
+	    }
+	}
+      else
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "internal logic error\n");
+	  goto cleanup;
+	}
+    }
+    
+  if (!sensor_found)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "Sensor representing slot %u not found\n",
+		       slot_number);
+      goto cleanup;
+    }
+      
+  if (ipmi_sensor_read (sensor_read_ctx,
+			sdr_record,
+			sdr_record_len,
+			0,
+			NULL,
+			&sensor_reading,
+			&sensor_reading_bitmask) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "ipmi_sensor_read: %s\n",
+		       ipmi_sensor_read_ctx_errormsg (sensor_read_ctx));
+      goto cleanup;
+    }
+      
+  if (!sensor_reading)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "Failed to retrieve watt reading for PCIe slot\n");
+      goto cleanup;
+    }
+  
+  if (fabs (*sensor_reading) < IPMI_OEM_DELL_ZERO_DEGREE_EPSILON)
+    slot_power_on_flag = 0;
+  else
+    slot_power_on_flag = 1;
+
+  /* XXX FINISH UP THIS STUFF using slot_power_on_flag and depending on power action */
+
+  /* Dell Poweredge OEM
+   *
+   * From Dell Provided Docs
+   *
+   * Note that only power toggle is supported natively.  On/off/status
+   * are not natively supported.  They will be calculated using sensor
+   * readings.
+   * 
+   * Slot Power Control Request
+   *
+   * 0x30 - OEM network function
+   * 0xF0 - OEM cmd
+   * 0x?? - bit 0 - slot 1
+   *      - bit 1 - slot 2
+   *      - ...
+   *      - bit 7 - slot 8
+   * 0x?? - bit 0 - slot 9
+   *      - bit 1 - slot 10
+   *      - ...
+   *      - bit 7 - slot 16
+   *
+   * only should do one slot at a time
+   *
+   * Slot Power Control Response
+   *
+   * 0xF0 - OEM cmd
+   * 0x?? - Completion Code
+   */
+
+  bytes_rq[0] = IPMI_CMD_OEM_DELL_SLOT_POWER_CONTROL;
+  bytes_rq[1] = 0;
+  bytes_rq[2] = 0;
+  bytes_rq[(slot_number - 1) / 8] = 0x1 << ((slot_number - 1) % 8);
+      
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+			      0, /* lun */
+			      IPMI_NET_FN_OEM_DELL_GENERIC_RQ, /* network function */
+			      bytes_rq, /* data */
+			      3, /* num bytes */
+			      bytes_rs,
+			      IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "ipmi_cmd_raw: %s\n",
+		       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+      
+  if (ipmi_oem_check_response_and_completion_code (state_data,
+						   bytes_rs,
+						   rs_len,
+						   2,
+						   IPMI_CMD_OEM_DELL_SLOT_POWER_CONTROL,
+						   IPMI_NET_FN_OEM_DELL_GENERIC_RS,
+						   NULL) < 0)
+    goto cleanup;
+  
+  rv = 0;
+ cleanup:
+  ipmi_sensor_read_ctx_destroy (sensor_read_ctx);
+  free (sensor_reading);
   return (rv);
 }

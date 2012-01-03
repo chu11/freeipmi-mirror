@@ -345,9 +345,16 @@ struct ipmi_oem_command oem_dell[] =
       ipmi_oem_inventec_set_sol_inactivity_timeout
     },
     {
+      "slot-power-toggle",
+      "<slot-number>",
+      1,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_dell_slot_power_toggle,
+    },
+    {
       "slot-power-control",
-      "<toggle|on|off|status> <slot-number>",
-      2,
+      "<platform-model> <toggle|on|off|status> <slot-number>",
+      3,
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_dell_slot_power_control,
     },

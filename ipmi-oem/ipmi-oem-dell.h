@@ -68,6 +68,8 @@ int ipmi_oem_dell_set_power_capacity_status (ipmi_oem_state_data_t *state_data);
 
 int ipmi_oem_dell_get_chassis_identify_status (ipmi_oem_state_data_t *state_data);
 
+int ipmi_oem_dell_slot_power_toggle (ipmi_oem_state_data_t *state_data);
+
 int ipmi_oem_dell_slot_power_control (ipmi_oem_state_data_t *state_data);
 
 #endif

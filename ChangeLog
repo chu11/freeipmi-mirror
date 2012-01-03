@@ -1,6 +1,7 @@
 2012-01-03  Albert Chu <chu11@llnl.gov>
 
-	* ipmi-oem/: Support Dell C410x OEM extension slot-power-control.
+	* ipmi-oem/: Support Dell C410x OEM extension slot-power-toggle
+	and slot-power-control.
 	
 2011-12-22  Albert Chu <chu11@llnl.gov>
 

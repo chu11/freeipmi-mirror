@@ -249,14 +249,23 @@ status.  Command confirmed to work on Dell Poweredge 2900, 2950, R610,
 and R710 (Dell 10G and 11G Poweredge systems).
 .RE
 .TP
-.B slot-power-control \fItoggle|on|off|status\fR \fIslot-number\fR
-This OEM command will perform a power control action on a PCIe slot.
-The only native power control operator available is the \fItoggle\fR
-option.  The \fIon\fR, \fIoff\fR, and \fIstatus\fR options are
-emulated through the reading of PCIe slot watt sensor readings
-(requiring \fBipmi\-oem\fR to read the system SDR).  The PCIe slot
-number can range from 1 to 16.  Command confirmed to work on Dell
+.B slot-power-toggle \fIslot-number\fR
+This OEM command will perform a power toggle on a PCIe slot.  The PCIe
+slot number can range from 1 to 16.  Command confirmed to work on Dell
 Poweredge C410x.
+.TP
+.B slot-power-control \fplatform\-model\fR \fIon|off|status\fR \fIslot-number\fR
+This OEM command will perform a power control action on a PCIe slot.
+\fIon\fR powers on a slot, \fIoff\fR powers off a slot, and
+\fIstatus\fR returns if the current power is on or off.  If the
+current power status is on, an \fIon\fR action does nothing.
+Similarly, if the current power status is off, an \fIoff\fR action
+does nothing.  The \fIon\fR, \fIoff\fR, and \fIstatus\fR slot power
+actions are not native and are emulated through a combination of a
+power toggle (using \fIslot\-power\-toggle\fR above) and the reading
+of PCIe slot watt sensors.  The PCIe slot number can range from 1 to
+16.  Command confirmed to work on Dell Poweredge C410x.  The currently
+supported \fIplatform\-model\fR options are \fIC410x\fR.
 .TP
 .B Fujitsu
 .RS
