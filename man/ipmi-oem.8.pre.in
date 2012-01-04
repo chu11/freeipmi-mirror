@@ -253,7 +253,7 @@ This OEM command will perform a power toggle on a PCIe slot.  The PCIe
 slot number can range from 1 to 16.  Command confirmed to work on Dell
 Poweredge C410x.
 .TP
-.B slot-power-control \fplatform\-model\fR \fIon|off|status\fR \fIslot-number\fR
+.B slot-power-control \fIplatform\-model\fR \fIon|off|status\fR \fIslot-number\fR
 This OEM command will perform a power control action on a PCIe slot.
 This OEM extension is tied very closely to a platform, so a supported
 platform must be specified.  The currently supported
@@ -275,29 +275,28 @@ platform, so a supported platform must be specified.  The currently
 supported \fIplatform\-model\fR options are \fIC410x\fR.  Command
 confirmed to work on Dell Poweredge C410x.
 .TP
-.B set-port-map \fIplatform\-model\fR \fIjumper|bmc\fR \fIipass\-mapping\fR \fI1:2|1:4|1:8\fR
+.B set-port-map \fIjumper|bmc\fR \fIipass\-mapping\fR \fI1:2|1:4|1:8\fR
 This OEM command will set an iPass mapping to PCIe controllers/slots.
-This OEM extension is tied very closely to a platform, so a supported
-platform must be specified.  The currently supported
-\fIplatform\-model\fR options are \fIC410x\fR.  \fIjumper\fR or
-\fIbmc\fR must be specified to indicate if iPass mappings will be
-controlled via jumpers on the system or via BMC/IPMI.  In order for
-reconfiguration to be done via \fBipmi\-oem\fR, the user must select
-\fIbmc\fR.  The \fIipass\-mapping\fR determines which iPass ports
-will be mapped.  \fI1:2\fR, \fI1:4\fR, and \fI1:8\fR determine the
-mapping that should be set.  See details below for specific platforms.
-Command confirmed to work on Dell Poweredge C410x.
+\fIjumper\fR or \fIbmc\fR must be specified to indicate if iPass
+mappings will be controlled via jumpers on the system or via a
+BMC/IPMI.  In order for reconfiguration to be done via
+\fBipmi\-oem\fR, the user must select \fIbmc\fR.  The
+\fIipass\-mapping\fR determines which iPass ports will be mapped.
+\fI1:2\fR, \fI1:4\fR, and \fI1:8\fR determine the mapping that should
+be set.  See details below for specific platforms.  Command confirmed
+to work on Dell Poweredge C410x.
 
-For the platform \fIC410x\fR, the \fIipass\-mapping\fR ranges from 1
+For the Dell Poweredge C410x, the \fIipass\-mapping\fR ranges from 1
 to 4.  \fI1\fR refers to iPass 1 and 5, \fI2\fR to 2 and 6, \fI3\fR to
 3 and 7, and \fI4\fR to 4 and 8.  For the platform \fIC410x\fR, PCIe
 slots 1, 2, 3, 4, 13, 14, 15, and 16 are attached to iPass 1, 2, 3,
 and 4.  PCIe slots 5, 6, 7, 8, 9, 10, 11, and 12 are attached to iPass
-5, 6, 7, and 8.  For example, on the \fIC410x\fR, if \fI1:2\fR is set
-on \fImapping-number\fR \fI1\fR, PCIe slots 1 and 15 will be assigned
-to iPass 1 and slots 2 and 16 will be assigned to iPass 5.  if
-\fI1:4\fR is chosen, PCIe slots 1, 2, 15, and 16 will be assigned to
-iPass 1 and iPass 5 will not be used.
+5, 6, 7, and 8.  For example, if \fI1:2\fR is set on
+\fImapping-number\fR \fI1\fR, PCIe slots 1 and 15 will be assigned to
+iPass 1 and slots 2 and 16 will be assigned to iPass 5.  if \fI1:4\fR
+is chosen, PCIe slots 1, 2, 15, and 16 will be assigned to iPass 1 and
+iPass 5 will not be used.
+
 .RE
 .TP
 .B Fujitsu

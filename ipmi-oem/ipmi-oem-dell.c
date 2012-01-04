@@ -326,14 +326,18 @@
 #define IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_1_2 1
 #define IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_1_4 0
 
+#define IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_MIN 1
+#define IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_MAX 16
+
 #define IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_BITMASK 0xF0
 #define IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_SHIFT   4
 
 #define IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_2_BITMASK 0x0F
 #define IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_2_SHIFT   0
 
-#define IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_2_OR_1_4 1
-#define IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_8        2
+#define IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_8_NOT_SUPPORTED 0
+#define IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_2_OR_1_4        1
+#define IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_8               2
 
 
 /* Will call ipmi_cmd_get_system_info_parameters only once, b/c field
@@ -5070,9 +5074,7 @@ ipmi_oem_dell_slot_power_toggle (ipmi_oem_state_data_t *state_data)
   errno = 0;
   slot_number = strtoul (state_data->prog_data->args->oem_options[0], &endptr, 10);
   if (errno
-      || endptr[0] != '\0'
-      || slot_number < IPMI_OEM_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MIN
-      || slot_number > IPMI_OEM_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MAX)
+      || endptr[0] != '\0')
     {
       pstdout_fprintf (state_data->pstate,
 		       stderr,
@@ -5083,9 +5085,21 @@ ipmi_oem_dell_slot_power_toggle (ipmi_oem_state_data_t *state_data)
       goto cleanup;
     }
   
+  if (slot_number < IPMI_OEM_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MIN
+      || slot_number > IPMI_OEM_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MAX)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "%s:%s invalid OEM option argument '%s' : out of range\n",
+		       state_data->prog_data->args->oem_id,
+		       state_data->prog_data->args->oem_command,
+		       state_data->prog_data->args->oem_options[2]);
+      goto cleanup;
+    }
+  
   if (_ipmi_oem_dell_do_slot_power_toggle (state_data, slot_number) < 0)
     goto cleanup;
-
+  
   rv = 0;
  cleanup:
   return (rv);
@@ -5165,13 +5179,23 @@ ipmi_oem_dell_slot_power_control (ipmi_oem_state_data_t *state_data)
   errno = 0;
   slot_number = strtoul (state_data->prog_data->args->oem_options[2], &endptr, 10);
   if (errno
-      || endptr[0] != '\0'
-      || slot_number < IPMI_OEM_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MIN
-      || slot_number > IPMI_OEM_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MAX)
+      || endptr[0] != '\0')
     {
       pstdout_fprintf (state_data->pstate,
 		       stderr,
 		       "%s:%s invalid OEM option argument '%s'\n",
+		       state_data->prog_data->args->oem_id,
+		       state_data->prog_data->args->oem_command,
+		       state_data->prog_data->args->oem_options[2]);
+      goto cleanup;
+    }
+
+  if (slot_number < IPMI_OEM_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MIN
+      || slot_number > IPMI_OEM_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MAX)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "%s:%s invalid OEM option argument '%s' : out of range\n",
 		       state_data->prog_data->args->oem_id,
 		       state_data->prog_data->args->oem_command,
 		       state_data->prog_data->args->oem_options[2]);
@@ -5188,7 +5212,8 @@ ipmi_oem_dell_slot_power_control (ipmi_oem_state_data_t *state_data)
                        strerror (errno));
       goto cleanup;
     }
-
+  
+  /* sensor numbers for these slots range from 0x50 to 0x5F */
   if (ipmi_cmd_get_sensor_reading (state_data->ipmi_ctx,
 				   IPMI_SENSOR_NUMBER_OEM_DELL_C410X_PCIE_1_WATT + (slot_number - 1),
 				   obj_cmd_rs) < 0)
@@ -5339,7 +5364,7 @@ ipmi_oem_dell_slot_power_control (ipmi_oem_state_data_t *state_data)
 	{
 	  pstdout_fprintf (state_data->pstate,
 			   stderr,
-			   "internal logic error\n");
+			   "Internal logic error\n");
 	  goto cleanup;
 	}
     }
@@ -5551,10 +5576,10 @@ ipmi_oem_dell_get_port_map (ipmi_oem_state_data_t *state_data)
   ipass_mapping4 = (bytes_rs[2] & IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_4_BITMASK);
   ipass_mapping4 >>= IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_4_SHIFT;
 
-  slot_mapping1 = (bytes_rs[2] & IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_BITMASK);
+  slot_mapping1 = (bytes_rs[3] & IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_BITMASK);
   slot_mapping1 >>= IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_SHIFT;
 
-  slot_mapping2 = (bytes_rs[2] & IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_2_BITMASK);
+  slot_mapping2 = (bytes_rs[3] & IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_2_BITMASK);
   slot_mapping2 >>= IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_2_SHIFT;
 
   if (control_type == IPMI_OEM_DELL_PORT_MAP_CONTROL_TYPE_JUMPER)
@@ -5691,6 +5716,326 @@ ipmi_oem_dell_get_port_map (ipmi_oem_state_data_t *state_data)
 	  else
 	    pstdout_printf (state_data->pstate,
 			    "iPass 8:\n");
+	}
+    }
+  else
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "Internal logic error\n");
+      goto cleanup;
+    }
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
+ipmi_oem_dell_set_port_map (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  char *endptr = NULL;
+  unsigned int ipass_mapping;
+  uint8_t slot_mapping;
+  uint8_t slot_mapping_subtype_is_1_2;
+  uint8_t control_type;
+  uint8_t ipass_mapping1;
+  uint8_t ipass_mapping2;
+  uint8_t ipass_mapping3;
+  uint8_t ipass_mapping4;
+  uint8_t slot_mapping1;
+  uint8_t slot_mapping2;
+  int rs_len;
+  int rv = -1;
+  
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 3);
+
+  if (strcasecmp (state_data->prog_data->args->oem_options[0], "jumper")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "bmc"))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[0]);
+      goto cleanup;
+    }
+  
+  errno = 0;
+  ipass_mapping = strtoul (state_data->prog_data->args->oem_options[1], &endptr, 10);
+  if (errno
+      || endptr[0] != '\0')
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "%s:%s invalid OEM option argument '%s'\n",
+		       state_data->prog_data->args->oem_id,
+		       state_data->prog_data->args->oem_command,
+		       state_data->prog_data->args->oem_options[1]);
+      goto cleanup;
+    }
+  
+  if (ipass_mapping < IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_MIN
+      || ipass_mapping > IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_MAX)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "%s:%s invalid OEM option argument '%s' : out of range\n",
+		       state_data->prog_data->args->oem_id,
+		       state_data->prog_data->args->oem_command,
+		       state_data->prog_data->args->oem_options[2]);
+      goto cleanup;
+    }
+  
+  if (strcasecmp (state_data->prog_data->args->oem_options[2], "1:2")
+      && strcasecmp (state_data->prog_data->args->oem_options[2], "1:4")
+      && strcasecmp (state_data->prog_data->args->oem_options[2], "1:8"))
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "%s:%s invalid OEM option argument '%s'\n",
+		       state_data->prog_data->args->oem_id,
+		       state_data->prog_data->args->oem_command,
+		       state_data->prog_data->args->oem_options[2]);
+      goto cleanup;
+    }
+  
+  /* Dell Poweredge OEM
+   *
+   * From Dell Provided Docs
+   *
+   * Port Map Configure Request
+   *
+   * 0x34 - OEM network function
+   * 0xC8 - OEM cmd
+   * 0x?? - bit 7 - get/set
+   *        - 0 - get
+   *        - 1 - set
+   *      - bit 6:4 - control type
+   *        - 1 - jumper
+   *        - 2 - bmc
+   *      - bit 3 - failover ipass mapping 1
+   *        - 0 - 1:4
+   *        - 1 - 1:2
+   *      - bit 2 - failover ipass mapping 2
+   *        - 0 - 1:4
+   *        - 1 - 1:2
+   *      - bit 1 - failover ipass mapping 3
+   *        - 0 - 1:4
+   *        - 1 - 1:2
+   *      - bit 0 - failover ipass mapping 4
+   *        - 0 - 1:4
+   *        - 1 - 1:2
+   * 0x?? - optional byte - new port map setting
+   *      - on get, must specify byte to get equivalent byte of response
+   *      - bit 7:4 - slot mapping 1,2,3,4,13,14,15,16
+   *      - bit 3:0 - slot mapping 5,6,7,8,9,10,11,12
+   *        - for both
+   *        - 1 - 1:2 or 1:4 mode (indicated in previous byte)
+   *        - 2 - 1:8 mode
+   *
+   * Port Map Configure Response
+   *
+   * 0xC8 - OEM cmd
+   * 0x?? - Completion Code
+   * 0x?? - bit 7:4 - control type
+   *        - 1 - jumper
+   *        - 2 - bmc
+   *      - bit 3 - failover ipass mapping 1
+   *        - 0 - 1:4
+   *        - 1 - 1:2
+   *      - bit 2 - failover ipass mapping 2
+   *        - 0 - 1:4
+   *        - 1 - 1:2
+   *      - bit 1 - failover ipass mapping 3
+   *        - 0 - 1:4
+   *        - 1 - 1:2
+   *      - bit 0 - failover ipass mapping 4
+   *        - 0 - 1:4
+   *        - 1 - 1:2
+   * 0x?? - optional byte
+   *      - bit 7:4 - slot mapping 1,2,3,4,13,14,15,16
+   *      - bit 3:0 - slot mapping 5,6,7,8,9,10,11,12
+   *        - for both
+   *        - 0 - 1:8 mode not supported
+   *        - 1 - 1:2 or 1:4 mode (indicated in previous byte)
+   *        - 2 - 1:8 mode
+   */
+
+  /* Get the current settings */
+
+  bytes_rq[0] = IPMI_CMD_OEM_DELL_PORT_MAP;
+  bytes_rq[1] = (IPMI_OEM_DELL_PORT_MAP_GET << IPMI_OEM_DELL_PORT_MAP_GET_SET_SHIFT);
+  bytes_rq[2] = 0x00;		/* to force proper return of data */
+
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+                              IPMI_NET_FN_OEM_DELL_GENERIC_PORT_MAP_RQ, /* network function */
+                              bytes_rq, /* data */
+                              3, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                   bytes_rs,
+                                                   rs_len,
+                                                   4,
+                                                   IPMI_CMD_OEM_DELL_PORT_MAP,
+                                                   IPMI_NET_FN_OEM_DELL_GENERIC_PORT_MAP_RS,
+                                                   NULL) < 0)
+    goto cleanup;
+
+  /* Figure out the old settings */
+
+  ipass_mapping1 = (bytes_rs[2] & IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_1_BITMASK);
+  ipass_mapping1 >>= IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_1_SHIFT;
+
+  ipass_mapping2 = (bytes_rs[2] & IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_2_BITMASK);
+  ipass_mapping2 >>= IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_2_SHIFT;
+
+  ipass_mapping3 = (bytes_rs[2] & IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_3_BITMASK);
+  ipass_mapping3 >>= IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_3_SHIFT;
+
+  ipass_mapping4 = (bytes_rs[2] & IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_4_BITMASK);
+  ipass_mapping4 >>= IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_4_SHIFT;
+
+  slot_mapping1 = (bytes_rs[3] & IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_BITMASK);
+  slot_mapping1 >>= IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_SHIFT;
+
+  slot_mapping2 = (bytes_rs[3] & IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_2_BITMASK);
+  slot_mapping2 >>= IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_2_SHIFT;
+
+  /* Build up the set request using the responses from the get
+   * response and user input
+   */
+
+  bytes_rq[0] = IPMI_CMD_OEM_DELL_PORT_MAP;
+  bytes_rq[1] = (IPMI_OEM_DELL_PORT_MAP_SET << IPMI_OEM_DELL_PORT_MAP_GET_SET_SHIFT);
+
+  if (!strcasecmp (state_data->prog_data->args->oem_options[1], "jumper"))
+    control_type = IPMI_OEM_DELL_PORT_MAP_CONTROL_TYPE_JUMPER;
+  else
+    control_type = IPMI_OEM_DELL_PORT_MAP_CONTROL_TYPE_BMC;
+
+  bytes_rq[1] |= (control_type << IPMI_OEM_DELL_PORT_MAP_CONTROL_TYPE_REQUEST_SHIFT);
+
+  if (!strcasecmp (state_data->prog_data->args->oem_options[2], "1:2"))
+    {
+      slot_mapping = IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_2_OR_1_4;
+      slot_mapping_subtype_is_1_2 = 1;
+    }
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[2], "1:4"))
+    {
+      slot_mapping = IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_2_OR_1_4;
+      slot_mapping_subtype_is_1_2 = 0;
+    }
+  else
+    slot_mapping = IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_8;
+	  
+  if (ipass_mapping == 1
+      && slot_mapping == IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_2_OR_1_4)
+    {
+      if (slot_mapping_subtype_is_1_2)
+	ipass_mapping1 = IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_1_2;
+      else
+	ipass_mapping1 = IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_1_4;
+    }
+
+  if (ipass_mapping == 2
+      && slot_mapping == IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_2_OR_1_4)
+    {
+      if (slot_mapping_subtype_is_1_2)
+	ipass_mapping2 = IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_1_2;
+      else
+	ipass_mapping2 = IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_1_4;
+    }
+
+  if (ipass_mapping == 3
+      && slot_mapping == IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_2_OR_1_4)
+    {
+      if (slot_mapping_subtype_is_1_2)
+	ipass_mapping3 = IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_1_2;
+      else
+	ipass_mapping3 = IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_1_4;
+    }
+
+  if (ipass_mapping == 4
+      && slot_mapping == IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_2_OR_1_4)
+    {
+      if (slot_mapping_subtype_is_1_2)
+	ipass_mapping4 = IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_1_2;
+      else
+	ipass_mapping4 = IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_1_4;
+    }
+
+  bytes_rq[1] |= (ipass_mapping1 << IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_1_SHIFT);
+  bytes_rq[1] |= (ipass_mapping2 << IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_2_SHIFT);
+  bytes_rq[1] |= (ipass_mapping3 << IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_3_SHIFT);
+  bytes_rq[1] |= (ipass_mapping4 << IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_4_SHIFT);
+
+  if (ipass_mapping == 1
+      || ipass_mapping == 2)
+    slot_mapping1 = slot_mapping;
+  else
+    slot_mapping2 = slot_mapping;
+
+  bytes_rq[2] = (slot_mapping1 << IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_SHIFT);
+  bytes_rq[2] |= (slot_mapping2 << IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_2_SHIFT);
+
+  /* Now set the new values */
+
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+                              IPMI_NET_FN_OEM_DELL_GENERIC_PORT_MAP_RQ, /* network function */
+                              bytes_rq, /* data */
+                              3, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+  
+  if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                   bytes_rs,
+                                                   rs_len,
+                                                   4,
+                                                   IPMI_CMD_OEM_DELL_PORT_MAP,
+                                                   IPMI_NET_FN_OEM_DELL_GENERIC_PORT_MAP_RS,
+                                                   NULL) < 0)
+    goto cleanup;
+  
+  /* Special case check at end */
+
+  if (slot_mapping == IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_8)
+    {
+      slot_mapping1 = (bytes_rs[3] & IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_BITMASK);
+      slot_mapping1 >>= IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_SHIFT;
+
+      slot_mapping2 = (bytes_rs[3] & IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_2_BITMASK);
+      slot_mapping2 >>= IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_2_SHIFT;
+  
+      if (slot_mapping1 == IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_8_NOT_SUPPORTED
+	  || slot_mapping2 == IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_8_NOT_SUPPORTED)
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "Platform does not support 1:8 slot mapping\n");
+	  goto cleanup;
 	}
     }
 

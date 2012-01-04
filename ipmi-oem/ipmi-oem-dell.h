@@ -74,4 +74,6 @@ int ipmi_oem_dell_slot_power_control (ipmi_oem_state_data_t *state_data);
 
 int ipmi_oem_dell_get_port_map (ipmi_oem_state_data_t *state_data);
 
+int ipmi_oem_dell_set_port_map (ipmi_oem_state_data_t *state_data);
+
 #endif
