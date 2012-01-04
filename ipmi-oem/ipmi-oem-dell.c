@@ -296,6 +296,46 @@
 /* relatively small, we're not looking for something super accurate */
 #define IPMI_OEM_DELL_ZERO_DEGREE_EPSILON 0.01
 
+#define IPMI_OEM_DELL_PORT_MAP_GET_SET_BITMASK 0x80
+#define IPMI_OEM_DELL_PORT_MAP_GET_SET_SHIFT   7
+
+#define IPMI_OEM_DELL_PORT_MAP_GET 0
+#define IPMI_OEM_DELL_PORT_MAP_SET 1
+
+#define IPMI_OEM_DELL_PORT_MAP_CONTROL_TYPE_REQUEST_BITMASK 0x70
+#define IPMI_OEM_DELL_PORT_MAP_CONTROL_TYPE_REQUEST_SHIFT   4
+
+#define IPMI_OEM_DELL_PORT_MAP_CONTROL_TYPE_RESPONSE_BITMASK 0xF0
+#define IPMI_OEM_DELL_PORT_MAP_CONTROL_TYPE_RESPONSE_SHIFT   4
+
+#define IPMI_OEM_DELL_PORT_MAP_CONTROL_TYPE_JUMPER 1
+#define IPMI_OEM_DELL_PORT_MAP_CONTROL_TYPE_BMC    2
+
+#define IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_1_BITMASK 0x08
+#define IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_1_SHIFT   3
+
+#define IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_2_BITMASK 0x04
+#define IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_2_SHIFT   2
+
+#define IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_3_BITMASK 0x02
+#define IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_3_SHIFT   1
+
+#define IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_4_BITMASK 0x01
+#define IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_4_SHIFT   0
+
+#define IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_1_2 1
+#define IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_1_4 0
+
+#define IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_BITMASK 0xF0
+#define IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_SHIFT   4
+
+#define IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_2_BITMASK 0x0F
+#define IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_2_SHIFT   0
+
+#define IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_2_OR_1_4 1
+#define IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_8        2
+
+
 /* Will call ipmi_cmd_get_system_info_parameters only once, b/c field
  * requested is defined by OEM to be < 16 bytes in length
  */
@@ -4962,10 +5002,6 @@ _ipmi_oem_dell_do_slot_power_toggle (ipmi_oem_state_data_t *state_data,
    *
    * From Dell Provided Docs
    *
-   * Note that only power toggle is supported natively.  On/off/status
-   * are not natively supported.  They will be calculated using sensor
-   * readings.
-   * 
    * Slot Power Control Request
    *
    * 0x30 - OEM network function
@@ -5266,5 +5302,289 @@ ipmi_oem_dell_slot_power_control (ipmi_oem_state_data_t *state_data)
  cleanup:
   ipmi_sensor_read_ctx_destroy (sensor_read_ctx);
   free (sensor_reading);
+  return (rv);
+}
+
+int
+ipmi_oem_dell_get_port_map (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  uint8_t control_type;
+  char *control_type_str;
+  uint8_t ipass_mapping1;
+  uint8_t ipass_mapping2;
+  uint8_t ipass_mapping3;
+  uint8_t ipass_mapping4;
+  uint8_t slot_mapping1;
+  uint8_t slot_mapping2;
+  int rs_len;
+  int rv = -1;
+  
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 1);
+
+  if (strcasecmp (state_data->prog_data->args->oem_options[0], "c410x"))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[0]);
+      goto cleanup;
+    }
+  
+  /* Dell Poweredge OEM
+   *
+   * From Dell Provided Docs
+   *
+   * Port Map Configure Request
+   *
+   * 0x34 - OEM network function
+   * 0xC8 - OEM cmd
+   * 0x?? - bit 7 - get/set
+   *        - 0 - get
+   *        - 1 - set
+   *      - bit 6:4 - control type
+   *        - 1 - jumper
+   *        - 2 - bmc
+   *      - bit 3 - failover ipass mapping 1
+   *        - 0 - 1:4
+   *        - 1 - 1:2
+   *      - bit 2 - failover ipass mapping 2
+   *        - 0 - 1:4
+   *        - 1 - 1:2
+   *      - bit 1 - failover ipass mapping 3
+   *        - 0 - 1:4
+   *        - 1 - 1:2
+   *      - bit 0 - failover ipass mapping 4
+   *        - 0 - 1:4
+   *        - 1 - 1:2
+   * 0x?? - optional byte - new port map setting
+   *      - on get, must specify byte to get equivalent byte of response
+   *      - bit 7:4 - slot mapping 1,2,3,4,13,14,15,16
+   *      - bit 3:0 - slot mapping 5,6,7,8,9,10,11,12
+   *        - for both
+   *        - 1 - 1:2 or 1:4 mode (indicated in previous byte)
+   *        - 2 - 1:8 mode
+   *
+   * Port Map Configure Response
+   *
+   * 0xC8 - OEM cmd
+   * 0x?? - Completion Code
+   * 0x?? - bit 7:4 - control type
+   *        - 1 - jumper
+   *        - 2 - bmc
+   *      - bit 3 - failover ipass mapping 1
+   *        - 0 - 1:4
+   *        - 1 - 1:2
+   *      - bit 2 - failover ipass mapping 2
+   *        - 0 - 1:4
+   *        - 1 - 1:2
+   *      - bit 1 - failover ipass mapping 3
+   *        - 0 - 1:4
+   *        - 1 - 1:2
+   *      - bit 0 - failover ipass mapping 4
+   *        - 0 - 1:4
+   *        - 1 - 1:2
+   * 0x?? - optional byte
+   *      - bit 7:4 - slot mapping 1,2,3,4,13,14,15,16
+   *      - bit 3:0 - slot mapping 5,6,7,8,9,10,11,12
+   *        - for both
+   *        - 0 - 1:8 mode not supported
+   *        - 1 - 1:2 or 1:4 mode (indicated in previous byte)
+   *        - 2 - 1:8 mode
+   */
+
+  bytes_rq[0] = IPMI_CMD_OEM_DELL_PORT_MAP;
+  bytes_rq[1] = (IPMI_OEM_DELL_PORT_MAP_GET << IPMI_OEM_DELL_PORT_MAP_GET_SET_SHIFT);
+  bytes_rq[2] = 0x00;		/* to force proper return of data */
+
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+                              IPMI_NET_FN_OEM_DELL_GENERIC_PORT_MAP_RQ, /* network function */
+                              bytes_rq, /* data */
+                              3, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                   bytes_rs,
+                                                   rs_len,
+                                                   4,
+                                                   IPMI_CMD_OEM_DELL_PORT_MAP,
+                                                   IPMI_NET_FN_OEM_DELL_GENERIC_PORT_MAP_RS,
+                                                   NULL) < 0)
+    goto cleanup;
+
+
+  control_type = (bytes_rs[2] & IPMI_OEM_DELL_PORT_MAP_CONTROL_TYPE_RESPONSE_BITMASK);
+  control_type >>= IPMI_OEM_DELL_PORT_MAP_CONTROL_TYPE_REQUEST_SHIFT;
+
+  ipass_mapping1 = (bytes_rs[2] & IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_1_BITMASK);
+  ipass_mapping1 >>= IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_1_SHIFT;
+
+  ipass_mapping2 = (bytes_rs[2] & IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_2_BITMASK);
+  ipass_mapping2 >>= IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_2_SHIFT;
+
+  ipass_mapping3 = (bytes_rs[2] & IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_3_BITMASK);
+  ipass_mapping3 >>= IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_3_SHIFT;
+
+  ipass_mapping4 = (bytes_rs[2] & IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_4_BITMASK);
+  ipass_mapping4 >>= IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_4_SHIFT;
+
+  slot_mapping1 = (bytes_rs[2] & IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_BITMASK);
+  slot_mapping1 >>= IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_SHIFT;
+
+  slot_mapping2 = (bytes_rs[2] & IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_2_BITMASK);
+  slot_mapping2 >>= IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_2_SHIFT;
+
+  if (control_type == IPMI_OEM_DELL_PORT_MAP_CONTROL_TYPE_JUMPER)
+    control_type_str = "Jumper";
+  else if (control_type == IPMI_OEM_DELL_PORT_MAP_CONTROL_TYPE_BMC)
+    control_type_str = "BMC";
+  else
+    control_type_str = "Unknown";
+
+  pstdout_printf (state_data->pstate,
+		  "Control Type: %s\n",
+		  control_type_str);
+
+  if (!strcasecmp (state_data->prog_data->args->oem_options[0], "c410x"))
+    {
+      if ((slot_mapping1 != IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_2_OR_1_4
+	   && slot_mapping1 != IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_8)
+	  || (slot_mapping2 != IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_2_OR_1_4
+	      && slot_mapping2 != IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_8))
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "Unrecognized slot mapping data\n");
+	  goto cleanup;
+	}
+
+      /* iPass 1 */
+      if (slot_mapping1 == IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_8)
+	pstdout_printf (state_data->pstate,
+			"iPass 1: PCIe1 PCIe2 PCIe3 PCIe4 PCIe13 PCIe14 PCIe15 PCIe16\n");
+      else
+	{
+	  if (ipass_mapping1 == IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_1_2)
+	    pstdout_printf (state_data->pstate,
+			    "iPass 1: PCIe1 PCIe15\n");
+	  else
+	    pstdout_printf (state_data->pstate,
+			    "iPass 1: PCIe1 PCIe2 PCIe15 PCIe16\n");
+	}
+
+      /* iPass 2 */
+      if (slot_mapping1 == IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_8)
+	pstdout_printf (state_data->pstate,
+			"iPASS 2:\n");
+      else
+	{
+	  if (ipass_mapping2 == IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_1_2)
+	    pstdout_printf (state_data->pstate,
+			    "iPass 2: PCIe3 PCIe13\n");
+	  else
+	    pstdout_printf (state_data->pstate,
+			    "iPass 2: PCIe3 PCIe4 PCIe13 PCIe14\n");
+	}
+
+      /* iPass 3 */
+      if (slot_mapping2 == IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_8)
+	pstdout_printf (state_data->pstate,
+			"iPass 3: PCIe5 PCIe6 PCIe7 PCIe8 PCIe9 PCIe10 PCIe11 PCIe12\n");
+      else
+	{
+	  if (ipass_mapping3 == IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_1_2)
+	    pstdout_printf (state_data->pstate,
+			    "iPass 3: PCIe5 PCIe11\n");
+	  else
+	    pstdout_printf (state_data->pstate,
+			    "iPass 3: PCIe5 PCIe6 PCIe11 PCIe12\n");
+	}
+
+      /* iPass 4 */
+      if (slot_mapping2 == IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_8)
+	pstdout_printf (state_data->pstate,
+			"iPass 4:\n");
+      else
+	{
+	  if (ipass_mapping4 == IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_1_2)
+	    pstdout_printf (state_data->pstate,
+			    "iPass 4: PCIe7 PCIe9\n");
+	  else
+	    pstdout_printf (state_data->pstate,
+			    "iPass 4: PCIe7 PCIe8 PCIe9 PCIe10\n");
+	}
+			  
+      /* iPass 5 */
+      if (slot_mapping1 == IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_8)
+	pstdout_printf (state_data->pstate,
+			"iPass 5:\n");
+      else
+	{
+	  if (ipass_mapping1 == IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_1_2)
+	    pstdout_printf (state_data->pstate,
+			    "iPass 5: PCIe2 PCIe16\n");
+	  else
+	    pstdout_printf (state_data->pstate,
+			    "iPass 5:\n");
+	}
+
+      /* iPass 6 */
+      if (slot_mapping1 == IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_8)
+	pstdout_printf (state_data->pstate,
+			"iPASS 6:\n");
+      else
+	{
+	  if (ipass_mapping2 == IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_1_2)
+	    pstdout_printf (state_data->pstate,
+			    "iPass 6: PCIe4 PCIe14\n");
+	  else
+	    pstdout_printf (state_data->pstate,
+			    "iPass 6:\n");
+	}
+
+      /* iPass 7 */
+      if (slot_mapping2 == IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_8)
+	pstdout_printf (state_data->pstate,
+			"iPass 7:\n");
+      else
+	{
+	  if (ipass_mapping3 == IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_1_2)
+	    pstdout_printf (state_data->pstate,
+			    "iPass 7: PCIe6 PCIe12\n");
+	  else
+	    pstdout_printf (state_data->pstate,
+			    "iPass 7:\n");
+	}
+
+      /* iPass 8 */
+      if (slot_mapping2 == IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_8)
+	pstdout_printf (state_data->pstate,
+			"iPass 8:\n");
+      else
+	{
+	  if (ipass_mapping4 == IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_1_2)
+	    pstdout_printf (state_data->pstate,
+			    "iPass 8: PCIe8 PCIe10\n");
+	  else
+	    pstdout_printf (state_data->pstate,
+			    "iPass 8:\n");
+	}
+    }
+
+  rv = 0;
+ cleanup:
   return (rv);
 }

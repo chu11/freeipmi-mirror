@@ -359,6 +359,13 @@ struct ipmi_oem_command oem_dell[] =
       ipmi_oem_dell_slot_power_control,
     },
     {
+      "get-port-map",
+      "<platform-model>",
+      1,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_dell_get_port_map,
+    },
+    {
       NULL,
       NULL,
       0,
