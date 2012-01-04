@@ -5091,11 +5091,38 @@ ipmi_oem_dell_slot_power_toggle (ipmi_oem_state_data_t *state_data)
   return (rv);
 }
 
+/* achu
+ *
+ * Under normal circumstances we should find the proper SDR entry for
+ * a given slot number input from the user, do a get sensor reading,
+ * decode the raw sensor reading into a real reading, and compare to
+ * 0.0 appropriately.
+ *
+ * However, for the C410x, it happens that all the SDR conversions are
+ * simple.  It's simply the raw reading * 2 to get the real reading.
+ * So if we are checking for 0 degrees Celsius, then a raw reading of
+ * 0 is 0 degrees Celsius.
+ *
+ * In order to avoid reading, parsing, etc. the SDR, we'll just call
+ * get sensor reading w/ the known sensor number and check the raw
+ * response.  I leave the original code in b/c someday I may need to
+ * work that code back in for different motherboards.
+ */
+#define IPMI_OEM_DELL_SLOT_POWER_CONTROL_OPTIMIZE 1
+
 int
 ipmi_oem_dell_slot_power_control (ipmi_oem_state_data_t *state_data)
 {
   char *endptr = NULL;
   unsigned int slot_number;
+  /* See comments above w/ IPMI_OEM_DELL_SLOT_POWER_CONTROL_OPTIMIZE */
+#if IPMI_OEM_DELL_SLOT_POWER_CONTROL_OPTIMIZE
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t sensor_reading;
+  uint8_t reading_state;
+  uint8_t sensor_scanning;
+  uint64_t val;
+#else /* !IPMI_OEM_DELL_SLOT_POWER_CONTROL_OPTIMIZE */
   uint16_t record_count;
   unsigned int sensor_found = 0;
   uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
@@ -5103,8 +5130,9 @@ ipmi_oem_dell_slot_power_control (ipmi_oem_state_data_t *state_data)
   ipmi_sensor_read_ctx_t sensor_read_ctx = NULL;
   double *sensor_reading = NULL;
   uint16_t sensor_reading_bitmask;
-  int slot_power_on_flag;
   unsigned int i;
+#endif /* !IPMI_OEM_DELL_SLOT_POWER_CONTROL_OPTIMIZE */
+  int slot_power_on_flag;
   int rv = -1;
   
   assert (state_data);
@@ -5150,6 +5178,80 @@ ipmi_oem_dell_slot_power_control (ipmi_oem_state_data_t *state_data)
       goto cleanup;
     }
   
+  /* See comments above w/ IPMI_OEM_DELL_SLOT_POWER_CONTROL_OPTIMIZE */
+#if IPMI_OEM_DELL_SLOT_POWER_CONTROL_OPTIMIZE
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_sensor_reading_rq)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_sensor_reading (state_data->ipmi_ctx,
+				   IPMI_SENSOR_NUMBER_OEM_DELL_C410X_PCIE_1_WATT + (slot_number - 1),
+				   obj_cmd_rs) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "ipmi_cmd_get_sensor_reading: %s\n",
+		       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+  
+  if (FIID_OBJ_GET (obj_cmd_rs,
+		    "sensor_reading",
+		    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "fiid_obj_get: 'sensor_reading': %s\n",
+		       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+  sensor_reading = val;
+
+  if (FIID_OBJ_GET (obj_cmd_rs,
+		    "reading_state",
+		    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "fiid_obj_get: 'reading_state': %s\n",
+		       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+  reading_state = val;
+
+  if (FIID_OBJ_GET (obj_cmd_rs,
+		    "sensor_scanning",
+		    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "fiid_obj_get: 'sensor_scanning': %s\n",
+		       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+  sensor_scanning = val;
+
+  if (reading_state == IPMI_SENSOR_READING_STATE_UNAVAILABLE
+      || sensor_scanning == IPMI_SENSOR_SCANNING_ON_THIS_SENSOR_DISABLE)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "PCIe slot sensor reading cannot be determined\n");
+      goto cleanup;
+    }
+
+  /* If non-zero, then it's on */
+  if (sensor_reading)
+    slot_power_on_flag = 1;
+  else
+    slot_power_on_flag = 0;
+
+#else /* !IPMI_OEM_DELL_SLOT_POWER_CONTROL_OPTIMIZE */
   if (!(sensor_read_ctx = ipmi_sensor_read_ctx_create (state_data->ipmi_ctx)))
     {
       pstdout_fprintf (state_data->pstate,
@@ -5274,10 +5376,13 @@ ipmi_oem_dell_slot_power_control (ipmi_oem_state_data_t *state_data)
       goto cleanup;
     }
   
+  /* If non-zero, then it's on */
   if (fabs (*sensor_reading) < IPMI_OEM_DELL_ZERO_DEGREE_EPSILON)
     slot_power_on_flag = 0;
   else
     slot_power_on_flag = 1;
+
+#endif /* !IPMI_OEM_DELL_SLOT_POWER_CONTROL_OPTIMIZE */
 
   if (!strcasecmp (state_data->prog_data->args->oem_options[1], "status"))
     {
@@ -5300,8 +5405,13 @@ ipmi_oem_dell_slot_power_control (ipmi_oem_state_data_t *state_data)
  out:  
   rv = 0;
  cleanup:
+  /* See comments above w/ IPMI_OEM_DELL_SLOT_POWER_CONTROL_OPTIMIZE */
+#if IPMI_OEM_DELL_SLOT_POWER_CONTROL_OPTIMIZE
+  fiid_obj_destroy (obj_cmd_rs);
+#else /* !IPMI_OEM_DELL_SLOT_POWER_CONTROL_OPTIMIZE */
   ipmi_sensor_read_ctx_destroy (sensor_read_ctx);
   free (sensor_reading);
+#endif /* !IPMI_OEM_DELL_SLOT_POWER_CONTROL_OPTIMIZE */
   return (rv);
 }
 
