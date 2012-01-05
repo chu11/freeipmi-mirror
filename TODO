@@ -1,251 +1,232 @@
-merges
-------
+branches to merge
+-----------------
 ipmioemdellgetsysteminfo
 dellc410x
 
-build system
-------------
-redo, so parallel build
+FreeIPMI general
+----------------
+- use switch instead of if/else if to improve performance
+- oem extensions
+  - test/check handle firmware versions
+  - document firmware versions in docs/ or mans/?
+- build system
+  - single Makefile, so parallel build faster?
+- consider moving #defines to #enums globally for easier debugging w/
+  gdb
+- event handling api/mechanism
+- choose alternate port
+  - most notably for testing or port forwarding
+  - maybe oddball case need fallback RMCP port
 
-oem
----
-handle firmware version too??
+FreeIPMI new stuff
+------------------
+- ASF - maybe support base protocol stuff like rmcp?
+- picmg hpm/hpmi.1 standard - defines ipmi firmware update stuff
+  - http://www.picmg.org/v2internal/specifications.htm
+- pmbus.org
+  - doable via FreeIPMI?  Can pass through Smbus to PmBus to do power control monitoring?
+- ipmi-seld
+  - log sel events to syslog?
+    - work across cluster, configure w/ range of hosts
+    - need filtering thingie to remove messages you don't care about?
+- server simulator
+  - support testing at scale
+  - test larger set of corner cases, possibilities, workarounds, etc. 
+  - different SDR combos
+  - different SEL entries
+  - all permutations of sensors, etc.
+- config tools for
+  - dcmi
+  - intel node manager
+  - firmware firewall
+  - other config options in ipmi-oem
+  - inventec mac/shared nic stuff
+    - will reboot BMC, is big problem
+- fru library like libipmimonitoring
+- ipmi proxy
+  - capture lan and do inband, maybe useful if you have dedicated port
+  that can't be seen by the network, and you don't have enough switch
+  ports to have both plugged up to the network.
 
-inband
-------
---fail-if-ipmi-not-detected
-- needs inband flag - discover vs. not-discover on locate
-- seems unnecessary.
-  - Ultimately it is impossible to do correctly, vendor need not store
-    anything in acpi/smbios/etc.
-  - User can use ipmi-locate if they really want to probe.
-
-interpret-lib
--------------
-handle sensor/sel events outside of spec - configurable in some way?
-handle sensor/sel events differently for different sensors on same
-motherboard
-- e.g.
-SENSORFAULT | State Deasserted
-SENSOROK    | State Asserted
-- need mechanism to specify record ids???
-some OEM sensors maybe dependent on sensor number too or generator ID.  ARGH!
-
-dist
-----
-not dist out manpages?
-
-performance
-----------
-sel-parse,oem code, else if instead of if, if, if
-
-asf
----
-support asf base protocol stuff in addition to IPMI?
-
-libfreeipmi/sel-parse, ipmi-sensors
------------------------------------
-re-org?  Need to split into individual mobo files?  Getting big.
-
-ipmi-sel
---------
-binary search like mechanism to make --display faster
-support kernel panic OEM event 0xf0
-- can't make work, is just my motherboard?  Or perhaps specific panics, not test panics.
-- redhat doesn't enable by default, probably don't need to worry about this much
-- http://cateee.net/lkddb/web-lkddb/IPMI_PANIC_STRING.html
-- http://www.cyberciti.biz/tips/compiling-linux-kernel-module.html
-ganglia plugin?
-nagios plugin?
-
-ipmi-seld
----------
-log sel events to syslog?
-- could work across cluster?
-- need filtering thingie to remove crud?
-
-general
--------
-forwarded command support (errata 35b)
-serial interface? via serial basic mode?  Could just be another interfaace -I
-lan
-- don't increment req on retries, only seq?
-- dunno, atleast put comments on code as to why we do this
-consider moving #defines to #enums globally for easier debugging w/ gdb
-ssif userspace implementation
-- see ipmiutil for example
-
-ipmi-fru/bmc-device
--------------------
-way to write/edit FRU fields?
-- useful for OEM integrators
-
-bmc-device
---------
-set bmc global enables
-- really should be done by firmware? or OS distro?
-- or only as ipmi-oem-ism?
-(NEVER TESTED) get auxiliary log status - not tested, don't have a machine with this support
-
-entity ids
------------
-0x41, 0x42, are "identical" to other entries
-- should map them together for entity-id-names output in sensors?
-
-simulator
----------
-server simulator, for scalable testing
-- test much larger set of corner cases, possibilities, etc.
-- different SDR combos
-- different SEL entries
-- all permutations of sensors, etc.
-
-ipmiconsole
------------
-suport other escape codes like w/ &D
-- F1-F12 suggested by user
-"learn" workarounds function - to figure out workaround flags for user
-support simultaneous SOL sessions
-- never tested b/c no motherboard I have supports, but should just work
-- maybe need to have option to not check for currently running
-  session, and/or mechanism to not disable current session?
-
-hostrange
----------
-exclude hosts option
-- not really necessary in FreeIPMI?  in pdsh, the reason you really
-  need this is because you can do -a (all) or -g (genders
-  attribute/netgroups attribute).
-if user inputs hostname of localhost, do inband not outofband?
-
-config tools
-------------
-collapse into one allmight tool? ipmi-config
-- user must pick section
-- bmc, pef, sensor, chassis, all
-- makes more extensible in the future
-  - oem, dcmi, intel node manager, system info, firmware firewall, etc.
-- --category option (bmc, sensors, chassis, pef, oem, dcmi, intel)
-  - prefix sensor config w/ something?
-- make tools prefix sections w/ appropriate prefixes to allow
-  for checking of what sections should be used
-  - i.e. BMC, CHASSIS, PEF, etc.
-  - probably not, too much backwords compatability crap to handle.
-    Also would make code ugly as hell to make all duplicate sections.
-    should do database of what sections go to what categories
-- --lan-channel for pick one?
-
-fiid
-----
-rearch for speed to not use strings, use macros + strings in internal.
-So something like:
-
-{1, FOO_MACRO, "FIELD_NAME", FLAGS}
-
-so avoid string compares for get/set/compare/etc., but have available
-for debug output.
-
-bmc-config
-----------
-IPv6
-- support ipv4 mapped ipv6 addresses?
-- simply have to deal w/ vendor crapola
-supermicro
-- if username not set and receive 0xCC from set user access, it's b/c
-username not set yet.  workaround?
-
-freeipmi tools
---------------
-config via environment variables too - like config file
-ipmi-oem-config
-- to deal with config OEM stuff config tool style?
-- consider maybe down the road
-- inventec mac/shared nic stuff
-  - will reboot BMC, is big problem
-
-oem
----
-dell poweredge lcd support
+library general
+---------------
+- merge all libs into one?  would aid debian packaging.
+  - make package layout simpler?
+  - make .so-naming consistent?
+  - merge all except libipmidetect?
 
 libfreeipmi
 -----------
-* xRC4
+- forwarded command support (errata 35b)
+- support serial interface?
+- have funcs that return buflen return ssize_t?, input should be
+  size_t and void *? like read(), write()?
+- xRC4
   - on Quanta S99Q/Dell FS12-TY
   - Began on branches/xrc, from the branch ChangeLog
-----
+  - xRC has been dropped for the time being.  After researching xRC,
+    ultimately the current architecture of all of FreeIPMI is
+    ill-suited for it.  As a stream based encryption, too much
+    architecture of FreeIPMI has been based on individual packets
+    being sent/recved/encrypted/decrypted independently of each other.
+    Most of xRC implementation is doable with some hacks.  For
+    example, the initialization vector and data offsets could be
+    passed as in/out parameters to the assemble/disassemble packet
+    functions.  The Krc could be re-generated as needed if the
+    initialization vector had been noticed to change (or data offset
+    == 0).  However, the deal break was an "out-of-band" requirement
+    for implementation of the suspend/resume payload encryption.  In
+    particular, if a packet from the BMC that had a new initialization
+    vector was dropped on the network, the client would need to send a
+    "suspend/resume payload encryption" packet to tell the BMC to
+    start over again before doing a resend. Architecturally, this was
+    the part that would have been VERY difficult to implement across
+    FreeIPMI as the client would suddenly be required to understand
+    the assemble/disassemble subtleties underneath and send the packet
+    on its own.
 
-xRC has been dropped for the time being.  After researching xRC,
-ultimately the current architecture of all of FreeIPMI is ill-suited
-for it.  As a stream based encryption, too much architecture of
-FreeIPMI has been based on individual packets being
-sent/recved/encrypted/decrypted independently of each other.  Most of
-xRC implementation is doable with some hacks.  For example, the
-initialization vector and data offsets could be passed as in/out
-parameters to the assemble/disassemble packet functions.  The Krc
-could be re-generated as needed if the initialization vector had been
-noticed to change (or data offset == 0).  However, the deal break was
-an "out-of-band" requirement for implementation of the suspend/resume
-payload encryption.  In particular, if a packet from the BMC that had
-a new initialization vector was dropped on the network, the client
-would need to send a "suspend/resume payload encryption" packet to
-tell the BMC to start over again before doing a
-resend. Architecturally, this was the part that would have been VERY
-difficult to implement across FreeIPMI as the client would suddenly be
-required to understand the assemble/disassemble subtleties underneath
-and send the packet on its own.
+libfreeipmi-fiid
+----------------
+- rearch for speed to not use strings, use macros + strings in internal.  So something like:
+  {1, FOO_MACRO, "FIELD_NAME", FLAGS}
+  so avoid string compares for get/set/compare/etc., but have available for debug output.
 
-----
-
-config
-------
-config file - support workarounds/etc. for heterogenous cluster?
-workaround-flags BLAH hosts[1-3]
-workaround-flags FOO  hosts[5-9]
-
-sensors/monitoring
+libfreeipmi-driver
 ------------------
-sensor reading factors
-- to support non-linear sensors
-check sensor thresholds manually instead of trust flags
-- some mobos seem to set flags incorrectly
-ipmimonitoring via sensor name
-- deal w/ motherboards with slightly different SDRs
-- but some mobos have sensor name == each other, so what is the purpose?
-- would need to also add sensor number with it??
+- ssif userspace implementation
+  - see ipmiutil for example
+- (NEVER TESTED) openipmi ipmb
+  
+libfreeipmi-api
+---------------
+--fail-if-ipmi-not-detected
+  - would need inband flag - discover vs. not-discover on locate
+  - Ultimately impossible to do correctly, vendor need not store
+    anything in acpi/smbios/etc.
+  - User can use ipmi-locate if they really want to probe?
+
+libfreeipmi-interpret
+---------------------
+- handle sensor/sel events outside of spec - configurable in some way?
+  - some vendors have extra bits not in spec
+- handle sensor/sel events differently for different sensors on same
+  motherboard
+  - e.g.
+  SENSORFAULT | State Deasserted
+  SENSOROK    | State Asserted
+  - need mechanism to specify record ids/sensor number/entity/generator?
+- some sensor interpretations dependent on sensor number, way to add?
+  - QSSCS4R SMI Timeout & Power Throttled sensors 
+    - same event-type/sensor-type/etc., but different interpretation??  
+
+libfreeipmi-sel-parse
+---------------------
+- use else if to improve performance
+- split vendor files into motherboard files?  Is getting big.
+
+libipmiconsole
+--------------
+- "learn" workarounds function - to figure out workaround flags for user support simultaneous SOL sessions
+  - very hard, almost impossible to do?? 
+- "check" function, to see if session currently running
+- engine_submit() - try and move initialization/setup code into engine
+  to reduce time spent in engine_submit(), this is the core loop used by
+  conman and other console software.
+- use conditional signals w/ garbage collector
+  - should work, it's not like the poll loop from before
+
+libipmimonitoring
+-----------------
+- select sensors via sensor name?
+  - deal w/ motherboards with slightly different SDRs
+  - but some mobos have sensor name == each other, so what is the purpose?
+  - would need to also add sensor number with it??
+  - also to deal w/ probability SDR's change on some mobos
+
+tools common
+------------
+- entity ids 0x41, 0x42, are "identical" to other entries
+  - should map them together for --entity-id-names output in
+    ipmi-sensors and ipmi-sel?
+- hostrange exclude hosts option
+  - not really necessary in FreeIPMI?  in pdsh, the reason you really
+    need this is because you can do -a (all) or -g (genders
+    attribute/netgroups attribute).
+- if user inputs hostname of localhost, do inband not outofband?
+- config via environment variables too - like config file?
+- config file - support workarounds/etc. for heterogenous clusters
+  - maybe?
+  - workaround-flags BLAH hosts[1-3]
+  -  workaround-flags FOO  hosts[5-9]
+- read/store username/password/k_g out of file encrypted so it's not
+  sitting there in the clear
+  
+ipmi-sensors
+------------
+- split vendor files into motherboard files?  Is getting big.
+- option to check sensor thresholds manually instead of event bitmask
+  - some mobos seem to set flags incorrectly
+- column for sensor number?
+  - useful for shared sensor output?
+- how to select specific shared sensor on commad line, can't do normally 
+  - i.e. perhaps need to do record-id and something else, like
+    -r 5.2 to indicate record id 5 and offset 2.
+  - issue for libipmimonitoring too?
+
+ipmi-sel
+--------
+- binary search like mechanism to make --display faster
+- support kernel panic OEM event 0xF0
+  - can't make work, is just my motherboard?  Or perhaps specific panics, not test panics?
+  - redhat doesn't enable by default, probably don't need to worry about this much
+  - see http://cateee.net/lkddb/web-lkddb/IPMI_PANIC_STRING.html
+  - see http://www.cyberciti.biz/tips/compiling-linux-kernel-module.html
+- ganglia plugin?
+- nagios plugin?
+
+ipmi-fru
+--------
+- write FRU data option
+  - for OEM integrators
+  - or should be in bmc-device?
+
+bmc-device
+--------
+- set bmc global enables
+  - really should be done by firmware or distro
+  - or only as needed in ipmi-oem per vendor need?
+- (NOT CONFIRMED) get auxiliary log status
+
+ipmiconsole
+-----------
+- support other escape codes like w/ &D
+- support F1-F12 suggested by user
+
+config tools
+------------
+- collapse into one allmighty tool
+  - user must pick section
+  - bmc, pef, sensor, chassis, all
+  - makes more extensible in the future
+    - oem, dcmi, intel node manager, system info, firmware firewall, etc.
+  - --category option (bmc, sensors, chassis, pef, oem, dcmi, intel)
+  - make tools prefix sections w/ appropriate prefixes to allow
+    for checking of what sections should be used
+    - i.e. BMC, CHASSIS, PEF, etc.
+    - probably not, too much backwords compatability crap to handle.
+      Also would make code ugly as hell to make all duplicate sections.
+      should do database of what sections go to what categories
+
+bmc-config
+----------
+- support ipv4 mapped ipv6 addresses?
+  - until in spec, no point, maybe deal in ipmi-oem?
 
 ipmi-chassis-config
 -------------------
 * conf.5 manpage
 (NEVER TESTED) panel button config - need hardware w/ this
 (NEVER TESTED) device instance selector
-
-general
--------
-beginning doc for developers
-event handling
-perl extensions
-- api support?
-- raw support?
-python extensions
-- api support?
-- raw support?
-firmware firewall support?
-- new config tool??
-read/store username/password/k_g out of file encrypted so it's not sitting there in the clear
-configure alternate port - i.e. don't use port 623?
-- under current IPMI spec, completely not compliant/possible
-IPv6
-- not possible under current IPMI spec
-- develop based on assumption someone's BMC can read IPv6 mapped IPv4 addresses?
-- assume OEM extensions to configure IPv6 addresses?
-have funcs that return buflen return ssize_t?, input should be size_t and void *? like read(), write()?
-config file support per host.
-- e.g. workarounds FOO nodes[0-100]
-
-ipmi extensions
----------------
-picmg hpm/hpmi.1 standard - defines ipmi firmware update stuff
-- http://www.picmg.org/v2internal/specifications.htm
 
 ipmi-pef-config
 -----------
@@ -256,66 +237,19 @@ ipmi-sensors-config
 * conf.5 manpage
 * instructions for each section??
 
-ipmi-sensors
-------------
-column for sensor number
-- useful is shared sensor output?
-
-shared sensors
---------------
-how to select specific shared sensor on commad line, can't do normally 
-- i.e. perhaps need to do record-id and something else, like
-  -r 5.2 to indicate record id 5 and offset 2.
-issue for libipmimonitoring too?
-
-inband code
------------
-retry/resend code?
-
-ipmb
-----
-(NEVER TESTED) openipmi ipmb
-
-libs
-----
-merge all libs into one?  would aid debian packaging.
-- make package layout simpler?
-- make .so-naming consistent?
-- merge all except libipmidetect?
-
-libipmiconsole
---------------
-engine_submit() - try and move initialization/setup code into engine
-to reduce time spent in engine_submit(), this is the core loop used by
-conman and other console software.
-use conditional signals w/ garbage collector
-- should work, it's not like the poll loop from before
-
-contribs
+ipmi-oem
 --------
-module for snmptrapd to parse ipmi traps
-zenoss
-- request from someone
+dell poweredge lcd support?
 
-ipmi proxy daemon
------------------
-capture lan and do inband, maybe useful if you have dedicated port
-that can't be seen by the network, and you don't have enough switch
-ports to have both plugged up to the network.
-
-python/perl bindings?
----------------------
-for libipmimonitoring
-for libfreeipmi?
- 
-libfreeipmi
------------
-create more libipmimonitoring like APIs for FRU and other parts?
-
-PmBus functionality
--------------------
-pmbus.org
-- doable via FreeIPMI?  Can pass through Smbus to PmBus to do power control monitoring?
+contributions
+-------------
+- perl extensions
+  - api support?
+  - raw support?
+- python extensions
+  - api support?
+  - raw support?
+- zenoss plugin
 
 RELEASE TODOS - Do on every release
 -----------------------------------
