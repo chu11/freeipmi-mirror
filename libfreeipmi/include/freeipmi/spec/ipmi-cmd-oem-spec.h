@@ -58,6 +58,16 @@ extern "C" {
 #define IPMI_CMD_OEM_DELL_GET_ACTIVE_LOM_STATUS                                0xC1
 #define IPMI_CMD_OEM_DELL_IDRAC_VIRTUAL_MAC                                    0xC9
 
+/*
+ * Dell Poweredge C410x
+ */
+
+/* IPMI_NET_FN_OEM_DELL_GENERIC_RQ / IPMI_NET_FN_OEM_DELL_GENERIC_RS */
+#define IPMI_CMD_OEM_DELL_SLOT_POWER_CONTROL 0xF0
+
+/* IPMI_NET_FN_OEM_DELL_GENERIC_PORT_MAP_RQ / IPMI_NET_FN_OEM_DELL_GENERIC_PORT_MAP_RS */
+#define IPMI_CMD_OEM_DELL_PORT_MAP           0xC8
+
 /******************************************* 
  * Fujitsu                                 *
  *******************************************/

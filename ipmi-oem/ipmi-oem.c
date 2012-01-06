@@ -345,6 +345,34 @@ struct ipmi_oem_command oem_dell[] =
       ipmi_oem_inventec_set_sol_inactivity_timeout
     },
     {
+      "slot-power-toggle",
+      "<slot-number>",
+      1,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_dell_slot_power_toggle,
+    },
+    {
+      "slot-power-control",
+      "<platform-model> <on|off|status> <slot-number>",
+      3,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_dell_slot_power_control,
+    },
+    {
+      "get-port-map",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_dell_get_port_map,
+    },
+    {
+      "set-port-map",
+      "<jumpber|bmc> <ipass-mapping> <1:2|1:4|1:8>",
+      3,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_dell_set_port_map,
+    },
+    {
       NULL,
       NULL,
       0,
