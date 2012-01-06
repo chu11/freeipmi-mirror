@@ -360,8 +360,8 @@ struct ipmi_oem_command oem_dell[] =
     },
     {
       "get-port-map",
-      "<platform-model>",
-      1,
+      NULL,
+      0,
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_dell_get_port_map,
     },

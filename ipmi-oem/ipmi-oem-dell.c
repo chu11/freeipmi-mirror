@@ -5457,19 +5457,8 @@ ipmi_oem_dell_get_port_map (ipmi_oem_state_data_t *state_data)
   int rv = -1;
   
   assert (state_data);
-  assert (state_data->prog_data->args->oem_options_count == 1);
+  assert (!state_data->prog_data->args->oem_options_count);
 
-  if (strcasecmp (state_data->prog_data->args->oem_options[0], "c410x"))
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "%s:%s invalid OEM option argument '%s'\n",
-                       state_data->prog_data->args->oem_id,
-                       state_data->prog_data->args->oem_command,
-                       state_data->prog_data->args->oem_options[0]);
-      goto cleanup;
-    }
-  
   /* Dell Poweredge OEM
    *
    * From Dell Provided Docs
@@ -5593,137 +5582,135 @@ ipmi_oem_dell_get_port_map (ipmi_oem_state_data_t *state_data)
 		  "Control Type: %s\n",
 		  control_type_str);
 
-  if (!strcasecmp (state_data->prog_data->args->oem_options[0], "c410x"))
-    {
-      if ((slot_mapping1 != IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_2_OR_1_4
-	   && slot_mapping1 != IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_8)
-	  || (slot_mapping2 != IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_2_OR_1_4
-	      && slot_mapping2 != IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_8))
-	{
-	  pstdout_fprintf (state_data->pstate,
-			   stderr,
-			   "Unrecognized slot mapping data\n");
-	  goto cleanup;
-	}
+  /* If 1:8 isn't supported, must be 1:2 or 1:4 */
 
-      /* iPass 1 */
-      if (slot_mapping1 == IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_8)
-	pstdout_printf (state_data->pstate,
-			"iPass 1: PCIe1 PCIe2 PCIe3 PCIe4 PCIe13 PCIe14 PCIe15 PCIe16\n");
-      else
-	{
-	  if (ipass_mapping1 == IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_1_2)
-	    pstdout_printf (state_data->pstate,
-			    "iPass 1: PCIe1 PCIe15\n");
-	  else
-	    pstdout_printf (state_data->pstate,
-			    "iPass 1: PCIe1 PCIe2 PCIe15 PCIe16\n");
-	}
+  if (slot_mapping1 == IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_8_NOT_SUPPORTED)
+    slot_mapping1 = IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_2_OR_1_4;
 
-      /* iPass 2 */
-      if (slot_mapping1 == IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_8)
-	pstdout_printf (state_data->pstate,
-			"iPASS 2:\n");
-      else
-	{
-	  if (ipass_mapping2 == IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_1_2)
-	    pstdout_printf (state_data->pstate,
-			    "iPass 2: PCIe3 PCIe13\n");
-	  else
-	    pstdout_printf (state_data->pstate,
-			    "iPass 2: PCIe3 PCIe4 PCIe13 PCIe14\n");
-	}
+  if (slot_mapping2 == IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_8_NOT_SUPPORTED)
+    slot_mapping2 = IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_2_OR_1_4;
 
-      /* iPass 3 */
-      if (slot_mapping2 == IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_8)
-	pstdout_printf (state_data->pstate,
-			"iPass 3: PCIe5 PCIe6 PCIe7 PCIe8 PCIe9 PCIe10 PCIe11 PCIe12\n");
-      else
-	{
-	  if (ipass_mapping3 == IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_1_2)
-	    pstdout_printf (state_data->pstate,
-			    "iPass 3: PCIe5 PCIe11\n");
-	  else
-	    pstdout_printf (state_data->pstate,
-			    "iPass 3: PCIe5 PCIe6 PCIe11 PCIe12\n");
-	}
-
-      /* iPass 4 */
-      if (slot_mapping2 == IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_8)
-	pstdout_printf (state_data->pstate,
-			"iPass 4:\n");
-      else
-	{
-	  if (ipass_mapping4 == IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_1_2)
-	    pstdout_printf (state_data->pstate,
-			    "iPass 4: PCIe7 PCIe9\n");
-	  else
-	    pstdout_printf (state_data->pstate,
-			    "iPass 4: PCIe7 PCIe8 PCIe9 PCIe10\n");
-	}
-			  
-      /* iPass 5 */
-      if (slot_mapping1 == IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_8)
-	pstdout_printf (state_data->pstate,
-			"iPass 5:\n");
-      else
-	{
-	  if (ipass_mapping1 == IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_1_2)
-	    pstdout_printf (state_data->pstate,
-			    "iPass 5: PCIe2 PCIe16\n");
-	  else
-	    pstdout_printf (state_data->pstate,
-			    "iPass 5:\n");
-	}
-
-      /* iPass 6 */
-      if (slot_mapping1 == IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_8)
-	pstdout_printf (state_data->pstate,
-			"iPASS 6:\n");
-      else
-	{
-	  if (ipass_mapping2 == IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_1_2)
-	    pstdout_printf (state_data->pstate,
-			    "iPass 6: PCIe4 PCIe14\n");
-	  else
-	    pstdout_printf (state_data->pstate,
-			    "iPass 6:\n");
-	}
-
-      /* iPass 7 */
-      if (slot_mapping2 == IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_8)
-	pstdout_printf (state_data->pstate,
-			"iPass 7:\n");
-      else
-	{
-	  if (ipass_mapping3 == IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_1_2)
-	    pstdout_printf (state_data->pstate,
-			    "iPass 7: PCIe6 PCIe12\n");
-	  else
-	    pstdout_printf (state_data->pstate,
-			    "iPass 7:\n");
-	}
-
-      /* iPass 8 */
-      if (slot_mapping2 == IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_8)
-	pstdout_printf (state_data->pstate,
-			"iPass 8:\n");
-      else
-	{
-	  if (ipass_mapping4 == IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_1_2)
-	    pstdout_printf (state_data->pstate,
-			    "iPass 8: PCIe8 PCIe10\n");
-	  else
-	    pstdout_printf (state_data->pstate,
-			    "iPass 8:\n");
-	}
-    }
-  else
+  if ((slot_mapping1 != IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_2_OR_1_4
+       && slot_mapping1 != IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_8)
+      || (slot_mapping2 != IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_2_OR_1_4
+	  && slot_mapping2 != IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_8))
     {
       pstdout_fprintf (state_data->pstate,
 		       stderr,
-		       "Internal logic error\n");
+		       "Unrecognized slot mapping data\n");
       goto cleanup;
+    }
+  
+  /* iPass 1 */
+  if (slot_mapping1 == IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_8)
+    pstdout_printf (state_data->pstate,
+		    "iPass 1: PCIe1 PCIe2 PCIe3 PCIe4 PCIe13 PCIe14 PCIe15 PCIe16\n");
+  else
+    {
+      if (ipass_mapping1 == IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_1_2)
+	pstdout_printf (state_data->pstate,
+			"iPass 1: PCIe1 PCIe15\n");
+      else
+	pstdout_printf (state_data->pstate,
+			"iPass 1: PCIe1 PCIe2 PCIe15 PCIe16\n");
+    }
+  
+  /* iPass 2 */
+  if (slot_mapping1 == IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_8)
+    pstdout_printf (state_data->pstate,
+		    "iPASS 2:\n");
+  else
+    {
+      if (ipass_mapping2 == IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_1_2)
+	pstdout_printf (state_data->pstate,
+			"iPass 2: PCIe3 PCIe13\n");
+      else
+	pstdout_printf (state_data->pstate,
+			"iPass 2: PCIe3 PCIe4 PCIe13 PCIe14\n");
+    }
+  
+  /* iPass 3 */
+  if (slot_mapping2 == IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_8)
+    pstdout_printf (state_data->pstate,
+		    "iPass 3: PCIe5 PCIe6 PCIe7 PCIe8 PCIe9 PCIe10 PCIe11 PCIe12\n");
+  else
+    {
+      if (ipass_mapping3 == IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_1_2)
+	pstdout_printf (state_data->pstate,
+			"iPass 3: PCIe5 PCIe11\n");
+      else
+	pstdout_printf (state_data->pstate,
+			"iPass 3: PCIe5 PCIe6 PCIe11 PCIe12\n");
+    }
+  
+  /* iPass 4 */
+  if (slot_mapping2 == IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_8)
+    pstdout_printf (state_data->pstate,
+		    "iPass 4:\n");
+  else
+    {
+      if (ipass_mapping4 == IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_1_2)
+	pstdout_printf (state_data->pstate,
+			"iPass 4: PCIe7 PCIe9\n");
+      else
+	pstdout_printf (state_data->pstate,
+			"iPass 4: PCIe7 PCIe8 PCIe9 PCIe10\n");
+    }
+  
+  /* iPass 5 */
+  if (slot_mapping1 == IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_8)
+    pstdout_printf (state_data->pstate,
+		    "iPass 5:\n");
+  else
+    {
+      if (ipass_mapping1 == IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_1_2)
+	pstdout_printf (state_data->pstate,
+			"iPass 5: PCIe2 PCIe16\n");
+      else
+	pstdout_printf (state_data->pstate,
+			"iPass 5:\n");
+    }
+  
+  /* iPass 6 */
+  if (slot_mapping1 == IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_8)
+    pstdout_printf (state_data->pstate,
+		    "iPASS 6:\n");
+  else
+    {
+      if (ipass_mapping2 == IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_1_2)
+	pstdout_printf (state_data->pstate,
+			"iPass 6: PCIe4 PCIe14\n");
+      else
+	pstdout_printf (state_data->pstate,
+			"iPass 6:\n");
+    }
+
+  /* iPass 7 */
+  if (slot_mapping2 == IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_8)
+    pstdout_printf (state_data->pstate,
+		    "iPass 7:\n");
+  else
+    {
+      if (ipass_mapping3 == IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_1_2)
+	pstdout_printf (state_data->pstate,
+			"iPass 7: PCIe6 PCIe12\n");
+      else
+	pstdout_printf (state_data->pstate,
+			"iPass 7:\n");
+    }
+
+  /* iPass 8 */
+  if (slot_mapping2 == IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_8)
+    pstdout_printf (state_data->pstate,
+		    "iPass 8:\n");
+  else
+    {
+      if (ipass_mapping4 == IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_1_2)
+	pstdout_printf (state_data->pstate,
+			"iPass 8: PCIe8 PCIe10\n");
+      else
+	pstdout_printf (state_data->pstate,
+			"iPass 8:\n");
     }
 
   rv = 0;
@@ -5916,19 +5903,7 @@ ipmi_oem_dell_set_port_map (ipmi_oem_state_data_t *state_data)
   slot_mapping2 = (bytes_rs[3] & IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_2_BITMASK);
   slot_mapping2 >>= IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_2_SHIFT;
 
-  /* Build up the set request using the responses from the get
-   * response and user input
-   */
-
-  bytes_rq[0] = IPMI_CMD_OEM_DELL_PORT_MAP;
-  bytes_rq[1] = (IPMI_OEM_DELL_PORT_MAP_SET << IPMI_OEM_DELL_PORT_MAP_GET_SET_SHIFT);
-
-  if (!strcasecmp (state_data->prog_data->args->oem_options[1], "jumper"))
-    control_type = IPMI_OEM_DELL_PORT_MAP_CONTROL_TYPE_JUMPER;
-  else
-    control_type = IPMI_OEM_DELL_PORT_MAP_CONTROL_TYPE_BMC;
-
-  bytes_rq[1] |= (control_type << IPMI_OEM_DELL_PORT_MAP_CONTROL_TYPE_REQUEST_SHIFT);
+  /* Special case check */
 
   if (!strcasecmp (state_data->prog_data->args->oem_options[2], "1:2"))
     {
@@ -5941,8 +5916,35 @@ ipmi_oem_dell_set_port_map (ipmi_oem_state_data_t *state_data)
       slot_mapping_subtype_is_1_2 = 0;
     }
   else
-    slot_mapping = IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_8;
-	  
+    {
+      slot_mapping = IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_8;
+      slot_mapping_subtype_is_1_2 = 0;
+    }
+
+  if (slot_mapping == IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_8
+      && (slot_mapping1 == IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_8_NOT_SUPPORTED
+	  || slot_mapping2 == IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_8_NOT_SUPPORTED))
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "Platform does not support 1:8 slot mapping\n");
+      goto cleanup;
+    }
+
+  /* Build up the set request using the responses from the get
+   * response and user input
+   */
+
+  bytes_rq[0] = IPMI_CMD_OEM_DELL_PORT_MAP;
+  bytes_rq[1] = (IPMI_OEM_DELL_PORT_MAP_SET << IPMI_OEM_DELL_PORT_MAP_GET_SET_SHIFT);
+
+  if (!strcasecmp (state_data->prog_data->args->oem_options[0], "jumper"))
+    control_type = IPMI_OEM_DELL_PORT_MAP_CONTROL_TYPE_JUMPER;
+  else
+    control_type = IPMI_OEM_DELL_PORT_MAP_CONTROL_TYPE_BMC;
+
+  bytes_rq[1] |= (control_type << IPMI_OEM_DELL_PORT_MAP_CONTROL_TYPE_REQUEST_SHIFT);
+  
   if (ipass_mapping == 1
       && slot_mapping == IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_2_OR_1_4)
     {
@@ -6013,32 +6015,12 @@ ipmi_oem_dell_set_port_map (ipmi_oem_state_data_t *state_data)
   if (ipmi_oem_check_response_and_completion_code (state_data,
                                                    bytes_rs,
                                                    rs_len,
-                                                   4,
+                                                   2,
                                                    IPMI_CMD_OEM_DELL_PORT_MAP,
                                                    IPMI_NET_FN_OEM_DELL_GENERIC_PORT_MAP_RS,
                                                    NULL) < 0)
     goto cleanup;
   
-  /* Special case check at end */
-
-  if (slot_mapping == IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_8)
-    {
-      slot_mapping1 = (bytes_rs[3] & IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_BITMASK);
-      slot_mapping1 >>= IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_SHIFT;
-
-      slot_mapping2 = (bytes_rs[3] & IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_2_BITMASK);
-      slot_mapping2 >>= IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_2_SHIFT;
-  
-      if (slot_mapping1 == IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_8_NOT_SUPPORTED
-	  || slot_mapping2 == IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_8_NOT_SUPPORTED)
-	{
-	  pstdout_fprintf (state_data->pstate,
-			   stderr,
-			   "Platform does not support 1:8 slot mapping\n");
-	  goto cleanup;
-	}
-    }
-
   rv = 0;
  cleanup:
   return (rv);
