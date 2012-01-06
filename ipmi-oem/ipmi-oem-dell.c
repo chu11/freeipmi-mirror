@@ -5030,7 +5030,7 @@ _ipmi_oem_dell_do_slot_power_toggle (ipmi_oem_state_data_t *state_data,
   bytes_rq[0] = IPMI_CMD_OEM_DELL_SLOT_POWER_CONTROL;
   bytes_rq[1] = 0;
   bytes_rq[2] = 0;
-  bytes_rq[(slot_number - 1) / 8] = 0x1 << ((slot_number - 1) % 8);
+  bytes_rq[1 + (slot_number - 1) / 8] = 0x1 << ((slot_number - 1) % 8);
   
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
 			      0, /* lun */
@@ -5093,7 +5093,7 @@ ipmi_oem_dell_slot_power_toggle (ipmi_oem_state_data_t *state_data)
 		       "%s:%s invalid OEM option argument '%s' : out of range\n",
 		       state_data->prog_data->args->oem_id,
 		       state_data->prog_data->args->oem_command,
-		       state_data->prog_data->args->oem_options[2]);
+		       state_data->prog_data->args->oem_options[0]);
       goto cleanup;
     }
   
@@ -5204,7 +5204,7 @@ ipmi_oem_dell_slot_power_control (ipmi_oem_state_data_t *state_data)
   
   /* See comments above w/ IPMI_OEM_DELL_SLOT_POWER_CONTROL_OPTIMIZE */
 #if IPMI_OEM_DELL_SLOT_POWER_CONTROL_OPTIMIZE
-  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_sensor_reading_rq)))
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_sensor_reading_rs)))
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
