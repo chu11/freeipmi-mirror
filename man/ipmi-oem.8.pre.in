@@ -268,12 +268,9 @@ native and are emulated through a combination of a power toggle (using
 sensors.  The PCIe slot number can range from 1 to 16.  Command
 confirmed to work on Dell Poweredge C410x.
 .TP
-.B get-port-map \fIplatform\-model\fR
+.B get-port-map
 This OEM command will retrieve the current iPASS mapping to PCIe
-controllers/slots.  This OEM extension is tied very closely to a
-platform, so a supported platform must be specified.  The currently
-supported \fIplatform\-model\fR options are \fIC410x\fR.  Command
-confirmed to work on Dell Poweredge C410x.
+controllers/slots.  Command confirmed to work on Dell Poweredge C410x.
 .TP
 .B set-port-map \fIjumper|bmc\fR \fIipass\-mapping\fR \fI1:2|1:4|1:8\fR
 This OEM command will set an iPass mapping to PCIe controllers/slots.
