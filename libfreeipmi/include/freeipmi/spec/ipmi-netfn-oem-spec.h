@@ -30,10 +30,18 @@ extern "C" {
 /*
  * Dell Poweredge R610
  * Dell Poweredge R710
+ * Dell Poweredge C410x
  */
 /* achu: not official names, named based on use context */
 #define IPMI_NET_FN_OEM_DELL_GENERIC_RQ 0x30
 #define IPMI_NET_FN_OEM_DELL_GENERIC_RS 0x31
+
+/*
+ * Dell Poweredge C410x
+ */
+/* achu: not official names, named based on use context */
+#define IPMI_NET_FN_OEM_DELL_GENERIC_PORT_MAP_RQ 0x34
+#define IPMI_NET_FN_OEM_DELL_GENERIC_PORT_MAP_RS 0x35
 
 /*******************************************
  * Fujitsu                                 *

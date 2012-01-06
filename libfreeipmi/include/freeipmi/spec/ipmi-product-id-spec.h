@@ -37,6 +37,11 @@ extern "C" {
 #define IPMI_DELL_PRODUCT_ID_POWEREDGE_R610 __IPMI_DELL_PRODUCT_ID_POWEREDGE
 #define IPMI_DELL_PRODUCT_ID_POWEREDGE_R710 __IPMI_DELL_PRODUCT_ID_POWEREDGE
 
+/* achu: 0 doesn't seem right?  Did the manufacturer not burn the
+ * right ID in?
+ */
+#define IPMI_DELL_PRODUCT_ID_POWEREDGE_C410X 0
+
 /******************************************* 
  * Fujitsu                                 *
  *******************************************/
