@@ -367,7 +367,7 @@ struct ipmi_oem_command oem_dell[] =
     },
     {
       "set-port-map",
-      "<jumpber|bmc> <ipass-mapping> <1:2|1:4|1:8>",
+      "<jumper|bmc> <ipass-mapping> <1:2|1:4|1:8>",
       3,
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_dell_set_port_map,
