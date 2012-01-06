@@ -1,4 +1,4 @@
-2012-01-03  Albert Chu <chu11@llnl.gov>
+2012-01-05  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/: Support Dell C410x OEM extension slot-power-toggle,
 	slot-power-control, get-port-map, and set-port-map.
