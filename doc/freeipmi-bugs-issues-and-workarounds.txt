@@ -563,8 +563,7 @@ Serial-Over-LAN Issue #6:
   When a new IPMI session is started and steals the SOL session from a
   previous one, the initial SOL session is not given a "SOL is
   deactivating" flag in a "BMC to Remote Console" packet.  The initial
-  IPMI session should eventually time out after having lot its ability
-  to do SOL, so the closing is not clean.
+  IPMI session should eventually time out, but the closing is not clean.
 
   Seen on: Supermicro H8QME with SIMSO daughter card, Inventec
   5441/Dell Xanadu II, Inventec 5442/Dell Xanadu III, Dell Poweredge
