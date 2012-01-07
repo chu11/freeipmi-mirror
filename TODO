@@ -1,7 +1,10 @@
+*** - priority for future major release
+XXX - priority for future minor release
+
 branches to merge
 -----------------
-ipmioemdellgetsysteminfo
-dellc410x - first merge 8269:8289
+ipmioemdellgetsysteminfo (XXX)
+dellc410x - first merge 8269:8289 (XXX)
 
 FreeIPMI general
 ----------------
@@ -14,9 +17,11 @@ FreeIPMI general
 - consider moving #defines to #enums globally for easier debugging w/
   gdb
 - event handling api/mechanism
-- choose alternate port
+- choose alternate port (XXX)
   - most notably for testing or port forwarding
   - maybe oddball case need fallback RMCP port
+  - to maintain backwards compatability, implement in hostname
+    i.e. "-h foonode:1282"
 
 FreeIPMI new stuff
 ------------------
@@ -35,9 +40,9 @@ FreeIPMI new stuff
   - different SDR combos
   - different SEL entries
   - all permutations of sensors, etc.
-- config tools for
-  - dcmi
-  - intel node manager
+- config tools for (***)
+  - dcmi (***)
+  - intel node manager (***)
   - firmware firewall
   - other config options in ipmi-oem
   - inventec mac/shared nic stuff
@@ -134,7 +139,7 @@ libipmiconsole
   conman and other console software.
 - use conditional signals w/ garbage collector
   - should work, it's not like the poll loop from before
-- implement flag to not issue deactivate payload on timeout errors
+- implement flag to not issue deactivate payload on timeout errors (XXX)
   - basically, tell ipmiconsole to assume SOL session stolen, we do not
     want to deactivate the payload of the currently running stolen session
   - or, call payload activation status to determine if stolen and can
@@ -173,7 +178,7 @@ ipmi-sensors
   - some mobos seem to set flags incorrectly
 - column for sensor number?
   - useful for shared sensor output?
-- how to select specific shared sensor on commad line, can't do normally 
+- how to select specific shared sensor on commad line, can't do normally (XXX)
   - i.e. perhaps need to do record-id and something else, like
     -r 5.2 to indicate record id 5 and offset 2.
   - issue for libipmimonitoring too?
@@ -209,7 +214,7 @@ ipmiconsole
 
 config tools
 ------------
-- collapse into one allmighty tool
+- collapse into one allmighty tool (***)
   - user must pick section
   - bmc, pef, sensor, chassis, all
   - makes more extensible in the future
