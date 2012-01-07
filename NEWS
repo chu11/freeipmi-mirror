@@ -2,6 +2,9 @@ FreeIPMI 1.1.2 - XX/XX/12
 -------------------------
 o In ipmi-oem, support new Dell C410x OEM extensions
   slot-power-toggle, slot-power-control, get-port-map, set-port-map.
+o Fix daemon setup race condition in ipmidetectd and bmc-watchdog that
+  can affect systemd.
+o Various documentation updates.
 
 FreeIPMI 1.1.1 - 01/03/12
 -------------------------

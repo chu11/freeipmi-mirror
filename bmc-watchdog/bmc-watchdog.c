@@ -1677,6 +1677,10 @@ _daemon_init ()
       unsigned int i;
       pid_t pid;
       FILE *pidfile;
+      int fds[2];
+
+      if ( pipe(fds) < 0 )
+        _err_exit ("pipe: %s", strerror (errno));
 
       if ( (pidfile = fopen(BMC_WATCHDOG_PIDFILE, "w")) == NULL )
         _err_exit ("fopen: %s", strerror (errno));
@@ -1684,7 +1688,14 @@ _daemon_init ()
       if ((pid = fork ()) < 0)
         _err_exit ("fork: %s", strerror (errno));
       if (pid)
-        exit (0);                   /* parent terminates */
+        {
+          /* parent terminates */
+          char buf;
+          read(fds[0], &buf, 1);
+          close(fds[1]);
+          close(fds[0]);
+          exit (0);
+        }
 
       setsid ();
 
@@ -1706,6 +1717,9 @@ _daemon_init ()
 
       umask (0);
 
+      write(fds[1], "a", 1);
+      close(fds[1]);
+      close(fds[0]);
       for (i = 0; i < 64; i++)
         close (i);
     }

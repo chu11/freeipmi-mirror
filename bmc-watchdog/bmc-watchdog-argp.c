@@ -205,7 +205,7 @@ _usage (struct bmc_watchdog_arguments *cmd_args)
            "  -V             --version                            Output version.\n");
 
   fprintf (stderr,
-           "             --debug                              Turn on debugging.\n");
+           "                 --debug                              Turn on debugging.\n");
 
   fprintf (stderr, "\n");
   if (cmd_args->set || cmd_args->start || cmd_args->daemon)
