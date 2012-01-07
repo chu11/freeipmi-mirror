@@ -58,7 +58,7 @@ Future versions of this manpage will try to include more information.
      	Password                                     userpass
      	## Possible values: Yes/No or blank to not set
      	Enable_User                                  No
-     	## Give password for IPMI 2.0 or blank to clear. MAX 20 chars.
+     	## Possible values: Yes/No
      	Lan_Enable_Ipmi_Msgs                         No
      	## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
      	Lan_Privilege_Limit                          No_Access
