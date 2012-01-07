@@ -268,11 +268,14 @@ extern "C" {
  * On some motherboards, it's been observed that IPMI connections
  * between the IPMI client and remote BMC/server can stay alive while
  * the remote server's internal connection between the BMC and serial
- * chip can be lost.  The affect is that this loss of the serial
- * connection will not be noticed by the IPMI client until serial data
- * is transfered from the client to the BMC and a timeout (or similar
- * error) is received.  The IPMI client must then reconnect to
- * restablish the session.
+ * chip can be lost.  This has been observed under several situations, 
+ * such as when the remote system is rebooted or a IPMI SOL session is
+ * stolen.   
+ *
+ * The affect is that this loss of the serial connection will not be
+ * noticed by the IPMI client until serial data is transfered from the
+ * client to the BMC and a timeout (or similar error) eventually occurs.
+ * The IPMI client must then reconnect to restablish the session.
  *
  * This is a severe problem for IPMI clients that predominantly log
  * serial data or display serial output without user interactivity.
