@@ -1649,6 +1649,11 @@ _output_dell_system_info_11g_or_12g_mac_addresses (ipmi_oem_state_data_t *state_
       goto cleanup;
     }
 
+#if 0
+  /* Apparently on some systems return a non-multiple of 8 bytes
+   *
+   * Just fall through and output whatever you can.
+   */
   if (total_bytes % 8)
     {
       pstdout_fprintf (state_data->pstate,
@@ -1657,6 +1662,7 @@ _output_dell_system_info_11g_or_12g_mac_addresses (ipmi_oem_state_data_t *state_
 		       total_bytes);
       goto cleanup;
     }
+#endif
 
   /* see record format below in ipmi_oem_dell_get_system_info(), record length = 8 */
   pstdout_printf (state_data->pstate,
