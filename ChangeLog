@@ -1,5 +1,14 @@
 2012-01-06  Albert Chu <chu11@llnl.gov>
 
+	* bmc-watchdog/: Fix usage output typo.
+
+2012-01-06  Jan Safranek <jsafrane@redhat.com>
+
+	* ipmidetectd/, bmc-watchdog/: Fix race in daemon setup code to
+	function with new systemd.
+
+2012-01-06  Albert Chu <chu11@llnl.gov>
+
 	* Update/fix various documentation and comments.
 	
 2012-01-05  Albert Chu <chu11@llnl.gov>
@@ -1650,7 +1659,7 @@
 
 	* ipmidetect/src/ipmidetectd/ipmidetectd_config.c: Fix parsing of
 	unknown arguments.
-	
+<	
 2010-06-28  Albert Chu <chu11@llnl.gov>
 
 	* bmc-watchdog/: Fix "ignorestateflag" workaround for more corner

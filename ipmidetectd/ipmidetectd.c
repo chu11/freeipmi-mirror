@@ -58,12 +58,22 @@ _daemon_init (void)
   /* Based on code in Unix network programming by R. Stevens */
   pid_t pid;
   unsigned int i;
+  int fds[2];
 
+  if (pipe(fds) < 0)
+    IPMIDETECTD_EXIT (("pipe: %s", strerror (errno)));
   if ((pid = fork ()) < 0)
     IPMIDETECTD_EXIT (("fork: %s", strerror (errno)));
 
-  if (pid != 0)                 /* Terminate Parent */
-    exit (0);
+  if (pid != 0)
+    {
+      /* Terminate Parent */
+      char buf;
+      read(fds[0], &buf, 1);
+      close(fds[1]);
+      close(fds[0]);
+      exit (0);
+    }
 
   setsid ();
 
@@ -79,6 +89,9 @@ _daemon_init (void)
   chdir ("/");
 
   umask (0);
+  write(fds[1], "a", 1);
+  close(fds[1]);
+  close(fds[0]);
 
   for (i = 0; i < 64; i++)
     close (i);
