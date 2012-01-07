@@ -1330,6 +1330,7 @@ enable_user_commit (const char *section_name,
            * IPMI Workaround
            *
            * Dell Poweredge R610
+           * Dell Poweredge R710
            *
            * Dell says this can only go after a set password command, and
            * you configure a non-null password.  Save info to possibly
