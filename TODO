@@ -5,6 +5,7 @@ branches to merge
 -----------------
 ipmioemdellgetsysteminfo (XXX)
 dellc410x - first merge 8269:8289 (XXX)
+serialkeepalive
 
 FreeIPMI FAQ/documentation
 --------------------------
