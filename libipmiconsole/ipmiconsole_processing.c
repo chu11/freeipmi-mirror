@@ -1742,7 +1742,8 @@ _serial_keepalive_is_necessary (ipmiconsole_ctx_t c)
   assert (c);
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
   assert (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION);
-  assert (c->config.engine_flags & IPMICONSOLE_ENGINE_SERIAL_KEEPALIVE);
+  assert (c->config.engine_flags & IPMICONSOLE_ENGINE_SERIAL_KEEPALIVE
+	  || c->config.engine_flags & IPMICONSOLE_ENGINE_SERIAL_KEEPALIVE_EMPTY);
 
   timeval_add_ms (&(c->session.last_sol_packet_received), c->config.session_timeout_len, &timeout);
   if (gettimeofday (&current, NULL) < 0)
@@ -1771,7 +1772,8 @@ _serial_keepalive_timeout (ipmiconsole_ctx_t c)
   assert (c);
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
   assert (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION);
-  assert (c->config.engine_flags & IPMICONSOLE_ENGINE_SERIAL_KEEPALIVE);
+  assert (c->config.engine_flags & IPMICONSOLE_ENGINE_SERIAL_KEEPALIVE
+	  || c->config.engine_flags & IPMICONSOLE_ENGINE_SERIAL_KEEPALIVE_EMPTY);
 
   if ((rv = _serial_keepalive_is_necessary (c)) < 0)
     return (-1);
@@ -3533,7 +3535,8 @@ _process_protocol_state_sol_session_send (ipmiconsole_ctx_t c)
   if (ret)
     return (1);
 
-  if (c->config.engine_flags & IPMICONSOLE_ENGINE_SERIAL_KEEPALIVE)
+  if (c->config.engine_flags & IPMICONSOLE_ENGINE_SERIAL_KEEPALIVE
+      || c->config.engine_flags & IPMICONSOLE_ENGINE_SERIAL_KEEPALIVE_EMPTY)
     {
       /* Retransmits handled by _sol_retransmission_timeout() call above */
       if ((ret = _serial_keepalive_timeout (c)) < 0)
