@@ -1228,6 +1228,8 @@ _output_dell_system_info_cmc_ipv6_info (ipmi_oem_state_data_t *state_data)
   return (rv);
 }
 
+#if 0
+/* cannot verify */
 static int
 _output_dell_system_info_snmp_ipv6_info (ipmi_oem_state_data_t *state_data)
 {
@@ -1487,6 +1489,7 @@ _output_dell_system_info_snmp_ipv6_info (ipmi_oem_state_data_t *state_data)
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
+#endif
 
 static int
 _output_dell_system_info_10g_mac_addresses (ipmi_oem_state_data_t *state_data)
@@ -1767,7 +1770,10 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
 		      "Option: cmc-ipv4-url\n"
 		      "Option: cmc-ipv6-info\n"
 		      "Option: cmc-ipv6-url\n"
+#if 0
+/* cannot verify */
 		      "Option: snmp-ipv6-info\n"
+#endif
                       "Option: mac-addresses\n");
       return (0);
     }
@@ -1797,7 +1803,10 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
       && strcasecmp (state_data->prog_data->args->oem_options[0], "cmc-ipv4-url")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "cmc-ipv6-info")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "cmc-ipv6-url")
+#if 0
+/* cannot verify */
       && strcasecmp (state_data->prog_data->args->oem_options[0], "snmp-ipv6-info")
+#endif
       && strcasecmp (state_data->prog_data->args->oem_options[0], "mac-addresses"))
     {
       pstdout_fprintf (state_data->pstate,
@@ -2160,11 +2169,14 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
 		      "%s\n",
 		      string);
     }
+#if 0
+/* cannot verify */
   else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "snmp-ipv6-info"))
     {
       if (_output_dell_system_info_snmp_ipv6_info (state_data) < 0)
 	goto cleanup;
     }
+#endif
   else /* (!strcasecmp (state_data->prog_data->args->oem_options[0], "mac-addresses")) */
     {
       uint8_t idrac_type = 0;
