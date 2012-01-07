@@ -134,6 +134,9 @@ libipmiconsole
   conman and other console software.
 - use conditional signals w/ garbage collector
   - should work, it's not like the poll loop from before
+- implement flag to not issue deactivate payload on timeout errors
+  - basically, tell ipmiconsole to assume SOL session stolen, we do not
+    want to deactivate the payload of the currently running stolen session
 
 libipmimonitoring
 -----------------
