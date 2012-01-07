@@ -213,6 +213,7 @@ ipmiconsole
 -----------
 - support other escape codes like w/ &D
 - support F1-F12 suggested by user
+- support serial keepalive option (XXX)
 
 config tools
 ------------
