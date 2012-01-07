@@ -563,7 +563,12 @@ Serial-Over-LAN Issue #6:
   When a new IPMI session is started and steals the SOL session from a
   previous one, the initial SOL session is not given a "SOL is
   deactivating" flag in a "BMC to Remote Console" packet.  The initial
-  IPMI session should eventually time out, but the closing is not clean.
+  IPMI session should eventually time out, but the closing is not
+  clean.
+
+  In some cases, the IPMI session may "stay alive" and it is only
+  serial data that may time out, leading to a situation that may be
+  very similar to Serial-Over-LAN Issue #8.
 
   Seen on: Supermicro H8QME with SIMSO daughter card, Inventec
   5441/Dell Xanadu II, Inventec 5442/Dell Xanadu III, Dell Poweredge
@@ -593,12 +598,10 @@ Serial-Over-LAN Issue #7: [IMPLEMENTATION]
 Serial-Over-LAN Issue #8: [IMPLEMENTATION]
 
   After a reboot, the SOL session appears to "disconnect" from the
-  motherboard's serial chip.  While the SOL session is technically
-  alive, and character data input from the user is accepted by the
-  remote BMC, no character data is sent back from the remote
-  motherboard.  The SOL session is subsequently useless.  There is
-  currently no workaround in place to handle this.  The session must
-  be closed and restarted.
+  motherboard's serial chip.  While the IPMI/SOL session is
+  technically alive, and character data input from the user is
+  accepted by the remote BMC, no character data is sent back from the
+  remote motherboard.  The SOL session is subsequently useless.
 
   Seen on: Intel SR1520ML, Intel X38ML
 
