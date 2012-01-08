@@ -7,6 +7,8 @@
 	spinning.
 
 	* ipmiconsole/: Add --serial-keepalive-empty support.
+
+	* configure.ac: Update versioning for libipmiconsole.
 	
 2012-01-06  Albert Chu <chu11@llnl.gov>
 
