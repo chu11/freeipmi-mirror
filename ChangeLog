@@ -1,5 +1,9 @@
 2012-01-08  Albert Chu <chu11@llnl.gov>
 
+	* README, man/freeipmi.7.pre.in: Update description of bmc-device.
+	
+2012-01-08  Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/cmds/ipmi-sensor-cmds.c,
 	libfreeipmi/include/freeipmi/templates/ipmi-sensor-cmds-templates.h:
 	Re-arm Sensor Events fields are optional not required.
