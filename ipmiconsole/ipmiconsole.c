@@ -349,6 +349,8 @@ main (int argc, char **argv)
   engine_config.engine_flags = 0;
   if (cmd_args.serial_keepalive)
     engine_config.engine_flags |= IPMICONSOLE_ENGINE_SERIAL_KEEPALIVE;
+  if (cmd_args.serial_keepalive_empty)
+    engine_config.engine_flags |= IPMICONSOLE_ENGINE_SERIAL_KEEPALIVE_EMPTY;
   if (cmd_args.lock_memory)
     engine_config.engine_flags |= IPMICONSOLE_ENGINE_LOCK_MEMORY;
 

@@ -1308,6 +1308,9 @@ Specify if in use SOL sessions should not be stolen by default.
 \fBipmiconsole\-serial\-keepalive\fR \fIENABLE|DISABLE\fR
 Specify if serial keepalive should be enabled by default.
 .TP
+\fBipmiconsole\-serial\-keepalive\-empty\fR \fIENABLE|DISABLE\fR
+Specify if serial keepalive empty should be enabled by default.
+.TP
 \fBipmiconsole\-lock\-memory\fR \fIENABLE|DISABLE\fR
 Specify if memory should be locked by default.
 

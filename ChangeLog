@@ -1,5 +1,19 @@
 2012-01-07  Albert Chu <chu11@llnl.gov>
 
+	Merge serialkeepalive branch
+
+	* libipmiconsole/: Add SERIAL_KEEPALIVE_EMPTY flag support.
+
+	* libipmiconsole/ipmiconsole_processing.c
+	(_serial_keepalive_timeout): Fix keepalive calculation to avoid
+	spinning.
+
+	* ipmiconsole/: Add --serial-keepalive-empty support.
+
+	* configure.ac: Update versioning for libipmiconsole.
+	
+2012-01-07  Albert Chu <chu11@llnl.gov>
+
 	* Update/fix various documentation and comments.
 
 2012-01-06  Albert Chu <chu11@llnl.gov>

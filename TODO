@@ -5,7 +5,6 @@ branches to merge
 -----------------
 ipmioemdellgetsysteminfo (XXX)
 dellc410x - first merge 8269:8289 (XXX)
-serialkeepalive
 
 FreeIPMI FAQ/documentation
 --------------------------
@@ -145,8 +144,6 @@ libipmiconsole
   conman and other console software.
 - use conditional signals w/ garbage collector
   - should work, it's not like the poll loop from before
-- implement SOL keepalive that does not send data (XXX)
-  - may be sufficient for some IPMI implementations
 - implement flag to not issue deactivate payload on timeout errors (XXX)
   - basically, tell ipmiconsole to assume SOL session stolen, we do not
     want to deactivate the payload of the currently running stolen session
@@ -219,7 +216,6 @@ ipmiconsole
 -----------
 - support other escape codes like w/ &D
 - support F1-F12 suggested by user
-- support serial keepalive option (XXX)
 
 config tools
 ------------
