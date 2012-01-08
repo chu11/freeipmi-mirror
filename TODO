@@ -149,6 +149,7 @@ libipmiconsole
     want to deactivate the payload of the currently running stolen session
   - or, call payload activation status to determine if stolen and can
     see if should call deactivate payload or not.
+  - test: intel s2600jf exhibit this behavior
  
 libipmimonitoring
 -----------------
