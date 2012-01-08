@@ -8,6 +8,9 @@ o In libipmiconsole, fix serial keepalive timeout calculation bug that
   can lead to excessive packets retransmitted.
 o In libipmiconsole, support new SERIAL_KEEPALIVE_EMPTY engine flag.
 o In ipmiconsole, support new --serial-keepalive-empty option.
+o In libipmiconsole, do not deactivate a SOL payload if it appears the
+  SOL payload has been stolen, but we did not receive a SOL deactivating
+  flag.
 o Various documentation updates.
 
 FreeIPMI 1.1.1 - 01/03/12
