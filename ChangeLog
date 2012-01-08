@@ -1,3 +1,8 @@
+2012-01-08  Albert Chu <chu11@llnl.gov>
+
+	* libipmiconsole/: Don't deactivate the SOL payload when it
+	appears the SOL session has been stolen.
+	
 2012-01-07  Albert Chu <chu11@llnl.gov>
 
 	Merge serialkeepalive branch

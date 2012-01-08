@@ -1606,7 +1606,7 @@ _ipmi_retransmission_timeout (ipmiconsole_ctx_t c)
  * Returns -1 on error
  */
 static int
-_sol_retransmission_timeout (ipmiconsole_ctx_t c)
+_sol_retransmission_timeout (ipmiconsole_ctx_t c, int *dont_deactivate_flag)
 {
   struct timeval current;
   struct timeval timeout;
@@ -1614,6 +1614,9 @@ _sol_retransmission_timeout (ipmiconsole_ctx_t c)
   assert (c);
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
   assert (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION);
+  assert (dont_deactivate_flag);
+
+  (*dont_deactivate_flag) = 0;
 
   timeval_add_ms (&(c->session.last_sol_input_packet_sent), c->config.retransmission_timeout_len, &timeout);
   if (gettimeofday (&current, NULL) < 0)
@@ -1629,6 +1632,15 @@ _sol_retransmission_timeout (ipmiconsole_ctx_t c)
   c->session.retransmission_count++;
   if (c->session.retransmission_count > c->config.maximum_retransmission_count)
     {
+      /* Under this scenario, we assume that SOL is not functional but
+       * IPMI is fine.  While it is unknown why SOL is not functional,
+       * there is a good chance it is because the SOL session has been
+       * stolen but we did not receive a flag indicating SOL is
+       * deactivating.  We don't want to deactivate the SOL payload,
+       * because that would kill the new session's SOL.
+       */ 
+      (*dont_deactivate_flag) = 1;
+
       IPMICONSOLE_CTX_DEBUG (c, ("closing session due to excessive sol retransmissions"));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_EXCESS_RETRANSMISSIONS_SENT);
       return (-1);
@@ -3523,13 +3535,25 @@ _process_protocol_state_sol_session_send (ipmiconsole_ctx_t c)
 
   if (c->session.sol_input_waiting_for_ack)
     {
-      if ((ret = _sol_retransmission_timeout (c)) < 0)
+      int dont_deactivate_flag = 0;
+
+      if ((ret = _sol_retransmission_timeout (c, &dont_deactivate_flag)) < 0)
         {
           /* Attempt to close the session cleanly */
           c->session.close_session_flag++;
-          if (_send_ipmi_packet (c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
-            return (-1);
-          c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
+
+          if (dont_deactivate_flag)
+            {
+              if (_send_ipmi_packet (c, IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RQ) < 0)
+                return (-1);
+              c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT;
+            }
+          else
+            {
+	      if (_send_ipmi_packet (c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
+		return (-1);
+	      c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
+	    }
           return (1);
         }
 
@@ -3609,6 +3633,12 @@ _process_protocol_state_sol_session_receive (ipmiconsole_ctx_t c, ipmiconsole_pa
       if (_sol_bmc_to_remote_console_packet (c, &sol_deactivating_flag) < 0)
         {
           c->session.close_session_flag++;
+
+	  /* If SOL is deactivating, there's a good chance another
+	   * session stole our SOL session.  We don't want to
+	   * deactivate the SOL payload, because all that will do is
+	   * deactivate the other session's SOL.
+	   */
           if (sol_deactivating_flag)
             {
               if (_send_ipmi_packet (c, IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RQ) < 0)
