@@ -1,6 +1,8 @@
 2012-01-XX  Albert Chu <chu11@llnl.gov>
 
 	* libipmiconsole/: Add SERIAL_KEEPALIVE_EMPTY flag support.
+
+	* ipmiconsole/: Add --serial-keepalive-empty support.
 	
 2012-01-06  Albert Chu <chu11@llnl.gov>
 
