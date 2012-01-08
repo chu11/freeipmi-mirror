@@ -2,6 +2,10 @@
 
 	* libipmiconsole/: Add SERIAL_KEEPALIVE_EMPTY flag support.
 
+	* libipmiconsole/ipmiconsole_processing.c
+	(_serial_keepalive_timeout): Fix keepalive calculation to avoid
+	spinning.
+
 	* ipmiconsole/: Add --serial-keepalive-empty support.
 	
 2012-01-06  Albert Chu <chu11@llnl.gov>
