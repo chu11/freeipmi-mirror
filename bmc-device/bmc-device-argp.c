@@ -82,36 +82,38 @@ static struct argp_option cmdline_options[] =
       "Get IP, UDP, and RMCP statistics.", 37},
     { "clear-lan-statistics", CLEAR_LAN_STATISTICS_KEY, NULL, 0,
       "Clear IP, UDP, and RMCP statistics.", 38},
+    { "rearm-sensor", REARM_SENSOR_KEY, NULL, 0,
+      "Re-arm a sensor.", 39},
     { "get-sdr-repository-time",   GET_SDR_REPOSITORY_TIME_KEY,  0, 0,
-      "Get SDR repository time.", 39},
+      "Get SDR repository time.", 40},
     { "set-sdr-repository-time",   SET_SDR_REPOSITORY_TIME_KEY,  "TIME", 0,
-      "Set SDR repository time.  Input format = \"MM/DD/YYYY - HH:MM:SS\" or \"now\".", 40},
+      "Set SDR repository time.  Input format = \"MM/DD/YYYY - HH:MM:SS\" or \"now\".", 41},
     { "get-sel-time", GET_SEL_TIME_KEY,  0, 0,
-      "Get SEL time.", 41},
+      "Get SEL time.", 42},
     { "set-sel-time", SET_SEL_TIME_KEY,  "TIME", 0,
-      "Set SEL time.  Input format = \"MM/DD/YYYY - HH:MM:SS\" or \"now\".", 42},
+      "Set SEL time.  Input format = \"MM/DD/YYYY - HH:MM:SS\" or \"now\".", 43},
     { "platform-event", PLATFORM_EVENT_KEY, "[generator_id] <event_message_format_version> <sensor_type> <sensor_number> <event_type> <event_direction> <event_data1> <event_data2> <event_data3>", 0,
-      "Instruct the BMC to process the specified event data.", 43},
+      "Instruct the BMC to process the specified event data.", 44},
     { "get-mca-auxiliary-log-status", GET_MCA_AUXILIARY_LOG_STATUS_KEY, NULL, 0,
-      "Get machine check architecture (MCA) auxiliary log status information.", 44},
+      "Get machine check architecture (MCA) auxiliary log status information.", 45},
     { "get-ssif-interface-capabilities", GET_SSIF_INTERFACE_CAPABILITIES_KEY, NULL, 0,
-      "Get SSIF interface capabilities.", 45},
+      "Get SSIF interface capabilities.", 46},
     { "get-kcs-interface-capabilities", GET_KCS_INTERFACE_CAPABILITIES_KEY, NULL, 0,
-      "Get KCS interface capabilities.", 46},
+      "Get KCS interface capabilities.", 47},
     { "get-bt-interface-capabilities", GET_BT_INTERFACE_CAPABILITIES_KEY, NULL, 0,
-      "Get BT interface capabilities.", 47},
+      "Get BT interface capabilities.", 48},
     { "get-bmc-global-enables", GET_BMC_GLOBAL_ENABLES_KEY, NULL, 0,
-      "Get BMC Global Enables.", 48},
+      "Get BMC Global Enables.", 49},
     { "set-system-firmware-version", SET_SYSTEM_FIRMWARE_VERSION_KEY, "STRING", 0,
-      "Set System Firmware Version.", 49},
+      "Set System Firmware Version.", 50},
     { "set-system-name", SET_SYSTEM_NAME_KEY, "STRING", 0,
-      "Set System Name.", 50},
+      "Set System Name.", 51},
     { "set-primary-operating-system-name", SET_PRIMARY_OPERATING_SYSTEM_NAME_KEY, "STRING", 0,
-      "Set Primary Operating System Name.", 51},
+      "Set Primary Operating System Name.", 52},
     { "set-operating-system-name", SET_OPERATING_SYSTEM_NAME_KEY, "STRING", 0,
-      "Set Operating System Name.", 52},
+      "Set Operating System Name.", 53},
     { "verbose", VERBOSE_KEY, 0, 0,
-      "Increase verbosity in output.", 53},
+      "Increase verbosity in output.", 54},
     { NULL, 0, NULL, 0, NULL, 0}
   };
 
@@ -214,6 +216,10 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case CLEAR_LAN_STATISTICS_KEY:
       cmd_args->clear_lan_statistics++;
       break;
+    case REARM_SENSOR_KEY:
+      cmd_args->rearm_sensor = 1;
+      cmd_args->rearm_sensor_arg = arg;
+      break;
     case GET_SDR_REPOSITORY_TIME_KEY:
       cmd_args->get_sdr_repository_time = 1;
       break;
@@ -309,6 +315,7 @@ _bmc_device_args_validate (struct bmc_device_arguments *cmd_args)
       && !cmd_args->set_acpi_power_state
       && !cmd_args->get_lan_statistics
       && !cmd_args->clear_lan_statistics
+      && !cmd_args->rearm_sensor
       && !cmd_args->get_sdr_repository_time
       && !cmd_args->set_sdr_repository_time
       && !cmd_args->get_sel_time
@@ -336,6 +343,7 @@ _bmc_device_args_validate (struct bmc_device_arguments *cmd_args)
        + cmd_args->set_acpi_power_state
        + cmd_args->get_lan_statistics
        + cmd_args->clear_lan_statistics
+       + cmd_args->rearm_sensor
        + cmd_args->get_sdr_repository_time
        + cmd_args->set_sdr_repository_time
        + cmd_args->get_sel_time
@@ -414,6 +422,8 @@ bmc_device_argp_parse (int argc, char **argv, struct bmc_device_arguments *cmd_a
   cmd_args->set_acpi_power_state_args.device_power_state = IPMI_ACPI_DEVICE_POWER_STATE_NO_CHANGE;
   cmd_args->get_lan_statistics = 0;
   cmd_args->clear_lan_statistics = 0;
+  cmd_args->rearm_sensor = 0;
+  cmd_args->rearm_sensor_arg = NULL;
   cmd_args->get_sdr_repository_time = 0;
   cmd_args->set_sdr_repository_time = 0;
   cmd_args->set_sdr_repository_time_arg = NULL;

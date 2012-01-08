@@ -64,7 +64,10 @@ typedef int (*Bmc_device_system_info)(ipmi_ctx_t ctx,
 				      unsigned int string_block_length,
 				      fiid_obj_t obj_cmd_rs);
 
-#define BMC_DEVICE_MAX_EVENT_ARGS 9
+#define BMC_DEVICE_MIN_REARM_SENSOR_ARGS 1
+#define BMC_DEVICE_MAX_REARM_SENSOR_ARGS 3
+
+#define BMC_DEVICE_MAX_PLATFORM_EVENT_ARGS 9
 
 static int
 cold_reset (bmc_device_state_data_t *state_data)
@@ -781,6 +784,157 @@ clear_lan_statistics (bmc_device_state_data_t *state_data)
 }
 
 static int
+rearm_sensor (bmc_device_state_data_t *state_data)
+{
+  struct bmc_device_arguments *args;
+  fiid_obj_t obj_cmd_rs = NULL;
+  char *rearm_sensor_arg_cpy = NULL;
+  char *str_args[BMC_DEVICE_MAX_REARM_SENSOR_ARGS];
+  unsigned int num_str_args = 0;
+  char *str_ptr;
+  char *lasts;
+  uint16_t record_id;
+  uint16_t assertion_bitmask;
+  uint16_t deassertion_bitmask;
+  int rv = -1;
+
+  assert (state_data);
+
+  args = state_data->prog_data->args;
+
+  if (!(rearm_sensor_arg_cpy = strdup(args->rearm_sensor_arg)))
+    {
+      pstdout_perror (state_data->pstate, "strdup");
+      goto cleanup;
+    }
+
+  str_ptr = strtok_r (rearm_sensor_arg_cpy, " \t\0", &lasts);
+  while (str_ptr && num_str_args < BMC_DEVICE_MAX_REARM_SENSOR_ARGS)
+    {
+      str_args[num_str_args] = str_ptr;
+      num_str_args++;
+
+      str_ptr = strtok_r (NULL, " \t\0", &lasts);
+    }
+
+  if (num_str_args != BMC_DEVICE_MIN_REARM_SENSOR_ARGS
+      && num_str_args != BMC_DEVICE_MAX_REARM_SENSOR_ARGS)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "Invalid number of arguments specified\n");
+      goto cleanup;
+    }
+
+#if 0
+  if (parse_hex_byte (state_data,
+                      str_args[str_args_index],
+                      &event_message_format_version,
+                      "event message format version") < 0)
+    goto cleanup;
+  str_args_index++;
+  
+  if (parse_hex_byte (state_data,
+                      str_args[str_args_index],
+                      &sensor_type,
+                      "sensor type") < 0)
+    goto cleanup;
+  str_args_index++;
+
+  if (parse_hex_byte (state_data,
+                      str_args[str_args_index],
+                      &sensor_number,
+                      "sensor number") < 0)
+    goto cleanup;
+  str_args_index++;
+
+  if (parse_hex_byte (state_data,
+                      str_args[str_args_index],
+                      &event_type,
+                      "event type") < 0)
+    goto cleanup;
+  str_args_index++;
+
+  if (!strcasecmp (str_args[str_args_index], "assertion"))
+    event_direction = IPMI_SEL_RECORD_ASSERTION_EVENT;
+  else if (!strcasecmp (str_args[str_args_index], "deassertion"))
+    event_direction = IPMI_SEL_RECORD_DEASSERTION_EVENT;
+  else
+    {
+      if (parse_hex_byte (state_data,
+                          str_args[str_args_index],
+                          &event_direction,
+                          "event direction") < 0)
+        goto cleanup;
+
+      if (!IPMI_SEL_RECORD_EVENT_DIRECTION_VALID (event_direction))
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "invalid hex byte argument for event direction\n");
+          goto cleanup;
+        }
+    }
+  str_args_index++;
+    
+  if (parse_hex_byte (state_data,
+                      str_args[str_args_index],
+                      &event_data1,
+                      "event data1") < 0)
+    goto cleanup;
+  str_args_index++;
+
+  if (parse_hex_byte (state_data,
+                      str_args[str_args_index],
+                      &event_data2,
+                      "event data2") < 0)
+    goto cleanup;
+  str_args_index++;
+
+  if (parse_hex_byte (state_data,
+                      str_args[str_args_index],
+                      &event_data3,
+                      "event data3") < 0)
+    goto cleanup;
+  str_args_index++;
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_platform_event_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_platform_event (state_data->ipmi_ctx,
+                               generator_id_ptr,
+                               event_message_format_version,
+                               sensor_type,
+                               sensor_number,
+                               event_type,
+                               event_direction,
+                               event_data1,
+                               event_data2,
+                               event_data3,
+                               obj_cmd_rs) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_platform_event: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+#endif
+
+  rv = 0;
+ cleanup:
+  free (platform_event_arg_cpy);
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
+static int
 get_sdr_repository_time (bmc_device_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -1108,7 +1262,7 @@ platform_event (bmc_device_state_data_t *state_data)
   fiid_obj_t obj_cmd_get_channel_info_rs = NULL;
   fiid_obj_t obj_cmd_rs = NULL;
   char *platform_event_arg_cpy = NULL;
-  char *str_args[BMC_DEVICE_MAX_EVENT_ARGS];
+  char *str_args[BMC_DEVICE_MAX_PLATFORM_EVENT_ARGS];
   unsigned int num_str_args = 0;
   char *str_ptr;
   char *lasts;
@@ -1138,7 +1292,7 @@ platform_event (bmc_device_state_data_t *state_data)
     }
 
   str_ptr = strtok_r (platform_event_arg_cpy, " \t\0", &lasts);
-  while (str_ptr && num_str_args < BMC_DEVICE_MAX_EVENT_ARGS)
+  while (str_ptr && num_str_args < BMC_DEVICE_MAX_PLATFORM_EVENT_ARGS)
     {
       str_args[num_str_args] = str_ptr;
       num_str_args++;
@@ -1146,8 +1300,8 @@ platform_event (bmc_device_state_data_t *state_data)
       str_ptr = strtok_r (NULL, " \t\0", &lasts);
     }
 
-  if (num_str_args != BMC_DEVICE_MAX_EVENT_ARGS
-      && num_str_args != (BMC_DEVICE_MAX_EVENT_ARGS - 1))
+  if (num_str_args != BMC_DEVICE_MAX_PLATFORM_EVENT_ARGS
+      && num_str_args != (BMC_DEVICE_MAX_PLATFORM_EVENT_ARGS - 1))
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -1188,7 +1342,7 @@ platform_event (bmc_device_state_data_t *state_data)
   channel_medium_type = val;
 
   if (channel_medium_type == IPMI_CHANNEL_MEDIUM_TYPE_SYSTEM_INTERFACE
-      && num_str_args != BMC_DEVICE_MAX_EVENT_ARGS)
+      && num_str_args != BMC_DEVICE_MAX_PLATFORM_EVENT_ARGS)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -1197,7 +1351,7 @@ platform_event (bmc_device_state_data_t *state_data)
     }
   
   /* see if generator_id specified */
-  if (num_str_args == BMC_DEVICE_MAX_EVENT_ARGS)
+  if (num_str_args == BMC_DEVICE_MAX_PLATFORM_EVENT_ARGS)
     {
       if (parse_hex_byte (state_data,
                           str_args[str_args_index],
@@ -2036,6 +2190,9 @@ run_cmd_args (bmc_device_state_data_t *state_data)
 
   if (args->clear_lan_statistics)
     return (clear_lan_statistics (state_data));
+
+  if (args->rearm_sensor)
+    return (rearm_sensor (state_data));
 
   if (args->get_sdr_repository_time)
     return (get_sdr_repository_time (state_data));
