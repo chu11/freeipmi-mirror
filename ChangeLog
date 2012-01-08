@@ -1,5 +1,11 @@
 2012-01-08  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/cmds/ipmi-sensor-cmds.c,
+	libfreeipmi/include/freeipmi/templates/ipmi-sensor-cmds-templates.h:
+	Re-arm Sensor Events fields are optional not required.
+	
+2012-01-08  Albert Chu <chu11@llnl.gov>
+
 	* libipmiconsole/: Don't deactivate the SOL payload when it
 	appears the SOL session has been stolen.
 	
