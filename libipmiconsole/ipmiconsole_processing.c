@@ -1692,8 +1692,6 @@ _keepalive_is_necessary (ipmiconsole_ctx_t c)
 static int
 _keepalive_timeout (ipmiconsole_ctx_t c)
 {
-  struct timeval current;
-  struct timeval timeout;
   int rv;
 
   assert (c);
@@ -1712,6 +1710,9 @@ _keepalive_timeout (ipmiconsole_ctx_t c)
 
   if (rv)
     {
+      struct timeval current;
+      struct timeval timeout;
+
       if (gettimeofday (&current, NULL) < 0)
         {
           IPMICONSOLE_CTX_DEBUG (c, ("gettimeofday: %s", strerror (errno)));
@@ -1790,13 +1791,28 @@ _serial_keepalive_timeout (ipmiconsole_ctx_t c)
           && !c->session.break_requested
           && !c->session.console_remote_console_to_bmc_bytes_before_break)
         {
-	  char buf[1] = { '\0' };
-	  int secure_malloc_flag;
-	  int dropped = 0;
-	  int n;
-	      
+	  struct timeval current;
+	  struct timeval timeout;
+
+	  if (gettimeofday (&current, NULL) < 0)
+	    {
+	      IPMICONSOLE_CTX_DEBUG (c, ("gettimeofday: %s", strerror (errno)));
+	      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SYSTEM_ERROR);
+	      return (-1);
+	    }
+	  
+	  timeval_add_ms (&(c->session.last_sol_input_packet_sent), c->config.retransmission_timeout_len, &timeout);
+	  if (!timeval_gt (&current, &timeout))
+	    return (0);
+	  /* else send a keepalive */
+	  
 	  if (c->config.engine_flags & IPMICONSOLE_ENGINE_SERIAL_KEEPALIVE)
 	    {
+	      char buf[1] = { '\0' };
+	      int secure_malloc_flag;
+	      int dropped = 0;
+	      int n;
+
 	      secure_malloc_flag = (c->config.engine_flags & IPMICONSOLE_ENGINE_LOCK_MEMORY) ? 1 : 0;
 	      
 	      if ((n = scbuf_write (c->connection.console_remote_console_to_bmc,
