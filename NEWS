@@ -4,6 +4,10 @@ o In ipmi-oem, support new Dell C410x OEM extensions
   slot-power-toggle, slot-power-control, get-port-map, set-port-map.
 o Fix daemon setup race condition in ipmidetectd and bmc-watchdog that
   can affect systemd.
+o In libipmiconsole, fix serial keepalive timeout calculation bug that
+  can lead to excessive packets retransmitted.
+o In libipmiconsole, support new SERIAL_KEEPALIVE_EMPTY engine flag.
+o In ipmiconsole, support new --serial-keepalive-empty option.
 o Various documentation updates.
 
 FreeIPMI 1.1.1 - 01/03/12

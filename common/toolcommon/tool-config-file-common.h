@@ -252,6 +252,8 @@ struct config_file_data_ipmiconsole
   int dont_steal_count;
   int serial_keepalive;
   int serial_keepalive_count;
+  int serial_keepalive_empty;
+  int serial_keepalive_empty_count;
   int lock_memory;
   int lock_memory_count;
 };

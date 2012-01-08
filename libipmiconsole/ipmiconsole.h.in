@@ -299,6 +299,15 @@ extern "C" {
  * NUL character byte may affect the remote system depending on what
  * input it may or may not be expecting.
  * 
+ * SERIAL_KEEPALIVE_EMPTY
+ *
+ * This option is identical to SERIAL_KEEPALIVE, except that the
+ * serial keepalive packets are empty and without character data.  On
+ * some motherboards, this may be sufficient to deal with the "serial
+ * keepalive" issue and character data need not be sent with each
+ * packet.  On some systems though, a SOL packet without character
+ * data may not be ACKed, and therefore the keepalive fails.
+ *
  * DEFAULT
  *
  * Informs library to use default, may it be the standard default or
@@ -308,6 +317,7 @@ extern "C" {
 #define IPMICONSOLE_ENGINE_OUTPUT_ON_SOL_ESTABLISHED 0x00000002
 #define IPMICONSOLE_ENGINE_LOCK_MEMORY               0x00000004
 #define IPMICONSOLE_ENGINE_SERIAL_KEEPALIVE          0x00000008
+#define IPMICONSOLE_ENGINE_SERIAL_KEEPALIVE_EMPTY    0x00000010
 #define IPMICONSOLE_ENGINE_DEFAULT                   0xFFFFFFFF
 
 /*

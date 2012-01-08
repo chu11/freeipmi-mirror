@@ -116,6 +116,7 @@ static char *ipmiconsole_errmsgs[] =
 #define IPMICONSOLE_ENGINE_OUTPUT_ON_SOL_ESTABLISHED_STR "outputonsolestablished"
 #define IPMICONSOLE_ENGINE_LOCK_MEMORY_STR               "lockmemory"
 #define IPMICONSOLE_ENGINE_SERIAL_KEEPALIVE_STR          "serialkeepalive"
+#define IPMICONSOLE_ENGINE_SERIAL_KEEPALIVE_EMPTY_STR    "serialkeepaliveempty"
 
 #define IPMICONSOLE_BEHAVIOR_ERROR_ON_SOL_INUSE_STR      "erroronsolinuse"
 #define IPMICONSOLE_BEHAVIOR_DEACTIVATE_ONLY_STR         "deactivateonly"
@@ -370,6 +371,8 @@ _config_file_engine_flags (conffile_t cf,
         engine_flags |= IPMICONSOLE_ENGINE_LOCK_MEMORY;
       else if (!strcasecmp (data->stringlist[i], IPMICONSOLE_ENGINE_SERIAL_KEEPALIVE_STR))
         engine_flags |= IPMICONSOLE_ENGINE_SERIAL_KEEPALIVE;
+      else if (!strcasecmp (data->stringlist[i], IPMICONSOLE_ENGINE_SERIAL_KEEPALIVE_EMPTY_STR))
+        engine_flags |= IPMICONSOLE_ENGINE_SERIAL_KEEPALIVE_EMPTY;
       else
         IPMICONSOLE_DEBUG (("libipmiconsole config file engine flag invalid"));
     }

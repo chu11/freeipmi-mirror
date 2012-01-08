@@ -117,7 +117,17 @@ the viewpoint of
 data is simply not be sent out of the remote system and this problem
 is only detected once there is user interaction.  By sending the
 occasional NUL character, the underlying loss of serial data transfer
-can be detected far more quickly.
+can be detected far more quickly.  There is some risk with this option,
+as the NUL character byte may affect the remote system depending on
+what data it may or may not be expecting. 
+.TP
+\fB\-\-serial\-keepalive\-empty\fR
+This option is identical to \fB\-\-serial\-keepalive\fR except that
+SOL packets will contain no NUL character data.  On some motherboards,
+this may be sufficient to deal with a hanging IPMI session without the
+risk regularly sending a NUL character byte may have.  However, some
+systems may not ACK a SOL packet without character data in it, meaning
+these keepalive packets do nothing. 
 .TP
 \fB\-\-lock-memory\fR
 Lock sensitive information (such as usernames and passwords) in

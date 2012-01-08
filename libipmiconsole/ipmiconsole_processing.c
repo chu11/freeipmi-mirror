@@ -188,7 +188,6 @@ _send_sol_packet_with_character_data (ipmiconsole_ctx_t c,
   assert (c);
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
   assert (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION);
-  assert (!scbuf_is_empty (c->connection.console_remote_console_to_bmc));
 
   secure_malloc_flag = (c->config.engine_flags & IPMICONSOLE_ENGINE_LOCK_MEMORY) ? 1 : 0;
 
@@ -212,35 +211,40 @@ _send_sol_packet_with_character_data (ipmiconsole_ctx_t c,
         /* Sequence number 0 is special, so start at 1 */
         c->session.sol_input_packet_sequence_number = 1;
 
-      /*
-       * If a serial break has occurred, we want to generate the break
-       * after all input before the break has been dealt with and none
-       * after the break have been sent.
-       */
-      if (!c->session.console_remote_console_to_bmc_bytes_before_break)
-        max_character_send_size = c->session.max_sol_character_send_size;
-      else
-        max_character_send_size = c->session.console_remote_console_to_bmc_bytes_before_break;
+      if (!scbuf_is_empty (c->connection.console_remote_console_to_bmc))
+	{
+	  /*
+	   * If a serial break has occurred, we want to generate the break
+	   * after all input before the break has been dealt with and none
+	   * after the break have been sent.
+	   */
+	  if (!c->session.console_remote_console_to_bmc_bytes_before_break)
+	    max_character_send_size = c->session.max_sol_character_send_size;
+	  else
+	    max_character_send_size = c->session.console_remote_console_to_bmc_bytes_before_break;
 
-      /* Notes: Since c->session.console_remote_console_to_bmc is a circular buffer, it may
-       * not be apparent why 'c->session.sol_input_character_data' and
-       * 'c->session.sol_input_character_data_len' is necessary.
-       *
-       * The reason it is needed is because the user may have typed
-       * additional info, thus increasing the amount of data in
-       * 'c->session.console_remote_console_to_bmc'.  We need to assure that if there is
-       * an SOL retransmission, the character data it is sending is
-       * perfectly identical.
-       */
-      if ((n = scbuf_peek (c->connection.console_remote_console_to_bmc,
-                           c->session.sol_input_character_data,
-                           max_character_send_size)) < 0)
-        {
-          IPMICONSOLE_CTX_DEBUG (c, ("scbuf_peek: %s", strerror (errno)));
-          ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-          goto cleanup;
-        }
-      c->session.sol_input_character_data_len = n;
+	  /* Notes: Since c->session.console_remote_console_to_bmc is a circular buffer, it may
+	   * not be apparent why 'c->session.sol_input_character_data' and
+	   * 'c->session.sol_input_character_data_len' is necessary.
+	   *
+	   * The reason it is needed is because the user may have typed
+	   * additional info, thus increasing the amount of data in
+	   * 'c->session.console_remote_console_to_bmc'.  We need to assure that if there is
+	   * an SOL retransmission, the character data it is sending is
+	   * perfectly identical.
+	   */
+	  if ((n = scbuf_peek (c->connection.console_remote_console_to_bmc,
+			       c->session.sol_input_character_data,
+			       max_character_send_size)) < 0)
+	    {
+	      IPMICONSOLE_CTX_DEBUG (c, ("scbuf_peek: %s", strerror (errno)));
+	      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
+	      goto cleanup;
+	    }
+	  c->session.sol_input_character_data_len = n;
+	}
+      else
+	c->session.sol_input_character_data_len = 0;
     }
 
   if ((pkt_len = ipmiconsole_sol_packet_assemble (c,
@@ -1688,8 +1692,6 @@ _keepalive_is_necessary (ipmiconsole_ctx_t c)
 static int
 _keepalive_timeout (ipmiconsole_ctx_t c)
 {
-  struct timeval current;
-  struct timeval timeout;
   int rv;
 
   assert (c);
@@ -1708,6 +1710,9 @@ _keepalive_timeout (ipmiconsole_ctx_t c)
 
   if (rv)
     {
+      struct timeval current;
+      struct timeval timeout;
+
       if (gettimeofday (&current, NULL) < 0)
         {
           IPMICONSOLE_CTX_DEBUG (c, ("gettimeofday: %s", strerror (errno)));
@@ -1742,7 +1747,8 @@ _serial_keepalive_is_necessary (ipmiconsole_ctx_t c)
   assert (c);
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
   assert (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION);
-  assert (c->config.engine_flags & IPMICONSOLE_ENGINE_SERIAL_KEEPALIVE);
+  assert (c->config.engine_flags & IPMICONSOLE_ENGINE_SERIAL_KEEPALIVE
+	  || c->config.engine_flags & IPMICONSOLE_ENGINE_SERIAL_KEEPALIVE_EMPTY);
 
   timeval_add_ms (&(c->session.last_sol_packet_received), c->config.session_timeout_len, &timeout);
   if (gettimeofday (&current, NULL) < 0)
@@ -1771,7 +1777,8 @@ _serial_keepalive_timeout (ipmiconsole_ctx_t c)
   assert (c);
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
   assert (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION);
-  assert (c->config.engine_flags & IPMICONSOLE_ENGINE_SERIAL_KEEPALIVE);
+  assert (c->config.engine_flags & IPMICONSOLE_ENGINE_SERIAL_KEEPALIVE
+	  || c->config.engine_flags & IPMICONSOLE_ENGINE_SERIAL_KEEPALIVE_EMPTY);
 
   if ((rv = _serial_keepalive_is_necessary (c)) < 0)
     return (-1);
@@ -1784,48 +1791,66 @@ _serial_keepalive_timeout (ipmiconsole_ctx_t c)
           && !c->session.break_requested
           && !c->session.console_remote_console_to_bmc_bytes_before_break)
         {
-          char buf[1] = { '\0' };
-          int secure_malloc_flag;
-          int dropped = 0;
-          int n;
+	  struct timeval current;
+	  struct timeval timeout;
 
-          secure_malloc_flag = (c->config.engine_flags & IPMICONSOLE_ENGINE_LOCK_MEMORY) ? 1 : 0;
+	  if (gettimeofday (&current, NULL) < 0)
+	    {
+	      IPMICONSOLE_CTX_DEBUG (c, ("gettimeofday: %s", strerror (errno)));
+	      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SYSTEM_ERROR);
+	      return (-1);
+	    }
+	  
+	  timeval_add_ms (&(c->session.last_sol_input_packet_sent), c->config.retransmission_timeout_len, &timeout);
+	  if (!timeval_gt (&current, &timeout))
+	    return (0);
+	  /* else send a keepalive */
+	  
+	  if (c->config.engine_flags & IPMICONSOLE_ENGINE_SERIAL_KEEPALIVE)
+	    {
+	      char buf[1] = { '\0' };
+	      int secure_malloc_flag;
+	      int dropped = 0;
+	      int n;
 
-          if ((n = scbuf_write (c->connection.console_remote_console_to_bmc,
-                                buf,
-                                1,
-                                &dropped,
-                                secure_malloc_flag)) < 0)
-            {
-              IPMICONSOLE_CTX_DEBUG (c, ("scbuf_write: %s", strerror (errno)));
-              ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-              return (-1);
-            }
-
-          if (n != 1)
-            {
-              IPMICONSOLE_CTX_DEBUG (c, ("scbuf_write: invalid bytes written; n=%d"));
-              ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-              return (-1);
-            }
+	      secure_malloc_flag = (c->config.engine_flags & IPMICONSOLE_ENGINE_LOCK_MEMORY) ? 1 : 0;
+	      
+	      if ((n = scbuf_write (c->connection.console_remote_console_to_bmc,
+				    buf,
+				    1,
+				    &dropped,
+				    secure_malloc_flag)) < 0)
+		{
+		  IPMICONSOLE_CTX_DEBUG (c, ("scbuf_write: %s", strerror (errno)));
+		  ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
+		  return (-1);
+		}
+	      
+	      if (n != 1)
+		{
+		  IPMICONSOLE_CTX_DEBUG (c, ("scbuf_write: invalid bytes written; n=%d"));
+		  ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
+		  return (-1);
+		}
           
-          if (dropped)
-            {
-              IPMICONSOLE_CTX_DEBUG (c, ("scbuf_write: dropped data: dropped=%d", dropped));
-              ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-              return (-1);
-            }
-          
-          if (_send_sol_packet_with_character_data (c, 0, 0, 0) < 0)
-            {
-              /* Attempt to close the session cleanly */
-              c->session.close_session_flag++;
-              if (_send_ipmi_packet (c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
-                return (-1);
-              c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
-              return (1);
-            }
-          return (1);
+	      if (dropped)
+		{
+		  IPMICONSOLE_CTX_DEBUG (c, ("scbuf_write: dropped data: dropped=%d", dropped));
+		  ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
+		  return (-1);
+		}
+	    }
+
+	  if (_send_sol_packet_with_character_data (c, 0, 0, 0) < 0)
+	    {
+	      /* Attempt to close the session cleanly */
+	      c->session.close_session_flag++;
+	      if (_send_ipmi_packet (c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
+		return (-1);
+	      c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
+	      return (1);
+	    }
+	  return (1);
         }
     }
 
@@ -3533,7 +3558,8 @@ _process_protocol_state_sol_session_send (ipmiconsole_ctx_t c)
   if (ret)
     return (1);
 
-  if (c->config.engine_flags & IPMICONSOLE_ENGINE_SERIAL_KEEPALIVE)
+  if (c->config.engine_flags & IPMICONSOLE_ENGINE_SERIAL_KEEPALIVE
+      || c->config.engine_flags & IPMICONSOLE_ENGINE_SERIAL_KEEPALIVE_EMPTY)
     {
       /* Retransmits handled by _sol_retransmission_timeout() call above */
       if ((ret = _serial_keepalive_timeout (c)) < 0)
