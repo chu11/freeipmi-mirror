@@ -348,8 +348,8 @@ RX100 S5.
 .RS
 .TP
 .B get-led
-This OEM command will get the current LED status.  Command confirmed
-to work on IBM x3755.
+This OEM command will get the current LED status.  This OEM command
+requires access to the SDR.  Command confirmed to work on IBM x3755.
 .RE
 .TP
 .B Intel
@@ -389,7 +389,8 @@ executing a cold-reset with
 .B IntelNM (Intel Node Manager)
 .SP
 The following OEM commands operate on Intel chipsets with Node Manager
-support.  They may work on multiple vendors motherboards.
+support.  They all require access to the SDR.  They may work on
+multiple vendors motherboards.
 .SP
 .RS
 .TP
@@ -862,12 +863,13 @@ If the verbose option is set, sensor names will be output with their
 entity ID and instance when appropriate.  (Similar to the
 \fI\-\-entity\-sensor\-names\fR option in
 .B ipmi-sensors.)
-Command confirmed to work on Sun Fire 4140 with ILOM.
+This OEM command requires access to the SDR.  Command confirmed to
+work on Sun Fire 4140 with ILOM.
 .TP
 .B set-led \fIrecord_id\fR \fIoff|on|standby|slow|fast\fR
 This OEM command will configure LED modes.  (See \fIget\-led\fR above
-for description on LED modes.)  Command confirmed to work on Sun Fire
-4140 with ILOM.
+for description on LED modes.)  This OEM command requires access to
+the SDR.  Command confirmed to work on Sun Fire 4140 with ILOM.
 .RE
 .TP
 .B Supermicro
