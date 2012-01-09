@@ -363,7 +363,7 @@ struct ipmipower_connection
 typedef struct ipmipower_powercmd *ipmipower_powercmd_t;
 typedef struct ipmipower_connection *ipmipower_connection_t;
 
-enum ipmi_sensors_argp_option_keys
+enum ipmipower_argp_option_keys
   {
     IPMI_VERSION_KEY = 160,       /* legacy option */
     RMCPDUMP_KEY = 161,
