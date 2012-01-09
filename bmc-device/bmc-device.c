@@ -816,7 +816,54 @@ parse_uint16 (bmc_device_state_data_t *state_data,
 
   if (strlen (from) >= 2)
     {
-      if (strncmp (from, "0x", 2) == 0)
+      if (!strncmp (from, "0x", 2))
+	{
+	  for (i = 2; from[i] != '\0'; i++)
+	    {
+	      if (!isxdigit (from[i]))
+		{
+		  pstdout_fprintf (state_data->pstate,
+				   stderr,
+				   "invalid hex byte argument for %s\n",
+				   str);
+		  return (-1);
+		}
+	    }
+	}
+    }
+
+  errno = 0;
+  (*to) = strtol (from, &endptr, 0);
+  if (errno
+      || endptr[0] != '\0')
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "invalid argument for %s\n",
+		       str);
+      return (-1);
+    }
+
+  return (0);
+}
+
+static int
+parse_hex_uint16 (bmc_device_state_data_t *state_data,
+		  char *from,
+		  uint16_t *to,
+		  char *str)
+{
+  char *endptr;
+  int i;
+
+  assert (state_data);
+  assert (from);
+  assert (to);
+  assert (str);
+
+  if (strlen (from) >= 2)
+    {
+      if (!strncmp (from, "0x", 2))
         from += 2;
     }
 
@@ -824,7 +871,7 @@ parse_uint16 (bmc_device_state_data_t *state_data,
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "invalid argument for %s\n",
+                       "invalid hex byte argument for %s\n",
                        str);
       return (-1);
     }
@@ -840,7 +887,7 @@ parse_uint16 (bmc_device_state_data_t *state_data,
           return (-1);
         }
     }
-
+  
   errno = 0;
   (*to) = strtol (from, &endptr, 16);
   if (errno
@@ -848,7 +895,7 @@ parse_uint16 (bmc_device_state_data_t *state_data,
     {
       pstdout_fprintf (state_data->pstate,
 		       stderr,
-		       "invalid argument for %s\n",
+		       "invalid hex byte argument for %s\n",
 		       str);
       return (-1);
     }
@@ -876,6 +923,11 @@ rearm_sensor (bmc_device_state_data_t *state_data)
   int sdr_record_len = 0;
   uint8_t record_type;
   uint8_t sensor_number;
+  uint8_t sensor_owner_id_type = 0;
+  uint8_t sensor_owner_id = 0;
+  uint8_t sensor_owner_lun = 0;
+  uint8_t channel_number = 0;
+  uint8_t slave_address = 0;
   int rv = -1;
 
   assert (state_data);
@@ -914,16 +966,16 @@ rearm_sensor (bmc_device_state_data_t *state_data)
 
   if (num_str_args == BMC_DEVICE_MAX_REARM_SENSOR_ARGS)
     {
-      if (parse_uint16 (state_data,
-			str_args[1],
-			&assertion_bitmask,
-			"assertion_bitmask") < 0)
+      if (parse_hex_uint16 (state_data,
+			    str_args[1],
+			    &assertion_bitmask,
+			    "assertion_bitmask") < 0)
 	goto cleanup;
       
-      if (parse_uint16 (state_data,
-			str_args[2],
-			&deassertion_bitmask,
-			"deassertion_bitmask") < 0)
+      if (parse_hex_uint16 (state_data,
+			    str_args[2],
+			    &deassertion_bitmask,
+			    "deassertion_bitmask") < 0)
 	goto cleanup;
 
       re_arm_all_event_status_from_this_sensor = IPMI_SENSOR_RE_ARM_ALL_EVENT_STATUS_DISABLED;
@@ -1004,6 +1056,34 @@ rearm_sensor (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
 
+  if (ipmi_sdr_parse_sensor_owner_id (state_data->sdr_parse_ctx,
+                                      sdr_record,
+                                      sdr_record_len,
+                                      &sensor_owner_id_type,
+                                      &sensor_owner_id) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_sdr_parse_sensor_owner_id: %s\n",
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+      goto cleanup;
+    }
+
+  if (ipmi_sdr_parse_sensor_owner_lun (state_data->sdr_parse_ctx,
+                                       sdr_record,
+                                       sdr_record_len,
+                                       &sensor_owner_lun,
+                                       &channel_number) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_sdr_parse_sensor_owner_lun: %s\n",
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+      goto cleanup;
+    }
+
+  slave_address = (sensor_owner_id << 1) | sensor_owner_id_type;
+
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_re_arm_sensor_events_rs)))
     {
       pstdout_fprintf (state_data->pstate,
@@ -1012,19 +1092,41 @@ rearm_sensor (bmc_device_state_data_t *state_data)
                        strerror (errno));
       goto cleanup;
     }
-  
-  if (ipmi_cmd_re_arm_sensor_events (state_data->ipmi_ctx,
-				     sensor_number,
-				     re_arm_all_event_status_from_this_sensor,
-				     assertion_bitmask_ptr,
-				     deassertion_bitmask_ptr,
-				     obj_cmd_rs) < 0)
+
+  if (slave_address == IPMI_SLAVE_ADDRESS_BMC)
     {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "ipmi_cmd_re_arm_sensor_events: %s\n",
-                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
-      goto cleanup;
+      if (ipmi_cmd_re_arm_sensor_events (state_data->ipmi_ctx,
+					 sensor_number,
+					 re_arm_all_event_status_from_this_sensor,
+					 assertion_bitmask_ptr,
+					 deassertion_bitmask_ptr,
+					 obj_cmd_rs) < 0)
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_cmd_re_arm_sensor_events: %s\n",
+			   ipmi_ctx_errormsg (state_data->ipmi_ctx));
+	  goto cleanup;
+	}
+    }
+  else
+    {
+      if (ipmi_cmd_re_arm_sensor_events_ipmb (state_data->ipmi_ctx,
+					      channel_number,
+					      slave_address,
+					      sensor_owner_lun,
+					      sensor_number,
+					      re_arm_all_event_status_from_this_sensor,
+					      assertion_bitmask_ptr,
+					      deassertion_bitmask_ptr,
+					      obj_cmd_rs) < 0)
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_cmd_re_arm_sensor_events: %s\n",
+			   ipmi_ctx_errormsg (state_data->ipmi_ctx));
+	  goto cleanup;
+	}
     }
   
   rv = 0;
@@ -1306,7 +1408,7 @@ parse_hex_byte (bmc_device_state_data_t *state_data,
 
   if (strlen (from) >= 2)
     {
-      if (strncmp (from, "0x", 2) == 0)
+      if (!strncmp (from, "0x", 2))
         from += 2;
     }
 
