@@ -784,6 +784,62 @@ clear_lan_statistics (bmc_device_state_data_t *state_data)
 }
 
 static int
+parse_uint16 (bmc_device_state_data_t *state_data,
+	      char *from,
+	      uint16_t *to,
+	      char *str)
+{
+  char *endptr;
+  int i;
+
+  assert (state_data);
+  assert (from);
+  assert (to);
+  assert (str);
+
+  if (strlen (from) >= 2)
+    {
+      if (strncmp (from, "0x", 2) == 0)
+        from += 2;
+    }
+
+  if (*from == '\0')
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "invalid argument for %s\n",
+                       str);
+      return (-1);
+    }
+  
+  for (i = 0; from[i] != '\0'; i++)
+    {
+      if (!isxdigit (from[i]))
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "invalid hex byte argument for %s\n",
+                           str);
+          return (-1);
+        }
+    }
+
+  errno = 0;
+  (*to) = strtol (from, &endptr, 16);
+  if (errno
+      || endptr[0] != '\0')
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "invalid argument for %s\n",
+		       str);
+      return (-1);
+    }
+
+  return (0);
+}
+
+static int
 rearm_sensor (bmc_device_state_data_t *state_data)
 {
   struct bmc_device_arguments *args;
@@ -796,6 +852,9 @@ rearm_sensor (bmc_device_state_data_t *state_data)
   uint16_t record_id;
   uint16_t assertion_bitmask;
   uint16_t deassertion_bitmask;
+  uint16_t *assertion_bitmask_ptr;
+  uint16_t *deassertion_bitmask_ptr;
+  uint8_t re_arm_all_event_status_from_this_sensor;
   int rv = -1;
 
   assert (state_data);
@@ -826,79 +885,38 @@ rearm_sensor (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
 
-#if 0
-  if (parse_hex_byte (state_data,
-                      str_args[str_args_index],
-                      &event_message_format_version,
-                      "event message format version") < 0)
+  if (parse_uint16 (state_data,
+		    str_args[0],
+		    &record_id,
+		    "record_id") < 0)
     goto cleanup;
-  str_args_index++;
-  
-  if (parse_hex_byte (state_data,
-                      str_args[str_args_index],
-                      &sensor_type,
-                      "sensor type") < 0)
-    goto cleanup;
-  str_args_index++;
 
-  if (parse_hex_byte (state_data,
-                      str_args[str_args_index],
-                      &sensor_number,
-                      "sensor number") < 0)
-    goto cleanup;
-  str_args_index++;
+  if (num_str_args == BMC_DEVICE_MAX_REARM_SENSOR_ARGS)
+    {
+      if (parse_uint16 (state_data,
+			str_args[1],
+			&assertion_bitmask,
+			"assertion_bitmask") < 0)
+	goto cleanup;
+      
+      if (parse_uint16 (state_data,
+			str_args[2],
+			&deassertion_bitmask,
+			"deassertion_bitmask") < 0)
+	goto cleanup;
 
-  if (parse_hex_byte (state_data,
-                      str_args[str_args_index],
-                      &event_type,
-                      "event type") < 0)
-    goto cleanup;
-  str_args_index++;
-
-  if (!strcasecmp (str_args[str_args_index], "assertion"))
-    event_direction = IPMI_SEL_RECORD_ASSERTION_EVENT;
-  else if (!strcasecmp (str_args[str_args_index], "deassertion"))
-    event_direction = IPMI_SEL_RECORD_DEASSERTION_EVENT;
+      re_arm_all_event_status_from_this_sensor = IPMI_SENSOR_RE_ARM_ALL_EVENT_STATUS_DISABLED;
+      assertion_bitmask_ptr = &assertion_bitmask;
+      deassertion_bitmask_ptr = &deassertion_bitmask;
+    }
   else
     {
-      if (parse_hex_byte (state_data,
-                          str_args[str_args_index],
-                          &event_direction,
-                          "event direction") < 0)
-        goto cleanup;
-
-      if (!IPMI_SEL_RECORD_EVENT_DIRECTION_VALID (event_direction))
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "invalid hex byte argument for event direction\n");
-          goto cleanup;
-        }
+      re_arm_all_event_status_from_this_sensor = IPMI_SENSOR_RE_ARM_ALL_EVENT_STATUS_ENABLED;
+      assertion_bitmask_ptr = NULL;
+      deassertion_bitmask_ptr = NULL;
     }
-  str_args_index++;
-    
-  if (parse_hex_byte (state_data,
-                      str_args[str_args_index],
-                      &event_data1,
-                      "event data1") < 0)
-    goto cleanup;
-  str_args_index++;
 
-  if (parse_hex_byte (state_data,
-                      str_args[str_args_index],
-                      &event_data2,
-                      "event data2") < 0)
-    goto cleanup;
-  str_args_index++;
-
-  if (parse_hex_byte (state_data,
-                      str_args[str_args_index],
-                      &event_data3,
-                      "event data3") < 0)
-    goto cleanup;
-  str_args_index++;
-
-  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_platform_event_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_re_arm_sensor_events_rs)))
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -907,25 +925,19 @@ rearm_sensor (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (ipmi_cmd_platform_event (state_data->ipmi_ctx,
-                               generator_id_ptr,
-                               event_message_format_version,
-                               sensor_type,
-                               sensor_number,
-                               event_type,
-                               event_direction,
-                               event_data1,
-                               event_data2,
-                               event_data3,
-                               obj_cmd_rs) < 0)
+  if (ipmi_cmd_re_arm_sensor_events (state_data->ipmi_ctx,
+				     sensor_number,
+				     re_arm_all_event_status_from_this_sensor,
+				     assertion_bitmask_ptr,
+				     deassertion_bitmask_ptr,
+				     obj_cmd_rs) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "ipmi_cmd_platform_event: %s\n",
+                       "ipmi_cmd_re_arm_sensor_events: %s\n",
                        ipmi_ctx_errormsg (state_data->ipmi_ctx));
       goto cleanup;
     }
-#endif
 
   rv = 0;
  cleanup:
