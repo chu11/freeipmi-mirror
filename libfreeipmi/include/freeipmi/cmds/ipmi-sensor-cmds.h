@@ -69,6 +69,10 @@ extern "C" {
 #define IPMI_SENSOR_RE_ARM_ALL_EVENT_STATUS_ENABLED 0x0
 #define IPMI_SENSOR_RE_ARM_ALL_EVENT_STATUS_DISABLED 0x1
 
+#define IPMI_SENSOR_RE_ARM_ALL_EVENT_STATUS_VALID(__val) \
+  (((__val) == IPMI_SENSOR_RE_ARM_ALL_EVENT_STATUS_ENABLED \
+    || (__val) == IPMI_SENSOR_RE_ARM_ALL_EVENT_STATUS_DISABLED) ? 1 : 0)
+
 /* achu: Yes, this one is backwards.  I don't know why */
 #define IPMI_SENSOR_READING_STATE_UNAVAILABLE 0x1
 #define IPMI_SENSOR_READING_STATE_AVAILABLE 0x0
@@ -235,6 +239,12 @@ int fill_cmd_set_sensor_event_enable_discrete (uint8_t sensor_number,
                                                fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_get_sensor_event_enable (uint8_t sensor_number, fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_re_arm_sensor_events (uint8_t sensor_number,
+				   uint8_t re_arm_all_event_status_from_this_sensor,
+				   uint16_t *re_arm_assertion_event,
+				   uint16_t *re_arm_deassertion_event,
+				   fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_get_sensor_reading (uint8_t sensor_number, fiid_obj_t obj_cmd_rq);
 

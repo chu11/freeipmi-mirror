@@ -1,16 +1,26 @@
 FreeIPMI 1.1.2 - XX/XX/12
 -------------------------
+Tools
+------
 o In ipmi-oem, support new Dell C410x OEM extensions
   slot-power-toggle, slot-power-control, get-port-map, set-port-map.
 o Fix daemon setup race condition in ipmidetectd and bmc-watchdog that
   can affect systemd.
+o In ipmiconsole, support new --serial-keepalive-empty option.
+o In bmc-device, support new --rearm-sensor option.
+
+Libraries
+----------
 o In libipmiconsole, fix serial keepalive timeout calculation bug that
   can lead to excessive packets retransmitted.
 o In libipmiconsole, support new SERIAL_KEEPALIVE_EMPTY engine flag.
-o In ipmiconsole, support new --serial-keepalive-empty option.
 o In libipmiconsole, do not deactivate a SOL payload if it appears the
   SOL payload has been stolen, but we did not receive a SOL deactivating
   flag.
+o In libfreeipmi, add functions for re-arm sensor events IPMI payload. 
+
+Misc
+----
 o Various documentation updates.
 
 FreeIPMI 1.1.1 - 01/03/12

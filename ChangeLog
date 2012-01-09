@@ -1,5 +1,13 @@
 2012-01-09  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/: Add re-arm sensor events functions.
+
+	* bmc-device/: Support --rearm-sensor.
+
+	* README, man/freeipmi.7.pre.in: Update description of bmc-device.
+
+2012-01-09  Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-oem.8.pre.in: Add SDR caching information to specific
 	OEM commands.
 	

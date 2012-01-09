@@ -222,7 +222,9 @@ power usage management.
 
 Bmc-device
 
-A tool to perform advanced BMC commands.
+A tool to perform advanced BMC commands, such as resetting the BMC,
+configuring ACPI, configuring SDR/SEL time, manually generating
+events, re-arming sensors, and configuring manufacturer settings.
 
 Ipmiping
 
