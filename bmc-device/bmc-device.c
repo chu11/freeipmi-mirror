@@ -929,7 +929,7 @@ rearm_sensor (bmc_device_state_data_t *state_data)
 
   rv = 0;
  cleanup:
-  free (platform_event_arg_cpy);
+  free (rearm_sensor_arg_cpy);
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
