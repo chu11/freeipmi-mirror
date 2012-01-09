@@ -62,6 +62,7 @@ static struct argp_option cmdline_options[] =
     ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL,
     ARGP_COMMON_OPTIONS_CONFIG_FILE,
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
+    ARGP_COMMON_SDR_OPTIONS,
     ARGP_COMMON_HOSTRANGED_OPTIONS,
     ARGP_COMMON_OPTIONS_DEBUG,
     { "cold-reset", COLD_RESET_KEY, NULL, 0,
@@ -281,6 +282,8 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     default:
       ret = common_parse_opt (key, arg, &(cmd_args->common));
       if (ret == ARGP_ERR_UNKNOWN)
+	ret = sdr_parse_opt (key, arg, &(cmd_args->sdr));
+      if (ret == ARGP_ERR_UNKNOWN)
         ret = hostrange_parse_opt (key, arg, &(cmd_args->hostrange));
       return (ret);
     }
@@ -296,7 +299,7 @@ _bmc_device_config_file_parse (struct bmc_device_arguments *cmd_args)
                          &(cmd_args->common),
                          NULL,
                          &(cmd_args->hostrange),
-                         CONFIG_FILE_INBAND | CONFIG_FILE_OUTOFBAND | CONFIG_FILE_HOSTRANGE,
+                         CONFIG_FILE_INBAND | CONFIG_FILE_OUTOFBAND | CONFIG_FILE_SDR | CONFIG_FILE_HOSTRANGE,
                          CONFIG_FILE_TOOL_BMC_DEVICE,
                          NULL) < 0)
     {
@@ -308,7 +311,8 @@ _bmc_device_config_file_parse (struct bmc_device_arguments *cmd_args)
 static void
 _bmc_device_args_validate (struct bmc_device_arguments *cmd_args)
 {
-  if (!cmd_args->cold_reset
+  if (!cmd_args->sdr.flush_cache
+      && !cmd_args->cold_reset
       && !cmd_args->warm_reset
       && !cmd_args->get_self_test_results
       && !cmd_args->get_acpi_power_state
@@ -336,7 +340,8 @@ _bmc_device_args_validate (struct bmc_device_arguments *cmd_args)
       exit (1);
     }
 
-  if ((cmd_args->cold_reset
+  if ((cmd_args->sdr.flush_cache
+       + cmd_args->cold_reset
        + cmd_args->warm_reset
        + cmd_args->get_self_test_results
        + cmd_args->get_acpi_power_state
@@ -411,6 +416,7 @@ void
 bmc_device_argp_parse (int argc, char **argv, struct bmc_device_arguments *cmd_args)
 {
   init_common_cmd_args_admin (&(cmd_args->common));
+  init_sdr_cmd_args (&(cmd_args->sdr));
   init_hostrange_cmd_args (&(cmd_args->hostrange));
 
   cmd_args->cold_reset = 0;

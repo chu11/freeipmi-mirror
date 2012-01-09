@@ -79,7 +79,8 @@ re-arming.  This option may also be useful to reset a sensor reading
 or event that may be stuck due to an internal hardware or firmware
 error.  If the \fIassertion_bitmask\fR and \fIdeassertion_bitmask\fR
 are specified, only the specific events will be re-armed.  If not
-specified, all possible events will be re-armed.
+specified, all possible events will be re-armed.  This command
+requires the loading of the SDR.
 .TP
 \fB\-\-get\-sdr\-repository\-time\fR
 Get SDR repository time.
@@ -139,6 +140,7 @@ Set Operating System Name.
 .TP
 \fB\-\-verbose\fR
 Increase verbosity in output.
+#include <@top_srcdir@/man/manpage-common-sdr-options.man>
 #include <@top_srcdir@/man/manpage-common-hostranged-options-header.man>
 #include <@top_srcdir@/man/manpage-common-hostranged-buffer.man>
 #include <@top_srcdir@/man/manpage-common-hostranged-consolidate.man>

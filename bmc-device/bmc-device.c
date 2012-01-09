@@ -49,6 +49,7 @@
 #include "tool-common.h"
 #include "tool-cmdline-common.h"
 #include "tool-hostrange-common.h"
+#include "tool-sdr-cache-common.h"
 
 typedef int (*Bmc_device_system_info_first_set)(ipmi_ctx_t ctx,
 						uint8_t set_selector,
@@ -68,6 +69,22 @@ typedef int (*Bmc_device_system_info)(ipmi_ctx_t ctx,
 #define BMC_DEVICE_MAX_REARM_SENSOR_ARGS 3
 
 #define BMC_DEVICE_MAX_PLATFORM_EVENT_ARGS 9
+
+static int
+_flush_cache (bmc_device_state_data_t *state_data)
+{
+  assert (state_data);
+  
+  if (sdr_cache_flush_cache (state_data->sdr_cache_ctx,
+                             state_data->pstate,
+                             state_data->prog_data->args->sdr.quiet_cache,
+                             state_data->hostname,
+                             state_data->prog_data->args->sdr.sdr_cache_directory,
+                             state_data->prog_data->args->sdr.sdr_cache_file) < 0)
+    return (-1);
+  
+  return (0);
+}
 
 static int
 cold_reset (bmc_device_state_data_t *state_data)
@@ -855,6 +872,10 @@ rearm_sensor (bmc_device_state_data_t *state_data)
   uint16_t *assertion_bitmask_ptr;
   uint16_t *deassertion_bitmask_ptr;
   uint8_t re_arm_all_event_status_from_this_sensor;
+  uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
+  int sdr_record_len = 0;
+  uint8_t record_type;
+  uint8_t sensor_number;
   int rv = -1;
 
   assert (state_data);
@@ -916,6 +937,73 @@ rearm_sensor (bmc_device_state_data_t *state_data)
       deassertion_bitmask_ptr = NULL;
     }
 
+  if (sdr_cache_create_and_load (state_data->sdr_cache_ctx,
+                                 state_data->pstate,
+                                 state_data->ipmi_ctx,
+                                 state_data->prog_data->args->sdr.quiet_cache,
+                                 state_data->prog_data->args->sdr.sdr_cache_recreate,
+                                 state_data->hostname,
+                                 state_data->prog_data->args->sdr.sdr_cache_directory,
+                                 state_data->prog_data->args->sdr.sdr_cache_file) < 0)
+    goto cleanup;
+  
+  if (ipmi_sdr_cache_search_record_id (state_data->sdr_cache_ctx,
+                                       record_id) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_sdr_cache_search_record_id: %s\n",
+                       ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
+      goto cleanup;
+    }
+  
+  if ((sdr_record_len = ipmi_sdr_cache_record_read (state_data->sdr_cache_ctx,
+                                                    sdr_record,
+                                                    IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_sdr_cache_record_read: %s\n",
+                       ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
+      goto cleanup;
+    }
+
+  if (ipmi_sdr_parse_record_id_and_type (state_data->sdr_parse_ctx,
+                                         sdr_record,
+                                         sdr_record_len,
+                                         NULL,
+                                         &record_type) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_sdr_parse_record_id_and_type: %s\n",
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+      goto cleanup;
+    }
+
+  if (record_type != IPMI_SDR_FORMAT_FULL_SENSOR_RECORD
+      && record_type != IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD
+      && record_type != IPMI_SDR_FORMAT_EVENT_ONLY_RECORD)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "Record ID points to invalid record type: %Xh\n",
+                       record_type);
+      goto cleanup;
+    }
+  
+  if (ipmi_sdr_parse_sensor_number (state_data->sdr_parse_ctx,
+                                    sdr_record,
+                                    sdr_record_len,
+                                    &sensor_number) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_sdr_parse_sensor_number: %s\n",
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+      goto cleanup;
+    }
+
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_re_arm_sensor_events_rs)))
     {
       pstdout_fprintf (state_data->pstate,
@@ -924,7 +1012,7 @@ rearm_sensor (bmc_device_state_data_t *state_data)
                        strerror (errno));
       goto cleanup;
     }
-
+  
   if (ipmi_cmd_re_arm_sensor_events (state_data->ipmi_ctx,
 				     sensor_number,
 				     re_arm_all_event_status_from_this_sensor,
@@ -938,7 +1026,7 @@ rearm_sensor (bmc_device_state_data_t *state_data)
                        ipmi_ctx_errormsg (state_data->ipmi_ctx));
       goto cleanup;
     }
-
+  
   rv = 0;
  cleanup:
   free (rearm_sensor_arg_cpy);
@@ -2182,6 +2270,9 @@ run_cmd_args (bmc_device_state_data_t *state_data)
 
   args = state_data->prog_data->args;
 
+  if (args->sdr.flush_cache)
+    return (_flush_cache (state_data));
+
   if (args->cold_reset)
     return (cold_reset (state_data));
 
@@ -2267,17 +2358,57 @@ _bmc_device (pstdout_state_t pstate,
 
   state_data.prog_data = prog_data;
   state_data.pstate = pstate;
+  state_data.hostname = (char *)hostname;
 
-  if (!(state_data.ipmi_ctx = ipmi_open (prog_data->progname,
-                                         hostname,
-                                         &(prog_data->args->common),
-                                         errmsg,
-                                         IPMI_OPEN_ERRMSGLEN)))
+  /* Special case, just flush, don't do an IPMI connection */
+  if (!prog_data->args->sdr.flush_cache)
     {
-      pstdout_fprintf (pstate,
-                       stderr,
-                       "%s\n",
-                       errmsg);
+      if (!(state_data.ipmi_ctx = ipmi_open (prog_data->progname,
+					     hostname,
+					     &(prog_data->args->common),
+					     errmsg,
+					     IPMI_OPEN_ERRMSGLEN)))
+	{
+	  pstdout_fprintf (pstate,
+			   stderr,
+			   "%s\n",
+			   errmsg);
+	  exit_code = EXIT_FAILURE;
+	  goto cleanup;
+	}
+    }
+
+  if (!(state_data.sdr_cache_ctx = ipmi_sdr_cache_ctx_create ()))
+    {
+      pstdout_perror (pstate, "ipmi_sdr_cache_ctx_create()");
+      exit_code = EXIT_FAILURE;
+      goto cleanup;
+    }
+  
+  if (state_data.prog_data->args->common.debug)
+    {
+      /* Don't error out, if this fails we can still continue */
+      if (ipmi_sdr_cache_ctx_set_flags (state_data.sdr_cache_ctx,
+                                        IPMI_SDR_CACHE_FLAGS_DEBUG_DUMP) < 0)
+        pstdout_fprintf (pstate,
+                         stderr,
+                         "ipmi_sdr_cache_ctx_set_flags: %s\n",
+                         ipmi_sdr_cache_ctx_strerror (ipmi_sdr_cache_ctx_errnum (state_data.sdr_cache_ctx)));
+      
+      if (hostname)
+        {
+          if (ipmi_sdr_cache_ctx_set_debug_prefix (state_data.sdr_cache_ctx,
+                                                   hostname) < 0)
+            pstdout_fprintf (pstate,
+                             stderr,
+                             "ipmi_sdr_cache_ctx_set_debug_prefix: %s\n",
+                             ipmi_sdr_cache_ctx_strerror (ipmi_sdr_cache_ctx_errnum (state_data.sdr_cache_ctx)));
+        }
+    }
+  
+  if (!(state_data.sdr_parse_ctx = ipmi_sdr_parse_ctx_create ()))
+    {
+      pstdout_perror (pstate, "ipmi_sdr_parse_ctx_create()");
       exit_code = EXIT_FAILURE;
       goto cleanup;
     }
@@ -2290,6 +2421,8 @@ _bmc_device (pstdout_state_t pstate,
 
   exit_code = 0;
  cleanup:
+  ipmi_sdr_cache_ctx_destroy (state_data.sdr_cache_ctx);
+  ipmi_sdr_parse_ctx_destroy (state_data.sdr_parse_ctx);
   ipmi_ctx_close (state_data.ipmi_ctx);
   ipmi_ctx_destroy (state_data.ipmi_ctx);
   return (exit_code);

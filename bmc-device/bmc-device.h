@@ -68,6 +68,7 @@ struct bmc_device_set_acpi_power_state
 struct bmc_device_arguments
 {
   struct common_cmd_args common;
+  struct sdr_cmd_args sdr;
   struct hostrange_cmd_args hostrange;
   int cold_reset;
   int warm_reset;
@@ -114,6 +115,9 @@ typedef struct bmc_device_state_data
   bmc_device_prog_data_t *prog_data;
   ipmi_ctx_t ipmi_ctx;
   pstdout_state_t pstate;
+  char *hostname;
+  ipmi_sdr_cache_ctx_t sdr_cache_ctx;
+  ipmi_sdr_parse_ctx_t sdr_parse_ctx;
 } bmc_device_state_data_t;
 
 #endif
