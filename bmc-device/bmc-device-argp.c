@@ -83,7 +83,7 @@ static struct argp_option cmdline_options[] =
       "Get IP, UDP, and RMCP statistics.", 37},
     { "clear-lan-statistics", CLEAR_LAN_STATISTICS_KEY, NULL, 0,
       "Clear IP, UDP, and RMCP statistics.", 38},
-    { "rearm-sensor", REARM_SENSOR_KEY, NULL, 0,
+    { "rearm-sensor", REARM_SENSOR_KEY, "<record_id> [<assertion_bitmask> <deassertion_bitmask>]", 0,
       "Re-arm a sensor.", 39},
     { "get-sdr-repository-time",   GET_SDR_REPOSITORY_TIME_KEY,  0, 0,
       "Get SDR repository time.", 40},
