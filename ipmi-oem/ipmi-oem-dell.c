@@ -40,6 +40,7 @@
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
 #include <math.h>
+#include <arpa/inet.h>
 #include <limits.h>
 #include <assert.h>
 
@@ -70,17 +71,51 @@
 /* 256 b/c length is 8 bit field */
 #define IPMI_OEM_DELL_MAX_BYTES 256
 
+#define IPMI_OEM_DELL_SYSTEM_INFO_STRING_ENCODING_BITMASK 0xF
+#define IPMI_OEM_DELL_SYSTEM_INFO_STRING_ENCODING_SHIFT   0
+
+#define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_MIN_LEN 41
+
 #define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IP_ADDRESS_FORMAT_IPV4 0x00
 #define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IP_ADDRESS_FORMAT_IPV6 0x01
 
 #define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IP_ADDRESS_CONFIG_DHCP   0x00
 #define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IP_ADDRESS_CONFIG_STATIC 0x01
 
+#define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_FIRMWARE_VERSION_STRING_LENGTH 20
+
 #define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_10G            0x08
 #define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_CMC            0x09
 #define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_11G_MONOLITHIC 0x0A
 #define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_11G_MODULAR    0x0B
 #define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_MASER_LITE_BMC 0x0D
+/* From ipmitool, http://ipmitool.sourceforge.net/ */
+#define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_12G_MONOLITHIC 0x10
+#define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_12G_MODULAR    0x11
+
+#define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_WEB_GUI_SERVER_CONTROL_DISABLED 0x00
+#define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_WEB_GUI_SERVER_CONTROL_ENABLED  0x01
+
+#define IPMI_OEM_DELL_SYSTEM_INFO_EMBEDDED_VIDEO_STATUS_DISABLED 0x00
+#define IPMI_OEM_DELL_SYSTEM_INFO_EMBEDDED_VIDEO_STATUS_ENABLED  0x01
+
+#define IPMI_OEM_DELL_SYSTEM_INFO_CMC_IPV6_INFO_MIN_LEN 57
+
+#define IPMI_OEM_DELL_SYSTEM_INFO_CMC_IPV6_INFO_IPV6_ADDRESS_STRING_LENGTH 39
+
+#define IPMI_OEM_DELL_SYSTEM_INFO_CMC_IPV6_INFO_IPV6_STATUS_BITMASK 0x1
+#define IPMI_OEM_DELL_SYSTEM_INFO_CMC_IPV6_INFO_IPV6_STATUS_SHIFT   0
+
+#define IPMI_OEM_DELL_SYSTEM_INFO_CMC_IPV6_INFO_IPV6_STATUS_DISABLED 0
+#define IPMI_OEM_DELL_SYSTEM_INFO_CMC_IPV6_INFO_IPV6_STATUS_ENABLED  1
+
+#define IPMI_OEM_DELL_SYSTEM_INFO_CMC_IPV6_INFO_AUTOCONFIGURATION_BITMASK 0x1
+#define IPMI_OEM_DELL_SYSTEM_INFO_CMC_IPV6_INFO_AUTOCONFIGURATION_SHIFT   0
+
+#define IPMI_OEM_DELL_SYSTEM_INFO_CMC_IPV6_INFO_AUTOCONFIGURATION_DISABLED 0
+#define IPMI_OEM_DELL_SYSTEM_INFO_CMC_IPV6_INFO_AUTOCONFIGURATION_ENABLED  1
+
+#define IPMI_OEM_DELL_SYSTEM_INFO_IPV6_SNMP_TRAP_DESTINATION_ADDRESS_MIN_LEN 6
 
 #define IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_TYPE_BITMASK 0x30
 #define IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_TYPE_SHIFT   4
@@ -119,7 +154,7 @@
 
 #define IPMI_OEM_DELL_MAC_ADDRESS_LENGTH             6
 
-#define IPMI_OEM_DELL_11G_MAC_ADDRESS_LENGTH         8 
+#define IPMI_OEM_DELL_11G_OR_12G_MAC_ADDRESS_LENGTH         8 
 
 #define IPMI_OEM_DELL_TOKEN_ID_NIC_LINK_SETTING_GROUP    0x02
 #define IPMI_OEM_DELL_TOKEN_ID_RAC_USER_PRIVILEGE        0x04
@@ -358,6 +393,7 @@ _get_dell_system_info_short_string (ipmi_oem_state_data_t *state_data,
   assert (state_data);
   assert (string);
   assert (string_len);
+  assert (state_data->prog_data->args->oem_options_count == 1);
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_system_info_parameters_rs)))
     {
@@ -375,6 +411,21 @@ _get_dell_system_info_short_string (ipmi_oem_state_data_t *state_data,
                                            IPMI_SYSTEM_INFO_PARAMETERS_NO_BLOCK_SELECTOR,
                                            obj_cmd_rs) < 0)
     {
+      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+	  && ((ipmi_check_completion_code (obj_cmd_rs,
+					   IPMI_COMP_CODE_GET_SYSTEM_INFO_PARAMETERS_PARAMETER_NOT_SUPPORTED) == 1)
+	      || (ipmi_check_completion_code (obj_cmd_rs,
+					      IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1)))
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "%s:%s '%s' option not supported on this system\n",
+			   state_data->prog_data->args->oem_id,
+			   state_data->prog_data->args->oem_command,
+			   state_data->prog_data->args->oem_options[0]);
+	  goto cleanup;
+	}
+      
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_cmd_get_system_info_parameters: %s\n",
@@ -451,12 +502,14 @@ _get_dell_system_info_long_string (ipmi_oem_state_data_t *state_data,
   uint8_t set_selector = 0;
   uint8_t string_length = 0;
   unsigned int string_count = 0;
+  uint8_t string_encoding;
   int len;
   int rv = -1;
 
   assert (state_data);
   assert (string);
   assert (string_len);
+  assert (state_data->prog_data->args->oem_options_count == 1);
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_system_info_parameters_rs)))
     {
@@ -474,6 +527,21 @@ _get_dell_system_info_long_string (ipmi_oem_state_data_t *state_data,
                                            IPMI_SYSTEM_INFO_PARAMETERS_NO_BLOCK_SELECTOR,
                                            obj_cmd_rs) < 0)
     {
+      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+	  && ((ipmi_check_completion_code (obj_cmd_rs,
+					   IPMI_COMP_CODE_GET_SYSTEM_INFO_PARAMETERS_PARAMETER_NOT_SUPPORTED) == 1)
+	      || (ipmi_check_completion_code (obj_cmd_rs,
+					      IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1)))
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "%s:%s '%s' option not supported on this system\n",
+			   state_data->prog_data->args->oem_id,
+			   state_data->prog_data->args->oem_command,
+			   state_data->prog_data->args->oem_options[0]);
+	  goto cleanup;
+	}
+
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_cmd_get_system_info_parameters: %s\n",
@@ -504,11 +572,14 @@ _get_dell_system_info_long_string (ipmi_oem_state_data_t *state_data,
 
   /* configuration_parameter_data[0] is the set selector, we don't care */
 
-  if (configuration_parameter_data[1] != IPMI_SYSTEM_INFO_ENCODING_ASCII_LATIN1)
+  string_encoding = (configuration_parameter_data[1] & IPMI_OEM_DELL_SYSTEM_INFO_STRING_ENCODING_BITMASK);
+  string_encoding >>= IPMI_OEM_DELL_SYSTEM_INFO_STRING_ENCODING_SHIFT;
+
+  if (string_encoding != IPMI_SYSTEM_INFO_ENCODING_ASCII_LATIN1)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "ipmi_cmd_get_system_info_parameters: invalid string type returned: %Xh\n",
+                       "Cannot handle non-ASCII encoding: %Xh\n",
                        configuration_parameter_data[0]);
       goto cleanup;
     }
@@ -615,15 +686,121 @@ _get_dell_system_info_long_string (ipmi_oem_state_data_t *state_data,
   return (rv);
 }
 
-/* returns 1 on success, 0 on not supported, -1 on error */
 static int
-_get_dell_system_info_idrac_info (ipmi_oem_state_data_t *state_data,
-                                  uint8_t *idrac_type)
+_get_dell_system_info_bytes (ipmi_oem_state_data_t *state_data,
+			     uint8_t parameter_selector,
+			     uint8_t *bytes,
+			     unsigned int bytes_len,
+			     unsigned int minimum_bytes_expected,
+			     unsigned int *bytes_len_ret)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t configuration_parameter_data[IPMI_OEM_MAX_BYTES];
   int len;
   int rv = -1;
+
+  assert (state_data);
+  assert (bytes);
+  assert (bytes_len);
+  assert (minimum_bytes_expected);
+  assert (state_data->prog_data->args->oem_options_count == 1);
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_system_info_parameters_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_system_info_parameters (state_data->ipmi_ctx,
+                                           IPMI_GET_SYSTEM_INFO_PARAMETER,
+                                           parameter_selector,
+					   IPMI_SYSTEM_INFO_PARAMETERS_NO_SET_SELECTOR,
+                                           IPMI_SYSTEM_INFO_PARAMETERS_NO_BLOCK_SELECTOR,
+                                           obj_cmd_rs) < 0)
+    {
+      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+	  && ((ipmi_check_completion_code (obj_cmd_rs,
+					   IPMI_COMP_CODE_GET_SYSTEM_INFO_PARAMETERS_PARAMETER_NOT_SUPPORTED) == 1)
+	      || (ipmi_check_completion_code (obj_cmd_rs,
+					      IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1)))
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "%s:%s '%s' option not supported on this system\n",
+			   state_data->prog_data->args->oem_id,
+			   state_data->prog_data->args->oem_command,
+			   state_data->prog_data->args->oem_options[0]);
+	  goto cleanup;
+	}
+
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_get_system_info_parameters: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+  
+  if ((len = fiid_obj_get_data (obj_cmd_rs,
+                                "configuration_parameter_data",
+                                configuration_parameter_data,
+                                IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get_data: 'configuration_parameter_data': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+  
+  if (len < minimum_bytes_expected)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "ipmi_cmd_get_system_info_parameters: invalid buffer length returned: %d\n",
+		       len);
+      goto cleanup;
+    }
+
+  if (len > bytes_len)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "Internal buffer overflow\n");
+      goto cleanup;
+    }
+  
+  memcpy (bytes, configuration_parameter_data, len);
+  
+  if (bytes_len_ret)
+    (*bytes_len_ret) = len;
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
+/* returns 1 on success, 0 on not supported, -1 on error */
+static int
+_get_dell_system_info_idrac_info (ipmi_oem_state_data_t *state_data,
+				  uint8_t *dhcp_or_static,
+				  char *ip_address_buf,
+				  unsigned int ip_address_buflen,
+				  char *idrac_firmware_version_buf,
+				  unsigned int idrac_firmware_version_buflen,
+                                  uint8_t *idrac_type)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t configuration_parameter_data[IPMI_OEM_MAX_BYTES];
+  uint8_t idrac_info[IPMI_OEM_MAX_BYTES];
+  unsigned int idrac_info_len = 0;
+  uint8_t string_encoding;
+  int len;
+  int rv = -1;
+  int i;
 
   assert (state_data);
   assert (idrac_type);
@@ -639,15 +816,21 @@ _get_dell_system_info_idrac_info (ipmi_oem_state_data_t *state_data,
    *
    * Parameter data response formatted:
    *
-   * 1st byte - string type
+   * Each block first byte is set-selector.  Not counting that, the
+   * total block of data is.
+   *
+   * 1st byte
+   * - 7:4 - reserved
+   * - 3:0 - string encoding, 0 = printable ascii  
    * 2nd byte - string length
    * 3rd byte - IP address format
    * - 0x00 - IPv4
    * - 0x01 - IPv6
    * 4th byte - DHCP or static
    * - 0x00 - dhcp
-   * - 0x00 - static
+   * - 0x01 - static
    * bytes 5-20 - IP address
+   * - achu: seems to be stored binary, not ascii.  Why??
    * bytes 21-40 - IDRAC firmware version
    * byte 41 - idrac type
    * - 0x08 - 10G
@@ -655,6 +838,8 @@ _get_dell_system_info_idrac_info (ipmi_oem_state_data_t *state_data,
    * - 0x0A - 11G monolithic
    * - 0x0B - 11g modular
    * - 0x0D - maser lite
+   * - 0x10 - 12g monolothic
+   * - 0x11 - 12g modular
    *
    * set selector 0 = bytes 1-16
    * set selector 1 = bytes 17-32
@@ -670,26 +855,520 @@ _get_dell_system_info_idrac_info (ipmi_oem_state_data_t *state_data,
       goto cleanup;
     }
   
-  /* Do set selector 2, we only care about the idrac type */
-  if (ipmi_cmd_get_system_info_parameters (state_data->ipmi_ctx,
-                                           IPMI_GET_SYSTEM_INFO_PARAMETER,
-                                           IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_IDRAC_INFO,
-                                           0x02,
-                                           IPMI_SYSTEM_INFO_PARAMETERS_NO_BLOCK_SELECTOR,
-                                           obj_cmd_rs) < 0)
+  for (i = 0; i < 3; i++)
     {
-      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
-          && (ipmi_check_completion_code (obj_cmd_rs,
-                                          IPMI_COMP_CODE_GET_SYSTEM_INFO_PARAMETERS_PARAMETER_NOT_SUPPORTED) == 1))
+      if (ipmi_cmd_get_system_info_parameters (state_data->ipmi_ctx,
+					       IPMI_GET_SYSTEM_INFO_PARAMETER,
+					       IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_IDRAC_INFO,
+					       i,
+					       IPMI_SYSTEM_INFO_PARAMETERS_NO_BLOCK_SELECTOR,
+					       obj_cmd_rs) < 0)
 	{
-	  rv = 0;
+	  if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+	      && (ipmi_check_completion_code (obj_cmd_rs,
+					      IPMI_COMP_CODE_GET_SYSTEM_INFO_PARAMETERS_PARAMETER_NOT_SUPPORTED) == 1))
+	    {
+	      rv = 0;
+	      goto cleanup;
+	    }
+	  
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_cmd_get_system_info_parameters: %s\n",
+			   ipmi_ctx_errormsg (state_data->ipmi_ctx));
+	  goto cleanup;
+	}
+      
+      if ((len = fiid_obj_get_data (obj_cmd_rs,
+				    "configuration_parameter_data",
+				    configuration_parameter_data,
+				    IPMI_OEM_MAX_BYTES)) < 0)
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "fiid_obj_get_data: 'configuration_parameter_data': %s\n",
+			   fiid_obj_errormsg (obj_cmd_rs));
+	  goto cleanup;
+	}
+      
+      if (!len)
+	{
+	  if (!idrac_info_len)
+	    {
+	      pstdout_fprintf (state_data->pstate,
+			       stderr,
+			       "%s:%s possibly not supported, no information available for reading\n",
+			       state_data->prog_data->args->oem_id,
+			       state_data->prog_data->args->oem_command);
+	      goto cleanup;
+	    }
+
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_cmd_get_system_info_parameters: invalid buffer length returned: %d\n",
+			   len);
 	  goto cleanup;
 	}
 
+      memcpy (&idrac_info[idrac_info_len],
+	      configuration_parameter_data + 1,	/* remove set selector */
+	      len - 1);
+
+      idrac_info_len += (len - 1);
+    }
+
+  if (idrac_info_len < IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_MIN_LEN)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "ipmi_cmd_get_system_info_parameters: invalid data length returned: %u\n",
+		       idrac_info_len);
+      goto cleanup;
+    }
+
+  string_encoding = (idrac_info[0] & IPMI_OEM_DELL_SYSTEM_INFO_STRING_ENCODING_BITMASK);
+  string_encoding >>= IPMI_OEM_DELL_SYSTEM_INFO_STRING_ENCODING_SHIFT;
+
+  if (string_encoding != IPMI_SYSTEM_INFO_ENCODING_ASCII_LATIN1)
+    {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "ipmi_cmd_get_system_info_parameters: %s\n",
-                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+                       "Cannot handle non-ASCII encoding: %Xh\n",
+                       configuration_parameter_data[0]);
+      goto cleanup;
+    }
+
+  if (dhcp_or_static)
+    (*dhcp_or_static) = idrac_info[3];
+
+  if (ip_address_buf && ip_address_buflen)
+    {
+      uint8_t ip_address_format;
+
+      ip_address_format = idrac_info[2];
+
+      if (ip_address_format == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IP_ADDRESS_FORMAT_IPV4)
+	{
+	  uint32_t ip_address;
+
+	  ip_address = idrac_info[4];
+	  ip_address |= (idrac_info[5] << 8);
+	  ip_address |= (idrac_info[6] << 16);
+	  ip_address |= (idrac_info[7] << 24);
+	  
+	  if (!inet_ntop (AF_INET, &ip_address, ip_address_buf, ip_address_buflen))
+	    {
+	      pstdout_fprintf (state_data->pstate,
+			       stderr,
+			       "inet_ntop: %s\n",
+			       strerror (errno));
+	      goto cleanup;
+	    }
+	}
+      else if (ip_address_format == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IP_ADDRESS_FORMAT_IPV6)
+	{
+	  uint32_t ip_address[4];
+
+	  ip_address[0] = idrac_info[4];
+	  ip_address[0] |= (idrac_info[5] << 8);
+	  ip_address[0] |= (idrac_info[6] << 16);
+	  ip_address[0] |= (idrac_info[7] << 24);
+	  ip_address[1] = idrac_info[8];
+	  ip_address[1] |= (idrac_info[9] << 8);
+	  ip_address[1] |= (idrac_info[10] << 16);
+	  ip_address[1] |= (idrac_info[11] << 24);
+	  ip_address[2] = idrac_info[12];
+	  ip_address[2] |= (idrac_info[13] << 8);
+	  ip_address[2] |= (idrac_info[14] << 16);
+	  ip_address[2] |= (idrac_info[15] << 24);
+	  ip_address[3] = idrac_info[16];
+	  ip_address[3] |= (idrac_info[17] << 8);
+	  ip_address[3] |= (idrac_info[18] << 16);
+	  ip_address[3] |= (idrac_info[19] << 24);
+
+	  if (!inet_ntop (AF_INET6, ip_address, ip_address_buf, ip_address_buflen))
+	    {
+	      pstdout_fprintf (state_data->pstate,
+			       stderr,
+			       "inet_ntop: %s\n",
+			       strerror (errno));
+	      goto cleanup;
+	    }
+	}
+      else
+	memset (ip_address_buf, '\0', ip_address_buflen);
+    } 
+
+  if (idrac_firmware_version_buf
+      && idrac_firmware_version_buflen
+      && idrac_firmware_version_buflen >= IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_FIRMWARE_VERSION_STRING_LENGTH)
+    memcpy (idrac_firmware_version_buf,
+	    &idrac_info[20],
+	    IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_FIRMWARE_VERSION_STRING_LENGTH);
+  
+  (*idrac_type) = idrac_info[40];
+
+  rv = 1;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
+static int
+_output_dell_system_info_idrac_info (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t dhcp_or_static;
+  char ip_address_buf[IPMI_OEM_STR_BUFLEN + 1]; 
+  char idrac_firmware_version_buf[IPMI_OEM_STR_BUFLEN + 1];
+  uint8_t idrac_type;
+  char *dhcp_or_static_str;
+  char *idrac_type_str;
+  int rv = -1;
+  int ret;
+
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 1);
+
+  memset (ip_address_buf, '\0', IPMI_OEM_STR_BUFLEN + 1);
+  memset (idrac_firmware_version_buf, '\0', IPMI_OEM_STR_BUFLEN + 1);
+
+  if ((ret = _get_dell_system_info_idrac_info (state_data,
+					       &dhcp_or_static,
+					       ip_address_buf,
+					       IPMI_OEM_STR_BUFLEN,
+					       idrac_firmware_version_buf,
+					       IPMI_OEM_STR_BUFLEN,
+					       &idrac_type)) < 0)
+    goto cleanup;
+
+  if (!ret)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "%s:%s '%s' option not supported on this system\n",
+		       state_data->prog_data->args->oem_id,
+		       state_data->prog_data->args->oem_command,
+		       state_data->prog_data->args->oem_options[0]);
+      goto cleanup;
+    }
+
+  pstdout_printf (state_data->pstate,
+		  "IP Address             : %s\n",
+		  ip_address_buf);
+
+  if (dhcp_or_static == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IP_ADDRESS_CONFIG_DHCP)
+    dhcp_or_static_str = "DHCP";
+  else if (dhcp_or_static == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IP_ADDRESS_CONFIG_STATIC)
+    dhcp_or_static_str = "Static";
+  else
+    dhcp_or_static_str = "Unknown";
+
+  pstdout_printf (state_data->pstate,
+		  "IP Configuration       : %s\n",
+		  dhcp_or_static_str);
+
+  pstdout_printf (state_data->pstate,
+		  "iDRAC Firmware Version : %s\n",
+		  idrac_firmware_version_buf);
+
+  if (idrac_type == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_10G)
+    idrac_type_str = "Dell Poweredge 10G";
+  else if (idrac_type == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_CMC)
+    idrac_type_str = "Dell Chassis Management Controller ";
+  else if (idrac_type == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_11G_MONOLITHIC)
+    idrac_type_str = "Dell Poweredge 11G (Monolithic)";
+  else if (idrac_type == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_11G_MODULAR)
+    idrac_type_str = "Dell Poweredge 11G (Modular)";
+  else if (idrac_type == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_MASER_LITE_BMC)
+    idrac_type_str = "Maser Lite BMC";
+  else if (idrac_type == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_12G_MONOLITHIC)
+    idrac_type_str = "Dell Poweredge 12G (Monolithic)";
+  else if (idrac_type == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_12G_MODULAR)
+    idrac_type_str = "Dell Poweredge 12G (Modular)";
+  else
+    idrac_type_str = "Unknown";
+
+  pstdout_printf (state_data->pstate,
+		  "iDRAC Type             : %s\n",
+		  idrac_type_str);
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+static int
+_output_dell_system_info_cmc_ipv6_info (ipmi_oem_state_data_t *state_data)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t configuration_parameter_data[IPMI_OEM_MAX_BYTES];
+  uint8_t cmc_ipv6_info[IPMI_OEM_MAX_BYTES];
+  unsigned int cmc_ipv6_info_len = 0;
+  uint8_t string_encoding;
+  uint8_t ipv6_status;
+  uint8_t autoconfiguration;
+  char ipv6_str_buf[IPMI_OEM_STR_BUFLEN + 1];
+  int len;
+  int rv = -1;
+  int i;
+
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 1);
+
+  /* Dell Poweredge OEM
+   *
+   * From Dell Provided Docs
+   *
+   * Uses Get System Info command
+   *
+   * CMC IPv6 Info Parameter = 0xF2
+   * CMC IPv6 Info Set Selector = ... see below ...
+   *
+   * Parameter data response formatted:
+   *
+   * Each block first byte is set-selector.  Not counting that, the
+   * total block of data is.
+   *
+   * 1st byte
+   * - 7:4 - reserved
+   * - 3:0 - string encoding, 0 = printable ascii  
+   * 2nd byte - string length
+   * 3rd byte - IPv6 status
+   * - bit 0 - 0 = disabled, 1 = enabled
+   * - bit 7:1 - reserved
+   * 4th byte - autoconfiguration
+   * - bit 0 - 0 = disabled, 1 = enabled
+   * - bit 7:1 - reserved
+   * bytes 5-16 - reserved
+   * byte 17 - prefix length
+   * byte 18 - string length
+   * byte 19-57 - IPv6 address (string)
+   *
+   * set selector 0 = bytes 1-16
+   * set selector 1 = bytes 17-32
+   * set selector 2 = bytes 33-41
+   * set selector 3 = bytes 42-57
+   */
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_system_info_parameters_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+  
+  for (i = 0; i < 4; i++)
+    {
+      if (ipmi_cmd_get_system_info_parameters (state_data->ipmi_ctx,
+					       IPMI_GET_SYSTEM_INFO_PARAMETER,
+					       IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_CMC_IPV6_INFO,
+					       i,
+					       IPMI_SYSTEM_INFO_PARAMETERS_NO_BLOCK_SELECTOR,
+					       obj_cmd_rs) < 0)
+	{
+	  if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+	      && ((ipmi_check_completion_code (obj_cmd_rs,
+					       IPMI_COMP_CODE_GET_SYSTEM_INFO_PARAMETERS_PARAMETER_NOT_SUPPORTED) == 1)
+		  || (ipmi_check_completion_code (obj_cmd_rs,
+						  IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1)))
+	    {
+	      pstdout_fprintf (state_data->pstate,
+			       stderr,
+			       "%s:%s '%s' option not supported on this system\n",
+			       state_data->prog_data->args->oem_id,
+			       state_data->prog_data->args->oem_command,
+			       state_data->prog_data->args->oem_options[0]);
+	      goto cleanup;
+	    }
+	  
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_cmd_get_system_info_parameters: %s\n",
+			   ipmi_ctx_errormsg (state_data->ipmi_ctx));
+	  goto cleanup;
+	}
+      
+      if ((len = fiid_obj_get_data (obj_cmd_rs,
+				    "configuration_parameter_data",
+				    configuration_parameter_data,
+				    IPMI_OEM_MAX_BYTES)) < 0)
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "fiid_obj_get_data: 'configuration_parameter_data': %s\n",
+			   fiid_obj_errormsg (obj_cmd_rs));
+	  goto cleanup;
+	}
+      
+      if (!len)
+	{
+	  if (!cmc_ipv6_info_len)
+	    {
+	      pstdout_fprintf (state_data->pstate,
+			       stderr,
+			       "%s:%s possibly not supported, no information available for reading\n",
+			       state_data->prog_data->args->oem_id,
+			       state_data->prog_data->args->oem_command);
+	      goto cleanup;
+	    }
+
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_cmd_get_system_info_parameters: invalid buffer length returned: %d\n",
+			   len);
+	  goto cleanup;
+	}
+      
+      memcpy (&cmc_ipv6_info[cmc_ipv6_info_len],
+	      configuration_parameter_data + 1,	/* remove set selector */
+	      len - 1);
+      
+      cmc_ipv6_info_len += (len - 1);
+    }
+
+  if (cmc_ipv6_info_len < IPMI_OEM_DELL_SYSTEM_INFO_CMC_IPV6_INFO_MIN_LEN)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "ipmi_cmd_get_system_info_parameters: invalid data length returned: %u\n",
+		       cmc_ipv6_info_len);
+      goto cleanup;
+    }
+
+  string_encoding = (cmc_ipv6_info[0] & IPMI_OEM_DELL_SYSTEM_INFO_STRING_ENCODING_BITMASK);
+  string_encoding >>= IPMI_OEM_DELL_SYSTEM_INFO_STRING_ENCODING_SHIFT;
+
+  if (string_encoding != IPMI_SYSTEM_INFO_ENCODING_ASCII_LATIN1)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "Cannot handle non-ASCII encoding: %Xh\n",
+                       configuration_parameter_data[0]);
+      goto cleanup;
+    }
+
+  ipv6_status = (cmc_ipv6_info[2] & IPMI_OEM_DELL_SYSTEM_INFO_CMC_IPV6_INFO_IPV6_STATUS_BITMASK);
+  ipv6_status >>= IPMI_OEM_DELL_SYSTEM_INFO_CMC_IPV6_INFO_IPV6_STATUS_SHIFT;
+
+  pstdout_printf (state_data->pstate,
+		  "IPv6 Status       : %s\n",
+		  ipv6_status == IPMI_OEM_DELL_SYSTEM_INFO_CMC_IPV6_INFO_IPV6_STATUS_ENABLED ? "Enabled" : "Disabled");
+
+  autoconfiguration = (cmc_ipv6_info[3] & IPMI_OEM_DELL_SYSTEM_INFO_CMC_IPV6_INFO_AUTOCONFIGURATION_BITMASK);
+  autoconfiguration >>= IPMI_OEM_DELL_SYSTEM_INFO_CMC_IPV6_INFO_AUTOCONFIGURATION_SHIFT;
+
+  pstdout_printf (state_data->pstate,
+		  "Autoconfiguration : %s\n",
+		  ipv6_status == IPMI_OEM_DELL_SYSTEM_INFO_CMC_IPV6_INFO_AUTOCONFIGURATION_ENABLED ? "Enabled" : "Disabled");
+
+  memset (ipv6_str_buf, '\0', IPMI_OEM_STR_BUFLEN + 1);
+
+  memcpy (ipv6_str_buf,
+	  &cmc_ipv6_info[18],
+	  IPMI_OEM_DELL_SYSTEM_INFO_CMC_IPV6_INFO_IPV6_ADDRESS_STRING_LENGTH);
+
+  pstdout_printf (state_data->pstate,
+		  "IPv6 Address      : %s\n",
+		  ipv6_str_buf);
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
+#if 0
+/* cannot verify */
+static int
+_output_dell_system_info_snmp_ipv6_info (ipmi_oem_state_data_t *state_data)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t configuration_parameter_data[IPMI_OEM_MAX_BYTES];
+  uint8_t ipv6_snmp_trap_destination_addresses[IPMI_OEM_MAX_BYTES];
+  unsigned int ipv6_snmp_trap_destination_addresses_len = 0;
+  uint8_t string_encoding;
+  uint8_t data_length;
+  uint8_t destination_type;
+  uint8_t alert_ack_timeout;
+  uint8_t retries;
+  char *destination_type_str;
+  char ipv6_str_buf[IPMI_OEM_STR_BUFLEN + 1];
+  int len;
+  int rv = -1;
+  int i;
+
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 1);
+
+  /* Dell Poweredge OEM
+   *
+   * From Dell Provided Docs
+   *
+   * Uses Get System Info command
+   *
+   * IPv6 SNMP Trap Destination Addresses Parameter = 0xF0
+   * IPv6 SNMP Trap Destination Addresses Set Selector = ... see below ...
+   *
+   * Parameter data response formatted:
+   *
+   * Each block first byte is set-selector.  Not counting that, the
+   * total block of data is.
+   *
+   * 1st byte
+   * - 7:4 - reserved
+   * - 3:0 - string encoding, 0 = printable ascii  
+   * 2nd byte - string length
+   * 3rd byte - destination type
+   * - bit 0 - 0 = disabled, 1 = enabled
+   * - bit 7:1 - reserved
+   * 4th byte - alert ack timeout
+   * - bit 0 - 0 = disabled, 1 = enabled
+   * - bit 7:1 - reserved
+   * 5th byte - retries
+   * bytes 6-N - IPv6 string (max 39 bytes)
+   *
+   * set selector 0 = bytes 1-16
+   * set selector 1 = bytes 17-32
+   * etc.
+   */
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_system_info_parameters_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+  
+  if (ipmi_cmd_get_system_info_parameters (state_data->ipmi_ctx,
+					   IPMI_GET_SYSTEM_INFO_PARAMETER,
+					   IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_IPV6_SNMP_TRAP_DESTINATION_ADDRESS,
+					   0,
+					   IPMI_SYSTEM_INFO_PARAMETERS_NO_BLOCK_SELECTOR,
+					   obj_cmd_rs) < 0)
+    {
+      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+	  && ((ipmi_check_completion_code (obj_cmd_rs,
+					   IPMI_COMP_CODE_GET_SYSTEM_INFO_PARAMETERS_PARAMETER_NOT_SUPPORTED) == 1)
+	      || (ipmi_check_completion_code (obj_cmd_rs,
+					      IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1)))
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "%s:%s '%s' option not supported on this system\n",
+			   state_data->prog_data->args->oem_id,
+			   state_data->prog_data->args->oem_command,
+			   state_data->prog_data->args->oem_options[0]);
+	  goto cleanup;
+	}
+      
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "ipmi_cmd_get_system_info_parameters: %s\n",
+		       ipmi_ctx_errormsg (state_data->ipmi_ctx));
       goto cleanup;
     }
 
@@ -705,7 +1384,17 @@ _get_dell_system_info_idrac_info (ipmi_oem_state_data_t *state_data,
       goto cleanup;
     }
 
-  if (len < 1)
+  if (!len)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "%s:%s possibly not supported, no information available for reading\n",
+		       state_data->prog_data->args->oem_id,
+		       state_data->prog_data->args->oem_command);
+      goto cleanup;
+    }
+
+  if (len < 3)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -714,17 +1403,147 @@ _get_dell_system_info_idrac_info (ipmi_oem_state_data_t *state_data,
       goto cleanup;
     }
 
-  /* idrac type in set selector 2 happens to be index 9 */
-  (*idrac_type) = configuration_parameter_data[9];
+  /* configuration_parameter_data[0] is the set selector, we don't care */
 
-  rv = 1;
+  string_encoding = (configuration_parameter_data[1] & IPMI_OEM_DELL_SYSTEM_INFO_STRING_ENCODING_BITMASK);
+  string_encoding >>= IPMI_OEM_DELL_SYSTEM_INFO_STRING_ENCODING_SHIFT;
+
+  if (string_encoding != IPMI_SYSTEM_INFO_ENCODING_ASCII_LATIN1)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "Cannot handle non-ASCII encoding: %Xh\n",
+                       configuration_parameter_data[0]);
+      goto cleanup;
+    }
+
+  data_length = configuration_parameter_data[2];
+
+  if (!data_length)
+    goto out;
+
+  memcpy (&ipv6_snmp_trap_destination_addresses[ipv6_snmp_trap_destination_addresses_len],
+	  configuration_parameter_data + 1,	/* remove set selector */
+	  len - 1);
+      
+  ipv6_snmp_trap_destination_addresses_len += (len - 1);
+
+  /* + 2 for string encoding and data length fields, aren't accounted
+   * for in Dell's OEM count
+   */
+  for (i = 1; i <  (data_length + 2) / 16; i++)
+    {
+      if (ipmi_cmd_get_system_info_parameters (state_data->ipmi_ctx,
+					       IPMI_GET_SYSTEM_INFO_PARAMETER,
+					       IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_IPV6_SNMP_TRAP_DESTINATION_ADDRESS,
+					       i,
+					       IPMI_SYSTEM_INFO_PARAMETERS_NO_BLOCK_SELECTOR,
+					       obj_cmd_rs) < 0)
+	{
+	  if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+	      && ((ipmi_check_completion_code (obj_cmd_rs,
+					       IPMI_COMP_CODE_GET_SYSTEM_INFO_PARAMETERS_PARAMETER_NOT_SUPPORTED) == 1)
+		  || (ipmi_check_completion_code (obj_cmd_rs,
+						  IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1)))
+	    {
+	      pstdout_fprintf (state_data->pstate,
+			       stderr,
+			       "%s:%s '%s' option not supported on this system\n",
+			       state_data->prog_data->args->oem_id,
+			       state_data->prog_data->args->oem_command,
+			       state_data->prog_data->args->oem_options[0]);
+	      goto cleanup;
+	    }
+	  
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_cmd_get_system_info_parameters: %s\n",
+			   ipmi_ctx_errormsg (state_data->ipmi_ctx));
+	  goto cleanup;
+	}
+      
+      if ((len = fiid_obj_get_data (obj_cmd_rs,
+				    "configuration_parameter_data",
+				    configuration_parameter_data,
+				    IPMI_OEM_MAX_BYTES)) < 0)
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "fiid_obj_get_data: 'configuration_parameter_data': %s\n",
+			   fiid_obj_errormsg (obj_cmd_rs));
+	  goto cleanup;
+	}
+      
+      if (!len)
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_cmd_get_system_info_parameters: invalid buffer length returned: %d\n",
+			   len);
+	  goto cleanup;
+	}
+      
+      memcpy (&ipv6_snmp_trap_destination_addresses[ipv6_snmp_trap_destination_addresses_len],
+	      configuration_parameter_data + 1,	/* remove set selector */
+	      len - 1);
+      
+      ipv6_snmp_trap_destination_addresses_len += (len - 1);
+    }
+
+  if (ipv6_snmp_trap_destination_addresses_len < IPMI_OEM_DELL_SYSTEM_INFO_IPV6_SNMP_TRAP_DESTINATION_ADDRESS_MIN_LEN)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "ipmi_cmd_get_system_info_parameters: invalid data length returned: %u\n",
+		       ipv6_snmp_trap_destination_addresses_len);
+      goto cleanup;
+    }
+
+  destination_type = ipv6_snmp_trap_destination_addresses[2];
+  alert_ack_timeout = ipv6_snmp_trap_destination_addresses[3];
+  retries = ipv6_snmp_trap_destination_addresses[4];
+
+  if (destination_type == IPMI_DESTINATION_TYPE_PET_TRAP_DESTINATION)
+    destination_type_str = "PET Trap destination";
+  else if (destination_type == IPMI_DESTINATION_TYPE_OEM1)
+    destination_type_str = "OEM 1";
+  else if (destination_type == IPMI_DESTINATION_TYPE_OEM2)
+    destination_type_str = "OEM 2";
+  else
+    destination_type_str = "Unknown";
+
+  pstdout_printf (state_data->pstate,
+		  "Destination Type          : %u s\n",
+		  destination_type_str);
+
+  pstdout_printf (state_data->pstate,
+		  "Alert Acknowledge Timeout : %u s\n",
+		  alert_ack_timeout);
+
+  pstdout_printf (state_data->pstate,
+		  "Retries                   : %u\n",
+		  retries);
+
+  memset (ipv6_str_buf, '\0', IPMI_OEM_STR_BUFLEN + 1);
+
+  memcpy (ipv6_str_buf,
+	  &ipv6_snmp_trap_destination_addresses[5],
+	  (data_length - 3));
+
+  pstdout_printf (state_data->pstate,
+		  "IPv6 Address              : %s\n",
+		  ipv6_str_buf);
+
+ out:
+  rv = 0;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
+#endif
 
 static int
-_get_dell_system_info_10g_mac_addresses (ipmi_oem_state_data_t *state_data)
+_output_dell_system_info_10g_mac_addresses (ipmi_oem_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t number_of_nics;
@@ -734,6 +1553,7 @@ _get_dell_system_info_10g_mac_addresses (ipmi_oem_state_data_t *state_data)
   int rv = -1;
 
   assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 1);
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_system_info_parameters_rs)))
     {
@@ -751,6 +1571,21 @@ _get_dell_system_info_10g_mac_addresses (ipmi_oem_state_data_t *state_data)
                                            IPMI_SYSTEM_INFO_PARAMETERS_NO_BLOCK_SELECTOR,
                                            obj_cmd_rs) < 0)
     {
+      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+	  && ((ipmi_check_completion_code (obj_cmd_rs,
+					   IPMI_COMP_CODE_GET_SYSTEM_INFO_PARAMETERS_PARAMETER_NOT_SUPPORTED) == 1)
+	      || (ipmi_check_completion_code (obj_cmd_rs,
+					      IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1)))
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "%s:%s '%s' option not supported on this system\n",
+			   state_data->prog_data->args->oem_id,
+			   state_data->prog_data->args->oem_command,
+			   state_data->prog_data->args->oem_options[0]);
+	  goto cleanup;
+	}
+      
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_cmd_get_system_info_parameters: %s\n",
@@ -808,7 +1643,7 @@ _get_dell_system_info_10g_mac_addresses (ipmi_oem_state_data_t *state_data)
 }
 
 static int
-_get_dell_system_info_11g_mac_addresses (ipmi_oem_state_data_t *state_data)
+_output_dell_system_info_11g_or_12g_mac_addresses (ipmi_oem_state_data_t *state_data)
 {
   uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
   uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
@@ -818,6 +1653,7 @@ _get_dell_system_info_11g_mac_addresses (ipmi_oem_state_data_t *state_data)
   int rv = -1;
 
   assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 1);
 
   /* see info below in ipmi_oem_dell_get_system_info() for packet
    * format.  We cannot use normal Get System Info b/c Dell hacked it
@@ -864,6 +1700,11 @@ _get_dell_system_info_11g_mac_addresses (ipmi_oem_state_data_t *state_data)
       goto cleanup;
     }
 
+#if 0
+  /* Apparently on some systems return a non-multiple of 8 bytes
+   *
+   * Just fall through and output whatever you can.
+   */
   if (total_bytes % 8)
     {
       pstdout_fprintf (state_data->pstate,
@@ -872,11 +1713,12 @@ _get_dell_system_info_11g_mac_addresses (ipmi_oem_state_data_t *state_data)
 		       total_bytes);
       goto cleanup;
     }
+#endif
 
   /* see record format below in ipmi_oem_dell_get_system_info(), record length = 8 */
   pstdout_printf (state_data->pstate,
 		  "NIC Number\tMAC Address\t\tNIC Status\n");
-  for (i = 0; i < (total_bytes / IPMI_OEM_DELL_11G_MAC_ADDRESS_LENGTH); i++)
+  for (i = 0; i < (total_bytes / IPMI_OEM_DELL_11G_OR_12G_MAC_ADDRESS_LENGTH); i++)
     {
       uint8_t mac_type;
       
@@ -885,8 +1727,8 @@ _get_dell_system_info_11g_mac_addresses (ipmi_oem_state_data_t *state_data)
       bytes_rq[2] = IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_11G_MAC_ADDRESSES; /* parameter selector */
       bytes_rq[3] = 0x00;		/* set selector */
       bytes_rq[4] = 0x00;		/* block selector */
-      bytes_rq[5] = i * IPMI_OEM_DELL_11G_MAC_ADDRESS_LENGTH; /* offset */
-      bytes_rq[6] = IPMI_OEM_DELL_11G_MAC_ADDRESS_LENGTH; /* length */
+      bytes_rq[5] = i * IPMI_OEM_DELL_11G_OR_12G_MAC_ADDRESS_LENGTH; /* offset */
+      bytes_rq[6] = IPMI_OEM_DELL_11G_OR_12G_MAC_ADDRESS_LENGTH; /* length */
       
       if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
 				  0, /* lun */
@@ -903,7 +1745,7 @@ _get_dell_system_info_11g_mac_addresses (ipmi_oem_state_data_t *state_data)
 	  goto cleanup;
 	}
       
-      /* 11 = IPMI_OEM_DELL_11G_MAC_ADDRESS_LENGTH + 3 (for cmd, completion code, parameter revision) */
+      /* 11 = IPMI_OEM_DELL_11G_OR_12G_MAC_ADDRESS_LENGTH + 3 (for cmd, completion code, parameter revision) */
       if (ipmi_oem_check_response_and_completion_code (state_data,
 						       bytes_rs,
 						       rs_len,
@@ -960,6 +1802,8 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
 {
   char string[IPMI_OEM_DELL_MAX_BYTES+1];
   unsigned int string_len = 0;
+  uint8_t bytes[IPMI_OEM_DELL_MAX_BYTES+1];
+  unsigned int bytes_len = 0;
   int rv = -1;
 
   assert (state_data);
@@ -974,6 +1818,19 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
 		      "Option: chassis-related-service-tag\n"
 		      "Option: board-revision\n"
 		      "Option: platform-model-name\n"
+		      "Option: slot-number\n"
+		      "Option: system-revision\n"
+		      "Option: embedded-video-status\n"
+		      "Option: idrac-info\n"
+		      "Option: idrac-ipv4-url\n"
+		      "Option: idrac-gui-webserver-control\n"
+		      "Option: cmc-ipv4-url\n"
+		      "Option: cmc-ipv6-info\n"
+		      "Option: cmc-ipv6-url\n"
+#if 0
+/* cannot verify */
+		      "Option: snmp-ipv6-info\n"
+#endif
                       "Option: mac-addresses\n");
       return (0);
     }
@@ -982,7 +1839,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "%s:%s please specify only get-system-info KEY\n");
+                       "%s:%s please specify one get-system-info KEY\n");
       goto cleanup;
     }
 
@@ -994,6 +1851,19 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
       && strcasecmp (state_data->prog_data->args->oem_options[0], "board-revision")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "product-name") /* legacy */
       && strcasecmp (state_data->prog_data->args->oem_options[0], "platform-model-name")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "slot-number")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "system-revision")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "embedded-video-status")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "idrac-info")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "idrac-ipv4-url")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "idrac-gui-webserver-control")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "cmc-ipv4-url")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "cmc-ipv6-info")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "cmc-ipv6-url")
+#if 0
+/* cannot verify */
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "snmp-ipv6-info")
+#endif
       && strcasecmp (state_data->prog_data->args->oem_options[0], "mac-addresses"))
     {
       pstdout_fprintf (state_data->pstate,
@@ -1032,14 +1902,20 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
    *
    * Format #2)
    *
-   * product-name parameter = 0xD1
+   * platform-model-name parameter = 0xD1
+   * slot number = 0xDC
+   * iDRAC IPv4 URL = 0xDE
+   * CMC IPv4 URL = 0xE0
+   * CMC IPv6 URL = 0xF3
    *
    * Parameter data response formatted:
    *
    * Set Selector 0:
    *
    * 1st byte = set selector
-   * 2nd byte = encoding
+   * 2nd byte
+   * - 7:4 - reserved
+   * - 3:0 - string encoding, 0 = printable ascii  
    * 3rd byte = string length
    * ? bytes = string
    *
@@ -1050,6 +1926,30 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
    *
    * Format #3)
    *
+   * iDRAC info = 0xDD
+   *
+   * See format in _get_dell_system_info_idrac_info().
+   *
+   * Format #4)
+   * 
+   * iDRAC GUI/Webserver Control = 0xE1
+   *
+   * 1st byte - 0x00 = Disabled, 0x01 = Enabled
+   *
+   * Format #5)
+   *
+   * CMC IPv6 Info = 0xF2
+   *
+   * See format in _output_dell_system_info_cmc_ipv6_info().
+   *
+   * Format #6)
+   *
+   * IPv6 SNMP Trap Destination Addresses = 0xF0
+   *
+   * See format in _output_dell_system_info_snmp_ipv6_info()
+   *
+   * Format #7)
+   *
    * Dell 10G systems, mac-addresses = 0xCB
    *
    * Parameter data response formatted:
@@ -1057,7 +1957,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
    * 1st byte = number of NICs
    * ? bytes = MAC address of NICS, number of NICS * 6 total bytes
    *
-   * Format #4)
+   * Format #8)
    *
    * Dell 11G systems, mac-addresses = 0xDA
    * + 2 extra bytes
@@ -1207,14 +2107,145 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
       pstdout_printf (state_data->pstate,
 		      "%s\n",
 		      string);
-
     }
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "slot-number"))
+    {
+      if (_get_dell_system_info_long_string (state_data,
+                                             IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_SLOT_NUMBER,
+                                             string,
+                                             IPMI_OEM_DELL_MAX_BYTES) < 0)
+        goto cleanup;
+      
+      pstdout_printf (state_data->pstate,
+		      "%s\n",
+		      string);
+    }
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "system-revision"))
+    {
+      if (_get_dell_system_info_bytes (state_data,
+				       IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_SYSTEM_REVISION,
+				       bytes,
+				       IPMI_OEM_DELL_MAX_BYTES,
+				       1,
+				       &bytes_len) < 0)
+        goto cleanup;
+
+      pstdout_printf (state_data->pstate,
+		      "%u\n",
+		      bytes[0]);
+    }
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "embedded-video-status"))
+    {
+      char *embedded_video_status_str;
+
+      if (_get_dell_system_info_bytes (state_data,
+				       IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_EMBEDDED_VIDEO_STATUS,
+				       bytes,
+				       IPMI_OEM_DELL_MAX_BYTES,
+				       1,
+				       &bytes_len) < 0)
+        goto cleanup;
+
+      if (bytes[0] == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_WEB_GUI_SERVER_CONTROL_DISABLED)
+	embedded_video_status_str = "Disabled";
+      else if (bytes[0] == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_WEB_GUI_SERVER_CONTROL_ENABLED)
+	embedded_video_status_str = "Enabled";
+      else
+	embedded_video_status_str = "Unknown";
+
+      pstdout_printf (state_data->pstate,
+		      "%s\n",
+		      embedded_video_status_str);
+    }
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "idrac-info"))
+    {
+      if (_output_dell_system_info_idrac_info (state_data) < 0)
+	goto cleanup;
+    }
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "idrac-ipv4-url"))
+    {
+      if (_get_dell_system_info_long_string (state_data,
+                                             IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_IDRAC_IPV4_URL,
+                                             string,
+                                             IPMI_OEM_DELL_MAX_BYTES) < 0)
+        goto cleanup;
+      
+      pstdout_printf (state_data->pstate,
+		      "%s\n",
+		      string);
+    }
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "idrac-gui-webserver-control"))
+    {
+      char *idrac_web_gui_server_control_str;
+ 
+      if (_get_dell_system_info_bytes (state_data,
+				       IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_IDRAC_GUI_WEBSERVER_CONTROL,
+				       bytes,
+				       IPMI_OEM_DELL_MAX_BYTES,
+				       1,
+				       &bytes_len) < 0)
+        goto cleanup;
+
+      if (bytes[0] == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_WEB_GUI_SERVER_CONTROL_DISABLED)
+	idrac_web_gui_server_control_str = "Disabled";
+      else if (bytes[1] == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_WEB_GUI_SERVER_CONTROL_ENABLED)
+	idrac_web_gui_server_control_str = "Enabled";
+      else
+	idrac_web_gui_server_control_str = "Unknown";
+      
+      pstdout_printf (state_data->pstate,
+		      "%s\n",
+		      idrac_web_gui_server_control_str);
+    }
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "cmc-ipv4-url"))
+    {
+      if (_get_dell_system_info_long_string (state_data,
+                                             IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_CMC_IPV4_URL,
+                                             string,
+                                             IPMI_OEM_DELL_MAX_BYTES) < 0)
+        goto cleanup;
+      
+      pstdout_printf (state_data->pstate,
+		      "%s\n",
+		      string);
+    }
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "cmc-ipv6-info"))
+    {
+      if (_output_dell_system_info_cmc_ipv6_info (state_data) < 0)
+	goto cleanup;
+    }
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "cmc-ipv6-url"))
+    {
+      if (_get_dell_system_info_long_string (state_data,
+                                             IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_CMC_IPV6_URL,
+                                             string,
+                                             IPMI_OEM_DELL_MAX_BYTES) < 0)
+        goto cleanup;
+      
+      pstdout_printf (state_data->pstate,
+		      "%s\n",
+		      string);
+    }
+#if 0
+/* cannot verify */
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "snmp-ipv6-info"))
+    {
+      if (_output_dell_system_info_snmp_ipv6_info (state_data) < 0)
+	goto cleanup;
+    }
+#endif
   else /* (!strcasecmp (state_data->prog_data->args->oem_options[0], "mac-addresses")) */
     {
       uint8_t idrac_type = 0;
       int ret;
       
-      if ((ret = _get_dell_system_info_idrac_info (state_data, &idrac_type)) < 0)
+      if ((ret = _get_dell_system_info_idrac_info (state_data,
+						   NULL,
+						   NULL,
+						   0,
+						   NULL,
+						   0,
+						   &idrac_type)) < 0)
 	goto cleanup;
 
       if (ret)
@@ -1222,14 +2253,16 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
 	  /* iDRAC 10g */
 	  if (idrac_type == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_10G)
 	    {
-	      if (_get_dell_system_info_10g_mac_addresses (state_data) < 0)
+	      if (_output_dell_system_info_10g_mac_addresses (state_data) < 0)
 		goto cleanup;
 	    }
-	  /* iDRAC 11g */
+	  /* iDRAC 11g or iDRAC 12g */
 	  else if (idrac_type == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_11G_MONOLITHIC
-		   || idrac_type == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_11G_MODULAR)
+		   || idrac_type == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_11G_MODULAR
+		   || idrac_type == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_12G_MONOLITHIC
+		   || idrac_type == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_12G_MODULAR)
 	    {
-	      if (_get_dell_system_info_11g_mac_addresses (state_data) < 0)
+	      if (_output_dell_system_info_11g_or_12g_mac_addresses (state_data) < 0)
 		goto cleanup;
 	    }
 	  else
@@ -1244,7 +2277,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
       else
 	{
 	  /* assume iDRAC 10g */
-	  if (_get_dell_system_info_10g_mac_addresses (state_data) < 0)
+	  if (_output_dell_system_info_10g_mac_addresses (state_data) < 0)
 	    goto cleanup;
 	}
 
@@ -4241,6 +5274,21 @@ ipmi_oem_dell_get_power_consumption_statistics (ipmi_oem_state_data_t *state_dat
                                            IPMI_SYSTEM_INFO_PARAMETERS_NO_BLOCK_SELECTOR,
                                            obj_cmd_rs) < 0)
     {
+      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+	  && ((ipmi_check_completion_code (obj_cmd_rs,
+					   IPMI_COMP_CODE_GET_SYSTEM_INFO_PARAMETERS_PARAMETER_NOT_SUPPORTED) == 1)
+	      || (ipmi_check_completion_code (obj_cmd_rs,
+					      IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1)))
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "%s:%s '%s' option not supported on this system\n",
+			   state_data->prog_data->args->oem_id,
+			   state_data->prog_data->args->oem_command,
+			   state_data->prog_data->args->oem_options[0]);
+	  goto cleanup;
+	}
+
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_cmd_get_system_info_parameters: %s\n",
@@ -4504,6 +5552,20 @@ _get_power_capacity (ipmi_oem_state_data_t *state_data,
                                            IPMI_SYSTEM_INFO_PARAMETERS_NO_BLOCK_SELECTOR,
                                            obj_cmd_rs) < 0)
     {
+      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+	  && ((ipmi_check_completion_code (obj_cmd_rs,
+					   IPMI_COMP_CODE_GET_SYSTEM_INFO_PARAMETERS_PARAMETER_NOT_SUPPORTED) == 1)
+	      || (ipmi_check_completion_code (obj_cmd_rs,
+					      IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1)))
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "%s:%s option not supported on this system\n",
+			   state_data->prog_data->args->oem_id,
+			   state_data->prog_data->args->oem_command);
+	  goto cleanup;
+	}
+
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_cmd_get_system_info_parameters: %s\n",

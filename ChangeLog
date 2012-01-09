@@ -1,5 +1,15 @@
 2012-01-09  Albert Chu <chu11@llnl.gov>
 
+	* Merge 8250:8352 ipmioemdellgetsysteminfo.
+
+	* ipmi-oem/ipmi-oem-dell.c: Add Dell get-system-info
+	'slot-number', 'system-revision', 'embedded-video-status',
+	'idrac-info', 'idrac-ipv4-url', 'idrac-gui-webserver-control',
+	'cmc-ipv4-url', 'cmc-ipv6-info', 'cmc-ipv6-url' k eys.  Support
+	12G mac addresses.  Support better error messages.
+	
+2012-01-09  Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/: Add re-arm sensor events functions.
 
 	* bmc-device/: Support --rearm-sensor.
