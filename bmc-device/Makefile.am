@@ -3,6 +3,7 @@ sbin_PROGRAMS = bmc-device
 bmc_device_CPPFLAGS = \
 	-I$(top_srcdir)/common/toolcommon \
 	-I$(top_srcdir)/common/toolhostrange \
+	-I$(top_srcdir)/common/toolsdr \
 	-I$(top_srcdir)/common/miscutil \
 	-I$(top_srcdir)/common/parsecommon \
 	-I$(top_srcdir)/common/portability \
@@ -13,6 +14,7 @@ bmc_device_CPPFLAGS = \
 bmc_device_LDADD = \
 	$(top_builddir)/common/toolcommon/libtoolcommon.la \
 	$(top_builddir)/common/toolhostrange/libtoolhostrange.la \
+	$(top_builddir)/common/toolsdr/libtoolsdr.la \
 	$(top_builddir)/common/miscutil/libmiscutil.la \
 	$(top_builddir)/common/parsecommon/libparsecommon.la \
 	$(top_builddir)/common/portability/libportability.la \
@@ -29,6 +31,9 @@ $(top_builddir)/common/toolcommon/libtoolcommon.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
 $(top_builddir)/common/toolhostrange/libtoolhostrange.la : force-dependency-check
+	@cd `dirname $@` && $(MAKE) `basename $@`
+
+$(top_builddir)/common/toolsdr/libtoolsdr.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
 $(top_builddir)/common/miscutil/libmiscutil.la : force-dependency-check

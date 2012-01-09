@@ -71,6 +71,17 @@ Get IP, UDP, and RMCP statistics.
 \fB\-\-clear\-lan\-statistics\fR
 Clear IP, UDP, and RMCP statistics.
 .TP
+\fB\-\-rearm\-sensor\fR=\fI"<record_id> [<assertion_bitmask> <deassertion_bitmask>]"\fR
+Re-arm a sensor.  Re-arming a sensor informs the internal device to
+reset and re-evaluate a sensor reading and events.  Most sensors are
+automatically re-armed, however a rare few do require manual
+re-arming.  This option may also be useful to reset a sensor reading
+or event that may be stuck due to an internal hardware or firmware
+error.  If the \fIassertion_bitmask\fR and \fIdeassertion_bitmask\fR
+are specified, only the specific events will be re-armed.  If not
+specified, all possible events will be re-armed.  This command
+requires the loading of the SDR.
+.TP
 \fB\-\-get\-sdr\-repository\-time\fR
 Get SDR repository time.
 .TP
@@ -129,6 +140,7 @@ Set Operating System Name.
 .TP
 \fB\-\-verbose\fR
 Increase verbosity in output.
+#include <@top_srcdir@/man/manpage-common-sdr-options.man>
 #include <@top_srcdir@/man/manpage-common-hostranged-options-header.man>
 #include <@top_srcdir@/man/manpage-common-hostranged-buffer.man>
 #include <@top_srcdir@/man/manpage-common-hostranged-consolidate.man>

@@ -152,6 +152,23 @@ int ipmi_cmd_get_sensor_event_enable_discrete (ipmi_ctx_t ctx,
                                                uint8_t sensor_number,
                                                fiid_obj_t obj_cmd_rs);
 
+int ipmi_cmd_re_arm_sensor_events (ipmi_ctx_t ctx,
+				   uint8_t sensor_number,
+				   uint8_t re_arm_all_event_status_from_this_sensor,
+				   uint16_t *re_arm_assertion_event,
+				   uint16_t *re_arm_deassertion_event,
+				   fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_re_arm_sensor_events_ipmb (ipmi_ctx_t ctx,
+					uint8_t channel_number,
+					uint8_t slave_address,
+					uint8_t lun,
+					uint8_t sensor_number,
+					uint8_t re_arm_all_event_status_from_this_sensor,
+					uint16_t *re_arm_assertion_event,
+					uint16_t *re_arm_deassertion_event,
+					fiid_obj_t obj_cmd_rs);
+
 int ipmi_cmd_get_sensor_reading (ipmi_ctx_t ctx,
                                  uint8_t sensor_number,
                                  fiid_obj_t obj_cmd_rs);

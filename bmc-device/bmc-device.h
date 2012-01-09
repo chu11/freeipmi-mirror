@@ -33,21 +33,22 @@ enum bmc_device_argp_option_keys
     SET_ACPI_POWER_STATE_KEY = 164,
     GET_LAN_STATISTICS_KEY = 165,
     CLEAR_LAN_STATISTICS_KEY = 166,
-    GET_SDR_REPOSITORY_TIME_KEY = 167,
-    SET_SDR_REPOSITORY_TIME_KEY = 168,
-    GET_SEL_TIME_KEY = 169,
-    SET_SEL_TIME_KEY = 170,
-    PLATFORM_EVENT_KEY = 171,
-    GET_MCA_AUXILIARY_LOG_STATUS_KEY = 172,
-    GET_SSIF_INTERFACE_CAPABILITIES_KEY = 173,
-    GET_KCS_INTERFACE_CAPABILITIES_KEY = 174,
-    GET_BT_INTERFACE_CAPABILITIES_KEY = 175,
-    GET_BMC_GLOBAL_ENABLES_KEY = 176,
-    SET_SYSTEM_FIRMWARE_VERSION_KEY=177,
-    SET_SYSTEM_NAME_KEY=178,
-    SET_PRIMARY_OPERATING_SYSTEM_NAME_KEY=179,
-    SET_OPERATING_SYSTEM_NAME_KEY=180,
-    VERBOSE_KEY = 181,
+    REARM_SENSOR_KEY = 167,
+    GET_SDR_REPOSITORY_TIME_KEY = 168,
+    SET_SDR_REPOSITORY_TIME_KEY = 169,
+    GET_SEL_TIME_KEY = 170,
+    SET_SEL_TIME_KEY = 171,
+    PLATFORM_EVENT_KEY = 172,
+    GET_MCA_AUXILIARY_LOG_STATUS_KEY = 173,
+    GET_SSIF_INTERFACE_CAPABILITIES_KEY = 174,
+    GET_KCS_INTERFACE_CAPABILITIES_KEY = 175,
+    GET_BT_INTERFACE_CAPABILITIES_KEY = 176,
+    GET_BMC_GLOBAL_ENABLES_KEY = 177,
+    SET_SYSTEM_FIRMWARE_VERSION_KEY=178,
+    SET_SYSTEM_NAME_KEY=179,
+    SET_PRIMARY_OPERATING_SYSTEM_NAME_KEY=180,
+    SET_OPERATING_SYSTEM_NAME_KEY=181,
+    VERBOSE_KEY = 182,
   };
 
 enum bmc_device_set_acpi_power_state_options
@@ -67,6 +68,7 @@ struct bmc_device_set_acpi_power_state
 struct bmc_device_arguments
 {
   struct common_cmd_args common;
+  struct sdr_cmd_args sdr;
   struct hostrange_cmd_args hostrange;
   int cold_reset;
   int warm_reset;
@@ -76,6 +78,8 @@ struct bmc_device_arguments
   struct bmc_device_set_acpi_power_state set_acpi_power_state_args;
   int get_lan_statistics;
   int clear_lan_statistics;
+  int rearm_sensor;
+  char *rearm_sensor_arg;
   int get_sdr_repository_time;
   int set_sdr_repository_time;
   char *set_sdr_repository_time_arg;
@@ -111,6 +115,9 @@ typedef struct bmc_device_state_data
   bmc_device_prog_data_t *prog_data;
   ipmi_ctx_t ipmi_ctx;
   pstdout_state_t pstate;
+  char *hostname;
+  ipmi_sdr_cache_ctx_t sdr_cache_ctx;
+  ipmi_sdr_parse_ctx_t sdr_parse_ctx;
 } bmc_device_state_data_t;
 
 #endif
