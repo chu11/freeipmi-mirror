@@ -484,6 +484,7 @@ BMC address Locator:
 @end example
 
 @node How do you setup Powerman with ipmipower?, Why is the IPMI kernel driver faster than the KCS driver?, SSIF Driver Configuration, Top
+@section How do you setup Powerman with ipmipower?
 
 There are additional details in the Powerman
 (@uref{http://code.google.com/p/powerman/}) documentation, however
