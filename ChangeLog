@@ -1,3 +1,7 @@
+2012-01-10  Albert Chu <chu11@llnl.gov>
+
+	* doc/freeipmi-faq.texi: Add conman configuration FAQ example.
+
 2012-01-09  Albert Chu <chu11@llnl.gov>
 
 	* doc/freeipmi-faq.texi: Add powerman configuration FAQ example.
