@@ -1,5 +1,9 @@
 2012-01-09  Albert Chu <chu11@llnl.gov>
 
+	* doc/freeipmi-faq.texi: Add powerman configuration FAQ example.
+	
+2012-01-09  Albert Chu <chu11@llnl.gov>
+
 	* Merge 8250:8352 ipmioemdellgetsysteminfo.
 
 	* ipmi-oem/ipmi-oem-dell.c: Add Dell get-system-info

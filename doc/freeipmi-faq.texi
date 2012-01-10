@@ -70,6 +70,7 @@ release @value{VERSION} of the FreeIPMI.
 * What setup is needed for Serial over LAN (SOL) or Ipmiconsole?::
 * Do I need to install or configure a driver to perform IPMI inband?:: 
 * SSIF Driver Configuration::   
+* How do you setup Powerman with ipmipower?::
 * Why is the IPMI kernel driver faster than the KCS driver?::
 * Why are there so many IPMI compliance bugs?::
 * How do I get around an IPMI compliance bug on my motherboard?::
@@ -230,7 +231,7 @@ can be found in the document freeipmi-hostrange.txt
 
 Ipmipower is capable of scaling to large nodes for cluster support and
 is supported by Powerman
-(@uref{http://sourceforge.net/projects/powerman}) for scalable power
+(@uref{http://code.google.com/p/powerman/}) for scalable power
 management.  At LLNL, in conjunction with Powerman, ipmipower is used
 for power control on clusters ranging from sizes of 4 to 2000.  It has
 been used to determine power status or power control LLNL's largest
@@ -444,7 +445,7 @@ Under most scenarios, the FreeIPMI tools should automatically discover which in-
 
 Every system is different and your situation may differ.  Please see your manufacturer instructions.
 
-@node SSIF Driver Configuration, Why is the IPMI kernel driver faster than the KCS driver?, Do I need to install or configure a driver to perform IPMI inband?, Top
+@node SSIF Driver Configuration, How do you setup Powerman with ipmipower?, Do I need to install or configure a driver to perform IPMI inband?, Top
 @section SSIF Driver Configuration
 
 FreeIPMI's SSIF driver works on top of kernel'2 i2c device
@@ -482,8 +483,42 @@ BMC address Locator:
     Usual values for record 08h -> 0x400
 @end example
 
+@node How do you setup Powerman with ipmipower?, Why is the IPMI kernel driver faster than the KCS driver?
 
-@node Why is the IPMI kernel driver faster than the KCS driver?, Why are there so many IPMI compliance bugs?, SSIF Driver Configuration, Top
+There are additional details in the Powerman
+(@uref{http://code.google.com/p/powerman/}) documentation, however
+here are the basics.  In the powerman.conf file, you want to include
+the ipmipower.dev device file, setup an ipmipower device in co-process
+mode, then configure hosts to use that device.
+
+@example
+include "/etc/powerman/ipmipower.dev"
+
+device "ipmi0" "ipmipower" "/usr/sbin/ipmipower -h mynodes[0-10] |&"
+
+node "mynodes[0-10]"  "ipmi0" "mynodes[0-10]"
+@end example
+
+You may wish to add some additional ipmipower configuration on the
+device line:
+
+@example
+device "ipmi0" "ipmipower" "/usr/sbin/ipmipower --wait-until-on --wait-until-off -h mynodes[0-10] -u username -p password |&"
+@end example
+
+although you will probably want to do some of this configuration
+(especially the username and password) in freeipmi.conf.
+
+If you use an alternate set of hostnames for IPMI from the primary
+hostname, that can configured like this:
+
+@example
+device "ipmi0" "ipmipower" "/usr/sbin/ipmipower -h altname[0-10] |&"
+
+node "primaryname[0-10]"  "ipmi0" "altname[0-10]"
+@end example
+
+@node Why is the IPMI kernel driver faster than the KCS driver?, Why are there so many IPMI compliance bugs?, How do you setup Powerman with ipmipower?, Top
 @section Why is the IPMI kernel driver faster than the KCS driver?
 
 Internally the IPMI kernel driver chooses to spin while polling for a
