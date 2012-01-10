@@ -483,7 +483,7 @@ BMC address Locator:
     Usual values for record 08h -> 0x400
 @end example
 
-@node How do you setup Powerman with ipmipower?, Why is the IPMI kernel driver faster than the KCS driver?
+@node How do you setup Powerman with ipmipower?, Why is the IPMI kernel driver faster than the KCS driver?, SSIF Driver Configuration, Top
 
 There are additional details in the Powerman
 (@uref{http://code.google.com/p/powerman/}) documentation, however
