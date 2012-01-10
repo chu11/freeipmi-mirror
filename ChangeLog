@@ -1,5 +1,11 @@
 2012-01-10  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/sensor-read/ipmi-sensor-read.c
+	(_sensor_reading_corner_case_checks): Handle corner case in Sun
+	Blade x6250.
+	
+2012-01-10  Albert Chu <chu11@llnl.gov>
+
 	* doc/freeipmi-faq.texi: Add conman configuration FAQ example.
 	Add terminology, ganglia, nagios info.
 
