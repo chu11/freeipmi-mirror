@@ -71,6 +71,7 @@ release @value{VERSION} of the FreeIPMI.
 * Do I need to install or configure a driver to perform IPMI inband?:: 
 * SSIF Driver Configuration::   
 * How do you setup Powerman with ipmipower?::
+* How do you setup Conman with ipmiconsole or libipmiconsole?::
 * Why is the IPMI kernel driver faster than the KCS driver?::
 * Why are there so many IPMI compliance bugs?::
 * How do I get around an IPMI compliance bug on my motherboard?::
@@ -483,7 +484,7 @@ BMC address Locator:
     Usual values for record 08h -> 0x400
 @end example
 
-@node How do you setup Powerman with ipmipower?, Why is the IPMI kernel driver faster than the KCS driver?, SSIF Driver Configuration, Top
+@node How do you setup Powerman with ipmipower?, How do you setup Conman with ipmiconsole or libipmiconsole?, SSIF Driver Configuration, Top
 @section How do you setup Powerman with ipmipower?
 
 There are additional details in the Powerman
@@ -519,7 +520,52 @@ device "ipmi0" "ipmipower" "/usr/sbin/ipmipower -h altname[0-10] |&"
 node "primaryname[0-10]"  "ipmi0" "altname[0-10]"
 @end example
 
-@node Why is the IPMI kernel driver faster than the KCS driver?, Why are there so many IPMI compliance bugs?, How do you setup Powerman with ipmipower?, Top
+@node How do you setup Conman with ipmiconsole or libipmiconsole?, Why is the IPMI kernel driver faster than the KCS driver?, How do you setup Powerman with ipmipower?, Top
+@section How do you setup Conman with ipmiconsole or libipmiconsole?
+
+There are additional details in the Conman
+(@uref{http://conman.googlecode.com/}) documentation and manpages,
+however here are some basics.
+
+To configure Conman to connect via the ipmiconsole tool, Conman comes
+with an expect script named ipmiconsole.exp, typically installed into
+/usr/lib/conman/exec/ipmiconsole.exp.  Consoles can be setup by adding
+lines to conman.conf like:
+
+@example
+CONSOLE name="myserver"   dev="/usr/lib/conman/exec/ipmiconsole.exp myserver myusername mypassword"
+@end example
+
+One of the useful aspects of using the ipmiconsole.exp script is that
+the same configuration options you may have already configured into
+freeipmi.conf, may be loaded automatically when ipmiconsole is
+executed via this expect script.
+
+However, as can be expected, scalability may be a problem as you must
+launch a process for every node in your cluster.
+
+Conman is also capable of connecting to servers natively through the
+libipmiconsole library, so that no additional processes are launched.
+They can be configured as follows:
+
+@example
+CONSOLE name="myserver" IPMIOPTS="U:myusername,P:mypassword" dev="ipmi:myserver"
+@end example
+
+on some older versions of Conman, you would instead use
+
+@example
+CONSOLE name="myserver" IPMIOPTS="myusername,mypassword" dev="ipmi:myserver"
+@end example
+
+Please see the Conman documentation for current version options and
+additional configuration options available.
+
+One of the additional advantages of configuring Conman to use the
+libipmiconsole library natively is that Conman is able to detect and
+manage additional IPMI error cases.
+
+@node Why is the IPMI kernel driver faster than the KCS driver?, Why are there so many IPMI compliance bugs?, How do you setup Conman with ipmiconsole or libipmiconsole?, Top
 @section Why is the IPMI kernel driver faster than the KCS driver?
 
 Internally the IPMI kernel driver chooses to spin while polling for a
