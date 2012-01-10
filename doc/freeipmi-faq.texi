@@ -66,12 +66,14 @@ release @value{VERSION} of the FreeIPMI.
 * libgcrypt requirement::          
 * x86-64 Compilation::          
 * Installing FreeIPMI on FreeBSD::
+* What are some IPMI terminology or acronyms I should be aware of?::
 * What setup is needed for FreeIPMI to communicate over LAN?::
 * What setup is needed for Serial over LAN (SOL) or Ipmiconsole?::
 * Do I need to install or configure a driver to perform IPMI inband?:: 
 * SSIF Driver Configuration::   
 * How do you setup Powerman with ipmipower?::
 * How do you setup Conman with ipmiconsole or libipmiconsole?::
+* How do you setup Ganglia or Nagios to monitor IPMI sensors via FreeIPMI?::
 * Why is the IPMI kernel driver faster than the KCS driver?::
 * Why are there so many IPMI compliance bugs?::
 * How do I get around an IPMI compliance bug on my motherboard?::
@@ -387,7 +389,7 @@ Example:
   # ./configure  --prefix=/usr --libdir=/usr/lib64
 @end example
 
-@node Installing FreeIPMI on FreeBSD, What setup is needed for FreeIPMI to communicate over LAN?, x86-64 Compilation, Top
+@node Installing FreeIPMI on FreeBSD, What are some IPMI terminology or acronyms I should be aware of?, x86-64 Compilation, Top
 @section Installing FreeIPMI on FreeBSD
 
 You can install a binary package of freeipmi or use the port,
@@ -399,7 +401,66 @@ in The FreeBSD Handbook.
 Please contact port maintainer (MAINTAINER line in the port's Makefile),
 if you have problems building from the port.
 
-@node What setup is needed for FreeIPMI to communicate over LAN?, What setup is needed for Serial over LAN (SOL) or Ipmiconsole?, Installing FreeIPMI on FreeBSD, Top
+@node What are some IPMI terminology or acronyms I should be aware of?, What setup is needed for FreeIPMI to communicate over LAN?, Installing FreeIPMI on FreeBSD, Top 
+@section What are some IPMI terminology or acronyms I should be aware of?
+
+Good question, here are some terms and acronyms with general definition you might want to know.
+
+@strong{BMC} stands for @strong{Baseboard Management Controller}.  The BMC
+is the management chip on the system that is responsible for IPMI.  It
+is common to refer to configuring the ``BMC'' as synonymous for
+configuring IPMI.
+
+@strong{inband} IPMI communication refers to communication on a system
+locally (i.e. not over a network).
+
+@strong{outofband} and @strong{IPMI over LAN} refer to IPMI
+communication over a network, typically ethernet.
+
+@strong{SDR} stands for @strong{Sensor Data Repository}.  The SDR is a
+database of system information that is needed by many other IPMI
+functions.  It is commonly read before some IPMI action can be taken.
+For example, it contains a list of all sensors on a system, so it
+must be downloaded before sensors on a system can be read.  In
+FreeIPMI, the SDR is cached in a common location and can be used by a
+number of tools, such as ipmi-sensors, ipmi-sel, and ipmi-fru.
+
+@strong{SEL} stands for @strong{System Event Log}.  The SEL is a log of
+events stored on the system for later diagnostics.  In FreeIPMI,
+ipmi-sel can be used to read the SEL.
+
+@strong{FRU} stands for @strong{Field Replaceable Unit}.  While FRU is
+a general computing term refering to a replaceable unit of
+electronics, in IPMI is is common to refer to the ``FRU'' as the
+database of all FRU components on a system.  In FreeIPMI,
+ipmi-fru can be used to read the FRU components on a system.
+
+@strong{PEF} stands for @strong{Platform Event Filtering}.  PEF refers
+to the rules that determine when PETs are generated and where they are
+sent.  In FreeIPMI, PEF can be configured via ipmi-pef-config.
+
+@strong{PET} stands for @strong{Platform Event Trap}.  PET refers to a
+trap that can be sent by a system to an SNMP agent to indicate an
+event has occurred on the system.  In FreeIPMI, a PET trap can be
+interpreted via ipmi-pet.
+
+@strong{DCMI} stands for @strong{Data Center Management Interface}.
+DCMI is a management interface defined by a group of vendors that use
+IPMI as the backend for their system management definition.  In
+FreeIPMI, ipmi-dcmi can be used to read/configuring DCMI.
+
+@strong{SOL} stands for @strong{Serial over LAN}.  SOL refers to the
+forwarding of serial system traffic over a network, typically an
+ethernet network.  It is typically used to access a remote system
+console.  In FreeIPMI, ipmiconsole is used to access a remote console
+via SOL.
+
+@strong{RMCP} stands for @strong{Remote Management Control Protocol}.
+The RMCP protocol is another remote management protocol which IPMI is
+defined within for outofband communication.  For most IPMI users, you
+will never need to know about RMCP.
+
+@node What setup is needed for FreeIPMI to communicate over LAN?, What setup is needed for Serial over LAN (SOL) or Ipmiconsole?, What are some IPMI terminology or acronyms I should be aware of?, Top
 @section What setup is needed for FreeIPMI to communicate over LAN?
 
 Please see the bmc-config.conf(5) manpage provided with FreeIPMI for
@@ -409,7 +470,7 @@ details, or you can read it on the FreeIPMI website's documentation
 @node What setup is needed for Serial over LAN (SOL) or Ipmiconsole?, Do I need to install or configure a driver to perform IPMI inband?, What setup is needed for FreeIPMI to communicate over LAN?, Top
 @section What setup is needed for Serial over LAN (SOL) or Ipmiconsole?
 
-The setup of Serial-over-LAN (SOL) and/or Ipmiconsole is highly dependent on your motherboard.  However, most motherboards
+The setup of Serial-over-LAN (SOL) and/or Ipmiconsole is highly dependent on your system.  However, most motherboardss
 require the following:
 
 1) Adjust the BIOS COM port for serial redirection over SOL instead of
@@ -520,7 +581,7 @@ device "ipmi0" "ipmipower" "/usr/sbin/ipmipower -h altname[0-10] |&"
 node "primaryname[0-10]"  "ipmi0" "altname[0-10]"
 @end example
 
-@node How do you setup Conman with ipmiconsole or libipmiconsole?, Why is the IPMI kernel driver faster than the KCS driver?, How do you setup Powerman with ipmipower?, Top
+@node How do you setup Conman with ipmiconsole or libipmiconsole?, How do you setup Ganglia or Nagios to monitor IPMI sensors via FreeIPMI?, How do you setup Powerman with ipmipower?, Top
 @section How do you setup Conman with ipmiconsole or libipmiconsole?
 
 There are additional details in the Conman
@@ -565,7 +626,15 @@ One of the additional advantages of configuring Conman to use the
 libipmiconsole library natively is that Conman is able to detect and
 manage additional IPMI error cases.
 
-@node Why is the IPMI kernel driver faster than the KCS driver?, Why are there so many IPMI compliance bugs?, How do you setup Conman with ipmiconsole or libipmiconsole?, Top
+@node How do you setup Ganglia or Nagios to monitor IPMI sensors via FreeIPMI?, Why is the IPMI kernel driver faster than the KCS driver?, How do you setup Conman with ipmiconsole or libipmiconsole?, Top
+@section How do you setup Ganglia or Nagios to monitor IPMI sensors via FreeIPMI?,
+
+Scripts to monitor IPMI via FreeIPMI in Ganglia and Nagios have been
+developed and are downloadable on the FreeIPMI homepage
+(@uref{http://www.gnu.org/software/freeipmi/download.html}).
+Instructions for setup can be found at the top of the scripts.
+
+@node Why is the IPMI kernel driver faster than the KCS driver?, Why are there so many IPMI compliance bugs?, How do you setup Ganglia or Nagios to monitor IPMI sensors via FreeIPMI?, Top
 @section Why is the IPMI kernel driver faster than the KCS driver?
 
 Internally the IPMI kernel driver chooses to spin while polling for a
