@@ -214,7 +214,7 @@ LAN Authentication Issue #13: [COMPLIANCE]
   specified in the open session stage rather than the privilege used
   during the RAKP1 stage.  This can be problematic if you specify
   IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL during that stage instead of a
-  real privilege level.
+  specific privilege level (i.e. operator).
 
   Seen on: Sun Fire X4150, Inventec 5441/Dell Xanadu II, Supermicro
   X8DTH, Supermicro X8DTG, Supermicro X8DTU, Intel S5500WBV/Penguin
