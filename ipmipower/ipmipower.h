@@ -112,6 +112,20 @@ typedef enum
    || (__c) == POWER_CMD_IDENTIFY_ON                        \
    || (__c) == POWER_CMD_IDENTIFY_OFF)
 
+typedef enum
+  {
+    OEM_POWER_TYPE_NONE    = 0,
+    OEM_POWER_TYPE_C410X   = 1,
+    OEM_POWER_TYPE_INVALID = 255
+  } oem_power_type_t;
+
+#define OEM_POWER_TYPE_NONE_STR "none"
+#define OEM_POWER_TYPE_C410X_STR "c410x"
+
+#define OEM_POWER_TYPE_VALID(__v)     \
+  ((__v) == OEM_POWER_TYPE_NONE       \
+   || (__v) == OEM_POWER_TYPE_C410X)
+ 
 /* packet_type_t
  * - packet types stored internally in an ipmipower_powercmd structure.
  * - Request types are *_REQ, Response types are *_RES
@@ -378,16 +392,17 @@ enum ipmi_sensors_argp_option_keys
     ON_IF_OFF_KEY = 164,
     WAIT_UNTIL_OFF_KEY = 165,
     WAIT_UNTIL_ON_KEY = 166,
+    OEM_POWER_TYPE_KEY = 167,
 
-    RETRY_WAIT_TIMEOUT_KEY = 167,
-    RETRANSMISSION_WAIT_TIMEOUT_KEY = 168,
-    RETRY_BACKOFF_COUNT_KEY = 169,
-    RETRANSMISSION_BACKOFF_COUNT_KEY = 170,
-    PING_INTERVAL_KEY = 171,
-    PING_TIMEOUT_KEY = 172,
-    PING_PACKET_COUNT_KEY = 173,
-    PING_PERCENT_KEY = 174,
-    PING_CONSEC_COUNT_KEY = 175,
+    RETRY_WAIT_TIMEOUT_KEY = 168,
+    RETRANSMISSION_WAIT_TIMEOUT_KEY = 169,
+    RETRY_BACKOFF_COUNT_KEY = 170,
+    RETRANSMISSION_BACKOFF_COUNT_KEY = 171,
+    PING_INTERVAL_KEY = 172,
+    PING_TIMEOUT_KEY = 173,
+    PING_PACKET_COUNT_KEY = 174,
+    PING_PERCENT_KEY = 175,
+    PING_CONSEC_COUNT_KEY = 176,
   };
 
 struct ipmipower_arguments
@@ -402,6 +417,7 @@ struct ipmipower_arguments
   int on_if_off;
   int wait_until_on;
   int wait_until_off;
+  oem_power_type_t oem_power_type;
 
   unsigned int retransmission_wait_timeout;
   unsigned int retransmission_backoff_count;
