@@ -19,6 +19,7 @@ o In ipmi-oem, add additional Dell get-system-info options
   - cmc-ipv6-info
   - cmc-ipv6-url
 o In ipmi-oem, support Dell 12G mac addresses under get-system-info.   
+o Fix several freeipmi.conf config file parsing bugs.
 
 Libraries
 ----------
