@@ -386,7 +386,7 @@ Some OEM extensions may require additional information for their power
 control action, such as a specific device identifier.  Additional
 information can be provided by appending this information to the end
 of the hostname.  The additional information should be prepended with
-a pipe (i.e. '|') symbol.  For example, the hostname \fImynode|18\fR
+a plus (i.e. '+') symbol.  For example, the hostname \fImynode+18\fR
 would indicate the power control operation should be sent to the host
 \fImynode\fR, and \fI18\fR is the identifier of a possible sub-device
 to be power controlled.
@@ -401,7 +401,7 @@ operations available.
 This OEM power type supports the power control of PCIe slots on Dell
 Poweredge C410x systems.  It supports \fBon\fR, \fBoff\fR, and
 \fBstat\fR.  Each power control operation must also specify a PCIe
-slot to operate on.  For example, the hostname \fImynode|2\fR would inform 
+slot to operate on.  For example, the hostname \fImynode+2\fR would inform 
 .B ipmipower
 to operate on slot number \fI2\fR on \fImynode\fR.
 
