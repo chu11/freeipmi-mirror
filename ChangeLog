@@ -1,5 +1,10 @@
 2012-01-10  Albert Chu <chu11@llnl.gov>
 
+	* common/toolcommon/tool-config-file-common.c: Fix several config
+	file option parsing bugs.
+	
+2012-01-10  Albert Chu <chu11@llnl.gov>
+
 	* doc/freeipmi-faq.texi: Add conman configuration FAQ example.
 	Add terminology, ganglia, nagios info.
 
