@@ -1251,6 +1251,15 @@ Sensors Issue #17: [COMPLIANCE]
   scanning bit and read a sensor reading regardless of the scanning
   bits value.
 
+Sensors Issue #18: [COMPLIANCE] [SENSORS-1]
+
+  Some sensors return IPMI_COMP_CODE_UNSPECIFIED_ERROR
+  (0xFF) completion codes for unknown reasons.
+
+  Seen on: Sun Blade x6250
+
+  Resolution: Workaround added to assume sensor not available.
+
 ----------------------------------------------------------------------
 
 ---------------------------------
