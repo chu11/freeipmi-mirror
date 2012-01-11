@@ -218,7 +218,7 @@ LAN Authentication Issue #13: [COMPLIANCE]
 
   Seen on: Sun Fire X4150, Inventec 5441/Dell Xanadu II, Supermicro
   X8DTH, Supermicro X8DTG, Supermicro X8DTU, Intel S5500WBV/Penguin
-  Relion 700, Intel S2600JF/Appro 512X, Quanta QSSC-S4R//Appro
+  Relion 700, Intel S2600JF/Appro 512X, Quanta QSSC-S4R/Appro
   GB812X-CN
 
   Resolution: Workaround option added to inform software to pass a
@@ -538,7 +538,7 @@ Serial-Over-LAN Issue #6: [COMPLIANCE]
   5441/Dell Xanadu II, Inventec 5442/Dell Xanadu III, Dell Poweredge
   R610, Dell Poweredge R710, Quanta S99Q/Dell FS12-TY, Supermicro
   X8DTG, Supermicro X8DTU, Intel S2600JF/Appro 512X, Quanta
-  QSSC-S4R//Appro GB812X-CN
+  QSSC-S4R/Appro GB812X-CN
  
   Resolution: None
 
