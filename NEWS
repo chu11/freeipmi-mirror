@@ -19,6 +19,8 @@ o In ipmi-oem, add additional Dell get-system-info options
   - cmc-ipv6-info
   - cmc-ipv6-url
 o In ipmi-oem, support Dell 12G mac addresses under get-system-info.   
+o In ipmi-sensors, some sensors that reported "Unknown" may now report
+  "N/A" due to an interpretation change of several IPMI error codes.
 o Fix several freeipmi.conf config file parsing bugs.
 
 Libraries
@@ -30,6 +32,8 @@ o In libipmiconsole, do not deactivate a SOL payload if it appears the
   SOL payload has been stolen, but we did not receive a SOL deactivating
   flag.
 o In libfreeipmi, add functions for re-arm sensor events IPMI payload. 
+o In libfreeipmi/sensor-read, under some error conditions return error
+  of "unavailable" instead of "cannot be obtained" error code.
 
 Misc
 ----
