@@ -3,6 +3,10 @@
 	* libfreeipmi/sensor-read/ipmi-sensor-read.c
 	(_sensor_reading_corner_case_checks): Handle corner case in Sun
 	Blade x6250.
+
+	* libfreeipmi/sensor-read/ipmi-sensor-read.c
+	(_sensor_reading_corner_case_checks): Slightly alter error code
+	return interpretations.
 	
 2012-01-10  Albert Chu <chu11@llnl.gov>
 
