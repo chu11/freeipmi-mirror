@@ -211,6 +211,13 @@ _sensor_reading_corner_case_checks (ipmi_sensor_read_ctx_t ctx,
       SENSOR_READ_SET_ERRNUM (ctx, IPMI_SENSOR_READ_ERR_NODE_BUSY);
       return (-1);
     }
+  /* IPMI Workaround
+   *
+   * achu: Error codes found on motherboards that strongly suggest
+   * "sensor not available".  See comments in
+   * freeipmi-bugs-issues-and-workarounds.txt for why I think this is
+   * a workaround and not an "ok" set of errors.
+   */
   else if ((ipmi_check_completion_code (obj_cmd_rs,
                                         IPMI_COMP_CODE_REQUESTED_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1)
 	   || (ipmi_check_completion_code (obj_cmd_rs,
@@ -220,9 +227,11 @@ _sensor_reading_corner_case_checks (ipmi_sensor_read_ctx_t ctx,
            || (ipmi_check_completion_code (obj_cmd_rs,
                                            IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1)
 	   || (ipmi_check_completion_code (obj_cmd_rs, 
-					IPMI_COMP_CODE_COMMAND_RESPONSE_COULD_NOT_BE_PROVIDED) == 1)
+					   IPMI_COMP_CODE_COMMAND_RESPONSE_COULD_NOT_BE_PROVIDED) == 1)
 	   || (ipmi_check_completion_code (obj_cmd_rs,
-                                           IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED) == 1))
+                                           IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED) == 1)
+	   || (ipmi_check_completion_code (obj_cmd_rs,
+					   IPMI_COMP_CODE_DESTINATION_UNAVAILABLE) == 1))
     {
       SENSOR_READ_SET_ERRNUM (ctx, IPMI_SENSOR_READ_ERR_SENSOR_READING_UNAVAILABLE);
       return (-1);
@@ -233,11 +242,9 @@ _sensor_reading_corner_case_checks (ipmi_sensor_read_ctx_t ctx,
       uint64_t val; 
       int flag;
 
-      /* Workaround
+      /* IPMI Workaround
        *
-       * Discovered on
-       *
-       * Sun Blade x6250
+       * Discovered on Sun Blade x6250
        *
        * For some reason, some sensors can return this error code
        * (0xFF).  However, it appears to be an invalid error response
@@ -245,6 +252,11 @@ _sensor_reading_corner_case_checks (ipmi_sensor_read_ctx_t ctx,
        * not available or that scanning is diabled.  So if the sensor
        * reports that it is unavailable, we'll report an error code
        * slightly more appropriate.
+       *
+       * Note, I do not handle this identically to the corner case
+       * checks above.  Those completion codes strongly suggest that a
+       * sensor is not available.  The error code "Unspecified Error"
+       * could mean anything.
        */
       
       if ((flag = fiid_obj_get (obj_cmd_rs,
