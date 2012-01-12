@@ -21,6 +21,7 @@ o In ipmi-oem, add additional Dell get-system-info options
 o In ipmi-oem, support Dell 12G mac addresses under get-system-info.   
 o In ipmi-sensors, some sensors that reported "Unknown" may now report
   "N/A" due to an interpretation change of several IPMI error codes.
+o In ipmi-sensors, workaround sensor reading issue on Sun Blade x6250.
 o Fix several freeipmi.conf config file parsing bugs.
 
 Libraries
@@ -34,6 +35,8 @@ o In libipmiconsole, do not deactivate a SOL payload if it appears the
 o In libfreeipmi, add functions for re-arm sensor events IPMI payload. 
 o In libfreeipmi/sensor-read, under some error conditions return error
   of "unavailable" instead of "cannot be obtained" error code.
+o In libfreeipmi/sensor-read, add workarounds to handle issues on Sun
+  Blade x6250.
 
 Misc
 ----
