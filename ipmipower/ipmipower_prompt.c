@@ -401,31 +401,6 @@ _cmd_workaround_flags (char **argv)
                            IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_NON_EMPTY_INTEGRITY_CHECK_VALUE_STR);
 }
 
-static char *
-_power_cmd_to_string (power_cmd_t cmd)
-{
-  if (cmd == POWER_CMD_POWER_OFF)
-    return ("off");
-  else if (cmd == POWER_CMD_POWER_ON)
-    return ("on");
-  else if (cmd == POWER_CMD_POWER_CYCLE)
-    return ("cycle");
-  else if (cmd == POWER_CMD_POWER_RESET)
-    return ("reset");
-  else if (cmd == POWER_CMD_POWER_STATUS)
-    return ("status");
-  else if (cmd == POWER_CMD_PULSE_DIAG_INTR)
-    return ("diagnostic interrupt");
-  else if (cmd == POWER_CMD_SOFT_SHUTDOWN_OS)
-    return ("soft shutdown os");
-  else if (cmd == POWER_CMD_IDENTIFY_ON)
-    return ("identify on");
-  else if (cmd == POWER_CMD_IDENTIFY_OFF)
-    return ("identify off");
-  else /* cmd == POWER_CMD_IDENTIFY_STATUS */
-    return ("identify status");
-}
-
 static int
 _power_cmd_to_oem_power_type_support (power_cmd_t cmd)
 {
@@ -475,7 +450,7 @@ _cmd_power (char **argv, power_cmd_t cmd)
 	{
 	  char *power_cmd_str;
 	  
-	  power_cmd_str = _power_cmd_to_string (cmd);
+	  power_cmd_str = ipmipower_cmd_to_string (cmd);
 	  
 	  ipmipower_cbuf_printf (ttyout,
 				 "'%s' requires atleast operator privilege\n",
@@ -490,7 +465,7 @@ _cmd_power (char **argv, power_cmd_t cmd)
 
       oem_power_type_support_mask = _power_cmd_to_oem_power_type_support (cmd);
   
-      power_cmd_str = _power_cmd_to_string (cmd);
+      power_cmd_str = ipmipower_cmd_to_string (cmd);
 
       if (!(oem_power_type_data[cmd_args.oem_power_type].supported_operations & oem_power_type_support_mask))
 	{

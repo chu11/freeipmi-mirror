@@ -597,7 +597,12 @@ main (int argc, char *argv[])
       if (cmd_args.common.privilege_level == IPMI_PRIVILEGE_LEVEL_USER
           && POWER_CMD_REQUIRES_OPERATOR_PRIVILEGE_LEVEL (cmd_args.powercmd))
         {
-          IPMIPOWER_ERROR (("power operation requires atleast operator privilege"));
+	  char *power_cmd_str;
+
+	  power_cmd_str = ipmipower_cmd_to_string (cmd_args.powercmd);
+
+          IPMIPOWER_ERROR (("'%s' operation requires atleast operator privilege",
+			    power_cmd_str));
           exit (1);
         }
 

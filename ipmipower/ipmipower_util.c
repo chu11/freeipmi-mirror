@@ -60,6 +60,33 @@
 
 extern struct ipmipower_arguments cmd_args;
 
+char *
+ipmipower_cmd_to_string (power_cmd_t cmd)
+{
+  assert (POWER_CMD_VALID (cmd));
+
+  if (cmd == POWER_CMD_POWER_OFF)
+    return ("off");
+  else if (cmd == POWER_CMD_POWER_ON)
+    return ("on");
+  else if (cmd == POWER_CMD_POWER_CYCLE)
+    return ("cycle");
+  else if (cmd == POWER_CMD_POWER_RESET)
+    return ("reset");
+  else if (cmd == POWER_CMD_POWER_STATUS)
+    return ("status");
+  else if (cmd == POWER_CMD_PULSE_DIAG_INTR)
+    return ("diagnostic interrupt");
+  else if (cmd == POWER_CMD_SOFT_SHUTDOWN_OS)
+    return ("soft shutdown os");
+  else if (cmd == POWER_CMD_IDENTIFY_ON)
+    return ("identify on");
+  else if (cmd == POWER_CMD_IDENTIFY_OFF)
+    return ("identify off");
+  else /* cmd == POWER_CMD_IDENTIFY_STATUS */
+    return ("identify status");
+}
+
 int
 ipmipower_poll (struct pollfd *ufds, unsigned int nfds, int timeout)
 {
