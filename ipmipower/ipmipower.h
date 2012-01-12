@@ -125,7 +125,24 @@ typedef enum
 #define OEM_POWER_TYPE_VALID(__v)     \
   ((__v) == OEM_POWER_TYPE_NONE       \
    || (__v) == OEM_POWER_TYPE_C410X)
- 
+
+#define OEM_POWER_TYPE_SUPPORT_OFF              0x0001
+#define OEM_POWER_TYPE_SUPPORT_ON               0x0002
+#define OEM_POWER_TYPE_SUPPORT_CYCLE            0x0004
+#define OEM_POWER_TYPE_SUPPORT_RESET            0x0008
+#define OEM_POWER_TYPE_SUPPORT_STATUS           0x0010
+#define OEM_POWER_TYPE_SUPPORT_DIAG_INTR        0x0020
+#define OEM_POWER_TYPE_SUPPORT_SOFT_SHUTDOWN_OS 0x0040
+#define OEM_POWER_TYPE_SUPPORT_IDENTIFY_ON      0x0080
+#define OEM_POWER_TYPE_SUPPORT_IDENTIFY_OFF     0x0100
+#define OEM_POWER_TYPE_SUPPORT_IDENTIFY_STATUS  0x0200
+#define OEM_POWER_TYPE_SUPPORT_ALL              0xFFFF
+
+struct oem_power_type_data {
+  char *name;
+  unsigned int supported_operations;
+};
+
 /* packet_type_t
  * - packet types stored internally in an ipmipower_powercmd structure.
  * - Request types are *_REQ, Response types are *_RES

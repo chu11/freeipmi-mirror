@@ -69,6 +69,8 @@ extern struct ipmipower_connection *ics;
 
 extern unsigned int ics_len;
 
+extern struct oem_power_type_data *oem_power_type_data;
+
 /* eliminate
  *
  * Note: only for non-interactive mode on the command line.  Won't be
@@ -399,31 +401,126 @@ _cmd_workaround_flags (char **argv)
                            IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_NON_EMPTY_INTEGRITY_CHECK_VALUE_STR);
 }
 
+static char *
+_power_cmd_to_string (power_cmd_t cmd)
+{
+  if (cmd == POWER_CMD_POWER_OFF)
+    return ("off");
+  else if (cmd == POWER_CMD_POWER_ON)
+    return ("on");
+  else if (cmd == POWER_CMD_POWER_CYCLE)
+    return ("cycle");
+  else if (cmd == POWER_CMD_POWER_RESET)
+    return ("reset");
+  else if (cmd == POWER_CMD_POWER_STATUS)
+    return ("status");
+  else if (cmd == POWER_CMD_PULSE_DIAG_INTR)
+    return ("diagnostic interrupt");
+  else if (cmd == POWER_CMD_SOFT_SHUTDOWN_OS)
+    return ("soft shutdown os");
+  else if (cmd == POWER_CMD_IDENTIFY_ON)
+    return ("identify on");
+  else if (cmd == POWER_CMD_IDENTIFY_OFF)
+    return ("identify off");
+  else /* cmd == POWER_CMD_IDENTIFY_STATUS */
+    return ("identify status");
+}
+
+static int
+_power_cmd_to_oem_power_type_support (power_cmd_t cmd)
+{
+  assert (POWER_CMD_VALID (cmd));
+
+  if (cmd == POWER_CMD_POWER_OFF)
+    return (OEM_POWER_TYPE_SUPPORT_OFF);
+  else if (cmd == POWER_CMD_POWER_ON)
+    return (OEM_POWER_TYPE_SUPPORT_ON);
+  else if (cmd == POWER_CMD_POWER_CYCLE)
+    return (OEM_POWER_TYPE_SUPPORT_CYCLE);
+  else if (cmd == POWER_CMD_POWER_RESET)
+    return (OEM_POWER_TYPE_SUPPORT_RESET);
+  else if (cmd == POWER_CMD_POWER_STATUS)
+    return (OEM_POWER_TYPE_SUPPORT_STATUS);
+  else if (cmd == POWER_CMD_PULSE_DIAG_INTR)
+    return (OEM_POWER_TYPE_SUPPORT_DIAG_INTR);
+  else if (cmd == POWER_CMD_SOFT_SHUTDOWN_OS)
+    return (OEM_POWER_TYPE_SUPPORT_SOFT_SHUTDOWN_OS);
+  else if (cmd == POWER_CMD_IDENTIFY_ON)
+    return (OEM_POWER_TYPE_SUPPORT_IDENTIFY_ON);
+  else if (cmd == POWER_CMD_IDENTIFY_OFF)
+    return (OEM_POWER_TYPE_SUPPORT_IDENTIFY_OFF);
+  else /* cmd == POWER_CMD_IDENTIFY_STATUS */
+    return (OEM_POWER_TYPE_SUPPORT_IDENTIFY_STATUS);
+}
+
 static void
 _cmd_power (char **argv, power_cmd_t cmd)
 {
   int i;
 
   assert (argv && POWER_CMD_VALID (cmd));
-
+  assert (OEM_POWER_TYPE_VALID (cmd_args.oem_power_type));
+  
   if (!cmd_args.common.hostname)
     {
       ipmipower_cbuf_printf (ttyout, "no hostname(s) configured\n");
       return;
     }
-
-  /* Check for correct privilege type */
-  if (cmd_args.common.privilege_level == IPMI_PRIVILEGE_LEVEL_USER
-      && POWER_CMD_REQUIRES_OPERATOR_PRIVILEGE_LEVEL (cmd))
+  
+  if (cmd_args.oem_power_type == OEM_POWER_TYPE_NONE)
     {
-      ipmipower_cbuf_printf (ttyout, "power operation requires atleast operator privilege\n");
-      return;
+      /* Check for correct privilege type */
+      if (cmd_args.common.privilege_level == IPMI_PRIVILEGE_LEVEL_USER
+	  && POWER_CMD_REQUIRES_OPERATOR_PRIVILEGE_LEVEL (cmd))
+	{
+	  char *power_cmd_str;
+	  
+	  power_cmd_str = _power_cmd_to_string (cmd);
+	  
+	  ipmipower_cbuf_printf (ttyout,
+				 "'%s' requires atleast operator privilege\n",
+				 power_cmd_str);
+	  return;
+	}
     }
+  else
+    {
+      unsigned int oem_power_type_support_mask;
+      char *power_cmd_str;
 
+      oem_power_type_support_mask = _power_cmd_to_oem_power_type_support (cmd);
+  
+      power_cmd_str = _power_cmd_to_string (cmd);
+
+      if (!(oem_power_type_data[cmd_args.oem_power_type].supported_operations & oem_power_type_support_mask))
+	{
+	  ipmipower_cbuf_printf (ttyout,
+				 "'%s' operation not supported by oem power type '%s'\n",
+				 power_cmd_str,
+				 oem_power_type_data[cmd_args.oem_power_type].name);
+	  return;
+	}
+
+      if (cmd_args.oem_power_type == OEM_POWER_TYPE_C410X)
+	{
+	  /* XXX - I'm pretty sure */
+	  if ((cmd == POWER_CMD_POWER_OFF
+	       || cmd == POWER_CMD_POWER_ON)
+	      && cmd_args.common.privilege_level == IPMI_PRIVILEGE_LEVEL_ADMIN)
+	    {
+	      ipmipower_cbuf_printf (ttyout,
+				     "'%s' requires admin privilege for oem power type '%s'\n",
+				     power_cmd_str,
+				     oem_power_type_data[cmd_args.oem_power_type].name);
+	      return;
+	    } 
+	}
+    }
+  
   if (!argv[1])  /* all nodes */
     {
       int nodes_queued = 0;
-
+      
       for (i = 0; i < ics_len; i++)
         {
           if (cmd_args.ping_interval
@@ -440,7 +537,7 @@ _cmd_power (char **argv, power_cmd_t cmd)
               nodes_queued++;
             }
         }
-
+      
       /* Special corner case when no nodes are discovered */
       if (!nodes_queued)
         ipmipower_output_finish ();
@@ -450,23 +547,23 @@ _cmd_power (char **argv, power_cmd_t cmd)
       hostlist_t h;
       hostlist_iterator_t itr;
       char *node;
-
+      
       if (!(h = hostlist_create (argv[1])))
         {
           ipmipower_cbuf_printf (ttyout, "invalid hostname(s) specified");
           return;
         }
-
+      
       if (!(itr = hostlist_iterator_create (h)))
         {
           IPMIPOWER_ERROR (("hostlist_iterator_create: %s", strerror (errno)));
           exit (1);
         }
-
+      
       while ((node = hostlist_next (itr)))
         {
           i = ipmipower_connection_hostname_index (ics, ics_len, node);
-
+	  
           if (i < 0)
             ipmipower_output (MSG_TYPE_UNCONFIGURED_HOSTNAME, node);
           else if (cmd_args.ping_interval
@@ -484,7 +581,7 @@ _cmd_power (char **argv, power_cmd_t cmd)
             }
           free (node);
         }
-
+      
       hostlist_iterator_destroy (itr);
       hostlist_destroy (h);
     }
