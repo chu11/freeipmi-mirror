@@ -1260,6 +1260,15 @@ Sensors Issue #18: [COMPLIANCE] [SENSORS-1]
 
   Resolution: Workaround added to assume sensor not available.
 
+Sensors Issue #19: [COMPLIANCE] [SENSORS-1]
+
+  Some sensors return IPMI_COMP_CODE_DESTINATION_UNAVAILABLE (0xD3)
+  completion codes for unknown reasons.
+
+  Seen on: Sun Blade 6000M2
+
+  Resolution: Workaround added to assume sensor not available.
+
 ----------------------------------------------------------------------
 
 ---------------------------------
