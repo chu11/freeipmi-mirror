@@ -61,7 +61,7 @@
 extern struct ipmipower_arguments cmd_args;
 
 char *
-ipmipower_cmd_to_string (power_cmd_t cmd)
+ipmipower_power_cmd_to_string (power_cmd_t cmd)
 {
   assert (POWER_CMD_VALID (cmd));
 

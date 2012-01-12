@@ -4,6 +4,9 @@
 	power type.
 
 	* ipmipower/ipmipower_oem.h, ipmipower/ipmipower_oem.c: New files.
+
+	* ipmipower/ipmipower_util.h, ipmipower/ipmipower_util.c
+	(ipmipower_power_cmd_to_string): New function.
 	
 2012-01-05  Albert Chu <chu11@llnl.gov>
 

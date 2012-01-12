@@ -580,7 +580,7 @@ main (int argc, char *argv[])
         {
 	  char *power_cmd_str;
 
-	  power_cmd_str = ipmipower_cmd_to_string (cmd_args.powercmd);
+	  power_cmd_str = ipmipower_power_cmd_to_string (cmd_args.powercmd);
 
           IPMIPOWER_ERROR (("'%s' operation requires atleast operator privilege",
 			    power_cmd_str));

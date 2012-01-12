@@ -37,7 +37,7 @@
  * - convert cmd value to string value.
  * - returns string.
  */
-char *ipmipower_cmd_to_string (power_cmd_t cmd);
+char *ipmipower_power_cmd_to_string (power_cmd_t cmd);
 
 /* ipmipower_poll
  * - safe poll()

@@ -450,7 +450,7 @@ _cmd_power (char **argv, power_cmd_t cmd)
 	{
 	  char *power_cmd_str;
 	  
-	  power_cmd_str = ipmipower_cmd_to_string (cmd);
+	  power_cmd_str = ipmipower_power_cmd_to_string (cmd);
 	  
 	  ipmipower_cbuf_printf (ttyout,
 				 "'%s' requires atleast operator privilege\n",
@@ -465,7 +465,7 @@ _cmd_power (char **argv, power_cmd_t cmd)
 
       oem_power_type_support_mask = _power_cmd_to_oem_power_type_support (cmd);
   
-      power_cmd_str = ipmipower_cmd_to_string (cmd);
+      power_cmd_str = ipmipower_power_cmd_to_string (cmd);
 
       if (!(oem_power_type_data[cmd_args.oem_power_type].supported_operations & oem_power_type_support_mask))
 	{
