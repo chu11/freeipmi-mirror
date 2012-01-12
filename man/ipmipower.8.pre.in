@@ -389,7 +389,9 @@ of the hostname.  The additional information should be prepended with
 a plus (i.e. '+') symbol.  For example, the hostname \fImynode+18\fR
 would indicate the power control operation should be sent to the host
 \fImynode\fR, and \fI18\fR is the identifier of a possible sub-device
-to be power controlled.
+to be power controlled.  If in interactive mode, the additional
+information can be overrided everytime you specify a hostname to
+perform a power control operation on.
 
 The following are the current OEM power types available, along with
 information on the systems they work with and the power control

@@ -1,6 +1,9 @@
 2012-01-XX  Albert Chu <chu11@llnl.gov>
 
-	* ipmipower/: Add --oem-power-type option and support C410x OEM power type.
+	* ipmipower/: Add --oem-power-type option and support C410x OEM
+	power type.
+
+	* ipmipower/ipmipower_oem.h, ipmipower/ipmipower_oem.c: New files.
 	
 2012-01-05  Albert Chu <chu11@llnl.gov>
 

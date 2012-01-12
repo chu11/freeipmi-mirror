@@ -85,25 +85,6 @@ unsigned int ics_len = 0;
 int output_hostrange_flag = 0;
 hostlist_t output_hostrange[MSG_TYPE_NUM_ENTRIES];
 
-/* for OEM power types */
-struct oem_power_type_data oem_power_type_data[] =
-  { 
-    /*  OEM_POWER_TYPE_NONE */
-    {
-      "none",
-      OEM_POWER_TYPE_SUPPORT_ALL,
-    },
-    /* OEM_POWER_TYPE_C410X - supports off, on, status */
-    {
-      "C410X",
-      OEM_POWER_TYPE_SUPPORT_OFF | OEM_POWER_TYPE_SUPPORT_ON | OEM_POWER_TYPE_SUPPORT_STATUS,
-    },
-    {
-      NULL,
-      0,
-    },
-  };
-
 static void
 _ipmipower_setup (void)
 {
