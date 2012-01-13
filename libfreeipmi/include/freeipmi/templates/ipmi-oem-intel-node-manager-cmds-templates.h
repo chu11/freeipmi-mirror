@@ -55,6 +55,7 @@ field flags - flags indicating qualities of the field.  The following
                               "sufficient" to make a packet/record valid
                               and not malformed, but not necessarily a
                               complete packet/record.
+
 /*
  * Intel Node Manager
  *
