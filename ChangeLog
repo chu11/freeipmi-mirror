@@ -6,7 +6,8 @@
 	* ipmipower/ipmipower_oem.h, ipmipower/ipmipower_oem.c: New files.
 
 	* ipmipower/ipmipower_util.h, ipmipower/ipmipower_util.c
-	(ipmipower_power_cmd_to_string): New function.
+	(ipmipower_power_cmd_to_string,
+	ipmipower_power_cmd_check_privilege): New functions.
 	
 2012-01-05  Albert Chu <chu11@llnl.gov>
 

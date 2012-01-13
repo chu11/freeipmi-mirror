@@ -444,17 +444,12 @@ _cmd_power (char **argv, power_cmd_t cmd)
   
   if (cmd_args.oem_power_type == OEM_POWER_TYPE_NONE)
     {
-      /* Check for correct privilege type */
-      if (cmd_args.common.privilege_level == IPMI_PRIVILEGE_LEVEL_USER
-	  && POWER_CMD_REQUIRES_OPERATOR_PRIVILEGE_LEVEL (cmd))
+      char errbuf[IPMIPOWER_OUTPUT_BUFLEN + 1];
+
+      memset (errbuf, '\0', IPMIPOWER_OUTPUT_BUFLEN + 1);
+      if (ipmipower_power_cmd_check_privilege (cmd, errbuf, IPMIPOWER_OUTPUT_BUFLEN) <= 0)
 	{
-	  char *power_cmd_str;
-	  
-	  power_cmd_str = ipmipower_power_cmd_to_string (cmd);
-	  
-	  ipmipower_cbuf_printf (ttyout,
-				 "'%s' requires atleast operator privilege\n",
-				 power_cmd_str);
+	  ipmipower_cbuf_printf (ttyout, "%s\n", errbuf);
 	  return;
 	}
     }

@@ -567,6 +567,7 @@ main (int argc, char *argv[])
    */
   if (cmd_args.powercmd != POWER_CMD_NONE)
     {
+      char errbuf[IPMIPOWER_OUTPUT_BUFLEN + 1];
       int i;
 
       /* must be checked in args parsing */
@@ -574,16 +575,12 @@ main (int argc, char *argv[])
 
       cmd_args.ping_interval = 0;
 
-      /* Check for appropriate privilege first */
-      if (cmd_args.common.privilege_level == IPMI_PRIVILEGE_LEVEL_USER
-          && POWER_CMD_REQUIRES_OPERATOR_PRIVILEGE_LEVEL (cmd_args.powercmd))
-        {
-	  char *power_cmd_str;
-
-	  power_cmd_str = ipmipower_power_cmd_to_string (cmd_args.powercmd);
-
-          IPMIPOWER_ERROR (("'%s' operation requires atleast operator privilege",
-			    power_cmd_str));
+      memset (errbuf, '\0', IPMIPOWER_OUTPUT_BUFLEN + 1);
+      if (ipmipower_power_cmd_check_privilege (cmd_args.powercmd,
+					       errbuf,
+					       IPMIPOWER_OUTPUT_BUFLEN) <= 0)
+	{
+	  IPMIPOWER_ERROR (("%s", errbuf));
           exit (1);
         }
 

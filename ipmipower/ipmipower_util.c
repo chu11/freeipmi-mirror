@@ -88,6 +88,39 @@ ipmipower_power_cmd_to_string (power_cmd_t cmd)
 }
 
 int
+ipmipower_power_cmd_check_privilege (power_cmd_t cmd,
+				     char *errbuf,
+				     unsigned int errbuflen)
+{
+  int rv = -1;
+  
+  assert (POWER_CMD_VALID (cmd));
+  assert (errbuf);
+  assert (errbuflen);
+  assert (cmd_args.oem_power_type == OEM_POWER_TYPE_NONE);
+  
+  if (cmd_args.common.privilege_level == IPMI_PRIVILEGE_LEVEL_USER
+      && POWER_CMD_REQUIRES_OPERATOR_PRIVILEGE_LEVEL (cmd))
+    {
+      char *power_cmd_str;
+      
+      power_cmd_str = ipmipower_power_cmd_to_string (cmd);
+      
+      snprintf (errbuf,
+		errbuflen, 
+		"'%s' requires atleast operator privilege",
+		power_cmd_str);
+      
+      rv = 0;
+      goto cleanup;
+    }
+
+  rv = 1; 
+ cleanup:
+  return (rv);
+}
+
+int
 ipmipower_poll (struct pollfd *ufds, unsigned int nfds, int timeout)
 {
   int n;
