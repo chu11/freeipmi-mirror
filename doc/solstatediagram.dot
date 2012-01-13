@@ -52,7 +52,7 @@ ErrorOut [label="Error Out"]
 
 End [label=End]
 
-Start -> GetAuthenticationCapabilities
+Start -> GetAuthenticationCapabilities [label="Using IPMI Port = 623"]
 
 GetAuthenticationCapabilities -> ErrorOut [label="IPMI 2.0 Not Supported / Cannot Authenticate"]
 
@@ -90,7 +90,7 @@ ActivatePayload -> DeactivatePayload [label="SOL on Different Port"]
 
 ActivatePayload -> CloseSession [label="Session Invalid Encryption / Session Invalid Payload Sizes"]
 
-ActivatePayload -> GetPayloadActivationStatus [label="SOL Active (race with other session)"]
+ActivatePayload -> GetPayloadActivationStatus [label="SOL Active (race with another session)"]
 
 SOLSession -> SOLSession [label="SOL Packets / IPMI Keepalive Packets"]
 
@@ -104,7 +104,7 @@ DeactivatePayload -> DeactivatePayload [label="Additional SOL Payload Active"]
 
 DeactivatePayload -> CloseSession [label="Quit SOL Session / SOL on Different Port"]
 
-CloseSession -> GetAuthenticationCapabilities [label="SOL on Different Port"]
+CloseSession -> GetAuthenticationCapabilities [label="SOL on Different Port (change IPMI Port)"]
 
 CloseSession -> End [label="Quit SOL Session / SOL Session Stolen"] 
 
