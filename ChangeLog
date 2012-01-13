@@ -6,6 +6,8 @@
 	*
 	libfreeipmi/include/record-format/ipmi-oem-intel-node-manager-cmds.h:
 	Update motherboard list.
+
+	* libfreeipmi/: Clean up some comments in various files.
 	
 2012-01-12  Albert Chu <chu11@llnl.gov>
 
