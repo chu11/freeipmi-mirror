@@ -27,157 +27,152 @@ extern "C" {
 
 #if 0
 
-Format = { bits, "field name", field flags }
+Please see fiid.h for details concerning the fiid interface.
 
-FIID_FIELD_REQUIRED - field is required for the payload
-FIID_FIELD_OPTIONAL - field is optional for the payload
+The following list the configurable fields of individual packet/record
+templates in FreeIPMI.  Each field is listed as a list of the
+following.
 
-FIID_FIELD_LENGTH_FIXED - field length is fixed at the number of bits listed
-FIID_FIELD_LENGTH_VARIABLE - field length is variable for the number of bits listed
+{ bits, "field name", field flag, field flag, ... }
 
-FIID_FIELD_MAKES_PACKET_SUFFICIENT - indicates field or fields are "sufficient" to make a valid packet
+bits - indicates the number of bits in the field
+
+field name - indicates the name of the field, used for getting/setting
+             fields in the fiid API.
+
+field flags - flags indicating qualities of the field.  The following
+              qualities may exist for each field.
+
+    REQUIRED - field is required for the packet/record
+    OPTIONAL - field is optional for the packet/record
+
+    LENGTH-FIXED - field length is fixed at the number of bits listed
+
+    LENGTH-VARIABLE - field length is variable for the number of bits
+                      listed
+
+    MAKES-PACKET-SUFFICIENT - indicates field or fields are
+                              "sufficient" to make a packet/record valid
+                              and not malformed, but not necessarily a
+                              complete packet/record.
 
 Get SDR Repository Info Request
 -------------------------------
 
-fiid_template_t tmpl_cmd_get_sdr_repository_info_rq =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_get_sdr_repository_info_rq
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED }
 
 Get SDR Repository Info Response
 --------------------------------
 
-fiid_template_t tmpl_cmd_get_sdr_repository_info_rs =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 4, "sdr_version_major", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "sdr_version_minor", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 16, "record_count", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 16, "free_space", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 32, "most_recent_addition_timestamp", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 32, "most_recent_erase_timestamp", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "get_sdr_repository_allocation_info_command_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "reserve_sdr_repository_command_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "partial_add_sdr_command_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "delete_sdr_command_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 2, "modal_non_modal_sdr_repository_update_operation_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "overflow_flag", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_get_sdr_repository_info_rs
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 4, "sdr_version_major", REQUIRED, LENGTH-FIXED }
+    { 4, "sdr_version_minor", REQUIRED, LENGTH-FIXED }
+    { 16, "record_count", REQUIRED, LENGTH-FIXED }
+    { 16, "free_space", REQUIRED, LENGTH-FIXED }
+    { 32, "most_recent_addition_timestamp", REQUIRED, LENGTH-FIXED }
+    { 32, "most_recent_erase_timestamp", REQUIRED, LENGTH-FIXED }
+    { 1, "get_sdr_repository_allocation_info_command_supported", REQUIRED, LENGTH-FIXED }
+    { 1, "reserve_sdr_repository_command_supported", REQUIRED, LENGTH-FIXED }
+    { 1, "partial_add_sdr_command_supported", REQUIRED, LENGTH-FIXED }
+    { 1, "delete_sdr_command_supported", REQUIRED, LENGTH-FIXED }
+    { 1, "reserved", REQUIRED, LENGTH-FIXED }
+    { 2, "modal_non_modal_sdr_repository_update_operation_supported", REQUIRED, LENGTH-FIXED }
+    { 1, "overflow_flag", REQUIRED, LENGTH-FIXED }
 
 Get SDR Repository Allocation Info Request
 ------------------------------------------
 
-fiid_template_t tmpl_cmd_get_sdr_repository_allocation_info_rq =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_get_sdr_repository_allocation_info_rq
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED }
 
 Get SDR Repository Allocation Info Response
 -------------------------------------------
 
-fiid_template_t tmpl_cmd_get_sdr_repository_allocation_info_rs =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 16, "number_of_possible_allocation_units", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 16, "allocation_unit_size", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 16, "number_of_free_allocation_units", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 16, "largest_free_block", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "maximum_record_size", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_get_sdr_repository_allocation_info_rs
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 16, "number_of_possible_allocation_units", REQUIRED, LENGTH-FIXED }
+    { 16, "allocation_unit_size", REQUIRED, LENGTH-FIXED }
+    { 16, "number_of_free_allocation_units", REQUIRED, LENGTH-FIXED }
+    { 16, "largest_free_block", REQUIRED, LENGTH-FIXED }
+    { 8, "maximum_record_size", REQUIRED, LENGTH-FIXED }
 
 Reserve SDR Repository Request
 ------------------------------
 
-fiid_template_t tmpl_cmd_reserve_sdr_repository_rq =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_reserve_sdr_repository_rq
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED }
 
 Reserve SDR Repository Response
 -------------------------------
 
-fiid_template_t tmpl_cmd_reserve_sdr_repository_rs =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 16, "reservation_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_reserve_sdr_repository_rs
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 16, "reservation_id", REQUIRED, LENGTH-FIXED }
 
 Get SDR Request
 ---------------
 
-fiid_template_t tmpl_cmd_get_sdr_rq =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 16, "reservation_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 16, "record_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "offset_into_record", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "bytes_to_read", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_get_sdr_rq
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED }
+    { 16, "reservation_id", REQUIRED, LENGTH-FIXED }
+    { 16, "record_id", REQUIRED, LENGTH-FIXED }
+    { 8, "offset_into_record", REQUIRED, LENGTH-FIXED }
+    { 8, "bytes_to_read", REQUIRED, LENGTH-FIXED }
 
 Get SDR Response
 ----------------
 
-fiid_template_t tmpl_cmd_get_sdr_rs =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 16, "next_record_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+FIID Template: tmpl_cmd_get_sdr_rs
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 16, "next_record_id", REQUIRED, LENGTH-FIXED }
     /* 2040 = 255 * 8, 255 b/c bytes_to_read field in request is 1 byte long */
-    { 2040, "record_data", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_VARIABLE},
-    { 0, "", 0}
-  };
+    { 2040, "record_data", REQUIRED, LENGTH-VARIABLE }
 
 Get SDR Repository Time Request
 -------------------------------
 
-fiid_template_t tmpl_cmd_get_sdr_repository_time_rq =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_get_sdr_repository_time_rq
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED }
 
 Get SDR Repository Time Response
 --------------------------------
 
-fiid_template_t tmpl_cmd_get_sdr_repository_time_rs =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 32, "time", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_get_sdr_repository_time_rs
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 32, "time", REQUIRED, LENGTH-FIXED }
 
 Set SDR Repository Time Request
 -------------------------------
 
-fiid_template_t tmpl_cmd_set_sdr_repository_time_rq =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 32, "time", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_set_sdr_repository_time_rq
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED }
+    { 32, "time", REQUIRED, LENGTH-FIXED }
 
 Set SDR Repository Time Response
 --------------------------------
 
-fiid_template_t tmpl_cmd_set_sdr_repository_time_rs =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_set_sdr_repository_time_rs
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
 
 #endif  /* 0 */
 

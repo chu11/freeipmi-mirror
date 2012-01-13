@@ -27,109 +27,116 @@ extern "C" {
 
 #if 0
 
-Format = { bits, "field name", field flags }
+Please see fiid.h for details concerning the fiid interface.
 
-FIID_FIELD_REQUIRED - field is required for the payload
-FIID_FIELD_OPTIONAL - field is optional for the payload
+The following list the configurable fields of individual packet/record
+templates in FreeIPMI.  Each field is listed as a list of the
+following.
 
-FIID_FIELD_LENGTH_FIXED - field length is fixed at the number of bits listed
-FIID_FIELD_LENGTH_VARIABLE - field length is variable for the number of bits listed
+{ bits, "field name", field flag, field flag, ... }
 
-FIID_FIELD_MAKES_PACKET_SUFFICIENT - indicates field or fields are "sufficient" to make a valid packet
+bits - indicates the number of bits in the field
+
+field name - indicates the name of the field, used for getting/setting
+             fields in the fiid API.
+
+field flags - flags indicating qualities of the field.  The following
+              qualities may exist for each field.
+
+    REQUIRED - field is required for the packet/record
+    OPTIONAL - field is optional for the packet/record
+
+    LENGTH-FIXED - field length is fixed at the number of bits listed
+
+    LENGTH-VARIABLE - field length is variable for the number of bits
+                      listed
+
+    MAKES-PACKET-SUFFICIENT - indicates field or fields are
+                              "sufficient" to make a packet/record valid
+                              and not malformed, but not necessarily a
+                              complete packet/record.
 
 Reset Watchdog Timer Request
 ----------------------------
 
-fiid_template_t tmpl_cmd_reset_watchdog_timer_rq =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_reset_watchdog_timer_rq
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED }
 
 Reset Watchdog Timer Response
 -----------------------------
 
-fiid_template_t tmpl_cmd_reset_watchdog_timer_rs =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_reset_watchdog_timer_rs
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
 
 Set Watchdog Timer Request
 --------------------------
 
-fiid_template_t tmpl_cmd_set_watchdog_timer_rq =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 3, "timer_use", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 3, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "stop_timer", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "log", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 3, "timeout_action", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 3, "pre_timeout_interrupt", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "reserved3", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "pre_timeout_interval", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "reserved4", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "timer_use_expiration_flag.bios_frb2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "timer_use_expiration_flag.bios_post", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "timer_use_expiration_flag.os_load", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "timer_use_expiration_flag.sms_os", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "timer_use_expiration_flag.oem", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "reserved5", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "reserved6", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 16, "initial_countdown_value", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_set_watchdog_timer_rq
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED }
+    { 3, "timer_use", REQUIRED, LENGTH-FIXED }
+    { 3, "reserved1", REQUIRED, LENGTH-FIXED }
+    { 1, "stop_timer", REQUIRED, LENGTH-FIXED }
+    { 1, "log", REQUIRED, LENGTH-FIXED }
+    { 3, "timeout_action", REQUIRED, LENGTH-FIXED }
+    { 1, "reserved2", REQUIRED, LENGTH-FIXED }
+    { 3, "pre_timeout_interrupt", REQUIRED, LENGTH-FIXED }
+    { 1, "reserved3", REQUIRED, LENGTH-FIXED }
+    { 8, "pre_timeout_interval", REQUIRED, LENGTH-FIXED }
+    { 1, "reserved4", REQUIRED, LENGTH-FIXED }
+    { 1, "timer_use_expiration_flag.bios_frb2", REQUIRED, LENGTH-FIXED }
+    { 1, "timer_use_expiration_flag.bios_post", REQUIRED, LENGTH-FIXED }
+    { 1, "timer_use_expiration_flag.os_load", REQUIRED, LENGTH-FIXED }
+    { 1, "timer_use_expiration_flag.sms_os", REQUIRED, LENGTH-FIXED }
+    { 1, "timer_use_expiration_flag.oem", REQUIRED, LENGTH-FIXED }
+    { 1, "reserved5", REQUIRED, LENGTH-FIXED }
+    { 1, "reserved6", REQUIRED, LENGTH-FIXED }
+    { 16, "initial_countdown_value", REQUIRED, LENGTH-FIXED }
 
 Set Watchdog Timer Response
 ---------------------------
 
-fiid_template_t tmpl_cmd_set_watchdog_timer_rs =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_set_watchdog_timer_rs
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
 
 Get Watchdog Timer Request
 --------------------------
 
-fiid_template_t tmpl_cmd_get_watchdog_timer_rq =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_get_watchdog_timer_rq
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED }
 
 Get Watchdog Timer Response
 ---------------------------
 
-fiid_template_t tmpl_cmd_get_watchdog_timer_rs =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 3, "timer_use", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 3, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "timer_state", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "log", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 3, "timeout_action", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 3, "pre_timeout_interrupt", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "reserved3", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "pre_timeout_interval", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "reserved4", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "timer_use_expiration_flag.bios_frb2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "timer_use_expiration_flag.bios_post", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "timer_use_expiration_flag.os_load", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "timer_use_expiration_flag.sms_os", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "timer_use_expiration_flag.oem", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "reserved5", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "reserved6", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 16, "initial_countdown_value", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 16, "present_countdown_value", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_get_watchdog_timer_rs
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 3, "timer_use", REQUIRED, LENGTH-FIXED }
+    { 3, "reserved1", REQUIRED, LENGTH-FIXED }
+    { 1, "timer_state", REQUIRED, LENGTH-FIXED }
+    { 1, "log", REQUIRED, LENGTH-FIXED }
+    { 3, "timeout_action", REQUIRED, LENGTH-FIXED }
+    { 1, "reserved2", REQUIRED, LENGTH-FIXED }
+    { 3, "pre_timeout_interrupt", REQUIRED, LENGTH-FIXED }
+    { 1, "reserved3", REQUIRED, LENGTH-FIXED }
+    { 8, "pre_timeout_interval", REQUIRED, LENGTH-FIXED }
+    { 1, "reserved4", REQUIRED, LENGTH-FIXED }
+    { 1, "timer_use_expiration_flag.bios_frb2", REQUIRED, LENGTH-FIXED }
+    { 1, "timer_use_expiration_flag.bios_post", REQUIRED, LENGTH-FIXED }
+    { 1, "timer_use_expiration_flag.os_load", REQUIRED, LENGTH-FIXED }
+    { 1, "timer_use_expiration_flag.sms_os", REQUIRED, LENGTH-FIXED }
+    { 1, "timer_use_expiration_flag.oem", REQUIRED, LENGTH-FIXED }
+    { 1, "reserved5", REQUIRED, LENGTH-FIXED }
+    { 1, "reserved6", REQUIRED, LENGTH-FIXED }
+    { 16, "initial_countdown_value", REQUIRED, LENGTH-FIXED }
+    { 16, "present_countdown_value", REQUIRED, LENGTH-FIXED }
 
 #endif  /* 0 */
 

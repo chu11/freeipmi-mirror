@@ -1,5 +1,18 @@
 2012-01-12  Albert Chu <chu11@llnl.gov>
 
+	Merge branch redotemplatedocs
+
+	* libfreeipmi/include/freeipmi/templates/: Redo format.  Update
+	OEM motherboard lists.
+
+	*
+	libfreeipmi/include/record-format/ipmi-oem-intel-node-manager-cmds.h:
+	Update motherboard list.
+
+	* libfreeipmi/: Clean up some comments in various files.
+	
+2012-01-12  Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/sensor-read/ipmi-sensor-read.c
 	(_sensor_reading_corner_case_checks): Handle corner case in Sun
 	Blade 6000M2.

@@ -26,10 +26,6 @@ extern "C" {
 #include <stdint.h>
 #include <freeipmi/fiid/fiid.h>
 
-/*******************************************
- * Intel                                   *
- *******************************************/
-
 /*
  * Intel Node Manager
  *
@@ -39,6 +35,7 @@ extern "C" {
  * Inventec 5441/Dell Xanadu II
  * Inventec 5442/Dell Xanadu III
  * Quanta S99Q/Dell FS12-TY
+ * Quanta QSSC-S4R/Appro GB812X-CN
  */
 
 #define IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_MIN 0x0

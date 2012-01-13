@@ -27,82 +27,86 @@ extern "C" {
 
 #if 0
 
-Format = { bits, "field name", field flags }
+Please see fiid.h for details concerning the fiid interface.
 
-FIID_FIELD_REQUIRED - field is required for the payload
-FIID_FIELD_OPTIONAL - field is optional for the payload
+The following list the configurable fields of individual packet/record
+templates in FreeIPMI.  Each field is listed as a list of the
+following.
 
-FIID_FIELD_LENGTH_FIXED - field length is fixed at the number of bits listed
-FIID_FIELD_LENGTH_VARIABLE - field length is variable for the number of bits listed
+{ bits, "field name", field flag, field flag, ... }
 
-FIID_FIELD_MAKES_PACKET_SUFFICIENT - indicates field or fields are "sufficient" to make a valid packet
+bits - indicates the number of bits in the field
+
+field name - indicates the name of the field, used for getting/setting
+             fields in the fiid API.
+
+field flags - flags indicating qualities of the field.  The following
+              qualities may exist for each field.
+
+    REQUIRED - field is required for the packet/record
+    OPTIONAL - field is optional for the packet/record
+
+    LENGTH-FIXED - field length is fixed at the number of bits listed
+
+    LENGTH-VARIABLE - field length is variable for the number of bits
+                      listed
+
+    MAKES-PACKET-SUFFICIENT - indicates field or fields are
+                              "sufficient" to make a packet/record valid
+                              and not malformed, but not necessarily a
+                              complete packet/record.
 
 SOL Payload Data
 ----------------
 
-fiid_template_t tmpl_sol_payload_data =
-  {
-    /* 0h ack only packet */
-    { 4, "packet_sequence_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    /* 0h information pakcet.  No request packet being ack'd or nack'd */
-    { 4, "packet_ack_nack_sequence_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "accepted_character_count", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "operation_status", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    /* 524288 = 65536 * 8 = 2^16 * 8, b/c ipmi_payload_len is 2 bytes */
-    { 524288, "character_data", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_sol_payload_data
+
+    { 4, "packet_sequence_number", REQUIRED, LENGTH-FIXED }
+    { 4, "reserved1", REQUIRED, LENGTH-FIXED }
+    { 4, "packet_ack_nack_sequence_number", REQUIRED, LENGTH-FIXED }
+    { 4, "reserved2", REQUIRED, LENGTH-FIXED }
+    { 8, "accepted_character_count", REQUIRED, LENGTH-FIXED }
+    { 8, "operation_status", REQUIRED, LENGTH-FIXED }
+    { 524288, "character_data", OPTIONAL, LENGTH-VARIABLE }
 
 SOL Payload Data Remote Console to BMC
 --------------------------------------
 
-fiid_template_t tmpl_sol_payload_data_remote_console_to_bmc =
-  {
-    /* 0h ack only packet */
-    { 4, "packet_sequence_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    /* 0h information pakcet.  No request packet being ack'd or nack'd */
-    { 4, "packet_ack_nack_sequence_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "accepted_character_count", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "flush_outbound", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "flush_inbound", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "drop_dcd_dsr", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "cts_pause", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "generate_break", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "ring_wor", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "nack", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "reserved3", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    /* 524288 = 65536 * 8 = 2^16 * 8, b/c ipmi_payload_len is 2 bytes */
-    { 524288, "character_data", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_sol_payload_data_remote_console_to_bmc
+
+    { 4, "packet_sequence_number", REQUIRED, LENGTH-FIXED }
+    { 4, "reserved1", REQUIRED, LENGTH-FIXED }
+    { 4, "packet_ack_nack_sequence_number", REQUIRED, LENGTH-FIXED }
+    { 4, "reserved2", REQUIRED, LENGTH-FIXED }
+    { 8, "accepted_character_count", REQUIRED, LENGTH-FIXED }
+    { 1, "flush_outbound", REQUIRED, LENGTH-FIXED }
+    { 1, "flush_inbound", REQUIRED, LENGTH-FIXED }
+    { 1, "drop_dcd_dsr", REQUIRED, LENGTH-FIXED }
+    { 1, "cts_pause", REQUIRED, LENGTH-FIXED }
+    { 1, "generate_break", REQUIRED, LENGTH-FIXED }
+    { 1, "ring_wor", REQUIRED, LENGTH-FIXED }
+    { 1, "nack", REQUIRED, LENGTH-FIXED }
+    { 1, "reserved3", REQUIRED, LENGTH-FIXED }
+    { 524288, "character_data", OPTIONAL, LENGTH-VARIABLE }
 
 SOL Payload Data BMC to Remote Console
 --------------------------------------
 
-fiid_template_t tmpl_sol_payload_data_bmc_to_remote_console =
-  {
-    /* 0h ack only packet */
-    { 4, "packet_sequence_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    /* 0h information pakcet.  No request packet being ack'd or nack'd */
-    { 4, "packet_ack_nack_sequence_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "accepted_character_count", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 2, "reserved3", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "break_condition", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "transmit_overrun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "sol_deactivating", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "character_transfer_unavailable", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "nack", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "reserved4", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    /* 524288 = 65536 * 8 = 2^16 * 8, b/c ipmi_payload_len is 2 bytes */
-    { 524288, "character_data", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_sol_payload_data_bmc_to_remote_console
+
+    { 4, "packet_sequence_number", REQUIRED, LENGTH-FIXED }
+    { 4, "reserved1", REQUIRED, LENGTH-FIXED }
+    { 4, "packet_ack_nack_sequence_number", REQUIRED, LENGTH-FIXED }
+    { 4, "reserved2", REQUIRED, LENGTH-FIXED }
+    { 8, "accepted_character_count", REQUIRED, LENGTH-FIXED }
+    { 2, "reserved3", REQUIRED, LENGTH-FIXED }
+    { 1, "break_condition", REQUIRED, LENGTH-FIXED }
+    { 1, "transmit_overrun", REQUIRED, LENGTH-FIXED }
+    { 1, "sol_deactivating", REQUIRED, LENGTH-FIXED }
+    { 1, "character_transfer_unavailable", REQUIRED, LENGTH-FIXED }
+    { 1, "nack", REQUIRED, LENGTH-FIXED }
+    { 1, "reserved4", REQUIRED, LENGTH-FIXED }
+    { 524288, "character_data", OPTIONAL, LENGTH-VARIABLE }
 
 #endif  /* 0 */
 

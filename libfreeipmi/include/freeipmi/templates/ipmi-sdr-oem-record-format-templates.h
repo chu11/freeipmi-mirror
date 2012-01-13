@@ -27,13 +27,34 @@ extern "C" {
 
 #if 0
 
-Format = { bits, "field name", field flags }
+Please see fiid.h for details concerning the fiid interface.
 
-FIID_FIELD_REQUIRED - field is required for the payload
-FIID_FIELD_OPTIONAL - field is optional for the payload
+The following list the configurable fields of individual packet/record
+templates in FreeIPMI.  Each field is listed as a list of the
+following.
 
-FIID_FIELD_LENGTH_FIXED - field length is fixed at the number of bits listed
-FIID_FIELD_LENGTH_VARIABLE - field length is variable for the number of bits listed
+{ bits, "field name", field flag, field flag, ... }
+
+bits - indicates the number of bits in the field
+
+field name - indicates the name of the field, used for getting/setting
+             fields in the fiid API.
+
+field flags - flags indicating qualities of the field.  The following
+              qualities may exist for each field.
+
+    REQUIRED - field is required for the packet/record
+    OPTIONAL - field is optional for the packet/record
+
+    LENGTH-FIXED - field length is fixed at the number of bits listed
+
+    LENGTH-VARIABLE - field length is variable for the number of bits
+                      listed
+
+    MAKES-PACKET-SUFFICIENT - indicates field or fields are
+                              "sufficient" to make a packet/record valid
+                              and not malformed, but not necessarily a
+                              complete packet/record.
 
 /*******************************************
  * Intel                                   *
@@ -48,38 +69,37 @@ FIID_FIELD_LENGTH_VARIABLE - field length is variable for the number of bits lis
  * Inventec 5441/Dell Xanadu II
  * Inventec 5442/Dell Xanadu III
  * Quanta S99Q/Dell FS12-TY
+ * Quanta QSSC-S4R/Appro GB812X-CN
  */
 
 SDR OEM Intel Node Manager Record
 ---------------------------------
 
-fiid_template_t tmpl_sdr_oem_intel_node_manager_record =
-  {
+FIID Template: tmpl_sdr_oem_intel_node_manager_record
+
     /*********************
      * SDR Record Header *
      *********************/
-    { 16, "record_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4,  "sdr_version_major", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4,  "sdr_version_minor", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "record_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "record_length", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 16, "record_id", REQUIRED, LENGTH-FIXED }
+    { 4,  "sdr_version_major", REQUIRED, LENGTH-FIXED }
+    { 4,  "sdr_version_minor", REQUIRED, LENGTH-FIXED }
+    { 8,  "record_type", REQUIRED, LENGTH-FIXED }
+    { 8,  "record_length", REQUIRED, LENGTH-FIXED }
     /********************
      * Record Key Bytes *
      ********************/
-    { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "record_subtype", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "version_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 7,  "nm_device_slave_address", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 2,  "sensor_owner_lun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 2,  "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4,  "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "nm_health_event_sensor_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "nm_exception_event_sensor_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "nm_operational_capabilities_sensor_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "nm_alert_threshold_exceeded_sensor_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+    { 24, "manufacturer_id", REQUIRED, LENGTH-FIXED }
+    { 8,  "record_subtype", REQUIRED, LENGTH-FIXED }
+    { 8,  "version_number", REQUIRED, LENGTH-FIXED }
+    { 1,  "reserved1", REQUIRED, LENGTH-FIXED }
+    { 7,  "nm_device_slave_address", REQUIRED, LENGTH-FIXED }
+    { 2,  "sensor_owner_lun", REQUIRED, LENGTH-FIXED }
+    { 2,  "reserved2", REQUIRED, LENGTH-FIXED }
+    { 4,  "channel_number", REQUIRED, LENGTH-FIXED }
+    { 8,  "nm_health_event_sensor_number", REQUIRED, LENGTH-FIXED }
+    { 8,  "nm_exception_event_sensor_number", REQUIRED, LENGTH-FIXED }
+    { 8,  "nm_operational_capabilities_sensor_number", REQUIRED, LENGTH-FIXED }
+    { 8,  "nm_alert_threshold_exceeded_sensor_number", REQUIRED, LENGTH-FIXED }
 
 #endif  /* 0 */
 

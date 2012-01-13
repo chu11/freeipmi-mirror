@@ -27,308 +27,286 @@ extern "C" {
 
 #if 0
 
-Format = { bits, "field name", field flags }
+Please see fiid.h for details concerning the fiid interface.
 
-FIID_FIELD_REQUIRED - field is required for the payload
-FIID_FIELD_OPTIONAL - field is optional for the payload
+The following list the configurable fields of individual packet/record
+templates in FreeIPMI.  Each field is listed as a list of the
+following.
 
-FIID_FIELD_LENGTH_FIXED - field length is fixed at the number of bits listed
-FIID_FIELD_LENGTH_VARIABLE - field length is variable for the number of bits listed
+{ bits, "field name", field flag, field flag, ... }
 
-FIID_FIELD_MAKES_PACKET_SUFFICIENT - indicates field or fields are "sufficient" to make a valid packet
+bits - indicates the number of bits in the field
+
+field name - indicates the name of the field, used for getting/setting
+             fields in the fiid API.
+
+field flags - flags indicating qualities of the field.  The following
+              qualities may exist for each field.
+
+    REQUIRED - field is required for the packet/record
+    OPTIONAL - field is optional for the packet/record
+
+    LENGTH-FIXED - field length is fixed at the number of bits listed
+
+    LENGTH-VARIABLE - field length is variable for the number of bits
+                      listed
+
+    MAKES-PACKET-SUFFICIENT - indicates field or fields are
+                              "sufficient" to make a packet/record valid
+                              and not malformed, but not necessarily a
+                              complete packet/record.
 
 Set SOL Configuration Parameters Request
 ----------------------------------------
 
-fiid_template_t tmpl_cmd_set_sol_configuration_parameters_rq =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1024, "configuration_parameter_data", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_VARIABLE},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_set_sol_configuration_parameters_rq
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED }
+    { 4, "channel_number", REQUIRED, LENGTH-FIXED }
+    { 4, "reserved", REQUIRED, LENGTH-FIXED }
+    { 8, "parameter_selector", REQUIRED, LENGTH-FIXED }
+    { 1024, "configuration_parameter_data", REQUIRED, LENGTH-VARIABLE }
 
 Set SOL Configuration Parameters Response
 -----------------------------------------
 
-fiid_template_t tmpl_cmd_set_sol_configuration_parameters_rs =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_set_sol_configuration_parameters_rs
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
 
 Set SOL Configuration Parameters (Set In Progress) Request
 ----------------------------------------------------------
 
-fiid_template_t tmpl_cmd_set_sol_configuration_parameters_set_in_progress_rq =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 2, "state", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 6, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_set_sol_configuration_parameters_set_in_progress_rq
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED }
+    { 4, "channel_number", REQUIRED, LENGTH-FIXED }
+    { 4, "reserved1", REQUIRED, LENGTH-FIXED }
+    { 8, "parameter_selector", REQUIRED, LENGTH-FIXED }
+    { 2, "state", REQUIRED, LENGTH-FIXED }
+    { 6, "reserved2", REQUIRED, LENGTH-FIXED }
 
 Set SOL Configuration Parameters (SOL Enable) Request
 -----------------------------------------------------
 
-fiid_template_t tmpl_cmd_set_sol_configuration_parameters_sol_enable_rq =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "sol_enable", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 7, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_set_sol_configuration_parameters_sol_enable_rq
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED }
+    { 4, "channel_number", REQUIRED, LENGTH-FIXED }
+    { 4, "reserved1", REQUIRED, LENGTH-FIXED }
+    { 8, "parameter_selector", REQUIRED, LENGTH-FIXED }
+    { 1, "sol_enable", REQUIRED, LENGTH-FIXED }
+    { 7, "reserved2", REQUIRED, LENGTH-FIXED }
 
 Set SOL Configuration Parameters (SOL Authentication) Request
 --------------------------------------------------------------
 
-fiid_template_t tmpl_cmd_set_sol_configuration_parameters_sol_authentication_rq =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "sol_privilege_level", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 2, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "force_sol_payload_authentication", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "force_sol_payload_encryption", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_set_sol_configuration_parameters_sol_authentication_rq
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED }
+    { 4, "channel_number", REQUIRED, LENGTH-FIXED }
+    { 4, "reserved1", REQUIRED, LENGTH-FIXED }
+    { 8, "parameter_selector", REQUIRED, LENGTH-FIXED }
+    { 4, "sol_privilege_level", REQUIRED, LENGTH-FIXED }
+    { 2, "reserved2", REQUIRED, LENGTH-FIXED }
+    { 1, "force_sol_payload_authentication", REQUIRED, LENGTH-FIXED }
+    { 1, "force_sol_payload_encryption", REQUIRED, LENGTH-FIXED }
 
 Set SOL Configuration Parameters (Character Accumulate Interval and Send Threshold) Request
 -------------------------------------------------------------------------------------------
 
-fiid_template_t tmpl_cmd_set_sol_configuration_parameters_character_accumulate_interval_and_send_threshold_rq =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "character_accumulate_interval", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "character_send_threshold", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_set_sol_configuration_parameters_character_accumulate_interval_and_send_threshold_rq
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED }
+    { 4, "channel_number", REQUIRED, LENGTH-FIXED }
+    { 4, "reserved1", REQUIRED, LENGTH-FIXED }
+    { 8, "parameter_selector", REQUIRED, LENGTH-FIXED }
+    { 8, "character_accumulate_interval", REQUIRED, LENGTH-FIXED }
+    { 8, "character_send_threshold", REQUIRED, LENGTH-FIXED }
 
 Set SOL Configuration Parameters (SOL Retry) Request
 ----------------------------------------------------
 
-fiid_template_t tmpl_cmd_set_sol_configuration_parameters_sol_retry_rq =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 3, "retry_count", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 5, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "retry_interval", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_set_sol_configuration_parameters_sol_retry_rq
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED }
+    { 4, "channel_number", REQUIRED, LENGTH-FIXED }
+    { 4, "reserved1", REQUIRED, LENGTH-FIXED }
+    { 8, "parameter_selector", REQUIRED, LENGTH-FIXED }
+    { 3, "retry_count", REQUIRED, LENGTH-FIXED }
+    { 5, "reserved2", REQUIRED, LENGTH-FIXED }
+    { 8, "retry_interval", REQUIRED, LENGTH-FIXED }
 
 Set SOL Configuration Parameters (SOL Non-Volatile Bit Rate) Request
 --------------------------------------------------------------------
 
-fiid_template_t tmpl_cmd_set_sol_configuration_parameters_sol_non_volatile_bit_rate_rq =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "bit_rate", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_set_sol_configuration_parameters_sol_non_volatile_bit_rate_rq
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED }
+    { 4, "channel_number", REQUIRED, LENGTH-FIXED }
+    { 4, "reserved1", REQUIRED, LENGTH-FIXED }
+    { 8, "parameter_selector", REQUIRED, LENGTH-FIXED }
+    { 4, "bit_rate", REQUIRED, LENGTH-FIXED }
+    { 4, "reserved2", REQUIRED, LENGTH-FIXED }
 
 Set SOL Configuration Parameters (SOL Volatile Bit Rate) Request
 ----------------------------------------------------------------
 
-fiid_template_t tmpl_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate_rq =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "bit_rate", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate_rq
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED }
+    { 4, "channel_number", REQUIRED, LENGTH-FIXED }
+    { 4, "reserved1", REQUIRED, LENGTH-FIXED }
+    { 8, "parameter_selector", REQUIRED, LENGTH-FIXED }
+    { 4, "bit_rate", REQUIRED, LENGTH-FIXED }
+    { 4, "reserved2", REQUIRED, LENGTH-FIXED }
 
 Set SOL Configuration Parameters (SOL Payload Port Number) Request
 ------------------------------------------------------------------
 
-fiid_template_t tmpl_cmd_set_sol_configuration_parameters_sol_payload_port_number_rq =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 16, "port_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_set_sol_configuration_parameters_sol_payload_port_number_rq
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED }
+    { 4, "channel_number", REQUIRED, LENGTH-FIXED }
+    { 4, "reserved1", REQUIRED, LENGTH-FIXED }
+    { 8, "parameter_selector", REQUIRED, LENGTH-FIXED }
+    { 16, "port_number", REQUIRED, LENGTH-FIXED }
 
 Get SOL Configuration Parameters Request
 ----------------------------------------
 
-fiid_template_t tmpl_cmd_get_sol_configuration_parameters_rq =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 3, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "get_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "set_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "block_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_get_sol_configuration_parameters_rq
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED }
+    { 4, "channel_number", REQUIRED, LENGTH-FIXED }
+    { 3, "reserved", REQUIRED, LENGTH-FIXED }
+    { 1, "get_parameter", REQUIRED, LENGTH-FIXED }
+    { 8, "parameter_selector", REQUIRED, LENGTH-FIXED }
+    { 8, "set_selector", REQUIRED, LENGTH-FIXED }
+    { 8, "block_selector", REQUIRED, LENGTH-FIXED }
 
 Get SOL Configuration Parameters Response
 -----------------------------------------
 
-fiid_template_t tmpl_cmd_get_sol_configuration_parameters_rs =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 4, "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1024, "configuration_parameter_data", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_VARIABLE},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_get_sol_configuration_parameters_rs
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 4, "present_revision", REQUIRED, LENGTH-FIXED }
+    { 4, "oldest_revision_parameter", REQUIRED, LENGTH-FIXED }
+    { 1024, "configuration_parameter_data", REQUIRED, LENGTH-VARIABLE }
 
 Get SOL Configuration Parameters (Set In Progress) Response
 -----------------------------------------------------------
 
-fiid_template_t tmpl_cmd_get_sol_configuration_parameters_set_in_progress_rs =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 4, "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 2, "state", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 6, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_get_sol_configuration_parameters_set_in_progress_rs
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 4, "present_revision", REQUIRED, LENGTH-FIXED }
+    { 4, "oldest_revision_parameter", REQUIRED, LENGTH-FIXED }
+    { 2, "state", REQUIRED, LENGTH-FIXED }
+    { 6, "reserved", REQUIRED, LENGTH-FIXED }
 
 Get SOL Configuration Parameters (SOL Enable) Response
 ------------------------------------------------------
 
-fiid_template_t tmpl_cmd_get_sol_configuration_parameters_sol_enable_rs =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 4, "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "sol_enable", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 7, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_get_sol_configuration_parameters_sol_enable_rs
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 4, "present_revision", REQUIRED, LENGTH-FIXED }
+    { 4, "oldest_revision_parameter", REQUIRED, LENGTH-FIXED }
+    { 1, "sol_enable", REQUIRED, LENGTH-FIXED }
+    { 7, "reserved", REQUIRED, LENGTH-FIXED }
 
 Get SOL Configuration Parameters (SOL Authentication) Response
 --------------------------------------------------------------
 
-fiid_template_t tmpl_cmd_get_sol_configuration_parameters_sol_authentication_rs =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 4, "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "sol_privilege_level", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 2, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "force_sol_payload_authentication", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "force_sol_payload_encryption", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_get_sol_configuration_parameters_sol_authentication_rs
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 4, "present_revision", REQUIRED, LENGTH-FIXED }
+    { 4, "oldest_revision_parameter", REQUIRED, LENGTH-FIXED }
+    { 4, "sol_privilege_level", REQUIRED, LENGTH-FIXED }
+    { 2, "reserved", REQUIRED, LENGTH-FIXED }
+    { 1, "force_sol_payload_authentication", REQUIRED, LENGTH-FIXED }
+    { 1, "force_sol_payload_encryption", REQUIRED, LENGTH-FIXED }
 
 Get SOL Configuration Parameters (Character Accumulate Interval and Send Threshold) Response
 --------------------------------------------------------------------------------------------
 
-fiid_template_t tmpl_cmd_get_sol_configuration_parameters_character_accumulate_interval_and_send_threshold_rs =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 4, "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "character_accumulate_interval", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "character_send_threshold", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_get_sol_configuration_parameters_character_accumulate_interval_and_send_threshold_rs
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 4, "present_revision", REQUIRED, LENGTH-FIXED }
+    { 4, "oldest_revision_parameter", REQUIRED, LENGTH-FIXED }
+    { 8, "character_accumulate_interval", REQUIRED, LENGTH-FIXED }
+    { 8, "character_send_threshold", REQUIRED, LENGTH-FIXED }
 
 Get SOL Configuration Parameters (SOL Retry) Response
 -----------------------------------------------------
 
-fiid_template_t tmpl_cmd_get_sol_configuration_parameters_sol_retry_rs =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 4, "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 3, "retry_count", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 5, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "retry_interval", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_get_sol_configuration_parameters_sol_retry_rs
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 4, "present_revision", REQUIRED, LENGTH-FIXED }
+    { 4, "oldest_revision_parameter", REQUIRED, LENGTH-FIXED }
+    { 3, "retry_count", REQUIRED, LENGTH-FIXED }
+    { 5, "reserved", REQUIRED, LENGTH-FIXED }
+    { 8, "retry_interval", REQUIRED, LENGTH-FIXED }
 
 Get SOL Configuration Parameters (SOL Non-Volatile Bit Rate) Response
 ---------------------------------------------------------------------
 
-fiid_template_t tmpl_cmd_get_sol_configuration_parameters_sol_non_volatile_bit_rate_rs =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 4, "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "bit_rate", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_get_sol_configuration_parameters_sol_non_volatile_bit_rate_rs
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 4, "present_revision", REQUIRED, LENGTH-FIXED }
+    { 4, "oldest_revision_parameter", REQUIRED, LENGTH-FIXED }
+    { 4, "bit_rate", REQUIRED, LENGTH-FIXED }
+    { 4, "reserved", REQUIRED, LENGTH-FIXED }
 
 Get SOL Configuration Parameters (SOL Volatile Bit Rate) Response
 -----------------------------------------------------------------
 
-fiid_template_t tmpl_cmd_get_sol_configuration_parameters_sol_volatile_bit_rate_rs =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 4, "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "bit_rate", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_get_sol_configuration_parameters_sol_volatile_bit_rate_rs
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 4, "present_revision", REQUIRED, LENGTH-FIXED }
+    { 4, "oldest_revision_parameter", REQUIRED, LENGTH-FIXED }
+    { 4, "bit_rate", REQUIRED, LENGTH-FIXED }
+    { 4, "reserved", REQUIRED, LENGTH-FIXED }
 
 Get SOL Configuration Parameters (SOL Payload Channel) Response
 ---------------------------------------------------------------
 
-/* Note: Read-Only field, no 'set' equivalent */
-fiid_template_t tmpl_cmd_get_sol_configuration_parameters_sol_payload_channel_rs =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 4, "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "payload_channel", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_get_sol_configuration_parameters_sol_payload_channel_rs
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 4, "present_revision", REQUIRED, LENGTH-FIXED }
+    { 4, "oldest_revision_parameter", REQUIRED, LENGTH-FIXED }
+    { 8, "payload_channel", REQUIRED, LENGTH-FIXED }
+
+  Notes: Read only field, no "set" equivalent.
 
 Get SOL Configuration Parameters (SOL Payload Port Number) Response
 -------------------------------------------------------------------
 
-fiid_template_t tmpl_cmd_get_sol_configuration_parameters_sol_payload_port_number_rs =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 4, "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 16, "port_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_get_sol_configuration_parameters_sol_payload_port_number_rs
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 4, "present_revision", REQUIRED, LENGTH-FIXED }
+    { 4, "oldest_revision_parameter", REQUIRED, LENGTH-FIXED }
+    { 16, "port_number", REQUIRED, LENGTH-FIXED }
 
 #endif  /* 0 */
 
