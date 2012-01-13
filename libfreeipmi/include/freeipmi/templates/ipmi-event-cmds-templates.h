@@ -64,18 +64,18 @@ Set Event Receiver Request
  */
 FIID Template: tmpl_cmd_set_event_receiver_rq
 
-    { 8, "cmd", REQUIRED, LENGTH-FIXED}
-    { 8, "event_receiver_slave_address", REQUIRED, LENGTH-FIXED}
-    { 2, "event_receiver_lun", REQUIRED, LENGTH-FIXED}
-    { 6, "reserved", REQUIRED, LENGTH-FIXED}
+    { 8, "cmd", REQUIRED, LENGTH-FIXED }
+    { 8, "event_receiver_slave_address", REQUIRED, LENGTH-FIXED }
+    { 2, "event_receiver_lun", REQUIRED, LENGTH-FIXED }
+    { 6, "reserved", REQUIRED, LENGTH-FIXED }
 
 Set Event Receiver Response
 ---------------------------
 
 FIID Template: tmpl_cmd_set_event_receiver_rs
 
-    { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT}
-    { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT}
+    { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
 
 Get Event Receiver Request
 --------------------------
@@ -85,42 +85,42 @@ Get Event Receiver Request
  */
 FIID Template: tmpl_cmd_get_event_receiver_rq
 
-    { 8, "cmd", REQUIRED, LENGTH-FIXED}
+    { 8, "cmd", REQUIRED, LENGTH-FIXED }
 
 Get Event Receiver Response
 ---------------------------
 
 FIID Template: tmpl_cmd_get_event_receiver_rs
 
-    { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT}
-    { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT}
-    { 8, "event_receiver_slave_address", REQUIRED, LENGTH-FIXED}
-    { 2, "event_receiver_lun", REQUIRED, LENGTH-FIXED}
-    { 6, "reserved", REQUIRED, LENGTH-FIXED}
+    { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8, "event_receiver_slave_address", REQUIRED, LENGTH-FIXED }
+    { 2, "event_receiver_lun", REQUIRED, LENGTH-FIXED }
+    { 6, "reserved", REQUIRED, LENGTH-FIXED }
 
 Platform Event Request
 ----------------------
 
 FIID Template: tmpl_cmd_platform_event_rq
 
-    { 8, "cmd", REQUIRED, LENGTH-FIXED}
-    { 8, "generator_id", OPTIONAL, LENGTH-FIXED}
-    { 8, "event_message_format_version", REQUIRED, LENGTH-FIXED} /* EvMRev in spec */
-    { 8, "sensor_type", REQUIRED, LENGTH-FIXED}
-    { 8, "sensor_number", REQUIRED, LENGTH-FIXED}
-    { 7, "event_type_code", REQUIRED, LENGTH-FIXED}
-    { 1, "event_dir", REQUIRED, LENGTH-FIXED}
-    { 8, "event_data1", REQUIRED, LENGTH-FIXED}
-    { 8, "event_data2", REQUIRED, LENGTH-FIXED}
-    { 8, "event_data3", REQUIRED, LENGTH-FIXED}
+    { 8, "cmd", REQUIRED, LENGTH-FIXED }
+    { 8, "generator_id", OPTIONAL, LENGTH-FIXED }
+    { 8, "event_message_format_version", REQUIRED, LENGTH-FIXED } /* EvMRev in spec */
+    { 8, "sensor_type", REQUIRED, LENGTH-FIXED }
+    { 8, "sensor_number", REQUIRED, LENGTH-FIXED }
+    { 7, "event_type_code", REQUIRED, LENGTH-FIXED }
+    { 1, "event_dir", REQUIRED, LENGTH-FIXED }
+    { 8, "event_data1", REQUIRED, LENGTH-FIXED }
+    { 8, "event_data2", REQUIRED, LENGTH-FIXED }
+    { 8, "event_data3", REQUIRED, LENGTH-FIXED }
 
 Platform Event Response
 -----------------------
 
 FIID Template: tmpl_cmd_platform_event_rs
 
-    { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT}
-    { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT}
+    { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
 
 #endif  /* 0 */
 

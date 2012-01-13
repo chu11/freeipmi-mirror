@@ -61,30 +61,30 @@ ASF Presence Ping
 
 FIID Template: tmpl_cmd_asf_presence_ping
 
-    { 32, "iana_enterprise_number", REQUIRED, LENGTH-FIXED}
-    { 8, "message_type", REQUIRED, LENGTH-FIXED}
-    { 8, "message_tag", REQUIRED, LENGTH-FIXED}
-    { 8, "reserved", REQUIRED, LENGTH-FIXED}
-    { 8, "data_length", REQUIRED, LENGTH-FIXED}
+    { 32, "iana_enterprise_number", REQUIRED, LENGTH-FIXED }
+    { 8, "message_type", REQUIRED, LENGTH-FIXED }
+    { 8, "message_tag", REQUIRED, LENGTH-FIXED }
+    { 8, "reserved", REQUIRED, LENGTH-FIXED }
+    { 8, "data_length", REQUIRED, LENGTH-FIXED }
 
 ASF Presence Pong
 -----------------
 
 FIID Template: tmpl_cmd_asf_presence_pong
 
-    { 32, "iana_enterprise_number", REQUIRED, LENGTH-FIXED}
-    { 8, "message_type", REQUIRED, LENGTH-FIXED}
-    { 8, "message_tag", REQUIRED, LENGTH-FIXED}
-    { 8, "reserved1", REQUIRED, LENGTH-FIXED}
-    { 8, "data_length", REQUIRED, LENGTH-FIXED}
-    { 32, "oem_iana_enterprise_number", REQUIRED, LENGTH-FIXED}
-    { 32, "oem_defined", REQUIRED, LENGTH-FIXED}
-    { 4, "supported_entities.version", REQUIRED, LENGTH-FIXED}
-    { 3, "supported_entities.reserved", REQUIRED, LENGTH-FIXED}
-    { 1, "supported_entities.ipmi_supported", REQUIRED, LENGTH-FIXED}
-    { 7, "supported_interactions.reserved", REQUIRED, LENGTH-FIXED}
-    { 1, "supported_interactions.security_extensions", REQUIRED, LENGTH-FIXED}
-    { 48, "reserved2", REQUIRED, LENGTH-FIXED}
+    { 32, "iana_enterprise_number", REQUIRED, LENGTH-FIXED }
+    { 8, "message_type", REQUIRED, LENGTH-FIXED }
+    { 8, "message_tag", REQUIRED, LENGTH-FIXED }
+    { 8, "reserved1", REQUIRED, LENGTH-FIXED }
+    { 8, "data_length", REQUIRED, LENGTH-FIXED }
+    { 32, "oem_iana_enterprise_number", REQUIRED, LENGTH-FIXED }
+    { 32, "oem_defined", REQUIRED, LENGTH-FIXED }
+    { 4, "supported_entities.version", REQUIRED, LENGTH-FIXED }
+    { 3, "supported_entities.reserved", REQUIRED, LENGTH-FIXED }
+    { 1, "supported_entities.ipmi_supported", REQUIRED, LENGTH-FIXED }
+    { 7, "supported_interactions.reserved", REQUIRED, LENGTH-FIXED }
+    { 1, "supported_interactions.security_extensions", REQUIRED, LENGTH-FIXED }
+    { 48, "reserved2", REQUIRED, LENGTH-FIXED }
 
 #endif  /* 0 */
 

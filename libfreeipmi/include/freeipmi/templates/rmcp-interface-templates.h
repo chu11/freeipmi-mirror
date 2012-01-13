@@ -61,12 +61,12 @@ RMCP Header
 
 FIID Template: tmpl_rmcp_hdr
 
-    { 8, "version", REQUIRED, LENGTH-FIXED}
-    { 8, "reserved", REQUIRED, LENGTH-FIXED}
-    { 8, "sequence_number", REQUIRED, LENGTH-FIXED}
-    { 5, "message_class.class", REQUIRED, LENGTH-FIXED}
-    { 2, "message_class.reserved", REQUIRED, LENGTH-FIXED}
-    { 1, "message_class.ack", REQUIRED, LENGTH-FIXED}
+    { 8, "version", REQUIRED, LENGTH-FIXED }
+    { 8, "reserved", REQUIRED, LENGTH-FIXED }
+    { 8, "sequence_number", REQUIRED, LENGTH-FIXED }
+    { 5, "message_class.class", REQUIRED, LENGTH-FIXED }
+    { 2, "message_class.reserved", REQUIRED, LENGTH-FIXED }
+    { 1, "message_class.ack", REQUIRED, LENGTH-FIXED }
 
 #endif  /* 0 */
 

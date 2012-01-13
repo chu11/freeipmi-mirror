@@ -61,33 +61,33 @@ IPMB Message Header Request
 
 FIID Template: tmpl_ipmb_msg_hdr_rq
 
-    { 8, "rs_addr", REQUIRED, LENGTH-FIXED}
-    { 2, "rs_lun", REQUIRED, LENGTH-FIXED}
-    { 6, "net_fn", REQUIRED, LENGTH-FIXED}
-    { 8, "checksum1", REQUIRED, LENGTH-FIXED}
-    { 8, "rq_addr", REQUIRED, LENGTH-FIXED}
-    { 2, "rq_lun", REQUIRED, LENGTH-FIXED}
-    { 6, "rq_seq", REQUIRED, LENGTH-FIXED}
+    { 8, "rs_addr", REQUIRED, LENGTH-FIXED }
+    { 2, "rs_lun", REQUIRED, LENGTH-FIXED }
+    { 6, "net_fn", REQUIRED, LENGTH-FIXED }
+    { 8, "checksum1", REQUIRED, LENGTH-FIXED }
+    { 8, "rq_addr", REQUIRED, LENGTH-FIXED }
+    { 2, "rq_lun", REQUIRED, LENGTH-FIXED }
+    { 6, "rq_seq", REQUIRED, LENGTH-FIXED }
 
 IPMB Message Header Response
 ----------------------------
 
 FIID Template: tmpl_ipmb_msg_hdr_rs
 
-    { 2, "rq_lun", REQUIRED, LENGTH-FIXED}
-    { 6, "net_fn", REQUIRED, LENGTH-FIXED}
-    { 8, "checksum1", REQUIRED, LENGTH-FIXED}
-    { 8, "rs_addr", REQUIRED, LENGTH-FIXED}
-    { 2, "rs_lun", REQUIRED, LENGTH-FIXED}
-    { 6, "rq_seq", REQUIRED, LENGTH-FIXED}
+    { 2, "rq_lun", REQUIRED, LENGTH-FIXED }
+    { 6, "net_fn", REQUIRED, LENGTH-FIXED }
+    { 8, "checksum1", REQUIRED, LENGTH-FIXED }
+    { 8, "rs_addr", REQUIRED, LENGTH-FIXED }
+    { 2, "rs_lun", REQUIRED, LENGTH-FIXED }
+    { 6, "rq_seq", REQUIRED, LENGTH-FIXED }
 
 FIID Template: tmpl_ipmb_msg_trlr
 
-    { 8, "checksum2", REQUIRED, LENGTH-FIXED}
+    { 8, "checksum2", REQUIRED, LENGTH-FIXED }
 
 FIID Template: tmpl_ipmb_msg
 
-    { 2040, "data", REQUIRED, LENGTH-VARIABLE}
+    { 2040, "data", REQUIRED, LENGTH-VARIABLE }
 
 #endif  /* 0 */
 
