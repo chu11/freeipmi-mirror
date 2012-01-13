@@ -93,7 +93,6 @@ FIID Template: tmpl_cmd_get_command_support_rq
     { 2, "operation", REQUIRED, LENGTH-FIXED }
     { 2, "lun", REQUIRED, LENGTH-FIXED }
     { 6, "reserved2", REQUIRED, LENGTH-FIXED }
-    /* For defining body code or group IANA depending on net_fn */
     { 24, "net_fn_data", OPTIONAL, LENGTH-VARIABLE }
 
 Get Command Support Response
@@ -118,7 +117,6 @@ FIID Template: tmpl_cmd_get_command_sub_function_support_rq
     { 2, "lun", REQUIRED, LENGTH-FIXED }
     { 6, "reserved3", REQUIRED, LENGTH-FIXED }
     { 8, "command", REQUIRED, LENGTH-FIXED }
-    /* For defining body code or group IANA depending on net_fn */
     { 24, "net_fn_data", OPTIONAL, LENGTH-VARIABLE }
 
 Get Command Sub-Function Support (Specification Errata) Response
@@ -158,7 +156,6 @@ FIID Template: tmpl_cmd_get_configurable_commands_rq
     { 2, "operation", REQUIRED, LENGTH-FIXED }
     { 2, "lun", REQUIRED, LENGTH-FIXED }
     { 6, "reserved2", REQUIRED, LENGTH-FIXED }
-    /* For defining body code or group IANA depending on net_fn */
     { 24, "net_fn_data", OPTIONAL, LENGTH-VARIABLE }
 
 Get Configurable Commands Response
@@ -183,7 +180,6 @@ FIID Template: tmpl_cmd_get_configurable_command_sub_functions_rq
     { 2, "lun", REQUIRED, LENGTH-FIXED }
     { 6, "reserved3", REQUIRED, LENGTH-FIXED }
     { 8, "command", REQUIRED, LENGTH-FIXED }
-    /* For defining body code or group IANA depending on net_fn */
     { 24, "net_fn_data", OPTIONAL, LENGTH-VARIABLE }
 
 Get Configurable Command Sub-Functions Response
@@ -209,7 +205,6 @@ FIID Template: tmpl_cmd_set_command_enables_rq
     { 2, "lun", REQUIRED, LENGTH-FIXED }
     { 6, "reserved2", REQUIRED, LENGTH-FIXED }
     { 128, "enable_disable_mask", REQUIRED, LENGTH-FIXED }
-    /* For defining body code or group IANA depending on net_fn */
     { 24, "net_fn_data", OPTIONAL, LENGTH-VARIABLE }
 
 Set Command Enables Response
@@ -232,7 +227,6 @@ FIID Template: tmpl_cmd_get_command_enables_rq
     { 2, "operation", REQUIRED, LENGTH-FIXED }
     { 2, "lun", REQUIRED, LENGTH-FIXED }
     { 6, "reserved2", REQUIRED, LENGTH-FIXED }
-    /* For defining body code or group IANA depending on net_fn */
     { 24, "net_fn_data", OPTIONAL, LENGTH-VARIABLE }
 
 Get Command Enables Response
@@ -317,7 +311,6 @@ FIID Template: tmpl_cmd_get_command_sub_function_enables_rq
     { 2, "lun", REQUIRED, LENGTH-FIXED }
     { 6, "reserved3", REQUIRED, LENGTH-FIXED }
     { 8, "command", REQUIRED, LENGTH-FIXED }
-    /* For defining body code or group IANA depending on net_fn */
     { 24, "net_fn_data", OPTIONAL, LENGTH-VARIABLE }
 
 Get Command Sub-Function Enables Response

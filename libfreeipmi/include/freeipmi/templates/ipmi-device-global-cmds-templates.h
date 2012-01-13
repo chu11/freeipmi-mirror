@@ -71,12 +71,12 @@ FIID Template: tmpl_cmd_get_device_id_rs
     { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
     { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
     { 8, "device_id", REQUIRED, LENGTH-FIXED }
-    { 4, "device_revision.revision", REQUIRED, LENGTH-FIXED }  /* binary encoded */
+    { 4, "device_revision.revision", REQUIRED, LENGTH-FIXED }
     { 3, "device_revision.reserved1", REQUIRED, LENGTH-FIXED }
     { 1, "device_revision.sdr_support", REQUIRED, LENGTH-FIXED }
     { 7, "firmware_revision1.major_revision", REQUIRED, LENGTH-FIXED }
     { 1, "firmware_revision1.device_available", REQUIRED, LENGTH-FIXED }
-    { 8, "firmware_revision2.minor_revision", REQUIRED, LENGTH-FIXED }  /* BCD encoded */
+    { 8, "firmware_revision2.minor_revision", REQUIRED, LENGTH-FIXED }
     { 4, "ipmi_version_major", REQUIRED, LENGTH-FIXED }
     { 4, "ipmi_version_minor", REQUIRED, LENGTH-FIXED }
     { 1, "additional_device_support.sensor_device", REQUIRED, LENGTH-FIXED }
@@ -170,9 +170,6 @@ FIID Template: tmpl_cmd_get_self_test_results_rq
 Get Self Test Results Response
 ------------------------------
 
-/* note: bitfield results only if self_test_results == 0x57.  See
- * specification for more information
- */
 FIID Template: tmpl_cmd_get_self_test_results_rs
 
     { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }

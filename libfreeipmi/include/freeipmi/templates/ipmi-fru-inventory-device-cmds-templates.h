@@ -88,7 +88,6 @@ FIID Template: tmpl_cmd_read_fru_data_rq
 Read FRU Data Response
 ----------------------
 
-/* 2040 = 255 * 8, 255 b/c count_returned field in request is 1 byte long */
 FIID Template: tmpl_cmd_read_fru_data_rs
 
     { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
@@ -99,7 +98,6 @@ FIID Template: tmpl_cmd_read_fru_data_rs
 Write FRU Data Request
 ----------------------
 
-/* 2040 = 255 * 8, 255 b/c bytes_to_write field in request is 1 byte long */
 FIID Template: tmpl_cmd_write_fru_data_rq
 
     { 8, "cmd", REQUIRED, LENGTH-FIXED }

@@ -368,7 +368,6 @@ FIID Template: tmpl_cmd_set_system_boot_options_boot_initiator_info_rq
 Set System Boot Options (Boot Initiator Mailbox) Request
 --------------------------------------------------------
 
-/* achu: 16 bytes per block, 16*8 = 128 bits */
 FIID Template: tmpl_cmd_set_system_boot_options_boot_initiator_mailbox_rq
 
     { 8, "cmd", REQUIRED, LENGTH-FIXED }
@@ -538,7 +537,6 @@ FIID Template: tmpl_cmd_get_system_boot_options_boot_initiator_info_rs
 Get System Boot Options (Boot Initiator Mailbox) Response
 ---------------------------------------------------------
 
-/* achu: 16 bytes per block, 16*8 = 128 bits */
 FIID Template: tmpl_cmd_get_system_boot_options_boot_initiator_mailbox_rs
 
     { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }

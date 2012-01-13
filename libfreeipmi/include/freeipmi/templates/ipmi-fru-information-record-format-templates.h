@@ -65,7 +65,6 @@ FIID Template: tmpl_fru_common_header
     { 4, "reserved", REQUIRED, LENGTH-FIXED }
     { 8, "internal_use_area_starting_offset", REQUIRED, LENGTH-FIXED }
     { 8, "chassis_info_area_starting_offset", REQUIRED, LENGTH-FIXED }
-    /* named "board area" in spec, assuming that's a typo */
     { 8, "board_info_area_starting_offset", REQUIRED, LENGTH-FIXED }
     { 8, "product_info_area_starting_offset", REQUIRED, LENGTH-FIXED }
     { 8, "multirecord_area_starting_offset", REQUIRED, LENGTH-FIXED }
@@ -147,7 +146,6 @@ FIID Template: tmpl_fru_dc_load
     { 4, "output_number", REQUIRED, LENGTH-FIXED }
     { 4, "reserved", REQUIRED, LENGTH-FIXED }
     { 16, "nominal_voltage", REQUIRED, LENGTH-FIXED }
-    /* Spec abbreviates specified to 'spec'd', so we keep it */
     { 16, "specd_minimum_voltage", REQUIRED, LENGTH-FIXED }
     { 16, "specd_maximum_voltage", REQUIRED, LENGTH-FIXED }
     { 16, "specd_ripple_and_noise_pk_pk", REQUIRED, LENGTH-FIXED }
@@ -157,7 +155,6 @@ FIID Template: tmpl_fru_dc_load
 FRU Management Access Record
 ----------------------------
 
-/* Note: At most 256*8 bits according to max sub-record types */
 FIID Template: tmpl_fru_management_access_record
 
     { 8, "sub_record_type", REQUIRED, LENGTH-FIXED }

@@ -372,7 +372,6 @@ FIID Template: tmpl_cmd_get_pef_configuration_parameters_pef_alert_startup_delay
 Get PEF Configuration Parameters (Number of Event Filters) Response
 -------------------------------------------------------------------
 
-/* Note: Read-Only field, no 'set' equivalent */
 FIID Template: tmpl_cmd_get_pef_configuration_parameters_number_of_event_filters_rs
 
     { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
@@ -381,6 +380,8 @@ FIID Template: tmpl_cmd_get_pef_configuration_parameters_number_of_event_filters
     { 4, "oldest_revision_parameter", REQUIRED, LENGTH-FIXED }
     { 7, "number_of_event_filters", REQUIRED, LENGTH-FIXED }
     { 1, "reserved", REQUIRED, LENGTH-FIXED }
+
+  Notes: Read only field, no "set" equivalent.
 
 Get PEF Configuration Parameters (Event Filter Table) Response
 --------------------------------------------------------------
@@ -444,7 +445,6 @@ FIID Template: tmpl_cmd_get_pef_configuration_parameters_event_filter_table_data
 Get PEF Configuration Parameters (Number of Alert Policy Entries) Response
 --------------------------------------------------------------------------
 
-/* Note: Read-Only field, no 'set' equivalent */
 FIID Template: tmpl_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries_rs
 
     { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
@@ -454,10 +454,11 @@ FIID Template: tmpl_cmd_get_pef_configuration_parameters_number_of_alert_policy_
     { 7, "number_of_alert_policy_entries", REQUIRED, LENGTH-FIXED }
     { 1, "reserved", REQUIRED, LENGTH-FIXED }
 
+  Notes: Read only field, no "set" equivalent.
+
 Get PEF Configuration Parameters (Number of Alert Strings) Response
 -------------------------------------------------------------------
 
-/* Note: Read-Only field, no 'set' equivalent */
 FIID Template: tmpl_cmd_get_pef_configuration_parameters_number_of_alert_strings_rs
 
     { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
@@ -466,6 +467,8 @@ FIID Template: tmpl_cmd_get_pef_configuration_parameters_number_of_alert_strings
     { 4, "oldest_revision_parameter", REQUIRED, LENGTH-FIXED }
     { 7, "number_of_alert_strings", REQUIRED, LENGTH-FIXED }
     { 1, "reserved", REQUIRED, LENGTH-FIXED }
+
+  Notes: Read only field, no "set" equivalent.
 
 Get PEF Configuration Parameters (Alert String Keys) Response
 -------------------------------------------------------------

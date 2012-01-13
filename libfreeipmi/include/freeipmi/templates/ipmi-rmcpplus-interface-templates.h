@@ -70,18 +70,12 @@ FIID Template: tmpl_rmcpplus_session_hdr
     { 8, "reserved2", OPTIONAL, LENGTH-FIXED }
     { 16, "oem_payload_id", OPTIONAL, LENGTH-FIXED }
     { 32, "session_id", REQUIRED, LENGTH-FIXED }
-    /* 0h outside of a session, seperate #'s if authenticated or unauthenticated session */
     { 32, "session_sequence_number", REQUIRED, LENGTH-FIXED }
-    /* length of just the payload */
     { 16, "ipmi_payload_len", REQUIRED, LENGTH-FIXED }
 
 RMCP+ Session Trailer
 ---------------------
 
-/* note: the ipmi spec wording is terrible.  The integrity pad is to
- * ensure that the data passed to the HMAC is a multiple of 4, not
- * just the integrity field.  Sigh ...
- */
 FIID Template: tmpl_rmcpplus_session_trlr
 
     { 32, "integrity_pad", OPTIONAL, LENGTH-VARIABLE }
@@ -95,7 +89,6 @@ RMCP+ Payload
 FIID Template: tmpl_rmcpplus_payload
 
     { 512, "confidentiality_header", OPTIONAL, LENGTH-VARIABLE }
-    /* 524288 = 65536 * 8 = 2^16 * 8, b/c ipmi_payload_len is 2 bytes */
     { 524288, "payload_data", REQUIRED, LENGTH-VARIABLE }
     { 512, "confidentiality_trailer", OPTIONAL, LENGTH-VARIABLE }
 
@@ -139,7 +132,6 @@ FIID Template: tmpl_rmcpplus_open_session_response
     { 4, "reserved1", REQUIRED, LENGTH-FIXED }
     { 8, "reserved2", REQUIRED, LENGTH-FIXED }
     { 32, "remote_console_session_id", REQUIRED, LENGTH-FIXED }
-    /* 0h not valid */
     { 32, "managed_system_session_id", REQUIRED, LENGTH-FIXED }
     { 8, "authentication_payload.payload_type", REQUIRED, LENGTH-FIXED }
     { 16, "reserved3", REQUIRED, LENGTH-FIXED }
@@ -203,11 +195,6 @@ FIID Template: tmpl_rmcpplus_rakp_message_3
 RMCP+ RAKP Message 4
 --------------------
 
-/* achu: The IPMI 2.0 Spec version 1.0 lists the 4th field as
- * "management_console_session_id", not "managed_system_session_id"
- * or "remote_console_session_id".  I'm assuming this is a typo and
- * that "remote_console_session_id" is what is really meant.
- */
 FIID Template: tmpl_rmcpplus_rakp_message_4
 
     { 8, "message_tag", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }

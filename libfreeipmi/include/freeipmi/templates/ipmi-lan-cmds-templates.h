@@ -96,7 +96,7 @@ FIID Template: tmpl_cmd_set_lan_configuration_parameters_authentication_type_ena
     { 4, "channel_number", REQUIRED, LENGTH-FIXED }
     { 4, "reserved", REQUIRED, LENGTH-FIXED }
     { 8, "parameter_selector", REQUIRED, LENGTH-FIXED }
-    /* byte 1 */
+
     { 1, "callback_level.none", REQUIRED, LENGTH-FIXED }
     { 1, "callback_level.md2", REQUIRED, LENGTH-FIXED }
     { 1, "callback_level.md5", REQUIRED, LENGTH-FIXED }
@@ -104,7 +104,7 @@ FIID Template: tmpl_cmd_set_lan_configuration_parameters_authentication_type_ena
     { 1, "callback_level.straight_password", REQUIRED, LENGTH-FIXED }
     { 1, "callback_level.oem_proprietary", REQUIRED, LENGTH-FIXED }
     { 2, "callback_level.reserved2", REQUIRED, LENGTH-FIXED }
-    /* byte 2 */
+
     { 1, "user_level.none", REQUIRED, LENGTH-FIXED }
     { 1, "user_level.md2", REQUIRED, LENGTH-FIXED }
     { 1, "user_level.md5", REQUIRED, LENGTH-FIXED }
@@ -112,7 +112,7 @@ FIID Template: tmpl_cmd_set_lan_configuration_parameters_authentication_type_ena
     { 1, "user_level.straight_password", REQUIRED, LENGTH-FIXED }
     { 1, "user_level.oem_proprietary", REQUIRED, LENGTH-FIXED }
     { 2, "user_level.reserved2", REQUIRED, LENGTH-FIXED }
-    /* byte 3 */
+
     { 1, "operator_level.none", REQUIRED, LENGTH-FIXED }
     { 1, "operator_level.md2", REQUIRED, LENGTH-FIXED }
     { 1, "operator_level.md5", REQUIRED, LENGTH-FIXED }
@@ -120,7 +120,7 @@ FIID Template: tmpl_cmd_set_lan_configuration_parameters_authentication_type_ena
     { 1, "operator_level.straight_password", REQUIRED, LENGTH-FIXED }
     { 1, "operator_level.oem_proprietary", REQUIRED, LENGTH-FIXED }
     { 2, "operator_level.reserved2", REQUIRED, LENGTH-FIXED }
-    /* byte 4 */
+
     { 1, "admin_level.none", REQUIRED, LENGTH-FIXED }
     { 1, "admin_level.md2", REQUIRED, LENGTH-FIXED }
     { 1, "admin_level.md5", REQUIRED, LENGTH-FIXED }
@@ -128,7 +128,7 @@ FIID Template: tmpl_cmd_set_lan_configuration_parameters_authentication_type_ena
     { 1, "admin_level.straight_password", REQUIRED, LENGTH-FIXED }
     { 1, "admin_level.oem_proprietary", REQUIRED, LENGTH-FIXED }
     { 2, "admin_level.reserved2", REQUIRED, LENGTH-FIXED }
-    /* byte 5 */
+
     { 1, "oem_level.none", REQUIRED, LENGTH-FIXED }
     { 1, "oem_level.md2", REQUIRED, LENGTH-FIXED }
     { 1, "oem_level.md5", REQUIRED, LENGTH-FIXED }
@@ -307,9 +307,11 @@ FIID Template: tmpl_cmd_set_lan_configuration_parameters_vlan_id_rq
     { 4, "channel_number", REQUIRED, LENGTH-FIXED }
     { 4, "reserved1", REQUIRED, LENGTH-FIXED }
     { 8, "parameter_selector", REQUIRED, LENGTH-FIXED }
-    { 12, "vlan_id", REQUIRED, LENGTH-FIXED }  /* LS byte first */
+    { 12, "vlan_id", REQUIRED, LENGTH-FIXED }
     { 3, "reserved2", REQUIRED, LENGTH-FIXED }
     { 1, "vlan_id_enable", REQUIRED, LENGTH-FIXED }
+
+  Notes: Vlan ID LS byte first.
 
 Set LAN Configuration Parameters (VLAN Priority) Request
 --------------------------------------------------------
@@ -321,7 +323,6 @@ FIID Template: tmpl_cmd_set_lan_configuration_parameters_vlan_priority_rq
     { 4, "reserved1", REQUIRED, LENGTH-FIXED }
     { 8, "parameter_selector", REQUIRED, LENGTH-FIXED }
     { 3, "vlan_priority", REQUIRED, LENGTH-FIXED }
-    /* Bits 3:4 in the IPMI spec do not exist.  */
     { 2, "unspecified", REQUIRED, LENGTH-FIXED }
     { 3, "reserved2", REQUIRED, LENGTH-FIXED }
 
@@ -406,7 +407,6 @@ FIID Template: tmpl_cmd_get_lan_configuration_parameters_set_in_progress_rs
 Get LAN Configuration Parameters (Authentication Type Support) Response
 -----------------------------------------------------------------------
 
-/* Note: Read-Only field, no 'set' equivalent */
 FIID Template: tmpl_cmd_get_lan_configuration_parameters_authentication_type_support_rs
 
     { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
@@ -420,6 +420,8 @@ FIID Template: tmpl_cmd_get_lan_configuration_parameters_authentication_type_sup
     { 1, "straight_password", REQUIRED, LENGTH-FIXED }
     { 1, "oem_proprietary", REQUIRED, LENGTH-FIXED }
     { 2, "reserved2", REQUIRED, LENGTH-FIXED }
+
+  Notes: Read only field, no "set" equivalent.
 
 Get LAN Configuration Parameters (Authentication Type Enables) Response
 -----------------------------------------------------------------------
@@ -649,9 +651,11 @@ FIID Template: tmpl_cmd_get_lan_configuration_parameters_vlan_id_rs
     { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
     { 4, "present_revision", REQUIRED, LENGTH-FIXED }
     { 4, "oldest_revision_parameter", REQUIRED, LENGTH-FIXED }
-    { 12, "vlan_id", REQUIRED, LENGTH-FIXED }  /* LS byte first */
+    { 12, "vlan_id", REQUIRED, LENGTH-FIXED }
     { 3, "reserved", REQUIRED, LENGTH-FIXED }
     { 1, "vlan_id_enable", REQUIRED, LENGTH-FIXED }
+
+  Notes: Vlan ID LS byte first.
 
 Get LAN Configuration Parameters (VLAN Priority) Response
 ---------------------------------------------------------
@@ -663,15 +667,12 @@ FIID Template: tmpl_cmd_get_lan_configuration_parameters_vlan_priority_rs
     { 4, "present_revision", REQUIRED, LENGTH-FIXED }
     { 4, "oldest_revision_parameter", REQUIRED, LENGTH-FIXED }
     { 3, "vlan_priority", REQUIRED, LENGTH-FIXED }
-    /* Bits 3:4 in the IPMI spec do not exist.  */
     { 2, "unspecified", REQUIRED, LENGTH-FIXED }
     { 3, "reserved", REQUIRED, LENGTH-FIXED }
-
 
 Get LAN Configuration Parameters (RMCP+ Messaging Cipher Suite Entry Support) Response
 --------------------------------------------------------------------------------------
 
-/* Note: Read-Only field, no 'set' equivalent */
 FIID Template: tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_support_rs
 
     { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
@@ -681,10 +682,11 @@ FIID Template: tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_ciph
     { 4, "cipher_suite_entry_count", REQUIRED, LENGTH-FIXED }
     { 4, "reserved", REQUIRED, LENGTH-FIXED }
 
+  Notes: Read only field, no "set" equivalent.
+
 Get LAN Configuration Parameters (RMCP+ Messaging Cipher Suite Entries) Response
 --------------------------------------------------------------------------------
 
-/* Note: Read-Only field, no 'set' equivalent */
 FIID Template: tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entries_rs
 
     { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
@@ -708,6 +710,8 @@ FIID Template: tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_ciph
     { 8, "cipher_suite_id_entry_N", OPTIONAL, LENGTH-FIXED }
     { 8, "cipher_suite_id_entry_O", OPTIONAL, LENGTH-FIXED }
     { 8, "cipher_suite_id_entry_P", OPTIONAL, LENGTH-FIXED }
+
+  Notes: Read only field, no "set" equivalent.
 
 Get LAN Configuration Parameters (RMCP+ Messaging Cipher Suite Privilege Levels) Response
 -----------------------------------------------------------------------------------------

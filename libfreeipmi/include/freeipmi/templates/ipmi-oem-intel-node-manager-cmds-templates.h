@@ -157,10 +157,6 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_policy_rs
 Set Node Manager Alert Thresholds Request
 -----------------------------------------
 
-/* achu: spec lists "alert threshold array", however each alert
- * threshold is 2 bytes and there is a max of 3, so I list as the
- * entries and make them optional
- */
 FIID Template: tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_thresholds_rq
 
     { 8,  "cmd", REQUIRED, LENGTH-FIXED }
@@ -196,10 +192,6 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_alert_thresholds
 Get Node Manager Alert Thresholds Response
 ------------------------------------------
 
-/* achu: spec lists "alert threshold array", however each alert
- * threshold is 2 bytes and there is a max of 3, so I list the
- * entries and make them optional
- */
 FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_alert_thresholds_rs
 
     { 8,  "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
@@ -213,10 +205,6 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_alert_thresholds
 Set Node Manager Policy Suspend Periods Request
 -----------------------------------------------
 
-/* achu: spec lists "array of policy suspend periods", however each
- * alert threshold is 3 bytes and there is a max of 5, so I list the
- * entries and make them optional
- */
 FIID Template: tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_suspend_periods_rq
 
     { 8,  "cmd", REQUIRED, LENGTH-FIXED }

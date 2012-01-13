@@ -112,7 +112,6 @@ FIID Template: tmpl_cmd_dcmi_get_dcmi_capability_info_rs
 DCMI Get DCMI Capability Info (Supported DCMI Capabilities) Response
 --------------------------------------------------------------------
 
-/* achu: assume typo "Out-Of-B" means "Out-Of-Band" */
 FIID Template: tmpl_cmd_dcmi_get_dcmi_capability_info_supported_dcmi_capabilities_rs
 
     { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
@@ -121,13 +120,9 @@ FIID Template: tmpl_cmd_dcmi_get_dcmi_capability_info_supported_dcmi_capabilitie
     { 8, "dcmi_specification_conformance.major_version", REQUIRED, LENGTH-FIXED }
     { 8, "dcmi_specification_conformance.minor_version", REQUIRED, LENGTH-FIXED }
     { 8, "parameter_revision", REQUIRED, LENGTH-FIXED }
-    /* in parameter revision >= 02h, reserved */
     { 1, "mandatory_platform_capabilities.identification_support", REQUIRED, LENGTH-FIXED }
-    /* in parameter revision >= 02h, reserved */
     { 1, "mandatory_platform_capabilities.sel_logging", REQUIRED, LENGTH-FIXED }
-    /* in parameter revision >= 02h, reserved */
     { 1, "mandatory_platform_capabilities.chassis_power", REQUIRED, LENGTH-FIXED }
-    /* in parameter revision >= 02h, reserved */
     { 1, "mandatory_platform_capabilities.temperature_monitor", REQUIRED, LENGTH-FIXED }
     { 4, "mandatory_platform_capabilities.reserved", REQUIRED, LENGTH-FIXED }
     { 1, "optional_platform_capabilities.power_management_monitoring_support", REQUIRED, LENGTH-FIXED }
@@ -135,14 +130,13 @@ FIID Template: tmpl_cmd_dcmi_get_dcmi_capability_info_supported_dcmi_capabilitie
     { 1, "manageability_access_capabilities.in_band_system_interface_channel_available", REQUIRED, LENGTH-FIXED }
     { 1, "manageability_access_capabilities.serial_tmode_available", REQUIRED, LENGTH-FIXED }
     { 1, "manageability_access_capabilities.out_of_band_secondary_lan_channel_available", REQUIRED, LENGTH-FIXED }
-    /* in parameter revision >= 02h, reserved */
     { 1, "manageability_access_capabilities.out_of_band_primary_lan_channel_available", REQUIRED, LENGTH-FIXED }
-    /* in parameter revision >= 02h, reserved */
     { 1, "manageability_access_capabilities.sol_supported", REQUIRED, LENGTH-FIXED }
-    /* in parameter revision >= 02h, reserved */
     { 1, "manageability_access_capabilities.vlan_capable", REQUIRED, LENGTH-FIXED }
     { 2, "manageability_access_capabilities.reserved", REQUIRED, LENGTH-FIXED }
 
+  Notes: Some fields not valid when parameter revision >= 2.  Please
+  see DCMI specification for details.
 
 DCMI Get DCMI Capability Info (Mandatory Platform Attributes) Response
 ----------------------------------------------------------------------
@@ -160,18 +154,17 @@ FIID Template: tmpl_cmd_dcmi_get_dcmi_capability_info_mandatory_platform_attribu
     { 1, "sel_attributes.entire_sel_flush_upon_rollover", REQUIRED, LENGTH-FIXED }
     { 1, "sel_attributes.reserved", REQUIRED, LENGTH-FIXED }
     { 1, "sel_attributes.sel_automatic_rollover_enabled", REQUIRED, LENGTH-FIXED }
-    /* in parameter revision >= 02h, reserved */
     { 1, "identification_attributes.guid_support", REQUIRED, LENGTH-FIXED }
     { 1, "identification_attributes.dhcp_host_name_support", REQUIRED, LENGTH-FIXED }
     { 1, "identification_attributes.asset_tag_support", REQUIRED, LENGTH-FIXED }
     { 5, "identification_attributes.reserved", REQUIRED, LENGTH-FIXED }
-    /* in parameter revision >= 02h, reserved */
     { 1, "temperature_monitoring.inlet_temperature", REQUIRED, LENGTH-FIXED }
-    /* in parameter revision >= 02h, reserved */
     { 1, "temperature_monitoring.processors_temperature", REQUIRED, LENGTH-FIXED }
-    /* in parameter revision >= 02h, reserved */
     { 1, "temperature_monitoring.baseboard_temperature", REQUIRED, LENGTH-FIXED }
     { 5, "temperature_monitoring.reserved", REQUIRED, LENGTH-FIXED }
+
+  Notes: Some fields not valid when parameter revision >= 2.  Please
+  see DCMI specification for details.
 
 DCMI Get DCMI Capability Info (Optional Platform Attributes) Response
 ---------------------------------------------------------------------
@@ -192,7 +185,6 @@ FIID Template: tmpl_cmd_dcmi_get_dcmi_capability_info_optional_platform_attribut
 DCMI Get DCMI Capability Info (Manageability Access Attributes) Response
 ------------------------------------------------------------------------
 
-/* achu: for consistency, renamed "oob" to "out_of_band" */
 FIID Template: tmpl_cmd_dcmi_get_dcmi_capability_info_manageability_access_attributes_rs
 
     { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
@@ -208,7 +200,6 @@ FIID Template: tmpl_cmd_dcmi_get_dcmi_capability_info_manageability_access_attri
 DCMI Get DCMI Capability Info (Enhanced System Power Statistics Attributes) Response
 ------------------------------------------------------------------------------------
 
-/* 256 * 8 = 2048 */
 FIID Template: tmpl_cmd_dcmi_get_dcmi_capability_info_enhanced_system_power_statistics_attributes_rs
 
     { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
@@ -391,10 +382,6 @@ FIID Template: tmpl_cmd_dcmi_get_asset_tag_rq
 DCMI Get Asset Tag Response
 ---------------------------
 
-/* achu: number_of_bytes_to_read is max 16, so presumably data can
- * only be max 16, but asset tag max is 64 bytes.  We'll use 64 bytes
- * (512 bits) as the max then.
- */
 FIID Template: tmpl_cmd_dcmi_get_asset_tag_rs
 
     { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
@@ -406,10 +393,6 @@ FIID Template: tmpl_cmd_dcmi_get_asset_tag_rs
 DCMI Set Asset Tag Request
 --------------------------
 
-/* achu: number_of_bytes_to_read is max 16, so presumably data can
- * only be max 16, but asset tag max is 64 bytes.  We'll use 64 bytes
- * (512 bits) as the max then.
- */
 FIID Template: tmpl_cmd_dcmi_set_asset_tag_rq
 
     { 8, "cmd", REQUIRED, LENGTH-FIXED }
@@ -441,10 +424,6 @@ FIID Template: tmpl_cmd_dcmi_get_management_controller_identifier_string_rq
 DCMI Get Management Controller Identifier String Response
 ---------------------------------------------------------
 
-/* achu: number_of_bytes_to_read is max 16, so presumably data can
- * only be max 16, but identifier max is 64 bytes.  We'll use 64 bytes
- * (512 bits) as the max then.
- */
 FIID Template: tmpl_cmd_dcmi_get_management_controller_identifier_string_rs
 
     { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
@@ -456,10 +435,6 @@ FIID Template: tmpl_cmd_dcmi_get_management_controller_identifier_string_rs
 DCMI Set Management Controller Identifier String Request
 --------------------------------------------------------
 
-/* achu: number_of_bytes_to_read is max 16, so presumably data can
- * only be max 16, but identifier max is 64 bytes.  We'll use 64 bytes
- * (512 bits) as the max then.
- */
 FIID Template: tmpl_cmd_dcmi_set_management_controller_identifier_string_rq
 
     { 8, "cmd", REQUIRED, LENGTH-FIXED }
@@ -492,9 +467,6 @@ FIID Template: tmpl_cmd_dcmi_get_dcmi_sensor_info_rq
 DCMI Get DCMI Sensor Info Response
 ----------------------------------
 
-/* presumably a max of 256 entity_instances (b/c 1 byte field), so 
- * assume max record ids of 256.  record_id = 16 bits, so 256 * 16 = 4096
- */
 FIID Template: tmpl_cmd_dcmi_get_dcmi_sensor_info_rs
 
     { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
@@ -502,7 +474,9 @@ FIID Template: tmpl_cmd_dcmi_get_dcmi_sensor_info_rs
     { 8, "group_extension_identification", REQUIRED, LENGTH-FIXED }
     { 8, "total_number_of_available_instances", REQUIRED, LENGTH-FIXED }
     { 8, "number_of_record_ids_in_this_response", REQUIRED, LENGTH-FIXED }
-    { 4096, "sdr_record_ids", OPTIONAL, LENGTH-VARIABLE } /* 16 bit fields of record ids, LS byte first */
+    { 4096, "sdr_record_ids", OPTIONAL, LENGTH-VARIABLE }
+
+  Notes: Record IDs LS byte first.
 
 DCMI Get Power Reading Request
 ------------------------------
@@ -671,14 +645,16 @@ FIID Template: tmpl_cmd_dcmi_get_temperature_reading_rs
     { 8, "group_extension_identification", REQUIRED, LENGTH-FIXED }
     { 8, "total_number_of_available_instances", REQUIRED, LENGTH-FIXED }
     { 8, "number_of_sets_of_temperature_data", REQUIRED, LENGTH-FIXED }
-    { 8, "temperature1", OPTIONAL, LENGTH-FIXED } /* signed 8 bit int */
-    { 8, "temperature2", OPTIONAL, LENGTH-FIXED } /* signed 8 bit int */
-    { 8, "temperature3", OPTIONAL, LENGTH-FIXED } /* signed 8 bit int */
-    { 8, "temperature4", OPTIONAL, LENGTH-FIXED } /* signed 8 bit int */
-    { 8, "temperature5", OPTIONAL, LENGTH-FIXED } /* signed 8 bit int */
-    { 8, "temperature6", OPTIONAL, LENGTH-FIXED } /* signed 8 bit int */
-    { 8, "temperature7", OPTIONAL, LENGTH-FIXED } /* signed 8 bit int */
-    { 8, "temperature8", OPTIONAL, LENGTH-FIXED } /* signed 8 bit int */
+    { 8, "temperature1", OPTIONAL, LENGTH-FIXED }
+    { 8, "temperature2", OPTIONAL, LENGTH-FIXED }
+    { 8, "temperature3", OPTIONAL, LENGTH-FIXED }
+    { 8, "temperature4", OPTIONAL, LENGTH-FIXED }
+    { 8, "temperature5", OPTIONAL, LENGTH-FIXED }
+    { 8, "temperature6", OPTIONAL, LENGTH-FIXED }
+    { 8, "temperature7", OPTIONAL, LENGTH-FIXED }
+    { 8, "temperature8", OPTIONAL, LENGTH-FIXED }
+
+  Notes: temperature fields are signed ints.
 
 #endif  /* 0 */
 

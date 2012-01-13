@@ -287,7 +287,6 @@ FIID Template: tmpl_cmd_get_sol_configuration_parameters_sol_volatile_bit_rate_r
 Get SOL Configuration Parameters (SOL Payload Channel) Response
 ---------------------------------------------------------------
 
-/* Note: Read-Only field, no 'set' equivalent */
 FIID Template: tmpl_cmd_get_sol_configuration_parameters_sol_payload_channel_rs
 
     { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
@@ -295,6 +294,8 @@ FIID Template: tmpl_cmd_get_sol_configuration_parameters_sol_payload_channel_rs
     { 4, "present_revision", REQUIRED, LENGTH-FIXED }
     { 4, "oldest_revision_parameter", REQUIRED, LENGTH-FIXED }
     { 8, "payload_channel", REQUIRED, LENGTH-FIXED }
+
+  Notes: Read only field, no "set" equivalent.
 
 Get SOL Configuration Parameters (SOL Payload Port Number) Response
 -------------------------------------------------------------------

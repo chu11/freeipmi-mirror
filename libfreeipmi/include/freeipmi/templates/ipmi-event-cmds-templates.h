@@ -59,9 +59,6 @@ field flags - flags indicating qualities of the field.  The following
 Set Event Receiver Request
 --------------------------
 
-/* event_receiver_slave_address is presumably always a slave address, not a
- * software id, so no "id type" field.
- */
 FIID Template: tmpl_cmd_set_event_receiver_rq
 
     { 8, "cmd", REQUIRED, LENGTH-FIXED }
@@ -80,9 +77,6 @@ FIID Template: tmpl_cmd_set_event_receiver_rs
 Get Event Receiver Request
 --------------------------
 
-/* event_receiver_slave_address is presumably always a slave address, not a
- * software id, so no "id type" field.
- */
 FIID Template: tmpl_cmd_get_event_receiver_rq
 
     { 8, "cmd", REQUIRED, LENGTH-FIXED }
@@ -105,7 +99,7 @@ FIID Template: tmpl_cmd_platform_event_rq
 
     { 8, "cmd", REQUIRED, LENGTH-FIXED }
     { 8, "generator_id", OPTIONAL, LENGTH-FIXED }
-    { 8, "event_message_format_version", REQUIRED, LENGTH-FIXED } /* EvMRev in spec */
+    { 8, "event_message_format_version", REQUIRED, LENGTH-FIXED }
     { 8, "sensor_type", REQUIRED, LENGTH-FIXED }
     { 8, "sensor_number", REQUIRED, LENGTH-FIXED }
     { 7, "event_type_code", REQUIRED, LENGTH-FIXED }

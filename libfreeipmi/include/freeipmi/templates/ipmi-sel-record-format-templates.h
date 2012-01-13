@@ -73,7 +73,6 @@ FIID Template: tmpl_sel_system_event_record
     { 8, "record_type", REQUIRED, LENGTH-FIXED }
     { 32, "timestamp", REQUIRED, LENGTH-FIXED }
 
-    /* Generator ID */
     { 1, "generator_id.id_type", REQUIRED, LENGTH-FIXED }
     { 7, "generator_id.id", REQUIRED, LENGTH-FIXED }
 
@@ -85,11 +84,9 @@ FIID Template: tmpl_sel_system_event_record
     { 8, "sensor_type", REQUIRED, LENGTH-FIXED }
     { 8, "sensor_number", REQUIRED, LENGTH-FIXED }
 
-    /* Event Dir, Event Type */
     { 7, "event_type_code", REQUIRED, LENGTH-FIXED }
     { 1, "event_dir", REQUIRED, LENGTH-FIXED }
 
-    /* Event Data */
     { 8, "event_data1", REQUIRED, LENGTH-FIXED }
     { 8, "event_data2", REQUIRED, LENGTH-FIXED }
     { 8, "event_data3", REQUIRED, LENGTH-FIXED }
@@ -104,7 +101,6 @@ FIID Template: tmpl_sel_system_event_record_event_fields
     { 8, "record_type", REQUIRED, LENGTH-FIXED }
     { 32, "timestamp", REQUIRED, LENGTH-FIXED }
 
-    /* Generator ID */
     { 1, "generator_id.id_type", REQUIRED, LENGTH-FIXED }
     { 7, "generator_id.id", REQUIRED, LENGTH-FIXED }
 
@@ -116,19 +112,15 @@ FIID Template: tmpl_sel_system_event_record_event_fields
     { 8, "sensor_type", REQUIRED, LENGTH-FIXED }
     { 8, "sensor_number", REQUIRED, LENGTH-FIXED }
 
-    /* Event Dir, Event Type */
     { 7, "event_type_code", REQUIRED, LENGTH-FIXED }
     { 1, "event_dir", REQUIRED, LENGTH-FIXED }
 
-    /* Event Data 1 */
     { 4, "offset_from_event_reading_type_code", REQUIRED, LENGTH-FIXED }
     { 2, "event_data3_flag", REQUIRED, LENGTH-FIXED }
     { 2, "event_data2_flag", REQUIRED, LENGTH-FIXED }
 
-    /* Event Data 2 */
     { 8, "event_data2", REQUIRED, LENGTH-FIXED }
 
-    /* Event Data 3 */
     { 8, "event_data3", REQUIRED, LENGTH-FIXED }
 
 
@@ -141,7 +133,6 @@ FIID Template: tmpl_sel_system_event_record_discrete_previous_state_severity
     { 8, "record_type", REQUIRED, LENGTH-FIXED }
     { 32, "timestamp", REQUIRED, LENGTH-FIXED }
 
-    /* Generator ID */
     { 1, "generator_id.id_type", REQUIRED, LENGTH-FIXED }
     { 7, "generator_id.id", REQUIRED, LENGTH-FIXED }
 
@@ -153,20 +144,16 @@ FIID Template: tmpl_sel_system_event_record_discrete_previous_state_severity
     { 8, "sensor_type", REQUIRED, LENGTH-FIXED }
     { 8, "sensor_number", REQUIRED, LENGTH-FIXED }
 
-    /* Event Dir, Event Type */
     { 7, "event_type_code", REQUIRED, LENGTH-FIXED }
     { 1, "event_dir", REQUIRED, LENGTH-FIXED }
 
-    /* Event Data 1 */
     { 4, "offset_from_event_reading_type_code", REQUIRED, LENGTH-FIXED }
     { 2, "event_data3_flag", REQUIRED, LENGTH-FIXED }
     { 2, "event_data2_flag", REQUIRED, LENGTH-FIXED }
 
-    /* Event Data 2 */
     { 4, "previous_offset_from_event_reading_type_code", REQUIRED, LENGTH-FIXED }
     { 4, "offset_from_severity_event_reading_type_code", REQUIRED, LENGTH-FIXED }
 
-    /* Event Data 3 */
     { 8, "event_data3", REQUIRED, LENGTH-FIXED }
 
 

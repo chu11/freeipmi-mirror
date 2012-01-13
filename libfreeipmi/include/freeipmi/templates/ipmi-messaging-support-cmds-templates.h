@@ -288,9 +288,9 @@ FIID Template: tmpl_cmd_get_bt_interface_capabilities_rs
     { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
     { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
     { 8, "number_of_outstanding_requests_supported", REQUIRED, LENGTH-FIXED }
-    { 8, "input_buffer_size", REQUIRED, LENGTH-FIXED }  /* in bytes */
-    { 8, "output_buffer_size", REQUIRED, LENGTH-FIXED }  /* in bytes */
-    { 8, "bmc_request_to_response_time", REQUIRED, LENGTH-FIXED }  /* in seconds */
+    { 8, "input_buffer_size", REQUIRED, LENGTH-FIXED }
+    { 8, "output_buffer_size", REQUIRED, LENGTH-FIXED }
+    { 8, "bmc_request_to_response_time", REQUIRED, LENGTH-FIXED }
     { 8, "recommended_retries", REQUIRED, LENGTH-FIXED }
 
 Master Write-Read Request
@@ -380,12 +380,14 @@ FIID Template: tmpl_cmd_get_system_guid_format_rs
 
     { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
     { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
-    { 48, "node", REQUIRED, LENGTH-FIXED }  /* LS byte first */
+    { 48, "node", REQUIRED, LENGTH-FIXED }
     { 8, "clock_seq_low", REQUIRED, LENGTH-FIXED }
     { 8, "clock_seq_hi_and_reserved", REQUIRED, LENGTH-FIXED }
-    { 16, "time_high_and_version", REQUIRED, LENGTH-FIXED }  /* LS byte first */
-    { 16, "time_mid", REQUIRED, LENGTH-FIXED }  /* LS byte first */
-    { 32, "time_low", REQUIRED, LENGTH-FIXED }  /* LS byte first */
+    { 16, "time_high_and_version", REQUIRED, LENGTH-FIXED }
+    { 16, "time_mid", REQUIRED, LENGTH-FIXED }
+    { 32, "time_low", REQUIRED, LENGTH-FIXED }
+
+  Notes: node and time values LS byte first. 
 
 Set System Info Parameters Request
 ----------------------------------
@@ -672,8 +674,10 @@ FIID Template: tmpl_cmd_get_session_challenge_rs
 
     { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
     { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
-    { 32, "temp_session_id", REQUIRED, LENGTH-FIXED }  /* LS byte first */
+    { 32, "temp_session_id", REQUIRED, LENGTH-FIXED }
     { 128, "challenge_string", REQUIRED, LENGTH-FIXED }
+
+  Notes: Session id LS byte first.
 
 Activiate Session Request
 -------------------------
@@ -936,10 +940,6 @@ FIID Template: tmpl_cmd_get_user_name_rs
 Set User Password Command Request
 ---------------------------------
 
-/* achu: Note that the password is variable length, but it must be
- * fixed to 0, 16, or 20 bytes.  We may try and amend this situation
- * in fiid at a later time.
- */
 FIID Template: tmpl_cmd_set_user_password_rq
 
     { 8, "cmd", REQUIRED, LENGTH-FIXED }
@@ -949,6 +949,9 @@ FIID Template: tmpl_cmd_set_user_password_rq
     { 2, "operation", REQUIRED, LENGTH-FIXED }
     { 6, "operation.reserved", REQUIRED, LENGTH-FIXED }
     { 160, "password", OPTIONAL, LENGTH-VARIABLE }
+
+  Notes: password is variable length, but limited to length of 0, 16,
+  or 20.
 
 Set User Password Command Response
 ----------------------------------
