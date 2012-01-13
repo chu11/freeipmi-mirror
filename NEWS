@@ -42,6 +42,7 @@ o In libfreeipmi/sensor-read, add workarounds to handle issues on Sun
 Misc
 ----
 o Various documentation updates.
+o Redo formattig of include/freeipmi/templates/ documents.
 
 FreeIPMI 1.1.1 - 01/03/12
 -------------------------
