@@ -277,13 +277,13 @@ Set System Boot Options (Service Partition Scan) Request
 --------------------------------------------------------
 
 FIID Template: tmpl_cmd_set_system_boot_options_service_partition_scan_rq
-{
- 8, "cmd", REQUIRED | LENGTH-FIXED}
- 7, "parameter_selector", REQUIRED | LENGTH-FIXED}
- 1, "parameter_valid", REQUIRED | LENGTH-FIXED}
- 1, "service_partition_discovered", REQUIRED | LENGTH-FIXED}
- 1, "service_partition_scan", REQUIRED | LENGTH-FIXED}
- 6, "reserved", REQUIRED | LENGTH-FIXED}
+
+    {8, "cmd", REQUIRED | LENGTH-FIXED}
+    {7, "parameter_selector", REQUIRED | LENGTH-FIXED}
+    {1, "parameter_valid", REQUIRED | LENGTH-FIXED}
+    {1, "service_partition_discovered", REQUIRED | LENGTH-FIXED}
+    {1, "service_partition_scan", REQUIRED | LENGTH-FIXED}
+    {6, "reserved", REQUIRED | LENGTH-FIXED}
 
 Set System Boot Options (BMC Boot Flag Valid Bit Clearing) Request
 ------------------------------------------------------------------
