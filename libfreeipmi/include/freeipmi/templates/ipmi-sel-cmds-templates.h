@@ -61,7 +61,7 @@ Get SEL Info Request
 
 FIID Template: tmpl_cmd_get_sel_info_rq
   {
-    { 8, "cmd", REQUIRED | LENGTH-FIXED},
+    { 8, "cmd", REQUIRED | LENGTH-FIXED}
   };
 
 Get SEL Info Response
@@ -69,20 +69,20 @@ Get SEL Info Response
 
 FIID Template: tmpl_cmd_get_sel_info_rs
   {
-    { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
-    { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
-    { 4, "sel_version_major", REQUIRED | LENGTH-FIXED},
-    { 4, "sel_version_minor", REQUIRED | LENGTH-FIXED},
-    { 16, "entries", REQUIRED | LENGTH-FIXED},
-    { 16, "free_space", REQUIRED | LENGTH-FIXED},
-    { 32, "most_recent_addition_timestamp", REQUIRED | LENGTH-FIXED},
-    { 32, "most_recent_erase_timestamp", REQUIRED | LENGTH-FIXED},
-    { 1, "get_sel_allocation_info_command_supported", REQUIRED | LENGTH-FIXED},
-    { 1, "reserve_sel_command_supported", REQUIRED | LENGTH-FIXED},
-    { 1, "partial_add_sel_entry_command_supported", REQUIRED | LENGTH-FIXED},
-    { 1, "delete_sel_command_supported", REQUIRED | LENGTH-FIXED},
-    { 3, "reserved", REQUIRED | LENGTH-FIXED},
-    { 1, "overflow_flag", REQUIRED | LENGTH-FIXED},
+    { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
+    { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
+    { 4, "sel_version_major", REQUIRED | LENGTH-FIXED}
+    { 4, "sel_version_minor", REQUIRED | LENGTH-FIXED}
+    { 16, "entries", REQUIRED | LENGTH-FIXED}
+    { 16, "free_space", REQUIRED | LENGTH-FIXED}
+    { 32, "most_recent_addition_timestamp", REQUIRED | LENGTH-FIXED}
+    { 32, "most_recent_erase_timestamp", REQUIRED | LENGTH-FIXED}
+    { 1, "get_sel_allocation_info_command_supported", REQUIRED | LENGTH-FIXED}
+    { 1, "reserve_sel_command_supported", REQUIRED | LENGTH-FIXED}
+    { 1, "partial_add_sel_entry_command_supported", REQUIRED | LENGTH-FIXED}
+    { 1, "delete_sel_command_supported", REQUIRED | LENGTH-FIXED}
+    { 3, "reserved", REQUIRED | LENGTH-FIXED}
+    { 1, "overflow_flag", REQUIRED | LENGTH-FIXED}
   };
 
 Get SEL Allocation Info Request
@@ -90,7 +90,7 @@ Get SEL Allocation Info Request
 
 FIID Template: tmpl_cmd_get_sel_allocation_info_rq
   {
-    { 8, "cmd", REQUIRED | LENGTH-FIXED},
+    { 8, "cmd", REQUIRED | LENGTH-FIXED}
   };
 
 Get SEL Allocation Info Response
@@ -98,13 +98,13 @@ Get SEL Allocation Info Response
 
 FIID Template: tmpl_cmd_get_sel_allocation_info_rs
   {
-    { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
-    { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
-    { 16, "number_of_possible_allocation_units", REQUIRED | LENGTH-FIXED},
-    { 16, "allocation_unit_size", REQUIRED | LENGTH-FIXED},
-    { 16, "number_of_free_allocation_units", REQUIRED | LENGTH-FIXED},
-    { 16, "largest_free_block", REQUIRED | LENGTH-FIXED},
-    { 8, "maximum_record_size", REQUIRED | LENGTH-FIXED},
+    { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
+    { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
+    { 16, "number_of_possible_allocation_units", REQUIRED | LENGTH-FIXED}
+    { 16, "allocation_unit_size", REQUIRED | LENGTH-FIXED}
+    { 16, "number_of_free_allocation_units", REQUIRED | LENGTH-FIXED}
+    { 16, "largest_free_block", REQUIRED | LENGTH-FIXED}
+    { 8, "maximum_record_size", REQUIRED | LENGTH-FIXED}
   };
 
 Reserve SEL Request
@@ -112,7 +112,7 @@ Reserve SEL Request
 
 FIID Template: tmpl_cmd_reserve_sel_rq
   {
-    { 8, "cmd", REQUIRED | LENGTH-FIXED},
+    { 8, "cmd", REQUIRED | LENGTH-FIXED}
   };
 
 Reserve SEL Response
@@ -120,9 +120,9 @@ Reserve SEL Response
 
 FIID Template: tmpl_cmd_reserve_sel_rs
   {
-    { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
-    { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
-    { 16, "reservation_id", REQUIRED | LENGTH-FIXED},
+    { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
+    { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
+    { 16, "reservation_id", REQUIRED | LENGTH-FIXED}
   };
 
 Get SEL Entry Request
@@ -130,11 +130,11 @@ Get SEL Entry Request
 
 FIID Template: tmpl_cmd_get_sel_entry_rq
   {
-    { 8, "cmd", REQUIRED | LENGTH-FIXED},
-    { 16, "reservation_id", REQUIRED | LENGTH-FIXED},
-    { 16, "record_id", REQUIRED | LENGTH-FIXED},
-    { 8, "offset_into_record", REQUIRED | LENGTH-FIXED},
-    { 8, "bytes_to_read", REQUIRED | LENGTH-FIXED},
+    { 8, "cmd", REQUIRED | LENGTH-FIXED}
+    { 16, "reservation_id", REQUIRED | LENGTH-FIXED}
+    { 16, "record_id", REQUIRED | LENGTH-FIXED}
+    { 8, "offset_into_record", REQUIRED | LENGTH-FIXED}
+    { 8, "bytes_to_read", REQUIRED | LENGTH-FIXED}
   };
 
 Get SEL Entry Response
@@ -142,10 +142,10 @@ Get SEL Entry Response
 
 FIID Template: tmpl_cmd_get_sel_entry_rs
   {
-    { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
-    { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
-    { 16, "next_record_id", REQUIRED | LENGTH-FIXED},
-    { 128, "record_data", OPTIONAL | LENGTH-VARIABLE},
+    { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
+    { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
+    { 16, "next_record_id", REQUIRED | LENGTH-FIXED}
+    { 128, "record_data", OPTIONAL | LENGTH-VARIABLE}
   };
 
 Delete SEL Entry Request
@@ -153,9 +153,9 @@ Delete SEL Entry Request
 
 FIID Template: tmpl_cmd_delete_sel_entry_rq
   {
-    { 8, "cmd", REQUIRED | LENGTH-FIXED},
-    { 16, "reservation_id", REQUIRED | LENGTH-FIXED},
-    { 16, "record_id", REQUIRED | LENGTH-FIXED},
+    { 8, "cmd", REQUIRED | LENGTH-FIXED}
+    { 16, "reservation_id", REQUIRED | LENGTH-FIXED}
+    { 16, "record_id", REQUIRED | LENGTH-FIXED}
   };
 
 Delete SEL Entry Response
@@ -163,9 +163,9 @@ Delete SEL Entry Response
 
 FIID Template: tmpl_cmd_delete_sel_entry_rs
   {
-    { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
-    { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
-    { 16, "record_id", REQUIRED | LENGTH-FIXED},
+    { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
+    { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
+    { 16, "record_id", REQUIRED | LENGTH-FIXED}
   };
 
 Clear SEL Request
@@ -173,12 +173,12 @@ Clear SEL Request
 
 FIID Template: tmpl_cmd_clear_sel_rq
   {
-    { 8, "cmd", REQUIRED | LENGTH-FIXED},
-    { 16, "reservation_id", REQUIRED | LENGTH-FIXED},
-    { 8, "C", REQUIRED | LENGTH-FIXED},
-    { 8, "L", REQUIRED | LENGTH-FIXED},
-    { 8, "R", REQUIRED | LENGTH-FIXED},
-    { 8, "operation", REQUIRED | LENGTH-FIXED},
+    { 8, "cmd", REQUIRED | LENGTH-FIXED}
+    { 16, "reservation_id", REQUIRED | LENGTH-FIXED}
+    { 8, "C", REQUIRED | LENGTH-FIXED}
+    { 8, "L", REQUIRED | LENGTH-FIXED}
+    { 8, "R", REQUIRED | LENGTH-FIXED}
+    { 8, "operation", REQUIRED | LENGTH-FIXED}
   };
 
 Clear SEL Response
@@ -186,10 +186,10 @@ Clear SEL Response
 
 FIID Template: tmpl_cmd_clear_sel_rs
   {
-    { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
-    { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
-    { 4, "erasure_progress", REQUIRED | LENGTH-FIXED},
-    { 4, "reserved", REQUIRED | LENGTH-FIXED},
+    { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
+    { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
+    { 4, "erasure_progress", REQUIRED | LENGTH-FIXED}
+    { 4, "reserved", REQUIRED | LENGTH-FIXED}
   };
 
 Get SEL Time Request
@@ -197,7 +197,7 @@ Get SEL Time Request
 
 FIID Template: tmpl_cmd_get_sel_time_rq
   {
-    { 8, "cmd", REQUIRED | LENGTH-FIXED},
+    { 8, "cmd", REQUIRED | LENGTH-FIXED}
   };
 
 Get SEL Time Response
@@ -205,9 +205,9 @@ Get SEL Time Response
 
 FIID Template: tmpl_cmd_get_sel_time_rs
   {
-    { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
-    { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
-    { 32, "time", REQUIRED | LENGTH-FIXED},
+    { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
+    { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
+    { 32, "time", REQUIRED | LENGTH-FIXED}
   };
 
 Set SEL Time Request
@@ -215,8 +215,8 @@ Set SEL Time Request
 
 FIID Template: tmpl_cmd_set_sel_time_rq
   {
-    { 8, "cmd", REQUIRED | LENGTH-FIXED},
-    { 32, "time", REQUIRED | LENGTH-FIXED},
+    { 8, "cmd", REQUIRED | LENGTH-FIXED}
+    { 32, "time", REQUIRED | LENGTH-FIXED}
   };
 
 Set SEL Time Response
@@ -224,8 +224,8 @@ Set SEL Time Response
 
 FIID Template: tmpl_cmd_set_sel_time_rs
   {
-    { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
-    { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
+    { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
+    { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
   };
 
 Get Auxiliary Log Status Request
@@ -233,9 +233,9 @@ Get Auxiliary Log Status Request
 
 FIID Template: tmpl_cmd_get_auxiliary_log_status_rq
   {
-    { 8, "cmd", REQUIRED | LENGTH-FIXED},
-    { 4, "log_type", REQUIRED | LENGTH-FIXED},
-    { 4, "reserved", REQUIRED | LENGTH-FIXED},
+    { 8, "cmd", REQUIRED | LENGTH-FIXED}
+    { 4, "log_type", REQUIRED | LENGTH-FIXED}
+    { 4, "reserved", REQUIRED | LENGTH-FIXED}
   };
 
 Get Auxiliary Log Status Response
@@ -243,9 +243,9 @@ Get Auxiliary Log Status Response
 
 FIID Template: tmpl_cmd_get_auxiliary_log_status_rs
   {
-    { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
-    { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
-    { 120, "log_data", REQUIRED | LENGTH-VARIABLE},
+    { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
+    { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
+    { 120, "log_data", REQUIRED | LENGTH-VARIABLE}
   };
 
 Get Auxiliary Log Status (MCA) Response
@@ -253,11 +253,11 @@ Get Auxiliary Log Status (MCA) Response
 
 FIID Template: tmpl_cmd_get_auxiliary_log_status_mca_rs
   {
-    { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
-    { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
-    { 32, "timestamp", REQUIRED | LENGTH-FIXED},
-    { 32, "mca_log_entry_count", REQUIRED | LENGTH-FIXED},
-    { 56, "log_data", OPTIONAL | LENGTH-VARIABLE},
+    { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
+    { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
+    { 32, "timestamp", REQUIRED | LENGTH-FIXED}
+    { 32, "mca_log_entry_count", REQUIRED | LENGTH-FIXED}
+    { 56, "log_data", OPTIONAL | LENGTH-VARIABLE}
   };
 
 Get Auxiliary Log Status (OEM) Response
@@ -265,11 +265,11 @@ Get Auxiliary Log Status (OEM) Response
 
 FIID Template: tmpl_cmd_get_auxiliary_log_status_oem_rs
   {
-    { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
-    { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
-    { 32, "timestamp", REQUIRED | LENGTH-FIXED},
-    { 24, "oem_id", REQUIRED | LENGTH-FIXED},
-    { 64, "log_data", REQUIRED | LENGTH-VARIABLE},
+    { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
+    { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
+    { 32, "timestamp", REQUIRED | LENGTH-FIXED}
+    { 24, "oem_id", REQUIRED | LENGTH-FIXED}
+    { 64, "log_data", REQUIRED | LENGTH-VARIABLE}
   };
 
 Set Auxiliary Log Status Request
@@ -277,10 +277,10 @@ Set Auxiliary Log Status Request
 
 FIID Template: tmpl_cmd_set_auxiliary_log_status_rq
   {
-    { 8, "cmd", REQUIRED | LENGTH-FIXED},
-    { 4, "log_type", REQUIRED | LENGTH-FIXED},
-    { 4, "reserved", REQUIRED | LENGTH-FIXED},
-    { 120, "log_data", REQUIRED | LENGTH-VARIABLE},
+    { 8, "cmd", REQUIRED | LENGTH-FIXED}
+    { 4, "log_type", REQUIRED | LENGTH-FIXED}
+    { 4, "reserved", REQUIRED | LENGTH-FIXED}
+    { 120, "log_data", REQUIRED | LENGTH-VARIABLE}
   };
 
 Set Auxiliary Log Status Response
@@ -288,8 +288,8 @@ Set Auxiliary Log Status Response
 
 FIID Template: tmpl_cmd_set_auxiliary_log_status_rs
   {
-    { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
-    { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
+    { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
+    { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
   };
 
 #endif  /* 0 */

@@ -61,8 +61,8 @@ Cipher Suite Record Header
 
 FIID Template: tmpl_cipher_suite_record_header
   {
-    { 6, "record_format", REQUIRED | LENGTH-FIXED},
-    { 2, "tag_bits", REQUIRED | LENGTH-FIXED},
+    { 6, "record_format", REQUIRED | LENGTH-FIXED}
+    { 2, "tag_bits", REQUIRED | LENGTH-FIXED}
   };
 
 Cipher Suite Record
@@ -70,15 +70,15 @@ Cipher Suite Record
 
 FIID Template: tmpl_cipher_suite_record
   {
-    { 6, "record_format", REQUIRED | LENGTH-FIXED},
-    { 2, "tag_bits", REQUIRED | LENGTH-FIXED},
-    { 8, "cipher_suite_id", REQUIRED | LENGTH-FIXED},
-    { 6, "authentication_algorithm", REQUIRED | LENGTH-FIXED},
-    { 2, "authentication_algorithm_tag_bits", REQUIRED | LENGTH-FIXED},
-    { 6, "integrity_algorithm", REQUIRED | LENGTH-FIXED},
-    { 2, "integrity_algorithm_tag_bits", REQUIRED | LENGTH-FIXED},
-    { 6, "confidentiality_algorithm", REQUIRED | LENGTH-FIXED},
-    { 2, "confidentiality_algorithm_tag_bits", REQUIRED | LENGTH-FIXED},
+    { 6, "record_format", REQUIRED | LENGTH-FIXED}
+    { 2, "tag_bits", REQUIRED | LENGTH-FIXED}
+    { 8, "cipher_suite_id", REQUIRED | LENGTH-FIXED}
+    { 6, "authentication_algorithm", REQUIRED | LENGTH-FIXED}
+    { 2, "authentication_algorithm_tag_bits", REQUIRED | LENGTH-FIXED}
+    { 6, "integrity_algorithm", REQUIRED | LENGTH-FIXED}
+    { 2, "integrity_algorithm_tag_bits", REQUIRED | LENGTH-FIXED}
+    { 6, "confidentiality_algorithm", REQUIRED | LENGTH-FIXED}
+    { 2, "confidentiality_algorithm_tag_bits", REQUIRED | LENGTH-FIXED}
   };
 
 OEM Cipher Suite Record
@@ -86,16 +86,16 @@ OEM Cipher Suite Record
 
 FIID Template: tmpl_oem_cipher_suite_record
   {
-    { 6, "record_format", REQUIRED | LENGTH-FIXED},
-    { 2, "tag_bits", REQUIRED | LENGTH-FIXED},
-    { 8, "oem_cipher_suite_id", REQUIRED | LENGTH-FIXED},
-    { 24, "oem_iana", REQUIRED | LENGTH-FIXED},
-    { 6, "authentication_algorithm", REQUIRED | LENGTH-FIXED},
-    { 2, "authentication_algorithm_tag_bits", REQUIRED | LENGTH-FIXED},
-    { 6, "integrity_algorithm", REQUIRED | LENGTH-FIXED},
-    { 2, "integrity_algorithm_tag_bits", REQUIRED | LENGTH-FIXED},
-    { 6, "confidentiality_algorithm", REQUIRED | LENGTH-FIXED},
-    { 2, "confidentiality_algorithm_tag_bits", REQUIRED | LENGTH-FIXED},
+    { 6, "record_format", REQUIRED | LENGTH-FIXED}
+    { 2, "tag_bits", REQUIRED | LENGTH-FIXED}
+    { 8, "oem_cipher_suite_id", REQUIRED | LENGTH-FIXED}
+    { 24, "oem_iana", REQUIRED | LENGTH-FIXED}
+    { 6, "authentication_algorithm", REQUIRED | LENGTH-FIXED}
+    { 2, "authentication_algorithm_tag_bits", REQUIRED | LENGTH-FIXED}
+    { 6, "integrity_algorithm", REQUIRED | LENGTH-FIXED}
+    { 2, "integrity_algorithm_tag_bits", REQUIRED | LENGTH-FIXED}
+    { 6, "confidentiality_algorithm", REQUIRED | LENGTH-FIXED}
+    { 2, "confidentiality_algorithm_tag_bits", REQUIRED | LENGTH-FIXED}
   };
 
 #endif  /* 0 */

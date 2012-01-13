@@ -61,9 +61,9 @@ Get NetFN Support Request
 
 FIID Template: tmpl_cmd_get_netfn_support_rq
   {
-    { 8, "cmd", REQUIRED | LENGTH-FIXED},
-    { 4, "channel_number", REQUIRED | LENGTH-FIXED},
-    { 4, "reserved", REQUIRED | LENGTH-FIXED},
+    { 8, "cmd", REQUIRED | LENGTH-FIXED}
+    { 4, "channel_number", REQUIRED | LENGTH-FIXED}
+    { 4, "reserved", REQUIRED | LENGTH-FIXED}
   };
 
 Get NetFN Support Response
@@ -71,16 +71,16 @@ Get NetFN Support Response
 
 FIID Template: tmpl_cmd_get_netfn_support_rs
   {
-    { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
-    { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
-    { 2, "lun0", REQUIRED | LENGTH-FIXED},
-    { 2, "lun1", REQUIRED | LENGTH-FIXED},
-    { 2, "lun2", REQUIRED | LENGTH-FIXED},
-    { 2, "lun3", REQUIRED | LENGTH-FIXED},
-    { 32, "lun0_netfn_support_bitmask", REQUIRED | LENGTH-FIXED},
-    { 32, "lun1_netfn_support_bitmask", REQUIRED | LENGTH-FIXED},
-    { 32, "lun2_netfn_support_bitmask", REQUIRED | LENGTH-FIXED},
-    { 32, "lun3_netfn_support_bitmask", REQUIRED | LENGTH-FIXED},
+    { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
+    { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
+    { 2, "lun0", REQUIRED | LENGTH-FIXED}
+    { 2, "lun1", REQUIRED | LENGTH-FIXED}
+    { 2, "lun2", REQUIRED | LENGTH-FIXED}
+    { 2, "lun3", REQUIRED | LENGTH-FIXED}
+    { 32, "lun0_netfn_support_bitmask", REQUIRED | LENGTH-FIXED}
+    { 32, "lun1_netfn_support_bitmask", REQUIRED | LENGTH-FIXED}
+    { 32, "lun2_netfn_support_bitmask", REQUIRED | LENGTH-FIXED}
+    { 32, "lun3_netfn_support_bitmask", REQUIRED | LENGTH-FIXED}
   };
 
 Get Command Support Request
@@ -88,15 +88,15 @@ Get Command Support Request
 
 FIID Template: tmpl_cmd_get_command_support_rq
   {
-    { 8, "cmd", REQUIRED | LENGTH-FIXED},
-    { 4, "channel_number", REQUIRED | LENGTH-FIXED},
-    { 4, "reserved1", REQUIRED | LENGTH-FIXED},
-    { 6, "net_fn", REQUIRED | LENGTH-FIXED},
-    { 2, "operation", REQUIRED | LENGTH-FIXED},
-    { 2, "lun", REQUIRED | LENGTH-FIXED},
-    { 6, "reserved2", REQUIRED | LENGTH-FIXED},
+    { 8, "cmd", REQUIRED | LENGTH-FIXED}
+    { 4, "channel_number", REQUIRED | LENGTH-FIXED}
+    { 4, "reserved1", REQUIRED | LENGTH-FIXED}
+    { 6, "net_fn", REQUIRED | LENGTH-FIXED}
+    { 2, "operation", REQUIRED | LENGTH-FIXED}
+    { 2, "lun", REQUIRED | LENGTH-FIXED}
+    { 6, "reserved2", REQUIRED | LENGTH-FIXED}
     /* For defining body code or group IANA depending on net_fn */
-    { 24, "net_fn_data", OPTIONAL | LENGTH-VARIABLE},
+    { 24, "net_fn_data", OPTIONAL | LENGTH-VARIABLE}
   };
 
 Get Command Support Response
@@ -104,9 +104,9 @@ Get Command Support Response
 
 FIID Template: tmpl_cmd_get_command_support_rs
   {
-    { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
-    { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
-    { 128, "command_support_mask", REQUIRED | LENGTH-FIXED},
+    { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
+    { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
+    { 128, "command_support_mask", REQUIRED | LENGTH-FIXED}
   };
 
 Get Command Sub-Function Support Request
@@ -114,16 +114,16 @@ Get Command Sub-Function Support Request
 
 FIID Template: tmpl_cmd_get_command_sub_function_support_rq
   {
-    { 8, "cmd", REQUIRED | LENGTH-FIXED},
-    { 4, "channel_number", REQUIRED | LENGTH-FIXED},
-    { 4, "reserved1", REQUIRED | LENGTH-FIXED},
-    { 6, "net_fn", REQUIRED | LENGTH-FIXED},
-    { 2, "reserved2", REQUIRED | LENGTH-FIXED},
-    { 2, "lun", REQUIRED | LENGTH-FIXED},
-    { 6, "reserved3", REQUIRED | LENGTH-FIXED},
-    { 8, "command", REQUIRED | LENGTH-FIXED},
+    { 8, "cmd", REQUIRED | LENGTH-FIXED}
+    { 4, "channel_number", REQUIRED | LENGTH-FIXED}
+    { 4, "reserved1", REQUIRED | LENGTH-FIXED}
+    { 6, "net_fn", REQUIRED | LENGTH-FIXED}
+    { 2, "reserved2", REQUIRED | LENGTH-FIXED}
+    { 2, "lun", REQUIRED | LENGTH-FIXED}
+    { 6, "reserved3", REQUIRED | LENGTH-FIXED}
+    { 8, "command", REQUIRED | LENGTH-FIXED}
     /* For defining body code or group IANA depending on net_fn */
-    { 24, "net_fn_data", OPTIONAL | LENGTH-VARIABLE},
+    { 24, "net_fn_data", OPTIONAL | LENGTH-VARIABLE}
   };
 
 Get Command Sub-Function Support (Specification Errata) Response
@@ -131,13 +131,13 @@ Get Command Sub-Function Support (Specification Errata) Response
 
 FIID Template: tmpl_cmd_get_command_sub_function_support_specification_errata_rs
   {
-    { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
-    { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
-    { 4, "errata_version", REQUIRED | LENGTH-FIXED},
-    { 4, "specification_type", REQUIRED | LENGTH-FIXED},
-    { 8, "specification_version", REQUIRED | LENGTH-FIXED},
-    { 8, "specification_revision", REQUIRED | LENGTH-FIXED},
-    { 32, "sub_function_support_mask", REQUIRED | LENGTH-FIXED},
+    { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
+    { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
+    { 4, "errata_version", REQUIRED | LENGTH-FIXED}
+    { 4, "specification_type", REQUIRED | LENGTH-FIXED}
+    { 8, "specification_version", REQUIRED | LENGTH-FIXED}
+    { 8, "specification_revision", REQUIRED | LENGTH-FIXED}
+    { 32, "sub_function_support_mask", REQUIRED | LENGTH-FIXED}
   };
 
 Get Command Sub-Function Support (Extension Errata) Response
@@ -145,12 +145,12 @@ Get Command Sub-Function Support (Extension Errata) Response
 
 FIID Template: tmpl_cmd_get_command_sub_function_support_extension_errata_rs
   {
-    { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
-    { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
-    { 8, "oem_group_defining_body_errata", REQUIRED | LENGTH-FIXED},
-    { 8, "specification_version", REQUIRED | LENGTH-FIXED},
-    { 8, "specification_revision", REQUIRED | LENGTH-FIXED},
-    { 32, "sub_function_support_mask", REQUIRED | LENGTH-FIXED},
+    { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
+    { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
+    { 8, "oem_group_defining_body_errata", REQUIRED | LENGTH-FIXED}
+    { 8, "specification_version", REQUIRED | LENGTH-FIXED}
+    { 8, "specification_revision", REQUIRED | LENGTH-FIXED}
+    { 32, "sub_function_support_mask", REQUIRED | LENGTH-FIXED}
   };
 
 Get Configurable Commands Request
@@ -158,15 +158,15 @@ Get Configurable Commands Request
 
 FIID Template: tmpl_cmd_get_configurable_commands_rq
   {
-    { 8, "cmd", REQUIRED | LENGTH-FIXED},
-    { 4, "channel_number", REQUIRED | LENGTH-FIXED},
-    { 4, "reserved1", REQUIRED | LENGTH-FIXED},
-    { 6, "net_fn", REQUIRED | LENGTH-FIXED},
-    { 2, "operation", REQUIRED | LENGTH-FIXED},
-    { 2, "lun", REQUIRED | LENGTH-FIXED},
-    { 6, "reserved2", REQUIRED | LENGTH-FIXED},
+    { 8, "cmd", REQUIRED | LENGTH-FIXED}
+    { 4, "channel_number", REQUIRED | LENGTH-FIXED}
+    { 4, "reserved1", REQUIRED | LENGTH-FIXED}
+    { 6, "net_fn", REQUIRED | LENGTH-FIXED}
+    { 2, "operation", REQUIRED | LENGTH-FIXED}
+    { 2, "lun", REQUIRED | LENGTH-FIXED}
+    { 6, "reserved2", REQUIRED | LENGTH-FIXED}
     /* For defining body code or group IANA depending on net_fn */
-    { 24, "net_fn_data", OPTIONAL | LENGTH-VARIABLE},
+    { 24, "net_fn_data", OPTIONAL | LENGTH-VARIABLE}
   };
 
 Get Configurable Commands Response
@@ -174,9 +174,9 @@ Get Configurable Commands Response
 
 FIID Template: tmpl_cmd_get_configurable_commands_rs
   {
-    { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
-    { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
-    { 128, "command_support_mask", REQUIRED | LENGTH-FIXED},
+    { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
+    { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
+    { 128, "command_support_mask", REQUIRED | LENGTH-FIXED}
   };
 
 Get Configurable Command Sub-Functions Request
@@ -184,16 +184,16 @@ Get Configurable Command Sub-Functions Request
 
 FIID Template: tmpl_cmd_get_configurable_command_sub_functions_rq
   {
-    { 8, "cmd", REQUIRED | LENGTH-FIXED},
-    { 4, "channel_number", REQUIRED | LENGTH-FIXED},
-    { 4, "reserved1", REQUIRED | LENGTH-FIXED},
-    { 6, "net_fn", REQUIRED | LENGTH-FIXED},
-    { 2, "reserved2", REQUIRED | LENGTH-FIXED},
-    { 2, "lun", REQUIRED | LENGTH-FIXED},
-    { 6, "reserved3", REQUIRED | LENGTH-FIXED},
-    { 8, "command", REQUIRED | LENGTH-FIXED},
+    { 8, "cmd", REQUIRED | LENGTH-FIXED}
+    { 4, "channel_number", REQUIRED | LENGTH-FIXED}
+    { 4, "reserved1", REQUIRED | LENGTH-FIXED}
+    { 6, "net_fn", REQUIRED | LENGTH-FIXED}
+    { 2, "reserved2", REQUIRED | LENGTH-FIXED}
+    { 2, "lun", REQUIRED | LENGTH-FIXED}
+    { 6, "reserved3", REQUIRED | LENGTH-FIXED}
+    { 8, "command", REQUIRED | LENGTH-FIXED}
     /* For defining body code or group IANA depending on net_fn */
-    { 24, "net_fn_data", OPTIONAL | LENGTH-VARIABLE},
+    { 24, "net_fn_data", OPTIONAL | LENGTH-VARIABLE}
   };
 
 Get Configurable Command Sub-Functions Response
@@ -201,10 +201,10 @@ Get Configurable Command Sub-Functions Response
 
 FIID Template: tmpl_cmd_get_configurable_command_sub_functions_rs
   {
-    { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
-    { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
-    { 32, "sub_function_enables1", REQUIRED | LENGTH-FIXED},
-    { 32, "sub_function_enables2", OPTIONAL | LENGTH-FIXED},
+    { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
+    { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
+    { 32, "sub_function_enables1", REQUIRED | LENGTH-FIXED}
+    { 32, "sub_function_enables2", OPTIONAL | LENGTH-FIXED}
   };
 
 Set Command Enables Request
@@ -212,16 +212,16 @@ Set Command Enables Request
 
 FIID Template: tmpl_cmd_set_command_enables_rq
   {
-    { 8, "cmd", REQUIRED | LENGTH-FIXED},
-    { 4, "channel_number", REQUIRED | LENGTH-FIXED},
-    { 4, "reserved1", REQUIRED | LENGTH-FIXED},
-    { 6, "net_fn", REQUIRED | LENGTH-FIXED},
-    { 2, "operation", REQUIRED | LENGTH-FIXED},
-    { 2, "lun", REQUIRED | LENGTH-FIXED},
-    { 6, "reserved2", REQUIRED | LENGTH-FIXED},
-    { 128, "enable_disable_mask", REQUIRED | LENGTH-FIXED},
+    { 8, "cmd", REQUIRED | LENGTH-FIXED}
+    { 4, "channel_number", REQUIRED | LENGTH-FIXED}
+    { 4, "reserved1", REQUIRED | LENGTH-FIXED}
+    { 6, "net_fn", REQUIRED | LENGTH-FIXED}
+    { 2, "operation", REQUIRED | LENGTH-FIXED}
+    { 2, "lun", REQUIRED | LENGTH-FIXED}
+    { 6, "reserved2", REQUIRED | LENGTH-FIXED}
+    { 128, "enable_disable_mask", REQUIRED | LENGTH-FIXED}
     /* For defining body code or group IANA depending on net_fn */
-    { 24, "net_fn_data", OPTIONAL | LENGTH-VARIABLE},
+    { 24, "net_fn_data", OPTIONAL | LENGTH-VARIABLE}
   };
 
 Set Command Enables Response
@@ -229,8 +229,8 @@ Set Command Enables Response
 
 FIID Template: tmpl_cmd_set_command_enables_rs
   {
-    { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
-    { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
+    { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
+    { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
   };
 
 Get Command Enables Request
@@ -238,15 +238,15 @@ Get Command Enables Request
 
 FIID Template: tmpl_cmd_get_command_enables_rq
   {
-    { 8, "cmd", REQUIRED | LENGTH-FIXED},
-    { 4, "channel_number", REQUIRED | LENGTH-FIXED},
-    { 4, "reserved1", REQUIRED | LENGTH-FIXED},
-    { 6, "net_fn", REQUIRED | LENGTH-FIXED},
-    { 2, "operation", REQUIRED | LENGTH-FIXED},
-    { 2, "lun", REQUIRED | LENGTH-FIXED},
-    { 6, "reserved2", REQUIRED | LENGTH-FIXED},
+    { 8, "cmd", REQUIRED | LENGTH-FIXED}
+    { 4, "channel_number", REQUIRED | LENGTH-FIXED}
+    { 4, "reserved1", REQUIRED | LENGTH-FIXED}
+    { 6, "net_fn", REQUIRED | LENGTH-FIXED}
+    { 2, "operation", REQUIRED | LENGTH-FIXED}
+    { 2, "lun", REQUIRED | LENGTH-FIXED}
+    { 6, "reserved2", REQUIRED | LENGTH-FIXED}
     /* For defining body code or group IANA depending on net_fn */
-    { 24, "net_fn_data", OPTIONAL | LENGTH-VARIABLE},
+    { 24, "net_fn_data", OPTIONAL | LENGTH-VARIABLE}
   };
 
 Get Command Enables Response
@@ -254,9 +254,9 @@ Get Command Enables Response
 
 FIID Template: tmpl_cmd_get_command_enables_rs
   {
-    { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
-    { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
-    { 128, "enable_disable_mask", REQUIRED | LENGTH-FIXED},
+    { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
+    { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
+    { 128, "enable_disable_mask", REQUIRED | LENGTH-FIXED}
   };
 
 Set Command Sub-Function Enables Request
@@ -264,16 +264,16 @@ Set Command Sub-Function Enables Request
 
 FIID Template: tmpl_cmd_set_command_sub_function_enables_rq
   {
-    { 8, "cmd", REQUIRED | LENGTH-FIXED},
-    { 4, "channel_number", REQUIRED | LENGTH-FIXED},
-    { 4, "reserved1", REQUIRED | LENGTH-FIXED},
-    { 6, "net_fn", REQUIRED | LENGTH-FIXED},
-    { 2, "reserved2", REQUIRED | LENGTH-FIXED},
-    { 2, "lun", REQUIRED | LENGTH-FIXED},
-    { 6, "reserved3", REQUIRED | LENGTH-FIXED},
-    { 8, "command", REQUIRED | LENGTH-FIXED},
-    { 32, "sub_function_enables1", REQUIRED | LENGTH-FIXED},
-    { 32, "sub_function_enables2", OPTIONAL | LENGTH-FIXED},
+    { 8, "cmd", REQUIRED | LENGTH-FIXED}
+    { 4, "channel_number", REQUIRED | LENGTH-FIXED}
+    { 4, "reserved1", REQUIRED | LENGTH-FIXED}
+    { 6, "net_fn", REQUIRED | LENGTH-FIXED}
+    { 2, "reserved2", REQUIRED | LENGTH-FIXED}
+    { 2, "lun", REQUIRED | LENGTH-FIXED}
+    { 6, "reserved3", REQUIRED | LENGTH-FIXED}
+    { 8, "command", REQUIRED | LENGTH-FIXED}
+    { 32, "sub_function_enables1", REQUIRED | LENGTH-FIXED}
+    { 32, "sub_function_enables2", OPTIONAL | LENGTH-FIXED}
   };
 
 Set Command Sub-Function Enables (Defining Body Code) Request
@@ -281,17 +281,17 @@ Set Command Sub-Function Enables (Defining Body Code) Request
 
 FIID Template: tmpl_cmd_set_command_sub_function_enables_defining_body_code_rq
   {
-    { 8, "cmd", REQUIRED | LENGTH-FIXED},
-    { 4, "channel_number", REQUIRED | LENGTH-FIXED},
-    { 4, "reserved1", REQUIRED | LENGTH-FIXED},
-    { 6, "net_fn", REQUIRED | LENGTH-FIXED},
-    { 2, "reserved2", REQUIRED | LENGTH-FIXED},
-    { 2, "lun", REQUIRED | LENGTH-FIXED},
-    { 6, "reserved3", REQUIRED | LENGTH-FIXED},
-    { 8, "command", REQUIRED | LENGTH-FIXED},
-    { 8, "defining_body_code", REQUIRED | LENGTH-FIXED},
-    { 32, "sub_function_enables1", REQUIRED | LENGTH-FIXED},
-    { 32, "sub_function_enables2", OPTIONAL | LENGTH-FIXED},
+    { 8, "cmd", REQUIRED | LENGTH-FIXED}
+    { 4, "channel_number", REQUIRED | LENGTH-FIXED}
+    { 4, "reserved1", REQUIRED | LENGTH-FIXED}
+    { 6, "net_fn", REQUIRED | LENGTH-FIXED}
+    { 2, "reserved2", REQUIRED | LENGTH-FIXED}
+    { 2, "lun", REQUIRED | LENGTH-FIXED}
+    { 6, "reserved3", REQUIRED | LENGTH-FIXED}
+    { 8, "command", REQUIRED | LENGTH-FIXED}
+    { 8, "defining_body_code", REQUIRED | LENGTH-FIXED}
+    { 32, "sub_function_enables1", REQUIRED | LENGTH-FIXED}
+    { 32, "sub_function_enables2", OPTIONAL | LENGTH-FIXED}
   };
 
 
@@ -300,17 +300,17 @@ Set Command Sub-Function Enables (OEM IANA) Request
 
 FIID Template: tmpl_cmd_set_command_sub_function_enables_oem_iana_rq
   {
-    { 8, "cmd", REQUIRED | LENGTH-FIXED},
-    { 4, "channel_number", REQUIRED | LENGTH-FIXED},
-    { 4, "reserved1", REQUIRED | LENGTH-FIXED},
-    { 6, "net_fn", REQUIRED | LENGTH-FIXED},
-    { 2, "reserved2", REQUIRED | LENGTH-FIXED},
-    { 2, "lun", REQUIRED | LENGTH-FIXED},
-    { 6, "reserved3", REQUIRED | LENGTH-FIXED},
-    { 8, "command", REQUIRED | LENGTH-FIXED},
-    { 24, "oem_iana", REQUIRED | LENGTH-FIXED},
-    { 32, "sub_function_enables1", REQUIRED | LENGTH-FIXED},
-    { 32, "sub_function_enables2", OPTIONAL | LENGTH-FIXED},
+    { 8, "cmd", REQUIRED | LENGTH-FIXED}
+    { 4, "channel_number", REQUIRED | LENGTH-FIXED}
+    { 4, "reserved1", REQUIRED | LENGTH-FIXED}
+    { 6, "net_fn", REQUIRED | LENGTH-FIXED}
+    { 2, "reserved2", REQUIRED | LENGTH-FIXED}
+    { 2, "lun", REQUIRED | LENGTH-FIXED}
+    { 6, "reserved3", REQUIRED | LENGTH-FIXED}
+    { 8, "command", REQUIRED | LENGTH-FIXED}
+    { 24, "oem_iana", REQUIRED | LENGTH-FIXED}
+    { 32, "sub_function_enables1", REQUIRED | LENGTH-FIXED}
+    { 32, "sub_function_enables2", OPTIONAL | LENGTH-FIXED}
   };
 
 
@@ -319,8 +319,8 @@ Set Command Sub-Function Enables Response
 
 FIID Template: tmpl_cmd_set_command_sub_function_enables_rs
   {
-    { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
-    { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
+    { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
+    { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
   };
 
 Get Command Sub-Function Enables Request
@@ -328,16 +328,16 @@ Get Command Sub-Function Enables Request
 
 FIID Template: tmpl_cmd_get_command_sub_function_enables_rq
   {
-    { 8, "cmd", REQUIRED | LENGTH-FIXED},
-    { 4, "channel_number", REQUIRED | LENGTH-FIXED},
-    { 4, "reserved1", REQUIRED | LENGTH-FIXED},
-    { 6, "net_fn", REQUIRED | LENGTH-FIXED},
-    { 2, "reserved2", REQUIRED | LENGTH-FIXED},
-    { 2, "lun", REQUIRED | LENGTH-FIXED},
-    { 6, "reserved3", REQUIRED | LENGTH-FIXED},
-    { 8, "command", REQUIRED | LENGTH-FIXED},
+    { 8, "cmd", REQUIRED | LENGTH-FIXED}
+    { 4, "channel_number", REQUIRED | LENGTH-FIXED}
+    { 4, "reserved1", REQUIRED | LENGTH-FIXED}
+    { 6, "net_fn", REQUIRED | LENGTH-FIXED}
+    { 2, "reserved2", REQUIRED | LENGTH-FIXED}
+    { 2, "lun", REQUIRED | LENGTH-FIXED}
+    { 6, "reserved3", REQUIRED | LENGTH-FIXED}
+    { 8, "command", REQUIRED | LENGTH-FIXED}
     /* For defining body code or group IANA depending on net_fn */
-    { 24, "net_fn_data", OPTIONAL | LENGTH-VARIABLE},
+    { 24, "net_fn_data", OPTIONAL | LENGTH-VARIABLE}
   };
 
 Get Command Sub-Function Enables Response
@@ -345,10 +345,10 @@ Get Command Sub-Function Enables Response
 
 FIID Template: tmpl_cmd_get_command_sub_function_enables_rs
   {
-    { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
-    { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
-    { 32, "sub_function_enables1", REQUIRED | LENGTH-FIXED},
-    { 32, "sub_function_enables2", OPTIONAL | LENGTH-FIXED},
+    { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
+    { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
+    { 32, "sub_function_enables1", REQUIRED | LENGTH-FIXED}
+    { 32, "sub_function_enables2", OPTIONAL | LENGTH-FIXED}
   };
 
 Get OEM NetFN IANA Support Request
@@ -356,13 +356,13 @@ Get OEM NetFN IANA Support Request
 
 FIID Template: tmpl_cmd_get_oem_netfn_iana_support_rq
   {
-    { 8, "cmd", REQUIRED | LENGTH-FIXED},
-    { 4, "channel_number", REQUIRED | LENGTH-FIXED},
-    { 4, "reserved1", REQUIRED | LENGTH-FIXED},
-    { 6, "net_fn", REQUIRED | LENGTH-FIXED},
-    { 2, "reserved2", REQUIRED | LENGTH-FIXED},
-    { 6, "list_index", REQUIRED | LENGTH-FIXED},
-    { 2, "reserved3", REQUIRED | LENGTH-FIXED},
+    { 8, "cmd", REQUIRED | LENGTH-FIXED}
+    { 4, "channel_number", REQUIRED | LENGTH-FIXED}
+    { 4, "reserved1", REQUIRED | LENGTH-FIXED}
+    { 6, "net_fn", REQUIRED | LENGTH-FIXED}
+    { 2, "reserved2", REQUIRED | LENGTH-FIXED}
+    { 6, "list_index", REQUIRED | LENGTH-FIXED}
+    { 2, "reserved3", REQUIRED | LENGTH-FIXED}
   };
 
 Get OEM NetFN IANA Support Response
@@ -370,15 +370,15 @@ Get OEM NetFN IANA Support Response
 
 FIID Template: tmpl_cmd_get_oem_netfn_iana_support_rs
   {
-    { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
-    { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
-    { 7, "last_iana", REQUIRED | LENGTH-FIXED},
-    { 1, "reserved", REQUIRED | LENGTH-FIXED},
-    { 2, "lun0", REQUIRED | LENGTH-FIXED},
-    { 2, "lun1", REQUIRED | LENGTH-FIXED},
-    { 2, "lun2", REQUIRED | LENGTH-FIXED},
-    { 2, "lun3", REQUIRED | LENGTH-FIXED},
-    { 24, "net_fn_data", OPTIONAL | LENGTH-VARIABLE},
+    { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
+    { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
+    { 7, "last_iana", REQUIRED | LENGTH-FIXED}
+    { 1, "reserved", REQUIRED | LENGTH-FIXED}
+    { 2, "lun0", REQUIRED | LENGTH-FIXED}
+    { 2, "lun1", REQUIRED | LENGTH-FIXED}
+    { 2, "lun2", REQUIRED | LENGTH-FIXED}
+    { 2, "lun3", REQUIRED | LENGTH-FIXED}
+    { 24, "net_fn_data", OPTIONAL | LENGTH-VARIABLE}
   };
 
 
