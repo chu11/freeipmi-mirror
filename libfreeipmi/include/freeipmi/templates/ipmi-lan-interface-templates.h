@@ -40,7 +40,7 @@ bits - indicates the number of bits in the field
 field name - indicates the name of the field, used for getting/setting
              fields in the fiid API.
 
-field flag, field flag, ... - flags indicating qualities of the field.  The following
+field flags - flags indicating qualities of the field.  The following
               qualities may exist for each field.
 
     REQUIRED - field is required for the packet/record
