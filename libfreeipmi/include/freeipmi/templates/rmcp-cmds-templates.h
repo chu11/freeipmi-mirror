@@ -27,47 +27,64 @@ extern "C" {
 
 #if 0
 
-Format = { bits, "field name", field flags }
+Please see fiid.h for details concerning the fiid interface.
 
-FIID_FIELD_REQUIRED - field is required for the payload
-FIID_FIELD_OPTIONAL - field is optional for the payload
+The following list the configurable fields of individual packet/record
+templates in FreeIPMI.  Each field is listed as a list of the
+following.
 
-FIID_FIELD_LENGTH_FIXED - field length is fixed at the number of bits listed
-FIID_FIELD_LENGTH_VARIABLE - field length is variable for the number of bits listed
+{ bits, "field name", field flag, field flag, ... }
+
+bits - indicates the number of bits in the field
+
+field name - indicates the name of the field, used for getting/setting
+             fields in the fiid API.
+
+field flags - flags indicating qualities of the field.  The following
+              qualities may exist for each field.
+
+    REQUIRED - field is required for the packet/record
+    OPTIONAL - field is optional for the packet/record
+
+    LENGTH-FIXED - field length is fixed at the number of bits listed
+
+    LENGTH-VARIABLE - field length is variable for the number of bits
+                      listed
+
+    MAKES-PACKET-SUFFICIENT - indicates field or fields are
+                              "sufficient" to make a packet/record valid
+                              and not malformed, but not necessarily a
+                              complete packet/record.
 
 ASF Presence Ping
 -----------------
 
-fiid_template_t tmpl_cmd_asf_presence_ping =
-  {
-    { 32, "iana_enterprise_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "message_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "message_tag", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "data_length", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_asf_presence_ping
+
+    { 32, "iana_enterprise_number", REQUIRED, LENGTH-FIXED }
+    { 8, "message_type", REQUIRED, LENGTH-FIXED }
+    { 8, "message_tag", REQUIRED, LENGTH-FIXED }
+    { 8, "reserved", REQUIRED, LENGTH-FIXED }
+    { 8, "data_length", REQUIRED, LENGTH-FIXED }
 
 ASF Presence Pong
 -----------------
 
-fiid_template_t tmpl_cmd_asf_presence_pong =
-  {
-    { 32, "iana_enterprise_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "message_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "message_tag", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "data_length", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 32, "oem_iana_enterprise_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 32, "oem_defined", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "supported_entities.version", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 3, "supported_entities.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "supported_entities.ipmi_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 7, "supported_interactions.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "supported_interactions.security_extensions", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 48, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_asf_presence_pong
+
+    { 32, "iana_enterprise_number", REQUIRED, LENGTH-FIXED }
+    { 8, "message_type", REQUIRED, LENGTH-FIXED }
+    { 8, "message_tag", REQUIRED, LENGTH-FIXED }
+    { 8, "reserved1", REQUIRED, LENGTH-FIXED }
+    { 8, "data_length", REQUIRED, LENGTH-FIXED }
+    { 32, "oem_iana_enterprise_number", REQUIRED, LENGTH-FIXED }
+    { 32, "oem_defined", REQUIRED, LENGTH-FIXED }
+    { 4, "supported_entities.version", REQUIRED, LENGTH-FIXED }
+    { 3, "supported_entities.reserved", REQUIRED, LENGTH-FIXED }
+    { 1, "supported_entities.ipmi_supported", REQUIRED, LENGTH-FIXED }
+    { 7, "supported_interactions.reserved", REQUIRED, LENGTH-FIXED }
+    { 1, "supported_interactions.security_extensions", REQUIRED, LENGTH-FIXED }
+    { 48, "reserved2", REQUIRED, LENGTH-FIXED }
 
 #endif  /* 0 */
 

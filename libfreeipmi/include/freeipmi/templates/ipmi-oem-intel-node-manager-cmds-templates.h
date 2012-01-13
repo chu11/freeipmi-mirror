@@ -27,19 +27,34 @@ extern "C" {
 
 #if 0
 
-Format = { bits, "field name", field flags }
+Please see fiid.h for details concerning the fiid interface.
 
-FIID_FIELD_REQUIRED - field is required for the payload
-FIID_FIELD_OPTIONAL - field is optional for the payload
+The following list the configurable fields of individual packet/record
+templates in FreeIPMI.  Each field is listed as a list of the
+following.
 
-FIID_FIELD_LENGTH_FIXED - field length is fixed at the number of bits listed
-FIID_FIELD_LENGTH_VARIABLE - field length is variable for the number of bits listed
+{ bits, "field name", field flag, field flag, ... }
 
-FIID_FIELD_MAKES_PACKET_SUFFICIENT - indicates field or fields are "sufficient" to make a valid packet
+bits - indicates the number of bits in the field
 
-/*******************************************
- * Intel                                   *
- *******************************************/
+field name - indicates the name of the field, used for getting/setting
+             fields in the fiid API.
+
+field flags - flags indicating qualities of the field.  The following
+              qualities may exist for each field.
+
+    REQUIRED - field is required for the packet/record
+    OPTIONAL - field is optional for the packet/record
+
+    LENGTH-FIXED - field length is fixed at the number of bits listed
+
+    LENGTH-VARIABLE - field length is variable for the number of bits
+                      listed
+
+    MAKES-PACKET-SUFFICIENT - indicates field or fields are
+                              "sufficient" to make a packet/record valid
+                              and not malformed, but not necessarily a
+                              complete packet/record.
 
 /*
  * Intel Node Manager
@@ -50,561 +65,490 @@ FIID_FIELD_MAKES_PACKET_SUFFICIENT - indicates field or fields are "sufficient" 
  * Inventec 5441/Dell Xanadu II
  * Inventec 5442/Dell Xanadu III
  * Quanta S99Q/Dell FS12-TY
+ * Quanta QSSC-S4R/Appro GB812X-CN
  */
 
 Enable Disable Node Manager Policy Control Request
 --------------------------------------------------
 
-fiid_template_t tmpl_cmd_oem_intel_node_manager_enable_disable_node_manager_policy_control_rq =
-  {
-    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4,  "policy_enable_disable", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4,  "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4,  "domain_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4,  "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "policy_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_oem_intel_node_manager_enable_disable_node_manager_policy_control_rq
+
+    { 8,  "cmd", REQUIRED, LENGTH-FIXED }
+    { 24, "manufacturer_id", REQUIRED, LENGTH-FIXED }
+    { 4,  "policy_enable_disable", REQUIRED, LENGTH-FIXED }
+    { 4,  "reserved1", REQUIRED, LENGTH-FIXED }
+    { 4,  "domain_id", REQUIRED, LENGTH-FIXED }
+    { 4,  "reserved2", REQUIRED, LENGTH-FIXED }
+    { 8,  "policy_id", REQUIRED, LENGTH-FIXED }
 
 Enable Disable Node Manager Policy Control Response
 ---------------------------------------------------
 
-fiid_template_t tmpl_cmd_oem_intel_node_manager_enable_disable_node_manager_policy_control_rs =
-  {
-    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},   
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_oem_intel_node_manager_enable_disable_node_manager_policy_control_rs
+
+    { 8,  "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8,  "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 24, "manufacturer_id", REQUIRED, LENGTH-FIXED }   
 
 Set Node Manager Policy Request
 -------------------------------
 
-fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_rq =
-  {
-    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4,  "domain_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy_enabled", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 3,  "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "policy_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4,  "policy_trigger_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4,  "policy_configuration_action", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy_exception_actions.send_alert", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy_exception_actions.shutdown_system", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 6,  "policy_exception_actions.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 16, "power_limit", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 32, "correction_time_limit", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 16, "policy_trigger_limit", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 16, "statistics_reporting_period", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_rq
+
+    { 8,  "cmd", REQUIRED, LENGTH-FIXED }
+    { 24, "manufacturer_id", REQUIRED, LENGTH-FIXED }
+    { 4,  "domain_id", REQUIRED, LENGTH-FIXED }
+    { 1,  "policy_enabled", REQUIRED, LENGTH-FIXED }
+    { 3,  "reserved", REQUIRED, LENGTH-FIXED }
+    { 8,  "policy_id", REQUIRED, LENGTH-FIXED }
+    { 4,  "policy_trigger_type", REQUIRED, LENGTH-FIXED }
+    { 4,  "policy_configuration_action", REQUIRED, LENGTH-FIXED }
+    { 1,  "policy_exception_actions.send_alert", REQUIRED, LENGTH-FIXED }
+    { 1,  "policy_exception_actions.shutdown_system", REQUIRED, LENGTH-FIXED }
+    { 6,  "policy_exception_actions.reserved", REQUIRED, LENGTH-FIXED }
+    { 16, "power_limit", REQUIRED, LENGTH-FIXED }
+    { 32, "correction_time_limit", REQUIRED, LENGTH-FIXED }
+    { 16, "policy_trigger_limit", REQUIRED, LENGTH-FIXED }
+    { 16, "statistics_reporting_period", REQUIRED, LENGTH-FIXED }
 
 Set Node Manager Policy Response
 --------------------------------
 
-fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_rs =
-  {
-    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_rs
+
+    { 8,  "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8,  "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 24, "manufacturer_id", REQUIRED, LENGTH-FIXED }
 
 Get Node Manager Policy Request
 -------------------------------
 
-fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_policy_rq =
-  {
-    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4,  "domain_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4,  "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "policy_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_policy_rq
+
+    { 8,  "cmd", REQUIRED, LENGTH-FIXED }
+    { 24, "manufacturer_id", REQUIRED, LENGTH-FIXED }
+    { 4,  "domain_id", REQUIRED, LENGTH-FIXED }
+    { 4,  "reserved", REQUIRED, LENGTH-FIXED }
+    { 8,  "policy_id", REQUIRED, LENGTH-FIXED }
 
 Get Node Manager Policy Response
 --------------------------------
 
-fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_policy_rs =
-  {
-    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4,  "domain_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy_enabled", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "per_domain_node_manager_policy_control_enabled", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "global_node_manager_policy_control_enabled", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4,  "policy_trigger_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4,  "policy_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy_exception_actions.send_alert", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy_exception_actions.shutdown_system", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 6,  "policy_exception_actions.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 16, "power_limit", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 32, "correction_time_limit", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 16, "policy_trigger_limit", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 16, "statistics_reporting_period", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_policy_rs
+
+    { 8,  "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8,  "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 24, "manufacturer_id", REQUIRED, LENGTH-FIXED }
+    { 4,  "domain_id", REQUIRED, LENGTH-FIXED }
+    { 1,  "policy_enabled", REQUIRED, LENGTH-FIXED }
+    { 1,  "per_domain_node_manager_policy_control_enabled", REQUIRED, LENGTH-FIXED }
+    { 1,  "global_node_manager_policy_control_enabled", REQUIRED, LENGTH-FIXED }
+    { 1,  "reserved", REQUIRED, LENGTH-FIXED }
+    { 4,  "policy_trigger_type", REQUIRED, LENGTH-FIXED }
+    { 4,  "policy_type", REQUIRED, LENGTH-FIXED }
+    { 1,  "policy_exception_actions.send_alert", REQUIRED, LENGTH-FIXED }
+    { 1,  "policy_exception_actions.shutdown_system", REQUIRED, LENGTH-FIXED }
+    { 6,  "policy_exception_actions.reserved", REQUIRED, LENGTH-FIXED }
+    { 16, "power_limit", REQUIRED, LENGTH-FIXED }
+    { 32, "correction_time_limit", REQUIRED, LENGTH-FIXED }
+    { 16, "policy_trigger_limit", REQUIRED, LENGTH-FIXED }
+    { 16, "statistics_reporting_period", REQUIRED, LENGTH-FIXED }
 
 Set Node Manager Alert Thresholds Request
 -----------------------------------------
 
-/* achu: spec lists "alert threshold array", however each alert
- * threshold is 2 bytes and there is a max of 3, so I list as the
- * entries and make them optional
- */
-fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_thresholds_rq =
-  {
-    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4,  "domain_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4,  "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "policy_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "number_of_alert_thresholds", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 16, "alert_threshold1", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 16, "alert_threshold2", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 16, "alert_threshold3", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_thresholds_rq
+
+    { 8,  "cmd", REQUIRED, LENGTH-FIXED }
+    { 24, "manufacturer_id", REQUIRED, LENGTH-FIXED }
+    { 4,  "domain_id", REQUIRED, LENGTH-FIXED }
+    { 4,  "reserved", REQUIRED, LENGTH-FIXED }
+    { 8,  "policy_id", REQUIRED, LENGTH-FIXED }
+    { 8,  "number_of_alert_thresholds", REQUIRED, LENGTH-FIXED }
+    { 16, "alert_threshold1", OPTIONAL, LENGTH-FIXED }
+    { 16, "alert_threshold2", OPTIONAL, LENGTH-FIXED }
+    { 16, "alert_threshold3", OPTIONAL, LENGTH-FIXED }
 
 Set Node Manager Alert Thresholds Response
 ------------------------------------------
 
-fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_thresholds_rs =
-  {
-    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_thresholds_rs
+
+    { 8,  "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8,  "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 24, "manufacturer_id", REQUIRED, LENGTH-FIXED }
 
 Get Node Manager Alert Thresholds Request
 -----------------------------------------
 
-fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_alert_thresholds_rq =
-  {
-    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4,  "domain_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4,  "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "policy_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_alert_thresholds_rq
+
+    { 8,  "cmd", REQUIRED, LENGTH-FIXED }
+    { 24, "manufacturer_id", REQUIRED, LENGTH-FIXED }
+    { 4,  "domain_id", REQUIRED, LENGTH-FIXED }
+    { 4,  "reserved", REQUIRED, LENGTH-FIXED }
+    { 8,  "policy_id", REQUIRED, LENGTH-FIXED }
 
 Get Node Manager Alert Thresholds Response
 ------------------------------------------
 
-/* achu: spec lists "alert threshold array", however each alert
- * threshold is 2 bytes and there is a max of 3, so I list the
- * entries and make them optional
- */
-fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_alert_thresholds_rs =
-  {
-    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "number_of_alert_thresholds", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 16, "alert_threshold1", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 16, "alert_threshold2", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 16, "alert_threshold3", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_alert_thresholds_rs
+
+    { 8,  "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8,  "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 24, "manufacturer_id", REQUIRED, LENGTH-FIXED }
+    { 8,  "number_of_alert_thresholds", REQUIRED, LENGTH-FIXED }
+    { 16, "alert_threshold1", OPTIONAL, LENGTH-FIXED }
+    { 16, "alert_threshold2", OPTIONAL, LENGTH-FIXED }
+    { 16, "alert_threshold3", OPTIONAL, LENGTH-FIXED }
 
 Set Node Manager Policy Suspend Periods Request
 -----------------------------------------------
 
-/* achu: spec lists "array of policy suspend periods", however each
- * alert threshold is 3 bytes and there is a max of 5, so I list the
- * entries and make them optional
- */
-fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_suspend_periods_rq =
-  {
-    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4,  "domain_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4,  "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "policy_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "number_of_policy_suspend_periods", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "policy1.suspend_start_time", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "policy1.suspend_stop_time", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy1.suspend_period_recurrence.monday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy1.suspend_period_recurrence.tuesday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy1.suspend_period_recurrence.wednesday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy1.suspend_period_recurrence.thursday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy1.suspend_period_recurrence.friday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy1.suspend_period_recurrence.saturday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy1.suspend_period_recurrence.sunday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy1.suspend_period_recurrence.reserved", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "policy2.suspend_start_time", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "policy2.suspend_stop_time", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy2.suspend_period_recurrence.monday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy2.suspend_period_recurrence.tuesday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy2.suspend_period_recurrence.wednesday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy2.suspend_period_recurrence.thursday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy2.suspend_period_recurrence.friday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy2.suspend_period_recurrence.saturday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy2.suspend_period_recurrence.sunday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy2.suspend_period_recurrence.reserved", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "policy3.suspend_start_time", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "policy3.suspend_stop_time", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy3.suspend_period_recurrence.monday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy3.suspend_period_recurrence.tuesday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy3.suspend_period_recurrence.wednesday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy3.suspend_period_recurrence.thursday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy3.suspend_period_recurrence.friday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy3.suspend_period_recurrence.saturday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy3.suspend_period_recurrence.sunday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy3.suspend_period_recurrence.reserved", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "policy4.suspend_start_time", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "policy4.suspend_stop_time", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy4.suspend_period_recurrence.monday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy4.suspend_period_recurrence.tuesday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy4.suspend_period_recurrence.wednesday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy4.suspend_period_recurrence.thursday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy4.suspend_period_recurrence.friday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy4.suspend_period_recurrence.saturday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy4.suspend_period_recurrence.sunday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy4.suspend_period_recurrence.reserved", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "policy5.suspend_start_time", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "policy5.suspend_stop_time", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy5.suspend_period_recurrence.monday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy5.suspend_period_recurrence.tuesday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy5.suspend_period_recurrence.wednesday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy5.suspend_period_recurrence.thursday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy5.suspend_period_recurrence.friday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy5.suspend_period_recurrence.saturday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy5.suspend_period_recurrence.sunday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy5.suspend_period_recurrence.reserved", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_suspend_periods_rq
+
+    { 8,  "cmd", REQUIRED, LENGTH-FIXED }
+    { 24, "manufacturer_id", REQUIRED, LENGTH-FIXED }
+    { 4,  "domain_id", REQUIRED, LENGTH-FIXED }
+    { 4,  "reserved", REQUIRED, LENGTH-FIXED }
+    { 8,  "policy_id", REQUIRED, LENGTH-FIXED }
+    { 8,  "number_of_policy_suspend_periods", REQUIRED, LENGTH-FIXED }
+    { 8,  "policy1.suspend_start_time", OPTIONAL, LENGTH-FIXED }
+    { 8,  "policy1.suspend_stop_time", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy1.suspend_period_recurrence.monday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy1.suspend_period_recurrence.tuesday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy1.suspend_period_recurrence.wednesday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy1.suspend_period_recurrence.thursday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy1.suspend_period_recurrence.friday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy1.suspend_period_recurrence.saturday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy1.suspend_period_recurrence.sunday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy1.suspend_period_recurrence.reserved", OPTIONAL, LENGTH-FIXED }
+    { 8,  "policy2.suspend_start_time", OPTIONAL, LENGTH-FIXED }
+    { 8,  "policy2.suspend_stop_time", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy2.suspend_period_recurrence.monday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy2.suspend_period_recurrence.tuesday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy2.suspend_period_recurrence.wednesday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy2.suspend_period_recurrence.thursday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy2.suspend_period_recurrence.friday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy2.suspend_period_recurrence.saturday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy2.suspend_period_recurrence.sunday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy2.suspend_period_recurrence.reserved", OPTIONAL, LENGTH-FIXED }
+    { 8,  "policy3.suspend_start_time", OPTIONAL, LENGTH-FIXED }
+    { 8,  "policy3.suspend_stop_time", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy3.suspend_period_recurrence.monday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy3.suspend_period_recurrence.tuesday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy3.suspend_period_recurrence.wednesday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy3.suspend_period_recurrence.thursday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy3.suspend_period_recurrence.friday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy3.suspend_period_recurrence.saturday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy3.suspend_period_recurrence.sunday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy3.suspend_period_recurrence.reserved", OPTIONAL, LENGTH-FIXED }
+    { 8,  "policy4.suspend_start_time", OPTIONAL, LENGTH-FIXED }
+    { 8,  "policy4.suspend_stop_time", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy4.suspend_period_recurrence.monday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy4.suspend_period_recurrence.tuesday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy4.suspend_period_recurrence.wednesday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy4.suspend_period_recurrence.thursday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy4.suspend_period_recurrence.friday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy4.suspend_period_recurrence.saturday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy4.suspend_period_recurrence.sunday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy4.suspend_period_recurrence.reserved", OPTIONAL, LENGTH-FIXED }
+    { 8,  "policy5.suspend_start_time", OPTIONAL, LENGTH-FIXED }
+    { 8,  "policy5.suspend_stop_time", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy5.suspend_period_recurrence.monday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy5.suspend_period_recurrence.tuesday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy5.suspend_period_recurrence.wednesday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy5.suspend_period_recurrence.thursday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy5.suspend_period_recurrence.friday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy5.suspend_period_recurrence.saturday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy5.suspend_period_recurrence.sunday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy5.suspend_period_recurrence.reserved", OPTIONAL, LENGTH-FIXED }
 
 Set Node Manager Policy Suspend Periods Response
 ------------------------------------------------
 
-fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_suspend_periods_rs =
-  {
-    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_suspend_periods_rs
+
+    { 8,  "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8,  "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 24, "manufacturer_id", REQUIRED, LENGTH-FIXED }
 
 Get Node Manager Policy Suspend Periods Request
 -----------------------------------------------
 
-fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_policy_suspend_periods_rq =
-  {
-    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4,  "domain_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4,  "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "policy_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_policy_suspend_periods_rq
+
+    { 8,  "cmd", REQUIRED, LENGTH-FIXED }
+    { 24, "manufacturer_id", REQUIRED, LENGTH-FIXED }
+    { 4,  "domain_id", REQUIRED, LENGTH-FIXED }
+    { 4,  "reserved", REQUIRED, LENGTH-FIXED }
+    { 8,  "policy_id", REQUIRED, LENGTH-FIXED }
 
 Get Node Manager Policy Suspend Periods Response
 ------------------------------------------------
 
-fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_policy_suspend_periods_rs =
-  {
-    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "number_of_policy_suspend_periods", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "policy1.suspend_start_time", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "policy1.suspend_stop_time", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy1.suspend_period_recurrence.monday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy1.suspend_period_recurrence.tuesday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy1.suspend_period_recurrence.wednesday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy1.suspend_period_recurrence.thursday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy1.suspend_period_recurrence.friday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy1.suspend_period_recurrence.saturday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy1.suspend_period_recurrence.sunday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy1.suspend_period_recurrence.reserved", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "policy2.suspend_start_time", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "policy2.suspend_stop_time", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy2.suspend_period_recurrence.monday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy2.suspend_period_recurrence.tuesday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy2.suspend_period_recurrence.wednesday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy2.suspend_period_recurrence.thursday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy2.suspend_period_recurrence.friday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy2.suspend_period_recurrence.saturday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy2.suspend_period_recurrence.sunday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy2.suspend_period_recurrence.reserved", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "policy3.suspend_start_time", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "policy3.suspend_stop_time", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy3.suspend_period_recurrence.monday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy3.suspend_period_recurrence.tuesday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy3.suspend_period_recurrence.wednesday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy3.suspend_period_recurrence.thursday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy3.suspend_period_recurrence.friday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy3.suspend_period_recurrence.saturday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy3.suspend_period_recurrence.sunday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy3.suspend_period_recurrence.reserved", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "policy4.suspend_start_time", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "policy4.suspend_stop_time", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy4.suspend_period_recurrence.monday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy4.suspend_period_recurrence.tuesday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy4.suspend_period_recurrence.wednesday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy4.suspend_period_recurrence.thursday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy4.suspend_period_recurrence.friday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy4.suspend_period_recurrence.saturday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy4.suspend_period_recurrence.sunday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy4.suspend_period_recurrence.reserved", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "policy5.suspend_start_time", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "policy5.suspend_stop_time", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy5.suspend_period_recurrence.monday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy5.suspend_period_recurrence.tuesday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy5.suspend_period_recurrence.wednesday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy5.suspend_period_recurrence.thursday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy5.suspend_period_recurrence.friday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy5.suspend_period_recurrence.saturday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy5.suspend_period_recurrence.sunday", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy5.suspend_period_recurrence.reserved", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_policy_suspend_periods_rs
+
+    { 8,  "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8,  "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 24, "manufacturer_id", REQUIRED, LENGTH-FIXED }
+    { 8,  "number_of_policy_suspend_periods", REQUIRED, LENGTH-FIXED }
+    { 8,  "policy1.suspend_start_time", OPTIONAL, LENGTH-FIXED }
+    { 8,  "policy1.suspend_stop_time", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy1.suspend_period_recurrence.monday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy1.suspend_period_recurrence.tuesday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy1.suspend_period_recurrence.wednesday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy1.suspend_period_recurrence.thursday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy1.suspend_period_recurrence.friday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy1.suspend_period_recurrence.saturday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy1.suspend_period_recurrence.sunday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy1.suspend_period_recurrence.reserved", OPTIONAL, LENGTH-FIXED }
+    { 8,  "policy2.suspend_start_time", OPTIONAL, LENGTH-FIXED }
+    { 8,  "policy2.suspend_stop_time", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy2.suspend_period_recurrence.monday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy2.suspend_period_recurrence.tuesday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy2.suspend_period_recurrence.wednesday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy2.suspend_period_recurrence.thursday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy2.suspend_period_recurrence.friday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy2.suspend_period_recurrence.saturday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy2.suspend_period_recurrence.sunday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy2.suspend_period_recurrence.reserved", OPTIONAL, LENGTH-FIXED }
+    { 8,  "policy3.suspend_start_time", OPTIONAL, LENGTH-FIXED }
+    { 8,  "policy3.suspend_stop_time", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy3.suspend_period_recurrence.monday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy3.suspend_period_recurrence.tuesday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy3.suspend_period_recurrence.wednesday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy3.suspend_period_recurrence.thursday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy3.suspend_period_recurrence.friday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy3.suspend_period_recurrence.saturday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy3.suspend_period_recurrence.sunday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy3.suspend_period_recurrence.reserved", OPTIONAL, LENGTH-FIXED }
+    { 8,  "policy4.suspend_start_time", OPTIONAL, LENGTH-FIXED }
+    { 8,  "policy4.suspend_stop_time", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy4.suspend_period_recurrence.monday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy4.suspend_period_recurrence.tuesday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy4.suspend_period_recurrence.wednesday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy4.suspend_period_recurrence.thursday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy4.suspend_period_recurrence.friday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy4.suspend_period_recurrence.saturday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy4.suspend_period_recurrence.sunday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy4.suspend_period_recurrence.reserved", OPTIONAL, LENGTH-FIXED }
+    { 8,  "policy5.suspend_start_time", OPTIONAL, LENGTH-FIXED }
+    { 8,  "policy5.suspend_stop_time", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy5.suspend_period_recurrence.monday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy5.suspend_period_recurrence.tuesday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy5.suspend_period_recurrence.wednesday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy5.suspend_period_recurrence.thursday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy5.suspend_period_recurrence.friday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy5.suspend_period_recurrence.saturday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy5.suspend_period_recurrence.sunday", OPTIONAL, LENGTH-FIXED }
+    { 1,  "policy5.suspend_period_recurrence.reserved", OPTIONAL, LENGTH-FIXED }
 
 Reset Node Manager Statistics Request
 -------------------------------------
 
-fiid_template_t tmpl_cmd_oem_intel_node_manager_reset_node_manager_statistics_rq =
-  {
-    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4,  "mode", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4,  "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4,  "domain_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4,  "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "policy_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_oem_intel_node_manager_reset_node_manager_statistics_rq
+
+    { 8,  "cmd", REQUIRED, LENGTH-FIXED }
+    { 24, "manufacturer_id", REQUIRED, LENGTH-FIXED }
+    { 4,  "mode", REQUIRED, LENGTH-FIXED }
+    { 4,  "reserved1", REQUIRED, LENGTH-FIXED }
+    { 4,  "domain_id", REQUIRED, LENGTH-FIXED }
+    { 4,  "reserved2", REQUIRED, LENGTH-FIXED }
+    { 8,  "policy_id", REQUIRED, LENGTH-FIXED }
 
 Reset Node Manager Statistics Response
 --------------------------------------
 
-fiid_template_t tmpl_cmd_oem_intel_node_manager_reset_node_manager_statistics_rs =
-  {
-    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_oem_intel_node_manager_reset_node_manager_statistics_rs
+
+    { 8,  "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8,  "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 24, "manufacturer_id", REQUIRED, LENGTH-FIXED }
 
 Get Node Manager Statistics Request
 -----------------------------------
 
-fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_statistics_rq =
-  {
-    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4,  "mode", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4,  "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4,  "domain_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4,  "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "policy_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_statistics_rq
+
+    { 8,  "cmd", REQUIRED, LENGTH-FIXED }
+    { 24, "manufacturer_id", REQUIRED, LENGTH-FIXED }
+    { 4,  "mode", REQUIRED, LENGTH-FIXED }
+    { 4,  "reserved1", REQUIRED, LENGTH-FIXED }
+    { 4,  "domain_id", REQUIRED, LENGTH-FIXED }
+    { 4,  "reserved2", REQUIRED, LENGTH-FIXED }
+    { 8,  "policy_id", REQUIRED, LENGTH-FIXED }
 
 Get Node Manager Statistics Response
 ------------------------------------
 
-fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_statistics_rs =
-  {
-    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 16, "current", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 16, "minimum", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 16, "maximum", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 16, "average", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 32, "timestamp", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 32, "statistics_reporting_period", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4,  "domain_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy_global_administrative_state", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy_operational_state", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "measurements_state", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "policy_activation_state", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_statistics_rs
+
+    { 8,  "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8,  "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 24, "manufacturer_id", REQUIRED, LENGTH-FIXED }
+    { 16, "current", REQUIRED, LENGTH-FIXED }
+    { 16, "minimum", REQUIRED, LENGTH-FIXED }
+    { 16, "maximum", REQUIRED, LENGTH-FIXED }
+    { 16, "average", REQUIRED, LENGTH-FIXED }
+    { 32, "timestamp", REQUIRED, LENGTH-FIXED }
+    { 32, "statistics_reporting_period", REQUIRED, LENGTH-FIXED }
+    { 4,  "domain_id", REQUIRED, LENGTH-FIXED }
+    { 1,  "policy_global_administrative_state", REQUIRED, LENGTH-FIXED }
+    { 1,  "policy_operational_state", REQUIRED, LENGTH-FIXED }
+    { 1,  "measurements_state", REQUIRED, LENGTH-FIXED }
+    { 1,  "policy_activation_state", REQUIRED, LENGTH-FIXED }
 
 Get Node Manager Capabilities Request
 -------------------------------------
 
-fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_capabilities_rq =
-  {
-    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4,  "domain_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4,  "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4,  "policy_trigger_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4,  "policy_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "policy_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_capabilities_rq
+
+    { 8,  "cmd", REQUIRED, LENGTH-FIXED }
+    { 24, "manufacturer_id", REQUIRED, LENGTH-FIXED }
+    { 4,  "domain_id", REQUIRED, LENGTH-FIXED }
+    { 4,  "reserved", REQUIRED, LENGTH-FIXED }
+    { 4,  "policy_trigger_type", REQUIRED, LENGTH-FIXED }
+    { 4,  "policy_type", REQUIRED, LENGTH-FIXED }
+    { 8,  "policy_id", REQUIRED, LENGTH-FIXED }
 
 Get Node Manager Capabilities Response
 --------------------------------------
 
-fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_capabilities_rs =
-  {
-    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "max_concurrent_settings", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 16, "max power_thermal", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 16, "min_power_thermal", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 32, "min_correction_time", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 32, "max_correction_time", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 16, "min_statistics_reporting_period", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 16, "max_statistics_reporting_period", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 7,  "domain_limiting_scope", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "limiting_based_on", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_capabilities_rs
+
+    { 8,  "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8,  "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 24, "manufacturer_id", REQUIRED, LENGTH-FIXED }
+    { 8,  "max_concurrent_settings", REQUIRED, LENGTH-FIXED }
+    { 16, "max power_thermal", REQUIRED, LENGTH-FIXED }
+    { 16, "min_power_thermal", REQUIRED, LENGTH-FIXED }
+    { 32, "min_correction_time", REQUIRED, LENGTH-FIXED }
+    { 32, "max_correction_time", REQUIRED, LENGTH-FIXED }
+    { 16, "min_statistics_reporting_period", REQUIRED, LENGTH-FIXED }
+    { 16, "max_statistics_reporting_period", REQUIRED, LENGTH-FIXED }
+    { 7,  "domain_limiting_scope", REQUIRED, LENGTH-FIXED }
+    { 1,  "limiting_based_on", REQUIRED, LENGTH-FIXED }
 
 Get Node Manager Version Request
 --------------------------------
 
-fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_version_rq =
-  {
-    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_version_rq
+
+    { 8,  "cmd", REQUIRED, LENGTH-FIXED }
+    { 24, "manufacturer_id", REQUIRED, LENGTH-FIXED }
 
 Get Node Manager Version Response
 ---------------------------------
 
-fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_version_rs =
-  {
-    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "node_manager_version", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "ipmi_interface_version", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "patch_version", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "major_firmware_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "minor_firmware_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_version_rs
+
+    { 8,  "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8,  "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 24, "manufacturer_id", REQUIRED, LENGTH-FIXED }
+    { 8,  "node_manager_version", REQUIRED, LENGTH-FIXED }
+    { 8,  "ipmi_interface_version", REQUIRED, LENGTH-FIXED }
+    { 8,  "patch_version", REQUIRED, LENGTH-FIXED }
+    { 8,  "major_firmware_revision", REQUIRED, LENGTH-FIXED }
+    { 8,  "minor_firmware_revision", REQUIRED, LENGTH-FIXED }
 
 Set Node Manager Power Draw Range Request
 -----------------------------------------
 
-fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_power_draw_range_rq =
-  {
-    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4,  "domain_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4,  "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 16, "minimum_power_draw", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 16, "maximum_power_draw", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_oem_intel_node_manager_set_node_manager_power_draw_range_rq
+
+    { 8,  "cmd", REQUIRED, LENGTH-FIXED }
+    { 24, "manufacturer_id", REQUIRED, LENGTH-FIXED }
+    { 4,  "domain_id", REQUIRED, LENGTH-FIXED }
+    { 4,  "reserved", REQUIRED, LENGTH-FIXED }
+    { 16, "minimum_power_draw", REQUIRED, LENGTH-FIXED }
+    { 16, "maximum_power_draw", REQUIRED, LENGTH-FIXED }
 
 Set Node Manager Power Draw Range Response
 ------------------------------------------
 
-fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_power_draw_range_rs =
-  {
-    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_oem_intel_node_manager_set_node_manager_power_draw_range_rs
+
+    { 8,  "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8,  "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 24, "manufacturer_id", REQUIRED, LENGTH-FIXED }
 
 Set Node Manager Alert Destination Request
 ------------------------------------------
 
-fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_destination_rq =
-  {
-    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4,  "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 3,  "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "destination_information_operation", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "destination_information", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 7,  "alert_string_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "send_alert_string", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_destination_rq
+
+    { 8,  "cmd", REQUIRED, LENGTH-FIXED }
+    { 24, "manufacturer_id", REQUIRED, LENGTH-FIXED }
+    { 4,  "channel_number", REQUIRED, LENGTH-FIXED }
+    { 3,  "reserved1", REQUIRED, LENGTH-FIXED }
+    { 1,  "destination_information_operation", REQUIRED, LENGTH-FIXED }
+    { 8,  "destination_information", REQUIRED, LENGTH-FIXED }
+    { 7,  "alert_string_selector", REQUIRED, LENGTH-FIXED }
+    { 1,  "send_alert_string", REQUIRED, LENGTH-FIXED }
 
 Set Node Manager Alert Destination (IPMB) Request
 -------------------------------------------------
 
-fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_destination_ipmb_rq =
-  {
-    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4,  "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 3,  "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "destination_information_operation", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 7,  "slave_address", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 7,  "alert_string_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "send_alert_string", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_destination_ipmb_rq
+
+    { 8,  "cmd", REQUIRED, LENGTH-FIXED }
+    { 24, "manufacturer_id", REQUIRED, LENGTH-FIXED }
+    { 4,  "channel_number", REQUIRED, LENGTH-FIXED }
+    { 3,  "reserved1", REQUIRED, LENGTH-FIXED }
+    { 1,  "destination_information_operation", REQUIRED, LENGTH-FIXED }
+    { 1,  "reserved2", REQUIRED, LENGTH-FIXED }
+    { 7,  "slave_address", REQUIRED, LENGTH-FIXED }
+    { 7,  "alert_string_selector", REQUIRED, LENGTH-FIXED }
+    { 1,  "send_alert_string", REQUIRED, LENGTH-FIXED }
 
 Set Node Manager Alert Destination (LAN) Request
 ------------------------------------------------
 
-fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_destination_lan_rq =
-  {
-    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4,  "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 3,  "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "destination_information_operation", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4,  "destination_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4,  "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 7,  "alert_string_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "send_alert_string", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_destination_lan_rq
+
+    { 8,  "cmd", REQUIRED, LENGTH-FIXED }
+    { 24, "manufacturer_id", REQUIRED, LENGTH-FIXED }
+    { 4,  "channel_number", REQUIRED, LENGTH-FIXED }
+    { 3,  "reserved1", REQUIRED, LENGTH-FIXED }
+    { 1,  "destination_information_operation", REQUIRED, LENGTH-FIXED }
+    { 4,  "destination_selector", REQUIRED, LENGTH-FIXED }
+    { 4,  "reserved2", REQUIRED, LENGTH-FIXED }
+    { 7,  "alert_string_selector", REQUIRED, LENGTH-FIXED }
+    { 1,  "send_alert_string", REQUIRED, LENGTH-FIXED }
 
 Set Node Manager Alert Destination Response
 -------------------------------------------
 
-fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_destination_rs =
-  {
-    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_destination_rs
+
+    { 8,  "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8,  "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 24, "manufacturer_id", REQUIRED, LENGTH-FIXED }
 
 Get Node Manager Alert Destination Request
 ------------------------------------------
 
-fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_alert_destination_rq =
-  {
-    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_alert_destination_rq
+
+    { 8,  "cmd", REQUIRED, LENGTH-FIXED }
+    { 24, "manufacturer_id", REQUIRED, LENGTH-FIXED }
 
 Get Node Manager Alert Destination Response
 -------------------------------------------
 
-fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_alert_destination_rs =
-  {
-    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4,  "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 3,  "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "destination_information_operation", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4,  "destination_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4,  "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 7,  "alert_string_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "send_alert_string", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_alert_destination_rs
+
+    { 8,  "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8,  "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 24, "manufacturer_id", REQUIRED, LENGTH-FIXED }
+    { 4,  "channel_number", REQUIRED, LENGTH-FIXED }
+    { 3,  "reserved1", REQUIRED, LENGTH-FIXED }
+    { 1,  "destination_information_operation", REQUIRED, LENGTH-FIXED }
+    { 4,  "destination_selector", REQUIRED, LENGTH-FIXED }
+    { 4,  "reserved2", REQUIRED, LENGTH-FIXED }
+    { 7,  "alert_string_selector", REQUIRED, LENGTH-FIXED }
+    { 1,  "send_alert_string", REQUIRED, LENGTH-FIXED }
 
 #endif  /* 0 */
 

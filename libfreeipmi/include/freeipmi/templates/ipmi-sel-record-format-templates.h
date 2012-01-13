@@ -27,159 +27,155 @@ extern "C" {
 
 #if 0
 
-Format = { bits, "field name", field flags }
+Please see fiid.h for details concerning the fiid interface.
 
-FIID_FIELD_REQUIRED - field is required for the payload
-FIID_FIELD_OPTIONAL - field is optional for the payload
+The following list the configurable fields of individual packet/record
+templates in FreeIPMI.  Each field is listed as a list of the
+following.
 
-FIID_FIELD_LENGTH_FIXED - field length is fixed at the number of bits listed
-FIID_FIELD_LENGTH_VARIABLE - field length is variable for the number of bits listed
+{ bits, "field name", field flag, field flag, ... }
+
+bits - indicates the number of bits in the field
+
+field name - indicates the name of the field, used for getting/setting
+             fields in the fiid API.
+
+field flags - flags indicating qualities of the field.  The following
+              qualities may exist for each field.
+
+    REQUIRED - field is required for the packet/record
+    OPTIONAL - field is optional for the packet/record
+
+    LENGTH-FIXED - field length is fixed at the number of bits listed
+
+    LENGTH-VARIABLE - field length is variable for the number of bits
+                      listed
+
+    MAKES-PACKET-SUFFICIENT - indicates field or fields are
+                              "sufficient" to make a packet/record valid
+                              and not malformed, but not necessarily a
+                              complete packet/record.
 
 SEL Record Header
 -----------------
 
-fiid_template_t tmpl_sel_record_header =
-  {
-    { 16, "record_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "record_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_sel_record_header
+
+    { 16, "record_id", REQUIRED, LENGTH-FIXED }
+    { 8, "record_type", REQUIRED, LENGTH-FIXED }
 
 SEL System Event Record
 -----------------------
 
-fiid_template_t tmpl_sel_system_event_record =
-  {
-    { 16, "record_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "record_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 32, "timestamp", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+FIID Template: tmpl_sel_system_event_record
 
-    /* Generator ID */
-    { 1, "generator_id.id_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 7, "generator_id.id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 16, "record_id", REQUIRED, LENGTH-FIXED }
+    { 8, "record_type", REQUIRED, LENGTH-FIXED }
+    { 32, "timestamp", REQUIRED, LENGTH-FIXED }
 
-    { 2, "ipmb_device_lun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 2, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "generator_id.id_type", REQUIRED, LENGTH-FIXED }
+    { 7, "generator_id.id", REQUIRED, LENGTH-FIXED }
 
-    { 8, "event_message_format_version", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "sensor_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "sensor_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 2, "ipmb_device_lun", REQUIRED, LENGTH-FIXED }
+    { 2, "reserved", REQUIRED, LENGTH-FIXED }
+    { 4, "channel_number", REQUIRED, LENGTH-FIXED }
 
-    /* Event Dir | Event Type */
-    { 7, "event_type_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "event_dir", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "event_message_format_version", REQUIRED, LENGTH-FIXED }
+    { 8, "sensor_type", REQUIRED, LENGTH-FIXED }
+    { 8, "sensor_number", REQUIRED, LENGTH-FIXED }
 
-    /* Event Data */
-    { 8, "event_data1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "event_data2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "event_data3", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 7, "event_type_code", REQUIRED, LENGTH-FIXED }
+    { 1, "event_dir", REQUIRED, LENGTH-FIXED }
 
-    { 0, "", 0}
-  };
+    { 8, "event_data1", REQUIRED, LENGTH-FIXED }
+    { 8, "event_data2", REQUIRED, LENGTH-FIXED }
+    { 8, "event_data3", REQUIRED, LENGTH-FIXED }
+
 
 SEL System Event Record (with Event flags)
 ------------------------------------------
 
-fiid_template_t tmpl_sel_system_event_record_event_fields =
-  {
-    { 16, "record_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "record_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 32, "timestamp", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+FIID Template: tmpl_sel_system_event_record_event_fields
 
-    /* Generator ID */
-    { 1, "generator_id.id_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 7, "generator_id.id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 16, "record_id", REQUIRED, LENGTH-FIXED }
+    { 8, "record_type", REQUIRED, LENGTH-FIXED }
+    { 32, "timestamp", REQUIRED, LENGTH-FIXED }
 
-    { 2, "ipmb_device_lun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 2, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "generator_id.id_type", REQUIRED, LENGTH-FIXED }
+    { 7, "generator_id.id", REQUIRED, LENGTH-FIXED }
 
-    { 8, "event_message_format_version", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "sensor_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "sensor_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 2, "ipmb_device_lun", REQUIRED, LENGTH-FIXED }
+    { 2, "reserved", REQUIRED, LENGTH-FIXED }
+    { 4, "channel_number", REQUIRED, LENGTH-FIXED }
 
-    /* Event Dir | Event Type */
-    { 7, "event_type_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "event_dir", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "event_message_format_version", REQUIRED, LENGTH-FIXED }
+    { 8, "sensor_type", REQUIRED, LENGTH-FIXED }
+    { 8, "sensor_number", REQUIRED, LENGTH-FIXED }
 
-    /* Event Data 1 */
-    { 4, "offset_from_event_reading_type_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 2, "event_data3_flag", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 2, "event_data2_flag", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 7, "event_type_code", REQUIRED, LENGTH-FIXED }
+    { 1, "event_dir", REQUIRED, LENGTH-FIXED }
 
-    /* Event Data 2 */
-    { 8, "event_data2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "offset_from_event_reading_type_code", REQUIRED, LENGTH-FIXED }
+    { 2, "event_data3_flag", REQUIRED, LENGTH-FIXED }
+    { 2, "event_data2_flag", REQUIRED, LENGTH-FIXED }
 
-    /* Event Data 3 */
-    { 8, "event_data3", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "event_data2", REQUIRED, LENGTH-FIXED }
 
-    { 0, "", 0}
-  };
+    { 8, "event_data3", REQUIRED, LENGTH-FIXED }
+
 
 SEL System Event Record (w/ Previous and Severity Offset fields)
 ----------------------------------------------------------------
 
-fiid_template_t tmpl_sel_system_event_record_discrete_previous_state_severity =
-  {
-    { 16, "record_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "record_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 32, "timestamp", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+FIID Template: tmpl_sel_system_event_record_discrete_previous_state_severity
 
-    /* Generator ID */
-    { 1, "generator_id.id_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 7, "generator_id.id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 16, "record_id", REQUIRED, LENGTH-FIXED }
+    { 8, "record_type", REQUIRED, LENGTH-FIXED }
+    { 32, "timestamp", REQUIRED, LENGTH-FIXED }
 
-    { 2, "ipmb_device_lun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 2, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "generator_id.id_type", REQUIRED, LENGTH-FIXED }
+    { 7, "generator_id.id", REQUIRED, LENGTH-FIXED }
 
-    { 8, "event_message_format_version", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "sensor_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "sensor_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 2, "ipmb_device_lun", REQUIRED, LENGTH-FIXED }
+    { 2, "reserved", REQUIRED, LENGTH-FIXED }
+    { 4, "channel_number", REQUIRED, LENGTH-FIXED }
 
-    /* Event Dir | Event Type */
-    { 7, "event_type_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "event_dir", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "event_message_format_version", REQUIRED, LENGTH-FIXED }
+    { 8, "sensor_type", REQUIRED, LENGTH-FIXED }
+    { 8, "sensor_number", REQUIRED, LENGTH-FIXED }
 
-    /* Event Data 1 */
-    { 4, "offset_from_event_reading_type_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 2, "event_data3_flag", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 2, "event_data2_flag", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 7, "event_type_code", REQUIRED, LENGTH-FIXED }
+    { 1, "event_dir", REQUIRED, LENGTH-FIXED }
 
-    /* Event Data 2 */
-    { 4, "previous_offset_from_event_reading_type_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "offset_from_severity_event_reading_type_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "offset_from_event_reading_type_code", REQUIRED, LENGTH-FIXED }
+    { 2, "event_data3_flag", REQUIRED, LENGTH-FIXED }
+    { 2, "event_data2_flag", REQUIRED, LENGTH-FIXED }
 
-    /* Event Data 3 */
-    { 8, "event_data3", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "previous_offset_from_event_reading_type_code", REQUIRED, LENGTH-FIXED }
+    { 4, "offset_from_severity_event_reading_type_code", REQUIRED, LENGTH-FIXED }
 
-    { 0, "", 0}
-  };
+    { 8, "event_data3", REQUIRED, LENGTH-FIXED }
+
 
 SEL Timestamped OEM Record
 --------------------------
 
-fiid_template_t tmpl_sel_timestamped_oem_record =
-  {
-    { 16, "record_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "record_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 32, "timestamp", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 48, "oem_defined", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_sel_timestamped_oem_record
+
+    { 16, "record_id", REQUIRED, LENGTH-FIXED }
+    { 8, "record_type", REQUIRED, LENGTH-FIXED }
+    { 32, "timestamp", REQUIRED, LENGTH-FIXED }
+    { 24, "manufacturer_id", REQUIRED, LENGTH-FIXED }
+    { 48, "oem_defined", REQUIRED, LENGTH-FIXED }
 
 SEL Non-Timestamped OEM Record
 ------------------------------
 
-fiid_template_t tmpl_sel_non_timestamped_oem_record =
-  {
-    { 16, "record_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "record_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 104, "oem_defined", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_sel_non_timestamped_oem_record
+
+    { 16, "record_id", REQUIRED, LENGTH-FIXED }
+    { 8, "record_type", REQUIRED, LENGTH-FIXED }
+    { 104, "oem_defined", REQUIRED, LENGTH-FIXED }
 
 #endif  /* 0 */
 

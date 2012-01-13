@@ -27,54 +27,67 @@ extern "C" {
 
 #if 0
 
-Format = { bits, "field name", field flags }
+Please see fiid.h for details concerning the fiid interface.
 
-FIID_FIELD_REQUIRED - field is required for the payload
-FIID_FIELD_OPTIONAL - field is optional for the payload
+The following list the configurable fields of individual packet/record
+templates in FreeIPMI.  Each field is listed as a list of the
+following.
 
-FIID_FIELD_LENGTH_FIXED - field length is fixed at the number of bits listed
-FIID_FIELD_LENGTH_VARIABLE - field length is variable for the number of bits listed
+{ bits, "field name", field flag, field flag, ... }
+
+bits - indicates the number of bits in the field
+
+field name - indicates the name of the field, used for getting/setting
+             fields in the fiid API.
+
+field flags - flags indicating qualities of the field.  The following
+              qualities may exist for each field.
+
+    REQUIRED - field is required for the packet/record
+    OPTIONAL - field is optional for the packet/record
+
+    LENGTH-FIXED - field length is fixed at the number of bits listed
+
+    LENGTH-VARIABLE - field length is variable for the number of bits
+                      listed
+
+    MAKES-PACKET-SUFFICIENT - indicates field or fields are
+                              "sufficient" to make a packet/record valid
+                              and not malformed, but not necessarily a
+                              complete packet/record.
 
 IPMB Message Header Request
 ---------------------------
 
-fiid_template_t tmpl_ipmb_msg_hdr_rq =
-  {
-    { 8, "rs_addr", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 2, "rs_lun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 6, "net_fn", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "checksum1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "rq_addr", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 2, "rq_lun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 6, "rq_seq", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_ipmb_msg_hdr_rq
+
+    { 8, "rs_addr", REQUIRED, LENGTH-FIXED }
+    { 2, "rs_lun", REQUIRED, LENGTH-FIXED }
+    { 6, "net_fn", REQUIRED, LENGTH-FIXED }
+    { 8, "checksum1", REQUIRED, LENGTH-FIXED }
+    { 8, "rq_addr", REQUIRED, LENGTH-FIXED }
+    { 2, "rq_lun", REQUIRED, LENGTH-FIXED }
+    { 6, "rq_seq", REQUIRED, LENGTH-FIXED }
 
 IPMB Message Header Response
 ----------------------------
 
-fiid_template_t tmpl_ipmb_msg_hdr_rs =
-  {
-    { 2, "rq_lun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 6, "net_fn", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "checksum1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "rs_addr", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 2, "rs_lun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 6, "rq_seq", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_ipmb_msg_hdr_rs
 
-fiid_template_t tmpl_ipmb_msg_trlr =
-  {
-    { 8, "checksum2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+    { 2, "rq_lun", REQUIRED, LENGTH-FIXED }
+    { 6, "net_fn", REQUIRED, LENGTH-FIXED }
+    { 8, "checksum1", REQUIRED, LENGTH-FIXED }
+    { 8, "rs_addr", REQUIRED, LENGTH-FIXED }
+    { 2, "rs_lun", REQUIRED, LENGTH-FIXED }
+    { 6, "rq_seq", REQUIRED, LENGTH-FIXED }
 
-fiid_template_t tmpl_ipmb_msg =
-  {
-    { 2040, "data", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_VARIABLE},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_ipmb_msg_trlr
+
+    { 8, "checksum2", REQUIRED, LENGTH-FIXED }
+
+FIID Template: tmpl_ipmb_msg
+
+    { 2040, "data", REQUIRED, LENGTH-VARIABLE }
 
 #endif  /* 0 */
 

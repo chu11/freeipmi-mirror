@@ -27,87 +27,92 @@ extern "C" {
 
 #if 0
 
-Format = { bits, "field name", field flags }
+Please see fiid.h for details concerning the fiid interface.
 
-FIID_FIELD_REQUIRED - field is required for the payload
-FIID_FIELD_OPTIONAL - field is optional for the payload
+The following list the configurable fields of individual packet/record
+templates in FreeIPMI.  Each field is listed as a list of the
+following.
 
-FIID_FIELD_LENGTH_FIXED - field length is fixed at the number of bits listed
-FIID_FIELD_LENGTH_VARIABLE - field length is variable for the number of bits listed
+{ bits, "field name", field flag, field flag, ... }
 
-FIID_FIELD_MAKES_PACKET_SUFFICIENT - indicates field or fields are "sufficient" to make a valid packet
+bits - indicates the number of bits in the field
+
+field name - indicates the name of the field, used for getting/setting
+             fields in the fiid API.
+
+field flags - flags indicating qualities of the field.  The following
+              qualities may exist for each field.
+
+    REQUIRED - field is required for the packet/record
+    OPTIONAL - field is optional for the packet/record
+
+    LENGTH-FIXED - field length is fixed at the number of bits listed
+
+    LENGTH-VARIABLE - field length is variable for the number of bits
+                      listed
+
+    MAKES-PACKET-SUFFICIENT - indicates field or fields are
+                              "sufficient" to make a packet/record valid
+                              and not malformed, but not necessarily a
+                              complete packet/record.
 
 Get FRU Inventory Area Info Request
 -----------------------------------
 
-fiid_template_t tmpl_cmd_get_fru_inventory_area_info_rq =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "fru_device_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_get_fru_inventory_area_info_rq
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED }
+    { 8, "fru_device_id", REQUIRED, LENGTH-FIXED }
 
 Get FRU Inventory Area Info Response
 ------------------------------------
 
-fiid_template_t tmpl_cmd_get_fru_inventory_area_info_rs =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 16, "fru_inventory_area_size", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "device_is_accessed", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 7, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_get_fru_inventory_area_info_rs
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 16, "fru_inventory_area_size", REQUIRED, LENGTH-FIXED }
+    { 1, "device_is_accessed", REQUIRED, LENGTH-FIXED }
+    { 7, "reserved", REQUIRED, LENGTH-FIXED }
 
 Read FRU Data Request
 ---------------------
 
-fiid_template_t tmpl_cmd_read_fru_data_rq =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "fru_device_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 16, "fru_inventory_offset_to_read", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "count_to_read", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_read_fru_data_rq
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED }
+    { 8, "fru_device_id", REQUIRED, LENGTH-FIXED }
+    { 16, "fru_inventory_offset_to_read", REQUIRED, LENGTH-FIXED }
+    { 8, "count_to_read", REQUIRED, LENGTH-FIXED }
 
 Read FRU Data Response
 ----------------------
 
-/* 2040 = 255 * 8, 255 b/c count_returned field in request is 1 byte long */
-fiid_template_t tmpl_cmd_read_fru_data_rs =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 8, "count_returned", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 2040, "requested_data", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_read_fru_data_rs
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8, "count_returned", REQUIRED, LENGTH-FIXED }
+    { 2040, "requested_data", OPTIONAL, LENGTH-VARIABLE }
 
 Write FRU Data Request
 ----------------------
 
-/* 2040 = 255 * 8, 255 b/c bytes_to_write field in request is 1 byte long */
-fiid_template_t tmpl_cmd_write_fru_data_rq =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "fru_device_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 16, "fru_inventory_offset_to_write", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 2040, "data_to_write", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_VARIABLE},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_write_fru_data_rq
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED }
+    { 8, "fru_device_id", REQUIRED, LENGTH-FIXED }
+    { 16, "fru_inventory_offset_to_write", REQUIRED, LENGTH-FIXED }
+    { 2040, "data_to_write", REQUIRED, LENGTH-VARIABLE }
 
 Write FRU Data Response
 -----------------------
 
-fiid_template_t tmpl_cmd_write_fru_data_rs =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 8, "count_written", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_write_fru_data_rs
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8, "count_written", REQUIRED, LENGTH-FIXED }
 
 #endif  /* 0 */
 

@@ -27,93 +27,94 @@ extern "C" {
 
 #if 0
 
-Format = { bits, "field name", field flags }
+Please see fiid.h for details concerning the fiid interface.
 
-FIID_FIELD_REQUIRED - field is required for the payload
-FIID_FIELD_OPTIONAL - field is optional for the payload
+The following list the configurable fields of individual packet/record
+templates in FreeIPMI.  Each field is listed as a list of the
+following.
 
-FIID_FIELD_LENGTH_FIXED - field length is fixed at the number of bits listed
-FIID_FIELD_LENGTH_VARIABLE - field length is variable for the number of bits listed
+{ bits, "field name", field flag, field flag, ... }
 
-FIID_FIELD_MAKES_PACKET_SUFFICIENT - indicates field or fields are "sufficient" to make a valid packet
+bits - indicates the number of bits in the field
+
+field name - indicates the name of the field, used for getting/setting
+             fields in the fiid API.
+
+field flags - flags indicating qualities of the field.  The following
+              qualities may exist for each field.
+
+    REQUIRED - field is required for the packet/record
+    OPTIONAL - field is optional for the packet/record
+
+    LENGTH-FIXED - field length is fixed at the number of bits listed
+
+    LENGTH-VARIABLE - field length is variable for the number of bits
+                      listed
+
+    MAKES-PACKET-SUFFICIENT - indicates field or fields are
+                              "sufficient" to make a packet/record valid
+                              and not malformed, but not necessarily a
+                              complete packet/record.
 
 Set Event Receiver Request
 --------------------------
 
-/* event_receiver_slave_address is presumably always a slave address, not a
- * software id, so no "id type" field.
- */
-fiid_template_t tmpl_cmd_set_event_receiver_rq =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "event_receiver_slave_address", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 2, "event_receiver_lun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 6, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_set_event_receiver_rq
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED }
+    { 8, "event_receiver_slave_address", REQUIRED, LENGTH-FIXED }
+    { 2, "event_receiver_lun", REQUIRED, LENGTH-FIXED }
+    { 6, "reserved", REQUIRED, LENGTH-FIXED }
 
 Set Event Receiver Response
 ---------------------------
 
-fiid_template_t tmpl_cmd_set_event_receiver_rs =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_set_event_receiver_rs
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
 
 Get Event Receiver Request
 --------------------------
 
-/* event_receiver_slave_address is presumably always a slave address, not a
- * software id, so no "id type" field.
- */
-fiid_template_t tmpl_cmd_get_event_receiver_rq =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_get_event_receiver_rq
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED }
 
 Get Event Receiver Response
 ---------------------------
 
-fiid_template_t tmpl_cmd_get_event_receiver_rs =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 8, "event_receiver_slave_address", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 2, "event_receiver_lun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 6, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_get_event_receiver_rs
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8, "event_receiver_slave_address", REQUIRED, LENGTH-FIXED }
+    { 2, "event_receiver_lun", REQUIRED, LENGTH-FIXED }
+    { 6, "reserved", REQUIRED, LENGTH-FIXED }
 
 Platform Event Request
 ----------------------
 
-fiid_template_t tmpl_cmd_platform_event_rq =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "generator_id", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 8, "event_message_format_version", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, /* EvMRev in spec */
-    { 8, "sensor_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "sensor_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 7, "event_type_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "event_dir", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "event_data1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "event_data2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "event_data3", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_platform_event_rq
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED }
+    { 8, "generator_id", OPTIONAL, LENGTH-FIXED }
+    { 8, "event_message_format_version", REQUIRED, LENGTH-FIXED }
+    { 8, "sensor_type", REQUIRED, LENGTH-FIXED }
+    { 8, "sensor_number", REQUIRED, LENGTH-FIXED }
+    { 7, "event_type_code", REQUIRED, LENGTH-FIXED }
+    { 1, "event_dir", REQUIRED, LENGTH-FIXED }
+    { 8, "event_data1", REQUIRED, LENGTH-FIXED }
+    { 8, "event_data2", REQUIRED, LENGTH-FIXED }
+    { 8, "event_data3", REQUIRED, LENGTH-FIXED }
 
 Platform Event Response
 -----------------------
 
-fiid_template_t tmpl_cmd_platform_event_rs =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 0, "", 0}
-  };
+FIID Template: tmpl_cmd_platform_event_rs
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
 
 #endif  /* 0 */
 
