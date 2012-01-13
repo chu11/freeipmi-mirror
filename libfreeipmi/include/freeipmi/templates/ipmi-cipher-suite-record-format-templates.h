@@ -59,7 +59,7 @@ field flags - flags indicating qualities of the field.  The following
 Cipher Suite Record Header
 --------------------------
 
-FIID Template: tmpl_cipher_suite_record_header =
+FIID Template: tmpl_cipher_suite_record_header
   {
     { 6, "record_format", REQUIRED | LENGTH-FIXED},
     { 2, "tag_bits", REQUIRED | LENGTH-FIXED},
@@ -69,7 +69,7 @@ FIID Template: tmpl_cipher_suite_record_header =
 Cipher Suite Record
 -------------------
 
-FIID Template: tmpl_cipher_suite_record =
+FIID Template: tmpl_cipher_suite_record
   {
     { 6, "record_format", REQUIRED | LENGTH-FIXED},
     { 2, "tag_bits", REQUIRED | LENGTH-FIXED},
@@ -86,7 +86,7 @@ FIID Template: tmpl_cipher_suite_record =
 OEM Cipher Suite Record
 -----------------------
 
-FIID Template: tmpl_oem_cipher_suite_record =
+FIID Template: tmpl_oem_cipher_suite_record
   {
     { 6, "record_format", REQUIRED | LENGTH-FIXED},
     { 2, "tag_bits", REQUIRED | LENGTH-FIXED},

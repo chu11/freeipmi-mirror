@@ -59,7 +59,7 @@ field flags - flags indicating qualities of the field.  The following
 LAN Session Header
 ------------------
 
-FIID Template: tmpl_lan_session_hdr =
+FIID Template: tmpl_lan_session_hdr
   {
     { 8, "authentication_type", REQUIRED | LENGTH-FIXED},
     { 32, "session_sequence_number", REQUIRED | LENGTH-FIXED},
@@ -102,7 +102,7 @@ FIID Template: tmpl_lan_msg_hdr_rs
 LAN Message Trailer
 -------------------
 
-FIID Template: tmpl_lan_msg_trlr =
+FIID Template: tmpl_lan_msg_trlr
   {
     { 8, "checksum2", REQUIRED | LENGTH-FIXED},
     { 0, "", 0}

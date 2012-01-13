@@ -59,7 +59,7 @@ field flags - flags indicating qualities of the field.  The following
 SOL Payload Data
 ----------------
 
-FIID Template: tmpl_sol_payload_data =
+FIID Template: tmpl_sol_payload_data
   {
     /* 0h ack only packet */
     { 4, "packet_sequence_number", REQUIRED | LENGTH-FIXED},
@@ -77,7 +77,7 @@ FIID Template: tmpl_sol_payload_data =
 SOL Payload Data Remote Console to BMC
 --------------------------------------
 
-FIID Template: tmpl_sol_payload_data_remote_console_to_bmc =
+FIID Template: tmpl_sol_payload_data_remote_console_to_bmc
   {
     /* 0h ack only packet */
     { 4, "packet_sequence_number", REQUIRED | LENGTH-FIXED},
@@ -102,7 +102,7 @@ FIID Template: tmpl_sol_payload_data_remote_console_to_bmc =
 SOL Payload Data BMC to Remote Console
 --------------------------------------
 
-FIID Template: tmpl_sol_payload_data_bmc_to_remote_console =
+FIID Template: tmpl_sol_payload_data_bmc_to_remote_console
   {
     /* 0h ack only packet */
     { 4, "packet_sequence_number", REQUIRED | LENGTH-FIXED},

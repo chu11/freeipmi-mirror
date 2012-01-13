@@ -85,13 +85,13 @@ FIID Template: tmpl_ipmb_msg_hdr_rs
     { 0, "", 0}
   };
 
-FIID Template: tmpl_ipmb_msg_trlr =
+FIID Template: tmpl_ipmb_msg_trlr
   {
     { 8, "checksum2", REQUIRED | LENGTH-FIXED},
     { 0, "", 0}
   };
 
-FIID Template: tmpl_ipmb_msg =
+FIID Template: tmpl_ipmb_msg
   {
     { 2040, "data", REQUIRED | LENGTH-VARIABLE},
     { 0, "", 0}
