@@ -183,6 +183,8 @@ ipmi-sensors
   - i.e. perhaps need to do record-id and something else, like
     -r 5.2 to indicate record id 5 and offset 2.
   - issue for libipmimonitoring too?
+- do not error out on unexpected sensor_read errors, move on? (XXX)
+  - i.e. unexpected completion code error?
 
 ipmi-sel
 --------
