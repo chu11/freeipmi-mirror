@@ -49,21 +49,27 @@
 
 extern struct ipmipower_arguments cmd_args;
 
-/* for OEM power types */
 struct oem_power_type_data oem_power_type_data[] =
   { 
-    /*  OEM_POWER_TYPE_NONE */
+    /*
+     * OEM_POWER_TYPE_NONE
+     */
     {
       "none",
       OEM_POWER_TYPE_SUPPORT_ALL,
     },
-    /* OEM_POWER_TYPE_C410X - supports off, on, status */
+
+    /*
+     * OEM_POWER_TYPE_C410X - supports off, on, status
+     */
     {
       "C410X",
       OEM_POWER_TYPE_SUPPORT_OFF | OEM_POWER_TYPE_SUPPORT_ON | OEM_POWER_TYPE_SUPPORT_STATUS,
     },
+
     {
       NULL,
       0,
     },
   };
+
