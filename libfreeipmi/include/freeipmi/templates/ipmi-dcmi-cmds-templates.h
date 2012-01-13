@@ -83,7 +83,7 @@ DCMI Rolling Average Time Period
 --------------------------------
 
 FIID Template: tmpl_dcmi_rolling_average_time_period
-  {
+
     { 6, "time_duration", REQUIRED | LENGTH-FIXED}
     { 2, "time_duration_units", REQUIRED | LENGTH-FIXED}
 
@@ -91,7 +91,7 @@ DCMI Get DCMI Capability Info Request
 -------------------------------------
 
 FIID Template: tmpl_cmd_dcmi_get_dcmi_capability_info_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 8, "group_extension_identification", REQUIRED | LENGTH-FIXED}
     { 8, "parameter_selector", REQUIRED | LENGTH-FIXED}
@@ -100,7 +100,7 @@ DCMI Get DCMI Capability Info Response
 --------------------------------------
 
 FIID Template: tmpl_cmd_dcmi_get_dcmi_capability_info_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "group_extension_identification", REQUIRED | LENGTH-FIXED}
@@ -114,7 +114,7 @@ DCMI Get DCMI Capability Info (Supported DCMI Capabilities) Response
 
 /* achu: assume typo "Out-Of-B" means "Out-Of-Band" */
 FIID Template: tmpl_cmd_dcmi_get_dcmi_capability_info_supported_dcmi_capabilities_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "group_extension_identification", REQUIRED | LENGTH-FIXED}
@@ -148,7 +148,7 @@ DCMI Get DCMI Capability Info (Mandatory Platform Attributes) Response
 ----------------------------------------------------------------------
 
 FIID Template: tmpl_cmd_dcmi_get_dcmi_capability_info_mandatory_platform_attributes_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "group_extension_identification", REQUIRED | LENGTH-FIXED}
@@ -177,7 +177,7 @@ DCMI Get DCMI Capability Info (Optional Platform Attributes) Response
 ---------------------------------------------------------------------
 
 FIID Template: tmpl_cmd_dcmi_get_dcmi_capability_info_optional_platform_attributes_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "group_extension_identification", REQUIRED | LENGTH-FIXED}
@@ -194,7 +194,7 @@ DCMI Get DCMI Capability Info (Manageability Access Attributes) Response
 
 /* achu: for consistency, renamed "oob" to "out_of_band" */
 FIID Template: tmpl_cmd_dcmi_get_dcmi_capability_info_manageability_access_attributes_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "group_extension_identification", REQUIRED | LENGTH-FIXED}
@@ -210,7 +210,7 @@ DCMI Get DCMI Capability Info (Enhanced System Power Statistics Attributes) Resp
 
 /* 256 * 8 = 2048 */
 FIID Template: tmpl_cmd_dcmi_get_dcmi_capability_info_enhanced_system_power_statistics_attributes_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "group_extension_identification", REQUIRED | LENGTH-FIXED}
@@ -225,7 +225,7 @@ DCMI Set DCMI Configuration Parameters Request
 ----------------------------------------------
 
 FIID Template: tmpl_cmd_dcmi_set_dcmi_configuration_parameters_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 8, "group_extension_identification", REQUIRED | LENGTH-FIXED}
     { 8, "parameter_selector", REQUIRED | LENGTH-FIXED}
@@ -236,7 +236,7 @@ DCMI Set DCMI Configuration Parameters Response
 -----------------------------------------------
 
 FIID Template: tmpl_cmd_dcmi_set_dcmi_configuration_parameters_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "group_extension_identification", REQUIRED | LENGTH-FIXED}
@@ -245,7 +245,7 @@ DCMI Set DCMI Configuration Parameters (Activate DHCP) Response
 ---------------------------------------------------------------
 
 FIID Template: tmpl_cmd_dcmi_set_dcmi_configuration_parameters_activate_dhcp_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 8, "group_extension_identification", REQUIRED | LENGTH-FIXED}
     { 8, "parameter_selector", REQUIRED | LENGTH-FIXED}
@@ -256,7 +256,7 @@ DCMI Set DCMI Configuration Parameters (Discovery Configuration) Response
 -------------------------------------------------------------------------
 
 FIID Template: tmpl_cmd_dcmi_set_dcmi_configuration_parameters_discovery_configuration_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 8, "group_extension_identification", REQUIRED | LENGTH-FIXED}
     { 8, "parameter_selector", REQUIRED | LENGTH-FIXED}
@@ -270,7 +270,7 @@ DCMI Set DCMI Configuration Parameters (DHCP Timing 1) Response
 ---------------------------------------------------------------
 
 FIID Template: tmpl_cmd_dcmi_set_dcmi_configuration_parameters_dhcp_timing_1_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 8, "group_extension_identification", REQUIRED | LENGTH-FIXED}
     { 8, "parameter_selector", REQUIRED | LENGTH-FIXED}
@@ -281,7 +281,7 @@ DCMI Set DCMI Configuration Parameters (DHCP Timing 2) Response
 ---------------------------------------------------------------
 
 FIID Template: tmpl_cmd_dcmi_set_dcmi_configuration_parameters_dhcp_timing_2_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 8, "group_extension_identification", REQUIRED | LENGTH-FIXED}
     { 8, "parameter_selector", REQUIRED | LENGTH-FIXED}
@@ -293,7 +293,7 @@ DCMI Set DCMI Configuration Parameters (DHCP Timing 3) Response
 ---------------------------------------------------------------
 
 FIID Template: tmpl_cmd_dcmi_set_dcmi_configuration_parameters_dhcp_timing_3_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 8, "group_extension_identification", REQUIRED | LENGTH-FIXED}
     { 8, "parameter_selector", REQUIRED | LENGTH-FIXED}
@@ -304,7 +304,7 @@ DCMI Get DCMI Configuration Parameters Request
 ----------------------------------------------
 
 FIID Template: tmpl_cmd_dcmi_get_dcmi_configuration_parameters_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 8, "group_extension_identification", REQUIRED | LENGTH-FIXED}
     { 8, "parameter_selector", REQUIRED | LENGTH-FIXED}
@@ -314,7 +314,7 @@ DCMI Get DCMI Configuration Parameters Response
 -----------------------------------------------
 
 FIID Template: tmpl_cmd_dcmi_get_dcmi_configuration_parameters_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "group_extension_identification", REQUIRED | LENGTH-FIXED}
@@ -327,7 +327,7 @@ DCMI Get DCMI Configuration Parameters (Discovery Configuration) Request
 ------------------------------------------------------------------------
 
 FIID Template: tmpl_cmd_dcmi_get_dcmi_configuration_parameters_discovery_configuration_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "group_extension_identification", REQUIRED | LENGTH-FIXED}
@@ -343,7 +343,7 @@ DCMI Get DCMI Configuration Parameters (DHCP Timing 1) Request
 --------------------------------------------------------------
 
 FIID Template: tmpl_cmd_dcmi_get_dcmi_configuration_parameters_dhcp_timing_1_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "group_extension_identification", REQUIRED | LENGTH-FIXED}
@@ -356,7 +356,7 @@ DCMI Get DCMI Configuration Parameters (DHCP Timing 2) Request
 --------------------------------------------------------------
 
 FIID Template: tmpl_cmd_dcmi_get_dcmi_configuration_parameters_dhcp_timing_2_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "group_extension_identification", REQUIRED | LENGTH-FIXED}
@@ -369,7 +369,7 @@ DCMI Get DCMI Configuration Parameters (DHCP Timing 3) Request
 --------------------------------------------------------------
 
 FIID Template: tmpl_cmd_dcmi_get_dcmi_configuration_parameters_dhcp_timing_3_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "group_extension_identification", REQUIRED | LENGTH-FIXED}
@@ -382,7 +382,7 @@ DCMI Get Asset Tag Request
 --------------------------
 
 FIID Template: tmpl_cmd_dcmi_get_asset_tag_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 8, "group_extension_identification", REQUIRED | LENGTH-FIXED}
     { 8, "offset_to_read", REQUIRED | LENGTH-FIXED}
@@ -396,7 +396,7 @@ DCMI Get Asset Tag Response
  * (512 bits) as the max then.
  */
 FIID Template: tmpl_cmd_dcmi_get_asset_tag_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "group_extension_identification", REQUIRED | LENGTH-FIXED}
@@ -411,7 +411,7 @@ DCMI Set Asset Tag Request
  * (512 bits) as the max then.
  */
 FIID Template: tmpl_cmd_dcmi_set_asset_tag_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 8, "group_extension_identification", REQUIRED | LENGTH-FIXED}
     { 8, "offset_to_write", REQUIRED | LENGTH-FIXED}
@@ -422,7 +422,7 @@ DCMI Set Asset Tag Response
 ---------------------------
 
 FIID Template: tmpl_cmd_dcmi_set_asset_tag_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "group_extension_identification", REQUIRED | LENGTH-FIXED}
@@ -432,7 +432,7 @@ DCMI Get Management Controller Identifier String Request
 --------------------------------------------------------
 
 FIID Template: tmpl_cmd_dcmi_get_management_controller_identifier_string_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 8, "group_extension_identification", REQUIRED | LENGTH-FIXED}
     { 8, "offset_to_read", REQUIRED | LENGTH-FIXED}
@@ -446,7 +446,7 @@ DCMI Get Management Controller Identifier String Response
  * (512 bits) as the max then.
  */
 FIID Template: tmpl_cmd_dcmi_get_management_controller_identifier_string_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "group_extension_identification", REQUIRED | LENGTH-FIXED}
@@ -461,7 +461,7 @@ DCMI Set Management Controller Identifier String Request
  * (512 bits) as the max then.
  */
 FIID Template: tmpl_cmd_dcmi_set_management_controller_identifier_string_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 8, "group_extension_identification", REQUIRED | LENGTH-FIXED}
     { 8, "offset_to_write", REQUIRED | LENGTH-FIXED}
@@ -472,7 +472,7 @@ DCMI Set Management Controller Identifier String Response
 ---------------------------------------------------------
 
 FIID Template: tmpl_cmd_dcmi_set_management_controller_identifier_string_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "group_extension_identification", REQUIRED | LENGTH-FIXED}
@@ -482,7 +482,7 @@ DCMI Get DCMI Sensor Info Request
 ---------------------------------
 
 FIID Template: tmpl_cmd_dcmi_get_dcmi_sensor_info_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 8, "group_extension_identification", REQUIRED | LENGTH-FIXED}
     { 8, "entity_id", REQUIRED | LENGTH-FIXED}
@@ -496,7 +496,7 @@ DCMI Get DCMI Sensor Info Response
  * assume max record ids of 256.  record_id = 16 bits, so 256 * 16 = 4096
  */
 FIID Template: tmpl_cmd_dcmi_get_dcmi_sensor_info_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "group_extension_identification", REQUIRED | LENGTH-FIXED}
@@ -508,7 +508,7 @@ DCMI Get Power Reading Request
 ------------------------------
 
 FIID Template: tmpl_cmd_dcmi_get_power_reading_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 8, "group_extension_identification", REQUIRED | LENGTH-FIXED}
     { 8, "mode", REQUIRED | LENGTH-FIXED}
@@ -518,7 +518,7 @@ DCMI Get Power Reading Response
 -------------------------------
 
 FIID Template: tmpl_cmd_dcmi_get_power_reading_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "group_extension_identification", REQUIRED | LENGTH-FIXED}
@@ -536,7 +536,7 @@ DCMI Get Power Limit Request
 ----------------------------
 
 FIID Template: tmpl_cmd_dcmi_get_power_limit_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 8, "group_extension_identification", REQUIRED | LENGTH-FIXED}
     { 16, "reserved", REQUIRED | LENGTH-FIXED}
@@ -545,7 +545,7 @@ DCMI Get Power Limit Response
 -----------------------------
 
 FIID Template: tmpl_cmd_dcmi_get_power_limit_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "group_extension_identification", REQUIRED | LENGTH-FIXED}
@@ -560,7 +560,7 @@ DCMI Set Power Limit Request
 ----------------------------
 
 FIID Template: tmpl_cmd_dcmi_set_power_limit_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 8, "group_extension_identification", REQUIRED | LENGTH-FIXED}
     { 24, "reserved1", REQUIRED | LENGTH-FIXED}
@@ -574,7 +574,7 @@ DCMI Set Power Limit Response
 -----------------------------
 
 FIID Template: tmpl_cmd_dcmi_set_power_limit_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "group_extension_identification", REQUIRED | LENGTH-FIXED}
@@ -583,7 +583,7 @@ DCMI Activate/Deactivate Power Limit Request
 --------------------------------------------
 
 FIID Template: tmpl_cmd_dcmi_activate_deactivate_power_limit_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 8, "group_extension_identification", REQUIRED | LENGTH-FIXED}
     { 8, "power_limit_activation", REQUIRED | LENGTH-FIXED}
@@ -593,7 +593,7 @@ DCMI Activate/Deactivate Power Limit Response
 ---------------------------------------------
 
 FIID Template: tmpl_cmd_dcmi_activate_deactivate_power_limit_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "group_extension_identification", REQUIRED | LENGTH-FIXED}
@@ -602,7 +602,7 @@ DCMI Get Thermal Limit Request
 ------------------------------
 
 FIID Template: tmpl_cmd_dcmi_get_thermal_limit_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 8, "group_extension_identification", REQUIRED | LENGTH-FIXED}
     { 8, "entity_id", REQUIRED | LENGTH-FIXED}
@@ -612,7 +612,7 @@ DCMI Get Thermal Limit Response
 -------------------------------
 
 FIID Template: tmpl_cmd_dcmi_get_thermal_limit_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "group_extension_identification", REQUIRED | LENGTH-FIXED}
@@ -627,7 +627,7 @@ DCMI Set Thermal Limit Request
 ------------------------------
 
 FIID Template: tmpl_cmd_dcmi_set_thermal_limit_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 8, "group_extension_identification", REQUIRED | LENGTH-FIXED}
     { 8, "entity_id", REQUIRED | LENGTH-FIXED}
@@ -643,7 +643,7 @@ DCMI Set Thermal Limit Response
 -------------------------------
 
 FIID Template: tmpl_cmd_dcmi_set_thermal_limit_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "group_extension_identification", REQUIRED | LENGTH-FIXED}
@@ -653,7 +653,7 @@ DCMI Get Temperature Reading Request
 ------------------------------------
 
 FIID Template: tmpl_cmd_dcmi_get_temperature_reading_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 8, "group_extension_identification", REQUIRED | LENGTH-FIXED}
     { 8, "sensor_type", REQUIRED | LENGTH-FIXED}
@@ -665,7 +665,7 @@ DCMI Get Temperature Reading Response
 -------------------------------------
 
 FIID Template: tmpl_cmd_dcmi_get_temperature_reading_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "group_extension_identification", REQUIRED | LENGTH-FIXED}

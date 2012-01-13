@@ -60,14 +60,14 @@ Reset Watchdog Timer Request
 ----------------------------
 
 FIID Template: tmpl_cmd_reset_watchdog_timer_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
 
 Reset Watchdog Timer Response
 -----------------------------
 
 FIID Template: tmpl_cmd_reset_watchdog_timer_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
 
@@ -75,7 +75,7 @@ Set Watchdog Timer Request
 --------------------------
 
 FIID Template: tmpl_cmd_set_watchdog_timer_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 3, "timer_use", REQUIRED | LENGTH-FIXED}
     { 3, "reserved1", REQUIRED | LENGTH-FIXED}
@@ -100,7 +100,7 @@ Set Watchdog Timer Response
 ---------------------------
 
 FIID Template: tmpl_cmd_set_watchdog_timer_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
 
@@ -108,14 +108,14 @@ Get Watchdog Timer Request
 --------------------------
 
 FIID Template: tmpl_cmd_get_watchdog_timer_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
 
 Get Watchdog Timer Response
 ---------------------------
 
 FIID Template: tmpl_cmd_get_watchdog_timer_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 3, "timer_use", REQUIRED | LENGTH-FIXED}

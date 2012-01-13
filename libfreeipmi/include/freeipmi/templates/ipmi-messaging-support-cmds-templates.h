@@ -60,7 +60,7 @@ Set BMC Global Enables Request
 ------------------------------
 
 FIID Template: tmpl_cmd_set_bmc_global_enables_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 1, "receive_message_queue_interrupt", REQUIRED | LENGTH-FIXED}
     { 1, "event_message_buffer_full_interrupt", REQUIRED | LENGTH-FIXED}
@@ -75,7 +75,7 @@ Set BMC Global Enables Response
 -------------------------------
 
 FIID Template: tmpl_cmd_set_bmc_global_enables_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
 
@@ -83,14 +83,14 @@ Get BMC Global Enables Request
 ------------------------------
 
 FIID Template: tmpl_cmd_get_bmc_global_enables_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
 
 Get BMC Global Enables Response
 -------------------------------
 
 FIID Template: tmpl_cmd_get_bmc_global_enables_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 1, "receive_message_queue_interrupt", REQUIRED | LENGTH-FIXED}
@@ -106,7 +106,7 @@ Clear Message Flags Request
 ---------------------------
 
 FIID Template: tmpl_cmd_clear_message_flags_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 1, "clear_receive_message_queue", REQUIRED | LENGTH-FIXED}
     { 1, "clear_event_message_buffer", REQUIRED | LENGTH-FIXED}
@@ -121,7 +121,7 @@ Clear Message Flags Response
 ----------------------------
 
 FIID Template: tmpl_cmd_clear_message_flags_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
 
@@ -129,14 +129,14 @@ Get Message Flags Request
 -------------------------
 
 FIID Template: tmpl_cmd_get_message_flags_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
 
 Get Message Flags Response
 --------------------------
 
 FIID Template: tmpl_cmd_get_message_flags_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 1, "receive_message_available", REQUIRED | LENGTH-FIXED}
@@ -152,7 +152,7 @@ Enable Message Channel Receive Request
 --------------------------------------
 
 FIID Template: tmpl_cmd_enable_message_channel_receive_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 4, "channel_number", REQUIRED | LENGTH-FIXED}
     { 4, "reserved1", REQUIRED | LENGTH-FIXED}
@@ -163,7 +163,7 @@ Enable Message Channel Receive Response
 ---------------------------------------
 
 FIID Template: tmpl_cmd_enable_message_channel_receive_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 4, "channel_number", REQUIRED | LENGTH-FIXED}
@@ -175,14 +175,14 @@ Get Message Request
 -------------------
 
 FIID Template: tmpl_cmd_get_message_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
 
 Get Message Response
 --------------------
 
 FIID Template: tmpl_cmd_get_message_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 4, "channel_number", REQUIRED | LENGTH-FIXED}
@@ -193,7 +193,7 @@ Send Message Request
 --------------------
 
 FIID Template: tmpl_cmd_send_message_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 4, "channel_number", REQUIRED | LENGTH-FIXED}
     { 1, "send_message_with_authentication", REQUIRED | LENGTH-FIXED}
@@ -205,7 +205,7 @@ Send Message Response
 ---------------------
 
 FIID Template: tmpl_cmd_send_message_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 1024, "response_data", OPTIONAL | LENGTH-VARIABLE}
@@ -214,14 +214,14 @@ Read Event Message Buffer Request
 ---------------------------------
 
 FIID Template: tmpl_cmd_read_event_message_buffer_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
 
 Read Event Message Buffer Response
 ----------------------------------
 
 FIID Template: tmpl_cmd_read_event_message_buffer_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 128, "message_data", REQUIRED | LENGTH-FIXED}
@@ -230,7 +230,7 @@ Get System Interface Capabilities Request
 -----------------------------------------
 
 FIID Template: tmpl_cmd_get_system_interface_capabilities_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 4, "system_interface", REQUIRED | LENGTH-FIXED}
     { 4, "reserved", REQUIRED | LENGTH-FIXED}
@@ -240,7 +240,7 @@ Get System Interface Capabilities Response
 ------------------------------------------
 
 FIID Template: tmpl_cmd_get_system_interface_capabilities_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "reserved1", REQUIRED | LENGTH-FIXED}
@@ -250,7 +250,7 @@ Get System Interface Capabilities (SSIF) Response
 --------------------------------------------------
 
 FIID Template: tmpl_cmd_get_system_interface_capabilities_ssif_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "reserved1", REQUIRED | LENGTH-FIXED}
@@ -265,7 +265,7 @@ Get System Interface Capabilities (KCS) Response
 ------------------------------------------------
 
 FIID Template: tmpl_cmd_get_system_interface_capabilities_kcs_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "reserved1", REQUIRED | LENGTH-FIXED}
@@ -277,14 +277,14 @@ Get BT Interface Capabilities Request
 -------------------------------------
 
 FIID Template: tmpl_cmd_get_bt_interface_capabilities_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
 
 Get BT Interface Capabilities Response
 --------------------------------------
 
 FIID Template: tmpl_cmd_get_bt_interface_capabilities_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "number_of_outstanding_requests_supported", REQUIRED | LENGTH-FIXED}
@@ -297,7 +297,7 @@ Master Write-Read Request
 -------------------------
 
 FIID Template: tmpl_cmd_master_write_read_rq 
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 1, "bus_type", REQUIRED | LENGTH-FIXED}
     { 3, "bus_id", REQUIRED | LENGTH-FIXED}
@@ -311,7 +311,7 @@ Master Write-Read Response
 --------------------------
 
 FIID Template: tmpl_cmd_master_write_read_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 2040, "data", OPTIONAL | LENGTH-VARIABLE}
@@ -320,7 +320,7 @@ Get Channel Authentication Capabilities Request
 -----------------------------------------------
 
 FIID Template: tmpl_cmd_get_channel_authentication_capabilities_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 4, "channel_number", REQUIRED | LENGTH-FIXED}
     { 3, "reserved1", REQUIRED | LENGTH-FIXED}
@@ -332,7 +332,7 @@ Get Channel Authentication Capabilities Response
 ------------------------------------------------
 
 FIID Template: tmpl_cmd_get_channel_authentication_capabilities_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "channel_number", REQUIRED | LENGTH-FIXED}
@@ -361,14 +361,14 @@ Get System GUID Request
 -----------------------
 
 FIID Template: tmpl_cmd_get_system_guid_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
 
 Get System GUID Response
 ------------------------
 
 FIID Template: tmpl_cmd_get_system_guid_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 128, "guid", REQUIRED | LENGTH-FIXED}
@@ -377,7 +377,7 @@ Get System GUID (with Format) Response
 --------------------------------------
 
 FIID Template: tmpl_cmd_get_system_guid_format_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 48, "node", REQUIRED | LENGTH-FIXED}  /* LS byte first */
@@ -391,7 +391,7 @@ Set System Info Parameters Request
 ----------------------------------
 
 FIID Template: tmpl_cmd_set_system_info_parameters_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 8, "parameter_selector", REQUIRED | LENGTH-FIXED}
     { 1024, "configuration_parameter_data", REQUIRED | LENGTH-VARIABLE}
@@ -400,7 +400,7 @@ Set System Info Parameters Response
 -----------------------------------
 
 FIID Template: tmpl_cmd_set_system_info_parameters_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
 
@@ -408,7 +408,7 @@ Set System Info Parameters (Set In Progress) Request
 ----------------------------------------------------
 
 FIID Template: tmpl_cmd_set_system_info_parameters_set_in_progress_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 8, "parameter_selector", REQUIRED | LENGTH-FIXED}
     { 2, "state", REQUIRED | LENGTH-FIXED}
@@ -418,7 +418,7 @@ Set System Info Parameters (System Firmware Version First Set) Request
 ----------------------------------------------------------------------
 
 FIID Template: tmpl_cmd_set_system_info_parameters_system_firmware_version_first_set_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 8, "parameter_selector", REQUIRED | LENGTH-FIXED}
     { 8, "set_selector", REQUIRED | LENGTH-FIXED}
@@ -431,7 +431,7 @@ Set System Info Parameters (System Firmware Version) Request
 ------------------------------------------------------------
 
 FIID Template: tmpl_cmd_set_system_info_parameters_system_firmware_version_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 8, "parameter_selector", REQUIRED | LENGTH-FIXED}
     { 8, "set_selector", REQUIRED | LENGTH-FIXED}
@@ -441,7 +441,7 @@ Set System Info Parameters (System Name First Set) Request
 ----------------------------------------------------------
 
 FIID Template: tmpl_cmd_set_system_info_parameters_system_name_first_set_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 8, "parameter_selector", REQUIRED | LENGTH-FIXED}
     { 8, "set_selector", REQUIRED | LENGTH-FIXED}
@@ -454,7 +454,7 @@ Set System Info Parameters (System Name) Request
 ------------------------------------------------
 
 FIID Template: tmpl_cmd_set_system_info_parameters_system_name_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 8, "parameter_selector", REQUIRED | LENGTH-FIXED}
     { 8, "set_selector", REQUIRED | LENGTH-FIXED}
@@ -464,7 +464,7 @@ Set System Info Parameters (Primary Operating System Name First Set) Request
 ----------------------------------------------------------------------------
 
 FIID Template: tmpl_cmd_set_system_info_parameters_primary_operating_system_name_first_set_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 8, "parameter_selector", REQUIRED | LENGTH-FIXED}
     { 8, "set_selector", REQUIRED | LENGTH-FIXED}
@@ -477,7 +477,7 @@ Set System Info Parameters (Primary Operating System Name) Request
 ------------------------------------------------------------------
 
 FIID Template: tmpl_cmd_set_system_info_parameters_primary_operating_system_name_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 8, "parameter_selector", REQUIRED | LENGTH-FIXED}
     { 8, "set_selector", REQUIRED | LENGTH-FIXED}
@@ -487,7 +487,7 @@ Set System Info Parameters (Operating System Name First Set) Request
 --------------------------------------------------------------------
 
 FIID Template: tmpl_cmd_set_system_info_parameters_operating_system_name_first_set_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 8, "parameter_selector", REQUIRED | LENGTH-FIXED}
     { 8, "set_selector", REQUIRED | LENGTH-FIXED}
@@ -500,7 +500,7 @@ Set System Info Parameters (Operating System Name) Request
 ----------------------------------------------------------
 
 FIID Template: tmpl_cmd_set_system_info_parameters_operating_system_name_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 8, "parameter_selector", REQUIRED | LENGTH-FIXED}
     { 8, "set_selector", REQUIRED | LENGTH-FIXED}
@@ -510,7 +510,7 @@ Get System Info Parameters Request
 ----------------------------------
 
 FIID Template: tmpl_cmd_get_system_info_parameters_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 7, "reserved", REQUIRED | LENGTH-FIXED}
     { 1, "get_parameter", REQUIRED | LENGTH-FIXED}
@@ -522,7 +522,7 @@ Get System Info Parameters Response
 -----------------------------------
 
 FIID Template: tmpl_cmd_get_system_info_parameters_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "parameter_revision", REQUIRED | LENGTH-FIXED}
@@ -535,7 +535,7 @@ Get System Info Parameters (System Firmware Version First Set) Response
 -----------------------------------------------------------------------
 
 FIID Template: tmpl_cmd_get_system_info_parameters_system_firmware_version_first_set_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "parameter_revision", REQUIRED | LENGTH-FIXED}
@@ -549,7 +549,7 @@ Get System Info Parameters (System Firmware Version) Response
 -------------------------------------------------------------
 
 FIID Template: tmpl_cmd_get_system_info_parameters_system_firmware_version_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "parameter_revision", REQUIRED | LENGTH-FIXED}
@@ -560,7 +560,7 @@ Get System Info Parameters (System Name First Set) Response
 -----------------------------------------------------------
 
 FIID Template: tmpl_cmd_get_system_info_parameters_system_name_first_set_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "parameter_revision", REQUIRED | LENGTH-FIXED}
@@ -574,7 +574,7 @@ Get System Info Parameters (System Name) Response
 -------------------------------------------------
 
 FIID Template: tmpl_cmd_get_system_info_parameters_system_name_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "parameter_revision", REQUIRED | LENGTH-FIXED}
@@ -585,7 +585,7 @@ Get System Info Parameters (Primary Operating System Name First Set) Response
 -----------------------------------------------------------------------------
 
 FIID Template: tmpl_cmd_get_system_info_parameters_primary_operating_system_name_first_set_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "parameter_revision", REQUIRED | LENGTH-FIXED}
@@ -599,7 +599,7 @@ Get System Info Parameters (Primary Operating System Name) Response
 -------------------------------------------------------------------
 
 FIID Template: tmpl_cmd_get_system_info_parameters_primary_operating_system_name_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "parameter_revision", REQUIRED | LENGTH-FIXED}
@@ -610,7 +610,7 @@ Get System Info Parameters (Operating System Name First Set) Response
 ---------------------------------------------------------------------
 
 FIID Template: tmpl_cmd_get_system_info_parameters_operating_system_name_first_set_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "parameter_revision", REQUIRED | LENGTH-FIXED}
@@ -624,7 +624,7 @@ Get System Info Parameters (Operating System Name) Response
 -----------------------------------------------------------
 
 FIID Template: tmpl_cmd_get_system_info_parameters_operating_system_name_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "parameter_revision", REQUIRED | LENGTH-FIXED}
@@ -635,7 +635,7 @@ Get Channel Cipher Suites Request
 ---------------------------------
 
 FIID Template: tmpl_cmd_get_channel_cipher_suites_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 4, "channel_number", REQUIRED | LENGTH-FIXED}
     { 4, "reserved1", REQUIRED | LENGTH-FIXED}
@@ -649,7 +649,7 @@ Get Channel Cipher Suites Response
 ----------------------------------
 
 FIID Template: tmpl_cmd_get_channel_cipher_suites_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "channel_number", REQUIRED | LENGTH-FIXED}
@@ -659,7 +659,7 @@ Get Session Challenge Request
 -----------------------------
 
 FIID Template: tmpl_cmd_get_session_challenge_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 4, "authentication_type", REQUIRED | LENGTH-FIXED}
     { 4, "reserved", REQUIRED | LENGTH-FIXED}
@@ -669,7 +669,7 @@ Get Session Challenge Response
 ------------------------------
 
 FIID Template: tmpl_cmd_get_session_challenge_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 32, "temp_session_id", REQUIRED | LENGTH-FIXED}  /* LS byte first */
@@ -679,7 +679,7 @@ Activiate Session Request
 -------------------------
 
 FIID Template: tmpl_cmd_activate_session_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 4, "authentication_type", REQUIRED | LENGTH-FIXED}
     { 4, "reserved1", REQUIRED | LENGTH-FIXED}
@@ -692,7 +692,7 @@ Activiate Session Response
 --------------------------
 
 FIID Template: tmpl_cmd_activate_session_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 4, "authentication_type", REQUIRED | LENGTH-FIXED}
@@ -706,7 +706,7 @@ Set Session Privilege Level Request
 -----------------------------------
 
 FIID Template: tmpl_cmd_set_session_privilege_level_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 4, "privilege_level", REQUIRED | LENGTH-FIXED}
     { 4, "reserved1", REQUIRED | LENGTH-FIXED}
@@ -715,7 +715,7 @@ Set Session Privilege Level Response
 ------------------------------------
 
 FIID Template: tmpl_cmd_set_session_privilege_level_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 4, "privilege_level", REQUIRED | LENGTH-FIXED}
@@ -725,7 +725,7 @@ Close Session Request
 ---------------------
 
 FIID Template: tmpl_cmd_close_session_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 32, "session_id", REQUIRED | LENGTH-FIXED}
     { 8, "session_handle", OPTIONAL | LENGTH-FIXED}
@@ -734,7 +734,7 @@ Close Session Response
 ----------------------
 
 FIID Template: tmpl_cmd_close_session_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
 
@@ -743,7 +743,7 @@ Set Channel Access Request
 --------------------------
 
 FIID Template: tmpl_cmd_set_channel_access_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 4, "channel_number", REQUIRED | LENGTH-FIXED}
     { 4, "reserved1", REQUIRED | LENGTH-FIXED}
@@ -760,7 +760,7 @@ Set Channel Access Response
 ---------------------------
 
 FIID Template: tmpl_cmd_set_channel_access_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
 
@@ -768,7 +768,7 @@ Get Channel Access Request
 --------------------------
 
 FIID Template: tmpl_cmd_get_channel_access_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 4, "channel_number", REQUIRED | LENGTH-FIXED}
     { 4, "reserved1", REQUIRED | LENGTH-FIXED}
@@ -779,7 +779,7 @@ Get Channel Access Response
 ---------------------------
 
 FIID Template: tmpl_cmd_get_channel_access_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 3, "ipmi_messaging_access_mode", REQUIRED | LENGTH-FIXED}
@@ -794,7 +794,7 @@ Get Channel Info Command Request
 --------------------------------
 
 FIID Template: tmpl_cmd_get_channel_info_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 4, "channel_number", REQUIRED | LENGTH-FIXED}
     { 4, "reserved", REQUIRED | LENGTH-FIXED}
@@ -803,7 +803,7 @@ Get Channel Info Command Response
 ---------------------------------
 
 FIID Template: tmpl_cmd_get_channel_info_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 4, "actual_channel_number", REQUIRED | LENGTH-FIXED}
@@ -821,7 +821,7 @@ Set Channel Security Keys Request
 ---------------------------------
 
 FIID Template: tmpl_cmd_set_channel_security_keys_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 4, "channel_number", REQUIRED | LENGTH-FIXED}
     { 4, "reserved1", REQUIRED | LENGTH-FIXED}
@@ -834,7 +834,7 @@ Set Channel Security Keys Response
 ----------------------------------
 
 FIID Template: tmpl_cmd_set_channel_security_keys_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 2, "lock_status", OPTIONAL | LENGTH-FIXED}
@@ -845,7 +845,7 @@ Set User Access Command Request
 -------------------------------
 
 FIID Template: tmpl_cmd_set_user_access_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 4, "channel_number", REQUIRED | LENGTH-FIXED}
     { 1, "user_ipmi_messaging", REQUIRED | LENGTH-FIXED}
@@ -863,7 +863,7 @@ Set User Access Command Response
 --------------------------------
 
 FIID Template: tmpl_cmd_set_user_access_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
 
@@ -871,7 +871,7 @@ Get User Access Command Request
 -------------------------------
 
 FIID Template: tmpl_cmd_get_user_access_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 4, "channel_number", REQUIRED | LENGTH-FIXED}
     { 4, "reserved1", REQUIRED | LENGTH-FIXED}
@@ -882,7 +882,7 @@ Get User Access Command Response
 --------------------------------
 
 FIID Template: tmpl_cmd_get_user_access_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 6, "max_channel_user_ids", REQUIRED | LENGTH-FIXED}
@@ -901,7 +901,7 @@ Set User Name Command Request
 -----------------------------
 
 FIID Template: tmpl_cmd_set_user_name_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 6, "user_id", REQUIRED | LENGTH-FIXED}
     { 2, "user_id.reserved", REQUIRED | LENGTH-FIXED}
@@ -911,7 +911,7 @@ Set User Name Command Response
 ------------------------------
 
 FIID Template: tmpl_cmd_set_user_name_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
 
@@ -919,7 +919,7 @@ Get User Name Command Request
 -----------------------------
 
 FIID Template: tmpl_cmd_get_user_name_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 6, "user_id", REQUIRED | LENGTH-FIXED}
     { 2, "user_id.reserved", REQUIRED | LENGTH-FIXED}
@@ -928,7 +928,7 @@ Get User Name Command Response
 ------------------------------
 
 FIID Template: tmpl_cmd_get_user_name_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 128, "user_name", REQUIRED | LENGTH-FIXED}
@@ -941,7 +941,7 @@ Set User Password Command Request
  * in fiid at a later time.
  */
 FIID Template: tmpl_cmd_set_user_password_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 6, "user_id", REQUIRED | LENGTH-FIXED}
     { 1, "user_id.reserved", REQUIRED | LENGTH-FIXED}
@@ -954,7 +954,7 @@ Set User Password Command Response
 ----------------------------------
 
 FIID Template: tmpl_cmd_set_user_password_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
 

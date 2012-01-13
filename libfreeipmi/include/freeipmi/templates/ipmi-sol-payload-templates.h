@@ -60,7 +60,7 @@ SOL Payload Data
 ----------------
 
 FIID Template: tmpl_sol_payload_data
-  {
+
     /* 0h ack only packet */
     { 4, "packet_sequence_number", REQUIRED | LENGTH-FIXED}
     { 4, "reserved1", REQUIRED | LENGTH-FIXED}
@@ -76,7 +76,7 @@ SOL Payload Data Remote Console to BMC
 --------------------------------------
 
 FIID Template: tmpl_sol_payload_data_remote_console_to_bmc
-  {
+
     /* 0h ack only packet */
     { 4, "packet_sequence_number", REQUIRED | LENGTH-FIXED}
     { 4, "reserved1", REQUIRED | LENGTH-FIXED}
@@ -99,7 +99,7 @@ SOL Payload Data BMC to Remote Console
 --------------------------------------
 
 FIID Template: tmpl_sol_payload_data_bmc_to_remote_console
-  {
+
     /* 0h ack only packet */
     { 4, "packet_sequence_number", REQUIRED | LENGTH-FIXED}
     { 4, "reserved1", REQUIRED | LENGTH-FIXED}

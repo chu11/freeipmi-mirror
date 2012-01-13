@@ -60,7 +60,7 @@ Get FRU Inventory Area Info Request
 -----------------------------------
 
 FIID Template: tmpl_cmd_get_fru_inventory_area_info_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 8, "fru_device_id", REQUIRED | LENGTH-FIXED}
 
@@ -68,7 +68,7 @@ Get FRU Inventory Area Info Response
 ------------------------------------
 
 FIID Template: tmpl_cmd_get_fru_inventory_area_info_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 16, "fru_inventory_area_size", REQUIRED | LENGTH-FIXED}
@@ -79,7 +79,7 @@ Read FRU Data Request
 ---------------------
 
 FIID Template: tmpl_cmd_read_fru_data_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 8, "fru_device_id", REQUIRED | LENGTH-FIXED}
     { 16, "fru_inventory_offset_to_read", REQUIRED | LENGTH-FIXED}
@@ -90,7 +90,7 @@ Read FRU Data Response
 
 /* 2040 = 255 * 8, 255 b/c count_returned field in request is 1 byte long */
 FIID Template: tmpl_cmd_read_fru_data_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "count_returned", REQUIRED | LENGTH-FIXED}
@@ -101,7 +101,7 @@ Write FRU Data Request
 
 /* 2040 = 255 * 8, 255 b/c bytes_to_write field in request is 1 byte long */
 FIID Template: tmpl_cmd_write_fru_data_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 8, "fru_device_id", REQUIRED | LENGTH-FIXED}
     { 16, "fru_inventory_offset_to_write", REQUIRED | LENGTH-FIXED}
@@ -111,7 +111,7 @@ Write FRU Data Response
 -----------------------
 
 FIID Template: tmpl_cmd_write_fru_data_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "count_written", REQUIRED | LENGTH-FIXED}

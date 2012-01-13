@@ -60,7 +60,7 @@ Cipher Suite Record Header
 --------------------------
 
 FIID Template: tmpl_cipher_suite_record_header
-  {
+
     { 6, "record_format", REQUIRED | LENGTH-FIXED}
     { 2, "tag_bits", REQUIRED | LENGTH-FIXED}
 
@@ -68,7 +68,7 @@ Cipher Suite Record
 -------------------
 
 FIID Template: tmpl_cipher_suite_record
-  {
+
     { 6, "record_format", REQUIRED | LENGTH-FIXED}
     { 2, "tag_bits", REQUIRED | LENGTH-FIXED}
     { 8, "cipher_suite_id", REQUIRED | LENGTH-FIXED}
@@ -83,7 +83,7 @@ OEM Cipher Suite Record
 -----------------------
 
 FIID Template: tmpl_oem_cipher_suite_record
-  {
+
     { 6, "record_format", REQUIRED | LENGTH-FIXED}
     { 2, "tag_bits", REQUIRED | LENGTH-FIXED}
     { 8, "oem_cipher_suite_id", REQUIRED | LENGTH-FIXED}

@@ -60,7 +60,7 @@ SDR Record Header
 -----------------
 
 FIID Template: tmpl_sdr_record_header
-  {
+
     /*********************
      * SDR Record Header *
      *********************/
@@ -74,7 +74,7 @@ SDR Full Sensor Record
 ----------------------
 
 FIID Template: tmpl_sdr_full_sensor_record
-  {
+
     /*********************
      * SDR Record Header *
      *********************/
@@ -184,7 +184,7 @@ SDR Full Sensor Record (Non-Threshold Base Sensors)
 ---------------------------------------------------
 
 FIID Template: tmpl_sdr_full_sensor_record_non_threshold_based_sensors
-  {
+
     /*********************
      * SDR Record Header *
      *********************/
@@ -340,7 +340,7 @@ SDR Full Sensor Record (Threshold Base Sensors)
 -----------------------------------------------
 
 FIID Template: tmpl_sdr_full_sensor_record_threshold_based_sensors
-  {
+
     /*********************
      * SDR Record Header *
      *********************/
@@ -497,7 +497,7 @@ SDR Compact Sensor Record
 -------------------------
 
 FIID Template: tmpl_sdr_compact_sensor_record
-  {
+
     /*********************
      * SDR Record Header *
      *********************/
@@ -577,7 +577,7 @@ SDR Compact Sensor Record (Non-Threshold Based Sensors)
 -------------------------------------------------------
 
 FIID Template: tmpl_sdr_compact_sensor_record_non_threshold_based_sensors
-  {
+
     /*********************
      * SDR Record Header *
      *********************/
@@ -704,7 +704,7 @@ SDR Compact Sensor Record (Threshold Based Sensors)
 ---------------------------------------------------
 
 FIID Template: tmpl_sdr_compact_sensor_record_threshold_based_sensors
-  {
+
     /*********************
      * SDR Record Header *
      *********************/
@@ -831,7 +831,7 @@ SDR Event Only Record
 ---------------------
 
 FIID Template: tmpl_sdr_event_only_record
-  {
+
     /*********************
      * SDR Record Header *
      *********************/
@@ -884,7 +884,7 @@ SDR Entity Association Record
 -----------------------------
 
 FIID Template: tmpl_sdr_entity_association_record
-  {
+
     /*********************
      * SDR Record Header *
      *********************/
@@ -927,7 +927,7 @@ SDR Device Relative Entity Association Record
 ---------------------------------------------
 
 FIID Template: tmpl_sdr_device_relative_entity_association_record
-  {
+
     /*********************
      * SDR Record Header *
      *********************/
@@ -984,7 +984,7 @@ SDR Generic Device Locator Record
 ---------------------------------
 
 FIID Template: tmpl_sdr_generic_device_locator_record
-  {
+
     /*********************
      * SDR Record Header *
      *********************/
@@ -1023,7 +1023,7 @@ SDR FRU Device Locator Record
 -----------------------------
 
 FIID Template: tmpl_sdr_fru_device_locator_record
-  {
+
     /*********************
      * SDR Record Header *
      *********************/
@@ -1070,7 +1070,7 @@ SDR FRU Device Locator Record (Non-Intelligent)
 -----------------------------------------------
 
 FIID Template: tmpl_sdr_fru_device_locator_record_non_intelligent
-  {
+
     /*********************
      * SDR Record Header *
      *********************/
@@ -1115,7 +1115,7 @@ SDR Management Controller Device Locator Record
 -----------------------------------------------
 
 FIID Template: tmpl_sdr_management_controller_device_locator_record
-  {
+
     /*********************
      * SDR Record Header *
      *********************/
@@ -1165,7 +1165,7 @@ SDR Management Controller Confirmation Record
 ---------------------------------------------
 
 FIID Template: tmpl_sdr_management_controller_confirmation_record
-  {
+
     /*********************
      * SDR Record Header *
      *********************/
@@ -1198,7 +1198,7 @@ SDR BMC Message Channel Info
 ----------------------------
 
 FIID Template: tmpl_sdr_bmc_message_channel_info_record
-  {
+
     /*********************
      * SDR Record Header *
      *********************/
@@ -1239,7 +1239,7 @@ SDR OEM Record
 --------------
 
 FIID Template: tmpl_sdr_oem_record
-  {
+
     /*********************
      * SDR Record Header *
      *********************/

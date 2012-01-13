@@ -60,7 +60,7 @@ KCS Header
 ----------
 
 FIID Template: tmpl_hdr_kcs
-  {
+
     { 2, "lun", REQUIRED | LENGTH-FIXED}
     { 6, "net_fn", REQUIRED | LENGTH-FIXED}
 

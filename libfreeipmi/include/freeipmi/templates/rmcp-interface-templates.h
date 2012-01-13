@@ -60,7 +60,7 @@ RMCP Header
 -----------
 
 FIID Template: tmpl_rmcp_hdr
-  {
+
     { 8, "version", REQUIRED | LENGTH-FIXED}
     { 8, "reserved", REQUIRED | LENGTH-FIXED}
     { 8, "sequence_number", REQUIRED | LENGTH-FIXED}

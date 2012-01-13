@@ -60,7 +60,7 @@ FRU Common Header
 -----------------
 
 FIID Template: tmpl_fru_common_header
-  {
+
     { 4, "format_version", REQUIRED | LENGTH-FIXED}
     { 4, "reserved", REQUIRED | LENGTH-FIXED}
     { 8, "internal_use_area_starting_offset", REQUIRED | LENGTH-FIXED}
@@ -76,7 +76,7 @@ FRU Info Area Header
 --------------------
 
 FIID Template: tmpl_fru_info_area_header
-  {
+
     { 4, "format_version", REQUIRED | LENGTH-FIXED}
     { 4, "reserved", REQUIRED | LENGTH-FIXED}
     { 8, "info_area_length", REQUIRED | LENGTH-FIXED}
@@ -85,7 +85,7 @@ FRU Multirecord Area Header
 ---------------------------
 
 FIID Template: tmpl_fru_multirecord_area_header
-  {
+
     { 8, "record_type_id", REQUIRED | LENGTH-FIXED}
     { 4, "record_format_version", REQUIRED | LENGTH-FIXED}
     { 3, "reserved", REQUIRED | LENGTH-FIXED}
@@ -98,7 +98,7 @@ FRU Power Supply Information
 ----------------------------
 
 FIID Template: tmpl_fru_power_supply_information
-  {
+
     { 12, "overall_capacity", REQUIRED | LENGTH-FIXED}
     { 4, "reserved1", REQUIRED | LENGTH-FIXED}
     { 16, "peak_va", REQUIRED | LENGTH-FIXED}
@@ -128,7 +128,7 @@ FRU DC Output
 -------------
 
 FIID Template: tmpl_fru_dc_output
-  {
+
     { 4, "output_number", REQUIRED | LENGTH-FIXED}
     { 3, "reserved", REQUIRED | LENGTH-FIXED}
     { 1, "standby", REQUIRED | LENGTH-FIXED}
@@ -143,7 +143,7 @@ FRU DC Load
 -----------
 
 FIID Template: tmpl_fru_dc_load
-  {
+
     { 4, "output_number", REQUIRED | LENGTH-FIXED}
     { 4, "reserved", REQUIRED | LENGTH-FIXED}
     { 16, "nominal_voltage", REQUIRED | LENGTH-FIXED}
@@ -159,7 +159,7 @@ FRU Management Access Record
 
 /* Note: At most 256*8 bits according to max sub-record types */
 FIID Template: tmpl_fru_management_access_record
-  {
+
     { 8, "sub_record_type", REQUIRED | LENGTH-FIXED}
     { 2048, "record", REQUIRED | LENGTH-VARIABLE}
 
@@ -167,7 +167,7 @@ FRU Base Compatability Record
 -----------------------------
 
 FIID Template: tmpl_fru_base_compatibility_record
-  {
+
     { 24, "manufacturer_id", REQUIRED | LENGTH-FIXED}
     { 8, "entity_id_code", REQUIRED | LENGTH-FIXED}
     { 8, "compatibility_base", REQUIRED | LENGTH-FIXED}
@@ -179,7 +179,7 @@ FRU Extended Compatability Record
 ---------------------------------
 
 FIID Template: tmpl_fru_extended_compatibility_record
-  {
+
     { 24, "manufacturer_id", REQUIRED | LENGTH-FIXED}
     { 8, "entity_id_code", REQUIRED | LENGTH-FIXED}
     { 8, "compatibility_base", REQUIRED | LENGTH-FIXED}
@@ -191,7 +191,7 @@ FRU OEM Record
 --------------
 
 FIID Template: tmpl_fru_oem_record
-  {
+
     { 24, "manufacturer_id", REQUIRED | LENGTH-FIXED}
     { 4096, "oem_data", REQUIRED | LENGTH-VARIABLE}
 

@@ -60,14 +60,14 @@ Get Device ID Request
 ---------------------
 
 FIID Template: tmpl_cmd_get_device_id_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
 
 Get Device ID Response
 ----------------------
 
 FIID Template: tmpl_cmd_get_device_id_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "device_id", REQUIRED | LENGTH-FIXED}
@@ -96,14 +96,14 @@ Cold Reset Request
 ------------------
 
 FIID Template: tmpl_cmd_cold_reset_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
 
 Cold Reset Response
 -------------------
 
 FIID Template: tmpl_cmd_cold_reset_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
 
@@ -111,14 +111,14 @@ Warm Reset Request
 ------------------
 
 FIID Template: tmpl_cmd_warm_reset_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
 
 Warm Reset Response
 -------------------
 
 FIID Template: tmpl_cmd_warm_reset_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
 
@@ -126,7 +126,7 @@ Set ACPI Power State Request
 ----------------------------
 
 FIID Template: tmpl_cmd_set_acpi_power_state_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 7, "system_power_state_enumeration", REQUIRED | LENGTH-FIXED}
     { 1, "set_system_power_state", REQUIRED | LENGTH-FIXED}
@@ -137,7 +137,7 @@ Set ACPI Power State Response
 -----------------------------
 
 FIID Template: tmpl_cmd_set_acpi_power_state_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
 
@@ -145,14 +145,14 @@ Get ACPI Power State Request
 ----------------------------
 
 FIID Template: tmpl_cmd_get_acpi_power_state_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
 
 Get ACPI Power State Response
 -----------------------------
 
 FIID Template: tmpl_cmd_get_acpi_power_state_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 7, "system_power_state_enumeration", REQUIRED | LENGTH-FIXED}
@@ -164,7 +164,7 @@ Get Self Test Results Request
 -----------------------------
 
 FIID Template: tmpl_cmd_get_self_test_results_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
 
 Get Self Test Results Response
@@ -174,7 +174,7 @@ Get Self Test Results Response
  * specification for more information
  */
 FIID Template: tmpl_cmd_get_self_test_results_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "self_test_result", REQUIRED | LENGTH-FIXED}
@@ -191,14 +191,14 @@ Get Device GUID Request
 -----------------------
 
 FIID Template: tmpl_cmd_get_device_guid_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
 
 Get Device GUID Response
 ------------------------
 
 FIID Template: tmpl_cmd_get_device_guid_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 128, "guid", REQUIRED | LENGTH-FIXED}
@@ -207,7 +207,7 @@ Get Device GUID (with Format) Response
 --------------------------------------
 
 FIID Template: tmpl_cmd_get_device_guid_format_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 48, "node", REQUIRED | LENGTH-FIXED}

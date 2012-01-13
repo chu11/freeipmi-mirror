@@ -60,7 +60,7 @@ Get NetFN Support Request
 -------------------------
 
 FIID Template: tmpl_cmd_get_netfn_support_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 4, "channel_number", REQUIRED | LENGTH-FIXED}
     { 4, "reserved", REQUIRED | LENGTH-FIXED}
@@ -69,7 +69,7 @@ Get NetFN Support Response
 --------------------------
 
 FIID Template: tmpl_cmd_get_netfn_support_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 2, "lun0", REQUIRED | LENGTH-FIXED}
@@ -85,7 +85,7 @@ Get Command Support Request
 ---------------------------
 
 FIID Template: tmpl_cmd_get_command_support_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 4, "channel_number", REQUIRED | LENGTH-FIXED}
     { 4, "reserved1", REQUIRED | LENGTH-FIXED}
@@ -100,7 +100,7 @@ Get Command Support Response
 ----------------------------
 
 FIID Template: tmpl_cmd_get_command_support_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 128, "command_support_mask", REQUIRED | LENGTH-FIXED}
@@ -109,7 +109,7 @@ Get Command Sub-Function Support Request
 ----------------------------------------
 
 FIID Template: tmpl_cmd_get_command_sub_function_support_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 4, "channel_number", REQUIRED | LENGTH-FIXED}
     { 4, "reserved1", REQUIRED | LENGTH-FIXED}
@@ -125,7 +125,7 @@ Get Command Sub-Function Support (Specification Errata) Response
 ----------------------------------------------------------------
 
 FIID Template: tmpl_cmd_get_command_sub_function_support_specification_errata_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 4, "errata_version", REQUIRED | LENGTH-FIXED}
@@ -138,7 +138,7 @@ Get Command Sub-Function Support (Extension Errata) Response
 ------------------------------------------------------------
 
 FIID Template: tmpl_cmd_get_command_sub_function_support_extension_errata_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "oem_group_defining_body_errata", REQUIRED | LENGTH-FIXED}
@@ -150,7 +150,7 @@ Get Configurable Commands Request
 ---------------------------------
 
 FIID Template: tmpl_cmd_get_configurable_commands_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 4, "channel_number", REQUIRED | LENGTH-FIXED}
     { 4, "reserved1", REQUIRED | LENGTH-FIXED}
@@ -165,7 +165,7 @@ Get Configurable Commands Response
 ----------------------------------
 
 FIID Template: tmpl_cmd_get_configurable_commands_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 128, "command_support_mask", REQUIRED | LENGTH-FIXED}
@@ -174,7 +174,7 @@ Get Configurable Command Sub-Functions Request
 ----------------------------------------------
 
 FIID Template: tmpl_cmd_get_configurable_command_sub_functions_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 4, "channel_number", REQUIRED | LENGTH-FIXED}
     { 4, "reserved1", REQUIRED | LENGTH-FIXED}
@@ -190,7 +190,7 @@ Get Configurable Command Sub-Functions Response
 -----------------------------------------------
 
 FIID Template: tmpl_cmd_get_configurable_command_sub_functions_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 32, "sub_function_enables1", REQUIRED | LENGTH-FIXED}
@@ -200,7 +200,7 @@ Set Command Enables Request
 ---------------------------
 
 FIID Template: tmpl_cmd_set_command_enables_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 4, "channel_number", REQUIRED | LENGTH-FIXED}
     { 4, "reserved1", REQUIRED | LENGTH-FIXED}
@@ -216,7 +216,7 @@ Set Command Enables Response
 ----------------------------
 
 FIID Template: tmpl_cmd_set_command_enables_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
 
@@ -224,7 +224,7 @@ Get Command Enables Request
 ---------------------------
 
 FIID Template: tmpl_cmd_get_command_enables_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 4, "channel_number", REQUIRED | LENGTH-FIXED}
     { 4, "reserved1", REQUIRED | LENGTH-FIXED}
@@ -239,7 +239,7 @@ Get Command Enables Response
 ----------------------------
 
 FIID Template: tmpl_cmd_get_command_enables_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 128, "enable_disable_mask", REQUIRED | LENGTH-FIXED}
@@ -248,7 +248,7 @@ Set Command Sub-Function Enables Request
 ----------------------------------------
 
 FIID Template: tmpl_cmd_set_command_sub_function_enables_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 4, "channel_number", REQUIRED | LENGTH-FIXED}
     { 4, "reserved1", REQUIRED | LENGTH-FIXED}
@@ -264,7 +264,7 @@ Set Command Sub-Function Enables (Defining Body Code) Request
 -------------------------------------------------------------
 
 FIID Template: tmpl_cmd_set_command_sub_function_enables_defining_body_code_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 4, "channel_number", REQUIRED | LENGTH-FIXED}
     { 4, "reserved1", REQUIRED | LENGTH-FIXED}
@@ -282,7 +282,7 @@ Set Command Sub-Function Enables (OEM IANA) Request
 ---------------------------------------------------
 
 FIID Template: tmpl_cmd_set_command_sub_function_enables_oem_iana_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 4, "channel_number", REQUIRED | LENGTH-FIXED}
     { 4, "reserved1", REQUIRED | LENGTH-FIXED}
@@ -300,7 +300,7 @@ Set Command Sub-Function Enables Response
 -----------------------------------------
 
 FIID Template: tmpl_cmd_set_command_sub_function_enables_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
 
@@ -308,7 +308,7 @@ Get Command Sub-Function Enables Request
 ----------------------------------------
 
 FIID Template: tmpl_cmd_get_command_sub_function_enables_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 4, "channel_number", REQUIRED | LENGTH-FIXED}
     { 4, "reserved1", REQUIRED | LENGTH-FIXED}
@@ -324,7 +324,7 @@ Get Command Sub-Function Enables Response
 -----------------------------------------
 
 FIID Template: tmpl_cmd_get_command_sub_function_enables_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 32, "sub_function_enables1", REQUIRED | LENGTH-FIXED}
@@ -334,7 +334,7 @@ Get OEM NetFN IANA Support Request
 ----------------------------------
 
 FIID Template: tmpl_cmd_get_oem_netfn_iana_support_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 4, "channel_number", REQUIRED | LENGTH-FIXED}
     { 4, "reserved1", REQUIRED | LENGTH-FIXED}
@@ -347,7 +347,7 @@ Get OEM NetFN IANA Support Response
 -----------------------------------
 
 FIID Template: tmpl_cmd_get_oem_netfn_iana_support_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 7, "last_iana", REQUIRED | LENGTH-FIXED}

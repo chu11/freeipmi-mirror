@@ -60,14 +60,14 @@ Get PEF Capabilities Request
 ----------------------------
 
 FIID Template: tmpl_cmd_get_pef_capabilities_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
 
 Get PEF Capabilities Response
 -----------------------------
 
 FIID Template: tmpl_cmd_get_pef_capabilities_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 4, "pef_version_major", REQUIRED | LENGTH-FIXED}
@@ -86,7 +86,7 @@ ARM PEF Postpone Timer Request
 ------------------------------
 
 FIID Template: tmpl_cmd_arm_pef_postpone_timer_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 8, "pef_postpone_timeout", REQUIRED | LENGTH-FIXED}
 
@@ -94,7 +94,7 @@ ARM PEF Postpone Timer Response
 -------------------------------
 
 FIID Template: tmpl_cmd_arm_pef_postpone_timer_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "present_timer_countdown_value", REQUIRED | LENGTH-FIXED}
@@ -103,7 +103,7 @@ Set PEF Configuration Parameters Request
 ----------------------------------------
 
 FIID Template: tmpl_cmd_set_pef_configuration_parameters_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 7, "parameter_selector", REQUIRED | LENGTH-FIXED}
     { 1, "reserved", REQUIRED | LENGTH-FIXED}
@@ -113,7 +113,7 @@ Set PEF Configuration Parameters Response
 -----------------------------------------
 
 FIID Template: tmpl_cmd_set_pef_configuration_parameters_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
 
@@ -121,7 +121,7 @@ Set PEF Configuration Parameters (Set In Progress) Request
 ----------------------------------------------------------
 
 FIID Template: tmpl_cmd_set_pef_configuration_parameters_set_in_progress_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 7, "parameter_selector", REQUIRED | LENGTH-FIXED}
     { 1, "reserved1", REQUIRED | LENGTH-FIXED}
@@ -132,7 +132,7 @@ Set PEF Configuration Parameters (PEF Control) Request
 ------------------------------------------------------
 
 FIID Template: tmpl_cmd_set_pef_configuration_parameters_pef_control_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 7, "parameter_selector", REQUIRED | LENGTH-FIXED}
     { 1, "reserved1", REQUIRED | LENGTH-FIXED}
@@ -146,7 +146,7 @@ Set PEF Configuration Parameters (PEF Action Global Control) Request
 --------------------------------------------------------------------
 
 FIID Template: tmpl_cmd_set_pef_configuration_parameters_pef_action_global_control_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 7, "parameter_selector", REQUIRED | LENGTH-FIXED}
     { 1, "reserved1", REQUIRED | LENGTH-FIXED}
@@ -162,7 +162,7 @@ Set PEF Configuration Parameters (PEF Startup Delay) Request
 ------------------------------------------------------------
 
 FIID Template: tmpl_cmd_set_pef_configuration_parameters_pef_startup_delay_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 7, "parameter_selector", REQUIRED | LENGTH-FIXED}
     { 1, "reserved", REQUIRED | LENGTH-FIXED}
@@ -172,7 +172,7 @@ Set PEF Configuration Parameters (PEF Alert Startup Delay) Request
 ------------------------------------------------------------------
 
 FIID Template: tmpl_cmd_set_pef_configuration_parameters_pef_alert_startup_delay_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 7, "parameter_selector", REQUIRED | LENGTH-FIXED}
     { 1, "reserved", REQUIRED | LENGTH-FIXED}
@@ -182,7 +182,7 @@ Set PEF Configuration Parameters (Event Filter Table) Request
 -------------------------------------------------------------
 
 FIID Template: tmpl_cmd_set_pef_configuration_parameters_event_filter_table_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 7, "parameter_selector", REQUIRED | LENGTH-FIXED}
     { 1, "reserved1", REQUIRED | LENGTH-FIXED}
@@ -225,7 +225,7 @@ Set PEF Configuration Parameters (Event Filter Table Data1) Request
 -------------------------------------------------------------------
 
 FIID Template: tmpl_cmd_set_pef_configuration_parameters_event_filter_table_data1_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 7, "parameter_selector", REQUIRED | LENGTH-FIXED}
     { 1, "reserved1", REQUIRED | LENGTH-FIXED}
@@ -239,7 +239,7 @@ Set PEF Configuration Parameters (Alert String Keys) Request
 ------------------------------------------------------------
 
 FIID Template: tmpl_cmd_set_pef_configuration_parameters_alert_string_keys_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 7, "parameter_selector", REQUIRED | LENGTH-FIXED}
     { 1, "reserved1", REQUIRED | LENGTH-FIXED}
@@ -254,7 +254,7 @@ Set PEF Configuration Parameters (Alert Strings) Request
 --------------------------------------------------------
 
 FIID Template: tmpl_cmd_set_pef_configuration_parameters_alert_strings_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 7, "parameter_selector", REQUIRED | LENGTH-FIXED}
     { 1, "reserved1", REQUIRED | LENGTH-FIXED}
@@ -267,7 +267,7 @@ Set PEF Configuration Parameters (Alert Policy Table) Request
 -------------------------------------------------------------
 
 FIID Template: tmpl_cmd_set_pef_configuration_parameters_alert_policy_table_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 7, "parameter_selector", REQUIRED | LENGTH-FIXED}
     { 1, "reserved1", REQUIRED | LENGTH-FIXED}
@@ -285,7 +285,7 @@ Get PEF Configuration Parameters Request
 ----------------------------------------
 
 FIID Template: tmpl_cmd_get_pef_configuration_parameters_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 7, "parameter_selector", REQUIRED | LENGTH-FIXED}
     { 1, "get_parameter", REQUIRED | LENGTH-FIXED}
@@ -296,7 +296,7 @@ Get PEF Configuration Parameters Response
 -----------------------------------------
 
 FIID Template: tmpl_cmd_get_pef_configuration_parameters_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 4, "present_revision", REQUIRED | LENGTH-FIXED}
@@ -307,7 +307,7 @@ Get PEF Configuration Parameters (Set In Progress) Response
 -----------------------------------------------------------
 
 FIID Template: tmpl_cmd_get_pef_configuration_parameters_set_in_progress_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 4, "present_revision", REQUIRED | LENGTH-FIXED}
@@ -319,7 +319,7 @@ Get PEF Configuration Parameters (PEF Control) Response
 -------------------------------------------------------
 
 FIID Template: tmpl_cmd_get_pef_configuration_parameters_pef_control_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 4, "present_revision", REQUIRED | LENGTH-FIXED}
@@ -334,7 +334,7 @@ Get PEF Configuration Parameters (PEF Action Global Control) Response
 ---------------------------------------------------------------------
 
 FIID Template: tmpl_cmd_get_pef_configuration_parameters_pef_action_global_control_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 4, "present_revision", REQUIRED | LENGTH-FIXED}
@@ -351,7 +351,7 @@ Get PEF Configuration Parameters (PEF Startup Delay) Response
 -------------------------------------------------------------
 
 FIID Template: tmpl_cmd_get_pef_configuration_parameters_pef_startup_delay_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 4, "present_revision", REQUIRED | LENGTH-FIXED}
@@ -362,7 +362,7 @@ Get PEF Configuration Parameters (PEF Alert Startup Delay) Response
 -------------------------------------------------------------------
 
 FIID Template: tmpl_cmd_get_pef_configuration_parameters_pef_alert_startup_delay_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 4, "present_revision", REQUIRED | LENGTH-FIXED}
@@ -374,7 +374,7 @@ Get PEF Configuration Parameters (Number of Event Filters) Response
 
 /* Note: Read-Only field, no 'set' equivalent */
 FIID Template: tmpl_cmd_get_pef_configuration_parameters_number_of_event_filters_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 4, "present_revision", REQUIRED | LENGTH-FIXED}
@@ -386,7 +386,7 @@ Get PEF Configuration Parameters (Event Filter Table) Response
 --------------------------------------------------------------
 
 FIID Template: tmpl_cmd_get_pef_configuration_parameters_event_filter_table_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 4, "present_revision", REQUIRED | LENGTH-FIXED}
@@ -430,7 +430,7 @@ Get PEF Configuration Parameters (Event Filter Table Data1) Response
 --------------------------------------------------------------------
 
 FIID Template: tmpl_cmd_get_pef_configuration_parameters_event_filter_table_data1_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 4, "present_revision", REQUIRED | LENGTH-FIXED}
@@ -446,7 +446,7 @@ Get PEF Configuration Parameters (Number of Alert Policy Entries) Response
 
 /* Note: Read-Only field, no 'set' equivalent */
 FIID Template: tmpl_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 4, "present_revision", REQUIRED | LENGTH-FIXED}
@@ -459,7 +459,7 @@ Get PEF Configuration Parameters (Number of Alert Strings) Response
 
 /* Note: Read-Only field, no 'set' equivalent */
 FIID Template: tmpl_cmd_get_pef_configuration_parameters_number_of_alert_strings_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 4, "present_revision", REQUIRED | LENGTH-FIXED}
@@ -471,7 +471,7 @@ Get PEF Configuration Parameters (Alert String Keys) Response
 -------------------------------------------------------------
 
 FIID Template: tmpl_cmd_get_pef_configuration_parameters_alert_string_keys_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 4, "present_revision", REQUIRED | LENGTH-FIXED}
@@ -487,7 +487,7 @@ Get PEF Configuration Parameters (Alert Strings) Response
 ---------------------------------------------------------
 
 FIID Template: tmpl_cmd_get_pef_configuration_parameters_alert_strings_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 4, "present_revision", REQUIRED | LENGTH-FIXED}
@@ -501,7 +501,7 @@ Get PEF Configuration Parameters (Alert Policy Table) Response
 --------------------------------------------------------------
 
 FIID Template: tmpl_cmd_get_pef_configuration_parameters_alert_policy_table_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 4, "present_revision", REQUIRED | LENGTH-FIXED}
@@ -520,7 +520,7 @@ Set Last Processed Event ID Request
 -----------------------------------
 
 FIID Template: tmpl_cmd_set_last_processed_event_id_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 1, "set_record_id_for_last_record", REQUIRED | LENGTH-FIXED}
     { 7, "reserved", REQUIRED | LENGTH-FIXED}
@@ -530,7 +530,7 @@ Set Last Processed Event ID Response
 ------------------------------------
 
 FIID Template: tmpl_cmd_set_last_processed_event_id_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
 
@@ -538,14 +538,14 @@ Get Last Processed Event ID Request
 -----------------------------------
 
 FIID Template: tmpl_cmd_get_last_processed_event_id_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
 
 Get Last Processed Event ID Response
 ------------------------------------
 
 FIID Template: tmpl_cmd_get_last_processed_event_id_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 32, "most_recent_addition_timestamp", REQUIRED | LENGTH-FIXED}
@@ -557,7 +557,7 @@ Alert Immediate Request
 -----------------------
 
 FIID Template: tmpl_cmd_alert_immediate_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 4, "channel_number", REQUIRED | LENGTH-FIXED}
     { 4, "reserved1", REQUIRED | LENGTH-FIXED}
@@ -571,7 +571,7 @@ Alert Immediate Response
 ------------------------
 
 FIID Template: tmpl_cmd_alert_immediate_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
 
@@ -579,7 +579,7 @@ PET Acknowledge Request
 -----------------------
 
 FIID Template: tmpl_cmd_pet_acknowledge_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 16, "sequence_number", REQUIRED | LENGTH-FIXED}
     { 32, "local_timestamp", REQUIRED | LENGTH-FIXED}
@@ -592,7 +592,7 @@ PET Acknowledge Response
 ------------------------
 
 FIID Template: tmpl_cmd_pet_acknowledge_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
 

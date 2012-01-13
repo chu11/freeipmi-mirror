@@ -60,14 +60,14 @@ Get SDR Repository Info Request
 -------------------------------
 
 FIID Template: tmpl_cmd_get_sdr_repository_info_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
 
 Get SDR Repository Info Response
 --------------------------------
 
 FIID Template: tmpl_cmd_get_sdr_repository_info_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 4, "sdr_version_major", REQUIRED | LENGTH-FIXED}
@@ -88,14 +88,14 @@ Get SDR Repository Allocation Info Request
 ------------------------------------------
 
 FIID Template: tmpl_cmd_get_sdr_repository_allocation_info_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
 
 Get SDR Repository Allocation Info Response
 -------------------------------------------
 
 FIID Template: tmpl_cmd_get_sdr_repository_allocation_info_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 16, "number_of_possible_allocation_units", REQUIRED | LENGTH-FIXED}
@@ -108,14 +108,14 @@ Reserve SDR Repository Request
 ------------------------------
 
 FIID Template: tmpl_cmd_reserve_sdr_repository_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
 
 Reserve SDR Repository Response
 -------------------------------
 
 FIID Template: tmpl_cmd_reserve_sdr_repository_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 16, "reservation_id", REQUIRED | LENGTH-FIXED}
@@ -124,7 +124,7 @@ Get SDR Request
 ---------------
 
 FIID Template: tmpl_cmd_get_sdr_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 16, "reservation_id", REQUIRED | LENGTH-FIXED}
     { 16, "record_id", REQUIRED | LENGTH-FIXED}
@@ -135,7 +135,7 @@ Get SDR Response
 ----------------
 
 FIID Template: tmpl_cmd_get_sdr_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 16, "next_record_id", REQUIRED | LENGTH-FIXED}
@@ -146,14 +146,14 @@ Get SDR Repository Time Request
 -------------------------------
 
 FIID Template: tmpl_cmd_get_sdr_repository_time_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
 
 Get SDR Repository Time Response
 --------------------------------
 
 FIID Template: tmpl_cmd_get_sdr_repository_time_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 32, "time", REQUIRED | LENGTH-FIXED}
@@ -162,7 +162,7 @@ Set SDR Repository Time Request
 -------------------------------
 
 FIID Template: tmpl_cmd_set_sdr_repository_time_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 32, "time", REQUIRED | LENGTH-FIXED}
 
@@ -170,7 +170,7 @@ Set SDR Repository Time Response
 --------------------------------
 
 FIID Template: tmpl_cmd_set_sdr_repository_time_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
 

@@ -60,7 +60,7 @@ RMCP+ Session Header
 --------------------
 
 FIID Template: tmpl_rmcpplus_session_hdr
-  {
+
     { 4, "authentication_type", REQUIRED | LENGTH-FIXED}
     { 4, "reserved1", REQUIRED | LENGTH-FIXED}
     { 6, "payload_type", REQUIRED | LENGTH-FIXED}
@@ -83,7 +83,7 @@ RMCP+ Session Trailer
  * just the integrity field.  Sigh ...
  */
 FIID Template: tmpl_rmcpplus_session_trlr
-  {
+
     { 32, "integrity_pad", OPTIONAL | LENGTH-VARIABLE}
     { 8, "pad_length", REQUIRED | LENGTH-FIXED}
     { 8, "next_header", REQUIRED | LENGTH-FIXED}
@@ -93,7 +93,7 @@ RMCP+ Payload
 -------------
 
 FIID Template: tmpl_rmcpplus_payload
-  {
+
     { 512, "confidentiality_header", OPTIONAL | LENGTH-VARIABLE}
     /* 524288 = 65536 * 8 = 2^16 * 8, b/c ipmi_payload_len is 2 bytes */
     { 524288, "payload_data", REQUIRED | LENGTH-VARIABLE}
@@ -103,7 +103,7 @@ RMCP+ Open Session Request
 --------------------------
 
 FIID Template: tmpl_rmcpplus_open_session_request
-  {
+
     { 8, "message_tag", REQUIRED | LENGTH-FIXED}
     { 4, "requested_maximum_privilege_level", REQUIRED | LENGTH-FIXED}
     { 4, "reserved1", REQUIRED | LENGTH-FIXED}
@@ -132,7 +132,7 @@ RMCP+ Open Session Response
 ---------------------------
 
 FIID Template: tmpl_rmcpplus_open_session_response
-  {
+
     { 8, "message_tag", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "rmcpplus_status_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 4, "maximum_privilege_level", REQUIRED | LENGTH-FIXED}
@@ -164,7 +164,7 @@ RMCP+ RAKP Message 1
 --------------------
 
 FIID Template: tmpl_rmcpplus_rakp_message_1
-  {
+
     { 8, "message_tag", REQUIRED | LENGTH-FIXED}
     { 24, "reserved1", REQUIRED | LENGTH-FIXED}
     { 32, "managed_system_session_id", REQUIRED | LENGTH-FIXED}
@@ -180,7 +180,7 @@ RMCP+ RAKP Message 2
 --------------------
 
 FIID Template: tmpl_rmcpplus_rakp_message_2
-  {
+
     { 8, "message_tag", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "rmcpplus_status_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 16, "reserved1", REQUIRED | LENGTH-FIXED}
@@ -193,7 +193,7 @@ RMCP+ RAKP Message 3
 --------------------
 
 FIID Template: tmpl_rmcpplus_rakp_message_3
-  {
+
     { 8, "message_tag", REQUIRED | LENGTH-FIXED}
     { 8, "rmcpplus_status_code", REQUIRED | LENGTH-FIXED}
     { 16, "reserved1", REQUIRED | LENGTH-FIXED}
@@ -209,7 +209,7 @@ RMCP+ RAKP Message 4
  * that "remote_console_session_id" is what is really meant.
  */
 FIID Template: tmpl_rmcpplus_rakp_message_4
-  {
+
     { 8, "message_tag", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "rmcpplus_status_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 16, "reserved1", REQUIRED | LENGTH-FIXED}

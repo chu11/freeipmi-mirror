@@ -60,7 +60,7 @@ Set Serial Modem Configuration Request
 --------------------------------------
 
 FIID Template: tmpl_cmd_set_serial_modem_configuration_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 4, "channel_number", REQUIRED | LENGTH-FIXED}
     { 4, "reserved", REQUIRED | LENGTH-FIXED}
@@ -71,7 +71,7 @@ Set Serial Modem Configuration Response
 ---------------------------------------
 
 FIID Template: tmpl_cmd_set_serial_modem_configuration_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
 
@@ -79,7 +79,7 @@ Set Serial Modem Configuration (Set In Progress) Request
 --------------------------------------------------------
 
 FIID Template: tmpl_cmd_set_serial_modem_configuration_set_in_progress_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 4, "channel_number", REQUIRED | LENGTH-FIXED}
     { 4, "reserved1", REQUIRED | LENGTH-FIXED}
@@ -91,7 +91,7 @@ Set Serial Modem Configuration (Connection Mode) Request
 --------------------------------------------------------
 
 FIID Template: tmpl_cmd_set_serial_modem_configuration_connection_mode_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 4, "channel_number", REQUIRED | LENGTH-FIXED}
     { 4, "reserved1", REQUIRED | LENGTH-FIXED}
@@ -106,7 +106,7 @@ Set Serial Modem Configuration (IPMI Messaging Comm Settings) Request
 ---------------------------------------------------------------------
 
 FIID Template: tmpl_cmd_set_serial_modem_configuration_ipmi_messaging_comm_settings_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 4, "channel_number", REQUIRED | LENGTH-FIXED}
     { 4, "reserved1", REQUIRED | LENGTH-FIXED}
@@ -121,7 +121,7 @@ Set Serial Modem Configuration (Page Blackout Interval) Request
 ---------------------------------------------------------------
 
 FIID Template: tmpl_cmd_set_serial_modem_configuration_page_blackout_interval_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 4, "channel_number", REQUIRED | LENGTH-FIXED}
     { 4, "reserved", REQUIRED | LENGTH-FIXED}
@@ -132,7 +132,7 @@ Set Serial Modem Configuration (Call Retry Interval) Request
 ------------------------------------------------------------
 
 FIID Template: tmpl_cmd_set_serial_modem_configuration_call_retry_interval_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 4, "channel_number", REQUIRED | LENGTH-FIXED}
     { 4, "reserved", REQUIRED | LENGTH-FIXED}
@@ -143,7 +143,7 @@ Get Serial Modem Configuration Request
 --------------------------------------
 
 FIID Template: tmpl_cmd_get_serial_modem_configuration_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 4, "channel_number", REQUIRED | LENGTH-FIXED}
     { 3, "reserved", REQUIRED | LENGTH-FIXED}
@@ -156,7 +156,7 @@ Get Serial Modem Configuration Response
 ---------------------------------------
 
 FIID Template: tmpl_cmd_get_serial_modem_configuration_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 4, "present_revision", REQUIRED | LENGTH-FIXED}
@@ -167,7 +167,7 @@ Get Serial Modem Configuration (Set In Progress) Response
 ---------------------------------------------------------
 
 FIID Template: tmpl_cmd_get_serial_modem_configuration_set_in_progress_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 4, "present_revision", REQUIRED | LENGTH-FIXED}
@@ -179,7 +179,7 @@ Get Serial Modem Configuration (Connection Mode) Response
 ---------------------------------------------------------
 
 FIID Template: tmpl_cmd_get_serial_modem_configuration_connection_mode_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 4, "present_revision", REQUIRED | LENGTH-FIXED}
@@ -194,7 +194,7 @@ Get Serial Modem Configuration (IPMI Messaging Comm Settings) Response
 ----------------------------------------------------------------------
 
 FIID Template: tmpl_cmd_get_serial_modem_configuration_ipmi_messaging_comm_settings_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 4, "present_revision", REQUIRED | LENGTH-FIXED}
@@ -209,7 +209,7 @@ Get Serial Modem Configuration (Page Blackout Interval) Response
 ----------------------------------------------------------------
 
 FIID Template: tmpl_cmd_get_serial_modem_configuration_page_blackout_interval_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 4, "present_revision", REQUIRED | LENGTH-FIXED}
@@ -220,7 +220,7 @@ Get Serial Modem Configuration (Call Retry Interval) Response
 -------------------------------------------------------------
 
 FIID Template: tmpl_cmd_get_serial_modem_configuration_call_retry_interval_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 4, "present_revision", REQUIRED | LENGTH-FIXED}

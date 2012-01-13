@@ -75,8 +75,8 @@ field flags - flags indicating qualities of the field.  The following
 SDR OEM Intel Node Manager Record
 ---------------------------------
 
-FIID Template: tmpl_sdr_oem_intel_node_manager_record =
-  {
+FIID Template: tmpl_sdr_oem_intel_node_manager_record
+
     /*********************
      * SDR Record Header *
      *********************/

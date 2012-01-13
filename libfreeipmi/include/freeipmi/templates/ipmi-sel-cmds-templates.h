@@ -60,14 +60,14 @@ Get SEL Info Request
 --------------------
 
 FIID Template: tmpl_cmd_get_sel_info_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
 
 Get SEL Info Response
 ---------------------
 
 FIID Template: tmpl_cmd_get_sel_info_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 4, "sel_version_major", REQUIRED | LENGTH-FIXED}
@@ -87,14 +87,14 @@ Get SEL Allocation Info Request
 -------------------------------
 
 FIID Template: tmpl_cmd_get_sel_allocation_info_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
 
 Get SEL Allocation Info Response
 --------------------------------
 
 FIID Template: tmpl_cmd_get_sel_allocation_info_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 16, "number_of_possible_allocation_units", REQUIRED | LENGTH-FIXED}
@@ -107,14 +107,14 @@ Reserve SEL Request
 -------------------
 
 FIID Template: tmpl_cmd_reserve_sel_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
 
 Reserve SEL Response
 --------------------
 
 FIID Template: tmpl_cmd_reserve_sel_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 16, "reservation_id", REQUIRED | LENGTH-FIXED}
@@ -123,7 +123,7 @@ Get SEL Entry Request
 ---------------------
 
 FIID Template: tmpl_cmd_get_sel_entry_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 16, "reservation_id", REQUIRED | LENGTH-FIXED}
     { 16, "record_id", REQUIRED | LENGTH-FIXED}
@@ -134,7 +134,7 @@ Get SEL Entry Response
 ----------------------
 
 FIID Template: tmpl_cmd_get_sel_entry_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 16, "next_record_id", REQUIRED | LENGTH-FIXED}
@@ -144,7 +144,7 @@ Delete SEL Entry Request
 ------------------------
 
 FIID Template: tmpl_cmd_delete_sel_entry_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 16, "reservation_id", REQUIRED | LENGTH-FIXED}
     { 16, "record_id", REQUIRED | LENGTH-FIXED}
@@ -153,7 +153,7 @@ Delete SEL Entry Response
 -------------------------
 
 FIID Template: tmpl_cmd_delete_sel_entry_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 16, "record_id", REQUIRED | LENGTH-FIXED}
@@ -162,7 +162,7 @@ Clear SEL Request
 -----------------
 
 FIID Template: tmpl_cmd_clear_sel_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 16, "reservation_id", REQUIRED | LENGTH-FIXED}
     { 8, "C", REQUIRED | LENGTH-FIXED}
@@ -174,7 +174,7 @@ Clear SEL Response
 ------------------
 
 FIID Template: tmpl_cmd_clear_sel_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 4, "erasure_progress", REQUIRED | LENGTH-FIXED}
@@ -184,14 +184,14 @@ Get SEL Time Request
 --------------------
 
 FIID Template: tmpl_cmd_get_sel_time_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
 
 Get SEL Time Response
 ---------------------
 
 FIID Template: tmpl_cmd_get_sel_time_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 32, "time", REQUIRED | LENGTH-FIXED}
@@ -200,7 +200,7 @@ Set SEL Time Request
 --------------------
 
 FIID Template: tmpl_cmd_set_sel_time_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 32, "time", REQUIRED | LENGTH-FIXED}
 
@@ -208,7 +208,7 @@ Set SEL Time Response
 ---------------------
 
 FIID Template: tmpl_cmd_set_sel_time_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
 
@@ -216,7 +216,7 @@ Get Auxiliary Log Status Request
 --------------------------------
 
 FIID Template: tmpl_cmd_get_auxiliary_log_status_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 4, "log_type", REQUIRED | LENGTH-FIXED}
     { 4, "reserved", REQUIRED | LENGTH-FIXED}
@@ -225,7 +225,7 @@ Get Auxiliary Log Status Response
 ---------------------------------
 
 FIID Template: tmpl_cmd_get_auxiliary_log_status_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 120, "log_data", REQUIRED | LENGTH-VARIABLE}
@@ -234,7 +234,7 @@ Get Auxiliary Log Status (MCA) Response
 ---------------------------------------
 
 FIID Template: tmpl_cmd_get_auxiliary_log_status_mca_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 32, "timestamp", REQUIRED | LENGTH-FIXED}
@@ -245,7 +245,7 @@ Get Auxiliary Log Status (OEM) Response
 ---------------------------------------
 
 FIID Template: tmpl_cmd_get_auxiliary_log_status_oem_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 32, "timestamp", REQUIRED | LENGTH-FIXED}
@@ -256,7 +256,7 @@ Set Auxiliary Log Status Request
 --------------------------------
 
 FIID Template: tmpl_cmd_set_auxiliary_log_status_rq
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 4, "log_type", REQUIRED | LENGTH-FIXED}
     { 4, "reserved", REQUIRED | LENGTH-FIXED}
@@ -266,7 +266,7 @@ Set Auxiliary Log Status Response
 ---------------------------------
 
 FIID Template: tmpl_cmd_set_auxiliary_log_status_rs
-  {
+
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
 

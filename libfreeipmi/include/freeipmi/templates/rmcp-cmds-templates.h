@@ -60,7 +60,7 @@ ASF Presence Ping
 -----------------
 
 FIID Template: tmpl_cmd_asf_presence_ping
-  {
+
     { 32, "iana_enterprise_number", REQUIRED | LENGTH-FIXED}
     { 8, "message_type", REQUIRED | LENGTH-FIXED}
     { 8, "message_tag", REQUIRED | LENGTH-FIXED}
@@ -71,7 +71,7 @@ ASF Presence Pong
 -----------------
 
 FIID Template: tmpl_cmd_asf_presence_pong
-  {
+
     { 32, "iana_enterprise_number", REQUIRED | LENGTH-FIXED}
     { 8, "message_type", REQUIRED | LENGTH-FIXED}
     { 8, "message_tag", REQUIRED | LENGTH-FIXED}
