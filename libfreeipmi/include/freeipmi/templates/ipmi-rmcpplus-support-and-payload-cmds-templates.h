@@ -67,7 +67,6 @@ FIID Template: tmpl_cmd_activate_payload_rq
     { 4, "payload_instance", REQUIRED | LENGTH-FIXED}
     { 4, "reserved2", REQUIRED | LENGTH-FIXED}
     { 32, "auxiliary_request_data", REQUIRED | LENGTH-FIXED}
-  };
 
 Activate Payload (SOL) Request
 ------------------------------
@@ -88,7 +87,6 @@ FIID Template: tmpl_cmd_activate_payload_sol_rq
     { 1, "authentication_activation", OPTIONAL | LENGTH-FIXED}
     { 1, "encryption_activation", OPTIONAL | LENGTH-FIXED}
     { 24, "reserved5", OPTIONAL | LENGTH-FIXED}
-  };
 
 Activate Payload Response
 -------------------------
@@ -102,7 +100,6 @@ FIID Template: tmpl_cmd_activate_payload_rs
     { 16, "outbound_payload_size", REQUIRED | LENGTH-FIXED}
     { 16, "payload_udp_port_number", REQUIRED | LENGTH-FIXED}
     { 16, "payload_vlan_number", REQUIRED | LENGTH-FIXED}
-  };
 
 Activate Payload (SOL) Response
 -------------------------------
@@ -117,7 +114,6 @@ FIID Template: tmpl_cmd_activate_payload_sol_rs
     { 16, "outbound_payload_size", REQUIRED | LENGTH-FIXED}
     { 16, "payload_udp_port_number", REQUIRED | LENGTH-FIXED}
     { 16, "payload_vlan_number", REQUIRED | LENGTH-FIXED}
-  };
 
 Deactivate Payload Request
 --------------------------
@@ -130,7 +126,6 @@ FIID Template: tmpl_cmd_deactivate_payload_rq
     { 4, "payload_instance", REQUIRED | LENGTH-FIXED}
     { 4, "reserved2", REQUIRED | LENGTH-FIXED}
     { 32, "payload_auxiliary_data", REQUIRED | LENGTH-FIXED}
-  };
 
 Deactivate Payload Response
 ---------------------------
@@ -139,7 +134,6 @@ FIID Template: tmpl_cmd_deactivate_payload_rs
   {
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
-  };
 
 Suspend Resume Payload Encryption Request
 -----------------------------------------
@@ -158,7 +152,6 @@ FIID Template: tmpl_cmd_suspend_resume_payload_encryption_rq
     */
     { 2, "operation", REQUIRED | LENGTH-FIXED}
     { 6, "reserved3", REQUIRED | LENGTH-FIXED}
-  };
 
 Suspend Resume Payload Encryption Response
 ------------------------------------------
@@ -167,7 +160,6 @@ FIID Template: tmpl_cmd_suspend_resume_payload_encryption_rs
   {
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
-  };
 
 Get Payload Activation Status Request
 -------------------------------------
@@ -176,7 +168,6 @@ FIID Template: tmpl_cmd_get_payload_activation_status_rq
   {
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 8, "payload_type", REQUIRED | LENGTH-FIXED}
-  };
 
 Get Payload Activation Status Response
 --------------------------------------
@@ -203,7 +194,6 @@ FIID Template: tmpl_cmd_get_payload_activation_status_rs
     { 1, "instance_14", REQUIRED | LENGTH-FIXED}
     { 1, "instance_15", REQUIRED | LENGTH-FIXED}
     { 1, "instance_16", REQUIRED | LENGTH-FIXED}
-  };
 
 Get Payload Instance Info Request
 ---------------------------------
@@ -213,7 +203,6 @@ FIID Template: tmpl_cmd_get_payload_instance_info_rq
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 8, "payload_type", REQUIRED | LENGTH-FIXED}
     { 8, "payload_instance", REQUIRED | LENGTH-FIXED}
-  };
 
 Get Payload Instance Info Response
 ----------------------------------
@@ -225,7 +214,6 @@ FIID Template: tmpl_cmd_get_payload_instance_info_rs
     { 32, "session_id", REQUIRED | LENGTH-FIXED}
     { 8, "port_number", REQUIRED | LENGTH-FIXED}
     { 56, "reserved", REQUIRED | LENGTH-FIXED}
-  };
 
 Set User Payload Access Request
 -------------------------------
@@ -255,7 +243,6 @@ FIID Template: tmpl_cmd_set_user_payload_access_rq
     { 1, "oem_payload_6", REQUIRED | LENGTH-FIXED}
     { 1, "oem_payload_7", REQUIRED | LENGTH-FIXED}
     { 8, "reserved4", REQUIRED | LENGTH-FIXED}
-  };
 
 Set User Payload Access Response
 --------------------------------
@@ -264,7 +251,6 @@ FIID Template: tmpl_cmd_set_user_payload_access_rs
   {
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
-  };
 
 Get User Payload Access Request
 -------------------------------
@@ -276,7 +262,6 @@ FIID Template: tmpl_cmd_get_user_payload_access_rq
     { 4, "reserved1", REQUIRED | LENGTH-FIXED}
     { 6, "user_id", REQUIRED | LENGTH-FIXED}
     { 2, "reserved2", REQUIRED | LENGTH-FIXED}
-  };
 
 Get User Payload Access Response
 --------------------------------
@@ -303,7 +288,6 @@ FIID Template: tmpl_cmd_get_user_payload_access_rs
     { 1, "oem_payload_6", REQUIRED | LENGTH-FIXED}
     { 1, "oem_payload_7", REQUIRED | LENGTH-FIXED}
     { 8, "reserved3", REQUIRED | LENGTH-FIXED}
-  };
 
 Get Channel Payload Support Request
 -----------------------------------
@@ -313,7 +297,6 @@ FIID Template: tmpl_cmd_get_channel_payload_support_rq
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 4, "channel_number", REQUIRED | LENGTH-FIXED}
     { 4, "reserved", REQUIRED | LENGTH-FIXED}
-  };
 
 Get Channel Payload Support Response
 ------------------------------------
@@ -371,7 +354,6 @@ FIID Template: tmpl_cmd_get_channel_payload_support_rs
     { 1, "payload_type_2Eh_supported", REQUIRED | LENGTH-FIXED}
     { 1, "payload_type_2Fh_supported", REQUIRED | LENGTH-FIXED}
     { 16, "reserved", REQUIRED | LENGTH-FIXED}
-  };
 
 Get Channel Payload Version Request
 -----------------------------------
@@ -382,7 +364,6 @@ FIID Template: tmpl_cmd_get_channel_payload_version_rq
     { 4, "channel_number", REQUIRED | LENGTH-FIXED}
     { 4, "reserved", REQUIRED | LENGTH-FIXED}
     { 8, "payload_type", REQUIRED | LENGTH-FIXED}
-  };
 
 Get Channel Payload Version Response
 ------------------------------------
@@ -393,7 +374,6 @@ FIID Template: tmpl_cmd_get_channel_payload_version_rs
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 4, "minor_format_version", REQUIRED | LENGTH-FIXED}
     { 4, "major_format_version", REQUIRED | LENGTH-FIXED}
-  };
 
 Get Channel OEM Payload Info Request
 ------------------------------------
@@ -406,7 +386,6 @@ FIID Template: tmpl_cmd_get_channel_oem_payload_info_rq
     { 8, "payload_type", REQUIRED | LENGTH-FIXED}
     { 24, "oem_iana", REQUIRED | LENGTH-FIXED}
     { 16, "oem_payload_id", REQUIRED | LENGTH-FIXED}
-  };
 
 Get Channel OEM Payload Info Response
 -------------------------------------
@@ -420,7 +399,6 @@ FIID Template: tmpl_cmd_get_channel_oem_payload_info_rs
     { 16, "oem_payload_id", REQUIRED | LENGTH-FIXED}
     { 4, "minor_format_version", REQUIRED | LENGTH-FIXED}
     { 4, "major_format_version", REQUIRED | LENGTH-FIXED}
-  };
 
 #endif  /* 0 */
 

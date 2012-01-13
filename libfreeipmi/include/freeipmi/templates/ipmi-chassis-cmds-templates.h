@@ -62,7 +62,6 @@ Get Chassis Capabilities Request
 FIID Template: tmpl_cmd_get_chassis_capabilities_rq
   {
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
-  };
 
 Get Chassis Capabilities Response
 ---------------------------------
@@ -81,7 +80,6 @@ FIID Template: tmpl_cmd_get_chassis_capabilities_rs
     { 8, "sel_device_address", REQUIRED | LENGTH-FIXED}
     { 8, "system_management_device_address", REQUIRED | LENGTH-FIXED}
     { 8, "bridge_device_address", OPTIONAL | LENGTH-FIXED}
-  };
 
 Get Chassis Status Request
 --------------------------
@@ -89,7 +87,6 @@ Get Chassis Status Request
 FIID Template: tmpl_cmd_get_chassis_status_rq
   {
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
-  };
 
 Get Chassis Status Response
 ---------------------------
@@ -126,7 +123,6 @@ FIID Template: tmpl_cmd_get_chassis_status_rs
     { 1, "front_panel.reset_button_disable_allowed", OPTIONAL | LENGTH-FIXED}
     { 1, "front_panel.diagnostic_interrupt_button_disable_allowed", OPTIONAL | LENGTH-FIXED}
     { 1, "front_panel.standby_button_disable_allowed", OPTIONAL | LENGTH-FIXED}
-  };
 
 Chassis Control Request
 -----------------------
@@ -136,7 +132,6 @@ FIID Template: tmpl_cmd_chassis_control_rq
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 4, "chassis_control", REQUIRED | LENGTH-FIXED}
     { 4, "reserved", REQUIRED | LENGTH-FIXED}
-  };
 
 Chassis Control Response
 ------------------------
@@ -145,7 +140,6 @@ FIID Template: tmpl_cmd_chassis_control_rs
   {
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
-  };
 
 Chassis Identify Request
 ------------------------
@@ -156,7 +150,6 @@ FIID Template: tmpl_cmd_chassis_identify_rq
     { 8, "identify_interval", OPTIONAL | LENGTH-FIXED}
     { 1, "force_identify", OPTIONAL | LENGTH-FIXED}
     { 7, "reserved", OPTIONAL | LENGTH-FIXED}
-  };
 
 Chassis Identify Response
 -------------------------
@@ -165,7 +158,6 @@ FIID Template: tmpl_cmd_chassis_identify_rs
   {
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
-  };
 
 Set Front Panel Button Enables Request
 --------------------------------------
@@ -178,7 +170,6 @@ FIID Template: tmpl_cmd_set_front_panel_enables_rq
     { 1, "disable_diagnostic_interrupt_button", REQUIRED | LENGTH-FIXED}
     { 1, "disable_standby_button_for_entering_standby", REQUIRED | LENGTH-FIXED}
     { 4, "reserved", REQUIRED | LENGTH-FIXED}
-  };
 
 Set Front Panel Button Enables Response
 ---------------------------------------
@@ -187,7 +178,6 @@ FIID Template: tmpl_cmd_set_front_panel_enables_rs
   {
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
-  };
 
 Set Power Restore Policy Request
 --------------------------------
@@ -197,7 +187,6 @@ FIID Template: tmpl_cmd_set_power_restore_policy_rq
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 3, "power_restore_policy", REQUIRED | LENGTH-FIXED}
     { 5, "reserved", REQUIRED | LENGTH-FIXED}
-  };
 
 Set Power Restore Policy Response
 ---------------------------------
@@ -210,7 +199,6 @@ FIID Template: tmpl_cmd_set_power_restore_policy_rs
     { 1, "restoring_power_to_state_when_ac_mains_was_lost", REQUIRED | LENGTH-FIXED}
     { 1, "always_powering_up_after_ac_mains_returns", REQUIRED | LENGTH-FIXED}
     { 5, "reserved", REQUIRED | LENGTH-FIXED}
-  };
 
 Set Power Cycle Interval Request
 --------------------------------
@@ -219,7 +207,6 @@ FIID Template: tmpl_cmd_set_power_cycle_interval_rq
   {
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 8, "interval", REQUIRED | LENGTH-FIXED}
-  };
 
 Set Power Cycle Interval Response
 ---------------------------------
@@ -228,7 +215,6 @@ FIID Template: tmpl_cmd_set_power_cycle_interval_rs
   {
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
-  };
 
 Get System Restart Cause Request
 --------------------------------
@@ -236,7 +222,6 @@ Get System Restart Cause Request
 FIID Template: tmpl_cmd_get_system_restart_cause_rq
   {
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
-  };
 
 Get System Restart Cause Response
 ---------------------------------
@@ -248,7 +233,6 @@ FIID Template: tmpl_cmd_get_system_restart_cause_rs
     { 4, "restart_cause", REQUIRED | LENGTH-FIXED}
     { 4, "reserved", REQUIRED | LENGTH-FIXED}
     { 8, "channel", REQUIRED | LENGTH-FIXED}
-  };
 
 Set System Boot Options Request
 -------------------------------
@@ -259,7 +243,6 @@ FIID Template: tmpl_cmd_set_system_boot_options_rq
     { 7, "parameter_selector", REQUIRED | LENGTH-FIXED}
     { 1, "parameter_valid", REQUIRED | LENGTH-FIXED}
     { 296, "configuration_parameter_data", OPTIONAL | LENGTH-VARIABLE }
-  };
 
 Set System Boot Options Response
 --------------------------------
@@ -268,7 +251,6 @@ FIID Template: tmpl_cmd_set_system_boot_options_rs
   {
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
-  };
 
 Set System Boot Options (Set In Progress) Request
 -------------------------------------------------
@@ -280,7 +262,6 @@ FIID Template: tmpl_cmd_set_system_boot_options_set_in_progress_rq
     { 1, "parameter_valid", REQUIRED | LENGTH-FIXED}
     { 2, "state", REQUIRED | LENGTH-FIXED}
     { 6, "reserved", REQUIRED | LENGTH-FIXED}
-  };
 
 Set System Boot Options (Service Partition Selector) Request
 ------------------------------------------------------------
@@ -291,7 +272,6 @@ FIID Template: tmpl_cmd_set_system_boot_options_service_partition_selector_rq
     { 7, "parameter_selector", REQUIRED | LENGTH-FIXED}
     { 1, "parameter_valid", REQUIRED | LENGTH-FIXED}
     { 8, "service_partition_selector", REQUIRED | LENGTH-FIXED}
-  };
 
 Set System Boot Options (Service Partition Scan) Request
 --------------------------------------------------------
@@ -304,7 +284,6 @@ FIID Template: tmpl_cmd_set_system_boot_options_service_partition_scan_rq
   { 1, "service_partition_discovered", REQUIRED | LENGTH-FIXED}
   { 1, "service_partition_scan", REQUIRED | LENGTH-FIXED}
   { 6, "reserved", REQUIRED | LENGTH-FIXED}
-};
 
 Set System Boot Options (BMC Boot Flag Valid Bit Clearing) Request
 ------------------------------------------------------------------
@@ -320,7 +299,6 @@ FIID Template: tmpl_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing
     { 1, "dont_automatically_clear_boot_flag_valid_bit_if_chassis_control_command_not_received_within_60_second_timeout", REQUIRED | LENGTH-FIXED}
     { 1, "dont_clear_valid_bit_on_reset_power_cycle_caused_by_PEF", REQUIRED | LENGTH-FIXED}
     { 3, "reserved", REQUIRED | LENGTH-FIXED}
-  };
 
 Set System Boot Options (Boot Info Acknowledge) Request
 -------------------------------------------------------
@@ -344,7 +322,6 @@ FIID Template: tmpl_cmd_set_system_boot_options_boot_info_acknowledge_rq
     { 1, "sms_handled_boot_info", REQUIRED | LENGTH-FIXED}
     { 1, "oem_handled_boot_info", REQUIRED | LENGTH-FIXED}
     { 3, "reserved", REQUIRED | LENGTH-FIXED}
-  };
 
 Set System Boot Options (Boot Flags) Request
 --------------------------------------------
@@ -374,7 +351,6 @@ FIID Template: tmpl_cmd_set_system_boot_options_boot_flags_rq
     { 4, "reserved2", REQUIRED | LENGTH-FIXED}
     { 5, "device_instance_selector", REQUIRED | LENGTH-FIXED}
     { 3, "reserved3", REQUIRED | LENGTH-FIXED}
-  };
 
 Set System Boot Options (Boot Initiator Info) Request
 -----------------------------------------------------
@@ -388,7 +364,6 @@ FIID Template: tmpl_cmd_set_system_boot_options_boot_initiator_info_rq
     { 4, "boot_source.reserved", REQUIRED | LENGTH-FIXED}
     { 32, "session_id", REQUIRED | LENGTH-FIXED}
     { 32, "boot_info_timestamp", REQUIRED | LENGTH-FIXED}
-  };
 
 Set System Boot Options (Boot Initiator Mailbox) Request
 --------------------------------------------------------
@@ -401,7 +376,6 @@ FIID Template: tmpl_cmd_set_system_boot_options_boot_initiator_mailbox_rq
     { 1, "parameter_valid", REQUIRED | LENGTH-FIXED}
     { 8, "set_selector", REQUIRED | LENGTH-FIXED}
     { 128, "block_data", OPTIONAL | LENGTH-VARIABLE}
-  };
 
 Get System Boot Options Request
 -------------------------------
@@ -413,7 +387,6 @@ FIID Template: tmpl_cmd_get_system_boot_options_rq
     { 1, "reserved", REQUIRED | LENGTH-FIXED}
     { 8, "set_selector", REQUIRED | LENGTH-FIXED}
     { 8, "block_selector", REQUIRED | LENGTH-FIXED}
-  };
 
 Get System Boot Options Response
 --------------------------------
@@ -427,7 +400,6 @@ FIID Template: tmpl_cmd_get_system_boot_options_rs
     { 7, "parameter_selector", REQUIRED | LENGTH-FIXED}
     { 1, "parameter_valid", REQUIRED | LENGTH-FIXED}
     { 296, "configuration_parameter_data", OPTIONAL | LENGTH-VARIABLE}
-  };
 
 Get System Boot Options (Set In Progress) Response
 --------------------------------------------------
@@ -442,7 +414,6 @@ FIID Template: tmpl_cmd_get_system_boot_options_set_in_progress_rs
     { 1, "parameter_valid", REQUIRED | LENGTH-FIXED}
     { 2, "state", REQUIRED | LENGTH-FIXED}
     { 6, "reserved2", REQUIRED | LENGTH-FIXED}
-  };
 
 Get System Boot Options (Service Partition Selector) Response
 -------------------------------------------------------------
@@ -456,7 +427,6 @@ FIID Template: tmpl_cmd_get_system_boot_options_service_partition_selector_rs
     { 7, "parameter_selector", REQUIRED | LENGTH-FIXED}
     { 1, "parameter_valid", REQUIRED | LENGTH-FIXED}
     { 8, "service_partition_selector", REQUIRED | LENGTH-FIXED}
-  };
 
 Get System Boot Options (Service Partition Scan) Response
 ---------------------------------------------------------
@@ -472,7 +442,6 @@ FIID Template: tmpl_cmd_get_system_boot_options_service_partition_scan_rs
     { 1, "service_partition_discovered", REQUIRED | LENGTH-FIXED}
     { 1, "service_partition_scan", REQUIRED | LENGTH-FIXED}
     { 6, "reserved2", REQUIRED | LENGTH-FIXED}
-  };
 
 Get System Boot Options (BMC Boot Flag Valid Bit Clearing) Response
 -------------------------------------------------------------------
@@ -491,7 +460,6 @@ FIID Template: tmpl_cmd_get_system_boot_options_BMC_boot_flag_valid_bit_clearing
     { 1, "dont_automatically_clear_boot_flag_valid_bit_if_chassis_control_command_not_received_within_60_second_timeout", REQUIRED | LENGTH-FIXED}
     { 1, "dont_clear_valid_bit_on_reset_power_cycle_caused_by_PEF", REQUIRED | LENGTH-FIXED}
     { 3, "reserved2", REQUIRED | LENGTH-FIXED}
-  };
 
 Get System Boot Options (Boot Info Acknowledge) Response
 --------------------------------------------------------
@@ -518,7 +486,6 @@ FIID Template: tmpl_cmd_get_system_boot_options_boot_info_acknowledge_rs
     { 1, "sms_handled_boot_info", REQUIRED | LENGTH-FIXED}
     { 1, "oem_handled_boot_info", REQUIRED | LENGTH-FIXED}
     { 3, "reserved2", REQUIRED | LENGTH-FIXED}
-  };
 
 Get System Boot Options (Boot Flags) Response
 ---------------------------------------------
@@ -551,7 +518,6 @@ FIID Template: tmpl_cmd_get_system_boot_options_boot_flags_rs
     { 4, "reserved2", REQUIRED | LENGTH-FIXED}
     { 5, "device_instance_selector", REQUIRED | LENGTH-FIXED}
     { 3, "reserved3", REQUIRED | LENGTH-FIXED}
-  };
 
 Get System Boot Options (Boot Initiator Info) Response
 ------------------------------------------------------
@@ -568,7 +534,6 @@ FIID Template: tmpl_cmd_get_system_boot_options_boot_initiator_info_rs
     { 4, "boot_source.reserved", REQUIRED | LENGTH-FIXED}
     { 32, "session_id", REQUIRED | LENGTH-FIXED}
     { 32, "boot_info_timestamp", REQUIRED | LENGTH-FIXED}
-  };
   
 Get System Boot Options (Boot Initiator Mailbox) Response
 ---------------------------------------------------------
@@ -584,7 +549,6 @@ FIID Template: tmpl_cmd_get_system_boot_options_boot_initiator_mailbox_rs
     { 1, "parameter_valid", REQUIRED | LENGTH-FIXED}
     { 8, "set_selector", REQUIRED | LENGTH-FIXED}
     { 128, "block_data", OPTIONAL | LENGTH-VARIABLE}
-  };
 
 Get Power On Hours Counter Request
 ----------------------------------
@@ -592,7 +556,6 @@ Get Power On Hours Counter Request
 FIID Template: tmpl_cmd_get_power_on_hours_counter_rq
   {
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
-  };
 
 Get Power On Hours Counter Response
 -----------------------------------
@@ -603,7 +566,6 @@ FIID Template: tmpl_cmd_get_power_on_hours_counter_rs
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "minutes_per_counter", REQUIRED | LENGTH-FIXED}
     { 32, "counter_reading", REQUIRED | LENGTH-FIXED}
-  };
 
 #endif  /* 0 */
 

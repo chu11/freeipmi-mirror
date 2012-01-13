@@ -63,7 +63,6 @@ FIID Template: tmpl_cipher_suite_record_header
   {
     { 6, "record_format", REQUIRED | LENGTH-FIXED}
     { 2, "tag_bits", REQUIRED | LENGTH-FIXED}
-  };
 
 Cipher Suite Record
 -------------------
@@ -79,7 +78,6 @@ FIID Template: tmpl_cipher_suite_record
     { 2, "integrity_algorithm_tag_bits", REQUIRED | LENGTH-FIXED}
     { 6, "confidentiality_algorithm", REQUIRED | LENGTH-FIXED}
     { 2, "confidentiality_algorithm_tag_bits", REQUIRED | LENGTH-FIXED}
-  };
 
 OEM Cipher Suite Record
 -----------------------
@@ -96,7 +94,6 @@ FIID Template: tmpl_oem_cipher_suite_record
     { 2, "integrity_algorithm_tag_bits", REQUIRED | LENGTH-FIXED}
     { 6, "confidentiality_algorithm", REQUIRED | LENGTH-FIXED}
     { 2, "confidentiality_algorithm_tag_bits", REQUIRED | LENGTH-FIXED}
-  };
 
 #endif  /* 0 */
 

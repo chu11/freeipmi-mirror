@@ -64,7 +64,6 @@ FIID Template: tmpl_cmd_get_device_sdr_info_rq
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 1, "operation", REQUIRED | LENGTH-FIXED}
     { 7, "reserved", REQUIRED | LENGTH-FIXED}
-  };
 
 Get Device SDR Info Response
 ----------------------------
@@ -81,7 +80,6 @@ FIID Template: tmpl_cmd_get_device_sdr_info_rs
     { 3, "flags.reserved", REQUIRED | LENGTH-FIXED}
     { 1, "flags.sensor_population", REQUIRED | LENGTH-FIXED}
     { 32, "sensor_population_change_indicator", REQUIRED | LENGTH-FIXED}
-  };
 
 Get Device SDR Request
 ----------------------
@@ -93,7 +91,6 @@ FIID Template: tmpl_cmd_get_device_sdr_rq
     { 16, "record_id", REQUIRED | LENGTH-FIXED}
     { 8, "offset_into_record", REQUIRED | LENGTH-FIXED}
     { 8, "bytes_to_read", REQUIRED | LENGTH-FIXED}
-  };
 
 Get Device SDR Response
 -----------------------
@@ -104,7 +101,6 @@ FIID Template: tmpl_cmd_get_device_sdr_rs
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 16, "record_id", REQUIRED | LENGTH-FIXED}
     { 4096, "requested_bytes", OPTIONAL | LENGTH-VARIABLE}
-  };
 
 Get Sensor Reading Factors Request
 ----------------------------------
@@ -114,7 +110,6 @@ FIID Template: tmpl_cmd_get_sensor_reading_factors_rq
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 8, "sensor_number", REQUIRED | LENGTH-FIXED}
     { 8, "reading_byte", REQUIRED | LENGTH-FIXED}
-  };
 
 Get Sensor Reading Factors Response
 -----------------------------------
@@ -135,7 +130,6 @@ FIID Template: tmpl_cmd_get_sensor_reading_factors_rs
     { 4, "accuracy_ms", REQUIRED | LENGTH-FIXED}
     { 4, "b_exponent", REQUIRED | LENGTH-FIXED}
     { 4, "r_exponent", REQUIRED | LENGTH-FIXED}
-  };
 
 Set Sensor Hysteresis Request
 -----------------------------
@@ -147,7 +141,6 @@ FIID Template: tmpl_cmd_set_sensor_hysteresis_rq
     { 8, "hysteresis_mask", REQUIRED | LENGTH-FIXED}
     { 8, "positive_going_threshold_hysteresis_value", REQUIRED | LENGTH-FIXED}
     { 8, "negative_going_threshold_hysteresis_value", REQUIRED | LENGTH-FIXED}
-  };
 
 Set Sensor Hysteresis Response
 ------------------------------
@@ -156,7 +149,6 @@ FIID Template: tmpl_cmd_set_sensor_hysteresis_rs
   {
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
-  };
 
 Get Sensor Hysteresis Request
 -----------------------------
@@ -166,7 +158,6 @@ FIID Template: tmpl_cmd_get_sensor_hysteresis_rq
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 8, "sensor_number", REQUIRED | LENGTH-FIXED}
     { 8, "hysteresis_mask", REQUIRED | LENGTH-FIXED}
-  };
 
 Get Sensor Hysteresis Response
 ------------------------------
@@ -177,7 +168,6 @@ FIID Template: tmpl_cmd_get_sensor_hysteresis_rs
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "positive_going_threshold_hysteresis_value", REQUIRED | LENGTH-FIXED}
     { 8, "negative_going_threshold_hysteresis_value", REQUIRED | LENGTH-FIXED}
-  };
 
 Set Sensor Thresholds Request
 -----------------------------
@@ -199,7 +189,6 @@ FIID Template: tmpl_cmd_set_sensor_thresholds_rq
     { 8, "upper_non_critical_threshold", REQUIRED | LENGTH-FIXED}
     { 8, "upper_critical_threshold", REQUIRED | LENGTH-FIXED}
     { 8, "upper_non_recoverable_threshold", REQUIRED | LENGTH-FIXED}
-  };
 
 Set Sensor Thresholds Response
 ------------------------------
@@ -208,7 +197,6 @@ FIID Template: tmpl_cmd_set_sensor_thresholds_rs
   {
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
-  };
 
 Get Sensor Thresholds Request
 -----------------------------
@@ -217,7 +205,6 @@ FIID Template: tmpl_cmd_get_sensor_thresholds_rq
   {
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 8, "sensor_number", REQUIRED | LENGTH-FIXED}
-  };
 
 Get Sensor Thresholds Response
 ------------------------------
@@ -239,7 +226,6 @@ FIID Template: tmpl_cmd_get_sensor_thresholds_rs
     { 8, "upper_non_critical_threshold", REQUIRED | LENGTH-FIXED}
     { 8, "upper_critical_threshold", REQUIRED | LENGTH-FIXED}
     { 8, "upper_non_recoverable_threshold", REQUIRED | LENGTH-FIXED}
-  };
 
 Set Sensor Event Enable Request
 -------------------------------
@@ -254,7 +240,6 @@ FIID Template: tmpl_cmd_set_sensor_event_enable_rq
     { 1, "all_event_messages", REQUIRED | LENGTH-FIXED}
     { 16, "assertion_event_bitmask", OPTIONAL | LENGTH-FIXED}
     { 16, "deassertion_event_bitmask", OPTIONAL | LENGTH-FIXED}
-  };
 
 Set Sensor Event Enable (Threshold) Request
 -------------------------------------------
@@ -299,7 +284,6 @@ FIID Template: tmpl_cmd_set_sensor_event_enable_threshold_rq
     { 1, "deassertion_event_upper_non_recoverable_going_high", OPTIONAL | LENGTH-FIXED}
     { 4, "reserved3", OPTIONAL | LENGTH-FIXED}
 
-  };
 
 Set Sensor Event Enable (Discrete) Request
 ------------------------------------------
@@ -350,7 +334,6 @@ FIID Template: tmpl_cmd_set_sensor_event_enable_discrete_rq
     { 1, "deassertion_event_state_bit_14", OPTIONAL | LENGTH-FIXED}
     { 1, "reserved3", OPTIONAL | LENGTH-FIXED}
 
-  };
 
 Set Sensor Event Enable Response
 --------------------------------
@@ -359,7 +342,6 @@ FIID Template: tmpl_cmd_set_sensor_event_enable_rs
   {
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
-  };
 
 Get Sensor Event Enable Request
 -------------------------------
@@ -368,7 +350,6 @@ FIID Template: tmpl_cmd_get_sensor_event_enable_rq
   {
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 8, "sensor_number", REQUIRED | LENGTH-FIXED}
-  };
 
 Get Sensor Event Enable Response
 --------------------------------
@@ -382,7 +363,6 @@ FIID Template: tmpl_cmd_get_sensor_event_enable_rs
     { 1, "all_event_messages", REQUIRED | LENGTH-FIXED}
     { 16, "assertion_event_bitmask", OPTIONAL | LENGTH-FIXED}
     { 16, "deassertion_event_bitmask", OPTIONAL | LENGTH-FIXED}
-  };
 
 Get Sensor Event Enable (Threshold) Response
 --------------------------------------------
@@ -426,7 +406,6 @@ FIID Template: tmpl_cmd_get_sensor_event_enable_threshold_rs
     { 1, "deassertion_event_for_upper_non_recoverable_going_high", OPTIONAL | LENGTH-FIXED}
     { 4, "reserved3", OPTIONAL | LENGTH-FIXED}
 
-  };
 
 Get Sensor Event Enable (Discrete) Response
 -------------------------------------------
@@ -476,7 +455,6 @@ FIID Template: tmpl_cmd_get_sensor_event_enable_discrete_rs
     { 1, "deassertion_event_message_for_state_bit_14", OPTIONAL | LENGTH-FIXED}
     { 1, "reserved3", OPTIONAL | LENGTH-FIXED}
 
-  };
 
 Re-arm Sensor Events Request
 ----------------------------
@@ -489,7 +467,6 @@ FIID Template: tmpl_cmd_re_arm_sensor_events_rq
     { 1, "re_arm_all_event_status_from_this_sensor", REQUIRED | LENGTH-FIXED}
     { 16, "re_arm_assertion_event", OPTIONAL | LENGTH-FIXED}
     { 16, "re_arm_deassertion_event", OPTIONAL | LENGTH-FIXED}
-  };
 
 Re-arm Sensor Events (Threshold) Request
 ----------------------------------------
@@ -526,7 +503,6 @@ FIID Template: tmpl_cmd_re_arm_sensor_events_threshold_rq
     { 1, "re_arm_deassertion_event_for_upper_non_recoverable_going_low", OPTIONAL | LENGTH-FIXED}
     { 1, "re_arm_deassertion_event_for_upper_non_recoverable_going_high", OPTIONAL | LENGTH-FIXED}
     { 4, "reserved3", OPTIONAL | LENGTH-FIXED}
-  };
 
 Re-arm Sensor Events (Discrete) Request
 ---------------------------------------
@@ -569,7 +545,6 @@ FIID Template: tmpl_cmd_re_arm_sensor_events_discrete_rq
     { 1, "re_arm_deassertion_event_for_state_bit_13", OPTIONAL | LENGTH-FIXED}
     { 1, "re_arm_deassertion_event_for_state_bit_14", OPTIONAL | LENGTH-FIXED}
     { 1, "reserved3", OPTIONAL | LENGTH-FIXED}
-  };
 
 Re-arm Sensor Events Response
 -----------------------------
@@ -578,7 +553,6 @@ FIID Template: tmpl_cmd_re_arm_sensor_events_rs
   {
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
-  };
 
 Get Sensor Event Status Request
 -------------------------------
@@ -587,7 +561,6 @@ FIID Template: tmpl_cmd_get_sensor_event_status_rq
   {
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 8, "sensor_number", REQUIRED | LENGTH-FIXED}
-  };
 
 Get Sensor Event Status Response
 --------------------------------
@@ -602,7 +575,6 @@ FIID Template: tmpl_cmd_get_sensor_event_status_rs
     { 1, "all_event_messages", REQUIRED | LENGTH-FIXED}
     { 16, "assertion_event", REQUIRED | LENGTH-FIXED}
     { 16, "deassertion_event", REQUIRED | LENGTH-FIXED}
-  };
 
 Get Sensor Event Status (Threshold) Response
 --------------------------------------------
@@ -647,7 +619,6 @@ FIID Template: tmpl_cmd_get_sensor_event_status_threshold_rs
     { 1, "deassertion_event_condition_for_upper_non_recoverable_going_high", REQUIRED | LENGTH-FIXED}
     { 4, "reserved3", REQUIRED | LENGTH-FIXED}
 
-  };
 
 Get Sensor Event Status (Discrete) Response
 --------------------------------------------
@@ -692,7 +663,6 @@ FIID Template: tmpl_cmd_get_sensor_event_status_discrete_rs
     { 1, "state_13_deassertion_event", REQUIRED | LENGTH-FIXED}
     { 1, "state_14_deassertion_event", REQUIRED | LENGTH-FIXED}
     { 1, "reserved3", REQUIRED | LENGTH-FIXED}
-  };
 
 Get Sensor Reading Request
 --------------------------
@@ -701,7 +671,6 @@ FIID Template: tmpl_cmd_get_sensor_reading_rq
   {
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 8, "sensor_number", REQUIRED | LENGTH-FIXED}
-  };
 
 Get Sensor Reading Response
 ---------------------------
@@ -718,7 +687,6 @@ FIID Template: tmpl_cmd_get_sensor_reading_rs
     { 8, "sensor_event_bitmask1", REQUIRED | LENGTH-FIXED}
     { 7, "sensor_event_bitmask2", OPTIONAL | LENGTH-FIXED}
     { 1, "reserved2", OPTIONAL | LENGTH-FIXED}
-  };
 
 Get Sensor Reading (Threshold) Response
 ---------------------------------------
@@ -740,7 +708,6 @@ FIID Template: tmpl_cmd_get_sensor_reading_threshold_rs
     { 1, "at_or_above_upper_non_recoverable_threshold", REQUIRED | LENGTH-FIXED}
     { 2, "reserved2", REQUIRED | LENGTH-FIXED}
     { 8, "reserved3", OPTIONAL | LENGTH-FIXED}
-  };
 
 Get Sensor Reading (Discrete) Response
 --------------------------------------
@@ -770,7 +737,6 @@ FIID Template: tmpl_cmd_get_sensor_reading_discrete_rs
     { 1, "state_13_asserted", OPTIONAL | LENGTH-FIXED}
     { 1, "state_14_asserted", OPTIONAL | LENGTH-FIXED}
     { 1, "reserved2", OPTIONAL | LENGTH-FIXED}
-  };
 
 Set Sensor Type Request
 -----------------------
@@ -782,7 +748,6 @@ FIID Template: tmpl_cmd_set_sensor_type_rq
     { 8, "sensor_type", REQUIRED | LENGTH-FIXED}
     { 7, "event_reading_type_code", REQUIRED | LENGTH-FIXED}
     { 1, "reserved", REQUIRED | LENGTH-FIXED}
-  };
 
 Set Sensor Type Response
 ------------------------
@@ -791,7 +756,6 @@ FIID Template: tmpl_cmd_set_sensor_type_rs
   {
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
-  };
 
 Get Sensor Type Request
 -----------------------
@@ -800,7 +764,6 @@ FIID Template: tmpl_cmd_get_sensor_type_rq
   {
     { 8, "cmd", REQUIRED | LENGTH-FIXED}
     { 8, "sensor_number", REQUIRED | LENGTH-FIXED}
-  };
 
 Get Sensor Type Response
 ------------------------
@@ -812,7 +775,6 @@ FIID Template: tmpl_cmd_get_sensor_type_rs
     { 8, "sensor_type", REQUIRED | LENGTH-FIXED}
     { 7, "event_reading_type_code", REQUIRED | LENGTH-FIXED}
     { 1, "reserved", REQUIRED | LENGTH-FIXED}
-  };
 
 #endif  /* 0 */
 

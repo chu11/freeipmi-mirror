@@ -71,7 +71,6 @@ FIID Template: tmpl_sol_payload_data
     { 8, "operation_status", REQUIRED | LENGTH-FIXED}
     /* 524288 = 65536 * 8 = 2^16 * 8, b/c ipmi_payload_len is 2 bytes */
     { 524288, "character_data", OPTIONAL | LENGTH-VARIABLE}
-  };
 
 SOL Payload Data Remote Console to BMC
 --------------------------------------
@@ -95,7 +94,6 @@ FIID Template: tmpl_sol_payload_data_remote_console_to_bmc
     { 1, "reserved3", REQUIRED | LENGTH-FIXED}
     /* 524288 = 65536 * 8 = 2^16 * 8, b/c ipmi_payload_len is 2 bytes */
     { 524288, "character_data", OPTIONAL | LENGTH-VARIABLE}
-  };
 
 SOL Payload Data BMC to Remote Console
 --------------------------------------
@@ -118,7 +116,6 @@ FIID Template: tmpl_sol_payload_data_bmc_to_remote_console
     { 1, "reserved4", REQUIRED | LENGTH-FIXED}
     /* 524288 = 65536 * 8 = 2^16 * 8, b/c ipmi_payload_len is 2 bytes */
     { 524288, "character_data", OPTIONAL | LENGTH-VARIABLE}
-  };
 
 #endif  /* 0 */
 

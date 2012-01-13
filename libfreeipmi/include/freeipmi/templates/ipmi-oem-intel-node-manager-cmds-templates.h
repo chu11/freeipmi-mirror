@@ -80,7 +80,6 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_enable_disable_node_manager_polic
     { 4,  "domain_id", REQUIRED | LENGTH-FIXED}
     { 4,  "reserved2", REQUIRED | LENGTH-FIXED}
     { 8,  "policy_id", REQUIRED | LENGTH-FIXED}
-  };
 
 Enable Disable Node Manager Policy Control Response
 ---------------------------------------------------
@@ -90,7 +89,6 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_enable_disable_node_manager_polic
     { 8,  "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8,  "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 24, "manufacturer_id", REQUIRED | LENGTH-FIXED}   
-  };
 
 Set Node Manager Policy Request
 -------------------------------
@@ -112,7 +110,6 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_rq
     { 32, "correction_time_limit", REQUIRED | LENGTH-FIXED}
     { 16, "policy_trigger_limit", REQUIRED | LENGTH-FIXED}
     { 16, "statistics_reporting_period", REQUIRED | LENGTH-FIXED}
-  };
 
 Set Node Manager Policy Response
 --------------------------------
@@ -122,7 +119,6 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_rs
     { 8,  "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8,  "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 24, "manufacturer_id", REQUIRED | LENGTH-FIXED}
-  };
 
 Get Node Manager Policy Request
 -------------------------------
@@ -134,7 +130,6 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_policy_rq
     { 4,  "domain_id", REQUIRED | LENGTH-FIXED}
     { 4,  "reserved", REQUIRED | LENGTH-FIXED}
     { 8,  "policy_id", REQUIRED | LENGTH-FIXED}
-  };
 
 Get Node Manager Policy Response
 --------------------------------
@@ -158,7 +153,6 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_policy_rs
     { 32, "correction_time_limit", REQUIRED | LENGTH-FIXED}
     { 16, "policy_trigger_limit", REQUIRED | LENGTH-FIXED}
     { 16, "statistics_reporting_period", REQUIRED | LENGTH-FIXED}
-  };
 
 Set Node Manager Alert Thresholds Request
 -----------------------------------------
@@ -178,7 +172,6 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_thresholds
     { 16, "alert_threshold1", OPTIONAL | LENGTH-FIXED}
     { 16, "alert_threshold2", OPTIONAL | LENGTH-FIXED}
     { 16, "alert_threshold3", OPTIONAL | LENGTH-FIXED}
-  };
 
 Set Node Manager Alert Thresholds Response
 ------------------------------------------
@@ -188,7 +181,6 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_thresholds
     { 8,  "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8,  "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 24, "manufacturer_id", REQUIRED | LENGTH-FIXED}
-  };
 
 Get Node Manager Alert Thresholds Request
 -----------------------------------------
@@ -200,7 +192,6 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_alert_thresholds
     { 4,  "domain_id", REQUIRED | LENGTH-FIXED}
     { 4,  "reserved", REQUIRED | LENGTH-FIXED}
     { 8,  "policy_id", REQUIRED | LENGTH-FIXED}
-  };
 
 Get Node Manager Alert Thresholds Response
 ------------------------------------------
@@ -218,7 +209,6 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_alert_thresholds
     { 16, "alert_threshold1", OPTIONAL | LENGTH-FIXED}
     { 16, "alert_threshold2", OPTIONAL | LENGTH-FIXED}
     { 16, "alert_threshold3", OPTIONAL | LENGTH-FIXED}
-  };
 
 Set Node Manager Policy Suspend Periods Request
 -----------------------------------------------
@@ -285,7 +275,6 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_suspend_p
     { 1,  "policy5.suspend_period_recurrence.saturday", OPTIONAL | LENGTH-FIXED}
     { 1,  "policy5.suspend_period_recurrence.sunday", OPTIONAL | LENGTH-FIXED}
     { 1,  "policy5.suspend_period_recurrence.reserved", OPTIONAL | LENGTH-FIXED}
-  };
 
 Set Node Manager Policy Suspend Periods Response
 ------------------------------------------------
@@ -295,7 +284,6 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_suspend_p
     { 8,  "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8,  "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 24, "manufacturer_id", REQUIRED | LENGTH-FIXED}
-  };
 
 Get Node Manager Policy Suspend Periods Request
 -----------------------------------------------
@@ -307,7 +295,6 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_policy_suspend_p
     { 4,  "domain_id", REQUIRED | LENGTH-FIXED}
     { 4,  "reserved", REQUIRED | LENGTH-FIXED}
     { 8,  "policy_id", REQUIRED | LENGTH-FIXED}
-  };
 
 Get Node Manager Policy Suspend Periods Response
 ------------------------------------------------
@@ -368,7 +355,6 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_policy_suspend_p
     { 1,  "policy5.suspend_period_recurrence.saturday", OPTIONAL | LENGTH-FIXED}
     { 1,  "policy5.suspend_period_recurrence.sunday", OPTIONAL | LENGTH-FIXED}
     { 1,  "policy5.suspend_period_recurrence.reserved", OPTIONAL | LENGTH-FIXED}
-  };
 
 Reset Node Manager Statistics Request
 -------------------------------------
@@ -382,7 +368,6 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_reset_node_manager_statistics_rq
     { 4,  "domain_id", REQUIRED | LENGTH-FIXED}
     { 4,  "reserved2", REQUIRED | LENGTH-FIXED}
     { 8,  "policy_id", REQUIRED | LENGTH-FIXED}
-  };
 
 Reset Node Manager Statistics Response
 --------------------------------------
@@ -392,7 +377,6 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_reset_node_manager_statistics_rs
     { 8,  "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8,  "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 24, "manufacturer_id", REQUIRED | LENGTH-FIXED}
-  };
 
 Get Node Manager Statistics Request
 -----------------------------------
@@ -406,7 +390,6 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_statistics_rq
     { 4,  "domain_id", REQUIRED | LENGTH-FIXED}
     { 4,  "reserved2", REQUIRED | LENGTH-FIXED}
     { 8,  "policy_id", REQUIRED | LENGTH-FIXED}
-  };
 
 Get Node Manager Statistics Response
 ------------------------------------
@@ -427,7 +410,6 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_statistics_rs
     { 1,  "policy_operational_state", REQUIRED | LENGTH-FIXED}
     { 1,  "measurements_state", REQUIRED | LENGTH-FIXED}
     { 1,  "policy_activation_state", REQUIRED | LENGTH-FIXED}
-  };
 
 Get Node Manager Capabilities Request
 -------------------------------------
@@ -441,7 +423,6 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_capabilities_rq
     { 4,  "policy_trigger_type", REQUIRED | LENGTH-FIXED}
     { 4,  "policy_type", REQUIRED | LENGTH-FIXED}
     { 8,  "policy_id", REQUIRED | LENGTH-FIXED}
-  };
 
 Get Node Manager Capabilities Response
 --------------------------------------
@@ -460,7 +441,6 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_capabilities_rs
     { 16, "max_statistics_reporting_period", REQUIRED | LENGTH-FIXED}
     { 7,  "domain_limiting_scope", REQUIRED | LENGTH-FIXED}
     { 1,  "limiting_based_on", REQUIRED | LENGTH-FIXED}
-  };
 
 Get Node Manager Version Request
 --------------------------------
@@ -469,7 +449,6 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_version_rq
   {
     { 8,  "cmd", REQUIRED | LENGTH-FIXED}
     { 24, "manufacturer_id", REQUIRED | LENGTH-FIXED}
-  };
 
 Get Node Manager Version Response
 ---------------------------------
@@ -484,7 +463,6 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_version_rs
     { 8,  "patch_version", REQUIRED | LENGTH-FIXED}
     { 8,  "major_firmware_revision", REQUIRED | LENGTH-FIXED}
     { 8,  "minor_firmware_revision", REQUIRED | LENGTH-FIXED}
-  };
 
 Set Node Manager Power Draw Range Request
 -----------------------------------------
@@ -497,7 +475,6 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_set_node_manager_power_draw_range
     { 4,  "reserved", REQUIRED | LENGTH-FIXED}
     { 16, "minimum_power_draw", REQUIRED | LENGTH-FIXED}
     { 16, "maximum_power_draw", REQUIRED | LENGTH-FIXED}
-  };
 
 Set Node Manager Power Draw Range Response
 ------------------------------------------
@@ -507,7 +484,6 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_set_node_manager_power_draw_range
     { 8,  "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8,  "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 24, "manufacturer_id", REQUIRED | LENGTH-FIXED}
-  };
 
 Set Node Manager Alert Destination Request
 ------------------------------------------
@@ -522,7 +498,6 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_destinatio
     { 8,  "destination_information", REQUIRED | LENGTH-FIXED}
     { 7,  "alert_string_selector", REQUIRED | LENGTH-FIXED}
     { 1,  "send_alert_string", REQUIRED | LENGTH-FIXED}
-  };
 
 Set Node Manager Alert Destination (IPMB) Request
 -------------------------------------------------
@@ -538,7 +513,6 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_destinatio
     { 7,  "slave_address", REQUIRED | LENGTH-FIXED}
     { 7,  "alert_string_selector", REQUIRED | LENGTH-FIXED}
     { 1,  "send_alert_string", REQUIRED | LENGTH-FIXED}
-  };
 
 Set Node Manager Alert Destination (LAN) Request
 ------------------------------------------------
@@ -554,7 +528,6 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_destinatio
     { 4,  "reserved2", REQUIRED | LENGTH-FIXED}
     { 7,  "alert_string_selector", REQUIRED | LENGTH-FIXED}
     { 1,  "send_alert_string", REQUIRED | LENGTH-FIXED}
-  };
 
 Set Node Manager Alert Destination Response
 -------------------------------------------
@@ -564,7 +537,6 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_destinatio
     { 8,  "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8,  "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 24, "manufacturer_id", REQUIRED | LENGTH-FIXED}
-  };
 
 Get Node Manager Alert Destination Request
 ------------------------------------------
@@ -573,7 +545,6 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_alert_destinatio
   {
     { 8,  "cmd", REQUIRED | LENGTH-FIXED}
     { 24, "manufacturer_id", REQUIRED | LENGTH-FIXED}
-  };
 
 Get Node Manager Alert Destination Response
 -------------------------------------------
@@ -590,7 +561,6 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_alert_destinatio
     { 4,  "reserved2", REQUIRED | LENGTH-FIXED}
     { 7,  "alert_string_selector", REQUIRED | LENGTH-FIXED}
     { 1,  "send_alert_string", REQUIRED | LENGTH-FIXED}
-  };
 
 #endif  /* 0 */
 

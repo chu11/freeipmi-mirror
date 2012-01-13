@@ -66,7 +66,6 @@ FIID Template: tmpl_cmd_set_lan_configuration_parameters_rq
     { 4, "reserved", REQUIRED | LENGTH-FIXED}
     { 8, "parameter_selector", REQUIRED | LENGTH-FIXED}
     { 1024, "configuration_parameter_data", REQUIRED | LENGTH-VARIABLE}
-  };
 
 Set LAN Configuration Parameters Response
 -----------------------------------------
@@ -75,7 +74,6 @@ FIID Template: tmpl_cmd_set_lan_configuration_parameters_rs
   {
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
-  };
 
 Set LAN Configuration Parameters (Set In Progress) Request
 ----------------------------------------------------------
@@ -88,7 +86,6 @@ FIID Template: tmpl_cmd_set_lan_configuration_parameters_set_in_progress_rq
     { 8, "parameter_selector", REQUIRED | LENGTH-FIXED}
     { 2, "state", REQUIRED | LENGTH-FIXED}
     { 6, "reserved2", REQUIRED | LENGTH-FIXED}
-  };
 
 Set LAN Configuration Parameters (Authentication Type Enables) Request
 ----------------------------------------------------------------------
@@ -139,7 +136,6 @@ FIID Template: tmpl_cmd_set_lan_configuration_parameters_authentication_type_ena
     { 1, "oem_level.straight_password", REQUIRED | LENGTH-FIXED}
     { 1, "oem_level.oem_proprietary", REQUIRED | LENGTH-FIXED}
     { 2, "oem_level.reserved2", REQUIRED | LENGTH-FIXED}
-  };
 
 Set LAN Configuration Parameters (IP Address) Request
 -----------------------------------------------------
@@ -151,7 +147,6 @@ FIID Template: tmpl_cmd_set_lan_configuration_parameters_ip_address_rq
     { 4, "reserved", REQUIRED | LENGTH-FIXED}
     { 8, "parameter_selector", REQUIRED | LENGTH-FIXED}
     { 32, "ip_address", REQUIRED | LENGTH-FIXED}
-  };
 
 Set LAN Configuration Parameters (IP Address Source) Request
 ------------------------------------------------------------
@@ -164,7 +159,6 @@ FIID Template: tmpl_cmd_set_lan_configuration_parameters_ip_address_source_rq
     { 8, "parameter_selector", REQUIRED | LENGTH-FIXED}
     { 4, "ip_address_source", REQUIRED | LENGTH-FIXED}
     { 4, "reserved2", REQUIRED | LENGTH-FIXED}
-  };
 
 Set LAN Configuration Parameters (MAC Address) Request
 ------------------------------------------------------
@@ -176,7 +170,6 @@ FIID Template: tmpl_cmd_set_lan_configuration_parameters_mac_address_rq
     { 4, "reserved", REQUIRED | LENGTH-FIXED}
     { 8, "parameter_selector", REQUIRED | LENGTH-FIXED}
     { 48, "mac_address", REQUIRED | LENGTH-FIXED}
-  };
 
 Set LAN Configuration Parameters (Subnet Mask) Request
 ------------------------------------------------------
@@ -188,7 +181,6 @@ FIID Template: tmpl_cmd_set_lan_configuration_parameters_subnet_mask_rq
     { 4, "reserved", REQUIRED | LENGTH-FIXED}
     { 8, "parameter_selector", REQUIRED | LENGTH-FIXED}
     { 32, "subnet_mask", REQUIRED | LENGTH-FIXED}
-  };
 
 Set LAN Configuration Parameters (BMC Generated ARP Control) Request
 --------------------------------------------------------------------
@@ -202,7 +194,6 @@ FIID Template: tmpl_cmd_set_lan_configuration_parameters_bmc_generated_arp_contr
     { 1, "bmc_generated_gratuitous_arps", REQUIRED | LENGTH-FIXED}
     { 1, "bmc_generated_arp_responses", REQUIRED | LENGTH-FIXED}
     { 6, "reserved2", REQUIRED | LENGTH-FIXED}
-  };
 
 Set LAN Configuration Parameters (Gratuitous ARP Interval) Request
 ------------------------------------------------------------------
@@ -214,7 +205,6 @@ FIID Template: tmpl_cmd_set_lan_configuration_parameters_gratuitous_arp_interval
     { 4, "reserved1", REQUIRED | LENGTH-FIXED}
     { 8, "parameter_selector", REQUIRED | LENGTH-FIXED}
     { 8, "gratuitous_arp_interval", REQUIRED | LENGTH-FIXED}
-  };
 
 Set LAN Configuration Parameters (Default Gateway Address) Request
 ------------------------------------------------------------------
@@ -226,7 +216,6 @@ FIID Template: tmpl_cmd_set_lan_configuration_parameters_default_gateway_address
     { 4, "reserved", REQUIRED | LENGTH-FIXED}
     { 8, "parameter_selector", REQUIRED | LENGTH-FIXED}
     { 32, "ip_address", REQUIRED | LENGTH-FIXED}
-  };
 
 Set LAN Configuration Parameters (Default Gateway MAC Address) Request
 ----------------------------------------------------------------------
@@ -238,7 +227,6 @@ FIID Template: tmpl_cmd_set_lan_configuration_parameters_default_gateway_mac_add
     { 4, "reserved", REQUIRED | LENGTH-FIXED}
     { 8, "parameter_selector", REQUIRED | LENGTH-FIXED}
     { 48, "mac_address", REQUIRED | LENGTH-FIXED}
-  };
 
 Set LAN Configuration Parameters (Backup Gateway Address) Request
 -----------------------------------------------------------------
@@ -250,7 +238,6 @@ FIID Template: tmpl_cmd_set_lan_configuration_parameters_backup_gateway_address_
     { 4, "reserved", REQUIRED | LENGTH-FIXED}
     { 8, "parameter_selector", REQUIRED | LENGTH-FIXED}
     { 32, "ip_address", REQUIRED | LENGTH-FIXED}
-  };
 
 Set LAN Configuration Parameters (Backup Gateway MAC Address) Request
 ---------------------------------------------------------------------
@@ -262,7 +249,6 @@ FIID Template: tmpl_cmd_set_lan_configuration_parameters_backup_gateway_mac_addr
     { 4, "reserved", REQUIRED | LENGTH-FIXED}
     { 8, "parameter_selector", REQUIRED | LENGTH-FIXED}
     { 48, "mac_address", REQUIRED | LENGTH-FIXED}
-  };
 
 Set LAN Configuration Parameters (Community String) Request
 -----------------------------------------------------------
@@ -274,7 +260,6 @@ FIID Template: tmpl_cmd_set_lan_configuration_parameters_community_string_rq
     { 4, "reserved", REQUIRED | LENGTH-FIXED}
     { 8, "parameter_selector", REQUIRED | LENGTH-FIXED}
     { 144, "community_string", REQUIRED | LENGTH-FIXED}
-  };
 
 Set LAN Configuration Parameters (Destination Type) Request
 -----------------------------------------------------------
@@ -294,7 +279,6 @@ FIID Template: tmpl_cmd_set_lan_configuration_parameters_destination_type_rq
     { 3, "retries", REQUIRED | LENGTH-FIXED}
     { 1, "reserved4", REQUIRED | LENGTH-FIXED}
     { 4, "reserved5", REQUIRED | LENGTH-FIXED}
-  };
 
 Set LAN Configuration Parameters (Destination Addresses) Request
 ----------------------------------------------------------------
@@ -313,7 +297,6 @@ FIID Template: tmpl_cmd_set_lan_configuration_parameters_destination_addresses_r
     { 7, "reserved4", REQUIRED | LENGTH-FIXED}
     { 32, "alerting_ip_address", REQUIRED | LENGTH-FIXED}
     { 48, "alerting_mac_address", REQUIRED | LENGTH-FIXED}
-  };
 
 Set LAN Configuration Parameters (VLAN ID) Request
 --------------------------------------------------
@@ -327,7 +310,6 @@ FIID Template: tmpl_cmd_set_lan_configuration_parameters_vlan_id_rq
     { 12, "vlan_id", REQUIRED | LENGTH-FIXED}  /* LS byte first */
     { 3, "reserved2", REQUIRED | LENGTH-FIXED}
     { 1, "vlan_id_enable", REQUIRED | LENGTH-FIXED}
-  };
 
 Set LAN Configuration Parameters (VLAN Priority) Request
 --------------------------------------------------------
@@ -342,7 +324,6 @@ FIID Template: tmpl_cmd_set_lan_configuration_parameters_vlan_priority_rq
     /* Bits 3:4 in the IPMI spec do not exist.  */
     { 2, "unspecified", REQUIRED | LENGTH-FIXED}
     { 3, "reserved2", REQUIRED | LENGTH-FIXED}
-  };
 
 Set LAN Configuration Parameters (RMCP+ Messaging Cipher Suite Privilege Levels) Request
 ----------------------------------------------------------------------------------------
@@ -370,7 +351,6 @@ FIID Template: tmpl_cmd_set_lan_configuration_parameters_rmcpplus_messaging_ciph
     { 4, "maximum_privilege_for_cipher_suite_14", OPTIONAL | LENGTH-FIXED}
     { 4, "maximum_privilege_for_cipher_suite_15", OPTIONAL | LENGTH-FIXED}
     { 4, "maximum_privilege_for_cipher_suite_16", OPTIONAL | LENGTH-FIXED}
-  };
 
 Set LAN Configuration Parameters (Bad Password Threshold) Request
 -----------------------------------------------------------------
@@ -386,7 +366,6 @@ FIID Template: tmpl_cmd_set_lan_configuration_parameters_bad_password_threshold_
     { 8, "bad_password_threshold_number", REQUIRED | LENGTH-FIXED}
     { 16, "attempt_count_reset_interval", REQUIRED | LENGTH-FIXED}
     { 16, "user_lockout_interval", REQUIRED | LENGTH-FIXED}
-  };
 
 Get LAN Configuration Parameters Request
 ----------------------------------------
@@ -400,7 +379,6 @@ FIID Template: tmpl_cmd_get_lan_configuration_parameters_rq
     { 8, "parameter_selector", REQUIRED | LENGTH-FIXED}
     { 8, "set_selector", REQUIRED | LENGTH-FIXED}
     { 8, "block_selector", REQUIRED | LENGTH-FIXED}
-  };
 
 Get LAN Configuration Parameters Response
 -----------------------------------------
@@ -412,7 +390,6 @@ FIID Template: tmpl_cmd_get_lan_configuration_parameters_rs
     { 4, "present_revision", REQUIRED | LENGTH-FIXED}
     { 4, "oldest_revision_parameter", REQUIRED | LENGTH-FIXED}
     { 1024, "configuration_parameter_data", REQUIRED | LENGTH-VARIABLE}
-  };
 
 Get LAN Configuration Parameters (Set In Progress) Response
 -----------------------------------------------------------
@@ -425,7 +402,6 @@ FIID Template: tmpl_cmd_get_lan_configuration_parameters_set_in_progress_rs
     { 4, "oldest_revision_parameter", REQUIRED | LENGTH-FIXED}
     { 2, "state", REQUIRED | LENGTH-FIXED}
     { 6, "reserved", REQUIRED | LENGTH-FIXED}
-  };
 
 Get LAN Configuration Parameters (Authentication Type Support) Response
 -----------------------------------------------------------------------
@@ -444,7 +420,6 @@ FIID Template: tmpl_cmd_get_lan_configuration_parameters_authentication_type_sup
     { 1, "straight_password", REQUIRED | LENGTH-FIXED}
     { 1, "oem_proprietary", REQUIRED | LENGTH-FIXED}
     { 2, "reserved2", REQUIRED | LENGTH-FIXED}
-  };
 
 Get LAN Configuration Parameters (Authentication Type Enables) Response
 -----------------------------------------------------------------------
@@ -490,7 +465,6 @@ FIID Template: tmpl_cmd_get_lan_configuration_parameters_authentication_type_ena
     { 1, "oem_level.straight_password", REQUIRED | LENGTH-FIXED}
     { 1, "oem_level.oem_proprietary", REQUIRED | LENGTH-FIXED}
     { 2, "oem_level.reserved2", REQUIRED | LENGTH-FIXED}
-  };
 
 Get LAN Configuration Parameters (IP Address) Response
 ------------------------------------------------------
@@ -502,7 +476,6 @@ FIID Template: tmpl_cmd_get_lan_configuration_parameters_ip_address_rs
     { 4, "present_revision", REQUIRED | LENGTH-FIXED}
     { 4, "oldest_revision_parameter", REQUIRED | LENGTH-FIXED}
     { 32, "ip_address", REQUIRED | LENGTH-FIXED}
-  };
 
 Get LAN Configuration Parameters (IP Address Source) Response
 -------------------------------------------------------------
@@ -515,7 +488,6 @@ FIID Template: tmpl_cmd_get_lan_configuration_parameters_ip_address_source_rs
     { 4, "oldest_revision_parameter", REQUIRED | LENGTH-FIXED}
     { 4, "ip_address_source", REQUIRED | LENGTH-FIXED}
     { 4, "reserved", REQUIRED | LENGTH-FIXED}
-  };
 
 Get LAN Configuration Parameters (MAC Address) Response
 -------------------------------------------------------
@@ -527,7 +499,6 @@ FIID Template: tmpl_cmd_get_lan_configuration_parameters_mac_address_rs
     { 4, "present_revision", REQUIRED | LENGTH-FIXED}
     { 4, "oldest_revision_parameter", REQUIRED | LENGTH-FIXED}
     { 48, "mac_address", REQUIRED | LENGTH-FIXED}
-  };
 
 Get LAN Configuration Parameters (Subnet Mask) Response
 -------------------------------------------------------
@@ -540,7 +511,6 @@ FIID Template: tmpl_cmd_get_lan_configuration_parameters_subnet_mask_rs
     { 4, "oldest_revision_parameter", REQUIRED | LENGTH-FIXED}
     { 32, "subnet_mask", REQUIRED | LENGTH-FIXED}
 
-  };
 
 Get LAN Configuration Parameters (BMC Generated ARP Control) Response
 ---------------------------------------------------------------------
@@ -554,7 +524,6 @@ FIID Template: tmpl_cmd_get_lan_configuration_parameters_bmc_generated_arp_contr
     { 1, "bmc_generated_gratuitous_arps", REQUIRED | LENGTH-FIXED}
     { 1, "bmc_generated_arp_responses", REQUIRED | LENGTH-FIXED}
     { 6, "reserved2", REQUIRED | LENGTH-FIXED}
-  };
 
 Get LAN Configuration Parameters (Gratuitous ARP Interval) Response
 -------------------------------------------------------------------
@@ -566,7 +535,6 @@ FIID Template: tmpl_cmd_get_lan_configuration_parameters_gratuitous_arp_interval
     { 4, "present_revision", REQUIRED | LENGTH-FIXED}
     { 4, "oldest_revision_parameter", REQUIRED | LENGTH-FIXED}
     { 8, "gratuitous_arp_interval", REQUIRED | LENGTH-FIXED}
-  };
 
 Get LAN Configuration Parameters (Default Gateway Address) Response
 -------------------------------------------------------------------
@@ -578,7 +546,6 @@ FIID Template: tmpl_cmd_get_lan_configuration_parameters_default_gateway_address
     { 4, "present_revision", REQUIRED | LENGTH-FIXED}
     { 4, "oldest_revision_parameter", REQUIRED | LENGTH-FIXED}
     { 32, "ip_address", REQUIRED | LENGTH-FIXED}
-  };
 
 Get LAN Configuration Parameters (Default Gateway MAC Address) Response
 -----------------------------------------------------------------------
@@ -590,7 +557,6 @@ FIID Template: tmpl_cmd_get_lan_configuration_parameters_default_gateway_mac_add
     { 4, "present_revision", REQUIRED | LENGTH-FIXED}
     { 4, "oldest_revision_parameter", REQUIRED | LENGTH-FIXED}
     { 48, "mac_address", REQUIRED | LENGTH-FIXED}
-  };
 
 Get LAN Configuration Parameters (Backup Gateway Address) Response
 ------------------------------------------------------------------
@@ -602,7 +568,6 @@ FIID Template: tmpl_cmd_get_lan_configuration_parameters_backup_gateway_address_
     { 4, "present_revision", REQUIRED | LENGTH-FIXED}
     { 4, "oldest_revision_parameter", REQUIRED | LENGTH-FIXED}
     { 32, "ip_address", REQUIRED | LENGTH-FIXED}
-  };
 
 Get LAN Configuration Parameters (Backup Gateway MAC Address) Response
 ----------------------------------------------------------------------
@@ -614,7 +579,6 @@ FIID Template: tmpl_cmd_get_lan_configuration_parameters_backup_gateway_mac_addr
     { 4, "present_revision", REQUIRED | LENGTH-FIXED}
     { 4, "oldest_revision_parameter", REQUIRED | LENGTH-FIXED}
     { 48, "mac_address", REQUIRED | LENGTH-FIXED}
-  };
 
 Get LAN Configuration Parameters (Community String) Response
 ------------------------------------------------------------
@@ -626,7 +590,6 @@ FIID Template: tmpl_cmd_get_lan_configuration_parameters_community_string_rs
     { 4, "present_revision", REQUIRED | LENGTH-FIXED}
     { 4, "oldest_revision_parameter", REQUIRED | LENGTH-FIXED}
     { 144, "community_string", REQUIRED | LENGTH-FIXED}
-  };
 
 Get LAN Configuration Parameters (Number of Destinations) Response
 ------------------------------------------------------------------
@@ -639,7 +602,6 @@ FIID Template: tmpl_cmd_get_lan_configuration_parameters_number_of_destinations_
     { 4, "oldest_revision_parameter", REQUIRED | LENGTH-FIXED}
     { 4, "number_of_lan_destinations", REQUIRED | LENGTH-FIXED}
     { 4, "reserved", REQUIRED | LENGTH-FIXED}
-  };
 
 Get LAN Configuration Parameters (Destination Type) Response
 ------------------------------------------------------------
@@ -659,7 +621,6 @@ FIID Template: tmpl_cmd_get_lan_configuration_parameters_destination_type_rs
     { 3, "retries", REQUIRED | LENGTH-FIXED}
     { 1, "reserved3", REQUIRED | LENGTH-FIXED}
     { 4, "reserved4", REQUIRED | LENGTH-FIXED}
-  };
 
 Get LAN Configuration Parameters (Destination Addresses) Response
 -----------------------------------------------------------------
@@ -678,7 +639,6 @@ FIID Template: tmpl_cmd_get_lan_configuration_parameters_destination_addresses_r
     { 1, "gateway_selector", REQUIRED | LENGTH-FIXED}
     { 32, "alerting_ip_address", REQUIRED | LENGTH-FIXED}
     { 48, "alerting_mac_address", REQUIRED | LENGTH-FIXED}
-  };
 
 Get LAN Configuration Parameters (VLAN ID) Response
 ---------------------------------------------------
@@ -692,7 +652,6 @@ FIID Template: tmpl_cmd_get_lan_configuration_parameters_vlan_id_rs
     { 12, "vlan_id", REQUIRED | LENGTH-FIXED}  /* LS byte first */
     { 3, "reserved", REQUIRED | LENGTH-FIXED}
     { 1, "vlan_id_enable", REQUIRED | LENGTH-FIXED}
-  };
 
 Get LAN Configuration Parameters (VLAN Priority) Response
 ---------------------------------------------------------
@@ -708,7 +667,6 @@ FIID Template: tmpl_cmd_get_lan_configuration_parameters_vlan_priority_rs
     { 2, "unspecified", REQUIRED | LENGTH-FIXED}
     { 3, "reserved", REQUIRED | LENGTH-FIXED}
 
-  };
 
 Get LAN Configuration Parameters (RMCP+ Messaging Cipher Suite Entry Support) Response
 --------------------------------------------------------------------------------------
@@ -722,7 +680,6 @@ FIID Template: tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_ciph
     { 4, "oldest_revision_parameter", REQUIRED | LENGTH-FIXED}
     { 4, "cipher_suite_entry_count", REQUIRED | LENGTH-FIXED}
     { 4, "reserved", REQUIRED | LENGTH-FIXED}
-  };
 
 Get LAN Configuration Parameters (RMCP+ Messaging Cipher Suite Entries) Response
 --------------------------------------------------------------------------------
@@ -751,7 +708,6 @@ FIID Template: tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_ciph
     { 8, "cipher_suite_id_entry_N", OPTIONAL | LENGTH-FIXED}
     { 8, "cipher_suite_id_entry_O", OPTIONAL | LENGTH-FIXED}
     { 8, "cipher_suite_id_entry_P", OPTIONAL | LENGTH-FIXED}
-  };
 
 Get LAN Configuration Parameters (RMCP+ Messaging Cipher Suite Privilege Levels) Response
 -----------------------------------------------------------------------------------------
@@ -779,7 +735,6 @@ FIID Template: tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_ciph
     { 4, "maximum_privilege_for_cipher_suite_14", OPTIONAL | LENGTH-FIXED}
     { 4, "maximum_privilege_for_cipher_suite_15", OPTIONAL | LENGTH-FIXED}
     { 4, "maximum_privilege_for_cipher_suite_16", OPTIONAL | LENGTH-FIXED}
-  };
 
 Get LAN Configuration Parameters (Bad Password Threshold) Response
 ------------------------------------------------------------------
@@ -795,7 +750,6 @@ FIID Template: tmpl_cmd_get_lan_configuration_parameters_bad_password_threshold_
     { 8, "bad_password_threshold_number", REQUIRED | LENGTH-FIXED}
     { 16, "attempt_count_reset_interval", REQUIRED | LENGTH-FIXED}
     { 16, "user_lockout_interval", REQUIRED | LENGTH-FIXED}
-  };
 
 Suspend BMC ARPs Request
 ------------------------
@@ -808,7 +762,6 @@ FIID Template: tmpl_cmd_suspend_bmc_arps_rq
     { 1, "gratuitous_arp_suspend", REQUIRED | LENGTH-FIXED}
     { 1, "arp_response_suspend", REQUIRED | LENGTH-FIXED}
     { 6, "reserved2", REQUIRED | LENGTH-FIXED}
-  };
 
 Suspend BMC ARPs Response
 -------------------------
@@ -820,7 +773,6 @@ FIID Template: tmpl_cmd_suspend_bmc_arps_rs
     { 1, "gratuitous_arp_response_status", REQUIRED | LENGTH-FIXED}
     { 1, "arp_response_status", REQUIRED | LENGTH-FIXED}
     { 6, "reserved", REQUIRED | LENGTH-FIXED}
-  };
 
 Get IP UDP RMCP Statistics Request
 ----------------------------------
@@ -832,7 +784,6 @@ FIID Template: tmpl_cmd_get_ip_udp_rmcp_statistics_rq
     { 4, "reserved1", REQUIRED | LENGTH-FIXED}
     { 1, "clear_all_statistics", REQUIRED | LENGTH-FIXED}
     { 7, "reserved2", REQUIRED | LENGTH-FIXED}
-  };
 
 Get IP UDP RMCP Statistics Response
 -----------------------------------
@@ -850,7 +801,6 @@ FIID Template: tmpl_cmd_get_ip_udp_rmcp_statistics_rs
     { 16, "valid_rmcp_packets_received", REQUIRED | LENGTH-FIXED}
     { 16, "udp_proxy_packets_received", REQUIRED | LENGTH-FIXED}
     { 16, "udp_proxy_packets_dropped", REQUIRED | LENGTH-FIXED}
-  };
 
 #endif  /* 0 */
 

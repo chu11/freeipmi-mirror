@@ -69,7 +69,6 @@ FIID Template: tmpl_sdr_record_header
     { 4, "sdr_version_minor", REQUIRED | LENGTH-FIXED}
     { 8, "record_type", REQUIRED | LENGTH-FIXED}
     { 8, "record_length", REQUIRED | LENGTH-FIXED}
-  };
 
 SDR Full Sensor Record
 ----------------------
@@ -180,7 +179,6 @@ FIID Template: tmpl_sdr_full_sensor_record
     { 8, "oem", REQUIRED | LENGTH-FIXED}
     { 8, "id_string_type_length_code", REQUIRED | LENGTH-FIXED}
     { 128, "id_string", OPTIONAL | LENGTH-VARIABLE}
-  };
 
 SDR Full Sensor Record (Non-Threshold Base Sensors)
 ---------------------------------------------------
@@ -337,7 +335,6 @@ FIID Template: tmpl_sdr_full_sensor_record_non_threshold_based_sensors
     { 8, "oem", REQUIRED | LENGTH-FIXED}
     { 8, "id_string_type_length_code", REQUIRED | LENGTH-FIXED}
     { 128, "id_string", OPTIONAL | LENGTH-VARIABLE}
-  };
 
 SDR Full Sensor Record (Threshold Base Sensors)
 -----------------------------------------------
@@ -495,7 +492,6 @@ FIID Template: tmpl_sdr_full_sensor_record_threshold_based_sensors
     { 8, "oem", REQUIRED | LENGTH-FIXED}
     { 8, "id_string_type_length_code", REQUIRED | LENGTH-FIXED}
     { 128, "id_string", OPTIONAL | LENGTH-VARIABLE}
-  };
 
 SDR Compact Sensor Record
 -------------------------
@@ -576,7 +572,6 @@ FIID Template: tmpl_sdr_compact_sensor_record
     { 8, "oem", REQUIRED | LENGTH-FIXED}
     { 8, "id_string_type_length_code", REQUIRED | LENGTH-FIXED}
     { 128, "id_string", OPTIONAL | LENGTH-VARIABLE}
-  };
 
 SDR Compact Sensor Record (Non-Threshold Based Sensors)
 -------------------------------------------------------
@@ -704,7 +699,6 @@ FIID Template: tmpl_sdr_compact_sensor_record_non_threshold_based_sensors
     { 8, "oem", REQUIRED | LENGTH-FIXED}
     { 8, "id_string_type_length_code", REQUIRED | LENGTH-FIXED}
     { 128, "id_string", OPTIONAL | LENGTH-VARIABLE}
-  };
 
 SDR Compact Sensor Record (Threshold Based Sensors)
 ---------------------------------------------------
@@ -832,7 +826,6 @@ FIID Template: tmpl_sdr_compact_sensor_record_threshold_based_sensors
     { 8, "oem", REQUIRED | LENGTH-FIXED}
     { 8, "id_string_type_length_code", REQUIRED | LENGTH-FIXED}
     { 128, "id_string", OPTIONAL | LENGTH-VARIABLE}
-  };
 
 SDR Event Only Record
 ---------------------
@@ -886,7 +879,6 @@ FIID Template: tmpl_sdr_event_only_record
 
     { 8, "id_string_type_length_code", REQUIRED | LENGTH-FIXED}
     { 128, "id_string", OPTIONAL | LENGTH-VARIABLE}
-  };
 
 SDR Entity Association Record
 -----------------------------
@@ -930,7 +922,6 @@ FIID Template: tmpl_sdr_entity_association_record
     { 8, "entity_id_contained_entity_range_4", REQUIRED | LENGTH-FIXED}
     /* Contained instance entity 4/range 4 */
     { 8, "instance_id_contained_entity_range_4", REQUIRED | LENGTH-FIXED}
-  };
 
 SDR Device Relative Entity Association Record
 ---------------------------------------------
@@ -988,7 +979,6 @@ FIID Template: tmpl_sdr_device_relative_entity_association_record
     { 8, "entity_id_contained_entity_range_4", REQUIRED | LENGTH-FIXED}
     { 8, "entity_instance_contained_entity_range_4", REQUIRED | LENGTH-FIXED}
     { 48, "reserved", REQUIRED | LENGTH-FIXED}
-  };
 
 SDR Generic Device Locator Record
 ---------------------------------
@@ -1028,7 +1018,6 @@ FIID Template: tmpl_sdr_generic_device_locator_record
     { 8, "oem", REQUIRED | LENGTH-FIXED}
     { 8, "device_id_string_type_length", REQUIRED | LENGTH-FIXED}
     { 128, "device_id_string", OPTIONAL | LENGTH-VARIABLE}
-  };
 
 SDR FRU Device Locator Record
 -----------------------------
@@ -1076,7 +1065,6 @@ FIID Template: tmpl_sdr_fru_device_locator_record
      * records.  I assume it's a typo in the spec.
      */
     { 128, "device_id_string", OPTIONAL | LENGTH-VARIABLE}
-  };
 
 SDR FRU Device Locator Record (Non-Intelligent)
 -----------------------------------------------
@@ -1122,7 +1110,6 @@ FIID Template: tmpl_sdr_fru_device_locator_record_non_intelligent
      * records.  I assume it's a typo in the spec.
      */
     { 128, "device_id_string", OPTIONAL | LENGTH-VARIABLE}
-  };
 
 SDR Management Controller Device Locator Record
 -----------------------------------------------
@@ -1173,7 +1160,6 @@ FIID Template: tmpl_sdr_management_controller_device_locator_record
     { 8, "oem", REQUIRED | LENGTH-FIXED}
     { 8, "device_id_string_type_length", REQUIRED | LENGTH-FIXED}
     { 128, "device_id_string", OPTIONAL | LENGTH-VARIABLE}
-  };
 
 SDR Management Controller Confirmation Record
 ---------------------------------------------
@@ -1207,7 +1193,6 @@ FIID Template: tmpl_sdr_management_controller_confirmation_record
     { 24, "manufacturer_id", REQUIRED | LENGTH-FIXED}
     { 16, "product_id", REQUIRED | LENGTH-FIXED}
     { 128, "device_guid", REQUIRED | LENGTH-FIXED}
-  };
 
 SDR BMC Message Channel Info
 ----------------------------
@@ -1249,7 +1234,6 @@ FIID Template: tmpl_sdr_bmc_message_channel_info_record
     { 4, "channel_7_protocol", REQUIRED | LENGTH-FIXED}
     { 3, "channel_7_message_receive_lun", REQUIRED | LENGTH-FIXED}
     { 1, "channel_7_transmit_supported", REQUIRED | LENGTH-FIXED}
-  };
 
 SDR OEM Record
 --------------
@@ -1269,7 +1253,6 @@ FIID Template: tmpl_sdr_oem_record
      ********************/
     { 24, "manufacturer_id", REQUIRED | LENGTH-FIXED}
     { 448, "oem_data", REQUIRED | LENGTH-FIXED}
-  };
 
 #endif  /* 0 */
 

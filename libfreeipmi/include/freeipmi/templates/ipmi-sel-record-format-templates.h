@@ -63,7 +63,6 @@ FIID Template: tmpl_sel_record_header
   {
     { 16, "record_id", REQUIRED | LENGTH-FIXED}
     { 8, "record_type", REQUIRED | LENGTH-FIXED}
-  };
 
 SEL System Event Record
 -----------------------
@@ -95,7 +94,6 @@ FIID Template: tmpl_sel_system_event_record
     { 8, "event_data2", REQUIRED | LENGTH-FIXED}
     { 8, "event_data3", REQUIRED | LENGTH-FIXED}
 
-  };
 
 SEL System Event Record (with Event flags)
 ------------------------------------------
@@ -133,7 +131,6 @@ FIID Template: tmpl_sel_system_event_record_event_fields
     /* Event Data 3 */
     { 8, "event_data3", REQUIRED | LENGTH-FIXED}
 
-  };
 
 SEL System Event Record (w/ Previous and Severity Offset fields)
 ----------------------------------------------------------------
@@ -172,7 +169,6 @@ FIID Template: tmpl_sel_system_event_record_discrete_previous_state_severity
     /* Event Data 3 */
     { 8, "event_data3", REQUIRED | LENGTH-FIXED}
 
-  };
 
 SEL Timestamped OEM Record
 --------------------------
@@ -184,7 +180,6 @@ FIID Template: tmpl_sel_timestamped_oem_record
     { 32, "timestamp", REQUIRED | LENGTH-FIXED}
     { 24, "manufacturer_id", REQUIRED | LENGTH-FIXED}
     { 48, "oem_defined", REQUIRED | LENGTH-FIXED}
-  };
 
 SEL Non-Timestamped OEM Record
 ------------------------------
@@ -194,7 +189,6 @@ FIID Template: tmpl_sel_non_timestamped_oem_record
     { 16, "record_id", REQUIRED | LENGTH-FIXED}
     { 8, "record_type", REQUIRED | LENGTH-FIXED}
     { 104, "oem_defined", REQUIRED | LENGTH-FIXED}
-  };
 
 #endif  /* 0 */
 

@@ -71,7 +71,6 @@ FIID Template: tmpl_fru_common_header
     { 8, "multirecord_area_starting_offset", REQUIRED | LENGTH-FIXED}
     { 8, "pad", REQUIRED | LENGTH-FIXED}
     { 8, "checksum", REQUIRED | LENGTH-FIXED}
-  };
 
 FRU Info Area Header
 --------------------
@@ -81,7 +80,6 @@ FIID Template: tmpl_fru_info_area_header
     { 4, "format_version", REQUIRED | LENGTH-FIXED}
     { 4, "reserved", REQUIRED | LENGTH-FIXED}
     { 8, "info_area_length", REQUIRED | LENGTH-FIXED}
-  };
 
 FRU Multirecord Area Header
 ---------------------------
@@ -95,7 +93,6 @@ FIID Template: tmpl_fru_multirecord_area_header
     { 8, "record_length", REQUIRED | LENGTH-FIXED}
     { 8, "record_checksum", REQUIRED | LENGTH-FIXED}
     { 8, "header_checksum", REQUIRED | LENGTH-FIXED}
-  };
 
 FRU Power Supply Information
 ----------------------------
@@ -126,7 +123,6 @@ FIID Template: tmpl_fru_power_supply_information
     { 4, "voltage_1", REQUIRED | LENGTH-FIXED}
     { 16, "total_combined_wattage", REQUIRED | LENGTH-FIXED}
     { 8, "predictive_fail_tachometer_lower_threshold", REQUIRED | LENGTH-FIXED}
-  };
 
 FRU DC Output
 -------------
@@ -142,7 +138,6 @@ FIID Template: tmpl_fru_dc_output
     { 16, "ripple_and_noise_pk_pk", REQUIRED | LENGTH-FIXED}
     { 16, "minimum_current_draw", REQUIRED | LENGTH-FIXED}
     { 16, "maximum_current_draw", REQUIRED | LENGTH-FIXED}
-  };
 
 FRU DC Load
 -----------
@@ -158,7 +153,6 @@ FIID Template: tmpl_fru_dc_load
     { 16, "specd_ripple_and_noise_pk_pk", REQUIRED | LENGTH-FIXED}
     { 16, "minimum_current_load", REQUIRED | LENGTH-FIXED}
     { 16, "maximum_current_load", REQUIRED | LENGTH-FIXED}
-  };
 
 FRU Management Access Record
 ----------------------------
@@ -168,7 +162,6 @@ FIID Template: tmpl_fru_management_access_record
   {
     { 8, "sub_record_type", REQUIRED | LENGTH-FIXED}
     { 2048, "record", REQUIRED | LENGTH-VARIABLE}
-  };
 
 FRU Base Compatability Record
 -----------------------------
@@ -181,7 +174,6 @@ FIID Template: tmpl_fru_base_compatibility_record
     { 7, "compatibility_code_start_value", REQUIRED | LENGTH-FIXED}
     { 1, "reserved", REQUIRED | LENGTH-FIXED}
     { 4096, "code_range_mask", REQUIRED | LENGTH-VARIABLE}
-  };
 
 FRU Extended Compatability Record
 ---------------------------------
@@ -194,7 +186,6 @@ FIID Template: tmpl_fru_extended_compatibility_record
     { 7, "compatibility_code_start_value", REQUIRED | LENGTH-FIXED}
     { 1, "reserved", REQUIRED | LENGTH-FIXED}
     { 4096, "code_range_mask", REQUIRED | LENGTH-VARIABLE}
-  };
 
 FRU OEM Record
 --------------
@@ -203,7 +194,6 @@ FIID Template: tmpl_fru_oem_record
   {
     { 24, "manufacturer_id", REQUIRED | LENGTH-FIXED}
     { 4096, "oem_data", REQUIRED | LENGTH-VARIABLE}
-  };
 
 #endif  /* 0 */
 
