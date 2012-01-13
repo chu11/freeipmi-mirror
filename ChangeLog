@@ -1,3 +1,9 @@
+2012-01-13  Albert Chu <chu11@llnl.gov>
+
+	* libipmiconsole/ipmiconsole_processing.c
+	(_process_protocol_state_deactivate_payload_sent): Fix deactivate
+	only corner case in which session not closed cleanly.
+	
 2012-01-12  Albert Chu <chu11@llnl.gov>
 
 	Merge branch redotemplatedocs

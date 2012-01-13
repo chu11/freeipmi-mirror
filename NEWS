@@ -33,6 +33,8 @@ o In libipmiconsole, support new SERIAL_KEEPALIVE_EMPTY engine flag.
 o In libipmiconsole, do not deactivate a SOL payload if it appears the
   SOL payload has been stolen, but we did not receive a SOL deactivating
   flag.
+o In libipmiconsole, fix corner case in which session not closed
+  cleanly when DEACTIVATE_ONLY flag specified.
 o In libfreeipmi, add functions for re-arm sensor events IPMI payload. 
 o In libfreeipmi/sensor-read, under some error conditions return error
   of "unavailable" instead of "cannot be obtained" error code.

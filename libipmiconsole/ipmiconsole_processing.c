@@ -3686,7 +3686,14 @@ _process_protocol_state_deactivate_payload_sent (ipmiconsole_ctx_t c)
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
 
   if (c->config.behavior_flags & IPMICONSOLE_BEHAVIOR_DEACTIVATE_ONLY)
-    c->session.deactivate_only_succeeded_flag++;
+    {
+      c->session.deactivate_only_succeeded_flag++;
+      c->session.close_session_flag++;
+      if (_send_ipmi_packet (c, IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RQ) < 0)
+        return (-1);
+      c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT;
+      return (0);
+    }
 
   if (c->session.close_session_flag || c->session.try_new_port_flag)
     {
