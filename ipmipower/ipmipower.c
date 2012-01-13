@@ -61,6 +61,7 @@
 #include "ipmipower_argp.h"
 #include "ipmipower_connection.h"
 #include "ipmipower_error.h"
+#include "ipmipower_oem.h"
 #include "ipmipower_powercmd.h"
 #include "ipmipower_prompt.h"
 #include "ipmipower_ping.h"
@@ -576,13 +577,26 @@ main (int argc, char *argv[])
       cmd_args.ping_interval = 0;
 
       memset (errbuf, '\0', IPMIPOWER_OUTPUT_BUFLEN + 1);
-      if (ipmipower_power_cmd_check_privilege (cmd_args.powercmd,
-					       errbuf,
-					       IPMIPOWER_OUTPUT_BUFLEN) <= 0)
+      if (cmd_args.oem_power_type == OEM_POWER_TYPE_NONE)
 	{
-	  IPMIPOWER_ERROR (("%s", errbuf));
-          exit (1);
-        }
+	  if (ipmipower_power_cmd_check_privilege (cmd_args.powercmd,
+						   errbuf,
+						   IPMIPOWER_OUTPUT_BUFLEN) <= 0)
+	    {
+	      IPMIPOWER_ERROR (("%s", errbuf));
+	      exit (1);
+	    }
+	}
+      else
+	{
+	  if (ipmipower_oem_power_cmd_check_support_and_privilege (cmd_args.powercmd,
+								   errbuf,
+								   IPMIPOWER_OUTPUT_BUFLEN) <= 0)
+	    {
+	      IPMIPOWER_ERROR (("%s", errbuf));
+	      exit (1);
+	    }
+	}
 
       _eliminate_nodes ();
 

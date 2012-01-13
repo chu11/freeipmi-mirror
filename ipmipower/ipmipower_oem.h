@@ -29,4 +29,14 @@
 
 #include "ipmipower.h"
 
+/* ipmipower_oem_power_cmd_check_support_and_privilege
+ * - check if power cmd supported for OEM type and privilege level ok
+ * - returns 1 if ok, 0 if not, -1 on error
+ * - if returns 0 or -1, error message in buf 
+ */
+int ipmipower_oem_power_cmd_check_support_and_privilege (power_cmd_t cmd,
+							 char *errbuf,
+							 unsigned int errbuflen);
+
 #endif /* _IPMIPOWER_OEM_H */
+

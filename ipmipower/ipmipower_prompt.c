@@ -47,6 +47,7 @@
 #include "ipmipower_prompt.h"
 #include "ipmipower_error.h"
 #include "ipmipower_connection.h"
+#include "ipmipower_oem.h"
 #include "ipmipower_ping.h"
 #include "ipmipower_powercmd.h"
 #include "ipmipower_output.h"
@@ -401,36 +402,10 @@ _cmd_workaround_flags (char **argv)
                            IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_NON_EMPTY_INTEGRITY_CHECK_VALUE_STR);
 }
 
-static int
-_power_cmd_to_oem_power_type_support (power_cmd_t cmd)
-{
-  assert (POWER_CMD_VALID (cmd));
-
-  if (cmd == POWER_CMD_POWER_OFF)
-    return (OEM_POWER_TYPE_SUPPORT_OFF);
-  else if (cmd == POWER_CMD_POWER_ON)
-    return (OEM_POWER_TYPE_SUPPORT_ON);
-  else if (cmd == POWER_CMD_POWER_CYCLE)
-    return (OEM_POWER_TYPE_SUPPORT_CYCLE);
-  else if (cmd == POWER_CMD_POWER_RESET)
-    return (OEM_POWER_TYPE_SUPPORT_RESET);
-  else if (cmd == POWER_CMD_POWER_STATUS)
-    return (OEM_POWER_TYPE_SUPPORT_STATUS);
-  else if (cmd == POWER_CMD_PULSE_DIAG_INTR)
-    return (OEM_POWER_TYPE_SUPPORT_DIAG_INTR);
-  else if (cmd == POWER_CMD_SOFT_SHUTDOWN_OS)
-    return (OEM_POWER_TYPE_SUPPORT_SOFT_SHUTDOWN_OS);
-  else if (cmd == POWER_CMD_IDENTIFY_ON)
-    return (OEM_POWER_TYPE_SUPPORT_IDENTIFY_ON);
-  else if (cmd == POWER_CMD_IDENTIFY_OFF)
-    return (OEM_POWER_TYPE_SUPPORT_IDENTIFY_OFF);
-  else /* cmd == POWER_CMD_IDENTIFY_STATUS */
-    return (OEM_POWER_TYPE_SUPPORT_IDENTIFY_STATUS);
-}
-
 static void
 _cmd_power (char **argv, power_cmd_t cmd)
 {
+  char errbuf[IPMIPOWER_OUTPUT_BUFLEN + 1];
   int i;
 
   assert (argv && POWER_CMD_VALID (cmd));
@@ -442,12 +417,12 @@ _cmd_power (char **argv, power_cmd_t cmd)
       return;
     }
   
+  memset (errbuf, '\0', IPMIPOWER_OUTPUT_BUFLEN + 1);
   if (cmd_args.oem_power_type == OEM_POWER_TYPE_NONE)
     {
-      char errbuf[IPMIPOWER_OUTPUT_BUFLEN + 1];
-
-      memset (errbuf, '\0', IPMIPOWER_OUTPUT_BUFLEN + 1);
-      if (ipmipower_power_cmd_check_privilege (cmd, errbuf, IPMIPOWER_OUTPUT_BUFLEN) <= 0)
+      if (ipmipower_power_cmd_check_privilege (cmd,
+					       errbuf,
+					       IPMIPOWER_OUTPUT_BUFLEN) <= 0)
 	{
 	  ipmipower_cbuf_printf (ttyout, "%s\n", errbuf);
 	  return;
@@ -455,35 +430,12 @@ _cmd_power (char **argv, power_cmd_t cmd)
     }
   else
     {
-      unsigned int oem_power_type_support_mask;
-      char *power_cmd_str;
-
-      oem_power_type_support_mask = _power_cmd_to_oem_power_type_support (cmd);
-  
-      power_cmd_str = ipmipower_power_cmd_to_string (cmd);
-
-      if (!(oem_power_type_data[cmd_args.oem_power_type].supported_operations & oem_power_type_support_mask))
-	{
-	  ipmipower_cbuf_printf (ttyout,
-				 "'%s' operation not supported by oem power type '%s'\n",
-				 power_cmd_str,
-				 oem_power_type_data[cmd_args.oem_power_type].name);
+      if (ipmipower_oem_power_cmd_check_support_and_privilege (cmd,
+							       errbuf,
+							       IPMIPOWER_OUTPUT_BUFLEN) <= 0)
+  	{
+	  ipmipower_cbuf_printf (ttyout, "%s\n", errbuf);
 	  return;
-	}
-
-      if (cmd_args.oem_power_type == OEM_POWER_TYPE_C410X)
-	{
-	  /* XXX - I'm pretty sure */
-	  if ((cmd == POWER_CMD_POWER_OFF
-	       || cmd == POWER_CMD_POWER_ON)
-	      && cmd_args.common.privilege_level == IPMI_PRIVILEGE_LEVEL_ADMIN)
-	    {
-	      ipmipower_cbuf_printf (ttyout,
-				     "'%s' requires admin privilege for oem power type '%s'\n",
-				     power_cmd_str,
-				     oem_power_type_data[cmd_args.oem_power_type].name);
-	      return;
-	    } 
 	}
     }
   
