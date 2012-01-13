@@ -1,0 +1,111 @@
+/*
+
+The following is a state diagram that attempts to cover the high level
+view of the IPMI packets sent/received during SOL in libipmiconsole.
+I admit to not being a guru of dot notation, but hopefully it helps.
+
+This diagram does not reflect the code perfectly.  Exceptions exist
+and other error conditions can arise, but hopefully this gives a good
+high level overview for understanding the code.  For example, network
+timeouts can occur at any point in time in this diagram.
+
+For the purposes of the graph, I have created a state called
+"ErrorOut".  "ErrorOut" means that the protocol to some extent gives
+up.  This is in contrast to "End", which means that we exited nicely.
+For example, if we notice the remote machine does not support IPMI
+2.0, we give up immediately.  There is no IPMI session that needs to
+be cleaned up.
+
+Albert Chu
+
+Updated 1/13/12
+
+*/
+
+digraph solstatemachine {
+
+Start [label=Start]
+
+GetAuthenticationCapabilities [label="Get Authentication Capabilities"]
+
+OpenSession [label="Open Session"]
+
+RAKP12 [label="RAKP 1 and 2"]
+
+RAKP34 [label="RAKP 3 and 4"]
+
+SetSessionPrivilege [label="Set Session Privilege"]
+
+GetChannelPayloadSupport [label="Get Channel Payload Support"]
+
+GetPayloadActivationStatus [label="Get Payload Activation Status"]
+
+ActivatePayload [label="Activate Payload"]
+
+SOLSession [label="SOL Session"]
+
+DeactivatePayload [label="Deactivate Payload"]
+
+CloseSession [label="Close Session"] 
+
+ErrorOut [label="Error Out"]
+
+End [label=End]
+
+Start -> GetAuthenticationCapabilities
+
+GetAuthenticationCapabilities -> ErrorOut [label="IPMI 2.0 Not Supported / Cannot Authenticate"]
+
+GetAuthenticationCapabilities -> OpenSession [label="IPMI 2.0 Supported and Can Authenticate"]
+
+OpenSession -> RAKP12 [label="Privilege Level Supported"]
+
+OpenSession -> ErrorOut [label="Privilege Level Not Supported"]
+
+RAKP12 -> RAKP34 [label="Authentication Pass"]
+
+RAKP12 -> ErrorOut [label="Authentication Fail"]
+
+RAKP34 -> SetSessionPrivilege [label="Authentication Pass"]
+
+RAKP34 -> ErrorOut [label="Authentication Fail"]
+
+SetSessionPrivilege -> GetChannelPayloadSupport [label="Privilege Allowed"]
+
+SetSessionPrivilege -> CloseSession [label="Privilege Not Allowed"]
+
+GetChannelPayloadSupport -> GetPayloadActivationStatus [label="SOL Supported"]
+
+GetChannelPayloadSupport -> CloseSession [label="SOL Not Supported"]
+
+GetPayloadActivationStatus -> ActivatePayload [label="Steal Session or Do Not Steal Session and SOL Not Active"]
+
+GetPayloadActivationStatus -> DeactivatePayload [label="Steal Session and SOL Active / Deactivate Only and SOL Active"]
+
+GetPayloadActivationStatus -> CloseSession [label="Deactivate Only and SOL Not Active / Do Not Steal Session and SOL Active"]
+
+ActivatePayload -> SOLSession [label="SOL Not Active and SOL on IPMI Port"]
+
+ActivatePayload -> DeactivatePayload [label="SOL on Different Port"]
+
+ActivatePayload -> CloseSession [label="Session Invalid Encryption / Session Invalid Payload Sizes"]
+
+ActivatePayload -> GetPayloadActivationStatus [label="SOL Active (race with other session)"]
+
+SOLSession -> SOLSession [label="SOL Packets / IPMI Keepalive Packets"]
+
+SOLSession -> DeactivatePayload [label="Quit SOL Session"]
+
+SOLSession -> CloseSession [label="SOL Session Stolen / SOL Payload Timeout"]
+
+DeactivatePayload -> ActivatePayload [label="Deactivated other SOL Session"]
+
+DeactivatePayload -> DeactivatePayload [label="Additional SOL Payload Active"]
+
+DeactivatePayload -> CloseSession [label="Quit SOL Session / SOL on Different Port"]
+
+CloseSession -> GetAuthenticationCapabilities [label="SOL on Different Port"]
+
+CloseSession -> End [label="Quit SOL Session / SOL Session Stolen"] 
+
+}
