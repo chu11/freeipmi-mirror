@@ -56,14 +56,14 @@ The following list the configurable fields of individual packet/record
 templates in FreeIPMI.  Each field is listed as a list of the
 following.
 
-{ bits, "field name", field flags }
+{ bits, "field name", field flag, field flag, ... }
 
 bits - indicates the number of bits in the field
 
 field name - indicates the name of the field, used for getting/setting
              fields in the fiid API.
 
-field flags - flags indicating qualities of the field.  The following
+field flag, field flag, ... - flags indicating qualities of the field.  The following
               qualities may exist for each field.
 
     REQUIRED - field is required for the packet/record
