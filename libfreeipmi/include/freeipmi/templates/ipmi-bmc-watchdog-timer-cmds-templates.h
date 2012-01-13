@@ -61,82 +61,82 @@ Reset Watchdog Timer Request
 
 FIID Template: tmpl_cmd_reset_watchdog_timer_rq
 
-    { 8, "cmd", REQUIRED | LENGTH-FIXED}
+    { 8, "cmd", REQUIRED, LENGTH-FIXED}
 
 Reset Watchdog Timer Response
 -----------------------------
 
 FIID Template: tmpl_cmd_reset_watchdog_timer_rs
 
-    { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
-    { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
+    { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT}
+    { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT}
 
 Set Watchdog Timer Request
 --------------------------
 
 FIID Template: tmpl_cmd_set_watchdog_timer_rq
 
-    { 8, "cmd", REQUIRED | LENGTH-FIXED}
-    { 3, "timer_use", REQUIRED | LENGTH-FIXED}
-    { 3, "reserved1", REQUIRED | LENGTH-FIXED}
-    { 1, "stop_timer", REQUIRED | LENGTH-FIXED}
-    { 1, "log", REQUIRED | LENGTH-FIXED}
-    { 3, "timeout_action", REQUIRED | LENGTH-FIXED}
-    { 1, "reserved2", REQUIRED | LENGTH-FIXED}
-    { 3, "pre_timeout_interrupt", REQUIRED | LENGTH-FIXED}
-    { 1, "reserved3", REQUIRED | LENGTH-FIXED}
-    { 8, "pre_timeout_interval", REQUIRED | LENGTH-FIXED}
-    { 1, "reserved4", REQUIRED | LENGTH-FIXED}
-    { 1, "timer_use_expiration_flag.bios_frb2", REQUIRED | LENGTH-FIXED}
-    { 1, "timer_use_expiration_flag.bios_post", REQUIRED | LENGTH-FIXED}
-    { 1, "timer_use_expiration_flag.os_load", REQUIRED | LENGTH-FIXED}
-    { 1, "timer_use_expiration_flag.sms_os", REQUIRED | LENGTH-FIXED}
-    { 1, "timer_use_expiration_flag.oem", REQUIRED | LENGTH-FIXED}
-    { 1, "reserved5", REQUIRED | LENGTH-FIXED}
-    { 1, "reserved6", REQUIRED | LENGTH-FIXED}
-    { 16, "initial_countdown_value", REQUIRED | LENGTH-FIXED}
+    { 8, "cmd", REQUIRED, LENGTH-FIXED}
+    { 3, "timer_use", REQUIRED, LENGTH-FIXED}
+    { 3, "reserved1", REQUIRED, LENGTH-FIXED}
+    { 1, "stop_timer", REQUIRED, LENGTH-FIXED}
+    { 1, "log", REQUIRED, LENGTH-FIXED}
+    { 3, "timeout_action", REQUIRED, LENGTH-FIXED}
+    { 1, "reserved2", REQUIRED, LENGTH-FIXED}
+    { 3, "pre_timeout_interrupt", REQUIRED, LENGTH-FIXED}
+    { 1, "reserved3", REQUIRED, LENGTH-FIXED}
+    { 8, "pre_timeout_interval", REQUIRED, LENGTH-FIXED}
+    { 1, "reserved4", REQUIRED, LENGTH-FIXED}
+    { 1, "timer_use_expiration_flag.bios_frb2", REQUIRED, LENGTH-FIXED}
+    { 1, "timer_use_expiration_flag.bios_post", REQUIRED, LENGTH-FIXED}
+    { 1, "timer_use_expiration_flag.os_load", REQUIRED, LENGTH-FIXED}
+    { 1, "timer_use_expiration_flag.sms_os", REQUIRED, LENGTH-FIXED}
+    { 1, "timer_use_expiration_flag.oem", REQUIRED, LENGTH-FIXED}
+    { 1, "reserved5", REQUIRED, LENGTH-FIXED}
+    { 1, "reserved6", REQUIRED, LENGTH-FIXED}
+    { 16, "initial_countdown_value", REQUIRED, LENGTH-FIXED}
 
 Set Watchdog Timer Response
 ---------------------------
 
 FIID Template: tmpl_cmd_set_watchdog_timer_rs
 
-    { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
-    { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
+    { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT}
+    { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT}
 
 Get Watchdog Timer Request
 --------------------------
 
 FIID Template: tmpl_cmd_get_watchdog_timer_rq
 
-    { 8, "cmd", REQUIRED | LENGTH-FIXED}
+    { 8, "cmd", REQUIRED, LENGTH-FIXED}
 
 Get Watchdog Timer Response
 ---------------------------
 
 FIID Template: tmpl_cmd_get_watchdog_timer_rs
 
-    { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
-    { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT}
-    { 3, "timer_use", REQUIRED | LENGTH-FIXED}
-    { 3, "reserved1", REQUIRED | LENGTH-FIXED}
-    { 1, "timer_state", REQUIRED | LENGTH-FIXED}
-    { 1, "log", REQUIRED | LENGTH-FIXED}
-    { 3, "timeout_action", REQUIRED | LENGTH-FIXED}
-    { 1, "reserved2", REQUIRED | LENGTH-FIXED}
-    { 3, "pre_timeout_interrupt", REQUIRED | LENGTH-FIXED}
-    { 1, "reserved3", REQUIRED | LENGTH-FIXED}
-    { 8, "pre_timeout_interval", REQUIRED | LENGTH-FIXED}
-    { 1, "reserved4", REQUIRED | LENGTH-FIXED}
-    { 1, "timer_use_expiration_flag.bios_frb2", REQUIRED | LENGTH-FIXED}
-    { 1, "timer_use_expiration_flag.bios_post", REQUIRED | LENGTH-FIXED}
-    { 1, "timer_use_expiration_flag.os_load", REQUIRED | LENGTH-FIXED}
-    { 1, "timer_use_expiration_flag.sms_os", REQUIRED | LENGTH-FIXED}
-    { 1, "timer_use_expiration_flag.oem", REQUIRED | LENGTH-FIXED}
-    { 1, "reserved5", REQUIRED | LENGTH-FIXED}
-    { 1, "reserved6", REQUIRED | LENGTH-FIXED}
-    { 16, "initial_countdown_value", REQUIRED | LENGTH-FIXED}
-    { 16, "present_countdown_value", REQUIRED | LENGTH-FIXED}
+    { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT}
+    { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT}
+    { 3, "timer_use", REQUIRED, LENGTH-FIXED}
+    { 3, "reserved1", REQUIRED, LENGTH-FIXED}
+    { 1, "timer_state", REQUIRED, LENGTH-FIXED}
+    { 1, "log", REQUIRED, LENGTH-FIXED}
+    { 3, "timeout_action", REQUIRED, LENGTH-FIXED}
+    { 1, "reserved2", REQUIRED, LENGTH-FIXED}
+    { 3, "pre_timeout_interrupt", REQUIRED, LENGTH-FIXED}
+    { 1, "reserved3", REQUIRED, LENGTH-FIXED}
+    { 8, "pre_timeout_interval", REQUIRED, LENGTH-FIXED}
+    { 1, "reserved4", REQUIRED, LENGTH-FIXED}
+    { 1, "timer_use_expiration_flag.bios_frb2", REQUIRED, LENGTH-FIXED}
+    { 1, "timer_use_expiration_flag.bios_post", REQUIRED, LENGTH-FIXED}
+    { 1, "timer_use_expiration_flag.os_load", REQUIRED, LENGTH-FIXED}
+    { 1, "timer_use_expiration_flag.sms_os", REQUIRED, LENGTH-FIXED}
+    { 1, "timer_use_expiration_flag.oem", REQUIRED, LENGTH-FIXED}
+    { 1, "reserved5", REQUIRED, LENGTH-FIXED}
+    { 1, "reserved6", REQUIRED, LENGTH-FIXED}
+    { 16, "initial_countdown_value", REQUIRED, LENGTH-FIXED}
+    { 16, "present_countdown_value", REQUIRED, LENGTH-FIXED}
 
 #endif  /* 0 */
 

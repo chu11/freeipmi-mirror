@@ -61,38 +61,38 @@ SEL Record Header
 
 FIID Template: tmpl_sel_record_header
 
-    { 16, "record_id", REQUIRED | LENGTH-FIXED}
-    { 8, "record_type", REQUIRED | LENGTH-FIXED}
+    { 16, "record_id", REQUIRED, LENGTH-FIXED}
+    { 8, "record_type", REQUIRED, LENGTH-FIXED}
 
 SEL System Event Record
 -----------------------
 
 FIID Template: tmpl_sel_system_event_record
 
-    { 16, "record_id", REQUIRED | LENGTH-FIXED}
-    { 8, "record_type", REQUIRED | LENGTH-FIXED}
-    { 32, "timestamp", REQUIRED | LENGTH-FIXED}
+    { 16, "record_id", REQUIRED, LENGTH-FIXED}
+    { 8, "record_type", REQUIRED, LENGTH-FIXED}
+    { 32, "timestamp", REQUIRED, LENGTH-FIXED}
 
     /* Generator ID */
-    { 1, "generator_id.id_type", REQUIRED | LENGTH-FIXED}
-    { 7, "generator_id.id", REQUIRED | LENGTH-FIXED}
+    { 1, "generator_id.id_type", REQUIRED, LENGTH-FIXED}
+    { 7, "generator_id.id", REQUIRED, LENGTH-FIXED}
 
-    { 2, "ipmb_device_lun", REQUIRED | LENGTH-FIXED}
-    { 2, "reserved", REQUIRED | LENGTH-FIXED}
-    { 4, "channel_number", REQUIRED | LENGTH-FIXED}
+    { 2, "ipmb_device_lun", REQUIRED, LENGTH-FIXED}
+    { 2, "reserved", REQUIRED, LENGTH-FIXED}
+    { 4, "channel_number", REQUIRED, LENGTH-FIXED}
 
-    { 8, "event_message_format_version", REQUIRED | LENGTH-FIXED}
-    { 8, "sensor_type", REQUIRED | LENGTH-FIXED}
-    { 8, "sensor_number", REQUIRED | LENGTH-FIXED}
+    { 8, "event_message_format_version", REQUIRED, LENGTH-FIXED}
+    { 8, "sensor_type", REQUIRED, LENGTH-FIXED}
+    { 8, "sensor_number", REQUIRED, LENGTH-FIXED}
 
-    /* Event Dir | Event Type */
-    { 7, "event_type_code", REQUIRED | LENGTH-FIXED}
-    { 1, "event_dir", REQUIRED | LENGTH-FIXED}
+    /* Event Dir, Event Type */
+    { 7, "event_type_code", REQUIRED, LENGTH-FIXED}
+    { 1, "event_dir", REQUIRED, LENGTH-FIXED}
 
     /* Event Data */
-    { 8, "event_data1", REQUIRED | LENGTH-FIXED}
-    { 8, "event_data2", REQUIRED | LENGTH-FIXED}
-    { 8, "event_data3", REQUIRED | LENGTH-FIXED}
+    { 8, "event_data1", REQUIRED, LENGTH-FIXED}
+    { 8, "event_data2", REQUIRED, LENGTH-FIXED}
+    { 8, "event_data3", REQUIRED, LENGTH-FIXED}
 
 
 SEL System Event Record (with Event flags)
@@ -100,36 +100,36 @@ SEL System Event Record (with Event flags)
 
 FIID Template: tmpl_sel_system_event_record_event_fields
 
-    { 16, "record_id", REQUIRED | LENGTH-FIXED}
-    { 8, "record_type", REQUIRED | LENGTH-FIXED}
-    { 32, "timestamp", REQUIRED | LENGTH-FIXED}
+    { 16, "record_id", REQUIRED, LENGTH-FIXED}
+    { 8, "record_type", REQUIRED, LENGTH-FIXED}
+    { 32, "timestamp", REQUIRED, LENGTH-FIXED}
 
     /* Generator ID */
-    { 1, "generator_id.id_type", REQUIRED | LENGTH-FIXED}
-    { 7, "generator_id.id", REQUIRED | LENGTH-FIXED}
+    { 1, "generator_id.id_type", REQUIRED, LENGTH-FIXED}
+    { 7, "generator_id.id", REQUIRED, LENGTH-FIXED}
 
-    { 2, "ipmb_device_lun", REQUIRED | LENGTH-FIXED}
-    { 2, "reserved", REQUIRED | LENGTH-FIXED}
-    { 4, "channel_number", REQUIRED | LENGTH-FIXED}
+    { 2, "ipmb_device_lun", REQUIRED, LENGTH-FIXED}
+    { 2, "reserved", REQUIRED, LENGTH-FIXED}
+    { 4, "channel_number", REQUIRED, LENGTH-FIXED}
 
-    { 8, "event_message_format_version", REQUIRED | LENGTH-FIXED}
-    { 8, "sensor_type", REQUIRED | LENGTH-FIXED}
-    { 8, "sensor_number", REQUIRED | LENGTH-FIXED}
+    { 8, "event_message_format_version", REQUIRED, LENGTH-FIXED}
+    { 8, "sensor_type", REQUIRED, LENGTH-FIXED}
+    { 8, "sensor_number", REQUIRED, LENGTH-FIXED}
 
-    /* Event Dir | Event Type */
-    { 7, "event_type_code", REQUIRED | LENGTH-FIXED}
-    { 1, "event_dir", REQUIRED | LENGTH-FIXED}
+    /* Event Dir, Event Type */
+    { 7, "event_type_code", REQUIRED, LENGTH-FIXED}
+    { 1, "event_dir", REQUIRED, LENGTH-FIXED}
 
     /* Event Data 1 */
-    { 4, "offset_from_event_reading_type_code", REQUIRED | LENGTH-FIXED}
-    { 2, "event_data3_flag", REQUIRED | LENGTH-FIXED}
-    { 2, "event_data2_flag", REQUIRED | LENGTH-FIXED}
+    { 4, "offset_from_event_reading_type_code", REQUIRED, LENGTH-FIXED}
+    { 2, "event_data3_flag", REQUIRED, LENGTH-FIXED}
+    { 2, "event_data2_flag", REQUIRED, LENGTH-FIXED}
 
     /* Event Data 2 */
-    { 8, "event_data2", REQUIRED | LENGTH-FIXED}
+    { 8, "event_data2", REQUIRED, LENGTH-FIXED}
 
     /* Event Data 3 */
-    { 8, "event_data3", REQUIRED | LENGTH-FIXED}
+    { 8, "event_data3", REQUIRED, LENGTH-FIXED}
 
 
 SEL System Event Record (w/ Previous and Severity Offset fields)
@@ -137,37 +137,37 @@ SEL System Event Record (w/ Previous and Severity Offset fields)
 
 FIID Template: tmpl_sel_system_event_record_discrete_previous_state_severity
 
-    { 16, "record_id", REQUIRED | LENGTH-FIXED}
-    { 8, "record_type", REQUIRED | LENGTH-FIXED}
-    { 32, "timestamp", REQUIRED | LENGTH-FIXED}
+    { 16, "record_id", REQUIRED, LENGTH-FIXED}
+    { 8, "record_type", REQUIRED, LENGTH-FIXED}
+    { 32, "timestamp", REQUIRED, LENGTH-FIXED}
 
     /* Generator ID */
-    { 1, "generator_id.id_type", REQUIRED | LENGTH-FIXED}
-    { 7, "generator_id.id", REQUIRED | LENGTH-FIXED}
+    { 1, "generator_id.id_type", REQUIRED, LENGTH-FIXED}
+    { 7, "generator_id.id", REQUIRED, LENGTH-FIXED}
 
-    { 2, "ipmb_device_lun", REQUIRED | LENGTH-FIXED}
-    { 2, "reserved", REQUIRED | LENGTH-FIXED}
-    { 4, "channel_number", REQUIRED | LENGTH-FIXED}
+    { 2, "ipmb_device_lun", REQUIRED, LENGTH-FIXED}
+    { 2, "reserved", REQUIRED, LENGTH-FIXED}
+    { 4, "channel_number", REQUIRED, LENGTH-FIXED}
 
-    { 8, "event_message_format_version", REQUIRED | LENGTH-FIXED}
-    { 8, "sensor_type", REQUIRED | LENGTH-FIXED}
-    { 8, "sensor_number", REQUIRED | LENGTH-FIXED}
+    { 8, "event_message_format_version", REQUIRED, LENGTH-FIXED}
+    { 8, "sensor_type", REQUIRED, LENGTH-FIXED}
+    { 8, "sensor_number", REQUIRED, LENGTH-FIXED}
 
-    /* Event Dir | Event Type */
-    { 7, "event_type_code", REQUIRED | LENGTH-FIXED}
-    { 1, "event_dir", REQUIRED | LENGTH-FIXED}
+    /* Event Dir, Event Type */
+    { 7, "event_type_code", REQUIRED, LENGTH-FIXED}
+    { 1, "event_dir", REQUIRED, LENGTH-FIXED}
 
     /* Event Data 1 */
-    { 4, "offset_from_event_reading_type_code", REQUIRED | LENGTH-FIXED}
-    { 2, "event_data3_flag", REQUIRED | LENGTH-FIXED}
-    { 2, "event_data2_flag", REQUIRED | LENGTH-FIXED}
+    { 4, "offset_from_event_reading_type_code", REQUIRED, LENGTH-FIXED}
+    { 2, "event_data3_flag", REQUIRED, LENGTH-FIXED}
+    { 2, "event_data2_flag", REQUIRED, LENGTH-FIXED}
 
     /* Event Data 2 */
-    { 4, "previous_offset_from_event_reading_type_code", REQUIRED | LENGTH-FIXED}
-    { 4, "offset_from_severity_event_reading_type_code", REQUIRED | LENGTH-FIXED}
+    { 4, "previous_offset_from_event_reading_type_code", REQUIRED, LENGTH-FIXED}
+    { 4, "offset_from_severity_event_reading_type_code", REQUIRED, LENGTH-FIXED}
 
     /* Event Data 3 */
-    { 8, "event_data3", REQUIRED | LENGTH-FIXED}
+    { 8, "event_data3", REQUIRED, LENGTH-FIXED}
 
 
 SEL Timestamped OEM Record
@@ -175,20 +175,20 @@ SEL Timestamped OEM Record
 
 FIID Template: tmpl_sel_timestamped_oem_record
 
-    { 16, "record_id", REQUIRED | LENGTH-FIXED}
-    { 8, "record_type", REQUIRED | LENGTH-FIXED}
-    { 32, "timestamp", REQUIRED | LENGTH-FIXED}
-    { 24, "manufacturer_id", REQUIRED | LENGTH-FIXED}
-    { 48, "oem_defined", REQUIRED | LENGTH-FIXED}
+    { 16, "record_id", REQUIRED, LENGTH-FIXED}
+    { 8, "record_type", REQUIRED, LENGTH-FIXED}
+    { 32, "timestamp", REQUIRED, LENGTH-FIXED}
+    { 24, "manufacturer_id", REQUIRED, LENGTH-FIXED}
+    { 48, "oem_defined", REQUIRED, LENGTH-FIXED}
 
 SEL Non-Timestamped OEM Record
 ------------------------------
 
 FIID Template: tmpl_sel_non_timestamped_oem_record
 
-    { 16, "record_id", REQUIRED | LENGTH-FIXED}
-    { 8, "record_type", REQUIRED | LENGTH-FIXED}
-    { 104, "oem_defined", REQUIRED | LENGTH-FIXED}
+    { 16, "record_id", REQUIRED, LENGTH-FIXED}
+    { 8, "record_type", REQUIRED, LENGTH-FIXED}
+    { 104, "oem_defined", REQUIRED, LENGTH-FIXED}
 
 #endif  /* 0 */
 

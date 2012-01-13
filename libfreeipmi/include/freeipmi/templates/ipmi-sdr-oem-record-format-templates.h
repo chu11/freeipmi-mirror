@@ -80,26 +80,26 @@ FIID Template: tmpl_sdr_oem_intel_node_manager_record
     /*********************
      * SDR Record Header *
      *********************/
-    { 16, "record_id", REQUIRED | LENGTH-FIXED}
-    { 4,  "sdr_version_major", REQUIRED | LENGTH-FIXED}
-    { 4,  "sdr_version_minor", REQUIRED | LENGTH-FIXED}
-    { 8,  "record_type", REQUIRED | LENGTH-FIXED}
-    { 8,  "record_length", REQUIRED | LENGTH-FIXED}
+    { 16, "record_id", REQUIRED, LENGTH-FIXED}
+    { 4,  "sdr_version_major", REQUIRED, LENGTH-FIXED}
+    { 4,  "sdr_version_minor", REQUIRED, LENGTH-FIXED}
+    { 8,  "record_type", REQUIRED, LENGTH-FIXED}
+    { 8,  "record_length", REQUIRED, LENGTH-FIXED}
     /********************
      * Record Key Bytes *
      ********************/
-    { 24, "manufacturer_id", REQUIRED | LENGTH-FIXED}
-    { 8,  "record_subtype", REQUIRED | LENGTH-FIXED}
-    { 8,  "version_number", REQUIRED | LENGTH-FIXED}
-    { 1,  "reserved1", REQUIRED | LENGTH-FIXED}
-    { 7,  "nm_device_slave_address", REQUIRED | LENGTH-FIXED}
-    { 2,  "sensor_owner_lun", REQUIRED | LENGTH-FIXED}
-    { 2,  "reserved2", REQUIRED | LENGTH-FIXED}
-    { 4,  "channel_number", REQUIRED | LENGTH-FIXED}
-    { 8,  "nm_health_event_sensor_number", REQUIRED | LENGTH-FIXED}
-    { 8,  "nm_exception_event_sensor_number", REQUIRED | LENGTH-FIXED}
-    { 8,  "nm_operational_capabilities_sensor_number", REQUIRED | LENGTH-FIXED}
-    { 8,  "nm_alert_threshold_exceeded_sensor_number", REQUIRED | LENGTH-FIXED}
+    { 24, "manufacturer_id", REQUIRED, LENGTH-FIXED}
+    { 8,  "record_subtype", REQUIRED, LENGTH-FIXED}
+    { 8,  "version_number", REQUIRED, LENGTH-FIXED}
+    { 1,  "reserved1", REQUIRED, LENGTH-FIXED}
+    { 7,  "nm_device_slave_address", REQUIRED, LENGTH-FIXED}
+    { 2,  "sensor_owner_lun", REQUIRED, LENGTH-FIXED}
+    { 2,  "reserved2", REQUIRED, LENGTH-FIXED}
+    { 4,  "channel_number", REQUIRED, LENGTH-FIXED}
+    { 8,  "nm_health_event_sensor_number", REQUIRED, LENGTH-FIXED}
+    { 8,  "nm_exception_event_sensor_number", REQUIRED, LENGTH-FIXED}
+    { 8,  "nm_operational_capabilities_sensor_number", REQUIRED, LENGTH-FIXED}
+    { 8,  "nm_alert_threshold_exceeded_sensor_number", REQUIRED, LENGTH-FIXED}
 
 #endif  /* 0 */
 
