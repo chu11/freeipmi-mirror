@@ -74,7 +74,6 @@ FIID Template: tmpl_rmcpplus_session_hdr
     { 32, "session_sequence_number", REQUIRED | LENGTH-FIXED},
     /* length of just the payload */
     { 16, "ipmi_payload_len", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 RMCP+ Session Trailer
@@ -90,7 +89,6 @@ FIID Template: tmpl_rmcpplus_session_trlr
     { 8, "pad_length", REQUIRED | LENGTH-FIXED},
     { 8, "next_header", REQUIRED | LENGTH-FIXED},
     { 256, "authentication_code", OPTIONAL | LENGTH-VARIABLE},
-    { 0, "", 0}
   };
 
 RMCP+ Payload
@@ -102,7 +100,6 @@ FIID Template: tmpl_rmcpplus_payload
     /* 524288 = 65536 * 8 = 2^16 * 8, b/c ipmi_payload_len is 2 bytes */
     { 524288, "payload_data", REQUIRED | LENGTH-VARIABLE},
     { 512, "confidentiality_trailer", OPTIONAL | LENGTH-VARIABLE},
-    { 0, "", 0}
   };
 
 RMCP+ Open Session Request
@@ -133,7 +130,6 @@ FIID Template: tmpl_rmcpplus_open_session_request
     { 6, "confidentiality_payload.confidentiality_algorithm", REQUIRED | LENGTH-FIXED},
     { 2, "reserved10", REQUIRED | LENGTH-FIXED},
     { 24, "reserved11", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 RMCP+ Open Session Response
@@ -167,7 +163,6 @@ FIID Template: tmpl_rmcpplus_open_session_response
     { 6, "confidentiality_payload.confidentiality_algorithm", REQUIRED | LENGTH-FIXED},
     { 2, "reserved10", REQUIRED | LENGTH-FIXED},
     { 24, "reserved11", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 RMCP+ RAKP Message 1
@@ -185,7 +180,6 @@ FIID Template: tmpl_rmcpplus_rakp_message_1
     { 16, "reserved3", REQUIRED | LENGTH-FIXED},
     { 8, "user_name_length", REQUIRED | LENGTH-FIXED},
     { 128, "user_name", OPTIONAL | LENGTH-VARIABLE},
-    { 0, "", 0}
   };
 
 RMCP+ RAKP Message 2
@@ -200,7 +194,6 @@ FIID Template: tmpl_rmcpplus_rakp_message_2
     { 128, "managed_system_random_number", REQUIRED | LENGTH-FIXED},
     { 128, "managed_system_guid", REQUIRED | LENGTH-FIXED},
     { 512, "key_exchange_authentication_code", OPTIONAL | LENGTH-VARIABLE},
-    { 0, "", 0}
   };
 
 RMCP+ RAKP Message 3
@@ -213,7 +206,6 @@ FIID Template: tmpl_rmcpplus_rakp_message_3
     { 16, "reserved1", REQUIRED | LENGTH-FIXED},
     { 32, "managed_system_session_id", REQUIRED | LENGTH-FIXED},
     { 512, "key_exchange_authentication_code", OPTIONAL | LENGTH-VARIABLE},
-    { 0, "", 0}
   };
 
 RMCP+ RAKP Message 4
@@ -231,7 +223,6 @@ FIID Template: tmpl_rmcpplus_rakp_message_4
     { 16, "reserved1", REQUIRED | LENGTH-FIXED},
     { 32, "remote_console_session_id", REQUIRED | LENGTH-FIXED},
     { 512, "integrity_check_value", OPTIONAL | LENGTH-VARIABLE},
-    { 0, "", 0}
   };
 
 #endif  /* 0 */

@@ -66,7 +66,6 @@ FIID Template: tmpl_cmd_asf_presence_ping
     { 8, "message_tag", REQUIRED | LENGTH-FIXED},
     { 8, "reserved", REQUIRED | LENGTH-FIXED},
     { 8, "data_length", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 ASF Presence Pong
@@ -87,7 +86,6 @@ FIID Template: tmpl_cmd_asf_presence_pong
     { 7, "supported_interactions.reserved", REQUIRED | LENGTH-FIXED},
     { 1, "supported_interactions.security_extensions", REQUIRED | LENGTH-FIXED},
     { 48, "reserved2", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 #endif  /* 0 */

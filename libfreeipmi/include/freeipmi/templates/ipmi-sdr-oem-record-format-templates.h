@@ -100,7 +100,6 @@ FIID Template: tmpl_sdr_oem_intel_node_manager_record =
     { 8,  "nm_exception_event_sensor_number", REQUIRED | LENGTH-FIXED},
     { 8,  "nm_operational_capabilities_sensor_number", REQUIRED | LENGTH-FIXED},
     { 8,  "nm_alert_threshold_exceeded_sensor_number", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 #endif  /* 0 */

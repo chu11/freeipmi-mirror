@@ -66,7 +66,6 @@ FIID Template: tmpl_cmd_set_serial_modem_configuration_rq
     { 4, "reserved", REQUIRED | LENGTH-FIXED},
     { 8, "parameter_selector", REQUIRED | LENGTH-FIXED},
     { 1024, "configuration_parameter_data", REQUIRED | LENGTH-VARIABLE},
-    { 0, "", 0}
   };
 
 Set Serial Modem Configuration Response
@@ -76,7 +75,6 @@ FIID Template: tmpl_cmd_set_serial_modem_configuration_rs
   {
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
-    { 0, "", 0}
   };
 
 Set Serial Modem Configuration (Set In Progress) Request
@@ -90,7 +88,6 @@ FIID Template: tmpl_cmd_set_serial_modem_configuration_set_in_progress_rq
     { 8, "parameter_selector", REQUIRED | LENGTH-FIXED},
     { 2, "state", REQUIRED | LENGTH-FIXED},
     { 6, "reserved2", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Set Serial Modem Configuration (Connection Mode) Request
@@ -107,7 +104,6 @@ FIID Template: tmpl_cmd_set_serial_modem_configuration_connection_mode_rq
     { 1, "terminal_mode", REQUIRED | LENGTH-FIXED},
     { 4, "reserved2", REQUIRED | LENGTH-FIXED},
     { 1, "connect_mode", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Set Serial Modem Configuration (IPMI Messaging Comm Settings) Request
@@ -124,7 +120,6 @@ FIID Template: tmpl_cmd_set_serial_modem_configuration_ipmi_messaging_comm_setti
     { 2, "flow_control", REQUIRED | LENGTH-FIXED},
     { 4, "bit_rate", REQUIRED | LENGTH-FIXED},
     { 4, "reserved3", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Set Serial Modem Configuration (Page Blackout Interval) Request
@@ -137,7 +132,6 @@ FIID Template: tmpl_cmd_set_serial_modem_configuration_page_blackout_interval_rq
     { 4, "reserved", REQUIRED | LENGTH-FIXED},
     { 8, "parameter_selector", REQUIRED | LENGTH-FIXED},
     { 8, "page_blackout_interval", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Set Serial Modem Configuration (Call Retry Interval) Request
@@ -150,7 +144,6 @@ FIID Template: tmpl_cmd_set_serial_modem_configuration_call_retry_interval_rq
     { 4, "reserved", REQUIRED | LENGTH-FIXED},
     { 8, "parameter_selector", REQUIRED | LENGTH-FIXED},
     { 8, "call_retry_interval", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Get Serial Modem Configuration Request
@@ -165,7 +158,6 @@ FIID Template: tmpl_cmd_get_serial_modem_configuration_rq
     { 8, "parameter_selector", REQUIRED | LENGTH-FIXED},
     { 8, "set_selector", REQUIRED | LENGTH-FIXED},
     { 8, "block_selector", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Get Serial Modem Configuration Response
@@ -178,7 +170,6 @@ FIID Template: tmpl_cmd_get_serial_modem_configuration_rs
     { 4, "present_revision", REQUIRED | LENGTH-FIXED},
     { 4, "oldest_revision_parameter", REQUIRED | LENGTH-FIXED},
     { 1024, "configuration_parameter_data", REQUIRED | LENGTH-VARIABLE},
-    { 0, "", 0}
   };
 
 Get Serial Modem Configuration (Set In Progress) Response
@@ -192,7 +183,6 @@ FIID Template: tmpl_cmd_get_serial_modem_configuration_set_in_progress_rs
     { 4, "oldest_revision_parameter", REQUIRED | LENGTH-FIXED},
     { 2, "state", REQUIRED | LENGTH-FIXED},
     { 6, "reserved", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Get Serial Modem Configuration (Connection Mode) Response
@@ -209,7 +199,6 @@ FIID Template: tmpl_cmd_get_serial_modem_configuration_connection_mode_rs
     { 1, "terminal_mode", REQUIRED | LENGTH-FIXED},
     { 4, "reserved", REQUIRED | LENGTH-FIXED},
     { 1, "connect_mode", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Get Serial Modem Configuration (IPMI Messaging Comm Settings) Response
@@ -226,7 +215,6 @@ FIID Template: tmpl_cmd_get_serial_modem_configuration_ipmi_messaging_comm_setti
     { 2, "flow_control", REQUIRED | LENGTH-FIXED},
     { 4, "bit_rate", REQUIRED | LENGTH-FIXED},
     { 4, "reserved2", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Get Serial Modem Configuration (Page Blackout Interval) Response
@@ -239,7 +227,6 @@ FIID Template: tmpl_cmd_get_serial_modem_configuration_page_blackout_interval_rs
     { 4, "present_revision", REQUIRED | LENGTH-FIXED},
     { 4, "oldest_revision_parameter", REQUIRED | LENGTH-FIXED},
     { 8, "page_blackout_interval", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Get Serial Modem Configuration (Call Retry Interval) Response
@@ -252,7 +239,6 @@ FIID Template: tmpl_cmd_get_serial_modem_configuration_call_retry_interval_rs
     { 4, "present_revision", REQUIRED | LENGTH-FIXED},
     { 4, "oldest_revision_parameter", REQUIRED | LENGTH-FIXED},
     { 8, "call_retry_interval", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 #endif  /* 0 */

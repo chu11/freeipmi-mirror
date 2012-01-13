@@ -62,7 +62,6 @@ Get SDR Repository Info Request
 FIID Template: tmpl_cmd_get_sdr_repository_info_rq
   {
     { 8, "cmd", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Get SDR Repository Info Response
@@ -85,7 +84,6 @@ FIID Template: tmpl_cmd_get_sdr_repository_info_rs
     { 1, "reserved", REQUIRED | LENGTH-FIXED},
     { 2, "modal_non_modal_sdr_repository_update_operation_supported", REQUIRED | LENGTH-FIXED},
     { 1, "overflow_flag", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Get SDR Repository Allocation Info Request
@@ -94,7 +92,6 @@ Get SDR Repository Allocation Info Request
 FIID Template: tmpl_cmd_get_sdr_repository_allocation_info_rq
   {
     { 8, "cmd", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Get SDR Repository Allocation Info Response
@@ -109,7 +106,6 @@ FIID Template: tmpl_cmd_get_sdr_repository_allocation_info_rs
     { 16, "number_of_free_allocation_units", REQUIRED | LENGTH-FIXED},
     { 16, "largest_free_block", REQUIRED | LENGTH-FIXED},
     { 8, "maximum_record_size", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Reserve SDR Repository Request
@@ -118,7 +114,6 @@ Reserve SDR Repository Request
 FIID Template: tmpl_cmd_reserve_sdr_repository_rq
   {
     { 8, "cmd", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Reserve SDR Repository Response
@@ -129,7 +124,6 @@ FIID Template: tmpl_cmd_reserve_sdr_repository_rs
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
     { 16, "reservation_id", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Get SDR Request
@@ -142,7 +136,6 @@ FIID Template: tmpl_cmd_get_sdr_rq
     { 16, "record_id", REQUIRED | LENGTH-FIXED},
     { 8, "offset_into_record", REQUIRED | LENGTH-FIXED},
     { 8, "bytes_to_read", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Get SDR Response
@@ -155,7 +148,6 @@ FIID Template: tmpl_cmd_get_sdr_rs
     { 16, "next_record_id", REQUIRED | LENGTH-FIXED},
     /* 2040 = 255 * 8, 255 b/c bytes_to_read field in request is 1 byte long */
     { 2040, "record_data", REQUIRED | LENGTH-VARIABLE},
-    { 0, "", 0}
   };
 
 Get SDR Repository Time Request
@@ -164,7 +156,6 @@ Get SDR Repository Time Request
 FIID Template: tmpl_cmd_get_sdr_repository_time_rq
   {
     { 8, "cmd", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Get SDR Repository Time Response
@@ -175,7 +166,6 @@ FIID Template: tmpl_cmd_get_sdr_repository_time_rs
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
     { 32, "time", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Set SDR Repository Time Request
@@ -185,7 +175,6 @@ FIID Template: tmpl_cmd_set_sdr_repository_time_rq
   {
     { 8, "cmd", REQUIRED | LENGTH-FIXED},
     { 32, "time", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Set SDR Repository Time Response
@@ -195,7 +184,6 @@ FIID Template: tmpl_cmd_set_sdr_repository_time_rs
   {
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
-    { 0, "", 0}
   };
 
 #endif  /* 0 */

@@ -62,7 +62,6 @@ Get Device ID Request
 FIID Template: tmpl_cmd_get_device_id_rq
   {
     { 8, "cmd", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Get Device ID Response
@@ -93,7 +92,6 @@ FIID Template: tmpl_cmd_get_device_id_rs
     { 4, "manufacturer_id.reserved1", REQUIRED | LENGTH-FIXED},
     { 16, "product_id", REQUIRED | LENGTH-FIXED},
     { 32, "auxiliary_firmware_revision_information", OPTIONAL | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Cold Reset Request
@@ -102,7 +100,6 @@ Cold Reset Request
 FIID Template: tmpl_cmd_cold_reset_rq
   {
     { 8, "cmd", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Cold Reset Response
@@ -112,7 +109,6 @@ FIID Template: tmpl_cmd_cold_reset_rs
   {
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
-    { 0, "", 0}
   };
 
 Warm Reset Request
@@ -121,7 +117,6 @@ Warm Reset Request
 FIID Template: tmpl_cmd_warm_reset_rq
   {
     { 8, "cmd", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Warm Reset Response
@@ -131,7 +126,6 @@ FIID Template: tmpl_cmd_warm_reset_rs
   {
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
-    { 0, "", 0}
   };
 
 Set ACPI Power State Request
@@ -144,7 +138,6 @@ FIID Template: tmpl_cmd_set_acpi_power_state_rq
     { 1, "set_system_power_state", REQUIRED | LENGTH-FIXED},
     { 7, "device_power_state_enumeration", REQUIRED | LENGTH-FIXED},
     { 1, "set_device_power_state", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Set ACPI Power State Response
@@ -154,7 +147,6 @@ FIID Template: tmpl_cmd_set_acpi_power_state_rs
   {
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
-    { 0, "", 0}
   };
 
 Get ACPI Power State Request
@@ -163,7 +155,6 @@ Get ACPI Power State Request
 FIID Template: tmpl_cmd_get_acpi_power_state_rq
   {
     { 8, "cmd", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Get ACPI Power State Response
@@ -177,7 +168,6 @@ FIID Template: tmpl_cmd_get_acpi_power_state_rs
     { 1, "reserved1", REQUIRED | LENGTH-FIXED},
     { 7, "device_power_state_enumeration", REQUIRED | LENGTH-FIXED},
     { 1, "reserved2", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Get Self Test Results Request
@@ -186,7 +176,6 @@ Get Self Test Results Request
 FIID Template: tmpl_cmd_get_self_test_results_rq
   {
     { 8, "cmd", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Get Self Test Results Response
@@ -208,7 +197,6 @@ FIID Template: tmpl_cmd_get_self_test_results_rs
     { 1, "cannot_access_bmc_fru_device", REQUIRED | LENGTH-FIXED},
     { 1, "cannot_access_sdr_repository", REQUIRED | LENGTH-FIXED},
     { 1, "cannot_access_sel_device", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Get Device GUID Request
@@ -217,7 +205,6 @@ Get Device GUID Request
 FIID Template: tmpl_cmd_get_device_guid_rq
   {
     { 8, "cmd", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Get Device GUID Response
@@ -228,7 +215,6 @@ FIID Template: tmpl_cmd_get_device_guid_rs
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
     { 128, "guid", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Get Device GUID (with Format) Response
@@ -244,7 +230,6 @@ FIID Template: tmpl_cmd_get_device_guid_format_rs
     { 16, "time_high_and_version", REQUIRED | LENGTH-FIXED},
     { 16, "time_mid", REQUIRED | LENGTH-FIXED},
     { 32, "time_low", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 #endif  /* 0 */

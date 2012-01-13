@@ -67,7 +67,6 @@ FIID Template: tmpl_rmcp_hdr
     { 5, "message_class.class", REQUIRED | LENGTH-FIXED},
     { 2, "message_class.reserved", REQUIRED | LENGTH-FIXED},
     { 1, "message_class.ack", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 #endif  /* 0 */

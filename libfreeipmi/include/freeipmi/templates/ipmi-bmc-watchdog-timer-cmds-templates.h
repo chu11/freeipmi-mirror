@@ -62,7 +62,6 @@ Reset Watchdog Timer Request
 FIID Template: tmpl_cmd_reset_watchdog_timer_rq
   {
     { 8, "cmd", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Reset Watchdog Timer Response
@@ -72,7 +71,6 @@ FIID Template: tmpl_cmd_reset_watchdog_timer_rs
   {
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
-    { 0, "", 0}
   };
 
 Set Watchdog Timer Request
@@ -99,7 +97,6 @@ FIID Template: tmpl_cmd_set_watchdog_timer_rq
     { 1, "reserved5", REQUIRED | LENGTH-FIXED},
     { 1, "reserved6", REQUIRED | LENGTH-FIXED},
     { 16, "initial_countdown_value", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Set Watchdog Timer Response
@@ -109,7 +106,6 @@ FIID Template: tmpl_cmd_set_watchdog_timer_rs
   {
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
-    { 0, "", 0}
   };
 
 Get Watchdog Timer Request
@@ -118,7 +114,6 @@ Get Watchdog Timer Request
 FIID Template: tmpl_cmd_get_watchdog_timer_rq
   {
     { 8, "cmd", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Get Watchdog Timer Response
@@ -147,7 +142,6 @@ FIID Template: tmpl_cmd_get_watchdog_timer_rs
     { 1, "reserved6", REQUIRED | LENGTH-FIXED},
     { 16, "initial_countdown_value", REQUIRED | LENGTH-FIXED},
     { 16, "present_countdown_value", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 #endif  /* 0 */

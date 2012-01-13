@@ -66,7 +66,6 @@ FIID Template: tmpl_lan_session_hdr
     { 32, "session_id", REQUIRED | LENGTH-FIXED},
     { 128, "authentication_code", OPTIONAL | LENGTH-FIXED},
     { 8, "ipmi_msg_len", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
  
 LAN Message Header Request
@@ -81,7 +80,6 @@ FIID Template: tmpl_lan_msg_hdr_rq
     { 8, "rq_addr", REQUIRED | LENGTH-FIXED},
     { 2, "rq_lun", REQUIRED | LENGTH-FIXED},
     { 6, "rq_seq", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 LAN Message Header Response
@@ -96,7 +94,6 @@ FIID Template: tmpl_lan_msg_hdr_rs
     { 8, "rs_addr", REQUIRED | LENGTH-FIXED},
     { 2, "rs_lun", REQUIRED | LENGTH-FIXED},
     { 6, "rq_seq", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 LAN Message Trailer
@@ -105,7 +102,6 @@ LAN Message Trailer
 FIID Template: tmpl_lan_msg_trlr
   {
     { 8, "checksum2", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 #endif  /* 0 */

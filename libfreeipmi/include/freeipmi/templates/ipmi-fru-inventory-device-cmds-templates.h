@@ -63,7 +63,6 @@ FIID Template: tmpl_cmd_get_fru_inventory_area_info_rq
   {
     { 8, "cmd", REQUIRED | LENGTH-FIXED},
     { 8, "fru_device_id", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Get FRU Inventory Area Info Response
@@ -76,7 +75,6 @@ FIID Template: tmpl_cmd_get_fru_inventory_area_info_rs
     { 16, "fru_inventory_area_size", REQUIRED | LENGTH-FIXED},
     { 1, "device_is_accessed", REQUIRED | LENGTH-FIXED},
     { 7, "reserved", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Read FRU Data Request
@@ -88,7 +86,6 @@ FIID Template: tmpl_cmd_read_fru_data_rq
     { 8, "fru_device_id", REQUIRED | LENGTH-FIXED},
     { 16, "fru_inventory_offset_to_read", REQUIRED | LENGTH-FIXED},
     { 8, "count_to_read", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Read FRU Data Response
@@ -101,7 +98,6 @@ FIID Template: tmpl_cmd_read_fru_data_rs
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
     { 8, "count_returned", REQUIRED | LENGTH-FIXED},
     { 2040, "requested_data", OPTIONAL | LENGTH-VARIABLE},
-    { 0, "", 0}
   };
 
 Write FRU Data Request
@@ -114,7 +110,6 @@ FIID Template: tmpl_cmd_write_fru_data_rq
     { 8, "fru_device_id", REQUIRED | LENGTH-FIXED},
     { 16, "fru_inventory_offset_to_write", REQUIRED | LENGTH-FIXED},
     { 2040, "data_to_write", REQUIRED | LENGTH-VARIABLE},
-    { 0, "", 0}
   };
 
 Write FRU Data Response
@@ -125,7 +120,6 @@ FIID Template: tmpl_cmd_write_fru_data_rs
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
     { 8, "count_written", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 #endif  /* 0 */

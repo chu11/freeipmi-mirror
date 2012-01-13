@@ -68,7 +68,6 @@ FIID Template: tmpl_cmd_set_event_receiver_rq
     { 8, "event_receiver_slave_address", REQUIRED | LENGTH-FIXED},
     { 2, "event_receiver_lun", REQUIRED | LENGTH-FIXED},
     { 6, "reserved", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Set Event Receiver Response
@@ -78,7 +77,6 @@ FIID Template: tmpl_cmd_set_event_receiver_rs
   {
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
-    { 0, "", 0}
   };
 
 Get Event Receiver Request
@@ -90,7 +88,6 @@ Get Event Receiver Request
 FIID Template: tmpl_cmd_get_event_receiver_rq
   {
     { 8, "cmd", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Get Event Receiver Response
@@ -103,7 +100,6 @@ FIID Template: tmpl_cmd_get_event_receiver_rs
     { 8, "event_receiver_slave_address", REQUIRED | LENGTH-FIXED},
     { 2, "event_receiver_lun", REQUIRED | LENGTH-FIXED},
     { 6, "reserved", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Platform Event Request
@@ -121,7 +117,6 @@ FIID Template: tmpl_cmd_platform_event_rq
     { 8, "event_data1", REQUIRED | LENGTH-FIXED},
     { 8, "event_data2", REQUIRED | LENGTH-FIXED},
     { 8, "event_data3", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Platform Event Response
@@ -131,7 +126,6 @@ FIID Template: tmpl_cmd_platform_event_rs
   {
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
-    { 0, "", 0}
   };
 
 #endif  /* 0 */

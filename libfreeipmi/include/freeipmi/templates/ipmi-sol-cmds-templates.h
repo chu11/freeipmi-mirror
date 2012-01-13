@@ -66,7 +66,6 @@ FIID Template: tmpl_cmd_set_sol_configuration_parameters_rq
     { 4, "reserved", REQUIRED | LENGTH-FIXED},
     { 8, "parameter_selector", REQUIRED | LENGTH-FIXED},
     { 1024, "configuration_parameter_data", REQUIRED | LENGTH-VARIABLE},
-    { 0, "", 0}
   };
 
 Set SOL Configuration Parameters Response
@@ -76,7 +75,6 @@ FIID Template: tmpl_cmd_set_sol_configuration_parameters_rs
   {
     { 8, "cmd", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
     { 8, "comp_code", REQUIRED | LENGTH-FIXED | MAKES-PACKET-SUFFICIENT},
-    { 0, "", 0}
   };
 
 Set SOL Configuration Parameters (Set In Progress) Request
@@ -90,7 +88,6 @@ FIID Template: tmpl_cmd_set_sol_configuration_parameters_set_in_progress_rq
     { 8, "parameter_selector", REQUIRED | LENGTH-FIXED},
     { 2, "state", REQUIRED | LENGTH-FIXED},
     { 6, "reserved2", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Set SOL Configuration Parameters (SOL Enable) Request
@@ -104,7 +101,6 @@ FIID Template: tmpl_cmd_set_sol_configuration_parameters_sol_enable_rq
     { 8, "parameter_selector", REQUIRED | LENGTH-FIXED},
     { 1, "sol_enable", REQUIRED | LENGTH-FIXED},
     { 7, "reserved2", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Set SOL Configuration Parameters (SOL Authentication) Request
@@ -120,7 +116,6 @@ FIID Template: tmpl_cmd_set_sol_configuration_parameters_sol_authentication_rq
     { 2, "reserved2", REQUIRED | LENGTH-FIXED},
     { 1, "force_sol_payload_authentication", REQUIRED | LENGTH-FIXED},
     { 1, "force_sol_payload_encryption", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Set SOL Configuration Parameters (Character Accumulate Interval and Send Threshold) Request
@@ -134,7 +129,6 @@ FIID Template: tmpl_cmd_set_sol_configuration_parameters_character_accumulate_in
     { 8, "parameter_selector", REQUIRED | LENGTH-FIXED},
     { 8, "character_accumulate_interval", REQUIRED | LENGTH-FIXED},
     { 8, "character_send_threshold", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Set SOL Configuration Parameters (SOL Retry) Request
@@ -149,7 +143,6 @@ FIID Template: tmpl_cmd_set_sol_configuration_parameters_sol_retry_rq
     { 3, "retry_count", REQUIRED | LENGTH-FIXED},
     { 5, "reserved2", REQUIRED | LENGTH-FIXED},
     { 8, "retry_interval", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Set SOL Configuration Parameters (SOL Non-Volatile Bit Rate) Request
@@ -163,7 +156,6 @@ FIID Template: tmpl_cmd_set_sol_configuration_parameters_sol_non_volatile_bit_ra
     { 8, "parameter_selector", REQUIRED | LENGTH-FIXED},
     { 4, "bit_rate", REQUIRED | LENGTH-FIXED},
     { 4, "reserved2", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Set SOL Configuration Parameters (SOL Volatile Bit Rate) Request
@@ -177,7 +169,6 @@ FIID Template: tmpl_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate_r
     { 8, "parameter_selector", REQUIRED | LENGTH-FIXED},
     { 4, "bit_rate", REQUIRED | LENGTH-FIXED},
     { 4, "reserved2", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Set SOL Configuration Parameters (SOL Payload Port Number) Request
@@ -190,7 +181,6 @@ FIID Template: tmpl_cmd_set_sol_configuration_parameters_sol_payload_port_number
     { 4, "reserved1", REQUIRED | LENGTH-FIXED},
     { 8, "parameter_selector", REQUIRED | LENGTH-FIXED},
     { 16, "port_number", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Get SOL Configuration Parameters Request
@@ -205,7 +195,6 @@ FIID Template: tmpl_cmd_get_sol_configuration_parameters_rq
     { 8, "parameter_selector", REQUIRED | LENGTH-FIXED},
     { 8, "set_selector", REQUIRED | LENGTH-FIXED},
     { 8, "block_selector", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Get SOL Configuration Parameters Response
@@ -218,7 +207,6 @@ FIID Template: tmpl_cmd_get_sol_configuration_parameters_rs
     { 4, "present_revision", REQUIRED | LENGTH-FIXED},
     { 4, "oldest_revision_parameter", REQUIRED | LENGTH-FIXED},
     { 1024, "configuration_parameter_data", REQUIRED | LENGTH-VARIABLE},
-    { 0, "", 0}
   };
 
 Get SOL Configuration Parameters (Set In Progress) Response
@@ -232,7 +220,6 @@ FIID Template: tmpl_cmd_get_sol_configuration_parameters_set_in_progress_rs
     { 4, "oldest_revision_parameter", REQUIRED | LENGTH-FIXED},
     { 2, "state", REQUIRED | LENGTH-FIXED},
     { 6, "reserved", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Get SOL Configuration Parameters (SOL Enable) Response
@@ -246,7 +233,6 @@ FIID Template: tmpl_cmd_get_sol_configuration_parameters_sol_enable_rs
     { 4, "oldest_revision_parameter", REQUIRED | LENGTH-FIXED},
     { 1, "sol_enable", REQUIRED | LENGTH-FIXED},
     { 7, "reserved", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Get SOL Configuration Parameters (SOL Authentication) Response
@@ -262,7 +248,6 @@ FIID Template: tmpl_cmd_get_sol_configuration_parameters_sol_authentication_rs
     { 2, "reserved", REQUIRED | LENGTH-FIXED},
     { 1, "force_sol_payload_authentication", REQUIRED | LENGTH-FIXED},
     { 1, "force_sol_payload_encryption", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Get SOL Configuration Parameters (Character Accumulate Interval and Send Threshold) Response
@@ -276,7 +261,6 @@ FIID Template: tmpl_cmd_get_sol_configuration_parameters_character_accumulate_in
     { 4, "oldest_revision_parameter", REQUIRED | LENGTH-FIXED},
     { 8, "character_accumulate_interval", REQUIRED | LENGTH-FIXED},
     { 8, "character_send_threshold", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Get SOL Configuration Parameters (SOL Retry) Response
@@ -291,7 +275,6 @@ FIID Template: tmpl_cmd_get_sol_configuration_parameters_sol_retry_rs
     { 3, "retry_count", REQUIRED | LENGTH-FIXED},
     { 5, "reserved", REQUIRED | LENGTH-FIXED},
     { 8, "retry_interval", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Get SOL Configuration Parameters (SOL Non-Volatile Bit Rate) Response
@@ -305,7 +288,6 @@ FIID Template: tmpl_cmd_get_sol_configuration_parameters_sol_non_volatile_bit_ra
     { 4, "oldest_revision_parameter", REQUIRED | LENGTH-FIXED},
     { 4, "bit_rate", REQUIRED | LENGTH-FIXED},
     { 4, "reserved", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Get SOL Configuration Parameters (SOL Volatile Bit Rate) Response
@@ -319,7 +301,6 @@ FIID Template: tmpl_cmd_get_sol_configuration_parameters_sol_volatile_bit_rate_r
     { 4, "oldest_revision_parameter", REQUIRED | LENGTH-FIXED},
     { 4, "bit_rate", REQUIRED | LENGTH-FIXED},
     { 4, "reserved", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Get SOL Configuration Parameters (SOL Payload Channel) Response
@@ -333,7 +314,6 @@ FIID Template: tmpl_cmd_get_sol_configuration_parameters_sol_payload_channel_rs
     { 4, "present_revision", REQUIRED | LENGTH-FIXED},
     { 4, "oldest_revision_parameter", REQUIRED | LENGTH-FIXED},
     { 8, "payload_channel", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 Get SOL Configuration Parameters (SOL Payload Port Number) Response
@@ -346,7 +326,6 @@ FIID Template: tmpl_cmd_get_sol_configuration_parameters_sol_payload_port_number
     { 4, "present_revision", REQUIRED | LENGTH-FIXED},
     { 4, "oldest_revision_parameter", REQUIRED | LENGTH-FIXED},
     { 16, "port_number", REQUIRED | LENGTH-FIXED},
-    { 0, "", 0}
   };
 
 #endif  /* 0 */
