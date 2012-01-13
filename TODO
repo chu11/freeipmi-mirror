@@ -145,7 +145,6 @@ libipmiconsole
   conman and other console software.
 - use conditional signals w/ garbage collector
   - should work, it's not like the poll loop from before
-- draw/document the SOL state machine (XXX)
  
 libipmimonitoring
 -----------------
