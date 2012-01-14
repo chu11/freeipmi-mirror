@@ -157,11 +157,15 @@ static struct argp cmdline_config_file_argp = { cmdline_options,
 static error_t
 cmdline_parse (int key, char *arg, struct argp_state *state)
 {
-  struct ipmi_sensors_arguments *cmd_args = state->input;
+  struct ipmi_sensors_arguments *cmd_args;
   char *endptr;
   char *tok;
   int value;
   error_t ret;
+
+  assert (state);
+  
+  cmd_args = state->input;
 
   switch (key)
     {
@@ -349,6 +353,8 @@ _ipmi_sensors_config_file_parse (struct ipmi_sensors_arguments *cmd_args)
 {
   struct config_file_data_ipmi_sensors config_file_data;
 
+  assert (cmd_args);
+
   memset (&config_file_data,
           '\0',
           sizeof (struct config_file_data_ipmi_sensors));
@@ -451,6 +457,8 @@ _ipmi_sensors_config_file_parse (struct ipmi_sensors_arguments *cmd_args)
 static void
 _ipmi_sensors_args_validate (struct ipmi_sensors_arguments *cmd_args)
 {
+  assert (cmd_args);
+
   if (cmd_args->sensor_types_length)
     {
       if (valid_sensor_types (NULL,
@@ -475,9 +483,14 @@ ipmi_sensors_argp_parse (int argc, char **argv, struct ipmi_sensors_arguments *c
 {
   unsigned int i;
 
+  assert (argc >= 0);
+  assert (argv);
+  assert (cmd_args);
+
   init_common_cmd_args_operator (&(cmd_args->common));
   init_sdr_cmd_args (&(cmd_args->sdr));
   init_hostrange_cmd_args (&(cmd_args->hostrange));
+
   cmd_args->verbose_count = 0;
   cmd_args->sdr_info = 0;
   cmd_args->quiet_readings = 0;

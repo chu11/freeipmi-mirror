@@ -146,17 +146,16 @@ void
 ipmi_ping_err_exit (char *fmt, ...)
 {
   char buf[IPMI_PING_MAX_ERR_LEN];
+  va_list ap;
 
-  if (!fmt || !_progname)
-    fprintf (stderr, "ipmi_ping_err_exit: improperly called\n");
-  else
-    {
-      va_list ap;
-      va_start (ap, fmt);
-      snprintf (buf, IPMI_PING_MAX_ERR_LEN, "%s: %s\n", _progname, fmt);
-      vfprintf (stderr, buf, ap);
-      va_end (ap);
-    }
+  assert (_progname);
+  assert (fmt);
+
+  va_start (ap, fmt);
+  snprintf (buf, IPMI_PING_MAX_ERR_LEN, "%s: %s\n", _progname, fmt);
+  vfprintf (stderr, buf, ap);
+  va_end (ap);
+
   _cleanup ();
   exit (1);
 }
@@ -175,6 +174,7 @@ static void
 _output_usage (const char *options)
 {
   assert (_progname);
+  assert (options);
 
   fprintf (stderr, "%s [OPTIONS] destination\n", _progname);
   if (strchr (options, 'c'))
@@ -215,6 +215,9 @@ _cmdline_parse (int argc,
 {
   char *endptr;
   int c;
+
+  assert (argc >= 0);
+  assert (argv);
 
   /* Turn off error messages */
   opterr = 0;
@@ -565,11 +568,9 @@ ipmi_ping_setup (int argc,
   char *ptr;
   char c;
 
-  if (argc <= 0 || !argv || !options)
-    {
-      fprintf (stderr, "ipmi_ping_setup: called improperly\n");
-      exit (1);
-    }
+  assert (argc >= 0);
+  assert (argv);
+  assert (options);
 
   /* Check for valid options */
   ptr = (char *)options;
@@ -594,11 +595,10 @@ ipmi_ping_loop (Ipmi_Ping_CreatePacket _create,
                 Ipmi_Ping_LatePacket _late,
                 Ipmi_Ping_EndResult _end)
 {
-  if (!_create || !_parse || !_late || !_end)
-    {
-      fprintf (stderr, "ipmi_ping_loop: called improperly\n");
-      exit (1);
-    }
+  assert (_create);
+  assert (_parse);
+  assert (_late);
+  assert (_end);
 
   _end_result = _end;
 

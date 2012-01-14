@@ -80,6 +80,8 @@ _config_file_bool (conffile_t cf,
 {
   int *bool;
 
+  assert (data);
+  assert (optionname);
   assert (option_ptr);
 
   bool = (int *)option_ptr;
@@ -99,6 +101,8 @@ _config_file_non_negative_int (conffile_t cf,
 {
   int *value;
 
+  assert (data);
+  assert (optionname);
   assert (option_ptr);
 
   value = (int *)option_ptr;
@@ -125,6 +129,8 @@ _config_file_positive_int (conffile_t cf,
 {
   int *value;
 
+  assert (data);
+  assert (optionname);
   assert (option_ptr);
 
   value = (int *)option_ptr;
@@ -151,6 +157,8 @@ _config_file_string (conffile_t cf,
 {
   char **value;
 
+  assert (data);
+  assert (optionname);
   assert (option_ptr);
 
   value = (char **)option_ptr;
@@ -177,6 +185,8 @@ _config_file_driver_type (conffile_t cf,
   struct common_cmd_args *cmd_args;
   int tmp;
 
+  assert (data);
+  assert (optionname);
   assert (option_ptr);
 
   cmd_args = (struct common_cmd_args *)option_ptr;
@@ -210,6 +220,8 @@ _config_file_username (conffile_t cf,
 {
   struct cmd_args_config *cmd_args_config;
 
+  assert (data);
+  assert (optionname);
   assert (option_ptr);
 
   cmd_args_config = (struct cmd_args_config *)option_ptr;
@@ -246,6 +258,8 @@ _config_file_password (conffile_t cf,
 {
   struct cmd_args_config *cmd_args_config;
 
+  assert (data);
+  assert (optionname);
   assert (option_ptr);
 
   cmd_args_config = (struct cmd_args_config *)option_ptr;
@@ -283,6 +297,8 @@ _config_file_k_g (conffile_t cf,
   struct cmd_args_config *cmd_args_config;
   int rv;
 
+  assert (data);
+  assert (optionname);
   assert (option_ptr);
 
   cmd_args_config = (struct cmd_args_config *)option_ptr;
@@ -317,6 +333,8 @@ _config_file_authentication_type (conffile_t cf,
   struct cmd_args_config *cmd_args_config;
   int tmp;
 
+  assert (data);
+  assert (optionname);
   assert (option_ptr);
 
   cmd_args_config = (struct cmd_args_config *)option_ptr;
@@ -349,6 +367,8 @@ _config_file_cipher_suite_id (conffile_t cf,
 {
   struct cmd_args_config *cmd_args_config;
 
+  assert (data);
+  assert (optionname);
   assert (option_ptr);
 
   cmd_args_config = (struct cmd_args_config *)option_ptr;
@@ -384,6 +404,8 @@ _config_file_privilege_level (conffile_t cf,
   struct cmd_args_config *cmd_args_config;
   int tmp;
 
+  assert (data);
+  assert (optionname);
   assert (option_ptr);
 
   cmd_args_config = (struct cmd_args_config *)option_ptr;
@@ -417,6 +439,8 @@ _config_file_workaround_flags (conffile_t cf,
   struct cmd_args_config *cmd_args_config;
   unsigned int i;
 
+  assert (data);
+  assert (optionname);
   assert (option_ptr);
 
   cmd_args_config = (struct cmd_args_config *)option_ptr;
@@ -471,6 +495,8 @@ _config_file_tool_option_username (conffile_t cf,
 {
   struct cmd_args_config *cmd_args_config;
 
+  assert (data);
+  assert (optionname);
   assert (option_ptr);
 
   cmd_args_config = (struct cmd_args_config *)option_ptr;
@@ -508,6 +534,8 @@ _config_file_tool_option_password (conffile_t cf,
 {
   struct cmd_args_config *cmd_args_config;
 
+  assert (data);
+  assert (optionname);
   assert (option_ptr);
 
   cmd_args_config = (struct cmd_args_config *)option_ptr;
@@ -546,6 +574,8 @@ _config_file_tool_option_k_g (conffile_t cf,
   struct cmd_args_config *cmd_args_config;
   int rv;
 
+  assert (data);
+  assert (optionname);
   assert (option_ptr);
 
   cmd_args_config = (struct cmd_args_config *)option_ptr;
@@ -581,6 +611,8 @@ _config_file_tool_option_authentication_type (conffile_t cf,
   struct cmd_args_config *cmd_args_config;
   int tmp;
 
+  assert (data);
+  assert (optionname);
   assert (option_ptr);
 
   cmd_args_config = (struct cmd_args_config *)option_ptr;
@@ -611,6 +643,8 @@ _config_file_tool_option_cipher_suite_id (conffile_t cf,
 {
   struct cmd_args_config *cmd_args_config;
 
+  assert (data);
+  assert (optionname);
   assert (option_ptr);
 
   cmd_args_config = (struct cmd_args_config *)option_ptr;
@@ -644,6 +678,8 @@ _config_file_tool_option_privilege_level (conffile_t cf,
   struct cmd_args_config *cmd_args_config;
   int tmp;
 
+  assert (data);
+  assert (optionname);
   assert (option_ptr);
 
   cmd_args_config = (struct cmd_args_config *)option_ptr;
@@ -675,6 +711,8 @@ _config_file_tool_option_workaround_flags (conffile_t cf,
   struct cmd_args_config *cmd_args_config;
   unsigned int i;
 
+  assert (data);
+  assert (optionname);
   assert (option_ptr);
 
   cmd_args_config = (struct cmd_args_config *)option_ptr;
@@ -727,6 +765,8 @@ _config_file_fanout (conffile_t cf,
 {
   struct hostrange_cmd_args *hostrange_args;
 
+  assert (data);
+  assert (optionname);
   assert (option_ptr);
 
   hostrange_args = (struct hostrange_cmd_args *)option_ptr;
@@ -793,6 +833,8 @@ _config_file_ipmi_sel_sensor_types (conffile_t cf,
 {
   struct config_file_data_ipmi_sel *config_file_data;
 
+  assert (data);
+  assert (optionname);
   assert (option_ptr);
 
   config_file_data = (struct config_file_data_ipmi_sel *)option_ptr;
@@ -815,6 +857,8 @@ _config_file_ipmi_sel_exclude_sensor_types (conffile_t cf,
 {
   struct config_file_data_ipmi_sel *config_file_data;
 
+  assert (data);
+  assert (optionname);
   assert (option_ptr);
 
   config_file_data = (struct config_file_data_ipmi_sel *)option_ptr;
@@ -874,6 +918,8 @@ _config_file_ipmi_sensors_record_ids (conffile_t cf,
 {
   struct config_file_data_ipmi_sensors *config_file_data;
 
+  assert (data);
+  assert (optionname);
   assert (option_ptr);
 
   config_file_data = (struct config_file_data_ipmi_sensors *)option_ptr;
@@ -896,6 +942,8 @@ _config_file_ipmi_sensors_exclude_record_ids (conffile_t cf,
 {
   struct config_file_data_ipmi_sensors *config_file_data;
 
+  assert (data);
+  assert (optionname);
   assert (option_ptr);
 
   config_file_data = (struct config_file_data_ipmi_sensors *)option_ptr;
@@ -918,6 +966,8 @@ _config_file_ipmi_sensors_sensor_types (conffile_t cf,
 {
   struct config_file_data_ipmi_sensors *config_file_data;
 
+  assert (data);
+  assert (optionname);
   assert (option_ptr);
 
   config_file_data = (struct config_file_data_ipmi_sensors *)option_ptr;
@@ -940,6 +990,8 @@ _config_file_ipmi_sensors_exclude_sensor_types (conffile_t cf,
 {
   struct config_file_data_ipmi_sensors *config_file_data;
 
+  assert (data);
+  assert (optionname);
   assert (option_ptr);
 
   config_file_data = (struct config_file_data_ipmi_sensors *)option_ptr;
@@ -962,6 +1014,8 @@ _config_file_ipmiconsole_escape_char (conffile_t cf,
 {
   char *chr;
 
+  assert (data);
+  assert (optionname);
   assert (option_ptr);
 
   chr = (char *)option_ptr;
@@ -983,6 +1037,8 @@ _config_file_ipmipower_ipmi_version (conffile_t cf,
   struct common_cmd_args *cmd_args;
   int tmp;
 
+  assert (data);
+  assert (optionname);
   assert (option_ptr);
 
   cmd_args = (struct common_cmd_args *)option_ptr;
@@ -1006,7 +1062,8 @@ _ignore_options (struct conffile_option *options, unsigned int options_len)
 {
   unsigned int i;
 
-  assert (options && options_len);
+  assert (options);
+  assert (options_len);
 
   for (i = 0; i < options_len; i++)
     options[i].option_type = CONFFILE_OPTION_IGNORE;
@@ -1020,7 +1077,9 @@ _copy_options (struct conffile_option *to_options,
 {
   unsigned int i;
 
-  assert (to_options && from_options && from_options_len);
+  assert (to_options);
+  assert (from_options);
+  assert (from_options_len);
 
   /* note: can't memcpy .. sigh .. wish I did this in C++ w/ a copy constructor */
   for (i = 0; i < from_options_len; i++)

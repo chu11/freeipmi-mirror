@@ -30,6 +30,7 @@
 #else /* !HAVE_ARGP_H */
 #include "freeipmi-argp.h"
 #endif /* !HAVE_ARGP_H */
+#include <assert.h>
 
 #include "ipmi-pef-config.h"
 #include "ipmi-pef-config-argp.h"
@@ -86,8 +87,12 @@ static struct argp cmdline_config_file_argp = { cmdline_options,
 static error_t
 cmdline_parse (int key, char *arg, struct argp_state *state)
 {
-  struct ipmi_pef_config_arguments *cmd_args = state->input;
+  struct ipmi_pef_config_arguments *cmd_args;
   error_t ret;
+
+  assert (state);
+  
+  cmd_args = state->input;
 
   switch (key)
     {
@@ -120,6 +125,8 @@ _ipmi_pef_config_config_file_parse (struct ipmi_pef_config_arguments *cmd_args)
 {
   struct config_file_data_ipmi_pef_config config_file_data;
   
+  assert (cmd_args);
+
   memset (&config_file_data,
           '\0',
           sizeof (struct config_file_data_ipmi_pef_config));
@@ -144,6 +151,8 @@ _ipmi_pef_config_config_file_parse (struct ipmi_pef_config_arguments *cmd_args)
 static void
 _ipmi_pef_config_args_validate (struct ipmi_pef_config_arguments *cmd_args)
 {
+  assert (cmd_args);
+
   if ((!cmd_args->config_args.action && !cmd_args->info)
       || (cmd_args->config_args.action && cmd_args->info)
       || cmd_args->config_args.action == -1)
@@ -163,9 +172,14 @@ _ipmi_pef_config_args_validate (struct ipmi_pef_config_arguments *cmd_args)
 void
 ipmi_pef_config_argp_parse (int argc, char **argv, struct ipmi_pef_config_arguments *cmd_args)
 {
+  assert (argc >= 0);
+  assert (argv);
+  assert (cmd_args);
+
   init_config_args (&(cmd_args->config_args));
   init_common_cmd_args_admin (&(cmd_args->config_args.common));
   init_hostrange_cmd_args (&(cmd_args->config_args.hostrange));
+
   cmd_args->info = 0;
 
   argp_parse (&cmdline_config_file_argp,

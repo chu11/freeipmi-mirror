@@ -473,11 +473,15 @@ _read_date_range (int *flag,
 static error_t
 cmdline_parse (int key, char *arg, struct argp_state *state)
 {
-  struct ipmi_sel_arguments *cmd_args = state->input;
+  struct ipmi_sel_arguments *cmd_args;
   error_t ret;
   char *endptr;
   char *tok;
   int value;
+
+  assert (state);
+  
+  cmd_args = state->input;
 
   switch (key)
     {
@@ -663,6 +667,8 @@ _ipmi_sel_config_file_parse (struct ipmi_sel_arguments *cmd_args)
 {
   struct config_file_data_ipmi_sel config_file_data;
 
+  assert (cmd_args);
+
   memset (&config_file_data,
           '\0',
           sizeof (struct config_file_data_ipmi_sel));
@@ -741,6 +747,8 @@ _ipmi_sel_config_file_parse (struct ipmi_sel_arguments *cmd_args)
 static void
 _ipmi_sel_args_validate (struct ipmi_sel_arguments *cmd_args)
 {
+  assert (cmd_args);
+
   if (cmd_args->sensor_types_length)
     {
       if (valid_sensor_types (NULL,
@@ -765,9 +773,14 @@ ipmi_sel_argp_parse (int argc, char **argv, struct ipmi_sel_arguments *cmd_args)
 {
   unsigned int i;
 
+  assert (argc >= 0);
+  assert (argv);
+  assert (cmd_args);
+
   init_common_cmd_args_operator (&(cmd_args->common));
   init_sdr_cmd_args (&(cmd_args->sdr));
   init_hostrange_cmd_args (&(cmd_args->hostrange));
+
   cmd_args->verbose_count = 0;
   cmd_args->info = 0;
   cmd_args->display = 0;

@@ -1,5 +1,9 @@
 2012-01-13  Albert Chu <chu11@llnl.gov>
 
+	* Audit and add asserts appropriately to large number of functions.
+	
+2012-01-13  Albert Chu <chu11@llnl.gov>
+
 	* doc/solstatediagram.dot: SOL State Diagram documentation.
 	
 2012-01-13  Albert Chu <chu11@llnl.gov>

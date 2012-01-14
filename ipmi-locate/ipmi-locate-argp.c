@@ -27,6 +27,7 @@
 #else /* !HAVE_ARGP_H */
 #include "freeipmi-argp.h"
 #endif /* !HAVE_ARGP_H */
+#include <assert.h>
 
 #include "ipmi-locate_.h"
 #include "ipmi-locate-argp.h"
@@ -64,7 +65,11 @@ static struct argp cmdline_argp = { cmdline_options,
 static error_t
 cmdline_parse (int key, char *arg, struct argp_state *state)
 {
-  struct ipmi_locate_arguments *cmd_args = state->input;
+  struct ipmi_locate_arguments *cmd_args;
+
+  assert (state);
+  
+  cmd_args = state->input;
 
   switch (key)
     {
@@ -87,6 +92,10 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 void
 ipmi_locate_argp_parse (int argc, char **argv, struct ipmi_locate_arguments *cmd_args)
 {
+  assert (argc >= 0);
+  assert (argv);
+  assert (cmd_args);
+
   cmd_args->defaults = 0;
 
   argp_parse (&cmdline_argp,

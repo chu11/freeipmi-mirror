@@ -31,6 +31,7 @@
 #include "freeipmi-argp.h"
 #endif /* !HAVE_ARGP_H */
 #include <limits.h>
+#include <assert.h>
 #include <errno.h>
 
 #include "ipmi-pet.h"
@@ -113,10 +114,14 @@ static struct argp cmdline_config_file_argp = { cmdline_options,
 static error_t
 cmdline_parse (int key, char *arg, struct argp_state *state)
 {
-  struct ipmi_pet_arguments *cmd_args = state->input;
+  struct ipmi_pet_arguments *cmd_args;
   char *endptr;
   unsigned long tmp;
   error_t ret;
+
+  assert (state);
+  
+  cmd_args = state->input;
 
   switch (key)
     {
@@ -284,6 +289,8 @@ _ipmi_pet_config_file_parse (struct ipmi_pet_arguments *cmd_args)
 {
   struct config_file_data_ipmi_pet config_file_data;
 
+  assert (cmd_args);
+
   memset (&config_file_data,
           '\0',
           sizeof (struct config_file_data_ipmi_pet));
@@ -326,6 +333,8 @@ _ipmi_pet_config_file_parse (struct ipmi_pet_arguments *cmd_args)
 static void
 _ipmi_pet_args_validate (struct ipmi_pet_arguments *cmd_args)
 {
+  assert (cmd_args);
+
   if (cmd_args->pet_acknowledge
       && !cmd_args->common.hostname)
     {
@@ -346,8 +355,13 @@ _ipmi_pet_args_validate (struct ipmi_pet_arguments *cmd_args)
 void
 ipmi_pet_argp_parse (int argc, char **argv, struct ipmi_pet_arguments *cmd_args)
 {
+  assert (argc >= 0);
+  assert (argv);
+  assert (cmd_args);
+
   init_common_cmd_args_operator (&(cmd_args->common));
   init_sdr_cmd_args (&(cmd_args->sdr));
+
   cmd_args->verbose_count = 0;
   cmd_args->pet_acknowledge = 0;
   cmd_args->cmd_file = NULL;

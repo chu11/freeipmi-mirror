@@ -117,8 +117,12 @@ static struct argp cmdline_config_file_argp = { cmdline_options,
 static error_t
 cmdline_parse (int key, char *arg, struct argp_state *state)
 {
-  struct ipmiconsole_arguments *cmd_args = state->input;
+  struct ipmiconsole_arguments *cmd_args;
   error_t ret;
+
+  assert (state);
+  
+  cmd_args = state->input;
 
   switch (key)
     {
@@ -167,6 +171,8 @@ _ipmiconsole_config_file_parse (struct ipmiconsole_arguments *cmd_args)
 {
   struct config_file_data_ipmiconsole config_file_data;
 
+  assert (cmd_args);
+
   memset (&config_file_data,
           '\0',
           sizeof (struct config_file_data_ipmiconsole));
@@ -214,6 +220,8 @@ _ipmiconsole_config_file_parse (struct ipmiconsole_arguments *cmd_args)
 static void
 _ipmiconsole_args_validate (struct ipmiconsole_arguments *cmd_args)
 {
+  assert (cmd_args);
+
   if (!cmd_args->common.hostname)
     err_exit ("hostname input required");
 }
@@ -221,7 +229,12 @@ _ipmiconsole_args_validate (struct ipmiconsole_arguments *cmd_args)
 void
 ipmiconsole_argp_parse (int argc, char **argv, struct ipmiconsole_arguments *cmd_args)
 {
+  assert (argc >= 0);
+  assert (argv);
+  assert (cmd_args);
+
   init_common_cmd_args_admin (&(cmd_args->common));
+
   cmd_args->escape_char = '&';
   cmd_args->dont_steal = 0;
   cmd_args->deactivate = 0;

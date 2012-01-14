@@ -42,6 +42,7 @@
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
+#include <assert.h>
 #include <errno.h>
 
 #include "ipmi-fru.h"
@@ -106,10 +107,14 @@ static struct argp cmdline_config_file_argp = { cmdline_options,
 static error_t
 cmdline_parse (int key, char *arg, struct argp_state *state)
 {
-  struct ipmi_fru_arguments *cmd_args = state->input;
+  struct ipmi_fru_arguments *cmd_args;
   error_t ret;
   char *endptr;
   int tmp;
+
+  assert (state);
+  
+  cmd_args = state->input;
 
   switch (key)
     {
@@ -165,6 +170,8 @@ _ipmi_fru_config_file_parse (struct ipmi_fru_arguments *cmd_args)
 {
   struct config_file_data_ipmi_fru config_file_data;
 
+  assert (cmd_args);
+
   memset (&config_file_data,
           '\0',
           sizeof (struct config_file_data_ipmi_fru));
@@ -193,9 +200,14 @@ _ipmi_fru_config_file_parse (struct ipmi_fru_arguments *cmd_args)
 void
 ipmi_fru_argp_parse (int argc, char **argv, struct ipmi_fru_arguments *cmd_args)
 {
+  assert (argc >= 0);
+  assert (argv);
+  assert (cmd_args);
+
   init_common_cmd_args_user (&(cmd_args->common));
   init_sdr_cmd_args (&(cmd_args->sdr));
   init_hostrange_cmd_args (&(cmd_args->hostrange));
+
   cmd_args->device_id = 0;
   cmd_args->device_id_set = 0;
   cmd_args->verbose_count = 0;

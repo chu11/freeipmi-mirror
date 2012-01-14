@@ -30,6 +30,7 @@
 #else /* !HAVE_ARGP_H */
 #include "freeipmi-argp.h"
 #endif /* !HAVE_ARGP_H */
+#include <assert.h>
 
 #include "ipmi-chassis-config.h"
 #include "ipmi-chassis-config-argp.h"
@@ -82,8 +83,12 @@ static struct argp cmdline_config_file_argp = { cmdline_options,
 static error_t
 cmdline_parse (int key, char *arg, struct argp_state *state)
 {
-  struct ipmi_chassis_config_arguments *cmd_args = state->input;
+  struct ipmi_chassis_config_arguments *cmd_args;
   error_t ret;
+
+  assert (state);
+  
+  cmd_args = state->input;
 
   switch (key)
     {
@@ -110,6 +115,8 @@ _ipmi_chassis_config_config_file_parse (struct ipmi_chassis_config_arguments *cm
 {
   struct config_file_data_ipmi_chassis_config config_file_data;
 
+  assert (cmd_args);
+
   memset (&config_file_data,
           '\0',
           sizeof (struct config_file_data_ipmi_chassis_config));
@@ -134,6 +141,8 @@ _ipmi_chassis_config_config_file_parse (struct ipmi_chassis_config_arguments *cm
 static void
 _ipmi_chassis_config_config_args_validate (struct ipmi_chassis_config_arguments *cmd_args)
 {
+  assert (cmd_args);
+
   if (!cmd_args->config_args.action || cmd_args->config_args.action == -1)
     {
       fprintf (stderr,
@@ -147,6 +156,10 @@ _ipmi_chassis_config_config_args_validate (struct ipmi_chassis_config_arguments 
 void
 ipmi_chassis_config_argp_parse (int argc, char **argv, struct ipmi_chassis_config_arguments *cmd_args)
 {
+  assert (argc >= 0);
+  assert (argv);
+  assert (cmd_args);
+
   init_config_args (&(cmd_args->config_args));
   init_common_cmd_args_admin (&(cmd_args->config_args.common));
   init_hostrange_cmd_args (&(cmd_args->config_args.hostrange));

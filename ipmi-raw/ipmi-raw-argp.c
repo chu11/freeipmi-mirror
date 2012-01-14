@@ -30,6 +30,7 @@
 #else /* !HAVE_ARGP_H */
 #include "freeipmi-argp.h"
 #endif /* !HAVE_ARGP_H */
+#include <assert.h>
 #include <errno.h>
 
 #include "ipmi-raw.h"
@@ -90,10 +91,14 @@ static struct argp cmdline_config_file_argp = { cmdline_options,
 static error_t
 cmdline_parse (int key, char *arg, struct argp_state *state)
 {
-  struct ipmi_raw_arguments *cmd_args = state->input;
+  struct ipmi_raw_arguments *cmd_args;
   char *endptr;
   int value;
   error_t ret;
+
+  assert (state);
+  
+  cmd_args = state->input;
 
   switch (key)
     {
@@ -196,6 +201,8 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 static void
 _ipmi_raw_config_file_parse (struct ipmi_raw_arguments *cmd_args)
 {
+  assert (cmd_args);
+
   if (config_file_parse (cmd_args->common.config_file,
                          0,
                          &(cmd_args->common),
@@ -213,6 +220,8 @@ _ipmi_raw_config_file_parse (struct ipmi_raw_arguments *cmd_args)
 static void
 _ipmi_raw_args_validate (struct ipmi_raw_arguments *cmd_args)
 {
+  assert (cmd_args);
+
   if ((cmd_args->channel_number
        && !cmd_args->slave_address)
       || (!cmd_args->channel_number
@@ -226,6 +235,10 @@ _ipmi_raw_args_validate (struct ipmi_raw_arguments *cmd_args)
 void
 ipmi_raw_argp_parse (int argc, char **argv, struct ipmi_raw_arguments *cmd_args)
 {
+  assert (argc >= 0);
+  assert (argv);
+  assert (cmd_args);
+
   init_common_cmd_args_admin (&(cmd_args->common));
   init_hostrange_cmd_args (&(cmd_args->hostrange));
 

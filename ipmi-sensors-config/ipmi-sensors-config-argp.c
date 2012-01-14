@@ -30,6 +30,7 @@
 #else /* !HAVE_ARGP_H */
 #include "freeipmi-argp.h"
 #endif /* !HAVE_ARGP_H */
+#include <assert.h>
 
 #include "ipmi-sensors-config.h"
 #include "ipmi-sensors-config-argp.h"
@@ -83,8 +84,12 @@ static struct argp cmdline_config_file_argp = { cmdline_options,
 static error_t
 cmdline_parse (int key, char *arg, struct argp_state *state)
 {
-  struct ipmi_sensors_config_arguments *cmd_args = state->input;
+  struct ipmi_sensors_config_arguments *cmd_args;
   error_t ret;
+
+  assert (state);
+  
+  cmd_args = state->input;
 
   switch (key)
     {
@@ -113,6 +118,8 @@ _ipmi_sensors_config_config_file_parse (struct ipmi_sensors_config_arguments *cm
 {
   struct config_file_data_ipmi_sensors_config config_file_data;
 
+  assert (cmd_args);
+
   memset (&config_file_data,
           '\0',
           sizeof (struct config_file_data_ipmi_sensors_config));
@@ -137,6 +144,8 @@ _ipmi_sensors_config_config_file_parse (struct ipmi_sensors_config_arguments *cm
 static void
 _ipmi_sensors_config_config_args_validate (struct ipmi_sensors_config_arguments *cmd_args)
 {
+  assert (cmd_args);
+
   if ((!cmd_args->config_args.action && !cmd_args->sdr.flush_cache)
       || (cmd_args->config_args.action && cmd_args->sdr.flush_cache)
       || cmd_args->config_args.action == -1)
@@ -156,6 +165,10 @@ _ipmi_sensors_config_config_args_validate (struct ipmi_sensors_config_arguments 
 void
 ipmi_sensors_config_argp_parse (int argc, char **argv, struct ipmi_sensors_config_arguments *cmd_args)
 {
+  assert (argc >= 0);
+  assert (argv);
+  assert (cmd_args);
+
   init_config_args (&(cmd_args->config_args));
   init_common_cmd_args_operator (&(cmd_args->config_args.common));
   init_hostrange_cmd_args (&(cmd_args->config_args.hostrange));

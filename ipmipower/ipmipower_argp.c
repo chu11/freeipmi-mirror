@@ -149,10 +149,14 @@ cmdline_parse (int key,
                char *arg,
                struct argp_state *state)
 {
-  struct ipmipower_arguments *cmd_args = state->input;
+  struct ipmipower_arguments *cmd_args;
   char *endptr;
   error_t ret;
   int tmp = 0;
+
+  assert (state);
+  
+  cmd_args = state->input;
 
   switch (key)
     {
@@ -308,6 +312,8 @@ _ipmipower_config_file_parse (struct ipmipower_arguments *cmd_args)
 {
   struct config_file_data_ipmipower config_file_data;
 
+  assert (cmd_args);
+
   memset (&config_file_data,
           '\0',
           sizeof (struct config_file_data_ipmipower));
@@ -365,6 +371,8 @@ _ipmipower_config_file_parse (struct ipmipower_arguments *cmd_args)
 static void
 _ipmipower_args_validate (struct ipmipower_arguments *cmd_args)
 {
+  assert (cmd_args);
+
   if (cmd_args->retransmission_wait_timeout > cmd_args->common.session_timeout)
     {
       fprintf (stderr, "retransmission wait timeout larger than session timeout\n");
@@ -393,6 +401,10 @@ _ipmipower_args_validate (struct ipmipower_arguments *cmd_args)
 void
 ipmipower_argp_parse (int argc, char **argv, struct ipmipower_arguments *cmd_args)
 {
+  assert (argc >= 0);
+  assert (argv);
+  assert (cmd_args);
+
   init_common_cmd_args_operator (&(cmd_args->common));
   init_hostrange_cmd_args (&(cmd_args->hostrange));
 

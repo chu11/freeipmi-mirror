@@ -39,6 +39,7 @@
 #else /* !HAVE_ARGP_H */
 #include "freeipmi-argp.h"
 #endif /* !HAVE_ARGP_H */
+#include <assert.h>
 #include <errno.h>
 
 #include "bmc-watchdog.h"
@@ -290,10 +291,14 @@ _usage (struct bmc_watchdog_arguments *cmd_args)
 static error_t
 cmdline_parse (int key, char *arg, struct argp_state *state)
 {
-  struct bmc_watchdog_arguments *cmd_args = state->input;
+  struct bmc_watchdog_arguments *cmd_args;
   error_t ret;
   char *endptr;
   int tmp;
+
+  assert (state);
+  
+  cmd_args = state->input;
 
   switch (key)
     {
@@ -555,6 +560,8 @@ _bmc_watchdog_args_validate (struct bmc_watchdog_arguments *cmd_args)
 {
   int count;
 
+  assert (cmd_args);
+
   if (cmd_args->help)
     _usage (cmd_args);
 
@@ -620,7 +627,12 @@ _bmc_watchdog_args_validate (struct bmc_watchdog_arguments *cmd_args)
 void
 bmc_watchdog_argp_parse (int argc, char **argv, struct bmc_watchdog_arguments *cmd_args)
 {
+  assert (argc >= 0);
+  assert (argv);
+  assert (cmd_args);
+
   init_common_cmd_args_user (&(cmd_args->common));
+
   cmd_args->set = 0;
   cmd_args->get = 0;
   cmd_args->reset = 0;

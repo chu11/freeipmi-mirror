@@ -30,6 +30,7 @@
 #else /* !HAVE_ARGP_H */
 #include "freeipmi-argp.h"
 #endif /* !HAVE_ARGP_H */
+#include <assert.h>
 #include <errno.h>
 
 #include <freeipmi/freeipmi.h>
@@ -133,8 +134,12 @@ static error_t boot_flag_parse (int key, char *arg, struct argp_state *state);
 static error_t
 boot_flag_parse (int key, char *arg, struct argp_state *state)
 {
-  struct ipmi_chassis_arguments *cmd_args = state->input;
+  struct ipmi_chassis_arguments *cmd_args;
   uint8_t value = 0;
+
+  assert (state);
+  
+  cmd_args = state->input;
 
   switch (key)
     {
@@ -320,8 +325,12 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 {
   error_t ret;
   char *endptr = NULL;
-  struct ipmi_chassis_arguments *cmd_args = state->input;
+  struct ipmi_chassis_arguments *cmd_args;
   int tmp;
+
+  assert (state);
+  
+  cmd_args = state->input;
 
   switch (key)
     {
@@ -469,6 +478,8 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 static void
 _ipmi_chassis_config_file_parse (struct ipmi_chassis_arguments *cmd_args)
 {
+  assert (cmd_args);
+
   if (config_file_parse (cmd_args->common.config_file,
                          0,
                          &(cmd_args->common),
@@ -486,6 +497,8 @@ _ipmi_chassis_config_file_parse (struct ipmi_chassis_arguments *cmd_args)
 static void
 _ipmi_chassis_args_validate (struct ipmi_chassis_arguments *cmd_args)
 {
+  assert (cmd_args);
+
   if (!cmd_args->get_chassis_capabilities
       && !cmd_args->get_chassis_status
       && !cmd_args->chassis_control
@@ -541,6 +554,10 @@ ipmi_chassis_argp_parse (int argc,
                          char **argv,
                          struct ipmi_chassis_arguments *cmd_args)
 {
+  assert (argc >= 0);
+  assert (argv);
+  assert (cmd_args);
+
   init_common_cmd_args_admin (&(cmd_args->common));
   init_hostrange_cmd_args (&(cmd_args->hostrange));
 

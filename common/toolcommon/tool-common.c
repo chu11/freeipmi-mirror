@@ -80,6 +80,11 @@ ipmi_open (const char *progname,
   ipmi_ctx_t ipmi_ctx = NULL;
   unsigned int workaround_flags = 0;
 
+  assert (progname);
+  assert (cmd_args);
+  assert (errmsg);
+  assert (errmsglen);
+
   if (!(ipmi_ctx = ipmi_ctx_create ()))
     {
       snprintf (errmsg,

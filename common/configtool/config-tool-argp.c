@@ -97,6 +97,8 @@ config_parse_opt (int key,
   char *key_name = NULL;
   char *value = NULL;
 
+  assert (config_args);
+
   switch (key)
     {
     case CONFIG_ARGP_CHECKOUT_KEY:

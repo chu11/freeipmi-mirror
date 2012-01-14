@@ -30,6 +30,7 @@
 #else /* !HAVE_ARGP_H */
 #include "freeipmi-argp.h"
 #endif /* !HAVE_ARGP_H */
+#include <assert.h>
 
 #include "bmc-info.h"
 #include "bmc-info-argp.h"
@@ -95,8 +96,12 @@ static struct argp cmdline_config_file_argp = { cmdline_options,
 static error_t
 cmdline_parse (int key, char *arg, struct argp_state *state)
 {
-  struct bmc_info_arguments *cmd_args = state->input;
+  struct bmc_info_arguments *cmd_args;
   error_t ret;
+
+  assert (state);
+  
+  cmd_args = state->input;
 
   switch (key)
     {
@@ -138,6 +143,8 @@ _bmc_info_config_file_parse (struct bmc_info_arguments *cmd_args)
 {
   struct config_file_data_bmc_info config_file_data;
 
+  assert (cmd_args);
+
   memset (&config_file_data,
           '\0',
           sizeof (struct config_file_data_bmc_info));
@@ -162,6 +169,10 @@ _bmc_info_config_file_parse (struct bmc_info_arguments *cmd_args)
 void
 bmc_info_argp_parse (int argc, char **argv, struct bmc_info_arguments *cmd_args)
 {
+  assert (argc >= 0);
+  assert (argv);
+  assert (cmd_args);
+
   init_common_cmd_args_user (&(cmd_args->common));
   init_hostrange_cmd_args (&(cmd_args->hostrange));
 

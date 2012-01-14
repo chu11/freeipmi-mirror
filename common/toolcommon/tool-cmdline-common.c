@@ -32,6 +32,7 @@
 #include <error.h>
 #endif /* HAVE_ERROR_H */
 #include <assert.h>
+#include <errno.h>
 
 #include <freeipmi/freeipmi.h>
 
@@ -44,7 +45,11 @@
 error_t
 cmdline_config_file_parse (int key, char *arg, struct argp_state *state)
 {
-  struct common_cmd_args *cmd_args = state->input;
+  struct common_cmd_args *cmd_args;
+
+  assert (state);
+
+  cmd_args = state->input;
 
   switch (key)
     {
@@ -95,6 +100,8 @@ common_parse_opt (int key,
   int tmp;
   unsigned int outofband_flags, outofband_2_0_flags, inband_flags, section_flags;
   int n;
+
+  assert (cmd_args);
 
   switch (key)
     {
@@ -365,6 +372,8 @@ sdr_parse_opt (int key,
                char *arg,
                struct sdr_cmd_args *sdr_cmd_args)
 {
+  assert (sdr_cmd_args);
+
   switch (key)
     {
     case ARGP_FLUSH_CACHE_KEY:
@@ -410,6 +419,8 @@ hostrange_parse_opt (int key,
   char *endptr;
   int tmp;
 
+  assert (hostrange_cmd_args);
+
   switch (key)
     {
     case ARGP_BUFFER_OUTPUT_KEY:
@@ -447,6 +458,8 @@ hostrange_parse_opt (int key,
 static void
 _init_common_cmd_args (struct common_cmd_args *cmd_args)
 {
+  assert (cmd_args);
+
   cmd_args->disable_auto_probe = 0;
   cmd_args->driver_type = IPMI_DEVICE_UNKNOWN;
   cmd_args->driver_type_outofband_only = 0;
@@ -474,6 +487,8 @@ _init_common_cmd_args (struct common_cmd_args *cmd_args)
 void
 init_common_cmd_args_user (struct common_cmd_args *cmd_args)
 {
+  assert (cmd_args);
+
   _init_common_cmd_args (cmd_args);
   cmd_args->privilege_level = IPMI_PRIVILEGE_LEVEL_USER;
 }
@@ -481,6 +496,8 @@ init_common_cmd_args_user (struct common_cmd_args *cmd_args)
 void
 init_common_cmd_args_operator (struct common_cmd_args *cmd_args)
 {
+  assert (cmd_args);
+
   _init_common_cmd_args (cmd_args);
   cmd_args->privilege_level = IPMI_PRIVILEGE_LEVEL_OPERATOR;
 }
@@ -495,6 +512,8 @@ init_common_cmd_args_admin (struct common_cmd_args *cmd_args)
 void
 verify_common_cmd_args_inband (struct common_cmd_args *cmd_args)
 {
+  assert (cmd_args);
+
   if (cmd_args->driver_device)
     {
       if (access (cmd_args->driver_device, R_OK|W_OK) < 0)
@@ -510,6 +529,8 @@ verify_common_cmd_args_inband (struct common_cmd_args *cmd_args)
 void
 verify_common_cmd_args_outofband (struct common_cmd_args *cmd_args, int check_hostname)
 {
+  assert (cmd_args);
+
   if (check_hostname
       && (cmd_args->driver_type == IPMI_DEVICE_LAN
           || cmd_args->driver_type == IPMI_DEVICE_LAN_2_0)
@@ -563,6 +584,8 @@ verify_common_cmd_args_outofband (struct common_cmd_args *cmd_args, int check_ho
 void
 verify_common_cmd_args (struct common_cmd_args *cmd_args)
 {
+  assert (cmd_args);
+
   verify_common_cmd_args_inband (cmd_args);
   verify_common_cmd_args_outofband (cmd_args, 1);
 }
@@ -570,6 +593,8 @@ verify_common_cmd_args (struct common_cmd_args *cmd_args)
 void
 init_sdr_cmd_args (struct sdr_cmd_args *sdr_cmd_args)
 {
+  assert (sdr_cmd_args);
+
   sdr_cmd_args->flush_cache = 0;
   sdr_cmd_args->quiet_cache = 0;
   sdr_cmd_args->sdr_cache_directory = NULL;
@@ -581,6 +606,8 @@ init_sdr_cmd_args (struct sdr_cmd_args *sdr_cmd_args)
 void
 verify_sdr_cmd_args (struct sdr_cmd_args *sdr_cmd_args)
 {
+  assert (sdr_cmd_args);
+
   if (sdr_cmd_args->sdr_cache_directory)
     {
       if (access (sdr_cmd_args->sdr_cache_directory, R_OK|W_OK|X_OK) < 0)
@@ -595,6 +622,8 @@ verify_sdr_cmd_args (struct sdr_cmd_args *sdr_cmd_args)
 void
 init_hostrange_cmd_args (struct hostrange_cmd_args *hostrange_cmd_args)
 {
+  assert (hostrange_cmd_args);
+
   hostrange_cmd_args->buffer_output = 0;
   hostrange_cmd_args->consolidate_output = 0;
   hostrange_cmd_args->fanout = 0;
@@ -605,6 +634,8 @@ init_hostrange_cmd_args (struct hostrange_cmd_args *hostrange_cmd_args)
 void
 verify_hostrange_cmd_args (struct hostrange_cmd_args *hostrange_cmd_args)
 {
+  assert (hostrange_cmd_args);
+
   if (hostrange_cmd_args->buffer_output && hostrange_cmd_args->consolidate_output)
     {
       fprintf (stderr, "cannot buffer and consolidate hostrange output, please select only one\n");
