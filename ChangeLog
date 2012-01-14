@@ -1,6 +1,10 @@
 2012-01-13  Albert Chu <chu11@llnl.gov>
 
 	* Audit and add asserts appropriately to large number of functions.
+
+	* common/configtool/: All config tools support hostranges, so
+	replace PSTDOUT_PRINTF with pstdout_printf, PSTDOUT_FPRINTF with
+	pstdout_fprintf, and PSTDOUT_PERROR with pstdout_perror.
 	
 2012-01-13  Albert Chu <chu11@llnl.gov>
 

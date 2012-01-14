@@ -327,13 +327,13 @@ config_ipv4_address_string2int (pstdout_state_t pstate,
                      &b3,
                      &b4)) < 0)
     {
-      PSTDOUT_PERROR (pstate, "sscanf");
+      pstdout_perror (pstate, "sscanf");
       return (-1);
     }
 
   if (ret != 4)
     {
-      PSTDOUT_FPRINTF (pstate,
+      pstdout_fprintf (pstate,
                        stderr,
                        "config_ipv4_address_string2int: Invalid src input: %s\n",
                        src);
@@ -370,13 +370,13 @@ config_mac_address_string2int (pstdout_state_t pstate,
                      &b5,
                      &b6)) < 0)
     {
-      PSTDOUT_PERROR (pstate, "sscanf");
+      pstdout_perror (pstate, "sscanf");
       return (-1);
     }
 
   if (ret != 6)
     {
-      PSTDOUT_FPRINTF (pstate,
+      pstdout_fprintf (pstate,
                        stderr,
                        "config_mac_address_string2int: Invalid src input: %s\n",
                        src);

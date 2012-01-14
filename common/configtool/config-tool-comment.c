@@ -132,7 +132,7 @@ config_section_comments (pstdout_state_t pstate,
   if (!(inbuf = strdup (in)))
     goto cleanup;
 
-  PSTDOUT_FPRINTF (pstate,
+  pstdout_fprintf (pstate,
                    fp,
                    "#\n");
 
@@ -147,11 +147,11 @@ config_section_comments (pstdout_state_t pstate,
                        buf,
                        FORMAT_COMMENT_BUFLEN) < 0)
     goto cleanup;
-  PSTDOUT_FPRINTF (pstate,
+  pstdout_fprintf (pstate,
                    fp,
                    "%s",
                    buf);
-  PSTDOUT_FPRINTF (pstate,
+  pstdout_fprintf (pstate,
                    fp,
                    "#\n");
 
@@ -163,11 +163,11 @@ config_section_comments (pstdout_state_t pstate,
                            buf,
                            FORMAT_COMMENT_BUFLEN) < 0)
         goto cleanup;
-      PSTDOUT_FPRINTF (pstate,
+      pstdout_fprintf (pstate,
                        fp,
                        "%s",
                        buf);
-      PSTDOUT_FPRINTF (pstate,
+      pstdout_fprintf (pstate,
                        fp,
                        "#\n");
 

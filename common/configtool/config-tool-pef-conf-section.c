@@ -73,7 +73,7 @@ _get_pef_control (pstdout_state_t pstate,
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_pef_configuration_parameters_pef_control_rs)))
     {
-      PSTDOUT_FPRINTF (pstate,
+      pstdout_fprintf (pstate,
                        stderr,
                        "fiid_obj_create: %s",
                        strerror (errno));
@@ -89,7 +89,7 @@ _get_pef_control (pstdout_state_t pstate,
       config_err_t ret;
 
       if (cmd_args->common.debug)
-        PSTDOUT_FPRINTF (pstate,
+        pstdout_fprintf (pstate,
                          stderr,
                          "ipmi_cmd_get_pef_configuration_parameters_pef_control: %s\n",
                          ipmi_ctx_errormsg (ipmi_ctx));
@@ -104,7 +104,7 @@ _get_pef_control (pstdout_state_t pstate,
 
   if (FIID_OBJ_GET (obj_cmd_rs, "pef", &val) < 0)
     {
-      PSTDOUT_FPRINTF (pstate,
+      pstdout_fprintf (pstate,
                        stderr,
                        "fiid_obj_get: 'pef': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
@@ -114,7 +114,7 @@ _get_pef_control (pstdout_state_t pstate,
 
   if (FIID_OBJ_GET (obj_cmd_rs, "pef_event_messages", &val) < 0)
     {
-      PSTDOUT_FPRINTF (pstate,
+      pstdout_fprintf (pstate,
                        stderr,
                        "fiid_obj_get: 'pef_event_messages': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
@@ -124,7 +124,7 @@ _get_pef_control (pstdout_state_t pstate,
 
   if (FIID_OBJ_GET (obj_cmd_rs, "pef_startup_delay", &val) < 0)
     {
-      PSTDOUT_FPRINTF (pstate,
+      pstdout_fprintf (pstate,
                        stderr,
                        "fiid_obj_get: 'pef_startup_delay': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
@@ -134,7 +134,7 @@ _get_pef_control (pstdout_state_t pstate,
 
   if (FIID_OBJ_GET (obj_cmd_rs, "pef_alert_startup_delay", &val) < 0)
     {
-      PSTDOUT_FPRINTF (pstate,
+      pstdout_fprintf (pstate,
                        stderr,
                        "fiid_obj_get: 'pef_alert_startup_delay': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
@@ -164,7 +164,7 @@ _set_pef_control (pstdout_state_t pstate,
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_pef_configuration_parameters_rs)))
     {
-      PSTDOUT_FPRINTF (pstate,
+      pstdout_fprintf (pstate,
                        stderr,
                        "fiid_obj_create: %s",
                        strerror (errno));
@@ -181,7 +181,7 @@ _set_pef_control (pstdout_state_t pstate,
       config_err_t ret;
 
       if (cmd_args->common.debug)
-        PSTDOUT_FPRINTF (pstate,
+        pstdout_fprintf (pstate,
                          stderr,
                          "ipmi_cmd_set_pef_configuration_parameters_pef_control: %s\n",
                          ipmi_ctx_errormsg (ipmi_ctx));
@@ -422,7 +422,7 @@ _get_pef_action_global_control (pstdout_state_t pstate,
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_pef_configuration_parameters_pef_action_global_control_rs)))
     {
-      PSTDOUT_FPRINTF (pstate,
+      pstdout_fprintf (pstate,
                        stderr,
                        "fiid_obj_create: %s",
                        strerror (errno));
@@ -438,7 +438,7 @@ _get_pef_action_global_control (pstdout_state_t pstate,
       config_err_t ret;
 
       if (cmd_args->common.debug)
-        PSTDOUT_FPRINTF (pstate,
+        pstdout_fprintf (pstate,
                          stderr,
                          "ipmi_cmd_get_pef_configuration_parameters_pef_action_global_control: %s\n",
                          ipmi_ctx_errormsg (ipmi_ctx));
@@ -453,7 +453,7 @@ _get_pef_action_global_control (pstdout_state_t pstate,
 
   if (FIID_OBJ_GET (obj_cmd_rs, "alert_action", &val) < 0)
     {
-      PSTDOUT_FPRINTF (pstate,
+      pstdout_fprintf (pstate,
                        stderr,
                        "fiid_obj_get: 'alert_action': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
@@ -463,7 +463,7 @@ _get_pef_action_global_control (pstdout_state_t pstate,
 
   if (FIID_OBJ_GET (obj_cmd_rs, "power_down_action", &val) < 0)
     {
-      PSTDOUT_FPRINTF (pstate,
+      pstdout_fprintf (pstate,
                        stderr,
                        "fiid_obj_get: 'power_down_action': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
@@ -473,7 +473,7 @@ _get_pef_action_global_control (pstdout_state_t pstate,
 
   if (FIID_OBJ_GET (obj_cmd_rs, "reset_action", &val) < 0)
     {
-      PSTDOUT_FPRINTF (pstate,
+      pstdout_fprintf (pstate,
                        stderr,
                        "fiid_obj_get: 'reset_action': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
@@ -483,7 +483,7 @@ _get_pef_action_global_control (pstdout_state_t pstate,
 
   if (FIID_OBJ_GET (obj_cmd_rs, "power_cycle_action", &val) < 0)
     {
-      PSTDOUT_FPRINTF (pstate,
+      pstdout_fprintf (pstate,
                        stderr,
                        "fiid_obj_get: 'power_cycle_action': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
@@ -493,7 +493,7 @@ _get_pef_action_global_control (pstdout_state_t pstate,
 
   if (FIID_OBJ_GET (obj_cmd_rs, "oem_action", &val) < 0)
     {
-      PSTDOUT_FPRINTF (pstate,
+      pstdout_fprintf (pstate,
                        stderr,
                        "fiid_obj_get: 'oem_action': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
@@ -503,7 +503,7 @@ _get_pef_action_global_control (pstdout_state_t pstate,
 
   if (FIID_OBJ_GET (obj_cmd_rs, "diagnostic_interrupt", &val) < 0)
     {
-      PSTDOUT_FPRINTF (pstate,
+      pstdout_fprintf (pstate,
                        stderr,
                        "fiid_obj_get: 'diagnostic_interrupt': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
@@ -533,7 +533,7 @@ _set_pef_action_global_control (pstdout_state_t pstate,
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_pef_configuration_parameters_rs)))
     {
-      PSTDOUT_FPRINTF (pstate,
+      pstdout_fprintf (pstate,
                        stderr,
                        "fiid_obj_create: %s",
                        strerror (errno));
@@ -552,7 +552,7 @@ _set_pef_action_global_control (pstdout_state_t pstate,
       config_err_t ret;
 
       if (cmd_args->common.debug)
-        PSTDOUT_FPRINTF (pstate,
+        pstdout_fprintf (pstate,
                          stderr,
                          "ipmi_cmd_set_pef_configuration_parameters_pef_action_global_control: %s\n",
                          ipmi_ctx_errormsg (ipmi_ctx));
@@ -895,7 +895,7 @@ pef_startup_delay_checkout (pstdout_state_t pstate,
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_pef_configuration_parameters_pef_startup_delay_rs)))
     {
-      PSTDOUT_FPRINTF (pstate,
+      pstdout_fprintf (pstate,
                        stderr,
                        "fiid_obj_create: %s",
                        strerror (errno));
@@ -911,7 +911,7 @@ pef_startup_delay_checkout (pstdout_state_t pstate,
       config_err_t ret;
 
       if (cmd_args->common.debug)
-        PSTDOUT_FPRINTF (pstate,
+        pstdout_fprintf (pstate,
                          stderr,
                          "ipmi_cmd_get_pef_configuration_parameters_pef_startup_delay: %s\n",
                          ipmi_ctx_errormsg (ipmi_ctx));
@@ -926,7 +926,7 @@ pef_startup_delay_checkout (pstdout_state_t pstate,
 
   if (FIID_OBJ_GET (obj_cmd_rs, "pef_startup_delay", &val) < 0)
     {
-      PSTDOUT_FPRINTF (pstate,
+      pstdout_fprintf (pstate,
                        stderr,
                        "fiid_obj_get: 'pef_startup_delay': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
@@ -961,7 +961,7 @@ pef_startup_delay_commit (pstdout_state_t pstate,
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_pef_configuration_parameters_rs)))
     {
-      PSTDOUT_FPRINTF (pstate,
+      pstdout_fprintf (pstate,
                        stderr,
                        "fiid_obj_create: %s",
                        strerror (errno));
@@ -975,7 +975,7 @@ pef_startup_delay_commit (pstdout_state_t pstate,
       config_err_t ret;
 
       if (cmd_args->common.debug)
-        PSTDOUT_FPRINTF (pstate,
+        pstdout_fprintf (pstate,
                          stderr,
                          "ipmi_cmd_set_pef_configuration_parameters_pef_startup_delay: %s\n",
                          ipmi_ctx_errormsg (ipmi_ctx));
@@ -1012,7 +1012,7 @@ pef_alert_startup_delay_checkout (pstdout_state_t pstate,
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_pef_configuration_parameters_pef_alert_startup_delay_rs)))
     {
-      PSTDOUT_FPRINTF (pstate,
+      pstdout_fprintf (pstate,
                        stderr,
                        "fiid_obj_create: %s",
                        strerror (errno));
@@ -1028,7 +1028,7 @@ pef_alert_startup_delay_checkout (pstdout_state_t pstate,
       config_err_t ret;
 
       if (cmd_args->common.debug)
-        PSTDOUT_FPRINTF (pstate,
+        pstdout_fprintf (pstate,
                          stderr,
                          "ipmi_cmd_get_pef_configuration_parameters_pef_alert_startup_delay: %s\n",
                          ipmi_ctx_errormsg (ipmi_ctx));
@@ -1043,7 +1043,7 @@ pef_alert_startup_delay_checkout (pstdout_state_t pstate,
 
   if (FIID_OBJ_GET (obj_cmd_rs, "pef_alert_startup_delay", &val) < 0)
     {
-      PSTDOUT_FPRINTF (pstate,
+      pstdout_fprintf (pstate,
                        stderr,
                        "fiid_obj_get: 'pef_alert_startup_delay': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
@@ -1078,7 +1078,7 @@ pef_alert_startup_delay_commit (pstdout_state_t pstate,
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_pef_configuration_parameters_rs)))
     {
-      PSTDOUT_FPRINTF (pstate,
+      pstdout_fprintf (pstate,
                        stderr,
                        "fiid_obj_create: %s",
                        strerror (errno));
@@ -1092,7 +1092,7 @@ pef_alert_startup_delay_commit (pstdout_state_t pstate,
       config_err_t ret;
 
       if (cmd_args->common.debug)
-        PSTDOUT_FPRINTF (pstate,
+        pstdout_fprintf (pstate,
                          stderr,
                          "ipmi_cmd_set_pef_configuration_parameters_pef_alert_startup_delay: %s\n",
                          ipmi_ctx_errormsg (ipmi_ctx));

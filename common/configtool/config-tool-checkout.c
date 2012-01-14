@@ -92,7 +92,7 @@ config_checkout_section (pstdout_state_t pstate,
                                    fp) < 0)
         {
           if (cmd_args->common.debug)
-            PSTDOUT_FPRINTF (pstate,
+            pstdout_fprintf (pstate,
                              stderr,
                              "## Error: Comment output error\n");
           ret = CONFIG_ERR_NON_FATAL_ERROR;
@@ -102,7 +102,7 @@ config_checkout_section (pstdout_state_t pstate,
   if (!line_length)
     line_length = CONFIG_CHECKOUT_LINE_LEN;
 
-  PSTDOUT_FPRINTF (pstate,
+  pstdout_fprintf (pstate,
                    fp,
                    "Section %s\n",
                    section->section_name);
@@ -135,13 +135,13 @@ config_checkout_section (pstdout_state_t pstate,
           if (cmd_args->verbose_count > 1)
             {
               if (this_ret == CONFIG_ERR_NON_FATAL_ERROR_NOT_SUPPORTED)
-                PSTDOUT_FPRINTF (pstate,
+                pstdout_fprintf (pstate,
                                  fp,
                                  "\t## Unable to checkout %s:%s : Not Supported\n",
                                  section->section_name,
                                  kv->key->key_name);
               else
-                PSTDOUT_FPRINTF (pstate,
+                pstdout_fprintf (pstate,
                                  fp,
                                  "\t## Unable to checkout %s:%s\n",
                                  section->section_name,
@@ -160,28 +160,28 @@ config_checkout_section (pstdout_state_t pstate,
               char *cptr;
 
               cptr = kv->key->description;
-              PSTDOUT_FPRINTF (pstate,
+              pstdout_fprintf (pstate,
                                fp,
                                "\t## ");
               while (*cptr)
                 {
                   if (*cptr == '\n')
-                    PSTDOUT_FPRINTF (pstate,
+                    pstdout_fprintf (pstate,
                                      fp,
                                      "\n\t## ");
                   else
-                    PSTDOUT_FPRINTF (pstate,
+                    pstdout_fprintf (pstate,
                                      fp,
                                      "%c",
                                      *cptr);
                   cptr++;
                 }
-              PSTDOUT_FPRINTF (pstate,
+              pstdout_fprintf (pstate,
                                fp,
                                "\n");
             }
           else
-            PSTDOUT_FPRINTF (pstate,
+            pstdout_fprintf (pstate,
                              fp,
                              "\t## %s\n",
                              kv->key->description);
@@ -219,20 +219,20 @@ config_checkout_section (pstdout_state_t pstate,
                                 "\t%s",
                                 kv->key->key_name);
 
-          PSTDOUT_FPRINTF (pstate,
+          pstdout_fprintf (pstate,
                            fp,
                            "%s",
                            obuf);
 
           while (key_len <= line_length)
             {
-              PSTDOUT_FPRINTF (pstate,
+              pstdout_fprintf (pstate,
                                fp,
                                " ");
               key_len++;
             }
 
-          PSTDOUT_FPRINTF (pstate,
+          pstdout_fprintf (pstate,
                            fp,
                            " %s\n",
                            kv->value_output);
@@ -241,7 +241,7 @@ config_checkout_section (pstdout_state_t pstate,
       kv = kv->next;
     }
 
-  PSTDOUT_FPRINTF (pstate,
+  pstdout_fprintf (pstate,
                    fp,
                    "EndSection\n");
   rv = ret;

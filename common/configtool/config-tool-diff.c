@@ -63,7 +63,7 @@ config_diff (pstdout_state_t pstate,
           if (this_ret == CONFIG_ERR_SUCCESS)
             {
               if (!same (kv->value_input, kv->value_output))
-                PSTDOUT_PRINTF (pstate,
+                pstdout_printf (pstate,
                                 "%s:%s - input=`%s':actual=`%s'\n",
                                 s->section_name,
                                 kv->key->key_name,
@@ -72,7 +72,7 @@ config_diff (pstdout_state_t pstate,
             }
           else
             {
-              PSTDOUT_PRINTF (pstate,
+              pstdout_printf (pstate,
                               "\t## ERROR: Unable to checkout %s:%s\n",
                               s->section_name,
                               kv->key->key_name);
