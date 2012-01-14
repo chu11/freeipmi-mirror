@@ -196,6 +196,16 @@ ipmi-sel
 - ganglia plugin?
 - nagios plugin?
 
+ipmipower
+--------
+- mechanism to serialize some power control operations (***)
+  - main issue is w/ oem extension power.  normally "on myhost[0-3]"
+    is fine b/c that's power control to three different hosts.  But
+    "on myhost+[0-3]" could be really bad.  The remote host may not 
+    be able to handle the 4 ipmi commands at the same time.
+  - have some pre-req like mechanism that power control ops won't be
+    started until earlier one done.
+
 ipmi-fru
 --------
 - write FRU data option
