@@ -42,6 +42,8 @@
 static void
 display_ipmi_locate_info (struct ipmi_locate_info *info)
 {
+  assert (info);
+
   printf ("IPMI Version: %d.%d\n",
           info->ipmi_version_major,
           info->ipmi_version_minor);

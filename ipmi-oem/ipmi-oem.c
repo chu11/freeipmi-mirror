@@ -1279,6 +1279,9 @@ _ipmi_oem (pstdout_state_t pstate,
   char errmsg[IPMI_OPEN_ERRMSGLEN];
   int exit_code = -1;
 
+  assert (pstate);
+  assert (arg);
+
   prog_data = (ipmi_oem_prog_data_t *)arg;
   memset (&state_data, '\0', sizeof (ipmi_oem_state_data_t));
 

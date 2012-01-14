@@ -51,6 +51,9 @@ _ipmi_sensors_config (pstdout_state_t pstate,
   int file_opened = 0;
   FILE *fp = NULL;              /* init NULL to remove warnings */
 
+  assert (pstate);
+  assert (arg);
+
   prog_data = (ipmi_sensors_config_prog_data_t *) arg;
 
   memset (&state_data, '\0', sizeof (ipmi_sensors_config_state_data_t));
