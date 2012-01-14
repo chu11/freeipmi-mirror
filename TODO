@@ -198,6 +198,11 @@ ipmi-sel
 
 ipmipower
 --------
+- mechanism to parallelize oem extension options ranges. (***)
+  - i.e. on myhost+[0-3].  Simultaneous power off slots 0-3.  Is
+    dangerous though, since many devices wouldn't be able to handle
+    all the simultaneous IPMI, or at minimum would lead to BUSY, can't
+    connectc, etc. errors.
 - mechanism to serialize some power control operations (***)
   - main issue is w/ oem extension power.  normally "on myhost[0-3]"
     is fine b/c that's power control to three different hosts.  But
