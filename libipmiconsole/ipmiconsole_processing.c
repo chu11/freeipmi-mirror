@@ -2162,6 +2162,18 @@ _check_sol_activated (ipmiconsole_ctx_t c)
     }
   c->session.sol_instance_capacity = val;
 
+  /* IPMI Workaround
+   *
+   * Discovered on XXX
+   *
+   * The sol_instance_capacity is always 0.  We will make the
+   * assumption that 0 means 1, or in other words, the vendor simply
+   * does not want to support multiple payload instances.
+   */
+
+  if (!c->session.sol_instance_capacity)
+    c->session.sol_instance_capacity = 1;
+
   if (c->session.sol_instance_capacity > IPMI_INSTANCES_ACTIVATED_LENGTH)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("invalid instance capacity: %d", c->session.sol_instance_capacity));
@@ -2186,14 +2198,14 @@ _check_sol_activated (ipmiconsole_ctx_t c)
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
           return (-1);
         }
-
+      
       if (val)
         {
           c->session.sol_instances_activated[c->session.sol_instances_activated_count] = i+1;
           c->session.sol_instances_activated_count++;
         }
     }
-
+  
   if (c->config.behavior_flags & IPMICONSOLE_BEHAVIOR_ERROR_ON_SOL_INUSE
       && c->session.sol_instances_activated_count)
     {

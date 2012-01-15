@@ -35,6 +35,8 @@ o In libipmiconsole, do not deactivate a SOL payload if it appears the
   flag.
 o In libipmiconsole, fix corner case in which session not closed
   cleanly when DEACTIVATE_ONLY flag specified.
+o In libipmiconsole, workaround bug in Dell Poweredge M605, M610, and
+  M915 where instance count of SOL is always returned as 0.
 o In libfreeipmi, add functions for re-arm sensor events IPMI payload. 
 o In libfreeipmi/sensor-read, under some error conditions return error
   of "unavailable" instead of "cannot be obtained" error code.
