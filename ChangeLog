@@ -1,8 +1,8 @@
 2012-01-11  Albert Chu <chu11@llnl.gov>
 
 	* libipmiconsole/ipmiconsole_processing.c (_check_sol_activated):
-	Workaround bug in XXX where instance count of SOL is returned as
-	0.
+	Workaround bug in Dell Poweredge M605, Dell Poweredge M610, and
+	Dell Poweredge M915 where instance count of SOL is returned as 0.
 	
 2012-01-11  Albert Chu <chu11@llnl.gov>
 
