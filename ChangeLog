@@ -1,3 +1,11 @@
+2012-01-15  Albert Chu <chu11@llnl.gov>
+
+	Merge branch dellsolinstancecapacity
+
+	* libipmiconsole/ipmiconsole_processing.c (_check_sol_activated):
+	Workaround bug in Dell Poweredge M605, Dell Poweredge M610, and
+	Dell Poweredge M915 where instance count of SOL is returned as 0.
+
 2012-01-13  Albert Chu <chu11@llnl.gov>
 
 	* Audit and add asserts appropriately to large number of functions.
