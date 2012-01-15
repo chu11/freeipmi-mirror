@@ -505,7 +505,9 @@ FreeIPMI includes a userspace driver that works on most motherboards without any
 
 Under most scenarios, the FreeIPMI tools should automatically discover which in-band interface to use and the proper settings to use.  Some motherboards may require you to determine alternate configurations for addresses, paths, etc. on your own and pass them as command line options to the tools.
 
-Every system is different and your situation may differ.  Please see your manufacturer instructions.
+Every system is different and your situation may differ.  Please see your manufacturer and operating system instructions.  
+
+There are some additional Linux OpenIPMI kernel driver notes here: @uref{http://www.gnu.org/software/freeipmi/README.openipmi}.
 
 @node SSIF Driver Configuration, How do you setup Powerman with ipmipower?, Do I need to install or configure a driver to perform IPMI inband?, Top
 @section SSIF Driver Configuration
