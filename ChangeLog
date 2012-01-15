@@ -1,5 +1,10 @@
 2012-01-15  Albert Chu <chu11@llnl.gov>
 
+	* doc/freeipmi-faq.texi: Add some OpenIPMI linux kerneld driver
+	notes.
+	
+2012-01-15  Albert Chu <chu11@llnl.gov>
+
 	Merge branch dellsolinstancecapacity
 
 	* libipmiconsole/ipmiconsole_processing.c (_check_sol_activated):
