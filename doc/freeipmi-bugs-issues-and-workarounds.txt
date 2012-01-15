@@ -825,8 +825,8 @@ BMC/IPMI Configuration Issue #14: [COMPLIANCE]
   Resolution: None
 
   Notes: This command is optional in the IPMI spec, but it is not
-  optional if ARP response is supported.  Confirmed fixed in newer
-  firmware for Inventec 5441/Dell Xanadu II.
+  optional if ARP response is supported (see Table 23-4 [2]).
+  Confirmed fixed in newer firmware for Inventec 5441/Dell Xanadu II.
 
 BMC/IPMI Configuration Issue #15: [COMPLIANCE]
 
