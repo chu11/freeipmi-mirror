@@ -667,7 +667,7 @@ Serial-Over-LAN Issue #16: [COMPLIANCE]
   really 1 when it is 0.  The assumption is made that the vendor does
   not support multiple instances, which is why it is reported as 0.
 
-Serial-Over-LAN Issue #17: [COMPLIANCE]
+Serial-Over-LAN Issue #17: [COMPLIANCE] or [IMPLEMENTATION]
 
   SOL sessions are not deactivated after a Deactivate Payload request.
   Despite the SOL session being active, it appears the BMC does not
@@ -679,7 +679,12 @@ Serial-Over-LAN Issue #17: [COMPLIANCE]
   Seen on: Dell Poweredge M605, Dell Poweredge M610, Dell Poweredge
   M915
 
-  Resolution: This is similar to issue #5 above.
+  Notes: It is possible the Dell BMC does not allow a SOL payload
+  deactivation except for the IPMI session that activated the SOL
+  payload.  While deactivation of a payload from another IPMI session
+  is allowed in IPMI (see Table 15-2 [2]), I am not sure if it is
+  required.  So I'm listing this as [COMPLIANCE] or [IMPLEMENTATION].
+  This is similar to issue #5 above.
 
 ----------------------------------------------------------------------
 
