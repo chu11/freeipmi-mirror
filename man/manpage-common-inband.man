@@ -12,5 +12,5 @@ Specify the in-band driver device path to be used instead of the
 probed path.
 .TP
 \fB\-\-register\-spacing\fR=\fIREGISTER-SPACING\fR
-Specify the in-band driver register spacing instead of the
-probed value.
+Specify the in-band driver register spacing instead of the probed
+value.  Argument is in bytes (i.e. 32bit register spacing = 4)
