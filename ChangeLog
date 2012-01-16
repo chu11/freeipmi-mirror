@@ -1,3 +1,7 @@
+2012-01-16  Albert Chu <chu11@llnl.gov>
+
+	* man/manpage-common-inband.man: Clarify argument input.
+
 2012-01-15  Albert Chu <chu11@llnl.gov>
 
 	* doc/freeipmi-faq.texi: Add some OpenIPMI linux kerneld driver
