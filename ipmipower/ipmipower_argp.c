@@ -422,7 +422,8 @@ _ipmipower_args_post_process (struct ipmipower_arguments *cmd_args)
 {
   assert (cmd_args);
   
-  if (cmd_args->common.hostname)
+  if (cmd_args->oem_power_type != OEM_POWER_TYPE_NONE
+      && cmd_args->common.hostname)
     {
       char *ptr;
 

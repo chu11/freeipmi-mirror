@@ -56,6 +56,7 @@
 #include "ipmipower.h"
 #include "ipmipower_connection.h"
 #include "ipmipower_error.h"
+#include "ipmipower_oem.h"
 #include "ipmipower_output.h"
 #include "ipmipower_powercmd.h"
 #include "ipmipower_packet.h"
@@ -135,6 +136,8 @@ _destroy_ipmipower_powercmd (ipmipower_powercmd_t ip)
   
   list_destroy (ip->sockets_to_close);
 
+  free (ip->extra_arg);
+
   free (ip);
 }
 
@@ -160,7 +163,9 @@ ipmipower_powercmd_cleanup ()
 }
 
 void
-ipmipower_powercmd_queue (power_cmd_t cmd, struct ipmipower_connection *ic)
+ipmipower_powercmd_queue (power_cmd_t cmd,
+			  struct ipmipower_connection *ic,
+			  const char *extra_arg)
 {
   ipmipower_powercmd_t ip;
 
@@ -513,6 +518,25 @@ ipmipower_powercmd_queue (power_cmd_t cmd, struct ipmipower_connection *ic)
     }
 
   list_append (pending, ip);
+
+  if (cmd_args.oem_power_type != OEM_POWER_TYPE_NONE)
+    {
+      assert (ipmipower_oem_power_cmd_check_support_and_privilege (cmd, NULL, 0) > 0);
+      assert (ipmipower_oem_power_cmd_check_extra_arg (extra_arg, NULL, 0) > 0);
+
+      if (extra_arg)
+	{
+	  if (!(ip->extra_arg = strdup (extra_arg)))
+	    {
+	      IPMIPOWER_ERROR (("strdup"));
+	      exit (1);
+	    }
+	}
+      else
+	ip->extra_arg = NULL;
+    }
+  else
+    ip->extra_arg = NULL;
 }
 
 int

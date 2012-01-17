@@ -39,10 +39,12 @@ void ipmipower_powercmd_setup ();
  */
 void ipmipower_powercmd_cleanup ();
 
-/* ipmipower_powercmd_queue_powercmd
+/* ipmipower_powercmd_queue
  * - Queue a command to be executed
  */
-void ipmipower_powercmd_queue (power_cmd_t cmd, struct ipmipower_connection *ic);
+void ipmipower_powercmd_queue (power_cmd_t cmd,
+			       struct ipmipower_connection *ic,
+			       const char *extra_arg);
 
 /* ipmipower_powercmd_pending
  * - Determines if any commands are still pending

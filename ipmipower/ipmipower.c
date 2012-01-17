@@ -613,7 +613,7 @@ main (int argc, char *argv[])
           if (ics[i].skip)
             continue;
 
-          ipmipower_powercmd_queue (cmd_args.powercmd, &ics[i]);
+          ipmipower_powercmd_queue (cmd_args.powercmd, &ics[i], cmd_args.hostname_extra_arg);
         }
     }
 

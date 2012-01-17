@@ -356,6 +356,9 @@ struct ipmipower_powercmd {
   fiid_obj_t obj_close_session_res;
 
   List sockets_to_close;
+
+  /* for oem power control ; extra arg passed in via "+extra" at end of hostname */
+  char *extra_arg;
 };
 
 /* ipmipower_connection

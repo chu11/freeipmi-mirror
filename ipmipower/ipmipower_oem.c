@@ -113,8 +113,7 @@ ipmipower_oem_power_cmd_check_support_and_privilege (power_cmd_t cmd,
   int rv = -1;
   
   assert (POWER_CMD_VALID (cmd));
-  assert (errbuf);
-  assert (errbuflen);
+  /* errbuf & errbuflen can be NULL/0 if doing an assert check */
   assert (cmd_args.oem_power_type != OEM_POWER_TYPE_NONE);
 
   oem_power_type_support_mask = _power_cmd_to_oem_power_type_support (cmd);
@@ -123,11 +122,12 @@ ipmipower_oem_power_cmd_check_support_and_privilege (power_cmd_t cmd,
   
   if (!(oem_power_type_data[cmd_args.oem_power_type].supported_operations & oem_power_type_support_mask))
     {
-      snprintf (errbuf,
-		errbuflen,
-		"'%s' operation not supported by oem power type '%s'",
-		power_cmd_str,
-		oem_power_type_data[cmd_args.oem_power_type].name);
+      if (errbuf && errbuflen)
+	snprintf (errbuf,
+		  errbuflen,
+		  "'%s' operation not supported by oem power type '%s'",
+		  power_cmd_str,
+		  oem_power_type_data[cmd_args.oem_power_type].name);
       rv = 0;
       goto cleanup;
     }
@@ -137,13 +137,15 @@ ipmipower_oem_power_cmd_check_support_and_privilege (power_cmd_t cmd,
       /* XXX - I'm pretty sure */
       if ((cmd == POWER_CMD_POWER_OFF
 	   || cmd == POWER_CMD_POWER_ON)
-	  && cmd_args.common.privilege_level == IPMI_PRIVILEGE_LEVEL_ADMIN)
+	  && (cmd_args.common.privilege_level == IPMI_PRIVILEGE_LEVEL_USER
+	      || cmd_args.common.privilege_level == IPMI_PRIVILEGE_LEVEL_OPERATOR))
 	{
-	  snprintf (errbuf,
-		    errbuflen,
-		    "'%s' requires admin privilege for oem power type '%s'",
-		    power_cmd_str,
-		    oem_power_type_data[cmd_args.oem_power_type].name);
+	  if (errbuf && errbuflen)
+	    snprintf (errbuf,
+		      errbuflen,
+		      "'%s' requires admin privilege for oem power type '%s'",
+		      power_cmd_str,
+		      oem_power_type_data[cmd_args.oem_power_type].name);
 	  rv = 0;
 	  goto cleanup;
 	} 
@@ -162,8 +164,7 @@ ipmipower_oem_power_cmd_check_extra_arg (const char *extra_arg,
   int rv = -1;
 
   /* extra_arg can be NULL, user didn't input one */
-  assert (errbuf);
-  assert (errbuflen);
+  /* errbuf & errbuflen can be NULL/0 if doing an assert check */
   assert (cmd_args.oem_power_type != OEM_POWER_TYPE_NONE);
   
   if (cmd_args.oem_power_type == OEM_POWER_TYPE_C410X)
@@ -173,10 +174,11 @@ ipmipower_oem_power_cmd_check_extra_arg (const char *extra_arg,
       
       if (!extra_arg)
 	{
-	  snprintf (errbuf,
-		    errbuflen,
-		    "slot number must be specified for oem power type '%s'",
-		    oem_power_type_data[cmd_args.oem_power_type].name);
+	  if (errbuf && errbuflen)
+	    snprintf (errbuf,
+		      errbuflen,
+		      "slot number must be specified for oem power type '%s'",
+		      oem_power_type_data[cmd_args.oem_power_type].name);
 	  rv = 0;
 	  goto cleanup;
 	}
@@ -186,11 +188,12 @@ ipmipower_oem_power_cmd_check_extra_arg (const char *extra_arg,
       if (errno
           || endptr[0] != '\0')
 	{
-	  snprintf (errbuf,
-		    errbuflen,
-		    "slot number '%s' for oem power type '%s' invalid",
-		    extra_arg,
-		    oem_power_type_data[cmd_args.oem_power_type].name);
+	  if (errbuf && errbuflen)
+	    snprintf (errbuf,
+		      errbuflen,
+		      "slot number '%s' for oem power type '%s' invalid",
+		      extra_arg,
+		      oem_power_type_data[cmd_args.oem_power_type].name);
 	  rv = 0;
 	  goto cleanup;
 	}
@@ -198,11 +201,12 @@ ipmipower_oem_power_cmd_check_extra_arg (const char *extra_arg,
       if (tmp < IPMIPOWER_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MIN
 	  || tmp > IPMIPOWER_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MAX)
 	{
-	  snprintf (errbuf,
-		    errbuflen,
-		    "slot number '%s' for oem power type '%s' out of range",
-		    extra_arg,
-		    oem_power_type_data[cmd_args.oem_power_type].name);
+	  if (errbuf && errbuflen)
+	    snprintf (errbuf,
+		      errbuflen,
+		      "slot number '%s' for oem power type '%s' out of range",
+		      extra_arg,
+		      oem_power_type_data[cmd_args.oem_power_type].name);
 	  rv = 0;
 	  goto cleanup;
 	}
