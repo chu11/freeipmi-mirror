@@ -32,7 +32,7 @@ FreeIPMI new stuff
   - http://www.picmg.org/v2internal/specifications.htm
 - pmbus.org
   - doable via FreeIPMI?  Can pass through Smbus to PmBus to do power control monitoring?
-- ipmi-seld
+- ipmi-seld (***)
   - log sel events to syslog?
     - work across cluster, configure w/ range of hosts
     - need filtering thingie to remove messages you don't care about?
