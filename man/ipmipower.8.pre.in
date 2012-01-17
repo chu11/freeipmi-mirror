@@ -380,7 +380,9 @@ you can instruct
 to execute alternate power control implementations over the standard
 ones.  Depending on the OEM extension, some power control commands may
 no longer be available.  For example, an OEM extensions may allow
-\fBon\fR but not \fBcycle\fR.
+\fBon\fR but not \fBcycle\fR.  Specific 
+.B ipmipower
+options may not longer function either.
 
 Some OEM extensions may require additional information for their power
 control action, such as a specific device identifier.  Additional
@@ -411,6 +413,9 @@ It should be noted that the only power control mechanism supported
 natively on the C410x is a power toggle.  The \fBon\fR, \fBoff\fR, and
 \fBstat\fR actions are emulated through a combination of a toggle and
 the reading of a PCIe slot watt sensor.
+
+The functionality of \fB\-\-wait\-until\-on\fR and
+\fB\-\-wait\-until\-off\fR are maintained with this OEM extension.
 
 Dell Poweredge C410x slot power control is alternately available in
 .B ipmi-oem(8)
