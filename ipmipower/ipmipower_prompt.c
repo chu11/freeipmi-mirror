@@ -169,6 +169,22 @@ _cmd_hostname_new (char **argv)
       return;
     }
   
+  if (cmd_args.oem_power_type != OEM_POWER_TYPE_NONE)
+    {
+      char errbuf[IPMIPOWER_OUTPUT_BUFLEN + 1];
+
+      memset (errbuf, '\0', IPMIPOWER_OUTPUT_BUFLEN + 1);
+      if (ipmipower_oem_power_cmd_check_extra_arg (new_hostname_extra_arg,
+						   errbuf,
+						   IPMIPOWER_OUTPUT_BUFLEN) <= 0)
+	{
+	  ipmipower_cbuf_printf (ttyout,
+				 "%s\n",
+				 errbuf);
+	  return;
+	}
+    }
+
   _cmd_hostname_clear ();
   
   cmd_args.common.hostname = new_hostname;

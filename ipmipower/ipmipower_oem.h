@@ -38,5 +38,14 @@ int ipmipower_oem_power_cmd_check_support_and_privilege (power_cmd_t cmd,
 							 char *errbuf,
 							 unsigned int errbuflen);
 
+/* ipmipower_oem_power_cmd_check_extra_arg
+ * - check if extra arg is valid
+ * - returns 1 if ok, 0 if not, -1 on error
+ * - if returns 0 or -1, error message in buf
+ */
+int ipmipower_oem_power_cmd_check_extra_arg (const char *extra_arg,
+					     char *errbuf,
+					     unsigned int errbuflen);
+
 #endif /* _IPMIPOWER_OEM_H */
 

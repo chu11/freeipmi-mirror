@@ -596,6 +596,14 @@ main (int argc, char *argv[])
 	      IPMIPOWER_ERROR (("%s", errbuf));
 	      exit (1);
 	    }
+
+	  if (ipmipower_oem_power_cmd_check_extra_arg (cmd_args.hostname_extra_arg,
+						       errbuf,
+						       IPMIPOWER_OUTPUT_BUFLEN) <= 0)
+	    {
+	      IPMIPOWER_ERROR (("%s", errbuf));
+	      exit (1);
+	    }
 	}
 
       _eliminate_nodes ();

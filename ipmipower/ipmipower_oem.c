@@ -63,7 +63,7 @@ struct oem_power_type_data oem_power_type_data[] =
      * OEM_POWER_TYPE_C410X - supports off, on, status
      */
     {
-      "C410X",
+      "C410x",
       OEM_POWER_TYPE_SUPPORT_OFF | OEM_POWER_TYPE_SUPPORT_ON | OEM_POWER_TYPE_SUPPORT_STATUS,
     },
 
@@ -72,6 +72,9 @@ struct oem_power_type_data oem_power_type_data[] =
       0,
     },
   };
+
+#define IPMIPOWER_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MIN 1
+#define IPMIPOWER_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MAX 16
 
 static int
 _power_cmd_to_oem_power_type_support (power_cmd_t cmd)
@@ -146,6 +149,65 @@ ipmipower_oem_power_cmd_check_support_and_privilege (power_cmd_t cmd,
 	} 
     }
 
+  rv = 1;
+ cleanup:
+  return (rv);
+}
+
+int
+ipmipower_oem_power_cmd_check_extra_arg (const char *extra_arg,
+					 char *errbuf,
+					 unsigned int errbuflen)
+{
+  int rv = -1;
+
+  /* extra_arg can be NULL, user didn't input one */
+  assert (errbuf);
+  assert (errbuflen);
+  assert (cmd_args.oem_power_type != OEM_POWER_TYPE_NONE);
+  
+  if (cmd_args.oem_power_type == OEM_POWER_TYPE_C410X)
+    {
+      char *endptr;
+      unsigned int tmp;
+      
+      if (!extra_arg)
+	{
+	  snprintf (errbuf,
+		    errbuflen,
+		    "slot number must be specified for oem power type '%s'",
+		    oem_power_type_data[cmd_args.oem_power_type].name);
+	  rv = 0;
+	  goto cleanup;
+	}
+      
+      errno = 0; 
+      tmp = strtol (extra_arg, &endptr, 0);
+      if (errno
+          || endptr[0] != '\0')
+	{
+	  snprintf (errbuf,
+		    errbuflen,
+		    "slot number '%s' for oem power type '%s' invalid",
+		    extra_arg,
+		    oem_power_type_data[cmd_args.oem_power_type].name);
+	  rv = 0;
+	  goto cleanup;
+	}
+      
+      if (tmp < IPMIPOWER_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MIN
+	  || tmp > IPMIPOWER_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MAX)
+	{
+	  snprintf (errbuf,
+		    errbuflen,
+		    "slot number '%s' for oem power type '%s' out of range",
+		    extra_arg,
+		    oem_power_type_data[cmd_args.oem_power_type].name);
+	  rv = 0;
+	  goto cleanup;
+	}
+    }
+  
   rv = 1;
  cleanup:
   return (rv);
