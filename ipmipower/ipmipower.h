@@ -426,6 +426,8 @@ struct ipmipower_arguments
 {
   struct common_cmd_args common;
   struct hostrange_cmd_args hostrange;
+  /* for oem power types ; extra arg passed in via "+extra" at end of hostname */
+  char *hostname_extra_arg;
 #ifndef NDEBUG
   int rmcpdump;
 #endif /* NDEBUG */

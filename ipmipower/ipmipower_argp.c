@@ -417,6 +417,29 @@ _ipmipower_args_validate (struct ipmipower_arguments *cmd_args)
     }
 }
 
+static void
+_ipmipower_args_post_process (struct ipmipower_arguments *cmd_args)
+{
+  assert (cmd_args);
+  
+  if (cmd_args->common.hostname)
+    {
+      char *ptr;
+
+      if ((ptr = strchr (cmd_args->common.hostname, '+')))
+	{
+	  *ptr = '\0';
+	  ptr++;
+	  
+	  if (!(cmd_args->hostname_extra_arg = strdup (ptr)))
+	    {
+	      perror ("strdup");
+	      exit (1);
+	    }
+	}
+    }
+}
+  
 void
 ipmipower_argp_parse (int argc, char **argv, struct ipmipower_arguments *cmd_args)
 {
@@ -428,6 +451,8 @@ ipmipower_argp_parse (int argc, char **argv, struct ipmipower_arguments *cmd_arg
   cmd_args->common.driver_type_outofband_only = 1;
   cmd_args->common.session_timeout = 20000; /* 20 seconds */
   cmd_args->common.retransmission_timeout = 400; /* .4 seconds */
+
+  cmd_args->hostname_extra_arg = NULL;
 
 #ifndef NDEBUG
   cmd_args->rmcpdump = 0;
@@ -466,4 +491,5 @@ ipmipower_argp_parse (int argc, char **argv, struct ipmipower_arguments *cmd_arg
   verify_common_cmd_args_outofband (&(cmd_args->common), 0);
   verify_hostrange_cmd_args (&(cmd_args->hostrange));
   _ipmipower_args_validate (cmd_args);
+  _ipmipower_args_post_process (cmd_args);
 }

@@ -107,57 +107,94 @@ _cmd_driver_type (char **argv)
 }
 
 static void
+_cmd_hostname_clear (void)
+{
+  free (cmd_args.common.hostname);
+  cmd_args.common.hostname = NULL;
+
+  free (cmd_args.hostname_extra_arg);
+  cmd_args.hostname_extra_arg = NULL;
+
+  ipmipower_connection_array_destroy (ics, ics_len);
+  ics = NULL;
+  ics_len = 0;
+}
+
+static void
+_cmd_hostname_new (char **argv)
+{
+  struct ipmipower_connection *icsPtr;
+  unsigned int len = 0;
+  char *new_hostname = NULL;
+  char *new_hostname_extra_arg = NULL;
+  char *ptr;
+
+  assert (argv);
+
+  if (!(new_hostname = strdup (argv[1])))
+    {
+      IPMIPOWER_ERROR (("strdup: %s", strerror(errno)));
+      exit (1);
+    }
+      
+  if ((ptr = strchr (new_hostname, '+')))
+    {
+      *ptr = '\0';
+      ptr++;
+      
+      if (!(new_hostname_extra_arg = strdup (ptr)))
+	{
+	  IPMIPOWER_ERROR (("strdup: %s", strerror(errno)));
+	  free (new_hostname);
+	  exit (1);
+	}
+    }
+  
+  if (!(icsPtr = ipmipower_connection_array_create (new_hostname, &len)))
+    {
+      /* dump error outputs here, most notably invalid hostname output */
+      if (cbuf_read_to_fd (ttyout, STDOUT_FILENO, -1) > 0)
+	{
+	  free (new_hostname);
+	  free (new_hostname_extra_arg);
+	  return;
+	}
+      else
+	ipmipower_cbuf_printf (ttyout,
+			       "ipmipower_connection_array_create: %s\n",
+			       strerror (errno));
+
+      free (new_hostname);
+      free (new_hostname_extra_arg);
+      return;
+    }
+  
+  _cmd_hostname_clear ();
+  
+  cmd_args.common.hostname = new_hostname;
+  cmd_args.hostname_extra_arg = new_hostname_extra_arg;
+  ics = icsPtr;
+  ics_len = len;
+
+  ipmipower_ping_force_discovery_sweep ();
+
+  ipmipower_cbuf_printf (ttyout,
+			 "hostname: %s\n",
+			 cmd_args.common.hostname);
+}
+
+static void
 _cmd_hostname (char **argv)
 {
   assert (argv);
 
   if (!argv[1])
     {
-      free (cmd_args.common.hostname);
-      cmd_args.common.hostname = NULL;
-
-      ipmipower_connection_array_destroy (ics, ics_len);
-      ics = NULL;
-      ics_len = 0;
-
+      _cmd_hostname_clear ();
       ipmipower_cbuf_printf (ttyout, "hostname(s) unconfigured\n");
     }
   else
-    {
-      struct ipmipower_connection *icsPtr;
-      unsigned int len = 0;
-
-      if (!(icsPtr = ipmipower_connection_array_create (argv[1], &len)))
-        {
-          /* dump error outputs here, most notably invalid hostname output */
-          if (cbuf_read_to_fd (ttyout, STDOUT_FILENO, -1) > 0)
-            return;
-          else
-            ipmipower_cbuf_printf (ttyout,
-                                   "ipmipower_connection_array_create: %s\n",
-                                   strerror (errno));
-          return;
-        }
-      
-      free (cmd_args.common.hostname);
-      cmd_args.common.hostname = NULL;
-
-      ipmipower_connection_array_destroy (ics, ics_len);
-      ics = icsPtr;
-      ics_len = len;
-
-      if (!(cmd_args.common.hostname = strdup (argv[1])))
-        {
-          IPMIPOWER_ERROR (("strdup: %s", strerror(errno)));
-          exit (1);
-        }
-
-      ipmipower_ping_force_discovery_sweep ();
-
-      ipmipower_cbuf_printf (ttyout,
-                             "hostname: %s\n",
-                             cmd_args.common.hostname);
-    }
+    _cmd_hostname_new (argv);
 }
 
 static void
