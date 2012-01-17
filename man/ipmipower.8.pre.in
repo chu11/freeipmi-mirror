@@ -379,19 +379,18 @@ you can instruct
 .B ipmipower
 to execute alternate power control implementations over the standard
 ones.  Depending on the OEM extension, some power control commands may
-no longer be available operating.  For example, some OEM extensions
-may allow \fBon\fR and \fBoff\fR, but not \fBcycle\fR or \fBreset\fR.
+no longer be available.  For example, an OEM extensions may allow
+\fBon\fR but not \fBcycle\fR.
 
 Some OEM extensions may require additional information for their power
 control action, such as a specific device identifier.  Additional
-information can be provided by appending this information to the end
-of the hostname.  The additional information should be prepended with
-a plus (i.e. '+') symbol.  For example, the hostname \fImynode+18\fR
-would indicate the power control operation should be sent to the host
-\fImynode\fR, and \fI18\fR is the identifier of a possible sub-device
-to be power controlled.  If in interactive mode, the additional
-information can be overrided everytime you specify a hostname to
-perform a power control operation on.
+information can be provided by appending a plus sign ('+') and the
+extra information to the end of the hostname.  For example, the
+hostname \fImynode+18\fR would indicate the power control operation
+should be sent to the host \fImynode\fR, and \fI18\fR is the
+identifier of a possible sub-device to be power controlled.  If in
+interactive mode, the additional information can be overrided
+everytime you specify a hostname during a power control operation.
 
 The following are the current OEM power types available, along with
 information on the systems they work with and the power control
@@ -402,8 +401,9 @@ operations available.
 .B C410X
 This OEM power type supports the power control of PCIe slots on Dell
 Poweredge C410x systems.  It supports \fBon\fR, \fBoff\fR, and
-\fBstat\fR.  Each power control operation must also specify a PCIe
-slot to operate on.  For example, the hostname \fImynode+2\fR would inform 
+\fBstat\fR.  The PCIe slot number to operate on must always be
+specified when attempting to power control with this extension.  For
+example, the hostname \fImynode+2\fR would inform
 .B ipmipower
 to operate on slot number \fI2\fR on \fImynode\fR.
 
