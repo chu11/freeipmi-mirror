@@ -59,6 +59,8 @@ ipmipower_check_checksum (ipmipower_powercmd_t ip, packet_type_t pkt)
           || pkt == GET_CHASSIS_STATUS_RES /* IPMI 1.5 or 2.0 */
           || pkt == CHASSIS_CONTROL_RES /* IPMI 1.5 or 2.0 */
           || pkt == CHASSIS_IDENTIFY_RES /* IPMI 1.5 or 2.0 */
+	  || pkt == C410X_GET_SENSOR_READING_RES /* IPMI 1.5 or 2.0 */
+	  || pkt == C410X_SLOT_POWER_CONTROL_RES /* IPMI 1.5 or 2.0 */
           || pkt == CLOSE_SESSION_RES); /* IPMI 1.5 or 2.0 */
 
   obj_cmd = ipmipower_packet_cmd_obj (ip, pkt);
@@ -93,6 +95,8 @@ ipmipower_check_authentication_code (ipmipower_powercmd_t ip,
           || pkt == GET_CHASSIS_STATUS_RES /* IPMI 1.5 or 2.0 */
           || pkt == CHASSIS_CONTROL_RES /* IPMI 1.5 or 2.0 */
           || pkt == CHASSIS_IDENTIFY_RES /* IPMI 1.5 or 2.0 */
+	  || pkt == C410X_GET_SENSOR_READING_RES /* IPMI 1.5 or 2.0 */
+	  || pkt == C410X_SLOT_POWER_CONTROL_RES /* IPMI 1.5 or 2.0 */
           || pkt == CLOSE_SESSION_RES); /* IPMI 1.5 or 2.0 */
   assert (buf && buflen);
 
@@ -103,6 +107,8 @@ ipmipower_check_authentication_code (ipmipower_powercmd_t ip,
               || pkt == GET_CHASSIS_STATUS_RES
               || pkt == CHASSIS_CONTROL_RES
               || pkt == CHASSIS_IDENTIFY_RES
+	      || pkt == C410X_GET_SENSOR_READING_RES
+	      || pkt == C410X_SLOT_POWER_CONTROL_RES
               || pkt == CLOSE_SESSION_RES)))
     {
       uint8_t authentication_type;
@@ -186,6 +192,8 @@ ipmipower_check_authentication_code (ipmipower_powercmd_t ip,
           || pkt == GET_CHASSIS_STATUS_RES
           || pkt == CHASSIS_CONTROL_RES
           || pkt == CHASSIS_IDENTIFY_RES
+	  || pkt == C410X_GET_SENSOR_READING_RES
+	  || pkt == C410X_SLOT_POWER_CONTROL_RES
           || pkt == CLOSE_SESSION_RES))
         */
     {
@@ -250,6 +258,8 @@ ipmipower_check_outbound_sequence_number (ipmipower_powercmd_t ip, packet_type_t
           || pkt == GET_CHASSIS_STATUS_RES
           || pkt == CHASSIS_CONTROL_RES
           || pkt == CHASSIS_IDENTIFY_RES
+	  || pkt == C410X_GET_SENSOR_READING_RES
+	  || pkt == C410X_SLOT_POWER_CONTROL_RES
           || pkt == CLOSE_SESSION_RES))
     {
       if (FIID_OBJ_GET (ip->obj_rmcpplus_session_hdr_res,
@@ -268,6 +278,8 @@ ipmipower_check_outbound_sequence_number (ipmipower_powercmd_t ip, packet_type_t
          || pkt == GET_CHASSIS_STATUS_RES
          || pkt == CHASSIS_CONTROL_RES
          || pkt == CHASSIS_IDENTIFY_RES
+	 || pkt == C410X_GET_SENSOR_READING_RES
+	 || pkt == C410X_SLOT_POWER_CONTROL_RES
          || pkt == CLOSE_SESSION_RES))
        */
     {
@@ -365,6 +377,8 @@ ipmipower_check_session_id (ipmipower_powercmd_t ip, packet_type_t pkt)
           || pkt == GET_CHASSIS_STATUS_RES
           || pkt == CHASSIS_CONTROL_RES
           || pkt == CHASSIS_IDENTIFY_RES
+	  || pkt == C410X_GET_SENSOR_READING_RES
+	  || pkt == C410X_SLOT_POWER_CONTROL_RES
           || pkt == CLOSE_SESSION_RES))
     {
       if (FIID_OBJ_GET (ip->obj_lan_session_hdr_res,
@@ -392,6 +406,8 @@ ipmipower_check_session_id (ipmipower_powercmd_t ip, packet_type_t pkt)
                || pkt == GET_CHASSIS_STATUS_RES
                || pkt == CHASSIS_CONTROL_RES
                || pkt == CHASSIS_IDENTIFY_RES
+	       || pkt == C410X_GET_SENSOR_READING_RES
+	       || pkt == C410X_SLOT_POWER_CONTROL_RES
                || pkt == CLOSE_SESSION_RES))
     {
       if (FIID_OBJ_GET (ip->obj_rmcpplus_session_hdr_res,
@@ -478,6 +494,10 @@ ipmipower_check_network_function (ipmipower_powercmd_t ip, packet_type_t pkt)
       || pkt == CHASSIS_CONTROL_RES
       || pkt == CHASSIS_IDENTIFY_RES)
     expected_netfn = IPMI_NET_FN_CHASSIS_RS;
+  else if (pkt == C410X_GET_SENSOR_READING_RES)
+    expected_netfn = IPMI_NET_FN_SENSOR_EVENT_RS;
+  else if (pkt == C410X_SLOT_POWER_CONTROL_RES)
+    expected_netfn = IPMI_NET_FN_OEM_DELL_GENERIC_RS;
   else
     expected_netfn = IPMI_NET_FN_APP_RS;
 
@@ -532,6 +552,10 @@ ipmipower_check_command (ipmipower_powercmd_t ip, packet_type_t pkt)
     expected_cmd = IPMI_CMD_CHASSIS_CONTROL;
   else if (pkt == CHASSIS_IDENTIFY_RES)
     expected_cmd = IPMI_CMD_CHASSIS_IDENTIFY;
+  else if (pkt == C410X_GET_SENSOR_READING_RES)
+    expected_cmd = IPMI_CMD_GET_SENSOR_READING;
+  else if (pkt == C410X_SLOT_POWER_CONTROL_RES)
+    expected_cmd = IPMI_CMD_OEM_DELL_SLOT_POWER_CONTROL;
   else if (pkt == CLOSE_SESSION_RES)
     expected_cmd = IPMI_CMD_CLOSE_SESSION;
 
@@ -633,6 +657,8 @@ ipmipower_check_payload_type (ipmipower_powercmd_t ip, packet_type_t pkt)
                   || pkt == GET_CHASSIS_STATUS_RES
                   || pkt == CHASSIS_CONTROL_RES
                   || pkt == CHASSIS_IDENTIFY_RES
+		  || pkt == C410X_GET_SENSOR_READING_RES
+		  || pkt == C410X_SLOT_POWER_CONTROL_RES
                   || pkt == CLOSE_SESSION_RES)));
 
   if (FIID_OBJ_GET (ip->obj_rmcpplus_session_hdr_res,
@@ -1170,6 +1196,8 @@ ipmipower_check_payload_pad (ipmipower_powercmd_t ip, packet_type_t pkt)
               || pkt == GET_CHASSIS_STATUS_RES
               || pkt == CHASSIS_CONTROL_RES
               || pkt == CHASSIS_IDENTIFY_RES
+	      || pkt == C410X_GET_SENSOR_READING_RES
+	      || pkt == C410X_SLOT_POWER_CONTROL_RES
               || pkt == CLOSE_SESSION_RES));
 
   confidentiality_algorithm = ip->confidentiality_algorithm;
@@ -1201,6 +1229,8 @@ ipmipower_check_integrity_pad (ipmipower_powercmd_t ip, packet_type_t pkt)
               || pkt == GET_CHASSIS_STATUS_RES
               || pkt == CHASSIS_CONTROL_RES
               || pkt == CHASSIS_IDENTIFY_RES
+	      || pkt == C410X_GET_SENSOR_READING_RES
+	      || pkt == C410X_SLOT_POWER_CONTROL_RES
               || pkt == CLOSE_SESSION_RES));
 
   if (ip->integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE)

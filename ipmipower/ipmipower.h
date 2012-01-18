@@ -169,8 +169,12 @@ typedef enum
     CHASSIS_CONTROL_RES                 = 0x209,
     CHASSIS_IDENTIFY_REQ                = 0x10A,
     CHASSIS_IDENTIFY_RES                = 0x20A,
-    CLOSE_SESSION_REQ                   = 0x10B,
-    CLOSE_SESSION_RES                   = 0x20B,
+    C410X_GET_SENSOR_READING_REQ        = 0x10B,
+    C410X_GET_SENSOR_READING_RES        = 0x20B,
+    C410X_SLOT_POWER_CONTROL_REQ        = 0x10C,
+    C410X_SLOT_POWER_CONTROL_RES        = 0x20C,
+    CLOSE_SESSION_REQ                   = 0x10D,
+    CLOSE_SESSION_RES                   = 0x20D,
   } packet_type_t;
 
 #define PACKET_TYPE_REQ_MASK           0x100
@@ -203,8 +207,10 @@ typedef enum
     PROTOCOL_STATE_GET_CHASSIS_STATUS_SENT              = 0x08,
     PROTOCOL_STATE_CHASSIS_CONTROL_SENT                 = 0x09,
     PROTOCOL_STATE_CHASSIS_IDENTIFY_SENT                = 0x0A,
-    PROTOCOL_STATE_CLOSE_SESSION_SENT                   = 0x0B,
-    PROTOCOL_STATE_END                                  = 0x0C,
+    PROTOCOL_STATE_C410X_GET_SENSOR_READING_SENT        = 0x0B,
+    PROTOCOL_STATE_C410X_SLOT_POWER_CONTROL_SENT        = 0x0C,
+    PROTOCOL_STATE_CLOSE_SESSION_SENT                   = 0x0D,
+    PROTOCOL_STATE_END                                  = 0x0E,
   } protocol_state_t;
 
 #define PROTOCOL_STATE_VALID(__s)    \
@@ -352,6 +358,10 @@ struct ipmipower_powercmd {
   fiid_obj_t obj_chassis_control_res;
   fiid_obj_t obj_chassis_identify_req;
   fiid_obj_t obj_chassis_identify_res;
+  fiid_obj_t obj_c410x_get_sensor_reading_req;
+  fiid_obj_t obj_c410x_get_sensor_reading_res;
+  fiid_obj_t obj_c410x_slot_power_control_req;
+  fiid_obj_t obj_c410x_slot_power_control_res;
   fiid_obj_t obj_close_session_req;
   fiid_obj_t obj_close_session_res;
 

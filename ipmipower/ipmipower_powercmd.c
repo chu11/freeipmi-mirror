@@ -117,6 +117,18 @@ _destroy_ipmipower_powercmd (ipmipower_powercmd_t ip)
   fiid_obj_destroy (ip->obj_chassis_control_res);
   fiid_obj_destroy (ip->obj_chassis_identify_req);
   fiid_obj_destroy (ip->obj_chassis_identify_res);
+
+  if (cmd_args.oem_power_type != OEM_POWER_TYPE_NONE)
+    {
+      if (cmd_args.oem_power_type == OEM_POWER_TYPE_C410X)
+	{
+	  fiid_obj_destroy (ip->obj_c410x_get_sensor_reading_req);
+	  fiid_obj_destroy (ip->obj_c410x_get_sensor_reading_res);
+	  fiid_obj_destroy (ip->obj_c410x_slot_power_control_req);
+	  fiid_obj_destroy (ip->obj_c410x_slot_power_control_res);
+	}
+    }
+
   fiid_obj_destroy (ip->obj_close_session_req);
   fiid_obj_destroy (ip->obj_close_session_res);
 
@@ -500,6 +512,34 @@ ipmipower_powercmd_queue (power_cmd_t cmd,
       IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
       exit (1);
     }
+  
+  if (cmd_args.oem_power_type != OEM_POWER_TYPE_NONE)
+    {
+      if (cmd_args.oem_power_type == OEM_POWER_TYPE_C410X)
+	{
+	  if (!(ip->obj_c410x_get_sensor_reading_req = fiid_obj_create (tmpl_cmd_get_sensor_reading_rq)))
+	    {
+	      IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
+	      exit (1);
+	    }
+	  if (!(ip->obj_c410x_get_sensor_reading_res = fiid_obj_create (tmpl_cmd_get_sensor_reading_rs)))
+	    {
+	      IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
+	      exit (1);
+	    }
+	  if (!(ip->obj_c410x_slot_power_control_req = fiid_obj_create (tmpl_cmd_c410x_slot_power_control_rq)))
+	    {
+	      IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
+	      exit (1);
+	    }
+	  if (!(ip->obj_c410x_slot_power_control_res = fiid_obj_create (tmpl_cmd_c410x_slot_power_control_rs)))
+	    {
+	      IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
+	      exit (1);
+	    }
+	}
+    }
+  
   if (!(ip->obj_close_session_req = fiid_obj_create (tmpl_cmd_close_session_rq)))
     {
       IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
@@ -645,6 +685,10 @@ _send_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
     ip->protocol_state = PROTOCOL_STATE_CHASSIS_CONTROL_SENT;
   else if (pkt == CHASSIS_IDENTIFY_REQ)
     ip->protocol_state = PROTOCOL_STATE_CHASSIS_IDENTIFY_SENT;
+  else if (pkt == C410X_GET_SENSOR_READING_REQ)
+    ip->protocol_state = PROTOCOL_STATE_C410X_GET_SENSOR_READING_SENT;
+  else if (pkt == C410X_SLOT_POWER_CONTROL_REQ)
+    ip->protocol_state = PROTOCOL_STATE_C410X_SLOT_POWER_CONTROL_SENT;
   else if (pkt == CLOSE_SESSION_REQ)
     ip->protocol_state = PROTOCOL_STATE_CLOSE_SESSION_SENT;
 
@@ -657,6 +701,8 @@ _send_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
           || pkt == GET_CHASSIS_STATUS_REQ
           || pkt == CHASSIS_CONTROL_REQ
           || pkt == CHASSIS_IDENTIFY_REQ
+	  || pkt == C410X_GET_SENSOR_READING_REQ
+	  || pkt == C410X_SLOT_POWER_CONTROL_REQ
           || pkt == CLOSE_SESSION_REQ))
     ip->session_inbound_count++;
 
@@ -850,6 +896,8 @@ _recv_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
                || pkt == GET_CHASSIS_STATUS_RES
                || pkt == CHASSIS_CONTROL_RES
                || pkt == CHASSIS_IDENTIFY_RES
+	       || pkt == C410X_GET_SENSOR_READING_RES
+	       || pkt == C410X_SLOT_POWER_CONTROL_RES
                || pkt == CLOSE_SESSION_RES))
     {
       if (!ipmipower_check_checksum (ip, pkt))
@@ -1016,6 +1064,8 @@ _recv_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
                || pkt == GET_CHASSIS_STATUS_RES
                || pkt == CHASSIS_CONTROL_RES
                || pkt == CHASSIS_IDENTIFY_RES
+	       || pkt == C410X_GET_SENSOR_READING_RES
+	       || pkt == C410X_SLOT_POWER_CONTROL_RES
                || pkt == CLOSE_SESSION_RES))
     {
       if (!ipmipower_check_payload_type (ip, pkt))
@@ -1317,6 +1367,10 @@ _retry_packets (ipmipower_powercmd_t ip)
     _send_packet (ip, CHASSIS_CONTROL_REQ);
   else if (ip->protocol_state == PROTOCOL_STATE_CHASSIS_IDENTIFY_SENT)
     _send_packet (ip, CHASSIS_IDENTIFY_REQ);
+  else if (ip->protocol_state == PROTOCOL_STATE_C410X_GET_SENSOR_READING_SENT)
+    _send_packet (ip, C410X_GET_SENSOR_READING_REQ);
+  else if (ip->protocol_state == PROTOCOL_STATE_C410X_SLOT_POWER_CONTROL_SENT)
+    _send_packet (ip, C410X_SLOT_POWER_CONTROL_REQ);
   else if (ip->protocol_state == PROTOCOL_STATE_CLOSE_SESSION_SENT)
     {
       /*
@@ -1713,6 +1767,7 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
 
   assert (ip);
   assert (PROTOCOL_STATE_VALID (ip->protocol_state));
+  assert (OEM_POWER_TYPE_VALID (cmd_args.oem_power_type));
 
   /* if timeout, give up */
   if (_has_timed_out (ip))
@@ -1851,17 +1906,27 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
           goto done;
         }
 
-      if (ip->cmd == POWER_CMD_POWER_STATUS
-          || ip->cmd == POWER_CMD_IDENTIFY_STATUS
-          || (cmd_args.on_if_off
-              && (ip->cmd == POWER_CMD_POWER_CYCLE
-                  || ip->cmd == POWER_CMD_POWER_RESET)))
-        _send_packet (ip, GET_CHASSIS_STATUS_REQ);
-      else if (ip->cmd == POWER_CMD_IDENTIFY_ON
-               || ip->cmd == POWER_CMD_IDENTIFY_OFF)
-        _send_packet (ip, CHASSIS_IDENTIFY_REQ);
-      else
-        _send_packet (ip, CHASSIS_CONTROL_REQ);
+      if (cmd_args.oem_power_type == OEM_POWER_TYPE_NONE)
+	{
+	  if (ip->cmd == POWER_CMD_POWER_STATUS
+	      || ip->cmd == POWER_CMD_IDENTIFY_STATUS
+	      || (cmd_args.on_if_off
+		  && (ip->cmd == POWER_CMD_POWER_CYCLE
+		      || ip->cmd == POWER_CMD_POWER_RESET)))
+	    _send_packet (ip, GET_CHASSIS_STATUS_REQ);
+	  else if (ip->cmd == POWER_CMD_IDENTIFY_ON
+		   || ip->cmd == POWER_CMD_IDENTIFY_OFF)
+	    _send_packet (ip, CHASSIS_IDENTIFY_REQ);
+	  else /* on, off, cycle, reset, pulse diag interupt, soft shutdown */
+	    _send_packet (ip, CHASSIS_CONTROL_REQ);
+	}
+      else /* cmd_args.oem_power_type == OEM_POWER_TYPE_C410X */
+	{
+	  if (ip->cmd == POWER_CMD_POWER_STATUS)
+	    _send_packet (ip, C410X_GET_SENSOR_READING_REQ);
+	  else /* on, off */
+	    _send_packet (ip, C410X_SLOT_POWER_CONTROL_REQ);
+	}
     }
   else if (ip->protocol_state == PROTOCOL_STATE_GET_CHASSIS_STATUS_SENT)
     {
@@ -2021,6 +2086,126 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
 
       ipmipower_output (MSG_TYPE_OK, ip->ic->hostname);
       _send_packet (ip, CLOSE_SESSION_REQ);
+    }
+  else if (ip->protocol_state == PROTOCOL_STATE_C410X_GET_SENSOR_READING_SENT)
+    {
+      uint8_t sensor_reading;
+      uint8_t reading_state;
+      uint8_t sensor_scanning;
+      int slot_power_on_flag;
+
+      if ((rv = _recv_packet (ip, C410X_GET_SENSOR_READING_RES)) != 1)
+        {
+          if (rv < 0)
+            /* Session is up, so close it */
+            _send_packet (ip, CLOSE_SESSION_REQ);
+          goto done;
+        }
+
+      if (FIID_OBJ_GET (ip->obj_c410x_get_sensor_reading_res,
+                        "sensor_reading",
+                        &val) < 0)
+        {
+          IPMIPOWER_ERROR (("FIID_OBJ_GET: 'sensor_reading': %s",
+                            fiid_obj_errormsg (ip->obj_get_chassis_status_res)));
+          exit (1);
+        }
+      sensor_reading = val;
+
+      if (FIID_OBJ_GET (ip->obj_c410x_get_sensor_reading_res,
+                        "reading_state",
+                        &val) < 0)
+        {
+          IPMIPOWER_ERROR (("FIID_OBJ_GET: 'reading_state': %s",
+                            fiid_obj_errormsg (ip->obj_get_chassis_status_res)));
+          exit (1);
+        }
+      reading_state = val;
+
+      if (FIID_OBJ_GET (ip->obj_c410x_get_sensor_reading_res,
+                        "sensor_scanning",
+                        &val) < 0)
+        {
+          IPMIPOWER_ERROR (("FIID_OBJ_GET: 'sensor_scanning': %s",
+                            fiid_obj_errormsg (ip->obj_get_chassis_status_res)));
+          exit (1);
+        }
+      sensor_scanning = val;
+
+      if (reading_state == IPMI_SENSOR_READING_STATE_UNAVAILABLE
+	  || sensor_scanning == IPMI_SENSOR_SCANNING_ON_THIS_SENSOR_DISABLE)
+	{
+	  ipmipower_output (MSG_TYPE_BMC_ERROR, ip->ic->hostname);
+	  _send_packet (ip, CLOSE_SESSION_REQ);
+	  goto done;
+	}
+
+      /* If non-zero, then it's on */
+      if (sensor_reading)
+	slot_power_on_flag = 1;
+      else
+	slot_power_on_flag = 0;
+
+      if (cmd_args.wait_until_on
+          && ip->cmd == POWER_CMD_POWER_ON
+          && ip->wait_until_on_state)
+        {
+          if (slot_power_on_flag)
+            {
+              ipmipower_output (MSG_TYPE_OK, ip->ic->hostname);
+              ip->wait_until_on_state = 0;
+              _send_packet (ip, CLOSE_SESSION_REQ);
+            }
+        }
+      else if (cmd_args.wait_until_off
+               && ip->cmd == POWER_CMD_POWER_OFF
+               && ip->wait_until_off_state)
+        {
+          if (!slot_power_on_flag)
+            {
+              ipmipower_output (MSG_TYPE_OK, ip->ic->hostname);
+              ip->wait_until_off_state = 0;
+              _send_packet (ip, CLOSE_SESSION_REQ);
+            }
+        }
+      else if (ip->cmd == POWER_CMD_POWER_STATUS)
+        {
+          ipmipower_output ((slot_power_on_flag) ? MSG_TYPE_ON : MSG_TYPE_OFF,
+                            ip->ic->hostname);
+          _send_packet (ip, CLOSE_SESSION_REQ);
+        }
+      else
+        {
+          IPMIPOWER_ERROR (("_process_ipmi_packets: invalid command state: %d", ip->cmd));
+          exit (1);
+        }
+    }
+  else if (ip->protocol_state == PROTOCOL_STATE_C410X_SLOT_POWER_CONTROL_SENT)
+    {
+      if ((rv = _recv_packet (ip, C410X_SLOT_POWER_CONTROL_RES)) != 1)
+        {
+          if (rv < 0)
+            /* Session is up, so close it */
+            _send_packet (ip, CLOSE_SESSION_REQ);
+          goto done;
+        }
+
+      if ((cmd_args.wait_until_on
+           && ip->cmd == POWER_CMD_POWER_ON)
+          || (cmd_args.wait_until_off
+              && ip->cmd == POWER_CMD_POWER_OFF))
+        {
+          if (ip->cmd == POWER_CMD_POWER_ON)
+            ip->wait_until_on_state++;
+          else
+            ip->wait_until_off_state++;
+          _send_packet (ip, C410X_GET_SENSOR_READING_REQ);
+        }
+      else
+        {
+          ipmipower_output (MSG_TYPE_OK, ip->ic->hostname);
+	  _send_packet (ip, CLOSE_SESSION_REQ);
+        }
     }
   else if (ip->protocol_state == PROTOCOL_STATE_CLOSE_SESSION_SENT)
     {

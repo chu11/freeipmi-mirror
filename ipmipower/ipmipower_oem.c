@@ -73,8 +73,46 @@ struct oem_power_type_data oem_power_type_data[] =
     },
   };
 
-#define IPMIPOWER_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MIN 1
-#define IPMIPOWER_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MAX 16
+/* OEM fiid templates */
+
+/* Dell Poweredge OEM
+ *
+ * From Dell Provided Docs
+ *
+ * Slot Power Control Request
+ *
+ * 0x30 - OEM network function
+ * 0xF0 - OEM cmd
+ * 0x?? - bit 0 - slot 1
+ *      - bit 1 - slot 2
+ *      - ...
+ *      - bit 7 - slot 8
+ * 0x?? - bit 0 - slot 9
+ *      - bit 1 - slot 10
+ *      - ...
+ *      - bit 7 - slot 16
+ *
+ * only should do one slot at a time
+ *
+ * Slot Power Control Response
+ *
+ * 0xF0 - OEM cmd
+ * 0x?? - Completion Code
+ */
+
+fiid_template_t tmpl_cmd_c410x_slot_power_control_rq =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 16, "slot_number_bitmask", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_c410x_slot_power_control_rs =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 0, "", 0}
+  };
 
 static int
 _power_cmd_to_oem_power_type_support (power_cmd_t cmd)

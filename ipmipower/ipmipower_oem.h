@@ -29,6 +29,16 @@
 
 #include "ipmipower.h"
 
+/*
+ * OEM C410x
+ */
+
+#define IPMIPOWER_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MIN 1
+#define IPMIPOWER_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MAX 16
+
+extern fiid_template_t tmpl_cmd_c410x_slot_power_control_rq;
+extern fiid_template_t tmpl_cmd_c410x_slot_power_control_rs;
+
 /* ipmipower_oem_power_cmd_check_support_and_privilege
  * - check if power cmd supported for OEM type and privilege level ok
  * - returns 1 if ok, 0 if not, -1 on error

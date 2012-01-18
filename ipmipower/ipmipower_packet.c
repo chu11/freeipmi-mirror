@@ -42,6 +42,7 @@
 
 #include "ipmipower_packet.h"
 #include "ipmipower_error.h"
+#include "ipmipower_oem.h"
 #include "ipmipower_util.h"
 
 #include "freeipmi-portability.h"
@@ -95,6 +96,14 @@ ipmipower_packet_cmd_template (ipmipower_powercmd_t ip, packet_type_t pkt)
     return (&tmpl_cmd_chassis_identify_rq[0]);
   else if (pkt == CHASSIS_IDENTIFY_RES)
     return (&tmpl_cmd_chassis_identify_rs[0]);
+  else if (pkt == C410X_GET_SENSOR_READING_REQ)
+    return (&tmpl_cmd_get_sensor_reading_rq[0]);
+  else if (pkt == C410X_GET_SENSOR_READING_RES)
+    return (&tmpl_cmd_get_sensor_reading_rs[0]);
+  else if (pkt == C410X_SLOT_POWER_CONTROL_REQ)
+    return (&tmpl_cmd_c410x_slot_power_control_rq[0]);
+  else if (pkt == C410X_SLOT_POWER_CONTROL_RES)
+    return (&tmpl_cmd_c410x_slot_power_control_rs[0]);
   else if (pkt == CLOSE_SESSION_REQ)
     return (&tmpl_cmd_close_session_rq[0]);
   else if (pkt == CLOSE_SESSION_RES)
@@ -155,6 +164,14 @@ ipmipower_packet_cmd_obj (ipmipower_powercmd_t ip, packet_type_t pkt)
     return (ip->obj_chassis_identify_req);
   else if (pkt == CHASSIS_IDENTIFY_RES)
     return (ip->obj_chassis_identify_res);
+  else if (pkt == C410X_GET_SENSOR_READING_REQ)
+    return (ip->obj_c410x_get_sensor_reading_req);
+  else if (pkt == C410X_GET_SENSOR_READING_RES)
+    return (ip->obj_c410x_get_sensor_reading_res);
+  else if (pkt == C410X_SLOT_POWER_CONTROL_REQ)
+    return (ip->obj_c410x_slot_power_control_req);
+  else if (pkt == C410X_SLOT_POWER_CONTROL_RES)
+    return (ip->obj_c410x_slot_power_control_res);
   else if (pkt == CLOSE_SESSION_REQ)
     return (ip->obj_close_session_req);
   else if (pkt == CLOSE_SESSION_RES)
@@ -223,6 +240,12 @@ ipmipower_packet_dump (ipmipower_powercmd_t ip, packet_type_t pkt,
       else if (pkt == CHASSIS_IDENTIFY_REQ
                || pkt == CHASSIS_IDENTIFY_RES)
         str_cmd = ipmi_cmd_str (IPMI_NET_FN_CHASSIS_RQ, IPMI_CMD_CHASSIS_IDENTIFY);
+      else if (pkt == C410X_GET_SENSOR_READING_REQ
+               || pkt == C410X_GET_SENSOR_READING_RES)
+        str_cmd = ipmi_cmd_str (IPMI_NET_FN_SENSOR_EVENT_RQ, IPMI_CMD_GET_SENSOR_READING);
+      else if (pkt == C410X_SLOT_POWER_CONTROL_REQ
+	       || pkt == C410X_SLOT_POWER_CONTROL_RES)
+	str_cmd = "C410x Slot Power Control";
       else if (pkt == CLOSE_SESSION_REQ
                || pkt == CLOSE_SESSION_RES)
         str_cmd = ipmi_cmd_str (IPMI_NET_FN_APP_RQ, IPMI_CMD_CLOSE_SESSION);
@@ -280,6 +303,10 @@ ipmipower_packet_dump (ipmipower_powercmd_t ip, packet_type_t pkt,
                    || pkt == CHASSIS_CONTROL_RES
                    || pkt == CHASSIS_IDENTIFY_REQ
                    || pkt == CHASSIS_IDENTIFY_RES
+		   || pkt == C410X_GET_SENSOR_READING_REQ
+		   || pkt == C410X_GET_SENSOR_READING_RES
+		   || pkt == C410X_SLOT_POWER_CONTROL_REQ
+		   || pkt == C410X_SLOT_POWER_CONTROL_RES
                    || pkt == CLOSE_SESSION_REQ
                    || pkt == CLOSE_SESSION_RES))
         {
@@ -816,6 +843,10 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
       || pkt == CHASSIS_CONTROL_REQ
       || pkt == CHASSIS_IDENTIFY_REQ)
     net_fn = IPMI_NET_FN_CHASSIS_RQ;
+  else if (pkt == C410X_GET_SENSOR_READING_REQ)
+    net_fn = IPMI_NET_FN_SENSOR_EVENT_RQ;
+  else if (pkt == C410X_SLOT_POWER_CONTROL_REQ)
+    net_fn = IPMI_NET_FN_OEM_DELL_GENERIC_RQ;
   else
     net_fn = IPMI_NET_FN_APP_RQ;
 
@@ -1179,6 +1210,69 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
           exit (1);
         }
       obj_cmd_req = ip->obj_chassis_identify_req;
+    }
+  else if (pkt == C410X_GET_SENSOR_READING_REQ)
+    {
+      char *endptr;
+      unsigned int slot_number;
+
+      assert (ip->extra_arg);
+
+      errno = 0;
+      slot_number = strtol (ip->extra_arg, &endptr, 0);
+
+      /* tons of error checks by now, should not error out here */
+      assert (!errno);
+      assert (endptr[0] == '\0');
+      assert (slot_number >= IPMIPOWER_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MIN
+	      && slot_number <= IPMIPOWER_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MAX);
+      
+      if (fill_cmd_get_sensor_reading (IPMI_SENSOR_NUMBER_OEM_DELL_C410X_PCIE_1_WATT + (slot_number - 1),
+				       ip->obj_c410x_get_sensor_reading_req) < 0)
+	{
+	  IPMIPOWER_ERROR (("fill_cmd_get_sensor_reading: %s", strerror (errno)));
+	  exit (1);
+	}
+
+      obj_cmd_req = ip->obj_c410x_get_sensor_reading_req;
+    }
+  else if (pkt == C410X_SLOT_POWER_CONTROL_REQ)
+    {
+      char *endptr;
+      unsigned int slot_number;
+      uint16_t slot_number_bitmask;
+
+      assert (ip->extra_arg);
+      
+      errno = 0;
+      slot_number = strtol (ip->extra_arg, &endptr, 0);
+      
+      /* tons of error checks by now, should not error out here */
+      assert (!errno);
+      assert (endptr[0] == '\0');
+      assert (slot_number >= IPMIPOWER_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MIN
+	      && slot_number <= IPMIPOWER_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MAX);
+
+      if (fiid_obj_set (ip->obj_c410x_slot_power_control_req,
+			"cmd",
+			IPMI_CMD_OEM_DELL_SLOT_POWER_CONTROL) < 0)
+	{
+	  IPMIPOWER_ERROR (("fiid_obj_set: 'cmd': %s",
+			    fiid_obj_errormsg (ip->obj_c410x_slot_power_control_req)));
+	  exit (1);
+	}
+
+      slot_number_bitmask = (0x1 << (slot_number - 1));
+      if (fiid_obj_set (ip->obj_c410x_slot_power_control_req,
+			"slot_number_bitmask",
+			slot_number_bitmask) < 0)
+	{
+	  IPMIPOWER_ERROR (("fiid_obj_set: 'slot_number_bitmask': %s",
+			    fiid_obj_errormsg (ip->obj_c410x_slot_power_control_req)));
+	  exit (1);
+	}
+
+      obj_cmd_req = ip->obj_c410x_slot_power_control_req;
     }
   else if (pkt == CLOSE_SESSION_REQ)
     {
