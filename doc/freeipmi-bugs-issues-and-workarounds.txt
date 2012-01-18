@@ -1364,6 +1364,24 @@ System Event Log Issue #6: [IMPLEMENTATION]
 
   Resolution: None
 
+System Event Log Issue #7: [COMPLIANCE]
+
+  SEL events showing a threshold sensor do not properly report if they
+  are going high or going low, which can lead to confusion from
+  users. For example, the following set of events might occur.
+
+  Upper Non-critical - going high ; Sensor Reading = 242.00 W ; Threshold = 240.00 W
+  Upper Non-critical - going high ; Sensor Reading = 180.00 W ; Threshold = 240.00 W
+
+  but it should instead show:
+
+  Upper Non-critical - going high ; Sensor Reading = 242.00 W ; Threshold = 240.00 W
+  Upper Non-critical - going low ; Sensor Reading = 180.00 W ; Threshold = 240.00 W
+
+  Seen on: Dell Poweredge C410x
+
+  Resolution: None
+
 ----------------------------------------------------------------------
 
 -----------------------------
