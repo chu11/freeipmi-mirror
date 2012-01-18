@@ -1,3 +1,7 @@
+2012-01-17  Albert Chu <chu11@llnl.gov>
+
+	* ipmipower/ipmipower.h: Redo packet validation macros.
+	
 2012-01-16  Albert Chu <chu11@llnl.gov>
 
 	* man/manpage-common-inband.man: Clarify argument input.

@@ -144,19 +144,25 @@ typedef enum
 
 #define PACKET_TYPE_REQ_MASK           0x100
 #define PACKET_TYPE_RES_MASK           0x200
+#define PACKET_TYPE_PKT_MIN            0x001
+#define PACKET_TYPE_PKT_MAX            0x00B
 #define PACKET_TYPE_PKT_MASK           0x0FF
 
+#define PACKET_TYPE_PACKET_VALID(__p)                    \
+  (((__p) & PACKET_TYPE_PKT_MASK) >= PACKET_TYPE_PKT_MIN \
+   && ((__p) & PACKET_TYPE_PKT_MASK) <= PACKET_TYPE_PKT_MAX)
+
 #define PACKET_TYPE_VALID_REQ(__p)          \
-  (((__p) & PACKET_TYPE_REQ_MASK) &&        \
-   ((__p) & PACKET_TYPE_PKT_MASK))
+  (((__p) & PACKET_TYPE_REQ_MASK)           \
+   && PACKET_TYPE_PACKET_VALID ((__p)))
 
 #define PACKET_TYPE_VALID_RES(__p)          \
-  (((__p) & PACKET_TYPE_RES_MASK) &&        \
-   ((__p) & PACKET_TYPE_PKT_MASK))
+  (((__p) & PACKET_TYPE_RES_MASK)	    \
+   && PACKET_TYPE_PACKET_VALID ((__p)))
 
 #define PACKET_TYPE_VALID_PKT(__p)          \
-  (PACKET_TYPE_VALID_REQ (__p) ||           \
-   PACKET_TYPE_VALID_RES (__p))
+  (PACKET_TYPE_VALID_REQ ((__p))	    \
+   || PACKET_TYPE_VALID_RES ((__p)))
 
 /* Protocol States */
 typedef enum
