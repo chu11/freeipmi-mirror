@@ -42,6 +42,9 @@ The following options are specific to
 .TP
 \fB\-v\fR
 Output verbose output.  This option will output event direction.
+Event direction may be useful to differentiate severity between some
+events.  For example, some motherboards may issue an event both when a
+temperature exceeds a threshold and when it goes back down below it.
 .TP
 \fB\-vv\fR
 Output very verbose output.  This option will output additional
