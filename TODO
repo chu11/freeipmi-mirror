@@ -28,6 +28,9 @@ FreeIPMI general
   - maybe oddball case need fallback RMCP port
   - to maintain backwards compatability, implement in hostname
     i.e. "-h foonode:1282"
+- loop/try again on NODE_BUSY errors (XXX)
+  - treat more like network busy than error?
+  - option for alternate behavior?
 
 FreeIPMI new stuff
 ------------------
