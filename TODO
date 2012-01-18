@@ -198,6 +198,9 @@ ipmi-sel
   - redhat doesn't enable by default, probably don't need to worry about this much
   - see http://cateee.net/lkddb/web-lkddb/IPMI_PANIC_STRING.html
   - see http://www.cyberciti.biz/tips/compiling-linux-kernel-module.html
+- non-uncommon for motherboards to output events both directions of
+  crossing threshold.  Can be confusing b/c assert/deassert not output
+  by default.  Should alter output in these cases?
 - ganglia plugin?
 - nagios plugin?
 
