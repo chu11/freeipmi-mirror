@@ -8,7 +8,7 @@
 	* ipmipower/ipmipower_util.h, ipmipower/ipmipower_util.c
 	(ipmipower_power_cmd_to_string,
 	ipmipower_power_cmd_check_privilege): New functions.
-	
+
 2012-01-05  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/: Support Dell C410x OEM extension slot-power-toggle,
