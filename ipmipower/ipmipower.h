@@ -169,25 +169,35 @@ typedef enum
     CHASSIS_CONTROL_RES                 = 0x209,
     CHASSIS_IDENTIFY_REQ                = 0x10A,
     CHASSIS_IDENTIFY_RES                = 0x20A,
-    CLOSE_SESSION_REQ                   = 0x10B,
-    CLOSE_SESSION_RES                   = 0x20B,
+    C410X_POWER_STATUS_REQ              = 0x10B
+    C410X_POWER_STATUS_RES              = 0x20B
+    C410X_POWER_TOGGLE_REQ              = 0x10C
+    C410X_POWER_TOGGLE_RES              = 0x20C
+    CLOSE_SESSION_REQ                   = 0x10D,
+    CLOSE_SESSION_RES                   = 0x20D,
   } packet_type_t;
 
 #define PACKET_TYPE_REQ_MASK           0x100
 #define PACKET_TYPE_RES_MASK           0x200
+#define PACKET_TYPE_PKT_MIN            0x001
+#define PACKET_TYPE_PKT_MAX            0x00D
 #define PACKET_TYPE_PKT_MASK           0x0FF
 
+#define PACKET_TYPE_PACKET_VALID(__p)                    \
+  (((__p) & PACKET_TYPE_PKT_MASK) >= PACKET_TYPE_PKT_MIN \
+   && ((__p) & PACKET_TYPE_PKT_MASK) <= PACKET_TYPE_PKT_MAX)
+
 #define PACKET_TYPE_VALID_REQ(__p)          \
-  (((__p) & PACKET_TYPE_REQ_MASK) &&        \
-   ((__p) & PACKET_TYPE_PKT_MASK))
+  (((__p) & PACKET_TYPE_REQ_MASK)           \
+   && PACKET_TYPE_PACKET_VALID ((__p)))
 
 #define PACKET_TYPE_VALID_RES(__p)          \
-  (((__p) & PACKET_TYPE_RES_MASK) &&        \
-   ((__p) & PACKET_TYPE_PKT_MASK))
+  (((__p) & PACKET_TYPE_RES_MASK)	    \
+   && PACKET_TYPE_PACKET_VALID ((__p)))
 
 #define PACKET_TYPE_VALID_PKT(__p)          \
-  (PACKET_TYPE_VALID_REQ (__p) ||           \
-   PACKET_TYPE_VALID_RES (__p))
+  ((PACKET_TYPE_VALID_REQ ((__p))	    \
+    || PACKET_TYPE_VALID_RES ((__p)))
 
 /* Protocol States */
 typedef enum
