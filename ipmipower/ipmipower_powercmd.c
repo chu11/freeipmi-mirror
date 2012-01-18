@@ -1865,7 +1865,7 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
           && ip->cmd == POWER_CMD_POWER_ON
           && ip->wait_until_on_state)
         {
-          if (power_state)
+          if (power_state == IPMI_SYSTEM_POWER_IS_ON)
             {
               ipmipower_output (MSG_TYPE_OK, ip->ic->hostname);
               ip->wait_until_on_state = 0;
@@ -1876,7 +1876,7 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
                && ip->cmd == POWER_CMD_POWER_OFF
                && ip->wait_until_off_state)
         {
-          if (!power_state)
+          if (power_state == IPMI_SYSTEM_POWER_IS_OFF)
             {
               ipmipower_output (MSG_TYPE_OK, ip->ic->hostname);
               ip->wait_until_off_state = 0;
@@ -1885,7 +1885,7 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
         }
       else if (ip->cmd == POWER_CMD_POWER_STATUS)
         {
-          ipmipower_output ((power_state) ? MSG_TYPE_ON : MSG_TYPE_OFF,
+          ipmipower_output ((power_state == IPMI_SYSTEM_POWER_IS_ON) ? MSG_TYPE_ON : MSG_TYPE_OFF,
                             ip->ic->hostname);
           _send_packet (ip, CLOSE_SESSION_REQ);
         }

@@ -1,6 +1,10 @@
 FreeIPMI 1.2.1 - XX/XX/XX
 -------------------------
 
+Libraries
+---------
+o In libfreeipmi, add missing macro definitions.
+
 FreeIPMI 1.1.1 - 01/03/12
 -------------------------
 

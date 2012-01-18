@@ -1,6 +1,12 @@
 2012-01-17  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/ipmipower.h: Redo packet validation macros.
+
+	* libfreeipmi/include/freeipmi/cmds/ipmi-chassis-cmds.h: Define
+	macros for on vs off power.
+	
+	* ipmipower/ipmipower_powercmd.c (_process_ipmi_packets): Use new
+	macros.
 	
 2012-01-16  Albert Chu <chu11@llnl.gov>
 
