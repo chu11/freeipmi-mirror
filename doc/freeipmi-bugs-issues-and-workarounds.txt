@@ -25,7 +25,7 @@ categories:
 
 [IMPLEMENTATION] - Implementations that are legal IPMI
                    implementations, but implementation choices makes
-                   IPMI poorer/more difficult to use.
+                   IPMI poorer, confusing, or more difficult to use.
 
 For the record, I have nothing against the vendors and the products
 that have these issues.  I am just as prone to programming bugs as
@@ -1364,19 +1364,23 @@ System Event Log Issue #6: [IMPLEMENTATION]
 
   Resolution: None
 
-System Event Log Issue #7: [COMPLIANCE]
+System Event Log Issue #7: [IMPLEMENTATION]
 
   SEL events showing a threshold sensor do not properly report if they
-  are going high or going low, which can lead to confusion from
+  are going high or going low, which can lead to confusion for
   users. For example, the following set of events might occur.
 
   Upper Non-critical - going high ; Sensor Reading = 242.00 W ; Threshold = 240.00 W
   Upper Non-critical - going high ; Sensor Reading = 180.00 W ; Threshold = 240.00 W
 
-  but it should instead show:
+  The following would be preferred
 
   Upper Non-critical - going high ; Sensor Reading = 242.00 W ; Threshold = 240.00 W
   Upper Non-critical - going low ; Sensor Reading = 180.00 W ; Threshold = 240.00 W
+
+  It is very likely the implementors only thought of
+  asserting/deasserting identical events, without considerations of
+  the actual event messages and the resulting output that can occur.
 
   Seen on: Dell Poweredge C410x
 
@@ -1548,26 +1552,11 @@ Misc IPMI Issue #3: [COMPLIANCE]
 | Appendix |
 ------------
 
-[COMPLIANCE]
-
-This is a IPMI compliance issue/bug.
-
 [CONFIG-1]
 
 To see a discussion on why this implementation is poor, please see
 "Configuration tool callback design" in the freeipmi-design.txt
 document.
-
-[IMPLEMENTATION]
-
-This is not an IPMI compliance issue, but rather a poor implementation
-that gives the user a poor experience.
-
-[INTERPRETATION]
-
-This is not an IPMI compliance issue, but rather a interpretation
-issue in the specification that has lead to multiple implementations
-by vendors.
 
 [SENSORS-1]
 
