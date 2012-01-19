@@ -1382,6 +1382,15 @@ System Event Log Issue #7: [COMPLIANCE]
 
   Resolution: None
 
+  Notes:
+
+  The following SEL output in ipmitool shows how it can lead to even more confusion.
+
+  Upper Non-critical going high | Reading 240 > Threshold 240 Watts
+  Upper Non-critical going high | Reading 88 > Threshold 240 Watts
+
+  It reads "88 > 240"
+
 ----------------------------------------------------------------------
 
 -----------------------------
