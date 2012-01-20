@@ -1,5 +1,6 @@
 *** - priority for future major release
 XXX - priority for future minor release
+ooo - priority code cleanup that should be done
 
 branches to merge
 -----------------
@@ -220,7 +221,7 @@ ipmipower
     started until earlier one done.
 - Cleanup code, create wrappers/funcs for "session packets", so in
   future don't have to make constant cut & paste into all parts of
-  code (***)
+  code (ooo)
   - i.e. all these ifs
      else if (pkt == OPEN_SESSION_REQ
            || pkt == RAKP_MESSAGE_1_REQ
