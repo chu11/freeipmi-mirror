@@ -398,6 +398,8 @@ struct ipmipower_connection
 
   discover_state_t discover_state;
   char hostname[MAXHOSTNAMELEN+1];
+  /* for oem power types ; extra arg passed in via "+extra" at end of hostname */
+  char *hostname_extra_arg;
   struct sockaddr_in destaddr;
 
   /* for eliminate option */
@@ -439,8 +441,6 @@ struct ipmipower_arguments
 {
   struct common_cmd_args common;
   struct hostrange_cmd_args hostrange;
-  /* for oem power types ; extra arg passed in via "+extra" at end of hostname */
-  char *hostname_extra_arg;
 #ifndef NDEBUG
   int rmcpdump;
 #endif /* NDEBUG */

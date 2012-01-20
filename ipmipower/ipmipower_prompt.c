@@ -107,115 +107,57 @@ _cmd_driver_type (char **argv)
 }
 
 static void
-_cmd_hostname_clear (void)
-{
-  free (cmd_args.common.hostname);
-  cmd_args.common.hostname = NULL;
-
-  free (cmd_args.hostname_extra_arg);
-  cmd_args.hostname_extra_arg = NULL;
-
-  ipmipower_connection_array_destroy (ics, ics_len);
-  ics = NULL;
-  ics_len = 0;
-}
-
-static void
-_cmd_hostname_new (char **argv)
-{
-  struct ipmipower_connection *icsPtr;
-  unsigned int len = 0;
-  char *new_hostname = NULL;
-  char *new_hostname_extra_arg = NULL;
-  char *ptr;
-
-  assert (argv);
-
-  if (!(new_hostname = strdup (argv[1])))
-    {
-      IPMIPOWER_ERROR (("strdup: %s", strerror(errno)));
-      exit (1);
-    }
-
-  if (cmd_args.oem_power_type != OEM_POWER_TYPE_NONE)
-    {
-      if ((ptr = strchr (new_hostname, '+')))
-	{
-	  *ptr = '\0';
-	  ptr++;
-	  
-	  if (!(new_hostname_extra_arg = strdup (ptr)))
-	    {
-	      IPMIPOWER_ERROR (("strdup: %s", strerror(errno)));
-	      free (new_hostname);
-	      exit (1);
-	    }
-	}
-    }
-  
-  if (!(icsPtr = ipmipower_connection_array_create (new_hostname, &len)))
-    {
-      /* dump error outputs here, most notably invalid hostname output */
-      if (cbuf_read_to_fd (ttyout, STDOUT_FILENO, -1) > 0)
-	{
-	  free (new_hostname);
-	  free (new_hostname_extra_arg);
-	  return;
-	}
-      else
-	ipmipower_cbuf_printf (ttyout,
-			       "ipmipower_connection_array_create: %s\n",
-			       strerror (errno));
-
-      free (new_hostname);
-      free (new_hostname_extra_arg);
-      return;
-    }
-  
-  /* user need not specify extra arg now */
-  if (cmd_args.oem_power_type != OEM_POWER_TYPE_NONE
-      && new_hostname_extra_arg)
-    {
-      char errbuf[IPMIPOWER_OUTPUT_BUFLEN + 1];
-
-      memset (errbuf, '\0', IPMIPOWER_OUTPUT_BUFLEN + 1);
-      if (ipmipower_oem_power_cmd_check_extra_arg (new_hostname_extra_arg,
-						   errbuf,
-						   IPMIPOWER_OUTPUT_BUFLEN) <= 0)
-	{
-	  ipmipower_cbuf_printf (ttyout,
-				 "%s\n",
-				 errbuf);
-	  return;
-	}
-    }
-
-  _cmd_hostname_clear ();
-  
-  cmd_args.common.hostname = new_hostname;
-  cmd_args.hostname_extra_arg = new_hostname_extra_arg;
-  ics = icsPtr;
-  ics_len = len;
-
-  ipmipower_ping_force_discovery_sweep ();
-
-  ipmipower_cbuf_printf (ttyout,
-			 "hostname: %s\n",
-			 cmd_args.common.hostname);
-}
-
-static void
 _cmd_hostname (char **argv)
 {
   assert (argv);
 
   if (!argv[1])
     {
-      _cmd_hostname_clear ();
+      free (cmd_args.common.hostname);
+      cmd_args.common.hostname = NULL;
+      
+      ipmipower_connection_array_destroy (ics, ics_len);
+      ics = NULL;
+      ics_len = 0;
+
       ipmipower_cbuf_printf (ttyout, "hostname(s) unconfigured\n");
     }
   else
-    _cmd_hostname_new (argv);
+    {
+      struct ipmipower_connection *icsPtr;
+      unsigned int len = 0;
+      
+      if (!(icsPtr = ipmipower_connection_array_create (argv[1], &len)))
+        {
+          /* dump error outputs here, most notably invalid hostname output */
+          if (cbuf_read_to_fd (ttyout, STDOUT_FILENO, -1) > 0)
+            return;
+          else
+            ipmipower_cbuf_printf (ttyout,
+                                   "ipmipower_connection_array_create: %s\n",
+                                   strerror (errno));
+          return;
+        }
+      
+      free (cmd_args.common.hostname);
+      cmd_args.common.hostname = NULL;
+      
+      ipmipower_connection_array_destroy (ics, ics_len);
+      ics = icsPtr;
+      ics_len = len;
+      
+      if (!(cmd_args.common.hostname = strdup (argv[1])))
+        {
+          IPMIPOWER_ERROR (("strdup: %s", strerror(errno)));
+          exit (1);
+        }
+
+      ipmipower_ping_force_discovery_sweep ();
+
+      ipmipower_cbuf_printf (ttyout,
+                             "hostname: %s\n",
+                             cmd_args.common.hostname);
+    }
 }
 
 static void
@@ -468,20 +410,6 @@ _cmd_power_all_nodes (power_cmd_t cmd)
 
   assert (POWER_CMD_VALID (cmd));
 
-  if (cmd_args.oem_power_type != OEM_POWER_TYPE_NONE)
-    {
-      char errbuf[IPMIPOWER_OUTPUT_BUFLEN + 1];
-
-      memset (errbuf, '\0', IPMIPOWER_OUTPUT_BUFLEN + 1);
-      if (ipmipower_oem_power_cmd_check_extra_arg (cmd_args.hostname_extra_arg,
-						   errbuf,
-						   IPMIPOWER_OUTPUT_BUFLEN) <= 0)
-	{
-	  ipmipower_cbuf_printf (ttyout, "%s\n", errbuf);
-	  return;
-	}
-    }
-
   for (i = 0; i < ics_len; i++)
     {
       if (cmd_args.ping_interval
@@ -494,7 +422,21 @@ _cmd_power_all_nodes (power_cmd_t cmd)
 	ipmipower_output (MSG_TYPE_BADCONNECTION, ics[i].hostname);
       else
 	{
-	  ipmipower_powercmd_queue (cmd, &ics[i], cmd_args.hostname_extra_arg);
+	  if (cmd_args.oem_power_type != OEM_POWER_TYPE_NONE)
+	    {
+	      char errbuf[IPMIPOWER_OUTPUT_BUFLEN + 1];
+	      
+	      memset (errbuf, '\0', IPMIPOWER_OUTPUT_BUFLEN + 1);
+	      if (ipmipower_oem_power_cmd_check_extra_arg (ics[i].hostname_extra_arg,
+							   errbuf,
+							   IPMIPOWER_OUTPUT_BUFLEN) <= 0)
+		{
+		  ipmipower_cbuf_printf (ttyout, "%s\n", errbuf);
+		  return;
+		}
+	    }
+	  
+	  ipmipower_powercmd_queue (cmd, &ics[i], ics[i].hostname_extra_arg);
 	  nodes_queued++;
 	}
     }
@@ -509,62 +451,15 @@ _cmd_power_specific_nodes (char **argv, power_cmd_t cmd)
 {
   hostlist_t h;
   hostlist_iterator_t itr;
-  char *input_hostname = NULL;
-  char *input_hostname_extra_arg = NULL;
-  char *extra_arg_to_use = NULL;
   char *node;
-  int i;
 
   assert (argv);
   assert (POWER_CMD_VALID (cmd));
   assert (OEM_POWER_TYPE_VALID (cmd_args.oem_power_type));
       
-  if (!(input_hostname = strdup (argv[1])))
-    {
-      IPMIPOWER_ERROR (("strdup: %s", strerror(errno)));
-      exit (1);
-    }
-      
-  if (cmd_args.oem_power_type != OEM_POWER_TYPE_NONE)
-    {
-      char errbuf[IPMIPOWER_OUTPUT_BUFLEN + 1];
-      char *ptr;
-
-      if ((ptr = strchr (input_hostname, '+')))
-	{
-	  *ptr = '\0';
-	  ptr++;
-	  
-	  if (!(input_hostname_extra_arg = strdup (ptr)))
-	    {
-	      IPMIPOWER_ERROR (("strdup: %s", strerror(errno)));
-	      free (input_hostname);
-	      exit (1);
-	    }
-	}
-
-      memset (errbuf, '\0', IPMIPOWER_OUTPUT_BUFLEN + 1);
-      if (input_hostname_extra_arg)
-	extra_arg_to_use = input_hostname_extra_arg;
-      else
-	extra_arg_to_use = cmd_args.hostname_extra_arg;
-
-      if (ipmipower_oem_power_cmd_check_extra_arg (extra_arg_to_use,
-						   errbuf,
-						   IPMIPOWER_OUTPUT_BUFLEN) <= 0)
-	{
-	  ipmipower_cbuf_printf (ttyout, "%s\n", errbuf);
-	  free (input_hostname);
-	  free (input_hostname_extra_arg);
-	  return;
-	}
-    }
-
-  if (!(h = hostlist_create (input_hostname)))
+  if (!(h = hostlist_create (argv[1])))
     {
       ipmipower_cbuf_printf (ttyout, "invalid hostname(s) specified");
-      free (input_hostname);
-      free (input_hostname_extra_arg);
       return;
     }
   
@@ -576,6 +471,26 @@ _cmd_power_specific_nodes (char **argv, power_cmd_t cmd)
   
   while ((node = hostlist_next (itr)))
     {
+      char *node_extra_arg = NULL;
+      int i;
+      
+      if (cmd_args.oem_power_type != OEM_POWER_TYPE_NONE)
+	{
+	  char *ptr;
+	  
+	  if ((ptr = strchr (node, '+')))
+	    {
+	      *ptr = '\0';
+	      ptr++;
+	      
+	      if (!(node_extra_arg = strdup (ptr)))
+		{
+		  IPMIPOWER_ERROR (("strdup: %s", strerror(errno)));
+		  exit (1);
+		}
+	    }
+	}
+
       i = ipmipower_connection_hostname_index (ics, ics_len, node);
       
       if (i < 0)
@@ -590,16 +505,38 @@ _cmd_power_specific_nodes (char **argv, power_cmd_t cmd)
 	ipmipower_output (MSG_TYPE_BADCONNECTION, ics[i].hostname);
       else
 	{
+	  char *extra_arg_to_use = NULL;
+
+	  if (cmd_args.oem_power_type != OEM_POWER_TYPE_NONE)
+	    {
+	      char errbuf[IPMIPOWER_OUTPUT_BUFLEN + 1];
+	      
+	      memset (errbuf, '\0', IPMIPOWER_OUTPUT_BUFLEN + 1);
+	      if (node_extra_arg)
+		extra_arg_to_use = node_extra_arg;
+	      else
+		extra_arg_to_use = ics[i].hostname_extra_arg;
+	      
+	      if (ipmipower_oem_power_cmd_check_extra_arg (extra_arg_to_use,
+							   errbuf,
+							   IPMIPOWER_OUTPUT_BUFLEN) <= 0)
+		{
+		  ipmipower_cbuf_printf (ttyout, "%s\n", errbuf);
+		  goto end_loop;
+		}
+	    }
+	  
 	  ipmipower_connection_clear (&ics[i]);
 	  ipmipower_powercmd_queue (cmd, &ics[i], extra_arg_to_use);
 	}
+      
+    end_loop:
       free (node);
+      free (node_extra_arg);
     }
   
   hostlist_iterator_destroy (itr);
   hostlist_destroy (h);
-  free (input_hostname);
-  free (input_hostname_extra_arg);
 }
 
 static void

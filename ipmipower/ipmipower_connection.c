@@ -129,6 +129,9 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
 {
   struct sockaddr_in srcaddr;
   struct hostent *result;
+  char *hostname_copy = NULL;
+  const char *hostname_to_use = NULL;
+  int rv = -1;
 
   assert (ic && hostname);
 
@@ -236,7 +239,34 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
 
   ic->discover_state = STATE_UNDISCOVERED;
 
-  strncpy (ic->hostname, hostname, MAXHOSTNAMELEN);
+  if (cmd_args.oem_power_type != OEM_POWER_TYPE_NONE)
+    {
+      char *ptr;
+
+      if (!(hostname_copy = strdup (hostname)))
+	{
+	  IPMIPOWER_ERROR (("strdup: %s", strerror(errno)));
+	  exit (1);
+	}
+
+      if ((ptr = strchr (hostname_copy, '+')))
+        {
+          *ptr = '\0';
+          ptr++;
+
+	  if (!(ic->hostname_extra_arg = strdup (ptr)))
+            {
+              IPMIPOWER_ERROR (("strdup: %s", strerror(errno)));
+              exit (1);
+            }
+        }
+      else
+	hostname_to_use = hostname;
+    }
+  else
+    hostname_to_use = hostname;
+
+  strncpy (ic->hostname, hostname_to_use, MAXHOSTNAMELEN);
   ic->hostname[MAXHOSTNAMELEN] = '\0';
 
   /* Determine the destination address */
@@ -257,13 +287,16 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
 #endif /* !HAVE_HSTRERROR */
           exit (1);
         }
-      return (-1);
+      goto cleanup;
     }
   ic->destaddr.sin_addr = *((struct in_addr *)result->h_addr);
 
   ic->skip = 0;
 
-  return (0);
+  rv = 0;
+ cleanup:
+  free (hostname_copy);
+  return (rv);
 }
 
 struct ipmipower_connection *
@@ -350,6 +383,7 @@ ipmipower_connection_array_create (const char *hostname, unsigned int *len)
             cbuf_destroy (ics[i].ping_in);
           if (ics[i].ping_out)
             cbuf_destroy (ics[i].ping_out);
+	  free (ics[i].hostname_extra_arg);
         }
       free (ics);
       return (NULL);

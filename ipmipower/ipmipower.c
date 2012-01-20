@@ -596,14 +596,6 @@ main (int argc, char *argv[])
 	      IPMIPOWER_ERROR (("%s", errbuf));
 	      exit (1);
 	    }
-
-	  if (ipmipower_oem_power_cmd_check_extra_arg (cmd_args.hostname_extra_arg,
-						       errbuf,
-						       IPMIPOWER_OUTPUT_BUFLEN) <= 0)
-	    {
-	      IPMIPOWER_ERROR (("%s", errbuf));
-	      exit (1);
-	    }
 	}
 
       _eliminate_nodes ();
@@ -613,7 +605,16 @@ main (int argc, char *argv[])
           if (ics[i].skip)
             continue;
 
-          ipmipower_powercmd_queue (cmd_args.powercmd, &ics[i], cmd_args.hostname_extra_arg);
+	  memset (errbuf, '\0', IPMIPOWER_OUTPUT_BUFLEN + 1);
+	  if (ipmipower_oem_power_cmd_check_extra_arg (ics[i].hostname_extra_arg,
+						       errbuf,
+						       IPMIPOWER_OUTPUT_BUFLEN) <= 0)
+	    {
+	      IPMIPOWER_ERROR (("%s", errbuf));
+	      exit (1);
+	    }
+
+          ipmipower_powercmd_queue (cmd_args.powercmd, &ics[i], ics[i].hostname_extra_arg);
         }
     }
 
