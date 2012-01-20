@@ -750,6 +750,8 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
       || pkt == GET_CHASSIS_STATUS_REQ
       || pkt == CHASSIS_CONTROL_REQ
       || pkt == CHASSIS_IDENTIFY_REQ
+      || pkt == C410X_GET_SENSOR_READING_REQ
+      || pkt == C410X_SLOT_POWER_CONTROL_REQ
       || pkt == CLOSE_SESSION_REQ)
     password = cmd_args.common.password;
   else
@@ -774,6 +776,8 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
                || pkt == GET_CHASSIS_STATUS_REQ
                || pkt == CHASSIS_CONTROL_REQ
                || pkt == CHASSIS_IDENTIFY_REQ
+	       || pkt == C410X_GET_SENSOR_READING_REQ
+	       || pkt == C410X_SLOT_POWER_CONTROL_REQ
                || pkt == CLOSE_SESSION_REQ))
     {
       if (FIID_OBJ_GET (ip->obj_activate_session_res,
@@ -791,6 +795,8 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
                || pkt == GET_CHASSIS_STATUS_REQ
                || pkt == CHASSIS_CONTROL_REQ
                || pkt == CHASSIS_IDENTIFY_REQ
+	       || pkt == C410X_GET_SENSOR_READING_REQ
+	       || pkt == C410X_SLOT_POWER_CONTROL_REQ
                || pkt == CLOSE_SESSION_REQ))
     {
       if (FIID_OBJ_GET (ip->obj_open_session_res,
@@ -812,6 +818,8 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
           || pkt == GET_CHASSIS_STATUS_REQ
           || pkt == CHASSIS_CONTROL_REQ
           || pkt == CHASSIS_IDENTIFY_REQ
+	  || pkt == C410X_GET_SENSOR_READING_REQ
+	  || pkt == C410X_SLOT_POWER_CONTROL_REQ
           || pkt == CLOSE_SESSION_REQ))
     {
       uint32_t initial_inbound_sequence_number;
@@ -833,6 +841,8 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
                || pkt == GET_CHASSIS_STATUS_REQ
                || pkt == CHASSIS_CONTROL_REQ
                || pkt == CHASSIS_IDENTIFY_REQ
+	       || pkt == C410X_GET_SENSOR_READING_REQ
+	       || pkt == C410X_SLOT_POWER_CONTROL_REQ
                || pkt == CLOSE_SESSION_REQ))
     sequence_number = ip->session_sequence_number;
   else
@@ -858,6 +868,8 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
                || pkt == GET_CHASSIS_STATUS_REQ
                || pkt == CHASSIS_CONTROL_REQ
                || pkt == CHASSIS_IDENTIFY_REQ
+	       || pkt == C410X_GET_SENSOR_READING_REQ
+	       || pkt == C410X_SLOT_POWER_CONTROL_REQ
                || pkt == CLOSE_SESSION_REQ))
     {
       if (!ip->permsgauth_enabled)
@@ -1295,6 +1307,8 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
               || pkt == GET_CHASSIS_STATUS_REQ
               || pkt == CHASSIS_CONTROL_REQ
               || pkt == CHASSIS_IDENTIFY_REQ
+	      || pkt == C410X_GET_SENSOR_READING_REQ
+	      || pkt == C410X_SLOT_POWER_CONTROL_REQ
               || pkt == CLOSE_SESSION_REQ)))
     rv = _ipmi_1_5_packet_create (ip,
                                   pkt,
@@ -1315,6 +1329,8 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
                    || pkt == GET_CHASSIS_STATUS_REQ
                    || pkt == CHASSIS_CONTROL_REQ
                    || pkt == CHASSIS_IDENTIFY_REQ
+		   || pkt == C410X_GET_SENSOR_READING_REQ
+		   || pkt == C410X_SLOT_POWER_CONTROL_REQ
                    || pkt == CLOSE_SESSION_REQ)))
     rv = _ipmi_2_0_packet_create (ip,
                                   pkt,

@@ -618,6 +618,8 @@ _send_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
                || pkt == GET_CHASSIS_STATUS_REQ
                || pkt == CHASSIS_CONTROL_REQ
                || pkt == CHASSIS_IDENTIFY_REQ
+	       || pkt == C410X_GET_SENSOR_READING_REQ
+	       || pkt == C410X_SLOT_POWER_CONTROL_REQ
                || pkt == CLOSE_SESSION_REQ))
     {
       /* IPMI 2.0 is special, sequence numbers of 0 don't count */
