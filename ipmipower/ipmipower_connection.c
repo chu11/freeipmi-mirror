@@ -259,6 +259,8 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
               IPMIPOWER_ERROR (("strdup: %s", strerror(errno)));
               exit (1);
             }
+
+	  hostname_to_use = hostname_copy;
         }
       else
 	hostname_to_use = hostname;

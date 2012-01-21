@@ -605,13 +605,16 @@ main (int argc, char *argv[])
           if (ics[i].skip)
             continue;
 
-	  memset (errbuf, '\0', IPMIPOWER_OUTPUT_BUFLEN + 1);
-	  if (ipmipower_oem_power_cmd_check_extra_arg (ics[i].hostname_extra_arg,
-						       errbuf,
-						       IPMIPOWER_OUTPUT_BUFLEN) <= 0)
+	  if (cmd_args.oem_power_type != OEM_POWER_TYPE_NONE)
 	    {
-	      IPMIPOWER_ERROR (("%s", errbuf));
-	      exit (1);
+	      memset (errbuf, '\0', IPMIPOWER_OUTPUT_BUFLEN + 1);
+	      if (ipmipower_oem_power_cmd_check_extra_arg (ics[i].hostname_extra_arg,
+							   errbuf,
+							   IPMIPOWER_OUTPUT_BUFLEN) <= 0)
+		{
+		  IPMIPOWER_ERROR (("%s", errbuf));
+		  exit (1);
+		}
 	    }
 
           ipmipower_powercmd_queue (cmd_args.powercmd, &ics[i], ics[i].hostname_extra_arg);
