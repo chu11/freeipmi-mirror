@@ -29,19 +29,10 @@
 
 #include "ipmipower.h"
 
-/* ipmipower_powercmd_setup
- * - Setup ipmipower to process commands
- */
 void ipmipower_powercmd_setup ();
 
-/* ipmipower_powercmd_cleanup
- * - Cleanup ipmipower when we are done
- */
 void ipmipower_powercmd_cleanup ();
 
-/* ipmipower_powercmd_queue
- * - Queue a command to be executed
- */
 void ipmipower_powercmd_queue (power_cmd_t cmd,
 			       struct ipmipower_connection *ic,
 			       const char *extra_arg);

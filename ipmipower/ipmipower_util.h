@@ -33,10 +33,6 @@
 
 #include "cbuf.h"
 
-/* ipmipower_power_cmd_to_string
- * - convert cmd value to string value.
- * - returns string.
- */
 char *ipmipower_power_cmd_to_string (power_cmd_t cmd);
 
 /* ipmipower_power_cmd_check_privilege

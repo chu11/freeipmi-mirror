@@ -77,9 +77,6 @@ static List pending = NULL;
 /* Count of currently executing power commands for fanout */
 static unsigned int executing_count = 0;
 
-/* _destroy_ipmipower_powercmd
- * - cleanup/destroy an ipmipower_powercmd_t structure stored within a List
- */
 static void
 _destroy_ipmipower_powercmd (ipmipower_powercmd_t ip)
 {
