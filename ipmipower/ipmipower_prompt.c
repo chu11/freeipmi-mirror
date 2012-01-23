@@ -107,19 +107,24 @@ _cmd_driver_type (char **argv)
 }
 
 static void
+_cmd_hostname_clear (void)
+{
+  free (cmd_args.common.hostname);
+  cmd_args.common.hostname = NULL;
+      
+  ipmipower_connection_array_destroy (ics, ics_len);
+  ics = NULL;
+  ics_len = 0;
+}
+
+static void
 _cmd_hostname (char **argv)
 {
   assert (argv);
 
   if (!argv[1])
     {
-      free (cmd_args.common.hostname);
-      cmd_args.common.hostname = NULL;
-      
-      ipmipower_connection_array_destroy (ics, ics_len);
-      ics = NULL;
-      ics_len = 0;
-
+      _cmd_hostname_clear ();
       ipmipower_cbuf_printf (ttyout, "hostname(s) unconfigured\n");
     }
   else
@@ -139,10 +144,8 @@ _cmd_hostname (char **argv)
           return;
         }
       
-      free (cmd_args.common.hostname);
-      cmd_args.common.hostname = NULL;
-      
-      ipmipower_connection_array_destroy (ics, ics_len);
+      _cmd_hostname_clear ();
+
       ics = icsPtr;
       ics_len = len;
       

@@ -13,6 +13,11 @@
 	(ipmipower_power_cmd_to_string,
 	ipmipower_power_cmd_check_privilege): New functions.
 
+	* ipmipower/ipmipower_prompt.c (_cmd_hostname_clear): New function.
+
+	* ipmipower/ipmipower_prompt.c (_cmd_hostname): Use
+	_cmd_hostname_clear appropriately.
+	
 2012-01-05  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/: Support Dell C410x OEM extension slot-power-toggle,
