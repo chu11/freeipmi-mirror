@@ -1,8 +1,6 @@
 2012-01-XX  Albert Chu <chu11@llnl.gov>
-
+	
 	Merge
-
-	XXX - fix ipmipower.h macros on merge trunk 
 
 	* ipmipower/: Add --oem-power-type option and support C410x OEM
 	power type.
@@ -17,6 +15,10 @@
 
 	* ipmipower/ipmipower_prompt.c (_cmd_hostname): Use
 	_cmd_hostname_clear appropriately.
+
+2012-01-17  Albert Chu <chu11@llnl.gov>
+
+	* ipmipower/ipmipower.h: Redo packet validation macros.
 	
 2012-01-05  Albert Chu <chu11@llnl.gov>
 
