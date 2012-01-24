@@ -590,12 +590,6 @@ ipmipower_powercmd_queue (power_cmd_t cmd,
       exit (1);
     }
 
-  if (!list_append (pending, ip))
-    {
-      IPMIPOWER_ERROR (("list_append: %s", strerror (errno)));
-      exit (1);
-    }
-
   if (cmd_args.oem_power_type != OEM_POWER_TYPE_NONE)
     {
       assert (ipmipower_oem_power_cmd_check_support_and_privilege (cmd, NULL, 0) > 0);
@@ -647,7 +641,7 @@ ipmipower_powercmd_queue (power_cmd_t cmd,
   if (cmd_args.oem_power_type == OEM_POWER_TYPE_C410X)
     {
       ipmipower_powercmd_t iptmp;
-      
+
       if ((iptmp = list_find_first (pending,
 				    _find_ipmipower_powercmd,
 				    ip->ic->hostname)))
@@ -656,7 +650,14 @@ ipmipower_powercmd_queue (power_cmd_t cmd,
 	  while (iptmp->next)
 	    iptmp = iptmp->next;
 	  iptmp->next = ip;
+	  return;
 	}
+    }
+
+  if (!list_append (pending, ip))
+    {
+      IPMIPOWER_ERROR (("list_append: %s", strerror (errno)));
+      exit (1);
     }
 }
 
@@ -2413,7 +2414,6 @@ ipmipower_powercmd_process_pending (int *timeout)
   if (list_count (add_to_pending) > 0)
     {
       ListIterator addtoitr;
-      ipmipower_powercmd_t iptmp;
 
       if (!(addtoitr = list_iterator_create (add_to_pending)))
 	{
@@ -2421,16 +2421,31 @@ ipmipower_powercmd_process_pending (int *timeout)
 	  exit (1);
 	}
       
-      while ((iptmp = list_next (addtoitr)))
+      while ((ip = list_next (addtoitr)))
 	{
-	  if (!list_append (pending, iptmp))
+	  if (!list_append (pending, ip))
 	    {
 	      IPMIPOWER_ERROR (("list_append: %s", strerror (errno)));
+	      exit (1);
+	    }
+
+	  if (!list_delete (addtoitr))
+	    {
+	      IPMIPOWER_ERROR (("list_delete"));
 	      exit (1);
 	    }
 	}
 
       list_iterator_destroy (addtoitr);
+
+      /* If by chance all commands are going to the same host, then
+       * the next powercmd will start after a default timeout.  We
+       * don't want that.  We'll shorten the timeout to a
+       * retransmission timeout so it appears more normal.
+       */
+
+      if (cmd_args.common.retransmission_timeout < min_timeout)
+	min_timeout = cmd_args.common.retransmission_timeout;
     } 
 
   if (!(num_pending = list_count (pending)))
