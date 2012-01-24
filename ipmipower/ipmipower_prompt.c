@@ -740,6 +740,10 @@ _cmd_config (void)
             goto cleanup;
         }
       
+      hostlist_sort (discovered);
+      hostlist_sort (undiscovered);
+      hostlist_sort (badconnection);
+
       if ((rv = hostlist_ranged_string (discovered, IPMIPOWER_OUTPUT_BUFLEN, buf)) < 0)
         {
           IPMIPOWER_ERROR (("hostlist_ranged_string: %s", strerror (errno)));

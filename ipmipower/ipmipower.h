@@ -375,6 +375,9 @@ struct ipmipower_powercmd {
 
   /* for oem power control ; extra arg passed in via "+extra" at end of hostname */
   char *extra_arg;
+
+  /* for oem power control to the same node */
+  struct ipmipower_powercmd *next;
 };
 
 /* ipmipower_connection

@@ -1,20 +1,15 @@
 2012-01-XX  Albert Chu <chu11@llnl.gov>
 	
-	Merge
+	Merge dellc410x
 
 	* ipmipower/: Add --oem-power-type option and support C410x OEM
-	power type.
+	power type.  Support ability to input power control to same host
+	multiple times under OEM conditions.  Serialize power control
+	operations to same host.
 
 	* ipmipower/ipmipower_oem.h, ipmipower/ipmipower_oem.c: New files.
 
-	* ipmipower/ipmipower_util.h, ipmipower/ipmipower_util.c
-	(ipmipower_power_cmd_to_string,
-	ipmipower_power_cmd_check_privilege): New functions.
-
-	* ipmipower/ipmipower_prompt.c (_cmd_hostname_clear): New function.
-
-	* ipmipower/ipmipower_prompt.c (_cmd_hostname): Use
-	_cmd_hostname_clear appropriately.
+	* ipmipower/: Various code cleanup;
 
 2012-01-17  Albert Chu <chu11@llnl.gov>
 

@@ -385,7 +385,7 @@ no longer be available.  For example, an OEM extensions may allow
 options may not longer function either.
 
 Some OEM extensions may require additional information for their power
-control action, such as a specific device identifier.  Additional
+control action, such as a sub-device identifier.  Additional
 information can be provided by appending a plus sign ('+') and the
 extra information to the end of the hostname.  For example, the
 hostname \fImynode+18\fR would indicate the power control operation
@@ -393,6 +393,13 @@ should be sent to the host \fImynode\fR, and \fI18\fR is the
 identifier of a possible sub-device to be power controlled.  If in
 interactive mode, the additional information can be overrided
 everytime you specify a hostname during a power control operation.
+
+Because OEM power control may involve subtypes, it is possible a user
+may wish to power control multiple sub-devices on the same host.  For
+example, you might specify the hosts \fImynode+1,mynode+2\fR,
+indicating to power control subdevice 1 and 2 on \fImynode\fR.
+Because many BMCs cannot handle multiple IPMI sessions, power control
+operations to the same host will be serialized internally.
 
 The following are the current OEM power types available, along with
 information on the systems they work with and the power control

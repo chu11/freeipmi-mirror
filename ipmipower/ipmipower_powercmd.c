@@ -74,13 +74,37 @@ extern struct ipmipower_arguments cmd_args;
 /* Queue of all pending power commands */
 static List pending = NULL;
 
+/* Queue of power commands to be added to the pending, for serializing
+ * OEM power control to the same host
+ */
+static List add_to_pending = NULL;
+
 /* Count of currently executing power commands for fanout */
 static unsigned int executing_count = 0;
 
-static void
-_destroy_ipmipower_powercmd (ipmipower_powercmd_t ip)
+static int
+_find_ipmipower_powercmd (void *x, void *key)
 {
-  assert (ip);
+  ipmipower_powercmd_t ip;
+  char *hostname;
+
+  assert (x);
+  assert (key);
+  
+  ip = (ipmipower_powercmd_t)x;
+  hostname = (char *)key;
+
+  return (!strcasecmp (ip->ic->hostname, hostname));
+}
+
+static void
+_destroy_ipmipower_powercmd (void *x)
+{
+  ipmipower_powercmd_t ip;
+
+  assert (x);
+
+  ip = (ipmipower_powercmd_t)x;
 
   fiid_obj_destroy (ip->obj_rmcp_hdr_req);
   fiid_obj_destroy (ip->obj_rmcp_hdr_res);
@@ -147,6 +171,9 @@ _destroy_ipmipower_powercmd (ipmipower_powercmd_t ip)
 
   free (ip->extra_arg);
 
+  /* Must be moved to add_to_pending before destroy */
+  assert (!ip->next);
+
   free (ip);
 }
 
@@ -161,6 +188,13 @@ ipmipower_powercmd_setup ()
       IPMIPOWER_ERROR (("list_create: %s", strerror (errno)));
       exit (1);
     }
+
+  add_to_pending = list_create (NULL);
+  if (!add_to_pending)
+    {
+      IPMIPOWER_ERROR (("list_create: %s", strerror (errno)));
+      exit (1);
+    }
 }
 
 void
@@ -168,7 +202,9 @@ ipmipower_powercmd_cleanup ()
 {
   assert (pending);  /* did not run ipmipower_powercmd_setup() */
   list_destroy (pending);
+  list_destroy (add_to_pending); 
   pending = NULL;
+  add_to_pending = NULL;
 }
 
 void
@@ -554,7 +590,11 @@ ipmipower_powercmd_queue (power_cmd_t cmd,
       exit (1);
     }
 
-  list_append (pending, ip);
+  if (!list_append (pending, ip))
+    {
+      IPMIPOWER_ERROR (("list_append: %s", strerror (errno)));
+      exit (1);
+    }
 
   if (cmd_args.oem_power_type != OEM_POWER_TYPE_NONE)
     {
@@ -574,6 +614,50 @@ ipmipower_powercmd_queue (power_cmd_t cmd,
     }
   else
     ip->extra_arg = NULL;
+
+  /* When doing OEM power control, it is possible the user may specify
+   * the same host multiple times.  This wouldn't be possible under
+   * normal cases.  For example, under normal circumstances if the user did
+   *
+   * -h foohost,foohost --on
+   *
+   * foohost would be collapsed to just one "foohost" (through a call
+   * to hostlist_uniq()), because it doesn't make sense to turn it on
+   * twice.
+   *
+   * However, now someone might want to do
+   *
+   * --oem-power-type=FOO -h foohost+1,foohost+2 --on
+   *
+   * Which logically can make sense now.
+   *
+   * We do not want to do power control to the host in parallel b/c
+   * many BMCs can't handle parallel sessions (you will BUSY errors).
+   * So we will serialize power control operations to the same host.
+   */
+
+  /* XXX: The constant strcmp and searching of this list can be slow
+   * (O(n^2)), but for the time being it is assumed this will not
+   * be an overall performance issue for ipmipower.  If it does become
+   * an issue, a bigger rearchitecture will be required.
+   */
+  
+  ip->next = NULL;
+
+  if (cmd_args.oem_power_type == OEM_POWER_TYPE_C410X)
+    {
+      ipmipower_powercmd_t iptmp;
+      
+      if ((iptmp = list_find_first (pending,
+				    _find_ipmipower_powercmd,
+				    ip->ic->hostname)))
+	{
+	  /* find the last one in the list */
+	  while (iptmp->next)
+	    iptmp = iptmp->next;
+	  iptmp->next = ip;
+	}
+    }
 }
 
 int
@@ -2284,13 +2368,33 @@ ipmipower_powercmd_process_pending (int *timeout)
   /* If we have a fanout, powercmds should be executed "in order" on
    * this list.  So no need to iterate through this list twice.
    */
-  itr = list_iterator_create (pending);
+
+  if (!(itr = list_iterator_create (pending)))
+    {
+      IPMIPOWER_ERROR (("list_iterator_create: %s", strerror (errno)));
+      exit (1);
+    }
+
   while ((ip = (ipmipower_powercmd_t)list_next (itr)))
     {
       int tmp_timeout = -1;
 
       if ((tmp_timeout = _process_ipmi_packets (ip)) < 0)
         {
+	  if (cmd_args.oem_power_type == OEM_POWER_TYPE_C410X)
+	    {
+	      if (ip->next)
+		{
+		  if (!list_append (add_to_pending, ip->next))
+		    {
+		      IPMIPOWER_ERROR (("list_append: %s", strerror (errno)));
+		      exit (1);
+		    }
+
+		  ip->next = NULL;
+		}
+	    }
+
           if (!list_delete (itr))
             {
               IPMIPOWER_ERROR (("list_delete"));
@@ -2305,6 +2409,29 @@ ipmipower_powercmd_process_pending (int *timeout)
         min_timeout = tmp_timeout;
     }
   list_iterator_destroy (itr);
+
+  if (list_count (add_to_pending) > 0)
+    {
+      ListIterator addtoitr;
+      ipmipower_powercmd_t iptmp;
+
+      if (!(addtoitr = list_iterator_create (add_to_pending)))
+	{
+	  IPMIPOWER_ERROR (("list_iterator_create: %s", strerror (errno)));
+	  exit (1);
+	}
+      
+      while ((iptmp = list_next (addtoitr)))
+	{
+	  if (!list_append (pending, iptmp))
+	    {
+	      IPMIPOWER_ERROR (("list_append: %s", strerror (errno)));
+	      exit (1);
+	    }
+	}
+
+      list_iterator_destroy (addtoitr);
+    } 
 
   if (!(num_pending = list_count (pending)))
     ipmipower_output_finish ();

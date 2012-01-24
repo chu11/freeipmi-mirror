@@ -313,6 +313,7 @@ ipmipower_connection_array_create (const char *hostname, unsigned int *len)
   int hl_count;
   int errcount = 0;
   int emfilecount = 0;
+  int i;
 
   assert (hostname && len);
 
@@ -347,6 +348,57 @@ ipmipower_connection_array_create (const char *hostname, unsigned int *len)
       ics[index].ipmi_fd = -1;
       ics[index].ping_fd = -1;
 
+      /* Normally, hostlist_uniq () will catch duplicate hosts input
+       * by the user, but becaues of the additional info,
+       * hostlist_uniq may not catch this.  For example, if the user
+       * inputs
+       *
+       * -h foohost+1,foohost+2
+       *
+       * We could be passed 'foohost' to this function twice.
+       */
+      
+      if (cmd_args.oem_power_type != OEM_POWER_TYPE_NONE)
+	{
+	  char *str_copy;
+	  char *ptr;
+	  int found = 0;
+
+	  if (!(str_copy = strdup (str)))
+	    {
+	      IPMIPOWER_ERROR (("strdup: %s", strerror(errno)));
+	      exit (1);
+	    }
+	  
+	  if ((ptr = strchr (str_copy, '+')))
+	    {
+	      *ptr = '\0';
+	      
+	      /* XXX: This is O(n^2) slow.  99% of the time it's a one
+	       * time setup cost, so we consider the slowness ok.  If
+	       * it becomes a problem later, we'll need to
+	       * rearchitect.
+	       */
+
+	      for (i = 0; i < index; i++)
+		{
+		  if (!strcmp (ics[i].hostname, str_copy))
+		    {
+		      found++;
+		      break;
+		    }
+		}
+	    }
+
+	  free (str_copy);
+
+	  if (found)
+	    {
+	      free (str);
+	      continue;
+	    }
+	}
+
       /* cleanup only at the end, gather all error outputs for
        * later
        */
@@ -371,7 +423,7 @@ ipmipower_connection_array_create (const char *hostname, unsigned int *len)
   if (errcount)
     {
       int i;
-      for (i = 0; i < hl_count; i++)
+      for (i = 0; i < index; i++)
         {
           /* ignore potential error, error path */
           close (ics[i].ipmi_fd);
@@ -391,7 +443,7 @@ ipmipower_connection_array_create (const char *hostname, unsigned int *len)
       return (NULL);
     }
 
-  *len = hl_count;
+  *len = index;
   return (ics);
 }
 
