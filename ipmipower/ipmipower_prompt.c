@@ -408,11 +408,12 @@ _cmd_workaround_flags (char **argv)
 static void
 _cmd_power_all_nodes (power_cmd_t cmd)
 {
+  struct ipmipower_connection_extra_arg *eanode;
   int nodes_queued = 0;
   int i;
 
   assert (POWER_CMD_VALID (cmd));
-
+     
   for (i = 0; i < ics_len; i++)
     {
       if (cmd_args.ping_interval
@@ -427,23 +428,30 @@ _cmd_power_all_nodes (power_cmd_t cmd)
 	{
 	  if (cmd_args.oem_power_type != OEM_POWER_TYPE_NONE)
 	    {
-	      char errbuf[IPMIPOWER_OUTPUT_BUFLEN + 1];
-	      
-	      memset (errbuf, '\0', IPMIPOWER_OUTPUT_BUFLEN + 1);
-	      if (ipmipower_oem_power_cmd_check_extra_arg (ics[i].hostname_extra_arg,
-							   errbuf,
-							   IPMIPOWER_OUTPUT_BUFLEN) <= 0)
+	      eanode = ics[i].extra_args;
+	      while (eanode)
 		{
-		  ipmipower_cbuf_printf (ttyout, "%s\n", errbuf);
-		  return;
+		  if (ipmipower_oem_power_cmd_check_extra_arg (eanode->extra_arg,
+							       NULL,
+							       0) <= 0)
+		    ipmipower_output (MSG_TYPE_INVALID_ARGUMENT_FOR_OEM_EXTENSION, ics[i].hostname);
+		  else
+		    {
+		      ipmipower_connection_clear (&ics[i]);
+		      ipmipower_powercmd_queue (cmd, &ics[i], eanode->extra_arg);
+		      nodes_queued++;
+		    }
+		  eanode = eanode->next;
 		}
 	    }
-	  
-	  ipmipower_powercmd_queue (cmd, &ics[i], ics[i].hostname_extra_arg);
-	  nodes_queued++;
+	  else
+	    {
+	      ipmipower_powercmd_queue (cmd, &ics[i], NULL);
+	      nodes_queued++;
+	    }
 	}
     }
-      
+  
   /* Special corner case when no nodes are discovered */
   if (!nodes_queued)
     ipmipower_output_finish ();
@@ -508,29 +516,23 @@ _cmd_power_specific_nodes (char **argv, power_cmd_t cmd)
 	ipmipower_output (MSG_TYPE_BADCONNECTION, ics[i].hostname);
       else
 	{
-	  char *extra_arg_to_use = NULL;
-
 	  if (cmd_args.oem_power_type != OEM_POWER_TYPE_NONE)
 	    {
-	      char errbuf[IPMIPOWER_OUTPUT_BUFLEN + 1];
-	      
-	      memset (errbuf, '\0', IPMIPOWER_OUTPUT_BUFLEN + 1);
-	      if (node_extra_arg)
-		extra_arg_to_use = node_extra_arg;
-	      else
-		extra_arg_to_use = ics[i].hostname_extra_arg;
-	      
-	      if (ipmipower_oem_power_cmd_check_extra_arg (extra_arg_to_use,
-							   errbuf,
-							   IPMIPOWER_OUTPUT_BUFLEN) <= 0)
+	      if (ipmipower_oem_power_cmd_check_extra_arg (node_extra_arg,
+							   NULL,
+							   0) <= 0)
 		{
-		  ipmipower_cbuf_printf (ttyout, "%s\n", errbuf);
+		  ipmipower_output (MSG_TYPE_INVALID_ARGUMENT_FOR_OEM_EXTENSION, ics[i].hostname);
 		  goto end_loop;
 		}
+	      ipmipower_connection_clear (&ics[i]);
+	      ipmipower_powercmd_queue (cmd, &ics[i], node_extra_arg);
 	    }
-	  
-	  ipmipower_connection_clear (&ics[i]);
-	  ipmipower_powercmd_queue (cmd, &ics[i], extra_arg_to_use);
+	  else
+	    {
+	      ipmipower_connection_clear (&ics[i]);
+	      ipmipower_powercmd_queue (cmd, &ics[i], NULL);
+	    }
 	}
       
     end_loop:

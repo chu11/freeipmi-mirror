@@ -71,6 +71,7 @@ static char *ipmipower_outputs[] =
     "unconfigured hostname",
     "out of resources",
     "ipmi 2.0 unavailable",
+    "invalid argument for OEM extension",
     "BMC busy",
     "BMC error"
   };

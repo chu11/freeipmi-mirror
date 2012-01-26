@@ -568,6 +568,7 @@ main (int argc, char *argv[])
    */
   if (cmd_args.powercmd != POWER_CMD_NONE)
     {
+      struct ipmipower_connection_extra_arg *eanode;
       char errbuf[IPMIPOWER_OUTPUT_BUFLEN + 1];
       int i;
 
@@ -599,6 +600,37 @@ main (int argc, char *argv[])
 	}
 
       _eliminate_nodes ();
+      
+      /* Because can input multiple hosts, check all args before doing
+       * powercmd queue so we don't do any if any single argument is
+       * invalid
+       */
+      if (cmd_args.oem_power_type != OEM_POWER_TYPE_NONE)
+	{
+	  for (i = 0; i < ics_len; i++)
+	    {
+	      assert (ics[i].extra_args);
+
+	      if (ics[i].skip)
+		continue;
+	      
+	      eanode = ics[i].extra_args;
+	      while (eanode)
+		{
+		  memset (errbuf, '\0', IPMIPOWER_OUTPUT_BUFLEN + 1);
+		  
+		  if (ipmipower_oem_power_cmd_check_extra_arg (eanode->extra_arg,
+							       errbuf,
+							       IPMIPOWER_OUTPUT_BUFLEN) <= 0)
+		    {
+		      IPMIPOWER_ERROR (("%s", errbuf));
+		      exit (1);
+		    }
+		  
+		  eanode = eanode->next;
+		}
+	    }
+	}
 
       for (i = 0; i < ics_len; i++)
         {
@@ -607,17 +639,17 @@ main (int argc, char *argv[])
 
 	  if (cmd_args.oem_power_type != OEM_POWER_TYPE_NONE)
 	    {
-	      memset (errbuf, '\0', IPMIPOWER_OUTPUT_BUFLEN + 1);
-	      if (ipmipower_oem_power_cmd_check_extra_arg (ics[i].hostname_extra_arg,
-							   errbuf,
-							   IPMIPOWER_OUTPUT_BUFLEN) <= 0)
+	      assert (ics[i].extra_args);
+
+	      eanode = ics[i].extra_args;
+	      while (eanode)
 		{
-		  IPMIPOWER_ERROR (("%s", errbuf));
-		  exit (1);
+		  ipmipower_powercmd_queue (cmd_args.powercmd, &ics[i], eanode->extra_arg);
+		  eanode = eanode->next;
 		}
 	    }
-
-          ipmipower_powercmd_queue (cmd_args.powercmd, &ics[i], ics[i].hostname_extra_arg);
+	  else
+	    ipmipower_powercmd_queue (cmd_args.powercmd, &ics[i], NULL);
         }
     }
 

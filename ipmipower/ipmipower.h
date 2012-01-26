@@ -270,8 +270,9 @@ typedef enum
     MSG_TYPE_UNCONFIGURED_HOSTNAME              = 18,
     MSG_TYPE_RESOURCES                          = 19,
     MSG_TYPE_IPMI_2_0_UNAVAILABLE               = 20,
-    MSG_TYPE_BMC_BUSY                           = 21,
-    MSG_TYPE_BMC_ERROR                          = 22,
+    MSG_TYPE_INVALID_ARGUMENT_FOR_OEM_EXTENSION = 21,
+    MSG_TYPE_BMC_BUSY                           = 22,
+    MSG_TYPE_BMC_ERROR                          = 23,
   } msg_type_t;
 
 #define MSG_TYPE_VALID(__m)          \
@@ -380,6 +381,12 @@ struct ipmipower_powercmd {
   struct ipmipower_powercmd *next;
 };
 
+struct ipmipower_connection_extra_arg
+{
+  struct ipmipower_connection_extra_arg *next;
+  char *extra_arg;
+};
+
 /* ipmipower_connection
  * - Stores various information and data for each remote node ipmi
  * "connection" we have.
@@ -408,7 +415,7 @@ struct ipmipower_connection
   discover_state_t discover_state;
   char hostname[MAXHOSTNAMELEN+1];
   /* for oem power types ; extra arg passed in via "+extra" at end of hostname */
-  char *hostname_extra_arg;
+  struct ipmipower_connection_extra_arg *extra_args;
   struct sockaddr_in destaddr;
 
   /* for eliminate option */

@@ -133,7 +133,8 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
   const char *hostname_to_use = NULL;
   int rv = -1;
 
-  assert (ic && hostname);
+  assert (ic);
+  assert (hostname);
 
   /* Don't use wrapper function, need to exit cleanly on EMFILE errno */
 
@@ -241,11 +242,13 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
 
   if (cmd_args.oem_power_type != OEM_POWER_TYPE_NONE)
     {
+      struct ipmipower_connection_extra_arg *ea;
+      char *extra_arg = NULL;
       char *ptr;
 
       if (!(hostname_copy = strdup (hostname)))
 	{
-	  IPMIPOWER_ERROR (("strdup: %s", strerror(errno)));
+	  IPMIPOWER_ERROR (("strdup: %s", strerror (errno)));
 	  exit (1);
 	}
 
@@ -253,17 +256,35 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
         {
           *ptr = '\0';
           ptr++;
-
-	  if (!(ic->hostname_extra_arg = strdup (ptr)))
-            {
-              IPMIPOWER_ERROR (("strdup: %s", strerror(errno)));
-              exit (1);
-            }
-
+	  extra_arg = ptr;
 	  hostname_to_use = hostname_copy;
         }
       else
 	hostname_to_use = hostname;
+
+      /* Hypothetically, some OEM power types may allow extra-args and
+       * not extra args.  So store both.
+       */
+
+      if (!(ea = (struct ipmipower_connection_extra_arg *)malloc (sizeof (struct ipmipower_connection_extra_arg))))
+	{
+	  IPMIPOWER_ERROR (("malloc: %s", strerror (errno)));
+	  exit (1);
+	}
+      
+      if (extra_arg)
+	{
+	  if (!(ea->extra_arg = strdup (extra_arg)))
+            {
+              IPMIPOWER_ERROR (("strdup: %s", strerror (errno)));
+              exit (1);
+            }
+	}
+      else
+	ea->extra_arg = NULL;
+      ea->next = NULL;
+
+      ic->extra_args = ea;
     }
   else
     hostname_to_use = hostname;
@@ -299,6 +320,54 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
  cleanup:
   free (hostname_copy);
   return (rv);
+}
+
+static void
+_connection_add_extra_arg (struct ipmipower_connection *ic, const char *extra_arg)
+{
+  struct ipmipower_connection_extra_arg *ea;
+  struct ipmipower_connection_extra_arg *eanode;
+
+  assert (ic);
+  assert (ic->extra_args);
+  assert (cmd_args.oem_power_type != OEM_POWER_TYPE_NONE);
+  
+  eanode = ic->extra_args;
+  while (eanode)
+    {
+      /* if duplicate, just return, no need to store */
+
+      if (!eanode->extra_arg && !extra_arg)
+	return;
+      if (eanode->extra_arg
+	  && extra_arg 
+	  && !strcmp (eanode->extra_arg, extra_arg))
+	return;
+      eanode = eanode->next;
+    }
+
+  if (!(ea = (struct ipmipower_connection_extra_arg *)malloc (sizeof (struct ipmipower_connection_extra_arg))))
+    {
+      IPMIPOWER_ERROR (("malloc: %s", strerror (errno)));
+      exit (1);
+    }
+  
+  if (extra_arg)
+    {
+      if (!(ea->extra_arg = strdup (extra_arg)))
+	{
+	  IPMIPOWER_ERROR (("strdup: %s", strerror (errno)));
+	  exit (1);
+	}
+    }
+  else
+    ea->extra_arg = NULL;
+  ea->next = NULL;
+
+  eanode = ic->extra_args;
+  while (eanode->next)
+    eanode = eanode->next;
+  eanode->next = ea; 
 }
 
 struct ipmipower_connection *
@@ -373,7 +442,8 @@ ipmipower_connection_array_create (const char *hostname, unsigned int *len)
 	  if ((ptr = strchr (str_copy, '+')))
 	    {
 	      *ptr = '\0';
-	      
+	      ptr++;
+
 	      /* XXX: This is O(n^2) slow.  99% of the time it's a one
 	       * time setup cost, so we consider the slowness ok.  If
 	       * it becomes a problem later, we'll need to
@@ -385,13 +455,16 @@ ipmipower_connection_array_create (const char *hostname, unsigned int *len)
 		  if (!strcmp (ics[i].hostname, str_copy))
 		    {
 		      found++;
+
+		      _connection_add_extra_arg (&ics[i], ptr);
+
 		      break;
 		    }
 		}
 	    }
-
+	  
 	  free (str_copy);
-
+	  
 	  if (found)
 	    {
 	      free (str);
@@ -437,7 +510,23 @@ ipmipower_connection_array_create (const char *hostname, unsigned int *len)
             cbuf_destroy (ics[i].ping_in);
           if (ics[i].ping_out)
             cbuf_destroy (ics[i].ping_out);
-	  free (ics[i].hostname_extra_arg);
+	  if (cmd_args.oem_power_type != OEM_POWER_TYPE_NONE)
+	    {
+	      struct ipmipower_connection_extra_arg *eanode;
+	      assert (ics[i].extra_args);
+	      
+	      eanode = ics[i].extra_args;
+	      while (eanode)
+		{
+		  struct ipmipower_connection_extra_arg *eatmp;
+		  eatmp = eanode->next;
+		  
+		  free (eanode->extra_arg);
+		  free (eanode);
+
+		  eanode = eatmp;
+		}
+	    }
         }
       free (ics);
       return (NULL);
@@ -466,6 +555,23 @@ ipmipower_connection_array_destroy (struct ipmipower_connection *ics,
       cbuf_destroy (ics[i].ipmi_out);
       cbuf_destroy (ics[i].ping_in);
       cbuf_destroy (ics[i].ping_out);
+      if (cmd_args.oem_power_type != OEM_POWER_TYPE_NONE)
+	{
+	  struct ipmipower_connection_extra_arg *eanode;
+	  assert (ics[i].extra_args);
+	  
+	  eanode = ics[i].extra_args;
+	  while (eanode)
+	    {
+	      struct ipmipower_connection_extra_arg *eatmp;
+	      eatmp = eanode->next;
+	      
+	      free (eanode->extra_arg);
+	      free (eanode);
+	      
+	      eanode = eatmp;
+	    }
+	}
     }
   free (ics);
 }

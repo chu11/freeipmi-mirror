@@ -2420,9 +2420,9 @@ ipmipower_powercmd_process_pending (int *timeout)
 	  IPMIPOWER_ERROR (("list_iterator_create: %s", strerror (errno)));
 	  exit (1);
 	}
-      
       while ((ip = list_next (addtoitr)))
 	{
+	  ipmipower_connection_clear (ip->ic);
 	  if (!list_append (pending, ip))
 	    {
 	      IPMIPOWER_ERROR (("list_append: %s", strerror (errno)));
