@@ -433,7 +433,8 @@ via the \fIDell\fR, \fIslot\-power\-toggle\fR
 .B NONE
 This informs
 .B ipmipower
-that no OEM power type extension is to be used.  This is the default.
+that no OEM power type extension is to be used and standard IPMI power
+control is used.  This is the default.
 
 .RE
 
