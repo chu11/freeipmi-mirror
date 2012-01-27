@@ -145,115 +145,115 @@ struct oem_power_type_data {
 
 /* packet_type_t
  * - packet types stored internally in an ipmipower_powercmd structure.
- * - Request types are *_REQ, Response types are *_RES
+ * - Request types are *_REQUEST, Response types are *_RESPONSE
  */
 typedef enum
   {
-    AUTHENTICATION_CAPABILITIES_REQ     = 0x101,
-    AUTHENTICATION_CAPABILITIES_RES     = 0x201,
-    GET_SESSION_CHALLENGE_REQ           = 0x102,
-    GET_SESSION_CHALLENGE_RES           = 0x202,
-    ACTIVATE_SESSION_REQ                = 0x103,
-    ACTIVATE_SESSION_RES                = 0x203,
-    OPEN_SESSION_REQ                    = 0x104,
-    OPEN_SESSION_RES                    = 0x204,
-    RAKP_MESSAGE_1_REQ                  = 0x105,
-    RAKP_MESSAGE_2_RES                  = 0x205,
-    RAKP_MESSAGE_3_REQ                  = 0x106,
-    RAKP_MESSAGE_4_RES                  = 0x206,
-    SET_SESSION_PRIVILEGE_LEVEL_REQ     = 0x107,
-    SET_SESSION_PRIVILEGE_LEVEL_RES     = 0x207,
-    GET_CHASSIS_STATUS_REQ              = 0x108,
-    GET_CHASSIS_STATUS_RES              = 0x208,
-    CHASSIS_CONTROL_REQ                 = 0x109,
-    CHASSIS_CONTROL_RES                 = 0x209,
-    CHASSIS_IDENTIFY_REQ                = 0x10A,
-    CHASSIS_IDENTIFY_RES                = 0x20A,
-    C410X_GET_SENSOR_READING_REQ        = 0x10B,
-    C410X_GET_SENSOR_READING_RES        = 0x20B,
-    C410X_SLOT_POWER_CONTROL_REQ        = 0x10C,
-    C410X_SLOT_POWER_CONTROL_RES        = 0x20C,
-    CLOSE_SESSION_REQ                   = 0x10D,
-    CLOSE_SESSION_RES                   = 0x20D,
+    AUTHENTICATION_CAPABILITIES_REQUEST     = 0x101,
+    AUTHENTICATION_CAPABILITIES_RESPONSE    = 0x201,
+    GET_SESSION_CHALLENGE_REQUEST           = 0x102,
+    GET_SESSION_CHALLENGE_RESPONSE          = 0x202,
+    ACTIVATE_SESSION_REQUEST                = 0x103,
+    ACTIVATE_SESSION_RESPONSE               = 0x203,
+    OPEN_SESSION_REQUEST                    = 0x104,
+    OPEN_SESSION_RESPONSE                   = 0x204,
+    RAKP_MESSAGE_1_REQUEST                  = 0x105,
+    RAKP_MESSAGE_2_RESPONSE                 = 0x205,
+    RAKP_MESSAGE_3_REQUEST                  = 0x106,
+    RAKP_MESSAGE_4_RESPONSE                 = 0x206,
+    SET_SESSION_PRIVILEGE_LEVEL_REQUEST     = 0x107,
+    SET_SESSION_PRIVILEGE_LEVEL_RESPONSE    = 0x207,
+    GET_CHASSIS_STATUS_REQUEST              = 0x108,
+    GET_CHASSIS_STATUS_RESPONSE             = 0x208,
+    CHASSIS_CONTROL_REQUEST                 = 0x109,
+    CHASSIS_CONTROL_RESPONSE                = 0x209,
+    CHASSIS_IDENTIFY_REQUEST                = 0x10A,
+    CHASSIS_IDENTIFY_RESPONSE               = 0x20A,
+    C410X_GET_SENSOR_READING_REQUEST        = 0x10B,
+    C410X_GET_SENSOR_READING_RESPONSE       = 0x20B,
+    C410X_SLOT_POWER_CONTROL_REQUEST        = 0x10C,
+    C410X_SLOT_POWER_CONTROL_RESPONSE       = 0x20C,
+    CLOSE_SESSION_REQUEST                   = 0x10D,
+    CLOSE_SESSION_RESPONSE                  = 0x20D,
   } packet_type_t;
 
-#define PACKET_TYPE_REQ_MASK           0x100
-#define PACKET_TYPE_RES_MASK           0x200
-#define PACKET_TYPE_PKT_MIN            0x001
-#define PACKET_TYPE_PKT_MAX            0x00D
-#define PACKET_TYPE_PKT_MASK           0x0FF
+#define PACKET_TYPE_REQUEST_MASK       0x100
+#define PACKET_TYPE_RESPONSE_MASK      0x200
+#define PACKET_TYPE_MIN                0x001
+#define PACKET_TYPE_MAX                0x00D
+#define PACKET_TYPE_PACKET_MASK        0x0FF
 
-#define PACKET_TYPE_PACKET_VALID(__p)                        \
-  (((__p) & PACKET_TYPE_PKT_MASK) >= PACKET_TYPE_PKT_MIN     \
-   && ((__p) & PACKET_TYPE_PKT_MASK) <= PACKET_TYPE_PKT_MAX)
+#define PACKET_TYPE_PACKET_VALID(__p)                       \
+  (((__p) & PACKET_TYPE_PACKET_MASK) >= PACKET_TYPE_MIN     \
+   && ((__p) & PACKET_TYPE_PACKET_MASK) <= PACKET_TYPE_MAX)
 
-#define PACKET_TYPE_VALID_REQ(__p)          \
-  (((__p) & PACKET_TYPE_REQ_MASK)           \
+#define PACKET_TYPE_REQUEST(__p)          \
+  (((__p) & PACKET_TYPE_REQUEST_MASK)           \
    && PACKET_TYPE_PACKET_VALID ((__p)))
 
-#define PACKET_TYPE_VALID_RES(__p)          \
-  (((__p) & PACKET_TYPE_RES_MASK)	    \
+#define PACKET_TYPE_RESPONSE(__p)         \
+  (((__p) & PACKET_TYPE_RESPONSE_MASK)	        \
    && PACKET_TYPE_PACKET_VALID ((__p)))
 
-#define PACKET_TYPE_VALID_PKT(__p)          \
-  (PACKET_TYPE_VALID_REQ ((__p))	    \
-   || PACKET_TYPE_VALID_RES ((__p)))
+#define PACKET_TYPE_VALID(__p)                  \
+  (PACKET_TYPE_REQUEST ((__p))	        \
+   || PACKET_TYPE_RESPONSE ((__p)))
 
-#define PACKET_TYPE_IPMI_1_5_SETUP(__p)          \
-  (((__p) == AUTHENTICATION_CAPABILITIES_REQ     \
-    || (__p) == AUTHENTICATION_CAPABILITIES_RES  \
-    || (__p) == GET_SESSION_CHALLENGE_REQ        \
-    || (__p) == GET_SESSION_CHALLENGE_RES        \
-    || (__p) == ACTIVATE_SESSION_REQ             \
-    || (__p) == ACTIVATE_SESSION_RES)) 
+#define PACKET_TYPE_IPMI_1_5_SETUP(__p)              \
+  (((__p) == AUTHENTICATION_CAPABILITIES_REQUEST     \
+    || (__p) == AUTHENTICATION_CAPABILITIES_RESPONSE \
+    || (__p) == GET_SESSION_CHALLENGE_REQUEST        \
+    || (__p) == GET_SESSION_CHALLENGE_RESPONSE       \
+    || (__p) == ACTIVATE_SESSION_REQUEST             \
+    || (__p) == ACTIVATE_SESSION_RESPONSE)) 
 
-#define PACKET_TYPE_IPMI_1_5_SETUP_REQ(__p)      \
-  (PACKET_TYPE_IPMI_1_5_SETUP (__p)              \
-   || PACKET_TYPE_VALID_REQ (__p))
+#define PACKET_TYPE_IPMI_1_5_SETUP_REQUEST(__p)      \
+  (PACKET_TYPE_IPMI_1_5_SETUP (__p)                  \
+   || PACKET_TYPE_REQUEST (__p))
 
-#define PACKET_TYPE_IPMI_1_5_SETUP_RES(__p)      \
-  (PACKET_TYPE_IPMI_1_5_SETUP (__p)              \
-   || PACKET_TYPE_VALID_RES (__p))
+#define PACKET_TYPE_IPMI_1_5_SETUP_RESPONSE(__p)     \
+  (PACKET_TYPE_IPMI_1_5_SETUP (__p)                  \
+   || PACKET_TYPE_RESPONSE (__p))
 
-#define PACKET_TYPE_IPMI_2_0_SETUP(__p)          \
-  (((__p) == OPEN_SESSION_REQ                    \
-    || (__p) == OPEN_SESSION_RES		 \
-    || (__p) == RAKP_MESSAGE_1_REQ               \
-    || (__p) == RAKP_MESSAGE_2_RES               \
-    || (__p) == RAKP_MESSAGE_3_REQ               \
-    || (__p) == RAKP_MESSAGE_4_RES)) 
+#define PACKET_TYPE_IPMI_2_0_SETUP(__p)              \
+  (((__p) == OPEN_SESSION_REQUEST                    \
+    || (__p) == OPEN_SESSION_RESPONSE		     \
+    || (__p) == RAKP_MESSAGE_1_REQUEST               \
+    || (__p) == RAKP_MESSAGE_2_RESPONSE              \
+    || (__p) == RAKP_MESSAGE_3_REQUEST               \
+    || (__p) == RAKP_MESSAGE_4_RESPONSE)) 
 
-#define PACKET_TYPE_IPMI_2_0_SETUP_REQ(__p)      \
-  (PACKET_TYPE_IPMI_2_0_SETUP (__p)              \
-   || PACKET_TYPE_VALID_REQ (__p))
+#define PACKET_TYPE_IPMI_2_0_SETUP_REQUEST(__p)      \
+  (PACKET_TYPE_IPMI_2_0_SETUP (__p)                  \
+   || PACKET_TYPE_REQUEST (__p))
 
-#define PACKET_TYPE_IPMI_2_0_SETUP_RES(__p)      \
-  (PACKET_TYPE_IPMI_2_0_SETUP (__p)              \
-   || PACKET_TYPE_VALID_RES (__p))
+#define PACKET_TYPE_IPMI_2_0_SETUP_RESPONSE(__p)     \
+  (PACKET_TYPE_IPMI_2_0_SETUP (__p)                  \
+   || PACKET_TYPE_RESPONSE (__p))
 
-#define PACKET_TYPE_IPMI_SESSION_PACKET(__p)     \
-  (((__p) == SET_SESSION_PRIVILEGE_LEVEL_REQ     \
-    || (__p) == SET_SESSION_PRIVILEGE_LEVEL_RES  \
-    || (__p) == GET_CHASSIS_STATUS_REQ	         \
-    || (__p) == GET_CHASSIS_STATUS_RES	         \
-    || (__p) == CHASSIS_CONTROL_REQ	         \
-    || (__p) == CHASSIS_CONTROL_RES	         \
-    || (__p) == CHASSIS_IDENTIFY_REQ	         \
-    || (__p) == CHASSIS_IDENTIFY_RES	         \
-    || (__p) == C410X_GET_SENSOR_READING_REQ     \
-    || (__p) == C410X_GET_SENSOR_READING_RES     \
-    || (__p) == C410X_SLOT_POWER_CONTROL_REQ     \
-    || (__p) == C410X_SLOT_POWER_CONTROL_RES     \
-    || (__p) == CLOSE_SESSION_REQ                \
-    || (__p) == CLOSE_SESSION_RES))
+#define PACKET_TYPE_IPMI_SESSION_PACKET(__p)         \
+  (((__p) == SET_SESSION_PRIVILEGE_LEVEL_REQUEST     \
+    || (__p) == SET_SESSION_PRIVILEGE_LEVEL_RESPONSE \
+    || (__p) == GET_CHASSIS_STATUS_REQUEST	     \
+    || (__p) == GET_CHASSIS_STATUS_RESPONSE	     \
+    || (__p) == CHASSIS_CONTROL_REQUEST	             \
+    || (__p) == CHASSIS_CONTROL_RESPONSE	     \
+    || (__p) == CHASSIS_IDENTIFY_REQUEST	     \
+    || (__p) == CHASSIS_IDENTIFY_RESPONSE	     \
+    || (__p) == C410X_GET_SENSOR_READING_REQUEST     \
+    || (__p) == C410X_GET_SENSOR_READING_RESPONSE    \
+    || (__p) == C410X_SLOT_POWER_CONTROL_REQUEST     \
+    || (__p) == C410X_SLOT_POWER_CONTROL_RESPONSE    \
+    || (__p) == CLOSE_SESSION_REQUEST                \
+    || (__p) == CLOSE_SESSION_RESPONSE))
 
-#define PACKET_TYPE_IPMI_SESSION_PACKET_REQ(__p)   \
-  (PACKET_TYPE_IPMI_SESSION_PACKET (__p)           \
-   && PACKET_TYPE_VALID_REQ (__p))
+#define PACKET_TYPE_IPMI_SESSION_PACKET_REQUEST(__p)  \
+  (PACKET_TYPE_IPMI_SESSION_PACKET (__p)              \
+   && PACKET_TYPE_REQUEST (__p))
 
-#define PACKET_TYPE_IPMI_SESSION_PACKET_RES(__p)   \
-  (PACKET_TYPE_IPMI_SESSION_PACKET (__p)           \
-   && PACKET_TYPE_VALID_RES (__p))
+#define PACKET_TYPE_IPMI_SESSION_PACKET_RESPONSE(__p) \
+  (PACKET_TYPE_IPMI_SESSION_PACKET (__p)              \
+   && PACKET_TYPE_RESPONSE (__p))
 
 /* Protocol States */
 typedef enum
