@@ -1980,6 +1980,10 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
 	}
       else /* cmd_args.oem_power_type == OEM_POWER_TYPE_C410X */
 	{
+	  assert (ip->cmd == POWER_CMD_POWER_STATUS
+		  || ip->cmd == POWER_CMD_POWER_OFF
+		  || ip->cmd == POWER_CMD_POWER_ON);
+
 	  if (ip->cmd == POWER_CMD_POWER_STATUS)
 	    _send_packet (ip, C410X_GET_SENSOR_READING_REQUEST);
 	  else /* on, off */

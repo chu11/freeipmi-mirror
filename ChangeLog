@@ -9,7 +9,7 @@
 
 	* ipmipower/ipmipower_oem.h, ipmipower/ipmipower_oem.c: New files.
 
-	* ipmipower/: Various code cleanup;
+	* ipmipower/: Various code cleanup given re-architecture.
 
 2012-01-17  Albert Chu <chu11@llnl.gov>
 
