@@ -99,8 +99,8 @@ typedef enum
   } power_cmd_t;
 
 #define POWER_CMD_VALID(__c)             \
-  ((__c) >= POWER_CMD_POWER_OFF &&        \
-   (__c) <= POWER_CMD_IDENTIFY_STATUS)
+  (((__c) >= POWER_CMD_POWER_OFF         \
+    && (__c) <= POWER_CMD_IDENTIFY_STATUS) ? 1 : 0)
 
 #define POWER_CMD_REQUIRES_OPERATOR_PRIVILEGE_LEVEL(__c)    \
   ((__c) == POWER_CMD_POWER_OFF                             \
@@ -123,8 +123,8 @@ typedef enum
 #define OEM_POWER_TYPE_C410X_STR "c410x"
 
 #define OEM_POWER_TYPE_VALID(__v)     \
-  ((__v) == OEM_POWER_TYPE_NONE       \
-   || (__v) == OEM_POWER_TYPE_C410X)
+  (((__v) == OEM_POWER_TYPE_NONE      \
+    || (__v) == OEM_POWER_TYPE_C410X) ? 1 : 0)
 
 #define OEM_POWER_TYPE_SUPPORT_OFF              0x0001
 #define OEM_POWER_TYPE_SUPPORT_ON               0x0002
@@ -184,76 +184,76 @@ typedef enum
 #define PACKET_TYPE_PACKET_MASK        0x0FF
 
 #define PACKET_TYPE_PACKET_VALID(__p)                       \
-  (((__p) & PACKET_TYPE_PACKET_MASK) >= PACKET_TYPE_MIN     \
-   && ((__p) & PACKET_TYPE_PACKET_MASK) <= PACKET_TYPE_MAX)
+  ((((__p) & PACKET_TYPE_PACKET_MASK) >= PACKET_TYPE_MIN    \
+    && ((__p) & PACKET_TYPE_PACKET_MASK) <= PACKET_TYPE_MAX) ? 1 : 0) 
 
 #define PACKET_TYPE_REQUEST(__p)          \
-  (((__p) & PACKET_TYPE_REQUEST_MASK)           \
-   && PACKET_TYPE_PACKET_VALID ((__p)))
+  ((((__p) & PACKET_TYPE_REQUEST_MASK)	  \
+    && PACKET_TYPE_PACKET_VALID ((__p))) ? 1 : 0)
 
 #define PACKET_TYPE_RESPONSE(__p)         \
-  (((__p) & PACKET_TYPE_RESPONSE_MASK)	        \
-   && PACKET_TYPE_PACKET_VALID ((__p)))
+  ((((__p) & PACKET_TYPE_RESPONSE_MASK)	  \
+    && PACKET_TYPE_PACKET_VALID ((__p))) ? 1 : 0)
 
-#define PACKET_TYPE_VALID(__p)                  \
-  (PACKET_TYPE_REQUEST ((__p))	        \
-   || PACKET_TYPE_RESPONSE ((__p)))
+#define PACKET_TYPE_VALID(__p)            \
+  ((PACKET_TYPE_REQUEST ((__p))	          \
+    || PACKET_TYPE_RESPONSE ((__p))) ? 1 : 0)
 
-#define PACKET_TYPE_IPMI_1_5_SETUP(__p)              \
-  (((__p) == AUTHENTICATION_CAPABILITIES_REQUEST     \
-    || (__p) == AUTHENTICATION_CAPABILITIES_RESPONSE \
-    || (__p) == GET_SESSION_CHALLENGE_REQUEST        \
-    || (__p) == GET_SESSION_CHALLENGE_RESPONSE       \
-    || (__p) == ACTIVATE_SESSION_REQUEST             \
-    || (__p) == ACTIVATE_SESSION_RESPONSE)) 
+#define PACKET_TYPE_IPMI_1_5_SETUP(__p)                 \
+  ((((__p) == AUTHENTICATION_CAPABILITIES_REQUEST       \
+     || (__p) == AUTHENTICATION_CAPABILITIES_RESPONSE	\
+     || (__p) == GET_SESSION_CHALLENGE_REQUEST		\
+     || (__p) == GET_SESSION_CHALLENGE_RESPONSE		\
+     || (__p) == ACTIVATE_SESSION_REQUEST		\
+     || (__p) == ACTIVATE_SESSION_RESPONSE)) ? 1 : 0)
 
 #define PACKET_TYPE_IPMI_1_5_SETUP_REQUEST(__p)      \
-  (PACKET_TYPE_IPMI_1_5_SETUP (__p)                  \
-   || PACKET_TYPE_REQUEST (__p))
+  ((PACKET_TYPE_IPMI_1_5_SETUP (__p)		     \
+    || PACKET_TYPE_REQUEST (__p)) ? 1 : 0)
 
 #define PACKET_TYPE_IPMI_1_5_SETUP_RESPONSE(__p)     \
-  (PACKET_TYPE_IPMI_1_5_SETUP (__p)                  \
-   || PACKET_TYPE_RESPONSE (__p))
+  ((PACKET_TYPE_IPMI_1_5_SETUP (__p)		     \
+    || PACKET_TYPE_RESPONSE (__p)) ? 1 : 0)
 
 #define PACKET_TYPE_IPMI_2_0_SETUP(__p)              \
-  (((__p) == OPEN_SESSION_REQUEST                    \
+  ((((__p) == OPEN_SESSION_REQUEST		     \
     || (__p) == OPEN_SESSION_RESPONSE		     \
     || (__p) == RAKP_MESSAGE_1_REQUEST               \
     || (__p) == RAKP_MESSAGE_2_RESPONSE              \
     || (__p) == RAKP_MESSAGE_3_REQUEST               \
-    || (__p) == RAKP_MESSAGE_4_RESPONSE)) 
+    || (__p) == RAKP_MESSAGE_4_RESPONSE))  ? 1 : 0)
 
 #define PACKET_TYPE_IPMI_2_0_SETUP_REQUEST(__p)      \
-  (PACKET_TYPE_IPMI_2_0_SETUP (__p)                  \
-   || PACKET_TYPE_REQUEST (__p))
+  ((PACKET_TYPE_IPMI_2_0_SETUP (__p)		     \
+    || PACKET_TYPE_REQUEST (__p)) ? 1 : 0)
 
 #define PACKET_TYPE_IPMI_2_0_SETUP_RESPONSE(__p)     \
-  (PACKET_TYPE_IPMI_2_0_SETUP (__p)                  \
-   || PACKET_TYPE_RESPONSE (__p))
+  ((PACKET_TYPE_IPMI_2_0_SETUP (__p)		     \
+    || PACKET_TYPE_RESPONSE (__p)) ? 1 : 0)
 
 #define PACKET_TYPE_IPMI_SESSION_PACKET(__p)         \
-  (((__p) == SET_SESSION_PRIVILEGE_LEVEL_REQUEST     \
-    || (__p) == SET_SESSION_PRIVILEGE_LEVEL_RESPONSE \
-    || (__p) == GET_CHASSIS_STATUS_REQUEST	     \
-    || (__p) == GET_CHASSIS_STATUS_RESPONSE	     \
-    || (__p) == CHASSIS_CONTROL_REQUEST	             \
-    || (__p) == CHASSIS_CONTROL_RESPONSE	     \
-    || (__p) == CHASSIS_IDENTIFY_REQUEST	     \
-    || (__p) == CHASSIS_IDENTIFY_RESPONSE	     \
-    || (__p) == C410X_GET_SENSOR_READING_REQUEST     \
-    || (__p) == C410X_GET_SENSOR_READING_RESPONSE    \
-    || (__p) == C410X_SLOT_POWER_CONTROL_REQUEST     \
-    || (__p) == C410X_SLOT_POWER_CONTROL_RESPONSE    \
-    || (__p) == CLOSE_SESSION_REQUEST                \
-    || (__p) == CLOSE_SESSION_RESPONSE))
+  ((((__p) == SET_SESSION_PRIVILEGE_LEVEL_REQUEST    \
+     || (__p) == SET_SESSION_PRIVILEGE_LEVEL_RESPONSE	\
+     || (__p) == GET_CHASSIS_STATUS_REQUEST		\
+     || (__p) == GET_CHASSIS_STATUS_RESPONSE		\
+     || (__p) == CHASSIS_CONTROL_REQUEST		\
+     || (__p) == CHASSIS_CONTROL_RESPONSE		\
+     || (__p) == CHASSIS_IDENTIFY_REQUEST		\
+     || (__p) == CHASSIS_IDENTIFY_RESPONSE		\
+     || (__p) == C410X_GET_SENSOR_READING_REQUEST	\
+     || (__p) == C410X_GET_SENSOR_READING_RESPONSE	\
+     || (__p) == C410X_SLOT_POWER_CONTROL_REQUEST	\
+     || (__p) == C410X_SLOT_POWER_CONTROL_RESPONSE	\
+     || (__p) == CLOSE_SESSION_REQUEST			\
+     || (__p) == CLOSE_SESSION_RESPONSE)) ? 1 : 0)
 
 #define PACKET_TYPE_IPMI_SESSION_PACKET_REQUEST(__p)  \
-  (PACKET_TYPE_IPMI_SESSION_PACKET (__p)              \
-   && PACKET_TYPE_REQUEST (__p))
+  ((PACKET_TYPE_IPMI_SESSION_PACKET (__p)	      \
+    && PACKET_TYPE_REQUEST (__p)) ? 1 : 0)
 
 #define PACKET_TYPE_IPMI_SESSION_PACKET_RESPONSE(__p) \
-  (PACKET_TYPE_IPMI_SESSION_PACKET (__p)              \
-   && PACKET_TYPE_RESPONSE (__p))
+  ((PACKET_TYPE_IPMI_SESSION_PACKET (__p)	      \
+    && PACKET_TYPE_RESPONSE (__p)) ? 1 : 0)
 
 /* Protocol States */
 typedef enum
@@ -276,8 +276,8 @@ typedef enum
   } protocol_state_t;
 
 #define PROTOCOL_STATE_VALID(__s)    \
-  ((__s) >= PROTOCOL_STATE_START &&  \
-   (__s) <= PROTOCOL_STATE_END)
+  (((__s) >= PROTOCOL_STATE_START    \
+    && (__s) <= PROTOCOL_STATE_END) ? 1 : 0)
 
 /* Discovery States */
 typedef enum
@@ -288,8 +288,8 @@ typedef enum
   } discover_state_t;
 
 #define DISCOVER_STATE_VALID(__s)    \
-  ((__s) >= STATE_DISCOVERED &&      \
-   (__s) <= STATE_BADCONNECTION)
+  (((__s) >= STATE_DISCOVERED	     \
+    && (__s) <= STATE_BADCONNECTION) ? 1 : 0)
 
 /* Link States */
 typedef enum
@@ -298,9 +298,9 @@ typedef enum
     LINK_BAD  = 0x02,
   } link_state_t;
 
-#define LINK_STATE_VALID(__s)        \
-  ((__s) >= LINK_GOOD &&             \
-   (__s) <= LINK_BAD)
+#define LINK_STATE_VALID(__s)    \
+  (((__s) >= LINK_GOOD	         \
+   && (__s) <= LINK_BAD) ? 1 : 0)
 
 /* Msg Types */
 typedef enum
@@ -331,11 +331,11 @@ typedef enum
     MSG_TYPE_BMC_ERROR                          = 23,
   } msg_type_t;
 
-#define MSG_TYPE_VALID(__m)          \
-  ((__m) >= MSG_TYPE_ON &&           \
-   (__m) <= MSG_TYPE_BMC_ERROR)
+#define MSG_TYPE_VALID(__m)         \
+  ((__m) >= MSG_TYPE_ON             \
+   && (__m) <= MSG_TYPE_BMC_ERROR)
 
-#define MSG_TYPE_NUM_ENTRIES (MSG_TYPE_BMC_ERROR+1)
+#define MSG_TYPE_NUM_ENTRIES (MSG_TYPE_BMC_ERROR + 1)
 
 /* ipmipower_powercmd
  * - Stores all information needed to execute a power command
