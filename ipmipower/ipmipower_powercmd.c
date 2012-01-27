@@ -691,18 +691,10 @@ _send_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
    */
   ip->ic->ipmi_requester_sequence_number_counter++;
 
-  if (pkt == OPEN_SESSION_REQ
-      || pkt == RAKP_MESSAGE_1_REQ
-      || pkt == RAKP_MESSAGE_3_REQ)
+  if (PACKET_TYPE_IPMI_2_0_SETUP_REQ (pkt))
     ip->message_tag_count++;
   else if (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0
-           && (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ
-               || pkt == GET_CHASSIS_STATUS_REQ
-               || pkt == CHASSIS_CONTROL_REQ
-               || pkt == CHASSIS_IDENTIFY_REQ
-	       || pkt == C410X_GET_SENSOR_READING_REQ
-	       || pkt == C410X_SLOT_POWER_CONTROL_REQ
-               || pkt == CLOSE_SESSION_REQ))
+           && PACKET_TYPE_IPMI_SESSION_PACKET_REQ (pkt))
     {
       /* IPMI 2.0 is special, sequence numbers of 0 don't count */
       ip->session_sequence_number++;
@@ -781,13 +773,7 @@ _send_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
    * activate session command.
    */
   if (cmd_args.common.driver_type == IPMI_DEVICE_LAN
-      && (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ
-          || pkt == GET_CHASSIS_STATUS_REQ
-          || pkt == CHASSIS_CONTROL_REQ
-          || pkt == CHASSIS_IDENTIFY_REQ
-	  || pkt == C410X_GET_SENSOR_READING_REQ
-	  || pkt == C410X_SLOT_POWER_CONTROL_REQ
-          || pkt == CLOSE_SESSION_REQ))
+      && PACKET_TYPE_IPMI_SESSION_PACKET_REQ (pkt))
     ip->session_inbound_count++;
 
   if (gettimeofday (&(ip->ic->last_ipmi_send), NULL) < 0)
@@ -976,13 +962,7 @@ _recv_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
         }
     }
   else if (cmd_args.common.driver_type == IPMI_DEVICE_LAN
-           && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
-               || pkt == GET_CHASSIS_STATUS_RES
-               || pkt == CHASSIS_CONTROL_RES
-               || pkt == CHASSIS_IDENTIFY_RES
-	       || pkt == C410X_GET_SENSOR_READING_RES
-	       || pkt == C410X_SLOT_POWER_CONTROL_RES
-               || pkt == CLOSE_SESSION_RES))
+	   && PACKET_TYPE_IPMI_SESSION_PACKET_RES (pkt))
     {
       if (!ipmipower_check_checksum (ip, pkt))
         {
@@ -1060,9 +1040,7 @@ _recv_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
           goto cleanup;
         }
     }
-  else if (pkt == OPEN_SESSION_RES
-           || pkt == RAKP_MESSAGE_2_RES
-           || pkt == RAKP_MESSAGE_4_RES)
+  else if (PACKET_TYPE_IPMI_2_0_SETUP_RES (pkt))
     {
       if (!ipmipower_check_payload_type (ip, pkt))
         {
@@ -1144,13 +1122,7 @@ _recv_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
         }
     }
   else if (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0
-           && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
-               || pkt == GET_CHASSIS_STATUS_RES
-               || pkt == CHASSIS_CONTROL_RES
-               || pkt == CHASSIS_IDENTIFY_RES
-	       || pkt == C410X_GET_SENSOR_READING_RES
-	       || pkt == C410X_SLOT_POWER_CONTROL_RES
-               || pkt == CLOSE_SESSION_RES))
+	   && PACKET_TYPE_IPMI_SESSION_PACKET_RES (pkt))
     {
       if (!ipmipower_check_payload_type (ip, pkt))
         {

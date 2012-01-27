@@ -51,17 +51,8 @@ ipmipower_check_checksum (ipmipower_powercmd_t ip, packet_type_t pkt)
   int rv;
 
   assert (ip);
-  assert (PACKET_TYPE_VALID_RES (pkt));
-  assert (pkt == AUTHENTICATION_CAPABILITIES_RES
-          || pkt == GET_SESSION_CHALLENGE_RES
-          || pkt == ACTIVATE_SESSION_RES
-          || pkt == SET_SESSION_PRIVILEGE_LEVEL_RES /* IPMI 1.5 or 2.0 */
-          || pkt == GET_CHASSIS_STATUS_RES /* IPMI 1.5 or 2.0 */
-          || pkt == CHASSIS_CONTROL_RES /* IPMI 1.5 or 2.0 */
-          || pkt == CHASSIS_IDENTIFY_RES /* IPMI 1.5 or 2.0 */
-	  || pkt == C410X_GET_SENSOR_READING_RES /* IPMI 1.5 or 2.0 */
-	  || pkt == C410X_SLOT_POWER_CONTROL_RES /* IPMI 1.5 or 2.0 */
-          || pkt == CLOSE_SESSION_RES); /* IPMI 1.5 or 2.0 */
+  assert (PACKET_TYPE_IPMI_1_5_SETUP_RES (pkt)
+	  || PACKET_TYPE_IPMI_SESSION_PACKET_RES (pkt)); /* 1.5 or 2.0 */
 
   obj_cmd = ipmipower_packet_cmd_obj (ip, pkt);
   if ((rv = ipmi_lan_check_checksum (ip->obj_lan_msg_hdr_res,
@@ -89,39 +80,20 @@ ipmipower_check_authentication_code (ipmipower_powercmd_t ip,
   int rv = -1;
 
   assert (ip);
-  assert (PACKET_TYPE_VALID_RES (pkt));
   assert (pkt == ACTIVATE_SESSION_RES
-          || pkt == SET_SESSION_PRIVILEGE_LEVEL_RES /* IPMI 1.5 or 2.0 */
-          || pkt == GET_CHASSIS_STATUS_RES /* IPMI 1.5 or 2.0 */
-          || pkt == CHASSIS_CONTROL_RES /* IPMI 1.5 or 2.0 */
-          || pkt == CHASSIS_IDENTIFY_RES /* IPMI 1.5 or 2.0 */
-	  || pkt == C410X_GET_SENSOR_READING_RES /* IPMI 1.5 or 2.0 */
-	  || pkt == C410X_SLOT_POWER_CONTROL_RES /* IPMI 1.5 or 2.0 */
-          || pkt == CLOSE_SESSION_RES); /* IPMI 1.5 or 2.0 */
+	  || PACKET_TYPE_IPMI_SESSION_PACKET_RES (pkt));
   assert (buf && buflen);
 
   /* IPMI 1.5 Checks */
   if (pkt == ACTIVATE_SESSION_RES
-      || (cmd_args.common.driver_type == IPMI_DEVICE_LAN
-          && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
-              || pkt == GET_CHASSIS_STATUS_RES
-              || pkt == CHASSIS_CONTROL_RES
-              || pkt == CHASSIS_IDENTIFY_RES
-	      || pkt == C410X_GET_SENSOR_READING_RES
-	      || pkt == C410X_SLOT_POWER_CONTROL_RES
-              || pkt == CLOSE_SESSION_RES)))
+      || cmd_args.common.driver_type == IPMI_DEVICE_LAN)
     {
       uint8_t authentication_type;
       int check_authcode_retry_flag = 0;
 
       if (pkt == ACTIVATE_SESSION_RES)
         authentication_type = cmd_args.common.authentication_type;
-      else /* pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
-              || pkt == GET_CHASSIS_STATUS_RES
-              || pkt == CHASSIS_CONTROL_RES
-              || pkt == CHASSIS_IDENTIFY_RES
-              || pkt == CLOSE_SESSION_RES
-           */
+      else /* PACKET_TYPE_IPMI_SESSION_PACKET_RES (pkt) */
         {
           if (!ip->permsgauth_enabled)
             {
@@ -186,16 +158,7 @@ ipmipower_check_authentication_code (ipmipower_powercmd_t ip,
                               ip->ic->hostname, ip->protocol_state));
         }
     }
-  else  /*
-          (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0
-          && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
-          || pkt == GET_CHASSIS_STATUS_RES
-          || pkt == CHASSIS_CONTROL_RES
-          || pkt == CHASSIS_IDENTIFY_RES
-	  || pkt == C410X_GET_SENSOR_READING_RES
-	  || pkt == C410X_SLOT_POWER_CONTROL_RES
-          || pkt == CLOSE_SESSION_RES))
-        */
+  else /* cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0 */
     {
       /* IPMI 2.0 Checks */
       uint8_t integrity_algorithm;
@@ -233,13 +196,7 @@ ipmipower_check_outbound_sequence_number (ipmipower_powercmd_t ip, packet_type_t
   int rv = 0;
 
   assert (ip);
-  assert (PACKET_TYPE_VALID_RES (pkt));
-  assert (pkt != AUTHENTICATION_CAPABILITIES_RES
-          && pkt != GET_SESSION_CHALLENGE_RES
-          && pkt != ACTIVATE_SESSION_RES
-          && pkt != OPEN_SESSION_RES
-          && pkt != RAKP_MESSAGE_2_RES
-          && pkt != RAKP_MESSAGE_4_RES);
+  assert (PACKET_TYPE_IPMI_SESSION_PACKET_RES (pkt));
 
   /* achu: This algorithm is more or less from Appendix A of the IPMI
    * spec.  It may not be entirely necessary for ipmipower, since the
@@ -253,14 +210,7 @@ ipmipower_check_outbound_sequence_number (ipmipower_powercmd_t ip, packet_type_t
    * change it later.
    */
 
-  if (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0
-      && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
-          || pkt == GET_CHASSIS_STATUS_RES
-          || pkt == CHASSIS_CONTROL_RES
-          || pkt == CHASSIS_IDENTIFY_RES
-	  || pkt == C410X_GET_SENSOR_READING_RES
-	  || pkt == C410X_SLOT_POWER_CONTROL_RES
-          || pkt == CLOSE_SESSION_RES))
+  if (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0)
     {
       if (FIID_OBJ_GET (ip->obj_rmcpplus_session_hdr_res,
                         "session_sequence_number",
@@ -272,16 +222,7 @@ ipmipower_check_outbound_sequence_number (ipmipower_powercmd_t ip, packet_type_t
         }
       session_sequence_number = val;
     }
-  else /*
-         (cmd_args.common.driver_type == IPMI_DEVICE_LAN
-         && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
-         || pkt == GET_CHASSIS_STATUS_RES
-         || pkt == CHASSIS_CONTROL_RES
-         || pkt == CHASSIS_IDENTIFY_RES
-	 || pkt == C410X_GET_SENSOR_READING_RES
-	 || pkt == C410X_SLOT_POWER_CONTROL_RES
-         || pkt == CLOSE_SESSION_RES))
-       */
+  else /* cmd_args.common.driver_type == IPMI_DEVICE_LAN */
     {
       if (FIID_OBJ_GET (ip->obj_lan_session_hdr_res,
                         "session_sequence_number",
@@ -367,19 +308,11 @@ ipmipower_check_session_id (ipmipower_powercmd_t ip, packet_type_t pkt)
   uint64_t val;
 
   assert (ip);
-  assert (PACKET_TYPE_VALID_RES (pkt));
-  assert (pkt != AUTHENTICATION_CAPABILITIES_RES
-          && pkt != GET_SESSION_CHALLENGE_RES
-          && pkt != ACTIVATE_SESSION_RES);
+  assert (PACKET_TYPE_IPMI_2_0_SETUP_RES (pkt)
+	  || PACKET_TYPE_IPMI_SESSION_PACKET_RES (pkt));
 
   if (cmd_args.common.driver_type == IPMI_DEVICE_LAN
-      && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
-          || pkt == GET_CHASSIS_STATUS_RES
-          || pkt == CHASSIS_CONTROL_RES
-          || pkt == CHASSIS_IDENTIFY_RES
-	  || pkt == C410X_GET_SENSOR_READING_RES
-	  || pkt == C410X_SLOT_POWER_CONTROL_RES
-          || pkt == CLOSE_SESSION_RES))
+      && PACKET_TYPE_IPMI_SESSION_PACKET_RES (pkt))
     {
       if (FIID_OBJ_GET (ip->obj_lan_session_hdr_res,
                         "session_id",
@@ -402,13 +335,7 @@ ipmipower_check_session_id (ipmipower_powercmd_t ip, packet_type_t pkt)
       expected_session_id = val;
     }
   else if (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0
-           && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
-               || pkt == GET_CHASSIS_STATUS_RES
-               || pkt == CHASSIS_CONTROL_RES
-               || pkt == CHASSIS_IDENTIFY_RES
-	       || pkt == C410X_GET_SENSOR_READING_RES
-	       || pkt == C410X_SLOT_POWER_CONTROL_RES
-               || pkt == CLOSE_SESSION_RES))
+	   && PACKET_TYPE_IPMI_SESSION_PACKET_RES (pkt))
     {
       if (FIID_OBJ_GET (ip->obj_rmcpplus_session_hdr_res,
                         "session_id",
@@ -421,11 +348,7 @@ ipmipower_check_session_id (ipmipower_powercmd_t ip, packet_type_t pkt)
       session_id = val;
       expected_session_id = ip->remote_console_session_id;
     }
-  else /* 
-          (pkt == OPEN_SESSION_RES
-          || pkt == RAKP_MESSAGE_2_RES
-          || pkt == RAKP_MESSAGE_4_RES)
-       */
+  else /* PACKET_TYPE_IPMI_2_0_SETUP_RES (pkt) */
     {
       fiid_obj_t obj_cmd;
 
@@ -474,11 +397,9 @@ ipmipower_check_network_function (ipmipower_powercmd_t ip, packet_type_t pkt)
   uint64_t val;
 
   assert (ip);
-  assert (PACKET_TYPE_VALID_RES (pkt));
   /* Assert this is not an IPMI 2.0 Session Setup Packet */
-  assert (pkt != OPEN_SESSION_RES
-          && pkt != RAKP_MESSAGE_2_RES
-          && pkt != RAKP_MESSAGE_4_RES);
+  assert (PACKET_TYPE_IPMI_1_5_SETUP_RES (pkt)
+	  || PACKET_TYPE_IPMI_SESSION_PACKET_RES (pkt));
 
   if (FIID_OBJ_GET (ip->obj_lan_msg_hdr_res,
                     "net_fn",
@@ -498,9 +419,13 @@ ipmipower_check_network_function (ipmipower_powercmd_t ip, packet_type_t pkt)
     expected_netfn = IPMI_NET_FN_SENSOR_EVENT_RS;
   else if (pkt == C410X_SLOT_POWER_CONTROL_RES)
     expected_netfn = IPMI_NET_FN_OEM_DELL_GENERIC_RS;
-  else
+  else /* pkt == AUTHENTICATION_CAPABILITIES_RES
+	  || pkt == GET_SESSION_CHALLENGE_RES
+	  || pkt == ACTIVATE_SESSION_RES
+	  || pkt == CLOSE_SESSION_RES
+	*/
     expected_netfn = IPMI_NET_FN_APP_RS;
-
+  
   if (netfn != expected_netfn)
     IPMIPOWER_DEBUG (("host = %s; p = %d; netfn failed: %Xh; expected = %Xh",
                       ip->ic->hostname,
@@ -520,11 +445,8 @@ ipmipower_check_command (ipmipower_powercmd_t ip, packet_type_t pkt)
   fiid_obj_t obj_cmd;
 
   assert (ip);
-  assert (PACKET_TYPE_VALID_RES (pkt));
-  /* Assert this is not an IPMI 2.0 Session Setup Packet */
-  assert (pkt != OPEN_SESSION_RES
-          && pkt != RAKP_MESSAGE_2_RES
-          && pkt != RAKP_MESSAGE_4_RES);
+  assert (PACKET_TYPE_IPMI_1_5_SETUP_RES (pkt)
+	  || PACKET_TYPE_IPMI_SESSION_PACKET_RES (pkt));
 
   obj_cmd = ipmipower_packet_cmd_obj (ip, pkt);
 
@@ -558,7 +480,7 @@ ipmipower_check_command (ipmipower_powercmd_t ip, packet_type_t pkt)
     expected_cmd = IPMI_CMD_OEM_DELL_SLOT_POWER_CONTROL;
   else if (pkt == CLOSE_SESSION_RES)
     expected_cmd = IPMI_CMD_CLOSE_SESSION;
-
+  
   if (cmd != expected_cmd)
     IPMIPOWER_DEBUG (("host = %s; p = %d; cmd failed: %Xh; expected = %Xh",
                       ip->ic->hostname,
@@ -577,11 +499,8 @@ ipmipower_check_requester_sequence_number (ipmipower_powercmd_t ip, packet_type_
   uint64_t val;
 
   assert (ip);
-  assert (PACKET_TYPE_VALID_RES (pkt));
-  /* Assert this is not an IPMI 2.0 Session Setup Packet */
-  assert (pkt != OPEN_SESSION_RES
-          && pkt != RAKP_MESSAGE_2_RES
-          && pkt != RAKP_MESSAGE_4_RES);
+  assert (PACKET_TYPE_IPMI_1_5_SETUP_RES (pkt)
+	  || PACKET_TYPE_IPMI_SESSION_PACKET_RES (pkt));
 
   expected_req_seq = ip->ic->ipmi_requester_sequence_number_counter % (IPMI_LAN_REQUESTER_SEQUENCE_NUMBER_MAX + 1);
 
@@ -614,10 +533,8 @@ ipmipower_check_completion_code (ipmipower_powercmd_t ip, packet_type_t pkt)
 
   assert (ip);
   assert (PACKET_TYPE_VALID_RES (pkt));
-  /* Assert this is not an IPMI 2.0 Session Setup Packet */
-  assert (pkt != OPEN_SESSION_RES
-          && pkt != RAKP_MESSAGE_2_RES
-          && pkt != RAKP_MESSAGE_4_RES);
+  assert (PACKET_TYPE_IPMI_1_5_SETUP_RES (pkt)
+	  || PACKET_TYPE_IPMI_SESSION_PACKET_RES (pkt));
 
   obj_cmd = ipmipower_packet_cmd_obj (ip, pkt);
 
@@ -648,18 +565,9 @@ ipmipower_check_payload_type (ipmipower_powercmd_t ip, packet_type_t pkt)
   uint64_t val;
 
   assert (ip);
-  assert (PACKET_TYPE_VALID_RES (pkt));
-  assert (pkt == OPEN_SESSION_RES
-          || pkt == RAKP_MESSAGE_2_RES
-          || pkt == RAKP_MESSAGE_4_RES
+  assert (PACKET_TYPE_IPMI_2_0_SETUP_RES (pkt)
           || (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0
-              && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
-                  || pkt == GET_CHASSIS_STATUS_RES
-                  || pkt == CHASSIS_CONTROL_RES
-                  || pkt == CHASSIS_IDENTIFY_RES
-		  || pkt == C410X_GET_SENSOR_READING_RES
-		  || pkt == C410X_SLOT_POWER_CONTROL_RES
-                  || pkt == CLOSE_SESSION_RES)));
+              && PACKET_TYPE_IPMI_SESSION_PACKET_RES (pkt)));
 
   if (FIID_OBJ_GET (ip->obj_rmcpplus_session_hdr_res,
                     "payload_type",
@@ -677,7 +585,7 @@ ipmipower_check_payload_type (ipmipower_powercmd_t ip, packet_type_t pkt)
     expected_payload_type = IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2;
   else if (pkt == RAKP_MESSAGE_4_RES)
     expected_payload_type = IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4;
-  else
+  else /* PACKET_TYPE_IPMI_SESSION_PACKET_RES (pkt) */
     expected_payload_type = IPMI_PAYLOAD_TYPE_IPMI;
 
   if (payload_type != expected_payload_type)
@@ -699,10 +607,7 @@ ipmipower_check_message_tag (ipmipower_powercmd_t ip, packet_type_t pkt)
   uint64_t val;
 
   assert (ip);
-  assert (PACKET_TYPE_VALID_RES (pkt));
-  assert (pkt == OPEN_SESSION_RES
-          || pkt == RAKP_MESSAGE_2_RES
-          || pkt == RAKP_MESSAGE_4_RES);
+  assert (PACKET_TYPE_IPMI_2_0_SETUP_RES (pkt));
 
   obj_cmd = ipmipower_packet_cmd_obj (ip, pkt);
 
@@ -736,10 +641,7 @@ ipmipower_check_rmcpplus_status_code (ipmipower_powercmd_t ip, packet_type_t pkt
   uint64_t val;
 
   assert (ip);
-  assert (PACKET_TYPE_VALID_RES (pkt));
-  assert (pkt == OPEN_SESSION_RES
-          || pkt == RAKP_MESSAGE_2_RES
-          || pkt == RAKP_MESSAGE_4_RES);
+  assert (PACKET_TYPE_IPMI_2_0_SETUP_RES (pkt));
 
   obj_cmd = ipmipower_packet_cmd_obj (ip, pkt);
 
@@ -1190,15 +1092,8 @@ ipmipower_check_payload_pad (ipmipower_powercmd_t ip, packet_type_t pkt)
   int rv;
 
   assert (ip);
-  assert (PACKET_TYPE_VALID_RES (pkt));
   assert (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0
-          && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
-              || pkt == GET_CHASSIS_STATUS_RES
-              || pkt == CHASSIS_CONTROL_RES
-              || pkt == CHASSIS_IDENTIFY_RES
-	      || pkt == C410X_GET_SENSOR_READING_RES
-	      || pkt == C410X_SLOT_POWER_CONTROL_RES
-              || pkt == CLOSE_SESSION_RES));
+          && PACKET_TYPE_IPMI_SESSION_PACKET_RES (pkt));
 
   confidentiality_algorithm = ip->confidentiality_algorithm;
 
@@ -1223,15 +1118,8 @@ ipmipower_check_integrity_pad (ipmipower_powercmd_t ip, packet_type_t pkt)
   int rv;
 
   assert (ip);
-  assert (PACKET_TYPE_VALID_RES (pkt));
   assert (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0
-          && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
-              || pkt == GET_CHASSIS_STATUS_RES
-              || pkt == CHASSIS_CONTROL_RES
-              || pkt == CHASSIS_IDENTIFY_RES
-	      || pkt == C410X_GET_SENSOR_READING_RES
-	      || pkt == C410X_SLOT_POWER_CONTROL_RES
-              || pkt == CLOSE_SESSION_RES));
+          && PACKET_TYPE_IPMI_SESSION_PACKET_RES (pkt));
 
   if (ip->integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE)
     return (1);

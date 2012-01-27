@@ -183,8 +183,8 @@ typedef enum
 #define PACKET_TYPE_PKT_MAX            0x00D
 #define PACKET_TYPE_PKT_MASK           0x0FF
 
-#define PACKET_TYPE_PACKET_VALID(__p)                    \
-  (((__p) & PACKET_TYPE_PKT_MASK) >= PACKET_TYPE_PKT_MIN \
+#define PACKET_TYPE_PACKET_VALID(__p)                        \
+  (((__p) & PACKET_TYPE_PKT_MASK) >= PACKET_TYPE_PKT_MIN     \
    && ((__p) & PACKET_TYPE_PKT_MASK) <= PACKET_TYPE_PKT_MAX)
 
 #define PACKET_TYPE_VALID_REQ(__p)          \
@@ -198,6 +198,62 @@ typedef enum
 #define PACKET_TYPE_VALID_PKT(__p)          \
   (PACKET_TYPE_VALID_REQ ((__p))	    \
    || PACKET_TYPE_VALID_RES ((__p)))
+
+#define PACKET_TYPE_IPMI_1_5_SETUP(__p)          \
+  (((__p) == AUTHENTICATION_CAPABILITIES_REQ     \
+    || (__p) == AUTHENTICATION_CAPABILITIES_RES  \
+    || (__p) == GET_SESSION_CHALLENGE_REQ        \
+    || (__p) == GET_SESSION_CHALLENGE_RES        \
+    || (__p) == ACTIVATE_SESSION_REQ             \
+    || (__p) == ACTIVATE_SESSION_RES)) 
+
+#define PACKET_TYPE_IPMI_1_5_SETUP_REQ(__p)      \
+  (PACKET_TYPE_IPMI_1_5_SETUP (__p)              \
+   || PACKET_TYPE_VALID_REQ (__p))
+
+#define PACKET_TYPE_IPMI_1_5_SETUP_RES(__p)      \
+  (PACKET_TYPE_IPMI_1_5_SETUP (__p)              \
+   || PACKET_TYPE_VALID_RES (__p))
+
+#define PACKET_TYPE_IPMI_2_0_SETUP(__p)          \
+  (((__p) == OPEN_SESSION_REQ                    \
+    || (__p) == OPEN_SESSION_RES		 \
+    || (__p) == RAKP_MESSAGE_1_REQ               \
+    || (__p) == RAKP_MESSAGE_2_RES               \
+    || (__p) == RAKP_MESSAGE_3_REQ               \
+    || (__p) == RAKP_MESSAGE_4_RES)) 
+
+#define PACKET_TYPE_IPMI_2_0_SETUP_REQ(__p)      \
+  (PACKET_TYPE_IPMI_2_0_SETUP (__p)              \
+   || PACKET_TYPE_VALID_REQ (__p))
+
+#define PACKET_TYPE_IPMI_2_0_SETUP_RES(__p)      \
+  (PACKET_TYPE_IPMI_2_0_SETUP (__p)              \
+   || PACKET_TYPE_VALID_RES (__p))
+
+#define PACKET_TYPE_IPMI_SESSION_PACKET(__p)     \
+  (((__p) == SET_SESSION_PRIVILEGE_LEVEL_REQ     \
+    || (__p) == SET_SESSION_PRIVILEGE_LEVEL_RES  \
+    || (__p) == GET_CHASSIS_STATUS_REQ	         \
+    || (__p) == GET_CHASSIS_STATUS_RES	         \
+    || (__p) == CHASSIS_CONTROL_REQ	         \
+    || (__p) == CHASSIS_CONTROL_RES	         \
+    || (__p) == CHASSIS_IDENTIFY_REQ	         \
+    || (__p) == CHASSIS_IDENTIFY_RES	         \
+    || (__p) == C410X_GET_SENSOR_READING_REQ     \
+    || (__p) == C410X_GET_SENSOR_READING_RES     \
+    || (__p) == C410X_SLOT_POWER_CONTROL_REQ     \
+    || (__p) == C410X_SLOT_POWER_CONTROL_RES     \
+    || (__p) == CLOSE_SESSION_REQ                \
+    || (__p) == CLOSE_SESSION_RES))
+
+#define PACKET_TYPE_IPMI_SESSION_PACKET_REQ(__p)   \
+  (PACKET_TYPE_IPMI_SESSION_PACKET (__p)           \
+   && PACKET_TYPE_VALID_REQ (__p))
+
+#define PACKET_TYPE_IPMI_SESSION_PACKET_RES(__p)   \
+  (PACKET_TYPE_IPMI_SESSION_PACKET (__p)           \
+   && PACKET_TYPE_VALID_RES (__p))
 
 /* Protocol States */
 typedef enum
