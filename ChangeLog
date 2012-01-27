@@ -1,5 +1,5 @@
-2012-01-XX  Albert Chu <chu11@llnl.gov>
-	
+2012-01-16  Albert Chu <chu11@llnl.gov>
+
 	Merge dellc410x
 
 	* ipmipower/: Add --oem-power-type option and support C410x OEM
@@ -14,6 +14,12 @@
 2012-01-17  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/ipmipower.h: Redo packet validation macros.
+
+	* libfreeipmi/include/freeipmi/cmds/ipmi-chassis-cmds.h: Define
+	macros for on vs off power.
+
+	* ipmipower/ipmipower_powercmd.c (_process_ipmi_packets): Use new
+	macros.
 	
 2012-01-05  Albert Chu <chu11@llnl.gov>
 

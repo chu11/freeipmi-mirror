@@ -31,6 +31,9 @@ extern "C" {
 #define IPMI_POWER_RESTORE_POLICY_POWERS_UP_AFTER_AC_RETURNS                0x02
 #define IPMI_POWER_RESTORE_POLICY_UNKNOWN                                   0x03
 
+#define IPMI_SYSTEM_POWER_IS_ON  1
+#define IPMI_SYSTEM_POWER_IS_OFF 0
+
 #define IPMI_LAST_POWER_EVENT_AC_FAILED                                     0x00
 #define IPMI_LAST_POWER_EVENT_POWER_DOWN_POWER_OVERLOAD                     0x01
 #define IPMI_LAST_POWER_EVENT_POWER_DOWN_INTERLOCK_ACTIVATED                0x02
