@@ -171,7 +171,9 @@ _destroy_ipmipower_powercmd (void *x)
 
   free (ip->extra_arg);
 
-  /* Must be moved to add_to_pending before destroy */
+  /* Any additional queued commands should be moved to add_to_pending
+   * before destroy
+   */
   assert (!ip->next);
 
   free (ip);
