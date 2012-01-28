@@ -518,15 +518,62 @@ _cmd_power_specific_nodes (char **argv, power_cmd_t cmd)
 	{
 	  if (cmd_args.oem_power_type != OEM_POWER_TYPE_NONE)
 	    {
-	      if (ipmipower_oem_power_cmd_check_extra_arg (node_extra_arg,
-							   NULL,
-							   0) <= 0)
+	      /* Some OEM power types could have ranges for the extra args */
+	      if (cmd_args.oem_power_type == OEM_POWER_TYPE_C410X
+		  && node_extra_arg)
 		{
-		  ipmipower_output (MSG_TYPE_INVALID_ARGUMENT_FOR_OEM_EXTENSION, ics[i].hostname);
-		  goto end_loop;
+		  hostlist_t hextra = NULL;
+
+		  /* if invalid to hostlist, it still may be valid in general, so fall through */
+		  if (!(hextra = hostlist_create (node_extra_arg)))
+		    goto one_extra_arg;
+
+		  if (hostlist_count (hextra) > 1)
+		    {
+		      hostlist_iterator_t hextraitr = NULL;
+		      char *extrastr;
+
+		      if (!(hextraitr = hostlist_iterator_create (hextra)))
+			{
+			  IPMIPOWER_ERROR (("hostlist_iterator_create: %s", strerror (errno)));
+			  exit (1);
+			}
+
+		      while ((extrastr = hostlist_next (hextraitr)))
+			{
+			  if (ipmipower_oem_power_cmd_check_extra_arg (extrastr,
+								       NULL,
+								       0) <= 0)
+			    {
+			      ipmipower_output (MSG_TYPE_INVALID_ARGUMENT_FOR_OEM_EXTENSION, ics[i].hostname);
+			      free (extrastr);
+			      hostlist_iterator_destroy (hextraitr);
+			      hostlist_destroy (hextra);
+			      goto end_loop;
+			    }
+			  ipmipower_connection_clear (&ics[i]);
+			  ipmipower_powercmd_queue (cmd, &ics[i], extrastr);
+			  free (extrastr);
+			}
+		      
+		      hostlist_iterator_destroy (hextraitr);
+		    }
+
+		  hostlist_destroy (hextra);
 		}
-	      ipmipower_connection_clear (&ics[i]);
-	      ipmipower_powercmd_queue (cmd, &ics[i], node_extra_arg);
+	      else
+		{
+		one_extra_arg:
+		  if (ipmipower_oem_power_cmd_check_extra_arg (node_extra_arg,
+							       NULL,
+							       0) <= 0)
+		    {
+		      ipmipower_output (MSG_TYPE_INVALID_ARGUMENT_FOR_OEM_EXTENSION, ics[i].hostname);
+		      goto end_loop;
+		    }
+		  ipmipower_connection_clear (&ics[i]);
+		  ipmipower_powercmd_queue (cmd, &ics[i], node_extra_arg);
+		}
 	    }
 	  else
 	    {

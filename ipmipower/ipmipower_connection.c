@@ -125,7 +125,7 @@ ipmipower_connection_clear (struct ipmipower_connection *ic)
 }
 
 static int
-_connection_setup (struct ipmipower_connection *ic, const char *hostname)
+_connection_setup_base (struct ipmipower_connection *ic, const char *hostname)
 {
   struct sockaddr_in srcaddr;
   struct hostent *result;
@@ -323,7 +323,7 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
 }
 
 static void
-_connection_add_extra_arg (struct ipmipower_connection *ic, const char *extra_arg)
+_connection_add_extra_arg_base (struct ipmipower_connection *ic, const char *extra_arg)
 {
   struct ipmipower_connection_extra_arg *ea;
   struct ipmipower_connection_extra_arg *eanode;
@@ -368,6 +368,146 @@ _connection_add_extra_arg (struct ipmipower_connection *ic, const char *extra_ar
   while (eanode->next)
     eanode = eanode->next;
   eanode->next = ea; 
+}
+
+static void
+_connection_add_extra_arg (struct ipmipower_connection *ic, const char *extra_arg)
+{
+  assert (ic);
+  assert (ic->extra_args);
+  assert (cmd_args.oem_power_type != OEM_POWER_TYPE_NONE);
+
+  /* Some OEM power types could have ranges for the extra args */
+  if (cmd_args.oem_power_type == OEM_POWER_TYPE_C410X
+      && extra_arg)
+    {
+      hostlist_t h = NULL;
+
+      /* if invalid to hostlist, it still may be valid in general, so fall through */
+      if (!(h = hostlist_create (extra_arg)))
+	goto one_extra_arg;
+
+      if (hostlist_count (h) > 1)
+	{
+	  hostlist_iterator_t hitr = NULL;
+	  char *extrastr;
+
+	  if (!(hitr = hostlist_iterator_create (h)))
+	    {
+	      IPMIPOWER_ERROR (("hostlist_iterator_create: %s", strerror (errno)));
+	      exit (1);
+	    }
+	  
+	  while ((extrastr = hostlist_next (hitr)))
+	    {
+	      _connection_add_extra_arg_base (ic, extrastr);
+	      free (extrastr);
+	    }
+	  
+	  hostlist_iterator_destroy (hitr);
+	  hostlist_destroy (h);
+	  return;
+	}
+      
+      hostlist_destroy (h);
+      goto one_extra_arg;
+    }
+
+ one_extra_arg:
+  _connection_add_extra_arg_base (ic, extra_arg);
+}
+
+static int
+_connection_setup (struct ipmipower_connection *ic, const char *hostname)
+{
+  assert (ic);
+  assert (hostname);
+
+  /* Some OEM power types could have ranges for the extra args */
+  if (cmd_args.oem_power_type != OEM_POWER_TYPE_NONE
+      && cmd_args.oem_power_type == OEM_POWER_TYPE_C410X)
+    {
+      char *hostname_copy = NULL;
+      char *extra_arg;
+      char *ptr;
+      
+      if (!(hostname_copy = strdup (hostname)))
+	{
+	  IPMIPOWER_ERROR (("strdup: %s", strerror (errno)));
+	  exit (1);
+	}
+      
+      if ((ptr = strchr (hostname_copy, '+')))
+	{
+	  hostlist_t h = NULL;
+	  
+	  *ptr = '\0';
+	  ptr++;
+	  extra_arg = ptr;
+	  
+	  /* if invalid to hostlist, it still may be valid in general, so fall through */
+	  if (!(h = hostlist_create (extra_arg)))
+	    {
+	      free (hostname_copy);
+	      goto not_multiple_extra_args;
+	    }
+	  
+	  if (hostlist_count (h) > 1)
+	    {
+	      hostlist_iterator_t hitr = NULL;
+	      unsigned int hcount = 0;
+	      char *extrastr;
+	      
+	      if (!(hitr = hostlist_iterator_create (h)))
+		{
+		  IPMIPOWER_ERROR (("hostlist_iterator_create: %s", strerror (errno)));
+		  exit (1);
+		}
+	      
+	      while ((extrastr = hostlist_next (hitr)))
+		{
+		  if (!hcount)
+		    {
+		      char hostnamebuf[IPMIPOWER_OUTPUT_BUFLEN + 1];
+		      
+		      memset (hostnamebuf, '\0', IPMIPOWER_OUTPUT_BUFLEN + 1);
+
+		      snprintf (hostnamebuf,
+				IPMIPOWER_OUTPUT_BUFLEN,
+				"%s+%s",
+				hostname_copy,
+				extrastr);
+		      
+		      if (_connection_setup_base (ic, hostnamebuf) < 0)
+			return (-1);
+		    }
+		  else
+		    _connection_add_extra_arg_base (ic, extrastr);
+		  free (extrastr);
+		  hcount++;
+		}
+	      
+	      hostlist_iterator_destroy (hitr);
+	      hostlist_destroy (h);
+	      free (hostname_copy);
+	      return (0);
+	    }
+	  else
+	    {
+	      free (hostname_copy);
+	      hostlist_destroy (h);
+	      goto not_multiple_extra_args;
+	    }
+	}
+      else
+	{
+	  free (hostname_copy);
+	  goto not_multiple_extra_args;
+	}
+    }
+
+ not_multiple_extra_args:
+  return (_connection_setup_base (ic, hostname));
 }
 
 struct ipmipower_connection *
