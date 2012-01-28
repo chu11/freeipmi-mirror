@@ -197,7 +197,7 @@ typedef enum
 
 #define PACKET_TYPE_VALID(__p)            \
   ((PACKET_TYPE_REQUEST ((__p))	          \
-    || PACKET_TYPE_RESPONSE ((__p))) ? 1 : 0)
+    && PACKET_TYPE_RESPONSE ((__p))) ? 1 : 0)
 
 #define PACKET_TYPE_IPMI_1_5_SETUP(__p)                 \
   ((((__p) == AUTHENTICATION_CAPABILITIES_REQUEST       \
@@ -209,11 +209,11 @@ typedef enum
 
 #define PACKET_TYPE_IPMI_1_5_SETUP_REQUEST(__p)      \
   ((PACKET_TYPE_IPMI_1_5_SETUP (__p)		     \
-    || PACKET_TYPE_REQUEST (__p)) ? 1 : 0)
+    && PACKET_TYPE_REQUEST (__p)) ? 1 : 0)
 
 #define PACKET_TYPE_IPMI_1_5_SETUP_RESPONSE(__p)     \
   ((PACKET_TYPE_IPMI_1_5_SETUP (__p)		     \
-    || PACKET_TYPE_RESPONSE (__p)) ? 1 : 0)
+    && PACKET_TYPE_RESPONSE (__p)) ? 1 : 0)
 
 #define PACKET_TYPE_IPMI_2_0_SETUP(__p)              \
   ((((__p) == OPEN_SESSION_REQUEST		     \
@@ -225,11 +225,11 @@ typedef enum
 
 #define PACKET_TYPE_IPMI_2_0_SETUP_REQUEST(__p)      \
   ((PACKET_TYPE_IPMI_2_0_SETUP (__p)		     \
-    || PACKET_TYPE_REQUEST (__p)) ? 1 : 0)
+    && PACKET_TYPE_REQUEST (__p)) ? 1 : 0)
 
 #define PACKET_TYPE_IPMI_2_0_SETUP_RESPONSE(__p)     \
   ((PACKET_TYPE_IPMI_2_0_SETUP (__p)		     \
-    || PACKET_TYPE_RESPONSE (__p)) ? 1 : 0)
+    && PACKET_TYPE_RESPONSE (__p)) ? 1 : 0)
 
 #define PACKET_TYPE_IPMI_SESSION_PACKET(__p)         \
   ((((__p) == SET_SESSION_PRIVILEGE_LEVEL_REQUEST    \
