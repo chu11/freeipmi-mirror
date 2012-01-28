@@ -197,7 +197,7 @@ typedef enum
 
 #define PACKET_TYPE_VALID(__p)            \
   ((PACKET_TYPE_REQUEST ((__p))	          \
-    && PACKET_TYPE_RESPONSE ((__p))) ? 1 : 0)
+    || PACKET_TYPE_RESPONSE ((__p))) ? 1 : 0)
 
 #define PACKET_TYPE_IPMI_1_5_SETUP(__p)                 \
   ((((__p) == AUTHENTICATION_CAPABILITIES_REQUEST       \
