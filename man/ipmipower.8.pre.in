@@ -371,7 +371,7 @@ Some motherboards include IPMI OEM extensions for alternate power
 control mechanisms.  For example, these power control mechanisms may
 allow you to power control a sub-device within the system rather than
 the entire system itself.
-
+.LP
 By specifying an OEM power type via \fB\-\-oem\-power\-type\fR on the
 command line or
 .B freeipmi.conf(5),
@@ -383,7 +383,7 @@ no longer be available.  For example, an OEM extensions may allow
 \fBon\fR but not \fBcycle\fR.  Specific 
 .B ipmipower
 options may not longer function either.
-
+.LP
 Some OEM extensions may require additional information for their power
 control action, such as a sub-device identifier.  Additional
 information can be provided by appending a plus sign ('+') and the
@@ -392,7 +392,7 @@ command line or in interactive mode.  For example, the hostname
 \fImynode+18\fR would indicate the power control operation should be
 sent to the host \fImynode\fR, and \fI18\fR is the identifier of a
 possible sub-device to be power controlled.
-
+.LP
 Because OEM power control may involve subtypes, it is possible a user
 may wish to power control multiple sub-devices on the same host.  For
 example, you might specify the hosts \fImynode+1,mynode+2\fR,
@@ -400,12 +400,11 @@ indicating to power control subdevice 1 and 2 on \fImynode\fR.
 Because many BMCs cannot handle multiple IPMI sessions, power control
 operations to the same host will be serialized internally by
 .B ipmipower.
-
+.LP
 The following are the current OEM power types available, along with
 information on the systems they work with and the power control
 operations available.
 
-.RS
 .TP
 .B C410X
 This OEM power type supports the power control of PCIe slots on Dell
@@ -415,19 +414,8 @@ specified when attempting to power control with this extension.  For
 example, the hostname \fImynode+2\fR would inform
 .B ipmipower
 to operate on slot number \fI2\fR on \fImynode\fR.
-
-It should be noted that the only power control mechanism supported
-natively on the C410x is a power toggle.  The \fBon\fR, \fBoff\fR, and
-\fBstat\fR actions are emulated through a combination of a toggle and
-the reading of a PCIe slot watt sensor.
-
 The functionality of \fB\-\-wait\-until\-on\fR and
 \fB\-\-wait\-until\-off\fR are maintained with this OEM extension.
-
-Dell Poweredge C410x slot power control is alternately available in
-.B ipmi-oem(8)
-via the \fIDell\fR, \fIslot\-power\-toggle\fR
-\fIslot\-power\-control\fR control options.
 
 .TP
 .B NONE
@@ -435,8 +423,6 @@ This informs
 .B ipmipower
 that no OEM power type extension is to be used and standard IPMI power
 control is used.  This is the default.
-
-.RE
 
 #include <@top_srcdir@/man/manpage-common-hostranged-text-main.man>
 .LP
