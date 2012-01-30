@@ -187,7 +187,8 @@ ipmipower_packet_cmd_obj (ipmipower_powercmd_t ip, packet_type_t pkt)
 }
 
 void
-ipmipower_packet_dump (ipmipower_powercmd_t ip, packet_type_t pkt,
+ipmipower_packet_dump (ipmipower_powercmd_t ip,
+		       packet_type_t pkt,
                        const void *buf,
                        unsigned int buflen)
 {
