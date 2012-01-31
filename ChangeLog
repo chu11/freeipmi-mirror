@@ -1,3 +1,8 @@
+2012-01-30  Albert Chu <chu11@llnl.gov>
+
+	* man/ipmi-oem.8.pre.in: Update supported motherboard information
+	based on tests from Ryan Cox.
+
 2012-01-27  Albert Chu <chu11@llnl.gov>
 
 	* man/ipmi-oem.8.pre.in: Update information based on tests from

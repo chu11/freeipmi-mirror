@@ -95,7 +95,7 @@ to NIC2 indicates IPMI is available on NIC1 w/ failover to NIC2 on
 NIC1's failure, and shared w/ failover to all indicates IPMI is
 available on NIC1 w/ failover to all other NICs in the event of NIC
 failure.  Command confirmed to work on Dell Poweredge 2900, 2950,
-R610, and R710 (Dell 10G and 11G Poweredge systems).
+R610, R710, and R905.
 .TP
 .B set-nic-section \fIdedicated|shared|shared_failover_nic2|shared_failover_all\fR
 This OEM command will set the current NIC selection to dedicated,
@@ -103,7 +103,7 @@ shared, shared_failover_nic2, or shared_failover_all.  (See
 \fIget\-nic\-selection\fR above for description on inputs.)  On older
 Poweredge systems, \fIshared_failover_nic2\fR may have been documented
 as just \fIfailover\fR.  Command confirmed to work on Dell Poweredge
-2900, 2950, R610, and R710 (Dell 10G and 11G Poweredge systems).
+2900, 2950, R610, R710, and R905.
 .TP
 .B get-active-lom-status
 This OEM command will get the current NIC being used for out of band
@@ -195,27 +195,26 @@ complete.  Command confirmed to work on Dell Poweredge R610 and R710
 .TP
 .B get-power-consumption-data
 This OEM command can retrieve power consumption data.  Command
-confirmed to work on Dell Poweredge R610 and R710 (Dell 11G Poweredge
-systems).
+confirmed to work on Dell Poweredge R610, R710, R905, M610, M610x, and
+M910.
 .TP
 .B reset-power-consumption-data \fIcumulative|peak\fI
 This OEM command can reset the cumulative or peak power consumption
 data (viewed via \fBget\-power\-consumption\-data\fR).  Command
-confirmed to work on Dell Poweredge R610 and R710 (Dell 11G Poweredge
-systems).
+confirmed to work on Dell Poweredge R610 and R710.  Untested but
+expected to work on Dell Poweredge R905, M610, M610x, and M910.
 .TP
 .B power-supply-info
 This OEM command can read and output power supply ratings and other
 information.  This OEM command requires access to the SDR.  Command
-confirmed to work on Dell Poweredge R610 and R710 (Dell 11G Poweredge
-systems).
+confirmed to work on Dell Poweredge R610, R710, and M610.
 .TP
 .B get-instantaneous-power-consumption-data \fIpower_supply_instance\fR
 This OEM command can read instantaneous power consumption data.  If a
 power supply instance number is specified, only data for that instance
 will be gathered.  Otherwise, collective power consumption will be
-gathered.  Command confirmed to work on Dell Poweredge R610 and R710
-(Dell 11G Poweredge systems).
+gathered.  Command confirmed to work on Dell Poweredge R610, R710,
+M610, M610x, and M910.
 .TP
 .B get-power-head-room
 This OEM command can read power head room.  Command confirmed to work
@@ -223,13 +222,13 @@ on Dell Poweredge R610 and R710 (Dell 11G Poweredge systems).
 .TP
 .B get-power-consumption-statistics \fIaverage|max|min\fR
 This OEM command can read average, max, or min power consumption
-history.  Command confirmed to work on Dell Poweredge R610 and R710
-(Dell 11G Poweredge systems).
+history.  Command confirmed to work on Dell Poweredge R610, R710,
+M610, M610x, and M910.
 .TP
 .B get-power-capacity
 This OEM command can read the current power capacity.  Command
-confirmed to work on Dell Poweredge R610 and R710 (Dell 11G Poweredge
-systems).
+confirmed to work on Dell Poweredge R610, R710,
+M610, M610x, and M910.
 .TP
 .B set-power-capacity \fIpower-capacity\fR
 This OEM command can write the current power capacity (specified in
@@ -238,8 +237,8 @@ Watts).  Command confirmed to work on Dell Poweredge R610 and R710
 .TP
 .B get-power-capacity-status
 This OEM command can determine if the current power capacity is
-enabled or disabled.  Command confirmed to work on Dell Poweredge R610
-and R710 (Dell 11G Poweredge systems).
+enabled or disabled.  Command confirmed to work on Dell Poweredge
+R610, R710, M610, M610x, and M910.
 .TP
 .B set-power-capacity-status \fIenable|disable\fR
 This OEM command can configure the current power capacity to be
@@ -249,7 +248,7 @@ and R710 (Dell 11G Poweredge systems).
 .B get-chassis-identify-status
 This OEM command will retrieve the current chassis identify (i.e. LED)
 status.  Command confirmed to work on Dell Poweredge 2900, 2950, R610,
-and R710 (Dell 10G and 11G Poweredge systems).
+R710, R905, M600, M610, M610x, and M910.
 .TP
 .B slot-power-toggle \fIslot-number\fR
 This OEM command will perform a power toggle on a PCIe slot.  The PCIe
