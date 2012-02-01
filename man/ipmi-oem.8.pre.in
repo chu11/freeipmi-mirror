@@ -201,8 +201,8 @@ M910.
 .B reset-power-consumption-data \fIcumulative|peak\fI
 This OEM command can reset the cumulative or peak power consumption
 data (viewed via \fBget\-power\-consumption\-data\fR).  Command
-confirmed to work on Dell Poweredge R610 and R710.  Untested but
-expected to work on Dell Poweredge R905, M610, M610x, and M910.
+confirmed to work on Dell Poweredge R610, R710, R905, M610, M610x, and
+M910.
 .TP
 .B power-supply-info
 This OEM command can read and output power supply ratings and other
