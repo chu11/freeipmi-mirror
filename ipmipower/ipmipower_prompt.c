@@ -561,9 +561,13 @@ _cmd_power_specific_nodes (char **argv, power_cmd_t cmd)
 			}
 		      
 		      hostlist_iterator_destroy (hextraitr);
+		      hostlist_destroy (hextra);
 		    }
-
-		  hostlist_destroy (hextra);
+		  else
+		    {
+		      hostlist_destroy (hextra);
+		      goto one_extra_arg;
+		    }
 		}
 	      else
 		{
