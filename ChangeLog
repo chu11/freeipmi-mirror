@@ -1,5 +1,11 @@
 2012-02-06  Albert Chu <chu11@llnl.gov>
 
+	* NEWS, configure.ac: Update for release.
+
+	* Tagged Release-1_1_2.
+
+2012-02-06  Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-sel.8.pre.in: Fix option typo.
 	
 2012-01-31  Albert Chu <chu11@llnl.gov>
