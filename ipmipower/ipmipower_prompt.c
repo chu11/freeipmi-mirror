@@ -418,12 +418,12 @@ _cmd_power_all_nodes (power_cmd_t cmd)
     {
       if (cmd_args.ping_interval
 	  && ics[i].discover_state == STATE_UNDISCOVERED)
-	ipmipower_output (MSG_TYPE_NOTDISCOVERED, ics[i].hostname);
+	ipmipower_output (MSG_TYPE_NOTDISCOVERED, ics[i].hostname, NULL);
       else if (cmd_args.ping_interval
 	       && cmd_args.ping_packet_count
 	       && cmd_args.ping_percent
 	       && ics[i].discover_state == STATE_BADCONNECTION)
-	ipmipower_output (MSG_TYPE_BADCONNECTION, ics[i].hostname);
+	ipmipower_output (MSG_TYPE_BADCONNECTION, ics[i].hostname, NULL);
       else
 	{
 	  if (cmd_args.oem_power_type != OEM_POWER_TYPE_NONE)
@@ -434,7 +434,9 @@ _cmd_power_all_nodes (power_cmd_t cmd)
 		  if (ipmipower_oem_power_cmd_check_extra_arg (eanode->extra_arg,
 							       NULL,
 							       0) <= 0)
-		    ipmipower_output (MSG_TYPE_INVALID_ARGUMENT_FOR_OEM_EXTENSION, ics[i].hostname);
+		    ipmipower_output (MSG_TYPE_INVALID_ARGUMENT_FOR_OEM_EXTENSION,
+				      ics[i].hostname,
+				      eanode->extra_arg);
 		  else
 		    {
 		      ipmipower_connection_clear (&ics[i]);
@@ -505,15 +507,15 @@ _cmd_power_specific_nodes (char **argv, power_cmd_t cmd)
       i = ipmipower_connection_hostname_index (ics, ics_len, node);
       
       if (i < 0)
-	ipmipower_output (MSG_TYPE_UNCONFIGURED_HOSTNAME, node);
+	ipmipower_output (MSG_TYPE_UNCONFIGURED_HOSTNAME, node, NULL);
       else if (cmd_args.ping_interval
 	       && ics[i].discover_state == STATE_UNDISCOVERED)
-	ipmipower_output (MSG_TYPE_NOTDISCOVERED, ics[i].hostname);
+	ipmipower_output (MSG_TYPE_NOTDISCOVERED, ics[i].hostname, NULL);
       else if (cmd_args.ping_interval
 	       && cmd_args.ping_packet_count
 	       && cmd_args.ping_percent
 	       && ics[i].discover_state == STATE_BADCONNECTION)
-	ipmipower_output (MSG_TYPE_BADCONNECTION, ics[i].hostname);
+	ipmipower_output (MSG_TYPE_BADCONNECTION, ics[i].hostname, NULL);
       else
 	{
 	  if (cmd_args.oem_power_type != OEM_POWER_TYPE_NONE)
@@ -545,7 +547,9 @@ _cmd_power_specific_nodes (char **argv, power_cmd_t cmd)
 								       NULL,
 								       0) <= 0)
 			    {
-			      ipmipower_output (MSG_TYPE_INVALID_ARGUMENT_FOR_OEM_EXTENSION, ics[i].hostname);
+			      ipmipower_output (MSG_TYPE_INVALID_ARGUMENT_FOR_OEM_EXTENSION,
+						ics[i].hostname,
+						extrastr);
 			      free (extrastr);
 			      hostlist_iterator_destroy (hextraitr);
 			      hostlist_destroy (hextra);
@@ -568,7 +572,9 @@ _cmd_power_specific_nodes (char **argv, power_cmd_t cmd)
 							       NULL,
 							       0) <= 0)
 		    {
-		      ipmipower_output (MSG_TYPE_INVALID_ARGUMENT_FOR_OEM_EXTENSION, ics[i].hostname);
+		      ipmipower_output (MSG_TYPE_INVALID_ARGUMENT_FOR_OEM_EXTENSION,
+					ics[i].hostname,
+					node_extra_arg);
 		      goto end_loop;
 		    }
 		  ipmipower_connection_clear (&ics[i]);

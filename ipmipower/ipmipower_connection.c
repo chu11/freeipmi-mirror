@@ -300,7 +300,7 @@ _connection_setup_base (struct ipmipower_connection *ic, const char *hostname)
   if (!(result = gethostbyname (ic->hostname)))
     {
       if (h_errno == HOST_NOT_FOUND)
-        ipmipower_output (MSG_TYPE_HOSTNAME_INVALID, ic->hostname);
+        ipmipower_output (MSG_TYPE_HOSTNAME_INVALID, ic->hostname, NULL);
       else
         {
 #if HAVE_HSTRERROR
@@ -530,7 +530,7 @@ ipmipower_connection_array_create (const char *hostname, unsigned int *len)
 
   if (!(hl = hostlist_create (hostname)))
     {
-      ipmipower_output (MSG_TYPE_HOSTNAME_INVALID, hostname);
+      ipmipower_output (MSG_TYPE_HOSTNAME_INVALID, hostname, NULL);
       return (NULL);
     }
 

@@ -77,7 +77,7 @@ static char *ipmipower_outputs[] =
   };
 
 void
-ipmipower_output (msg_type_t num, const char *hostname)
+ipmipower_output (msg_type_t num, const char *hostname, const char *extra_arg)
 {
   assert (MSG_TYPE_VALID (num));
   assert (hostname);
@@ -92,9 +92,11 @@ ipmipower_output (msg_type_t num, const char *hostname)
     }
   else
     ipmipower_cbuf_printf (ttyout,
-                           "%s: %s\n",
-                           hostname,
-                           ipmipower_outputs[num]);
+			   "%s%s%s: %s\n",
+			   hostname,
+			   extra_arg ? "+" : "",
+			   extra_arg ? extra_arg : "",
+			   ipmipower_outputs[num]);
 
   return;
 }
