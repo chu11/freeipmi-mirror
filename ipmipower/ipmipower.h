@@ -126,6 +126,9 @@ typedef enum
   (((__v) == OEM_POWER_TYPE_NONE      \
     || (__v) == OEM_POWER_TYPE_C410X) ? 1 : 0)
 
+#define OEM_POWER_TYPE_REQUIRES_EXTRA_ARGUMENT(__v) \
+  (((__v) == OEM_POWER_TYPE_C410X) ? 1 : 0)
+
 #define OEM_POWER_TYPE_SUPPORT_OFF              0x0001
 #define OEM_POWER_TYPE_SUPPORT_ON               0x0002
 #define OEM_POWER_TYPE_SUPPORT_CYCLE            0x0004
