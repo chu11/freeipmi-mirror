@@ -1984,10 +1984,7 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
 		  || ip->cmd == POWER_CMD_POWER_OFF
 		  || ip->cmd == POWER_CMD_POWER_ON);
 
-	  if (ip->cmd == POWER_CMD_POWER_STATUS)
-	    _send_packet (ip, C410X_GET_SENSOR_READING_REQUEST);
-	  else /* on, off */
-	    _send_packet (ip, C410X_SLOT_POWER_CONTROL_REQUEST);
+	  _send_packet (ip, C410X_GET_SENSOR_READING_REQUEST);
 	}
     }
   else if (ip->protocol_state == PROTOCOL_STATE_GET_CHASSIS_STATUS_SENT)
@@ -2204,7 +2201,8 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
 	}
 
       /* If non-zero, then it's on */
-      if (sensor_reading)
+      /* achu: Sometimes "off" is 2.0 Watts, which equates to a sensor reading of 1 */
+      if (sensor_reading > 1)
 	slot_power_on_flag = 1;
       else
 	slot_power_on_flag = 0;
@@ -2238,6 +2236,26 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
 			    ip->extra_arg);
           _send_packet (ip, CLOSE_SESSION_REQUEST);
         }
+      else if (ip->cmd == POWER_CMD_POWER_ON)
+	{
+	  if (slot_power_on_flag)
+	    {
+	      ipmipower_output (MSG_TYPE_OK, ip->ic->hostname, ip->extra_arg);
+	      _send_packet (ip, CLOSE_SESSION_REQUEST);
+	    }
+	  else
+	    _send_packet (ip, C410X_SLOT_POWER_CONTROL_REQUEST);
+	}
+      else if (ip->cmd == POWER_CMD_POWER_OFF)
+	{
+	  if (!slot_power_on_flag)
+	    {
+	      ipmipower_output (MSG_TYPE_OK, ip->ic->hostname, ip->extra_arg);
+	      _send_packet (ip, CLOSE_SESSION_REQUEST);
+	    }
+	  else
+	    _send_packet (ip, C410X_SLOT_POWER_CONTROL_REQUEST);
+	}
       else
         {
           IPMIPOWER_ERROR (("_process_ipmi_packets: invalid command state: %d", ip->cmd));
