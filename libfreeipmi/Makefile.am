@@ -194,6 +194,8 @@ libfreeipmi_la_SOURCES = \
 	sel-parse/ipmi-sel-parse-string-quanta.h \
 	sel-parse/ipmi-sel-parse-string-sun.c \
 	sel-parse/ipmi-sel-parse-string-sun.h \
+	sel-parse/ipmi-sel-parse-string-supermicro.c \
+	sel-parse/ipmi-sel-parse-string-supermicro.h \
 	sel-parse/ipmi-sel-parse-trace.h \
 	sel-parse/ipmi-sel-parse-util.c \
 	sel-parse/ipmi-sel-parse-util.h \

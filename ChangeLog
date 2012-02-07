@@ -1,3 +1,7 @@
+2012-02-07  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/sel-parse/: Support Supermicro SEL CPU Temp events.
+	
 2012-02-06  Albert Chu <chu11@llnl.gov>
 
 	* man/ipmi-sel.8.pre.in: Fix option typo.
