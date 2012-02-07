@@ -379,19 +379,23 @@ you can instruct
 .B ipmipower
 to execute alternate power control implementations over the standard
 ones.  Depending on the OEM extension, some power control commands may
-no longer be available.  For example, an OEM extensions may allow
+no longer be available.  For example, an OEM
+extension may allow
 \fBon\fR but not \fBcycle\fR.  Specific 
 .B ipmipower
 options may not longer function either.
 .LP
-Some OEM extensions may require additional information for their power
-control action, such as a sub-device identifier.  Additional
-information can be provided by appending a plus sign ('+') and the
-extra information to the end of the hostname.  This can be done on the
+Some OEM extensions may require additional arguments for their power
+control action, such as a sub-device identifier.  Additional arguments
+can be provided by appending a plus sign ('+') and the extra
+information to the end of the hostname.  This can be done on the
 command line or in interactive mode.  For example, the hostname
 \fImynode+18\fR would indicate the power control operation should be
 sent to the host \fImynode\fR, and \fI18\fR is the identifier of a
-possible sub-device to be power controlled.
+possible sub-device to be power controlled.  The
+\fI\-\-consolidate\-output\fR option is commonly disabled when using
+an OEM power control that requires extra arguments.
+
 .LP
 Because OEM power control may involve subtypes, it is possible a user
 may wish to power control multiple sub-devices on the same host.  For
@@ -404,7 +408,6 @@ operations to the same host will be serialized internally by
 The following are the current OEM power types available, along with
 information on the systems they work with and the power control
 operations available.
-
 .TP
 .B C410X
 This OEM power type supports the power control of PCIe slots on Dell
@@ -414,8 +417,11 @@ specified when attempting to power control with this extension.  For
 example, the hostname \fImynode+2\fR would inform
 .B ipmipower
 to operate on slot number \fI2\fR on \fImynode\fR.
-The functionality of \fB\-\-wait\-until\-on\fR and
-\fB\-\-wait\-until\-off\fR are maintained with this OEM extension.
+The C410x appears to have difficulty handling new slot power control
+requests until prior ones have completed.  Users may wish to strongly
+consider using the \fB\-\-wait\-until\-on\fR and
+\fB\-\-wait\-until\-off\fR options if multiple slots will be power
+controlled in short succession.
 
 .TP
 .B NONE
