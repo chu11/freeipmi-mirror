@@ -1,3 +1,7 @@
+2012-02-08  Albert Chu <chu11@llnl.gov>
+
+	* doc/freeipmi-coding.txt, README.build: Add configure notes.
+	
 2012-02-07  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/sel-parse/: Support Supermicro SEL CPU Temp events.

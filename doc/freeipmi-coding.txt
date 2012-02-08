@@ -223,3 +223,49 @@ stacks of parameters) that come with having long parameters lists and
 the atrocities of having gigantic 25+ parameter function calls in
 code.
 
+5) Compilation and Development Notes
+------------------------------------
+
+Normally, to build and develop from the source tree you need to run:
+
+./autogen.sh
+./configure
+make
+
+out of the directory you are in.
+
+The following configure options can help you with many development
+issues:
+
+--enable-debug
+
+This option will turn on compilation of debugging symbols.  More
+warnings may also be enabled when compiling.
+
+In addition, this option may enable a few "workarounds" to allow for
+easier development of code.  Most notably, inband drivers may look in
+additional locations for an ipckey, so that inband development can be
+done in a local directory without a full installation.
+
+Generally speaking, if developing out of a local tree, you'll almost
+always want to enable this flag.
+
+--enable-profile
+
+If --enable-debug is enabled, this option will turn on compilation
+with profiling data.
+
+--enable-trace
+
+Compile tracing information into a significant portion of FreeIPMI
+code.  This will result in significant amounts of extra information to
+be output.
+
+--enable-rawdumps
+
+Some users may be more familiar with raw IPMI packet dumps instead of
+the detailed field identified dumps that normally occur when running
+tools with --debug.  In this case, --enable-rawdumps, will inform
+FreeIPMI to also output packets in raw form.
+
+
