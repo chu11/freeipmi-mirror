@@ -558,7 +558,7 @@ ipmipower_connection_array_create (const char *hostname, unsigned int *len)
       ics[index].ping_fd = -1;
 
       /* Normally, hostlist_uniq () will catch duplicate hosts input
-       * by the user, but becaues of the additional info,
+       * by the user, but because of the additional info,
        * hostlist_uniq may not catch this.  For example, if the user
        * inputs
        *
