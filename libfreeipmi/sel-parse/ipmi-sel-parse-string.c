@@ -70,6 +70,7 @@
 #include "ipmi-sel-parse-string-inventec.h"
 #include "ipmi-sel-parse-string-quanta.h"
 #include "ipmi-sel-parse-string-sun.h"
+#include "ipmi-sel-parse-string-supermicro.h"
 #include "ipmi-sel-parse-trace.h"
 #include "ipmi-sel-parse-util.h"
 
@@ -938,6 +939,26 @@ _output_oem_event_data1_class_oem (ipmi_sel_parse_ctx_t ctx,
                                                                      flags,
                                                                      wlen,
                                                                      system_event_record_data)) < 0)
+	return (-1);
+      
+      if (ret)
+	return (1);
+    }
+
+  /* achu: Some vendors re-flash the manufacturer id */
+  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_SUPERMICRO
+      || ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND
+      || ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_PEPPERCON
+      || ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_MAGNUM_TECHNOLOGIES)
+    {
+      if ((ret = ipmi_sel_parse_output_supermicro_event_data1_class_oem (ctx,
+									 sel_parse_entry,
+									 sel_record_type,
+									 tmpbuf,
+									 tmpbuflen,
+									 flags,
+									 wlen,
+									 system_event_record_data)) < 0)
 	return (-1);
       
       if (ret)
