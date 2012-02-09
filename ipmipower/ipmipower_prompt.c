@@ -475,7 +475,7 @@ _cmd_power_specific_nodes (char **argv, power_cmd_t cmd)
       
   if (!(h = hostlist_create (argv[1])))
     {
-      ipmipower_cbuf_printf (ttyout, "invalid hostname(s) specified");
+      ipmipower_cbuf_printf (ttyout, "invalid hostname(s) specified\n");
       goto cleanup;
     }
   
@@ -504,7 +504,7 @@ _cmd_power_specific_nodes (char **argv, power_cmd_t cmd)
 
       if (!(h2 = hostlist_create (hstr)))
         {
-	  ipmipower_cbuf_printf (ttyout, "invalid hostname(s) specified");
+	  ipmipower_cbuf_printf (ttyout, "invalid hostname(s) specified\n");
 	  goto cleanup;
         }
 
