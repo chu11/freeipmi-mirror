@@ -11,6 +11,9 @@
 
 	* ipmipower/: Various code cleanup given re-architecture.
 
+	* common/miscutil/hostlist.c: Remove fprintf debug error messages
+	from tool.
+
 2012-01-17  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/ipmipower.h: Redo packet validation macros.

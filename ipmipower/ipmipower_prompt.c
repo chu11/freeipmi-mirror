@@ -462,9 +462,12 @@ _cmd_power_all_nodes (power_cmd_t cmd)
 static void
 _cmd_power_specific_nodes (char **argv, power_cmd_t cmd)
 {
-  hostlist_t h;
-  hostlist_iterator_t itr;
-  char *node;
+  hostlist_t h = NULL;
+  hostlist_iterator_t hitr = NULL;
+  hostlist_t h2 = NULL;
+  hostlist_iterator_t h2itr = NULL;
+  char *hstr = NULL; 
+  char *h2str = NULL;
 
   assert (argv);
   assert (POWER_CMD_VALID (cmd));
@@ -473,132 +476,122 @@ _cmd_power_specific_nodes (char **argv, power_cmd_t cmd)
   if (!(h = hostlist_create (argv[1])))
     {
       ipmipower_cbuf_printf (ttyout, "invalid hostname(s) specified");
-      return;
+      goto cleanup;
     }
   
-  if (!(itr = hostlist_iterator_create (h)))
+  if (!(hitr = hostlist_iterator_create (h)))
     {
       IPMIPOWER_ERROR (("hostlist_iterator_create: %s", strerror (errno)));
       exit (1);
     }
   
-  while ((node = hostlist_next (itr)))
+  while ((hstr = hostlist_next (hitr)))
     {
-      char *node_extra_arg = NULL;
-      int i;
-      
-      if (cmd_args.oem_power_type != OEM_POWER_TYPE_NONE)
-	{
-	  char *ptr;
-	  
-	  if ((ptr = strchr (node, '+')))
-	    {
-	      *ptr = '\0';
-	      ptr++;
-	      
-	      if (!(node_extra_arg = strdup (ptr)))
-		{
-		  IPMIPOWER_ERROR (("strdup: %s", strerror(errno)));
-		  exit (1);
-		}
-	    }
-	}
+      /* achu: The double hostlist_create is to handle the corner case
+       * of someone inputting.
+       *
+       * foohost[1-3]+[1-3]
+       *
+       * We need to double hostlist to get all the hosts and extra
+       * args.
+       *
+       * Under most scenarios, this is just inefficient code.  But we
+       * feel the performance hit isn't egregious.  In addition, the
+       * code logic is simpler to do it this way then have a whole
+       * bunch of wacky if-check scenarios to make it more efficient.
+       * We'll revisit as necessary in the future.
+       */
 
-      i = ipmipower_connection_hostname_index (ics, ics_len, node);
-      
-      if (i < 0)
-	ipmipower_output (MSG_TYPE_UNCONFIGURED_HOSTNAME, node, NULL);
-      else if (cmd_args.ping_interval
-	       && ics[i].discover_state == STATE_UNDISCOVERED)
-	ipmipower_output (MSG_TYPE_NOTDISCOVERED, ics[i].hostname, NULL);
-      else if (cmd_args.ping_interval
-	       && cmd_args.ping_packet_count
-	       && cmd_args.ping_percent
-	       && ics[i].discover_state == STATE_BADCONNECTION)
-	ipmipower_output (MSG_TYPE_BADCONNECTION, ics[i].hostname, NULL);
-      else
+      if (!(h2 = hostlist_create (hstr)))
+        {
+	  ipmipower_cbuf_printf (ttyout, "invalid hostname(s) specified");
+	  goto cleanup;
+        }
+
+      hostlist_uniq (h2);
+
+      if (!(h2itr = hostlist_iterator_create (h2)))
+        {
+          IPMIPOWER_ERROR (("hostlist_iterator_create: %s", strerror (errno)));
+          exit (1);
+        }
+
+      while ((h2str = hostlist_next (h2itr)))
 	{
+	  char *h2str_extra_arg = NULL;
+	  int i;
+	  
 	  if (cmd_args.oem_power_type != OEM_POWER_TYPE_NONE)
 	    {
-	      /* Some OEM power types could have ranges for the extra args */
-	      if (cmd_args.oem_power_type == OEM_POWER_TYPE_C410X
-		  && node_extra_arg)
+	      char *ptr;
+	      
+	      if ((ptr = strchr (h2str, '+')))
 		{
-		  hostlist_t hextra = NULL;
-
-		  /* if invalid to hostlist, it still may be valid in general, so fall through */
-		  if (!(hextra = hostlist_create (node_extra_arg)))
-		    goto one_extra_arg;
-
-		  if (hostlist_count (hextra) > 1)
+		  *ptr = '\0';
+		  ptr++;
+		  
+		  if (!(h2str_extra_arg = strdup (ptr)))
 		    {
-		      hostlist_iterator_t hextraitr = NULL;
-		      char *extrastr;
-
-		      if (!(hextraitr = hostlist_iterator_create (hextra)))
-			{
-			  IPMIPOWER_ERROR (("hostlist_iterator_create: %s", strerror (errno)));
-			  exit (1);
-			}
-
-		      while ((extrastr = hostlist_next (hextraitr)))
-			{
-			  if (ipmipower_oem_power_cmd_check_extra_arg (extrastr,
-								       NULL,
-								       0) <= 0)
-			    {
-			      ipmipower_output (MSG_TYPE_INVALID_ARGUMENT_FOR_OEM_EXTENSION,
-						ics[i].hostname,
-						extrastr);
-			      free (extrastr);
-			      hostlist_iterator_destroy (hextraitr);
-			      hostlist_destroy (hextra);
-			      goto end_loop;
-			    }
-			  ipmipower_connection_clear (&ics[i]);
-			  ipmipower_powercmd_queue (cmd, &ics[i], extrastr);
-			  free (extrastr);
-			}
-		      
-		      hostlist_iterator_destroy (hextraitr);
-		      hostlist_destroy (hextra);
-		    }
-		  else
-		    {
-		      hostlist_destroy (hextra);
-		      goto one_extra_arg;
+		      IPMIPOWER_ERROR (("strdup: %s", strerror(errno)));
+		      exit (1);
 		    }
 		}
-	      else
+	    }
+	  
+	  i = ipmipower_connection_hostname_index (ics, ics_len, h2str);
+	  
+	  if (i < 0)
+	    ipmipower_output (MSG_TYPE_UNCONFIGURED_HOSTNAME, h2str, NULL);
+	  else if (cmd_args.ping_interval
+		   && ics[i].discover_state == STATE_UNDISCOVERED)
+	    ipmipower_output (MSG_TYPE_NOTDISCOVERED, ics[i].hostname, NULL);
+	  else if (cmd_args.ping_interval
+		   && cmd_args.ping_packet_count
+		   && cmd_args.ping_percent
+		   && ics[i].discover_state == STATE_BADCONNECTION)
+	    ipmipower_output (MSG_TYPE_BADCONNECTION, ics[i].hostname, NULL);
+	  else
+	    {
+	      if (cmd_args.oem_power_type != OEM_POWER_TYPE_NONE)
 		{
-		one_extra_arg:
-		  if (ipmipower_oem_power_cmd_check_extra_arg (node_extra_arg,
+		  if (ipmipower_oem_power_cmd_check_extra_arg (h2str_extra_arg,
 							       NULL,
 							       0) <= 0)
 		    {
 		      ipmipower_output (MSG_TYPE_INVALID_ARGUMENT_FOR_OEM_EXTENSION,
 					ics[i].hostname,
-					node_extra_arg);
-		      goto end_loop;
+					h2str_extra_arg);
+		      goto end_inner_loop;
 		    }
 		  ipmipower_connection_clear (&ics[i]);
-		  ipmipower_powercmd_queue (cmd, &ics[i], node_extra_arg);
+		  ipmipower_powercmd_queue (cmd, &ics[i], h2str_extra_arg);
+		}
+	      else
+		{
+		  ipmipower_connection_clear (&ics[i]);
+		  ipmipower_powercmd_queue (cmd, &ics[i], NULL);
 		}
 	    }
-	  else
-	    {
-	      ipmipower_connection_clear (&ics[i]);
-	      ipmipower_powercmd_queue (cmd, &ics[i], NULL);
-	    }
+	  
+	end_inner_loop:
+	  free (h2str_extra_arg);
+	  free (h2str);
+	  h2str = NULL;
 	}
       
-    end_loop:
-      free (node);
-      free (node_extra_arg);
+      hostlist_iterator_destroy (h2itr);
+      hostlist_destroy (h2);
+      h2itr = NULL;
+      h2 = NULL;
     }
   
-  hostlist_iterator_destroy (itr);
+ cleanup:
+  hostlist_iterator_destroy (h2itr);
+  hostlist_destroy (h2);
+  hostlist_iterator_destroy (hitr);
   hostlist_destroy (h);
+  free (hstr);
+  free (h2str);
 }
 
 static void

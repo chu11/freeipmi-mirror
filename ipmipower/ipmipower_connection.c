@@ -125,7 +125,7 @@ ipmipower_connection_clear (struct ipmipower_connection *ic)
 }
 
 static int
-_connection_setup_base (struct ipmipower_connection *ic, const char *hostname)
+_connection_setup (struct ipmipower_connection *ic, const char *hostname)
 {
   struct sockaddr_in srcaddr;
   struct hostent *result;
@@ -417,110 +417,96 @@ _connection_add_extra_arg (struct ipmipower_connection *ic, const char *extra_ar
   _connection_add_extra_arg_base (ic, extra_arg);
 }
 
-static int
-_connection_setup (struct ipmipower_connection *ic, const char *hostname)
+int
+_hostname_count (const char *hostname)
 {
-  assert (ic);
-  assert (hostname);
+  hostlist_t h = NULL;
+  hostlist_t h2 = NULL;
+  hostlist_iterator_t hitr = NULL;
+  char *hstr = NULL;
+  int rv = -1;
 
-  /* Some OEM power types could have ranges for the extra args */
-  if (cmd_args.oem_power_type != OEM_POWER_TYPE_NONE
-      && cmd_args.oem_power_type == OEM_POWER_TYPE_C410X)
+  /* achu:
+   *
+   * Possible user inputs are wide given extra-argument possibilities.
+   *
+   * foohost+1,foohost+2 is one host
+   * foohost+[1-3] is one host
+   * foohost[1-3]+A is 3 hosts
+   * foohost[1-3]+[1-3] is 3 hosts
+   *
+   * The issue is that makes this complicated is when something like
+   * foohost[1-3]+[1-3] is parsed with the hostlist library, it can be
+   * parsed as foohost[1-3]+1, foohost[1-3]+2, foohost[1-3]+3.  So it
+   * can appear like 9 hosts when in fact it is 3.
+   *
+   * This function will attempt to handle everthing and count up
+   * everything appropriately.
+   */
+
+  if (!(h = hostlist_create (hostname)))
     {
-      char *hostname_copy = NULL;
-      char *extra_arg;
+      ipmipower_output (MSG_TYPE_HOSTNAME_INVALID, hostname, NULL);
+      goto cleanup;
+    }
+
+  if (!(h2 = hostlist_create (NULL)))
+    {
+      IPMIPOWER_ERROR (("hostlist_create: %s", strerror (errno)));
+      exit (1);
+    }
+
+  hostlist_uniq (h);
+
+  if (!(hitr = hostlist_iterator_create (h)))
+    {
+      IPMIPOWER_ERROR (("hostlist_iterator_create: %s", strerror (errno)));
+      exit (1);
+    }
+      
+  while ((hstr = hostlist_next (hitr)))
+    {
       char *ptr;
       
-      if (!(hostname_copy = strdup (hostname)))
+      if (cmd_args.oem_power_type != OEM_POWER_TYPE_NONE)
 	{
-	  IPMIPOWER_ERROR (("strdup: %s", strerror (errno)));
+	  if ((ptr = strchr (hstr, '+')))
+	    *ptr = '\0';
+	}
+
+      if (!hostlist_push (h2, hstr))
+	{
+	  IPMIPOWER_ERROR (("hostlist_push: %s", strerror(errno)));
 	  exit (1);
 	}
       
-      if ((ptr = strchr (hostname_copy, '+')))
-	{
-	  hostlist_t h = NULL;
-	  
-	  *ptr = '\0';
-	  ptr++;
-	  extra_arg = ptr;
-	  
-	  /* if invalid to hostlist, it still may be valid in general, so fall through */
-	  if (!(h = hostlist_create (extra_arg)))
-	    {
-	      free (hostname_copy);
-	      goto not_multiple_extra_args;
-	    }
-	  
-	  if (hostlist_count (h) > 1)
-	    {
-	      hostlist_iterator_t hitr = NULL;
-	      unsigned int hcount = 0;
-	      char *extrastr;
-	      
-	      if (!(hitr = hostlist_iterator_create (h)))
-		{
-		  IPMIPOWER_ERROR (("hostlist_iterator_create: %s", strerror (errno)));
-		  exit (1);
-		}
-	      
-	      while ((extrastr = hostlist_next (hitr)))
-		{
-		  if (!hcount)
-		    {
-		      char hostnamebuf[IPMIPOWER_OUTPUT_BUFLEN + 1];
-		      
-		      memset (hostnamebuf, '\0', IPMIPOWER_OUTPUT_BUFLEN + 1);
-
-		      snprintf (hostnamebuf,
-				IPMIPOWER_OUTPUT_BUFLEN,
-				"%s+%s",
-				hostname_copy,
-				extrastr);
-		      
-		      if (_connection_setup_base (ic, hostnamebuf) < 0)
-			return (-1);
-		    }
-		  else
-		    _connection_add_extra_arg_base (ic, extrastr);
-		  free (extrastr);
-		  hcount++;
-		}
-	      
-	      hostlist_iterator_destroy (hitr);
-	      hostlist_destroy (h);
-	      free (hostname_copy);
-	      return (0);
-	    }
-	  else
-	    {
-	      free (hostname_copy);
-	      hostlist_destroy (h);
-	      goto not_multiple_extra_args;
-	    }
-	}
-      else
-	{
-	  free (hostname_copy);
-	  goto not_multiple_extra_args;
-	}
+      free (hstr);
     }
 
- not_multiple_extra_args:
-  return (_connection_setup_base (ic, hostname));
+  hostlist_uniq (h2);
+  
+  rv = hostlist_count (h2);
+
+ cleanup:
+  hostlist_iterator_destroy (hitr);
+  hostlist_destroy (h);
+  hostlist_destroy (h2);
+  return (rv);
 }
 
 struct ipmipower_connection *
 ipmipower_connection_array_create (const char *hostname, unsigned int *len)
 {
-  char *str = NULL;
   int index = 0;
-  hostlist_t hl = NULL;
-  hostlist_iterator_t itr = NULL;
+  hostlist_t h = NULL;
+  hostlist_iterator_t hitr = NULL;
+  hostlist_t h2 = NULL;
+  hostlist_iterator_t h2itr = NULL;
+  char *hstr = NULL;
+  char *h2str = NULL;
   struct ipmipower_connection *ics = NULL;
-  int size = sizeof (struct ipmipower_connection);
-  int hl_count;
-  int errcount = 0;
+  int host_count;
+  int errflag = 0;
   int emfilecount = 0;
   int i;
 
@@ -528,112 +514,168 @@ ipmipower_connection_array_create (const char *hostname, unsigned int *len)
 
   *len = 0;
 
-  if (!(hl = hostlist_create (hostname)))
-    {
-      ipmipower_output (MSG_TYPE_HOSTNAME_INVALID, hostname, NULL);
-      return (NULL);
-    }
+  if ((host_count = _hostname_count (hostname)) < 0)
+    return (NULL);
 
-  if (!(itr = hostlist_iterator_create (hl)))
-    {
-      IPMIPOWER_ERROR (("hostlist_iterator_create: %s", strerror (errno)));
-      exit (1);
-    }
-
-  hostlist_uniq (hl);
-
-  hl_count = hostlist_count (hl);
-
-  if (!(ics = (struct ipmipower_connection *)malloc (size * hl_count)))
+  if (!(ics = (struct ipmipower_connection *)malloc (sizeof (struct ipmipower_connection) * host_count)))
     {
       IPMIPOWER_ERROR (("malloc: %s", strerror (errno)));
       exit (1);
     }
 
-  memset (ics, '\0', (size * hl_count));
+  memset (ics, '\0', (sizeof (struct ipmipower_connection) * host_count));
 
-  while ((str = hostlist_next (itr)))
+  for (i = 0; i < host_count; i++)
     {
-      ics[index].ipmi_fd = -1;
-      ics[index].ping_fd = -1;
+      ics[i].ipmi_fd = -1;
+      ics[i].ping_fd = -1;
+    }
+ 
+  if (!(h = hostlist_create (hostname)))
+    {
+      ipmipower_output (MSG_TYPE_HOSTNAME_INVALID, hostname, NULL);
+      errflag++;
+      goto cleanup;
+    }
 
-      /* Normally, hostlist_uniq () will catch duplicate hosts input
-       * by the user, but because of the additional info,
-       * hostlist_uniq may not catch this.  For example, if the user
-       * inputs
+  hostlist_uniq (h);
+
+  if (!(hitr = hostlist_iterator_create (h)))
+    {
+      IPMIPOWER_ERROR (("hostlist_iterator_create: %s", strerror (errno)));
+      exit (1);
+    }
+
+  while ((hstr = hostlist_next (hitr)))
+    {
+      /* achu: The double hostlist_create is to handle the corner case
+       * of someone inputting.
        *
-       * -h foohost+1,foohost+2
+       * foohost[1-3]+[1-3]
        *
-       * We could be passed 'foohost' to this function twice.
+       * We need to double hostlist to get all the hosts and extra
+       * args.
+       *
+       * Under most scenarios, this is just inefficient code.
+       * However, this is normally a one time setup cost, so shouldn't
+       * affect the overall running of ipmipower.  In addition, the
+       * code logic is simpler to do it this way then have a whole
+       * bunch of wacky if-check scenarios to make it more efficient.
        */
-      
-      if (cmd_args.oem_power_type != OEM_POWER_TYPE_NONE)
+
+      if (!(h2 = hostlist_create (hstr)))
 	{
-	  char *str_copy;
-	  char *ptr;
-	  int found = 0;
+	  ipmipower_output (MSG_TYPE_HOSTNAME_INVALID, hostname, NULL);
+	  errflag++;
+	  goto cleanup;
+	}
+      
+      hostlist_uniq (h2);
 
-	  if (!(str_copy = strdup (str)))
+      if (!(h2itr = hostlist_iterator_create (h2)))
+	{
+	  IPMIPOWER_ERROR (("hostlist_iterator_create: %s", strerror (errno)));
+	  exit (1);
+	}
+
+      while ((h2str = hostlist_next (h2itr)))
+	{
+	  /* We need to see if the host has already been saved to the
+	   * ics array.  It's possible under many circumstances with
+	   * extra args, such as
+	   *
+	   * foohost+1,foohost+2
+	   *
+	   * that it's already in the list. 
+	   */
+
+	  if (cmd_args.oem_power_type != OEM_POWER_TYPE_NONE)
 	    {
-	      IPMIPOWER_ERROR (("strdup: %s", strerror(errno)));
-	      exit (1);
-	    }
-	  
-	  if ((ptr = strchr (str_copy, '+')))
-	    {
-	      *ptr = '\0';
-	      ptr++;
-
-	      /* XXX: This is O(n^2) slow.  99% of the time it's a one
-	       * time setup cost, so we consider the slowness ok.  If
-	       * it becomes a problem later, we'll need to
-	       * rearchitect.
-	       */
-
-	      for (i = 0; i < index; i++)
+	      char *h2str_copy;
+	      char *ptr;
+	      int found = 0;
+	      
+	      if (!(h2str_copy = strdup (h2str)))
 		{
-		  if (!strcmp (ics[i].hostname, str_copy))
+		  IPMIPOWER_ERROR (("strdup: %s", strerror(errno)));
+		  exit (1);
+		}
+	      
+	      if ((ptr = strchr (h2str_copy, '+')))
+		{
+		  *ptr = '\0';
+		  ptr++;
+		  
+		  /* XXX: This is O(n^2) slow.  99% of the time it's a one
+		   * time setup cost, so we consider the slowness ok.  If
+		   * it becomes a problem later, we'll need to
+		   * rearchitect.
+		   */
+		  
+		  for (i = 0; i < index; i++)
 		    {
-		      found++;
-
-		      _connection_add_extra_arg (&ics[i], ptr);
-
-		      break;
+		      if (!strcmp (ics[i].hostname, h2str_copy))
+			{
+			  found++;
+			  
+			  _connection_add_extra_arg (&ics[i], ptr);
+			  
+			  break;
+			}
 		    }
+		}
+	      
+	      free (h2str_copy);
+	      
+	      if (found)
+		{
+		  free (h2str);
+		  continue;
 		}
 	    }
 	  
-	  free (str_copy);
-	  
-	  if (found)
+	  if (index >= host_count)
 	    {
-	      free (str);
-	      continue;
+	      IPMIPOWER_ERROR (("Invalid host count: %d", host_count));
+	      exit (1);
 	    }
+	  
+	  /* cleanup only at the end, gather all error outputs for
+	   * later
+	   */
+	  if (_connection_setup (&ics[index], h2str) < 0)
+	    {
+	      if (errno == EMFILE && !emfilecount)
+		{
+		  IPMIPOWER_DEBUG (("file descriptor limit reached"));
+		  /* XXX return -1? */
+		  emfilecount++;
+		}
+	      errflag++;
+	    }
+	  
+	  free (h2str);
+	  h2str = NULL;
+	  index++;
 	}
 
-      /* cleanup only at the end, gather all error outputs for
-       * later
-       */
-      if (_connection_setup (&ics[index], str) < 0)
-        {
-          if (errno == EMFILE && !emfilecount)
-            {
-              IPMIPOWER_DEBUG (("file descriptor limit reached"));
-              /* XXX return -1? */
-              emfilecount++;
-            }
-          errcount++;
-        }
-
-      free (str);
-      index++;
+      hostlist_iterator_destroy (h2itr);
+      hostlist_destroy (h2);
+      h2itr = NULL;
+      h2 = NULL;
+      free (hstr);
+      hstr = NULL;
     }
 
-  hostlist_iterator_destroy (itr);
-  hostlist_destroy (hl);
+ cleanup:
+  hostlist_iterator_destroy (h2itr);
+  hostlist_destroy (h2);
+  hostlist_iterator_destroy (hitr);
+  hostlist_destroy (h);
+  free (h2str);
+  free (hstr);
 
-  if (errcount)
+  if (errflag)
     {
       int i;
       for (i = 0; i < index; i++)
