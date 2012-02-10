@@ -1,3 +1,8 @@
+2012-02-10  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/api/ipmi-api.c (ipmi_ctx_open_inband): Add comment
+	about openipmi driver.
+	
 2012-02-08  Albert Chu <chu11@llnl.gov>
 
 	* doc/freeipmi-coding.txt, README.build: Add configure notes.
