@@ -219,22 +219,6 @@ ipmipower
     be able to handle the 4 ipmi commands at the same time.
   - have some pre-req like mechanism that power control ops won't be
     started until earlier one done.
-- Cleanup code, create wrappers/funcs for "session packets", so in
-  future don't have to make constant cut & paste into all parts of
-  code (ooo)
-  - i.e. all these ifs
-     else if (pkt == OPEN_SESSION_REQ
-           || pkt == RAKP_MESSAGE_1_REQ
-           || pkt == RAKP_MESSAGE_3_REQ
-           || (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0
-               && (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ
-                   || pkt == GET_CHASSIS_STATUS_REQ
-                   || pkt == CHASSIS_CONTROL_REQ
-                   || pkt == CHASSIS_IDENTIFY_REQ
-                   || pkt == C410X_GET_SENSOR_READING_REQ
-                   || pkt == C410X_SLOT_POWER_CONTROL_REQ
-                   || pkt == CLOSE_SESSION_REQ)))
-
 
 ipmi-fru
 --------

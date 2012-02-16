@@ -1105,6 +1105,9 @@ extern unsigned int ipmi_oem_intel_specific_pci_correctable_sensor_max_index;
 #define IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP_OVERHEAT      0x04
 #define IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP_NOT_INSTALLED 0x07
 
+/* achu: Different for SEL, I don't know why */
+#define IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP_SEL_OVERHEAT  0x02
+
 #ifdef __cplusplus
 }
 #endif

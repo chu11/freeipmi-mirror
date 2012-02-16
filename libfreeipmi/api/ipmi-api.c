@@ -901,6 +901,15 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
        *
        * The system uses KCS w/ an I/O base address, but the bit is
        * set incorrectly.  Ignore it if specified by the user.
+       *
+       * Note: Linux OpenIPMI kernel driver always assumes System I/O.
+       * In ipmi_si_intf.c
+       *
+       * "Note that technically, the lower bit of the base address
+       * should be 1 if the address is I/O and 0 if the address is in
+       * memory.  So many systems get that wrong (and all that I have
+       * seen are I/O) so we just ignore that bit and assume I/O.
+       * Systems that use memory should use the newer spec, anyway."
        */
       if (!(ctx->workaround_flags_inband & IPMI_WORKAROUND_FLAGS_INBAND_ASSUME_IO_BASE_ADDRESS))
         {

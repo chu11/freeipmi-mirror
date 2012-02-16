@@ -64,3 +64,44 @@ in order for RPMs to be stored in the default locations.
 After the RPMs are built, you may install them the normal way:
 
 rpm -i freeipmi-X.Y.Z.ARCH.rpm
+
+Additional configure options
+----------------------------
+
+The following configure options are available to users for more unique
+compilation requirements and environments.
+
+--without-encryption
+
+This option disables compilation of encryption support in FreeIPMI.
+Most notably, this disables encryption support when doing out of band
+IPMI 2.0 communication.
+
+This option may be particularly useful in embedded environments that
+do not have the libraries needed to compile encryption support.
+
+--with-dont-check-for-root
+
+When running tools inband, root access is normally required.  In some
+systems, this may not be desired.  This options removes the check for
+root access in FreeIPMI tools.
+
+--without-random-device
+
+This option disables checks and use of /dev/urandom and /dev/random.
+This may be required for embededded systems without these devices.
+
+--with-pkgconfig-dir
+
+This option can configure an alternate default pkgconfig directory.
+
+--with-bmc-watchdog-logfile
+
+This option can configure an alternate default bmc-watchdog log
+directory.
+
+--with-ipmi-monitoring-sdr-cache-dir
+
+This option can configure an alternate default libipmimonitoring SDR
+cache directory.
+

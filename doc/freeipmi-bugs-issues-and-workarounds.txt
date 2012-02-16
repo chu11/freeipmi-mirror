@@ -448,7 +448,7 @@ SDR Issue #3: [COMPLIANCE]
 
   Seen on: HP Proliant DL585G7
 
-  Resolution: Workaround added to adjust and handle the correct lenght
+  Resolution: Workaround added to adjust and handle the correct length
   of the record.
 
 ----------------------------------------------------------------------
