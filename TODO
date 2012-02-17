@@ -2,10 +2,6 @@
 XXX - priority for future minor release
 ooo - priority code cleanup that should be done
 
-branches to merge
------------------
-dellc410x - first merge 8269:8289, second 8289:8538 (XXX)
-
 FreeIPMI FAQ/documentation
 --------------------------
 
@@ -208,17 +204,11 @@ ipmi-sel
 ipmipower
 --------
 - mechanism to parallelize oem extension options ranges. (***)
-  - i.e. on myhost+[0-3].  Simultaneous power off slots 0-3.  Is
-    dangerous though, since many devices wouldn't be able to handle
-    all the simultaneous IPMI, or at minimum would lead to BUSY, can't
-    connectc, etc. errors.
-- mechanism to serialize some power control operations (***)
-  - main issue is w/ oem extension power.  normally "on myhost[0-3]"
-    is fine b/c that's power control to three different hosts.  But
-    "on myhost+[0-3]" could be really bad.  The remote host may not 
-    be able to handle the 4 ipmi commands at the same time.
-  - have some pre-req like mechanism that power control ops won't be
-    started until earlier one done.
+  - i.e. on myhost+[0-3].  Simultaneous power off slots 0-3.
+  - perhaps --serialize-same-host option
+  - Will require larger re-architecture, create additional sockets per
+    power control attempt.  The constant sockets created in the
+    ipmipower_connection structs limit this for the time being.
 
 ipmi-fru
 --------
