@@ -77,7 +77,7 @@ ipmipower_power_cmd_to_string (power_cmd_t cmd)
       return ("reset");
     case POWER_CMD_POWER_STATUS:
       return ("status");
-    case POWER_CMD_PULSE_DIAG_INTR:
+    case POWER_CMD_PULSE_DIAGNOSTIC_INTERRUPT:
       return ("diagnostic interrupt");
     case POWER_CMD_SOFT_SHUTDOWN_OS:
       return ("soft shutdown os");

@@ -1279,7 +1279,7 @@ ipmipower_prompt_process_cmdline (void)
               else if (!strcmp (argv[0], "stat"))
                 _cmd_power (argv, POWER_CMD_POWER_STATUS);
               else if (!strcmp (argv[0], "pulse"))
-                _cmd_power (argv, POWER_CMD_PULSE_DIAG_INTR);
+                _cmd_power (argv, POWER_CMD_PULSE_DIAGNOSTIC_INTERRUPT);
               else if (!strcmp (argv[0], "soft"))
                 _cmd_power (argv, POWER_CMD_SOFT_SHUTDOWN_OS);
               else if (!strcmp (argv[0], "identify-on"))

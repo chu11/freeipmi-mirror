@@ -209,7 +209,7 @@ cmdline_parse (int key,
       cmd_args->powercmd = POWER_CMD_POWER_STATUS;
       break;
     case PULSE_KEY:       /* --pulse */
-      cmd_args->powercmd = POWER_CMD_PULSE_DIAG_INTR;
+      cmd_args->powercmd = POWER_CMD_PULSE_DIAGNOSTIC_INTERRUPT;
       break;
     case SOFT_KEY:       /* --soft */
       cmd_args->powercmd = POWER_CMD_SOFT_SHUTDOWN_OS;

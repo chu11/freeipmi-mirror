@@ -1,7 +1,8 @@
 2012-02-17  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/: Various code cleanup.  Use switch statements where
-	it would be more appropriate.
+	it would be more appropriate.  Change "DIAG_INTR" to
+	"DIAGNOSTIC_INTERRUPT" in code for readability.
 	
 2012-02-17  Albert Chu <chu11@llnl.gov>
 

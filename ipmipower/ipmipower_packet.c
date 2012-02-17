@@ -1128,7 +1128,7 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
               || ip->cmd == POWER_CMD_POWER_ON
               || ip->cmd == POWER_CMD_POWER_CYCLE
               || ip->cmd == POWER_CMD_POWER_RESET
-              || ip->cmd == POWER_CMD_PULSE_DIAG_INTR
+              || ip->cmd == POWER_CMD_PULSE_DIAGNOSTIC_INTERRUPT
               || ip->cmd == POWER_CMD_SOFT_SHUTDOWN_OS);
 
       if (ip->cmd == POWER_CMD_POWER_OFF)
@@ -1139,7 +1139,7 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
         command = IPMI_CHASSIS_CONTROL_POWER_CYCLE;
       else if (ip->cmd == POWER_CMD_POWER_RESET)
         command = IPMI_CHASSIS_CONTROL_HARD_RESET;
-      else if (ip->cmd == POWER_CMD_PULSE_DIAG_INTR)
+      else if (ip->cmd == POWER_CMD_PULSE_DIAGNOSTIC_INTERRUPT)
         command = IPMI_CHASSIS_CONTROL_PULSE_DIAGNOSTIC_INTERRUPT;
       else if (ip->cmd == POWER_CMD_SOFT_SHUTDOWN_OS)
         command = IPMI_CHASSIS_CONTROL_INITIATE_SOFT_SHUTDOWN;

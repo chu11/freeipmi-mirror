@@ -85,17 +85,17 @@
  */
 typedef enum
   {
-    POWER_CMD_NONE             = 0x00,
-    POWER_CMD_POWER_OFF        = 0x01,
-    POWER_CMD_POWER_ON         = 0x02,
-    POWER_CMD_POWER_CYCLE      = 0x03,
-    POWER_CMD_POWER_RESET      = 0x04,
-    POWER_CMD_POWER_STATUS     = 0x05,
-    POWER_CMD_PULSE_DIAG_INTR  = 0x06,
-    POWER_CMD_SOFT_SHUTDOWN_OS = 0x07,
-    POWER_CMD_IDENTIFY_ON      = 0x08,
-    POWER_CMD_IDENTIFY_OFF     = 0x09,
-    POWER_CMD_IDENTIFY_STATUS  = 0x0A,
+    POWER_CMD_NONE                       = 0x00,
+    POWER_CMD_POWER_OFF                  = 0x01,
+    POWER_CMD_POWER_ON                   = 0x02,
+    POWER_CMD_POWER_CYCLE                = 0x03,
+    POWER_CMD_POWER_RESET                = 0x04,
+    POWER_CMD_POWER_STATUS               = 0x05,
+    POWER_CMD_PULSE_DIAGNOSTIC_INTERRUPT = 0x06,
+    POWER_CMD_SOFT_SHUTDOWN_OS           = 0x07,
+    POWER_CMD_IDENTIFY_ON                = 0x08,
+    POWER_CMD_IDENTIFY_OFF               = 0x09,
+    POWER_CMD_IDENTIFY_STATUS            = 0x0A,
   } power_cmd_t;
 
 #define POWER_CMD_VALID(__c)             \
@@ -107,7 +107,7 @@ typedef enum
    || (__c) == POWER_CMD_POWER_ON                           \
    || (__c) == POWER_CMD_POWER_CYCLE                        \
    || (__c) == POWER_CMD_POWER_RESET                        \
-   || (__c) == POWER_CMD_PULSE_DIAG_INTR                    \
+   || (__c) == POWER_CMD_PULSE_DIAGNOSTIC_INTERRUPT         \
    || (__c) == POWER_CMD_SOFT_SHUTDOWN_OS                   \
    || (__c) == POWER_CMD_IDENTIFY_ON                        \
    || (__c) == POWER_CMD_IDENTIFY_OFF)
@@ -129,17 +129,17 @@ typedef enum
 #define OEM_POWER_TYPE_REQUIRES_EXTRA_ARGUMENT(__v) \
   (((__v) == OEM_POWER_TYPE_C410X) ? 1 : 0)
 
-#define OEM_POWER_TYPE_SUPPORT_OFF              0x0001
-#define OEM_POWER_TYPE_SUPPORT_ON               0x0002
-#define OEM_POWER_TYPE_SUPPORT_CYCLE            0x0004
-#define OEM_POWER_TYPE_SUPPORT_RESET            0x0008
-#define OEM_POWER_TYPE_SUPPORT_STATUS           0x0010
-#define OEM_POWER_TYPE_SUPPORT_DIAG_INTR        0x0020
-#define OEM_POWER_TYPE_SUPPORT_SOFT_SHUTDOWN_OS 0x0040
-#define OEM_POWER_TYPE_SUPPORT_IDENTIFY_ON      0x0080
-#define OEM_POWER_TYPE_SUPPORT_IDENTIFY_OFF     0x0100
-#define OEM_POWER_TYPE_SUPPORT_IDENTIFY_STATUS  0x0200
-#define OEM_POWER_TYPE_SUPPORT_ALL              0xFFFF
+#define OEM_POWER_TYPE_SUPPORT_OFF                  0x0001
+#define OEM_POWER_TYPE_SUPPORT_ON                   0x0002
+#define OEM_POWER_TYPE_SUPPORT_CYCLE                0x0004
+#define OEM_POWER_TYPE_SUPPORT_RESET                0x0008
+#define OEM_POWER_TYPE_SUPPORT_STATUS               0x0010
+#define OEM_POWER_TYPE_SUPPORT_DIAGNOSTIC_INTERRUPT 0x0020
+#define OEM_POWER_TYPE_SUPPORT_SOFT_SHUTDOWN_OS     0x0040
+#define OEM_POWER_TYPE_SUPPORT_IDENTIFY_ON          0x0080
+#define OEM_POWER_TYPE_SUPPORT_IDENTIFY_OFF         0x0100
+#define OEM_POWER_TYPE_SUPPORT_IDENTIFY_STATUS      0x0200
+#define OEM_POWER_TYPE_SUPPORT_ALL                  0xFFFF
 
 struct oem_power_type_data {
   char *name;
