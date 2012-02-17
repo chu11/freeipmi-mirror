@@ -724,14 +724,17 @@ _send_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
 
   secure_memset (buf, '\0', IPMIPOWER_PACKET_BUFLEN);
 
-  if (pkt == AUTHENTICATION_CAPABILITIES_REQUEST)
-    ip->protocol_state = PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_SENT;
-  else if (pkt == GET_SESSION_CHALLENGE_REQUEST)
-    ip->protocol_state = PROTOCOL_STATE_GET_SESSION_CHALLENGE_SENT;
-  else if (pkt == ACTIVATE_SESSION_REQUEST)
+  switch (pkt)
     {
+    case AUTHENTICATION_CAPABILITIES_REQUEST:
+      ip->protocol_state = PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_SENT;
+      break;
+    case GET_SESSION_CHALLENGE_REQUEST:
+      ip->protocol_state = PROTOCOL_STATE_GET_SESSION_CHALLENGE_SENT;
+      break;
+    case ACTIVATE_SESSION_REQUEST:
       ip->protocol_state = PROTOCOL_STATE_ACTIVATE_SESSION_SENT;
-
+	
       /* IPMI Workaround (achu)
        *
        * Close all sockets that were saved during the Get Session
@@ -739,36 +742,50 @@ _send_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
        * _retry_packets().
        */
       if (list_count (ip->sockets_to_close) > 0)
-        {
-          int *fd;
-          while ((fd = list_pop (ip->sockets_to_close)))
-            {
-              /* cleanup path, ignore potential error */
-              close (*fd);
-              free (fd);
-            }
-        }
+	{
+	  int *fd;
+	  while ((fd = list_pop (ip->sockets_to_close)))
+	    {
+	      /* cleanup path, ignore potential error */
+	      close (*fd);
+	      free (fd);
+	    }
+	}
+      break;
+    case OPEN_SESSION_REQUEST:
+      ip->protocol_state = PROTOCOL_STATE_OPEN_SESSION_SENT;
+      break;
+    case RAKP_MESSAGE_1_REQUEST:
+      ip->protocol_state = PROTOCOL_STATE_RAKP_MESSAGE_1_SENT;
+      break;
+    case RAKP_MESSAGE_3_REQUEST:
+      ip->protocol_state = PROTOCOL_STATE_RAKP_MESSAGE_3_SENT;
+      break;
+    case SET_SESSION_PRIVILEGE_LEVEL_REQUEST:
+      ip->protocol_state = PROTOCOL_STATE_SET_SESSION_PRIVILEGE_LEVEL_SENT;
+      break;
+    case GET_CHASSIS_STATUS_REQUEST:
+      ip->protocol_state = PROTOCOL_STATE_GET_CHASSIS_STATUS_SENT;
+      break;
+    case CHASSIS_CONTROL_REQUEST:
+      ip->protocol_state = PROTOCOL_STATE_CHASSIS_CONTROL_SENT;
+      break;
+    case CHASSIS_IDENTIFY_REQUEST:
+      ip->protocol_state = PROTOCOL_STATE_CHASSIS_IDENTIFY_SENT;
+      break;
+    case C410X_GET_SENSOR_READING_REQUEST:
+      ip->protocol_state = PROTOCOL_STATE_C410X_GET_SENSOR_READING_SENT;
+      break;
+    case C410X_SLOT_POWER_CONTROL_REQUEST:
+      ip->protocol_state = PROTOCOL_STATE_C410X_SLOT_POWER_CONTROL_SENT;
+      break;
+    case CLOSE_SESSION_REQUEST:
+      ip->protocol_state = PROTOCOL_STATE_CLOSE_SESSION_SENT;
+      break;
+    default:
+      IPMIPOWER_ERROR (("_send_packet: invalid pkt type: %d", pkt));
+      exit (1);
     }
-  else if (pkt == OPEN_SESSION_REQUEST)
-    ip->protocol_state = PROTOCOL_STATE_OPEN_SESSION_SENT;
-  else if (pkt == RAKP_MESSAGE_1_REQUEST)
-    ip->protocol_state = PROTOCOL_STATE_RAKP_MESSAGE_1_SENT;
-  else if (pkt == RAKP_MESSAGE_3_REQUEST)
-    ip->protocol_state = PROTOCOL_STATE_RAKP_MESSAGE_3_SENT;
-  else if (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQUEST)
-    ip->protocol_state = PROTOCOL_STATE_SET_SESSION_PRIVILEGE_LEVEL_SENT;
-  else if (pkt == GET_CHASSIS_STATUS_REQUEST)
-    ip->protocol_state = PROTOCOL_STATE_GET_CHASSIS_STATUS_SENT;
-  else if (pkt == CHASSIS_CONTROL_REQUEST)
-    ip->protocol_state = PROTOCOL_STATE_CHASSIS_CONTROL_SENT;
-  else if (pkt == CHASSIS_IDENTIFY_REQUEST)
-    ip->protocol_state = PROTOCOL_STATE_CHASSIS_IDENTIFY_SENT;
-  else if (pkt == C410X_GET_SENSOR_READING_REQUEST)
-    ip->protocol_state = PROTOCOL_STATE_C410X_GET_SENSOR_READING_SENT;
-  else if (pkt == C410X_SLOT_POWER_CONTROL_REQUEST)
-    ip->protocol_state = PROTOCOL_STATE_C410X_SLOT_POWER_CONTROL_SENT;
-  else if (pkt == CLOSE_SESSION_REQUEST)
-    ip->protocol_state = PROTOCOL_STATE_CLOSE_SESSION_SENT;
 
   /* Session inbound count is incremented after the packet is sent,
    * since the first inbound sequence number is specified by the
@@ -1345,110 +1362,130 @@ _retry_packets (ipmipower_powercmd_t ip)
                     ip->protocol_state,
                     ip->retransmission_count));
 
-  if (ip->protocol_state == PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_SENT)
-    _send_packet (ip, AUTHENTICATION_CAPABILITIES_REQUEST);
-  else if (ip->protocol_state == PROTOCOL_STATE_GET_SESSION_CHALLENGE_SENT)
+  switch (ip->protocol_state)
     {
-      /* IPMI Workaround (achu)
-       *
-       * Discovered on Intel Tiger4 (SR870BN4)
-       *
-       * If the reply from a previous Get Session Challenge request is
-       * lost on the network, the following retransmission will make
-       * the BMC confused and it will not respond to future packets.
-       *
-       * The problem seems to exist only when the retransmitted packet
-       * is transmitted from the same source port.  Therefore, the fix
-       * is to send the retransmission from a different source port.
-       * So we'll create a new socket, re-bind to an ephemereal port
-       * (guaranteeing us a brand new port), and store this new
-       * socket.
-       *
-       * In the event we need to resend this packet multiple times, we
-       * do not want the chance that old ports will be used again.  We
-       * store the old file descriptrs (which are bound to the old
-       * ports) on a list, and close all of them after we have gotten
-       * past the Get Session Challenge phase of the protocol.
-       */
-      int new_fd, *old_fd;
-      struct sockaddr_in srcaddr;
-
-      if ((new_fd = socket (AF_INET, SOCK_DGRAM, 0)) < 0)
-        {
-          if (errno != EMFILE)
-            {
-              IPMIPOWER_ERROR (("socket: %s", strerror (errno)));
-              exit (1);
-            }
-
-          ipmipower_output (MSG_TYPE_RESOURCES, ip->ic->hostname, ip->extra_arg);
-          return (-1);
-        }
-
-      bzero (&srcaddr, sizeof (struct sockaddr_in));
-      srcaddr.sin_family = AF_INET;
-      srcaddr.sin_port = htons (0);
-      srcaddr.sin_addr.s_addr = htonl (INADDR_ANY);
-
-      if (bind (new_fd, &srcaddr, sizeof (struct sockaddr_in)) < 0)
-        {
-          IPMIPOWER_ERROR (("bind: %s", strerror (errno)));
-          exit (1);
-        }
-
-      if (!(old_fd = (int *)malloc (sizeof (int))))
-        {
-          IPMIPOWER_ERROR (("malloc: %s", strerror (errno)));
-          exit (1);
-        }
-
-      *old_fd = ip->ic->ipmi_fd;
-      list_push (ip->sockets_to_close, old_fd);
-
-      ip->ic->ipmi_fd = new_fd;
-
-      _send_packet (ip, GET_SESSION_CHALLENGE_REQUEST);
+    case PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_SENT:
+      _send_packet (ip, AUTHENTICATION_CAPABILITIES_REQUEST);
+      break;
+    case PROTOCOL_STATE_GET_SESSION_CHALLENGE_SENT:
+      {
+	/* IPMI Workaround (achu)
+	 *
+	 * Discovered on Intel Tiger4 (SR870BN4)
+	 *
+	 * If the reply from a previous Get Session Challenge request is
+	 * lost on the network, the following retransmission will make
+	 * the BMC confused and it will not respond to future packets.
+	 *
+	 * The problem seems to exist only when the retransmitted packet
+	 * is transmitted from the same source port.  Therefore, the fix
+	 * is to send the retransmission from a different source port.
+	 * So we'll create a new socket, re-bind to an ephemereal port
+	 * (guaranteeing us a brand new port), and store this new
+	 * socket.
+	 *
+	 * In the event we need to resend this packet multiple times, we
+	 * do not want the chance that old ports will be used again.  We
+	 * store the old file descriptrs (which are bound to the old
+	 * ports) on a list, and close all of them after we have gotten
+	 * past the Get Session Challenge phase of the protocol.
+	 */
+	int new_fd, *old_fd;
+	struct sockaddr_in srcaddr;
+	
+	if ((new_fd = socket (AF_INET, SOCK_DGRAM, 0)) < 0)
+	  {
+	    if (errno != EMFILE)
+	      {
+		IPMIPOWER_ERROR (("socket: %s", strerror (errno)));
+		exit (1);
+	      }
+	    
+	    ipmipower_output (MSG_TYPE_RESOURCES, ip->ic->hostname, ip->extra_arg);
+	    return (-1);
+	  }
+	
+	bzero (&srcaddr, sizeof (struct sockaddr_in));
+	srcaddr.sin_family = AF_INET;
+	srcaddr.sin_port = htons (0);
+	srcaddr.sin_addr.s_addr = htonl (INADDR_ANY);
+	
+	if (bind (new_fd, &srcaddr, sizeof (struct sockaddr_in)) < 0)
+	  {
+	    IPMIPOWER_ERROR (("bind: %s", strerror (errno)));
+	    exit (1);
+	  }
+	
+	if (!(old_fd = (int *)malloc (sizeof (int))))
+	  {
+	    IPMIPOWER_ERROR (("malloc: %s", strerror (errno)));
+	    exit (1);
+	  }
+	
+	*old_fd = ip->ic->ipmi_fd;
+	list_push (ip->sockets_to_close, old_fd);
+	
+	ip->ic->ipmi_fd = new_fd;
+	
+	_send_packet (ip, GET_SESSION_CHALLENGE_REQUEST);
+      }
+      break;
+    case PROTOCOL_STATE_ACTIVATE_SESSION_SENT:
+      _send_packet (ip, ACTIVATE_SESSION_REQUEST);
+      break;
+    case PROTOCOL_STATE_OPEN_SESSION_SENT:
+      _send_packet (ip, OPEN_SESSION_REQUEST);
+      break;
+    case PROTOCOL_STATE_RAKP_MESSAGE_1_SENT:
+      _send_packet (ip, RAKP_MESSAGE_1_REQUEST);
+      break;
+    case PROTOCOL_STATE_RAKP_MESSAGE_3_SENT:
+      _send_packet (ip, RAKP_MESSAGE_3_REQUEST);
+      break;
+    case PROTOCOL_STATE_SET_SESSION_PRIVILEGE_LEVEL_SENT:
+      _send_packet (ip, SET_SESSION_PRIVILEGE_LEVEL_REQUEST);
+      break;
+    case PROTOCOL_STATE_GET_CHASSIS_STATUS_SENT:
+      _send_packet (ip, GET_CHASSIS_STATUS_REQUEST);
+      break;
+    case PROTOCOL_STATE_CHASSIS_CONTROL_SENT:
+      _send_packet (ip, CHASSIS_CONTROL_REQUEST);
+      break;
+    case PROTOCOL_STATE_CHASSIS_IDENTIFY_SENT:
+      _send_packet (ip, CHASSIS_IDENTIFY_REQUEST);
+      break;
+    case PROTOCOL_STATE_C410X_GET_SENSOR_READING_SENT:
+      _send_packet (ip, C410X_GET_SENSOR_READING_REQUEST);
+      break;
+    case PROTOCOL_STATE_C410X_SLOT_POWER_CONTROL_SENT:
+      _send_packet (ip, C410X_SLOT_POWER_CONTROL_REQUEST);
+      break;
+    case PROTOCOL_STATE_CLOSE_SESSION_SENT:
+      {
+	/*
+	 * It's pointless to retransmit a close-session.
+	 *
+	 * 1) The power control operation has already completed.
+	 *
+	 * 2) There is no guarantee the remote BMC will respond.  If the
+	 * previous close session response was dropped by the network,
+	 * then the session has already been closed by the BMC.  Any
+	 * retransmission will send a session id that is unknown to the
+	 * BMC, and they will either respond with an error or ignore the
+	 * packet.
+	 *
+	 * _send_packet(ip, CLOSE_SESSION_REQUEST);
+	 */
+	ip->close_timeout++;
+	return (0);
+      }
+      break;
+    default:
+      IPMIPOWER_ERROR (("_retry_packets: invalid protocol state: %d\n",
+			ip->protocol_state));
+      exit (1);
     }
-  else if (ip->protocol_state == PROTOCOL_STATE_ACTIVATE_SESSION_SENT)
-    _send_packet (ip, ACTIVATE_SESSION_REQUEST);
-  else if (ip->protocol_state == PROTOCOL_STATE_OPEN_SESSION_SENT)
-    _send_packet (ip, OPEN_SESSION_REQUEST);
-  else if (ip->protocol_state == PROTOCOL_STATE_RAKP_MESSAGE_1_SENT)
-    _send_packet (ip, RAKP_MESSAGE_1_REQUEST);
-  else if (ip->protocol_state == PROTOCOL_STATE_RAKP_MESSAGE_3_SENT)
-    _send_packet (ip, RAKP_MESSAGE_3_REQUEST);
-  else if (ip->protocol_state == PROTOCOL_STATE_SET_SESSION_PRIVILEGE_LEVEL_SENT)
-    _send_packet (ip, SET_SESSION_PRIVILEGE_LEVEL_REQUEST);
-  else if (ip->protocol_state == PROTOCOL_STATE_GET_CHASSIS_STATUS_SENT)
-    _send_packet (ip, GET_CHASSIS_STATUS_REQUEST);
-  else if (ip->protocol_state == PROTOCOL_STATE_CHASSIS_CONTROL_SENT)
-    _send_packet (ip, CHASSIS_CONTROL_REQUEST);
-  else if (ip->protocol_state == PROTOCOL_STATE_CHASSIS_IDENTIFY_SENT)
-    _send_packet (ip, CHASSIS_IDENTIFY_REQUEST);
-  else if (ip->protocol_state == PROTOCOL_STATE_C410X_GET_SENSOR_READING_SENT)
-    _send_packet (ip, C410X_GET_SENSOR_READING_REQUEST);
-  else if (ip->protocol_state == PROTOCOL_STATE_C410X_SLOT_POWER_CONTROL_SENT)
-    _send_packet (ip, C410X_SLOT_POWER_CONTROL_REQUEST);
-  else if (ip->protocol_state == PROTOCOL_STATE_CLOSE_SESSION_SENT)
-    {
-      /*
-       * It's pointless to retransmit a close-session.
-       *
-       * 1) The power control operation has already completed.
-       *
-       * 2) There is no guarantee the remote BMC will respond.  If the
-       * previous close session response was dropped by the network,
-       * then the session has already been closed by the BMC.  Any
-       * retransmission will send a session id that is unknown to the
-       * BMC, and they will either respond with an error or ignore the
-       * packet.
-       *
-       * _send_packet(ip, CLOSE_SESSION_REQUEST);
-       */
-      ip->close_timeout++;
-      return (0);
-    }
-      
+  
   return (1);
 }
 

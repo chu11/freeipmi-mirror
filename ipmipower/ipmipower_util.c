@@ -65,26 +65,34 @@ ipmipower_power_cmd_to_string (power_cmd_t cmd)
 {
   assert (POWER_CMD_VALID (cmd));
 
-  if (cmd == POWER_CMD_POWER_OFF)
-    return ("off");
-  else if (cmd == POWER_CMD_POWER_ON)
-    return ("on");
-  else if (cmd == POWER_CMD_POWER_CYCLE)
-    return ("cycle");
-  else if (cmd == POWER_CMD_POWER_RESET)
-    return ("reset");
-  else if (cmd == POWER_CMD_POWER_STATUS)
-    return ("status");
-  else if (cmd == POWER_CMD_PULSE_DIAG_INTR)
-    return ("diagnostic interrupt");
-  else if (cmd == POWER_CMD_SOFT_SHUTDOWN_OS)
-    return ("soft shutdown os");
-  else if (cmd == POWER_CMD_IDENTIFY_ON)
-    return ("identify on");
-  else if (cmd == POWER_CMD_IDENTIFY_OFF)
-    return ("identify off");
-  else /* cmd == POWER_CMD_IDENTIFY_STATUS */
-    return ("identify status");
+  switch (cmd)
+    {
+    case POWER_CMD_POWER_OFF:
+      return ("off");
+    case POWER_CMD_POWER_ON:
+      return ("on");
+    case POWER_CMD_POWER_CYCLE:
+      return ("cycle");
+    case POWER_CMD_POWER_RESET:
+      return ("reset");
+    case POWER_CMD_POWER_STATUS:
+      return ("status");
+    case POWER_CMD_PULSE_DIAG_INTR:
+      return ("diagnostic interrupt");
+    case POWER_CMD_SOFT_SHUTDOWN_OS:
+      return ("soft shutdown os");
+    case POWER_CMD_IDENTIFY_ON:
+      return ("identify on");
+    case POWER_CMD_IDENTIFY_OFF:
+      return ("identify off");
+    case POWER_CMD_IDENTIFY_STATUS:
+      return ("identify status");
+    default:
+      IPMIPOWER_ERROR (("ipmipower_power_cmd_to_string: invalid power cmd type: %d", cmd));
+      exit (1);
+    }
+  
+  return (NULL);		/* NOT REACHED */
 }
 
 int

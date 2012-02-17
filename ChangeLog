@@ -1,5 +1,10 @@
 2012-02-17  Albert Chu <chu11@llnl.gov>
 
+	* ipmipower/: Various code cleanup.  Use switch statements where
+	it would be more appropriate.
+	
+2012-02-17  Albert Chu <chu11@llnl.gov>
+
 	Merge dellc410x
 
 	* ipmipower/: Add --oem-power-type option and support C410x OEM
