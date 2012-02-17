@@ -1,3 +1,7 @@
+2012-02-17  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-oem/ipmi-oem-dell.c: Fix C410X corner case.
+
 2012-02-08  Albert Chu <chu11@llnl.gov>
 
 	* doc/freeipmi-coding.txt, README.build: Add configure notes.

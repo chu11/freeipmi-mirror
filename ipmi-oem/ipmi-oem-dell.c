@@ -328,8 +328,8 @@
 #define IPMI_OEM_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MIN 1
 #define IPMI_OEM_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MAX 16
 
-/* relatively small, we're not looking for something super accurate */
-#define IPMI_OEM_DELL_ZERO_DEGREE_EPSILON 0.01
+/* Some slots resolve to 2.0 Watts when "off" */  
+#define IPMI_OEM_DELL_ZERO_DEGREE_EPSILON 2.5
 
 #define IPMI_OEM_DELL_PORT_MAP_GET_SET_BITMASK 0x80
 #define IPMI_OEM_DELL_PORT_MAP_GET_SET_SHIFT   7
@@ -6333,7 +6333,8 @@ ipmi_oem_dell_slot_power_control (ipmi_oem_state_data_t *state_data)
     }
 
   /* If non-zero, then it's on */
-  if (sensor_reading)
+  /* achu: Sometimes "off" is 2.0 Watts, which equates to a sensor reading of 1 */
+  if (sensor_reading > 1)
     slot_power_on_flag = 1;
   else
     slot_power_on_flag = 0;
