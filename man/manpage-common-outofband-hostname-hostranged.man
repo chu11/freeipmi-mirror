@@ -1,5 +1,7 @@
 .TP
-\fB\-h\fR \fIIPMIHOST1,IPMIHOST2,...\fR, \fB\-\-hostname\fR=\fIIPMIHOST1,IPMIHOST2,...\fR
+\fB\-h\fR \fIIPMIHOST1,IPMIHOST2,...\fR, \fB\-\-hostname\fR=\fIIPMIHOST1[:PORT],IPMIHOST2[:PORT],...\fR
 Specify the remote host(s) to communicate with.  Multiple hostnames
 may be separated by comma or may be specified in a range format; see
-HOSTRANGED SUPPORT below.
+HOSTRANGED SUPPORT below.  An optional port can be specified with each
+host, which may be useful in port forwarding or similar situations.
+

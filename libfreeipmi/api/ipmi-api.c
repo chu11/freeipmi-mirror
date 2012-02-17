@@ -41,6 +41,7 @@
 #include <netdb.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <limits.h>
 #include <assert.h>
 #include <errno.h>
 
@@ -327,14 +328,54 @@ _setup_hostname (ipmi_ctx_t ctx, const char *hostname)
 #else /* !HAVE_FUNC_GETHOSTBYNAME_R */
   struct hostent *hptr;
 #endif /* !HAVE_FUNC_GETHOSTBYNAME_R */
+  char *hostname_copy = NULL;
+  char *hostname_ptr;
+  uint16_t port = RMCP_AUX_BUS_SHUNT;
+  int rv = -1;
 
   assert (ctx);
   assert (ctx->magic == IPMI_CTX_MAGIC);
   assert (hostname);
 
+  if (strchr (hostname, ':'))
+    {
+      char *ptr;
+
+      if (!(hostname_copy = strdup ((char *)hostname)))
+	{
+	  API_SET_ERRNUM (ctx, IPMI_ERR_OUT_OF_MEMORY);
+	  goto cleanup;
+	}
+
+      if ((ptr = strchr (hostname_copy, ':')))
+	{
+	  char *endptr;
+	  int tmp;
+
+	  *ptr = '\0';
+	  ptr++;
+	  
+	  errno = 0;
+	  tmp = strtol (ptr, &endptr, 0);
+	  if (errno
+	      || endptr[0] != '\0'
+	      || !port
+	      || port > USHRT_MAX)
+	    {
+	      API_SET_ERRNUM (ctx, IPMI_ERR_HOSTNAME_INVALID);
+	      goto cleanup;
+	    }
+	  
+	  port = tmp;
+	}
+      hostname_ptr = hostname_copy;
+    }
+  else
+    hostname_ptr = (char *)hostname;
+  
   memset (&hent, '\0', sizeof (struct hostent));
 #if defined(HAVE_FUNC_GETHOSTBYNAME_R_6)
-  if (gethostbyname_r (hostname,
+  if (gethostbyname_r (hostname_ptr,
                        &hent,
                        buf,
                        GETHOSTBYNAME_AUX_BUFLEN,
@@ -342,26 +383,26 @@ _setup_hostname (ipmi_ctx_t ctx, const char *hostname)
                        &h_errnop))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_HOSTNAME_INVALID);
-      return (-1);
+      goto cleanup;
     }
   if (!hptr)
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_HOSTNAME_INVALID);
-      return (-1);
+      goto cleanup;
     }
 #elif defined(HAVE_FUNC_GETHOSTBYNAME_R_5)
   /* Jan Forch - Solaris gethostbyname_r returns ptr, not integer */
-  if (!gethostbyname_r (hostname,
+  if (!gethostbyname_r (hostname_ptr,
                         &hent,
                         buf,
                         GETHOSTBYNAME_AUX_BUFLEN,
                         &h_errnop))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_HOSTNAME_INVALID);
-      return (-1);
+      goto cleanup;
     }
 #else  /* !HAVE_FUNC_GETHOSTBYNAME_R */
-  if (freeipmi_gethostbyname_r (hostname,
+  if (freeipmi_gethostbyname_r (hostname_ptr,
                                 &hent,
                                 buf,
                                 GETHOSTBYNAME_AUX_BUFLEN,
@@ -369,24 +410,27 @@ _setup_hostname (ipmi_ctx_t ctx, const char *hostname)
                                 &h_errnop))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_HOSTNAME_INVALID);
-      return (-1);
+      goto cleanup;
     }
   if (!hptr)
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_HOSTNAME_INVALID);
-      return (-1);
+      goto cleanup;
     }
 #endif /* !HAVE_FUNC_GETHOSTBYNAME_R */
 
   strncpy (ctx->io.outofband.hostname,
-           hostname,
+           hostname_ptr,
            MAXHOSTNAMELEN);
 
   ctx->io.outofband.remote_host.sin_family = AF_INET;
-  ctx->io.outofband.remote_host.sin_port = htons (RMCP_AUX_BUS_SHUNT);
+  ctx->io.outofband.remote_host.sin_port = htons (port);
   ctx->io.outofband.remote_host.sin_addr = *(struct in_addr *) hent.h_addr;
 
-  return (0);
+  rv = 0;
+ cleanup:
+  free (hostname_copy);
+  return (rv);
 }
 
 static int

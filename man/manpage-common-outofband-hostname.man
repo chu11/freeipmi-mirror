@@ -1,3 +1,5 @@
 .TP
-\fB\-h\fR \fIIPMIHOST\FR, \fB\-\-hostname\fR=\fIIPMIHOST\fR
-Specify the remote host to communicate with.
+\fB\-h\fR \fIIPMIHOST\FR, \fB\-\-hostname\fR=\fIIPMIHOST[:PORT]\fR
+Specify the remote host to communicate with.  An optional port can be
+specified, which may be useful in port forwarding or similar
+situations.

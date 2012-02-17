@@ -1,3 +1,12 @@
+2012-02-16  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/api/ipmi-api.c (_setup_hostname): Support ability to
+	specify alternate port.
+
+	* man/manpage-common-outofband-hostname.man,
+	man/manpage-common-outofband-hostname-hostranged.man: Update
+	manpages appropriately.
+	
 2012-02-10  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/api/ipmi-api.c (ipmi_ctx_open_inband): Add comment
