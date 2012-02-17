@@ -56,62 +56,62 @@ ipmipower_packet_cmd_template (ipmipower_powercmd_t ip, packet_type_t pkt)
   assert (ip);
   assert (PACKET_TYPE_VALID (pkt));
 
-  if (pkt == AUTHENTICATION_CAPABILITIES_REQUEST)
-    return (&tmpl_cmd_get_channel_authentication_capabilities_rq[0]);
-  else if (pkt == AUTHENTICATION_CAPABILITIES_RESPONSE)
-    return (&tmpl_cmd_get_channel_authentication_capabilities_rs[0]);
-  else if (pkt == GET_SESSION_CHALLENGE_REQUEST)
-    return (&tmpl_cmd_get_session_challenge_rq[0]);
-  else if (pkt == GET_SESSION_CHALLENGE_RESPONSE)
-    return (&tmpl_cmd_get_session_challenge_rs[0]);
-  else if (pkt == ACTIVATE_SESSION_REQUEST)
-    return (&tmpl_cmd_activate_session_rq[0]);
-  else if (pkt == ACTIVATE_SESSION_RESPONSE)
-    return (&tmpl_cmd_activate_session_rs[0]);
-  else if (pkt == OPEN_SESSION_REQUEST)
-    return (&tmpl_rmcpplus_open_session_request[0]);
-  else if (pkt == OPEN_SESSION_RESPONSE)
-    return (&tmpl_rmcpplus_open_session_response[0]);
-  else if (pkt == RAKP_MESSAGE_1_REQUEST)
-    return (&tmpl_rmcpplus_rakp_message_1[0]);
-  else if (pkt == RAKP_MESSAGE_2_RESPONSE)
-    return (&tmpl_rmcpplus_rakp_message_2[0]);
-  else if (pkt == RAKP_MESSAGE_3_REQUEST)
-    return (&tmpl_rmcpplus_rakp_message_3[0]);
-  else if (pkt == RAKP_MESSAGE_4_RESPONSE)
-    return (&tmpl_rmcpplus_rakp_message_4[0]);
-  else if (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQUEST)
-    return (&tmpl_cmd_set_session_privilege_level_rq[0]);
-  else if (pkt == SET_SESSION_PRIVILEGE_LEVEL_RESPONSE)
-    return (&tmpl_cmd_set_session_privilege_level_rs[0]);
-  else if (pkt == GET_CHASSIS_STATUS_REQUEST)
-    return (&tmpl_cmd_get_chassis_status_rq[0]);
-  else if (pkt == GET_CHASSIS_STATUS_RESPONSE)
-    return (&tmpl_cmd_get_chassis_status_rs[0]);
-  else if (pkt == CHASSIS_CONTROL_REQUEST)
-    return (&tmpl_cmd_chassis_control_rq[0]);
-  else if (pkt == CHASSIS_CONTROL_RESPONSE)
-    return (&tmpl_cmd_chassis_control_rs[0]);
-  else if (pkt == CHASSIS_IDENTIFY_REQUEST)
-    return (&tmpl_cmd_chassis_identify_rq[0]);
-  else if (pkt == CHASSIS_IDENTIFY_RESPONSE)
-    return (&tmpl_cmd_chassis_identify_rs[0]);
-  else if (pkt == C410X_GET_SENSOR_READING_REQUEST)
-    return (&tmpl_cmd_get_sensor_reading_rq[0]);
-  else if (pkt == C410X_GET_SENSOR_READING_RESPONSE)
-    return (&tmpl_cmd_get_sensor_reading_rs[0]);
-  else if (pkt == C410X_SLOT_POWER_CONTROL_REQUEST)
-    return (&tmpl_cmd_c410x_slot_power_control_rq[0]);
-  else if (pkt == C410X_SLOT_POWER_CONTROL_RESPONSE)
-    return (&tmpl_cmd_c410x_slot_power_control_rs[0]);
-  else if (pkt == CLOSE_SESSION_REQUEST)
-    return (&tmpl_cmd_close_session_rq[0]);
-  else if (pkt == CLOSE_SESSION_RESPONSE)
-    return (&tmpl_cmd_close_session_rs[0]);
-  else
+  switch (pkt)
     {
-      IPMIPOWER_ERROR (("ipmipower_packet_cmd_template: invalid packet type: %d",
-                        ip->protocol_state));
+    case AUTHENTICATION_CAPABILITIES_REQUEST:
+      return (&tmpl_cmd_get_channel_authentication_capabilities_rq[0]);
+    case AUTHENTICATION_CAPABILITIES_RESPONSE:
+      return (&tmpl_cmd_get_channel_authentication_capabilities_rs[0]);
+    case GET_SESSION_CHALLENGE_REQUEST:
+      return (&tmpl_cmd_get_session_challenge_rq[0]);
+    case GET_SESSION_CHALLENGE_RESPONSE:
+      return (&tmpl_cmd_get_session_challenge_rs[0]);
+    case ACTIVATE_SESSION_REQUEST:
+      return (&tmpl_cmd_activate_session_rq[0]);
+    case ACTIVATE_SESSION_RESPONSE:
+      return (&tmpl_cmd_activate_session_rs[0]);
+    case OPEN_SESSION_REQUEST:
+      return (&tmpl_rmcpplus_open_session_request[0]);
+    case OPEN_SESSION_RESPONSE:
+      return (&tmpl_rmcpplus_open_session_response[0]);
+    case RAKP_MESSAGE_1_REQUEST:
+      return (&tmpl_rmcpplus_rakp_message_1[0]);
+    case RAKP_MESSAGE_2_RESPONSE:
+      return (&tmpl_rmcpplus_rakp_message_2[0]);
+    case RAKP_MESSAGE_3_REQUEST:
+      return (&tmpl_rmcpplus_rakp_message_3[0]);
+    case RAKP_MESSAGE_4_RESPONSE:
+      return (&tmpl_rmcpplus_rakp_message_4[0]);
+    case SET_SESSION_PRIVILEGE_LEVEL_REQUEST:
+      return (&tmpl_cmd_set_session_privilege_level_rq[0]);
+    case SET_SESSION_PRIVILEGE_LEVEL_RESPONSE:
+      return (&tmpl_cmd_set_session_privilege_level_rs[0]);
+    case GET_CHASSIS_STATUS_REQUEST:
+      return (&tmpl_cmd_get_chassis_status_rq[0]);
+    case GET_CHASSIS_STATUS_RESPONSE:
+      return (&tmpl_cmd_get_chassis_status_rs[0]);
+    case CHASSIS_CONTROL_REQUEST:
+      return (&tmpl_cmd_chassis_control_rq[0]);
+    case CHASSIS_CONTROL_RESPONSE:
+      return (&tmpl_cmd_chassis_control_rs[0]);
+    case CHASSIS_IDENTIFY_REQUEST:
+      return (&tmpl_cmd_chassis_identify_rq[0]);
+    case CHASSIS_IDENTIFY_RESPONSE:
+      return (&tmpl_cmd_chassis_identify_rs[0]);
+    case C410X_GET_SENSOR_READING_REQUEST:
+      return (&tmpl_cmd_get_sensor_reading_rq[0]);
+    case C410X_GET_SENSOR_READING_RESPONSE:
+      return (&tmpl_cmd_get_sensor_reading_rs[0]);
+    case C410X_SLOT_POWER_CONTROL_REQUEST:
+      return (&tmpl_cmd_c410x_slot_power_control_rq[0]);
+    case C410X_SLOT_POWER_CONTROL_RESPONSE:
+      return (&tmpl_cmd_c410x_slot_power_control_rs[0]);
+    case CLOSE_SESSION_REQUEST:
+      return (&tmpl_cmd_close_session_rq[0]);
+    case CLOSE_SESSION_RESPONSE:
+      return (&tmpl_cmd_close_session_rs[0]);
+    default:
+      IPMIPOWER_ERROR (("ipmipower_packet_cmd_template: invalid packet type: %d", pkt));
       exit (1);
     }
 
@@ -124,62 +124,62 @@ ipmipower_packet_cmd_obj (ipmipower_powercmd_t ip, packet_type_t pkt)
   assert (ip);
   assert (PACKET_TYPE_VALID (pkt));
 
-  if (pkt == AUTHENTICATION_CAPABILITIES_REQUEST)
-    return (ip->obj_authentication_capabilities_req);
-  else if (pkt == AUTHENTICATION_CAPABILITIES_RESPONSE)
-    return (ip->obj_authentication_capabilities_res);
-  else if (pkt == GET_SESSION_CHALLENGE_REQUEST)
-    return (ip->obj_get_session_challenge_req);
-  else if (pkt == GET_SESSION_CHALLENGE_RESPONSE)
-    return (ip->obj_get_session_challenge_res);
-  else if (pkt == ACTIVATE_SESSION_REQUEST)
-    return (ip->obj_activate_session_req);
-  else if (pkt == ACTIVATE_SESSION_RESPONSE)
-    return (ip->obj_activate_session_res);
-  else if (pkt == OPEN_SESSION_REQUEST)
-    return (ip->obj_open_session_req);
-  else if (pkt == OPEN_SESSION_RESPONSE)
-    return (ip->obj_open_session_res);
-  else if (pkt == RAKP_MESSAGE_1_REQUEST)
-    return (ip->obj_rakp_message_1_req);
-  else if (pkt == RAKP_MESSAGE_2_RESPONSE)
-    return (ip->obj_rakp_message_2_res);
-  else if (pkt == RAKP_MESSAGE_3_REQUEST)
-    return (ip->obj_rakp_message_3_req);
-  else if (pkt == RAKP_MESSAGE_4_RESPONSE)
-    return (ip->obj_rakp_message_4_res);
-  else if (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQUEST)
-    return (ip->obj_set_session_privilege_level_req);
-  else if (pkt == SET_SESSION_PRIVILEGE_LEVEL_RESPONSE)
-    return (ip->obj_set_session_privilege_level_res);
-  else if (pkt == GET_CHASSIS_STATUS_REQUEST)
-    return (ip->obj_get_chassis_status_req);
-  else if (pkt == GET_CHASSIS_STATUS_RESPONSE)
-    return (ip->obj_get_chassis_status_res);
-  else if (pkt == CHASSIS_CONTROL_REQUEST)
-    return (ip->obj_chassis_control_req);
-  else if (pkt == CHASSIS_CONTROL_RESPONSE)
-    return (ip->obj_chassis_control_res);
-  else if (pkt == CHASSIS_IDENTIFY_REQUEST)
-    return (ip->obj_chassis_identify_req);
-  else if (pkt == CHASSIS_IDENTIFY_RESPONSE)
-    return (ip->obj_chassis_identify_res);
-  else if (pkt == C410X_GET_SENSOR_READING_REQUEST)
-    return (ip->obj_c410x_get_sensor_reading_req);
-  else if (pkt == C410X_GET_SENSOR_READING_RESPONSE)
-    return (ip->obj_c410x_get_sensor_reading_res);
-  else if (pkt == C410X_SLOT_POWER_CONTROL_REQUEST)
-    return (ip->obj_c410x_slot_power_control_req);
-  else if (pkt == C410X_SLOT_POWER_CONTROL_RESPONSE)
-    return (ip->obj_c410x_slot_power_control_res);
-  else if (pkt == CLOSE_SESSION_REQUEST)
-    return (ip->obj_close_session_req);
-  else if (pkt == CLOSE_SESSION_RESPONSE)
-    return (ip->obj_close_session_res);
-  else
+  switch (pkt)
     {
-      IPMIPOWER_ERROR (("ipmipower_packet_cmd_obj: invalid packet type: %d",
-                        ip->protocol_state));
+    case AUTHENTICATION_CAPABILITIES_REQUEST:
+      return (ip->obj_authentication_capabilities_req);
+    case AUTHENTICATION_CAPABILITIES_RESPONSE:
+      return (ip->obj_authentication_capabilities_res);
+    case GET_SESSION_CHALLENGE_REQUEST:
+      return (ip->obj_get_session_challenge_req);
+    case GET_SESSION_CHALLENGE_RESPONSE:
+      return (ip->obj_get_session_challenge_res);
+    case ACTIVATE_SESSION_REQUEST:
+      return (ip->obj_activate_session_req);
+    case ACTIVATE_SESSION_RESPONSE:
+      return (ip->obj_activate_session_res);
+    case OPEN_SESSION_REQUEST:
+      return (ip->obj_open_session_req);
+    case OPEN_SESSION_RESPONSE:
+      return (ip->obj_open_session_res);
+    case RAKP_MESSAGE_1_REQUEST:
+      return (ip->obj_rakp_message_1_req);
+    case RAKP_MESSAGE_2_RESPONSE:
+      return (ip->obj_rakp_message_2_res);
+    case RAKP_MESSAGE_3_REQUEST:
+      return (ip->obj_rakp_message_3_req);
+    case RAKP_MESSAGE_4_RESPONSE:
+      return (ip->obj_rakp_message_4_res);
+    case SET_SESSION_PRIVILEGE_LEVEL_REQUEST:
+      return (ip->obj_set_session_privilege_level_req);
+    case SET_SESSION_PRIVILEGE_LEVEL_RESPONSE:
+      return (ip->obj_set_session_privilege_level_res);
+    case GET_CHASSIS_STATUS_REQUEST:
+      return (ip->obj_get_chassis_status_req);
+    case GET_CHASSIS_STATUS_RESPONSE:
+      return (ip->obj_get_chassis_status_res);
+    case CHASSIS_CONTROL_REQUEST:
+      return (ip->obj_chassis_control_req);
+    case CHASSIS_CONTROL_RESPONSE:
+      return (ip->obj_chassis_control_res);
+    case CHASSIS_IDENTIFY_REQUEST:
+      return (ip->obj_chassis_identify_req);
+    case CHASSIS_IDENTIFY_RESPONSE:
+      return (ip->obj_chassis_identify_res);
+    case C410X_GET_SENSOR_READING_REQUEST:
+      return (ip->obj_c410x_get_sensor_reading_req);
+    case C410X_GET_SENSOR_READING_RESPONSE:
+      return (ip->obj_c410x_get_sensor_reading_res);
+    case C410X_SLOT_POWER_CONTROL_REQUEST:
+      return (ip->obj_c410x_slot_power_control_req);
+    case C410X_SLOT_POWER_CONTROL_RESPONSE:
+      return (ip->obj_c410x_slot_power_control_res);
+    case CLOSE_SESSION_REQUEST:
+      return (ip->obj_close_session_req);
+    case CLOSE_SESSION_RESPONSE:
+      return (ip->obj_close_session_res);
+    default:
+      IPMIPOWER_ERROR (("ipmipower_packet_cmd_obj: invalid packet type: %d", pkt));
       exit (1);
     }
 
@@ -209,47 +209,68 @@ ipmipower_packet_dump (ipmipower_powercmd_t ip,
       else
         packet_type = DEBUG_UTIL_TYPE_IPMI_2_0;
 
-      if (pkt == AUTHENTICATION_CAPABILITIES_REQUEST
-          || pkt == AUTHENTICATION_CAPABILITIES_RESPONSE)
-        str_cmd = ipmi_cmd_str (IPMI_NET_FN_APP_RQ, IPMI_CMD_GET_CHANNEL_AUTHENTICATION_CAPABILITIES);
-      else if (pkt == GET_SESSION_CHALLENGE_REQUEST
-               || pkt == GET_SESSION_CHALLENGE_RESPONSE)
-        str_cmd = ipmi_cmd_str (IPMI_NET_FN_APP_RQ, IPMI_CMD_GET_SESSION_CHALLENGE);
-      else if (pkt == ACTIVATE_SESSION_REQUEST
-               || pkt == ACTIVATE_SESSION_RESPONSE)
-        str_cmd = ipmi_cmd_str (IPMI_NET_FN_APP_RQ, IPMI_CMD_ACTIVATE_SESSION);
-      else if (pkt == OPEN_SESSION_REQUEST
-               || pkt == OPEN_SESSION_RESPONSE)
-        str_cmd = DEBUG_UTIL_OPEN_SESSION_STR;
-      else if (pkt == RAKP_MESSAGE_1_REQUEST)
-        str_cmd = DEBUG_UTIL_RAKP_1_STR;
-      else if (pkt == RAKP_MESSAGE_2_RESPONSE)
-        str_cmd = DEBUG_UTIL_RAKP_2_STR;
-      else if (pkt == RAKP_MESSAGE_3_REQUEST)
-        str_cmd = DEBUG_UTIL_RAKP_3_STR;
-      else if (pkt == RAKP_MESSAGE_4_RESPONSE)
-        str_cmd = DEBUG_UTIL_RAKP_4_STR;
-      else if (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQUEST
-               || pkt == SET_SESSION_PRIVILEGE_LEVEL_RESPONSE)
-        str_cmd = ipmi_cmd_str (IPMI_NET_FN_APP_RQ, IPMI_CMD_SET_SESSION_PRIVILEGE_LEVEL);
-      else if (pkt == GET_CHASSIS_STATUS_REQUEST
-               || pkt == GET_CHASSIS_STATUS_RESPONSE)
-        str_cmd = ipmi_cmd_str (IPMI_NET_FN_CHASSIS_RQ, IPMI_CMD_GET_CHASSIS_STATUS);
-      else if (pkt == CHASSIS_CONTROL_REQUEST
-               || pkt == CHASSIS_CONTROL_RESPONSE)
-        str_cmd = ipmi_cmd_str (IPMI_NET_FN_CHASSIS_RQ, IPMI_CMD_CHASSIS_CONTROL);
-      else if (pkt == CHASSIS_IDENTIFY_REQUEST
-               || pkt == CHASSIS_IDENTIFY_RESPONSE)
-        str_cmd = ipmi_cmd_str (IPMI_NET_FN_CHASSIS_RQ, IPMI_CMD_CHASSIS_IDENTIFY);
-      else if (pkt == C410X_GET_SENSOR_READING_REQUEST
-               || pkt == C410X_GET_SENSOR_READING_RESPONSE)
-        str_cmd = ipmi_cmd_str (IPMI_NET_FN_SENSOR_EVENT_RQ, IPMI_CMD_GET_SENSOR_READING);
-      else if (pkt == C410X_SLOT_POWER_CONTROL_REQUEST
-	       || pkt == C410X_SLOT_POWER_CONTROL_RESPONSE)
-	str_cmd = "C410x Slot Power Control";
-      else if (pkt == CLOSE_SESSION_REQUEST
-               || pkt == CLOSE_SESSION_RESPONSE)
-        str_cmd = ipmi_cmd_str (IPMI_NET_FN_APP_RQ, IPMI_CMD_CLOSE_SESSION);
+      switch (pkt)
+	{
+	case AUTHENTICATION_CAPABILITIES_REQUEST:
+	case AUTHENTICATION_CAPABILITIES_RESPONSE:
+	  str_cmd = ipmi_cmd_str (IPMI_NET_FN_APP_RQ, IPMI_CMD_GET_CHANNEL_AUTHENTICATION_CAPABILITIES);
+	  break;
+	case GET_SESSION_CHALLENGE_REQUEST:
+	case GET_SESSION_CHALLENGE_RESPONSE:
+	  str_cmd = ipmi_cmd_str (IPMI_NET_FN_APP_RQ, IPMI_CMD_GET_SESSION_CHALLENGE);
+	  break;
+	case ACTIVATE_SESSION_REQUEST:
+	case ACTIVATE_SESSION_RESPONSE:
+	  str_cmd = ipmi_cmd_str (IPMI_NET_FN_APP_RQ, IPMI_CMD_ACTIVATE_SESSION);
+	  break;
+	case OPEN_SESSION_REQUEST:
+	case OPEN_SESSION_RESPONSE:
+	  str_cmd = DEBUG_UTIL_OPEN_SESSION_STR;
+	  break;
+	case RAKP_MESSAGE_1_REQUEST:
+	  str_cmd = DEBUG_UTIL_RAKP_1_STR;
+	  break;
+	case RAKP_MESSAGE_2_RESPONSE:
+	  str_cmd = DEBUG_UTIL_RAKP_2_STR;
+	  break;
+	case RAKP_MESSAGE_3_REQUEST:
+	  str_cmd = DEBUG_UTIL_RAKP_3_STR;
+	  break;
+	case RAKP_MESSAGE_4_RESPONSE:
+	  str_cmd = DEBUG_UTIL_RAKP_4_STR;
+	  break;
+	case SET_SESSION_PRIVILEGE_LEVEL_REQUEST:
+	case SET_SESSION_PRIVILEGE_LEVEL_RESPONSE:
+	  str_cmd = ipmi_cmd_str (IPMI_NET_FN_APP_RQ, IPMI_CMD_SET_SESSION_PRIVILEGE_LEVEL);
+	  break;
+	case GET_CHASSIS_STATUS_REQUEST:
+	case GET_CHASSIS_STATUS_RESPONSE:
+	  str_cmd = ipmi_cmd_str (IPMI_NET_FN_CHASSIS_RQ, IPMI_CMD_GET_CHASSIS_STATUS);
+	  break;
+	case CHASSIS_CONTROL_REQUEST:
+	case CHASSIS_CONTROL_RESPONSE:
+	  str_cmd = ipmi_cmd_str (IPMI_NET_FN_CHASSIS_RQ, IPMI_CMD_CHASSIS_CONTROL);
+	  break;
+	case CHASSIS_IDENTIFY_REQUEST:
+	case CHASSIS_IDENTIFY_RESPONSE:
+	  str_cmd = ipmi_cmd_str (IPMI_NET_FN_CHASSIS_RQ, IPMI_CMD_CHASSIS_IDENTIFY);
+	  break;
+	case C410X_GET_SENSOR_READING_REQUEST:
+	case C410X_GET_SENSOR_READING_RESPONSE:
+	  str_cmd = ipmi_cmd_str (IPMI_NET_FN_SENSOR_EVENT_RQ, IPMI_CMD_GET_SENSOR_READING);
+	  break;
+	case C410X_SLOT_POWER_CONTROL_REQUEST:
+	case C410X_SLOT_POWER_CONTROL_RESPONSE:
+	  str_cmd = "C410x Slot Power Control";
+	  break;
+	case CLOSE_SESSION_REQUEST:
+	case CLOSE_SESSION_RESPONSE:
+	  str_cmd = ipmi_cmd_str (IPMI_NET_FN_APP_RQ, IPMI_CMD_CLOSE_SESSION);
+	  break;
+	default:
+	  IPMIPOWER_ERROR (("ipmipower_packet_dump: invalid packet type: %d", pkt));
+	  exit (1);
+	}
 
       if (PACKET_TYPE_REQUEST (pkt))
         packet_direction = DEBUG_UTIL_DIRECTION_REQUEST;
