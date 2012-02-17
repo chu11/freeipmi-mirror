@@ -595,11 +595,11 @@ ipmipower_check_payload_type (ipmipower_powercmd_t ip, packet_type_t pkt)
     }
   payload_type = val;
 
-  if (pkt == OPEN_SESSION_RS)
+  if (pkt == OPEN_SESSION_RESPONSE)
     expected_payload_type = IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE;
-  else if (pkt == RAKP_MESSAGE_2_RS)
+  else if (pkt == RAKP_MESSAGE_2)
     expected_payload_type = IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2;
-  else if (pkt == RAKP_MESSAGE_4_RS)
+  else if (pkt == RAKP_MESSAGE_4)
     expected_payload_type = IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4;
   else /* PACKET_TYPE_IPMI_SESSION_PACKET_RS (pkt) */
     expected_payload_type = IPMI_PAYLOAD_TYPE_IPMI;
@@ -714,7 +714,7 @@ ipmipower_check_open_session_response_privilege (ipmipower_powercmd_t ip, packet
   int rv;
 
   assert (ip);
-  assert (pkt == OPEN_SESSION_RS);
+  assert (pkt == OPEN_SESSION_RESPONSE);
 
   /* IPMI Workaround (achu)
    *
@@ -773,7 +773,7 @@ ipmipower_check_rakp_2_key_exchange_authentication_code (ipmipower_powercmd_t ip
   int rv;
 
   assert (ip);
-  assert (pkt == RAKP_MESSAGE_2_RS);
+  assert (pkt == RAKP_MESSAGE_2);
 
   /* IPMI Workaround (achu)
    *
@@ -1000,7 +1000,7 @@ ipmipower_check_rakp_4_integrity_check_value (ipmipower_powercmd_t ip, packet_ty
   int rv;
 
   assert (ip);
-  assert (pkt == RAKP_MESSAGE_4_RS);
+  assert (pkt == RAKP_MESSAGE_4);
 
   /* IPMI Workaround (achu)
    *

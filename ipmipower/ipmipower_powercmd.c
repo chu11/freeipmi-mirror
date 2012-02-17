@@ -753,13 +753,13 @@ _send_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
 	    }
 	}
       break;
-    case OPEN_SESSION_RQ:
-      ip->protocol_state = PROTOCOL_STATE_OPEN_SESSION_SENT;
+    case OPEN_SESSION_REQUEST:
+      ip->protocol_state = PROTOCOL_STATE_OPEN_SESSION_REQUEST_SENT;
       break;
-    case RAKP_MESSAGE_1_RQ:
+    case RAKP_MESSAGE_1:
       ip->protocol_state = PROTOCOL_STATE_RAKP_MESSAGE_1_SENT;
       break;
-    case RAKP_MESSAGE_3_RQ:
+    case RAKP_MESSAGE_3:
       ip->protocol_state = PROTOCOL_STATE_RAKP_MESSAGE_3_SENT;
       break;
     case SET_SESSION_PRIVILEGE_LEVEL_RQ:
@@ -1098,7 +1098,7 @@ _recv_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
           goto cleanup;
         }
 
-      if (pkt == OPEN_SESSION_RS)
+      if (pkt == OPEN_SESSION_RESPONSE)
         {
           if (!ipmipower_check_open_session_response_privilege (ip, pkt))
             {
@@ -1106,7 +1106,7 @@ _recv_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
               goto cleanup;
             }
         }
-      else if (pkt == RAKP_MESSAGE_2_RS)
+      else if (pkt == RAKP_MESSAGE_2)
         {
           if (!ipmipower_check_rakp_2_key_exchange_authentication_code (ip, pkt))
             {
@@ -1123,7 +1123,7 @@ _recv_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
               goto cleanup;
             }
         }
-      else if (pkt == RAKP_MESSAGE_4_RS)
+      else if (pkt == RAKP_MESSAGE_4)
         {
           if (!ipmipower_check_rakp_4_integrity_check_value (ip, pkt))
             {
@@ -1439,14 +1439,14 @@ _retry_packets (ipmipower_powercmd_t ip)
     case PROTOCOL_STATE_ACTIVATE_SESSION_SENT:
       _send_packet (ip, ACTIVATE_SESSION_RQ);
       break;
-    case PROTOCOL_STATE_OPEN_SESSION_SENT:
-      _send_packet (ip, OPEN_SESSION_RQ);
+    case PROTOCOL_STATE_OPEN_SESSION_REQUEST_SENT:
+      _send_packet (ip, OPEN_SESSION_REQUEST);
       break;
     case PROTOCOL_STATE_RAKP_MESSAGE_1_SENT:
-      _send_packet (ip, RAKP_MESSAGE_1_RQ);
+      _send_packet (ip, RAKP_MESSAGE_1);
       break;
     case PROTOCOL_STATE_RAKP_MESSAGE_3_SENT:
-      _send_packet (ip, RAKP_MESSAGE_3_RQ);
+      _send_packet (ip, RAKP_MESSAGE_3);
       break;
     case PROTOCOL_STATE_SET_SESSION_PRIVILEGE_LEVEL_SENT:
       _send_packet (ip, SET_SESSION_PRIVILEGE_LEVEL_RQ);
@@ -1915,7 +1915,7 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
           if (_check_ipmi_2_0_authentication_capabilities (ip) < 0)
             return (-1);
           
-          _send_packet (ip, OPEN_SESSION_RQ);
+          _send_packet (ip, OPEN_SESSION_REQUEST);
         }
       else
         {
@@ -1956,9 +1956,9 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
      
       _send_packet (ip, SET_SESSION_PRIVILEGE_LEVEL_RQ);
     }
-  else if (ip->protocol_state == PROTOCOL_STATE_OPEN_SESSION_SENT)
+  else if (ip->protocol_state == PROTOCOL_STATE_OPEN_SESSION_REQUEST_SENT)
     {
-      if ((rv = _recv_packet (ip, OPEN_SESSION_RS)) != 1)
+      if ((rv = _recv_packet (ip, OPEN_SESSION_RESPONSE)) != 1)
         {
           if (rv < 0)
             /* XXX Session is not up, is it ok to quit here?  Or
@@ -1967,11 +1967,11 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
           goto done;
         }
 
-      _send_packet (ip, RAKP_MESSAGE_1_RQ);
+      _send_packet (ip, RAKP_MESSAGE_1);
     }
   else if (ip->protocol_state == PROTOCOL_STATE_RAKP_MESSAGE_1_SENT)
     {
-      if ((rv = _recv_packet (ip, RAKP_MESSAGE_2_RS)) != 1)
+      if ((rv = _recv_packet (ip, RAKP_MESSAGE_2)) != 1)
         {
           if (rv < 0)
             /* XXX Session is not up, is it ok to quit here?  Or
@@ -1983,11 +1983,11 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
       if (_calculate_cipher_keys (ip) < 0)
         return (-1);
 
-      _send_packet (ip, RAKP_MESSAGE_3_RQ);
+      _send_packet (ip, RAKP_MESSAGE_3);
     }
   else if (ip->protocol_state == PROTOCOL_STATE_RAKP_MESSAGE_3_SENT)
     {
-      if ((rv = _recv_packet (ip, RAKP_MESSAGE_4_RS)) != 1)
+      if ((rv = _recv_packet (ip, RAKP_MESSAGE_4)) != 1)
         {
           if (rv < 0)
             /* XXX Session is not up, is it ok to quit here?  Or

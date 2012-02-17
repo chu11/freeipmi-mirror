@@ -3,8 +3,7 @@
 	* ipmipower/: Various code cleanup.  Use switch statements where
 	it would be more appropriate.  Change "DIAG_INTR" to
 	"DIAGNOSTIC_INTERRUPT" in code for readability.  Make code
-	consistent to rest of FreeIPMI by labeling requests as RQ and
-	responses as RS.  Add asserts as needed.
+	consistent to other codein FreeIPMI.  Add asserts as needed.
 
 	* libipmiconsole/: Various code cleanup.  Use switch statements
 	where it would be more appropriate.

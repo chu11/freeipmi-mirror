@@ -158,12 +158,12 @@ typedef enum
     GET_SESSION_CHALLENGE_RS          = 0x202,
     ACTIVATE_SESSION_RQ               = 0x103,
     ACTIVATE_SESSION_RS               = 0x203,
-    OPEN_SESSION_RQ                   = 0x104,
-    OPEN_SESSION_RS                   = 0x204,
-    RAKP_MESSAGE_1_RQ                 = 0x105,
-    RAKP_MESSAGE_2_RS                 = 0x205,
-    RAKP_MESSAGE_3_RQ                 = 0x106,
-    RAKP_MESSAGE_4_RS                 = 0x206,
+    OPEN_SESSION_REQUEST              = 0x104,
+    OPEN_SESSION_RESPONSE             = 0x204,
+    RAKP_MESSAGE_1                    = 0x105,
+    RAKP_MESSAGE_2                    = 0x205,
+    RAKP_MESSAGE_3                    = 0x106,
+    RAKP_MESSAGE_4                    = 0x206,
     SET_SESSION_PRIVILEGE_LEVEL_RQ    = 0x107,
     SET_SESSION_PRIVILEGE_LEVEL_RS    = 0x207,
     GET_CHASSIS_STATUS_RQ             = 0x108,
@@ -219,12 +219,12 @@ typedef enum
     && PACKET_TYPE_RS (__p)) ? 1 : 0)
 
 #define PACKET_TYPE_IPMI_2_0_SETUP(__p) \
-  ((((__p) == OPEN_SESSION_RQ		\
-    || (__p) == OPEN_SESSION_RS		\
-    || (__p) == RAKP_MESSAGE_1_RQ       \
-    || (__p) == RAKP_MESSAGE_2_RS       \
-    || (__p) == RAKP_MESSAGE_3_RQ       \
-    || (__p) == RAKP_MESSAGE_4_RS))  ? 1 : 0)
+  ((((__p) == OPEN_SESSION_REQUEST	\
+    || (__p) == OPEN_SESSION_RESPONSE	\
+    || (__p) == RAKP_MESSAGE_1          \
+    || (__p) == RAKP_MESSAGE_2          \
+    || (__p) == RAKP_MESSAGE_3          \
+    || (__p) == RAKP_MESSAGE_4))  ? 1 : 0)
 
 #define PACKET_TYPE_IPMI_2_0_SETUP_RQ(__p) \
   ((PACKET_TYPE_IPMI_2_0_SETUP (__p)	   \
@@ -265,7 +265,7 @@ typedef enum
     PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_SENT     = 0x01,
     PROTOCOL_STATE_GET_SESSION_CHALLENGE_SENT           = 0x02,
     PROTOCOL_STATE_ACTIVATE_SESSION_SENT                = 0x03,
-    PROTOCOL_STATE_OPEN_SESSION_SENT                    = 0x04,
+    PROTOCOL_STATE_OPEN_SESSION_REQUEST_SENT            = 0x04,
     PROTOCOL_STATE_RAKP_MESSAGE_1_SENT                  = 0x05,
     PROTOCOL_STATE_RAKP_MESSAGE_3_SENT                  = 0x06,
     PROTOCOL_STATE_SET_SESSION_PRIVILEGE_LEVEL_SENT     = 0x07,

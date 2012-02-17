@@ -70,17 +70,17 @@ ipmipower_packet_cmd_template (ipmipower_powercmd_t ip, packet_type_t pkt)
       return (&tmpl_cmd_activate_session_rq[0]);
     case ACTIVATE_SESSION_RS:
       return (&tmpl_cmd_activate_session_rs[0]);
-    case OPEN_SESSION_RQ:
+    case OPEN_SESSION_REQUEST:
       return (&tmpl_rmcpplus_open_session_request[0]);
-    case OPEN_SESSION_RS:
+    case OPEN_SESSION_RESPONSE:
       return (&tmpl_rmcpplus_open_session_response[0]);
-    case RAKP_MESSAGE_1_RQ:
+    case RAKP_MESSAGE_1:
       return (&tmpl_rmcpplus_rakp_message_1[0]);
-    case RAKP_MESSAGE_2_RS:
+    case RAKP_MESSAGE_2:
       return (&tmpl_rmcpplus_rakp_message_2[0]);
-    case RAKP_MESSAGE_3_RQ:
+    case RAKP_MESSAGE_3:
       return (&tmpl_rmcpplus_rakp_message_3[0]);
-    case RAKP_MESSAGE_4_RS:
+    case RAKP_MESSAGE_4:
       return (&tmpl_rmcpplus_rakp_message_4[0]);
     case SET_SESSION_PRIVILEGE_LEVEL_RQ:
       return (&tmpl_cmd_set_session_privilege_level_rq[0]);
@@ -138,17 +138,17 @@ ipmipower_packet_cmd_obj (ipmipower_powercmd_t ip, packet_type_t pkt)
       return (ip->obj_activate_session_rq);
     case ACTIVATE_SESSION_RS:
       return (ip->obj_activate_session_rs);
-    case OPEN_SESSION_RQ:
+    case OPEN_SESSION_REQUEST:
       return (ip->obj_open_session_rq);
-    case OPEN_SESSION_RS:
+    case OPEN_SESSION_RESPONSE:
       return (ip->obj_open_session_rs);
-    case RAKP_MESSAGE_1_RQ:
+    case RAKP_MESSAGE_1:
       return (ip->obj_rakp_message_1_rq);
-    case RAKP_MESSAGE_2_RS:
+    case RAKP_MESSAGE_2:
       return (ip->obj_rakp_message_2_rs);
-    case RAKP_MESSAGE_3_RQ:
+    case RAKP_MESSAGE_3:
       return (ip->obj_rakp_message_3_rq);
-    case RAKP_MESSAGE_4_RS:
+    case RAKP_MESSAGE_4:
       return (ip->obj_rakp_message_4_rs);
     case SET_SESSION_PRIVILEGE_LEVEL_RQ:
       return (ip->obj_set_session_privilege_level_rq);
@@ -223,20 +223,20 @@ ipmipower_packet_dump (ipmipower_powercmd_t ip,
 	case ACTIVATE_SESSION_RS:
 	  str_cmd = ipmi_cmd_str (IPMI_NET_FN_APP_RQ, IPMI_CMD_ACTIVATE_SESSION);
 	  break;
-	case OPEN_SESSION_RQ:
-	case OPEN_SESSION_RS:
+	case OPEN_SESSION_REQUEST:
+	case OPEN_SESSION_RESPONSE:
 	  str_cmd = DEBUG_UTIL_OPEN_SESSION_STR;
 	  break;
-	case RAKP_MESSAGE_1_RQ:
+	case RAKP_MESSAGE_1:
 	  str_cmd = DEBUG_UTIL_RAKP_1_STR;
 	  break;
-	case RAKP_MESSAGE_2_RS:
+	case RAKP_MESSAGE_2:
 	  str_cmd = DEBUG_UTIL_RAKP_2_STR;
 	  break;
-	case RAKP_MESSAGE_3_RQ:
+	case RAKP_MESSAGE_3:
 	  str_cmd = DEBUG_UTIL_RAKP_3_STR;
 	  break;
-	case RAKP_MESSAGE_4_RS:
+	case RAKP_MESSAGE_4:
 	  str_cmd = DEBUG_UTIL_RAKP_4_STR;
 	  break;
 	case SET_SESSION_PRIVILEGE_LEVEL_RQ:
@@ -711,8 +711,8 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
   assert (buflen);
 
   if (pkt == GET_SESSION_CHALLENGE_RQ
-      || pkt == RAKP_MESSAGE_1_RQ
-      || pkt == RAKP_MESSAGE_3_RQ)
+      || pkt == RAKP_MESSAGE_1
+      || pkt == RAKP_MESSAGE_3)
     {
       username = cmd_args.common.username;
 
@@ -725,7 +725,7 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
        * allowed.  "No Null characters (00h) are allowed in the name".
        * Table 13-11 in the IPMI 2.0 spec.
        */
-      if (pkt == RAKP_MESSAGE_1_RQ
+      if (pkt == RAKP_MESSAGE_1
           && (cmd_args.common.workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION))
         {
           memset (username_buf, '\0', IPMI_MAX_USER_NAME_LENGTH+1);
@@ -854,11 +854,11 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
   if (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0)
     {
       /* Calculate Payload Type */
-      if (pkt == OPEN_SESSION_RQ)
+      if (pkt == OPEN_SESSION_REQUEST)
         payload_type = IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST;
-      else if (pkt == RAKP_MESSAGE_1_RQ)
+      else if (pkt == RAKP_MESSAGE_1)
         payload_type = IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1;
-      else if (pkt == RAKP_MESSAGE_3_RQ)
+      else if (pkt == RAKP_MESSAGE_3)
         payload_type = IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3;
       else
         payload_type = IPMI_PAYLOAD_TYPE_IPMI;
@@ -867,8 +867,8 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
        * for the RAKP session setup protocol.  The values will be
        * different.
        */
-      if (pkt == RAKP_MESSAGE_1_RQ
-          || pkt == RAKP_MESSAGE_3_RQ)
+      if (pkt == RAKP_MESSAGE_1
+          || pkt == RAKP_MESSAGE_3)
         {
           if (FIID_OBJ_GET (ip->obj_open_session_rs,
                             "managed_system_session_id",
@@ -987,7 +987,7 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
         }
       obj_cmd_rq = ip->obj_activate_session_rq;
     }
-  else if (pkt == OPEN_SESSION_RQ)
+  else if (pkt == OPEN_SESSION_REQUEST)
     {
       if (fill_rmcpplus_open_session (ip->initial_message_tag + ip->message_tag_count,
                                       ip->requested_maximum_privilege_level,
@@ -1002,7 +1002,7 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
         }
       obj_cmd_rq = ip->obj_open_session_rq;
     }
-  else if (pkt == RAKP_MESSAGE_1_RQ)
+  else if (pkt == RAKP_MESSAGE_1)
     {
       if (fill_rmcpplus_rakp_message_1 (ip->initial_message_tag + ip->message_tag_count,
                                         managed_system_session_id,
@@ -1019,7 +1019,7 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
         }
       obj_cmd_rq = ip->obj_rakp_message_1_rq;
     }
-  else if (pkt == RAKP_MESSAGE_3_RQ)
+  else if (pkt == RAKP_MESSAGE_3)
     {
       uint8_t managed_system_random_number[IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH];
       int managed_system_random_number_len;
