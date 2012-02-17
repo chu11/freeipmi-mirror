@@ -148,115 +148,115 @@ struct oem_power_type_data {
 
 /* packet_type_t
  * - packet types stored internally in an ipmipower_powercmd structure.
- * - Request types are *_REQUEST, Response types are *_RESPONSE
+ * - Request types are *_RQ, Response types are *_RS
  */
 typedef enum
   {
-    AUTHENTICATION_CAPABILITIES_REQUEST     = 0x101,
-    AUTHENTICATION_CAPABILITIES_RESPONSE    = 0x201,
-    GET_SESSION_CHALLENGE_REQUEST           = 0x102,
-    GET_SESSION_CHALLENGE_RESPONSE          = 0x202,
-    ACTIVATE_SESSION_REQUEST                = 0x103,
-    ACTIVATE_SESSION_RESPONSE               = 0x203,
-    OPEN_SESSION_REQUEST                    = 0x104,
-    OPEN_SESSION_RESPONSE                   = 0x204,
-    RAKP_MESSAGE_1_REQUEST                  = 0x105,
-    RAKP_MESSAGE_2_RESPONSE                 = 0x205,
-    RAKP_MESSAGE_3_REQUEST                  = 0x106,
-    RAKP_MESSAGE_4_RESPONSE                 = 0x206,
-    SET_SESSION_PRIVILEGE_LEVEL_REQUEST     = 0x107,
-    SET_SESSION_PRIVILEGE_LEVEL_RESPONSE    = 0x207,
-    GET_CHASSIS_STATUS_REQUEST              = 0x108,
-    GET_CHASSIS_STATUS_RESPONSE             = 0x208,
-    CHASSIS_CONTROL_REQUEST                 = 0x109,
-    CHASSIS_CONTROL_RESPONSE                = 0x209,
-    CHASSIS_IDENTIFY_REQUEST                = 0x10A,
-    CHASSIS_IDENTIFY_RESPONSE               = 0x20A,
-    C410X_GET_SENSOR_READING_REQUEST        = 0x10B,
-    C410X_GET_SENSOR_READING_RESPONSE       = 0x20B,
-    C410X_SLOT_POWER_CONTROL_REQUEST        = 0x10C,
-    C410X_SLOT_POWER_CONTROL_RESPONSE       = 0x20C,
-    CLOSE_SESSION_REQUEST                   = 0x10D,
-    CLOSE_SESSION_RESPONSE                  = 0x20D,
+    AUTHENTICATION_CAPABILITIES_RQ    = 0x101,
+    AUTHENTICATION_CAPABILITIES_RS    = 0x201,
+    GET_SESSION_CHALLENGE_RQ          = 0x102,
+    GET_SESSION_CHALLENGE_RS          = 0x202,
+    ACTIVATE_SESSION_RQ               = 0x103,
+    ACTIVATE_SESSION_RS               = 0x203,
+    OPEN_SESSION_RQ                   = 0x104,
+    OPEN_SESSION_RS                   = 0x204,
+    RAKP_MESSAGE_1_RQ                 = 0x105,
+    RAKP_MESSAGE_2_RS                 = 0x205,
+    RAKP_MESSAGE_3_RQ                 = 0x106,
+    RAKP_MESSAGE_4_RS                 = 0x206,
+    SET_SESSION_PRIVILEGE_LEVEL_RQ    = 0x107,
+    SET_SESSION_PRIVILEGE_LEVEL_RS    = 0x207,
+    GET_CHASSIS_STATUS_RQ             = 0x108,
+    GET_CHASSIS_STATUS_RS             = 0x208,
+    CHASSIS_CONTROL_RQ                = 0x109,
+    CHASSIS_CONTROL_RS                = 0x209,
+    CHASSIS_IDENTIFY_RQ               = 0x10A,
+    CHASSIS_IDENTIFY_RS               = 0x20A,
+    C410X_GET_SENSOR_READING_RQ       = 0x10B,
+    C410X_GET_SENSOR_READING_RS       = 0x20B,
+    C410X_SLOT_POWER_CONTROL_RQ       = 0x10C,
+    C410X_SLOT_POWER_CONTROL_RS       = 0x20C,
+    CLOSE_SESSION_RQ                  = 0x10D,
+    CLOSE_SESSION_RS                  = 0x20D,
   } packet_type_t;
 
-#define PACKET_TYPE_REQUEST_MASK       0x100
-#define PACKET_TYPE_RESPONSE_MASK      0x200
-#define PACKET_TYPE_MIN                0x001
-#define PACKET_TYPE_MAX                0x00D
-#define PACKET_TYPE_PACKET_MASK        0x0FF
+#define PACKET_TYPE_RQ_MASK      0x100
+#define PACKET_TYPE_RS_MASK      0x200
+#define PACKET_TYPE_MIN          0x001
+#define PACKET_TYPE_MAX          0x00D
+#define PACKET_TYPE_PACKET_MASK  0x0FF
 
 #define PACKET_TYPE_PACKET_VALID(__p)                   \
   (((__p) & PACKET_TYPE_PACKET_MASK) >= PACKET_TYPE_MIN \
    && ((__p) & PACKET_TYPE_PACKET_MASK) <= PACKET_TYPE_MAX)
 
-#define PACKET_TYPE_REQUEST(__p)          \
-  ((((__p) & PACKET_TYPE_REQUEST_MASK)	  \
+#define PACKET_TYPE_RQ(__p)       \
+  ((((__p) & PACKET_TYPE_RQ_MASK) \
     && PACKET_TYPE_PACKET_VALID ((__p))) ? 1 : 0)
 
-#define PACKET_TYPE_RESPONSE(__p)         \
-  ((((__p) & PACKET_TYPE_RESPONSE_MASK)	  \
+#define PACKET_TYPE_RS(__p)       \
+  ((((__p) & PACKET_TYPE_RS_MASK) \
     && PACKET_TYPE_PACKET_VALID ((__p))) ? 1 : 0)
 
-#define PACKET_TYPE_VALID(__p)            \
-  ((PACKET_TYPE_REQUEST ((__p))	          \
-    || PACKET_TYPE_RESPONSE ((__p))) ? 1 : 0)
+#define PACKET_TYPE_VALID(__p) \
+  ((PACKET_TYPE_RQ ((__p))     \
+    || PACKET_TYPE_RS ((__p))) ? 1 : 0)
 
-#define PACKET_TYPE_IPMI_1_5_SETUP(__p)                 \
-  ((((__p) == AUTHENTICATION_CAPABILITIES_REQUEST       \
-     || (__p) == AUTHENTICATION_CAPABILITIES_RESPONSE	\
-     || (__p) == GET_SESSION_CHALLENGE_REQUEST		\
-     || (__p) == GET_SESSION_CHALLENGE_RESPONSE		\
-     || (__p) == ACTIVATE_SESSION_REQUEST		\
-     || (__p) == ACTIVATE_SESSION_RESPONSE)) ? 1 : 0)
+#define PACKET_TYPE_IPMI_1_5_SETUP(__p)         \
+  ((((__p) == AUTHENTICATION_CAPABILITIES_RQ    \
+     || (__p) == AUTHENTICATION_CAPABILITIES_RS	\
+     || (__p) == GET_SESSION_CHALLENGE_RQ	\
+     || (__p) == GET_SESSION_CHALLENGE_RS	\
+     || (__p) == ACTIVATE_SESSION_RQ		\
+     || (__p) == ACTIVATE_SESSION_RS)) ? 1 : 0)
 
-#define PACKET_TYPE_IPMI_1_5_SETUP_REQUEST(__p)      \
-  ((PACKET_TYPE_IPMI_1_5_SETUP (__p)		     \
-    && PACKET_TYPE_REQUEST (__p)) ? 1 : 0)
+#define PACKET_TYPE_IPMI_1_5_SETUP_RQ(__p) \
+  ((PACKET_TYPE_IPMI_1_5_SETUP (__p)	   \
+    && PACKET_TYPE_RQ (__p)) ? 1 : 0)
 
-#define PACKET_TYPE_IPMI_1_5_SETUP_RESPONSE(__p)     \
-  ((PACKET_TYPE_IPMI_1_5_SETUP (__p)		     \
-    && PACKET_TYPE_RESPONSE (__p)) ? 1 : 0)
+#define PACKET_TYPE_IPMI_1_5_SETUP_RS(__p) \
+  ((PACKET_TYPE_IPMI_1_5_SETUP (__p)	   \
+    && PACKET_TYPE_RS (__p)) ? 1 : 0)
 
-#define PACKET_TYPE_IPMI_2_0_SETUP(__p)              \
-  ((((__p) == OPEN_SESSION_REQUEST		     \
-    || (__p) == OPEN_SESSION_RESPONSE		     \
-    || (__p) == RAKP_MESSAGE_1_REQUEST               \
-    || (__p) == RAKP_MESSAGE_2_RESPONSE              \
-    || (__p) == RAKP_MESSAGE_3_REQUEST               \
-    || (__p) == RAKP_MESSAGE_4_RESPONSE))  ? 1 : 0)
+#define PACKET_TYPE_IPMI_2_0_SETUP(__p) \
+  ((((__p) == OPEN_SESSION_RQ		\
+    || (__p) == OPEN_SESSION_RS		\
+    || (__p) == RAKP_MESSAGE_1_RQ       \
+    || (__p) == RAKP_MESSAGE_2_RS       \
+    || (__p) == RAKP_MESSAGE_3_RQ       \
+    || (__p) == RAKP_MESSAGE_4_RS))  ? 1 : 0)
 
-#define PACKET_TYPE_IPMI_2_0_SETUP_REQUEST(__p)      \
-  ((PACKET_TYPE_IPMI_2_0_SETUP (__p)		     \
-    && PACKET_TYPE_REQUEST (__p)) ? 1 : 0)
+#define PACKET_TYPE_IPMI_2_0_SETUP_RQ(__p) \
+  ((PACKET_TYPE_IPMI_2_0_SETUP (__p)	   \
+    && PACKET_TYPE_RQ (__p)) ? 1 : 0)
 
-#define PACKET_TYPE_IPMI_2_0_SETUP_RESPONSE(__p)     \
-  ((PACKET_TYPE_IPMI_2_0_SETUP (__p)		     \
-    && PACKET_TYPE_RESPONSE (__p)) ? 1 : 0)
+#define PACKET_TYPE_IPMI_2_0_SETUP_RS(__p) \
+  ((PACKET_TYPE_IPMI_2_0_SETUP (__p)	   \
+    && PACKET_TYPE_RS (__p)) ? 1 : 0)
 
-#define PACKET_TYPE_IPMI_SESSION_PACKET(__p)         \
-  ((((__p) == SET_SESSION_PRIVILEGE_LEVEL_REQUEST    \
-     || (__p) == SET_SESSION_PRIVILEGE_LEVEL_RESPONSE	\
-     || (__p) == GET_CHASSIS_STATUS_REQUEST		\
-     || (__p) == GET_CHASSIS_STATUS_RESPONSE		\
-     || (__p) == CHASSIS_CONTROL_REQUEST		\
-     || (__p) == CHASSIS_CONTROL_RESPONSE		\
-     || (__p) == CHASSIS_IDENTIFY_REQUEST		\
-     || (__p) == CHASSIS_IDENTIFY_RESPONSE		\
-     || (__p) == C410X_GET_SENSOR_READING_REQUEST	\
-     || (__p) == C410X_GET_SENSOR_READING_RESPONSE	\
-     || (__p) == C410X_SLOT_POWER_CONTROL_REQUEST	\
-     || (__p) == C410X_SLOT_POWER_CONTROL_RESPONSE	\
-     || (__p) == CLOSE_SESSION_REQUEST			\
-     || (__p) == CLOSE_SESSION_RESPONSE)) ? 1 : 0)
+#define PACKET_TYPE_IPMI_SESSION_PACKET(__p)    \
+  ((((__p) == SET_SESSION_PRIVILEGE_LEVEL_RQ    \
+     || (__p) == SET_SESSION_PRIVILEGE_LEVEL_RS	\
+     || (__p) == GET_CHASSIS_STATUS_RQ		\
+     || (__p) == GET_CHASSIS_STATUS_RS		\
+     || (__p) == CHASSIS_CONTROL_RQ		\
+     || (__p) == CHASSIS_CONTROL_RS		\
+     || (__p) == CHASSIS_IDENTIFY_RQ		\
+     || (__p) == CHASSIS_IDENTIFY_RS		\
+     || (__p) == C410X_GET_SENSOR_READING_RQ	\
+     || (__p) == C410X_GET_SENSOR_READING_RS	\
+     || (__p) == C410X_SLOT_POWER_CONTROL_RQ	\
+     || (__p) == C410X_SLOT_POWER_CONTROL_RS	\
+     || (__p) == CLOSE_SESSION_RQ		\
+     || (__p) == CLOSE_SESSION_RS)) ? 1 : 0)
 
-#define PACKET_TYPE_IPMI_SESSION_PACKET_REQUEST(__p)  \
-  ((PACKET_TYPE_IPMI_SESSION_PACKET (__p)	      \
-    && PACKET_TYPE_REQUEST (__p)) ? 1 : 0)
+#define PACKET_TYPE_IPMI_SESSION_PACKET_RQ(__p) \
+  ((PACKET_TYPE_IPMI_SESSION_PACKET (__p)	\
+    && PACKET_TYPE_RQ (__p)) ? 1 : 0)
 
-#define PACKET_TYPE_IPMI_SESSION_PACKET_RESPONSE(__p) \
-  ((PACKET_TYPE_IPMI_SESSION_PACKET (__p)	      \
-    && PACKET_TYPE_RESPONSE (__p)) ? 1 : 0)
+#define PACKET_TYPE_IPMI_SESSION_PACKET_RS(__p) \
+  ((PACKET_TYPE_IPMI_SESSION_PACKET (__p)	\
+    && PACKET_TYPE_RS (__p)) ? 1 : 0)
 
 /* Protocol States */
 typedef enum
@@ -391,45 +391,45 @@ struct ipmipower_powercmd {
 
   struct ipmipower_connection *ic;
 
-  fiid_obj_t obj_rmcp_hdr_req;
-  fiid_obj_t obj_rmcp_hdr_res;
-  fiid_obj_t obj_lan_session_hdr_req;
-  fiid_obj_t obj_lan_session_hdr_res;
-  fiid_obj_t obj_lan_msg_hdr_req;
-  fiid_obj_t obj_lan_msg_hdr_res;
-  fiid_obj_t obj_lan_msg_trlr_res;
-  fiid_obj_t obj_rmcpplus_session_hdr_req;
-  fiid_obj_t obj_rmcpplus_session_hdr_res;
-  fiid_obj_t obj_rmcpplus_payload_res;
-  fiid_obj_t obj_rmcpplus_session_trlr_req;
-  fiid_obj_t obj_rmcpplus_session_trlr_res;
+  fiid_obj_t obj_rmcp_hdr_rq;
+  fiid_obj_t obj_rmcp_hdr_rs;
+  fiid_obj_t obj_lan_session_hdr_rq;
+  fiid_obj_t obj_lan_session_hdr_rs;
+  fiid_obj_t obj_lan_msg_hdr_rq;
+  fiid_obj_t obj_lan_msg_hdr_rs;
+  fiid_obj_t obj_lan_msg_trlr_rs;
+  fiid_obj_t obj_rmcpplus_session_hdr_rq;
+  fiid_obj_t obj_rmcpplus_session_hdr_rs;
+  fiid_obj_t obj_rmcpplus_payload_rs;
+  fiid_obj_t obj_rmcpplus_session_trlr_rq;
+  fiid_obj_t obj_rmcpplus_session_trlr_rs;
 
-  fiid_obj_t obj_authentication_capabilities_req;
-  fiid_obj_t obj_authentication_capabilities_res;
-  fiid_obj_t obj_get_session_challenge_req;
-  fiid_obj_t obj_get_session_challenge_res;
-  fiid_obj_t obj_activate_session_req;
-  fiid_obj_t obj_activate_session_res;
-  fiid_obj_t obj_open_session_req;
-  fiid_obj_t obj_open_session_res;
-  fiid_obj_t obj_rakp_message_1_req;
-  fiid_obj_t obj_rakp_message_2_res;
-  fiid_obj_t obj_rakp_message_3_req;
-  fiid_obj_t obj_rakp_message_4_res;
-  fiid_obj_t obj_set_session_privilege_level_req;
-  fiid_obj_t obj_set_session_privilege_level_res;
-  fiid_obj_t obj_get_chassis_status_req;
-  fiid_obj_t obj_get_chassis_status_res;
-  fiid_obj_t obj_chassis_control_req;
-  fiid_obj_t obj_chassis_control_res;
-  fiid_obj_t obj_chassis_identify_req;
-  fiid_obj_t obj_chassis_identify_res;
-  fiid_obj_t obj_c410x_get_sensor_reading_req;
-  fiid_obj_t obj_c410x_get_sensor_reading_res;
-  fiid_obj_t obj_c410x_slot_power_control_req;
-  fiid_obj_t obj_c410x_slot_power_control_res;
-  fiid_obj_t obj_close_session_req;
-  fiid_obj_t obj_close_session_res;
+  fiid_obj_t obj_authentication_capabilities_rq;
+  fiid_obj_t obj_authentication_capabilities_rs;
+  fiid_obj_t obj_get_session_challenge_rq;
+  fiid_obj_t obj_get_session_challenge_rs;
+  fiid_obj_t obj_activate_session_rq;
+  fiid_obj_t obj_activate_session_rs;
+  fiid_obj_t obj_open_session_rq;
+  fiid_obj_t obj_open_session_rs;
+  fiid_obj_t obj_rakp_message_1_rq;
+  fiid_obj_t obj_rakp_message_2_rs;
+  fiid_obj_t obj_rakp_message_3_rq;
+  fiid_obj_t obj_rakp_message_4_rs;
+  fiid_obj_t obj_set_session_privilege_level_rq;
+  fiid_obj_t obj_set_session_privilege_level_rs;
+  fiid_obj_t obj_get_chassis_status_rq;
+  fiid_obj_t obj_get_chassis_status_rs;
+  fiid_obj_t obj_chassis_control_rq;
+  fiid_obj_t obj_chassis_control_rs;
+  fiid_obj_t obj_chassis_identify_rq;
+  fiid_obj_t obj_chassis_identify_rs;
+  fiid_obj_t obj_c410x_get_sensor_reading_rq;
+  fiid_obj_t obj_c410x_get_sensor_reading_rs;
+  fiid_obj_t obj_c410x_slot_power_control_rq;
+  fiid_obj_t obj_c410x_slot_power_control_rs;
+  fiid_obj_t obj_close_session_rq;
+  fiid_obj_t obj_close_session_rs;
 
   List sockets_to_close;
 
