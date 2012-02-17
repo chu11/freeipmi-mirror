@@ -29,14 +29,8 @@
 
 #include "ipmipower.h"
 
-/* ipmipower_ping_force_discovery_sweep
- * - Force a sweep of discovery when a new set of hostnames are set
- */
 void ipmipower_ping_force_discovery_sweep ();
 
-/* ipmipower_ping_process
- * - Process pings
- */
 void ipmipower_ping_process_pings (int *timeout);
 
 #endif /* _IPMIPOWER_PING_H */

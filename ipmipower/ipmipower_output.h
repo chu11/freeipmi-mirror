@@ -29,13 +29,10 @@
 
 #include "ipmipower.h"
 
-/* ipmipower_output
- * - Output msg with hostname prefix to ttyout
- */
-void ipmipower_output (msg_type_t num, const char *hostname);
+void ipmipower_output (msg_type_t num, const char *hostname, const char *extra_arg);
 
 /* ipmipower_output_finish
- * - Output final results
+ * - Output final results, mostly notably w/ consolidated output.
  */
 void ipmipower_output_finish (void);
 

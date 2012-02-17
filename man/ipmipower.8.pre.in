@@ -35,8 +35,9 @@ allows users to remotely power on, off, cycle, hard reset, get a power
 status query, perform a pulse diagnostic interrupt, or initiate a
 soft-shutdown of the OS via ACPI through the IPMI over LAN protocol.
 .LP
-When a power command (--on, --off, --cycle, --reset, --stat, --pulse,
-or --soft) is specified on the command line,
+When a power command (\fB\-\-on\fR, \fB\-\-off\fR, \fB\-\-cycle\fR,
+\fB\-\-reset\fR, \fB\-\-stat\fR, \fB\-\-pulse\fR, or \fB\-\-soft\fR)
+is specified on the command line,
 .B ipmipower 
 will attempt to run the power command on all hostnames listed on the
 command line then exit.
@@ -133,6 +134,14 @@ power off actually taking place.  This option will force
 .B ipmipower 
 to regularly query the remote BMC and return only after the machine
 has powered off.
+.TP
+\fB\-\-oem\-power\-type\fR=\fRIOEM\-POWER\-TYPE\fR
+This option informs
+.B ipmipower
+to initiate power control operations via an IPMI OEM specific power
+control extension.  The currently available POWERTYPEs are \fINONE\fR
+and \fIC410X\fR.  Please see OEM POWER EXTENSIONS below for additional
+information.
 
 .SH "IPMIPOWER ADVANCED NETWORK OPTIONS"
 The following options are used to change the networking behavior of
@@ -357,6 +366,70 @@ Output the current configuration.
 \fBquit\fR
 Quit program.
 .B ipmipower.
+.SH "OEM POWER EXTENSIONS"
+Some motherboards include IPMI OEM extensions for alternate power
+control mechanisms.  For example, these power control mechanisms may
+allow you to power control a sub-device within the system rather than
+the entire system itself.
+.LP
+By specifying an OEM power type via \fB\-\-oem\-power\-type\fR on the
+command line or
+.B freeipmi.conf(5),
+you can instruct
+.B ipmipower
+to execute alternate power control implementations over the standard
+ones.  Depending on the OEM extension, some power control commands may
+no longer be available.  For example, an OEM
+extension may allow
+\fBon\fR but not \fBcycle\fR.  Specific 
+.B ipmipower
+options may not longer function either.
+.LP
+Some OEM extensions may require additional arguments for their power
+control action, such as a sub-device identifier.  Additional arguments
+can be provided by appending a plus sign ('+') and the extra
+information to the end of the hostname.  This can be done on the
+command line or in interactive mode.  For example, the hostname
+\fImynode+18\fR would indicate the power control operation should be
+sent to the host \fImynode\fR, and \fI18\fR is the identifier of a
+possible sub-device to be power controlled.  The
+\fI\-\-consolidate\-output\fR option is commonly disabled when using
+an OEM power control that requires extra arguments.
+
+.LP
+Because OEM power control may involve subtypes, it is possible a user
+may wish to power control multiple sub-devices on the same host.  For
+example, you might specify the hosts \fImynode+1,mynode+2\fR,
+indicating to power control subdevice 1 and 2 on \fImynode\fR.
+Because many BMCs cannot handle multiple IPMI sessions, power control
+operations to the same host will be serialized internally by
+.B ipmipower.
+.LP
+The following are the current OEM power types available, along with
+information on the systems they work with and the power control
+operations available.
+.TP
+.B C410X
+This OEM power type supports the power control of PCIe slots on Dell
+Poweredge C410x systems.  It supports \fBon\fR, \fBoff\fR, and
+\fBstat\fR.  The PCIe slot number ranges from 1-16 and must always be
+specified when attempting to power control with this extension.  For
+example, the hostname \fImynode+2\fR would inform
+.B ipmipower
+to operate on slot number \fI2\fR on \fImynode\fR.
+The C410x appears to have difficulty handling new slot power control
+requests until prior ones have completed.  Users may wish to strongly
+consider using the \fB\-\-wait\-until\-on\fR and
+\fB\-\-wait\-until\-off\fR options if multiple slots will be power
+controlled in short succession.
+
+.TP
+.B NONE
+This informs
+.B ipmipower
+that no OEM power type extension is to be used and standard IPMI power
+control is used.  This is the default.
+
 #include <@top_srcdir@/man/manpage-common-hostranged-text-main.man>
 .LP
 When multiple hosts are specified by the user, a socket will be
@@ -447,5 +520,5 @@ Copyright (C) 2007-2012 Lawrence Livermore National Security, LLC.
 Copyright (C) 2003-2007 The Regents of the University of California.
 #include <@top_srcdir@/man/manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
-freeipmi.conf(5), freeipmi(7), bmc-config(8)
+freeipmi.conf(5), freeipmi(7), bmc-config(8), ipmi-oem(8)
 #include <@top_srcdir@/man/manpage-common-homepage.man>

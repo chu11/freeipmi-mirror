@@ -55,6 +55,8 @@
 #  undef lsd_fatal_error
    extern void lsd_fatal_error(char *file, int line, char *mesg);
 #else /* !WITH_LSD_FATAL_ERROR_FUNC */
+
+#if 0
 #  ifndef lsd_fatal_error
 #    define lsd_fatal_error(file, line, mesg)                                \
        do {                                                                  \
@@ -62,6 +64,12 @@
            file, line, mesg, strerror(errno));                               \
        } while (0)
 #  endif /* !lsd_fatal_error */
+#else /* !0 */
+#  ifndef lsd_fatal_error
+#    define lsd_fatal_error(file, line, mesg)
+#  endif /* !lsd_fatal_error */
+#endif	/* !0 */
+
 #endif /* !WITH_LSD_FATAL_ERROR_FUNC */
 
 /*

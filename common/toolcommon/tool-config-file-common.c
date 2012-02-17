@@ -4204,6 +4204,17 @@ config_file_parse (const char *filename,
         &(ipmipower_data.wait_until_off),
         0
       },
+      {
+        "ipmipower-oem-power-type",
+        CONFFILE_OPTION_STRING,
+        -1,
+        _config_file_string,
+        1,
+        0,
+        &(ipmipower_data.oem_power_type_str_count),
+        &(ipmipower_data.oem_power_type_str),
+        0,
+      },
       /* retry-wait-timeout for backwards comptability */
       {
         "retry-wait-timeout",

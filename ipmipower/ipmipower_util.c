@@ -60,6 +60,66 @@
 
 extern struct ipmipower_arguments cmd_args;
 
+char *
+ipmipower_power_cmd_to_string (power_cmd_t cmd)
+{
+  assert (POWER_CMD_VALID (cmd));
+
+  if (cmd == POWER_CMD_POWER_OFF)
+    return ("off");
+  else if (cmd == POWER_CMD_POWER_ON)
+    return ("on");
+  else if (cmd == POWER_CMD_POWER_CYCLE)
+    return ("cycle");
+  else if (cmd == POWER_CMD_POWER_RESET)
+    return ("reset");
+  else if (cmd == POWER_CMD_POWER_STATUS)
+    return ("status");
+  else if (cmd == POWER_CMD_PULSE_DIAG_INTR)
+    return ("diagnostic interrupt");
+  else if (cmd == POWER_CMD_SOFT_SHUTDOWN_OS)
+    return ("soft shutdown os");
+  else if (cmd == POWER_CMD_IDENTIFY_ON)
+    return ("identify on");
+  else if (cmd == POWER_CMD_IDENTIFY_OFF)
+    return ("identify off");
+  else /* cmd == POWER_CMD_IDENTIFY_STATUS */
+    return ("identify status");
+}
+
+int
+ipmipower_power_cmd_check_privilege (power_cmd_t cmd,
+				     char *errbuf,
+				     unsigned int errbuflen)
+{
+  int rv = -1;
+  
+  assert (POWER_CMD_VALID (cmd));
+  assert (errbuf);
+  assert (errbuflen);
+  assert (cmd_args.oem_power_type == OEM_POWER_TYPE_NONE);
+  
+  if (cmd_args.common.privilege_level == IPMI_PRIVILEGE_LEVEL_USER
+      && POWER_CMD_REQUIRES_OPERATOR_PRIVILEGE_LEVEL (cmd))
+    {
+      char *power_cmd_str;
+      
+      power_cmd_str = ipmipower_power_cmd_to_string (cmd);
+      
+      snprintf (errbuf,
+		errbuflen, 
+		"'%s' requires atleast operator privilege",
+		power_cmd_str);
+      
+      rv = 0;
+      goto cleanup;
+    }
+
+  rv = 1; 
+ cleanup:
+  return (rv);
+}
+
 int
 ipmipower_poll (struct pollfd *ufds, unsigned int nfds, int timeout)
 {

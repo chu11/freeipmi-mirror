@@ -10,6 +10,26 @@ FreeIPMI 1.1.1 - 01/03/12
 
 Tools
 -----
+o In ipmipower, support --oem-power-type option to support OEM
+  specific power control operations.  Included in this support were
+  the follow changes to ipmipower:
+  - Support initial OEM power type of C410X.
+  - Re-architect to allow input of extra information for an OEM power
+    operation via the '+' operator after the hostname.
+  - Re-architect to allow input of target hostname multiple times
+    under OEM power cases.
+  - Re-architect to allow serialization of power control operations to
+    the same host.
+
+Libraries
+---------
+o In libfreeipmi, add missing macro definitions.
+
+FreeIPMI 1.1.1 - 01/03/12
+-------------------------
+
+Tools
+-----
 o Support new tool ipmi-pet, tool to parse/interpret platform event traps.
 o Support new --sdr-cache-file option specify specific SDR cache file
   in all SDR related tools (ipmi-sensors, ipmi-sel, ipmi-fru, etc.).

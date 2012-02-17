@@ -37,6 +37,8 @@ ipmipower_SOURCES = \
 	ipmipower_connection.h \
 	ipmipower_error.c \
 	ipmipower_error.h \
+	ipmipower_oem.c \
+	ipmipower_oem.h \
 	ipmipower_output.c \
 	ipmipower_output.h \
 	ipmipower_packet.c \

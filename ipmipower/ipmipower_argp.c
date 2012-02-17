@@ -109,26 +109,28 @@ static struct argp_option cmdline_options[] =
       "Regularly query the remote BMC and return only after the machine has powered off.", 39},
     { "wait-until-on", WAIT_UNTIL_ON_KEY, 0, 0,
       "Regularly query the remote BMC and return only after the machine has powered on.", 40},
+    { "oem-power-type", OEM_POWER_TYPE_KEY, "OEM-POWER-TYPE", 0,
+      "Specify an OEM power type to be used.", 41},
     /* retry-wait-timeout maintained for backwards comptability */
     { "retry-wait-timeout", RETRY_WAIT_TIMEOUT_KEY, "MILLISECONDS", OPTION_HIDDEN,
-      "Specify the retransmission timeout length in milliseconds.", 41},
+      "Specify the retransmission timeout length in milliseconds.", 42},
     { "retransmission-wait-timeout", RETRANSMISSION_WAIT_TIMEOUT_KEY, "MILLISECONDS", 0,
-      "Specify the retransmission timeout length in milliseconds.", 41},
+      "Specify the retransmission timeout length in milliseconds.", 42},
     /* retry-backoff-count maintained for backwards comptability */
     { "retry-backoff-count", RETRY_BACKOFF_COUNT_KEY, "COUNT", OPTION_HIDDEN,
-      "Specify the retransmission backoff count for retransmissions.", 42},
+      "Specify the retransmission backoff count for retransmissions.", 43},
     { "retransmission-backoff-count", RETRANSMISSION_BACKOFF_COUNT_KEY, "COUNT", 0,
-      "Specify the retransmission backoff count for retransmissions.", 42},
+      "Specify the retransmission backoff count for retransmissions.", 43},
     { "ping-interval", PING_INTERVAL_KEY, "MILLISECONDS", 0,
-      "Specify the ping interval length in milliseconds.", 43},
+      "Specify the ping interval length in milliseconds.", 44},
     { "ping-timeout", PING_TIMEOUT_KEY, "MILLISECONDS", 0,
-      "Specify the ping timeout length in milliseconds.", 44},
+      "Specify the ping timeout length in milliseconds.", 45},
     { "ping-packet-count", PING_PACKET_COUNT_KEY, "COUNT", 0,
-      "Specify the ping packet count size.", 45},
+      "Specify the ping packet count size.", 46},
     { "ping-percent", PING_PERCENT_KEY, "PERCENT", 0,
-      "Specify the ping percent value.", 46},
+      "Specify the ping percent value.", 47},
     { "ping-consec-count", PING_CONSEC_COUNT_KEY, "COUNT", 0,
-      "Specify the ping consecutive count.", 47},
+      "Specify the ping consecutive count.", 48},
     { NULL, 0, NULL, 0, NULL, 0}
   };
 
@@ -143,6 +145,19 @@ static struct argp cmdline_config_file_argp = { cmdline_options,
                                                 cmdline_config_file_parse,
                                                 cmdline_args_doc,
                                                 cmdline_doc};
+
+void _parse_oem_power_type (struct ipmipower_arguments *cmd_args, const char *oem_power_type_str)
+{      
+  assert (cmd_args);
+  assert (oem_power_type_str);
+
+  if (!strcasecmp (oem_power_type_str, OEM_POWER_TYPE_NONE_STR))
+    cmd_args->oem_power_type = OEM_POWER_TYPE_NONE;
+  else if (!strcasecmp (oem_power_type_str, OEM_POWER_TYPE_C410X_STR))
+    cmd_args->oem_power_type = OEM_POWER_TYPE_C410X;
+  else
+    cmd_args->oem_power_type = OEM_POWER_TYPE_INVALID;
+}
 
 static error_t
 cmdline_parse (int key,
@@ -207,6 +222,9 @@ cmdline_parse (int key,
       break;
     case WAIT_UNTIL_ON_KEY:       /* --wait-until-off */
       cmd_args->wait_until_off++;
+      break;
+    case OEM_POWER_TYPE_KEY:
+      _parse_oem_power_type (cmd_args, arg);
       break;
       /* RETRY_WAIT_TIMEOUT for backwards compatability */
     case RETRY_WAIT_TIMEOUT_KEY:
@@ -352,6 +370,9 @@ _ipmipower_config_file_parse (struct ipmipower_arguments *cmd_args)
     cmd_args->wait_until_on = config_file_data.wait_until_on;
   if (config_file_data.wait_until_off_count)
     cmd_args->wait_until_off = config_file_data.wait_until_off;
+  /* See comments in config file parsing */
+  if (config_file_data.oem_power_type_str_count)
+    _parse_oem_power_type (cmd_args, config_file_data.oem_power_type_str);
   if (config_file_data.retransmission_wait_timeout_count)
     cmd_args->retransmission_wait_timeout = config_file_data.retransmission_wait_timeout;
   if (config_file_data.retransmission_backoff_count_count)
@@ -372,6 +393,12 @@ static void
 _ipmipower_args_validate (struct ipmipower_arguments *cmd_args)
 {
   assert (cmd_args);
+
+  if (!OEM_POWER_TYPE_VALID (cmd_args->oem_power_type))
+    {
+      fprintf (stderr, "invalid oem power type\n");
+      exit (1);
+    }
 
   if (cmd_args->retransmission_wait_timeout > cmd_args->common.session_timeout)
     {
@@ -422,6 +449,7 @@ ipmipower_argp_parse (int argc, char **argv, struct ipmipower_arguments *cmd_arg
   cmd_args->on_if_off = 0;
   cmd_args->wait_until_on = 0;
   cmd_args->wait_until_off = 0;
+  cmd_args->oem_power_type = OEM_POWER_TYPE_NONE;
   cmd_args->retransmission_wait_timeout = 500; /* .5 seconds  */
   cmd_args->retransmission_backoff_count = 8;
   cmd_args->ping_interval = 5000; /* 5 seconds */

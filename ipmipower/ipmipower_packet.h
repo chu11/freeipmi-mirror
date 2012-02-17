@@ -29,15 +29,8 @@
 
 #include "ipmipower.h"
 
-/* ipmipower_packet_cmd_template
- * - retrieve template of the appropriate packet type
- */
-fiid_field_t *
-ipmipower_packet_cmd_template (ipmipower_powercmd_t ip, packet_type_t pkt);
+fiid_field_t *ipmipower_packet_cmd_template (ipmipower_powercmd_t ip, packet_type_t pkt);
 
-/* ipmipower_packet_cmd_obj
- * - retrieve object pointer of the appropriate packet type
- */
 fiid_obj_t ipmipower_packet_cmd_obj (ipmipower_powercmd_t ip, packet_type_t pkt);
 
 /* ipmipower_packet_store
@@ -51,9 +44,6 @@ int ipmipower_packet_store (ipmipower_powercmd_t ip,
                             const void *buf,
                             unsigned int buflen);
 
-/* ipmipower_packet_dump
- * - Dump contents of ipmi packet
- */
 void ipmipower_packet_dump (ipmipower_powercmd_t ip,
                             packet_type_t pkt,
                             const void *buf,

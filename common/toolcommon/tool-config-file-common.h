@@ -266,6 +266,9 @@ struct config_file_data_ipmipower
   int wait_until_on_count;
   int wait_until_off;
   int wait_until_off_count;
+  /* Parse string and let ipmipower determine if it is valid */
+  char *oem_power_type_str;
+  int oem_power_type_str_count;
 
   unsigned int retransmission_wait_timeout;
   int retransmission_wait_timeout_count;

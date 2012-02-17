@@ -1383,6 +1383,9 @@ Specify if wait-until-on functionality is enabled or disabled by default.
 \fBipmipower\-wait\-until\-off\fR \fIENABLE|DISABLE\fR
 Specify if wait-until-off functionality is enabled or disabled by default.
 .TP
+\fBipmipower\-oem\-power\-type\fR \fIOEM\-POWER\-TYPE\fR
+Specify OEM power type to be used.
+.TP
 \fBipmipower\-retransmission\-wait\-timeout\fR \fIMILLISECONDS\fR
 Specify the default retransmission wait timeout length to use in
 milliseconds.

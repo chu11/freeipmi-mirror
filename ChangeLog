@@ -1,3 +1,21 @@
+2012-02-17  Albert Chu <chu11@llnl.gov>
+
+	Merge dellc410x
+
+	* ipmipower/: Add --oem-power-type option and support C410x OEM
+	power type.  Support ability to input power control to same host
+	multiple times under OEM conditions.  Serialize power control
+	operations to same host.
+
+	* ipmipower/ipmipower_oem.h, ipmipower/ipmipower_oem.c: New files.
+
+	* ipmipower/: Various code cleanup given re-architecture.
+
+	* common/miscutil/hostlist.c: Remove fprintf debug error messages
+	from tool.
+
+	* ipmi-oem/ipmi-oem-dell.c: Fix C410X corner case.
+
 2012-02-10  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/api/ipmi-api.c (ipmi_ctx_open_inband): Add comment
