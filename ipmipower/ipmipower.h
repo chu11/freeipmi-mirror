@@ -186,9 +186,9 @@ typedef enum
 #define PACKET_TYPE_MAX                0x00D
 #define PACKET_TYPE_PACKET_MASK        0x0FF
 
-#define PACKET_TYPE_PACKET_VALID(__p)                    \
-  (((__p) & PACKET_TYPE_PKT_MASK) >= PACKET_TYPE_PKT_MIN \
-   && ((__p) & PACKET_TYPE_PKT_MASK) <= PACKET_TYPE_PKT_MAX)
+#define PACKET_TYPE_PACKET_VALID(__p)                   \
+  (((__p) & PACKET_TYPE_PACKET_MASK) >= PACKET_TYPE_MIN \
+   && ((__p) & PACKET_TYPE_PACKET_MASK) <= PACKET_TYPE_MAX)
 
 #define PACKET_TYPE_REQUEST(__p)          \
   ((((__p) & PACKET_TYPE_REQUEST_MASK)	  \
