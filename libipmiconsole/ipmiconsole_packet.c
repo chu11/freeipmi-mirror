@@ -62,60 +62,63 @@ ipmiconsole_packet_template (ipmiconsole_ctx_t c,
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
   assert (IPMICONSOLE_PACKET_TYPE_VALID (p));
 
-  if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_RQ)
-    return (&tmpl_cmd_get_channel_authentication_capabilities_rq[0]);
-  else if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_RS)
-    return (&tmpl_cmd_get_channel_authentication_capabilities_rs[0]);
-  else if (p == IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_REQUEST)
-    return (&tmpl_rmcpplus_open_session_request[0]);
-  else if (p == IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_RESPONSE)
-    return (&tmpl_rmcpplus_open_session_response[0]);
-  else if (p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_1)
-    return (&tmpl_rmcpplus_rakp_message_1[0]);
-  else if (p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_2)
-    return (&tmpl_rmcpplus_rakp_message_2[0]);
-  else if (p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_3)
-    return (&tmpl_rmcpplus_rakp_message_3[0]);
-  else if (p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_4)
-    return (&tmpl_rmcpplus_rakp_message_4[0]);
-  else if (p == IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RQ)
-    return (&tmpl_cmd_set_session_privilege_level_rq[0]);
-  else if (p == IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RS)
-    return (&tmpl_cmd_set_session_privilege_level_rs[0]);
-  else if (p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_SUPPORT_RQ)
-    return (&tmpl_cmd_get_channel_payload_support_rq[0]);
-  else if (p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_SUPPORT_RS)
-    return (&tmpl_cmd_get_channel_payload_support_rs[0]);
-  else if (p == IPMICONSOLE_PACKET_TYPE_GET_PAYLOAD_ACTIVATION_STATUS_RQ)
-    return (&tmpl_cmd_get_payload_activation_status_rq[0]);
-  else if (p == IPMICONSOLE_PACKET_TYPE_GET_PAYLOAD_ACTIVATION_STATUS_RS)
-    return (&tmpl_cmd_get_payload_activation_status_rs[0]);
-  else if (p == IPMICONSOLE_PACKET_TYPE_ACTIVATE_PAYLOAD_RQ)
-    return (&tmpl_cmd_activate_payload_sol_rq[0]);
-  else if (p == IPMICONSOLE_PACKET_TYPE_ACTIVATE_PAYLOAD_RS)
-    return (&tmpl_cmd_activate_payload_sol_rs[0]);
-  else if (p == IPMICONSOLE_PACKET_TYPE_SOL_PAYLOAD_DATA_RQ)
-    return (&tmpl_sol_payload_data_remote_console_to_bmc[0]);
-  else if (p == IPMICONSOLE_PACKET_TYPE_SOL_PAYLOAD_DATA_RS)
-    return (&tmpl_sol_payload_data_bmc_to_remote_console[0]);
-  else if (p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_VERSION_RQ)
-    return (&tmpl_cmd_get_channel_payload_version_rq[0]);
-  else if (p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_VERSION_RS)
-    return (&tmpl_cmd_get_channel_payload_version_rs[0]);
-  else if (p == IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ)
-    return (&tmpl_cmd_deactivate_payload_rq[0]);
-  else if (p == IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RS)
-    return (&tmpl_cmd_deactivate_payload_rs[0]);
-  else if (p == IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RQ)
-    return (&tmpl_cmd_chassis_control_rq[0]);
-  else if (p == IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RS)
-    return (&tmpl_cmd_chassis_control_rs[0]);
-  else
+  switch (p)
     {
+    case IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_RQ:
+      return (&tmpl_cmd_get_channel_authentication_capabilities_rq[0]);
+    case IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_RS:
+      return (&tmpl_cmd_get_channel_authentication_capabilities_rs[0]);
+    case IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_REQUEST:
+      return (&tmpl_rmcpplus_open_session_request[0]);
+    case IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_RESPONSE:
+      return (&tmpl_rmcpplus_open_session_response[0]);
+    case IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_1:
+      return (&tmpl_rmcpplus_rakp_message_1[0]);
+    case IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_2:
+      return (&tmpl_rmcpplus_rakp_message_2[0]);
+    case IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_3:
+      return (&tmpl_rmcpplus_rakp_message_3[0]);
+    case IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_4:
+      return (&tmpl_rmcpplus_rakp_message_4[0]);
+    case IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RQ:
+      return (&tmpl_cmd_set_session_privilege_level_rq[0]);
+    case IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RS:
+      return (&tmpl_cmd_set_session_privilege_level_rs[0]);
+    case IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_SUPPORT_RQ:
+      return (&tmpl_cmd_get_channel_payload_support_rq[0]);
+    case IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_SUPPORT_RS:
+      return (&tmpl_cmd_get_channel_payload_support_rs[0]);
+    case IPMICONSOLE_PACKET_TYPE_GET_PAYLOAD_ACTIVATION_STATUS_RQ:
+      return (&tmpl_cmd_get_payload_activation_status_rq[0]);
+    case IPMICONSOLE_PACKET_TYPE_GET_PAYLOAD_ACTIVATION_STATUS_RS:
+      return (&tmpl_cmd_get_payload_activation_status_rs[0]);
+    case IPMICONSOLE_PACKET_TYPE_ACTIVATE_PAYLOAD_RQ:
+      return (&tmpl_cmd_activate_payload_sol_rq[0]);
+    case IPMICONSOLE_PACKET_TYPE_ACTIVATE_PAYLOAD_RS:
+      return (&tmpl_cmd_activate_payload_sol_rs[0]);
+    case IPMICONSOLE_PACKET_TYPE_SOL_PAYLOAD_DATA_RQ:
+      return (&tmpl_sol_payload_data_remote_console_to_bmc[0]);
+    case IPMICONSOLE_PACKET_TYPE_SOL_PAYLOAD_DATA_RS:
+      return (&tmpl_sol_payload_data_bmc_to_remote_console[0]);
+    case IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_VERSION_RQ:
+      return (&tmpl_cmd_get_channel_payload_version_rq[0]);
+    case IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_VERSION_RS:
+      return (&tmpl_cmd_get_channel_payload_version_rs[0]);
+    case IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ:
+      return (&tmpl_cmd_deactivate_payload_rq[0]);
+    case IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RS:
+      return (&tmpl_cmd_deactivate_payload_rs[0]);
+    case IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RQ:
+      return (&tmpl_cmd_chassis_control_rq[0]);
+    case IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RS:
+      return (&tmpl_cmd_chassis_control_rs[0]);
+    default:
       IPMICONSOLE_CTX_DEBUG (c, ("invalid packet type: %d", p));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return (NULL);
     }
+
+  return (NULL);			/* NOT REACHED */
 }
 
 fiid_obj_t
@@ -126,60 +129,63 @@ ipmiconsole_packet_object (ipmiconsole_ctx_t c,
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
   assert (IPMICONSOLE_PACKET_TYPE_VALID (p));
 
-  if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_RQ)
-    return (c->connection.obj_authentication_capabilities_rq);
-  else if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_RS)
-    return (c->connection.obj_authentication_capabilities_rs);
-  else if (p == IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_REQUEST)
-    return (c->connection.obj_open_session_request);
-  else if (p == IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_RESPONSE)
-    return (c->connection.obj_open_session_response);
-  else if (p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_1)
-    return (c->connection.obj_rakp_message_1);
-  else if (p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_2)
-    return (c->connection.obj_rakp_message_2);
-  else if (p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_3)
-    return (c->connection.obj_rakp_message_3);
-  else if (p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_4)
-    return (c->connection.obj_rakp_message_4);
-  else if (p == IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RQ)
-    return (c->connection.obj_set_session_privilege_level_rq);
-  else if (p == IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RS)
-    return (c->connection.obj_set_session_privilege_level_rs);
-  else if (p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_SUPPORT_RQ)
-    return (c->connection.obj_get_channel_payload_support_rq);
-  else if (p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_SUPPORT_RS)
-    return (c->connection.obj_get_channel_payload_support_rs);
-  else if (p == IPMICONSOLE_PACKET_TYPE_GET_PAYLOAD_ACTIVATION_STATUS_RQ)
-    return (c->connection.obj_get_payload_activation_status_rq);
-  else if (p == IPMICONSOLE_PACKET_TYPE_GET_PAYLOAD_ACTIVATION_STATUS_RS)
-    return (c->connection.obj_get_payload_activation_status_rs);
-  else if (p == IPMICONSOLE_PACKET_TYPE_ACTIVATE_PAYLOAD_RQ)
-    return (c->connection.obj_activate_payload_rq);
-  else if (p == IPMICONSOLE_PACKET_TYPE_ACTIVATE_PAYLOAD_RS)
-    return (c->connection.obj_activate_payload_rs);
-  else if (p == IPMICONSOLE_PACKET_TYPE_SOL_PAYLOAD_DATA_RQ)
-    return (c->connection.obj_sol_payload_data_rq);
-  else if (p == IPMICONSOLE_PACKET_TYPE_SOL_PAYLOAD_DATA_RS)
-    return (c->connection.obj_sol_payload_data_rs);
-  else if (p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_VERSION_RQ)
-    return (c->connection.obj_get_channel_payload_version_rq);
-  else if (p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_VERSION_RS)
-    return (c->connection.obj_get_channel_payload_version_rs);
-  else if (p == IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ)
-    return (c->connection.obj_deactivate_payload_rq);
-  else if (p == IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RS)
-    return (c->connection.obj_deactivate_payload_rs);
-  else if (p == IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RQ)
-    return (c->connection.obj_close_session_rq);
-  else if (p == IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RS)
-    return (c->connection.obj_close_session_rs);
-  else
+  switch (p)
     {
+    case IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_RQ:
+      return (c->connection.obj_authentication_capabilities_rq);
+    case IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_RS:
+      return (c->connection.obj_authentication_capabilities_rs);
+    case IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_REQUEST:
+      return (c->connection.obj_open_session_request);
+    case IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_RESPONSE:
+      return (c->connection.obj_open_session_response);
+    case IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_1:
+      return (c->connection.obj_rakp_message_1);
+    case IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_2:
+      return (c->connection.obj_rakp_message_2);
+    case IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_3:
+      return (c->connection.obj_rakp_message_3);
+    case IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_4:
+      return (c->connection.obj_rakp_message_4);
+    case IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RQ:
+      return (c->connection.obj_set_session_privilege_level_rq);
+    case IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RS:
+      return (c->connection.obj_set_session_privilege_level_rs);
+    case IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_SUPPORT_RQ:
+      return (c->connection.obj_get_channel_payload_support_rq);
+    case IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_SUPPORT_RS:
+      return (c->connection.obj_get_channel_payload_support_rs);
+    case IPMICONSOLE_PACKET_TYPE_GET_PAYLOAD_ACTIVATION_STATUS_RQ:
+      return (c->connection.obj_get_payload_activation_status_rq);
+    case IPMICONSOLE_PACKET_TYPE_GET_PAYLOAD_ACTIVATION_STATUS_RS:
+      return (c->connection.obj_get_payload_activation_status_rs);
+    case IPMICONSOLE_PACKET_TYPE_ACTIVATE_PAYLOAD_RQ:
+      return (c->connection.obj_activate_payload_rq);
+    case IPMICONSOLE_PACKET_TYPE_ACTIVATE_PAYLOAD_RS:
+      return (c->connection.obj_activate_payload_rs);
+    case IPMICONSOLE_PACKET_TYPE_SOL_PAYLOAD_DATA_RQ:
+      return (c->connection.obj_sol_payload_data_rq);
+    case IPMICONSOLE_PACKET_TYPE_SOL_PAYLOAD_DATA_RS:
+      return (c->connection.obj_sol_payload_data_rs);
+    case IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_VERSION_RQ:
+      return (c->connection.obj_get_channel_payload_version_rq);
+    case IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_VERSION_RS:
+      return (c->connection.obj_get_channel_payload_version_rs);
+    case IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ:
+      return (c->connection.obj_deactivate_payload_rq);
+    case IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RS:
+      return (c->connection.obj_deactivate_payload_rs);
+    case IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RQ:
+      return (c->connection.obj_close_session_rq);
+    case IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RS:
+      return (c->connection.obj_close_session_rs);
+    default:
       IPMICONSOLE_CTX_DEBUG (c, ("invalid packet type: %d", p));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return (NULL);
     }
+
+  return (NULL);			/* NOT REACHED */
 }
 
 static int
@@ -204,47 +210,63 @@ _packet_dump_hdr (ipmiconsole_ctx_t c,
   else
     packet_type = DEBUG_UTIL_TYPE_IPMI_2_0;
 
-  if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_RQ
-      || p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_RS)
-    str_cmd = ipmi_cmd_str (IPMI_NET_FN_APP_RQ, IPMI_CMD_GET_CHANNEL_AUTHENTICATION_CAPABILITIES);
-  else if (p == IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_REQUEST
-           || p == IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_RESPONSE)
-    str_cmd = DEBUG_UTIL_OPEN_SESSION_STR;
-  else if (p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_1)
-    str_cmd = DEBUG_UTIL_RAKP_1_STR;
-  else if (p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_2)
-    str_cmd = DEBUG_UTIL_RAKP_2_STR;
-  else if (p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_3)
-    str_cmd = DEBUG_UTIL_RAKP_3_STR;
-  else if (p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_4)
-    str_cmd = DEBUG_UTIL_RAKP_4_STR;
-  else if (p == IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RQ
-           || p == IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RS)
-    str_cmd = ipmi_cmd_str (IPMI_NET_FN_APP_RQ, IPMI_CMD_SET_SESSION_PRIVILEGE_LEVEL);
-  else if (p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_SUPPORT_RQ
-           || p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_SUPPORT_RS)
-    str_cmd = ipmi_cmd_str (IPMI_NET_FN_APP_RQ, IPMI_CMD_GET_CHANNEL_PAYLOAD_SUPPORT);
-  else if (p == IPMICONSOLE_PACKET_TYPE_GET_PAYLOAD_ACTIVATION_STATUS_RQ
-           || p == IPMICONSOLE_PACKET_TYPE_GET_PAYLOAD_ACTIVATION_STATUS_RS)
-    str_cmd = ipmi_cmd_str (IPMI_NET_FN_APP_RQ, IPMI_CMD_GET_PAYLOAD_ACTIVATION_STATUS);
-  else if (p == IPMICONSOLE_PACKET_TYPE_ACTIVATE_PAYLOAD_RQ
-           || p == IPMICONSOLE_PACKET_TYPE_ACTIVATE_PAYLOAD_RS)
-    str_cmd = ipmi_cmd_str (IPMI_NET_FN_APP_RQ, IPMI_CMD_ACTIVATE_PAYLOAD);
-  else if (p == IPMICONSOLE_PACKET_TYPE_SOL_PAYLOAD_DATA_RQ)
-    str_cmd = "SOL Remote Console to BMC";
-  else if (p == IPMICONSOLE_PACKET_TYPE_SOL_PAYLOAD_DATA_RS)
-    str_cmd = "SOL BMC to Remote Console";
-  else if (p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_VERSION_RQ
-           || p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_VERSION_RS)
-    str_cmd = ipmi_cmd_str (IPMI_NET_FN_APP_RQ, IPMI_CMD_GET_CHANNEL_PAYLOAD_VERSION);
-  else if (p == IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ
-           || p == IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RS)
-    str_cmd = ipmi_cmd_str (IPMI_NET_FN_APP_RQ, IPMI_CMD_DEACTIVATE_PAYLOAD);
-  else if (p == IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RQ
-           || p == IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RS)
-    str_cmd = ipmi_cmd_str (IPMI_NET_FN_APP_RQ, IPMI_CMD_CLOSE_SESSION);
-  else
+  switch (p)
     {
+    case IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_RQ:
+    case IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_RS:
+      str_cmd = ipmi_cmd_str (IPMI_NET_FN_APP_RQ, IPMI_CMD_GET_CHANNEL_AUTHENTICATION_CAPABILITIES);
+      break;
+    case IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_REQUEST:
+    case IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_RESPONSE:
+      str_cmd = DEBUG_UTIL_OPEN_SESSION_STR;
+      break;
+    case IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_1:
+      str_cmd = DEBUG_UTIL_RAKP_1_STR;
+      break;
+    case IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_2:
+      str_cmd = DEBUG_UTIL_RAKP_2_STR;
+      break;
+    case IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_3:
+      str_cmd = DEBUG_UTIL_RAKP_3_STR;
+      break;
+    case IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_4:
+      str_cmd = DEBUG_UTIL_RAKP_4_STR;
+      break;
+    case IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RQ:
+    case IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RS:
+      str_cmd = ipmi_cmd_str (IPMI_NET_FN_APP_RQ, IPMI_CMD_SET_SESSION_PRIVILEGE_LEVEL);
+      break;
+    case IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_SUPPORT_RQ:
+    case IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_SUPPORT_RS:
+      str_cmd = ipmi_cmd_str (IPMI_NET_FN_APP_RQ, IPMI_CMD_GET_CHANNEL_PAYLOAD_SUPPORT);
+      break;
+    case IPMICONSOLE_PACKET_TYPE_GET_PAYLOAD_ACTIVATION_STATUS_RQ:
+    case IPMICONSOLE_PACKET_TYPE_GET_PAYLOAD_ACTIVATION_STATUS_RS:
+      str_cmd = ipmi_cmd_str (IPMI_NET_FN_APP_RQ, IPMI_CMD_GET_PAYLOAD_ACTIVATION_STATUS);
+      break;
+    case IPMICONSOLE_PACKET_TYPE_ACTIVATE_PAYLOAD_RQ:
+    case IPMICONSOLE_PACKET_TYPE_ACTIVATE_PAYLOAD_RS:
+      str_cmd = ipmi_cmd_str (IPMI_NET_FN_APP_RQ, IPMI_CMD_ACTIVATE_PAYLOAD);
+      break;
+    case IPMICONSOLE_PACKET_TYPE_SOL_PAYLOAD_DATA_RQ:
+      str_cmd = "SOL Remote Console to BMC";
+      break;
+    case IPMICONSOLE_PACKET_TYPE_SOL_PAYLOAD_DATA_RS:
+      str_cmd = "SOL BMC to Remote Console";
+      break;
+    case IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_VERSION_RQ:
+    case IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_VERSION_RS:
+      str_cmd = ipmi_cmd_str (IPMI_NET_FN_APP_RQ, IPMI_CMD_GET_CHANNEL_PAYLOAD_VERSION);
+      break;
+    case IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ:
+    case IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RS:
+      str_cmd = ipmi_cmd_str (IPMI_NET_FN_APP_RQ, IPMI_CMD_DEACTIVATE_PAYLOAD);
+      break;
+    case IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RQ:
+    case IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RS:
+      str_cmd = ipmi_cmd_str (IPMI_NET_FN_APP_RQ, IPMI_CMD_CLOSE_SESSION);
+      break;
+    default:
       IPMICONSOLE_CTX_DEBUG (c, ("invalid packet type: %d", p));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return (-1);

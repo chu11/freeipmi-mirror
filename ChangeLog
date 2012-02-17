@@ -5,6 +5,9 @@
 	"DIAGNOSTIC_INTERRUPT" in code for readability.  Make code
 	consistent to rest of FreeIPMI by labeling requests as RQ and
 	responses as RS.  Add asserts as needed.
+
+	* libipmiconsole/: Various code cleanup.  Use switch statements
+	where it would be more appropriate.
 	
 2012-02-17  Albert Chu <chu11@llnl.gov>
 
