@@ -42,6 +42,7 @@
 #include <errno.h>
 
 #include "ipmipower_oem.h"
+#include "ipmipower_error.h"
 #include "ipmipower_util.h"
 
 #include "freeipmi-portability.h"
