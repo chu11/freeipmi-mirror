@@ -142,18 +142,6 @@ to initiate power control operations via an IPMI OEM specific power
 control extension.  The currently available POWERTYPEs are \fINONE\fR
 and \fIC410X\fR.  Please see OEM POWER EXTENSIONS below for additional
 information.
-.TP
-\fB\-\-serialize\-identical\-target\fR
-By default, 
-.B ipmipower
-parallelizes communication with all inputted power control targets.  Under most circumstances, this is optimal.  However, when using the
-\fB\-\-oem\-power\-type\fR option, it is possible to 
-
-Because many BMCs cannot handle multiple IPMI sessions, power control
-operations to the same host will be serialized internally by
-.B ipmipower.
-
-
 
 .SH "IPMIPOWER ADVANCED NETWORK OPTIONS"
 The following options are used to change the networking behavior of
@@ -413,6 +401,9 @@ Because OEM power control may involve subtypes, it is possible a user
 may wish to power control multiple sub-devices on the same host.  For
 example, you might specify the hosts \fImynode+1,mynode+2\fR,
 indicating to power control subdevice 1 and 2 on \fImynode\fR.
+Because many BMCs cannot handle multiple IPMI sessions, power control
+operations to the same host will be serialized internally by
+.B ipmipower.
 .LP
 The following are the current OEM power types available, along with
 information on the systems they work with and the power control
