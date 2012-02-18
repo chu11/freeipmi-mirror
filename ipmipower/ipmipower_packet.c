@@ -51,10 +51,10 @@
 extern struct ipmipower_arguments cmd_args;
 
 fiid_field_t *
-ipmipower_packet_cmd_template (ipmipower_powercmd_t ip, packet_type_t pkt)
+ipmipower_packet_cmd_template (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
 {
   assert (ip);
-  assert (PACKET_TYPE_VALID (pkt));
+  assert (IPMIPOWER_PACKET_TYPE_VALID (pkt));
 
   switch (pkt)
     {
@@ -119,10 +119,10 @@ ipmipower_packet_cmd_template (ipmipower_powercmd_t ip, packet_type_t pkt)
 }
 
 fiid_obj_t
-ipmipower_packet_cmd_obj (ipmipower_powercmd_t ip, packet_type_t pkt)
+ipmipower_packet_cmd_obj (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
 {
   assert (ip);
-  assert (PACKET_TYPE_VALID (pkt));
+  assert (IPMIPOWER_PACKET_TYPE_VALID (pkt));
 
   switch (pkt)
     {
@@ -188,12 +188,12 @@ ipmipower_packet_cmd_obj (ipmipower_powercmd_t ip, packet_type_t pkt)
 
 void
 ipmipower_packet_dump (ipmipower_powercmd_t ip,
-		       packet_type_t pkt,
+		       ipmipower_packet_type_t pkt,
                        const void *buf,
                        unsigned int buflen)
 {
   assert (ip);
-  assert (PACKET_TYPE_VALID (pkt));
+  assert (IPMIPOWER_PACKET_TYPE_VALID (pkt));
   assert (buf);
 
   if (cmd_args.common.debug)
@@ -272,7 +272,7 @@ ipmipower_packet_dump (ipmipower_powercmd_t ip,
 	  exit (1);
 	}
 
-      if (PACKET_TYPE_RQ (pkt))
+      if (IPMIPOWER_PACKET_TYPE_RQ (pkt))
         packet_direction = DEBUG_UTIL_DIRECTION_REQUEST;
       else
         packet_direction = DEBUG_UTIL_DIRECTION_RESPONSE;
@@ -284,12 +284,12 @@ ipmipower_packet_dump (ipmipower_powercmd_t ip,
                      hdrbuf,
                      DEBUG_UTIL_HDR_BUFLEN);
 
-      if (PACKET_TYPE_RQ (pkt))
+      if (IPMIPOWER_PACKET_TYPE_RQ (pkt))
         tmpl_lan_msg_hdr = &tmpl_lan_msg_hdr_rq[0];
       else
         tmpl_lan_msg_hdr = &tmpl_lan_msg_hdr_rs[0];
 
-      if (PACKET_TYPE_IPMI_2_0_SETUP (pkt))
+      if (IPMIPOWER_PACKET_TYPE_IPMI_2_0_SETUP (pkt))
         {
           if (ipmi_dump_rmcpplus_packet (STDERR_FILENO,
                                          ip->ic->hostname,
@@ -312,7 +312,7 @@ ipmipower_packet_dump (ipmipower_powercmd_t ip,
             }
         }
       else if (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0
-               && PACKET_TYPE_IPMI_SESSION_PACKET (pkt))
+               && IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET (pkt))
         {
           if (ipmi_dump_rmcpplus_packet (STDERR_FILENO,
                                          ip->ic->hostname,
@@ -335,7 +335,7 @@ ipmipower_packet_dump (ipmipower_powercmd_t ip,
             }
         }
       else /* cmd_args.common.driver_type == IPMI_DEVICE_LAN
-	      && PACKET_TYPE_IPMI_SESSION_PACKET (pkt))
+	      && IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET (pkt))
 	   */
         {
           if (ipmi_dump_lan_packet (STDERR_FILENO,
@@ -356,7 +356,7 @@ ipmipower_packet_dump (ipmipower_powercmd_t ip,
 
 int
 ipmipower_packet_store (ipmipower_powercmd_t ip,
-                        packet_type_t pkt,
+                        ipmipower_packet_type_t pkt,
                         const void *buf,
                         unsigned int buflen)
 {
@@ -366,7 +366,7 @@ ipmipower_packet_store (ipmipower_powercmd_t ip,
   assert (ip);
   assert (buf);
   assert (buflen);
-  assert (PACKET_TYPE_RS (pkt));
+  assert (IPMIPOWER_PACKET_TYPE_RS (pkt));
 
   obj = ipmipower_packet_cmd_obj (ip, pkt);
 
@@ -416,7 +416,7 @@ ipmipower_packet_store (ipmipower_powercmd_t ip,
       exit (1);
     }
 
-  if (PACKET_TYPE_IPMI_1_5_SETUP_RS (pkt)
+  if (IPMIPOWER_PACKET_TYPE_IPMI_1_5_SETUP_RS (pkt)
       || cmd_args.common.driver_type == IPMI_DEVICE_LAN)
     {
       if ((rv = unassemble_ipmi_lan_pkt (buf,
@@ -434,7 +434,7 @@ ipmipower_packet_store (ipmipower_powercmd_t ip,
     }
   else
     {
-      if (PACKET_TYPE_IPMI_2_0_SETUP_RS (pkt))
+      if (IPMIPOWER_PACKET_TYPE_IPMI_2_0_SETUP_RS (pkt))
         {
           if ((rv = unassemble_ipmi_rmcpplus_pkt (IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE,
                                                   IPMI_INTEGRITY_ALGORITHM_NONE,
@@ -489,7 +489,7 @@ ipmipower_packet_store (ipmipower_powercmd_t ip,
 
 static int
 _ipmi_1_5_packet_create (ipmipower_powercmd_t ip,
-                         packet_type_t pkt,
+                         ipmipower_packet_type_t pkt,
                          uint8_t authentication_type,
                          uint32_t inbound_sequence_number,
                          uint32_t session_id,
@@ -503,7 +503,7 @@ _ipmi_1_5_packet_create (ipmipower_powercmd_t ip,
   int len;
 
   assert (ip);
-  assert (PACKET_TYPE_RQ (pkt));
+  assert (IPMIPOWER_PACKET_TYPE_RQ (pkt));
   assert (fiid_obj_valid (obj_cmd_rq));
   assert (buf);
   assert (buflen);
@@ -568,7 +568,7 @@ _ipmi_1_5_packet_create (ipmipower_powercmd_t ip,
 
 static int
 _ipmi_2_0_packet_create (ipmipower_powercmd_t ip,
-                         packet_type_t pkt,
+                         ipmipower_packet_type_t pkt,
                          uint8_t payload_type,
                          uint8_t payload_authenticated,
                          uint8_t payload_encrypted,
@@ -591,7 +591,7 @@ _ipmi_2_0_packet_create (ipmipower_powercmd_t ip,
   int len;
 
   assert (ip);
-  assert (PACKET_TYPE_RQ (pkt));
+  assert (IPMIPOWER_PACKET_TYPE_RQ (pkt));
   assert (fiid_obj_valid (obj_cmd_rq));
   assert (buf);
   assert (buflen);
@@ -679,7 +679,7 @@ _ipmi_2_0_packet_create (ipmipower_powercmd_t ip,
 
 int
 ipmipower_packet_create (ipmipower_powercmd_t ip,
-                         packet_type_t pkt,
+                         ipmipower_packet_type_t pkt,
                          void *buf,
                          unsigned int buflen)
 {
@@ -706,7 +706,7 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
   int rv = 0;
 
   assert (ip);
-  assert (PACKET_TYPE_RQ (pkt));
+  assert (IPMIPOWER_PACKET_TYPE_RQ (pkt));
   assert (buf);
   assert (buflen);
 
@@ -745,8 +745,8 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
 
   /* Calculate Password */
   if (pkt == ACTIVATE_SESSION_RQ
-      || PACKET_TYPE_IPMI_2_0_SETUP_RQ (pkt) 
-      || PACKET_TYPE_IPMI_SESSION_PACKET_RQ (pkt))
+      || IPMIPOWER_PACKET_TYPE_IPMI_2_0_SETUP_RQ (pkt) 
+      || IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RQ (pkt))
     password = cmd_args.common.password;
   else
     password = NULL;
@@ -766,7 +766,7 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
       session_id = val;
     }
   else if (cmd_args.common.driver_type == IPMI_DEVICE_LAN
-	   && PACKET_TYPE_IPMI_SESSION_PACKET_RQ (pkt))
+	   && IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RQ (pkt))
     {
       if (FIID_OBJ_GET (ip->obj_activate_session_rs,
                         "session_id",
@@ -779,7 +779,7 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
       session_id = val;
     }
   else if (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0
-	   && PACKET_TYPE_IPMI_SESSION_PACKET_RQ (pkt))
+	   && IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RQ (pkt))
     {
       if (FIID_OBJ_GET (ip->obj_open_session_rs,
                         "managed_system_session_id",
@@ -796,7 +796,7 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
 
   /* Calculate Sequence Number */
   if (cmd_args.common.driver_type == IPMI_DEVICE_LAN
-      && PACKET_TYPE_IPMI_SESSION_PACKET_RQ (pkt))
+      && IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RQ (pkt))
     {
       uint32_t initial_inbound_sequence_number;
 
@@ -813,7 +813,7 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
       sequence_number = initial_inbound_sequence_number + ip->session_inbound_count;
     }
   else if (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0
-	   && PACKET_TYPE_IPMI_SESSION_PACKET_RQ (pkt))
+	   && IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RQ (pkt))
     sequence_number = ip->session_sequence_number;
   else
     sequence_number = 0;
@@ -838,7 +838,7 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
   if (pkt == ACTIVATE_SESSION_RQ)
     authentication_type = cmd_args.common.authentication_type;
   else if (cmd_args.common.driver_type == IPMI_DEVICE_LAN
-	   && PACKET_TYPE_IPMI_SESSION_PACKET_RQ (pkt))
+	   && IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RQ (pkt))
     {
       if (!ip->permsgauth_enabled)
         authentication_type = IPMI_AUTHENTICATION_TYPE_NONE;
@@ -882,7 +882,7 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
         }
 
       /* Setup authentication/integrity/confidentiality keys */
-      if (PACKET_TYPE_IPMI_2_0_SETUP_RQ (pkt))
+      if (IPMIPOWER_PACKET_TYPE_IPMI_2_0_SETUP_RQ (pkt))
         {
           authentication_algorithm = IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE;
           integrity_algorithm = IPMI_INTEGRITY_ALGORITHM_NONE;
@@ -892,7 +892,7 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
           confidentiality_key = NULL;
           confidentiality_key_len = 0;
         }
-      else /* PACKET_TYPE_IPMI_SESSION_PACKET_RQ (pkt) */
+      else /* IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RQ (pkt) */
         {
           authentication_algorithm = ip->authentication_algorithm;
           integrity_algorithm = ip->integrity_algorithm;
@@ -904,14 +904,14 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
         }
 
       /* Calculate Payload Authenticated */
-      if (PACKET_TYPE_IPMI_2_0_SETUP_RQ (pkt)
+      if (IPMIPOWER_PACKET_TYPE_IPMI_2_0_SETUP_RQ (pkt)
           || integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE)
         payload_authenticated = IPMI_PAYLOAD_FLAG_UNAUTHENTICATED;
       else
         payload_authenticated = IPMI_PAYLOAD_FLAG_AUTHENTICATED;
 
       /* Calculate Payload Encrypted */
-      if (PACKET_TYPE_IPMI_2_0_SETUP_RQ (pkt)
+      if (IPMIPOWER_PACKET_TYPE_IPMI_2_0_SETUP_RQ (pkt)
           || confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_NONE)
         payload_encrypted = IPMI_PAYLOAD_FLAG_UNENCRYPTED;
       else
@@ -1124,24 +1124,24 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
     {
       uint8_t command = 0;
 
-      assert (ip->cmd == POWER_CMD_POWER_OFF
-              || ip->cmd == POWER_CMD_POWER_ON
-              || ip->cmd == POWER_CMD_POWER_CYCLE
-              || ip->cmd == POWER_CMD_POWER_RESET
-              || ip->cmd == POWER_CMD_PULSE_DIAGNOSTIC_INTERRUPT
-              || ip->cmd == POWER_CMD_SOFT_SHUTDOWN_OS);
+      assert (ip->cmd == IPMIPOWER_POWER_CMD_POWER_OFF
+              || ip->cmd == IPMIPOWER_POWER_CMD_POWER_ON
+              || ip->cmd == IPMIPOWER_POWER_CMD_POWER_CYCLE
+              || ip->cmd == IPMIPOWER_POWER_CMD_POWER_RESET
+              || ip->cmd == IPMIPOWER_POWER_CMD_PULSE_DIAGNOSTIC_INTERRUPT
+              || ip->cmd == IPMIPOWER_POWER_CMD_SOFT_SHUTDOWN_OS);
 
-      if (ip->cmd == POWER_CMD_POWER_OFF)
+      if (ip->cmd == IPMIPOWER_POWER_CMD_POWER_OFF)
         command = IPMI_CHASSIS_CONTROL_POWER_DOWN;
-      else if (ip->cmd == POWER_CMD_POWER_ON)
+      else if (ip->cmd == IPMIPOWER_POWER_CMD_POWER_ON)
         command = IPMI_CHASSIS_CONTROL_POWER_UP;
-      else if (ip->cmd == POWER_CMD_POWER_CYCLE)
+      else if (ip->cmd == IPMIPOWER_POWER_CMD_POWER_CYCLE)
         command = IPMI_CHASSIS_CONTROL_POWER_CYCLE;
-      else if (ip->cmd == POWER_CMD_POWER_RESET)
+      else if (ip->cmd == IPMIPOWER_POWER_CMD_POWER_RESET)
         command = IPMI_CHASSIS_CONTROL_HARD_RESET;
-      else if (ip->cmd == POWER_CMD_PULSE_DIAGNOSTIC_INTERRUPT)
+      else if (ip->cmd == IPMIPOWER_POWER_CMD_PULSE_DIAGNOSTIC_INTERRUPT)
         command = IPMI_CHASSIS_CONTROL_PULSE_DIAGNOSTIC_INTERRUPT;
-      else if (ip->cmd == POWER_CMD_SOFT_SHUTDOWN_OS)
+      else if (ip->cmd == IPMIPOWER_POWER_CMD_SOFT_SHUTDOWN_OS)
         command = IPMI_CHASSIS_CONTROL_INITIATE_SOFT_SHUTDOWN;
 
       if (fill_cmd_chassis_control (command, ip->obj_chassis_control_rq) < 0)
@@ -1158,10 +1158,10 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
       uint8_t *identify_interval_ptr = NULL;
       uint8_t *force_identify_ptr = NULL;
 
-      assert (ip->cmd == POWER_CMD_IDENTIFY_ON
-              || ip->cmd == POWER_CMD_IDENTIFY_OFF);
+      assert (ip->cmd == IPMIPOWER_POWER_CMD_IDENTIFY_ON
+              || ip->cmd == IPMIPOWER_POWER_CMD_IDENTIFY_OFF);
 
-      if (ip->cmd == POWER_CMD_IDENTIFY_ON)
+      if (ip->cmd == IPMIPOWER_POWER_CMD_IDENTIFY_ON)
         {
           /* must pass interval for force to be taken */
           identify_interval = 0xFF;
@@ -1261,9 +1261,9 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
     }
 
   /* Construct packets */
-  if (PACKET_TYPE_IPMI_1_5_SETUP_RQ (pkt)
+  if (IPMIPOWER_PACKET_TYPE_IPMI_1_5_SETUP_RQ (pkt)
       || (cmd_args.common.driver_type == IPMI_DEVICE_LAN
-	  && PACKET_TYPE_IPMI_SESSION_PACKET_RQ (pkt)))
+	  && IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RQ (pkt)))
     rv = _ipmi_1_5_packet_create (ip,
                                   pkt,
                                   authentication_type,
@@ -1275,9 +1275,9 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
                                   obj_cmd_rq,
                                   buf,
                                   buflen);
-  else if (PACKET_TYPE_IPMI_2_0_SETUP_RQ (pkt)
+  else if (IPMIPOWER_PACKET_TYPE_IPMI_2_0_SETUP_RQ (pkt)
            || (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0
-	       && PACKET_TYPE_IPMI_SESSION_PACKET_RQ (pkt)))
+	       && IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RQ (pkt)))
     rv = _ipmi_2_0_packet_create (ip,
                                   pkt,
                                   payload_type,
@@ -1308,17 +1308,17 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
   return (rv);
 }
 
-msg_type_t
-ipmipower_packet_errmsg (ipmipower_powercmd_t ip, packet_type_t pkt)
+ipmipower_msg_type_t
+ipmipower_packet_errmsg (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
 {
   fiid_obj_t obj_cmd;
 
   assert (ip);
-  assert (PACKET_TYPE_RS (pkt));
+  assert (IPMIPOWER_PACKET_TYPE_RS (pkt));
 
   obj_cmd = ipmipower_packet_cmd_obj (ip, pkt);
 
-  if (PACKET_TYPE_IPMI_2_0_SETUP_RS (pkt))
+  if (IPMIPOWER_PACKET_TYPE_IPMI_2_0_SETUP_RS (pkt))
     {
       uint8_t rmcpplus_status_code;
       uint64_t val;
@@ -1361,14 +1361,14 @@ ipmipower_packet_errmsg (ipmipower_powercmd_t ip, packet_type_t pkt)
         }
       else if (rmcpplus_status_code == RMCPPLUS_STATUS_INSUFFICIENT_RESOURCES_TO_CREATE_A_SESSION
                || rmcpplus_status_code == RMCPPLUS_STATUS_INSUFFICIENT_RESOURCES_TO_CREATE_A_SESSION_AT_THE_REQUESTED_TIME)
-        return (MSG_TYPE_BMC_BUSY);
+        return (IPMIPOWER_MSG_TYPE_BMC_BUSY);
       else if (rmcpplus_status_code == RMCPPLUS_STATUS_UNAUTHORIZED_ROLE_OR_PRIVILEGE_LEVEL_REQUESTED
 	       || rmcpplus_status_code == RMCPPLUS_STATUS_INVALID_ROLE)
-        return (MSG_TYPE_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED);
+        return (IPMIPOWER_MSG_TYPE_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED);
       else if (rmcpplus_status_code == RMCPPLUS_STATUS_UNAUTHORIZED_NAME)
-        return (MSG_TYPE_USERNAME_INVALID);
+        return (IPMIPOWER_MSG_TYPE_USERNAME_INVALID);
       else if (rmcpplus_status_code == RMCPPLUS_STATUS_NO_CIPHER_SUITE_MATCH_WITH_PROPOSED_SECURITY_ALGORITHMS)
-        return (MSG_TYPE_CIPHER_SUITE_ID_UNAVAILABLE);
+        return (IPMIPOWER_MSG_TYPE_CIPHER_SUITE_ID_UNAVAILABLE);
     }
   else
     {
@@ -1394,34 +1394,34 @@ ipmipower_packet_errmsg (ipmipower_powercmd_t ip, packet_type_t pkt)
       else if (pkt == AUTHENTICATION_CAPABILITIES_RS
                && cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0
                && comp_code == IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST)
-        return (MSG_TYPE_IPMI_2_0_UNAVAILABLE);
+        return (IPMIPOWER_MSG_TYPE_IPMI_2_0_UNAVAILABLE);
       else if (pkt == GET_SESSION_CHALLENGE_RS
                && (comp_code == IPMI_COMP_CODE_GET_SESSION_CHALLENGE_INVALID_USERNAME
                    || comp_code == IPMI_COMP_CODE_GET_SESSION_CHALLENGE_NULL_USERNAME_NOT_ENABLED))
-        return (MSG_TYPE_USERNAME_INVALID);
+        return (IPMIPOWER_MSG_TYPE_USERNAME_INVALID);
       else if (pkt == ACTIVATE_SESSION_RS
                && comp_code == IPMI_COMP_CODE_ACTIVATE_SESSION_EXCEEDS_PRIVILEGE_LEVEL)
-        return (MSG_TYPE_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED);
+        return (IPMIPOWER_MSG_TYPE_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED);
       else if (pkt == ACTIVATE_SESSION_RS
                && (comp_code == IPMI_COMP_CODE_ACTIVATE_SESSION_NO_SESSION_SLOT_AVAILABLE
                    || comp_code == IPMI_COMP_CODE_ACTIVATE_SESSION_NO_SLOT_AVAILABLE_FOR_GIVEN_USER
                    || comp_code == IPMI_COMP_CODE_ACTIVATE_SESSION_NO_SLOT_AVAILABLE_TO_SUPPORT_USER))
-        return (MSG_TYPE_BMC_BUSY);
+        return (IPMIPOWER_MSG_TYPE_BMC_BUSY);
       else if (pkt == SET_SESSION_PRIVILEGE_LEVEL_RS
                && (comp_code == IPMI_COMP_CODE_SET_SESSION_PRIVILEGE_LEVEL_REQUESTED_LEVEL_NOT_AVAILABLE_FOR_USER
                    || comp_code == IPMI_COMP_CODE_SET_SESSION_PRIVILEGE_LEVEL_REQUESTED_LEVEL_EXCEEDS_USER_PRIVILEGE_LIMIT
                    || comp_code == IPMI_COMP_CODE_SET_SESSION_PRIVILEGE_LEVEL_CANNOT_DISABLE_USER_LEVEL_AUTHENTICATION))
-        return (MSG_TYPE_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED);
+        return (IPMIPOWER_MSG_TYPE_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED);
 #if 0
       /* Should not reach this point, should be handled by other code */
       else if (pkt == CHASSIS_CONTROL_RS
                && comp_code == IPMI_COMP_CODE_INSUFFICIENT_PRIVILEGE_LEVEL)
-        return (MSG_TYPE_PRIVILEGE_LEVEL_INSUFFICIENT);
+        return (IPMIPOWER_MSG_TYPE_PRIVILEGE_LEVEL_INSUFFICIENT);
 #endif
       else if (pkt == CHASSIS_CONTROL_RS
                && comp_code == IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED)
-        return (MSG_TYPE_OPERATION_INVALID);
+        return (IPMIPOWER_MSG_TYPE_OPERATION_INVALID);
     }
 
-  return (MSG_TYPE_BMC_ERROR);
+  return (IPMIPOWER_MSG_TYPE_BMC_ERROR);
 }

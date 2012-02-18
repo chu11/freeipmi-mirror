@@ -29,9 +29,11 @@
 
 #include "ipmipower.h"
 
-fiid_field_t *ipmipower_packet_cmd_template (ipmipower_powercmd_t ip, packet_type_t pkt);
+fiid_field_t *ipmipower_packet_cmd_template (ipmipower_powercmd_t ip,
+					     ipmipower_packet_type_t pkt);
 
-fiid_obj_t ipmipower_packet_cmd_obj (ipmipower_powercmd_t ip, packet_type_t pkt);
+fiid_obj_t ipmipower_packet_cmd_obj (ipmipower_powercmd_t ip,
+				     ipmipower_packet_type_t pkt);
 
 /* ipmipower_packet_store
  * - Store pkt into ipmipower_powercmd_t structure
@@ -40,12 +42,12 @@ fiid_obj_t ipmipower_packet_cmd_obj (ipmipower_powercmd_t ip, packet_type_t pkt)
  * - Returns 1 if packet unparsed properly, 0 if not
  */
 int ipmipower_packet_store (ipmipower_powercmd_t ip,
-                            packet_type_t pkt,
+                            ipmipower_packet_type_t pkt,
                             const void *buf,
                             unsigned int buflen);
 
 void ipmipower_packet_dump (ipmipower_powercmd_t ip,
-                            packet_type_t pkt,
+                            ipmipower_packet_type_t pkt,
                             const void *buf,
                             unsigned int buflen);
 
@@ -55,7 +57,7 @@ void ipmipower_packet_dump (ipmipower_powercmd_t ip,
  * - Returns length of packet stored in buf
  */
 int ipmipower_packet_create (ipmipower_powercmd_t ip,
-                             packet_type_t pkt,
+                             ipmipower_packet_type_t pkt,
                              void *buf,
                              unsigned int buflen);
 
@@ -64,6 +66,7 @@ int ipmipower_packet_create (ipmipower_powercmd_t ip,
  * - Only works with response packet types
  * Returns message error code for appropriate error message
  */
-msg_type_t ipmipower_packet_errmsg (ipmipower_powercmd_t ip, packet_type_t pkt);
+ipmipower_msg_type_t ipmipower_packet_errmsg (ipmipower_powercmd_t ip,
+					      ipmipower_packet_type_t pkt);
 
 #endif /* _IPMIPOWER_PACKETS_H */

@@ -53,19 +53,19 @@ extern struct ipmipower_arguments cmd_args;
 struct oem_power_type_data oem_power_type_data[] =
   { 
     /*
-     * OEM_POWER_TYPE_NONE
+     * IPMIPOWER_OEM_POWER_TYPE_NONE
      */
     {
       "none",
-      OEM_POWER_TYPE_SUPPORT_ALL,
+      IPMIPOWER_OEM_POWER_TYPE_SUPPORT_ALL,
     },
 
     /*
-     * OEM_POWER_TYPE_C410X - supports off, on, status
+     * IPMIPOWER_OEM_POWER_TYPE_C410X - supports off, on, status
      */
     {
       "C410x",
-      OEM_POWER_TYPE_SUPPORT_OFF | OEM_POWER_TYPE_SUPPORT_ON | OEM_POWER_TYPE_SUPPORT_STATUS,
+      IPMIPOWER_OEM_POWER_TYPE_SUPPORT_OFF | IPMIPOWER_OEM_POWER_TYPE_SUPPORT_ON | IPMIPOWER_OEM_POWER_TYPE_SUPPORT_STATUS,
     },
 
     {
@@ -116,34 +116,34 @@ fiid_template_t tmpl_cmd_c410x_slot_power_control_rs =
   };
 
 static int
-_power_cmd_to_oem_power_type_support (power_cmd_t cmd)
+_ipmipower_power_cmd_to_oem_power_type_support (ipmipower_power_cmd_t cmd)
 {
-  assert (POWER_CMD_VALID (cmd));
+  assert (IPMIPOWER_POWER_CMD_VALID (cmd));
 
   switch (cmd)
     {
-    case POWER_CMD_POWER_OFF:
-      return (OEM_POWER_TYPE_SUPPORT_OFF);
-    case POWER_CMD_POWER_ON:
-      return (OEM_POWER_TYPE_SUPPORT_ON);
-    case POWER_CMD_POWER_CYCLE:
-      return (OEM_POWER_TYPE_SUPPORT_CYCLE);
-    case POWER_CMD_POWER_RESET:
-      return (OEM_POWER_TYPE_SUPPORT_RESET);
-    case POWER_CMD_POWER_STATUS:
-      return (OEM_POWER_TYPE_SUPPORT_STATUS);
-    case POWER_CMD_PULSE_DIAGNOSTIC_INTERRUPT:
-      return (OEM_POWER_TYPE_SUPPORT_DIAGNOSTIC_INTERRUPT);
-    case POWER_CMD_SOFT_SHUTDOWN_OS:
-      return (OEM_POWER_TYPE_SUPPORT_SOFT_SHUTDOWN_OS);
-    case POWER_CMD_IDENTIFY_ON:
-      return (OEM_POWER_TYPE_SUPPORT_IDENTIFY_ON);
-    case POWER_CMD_IDENTIFY_OFF:
-      return (OEM_POWER_TYPE_SUPPORT_IDENTIFY_OFF);
-    case POWER_CMD_IDENTIFY_STATUS:
-      return (OEM_POWER_TYPE_SUPPORT_IDENTIFY_STATUS);
+    case IPMIPOWER_POWER_CMD_POWER_OFF:
+      return (IPMIPOWER_OEM_POWER_TYPE_SUPPORT_OFF);
+    case IPMIPOWER_POWER_CMD_POWER_ON:
+      return (IPMIPOWER_OEM_POWER_TYPE_SUPPORT_ON);
+    case IPMIPOWER_POWER_CMD_POWER_CYCLE:
+      return (IPMIPOWER_OEM_POWER_TYPE_SUPPORT_CYCLE);
+    case IPMIPOWER_POWER_CMD_POWER_RESET:
+      return (IPMIPOWER_OEM_POWER_TYPE_SUPPORT_RESET);
+    case IPMIPOWER_POWER_CMD_POWER_STATUS:
+      return (IPMIPOWER_OEM_POWER_TYPE_SUPPORT_STATUS);
+    case IPMIPOWER_POWER_CMD_PULSE_DIAGNOSTIC_INTERRUPT:
+      return (IPMIPOWER_OEM_POWER_TYPE_SUPPORT_DIAGNOSTIC_INTERRUPT);
+    case IPMIPOWER_POWER_CMD_SOFT_SHUTDOWN_OS:
+      return (IPMIPOWER_OEM_POWER_TYPE_SUPPORT_SOFT_SHUTDOWN_OS);
+    case IPMIPOWER_POWER_CMD_IDENTIFY_ON:
+      return (IPMIPOWER_OEM_POWER_TYPE_SUPPORT_IDENTIFY_ON);
+    case IPMIPOWER_POWER_CMD_IDENTIFY_OFF:
+      return (IPMIPOWER_OEM_POWER_TYPE_SUPPORT_IDENTIFY_OFF);
+    case IPMIPOWER_POWER_CMD_IDENTIFY_STATUS:
+      return (IPMIPOWER_OEM_POWER_TYPE_SUPPORT_IDENTIFY_STATUS);
     default:
-      IPMIPOWER_ERROR (("_power_cmd_to_oem_power_type_support: invalid power cmd: %d", cmd));
+      IPMIPOWER_ERROR (("_ipmipower_power_cmd_to_oem_power_type_support: invalid power cmd: %d", cmd));
       exit (1);
     }
 
@@ -151,7 +151,7 @@ _power_cmd_to_oem_power_type_support (power_cmd_t cmd)
 }
 
 int
-ipmipower_oem_power_cmd_check_support_and_privilege (power_cmd_t cmd,
+ipmipower_oem_power_cmd_check_support_and_privilege (ipmipower_power_cmd_t cmd,
 						     char *errbuf,
 						     unsigned int errbuflen)
 {
@@ -159,11 +159,11 @@ ipmipower_oem_power_cmd_check_support_and_privilege (power_cmd_t cmd,
   char *power_cmd_str;
   int rv = -1;
   
-  assert (POWER_CMD_VALID (cmd));
+  assert (IPMIPOWER_POWER_CMD_VALID (cmd));
   /* errbuf & errbuflen can be NULL/0 if doing an assert check */
-  assert (cmd_args.oem_power_type != OEM_POWER_TYPE_NONE);
+  assert (cmd_args.oem_power_type != IPMIPOWER_OEM_POWER_TYPE_NONE);
 
-  oem_power_type_support_mask = _power_cmd_to_oem_power_type_support (cmd);
+  oem_power_type_support_mask = _ipmipower_power_cmd_to_oem_power_type_support (cmd);
   
   power_cmd_str = ipmipower_power_cmd_to_string (cmd);
   
@@ -179,11 +179,11 @@ ipmipower_oem_power_cmd_check_support_and_privilege (power_cmd_t cmd,
       goto cleanup;
     }
   
-  if (cmd_args.oem_power_type == OEM_POWER_TYPE_C410X)
+  if (cmd_args.oem_power_type == IPMIPOWER_OEM_POWER_TYPE_C410X)
     {
       /* XXX - I'm pretty sure */
-      if ((cmd == POWER_CMD_POWER_OFF
-	   || cmd == POWER_CMD_POWER_ON)
+      if ((cmd == IPMIPOWER_POWER_CMD_POWER_OFF
+	   || cmd == IPMIPOWER_POWER_CMD_POWER_ON)
 	  && (cmd_args.common.privilege_level == IPMI_PRIVILEGE_LEVEL_USER
 	      || cmd_args.common.privilege_level == IPMI_PRIVILEGE_LEVEL_OPERATOR))
 	{
@@ -212,9 +212,9 @@ ipmipower_oem_power_cmd_check_extra_arg (const char *extra_arg,
 
   /* extra_arg can be NULL, user didn't input one */
   /* errbuf & errbuflen can be NULL/0 if doing an assert check */
-  assert (cmd_args.oem_power_type != OEM_POWER_TYPE_NONE);
+  assert (cmd_args.oem_power_type != IPMIPOWER_OEM_POWER_TYPE_NONE);
   
-  if (cmd_args.oem_power_type == OEM_POWER_TYPE_C410X)
+  if (cmd_args.oem_power_type == IPMIPOWER_OEM_POWER_TYPE_C410X)
     {
       char *endptr;
       unsigned int tmp;

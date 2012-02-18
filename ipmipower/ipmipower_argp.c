@@ -151,12 +151,12 @@ void _parse_oem_power_type (struct ipmipower_arguments *cmd_args, const char *oe
   assert (cmd_args);
   assert (oem_power_type_str);
 
-  if (!strcasecmp (oem_power_type_str, OEM_POWER_TYPE_NONE_STR))
-    cmd_args->oem_power_type = OEM_POWER_TYPE_NONE;
-  else if (!strcasecmp (oem_power_type_str, OEM_POWER_TYPE_C410X_STR))
-    cmd_args->oem_power_type = OEM_POWER_TYPE_C410X;
+  if (!strcasecmp (oem_power_type_str, IPMIPOWER_OEM_POWER_TYPE_NONE_STR))
+    cmd_args->oem_power_type = IPMIPOWER_OEM_POWER_TYPE_NONE;
+  else if (!strcasecmp (oem_power_type_str, IPMIPOWER_OEM_POWER_TYPE_C410X_STR))
+    cmd_args->oem_power_type = IPMIPOWER_OEM_POWER_TYPE_C410X;
   else
-    cmd_args->oem_power_type = OEM_POWER_TYPE_INVALID;
+    cmd_args->oem_power_type = IPMIPOWER_OEM_POWER_TYPE_INVALID;
 }
 
 static error_t
@@ -194,25 +194,25 @@ cmdline_parse (int key,
       break;
 #endif /* !NDEBUG */
     case ON_KEY:       /* --on */
-      cmd_args->powercmd = POWER_CMD_POWER_ON;
+      cmd_args->powercmd = IPMIPOWER_POWER_CMD_POWER_ON;
       break;
     case OFF_KEY:       /* --off */
-      cmd_args->powercmd = POWER_CMD_POWER_OFF;
+      cmd_args->powercmd = IPMIPOWER_POWER_CMD_POWER_OFF;
       break;
     case CYCLE_KEY:       /* --cycle */
-      cmd_args->powercmd = POWER_CMD_POWER_CYCLE;
+      cmd_args->powercmd = IPMIPOWER_POWER_CMD_POWER_CYCLE;
       break;
     case RESET_KEY:       /* --reset */
-      cmd_args->powercmd = POWER_CMD_POWER_RESET;
+      cmd_args->powercmd = IPMIPOWER_POWER_CMD_POWER_RESET;
       break;
     case STAT_KEY:       /* --stat */
-      cmd_args->powercmd = POWER_CMD_POWER_STATUS;
+      cmd_args->powercmd = IPMIPOWER_POWER_CMD_POWER_STATUS;
       break;
     case PULSE_KEY:       /* --pulse */
-      cmd_args->powercmd = POWER_CMD_PULSE_DIAGNOSTIC_INTERRUPT;
+      cmd_args->powercmd = IPMIPOWER_POWER_CMD_PULSE_DIAGNOSTIC_INTERRUPT;
       break;
     case SOFT_KEY:       /* --soft */
-      cmd_args->powercmd = POWER_CMD_SOFT_SHUTDOWN_OS;
+      cmd_args->powercmd = IPMIPOWER_POWER_CMD_SOFT_SHUTDOWN_OS;
       break;
     case ON_IF_OFF_KEY:       /* --on-if-off */
       cmd_args->on_if_off++;
@@ -394,7 +394,7 @@ _ipmipower_args_validate (struct ipmipower_arguments *cmd_args)
 {
   assert (cmd_args);
 
-  if (!OEM_POWER_TYPE_VALID (cmd_args->oem_power_type))
+  if (!IPMIPOWER_OEM_POWER_TYPE_VALID (cmd_args->oem_power_type))
     {
       fprintf (stderr, "invalid oem power type\n");
       exit (1);
@@ -406,7 +406,7 @@ _ipmipower_args_validate (struct ipmipower_arguments *cmd_args)
       exit (1);
     }
 
-  if (cmd_args->powercmd != POWER_CMD_NONE && !cmd_args->common.hostname)
+  if (cmd_args->powercmd != IPMIPOWER_POWER_CMD_NONE && !cmd_args->common.hostname)
     {
       fprintf (stderr, "must specify target hostname(s) in non-interactive mode\n");
       exit (1);
@@ -445,11 +445,11 @@ ipmipower_argp_parse (int argc, char **argv, struct ipmipower_arguments *cmd_arg
   cmd_args->rmcpdump = 0;
 #endif /* NDEBUG */
 
-  cmd_args->powercmd = POWER_CMD_NONE;
+  cmd_args->powercmd = IPMIPOWER_POWER_CMD_NONE;
   cmd_args->on_if_off = 0;
   cmd_args->wait_until_on = 0;
   cmd_args->wait_until_off = 0;
-  cmd_args->oem_power_type = OEM_POWER_TYPE_NONE;
+  cmd_args->oem_power_type = IPMIPOWER_OEM_POWER_TYPE_NONE;
   cmd_args->retransmission_wait_timeout = 500; /* .5 seconds  */
   cmd_args->retransmission_backoff_count = 8;
   cmd_args->ping_interval = 5000; /* 5 seconds */

@@ -33,7 +33,7 @@ void ipmipower_powercmd_setup ();
 
 void ipmipower_powercmd_cleanup ();
 
-void ipmipower_powercmd_queue (power_cmd_t cmd,
+void ipmipower_powercmd_queue (ipmipower_power_cmd_t cmd,
 			       struct ipmipower_connection *ic,
 			       const char *extra_arg);
 

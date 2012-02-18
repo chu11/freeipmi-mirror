@@ -80,76 +80,69 @@
 
 #define IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH 64
 
-/* power_cmd_t
- * - power control commands
- */
 typedef enum
   {
-    POWER_CMD_NONE                       = 0x00,
-    POWER_CMD_POWER_OFF                  = 0x01,
-    POWER_CMD_POWER_ON                   = 0x02,
-    POWER_CMD_POWER_CYCLE                = 0x03,
-    POWER_CMD_POWER_RESET                = 0x04,
-    POWER_CMD_POWER_STATUS               = 0x05,
-    POWER_CMD_PULSE_DIAGNOSTIC_INTERRUPT = 0x06,
-    POWER_CMD_SOFT_SHUTDOWN_OS           = 0x07,
-    POWER_CMD_IDENTIFY_ON                = 0x08,
-    POWER_CMD_IDENTIFY_OFF               = 0x09,
-    POWER_CMD_IDENTIFY_STATUS            = 0x0A,
-  } power_cmd_t;
+    IPMIPOWER_POWER_CMD_NONE                       = 0x00,
+    IPMIPOWER_POWER_CMD_POWER_OFF                  = 0x01,
+    IPMIPOWER_POWER_CMD_POWER_ON                   = 0x02,
+    IPMIPOWER_POWER_CMD_POWER_CYCLE                = 0x03,
+    IPMIPOWER_POWER_CMD_POWER_RESET                = 0x04,
+    IPMIPOWER_POWER_CMD_POWER_STATUS               = 0x05,
+    IPMIPOWER_POWER_CMD_PULSE_DIAGNOSTIC_INTERRUPT = 0x06,
+    IPMIPOWER_POWER_CMD_SOFT_SHUTDOWN_OS           = 0x07,
+    IPMIPOWER_POWER_CMD_IDENTIFY_ON                = 0x08,
+    IPMIPOWER_POWER_CMD_IDENTIFY_OFF               = 0x09,
+    IPMIPOWER_POWER_CMD_IDENTIFY_STATUS            = 0x0A,
+  } ipmipower_power_cmd_t;
 
-#define POWER_CMD_VALID(__c)             \
-  (((__c) >= POWER_CMD_POWER_OFF         \
-    && (__c) <= POWER_CMD_IDENTIFY_STATUS) ? 1 : 0)
+#define IPMIPOWER_POWER_CMD_VALID(__c)             \
+  (((__c) >= IPMIPOWER_POWER_CMD_POWER_OFF         \
+    && (__c) <= IPMIPOWER_POWER_CMD_IDENTIFY_STATUS) ? 1 : 0)
 
-#define POWER_CMD_REQUIRES_OPERATOR_PRIVILEGE_LEVEL(__c)    \
-  ((__c) == POWER_CMD_POWER_OFF                             \
-   || (__c) == POWER_CMD_POWER_ON                           \
-   || (__c) == POWER_CMD_POWER_CYCLE                        \
-   || (__c) == POWER_CMD_POWER_RESET                        \
-   || (__c) == POWER_CMD_PULSE_DIAGNOSTIC_INTERRUPT         \
-   || (__c) == POWER_CMD_SOFT_SHUTDOWN_OS                   \
-   || (__c) == POWER_CMD_IDENTIFY_ON                        \
-   || (__c) == POWER_CMD_IDENTIFY_OFF)
+#define IPMIPOWER_POWER_CMD_REQUIRES_OPERATOR_PRIVILEGE_LEVEL(__c)    \
+  ((__c) == IPMIPOWER_POWER_CMD_POWER_OFF                             \
+   || (__c) == IPMIPOWER_POWER_CMD_POWER_ON                           \
+   || (__c) == IPMIPOWER_POWER_CMD_POWER_CYCLE                        \
+   || (__c) == IPMIPOWER_POWER_CMD_POWER_RESET                        \
+   || (__c) == IPMIPOWER_POWER_CMD_PULSE_DIAGNOSTIC_INTERRUPT         \
+   || (__c) == IPMIPOWER_POWER_CMD_SOFT_SHUTDOWN_OS                   \
+   || (__c) == IPMIPOWER_POWER_CMD_IDENTIFY_ON                        \
+   || (__c) == IPMIPOWER_POWER_CMD_IDENTIFY_OFF)
 
 typedef enum
   {
-    OEM_POWER_TYPE_NONE    = 0,
-    OEM_POWER_TYPE_C410X   = 1,
-    OEM_POWER_TYPE_INVALID = 255
+    IPMIPOWER_OEM_POWER_TYPE_NONE    = 0,
+    IPMIPOWER_OEM_POWER_TYPE_C410X   = 1,
+    IPMIPOWER_OEM_POWER_TYPE_INVALID = 255
   } oem_power_type_t;
 
-#define OEM_POWER_TYPE_NONE_STR "none"
-#define OEM_POWER_TYPE_C410X_STR "c410x"
+#define IPMIPOWER_OEM_POWER_TYPE_NONE_STR "none"
+#define IPMIPOWER_OEM_POWER_TYPE_C410X_STR "c410x"
 
-#define OEM_POWER_TYPE_VALID(__v)     \
-  (((__v) == OEM_POWER_TYPE_NONE      \
-    || (__v) == OEM_POWER_TYPE_C410X) ? 1 : 0)
+#define IPMIPOWER_OEM_POWER_TYPE_VALID(__v)     \
+  (((__v) == IPMIPOWER_OEM_POWER_TYPE_NONE      \
+    || (__v) == IPMIPOWER_OEM_POWER_TYPE_C410X) ? 1 : 0)
 
-#define OEM_POWER_TYPE_REQUIRES_EXTRA_ARGUMENT(__v) \
-  (((__v) == OEM_POWER_TYPE_C410X) ? 1 : 0)
+#define IPMIPOWER_OEM_POWER_TYPE_REQUIRES_EXTRA_ARGUMENT(__v) \
+  (((__v) == IPMIPOWER_OEM_POWER_TYPE_C410X) ? 1 : 0)
 
-#define OEM_POWER_TYPE_SUPPORT_OFF                  0x0001
-#define OEM_POWER_TYPE_SUPPORT_ON                   0x0002
-#define OEM_POWER_TYPE_SUPPORT_CYCLE                0x0004
-#define OEM_POWER_TYPE_SUPPORT_RESET                0x0008
-#define OEM_POWER_TYPE_SUPPORT_STATUS               0x0010
-#define OEM_POWER_TYPE_SUPPORT_DIAGNOSTIC_INTERRUPT 0x0020
-#define OEM_POWER_TYPE_SUPPORT_SOFT_SHUTDOWN_OS     0x0040
-#define OEM_POWER_TYPE_SUPPORT_IDENTIFY_ON          0x0080
-#define OEM_POWER_TYPE_SUPPORT_IDENTIFY_OFF         0x0100
-#define OEM_POWER_TYPE_SUPPORT_IDENTIFY_STATUS      0x0200
-#define OEM_POWER_TYPE_SUPPORT_ALL                  0xFFFF
+#define IPMIPOWER_OEM_POWER_TYPE_SUPPORT_OFF                  0x0001
+#define IPMIPOWER_OEM_POWER_TYPE_SUPPORT_ON                   0x0002
+#define IPMIPOWER_OEM_POWER_TYPE_SUPPORT_CYCLE                0x0004
+#define IPMIPOWER_OEM_POWER_TYPE_SUPPORT_RESET                0x0008
+#define IPMIPOWER_OEM_POWER_TYPE_SUPPORT_STATUS               0x0010
+#define IPMIPOWER_OEM_POWER_TYPE_SUPPORT_DIAGNOSTIC_INTERRUPT 0x0020
+#define IPMIPOWER_OEM_POWER_TYPE_SUPPORT_SOFT_SHUTDOWN_OS     0x0040
+#define IPMIPOWER_OEM_POWER_TYPE_SUPPORT_IDENTIFY_ON          0x0080
+#define IPMIPOWER_OEM_POWER_TYPE_SUPPORT_IDENTIFY_OFF         0x0100
+#define IPMIPOWER_OEM_POWER_TYPE_SUPPORT_IDENTIFY_STATUS      0x0200
+#define IPMIPOWER_OEM_POWER_TYPE_SUPPORT_ALL                  0xFFFF
 
 struct oem_power_type_data {
   char *name;
   unsigned int supported_operations;
 };
 
-/* packet_type_t
- * - packet types stored internally in an ipmipower_powercmd structure.
- * - Request types are *_RQ, Response types are *_RS
- */
 typedef enum
   {
     AUTHENTICATION_CAPABILITIES_RQ    = 0x101,
@@ -178,174 +171,170 @@ typedef enum
     C410X_SLOT_POWER_CONTROL_RS       = 0x20C,
     CLOSE_SESSION_RQ                  = 0x10D,
     CLOSE_SESSION_RS                  = 0x20D,
-  } packet_type_t;
+  } ipmipower_packet_type_t;
 
-#define PACKET_TYPE_RQ_MASK      0x100
-#define PACKET_TYPE_RS_MASK      0x200
-#define PACKET_TYPE_MIN          0x001
-#define PACKET_TYPE_MAX          0x00D
-#define PACKET_TYPE_PACKET_MASK  0x0FF
+#define IPMIPOWER_PACKET_TYPE_RQ_MASK      0x100
+#define IPMIPOWER_PACKET_TYPE_RS_MASK      0x200
+#define IPMIPOWER_PACKET_TYPE_MIN          0x001
+#define IPMIPOWER_PACKET_TYPE_MAX          0x00D
+#define IPMIPOWER_PACKET_TYPE_PACKET_MASK  0x0FF
 
-#define PACKET_TYPE_PACKET_VALID(__p)                   \
-  (((__p) & PACKET_TYPE_PACKET_MASK) >= PACKET_TYPE_MIN \
-   && ((__p) & PACKET_TYPE_PACKET_MASK) <= PACKET_TYPE_MAX)
+#define IPMIPOWER_PACKET_TYPE_PACKET_VALID(__p)                             \
+  (((__p) & IPMIPOWER_PACKET_TYPE_PACKET_MASK) >= IPMIPOWER_PACKET_TYPE_MIN \
+   && ((__p) & IPMIPOWER_PACKET_TYPE_PACKET_MASK) <= IPMIPOWER_PACKET_TYPE_MAX)
 
-#define PACKET_TYPE_RQ(__p)       \
-  ((((__p) & PACKET_TYPE_RQ_MASK) \
-    && PACKET_TYPE_PACKET_VALID ((__p))) ? 1 : 0)
+#define IPMIPOWER_PACKET_TYPE_RQ(__p)       \
+  ((((__p) & IPMIPOWER_PACKET_TYPE_RQ_MASK) \
+    && IPMIPOWER_PACKET_TYPE_PACKET_VALID ((__p))) ? 1 : 0)
 
-#define PACKET_TYPE_RS(__p)       \
-  ((((__p) & PACKET_TYPE_RS_MASK) \
-    && PACKET_TYPE_PACKET_VALID ((__p))) ? 1 : 0)
+#define IPMIPOWER_PACKET_TYPE_RS(__p)       \
+  ((((__p) & IPMIPOWER_PACKET_TYPE_RS_MASK) \
+    && IPMIPOWER_PACKET_TYPE_PACKET_VALID ((__p))) ? 1 : 0)
 
-#define PACKET_TYPE_VALID(__p) \
-  ((PACKET_TYPE_RQ ((__p))     \
-    || PACKET_TYPE_RS ((__p))) ? 1 : 0)
+#define IPMIPOWER_PACKET_TYPE_VALID(__p) \
+  ((IPMIPOWER_PACKET_TYPE_RQ ((__p))     \
+    || IPMIPOWER_PACKET_TYPE_RS ((__p))) ? 1 : 0)
 
-#define PACKET_TYPE_IPMI_1_5_SETUP(__p)         \
-  ((((__p) == AUTHENTICATION_CAPABILITIES_RQ    \
-     || (__p) == AUTHENTICATION_CAPABILITIES_RS	\
-     || (__p) == GET_SESSION_CHALLENGE_RQ	\
-     || (__p) == GET_SESSION_CHALLENGE_RS	\
-     || (__p) == ACTIVATE_SESSION_RQ		\
+#define IPMIPOWER_PACKET_TYPE_IPMI_1_5_SETUP(__p) \
+  ((((__p) == AUTHENTICATION_CAPABILITIES_RQ      \
+     || (__p) == AUTHENTICATION_CAPABILITIES_RS	  \
+     || (__p) == GET_SESSION_CHALLENGE_RQ	  \
+     || (__p) == GET_SESSION_CHALLENGE_RS	  \
+     || (__p) == ACTIVATE_SESSION_RQ		  \
      || (__p) == ACTIVATE_SESSION_RS)) ? 1 : 0)
 
-#define PACKET_TYPE_IPMI_1_5_SETUP_RQ(__p) \
-  ((PACKET_TYPE_IPMI_1_5_SETUP (__p)	   \
-    && PACKET_TYPE_RQ (__p)) ? 1 : 0)
+#define IPMIPOWER_PACKET_TYPE_IPMI_1_5_SETUP_RQ(__p) \
+  ((IPMIPOWER_PACKET_TYPE_IPMI_1_5_SETUP (__p)	     \
+    && IPMIPOWER_PACKET_TYPE_RQ (__p)) ? 1 : 0)
 
-#define PACKET_TYPE_IPMI_1_5_SETUP_RS(__p) \
-  ((PACKET_TYPE_IPMI_1_5_SETUP (__p)	   \
-    && PACKET_TYPE_RS (__p)) ? 1 : 0)
+#define IPMIPOWER_PACKET_TYPE_IPMI_1_5_SETUP_RS(__p) \
+  ((IPMIPOWER_PACKET_TYPE_IPMI_1_5_SETUP (__p)	     \
+    && IPMIPOWER_PACKET_TYPE_RS (__p)) ? 1 : 0)
 
-#define PACKET_TYPE_IPMI_2_0_SETUP(__p) \
-  ((((__p) == OPEN_SESSION_REQUEST	\
-    || (__p) == OPEN_SESSION_RESPONSE	\
-    || (__p) == RAKP_MESSAGE_1          \
-    || (__p) == RAKP_MESSAGE_2          \
-    || (__p) == RAKP_MESSAGE_3          \
+#define IPMIPOWER_PACKET_TYPE_IPMI_2_0_SETUP(__p) \
+  ((((__p) == OPEN_SESSION_REQUEST	          \
+    || (__p) == OPEN_SESSION_RESPONSE	          \
+    || (__p) == RAKP_MESSAGE_1                    \
+    || (__p) == RAKP_MESSAGE_2                    \
+    || (__p) == RAKP_MESSAGE_3                    \
     || (__p) == RAKP_MESSAGE_4))  ? 1 : 0)
 
-#define PACKET_TYPE_IPMI_2_0_SETUP_RQ(__p) \
-  ((PACKET_TYPE_IPMI_2_0_SETUP (__p)	   \
-    && PACKET_TYPE_RQ (__p)) ? 1 : 0)
+#define IPMIPOWER_PACKET_TYPE_IPMI_2_0_SETUP_RQ(__p) \
+  ((IPMIPOWER_PACKET_TYPE_IPMI_2_0_SETUP (__p)	     \
+    && IPMIPOWER_PACKET_TYPE_RQ (__p)) ? 1 : 0)
 
-#define PACKET_TYPE_IPMI_2_0_SETUP_RS(__p) \
-  ((PACKET_TYPE_IPMI_2_0_SETUP (__p)	   \
-    && PACKET_TYPE_RS (__p)) ? 1 : 0)
+#define IPMIPOWER_PACKET_TYPE_IPMI_2_0_SETUP_RS(__p) \
+  ((IPMIPOWER_PACKET_TYPE_IPMI_2_0_SETUP (__p)	     \
+    && IPMIPOWER_PACKET_TYPE_RS (__p)) ? 1 : 0)
 
-#define PACKET_TYPE_IPMI_SESSION_PACKET(__p)    \
-  ((((__p) == SET_SESSION_PRIVILEGE_LEVEL_RQ    \
-     || (__p) == SET_SESSION_PRIVILEGE_LEVEL_RS	\
-     || (__p) == GET_CHASSIS_STATUS_RQ		\
-     || (__p) == GET_CHASSIS_STATUS_RS		\
-     || (__p) == CHASSIS_CONTROL_RQ		\
-     || (__p) == CHASSIS_CONTROL_RS		\
-     || (__p) == CHASSIS_IDENTIFY_RQ		\
-     || (__p) == CHASSIS_IDENTIFY_RS		\
-     || (__p) == C410X_GET_SENSOR_READING_RQ	\
-     || (__p) == C410X_GET_SENSOR_READING_RS	\
-     || (__p) == C410X_SLOT_POWER_CONTROL_RQ	\
-     || (__p) == C410X_SLOT_POWER_CONTROL_RS	\
-     || (__p) == CLOSE_SESSION_RQ		\
+#define IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET(__p) \
+  ((((__p) == SET_SESSION_PRIVILEGE_LEVEL_RQ           \
+     || (__p) == SET_SESSION_PRIVILEGE_LEVEL_RS	       \
+     || (__p) == GET_CHASSIS_STATUS_RQ		       \
+     || (__p) == GET_CHASSIS_STATUS_RS		       \
+     || (__p) == CHASSIS_CONTROL_RQ		       \
+     || (__p) == CHASSIS_CONTROL_RS		       \
+     || (__p) == CHASSIS_IDENTIFY_RQ		       \
+     || (__p) == CHASSIS_IDENTIFY_RS		       \
+     || (__p) == C410X_GET_SENSOR_READING_RQ	       \
+     || (__p) == C410X_GET_SENSOR_READING_RS	       \
+     || (__p) == C410X_SLOT_POWER_CONTROL_RQ	       \
+     || (__p) == C410X_SLOT_POWER_CONTROL_RS	       \
+     || (__p) == CLOSE_SESSION_RQ		       \
      || (__p) == CLOSE_SESSION_RS)) ? 1 : 0)
 
-#define PACKET_TYPE_IPMI_SESSION_PACKET_RQ(__p) \
-  ((PACKET_TYPE_IPMI_SESSION_PACKET (__p)	\
-    && PACKET_TYPE_RQ (__p)) ? 1 : 0)
+#define IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RQ(__p) \
+  ((IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET (__p)	  \
+    && IPMIPOWER_PACKET_TYPE_RQ (__p)) ? 1 : 0)
 
-#define PACKET_TYPE_IPMI_SESSION_PACKET_RS(__p) \
-  ((PACKET_TYPE_IPMI_SESSION_PACKET (__p)	\
-    && PACKET_TYPE_RS (__p)) ? 1 : 0)
+#define IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RS(__p) \
+  ((IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET (__p)  	  \
+    && IPMIPOWER_PACKET_TYPE_RS (__p)) ? 1 : 0)
 
-/* Protocol States */
 typedef enum
   {
-    PROTOCOL_STATE_START                                = 0x00,
-    PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_SENT     = 0x01,
-    PROTOCOL_STATE_GET_SESSION_CHALLENGE_SENT           = 0x02,
-    PROTOCOL_STATE_ACTIVATE_SESSION_SENT                = 0x03,
-    PROTOCOL_STATE_OPEN_SESSION_REQUEST_SENT            = 0x04,
-    PROTOCOL_STATE_RAKP_MESSAGE_1_SENT                  = 0x05,
-    PROTOCOL_STATE_RAKP_MESSAGE_3_SENT                  = 0x06,
-    PROTOCOL_STATE_SET_SESSION_PRIVILEGE_LEVEL_SENT     = 0x07,
-    PROTOCOL_STATE_GET_CHASSIS_STATUS_SENT              = 0x08,
-    PROTOCOL_STATE_CHASSIS_CONTROL_SENT                 = 0x09,
-    PROTOCOL_STATE_CHASSIS_IDENTIFY_SENT                = 0x0A,
-    PROTOCOL_STATE_C410X_GET_SENSOR_READING_SENT        = 0x0B,
-    PROTOCOL_STATE_C410X_SLOT_POWER_CONTROL_SENT        = 0x0C,
-    PROTOCOL_STATE_CLOSE_SESSION_SENT                   = 0x0D,
-    PROTOCOL_STATE_END                                  = 0x0E,
-  } protocol_state_t;
+    IPMIPOWER_PROTOCOL_STATE_START                                = 0x00,
+    IPMIPOWER_PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_SENT     = 0x01,
+    IPMIPOWER_PROTOCOL_STATE_GET_SESSION_CHALLENGE_SENT           = 0x02,
+    IPMIPOWER_PROTOCOL_STATE_ACTIVATE_SESSION_SENT                = 0x03,
+    IPMIPOWER_PROTOCOL_STATE_OPEN_SESSION_REQUEST_SENT            = 0x04,
+    IPMIPOWER_PROTOCOL_STATE_RAKP_MESSAGE_1_SENT                  = 0x05,
+    IPMIPOWER_PROTOCOL_STATE_RAKP_MESSAGE_3_SENT                  = 0x06,
+    IPMIPOWER_PROTOCOL_STATE_SET_SESSION_PRIVILEGE_LEVEL_SENT     = 0x07,
+    IPMIPOWER_PROTOCOL_STATE_GET_CHASSIS_STATUS_SENT              = 0x08,
+    IPMIPOWER_PROTOCOL_STATE_CHASSIS_CONTROL_SENT                 = 0x09,
+    IPMIPOWER_PROTOCOL_STATE_CHASSIS_IDENTIFY_SENT                = 0x0A,
+    IPMIPOWER_PROTOCOL_STATE_C410X_GET_SENSOR_READING_SENT        = 0x0B,
+    IPMIPOWER_PROTOCOL_STATE_C410X_SLOT_POWER_CONTROL_SENT        = 0x0C,
+    IPMIPOWER_PROTOCOL_STATE_CLOSE_SESSION_SENT                   = 0x0D,
+    IPMIPOWER_PROTOCOL_STATE_END                                  = 0x0E,
+  } ipmipower_protocol_state_t;
 
-#define PROTOCOL_STATE_VALID(__s)    \
-  (((__s) >= PROTOCOL_STATE_START    \
-    && (__s) <= PROTOCOL_STATE_END) ? 1 : 0)
+#define IPMIPOWER_PROTOCOL_STATE_VALID(__s)    \
+  (((__s) >= IPMIPOWER_PROTOCOL_STATE_START    \
+    && (__s) <= IPMIPOWER_PROTOCOL_STATE_END) ? 1 : 0)
 
-/* Discovery States */
 typedef enum
   {
-    STATE_DISCOVERED     = 0x01,
-    STATE_UNDISCOVERED   = 0x02,
-    STATE_BADCONNECTION  = 0x03,
-  } discover_state_t;
+    IPMIPOWER_DISCOVER_STATE_DISCOVERED     = 0x01,
+    IPMIPOWER_DISCOVER_STATE_UNDISCOVERED   = 0x02,
+    IPMIPOWER_DISCOVER_STATE_BADCONNECTION  = 0x03,
+  } ipmipower_discover_state_t;
 
-#define DISCOVER_STATE_VALID(__s)    \
-  (((__s) >= STATE_DISCOVERED	     \
-    && (__s) <= STATE_BADCONNECTION) ? 1 : 0)
+#define IPMIPOWER_DISCOVER_STATE_VALID(__s)      \
+  (((__s) >= IPMIPOWER_DISCOVER_STATE_DISCOVERED \
+    && (__s) <= IPMIPOWER_DISCOVER_STATE_BADCONNECTION) ? 1 : 0)
 
-/* Link States */
 typedef enum
   {
-    LINK_GOOD = 0x01,
-    LINK_BAD  = 0x02,
-  } link_state_t;
+    IPMIPOWER_LINK_STATE_GOOD = 0x01,
+    IPMIPOWER_LINK_STATE_BAD  = 0x02,
+  } ipmipower_link_state_t;
 
-#define LINK_STATE_VALID(__s)    \
-  (((__s) >= LINK_GOOD	         \
-   && (__s) <= LINK_BAD) ? 1 : 0)
+#define IPMIPOWER_LINK_STATE_VALID(__s) \
+  (((__s) >= IPMIPOWER_LINK_STATE_GOOD	\
+   && (__s) <= IPMIPOWER_LINK_STATE_BAD) ? 1 : 0)
 
-/* Msg Types */
 typedef enum
   {
-    MSG_TYPE_ON                                 =  0,
-    MSG_TYPE_OFF                                =  1,
-    MSG_TYPE_OK                                 =  2,
-    MSG_TYPE_UNKNOWN                            =  3,
-    MSG_TYPE_USERNAME_INVALID                   =  4,
-    MSG_TYPE_PASSWORD_INVALID                   =  5,
-    MSG_TYPE_PASSWORD_LENGTH_INVALID            =  6,
-    MSG_TYPE_K_G_INVALID                        =  7,
-    MSG_TYPE_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED =  8,
-    MSG_TYPE_OPERATION_INVALID                  =  9,
-    MSG_TYPE_AUTHENTICATION_TYPE_UNAVAILABLE    = 10,
-    MSG_TYPE_CIPHER_SUITE_ID_UNAVAILABLE        = 11,
-    MSG_TYPE_PASSWORD_VERIFICATION_TIMEOUT      = 12,
-    MSG_TYPE_CONNECTION_TIMEOUT                 = 13,
-    MSG_TYPE_SESSION_TIMEOUT                    = 14,
-    MSG_TYPE_NOTDISCOVERED                      = 15,
-    MSG_TYPE_BADCONNECTION                      = 16,
-    MSG_TYPE_HOSTNAME_INVALID                   = 17,
-    MSG_TYPE_UNCONFIGURED_HOSTNAME              = 18,
-    MSG_TYPE_RESOURCES                          = 19,
-    MSG_TYPE_IPMI_2_0_UNAVAILABLE               = 20,
-    MSG_TYPE_INVALID_ARGUMENT_FOR_OEM_EXTENSION = 21,
-    MSG_TYPE_BMC_BUSY                           = 22,
-    MSG_TYPE_BMC_ERROR                          = 23,
-  } msg_type_t;
+    IPMIPOWER_MSG_TYPE_ON                                 =  0,
+    IPMIPOWER_MSG_TYPE_OFF                                =  1,
+    IPMIPOWER_MSG_TYPE_OK                                 =  2,
+    IPMIPOWER_MSG_TYPE_UNKNOWN                            =  3,
+    IPMIPOWER_MSG_TYPE_USERNAME_INVALID                   =  4,
+    IPMIPOWER_MSG_TYPE_PASSWORD_INVALID                   =  5,
+    IPMIPOWER_MSG_TYPE_PASSWORD_LENGTH_INVALID            =  6,
+    IPMIPOWER_MSG_TYPE_K_G_INVALID                        =  7,
+    IPMIPOWER_MSG_TYPE_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED =  8,
+    IPMIPOWER_MSG_TYPE_OPERATION_INVALID                  =  9,
+    IPMIPOWER_MSG_TYPE_AUTHENTICATION_TYPE_UNAVAILABLE    = 10,
+    IPMIPOWER_MSG_TYPE_CIPHER_SUITE_ID_UNAVAILABLE        = 11,
+    IPMIPOWER_MSG_TYPE_PASSWORD_VERIFICATION_TIMEOUT      = 12,
+    IPMIPOWER_MSG_TYPE_CONNECTION_TIMEOUT                 = 13,
+    IPMIPOWER_MSG_TYPE_SESSION_TIMEOUT                    = 14,
+    IPMIPOWER_MSG_TYPE_NOTDISCOVERED                      = 15,
+    IPMIPOWER_MSG_TYPE_BADCONNECTION                      = 16,
+    IPMIPOWER_MSG_TYPE_HOSTNAME_INVALID                   = 17,
+    IPMIPOWER_MSG_TYPE_UNCONFIGURED_HOSTNAME              = 18,
+    IPMIPOWER_MSG_TYPE_RESOURCES                          = 19,
+    IPMIPOWER_MSG_TYPE_IPMI_2_0_UNAVAILABLE               = 20,
+    IPMIPOWER_MSG_TYPE_INVALID_ARGUMENT_FOR_OEM_EXTENSION = 21,
+    IPMIPOWER_MSG_TYPE_BMC_BUSY                           = 22,
+    IPMIPOWER_MSG_TYPE_BMC_ERROR                          = 23,
+  } ipmipower_msg_type_t;
 
-#define MSG_TYPE_VALID(__m)         \
-  ((__m) >= MSG_TYPE_ON             \
-   && (__m) <= MSG_TYPE_BMC_ERROR)
+#define IPMIPOWER_MSG_TYPE_VALID(__m)         \
+  ((__m) >= IPMIPOWER_MSG_TYPE_ON             \
+   && (__m) <= IPMIPOWER_MSG_TYPE_BMC_ERROR)
 
-#define MSG_TYPE_NUM_ENTRIES (MSG_TYPE_BMC_ERROR + 1)
+#define IPMIPOWER_MSG_TYPE_NUM_ENTRIES (IPMIPOWER_MSG_TYPE_BMC_ERROR + 1)
 
 /* ipmipower_powercmd
  * - Stores all information needed to execute a power command
  */
 struct ipmipower_powercmd {
-  power_cmd_t cmd;
-  protocol_state_t protocol_state;
+  ipmipower_power_cmd_t cmd;
+  ipmipower_protocol_state_t protocol_state;
 
   /*
    * Protocol State Machine Variables
@@ -465,13 +454,13 @@ struct ipmipower_connection
   struct timeval last_ipmi_recv;
   struct timeval last_ping_recv;
 
-  link_state_t link_state;
+  ipmipower_link_state_t link_state;
   unsigned int ping_last_packet_recv_flag;
   unsigned int ping_packet_count_send;
   unsigned int ping_packet_count_recv;
   unsigned int ping_consec_count;
 
-  discover_state_t discover_state;
+  ipmipower_discover_state_t discover_state;
   char hostname[MAXHOSTNAMELEN+1];
   /* for oem power types ; extra arg passed in via "+extra" at end of hostname */
   struct ipmipower_connection_extra_arg *extra_args;
@@ -520,7 +509,7 @@ struct ipmipower_arguments
   int rmcpdump;
 #endif /* NDEBUG */
 
-  power_cmd_t powercmd;
+  ipmipower_power_cmd_t powercmd;
   int on_if_off;
   int wait_until_on;
   int wait_until_off;

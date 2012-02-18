@@ -84,7 +84,7 @@ unsigned int ics_len = 0;
 
 /* Array of hostlists for short output */
 int output_hostrange_flag = 0;
-hostlist_t output_hostrange[MSG_TYPE_NUM_ENTRIES];
+hostlist_t output_hostrange[IPMIPOWER_MSG_TYPE_NUM_ENTRIES];
 
 static void
 _ipmipower_setup (void)
@@ -126,7 +126,7 @@ _ipmipower_setup (void)
     }
   cbuf_opt_set (ttyout, CBUF_OPT_OVERWRITE, CBUF_WRAP_MANY);
 
-  for (i = 0; i < MSG_TYPE_NUM_ENTRIES; i++)
+  for (i = 0; i < IPMIPOWER_MSG_TYPE_NUM_ENTRIES; i++)
     {
       if (!(output_hostrange[i] = hostlist_create (NULL)))
         {
@@ -149,7 +149,7 @@ _ipmipower_cleanup (void)
 
   ipmipower_connection_array_destroy (ics, ics_len);
 
-  for (i = 0; i < MSG_TYPE_NUM_ENTRIES; i++)
+  for (i = 0; i < IPMIPOWER_MSG_TYPE_NUM_ENTRIES; i++)
     hostlist_destroy (output_hostrange[i]);
 }
 
@@ -539,7 +539,7 @@ main (int argc, char *argv[])
   /* after ipmipower_argp_parse - IPMIPOWER_ERROR/IPMIPOWER_DEBUG
    * macros used 
    */
-  if (cmd_args.powercmd == POWER_CMD_NONE)
+  if (cmd_args.powercmd == IPMIPOWER_POWER_CMD_NONE)
     ipmipower_error_setup (IPMIPOWER_ERROR_STDERR | IPMIPOWER_ERROR_SYSLOG);
   else
     ipmipower_error_setup (IPMIPOWER_ERROR_STDERR);
@@ -566,7 +566,7 @@ main (int argc, char *argv[])
    * command line, put the power control commands in the pending
    * queue.
    */
-  if (cmd_args.powercmd != POWER_CMD_NONE)
+  if (cmd_args.powercmd != IPMIPOWER_POWER_CMD_NONE)
     {
       struct ipmipower_connection_extra_arg *eanode;
       char errbuf[IPMIPOWER_OUTPUT_BUFLEN + 1];
@@ -578,7 +578,7 @@ main (int argc, char *argv[])
       cmd_args.ping_interval = 0;
 
       memset (errbuf, '\0', IPMIPOWER_OUTPUT_BUFLEN + 1);
-      if (cmd_args.oem_power_type == OEM_POWER_TYPE_NONE)
+      if (cmd_args.oem_power_type == IPMIPOWER_OEM_POWER_TYPE_NONE)
 	{
 	  if (ipmipower_power_cmd_check_privilege (cmd_args.powercmd,
 						   errbuf,
@@ -605,7 +605,7 @@ main (int argc, char *argv[])
        * powercmd queue so we don't do any if any single argument is
        * invalid
        */
-      if (cmd_args.oem_power_type != OEM_POWER_TYPE_NONE)
+      if (cmd_args.oem_power_type != IPMIPOWER_OEM_POWER_TYPE_NONE)
 	{
 	  for (i = 0; i < ics_len; i++)
 	    {
@@ -637,7 +637,7 @@ main (int argc, char *argv[])
           if (ics[i].skip)
             continue;
 
-	  if (cmd_args.oem_power_type != OEM_POWER_TYPE_NONE)
+	  if (cmd_args.oem_power_type != IPMIPOWER_OEM_POWER_TYPE_NONE)
 	    {
 	      assert (ics[i].extra_args);
 
@@ -656,7 +656,7 @@ main (int argc, char *argv[])
   /* immediately send out discovery messages upon startup */
   ipmipower_ping_force_discovery_sweep ();
 
-  _poll_loop ((cmd_args.powercmd != POWER_CMD_NONE) ? 1 : 0);
+  _poll_loop ((cmd_args.powercmd != IPMIPOWER_POWER_CMD_NONE) ? 1 : 0);
 
   ipmipower_powercmd_cleanup ();
   _ipmipower_cleanup ();

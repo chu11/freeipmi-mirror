@@ -121,9 +121,9 @@ ipmipower_ping_process_pings (int *timeout)
               if (ics[i].ping_packet_count_send == cmd_args.ping_packet_count)
                 {
                   if ((((double)(ics[i].ping_packet_count_send - ics[i].ping_packet_count_recv))/ics[i].ping_packet_count_send) > ((double)cmd_args.ping_percent/100))
-                    ics[i].link_state = LINK_BAD;
+                    ics[i].link_state = IPMIPOWER_LINK_STATE_BAD;
                   else
-                    ics[i].link_state = LINK_GOOD;
+                    ics[i].link_state = IPMIPOWER_LINK_STATE_GOOD;
 
                   ics[i].ping_packet_count_send = 0;
                   ics[i].ping_packet_count_recv = 0;
@@ -331,20 +331,20 @@ ipmipower_ping_process_pings (int *timeout)
                   
                   if (cmd_args.ping_packet_count && cmd_args.ping_percent)
                     {
-                      if (ics[i].link_state == LINK_GOOD)
-                        ics[i].discover_state = STATE_DISCOVERED;
+                      if (ics[i].link_state == IPMIPOWER_LINK_STATE_GOOD)
+                        ics[i].discover_state = IPMIPOWER_DISCOVER_STATE_DISCOVERED;
                       else
                         {
                           if (cmd_args.ping_consec_count
                               && ics[i].ping_consec_count >= cmd_args.ping_consec_count)
-                            ics[i].discover_state = STATE_DISCOVERED;
+                            ics[i].discover_state = IPMIPOWER_DISCOVER_STATE_DISCOVERED;
                           else
-                            ics[i].discover_state = STATE_BADCONNECTION;
+                            ics[i].discover_state = IPMIPOWER_DISCOVER_STATE_BADCONNECTION;
                         }
                     }
                   else
                     {
-                      ics[i].discover_state = STATE_DISCOVERED;
+                      ics[i].discover_state = IPMIPOWER_DISCOVER_STATE_DISCOVERED;
                     }
                   ics[i].last_ping_recv.tv_sec = cur_time.tv_sec;
                   ics[i].last_ping_recv.tv_usec = cur_time.tv_usec;
@@ -359,7 +359,7 @@ ipmipower_ping_process_pings (int *timeout)
       timeval_sub (&cur_time, &ics[i].last_ping_recv, &result);
       timeval_millisecond_calc (&result, &ms_time);
       if (ms_time >= cmd_args.ping_timeout)
-        ics[i].discover_state = STATE_UNDISCOVERED;
+        ics[i].discover_state = IPMIPOWER_DISCOVER_STATE_UNDISCOVERED;
     }
 
   timeval_sub (&next_ping_sends_time, &cur_time, &result);

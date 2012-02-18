@@ -406,27 +406,27 @@ _cmd_workaround_flags (char **argv)
 }
 
 static void
-_cmd_power_all_nodes (power_cmd_t cmd)
+_cmd_power_all_nodes (ipmipower_power_cmd_t cmd)
 {
   struct ipmipower_connection_extra_arg *eanode;
   int nodes_queued = 0;
   int i;
 
-  assert (POWER_CMD_VALID (cmd));
+  assert (IPMIPOWER_POWER_CMD_VALID (cmd));
      
   for (i = 0; i < ics_len; i++)
     {
       if (cmd_args.ping_interval
-	  && ics[i].discover_state == STATE_UNDISCOVERED)
-	ipmipower_output (MSG_TYPE_NOTDISCOVERED, ics[i].hostname, NULL);
+	  && ics[i].discover_state == IPMIPOWER_DISCOVER_STATE_UNDISCOVERED)
+	ipmipower_output (IPMIPOWER_MSG_TYPE_NOTDISCOVERED, ics[i].hostname, NULL);
       else if (cmd_args.ping_interval
 	       && cmd_args.ping_packet_count
 	       && cmd_args.ping_percent
-	       && ics[i].discover_state == STATE_BADCONNECTION)
-	ipmipower_output (MSG_TYPE_BADCONNECTION, ics[i].hostname, NULL);
+	       && ics[i].discover_state == IPMIPOWER_DISCOVER_STATE_BADCONNECTION)
+	ipmipower_output (IPMIPOWER_MSG_TYPE_BADCONNECTION, ics[i].hostname, NULL);
       else
 	{
-	  if (cmd_args.oem_power_type != OEM_POWER_TYPE_NONE)
+	  if (cmd_args.oem_power_type != IPMIPOWER_OEM_POWER_TYPE_NONE)
 	    {
 	      eanode = ics[i].extra_args;
 	      while (eanode)
@@ -434,7 +434,7 @@ _cmd_power_all_nodes (power_cmd_t cmd)
 		  if (ipmipower_oem_power_cmd_check_extra_arg (eanode->extra_arg,
 							       NULL,
 							       0) <= 0)
-		    ipmipower_output (MSG_TYPE_INVALID_ARGUMENT_FOR_OEM_EXTENSION,
+		    ipmipower_output (IPMIPOWER_MSG_TYPE_INVALID_ARGUMENT_FOR_OEM_EXTENSION,
 				      ics[i].hostname,
 				      eanode->extra_arg);
 		  else
@@ -460,7 +460,7 @@ _cmd_power_all_nodes (power_cmd_t cmd)
 }
 
 static void
-_cmd_power_specific_nodes (char **argv, power_cmd_t cmd)
+_cmd_power_specific_nodes (char **argv, ipmipower_power_cmd_t cmd)
 {
   hostlist_t h = NULL;
   hostlist_iterator_t hitr = NULL;
@@ -470,8 +470,8 @@ _cmd_power_specific_nodes (char **argv, power_cmd_t cmd)
   char *h2str = NULL;
 
   assert (argv);
-  assert (POWER_CMD_VALID (cmd));
-  assert (OEM_POWER_TYPE_VALID (cmd_args.oem_power_type));
+  assert (IPMIPOWER_POWER_CMD_VALID (cmd));
+  assert (IPMIPOWER_OEM_POWER_TYPE_VALID (cmd_args.oem_power_type));
       
   if (!(h = hostlist_create (argv[1])))
     {
@@ -521,7 +521,7 @@ _cmd_power_specific_nodes (char **argv, power_cmd_t cmd)
 	  char *h2str_extra_arg = NULL;
 	  int i;
 	  
-	  if (cmd_args.oem_power_type != OEM_POWER_TYPE_NONE)
+	  if (cmd_args.oem_power_type != IPMIPOWER_OEM_POWER_TYPE_NONE)
 	    {
 	      char *ptr;
 	      
@@ -541,24 +541,24 @@ _cmd_power_specific_nodes (char **argv, power_cmd_t cmd)
 	  i = ipmipower_connection_hostname_index (ics, ics_len, h2str);
 	  
 	  if (i < 0)
-	    ipmipower_output (MSG_TYPE_UNCONFIGURED_HOSTNAME, h2str, NULL);
+	    ipmipower_output (IPMIPOWER_MSG_TYPE_UNCONFIGURED_HOSTNAME, h2str, NULL);
 	  else if (cmd_args.ping_interval
-		   && ics[i].discover_state == STATE_UNDISCOVERED)
-	    ipmipower_output (MSG_TYPE_NOTDISCOVERED, ics[i].hostname, NULL);
+		   && ics[i].discover_state == IPMIPOWER_DISCOVER_STATE_UNDISCOVERED)
+	    ipmipower_output (IPMIPOWER_MSG_TYPE_NOTDISCOVERED, ics[i].hostname, NULL);
 	  else if (cmd_args.ping_interval
 		   && cmd_args.ping_packet_count
 		   && cmd_args.ping_percent
-		   && ics[i].discover_state == STATE_BADCONNECTION)
-	    ipmipower_output (MSG_TYPE_BADCONNECTION, ics[i].hostname, NULL);
+		   && ics[i].discover_state == IPMIPOWER_DISCOVER_STATE_BADCONNECTION)
+	    ipmipower_output (IPMIPOWER_MSG_TYPE_BADCONNECTION, ics[i].hostname, NULL);
 	  else
 	    {
-	      if (cmd_args.oem_power_type != OEM_POWER_TYPE_NONE)
+	      if (cmd_args.oem_power_type != IPMIPOWER_OEM_POWER_TYPE_NONE)
 		{
 		  if (ipmipower_oem_power_cmd_check_extra_arg (h2str_extra_arg,
 							       NULL,
 							       0) <= 0)
 		    {
-		      ipmipower_output (MSG_TYPE_INVALID_ARGUMENT_FOR_OEM_EXTENSION,
+		      ipmipower_output (IPMIPOWER_MSG_TYPE_INVALID_ARGUMENT_FOR_OEM_EXTENSION,
 					ics[i].hostname,
 					h2str_extra_arg);
 		      goto end_inner_loop;
@@ -595,13 +595,13 @@ _cmd_power_specific_nodes (char **argv, power_cmd_t cmd)
 }
 
 static void
-_cmd_power (char **argv, power_cmd_t cmd)
+_cmd_power (char **argv, ipmipower_power_cmd_t cmd)
 {
   char errbuf[IPMIPOWER_OUTPUT_BUFLEN + 1];
 
   assert (argv);
-  assert (POWER_CMD_VALID (cmd));
-  assert (OEM_POWER_TYPE_VALID (cmd_args.oem_power_type));
+  assert (IPMIPOWER_POWER_CMD_VALID (cmd));
+  assert (IPMIPOWER_OEM_POWER_TYPE_VALID (cmd_args.oem_power_type));
   
   if (!cmd_args.common.hostname)
     {
@@ -610,7 +610,7 @@ _cmd_power (char **argv, power_cmd_t cmd)
     }
   
   memset (errbuf, '\0', IPMIPOWER_OUTPUT_BUFLEN + 1);
-  if (cmd_args.oem_power_type == OEM_POWER_TYPE_NONE)
+  if (cmd_args.oem_power_type == IPMIPOWER_OEM_POWER_TYPE_NONE)
     {
       if (ipmipower_power_cmd_check_privilege (cmd,
 					       errbuf,
@@ -781,9 +781,9 @@ _cmd_config (void)
 
       for (i = 0; i < ics_len; i++)
         {
-          if (ics[i].discover_state == STATE_DISCOVERED)
+          if (ics[i].discover_state == IPMIPOWER_DISCOVER_STATE_DISCOVERED)
             rv = hostlist_push_host (discovered, ics[i].hostname);
-          else if (ics[i].discover_state == STATE_UNDISCOVERED)
+          else if (ics[i].discover_state == IPMIPOWER_DISCOVER_STATE_UNDISCOVERED)
             rv = hostlist_push_host (undiscovered, ics[i].hostname);
           else
             rv = hostlist_push_host (badconnection, ics[i].hostname);
@@ -1269,25 +1269,25 @@ ipmipower_prompt_process_cmdline (void)
               else if (!strcmp (argv[0], "happyeaster"))
                 ipmipower_cbuf_printf (ttyout, "by Albert Chu <chu11@llnl.gov>\n");
               else if (!strcmp (argv[0], "on"))
-                _cmd_power (argv, POWER_CMD_POWER_ON);
+                _cmd_power (argv, IPMIPOWER_POWER_CMD_POWER_ON);
               else if (!strcmp (argv[0], "off"))
-                _cmd_power (argv, POWER_CMD_POWER_OFF);
+                _cmd_power (argv, IPMIPOWER_POWER_CMD_POWER_OFF);
               else if (!strcmp (argv[0], "cycle"))
-                _cmd_power (argv, POWER_CMD_POWER_CYCLE);
+                _cmd_power (argv, IPMIPOWER_POWER_CMD_POWER_CYCLE);
               else if (!strcmp (argv[0], "reset"))
-                _cmd_power (argv, POWER_CMD_POWER_RESET);
+                _cmd_power (argv, IPMIPOWER_POWER_CMD_POWER_RESET);
               else if (!strcmp (argv[0], "stat"))
-                _cmd_power (argv, POWER_CMD_POWER_STATUS);
+                _cmd_power (argv, IPMIPOWER_POWER_CMD_POWER_STATUS);
               else if (!strcmp (argv[0], "pulse"))
-                _cmd_power (argv, POWER_CMD_PULSE_DIAGNOSTIC_INTERRUPT);
+                _cmd_power (argv, IPMIPOWER_POWER_CMD_PULSE_DIAGNOSTIC_INTERRUPT);
               else if (!strcmp (argv[0], "soft"))
-                _cmd_power (argv, POWER_CMD_SOFT_SHUTDOWN_OS);
+                _cmd_power (argv, IPMIPOWER_POWER_CMD_SOFT_SHUTDOWN_OS);
               else if (!strcmp (argv[0], "identify-on"))
-                _cmd_power (argv, POWER_CMD_IDENTIFY_ON);
+                _cmd_power (argv, IPMIPOWER_POWER_CMD_IDENTIFY_ON);
               else if (!strcmp (argv[0], "identify-off"))
-                _cmd_power (argv, POWER_CMD_IDENTIFY_OFF);
+                _cmd_power (argv, IPMIPOWER_POWER_CMD_IDENTIFY_OFF);
               else if (!strcmp (argv[0], "identify-status"))
-                _cmd_power (argv, POWER_CMD_IDENTIFY_STATUS);
+                _cmd_power (argv, IPMIPOWER_POWER_CMD_IDENTIFY_STATUS);
               else if (!strcmp (argv[0], "on-if-off"))
                 _cmd_set_flag (argv,
                                &cmd_args.on_if_off,

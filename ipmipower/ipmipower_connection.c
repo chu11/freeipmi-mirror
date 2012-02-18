@@ -232,15 +232,15 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
   memset (&ic->last_ipmi_recv, '\0', sizeof (struct timeval));
   memset (&ic->last_ping_recv, '\0', sizeof (struct timeval));
 
-  ic->link_state = LINK_GOOD; /* assumed good to begin with */
+  ic->link_state = IPMIPOWER_LINK_STATE_GOOD; /* assumed good to begin with */
   ic->ping_last_packet_recv_flag = 0;
   ic->ping_packet_count_send = 0;
   ic->ping_packet_count_recv = 0;
   ic->ping_consec_count = 0;
 
-  ic->discover_state = STATE_UNDISCOVERED;
+  ic->discover_state = IPMIPOWER_DISCOVER_STATE_UNDISCOVERED;
 
-  if (cmd_args.oem_power_type != OEM_POWER_TYPE_NONE)
+  if (cmd_args.oem_power_type != IPMIPOWER_OEM_POWER_TYPE_NONE)
     {
       struct ipmipower_connection_extra_arg *ea;
       char *extra_arg = NULL;
@@ -300,7 +300,7 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
   if (!(result = gethostbyname (ic->hostname)))
     {
       if (h_errno == HOST_NOT_FOUND)
-        ipmipower_output (MSG_TYPE_HOSTNAME_INVALID, ic->hostname, NULL);
+        ipmipower_output (IPMIPOWER_MSG_TYPE_HOSTNAME_INVALID, ic->hostname, NULL);
       else
         {
 #if HAVE_HSTRERROR
@@ -330,7 +330,7 @@ _connection_add_extra_arg_base (struct ipmipower_connection *ic, const char *ext
 
   assert (ic);
   assert (ic->extra_args);
-  assert (cmd_args.oem_power_type != OEM_POWER_TYPE_NONE);
+  assert (cmd_args.oem_power_type != IPMIPOWER_OEM_POWER_TYPE_NONE);
   
   eanode = ic->extra_args;
   while (eanode)
@@ -375,10 +375,10 @@ _connection_add_extra_arg (struct ipmipower_connection *ic, const char *extra_ar
 {
   assert (ic);
   assert (ic->extra_args);
-  assert (cmd_args.oem_power_type != OEM_POWER_TYPE_NONE);
+  assert (cmd_args.oem_power_type != IPMIPOWER_OEM_POWER_TYPE_NONE);
 
   /* Some OEM power types could have ranges for the extra args */
-  if (cmd_args.oem_power_type == OEM_POWER_TYPE_C410X
+  if (cmd_args.oem_power_type == IPMIPOWER_OEM_POWER_TYPE_C410X
       && extra_arg)
     {
       hostlist_t h = NULL;
@@ -446,7 +446,7 @@ _hostname_count (const char *hostname)
 
   if (!(h = hostlist_create (hostname)))
     {
-      ipmipower_output (MSG_TYPE_HOSTNAME_INVALID, hostname, NULL);
+      ipmipower_output (IPMIPOWER_MSG_TYPE_HOSTNAME_INVALID, hostname, NULL);
       goto cleanup;
     }
 
@@ -468,7 +468,7 @@ _hostname_count (const char *hostname)
     {
       char *ptr;
       
-      if (cmd_args.oem_power_type != OEM_POWER_TYPE_NONE)
+      if (cmd_args.oem_power_type != IPMIPOWER_OEM_POWER_TYPE_NONE)
 	{
 	  if ((ptr = strchr (hstr, '+')))
 	    *ptr = '\0';
@@ -533,7 +533,7 @@ ipmipower_connection_array_create (const char *hostname, unsigned int *len)
  
   if (!(h = hostlist_create (hostname)))
     {
-      ipmipower_output (MSG_TYPE_HOSTNAME_INVALID, hostname, NULL);
+      ipmipower_output (IPMIPOWER_MSG_TYPE_HOSTNAME_INVALID, hostname, NULL);
       errflag++;
       goto cleanup;
     }
@@ -565,7 +565,7 @@ ipmipower_connection_array_create (const char *hostname, unsigned int *len)
 
       if (!(h2 = hostlist_create (hstr)))
 	{
-	  ipmipower_output (MSG_TYPE_HOSTNAME_INVALID, hostname, NULL);
+	  ipmipower_output (IPMIPOWER_MSG_TYPE_HOSTNAME_INVALID, hostname, NULL);
 	  errflag++;
 	  goto cleanup;
 	}
@@ -589,7 +589,7 @@ ipmipower_connection_array_create (const char *hostname, unsigned int *len)
 	   * that it's already in the list. 
 	   */
 
-	  if (cmd_args.oem_power_type != OEM_POWER_TYPE_NONE)
+	  if (cmd_args.oem_power_type != IPMIPOWER_OEM_POWER_TYPE_NONE)
 	    {
 	      char *h2str_copy;
 	      char *ptr;
@@ -692,7 +692,7 @@ ipmipower_connection_array_create (const char *hostname, unsigned int *len)
             cbuf_destroy (ics[i].ping_in);
           if (ics[i].ping_out)
             cbuf_destroy (ics[i].ping_out);
-	  if (cmd_args.oem_power_type != OEM_POWER_TYPE_NONE)
+	  if (cmd_args.oem_power_type != IPMIPOWER_OEM_POWER_TYPE_NONE)
 	    {
 	      struct ipmipower_connection_extra_arg *eanode;
 	      assert (ics[i].extra_args);
@@ -737,7 +737,7 @@ ipmipower_connection_array_destroy (struct ipmipower_connection *ics,
       cbuf_destroy (ics[i].ipmi_out);
       cbuf_destroy (ics[i].ping_in);
       cbuf_destroy (ics[i].ping_out);
-      if (cmd_args.oem_power_type != OEM_POWER_TYPE_NONE)
+      if (cmd_args.oem_power_type != IPMIPOWER_OEM_POWER_TYPE_NONE)
 	{
 	  struct ipmipower_connection_extra_arg *eanode;
 	  assert (ics[i].extra_args);

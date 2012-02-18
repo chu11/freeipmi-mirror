@@ -44,7 +44,7 @@ extern fiid_template_t tmpl_cmd_c410x_slot_power_control_rs;
  * - returns 1 if ok, 0 if not, -1 on error
  * - if returns 0 or -1, error message in buf 
  */
-int ipmipower_oem_power_cmd_check_support_and_privilege (power_cmd_t cmd,
+int ipmipower_oem_power_cmd_check_support_and_privilege (ipmipower_power_cmd_t cmd,
 							 char *errbuf,
 							 unsigned int errbuflen);
 

@@ -61,31 +61,31 @@
 extern struct ipmipower_arguments cmd_args;
 
 char *
-ipmipower_power_cmd_to_string (power_cmd_t cmd)
+ipmipower_power_cmd_to_string (ipmipower_power_cmd_t cmd)
 {
-  assert (POWER_CMD_VALID (cmd));
+  assert (IPMIPOWER_POWER_CMD_VALID (cmd));
 
   switch (cmd)
     {
-    case POWER_CMD_POWER_OFF:
+    case IPMIPOWER_POWER_CMD_POWER_OFF:
       return ("off");
-    case POWER_CMD_POWER_ON:
+    case IPMIPOWER_POWER_CMD_POWER_ON:
       return ("on");
-    case POWER_CMD_POWER_CYCLE:
+    case IPMIPOWER_POWER_CMD_POWER_CYCLE:
       return ("cycle");
-    case POWER_CMD_POWER_RESET:
+    case IPMIPOWER_POWER_CMD_POWER_RESET:
       return ("reset");
-    case POWER_CMD_POWER_STATUS:
+    case IPMIPOWER_POWER_CMD_POWER_STATUS:
       return ("status");
-    case POWER_CMD_PULSE_DIAGNOSTIC_INTERRUPT:
+    case IPMIPOWER_POWER_CMD_PULSE_DIAGNOSTIC_INTERRUPT:
       return ("diagnostic interrupt");
-    case POWER_CMD_SOFT_SHUTDOWN_OS:
+    case IPMIPOWER_POWER_CMD_SOFT_SHUTDOWN_OS:
       return ("soft shutdown os");
-    case POWER_CMD_IDENTIFY_ON:
+    case IPMIPOWER_POWER_CMD_IDENTIFY_ON:
       return ("identify on");
-    case POWER_CMD_IDENTIFY_OFF:
+    case IPMIPOWER_POWER_CMD_IDENTIFY_OFF:
       return ("identify off");
-    case POWER_CMD_IDENTIFY_STATUS:
+    case IPMIPOWER_POWER_CMD_IDENTIFY_STATUS:
       return ("identify status");
     default:
       IPMIPOWER_ERROR (("ipmipower_power_cmd_to_string: invalid power cmd type: %d", cmd));
@@ -96,19 +96,19 @@ ipmipower_power_cmd_to_string (power_cmd_t cmd)
 }
 
 int
-ipmipower_power_cmd_check_privilege (power_cmd_t cmd,
+ipmipower_power_cmd_check_privilege (ipmipower_power_cmd_t cmd,
 				     char *errbuf,
 				     unsigned int errbuflen)
 {
   int rv = -1;
   
-  assert (POWER_CMD_VALID (cmd));
+  assert (IPMIPOWER_POWER_CMD_VALID (cmd));
   assert (errbuf);
   assert (errbuflen);
-  assert (cmd_args.oem_power_type == OEM_POWER_TYPE_NONE);
+  assert (cmd_args.oem_power_type == IPMIPOWER_OEM_POWER_TYPE_NONE);
   
   if (cmd_args.common.privilege_level == IPMI_PRIVILEGE_LEVEL_USER
-      && POWER_CMD_REQUIRES_OPERATOR_PRIVILEGE_LEVEL (cmd))
+      && IPMIPOWER_POWER_CMD_REQUIRES_OPERATOR_PRIVILEGE_LEVEL (cmd))
     {
       char *power_cmd_str;
       

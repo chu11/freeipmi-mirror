@@ -29,7 +29,7 @@
 
 #include "ipmipower.h"
 
-void ipmipower_output (msg_type_t num, const char *hostname, const char *extra_arg);
+void ipmipower_output (ipmipower_msg_type_t num, const char *hostname, const char *extra_arg);
 
 /* ipmipower_output_finish
  * - Output final results, mostly notably w/ consolidated output.
