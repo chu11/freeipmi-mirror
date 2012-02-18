@@ -344,50 +344,69 @@ ipmi_sel_parse_output_quanta_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
           char dimmbuf[QUANTA_EVENT_BUFFER_LENGTH];
           char *dimm_str = NULL;
 
-          if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_A0)
-            dimm_str = "DIMM A0";
-          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_A1)
-            dimm_str = "DIMM A1";
-          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_A2)
-            dimm_str = "DIMM A2";
-          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_B0)
-            dimm_str = "DIMM B0";
-          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_B1)
-            dimm_str = "DIMM B1";
-          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_B2)
-            dimm_str = "DIMM B2";
-          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_C0)
-            dimm_str = "DIMM C0";
-          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_C1)
-            dimm_str = "DIMM C1";
-          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_C2)
-            dimm_str = "DIMM C2";
-          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_D0)
-            dimm_str = "DIMM D0";
-          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_D1)
-            dimm_str = "DIMM D1";
-          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_D2)
-            dimm_str = "DIMM D2";
-          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_E0)
-            dimm_str = "DIMM E0";
-          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_E1)
-            dimm_str = "DIMM E1";
-          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_E2)
-            dimm_str = "DIMM E2";
-          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_F0)
-            dimm_str = "DIMM F0";
-          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_F1)
-            dimm_str = "DIMM F1";
-          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_F2)
-            dimm_str = "DIMM F2";
-          else
-            {
+	  switch (system_event_record_data->event_data3)
+	    {
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_A0:
+	      dimm_str = "DIMM A0";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_A1:
+	      dimm_str = "DIMM A1";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_A2:
+	      dimm_str = "DIMM A2";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_B0:
+	      dimm_str = "DIMM B0";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_B1:
+	      dimm_str = "DIMM B1";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_B2:
+	      dimm_str = "DIMM B2";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_C0:
+	      dimm_str = "DIMM C0";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_C1:
+	      dimm_str = "DIMM C1";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_C2:
+	      dimm_str = "DIMM C2";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_D0:
+	      dimm_str = "DIMM D0";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_D1:
+	      dimm_str = "DIMM D1";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_D2:
+	      dimm_str = "DIMM D2";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_E0:
+	      dimm_str = "DIMM E0";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_E1:
+	      dimm_str = "DIMM E1";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_E2:
+	      dimm_str = "DIMM E2";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_F0:
+	      dimm_str = "DIMM F0";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_F1:
+	      dimm_str = "DIMM F1";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_F2:
+	      dimm_str = "DIMM F2";
+	      break;
+	    default:
               snprintf (dimmbuf,
                         QUANTA_EVENT_BUFFER_LENGTH,
                         "Error DIMM %u",
                         system_event_record_data->event_data3);
               dimm_str = dimmbuf;
-            }
+	    }
           
           snprintf (tmpbuf,
                     tmpbuflen,
@@ -426,20 +445,29 @@ ipmi_sel_parse_output_quanta_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
         {
           char *errstr = NULL;
 
-          if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_OEM_QUANTA_EVENT_DATA3_QPI0_ERROR)
-            errstr = "QPI[0] Error";
-          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_OEM_QUANTA_EVENT_DATA3_QPI1_ERROR)
-            errstr = "QPI[1] Error";
-          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_OEM_QUANTA_EVENT_DATA3_QPI2_ERROR)
-            errstr = "QPI[2] Error";
-          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_OEM_QUANTA_EVENT_DATA3_QPI3_ERROR)
-            errstr = "QPI[3] Error";
-          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_OEM_QUANTA_EVENT_DATA3_MISCELLANEOUS_ERROR)
-            errstr = "Miscellaneous Error";
-          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_OEM_QUANTA_EVENT_DATA3_IOH_CORE_ERROR)
-            errstr = "IOH Core Error";
-          else
-            errstr = "Unknown Error";
+	  switch (system_event_record_data->event_data3)
+	    {
+	    case IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_OEM_QUANTA_EVENT_DATA3_QPI0_ERROR:
+	      errstr = "QPI[0] Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_OEM_QUANTA_EVENT_DATA3_QPI1_ERROR:
+	      errstr = "QPI[1] Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_OEM_QUANTA_EVENT_DATA3_QPI2_ERROR:
+	      errstr = "QPI[2] Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_OEM_QUANTA_EVENT_DATA3_QPI3_ERROR:
+	      errstr = "QPI[3] Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_OEM_QUANTA_EVENT_DATA3_MISCELLANEOUS_ERROR:
+	      errstr = "Miscellaneous Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_OEM_QUANTA_EVENT_DATA3_IOH_CORE_ERROR:
+	      errstr = "IOH Core Error";
+	      break;
+	    default:
+	      errstr = "Unknown Error";
+	    }
 
           snprintf (tmpbuf,
                     tmpbuflen,

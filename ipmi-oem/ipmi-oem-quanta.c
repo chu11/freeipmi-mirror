@@ -1283,14 +1283,23 @@ ipmi_oem_quanta_get_account_status (ipmi_oem_state_data_t *state_data)
         goto cleanup;
       account_status = tmpvalue;
 
-      if (account_status == IPMI_OEM_QUANTA_EXTENDED_CONFIG_ACCOUNT_STATUS_UNSPECIFIED)
-        account_status_str = "Unspecified";
-      else if (account_status == IPMI_OEM_QUANTA_EXTENDED_CONFIG_ACCOUNT_STATUS_ENABLED)
-        account_status_str = "Enabled";
-      else if (account_status == IPMI_OEM_QUANTA_EXTENDED_CONFIG_ACCOUNT_STATUS_DISABLED)
-        account_status_str = "Disabled";
-      else 
-        account_status_str = "Lockout";
+      switch (account_status)
+	{
+	case IPMI_OEM_QUANTA_EXTENDED_CONFIG_ACCOUNT_STATUS_UNSPECIFIED:
+	  account_status_str = "Unspecified";
+	  break;
+	case IPMI_OEM_QUANTA_EXTENDED_CONFIG_ACCOUNT_STATUS_ENABLED:
+	  account_status_str = "Enabled";
+	  break;
+	case IPMI_OEM_QUANTA_EXTENDED_CONFIG_ACCOUNT_STATUS_DISABLED:
+	  account_status_str = "Disabled";
+	  break;
+	case IPMI_OEM_QUANTA_EXTENDED_CONFIG_ACCOUNT_STATUS_LOCKOUT:
+	  account_status_str = "Lockout";
+	  break;
+	default:
+	  account_status_str = "Unknown";
+	}
 
       pstdout_printf (state_data->pstate,
                       "%-16s | %s\n",
@@ -2439,39 +2448,57 @@ ipmi_oem_quanta_get_processor_information (ipmi_oem_state_data_t *state_data)
                         processor_index);
       else
 	{
-	  if (processor_type == IPMI_OEM_QUANTA_PROCESSOR_TYPE_CELERON)
-	    processor_type_str = "Celeron";
-	  else if (processor_type == IPMI_OEM_QUANTA_PROCESSOR_TYPE_PENTIUM_3)
-	    processor_type_str = "Pentium 3";
-	  else if (processor_type == IPMI_OEM_QUANTA_PROCESSOR_TYPE_PENTIUM_4)
-	    processor_type_str = "Pentium 4";
-	  else if (processor_type == IPMI_OEM_QUANTA_PROCESSOR_TYPE_XEON)
-	    processor_type_str = "Xeon";
-	  else if (processor_type == IPMI_OEM_QUANTA_PROCESSOR_TYPE_PRESTONIA)
-	    processor_type_str = "Prestonia";
-	  else if (processor_type == IPMI_OEM_QUANTA_PROCESSOR_TYPE_NOCONA)
-	    processor_type_str = "Nocona";
-	  else if (processor_type == IPMI_OEM_QUANTA_PROCESSOR_TYPE_OPTERON)
-	    processor_type_str = "Opteron";
-	  else if (processor_type == IPMI_OEM_QUANTA_PROCESSOR_TYPE_DEMPSEY)
-	    processor_type_str = "Dempsey";
-	  else if (processor_type == IPMI_OEM_QUANTA_PROCESSOR_TYPE_CLOVERTOWN)
-	    processor_type_str = "Clovertown";
-	  else if (processor_type == IPMI_OEM_QUANTA_PROCESSOR_TYPE_TIGERTON)
-	    processor_type_str = "Tigerton";
-	  else if (processor_type == IPMI_OEM_QUANTA_PROCESSOR_TYPE_DUNNINGTON)
-	    processor_type_str = "Dunnington";
-	  else if (processor_type == IPMI_OEM_QUANTA_PROCESSOR_TYPE_HARPERTOWN)
-	    processor_type_str = "Harpertown";
-	  else if (processor_type == IPMI_OEM_QUANTA_PROCESSOR_TYPE_WOLFDALE_DP)
-	    /* achu: listed as "WolfDale-Dp" in spec, I don't like that output */
-	    processor_type_str = "Wolfdale-DP";
-	  else if (processor_type == IPMI_OEM_QUANTA_PROCESSOR_TYPE_NEHALEM_EP)
-	    processor_type_str = "Nehalem-EP";
-          else if (processor_type == IPMI_OEM_QUANTA_PROCESSOR_TYPE_WESTMERE_EP)
-            processor_type_str = "Westmere-EP";
-	  else      
-	    processor_type_str = "Unknown Processor";
+	  switch (processor_type)
+	    {
+	    case IPMI_OEM_QUANTA_PROCESSOR_TYPE_CELERON:
+	      processor_type_str = "Celeron";
+	      break;
+	    case IPMI_OEM_QUANTA_PROCESSOR_TYPE_PENTIUM_3:
+	      processor_type_str = "Pentium 3";
+	      break;
+	    case IPMI_OEM_QUANTA_PROCESSOR_TYPE_PENTIUM_4:
+	      processor_type_str = "Pentium 4";
+	      break;
+	    case IPMI_OEM_QUANTA_PROCESSOR_TYPE_XEON:
+	      processor_type_str = "Xeon";
+	      break;
+	    case IPMI_OEM_QUANTA_PROCESSOR_TYPE_PRESTONIA:
+	      processor_type_str = "Prestonia";
+	      break;
+	    case IPMI_OEM_QUANTA_PROCESSOR_TYPE_NOCONA:
+	      processor_type_str = "Nocona";
+	      break;
+	    case IPMI_OEM_QUANTA_PROCESSOR_TYPE_OPTERON:
+	      processor_type_str = "Opteron";
+	      break;
+	    case IPMI_OEM_QUANTA_PROCESSOR_TYPE_DEMPSEY:
+	      processor_type_str = "Dempsey";
+	      break;
+	    case IPMI_OEM_QUANTA_PROCESSOR_TYPE_CLOVERTOWN:
+	      processor_type_str = "Clovertown";
+	      break;
+	    case IPMI_OEM_QUANTA_PROCESSOR_TYPE_TIGERTON:
+	      processor_type_str = "Tigerton";
+	      break;
+	    case IPMI_OEM_QUANTA_PROCESSOR_TYPE_DUNNINGTON:
+	      processor_type_str = "Dunnington";
+	      break;
+	    case IPMI_OEM_QUANTA_PROCESSOR_TYPE_HARPERTOWN:
+	      processor_type_str = "Harpertown";
+	      break;
+	    case IPMI_OEM_QUANTA_PROCESSOR_TYPE_WOLFDALE_DP:
+	      /* achu: listed as "WolfDale-Dp" in spec, I don't like that output */
+	      processor_type_str = "Wolfdale-DP";
+	      break;
+	    case IPMI_OEM_QUANTA_PROCESSOR_TYPE_NEHALEM_EP:
+	      processor_type_str = "Nehalem-EP";
+	      break;
+	    case IPMI_OEM_QUANTA_PROCESSOR_TYPE_WESTMERE_EP:
+	      processor_type_str = "Westmere-EP";
+	      break;
+	    default:
+	      processor_type_str = "Unknown Processor";
+	    }
 	  
 	  pstdout_printf (state_data->pstate,
 			  "Processor %u: %s %.2f Ghz\n",

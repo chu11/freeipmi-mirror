@@ -178,31 +178,43 @@ ipmi_sensor_decode_value (int8_t r_exponent,
   dval += (b * pow (10, b_exponent));
   dval *= pow (10, r_exponent);
 
-  if (linearization == IPMI_SDR_LINEARIZATION_LN)
-    dval = log (dval);
-  else if (linearization == IPMI_SDR_LINEARIZATION_LOG10)
-    dval = log10 (dval);
-  else if (linearization == IPMI_SDR_LINEARIZATION_LOG2)
-    dval = log2 (dval);
-  else if (linearization == IPMI_SDR_LINEARIZATION_E)
-    dval = exp (dval);
-  else if (linearization == IPMI_SDR_LINEARIZATION_EXP10)
-    dval = exp10 (dval);
-  else if (linearization == IPMI_SDR_LINEARIZATION_EXP2)
-    dval = exp2 (dval);
-  else if (linearization == IPMI_SDR_LINEARIZATION_INVERSE)
+  switch (linearization)
     {
+    case IPMI_SDR_LINEARIZATION_LN:
+      dval = log (dval);
+      break;
+    case IPMI_SDR_LINEARIZATION_LOG10:
+      dval = log10 (dval);
+      break;
+    case IPMI_SDR_LINEARIZATION_LOG2:
+      dval = log2 (dval);
+      break;
+    case IPMI_SDR_LINEARIZATION_E:
+      dval = exp (dval);
+      break;
+    case IPMI_SDR_LINEARIZATION_EXP10:
+      dval = exp10 (dval);
+      break;
+    case IPMI_SDR_LINEARIZATION_EXP2:
+      dval = exp2 (dval);
+      break;
+    case IPMI_SDR_LINEARIZATION_INVERSE:
       if (dval != 0.0)
-        dval = 1.0 / dval;
+	dval = 1.0 / dval;
+      break;
+    case IPMI_SDR_LINEARIZATION_SQR:
+      dval = pow (dval, 2.0);
+      break;
+    case IPMI_SDR_LINEARIZATION_CUBE:
+      dval = pow (dval, 3.0);
+      break;
+    case IPMI_SDR_LINEARIZATION_SQRT:
+      dval = sqrt (dval);
+      break;
+    case IPMI_SDR_LINEARIZATION_CUBERT:
+      dval = cbrt (dval);
+      break;
     }
-  else if (linearization == IPMI_SDR_LINEARIZATION_SQR)
-    dval = pow (dval, 2.0);
-  else if (linearization == IPMI_SDR_LINEARIZATION_CUBE)
-    dval = pow (dval, 3.0);
-  else if (linearization == IPMI_SDR_LINEARIZATION_SQRT)
-    dval = sqrt (dval);
-  else if (linearization == IPMI_SDR_LINEARIZATION_CUBERT)
-    dval = cbrt (dval);
 
   *value = dval;
   return (0);
@@ -243,31 +255,43 @@ ipmi_sensor_decode_raw_value (int8_t r_exponent,
    * Folks online suggest just using exp(1.0) in its place.  Sounds
    * good to me.
    */
-  if (linearization == IPMI_SDR_LINEARIZATION_LN)
-    dval = exp (dval);
-  else if (linearization == IPMI_SDR_LINEARIZATION_LOG10)
-    dval = exp10 (dval);
-  else if (linearization == IPMI_SDR_LINEARIZATION_LOG2)
-    dval = exp2 (dval);
-  else if (linearization == IPMI_SDR_LINEARIZATION_E)
-    dval = (log (dval)/log (exp (1.0)));
-  else if (linearization == IPMI_SDR_LINEARIZATION_EXP10)
-    dval = (log (dval)/log (10));
-  else if (linearization == IPMI_SDR_LINEARIZATION_EXP2)
-    dval = (log (dval)/log (2));
-  else if (linearization == IPMI_SDR_LINEARIZATION_INVERSE)
+  switch (linearization)
     {
+    case IPMI_SDR_LINEARIZATION_LN:
+      dval = exp (dval);
+      break;
+    case IPMI_SDR_LINEARIZATION_LOG10:
+      dval = exp10 (dval);
+      break;
+    case IPMI_SDR_LINEARIZATION_LOG2:
+      dval = exp2 (dval);
+      break;
+    case IPMI_SDR_LINEARIZATION_E:
+      dval = (log (dval)/log (exp (1.0)));
+      break;
+    case IPMI_SDR_LINEARIZATION_EXP10:
+      dval = (log (dval)/log (10));
+      break;
+    case IPMI_SDR_LINEARIZATION_EXP2:
+      dval = (log (dval)/log (2));
+      break;
+    case IPMI_SDR_LINEARIZATION_INVERSE:
       if (dval != 0.0)
         dval = 1.0 / dval;
+      break;
+    case IPMI_SDR_LINEARIZATION_SQR:
+      dval = sqrt (dval);
+      break;
+    case IPMI_SDR_LINEARIZATION_CUBE:
+      dval = cbrt (dval);
+      break;
+    case IPMI_SDR_LINEARIZATION_SQRT:
+      dval = pow (dval, 2.0);
+      break;
+    case IPMI_SDR_LINEARIZATION_CUBERT:
+      dval = pow (dval, 3.0);
+      break;
     }
-  else if (linearization == IPMI_SDR_LINEARIZATION_SQR)
-    dval = sqrt (dval);
-  else if (linearization == IPMI_SDR_LINEARIZATION_CUBE)
-    dval = cbrt (dval);
-  else if (linearization == IPMI_SDR_LINEARIZATION_SQRT)
-    dval = pow (dval, 2.0);
-  else if (linearization == IPMI_SDR_LINEARIZATION_CUBERT)
-    dval = pow (dval, 3.0);
 
   dval = (dval / pow (10, r_exponent));
   dval = (dval - (b * pow (10, b_exponent)));
@@ -322,31 +346,43 @@ ipmi_sensor_decode_tolerance (int8_t r_exponent,
   dval /= 2.0;
   dval += (dval * pow (10, r_exponent));
 
-  if (linearization == IPMI_SDR_LINEARIZATION_LN)
-    dval = log (dval);
-  else if (linearization == IPMI_SDR_LINEARIZATION_LOG10)
-    dval = log10 (dval);
-  else if (linearization == IPMI_SDR_LINEARIZATION_LOG2)
-    dval = log2 (dval);
-  else if (linearization == IPMI_SDR_LINEARIZATION_E)
-    dval = exp (dval);
-  else if (linearization == IPMI_SDR_LINEARIZATION_EXP10)
-    dval = exp10 (dval);
-  else if (linearization == IPMI_SDR_LINEARIZATION_EXP2)
-    dval = exp2 (dval);
-  else if (linearization == IPMI_SDR_LINEARIZATION_INVERSE)
+  switch (linearization)
     {
+    case IPMI_SDR_LINEARIZATION_LN:
+      dval = log (dval);
+      break;
+    case IPMI_SDR_LINEARIZATION_LOG10:
+      dval = log10 (dval);
+      break;
+    case IPMI_SDR_LINEARIZATION_LOG2:
+      dval = log2 (dval);
+      break;
+    case IPMI_SDR_LINEARIZATION_E:
+      dval = exp (dval);
+      break;
+    case IPMI_SDR_LINEARIZATION_EXP10:
+      dval = exp10 (dval);
+      break;
+    case IPMI_SDR_LINEARIZATION_EXP2:
+      dval = exp2 (dval);
+      break;
+    case IPMI_SDR_LINEARIZATION_INVERSE:
       if (dval != 0.0)
-        dval = 1.0 / dval;
+	dval = 1.0 / dval;
+      break;
+    case IPMI_SDR_LINEARIZATION_SQR:
+      dval = pow (dval, 2.0);
+      break;
+    case IPMI_SDR_LINEARIZATION_CUBE:
+      dval = pow (dval, 3.0);
+      break;
+    case IPMI_SDR_LINEARIZATION_SQRT:
+      dval = sqrt (dval);
+      break;
+    case IPMI_SDR_LINEARIZATION_CUBERT:
+      dval = cbrt (dval);
+      break;
     }
-  else if (linearization == IPMI_SDR_LINEARIZATION_SQR)
-    dval = pow (dval, 2.0);
-  else if (linearization == IPMI_SDR_LINEARIZATION_CUBE)
-    dval = pow (dval, 3.0);
-  else if (linearization == IPMI_SDR_LINEARIZATION_SQRT)
-    dval = sqrt (dval);
-  else if (linearization == IPMI_SDR_LINEARIZATION_CUBERT)
-    dval = cbrt (dval);
 
   *value = dval;
   return (0);

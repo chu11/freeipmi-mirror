@@ -251,17 +251,24 @@ _sdr_repository_info (ipmi_sensors_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (val == IPMI_SDR_MODAL_NON_MODAL_REPOSITORY_UPDATE_OP_UNSPECIFIED)
-    str = "unspecified";
-  else if (val == IPMI_SDR_NON_MODAL_REPOSITORY_UPDATE_OP_SUPPORTED)
-    str = "non-Modal supported";
-  else if (val == IPMI_SDR_MODAL_REPOSITORY_UPDATE_OP_SUPPORTED)
-    str = "modal supported";
-  else if (val == IPMI_SDR_MODAL_NON_MODAL_REPOSITORY_UPDATE_OP_SUPPORTED)
-    str = "both supported";
-  else
-    str = "unknown";
-
+  switch (val)
+    {
+    case IPMI_SDR_MODAL_NON_MODAL_REPOSITORY_UPDATE_OP_UNSPECIFIED:
+      str = "unspecified";
+      break;
+    case IPMI_SDR_NON_MODAL_REPOSITORY_UPDATE_OP_SUPPORTED:
+      str = "non-Modal supported";
+      break;
+    case IPMI_SDR_MODAL_REPOSITORY_UPDATE_OP_SUPPORTED:
+      str = "modal supported";
+      break;
+    case IPMI_SDR_MODAL_NON_MODAL_REPOSITORY_UPDATE_OP_SUPPORTED:
+      str = "both supported";
+      break;
+    default:
+      str = "unknown";
+    }
+  
   pstdout_printf (state_data->pstate,
                   "Modal/non-modal SDR Repository Update operation   : %s\n",
                   str);

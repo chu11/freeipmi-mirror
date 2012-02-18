@@ -1067,68 +1067,102 @@ display_channel_info (bmc_info_state_data_t *state_data)
       if (IPMI_CHANNEL_MEDIUM_TYPE_IS_RESERVED (channel_info_list[i].channel_medium_type))
         continue;
 
-      if (IPMI_CHANNEL_MEDIUM_TYPE_IS_RESERVED (channel_info_list[i].channel_medium_type))
-        medium_type_str = "Reserved";
-      else if (channel_info_list[i].channel_medium_type == IPMI_CHANNEL_MEDIUM_TYPE_IPMB)
-        medium_type_str = "IPMB (I2C)";
-      else if (channel_info_list[i].channel_medium_type == IPMI_CHANNEL_MEDIUM_TYPE_ICMB_10)
-        medium_type_str = "ICMB v1.0";
-      else if (channel_info_list[i].channel_medium_type == IPMI_CHANNEL_MEDIUM_TYPE_ICMB_09)
-        medium_type_str = "ICMB v0.9";
-      else if (channel_info_list[i].channel_medium_type == IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3)
-        medium_type_str = "802.3 LAN";
-      else if (channel_info_list[i].channel_medium_type == IPMI_CHANNEL_MEDIUM_TYPE_RS232)
-        medium_type_str = "Asynch. Serial/Modem (RS-232)";
-      else if (channel_info_list[i].channel_medium_type == IPMI_CHANNEL_MEDIUM_TYPE_OTHER_LAN)
-        medium_type_str = "Other LAN";
-      else if (channel_info_list[i].channel_medium_type == IPMI_CHANNEL_MEDIUM_TYPE_PCI_SMBUS)
-        medium_type_str = "PCI SMBus";
-      else if (channel_info_list[i].channel_medium_type == IPMI_CHANNEL_MEDIUM_TYPE_SMBUS_10_11)
-        medium_type_str = "SMBus v1.0/1.1";
-      else if (channel_info_list[i].channel_medium_type == IPMI_CHANNEL_MEDIUM_TYPE_SMBUS_20)
-        medium_type_str = "SMBus v2.0";
-      else if (channel_info_list[i].channel_medium_type == IPMI_CHANNEL_MEDIUM_TYPE_USB_1X)
-        medium_type_str = "USB 1.x";
-      else if (channel_info_list[i].channel_medium_type == IPMI_CHANNEL_MEDIUM_TYPE_USB_2X)
-        medium_type_str = "USB 2.x";
-      else if (channel_info_list[i].channel_medium_type == IPMI_CHANNEL_MEDIUM_TYPE_SYSTEM_INTERFACE)
-        medium_type_str = "System Interface (KCS, SMIC, or BT)";
-      else if (IPMI_CHANNEL_MEDIUM_TYPE_IS_OEM (channel_info_list[i].channel_medium_type))
-        medium_type_str = "OEM";
-      else
-        medium_type_str = "unknown";
+      switch (channel_info_list[i].channel_medium_type)
+	{
+	case IPMI_CHANNEL_MEDIUM_TYPE_IPMB:
+	  medium_type_str = "IPMB (I2C)";
+	  break;
+	case IPMI_CHANNEL_MEDIUM_TYPE_ICMB_10:
+	  medium_type_str = "ICMB v1.0";
+	  break;
+	case IPMI_CHANNEL_MEDIUM_TYPE_ICMB_09:
+	  medium_type_str = "ICMB v0.9";
+	  break;
+	case IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3:
+	  medium_type_str = "802.3 LAN";
+	  break;
+	case IPMI_CHANNEL_MEDIUM_TYPE_RS232:
+	  medium_type_str = "Asynch. Serial/Modem (RS-232)";
+	  break;
+	case IPMI_CHANNEL_MEDIUM_TYPE_OTHER_LAN:
+	  medium_type_str = "Other LAN";
+	  break;
+	case IPMI_CHANNEL_MEDIUM_TYPE_PCI_SMBUS:
+	  medium_type_str = "PCI SMBus";
+	  break;
+	case IPMI_CHANNEL_MEDIUM_TYPE_SMBUS_10_11:
+	  medium_type_str = "SMBus v1.0/1.1";
+	  break;
+	case IPMI_CHANNEL_MEDIUM_TYPE_SMBUS_20:
+	  medium_type_str = "SMBus v2.0";
+	  break;
+	case IPMI_CHANNEL_MEDIUM_TYPE_USB_1X:
+	  medium_type_str = "USB 1.x";
+	  break;
+	case IPMI_CHANNEL_MEDIUM_TYPE_USB_2X:
+	  medium_type_str = "USB 2.x";
+	  break;
+	case IPMI_CHANNEL_MEDIUM_TYPE_SYSTEM_INTERFACE:
+	  medium_type_str = "System Interface (KCS, SMIC, or BT)";
+	  break;
+	default:
+	  if (IPMI_CHANNEL_MEDIUM_TYPE_IS_OEM (channel_info_list[i].channel_medium_type))
+	    medium_type_str = "OEM";
+	  else
+	    medium_type_str = "unknown";
+	}
 
-      if (IPMI_CHANNEL_PROTOCOL_TYPE_IS_RESERVED (channel_info_list[i].channel_protocol_type))
-        protocol_type_str = "Reserved";
-      else if (channel_info_list[i].channel_protocol_type == IPMI_CHANNEL_PROTOCOL_TYPE_IPMB)
-        protocol_type_str = "IPMB-1.0";
-      else if (channel_info_list[i].channel_protocol_type == IPMI_CHANNEL_PROTOCOL_TYPE_ICMB_10)
-        protocol_type_str = "ICMB-1.0";
-      else if (channel_info_list[i].channel_protocol_type == IPMI_CHANNEL_PROTOCOL_TYPE_SMBUS_1X_2X)
-        protocol_type_str = "IPMI-SMBus";
-      else if (channel_info_list[i].channel_protocol_type == IPMI_CHANNEL_PROTOCOL_TYPE_KCS)
-        protocol_type_str = "KCS";
-      else if (channel_info_list[i].channel_protocol_type == IPMI_CHANNEL_PROTOCOL_TYPE_SMIC)
-        protocol_type_str = "SMIC";
-      else if (channel_info_list[i].channel_protocol_type == IPMI_CHANNEL_PROTOCOL_TYPE_BT_10)
-        protocol_type_str = "BT-10";
-      else if (channel_info_list[i].channel_protocol_type == IPMI_CHANNEL_PROTOCOL_TYPE_BT_15)
-        protocol_type_str = "BT-15";
-      else if (channel_info_list[i].channel_protocol_type == IPMI_CHANNEL_PROTOCOL_TYPE_TMODE)
-        protocol_type_str = "TMODE";
-      else if (IPMI_CHANNEL_PROTOCOL_TYPE_IS_OEM (channel_info_list[i].channel_protocol_type))
-        protocol_type_str = "OEM";
-      else
-        protocol_type_str = "unknown";
-
-      if (channel_info_list[i].session_support == IPMI_SESSION_SUPPORT_SESSION_LESS)
-        session_support_str = "session-less";
-      else if (channel_info_list[i].session_support == IPMI_SESSION_SUPPORT_SINGLE_SESSION)
-        session_support_str = "single-session";
-      else if (channel_info_list[i].session_support == IPMI_SESSION_SUPPORT_MULTI_SESSION)
-        session_support_str = "multi-session";
-      else
-        session_support_str = "session-based";
+      switch (channel_info_list[i].channel_protocol_type)
+	{
+	case IPMI_CHANNEL_PROTOCOL_TYPE_IPMB:
+	  protocol_type_str = "IPMB-1.0";
+	  break;
+	case IPMI_CHANNEL_PROTOCOL_TYPE_ICMB_10:
+	  protocol_type_str = "ICMB-1.0";
+	  break;
+	case IPMI_CHANNEL_PROTOCOL_TYPE_SMBUS_1X_2X:
+	  protocol_type_str = "IPMI-SMBus";
+	  break;
+	case IPMI_CHANNEL_PROTOCOL_TYPE_KCS:
+	  protocol_type_str = "KCS";
+	  break;
+	case IPMI_CHANNEL_PROTOCOL_TYPE_SMIC:
+	  protocol_type_str = "SMIC";
+	  break;
+	case IPMI_CHANNEL_PROTOCOL_TYPE_BT_10:
+	  protocol_type_str = "BT-10";
+	  break;
+	case IPMI_CHANNEL_PROTOCOL_TYPE_BT_15:
+	  protocol_type_str = "BT-15";
+	  break;
+	case IPMI_CHANNEL_PROTOCOL_TYPE_TMODE:
+	  protocol_type_str = "TMODE";
+	  break;
+	default:
+	  if (IPMI_CHANNEL_PROTOCOL_TYPE_IS_RESERVED (channel_info_list[i].channel_protocol_type))
+	    protocol_type_str = "Reserved";
+	  else if (IPMI_CHANNEL_PROTOCOL_TYPE_IS_OEM (channel_info_list[i].channel_protocol_type))
+	    protocol_type_str = "OEM";
+	  else
+	    protocol_type_str = "unknown";
+	}
+      
+      switch (channel_info_list[i].session_support)
+	{
+	case IPMI_SESSION_SUPPORT_SESSION_LESS:
+	  session_support_str = "session-less";
+	  break;
+	case IPMI_SESSION_SUPPORT_SINGLE_SESSION:
+	  session_support_str = "single-session";
+	  break;
+	case IPMI_SESSION_SUPPORT_MULTI_SESSION:
+	  session_support_str = "multi-session";
+	  break;
+	case IPMI_SESSION_SUPPORT_SESSION_BASED:
+	  session_support_str = "session-based";
+	default:
+	  session_support_str = "unknown";
+	}
         
       if (!state_data->prog_data->args->get_channel_info || first_newline_output)
         pstdout_printf (state_data->pstate, "\n");

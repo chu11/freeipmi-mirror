@@ -446,16 +446,21 @@ ipmi_fru_output_product_info_area (ipmi_fru_state_data_t *state_data,
 static char *
 _voltage_str (uint8_t voltage)
 {
-  if (voltage == IPMI_FRU_VOLTAGE_12V)
-    return "12V";
-  else if (voltage == IPMI_FRU_VOLTAGE_MINUS12V)
-    return "-12V";
-  else if (voltage == IPMI_FRU_VOLTAGE_5V)
-    return "5V";
-  else if (voltage == IPMI_FRU_VOLTAGE_3_3V)
-    return "3.3V";
-  else
-    return "";
+  switch (voltage)
+    {
+    case IPMI_FRU_VOLTAGE_12V:
+      return "12V";
+    case IPMI_FRU_VOLTAGE_MINUS12V:
+      return "-12V";
+    case IPMI_FRU_VOLTAGE_5V:
+      return "5V";
+    case IPMI_FRU_VOLTAGE_3_3V:
+      return "3.3V";
+    default:
+      return "";
+    }
+
+  return (NULL);		/* NOT REACHED */
 }
 
 int

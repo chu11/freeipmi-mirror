@@ -11,9 +11,6 @@ FreeIPMI FAQ/documentation
 
 FreeIPMI general
 ----------------
-- use switch instead of if/else if to improve performance (***)
-  - probably libfreeipmi tons of places
-  - audit
 - oem extensions
   - test/check handle firmware versions
   - document firmware versions in docs/ or mans/?

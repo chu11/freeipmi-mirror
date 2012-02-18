@@ -427,18 +427,21 @@ _get_sensor_units (ipmi_monitoring_ctx_t c,
       return (IPMI_MONITORING_SENSOR_UNITS_UNKNOWN);
     }
 
-  if (sensor_base_unit_type == IPMI_SENSOR_UNIT_DEGREES_C)
-    return (IPMI_MONITORING_SENSOR_UNITS_CELSIUS);
-  else if (sensor_base_unit_type == IPMI_SENSOR_UNIT_DEGREES_F)
-    return (IPMI_MONITORING_SENSOR_UNITS_FAHRENHEIT);
-  else if (sensor_base_unit_type == IPMI_SENSOR_UNIT_VOLTS)
-    return (IPMI_MONITORING_SENSOR_UNITS_VOLTS);
-  else if (sensor_base_unit_type == IPMI_SENSOR_UNIT_AMPS)
-    return (IPMI_MONITORING_SENSOR_UNITS_AMPS);
-  else if (sensor_base_unit_type == IPMI_SENSOR_UNIT_RPM)
-    return (IPMI_MONITORING_SENSOR_UNITS_RPM);
-  else if (sensor_base_unit_type == IPMI_SENSOR_UNIT_WATTS)
-    return (IPMI_MONITORING_SENSOR_UNITS_WATTS);
+  switch (sensor_base_unit_type)
+    {
+    case IPMI_SENSOR_UNIT_DEGREES_C:
+      return (IPMI_MONITORING_SENSOR_UNITS_CELSIUS);
+    case IPMI_SENSOR_UNIT_DEGREES_F:
+      return (IPMI_MONITORING_SENSOR_UNITS_FAHRENHEIT);
+    case IPMI_SENSOR_UNIT_VOLTS:
+      return (IPMI_MONITORING_SENSOR_UNITS_VOLTS);
+    case IPMI_SENSOR_UNIT_AMPS:
+      return (IPMI_MONITORING_SENSOR_UNITS_AMPS);
+    case IPMI_SENSOR_UNIT_RPM:
+      return (IPMI_MONITORING_SENSOR_UNITS_RPM);
+    case IPMI_SENSOR_UNIT_WATTS:
+      return (IPMI_MONITORING_SENSOR_UNITS_WATTS);
+    }
 
   IPMI_MONITORING_DEBUG (("sensor_base_unit_type '0x%X' not supported", sensor_base_unit_type));
   return (IPMI_MONITORING_SENSOR_UNITS_UNKNOWN);

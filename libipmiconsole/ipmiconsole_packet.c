@@ -454,24 +454,35 @@ _packet_dump_unknown_hdr (ipmiconsole_ctx_t c,
           return (-1);
         }
 
-      if (payload_type == IPMI_PAYLOAD_TYPE_SOL)
-        str = "= Unexpected SOL Packet                        =";
-      else if (payload_type == IPMI_PAYLOAD_TYPE_IPMI)
-        str = "= Unexpected IPMI 2.0 Packet                   =";
-      else if (payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST)
-        str = "= Unexpected Open Session Request              =";
-      else if (payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE)
-        str = "= Unexpected Open Session Response             =";
-      else if (payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1)
-        str = "= Unexpected RAKP Message 1                    =";
-      else if (payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2)
-        str = "= Unexpected RAKP Message 2                    =";
-      else if (payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3)
-        str = "= Unexpected RAKP Message 3                    =";
-      else if (payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4)
-        str = "= Unexpected RAKP Message 4                    =";
-      else
-        str = "= Unexpected Packet                            =";
+      switch (payload_type)
+	{
+	case IPMI_PAYLOAD_TYPE_SOL:
+	  str = "= Unexpected SOL Packet                        =";
+	  break;
+	case IPMI_PAYLOAD_TYPE_IPMI:
+	  str = "= Unexpected IPMI 2.0 Packet                   =";
+	  break;
+	case IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST:
+	  str = "= Unexpected Open Session Request              =";
+	  break;
+	case IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE:
+	  str = "= Unexpected Open Session Response             =";
+	  break;
+	case IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1:
+	  str = "= Unexpected RAKP Message 1                    =";
+	  break;
+	case IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2:
+	  str = "= Unexpected RAKP Message 2                    =";
+	  break;
+	case IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3:
+	  str = "= Unexpected RAKP Message 3                    =";
+	  break;
+	case IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4:
+	  str = "= Unexpected RAKP Message 4                    =";
+	  break;
+	default:
+	  str = "= Unexpected Packet                            =";
+	}
     }
 
   if ((len = snprintf (hdr, hdrlen, fmt, str)) < 0)

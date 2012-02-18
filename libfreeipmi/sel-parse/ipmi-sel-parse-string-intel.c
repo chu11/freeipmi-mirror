@@ -221,24 +221,31 @@ ipmi_sel_parse_output_intel_event_data1_class_oem (ipmi_sel_parse_ctx_t ctx,
 	{
 	  char *event_msg_str = NULL;
 	  
-	  if (system_event_record_data->offset_from_event_reading_type_code == IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_CORRECTABLE_MEMORY_ERROR_PERSISTENT_RECOVERABLE_ERROR)
-	    event_msg_str = "Persistent Recoverable Error";
-	  else if (system_event_record_data->offset_from_event_reading_type_code == IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_CORRECTABLE_MEMORY_ERROR_PERSISTENT_PARITY_ALERT)
-	    event_msg_str = "Persistent Parity Alert";
-	  else if (system_event_record_data->offset_from_event_reading_type_code == IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_CORRECTABLE_MEMORY_ERROR_PERSISTENT_PARITY_STATUS)
-	    event_msg_str = "Persistent Parity Status";
-	  else if (system_event_record_data->offset_from_event_reading_type_code == IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_CORRECTABLE_MEMORY_ERROR_SMI_LINK_LANE_FAIL_OVER_EVENT)
-	    event_msg_str = "SMI Link Lane Fail Over (LFO) Event";
-	    
-	    if (event_msg_str)
-	      {
-		snprintf (tmpbuf,
-			  tmpbuflen,
-			  "%s",
-			  event_msg_str);
-		
-		return (1);
-	      }
+	  switch (system_event_record_data->offset_from_event_reading_type_code)
+	    {
+	    case IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_CORRECTABLE_MEMORY_ERROR_PERSISTENT_RECOVERABLE_ERROR:
+	      event_msg_str = "Persistent Recoverable Error";
+	      break;
+	    case IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_CORRECTABLE_MEMORY_ERROR_PERSISTENT_PARITY_ALERT:
+	      event_msg_str = "Persistent Parity Alert";
+	      break;
+	    case IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_CORRECTABLE_MEMORY_ERROR_PERSISTENT_PARITY_STATUS:
+	      event_msg_str = "Persistent Parity Status";
+	      break;
+	    case IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_CORRECTABLE_MEMORY_ERROR_SMI_LINK_LANE_FAIL_OVER_EVENT:
+	      event_msg_str = "SMI Link Lane Fail Over (LFO) Event";
+	      break;
+	    }
+	  
+	  if (event_msg_str)
+	    {
+	      snprintf (tmpbuf,
+			tmpbuflen,
+			"%s",
+			event_msg_str);
+	      
+	      return (1);
+	    }
 	}
 
       if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QUANTA_QSSC_S4R_UNCORRECTABLE_ERROR
@@ -252,15 +259,15 @@ ipmi_sel_parse_output_intel_event_data1_class_oem (ipmi_sel_parse_ctx_t ctx,
 	  else if (system_event_record_data->offset_from_event_reading_type_code == IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_UNCORRECTABLE_MEMORY_ERROR_UNCORRECTABLE_ALERT_FRAME)
 	    event_msg_str = "Uncorrectable Alert Frame";
 	    
-	    if (event_msg_str)
-	      {
-		snprintf (tmpbuf,
-			  tmpbuflen,
-			  "%s",
-			  event_msg_str);
-		
-		return (1);
-	      }
+	  if (event_msg_str)
+	    {
+	      snprintf (tmpbuf,
+			tmpbuflen,
+			"%s",
+			event_msg_str);
+	      
+	      return (1);
+	    }
 	}
 
       if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QUANTA_QSSC_S4R_CORRECTABLE_ERROR
@@ -274,15 +281,15 @@ ipmi_sel_parse_output_intel_event_data1_class_oem (ipmi_sel_parse_ctx_t ctx,
 	  else if (system_event_record_data->offset_from_event_reading_type_code == IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_CORRECTABLE_MEMORY_ERROR_UNCORRECTABLE_ERROR)
 	    event_msg_str = "Uncorrectable Error";
 	    
-	    if (event_msg_str)
-	      {
-		snprintf (tmpbuf,
-			  tmpbuflen,
-			  "%s",
-			  event_msg_str);
-		
-		return (1);
-	      }
+	  if (event_msg_str)
+	    {
+	      snprintf (tmpbuf,
+			tmpbuflen,
+			"%s",
+			event_msg_str);
+	      
+	      return (1);
+	    }
 	}
     }
 
@@ -426,33 +433,50 @@ ipmi_sel_parse_output_intel_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
 	  error_sub_code = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_ERROR_SUB_CODE_BITMASK);
 	  error_sub_code >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_ERROR_SUB_CODE_SHIFT;
 	  
-	  if (event_special_code == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_EVENT_SPECIAL_CODE_INVALID_INFORMATION)
-	    event_special_code_str = "Invalid Information"; 
-	  else if (event_special_code == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_EVENT_SPECIAL_CODE_MEMORY_BOARD_HOT_REPLACED_WITH_MISMATCHED_OR_FAULTY_MEMORY)
-	    event_special_code_str = "Memory Board hot-replaced with mismatched or faulty memory";
-	  else if (event_special_code == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_EVENT_SPECIAL_CODE_MEMORY_HOT_PLUG_GENERIC_INITIALIZATION_ERROR)
-	    event_special_code_str = "Memory Hot-plug generic initialization error";
-	  else if (event_special_code == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_EVENT_SPECIAL_CODE_MEMORY_HOT_PLUG_TIMEOUT)
-	    event_special_code_str = "Memory Hot-plug Timeout";
-	  else if (event_special_code == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_EVENT_SPECIAL_CODE_USER_INITIATED_CANCELATION)
-	    event_special_code_str = "User-initiated cancelation";
-	  else
-	    event_special_code_str = "Unknown";
+	  switch (event_special_code)
+	    {
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_EVENT_SPECIAL_CODE_INVALID_INFORMATION:
+	      event_special_code_str = "Invalid Information"; 
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_EVENT_SPECIAL_CODE_MEMORY_BOARD_HOT_REPLACED_WITH_MISMATCHED_OR_FAULTY_MEMORY:
+	      event_special_code_str = "Memory Board hot-replaced with mismatched or faulty memory";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_EVENT_SPECIAL_CODE_MEMORY_HOT_PLUG_GENERIC_INITIALIZATION_ERROR:
+	      event_special_code_str = "Memory Hot-plug generic initialization error";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_EVENT_SPECIAL_CODE_MEMORY_HOT_PLUG_TIMEOUT:
+	      event_special_code_str = "Memory Hot-plug Timeout";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_EVENT_SPECIAL_CODE_USER_INITIATED_CANCELATION:
+	      event_special_code_str = "User-initiated cancelation";
+	      break;
+	    default:
+	      event_special_code_str = "Unknown";
+	    }
 
 	  if (event_special_code == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_EVENT_SPECIAL_CODE_MEMORY_HOT_PLUG_GENERIC_INITIALIZATION_ERROR)
 	    {
-	      if (error_sub_code == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_ERROR_SUB_CODE_MEMORY_BIST_ERROR)
-		error_sub_code_str = "Memory BIST Error";
-	      else if (error_sub_code == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_ERROR_SUB_CODE_SPD_ERROR)
-		error_sub_code_str = "SPD Error";
-	      else if (error_sub_code == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_ERROR_SUB_CODE_CLTT_CONFIGURATION_ERROR)
-		error_sub_code_str = "CLTT Configuration Error";
-	      else if (error_sub_code == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_ERROR_SUB_CODE_POPULATION_RULE_ERROR)
-		error_sub_code_str = "Population Rule Error";
-	      else if (error_sub_code == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_ERROR_SUB_CODE_MISMATCHED_DIMM_ERROR)
-		error_sub_code_str = "Mismatched DIMM Error";
-	      else if (error_sub_code == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_ERROR_SUB_CODE_OTHER_MEMORY_INITIALIZATION_ERRORS)
-		error_sub_code_str = "Other Memory Initialization Errors";
+	      switch (error_sub_code)
+		{
+		case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_ERROR_SUB_CODE_MEMORY_BIST_ERROR:
+		  error_sub_code_str = "Memory BIST Error";
+		  break;
+		case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_ERROR_SUB_CODE_SPD_ERROR:
+		  error_sub_code_str = "SPD Error";
+		  break;
+		case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_ERROR_SUB_CODE_CLTT_CONFIGURATION_ERROR:
+		  error_sub_code_str = "CLTT Configuration Error";
+		  break;
+		case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_ERROR_SUB_CODE_POPULATION_RULE_ERROR:
+		  error_sub_code_str = "Population Rule Error";
+		  break;
+		case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_ERROR_SUB_CODE_MISMATCHED_DIMM_ERROR:
+		  error_sub_code_str = "Mismatched DIMM Error";
+		  break;
+		case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_ERROR_SUB_CODE_OTHER_MEMORY_INITIALIZATION_ERRORS:
+		  error_sub_code_str = "Other Memory Initialization Errors";
+		  break;
+		}
 	    }
 	  
 	  snprintf (tmpbuf,
@@ -623,24 +647,35 @@ _ipmi_sel_parse_output_intel_quanta_qssc_s4r_memory_board (ipmi_sel_parse_ctx_t 
   memory_board = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MEMORY_BOARD_BITMASK);
   memory_board >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MEMORY_BOARD_SHIFT;
   
-  if (memory_board == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MEMORY_BOARD_MEM1_SLOT)
-    memory_board_str = "MEM1_SLOT";
-  else if (memory_board == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MEMORY_BOARD_MEM2_SLOT)
-    memory_board_str = "MEM2_SLOT";
-  else if (memory_board == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MEMORY_BOARD_MEM3_SLOT)
-    memory_board_str = "MEM3_SLOT";
-  else if (memory_board == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MEMORY_BOARD_MEM4_SLOT)
-    memory_board_str = "MEM4_SLOT";
-  else if (memory_board == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MEMORY_BOARD_MEM5_SLOT)
-    memory_board_str = "MEM5_SLOT";
-  else if (memory_board == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MEMORY_BOARD_MEM6_SLOT)
-    memory_board_str = "MEM6_SLOT";
-  else if (memory_board == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MEMORY_BOARD_MEM7_SLOT)
-    memory_board_str = "MEM7_SLOT";
-  else if (memory_board == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MEMORY_BOARD_MEM8_SLOT)
-    memory_board_str = "MEM8_SLOT";
-  else
-    memory_board_str = "Unknown";
+  switch (memory_board)
+    {
+    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MEMORY_BOARD_MEM1_SLOT:
+      memory_board_str = "MEM1_SLOT";
+      break;
+    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MEMORY_BOARD_MEM2_SLOT:
+      memory_board_str = "MEM2_SLOT";
+      break;
+    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MEMORY_BOARD_MEM3_SLOT:
+      memory_board_str = "MEM3_SLOT";
+      break;
+    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MEMORY_BOARD_MEM4_SLOT:
+      memory_board_str = "MEM4_SLOT";
+      break;
+    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MEMORY_BOARD_MEM5_SLOT:
+      memory_board_str = "MEM5_SLOT";
+      break;
+    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MEMORY_BOARD_MEM6_SLOT:
+      memory_board_str = "MEM6_SLOT";
+      break;
+    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MEMORY_BOARD_MEM7_SLOT:
+      memory_board_str = "MEM7_SLOT";
+      break;
+    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MEMORY_BOARD_MEM8_SLOT:
+      memory_board_str = "MEM8_SLOT";
+      break;
+    default:
+      memory_board_str = "Unknown";
+    }
 
   snprintf (tmpbuf,
 	    tmpbuflen,
@@ -651,24 +686,29 @@ _ipmi_sel_parse_output_intel_quanta_qssc_s4r_memory_board (ipmi_sel_parse_ctx_t 
 static char *
 _ipmi_sel_parse_output_intel_quanta_qssc_s4r_dimm_slot_str (uint8_t dimm_slot)
 {
-  if (dimm_slot == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DIMM_SLOT_1B)
-    return "DIMM_1/B";
-  else if (dimm_slot == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DIMM_SLOT_1A)
-    return "DIMM_1/A";
-  else if (dimm_slot == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DIMM_SLOT_2B)
-    return "DIMM_2/B";
-  else if (dimm_slot == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DIMM_SLOT_2A)
-    return "DIMM_2/A";
-  else if (dimm_slot == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DIMM_SLOT_1D)
-    return "DIMM_1/D";
-  else if (dimm_slot == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DIMM_SLOT_1C)
-    return "DIMM_1/C";
-  else if (dimm_slot == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DIMM_SLOT_2D)
-    return "DIMM_2/D";
-  else if (dimm_slot == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DIMM_SLOT_2C)
-    return "DIMM_2/C";
-  else
-    return "Unknown";
+  switch (dimm_slot)
+    {
+    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DIMM_SLOT_1B:
+      return ("DIMM_1/B");
+    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DIMM_SLOT_1A:
+      return ("DIMM_1/A");
+    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DIMM_SLOT_2B:
+      return ("DIMM_2/B");
+    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DIMM_SLOT_2A:
+      return ("DIMM_2/A");
+    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DIMM_SLOT_1D:
+      return ("DIMM_1/D");
+    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DIMM_SLOT_1C:
+      return ("DIMM_1/C");
+    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DIMM_SLOT_2D:
+      return ("DIMM_2/D");
+    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DIMM_SLOT_2C:
+      return ("DIMM_2/C");
+    default:
+      return ("Unknown");
+    }
+
+  return (NULL);		/* NOT REACHED */
 }
 
 static void
@@ -725,12 +765,17 @@ _ipmi_sel_parse_output_intel_quanta_qssc_s4r_smi_link (ipmi_sel_parse_ctx_t ctx,
   smi_link = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_SMI_LINK_BITMASK);
   smi_link >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_SMI_LINK_SHIFT;
 
-  if (smi_link == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_SMI_LINK_0)
-    smi_link_str = "SMI_LINK0";
-  else if (smi_link == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_SMI_LINK_1)
-    smi_link_str = "SMI_LINK1";
-  else
-    smi_link_str = "Unknown";
+  switch (smi_link)
+    {
+    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_SMI_LINK_0:
+      smi_link_str = "SMI_LINK0";
+      break;
+    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_SMI_LINK_1:
+      smi_link_str = "SMI_LINK1";
+      break;
+    default:
+      smi_link_str = "Unknown";
+    }
   
   snprintf (tmpbuf,
 	    tmpbuflen,
@@ -912,40 +957,60 @@ ipmi_sel_parse_output_intel_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
 	  instance_id = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MIRRORING_INSTANCE_ID_BITMASK);
 	  instance_id >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MIRRORING_INSTANCE_ID_SHIFT;
 
-	  if (domain_instance_type == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MIRRORING_DOMAIN_INSTANCE_TYPE_LOCAL_MEMORY_MIRRORING_INTRA_SOCKET)
-	    domain_instance_str = "Local memory mirroring";
-	  else if (domain_instance_type == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MIRRORING_DOMAIN_INSTANCE_TYPE_GLOBAL_MEMORY_MIRRORING_INTER_SOCKET)
-	    domain_instance_str = "Global memory mirroring";
-	  else
-	    domain_instance_str = "Unknown";
+	  switch (domain_instance_type)
+	    {
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MIRRORING_DOMAIN_INSTANCE_TYPE_LOCAL_MEMORY_MIRRORING_INTRA_SOCKET:
+	      domain_instance_str = "Local memory mirroring";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MIRRORING_DOMAIN_INSTANCE_TYPE_GLOBAL_MEMORY_MIRRORING_INTER_SOCKET:
+	      domain_instance_str = "Global memory mirroring";
+	      break;
+	    default:
+	      domain_instance_str = "Unknown";
+	    }
 
-	  if (instance_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MIRRORING_INSTANCE_ID_1_2)
-	    instance_id_str = "{MEM1_SLOT, MEM2_SLOT}";
-	  else if (instance_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MIRRORING_INSTANCE_ID_3_4)
-	    instance_id_str = "{MEM3_SLOT, MEM4_SLOT}";
-	  else if (instance_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MIRRORING_INSTANCE_ID_5_6)
-	    instance_id_str = "{MEM5_SLOT, MEM6_SLOT}";
-	  else if (instance_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MIRRORING_INSTANCE_ID_7_8)
-	    instance_id_str = "{MEM7_SLOT, MEM8_SLOT}";
-	  else if (instance_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MIRRORING_INSTANCE_ID_1_4)
-	    instance_id_str = "{MEM1_SLOT, MEM4_SLOT}";
-	  else if (instance_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MIRRORING_INSTANCE_ID_3_2)
-	    instance_id_str = "{MEM3_SLOT, MEM2_SLOT}";
-	  else if (instance_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MIRRORING_INSTANCE_ID_5_8)
-	    instance_id_str = "{MEM5_SLOT, MEM8_SLOT}";
-	  else if (instance_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MIRRORING_INSTANCE_ID_7_6)
-	    instance_id_str = "{MEM7_SLOT, MEM6_SLOT}";
-	  else if (instance_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MIRRORING_INSTANCE_ID_1_3)
-	    instance_id_str = "{MEM1_SLOT, MEM3_SLOT}";
-	  else if (instance_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MIRRORING_INSTANCE_ID_2_4)
-	    instance_id_str = "{MEM2_SLOT, MEM4_SLOT}";
-	  else if (instance_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MIRRORING_INSTANCE_ID_5_7)
-	    instance_id_str = "{MEM5_SLOT, MEM7_SLOT}";
-	  else if (instance_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MIRRORING_INSTANCE_ID_6_8)
-	    instance_id_str = "{MEM6_SLOT, MEM8_SLOT}";
-	  else
-	    instance_id_str = "Unknown";
-	  
+	  switch (instance_id)
+	    {
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MIRRORING_INSTANCE_ID_1_2:
+	      instance_id_str = "{MEM1_SLOT, MEM2_SLOT}";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MIRRORING_INSTANCE_ID_3_4:
+	      instance_id_str = "{MEM3_SLOT, MEM4_SLOT}";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MIRRORING_INSTANCE_ID_5_6:
+	      instance_id_str = "{MEM5_SLOT, MEM6_SLOT}";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MIRRORING_INSTANCE_ID_7_8:
+	      instance_id_str = "{MEM7_SLOT, MEM8_SLOT}";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MIRRORING_INSTANCE_ID_1_4:
+	      instance_id_str = "{MEM1_SLOT, MEM4_SLOT}";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MIRRORING_INSTANCE_ID_3_2:
+	      instance_id_str = "{MEM3_SLOT, MEM2_SLOT}";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MIRRORING_INSTANCE_ID_5_8:
+	      instance_id_str = "{MEM5_SLOT, MEM8_SLOT}";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MIRRORING_INSTANCE_ID_7_6:
+	      instance_id_str = "{MEM7_SLOT, MEM6_SLOT}";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MIRRORING_INSTANCE_ID_1_3:
+	      instance_id_str = "{MEM1_SLOT, MEM3_SLOT}";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MIRRORING_INSTANCE_ID_2_4:
+	      instance_id_str = "{MEM2_SLOT, MEM4_SLOT}";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MIRRORING_INSTANCE_ID_5_7:
+	      instance_id_str = "{MEM5_SLOT, MEM7_SLOT}";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_MIRRORING_INSTANCE_ID_6_8:
+	      instance_id_str = "{MEM6_SLOT, MEM8_SLOT}";
+	      break;
+	    default:
+	      instance_id_str = "Unknown";
+	    }
+
 	  snprintf (tmpbuf,
 		    tmpbuflen,
 		    "Domain Instance = %s, Instance = %s",
@@ -1187,258 +1252,386 @@ ipmi_sel_parse_output_intel_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
 	  error_code = system_event_record_data->event_data2;
 	  error_code |= (system_event_record_data->event_data3 << 8);
           
-	  if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_CMOS_DATE_TIME_NOT_SET)
-	    error_code_str = "CMOS date / time not set";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PASSWORD_CHECK_FAILED)
-	    error_code_str = "Password check failed";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_KEYBOARD_COMPONENT_ENCOUNTERED_A_LOCKED_ERROR)
-	    error_code_str = "Keyboard component encountered a locked error";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_KEYBOARD_COMPONENT_ENCOUNTERED_A_STUCK_KEY_ERROR)
-	    error_code_str = "Keyboard component encountered a stuck key error";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_FIXED_MEDIA_THE_SAS_RAID_FIRMWARE_CAN_NOT_RUN_PROPERLY)
-	    error_code_str = "Fixed Media The SAS RAID firmware can not run properly. The user should attempt to reflash the firmware";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PCI_COMPONENT_ENCOUNTERED_A_PERR_ERROR)
-	    error_code_str = "PCI component encountered a PERR error";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PCI_RESOURCE_CONFLICT)
-	    error_code_str = "PCI resource conflict";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PCI_OUT_OF_RESOURCES_ERROR)
-	    error_code_str = "PCI out of resources error";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PROCESSOR_0X_CACHE_SIZE_MISMATCH_DETECTED)
-	    error_code_str = "Processor 0x cache size mismatch detected";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PROCESSOR_0X_STEPPING_MISMATCH)
-	    error_code_str = "Processor 0x stepping mismatch";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PROCESSOR_0X_FAMILY_MISMATCH_DETECTED)
-	    error_code_str = "Processor 0x family mismatch detected";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PROCESSOR_0X_INTEL_QPI_SPEED_MISMATCH)
-	    error_code_str = "Processor 0x Intel(R) QPI speed mismatch";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PROCESSOR_0X_MODEL_MISMATCH)
-	    error_code_str = "Processor 0x model mismatch";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PROCESSOR_0X_SPEEDS_MISMATCHED)
-	    error_code_str = "Processor 0x speeds mismatched";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PROCESSOR_0X_FAMILY_IS_NOT_SUPPORTED)
-	    error_code_str = "Processor 0x family is not supported";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PROCESSOR_AND_CHIPSET_STEPPING_CONFIGURATION_IS_UNSUPPORTED)
-	    error_code_str = "Processor and chipset stepping configuration is unsupported";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_CMOS_NVRAM_CONFIGURATION_CLEARED)
-	    error_code_str = "CMOS/NVRAM Configuration Cleared";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PASSWORDS_CLEARED_BY_JUMPER)
-	    error_code_str = "Passwords cleared by jumper";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PASSWORD_CLEAR_JUMPER_IS_SET)
-	    error_code_str = "Password clear jumper is set";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PROCESSOR_01_UNABLE_TO_APPLY_MICROCODE_UPDATE)
-	    error_code_str = "Processor 01 unable to apply microcode update";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PROCESSOR_02_UNABLE_TO_APPLY_MICROCODE_UPDATE)
-	    error_code_str = "Processor 02 unable to apply microcode update";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PROCESSOR_0X_MICROCODE_UPDATE_NOT_FOUND)
-	    error_code_str = "Processor 0x microcode update not found";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_WATCHDOG_TIMER_FAILED_ON_LAST_BOOT)
-	    error_code_str = "Watchdog timer failed on last boot";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_OS_BOOT_WATCHDOG_TIMER_FAILURE)
-	    error_code_str = "OS boot watchdog timer failure";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_BASEBOARD_MANAGEMENT_CONTROLLER_FAILED_SELF_TEST)
-	    error_code_str = "Baseboard management controller failed self-test";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_BASEBOARD_MANAGEMENT_CONTROLLER_FAILED_TO_RESPOND)
-	    error_code_str = "Baseboard management controller failed to respond";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_BASEBOARD_MANAGEMENT_CONTROLLER_IN_UPDATE_MODE)
-	    error_code_str = "Baseboard management controller in update mode";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_SENSOR_DATA_RECORD_EMPTY)
-	    error_code_str = "Sensor data record empty";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_SYSTEM_EVENT_LOG_FULL)
-	    error_code_str = "System event log full";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_MEMORY_COMPONENT_COULD_NOT_BE_CONFIGURED_IN_THE_SELECTED_RAS_MODE)
-	    error_code_str = "Memory component could not be configured in the selected RAS mode";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_POPULATION_ERROR)
-	    error_code_str = "DIMM Population Error";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_CLTT_CONFIGURATION_FAILURE_ERROR)
-	    error_code_str = "CLTT Configuration Failure Error";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_A1_FAILED_SELF_TEST_BIST)
-	    error_code_str = "DIMM_A1 failed Self Test (BIST)";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_A2_FAILED_SELF_TEST_BIST)
-	    error_code_str = "DIMM_A2 failed Self Test (BIST)";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_B1_FAILED_SELF_TEST_BIST)
-	    error_code_str = "DIMM_B1 failed Self Test (BIST)";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_B2_FAILED_SELF_TEST_BIST)
-	    error_code_str = "DIMM_B2 failed Self Test (BIST)";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_C1_FAILED_SELF_TEST_BIST)
-	    error_code_str = "DIMM_C1 failed Self Test (BIST)";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_C2_FAILED_SELF_TEST_BIST)
-	    error_code_str = "DIMM_C2 failed Self Test (BIST)";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_D1_FAILED_SELF_TEST_BIST)
-	    error_code_str = "DIMM_D1 failed Self Test (BIST)";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_D2_FAILED_SELF_TEST_BIST)
-	    error_code_str = "DIMM_D2 failed Self Test (BIST)";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_E1_FAILED_SELF_TEST_BIST)
-	    error_code_str = "DIMM_E1 failed Self Test (BIST)";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_E2_FAILED_SELF_TEST_BIST)
-	    error_code_str = "DIMM_E2 failed Self Test (BIST)";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_F1_FAILED_SELF_TEST_BIST)
-	    error_code_str = "DIMM_F1 failed Self Test (BIST)";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_F2_FAILED_SELF_TEST_BIST)
-	    error_code_str = "DIMM_F2 failed Self Test (BIST)";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_A1_DISABLED)
-	    error_code_str = "DIMM_A1 Disabled";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_A2_DISABLED)
-	    error_code_str = "DIMM_A2 Disabled";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_B1_DISABLED)
-	    error_code_str = "DIMM_B1 Disabled";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_B2_DISABLED)
-	    error_code_str = "DIMM_B2 Disabled";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_C1_DISABLED)
-	    error_code_str = "DIMM_C1 Disabled";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_C2_DISABLED)
-	    error_code_str = "DIMM_C2 Disabled";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_D1_DISABLED)
-	    error_code_str = "DIMM_D1 Disabled";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_D2_DISABLED)
-	    error_code_str = "DIMM_D2 Disabled";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_E1_DISABLED)
-	    error_code_str = "DIMM_E1 Disabled";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_E2_DISABLED)
-	    error_code_str = "DIMM_E2 Disabled";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_F1_DISABLED)
-	    error_code_str = "DIMM_F1 Disabled";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_F2_DISABLED)
-	    error_code_str = "DIMM_F2 Disabled";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_A1_COMPONENT_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAIL_ERROR)
-	    error_code_str = "DIMM_A1 Component encountered a Serial Presence Detection (SPD) fail error";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_A2_COMPONENT_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAIL_ERROR)
-	    error_code_str = "DIMM_A2 Component encountered a Serial Presence Detection (SPD) fail error";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_B1_COMPONENT_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAIL_ERROR)
-	    error_code_str = "DIMM_B1 Component encountered a Serial Presence Detection (SPD) fail error";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_B2_COMPONENT_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAIL_ERROR)
-	    error_code_str = "DIMM_B2 Component encountered a Serial Presence Detection (SPD) fail error";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_C1_COMPONENT_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAIL_ERROR)
-	    error_code_str = "DIMM_C1 Component encountered a Serial Presence Detection (SPD) fail error";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_C2_COMPONENT_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAIL_ERROR)
-	    error_code_str = "DIMM_C2 Component encountered a Serial Presence Detection (SPD) fail error";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_D1_COMPONENT_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAIL_ERROR)
-	    error_code_str = "DIMM_D1 Component encountered a Serial Presence Detection (SPD) fail error";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_D2_COMPONENT_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAIL_ERROR)
-	    error_code_str = "DIMM_D2 Component encountered a Serial Presence Detection (SPD) fail error";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_E1_COMPONENT_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAIL_ERROR)
-	    error_code_str = "DIMM_E1 Component encountered a Serial Presence Detection (SPD) fail error";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_E2_COMPONENT_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAIL_ERROR)
-	    error_code_str = "DIMM_E2 Component encountered a Serial Presence Detection (SPD) fail error";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_F1_COMPONENT_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAIL_ERROR)
-	    error_code_str = "DIMM_F1 Component encountered a Serial Presence Detection (SPD) fail error";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_F2_COMPONENT_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAIL_ERROR)
-	    error_code_str = "DIMM_F2 Component encountered a Serial Presence Detection (SPD) fail error";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_A1_UNCORRECTABLE_ECC_ERROR_ENCOUNTERED)
-	    error_code_str = "DIMM_A1 Uncorrectable ECC error encountered";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_A2_UNCORRECTABLE_ECC_ERROR_ENCOUNTERED)
-	    error_code_str = "DIMM_A2 Uncorrectable ECC error encountered";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_B1_UNCORRECTABLE_ECC_ERROR_ENCOUNTERED)
-	    error_code_str = "DIMM_B1 Uncorrectable ECC error encountered";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_B2_UNCORRECTABLE_ECC_ERROR_ENCOUNTERED)
-	    error_code_str = "DIMM_B2 Uncorrectable ECC error encountered";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_C1_UNCORRECTABLE_ECC_ERROR_ENCOUNTERED)
-	    error_code_str = "DIMM_C1 Uncorrectable ECC error encountered";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_C2_UNCORRECTABLE_ECC_ERROR_ENCOUNTERED)
-	    error_code_str = "DIMM_C2 Uncorrectable ECC error encountered";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_D1_UNCORRECTABLE_ECC_ERROR_ENCOUNTERED)
-	    error_code_str = "DIMM_D1 Uncorrectable ECC error encountered";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_D2_UNCORRECTABLE_ECC_ERROR_ENCOUNTERED)
-	    error_code_str = "DIMM_D2 Uncorrectable ECC error encountered";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_E1_UNCORRECTABLE_ECC_ERROR_ENCOUNTERED)
-	    error_code_str = "DIMM_E1 Uncorrectable ECC error encountered";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_E2_UNCORRECTABLE_ECC_ERROR_ENCOUNTERED)
-	    error_code_str = "DIMM_E2 Uncorrectable ECC error encountered";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_F1_UNCORRECTABLE_ECC_ERROR_ENCOUNTERED)
-	    error_code_str = "DIMM_F1 Uncorrectable ECC error encountered";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_F2_UNCORRECTABLE_ECC_ERROR_ENCOUNTERED)
-	    error_code_str = "DIMM_F2 Uncorrectable ECC error encountered";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_CHIPSET_RECLAIM_OF_NON_CRITICAL_VARIABLES_COMPLETE)
-	    error_code_str = "Chipset Reclaim of non critical variables complete";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_UNSPECIFIED_PROCESSOR_COMPONENT_HAS_ENCOUNTERED_A_NON_SPECIFIC_ERROR)
-	    error_code_str = "Unspecified processor component has encountered a non specific error";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_KEYBOARD_COMPONENT_WAS_NOT_DETECTED)
-	    error_code_str = "Keyboard component was not detected";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_KEYBOARD_COMPONENT_ENCOUNTERED_A_CONTROLLER_ERROR)
-	    error_code_str = "Keyboard component encountered a controller error";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_MOUSE_COMPONENT_WAS_NOT_DETECTED)
-	    error_code_str = "Mouse component was not detected";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_MOUSE_COMPONENT_ENCOUNTERED_A_CONTROLLER_ERROR)
-	    error_code_str = "Mouse component encountered a controller error";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_LOCAL_CONSOLE_COMPONENT_ENCOUNTERED_A_CONTROLLER_ERROR)
-	    error_code_str = "Local Console component encountered a controller error";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_LOCAL_CONSOLE_COMPONENT_ENCOUNTERED_AN_OUTPUT_ERROR)
-	    error_code_str = "Local Console component encountered an output error";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_LOCAL_CONSOLE_COMPONENT_ENCOUNTERED_A_RESOURCE_CONFLICT_ERROR)
-	    error_code_str = "Local Console component encountered a resource conflict error";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_REMOTE_CONSOLE_COMPONENT_ENCOUNTERED_A_CONTROLLER_ERROR)
-	    error_code_str = "Remote Console component encountered a controller error";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_REMOTE_CONSOLE_COMPONENT_ENCOUNTERED_AN_INPUT_ERROR)
-	    error_code_str = "Remote Console component encountered an input error";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_REMOTE_CONSOLE_COMPONENT_ENCOUNTERED_AN_OUTPUT_ERROR)
-	    error_code_str = "Remote Console component encountered an output error";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_SERIAL_PORT_COMPONENT_WAS_NOT_DETECTED)
-	    error_code_str = "Serial port component was not detected";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_SERIAL_PORT_COMPONENT_ENCOUNTERED_A_RESOURCE_CONFLICT_ERROR)
-	    error_code_str = "Serial port component encountered a resource conflict error";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_SERIAL_PORT_CONTROLLER_ERROR)
-	    error_code_str = "Serial Port controller error";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_SERIAL_PORT_COMPONENT_ENCOUNTERED_AN_INPUT_ERROR)
-	    error_code_str = "Serial Port component encountered an input error";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_SERIAL_PORT_COMPONENT_ENCOUNTERED_AN_OUTPUT_ERROR)
-	    error_code_str = "Serial Port component encountered an output error";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_LPC_COMPONENT_ENCOUNTERED_A_CONTROLLER_ERROR)
-	    error_code_str = "LPC component encountered a controller error";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_LPC_COMPONENT_ENCOUNTERED_A_RESOURCE_CONFLICT_ERROR)
-	    error_code_str = "LPC component encountered a resource conflict error";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_ATA_ATPI_COMPONENT_ENCOUNTERED_A_CONTROLLER_ERROR)
-	    error_code_str = "ATA/ATPI component encountered a controller error";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PCI_COMPONENT_ENCOUNTERED_A_CONTROLLER_ERROR)
-	    error_code_str = "PCI component encountered a controller error";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PCI_COMPONENT_ENCOUNTERED_A_READ_ERROR)
-	    error_code_str = "PCI component encountered a read error";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PCI_COMPONENT_ENCOUNTERED_A_WRITE_ERROR)
-	    error_code_str = "PCI component encountered a write error";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_UNSPECIFIED_SOFTWARE_COMPONENT_ENCOUNTERED_A_START_ERROR)
-	    error_code_str = "Unspecified software component encountered a start error";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PEI_CORE_COMPONENT_ENCOUNTERED_A_LOAD_ERROR)
-	    error_code_str = "PEI Core component encountered a load error";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PEI_MODULE_COMPONENT_ENCOUNTERED_A_ILLEGAL_SOFTWARE_STATE_ERROR)
-	    error_code_str = "PEI module component encountered a illegal software state error";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DXE_CORE_COMPONENT_ENCOUNTERED_A_ILLEGAL_SOFTWARE_STATE_ERROR)
-	    error_code_str = "DXE core component encountered a illegal software state error";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DXE_BOOT_SERVICES_DRIVER_COMPONENT_ENCOUNTERED_A_ILLEGAL_SOFTWARE_STATE_ERROR)
-	    error_code_str = "DXE boot services driver component encountered a illegal software state error";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DXE_BOOT_SERVICES_DRIVER_COMPONENT_ENCOUNTERED_INVALID_CONFIGURATION)
-	    error_code_str = "DXE boot services driver component encountered invalid configuration";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_SMM_DRIVER_COMPONENT_ENCOUNTERED_A_ILLEGAL_SOFTWARE_STATE_ERROR)
-	    error_code_str = "SMM driver component encountered a illegal software state error";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_TPM_DEVICE_NOT_DETECTED)
-	    error_code_str = "TPM device not detected";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_TPM_DEVICE_MISSING_OR_NOT_RESPONDING)
-	    error_code_str = "TPM device missing or not responding";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_TPM_DEVICE_FAILURE)
-	    error_code_str = "TPM device failure";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_TPM_DEVICE_FAILED_SELF_TEST)
-	    error_code_str = "TPM device failed self test";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PROCESSOR_COMPONENT_ENCOUNTERED_A_MISMATCH_ERROR)
-	    error_code_str = "Processor component encountered a mismatch error";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PROCESSOR_COMPONENT_ENCOUNTERED_A_LOW_VOLTAGE_ERROR)
-	    error_code_str = "Processor component encountered a low voltage error";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PROCESSOR_COMPONENT_ENCOUNTERED_A_HIGH_VOLTAGE_ERROR)
-	    error_code_str = "Processor component encountered a high voltage error";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PCI_COMPONENT_ENCOUNTERED_A_SERR_ERROR)
-	    error_code_str = "PCI component encountered a SERR error";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_ATA_ATPI_ATA_BUS_SMART_NOT_SUPPORTED)
-	    error_code_str = "ATA/ATPI ATA bus SMART not supported";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_ATA_ATPI_ATA_SMART_IS_DISABLED)
-	    error_code_str = "ATA/ATPI ATA SMART is disabled";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PCI_EXPRESS_COMPONENT_ENCOUNTERED_A_PERR_ERROR)
-	    error_code_str = "PCI Express component encountered a PERR error";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PCI_EXPRESS_COMPONENT_ENCOUNTERED_A_SERR_ERROR)
-	    error_code_str = "PCI Express component encountered a SERR error";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PCI_EXPRESS_IBIST_ERROR)
-	    error_code_str = "PCI Express IBIST error";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DXE_BOOT_SERVICES_DRIVER_NOT_ENOUGH_MEMORY_AVAILABLE_TO_SHADOW_A_LEGACY_OPTION_ROM)
-	    error_code_str = "DXE boot services driver Not enough memory available to shadow a legacy option ROM";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DXE_BOOT_SERVICES_DRIVER_UNRECOGNIZED)
-	    error_code_str = "DXE boot services driver Unrecognized";
-	  else
-	    error_code_str = "Undefined Post Error";
+	  switch (error_code)
+	    {
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_CMOS_DATE_TIME_NOT_SET:
+	      error_code_str = "CMOS date / time not set";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PASSWORD_CHECK_FAILED:
+	      error_code_str = "Password check failed";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_KEYBOARD_COMPONENT_ENCOUNTERED_A_LOCKED_ERROR:
+	      error_code_str = "Keyboard component encountered a locked error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_KEYBOARD_COMPONENT_ENCOUNTERED_A_STUCK_KEY_ERROR:
+	      error_code_str = "Keyboard component encountered a stuck key error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_FIXED_MEDIA_THE_SAS_RAID_FIRMWARE_CAN_NOT_RUN_PROPERLY:
+	      error_code_str = "Fixed Media The SAS RAID firmware can not run properly. The user should attempt to reflash the firmware";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PCI_COMPONENT_ENCOUNTERED_A_PERR_ERROR:
+	      error_code_str = "PCI component encountered a PERR error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PCI_RESOURCE_CONFLICT:
+	      error_code_str = "PCI resource conflict";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PCI_OUT_OF_RESOURCES_ERROR:
+	      error_code_str = "PCI out of resources error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PROCESSOR_0X_CACHE_SIZE_MISMATCH_DETECTED:
+	      error_code_str = "Processor 0x cache size mismatch detected";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PROCESSOR_0X_STEPPING_MISMATCH:
+	      error_code_str = "Processor 0x stepping mismatch";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PROCESSOR_0X_FAMILY_MISMATCH_DETECTED:
+	      error_code_str = "Processor 0x family mismatch detected";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PROCESSOR_0X_INTEL_QPI_SPEED_MISMATCH:
+	      error_code_str = "Processor 0x Intel(R) QPI speed mismatch";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PROCESSOR_0X_MODEL_MISMATCH:
+	      error_code_str = "Processor 0x model mismatch";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PROCESSOR_0X_SPEEDS_MISMATCHED:
+	      error_code_str = "Processor 0x speeds mismatched";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PROCESSOR_0X_FAMILY_IS_NOT_SUPPORTED:
+	      error_code_str = "Processor 0x family is not supported";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PROCESSOR_AND_CHIPSET_STEPPING_CONFIGURATION_IS_UNSUPPORTED:
+	      error_code_str = "Processor and chipset stepping configuration is unsupported";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_CMOS_NVRAM_CONFIGURATION_CLEARED:
+	      error_code_str = "CMOS/NVRAM Configuration Cleared";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PASSWORDS_CLEARED_BY_JUMPER:
+	      error_code_str = "Passwords cleared by jumper";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PASSWORD_CLEAR_JUMPER_IS_SET:
+	      error_code_str = "Password clear jumper is set";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PROCESSOR_01_UNABLE_TO_APPLY_MICROCODE_UPDATE:
+	      error_code_str = "Processor 01 unable to apply microcode update";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PROCESSOR_02_UNABLE_TO_APPLY_MICROCODE_UPDATE:
+	      error_code_str = "Processor 02 unable to apply microcode update";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PROCESSOR_0X_MICROCODE_UPDATE_NOT_FOUND:
+	      error_code_str = "Processor 0x microcode update not found";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_WATCHDOG_TIMER_FAILED_ON_LAST_BOOT:
+	      error_code_str = "Watchdog timer failed on last boot";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_OS_BOOT_WATCHDOG_TIMER_FAILURE:
+	      error_code_str = "OS boot watchdog timer failure";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_BASEBOARD_MANAGEMENT_CONTROLLER_FAILED_SELF_TEST:
+	      error_code_str = "Baseboard management controller failed self-test";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_BASEBOARD_MANAGEMENT_CONTROLLER_FAILED_TO_RESPOND:
+	      error_code_str = "Baseboard management controller failed to respond";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_BASEBOARD_MANAGEMENT_CONTROLLER_IN_UPDATE_MODE:
+	      error_code_str = "Baseboard management controller in update mode";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_SENSOR_DATA_RECORD_EMPTY:
+	      error_code_str = "Sensor data record empty";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_SYSTEM_EVENT_LOG_FULL:
+	      error_code_str = "System event log full";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_MEMORY_COMPONENT_COULD_NOT_BE_CONFIGURED_IN_THE_SELECTED_RAS_MODE:
+	      error_code_str = "Memory component could not be configured in the selected RAS mode";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_POPULATION_ERROR:
+	      error_code_str = "DIMM Population Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_CLTT_CONFIGURATION_FAILURE_ERROR:
+	      error_code_str = "CLTT Configuration Failure Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_A1_FAILED_SELF_TEST_BIST:
+	      error_code_str = "DIMM_A1 failed Self Test (BIST)";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_A2_FAILED_SELF_TEST_BIST:
+	      error_code_str = "DIMM_A2 failed Self Test (BIST)";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_B1_FAILED_SELF_TEST_BIST:
+	      error_code_str = "DIMM_B1 failed Self Test (BIST)";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_B2_FAILED_SELF_TEST_BIST:
+	      error_code_str = "DIMM_B2 failed Self Test (BIST)";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_C1_FAILED_SELF_TEST_BIST:
+	      error_code_str = "DIMM_C1 failed Self Test (BIST)";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_C2_FAILED_SELF_TEST_BIST:
+	      error_code_str = "DIMM_C2 failed Self Test (BIST)";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_D1_FAILED_SELF_TEST_BIST:
+	      error_code_str = "DIMM_D1 failed Self Test (BIST)";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_D2_FAILED_SELF_TEST_BIST:
+	      error_code_str = "DIMM_D2 failed Self Test (BIST)";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_E1_FAILED_SELF_TEST_BIST:
+	      error_code_str = "DIMM_E1 failed Self Test (BIST)";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_E2_FAILED_SELF_TEST_BIST:
+	      error_code_str = "DIMM_E2 failed Self Test (BIST)";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_F1_FAILED_SELF_TEST_BIST:
+	      error_code_str = "DIMM_F1 failed Self Test (BIST)";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_F2_FAILED_SELF_TEST_BIST:
+	      error_code_str = "DIMM_F2 failed Self Test (BIST)";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_A1_DISABLED:
+	      error_code_str = "DIMM_A1 Disabled";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_A2_DISABLED:
+	      error_code_str = "DIMM_A2 Disabled";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_B1_DISABLED:
+	      error_code_str = "DIMM_B1 Disabled";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_B2_DISABLED:
+	      error_code_str = "DIMM_B2 Disabled";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_C1_DISABLED:
+	      error_code_str = "DIMM_C1 Disabled";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_C2_DISABLED:
+	      error_code_str = "DIMM_C2 Disabled";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_D1_DISABLED:
+	      error_code_str = "DIMM_D1 Disabled";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_D2_DISABLED:
+	      error_code_str = "DIMM_D2 Disabled";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_E1_DISABLED:
+	      error_code_str = "DIMM_E1 Disabled";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_E2_DISABLED:
+	      error_code_str = "DIMM_E2 Disabled";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_F1_DISABLED:
+	      error_code_str = "DIMM_F1 Disabled";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_F2_DISABLED:
+	      error_code_str = "DIMM_F2 Disabled";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_A1_COMPONENT_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAIL_ERROR:
+	      error_code_str = "DIMM_A1 Component encountered a Serial Presence Detection (SPD) fail error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_A2_COMPONENT_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAIL_ERROR:
+	      error_code_str = "DIMM_A2 Component encountered a Serial Presence Detection (SPD) fail error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_B1_COMPONENT_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAIL_ERROR:
+	      error_code_str = "DIMM_B1 Component encountered a Serial Presence Detection (SPD) fail error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_B2_COMPONENT_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAIL_ERROR:
+	      error_code_str = "DIMM_B2 Component encountered a Serial Presence Detection (SPD) fail error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_C1_COMPONENT_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAIL_ERROR:
+	      error_code_str = "DIMM_C1 Component encountered a Serial Presence Detection (SPD) fail error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_C2_COMPONENT_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAIL_ERROR:
+	      error_code_str = "DIMM_C2 Component encountered a Serial Presence Detection (SPD) fail error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_D1_COMPONENT_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAIL_ERROR:
+	      error_code_str = "DIMM_D1 Component encountered a Serial Presence Detection (SPD) fail error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_D2_COMPONENT_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAIL_ERROR:
+	      error_code_str = "DIMM_D2 Component encountered a Serial Presence Detection (SPD) fail error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_E1_COMPONENT_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAIL_ERROR:
+	      error_code_str = "DIMM_E1 Component encountered a Serial Presence Detection (SPD) fail error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_E2_COMPONENT_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAIL_ERROR:
+	      error_code_str = "DIMM_E2 Component encountered a Serial Presence Detection (SPD) fail error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_F1_COMPONENT_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAIL_ERROR:
+	      error_code_str = "DIMM_F1 Component encountered a Serial Presence Detection (SPD) fail error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_F2_COMPONENT_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAIL_ERROR:
+	      error_code_str = "DIMM_F2 Component encountered a Serial Presence Detection (SPD) fail error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_A1_UNCORRECTABLE_ECC_ERROR_ENCOUNTERED:
+	      error_code_str = "DIMM_A1 Uncorrectable ECC error encountered";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_A2_UNCORRECTABLE_ECC_ERROR_ENCOUNTERED:
+	      error_code_str = "DIMM_A2 Uncorrectable ECC error encountered";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_B1_UNCORRECTABLE_ECC_ERROR_ENCOUNTERED:
+	      error_code_str = "DIMM_B1 Uncorrectable ECC error encountered";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_B2_UNCORRECTABLE_ECC_ERROR_ENCOUNTERED:
+	      error_code_str = "DIMM_B2 Uncorrectable ECC error encountered";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_C1_UNCORRECTABLE_ECC_ERROR_ENCOUNTERED:
+	      error_code_str = "DIMM_C1 Uncorrectable ECC error encountered";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_C2_UNCORRECTABLE_ECC_ERROR_ENCOUNTERED:
+	      error_code_str = "DIMM_C2 Uncorrectable ECC error encountered";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_D1_UNCORRECTABLE_ECC_ERROR_ENCOUNTERED:
+	      error_code_str = "DIMM_D1 Uncorrectable ECC error encountered";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_D2_UNCORRECTABLE_ECC_ERROR_ENCOUNTERED:
+	      error_code_str = "DIMM_D2 Uncorrectable ECC error encountered";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_E1_UNCORRECTABLE_ECC_ERROR_ENCOUNTERED:
+	      error_code_str = "DIMM_E1 Uncorrectable ECC error encountered";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_E2_UNCORRECTABLE_ECC_ERROR_ENCOUNTERED:
+	      error_code_str = "DIMM_E2 Uncorrectable ECC error encountered";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_F1_UNCORRECTABLE_ECC_ERROR_ENCOUNTERED:
+	      error_code_str = "DIMM_F1 Uncorrectable ECC error encountered";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DIMM_F2_UNCORRECTABLE_ECC_ERROR_ENCOUNTERED:
+	      error_code_str = "DIMM_F2 Uncorrectable ECC error encountered";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_CHIPSET_RECLAIM_OF_NON_CRITICAL_VARIABLES_COMPLETE:
+	      error_code_str = "Chipset Reclaim of non critical variables complete";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_UNSPECIFIED_PROCESSOR_COMPONENT_HAS_ENCOUNTERED_A_NON_SPECIFIC_ERROR:
+	      error_code_str = "Unspecified processor component has encountered a non specific error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_KEYBOARD_COMPONENT_WAS_NOT_DETECTED:
+	      error_code_str = "Keyboard component was not detected";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_KEYBOARD_COMPONENT_ENCOUNTERED_A_CONTROLLER_ERROR:
+	      error_code_str = "Keyboard component encountered a controller error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_MOUSE_COMPONENT_WAS_NOT_DETECTED:
+	      error_code_str = "Mouse component was not detected";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_MOUSE_COMPONENT_ENCOUNTERED_A_CONTROLLER_ERROR:
+	      error_code_str = "Mouse component encountered a controller error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_LOCAL_CONSOLE_COMPONENT_ENCOUNTERED_A_CONTROLLER_ERROR:
+	      error_code_str = "Local Console component encountered a controller error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_LOCAL_CONSOLE_COMPONENT_ENCOUNTERED_AN_OUTPUT_ERROR:
+	      error_code_str = "Local Console component encountered an output error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_LOCAL_CONSOLE_COMPONENT_ENCOUNTERED_A_RESOURCE_CONFLICT_ERROR:
+	      error_code_str = "Local Console component encountered a resource conflict error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_REMOTE_CONSOLE_COMPONENT_ENCOUNTERED_A_CONTROLLER_ERROR:
+	      error_code_str = "Remote Console component encountered a controller error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_REMOTE_CONSOLE_COMPONENT_ENCOUNTERED_AN_INPUT_ERROR:
+	      error_code_str = "Remote Console component encountered an input error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_REMOTE_CONSOLE_COMPONENT_ENCOUNTERED_AN_OUTPUT_ERROR:
+	      error_code_str = "Remote Console component encountered an output error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_SERIAL_PORT_COMPONENT_WAS_NOT_DETECTED:
+	      error_code_str = "Serial port component was not detected";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_SERIAL_PORT_COMPONENT_ENCOUNTERED_A_RESOURCE_CONFLICT_ERROR:
+	      error_code_str = "Serial port component encountered a resource conflict error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_SERIAL_PORT_CONTROLLER_ERROR:
+	      error_code_str = "Serial Port controller error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_SERIAL_PORT_COMPONENT_ENCOUNTERED_AN_INPUT_ERROR:
+	      error_code_str = "Serial Port component encountered an input error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_SERIAL_PORT_COMPONENT_ENCOUNTERED_AN_OUTPUT_ERROR:
+	      error_code_str = "Serial Port component encountered an output error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_LPC_COMPONENT_ENCOUNTERED_A_CONTROLLER_ERROR:
+	      error_code_str = "LPC component encountered a controller error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_LPC_COMPONENT_ENCOUNTERED_A_RESOURCE_CONFLICT_ERROR:
+	      error_code_str = "LPC component encountered a resource conflict error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_ATA_ATPI_COMPONENT_ENCOUNTERED_A_CONTROLLER_ERROR:
+	      error_code_str = "ATA/ATPI component encountered a controller error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PCI_COMPONENT_ENCOUNTERED_A_CONTROLLER_ERROR:
+	      error_code_str = "PCI component encountered a controller error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PCI_COMPONENT_ENCOUNTERED_A_READ_ERROR:
+	      error_code_str = "PCI component encountered a read error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PCI_COMPONENT_ENCOUNTERED_A_WRITE_ERROR:
+	      error_code_str = "PCI component encountered a write error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_UNSPECIFIED_SOFTWARE_COMPONENT_ENCOUNTERED_A_START_ERROR:
+	      error_code_str = "Unspecified software component encountered a start error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PEI_CORE_COMPONENT_ENCOUNTERED_A_LOAD_ERROR:
+	      error_code_str = "PEI Core component encountered a load error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PEI_MODULE_COMPONENT_ENCOUNTERED_A_ILLEGAL_SOFTWARE_STATE_ERROR:
+	      error_code_str = "PEI module component encountered a illegal software state error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DXE_CORE_COMPONENT_ENCOUNTERED_A_ILLEGAL_SOFTWARE_STATE_ERROR:
+	      error_code_str = "DXE core component encountered a illegal software state error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DXE_BOOT_SERVICES_DRIVER_COMPONENT_ENCOUNTERED_A_ILLEGAL_SOFTWARE_STATE_ERROR:
+	      error_code_str = "DXE boot services driver component encountered a illegal software state error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DXE_BOOT_SERVICES_DRIVER_COMPONENT_ENCOUNTERED_INVALID_CONFIGURATION:
+	      error_code_str = "DXE boot services driver component encountered invalid configuration";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_SMM_DRIVER_COMPONENT_ENCOUNTERED_A_ILLEGAL_SOFTWARE_STATE_ERROR:
+	      error_code_str = "SMM driver component encountered a illegal software state error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_TPM_DEVICE_NOT_DETECTED:
+	      error_code_str = "TPM device not detected";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_TPM_DEVICE_MISSING_OR_NOT_RESPONDING:
+	      error_code_str = "TPM device missing or not responding";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_TPM_DEVICE_FAILURE:
+	      error_code_str = "TPM device failure";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_TPM_DEVICE_FAILED_SELF_TEST:
+	      error_code_str = "TPM device failed self test";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PROCESSOR_COMPONENT_ENCOUNTERED_A_MISMATCH_ERROR:
+	      error_code_str = "Processor component encountered a mismatch error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PROCESSOR_COMPONENT_ENCOUNTERED_A_LOW_VOLTAGE_ERROR:
+	      error_code_str = "Processor component encountered a low voltage error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PROCESSOR_COMPONENT_ENCOUNTERED_A_HIGH_VOLTAGE_ERROR:
+	      error_code_str = "Processor component encountered a high voltage error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PCI_COMPONENT_ENCOUNTERED_A_SERR_ERROR:
+	      error_code_str = "PCI component encountered a SERR error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_ATA_ATPI_ATA_BUS_SMART_NOT_SUPPORTED:
+	      error_code_str = "ATA/ATPI ATA bus SMART not supported";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_ATA_ATPI_ATA_SMART_IS_DISABLED:
+	      error_code_str = "ATA/ATPI ATA SMART is disabled";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PCI_EXPRESS_COMPONENT_ENCOUNTERED_A_PERR_ERROR:
+	      error_code_str = "PCI Express component encountered a PERR error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PCI_EXPRESS_COMPONENT_ENCOUNTERED_A_SERR_ERROR:
+	      error_code_str = "PCI Express component encountered a SERR error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_PCI_EXPRESS_IBIST_ERROR:
+	      error_code_str = "PCI Express IBIST error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DXE_BOOT_SERVICES_DRIVER_NOT_ENOUGH_MEMORY_AVAILABLE_TO_SHADOW_A_LEGACY_OPTION_ROM:
+	      error_code_str = "DXE boot services driver Not enough memory available to shadow a legacy option ROM";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_DXE_BOOT_SERVICES_DRIVER_UNRECOGNIZED:
+	      error_code_str = "DXE boot services driver Unrecognized";
+	      break;
+	    default:
+	      error_code_str = "Undefined Post Error";
+	    }
 
 	  if (ipmi_sel_parse_string_snprintf (buf,
 					      buflen,
@@ -1629,14 +1822,20 @@ ipmi_sel_parse_output_intel_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
 		{
 		  char *mirroring_domain_local_subinstance_str = NULL;
 
-		  if (mirroring_domain_local_subinstance == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_LOCAL_MIRRORING_DOMAIN_LOCAL_SUBINSTANCE_CHANNEL_0_1)
-		    mirroring_domain_local_subinstance_str = "{Ch0, Ch1}";
-		  else if (mirroring_domain_local_subinstance == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_LOCAL_MIRRORING_DOMAIN_LOCAL_SUBINSTANCE_CHANNEL_0_2)
-		    mirroring_domain_local_subinstance_str = "{Ch0, Ch2}";
-		  else if (mirroring_domain_local_subinstance == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_LOCAL_MIRRORING_DOMAIN_LOCAL_SUBINSTANCE_CHANNEL_1_2)
-		    mirroring_domain_local_subinstance_str = "{Ch1, Ch2}";
-		  else
-		    mirroring_domain_local_subinstance_str = "Unknown";
+		  switch (mirroring_domain_local_subinstance)
+		    {
+		    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_LOCAL_MIRRORING_DOMAIN_LOCAL_SUBINSTANCE_CHANNEL_0_1:
+		      mirroring_domain_local_subinstance_str = "{Ch0, Ch1}";
+		      break;
+		    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_LOCAL_MIRRORING_DOMAIN_LOCAL_SUBINSTANCE_CHANNEL_0_2:
+		      mirroring_domain_local_subinstance_str = "{Ch0, Ch2}";
+		      break;
+		    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_LOCAL_MIRRORING_DOMAIN_LOCAL_SUBINSTANCE_CHANNEL_1_2:
+		      mirroring_domain_local_subinstance_str = "{Ch1, Ch2}";
+		      break;
+		    default:
+		      mirroring_domain_local_subinstance_str = "Unknown";
+		    }
 
 		  snprintf (mirroring_domain_local_subinstance_buf,
 			    INTEL_EVENT_BUFFER_LENGTH,
@@ -1758,28 +1957,40 @@ ipmi_sel_parse_output_intel_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
 	    {
 	      domain_instance_str = "Local memory sparing";
 
-	      if (sparing_type == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_SPARING_DOMAIN_INSTANCE_TYPE_LOCAL_MEMORY_SPARING_SPARING_TYPE_DIMM_SPARING)
-		sparing_type_str = "DIMM Sparing";
-	      else if (sparing_type == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_SPARING_DOMAIN_INSTANCE_TYPE_LOCAL_MEMORY_SPARING_SPARING_TYPE_RANK_SPARING)
-		sparing_type_str = "Rank Sparing";
-	      else
-		sparing_type_str = "Unknown";
+	      switch (sparing_type)
+		{
+		case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_SPARING_DOMAIN_INSTANCE_TYPE_LOCAL_MEMORY_SPARING_SPARING_TYPE_DIMM_SPARING:
+		  sparing_type_str = "DIMM Sparing";
+		  break;
+		case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_SPARING_DOMAIN_INSTANCE_TYPE_LOCAL_MEMORY_SPARING_SPARING_TYPE_RANK_SPARING:
+		  sparing_type_str = "Rank Sparing";
+		  break;
+		default:
+		  sparing_type_str = "Unknown";
+		}
 
 	      snprintf (sparing_type_buf,
 			INTEL_EVENT_BUFFER_LENGTH,
 			", Sparing Type = %s",
 			sparing_type_str);
 
-	      if (spared_dimm_information == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_SPARED_DIMM_INFORMATION_LOCAL_SPARING_DIMM_1B_LOCKSTEP_DIMM_1D)
-		spared_dimm_information_str = "DIMM_1B lock steep with DIMM 1D";
-	      else if (spared_dimm_information == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_SPARED_DIMM_INFORMATION_LOCAL_SPARING_DIMM_1A_LOCKSTEP_DIMM_1C)
-		spared_dimm_information_str = "DIMM_1B lock steep with DIMM 1D";
-	      else if (spared_dimm_information == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_SPARED_DIMM_INFORMATION_LOCAL_SPARING_DIMM_2B_LOCKSTEP_DIMM_2D)
-		spared_dimm_information_str = "DIMM_1B lock steep with DIMM 1D";
-	      else if (spared_dimm_information == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_SPARED_DIMM_INFORMATION_LOCAL_SPARING_DIMM_2A_LOCKSTEP_DIMM_2C)
-		spared_dimm_information_str = "DIMM_1B lock steep with DIMM 1D";
-	      else
-		spared_dimm_information_str = "Unknown";
+	      switch (spared_dimm_information)
+		{
+		case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_SPARED_DIMM_INFORMATION_LOCAL_SPARING_DIMM_1B_LOCKSTEP_DIMM_1D:
+		  spared_dimm_information_str = "DIMM_1B lock steep with DIMM 1D";
+		  break;
+		case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_SPARED_DIMM_INFORMATION_LOCAL_SPARING_DIMM_1A_LOCKSTEP_DIMM_1C:
+		  spared_dimm_information_str = "DIMM_1B lock steep with DIMM 1D";
+		  break;
+		case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_SPARED_DIMM_INFORMATION_LOCAL_SPARING_DIMM_2B_LOCKSTEP_DIMM_2D:
+		  spared_dimm_information_str = "DIMM_1B lock steep with DIMM 1D";
+		  break;
+		case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_SPARED_DIMM_INFORMATION_LOCAL_SPARING_DIMM_2A_LOCKSTEP_DIMM_2C:
+		  spared_dimm_information_str = "DIMM_1B lock steep with DIMM 1D";
+		  break;
+		default:
+		  spared_dimm_information_str = "Unknown";
+		}
 
 	      snprintf (spared_dimm_information_buf,
                         INTEL_EVENT_BUFFER_LENGTH,
@@ -1840,20 +2051,29 @@ ipmi_sel_parse_output_intel_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
 	  error_type = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_ERROR_TYPE_BITMASK);
 	  error_type >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_ERROR_TYPE_SHIFT;
 
-	  if (error_type == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_ERROR_TYPE_MIRROR)
-	    error_type_str = "Mirror";
-	  else if (error_type == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_ERROR_TYPE_SPARE)
-	    error_type_str = "Spare";
-	  else if (error_type == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_ERROR_TYPE_INTERLEAVE)
-	    error_type_str = "Interleave";
-	  else if (error_type == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_ERROR_TYPE_HEMISPHERE)
-	    error_type_str = "Hemisphere";
-	  else if (error_type == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_ERROR_TYPE_POPULATION)
-	    error_type_str = "Population";
-	  else if (error_type == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_ERROR_TYPE_DEVICE_MISMATCH)
-	    error_type_str = "Device Mismatch";
-	  else
-	    error_type_str = "Unknown";
+	  switch (error_type)
+	    {
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_ERROR_TYPE_MIRROR:
+	      error_type_str = "Mirror";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_ERROR_TYPE_SPARE:
+	      error_type_str = "Spare";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_ERROR_TYPE_INTERLEAVE:
+	      error_type_str = "Interleave";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_ERROR_TYPE_HEMISPHERE:
+	      error_type_str = "Hemisphere";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_ERROR_TYPE_POPULATION:
+	      error_type_str = "Population";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_ERROR_TYPE_DEVICE_MISMATCH:
+	      error_type_str = "Device Mismatch";
+	      break;
+	    default:
+	      error_type_str = "Unknown";
+	    }
 
 	  _ipmi_sel_parse_output_intel_quanta_qssc_s4r_memory_board (ctx,
 								     memory_board_buf,
@@ -1905,140 +2125,198 @@ ipmi_sel_parse_output_intel_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
 	  error_code_type = (error_code & IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_BITMASK);
 	  error_code_type >>= IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_SHIFT;
 
-	  if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_CMOS_DATE_TIME_NOT_SET)
-	    error_code_str = "CMOS Date/Time not set";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_PASSWORD_CHECK_FAILED)
-	    error_code_str = "Password check failed";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_KEYBOARD_LOCKED_ERROR)
-	    error_code_str = "Keyboard locked error";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_KEYBOARD_STUCK_KEY_ERROR)
-	    error_code_str = "Keyboard stuck key error";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_THE_SAS_RAID_FIRMWARE_CANNOT_RUN_PROPERLY)
-	    error_code_str = "The SAS RAID firmware can not run properly. The user should attempt to reflash the firmware";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_PCI_PARITY_ERROR)
-	    error_code_str = "PCI Parity Error (PERR)";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_PCI_RESOURCE_CONFLICT_ERROR)
-	    error_code_str = "PCI resource conflict error";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_PCI_OUT_OF_RESOURCES_ERROR)
-	    error_code_str = "PCI out of resources error";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_PROCESSOR_CACHE_SIZE_MISMATCH_DETECTED)
-	    error_code_str = "Processor cache size mismatch detected";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_PROCESSOR_STEPPING_MISMATCH)
-	    error_code_str = "Processor stepping mismatch";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_PROCESSOR_FAMILY_MISMATCH_DETECTED)
-	    error_code_str = "Processor family mismatch detected";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_PROCESSOR_INTEL_QPI_SPEED_MISMATCH)
-	    error_code_str = "Processor Intel(R) QPI speed mismatch";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_PROCESSOR_AND_CHIPSET_STEPPING_CONFIGURATION_IS_UNSUPPORTED)
-	    error_code_str = "Processor and chipset stepping configuration is unsupported";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_CMOS_NVRAM_CONFIGURATION_CLEARED)
-	    error_code_str = "CMOS/NVRAM configuration cleared";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_PASSWORDS_CLEARED_BY_JUMPER)
-	    error_code_str = "Passwords cleared by jumper";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_PASSWORD_CLEAR_JUMPER_IS_SET)
-	    error_code_str = "Password clear jumper is set";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_PROCESSOR_DISABLED)
- 	    error_code_str = "Processor Disabled";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_FRB_3_TIMEOUT)
- 	    error_code_str = "Processor FRB-3 timeout";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_PROCESSOR_01_UNABLE_TO_APPLY_MICROCODE_UPDATE)
-	    error_code_str = "Processor 01 unable to apply microcode update";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_PROCESSOR_02_UNABLE_TO_APPLY_MICROCODE_UPDATE)
-	    error_code_str = "Processor 02 unable to apply microcode update";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_PROCESSOR_03_UNABLE_TO_APPLY_MICROCODE_UPDATE)
-	    error_code_str = "Processor 03 unable to apply microcode update";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_PROCESSOR_04_UNABLE_TO_APPLY_MICROCODE_UPDATE)
-	    error_code_str = "Processor 04 unable to apply microcode update";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_PROCESSOR_BUILD_IN_SELF_TEST_FAILURE)
-	    error_code_str = "Processor Build-In Self Test (BIST) failure";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_PROCESSOR_MICROCODE_UPDATE_NOT_FOUND)
-	    error_code_str = "Processor microcode update not found";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_WATCHDOG_TIMER_FAILED_ON_LAST_BOOT)
-	    error_code_str = "Watchdog timer failed on last boot";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_OS_BOOT_WATCHDOG_TIMER_FAILURE)
-	    error_code_str = "OS boot watchdog timer failure";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_BASEBOARD_MANAGEMENT_CONTROLLER_FAILED_SELF_TEST)
-	    error_code_str = "Baseboard Management Controller failed self-test";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_BASEBOARD_MANAGEMENT_CONTROLLER_FAILED_TO_RESPOND)
-	    error_code_str = "Baseboard Management Controller failed to respond";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_BASEBOARD_MANAGEMENT_CONTROLLER_IN_UPDATE_MODE)
-	    error_code_str = "Baseboard Management Controller in update mode";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_BASEBOARD_MANAGEMENT_CONTROLLER_SENSOR_DATA_RECORD_EMPTY)
-	    error_code_str = "Baseboard Management Controller Sensor Data Record empty";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_BASEBOARD_MANAGEMENT_CONTROLLER_SYSTEM_EVENT_LOG_FULL)
-	    error_code_str = "Baseboard Management Controller System event log full";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_CHIPSET_RECLAIM_OF_NON_CRITICAL_VARIABLES_COMPLETE)
-	    error_code_str = "Chipset Reclaim of non critical variables complete";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TPM_DEVICE_NOT_DETECTED)
-	    error_code_str = "TPM device not detected";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TPM_DEVICE_MISSING_OR_NOT_RESPONDING)
-	    error_code_str = "TPM device missing or not responding";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TPM_DEVICE_FAILURE)
-	    error_code_str = "TPM device failure";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TPM_DEVICE_FAILED_SELF_TEST)
-	    error_code_str = "TPM device failed self test";
-	  else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_MEMORY_WAS_NOT_CONFIGURED_FOR_THE_SELECTED_MEMORY_RAS_CONFIGURATION)
-	    error_code_str = "Memory was not configured for the selected Memory RAS configuration";
-	  else if (error_code_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY)
+	  switch (error_code)
 	    {
-	      uint16_t memory_error_code;
-	      uint16_t cpu_socket;
-	      uint16_t dimm_slot;
-	      char *memory_error_code_str;
- 	      char *cpu_socket_str;
- 	      char *dimm_slot_str;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_CMOS_DATE_TIME_NOT_SET:
+	      error_code_str = "CMOS Date/Time not set";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_PASSWORD_CHECK_FAILED:
+	      error_code_str = "Password check failed";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_KEYBOARD_LOCKED_ERROR:
+	      error_code_str = "Keyboard locked error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_KEYBOARD_STUCK_KEY_ERROR:
+	      error_code_str = "Keyboard stuck key error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_THE_SAS_RAID_FIRMWARE_CANNOT_RUN_PROPERLY:
+	      error_code_str = "The SAS RAID firmware can not run properly. The user should attempt to reflash the firmware";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_PCI_PARITY_ERROR:
+	      error_code_str = "PCI Parity Error (PERR)";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_PCI_RESOURCE_CONFLICT_ERROR:
+	      error_code_str = "PCI resource conflict error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_PCI_OUT_OF_RESOURCES_ERROR:
+	      error_code_str = "PCI out of resources error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_PROCESSOR_CACHE_SIZE_MISMATCH_DETECTED:
+	      error_code_str = "Processor cache size mismatch detected";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_PROCESSOR_STEPPING_MISMATCH:
+	      error_code_str = "Processor stepping mismatch";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_PROCESSOR_FAMILY_MISMATCH_DETECTED:
+	      error_code_str = "Processor family mismatch detected";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_PROCESSOR_INTEL_QPI_SPEED_MISMATCH:
+	      error_code_str = "Processor Intel(R) QPI speed mismatch";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_PROCESSOR_AND_CHIPSET_STEPPING_CONFIGURATION_IS_UNSUPPORTED:
+	      error_code_str = "Processor and chipset stepping configuration is unsupported";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_CMOS_NVRAM_CONFIGURATION_CLEARED:
+	      error_code_str = "CMOS/NVRAM configuration cleared";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_PASSWORDS_CLEARED_BY_JUMPER:
+	      error_code_str = "Passwords cleared by jumper";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_PASSWORD_CLEAR_JUMPER_IS_SET:
+	      error_code_str = "Password clear jumper is set";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_PROCESSOR_DISABLED:
+	      error_code_str = "Processor Disabled";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_FRB_3_TIMEOUT:
+	      error_code_str = "Processor FRB-3 timeout";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_PROCESSOR_01_UNABLE_TO_APPLY_MICROCODE_UPDATE:
+	      error_code_str = "Processor 01 unable to apply microcode update";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_PROCESSOR_02_UNABLE_TO_APPLY_MICROCODE_UPDATE:
+	      error_code_str = "Processor 02 unable to apply microcode update";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_PROCESSOR_03_UNABLE_TO_APPLY_MICROCODE_UPDATE:
+	      error_code_str = "Processor 03 unable to apply microcode update";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_PROCESSOR_04_UNABLE_TO_APPLY_MICROCODE_UPDATE:
+	      error_code_str = "Processor 04 unable to apply microcode update";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_PROCESSOR_BUILD_IN_SELF_TEST_FAILURE:
+	      error_code_str = "Processor Build-In Self Test (BIST) failure";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_PROCESSOR_MICROCODE_UPDATE_NOT_FOUND:
+	      error_code_str = "Processor microcode update not found";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_WATCHDOG_TIMER_FAILED_ON_LAST_BOOT:
+	      error_code_str = "Watchdog timer failed on last boot";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_OS_BOOT_WATCHDOG_TIMER_FAILURE:
+	      error_code_str = "OS boot watchdog timer failure";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_BASEBOARD_MANAGEMENT_CONTROLLER_FAILED_SELF_TEST:
+	      error_code_str = "Baseboard Management Controller failed self-test";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_BASEBOARD_MANAGEMENT_CONTROLLER_FAILED_TO_RESPOND:
+	      error_code_str = "Baseboard Management Controller failed to respond";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_BASEBOARD_MANAGEMENT_CONTROLLER_IN_UPDATE_MODE:
+	      error_code_str = "Baseboard Management Controller in update mode";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_BASEBOARD_MANAGEMENT_CONTROLLER_SENSOR_DATA_RECORD_EMPTY:
+	      error_code_str = "Baseboard Management Controller Sensor Data Record empty";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_BASEBOARD_MANAGEMENT_CONTROLLER_SYSTEM_EVENT_LOG_FULL:
+	      error_code_str = "Baseboard Management Controller System event log full";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_CHIPSET_RECLAIM_OF_NON_CRITICAL_VARIABLES_COMPLETE:
+	      error_code_str = "Chipset Reclaim of non critical variables complete";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TPM_DEVICE_NOT_DETECTED:
+	      error_code_str = "TPM device not detected";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TPM_DEVICE_MISSING_OR_NOT_RESPONDING:
+	      error_code_str = "TPM device missing or not responding";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TPM_DEVICE_FAILURE:
+	      error_code_str = "TPM device failure";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TPM_DEVICE_FAILED_SELF_TEST:
+	      error_code_str = "TPM device failed self test";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_MEMORY_WAS_NOT_CONFIGURED_FOR_THE_SELECTED_MEMORY_RAS_CONFIGURATION:
+	      error_code_str = "Memory was not configured for the selected Memory RAS configuration";
+	      break;
+	    default:
+	      if (error_code_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY)
+		{
+		  uint16_t memory_error_code;
+		  uint16_t cpu_socket;
+		  uint16_t dimm_slot;
+		  char *memory_error_code_str;
+		  char *cpu_socket_str;
+		  char *dimm_slot_str;
 
-	      memory_error_code = (error_code & IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY_ERROR_CODE_BITMASK);
-	      memory_error_code >>= IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY_ERROR_CODE_SHIFT;
+		  memory_error_code = (error_code & IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY_ERROR_CODE_BITMASK);
+		  memory_error_code >>= IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY_ERROR_CODE_SHIFT;
 	      
-	      cpu_socket = (error_code & IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY_CPU_SOCKET_BITMASK);
-	      cpu_socket >>= IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY_CPU_SOCKET_SHIFT;
+		  cpu_socket = (error_code & IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY_CPU_SOCKET_BITMASK);
+		  cpu_socket >>= IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY_CPU_SOCKET_SHIFT;
 	      
-	      dimm_slot = (error_code & IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY_DIMM_SLOT_BITMASK);
-	      dimm_slot >>= IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY_DIMM_SLOT_SHIFT;
+		  dimm_slot = (error_code & IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY_DIMM_SLOT_BITMASK);
+		  dimm_slot >>= IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY_DIMM_SLOT_SHIFT;
 	      
-	      if (memory_error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY_ERROR_CODE_MEMORY_INVALID_TYPE_ERROR)
-		memory_error_code_str = "Memory invalid type error";
-	      else if (memory_error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY_ERROR_CODE_MEMORY_DISABLED)
-		memory_error_code_str = "Memory disabled";
-	      else if (memory_error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY_ERROR_CODE_MEMORY_MISMATCH_ERROR)
-		memory_error_code_str = "Memory mismatch error";
-	      else if (memory_error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY_ERROR_CODE_MEMORY_TRAINING_ERROR)
-		memory_error_code_str = "Memory Training Failed";
-	      else if (memory_error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY_ERROR_CODE_TOO_MANY_DIMM_TYPES)
-		memory_error_code_str = "Too many DIMM Types";
-	      else if (memory_error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY_ERROR_CODE_MEMORY_BIST_FAILED)
-		memory_error_code_str = "Memory BIST Failed";
-	      else if (memory_error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY_ERROR_CODE_SPD_FAILED)
-		memory_error_code_str = "SPD Failed";
+		  switch (memory_error_code)
+		    {
+		    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY_ERROR_CODE_MEMORY_INVALID_TYPE_ERROR:
+		      memory_error_code_str = "Memory invalid type error";
+		      break;
+		    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY_ERROR_CODE_MEMORY_DISABLED:
+		      memory_error_code_str = "Memory disabled";
+		      break;
+		    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY_ERROR_CODE_MEMORY_MISMATCH_ERROR:
+		      memory_error_code_str = "Memory mismatch error";
+		      break;
+		    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY_ERROR_CODE_MEMORY_TRAINING_ERROR:
+		      memory_error_code_str = "Memory Training Failed";
+		      break;
+		    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY_ERROR_CODE_TOO_MANY_DIMM_TYPES:
+		      memory_error_code_str = "Too many DIMM Types";
+		      break;
+		    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY_ERROR_CODE_MEMORY_BIST_FAILED:
+		      memory_error_code_str = "Memory BIST Failed";
+		      break;
+		    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY_ERROR_CODE_SPD_FAILED:
+		      memory_error_code_str = "SPD Failed";
+		      break;
+		    default:
+		      memory_error_code_str = "Unknown Memory Failure";
+		    }
+		  
+		  switch (cpu_socket)
+		    {
+		    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY_CPU_SOCKET_1:
+		      cpu_socket_str = "CPU_1";
+		      break;
+		    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY_CPU_SOCKET_2:
+		      cpu_socket_str = "CPU_2";
+		      break;
+		    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY_CPU_SOCKET_3:
+		      cpu_socket_str = "CPU_3";
+		      break;
+		    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY_CPU_SOCKET_4:
+		      cpu_socket_str = "CPU_4";
+		      break;
+		    default:
+		      cpu_socket_str = "Unknown CPU Socket";
+		    }
+		  
+		  dimm_slot_str = _ipmi_sel_parse_output_intel_quanta_qssc_s4r_dimm_slot_str (dimm_slot);
+		  
+		  snprintf (error_code_buf,
+			    INTEL_EVENT_BUFFER_LENGTH,
+			    "%s, CPU Socket = %s, DIMM Slot = %s",
+			    memory_error_code_str,
+			    cpu_socket_str,
+			    dimm_slot_str);
+		  
+		  error_code_str = error_code_buf;
+		}
 	      else
-		memory_error_code_str = "Unknown Memory Failure";
-	      
-	      if (cpu_socket == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY_CPU_SOCKET_1)
-		cpu_socket_str = "CPU_1";
-	      else if (cpu_socket == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY_CPU_SOCKET_2)
-		cpu_socket_str = "CPU_2";
-	      else if (cpu_socket == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY_CPU_SOCKET_3)
-		cpu_socket_str = "CPU_3";
-	      else if (cpu_socket == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY_CPU_SOCKET_4)
-		cpu_socket_str = "CPU_4";
-	      else
-		cpu_socket_str = "Unknown CPU Socket";
-	      
-	      dimm_slot_str = _ipmi_sel_parse_output_intel_quanta_qssc_s4r_dimm_slot_str (dimm_slot);
-	      
-	      snprintf (error_code_buf,
-			INTEL_EVENT_BUFFER_LENGTH,
-			"%s, CPU Socket = %s, DIMM Slot = %s",
-			memory_error_code_str,
-			cpu_socket_str,
-			dimm_slot_str);
-
-	      error_code_str = error_code_buf;
+		error_code_str = "Undefined Post Error";
 	    }
-	  else
-	    error_code_str = "Undefined Post Error";
-
+	  
 	  if (ipmi_sel_parse_string_snprintf (buf,
 					      buflen,
 					      wlen,

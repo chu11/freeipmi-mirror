@@ -1773,14 +1773,23 @@ ipmi_oem_inventec_get_account_status (ipmi_oem_state_data_t *state_data)
         goto cleanup;
       account_status = tmpvalue;
 
-      if (account_status == IPMI_OEM_INVENTEC_EXTENDED_CONFIG_ACCOUNT_STATUS_UNSPECIFIED)
-        account_status_str = "Unspecified";
-      else if (account_status == IPMI_OEM_INVENTEC_EXTENDED_CONFIG_ACCOUNT_STATUS_ENABLED)
-        account_status_str = "Enabled";
-      else if (account_status == IPMI_OEM_INVENTEC_EXTENDED_CONFIG_ACCOUNT_STATUS_DISABLED)
-        account_status_str = "Disabled";
-      else 
-        account_status_str = "Lockout";
+      switch (account_status)
+	{
+	case IPMI_OEM_INVENTEC_EXTENDED_CONFIG_ACCOUNT_STATUS_UNSPECIFIED:
+	  account_status_str = "Unspecified";
+	  break;
+	case IPMI_OEM_INVENTEC_EXTENDED_CONFIG_ACCOUNT_STATUS_ENABLED:
+	  account_status_str = "Enabled";
+	  break;
+	case IPMI_OEM_INVENTEC_EXTENDED_CONFIG_ACCOUNT_STATUS_DISABLED:
+	  account_status_str = "Disabled";
+	  break;
+	case IPMI_OEM_INVENTEC_EXTENDED_CONFIG_ACCOUNT_STATUS_LOCKOUT:
+	  account_status_str = "Lockout";
+	  break;
+	default:
+	  account_status_str = "Unknown";
+	}
 
       pstdout_printf (state_data->pstate,
                       "%-16s | %s\n",
@@ -3097,16 +3106,23 @@ ipmi_oem_inventec_get_firmware_information (ipmi_oem_state_data_t *state_data)
                   "Controller Description : %s\n",
                   description);
 
-  if (entity == IPMI_OEM_INVENTEC_EXTENDED_CONFIG_FIRMWARE_INFORMATION_ENTITY_BMC)
-    entity_str = "BMC";
-  else if (entity == IPMI_OEM_INVENTEC_EXTENDED_CONFIG_FIRMWARE_INFORMATION_ENTITY_SYSTEM_BIOS)
-    entity_str = "System (BIOS)";
-  else if (entity == IPMI_OEM_INVENTEC_EXTENDED_CONFIG_FIRMWARE_INFORMATION_ENTITY_PDB)
-    entity_str = "PDB";
-  else if (entity == IPMI_OEM_INVENTEC_EXTENDED_CONFIG_FIRMWARE_INFORMATION_ENTITY_FCB)
-    entity_str = "FCB";
-  else
-    entity_str = "Unrecognized";
+  switch (entity)
+    {
+    case IPMI_OEM_INVENTEC_EXTENDED_CONFIG_FIRMWARE_INFORMATION_ENTITY_BMC:
+      entity_str = "BMC";
+      break;
+    case IPMI_OEM_INVENTEC_EXTENDED_CONFIG_FIRMWARE_INFORMATION_ENTITY_SYSTEM_BIOS:
+      entity_str = "System (BIOS)";
+      break;
+    case IPMI_OEM_INVENTEC_EXTENDED_CONFIG_FIRMWARE_INFORMATION_ENTITY_PDB:
+      entity_str = "PDB";
+      break;
+    case IPMI_OEM_INVENTEC_EXTENDED_CONFIG_FIRMWARE_INFORMATION_ENTITY_FCB:
+      entity_str = "FCB";
+      break;
+    default:
+      entity_str = "Unrecognized";
+    }
 
   pstdout_printf (state_data->pstate,
                   "Controller Entity      : %s\n",

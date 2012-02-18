@@ -223,6 +223,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val = 0, temp_val;
+  char *str;
   int rv = -1;
   int flag;
 
@@ -318,28 +319,29 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
       goto cleanup;
     }
 
-  pstdout_printf (state_data->pstate,
-                  "Power restore policy                : ");
-
   switch (val)
     {
     case IPMI_POWER_RESTORE_POLICY_POWERED_OFF_AFTER_AC_RETURNS:
-      pstdout_printf (state_data->pstate, "Always off\n");
+      str = "Always off";
       break;
 
     case IPMI_POWER_RESTORE_POLICY_POWER_RESTORED_TO_STATE:
-      pstdout_printf (state_data->pstate, "Restore\n");
+      str = "Restore";
       break;
 
     case IPMI_POWER_RESTORE_POLICY_POWERS_UP_AFTER_AC_RETURNS:
-      pstdout_printf (state_data->pstate, "Always on\n");
+      str = "Always on";
       break;
 
     case IPMI_POWER_RESTORE_POLICY_UNKNOWN:
     default:
-      pstdout_printf (state_data->pstate, "unknown\n");
+      str = "unknown";
       break;
     }
+
+  pstdout_printf (state_data->pstate,
+                  "Power restore policy                : %s\n",
+		  str);
 
   temp_val = IPMI_LAST_POWER_EVENT_UNKNOWN;
 
@@ -416,34 +418,32 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
     temp_val = IPMI_LAST_POWER_EVENT_POWER_ON_VIA_IPMI;
 
  print:
-  pstdout_printf (state_data->pstate, "Last Power Event                    : ");
 
   switch (temp_val)
     {
     case IPMI_LAST_POWER_EVENT_AC_FAILED:
-      pstdout_printf (state_data->pstate, "ac failed\n");
+      str = "ac failed";
       break;
-
     case IPMI_LAST_POWER_EVENT_POWER_DOWN_POWER_OVERLOAD:
-      pstdout_printf (state_data->pstate, "power down due to power overload\n");
+      str = "power down due to power overload";
       break;
-
     case IPMI_LAST_POWER_EVENT_POWER_DOWN_INTERLOCK_ACTIVATED:
-      pstdout_printf (state_data->pstate, "power down due to Activation of interlock switch\n");
+      str = "power down due to Activation of interlock switch";
       break;
-
     case IPMI_LAST_POWER_EVENT_POWER_DOWN_POWER_FAULT:
-      pstdout_printf (state_data->pstate, "power down due to power fault\n");
+      str = "power down due to power fault";
       break;
-
     case IPMI_LAST_POWER_EVENT_POWER_ON_VIA_IPMI:
-      pstdout_printf (state_data->pstate, "power on via ipmi command\n");
+      str = "power on via ipmi command";
       break;
-
     default:
-      pstdout_printf (state_data->pstate, "unknown\n");
+      str = "unknown";
       break;
     }
+
+  pstdout_printf (state_data->pstate,
+		  "Last Power Event                    : %s\n",
+		  str);
 
   if (FIID_OBJ_GET (obj_cmd_rs, "misc_chassis_state.chassis_intrusion_active", &val) < 0)
     {
@@ -517,27 +517,29 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
           goto cleanup;
         }
 
-      pstdout_printf (state_data->pstate,
-                      "Chassis Identify state              : ");
-
       switch (val)
         {
         case IPMI_CHASSIS_IDENTIFY_STATE_OFF:
-          pstdout_printf (state_data->pstate, "off\n");
+          str = "off";
           break;
 
         case IPMI_CHASSIS_IDENTIFY_STATE_TEMPORARY_ON:
-          pstdout_printf (state_data->pstate, "Timed on\n");
+          str = "Timed on";
           break;
 
         case IPMI_CHASSIS_IDENTIFY_STATE_INDEFINITE_ON:
-          pstdout_printf (state_data->pstate, "Indefinite on\n");
+          str = "Indefinite on";
           break;
 
         default:
-          pstdout_printf (state_data->pstate, "unknown\n");
+          str = "unknown";
           break;
         }
+
+      pstdout_printf (state_data->pstate,
+                      "Chassis Identify state              : %s\n",
+		      str);
+
     }
 
   if ((flag = fiid_obj_get (obj_cmd_rs,
@@ -880,32 +882,47 @@ get_system_restart_cause (ipmi_chassis_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (val == IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_UNKNOWN)
-    restart_cause_str = "unknown";
-  else if (val == IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_CHASSIS_CONTROL_COMMAND)
-    restart_cause_str = "Chassis control command";
-  else if (val == IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_RESET_VIA_PUSHBUTTON)
-    restart_cause_str = "Reset via pushbutton";
-  else if (val == IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_POWER_UP_VIA_POWER_PUSHBUTTON)
-    restart_cause_str = "Power up via power pushbutton";
-  else if (val == IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_WATCHDOG_EXPIRATION)
-    restart_cause_str = "Watchdog expiration";
-  else if (val == IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_OEM)
-    restart_cause_str = "OEM";
-  else if (val == IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_AUTOMATIC_POWER_UP_ALWAYS_RESTORE)
-    restart_cause_str = "Automatic power-up on AC being applied due to \"always restore\" power restore policy";
-  else if (val == IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_AUTOMATIC_POWER_UP_RESTORE_PREVIOUS)
-    restart_cause_str = "Automatic power-up on AC being applied due to \"restore previous power state\" power restore policy";
-  else if (val == IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_RESET_VIA_PEF)
-    restart_cause_str = "Reset via PEF";
-  else if (val == IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_POWER_CYCLE_VIA_PEF)
-    restart_cause_str = "Power cycle via PEF";
-  else if (val == IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_SOFT_RESET)
-    restart_cause_str = "Soft reset";
-  else if (val == IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_POWER_UP_VIA_RTC)
-    restart_cause_str = "Power up via RTC";
-  else
-    restart_cause_str = "unknown";
+  switch (val)
+    {
+    case IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_UNKNOWN:
+      restart_cause_str = "unknown";
+      break;
+    case IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_CHASSIS_CONTROL_COMMAND:
+      restart_cause_str = "Chassis control command";
+      break;
+    case IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_RESET_VIA_PUSHBUTTON:
+      restart_cause_str = "Reset via pushbutton";
+      break;
+    case IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_POWER_UP_VIA_POWER_PUSHBUTTON:
+      restart_cause_str = "Power up via power pushbutton";
+      break;
+    case IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_WATCHDOG_EXPIRATION:
+      restart_cause_str = "Watchdog expiration";
+      break;
+    case IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_OEM:
+      restart_cause_str = "OEM";
+      break;
+    case IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_AUTOMATIC_POWER_UP_ALWAYS_RESTORE:
+      restart_cause_str = "Automatic power-up on AC being applied due to \"always restore\" power restore policy";
+      break;
+    case IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_AUTOMATIC_POWER_UP_RESTORE_PREVIOUS:
+      restart_cause_str = "Automatic power-up on AC being applied due to \"restore previous power state\" power restore policy";
+      break;
+    case IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_RESET_VIA_PEF:
+      restart_cause_str = "Reset via PEF";
+      break;
+    case IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_POWER_CYCLE_VIA_PEF:
+      restart_cause_str = "Power cycle via PEF";
+      break;
+    case IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_SOFT_RESET:
+      restart_cause_str = "Soft reset";
+      break;
+    case IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_POWER_UP_VIA_RTC:
+      restart_cause_str = "Power up via RTC";
+      break;
+    default:
+      restart_cause_str = "unknown";
+    }
   
   pstdout_printf (state_data->pstate,
                   "Restart cause : %s\n",

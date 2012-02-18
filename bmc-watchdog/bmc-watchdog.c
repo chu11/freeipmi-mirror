@@ -1371,70 +1371,95 @@ _set_cmd (void)
 static char *
 _log_str (uint8_t log)
 {
-  if (log == IPMI_BMC_WATCHDOG_TIMER_LOG_ENABLE)
-    return "Enabled";
-  else if (log == IPMI_BMC_WATCHDOG_TIMER_LOG_DISABLE)
-    return "Disabled";
-  else
-    return "Internal Error, Unknown Log Value";
+  switch (log)
+    {
+    case IPMI_BMC_WATCHDOG_TIMER_LOG_ENABLE:
+      return "Enabled";
+    case IPMI_BMC_WATCHDOG_TIMER_LOG_DISABLE:
+      return "Disabled";
+    default:
+      return "Internal Error, Unknown Log Value";
+    }
+
+  return (NULL);		/* NOT REACHED */
 }
 
 static char *
 _timer_state_str (uint8_t timer_state)
 {
-  if (timer_state == IPMI_BMC_WATCHDOG_TIMER_TIMER_STATE_RUNNING)
-    return "Running";
-  else if (timer_state == IPMI_BMC_WATCHDOG_TIMER_TIMER_STATE_STOPPED)
-    return "Stopped";
-  else
-    return "Internal Error, Unknown Stop Timer Value";
+  switch (timer_state)
+    {
+    case IPMI_BMC_WATCHDOG_TIMER_TIMER_STATE_RUNNING:
+      return "Running";
+    case IPMI_BMC_WATCHDOG_TIMER_TIMER_STATE_STOPPED:
+      return "Stopped";
+    default:
+      return "Internal Error, Unknown Stop Timer Value";
+    }
+
+  return (NULL);		/* NOT REACHED */
 }
 
 static char *
 _timer_use_str (uint8_t timer_use)
 {
-  if (timer_use == IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_BIOS_FRB2)
-    return "BIOS FRB2";
-  else if (timer_use == IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_BIOS_POST)
-    return "BIOS POST";
-  else if (timer_use == IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_OS_LOAD)
-    return "OS LOAD";
-  else if (timer_use == IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_SMS_OS)
-    return "SMS/OS";
-  else if (timer_use == IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_OEM)
-    return "OEM";
-  else
-    return "Reserved";
+  switch (timer_use)
+    {
+    case IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_BIOS_FRB2:
+      return "BIOS FRB2";
+    case IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_BIOS_POST:
+      return "BIOS POST";
+    case IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_OS_LOAD:
+      return "OS LOAD";
+    case IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_SMS_OS:
+      return "SMS/OS";
+    case IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_OEM:
+      return "OEM";
+    default:
+      return "Reserved";
+    }
+
+  return (NULL);		/* NOT REACHED */
 }
 
 static char *
 _pre_timeout_interrupt_str (uint8_t pre_timeout_interrupt)
 {
-  if (pre_timeout_interrupt == IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_NONE)
-    return "None";
-  else if (pre_timeout_interrupt == IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_SMI)
-    return "SMI";
-  else if (pre_timeout_interrupt == IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_NMI)
-    return "NMI / Diagnostic Interrupt";
-  else if (pre_timeout_interrupt == IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_MESSAGING_INTERRUPT)
-    return "Messaging Interrupt";
-  else
-    return "Reserved";
+  switch (pre_timeout_interrupt)
+    {
+    case IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_NONE:
+      return "None";
+    case IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_SMI:
+      return "SMI";
+    case IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_NMI:
+      return "NMI / Diagnostic Interrupt";
+    case IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_MESSAGING_INTERRUPT:
+      return "Messaging Interrupt";
+    default:
+      return "Reserved";
+    }
+  
+  return (NULL);		/* NOT REACHED */
 }
 
 static char *
 _timeout_action_str (uint8_t timeout_action)
 {
-  if (timeout_action == IPMI_BMC_WATCHDOG_TIMER_TIMEOUT_ACTION_NO_ACTION)
-    return "None";
-  else if (timeout_action == IPMI_BMC_WATCHDOG_TIMER_TIMEOUT_ACTION_HARD_RESET)
-    return "Hard Reset";
-  else if (timeout_action == IPMI_BMC_WATCHDOG_TIMER_TIMEOUT_ACTION_POWER_DOWN)
-    return "Power Down";
-  else if (timeout_action == IPMI_BMC_WATCHDOG_TIMER_TIMEOUT_ACTION_POWER_CYCLE)
-    return "Power Cycle";
-  else
-    return "Reserved";
+  switch (timeout_action)
+    {
+    case IPMI_BMC_WATCHDOG_TIMER_TIMEOUT_ACTION_NO_ACTION:
+      return "None";
+    case IPMI_BMC_WATCHDOG_TIMER_TIMEOUT_ACTION_HARD_RESET:
+      return "Hard Reset";
+    case IPMI_BMC_WATCHDOG_TIMER_TIMEOUT_ACTION_POWER_DOWN:
+      return "Power Down";
+    case IPMI_BMC_WATCHDOG_TIMER_TIMEOUT_ACTION_POWER_CYCLE:
+      return "Power Cycle";
+    default:
+      return "Reserved";
+    }
+
+  return (NULL);		/* NOT REACHED */
 }
 
 static void

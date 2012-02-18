@@ -592,18 +592,26 @@ ipmi_sel_parse_output_intel_node_manager_event_data2_class_oem (ipmi_sel_parse_c
           error_type = (system_event_record_data->event_data2 & IPMI_OEM_INTEL_NODE_MANAGER_HEALTH_EVENT_EVENT_DATA2_ERROR_TYPE_BITMASK);
           error_type >>= IPMI_OEM_INTEL_NODE_MANAGER_HEALTH_EVENT_EVENT_DATA2_ERROR_TYPE_SHIFT;
           
-          if (error_type == IPMI_OEM_INTEL_NODE_MANAGER_HEALTH_EVENT_EVENT_DATA2_ERROR_TYPE_POLICY_MISCONFIGURATION)
-            error_type_str = "Policy Misconfiguration";
-          else if (error_type == IPMI_OEM_INTEL_NODE_MANAGER_HEALTH_EVENT_EVENT_DATA2_ERROR_TYPE_POWER_SENSOR_READING_FAILURE)
-            error_type_str = "Power Sensor Reading Failure";
-          else if (error_type == IPMI_OEM_INTEL_NODE_MANAGER_HEALTH_EVENT_EVENT_DATA2_ERROR_TYPE_INLET_TEMPERATURE_READING_FAILURE)
-            error_type_str = "Inlet Temperature Reading Failure";
-          else if (error_type == IPMI_OEM_INTEL_NODE_MANAGER_HEALTH_EVENT_EVENT_DATA2_ERROR_TYPE_HOST_COMMUNICATION_ERROR)
-            error_type_str = "Host Communication error";
-          else if (error_type == IPMI_OEM_INTEL_NODE_MANAGER_HEALTH_EVENT_EVENT_DATA2_ERROR_TYPE_REAL_TIME_CLOCK_SYNCHRONIZATION_FAILURE)
-            error_type_str = "Real-time clock synchronization failure";
-          else
-            error_type_str = "Unknown";
+	  switch (error_type)
+	    {
+	    case IPMI_OEM_INTEL_NODE_MANAGER_HEALTH_EVENT_EVENT_DATA2_ERROR_TYPE_POLICY_MISCONFIGURATION:
+	      error_type_str = "Policy Misconfiguration";
+	      break;
+	    case IPMI_OEM_INTEL_NODE_MANAGER_HEALTH_EVENT_EVENT_DATA2_ERROR_TYPE_POWER_SENSOR_READING_FAILURE:
+	      error_type_str = "Power Sensor Reading Failure";
+	      break;
+	    case IPMI_OEM_INTEL_NODE_MANAGER_HEALTH_EVENT_EVENT_DATA2_ERROR_TYPE_INLET_TEMPERATURE_READING_FAILURE:
+	      error_type_str = "Inlet Temperature Reading Failure";
+	      break;
+	    case IPMI_OEM_INTEL_NODE_MANAGER_HEALTH_EVENT_EVENT_DATA2_ERROR_TYPE_HOST_COMMUNICATION_ERROR:
+	      error_type_str = "Host Communication error";
+	      break;
+	    case IPMI_OEM_INTEL_NODE_MANAGER_HEALTH_EVENT_EVENT_DATA2_ERROR_TYPE_REAL_TIME_CLOCK_SYNCHRONIZATION_FAILURE:
+	      error_type_str = "Real-time clock synchronization failure";
+	      break;
+	    default:
+	      error_type_str = "Unknown";
+	    }
           
           snprintf (tmpbuf,
                     tmpbuflen,
@@ -639,18 +647,26 @@ ipmi_sel_parse_output_intel_node_manager_event_data2_class_oem (ipmi_sel_parse_c
           
           health_event = system_event_record_data->event_data2;
           
-          if (health_event == IPMI_OEM_INTEL_NODE_MANAGER_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_FORCED_GPIO_RECOVER)
-            health_event_str = "Forced GPIO recovery";
-          else if (health_event == IPMI_OEM_INTEL_NODE_MANAGER_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_IMAGE_EXECUTION_FAILED)
-            health_event_str = "Image execution failed";
-          else if (health_event == IPMI_OEM_INTEL_NODE_MANAGER_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_FLASH_ERASE_ERROR)
-            health_event_str = "Flash erase error";
-          else if (health_event == IPMI_OEM_INTEL_NODE_MANAGER_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_FLASH_CORRUPTED)
-            health_event_str = "Flash corrupted";
-          else if (health_event == IPMI_OEM_INTEL_NODE_MANAGER_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_INTERNAL_ERROR)
-            health_event_str = "Internal error";
-          else
-            health_event_str = "Unknown";
+	  switch (health_event)
+	    {
+	    case IPMI_OEM_INTEL_NODE_MANAGER_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_FORCED_GPIO_RECOVER:
+	      health_event_str = "Forced GPIO recovery";
+	      break;
+	    case IPMI_OEM_INTEL_NODE_MANAGER_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_IMAGE_EXECUTION_FAILED:
+	      health_event_str = "Image execution failed";
+	      break;
+	    case IPMI_OEM_INTEL_NODE_MANAGER_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_FLASH_ERASE_ERROR:
+	      health_event_str = "Flash erase error";
+	      break;
+	    case IPMI_OEM_INTEL_NODE_MANAGER_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_FLASH_CORRUPTED:
+	      health_event_str = "Flash corrupted";
+	      break;
+	    case IPMI_OEM_INTEL_NODE_MANAGER_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_INTERNAL_ERROR:
+	      health_event_str = "Internal error";
+	      break;
+	    default:
+	      health_event_str = "Unknown";
+	    }
           
           snprintf (tmpbuf,
                     tmpbuflen,

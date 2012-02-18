@@ -325,35 +325,37 @@ ipmi_sel_parse_output_dell_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
               || system_event_record_data->event_data2 == IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA2_OEM_DELL_OVER_CURRENT_FAULT
               || system_event_record_data->event_data2 == IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA2_OEM_DELL_FAN_FAULT))
         {
-          if (system_event_record_data->event_data2 == IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA2_OEM_DELL_PSU_COMMUNICATION_ERROR)
-            snprintf (tmpbuf,
-                      tmpbuflen,
-                      "PSU Communication Error");
-          else if (system_event_record_data->event_data2 == IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA2_OEM_DELL_OVER_TEMPERATURE_WARNING)
-            snprintf (tmpbuf,
-                      tmpbuflen,
-                      "Over Temperature Warning");
-          else if (system_event_record_data->event_data2 == IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA2_OEM_DELL_OVER_TEMPERATURE_FAULT)
-            snprintf (tmpbuf,
-                      tmpbuflen,
-                      "Over Temperature Fault");
-          else if (system_event_record_data->event_data2 == IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA2_OEM_DELL_UNDER_VOLTAGE_FAULT)
-            snprintf (tmpbuf,
-                      tmpbuflen,
-                      "Under Voltage Fault");
-          else if (system_event_record_data->event_data2 == IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA2_OEM_DELL_OVER_VOLTAGE_FAULT)
-            snprintf (tmpbuf,
-                      tmpbuflen,
-                      "Over Voltage Fault");
-          else if (system_event_record_data->event_data2 == IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA2_OEM_DELL_OVER_CURRENT_FAULT)
-            snprintf (tmpbuf,
-                      tmpbuflen,
-                      "Over Current Fault");
-          else /* system_event_record_data->event_data2 == IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA2_OEM_DELL_FAN_FAULT */
-            snprintf (tmpbuf,
-                      tmpbuflen,
-                      "Fan Fault");
+	  char *str;
+
+	  switch (system_event_record_data->event_data2)
+	    {
+	    case IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA2_OEM_DELL_PSU_COMMUNICATION_ERROR:
+	      str = "PSU Communication Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA2_OEM_DELL_OVER_TEMPERATURE_WARNING:
+	      str = "Over Temperature Warning";
+	      break;
+	    case IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA2_OEM_DELL_OVER_TEMPERATURE_FAULT:
+	      str = "Over Temperature Fault";
+	      break;
+	    case IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA2_OEM_DELL_UNDER_VOLTAGE_FAULT:
+	      str = "Under Voltage Fault";
+	      break;
+	    case IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA2_OEM_DELL_OVER_VOLTAGE_FAULT:
+	      str = "Over Voltage Fault";
+	      break;
+	    case IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA2_OEM_DELL_OVER_CURRENT_FAULT:
+	      str = "Over Current Fault";
+	      break;
+	    case IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA2_OEM_DELL_FAN_FAULT:
+	      str = "Fan Fault";
+	      break;
+	    default:
+	      str = "Internal Logic Error";
+	    }
           
+	  snprintf (tmpbuf, tmpbuflen, "%s", str);
+
           return (1);
         }
 
@@ -387,49 +389,71 @@ ipmi_sel_parse_output_dell_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
           char *error_code_str = NULL;
 
           /* achu: I am assuming only fatal error codes are possible, not progress codes */
-          if (system_event_record_data->event_data2 == IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_NO_MEMORY_DETECTED)
-            error_code_str = "No memory detected";
-          else if (system_event_record_data->event_data2 == IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_MEMORY_DETECTED_BUT_IS_NOT_CONFIGURABLE)
-            error_code_str = "Memory detected but is not configurable";
-          else if (system_event_record_data->event_data2 == IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_MEMORY_CONFIGURED_BUT_NOT_USABLE)
-            error_code_str = "Memory configured but not usable";
-          else if (system_event_record_data->event_data2 == IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_SYSTEM_BIOS_SHADOW_FAILURE)
-            error_code_str = "System BIOS shadow failure";
-          else if (system_event_record_data->event_data2 == IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_CMOS_FAILURE)
-            error_code_str = "CMOS failure";
-          else if (system_event_record_data->event_data2 == IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_DMA_CONTROLLER_FAILURE)
-            error_code_str = "DMA controller failure";
-          else if (system_event_record_data->event_data2 == IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_INTERRUPT_CONTROLLER_FAILURE)
-            error_code_str = "Interrupt controller failure";
-          else if (system_event_record_data->event_data2 == IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_TIMER_REFRESH_FAILURE)
-            error_code_str = "Timer refresh failure";
-          else if (system_event_record_data->event_data2 == IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_PROGRAMMABLE_INTERVAL_TIMER_ERROR)
-            error_code_str = "Programmable interval timer error";
-          else if (system_event_record_data->event_data2 == IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_PARITY_ERROR)
-            error_code_str = "Parity error";
-          else if (system_event_record_data->event_data2 == IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_SIO_FAILURE)
-            error_code_str = "SIO failure";
-          else if (system_event_record_data->event_data2 == IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_KEYBOARD_CONTROLLER_FAILURE)
-            error_code_str = "Keyboard controller failure";
-          else if (system_event_record_data->event_data2 == IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_SMI_INITIALIZATION_FAILURE)
-            error_code_str = "SMI initialization failure";
-          else if (system_event_record_data->event_data2 == IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_SHUTDOWN_TEST_FAILURE)
-            error_code_str = "Shutdown test failure";
-          else if (system_event_record_data->event_data2 == IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_POST_MEMORY_TEST_FAILURE)
-            error_code_str = "POST Memory test failure";
-          else if (system_event_record_data->event_data2 == IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_RAC_CONFIGURATION_FAILURE)
-            error_code_str = "RAC configuration failure";
-          else if (system_event_record_data->event_data2 == IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_CPU_CONFIGURATION_FAILURE)
-            error_code_str = "CPU configuration failure";
-          else if (system_event_record_data->event_data2 == IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_INCORRECT_MEMORY_CONFIGURATION)
-            error_code_str = "Incorrect memory configuration";
-          else if (system_event_record_data->event_data2 == IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_GENERAL_FAILURE_AFTER_VIDEO)
-            error_code_str = "General failure after video";
-          else
-            snprintf (tmpbuf,
-                      tmpbuflen,
-                      "BIOS Fatal Error code: %02Xh",
-                      system_event_record_data->event_data2);
+	  switch (system_event_record_data->event_data2)
+	    {
+	    case IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_NO_MEMORY_DETECTED:
+	      error_code_str = "No memory detected";
+	      break;
+	    case IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_MEMORY_DETECTED_BUT_IS_NOT_CONFIGURABLE:
+	      error_code_str = "Memory detected but is not configurable";
+	      break;
+	    case IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_MEMORY_CONFIGURED_BUT_NOT_USABLE:
+	      error_code_str = "Memory configured but not usable";
+	      break;
+	    case IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_SYSTEM_BIOS_SHADOW_FAILURE:
+	      error_code_str = "System BIOS shadow failure";
+	      break;
+	    case IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_CMOS_FAILURE:
+	      error_code_str = "CMOS failure";
+	      break;
+	    case IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_DMA_CONTROLLER_FAILURE:
+	      error_code_str = "DMA controller failure";
+	      break;
+	    case IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_INTERRUPT_CONTROLLER_FAILURE:
+	      error_code_str = "Interrupt controller failure";
+	      break;
+	    case IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_TIMER_REFRESH_FAILURE:
+	      error_code_str = "Timer refresh failure";
+	      break;
+	    case IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_PROGRAMMABLE_INTERVAL_TIMER_ERROR:
+	      error_code_str = "Programmable interval timer error";
+	      break;
+	    case IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_PARITY_ERROR:
+	      error_code_str = "Parity error";
+	      break;
+	    case IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_SIO_FAILURE:
+	      error_code_str = "SIO failure";
+	      break;
+	    case IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_KEYBOARD_CONTROLLER_FAILURE:
+	      error_code_str = "Keyboard controller failure";
+	      break;
+	    case IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_SMI_INITIALIZATION_FAILURE:
+	      error_code_str = "SMI initialization failure";
+	      break;
+	    case IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_SHUTDOWN_TEST_FAILURE:
+	      error_code_str = "Shutdown test failure";
+	      break;
+	    case IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_POST_MEMORY_TEST_FAILURE:
+	      error_code_str = "POST Memory test failure";
+	      break;
+	    case IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_RAC_CONFIGURATION_FAILURE:
+	      error_code_str = "RAC configuration failure";
+	      break;
+	    case IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_CPU_CONFIGURATION_FAILURE:
+	      error_code_str = "CPU configuration failure";
+	      break;
+	    case IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_INCORRECT_MEMORY_CONFIGURATION:
+	      error_code_str = "Incorrect memory configuration";
+	      break;
+	    case IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_GENERAL_FAILURE_AFTER_VIDEO:
+	      error_code_str = "General failure after video";
+	      break;
+	    default:
+	      snprintf (tmpbuf,
+			tmpbuflen,
+			"BIOS Fatal Error code: %02Xh",
+			system_event_record_data->event_data2);
+	    }
           
           if (error_code_str)
             snprintf (tmpbuf,

@@ -48,20 +48,29 @@ api_set_api_errnum_by_errno (ipmi_ctx_t ctx, int __errno)
 {
   assert (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  if (__errno == 0)
-    ctx->errnum = IPMI_ERR_SUCCESS;
-  else if (__errno == ENOMEM)
-    ctx->errnum = IPMI_ERR_OUT_OF_MEMORY;
-  else if (__errno == ENODEV)
-    ctx->errnum = IPMI_ERR_DEVICE_NOT_SUPPORTED;
-  else if (__errno == ECONNRESET)
-    ctx->errnum = IPMI_ERR_IPMI_ERROR;
-  else if (__errno == ECONNREFUSED)
-    ctx->errnum = IPMI_ERR_IPMI_ERROR;
-  else if (__errno == EINVAL)
-    ctx->errnum = IPMI_ERR_PARAMETERS;
-  else
-    ctx->errnum = IPMI_ERR_INTERNAL_ERROR;
+  switch (__errno)
+    {
+    case 0:
+      ctx->errnum = IPMI_ERR_SUCCESS;
+      break;
+    case ENOMEM:
+      ctx->errnum = IPMI_ERR_OUT_OF_MEMORY;
+      break;
+    case ENODEV:
+      ctx->errnum = IPMI_ERR_DEVICE_NOT_SUPPORTED;
+      break;
+    case ECONNRESET:
+      ctx->errnum = IPMI_ERR_IPMI_ERROR;
+      break;
+    case ECONNREFUSED:
+      ctx->errnum = IPMI_ERR_IPMI_ERROR;
+      break;
+    case EINVAL:
+      ctx->errnum = IPMI_ERR_PARAMETERS;
+      break;
+    default:
+      ctx->errnum = IPMI_ERR_INTERNAL_ERROR;
+    }
 }
 
 void
@@ -69,21 +78,27 @@ api_set_api_errnum_by_fiid_object (ipmi_ctx_t ctx, fiid_obj_t obj)
 {
   assert (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  if (fiid_obj_errnum (obj) == FIID_ERR_SUCCESS)
-    ctx->errnum = IPMI_ERR_SUCCESS;
-  else if (fiid_obj_errnum (obj) == FIID_ERR_OUT_OF_MEMORY)
-    ctx->errnum = IPMI_ERR_OUT_OF_MEMORY;
-  else if (fiid_obj_errnum (obj) == FIID_ERR_DATA_NOT_AVAILABLE)
-    ctx->errnum = IPMI_ERR_IPMI_ERROR;
-  else if (fiid_obj_errnum (obj) == FIID_ERR_FIELD_NOT_FOUND
-           || fiid_obj_errnum (obj) == FIID_ERR_DATA_NOT_BYTE_ALIGNED
-           || fiid_obj_errnum (obj) == FIID_ERR_REQUIRED_FIELD_MISSING
-           || fiid_obj_errnum (obj) == FIID_ERR_FIXED_LENGTH_FIELD_INVALID
-           || fiid_obj_errnum (obj) == FIID_ERR_DATA_NOT_AVAILABLE
-           || fiid_obj_errnum (obj) == FIID_ERR_NOT_IDENTICAL)
-    ctx->errnum = IPMI_ERR_PARAMETERS;
-  else
-    ctx->errnum = IPMI_ERR_INTERNAL_ERROR;
+  switch (fiid_obj_errnum (obj))
+    {
+    case FIID_ERR_SUCCESS:
+      ctx->errnum = IPMI_ERR_SUCCESS;
+      break;
+    case FIID_ERR_OUT_OF_MEMORY:
+      ctx->errnum = IPMI_ERR_OUT_OF_MEMORY;
+      break;
+    case FIID_ERR_DATA_NOT_AVAILABLE:
+      ctx->errnum = IPMI_ERR_IPMI_ERROR;
+      break;
+    case FIID_ERR_FIELD_NOT_FOUND:
+    case FIID_ERR_DATA_NOT_BYTE_ALIGNED:
+    case FIID_ERR_REQUIRED_FIELD_MISSING:
+    case FIID_ERR_FIXED_LENGTH_FIELD_INVALID:
+    case FIID_ERR_NOT_IDENTICAL:
+      ctx->errnum = IPMI_ERR_PARAMETERS;
+      break;
+    default:
+      ctx->errnum = IPMI_ERR_INTERNAL_ERROR;
+    }
 }
 
 void
@@ -115,16 +130,23 @@ api_set_api_errnum_by_locate_errnum (ipmi_ctx_t ctx, int locate_errnum)
 {
   assert (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  if (locate_errnum == IPMI_LOCATE_ERR_SUCCESS)
-    ctx->errnum = IPMI_ERR_SUCCESS;
-  else if (locate_errnum == IPMI_LOCATE_ERR_OUT_OF_MEMORY)
-    ctx->errnum = IPMI_ERR_OUT_OF_MEMORY;
-  else if (locate_errnum == IPMI_LOCATE_ERR_PERMISSION)
-    ctx->errnum = IPMI_ERR_PERMISSION;
-  else if (locate_errnum == IPMI_LOCATE_ERR_SYSTEM_ERROR)
-    ctx->errnum = IPMI_ERR_SYSTEM_ERROR;
-  else
-    ctx->errnum = IPMI_ERR_INTERNAL_ERROR;
+  switch (locate_errnum)
+    {
+    case IPMI_LOCATE_ERR_SUCCESS:
+      ctx->errnum = IPMI_ERR_SUCCESS;
+      break;
+    case IPMI_LOCATE_ERR_OUT_OF_MEMORY:
+      ctx->errnum = IPMI_ERR_OUT_OF_MEMORY;
+      break;
+    case IPMI_LOCATE_ERR_PERMISSION:
+      ctx->errnum = IPMI_ERR_PERMISSION;
+      break;
+    case IPMI_LOCATE_ERR_SYSTEM_ERROR:
+      ctx->errnum = IPMI_ERR_SYSTEM_ERROR;
+      break;
+    default:
+      ctx->errnum = IPMI_ERR_INTERNAL_ERROR;
+    }
 }
 
 void
@@ -132,22 +154,32 @@ api_set_api_errnum_by_kcs_errnum (ipmi_ctx_t ctx, int kcs_errnum)
 {
   assert (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  if (kcs_errnum == IPMI_KCS_ERR_SUCCESS)
-    ctx->errnum = IPMI_ERR_SUCCESS;
-  else if (kcs_errnum == IPMI_KCS_ERR_OUT_OF_MEMORY)
-    ctx->errnum = IPMI_ERR_OUT_OF_MEMORY;
-  else if (kcs_errnum == IPMI_KCS_ERR_PERMISSION)
-    ctx->errnum = IPMI_ERR_PERMISSION;
-  else if (kcs_errnum == IPMI_KCS_ERR_DEVICE_NOT_FOUND)
-    ctx->errnum = IPMI_ERR_DEVICE_NOT_FOUND;
-  else if (kcs_errnum == IPMI_KCS_ERR_DRIVER_TIMEOUT)
-    ctx->errnum = IPMI_ERR_DRIVER_TIMEOUT;
-  else if (kcs_errnum == IPMI_KCS_ERR_BUSY)
-    ctx->errnum = IPMI_ERR_SYSTEM_ERROR;
-  else if (kcs_errnum == IPMI_KCS_ERR_SYSTEM_ERROR)
-    ctx->errnum = IPMI_ERR_SYSTEM_ERROR;
-  else
-    ctx->errnum = IPMI_ERR_INTERNAL_ERROR;
+  switch (kcs_errnum)
+    {
+    case IPMI_KCS_ERR_SUCCESS:
+      ctx->errnum = IPMI_ERR_SUCCESS;
+      break;
+    case IPMI_KCS_ERR_OUT_OF_MEMORY:
+      ctx->errnum = IPMI_ERR_OUT_OF_MEMORY;
+      break;
+    case IPMI_KCS_ERR_PERMISSION:
+      ctx->errnum = IPMI_ERR_PERMISSION;
+      break;
+    case IPMI_KCS_ERR_DEVICE_NOT_FOUND:
+      ctx->errnum = IPMI_ERR_DEVICE_NOT_FOUND;
+      break;
+    case IPMI_KCS_ERR_DRIVER_TIMEOUT:
+      ctx->errnum = IPMI_ERR_DRIVER_TIMEOUT;
+      break;
+    case IPMI_KCS_ERR_BUSY:
+      ctx->errnum = IPMI_ERR_SYSTEM_ERROR;
+      break;
+    case IPMI_KCS_ERR_SYSTEM_ERROR:
+      ctx->errnum = IPMI_ERR_SYSTEM_ERROR;
+      break;
+    default:
+      ctx->errnum = IPMI_ERR_INTERNAL_ERROR;
+    }
 }
 
 void
@@ -155,22 +187,32 @@ api_set_api_errnum_by_ssif_errnum (ipmi_ctx_t ctx, int ssif_errnum)
 {
   assert (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  if (ssif_errnum == IPMI_SSIF_ERR_SUCCESS)
-    ctx->errnum = IPMI_ERR_SUCCESS;
-  else if (ssif_errnum == IPMI_SSIF_ERR_OUT_OF_MEMORY)
-    ctx->errnum = IPMI_ERR_OUT_OF_MEMORY;
-  else if (ssif_errnum == IPMI_SSIF_ERR_PERMISSION)
-    ctx->errnum = IPMI_ERR_PERMISSION;
-  else if (ssif_errnum == IPMI_SSIF_ERR_DEVICE_NOT_FOUND)
-    ctx->errnum = IPMI_ERR_DEVICE_NOT_FOUND;
-  else if (ssif_errnum == IPMI_SSIF_ERR_DRIVER_TIMEOUT)
-    ctx->errnum = IPMI_ERR_DRIVER_TIMEOUT;
-  else if (ssif_errnum == IPMI_SSIF_ERR_BUSY)
-    ctx->errnum = IPMI_ERR_SYSTEM_ERROR;
-  else if (ssif_errnum == IPMI_SSIF_ERR_SYSTEM_ERROR)
-    ctx->errnum = IPMI_ERR_SYSTEM_ERROR;
-  else
-    ctx->errnum = IPMI_ERR_INTERNAL_ERROR;
+  switch (ssif_errnum)
+    {
+    case IPMI_SSIF_ERR_SUCCESS:
+      ctx->errnum = IPMI_ERR_SUCCESS;
+      break;
+    case IPMI_SSIF_ERR_OUT_OF_MEMORY:
+      ctx->errnum = IPMI_ERR_OUT_OF_MEMORY;
+      break;
+    case IPMI_SSIF_ERR_PERMISSION:
+      ctx->errnum = IPMI_ERR_PERMISSION;
+      break;
+    case IPMI_SSIF_ERR_DEVICE_NOT_FOUND:
+      ctx->errnum = IPMI_ERR_DEVICE_NOT_FOUND;
+      break;
+    case IPMI_SSIF_ERR_DRIVER_TIMEOUT:
+      ctx->errnum = IPMI_ERR_DRIVER_TIMEOUT;
+      break;
+    case IPMI_SSIF_ERR_BUSY:
+      ctx->errnum = IPMI_ERR_SYSTEM_ERROR;
+      break;
+    case IPMI_SSIF_ERR_SYSTEM_ERROR:
+      ctx->errnum = IPMI_ERR_SYSTEM_ERROR;
+      break;
+    default:
+      ctx->errnum = IPMI_ERR_INTERNAL_ERROR;
+    }
 }
 
 void
@@ -178,20 +220,29 @@ api_set_api_errnum_by_openipmi_errnum (ipmi_ctx_t ctx, int openipmi_errnum)
 {
   assert (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  if (openipmi_errnum == IPMI_OPENIPMI_ERR_SUCCESS)
-    ctx->errnum = IPMI_ERR_SUCCESS;
-  else if (openipmi_errnum == IPMI_OPENIPMI_ERR_OUT_OF_MEMORY)
-    ctx->errnum = IPMI_ERR_OUT_OF_MEMORY;
-  else if (openipmi_errnum == IPMI_OPENIPMI_ERR_PERMISSION)
-    ctx->errnum = IPMI_ERR_PERMISSION;
-  else if (openipmi_errnum == IPMI_OPENIPMI_ERR_DEVICE_NOT_FOUND)
-    ctx->errnum = IPMI_ERR_DEVICE_NOT_FOUND;
-  else if (openipmi_errnum == IPMI_OPENIPMI_ERR_DRIVER_TIMEOUT)
-    ctx->errnum = IPMI_ERR_DRIVER_TIMEOUT;
-  else if (openipmi_errnum == IPMI_OPENIPMI_ERR_SYSTEM_ERROR)
-    ctx->errnum = IPMI_ERR_SYSTEM_ERROR;
-  else
-    ctx->errnum = IPMI_ERR_INTERNAL_ERROR;
+  switch (openipmi_errnum)
+    {
+    case IPMI_OPENIPMI_ERR_SUCCESS:
+      ctx->errnum = IPMI_ERR_SUCCESS;
+      break;
+    case IPMI_OPENIPMI_ERR_OUT_OF_MEMORY:
+      ctx->errnum = IPMI_ERR_OUT_OF_MEMORY;
+      break;
+    case IPMI_OPENIPMI_ERR_PERMISSION:
+      ctx->errnum = IPMI_ERR_PERMISSION;
+      break;
+    case IPMI_OPENIPMI_ERR_DEVICE_NOT_FOUND:
+      ctx->errnum = IPMI_ERR_DEVICE_NOT_FOUND;
+      break;
+    case IPMI_OPENIPMI_ERR_DRIVER_TIMEOUT:
+      ctx->errnum = IPMI_ERR_DRIVER_TIMEOUT;
+      break;
+    case IPMI_OPENIPMI_ERR_SYSTEM_ERROR:
+      ctx->errnum = IPMI_ERR_SYSTEM_ERROR;
+      break;
+    default:
+      ctx->errnum = IPMI_ERR_INTERNAL_ERROR;
+    }
 }
 
 void
@@ -199,22 +250,32 @@ api_set_api_errnum_by_sunbmc_errnum (ipmi_ctx_t ctx, int sunbmc_errnum)
 {
   assert (ctx && ctx->magic == IPMI_CTX_MAGIC);
 
-  if (sunbmc_errnum == IPMI_SUNBMC_ERR_SUCCESS)
-    ctx->errnum = IPMI_ERR_SUCCESS;
-  else if (sunbmc_errnum == IPMI_SUNBMC_ERR_OUT_OF_MEMORY)
-    ctx->errnum = IPMI_ERR_OUT_OF_MEMORY;
-  else if (sunbmc_errnum == IPMI_SUNBMC_ERR_PERMISSION)
-    ctx->errnum = IPMI_ERR_PERMISSION;
-  else if (sunbmc_errnum == IPMI_SUNBMC_ERR_DEVICE_NOT_FOUND)
-    ctx->errnum = IPMI_ERR_DEVICE_NOT_FOUND;
-  else if (sunbmc_errnum == IPMI_SUNBMC_ERR_DEVICE_NOT_SUPPORTED)
-    ctx->errnum = IPMI_ERR_DEVICE_NOT_SUPPORTED;
-  else if (sunbmc_errnum == IPMI_SUNBMC_ERR_DRIVER_TIMEOUT)
-    ctx->errnum = IPMI_ERR_DRIVER_TIMEOUT;
-  else if (sunbmc_errnum == IPMI_SUNBMC_ERR_SYSTEM_ERROR)
-    ctx->errnum = IPMI_ERR_SYSTEM_ERROR;
-  else
-    ctx->errnum = IPMI_ERR_INTERNAL_ERROR;
+  switch (sunbmc_errnum)
+    {
+    case IPMI_SUNBMC_ERR_SUCCESS:
+      ctx->errnum = IPMI_ERR_SUCCESS;
+      break;
+    case IPMI_SUNBMC_ERR_OUT_OF_MEMORY:
+      ctx->errnum = IPMI_ERR_OUT_OF_MEMORY;
+      break;
+    case IPMI_SUNBMC_ERR_PERMISSION:
+      ctx->errnum = IPMI_ERR_PERMISSION;
+      break;
+    case IPMI_SUNBMC_ERR_DEVICE_NOT_FOUND:
+      ctx->errnum = IPMI_ERR_DEVICE_NOT_FOUND;
+      break;
+    case IPMI_SUNBMC_ERR_DEVICE_NOT_SUPPORTED:
+      ctx->errnum = IPMI_ERR_DEVICE_NOT_SUPPORTED;
+      break;
+    case IPMI_SUNBMC_ERR_DRIVER_TIMEOUT:
+      ctx->errnum = IPMI_ERR_DRIVER_TIMEOUT;
+      break;
+    case IPMI_SUNBMC_ERR_SYSTEM_ERROR:
+      ctx->errnum = IPMI_ERR_SYSTEM_ERROR;
+      break;
+    default:
+      ctx->errnum = IPMI_ERR_INTERNAL_ERROR;
+    }
 }
 
 static int

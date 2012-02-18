@@ -1071,22 +1071,32 @@ _output_dell_system_info_idrac_info (ipmi_oem_state_data_t *state_data)
 		  "iDRAC Firmware Version : %s\n",
 		  idrac_firmware_version_buf);
 
-  if (idrac_type == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_10G)
-    idrac_type_str = "Dell Poweredge 10G";
-  else if (idrac_type == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_CMC)
-    idrac_type_str = "Dell Chassis Management Controller ";
-  else if (idrac_type == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_11G_MONOLITHIC)
-    idrac_type_str = "Dell Poweredge 11G (Monolithic)";
-  else if (idrac_type == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_11G_MODULAR)
-    idrac_type_str = "Dell Poweredge 11G (Modular)";
-  else if (idrac_type == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_MASER_LITE_BMC)
-    idrac_type_str = "Maser Lite BMC";
-  else if (idrac_type == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_12G_MONOLITHIC)
-    idrac_type_str = "Dell Poweredge 12G (Monolithic)";
-  else if (idrac_type == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_12G_MODULAR)
-    idrac_type_str = "Dell Poweredge 12G (Modular)";
-  else
-    idrac_type_str = "Unknown";
+  switch (idrac_type)
+    {
+    case IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_10G:
+      idrac_type_str = "Dell Poweredge 10G";
+      break;
+    case IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_CMC:
+      idrac_type_str = "Dell Chassis Management Controller ";
+      break;
+    case IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_11G_MONOLITHIC:
+      idrac_type_str = "Dell Poweredge 11G (Monolithic)";
+      break;
+    case IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_11G_MODULAR:
+      idrac_type_str = "Dell Poweredge 11G (Modular)";
+      break;
+    case IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_MASER_LITE_BMC:
+      idrac_type_str = "Maser Lite BMC";
+      break;
+    case IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_12G_MONOLITHIC:
+      idrac_type_str = "Dell Poweredge 12G (Monolithic)";
+      break;
+    case IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_12G_MODULAR:
+      idrac_type_str = "Dell Poweredge 12G (Modular)";
+      break;
+    default:
+      idrac_type_str = "Unknown";
+    }
 
   pstdout_printf (state_data->pstate,
 		  "iDRAC Type             : %s\n",
@@ -1503,14 +1513,20 @@ _output_dell_system_info_snmp_ipv6_info (ipmi_oem_state_data_t *state_data)
   alert_ack_timeout = ipv6_snmp_trap_destination_addresses[3];
   retries = ipv6_snmp_trap_destination_addresses[4];
 
-  if (destination_type == IPMI_DESTINATION_TYPE_PET_TRAP_DESTINATION)
-    destination_type_str = "PET Trap destination";
-  else if (destination_type == IPMI_DESTINATION_TYPE_OEM1)
-    destination_type_str = "OEM 1";
-  else if (destination_type == IPMI_DESTINATION_TYPE_OEM2)
-    destination_type_str = "OEM 2";
-  else
-    destination_type_str = "Unknown";
+  switch (destination_type)
+    {
+    case IPMI_DESTINATION_TYPE_PET_TRAP_DESTINATION:
+      destination_type_str = "PET Trap destination";
+      break;
+    case IPMI_DESTINATION_TYPE_OEM1:
+      destination_type_str = "OEM 1";
+      break;
+    case IPMI_DESTINATION_TYPE_OEM2:
+      destination_type_str = "OEM 2";
+      break;
+    default:
+      destination_type_str = "Unknown";
+    }
 
   pstdout_printf (state_data->pstate,
 		  "Destination Type          : %u s\n",
@@ -1770,14 +1786,20 @@ _output_dell_system_info_11g_or_12g_mac_addresses (ipmi_oem_state_data_t *state_
 	  nic_number = (bytes_rs[4] & IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_NIC_NUMBER_BITMASK);
           nic_number >>= IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_NIC_NUMBER_SHIFT;
 
-	  if (nic_status == IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_STATUS_ENABLED)
-	    nic_status_str = "Enabled";
-	  else if (nic_status == IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_STATUS_DISABLED)
-	    nic_status_str = "Disabled";
-	  else if (nic_status == IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_STATUS_PLAYING_DEAD)
-	    nic_status_str = "Playing Dead";
-	  else
-	    nic_status_str = "Unknown";
+	  switch (nic_status)
+	    {
+	    case IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_STATUS_ENABLED:
+	      nic_status_str = "Enabled";
+	      break;
+	    case IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_STATUS_DISABLED:
+	      nic_status_str = "Disabled";
+	      break;
+	    case IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_STATUS_PLAYING_DEAD:
+	      nic_status_str = "Playing Dead";
+	      break;
+	    default:
+	      nic_status_str = "Unknown";
+	    }
 
 	  pstdout_printf (state_data->pstate,
 			  "%u\t\t%02X:%02X:%02X:%02X:%02X:%02X\t%s\n",
@@ -5736,14 +5758,20 @@ ipmi_oem_dell_get_power_capacity (ipmi_oem_state_data_t *state_data)
 		  "Available Power                : %u W\n",
 		  available_power);
 
-  if (system_throttling == IPMI_OEM_DELL_GET_POWER_CAPACITY_SYSTEM_THROTTLING_NORMAL_SYSTEM_OPERATION)
-    system_throttling_str = "Normal system operation";
-  else if (system_throttling == IPMI_OEM_DELL_GET_POWER_CAPACITY_SYSTEM_THROTTLING_SYSTEM_NEEDS_TO_BE_THROTTLED)
-    system_throttling_str = "System needs to be throttled";
-  else if (system_throttling == IPMI_OEM_DELL_GET_POWER_CAPACITY_SYSTEM_THROTTLING_SYSTEM_IS_OVERCONFIGURED)
-    system_throttling_str = "System is overconfigured";
-  else
-    system_throttling_str = "Unknown";
+  switch (system_throttling)
+    {
+    case IPMI_OEM_DELL_GET_POWER_CAPACITY_SYSTEM_THROTTLING_NORMAL_SYSTEM_OPERATION:
+      system_throttling_str = "Normal system operation";
+      break;
+    case IPMI_OEM_DELL_GET_POWER_CAPACITY_SYSTEM_THROTTLING_SYSTEM_NEEDS_TO_BE_THROTTLED:
+      system_throttling_str = "System needs to be throttled";
+      break;
+    case IPMI_OEM_DELL_GET_POWER_CAPACITY_SYSTEM_THROTTLING_SYSTEM_IS_OVERCONFIGURED:
+      system_throttling_str = "System is overconfigured";
+      break;
+    default:
+      system_throttling_str = "Unknown";
+    }
 
   pstdout_printf (state_data->pstate,
 		  "System Throttling              : %s\n",
@@ -5987,6 +6015,7 @@ ipmi_oem_dell_get_chassis_identify_status (ipmi_oem_state_data_t *state_data)
   uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
   uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
   uint8_t identify_status;
+  char *identify_status_str;
   int rs_len;
   int rv = -1;
   
@@ -6039,12 +6068,21 @@ ipmi_oem_dell_get_chassis_identify_status (ipmi_oem_state_data_t *state_data)
 
   identify_status = bytes_rs[2];
 
-  if (identify_status == IPMI_OEM_DELL_QUERY_CHASSIS_IDENTIFY_STATUS_OFF)
-    pstdout_printf (state_data->pstate, "Off\n");
-  else if (identify_status == IPMI_OEM_DELL_QUERY_CHASSIS_IDENTIFY_STATUS_ON)
-    pstdout_printf (state_data->pstate, "On\n");
-  else
-    pstdout_printf (state_data->pstate, "Unknown\n");
+  switch (identify_status)
+    {
+    case IPMI_OEM_DELL_QUERY_CHASSIS_IDENTIFY_STATUS_OFF:
+      identify_status_str = "Off";
+      break;
+    case IPMI_OEM_DELL_QUERY_CHASSIS_IDENTIFY_STATUS_ON:
+      identify_status_str = "On";
+      break;
+    default:
+      identify_status_str = "Unknown";
+    }
+  
+  pstdout_printf (state_data->pstate,
+		  "%s\n",
+		  identify_status_str);
 
   rv = 0;
  cleanup:
@@ -6634,12 +6672,17 @@ ipmi_oem_dell_get_port_map (ipmi_oem_state_data_t *state_data)
   slot_mapping2 = (bytes_rs[3] & IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_2_BITMASK);
   slot_mapping2 >>= IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_2_SHIFT;
 
-  if (control_type == IPMI_OEM_DELL_PORT_MAP_CONTROL_TYPE_JUMPER)
-    control_type_str = "Jumper";
-  else if (control_type == IPMI_OEM_DELL_PORT_MAP_CONTROL_TYPE_BMC)
-    control_type_str = "BMC";
-  else
-    control_type_str = "Unknown";
+  switch (control_type)
+    {
+    case IPMI_OEM_DELL_PORT_MAP_CONTROL_TYPE_JUMPER:
+      control_type_str = "Jumper";
+      break;
+    case IPMI_OEM_DELL_PORT_MAP_CONTROL_TYPE_BMC:
+      control_type_str = "BMC";
+      break;
+    default:
+      control_type_str = "Unknown";
+    }
 
   pstdout_printf (state_data->pstate,
 		  "Control Type: %s\n",

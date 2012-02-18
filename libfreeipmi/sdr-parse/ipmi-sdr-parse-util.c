@@ -42,12 +42,17 @@ sdr_parse_set_sdr_parse_errnum_by_errno (ipmi_sdr_parse_ctx_t ctx, int __errno)
 {
   assert (ctx && ctx->magic == IPMI_SDR_PARSE_CTX_MAGIC);
 
-  if (__errno == 0)
-    ctx->errnum = IPMI_SDR_PARSE_ERR_SUCCESS;
-  else if (__errno == ENOMEM)
-    ctx->errnum = IPMI_SDR_PARSE_ERR_OUT_OF_MEMORY;
-  else
-    ctx->errnum = IPMI_SDR_PARSE_ERR_INTERNAL_ERROR;
+  switch (__errno)
+    {
+    case 0:
+      ctx->errnum = IPMI_SDR_PARSE_ERR_SUCCESS;
+      break;
+    case ENOMEM:
+      ctx->errnum = IPMI_SDR_PARSE_ERR_OUT_OF_MEMORY;
+      break;
+    default:
+      ctx->errnum = IPMI_SDR_PARSE_ERR_INTERNAL_ERROR;
+    }
 }
 
 void
@@ -55,19 +60,25 @@ sdr_parse_set_sdr_parse_errnum_by_fiid_object (ipmi_sdr_parse_ctx_t ctx, fiid_ob
 {
   assert (ctx && ctx->magic == IPMI_SDR_PARSE_CTX_MAGIC);
 
-  if (fiid_obj_errnum (obj) == FIID_ERR_SUCCESS)
-    ctx->errnum = IPMI_SDR_PARSE_ERR_SUCCESS;
-  else if (fiid_obj_errnum (obj) == FIID_ERR_OUT_OF_MEMORY)
-    ctx->errnum = IPMI_SDR_PARSE_ERR_OUT_OF_MEMORY;
-  else if (fiid_obj_errnum (obj) == FIID_ERR_DATA_NOT_AVAILABLE)
-    ctx->errnum = IPMI_SDR_PARSE_ERR_SYSTEM_ERROR;
-  else if (fiid_obj_errnum (obj) == FIID_ERR_FIELD_NOT_FOUND
-           || fiid_obj_errnum (obj) == FIID_ERR_DATA_NOT_BYTE_ALIGNED
-           || fiid_obj_errnum (obj) == FIID_ERR_REQUIRED_FIELD_MISSING
-           || fiid_obj_errnum (obj) == FIID_ERR_FIXED_LENGTH_FIELD_INVALID
-           || fiid_obj_errnum (obj) == FIID_ERR_DATA_NOT_AVAILABLE
-           || fiid_obj_errnum (obj) == FIID_ERR_NOT_IDENTICAL)
-    ctx->errnum = IPMI_SDR_PARSE_ERR_PARAMETERS;
-  else
-    ctx->errnum = IPMI_SDR_PARSE_ERR_INTERNAL_ERROR;
+  switch (fiid_obj_errnum (obj))
+    {
+    case FIID_ERR_SUCCESS:
+      ctx->errnum = IPMI_SDR_PARSE_ERR_SUCCESS;
+      break;
+    case FIID_ERR_OUT_OF_MEMORY:
+      ctx->errnum = IPMI_SDR_PARSE_ERR_OUT_OF_MEMORY;
+      break;
+    case FIID_ERR_DATA_NOT_AVAILABLE:
+      ctx->errnum = IPMI_SDR_PARSE_ERR_SYSTEM_ERROR;
+      break;
+    case FIID_ERR_FIELD_NOT_FOUND:
+    case FIID_ERR_DATA_NOT_BYTE_ALIGNED:
+    case FIID_ERR_REQUIRED_FIELD_MISSING:
+    case FIID_ERR_FIXED_LENGTH_FIELD_INVALID:
+    case FIID_ERR_NOT_IDENTICAL:
+      ctx->errnum = IPMI_SDR_PARSE_ERR_PARAMETERS;
+      break;
+    default:
+      ctx->errnum = IPMI_SDR_PARSE_ERR_INTERNAL_ERROR;
+    }
 }

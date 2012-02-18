@@ -1,12 +1,11 @@
 2012-02-17  Albert Chu <chu11@llnl.gov>
 
-	* ipmipower/: Various code cleanup.  Use switch statements where
-	it would be more appropriate.  Change "DIAG_INTR" to
+	* ipmipower/: Various code cleanup.  Change "DIAG_INTR" to
 	"DIAGNOSTIC_INTERRUPT" in code for readability.  Make code
 	consistent to other codein FreeIPMI.  Add asserts as needed.
 
-	* libipmiconsole/: Various code cleanup.  Use switch statements
-	where it would be more appropriate.
+	* Globally: Various code cleanup.  Use switch statements where it
+	would be more appropriate for performance improvements.
 	
 2012-02-17  Albert Chu <chu11@llnl.gov>
 

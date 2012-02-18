@@ -186,162 +186,242 @@ _get_led_name (ipmi_oem_state_data_t *state_data,
    else if (oem_data->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_IBM
             && oem_data->product_id == IPMI_IBM_PRODUCT_ID_X3755)
      {
-       if (led_id == IPMI_OEM_IBM_LED_X3755_CPU)
-         led_id_str = "CPU";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_CPU1)
-         led_id_str = "CPU1";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_CPU2)
-         led_id_str = "CPU2";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_CPU3)
-         led_id_str = "CPU3";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_CPU4)
-         led_id_str = "CPU4";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_CPU1_BOARD)
-         led_id_str = "CPU1_BOARD";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_CPU2_BOARD)
-         led_id_str = "CPU2_BOARD";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_CPU3_BOARD)
-         led_id_str = "CPU3_BOARD";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_CPU4_BOARD)
-         led_id_str = "CPU4_BOARD";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_DIMM_1)
-         led_id_str = "DIMM 1";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_DIMM_2)
-         led_id_str = "DIMM 2";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_DIMM_3)
-         led_id_str = "DIMM 3";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_DIMM_4)
-         led_id_str = "DIMM 4";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_DIMM_5)
-         led_id_str = "DIMM 5";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_DIMM_6)
-         led_id_str = "DIMM 6";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_DIMM_7)
-         led_id_str = "DIMM 7";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_DIMM_8)
-         led_id_str = "DIMM 8";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_DIMM_9)
-         led_id_str = "DIMM 9";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_DIMM_10)
-         led_id_str = "DIMM 10";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_DIMM_11)
-         led_id_str = "DIMM 11";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_DIMM_12)
-         led_id_str = "DIMM 12";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_DIMM_13)
-         led_id_str = "DIMM 13";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_DIMM_14)
-         led_id_str = "DIMM 14";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_DIMM_15)
-         led_id_str = "DIMM 15";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_DIMM_16)
-         led_id_str = "DIMM 16";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_DIMM_17)
-         led_id_str = "DIMM 17";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_DIMM_18)
-         led_id_str = "DIMM 18";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_DIMM_19)
-         led_id_str = "DIMM 19";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_DIMM_20)
-         led_id_str = "DIMM 20";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_DIMM_21)
-         led_id_str = "DIMM 21";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_DIMM_22)
-         led_id_str = "DIMM 22";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_DIMM_23)
-         led_id_str = "DIMM 23";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_DIMM_24)
-         led_id_str = "DIMM 24";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_DIMM_25)
-         led_id_str = "DIMM 25";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_DIMM_26)
-         led_id_str = "DIMM 26";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_DIMM_27)
-         led_id_str = "DIMM 27";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_DIMM_28)
-         led_id_str = "DIMM 28";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_DIMM_29)
-         led_id_str = "DIMM 29";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_DIMM_30)
-         led_id_str = "DIMM 30";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_DIMM_31)
-         led_id_str = "DIMM 31";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_DIMM_32)
-         led_id_str = "DIMM 32";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_FAN)
-         led_id_str = "FAN";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_FAN_1)
-         led_id_str = "Fan 1";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_FAN_2)
-         led_id_str = "Fan 2";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_FAN_3)
-         led_id_str = "Fan 3";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_FAN_4)
-         led_id_str = "Fan 4";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_FAN_5)
-         led_id_str = "Fan 5";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_FAN_6)
-         led_id_str = "Fan 6";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_FAN_7)
-         led_id_str = "Fan 7";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_FAN_8)
-         led_id_str = "Fan 8";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_PCI)
-         led_id_str = "PCI";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_PCI_1)
-         led_id_str = "PCI 1";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_PCI_2)
-         led_id_str = "PCI 2";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_PCI_3)
-         led_id_str = "PCI 3";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_PCI_4)
-         led_id_str = "PCI 4";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_PCI_5)
-         led_id_str = "PCI 5";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_PCI_6)
-         led_id_str = "PCI 6";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_SERVERAID_8K_BATT)
-         led_id_str = "ServeRAID 8k Batt";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_SERVERAID_8K_ERR)
-         led_id_str = "ServeRAID 8k Err";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_ALERT)
-         led_id_str = "Alert";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_BK_BLUE)
-         led_id_str = "BK_Blue";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_BOARD)
-         led_id_str = "BOARD";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_CNFG)
-         led_id_str = "CNFG";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_DASD)
-         led_id_str = "DASD";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_FAULT)
-         led_id_str = "FAULT";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_HTX)
-         led_id_str = "HTX";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_INFO)
-         led_id_str = "INFO";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_LOCATION)
-         led_id_str = "Location";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_MEM)
-         led_id_str = "MEM";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_NMI)
-         led_id_str = "NMI";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_OVERSPEC)
-         led_id_str = "OVERSPEC";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_RAID)
-         led_id_str = "RAID";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_SEER)
-         led_id_str = "SEER";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_SP)
-         led_id_str = "SP";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_TEMP)
-         led_id_str = "TEMP";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_VRM)
-         led_id_str = "VRM";
-       else if (led_id == IPMI_OEM_IBM_LED_X3755_UNKNOWN1
-                || led_id == IPMI_OEM_IBM_LED_X3755_UNKNOWN2
-                || led_id == IPMI_OEM_IBM_LED_X3755_UNKNOWN3)
-         led_id_str = "UNKNOWN";
+       switch (led_id)
+	 {
+	 case IPMI_OEM_IBM_LED_X3755_CPU:
+	   led_id_str = "CPU";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_CPU1:
+	   led_id_str = "CPU1";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_CPU2:
+	   led_id_str = "CPU2";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_CPU3:
+	   led_id_str = "CPU3";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_CPU4:
+	   led_id_str = "CPU4";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_CPU1_BOARD:
+	   led_id_str = "CPU1_BOARD";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_CPU2_BOARD:
+	   led_id_str = "CPU2_BOARD";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_CPU3_BOARD:
+	   led_id_str = "CPU3_BOARD";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_CPU4_BOARD:
+	   led_id_str = "CPU4_BOARD";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_DIMM_1:
+	   led_id_str = "DIMM 1";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_DIMM_2:
+	   led_id_str = "DIMM 2";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_DIMM_3:
+	   led_id_str = "DIMM 3";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_DIMM_4:
+	   led_id_str = "DIMM 4";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_DIMM_5:
+	   led_id_str = "DIMM 5";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_DIMM_6:
+	   led_id_str = "DIMM 6";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_DIMM_7:
+	   led_id_str = "DIMM 7";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_DIMM_8:
+	   led_id_str = "DIMM 8";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_DIMM_9:
+	   led_id_str = "DIMM 9";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_DIMM_10:
+	   led_id_str = "DIMM 10";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_DIMM_11:
+	   led_id_str = "DIMM 11";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_DIMM_12:
+	   led_id_str = "DIMM 12";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_DIMM_13:
+	   led_id_str = "DIMM 13";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_DIMM_14:
+	   led_id_str = "DIMM 14";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_DIMM_15:
+	   led_id_str = "DIMM 15";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_DIMM_16:
+	   led_id_str = "DIMM 16";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_DIMM_17:
+	   led_id_str = "DIMM 17";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_DIMM_18:
+	   led_id_str = "DIMM 18";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_DIMM_19:
+	   led_id_str = "DIMM 19";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_DIMM_20:
+	   led_id_str = "DIMM 20";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_DIMM_21:
+	   led_id_str = "DIMM 21";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_DIMM_22:
+	   led_id_str = "DIMM 22";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_DIMM_23:
+	   led_id_str = "DIMM 23";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_DIMM_24:
+	   led_id_str = "DIMM 24";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_DIMM_25:
+	   led_id_str = "DIMM 25";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_DIMM_26:
+	   led_id_str = "DIMM 26";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_DIMM_27:
+	   led_id_str = "DIMM 27";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_DIMM_28:
+	   led_id_str = "DIMM 28";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_DIMM_29:
+	   led_id_str = "DIMM 29";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_DIMM_30:
+	   led_id_str = "DIMM 30";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_DIMM_31:
+	   led_id_str = "DIMM 31";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_DIMM_32:
+	   led_id_str = "DIMM 32";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_FAN:
+	   led_id_str = "FAN";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_FAN_1:
+	   led_id_str = "Fan 1";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_FAN_2:
+	   led_id_str = "Fan 2";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_FAN_3:
+	   led_id_str = "Fan 3";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_FAN_4:
+	   led_id_str = "Fan 4";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_FAN_5:
+	   led_id_str = "Fan 5";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_FAN_6:
+	   led_id_str = "Fan 6";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_FAN_7:
+	   led_id_str = "Fan 7";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_FAN_8:
+	   led_id_str = "Fan 8";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_PCI:
+	   led_id_str = "PCI";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_PCI_1:
+	   led_id_str = "PCI 1";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_PCI_2:
+	   led_id_str = "PCI 2";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_PCI_3:
+	   led_id_str = "PCI 3";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_PCI_4:
+	   led_id_str = "PCI 4";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_PCI_5:
+	   led_id_str = "PCI 5";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_PCI_6:
+	   led_id_str = "PCI 6";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_SERVERAID_8K_BATT:
+	   led_id_str = "ServeRAID 8k Batt";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_SERVERAID_8K_ERR:
+	   led_id_str = "ServeRAID 8k Err";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_ALERT:
+	   led_id_str = "Alert";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_BK_BLUE:
+	   led_id_str = "BK_Blue";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_BOARD:
+	   led_id_str = "BOARD";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_CNFG:
+	   led_id_str = "CNFG";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_DASD:
+	   led_id_str = "DASD";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_FAULT:
+	   led_id_str = "FAULT";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_HTX:
+	   led_id_str = "HTX";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_INFO:
+	   led_id_str = "INFO";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_LOCATION:
+	   led_id_str = "Location";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_MEM:
+	   led_id_str = "MEM";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_NMI:
+	   led_id_str = "NMI";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_OVERSPEC:
+	   led_id_str = "OVERSPEC";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_RAID:
+	   led_id_str = "RAID";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_SEER:
+	   led_id_str = "SEER";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_SP:
+	   led_id_str = "SP";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_TEMP:
+	   led_id_str = "TEMP";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_VRM:
+	   led_id_str = "VRM";
+	   break;
+	 case IPMI_OEM_IBM_LED_X3755_UNKNOWN1:
+	 case IPMI_OEM_IBM_LED_X3755_UNKNOWN2:
+	 case IPMI_OEM_IBM_LED_X3755_UNKNOWN3:
+	   led_id_str = "UNKNOWN";
+	   break;
+	 }
      }
 
    if (led_id_str)

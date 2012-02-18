@@ -205,30 +205,44 @@ ipmi_sdr_cache_record_type_str (ipmi_sdr_cache_ctx_t ctx,
     }
   record_type = val;
 
-  if (record_type == IPMI_SDR_FORMAT_FULL_SENSOR_RECORD)
-    rv = "SDR Full Sensor Record";
-  else if (record_type == IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD)
-    rv = "SDR Compact Sensor Record";
-  else if (record_type == IPMI_SDR_FORMAT_EVENT_ONLY_RECORD)
-    rv = "SDR Event Only Record";
-  else if (record_type == IPMI_SDR_FORMAT_ENTITY_ASSOCIATION_RECORD)
-    rv = "SDR Entity Association Record";
-  else if (record_type == IPMI_SDR_FORMAT_DEVICE_RELATIVE_ENTITY_ASSOCIATION_RECORD)
-    rv = "SDR Device Relative Entity Association Record";
-  else if (record_type == IPMI_SDR_FORMAT_GENERIC_DEVICE_LOCATOR_RECORD)
-    rv = "SDR Generic Device Locator Record";
-  else if (record_type == IPMI_SDR_FORMAT_FRU_DEVICE_LOCATOR_RECORD)
-    rv = "SDR FRU Device Locator Record";
-  else if (record_type == IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD)
-    rv = "SDR Management Controller Device Locator Record";
-  else if (record_type == IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_CONFIRMATION_RECORD)
-    rv = "SDR Management Controller Confirmation Record";
-  else if (record_type == IPMI_SDR_FORMAT_BMC_MESSAGE_CHANNEL_INFO_RECORD)
-    rv = "SDR Message Channel Info Record";
-  else if (record_type == IPMI_SDR_FORMAT_OEM_RECORD)
-    rv = "SDR OEM Record";
-  else
-    rv = "SDR Unknown Record";
+  switch (record_type)
+    {
+    case IPMI_SDR_FORMAT_FULL_SENSOR_RECORD:
+      rv = "SDR Full Sensor Record";
+      break;
+    case IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD:
+      rv = "SDR Compact Sensor Record";
+      break;
+    case IPMI_SDR_FORMAT_EVENT_ONLY_RECORD:
+      rv = "SDR Event Only Record";
+      break;
+    case IPMI_SDR_FORMAT_ENTITY_ASSOCIATION_RECORD:
+      rv = "SDR Entity Association Record";
+      break;
+    case IPMI_SDR_FORMAT_DEVICE_RELATIVE_ENTITY_ASSOCIATION_RECORD:
+      rv = "SDR Device Relative Entity Association Record";
+      break;
+    case IPMI_SDR_FORMAT_GENERIC_DEVICE_LOCATOR_RECORD:
+      rv = "SDR Generic Device Locator Record";
+      break;
+    case IPMI_SDR_FORMAT_FRU_DEVICE_LOCATOR_RECORD:
+      rv = "SDR FRU Device Locator Record";
+      break;
+    case IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD:
+      rv = "SDR Management Controller Device Locator Record";
+      break;
+    case IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_CONFIRMATION_RECORD:
+      rv = "SDR Management Controller Confirmation Record";
+      break;
+    case IPMI_SDR_FORMAT_BMC_MESSAGE_CHANNEL_INFO_RECORD:
+      rv = "SDR Message Channel Info Record";
+      break;
+    case IPMI_SDR_FORMAT_OEM_RECORD:
+      rv = "SDR OEM Record";
+      break;
+    default:
+      rv = "SDR Unknown Record";
+    }
 
  cleanup:
   fiid_obj_destroy (obj_sdr_record_header);

@@ -332,18 +332,26 @@ ipmi_oem_sun_get_led (ipmi_oem_state_data_t *state_data)
           sensor_name = device_id_string;
         }
       
-      if (led_mode == IPMI_OEM_SUN_LED_MODE_OFF)
-        led_mode_str = "Off";
-      else if (led_mode == IPMI_OEM_SUN_LED_MODE_ON)
-        led_mode_str = "On";
-      else if (led_mode == IPMI_OEM_SUN_LED_MODE_STANDBY)
-        led_mode_str = "Standby";
-      else if (led_mode == IPMI_OEM_SUN_LED_MODE_SLOW)
-        led_mode_str = "Slow";
-      else if (led_mode == IPMI_OEM_SUN_LED_MODE_FAST)
-        led_mode_str = "Fast";
-      else
-        led_mode_str = "Unknown";
+      switch (led_mode)
+	{
+	case IPMI_OEM_SUN_LED_MODE_OFF:
+	  led_mode_str = "Off";
+	  break;
+	case IPMI_OEM_SUN_LED_MODE_ON:
+	  led_mode_str = "On";
+	  break;
+	case IPMI_OEM_SUN_LED_MODE_STANDBY:
+	  led_mode_str = "Standby";
+	  break;
+	case IPMI_OEM_SUN_LED_MODE_SLOW:
+	  led_mode_str = "Slow";
+	  break;
+	case IPMI_OEM_SUN_LED_MODE_FAST:
+	  led_mode_str = "Fast";
+	  break;
+	default:
+	  led_mode_str = "Unknown";
+	}
       
       snprintf (fmt,
                 IPMI_OEM_FMT_BUFLEN,

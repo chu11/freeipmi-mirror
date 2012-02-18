@@ -423,42 +423,42 @@ ipmi_sel_parse_output_inventec_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ct
               || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5441_DIMM_CPU1_CH1_DIM0
               || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5441_DIMM_CPU1_CH2_DIM0))
         {
-          if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5441_DIMM_CPU0_CH0_DIM1)
-            snprintf (tmpbuf,
-                      tmpbuflen,
-                      "Dimm Number - CPU0/Ch0/DIM1");
-          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5441_DIMM_CPU0_CH0_DIM0)
-            snprintf (tmpbuf,
-                      tmpbuflen,
-                      "Dimm Number - CPU0/Ch0/DIM0");
-          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5441_DIMM_CPU0_CH1_DIM1)
-            snprintf (tmpbuf,
-                      tmpbuflen,
-                      "Dimm Number - CPU0/Ch1/DIM1");
-          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5441_DIMM_CPU0_CH1_DIM0)
-            snprintf (tmpbuf,
-                      tmpbuflen,
-                      "Dimm Number - CPU0/Ch1/DIM0");
-          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5441_DIMM_CPU0_CH2_DIM1)
-            snprintf (tmpbuf,
-                      tmpbuflen,
-                      "Dimm Number - CPU0/Ch2/DIM1");
-          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5441_DIMM_CPU0_CH2_DIM0)
-            snprintf (tmpbuf,
-                      tmpbuflen,
-                      "Dimm Number - CPU0/Ch2/DIM0");
-          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5441_DIMM_CPU1_CH0_DIM0)
-            snprintf (tmpbuf,
-                      tmpbuflen,
-                      "Dimm Number - CPU1/Ch0/DIM0");
-          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5441_DIMM_CPU1_CH1_DIM0)
-            snprintf (tmpbuf,
-                      tmpbuflen,
-                      "Dimm Number - CPU1/Ch1/DIM0");
-          else /* system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5441_DIMM_CPU1_CH2_DIM0 */
-            snprintf (tmpbuf,
-                      tmpbuflen,
-                      "Dimm Number - CPU1/Ch2/DIM0");
+	  char *str;
+
+	  switch (system_event_record_data->event_data3)
+	    {
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5441_DIMM_CPU0_CH0_DIM1:
+	      str = "Dimm Number - CPU0/Ch0/DIM1";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5441_DIMM_CPU0_CH0_DIM0:
+	      str = "Dimm Number - CPU0/Ch0/DIM0";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5441_DIMM_CPU0_CH1_DIM1:
+	      str = "Dimm Number - CPU0/Ch1/DIM1";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5441_DIMM_CPU0_CH1_DIM0:
+	      str = "Dimm Number - CPU0/Ch1/DIM0";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5441_DIMM_CPU0_CH2_DIM1:
+	      str = "Dimm Number - CPU0/Ch2/DIM1";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5441_DIMM_CPU0_CH2_DIM0:
+	      str = "Dimm Number - CPU0/Ch2/DIM0";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5441_DIMM_CPU1_CH0_DIM0:
+	      str = "Dimm Number - CPU1/Ch0/DIM0";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5441_DIMM_CPU1_CH1_DIM0:
+	      str = "Dimm Number - CPU1/Ch1/DIM0";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5441_DIMM_CPU1_CH2_DIM0:
+	      str = "Dimm Number - CPU1/Ch2/DIM0";
+	      break;
+	    default:
+	      str = "Internal Logic Error";
+	    }
+
+	  snprintf (tmpbuf, tmpbuflen, "%s", str);
 
           return (1);
         }
@@ -492,61 +492,59 @@ ipmi_sel_parse_output_inventec_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ct
               || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU1_CH2_DIM1
               || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU1_CH2_DIM0))
         {
+	  char *str;
+
           /* achu: technically there is a pattern here for this
            * motherboard and I could make some of this code shorter
            * w/ some bitmasking.  But I'll just brute force it out for
            * readability.  I'll revisit as more motherboards are added
            * later.
            */
-          if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU0_CH0_DIM1)
-            snprintf (tmpbuf,
-                      tmpbuflen,
-                      "Dimm Number - CPU0/Ch0/DIM1");
-          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU0_CH0_DIM0)
-            snprintf (tmpbuf,
-                      tmpbuflen,
-                      "Dimm Number - CPU0/Ch0/DIM0");
-          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU0_CH1_DIM1)
-            snprintf (tmpbuf,
-                      tmpbuflen,
-                      "Dimm Number - CPU0/Ch1/DIM1");
-          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU0_CH1_DIM0)
-            snprintf (tmpbuf,
-                      tmpbuflen,
-                      "Dimm Number - CPU0/Ch1/DIM0");
-          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU0_CH2_DIM1)
-            snprintf (tmpbuf,
-                      tmpbuflen,
-                      "Dimm Number - CPU0/Ch2/DIM1");
-          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU0_CH2_DIM0)
-            snprintf (tmpbuf,
-                      tmpbuflen,
-                      "Dimm Number - CPU0/Ch2/DIM0");
-          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU1_CH0_DIM1)
-            snprintf (tmpbuf,
-                      tmpbuflen,
-                      "Dimm Number - CPU1/Ch0/DIM1");
-          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU1_CH0_DIM0)
-            snprintf (tmpbuf,
-                      tmpbuflen,
-                      "Dimm Number - CPU1/Ch0/DIM0");
-          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU1_CH1_DIM1)
-            snprintf (tmpbuf,
-                      tmpbuflen,
-                      "Dimm Number - CPU1/Ch1/DIM1");
-          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU1_CH1_DIM0)
-            snprintf (tmpbuf,
-                      tmpbuflen,
-                      "Dimm Number - CPU1/Ch1/DIM0");
-          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU1_CH2_DIM1)
-            snprintf (tmpbuf,
-                      tmpbuflen,
-                      "Dimm Number - CPU1/Ch2/DIM1");
-          else /* system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU1_CH2_DIM0 */
-            snprintf (tmpbuf,
-                      tmpbuflen,
-                      "Dimm Number - CPU1/Ch2/DIM0");
+
+	  switch (system_event_record_data->event_data3)
+	    {
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU0_CH0_DIM1:
+	      str = "Dimm Number - CPU0/Ch0/DIM1";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU0_CH0_DIM0:
+	      str = "Dimm Number - CPU0/Ch0/DIM0";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU0_CH1_DIM1:
+	      str = "Dimm Number - CPU0/Ch1/DIM1";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU0_CH1_DIM0:
+	      str = "Dimm Number - CPU0/Ch1/DIM0";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU0_CH2_DIM1:
+	      str = "Dimm Number - CPU0/Ch2/DIM1";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU0_CH2_DIM0:
+	      str = "Dimm Number - CPU0/Ch2/DIM0";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU1_CH0_DIM1:
+	      str = "Dimm Number - CPU1/Ch0/DIM1";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU1_CH0_DIM0:
+	      str = "Dimm Number - CPU1/Ch0/DIM0";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU1_CH1_DIM1:
+	      str = "Dimm Number - CPU1/Ch1/DIM1";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU1_CH1_DIM0:
+	      str = "Dimm Number - CPU1/Ch1/DIM0";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU1_CH2_DIM1:
+	      str = "Dimm Number - CPU1/Ch2/DIM1";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU1_CH2_DIM0:
+	      str = "Dimm Number - CPU1/Ch2/DIM0";
+	      break;
+	    default:
+	      str = "Internal Logic Error";
+	    }
           
+	  snprintf (tmpbuf, tmpbuflen, "%s", str);
+
           return (1);
         }
     }
@@ -565,24 +563,28 @@ ipmi_sel_parse_output_inventec_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ct
           && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS
           && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INVENTEC_PORT80_CODE_EVENT)
         {
-          
-          if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_EVENT_DATA3_OEM_INVENTEC_PORT80_CODE_EXTENDED_MEMORY_TEST)
-            snprintf (tmpbuf,
-                      tmpbuflen,
-                      "PORT80 Code Event = Extended Memory Test");
-          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_EVENT_DATA3_OEM_INVENTEC_PORT80_CODE_SETUP_MENU)
-            snprintf (tmpbuf,
-                      tmpbuflen,
-                      "PORT80 Code Event = Setup Menu");
-          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_EVENT_DATA3_OEM_INVENTEC_PORT80_CODE_OPTION_ROM_SCAN)
-            snprintf (tmpbuf,
-                      tmpbuflen,
-                      "PORT80 Code Event = Option ROM Scan");
-          else
-            snprintf (tmpbuf,
-                      tmpbuflen,
-                      "PORT80 Code Event = %02Xh",
-                      system_event_record_data->event_data3);
+	  char *str = NULL;
+
+	  switch (system_event_record_data->event_data3)
+	    {
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_EVENT_DATA3_OEM_INVENTEC_PORT80_CODE_EXTENDED_MEMORY_TEST:
+	      str = "PORT80 Code Event = Extended Memory Test";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_EVENT_DATA3_OEM_INVENTEC_PORT80_CODE_SETUP_MENU:
+	      str = "PORT80 Code Event = Setup Menu";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_EVENT_DATA3_OEM_INVENTEC_PORT80_CODE_OPTION_ROM_SCAN:
+	      str = "PORT80 Code Event = Option ROM Scan";
+	      break;
+	    default:
+	      snprintf (tmpbuf,
+			tmpbuflen,
+			"PORT80 Code Event = %02Xh",
+			system_event_record_data->event_data3);
+	    }
+	  
+	  if (str)
+	    snprintf (tmpbuf, tmpbuflen, "%s", str);
           
           return (1);
         }
@@ -711,146 +713,218 @@ ipmi_sel_parse_output_inventec_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx
           error_code = system_event_record_data->event_data2;
           error_code |= (system_event_record_data->event_data3 << 8);
           
-          if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_TIMER_COUNT_READ_WRITE_ERROR)
-            error_code_str = "Timer Count Read/Write Error";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_MASTER_PIC_ERROR)
-            error_code_str = "Master PIC Error";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_SLAVE_PIC_ERROR)
-            error_code_str = "Slave PIC Error";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_CMOS_BATTERY_ERROR)
-            error_code_str = "CMOS Battery Error";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_CMOS_DIAGNOSTIC_STATUS_ERROR)
-            error_code_str = "CMOS Diagnostic Status Error";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_CMOS_CHECKSUM_ERROR)
-            error_code_str = "CMOS Checksum Error";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_CMOS_CONFIG_ERROR)
-            error_code_str = "CMOS Config Error";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_KEYBOARD_LOCK_ERROR)
-            error_code_str = "Keyboard Lock Error";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_NO_KEYBOARD_ERROR)
-            error_code_str = "No Keyboard Error";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_KBC_BAT_TEST_ERROR)
-            error_code_str = "KBC Bat Test Error";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_CMOS_MEMORY_SIZE_ERROR)
-            error_code_str = "CMOS Memory Size Error";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_RAM_READ_WRITE_TEST_ERROR)
-            error_code_str = "RAM Read/Write Test Error";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_FDD_0_ERROR)
-            error_code_str = "FDD 0 Error";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_FLOPPY_CONTROLLER_ERROR)
-            error_code_str = "Floppy Controller Error";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_CMOS_DATE_TIME_ERROR)
-            error_code_str = "CMOS Date Time Error";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_NO_PS2_MOUSE_ERROR)
-            error_code_str = "No PS2 Mouse Error";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_REFRESH_TIMER_ERROR)
-            error_code_str = "Refresh Timer Error";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_DISPLAY_MEMORY_ERROR)
-            error_code_str = "Display Memory Error";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_POST_THE_INS_KEY_ERROR)
-            error_code_str = "Post the <INS> key Error";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_DMAC_PAGE_REGISTER_ERROR)
-            error_code_str = "DMAC Page Register Error";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_DMAC1_CHANNEL_REGISTER_ERROR)
-            error_code_str = "DMAC1 Channel Register Error";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_DMAC2_CHANNEL_REGISTER_ERROR)
-            error_code_str = "DMAC2 Channel Register Error";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_PMM_MEMORY_ALLOCATION_ERROR)
-            error_code_str = "PMM Memory Allocation Error";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_PASSWORD_CHECK_ERROR)
-            error_code_str = "Password Check Error";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_ADM_MODULE_ERROR)
-            error_code_str = "ADM Module Error";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_LANGUAGE_MODULE_ERROR)
-            error_code_str = "Language Module Error";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_KBC_INTERFACE_ERROR)
-            error_code_str = "KBC Interface Error";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_HDD_0_ERROR)
-            error_code_str = "HDD 0 Error";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_HDD_1_ERROR)
-            error_code_str = "HDD 1 Error";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_HDD_2_ERROR)
-            error_code_str = "HDD 2 Error";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_HDD_3_ERROR)
-            error_code_str = "HDD 3 Error";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_HDD_4_ERROR)
-            error_code_str = "HDD 4 Error";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_HDD_5_ERROR)
-            error_code_str = "HDD 5 Error";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_HDD_6_ERROR)
-            error_code_str = "HDD 6 Error";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_HDD_7_ERROR)
-            error_code_str = "HDD 7 Error";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_ATAPI_0_ERROR)
-            error_code_str = "ATAPI 0 Error";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_ATAPI_1_ERROR)
-            error_code_str = "ATAPI 1 Error";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_ATAPI_2_ERROR)
-            error_code_str = "ATAPI 2 Error";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_ATAPI_3_ERROR)
-            error_code_str = "ATAPI 3 Error";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_ATAPI_4_ERROR)
-            error_code_str = "ATAPI 4 Error";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_ATAPI_5_ERROR)
-            error_code_str = "ATAPI 5 Error";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_ATAPI_6_ERROR)
-            error_code_str = "ATAPI 6 Error";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_ATAPI_7_ERROR)
-            error_code_str = "ATAPI 7 Error";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_ATA_SMART_FEATURE_ERROR)
-            error_code_str = "ATA SMART Feature Error";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_NON_CRITICAL_PASSWORD_CHECK_ERROR)
-            error_code_str = "Non-Critical Password Check Error";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_DUMMY_BIOS_ERROR)
-            error_code_str = "Dummy BIOS Error";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_USB_HC_NOT_FOUND)
-            error_code_str = "USB HC Not Found";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_USB_DEVICE_INIT_ERROR)
-            error_code_str = "USB Device Init Error";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_USB_DEVICE_DISABLED)
-            error_code_str = "USB Device Disabled";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_USB_OHCI_EMUL_NOT_SUPPORTED)
-            error_code_str = "USB OHCI EMUL Not Supported";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_USB_EHCI_64BIT_DATA_STRUCTURE_ERROR)
-            error_code_str = "USB EHCI 64bit Data Structure Error";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_SMBIOS_NOT_ENOUGH_SPACE_IN_F000)
-            error_code_str = "SMBIOS Not Enough Space In F000";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_AP_APPLICATION_PROCESSOR_FAILED_BIST)
-            error_code_str = "AP (Application Processor) failed BIST";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_CPU1_THERMAL_FAILURE_DUE_TO_PROCHOT)
-            error_code_str = "CPU1 Thermal Failure due to PROCHOT#";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_CPU2_THERMAL_FAILURE_DUE_TO_PROCHOT)
-            error_code_str = "CPU2 Thermal Failure due to PROCHOT#";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_CPU3_THERMAL_FAILURE_DUE_TO_PROCHOT)
-            error_code_str = "CPU3 Thermal Failure due to PROCHOT#";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_CPU4_THERMAL_FAILURE_DUE_TO_PROCHOT)
-            error_code_str = "CPU4 Thermal Failure due to PROCHOT#";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_PROCESSOR_FAILED_BIST_BSP)
-            error_code_str = "Processor failed BIST (BSP)"; /* BSP = Baseboard Service Processor */
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_CPU1_PROCESSOR_MISSING_MICROCODE)
-            error_code_str = "CPU1 Processor missing microcode";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_CPU2_PROCESSOR_MISSING_MICROCODE)
-            error_code_str = "CPU2 Processor missing microcode";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_CPU3_PROCESSOR_MISSING_MICROCODE)
-            error_code_str = "CPU3 Processor missing microcode";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_CPU4_PROCESSOR_MISSING_MICROCODE)
-            error_code_str = "CPU4 Processor missing microcode";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_L2_CACHE_SIZE_MISMATCH)
-            error_code_str = "L2 cache size mismatch";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_CPUID_PROCESSOR_STEPPING_ARE_DIFFERENT)
-            error_code_str = "CPUID, Processor stepping are different";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_CPUID_PROCESSOR_FAMILY_ARE_DIFFERENT)
-            error_code_str = "CPUID, Processor family are different";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_FRONT_SIDE_BUS_MISMATCH)
-            error_code_str = "Front side bus mismatch";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_CPUID_PROCESSOR_MODEL_ARE_DIFFERENT)
-            error_code_str = "CPUID, Processor Model are different";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_PROCESSOR_SPEEDS_MISMATCHED)
-            error_code_str = "Processor speeds mismatched";
-          else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_QPI_MISMATCHED)
-            error_code_str = "QPI mismatched"; /* QPI = Quickpath Interconnect */
-          else
-            error_code_str = "Undefined BIOS Error";
+	  switch (error_code)
+	    {
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_TIMER_COUNT_READ_WRITE_ERROR:
+	      error_code_str = "Timer Count Read/Write Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_MASTER_PIC_ERROR:
+	      error_code_str = "Master PIC Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_SLAVE_PIC_ERROR:
+	      error_code_str = "Slave PIC Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_CMOS_BATTERY_ERROR:
+	      error_code_str = "CMOS Battery Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_CMOS_DIAGNOSTIC_STATUS_ERROR:
+	      error_code_str = "CMOS Diagnostic Status Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_CMOS_CHECKSUM_ERROR:
+	      error_code_str = "CMOS Checksum Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_CMOS_CONFIG_ERROR:
+	      error_code_str = "CMOS Config Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_KEYBOARD_LOCK_ERROR:
+	      error_code_str = "Keyboard Lock Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_NO_KEYBOARD_ERROR:
+	      error_code_str = "No Keyboard Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_KBC_BAT_TEST_ERROR:
+	      error_code_str = "KBC Bat Test Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_CMOS_MEMORY_SIZE_ERROR:
+	      error_code_str = "CMOS Memory Size Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_RAM_READ_WRITE_TEST_ERROR:
+	      error_code_str = "RAM Read/Write Test Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_FDD_0_ERROR:
+	      error_code_str = "FDD 0 Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_FLOPPY_CONTROLLER_ERROR:
+	      error_code_str = "Floppy Controller Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_CMOS_DATE_TIME_ERROR:
+	      error_code_str = "CMOS Date Time Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_NO_PS2_MOUSE_ERROR:
+	      error_code_str = "No PS2 Mouse Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_REFRESH_TIMER_ERROR:
+	      error_code_str = "Refresh Timer Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_DISPLAY_MEMORY_ERROR:
+	      error_code_str = "Display Memory Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_POST_THE_INS_KEY_ERROR:
+	      error_code_str = "Post the <INS> key Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_DMAC_PAGE_REGISTER_ERROR:
+	      error_code_str = "DMAC Page Register Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_DMAC1_CHANNEL_REGISTER_ERROR:
+	      error_code_str = "DMAC1 Channel Register Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_DMAC2_CHANNEL_REGISTER_ERROR:
+	      error_code_str = "DMAC2 Channel Register Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_PMM_MEMORY_ALLOCATION_ERROR:
+	      error_code_str = "PMM Memory Allocation Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_PASSWORD_CHECK_ERROR:
+	      error_code_str = "Password Check Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_ADM_MODULE_ERROR:
+	      error_code_str = "ADM Module Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_LANGUAGE_MODULE_ERROR:
+	      error_code_str = "Language Module Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_KBC_INTERFACE_ERROR:
+	      error_code_str = "KBC Interface Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_HDD_0_ERROR:
+	      error_code_str = "HDD 0 Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_HDD_1_ERROR:
+	      error_code_str = "HDD 1 Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_HDD_2_ERROR:
+	      error_code_str = "HDD 2 Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_HDD_3_ERROR:
+	      error_code_str = "HDD 3 Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_HDD_4_ERROR:
+	      error_code_str = "HDD 4 Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_HDD_5_ERROR:
+	      error_code_str = "HDD 5 Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_HDD_6_ERROR:
+	      error_code_str = "HDD 6 Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_HDD_7_ERROR:
+	      error_code_str = "HDD 7 Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_ATAPI_0_ERROR:
+	      error_code_str = "ATAPI 0 Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_ATAPI_1_ERROR:
+	      error_code_str = "ATAPI 1 Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_ATAPI_2_ERROR:
+	      error_code_str = "ATAPI 2 Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_ATAPI_3_ERROR:
+	      error_code_str = "ATAPI 3 Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_ATAPI_4_ERROR:
+	      error_code_str = "ATAPI 4 Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_ATAPI_5_ERROR:
+	      error_code_str = "ATAPI 5 Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_ATAPI_6_ERROR:
+	      error_code_str = "ATAPI 6 Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_ATAPI_7_ERROR:
+	      error_code_str = "ATAPI 7 Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_ATA_SMART_FEATURE_ERROR:
+	      error_code_str = "ATA SMART Feature Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_NON_CRITICAL_PASSWORD_CHECK_ERROR:
+	      error_code_str = "Non-Critical Password Check Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_DUMMY_BIOS_ERROR:
+	      error_code_str = "Dummy BIOS Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_USB_HC_NOT_FOUND:
+	      error_code_str = "USB HC Not Found";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_USB_DEVICE_INIT_ERROR:
+	      error_code_str = "USB Device Init Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_USB_DEVICE_DISABLED:
+	      error_code_str = "USB Device Disabled";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_USB_OHCI_EMUL_NOT_SUPPORTED:
+	      error_code_str = "USB OHCI EMUL Not Supported";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_USB_EHCI_64BIT_DATA_STRUCTURE_ERROR:
+	      error_code_str = "USB EHCI 64bit Data Structure Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_SMBIOS_NOT_ENOUGH_SPACE_IN_F000:
+	      error_code_str = "SMBIOS Not Enough Space In F000";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_AP_APPLICATION_PROCESSOR_FAILED_BIST:
+	      error_code_str = "AP (Application Processor) failed BIST";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_CPU1_THERMAL_FAILURE_DUE_TO_PROCHOT:
+	      error_code_str = "CPU1 Thermal Failure due to PROCHOT#";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_CPU2_THERMAL_FAILURE_DUE_TO_PROCHOT:
+	      error_code_str = "CPU2 Thermal Failure due to PROCHOT#";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_CPU3_THERMAL_FAILURE_DUE_TO_PROCHOT:
+	      error_code_str = "CPU3 Thermal Failure due to PROCHOT#";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_CPU4_THERMAL_FAILURE_DUE_TO_PROCHOT:
+	      error_code_str = "CPU4 Thermal Failure due to PROCHOT#";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_PROCESSOR_FAILED_BIST_BSP:
+	      error_code_str = "Processor failed BIST (BSP)"; /* BSP = Baseboard Service Processor */
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_CPU1_PROCESSOR_MISSING_MICROCODE:
+	      error_code_str = "CPU1 Processor missing microcode";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_CPU2_PROCESSOR_MISSING_MICROCODE:
+	      error_code_str = "CPU2 Processor missing microcode";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_CPU3_PROCESSOR_MISSING_MICROCODE:
+	      error_code_str = "CPU3 Processor missing microcode";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_CPU4_PROCESSOR_MISSING_MICROCODE:
+	      error_code_str = "CPU4 Processor missing microcode";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_L2_CACHE_SIZE_MISMATCH:
+	      error_code_str = "L2 cache size mismatch";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_CPUID_PROCESSOR_STEPPING_ARE_DIFFERENT:
+	      error_code_str = "CPUID, Processor stepping are different";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_CPUID_PROCESSOR_FAMILY_ARE_DIFFERENT:
+	      error_code_str = "CPUID, Processor family are different";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_FRONT_SIDE_BUS_MISMATCH:
+	      error_code_str = "Front side bus mismatch";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_CPUID_PROCESSOR_MODEL_ARE_DIFFERENT:
+	      error_code_str = "CPUID, Processor Model are different";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_PROCESSOR_SPEEDS_MISMATCHED:
+	      error_code_str = "Processor speeds mismatched";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_QPI_MISMATCHED:
+	      error_code_str = "QPI mismatched"; /* QPI = Quickpath Interconnect */
+	      break;
+	    default:
+	      error_code_str = "Undefined BIOS Error";
+	    }
       
           if (ipmi_sel_parse_string_snprintf (buf,
 					      buflen,

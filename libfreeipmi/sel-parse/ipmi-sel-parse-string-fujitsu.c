@@ -298,17 +298,24 @@ _ipmi_sel_oem_fujitsu_get_sel_entry_long_text (ipmi_sel_parse_ctx_t ctx,
   
   if (include_severity)
     {
-      if (severity == IPMI_OEM_FUJITSU_SEVERITY_INFORMATIONAL)
-        severity_str = "INFORMATIONAL";
-      else if (severity == IPMI_OEM_FUJITSU_SEVERITY_MINOR)
-        severity_str = "MINOR";
-      else if (severity == IPMI_OEM_FUJITSU_SEVERITY_MAJOR)
-        severity_str = "MAJOR";
-      else if (severity == IPMI_OEM_FUJITSU_SEVERITY_CRITICAL)
-        severity_str = "CRITICAL";
-      else
-        severity_str = "Unknown Severity";
-      
+      switch (severity)
+	{
+	case IPMI_OEM_FUJITSU_SEVERITY_INFORMATIONAL:
+	  severity_str = "INFORMATIONAL";
+	  break;
+	case IPMI_OEM_FUJITSU_SEVERITY_MINOR:
+	  severity_str = "MINOR";
+	  break;
+	case IPMI_OEM_FUJITSU_SEVERITY_MAJOR:
+	  severity_str = "MAJOR";
+	  break;
+	case IPMI_OEM_FUJITSU_SEVERITY_CRITICAL:
+	  severity_str = "CRITICAL";
+	  break;
+	default:
+	  severity_str = "Unknown Severity";
+	}
+
       if (css_str)
         snprintf (string_buf,
                   IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH,
