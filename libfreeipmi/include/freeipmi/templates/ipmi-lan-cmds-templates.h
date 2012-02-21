@@ -679,8 +679,8 @@ FIID Template: tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_ciph
     { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
     { 4, "present_revision", REQUIRED, LENGTH-FIXED }
     { 4, "oldest_revision_parameter", REQUIRED, LENGTH-FIXED }
-    { 4, "cipher_suite_entry_count", REQUIRED, LENGTH-FIXED }
-    { 4, "reserved", REQUIRED, LENGTH-FIXED }
+    { 5, "cipher_suite_entry_count", REQUIRED, LENGTH-FIXED }
+    { 3, "reserved", REQUIRED, LENGTH-FIXED }
 
   Notes: Read only field, no "set" equivalent.
 
