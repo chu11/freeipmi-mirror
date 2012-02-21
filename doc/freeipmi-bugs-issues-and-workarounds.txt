@@ -1230,15 +1230,13 @@ Sensors Issue #14: [IMPLEMENTATION]
 
   Resolution: None
 
-Sensors Issue #15: [COMPLIANCE]
+Sensors Issue #15: [INTERPRETATION]
 
-  SDR records for some sensors give conflicting information.  For
-  example, a threshold based sensor lists an event/reading type code
-  for a discrete sensor.  The analog data format indicates an
+  SDR records for some sensors list an event/reading type code for a
+  discrete sensor, but return an analog reading from a Get Sensor
+  Reading command. (The SDR's analog data format indicates an
   analog/threshold based sensor, however no threshold limits for the
-  sensor are listed in the SDR.  This can lead to software to make
-  invalid assumptions of the type of sensor it is reading and how to
-  handle it.
+  sensor are listed in the SDR.)
 
   This was discovered when FreeIPMI and IPMItool sensor output
   mismatched.  In FreeIPMI, ipmi-sensors would report discrete states
@@ -1247,9 +1245,15 @@ Sensors Issue #15: [COMPLIANCE]
   output the sensor reading (e.g. 100 Watts) but invalid/incorrect
   discrete states.
 
-  IMO, a SDR record that indicates a threshold reading w/ a discrete
-  event/reading type code is illegal.  While it is not explicitly
-  stated in the IPMI specification, it's is very strongly implied.
+  IMO, a SDR record that indicates an analog reading w/ a discrete
+  event/reading type code is illegal.  At the minimum it makes no
+  sense.  If you report an analog reading without any treshold
+  information, what is the use?  While it is not explicitly stated in
+  the IPMI specification, this is strongly implied to be wrong.  In
+  42.1, it states for threshold sensors, "The Get Sensor Reading
+  command for a threshold-based sensor contains the present 'analog'
+  reading for the sensor along in addition to the discrete threshold
+  comparison status bit field."
 
   Seen on: HP Proliant DL380 G7, HP ProLiant ML310 G5
 

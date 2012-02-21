@@ -193,12 +193,14 @@ sensor interpretation configuration file.  Please see
 #include <@top_srcdir@/man/manpage-common-workaround-outofband-15-text.man>
 #include <@top_srcdir@/man/manpage-common-workaround-outofband-20-text.man>
 .LP
-\fIdiscretereading\fR - This workaround option will allow sensor readings
-to be read even if the event/reading type code for the sensor is not
-valid.  This option works around poorly defined (and arguably illegal)
-SDR records that list non-discrete sensor expectations along with
-discrete state conditions.  This option is confirmed to work around
-issues on HP Proliant DL380 G7 and HP ProLiant ML310 G5 motherboards.
+\fIdiscretereading\fR - This workaround option will allow analog
+sensor readings (i.e. rpm, degrees, etc.) to be read even if the
+event/reading type code for the sensor is for a discrete sensor
+(i.e. assert vs. deassert).  This option works around poorly defined
+(and arguably illegal) SDR records that expect analog sensor readings
+to be read alongside discrete sensors.  This option is confirmed to
+work around issues on HP Proliant DL380 G7 and HP ProLiant ML310 G5
+motherboards.
 .LP
 \fIignorescanningdisabled\fR - This workaround option will allow sensor
 readings to be read even if the sensor scanning bit indicates a sensor
