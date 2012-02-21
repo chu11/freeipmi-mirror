@@ -185,6 +185,8 @@ ipmi-sensors
 - do not error out on unexpected sensor_read errors, move on? (***)
   - i.e. unexpected completion code error?
   - require rework of sensor-read lib?  How detect session timeout, etc. 
+- make 'discretereading' on by default?
+  - it does not appear that to be illegal by IPMI spec.
 
 ipmi-sel
 --------
