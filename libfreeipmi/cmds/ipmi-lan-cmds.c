@@ -684,8 +684,8 @@ fiid_template_t tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cip
     { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 4, "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4, "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "cipher_suite_entry_count", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 5, "cipher_suite_entry_count", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 3, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 0, "", 0}
   };
 

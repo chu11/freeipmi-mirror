@@ -1,9 +1,23 @@
 FreeIPMI 1.1.3 - XX/XX/12
 -------------------------
+Tools
+------
 o Support Supermicro CPU temperature SEL events.
-o In ipmi-oem, fix corner case with Dell C410x power control calculation.
+o In ipmi-oem, fix corner case with Dell C410x power control
+  calculation.
+o In bmc-config, fix corner case in Rmcpplus_Conf_Privilege
+  configuration.
 o Various documentation updates.
 
+Libraries
+----------
+o In libfreeipmi, fix incorrect packet layout for the Get Lan
+Configuration Parameters RMCPplus Messaing Cipher Suite Entry Support
+response.
+
+Misc
+----
+o Various documentation updates.
 
 FreeIPMI 1.1.2 - 02/06/12
 -------------------------
