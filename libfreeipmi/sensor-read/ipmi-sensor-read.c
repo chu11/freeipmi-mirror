@@ -767,13 +767,8 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
             }
 
           *sensor_reading = tmp_sensor_reading;
-	  rv = 1;
         }
-      else
-	/* Although unlikely, conceivably could be threshold sensor w/
-	 * compact record
-	 */
-	rv = 0;
+      rv = 1;
     }
   else if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_GENERIC_DISCRETE
            || event_reading_type_code_class ==  IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE)
