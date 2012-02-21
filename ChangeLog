@@ -3,6 +3,10 @@
 	* doc/freeipmi-bugs-issues-and-workarounds.txt,
 	man/ipmi-sensors.8.pre.in: Update information concerning
 	'discretereading' workaround.
+
+	* libfreeipmi/sensor-read/ipmi-sensor-read.c (ipmi_sensor_read):
+	Fix possible corner case, where a compact sensor could have a
+	threshold event reading/type code.
 	
 2012-02-17  Albert Chu <chu11@llnl.gov>
 
