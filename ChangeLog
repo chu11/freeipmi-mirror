@@ -3,6 +3,9 @@
 	* doc/freeipmi-bugs-issues-and-workarounds.txt,
 	man/ipmi-sensors.8.pre.in: Update information concerning
 	'discretereading' workaround.
+
+	* ipmi-sensors/: Code cleanup, rename 'reading' to
+	'sensor_reading' for consistency.
 	
 2012-02-17  Albert Chu <chu11@llnl.gov>
 

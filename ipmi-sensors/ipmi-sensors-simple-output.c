@@ -172,7 +172,7 @@ _legacy_simple_output_full_record (ipmi_sensors_state_data_t *state_data,
                                    const void *sdr_record,
                                    unsigned int sdr_record_len,
                                    uint16_t record_id,
-                                   double *reading,
+                                   double *sensor_reading,
                                    int event_message_output_type,
                                    uint16_t sensor_event_bitmask,
                                    char **event_message_list,
@@ -240,10 +240,10 @@ _legacy_simple_output_full_record (ipmi_sensors_state_data_t *state_data,
                                            &upper_non_recoverable_threshold) < 0)
             goto cleanup;
 
-          if (reading)
+          if (sensor_reading)
             pstdout_printf (state_data->pstate,
                             "%.2f %s ",
-                            _round_double2 (*reading),
+                            _round_double2 (*sensor_reading),
                             sensor_units_buf);
           else
             pstdout_printf (state_data->pstate,
@@ -413,7 +413,7 @@ _ipmimonitoring_legacy_simple_output_full_record (ipmi_sensors_state_data_t *sta
                                                   const void *sdr_record,
                                                   unsigned int sdr_record_len,
                                                   uint16_t record_id,
-                                                  double *reading,
+                                                  double *sensor_reading,
                                                   int event_message_output_type,
                                                   uint16_t sensor_event_bitmask,
                                                   char **event_message_list,
@@ -482,11 +482,11 @@ _ipmimonitoring_legacy_simple_output_full_record (ipmi_sensors_state_data_t *sta
               goto cleanup;
             
             
-            if (reading)
+            if (sensor_reading)
               pstdout_printf (state_data->pstate,
                               " | %s | %f\n",
                               sensor_units_buf,
-                              *reading);
+                              *sensor_reading);
             else
               pstdout_printf (state_data->pstate,
                               " | %s | %s\n",
@@ -741,7 +741,7 @@ _simple_output_full_record (ipmi_sensors_state_data_t *state_data,
                             unsigned int sdr_record_len,
                             uint16_t record_id,
                             uint8_t sensor_number,
-                            double *reading,
+                            double *sensor_reading,
                             int event_message_output_type,
                             uint16_t sensor_event_bitmask,
                             char **event_message_list,
@@ -796,7 +796,7 @@ _simple_output_full_record (ipmi_sensors_state_data_t *state_data,
 
           memset (fmt, '\0', IPMI_SENSORS_FMT_BUFLEN + 1);
 
-          if (reading)
+          if (sensor_reading)
             {
               if (state_data->prog_data->args->comma_separated_output)
                 snprintf (fmt,
@@ -810,7 +810,7 @@ _simple_output_full_record (ipmi_sensors_state_data_t *state_data,
               
               pstdout_printf (state_data->pstate,
                               fmt,
-                              _round_double2 (*reading),
+                              _round_double2 (*sensor_reading),
                               sensor_units_buf);
             }
           else
@@ -854,7 +854,7 @@ _simple_output_full_record (ipmi_sensors_state_data_t *state_data,
       if (!state_data->prog_data->args->quiet_readings)
         {
 	  if (state_data->prog_data->args->common.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_DISCRETE_READING
-	      && reading)
+	      && sensor_reading)
 	    {
 	      char sensor_units_buf[IPMI_SENSORS_UNITS_BUFLEN+1];
 
@@ -882,7 +882,7 @@ _simple_output_full_record (ipmi_sensors_state_data_t *state_data,
 		  
 	      pstdout_printf (state_data->pstate,
 			      fmt,
-			      _round_double2 (*reading),
+			      _round_double2 (*sensor_reading),
 			      sensor_units_buf);
 	    }
 	  else
@@ -1122,7 +1122,7 @@ ipmi_sensors_simple_output (ipmi_sensors_state_data_t *state_data,
                             const void *sdr_record,
                             unsigned int sdr_record_len,
                             uint8_t sensor_number,
-                            double *reading,
+                            double *sensor_reading,
                             int event_message_output_type,
                             uint16_t sensor_event_bitmask,
                             char **event_message_list,
@@ -1163,7 +1163,7 @@ ipmi_sensors_simple_output (ipmi_sensors_state_data_t *state_data,
                                                    sdr_record,
                                                    sdr_record_len,
                                                    record_id,
-                                                   reading,
+                                                   sensor_reading,
                                                    event_message_output_type,
                                                    sensor_event_bitmask,
                                                    event_message_list,
@@ -1173,7 +1173,7 @@ ipmi_sensors_simple_output (ipmi_sensors_state_data_t *state_data,
                                                                   sdr_record,
                                                                   sdr_record_len,
                                                                   record_id,
-                                                                  reading,
+                                                                  sensor_reading,
                                                                   event_message_output_type,
                                                                   sensor_event_bitmask,
                                                                   event_message_list,
@@ -1184,7 +1184,7 @@ ipmi_sensors_simple_output (ipmi_sensors_state_data_t *state_data,
                                             sdr_record_len,
                                             record_id,
                                             sensor_number,
-                                            reading,
+                                            sensor_reading,
                                             event_message_output_type,
                                             sensor_event_bitmask,
                                             event_message_list,

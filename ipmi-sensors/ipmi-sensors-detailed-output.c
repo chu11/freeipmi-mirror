@@ -1439,7 +1439,7 @@ _detailed_output_full_record (ipmi_sensors_state_data_t *state_data,
                               uint8_t sensor_number,
                               uint8_t record_type,
                               uint16_t record_id,
-                              double *reading,
+                              double *sensor_reading,
                               int event_message_output_type,
                               uint16_t sensor_event_bitmask,
                               char **event_message_list,
@@ -1596,10 +1596,10 @@ _detailed_output_full_record (ipmi_sensors_state_data_t *state_data,
 
   if (state_data->prog_data->args->legacy_output)
     {
-      if (reading)
+      if (sensor_reading)
         pstdout_printf (state_data->pstate,
                         "Sensor Reading: %f %s\n",
-                        *reading,
+                        *sensor_reading,
                         sensor_units_buf);
       else
         pstdout_printf (state_data->pstate,
@@ -1610,10 +1610,10 @@ _detailed_output_full_record (ipmi_sensors_state_data_t *state_data,
     {
       /* no need to output "N/A" for discrete sensors */
 
-      if (reading)
+      if (sensor_reading)
         pstdout_printf (state_data->pstate,
                         "Sensor Reading: %f %s\n",
-                        *reading,
+                        *sensor_reading,
                         sensor_units_buf);
       else if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD)
         pstdout_printf (state_data->pstate,
@@ -2478,7 +2478,7 @@ ipmi_sensors_detailed_output (ipmi_sensors_state_data_t *state_data,
                               const void *sdr_record,
                               unsigned int sdr_record_len,
                               uint8_t sensor_number,
-                              double *reading,
+                              double *sensor_reading,
                               int event_message_output_type,
                               uint16_t sensor_event_bitmask,
                               char **event_message_list,
@@ -2517,7 +2517,7 @@ ipmi_sensors_detailed_output (ipmi_sensors_state_data_t *state_data,
                                                 sensor_number,
                                                 record_type,
                                                 record_id,
-                                                reading,
+                                                sensor_reading,
                                                 event_message_output_type,
                                                 sensor_event_bitmask,
                                                 event_message_list,
@@ -2610,7 +2610,7 @@ ipmi_sensors_detailed_output (ipmi_sensors_state_data_t *state_data,
                                                 sensor_number,
                                                 record_type,
                                                 record_id,
-                                                reading,
+                                                sensor_reading,
                                                 event_message_output_type,
                                                 sensor_event_bitmask,
                                                 event_message_list,
