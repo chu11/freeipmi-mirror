@@ -27,6 +27,7 @@ FreeIPMI general
 - loop/try again on NODE_BUSY errors (XXX)
   - treat more like network busy than error?
   - option for alternate behavior?
+- update text documents to texinfo (***)
 
 FreeIPMI new stuff
 ------------------
