@@ -354,15 +354,21 @@ _setup_hostname (ipmi_ctx_t ctx, const char *hostname)
 
 	  *ptr = '\0';
 	  ptr++;
+
+	  if (strlen (hostname_copy) > MAXHOSTNAMELEN)
+	    {
+	      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
+	      return (-1);
+	    }
 	  
 	  errno = 0;
 	  tmp = strtol (ptr, &endptr, 0);
 	  if (errno
 	      || endptr[0] != '\0'
-	      || !port
-	      || port > USHRT_MAX)
+	      || tmp <= 0
+	      || tmp > USHRT_MAX)
 	    {
-	      API_SET_ERRNUM (ctx, IPMI_ERR_HOSTNAME_INVALID);
+	      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
 	      goto cleanup;
 	    }
 	  
@@ -371,7 +377,15 @@ _setup_hostname (ipmi_ctx_t ctx, const char *hostname)
       hostname_ptr = hostname_copy;
     }
   else
-    hostname_ptr = (char *)hostname;
+    {
+      if (strlen (hostname) > MAXHOSTNAMELEN)
+	{
+	  API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
+	  return (-1);
+	}
+
+      hostname_ptr = (char *)hostname;
+    }
   
   memset (&hent, '\0', sizeof (struct hostent));
 #if defined(HAVE_FUNC_GETHOSTBYNAME_R_6)
@@ -497,8 +511,8 @@ ipmi_ctx_open_outofband (ipmi_ctx_t ctx,
       return (-1);
     }
 
+  /* hostname length checks in _setup_hostname() */
   if (!hostname
-      || strlen (hostname) > MAXHOSTNAMELEN
       || (username && strlen (username) > IPMI_MAX_USER_NAME_LENGTH)
       || (password && strlen (password) > IPMI_1_5_MAX_PASSWORD_LENGTH)
       || !IPMI_1_5_AUTHENTICATION_TYPE_VALID (authentication_type)
@@ -640,8 +654,8 @@ ipmi_ctx_open_outofband_2_0 (ipmi_ctx_t ctx,
       return (-1);
     }
 
+  /* hostname length checks in _setup_hostname() */
   if (!hostname
-      || strlen (hostname) > MAXHOSTNAMELEN
       || (username && strlen (username) > IPMI_MAX_USER_NAME_LENGTH)
       || (password && strlen (password) > IPMI_2_0_MAX_PASSWORD_LENGTH)
       || (k_g && k_g_len > IPMI_MAX_K_G_LENGTH)

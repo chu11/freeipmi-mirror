@@ -233,6 +233,7 @@ struct ipmiconsole_ctx_config {
 
   /* ipmi config */
   char hostname[MAXHOSTNAMELEN+1];
+  uint16_t port;
   char username[IPMI_MAX_USER_NAME_LENGTH+1];
   char password[IPMI_2_0_MAX_PASSWORD_LENGTH+1];
   uint8_t k_g[IPMI_MAX_K_G_LENGTH+1];
