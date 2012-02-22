@@ -124,18 +124,18 @@ developers from CDC and LLNL merging the IPMI software developed by
 both organizations into FreeIPMI.
 
 Anand Babu, Balamurugan and Ian Zimmerman at CDC contributed the
-in-band KCS driver, ipmi-sensors, bmc-config, ipmi-sel, bmc-info, and
+in-band KCS driver, @command{ipmi-sensors}, @command{bmc-config}, @command{ipmi-sel}, @command{bmc-info}, and
 portions of libfreeipmi.  Albert Chu and Jim Garlick at LLNL
-contributed ipmipower, bmc-watchdog, ipmiping, rmcpping, portions of
-libfreeipmi, and ipmi support in Powerman.  In October 2004, FreeIPMI
+contributed @command{ipmipower}, @command{bmc-watchdog}, @command{ipmiping}, @command{rmcpping}, portions of
+libfreeipmi, and IPMI support in Powerman.  In October 2004, FreeIPMI
 0.1.0 was officially released.
 
 Since the 0.1.0 release, Z Research developers have contributed
-ipmi-chassis, ipmi-raw, ipmi-locate, and portions of ipmi-pef-config.
-LLNL has contributed IPMI 2.0 support, hostrange support, ipmiconsole,
-libipmiconsole, ipmidetect, ipmi-sensors-config, ipmi-chassis-config,
-bmc-device, ipmi-oem, ipmi-dcmi, libipmimonitoring, and portions of
-ipmi-pef-config.
+@command{ipmi-chassis}, @command{ipmi-raw}, @command{ipmi-locate}, and portions of @command{ipmi-pef-config}.
+LLNL has contributed IPMI 2.0 support, hostrange support, @command{ipmiconsole},
+libipmiconsole, @command{ipmidetect}, @command{ipmi-sensors-config}, @command{ipmi-chassis-config},
+@command{bmc-device}, @command{ipmi-oem}, @command{ipmi-dcmi}, libipmimonitoring, and portions of
+@command{ipmi-pef-config}.
 
 (Note: The original FreeIPMI developers from California Digital
 Corp. are now at Zresearch Inc.)
@@ -179,8 +179,8 @@ and/or large data centers.  Much of this original support was added to
 support the large cluster environments at Lawrence Livermore National
 Laboratory (LLNL).
 
-Scalable parallel execution of many FreeIPMI tools (ipmi-sensors,
-ipmi-sel, bmc-info, etc.) across a cluster is supported through
+Scalable parallel execution of many FreeIPMI tools (@command{ipmi-sensors},
+@command{ipmi-sel}, @command{bmc-info}, etc.) across a cluster is supported through
 hostranged input and output.  For example:
 
 @example
@@ -243,7 +243,7 @@ clusters in under a second.
 Ipmiconsole is currently supported by Conman
 (@uref{http://conman.googlecode.com/}) for scalable console management.
 
-Ipmi-sensors and libipmimonitoring are capable of interpreting sensor
+@command{Ipmi-sensors} and libipmimonitoring are capable of interpreting sensor
 readings as well as just reporting them.  It can be used for host
 monitoring IPMI sensor severity on a cluster.  By mapping sensor
 readings into NOMINAL, WARNING, or CRITICAL states, it makes
@@ -258,7 +258,7 @@ and Nagios
 have also been developed and made available for download
 (@uref{http://www.gnu.org/software/freeipmi/download.html}).
 
-Ipmi-sel and libipmimonitoring are capable of interpreting system
+@command{Ipmi-sel} and libipmimonitoring are capable of interpreting system
 event log (SEL) entries as well as just reporting them.  It can be
 used for host monitoring IPMI event severity on a cluster.  By mapping
 events into NOMINAL, WARNING, or CRITICAL states, it makes monitoring
@@ -267,8 +267,8 @@ system events easier across large numbers of nodes.  Skummee
 libipmimonitoring to monitoring the SEL on LLNL clusters of up to 2000
 nodes in size.
 
-The bmc-config, ipmi-chassis-config, ipmi-pef-config,
-ipmi-sensors-config, and configuration file and command-line interface
+The @command{bmc-config}, @command{ipmi-chassis-config}, @command{ipmi-pef-config},
+@command{ipmi-sensors-config}, and configuration file and command-line interface
 are used to easily copy the BMC configuration from one node to every
 other node in a cluster quickly.  It has been used to modify the BMC
 configuration across large LLNL clusters in a few minutes.  They also
@@ -282,10 +282,10 @@ temporarily removed for servicing.
 2) Additional OEM support
 
 FreeIPMI contains support for a number of OEM extensions and OEM
-sensors and/or events.  Ipmi-oem currently supports OEM command
+sensors and/or events.  @command{Ipmi-oem} currently supports OEM command
 extensions for motherboards made by Dell, Fujitsu, IBM, Intel,
-Inventec, Quanta, Sun Microsystems, and Supermicro.  Ipmi-sensors and
-Ipmi-sel support OEM sensors and/or events for motherboards made from
+Inventec, Quanta, Sun Microsystems, and Supermicro.  @command{Ipmi-sensors} and
+@command{ipmi-sel} support OEM sensors and/or events for motherboards made from
 Dell, Fujitsu, Intel, Inventec, Quanta, Sun Microsystems, and
 Supermicro.  (Some of the motherboards may have been rebranded by
 vendors, see manpages for official list of confirmed supported
@@ -303,8 +303,8 @@ tool.
 
 In addition to the features listed above, FreeIPMI also supports
 specifications related to IPMI.  The Data Center Management Interface,
-or DCMI, is supported via the FreeIPMI tool ipmi-dcmi.  Some aspects
-of the Intel Power Node Manager are supported in ipmi-oem.
+or DCMI, is supported via the FreeIPMI tool @command{ipmi-dcmi}.  Some aspects
+of the Intel Power Node Manager are supported in @command{ipmi-oem}.
 
 5) Easy setup
 
@@ -324,13 +324,13 @@ Unfortunately, there are no universally defined mechanisms for
 determining if a system supports IPMI.  The following may provide
 hints.
 
-1) FreeIPMI's ipmi-locate can be used to determine if IPMI can be
+1) FreeIPMI's @command{ipmi-locate} can be used to determine if IPMI can be
 found on your system.  Users are cautioned though, the failure to
 discover IPMI via ipmi-locate is not sufficient to disprove that IPMI
 exists on your system.  Your system may not publish such information
 or may expect clients to communicate at default locations.
 
-2) dmidecode may be similarly used to probe for devices that support
+2) @command{dmidecode} may be similarly used to probe for devices that support
 IPMI on your system.  You may grep for IPMI or specifying the IPMI DMI
 type on the command line.
 
@@ -423,31 +423,31 @@ functions.  It is commonly read before some IPMI action can be taken.
 For example, it contains a list of all sensors on a system, so it
 must be downloaded before sensors on a system can be read.  In
 FreeIPMI, the SDR is cached in a common location and can be used by a
-number of tools, such as ipmi-sensors, ipmi-sel, and ipmi-fru.
+number of tools, such as @command{ipmi-sensors}, @command{ipmi-sel}, and @command{ipmi-fru}.
 
 @strong{SEL} stands for @strong{System Event Log}.  The SEL is a log of
 events stored on the system for later diagnostics.  In FreeIPMI,
-ipmi-sel can be used to read the SEL.
+@command{ipmi-sel} can be used to read the SEL.
 
 @strong{FRU} stands for @strong{Field Replaceable Unit}.  While FRU is
 a general computing term refering to a replaceable unit of
 electronics, in IPMI is is common to refer to the ``FRU'' as the
 database of all FRU components on a system.  In FreeIPMI,
-ipmi-fru can be used to read the FRU components on a system.
+@command{ipmi-fru} can be used to read the FRU components on a system.
 
 @strong{PEF} stands for @strong{Platform Event Filtering}.  PEF refers
 to the rules that determine when PETs are generated and where they are
-sent.  In FreeIPMI, PEF can be configured via ipmi-pef-config.
+sent.  In FreeIPMI, PEF can be configured via @command{ipmi-pef-config}.
 
 @strong{PET} stands for @strong{Platform Event Trap}.  PET refers to a
 trap that can be sent by a system to an SNMP agent to indicate an
 event has occurred on the system.  In FreeIPMI, a PET trap can be
-interpreted via ipmi-pet.
+interpreted via @command{ipmi-pet}.
 
 @strong{DCMI} stands for @strong{Data Center Management Interface}.
 DCMI is a management interface defined by a group of vendors that use
 IPMI as the backend for their system management definition.  In
-FreeIPMI, ipmi-dcmi can be used to read/configuring DCMI.
+FreeIPMI, @command{ipmi-dcmi} can be used to read/configuring DCMI.
 
 @strong{SOL} stands for @strong{Serial over LAN}.  SOL refers to the
 forwarding of serial system traffic over a network, typically an
