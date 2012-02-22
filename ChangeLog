@@ -1,3 +1,9 @@
+2012-02-22  Albert Chu <chu11@llnl.gov>
+
+	* Support Cipher Suite 15 and 16 globally.
+
+	* Add details of Cipher Suite 18 and 19 globally.
+	
 2012-02-21  Albert Chu <chu11@llnl.gov>
 
 	* doc/freeipmi-bugs-issues-and-workarounds.txt,
