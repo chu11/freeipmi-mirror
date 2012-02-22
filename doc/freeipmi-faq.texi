@@ -46,7 +46,7 @@ Copyright @copyright{} 2003-2012 FreeIPMI Core Team
 @end titlepage
 
 
-@node Top, What is IPMI, (dir), (dir)
+@node Top, What is IPMI?, (dir), (dir)
 @ifinfo
 Frequently Asked Questions on @strong{FreeIPMI}
 
@@ -55,7 +55,7 @@ release @value{VERSION} of the FreeIPMI.
 @end ifinfo
 
 @menu
-* What is IPMI::                
+* What is IPMI?::                
 * What is FreeIPMI?::       
 * How did FreeIPMI start?::           
 * What operating systems does FreeIPMI run on?::
@@ -84,8 +84,8 @@ release @value{VERSION} of the FreeIPMI.
 @c Output the table of contents at the beginning.
 @contents
 
-@node What is IPMI, What is FreeIPMI?, Top, Top
-@section @acronym{IPMI} - Platform Management Standard
+@node What is IPMI?, What is FreeIPMI?, Top, Top
+@section What is IPMI?
 
 The @acronym{IPMI} specifications define standardized, abstracted interfaces to
 the platform management subsystem.  @acronym{IPMI} includes the definition of
@@ -104,7 +104,7 @@ conditions for later examination and alerting where the platform
 issues the alert without aid of run-time software.  Lastly it includes
 inventory information that can help identify a failed hardware unit.
 
-@node What is FreeIPMI?, How did FreeIPMI start?, What is IPMI, Top
+@node What is FreeIPMI?, How did FreeIPMI start?, What is IPMI?, Top
 @section What is FreeIPMI?
 
 FreeIPMI is a collection of Intelligent Platform Management
@@ -371,7 +371,7 @@ and receive a 'libgcrypt required to build libfreeipmi' error, please
 install libgcrypt.  For Linux users, this may require the install of
 the libgcrypt-devel package as well.  For those who do not need IPMI
 2.0 encryption, FreeIPMI may be built without it by specifying
---without-encryption when executing configure.
+@option{--without-encryption} when executing configure.
 
 @node x86-64 Compilation, Installing FreeIPMI on FreeBSD, libgcrypt requirement, Top
 @section x86-64 Compilation
@@ -382,7 +382,7 @@ libraries.  However, some multi-architecture installs (e.g. you have
 32 bit and 64 bit libraries installed) may lead to builds and installs
 of 32 bit instead of 64 bit.  For those noticing this, pass libdir
 appropriately to the configure script to workaround this
-problem. (e.g. --libdir=/usr/lib64)
+problem. (e.g. @option{--libdir=/usr/lib64})
 
 Example:
 @example
@@ -501,7 +501,7 @@ Ipmiconsole or SOL, is the ttySX terminal may need to be changed.
 
 For most people the answer is no.
 
-FreeIPMI includes a userspace driver that works on most motherboards without any driver installation, loading, or configuration required.  FreeIPMI also includes support of a Linux SSIF driver through the SSIF device (i.e. /dev/i2c-0), the OpenIPMI Linux kernel driver (i.e. /dev/ipmi0), and the Sun/Solaris BMC driver (i.e. /dev/bmc).  If you communicate through one of these mechanisms, the appropriate drivers for them should be loaded.  Most systems should automatically load the appropriate drivers you need.  
+FreeIPMI includes a userspace driver that works on most motherboards without any driver installation, loading, or configuration required.  FreeIPMI also includes support of a Linux SSIF driver through the SSIF device (i.e. @file{/dev/i2c-0}), the OpenIPMI Linux kernel driver (i.e. @file{/dev/ipmi0}), and the Sun/Solaris BMC driver (i.e. @file{/dev/bmc}).  If you communicate through one of these mechanisms, the appropriate drivers for them should be loaded.  Most systems should automatically load the appropriate drivers you need.  
 
 Under most scenarios, the FreeIPMI tools should automatically discover which in-band interface to use and the proper settings to use.  Some motherboards may require you to determine alternate configurations for addresses, paths, etc. on your own and pass them as command line options to the tools.
 
@@ -553,7 +553,7 @@ BMC address Locator:
 There are additional details in the Powerman
 (@uref{http://code.google.com/p/powerman/}) documentation, however
 here are the basics.  In the powerman.conf file, you want to include
-the ipmipower.dev device file, setup an ipmipower device in co-process
+the @file{ipmipower.dev} device file, setup an ipmipower device in co-process
 mode, then configure hosts to use that device.
 
 @example
@@ -584,7 +584,7 @@ node "primaryname[0-10]"  "ipmi0" "altname[0-10]"
 @end example
 
 Configuration can be trickier if you want to configure Powerman to use
-ipmipower with an OEM extension specified through --oem-power-type.
+ipmipower with an OEM extension specified through @option{--oem-power-type}.
 Many OEM extensions in ipmipower must include additional arguments,
 which can be passed in via the node argument.  In addition, while
 ipmipower can take a host range as an additional argument, powerman
@@ -621,8 +621,8 @@ node "mynodes[0-10]-16" "ipmi0" "mynodes[0-10]+16"
 As noted in the manpage, the Dell Poweredge C410x appears to have
 difficulty handling new slot power control requests until prior ones
 have completed.  Users may wish to configure ipmipower with
---wait-until-on, --wait-until-off, and consider using the
-ipmipower-serial.dev device file instead of ipmipower.dev.
+@option{--wait-until-on}, @option{--wait-until-off}, and consider using the
+@file{ipmipower-serial.dev} device file instead of @file{ipmipower.dev}.
 
 @node How do you setup Conman with ipmiconsole or libipmiconsole?, How do you setup Ganglia or Nagios to monitor IPMI sensors via FreeIPMI?, How do you setup Powerman with ipmipower?, Top
 @section How do you setup Conman with ipmiconsole or libipmiconsole?
@@ -633,7 +633,7 @@ however here are some basics.
 
 To configure Conman to connect via the ipmiconsole tool, Conman comes
 with an expect script named ipmiconsole.exp, typically installed into
-/usr/lib/conman/exec/ipmiconsole.exp.  Consoles can be setup by adding
+@file{/usr/lib/conman/exec/ipmiconsole.exp}.  Consoles can be setup by adding
 lines to conman.conf like:
 
 @example
@@ -642,7 +642,7 @@ CONSOLE name="myserver"   dev="/usr/lib/conman/exec/ipmiconsole.exp myserver myu
 
 One of the useful aspects of using the ipmiconsole.exp script is that
 the same configuration options you may have already configured into
-freeipmi.conf, may be loaded automatically when ipmiconsole is
+@file{freeipmi.conf}, may be loaded automatically when ipmiconsole is
 executed via this expect script.
 
 However, as can be expected, scalability may be a problem as you must
