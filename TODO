@@ -142,7 +142,7 @@ libipmiconsole
 - "check" function, to see if session currently running
 - engine_submit() - try and move initialization/setup code into engine
   to reduce time spent in engine_submit(), this is the core loop used by
-  conman and other console software.
+  conman and other console software. (***)
 - use conditional signals w/ garbage collector
   - should work, it's not like the poll loop from before
  
