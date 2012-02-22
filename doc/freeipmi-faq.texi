@@ -583,6 +583,47 @@ device "ipmi0" "ipmipower" "/usr/sbin/ipmipower -h altname[0-10] |&"
 node "primaryname[0-10]"  "ipmi0" "altname[0-10]"
 @end example
 
+Configuration can be trickier if you want to configure Powerman to use
+ipmipower with an OEM extension specified through --oem-power-type.
+Many OEM extensions in ipmipower must include additional arguments,
+which can be passed in via the node argument.  In addition, while
+ipmipower can take a host range as an additional argument, powerman
+may not.
+
+For example, the following would be suitable to configure OEM
+extension support the Dell Poweredge C410x.  A specific node
+identifier (i.e. mynode0-1) is used to map to a specific node and
+additional argument.
+
+@example
+include "/etc/powerman/ipmipower.dev"
+
+device "ipmi0" "ipmipower" "/usr/sbin/ipmipower -h mynodes[0-10]+[1-16] --oem-power-type=c410x -l admin |&"
+
+node "mynodes[0-10]-1" "ipmi0" "mynodes[0-10]+1"
+node "mynodes[0-10]-2" "ipmi0" "mynodes[0-10]+2"
+node "mynodes[0-10]-3" "ipmi0" "mynodes[0-10]+3"
+node "mynodes[0-10]-4" "ipmi0" "mynodes[0-10]+4"
+node "mynodes[0-10]-5" "ipmi0" "mynodes[0-10]+5"
+node "mynodes[0-10]-6" "ipmi0" "mynodes[0-10]+6"
+node "mynodes[0-10]-7" "ipmi0" "mynodes[0-10]+7"
+node "mynodes[0-10]-8" "ipmi0" "mynodes[0-10]+8"
+node "mynodes[0-10]-9" "ipmi0" "mynodes[0-10]+9"
+node "mynodes[0-10]-10" "ipmi0" "mynodes[0-10]+10"
+node "mynodes[0-10]-11" "ipmi0" "mynodes[0-10]+11"
+node "mynodes[0-10]-12" "ipmi0" "mynodes[0-10]+12"
+node "mynodes[0-10]-13" "ipmi0" "mynodes[0-10]+13"
+node "mynodes[0-10]-14" "ipmi0" "mynodes[0-10]+14"
+node "mynodes[0-10]-15" "ipmi0" "mynodes[0-10]+15"
+node "mynodes[0-10]-16" "ipmi0" "mynodes[0-10]+16"
+@end example
+
+As noted in the manpage, the Dell Poweredge C410x appears to have
+difficulty handling new slot power control requests until prior ones
+have completed.  Users may wish to configure ipmipower with
+--wait-until-on, --wait-until-off, and consider using the
+ipmipower-serial.dev device file instead of ipmipower.dev.
+
 @node How do you setup Conman with ipmiconsole or libipmiconsole?, How do you setup Ganglia or Nagios to monitor IPMI sensors via FreeIPMI?, How do you setup Powerman with ipmipower?, Top
 @section How do you setup Conman with ipmiconsole or libipmiconsole?
 

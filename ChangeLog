@@ -10,6 +10,7 @@
 	* libfreeipmi/cmds/ipmi-lan-cmds.c: Fix packet layout for
 	tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_support_rs.
 	
+	* doc/freeipmi-faq.texi: Add Powerman configuration notes for C410x.
 	
 2012-02-17  Albert Chu <chu11@llnl.gov>
 
