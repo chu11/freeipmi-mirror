@@ -5,7 +5,6 @@ ooo - priority code cleanup that should be done
 branches to merge
 -----------------
 altport
-sha256
 
 FreeIPMI FAQ/documentation
 --------------------------
@@ -204,6 +203,13 @@ ipmi-sel
   crossing threshold.  Can be confusing b/c assert/deassert not output
   by default.  Should alter output in these cases?
 - --delete-date-range (XXX)
+- reservation mechanism, so user can hypothetically script series of
+  things and be notified if something goes wrong in the interim. (XXX)
+  - i.e. ipmi-sel --get-reservation
+         ipmi-sel --use-reservation=X --date-range="..."
+         ipmi-sel --use-reservation=X --clear
+         and if an error occurs along the way, user can script around it
+         allows user to know if race occurs between "get" and "clear" 
 - ganglia plugin?
 - nagios plugin?
 
