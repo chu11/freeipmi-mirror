@@ -65,7 +65,7 @@ extern "C" {
      * SHA256 instead of SHA1 and SHA256-128 instead of SHA1-96.       \
      */                                                                \
     /* Cipher Suite 17 confirmed via DCMI 1.1 specification */         \
-    /* Cipher Suite 15 */                                              \ 
+    /* Cipher Suite 15 */                                              \
     || ((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA256        \
         && ((__i) == IPMI_INTEGRITY_ALGORITHM_NONE                     \
             && (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE))          \
@@ -110,7 +110,7 @@ extern "C" {
      * SHA256 instead of SHA1 and SHA256-128 instead of SHA1-96.          \
      */                                                                   \
     /* Cipher Suite 17 confirmed via DCMI 1.1 specification */            \
-    /* Cipher Suite 15 */                                                 \ 
+    /* Cipher Suite 15 */                                                 \
     || ((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA256           \
         && ((__i) == IPMI_INTEGRITY_ALGORITHM_NONE                        \
             && (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE))             \

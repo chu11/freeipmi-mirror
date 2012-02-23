@@ -193,6 +193,7 @@ ipmi_algorithms_to_cipher_suite_id (uint8_t authentication_algorithm,
           else /* confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_XRC4_40 */
             *cipher_suite_id = 19;
 	}
+    }
 
   return (0);
 }
