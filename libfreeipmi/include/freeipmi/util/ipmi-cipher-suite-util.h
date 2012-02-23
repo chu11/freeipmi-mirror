@@ -121,9 +121,9 @@ extern "C" {
                 || (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128))) ) ? 1 : 0)
 
 /* XXX: Errata 4 defines SHA256 but not cipher suite IDs */
-/* achu: Intel support says Cipher Suite 15-19 maps to 1-5 using   \
- * SHA256 instead of SHA1 and SHA256-128 instead of SHA1-96.       \
- */                                                                \
+/* achu: Intel support says Cipher Suite 15-19 maps to 1-5 using
+ * SHA256 instead of SHA1 and SHA256-128 instead of SHA1-96.
+ */
 /* Cipher Suite 17 confirmed via DCMI 1.1 specification */
 
 /* To avoid gcc warnings, add +1 in comparison */
