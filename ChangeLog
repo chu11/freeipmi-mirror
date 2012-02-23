@@ -3,6 +3,9 @@
 	* bmc-config/bmc-config-rmcpplus-conf-privilege-section.c
 	(id_checkout): Fix cipher suite privilege
 	configuration corner cases workaround on HP DL145.
+
+	* man/manpage-common-workaround-outofband-20-text.man: Document
+	Intel S2600JF/Appro 512X workaround.
 	
 2012-02-22  Albert Chu <chu11@llnl.gov>
 

@@ -39,4 +39,4 @@ when using Cipher Suite ID 0.  The integrity check value should be 0
 length, however the remote motherboard responds with a non-empty
 field.  Those hitting this issue may see "k_g invalid" errors.  Issue
 observed on Supermicro X8DTG, Supermicro X8DTU, and Intel
-S5500WBV/Penguin Relion 700.
+S5500WBV/Penguin Relion 700, and Intel S2600JF/Appro 512X.
