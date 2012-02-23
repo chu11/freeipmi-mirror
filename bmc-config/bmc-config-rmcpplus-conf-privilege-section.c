@@ -302,7 +302,7 @@ id_checkout (const char *section_name,
   uint8_t privilege;
   unsigned int i;
   int id_found = 0;
-  
+
   assert (section_name);
   assert (kv);
   assert (arg);
@@ -316,7 +316,11 @@ id_checkout (const char *section_name,
     {
       if (state_data->cipher_suite_id_supported[i] == id)
         {
-          privilege = state_data->cipher_suite_priv[i];
+	  /* achu: NOT A BUG.
+	   *
+	   * IPMI spec is kooky, you want to index at [id] not [i]
+	   */
+          privilege = state_data->cipher_suite_priv[id];
           id_found++;
           break;
         }
@@ -367,9 +371,7 @@ id_commit (const char *section_name,
   uint8_t privs[CIPHER_SUITE_LEN];
   uint8_t privilege;
   unsigned int i;
-  unsigned int id_index;
-  int id_found = 0;
- 
+
   assert (section_name);
   assert (kv);
   assert (arg);
@@ -398,23 +400,11 @@ id_commit (const char *section_name,
 
   memset (privs, '\0', CIPHER_SUITE_LEN);
   memcpy (privs, state_data->cipher_suite_priv, CIPHER_SUITE_LEN);
-
-  for (i = 0; i < state_data->cipher_suite_entry_count; i++)
-    {
-      if (state_data->cipher_suite_id_supported[i] == id)
-        {
-	  privs[i] = privilege;
-	  id_index = i;
-	  id_found++;
-          break;
-        }
-    }
-
-  if (!id_found)
-    {
-      rv = CONFIG_ERR_NON_FATAL_ERROR_NOT_SUPPORTED;
-      goto cleanup;
-    }
+  /* achu: NOT A BUG.
+   *
+   * IPMI spec is kooky, you want to index at [id] not a searched [i]
+   */
+  privs[id] = privilege;
   
   /* IPMI Workaround (achu)
    *
@@ -448,13 +438,13 @@ id_commit (const char *section_name,
               snprintf (keynametmp,
                         CONFIG_MAX_KEY_NAME_LEN,
                         "Maximum_Privilege_Cipher_Suite_Id_%u",
-                        state_data->cipher_suite_id_supported[i]);
-	      
+                        i);
+
               if ((kvtmp = config_find_keyvalue (section, keynametmp)))
                 {
 		  uint8_t privilege_tmp;
                   privilege_tmp = rmcpplus_priv_number (kvtmp->value_input);
-                  privs[i] = privilege_tmp;
+                  privs[i] = privilege;
                 }
               else
                 {
@@ -517,7 +507,7 @@ id_commit (const char *section_name,
       goto cleanup;
     }
 
-  state_data->cipher_suite_priv[id_index] = privilege;
+  state_data->cipher_suite_priv[id] = privilege;
   rv = CONFIG_ERR_SUCCESS;
 
  cleanup:
@@ -734,6 +724,10 @@ bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_d
                               rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
+#if 0
+
+  /* achu: Can't support this config until IPMI spec is updated.  Yeah, it sucks */
+
   if (config_section_add_key (state_data->pstate,
                               section,
                               "Maximum_Privilege_Cipher_Suite_Id_16",
@@ -773,6 +767,8 @@ bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_d
                               id_commit_cb,
                               rmcpplus_priv_number_validate) < 0)
     goto cleanup;
+#endif
+
   return (section);
 
  cleanup:
