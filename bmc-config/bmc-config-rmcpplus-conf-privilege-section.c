@@ -724,10 +724,6 @@ bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_d
                               rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-#if 0
-
-  /* achu: Can't support this config until IPMI spec is updated.  Yeah, it sucks */
-
   if (config_section_add_key (state_data->pstate,
                               section,
                               "Maximum_Privilege_Cipher_Suite_Id_16",
@@ -737,6 +733,10 @@ bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_d
                               id_commit_cb,
                               rmcpplus_priv_number_validate) < 0)
     goto cleanup;
+
+#if 0
+
+  /* achu: Can't support this config until IPMI spec is updated.  Yeah, it sucks */
 
   if (config_section_add_key (state_data->pstate,
                               section,
