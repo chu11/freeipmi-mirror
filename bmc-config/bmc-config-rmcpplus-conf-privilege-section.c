@@ -436,7 +436,7 @@ id_commit (const char *section_name,
                 {
 		  uint8_t privilege_tmp;
                   privilege_tmp = rmcpplus_priv_number (kvtmp->value_input);
-                  privs[i] = privilege;
+                  privs[i] = privilege_tmp;
                 }
               else
                 {

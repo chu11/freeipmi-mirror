@@ -1,5 +1,11 @@
 2012-02-22  Albert Chu <chu11@llnl.gov>
 
+	* bmc-config/bmc-config-rmcpplus-conf-privilege-section.c
+	(id_checkout): Fix cipher suite privilege
+	configuration corner cases workaround on HP DL145.
+	
+2012-02-22  Albert Chu <chu11@llnl.gov>
+
 	* common/toolcommon/tool-cmdline-common.c (common_parse_opt),
 	common/toolcommon/tool-config-file-common.c
 	(_config_file_cipher_suite_id): Differentiate between invalid and

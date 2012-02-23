@@ -9,6 +9,8 @@ o In bmc-config, fix corner case in Rmcpplus_Conf_Privilege
   configuration.
 o In all tools, fix error messages to differentiate between invalid
   and unsupported cipher suite IDs.
+o In bmc-config, fix a Cipher Suite Privilege configuration
+  corner case for an HP DL145 workaround.
 o Various documentation updates.
 
 Libraries
