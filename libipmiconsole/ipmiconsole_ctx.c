@@ -138,14 +138,19 @@ ipmiconsole_ctx_list_cleanup (ipmiconsole_ctx_t c)
 int
 ipmiconsole_ctx_config_setup (ipmiconsole_ctx_t c,
                               const char *hostname,
+			      uint16_t port,
                               struct ipmiconsole_ipmi_config *ipmi_config,
                               struct ipmiconsole_protocol_config *protocol_config,
                               struct ipmiconsole_engine_config *engine_config)
 {
   assert (c);
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
+  assert (hostname);
+  assert (port);
 
   strcpy (c->config.hostname, hostname);
+
+  c->config.port = port;
 
   if (ipmi_config->username)
     strcpy (c->config.username, ipmi_config->username);
@@ -1102,7 +1107,7 @@ ipmiconsole_ctx_session_setup (ipmiconsole_ctx_t c)
   assert (c);
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
 
-  c->session.console_port = RMCP_PRIMARY_RMCP_PORT;
+  c->session.console_port = c->config.port;
 
   memset (&(c->session.addr), '\0', sizeof (struct sockaddr_in));
   c->session.addr.sin_family = AF_INET;

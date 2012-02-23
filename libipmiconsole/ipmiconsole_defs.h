@@ -61,6 +61,9 @@
 #define MAXHOSTNAMELEN 64
 #endif /* MAXHOSTNAMELEN */
 
+/* +5 for digits (max 65535) and +1 for colon ':' */
+#define MAXHOSTNAMELEN_WITH_PORT (MAXHOSTNAMELEN + 6)
+
 #ifndef MAXPATHLEN
 #define MAXPATHLEN 4096
 #endif /* MAXPATHLEN */
