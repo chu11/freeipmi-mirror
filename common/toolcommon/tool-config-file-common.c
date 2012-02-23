@@ -377,10 +377,15 @@ _config_file_cipher_suite_id (conffile_t cf,
     return (0);
 
   if (data->intval < IPMI_CIPHER_SUITE_ID_MIN
-      || data->intval > IPMI_CIPHER_SUITE_ID_MAX
-      || !IPMI_CIPHER_SUITE_ID_SUPPORTED (data->intval))
+      || data->intval > IPMI_CIPHER_SUITE_ID_MAX)
     {
       fprintf (stderr, "Config File Error: invalid value for %s\n", optionname);
+      exit (1);
+    }
+
+  if (!IPMI_CIPHER_SUITE_ID_SUPPORTED (data->intval))
+    {
+      fprintf (stderr, "Config File Error: unsupported value for %s\n", optionname);
       exit (1);
     }
 

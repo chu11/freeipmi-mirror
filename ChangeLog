@@ -1,8 +1,9 @@
 2012-02-22  Albert Chu <chu11@llnl.gov>
 
-	* common/toolcommon/tool-cmdline-common.c (common_parse_opt):
-	Differentiate between invalid and unsupported cipher suites in
-	error message output.
+	* common/toolcommon/tool-cmdline-common.c (common_parse_opt),
+	common/toolcommon/tool-config-file-common.c
+	(_config_file_cipher_suite_id): Differentiate between invalid and
+	unsupported cipher suites in error message output.
 	
 2012-02-21  Albert Chu <chu11@llnl.gov>
 
