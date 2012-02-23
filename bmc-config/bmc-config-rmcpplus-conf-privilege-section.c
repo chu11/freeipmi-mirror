@@ -318,7 +318,7 @@ id_checkout (const char *section_name,
         {
 	  /* achu: NOT A BUG.
 	   *
-	   * IPMI spec is kooky, you want to index at [id] not [i]
+	   * IPMI spec is_supported does not map to privileges array, you want to index at [id] not [i]
 	   */
           privilege = state_data->cipher_suite_priv[id];
           id_found++;
@@ -402,7 +402,7 @@ id_commit (const char *section_name,
   memcpy (privs, state_data->cipher_suite_priv, CIPHER_SUITE_LEN);
   /* achu: NOT A BUG.
    *
-   * IPMI spec is kooky, you want to index at [id] not a searched [i]
+   * IPMI spec is_supported does not map to privileges array, you want to index at [id] not a searched [i]
    */
   privs[id] = privilege;
   
@@ -507,6 +507,10 @@ id_commit (const char *section_name,
       goto cleanup;
     }
 
+  /* achu: NOT A BUG.
+   *
+   * IPMI spec is_supported does not map to privileges array, you want to index at [id] not [i]
+   */
   state_data->cipher_suite_priv[id] = privilege;
   rv = CONFIG_ERR_SUCCESS;
 
