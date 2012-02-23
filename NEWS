@@ -11,6 +11,8 @@ o In all tools, fix error messages to differentiate between invalid
   and unsupported cipher suite IDs.
 o In bmc-config, fix a Cipher Suite Privilege configuration
   corner case for an HP DL145 workaround.
+o In bmc-config, workaround Cipher Suite Privilege configuration issue
+  on Intel S2600JF/Appro 512X.
 o Various documentation updates.
 
 Libraries

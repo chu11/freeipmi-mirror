@@ -39,6 +39,8 @@
 
 #define BMC_CONFIG_PRIVILEGE_LEVEL_SUPPORTED_BUT_NOT_READABLE 0xFF
 
+#define BMC_CONFIG_CIPHER_SUITE_INCORRECT_RANGE_LEN 16
+
 static config_err_t
 _rmcpplus_cipher_suite_id_privilege_setup (bmc_config_state_data_t *state_data,
 					   const char *section_name)
@@ -181,6 +183,34 @@ _rmcpplus_cipher_suite_id_privilege_setup (bmc_config_state_data_t *state_data,
           state_data->cipher_suite_id_supported[i] = val;
         }
 
+      /* IPMI Workaround (achu)
+       *
+       * Intel S2600JF/Appro 512X
+       *
+       * Motherboard incorrectly states that it supports Cipher Suites
+       * 1-16 instead of 0-15.  If this is specifically returned, adjust
+       * appropriately.
+       */
+      if (state_data->cipher_suite_entry_count == BMC_CONFIG_CIPHER_SUITE_INCORRECT_RANGE_LEN)
+	{
+	  int workaround_condition_not_found = 0;
+	  
+	  for (i = 0; i < state_data->cipher_suite_entry_count; i++)
+	    {
+	      if (state_data->cipher_suite_id_supported[i] != (i + 1))
+		{
+		  workaround_condition_not_found++;
+		  break;
+		}
+	    }
+	  
+	  if (!workaround_condition_not_found)
+	    {
+	      for (i = 0; i < state_data->cipher_suite_entry_count; i++)
+		state_data->cipher_suite_id_supported[i] -= 1;
+	    }
+        }
+      
       state_data->cipher_suite_id_supported_set++;
     }
 
