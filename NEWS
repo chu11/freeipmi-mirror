@@ -7,6 +7,8 @@ o In ipmi-oem, fix corner case with Dell C410x power control
   calculation.
 o In bmc-config, fix corner case in Rmcpplus_Conf_Privilege
   configuration.
+o In all tools, fix error messages to differentiate between invalid
+  and unsupported cipher suite IDs.
 o Various documentation updates.
 
 Libraries
