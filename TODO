@@ -203,6 +203,7 @@ ipmi-sel
 - non-uncommon for motherboards to output events both directions of
   crossing threshold.  Can be confusing b/c assert/deassert not output
   by default.  Should alter output in these cases?
+- --delete-date-range (XXX)
 - ganglia plugin?
 - nagios plugin?
 
