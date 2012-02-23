@@ -259,7 +259,7 @@ LAN Authentication Issue #16: [COMPLIANCE]
   be 0 length.
 
   Seen on: Supermicro X8DTG, Supermicro X8DTU, Intel S5500WBV/Penguin
-  Relion 700
+  Relion 700, Intel S2600JF/Appro 512X
 
   Resolution: Workaround option added to inform software to ignore the
   non-zero length field.
@@ -321,6 +321,15 @@ LAN Authentication Issue #21: [COMPLIANCE]
   Seen on: Sun Fire 4100 with ILOM
 
   Resolution: Workaround added to parse unique cipher suite records.
+
+LAN Authentication Issue #22: [COMPLIANCE]
+
+  The motherboard reports support of Cipher Suite ID 15, however when
+  attemption authenticate with it, it is reported as unsupported.
+
+  Seen on: Intel S2600JF/Appro 512X
+
+  Resolution: None
 
 ----------------------------------------------------------------------
 
