@@ -1,3 +1,9 @@
+2012-02-22  Albert Chu <chu11@llnl.gov>
+
+	* common/toolcommon/tool-cmdline-common.c (common_parse_opt):
+	Differentiate between invalid and unsupported cipher suites in
+	error message output.
+	
 2012-02-21  Albert Chu <chu11@llnl.gov>
 
 	* doc/freeipmi-bugs-issues-and-workarounds.txt,

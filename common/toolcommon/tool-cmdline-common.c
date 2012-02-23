@@ -317,12 +317,16 @@ common_parse_opt (int key,
       if (errno
 	  || endptr[0] != '\0'
           || tmp < IPMI_CIPHER_SUITE_ID_MIN
-          || tmp > IPMI_CIPHER_SUITE_ID_MAX
-          || !IPMI_CIPHER_SUITE_ID_SUPPORTED (tmp))
+          || tmp > IPMI_CIPHER_SUITE_ID_MAX)
         {
           fprintf (stderr, "invalid cipher suite id\n");
           exit (1);
         }
+      if (!IPMI_CIPHER_SUITE_ID_SUPPORTED (tmp))
+	{
+          fprintf (stderr, "unsupported cipher suite id\n");
+          exit (1);
+	}
       cmd_args->cipher_suite_id = tmp;
       break;
       /* ARGP_PRIVILEGE_KEY for backwards compatability */
