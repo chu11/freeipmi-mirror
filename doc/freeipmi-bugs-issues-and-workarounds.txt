@@ -1028,8 +1028,8 @@ BMC/IPMI Configuration Issue #29: [COMPLIANCE]
 
 BMC/IPMI Configuration Issue #30: [COMPLIANCE]
 
-  Cipher suite privilege levels are not configurable.  The cipher
-  suite entry count is 0.
+  Cipher suite privilege level 0 is not listed as supported, even
+  though it is supported.
 
   Seen on: Intel S2600JF/Appro 512X
 
