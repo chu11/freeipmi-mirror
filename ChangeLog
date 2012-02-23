@@ -6,6 +6,10 @@
 
 	* man/manpage-common-workaround-outofband-20-text.man: Document
 	Intel S2600JF/Appro 512X workaround.
+
+	* bmc-config/bmc-config-rmcpplus-conf-privilege-section.c (_rmcpplus_cipher_suite_id_privilege_setup):
+	Workaround cipher suite privilege configuration bug in Intel
+	S2600JF/Appro 512X.
 	
 2012-02-22  Albert Chu <chu11@llnl.gov>
 

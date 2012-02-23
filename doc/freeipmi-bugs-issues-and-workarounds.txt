@@ -1028,12 +1028,13 @@ BMC/IPMI Configuration Issue #29: [COMPLIANCE]
 
 BMC/IPMI Configuration Issue #30: [COMPLIANCE]
 
-  Cipher suite privilege level 0 is not listed as supported, even
-  though it is supported.
+  Cipher Suite 1-16 are listed as supported instead of cipher suites
+  0-15.
 
   Seen on: Intel S2600JF/Appro 512X
 
-  Resolution: None
+  Resolution: Workaround added to detect this specific situation and
+  adjust appropriately.
 
 ----------------------------------------------------------------------
 
