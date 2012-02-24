@@ -38,12 +38,13 @@ extern "C" {
 #define IPMI_SEL_PARSE_ERR_SEL_ENTRIES_LIST_END                    7
 #define IPMI_SEL_PARSE_ERR_INVALID_SEL_ENTRY                       8
 #define IPMI_SEL_PARSE_ERR_NOT_FOUND                               9
-#define IPMI_SEL_PARSE_ERR_CALLBACK_ERROR                         10
-#define IPMI_SEL_PARSE_ERR_IPMI_ERROR                             11
-#define IPMI_SEL_PARSE_ERR_SYSTEM_ERROR                           12
-#define IPMI_SEL_PARSE_ERR_OVERFLOW                               13
-#define IPMI_SEL_PARSE_ERR_INTERNAL_ERROR                         14
-#define IPMI_SEL_PARSE_ERR_ERRNUMRANGE                            15
+#define IPMI_SEL_PARSE_ERR_RESERVATION_CANCELED                   10
+#define IPMI_SEL_PARSE_ERR_CALLBACK_ERROR                         11
+#define IPMI_SEL_PARSE_ERR_IPMI_ERROR                             12
+#define IPMI_SEL_PARSE_ERR_SYSTEM_ERROR                           13
+#define IPMI_SEL_PARSE_ERR_OVERFLOW                               14
+#define IPMI_SEL_PARSE_ERR_INTERNAL_ERROR                         15
+#define IPMI_SEL_PARSE_ERR_ERRNUMRANGE                            16
 
 #define IPMI_SEL_PARSE_FLAGS_DEFAULT                              0x0000
 #define IPMI_SEL_PARSE_FLAGS_DEBUG_DUMP                           0x0001
@@ -86,10 +87,10 @@ char * ipmi_sel_parse_ctx_errormsg (ipmi_sel_parse_ctx_t ctx);
 /* SEL Parse flag functions and settings functions */
 int ipmi_sel_parse_ctx_get_flags (ipmi_sel_parse_ctx_t ctx, unsigned int *flags);
 int ipmi_sel_parse_ctx_set_flags (ipmi_sel_parse_ctx_t ctx, unsigned int flags);
+
 /* for use w/ string parsing w/ IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA */
 int ipmi_sel_parse_ctx_get_manufacturer_id (ipmi_sel_parse_ctx_t ctx, uint32_t *manufacturer_id);
 int ipmi_sel_parse_ctx_set_manufacturer_id (ipmi_sel_parse_ctx_t ctx, uint32_t manufacturer_id);
-/* for use w/ string parsing w/ IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA */
 int ipmi_sel_parse_ctx_get_product_id (ipmi_sel_parse_ctx_t ctx, uint16_t *product_id);
 int ipmi_sel_parse_ctx_set_product_id (ipmi_sel_parse_ctx_t ctx, uint16_t product_id);
 int ipmi_sel_parse_ctx_get_ipmi_version (ipmi_sel_parse_ctx_t ctx,
@@ -98,6 +99,7 @@ int ipmi_sel_parse_ctx_get_ipmi_version (ipmi_sel_parse_ctx_t ctx,
 int ipmi_sel_parse_ctx_set_ipmi_version (ipmi_sel_parse_ctx_t ctx,
                                          uint8_t ipmi_version_major,
                                          uint8_t ipmi_version_minor);
+
 char *ipmi_sel_parse_ctx_get_debug_prefix (ipmi_sel_parse_ctx_t ctx);
 int ipmi_sel_parse_ctx_set_debug_prefix (ipmi_sel_parse_ctx_t ctx, const char *debug_prefix);
 
@@ -107,6 +109,40 @@ int ipmi_sel_parse_ctx_set_debug_prefix (ipmi_sel_parse_ctx_t ctx, const char *d
  */
 char *ipmi_sel_parse_ctx_get_separator (ipmi_sel_parse_ctx_t ctx);
 int ipmi_sel_parse_ctx_set_separator (ipmi_sel_parse_ctx_t ctx, const char *separator);
+
+/* register/clear a reservation ID
+ * - Almost all SEL operations use a reservation ID.  Generally
+ *   speaking, it can be considered an advisory lock.  The same
+ *   reservation ID can be used for all "read" operations and will only
+ *   be canceled when some "write" operation has occurred on the SEL.
+ *   This "write" operation could be a new SEL event, a SEL event that
+ *   was deleted, etc.
+ * - Normally, it is no big deal for a reservation ID to be canceled.
+ *   The most normal circumstance is a new SEL event has been generated
+ *   while reading the current list of SEL records.  Therefore, under
+ *   most circumstances, this library will simple re-retrieve a
+ *   reservation ID once it has noticed one has been canceled.
+ * - These functions allow you to override the default functionality.
+ *   You may inform the library to register a specific reservation ID
+ *   and continue to use it for all SEL operations.  In the event that
+ *   it has been canceled, a IPMI_SEL_PARSE_ERR_RESERVATION_CANCELED
+ *   errnum will be returned.
+ * - These functions are predominantly useful for doing a set of
+ *   operations and wanting to be informed of a possible race
+ *   condition occurring.  For example, perhaps you wish to read all
+ *   the SEL records, log them, then clear them.  There is a small
+ *   window where a new SEL event could be generated, then cleared
+ *   without the user knowing it ever existed.  Use of a fixed
+ *   reservation ID would be a mechanism to notice this.
+ * - In the event a reservation ID is canceled, it is up to the user
+ *   to re-register a reservation ID, otherwise SEL operations will
+ *   continue to default to grab its own reservation ID.
+ * - In ipmi_sel_parse_ctx_register_reservation_id(), an optional
+ *   reservation_id can be passed to see what reservation ID was
+ *   specifically registered.
+ */
+int ipmi_sel_parse_ctx_register_reservation_id (ipmi_sel_parse_ctx_t ctx, uint16_t *reservation_id);
+int ipmi_sel_parse_ctx_clear_reservation_id (ipmi_sel_parse_ctx_t ctx);
 
 /* SEL Parse Functions
  *
