@@ -21,6 +21,8 @@ o In ipmipower, support --oem-power-type option to support OEM
 Libraries
 ---------
 o In libfreeipmi, add missing macro definitions.
+o In libfreeipmi, support reservation-id registration and clearing in
+  the sel-parse sub-library.
 
 FreeIPMI 1.1.1 - 01/03/12
 -------------------------
