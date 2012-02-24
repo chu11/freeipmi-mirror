@@ -620,6 +620,7 @@ main (int argc, char *argv[])
   int exit_val;
 
   err_init (argv[0]);
+  err_init_exit_value (2);
   err_set_flags (ERROR_STDERR);
 
   _init_ipmidetect ();

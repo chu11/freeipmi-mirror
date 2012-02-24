@@ -117,6 +117,8 @@ Show all difference between the current configuration and the sensor-data2.conf 
 .PP
 Commit all configuration values from the sensor-data1.conf file.
 .PP
+#include <@top_srcdir@/man/manpage-common-diagnostics.man>
+#include <@top_srcdir@/man/manpage-common-diagnostics-hostranged-text.man>
 #include <@top_srcdir@/man/manpage-common-known-issues.man>
 .LP
 Event enable support has not been written for all sensors types.  If

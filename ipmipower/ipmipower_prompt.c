@@ -72,6 +72,8 @@ extern unsigned int ics_len;
 
 extern struct oem_power_type_data *oem_power_type_data;
 
+extern unsigned int output_counts[IPMIPOWER_MSG_TYPE_NUM_ENTRIES];
+
 /* eliminate
  *
  * Note: only for non-interactive mode on the command line.  Won't be
@@ -409,11 +411,13 @@ static void
 _cmd_power_all_nodes (ipmipower_power_cmd_t cmd)
 {
   struct ipmipower_connection_extra_arg *eanode;
-  int nodes_queued = 0;
+  unsigned int nodes_queued = 0;
   int i;
 
   assert (IPMIPOWER_POWER_CMD_VALID (cmd));
      
+  memset (output_counts, '\0', sizeof (output_counts));
+
   for (i = 0; i < ics_len; i++)
     {
       if (cmd_args.ping_interval
@@ -448,6 +452,7 @@ _cmd_power_all_nodes (ipmipower_power_cmd_t cmd)
 	    }
 	  else
 	    {
+	      ipmipower_connection_clear (&ics[i]);
 	      ipmipower_powercmd_queue (cmd, &ics[i], NULL);
 	      nodes_queued++;
 	    }
@@ -485,6 +490,8 @@ _cmd_power_specific_nodes (char **argv, ipmipower_power_cmd_t cmd)
       exit (1);
     }
   
+  memset (output_counts, '\0', sizeof (output_counts));
+
   while ((hstr = hostlist_next (hitr)))
     {
       /* achu: The double hostlist_create is to handle the corner case

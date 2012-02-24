@@ -104,6 +104,8 @@ MANS_COMMON = \
 	manpage-common-troubleshooting-heading-start.man \
 	manpage-common-troubleshooting-inband.man \
 	manpage-common-troubleshooting-outofband.man \
+	manpage-common-diagnostics.man \
+	manpage-common-diagnostics-hostranged-text.man \
 	manpage-common-known-issues.man \
 	manpage-common-known-issues-ping.man \
 	manpage-common-reporting-bugs.man \

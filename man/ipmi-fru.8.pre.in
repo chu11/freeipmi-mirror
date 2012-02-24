@@ -127,6 +127,8 @@ Not all language codes are supported in
 .B ipmi-fru.
 If additional language code support is required please contact the
 FreeIPMI maintainers.
+#include <@top_srcdir@/man/manpage-common-diagnostics.man>
+#include <@top_srcdir@/man/manpage-common-diagnostics-hostranged-text.man>
 #include <@top_srcdir@/man/manpage-common-known-issues.man>
 #include <@top_srcdir@/man/manpage-common-reporting-bugs.man>
 .SH COPYRIGHT

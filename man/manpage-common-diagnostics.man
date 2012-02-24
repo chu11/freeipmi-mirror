@@ -1,0 +1,3 @@
+.SH "DIAGNOSTICS"
+Upon successful execution, exit status is 0.  On error, exit status is
+1.

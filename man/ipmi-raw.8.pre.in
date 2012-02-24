@@ -94,6 +94,8 @@ Read LUN/FN, command and request data from given file instead of standard input.
 .PP 
 Read LUN, NETFN, command and request data from file as standard input.
 .PP
+#include <@top_srcdir@/man/manpage-common-diagnostics.man>
+#include <@top_srcdir@/man/manpage-common-diagnostics-hostranged-text.man>
 #include <@top_srcdir@/man/manpage-common-known-issues.man>
 #include <@top_srcdir@/man/manpage-common-reporting-bugs.man>
 .SH "COPYRIGHT"

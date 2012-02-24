@@ -47,6 +47,7 @@
 extern cbuf_t ttyout;
 extern struct ipmipower_arguments cmd_args;
 extern hostlist_t output_hostrange[IPMIPOWER_MSG_TYPE_NUM_ENTRIES];
+extern unsigned int output_counts[IPMIPOWER_MSG_TYPE_NUM_ENTRIES];
 
 static char *ipmipower_outputs[] =
   {
@@ -101,6 +102,7 @@ ipmipower_output (ipmipower_msg_type_t num, const char *hostname, const char *ex
 			   extra_arg ? extra_arg : "",
 			   ipmipower_outputs[num]);
 
+  output_counts[num]++;
   return;
 }
 

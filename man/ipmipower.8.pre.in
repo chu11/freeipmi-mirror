@@ -479,6 +479,12 @@ Other methods are listed in the IPMI specification.
 #include <@top_srcdir@/man/manpage-common-workaround-outofband-15-text.man>
 #include <@top_srcdir@/man/manpage-common-workaround-outofband-20-text.man>
 #include <@top_srcdir@/man/manpage-common-workaround-extra-text.man>
+#include <@top_srcdir@/man/manpage-common-diagnostics.man>
+#include <@top_srcdir@/man/manpage-common-diagnostics-hostranged-text.man>
+.LP
+When operating in interactive mode, the exit value will be based on the last
+power operation executed.
+
 #include <@top_srcdir@/man/manpage-common-known-issues.man>
 .LP
 IPMI specifications do not require BMCs to perform a power control

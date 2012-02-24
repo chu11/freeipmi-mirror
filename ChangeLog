@@ -1,3 +1,15 @@
+2012-02-24  Albert Chu <chu11@llnl.gov>
+
+	* common/miscutil/error.h, common/miscutil/error.c
+	(err_init_exit_value): New function.
+
+	* ipmidetect/ipmidetect.c (main): Exit with value 2 on errors.
+
+	* ipmipower/: Properly exit with 1 when an error occurs on IPMI
+	errors instead of just system errors.
+
+	* man/: Add exit value diagnostics information to most manpages.
+	
 2012-02-23  Albert Chu <chu11@llnl.gov>
 
 	Merge sha256 branch.

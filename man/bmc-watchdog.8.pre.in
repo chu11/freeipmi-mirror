@@ -300,6 +300,7 @@ Setup a bmc-watchdog daemon that resets the machine after 15 minutes
 script /etc/init.d/bmc-watchdog for a more complete example):
         bmc-watchdog -d -u 4 -p 0 -a 1 -i 900
 
+#include <@top_srcdir@/man/manpage-common-diagnostics.man>
 .SH "KNOWN ISSUES"
 .B Bmc-watchdog
 may fail to reset the watchdog timer if it is not scheduled properly.

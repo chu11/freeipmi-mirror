@@ -86,6 +86,9 @@ unsigned int ics_len = 0;
 int output_hostrange_flag = 0;
 hostlist_t output_hostrange[IPMIPOWER_MSG_TYPE_NUM_ENTRIES];
 
+/* Array of outputs for determining exit value */
+unsigned int output_counts[IPMIPOWER_MSG_TYPE_NUM_ENTRIES];
+
 static void
 _ipmipower_setup (void)
 {
@@ -134,6 +137,8 @@ _ipmipower_setup (void)
           exit (1);
         }
     }
+
+  memset (output_counts, '\0', sizeof (output_counts));
 }
 
 static void
@@ -532,6 +537,9 @@ _poll_loop (int non_interactive)
 int
 main (int argc, char *argv[])
 {
+  int exit_val = 0;
+  int i;
+
   ipmi_disable_coredump ();
 
   ipmipower_argp_parse (argc, argv, &cmd_args);
@@ -570,7 +578,6 @@ main (int argc, char *argv[])
     {
       struct ipmipower_connection_extra_arg *eanode;
       char errbuf[IPMIPOWER_OUTPUT_BUFLEN + 1];
-      int i;
 
       /* must be checked in args parsing */
       assert (cmd_args.common.hostname);
@@ -660,5 +667,17 @@ main (int argc, char *argv[])
 
   ipmipower_powercmd_cleanup ();
   _ipmipower_cleanup ();
-  exit (0);
+
+  /* If any error messages other than "on", "off", or "ok", then an
+   * error occurred
+   */
+  for (i = IPMIPOWER_MSG_TYPE_ERROR_MIN; i < IPMIPOWER_MSG_TYPE_ERROR_MAX; i++)
+    {
+      if (output_counts[i])
+	{
+	  exit_val = 1;
+	  break;
+	}
+    }
+  exit (exit_val);
 }
