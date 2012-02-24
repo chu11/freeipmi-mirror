@@ -9,6 +9,8 @@
 	errors instead of just system errors.
 
 	* man/: Add exit value diagnostics information to most manpages.
+
+	* ipmipower/: Code cleanup for consistency to libipmiconsole code.
 	
 2012-02-23  Albert Chu <chu11@llnl.gov>
 

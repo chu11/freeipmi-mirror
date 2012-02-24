@@ -727,13 +727,13 @@ _send_packet (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
 
   switch (pkt)
     {
-    case AUTHENTICATION_CAPABILITIES_RQ:
+    case IPMIPOWER_PACKET_TYPE_AUTHENTICATION_CAPABILITIES_RQ:
       ip->protocol_state = IPMIPOWER_PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_SENT;
       break;
-    case GET_SESSION_CHALLENGE_RQ:
+    case IPMIPOWER_PACKET_TYPE_GET_SESSION_CHALLENGE_RQ:
       ip->protocol_state = IPMIPOWER_PROTOCOL_STATE_GET_SESSION_CHALLENGE_SENT;
       break;
-    case ACTIVATE_SESSION_RQ:
+    case IPMIPOWER_PACKET_TYPE_ACTIVATE_SESSION_RQ:
       ip->protocol_state = IPMIPOWER_PROTOCOL_STATE_ACTIVATE_SESSION_SENT;
 	
       /* IPMI Workaround (achu)
@@ -753,34 +753,34 @@ _send_packet (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
 	    }
 	}
       break;
-    case OPEN_SESSION_REQUEST:
+    case IPMIPOWER_PACKET_TYPE_OPEN_SESSION_REQUEST:
       ip->protocol_state = IPMIPOWER_PROTOCOL_STATE_OPEN_SESSION_REQUEST_SENT;
       break;
-    case RAKP_MESSAGE_1:
+    case IPMIPOWER_PACKET_TYPE_RAKP_MESSAGE_1:
       ip->protocol_state = IPMIPOWER_PROTOCOL_STATE_RAKP_MESSAGE_1_SENT;
       break;
-    case RAKP_MESSAGE_3:
+    case IPMIPOWER_PACKET_TYPE_RAKP_MESSAGE_3:
       ip->protocol_state = IPMIPOWER_PROTOCOL_STATE_RAKP_MESSAGE_3_SENT;
       break;
-    case SET_SESSION_PRIVILEGE_LEVEL_RQ:
+    case IPMIPOWER_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RQ:
       ip->protocol_state = IPMIPOWER_PROTOCOL_STATE_SET_SESSION_PRIVILEGE_LEVEL_SENT;
       break;
-    case GET_CHASSIS_STATUS_RQ:
+    case IPMIPOWER_PACKET_TYPE_GET_CHASSIS_STATUS_RQ:
       ip->protocol_state = IPMIPOWER_PROTOCOL_STATE_GET_CHASSIS_STATUS_SENT;
       break;
-    case CHASSIS_CONTROL_RQ:
+    case IPMIPOWER_PACKET_TYPE_CHASSIS_CONTROL_RQ:
       ip->protocol_state = IPMIPOWER_PROTOCOL_STATE_CHASSIS_CONTROL_SENT;
       break;
-    case CHASSIS_IDENTIFY_RQ:
+    case IPMIPOWER_PACKET_TYPE_CHASSIS_IDENTIFY_RQ:
       ip->protocol_state = IPMIPOWER_PROTOCOL_STATE_CHASSIS_IDENTIFY_SENT;
       break;
-    case C410X_GET_SENSOR_READING_RQ:
+    case IPMIPOWER_PACKET_TYPE_C410X_GET_SENSOR_READING_RQ:
       ip->protocol_state = IPMIPOWER_PROTOCOL_STATE_C410X_GET_SENSOR_READING_SENT;
       break;
-    case C410X_SLOT_POWER_CONTROL_RQ:
+    case IPMIPOWER_PACKET_TYPE_C410X_SLOT_POWER_CONTROL_RQ:
       ip->protocol_state = IPMIPOWER_PROTOCOL_STATE_C410X_SLOT_POWER_CONTROL_SENT;
       break;
-    case CLOSE_SESSION_RQ:
+    case IPMIPOWER_PACKET_TYPE_CLOSE_SESSION_RQ:
       ip->protocol_state = IPMIPOWER_PROTOCOL_STATE_CLOSE_SESSION_SENT;
       break;
     default:
@@ -834,8 +834,8 @@ _recv_packet (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
       goto cleanup;
     }
 
-  if (pkt == AUTHENTICATION_CAPABILITIES_RS
-      || pkt == GET_SESSION_CHALLENGE_RS)
+  if (pkt == IPMIPOWER_PACKET_TYPE_AUTHENTICATION_CAPABILITIES_RS
+      || pkt == IPMIPOWER_PACKET_TYPE_GET_SESSION_CHALLENGE_RS)
     {
       if (!ipmipower_check_checksum (ip, pkt))
         {
@@ -886,7 +886,7 @@ _recv_packet (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
           goto cleanup;
         }
     }
-  else if (pkt == ACTIVATE_SESSION_RS)
+  else if (pkt == IPMIPOWER_PACKET_TYPE_ACTIVATE_SESSION_RS)
     {
       if (!ipmipower_check_checksum (ip, pkt))
         {
@@ -1026,7 +1026,7 @@ _recv_packet (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
 
       if (!ipmipower_check_requester_sequence_number (ip, pkt))
         {
-          if (pkt == CLOSE_SESSION_RS)
+          if (pkt == IPMIPOWER_PACKET_TYPE_CLOSE_SESSION_RS)
             goto close_session_workaround;
           rv = 0;
           goto cleanup;
@@ -1037,7 +1037,7 @@ _recv_packet (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
        */
       if (!ipmipower_check_completion_code (ip, pkt))
         {
-          if (pkt == CLOSE_SESSION_RS)
+          if (pkt == IPMIPOWER_PACKET_TYPE_CLOSE_SESSION_RS)
             goto close_session_workaround;
 
           ipmipower_output (ipmipower_packet_errmsg (ip, pkt), ip->ic->hostname, ip->extra_arg);
@@ -1098,7 +1098,7 @@ _recv_packet (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
           goto cleanup;
         }
 
-      if (pkt == OPEN_SESSION_RESPONSE)
+      if (pkt == IPMIPOWER_PACKET_TYPE_OPEN_SESSION_RESPONSE)
         {
           if (!ipmipower_check_open_session_response_privilege (ip, pkt))
             {
@@ -1106,7 +1106,7 @@ _recv_packet (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
               goto cleanup;
             }
         }
-      else if (pkt == RAKP_MESSAGE_2)
+      else if (pkt == IPMIPOWER_PACKET_TYPE_RAKP_MESSAGE_2)
         {
           if (!ipmipower_check_rakp_2_key_exchange_authentication_code (ip, pkt))
             {
@@ -1123,7 +1123,7 @@ _recv_packet (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
               goto cleanup;
             }
         }
-      else if (pkt == RAKP_MESSAGE_4)
+      else if (pkt == IPMIPOWER_PACKET_TYPE_RAKP_MESSAGE_4)
         {
           if (!ipmipower_check_rakp_4_integrity_check_value (ip, pkt))
             {
@@ -1204,7 +1204,7 @@ _recv_packet (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
 
       if (!ipmipower_check_requester_sequence_number (ip, pkt))
         {
-          if (pkt == CLOSE_SESSION_RS)
+          if (pkt == IPMIPOWER_PACKET_TYPE_CLOSE_SESSION_RS)
             goto close_session_workaround;
           rv = 0;
           goto cleanup;
@@ -1215,7 +1215,7 @@ _recv_packet (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
        */
       if (!ipmipower_check_completion_code (ip, pkt))
         {
-          if (pkt == CLOSE_SESSION_RS)
+          if (pkt == IPMIPOWER_PACKET_TYPE_CLOSE_SESSION_RS)
             goto close_session_workaround;
           
           ip->retransmission_count = 0;  /* important to reset */
@@ -1371,7 +1371,7 @@ _retry_packets (ipmipower_powercmd_t ip)
   switch (ip->protocol_state)
     {
     case IPMIPOWER_PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_SENT:
-      _send_packet (ip, AUTHENTICATION_CAPABILITIES_RQ);
+      _send_packet (ip, IPMIPOWER_PACKET_TYPE_AUTHENTICATION_CAPABILITIES_RQ);
       break;
     case IPMIPOWER_PROTOCOL_STATE_GET_SESSION_CHALLENGE_SENT:
       {
@@ -1433,38 +1433,38 @@ _retry_packets (ipmipower_powercmd_t ip)
 	
 	ip->ic->ipmi_fd = new_fd;
 	
-	_send_packet (ip, GET_SESSION_CHALLENGE_RQ);
+	_send_packet (ip, IPMIPOWER_PACKET_TYPE_GET_SESSION_CHALLENGE_RQ);
       }
       break;
     case IPMIPOWER_PROTOCOL_STATE_ACTIVATE_SESSION_SENT:
-      _send_packet (ip, ACTIVATE_SESSION_RQ);
+      _send_packet (ip, IPMIPOWER_PACKET_TYPE_ACTIVATE_SESSION_RQ);
       break;
     case IPMIPOWER_PROTOCOL_STATE_OPEN_SESSION_REQUEST_SENT:
-      _send_packet (ip, OPEN_SESSION_REQUEST);
+      _send_packet (ip, IPMIPOWER_PACKET_TYPE_OPEN_SESSION_REQUEST);
       break;
     case IPMIPOWER_PROTOCOL_STATE_RAKP_MESSAGE_1_SENT:
-      _send_packet (ip, RAKP_MESSAGE_1);
+      _send_packet (ip, IPMIPOWER_PACKET_TYPE_RAKP_MESSAGE_1);
       break;
     case IPMIPOWER_PROTOCOL_STATE_RAKP_MESSAGE_3_SENT:
-      _send_packet (ip, RAKP_MESSAGE_3);
+      _send_packet (ip, IPMIPOWER_PACKET_TYPE_RAKP_MESSAGE_3);
       break;
     case IPMIPOWER_PROTOCOL_STATE_SET_SESSION_PRIVILEGE_LEVEL_SENT:
-      _send_packet (ip, SET_SESSION_PRIVILEGE_LEVEL_RQ);
+      _send_packet (ip, IPMIPOWER_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RQ);
       break;
     case IPMIPOWER_PROTOCOL_STATE_GET_CHASSIS_STATUS_SENT:
-      _send_packet (ip, GET_CHASSIS_STATUS_RQ);
+      _send_packet (ip, IPMIPOWER_PACKET_TYPE_GET_CHASSIS_STATUS_RQ);
       break;
     case IPMIPOWER_PROTOCOL_STATE_CHASSIS_CONTROL_SENT:
-      _send_packet (ip, CHASSIS_CONTROL_RQ);
+      _send_packet (ip, IPMIPOWER_PACKET_TYPE_CHASSIS_CONTROL_RQ);
       break;
     case IPMIPOWER_PROTOCOL_STATE_CHASSIS_IDENTIFY_SENT:
-      _send_packet (ip, CHASSIS_IDENTIFY_RQ);
+      _send_packet (ip, IPMIPOWER_PACKET_TYPE_CHASSIS_IDENTIFY_RQ);
       break;
     case IPMIPOWER_PROTOCOL_STATE_C410X_GET_SENSOR_READING_SENT:
-      _send_packet (ip, C410X_GET_SENSOR_READING_RQ);
+      _send_packet (ip, IPMIPOWER_PACKET_TYPE_C410X_GET_SENSOR_READING_RQ);
       break;
     case IPMIPOWER_PROTOCOL_STATE_C410X_SLOT_POWER_CONTROL_SENT:
-      _send_packet (ip, C410X_SLOT_POWER_CONTROL_RQ);
+      _send_packet (ip, IPMIPOWER_PACKET_TYPE_C410X_SLOT_POWER_CONTROL_RQ);
       break;
     case IPMIPOWER_PROTOCOL_STATE_CLOSE_SESSION_SENT:
       {
@@ -1480,7 +1480,7 @@ _retry_packets (ipmipower_powercmd_t ip)
 	 * BMC, and they will either respond with an error or ignore the
 	 * packet.
 	 *
-	 * _send_packet(ip, CLOSE_SESSION_RQ);
+	 * _send_packet(ip, IPMIPOWER_PACKET_TYPE_CLOSE_SESSION_RQ);
 	 */
 	ip->close_timeout++;
 	return (0);
@@ -1892,7 +1892,7 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
           && (executing_count >= cmd_args.hostrange.fanout))
         return (cmd_args.common.session_timeout);
 
-      _send_packet (ip, AUTHENTICATION_CAPABILITIES_RQ);
+      _send_packet (ip, IPMIPOWER_PACKET_TYPE_AUTHENTICATION_CAPABILITIES_RQ);
 
       if (gettimeofday (&(ip->time_begin), NULL) < 0)
         {
@@ -1903,7 +1903,7 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
     }
   else if (ip->protocol_state == IPMIPOWER_PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_SENT)
     {
-      if ((rv = _recv_packet (ip, AUTHENTICATION_CAPABILITIES_RS)) != 1)
+      if ((rv = _recv_packet (ip, IPMIPOWER_PACKET_TYPE_AUTHENTICATION_CAPABILITIES_RS)) != 1)
         {
           if (rv < 0)
             return (-1);
@@ -1915,19 +1915,19 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
           if (_check_ipmi_2_0_authentication_capabilities (ip) < 0)
             return (-1);
           
-          _send_packet (ip, OPEN_SESSION_REQUEST);
+          _send_packet (ip, IPMIPOWER_PACKET_TYPE_OPEN_SESSION_REQUEST);
         }
       else
         {
           if (_check_ipmi_1_5_authentication_capabilities (ip) < 0)
             return (-1);
           
-          _send_packet (ip, GET_SESSION_CHALLENGE_RQ);
+          _send_packet (ip, IPMIPOWER_PACKET_TYPE_GET_SESSION_CHALLENGE_RQ);
         }
     }
   else if (ip->protocol_state == IPMIPOWER_PROTOCOL_STATE_GET_SESSION_CHALLENGE_SENT)
     {
-      if ((rv = _recv_packet (ip, GET_SESSION_CHALLENGE_RS)) != 1)
+      if ((rv = _recv_packet (ip, IPMIPOWER_PACKET_TYPE_GET_SESSION_CHALLENGE_RS)) != 1)
         {
           if (rv < 0)
             /* XXX Session is not up, is it ok to quit here?  Or
@@ -1936,11 +1936,11 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
           goto done;
         }
 
-      _send_packet (ip, ACTIVATE_SESSION_RQ);
+      _send_packet (ip, IPMIPOWER_PACKET_TYPE_ACTIVATE_SESSION_RQ);
     }
   else if (ip->protocol_state == IPMIPOWER_PROTOCOL_STATE_ACTIVATE_SESSION_SENT)
     {
-      if ((rv = _recv_packet (ip, ACTIVATE_SESSION_RS)) != 1)
+      if ((rv = _recv_packet (ip, IPMIPOWER_PACKET_TYPE_ACTIVATE_SESSION_RS)) != 1)
         {
           if (rv < 0)
             /* XXX Session is not up, is it ok to quit here?  Or
@@ -1954,11 +1954,11 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
          * should we timeout?? */
         return (-1);
      
-      _send_packet (ip, SET_SESSION_PRIVILEGE_LEVEL_RQ);
+      _send_packet (ip, IPMIPOWER_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RQ);
     }
   else if (ip->protocol_state == IPMIPOWER_PROTOCOL_STATE_OPEN_SESSION_REQUEST_SENT)
     {
-      if ((rv = _recv_packet (ip, OPEN_SESSION_RESPONSE)) != 1)
+      if ((rv = _recv_packet (ip, IPMIPOWER_PACKET_TYPE_OPEN_SESSION_RESPONSE)) != 1)
         {
           if (rv < 0)
             /* XXX Session is not up, is it ok to quit here?  Or
@@ -1967,11 +1967,11 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
           goto done;
         }
 
-      _send_packet (ip, RAKP_MESSAGE_1);
+      _send_packet (ip, IPMIPOWER_PACKET_TYPE_RAKP_MESSAGE_1);
     }
   else if (ip->protocol_state == IPMIPOWER_PROTOCOL_STATE_RAKP_MESSAGE_1_SENT)
     {
-      if ((rv = _recv_packet (ip, RAKP_MESSAGE_2)) != 1)
+      if ((rv = _recv_packet (ip, IPMIPOWER_PACKET_TYPE_RAKP_MESSAGE_2)) != 1)
         {
           if (rv < 0)
             /* XXX Session is not up, is it ok to quit here?  Or
@@ -1983,11 +1983,11 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
       if (_calculate_cipher_keys (ip) < 0)
         return (-1);
 
-      _send_packet (ip, RAKP_MESSAGE_3);
+      _send_packet (ip, IPMIPOWER_PACKET_TYPE_RAKP_MESSAGE_3);
     }
   else if (ip->protocol_state == IPMIPOWER_PROTOCOL_STATE_RAKP_MESSAGE_3_SENT)
     {
-      if ((rv = _recv_packet (ip, RAKP_MESSAGE_4)) != 1)
+      if ((rv = _recv_packet (ip, IPMIPOWER_PACKET_TYPE_RAKP_MESSAGE_4)) != 1)
         {
           if (rv < 0)
             /* XXX Session is not up, is it ok to quit here?  Or
@@ -1996,15 +1996,15 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
           goto done;
         }
 
-      _send_packet (ip, SET_SESSION_PRIVILEGE_LEVEL_RQ);
+      _send_packet (ip, IPMIPOWER_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RQ);
     }
   else if (ip->protocol_state == IPMIPOWER_PROTOCOL_STATE_SET_SESSION_PRIVILEGE_LEVEL_SENT)
     {
-      if ((rv = _recv_packet (ip, SET_SESSION_PRIVILEGE_LEVEL_RS)) != 1)
+      if ((rv = _recv_packet (ip, IPMIPOWER_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RS)) != 1)
         {
           if (rv < 0)
             /* Session is up, so close it */
-            _send_packet (ip, CLOSE_SESSION_RQ);
+            _send_packet (ip, IPMIPOWER_PACKET_TYPE_CLOSE_SESSION_RQ);
           goto done;
         }
 
@@ -2015,12 +2015,12 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
 	      || (cmd_args.on_if_off
 		  && (ip->cmd == IPMIPOWER_POWER_CMD_POWER_CYCLE
 		      || ip->cmd == IPMIPOWER_POWER_CMD_POWER_RESET)))
-	    _send_packet (ip, GET_CHASSIS_STATUS_RQ);
+	    _send_packet (ip, IPMIPOWER_PACKET_TYPE_GET_CHASSIS_STATUS_RQ);
 	  else if (ip->cmd == IPMIPOWER_POWER_CMD_IDENTIFY_ON
 		   || ip->cmd == IPMIPOWER_POWER_CMD_IDENTIFY_OFF)
-	    _send_packet (ip, CHASSIS_IDENTIFY_RQ);
+	    _send_packet (ip, IPMIPOWER_PACKET_TYPE_CHASSIS_IDENTIFY_RQ);
 	  else /* on, off, cycle, reset, pulse diag interupt, soft shutdown */
-	    _send_packet (ip, CHASSIS_CONTROL_RQ);
+	    _send_packet (ip, IPMIPOWER_PACKET_TYPE_CHASSIS_CONTROL_RQ);
 	}
       else /* cmd_args.oem_power_type == IPMIPOWER_OEM_POWER_TYPE_C410X */
 	{
@@ -2028,18 +2028,18 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
 		  || ip->cmd == IPMIPOWER_POWER_CMD_POWER_OFF
 		  || ip->cmd == IPMIPOWER_POWER_CMD_POWER_ON);
 
-	  _send_packet (ip, C410X_GET_SENSOR_READING_RQ);
+	  _send_packet (ip, IPMIPOWER_PACKET_TYPE_C410X_GET_SENSOR_READING_RQ);
 	}
     }
   else if (ip->protocol_state == IPMIPOWER_PROTOCOL_STATE_GET_CHASSIS_STATUS_SENT)
     {
       uint8_t power_state;
 
-      if ((rv = _recv_packet (ip, GET_CHASSIS_STATUS_RS)) != 1)
+      if ((rv = _recv_packet (ip, IPMIPOWER_PACKET_TYPE_GET_CHASSIS_STATUS_RS)) != 1)
         {
           if (rv < 0)
             /* Session is up, so close it */
-            _send_packet (ip, CLOSE_SESSION_RQ);
+            _send_packet (ip, IPMIPOWER_PACKET_TYPE_CLOSE_SESSION_RQ);
           goto done;
         }
 
@@ -2061,7 +2061,7 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
             {
               ipmipower_output (IPMIPOWER_MSG_TYPE_OK, ip->ic->hostname, ip->extra_arg);
               ip->wait_until_on_state = 0;
-              _send_packet (ip, CLOSE_SESSION_RQ);
+              _send_packet (ip, IPMIPOWER_PACKET_TYPE_CLOSE_SESSION_RQ);
             }
         }
       else if (cmd_args.wait_until_off
@@ -2072,7 +2072,7 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
             {
               ipmipower_output (IPMIPOWER_MSG_TYPE_OK, ip->ic->hostname, ip->extra_arg);
               ip->wait_until_off_state = 0;
-              _send_packet (ip, CLOSE_SESSION_RQ);
+              _send_packet (ip, IPMIPOWER_PACKET_TYPE_CLOSE_SESSION_RQ);
             }
         }
       else if (ip->cmd == IPMIPOWER_POWER_CMD_POWER_STATUS)
@@ -2080,7 +2080,7 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
           ipmipower_output ((power_state == IPMI_SYSTEM_POWER_IS_ON) ? IPMIPOWER_MSG_TYPE_ON : IPMIPOWER_MSG_TYPE_OFF,
                             ip->ic->hostname,
 			    ip->extra_arg);
-          _send_packet (ip, CLOSE_SESSION_RQ);
+          _send_packet (ip, IPMIPOWER_PACKET_TYPE_CLOSE_SESSION_RQ);
         }
       else if (cmd_args.on_if_off && (ip->cmd == IPMIPOWER_POWER_CMD_POWER_CYCLE
                                       || ip->cmd == IPMIPOWER_POWER_CMD_POWER_RESET))
@@ -2090,7 +2090,7 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
               /* This is now a power-on operation */
               ip->cmd = IPMIPOWER_POWER_CMD_POWER_ON;
             }
-          _send_packet (ip, CHASSIS_CONTROL_RQ);
+          _send_packet (ip, IPMIPOWER_PACKET_TYPE_CHASSIS_CONTROL_RQ);
         }
       else if (ip->cmd == IPMIPOWER_POWER_CMD_IDENTIFY_STATUS)
         {
@@ -2131,7 +2131,7 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
           else
             ipmipower_output (IPMIPOWER_MSG_TYPE_UNKNOWN, ip->ic->hostname, ip->extra_arg);
 
-          _send_packet (ip, CLOSE_SESSION_RQ);
+          _send_packet (ip, IPMIPOWER_PACKET_TYPE_CLOSE_SESSION_RQ);
         }
       else
         {
@@ -2141,11 +2141,11 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
     }
   else if (ip->protocol_state == IPMIPOWER_PROTOCOL_STATE_CHASSIS_CONTROL_SENT)
     {
-      if ((rv = _recv_packet (ip, CHASSIS_CONTROL_RS)) != 1)
+      if ((rv = _recv_packet (ip, IPMIPOWER_PACKET_TYPE_CHASSIS_CONTROL_RS)) != 1)
         {
           if (rv < 0)
             /* Session is up, so close it */
-            _send_packet (ip, CLOSE_SESSION_RQ);
+            _send_packet (ip, IPMIPOWER_PACKET_TYPE_CLOSE_SESSION_RQ);
           goto done;
         }
 
@@ -2158,7 +2158,7 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
             ip->wait_until_on_state++;
           else
             ip->wait_until_off_state++;
-          _send_packet (ip, GET_CHASSIS_STATUS_RQ);
+          _send_packet (ip, IPMIPOWER_PACKET_TYPE_GET_CHASSIS_STATUS_RQ);
         }
       else
         {
@@ -2175,21 +2175,21 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
           if (ip->cmd == IPMIPOWER_POWER_CMD_POWER_RESET)
             goto finish_up;
           else
-            _send_packet (ip, CLOSE_SESSION_RQ);
+            _send_packet (ip, IPMIPOWER_PACKET_TYPE_CLOSE_SESSION_RQ);
         }
     }
   else if (ip->protocol_state == IPMIPOWER_PROTOCOL_STATE_CHASSIS_IDENTIFY_SENT)
     {
-      if ((rv = _recv_packet (ip, CHASSIS_IDENTIFY_RS)) != 1)
+      if ((rv = _recv_packet (ip, IPMIPOWER_PACKET_TYPE_CHASSIS_IDENTIFY_RS)) != 1)
         {
           if (rv < 0)
             /* Session is up, so close it */
-            _send_packet (ip, CLOSE_SESSION_RQ);
+            _send_packet (ip, IPMIPOWER_PACKET_TYPE_CLOSE_SESSION_RQ);
           goto done;
         }
 
       ipmipower_output (IPMIPOWER_MSG_TYPE_OK, ip->ic->hostname, ip->extra_arg);
-      _send_packet (ip, CLOSE_SESSION_RQ);
+      _send_packet (ip, IPMIPOWER_PACKET_TYPE_CLOSE_SESSION_RQ);
     }
   else if (ip->protocol_state == IPMIPOWER_PROTOCOL_STATE_C410X_GET_SENSOR_READING_SENT)
     {
@@ -2198,11 +2198,11 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
       uint8_t sensor_scanning;
       int slot_power_on_flag;
 
-      if ((rv = _recv_packet (ip, C410X_GET_SENSOR_READING_RS)) != 1)
+      if ((rv = _recv_packet (ip, IPMIPOWER_PACKET_TYPE_C410X_GET_SENSOR_READING_RS)) != 1)
         {
           if (rv < 0)
             /* Session is up, so close it */
-            _send_packet (ip, CLOSE_SESSION_RQ);
+            _send_packet (ip, IPMIPOWER_PACKET_TYPE_CLOSE_SESSION_RQ);
           goto done;
         }
 
@@ -2240,7 +2240,7 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
 	  || sensor_scanning == IPMI_SENSOR_SCANNING_ON_THIS_SENSOR_DISABLE)
 	{
 	  ipmipower_output (IPMIPOWER_MSG_TYPE_BMC_ERROR, ip->ic->hostname, ip->extra_arg);
-	  _send_packet (ip, CLOSE_SESSION_RQ);
+	  _send_packet (ip, IPMIPOWER_PACKET_TYPE_CLOSE_SESSION_RQ);
 	  goto done;
 	}
 
@@ -2259,7 +2259,7 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
             {
               ipmipower_output (IPMIPOWER_MSG_TYPE_OK, ip->ic->hostname, ip->extra_arg);
               ip->wait_until_on_state = 0;
-              _send_packet (ip, CLOSE_SESSION_RQ);
+              _send_packet (ip, IPMIPOWER_PACKET_TYPE_CLOSE_SESSION_RQ);
             }
         }
       else if (cmd_args.wait_until_off
@@ -2270,7 +2270,7 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
             {
               ipmipower_output (IPMIPOWER_MSG_TYPE_OK, ip->ic->hostname, ip->extra_arg);
               ip->wait_until_off_state = 0;
-              _send_packet (ip, CLOSE_SESSION_RQ);
+              _send_packet (ip, IPMIPOWER_PACKET_TYPE_CLOSE_SESSION_RQ);
             }
         }
       else if (ip->cmd == IPMIPOWER_POWER_CMD_POWER_STATUS)
@@ -2278,27 +2278,27 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
           ipmipower_output ((slot_power_on_flag) ? IPMIPOWER_MSG_TYPE_ON : IPMIPOWER_MSG_TYPE_OFF,
                             ip->ic->hostname,
 			    ip->extra_arg);
-          _send_packet (ip, CLOSE_SESSION_RQ);
+          _send_packet (ip, IPMIPOWER_PACKET_TYPE_CLOSE_SESSION_RQ);
         }
       else if (ip->cmd == IPMIPOWER_POWER_CMD_POWER_ON)
 	{
 	  if (slot_power_on_flag)
 	    {
 	      ipmipower_output (IPMIPOWER_MSG_TYPE_OK, ip->ic->hostname, ip->extra_arg);
-	      _send_packet (ip, CLOSE_SESSION_RQ);
+	      _send_packet (ip, IPMIPOWER_PACKET_TYPE_CLOSE_SESSION_RQ);
 	    }
 	  else
-	    _send_packet (ip, C410X_SLOT_POWER_CONTROL_RQ);
+	    _send_packet (ip, IPMIPOWER_PACKET_TYPE_C410X_SLOT_POWER_CONTROL_RQ);
 	}
       else if (ip->cmd == IPMIPOWER_POWER_CMD_POWER_OFF)
 	{
 	  if (!slot_power_on_flag)
 	    {
 	      ipmipower_output (IPMIPOWER_MSG_TYPE_OK, ip->ic->hostname, ip->extra_arg);
-	      _send_packet (ip, CLOSE_SESSION_RQ);
+	      _send_packet (ip, IPMIPOWER_PACKET_TYPE_CLOSE_SESSION_RQ);
 	    }
 	  else
-	    _send_packet (ip, C410X_SLOT_POWER_CONTROL_RQ);
+	    _send_packet (ip, IPMIPOWER_PACKET_TYPE_C410X_SLOT_POWER_CONTROL_RQ);
 	}
       else
         {
@@ -2308,11 +2308,11 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
     }
   else if (ip->protocol_state == IPMIPOWER_PROTOCOL_STATE_C410X_SLOT_POWER_CONTROL_SENT)
     {
-      if ((rv = _recv_packet (ip, C410X_SLOT_POWER_CONTROL_RS)) != 1)
+      if ((rv = _recv_packet (ip, IPMIPOWER_PACKET_TYPE_C410X_SLOT_POWER_CONTROL_RS)) != 1)
         {
           if (rv < 0)
             /* Session is up, so close it */
-            _send_packet (ip, CLOSE_SESSION_RQ);
+            _send_packet (ip, IPMIPOWER_PACKET_TYPE_CLOSE_SESSION_RQ);
           goto done;
         }
 
@@ -2325,12 +2325,12 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
             ip->wait_until_on_state++;
           else
             ip->wait_until_off_state++;
-          _send_packet (ip, C410X_GET_SENSOR_READING_RQ);
+          _send_packet (ip, IPMIPOWER_PACKET_TYPE_C410X_GET_SENSOR_READING_RQ);
         }
       else
         {
           ipmipower_output (IPMIPOWER_MSG_TYPE_OK, ip->ic->hostname, ip->extra_arg);
-	  _send_packet (ip, CLOSE_SESSION_RQ);
+	  _send_packet (ip, IPMIPOWER_PACKET_TYPE_CLOSE_SESSION_RQ);
         }
     }
   else if (ip->protocol_state == IPMIPOWER_PROTOCOL_STATE_CLOSE_SESSION_SENT)
@@ -2351,7 +2351,7 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
           goto finish_up;
         }
 
-      if (!_recv_packet (ip, CLOSE_SESSION_RS))
+      if (!_recv_packet (ip, IPMIPOWER_PACKET_TYPE_CLOSE_SESSION_RS))
         goto done;
 
       /* Regardless of packet error or success, finish up */

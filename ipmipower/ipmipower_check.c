@@ -81,18 +81,18 @@ ipmipower_check_authentication_code (ipmipower_powercmd_t ip,
   int rv = -1;
 
   assert (ip);
-  assert (pkt == ACTIVATE_SESSION_RS
+  assert (pkt == IPMIPOWER_PACKET_TYPE_ACTIVATE_SESSION_RS
 	  || IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RS (pkt));
   assert (buf && buflen);
 
   /* IPMI 1.5 Checks */
-  if (pkt == ACTIVATE_SESSION_RS
+  if (pkt == IPMIPOWER_PACKET_TYPE_ACTIVATE_SESSION_RS
       || cmd_args.common.driver_type == IPMI_DEVICE_LAN)
     {
       uint8_t authentication_type;
       int check_authcode_retry_flag = 0;
 
-      if (pkt == ACTIVATE_SESSION_RS)
+      if (pkt == IPMIPOWER_PACKET_TYPE_ACTIVATE_SESSION_RS)
         authentication_type = cmd_args.common.authentication_type;
       else /* IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RS (pkt) */
         {
@@ -415,18 +415,18 @@ ipmipower_check_network_function (ipmipower_powercmd_t ip,
     }
   netfn = val;
 
-  if (pkt == GET_CHASSIS_STATUS_RS
-      || pkt == CHASSIS_CONTROL_RS
-      || pkt == CHASSIS_IDENTIFY_RS)
+  if (pkt == IPMIPOWER_PACKET_TYPE_GET_CHASSIS_STATUS_RS
+      || pkt == IPMIPOWER_PACKET_TYPE_CHASSIS_CONTROL_RS
+      || pkt == IPMIPOWER_PACKET_TYPE_CHASSIS_IDENTIFY_RS)
     expected_netfn = IPMI_NET_FN_CHASSIS_RS;
-  else if (pkt == C410X_GET_SENSOR_READING_RS)
+  else if (pkt == IPMIPOWER_PACKET_TYPE_C410X_GET_SENSOR_READING_RS)
     expected_netfn = IPMI_NET_FN_SENSOR_EVENT_RS;
-  else if (pkt == C410X_SLOT_POWER_CONTROL_RS)
+  else if (pkt == IPMIPOWER_PACKET_TYPE_C410X_SLOT_POWER_CONTROL_RS)
     expected_netfn = IPMI_NET_FN_OEM_DELL_GENERIC_RS;
-  else /* pkt == AUTHENTICATION_CAPABILITIES_RS
-	  || pkt == GET_SESSION_CHALLENGE_RS
-	  || pkt == ACTIVATE_SESSION_RS
-	  || pkt == CLOSE_SESSION_RS
+  else /* pkt == IPMIPOWER_PACKET_TYPE_AUTHENTICATION_CAPABILITIES_RS
+	  || pkt == IPMIPOWER_PACKET_TYPE_GET_SESSION_CHALLENGE_RS
+	  || pkt == IPMIPOWER_PACKET_TYPE_ACTIVATE_SESSION_RS
+	  || pkt == IPMIPOWER_PACKET_TYPE_CLOSE_SESSION_RS
 	*/
     expected_netfn = IPMI_NET_FN_APP_RS;
   
@@ -467,34 +467,34 @@ ipmipower_check_command (ipmipower_powercmd_t ip,
 
   switch (pkt)
     {
-    case AUTHENTICATION_CAPABILITIES_RS:
+    case IPMIPOWER_PACKET_TYPE_AUTHENTICATION_CAPABILITIES_RS:
       expected_cmd = IPMI_CMD_GET_CHANNEL_AUTHENTICATION_CAPABILITIES;
       break;
-    case GET_SESSION_CHALLENGE_RS:
+    case IPMIPOWER_PACKET_TYPE_GET_SESSION_CHALLENGE_RS:
       expected_cmd = IPMI_CMD_GET_SESSION_CHALLENGE;
       break;
-    case ACTIVATE_SESSION_RS:
+    case IPMIPOWER_PACKET_TYPE_ACTIVATE_SESSION_RS:
       expected_cmd = IPMI_CMD_ACTIVATE_SESSION;
       break;
-    case SET_SESSION_PRIVILEGE_LEVEL_RS:
+    case IPMIPOWER_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RS:
       expected_cmd = IPMI_CMD_SET_SESSION_PRIVILEGE_LEVEL;
       break;
-    case GET_CHASSIS_STATUS_RS:
+    case IPMIPOWER_PACKET_TYPE_GET_CHASSIS_STATUS_RS:
       expected_cmd = IPMI_CMD_GET_CHASSIS_STATUS;
       break;
-    case CHASSIS_CONTROL_RS:
+    case IPMIPOWER_PACKET_TYPE_CHASSIS_CONTROL_RS:
       expected_cmd = IPMI_CMD_CHASSIS_CONTROL;
       break;
-    case CHASSIS_IDENTIFY_RS:
+    case IPMIPOWER_PACKET_TYPE_CHASSIS_IDENTIFY_RS:
       expected_cmd = IPMI_CMD_CHASSIS_IDENTIFY;
       break;
-    case C410X_GET_SENSOR_READING_RS:
+    case IPMIPOWER_PACKET_TYPE_C410X_GET_SENSOR_READING_RS:
       expected_cmd = IPMI_CMD_GET_SENSOR_READING;
       break;
-    case C410X_SLOT_POWER_CONTROL_RS:
+    case IPMIPOWER_PACKET_TYPE_C410X_SLOT_POWER_CONTROL_RS:
       expected_cmd = IPMI_CMD_OEM_DELL_SLOT_POWER_CONTROL;
       break;
-    case CLOSE_SESSION_RS:
+    case IPMIPOWER_PACKET_TYPE_CLOSE_SESSION_RS:
       expected_cmd = IPMI_CMD_CLOSE_SESSION;
       break;
     default:
@@ -603,11 +603,11 @@ ipmipower_check_payload_type (ipmipower_powercmd_t ip,
     }
   payload_type = val;
 
-  if (pkt == OPEN_SESSION_RESPONSE)
+  if (pkt == IPMIPOWER_PACKET_TYPE_OPEN_SESSION_RESPONSE)
     expected_payload_type = IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE;
-  else if (pkt == RAKP_MESSAGE_2)
+  else if (pkt == IPMIPOWER_PACKET_TYPE_RAKP_MESSAGE_2)
     expected_payload_type = IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2;
-  else if (pkt == RAKP_MESSAGE_4)
+  else if (pkt == IPMIPOWER_PACKET_TYPE_RAKP_MESSAGE_4)
     expected_payload_type = IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4;
   else /* IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RS (pkt) */
     expected_payload_type = IPMI_PAYLOAD_TYPE_IPMI;
@@ -726,7 +726,7 @@ ipmipower_check_open_session_response_privilege (ipmipower_powercmd_t ip,
   int rv;
 
   assert (ip);
-  assert (pkt == OPEN_SESSION_RESPONSE);
+  assert (pkt == IPMIPOWER_PACKET_TYPE_OPEN_SESSION_RESPONSE);
 
   /* IPMI Workaround (achu)
    *
@@ -786,7 +786,7 @@ ipmipower_check_rakp_2_key_exchange_authentication_code (ipmipower_powercmd_t ip
   int rv;
 
   assert (ip);
-  assert (pkt == RAKP_MESSAGE_2);
+  assert (pkt == IPMIPOWER_PACKET_TYPE_RAKP_MESSAGE_2);
 
   /* IPMI Workaround (achu)
    *
@@ -1014,7 +1014,7 @@ ipmipower_check_rakp_4_integrity_check_value (ipmipower_powercmd_t ip,
   int rv;
 
   assert (ip);
-  assert (pkt == RAKP_MESSAGE_4);
+  assert (pkt == IPMIPOWER_PACKET_TYPE_RAKP_MESSAGE_4);
 
   /* IPMI Workaround (achu)
    *
