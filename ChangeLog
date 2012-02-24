@@ -1,3 +1,15 @@
+2012-02-23  Albert Chu <chu11@llnl.gov>
+
+	Merge sha256 branch.
+
+	* Support Cipher Suite 15 and 16 globally.
+
+	* Add details of Cipher Suite 18 and 19 globally.
+
+	* bmc-config/bmc-config-rmcpplus-conf-privilege-section.c
+	(bmc_config_rmcpplus_conf_privilege_section_get): Add
+	configuration for Maximum_Privilege_Cipher_Suite_Id_15.
+	
 2012-02-22  Albert Chu <chu11@llnl.gov>
 
 	* bmc-config/bmc-config-rmcpplus-conf-privilege-section.c

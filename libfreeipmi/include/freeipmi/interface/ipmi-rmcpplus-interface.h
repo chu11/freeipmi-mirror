@@ -190,9 +190,12 @@ extern "C" {
 
 /* Refer to table 22-19 */
 /* XXX - Errata 4 defines SHA256 but not cipher suite IDs */
+/* achu: Intel support says Cipher Suite 15-19 maps to 1-5 using
+ * SHA256 instead of SHA1 and SHA256-128 instead of SHA1-96.
+ */
 /* Cipher Suite 17 confirmed via DCMI 1.1 specification */
 #define IPMI_CIPHER_SUITE_ID_MIN                          0
-#define IPMI_CIPHER_SUITE_ID_MAX                          17
+#define IPMI_CIPHER_SUITE_ID_MAX                          19
 
 /* 
  * fill* functions return 0 on success, -1 on error.

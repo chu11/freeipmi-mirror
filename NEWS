@@ -1,10 +1,6 @@
 FreeIPMI 1.2.1 - XX/XX/XX
 -------------------------
 
-Libraries
----------
-o In libfreeipmi, add missing macro definitions.
-
 Tools
 -----
 o In ipmipower, support --oem-power-type option to support OEM
@@ -17,10 +13,21 @@ o In ipmipower, support --oem-power-type option to support OEM
     under OEM power cases.
   - Re-architect to allow serialization of power control operations to
     the same host.
+o In bmc-config, add configuration support for
+  Maximum_Privilege_Cipher_Suite_Id_15 under RMCPplus_Conf_Privilege.
+o Globally support Cipher Suite ID 15 and 16 based on comments from
+  Intel.
 
 Libraries
 ---------
 o In libfreeipmi, add missing macro definitions.
+o In libfreeipmi, support Cipher Suite 15 and 16 implementation based
+  on comments from Intel.
+o In libfreeipmi, add Cipher Suite 18 and 19 information, but do not
+  support.
+ 
+Misc
+----
 
 FreeIPMI 1.1.1 - 01/03/12
 -------------------------

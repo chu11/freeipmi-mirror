@@ -346,6 +346,10 @@ id_checkout (const char *section_name,
     {
       if (state_data->cipher_suite_id_supported[i] == id)
         {
+	  /* achu: NOT A BUG.
+	   *
+	   * IPMI spec is_supported does not map to privileges array, you want to index at [id] not [i]
+	   */
           privilege = state_data->cipher_suite_priv[id];
           id_found++;
           break;
@@ -426,6 +430,10 @@ id_commit (const char *section_name,
 
   memset (privs, '\0', CIPHER_SUITE_LEN);
   memcpy (privs, state_data->cipher_suite_priv, CIPHER_SUITE_LEN);
+  /* achu: NOT A BUG.
+   *
+   * IPMI spec is_supported does not map to privileges array, you want to index at [id] not a searched [i]
+   */
   privs[id] = privilege;
   
   /* IPMI Workaround (achu)
@@ -529,6 +537,10 @@ id_commit (const char *section_name,
       goto cleanup;
     }
 
+  /* achu: NOT A BUG.
+   *
+   * IPMI spec is_supported does not map to privileges array, you want to index at [id] not [i]
+   */
   state_data->cipher_suite_priv[id] = privilege;
   rv = CONFIG_ERR_SUCCESS;
 
@@ -735,6 +747,61 @@ bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_d
                               id_commit_cb,
                               rmcpplus_priv_number_validate) < 0)
     goto cleanup;
+
+  if (config_section_add_key (state_data->pstate,
+                              section,
+                              "Maximum_Privilege_Cipher_Suite_Id_15",
+                              "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
+                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
+                              id_checkout_cb,
+                              id_commit_cb,
+                              rmcpplus_priv_number_validate) < 0)
+    goto cleanup;
+
+#if 0
+
+  /* achu: Can't support this config until IPMI spec is updated.  Yeah, it sucks */
+
+  if (config_section_add_key (state_data->pstate,
+                              section,
+                              "Maximum_Privilege_Cipher_Suite_Id_16",
+                              "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
+                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
+                              id_checkout_cb,
+                              id_commit_cb,
+                              rmcpplus_priv_number_validate) < 0)
+    goto cleanup;
+
+  if (config_section_add_key (state_data->pstate,
+                              section,
+                              "Maximum_Privilege_Cipher_Suite_Id_17",
+                              "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
+                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
+                              id_checkout_cb,
+                              id_commit_cb,
+                              rmcpplus_priv_number_validate) < 0)
+    goto cleanup;
+
+  if (config_section_add_key (state_data->pstate,
+                              section,
+                              "Maximum_Privilege_Cipher_Suite_Id_18",
+                              "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
+                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
+                              id_checkout_cb,
+                              id_commit_cb,
+                              rmcpplus_priv_number_validate) < 0)
+    goto cleanup;
+
+  if (config_section_add_key (state_data->pstate,
+                              section,
+                              "Maximum_Privilege_Cipher_Suite_Id_19",
+                              "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
+                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
+                              id_checkout_cb,
+                              id_commit_cb,
+                              rmcpplus_priv_number_validate) < 0)
+    goto cleanup;
+#endif
 
   return (section);
 
