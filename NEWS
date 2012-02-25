@@ -17,6 +17,7 @@ o In ipmipower, support --oem-power-type option to support OEM
     under OEM power cases.
   - Re-architect to allow serialization of power control operations to
     the same host.
+o In ipmi-sel, support new --post-clear option.
 
 Libraries
 ---------

@@ -113,6 +113,20 @@ the vendor.
 \fB\-\-clear\fR
 Clear SEL.
 .TP
+\fB\-\-post\-clear\fR
+Identical to \fB\-\-clear\fR, except the SEL clearning will be
+performed after SEL event records are displayed.  This option is
+useful for scripting if users intend to log SEL events to another log,
+then immediately clear SEL.  Unlike calling \fB\-\-clear\fR in another
+execution of
+.B ipmi-sel,
+this option will use SEL reservations to notify the user if a SEL
+change has occurred while displaying and clearing the SEL.  This can
+protect users from a race, where a new SEL event is unknowingly
+generated before clearing the SEL.  Note that SEL reservations are
+optionally implemented by vendors and may not be available on all
+machines.
+.TP
 \fB\-\-delete\fR=\fIRECORD\-IDS\-LIST\fR
 Delete records by record id in the SEL.  Accepts space or comma
 separated lists.

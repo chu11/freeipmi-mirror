@@ -6,6 +6,8 @@
 	as well as a new error return of
 	IPMI_SEL_PARSE_ERR_RESERVATION_CANCELED.
 
+	* ipmi-sel/: Support --post-clear option. 
+
 2012-02-22  Albert Chu <chu11@llnl.gov>
 
 	* bmc-config/bmc-config-rmcpplus-conf-privilege-section.c

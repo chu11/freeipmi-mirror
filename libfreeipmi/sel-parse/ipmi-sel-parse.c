@@ -1938,13 +1938,13 @@ ipmi_sel_parse_clear_sel (ipmi_sel_parse_ctx_t ctx)
 	      else
 		{
 		  reservation_id_retry_count++;
-
+		  
 		  if (reservation_id_retry_count > IPMI_SEL_PARSE_RESERVATION_ID_RETRY)
 		    {
 		      SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_IPMI_ERROR);
 		      goto cleanup;
 		    }
-
+		  
 		  if (sel_parse_get_reservation_id (ctx, &reservation_id, NULL) < 0)
 		    goto cleanup;
 
