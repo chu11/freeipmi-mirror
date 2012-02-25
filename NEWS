@@ -21,6 +21,7 @@ o In ipmipower, exit with value 1 on IPMI errors in addition to system
   errors.
 o In ipmidetect, exit with exit value 2 when an error occurs.  Exit
   value of 0 or 1 are reserved for scripting.
+o In ipmi-sel, support new --post-clear option.
 
 Libraries
 ---------
@@ -29,6 +30,8 @@ o In libfreeipmi, support Cipher Suite 15 and 16 implementation based
   on comments from Intel.
 o In libfreeipmi, add Cipher Suite 18 and 19 information, but do not
   support.
+o In libfreeipmi, support reservation-id registration and clearing in
+  the sel-parse sub-library.
  
 Misc
 ----

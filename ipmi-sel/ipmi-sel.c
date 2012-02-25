@@ -1723,6 +1723,18 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
 
     }
 
+  if (args->post_clear)
+    {
+      if (ipmi_sel_parse_ctx_register_reservation_id (state_data->sel_parse_ctx, NULL) < 0)
+	{
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_sel_parse_ctx_register_reservation_id: %s\n",
+                           ipmi_sel_parse_ctx_errormsg (state_data->sel_parse_ctx));
+	  goto cleanup;
+	}
+    }
+
   if (!args->legacy_output)
     {
       if (!args->sdr.ignore_sdr_cache)
@@ -2086,6 +2098,18 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
                            ipmi_sel_parse_ctx_errormsg (state_data->sel_parse_ctx));
           goto cleanup;
         }
+    }
+
+  if (args->post_clear)
+    {
+      if (ipmi_sel_parse_clear_sel (state_data->sel_parse_ctx) < 0)
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_sel_parse_clear_sel: %s\n",
+			   ipmi_sel_parse_ctx_errormsg (state_data->sel_parse_ctx));
+	  goto cleanup;
+	}
     }
 
  out:

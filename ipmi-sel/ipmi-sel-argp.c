@@ -107,43 +107,45 @@ static struct argp_option cmdline_options[] =
       "Display approximately the last count SEL records.", 39},
     { "clear", CLEAR_KEY, 0, 0,
       "Clear SEL.", 40},
+    { "post-clear", POST_CLEAR_KEY, 0, 0,
+      "Clear SEL after displaying SEL records.", 41},
     /* legacy */
     { "delete-all", DELETE_ALL_KEY, 0, OPTION_HIDDEN,
-      "Delete all SEL records.", 41},
+      "Delete all SEL records.", 42},
     { "delete",     DELETE_KEY,     "RECORD-IDS-LIST", 0,
-      "Delete SEL records by record ids.", 42},
+      "Delete SEL records by record ids.", 43},
     { "delete-range", DELETE_RANGE_KEY, "START-END", 0,
-      "Delete record ids from START to END in the SEL.", 43},
+      "Delete record ids from START to END in the SEL.", 44},
     { "system-event-only", SYSTEM_EVENT_ONLY_KEY, 0, 0,
-      "Output only system event records (i.e. don't output OEM records).", 44},
+      "Output only system event records (i.e. don't output OEM records).", 45},
     { "oem-event-only", OEM_EVENT_ONLY_KEY, 0, 0,
-      "Output only OEM event records.", 45},
+      "Output only OEM event records.", 46},
     { "output-manufacturer-id", OUTPUT_MANUFACTURER_ID_KEY, 0, 0,
-      "Output manufacturer ID on OEM event records when available.", 46},
+      "Output manufacturer ID on OEM event records when available.", 47},
     { "output-event-state", OUTPUT_EVENT_STATE_KEY, 0, 0,
-      "Output event state in output.", 47},
+      "Output event state in output.", 48},
     { "event-state-config-file", EVENT_STATE_CONFIG_FILE_KEY, "FILE", 0,
-      "Specify an alternate event state configuration file.", 48},
+      "Specify an alternate event state configuration file.", 49},
     { "hex-dump",   HEX_DUMP_KEY, 0, 0,
-      "Hex-dump SEL records.", 49},
+      "Hex-dump SEL records.", 50},
     { "assume-system-event-records", ASSUME_SYSTEM_EVENT_RECORDS_KEY, 0, 0,
       "Assume invalid record types are system event records.", 51},
     { "interpret-oem-data", INTERPRET_OEM_DATA_KEY, NULL, 0,
-      "Attempt to interpret OEM data.", 51},
+      "Attempt to interpret OEM data.", 52},
     { "output-oem-event-strings", OUTPUT_OEM_EVENT_STRINGS_KEY, NULL, 0,
-      "Attempt to output OEM event strings.", 52},
+      "Attempt to output OEM event strings.", 53},
     { "entity-sensor-names", ENTITY_SENSOR_NAMES_KEY, NULL, 0,
-      "Output sensor names with entity ids and instances.", 53},
+      "Output sensor names with entity ids and instances.", 54},
     { "no-sensor-type-output", NO_SENSOR_TYPE_OUTPUT_KEY, 0, 0,
-      "Do not show sensor type output.", 54},
+      "Do not show sensor type output.", 55},
     { "comma-separated-output", COMMA_SEPARATED_OUTPUT_KEY, 0, 0,
-      "Output fields in comma separated format.", 55},
+      "Output fields in comma separated format.", 56},
     { "no-header-output", NO_HEADER_OUTPUT_KEY, 0, 0,
-      "Do not output column headers.", 56},
+      "Do not output column headers.", 57},
     { "non-abbreviated-units", NON_ABBREVIATED_UNITS_KEY, 0, 0,
-      "Output non-abbreviated units (e.g. 'Amps' instead of 'A').", 57},
+      "Output non-abbreviated units (e.g. 'Amps' instead of 'A').", 58},
     { "legacy-output", LEGACY_OUTPUT_KEY, 0, 0,
-      "Output in legacy format.", 58},
+      "Output in legacy format.", 59},
     { NULL, 0, NULL, 0, NULL, 0}
   };
 
@@ -583,6 +585,9 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case DELETE_ALL_KEY:        /* legacy */
       cmd_args->clear = 1;
       break;
+    case POST_CLEAR_KEY:
+      cmd_args->post_clear = 1;
+      break;
     case DELETE_KEY:
       _read_record_list (&(cmd_args->delete),
                          cmd_args->delete_record_list,
@@ -823,6 +828,7 @@ ipmi_sel_argp_parse (int argc, char **argv, struct ipmi_sel_arguments *cmd_args)
   cmd_args->tail = 0;
   cmd_args->tail_count = 0;
   cmd_args->clear = 0;
+  cmd_args->post_clear = 0;
   cmd_args->delete = 0;
   memset (cmd_args->delete_record_list,
           '\0',

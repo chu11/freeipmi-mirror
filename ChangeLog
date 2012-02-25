@@ -1,5 +1,17 @@
 2012-02-24  Albert Chu <chu11@llnl.gov>
 
+	Merge selreservation branch
+
+	* libfreeipmi/: Support new functions
+	ipmi_sel_parse_ctx_register_reservation_id() and
+	ipmi_sel_parse_ctx_clear_reservation_id() in the sel-parse library
+	as well as a new error return of
+	IPMI_SEL_PARSE_ERR_RESERVATION_CANCELED.
+
+	* ipmi-sel/: Support --post-clear option. 
+
+2012-02-24  Albert Chu <chu11@llnl.gov>
+
 	* common/miscutil/error.h, common/miscutil/error.c
 	(err_init_exit_value): New function.
 

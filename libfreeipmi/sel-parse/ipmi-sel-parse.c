@@ -66,6 +66,7 @@ static char *ipmi_sel_parse_errmsgs[] =
     "invalid sel entry",
     "end of sel entries list reached",
     "not found",
+    "reservation canceled",
     "callback error",
     "internal IPMI error",
     "internal system error",
@@ -94,6 +95,9 @@ ipmi_sel_parse_ctx_create (ipmi_ctx_t ipmi_ctx, ipmi_sdr_cache_ctx_t sdr_cache_c
   ctx->ipmi_version_minor = 0;
   ctx->debug_prefix = NULL;
   ctx->separator = NULL;
+
+  ctx->reservation_id = 0;
+  ctx->reservation_id_registered = 0;
 
   ctx->ipmi_ctx = ipmi_ctx;
   ctx->sdr_cache_ctx = sdr_cache_ctx;
@@ -421,6 +425,56 @@ ipmi_sel_parse_ctx_set_separator (ipmi_sel_parse_ctx_t ctx, const char *separato
   return (0);
 }
 
+int
+ipmi_sel_parse_ctx_register_reservation_id (ipmi_sel_parse_ctx_t ctx, uint16_t *reservation_id)
+{
+  if (!ctx || ctx->magic != IPMI_SEL_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if (!ctx->ipmi_ctx)
+    {
+      SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_IPMI_ERROR);
+      return (-1);
+    }
+
+  if (sel_parse_get_reservation_id (ctx, &ctx->reservation_id, NULL) < 0)
+    return (-1);
+
+  /* Possible reservation ID not supported */
+  if (!ctx->reservation_id)
+    {
+      SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_IPMI_ERROR);
+      return (-1);
+    }
+    
+  if (reservation_id)
+    *reservation_id = ctx->reservation_id;
+
+  ctx->reservation_id_registered = 1;
+
+  ctx->errnum = IPMI_SEL_PARSE_ERR_SUCCESS;
+  return (0);
+}
+
+int
+ipmi_sel_parse_ctx_clear_reservation_id (ipmi_sel_parse_ctx_t ctx)
+{
+  if (!ctx || ctx->magic != IPMI_SEL_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  ctx->reservation_id = 0;
+  ctx->reservation_id_registered = 0;
+
+  ctx->errnum = IPMI_SEL_PARSE_ERR_SUCCESS;
+  return (0);
+}
+
 static void
 _sel_entry_dump (ipmi_sel_parse_ctx_t ctx, struct ipmi_sel_parse_entry *sel_parse_entry)
 {
@@ -615,23 +669,28 @@ _get_sel_entry (ipmi_sel_parse_ctx_t ctx,
     {
       if (!(*reservation_id_initialized) || reservation_canceled)
         {
-          if (sel_parse_get_reservation_id (ctx, reservation_id, &is_insufficient_privilege_level) < 0)
-            {
-              /* IPMI Workaround (achu)
-               *
-               * Discovered on Supermicro H8QME with SIMSO daughter card.
-               *
-               * For some reason motherboard requires Operator
-               * privilege instead of User privilege.  If
-               * IPMI_COMP_CODE_INSUFFICIENT_PRIVILEGE_LEVEL was
-               * received, just use reservation ID 0. For the reasons
-               * listed above, it shouldn't matter.
-               */
-              if (is_insufficient_privilege_level)
-                (*reservation_id) = 0;
-              else
-                goto cleanup;
-            }
+	  if (ctx->reservation_id_registered)
+	    (*reservation_id) = ctx->reservation_id;
+	  else
+	    {
+	      if (sel_parse_get_reservation_id (ctx, reservation_id, &is_insufficient_privilege_level) < 0)
+		{
+		  /* IPMI Workaround (achu)
+		   *
+		   * Discovered on Supermicro H8QME with SIMSO daughter card.
+		   *
+		   * For some reason motherboard requires Operator
+		   * privilege instead of User privilege.  If
+		   * IPMI_COMP_CODE_INSUFFICIENT_PRIVILEGE_LEVEL was
+		   * received, just use reservation ID 0. For the reasons
+		   * listed above, it shouldn't matter.
+		   */
+		  if (is_insufficient_privilege_level)
+		    (*reservation_id) = 0;
+		  else
+		    goto cleanup;
+		}
+	    }
           (*reservation_id_initialized)++;
         }
       
@@ -646,17 +705,25 @@ _get_sel_entry (ipmi_sel_parse_ctx_t ctx,
               && ipmi_check_completion_code (obj_cmd_rs,
                                              IPMI_COMP_CODE_RESERVATION_CANCELLED) == 1)
             {
-              reservation_id_retry_count++;
-              reservation_canceled++;
-              (*reservation_id_initialized) = 0;
-              
-              if (reservation_id_retry_count > IPMI_SEL_PARSE_RESERVATION_ID_RETRY)
-                {
-                  SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_IPMI_ERROR);
-                  goto cleanup;
-                }
-              
-              continue;
+	      if (ctx->reservation_id_registered)
+		{
+		  SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_RESERVATION_CANCELED);
+		  goto cleanup;
+		}
+              else
+		{
+		  reservation_id_retry_count++;
+		  reservation_canceled++;
+		  (*reservation_id_initialized) = 0;
+		  
+		  if (reservation_id_retry_count > IPMI_SEL_PARSE_RESERVATION_ID_RETRY)
+		    {
+		      SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_IPMI_ERROR);
+		      goto cleanup;
+		    }
+		  
+		  continue;
+		}
             }
           else
             {
@@ -664,7 +731,7 @@ _get_sel_entry (ipmi_sel_parse_ctx_t ctx,
               goto cleanup;
             }
         }
-
+      
       break;
     }
   
@@ -1846,8 +1913,13 @@ ipmi_sel_parse_clear_sel (ipmi_sel_parse_ctx_t ctx)
 
   while (1)
     {
-      if (sel_parse_get_reservation_id (ctx, &reservation_id, NULL) < 0)
-        goto cleanup;
+      if (ctx->reservation_id_registered)
+	reservation_id = ctx->reservation_id;
+      else
+	{
+	  if (sel_parse_get_reservation_id (ctx, &reservation_id, NULL) < 0)
+	    goto cleanup;
+	}
 
       if (ipmi_cmd_clear_sel (ctx->ipmi_ctx,
                               reservation_id,
@@ -1858,18 +1930,26 @@ ipmi_sel_parse_clear_sel (ipmi_sel_parse_ctx_t ctx)
               && ipmi_check_completion_code (obj_cmd_rs,
                                              IPMI_COMP_CODE_RESERVATION_CANCELLED) == 1)
             {
-              reservation_id_retry_count++;
+	      if (ctx->reservation_id_registered)
+		{
+		  SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_RESERVATION_CANCELED);
+		  goto cleanup;
+		}
+	      else
+		{
+		  reservation_id_retry_count++;
+		  
+		  if (reservation_id_retry_count > IPMI_SEL_PARSE_RESERVATION_ID_RETRY)
+		    {
+		      SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_IPMI_ERROR);
+		      goto cleanup;
+		    }
+		  
+		  if (sel_parse_get_reservation_id (ctx, &reservation_id, NULL) < 0)
+		    goto cleanup;
 
-              if (reservation_id_retry_count > IPMI_SEL_PARSE_RESERVATION_ID_RETRY)
-                {
-                  SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_IPMI_ERROR);
-                  goto cleanup;
-                }
-
-              if (sel_parse_get_reservation_id (ctx, &reservation_id, NULL) < 0)
-                goto cleanup;
-
-              continue;
+		  continue;
+		}
             }
           else
             {
@@ -1917,8 +1997,13 @@ ipmi_sel_parse_delete_sel_entry (ipmi_sel_parse_ctx_t ctx, uint16_t record_id)
 
   while (1)
     {
-      if (sel_parse_get_reservation_id (ctx, &reservation_id, NULL) < 0)
-        goto cleanup;
+      if (ctx->reservation_id_registered)
+	reservation_id = ctx->reservation_id;
+      else
+	{
+	  if (sel_parse_get_reservation_id (ctx, &reservation_id, NULL) < 0)
+	    goto cleanup;
+	}
 
       if (ipmi_cmd_delete_sel_entry (ctx->ipmi_ctx,
                                      reservation_id,
@@ -1936,18 +2021,26 @@ ipmi_sel_parse_delete_sel_entry (ipmi_sel_parse_ctx_t ctx, uint16_t record_id)
                    && ipmi_check_completion_code (obj_cmd_rs,
                                                   IPMI_COMP_CODE_RESERVATION_CANCELLED) == 1)
             {
-              reservation_id_retry_count++;
+	      if (ctx->reservation_id_registered)
+		{
+		  SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_RESERVATION_CANCELED);
+		  goto cleanup;
+		}
+	      else
+		{
+		  reservation_id_retry_count++;
+		  
+		  if (reservation_id_retry_count > IPMI_SEL_PARSE_RESERVATION_ID_RETRY)
+		    {
+		      SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_IPMI_ERROR);
+		      goto cleanup;
+		    }
 
-              if (reservation_id_retry_count > IPMI_SEL_PARSE_RESERVATION_ID_RETRY)
-                {
-                  SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_IPMI_ERROR);
-                  goto cleanup;
-                }
+		  if (sel_parse_get_reservation_id (ctx, &reservation_id, NULL) < 0)
+		    goto cleanup;
 
-              if (sel_parse_get_reservation_id (ctx, &reservation_id, NULL) < 0)
-                goto cleanup;
-
-              continue;
+		  continue;
+		}
             }
           else
             {

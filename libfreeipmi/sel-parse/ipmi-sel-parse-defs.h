@@ -86,6 +86,9 @@ struct ipmi_sel_parse_ctx {
   char *debug_prefix;
   char *separator;
 
+  uint16_t reservation_id;
+  int reservation_id_registered;
+
   ipmi_ctx_t ipmi_ctx;
   ipmi_sdr_cache_ctx_t sdr_cache_ctx;
 
