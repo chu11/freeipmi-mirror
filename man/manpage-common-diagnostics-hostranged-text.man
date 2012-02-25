@@ -1,0 +1,4 @@
+.LP
+If multiple hosts are specified for communication, the exit status
+is 0 if and only if all targets successfully execute.  Otherwise the
+exit status is 1.
