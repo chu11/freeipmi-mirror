@@ -1,3 +1,7 @@
+2012-02-26  Yaroslav Halchenko <debian@onerussian.com>
+
+	* man/ipmi-chassis.8.pre.in: Fix typos.
+	
 2012-02-24  Albert Chu <chu11@llnl.gov>
 
 	Merge selreservation branch

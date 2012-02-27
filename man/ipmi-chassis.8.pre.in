@@ -179,7 +179,7 @@ Get the chassis status of a remote machine using IPMI over LAN.
 .PP
 Get the chassis status across a cluster using IPMI over LAN.
 .PP
-.B # ipmi-chassis -h ahost -u myusername -p mypassword --chassis-control=POWER-ON
+.B # ipmi-chassis -h ahost -u myusername -p mypassword --chassis-control=POWER-UP
 .PP
 Power on a remote machine using IPMI over LAN.
 .PP
