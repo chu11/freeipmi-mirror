@@ -265,7 +265,7 @@ LAN Authentication Issue #16: [COMPLIANCE]
   non-zero length field.
 
   Notes: Confirmed fixed in newer firmware for Supermicro X8DTG,
-  Supermicro X8DTU.
+  Supermicro X8DTU, Intel S2600JF/Appro 512X.
 
 LAN Authentication Issue #17: [COMPLIANCE]
 
@@ -330,6 +330,8 @@ LAN Authentication Issue #22: [COMPLIANCE]
   Seen on: Intel S2600JF/Appro 512X
 
   Resolution: None
+
+  Notes: Confirmed fixed in newer firmware.
 
 ----------------------------------------------------------------------
 
@@ -1035,6 +1037,8 @@ BMC/IPMI Configuration Issue #30: [COMPLIANCE]
 
   Resolution: Workaround added to detect this specific situation and
   adjust appropriately.
+
+  Notes: Confirmed fixed in newer firmware.
 
 ----------------------------------------------------------------------
 
