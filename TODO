@@ -48,6 +48,8 @@ FreeIPMI new stuff
     - clear records on full or not
     - mechanism to log last SEL event logged or not?
       - or only log new SEL events?
+    - option allow user to specify format for log
+      - i.e. %h: %t - %e
 - server simulator
   - support testing at scale
   - test larger set of corner cases, possibilities, workarounds, etc. 
