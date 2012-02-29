@@ -40,6 +40,14 @@ FreeIPMI new stuff
   - log sel events to syslog?
     - work across cluster, configure w/ range of hosts
     - need filtering thingie to remove messages you don't care about?
+    - mechanism/option to clear when SEL buffer full
+    - detect if SEL buffer cleared "out of band"
+    - must do safely w/o racing (i.e. w/ external clear/delete)
+      - using reservation IDs
+    - option to delete recordss as logged or not
+    - clear records on full or not
+    - mechanism to log last SEL event logged or not?
+      - or only log new SEL events?
 - server simulator
   - support testing at scale
   - test larger set of corner cases, possibilities, workarounds, etc. 
