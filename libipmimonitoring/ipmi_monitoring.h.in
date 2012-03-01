@@ -407,6 +407,9 @@ enum ipmi_monitoring_sensor_reading_flags
  *   8 - A = HMAC-MD5; I = HMAC-MD5-128; C = AES-CBC-128
  *   11 - A = HMAC-MD5; I = MD5-128; C = None
  *   12 - A = HMAC-MD5; I = MD5-128; C = AES-CBC-128
+ *   15 - A = HMAC-SHA256; I = None; C = None
+ *   16 - A = HMAC-SHA256; I = HMAC-SHA256-128; C = None
+ *   17 - A = HMAC-SHA256; I = HMAC-SHA256-128; C = AES-CBC-128
  *
  *   Pass < 0 for default of 3.
  *

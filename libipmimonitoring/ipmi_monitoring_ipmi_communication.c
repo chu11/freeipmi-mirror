@@ -373,15 +373,7 @@ _ipmi_2_0_init (ipmi_monitoring_ctx_t c,
                       && config->privilege_level != IPMI_MONITORING_PRIVILEGE_LEVEL_OPERATOR
                       && config->privilege_level != IPMI_MONITORING_PRIVILEGE_LEVEL_ADMIN))
               || (config->cipher_suite_id >= 0
-                  && (config->cipher_suite_id != 0
-                      && config->cipher_suite_id != 1
-                      && config->cipher_suite_id != 2
-                      && config->cipher_suite_id != 3
-                      && config->cipher_suite_id != 6
-                      && config->cipher_suite_id != 7
-                      && config->cipher_suite_id != 8
-                      && config->cipher_suite_id != 11
-                      && config->cipher_suite_id != 12))
+                  && !IPMI_CIPHER_SUITE_ID_SUPPORTED (config->cipher_suite_id))
               || (config->workaround_flags & ~workaround_flags_mask))))
     {
       c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
