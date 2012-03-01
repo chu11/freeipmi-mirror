@@ -56,7 +56,7 @@ for requests off of.  Default is 9225.
 .I host string
 Specify a host or IP address the ipmidetectd daemon should send IPMI
 pings to.  Can be specified as many times as necessary.  Can accept host ranges
-as input.  See HOSTRANGED SUPPORT
+as input.  See HOSTRANGED SUPPORT in
 .B ipmidetect(8)
 for information on ranged formats.
 .SH "FILES"
