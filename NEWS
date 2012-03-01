@@ -16,8 +16,10 @@ o Various documentation updates.
 Libraries
 ----------
 o In libfreeipmi, fix incorrect packet layout for the Get Lan
-Configuration Parameters RMCPplus Messaging Cipher Suite Entry Support
-response.
+  Configuration Parameters RMCPplus Messaging Cipher Suite Entry Support
+  response.
+o In libipmimonitoring, properly return connection timeout error on
+  connection timeout.
 
 Misc
 ----

@@ -1,3 +1,9 @@
+2012-03-01  Albert Chu <chu11@llnl.gov>
+	
+	* libipmimonitoring/ipmi_monitoring_ipmi_communication.c
+	(_ipmi_1_5_init, _ipmi_2_0_init): Properly return connection
+	timeout error on connection timeout.
+	
 2012-02-26  Yaroslav Halchenko <debian@onerussian.com>
 
 	* man/ipmi-chassis.8.pre.in: Fix typos.
