@@ -183,7 +183,11 @@ tools common
   -  workaround-flags FOO  hosts[5-9]
 - read/store username/password/k_g out of file encrypted so it's not
   sitting there in the clear
-  
+- convenience function to loop infinite times necessary to expand (***)
+  hostrange until done.
+  - i.e. node[0-4]-[3-10]
+  - hack is in ipmipower right now for 2s, no where else supported 
+
 ipmi-sensors
 ------------
 - split vendor files into motherboard files?  Is getting big.
