@@ -318,6 +318,8 @@ _ipmi_1_5_init (ipmi_monitoring_ctx_t c,
         c->errnum = IPMI_MONITORING_ERR_AUTHENTICATION_TYPE_UNAVAILABLE;
       else if (ipmi_ctx_errnum (c->ipmi_ctx) == IPMI_ERR_PASSWORD_VERIFICATION_TIMEOUT)
         c->errnum = IPMI_MONITORING_ERR_PASSWORD_VERIFICATION_TIMEOUT;
+      else if (ipmi_ctx_errnum (c->ipmi_ctx) == IPMI_ERR_CONNECTION_TIMEOUT)
+        c->errnum = IPMI_MONITORING_ERR_CONNECTION_TIMEOUT;
       else if (ipmi_ctx_errnum (c->ipmi_ctx) == IPMI_ERR_SESSION_TIMEOUT)
         c->errnum = IPMI_MONITORING_ERR_SESSION_TIMEOUT;
       else if (ipmi_ctx_errnum (c->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
@@ -466,6 +468,8 @@ _ipmi_2_0_init (ipmi_monitoring_ctx_t c,
         c->errnum = IPMI_MONITORING_ERR_PASSWORD_VERIFICATION_TIMEOUT;
       else if (ipmi_ctx_errnum (c->ipmi_ctx) == IPMI_ERR_IPMI_2_0_UNAVAILABLE)
         c->errnum = IPMI_MONITORING_ERR_IPMI_2_0_UNAVAILABLE;
+      else if (ipmi_ctx_errnum (c->ipmi_ctx) == IPMI_ERR_CONNECTION_TIMEOUT)
+        c->errnum = IPMI_MONITORING_ERR_CONNECTION_TIMEOUT;
       else if (ipmi_ctx_errnum (c->ipmi_ctx) == IPMI_ERR_SESSION_TIMEOUT)
         c->errnum = IPMI_MONITORING_ERR_SESSION_TIMEOUT;
       else if (ipmi_ctx_errnum (c->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE

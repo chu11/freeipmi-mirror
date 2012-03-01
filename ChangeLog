@@ -1,4 +1,10 @@
 2012-03-01  Albert Chu <chu11@llnl.gov>
+	
+	* libipmimonitoring/ipmi_monitoring_ipmi_communication.c
+	(_ipmi_1_5_init, _ipmi_2_0_init): Properly return connection
+	timeout error on connection timeout.
+	
+2012-03-01  Albert Chu <chu11@llnl.gov>
 
 	* libipmimonitoring/, libipmiconsole/: Support Cipher Suite 15,
 	16, and 17.
