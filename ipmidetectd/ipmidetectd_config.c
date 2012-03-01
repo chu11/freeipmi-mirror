@@ -128,27 +128,27 @@ _cmdline_parse (int argc, char **argv)
     while ((c = getopt (argc, argv, options)) != -1)
 #endif
       {
-    switch (c)
-      {
-      case 'h':       /* --help */
-        _usage ();
-        break;
-      case 'v':       /* --version */
-        _version ();
-        break;
+	switch (c)
+	  {
+	  case 'h':       /* --help */
+	    _usage ();
+	    break;
+	  case 'v':       /* --version */
+	    _version ();
+	    break;
 #ifndef NDEBUG
-      case 'c':       /* --config-file */
-        if (!(conf.config_file = strdup (optarg)))
-          IPMIDETECTD_EXIT (("strdup: %s", strerror (errno)));
-        break;
-      case 'd':       /* --debug */
-        conf.debug++;
-        break;
+	  case 'c':       /* --config-file */
+	    if (!(conf.config_file = strdup (optarg)))
+	      IPMIDETECTD_EXIT (("strdup: %s", strerror (errno)));
+	    break;
+	  case 'd':       /* --debug */
+	    conf.debug++;
+	    break;
 #endif /* NDEBUG */
-      case '?':
-      default:
-        IPMIDETECTD_EXIT (("unknown command line option '%c'", c));
-      }
+	  case '?':
+	  default:
+	    IPMIDETECTD_EXIT (("unknown command line option '%c'", c));
+	  }
       }
 }
 
