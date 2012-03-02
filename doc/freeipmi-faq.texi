@@ -628,8 +628,8 @@ range as an additional argument, Powerman may not.
 
 For example, the following would be suitable to configure OEM
 extension support the Dell Poweredge C410x.  A specific node
-identifier (i.e. mynode0-1) is used to map to a specific node and
-additional argument.
+identifier is used to map to a specific node and additional argument
+(i.e. mynodes0-1 maps to mynodes0+1).
 
 @example
 include "/etc/powerman/ipmipower.dev"
