@@ -656,7 +656,7 @@ node "mynodes[0-10]-16" "ipmi0" "mynodes[0-10]+16"
 
 As noted in the manpage, the Dell Poweredge C410x appears to have
 difficulty handling new slot power control requests until prior ones
-have completed.  Users may wish to configure ipmipower with
+have completed.  Users may wish to configure @command{ipmipower} with
 @option{--wait-until-on}, @option{--wait-until-off}, and consider
 using the @file{ipmipower-serial.dev} device file instead of
 @file{ipmipower.dev}.
