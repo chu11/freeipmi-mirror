@@ -1,4 +1,6 @@
-2012-02-16  Albert Chu <chu11@llnl.gov>
+2012-03-01  Albert Chu <chu11@llnl.gov>
+
+	Merge altport branch. 
 
 	* libfreeipmi/api/ipmi-api.c (_setup_hostname),
 	libipmiconsole/ipmiconsole_defs.h, libipmiconsole/ipmiconsole.c
