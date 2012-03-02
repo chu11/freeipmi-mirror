@@ -1,5 +1,10 @@
 2012-03-01  Albert Chu <chu11@llnl.gov>
 
+	* ipmipower/ipmipower_connection.c (_connection_setup): Support
+	ability to specify alternate port in hostname argument.
+	
+2012-03-01  Albert Chu <chu11@llnl.gov>
+
 	Merge altport branch. 
 
 	* libfreeipmi/api/ipmi-api.c (_setup_hostname),

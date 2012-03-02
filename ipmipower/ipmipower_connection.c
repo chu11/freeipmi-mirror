@@ -41,6 +41,7 @@
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
 #include <netinet/in.h>
+#include <limits.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <errno.h>
@@ -129,8 +130,11 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
 {
   struct sockaddr_in srcaddr;
   struct hostent *result;
-  char *hostname_copy = NULL;
-  const char *hostname_to_use = NULL;
+  char *hostname_first_parse_copy = NULL;
+  const char *hostname_first_parse_ptr = NULL;
+  char *hostname_second_parse_copy = NULL;
+  const char *hostname_second_parse_ptr = NULL;
+  uint16_t port = RMCP_PRIMARY_RMCP_PORT;
   int rv = -1;
 
   assert (ic);
@@ -246,21 +250,21 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
       char *extra_arg = NULL;
       char *ptr;
 
-      if (!(hostname_copy = strdup (hostname)))
+      if (!(hostname_first_parse_copy = strdup (hostname)))
 	{
 	  IPMIPOWER_ERROR (("strdup: %s", strerror (errno)));
 	  exit (1);
 	}
 
-      if ((ptr = strchr (hostname_copy, '+')))
+      if ((ptr = strchr (hostname_first_parse_copy, '+')))
         {
           *ptr = '\0';
           ptr++;
 	  extra_arg = ptr;
-	  hostname_to_use = hostname_copy;
+	  hostname_first_parse_ptr = hostname_first_parse_copy;
         }
       else
-	hostname_to_use = hostname;
+	hostname_first_parse_ptr = hostname;
 
       /* Hypothetically, some OEM power types may allow extra-args and
        * not extra args.  So store both.
@@ -287,15 +291,54 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
       ic->extra_args = ea;
     }
   else
-    hostname_to_use = hostname;
+    hostname_first_parse_ptr = hostname;
 
-  strncpy (ic->hostname, hostname_to_use, MAXHOSTNAMELEN);
+  if (strchr (hostname_first_parse_ptr, ':'))
+    {
+      char *ptr;
+
+      if (!(hostname_second_parse_copy = strdup (hostname_first_parse_ptr)))
+	{
+	  IPMIPOWER_ERROR (("strdup: %s", strerror (errno)));
+	  exit (1);
+	}
+
+      if ((ptr = strchr (hostname_second_parse_copy, ':')))
+	{
+	  char *endptr;
+          int tmp;
+
+	  *ptr = '\0';
+          ptr++;
+	  
+	  hostname_second_parse_ptr = hostname_second_parse_copy;
+
+          errno = 0;
+          tmp = strtol (ptr, &endptr, 0);
+          if (errno
+              || endptr[0] != '\0'
+              || tmp <= 0
+              || tmp > USHRT_MAX)
+            {
+	      ipmipower_output (IPMIPOWER_MSG_TYPE_HOSTNAME_INVALID, hostname_second_parse_ptr, NULL);
+	      goto cleanup;
+            }
+	  
+          port = tmp;
+	}
+      else
+	hostname_second_parse_ptr = hostname_second_parse_copy;
+    }
+  else
+    hostname_second_parse_ptr = hostname_first_parse_ptr;
+
+  strncpy (ic->hostname, hostname_second_parse_ptr, MAXHOSTNAMELEN);
   ic->hostname[MAXHOSTNAMELEN] = '\0';
 
   /* Determine the destination address */
   bzero (&(ic->destaddr), sizeof (struct sockaddr_in));
   ic->destaddr.sin_family = AF_INET;
-  ic->destaddr.sin_port = htons (RMCP_PRIMARY_RMCP_PORT);
+  ic->destaddr.sin_port = htons (port);
 
   if (!(result = gethostbyname (ic->hostname)))
     {
@@ -318,7 +361,8 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
 
   rv = 0;
  cleanup:
-  free (hostname_copy);
+  free (hostname_first_parse_copy);
+  free (hostname_second_parse_copy);
   return (rv);
 }
 

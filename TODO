@@ -4,7 +4,6 @@ ooo - priority code cleanup that should be done
 
 branches to merge
 -----------------
-altport - but must finish ipmipower
 
 FreeIPMI FAQ/documentation
 --------------------------
@@ -19,11 +18,6 @@ FreeIPMI general
 - consider moving #defines to #enums globally for easier debugging w/
   gdb
 - event handling api/mechanism
-- choose alternate port (XXX)
-  - most notably for testing or port forwarding
-  - maybe oddball case need fallback RMCP port
-  - to maintain backwards compatability, implement in hostname
-    i.e. "-h foonode:1282"
 - loop/try again on NODE_BUSY errors (XXX)
   - treat more like network busy than error?
   - option for alternate behavior?
