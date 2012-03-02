@@ -211,13 +211,6 @@ ipmi-sel
   crossing threshold.  Can be confusing b/c assert/deassert not output
   by default.  Should alter output in these cases?
 - --delete-date-range (XXX)
-- reservation mechanism, so user can hypothetically script series of
-  things and be notified if something goes wrong in the interim. (XXX)
-  - i.e. ipmi-sel --get-reservation
-         ipmi-sel --use-reservation=X --date-range="..."
-         ipmi-sel --use-reservation=X --clear
-         and if an error occurs along the way, user can script around it
-         allows user to know if race occurs between "get" and "clear" 
 - ganglia plugin?
 - nagios plugin?
 
@@ -241,8 +234,6 @@ bmc-device
 - set bmc global enables
   - really should be done by firmware or distro
   - or only as needed in ipmi-oem per vendor need?
-- re-arm sensor (XXX)
-  - rearm shared sensor selection (see ipmi-sensors issue) (XXX)
 - (NOT CONFIRMED) get auxiliary log status
 
 ipmiconsole
