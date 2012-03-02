@@ -58,6 +58,7 @@
 #include <fcntl.h>
 #endif /* HAVE_FCNTL_H */
 #include <signal.h>
+#include <limits.h>
 #include <assert.h>
 #include <errno.h>
 
@@ -196,12 +197,46 @@ _nodes_setup (void)
       char *tmpstr;
       char *ip;
       int len;
+      char *host_copy = NULL;
+      char *host_ptr;
+      uint16_t port = RMCP_PRIMARY_RMCP_PORT;
 
       if (!(info = (struct ipmidetectd_info *)malloc (sizeof (struct ipmidetectd_info))))
         IPMIDETECTD_EXIT (("malloc: %s", strerror (errno)));
       memset (info, '\0', sizeof (struct ipmidetectd_info));
 
-      if (!(info->hostname = strdup (host)))
+      if (strchr (host, ':'))
+	{
+	  char *ptr;
+
+	  if (!(host_copy = strdup (host)))
+	    IPMIDETECTD_EXIT (("strdup: %s", strerror (errno)));
+	  
+	  if ((ptr = strchr (host_copy, ':')))
+	    {
+	      char *endptr;
+	      int tmp;
+
+	      *ptr = '\0';
+	      ptr++;
+	      
+	      errno = 0;
+	      tmp = strtol (ptr, &endptr, 0);
+	      if (errno
+		  || endptr[0] != '\0'
+		  || tmp <= 0
+		  || tmp > USHRT_MAX)
+		IPMIDETECTD_EXIT (("invalid port specified: %s", host));
+	      
+	      port = tmp;
+	    }
+
+	  host_ptr = host_copy;
+	}
+      else
+	host_ptr = host;
+
+      if (!(info->hostname = strdup (host_ptr)))
         IPMIDETECTD_EXIT (("strdup: %s", strerror (errno)));
 
       /* Use random number for starting sequence number to avoid probability of
@@ -215,7 +250,7 @@ _nodes_setup (void)
 
       info->fd = fds[i/IPMIDETECTD_NODES_PER_SOCKET];
 
-      if (!(h = gethostbyname (host)))
+      if (!(h = gethostbyname (host_ptr)))
         {
 #if HAVE_HSTRERROR
           IPMIDETECTD_EXIT (("gethostbyname: %s", hstrerror (h_errno)));
@@ -226,7 +261,8 @@ _nodes_setup (void)
 
       info->destaddr.sin_family = AF_INET;
       info->destaddr.sin_addr = *((struct in_addr *)h->h_addr);
-      info->destaddr.sin_port = htons (RMCP_PRIMARY_RMCP_PORT);
+      info->destaddr.sin_port = htons (port);
+      free (host_copy);
       free (host);
 
       if (!list_append (nodes, info))

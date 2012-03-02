@@ -38,6 +38,7 @@ void ipmiconsole_ctx_list_cleanup (ipmiconsole_ctx_t c);
 
 int ipmiconsole_ctx_config_setup (ipmiconsole_ctx_t c,
                                   const char *hostname,
+				  uint16_t port,
                                   struct ipmiconsole_ipmi_config *ipmi_config,
                                   struct ipmiconsole_protocol_config *protocol_config,
                                   struct ipmiconsole_engine_config *engine_config);

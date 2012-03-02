@@ -54,6 +54,7 @@
 #ifdef HAVE_PTHREAD_H
 #include <pthread.h>
 #endif /* HAVE_PTHREAD_H */
+#include <limits.h>
 #include <sys/resource.h>
 #include <assert.h>
 #include <errno.h>
@@ -1085,9 +1086,11 @@ ipmiconsole_ctx_create (const char *hostname,
                         struct ipmiconsole_engine_config *engine_config)
 {
   ipmiconsole_ctx_t c = NULL;
+  char hostnamebuf[MAXHOSTNAMELEN_WITH_PORT + 1];
+  char *hostname_ptr;
+  uint16_t port = RMCP_PRIMARY_RMCP_PORT;
 
   if (!hostname
-      || (hostname && strlen (hostname) > MAXHOSTNAMELEN)
       || !ipmi_config
       || !protocol_config
       || !engine_config
@@ -1112,6 +1115,64 @@ ipmiconsole_ctx_create (const char *hostname,
       IPMICONSOLE_DEBUG (("invalid input parameters"));
       errno = EINVAL;
       return (NULL);
+    }
+
+  if (strchr (hostname, ':'))
+    {
+      char *ptr;
+
+      if (strlen (hostname) > MAXHOSTNAMELEN_WITH_PORT)
+	{
+	  IPMICONSOLE_DEBUG (("invalid input parameters"));
+	  errno = EINVAL;
+	  return (NULL);
+	} 
+      
+      memset (hostnamebuf, '\0', MAXHOSTNAMELEN_WITH_PORT + 1);
+      strcpy (hostnamebuf, hostname);
+      
+      if ((ptr = strchr (hostnamebuf, ':')))
+	{
+	  char *endptr;
+          int tmp;
+	  
+	  *ptr = '\0';
+	  ptr++;
+	  
+	  if (strlen (hostnamebuf) > MAXHOSTNAMELEN)
+	    {
+	      IPMICONSOLE_DEBUG (("invalid input parameters"));
+	      errno = EINVAL;
+	      return (NULL);
+	    } 
+	  
+	  errno = 0;
+	  tmp = strtol (ptr, &endptr, 0);
+	  if (errno
+              || endptr[0] != '\0'
+              || tmp <= 0
+	      || tmp > USHRT_MAX)
+	    {
+	      IPMICONSOLE_DEBUG (("invalid input parameters"));
+	      errno = EINVAL;
+	      return (NULL);
+	    }
+	  
+	  port = tmp;
+	}
+
+      hostname_ptr = hostnamebuf;
+    }
+  else
+    {
+      if (strlen (hostname) > MAXHOSTNAMELEN)
+	{
+	  IPMICONSOLE_DEBUG (("invalid input parameters"));
+	  errno = EINVAL;
+	  return (NULL);
+	}
+
+      hostname_ptr = (char *)hostname;
     }
 
   /* If engine is not setup, the default_config is not yet known */
@@ -1149,7 +1210,8 @@ ipmiconsole_ctx_create (const char *hostname,
     goto cleanup;
 
   if (ipmiconsole_ctx_config_setup (c,
-                                    hostname,
+                                    hostname_ptr,
+				    port,
                                     ipmi_config,
                                     protocol_config,
                                     engine_config) < 0)

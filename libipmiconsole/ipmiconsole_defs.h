@@ -61,6 +61,9 @@
 #define MAXHOSTNAMELEN 64
 #endif /* MAXHOSTNAMELEN */
 
+/* +5 for digits (max 65535) and +1 for colon ':' */
+#define MAXHOSTNAMELEN_WITH_PORT (MAXHOSTNAMELEN + 6)
+
 #ifndef MAXPATHLEN
 #define MAXPATHLEN 4096
 #endif /* MAXPATHLEN */
@@ -233,6 +236,7 @@ struct ipmiconsole_ctx_config {
 
   /* ipmi config */
   char hostname[MAXHOSTNAMELEN+1];
+  uint16_t port;
   char username[IPMI_MAX_USER_NAME_LENGTH+1];
   char password[IPMI_2_0_MAX_PASSWORD_LENGTH+1];
   uint8_t k_g[IPMI_MAX_K_G_LENGTH+1];

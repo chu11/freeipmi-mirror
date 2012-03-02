@@ -53,10 +53,11 @@ regularly sent out.  Default is 15000.
 Specify the alternate default port the ipmidetectd server should listen
 for requests off of.  Default is 9225.
 .TP 
-.I host string
+.I host string[:port] 
 Specify a host or IP address the ipmidetectd daemon should send IPMI
-pings to.  Can be specified as many times as necessary.  Can accept host ranges
-as input.  See HOSTRANGED SUPPORT in
+pings to.  Can be specified as many times as necessary.  An optional
+port can be specified.  Can accept host ranges as input.  See
+HOSTRANGED SUPPORT in
 .B ipmidetect(8)
 for information on ranged formats.
 .SH "FILES"

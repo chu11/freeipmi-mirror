@@ -212,20 +212,18 @@ _ipmi_1_5_init (ipmi_monitoring_ctx_t c,
   assert (c->ipmi_ctx);
   assert (hostname);
 
-  if (strlen (hostname) > MAXHOSTNAMELEN
-      || (config
-          && ((config->username && strlen (config->username) > IPMI_MAX_USER_NAME_LENGTH)
-              || (config->password && strlen (config->password) > IPMI_1_5_MAX_PASSWORD_LENGTH)
-              || (config->privilege_level >= 0
-                  && (config->privilege_level != IPMI_MONITORING_PRIVILEGE_LEVEL_USER
-                      && config->privilege_level != IPMI_MONITORING_PRIVILEGE_LEVEL_OPERATOR
-                      && config->privilege_level != IPMI_MONITORING_PRIVILEGE_LEVEL_ADMIN))
-              || (config->authentication_type >= 0
-                  && (config->authentication_type != IPMI_MONITORING_AUTHENTICATION_TYPE_NONE
-                      && config->authentication_type != IPMI_MONITORING_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY
-                      && config->authentication_type != IPMI_MONITORING_AUTHENTICATION_TYPE_MD2
-                      && config->authentication_type != IPMI_MONITORING_AUTHENTICATION_TYPE_MD5))
-              || (config->workaround_flags & ~workaround_flags_mask))))
+  /* hostname, username, password length/input check handled via lib calls */
+  if (config
+      && ((config->privilege_level >= 0
+	   && (config->privilege_level != IPMI_MONITORING_PRIVILEGE_LEVEL_USER
+	       && config->privilege_level != IPMI_MONITORING_PRIVILEGE_LEVEL_OPERATOR
+	       && config->privilege_level != IPMI_MONITORING_PRIVILEGE_LEVEL_ADMIN))
+	  || (config->authentication_type >= 0
+	      && (config->authentication_type != IPMI_MONITORING_AUTHENTICATION_TYPE_NONE
+		  && config->authentication_type != IPMI_MONITORING_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY
+		  && config->authentication_type != IPMI_MONITORING_AUTHENTICATION_TYPE_MD2
+		  && config->authentication_type != IPMI_MONITORING_AUTHENTICATION_TYPE_MD5))
+	  || (config->workaround_flags & ~workaround_flags_mask)))
     {
       c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
       return (-1);
@@ -365,18 +363,15 @@ _ipmi_2_0_init (ipmi_monitoring_ctx_t c,
   assert (c->ipmi_ctx);
   assert (hostname);
 
-  if (strlen (hostname) > MAXHOSTNAMELEN
-      || (config
-          && ((config->username && strlen (config->username) > IPMI_MAX_USER_NAME_LENGTH)
-              || (config->password && strlen (config->password) > IPMI_2_0_MAX_PASSWORD_LENGTH)
-              || (config->k_g && config->k_g_len > IPMI_MAX_K_G_LENGTH)
-              || (config->privilege_level >= 0
-                  && (config->privilege_level != IPMI_MONITORING_PRIVILEGE_LEVEL_USER
-                      && config->privilege_level != IPMI_MONITORING_PRIVILEGE_LEVEL_OPERATOR
-                      && config->privilege_level != IPMI_MONITORING_PRIVILEGE_LEVEL_ADMIN))
-              || (config->cipher_suite_id >= 0
-                  && !IPMI_CIPHER_SUITE_ID_SUPPORTED (config->cipher_suite_id))
-              || (config->workaround_flags & ~workaround_flags_mask))))
+  /* hostname, username, password, k_g length/input check handled via lib calls */
+  if (config
+      && ((config->privilege_level >= 0
+	   && (config->privilege_level != IPMI_MONITORING_PRIVILEGE_LEVEL_USER
+	       && config->privilege_level != IPMI_MONITORING_PRIVILEGE_LEVEL_OPERATOR
+	       && config->privilege_level != IPMI_MONITORING_PRIVILEGE_LEVEL_ADMIN))
+	  || (config->cipher_suite_id >= 0
+	      && !IPMI_CIPHER_SUITE_ID_SUPPORTED (config->cipher_suite_id))
+	  || (config->workaround_flags & ~workaround_flags_mask)))
     {
       c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
       return (-1);
@@ -503,11 +498,11 @@ _outofband_init (ipmi_monitoring_ctx_t c,
   assert (c->ipmi_ctx);
   assert (hostname);
 
-  if (strlen (hostname) > MAXHOSTNAMELEN
-      || (config
-          && ((config->protocol_version >= 0
-               && (config->protocol_version != IPMI_MONITORING_PROTOCOL_VERSION_1_5
-                   && config->protocol_version != IPMI_MONITORING_PROTOCOL_VERSION_2_0)))))
+  /* hostname length/input check in later functions */
+  if (config
+      && ((config->protocol_version >= 0
+	   && (config->protocol_version != IPMI_MONITORING_PROTOCOL_VERSION_1_5
+	       && config->protocol_version != IPMI_MONITORING_PROTOCOL_VERSION_2_0))))
     {
       c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
       return (-1);

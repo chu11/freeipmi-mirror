@@ -1,4 +1,24 @@
 2012-03-01  Albert Chu <chu11@llnl.gov>
+
+	Merge altport branch. 
+
+	* libfreeipmi/api/ipmi-api.c (_setup_hostname),
+	libipmiconsole/ipmiconsole_defs.h, libipmiconsole/ipmiconsole.c
+	(ipmiconsole_ctx_create), libipmiconsole/ipmiconsole_ctx.h
+	(ipmiconsole_ctx_config_setup), libipmiconsole/ipmiconsole_ctx.c
+	(ipmiconsole_ctx_config_setup), ipmidetectd/ipmidetectd_loop.c
+	(_nodes_setup): Support ability to specify alternate port in
+	hostname argument or host config.
+
+	* libipmimonitoring/ipmi_monitoring_ipmi_communication.c
+	(_ipmi_1_5_init, _ipmi_2_0_init, _outofband_init): Let various
+	error checking fall through to lower level APIs.
+	
+	* man/manpage-common-outofband-hostname.man,
+	man/manpage-common-outofband-hostname-hostranged.man,
+	man/ipmidetectd.conf.5.pre.in: Update manpages appropriately.
+
+2012-03-01  Albert Chu <chu11@llnl.gov>
 	
 	* libipmimonitoring/ipmi_monitoring_ipmi_communication.c
 	(_ipmi_1_5_init, _ipmi_2_0_init): Properly return connection
