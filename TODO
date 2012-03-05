@@ -235,6 +235,7 @@ bmc-device
   - really should be done by firmware or distro
   - or only as needed in ipmi-oem per vendor need?
 - (NOT CONFIRMED) get auxiliary log status
+- set sensor reading (XXX)
 
 ipmiconsole
 -----------
