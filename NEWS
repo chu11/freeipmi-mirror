@@ -38,6 +38,7 @@ o In libipmimonitoring, support Cipher Suite ID 15, 16, and 17.
 o In libfreeipmi, libipmiconsole, libipmimonitoring, support ability
   to specify alternate port via optional [:port] in hostname or host
   config.
+o In libfreeipmi, add additional IPMI commands/payloads. 
  
 Misc
 ----

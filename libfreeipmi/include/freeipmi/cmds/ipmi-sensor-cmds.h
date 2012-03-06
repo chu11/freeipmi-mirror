@@ -80,6 +80,33 @@ extern "C" {
 #define IPMI_SENSOR_THRESHOLD_SET     0x1
 #define IPMI_SENSOR_THRESHOLD_NOT_SET 0x0
 
+#define IPMI_SENSOR_READING_OPERATION_WRITE_GIVEN_VALUE_TO_SENSOR_READING_BYTE 0x01
+#define IPMI_SENSOR_READING_OPERATION_DONT_CHANGE_SENSOR_READING_BYTE          0x00
+
+#define IPMI_SENSOR_READING_OPERATION_VALID(__val) \
+  (((__val) == IPMI_SENSOR_READING_OPERATION_WRITE_GIVEN_VALUE_TO_SENSOR_READING_BYTE \
+    || (__val) == IPMI_SENSOR_READING_OPERATION_DONT_CHANGE_SENSOR_READING_BYTE) ? 1 : 0)
+
+#define IPMI_ASSERTION_DEASSERTION_BITS_OPERATION_CLEAR_EVENT_STATUS_BITS       0x03
+#define IPMI_ASSERTION_DEASSERTION_BITS_OPERATION_SET_EVENT_STATUS_BITS         0x02
+#define IPMI_ASSERTION_DEASSERTION_BITS_OPERATION_WRITE_EVENT_STATUS_BITS       0x01
+#define IPMI_ASSERTION_DEASSERTION_BITS_OPERATION_DONT_CHANGE_EVENT_STATUS_BITS 0x00
+
+#define IPMI_ASSERTION_DEASSERTION_EVENT_STATUS_BITS_OPERATION_VALID(__val) \
+  (((__val) == IPMI_ASSERTION_DEASSERTION_EVENT_STATUS_BITS_OPERATION_CLEAR_EVENT_STATUS_BITS \
+    || (__val) == IPMI_ASSERTION_DEASSERTION_EVENT_STATUS_BITS_OPERATION_SET_EVENT_STATUS_BITS \
+    || (__val) == IPMI_ASSERTION_DEASSERTION_EVENT_STATUS_BITS_OPERATION_WRITE_EVENT_STATUS_BITS \
+    || (__val) == IPMI_ASSERTION_DEASSERTION_EVENT_STATUS_BITS_OPERATION_DONT_CHANGE_EVENT_STATUS_BITS) ? 1 : 0)
+
+#define IPMI_EVENT_DATA_BYTES_OPERATION_WRITE_EVENT_DATA_BYTES_EXCLUDING_EVENT_OFFSET 0x02
+#define IPMI_EVENT_DATA_BYTES_OPERATION_WRITE_EVENT_DATA_BYTES_INCLUDING_EVENT_OFFSET 0x01
+#define IPMI_EVENT_DATA_BYTES_OPERATION_DONT_WRITE_EVENT_DATA_BYTES                   0x00
+
+#define IPMI_EVENT_DATA_BYTES_OPERATION_VALID(__val) \
+  (((__val) == IPMI_EVENT_DATA_BYTES_OPERATION_WRITE_EVENT_DATA_BYTES_EXCLUDING_EVENT_OFFSET \
+    || (__val) == IPMI_EVENT_DATA_BYTES_OPERATION_WRITE_EVENT_DATA_BYTES_INCLUDING_EVENT_OFFSET \
+    || (__val) == IPMI_EVENT_DATA_BYTES_OPERATION_DONT_WRITE_EVENT_DATA_BYTES) ? 1 : 0)
+
 /* 
  * fill* functions return 0 on success, -1 on error.
  *
@@ -140,6 +167,14 @@ extern fiid_template_t tmpl_cmd_set_sensor_type_rs;
 
 extern fiid_template_t tmpl_cmd_get_sensor_type_rq;
 extern fiid_template_t tmpl_cmd_get_sensor_type_rs;
+
+extern fiid_template_t tmpl_cmd_set_sensor_reading_and_event_status_rq;
+extern fiid_template_t tmpl_cmd_set_sensor_reading_and_event_status_threshold_rq;
+extern fiid_template_t tmpl_cmd_set_sensor_reading_and_event_status_discrete_rq;
+extern fiid_template_t tmpl_cmd_set_sensor_reading_and_event_status_event_fields_rq;
+extern fiid_template_t tmpl_cmd_set_sensor_reading_and_event_status_threshold_event_fields_rq;
+extern fiid_template_t tmpl_cmd_set_sensor_reading_and_event_status_discrete_event_fields_rq;
+extern fiid_template_t tmpl_cmd_set_sensor_reading_and_event_status_rs;
 
 /* achu: as of IPMI 2.0 hysteresis_mask reserved for future - write as 0xFF */
 int fill_cmd_set_sensor_hysteresis (uint8_t sensor_number,

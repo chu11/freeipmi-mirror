@@ -232,6 +232,16 @@ ipmi_completion_code_strerror_r (uint8_t cmd,
                   SNPRINTF_RETURN (IPMI_COMP_CODE_ALERT_IPMI_MESSAGING_SESSION_ACTIVE_STR);
                 }
               break;
+	    case IPMI_CMD_SET_SENSOR_READING_AND_EVENT_STATUS:
+	      switch (comp_code)
+		{
+		case IPMI_COMP_CODE_SENSOR_READING_OR_STATUS_NOT_SETTABLE:
+		  SNPRINTF_RETURN (IPMI_COMP_CODE_SENSOR_READING_OR_STATUS_NOT_SETTABLE_STR);
+		  
+		case IPMI_COMP_CODE_EVENT_DATA_BYTES_NOT_SETTABLE:
+		  SNPRINTF_RETURN (IPMI_COMP_CODE_EVENT_DATA_BYTES_NOT_SETTABLE_STR);
+		}
+	      break;
             }
           break;
 

@@ -776,6 +776,240 @@ FIID Template: tmpl_cmd_get_sensor_type_rs
     { 7, "event_reading_type_code", REQUIRED, LENGTH-FIXED }
     { 1, "reserved", REQUIRED, LENGTH-FIXED }
 
+Set Sensor Reading and Event Status Request
+-------------------------------------------
+
+FIID Template: tmpl_cmd_set_sensor_reading_and_event_status_rq
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED }
+    { 8, "sensor_number", REQUIRED, LENGTH-FIXED }
+    { 2, "sensor_reading_operation", REQUIRED, LENGTH-FIXED }
+    { 2, "deassertion_bits_operation", REQUIRED, LENGTH-FIXED }
+    { 2, "assertion_bits_operation", REQUIRED, LENGTH-FIXED }
+    { 2, "event_data_bytes_operation", REQUIRED, LENGTH-FIXED }
+    { 8, "sensor_reading", REQUIRED, LENGTH-FIXED }
+    { 8, "assertion_event_bitmask1", REQUIRED, LENGTH-FIXED }
+    { 8, "assertion_event_bitmask2", REQUIRED, LENGTH-FIXED }
+    { 8, "deassertion_event_bitmask1", REQUIRED, LENGTH-FIXED }
+    { 8, "deassertion_event_bitmask2", REQUIRED, LENGTH-FIXED }
+    { 8, "event_data_1", REQUIRED, LENGTH-FIXED }
+    { 8, "event_data_2", REQUIRED, LENGTH-FIXED }
+    { 8, "event_data_3", REQUIRED, LENGTH-FIXED }
+
+Set Sensor Reading and Event Status (Threshold) Request
+-------------------------------------------------------
+
+FIID Template: tmpl_cmd_set_sensor_reading_and_event_status_threshold_rq
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED }
+    { 8, "sensor_number", REQUIRED, LENGTH-FIXED }
+    { 2, "sensor_reading_operation", REQUIRED, LENGTH-FIXED }
+    { 2, "deassertion_bits_operation", REQUIRED, LENGTH-FIXED }
+    { 2, "assertion_bits_operation", REQUIRED, LENGTH-FIXED }
+    { 2, "event_data_bytes_operation", REQUIRED, LENGTH-FIXED }
+    { 8, "sensor_reading", REQUIRED, LENGTH-FIXED }
+    { 1, "assertion_event_lower_non_critical_going_low_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "assertion_event_lower_non_critical_going_high_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "assertion_event_lower_critical_going_low_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "assertion_event_lower_critical_going_high_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "assertion_event_lower_non_recoverable_going_low_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "assertion_event_lower_non_recoverable_going_high_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "assertion_event_upper_non_critical_going_low_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "assertion_event_upper_non_critical_going_high_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "assertion_event_upper_critical_going_low_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "assertion_event_upper_critical_going_high_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "assertion_event_upper_non_recoverable_going_low_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "assertion_event_upper_non_recoverable_going_high_occurred", REQUIRED, LENGTH-FIXED }
+    { 4, "reserved1", REQUIRED, LENGTH-FIXED }
+    { 1, "deassertion_event_lower_non_critical_going_low_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "deassertion_event_lower_non_critical_going_high_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "deassertion_event_lower_critical_going_low_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "deassertion_event_lower_critical_going_high_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "deassertion_event_lower_non_recoverable_going_low_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "deassertion_event_lower_non_recoverable_going_high_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "deassertion_event_upper_non_critical_going_low_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "deassertion_event_upper_non_critical_going_high_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "deassertion_event_upper_critical_going_low_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "deassertion_event_upper_critical_going_high_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "deassertion_event_upper_non_recoverable_going_low_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "deassertion_event_upper_non_recoverable_going_high_occurred", REQUIRED, LENGTH-FIXED }
+    { 4, "reserved2", REQUIRED, LENGTH-FIXED }
+    { 8, "event_data_1", REQUIRED, LENGTH-FIXED }
+    { 8, "event_data_2", REQUIRED, LENGTH-FIXED }
+    { 8, "event_data_3", REQUIRED, LENGTH-FIXED }
+
+Set Sensor Reading and Event Status (Discrete) Request
+------------------------------------------------------
+
+FIID Template: tmpl_cmd_set_sensor_reading_and_event_status_discrete_rq
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED }
+    { 8, "sensor_number", REQUIRED, LENGTH-FIXED }
+    { 2, "sensor_reading_operation", REQUIRED, LENGTH-FIXED }
+    { 2, "deassertion_bits_operation", REQUIRED, LENGTH-FIXED }
+    { 2, "assertion_bits_operation", REQUIRED, LENGTH-FIXED }
+    { 2, "event_data_bytes_operation", REQUIRED, LENGTH-FIXED }
+    { 8, "sensor_reading", REQUIRED, LENGTH-FIXED }
+    { 1, "state_0_assertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_1_assertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_2_assertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_3_assertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_4_assertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_5_assertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_6_assertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_7_assertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_8_assertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_9_assertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_10_assertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_11_assertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_12_assertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_13_assertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_14_assertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "reserved1", REQUIRED, LENGTH-FIXED }
+    { 1, "state_0_deassertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_1_deassertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_2_deassertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_3_deassertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_4_deassertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_5_deassertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_6_deassertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_7_deassertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_8_deassertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_9_deassertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_10_deassertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_11_deassertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_12_deassertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_13_deassertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_14_deassertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "reserved1", REQUIRED, LENGTH-FIXED }
+    { 8, "event_data_1", REQUIRED, LENGTH-FIXED }
+    { 8, "event_data_2", REQUIRED, LENGTH-FIXED }
+    { 8, "event_data_3", REQUIRED, LENGTH-FIXED }
+
+Set Sensor Reading and Event Status (with Event Fields) Request
+---------------------------------------------------------------
+
+FIID Template: tmpl_cmd_set_sensor_reading_and_event_status_event_fields_rq
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED }
+    { 8, "sensor_number", REQUIRED, LENGTH-FIXED }
+    { 2, "sensor_reading_operation", REQUIRED, LENGTH-FIXED }
+    { 2, "deassertion_bits_operation", REQUIRED, LENGTH-FIXED }
+    { 2, "assertion_bits_operation", REQUIRED, LENGTH-FIXED }
+    { 2, "event_data_bytes_operation", REQUIRED, LENGTH-FIXED }
+    { 8, "sensor_reading", REQUIRED, LENGTH-FIXED }
+    { 8, "assertion_event_bitmask1", REQUIRED, LENGTH-FIXED }
+    { 8, "assertion_event_bitmask2", REQUIRED, LENGTH-FIXED }
+    { 8, "deassertion_event_bitmask1", REQUIRED, LENGTH-FIXED }
+    { 8, "deassertion_event_bitmask2", REQUIRED, LENGTH-FIXED }
+    { 4, "offset_from_event_reading_type_code", REQUIRED, LENGTH-FIXED }
+    { 2, "event_data3_flag", REQUIRED, LENGTH-FIXED }
+    { 2, "event_data2_flag", REQUIRED, LENGTH-FIXED }
+    { 8, "event_data_2", REQUIRED, LENGTH-FIXED }
+    { 8, "event_data_3", REQUIRED, LENGTH-FIXED }
+
+Set Sensor Reading and Event Status (Threshold with Event Fields) Request
+-------------------------------------------------------------------------
+
+FIID Template: tmpl_cmd_set_sensor_reading_and_event_status_threshold_event_fields_rq
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED }
+    { 8, "sensor_number", REQUIRED, LENGTH-FIXED }
+    { 2, "sensor_reading_operation", REQUIRED, LENGTH-FIXED }
+    { 2, "deassertion_bits_operation", REQUIRED, LENGTH-FIXED }
+    { 2, "assertion_bits_operation", REQUIRED, LENGTH-FIXED }
+    { 2, "event_data_bytes_operation", REQUIRED, LENGTH-FIXED }
+    { 8, "sensor_reading", REQUIRED, LENGTH-FIXED }
+    { 1, "assertion_event_lower_non_critical_going_low_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "assertion_event_lower_non_critical_going_high_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "assertion_event_lower_critical_going_low_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "assertion_event_lower_critical_going_high_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "assertion_event_lower_non_recoverable_going_low_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "assertion_event_lower_non_recoverable_going_high_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "assertion_event_upper_non_critical_going_low_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "assertion_event_upper_non_critical_going_high_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "assertion_event_upper_critical_going_low_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "assertion_event_upper_critical_going_high_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "assertion_event_upper_non_recoverable_going_low_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "assertion_event_upper_non_recoverable_going_high_occurred", REQUIRED, LENGTH-FIXED }
+    { 4, "reserved1", REQUIRED, LENGTH-FIXED }
+    { 1, "deassertion_event_lower_non_critical_going_low_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "deassertion_event_lower_non_critical_going_high_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "deassertion_event_lower_critical_going_low_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "deassertion_event_lower_critical_going_high_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "deassertion_event_lower_non_recoverable_going_low_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "deassertion_event_lower_non_recoverable_going_high_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "deassertion_event_upper_non_critical_going_low_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "deassertion_event_upper_non_critical_going_high_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "deassertion_event_upper_critical_going_low_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "deassertion_event_upper_critical_going_high_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "deassertion_event_upper_non_recoverable_going_low_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "deassertion_event_upper_non_recoverable_going_high_occurred", REQUIRED, LENGTH-FIXED }
+    { 4, "reserved2", REQUIRED, LENGTH-FIXED }
+    { 4, "offset_from_event_reading_type_code", REQUIRED, LENGTH-FIXED }
+    { 2, "event_data3_flag", REQUIRED, LENGTH-FIXED }
+    { 2, "event_data2_flag", REQUIRED, LENGTH-FIXED }
+    { 8, "event_data_2", REQUIRED, LENGTH-FIXED }
+    { 8, "event_data_3", REQUIRED, LENGTH-FIXED }
+
+Set Sensor Reading and Event Status (Discrete with Event Fields) Request
+------------------------------------------------------------------------
+
+FIID Template: tmpl_cmd_set_sensor_reading_and_event_status_discrete_event_fields_rq
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED }
+    { 8, "sensor_number", REQUIRED, LENGTH-FIXED }
+    { 2, "sensor_reading_operation", REQUIRED, LENGTH-FIXED }
+    { 2, "deassertion_bits_operation", REQUIRED, LENGTH-FIXED }
+    { 2, "assertion_bits_operation", REQUIRED, LENGTH-FIXED }
+    { 2, "event_data_bytes_operation", REQUIRED, LENGTH-FIXED }
+    { 8, "sensor_reading", REQUIRED, LENGTH-FIXED }
+    { 1, "state_0_assertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_1_assertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_2_assertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_3_assertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_4_assertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_5_assertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_6_assertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_7_assertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_8_assertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_9_assertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_10_assertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_11_assertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_12_assertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_13_assertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_14_assertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "reserved1", REQUIRED, LENGTH-FIXED }
+    { 1, "state_0_deassertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_1_deassertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_2_deassertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_3_deassertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_4_deassertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_5_deassertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_6_deassertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_7_deassertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_8_deassertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_9_deassertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_10_deassertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_11_deassertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_12_deassertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_13_deassertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "state_14_deassertion_event_occurred", REQUIRED, LENGTH-FIXED }
+    { 1, "reserved1", REQUIRED, LENGTH-FIXED }
+    { 4, "offset_from_event_reading_type_code", REQUIRED, LENGTH-FIXED }
+    { 2, "event_data3_flag", REQUIRED, LENGTH-FIXED }
+    { 2, "event_data2_flag", REQUIRED, LENGTH-FIXED }
+    { 8, "event_data_2", REQUIRED, LENGTH-FIXED }
+    { 8, "event_data_3", REQUIRED, LENGTH-FIXED }
+
+Set Sensor Reading and Event Status Response
+--------------------------------------------
+
+FIID Template: tmpl_cmd_set_sensor_reading_and_event_status_rs
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+
 #endif  /* 0 */
 
 #ifdef __cplusplus

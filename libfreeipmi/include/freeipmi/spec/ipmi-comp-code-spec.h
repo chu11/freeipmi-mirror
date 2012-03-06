@@ -517,6 +517,16 @@ extern "C" {
 /*
  * Sensor Device Commands
  */
+/* IPMI_CMD_SET_SENSOR_READING_AND_EVENT_STATUS */
+#define IPMI_COMP_CODE_SENSOR_READING_OR_STATUS_NOT_SETTABLE                                                          0x80
+#define IPMI_COMP_CODE_SENSOR_READING_OR_STATUS_NOT_SETTABLE_STR \
+  "Attempt to change reading or set or clear status bits that " \
+  "are not settable via this command"
+
+#define IPMI_COMP_CODE_EVENT_DATA_BYTES_NOT_SETTABLE                                                                  0x81
+#define IPMI_COMP_CODE_EVENT_DATA_BYTES_NOT_SETTABLE_STR \
+  "Attempted to set Event Data Bytes, but setting Event Data Bytes is not " \
+  "supported for this sensor."
 
 /*
  * FRU Device Commands
