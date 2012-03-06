@@ -137,12 +137,12 @@ ipmi_completion_code_strerror_r (uint8_t cmd,
       SNPRINTF_RETURN (IPMI_COMP_CODE_UNSPECIFIED_ERROR_STR);
     }
 
-  /* OEM completion codes */
-  if ((comp_code >= 0x01) && (comp_code <= 0x7E))
+  /* Device Specific OEM completion codes */
+  if (IPMI_COMP_CODE_DEVICE_SPECIFIC_CODES (comp_code))
     SNPRINTF_RETURN ("Device specific (OEM) completion code %02Xh.", comp_code);
 
   /* Command specific completion codes */
-  if ((comp_code >= 0x80) && (comp_code <= 0xBE))
+  if (IPMI_COMP_CODE_COMMAND_SPECIFIC_CODES (comp_code))
     {
       if (!IPMI_NET_FN_VALID (netfn))
         {
