@@ -92,8 +92,8 @@ FIID Template: tmpl_sel_system_event_record
     { 8, "event_data3", REQUIRED, LENGTH-FIXED }
 
 
-SEL System Event Record (with Event flags)
-------------------------------------------
+SEL System Event Record (with Event fields)
+-------------------------------------------
 
 FIID Template: tmpl_sel_system_event_record_event_fields
 
