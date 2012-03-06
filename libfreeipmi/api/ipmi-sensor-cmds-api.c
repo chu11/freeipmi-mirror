@@ -1116,3 +1116,78 @@ ipmi_cmd_get_sensor_reading_discrete (ipmi_ctx_t ctx,
   return (rv);
 }
 
+int
+ipmi_cmd_set_sensor_reading_and_event_status (ipmi_ctx_t ctx,
+					      uint8_t sensor_number,
+					      uint8_t sensor_reading_operation,
+					      uint8_t deassertion_bits_operation,
+					      uint8_t assertion_bits_operation,
+					      uint8_t event_data_bytes_operation,
+					      uint8_t sensor_reading,
+					      uint16_t assertion_event_bitmask,
+					      uint16_t deassertion_event_bitmask,
+					      uint8_t event_data1,
+					      uint8_t event_data2,
+					      uint8_t event_data3,
+					      fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  int rv = -1;
+
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if (!fiid_obj_valid (obj_cmd_rs))
+    {
+      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_set_sensor_reading_and_event_status_rs) < 0)
+    {
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
+      return (-1);
+    }
+
+  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_set_sensor_reading_and_event_status_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (fill_cmd_set_sensor_reading_and_event_status (sensor_number,
+						    sensor_reading_operation,
+						    deassertion_bits_operation,
+						    assertion_bits_operation,
+						    event_data_bytes_operation,
+						    sensor_reading,
+						    assertion_event_bitmask,
+						    deassertion_event_bitmask,
+						    event_data1,
+						    event_data2,
+						    event_data3,
+						    obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+  
+  if (api_ipmi_cmd (ctx,
+                    IPMI_BMC_IPMB_LUN_BMC,
+                    IPMI_NET_FN_SENSOR_EVENT_RQ,
+                    obj_cmd_rq,
+                    obj_cmd_rs) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      goto cleanup;
+    }
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rq);
+  return (rv);
+}

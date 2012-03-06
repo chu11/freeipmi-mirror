@@ -1473,3 +1473,52 @@ fill_cmd_get_sensor_reading (uint8_t sensor_number, fiid_obj_t obj_cmd_rq)
 
   return (0);
 }
+
+int
+fill_cmd_set_sensor_reading_and_event_status (uint8_t sensor_number,
+					      uint8_t sensor_reading_operation,
+					      uint8_t deassertion_bits_operation,
+					      uint8_t assertion_bits_operation,
+					      uint8_t event_data_bytes_operation,
+					      uint8_t sensor_reading,
+					      uint16_t assertion_event_bitmask,
+					      uint16_t deassertion_event_bitmask,
+					      uint8_t event_data1,
+					      uint8_t event_data2,
+					      uint8_t event_data3,
+					      fiid_obj_t obj_cmd_rq)
+{
+  if (!IPMI_SENSOR_READING_OPERATION_VALID (sensor_reading_operation)
+      || !IPMI_ASSERTION_DEASSERTION_EVENT_STATUS_BITS_OPERATION_VALID (deassertion_bits_operation)
+      || !IPMI_ASSERTION_DEASSERTION_EVENT_STATUS_BITS_OPERATION_VALID (assertion_bits_operation)
+      || !IPMI_EVENT_DATA_BYTES_OPERATION_VALID (event_data_bytes_operation)
+      || !fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_sensor_reading_and_event_status_rq) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SENSOR_READING_AND_EVENT_STATUS);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "sensor_number", sensor_number);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "sensor_reading_operation", sensor_reading_operation);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "deassertion_bits_operation", deassertion_bits_operation);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "assertion_bits_operation", assertion_bits_operation);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "event_data_bytes_operation", event_data_bytes_operation);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "sensor_reading", sensor_reading);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_bitmask1", assertion_event_bitmask & 0x00FF);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_bitmask2", (assertion_event_bitmask & 0xFF00) >> 8);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_bitmask1", deassertion_event_bitmask & 0x00FF);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_bitmask2", (deassertion_event_bitmask & 0xFF00) >> 8);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "event_data1", event_data1);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "event_data2", event_data2);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "event_data3", event_data3);
+
+  return (0);
+}

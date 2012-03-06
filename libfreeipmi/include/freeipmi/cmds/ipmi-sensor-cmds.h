@@ -87,10 +87,10 @@ extern "C" {
   (((__val) == IPMI_SENSOR_READING_OPERATION_WRITE_GIVEN_VALUE_TO_SENSOR_READING_BYTE \
     || (__val) == IPMI_SENSOR_READING_OPERATION_DONT_CHANGE_SENSOR_READING_BYTE) ? 1 : 0)
 
-#define IPMI_ASSERTION_DEASSERTION_BITS_OPERATION_CLEAR_EVENT_STATUS_BITS       0x03
-#define IPMI_ASSERTION_DEASSERTION_BITS_OPERATION_SET_EVENT_STATUS_BITS         0x02
-#define IPMI_ASSERTION_DEASSERTION_BITS_OPERATION_WRITE_EVENT_STATUS_BITS       0x01
-#define IPMI_ASSERTION_DEASSERTION_BITS_OPERATION_DONT_CHANGE_EVENT_STATUS_BITS 0x00
+#define IPMI_ASSERTION_DEASSERTION_EVENT_STATUS_BITS_OPERATION_CLEAR_EVENT_STATUS_BITS       0x03
+#define IPMI_ASSERTION_DEASSERTION_EVENT_STATUS_BITS_OPERATION_SET_EVENT_STATUS_BITS         0x02
+#define IPMI_ASSERTION_DEASSERTION_EVENT_STATUS_BITS_OPERATION_WRITE_EVENT_STATUS_BITS       0x01
+#define IPMI_ASSERTION_DEASSERTION_EVENT_STATUS_BITS_OPERATION_DONT_CHANGE_EVENT_STATUS_BITS 0x00
 
 #define IPMI_ASSERTION_DEASSERTION_EVENT_STATUS_BITS_OPERATION_VALID(__val) \
   (((__val) == IPMI_ASSERTION_DEASSERTION_EVENT_STATUS_BITS_OPERATION_CLEAR_EVENT_STATUS_BITS \
@@ -282,6 +282,19 @@ int fill_cmd_re_arm_sensor_events (uint8_t sensor_number,
 				   fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_get_sensor_reading (uint8_t sensor_number, fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_set_sensor_reading_and_event_status (uint8_t sensor_number,
+						  uint8_t sensor_reading_operation,
+						  uint8_t deassertion_bits_operation,
+						  uint8_t assertion_bits_operation,
+						  uint8_t event_data_bytes_operation,
+						  uint8_t sensor_reading,
+						  uint16_t assertion_event_bitmask,
+						  uint16_t deassertion_event_bitmask,
+						  uint8_t event_data1,
+						  uint8_t event_data2,
+						  uint8_t event_data3,
+						  fiid_obj_t obj_cmd_rq);
 
 #ifdef __cplusplus
 }
