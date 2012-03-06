@@ -1,22 +1,22 @@
-ganglia_docdir = $(datadir)/doc/$(PACKAGE)/contrib/ganglia
+ganglia_docdir = $(docdir)/contrib/ganglia
 
 ganglia_doc_DATA = \
 	ganglia/README \
 	ganglia/ganglia_ipmi_sensors.pl
 
-libipmimonitoring_docdir = $(datadir)/doc/$(PACKAGE)/contrib/libipmimonitoring
+libipmimonitoring_docdir = $(docdir)/contrib/libipmimonitoring
 
 libipmimonitoring_doc_DATA = \
 	libipmimonitoring/ipmimonitoring-sel.c \
 	libipmimonitoring/ipmimonitoring-sensors.c
 
-nagios_docdir = $(datadir)/doc/$(PACKAGE)/contrib/nagios
+nagios_docdir = $(docdir)/contrib/nagios
 
 nagios_doc_DATA = \
 	nagios/README \
 	nagios/nagios_ipmi_sensors.pl
 
-pet_docdir = $(datadir)/doc/$(PACKAGE)/contrib/pet
+pet_docdir = $(docdir)/contrib/pet
 
 pet_doc_DATA = \
 	pet/README \
