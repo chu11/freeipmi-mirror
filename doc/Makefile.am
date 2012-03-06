@@ -13,8 +13,6 @@ EXTRA_DIST = \
 	freeipmi-bugs-issues-and-workarounds.txt \
 	freeipmi-oem-documentation-requirements.txt
 
-docdir = $(datadir)/doc/$(PACKAGE)
-
 doc_DATA = $(EXTRA_DIST)
 
 

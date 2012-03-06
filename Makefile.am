@@ -79,7 +79,6 @@ EXTRA = \
 	DISCLAIMER.ipmidetect.UC \
 	DISCLAIMER.ipmi-fru.UC
 
-docdir   = $(datadir)/doc/$(PACKAGE)
 doc_DATA = $(EXTRA)
 
 CLEANFILES =

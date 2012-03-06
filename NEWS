@@ -23,6 +23,7 @@ o In libipmimonitoring, properly return connection timeout error on
 
 Misc
 ----
+o Fix build when using --docdir. 
 o Various documentation updates.
 
 FreeIPMI 1.1.2 - 02/06/12
