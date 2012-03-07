@@ -14,7 +14,7 @@ o In ipmipower, support --oem-power-type option to support OEM
   - Re-architect to allow serialization of power control operations to
     the same host.
 o Globally in tools, support ability to specify alternate port via
-  optional [:port] in hostname.
+  optional [:port] in hostname or host config.
 o In bmc-config, add configuration support for
   Maximum_Privilege_Cipher_Suite_Id_15 under RMCPplus_Conf_Privilege.
 o Globally support Cipher Suite ID 15 and 16 based on comments from
@@ -36,8 +36,7 @@ o In libfreeipmi, support reservation-id registration and clearing in
   the sel-parse sub-library.
 o In libipmimonitoring, support Cipher Suite ID 15, 16, and 17.
 o In libfreeipmi, libipmiconsole, libipmimonitoring, support ability
-  to specify alternate port via optional [:port] in hostname or host
-  config.
+  to specify alternate port via optional [:port] in hostname.
 o In libfreeipmi, add additional IPMI commands/payloads. 
  
 Misc
