@@ -3,6 +3,8 @@
  	* libfreeipmi/api/, libfreeipmi/cmds/: Support set sensor reading
 	and event status command functions.
 
+	* bmc-device/: Support --set-sensor-reading-and-event-status.
+
 2012-03-06  Thomas Renninger <trenn@suse.de>
 
 	* contrib/Makefile.am, Makefile.am, doc/Makefile.am: Fix docdir

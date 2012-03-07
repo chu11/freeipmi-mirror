@@ -111,6 +111,21 @@ required if generating the event via a system interface (i.e. inband).
 If generating the event via a system interface, the system management
 software generator id range is 0x41 to 6Fh.
 .TP
+\fB\-\-set\-sensor\-reading\-and\-event\-status\fR=\fI"<sensor_number> <sensor_reading> <sensor_reading_operation> <assertion_bitmask> <assertion_bitmask_operation> <deassertion_bitmask> <deassertion_bitmask_operation> <event_data1> <event_data2> <event_data3> <event_data_operation>"\fR
+Instruct the BMC to set a sensor reading and/or event status.  How the
+various fields are written depends on a set of operation instructions
+specified.  The \fIsensor_reading\fR can be written or not changed
+with the respective operation \fIwrite\fR and \fInochange\fR.  For the
+\fIassertion_bitmask\fR and \fIdeassertion_bitmask\fR, the 0 bits of
+the bitmask can clear the bits of the status, the 1 bits of the
+bitmask can set the bits of the status, the entire bitmask can be
+written as the status, or the status cannot be changed respecitvely
+with the respective operations \fIclear0bits\fR, \fIset1bits\fR,
+\fIwrite\fR, and \fInochange\fR.  The \fIevent_data1\fR byte can be
+written fully, written without the event offset (bits 3:0), or not be
+changed via the \fIwrite\fR, \fInooffsetwrite\fR, or \fInochange\fR
+operations.
+.TP
 \fB\-\-get\-mca\-auxiliary\-log\-status\fR
 Get machine check architecture (MCA) auxiliary log status information.
 .TP

@@ -70,6 +70,8 @@ typedef int (*Bmc_device_system_info)(ipmi_ctx_t ctx,
 
 #define BMC_DEVICE_MAX_PLATFORM_EVENT_ARGS 9
 
+#define BMC_DEVICE_SET_SENSOR_READING_AND_EVENT_STATUS_ARGS 11
+
 static int
 _flush_cache (bmc_device_state_data_t *state_data)
 {
@@ -1672,6 +1674,205 @@ platform_event (bmc_device_state_data_t *state_data)
 }
 
 static int
+set_sensor_reading_and_event_status (bmc_device_state_data_t *state_data)
+{
+  struct bmc_device_arguments *args;
+  fiid_obj_t obj_cmd_rs = NULL;
+  char *set_sensor_reading_and_event_status_arg_cpy = NULL;
+  char *str_args[BMC_DEVICE_SET_SENSOR_READING_AND_EVENT_STATUS_ARGS];
+  unsigned int num_str_args = 0;
+  char *str_ptr;
+  char *lasts;
+  unsigned int str_args_index = 0;
+  uint8_t sensor_number;
+  uint8_t sensor_reading;
+  uint8_t sensor_reading_operation;
+  uint16_t assertion_bitmask;
+  uint8_t assertion_bitmask_operation;
+  uint16_t deassertion_bitmask;
+  uint8_t deassertion_bitmask_operation;
+  uint8_t event_data1;
+  uint8_t event_data2;
+  uint8_t event_data3;
+  uint8_t event_data_operation;
+  int rv = -1;
+
+  assert (state_data);
+
+  args = state_data->prog_data->args;
+
+  if (!(set_sensor_reading_and_event_status_arg_cpy = strdup(args->set_sensor_reading_and_event_status_arg)))
+    {
+      pstdout_perror (state_data->pstate, "strdup");
+      goto cleanup;
+    }
+
+  str_ptr = strtok_r (set_sensor_reading_and_event_status_arg_cpy, " \t\0", &lasts);
+  while (str_ptr && num_str_args < BMC_DEVICE_SET_SENSOR_READING_AND_EVENT_STATUS_ARGS)
+    {
+      str_args[num_str_args] = str_ptr;
+      num_str_args++;
+
+      str_ptr = strtok_r (NULL, " \t\0", &lasts);
+    }
+
+  if (num_str_args != BMC_DEVICE_SET_SENSOR_READING_AND_EVENT_STATUS_ARGS)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "Invalid number of arguments specified\n");
+      goto cleanup;
+    }
+
+  if (parse_hex_byte (state_data,
+		      str_args[str_args_index],
+		      &sensor_number,
+		      "sensor number") < 0)
+    goto cleanup;
+  str_args_index++;
+  
+  if (parse_hex_byte (state_data,
+		      str_args[str_args_index],
+		      &sensor_reading,
+		      "sensor reading") < 0)
+    goto cleanup;
+  str_args_index++;
+
+  if (!strcasecmp (str_args[str_args_index], "write"))
+    sensor_reading_operation = IPMI_SENSOR_READING_OPERATION_WRITE_GIVEN_VALUE_TO_SENSOR_READING_BYTE;
+  else if (!strcasecmp (str_args[str_args_index], "nochange"))
+    sensor_reading_operation = IPMI_SENSOR_READING_OPERATION_DONT_CHANGE_SENSOR_READING_BYTE;
+  else
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "Invalid sensor reading operation specified\n"); 
+      goto cleanup;
+    }
+  str_args_index++;
+
+  if (parse_uint16 (state_data,
+		    str_args[str_args_index],
+		    &assertion_bitmask,
+		    "assertion bitmask") < 0)
+    goto cleanup;
+  str_args_index++;
+
+  if (!strcasecmp (str_args[str_args_index], "clear0bits"))
+    assertion_bitmask_operation = IPMI_ASSERTION_DEASSERTION_EVENT_STATUS_BITS_OPERATION_CLEAR_EVENT_STATUS_BITS;
+  else if (!strcasecmp (str_args[str_args_index], "set1bits"))
+    assertion_bitmask_operation = IPMI_ASSERTION_DEASSERTION_EVENT_STATUS_BITS_OPERATION_SET_EVENT_STATUS_BITS;
+  else if (!strcasecmp (str_args[str_args_index], "write"))
+    assertion_bitmask_operation = IPMI_ASSERTION_DEASSERTION_EVENT_STATUS_BITS_OPERATION_WRITE_EVENT_STATUS_BITS;
+  else if (!strcasecmp (str_args[str_args_index], "nochange"))
+    assertion_bitmask_operation = IPMI_ASSERTION_DEASSERTION_EVENT_STATUS_BITS_OPERATION_DONT_CHANGE_EVENT_STATUS_BITS;
+  else
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "Invalid assertion bitmask operation specified\n"); 
+      goto cleanup;
+    }
+  str_args_index++;
+
+  if (parse_uint16 (state_data,
+		    str_args[str_args_index],
+		    &deassertion_bitmask,
+		    "deassertion bitmask") < 0)
+    goto cleanup;
+  str_args_index++;
+
+  if (!strcasecmp (str_args[str_args_index], "clear0bits"))
+    deassertion_bitmask_operation = IPMI_ASSERTION_DEASSERTION_EVENT_STATUS_BITS_OPERATION_CLEAR_EVENT_STATUS_BITS;
+  else if (!strcasecmp (str_args[str_args_index], "set1bits"))
+    deassertion_bitmask_operation = IPMI_ASSERTION_DEASSERTION_EVENT_STATUS_BITS_OPERATION_SET_EVENT_STATUS_BITS;
+  else if (!strcasecmp (str_args[str_args_index], "write"))
+    deassertion_bitmask_operation = IPMI_ASSERTION_DEASSERTION_EVENT_STATUS_BITS_OPERATION_WRITE_EVENT_STATUS_BITS;
+  else if (!strcasecmp (str_args[str_args_index], "nochange"))
+    deassertion_bitmask_operation = IPMI_ASSERTION_DEASSERTION_EVENT_STATUS_BITS_OPERATION_DONT_CHANGE_EVENT_STATUS_BITS;
+  else
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "Invalid deassertion bitmask operation specified\n"); 
+      goto cleanup;
+    }
+  str_args_index++;
+
+  if (parse_hex_byte (state_data,
+                      str_args[str_args_index],
+                      &event_data1,
+                      "event data1") < 0)
+    goto cleanup;
+  str_args_index++;
+
+  if (parse_hex_byte (state_data,
+                      str_args[str_args_index],
+                      &event_data2,
+                      "event data2") < 0)
+    goto cleanup;
+  str_args_index++;
+
+  if (parse_hex_byte (state_data,
+                      str_args[str_args_index],
+                      &event_data3,
+                      "event data3") < 0)
+    goto cleanup;
+  str_args_index++;
+    
+  if (!strcasecmp (str_args[str_args_index], "write"))
+    event_data_operation = IPMI_EVENT_DATA_BYTES_OPERATION_WRITE_EVENT_DATA_BYTES_INCLUDING_EVENT_OFFSET;
+  else if (!strcasecmp (str_args[str_args_index], "nooffsetwrite"))
+    event_data_operation = IPMI_EVENT_DATA_BYTES_OPERATION_WRITE_EVENT_DATA_BYTES_EXCLUDING_EVENT_OFFSET;
+  else if (!strcasecmp (str_args[str_args_index], "nochange"))
+    event_data_operation = IPMI_EVENT_DATA_BYTES_OPERATION_DONT_WRITE_EVENT_DATA_BYTES;
+  else
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "Invalid event data operation specified\n"); 
+      goto cleanup;
+    }
+  str_args_index++;
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_sensor_reading_and_event_status_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_set_sensor_reading_and_event_status (state_data->ipmi_ctx,
+						    sensor_number,
+						    sensor_reading_operation,
+						    deassertion_bitmask_operation,
+						    assertion_bitmask_operation,
+						    event_data_operation,
+						    sensor_reading,
+						    assertion_bitmask,
+						    deassertion_bitmask,
+						    event_data1,
+						    event_data2,
+						    event_data3,
+						    obj_cmd_rs) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_set_sensor_reading_and_event_status: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  rv = 0;
+ cleanup:
+  free (set_sensor_reading_and_event_status_arg_cpy);
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
+static int
 get_mca_auxiliary_log_status (bmc_device_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -2413,6 +2614,9 @@ run_cmd_args (bmc_device_state_data_t *state_data)
 
   if (args->platform_event)
     return (platform_event (state_data));
+
+  if (args->set_sensor_reading_and_event_status)
+    return (set_sensor_reading_and_event_status (state_data));
 
   if (args->get_mca_auxiliary_log_status)
     return (get_mca_auxiliary_log_status (state_data));

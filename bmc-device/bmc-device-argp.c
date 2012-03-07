@@ -96,26 +96,28 @@ static struct argp_option cmdline_options[] =
       "Set SEL time.  Input format = \"MM/DD/YYYY - HH:MM:SS\" or \"now\".", 43},
     { "platform-event", PLATFORM_EVENT_KEY, "[generator_id] <event_message_format_version> <sensor_type> <sensor_number> <event_type> <event_direction> <event_data1> <event_data2> <event_data3>", 0,
       "Instruct the BMC to process the specified event data.", 44},
+    { "set-sensor-reading-and-event-status", SET_SENSOR_READING_AND_EVENT_STATUS_KEY, "<sensor_number> <sensor_reading> <sensor_reading_operation> <assertion_bitmask> <assertion_bitmask_operation> <deassertion_bitmask> <deassertion_bitmask_operation> <event_data1> <event_data2> <event_data3> <event_data_operation>", 0,
+      "Instruct the BMC to set a sensor reading and/or event status.", 45},
     { "get-mca-auxiliary-log-status", GET_MCA_AUXILIARY_LOG_STATUS_KEY, NULL, 0,
-      "Get machine check architecture (MCA) auxiliary log status information.", 45},
+      "Get machine check architecture (MCA) auxiliary log status information.", 46},
     { "get-ssif-interface-capabilities", GET_SSIF_INTERFACE_CAPABILITIES_KEY, NULL, 0,
-      "Get SSIF interface capabilities.", 46},
+      "Get SSIF interface capabilities.", 47},
     { "get-kcs-interface-capabilities", GET_KCS_INTERFACE_CAPABILITIES_KEY, NULL, 0,
-      "Get KCS interface capabilities.", 47},
+      "Get KCS interface capabilities.", 48},
     { "get-bt-interface-capabilities", GET_BT_INTERFACE_CAPABILITIES_KEY, NULL, 0,
-      "Get BT interface capabilities.", 48},
+      "Get BT interface capabilities.", 49},
     { "get-bmc-global-enables", GET_BMC_GLOBAL_ENABLES_KEY, NULL, 0,
-      "Get BMC Global Enables.", 49},
+      "Get BMC Global Enables.", 50},
     { "set-system-firmware-version", SET_SYSTEM_FIRMWARE_VERSION_KEY, "STRING", 0,
-      "Set System Firmware Version.", 50},
+      "Set System Firmware Version.", 51},
     { "set-system-name", SET_SYSTEM_NAME_KEY, "STRING", 0,
-      "Set System Name.", 51},
+      "Set System Name.", 52},
     { "set-primary-operating-system-name", SET_PRIMARY_OPERATING_SYSTEM_NAME_KEY, "STRING", 0,
-      "Set Primary Operating System Name.", 52},
+      "Set Primary Operating System Name.", 53},
     { "set-operating-system-name", SET_OPERATING_SYSTEM_NAME_KEY, "STRING", 0,
-      "Set Operating System Name.", 53},
+      "Set Operating System Name.", 54},
     { "verbose", VERBOSE_KEY, 0, 0,
-      "Increase verbosity in output.", 54},
+      "Increase verbosity in output.", 55},
     { NULL, 0, NULL, 0, NULL, 0}
   };
 
@@ -244,6 +246,10 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       cmd_args->platform_event = 1;
       cmd_args->platform_event_arg = arg;
       break;
+    case SET_SENSOR_READING_AND_EVENT_STATUS_KEY:
+      cmd_args->set_sensor_reading_and_event_status = 1;
+      cmd_args->set_sensor_reading_and_event_status_arg = arg;
+      break;
     case GET_MCA_AUXILIARY_LOG_STATUS_KEY:
       cmd_args->get_mca_auxiliary_log_status = 1;
       break;
@@ -334,6 +340,7 @@ _bmc_device_args_validate (struct bmc_device_arguments *cmd_args)
       && !cmd_args->get_sel_time
       && !cmd_args->set_sel_time
       && !cmd_args->platform_event
+      && !cmd_args->set_sensor_reading_and_event_status
       && !cmd_args->get_mca_auxiliary_log_status
       && !cmd_args->get_ssif_interface_capabilities
       && !cmd_args->get_kcs_interface_capabilities
@@ -363,6 +370,7 @@ _bmc_device_args_validate (struct bmc_device_arguments *cmd_args)
        + cmd_args->get_sel_time
        + cmd_args->set_sel_time
        + cmd_args->platform_event
+       + cmd_args->set_sensor_reading_and_event_status
        + cmd_args->get_mca_auxiliary_log_status
        + cmd_args->get_ssif_interface_capabilities
        + cmd_args->get_kcs_interface_capabilities
@@ -451,6 +459,8 @@ bmc_device_argp_parse (int argc, char **argv, struct bmc_device_arguments *cmd_a
   cmd_args->set_sel_time_arg = NULL;
   cmd_args->platform_event = 0;
   cmd_args->platform_event_arg = NULL;
+  cmd_args->set_sensor_reading_and_event_status = 0;
+  cmd_args->set_sensor_reading_and_event_status_arg = NULL;
   cmd_args->get_mca_auxiliary_log_status = 0;
   cmd_args->get_ssif_interface_capabilities = 0;
   cmd_args->get_kcs_interface_capabilities = 0;
