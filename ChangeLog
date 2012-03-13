@@ -1,5 +1,13 @@
 2012-03-06  Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/: Add Intel --get-power-restore-delay and --set-power-restore-delay.
+
+	* libfreeipmi/include/: Add additions for Intel S2600JF/Appro 512x
+
+	* man/: Update documentation for Intel S2600JF/Appro 512x support.
+	
+2012-03-06  Albert Chu <chu11@llnl.gov>
+
  	* libfreeipmi/api/, libfreeipmi/cmds/: Support set sensor reading
 	and event status command functions.
 

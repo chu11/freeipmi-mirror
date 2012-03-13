@@ -202,6 +202,11 @@
 #define IPMI_OEM_INTEL_RESTORE_CONFIGURATION_RESTORE_PROGRESS_RESTORE_IN_PROGRESS 0x00
 #define IPMI_OEM_INTEL_RESTORE_CONFIGURATION_RESTORE_PROGRESS_RESTORE_COMPLETED   0x01
 
+#define IPMI_OEM_INTEL_POWER_RESTORE_DELAY_MSB_MASK 0x07
+#define IPMI_OEM_INTEL_POWER_RESTORE_DELAY_LSB_MASK 0xFF
+
+#define IPMI_OEM_INTEL_POWER_RESTORE_DELAY_MAX 0x07FF
+
 static int
 _get_smtp_configuration_data (ipmi_oem_state_data_t *state_data,
 			      uint8_t channel_number,
@@ -1137,6 +1142,164 @@ ipmi_oem_intel_set_smtp_config (ipmi_oem_state_data_t *state_data)
 }
 
 int
+ipmi_oem_intel_get_power_restore_delay (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  uint16_t delay = 0; 
+  int rs_len;
+  int rv = -1;
+
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+
+  /* Intel S2600JF/Appro 512X
+   *
+   * Request 
+   *
+   * 0x30 - OEM network function
+   * 0x55 - OEM cmd
+   *
+   * Response 
+   *
+   * 0x55 - OEM cmd
+   * 0x?? - Completion Code
+   * 0x?? - delay setting (MSB)
+   *      - [7:3] - reserved
+   *      - [2:0] - most significant 3 bits
+   * 0x?? - delay setting (LSB)
+   *
+   * delay setting is 11 bits total.
+   */
+
+  bytes_rq[0] = IPMI_NET_FN_OEM_INTEL_GENERIC_RQ;
+  bytes_rq[1] = IPMI_CMD_OEM_INTEL_GET_POWER_RESTORE_DELAY;
+
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+                              IPMI_NET_FN_OEM_INTEL_GENERIC_RQ, /* network function */
+                              bytes_rq, /* data */
+                              2, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+  
+  if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                   bytes_rs,
+                                                   rs_len,
+                                                   4,
+                                                   IPMI_CMD_OEM_INTEL_GET_POWER_RESTORE_DELAY,
+                                                   IPMI_NET_FN_OEM_INTEL_GENERIC_RS,
+                                                   NULL) < 0)
+    goto cleanup;
+
+  delay = ((bytes_rs[2] & IPMI_OEM_INTEL_POWER_RESTORE_DELAY_MSB_MASK) << 8) | bytes_rs[3];
+
+  pstdout_printf (state_data->pstate, "%u\n", delay);
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
+ipmi_oem_intel_set_power_restore_delay (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  unsigned int tmp;
+  char *endptr;
+  uint16_t delay = 0; 
+  int rs_len;
+  int rv = -1;
+
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 1);
+
+  errno = 0;
+  
+  tmp = strtoul (state_data->prog_data->args->oem_options[0],
+		 &endptr,
+		 10);
+  if (errno
+      || endptr[0] != '\0'
+      || tmp > IPMI_OEM_INTEL_POWER_RESTORE_DELAY_MAX)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "%s:%s invalid OEM option argument '%s'\n",
+		       state_data->prog_data->args->oem_id,
+		       state_data->prog_data->args->oem_command,
+		       state_data->prog_data->args->oem_options[0]);
+      goto cleanup;
+    }
+  
+  delay = tmp;
+  
+  /* Intel S2600JF/Appro 512X
+   *
+   * Request 
+   *
+   * 0x30 - OEM network function
+   * 0x54 - OEM cmd
+   * 0x?? - delay setting (MSB)
+   *      - [7:3] - reserved
+   *      - [2:0] - most significant 3 bits
+   * 0x?? - delay setting (LSB)
+   *
+   * Response 
+   *
+   * 0x55 - OEM cmd
+   * 0x?? - Completion Code
+   *
+   * delay setting is 11 bits total.
+   */
+
+  bytes_rq[0] = IPMI_NET_FN_OEM_INTEL_GENERIC_RQ;
+  bytes_rq[1] = IPMI_CMD_OEM_INTEL_SET_POWER_RESTORE_DELAY;
+  bytes_rq[2] = (delay & IPMI_OEM_INTEL_POWER_RESTORE_DELAY_MSB_MASK) >> 8;
+  bytes_rq[3] = (delay & IPMI_OEM_INTEL_POWER_RESTORE_DELAY_LSB_MASK);
+
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+                              IPMI_NET_FN_OEM_INTEL_GENERIC_RQ, /* network function */
+                              bytes_rq, /* data */
+                              4, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+  
+  if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                   bytes_rs,
+                                                   rs_len,
+                                                   2,
+                                                   IPMI_CMD_OEM_INTEL_SET_POWER_RESTORE_DELAY,
+                                                   IPMI_NET_FN_OEM_INTEL_GENERIC_RS,
+                                                   NULL) < 0)
+    goto cleanup;
+
+  delay = ((bytes_rs[2] & IPMI_OEM_INTEL_POWER_RESTORE_DELAY_MSB_MASK) << 8) | bytes_rs[3];
+
+  pstdout_printf (state_data->pstate, "%u\n", delay);
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
 ipmi_oem_intel_restore_configuration (ipmi_oem_state_data_t *state_data)
 {
   uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
@@ -1148,6 +1311,7 @@ ipmi_oem_intel_restore_configuration (ipmi_oem_state_data_t *state_data)
   assert (!state_data->prog_data->args->oem_options_count);
 
   /* Intel S5500WB/Penguin Computing Relion 700
+   * Intel S2600JF/Appro 512X
    *
    * Restore Configuration Request
    *
