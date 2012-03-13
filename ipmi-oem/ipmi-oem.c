@@ -504,6 +504,20 @@ struct ipmi_oem_command oem_intel[] =
       ipmi_oem_intel_set_power_restore_delay
     },
     {
+      "get-bmc-service-status",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_intel_get_bmc_service_status
+    },
+    {
+      "set-bmc-service-status",
+      "<enable|disable> <ssh|http|kvm>",
+      2,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_intel_set_bmc_service_status
+    },
+    {
       "restore-configuration",
       NULL,
       0,
