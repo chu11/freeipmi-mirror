@@ -1,3 +1,10 @@
+2012-03-12  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-oem/ipmi-oem-supermicro.c
+	(ipmi_oem_supermicro_get_bmc_services_status,
+	ipmi_oem_supermicro_set_bmc_services_status): Fix error message
+	output.
+	
 2012-03-06  Albert Chu <chu11@llnl.gov>
 
  	* libfreeipmi/api/, libfreeipmi/cmds/: Support set sensor reading
