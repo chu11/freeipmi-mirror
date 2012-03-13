@@ -1296,10 +1296,6 @@ ipmi_oem_intel_set_power_restore_delay (ipmi_oem_state_data_t *state_data)
                                                    NULL) < 0)
     goto cleanup;
 
-  delay = ((bytes_rs[2] & IPMI_OEM_INTEL_POWER_RESTORE_DELAY_MSB_MASK) << 8) | bytes_rs[3];
-
-  pstdout_printf (state_data->pstate, "%u\n", delay);
-
   rv = 0;
  cleanup:
   return (rv);
