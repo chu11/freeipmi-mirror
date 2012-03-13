@@ -1180,14 +1180,13 @@ ipmi_oem_intel_get_power_restore_delay (ipmi_oem_state_data_t *state_data)
    * delay setting is 11 bits total.
    */
 
-  bytes_rq[0] = IPMI_NET_FN_OEM_INTEL_GENERIC_RQ;
-  bytes_rq[1] = IPMI_CMD_OEM_INTEL_GET_POWER_RESTORE_DELAY;
+  bytes_rq[0] = IPMI_CMD_OEM_INTEL_GET_POWER_RESTORE_DELAY;
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
                               IPMI_NET_FN_OEM_INTEL_GENERIC_RQ, /* network function */
                               bytes_rq, /* data */
-                              2, /* num bytes */
+                              1, /* num bytes */
                               bytes_rs,
                               IPMI_OEM_MAX_BYTES)) < 0)
     {
@@ -1269,16 +1268,15 @@ ipmi_oem_intel_set_power_restore_delay (ipmi_oem_state_data_t *state_data)
    * delay setting is 11 bits total.
    */
 
-  bytes_rq[0] = IPMI_NET_FN_OEM_INTEL_GENERIC_RQ;
-  bytes_rq[1] = IPMI_CMD_OEM_INTEL_SET_POWER_RESTORE_DELAY;
-  bytes_rq[2] = (delay & IPMI_OEM_INTEL_POWER_RESTORE_DELAY_MSB_MASK) >> 8;
-  bytes_rq[3] = (delay & IPMI_OEM_INTEL_POWER_RESTORE_DELAY_LSB_MASK);
+  bytes_rq[0] = IPMI_CMD_OEM_INTEL_SET_POWER_RESTORE_DELAY;
+  bytes_rq[1] = (delay & IPMI_OEM_INTEL_POWER_RESTORE_DELAY_MSB_MASK) >> 8;
+  bytes_rq[2] = (delay & IPMI_OEM_INTEL_POWER_RESTORE_DELAY_LSB_MASK);
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
                               IPMI_NET_FN_OEM_INTEL_GENERIC_RQ, /* network function */
                               bytes_rq, /* data */
-                              4, /* num bytes */
+                              3, /* num bytes */
                               bytes_rs,
                               IPMI_OEM_MAX_BYTES)) < 0)
     {
