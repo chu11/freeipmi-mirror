@@ -317,8 +317,6 @@ extern unsigned int ipmi_sensor_type_oem_fujitsu_config_backup_max_index;
 
 /*
  * Intel S5500WB/Penguin Computing Relion 700
- * Quanta QSSC-S4R/Appro GB812X-CN
- * (Quanta motherboard maintains Intel manufacturer ID)
  */
 
 /*
@@ -588,6 +586,50 @@ extern unsigned int ipmi_oem_intel_specific_pci_correctable_sensor_max_index;
  * Quanta QSSC-S4R/Appro GB812X-CN
  * (Quanta motherboard maintains Intel manufacturer ID)
  */
+
+/*
+ * Event Reading Type Code = IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QUANTA_QSSC_S4R_PCIE_FATAL_SENSOR
+ * Sensor Type = IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
+ */
+/* achu: Similar to above, but some events text changed, so new macros to differentiate */
+#define IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_PCIE_FATAL_SENSOR_DATA_LINK_LAYER_PROTOCOL_ERROR 0x00
+#define IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_PCIE_FATAL_SENSOR_SURPRISE_LINK_DOWN             0x01
+#define IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_PCIE_FATAL_SENSOR_UNEXPECTED_COMPLETER           0x02
+#define IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_PCIE_FATAL_SENSOR_UNSUPPORTED_REQUEST            0x03
+#define IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_PCIE_FATAL_SENSOR_POISONED_TLP                   0x04
+#define IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_PCIE_FATAL_SENSOR_FLOW_CONTROL_PROTOCOL          0x05
+#define IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_PCIE_FATAL_SENSOR_COMPLETION_TIMEOUT             0x06
+#define IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_PCIE_FATAL_SENSOR_COMPLETER_ABORT                0x07
+#define IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_PCIE_FATAL_SENSOR_RECEIVER_BUFFER_OVERFLOW       0x08
+#define IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_PCIE_FATAL_SENSOR_ACS_VIOLATION                  0x09
+#define IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_PCIE_FATAL_SENSOR_MALFORMED_TLP                  0x0A
+#define IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_PCIE_FATAL_SENSOR_RECEIVED_FATAL_MESSAGE         0x0B
+#define IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_PCIE_FATAL_SENSOR_UNEXPECTED_COMPLETION_B        0x0C
+#define IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_PCIE_FATAL_SENSOR_RECEIVED_NON_FATAL_MESSAGE     0x0D
+
+/*
+ * Event Reading Type Code = IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QUANTA_QSSC_S4R_PCIE_CORRECTABLE_SENSOR
+ * Sensor Type = IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
+ */
+/* achu: Similar to above, but some events text changed, so new macros to differentiate */
+#define IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_PCIE_CORRECTABLE_SENSOR_RECEIVER_ERROR       0x00
+#define IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_PCIE_CORRECTABLE_SENSOR_BAD_DLLP             0x01
+#define IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_PCIE_CORRECTABLE_SENSOR_BAD_TLLP             0x02
+#define IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_PCIE_CORRECTABLE_SENSOR_REPLAY_NUM_ROLLOVER  0x03
+#define IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_PCIE_CORRECTABLE_SENSOR_REPLAY_TIMER_TIMEOUT 0x04
+#define IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_PCIE_CORRECTABLE_SENSOR_ADVISORY_NON_FATAL   0x05
+#define IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_PCIE_CORRECTABLE_SENSOR_LINK_BW_CHANGED      0x06
+
+/*
+ * String arrays for above
+ */
+
+/* achu: Similar to above, but some events text changed, so new arrays to differentiate */
+extern const char * const ipmi_oem_intel_quanta_qssc_s4r_specific_pci_fatal_sensor[];
+extern unsigned int ipmi_oem_intel_quanta_qssc_s4r_specific_pci_fatal_sensor_max_index;
+
+extern const char * const ipmi_oem_intel_quanta_qssc_s4r_specific_pci_correctable_sensor[];
+extern unsigned int ipmi_oem_intel_quanta_qssc_s4r_specific_pci_correctable_sensor_max_index;
 
 /*
  * Event Reading Type Code = IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QUANTA_QSSC_S4R_CORRECTABLE_ERROR
