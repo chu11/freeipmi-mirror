@@ -4,6 +4,9 @@
 	--set-power-restore-delay, --get-bmc-service-status,
 	--set-bmc-service-status.
 
+	* libfreeipmi/sel-parse/: Support Intel S2600JF/Appro 512X OEM SEL
+	events.
+
 	* libfreeipmi/include/: Add additions for Intel S2600JF/Appro 512x
 
 	* man/: Update documentation for Intel S2600JF/Appro 512x support.

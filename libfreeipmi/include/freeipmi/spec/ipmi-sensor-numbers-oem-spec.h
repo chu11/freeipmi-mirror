@@ -178,6 +178,16 @@ extern "C" {
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_QUANTA_QSSC_S4R_MEMORY_BOARD_STATE                                        0x20
 
 /*
+ * Intel S2600JF/Appro 512X
+ */
+/* achu: Few same as above, but to clearly differentiate motherboards, duplicate them */
+/* achu: note a typo, memory ras configuration status & memory ecc error both 2, not sure why in doc */
+#define IPMI_SENSOR_NUMBER_OEM_INTEL_S2600JF_MIRRORING_REDUNDANCY_STATE      0x01
+#define IPMI_SENSOR_NUMBER_OEM_INTEL_S2600JF_MEMORY_RAS_CONFIGURATION_STATUS 0x02
+#define IPMI_SENSOR_NUMBER_OEM_INTEL_S2600JF_MEMORY_ECC_ERROR                0x02
+#define IPMI_SENSOR_NUMBER_OEM_INTEL_S2600JF_LEGACY_PCI_ERROR                0x03
+
+/*
  * Intel Node Manager
  *
  * For Intel Chips, not just Intel Motherboards.  Confirmed for:

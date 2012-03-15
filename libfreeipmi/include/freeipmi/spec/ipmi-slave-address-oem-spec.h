@@ -29,11 +29,21 @@ extern "C" {
 
 /*
  * Intel S5500WB/Penguin Computing Relion 700
+ * Intel S2600JF/Appro 512X
  */
 
 #define IPMI_GENERATOR_ID_OEM_INTEL_BIOS_SMI_HANDLER   0x33
+
+/*
+ * Intel S5500WB/Penguin Computing Relion 700
+ */
 #define IPMI_GENERATOR_ID_OEM_INTEL_ME_FIRMWARE        0x2C
 #define IPMI_GENERATOR_ID_OEM_INTEL_HSC_FIRMWARE       0xC0
+
+/*
+ * Intel S2600JF/Appro 512X
+ */
+#define IPMI_GENERATOR_ID_OEM_INTEL_BIOS_POST          0x01
 
 /*******************************************
  * Inventec                                *

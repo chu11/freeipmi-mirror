@@ -50,6 +50,7 @@ extern "C" {
  * Intel S5500WB/Penguin Computing Relion 700
  * Quanta QSSC-S4R/Appro GB812X-CN
  * (Quanta motherboard maintains Intel manufacturer ID)
+ * Intel S2600JF/Appro 512X
  */
 
 #define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_FATAL_SENSOR       0x70
@@ -76,6 +77,7 @@ extern "C" {
  * Inventec 5442/Dell Xanadu III
  * Quanta S99Q/Dell FS12-TY
  * Quanta QSSC-S4R/Appro GB812X-CN
+ * Intel S2600JF/Appro 512X
  */
 
 #define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_NODE_MANAGER_EXCEPTION_EVENT                       0x72
