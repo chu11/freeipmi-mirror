@@ -744,10 +744,10 @@ _ipmi_sel_parse_output_intel_quanta_qssc_s4r_dimm_slot (ipmi_sel_parse_ctx_t ctx
 
 static void
 _ipmi_sel_parse_output_intel_quanta_qssc_s4r_smi_link (ipmi_sel_parse_ctx_t ctx,
-							char *tmpbuf,
-							unsigned int tmpbuflen,
-							unsigned int flags,
-							struct ipmi_sel_system_event_record_data *system_event_record_data)
+						       char *tmpbuf,
+						       unsigned int tmpbuflen,
+						       unsigned int flags,
+						       struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   uint8_t smi_link;
   char *smi_link_str;
@@ -813,7 +813,7 @@ ipmi_sel_parse_output_intel_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
    *
    * Intel S5500WB/Penguin Computing Relion 700
    * Quanta QSSC-S4R/Appro GB812X-CN
-   * * (Quanta motherboard maintains Intel manufacturer ID)
+   * (Quanta motherboard maintains Intel manufacturer ID)
    */
   if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S5500WB
       || ctx->product_id == IPMI_INTEL_PRODUCT_ID_QUANTA_QSSC_S4R)
