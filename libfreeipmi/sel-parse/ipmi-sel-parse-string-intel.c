@@ -321,7 +321,9 @@ ipmi_sel_parse_output_intel_event_data1_class_oem (ipmi_sel_parse_ctx_t ctx,
 	  && ((system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600JF_PCIE_FATAL_ERROR
 	       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600JF_PCI_FATAL_ERROR)
 	      || (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600JF_PCIE_CORRECTABLE_ERROR
-		  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600JF_PCI_CORRECTABLE_ERROR)))
+		  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600JF_PCI_CORRECTABLE_ERROR)
+	      || (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600JF_OPI_FATAL_ERROR
+		  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600JF_OPI_FATAL_ERROR)))
 	{
 	  int ret;
 	  
@@ -635,7 +637,6 @@ ipmi_sel_parse_output_intel_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
 	  
 	  return (1);
 	}
-
     }
   
   return (0);
@@ -732,6 +733,49 @@ ipmi_sel_parse_output_intel_event_data2_class_oem (ipmi_sel_parse_ctx_t ctx,
 		    tmpbuflen,
 		    "Socket %u",
 		    system_event_record_data->event_data2);
+	  
+	  return (1);
+	}
+    }
+
+  /* OEM Interpretation
+   *
+   * Intel S2600JF/Appro 512X
+   */
+  if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600JF)
+    {
+      if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600JF_BIOS_SMI_HANDLER
+	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
+	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600JF_OPI_FATAL_ERROR
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600JF_OPI_FATAL_ERROR)
+	{
+	  uint8_t node_id;
+	  char *node_id_str;
+
+	  node_id = system_event_record_data->event_data2;
+
+	  switch (node_id)
+	    {
+	    case IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_EVENT_DATA2_OEM_INTEL_S2600JF_NODE_ID_CPU_1:
+	      node_id_str = "1";
+	      break;
+	    case IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_EVENT_DATA2_OEM_INTEL_S2600JF_NODE_ID_CPU_2:
+	      node_id_str = "2";
+	      break;
+	    case IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_EVENT_DATA2_OEM_INTEL_S2600JF_NODE_ID_CPU_3:
+	      node_id_str = "3";
+	      break;
+	    case IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_EVENT_DATA2_OEM_INTEL_S2600JF_NODE_ID_CPU_4:
+	      node_id_str = "4";
+	      break;
+	    default:
+	      node_id_str = "Unknown";
+	    }
+	  
+	  snprintf (tmpbuf,
+		    tmpbuflen,
+		    "CPU = %s",
+		    node_id_str);
 	  
 	  return (1);
 	}

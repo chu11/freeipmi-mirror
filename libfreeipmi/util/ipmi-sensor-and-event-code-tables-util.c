@@ -2061,6 +2061,14 @@ ipmi_get_oem_specific_message (uint32_t manufacturer_id,
 					buflen,
 					ipmi_oem_intel_s2600jf_specific_pci_correctable_error_max_index,
 					ipmi_oem_intel_s2600jf_specific_pci_correctable_error));
+
+	  if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600JF_OPI_FATAL_ERROR
+	      && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
+	    return (_get_event_message (offset,
+					buf,
+					buflen,
+					ipmi_oem_intel_s2600jf_specific_opi_fatal_error_max_index,
+					ipmi_oem_intel_s2600jf_specific_opi_fatal_error));
 	}
     }
 

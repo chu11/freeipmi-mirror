@@ -436,3 +436,24 @@ const char * const ipmi_oem_intel_s2600jf_specific_pci_correctable_error[] =
     NULL
   };
 unsigned int ipmi_oem_intel_s2600jf_specific_pci_correctable_error_max_index = 0x08;
+
+const char * const ipmi_oem_intel_s2600jf_specific_opi_fatal_error[] =
+  {
+    "Link Layer Uncorrectable ECC Error",
+    "Protocol Layer Poisoned Packet Reception Error",
+    "LINK/PHY Init Failure with resultant degradation in link width",
+    "CSI PHY Layer detected drift buffer alarm",
+    "CSI PHY detected latency buffer rollover",
+    "CSI PHY Init Failure",
+    "CSI Link Layer generic control error (buffer overflow/underflow, credit underflow and so on.)",
+    "Parity error in link or PHY layer",
+    "Protocol layer timeout detected",
+    "Protocol layer failed response",
+    "Protocol layer illegal packet field, taret Node ID and so on.",
+    "Protocol Layer Queue/table overflow/underflow",
+    "Viral Error",
+    "Protocol Layer parity error",
+    "Routing Table Error",
+    NULL
+  };
+unsigned int ipmi_oem_intel_s2600jf_specific_opi_fatal_error_max_index = 0x0E;
