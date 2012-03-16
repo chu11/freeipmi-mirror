@@ -509,6 +509,36 @@ _ipmi_sel_parse_output_intel_bus (ipmi_sel_parse_ctx_t ctx,
 	    system_event_record_data->event_data2);
 }
 
+static const char *
+_ipmi_sel_parse_output_intel_s2600jf_ras_mode (uint8_t event_data) 
+{
+  uint8_t ras_mode;
+  char *ras_mode_str;
+
+  ras_mode = (event_data & IPMI_SENSOR_MEMORY_DEVICE_ENABLED_EVENT_DATA2_OR_EVENT_DATA3_OEM_INTEL_S2600JF_RAS_MODE_BITMASK);
+  ras_mode >>= IPMI_SENSOR_MEMORY_DEVICE_ENABLED_EVENT_DATA2_OR_EVENT_DATA3_OEM_INTEL_S2600JF_RAS_MODE_SHIFT;
+	  
+  switch (ras_mode)
+    {
+    case IPMI_SENSOR_MEMORY_DEVICE_ENABLED_EVENT_DATA2_OR_EVENT_DATA3_OEM_INTEL_S2600JF_RAS_MODE_NONE:
+      ras_mode_str = "None"; 
+      break;
+    case IPMI_SENSOR_MEMORY_DEVICE_ENABLED_EVENT_DATA2_OR_EVENT_DATA3_OEM_INTEL_S2600JF_RAS_MODE_MIRRORING:
+      ras_mode_str = "Mirroring";
+      break;
+    case IPMI_SENSOR_MEMORY_DEVICE_ENABLED_EVENT_DATA2_OR_EVENT_DATA3_OEM_INTEL_S2600JF_RAS_MODE_LOCKSTEP:
+      ras_mode_str = "Lockstep";
+      break;
+    case IPMI_SENSOR_MEMORY_DEVICE_ENABLED_EVENT_DATA2_OR_EVENT_DATA3_OEM_INTEL_S2600JF_RAS_MODE_RANK_SPARING:
+      ras_mode_str = "Rank Sparing";
+      break;
+    default:
+      ras_mode_str = "Unknown";
+    }
+
+  return (ras_mode_str);
+}
+
 /* return (0) - no OEM match
  * return (1) - OEM match
  * return (-1) - error, cleanup and return error
@@ -820,7 +850,26 @@ ipmi_sel_parse_output_intel_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
 	  
 	  return (1);
 	}
-    }
+
+    if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600JF_BIOS_POST
+	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_ENABLED
+	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600JF_MEMORY_RAS_MODE_SELECT
+	  && (system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_DEVICE_ENABLED_DEVICE_DISABLED
+	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_DEVICE_ENABLED_DEVICE_ENABLED))
+	{
+	  const char *ras_mode_str;
+	  
+	  ras_mode_str = _ipmi_sel_parse_output_intel_s2600jf_ras_mode (system_event_record_data->event_data2);
+	  
+	  snprintf (tmpbuf,
+		    tmpbuflen,
+		    "Previous RAS Mode = %s",
+		    ras_mode_str);
+	  
+	  return (1);
+	}
+      }
   
   return (0);
 }
@@ -1654,35 +1703,34 @@ ipmi_sel_parse_output_intel_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
 	  && (system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_DEVICE_ENABLED_DEVICE_DISABLED
 	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_DEVICE_ENABLED_DEVICE_ENABLED))
 	{
-	  uint8_t ras_mode;
-	  char *ras_mode_str;
+	  const char *ras_mode_str;
 
-	  ras_mode = (system_event_record_data->event_data3 & IPMI_SENSOR_MEMORY_DEVICE_ENABLED_EVENT_DATA3_OEM_INTEL_S2600JF_RAS_MODE_BITMASK);
-	  ras_mode >>= IPMI_SENSOR_MEMORY_DEVICE_ENABLED_EVENT_DATA3_OEM_INTEL_S2600JF_RAS_MODE_SHIFT;
-	  
-	  switch (ras_mode)
-	    {
-	    case IPMI_SENSOR_MEMORY_DEVICE_ENABLED_EVENT_DATA3_OEM_INTEL_S2600JF_RAS_MODE_NONE:
-	      ras_mode_str = "None"; 
-	      break;
-	    case IPMI_SENSOR_MEMORY_DEVICE_ENABLED_EVENT_DATA3_OEM_INTEL_S2600JF_RAS_MODE_MIRRORING:
-	      ras_mode_str = "Mirroring";
-	      break;
-	    case IPMI_SENSOR_MEMORY_DEVICE_ENABLED_EVENT_DATA3_OEM_INTEL_S2600JF_RAS_MODE_LOCKSTEP:
-	      ras_mode_str = "Lockstep";
-	      break;
-	    case IPMI_SENSOR_MEMORY_DEVICE_ENABLED_EVENT_DATA3_OEM_INTEL_S2600JF_RAS_MODE_RANK_SPARING:
-	      ras_mode_str = "Rank Sparing";
-	      break;
-	    default:
-	      ras_mode_str = "Unknown";
-	    }
+	  ras_mode_str = _ipmi_sel_parse_output_intel_s2600jf_ras_mode (system_event_record_data->event_data3);
 	  
 	  snprintf (tmpbuf,
 		    tmpbuflen,
 		    "RAS Mode = %s",
 		    ras_mode_str);
-
+	  
+	  return (1);
+	}
+      
+      if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600JF_BIOS_POST
+	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_ENABLED
+	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600JF_MEMORY_RAS_MODE_SELECT
+	  && (system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_DEVICE_ENABLED_DEVICE_DISABLED
+	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_DEVICE_ENABLED_DEVICE_ENABLED))
+	{
+	  const char *ras_mode_str;
+	  
+	  ras_mode_str = _ipmi_sel_parse_output_intel_s2600jf_ras_mode (system_event_record_data->event_data3);
+	  
+	  snprintf (tmpbuf,
+		    tmpbuflen,
+		    "Selected RAS Mode = %s",
+		    ras_mode_str);
+	  
 	  return (1);
 	}
   
