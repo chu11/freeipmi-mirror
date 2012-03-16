@@ -457,3 +457,12 @@ const char * const ipmi_oem_intel_s2600jf_specific_opi_fatal_error[] =
     NULL
   };
 unsigned int ipmi_oem_intel_s2600jf_specific_opi_fatal_error_max_index = 0x0E;
+
+const char * const ipmi_oem_intel_s2600jf_specific_qpi_link_width_reduced[] =
+  {
+    "reserved",
+    "Reduced to 1/2 width",
+    "Reduced to 1/4 width",
+    NULL
+  };
+unsigned int ipmi_oem_intel_s2600jf_specific_qpi_link_width_reduced_max_index = 0x02;
