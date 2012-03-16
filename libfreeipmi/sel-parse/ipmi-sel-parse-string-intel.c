@@ -316,7 +316,7 @@ ipmi_sel_parse_output_intel_event_data1_class_oem (ipmi_sel_parse_ctx_t ctx,
    */
   if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600JF)
     {
-      if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_BIOS_SMI_HANDLER
+      if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600JF_BIOS_SMI_HANDLER
 	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
 	  && ((system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600JF_PCIE_FATAL_ERROR
 	       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600JF_PCI_FATAL_ERROR)
@@ -542,7 +542,7 @@ ipmi_sel_parse_output_intel_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
    */
   if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600JF)
     {
-      if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_BIOS_SMI_HANDLER
+      if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600JF_BIOS_SMI_HANDLER
 	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY
 	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
 	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600JF_MIRRORING_REDUNDANCY_STATE
@@ -567,7 +567,7 @@ ipmi_sel_parse_output_intel_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
 	  return (1);
 	}
 
-      if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_BIOS_POST
+      if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600JF_BIOS_POST
 	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_ENABLED
 	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
 	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600JF_MEMORY_RAS_CONFIGURATION_STATUS
@@ -600,7 +600,7 @@ ipmi_sel_parse_output_intel_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
 	  return (1);
 	}
 
-      if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_BIOS_SMI_HANDLER
+      if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600JF_BIOS_SMI_HANDLER
 	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
 	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
 	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600JF_MEMORY_ECC_ERROR
@@ -620,7 +620,7 @@ ipmi_sel_parse_output_intel_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
 	  return (1);
 	}
 
-      if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_BIOS_SMI_HANDLER
+      if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600JF_BIOS_SMI_HANDLER
 	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
 	  && ((system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
 	       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600JF_LEGACY_PCI_ERROR
@@ -1310,13 +1310,13 @@ ipmi_sel_parse_output_intel_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
    */
   if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600JF)
     {
-      if ((system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_BIOS_SMI_HANDLER
+      if ((system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600JF_BIOS_SMI_HANDLER
 	   && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY
 	   && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
 	   && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600JF_MIRRORING_REDUNDANCY_STATE
 	   && (system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_REDUNDANCY_FULLY_REDUNDANT
 	       || system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_REDUNDANCY_REDUNDANCY_DEGRADED))
-	  || (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_BIOS_SMI_HANDLER
+	  || (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600JF_BIOS_SMI_HANDLER
 	      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
 	      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
 	      && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600JF_MEMORY_ECC_ERROR
@@ -1400,7 +1400,7 @@ ipmi_sel_parse_output_intel_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
 	  return (1);
 	}     
 
-      if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_BIOS_POST
+      if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600JF_BIOS_POST
 	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_ENABLED
 	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
 	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600JF_MEMORY_RAS_CONFIGURATION_STATUS
@@ -1439,7 +1439,7 @@ ipmi_sel_parse_output_intel_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
 	  return (1);
 	}
   
-      if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_BIOS_SMI_HANDLER
+      if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600JF_BIOS_SMI_HANDLER
 	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
 	  && ((system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
 	       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600JF_LEGACY_PCI_ERROR
@@ -2454,7 +2454,7 @@ ipmi_sel_parse_output_intel_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
 	  return (1);
 	}
 
-      if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_BIOS_SMI_HANDLER
+      if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_QUANTA_QSSC_S4R_BIOS_POST
 	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
 	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS
 	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_QUANTA_QSSC_S4R_BIOS_POST_ERROR
@@ -2667,6 +2667,420 @@ ipmi_sel_parse_output_intel_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
 		error_code_str = "Undefined Post Error";
 	    }
 	  
+	  if (ipmi_sel_parse_string_snprintf (buf,
+					      buflen,
+					      wlen,
+					      "%s",
+					      error_code_str))
+	    (*oem_rv) = 1;
+	  else
+	    (*oem_rv) = 0;
+      
+	  return (1);
+	}
+    }
+
+  /* OEM Interpretation
+   *
+   * Intel S2600JF/Appro 512X
+   */
+  if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600JF)
+    {
+      if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600JF_BIOS_POST
+	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600JF_BIOS_POST_ERROR
+	  && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_SYSTEM_FIRMWARE_ERROR
+	  && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
+	  && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
+	{
+	  uint16_t error_code;
+	  char *error_code_str = NULL;
+          
+	  error_code = system_event_record_data->event_data2;
+	  error_code |= (system_event_record_data->event_data3 << 8);
+          
+	  switch (error_code)
+	    {
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_CMOS_DATE_TIME_NOT_SET:
+	      error_code_str = "CMOS date / time not set";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_PASSWORD_CHECK_FAILED:
+	      error_code_str = "Password check failed";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_KEYBOARD_COMPONENT_ENCOUNTERED_A_LOCKED_ERROR:
+	      error_code_str = "Keyboard component encountered a locked error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_KEYBOARD_COMPONENT_ENCOUNTERED_A_STUCK_KEY_ERROR:
+	      error_code_str = "Keyboard component encountered a stuck key error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_FIXED_MEDIA_THE_SAS_RAID_FIRMWARE_CANNOT_RUN_PROPERLY:
+	      error_code_str = "Fixed Media The SAS RAID firmware cannot run properly. The user should attempt to reflash the firmware";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_PCI_COMPONENT_ENCOUNTERED_A_PERR_ERROR:
+	      error_code_str = "PCI component encountered a PERR error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_PCI_RESOURCE_CONFLICT:
+	      error_code_str = "PCI resource conflict";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_PCI_OUT_OF_RESOURCES_ERROR:
+	      error_code_str = "PCI out of resources error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_PROCESSOR_0X_CACHE_SIZE_MISMATCH_DETECTED:
+	      error_code_str = "Processor 0x cache size mismatch detected";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_PROCESSOR_0X_STEPPING_MISMATCH:
+	      error_code_str = "Processor 0x stepping mismatch";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_PROCESSOR_0X_FAMILY_MISMATCH_DETECTED:
+	      error_code_str = "Processor 0x family mismatch detected";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_PROCESSOR_0X_INTEL_QPI_SPEED_MISMATCH:
+	      error_code_str = "Processor 0x Intel(R) QPI speed mismatch";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_PROCESSOR_0X_MODEL_MISMATCH:
+	      error_code_str = "Processor 0x model mismatch";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_PROCESSOR_0X_SPEEDS_MISMATCHED:
+	      error_code_str = "Processor 0x speeds mismatched";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_PROCESSOR_0X_FAMILY_IS_NOT_SUPPORTED:
+	      error_code_str = "Processor 0x family is not supported";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_PROCESSOR_AND_CHIPSET_STEPPING_CONFIGURATION_IS_UNSUPPORTED:
+	      error_code_str = "Processor and chipset stepping configuration is unsupported";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_CMOS_NVRAM_CONFIGURATION_CLEARED:
+	      error_code_str = "CMOS/NVRAM Configuration Cleared";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_PASSWORDS_CLEARED_BY_JUMPER:
+	      error_code_str = "Passwords cleared by jumper";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_PASSWORD_CLEAR_JUMPER_IS_SET:
+	      error_code_str = "Password clear jumper is set";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_PROCESSOR_01_UNABLE_TO_APPLY_MICROCODE_UPDATE:
+	      error_code_str = "Processor 01 unable to apply microcode update";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_PROCESSOR_02_UNABLE_TO_APPLY_MICROCODE_UPDATE:
+	      error_code_str = "Processor 02 unable to apply microcode update";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_PROCESSOR_0X_MICROCODE_UPDATE_NOT_FOUND:
+	      error_code_str = "Processor 0x microcode update not found";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_WATCHDOG_TIMER_FAILED_ON_LAST_BOOT:
+	      error_code_str = "Watchdog timer failed on last boot";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_OS_BOOT_WATCHDOG_TIMER_FAILURE:
+	      error_code_str = "OS boot watchdog timer failure";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_BASEBOARD_MANAGEMENT_CONTROLLER_FAILED_SELF_TEST:
+	      error_code_str = "Baseboard management controller failed self-test";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_BASEBOARD_MANAGEMENT_CONTROLLER_FAILED_TO_RESPOND:
+	      error_code_str = "Baseboard management controller failed to respond";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_BASEBOARD_MANAGEMENT_CONTROLLER_IN_UPDATE_MODE:
+	      error_code_str = "Baseboard management controller in update mode";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_SENSOR_DATA_RECORD_EMPTY:
+	      error_code_str = "Sensor data record empty";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_SYSTEM_EVENT_LOG_FULL:
+	      error_code_str = "System event log full";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_MEMORY_COMPONENT_COULD_NOT_BE_CONFIGURED_IN_THE_SELECTED_RAS_MODE:
+	      error_code_str = "Memory component could not be configured in the selected RAS mode";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_DIMM_POPULATION_ERROR:
+	      error_code_str = "DIMM Population Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_CLTT_CONFIGURATION_FAILURE_ERROR:
+	      error_code_str = "CLTT Configuration Failure Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_DIMM_A1_FAILED_SELF_TEST_BIST:
+	      error_code_str = "DIMM_A1 failed Self Test (BIST)";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_DIMM_A2_FAILED_SELF_TEST_BIST:
+	      error_code_str = "DIMM_A2 failed Self Test (BIST)";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_DIMM_B1_FAILED_SELF_TEST_BIST:
+	      error_code_str = "DIMM_B1 failed Self Test (BIST)";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_DIMM_B2_FAILED_SELF_TEST_BIST:
+	      error_code_str = "DIMM_B2 failed Self Test (BIST)";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_DIMM_C1_FAILED_SELF_TEST_BIST:
+	      error_code_str = "DIMM_C1 failed Self Test (BIST)";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_DIMM_C2_FAILED_SELF_TEST_BIST:
+	      error_code_str = "DIMM_C2 failed Self Test (BIST)";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_DIMM_D1_FAILED_SELF_TEST_BIST:
+	      error_code_str = "DIMM_D1 failed Self Test (BIST)";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_DIMM_D2_FAILED_SELF_TEST_BIST:
+	      error_code_str = "DIMM_D2 failed Self Test (BIST)";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_DIMM_E1_FAILED_SELF_TEST_BIST:
+	      error_code_str = "DIMM_E1 failed Self Test (BIST)";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_DIMM_E2_FAILED_SELF_TEST_BIST:
+	      error_code_str = "DIMM_E2 failed Self Test (BIST)";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_DIMM_F1_FAILED_SELF_TEST_BIST:
+	      error_code_str = "DIMM_F1 failed Self Test (BIST)";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_DIMM_F2_FAILED_SELF_TEST_BIST:
+	      error_code_str = "DIMM_F2 failed Self Test (BIST)";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_DIMM_A1_DISABLED:
+	      error_code_str = "DIMM_A1 Disabled";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_DIMM_A2_DISABLED:
+	      error_code_str = "DIMM_A2 Disabled";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_DIMM_B1_DISABLED:
+	      error_code_str = "DIMM_B1 Disabled";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_DIMM_B2_DISABLED:
+	      error_code_str = "DIMM_B2 Disabled";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_DIMM_C1_DISABLED:
+	      error_code_str = "DIMM_C1 Disabled";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_DIMM_C2_DISABLED:
+	      error_code_str = "DIMM_C2 Disabled";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_DIMM_D1_DISABLED:
+	      error_code_str = "DIMM_D1 Disabled";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_DIMM_D2_DISABLED:
+	      error_code_str = "DIMM_D2 Disabled";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_DIMM_E1_DISABLED:
+	      error_code_str = "DIMM_E1 Disabled";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_DIMM_E2_DISABLED:
+	      error_code_str = "DIMM_E2 Disabled";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_DIMM_F1_DISABLED:
+	      error_code_str = "DIMM_F1 Disabled";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_DIMM_F2_DISABLED:
+	      error_code_str = "DIMM_F2 Disabled";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_DIMM_A1_COMPONENT_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAIL_ERROR:
+	      error_code_str = "DIMM_A1 Component encountered a Serial Presence Detection (SPD) fail error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_DIMM_A2_COMPONENT_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAIL_ERROR:
+	      error_code_str = "DIMM_A2 Component encountered a Serial Presence Detection (SPD) fail error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_DIMM_B1_COMPONENT_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAIL_ERROR:
+	      error_code_str = "DIMM_B1 Component encountered a Serial Presence Detection (SPD) fail error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_DIMM_B2_COMPONENT_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAIL_ERROR:
+	      error_code_str = "DIMM_B2 Component encountered a Serial Presence Detection (SPD) fail error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_DIMM_C1_COMPONENT_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAIL_ERROR:
+	      error_code_str = "DIMM_C1 Component encountered a Serial Presence Detection (SPD) fail error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_DIMM_C2_COMPONENT_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAIL_ERROR:
+	      error_code_str = "DIMM_C2 Component encountered a Serial Presence Detection (SPD) fail error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_DIMM_D1_COMPONENT_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAIL_ERROR:
+	      error_code_str = "DIMM_D1 Component encountered a Serial Presence Detection (SPD) fail error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_DIMM_D2_COMPONENT_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAIL_ERROR:
+	      error_code_str = "DIMM_D2 Component encountered a Serial Presence Detection (SPD) fail error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_DIMM_E1_COMPONENT_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAIL_ERROR:
+	      error_code_str = "DIMM_E1 Component encountered a Serial Presence Detection (SPD) fail error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_DIMM_E2_COMPONENT_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAIL_ERROR:
+	      error_code_str = "DIMM_E2 Component encountered a Serial Presence Detection (SPD) fail error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_DIMM_F1_COMPONENT_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAIL_ERROR:
+	      error_code_str = "DIMM_F1 Component encountered a Serial Presence Detection (SPD) fail error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_DIMM_F2_COMPONENT_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAIL_ERROR:
+	      error_code_str = "DIMM_F2 Component encountered a Serial Presence Detection (SPD) fail error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_DIMM_A1_UNCORRECTABLE_ECC_ERROR_ENCOUNTERED:
+	      error_code_str = "DIMM_A1 Uncorrectable ECC error encountered";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_DIMM_A2_UNCORRECTABLE_ECC_ERROR_ENCOUNTERED:
+	      error_code_str = "DIMM_A2 Uncorrectable ECC error encountered";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_DIMM_B1_UNCORRECTABLE_ECC_ERROR_ENCOUNTERED:
+	      error_code_str = "DIMM_B1 Uncorrectable ECC error encountered";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_DIMM_B2_UNCORRECTABLE_ECC_ERROR_ENCOUNTERED:
+	      error_code_str = "DIMM_B2 Uncorrectable ECC error encountered";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_DIMM_C1_UNCORRECTABLE_ECC_ERROR_ENCOUNTERED:
+	      error_code_str = "DIMM_C1 Uncorrectable ECC error encountered";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_DIMM_C2_UNCORRECTABLE_ECC_ERROR_ENCOUNTERED:
+	      error_code_str = "DIMM_C2 Uncorrectable ECC error encountered";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_DIMM_D1_UNCORRECTABLE_ECC_ERROR_ENCOUNTERED:
+	      error_code_str = "DIMM_D1 Uncorrectable ECC error encountered";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_DIMM_D2_UNCORRECTABLE_ECC_ERROR_ENCOUNTERED:
+	      error_code_str = "DIMM_D2 Uncorrectable ECC error encountered";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_DIMM_E1_UNCORRECTABLE_ECC_ERROR_ENCOUNTERED:
+	      error_code_str = "DIMM_E1 Uncorrectable ECC error encountered";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_DIMM_E2_UNCORRECTABLE_ECC_ERROR_ENCOUNTERED:
+	      error_code_str = "DIMM_E2 Uncorrectable ECC error encountered";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_DIMM_F1_UNCORRECTABLE_ECC_ERROR_ENCOUNTERED:
+	      error_code_str = "DIMM_F1 Uncorrectable ECC error encountered";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_DIMM_F2_UNCORRECTABLE_ECC_ERROR_ENCOUNTERED:
+	      error_code_str = "DIMM_F2 Uncorrectable ECC error encountered";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_CHIPSET_RECLAIM_OF_NON_CRITICAL_VARIABLES_COMPLETE:
+	      error_code_str = "Chipset Reclaim of non critical variables complete";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_UNSPECIFIED_PROCESSOR_COMPONENT_HAS_ENCOUNTERED_A_NONSPECIFIC_ERROR:
+	      error_code_str = "Unspecified processor component has encountered a nonspecific error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_KEYBOARD_COMPONENT_WAS_NOT_DETECTED:
+	      error_code_str = "Keyboard component was not detected";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_KEYBOARD_COMPONENT_ENCOUNTERED_A_CONTROLLER_ERROR:
+	      error_code_str = "Keyboard component encountered a controller error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_MOUSE_COMPONENT_WAS_NOT_DETECTED:
+	      error_code_str = "Mouse component was not detected";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_MOUSE_COMPONENT_ENCOUNTERED_A_CONTROLLER_ERROR:
+	      error_code_str = "Mouse component encountered a controller error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_LOCAL_CONSOLE_COMPONENT_ENCOUNTERED_A_CONTROLLER_ERROR:
+	      error_code_str = "Local Console component encountered a controller error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_LOCAL_CONSOLE_COMPONENT_ENCOUNTERED_AN_OUTPUT_ERROR:
+	      error_code_str = "Local Console component encountered an output error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_LOCAL_CONSOLE_COMPONENT_ENCOUNTERED_A_RESOURCE_CONFLICT_ERROR:
+	      error_code_str = "Local Console component encountered a resource conflict error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_REMOTE_CONSOLE_COMPONENT_ENCOUNTERED_A_CONTROLLER_ERROR:
+	      error_code_str = "Remote Console component encountered a controller error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_REMOTE_CONSOLE_COMPONENT_ENCOUNTERED_AN_INPUT_ERROR:
+	      error_code_str = "Remote Console component encountered an input error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_REMOTE_CONSOLE_COMPONENT_ENCOUNTERED_AN_OUTPUT_ERROR:
+	      error_code_str = "Remote Console component encountered an output error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_SERIAL_PORT_COMPONENT_WAS_NOT_DETECTED:
+	      error_code_str = "Serial port component was not detected";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_SERIAL_PORT_COMPONENT_ENCOUNTERED_A_RESOURCE_CONFLICT_ERROR:
+	      error_code_str = "Serial port component encountered a resource conflict error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_SERIAL_PORT_CONTROLLER_ERROR:
+	      error_code_str = "Serial Port controller error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_SERIAL_PORT_COMPONENT_ENCOUNTERED_AN_INPUT_ERROR:
+	      error_code_str = "Serial Port component encountered an input error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_SERIAL_PORT_COMPONENT_ENCOUNTERED_AN_OUTPUT_ERROR:
+	      error_code_str = "Serial Port component encountered an output error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_LPC_COMPONENT_ENCOUNTERED_A_CONTROLLER_ERROR:
+	      error_code_str = "LPC component encountered a controller error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_LPC_COMPONENT_ENCOUNTERED_A_RESOURCE_CONFLICT_ERROR:
+	      error_code_str = "LPC component encountered a resource conflict error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_ATA_ATPI_COMPONENT_ENCOUNTERED_A_CONTROLLER_ERROR:
+	      error_code_str = "ATA/ATPI component encountered a controller error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_PCI_COMPONENT_ENCOUNTERED_A_CONTROLLER_ERROR:
+	      error_code_str = "PCI component encountered a controller error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_PCI_COMPONENT_ENCOUNTERED_A_READ_ERROR:
+	      error_code_str = "PCI component encountered a read error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_PCI_COMPONENT_ENCOUNTERED_A_WRITE_ERROR:
+	      error_code_str = "PCI component encountered a write error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_UNSPECIFIED_SOFTWARE_COMPONENT_ENCOUNTERED_A_START_ERROR:
+	      error_code_str = "Unspecified software component encountered a start error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_PEI_CORE_COMPONENT_ENCOUNTERED_A_LOAD_ERROR:
+	      error_code_str = "PEI Core component encountered a load error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_PEI_MODULE_COMPONENT_ENCOUNTERED_AN_ILLEGAL_SOFTWARE_STATE_ERROR:
+	      error_code_str = "PEI module component encountered an illegal software state error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_DXE_CORE_COMPONENT_ENCOUNTERED_AN_ILLEGAL_SOFTWARE_STATE_ERROR:
+	      error_code_str = "DXE core component encountered an illegal software state error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_DXE_BOOT_SERVICES_DRIVER_COMPONENT_ENCOUNTERED_AN_ILLEGAL_SOFTWARE_STATE_ERROR:
+	      error_code_str = "DXE boot services driver component encountered an illegal software state error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_DXE_BOOT_SERVICES_DRIVER_COMPONENT_ENCOUNTERED_AN_INVALID_CONFIGURATION:
+	      error_code_str = "DXE boot services driver component encountered an invalid configuration";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_SMM_DRIVER_COMPONENT_ENCOUNTERED_AN_ILLEGAL_SOFTWARE_STATE_ERROR:
+	      error_code_str = "SMM driver component encountered an illegal software state error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_TPM_DEVICE_NOT_DETECTED:
+	      error_code_str = "TPM device not detected";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_TPM_DEVICE_MISSING_OR_NOT_RESPONDING:
+	      error_code_str = "TPM device missing or not responding";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_TPM_DEVICE_FAILURE:
+	      error_code_str = "TPM device failure";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_TPM_DEVICE_FAILED_SELF_TEST:
+	      error_code_str = "TPM device failed self test";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_PROCESSOR_COMPONENT_ENCOUNTERED_A_MISMATCH_ERROR:
+	      error_code_str = "Processor component encountered a mismatch error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_PROCESSOR_COMPONENT_ENCOUNTERED_A_LOW_VOLTAGE_ERROR:
+	      error_code_str = "Processor component encountered a low voltage error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_PROCESSOR_COMPONENT_ENCOUNTERED_A_HIGH_VOLTAGE_ERROR:
+	      error_code_str = "Processor component encountered a high voltage error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_PCI_COMPONENT_ENCOUNTERED_A_SERR_ERROR:
+	      error_code_str = "PCI component encountered a SERR error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_ATA_ATPI_ATA_BUS_SMART_NOT_SUPPORTED:
+	      error_code_str = "ATA/ATPI ATA bus SMART not supported";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_ATA_ATPI_ATA_SMART_IS_DISABLED:
+	      error_code_str = "ATA/ATPI ATA SMART is disabled";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_PCI_EXPRESS_COMPONENT_ENCOUNTERED_A_PERR_ERROR:
+	      error_code_str = "PCI Express component encountered a PERR error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_PCI_EXPRESS_COMPONENT_ENCOUNTERED_A_SERR_ERROR:
+	      error_code_str = "PCI Express component encountered a SERR error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_PCI_EXPRESS_IBIST_ERROR:
+	      error_code_str = "PCI Express IBIST error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_DXE_BOOT_SERVICES_DRIVER_NOT_ENOUGH_MEMORY_AVAILABLE_TO_SHADOW_A_LEGACY_OPTION_ROM:
+	      error_code_str = "DXE boot services driver Not enough memory available to shadow a legacy option ROM";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_DXE_BOOT_SERVICES_DRIVER_UNRECOGNIZED:
+	      error_code_str = "DXE boot services driver Unrecognized";
+	      break;
+	    default:
+	      error_code_str = "Undefined Post Error";
+	    }
+
 	  if (ipmi_sel_parse_string_snprintf (buf,
 					      buflen,
 					      wlen,
