@@ -6,7 +6,8 @@
 
 	* libfreeipmi/include/freeipmi/spec/, libfreeipmi/sel-parse/:
 	Re-arch SEL OEM interpretations of Quanta QSSC-S4R/Appro GB812X-CN
-	to prepare for Intel S2600JF/Appro 512X.
+	to prepare for Intel S2600JF/Appro 512X.  Add QPI Interconnect
+	specific event offset messages.
 
 	* libfreeipmi/sel-parse/: Support Intel S2600JF/Appro 512X OEM SEL
 	events.
