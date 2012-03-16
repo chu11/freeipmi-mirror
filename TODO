@@ -5,6 +5,11 @@ ooo - priority code cleanup that should be done
 branches to merge
 -----------------
 
+to test
+-------
+ipmi-oem get/set bmc services for intel s2600jf
+sel oem events
+
 FreeIPMI FAQ/documentation
 --------------------------
 
