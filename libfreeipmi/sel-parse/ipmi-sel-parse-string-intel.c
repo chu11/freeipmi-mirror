@@ -776,6 +776,50 @@ ipmi_sel_parse_output_intel_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
 	  
 	  return (1);
 	}
+
+      if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600JF_BIOS_SMI_HANDLER
+	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY
+	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600JF_SPARING_REDUNDANCY_STATE
+	  && (system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_REDUNDANCY_FULLY_REDUNDANT
+	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_REDUNDANCY_REDUNDANCY_DEGRADED))
+	{
+	  uint8_t sparing_domain_channel;
+	  uint8_t dimm_rank_number;
+	  char *sparing_domain_channel_str;
+
+	  sparing_domain_channel = (system_event_record_data->event_data2 & IPMI_SENSOR_MEMORY_REDUNDANCY_EVENT_DATA2_OEM_INTEL_S2600JF_SPARING_DOMAIN_CHANNEL_BITMASK);
+	  sparing_domain_channel >>= IPMI_SENSOR_MEMORY_REDUNDANCY_EVENT_DATA2_OEM_INTEL_S2600JF_SPARING_DOMAIN_CHANNEL_SHIFT;
+	  
+	  dimm_rank_number = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_S2600JF_DIMM_RANK_NUMBER_BITMASK);
+	  dimm_rank_number >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_S2600JF_DIMM_RANK_NUMBER_SHIFT;
+	  
+	  switch (sparing_domain_channel)
+	    {
+	    case IPMI_SENSOR_MEMORY_REDUNDANCY_EVENT_DATA2_OEM_INTEL_S2600JF_SPARING_DOMAIN_CHANNEL_A:
+	      sparing_domain_channel_str = "A";
+	      break;
+	    case IPMI_SENSOR_MEMORY_REDUNDANCY_EVENT_DATA2_OEM_INTEL_S2600JF_SPARING_DOMAIN_CHANNEL_B:
+	      sparing_domain_channel_str = "B";
+	      break;
+	    case IPMI_SENSOR_MEMORY_REDUNDANCY_EVENT_DATA2_OEM_INTEL_S2600JF_SPARING_DOMAIN_CHANNEL_C:
+	      sparing_domain_channel_str = "C";
+	      break;
+	    case IPMI_SENSOR_MEMORY_REDUNDANCY_EVENT_DATA2_OEM_INTEL_S2600JF_SPARING_DOMAIN_CHANNEL_D:
+	      sparing_domain_channel_str = "D";
+	      break;
+	    default:
+	      sparing_domain_channel_str = "Unknown";
+	    }
+
+	  snprintf (tmpbuf,
+		    tmpbuflen,
+		    "Sparing Domain Channel Pair for Socket = %s, DIMM Rank Number = %u",
+		    sparing_domain_channel_str,
+		    dimm_rank_number);
+	  
+	  return (1);
+	}
     }
   
   return (0);
@@ -1515,7 +1559,8 @@ ipmi_sel_parse_output_intel_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
       if ((system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600JF_BIOS_SMI_HANDLER
 	   && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY
 	   && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
-	   && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600JF_MIRRORING_REDUNDANCY_STATE
+	   && (system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600JF_MIRRORING_REDUNDANCY_STATE
+	       || system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600JF_SPARING_REDUNDANCY_STATE)
 	   && (system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_REDUNDANCY_FULLY_REDUNDANT
 	       || system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_REDUNDANCY_REDUNDANCY_DEGRADED))
 	  || (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600JF_BIOS_SMI_HANDLER
