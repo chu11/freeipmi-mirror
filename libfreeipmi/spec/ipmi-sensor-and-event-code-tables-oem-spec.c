@@ -422,6 +422,28 @@ const char * const ipmi_oem_intel_s2600jf_specific_pci_fatal_error[] =
   };
 unsigned int ipmi_oem_intel_s2600jf_specific_pci_fatal_error_max_index = 0x0F;
 
+const char * const ipmi_oem_intel_s2600jf_specific_pci_fatal_error_2[] =
+  {
+    "Atomic Egress Blocked",
+    "TLP Prefix Blocked",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "Unspecified Non-AER Fatal Error",
+    NULL
+  };
+unsigned int ipmi_oem_intel_s2600jf_specific_pci_fatal_error_2_max_index = 0x0F;
+
 const char * const ipmi_oem_intel_s2600jf_specific_pci_correctable_error[] =
   {
     "Receiver Error",
@@ -457,6 +479,19 @@ const char * const ipmi_oem_intel_s2600jf_specific_opi_fatal_error[] =
     NULL
   };
 unsigned int ipmi_oem_intel_s2600jf_specific_opi_fatal_error_max_index = 0x0E;
+
+const char * const ipmi_oem_intel_s2600jf_specific_opi_fatal_error_2[] =
+  {
+    "Illegal inbound request",
+    "PCH Write Cache Uncorrectable Data ECC Error",
+    "PCH Write Cache Uncorrectable Data ECC Error", /* same not typo, typo in spec? */
+    "PCH Write Cache Uncorrectable Data ECC Error", /* same not typo, typo in spec? */
+    "PCH Received XPF physical/logical redirect interrupt inbound",
+    "PCH Illegal SAD or Illegal or non-existent address or memory",
+    "PCH Write Cache Coherency Violation",
+    NULL
+  };
+unsigned int ipmi_oem_intel_s2600jf_specific_opi_fatal_error_2_max_index = 0x06;
 
 const char * const ipmi_oem_intel_s2600jf_specific_qpi_link_width_reduced[] =
   {

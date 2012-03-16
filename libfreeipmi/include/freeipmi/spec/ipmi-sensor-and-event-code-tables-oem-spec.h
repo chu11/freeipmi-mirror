@@ -885,6 +885,15 @@ extern unsigned int ipmi_oem_intel_quanta_qssc_s4r_specific_pci_correctable_sens
 #define IPMI_OEM_INTEL_S2600JF_SPECIFIC_PCIE_FATAL_ERROR_MC_BLOCKED_TLP                 0x0F
 
 /*
+ * Event Reading Type Code = IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600JF_PCIE_FATAL_ERROR_2
+ * Sensor Type = IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
+ */
+/* achu: not a typo, why a from from 0x01 to 0x0f? */
+#define IPMI_OEM_INTEL_S2600JF_SPECIFIC_PCIE_FATAL_ERROR_2_ATOMIC_EGRESS_BLOCKED           0x00
+#define IPMI_OEM_INTEL_S2600JF_SPECIFIC_PCIE_FATAL_ERROR_2_TLP_PREFIX_BLOCKED              0x01
+#define IPMI_OEM_INTEL_S2600JF_SPECIFIC_PCIE_FATAL_ERROR_2_UNSPECIFIED_NON_AER_FATAL_ERROR 0x0F
+
+/*
  * Event Reading Type Code = IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600JF_PCIE_CORRECTABLE_ERROR
  * Sensor Type = IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
  */
@@ -920,6 +929,19 @@ extern unsigned int ipmi_oem_intel_quanta_qssc_s4r_specific_pci_correctable_sens
 #define IPMI_OEM_INTEL_S2600JF_SPECIFIC_OPI_FATAL_ERROR_ROUTING_TABLE_ERROR                            0x0E
 
 /*
+ * Event Reading Type Code = IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600JF_OPI_FATAL_ERROR_2
+ * Sensor Type = IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
+ */
+/* achu: not a typo, 1h == 2h == 3h.  Typos in doc? */
+#define IPMI_OEM_INTEL_S2600JF_SPECIFIC_OPI_FATAL_ERROR_2_ILLEGAL_INBOUND_REQUEST                                      0x00
+#define IPMI_OEM_INTEL_S2600JF_SPECIFIC_OPI_FATAL_ERROR_2_PCH_WRITE_CACHE_UNCORRECTABLE_DATA_ECC_ERROR                 0x01
+#define IPMI_OEM_INTEL_S2600JF_SPECIFIC_OPI_FATAL_ERROR_2_PCH_WRITE_CACHE_UNCORRECTABLE_DATA_ECC_ERROR_2               0x02
+#define IPMI_OEM_INTEL_S2600JF_SPECIFIC_OPI_FATAL_ERROR_2_PCH_WRITE_CACHE_UNCORRECTABLE_DATA_ECC_ERROR_3               0x03
+#define IPMI_OEM_INTEL_S2600JF_SPECIFIC_OPI_FATAL_ERROR_2_PCH_RECEIVED_XPF_PHYSICAL_LOGICAL_REDIRECT_INTERRUPT_INBOUND 0x04
+#define IPMI_OEM_INTEL_S2600JF_SPECIFIC_OPI_FATAL_ERROR_2_PCH_ILLEGAL_SAD_OR_ILLEGAL_OR_NON_EXISTENT_ADDRESS_OR_MEMORY 0x05
+#define IPMI_OEM_INTEL_S2600JF_SPECIFIC_OPI_FATAL_ERROR_2_PCH_WRITE_CACHE_COHERENCY_VIOLATION                          0x06
+
+/*
  * Event Reading Type Code = IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600JF_QPI_LINK_WIDTH_REDUCED
  * Sensor Type = IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
  */
@@ -935,11 +957,17 @@ extern unsigned int ipmi_oem_intel_quanta_qssc_s4r_specific_pci_correctable_sens
 extern const char * const ipmi_oem_intel_s2600jf_specific_pci_fatal_error[];
 extern unsigned int ipmi_oem_intel_s2600jf_specific_pci_fatal_error_max_index;
 
+extern const char * const ipmi_oem_intel_s2600jf_specific_pci_fatal_error_2[];
+extern unsigned int ipmi_oem_intel_s2600jf_specific_pci_fatal_error_2_max_index;
+
 extern const char * const ipmi_oem_intel_s2600jf_specific_pci_correctable_error[];
 extern unsigned int ipmi_oem_intel_s2600jf_specific_pci_correctable_error_max_index;
 
 extern const char * const ipmi_oem_intel_s2600jf_specific_opi_fatal_error[];
 extern unsigned int ipmi_oem_intel_s2600jf_specific_opi_fatal_error_max_index;
+
+extern const char * const ipmi_oem_intel_s2600jf_specific_opi_fatal_error_2[];
+extern unsigned int ipmi_oem_intel_s2600jf_specific_opi_fatal_error_2_max_index;
 
 extern const char * const ipmi_oem_intel_s2600jf_specific_qpi_link_width_reduced[];
 extern unsigned int ipmi_oem_intel_s2600jf_specific_qpi_link_width_reduced_max_index;
