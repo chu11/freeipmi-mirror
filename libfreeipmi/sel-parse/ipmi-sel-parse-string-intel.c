@@ -3404,6 +3404,123 @@ ipmi_sel_parse_output_intel_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
       
 	  return (1);
 	}
+
+      if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600JF_BIOS_SMI_HANDLER
+	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600JF_MEMORY_PARITY_ERROR
+	  && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_PARITY
+	  && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
+	  && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
+	{
+	  uint8_t channel_valid;
+	  uint8_t dimm_valid;
+	  uint8_t error_type;
+	  uint8_t socket_id;
+	  uint8_t channel;
+	  uint8_t dimm;
+	  char *error_type_str;
+	  char *socket_id_str;
+	  char *channel_str;
+	  char *dimm_str;
+
+	  channel_valid = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_S2600JF_EVENT_DATA3_CHANNEL_VALID_BITMASK);
+	  channel_valid >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_S2600JF_EVENT_DATA3_CHANNEL_VALID_SHIFT;
+
+	  dimm_valid = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_S2600JF_EVENT_DATA3_DIMM_VALID_BITMASK);
+	  dimm_valid >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_S2600JF_EVENT_DATA3_DIMM_VALID_SHIFT;
+
+	  error_type = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_S2600JF_ERROR_TYPE_BITMASK);
+	  error_type >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_S2600JF_ERROR_TYPE_SHIFT;
+
+	  socket_id = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_S2600JF_SOCKET_ID_BITMASK);
+	  socket_id >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_S2600JF_SOCKET_ID_SHIFT;
+	  
+	  channel = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_S2600JF_CHANNEL_BITMASK);
+	  channel >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_S2600JF_CHANNEL_SHIFT;
+  
+	  dimm = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_S2600JF_DIMM_BITMASK);
+	  dimm >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_S2600JF_DIMM_SHIFT;
+	  
+	  switch (error_type)
+	    {
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_S2600JF_ERROR_TYPE_NOT_KNOWN:
+	      error_type_str = "Not Known";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_S2600JF_ERROR_TYPE_ADDRESS_PARITY_ERROR:
+	      error_type_str = "Address Parity Error";
+	      break;
+	    default:
+	      error_type_str = "Unknown";
+	    }
+
+	  switch (socket_id)
+	    {
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_S2600JF_SOCKET_ID_CPU_1:
+	      socket_id_str = "1";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_S2600JF_SOCKET_ID_CPU_2:
+	      socket_id_str = "2";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_S2600JF_SOCKET_ID_CPU_3:
+	      socket_id_str = "3";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_S2600JF_SOCKET_ID_CPU_4:
+	      socket_id_str = "4";
+	      break;
+	    default:
+	      socket_id_str = "Unknown";
+	    }
+	  
+	  switch (channel)
+	    {
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_S2600JF_CHANNEL_A:
+	      channel_str = "A";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_S2600JF_CHANNEL_B:
+	      channel_str = "B";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_S2600JF_CHANNEL_C:
+	      channel_str = "C";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_S2600JF_CHANNEL_D:
+	      channel_str = "D";
+	      break;
+	    default:
+	      channel_str = "Unknown";
+	    }
+	  
+	  switch (dimm)
+	    {
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_S2600JF_DIMM_1:
+	      dimm_str = "1";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_S2600JF_DIMM_2:
+	      dimm_str = "2";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_S2600JF_DIMM_3:
+	      dimm_str = "3";
+	      break;
+	    default:
+	      dimm_str = "Unknown";
+	    }
+	  
+	  if (ipmi_sel_parse_string_snprintf (buf,
+					      buflen,
+					      wlen,
+					      "Error Type = %s, CPU = %s%s%s%s%s",
+					      error_type_str,
+					      socket_id_str,
+					      channel_valid ? ", Channel = " : "",
+					      channel_valid ? channel_str : "",
+					      dimm_valid ? ", DIMM = " : "",
+					      dimm_valid ? dimm_str : ""))
+	    (*oem_rv) = 1;
+	  else
+	    (*oem_rv) = 0;
+	  
+	  return (1);
+	}     
     }
 
   return (0);
