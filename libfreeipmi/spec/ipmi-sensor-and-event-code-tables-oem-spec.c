@@ -392,3 +392,47 @@ const char * const ipmi_oem_intel_quanta_qssc_s4r_specific_pci_correctable_senso
     NULL
   };
 unsigned int ipmi_oem_intel_quanta_qssc_s4r_specific_pci_correctable_sensor_max_index = 0x06;
+
+/*
+ * Intel S2600JF/Appro 512X
+ */
+
+/* achu: Similar to above, but some events text changed and new ones,
+ * so new arrays to differentiate */
+
+const char * const ipmi_oem_intel_s2600jf_specific_pci_fatal_error[] =
+  {
+    "Data Link Layer Protocol Error",
+    "Surprise Link Down Error",
+    "Completer Abort",
+    "Unsupported Request",
+    "Poisoned TLP",
+    "Flow Control Protocol",
+    "Completion Timeout",
+    "Receiver Buffer Overflow",
+    "ACS Violation Error",
+    "Malformed TLP Error",
+    "ECRC Error",
+    "Received Fatal Message From Downstream",
+    "Unexpected Completion",
+    "Received ERR_NONFATAL Message",
+    "Uncorrectable Internal",
+    "MC Blocked TLP",
+    NULL
+  };
+unsigned int ipmi_oem_intel_s2600jf_specific_pci_fatal_error_max_index = 0x0F;
+
+const char * const ipmi_oem_intel_s2600jf_specific_pci_correctable_error[] =
+  {
+    "Receiver Error",
+    "Bad DLLP",
+    "Bad TLP",
+    "Replay Num Rollover",
+    "Replay Timer timeout",
+    "Advisory Non-fatal",
+    "Link BW Changed",
+    "Correctable Internal",
+    "Header Log Overflow",
+    NULL
+  };
+unsigned int ipmi_oem_intel_s2600jf_specific_pci_correctable_error_max_index = 0x08;

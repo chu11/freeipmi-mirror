@@ -2004,6 +2004,7 @@ ipmi_get_oem_specific_message (uint32_t manufacturer_id,
    * Intel S5500WB/Penguin Computing Relion 700
    * Quanta QSSC-S4R/Appro GB812X-CN
    * (Quanta motherboard maintains Intel manufacturer ID)
+   * Intel S2600JF/Appro 512X
    */
   if (manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL)
     {
@@ -2042,6 +2043,24 @@ ipmi_get_oem_specific_message (uint32_t manufacturer_id,
 					buflen,
 					ipmi_oem_intel_quanta_qssc_s4r_specific_pci_correctable_sensor_max_index,
 					ipmi_oem_intel_quanta_qssc_s4r_specific_pci_correctable_sensor));
+	}
+      else if (product_id == IPMI_INTEL_PRODUCT_ID_S2600JF)
+	{
+	  if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600JF_PCIE_FATAL_ERROR
+	      && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
+	    return (_get_event_message (offset,
+					buf,
+					buflen,
+					ipmi_oem_intel_s2600jf_specific_pci_fatal_error_max_index,
+					ipmi_oem_intel_s2600jf_specific_pci_fatal_error));
+	  
+	  if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600JF_PCIE_CORRECTABLE_ERROR
+	      && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
+	    return (_get_event_message (offset,
+					buf,
+					buflen,
+					ipmi_oem_intel_s2600jf_specific_pci_correctable_error_max_index,
+					ipmi_oem_intel_s2600jf_specific_pci_correctable_error));
 	}
     }
 

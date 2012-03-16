@@ -73,6 +73,14 @@ extern "C" {
 #define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QUANTA_QSSC_S4R_UNCORRECTABLE_ERROR     0x77
 
 /*
+ * Intel S2600JF/Appro 512X
+ */
+/* achu: some are similar to above, but different names, new events,
+ * new numbers, so making new macros to differentiate */
+#define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600JF_PCIE_FATAL_ERROR       0x70
+#define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600JF_PCIE_CORRECTABLE_ERROR 0x71
+
+/*
  * Intel Node Manager
  *
  * For Intel Chips, not just Intel Motherboards.  Confirmed for:
