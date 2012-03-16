@@ -435,6 +435,45 @@ ipmi_sel_parse_output_intel_event_data1_class_oem (ipmi_sel_parse_ctx_t ctx,
 	  if (ret > 0)
 	    return (1);
 	}
+
+      if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600JF_BIOS_SMI_HANDLER
+	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600JF_QPI_CORRECTABLE_ERRORS
+	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600JF_QPI_CORRECTABLE_ERRORS)
+	{
+	  snprintf (tmpbuf,
+		    tmpbuflen,
+		    "QPI Correctable Errors Event = %02Xh",
+		    system_event_record_data->offset_from_event_reading_type_code);
+	  
+	  return (1);
+	}
+      
+      if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600JF_BIOS_SMI_HANDLER
+	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600JF_CHIPSET_PROPRIETARY
+	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600JF_CHIPSET_PROPRIETARY)
+	{
+	  snprintf (tmpbuf,
+		    tmpbuflen,
+		    "Chipset Proprietary Event = %02Xh",
+		    system_event_record_data->offset_from_event_reading_type_code);
+	  
+	  return (1);
+	}
+
+      if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600JF_BIOS_SMI_HANDLER
+	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600JF_MEMORY_ERROR_EXTENSION
+	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600JF_MEMORY_ERROR_EXTENSION)
+	{
+	  snprintf (tmpbuf,
+		    tmpbuflen,
+		    "Memory Error Extension Event = %02Xh",
+		    system_event_record_data->offset_from_event_reading_type_code);
+	  
+	  return (1);
+	}
     }
 
   return (0);
