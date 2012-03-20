@@ -1159,7 +1159,7 @@ _interpret_sensor_oem_intel_smi_timeout_power_throttled (ipmi_interpret_ctx_t ct
 
   /* Intel SMI Timeout
    * Intel SR1625
-   * Intel S5500WB/Penguin Computing Relion
+   * Intel S5500WB/Penguin Computing Relion 700
    * Quanta QSSC-S4R/Appro GB812X-CN (Quanta motherboard maintains Intel manufacturer ID)
    * Intel S5000PAL
    *
@@ -1189,7 +1189,7 @@ _interpret_sensor_oem_intel_smi_timeout_power_throttled (ipmi_interpret_ctx_t ct
    */
 
   /* Intel SR1625
-   * Intel S5500WB/Penguin Computing Relion
+   * Intel S5500WB/Penguin Computing Relion 700
    */
   if (_interpret_sensor_oem_intel_smi_timeout_power_throttled_wrapper (ctx,
 								       IPMI_IANA_ENTERPRISE_ID_INTEL,
