@@ -1156,7 +1156,7 @@ _interpret_sel_oem_intel_smi_timeout_power_throttled (ipmi_interpret_ctx_t ctx)
    * Quanta QSSC-S4R/Appro GB812X-CN (Quanta motherboard maintains Intel manufacturer ID)
    *
    * Manufacturer ID = 343 (Intel)                                                                              
-   * Product ID = 62 (Intel SR1625, S5500WB), 64 (Quanta QSSC-S4R)
+   * Product ID = 62 (Intel SR1625, S5500WB), 64 (Quanta QSSC-S4R), 40 (Intel S5000PAL)
    * Event/Reading Type Code = 3h (State Asserted/Deasserted)
    * Sensor Type = F3h (OEM)                                                                                 
    * EventData1 0x00 = "State Deasserted"
@@ -1199,6 +1199,88 @@ _interpret_sel_oem_intel_smi_timeout_power_throttled (ipmi_interpret_ctx_t ctx)
 }
 
 static int
+_interpret_sel_oem_intel_nmi_state_wrapper (ipmi_interpret_ctx_t ctx,
+					    uint32_t manufacturer_id,
+					    uint16_t product_id)
+{
+  struct ipmi_interpret_sel_oem_sensor_config *oem_conf;
+
+  assert (ctx);
+  assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
+  assert (ctx->interpret_sel.sel_oem_sensor_config);
+  assert (ctx->interpret_sel.sel_oem_record_config);
+
+  if (_interpret_sel_oem_sensor_config_create (ctx,
+					       manufacturer_id,
+					       product_id,
+					       IPMI_EVENT_READING_TYPE_CODE_STATE,
+					       IPMI_SENSOR_TYPE_OEM_INTEL_NMI_STATE,
+					       &oem_conf) < 0)
+    return (-1);
+  
+  oem_conf->oem_sensor_data[0].event_direction_any_flag = 1;
+  oem_conf->oem_sensor_data[0].event_direction = 0; /* doesn't matter */
+
+  oem_conf->oem_sensor_data[0].event_data1_any_flag = 0;
+  oem_conf->oem_sensor_data[0].event_data1 = IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_DEASSERTED;
+
+  oem_conf->oem_sensor_data[0].event_data2_any_flag = 1;
+  oem_conf->oem_sensor_data[0].event_data2 = 0; /* doesn't matter */
+
+  oem_conf->oem_sensor_data[0].event_data3_any_flag = 1;
+  oem_conf->oem_sensor_data[0].event_data3 = 0; /* doesn't matter */
+
+  oem_conf->oem_sensor_data[0].sel_state = IPMI_INTERPRET_STATE_NOMINAL;
+
+  oem_conf->oem_sensor_data[1].event_direction_any_flag = 1;
+  oem_conf->oem_sensor_data[1].event_direction = 0; /* doesn't matter */
+
+  oem_conf->oem_sensor_data[1].event_data1_any_flag = 0;
+  oem_conf->oem_sensor_data[1].event_data1 = IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED;
+
+  oem_conf->oem_sensor_data[1].event_data2_any_flag = 1;
+  oem_conf->oem_sensor_data[1].event_data2 = 0; /* doesn't matter */
+
+  oem_conf->oem_sensor_data[1].event_data3_any_flag = 1;
+  oem_conf->oem_sensor_data[1].event_data3 = 0; /* doesn't matter */
+
+  oem_conf->oem_sensor_data[1].sel_state = IPMI_INTERPRET_STATE_CRITICAL;
+
+  oem_conf->oem_sensor_data_count = 2;
+
+  return (0);
+}
+
+static int
+_interpret_sel_oem_intel_nmi_state (ipmi_interpret_ctx_t ctx)
+{
+
+  assert (ctx);
+  assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
+  assert (ctx->interpret_sel.sel_oem_sensor_config);
+  assert (ctx->interpret_sel.sel_oem_record_config);
+
+  /* Intel NMI State
+   * Intel S5000PAL
+   *
+   * Manufacturer ID = 343 (Intel)                                                                              
+   * Product ID = 40 (Intel S5000PAL)
+   * Event/Reading Type Code = 3h (State Asserted/Deasserted)
+   * Sensor Type = F3h (OEM)                                                                                 
+   * EventData1 0x00 = "State Deasserted"
+   * EventData2 0x01 = "State Asserted"
+   */
+
+  /* Intel S5000PAL */
+  if (_interpret_sel_oem_intel_nmi_state_wrapper (ctx,
+						  IPMI_IANA_ENTERPRISE_ID_INTEL,
+						  IPMI_INTEL_PRODUCT_ID_S5000PAL) < 0)
+    return (-1);
+  
+  return (0);
+}
+
+static int
 _interpret_sel_oem_intel (ipmi_interpret_ctx_t ctx)
 {
   assert (ctx);
@@ -1210,6 +1292,9 @@ _interpret_sel_oem_intel (ipmi_interpret_ctx_t ctx)
     return (-1);
 
   if (_interpret_sel_oem_intel_smi_timeout_power_throttled (ctx) < 0)
+    return (-1);
+
+  if (_interpret_sel_oem_intel_nmi_state (ctx) < 0)
     return (-1);
 
   return (0);

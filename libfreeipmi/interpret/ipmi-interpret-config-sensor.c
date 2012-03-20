@@ -1212,6 +1212,69 @@ _interpret_sensor_oem_intel_smi_timeout_power_throttled (ipmi_interpret_ctx_t ct
 }
 
 static int
+_interpret_sensor_oem_intel_nmi_state_wrapper (ipmi_interpret_ctx_t ctx,
+								 uint32_t manufacturer_id,
+								 uint16_t product_id)
+{
+  struct ipmi_interpret_sensor_oem_config *oem_conf;
+
+  assert (ctx);
+  assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
+  assert (ctx->interpret_sensor.sensor_oem_config);
+
+  if (_interpret_sensor_oem_config_create (ctx,
+					   manufacturer_id,
+					   product_id,
+					   IPMI_EVENT_READING_TYPE_CODE_STATE,
+					   IPMI_SENSOR_TYPE_OEM_INTEL_NMI_STATE,
+					   &oem_conf) < 0)
+    return (-1);
+  
+  oem_conf->oem_state[0].sensor_event_bitmask = 0;
+  oem_conf->oem_state[0].sensor_state = IPMI_INTERPRET_STATE_NOMINAL;
+  oem_conf->oem_state[0].oem_state_type = IPMI_OEM_STATE_TYPE_BITMASK;
+
+  oem_conf->oem_state[1].sensor_event_bitmask = (0x1 << IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_DEASSERTED);
+  oem_conf->oem_state[1].sensor_state = IPMI_INTERPRET_STATE_NOMINAL;
+  oem_conf->oem_state[1].oem_state_type = IPMI_OEM_STATE_TYPE_BITMASK;
+  
+  oem_conf->oem_state[2].sensor_event_bitmask = (0x1 << IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED);
+  oem_conf->oem_state[2].sensor_state = IPMI_INTERPRET_STATE_CRITICAL;
+  oem_conf->oem_state[2].oem_state_type = IPMI_OEM_STATE_TYPE_BITMASK;
+
+  oem_conf->oem_state_count = 3;
+  
+  return (0);
+}
+
+static int
+_interpret_sensor_oem_intel_nmi_state (ipmi_interpret_ctx_t ctx)
+{
+  assert (ctx);
+  assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
+  assert (ctx->interpret_sensor.sensor_oem_config);
+
+  /* Intel NMI State
+   * Intel S5000PAL
+   *
+   * Manufacturer ID = 343 (Intel)
+   * Product ID = 40 (Intel S5000PAL)
+   * Event/Reading Type Code = 3h (State Asserted/Deasserted)
+   * Sensor Type = C0h (OEM)
+   * Bitmask 0x0001 = "State Deasserted"
+   * Bitmask 0x0002 = "State Asserted"
+   */
+
+  /* Intel S5000PAL */
+  if (_interpret_sensor_oem_intel_nmi_state_wrapper (ctx,
+						     IPMI_IANA_ENTERPRISE_ID_INTEL,
+						     IPMI_INTEL_PRODUCT_ID_S5000PAL) < 0)
+    return (-1);
+  
+  return (0);
+}
+
+static int
 _interpret_sensor_oem_intel (ipmi_interpret_ctx_t ctx)
 {
   assert (ctx);
@@ -1219,6 +1282,9 @@ _interpret_sensor_oem_intel (ipmi_interpret_ctx_t ctx)
   assert (ctx->interpret_sensor.sensor_oem_config);
 
   if (_interpret_sensor_oem_intel_smi_timeout_power_throttled (ctx) < 0)
+    return (-1);
+
+  if (_interpret_sensor_oem_intel_nmi_state (ctx) < 0)
     return (-1);
 
   return (0);
