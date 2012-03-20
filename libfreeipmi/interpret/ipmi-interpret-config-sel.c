@@ -1145,8 +1145,10 @@ _interpret_sel_oem_intel_smi_timeout_power_throttled (ipmi_interpret_ctx_t ctx)
   assert (ctx->interpret_sel.sel_oem_record_config);
 
   /* Intel SMI Timeout
-   * Intel SR1625/S5500WB 
+   * Intel SR1625
+   * Intel S5500WB/Penguin Computing Relion
    * Quanta QSSC-S4R/Appro GB812X-CN (Quanta motherboard maintains Intel manufacturer ID)
+   * Intel S5000PAL
    *
    * and
    *
@@ -1173,7 +1175,9 @@ _interpret_sel_oem_intel_smi_timeout_power_throttled (ipmi_interpret_ctx_t ctx)
    * event for that sensor. The BMC will also reset the system.
    */
 
-  /* Intel SR1625/S5500WB */
+  /* Intel SR1625
+   * Intel S5500WB/Penguin Computing Relion
+   */
   if (_interpret_sel_oem_intel_smi_timeout_power_throttled_wrapper (ctx,
 								    IPMI_IANA_ENTERPRISE_ID_INTEL,
 								    IPMI_INTEL_PRODUCT_ID_SR1625) < 0)
@@ -1185,6 +1189,12 @@ _interpret_sel_oem_intel_smi_timeout_power_throttled (ipmi_interpret_ctx_t ctx)
 								    IPMI_INTEL_PRODUCT_ID_QUANTA_QSSC_S4R) < 0)
     return (-1);
 
+  /* Intel S5000PAL */
+  if (_interpret_sel_oem_intel_smi_timeout_power_throttled_wrapper (ctx,
+								    IPMI_IANA_ENTERPRISE_ID_INTEL,
+								    IPMI_INTEL_PRODUCT_ID_S5000PAL) < 0)
+    return (-1);
+  
   return (0);
 }
 

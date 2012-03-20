@@ -3,7 +3,8 @@
 	* libfreeipmi/interpret/: Support sensor Session Audit
 	intepretation.  Convert default state of
 	IPMI_Session_Audit_Invalid_Username_Or_Password from Critical to
-	Warning.  Support Voltage Limit sensors.
+	Warning.  Support Voltage Limit sensors.  Support SMI timeout on
+	Intel S5000PAL motherboard.
 
 	* man/, etc/: Upate appropriately.
 	

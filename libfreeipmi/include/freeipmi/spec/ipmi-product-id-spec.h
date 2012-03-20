@@ -134,6 +134,8 @@ extern "C" {
 
 #define IPMI_INTEL_PRODUCT_ID_S2600JF  77
 
+#define IPMI_INTEL_PRODUCT_ID_S5000PAL 40
+
 /* 
  * Intel derived
  */
