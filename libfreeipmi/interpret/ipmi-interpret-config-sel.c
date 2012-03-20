@@ -128,6 +128,13 @@ static struct ipmi_interpret_sel_config ipmi_interpret_sel_voltage_state_config[
   };
 static unsigned int ipmi_interpret_sel_voltage_state_config_len = 2;
 
+static struct ipmi_interpret_sel_config ipmi_interpret_sel_voltage_limit_config[] =
+  {
+    { "IPMI_Voltage_Limit_Not_Exceeded", IPMI_INTERPRET_STATE_NOMINAL, IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_Voltage_Limit_Exceeded", IPMI_INTERPRET_STATE_CRITICAL, IPMI_INTERPRET_STATE_CRITICAL},
+  };
+static unsigned int ipmi_interpret_sel_voltage_limit_config_len = 2;
+
 static struct ipmi_interpret_sel_config ipmi_interpret_sel_voltage_performance_config[] =
   {
     { "IPMI_Voltage_Performance_Met", IPMI_INTERPRET_STATE_NOMINAL, IPMI_INTERPRET_STATE_NOMINAL},
@@ -1251,6 +1258,12 @@ ipmi_interpret_sel_init (ipmi_interpret_ctx_t ctx)
     goto cleanup;
 
   if (_interpret_config_sel_init (ctx,
+                                  &ctx->interpret_sel.ipmi_interpret_sel_voltage_limit_config,
+                                  ipmi_interpret_sel_voltage_limit_config,
+                                  ipmi_interpret_sel_voltage_limit_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_config_sel_init (ctx,
                                   &ctx->interpret_sel.ipmi_interpret_sel_voltage_performance_config,
                                   ipmi_interpret_sel_voltage_performance_config,
                                   ipmi_interpret_sel_voltage_performance_config_len) < 0)
@@ -1641,6 +1654,9 @@ ipmi_interpret_sel_destroy (ipmi_interpret_ctx_t ctx)
 
   _interpret_config_sel_destroy (ctx,
                                  ctx->interpret_sel.ipmi_interpret_sel_voltage_state_config);
+
+  _interpret_config_sel_destroy (ctx,
+                                 ctx->interpret_sel.ipmi_interpret_sel_voltage_limit_config);
 
   _interpret_config_sel_destroy (ctx,
                                  ctx->interpret_sel.ipmi_interpret_sel_voltage_performance_config);
@@ -2302,6 +2318,7 @@ ipmi_interpret_sel_config_parse (ipmi_interpret_ctx_t ctx,
   int ipmi_interpret_sel_temperature_limit_flags[ipmi_interpret_sel_temperature_limit_config_len];
   int ipmi_interpret_sel_temperature_transition_severity_flags[ipmi_interpret_sel_temperature_transition_severity_config_len];
   int ipmi_interpret_sel_voltage_state_flags[ipmi_interpret_sel_voltage_state_config_len];
+  int ipmi_interpret_sel_voltage_limit_flags[ipmi_interpret_sel_voltage_limit_config_len];
   int ipmi_interpret_sel_voltage_performance_flags[ipmi_interpret_sel_voltage_performance_config_len];
   int ipmi_interpret_sel_voltage_transition_severity_flags[ipmi_interpret_sel_voltage_transition_severity_config_len];
   int ipmi_interpret_sel_current_transition_severity_flags[ipmi_interpret_sel_current_transition_severity_config_len];
@@ -2402,6 +2419,12 @@ ipmi_interpret_sel_config_parse (ipmi_interpret_ctx_t ctx,
                             ctx->interpret_sel.ipmi_interpret_sel_voltage_state_config,
                             ipmi_interpret_sel_voltage_state_flags,
                             ipmi_interpret_sel_voltage_state_config_len);
+
+  _fill_sel_config_options (config_file_options,
+                            &config_file_options_len,
+                            ctx->interpret_sel.ipmi_interpret_sel_voltage_limit_config,
+                            ipmi_interpret_sel_voltage_limit_flags,
+                            ipmi_interpret_sel_voltage_limit_config_len);
 
   _fill_sel_config_options (config_file_options,
                             &config_file_options_len,

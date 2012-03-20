@@ -133,6 +133,7 @@ struct ipmi_interpret_sel {
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_temperature_limit_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_temperature_transition_severity_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_voltage_state_config;
+  struct ipmi_interpret_sel_config **ipmi_interpret_sel_voltage_limit_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_voltage_performance_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_voltage_transition_severity_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_current_transition_severity_config;
@@ -214,6 +215,7 @@ struct ipmi_interpret_sensor {
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_temperature_limit_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_temperature_transition_severity_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_voltage_state_config;
+  struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_voltage_limit_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_voltage_performance_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_voltage_transition_severity_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_current_transition_severity_config;

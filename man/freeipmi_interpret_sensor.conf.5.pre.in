@@ -177,6 +177,21 @@ Defaults to Nominal.
 Defaults to Warning.
 .RE
 .TP
+.B IPMI_Voltage_Limit
+The following states correspond to Voltage sensors that report on
+limits.
+.RS
+.TP
+\fBIPMI_Voltage_Limit_No_Event\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Voltage_Limit_Not_Exceeded\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Voltage_Limit_Exceeded\fR
+Defaults to Critical.
+.RE
+.TP
 .B IPMI_Voltage_Performance
 The following states correspond to Voltage sensors that report on
 performance.

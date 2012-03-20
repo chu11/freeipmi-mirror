@@ -1,12 +1,11 @@
-2012-03-12  Albert Chu <chu11@llnl.gov>
+2012-03-20  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/interpret/: Support sensor Session Audit
 	intepretation.  Convert default state of
 	IPMI_Session_Audit_Invalid_Username_Or_Password from Critical to
-	Warning.
+	Warning.  Support Voltage Limit sensors.
 
-	* man/, etc/: Upate appropriately.  Document SEL Session Audit
-	interpretations.
+	* man/, etc/: Upate appropriately.
 	
 2012-03-12  Albert Chu <chu11@llnl.gov>
 
