@@ -1,5 +1,15 @@
 2012-03-12  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/interpret/: Support sensor Session Audit
+	intepretation.  Convert default state of
+	IPMI_Session_Audit_Invalid_Username_Or_Password from Critical to
+	Warning.
+
+	* man/, etc/: Upate appropriately.  Document SEL Session Audit
+	interpretations.
+	
+2012-03-12  Albert Chu <chu11@llnl.gov>
+
 	* ipmi-oem/ipmi-oem-supermicro.c
 	(ipmi_oem_supermicro_get_bmc_services_status,
 	ipmi_oem_supermicro_set_bmc_services_status): Fix error message

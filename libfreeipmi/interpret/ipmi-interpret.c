@@ -1319,6 +1319,8 @@ ipmi_interpret_sensor (ipmi_interpret_ctx_t ctx,
         sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_management_subsystem_health_config;
       else if (sensor_type == IPMI_SENSOR_TYPE_BATTERY)
         sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_battery_config;
+      else if (sensor_type == IPMI_SENSOR_TYPE_SESSION_AUDIT)
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_session_audit_config;
       else if (sensor_type == IPMI_SENSOR_TYPE_FRU_STATE)
         sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_fru_state_config;
       else if (ctx->flags & IPMI_INTERPRET_FLAGS_INTERPRET_OEM_DATA

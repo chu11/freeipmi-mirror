@@ -669,6 +669,16 @@ static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_battery_config[
   };
 static unsigned int ipmi_interpret_sensor_battery_config_len = 4;
 
+static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_session_audit_config[] =
+  {
+    { "IPMI_Session_Audit_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_Session_Audit_Session_Activated", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_Session_Audit_Session_Deactivated", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_Session_Audit_Invalid_Username_Or_Password", IPMI_INTERPRET_STATE_WARNING},
+    { "IPMI_Session_Audit_Invalid_Password_Disable", IPMI_INTERPRET_STATE_CRITICAL},
+  };
+static unsigned int ipmi_interpret_sensor_session_audit_config_len = 5;
+
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_fru_state_config[] =
   {
     { "IPMI_FRU_State_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
@@ -1524,6 +1534,12 @@ ipmi_interpret_sensor_init (ipmi_interpret_ctx_t ctx)
     goto cleanup;
 
   if (_interpret_config_sensor_init (ctx,
+                                     &ctx->interpret_sensor.ipmi_interpret_sensor_session_audit_config,
+                                     ipmi_interpret_sensor_session_audit_config,
+                                     ipmi_interpret_sensor_session_audit_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_config_sensor_init (ctx,
                                      &ctx->interpret_sensor.ipmi_interpret_sensor_fru_state_config,
                                      ipmi_interpret_sensor_fru_state_config,
                                      ipmi_interpret_sensor_fru_state_config_len) < 0)
@@ -1721,6 +1737,9 @@ ipmi_interpret_sensor_destroy (ipmi_interpret_ctx_t ctx)
 
   _interpret_config_sensor_destroy (ctx,
                                     ctx->interpret_sensor.ipmi_interpret_sensor_battery_config);
+
+  _interpret_config_sensor_destroy (ctx,
+                                    ctx->interpret_sensor.ipmi_interpret_sensor_session_audit_config);
 
   _interpret_config_sensor_destroy (ctx,
                                     ctx->interpret_sensor.ipmi_interpret_sensor_fru_state_config);
@@ -2012,6 +2031,7 @@ ipmi_interpret_sensor_config_parse (ipmi_interpret_ctx_t ctx,
   int ipmi_interpret_sensor_entity_presence_device_present_flags[ipmi_interpret_sensor_entity_presence_device_present_config_len];
   int ipmi_interpret_sensor_management_subsystem_health_flags[ipmi_interpret_sensor_management_subsystem_health_config_len];
   int ipmi_interpret_sensor_battery_flags[ipmi_interpret_sensor_battery_config_len];
+  int ipmi_interpret_sensor_session_audit_flags[ipmi_interpret_sensor_session_audit_config_len];
   int ipmi_interpret_sensor_fru_state_flags[ipmi_interpret_sensor_fru_state_config_len];
   int sensor_oem_bitmask_flag;
   int sensor_oem_value_flag;
@@ -2328,6 +2348,12 @@ ipmi_interpret_sensor_config_parse (ipmi_interpret_ctx_t ctx,
                                ctx->interpret_sensor.ipmi_interpret_sensor_battery_config,
                                ipmi_interpret_sensor_battery_flags,
                                ipmi_interpret_sensor_battery_config_len);
+
+  _fill_sensor_config_options (config_file_options,
+                               &config_file_options_len,
+                               ctx->interpret_sensor.ipmi_interpret_sensor_session_audit_config,
+                               ipmi_interpret_sensor_session_audit_flags,
+                               ipmi_interpret_sensor_session_audit_config_len);
 
   _fill_sensor_config_options (config_file_options,
                                &config_file_options_len,

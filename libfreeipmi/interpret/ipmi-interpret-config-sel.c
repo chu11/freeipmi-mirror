@@ -689,7 +689,7 @@ static struct ipmi_interpret_sel_config ipmi_interpret_sel_session_audit_config[
   {
     { "IPMI_Session_Audit_Session_Activated", IPMI_INTERPRET_STATE_NOMINAL, IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_Session_Audit_Session_Deactivated", IPMI_INTERPRET_STATE_NOMINAL, IPMI_INTERPRET_STATE_NOMINAL},
-    { "IPMI_Session_Audit_Invalid_Username_Or_Password", IPMI_INTERPRET_STATE_CRITICAL, IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_Session_Audit_Invalid_Username_Or_Password", IPMI_INTERPRET_STATE_WARNING, IPMI_INTERPRET_STATE_WARNING},
     { "IPMI_Session_Audit_Invalid_Password_Disable", IPMI_INTERPRET_STATE_CRITICAL, IPMI_INTERPRET_STATE_CRITICAL},
   };
 static unsigned int ipmi_interpret_sel_session_audit_config_len = 4;
