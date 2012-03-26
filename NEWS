@@ -5,6 +5,10 @@ Tools
 o In ipmi-oem, fix error message output in several Supermicro OEM
   commands.
 
+Misc
+----
+o Various documentation updates.
+
 FreeIPMI 1.1.3 - 03/06/12
 -------------------------
 Tools
