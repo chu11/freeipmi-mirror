@@ -268,7 +268,7 @@ ipmi_oem_supermicro_get_bmc_services_status (ipmi_oem_state_data_t *state_data)
                                                    bytes_rs,
                                                    rs_len,
                                                    3,
-                                                   IPMI_CMD_OEM_SUPERMICRO_RESET_INTRUSION,
+                                                   IPMI_CMD_OEM_SUPERMICRO_GENERIC_EXTENSION,
                                                    IPMI_NET_FN_OEM_SUPERMICRO_GENERIC_RS,
                                                    NULL) < 0)
     goto cleanup;
@@ -357,7 +357,7 @@ ipmi_oem_supermicro_set_bmc_services_status (ipmi_oem_state_data_t *state_data)
                                                    bytes_rs,
                                                    rs_len,
                                                    2,
-                                                   IPMI_CMD_OEM_SUPERMICRO_RESET_INTRUSION,
+                                                   IPMI_CMD_OEM_SUPERMICRO_GENERIC_EXTENSION,
                                                    IPMI_NET_FN_OEM_SUPERMICRO_GENERIC_RS,
                                                    NULL) < 0)
     goto cleanup;
