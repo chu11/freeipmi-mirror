@@ -227,7 +227,7 @@ LAN Authentication Issue #13: [COMPLIANCE]
 
   Notes: Confirmed fixed in newer firmware for Inventec 5441/Dell
   Xanadu II.  Due to legacy, vendor reports will not fix on Intel
-  S5500WBV/Penguin Relion 700.
+  S5500WBV/Penguin Relion 700 and Intel S2600JF/Appro 512X.
 
 LAN Authentication Issue #14: [COMPLIANCE]
 
