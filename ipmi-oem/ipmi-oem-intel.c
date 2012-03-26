@@ -1317,11 +1317,11 @@ ipmi_oem_intel_get_bmc_service_status (ipmi_oem_state_data_t *state_data)
    * Request 
    *
    * 0x30 - OEM network function
-   * 0xB1 - OEM cmd
+   * 0xB2 - OEM cmd
    *
    * Response 
    *
-   * 0xB1 - OEM cmd
+   * 0xB2 - OEM cmd
    * 0x?? - Completion Code
    * 0x?? - Standard Services bit pattern
    *      - bit 7 - 0 - ssh service is not running
@@ -1419,7 +1419,7 @@ ipmi_oem_intel_set_bmc_service_status (ipmi_oem_state_data_t *state_data)
    * Request 
    *
    * 0x30 - OEM network function
-   * 0xB2 - OEM cmd
+   * 0xB1 - OEM cmd
    * 0x?? - 00h - disable given services
    *        01h - enable given services
    * 0x?? - Standard Services bit pattern
@@ -1436,7 +1436,7 @@ ipmi_oem_intel_set_bmc_service_status (ipmi_oem_state_data_t *state_data)
    *
    * Response 
    *
-   * 0xB2 - OEM cmd
+   * 0xB1 - OEM cmd
    * 0x?? - Completion Code
    */
 
