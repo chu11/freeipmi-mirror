@@ -177,6 +177,18 @@ Defaults to Nominal.
 Defaults to Warning.
 .RE
 .TP
+.B IPMI_Voltage_Limit
+The following states correspond to Voltage sensor events that
+report on limits.
+.RS
+.TP
+\fBIPMI_Voltage_Limit_Not_Exceeded\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Voltage_Limit_Exceeded\fR
+Defaults to Critical.
+.RE
+.TP
 .B IPMI_Voltage_Performance
 The following states correspond to Voltage sensor events that report on
 performance.
@@ -1260,6 +1272,24 @@ Defaults to Critical.
 .TP
 \fBIPMI_Battery_Battery_Presence_Detected\fR
 Defaults to Nominal.
+.RE
+.TP
+.B IPMI_Session_Audit
+The following states correspond to Session Audit sensor events w/
+Session Audit specific output events.
+.RS
+.TP
+\fBIPMI_Session_Audit_Session_Activated\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Session_Audit_Session_Deactivated\fR
+Defaults to Nominal.
+.TP
+\fBIIPMI_Session_Audit_Invalid_Username_Or_Password\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Session_Audit_Invalid_Password_Disable\fR
+Defaults to Critical.
 .RE
 .TP
 .B IPMI_FRU_State

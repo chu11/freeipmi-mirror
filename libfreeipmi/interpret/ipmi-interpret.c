@@ -724,6 +724,9 @@ ipmi_interpret_sel (ipmi_interpret_ctx_t ctx,
           else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
               && sensor_type == IPMI_SENSOR_TYPE_VOLTAGE)
             sel_config = ctx->interpret_sel.ipmi_interpret_sel_voltage_state_config;
+          else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_LIMIT
+                   && sensor_type == IPMI_SENSOR_TYPE_VOLTAGE)
+            sel_config = ctx->interpret_sel.ipmi_interpret_sel_voltage_limit_config;
           else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_PERFORMANCE
                    && sensor_type == IPMI_SENSOR_TYPE_VOLTAGE)
             sel_config = ctx->interpret_sel.ipmi_interpret_sel_voltage_performance_config;
@@ -1174,6 +1177,9 @@ ipmi_interpret_sensor (ipmi_interpret_ctx_t ctx,
       else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
 	       && sensor_type == IPMI_SENSOR_TYPE_VOLTAGE)
         sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_voltage_state_config;
+      else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_LIMIT
+               && sensor_type == IPMI_SENSOR_TYPE_VOLTAGE)
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_voltage_limit_config;
       else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_PERFORMANCE
                && sensor_type == IPMI_SENSOR_TYPE_VOLTAGE)
         sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_voltage_performance_config;
@@ -1319,6 +1325,8 @@ ipmi_interpret_sensor (ipmi_interpret_ctx_t ctx,
         sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_management_subsystem_health_config;
       else if (sensor_type == IPMI_SENSOR_TYPE_BATTERY)
         sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_battery_config;
+      else if (sensor_type == IPMI_SENSOR_TYPE_SESSION_AUDIT)
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_session_audit_config;
       else if (sensor_type == IPMI_SENSOR_TYPE_FRU_STATE)
         sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_fru_state_config;
       else if (ctx->flags & IPMI_INTERPRET_FLAGS_INTERPRET_OEM_DATA

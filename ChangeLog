@@ -1,3 +1,15 @@
+2012-03-20  Albert Chu <chu11@llnl.gov>
+
+	Merge intels5000pal branch.
+
+	* libfreeipmi/interpret/: Support sensor Session Audit
+	intepretation.  Convert default state of
+	IPMI_Session_Audit_Invalid_Username_Or_Password from Critical to
+	Warning.  Support Voltage Limit sensors.  Support SMI timeout on
+	Intel S5000PAL motherboard.
+
+	* man/, etc/: Upate appropriately.
+	
 2012-03-12  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/ipmi-oem-supermicro.c
