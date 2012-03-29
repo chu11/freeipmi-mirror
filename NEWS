@@ -5,6 +5,13 @@ Tools
 o In ipmi-oem, fix error message output in several Supermicro OEM
   commands.
 
+Libraries
+----------
+o In libfreeipmi, support new sensor and SEL event interpretations,
+  including Session Audit, Voltage Limits.
+o In libfreeipmi, support new OEM interpretations for Intel S5000PAL
+  NMI State and SMI timeout sensors/SEL events.
+
 Misc
 ----
 o Various documentation updates.
