@@ -1,5 +1,7 @@
 2012-03-20  Albert Chu <chu11@llnl.gov>
 
+	Merge intels5000pal branch.
+
 	* libfreeipmi/interpret/: Support sensor Session Audit
 	intepretation.  Convert default state of
 	IPMI_Session_Audit_Invalid_Username_Or_Password from Critical to
