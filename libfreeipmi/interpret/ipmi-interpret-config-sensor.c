@@ -127,6 +127,14 @@ static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_voltage_state_c
   };
 static unsigned int ipmi_interpret_sensor_voltage_state_config_len = 3;
 
+static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_voltage_limit_config[] =
+  {
+    { "IPMI_Voltage_Limit_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_Voltage_Limit_Not_Exceeded", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_Voltage_Limit_Exceeded", IPMI_INTERPRET_STATE_CRITICAL},
+  };
+static unsigned int ipmi_interpret_sensor_voltage_limit_config_len = 3;
+
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_voltage_performance_config[] =
   {
     { "IPMI_Voltage_Performance_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
@@ -669,6 +677,16 @@ static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_battery_config[
   };
 static unsigned int ipmi_interpret_sensor_battery_config_len = 4;
 
+static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_session_audit_config[] =
+  {
+    { "IPMI_Session_Audit_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_Session_Audit_Session_Activated", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_Session_Audit_Session_Deactivated", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_Session_Audit_Invalid_Username_Or_Password", IPMI_INTERPRET_STATE_WARNING},
+    { "IPMI_Session_Audit_Invalid_Password_Disable", IPMI_INTERPRET_STATE_CRITICAL},
+  };
+static unsigned int ipmi_interpret_sensor_session_audit_config_len = 5;
+
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_fru_state_config[] =
   {
     { "IPMI_FRU_State_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
@@ -1140,8 +1158,10 @@ _interpret_sensor_oem_intel_smi_timeout_power_throttled (ipmi_interpret_ctx_t ct
   assert (ctx->interpret_sensor.sensor_oem_config);
 
   /* Intel SMI Timeout
-   * Intel SR1625/S5500WB
+   * Intel SR1625
+   * Intel S5500WB/Penguin Computing Relion 700
    * Quanta QSSC-S4R/Appro GB812X-CN (Quanta motherboard maintains Intel manufacturer ID)
+   * Intel S5000PAL
    *
    * and
    *
@@ -1149,7 +1169,7 @@ _interpret_sensor_oem_intel_smi_timeout_power_throttled (ipmi_interpret_ctx_t ct
    * Quanta QSSC-S4R/Appro GB812X-CN (Quanta motherboard maintains Intel manufacturer ID)
    *
    * Manufacturer ID = 343 (Intel)
-   * Product ID = 62 (Intel SR1625, S5500WB), 64 (Quanta QSSC-S4R)
+   * Product ID = 62 (Intel SR1625, S5500WB), 64 (Quanta QSSC-S4R), 40 (Intel S5000PAL)
    * Event/Reading Type Code = 3h (State Asserted/Deasserted)
    * Sensor Type = F3h (OEM)
    * Bitmask 0x0001 = "State Deasserted"
@@ -1168,7 +1188,9 @@ _interpret_sensor_oem_intel_smi_timeout_power_throttled (ipmi_interpret_ctx_t ct
    * event for that sensor. The BMC will also reset the system.
    */
 
-  /* Intel SR1625/S5500WB */
+  /* Intel SR1625
+   * Intel S5500WB/Penguin Computing Relion 700
+   */
   if (_interpret_sensor_oem_intel_smi_timeout_power_throttled_wrapper (ctx,
 								       IPMI_IANA_ENTERPRISE_ID_INTEL,
 								       IPMI_INTEL_PRODUCT_ID_SR1625) < 0)
@@ -1180,6 +1202,75 @@ _interpret_sensor_oem_intel_smi_timeout_power_throttled (ipmi_interpret_ctx_t ct
 								       IPMI_INTEL_PRODUCT_ID_QUANTA_QSSC_S4R) < 0)
     return (-1);
 
+  /* Intel S5000PAL */
+  if (_interpret_sensor_oem_intel_smi_timeout_power_throttled_wrapper (ctx,
+								       IPMI_IANA_ENTERPRISE_ID_INTEL,
+								       IPMI_INTEL_PRODUCT_ID_S5000PAL) < 0)
+    return (-1);
+
+  return (0);
+}
+
+static int
+_interpret_sensor_oem_intel_nmi_state_wrapper (ipmi_interpret_ctx_t ctx,
+								 uint32_t manufacturer_id,
+								 uint16_t product_id)
+{
+  struct ipmi_interpret_sensor_oem_config *oem_conf;
+
+  assert (ctx);
+  assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
+  assert (ctx->interpret_sensor.sensor_oem_config);
+
+  if (_interpret_sensor_oem_config_create (ctx,
+					   manufacturer_id,
+					   product_id,
+					   IPMI_EVENT_READING_TYPE_CODE_STATE,
+					   IPMI_SENSOR_TYPE_OEM_INTEL_NMI_STATE,
+					   &oem_conf) < 0)
+    return (-1);
+  
+  oem_conf->oem_state[0].sensor_event_bitmask = 0;
+  oem_conf->oem_state[0].sensor_state = IPMI_INTERPRET_STATE_NOMINAL;
+  oem_conf->oem_state[0].oem_state_type = IPMI_OEM_STATE_TYPE_BITMASK;
+
+  oem_conf->oem_state[1].sensor_event_bitmask = (0x1 << IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_DEASSERTED);
+  oem_conf->oem_state[1].sensor_state = IPMI_INTERPRET_STATE_NOMINAL;
+  oem_conf->oem_state[1].oem_state_type = IPMI_OEM_STATE_TYPE_BITMASK;
+  
+  oem_conf->oem_state[2].sensor_event_bitmask = (0x1 << IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED);
+  oem_conf->oem_state[2].sensor_state = IPMI_INTERPRET_STATE_CRITICAL;
+  oem_conf->oem_state[2].oem_state_type = IPMI_OEM_STATE_TYPE_BITMASK;
+
+  oem_conf->oem_state_count = 3;
+  
+  return (0);
+}
+
+static int
+_interpret_sensor_oem_intel_nmi_state (ipmi_interpret_ctx_t ctx)
+{
+  assert (ctx);
+  assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
+  assert (ctx->interpret_sensor.sensor_oem_config);
+
+  /* Intel NMI State
+   * Intel S5000PAL
+   *
+   * Manufacturer ID = 343 (Intel)
+   * Product ID = 40 (Intel S5000PAL)
+   * Event/Reading Type Code = 3h (State Asserted/Deasserted)
+   * Sensor Type = C0h (OEM)
+   * Bitmask 0x0001 = "State Deasserted"
+   * Bitmask 0x0002 = "State Asserted"
+   */
+
+  /* Intel S5000PAL */
+  if (_interpret_sensor_oem_intel_nmi_state_wrapper (ctx,
+						     IPMI_IANA_ENTERPRISE_ID_INTEL,
+						     IPMI_INTEL_PRODUCT_ID_S5000PAL) < 0)
+    return (-1);
+  
   return (0);
 }
 
@@ -1191,6 +1282,9 @@ _interpret_sensor_oem_intel (ipmi_interpret_ctx_t ctx)
   assert (ctx->interpret_sensor.sensor_oem_config);
 
   if (_interpret_sensor_oem_intel_smi_timeout_power_throttled (ctx) < 0)
+    return (-1);
+
+  if (_interpret_sensor_oem_intel_nmi_state (ctx) < 0)
     return (-1);
 
   return (0);
@@ -1251,6 +1345,12 @@ ipmi_interpret_sensor_init (ipmi_interpret_ctx_t ctx)
                                      &ctx->interpret_sensor.ipmi_interpret_sensor_voltage_state_config,
                                      ipmi_interpret_sensor_voltage_state_config,
                                      ipmi_interpret_sensor_voltage_state_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_config_sensor_init (ctx,
+                                     &ctx->interpret_sensor.ipmi_interpret_sensor_voltage_limit_config,
+                                     ipmi_interpret_sensor_voltage_limit_config,
+                                     ipmi_interpret_sensor_voltage_limit_config_len) < 0)
     goto cleanup;
 
   if (_interpret_config_sensor_init (ctx,
@@ -1524,6 +1624,12 @@ ipmi_interpret_sensor_init (ipmi_interpret_ctx_t ctx)
     goto cleanup;
 
   if (_interpret_config_sensor_init (ctx,
+                                     &ctx->interpret_sensor.ipmi_interpret_sensor_session_audit_config,
+                                     ipmi_interpret_sensor_session_audit_config,
+                                     ipmi_interpret_sensor_session_audit_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_config_sensor_init (ctx,
                                      &ctx->interpret_sensor.ipmi_interpret_sensor_fru_state_config,
                                      ipmi_interpret_sensor_fru_state_config,
                                      ipmi_interpret_sensor_fru_state_config_len) < 0)
@@ -1586,6 +1692,9 @@ ipmi_interpret_sensor_destroy (ipmi_interpret_ctx_t ctx)
 
   _interpret_config_sensor_destroy (ctx,
                                     ctx->interpret_sensor.ipmi_interpret_sensor_voltage_state_config);
+
+  _interpret_config_sensor_destroy (ctx,
+                                    ctx->interpret_sensor.ipmi_interpret_sensor_voltage_limit_config);
 
   _interpret_config_sensor_destroy (ctx,
                                     ctx->interpret_sensor.ipmi_interpret_sensor_voltage_performance_config);
@@ -1721,6 +1830,9 @@ ipmi_interpret_sensor_destroy (ipmi_interpret_ctx_t ctx)
 
   _interpret_config_sensor_destroy (ctx,
                                     ctx->interpret_sensor.ipmi_interpret_sensor_battery_config);
+
+  _interpret_config_sensor_destroy (ctx,
+                                    ctx->interpret_sensor.ipmi_interpret_sensor_session_audit_config);
 
   _interpret_config_sensor_destroy (ctx,
                                     ctx->interpret_sensor.ipmi_interpret_sensor_fru_state_config);
@@ -1967,6 +2079,7 @@ ipmi_interpret_sensor_config_parse (ipmi_interpret_ctx_t ctx,
   int ipmi_interpret_sensor_temperature_limit_flags[ipmi_interpret_sensor_temperature_limit_config_len];
   int ipmi_interpret_sensor_temperature_transition_severity_flags[ipmi_interpret_sensor_temperature_transition_severity_config_len];
   int ipmi_interpret_sensor_voltage_state_flags[ipmi_interpret_sensor_voltage_state_config_len];
+  int ipmi_interpret_sensor_voltage_limit_flags[ipmi_interpret_sensor_voltage_limit_config_len];
   int ipmi_interpret_sensor_voltage_performance_flags[ipmi_interpret_sensor_voltage_performance_config_len];
   int ipmi_interpret_sensor_voltage_transition_severity_flags[ipmi_interpret_sensor_voltage_transition_severity_config_len];
   int ipmi_interpret_sensor_current_transition_severity_flags[ipmi_interpret_sensor_current_transition_severity_config_len];
@@ -2012,6 +2125,7 @@ ipmi_interpret_sensor_config_parse (ipmi_interpret_ctx_t ctx,
   int ipmi_interpret_sensor_entity_presence_device_present_flags[ipmi_interpret_sensor_entity_presence_device_present_config_len];
   int ipmi_interpret_sensor_management_subsystem_health_flags[ipmi_interpret_sensor_management_subsystem_health_config_len];
   int ipmi_interpret_sensor_battery_flags[ipmi_interpret_sensor_battery_config_len];
+  int ipmi_interpret_sensor_session_audit_flags[ipmi_interpret_sensor_session_audit_config_len];
   int ipmi_interpret_sensor_fru_state_flags[ipmi_interpret_sensor_fru_state_config_len];
   int sensor_oem_bitmask_flag;
   int sensor_oem_value_flag;
@@ -2058,6 +2172,12 @@ ipmi_interpret_sensor_config_parse (ipmi_interpret_ctx_t ctx,
                                ctx->interpret_sensor.ipmi_interpret_sensor_voltage_state_config,
                                ipmi_interpret_sensor_voltage_state_flags,
                                ipmi_interpret_sensor_voltage_state_config_len);
+
+  _fill_sensor_config_options (config_file_options,
+                               &config_file_options_len,
+                               ctx->interpret_sensor.ipmi_interpret_sensor_voltage_limit_config,
+                               ipmi_interpret_sensor_voltage_limit_flags,
+                               ipmi_interpret_sensor_voltage_limit_config_len);
 
   _fill_sensor_config_options (config_file_options,
                                &config_file_options_len,
@@ -2328,6 +2448,12 @@ ipmi_interpret_sensor_config_parse (ipmi_interpret_ctx_t ctx,
                                ctx->interpret_sensor.ipmi_interpret_sensor_battery_config,
                                ipmi_interpret_sensor_battery_flags,
                                ipmi_interpret_sensor_battery_config_len);
+
+  _fill_sensor_config_options (config_file_options,
+                               &config_file_options_len,
+                               ctx->interpret_sensor.ipmi_interpret_sensor_session_audit_config,
+                               ipmi_interpret_sensor_session_audit_flags,
+                               ipmi_interpret_sensor_session_audit_config_len);
 
   _fill_sensor_config_options (config_file_options,
                                &config_file_options_len,

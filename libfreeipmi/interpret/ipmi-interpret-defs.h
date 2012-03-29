@@ -133,6 +133,7 @@ struct ipmi_interpret_sel {
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_temperature_limit_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_temperature_transition_severity_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_voltage_state_config;
+  struct ipmi_interpret_sel_config **ipmi_interpret_sel_voltage_limit_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_voltage_performance_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_voltage_transition_severity_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_current_transition_severity_config;
@@ -214,6 +215,7 @@ struct ipmi_interpret_sensor {
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_temperature_limit_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_temperature_transition_severity_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_voltage_state_config;
+  struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_voltage_limit_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_voltage_performance_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_voltage_transition_severity_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_current_transition_severity_config;
@@ -259,6 +261,7 @@ struct ipmi_interpret_sensor {
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_entity_presence_device_present_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_management_subsystem_health_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_battery_config;
+  struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_session_audit_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_fru_state_config;
 
   hash_t sensor_oem_config;
