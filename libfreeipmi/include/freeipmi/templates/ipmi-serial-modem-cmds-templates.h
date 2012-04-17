@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_SERIAL_MODEM_CMDS_TEMPLATES_H
-#define _IPMI_SERIAL_MODEM_CMDS_TEMPLATES_H
+#ifndef IPMI_SERIAL_MODEM_CMDS_TEMPLATES_H
+#define IPMI_SERIAL_MODEM_CMDS_TEMPLATES_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -233,4 +233,4 @@ FIID Template: tmpl_cmd_get_serial_modem_configuration_call_retry_interval_rs
 }
 #endif
 
-#endif  /* _IPMI_SERIAL_MODEM_CMDS_TEMPLATES_H */
+#endif /* IPMI_SERIAL_MODEM_CMDS_TEMPLATES_H */

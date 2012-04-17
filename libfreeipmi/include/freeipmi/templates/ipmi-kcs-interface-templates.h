@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_KCS_INTERFACE_TEMPLATES_H
-#define _IPMI_KCS_INTERFACE_TEMPLATES_H
+#ifndef IPMI_KCS_INTERFACE_TEMPLATES_H
+#define IPMI_KCS_INTERFACE_TEMPLATES_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -70,4 +70,4 @@ FIID Template: tmpl_hdr_kcs
 }
 #endif
 
-#endif  /* _IPMI_KCS_INTERFACE_TEMPLATES_H */
+#endif /* IPMI_KCS_INTERFACE_TEMPLATES_H */

@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_CHASSIS_CMDS_TEMPLATES_H
-#define _IPMI_CHASSIS_CMDS_TEMPLATES_H
+#ifndef IPMI_CHASSIS_CMDS_TEMPLATES_H
+#define IPMI_CHASSIS_CMDS_TEMPLATES_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -571,4 +571,4 @@ FIID Template: tmpl_cmd_get_power_on_hours_counter_rs
 }
 #endif
 
-#endif  /* _IPMI_CHASSIS_CMDS_TEMPLATES_H */
+#endif /* IPMI_CHASSIS_CMDS_TEMPLATES_H */

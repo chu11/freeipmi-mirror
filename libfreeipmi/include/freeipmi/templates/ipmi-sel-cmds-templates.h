@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_SEL_CMDS_TEMPLATES_H
-#define _IPMI_SEL_CMDS_TEMPLATES_H
+#ifndef IPMI_SEL_CMDS_TEMPLATES_H
+#define IPMI_SEL_CMDS_TEMPLATES_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -276,4 +276,4 @@ FIID Template: tmpl_cmd_set_auxiliary_log_status_rs
 }
 #endif
 
-#endif  /* _IPMI_SEL_CMDS_TEMPLATES_H */
+#endif /* IPMI_SEL_CMDS_TEMPLATES_H */

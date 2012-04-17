@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_SEL_RECORD_FORMAT_TEMPLATES_H
-#define _IPMI_SEL_RECORD_FORMAT_TEMPLATES_H
+#ifndef IPMI_SEL_RECORD_FORMAT_TEMPLATES_H
+#define IPMI_SEL_RECORD_FORMAT_TEMPLATES_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -183,4 +183,4 @@ FIID Template: tmpl_sel_non_timestamped_oem_record
 }
 #endif
 
-#endif  /* _IPMI_SEL_RECORD_FORMAT_TEMPLATES_H */
+#endif /* IPMI_SEL_RECORD_FORMAT_TEMPLATES_H */

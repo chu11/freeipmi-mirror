@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_DEVICE_GLOBAL_CMDS_TEMPLATES_H
-#define _IPMI_DEVICE_GLOBAL_CMDS_TEMPLATES_H
+#ifndef IPMI_DEVICE_GLOBAL_CMDS_TEMPLATES_H
+#define IPMI_DEVICE_GLOBAL_CMDS_TEMPLATES_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -220,4 +220,4 @@ FIID Template: tmpl_cmd_get_device_guid_format_rs
 }
 #endif
 
-#endif  /* _IPMI_DEVICE_GLOBAL_CMDS_TEMPLATES_H */
+#endif /* IPMI_DEVICE_GLOBAL_CMDS_TEMPLATES_H */

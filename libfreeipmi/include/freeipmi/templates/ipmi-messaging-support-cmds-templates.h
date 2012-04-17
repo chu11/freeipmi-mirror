@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_MESSAGING_SUPPORT_CMDS_TEMPLATES_H
-#define _IPMI_MESSAGING_SUPPORT_CMDS_TEMPLATES_H
+#ifndef IPMI_MESSAGING_SUPPORT_CMDS_TEMPLATES_H
+#define IPMI_MESSAGING_SUPPORT_CMDS_TEMPLATES_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -967,4 +967,4 @@ FIID Template: tmpl_cmd_set_user_password_rs
 }
 #endif
 
-#endif  /* _IPMI_MESSAGING_SUPPORT_CMDS_TEMPLATES_H */
+#endif /* IPMI_MESSAGING_SUPPORT_CMDS_TEMPLATES_H */

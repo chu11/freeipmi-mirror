@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_IPMB_INTERFACE_TEMPLATES_H
-#define _IPMI_IPMB_INTERFACE_TEMPLATES_H
+#ifndef IPMI_IPMB_INTERFACE_TEMPLATES_H
+#define IPMI_IPMB_INTERFACE_TEMPLATES_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -95,4 +95,4 @@ FIID Template: tmpl_ipmb_msg
 }
 #endif
 
-#endif  /* _IPMI_IPMB_INTERFACE_TEMPLATES_H */
+#endif /* IPMI_IPMB_INTERFACE_TEMPLATES_H */

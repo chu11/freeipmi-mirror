@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_SOL_PAYLOAD_TEMPLATES_H
-#define _IPMI_SOL_PAYLOAD_TEMPLATES_H
+#ifndef IPMI_SOL_PAYLOAD_TEMPLATES_H
+#define IPMI_SOL_PAYLOAD_TEMPLATES_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -114,4 +114,4 @@ FIID Template: tmpl_sol_payload_data_bmc_to_remote_console
 }
 #endif
 
-#endif  /* _IPMI_SOL_CMDS_TEMPLATES_H */
+#endif /* IPMI_SOL_CMDS_TEMPLATES_H */

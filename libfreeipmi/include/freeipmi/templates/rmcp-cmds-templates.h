@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _RMCP_CMDS_TEMPLATES_H
-#define _RMCP_CMDS_TEMPLATES_H
+#ifndef RMCP_CMDS_TEMPLATES_H
+#define RMCP_CMDS_TEMPLATES_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -92,4 +92,4 @@ FIID Template: tmpl_cmd_asf_presence_pong
 }
 #endif
 
-#endif  /* _RMCP_CMDS_TEMPLATES_H */
+#endif /* RMCP_CMDS_TEMPLATES_H */

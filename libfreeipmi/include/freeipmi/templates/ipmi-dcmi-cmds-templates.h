@@ -39,8 +39,8 @@
  *  with Ipmi-Dcmi.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _IPMI_DCMI_CMDS_TEMPLATES_H
-#define _IPMI_DCMI_CMDS_TEMPLATES_H
+#ifndef IPMI_DCMI_CMDS_TEMPLATES_H
+#define IPMI_DCMI_CMDS_TEMPLATES_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -662,4 +662,4 @@ FIID Template: tmpl_cmd_dcmi_get_temperature_reading_rs
 }
 #endif
 
-#endif  /* _IPMI_DCMI_CMDS_TEMPLATES_H */
+#endif /* IPMI_DCMI_CMDS_TEMPLATES_H */
