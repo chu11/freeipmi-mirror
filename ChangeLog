@@ -9,6 +9,8 @@
 	* Fix inconsistencies with header guards #defines and #endif
 	comments.
 
+	* Fix file scope object naming issues.
+
 2012-03-20  Albert Chu <chu11@llnl.gov>
 
 	Merge intels5000pal branch.

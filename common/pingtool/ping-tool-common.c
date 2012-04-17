@@ -104,42 +104,42 @@ extern int optind, opterr, optopt;
 extern int h_errno;
 
 /* cmdline options */
-static int _count = -1;
-static int _interval = 1;
-static int _timeout = 5;
-static int _verbose = 0;
-static int _debug = 0;
-static int _version = IPMI_PING_VERSION_1_5;
-static int _initial_sequence_number = -1;
+static int pingtool_count = -1;
+static int pingtool_interval = 1;
+static int pingtool_timeout = 5;
+static int pingtool_verbose = 0;
+static int pingtool_debug = 0;
+static int pingtool_version = IPMI_PING_VERSION_1_5;
+static int pingtool_initial_sequence_number = -1;
 
 /* globals */
-static int _sockfd = 0;
-static char *_progname = NULL;
-static char *_interface = NULL;
-static char _dest[MAXHOSTNAMELEN+1];
-static char _dest_ip[INET_ADDRSTRLEN+1];
-static struct sockaddr_in _srcaddr;
-static struct sockaddr_in _destaddr;
-static unsigned int _pkt_sent = 0;
-static unsigned int _pkt_recv = 0;
-static Ipmi_Ping_EndResult _end_result = NULL;
+static int pingtool_sockfd = 0;
+static char *pingtool_progname = NULL;
+static char *pingtool_interface = NULL;
+static char pingtool_dest[MAXHOSTNAMELEN+1];
+static char pingtool_dest_ip[INET_ADDRSTRLEN+1];
+static struct sockaddr_in pingtool_srcaddr;
+static struct sockaddr_in pingtool_destaddr;
+static unsigned int pingtool_pkt_sent = 0;
+static unsigned int pingtool_pkt_recv = 0;
+static Ipmi_Ping_EndResult pingtool_end_result = NULL;
 
 static void
 _cleanup (void)
 {
   /* ignore potential error, error path */
-  close (_sockfd);
+  close (pingtool_sockfd);
 }
 
 static void
-_err_init (char *__progname)
+_err_init (char *progname)
 {
   char *ptr = NULL;
 
-  assert (__progname);
+  assert (progname);
 
-  ptr = strrchr (__progname, '/');
-  _progname = (ptr == NULL) ? __progname : ptr + 1;
+  ptr = strrchr (progname, '/');
+  pingtool_progname = (ptr == NULL) ? progname : ptr + 1;
 }
 
 void
@@ -148,11 +148,11 @@ ipmi_ping_err_exit (char *fmt, ...)
   char buf[IPMI_PING_MAX_ERR_LEN];
   va_list ap;
 
-  assert (_progname);
+  assert (pingtool_progname);
   assert (fmt);
 
   va_start (ap, fmt);
-  snprintf (buf, IPMI_PING_MAX_ERR_LEN, "%s: %s\n", _progname, fmt);
+  snprintf (buf, IPMI_PING_MAX_ERR_LEN, "%s: %s\n", pingtool_progname, fmt);
   vfprintf (stderr, buf, ap);
   va_end (ap);
 
@@ -173,10 +173,10 @@ _strncpy (char *dest, char *src, unsigned int len)
 static void
 _output_usage (const char *options)
 {
-  assert (_progname);
+  assert (pingtool_progname);
   assert (options);
 
-  fprintf (stderr, "%s [OPTIONS] destination\n", _progname);
+  fprintf (stderr, "%s [OPTIONS] destination\n", pingtool_progname);
   if (strchr (options, 'c'))
     fprintf (stderr, "  -c   count\n");
   if (strchr (options, 'i'))
@@ -199,9 +199,9 @@ _output_usage (const char *options)
 static void
 _output_version (void)
 {
-  assert (_progname);
+  assert (pingtool_progname);
 
-  fprintf (stderr, "%s %s\n", _progname, VERSION);
+  fprintf (stderr, "%s %s\n", pingtool_progname, VERSION);
 
   exit (1);
 }
@@ -232,49 +232,49 @@ _cmdline_parse (int argc,
           _output_version ();
         case 'r':
           if (!strcmp (optarg, IPMI_PING_VERSION_1_5_STR))
-            _version = IPMI_PING_VERSION_1_5;
+            pingtool_version = IPMI_PING_VERSION_1_5;
           else if (!strcmp (optarg, IPMI_PING_VERSION_2_0_STR))
-            _version = IPMI_PING_VERSION_2_0;
+            pingtool_version = IPMI_PING_VERSION_2_0;
           else
             ipmi_ping_err_exit ("invalid version");
           break;
         case 'c':
-          _count = strtol (optarg, &endptr, 10);
+          pingtool_count = strtol (optarg, &endptr, 10);
 	  if (errno || endptr[0] != '\0')
             ipmi_ping_err_exit ("count argument invalid");
-          if (!_count)
+          if (!pingtool_count)
             ipmi_ping_err_exit ("count must be > 0");
           break;
         case 'i':
-          _interval = strtol (optarg, &endptr, 10);
+          pingtool_interval = strtol (optarg, &endptr, 10);
 	  if (errno || endptr[0] != '\0')
             ipmi_ping_err_exit ("interval argument invalid");
-          if (!_interval)
+          if (!pingtool_interval)
             ipmi_ping_err_exit ("interval must be > 0");
           break;
         case 'I':
-          _interface = optarg;
+          pingtool_interface = optarg;
           break;
         case 't':
-          _timeout = strtol (optarg, &endptr, 10);
+          pingtool_timeout = strtol (optarg, &endptr, 10);
 	  if (errno || endptr[0] != '\0')
             ipmi_ping_err_exit ("timeout argument invalid");
-          if (!_timeout)
+          if (!pingtool_timeout)
             ipmi_ping_err_exit ("timeout must be > 0");
           break;
         case 'v':
-          _verbose++;
+          pingtool_verbose++;
           break;
         case 's':
-          _initial_sequence_number = strtol (optarg, &endptr, 10);
+          pingtool_initial_sequence_number = strtol (optarg, &endptr, 10);
 	  if (errno || endptr[0] != '\0')
             ipmi_ping_err_exit ("initial sequence number invalid");
-          if (_initial_sequence_number < min_sequence_number
-              || _initial_sequence_number > max_sequence_number)
+          if (pingtool_initial_sequence_number < min_sequence_number
+              || pingtool_initial_sequence_number > max_sequence_number)
             ipmi_ping_err_exit ("initial sequence number out of range");
           break;
         case 'd':
-          _debug++;
+          pingtool_debug++;
           break;
         default:
           ipmi_ping_err_exit ("Command line option error");
@@ -286,7 +286,7 @@ _cmdline_parse (int argc,
   if (optind >= argc)
     ipmi_ping_err_exit ("destination must be specified");
 
-  _strncpy (_dest, argv[optind], MAXHOSTNAMELEN);
+  _strncpy (pingtool_dest, argv[optind], MAXHOSTNAMELEN);
 }
 
 /* signal handlers + sleep(3) is a bad idea, so use select(3) */
@@ -309,13 +309,16 @@ _signal_handler (int sig)
 {
   int ret;
 
-  assert (_progname);
-  assert (_end_result);
+  assert (pingtool_progname);
+  assert (pingtool_end_result);
 
   /* Must output result here, b/c who knows where in the code we are
    * when we caught the signal
    */
-  ret = _end_result (_progname, _dest, _pkt_sent, _pkt_recv);
+  ret = pingtool_end_result (pingtool_progname,
+			     pingtool_dest,
+			     pingtool_pkt_sent,
+			     pingtool_pkt_recv);
   _cleanup ();
   exit (ret);
 }
@@ -329,25 +332,27 @@ _setup (void)
   if (signal (SIGINT, _signal_handler) == SIG_ERR)
     ipmi_ping_err_exit ("signal setup failed");
 
-  if ((_sockfd = socket (AF_INET, SOCK_DGRAM, 0)) < 0)
+  if ((pingtool_sockfd = socket (AF_INET, SOCK_DGRAM, 0)) < 0)
     ipmi_ping_err_exit ("socket: %s", strerror (errno));
 
-  memset (&_srcaddr, '\0', sizeof (_srcaddr));
-  _srcaddr.sin_family = AF_INET;
-  _srcaddr.sin_port = htons (0);
+  memset (&pingtool_srcaddr, '\0', sizeof (pingtool_srcaddr));
+  pingtool_srcaddr.sin_family = AF_INET;
+  pingtool_srcaddr.sin_port = htons (0);
 
-  if (!_interface)
-    _srcaddr.sin_addr.s_addr = htonl (INADDR_ANY);
+  if (!pingtool_interface)
+    pingtool_srcaddr.sin_addr.s_addr = htonl (INADDR_ANY);
   else
     {
       /* If there is a period, assume user input an IP address.  No
        * period, assume user input an interface name
        */
-      if (strchr (_interface, '.'))
+      if (strchr (pingtool_interface, '.'))
         {
           int rv;
 
-          if ((rv = inet_pton (AF_INET, _interface, &_srcaddr.sin_addr)) < 0)
+          if ((rv = inet_pton (AF_INET,
+			       pingtool_interface,
+			       &pingtool_srcaddr.sin_addr)) < 0)
             ipmi_ping_err_exit ("inet_pton: %s", strerror (errno));
           if (!rv)
             ipmi_ping_err_exit ("invalid interface address");
@@ -357,25 +362,28 @@ _setup (void)
           struct ifreq ifr;
           struct sockaddr_in temp_sockaddr;
 
-          _strncpy (ifr.ifr_name, _interface, IFNAMSIZ);
+          _strncpy (ifr.ifr_name, pingtool_interface, IFNAMSIZ);
           ifr.ifr_addr.sa_family = AF_INET;
-          if (ioctl (_sockfd, SIOCGIFADDR, &ifr) < 0)
+          if (ioctl (pingtool_sockfd, SIOCGIFADDR, &ifr) < 0)
             ipmi_ping_err_exit ("ioctl: %s", strerror (errno));
 
           temp_sockaddr = *((struct sockaddr_in *)&ifr.ifr_addr);
-          memcpy (&_srcaddr.sin_addr.s_addr, &temp_sockaddr.sin_addr.s_addr,
-                  sizeof (_srcaddr.sin_addr.s_addr));
+          memcpy (&pingtool_srcaddr.sin_addr.s_addr,
+		  &temp_sockaddr.sin_addr.s_addr,
+                  sizeof (pingtool_srcaddr.sin_addr.s_addr));
         }
     }
 
-  if (bind (_sockfd, (struct sockaddr *)&_srcaddr, sizeof (_srcaddr)) < 0)
+  if (bind (pingtool_sockfd,
+	    (struct sockaddr *)&pingtool_srcaddr,
+	    sizeof (pingtool_srcaddr)) < 0)
     ipmi_ping_err_exit ("bind: %s", strerror (errno));
 
-  memset (&_destaddr, '\0', sizeof (_destaddr));
-  _destaddr.sin_family = AF_INET;
-  _destaddr.sin_port = htons (RMCP_PRIMARY_RMCP_PORT);
+  memset (&pingtool_destaddr, '\0', sizeof (pingtool_destaddr));
+  pingtool_destaddr.sin_family = AF_INET;
+  pingtool_destaddr.sin_port = htons (RMCP_PRIMARY_RMCP_PORT);
 
-  if (!(hptr = gethostbyname (_dest)))
+  if (!(hptr = gethostbyname (pingtool_dest)))
     {
 #if HAVE_HSTRERROR
       ipmi_ping_err_exit ("gethostbyname: %s", hstrerror (h_errno));
@@ -383,44 +391,44 @@ _setup (void)
       ipmi_ping_err_exit ("gethostbyname: h_errno = %d", h_errno);
 #endif /* !HAVE_HSTRERROR */
     }
-  _destaddr.sin_addr = *((struct in_addr *)hptr->h_addr);
-  temp = inet_ntoa (_destaddr.sin_addr);
-  _strncpy (_dest_ip, temp, INET_ADDRSTRLEN);
+  pingtool_destaddr.sin_addr = *((struct in_addr *)hptr->h_addr);
+  temp = inet_ntoa (pingtool_destaddr.sin_addr);
+  _strncpy (pingtool_dest_ip, temp, INET_ADDRSTRLEN);
 
   srand (time (NULL));
 }
 
 static void
-_main_loop (Ipmi_Ping_CreatePacket _create,
-            Ipmi_Ping_ParsePacket _parse,
-            Ipmi_Ping_LatePacket _late)
+_main_loop (Ipmi_Ping_CreatePacket create,
+            Ipmi_Ping_ParsePacket parse,
+            Ipmi_Ping_LatePacket late)
 {
   unsigned int sequence_number = 0;
   time_t last_send = 0;
   int ret;
 
-  assert (_create);
-  assert (_parse);
-  assert (_late);
-  assert (_progname);
-  assert (_end_result);
+  assert (create);
+  assert (parse);
+  assert (late);
+  assert (pingtool_progname);
+  assert (pingtool_end_result);
 
-  if (_initial_sequence_number < 0)
+  if (pingtool_initial_sequence_number < 0)
     {
       int len;
 
-      if ((len = ipmi_get_random (&_initial_sequence_number,
-                                  sizeof (_initial_sequence_number))) < 0)
+      if ((len = ipmi_get_random (&pingtool_initial_sequence_number,
+                                  sizeof (pingtool_initial_sequence_number))) < 0)
         ipmi_ping_err_exit ("ipmi_get_random: %s", strerror (errno));
-      if (len != sizeof (_initial_sequence_number))
+      if (len != sizeof (pingtool_initial_sequence_number))
         ipmi_ping_err_exit ("ipmi_get_random: invalid len returned");
     }
 
-  sequence_number = _initial_sequence_number;
+  sequence_number = pingtool_initial_sequence_number;
 
-  printf ("%s %s (%s)\n", _progname, _dest, _dest_ip);
+  printf ("%s %s (%s)\n", pingtool_progname, pingtool_dest, pingtool_dest_ip);
 
-  while (_count == -1 || (_pkt_sent < _count))
+  while (pingtool_count == -1 || (pingtool_pkt_sent < pingtool_count))
     {
       int rv, len, received = 0;
       uint8_t buf[IPMI_PING_MAX_PKT_LEN];
@@ -428,26 +436,26 @@ _main_loop (Ipmi_Ping_CreatePacket _create,
 
       /* wait if necessary */
       now = time (NULL);
-      if ((now - last_send) < _interval)
+      if ((now - last_send) < pingtool_interval)
         {
-          if (_sleep ((last_send + _interval - now)) < 0)
+          if (_sleep ((last_send + pingtool_interval - now)) < 0)
             continue;
         }
 
-      if ((len = _create (_dest,
-                          buf,
-                          IPMI_PING_MAX_PKT_LEN,
-                          sequence_number,
-                          _version,
-                          _debug)) < 0)
+      if ((len = create (pingtool_dest,
+			 buf,
+			 IPMI_PING_MAX_PKT_LEN,
+			 sequence_number,
+			 pingtool_version,
+			 pingtool_debug)) < 0)
         ipmi_ping_err_exit ("_create failed: %s", strerror (errno));
 
-      rv = ipmi_lan_sendto (_sockfd,
+      rv = ipmi_lan_sendto (pingtool_sockfd,
                             buf,
                             len,
                             0,
-                            (struct sockaddr *)&_destaddr,
-                            sizeof (_destaddr));
+                            (struct sockaddr *)&pingtool_destaddr,
+                            sizeof (pingtool_destaddr));
       if (rv < 0)
         ipmi_ping_err_exit ("ipmi_sendto: %s", strerror (errno));
 
@@ -456,20 +464,20 @@ _main_loop (Ipmi_Ping_CreatePacket _create,
 
       last_send = time (NULL);
 
-      _pkt_sent++;
+      pingtool_pkt_sent++;
 
-      while (((now = time (NULL)) - last_send) < _timeout)
+      while (((now = time (NULL)) - last_send) < pingtool_timeout)
         {
           fd_set rset;
           struct timeval tv;
 
           FD_ZERO (&rset);
-          FD_SET (_sockfd, &rset);
+          FD_SET (pingtool_sockfd, &rset);
 
-          tv.tv_sec = (last_send + _timeout - now);
+          tv.tv_sec = (last_send + pingtool_timeout - now);
           tv.tv_usec = 0;
 
-          if ((rv = select (_sockfd+1, &rset, NULL, NULL, &tv)) < 0)
+          if ((rv = select (pingtool_sockfd+1, &rset, NULL, NULL, &tv)) < 0)
             ipmi_ping_err_exit ("select: %s", strerror (errno));
 
           if (rv == 1)
@@ -478,7 +486,7 @@ _main_loop (Ipmi_Ping_CreatePacket _create,
               socklen_t fromlen;
 
               fromlen = sizeof (from);
-              len = ipmi_lan_recvfrom (_sockfd,
+              len = ipmi_lan_recvfrom (pingtool_sockfd,
                                        buf,
                                        IPMI_PING_MAX_PKT_LEN,
                                        0,
@@ -523,14 +531,14 @@ _main_loop (Ipmi_Ping_CreatePacket _create,
               if (len < 0)
                 ipmi_ping_err_exit ("ipmi_recvfrom: %s", strerror (errno));
 
-              if ((rv = _parse (_dest,
-                                buf,
-                                len,
-                                inet_ntoa (from.sin_addr),
-                                sequence_number,
-                                _verbose,
-                                _version,
-                                _debug)) < 0)
+              if ((rv = parse (pingtool_dest,
+			       buf,
+			       len,
+			       inet_ntoa (from.sin_addr),
+			       sequence_number,
+			       pingtool_verbose,
+			       pingtool_version,
+			       pingtool_debug)) < 0)
                 ipmi_ping_err_exit ("_parse failed: %s", strerror (errno));
 
               /* If rv == 0, the sequence numbers don't match, so
@@ -541,18 +549,21 @@ _main_loop (Ipmi_Ping_CreatePacket _create,
                 continue;
 
               received++;
-              _pkt_recv++;
+              pingtool_pkt_recv++;
               break;
             }
         }
 
       if (!received)
-        _late (sequence_number);
+        late (sequence_number);
 
       sequence_number++;
     }
 
-  ret = _end_result (_progname, _dest, _pkt_sent, _pkt_recv);
+  ret = pingtool_end_result (pingtool_progname,
+			     pingtool_dest,
+			     pingtool_pkt_sent,
+			     pingtool_pkt_recv);
   _cleanup ();
   exit (ret);
 }
@@ -585,24 +596,28 @@ ipmi_ping_setup (int argc,
     }
 
   _err_init (argv[0]);
-  _cmdline_parse (argc, argv, min_sequence_number, max_sequence_number, options);
+  _cmdline_parse (argc,
+		  argv,
+		  min_sequence_number,
+		  max_sequence_number,
+		  options);
   _setup ();
 }
 
 void
-ipmi_ping_loop (Ipmi_Ping_CreatePacket _create,
-                Ipmi_Ping_ParsePacket _parse,
-                Ipmi_Ping_LatePacket _late,
-                Ipmi_Ping_EndResult _end)
+ipmi_ping_loop (Ipmi_Ping_CreatePacket create,
+                Ipmi_Ping_ParsePacket parse,
+                Ipmi_Ping_LatePacket late,
+                Ipmi_Ping_EndResult end)
 {
-  assert (_create);
-  assert (_parse);
-  assert (_late);
-  assert (_end);
+  assert (create);
+  assert (parse);
+  assert (late);
+  assert (end);
 
-  _end_result = _end;
+  pingtool_end_result = end;
 
-  _main_loop (_create, _parse, _late);
+  _main_loop (create, parse, late);
 
   return;                     /* NOT REACHED */
 }
