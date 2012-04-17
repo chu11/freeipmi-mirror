@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_CIPHER_SUITE_UTIL_H
-#define _IPMI_CIPHER_SUITE_UTIL_H
+#ifndef IPMI_CIPHER_SUITE_UTIL_H
+#define IPMI_CIPHER_SUITE_UTIL_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -148,4 +148,4 @@ int ipmi_algorithms_to_cipher_suite_id (uint8_t authentication_algorithm,
 }
 #endif
 
-#endif /* ipmi-cipher_suite-util.h */
+#endif /* IPMI_CIPHER_SUITE_UTIL_H */

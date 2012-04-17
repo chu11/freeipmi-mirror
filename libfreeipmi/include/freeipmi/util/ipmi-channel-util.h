@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_CHANNEL_UTIL_H
-#define _IPMI_CHANNEL_UTIL_H
+#ifndef IPMI_CHANNEL_UTIL_H
+#define IPMI_CHANNEL_UTIL_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -44,4 +44,4 @@ int ipmi_get_channel_numbers (ipmi_ctx_t ctx,
 }
 #endif
 
-#endif /* ipmi-channel-util.h */
+#endif /* IPMI_CHANNEL_UTIL_H */

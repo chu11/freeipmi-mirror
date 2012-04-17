@@ -16,9 +16,8 @@
  * 
  */
 
-
-#ifndef _IPMI_SENSOR_UTIL_H
-#define _IPMI_SENSOR_UTIL_H
+#ifndef IPMI_SENSOR_UTIL_H
+#define IPMI_SENSOR_UTIL_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -79,4 +78,4 @@ int ipmi_sensor_decode_resolution (int8_t r_exponent,
 }
 #endif
 
-#endif /* _IPMI_SENSOR_UTIL_H */
+#endif /* IPMI_SENSOR_UTIL_H */

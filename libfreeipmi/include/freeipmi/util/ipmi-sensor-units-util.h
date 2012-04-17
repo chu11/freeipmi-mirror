@@ -16,9 +16,8 @@
  * 
  */
 
-
-#ifndef _IPMI_SENSOR_UNITS_UTIL_H
-#define _IPMI_SENSOR_UNITS_UTIL_H
+#ifndef IPMI_SENSOR_UNITS_UTIL_H
+#define IPMI_SENSOR_UNITS_UTIL_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -40,4 +39,4 @@ int ipmi_sensor_units_string (uint8_t sensor_units_percentage,
 }
 #endif
 
-#endif /* _IPMI_SENSOR_UNITS_UTIL_H */
+#endif /* IPMI_SENSOR_UNITS_UTIL_H */

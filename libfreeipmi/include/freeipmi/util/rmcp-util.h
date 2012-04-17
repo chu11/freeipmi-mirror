@@ -17,8 +17,8 @@
  */
 
 
-#ifndef _RMCP_UTIL_H
-#define _RMCP_UTIL_H    1
+#ifndef RMCP_UTIL_H
+#define RMCP_UTIL_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -34,4 +34,4 @@ int ipmi_rmcp_check_message_tag (fiid_obj_t pong, uint8_t message_tag);
 }
 #endif
 
-#endif /* rmcp-util.h */
+#endif /* RMCP_UTIL_H */

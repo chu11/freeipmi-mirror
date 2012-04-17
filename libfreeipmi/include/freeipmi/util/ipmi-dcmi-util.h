@@ -39,8 +39,8 @@
  *  with Ipmi-Dcmi.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _IPMI_DCMI_UTIL_H
-#define _IPMI_UTIL_H    1
+#ifndef IPMI_DCMI_UTIL_H
+#define IPMI_DCMI_UTIL_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -55,6 +55,4 @@ const char *ipmi_cmd_dcmi_str (uint8_t cmd);
 }
 #endif
 
-#endif /* ipmi-dcmi-util.h */
-
-
+#endif /* IPMI_DCMI_UTIL_H */
