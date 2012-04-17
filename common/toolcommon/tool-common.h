@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _TOOL_COMMON_H
-#define _TOOL_COMMON_H
+#ifndef TOOL_COMMON_H
+#define TOOL_COMMON_H
 
 #include <stdint.h>
 #include <freeipmi/freeipmi.h>
@@ -43,4 +43,4 @@ int check_kg_len (const char *in);
 /* Turn a 20-byte binary k_g key into an output string */
 char *format_kg (char *out, unsigned int outlen, const void *k_g);
 
-#endif
+#endif /* TOOL_COMMON_H */

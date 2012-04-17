@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _PARSE_COMMON_H
-#define _PARSE_COMMON_H
+#ifndef PARSE_COMMON_H
+#define PARSE_COMMON_H
 
 #if HAVE_CONFIG_H
 #include "config.h"
@@ -165,4 +165,4 @@ int parse_workaround_flags_tool (const char *str,
  */
 int parse_kg (void *out, unsigned int outlen, const char *in);
 
-#endif
+#endif /* PARSE_COMMON_H */

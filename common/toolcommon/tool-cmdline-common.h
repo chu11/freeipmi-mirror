@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _TOOL_CMDLINE_COMMON_H
-#define _TOOL_CMDLINE_COMMON_H
+#ifndef TOOL_CMDLINE_COMMON_H
+#define TOOL_CMDLINE_COMMON_H
 
 #if HAVE_CONFIG_H
 #include "config.h"
@@ -275,4 +275,4 @@ void verify_hostrange_cmd_args (struct hostrange_cmd_args *hostrange_cmd_args);
 /* to parse only the --config-file option */
 error_t cmdline_config_file_parse (int key, char *arg, struct argp_state *state);
 
-#endif
+#endif /* TOOL_CMDLINE_COMMON_H */

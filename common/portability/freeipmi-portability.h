@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _FREEIPMI_PORTABILITY_H
-#define _FREEIPMI_PORTABILITY_H 1
+#ifndef FREEIPMI_PORTABILITY_H
+#define FREEIPMI_PORTABILITY_H
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -215,4 +215,4 @@ int freeipmi_gethostbyname_r (const char *name,
                               int *h_errnop);
 #endif /* !defined(HAVE_FUNC_GETHOSTBYNAME_R_6) && !defined(HAVE_FUNC_GETHOSTBYNAME_R_5) */
 
-#endif /* freeipmi-portability.h */
+#endif /* FREEIPMI_PORTABILITY_H */

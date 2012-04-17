@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _DEBUG_UTIL_H
-#define _DEBUG_UTIL_H   1
+#ifndef DEBUG_UTIL_H
+#define DEBUG_UTIL_H
 
 #include <stdint.h>
 
@@ -60,4 +60,4 @@ int debug_hdr_cmd (uint8_t packet_type,
                    char *hdrbuf,
                    unsigned int hdrbuf_len);
 
-#endif
+#endif /* DEBUG_UTIL_H */

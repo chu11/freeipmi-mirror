@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _TOOL_SDR_CACHE_COMMON_H
-#define _TOOL_SDR_CACHE_COMMON_H
+#ifndef TOOL_SDR_CACHE_COMMON_H
+#define TOOL_SDR_CACHE_COMMON_H
 
 #include <stdio.h>
 #include <stdint.h>
@@ -50,4 +50,4 @@ int ipmi_sdr_cache_search_sensor_wrapper (ipmi_sdr_cache_ctx_t ctx,
 					  uint8_t sensor_number,
 					  uint8_t generator_id);
 
-#endif
+#endif /* TOOL_SDR_CACHE_COMMON_H */
