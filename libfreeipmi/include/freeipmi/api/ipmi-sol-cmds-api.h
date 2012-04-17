@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_SOL_CMDS_API_H
-#define _IPMI_SOL_CMDS_API_H
+#ifndef IPMI_SOL_CMDS_API_H
+#define IPMI_SOL_CMDS_API_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -161,4 +161,4 @@ int ipmi_cmd_get_sol_configuration_parameters_sol_payload_port_number (ipmi_ctx_
 }
 #endif
 
-#endif
+#endif /* IPMI_SOL_CMDS_API_H */

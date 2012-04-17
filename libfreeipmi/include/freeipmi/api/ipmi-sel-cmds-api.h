@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_SEL_CMDS_API_H
-#define _IPMI_SEL_CMDS_API_H
+#ifndef IPMI_SEL_CMDS_API_H
+#define IPMI_SEL_CMDS_API_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -82,4 +82,4 @@ int ipmi_cmd_set_auxiliary_log_status (ipmi_ctx_t ctx,
 }
 #endif
 
-#endif
+#endif /* IPMI_SEL_CMDS_API_H */

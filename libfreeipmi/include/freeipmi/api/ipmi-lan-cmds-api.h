@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_LAN_CMDS_API_H
-#define _IPMI_LAN_CMDS_API_H
+#ifndef IPMI_LAN_CMDS_API_H
+#define IPMI_LAN_CMDS_API_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -412,4 +412,4 @@ int ipmi_cmd_get_ip_udp_rmcp_statistics (ipmi_ctx_t ctx,
 }
 #endif
 
-#endif
+#endif /* IPMI_LAN_CMDS_API_H */
