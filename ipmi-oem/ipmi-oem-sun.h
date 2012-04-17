@@ -16,12 +16,12 @@
  * 
  */
 
-#ifndef _IPMI_OEM_SUN_H
-#define _IPMI_OEM_SUN_H
+#ifndef IPMI_OEM_SUN_H
+#define IPMI_OEM_SUN_H
 
 #include "ipmi-oem.h"
 
 int ipmi_oem_sun_get_led (ipmi_oem_state_data_t *state_data);
 int ipmi_oem_sun_set_led (ipmi_oem_state_data_t *state_data);
 
-#endif
+#endif /* IPMI_OEM_SUN_H */

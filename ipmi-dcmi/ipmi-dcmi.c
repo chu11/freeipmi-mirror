@@ -48,7 +48,7 @@
 
 #include <freeipmi/freeipmi.h>
 
-#include "ipmi-dcmi.h"
+#include "ipmi-dcmi_.h"
 #include "ipmi-dcmi-argp.h"
 
 #include "freeipmi-portability.h"

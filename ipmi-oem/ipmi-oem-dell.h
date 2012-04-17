@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_OEM_DELL_H
-#define _IPMI_OEM_DELL_H
+#ifndef IPMI_OEM_DELL_H
+#define IPMI_OEM_DELL_H
 
 #include "ipmi-oem.h"
 
@@ -76,4 +76,4 @@ int ipmi_oem_dell_get_port_map (ipmi_oem_state_data_t *state_data);
 
 int ipmi_oem_dell_set_port_map (ipmi_oem_state_data_t *state_data);
 
-#endif
+#endif /* IPMI_OEM_DELL_H */

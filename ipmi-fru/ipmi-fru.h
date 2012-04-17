@@ -25,8 +25,8 @@
  *  with Ipmi-fru.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _IPMI_FRU_H
-#define _IPMI_FRU_H
+#ifndef IPMI_FRU_H
+#define IPMI_FRU_H
 
 #include <stdint.h>
 #include <freeipmi/freeipmi.h>
@@ -73,4 +73,4 @@ typedef struct ipmi_fru_state_data
   struct ipmi_oem_data oem_data;
 } ipmi_fru_state_data_t;
 
-#endif
+#endif /* IPMI_FRU_H */

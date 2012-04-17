@@ -25,11 +25,11 @@
  *  with Ipmi-fru.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _IPMI_FRU_ARGP_H
-#define _IPMI_FRU_ARGP_H
+#ifndef IPMI_FRU_ARGP_H
+#define IPMI_FRU_ARGP_H
 
 #include "ipmi-fru.h"
 
 void ipmi_fru_argp_parse (int argc, char **argv, struct ipmi_fru_arguments *cmd_args);
 
-#endif
+#endif /* IPMI_FRU_ARGP_H */

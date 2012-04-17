@@ -23,7 +23,7 @@ ipmi_dcmi_LDADD = \
 
 ipmi_dcmi_SOURCES = \
 	ipmi-dcmi.c \
-	ipmi-dcmi.h \
+	ipmi-dcmi_.h \
 	ipmi-dcmi-argp.c \
 	ipmi-dcmi-argp.h
 

@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_OEM_INTELNM_H
-#define _IPMI_OEM_INTELNM_H
+#ifndef IPMI_OEM_INTELNM_H
+#define IPMI_OEM_INTELNM_H
 
 #include "ipmi-oem.h"
 
@@ -27,4 +27,4 @@ int ipmi_oem_intelnm_reset_node_manager_statistics (ipmi_oem_state_data_t *state
 
 int ipmi_oem_intelnm_get_node_manager_version (ipmi_oem_state_data_t *state_data);
 
-#endif
+#endif /* IPMI_OEM_INTELNM_H */

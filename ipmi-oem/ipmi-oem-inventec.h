@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_OEM_INVENTEC_H
-#define _IPMI_OEM_INVENTEC_H
+#ifndef IPMI_OEM_INVENTEC_H
+#define IPMI_OEM_INVENTEC_H
 
 #include "ipmi-oem.h"
 
@@ -96,4 +96,4 @@ int ipmi_oem_inventec_set_system_guid (ipmi_oem_state_data_t *state_data);
 int ipmi_oem_inventec_read_eeprom (ipmi_oem_state_data_t *state_data);
 int ipmi_oem_inventec_clear_eeprom (ipmi_oem_state_data_t *state_data);
 
-#endif
+#endif /* IPMI_OEM_INVENTEC_H */

@@ -16,11 +16,11 @@
  * 
  */
 
-#ifndef _IPMI_LOCATE_ARGP_H
-#define _IPMI_LOCATE_ARGP_H
+#ifndef IPMI_LOCATE_ARGP_H
+#define IPMI_LOCATE_ARGP_H
 
 #include "ipmi-locate_.h"
 
 void ipmi_locate_argp_parse (int argc, char **argv, struct ipmi_locate_arguments *cmd_args);
 
-#endif
+#endif /* IPMI_LOCATE_ARGP_H */

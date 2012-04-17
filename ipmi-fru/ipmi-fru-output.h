@@ -25,8 +25,8 @@
  *  with Ipmi-fru.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _IPMI_FRU_INFO_AREA_H
-#define _IPMI_FRU_INFO_AREA_H
+#ifndef IPMI_FRU_OUTPUT_H
+#define IPMI_FRU_OUTPUT_H
 
 #include <freeipmi/freeipmi.h>
 
@@ -91,4 +91,4 @@ int ipmi_fru_output_oem_record (ipmi_fru_state_data_t *state_data,
                                 const void *areabuf,
                                 uint8_t area_length);
 
-#endif
+#endif /* IPMI_FRU_OUTPUT_H */

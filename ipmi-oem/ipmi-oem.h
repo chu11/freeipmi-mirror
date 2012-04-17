@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_OEM_H
-#define _IPMI_OEM_H
+#ifndef IPMI_OEM_H
+#define IPMI_OEM_H
 
 #include <freeipmi/freeipmi.h>
 
@@ -62,4 +62,4 @@ typedef struct ipmi_oem_state_data
   ipmi_sdr_parse_ctx_t sdr_parse_ctx;
 } ipmi_oem_state_data_t;
 
-#endif
+#endif /* IPMI_OEM_H */
