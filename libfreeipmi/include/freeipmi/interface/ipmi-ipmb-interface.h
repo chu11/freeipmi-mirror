@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_IPMB_INTERFACE_H
-#define _IPMI_IPMB_INTERFACE_H  1
+#ifndef IPMI_IPMB_INTERFACE_H
+#define IPMI_IPMB_INTERFACE_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -70,6 +70,4 @@ int unassemble_ipmi_ipmb_msg (fiid_obj_t obj_ipmb_msg,
 }
 #endif
 
-#endif /* ipmi-ipmb-interface.h */
-
-
+#endif /* IPMI_IPMB_INTERFACE_H */

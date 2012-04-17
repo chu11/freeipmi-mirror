@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_LAN_INTERFACE_H
-#define _IPMI_LAN_INTERFACE_H   1
+#ifndef IPMI_LAN_INTERFACE_H
+#define IPMI_LAN_INTERFACE_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -104,6 +104,4 @@ ssize_t ipmi_lan_recvfrom (int s,
 }
 #endif
 
-#endif /* ipmi-lan-interface.h */
-
-
+#endif /* IPMI_LAN_INTERFACE_H */

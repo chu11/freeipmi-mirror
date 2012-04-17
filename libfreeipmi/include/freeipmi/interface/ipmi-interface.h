@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_INTERFACE_H
-#define _IPMI_INTERFACE_H   1
+#ifndef IPMI_INTERFACE_H
+#define IPMI_INTERFACE_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -38,6 +38,4 @@ extern "C" {
 }
 #endif
 
-#endif /* ipmi-lan-interface.h */
-
-
+#endif /* IPMI_INTERFACE_H */
