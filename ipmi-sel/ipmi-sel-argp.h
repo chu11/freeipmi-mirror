@@ -16,11 +16,11 @@
  * 
  */
 
-#ifndef _IPMI_SEL_ARGP_H
-#define _IPMI_SEL_ARGP_H
+#ifndef IPMI_SEL_ARGP_H
+#define IPMI_SEL_ARGP_H
 
 #include "ipmi-sel.h"
 
 void ipmi_sel_argp_parse (int argc, char **argv, struct ipmi_sel_arguments *cmd_args);
 
-#endif
+#endif /* IPMI_SEL_ARGP_H */

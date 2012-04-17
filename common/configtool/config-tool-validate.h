@@ -77,4 +77,4 @@ config_validate_t config_mac_address_validate (const char *section_name,
                                                const char *value,
                                                void *arg);
 
-#endif /* _CONFIG_TOOL_VALIDATE_H_ */
+#endif /* _CONFIG_TOOL_VALIDATE_H */

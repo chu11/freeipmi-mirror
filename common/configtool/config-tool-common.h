@@ -193,4 +193,4 @@ struct config_section {
   struct config_section *next;
 };
 
-#endif /* _CONFIG_TOOL_COMMON_H_ */
+#endif /* _CONFIG_TOOL_COMMON_H */

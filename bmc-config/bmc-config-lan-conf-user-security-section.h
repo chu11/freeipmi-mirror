@@ -27,4 +27,4 @@ struct config_section * bmc_config_lan_conf_user_security_section_get (bmc_confi
 								       unsigned int config_flags,
                                                                        int channel_index);
 
-#endif /* _BMC_CONFIG_LAN_CONF_USER_SECURITY_SECTION_H_ */
+#endif /* _BMC_CONFIG_LAN_CONF_USER_SECURITY_SECTION_H */

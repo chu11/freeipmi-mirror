@@ -117,4 +117,4 @@ typedef struct bmc_config_state_data
   unsigned int sol_channel_numbers_loaded;
 } bmc_config_state_data_t;
 
-#endif /* _BMC_CONFIG_H_ */
+#endif /* _BMC_CONFIG_H */

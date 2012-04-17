@@ -93,4 +93,4 @@ error_t config_parse_opt (int key,
 
 void config_args_validate (struct config_arguments *config_args);
 
-#endif /* _CONFIG_TOOL_ARGP_H_ */
+#endif /* _CONFIG_TOOL_ARGP_H */

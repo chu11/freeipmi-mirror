@@ -27,4 +27,4 @@ struct config_section * bmc_config_rmcpplus_conf_privilege_section_get (bmc_conf
 									unsigned int config_flags,
 									int channel_index);
 
-#endif /* _BMC_CONFIG_RMCPPLUS_CONF_PRIVILEGE_SECTION_H_ */
+#endif /* _BMC_CONFIG_RMCPPLUS_CONF_PRIVILEGE_SECTION_H */

@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_SENSORS_OEM_INTEL_H
-#define _IPMI_SENSORS_OEM_INTEL_H
+#ifndef IPMI_SENSORS_OEM_INTEL_H
+#define IPMI_SENSORS_OEM_INTEL_H
 
 #include "ipmi-sensors.h"
 
@@ -28,4 +28,4 @@ int ipmi_sensors_oem_intel_output_oem_record (ipmi_sensors_state_data_t *state_d
 					      const uint8_t *oem_data,
 					      unsigned int oem_data_len);
 
-#endif
+#endif /* IPMI_SENSORS_OEM_INTEL_H */

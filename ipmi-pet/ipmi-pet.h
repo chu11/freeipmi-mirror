@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_PET_H
-#define _IPMI_PET_H
+#ifndef IPMI_PET_H
+#define IPMI_PET_H
 
 #include <freeipmi/freeipmi.h>
 
@@ -96,4 +96,4 @@ typedef struct ipmi_pet_state_data
   struct ipmi_oem_data oem_data;
 } ipmi_pet_state_data_t;
 
-#endif
+#endif /* IPMI_PET_H */

@@ -38,4 +38,4 @@ config_err_t config_checkout (pstdout_state_t pstate,
                               unsigned int line_length,
                               void *arg);
 
-#endif /* _CONFIG_TOOL_CHECKOUT_H_ */
+#endif /* _CONFIG_TOOL_CHECKOUT_H */

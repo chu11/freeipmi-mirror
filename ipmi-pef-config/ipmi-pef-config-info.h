@@ -17,11 +17,11 @@
  */
 
 
-#ifndef _IPMI_PEF_CONFIG_INFO_H
-#define _IPMI_PEF_CONFIG_INFO_H
+#ifndef IPMI_PEF_CONFIG_INFO_H
+#define IPMI_PEF_CONFIG_INFO_H
 
 #include "ipmi-pef-config.h"
 
 config_err_t pef_info (ipmi_pef_config_state_data_t *state_data);
 
-#endif
+#endif /* IPMI_PEF_CONFIG_INFO_H */

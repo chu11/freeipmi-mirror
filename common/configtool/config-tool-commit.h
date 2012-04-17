@@ -32,4 +32,4 @@ config_err_t config_commit (pstdout_state_t pstate,
                             struct config_arguments *cmd_args,
                             void *arg);
 
-#endif /* _CONFIG_TOOL_COMMIT_H_ */
+#endif /* _CONFIG_TOOL_COMMIT_H */

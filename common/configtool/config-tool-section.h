@@ -111,4 +111,4 @@ int config_sections_insert_keyvalues (pstdout_state_t pstate,
 config_err_t config_output_sections_list (pstdout_state_t pstate,
                                           struct config_section *sections);
 
-#endif /* _CONFIG_TOOL_SECTION_H_ */
+#endif /* _CONFIG_TOOL_SECTION_H */

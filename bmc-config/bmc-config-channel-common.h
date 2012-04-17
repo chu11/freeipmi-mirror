@@ -24,4 +24,4 @@
 int bmc_config_channel_common_section_get (bmc_config_state_data_t *state_data,
                                            struct config_section *channel_section);
 
-#endif /* _BMC_CONFIG_CHANNEL_COMMON_H_ */
+#endif /* _BMC_CONFIG_CHANNEL_COMMON_H */

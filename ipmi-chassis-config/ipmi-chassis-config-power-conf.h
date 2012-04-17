@@ -25,4 +25,4 @@
 
 struct config_section * ipmi_chassis_config_power_conf_get (ipmi_chassis_config_state_data_t *state_data);
 
-#endif /* _IPMI_CHASSIS_CONFIG_POWER_CONF_H_ */
+#endif /* _IPMI_CHASSIS_CONFIG_POWER_CONF_H */

@@ -79,4 +79,4 @@ int config_is_config_param_non_fatal_error (ipmi_ctx_t ipmi_ctx,
                                             fiid_obj_t obj_cmd_rs,
                                             config_err_t *non_fatal_err);
 
-#endif /* _CONFIG_TOOL_UTIL_H_ */
+#endif /* _CONFIG_TOOL_UTIL_H */

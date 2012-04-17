@@ -25,4 +25,4 @@
 
 struct config_section * ipmi_chassis_config_front_panel_buttons_get (ipmi_chassis_config_state_data_t *state_data);
 
-#endif /* _IPMI_CHASSIS_CONFIG_FRONT_PANEL_BUTTONS_H_ */
+#endif /* _IPMI_CHASSIS_CONFIG_FRONT_PANEL_BUTTONS_H */

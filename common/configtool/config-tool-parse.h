@@ -27,4 +27,4 @@ config_err_t config_parse (pstdout_state_t pstate,
                            struct config_arguments *cmd_args,
                            FILE *fp);
 
-#endif /* _CONFIG_TOOL_PARSE_H_ */
+#endif /* _CONFIG_TOOL_PARSE_H */
