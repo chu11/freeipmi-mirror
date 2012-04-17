@@ -5,6 +5,7 @@ ooo - priority code cleanup that should be done
 reserved
 
 header guards w/ _
+_ on end
 header guards w/o end comment correct
 macros w/ _ in front
 macros w/ __ in front
