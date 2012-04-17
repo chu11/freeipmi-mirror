@@ -1,5 +1,7 @@
 2012-03-20  Albert Chu <chu11@llnl.gov>
 
+	Merge reservedmacros branch.
+
 	Fix bug #36177: reserved identifier violation.
 
 	See https://www.securecoding.cert.org/confluence/display/seccode/DCL37-C.+Do+not+declare+or+define+a+reserved+identifier
