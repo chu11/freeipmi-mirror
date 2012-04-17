@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_SOL_CMDS_H
-#define _IPMI_SOL_CMDS_H
+#ifndef IPMI_SOL_CMDS_H
+#define IPMI_SOL_CMDS_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -166,4 +166,4 @@ int fill_cmd_get_sol_configuration_parameters (uint8_t channel_number,
 }
 #endif
 
-#endif
+#endif /* IPMI_SOL_CMDS_H */

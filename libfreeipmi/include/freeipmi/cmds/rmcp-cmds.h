@@ -17,8 +17,8 @@
  */
 
 
-#ifndef _RMCP_CMDS_H
-#define _RMCP_CMDS_H    1
+#ifndef RMCP_CMDS_H
+#define RMCP_CMDS_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -50,4 +50,4 @@ int fill_cmd_asf_presence_ping (uint8_t message_tag, fiid_obj_t obj_cmd);
 }
 #endif
 
-#endif /* rmcp-cmds.h */
+#endif /* RMCP_CMDS_H */

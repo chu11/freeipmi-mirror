@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_FIRMWARE_FIREWALL_COMMAND_DISCOVERY_CMDS_H
-#define _IPMI_FIRMWARE_FIREWALL_COMMAND_DISCOVERY_CMDS_H
+#ifndef IPMI_FIRMWARE_FIREWALL_COMMAND_DISCOVERY_CMDS_H
+#define IPMI_FIRMWARE_FIREWALL_COMMAND_DISCOVERY_CMDS_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -194,6 +194,4 @@ int fill_cmd_get_oem_netfn_iana_support (uint8_t channel_number,
 }
 #endif
 
-#endif /* ipmi-firmware-firewall-command-discovery-cmds.h */
-
-
+#endif /* IPMI_FIRMWARE_FIREWALL_COMMAND_DISCOVERY_CMDS_H */

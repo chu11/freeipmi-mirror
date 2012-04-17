@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_SDR_REPOSITORY_CMDS_H
-#define _IPMI_SDR_REPOSITORY_CMDS_H
+#ifndef IPMI_SDR_REPOSITORY_CMDS_H
+#define IPMI_SDR_REPOSITORY_CMDS_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -84,4 +84,4 @@ int fill_cmd_set_sdr_repository_time (uint32_t time, fiid_obj_t obj_cmd_rq);
 }
 #endif
 
-#endif
+#endif /* IPMI_SDR_REPOSITORY_CMDS_H */

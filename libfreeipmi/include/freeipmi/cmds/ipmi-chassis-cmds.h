@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_CHASSIS_CMDS_H
-#define _IPMI_CHASSIS_CMDS_H
+#ifndef IPMI_CHASSIS_CMDS_H
+#define IPMI_CHASSIS_CMDS_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -406,4 +406,5 @@ int fill_cmd_get_power_on_hours_counter (fiid_obj_t obj_cmd_rq);
 #ifdef __cplusplus
 }
 #endif
-#endif
+
+#endif /* IPMI_CHASSIS_CMDS_H */

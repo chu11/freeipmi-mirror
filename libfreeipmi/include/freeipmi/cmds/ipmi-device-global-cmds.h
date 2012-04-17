@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_DEVICE_GLOBAL_CMDS_H
-#define _IPMI_DEVICE_GLOBAL_CMDS_H
+#ifndef IPMI_DEVICE_GLOBAL_CMDS_H
+#define IPMI_DEVICE_GLOBAL_CMDS_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -152,4 +152,4 @@ int fill_cmd_get_device_guid (fiid_obj_t obj_cmd_rq);
 }
 #endif
 
-#endif /* ipmi-device-global-cmds.h */
+#endif /* IPMI_DEVICE_GLOBAL_CMDS_H */
