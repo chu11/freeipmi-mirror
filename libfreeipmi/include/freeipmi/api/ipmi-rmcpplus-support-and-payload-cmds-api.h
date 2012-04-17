@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_RMCPPLUS_SUPPORT_AND_PAYLOAD_CMDS_API_H
-#define _IPMI_RMCPPLUS_SUPPORT_AND_PAYLOAD_CMDS_API_H
+#ifndef IPMI_RMCPPLUS_SUPPORT_AND_PAYLOAD_CMDS_API_H
+#define IPMI_RMCPPLUS_SUPPORT_AND_PAYLOAD_CMDS_API_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -66,6 +66,4 @@ int ipmi_cmd_get_user_payload_access (ipmi_ctx_t ctx,
 }
 #endif
 
-#endif /* _IPMI_RMCPPLUS_SUPPORT_AND_PAYLOAD_CMDS_API_H */
-
-
+#endif /* IPMI_RMCPPLUS_SUPPORT_AND_PAYLOAD_CMDS_API_H */
