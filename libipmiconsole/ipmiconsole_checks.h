@@ -24,8 +24,8 @@
  *  with Ipmiconsole.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _IPMICONSOLE_CHECKS_H
-#define _IPMICONSOLE_CHECKS_H
+#ifndef IPMICONSOLE_CHECKS_H
+#define IPMICONSOLE_CHECKS_H
 
 #include <freeipmi/freeipmi.h>
 #include "ipmiconsole.h"
@@ -52,4 +52,4 @@ int ipmiconsole_check_rakp_4_integrity_check_value (ipmiconsole_ctx_t c, ipmicon
 int ipmiconsole_check_payload_pad (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p);
 int ipmiconsole_check_integrity_pad (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p);
 
-#endif /* _IPMICONSOLE_CHECKS_H */
+#endif /* IPMICONSOLE_CHECKS_H */

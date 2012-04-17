@@ -24,12 +24,12 @@
  *  with Ipmimonitoring.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _IPMI_MONITORING_PARSE_COMMON_H
-#define _IPMI_MONITORING_PARSE_COMMON_H
+#ifndef IPMI_MONITORING_PARSE_COMMON_H
+#define IPMI_MONITORING_PARSE_COMMON_H
 
 #include "ipmi_monitoring.h"
 
 int ipmi_monitoring_get_sensor_type (ipmi_monitoring_ctx_t c,
                                      uint8_t sensor_type);
 
-#endif /* _IPMI_MONITORING_PARSE_COMMON_H */
+#endif /* IPMI_MONITORING_PARSE_COMMON_H */

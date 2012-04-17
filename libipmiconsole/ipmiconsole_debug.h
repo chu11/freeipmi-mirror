@@ -24,8 +24,8 @@
  *  with Ipmiconsole.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _IPMICONSOLE_DEBUG_H
-#define _IPMICONSOLE_DEBUG_H
+#ifndef IPMICONSOLE_DEBUG_H
+#define IPMICONSOLE_DEBUG_H
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -103,4 +103,4 @@ void ipmiconsole_ctx_debug (ipmiconsole_ctx_t c, const char *fmt, ...);
 
 char * __debug_msg_create (const char *fmt, ...);
 
-#endif /* _IPMICONSOLE_DEBUG_H */
+#endif /* IPMICONSOLE_DEBUG_H */

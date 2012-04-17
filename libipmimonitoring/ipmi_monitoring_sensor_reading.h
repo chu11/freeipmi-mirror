@@ -24,8 +24,8 @@
  *  with Ipmimonitoring.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _IPMI_MONITORING_SENSOR_READING_H
-#define _IPMI_MONITORING_SENSOR_READING_H
+#ifndef IPMI_MONITORING_SENSOR_READING_H
+#define IPMI_MONITORING_SENSOR_READING_H
 
 #include "ipmi_monitoring.h"
 
@@ -41,4 +41,4 @@ int ipmi_monitoring_get_sensor_reading (ipmi_monitoring_ctx_t c,
                                         unsigned int *sensor_types,
                                         unsigned int sensor_types_len);
 
-#endif /* _IPMI_MONITORING_SENSOR_READING_H */
+#endif /* IPMI_MONITORING_SENSOR_READING_H */

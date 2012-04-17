@@ -24,8 +24,8 @@
  *  with Ipmiconsole.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _IPMICONSOLE_PROCESSING_H
-#define _IPMICONSOLE_PROCESSING_H
+#ifndef IPMICONSOLE_PROCESSING_H
+#define IPMICONSOLE_PROCESSING_H
 
 #include "ipmiconsole.h"
 
@@ -33,4 +33,4 @@
 
 int ipmiconsole_process_ctxs (List console_engine_ctxs, unsigned int *timeout);
 
-#endif /* _IPMICONSOLE_PROCESSING_H */
+#endif /* IPMICONSOLE_PROCESSING_H */

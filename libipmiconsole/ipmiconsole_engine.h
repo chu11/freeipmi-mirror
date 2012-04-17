@@ -24,8 +24,8 @@
  *  with Ipmiconsole.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _IPMICONSOLE_ENGINE_H
-#define _IPMICONSOLE_ENGINE_H
+#ifndef IPMICONSOLE_ENGINE_H
+#define IPMICONSOLE_ENGINE_H
 
 #include "ipmiconsole.h"
 
@@ -41,4 +41,4 @@ int ipmiconsole_engine_submit_ctx (ipmiconsole_ctx_t c);
 
 int ipmiconsole_engine_cleanup (int cleanup_sol_sessions);
 
-#endif /* _IPMICONSOLE_ENGINE_H */
+#endif /* IPMICONSOLE_ENGINE_H */

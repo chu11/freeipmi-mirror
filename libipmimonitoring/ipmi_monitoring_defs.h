@@ -24,8 +24,8 @@
  *  with Ipmimonitoring.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _IPMI_MONITORING_DEFS_H
-#define _IPMI_MONITORING_DEFS_H
+#ifndef IPMI_MONITORING_DEFS_H
+#define IPMI_MONITORING_DEFS_H
 
 #if HAVE_CONFIG_H
 #include <config.h>
@@ -222,4 +222,4 @@ struct ipmi_monitoring_ctx {
   struct ipmi_monitoring_sensor_reading *callback_sensor_reading;
 };
 
-#endif /* _IPMI_MONITORING_DEFS_H */
+#endif /* IPMI_MONITORING_DEFS_H */

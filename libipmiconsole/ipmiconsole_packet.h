@@ -24,8 +24,8 @@
  *  with Ipmiconsole.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _IPMICONSOLE_PACKET_H
-#define _IPMICONSOLE_PACKET_H
+#ifndef IPMICONSOLE_PACKET_H
+#define IPMICONSOLE_PACKET_H
 
 #include <freeipmi/freeipmi.h>
 
@@ -71,4 +71,4 @@ int ipmiconsole_packet_unassemble (ipmiconsole_ctx_t c,
 int ipmiconsole_calculate_errnum (ipmiconsole_ctx_t c,
                                   ipmiconsole_packet_type_t p);
 
-#endif /* _IPMICONSOLE_PACKET_H */
+#endif /* IPMICONSOLE_PACKET_H */
