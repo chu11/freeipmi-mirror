@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_API_DEFS_H
-#define _IPMI_API_DEFS_H
+#ifndef IPMI_API_DEFS_H
+#define IPMI_API_DEFS_H
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -187,4 +187,4 @@ struct ipmi_ctx
   } io;
 };
 
-#endif /* _IPMI_API_DEFS_H */
+#endif /* IPMI_API_DEFS_H */

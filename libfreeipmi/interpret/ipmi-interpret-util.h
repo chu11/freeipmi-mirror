@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_INTERPRET_UTIL_H
-#define _IPMI_INTERPRET_UTIL_H
+#ifndef IPMI_INTERPRET_UTIL_H
+#define IPMI_INTERPRET_UTIL_H
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -39,5 +39,4 @@ void interpret_set_interpret_errnum_by_errno (ipmi_interpret_ctx_t ctx, int __er
 
 void interpret_set_interpret_errnum_by_sel_parse_ctx (ipmi_interpret_ctx_t ctx, ipmi_sel_parse_ctx_t sel_parse_ctx);
 
-#endif /* ipmi-interpret-util.h */
-
+#endif /* IPMI_INTERPRET_UTIL_H */

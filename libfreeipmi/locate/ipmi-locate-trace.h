@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_LOCATE_TRACE_H
-#define _IPMI_LOCATE_TRACE_H
+#ifndef IPMI_LOCATE_TRACE_H
+#define IPMI_LOCATE_TRACE_H
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -52,5 +52,4 @@
     __MSG_TRACE (fiid_obj_errormsg ((__obj)), fiid_obj_errnum ((__obj))); \
   } while (0)
 
-#endif /* ipmi-locate-trace.h */
-
+#endif /* IPMI_LOCATE_TRACE_H */

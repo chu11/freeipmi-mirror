@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_SEL_PARSE_STRING_SUPERMICRO_H
-#define _IPMI_SEL_PARSE_STRING_SUPERMICRO_H
+#ifndef IPMI_SEL_PARSE_STRING_SUPERMICRO_H
+#define IPMI_SEL_PARSE_STRING_SUPERMICRO_H
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -39,4 +39,4 @@ int ipmi_sel_parse_output_supermicro_event_data1_class_oem (ipmi_sel_parse_ctx_t
 							    unsigned int *wlen,
 							    struct ipmi_sel_system_event_record_data *system_event_record_data);
 
-#endif /* _IPMI_SEL_PARSE_STRING_SUPERMICRO_H */
+#endif /* IPMI_SEL_PARSE_STRING_SUPERMICRO_H */

@@ -1,6 +1,6 @@
 
-#ifndef _IPMI_LOCATE_DEFS_H
-#define _IPMI_LOCATE_DEFS_H
+#ifndef IPMI_LOCATE_DEFS_H
+#define IPMI_LOCATE_DEFS_H
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -33,4 +33,4 @@ struct ipmi_locate_ctx {
   int errnum;
 };
 
-#endif /* _IPMI_LOCATE_DEFS_H */
+#endif /* IPMI_LOCATE_DEFS_H */

@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_INTERPRET_TRACE_H
-#define _IPMI_INTERPRET_TRACE_H
+#ifndef IPMI_INTERPRET_TRACE_H
+#define IPMI_INTERPRET_TRACE_H
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -50,5 +50,4 @@
     __MSG_TRACE (ipmi_sel_parse_ctx_errormsg ((__sel_parse_ctx)), ipmi_sel_parse_ctx_errnum ((__sel_parse_ctx))); \
   } while (0)
 
-#endif /* ipmi-interpret-trace.h */
-
+#endif /* IPMI_INTERPRET_TRACE_H */

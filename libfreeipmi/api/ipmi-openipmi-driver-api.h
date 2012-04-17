@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_OPENIPMI_DRIVER_API_H
-#define _IPMI_OPENIPMI_DRIVER_API_H 1
+#ifndef IPMI_OPENIPMI_DRIVER_API_H
+#define IPMI_OPENIPMI_DRIVER_API_H
 
 #include <stdint.h>
 #include <freeipmi/api/ipmi-api.h>
@@ -43,5 +43,4 @@ int ipmi_openipmi_cmd_raw_api_ipmb (ipmi_ctx_t ctx,
 				    void *buf_rs,
 				    unsigned int buf_rs_len);
 
-#endif /* ipmi-openipmi-driver-api.h */
-
+#endif /* IPMI_OPENIPMI_DRIVER_API_H */

@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_SDR_PARSE_DEFS_H
-#define _IPMI_SDR_PARSE_DEFS_H
+#ifndef IPMI_SDR_PARSE_DEFS_H
+#define IPMI_SDR_PARSE_DEFS_H
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -44,4 +44,4 @@ struct ipmi_sdr_parse_ctx {
   unsigned int flags;
 };
 
-#endif /* _IPMI_SDR_PARSE_DEFS_H */
+#endif /* IPMI_SDR_PARSE_DEFS_H */

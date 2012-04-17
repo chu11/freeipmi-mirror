@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_BIT_OPS_H
-#define _IPMI_BIT_OPS_H 1
+#ifndef IPMI_BIT_OPS_H
+#define IPMI_BIT_OPS_H
 
 #define BIT_0 0x01
 #define BIT_1 0x02
@@ -151,6 +151,4 @@ typedef uint8_t bitstr_t;
 int bits_extract (uint64_t bits, uint8_t start, uint8_t end, uint64_t *result);
 int bits_merge (uint64_t bits, uint8_t start, uint8_t end, uint64_t val, uint64_t *result);
 
-#endif /* ipmi-bit-ops.h */
-
-
+#endif /* IPMI_BIT_OPS_H */

@@ -24,8 +24,8 @@
  *  with Ipmipower.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _IPMI_MD5_H
-#define _IPMI_MD5_H
+#ifndef IPMI_MD5_H
+#define IPMI_MD5_H
 
 #include <stdint.h>
 
@@ -51,4 +51,4 @@ int md5_update_data (md5_t *ctx, const void *buf, unsigned int buflen);
 
 int md5_finish (md5_t *ctx, void *digest, unsigned int digestlen);
 
-#endif /* _IPMI_MD5_H */
+#endif /* IPMI_MD5_H */

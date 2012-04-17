@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_API_TRACE_H
-#define _IPMI_API_TRACE_H
+#ifndef IPMI_API_TRACE_H
+#define IPMI_API_TRACE_H
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -112,5 +112,5 @@
     __MSG_TRACE (ipmi_locate_ctx_strerror ((__errnum)), (__errnum));      \
   } while (0)
 
-#endif /* ipmi-api-trace.h */
+#endif /* IPMI_API_TRACE_H */
 

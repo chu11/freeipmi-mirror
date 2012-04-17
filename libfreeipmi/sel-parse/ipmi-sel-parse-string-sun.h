@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_SEL_PARSE_STRING_SUN_H
-#define _IPMI_SEL_PARSE_STRING_SUN_H
+#ifndef IPMI_SEL_PARSE_STRING_SUN_H
+#define IPMI_SEL_PARSE_STRING_SUN_H
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -48,4 +48,4 @@ int ipmi_sel_parse_output_sun_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx
                                                         unsigned int *wlen,
                                                         struct ipmi_sel_system_event_record_data *system_event_record_data);
 
-#endif /* _IPMI_SEL_PARSE_STRING_SUN_H */
+#endif /* IPMI_SEL_PARSE_STRING_SUN_H */

@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_ERR_WRAPPERS_H
-#define _IPMI_ERR_WRAPPERS_H
+#ifndef IPMI_TRACE_H
+#define IPMI_TRACE_H
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -93,5 +93,4 @@
     __MSG_TRACE (fiid_iterator_errormsg ((__iter)), fiid_iterator_errnum ((__iter))); \
   } while (0)
 
-#endif /* ipmi-trace.h */
-
+#endif /* IPMI_TRACE_H */

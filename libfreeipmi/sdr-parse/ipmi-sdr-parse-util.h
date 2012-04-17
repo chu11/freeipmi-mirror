@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_SDR_PARSE_UTIL_H
-#define _IPMI_SDR_PARSE_UTIL_H
+#ifndef IPMI_SDR_PARSE_UTIL_H
+#define IPMI_SDR_PARSE_UTIL_H
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -40,5 +40,4 @@ void sdr_parse_set_sdr_parse_errnum_by_errno (ipmi_sdr_parse_ctx_t ctx, int __er
 
 void sdr_parse_set_sdr_parse_errnum_by_fiid_object (ipmi_sdr_parse_ctx_t ctx, fiid_obj_t obj);
 
-#endif /* ipmi-sdr-parse-util.h */
-
+#endif /* IPMI_SDR_PARSE_UTIL_H */

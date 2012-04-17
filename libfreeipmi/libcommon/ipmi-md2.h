@@ -24,8 +24,8 @@
  *  with Ipmipower.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _IPMI_MD2_H
-#define _IPMI_MD2_H
+#ifndef IPMI_MD2_H
+#define IPMI_MD2_H
 
 #include <stdint.h>
 
@@ -51,4 +51,4 @@ int md2_update_data (md2_t *ctx, const void *buf, unsigned int buflen);
 
 int md2_finish (md2_t *ctx, void *digest, unsigned int digestlen);
 
-#endif /* _IPMI_MD2_H */
+#endif /* IPMI_MD2_H */

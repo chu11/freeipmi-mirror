@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_SEL_PARSE_STRING_H
-#define _IPMI_SEL_PARSE_STRING_H
+#ifndef IPMI_SEL_PARSE_STRING_H
+#define IPMI_SEL_PARSE_STRING_H
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -47,4 +47,4 @@ int sel_parse_format_record_string (ipmi_sel_parse_ctx_t ctx,
 				    unsigned int buflen,
 				    unsigned int flags);
 
-#endif /* _IPMI_SEL_PARSE_STRING_H */
+#endif /* IPMI_SEL_PARSE_STRING_H */

@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_SEL_PARSE_UTIL_H
-#define _IPMI_SEL_PARSE_UTIL_H
+#ifndef IPMI_SEL_PARSE_UTIL_H
+#define IPMI_SEL_PARSE_UTIL_H
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -40,5 +40,4 @@ void sel_parse_set_sel_parse_errnum_by_errno (ipmi_sel_parse_ctx_t ctx, int __er
 
 void sel_parse_set_sel_parse_errnum_by_fiid_object (ipmi_sel_parse_ctx_t ctx, fiid_obj_t obj);
 
-#endif /* ipmi-sel-parse-util.h */
-
+#endif /* IPMI_SEL_PARSE_UTIL_H */

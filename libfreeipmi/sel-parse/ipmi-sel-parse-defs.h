@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_SEL_PARSE_DEFS_H
-#define _IPMI_SEL_PARSE_DEFS_H
+#ifndef IPMI_SEL_PARSE_DEFS_H
+#define IPMI_SEL_PARSE_DEFS_H
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -103,4 +103,4 @@ struct ipmi_sel_parse_ctx {
   struct ipmi_sel_oem_intel_node_manager intel_node_manager;
 };
 
-#endif /* _IPMI_SEL_PARSE_DEFS_H */
+#endif /* IPMI_SEL_PARSE_DEFS_H */

@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_LAN_SESSION_UTIL_H
-#define _IPMI_LAN_SESSION_UTIL_H        1
+#ifndef IPMI_LAN_SESSION_COMMON_H
+#define IPMI_LAN_SESSION_COMMON_H
 
 #include <stdint.h>
 #include <freeipmi/api/ipmi-api.h>
@@ -88,6 +88,4 @@ int ipmi_lan_2_0_open_session (ipmi_ctx_t ctx);
 
 int ipmi_lan_2_0_close_session (ipmi_ctx_t ctx);
 
-#endif /* ipmi-lan-interface.h */
-
-
+#endif /* IPMI_LAN_SESSION_COMMON_H */

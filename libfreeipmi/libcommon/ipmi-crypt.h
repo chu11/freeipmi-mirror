@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_CRYPT_H
-#define _IPMI_CRYPT_H
+#ifndef IPMI_CRYPT_H
+#define IPMI_CRYPT_H
 
 #include <stdint.h>
 
@@ -101,4 +101,4 @@ int ipmi_crypt_cipher_key_len (unsigned int cipher_algorithm);
 
 int ipmi_crypt_cipher_block_len (unsigned int cipher_algorithm);
 
-#endif
+#endif /* IPMI_CRYPT_H */

@@ -42,8 +42,8 @@
  *  with Ipmi-fru.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _IPMI_FRU_PARSE_COMMON_H
-#define _IPMI_FRU_PARSE_COMMON_H
+#ifndef IPMI_FRU_PARSE_COMMON_H
+#define IPMI_FRU_PARSE_COMMON_H
 
 int ipmi_fru_parse_dump_hex (ipmi_fru_parse_ctx_t ctx,
                              const void *frubuf,
@@ -54,4 +54,4 @@ int ipmi_fru_parse_dump_obj (ipmi_fru_parse_ctx_t ctx,
                              fiid_obj_t obj,
                              const char *debug_hdr);
 
-#endif
+#endif /* IPMI_FRU_PARSE_COMMON_H */

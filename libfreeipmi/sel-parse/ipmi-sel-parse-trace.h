@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_SEL_PARSE_TRACE_H
-#define _IPMI_SEL_PARSE_TRACE_H
+#ifndef IPMI_SEL_PARSE_TRACE_H
+#define IPMI_SEL_PARSE_TRACE_H
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -50,5 +50,4 @@
     __MSG_TRACE (fiid_obj_errormsg ((__obj)), fiid_obj_errnum ((__obj))); \
   } while (0)
 
-#endif /* ipmi-sel-parse-trace.h */
-
+#endif /* IPMI_SEL_PARSE_TRACE_H */

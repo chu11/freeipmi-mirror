@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_DRIVER_TRACE_H
-#define _IPMI_DRIVER_TRACE_H
+#ifndef IPMI_DRIVER_TRACE_H
+#define IPMI_DRIVER_TRACE_H
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -97,5 +97,4 @@
     __ERRNO_TRACE (__errno);                                    \
   } while (0)
 
-#endif /* ipmi-driver-trace.h */
-
+#endif /* IPMI_DRIVER_TRACE_H */

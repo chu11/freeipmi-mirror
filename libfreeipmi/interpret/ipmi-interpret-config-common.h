@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_INTERPRET_CONFIG_COMMON_H
-#define _IPMI_INTERPRET_CONFIG_COMMON_H
+#ifndef IPMI_INTERPRET_CONFIG_COMMON_H
+#define IPMI_INTERPRET_CONFIG_COMMON_H
 
 #include "freeipmi/interpret/ipmi-interpret.h"
 
@@ -50,5 +50,4 @@ int ipmi_interpret_config_parse_manufactuer_id_product_id (conffile_t cf,
                                                            struct ipmi_interpret_config_file_ids ids[IPMI_INTERPRET_CONFIG_FILE_MANUFACTURER_ID_MAX],
                                                            unsigned int *ids_count);
 
-#endif /* ipmi-interpret-config-common.h */
-
+#endif /* IPMI_INTERPRET_CONFIG_COMMON_H */
