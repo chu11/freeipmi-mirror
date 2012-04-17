@@ -9,6 +9,8 @@
 	* Fix inconsistencies with header guards #defines and #endif
 	comments.
 
+	* Rename many macros for safety.
+	
 	* Fix file scope object naming issues.
 
 2012-03-20  Albert Chu <chu11@llnl.gov>
