@@ -24,8 +24,8 @@
  *  with Ipmipower.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _IPMIPOWER_PROMPT_H
-#define _IPMIPOWER_PROMPT_H
+#ifndef IPMIPOWER_PROMPT_H
+#define IPMIPOWER_PROMPT_H
 
 #include "ipmipower.h"
 
@@ -36,4 +36,4 @@
  */
 int ipmipower_prompt_process_cmdline (void);
 
-#endif /* _IPMIPOWER_PROMPT_H */
+#endif /* IPMIPOWER_PROMPT_H */

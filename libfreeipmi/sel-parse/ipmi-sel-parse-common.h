@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_SEL_PARSE_COMMON_H
-#define _IPMI_SEL_PARSE_COMMON_H
+#ifndef IPMI_SEL_PARSE_COMMON_H
+#define IPMI_SEL_PARSE_COMMON_H
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -79,4 +79,4 @@ int sel_parse_get_previous_state_or_severity (ipmi_sel_parse_ctx_t ctx,
                                               uint8_t *previous_offset_from_event_reading_type_code,
                                               uint8_t *offset_from_severity_event_reading_type_code);
 
-#endif /* _IPMI_SEL_PARSE_COMMON_H */
+#endif /* IPMI_SEL_PARSE_COMMON_H */

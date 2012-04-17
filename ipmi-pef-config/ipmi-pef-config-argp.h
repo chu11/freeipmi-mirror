@@ -16,11 +16,11 @@
  * 
  */
 
-#ifndef _IPMI_PEF_CONFIG_ARGP_H
-#define _IPMI_PEF_CONFIG_ARGP_H
+#ifndef IPMI_PEF_CONFIG_ARGP_H
+#define IPMI_PEF_CONFIG_ARGP_H
 
 #include "ipmi-pef-config.h"
 
 void ipmi_pef_config_argp_parse (int argc, char **argv, struct ipmi_pef_config_arguments *cmd_args);
 
-#endif
+#endif /* IPMI_PEF_CONFIG_ARGP_H */

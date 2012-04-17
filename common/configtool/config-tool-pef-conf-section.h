@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _CONFIG_TOOL_PEF_CONF_SECTION_H_
-#define _CONFIG_TOOL_PEF_CONF_SECTION_H_
+#ifndef CONFIG_TOOL_PEF_CONF_SECTION_H
+#define CONFIG_TOOL_PEF_CONF_SECTION_H
 
 #include <freeipmi/freeipmi.h>
 
@@ -144,4 +144,4 @@ config_err_t pef_alert_startup_delay_commit (pstdout_state_t pstate,
                                              ipmi_ctx_t ipmi_ctx,
                                              struct config_arguments *cmd_args);
 
-#endif /* _CONFIG_TOOL_PEF_CONF_SECTION_H_ */
+#endif /* CONFIG_TOOL_PEF_CONF_SECTION_H */

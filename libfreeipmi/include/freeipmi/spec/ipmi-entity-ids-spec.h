@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_ENTITY_IDS_SPEC_H
-#define _IPMI_ENTITY_IDS_SPEC_H
+#ifndef IPMI_ENTITY_IDS_SPEC_H
+#define IPMI_ENTITY_IDS_SPEC_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -132,4 +132,4 @@ extern const char *const ipmi_entity_ids_pretty[];
 }
 #endif
 
-#endif
+#endif /* IPMI_ENTITY_IDS_SPEC_H */

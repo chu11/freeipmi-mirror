@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_SENSORS_OUTPUT_COMMON_H
-#define _IPMI_SENSORS_OUTPUT_COMMON_H
+#ifndef IPMI_SENSORS_OUTPUT_COMMON_H
+#define IPMI_SENSORS_OUTPUT_COMMON_H
 
 #include "ipmi-sensors.h"
 
@@ -87,4 +87,4 @@ int ipmi_sensors_get_sensor_state (ipmi_sensors_state_data_t *state_data,
                                    uint16_t sensor_event_bitmask,
                                    char **sensor_state_str);
 
-#endif
+#endif /* IPMI_SENSORS_OUTPUT_COMMON_H */

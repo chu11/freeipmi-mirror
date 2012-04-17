@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_SENSOR_CMDS_API_H
-#define _IPMI_SENSOR_CMDS_API_H
+#ifndef IPMI_SENSOR_CMDS_API_H
+#define IPMI_SENSOR_CMDS_API_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -206,4 +206,4 @@ int ipmi_cmd_set_sensor_reading_and_event_status (ipmi_ctx_t ctx,
 }
 #endif
 
-#endif /* ipmi-sensor-cmds-api.h */
+#endif /* IPMI_SENSOR_CMDS_API_H */

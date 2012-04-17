@@ -16,11 +16,11 @@
  * 
  */
 
-#ifndef _IPMI_OEM_IBM_H
-#define _IPMI_OEM_IBM_H
+#ifndef IPMI_OEM_IBM_H
+#define IPMI_OEM_IBM_H
 
 #include "ipmi-oem.h"
 
 int ipmi_oem_ibm_get_led (ipmi_oem_state_data_t *state_data);
 
-#endif
+#endif /* IPMI_OEM_IBM_H */

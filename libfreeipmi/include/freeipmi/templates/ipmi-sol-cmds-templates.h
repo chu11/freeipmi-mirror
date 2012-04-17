@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_SOL_CMDS_TEMPLATES_H
-#define _IPMI_SOL_CMDS_TEMPLATES_H
+#ifndef IPMI_SOL_CMDS_TEMPLATES_H
+#define IPMI_SOL_CMDS_TEMPLATES_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -314,4 +314,4 @@ FIID Template: tmpl_cmd_get_sol_configuration_parameters_sol_payload_port_number
 }
 #endif
 
-#endif  /* _IPMI_SOL_CMDS_TEMPLATES_H */
+#endif /* IPMI_SOL_CMDS_TEMPLATES_H */

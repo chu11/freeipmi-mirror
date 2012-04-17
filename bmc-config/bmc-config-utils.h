@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _BMC_CONFIG_UTILS_H
-#define _BMC_CONFIG_UTILS_H
+#ifndef BMC_CONFIG_UTILS_H
+#define BMC_CONFIG_UTILS_H
 
 #include "bmc-config.h"
 
@@ -39,4 +39,4 @@ config_err_t get_sol_channel_number (bmc_config_state_data_t *state_data,
 				     const char *section_name,
 				     uint8_t *channel_number);
 
-#endif
+#endif /* BMC_CONFIG_UTILS_H */

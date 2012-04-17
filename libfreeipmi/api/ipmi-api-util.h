@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_API_UTIL_H
-#define _IPMI_API_UTIL_H
+#ifndef IPMI_API_UTIL_H
+#define IPMI_API_UTIL_H
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -67,5 +67,4 @@ int api_ipmi_cmd_ipmb (ipmi_ctx_t ctx,
                        fiid_obj_t obj_cmd_rq,
                        fiid_obj_t obj_cmd_rs);
 
-#endif /* ipmi-api-util.h */
-
+#endif /* IPMI_API_UTIL_H */

@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _CONFIG_TOOL_COMMON_H_
-#define _CONFIG_TOOL_COMMON_H_
+#ifndef CONFIG_TOOL_COMMON_H
+#define CONFIG_TOOL_COMMON_H
 
 #include <stdio.h>
 
@@ -193,4 +193,4 @@ struct config_section {
   struct config_section *next;
 };
 
-#endif /* _CONFIG_TOOL_COMMON_H_ */
+#endif /* CONFIG_TOOL_COMMON_H */

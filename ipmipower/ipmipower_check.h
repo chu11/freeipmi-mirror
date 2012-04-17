@@ -24,8 +24,8 @@
  *  with Ipmipower.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _IPMIPOWER_CHECKS_H
-#define _IPMIPOWER_CHECKS_H
+#ifndef IPMIPOWER_CHECKS_H
+#define IPMIPOWER_CHECKS_H
 
 #include "ipmipower.h"
 
@@ -167,4 +167,4 @@ int ipmipower_check_payload_pad (ipmipower_powercmd_t ip,
 int ipmipower_check_integrity_pad (ipmipower_powercmd_t ip,
 				   ipmipower_packet_type_t pkt);
 
-#endif /* _IPMIPOWER_CHECKS_H */
+#endif /* IPMIPOWER_CHECKS_H */

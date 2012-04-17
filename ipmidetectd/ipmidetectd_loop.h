@@ -24,9 +24,9 @@
  *  with Ipmidetect.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _IPMIDETECTD_LOOP_H
-#define _IPMIDETECTD_LOOP_H 1
+#ifndef IPMIDETECTD_LOOP_H
+#define IPMIDETECTD_LOOP_H
 
 void ipmidetectd_loop (void);
 
-#endif /* _IPMIDETECTD_LOOP_H */
+#endif /* IPMIDETECTD_LOOP_H */

@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_EVENT_CMDS_TEMPLATES_H
-#define _IPMI_EVENT_CMDS_TEMPLATES_H
+#ifndef IPMI_EVENT_CMDS_TEMPLATES_H
+#define IPMI_EVENT_CMDS_TEMPLATES_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -122,4 +122,4 @@ FIID Template: tmpl_cmd_platform_event_rs
 }
 #endif
 
-#endif  /* _IPMI_EVENT_CMDS_TEMPLATES_H */
+#endif /* IPMI_EVENT_CMDS_TEMPLATES_H */

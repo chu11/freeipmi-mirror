@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _TOOL_HOSTRANGE_COMMON_H
-#define _TOOL_HOSTRANGE_COMMON_H
+#ifndef TOOL_HOSTRANGE_COMMON_H
+#define TOOL_HOSTRANGE_COMMON_H
 
 /* Returns number of hosts setup for, -1 on error */
 int pstdout_setup (char **hosts,
@@ -27,4 +27,4 @@ int pstdout_setup (char **hosts,
                    int eliminate,
                    int always_prefix);
 
-#endif /* _TOOL_HOSTRANGE_COMMON_H */
+#endif /* TOOL_HOSTRANGE_COMMON_H */

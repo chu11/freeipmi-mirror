@@ -17,8 +17,8 @@
  */
 
 
-#ifndef _IPMI_RMCPPLUS_STATUS_SPEC_H
-#define _IPMI_RMCPPLUS_STATUS_SPEC_H
+#ifndef IPMI_RMCPPLUS_STATUS_SPEC_H
+#define IPMI_RMCPPLUS_STATUS_SPEC_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -113,5 +113,4 @@ extern "C" {
 }
 #endif
 
-#endif /* _IPMI_RMCPPLUS_STATUS_SPEC_H */
-
+#endif /* IPMI_RMCPPLUS_STATUS_SPEC_H */

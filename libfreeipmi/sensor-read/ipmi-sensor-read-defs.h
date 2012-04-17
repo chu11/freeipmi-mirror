@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_SENSOR_READ_DEFS_H
-#define _IPMI_SENSOR_READ_DEFS_H
+#ifndef IPMI_SENSOR_READ_DEFS_H
+#define IPMI_SENSOR_READ_DEFS_H
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -52,4 +52,4 @@ struct ipmi_sensor_read_ctx {
   ipmi_sdr_parse_ctx_t sdr_parse_ctx;
 };
 
-#endif /* _IPMI_SENSOR_READ_DEFS_H */
+#endif /* IPMI_SENSOR_READ_DEFS_H */

@@ -24,8 +24,8 @@
  *  with Ipmimonitoring.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _IPMI_MONITORING_BITMASKS_H
-#define _IPMI_MONITORING_BITMASKS_H
+#ifndef IPMI_MONITORING_BITMASKS_H
+#define IPMI_MONITORING_BITMASKS_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -527,4 +527,4 @@ enum ipmi_monitoring_sensor_bitmask_fru_state
 }
 #endif
 
-#endif /* _IPMI_MONITORING_BITMASKS_H */
+#endif /* IPMI_MONITORING_BITMASKS_H */

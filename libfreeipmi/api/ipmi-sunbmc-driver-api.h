@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_SUNBMC_DRIVER_API_H
-#define _IPMI_SUNBMC_DRIVER_API_H 1
+#ifndef IPMI_SUNBMC_DRIVER_API_H
+#define IPMI_SUNBMC_DRIVER_API_H
 
 #include <stdint.h>
 #include <freeipmi/api/ipmi-api.h>
@@ -33,5 +33,4 @@ int ipmi_sunbmc_cmd_raw_api (ipmi_ctx_t ctx,
                              void *buf_rs,
                              unsigned int buf_rs_len);
 
-#endif /* ipmi-sunbmc-driver-api.h */
-
+#endif /* IPMI_SUNBMC_DRIVER_API_H */

@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_OEM_INTEL_NODE_MANAGER_CMDS_API_H
-#define _IPMI_OEM_INTEL_NODE_MANAGER_CMDS_API_H
+#ifndef IPMI_OEM_INTEL_NODE_MANAGER_CMDS_API_H
+#define IPMI_OEM_INTEL_NODE_MANAGER_CMDS_API_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -249,4 +249,4 @@ int ipmi_cmd_oem_intel_node_manager_get_node_manager_alert_destination (ipmi_ctx
 }
 #endif
 
-#endif
+#endif /* IPMI_OEM_INTEL_NODE_MANAGER_CMDS_API_H */

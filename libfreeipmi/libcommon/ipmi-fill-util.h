@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_FILL_UTIL_H
-#define _IPMI_FILL_UTIL_H 1
+#ifndef IPMI_FILL_UTIL_H
+#define IPMI_FILL_UTIL_H
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -58,4 +58,4 @@
       }                                                                     \
   } while (0)
 
-#endif /* ipmi-fill-util.h */
+#endif /* IPMI_FILL_UTIL_H */

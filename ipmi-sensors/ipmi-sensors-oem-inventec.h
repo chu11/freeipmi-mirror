@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_SENSORS_OEM_INVENTEC_H
-#define _IPMI_SENSORS_OEM_INVENTEC_H
+#ifndef IPMI_SENSORS_OEM_INVENTEC_H
+#define IPMI_SENSORS_OEM_INVENTEC_H
 
 #include "ipmi-sensors.h"
 
@@ -32,4 +32,4 @@ int ipmi_sensors_oem_inventec_output_oem_record (ipmi_sensors_state_data_t *stat
 						 const uint8_t *oem_data,
 						 unsigned int oem_data_len);
 
-#endif
+#endif /* IPMI_SENSORS_OEM_INVENTEC_H */

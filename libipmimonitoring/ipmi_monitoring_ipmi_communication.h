@@ -24,8 +24,8 @@
  *  with Ipmimonitoring.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _IPMI_MONITORING_IPMI_COMMUNICATION_H
-#define _IPMI_MONITORING_IPMI_COMMUNICATION_H
+#ifndef IPMI_MONITORING_IPMI_COMMUNICATION_H
+#define IPMI_MONITORING_IPMI_COMMUNICATION_H
 
 #include <freeipmi/freeipmi.h>
 
@@ -39,4 +39,4 @@ void ipmi_monitoring_ipmi_ctx_error_convert (ipmi_monitoring_ctx_t c);
 
 int ipmi_monitoring_ipmi_communication_cleanup (ipmi_monitoring_ctx_t c);
 
-#endif /* _IPMI_MONITORING_IPMI_COMMUNICATION_H */
+#endif /* IPMI_MONITORING_IPMI_COMMUNICATION_H */

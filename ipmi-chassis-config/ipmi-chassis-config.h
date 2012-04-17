@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_CHASSIS_CONFIG_H
-#define _IPMI_CHASSIS_CONFIG_H
+#ifndef IPMI_CHASSIS_CONFIG_H
+#define IPMI_CHASSIS_CONFIG_H
 
 #include <stdint.h>
 #include <freeipmi/freeipmi.h>
@@ -66,4 +66,4 @@ typedef struct ipmi_chassis_config_state_data
   uint8_t front_panel_enable_power_off_button_for_power_off_only;
 } ipmi_chassis_config_state_data_t;
 
-#endif
+#endif /* IPMI_CHASSIS_CONFIG_H */

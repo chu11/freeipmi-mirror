@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_FRU_PARSE_UTIL_H
-#define _IPMI_FRU_PARSE_UTIL_H
+#ifndef IPMI_FRU_PARSE_UTIL_H
+#define IPMI_FRU_PARSE_UTIL_H
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -40,5 +40,4 @@ void fru_parse_set_fru_parse_errnum_by_errno (ipmi_fru_parse_ctx_t ctx, int __er
 
 void fru_parse_set_fru_parse_errnum_by_fiid_object (ipmi_fru_parse_ctx_t ctx, fiid_obj_t obj);
 
-#endif /* ipmi-fru-parse-util.h */
-
+#endif /* IPMI_FRU_PARSE_UTIL_H */

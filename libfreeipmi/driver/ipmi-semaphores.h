@@ -23,8 +23,8 @@
   release it. --Anand Babu
 */
 
-#ifndef _IPMI_SEMAPHORES_H
-#define _IPMI_SEMAPHORES_H      1
+#ifndef IPMI_SEMAPHORES_H
+#define IPMI_SEMAPHORES_H
 
 #include <sys/types.h>
 #include <sys/ipc.h>
@@ -51,4 +51,4 @@ int ipmi_mutex_lock_interruptible (int semid);
 
 int ipmi_mutex_unlock (int semid);
 
-#endif /* ipmi-semaphores.h */
+#endif /* IPMI_SEMAPHORES_H */

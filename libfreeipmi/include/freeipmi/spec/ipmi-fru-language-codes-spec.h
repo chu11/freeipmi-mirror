@@ -40,8 +40,8 @@
  *  with Ipmi-fru.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _IPMI_FRU_LANGUAGE_CODES_SPEC_H
-#define _IPMI_FRU_LANGUAGE_CODES_SPEC_H
+#ifndef IPMI_FRU_LANGUAGE_CODES_SPEC_H
+#define IPMI_FRU_LANGUAGE_CODES_SPEC_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -205,4 +205,4 @@ extern const char *const ipmi_fru_language_codes[];
 }
 #endif
 
-#endif /* _IPMI_FRU_LANGUAGE_CODES_SPEC_H */
+#endif /* IPMI_FRU_LANGUAGE_CODES_SPEC_H */

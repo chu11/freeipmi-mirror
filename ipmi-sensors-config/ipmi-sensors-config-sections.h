@@ -16,11 +16,11 @@
  * 
  */
 
-#ifndef _IPMI_SENSORS_CONFIG_SECTIONS
-#define _IPMI_SENSORS_CONFIG_SECTIONS
+#ifndef IPMI_SENSORS_CONFIG_SECTIONS_H
+#define IPMI_SENSORS_CONFIG_SECTIONS_H
 
 #include "ipmi-sensors-config.h"
 
 struct config_section *ipmi_sensors_config_sections_create (ipmi_sensors_config_state_data_t *state_data);
 
-#endif /* _IPMI_SENSORS_CONFIG_SECTIONS */
+#endif /* IPMI_SENSORS_CONFIG_SECTIONS_H */

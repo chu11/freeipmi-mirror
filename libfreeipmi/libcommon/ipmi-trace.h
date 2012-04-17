@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_ERR_WRAPPERS_H
-#define _IPMI_ERR_WRAPPERS_H
+#ifndef IPMI_TRACE_H
+#define IPMI_TRACE_H
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -37,7 +37,7 @@
 #define ERR_WRAPPER_STR_MAX_LEN 4096
 
 #if defined (IPMI_TRACE)
-#define __MSG_TRACE(__msgtracestr, __msgtracenum)       \
+#define TRACE_MSG_OUT(__msgtracestr, __msgtracenum)       \
   do {                                                  \
     fprintf (stderr,                                    \
              "%s: %d: %s: error '%s' (%d)\n",           \
@@ -46,7 +46,7 @@
     fflush (stderr);                                    \
   } while (0)
 
-#define __ERRNO_TRACE(__errno_orig)                                     \
+#define TRACE_ERRNO_OUT(__errno_orig)                                     \
   do {                                                                  \
     extern int errno;                                                   \
     int __save_errno = __errno_orig;                                    \
@@ -60,38 +60,37 @@
     fflush (stderr);                                                    \
     __errno_orig = __save_errno;                                        \
   } while (0)
-#else
-#define __MSG_TRACE(__msgtracestr, __msgtracenum)
-#define __ERRNO_TRACE(__errno_orig)
-#endif /* IPMI_TRACE */
+#else /* !IPMI_TRACE */
+#define TRACE_MSG_OUT(__msgtracestr, __msgtracenum)
+#define TRACE_ERRNO_OUT(__errno_orig)
+#endif /* !IPMI_TRACE */
 
 #define ERR_TRACE(__str, __num)                 \
   do {                                          \
-    __MSG_TRACE (__str, __num);                 \
+    TRACE_MSG_OUT (__str, __num);               \
   } while (0)
 
 #define SET_ERRNO(__errno)                      \
   do {                                          \
     errno = (__errno);                          \
-    __ERRNO_TRACE (errno);                      \
+    TRACE_ERRNO_OUT (errno);                    \
   } while (0)
 
 #define ERRNO_TRACE(__errno)                    \
   do {                                          \
-    __ERRNO_TRACE (__errno);                    \
+    TRACE_ERRNO_OUT (__errno);                  \
   } while (0)
 
-#define FIID_OBJECT_ERROR_TO_ERRNO(__obj)                                 \
-  do {                                                                    \
-    set_errno_by_fiid_object ((__obj));                                   \
-    __MSG_TRACE (fiid_obj_errormsg ((__obj)), fiid_obj_errnum ((__obj))); \
+#define FIID_OBJECT_ERROR_TO_ERRNO(__obj)                                   \
+  do {                                                                      \
+    set_errno_by_fiid_object ((__obj));                                     \
+    TRACE_MSG_OUT (fiid_obj_errormsg ((__obj)), fiid_obj_errnum ((__obj))); \
   } while (0)
 
-#define FIID_ITERATOR_ERROR_TO_ERRNO(__iter)                                          \
-  do {                                                                                \
-    set_errno_by_fiid_iterator ((__iter));                                            \
-    __MSG_TRACE (fiid_iterator_errormsg ((__iter)), fiid_iterator_errnum ((__iter))); \
+#define FIID_ITERATOR_ERROR_TO_ERRNO(__iter)                                            \
+  do {                                                                                  \
+    set_errno_by_fiid_iterator ((__iter));                                              \
+    TRACE_MSG_OUT (fiid_iterator_errormsg ((__iter)), fiid_iterator_errnum ((__iter))); \
   } while (0)
 
-#endif /* ipmi-trace.h */
-
+#endif /* IPMI_TRACE_H */

@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_OEM_INTEL_NODE_MANAGER_CMDS_TEMPLATES_H
-#define _IPMI_OEM_INTEL_NODE_MANAGER_CMDS_TEMPLATES_H
+#ifndef IPMI_OEM_INTEL_NODE_MANAGER_CMDS_TEMPLATES_H
+#define IPMI_OEM_INTEL_NODE_MANAGER_CMDS_TEMPLATES_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -556,4 +556,4 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_alert_destinatio
 }
 #endif
 
-#endif  /* _IPMI_OEM_CMDS_TEMPLATES_H */
+#endif /* IPMI_OEM_CMDS_TEMPLATES_H */

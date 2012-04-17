@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_SENSORS_OEM_INTEL_NODE_MANAGER_H
-#define _IPMI_SENSORS_OEM_INTEL_NODE_MANAGER_H
+#ifndef IPMI_SENSORS_OEM_INTEL_NODE_MANAGER_H
+#define IPMI_SENSORS_OEM_INTEL_NODE_MANAGER_H
 
 #include "ipmi-sensors.h"
 
@@ -44,4 +44,4 @@ int ipmi_sensors_oem_intel_node_manager_output_oem_record (ipmi_sensors_state_da
 							   const void *sdr_record,
 							   unsigned int sdr_record_len);
 
-#endif
+#endif /* IPMI_SENSORS_OEM_INTEL_NODE_MANAGER_H */

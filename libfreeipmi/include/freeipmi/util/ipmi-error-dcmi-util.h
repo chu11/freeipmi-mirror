@@ -39,8 +39,8 @@
  *  with Ipmi-Dcmi.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _IPMI_ERROR_DCMI_UTIL_H
-#define _IPMI_ERROR_DCMI_UTIL_H
+#ifndef IPMI_ERROR_DCMI_UTIL_H
+#define IPMI_ERROR_DCMI_UTIL_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -67,5 +67,4 @@ int ipmi_completion_code_dcmi_strerror_cmd_r (fiid_obj_t obj_cmd,
 }
 #endif
 
-#endif /* ipmi-error-dcmi-util.h */
-
+#endif /* IPMI_ERROR_DCMI_UTIL_H */

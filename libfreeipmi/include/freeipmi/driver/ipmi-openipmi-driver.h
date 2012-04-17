@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_OPENIPMI_DRIVER_H
-#define _IPMI_OPENIPMI_DRIVER_H 1
+#ifndef IPMI_OPENIPMI_DRIVER_H
+#define IPMI_OPENIPMI_DRIVER_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -78,5 +78,4 @@ int ipmi_openipmi_cmd_ipmb (ipmi_openipmi_ctx_t ctx,
 }
 #endif
 
-#endif /* ipmi-openipmi-driver.h */
-
+#endif /* IPMI_OPENIPMI_DRIVER_H */

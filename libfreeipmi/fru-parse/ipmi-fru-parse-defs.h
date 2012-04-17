@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_FRU_PARSE_DEFS_H
-#define _IPMI_FRU_PARSE_DEFS_H
+#ifndef IPMI_FRU_PARSE_DEFS_H
+#define IPMI_FRU_PARSE_DEFS_H
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -60,4 +60,4 @@ struct ipmi_fru_parse_ctx {
   unsigned int multirecord_area_offset_in_bytes;
 };
 
-#endif /* _IPMI_FRU_PARSE_DEFS_H */
+#endif /* IPMI_FRU_PARSE_DEFS_H */

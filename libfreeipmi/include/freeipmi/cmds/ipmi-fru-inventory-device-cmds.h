@@ -40,8 +40,8 @@
  *  with Ipmi-fru.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _IPMI_FRU_INVENTORY_DEVICE_CMDS_H
-#define _IPMI_FRU_INVENTORY_DEVICE_CMDS_H
+#ifndef IPMI_FRU_INVENTORY_DEVICE_CMDS_H
+#define IPMI_FRU_INVENTORY_DEVICE_CMDS_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -91,4 +91,4 @@ int fill_cmd_write_fru_data (uint8_t fru_device_id,
 }
 #endif
 
-#endif /* _IPMI_FRU_INVENTORY_DEVICE_CMDS_H */
+#endif /* IPMI_FRU_INVENTORY_DEVICE_CMDS_H */

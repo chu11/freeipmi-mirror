@@ -40,8 +40,8 @@
  *  with Ipmi-fru.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _IPMI_FRU_INFORMATION_RECORD_FORMAT_H
-#define _IPMI_FRU_INFORMATION_RECORD_FORMAT_H
+#ifndef IPMI_FRU_INFORMATION_RECORD_FORMAT_H
+#define IPMI_FRU_INFORMATION_RECORD_FORMAT_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -136,4 +136,4 @@ extern fiid_template_t tmpl_fru_oem_record;
 }
 #endif
 
-#endif /* _IPMI_FRU_INFORMATION_RECORD_FORMAT_H */
+#endif /* IPMI_FRU_INFORMATION_RECORD_FORMAT_H */

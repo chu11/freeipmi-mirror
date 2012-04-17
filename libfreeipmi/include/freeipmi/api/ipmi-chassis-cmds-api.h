@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_CHASSIS_CMDS_API_H
-#define _IPMI_CHASSIS_CMDS_API_H
+#ifndef IPMI_CHASSIS_CMDS_API_H
+#define IPMI_CHASSIS_CMDS_API_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -186,4 +186,4 @@ int ipmi_cmd_get_power_on_hours_counter (ipmi_ctx_t ctx,
 }
 #endif
 
-#endif
+#endif /* IPMI_CHASSIS_CMDS_API_H */

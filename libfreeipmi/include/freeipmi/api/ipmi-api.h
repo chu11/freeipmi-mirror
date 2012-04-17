@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_API_H
-#define _IPMI_API_H
+#ifndef IPMI_API_H
+#define IPMI_API_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -265,4 +265,4 @@ void ipmi_ctx_destroy (ipmi_ctx_t ctx);
 }
 #endif
 
-#endif /* _IPMI_API_H */
+#endif /* IPMI_API_H */

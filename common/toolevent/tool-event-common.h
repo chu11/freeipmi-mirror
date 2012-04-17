@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _TOOL_EVENT_COMMON_H
-#define _TOOL_EVENT_COMMON_H
+#ifndef TOOL_EVENT_COMMON_H
+#define TOOL_EVENT_COMMON_H
 
 #include <stdio.h>
 #include <stdint.h>
@@ -129,4 +129,4 @@ int event_output_event (pstdout_state_t pstate,
 int event_output_not_available_event (pstdout_state_t pstate,
 				      int comma_separated_output);
 
-#endif
+#endif /* TOOL_EVENT_COMMON_H */

@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_SEL_H
-#define _IPMI_SEL_H
+#ifndef IPMI_SEL_H
+#define IPMI_SEL_H
 
 #include <freeipmi/freeipmi.h>
 
@@ -146,4 +146,4 @@ typedef struct ipmi_sel_state_data
   uint16_t last_record_id;
 } ipmi_sel_state_data_t;
 
-#endif
+#endif /* IPMI_SEL_H */

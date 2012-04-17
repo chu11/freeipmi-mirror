@@ -17,8 +17,8 @@
 
 */
 
-#ifndef _IPMI_SEL_PARSE_STRING_FUJITSU_H
-#define _IPMI_SEL_PARSE_STRING_FUJITSU_H
+#ifndef IPMI_SEL_PARSE_STRING_FUJITSU_H
+#define IPMI_SEL_PARSE_STRING_FUJITSU_H
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -68,4 +68,4 @@ int ipmi_sel_parse_output_fujitsu_oem_string (ipmi_sel_parse_ctx_t ctx,
                                               unsigned int *wlen,
                                               int *oem_rv);
 
-#endif /* _IPMI_SEL_PARSE_STRING_FUJITSU_H */
+#endif /* IPMI_SEL_PARSE_STRING_FUJITSU_H */

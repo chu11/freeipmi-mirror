@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_PEF_CONFIG_H
-#define _IPMI_PEF_CONFIG_H
+#ifndef IPMI_PEF_CONFIG_H
+#define IPMI_PEF_CONFIG_H
 
 #include <stdint.h>
 #include <freeipmi/freeipmi.h>
@@ -77,4 +77,4 @@ typedef struct ipmi_pef_config_state_data
   unsigned int lan_channel_numbers_loaded;
 } ipmi_pef_config_state_data_t;
 
-#endif
+#endif /* IPMI_PEF_CONFIG_H */

@@ -39,8 +39,8 @@
  *  with Ipmi-Dcmi.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _IPMI_DCMI_CMDS_API_H
-#define _IPMI_DCMI_CMDS_API_H
+#ifndef IPMI_DCMI_CMDS_API_H
+#define IPMI_DCMI_CMDS_API_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -207,4 +207,4 @@ int ipmi_cmd_dcmi_get_temperature_reading (ipmi_ctx_t ctx,
 }
 #endif
 
-#endif /* ipmi-dcmi-cmds-api.h */
+#endif /* IPMI_DCMI_CMDS_API_H */

@@ -54,8 +54,8 @@
 
 #include "scbuf.h"
 
-#ifndef _IPMICONSOLE_DEFS_H
-#define _IPMICONSOLE_DEFS_H
+#ifndef IPMICONSOLE_DEFS_H
+#define IPMICONSOLE_DEFS_H
 
 #ifndef MAXHOSTNAMELEN
 #define MAXHOSTNAMELEN 64
@@ -530,4 +530,4 @@ struct ipmiconsole_ctx {
   unsigned int session_submitted;
 };
 
-#endif /* _IPMICONSOLE_DEFS_H */
+#endif /* IPMICONSOLE_DEFS_H */

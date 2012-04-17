@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_RAW_H
-#define _IPMI_RAW_H
+#ifndef IPMI_RAW_H
+#define IPMI_RAW_H
 
 #include <freeipmi/freeipmi.h>
 
@@ -60,4 +60,4 @@ typedef struct ipmi_raw_state_data
   pstdout_state_t pstate;
 } ipmi_raw_state_data_t;
 
-#endif
+#endif /* IPMI_RAW_H */

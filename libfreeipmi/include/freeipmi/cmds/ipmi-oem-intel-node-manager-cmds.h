@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_OEM_INTEL_NODE_MANAGER_CMDS_H
-#define _IPMI_OEM_INTEL_NODE_MANAGER_CMDS_H
+#ifndef IPMI_OEM_INTEL_NODE_MANAGER_CMDS_H
+#define IPMI_OEM_INTEL_NODE_MANAGER_CMDS_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -367,4 +367,5 @@ int fill_cmd_oem_intel_node_manager_get_node_manager_alert_destination (fiid_obj
 #ifdef __cplusplus
 }
 #endif
-#endif
+
+#endif /* IPMI_OEM_INTEL_NODE_MANAGER_CMDS_H */

@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_CMD_OEM_SPEC_H
-#define _IPMI_CMD_OEM_SPEC_H
+#ifndef IPMI_CMD_OEM_SPEC_H
+#define IPMI_CMD_OEM_SPEC_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -258,4 +258,4 @@ extern "C" {
 }
 #endif
 
-#endif /* ipmi-cmd-spec.h */
+#endif /* IPMI_CMD_OEM_SPEC_H */

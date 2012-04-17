@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_LAN_INTERFACE_API_H
-#define _IPMI_LAN_INTERFACE_API_H       1
+#ifndef IPMI_LAN_INTERFACE_API_H
+#define IPMI_LAN_INTERFACE_API_H
 
 #include <stdint.h>
 #include <freeipmi/api/ipmi-api.h>
@@ -63,6 +63,4 @@ int ipmi_lan_2_0_cmd_raw_ipmb (ipmi_ctx_t ctx,
 			       void *buf_rs,
 			       unsigned int buf_rs_len);
 
-#endif /* ipmi-lan-interface.h */
-
-
+#endif /* IPMI_LAN_INTERFACE_API_H */

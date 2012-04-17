@@ -24,11 +24,11 @@
  *  with Ipmipower.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _IPMIPOWER_ARGP_H
-#define _IPMIPOWER_ARGP_H
+#ifndef IPMIPOWER_ARGP_H
+#define IPMIPOWER_ARGP_H
 
 #include "ipmipower.h"
 
 void ipmipower_argp_parse (int argc, char **argv, struct ipmipower_arguments *cmd_args);
 
-#endif /* _IPMIPOWER_ARGP_H */
+#endif /* IPMIPOWER_ARGP_H */

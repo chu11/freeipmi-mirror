@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_IPMB_UTIL_H
-#define _IPMI_IPMB_UTIL_H       1
+#ifndef IPMI_IPMB_UTIL_H
+#define IPMI_IPMB_UTIL_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -39,6 +39,4 @@ int ipmi_ipmb_check_checksum (uint8_t rq_addr,
 }
 #endif
 
-#endif /* ipmi-ipmb-util.h */
-
-
+#endif /* IPMI_IPMB_UTIL_H */

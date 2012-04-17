@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _RMCP_INTERFACE_TEMPLATES_H
-#define _RMCP_INTERFACE_TEMPLATES_H
+#ifndef RMCP_INTERFACE_TEMPLATES_H
+#define RMCP_INTERFACE_TEMPLATES_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -74,4 +74,4 @@ FIID Template: tmpl_rmcp_hdr
 }
 #endif
 
-#endif  /* _RMCP_INTERFACE_TEMPLATES_H */
+#endif /* RMCP_INTERFACE_TEMPLATES_H */

@@ -16,9 +16,8 @@
  * 
  */
 
-
-#ifndef _BMC_CONFIG_LAN_CONF_SECTION_H_
-#define _BMC_CONFIG_LAN_CONF_SECTION_H_
+#ifndef BMC_CONFIG_LAN_CONF_SECTION_H
+#define BMC_CONFIG_LAN_CONF_SECTION_H
 
 #include "bmc-config.h"
 
@@ -26,4 +25,4 @@ struct config_section * bmc_config_lan_conf_section_get (bmc_config_state_data_t
                                                          unsigned int config_flags,
                                                          int channel_index);
 
-#endif /* _BMC_CONFIG_LAN_CONF_SECTION_H_ */
+#endif /* BMC_CONFIG_LAN_CONF_SECTION_H */

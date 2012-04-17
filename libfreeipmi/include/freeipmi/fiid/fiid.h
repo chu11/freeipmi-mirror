@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _FIID_H
-#define _FIID_H 1
+#ifndef FIID_H
+#define FIID_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -748,6 +748,4 @@ int fiid_iterator_get_data (fiid_iterator_t iter,
 }
 #endif
 
-#endif /* fiid.h */
-
-
+#endif /* FIID_H */

@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_FRU_PARSE_H
-#define _IPMI_FRU_PARSE_H
+#ifndef IPMI_FRU_PARSE_H
+#define IPMI_FRU_PARSE_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -284,4 +284,4 @@ int ipmi_fru_parse_type_length_field_to_string (ipmi_fru_parse_ctx_t ctx,
 }
 #endif
 
-#endif /* _IPMI_FRU_PARSE_H */
+#endif /* IPMI_FRU_PARSE_H */

@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _CONFIG_TOOL_SECTION_H_
-#define _CONFIG_TOOL_SECTION_H_
+#ifndef CONFIG_TOOL_SECTION_H
+#define CONFIG_TOOL_SECTION_H
 
 #include "config-tool-common.h"
 #include "pstdout.h"
@@ -111,4 +111,4 @@ int config_sections_insert_keyvalues (pstdout_state_t pstate,
 config_err_t config_output_sections_list (pstdout_state_t pstate,
                                           struct config_section *sections);
 
-#endif /* _CONFIG_TOOL_SECTION_H_ */
+#endif /* CONFIG_TOOL_SECTION_H */

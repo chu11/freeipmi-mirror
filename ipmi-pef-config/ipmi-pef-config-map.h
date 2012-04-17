@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_PEF_CONFIG_MAP_H
-#define _IPMI_PEF_CONFIG_MAP_H
+#ifndef IPMI_PEF_CONFIG_MAP_H
+#define IPMI_PEF_CONFIG_MAP_H
 
 int alert_destination_type_number (const char *source);
 
@@ -43,4 +43,4 @@ int sensor_type_number (const char *source);
 
 char *sensor_type_string (uint8_t source);
 
-#endif
+#endif /* IPMI_PEF_CONFIG_MAP_H */

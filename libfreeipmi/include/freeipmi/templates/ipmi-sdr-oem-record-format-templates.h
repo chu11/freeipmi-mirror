@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_SDR_OEM_RECORD_FORMAT_TEMPLATES_H
-#define _IPMI_SDR_OEM_RECORD_FORMAT_TEMPLATES_H
+#ifndef IPMI_SDR_OEM_RECORD_FORMAT_TEMPLATES_H
+#define IPMI_SDR_OEM_RECORD_FORMAT_TEMPLATES_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -107,4 +107,4 @@ FIID Template: tmpl_sdr_oem_intel_node_manager_record
 }
 #endif
 
-#endif  /* _IPMI_SDR_OEM_RECORD_FORMAT_TEMPLATES_H */
+#endif /* IPMI_SDR_OEM_RECORD_FORMAT_TEMPLATES_H */

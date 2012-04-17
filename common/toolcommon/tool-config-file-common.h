@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _TOOL_CONFIG_FILE_COMMON_H
-#define _TOOL_CONFIG_FILE_COMMON_H
+#ifndef TOOL_CONFIG_FILE_COMMON_H
+#define TOOL_CONFIG_FILE_COMMON_H
 
 #if HAVE_CONFIG_H
 #include "config.h"
@@ -295,4 +295,4 @@ int config_file_parse (const char *filename,
                        unsigned int tool_support,
                        void *tool_data);
 
-#endif
+#endif /* TOOL_CONFIG_FILE_COMMON_H */

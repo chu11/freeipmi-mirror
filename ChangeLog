@@ -1,5 +1,24 @@
 2012-03-20  Albert Chu <chu11@llnl.gov>
 
+	Merge reservedmacros branch.
+
+	Fix bug #36177: reserved identifier violation.
+
+	See https://www.securecoding.cert.org/confluence/display/seccode/DCL37-C.+Do+not+declare+or+define+a+reserved+identifier
+
+	* Rename many header guards for compliance.
+
+	* Fix inconsistencies with header guards #defines and #endif
+	comments.
+
+	* Rename many macros for safety.
+	
+	* Fix file scope object naming issues.
+
+	* Make some variables static that should be file local. 
+
+2012-03-20  Albert Chu <chu11@llnl.gov>
+
 	Merge intels5000pal branch.
 
 	* libfreeipmi/interpret/: Support sensor Session Audit

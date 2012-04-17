@@ -16,13 +16,12 @@
  * 
  */
 
-
-#ifndef _BMC_CONFIG_PEF_CONF_SECTION_H_
-#define _BMC_CONFIG_PEF_CONF_SECTION_H_
+#ifndef BMC_CONFIG_PEF_CONF_SECTION_H
+#define BMC_CONFIG_PEF_CONF_SECTION_H
 
 #include "bmc-config.h"
 #include "bmc-config-sections.h"
 
 struct config_section * bmc_config_pef_conf_section_get (bmc_config_state_data_t *state_data);
 
-#endif /* _BMC_CONFIG_PEF_CONF_SECTION_H_ */
+#endif /* BMC_CONFIG_PEF_CONF_SECTION_H */

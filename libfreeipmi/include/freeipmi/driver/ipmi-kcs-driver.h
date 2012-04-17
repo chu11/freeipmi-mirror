@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_KCS_DRIVER_H
-#define _IPMI_KCS_DRIVER_H 1
+#ifndef IPMI_KCS_DRIVER_H
+#define IPMI_KCS_DRIVER_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -95,5 +95,4 @@ int ipmi_kcs_cmd (ipmi_kcs_ctx_t ctx,
 }
 #endif
 
-#endif /* ipmi-kcs-driver.h */
-
+#endif /* IPMI_KCS_DRIVER_H */

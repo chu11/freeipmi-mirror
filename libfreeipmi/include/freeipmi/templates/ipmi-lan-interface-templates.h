@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_LAN_INTERFACE_TEMPLATES_H
-#define _IPMI_LAN_INTERFACE_TEMPLATES_H
+#ifndef IPMI_LAN_INTERFACE_TEMPLATES_H
+#define IPMI_LAN_INTERFACE_TEMPLATES_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -106,4 +106,4 @@ FIID Template: tmpl_lan_msg_trlr
 }
 #endif
 
-#endif  /* _IPMI_LAN_INTERFACE_TEMPLATES_H */
+#endif /* IPMI_LAN_INTERFACE_TEMPLATES_H */

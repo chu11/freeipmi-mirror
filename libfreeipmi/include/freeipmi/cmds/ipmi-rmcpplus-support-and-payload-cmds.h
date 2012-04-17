@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_RMCPPLUS_SUPPORT_AND_PAYLOAD_CMDS_H
-#define _IPMI_RMCPPLUS_SUPPORT_AND_PAYLOAD_CMDS_H
+#ifndef IPMI_RMCPPLUS_SUPPORT_AND_PAYLOAD_CMDS_H
+#define IPMI_RMCPPLUS_SUPPORT_AND_PAYLOAD_CMDS_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -195,4 +195,4 @@ int fill_cmd_get_channel_oem_payload_info (uint8_t channel_number,
 }
 #endif
 
-#endif
+#endif /* IPMI_RMCPPLUS_SUPPORT_AND_PAYLOAD_CMDS_H */

@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_BIT_OPS_H
-#define _IPMI_BIT_OPS_H 1
+#ifndef IPMI_BIT_OPS_H
+#define IPMI_BIT_OPS_H
 
 #define BIT_0 0x01
 #define BIT_1 0x02
@@ -49,13 +49,14 @@
 #define BITS_ROUND_BYTES(bits_count) ((bits_count / 8) + ((bits_count % 8) ? 1 : 0))
 
 typedef uint8_t bitstr_t;
+
 /* internal macros */
 /* byte of the bitstring bit is in */
-#define _BITSTR_BYTE(bit)                       \
+#define BITSTR_BYTE(bit)                        \
   ((bit) >> 3)
 
 /* mask for the bit within its byte */
-#define _BITSTR_MASK(bit)                       \
+#define BITSTR_MASK(bit)                        \
   (1 << ((bit)&0x7))
 
 /* external macros */
@@ -74,22 +75,22 @@ typedef uint8_t bitstr_t;
 
 /* is bit N of bitstring name set? */
 #define BITSTR_TEST(name, bit)                          \
-  ((name)[_BITSTR_BYTE (bit)] & _BITSTR_MASK (bit))
+  ((name)[BITSTR_BYTE (bit)] & BITSTR_MASK (bit))
 
 /* set bit N of bitstring name */
 #define BITSTR_SET(name, bit)                           \
-  (name)[_BITSTR_BYTE (bit)] |= _BITSTR_MASK (bit)
+  (name)[BITSTR_BYTE (bit)] |= BITSTR_MASK (bit)
 
 /* clear bit N of bitstring name */
 #define BITSTR_CLEAR(name, bit)                         \
-  (name)[_BITSTR_BYTE (bit)] &= ~_BITSTR_MASK(bit)
+  (name)[BITSTR_BYTE (bit)] &= ~BITSTR_MASK(bit)
 
 /* clear bits start ... stop in bitstring */
 #define BITSTR_NCLEAR(name, start, stop) {                      \
     register bitstr_t *_name = name;                            \
     register int _start = start, _stop = stop;                  \
-    register int _startbyte = _BITSTR_BYTE (_start);            \
-    register int _stopbyte = _BITSTR_BYTE (_stop);              \
+    register int _startbyte = BITSTR_BYTE (_start);             \
+    register int _stopbyte = BITSTR_BYTE (_stop);               \
     if (_startbyte == _stopbyte) {                              \
       _name[_startbyte] &= ((0xff >> (8 - (_start&0x7))) |      \
                             (0xff << ((_stop&0x7) + 1)));       \
@@ -105,8 +106,8 @@ typedef uint8_t bitstr_t;
 #define BITSTR_NSET(name, start, stop) {                        \
     register bitstr_t *_name = name;                            \
     register int _start = start, _stop = stop;                  \
-    register int _startbyte = _BITSTR_BYTE (_start);            \
-    register int _stopbyte = _BITSTR_BYTE (_stop);              \
+    register int _startbyte = BITSTR_BYTE (_start);             \
+    register int _stopbyte = BITSTR_BYTE (_stop);               \
     if (_startbyte == _stopbyte) {                              \
       _name[_startbyte] |= ((0xff << (_start&0x7)) &            \
                             (0xff >> (7 - (_stop&0x7))));       \
@@ -122,7 +123,7 @@ typedef uint8_t bitstr_t;
 #define BITSTR_FFC(name, nbits, value) {                                \
     register bitstr_t *_name = name;                                    \
     register int _byte, _nbits = nbits;                                 \
-    register int _stopbyte = _BITSTR_BYTE (_nbits), _value = -1;        \
+    register int _stopbyte = BITSTR_BYTE (_nbits), _value = -1;         \
     for (_byte = 0; _byte <= _stopbyte; ++_byte)                        \
       if (_name[_byte] != 0xff) {                                       \
         _value = _byte << 3;                                            \
@@ -137,7 +138,7 @@ typedef uint8_t bitstr_t;
 #define BITSTR_FFS(name, nbits, value) {                                \
     register bitstr_t *_name = name;                                    \
     register int _byte, _nbits = nbits;                                 \
-    register int _stopbyte = _BITSTR_BYTE (_nbits), _value = -1;        \
+    register int _stopbyte = BITSTR_BYTE (_nbits), _value = -1;         \
     for (_byte = 0; _byte <= _stopbyte; ++_byte)                        \
       if (_name[_byte]) {                                               \
         _value = _byte << 3;                                            \
@@ -151,6 +152,4 @@ typedef uint8_t bitstr_t;
 int bits_extract (uint64_t bits, uint8_t start, uint8_t end, uint64_t *result);
 int bits_merge (uint64_t bits, uint8_t start, uint8_t end, uint64_t val, uint64_t *result);
 
-#endif /* ipmi-bit-ops.h */
-
-
+#endif /* IPMI_BIT_OPS_H */

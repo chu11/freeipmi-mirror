@@ -40,8 +40,8 @@
  *  with Ipmi-fru.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _IPMI_FRU_INVENTORY_DEVICE_CMDS_API_H
-#define _IPMI_FRU_INVENTORY_DEVICE_CMDS_API_H
+#ifndef IPMI_FRU_INVENTORY_DEVICE_CMDS_API_H
+#define IPMI_FRU_INVENTORY_DEVICE_CMDS_API_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -72,4 +72,4 @@ int ipmi_cmd_read_fru_data (ipmi_ctx_t ctx,
 }
 #endif
 
-#endif /* _IPMI_FRU_INVENTORY_DEVICE_CMDS_API_H */
+#endif /* IPMI_FRU_INVENTORY_DEVICE_CMDS_API_H */

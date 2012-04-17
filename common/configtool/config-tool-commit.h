@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _CONFIG_TOOL_COMMIT_H_
-#define _CONFIG_TOOL_COMMIT_H_
+#ifndef CONFIG_TOOL_COMMIT_H
+#define CONFIG_TOOL_COMMIT_H
 
 #include "config-tool-common.h"
 #include "pstdout.h"
@@ -32,4 +32,4 @@ config_err_t config_commit (pstdout_state_t pstate,
                             struct config_arguments *cmd_args,
                             void *arg);
 
-#endif /* _CONFIG_TOOL_COMMIT_H_ */
+#endif /* CONFIG_TOOL_COMMIT_H */

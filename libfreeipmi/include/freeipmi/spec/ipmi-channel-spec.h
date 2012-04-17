@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_CHANNEL_SPEC_H
-#define _IPMI_CHANNEL_SPEC_H
+#ifndef IPMI_CHANNEL_SPEC_H
+#define IPMI_CHANNEL_SPEC_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -94,6 +94,4 @@ extern "C" {
 }
 #endif
 
-#endif /* ipmi-channel-spec.h */
-
-
+#endif /* IPMI_CHANNEL_SPEC_H */

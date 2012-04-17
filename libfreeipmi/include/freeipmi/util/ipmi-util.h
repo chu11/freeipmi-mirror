@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_UTIL_H
-#define _IPMI_UTIL_H    1
+#ifndef IPMI_UTIL_H
+#define IPMI_UTIL_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -73,6 +73,4 @@ const char *ipmi_cmd_str (uint8_t net_fn, uint8_t cmd);
 }
 #endif
 
-#endif /* ipmi-util.h */
-
-
+#endif /* IPMI_UTIL_H */

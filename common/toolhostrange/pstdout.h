@@ -25,8 +25,8 @@
  *  with Pstdout.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _PSTDOUT_H
-#define _PSTDOUT_H 1
+#ifndef PSTDOUT_H
+#define PSTDOUT_H
 
 /* 
  * Pstdout is a library/tool to launch and manage multiple threads,
@@ -276,4 +276,4 @@ int PSTDOUT_FPRINTF(pstdout_state_t pstate, FILE *stream, const char *format, ..
  */
 void PSTDOUT_PERROR(pstdout_state_t pstate, const char *s);
 
-#endif /* _PSTDOUT_H */
+#endif /* PSTDOUT_H */

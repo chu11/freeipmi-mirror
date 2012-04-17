@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_LOCATE_UTIL_H
-#define _IPMI_LOCATE_UTIL_H
+#ifndef IPMI_LOCATE_UTIL_H
+#define IPMI_LOCATE_UTIL_H
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -39,5 +39,4 @@ void locate_set_locate_errnum_by_errno (ipmi_locate_ctx_t ctx, int __errno);
 
 void locate_set_locate_errnum_by_fiid_object (ipmi_locate_ctx_t ctx, fiid_obj_t obj);
 
-#endif /* ipmi-locate-util.h */
-
+#endif /* IPMI_LOCATE_UTIL_H */

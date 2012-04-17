@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _TOOL_OEM_COMMON_H
-#define _TOOL_OEM_COMMON_H
+#ifndef TOOL_OEM_COMMON_H
+#define TOOL_OEM_COMMON_H
 
 #include <stdio.h>
 #include <stdint.h>
@@ -38,4 +38,4 @@ int ipmi_get_oem_data (pstdout_state_t pstate,
                        ipmi_ctx_t ipmi_ctx,
                        struct ipmi_oem_data *oem_data);
 
-#endif
+#endif /* TOOL_OEM_COMMON_H */

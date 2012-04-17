@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_SDR_RECORD_FORMAT_H
-#define _IPMI_SDR_RECORD_FORMAT_H
+#ifndef IPMI_SDR_RECORD_FORMAT_H
+#define IPMI_SDR_RECORD_FORMAT_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -225,4 +225,4 @@ extern fiid_template_t tmpl_sdr_oem_record;
 }
 #endif
 
-#endif
+#endif /* IPMI_SDR_RECORD_FORMAT_H */

@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_INTERPRET_DEFS_H
-#define _IPMI_INTERPRET_DEFS_H
+#ifndef IPMI_INTERPRET_DEFS_H
+#define IPMI_INTERPRET_DEFS_H
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -280,4 +280,4 @@ struct ipmi_interpret_ctx {
   struct ipmi_interpret_sensor interpret_sensor;
 };
 
-#endif /* _IPMI_INTERPRET_DEFS_H */
+#endif /* IPMI_INTERPRET_DEFS_H */

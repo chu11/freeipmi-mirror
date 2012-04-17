@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _CONFIG_TOOL_CHECKOUT_H_
-#define _CONFIG_TOOL_CHECKOUT_H_
+#ifndef CONFIG_TOOL_CHECKOUT_H
+#define CONFIG_TOOL_CHECKOUT_H
 
 #include "config-tool-common.h"
 #include "pstdout.h"
@@ -38,4 +38,4 @@ config_err_t config_checkout (pstdout_state_t pstate,
                               unsigned int line_length,
                               void *arg);
 
-#endif /* _CONFIG_TOOL_CHECKOUT_H_ */
+#endif /* CONFIG_TOOL_CHECKOUT_H */

@@ -24,11 +24,11 @@
  *  with Ipmiconsole.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _IPMICONSOLE_GARBAGE_COLLECTOR_H
-#define _IPMICONSOLE_GARBAGE_COLLECTOR_H
+#ifndef IPMICONSOLE_GARBAGE_COLLECTOR_H
+#define IPMICONSOLE_GARBAGE_COLLECTOR_H
 
 #include "ipmiconsole.h"
 
 void *ipmiconsole_garbage_collector (void *arg);
 
-#endif /* _IPMICONSOLE_GARBAGE_COLLECTOR_H */
+#endif /* IPMICONSOLE_GARBAGE_COLLECTOR_H */

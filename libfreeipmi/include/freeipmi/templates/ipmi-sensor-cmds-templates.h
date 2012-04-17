@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_SENSOR_CMDS_TEMPLATES_H
-#define _IPMI_SENSOR_CMDS_TEMPLATES_H
+#ifndef IPMI_SENSOR_CMDS_TEMPLATES_H
+#define IPMI_SENSOR_CMDS_TEMPLATES_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -1016,4 +1016,4 @@ FIID Template: tmpl_cmd_set_sensor_reading_and_event_status_rs
 }
 #endif
 
-#endif  /* _IPMI_SENSOR_CMDS_TEMPLATES_H */
+#endif /* IPMI_SENSOR_CMDS_TEMPLATES_H */

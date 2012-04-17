@@ -24,8 +24,8 @@
  *  with Ipmiconsole.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _IPMICONSOLE_H
-#define _IPMICONSOLE_H
+#ifndef IPMICONSOLE_H
+#define IPMICONSOLE_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -914,4 +914,4 @@ int ipmiconsole_workaround_flags_is_valid (unsigned int workaround_flags);
 }
 #endif
 
-#endif /* _IPMICONSOLE_H */
+#endif /* IPMICONSOLE_H */

@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_LOCATE_H
-#define _IPMI_LOCATE_H  1
+#ifndef IPMI_LOCATE_H
+#define IPMI_LOCATE_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -131,5 +131,4 @@ int ipmi_locate_dmidecode_get_device_info (ipmi_locate_ctx_t ctx,
 }
 #endif
 
-#endif /* ipmi-locate.h */
-
+#endif /* IPMI_LOCATE_H */

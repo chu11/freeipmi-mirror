@@ -24,11 +24,11 @@
  *  with Ipmi-Dcmi.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _IPMI_DCMI_ARGP_H
-#define _IPMI_DCMI_ARGP_H
+#ifndef IPMI_DCMI_ARGP_H
+#define IPMI_DCMI_ARGP_H
 
 #include "ipmi-dcmi.h"
 
 void ipmi_dcmi_argp_parse (int argc, char **argv, struct ipmi_dcmi_arguments *cmd_args);
 
-#endif
+#endif /* IPMI_DCMI_ARGP_H */

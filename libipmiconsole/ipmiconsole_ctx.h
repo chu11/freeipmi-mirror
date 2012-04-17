@@ -24,8 +24,8 @@
  *  with Ipmiconsole.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _IPMICONSOLE_CTX_H
-#define _IPMICONSOLE_CTX_H
+#ifndef IPMICONSOLE_CTX_H
+#define IPMICONSOLE_CTX_H
 
 #include "ipmiconsole.h"
 
@@ -77,4 +77,4 @@ int ipmiconsole_ctx_get_errnum (ipmiconsole_ctx_t c);
 
 void ipmiconsole_ctx_set_errnum (ipmiconsole_ctx_t c, int errnum);
 
-#endif /* _IPMICONSOLE_CTX_H */
+#endif /* IPMICONSOLE_CTX_H */

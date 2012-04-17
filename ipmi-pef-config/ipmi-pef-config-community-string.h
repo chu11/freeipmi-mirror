@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_PEF_CONFIG_COMMUNITY_STRING_H_
-#define _IPMI_PEF_CONFIG_COMMUNITY_STRING_H_
+#ifndef IPMI_PEF_CONFIG_COMMUNITY_STRING_H
+#define IPMI_PEF_CONFIG_COMMUNITY_STRING_H
 
 #include "ipmi-pef-config.h"
 #include "ipmi-pef-config-sections.h"
@@ -26,4 +26,4 @@ struct config_section * ipmi_pef_config_community_string_section_get (ipmi_pef_c
 								      unsigned int config_flags,
 								      int channel_index);
 
-#endif /* _IPMI_PEF_CONFIG_COMMUNITY_STRING_H_ */
+#endif /* IPMI_PEF_CONFIG_COMMUNITY_STRING_H */

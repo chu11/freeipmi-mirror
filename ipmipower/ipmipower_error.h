@@ -49,8 +49,8 @@
  *  with Ipmiconsole.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _IPMIPOWER_ERROR_H
-#define _IPMIPOWER_ERROR_H
+#ifndef IPMIPOWER_ERROR_H
+#define IPMIPOWER_ERROR_H
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -121,4 +121,4 @@ void ipmipower_debug (const char *fmt, ...);
 
 char * __error_msg_create (const char *fmt, ...);
 
-#endif /* _IPMIPOWER_ERROR_H */
+#endif /* IPMIPOWER_ERROR_H */

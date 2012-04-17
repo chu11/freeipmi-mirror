@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_OEM_COMMON_H
-#define _IPMI_OEM_COMMON_H
+#ifndef IPMI_OEM_COMMON_H
+#define IPMI_OEM_COMMON_H
 
 #include "ipmi-oem.h"
 
@@ -92,4 +92,4 @@ int ipmi_oem_parse_string (ipmi_oem_state_data_t *state_data,
                            char *stringbuf,
                            unsigned int stringbuflen);
 
-#endif
+#endif /* IPMI_OEM_COMMON_H */

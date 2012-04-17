@@ -24,11 +24,11 @@
  *  with Ipmiconsole.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _IPMICONSOLE_UTIL_H
-#define _IPMICONSOLE_UTIL_H
+#ifndef IPMICONSOLE_UTIL_H
+#define IPMICONSOLE_UTIL_H
 
 #include "ipmiconsole.h"
 
 int ipmiconsole_set_closeonexec (ipmiconsole_ctx_t c, int fd);
 
-#endif /* _IPMICONSOLE_UTIL_H */
+#endif /* IPMICONSOLE_UTIL_H */

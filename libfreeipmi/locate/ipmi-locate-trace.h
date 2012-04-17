@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_LOCATE_TRACE_H
-#define _IPMI_LOCATE_TRACE_H
+#ifndef IPMI_LOCATE_TRACE_H
+#define IPMI_LOCATE_TRACE_H
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -34,23 +34,22 @@
 
 #include "ipmi-locate-util.h"
 
-#define LOCATE_SET_ERRNUM(__ctx, __errnum)                              \
-  do {                                                                  \
-    (__ctx)->errnum = (__errnum);                                       \
-    __MSG_TRACE (ipmi_locate_ctx_errormsg ((__ctx)), (__errnum));       \
+#define LOCATE_SET_ERRNUM(__ctx, __errnum)                                  \
+  do {                                                                      \
+    (__ctx)->errnum = (__errnum);                                           \
+    TRACE_MSG_OUT (ipmi_locate_ctx_errormsg ((__ctx)), (__errnum));         \
   } while (0)
 
-#define LOCATE_ERRNO_TO_LOCATE_ERRNUM(__ctx, __errno)           \
-  do {                                                          \
-    locate_set_locate_errnum_by_errno ((__ctx), (__errno));     \
-    __ERRNO_TRACE ((__errno));                                  \
+#define LOCATE_ERRNO_TO_LOCATE_ERRNUM(__ctx, __errno)                       \
+  do {                                                                      \
+    locate_set_locate_errnum_by_errno ((__ctx), (__errno));                 \
+    TRACE_ERRNO_OUT ((__errno));                                            \
   } while (0)
 
-#define LOCATE_FIID_OBJECT_ERROR_TO_LOCATE_ERRNUM(__ctx, __obj)           \
-  do {                                                                    \
-    locate_set_locate_errnum_by_fiid_object ((__ctx), (__obj));           \
-    __MSG_TRACE (fiid_obj_errormsg ((__obj)), fiid_obj_errnum ((__obj))); \
+#define LOCATE_FIID_OBJECT_ERROR_TO_LOCATE_ERRNUM(__ctx, __obj)             \
+  do {                                                                      \
+    locate_set_locate_errnum_by_fiid_object ((__ctx), (__obj));             \
+    TRACE_MSG_OUT (fiid_obj_errormsg ((__obj)), fiid_obj_errnum ((__obj))); \
   } while (0)
 
-#endif /* ipmi-locate-trace.h */
-
+#endif /* IPMI_LOCATE_TRACE_H */

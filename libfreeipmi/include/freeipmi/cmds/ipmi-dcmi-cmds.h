@@ -39,8 +39,8 @@
  *  with Ipmi-Dcmi.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _IPMI_DCMI_CMDS_H
-#define _IPMI_DCMI_CMDS_H
+#ifndef IPMI_DCMI_CMDS_H
+#define IPMI_DCMI_CMDS_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -339,4 +339,4 @@ int fill_cmd_dcmi_get_temperature_reading (uint8_t sensor_type,
 }
 #endif
 
-#endif /* ipmi-dcmi-cmds.h */
+#endif /* IPMI_DCMI_CMDS_H */

@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_AUTHENTICATION_TYPE_SPEC_H
-#define _IPMI_AUTHENTICATION_TYPE_SPEC_H
+#ifndef IPMI_AUTHENTICATION_TYPE_SPEC_H
+#define IPMI_AUTHENTICATION_TYPE_SPEC_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -53,6 +53,4 @@ extern "C" {
 }
 #endif
 
-#endif /* ipmi-authentication-type-spec.h */
-
-
+#endif /* IPMI_AUTHENTICATION_TYPE_SPEC_H */

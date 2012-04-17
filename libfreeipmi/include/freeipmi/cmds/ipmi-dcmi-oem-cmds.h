@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_DCMI_OEM_CMDS_H
-#define _IPMI_DCMI_OEM_CMDS_H
+#ifndef IPMI_DCMI_OEM_CMDS_H
+#define IPMI_DCMI_OEM_CMDS_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -30,4 +30,4 @@ extern "C" {
 }
 #endif
 
-#endif /* ipmi-dcmi-oem-cmds.h */
+#endif /* IPMI_DCMI_OEM_CMDS_H */

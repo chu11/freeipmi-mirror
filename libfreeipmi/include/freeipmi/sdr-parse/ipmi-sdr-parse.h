@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_SDR_PARSE_H
-#define _IPMI_SDR_PARSE_H
+#ifndef IPMI_SDR_PARSE_H
+#define IPMI_SDR_PARSE_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -408,4 +408,4 @@ int ipmi_sdr_parse_oem_data (ipmi_sdr_parse_ctx_t ctx,
 }
 #endif
 
-#endif /* _IPMI_SDR_PARSE_H */
+#endif /* IPMI_SDR_PARSE_H */

@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_OEM_INTEL_H
-#define _IPMI_OEM_INTEL_H
+#ifndef IPMI_OEM_INTEL_H
+#define IPMI_OEM_INTEL_H
 
 #include "ipmi-oem.h"
 
@@ -26,4 +26,4 @@ int ipmi_oem_intel_set_smtp_config (ipmi_oem_state_data_t *state_data);
 
 int ipmi_oem_intel_restore_configuration (ipmi_oem_state_data_t *state_data);
 
-#endif
+#endif /* IPMI_OEM_INTEL_H */

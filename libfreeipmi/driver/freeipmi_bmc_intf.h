@@ -30,8 +30,8 @@
  * EVEN IF SUN HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
 
-#ifndef _BMC_INTF_H
-#define	_BMC_INTF_H
+#ifndef FREEIPMI_BMC_INTF_H
+#define	FREEIPMI_BMC_INTF_H
 
 /* achu: removing pragma for FreeIPMI */
 #if 0
@@ -207,4 +207,4 @@ typedef struct bmc_msg {
 }
 #endif
 
-#endif /* _BMC_INTF_H */
+#endif /* FREEIPMI_BMC_INTF_H */

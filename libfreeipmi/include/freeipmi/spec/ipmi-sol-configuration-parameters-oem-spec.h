@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_SOL_PARAMETER_OEM_SPEC_H
-#define _IPMI_SOL_PARAMETER_OEM_SPEC_H
+#ifndef IPMI_SOL_CONFIGURATION_PARAMETERS_OEM_SPEC_H
+#define IPMI_SOL_CONFIGURATION_PARAMETERS_OEM_SPEC_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -38,4 +38,4 @@ extern "C" {
 }
 #endif
 
-#endif /* _IPMI_SOL_PARAMETER_SPEC_H */
+#endif /* IPMI_SOL_CONFIGURATION_PARAMETERS_OEM_SPEC_H */

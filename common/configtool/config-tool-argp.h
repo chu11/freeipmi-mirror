@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _CONFIG_TOOL_ARGP_H_
-#define _CONFIG_TOOL_ARGP_H_
+#ifndef CONFIG_TOOL_ARGP_H
+#define CONFIG_TOOL_ARGP_H
 
 #if HAVE_CONFIG_H
 #include "config.h"
@@ -93,4 +93,4 @@ error_t config_parse_opt (int key,
 
 void config_args_validate (struct config_arguments *config_args);
 
-#endif /* _CONFIG_TOOL_ARGP_H_ */
+#endif /* CONFIG_TOOL_ARGP_H */

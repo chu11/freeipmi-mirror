@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_SEL_PARSE_STRING_DELL_H
-#define _IPMI_SEL_PARSE_STRING_DELL_H
+#ifndef IPMI_SEL_PARSE_STRING_DELL_H
+#define IPMI_SEL_PARSE_STRING_DELL_H
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -94,4 +94,4 @@ int ipmi_sel_parse_output_dell_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx
 							struct ipmi_sel_system_event_record_data *system_event_record_data,
 							int *oem_rv);
 
-#endif /* _IPMI_SEL_PARSE_STRING_DELL_H */
+#endif /* IPMI_SEL_PARSE_STRING_DELL_H */

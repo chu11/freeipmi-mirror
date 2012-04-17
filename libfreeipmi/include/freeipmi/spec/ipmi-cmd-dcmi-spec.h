@@ -39,8 +39,8 @@
  *  with Ipmi-Dcmi.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _IPMI_CMD_DCMI_SPEC_H
-#define _IPMI_CMD_DCMI_SPEC_H
+#ifndef IPMI_CMD_DCMI_SPEC_H
+#define IPMI_CMD_DCMI_SPEC_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -66,4 +66,4 @@ extern "C" {
 }
 #endif
 
-#endif /* ipmi-cmd-dcmi-spec.h */
+#endif /* IPMI_CMD_DCMI_SPEC_H */

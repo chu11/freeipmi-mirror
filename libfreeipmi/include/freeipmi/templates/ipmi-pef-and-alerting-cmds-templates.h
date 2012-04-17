@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_PEF_AND_ALERTING_CMDS_TEMPLATES_H
-#define _IPMI_PEF_AND_ALERTING_CMDS_TEMPLATES_H
+#ifndef IPMI_PEF_AND_ALERTING_CMDS_TEMPLATES_H
+#define IPMI_PEF_AND_ALERTING_CMDS_TEMPLATES_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -605,4 +605,4 @@ FIID Template: tmpl_cmd_pet_acknowledge_rs
 }
 #endif
 
-#endif  /* _IPMI_PEF_AND_ALERTING_CMDS_TEMPLATES_H */
+#endif /* IPMI_PEF_AND_ALERTING_CMDS_TEMPLATES_H */

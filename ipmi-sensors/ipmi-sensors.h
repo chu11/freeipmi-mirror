@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_SENSORS_H
-#define _IPMI_SENSORS_H
+#ifndef IPMI_SENSORS_H
+#define IPMI_SENSORS_H
 
 #include <freeipmi/freeipmi.h>
 
@@ -124,4 +124,4 @@ typedef struct ipmi_sensors_state_data
   struct ipmi_sensors_interpret_oem_data_intel_node_manager intel_node_manager;
 } ipmi_sensors_state_data_t;
 
-#endif
+#endif /* IPMI_SENSORS_H */

@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_SENSOR_READ_TRACE_H
-#define _IPMI_SENSOR_READ_TRACE_H
+#ifndef IPMI_SENSOR_READ_TRACE_H
+#define IPMI_SENSOR_READ_TRACE_H
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -32,23 +32,22 @@
 
 #include "libcommon/ipmi-trace.h"
 
-#define SENSOR_READ_SET_ERRNUM(__ctx, __errnum)                           \
-  do {                                                                    \
-    (__ctx)->errnum = (__errnum);                                         \
-    __MSG_TRACE (ipmi_sensor_read_ctx_errormsg ((__ctx)), (__errnum));    \
+#define SENSOR_READ_SET_ERRNUM(__ctx, __errnum)                             \
+  do {                                                                      \
+    (__ctx)->errnum = (__errnum);                                           \
+    TRACE_MSG_OUT (ipmi_sensor_read_ctx_errormsg ((__ctx)), (__errnum));    \
   } while (0)
 
-#define SENSOR_READ_ERRNO_TO_SENSOR_READ_ERRNUM(__ctx, __errno)           \
-  do {                                                                    \
-    sensor_read_set_sensor_read_errnum_by_errno ((__ctx), (__errno));     \
-    __ERRNO_TRACE ((__errno));                                            \
+#define SENSOR_READ_ERRNO_TO_SENSOR_READ_ERRNUM(__ctx, __errno)             \
+  do {                                                                      \
+    sensor_read_set_sensor_read_errnum_by_errno ((__ctx), (__errno));       \
+    TRACE_ERRNO_OUT ((__errno));                                            \
   } while (0)
 
-#define SENSOR_READ_FIID_OBJECT_ERROR_TO_SENSOR_READ_ERRNUM(__ctx, __obj) \
-  do {                                                                    \
-    sensor_read_set_sensor_read_errnum_by_fiid_object ((__ctx), (__obj)); \
-    __MSG_TRACE (fiid_obj_errormsg ((__obj)), fiid_obj_errnum ((__obj))); \
+#define SENSOR_READ_FIID_OBJECT_ERROR_TO_SENSOR_READ_ERRNUM(__ctx, __obj)   \
+  do {                                                                      \
+    sensor_read_set_sensor_read_errnum_by_fiid_object ((__ctx), (__obj));   \
+    TRACE_MSG_OUT (fiid_obj_errormsg ((__obj)), fiid_obj_errnum ((__obj))); \
   } while (0)
 
-#endif /* ipmi-sensor-read-trace.h */
-
+#endif /* IPMI_SENSOR_READ_TRACE_H */

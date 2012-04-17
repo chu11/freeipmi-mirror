@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_RMCPPLUS_INTERFACE_H
-#define _IPMI_RMCPPLUS_INTERFACE_H
+#ifndef IPMI_RMCPPLUS_INTERFACE_H
+#define IPMI_RMCPPLUS_INTERFACE_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -318,4 +318,4 @@ int unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
 }
 #endif
 
-#endif
+#endif /* IPMI_RMCPPLUS_INTERFACE_H */

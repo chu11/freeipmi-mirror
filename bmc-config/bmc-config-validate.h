@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _BMC_CONFIG_VALIDATE_H
-#define _BMC_CONFIG_VALIDATE_H
+#ifndef BMC_CONFIG_VALIDATE_H
+#define BMC_CONFIG_VALIDATE_H
 
 #include "bmc-config.h"
 #include "bmc-config-sections.h"
@@ -82,4 +82,4 @@ config_validate_t alert_gateway_number_validate (const char *section_name,
                                                  const char *value,
                                                  void *arg);
 
-#endif
+#endif /* BMC_CONFIG_VALIDATE_H */

@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _FREEIPMI_H
-#define _FREEIPMI_H     1
+#ifndef FREEIPMI_H
+#define FREEIPMI_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -175,5 +175,5 @@ extern "C" {
 }
 #endif
 
-#endif /* freeipmi.h */
+#endif /* FREEIPMI_H */
 

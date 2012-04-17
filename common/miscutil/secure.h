@@ -24,8 +24,8 @@
  *  with Ipmiconsole.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _SECURE_H
-#define _SECURE_H
+#ifndef SECURE_H
+#define SECURE_H
 
 #include <sys/types.h>
 
@@ -36,4 +36,4 @@ void *secure_malloc (size_t len);
 
 void secure_free (void *ptr, size_t len);
 
-#endif /* _SECURE_H */
+#endif /* SECURE_H */

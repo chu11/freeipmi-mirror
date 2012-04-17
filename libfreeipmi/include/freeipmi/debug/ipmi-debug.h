@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_DEBUG_H
-#define _IPMI_DEBUG_H
+#ifndef IPMI_DEBUG_H
+#define IPMI_DEBUG_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -148,6 +148,4 @@ int ipmi_dump_hex (int fd,
 }
 #endif
 
-#endif /* ipmi-debug.h */
-
-
+#endif /* IPMI_DEBUG_H */

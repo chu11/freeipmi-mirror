@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_LAN_CMDS_H
-#define _IPMI_LAN_CMDS_H
+#ifndef IPMI_LAN_CMDS_H
+#define IPMI_LAN_CMDS_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -396,4 +396,4 @@ int fill_cmd_get_ip_udp_rmcp_statistics (uint8_t channel_number,
 }
 #endif
 
-#endif
+#endif /* IPMI_LAN_CMDS_H */

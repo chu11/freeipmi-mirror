@@ -103,17 +103,17 @@
 struct bmc_watchdog_arguments cmd_args;
 
 /* program name */
-char *err_progname = NULL;
+static char *err_progname = NULL;
 
-ipmi_kcs_ctx_t kcs_ctx = NULL;
-ipmi_ssif_ctx_t ssif_ctx = NULL;
-ipmi_openipmi_ctx_t openipmi_ctx = NULL;
-ipmi_sunbmc_ctx_t sunbmc_ctx = NULL;
-int driver_type_used = -1;
+static ipmi_kcs_ctx_t kcs_ctx = NULL;
+static ipmi_ssif_ctx_t ssif_ctx = NULL;
+static ipmi_openipmi_ctx_t openipmi_ctx = NULL;
+static ipmi_sunbmc_ctx_t sunbmc_ctx = NULL;
+static int driver_type_used = -1;
 
-int shutdown_flag = 1;
+static int shutdown_flag = 1;
 
-int logfile_fd = -1;
+static int logfile_fd = -1;
 
 static void
 _syslog (int priority, const char *fmt, ...)

@@ -24,8 +24,8 @@
  *  with Ipmiconsole.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _TIMEVAL_H
-#define _TIMEVAL_H
+#ifndef TIMEVAL_H
+#define TIMEVAL_H
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -60,4 +60,4 @@ void timeval_sub_ms (struct timeval *a, unsigned int ms, struct timeval *result)
 
 void timeval_millisecond_calc (struct timeval *a, unsigned int *ms);
 
-#endif /* _TIMEVAL_H */
+#endif /* TIMEVAL_H */

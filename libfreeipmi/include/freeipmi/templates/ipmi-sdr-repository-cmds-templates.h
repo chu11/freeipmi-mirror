@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_SDR_REPOSITORY_CMDS_TEMPLATES_H
-#define _IPMI_SDR_REPOSITORY_CMDS_TEMPLATES_H
+#ifndef IPMI_SDR_REPOSITORY_CMDS_TEMPLATES_H
+#define IPMI_SDR_REPOSITORY_CMDS_TEMPLATES_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -180,4 +180,4 @@ FIID Template: tmpl_cmd_set_sdr_repository_time_rs
 }
 #endif
 
-#endif  /* _IPMI_SDR_REPOSITORY_CMDS_TEMPLATES_H */
+#endif /* IPMI_SDR_REPOSITORY_CMDS_TEMPLATES_H */

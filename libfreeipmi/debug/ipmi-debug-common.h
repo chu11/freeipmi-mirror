@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_DEBUG_COMMON_H
-#define _IPMI_DEBUG_COMMON_H
+#ifndef IPMI_DEBUG_COMMON_H
+#define IPMI_DEBUG_COMMON_H
 
 #include <stdint.h>
 
@@ -43,6 +43,4 @@ int ipmi_debug_dump_ipmb (int fd,
                           fiid_template_t tmpl_ipmb_msg_hdr,
                           fiid_template_t tmpl_ipmb_cmd);
 
-#endif /* ipmi-debug-common.h */
-
-
+#endif /* IPMI_DEBUG_COMMON_H */

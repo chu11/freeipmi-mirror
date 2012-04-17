@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_KCS_DRIVER_API_H
-#define _IPMI_KCS_DRIVER_API_H 1
+#ifndef IPMI_KCS_DRIVER_API_H
+#define IPMI_KCS_DRIVER_API_H
 
 #include <stdint.h>
 #include <freeipmi/fiid/fiid.h>
@@ -48,5 +48,4 @@ int ipmi_kcs_cmd_raw_api_ipmb (ipmi_ctx_t ctx,
 			       void *buf_rs,
 			       unsigned int buf_rs_len);
 
-#endif /* ipmi-kcs-driver-api.h */
-
+#endif /* IPMI_KCS_DRIVER_API_H */

@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_NETFN_OEM_SPEC_H
-#define _IPMI_NETFN_OEM_SPEC_H
+#ifndef IPMI_NETFN_OEM_SPEC_H
+#define IPMI_NETFN_OEM_SPEC_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -124,4 +124,4 @@ extern "C" {
 }
 #endif
 
-#endif /* ipmi-netfn-oem-spec.h */
+#endif /* IPMI_NETFN_OEM_SPEC_H */

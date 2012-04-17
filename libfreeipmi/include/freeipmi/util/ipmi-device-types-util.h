@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_DEVICE_TYPES_UTIL_H
-#define _IPMI_DEVICE_TYPES_UTIL_H
+#ifndef IPMI_DEVICE_TYPES_UTIL_H
+#define IPMI_DEVICE_TYPES_UTIL_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -35,4 +35,4 @@ int ipmi_device_type_modifer_message (uint8_t device_type,
 }
 #endif
 
-#endif
+#endif /* IPMI_DEVICE_TYPES_UTIL_H */

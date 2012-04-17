@@ -17,8 +17,8 @@
  */
 
 
-#ifndef _RMCP_INTERFACE_H
-#define _RMCP_INTERFACE_H       1
+#ifndef RMCP_INTERFACE_H
+#define RMCP_INTERFACE_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -94,4 +94,4 @@ int unassemble_rmcp_pkt (const void *pkt,
 }
 #endif
 
-#endif /* rmcp-interface.h */
+#endif /* RMCP_INTERFACE_H */

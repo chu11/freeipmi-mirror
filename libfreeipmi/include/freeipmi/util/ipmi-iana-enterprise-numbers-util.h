@@ -17,8 +17,8 @@
  */
 
 
-#ifndef _IPMI_IANA_ENTERPRISE_NUMBERS_UTIL_H
-#define _IPMI_IANA_ENTERPRISE_NUMBERS_UTIL_H
+#ifndef IPMI_IANA_ENTERPRISE_NUMBERS_UTIL_H
+#define IPMI_IANA_ENTERPRISE_NUMBERS_UTIL_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -39,4 +39,4 @@ int ipmi_iana_enterprise_numbers_string (uint32_t manufacturer_id,
 }
 #endif
 
-#endif /* _IPMI_IANA_ENTERPRISE_NUMBERS_UTIL_H */
+#endif /* IPMI_IANA_ENTERPRISE_NUMBERS_UTIL_H */

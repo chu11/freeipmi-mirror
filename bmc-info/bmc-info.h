@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _BMC_INFO_H
-#define _BMC_INFO_H
+#ifndef BMC_INFO_H
+#define BMC_INFO_H
 
 #include <freeipmi/freeipmi.h>
 
@@ -58,4 +58,4 @@ typedef struct bmc_info_state_data
   pstdout_state_t pstate;
 } bmc_info_state_data_t;
 
-#endif
+#endif /* BMC_INFO_H */

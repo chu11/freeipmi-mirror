@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_EVENT_CMDS_H
-#define _IPMI_EVENT_CMDS_H
+#ifndef IPMI_EVENT_CMDS_H
+#define IPMI_EVENT_CMDS_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -66,4 +66,4 @@ int fill_cmd_platform_event (uint8_t *generator_id,
 }
 #endif
 
-#endif /* ipmi-event-cmds.h */
+#endif /* IPMI_EVENT_CMDS_H */

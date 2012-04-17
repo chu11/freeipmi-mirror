@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_RMCPPLUS_UTIL_H
-#define _IPMI_RMCPPLUS_UTIL_H
+#ifndef IPMI_RMCPPLUS_UTIL_H
+#define IPMI_RMCPPLUS_UTIL_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -173,4 +173,4 @@ int ipmi_rmcpplus_calculate_payload_type (const void *pkt,
 }
 #endif
 
-#endif
+#endif /* IPMI_RMCPPLUS_UTIL_H */

@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_SEL_CMDS_H
-#define _IPMI_SEL_CMDS_H
+#ifndef IPMI_SEL_CMDS_H
+#define IPMI_SEL_CMDS_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -127,4 +127,4 @@ int fill_cmd_set_auxiliary_log_status (uint8_t log_type,
 }
 #endif
 
-#endif
+#endif /* IPMI_SEL_CMDS_H */

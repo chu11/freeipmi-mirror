@@ -25,8 +25,8 @@
  *  with Bmc-Watchdog.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _BMC_WATCHDOG_H
-#define _BMC_WATCHDOG_H
+#ifndef BMC_WATCHDOG_H
+#define BMC_WATCHDOG_H
 
 #include <freeipmi/freeipmi.h>
 
@@ -111,4 +111,4 @@ struct bmc_watchdog_arguments
   int version;
 };
 
-#endif
+#endif /* BMC_WATCHDOG_H */

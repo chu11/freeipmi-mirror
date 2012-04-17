@@ -25,8 +25,8 @@
 
 /* file is "ipmi-locate_.h", so double underscore */
 
-#ifndef _IPMI_LOCATE__H
-#define _IPMI_LOCATE__H
+#ifndef IPMI_LOCATE__H
+#define IPMI_LOCATE__H
 
 #include <freeipmi/freeipmi.h>
 
@@ -40,4 +40,4 @@ struct ipmi_locate_arguments
   int defaults;
 };
 
-#endif
+#endif /* IPMI_LOCATE__H */

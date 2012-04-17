@@ -24,8 +24,8 @@
  *  with Ipmimonitoring.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _IPMI_MONITORING_SDR_CACHE_H
-#define _IPMI_MONITORING_SDR_CACHE_H
+#ifndef IPMI_MONITORING_SDR_CACHE_H
+#define IPMI_MONITORING_SDR_CACHE_H
 
 #include "ipmi_monitoring.h"
 
@@ -37,4 +37,4 @@ int ipmi_monitoring_sdr_cache_unload (ipmi_monitoring_ctx_t c);
 int ipmi_monitoring_sdr_cache_flush (ipmi_monitoring_ctx_t c,
                                      const char *hostname);
 
-#endif /* _IPMI_MONITORING_SDR_CACHE_H */
+#endif /* IPMI_MONITORING_SDR_CACHE_H */

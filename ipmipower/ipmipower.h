@@ -24,8 +24,8 @@
  *  with Ipmipower.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _IPMIPOWER_H
-#define _IPMIPOWER_H
+#ifndef IPMIPOWER_H
+#define IPMIPOWER_H
 
 #if HAVE_CONFIG_H
 #include "config.h"
@@ -527,4 +527,4 @@ struct ipmipower_arguments
   unsigned int ping_consec_count;
 };
 
-#endif /* _IPMIPOWER_H */
+#endif /* IPMIPOWER_H */

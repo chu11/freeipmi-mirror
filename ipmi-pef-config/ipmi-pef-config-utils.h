@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_PEF_CONFIG_UTILS_H
-#define _IPMI_PEF_CONFIG_UTILS_H
+#ifndef IPMI_PEF_CONFIG_UTILS_H
+#define IPMI_PEF_CONFIG_UTILS_H
 
 #include <stdint.h>
 
@@ -29,4 +29,4 @@ config_err_t get_lan_channel_number (struct ipmi_pef_config_state_data *state_da
 				     const char *section_name,
                                      uint8_t *channel_number);
 
-#endif
+#endif /* IPMI_PEF_CONFIG_UTILS_H */
