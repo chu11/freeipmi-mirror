@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_PRIVILEGE_LEVEL_SPEC_H
-#define _IPMI_PRIVILEGE_LEVEL_SPEC_H
+#ifndef IPMI_PRIVILEGE_LEVEL_SPEC_H
+#define IPMI_PRIVILEGE_LEVEL_SPEC_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -51,6 +51,4 @@ extern "C" {
 }
 #endif
 
-#endif /* ipmi-privilege-level-spec.h */
-
-
+#endif /* IPMI_PRIVILEGE_LEVEL_SPEC_H */

@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_INTERPRET_H
-#define _IPMI_INTERPRET_H
+#ifndef IPMI_INTERPRET_H
+#define IPMI_INTERPRET_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -99,4 +99,4 @@ int ipmi_interpret_sensor (ipmi_interpret_ctx_t ctx,
 }
 #endif
 
-#endif /* _IPMI_INTERPRET_H */
+#endif /* IPMI_INTERPRET_H */

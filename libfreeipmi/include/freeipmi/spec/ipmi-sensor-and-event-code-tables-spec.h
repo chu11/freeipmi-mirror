@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_SENSOR_AND_EVENT_CODE_TABLES_SPEC_H
-#define _IPMI_SENSOR_AND_EVENT_CODE_TABLES_SPEC_H
+#ifndef IPMI_SENSOR_AND_EVENT_CODE_TABLES_SPEC_H
+#define IPMI_SENSOR_AND_EVENT_CODE_TABLES_SPEC_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -901,4 +901,4 @@ extern unsigned int ipmi_sensor_type_session_audit_event_data3_offset_session_de
 }
 #endif
 
-#endif
+#endif /* IPMI_SENSOR_AND_EVENT_CODE_TABLES_SPEC_H */

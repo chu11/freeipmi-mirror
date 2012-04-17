@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_SENSOR_NUMBERS_OEM_SPEC_H
-#define _IPMI_SENSOR_NUMBERS_OEM_SPEC_H
+#ifndef IPMI_SENSOR_NUMBERS_OEM_SPEC_H
+#define IPMI_SENSOR_NUMBERS_OEM_SPEC_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -224,4 +224,4 @@ extern "C" {
 }
 #endif
 
-#endif
+#endif /* IPMI_SENSOR_NUMBERS_OEM_SPEC_H */

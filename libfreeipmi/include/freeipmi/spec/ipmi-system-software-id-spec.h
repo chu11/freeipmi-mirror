@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_SYSTEM_SOFTWARE_ID_SPEC_H
-#define _IPMI_SYSTEM_SOFTWARE_ID_SPEC_H
+#ifndef IPMI_SYSTEM_SOFTWARE_ID_SPEC_H
+#define IPMI_SYSTEM_SOFTWARE_ID_SPEC_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -75,6 +75,4 @@ extern "C" {
 }
 #endif
 
-#endif /* ipmi-system-software-id-spec.h */
-
-
+#endif /* IPMI_SYSTEM_SOFTWARE_ID_SPEC_H */

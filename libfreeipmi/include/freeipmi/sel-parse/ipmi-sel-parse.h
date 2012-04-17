@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_SEL_PARSE_H
-#define _IPMI_SEL_PARSE_H
+#ifndef IPMI_SEL_PARSE_H
+#define IPMI_SEL_PARSE_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -467,4 +467,4 @@ int ipmi_sel_parse_format_record_string (ipmi_sel_parse_ctx_t ctx,
 }
 #endif
 
-#endif /* _IPMI_SEL_PARSE_H */
+#endif /* IPMI_SEL_PARSE_H */

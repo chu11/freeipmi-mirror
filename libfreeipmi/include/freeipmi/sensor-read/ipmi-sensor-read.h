@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_SENSOR_READ_H
-#define _IPMI_SENSOR_READ_H
+#ifndef IPMI_SENSOR_READ_H
+#define IPMI_SENSOR_READ_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -111,4 +111,4 @@ int ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
 }
 #endif
 
-#endif /* _IPMI_SENSOR_READ_H */
+#endif /* IPMI_SENSOR_READ_H */

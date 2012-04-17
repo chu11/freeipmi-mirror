@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_SENSOR_UNITS_SPEC_H
-#define _IPMI_SENSOR_UNITS_SPEC_H
+#ifndef IPMI_SENSOR_UNITS_SPEC_H
+#define IPMI_SENSOR_UNITS_SPEC_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -143,4 +143,4 @@ extern const char *const ipmi_sensor_rate_units[];
 }
 #endif
 
-#endif
+#endif /* IPMI_SENSOR_UNITS_SPEC_H */

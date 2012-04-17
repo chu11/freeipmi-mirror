@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_PRODUCT_ID_SPEC_H
-#define _IPMI_PRODUCT_ID_SPEC_H
+#ifndef IPMI_PRODUCT_ID_SPEC_H
+#define IPMI_PRODUCT_ID_SPEC_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -230,4 +230,4 @@ extern "C" {
 }
 #endif
 
-#endif
+#endif /* IPMI_PRODUCT_ID_SPEC_H */

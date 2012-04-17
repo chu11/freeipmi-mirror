@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_IPMB_LUN_SPEC_H
-#define _IPMI_IPMB_LUN_SPEC_H
+#ifndef IPMI_IPMB_LUN_SPEC_H
+#define IPMI_IPMB_LUN_SPEC_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -60,4 +60,4 @@ extern "C" {
 }
 #endif
 
-#endif /* ipmi-ipmb-lun-spec.h */
+#endif /* IPMI_IPMB_LUN_SPEC_H */

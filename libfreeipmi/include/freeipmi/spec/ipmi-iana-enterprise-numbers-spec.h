@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_IANA_ENTERPRISE_NUMBERS_SPEC_H
-#define _IPMI_IANA_ENTERPRISE_NUMBERS_SPEC_H
+#ifndef IPMI_IANA_ENTERPRISE_NUMBERS_SPEC_H
+#define IPMI_IANA_ENTERPRISE_NUMBERS_SPEC_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -59,4 +59,4 @@ extern const char *const ipmi_iana_enterprise_numbers[];
 }
 #endif
 
-#endif
+#endif /* IPMI_IANA_ENTERPRISE_NUMBERS_SPEC_H */

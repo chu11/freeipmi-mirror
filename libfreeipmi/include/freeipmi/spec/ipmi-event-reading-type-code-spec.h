@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_EVENT_READING_TYPE_CODE_SPEC_H
-#define _IPMI_EVENT_READING_TYPE_CODE_SPEC_H
+#ifndef IPMI_EVENT_READING_TYPE_CODE_SPEC_H
+#define IPMI_EVENT_READING_TYPE_CODE_SPEC_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -63,6 +63,4 @@ extern "C" {
 }
 #endif
 
-#endif /* ipmi-event-reading-type-code-spec.h */
-
-
+#endif /* IPMI_EVENT_READING_TYPE_CODE_SPEC_H */

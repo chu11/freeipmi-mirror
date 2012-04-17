@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_SLAVE_ADDRESS_SPEC_H
-#define _IPMI_SLAVE_ADDRESS_SPEC_H
+#ifndef IPMI_SLAVE_ADDRESS_SPEC_H
+#define IPMI_SLAVE_ADDRESS_SPEC_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -55,4 +55,4 @@ extern "C" {
 }
 #endif
 
-#endif /* ipmi-slave-address-spec.h */
+#endif /* IPMI_SLAVE_ADDRESS_SPEC_H */
