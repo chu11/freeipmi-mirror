@@ -24,8 +24,8 @@
  *  with Ipmipower.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _IPMIPOWER_UTIL_H
-#define _IPMIPOWER_UTIL_H
+#ifndef IPMIPOWER_UTIL_H
+#define IPMIPOWER_UTIL_H
 
 #include <sys/poll.h>
 
@@ -62,4 +62,4 @@ void ipmipower_cbuf_printf(cbuf_t cbuf, const char *fmt, ...);
  */
 int ipmipower_cbuf_peek_and_drop (cbuf_t buf, void *buffer, int len);
 
-#endif /* _IPMIPOWER_UTIL_H */
+#endif /* IPMIPOWER_UTIL_H */

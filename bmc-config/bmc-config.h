@@ -17,8 +17,8 @@
  */
 
 
-#ifndef _BMC_CONFIG_H_
-#define _BMC_CONFIG_H_
+#ifndef _BMC_CONFIG_H
+#define _BMC_CONFIG_H
 
 #include <stdint.h>
 #include <freeipmi/freeipmi.h>

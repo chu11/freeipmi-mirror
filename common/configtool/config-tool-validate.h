@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _CONFIG_TOOL_VALIDATE_H_
-#define _CONFIG_TOOL_VALIDATE_H_
+#ifndef _CONFIG_TOOL_VALIDATE_H
+#define _CONFIG_TOOL_VALIDATE_H
 
 #include <stdio.h>
 

@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _CONFIG_TOOL_COMMON_H_
-#define _CONFIG_TOOL_COMMON_H_
+#ifndef _CONFIG_TOOL_COMMON_H
+#define _CONFIG_TOOL_COMMON_H
 
 #include <stdio.h>
 

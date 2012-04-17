@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _CONFIG_TOOL_PEF_CONF_SECTION_H_
-#define _CONFIG_TOOL_PEF_CONF_SECTION_H_
+#ifndef _CONFIG_TOOL_PEF_CONF_SECTION_H
+#define _CONFIG_TOOL_PEF_CONF_SECTION_H
 
 #include <freeipmi/freeipmi.h>
 

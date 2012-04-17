@@ -24,8 +24,8 @@
  *  with Ipmipower.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _IPMIPOWER_POWERCMD_H
-#define _IPMIPOWER_POWERCMD_H
+#ifndef IPMIPOWER_POWERCMD_H
+#define IPMIPOWER_POWERCMD_H
 
 #include "ipmipower.h"
 
@@ -51,4 +51,4 @@ int ipmipower_powercmd_pending ();
  */
 int ipmipower_powercmd_process_pending (int *timeout);
 
-#endif /* _IPMIPOWER_POWERCMD_H */
+#endif /* IPMIPOWER_POWERCMD_H */

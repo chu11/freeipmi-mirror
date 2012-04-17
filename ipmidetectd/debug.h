@@ -49,8 +49,8 @@
  *  with Cerebro.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _DEBUG_H
-#define _DEBUG_H
+#ifndef DEBUG_H
+#define DEBUG_H
 
 #if HAVE_CONFIG_H
 #include "config.h"
@@ -135,4 +135,4 @@ char *_debug_msg_create(const char *fmt, ...);
 
 #endif /* NDEBUG */
 
-#endif /* _DEBUG_H */
+#endif /* DEBUG_H */

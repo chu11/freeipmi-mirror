@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_SENSORS_CONFIG_H
-#define _IPMI_SENSORS_CONFIG_H
+#ifndef IPMI_SENSORS_CONFIG_H
+#define IPMI_SENSORS_CONFIG_H
 
 #include <stdint.h>
 #include <freeipmi/freeipmi.h>
@@ -59,4 +59,4 @@ typedef struct ipmi_sensors_config_state_data
   ipmi_sdr_parse_ctx_t sdr_parse_ctx;
 } ipmi_sensors_config_state_data_t;
 
-#endif
+#endif /* IPMI_SENSORS_CONFIG_H */

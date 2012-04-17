@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _CONFIG_TOOL_UTIL_H_
-#define _CONFIG_TOOL_UTIL_H_
+#ifndef _CONFIG_TOOL_UTIL_H
+#define _CONFIG_TOOL_UTIL_H
 
 #include <stdio.h>
 #include <stdint.h>

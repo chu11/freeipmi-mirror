@@ -24,8 +24,8 @@
  *  with Ipmipower.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _IPMIPOWER_PACKETS_H
-#define _IPMIPOWER_PACKETS_H
+#ifndef IPMIPOWER_PACKETS_H
+#define IPMIPOWER_PACKETS_H
 
 #include "ipmipower.h"
 
@@ -69,4 +69,4 @@ int ipmipower_packet_create (ipmipower_powercmd_t ip,
 ipmipower_msg_type_t ipmipower_packet_errmsg (ipmipower_powercmd_t ip,
 					      ipmipower_packet_type_t pkt);
 
-#endif /* _IPMIPOWER_PACKETS_H */
+#endif /* IPMIPOWER_PACKETS_H */

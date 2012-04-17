@@ -17,8 +17,8 @@
  */
 
 
-#ifndef _IPMI_CHASSIS_CONFIG_POWER_CONF_H_
-#define _IPMI_CHASSIS_CONFIG_POWER_CONF_H_
+#ifndef _IPMI_CHASSIS_CONFIG_POWER_CONF_H
+#define _IPMI_CHASSIS_CONFIG_POWER_CONF_H
 
 #include "ipmi-chassis-config.h"
 #include "ipmi-chassis-config-sections.h"

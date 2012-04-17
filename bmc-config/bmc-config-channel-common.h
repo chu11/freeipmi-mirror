@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _BMC_CONFIG_CHANNEL_COMMON_H_
-#define _BMC_CONFIG_CHANNEL_COMMON_H_
+#ifndef _BMC_CONFIG_CHANNEL_COMMON_H
+#define _BMC_CONFIG_CHANNEL_COMMON_H
 
 #include "bmc-config.h"
 

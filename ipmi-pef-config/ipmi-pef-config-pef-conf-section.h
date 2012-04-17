@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_PEF_CONFIG_PEF_CONF_SECTION_H_
-#define _IPMI_PEF_CONFIG_PEF_CONF_SECTION_H_
+#ifndef _IPMI_PEF_CONFIG_PEF_CONF_SECTION_H
+#define _IPMI_PEF_CONFIG_PEF_CONF_SECTION_H
 
 #include "ipmi-pef-config.h"
 #include "ipmi-pef-config-sections.h"

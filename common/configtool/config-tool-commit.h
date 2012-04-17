@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _CONFIG_TOOL_COMMIT_H_
-#define _CONFIG_TOOL_COMMIT_H_
+#ifndef _CONFIG_TOOL_COMMIT_H
+#define _CONFIG_TOOL_COMMIT_H
 
 #include "config-tool-common.h"
 #include "pstdout.h"

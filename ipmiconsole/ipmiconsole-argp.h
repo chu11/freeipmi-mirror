@@ -24,11 +24,11 @@
  *  with Ipmiconsole.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _IPMICONSOLE_ARGP_H
-#define _IPMICONSOLE_ARGP_H
+#ifndef IPMICONSOLE_ARGP_H
+#define IPMICONSOLE_ARGP_H
 
 #include "ipmiconsole.h"
 
 void ipmiconsole_argp_parse (int argc, char **argv, struct ipmiconsole_arguments *cmd_args);
 
-#endif /* _IPMICONSOLE_ARGP_H */
+#endif /* IPMICONSOLE_ARGP_H */

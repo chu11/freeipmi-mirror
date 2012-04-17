@@ -24,8 +24,8 @@
  *  with Ipmipower.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _IPMIPOWER_CONNECTION_H
-#define _IPMIPOWER_CONNECTION_H
+#ifndef IPMIPOWER_CONNECTION_H
+#define IPMIPOWER_CONNECTION_H
 
 #include "ipmipower.h"
 
@@ -55,4 +55,4 @@ int ipmipower_connection_hostname_index (struct ipmipower_connection *ics,
                                          unsigned int ics_len,
                                          const char *hostname);
 
-#endif /* _IPMIPOWER_CONNECTION_H */
+#endif /* IPMIPOWER_CONNECTION_H */

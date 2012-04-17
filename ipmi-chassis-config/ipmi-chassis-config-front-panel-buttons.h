@@ -17,8 +17,8 @@
  */
 
 
-#ifndef _IPMI_CHASSIS_CONFIG_FRONT_PANEL_BUTTONS_H_
-#define _IPMI_CHASSIS_CONFIG_FRONT_PANEL_BUTTONS_H_
+#ifndef _IPMI_CHASSIS_CONFIG_FRONT_PANEL_BUTTONS_H
+#define _IPMI_CHASSIS_CONFIG_FRONT_PANEL_BUTTONS_H
 
 #include "ipmi-chassis-config.h"
 #include "ipmi-chassis-config-sections.h"

@@ -17,8 +17,8 @@
  */
 
 
-#ifndef _IPMI_PEF_CONFIG_LAN_ALERT_DESTINATION_H_
-#define _IPMI_PEF_CONFIG_LAN_ALERT_DESTINATION_H_
+#ifndef _IPMI_PEF_CONFIG_LAN_ALERT_DESTINATION_H
+#define _IPMI_PEF_CONFIG_LAN_ALERT_DESTINATION_H
 
 #include "ipmi-pef-config.h"
 #include "ipmi-pef-config-sections.h"

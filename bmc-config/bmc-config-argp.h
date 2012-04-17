@@ -17,8 +17,8 @@
  */
 
 
-#ifndef _BMC_ARGP_H_
-#define _BMC_ARGP_H_
+#ifndef _BMC_ARGP_H
+#define _BMC_ARGP_H
 
 #include "bmc-config.h"
 

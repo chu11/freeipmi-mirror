@@ -17,8 +17,8 @@
  */
 
 
-#ifndef _BMC_CONFIG_LAN_CONF_MISC_SECTION_H_
-#define _BMC_CONFIG_LAN_CONF_MISC_SECTION_H_
+#ifndef _BMC_CONFIG_LAN_CONF_MISC_SECTION_H
+#define _BMC_CONFIG_LAN_CONF_MISC_SECTION_H
 
 #include "bmc-config.h"
 #include "bmc-config-sections.h"

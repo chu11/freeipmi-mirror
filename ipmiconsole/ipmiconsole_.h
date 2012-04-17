@@ -32,8 +32,8 @@
  */
 
 /* file is "ipmiconsole_.h", so double underscore */
-#ifndef _IPMICONSOLE__H
-#define _IPMICONSOLE__H
+#ifndef IPMICONSOLE__H
+#define IPMICONSOLE__H
 
 #include <freeipmi/freeipmi.h>
 
@@ -67,4 +67,4 @@ struct ipmiconsole_arguments
 #endif /* NDEBUG */
 };
 
-#endif /* _IPMICONSOLE__H */
+#endif /* IPMICONSOLE__H */

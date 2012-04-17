@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _CONFIG_TOOL_ARGP_H_
-#define _CONFIG_TOOL_ARGP_H_
+#ifndef _CONFIG_TOOL_ARGP_H
+#define _CONFIG_TOOL_ARGP_H
 
 #if HAVE_CONFIG_H
 #include "config.h"

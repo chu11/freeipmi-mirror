@@ -24,8 +24,8 @@
  *  with Ipmipower.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _IPMIPOWER_PING_H
-#define _IPMIPOWER_PING_H
+#ifndef IPMIPOWER_PING_H
+#define IPMIPOWER_PING_H
 
 #include "ipmipower.h"
 
@@ -33,4 +33,4 @@ void ipmipower_ping_force_discovery_sweep ();
 
 void ipmipower_ping_process_pings (int *timeout);
 
-#endif /* _IPMIPOWER_PING_H */
+#endif /* IPMIPOWER_PING_H */

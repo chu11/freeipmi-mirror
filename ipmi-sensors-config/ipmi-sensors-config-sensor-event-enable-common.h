@@ -17,8 +17,8 @@
  */
 
 
-#ifndef _IPMI_SENSORS_CONFIG_SENSOR_EVENT_ENABLE_COMMON_H_
-#define _IPMI_SENSORS_CONFIG_SENSOR_EVENT_ENABLE_COMMON_H_
+#ifndef IPMI_SENSORS_CONFIG_SENSOR_EVENT_ENABLE_COMMON_H
+#define IPMI_SENSORS_CONFIG_SENSOR_EVENT_ENABLE_COMMON_H
 
 #include "ipmi-sensors-config.h"
 #include "ipmi-sensors-config-sections.h"
@@ -44,4 +44,4 @@ int setup_sensor_event_enable_fields (ipmi_sensors_config_state_data_t *state_da
                                       unsigned int sdr_record_len,
                                       struct config_section *section);
 
-#endif /* _IPMI_SENSORS_CONFIG_SENSOR_EVENT_ENABLE_COMMON_H_ */
+#endif /* IPMI_SENSORS_CONFIG_SENSOR_EVENT_ENABLE_COMMON_H */

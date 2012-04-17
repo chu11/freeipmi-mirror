@@ -24,8 +24,8 @@
  *  with Ipmipower.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _IPMIPOWER_OEM_H
-#define _IPMIPOWER_OEM_H
+#ifndef IPMIPOWER_OEM_H
+#define IPMIPOWER_OEM_H
 
 #include "ipmipower.h"
 
@@ -57,5 +57,4 @@ int ipmipower_oem_power_cmd_check_extra_arg (const char *extra_arg,
 					     char *errbuf,
 					     unsigned int errbuflen);
 
-#endif /* _IPMIPOWER_OEM_H */
-
+#endif /* IPMIPOWER_OEM_H */

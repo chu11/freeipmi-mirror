@@ -24,8 +24,8 @@
  *  with Ipmidetect.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _IPMIDETECTD_H
-#define _IPMIDETECTD_H 1
+#ifndef IPMIDETECTD_H
+#define IPMIDETECTD_H
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -44,4 +44,4 @@
 #define MAXPATHLEN 4096
 #endif /* MAXPATHLEN */
 
-#endif /* _IPMIDETECTD_H */
+#endif /* IPMIDETECTD_H */

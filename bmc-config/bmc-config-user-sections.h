@@ -17,8 +17,8 @@
  */
 
 
-#ifndef _BMC_CONFIG_USER_SECTIONS_H_
-#define _BMC_CONFIG_USER_SECTIONS_H_
+#ifndef _BMC_CONFIG_USER_SECTIONS_H
+#define _BMC_CONFIG_USER_SECTIONS_H
 
 #include "bmc-config.h"
 #include "bmc-config-sections.h"

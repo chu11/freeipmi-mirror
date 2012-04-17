@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_PEF_CONFIG_ALERT_STRING_H_
-#define _IPMI_PEF_CONFIG_ALERT_STRING_H_
+#ifndef _IPMI_PEF_CONFIG_ALERT_STRING_H
+#define _IPMI_PEF_CONFIG_ALERT_STRING_H
 
 #include "ipmi-pef-config.h"
 #include "ipmi-pef-config-sections.h"

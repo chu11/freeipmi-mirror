@@ -24,8 +24,8 @@
  *  with Ipmidetect.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _IPMIDETECTD_CONFIG_H
-#define _IPMIDETECTD_CONFIG_H
+#ifndef IPMIDETECTD_CONFIG_H
+#define IPMIDETECTD_CONFIG_H
 
 #if HAVE_CONFIG_H
 #include "config.h"
@@ -51,4 +51,4 @@ struct ipmidetectd_config
 
 void ipmidetectd_config_setup (int argc, char **argv);
 
-#endif /* _IPMIDETECTD_CONFIG_H */
+#endif /* IPMIDETECTD_CONFIG_H */

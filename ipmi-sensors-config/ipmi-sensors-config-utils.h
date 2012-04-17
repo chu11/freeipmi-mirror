@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_SENSORS_CONFIG_UTILS_H
-#define _IPMI_SENSORS_CONFIG_UTILS_H
+#ifndef IPMI_SENSORS_CONFIG_UTILS_H
+#define IPMI_SENSORS_CONFIG_UTILS_H
 
 #include "ipmi-sensors-config.h"
 
@@ -38,4 +38,4 @@ config_err_t get_sdr_record (ipmi_sensors_config_state_data_t *state_data,
                              void *sdr_record,
                              unsigned int *sdr_record_len);
 
-#endif
+#endif /* IPMI_SENSORS_CONFIG_UTILS_H */

@@ -24,8 +24,8 @@
  *  with Ipmipower.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _IPMIPOWER_OUTPUT_H
-#define _IPMIPOWER_OUTPUT_H
+#ifndef IPMIPOWER_OUTPUT_H
+#define IPMIPOWER_OUTPUT_H
 
 #include "ipmipower.h"
 
@@ -36,4 +36,4 @@ void ipmipower_output (ipmipower_msg_type_t num, const char *hostname, const cha
  */
 void ipmipower_output_finish (void);
 
-#endif /* _IPMIPOWER_OUTPUT_H */
+#endif /* IPMIPOWER_OUTPUT_H */
