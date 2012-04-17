@@ -16,11 +16,11 @@
  * 
  */
 
-#ifndef _BMC_CONFIG_SECTIONS_H
-#define _BMC_CONFIG_SECTIONS_H
+#ifndef BMC_CONFIG_SECTIONS_H
+#define BMC_CONFIG_SECTIONS_H
 
 #include "bmc-config.h"
 
 struct config_section *bmc_config_sections_create (bmc_config_state_data_t *state_data);
 
-#endif /* _BMC_CONFIG_SECTIONS_H */
+#endif /* BMC_CONFIG_SECTIONS_H */

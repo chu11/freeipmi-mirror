@@ -17,11 +17,11 @@
  */
 
 
-#ifndef _BMC_ARGP_H
-#define _BMC_ARGP_H
+#ifndef BMC_CONFIG_ARGP_H
+#define BMC_CONFIG_ARGP_H
 
 #include "bmc-config.h"
 
 void bmc_config_argp_parse (int argc, char *argv[], struct bmc_config_arguments *args);
 
-#endif /* _BMC_ARGP_H */
+#endif /* BMC_CONFIG_ARGP_H */

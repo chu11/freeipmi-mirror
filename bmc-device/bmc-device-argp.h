@@ -16,11 +16,11 @@
  * 
  */
 
-#ifndef _BMC_DEVICE_ARGP_H
-#define _BMC_DEVICE_ARGP_H
+#ifndef BMC_DEVICE_ARGP_H
+#define BMC_DEVICE_ARGP_H
 
 #include "bmc-device.h"
 
 void bmc_device_argp_parse (int argc, char **argv, struct bmc_device_arguments *cmd_args);
 
-#endif
+#endif /* BMC_DEVICE_ARGP_H */

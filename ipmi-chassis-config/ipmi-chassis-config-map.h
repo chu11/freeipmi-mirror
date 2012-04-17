@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _BMC_CONFIG_MAP_H
-#define _BMC_CONFIG_MAP_H
+#ifndef IPMI_CHASSIS_CONFIG_MAP_H
+#define IPMI_CHASSIS_CONFIG_MAP_H
 
 #include "ipmi-chassis-config.h"
 
@@ -45,4 +45,4 @@ int console_redirection_number (const char *string);
 
 char *console_redirection_string (uint8_t value);
 
-#endif
+#endif /* IPMI_CHASSIS_CONFIG_MAP_H */

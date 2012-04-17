@@ -16,11 +16,11 @@
  * 
  */
 
-#ifndef _IPMI_CHASSIS_CONFIG_ARGP_H
-#define _IPMI_CHASSIS_CONFIG_ARGP_H
+#ifndef IPMI_CHASSIS_CONFIG_ARGP_H
+#define IPMI_CHASSIS_CONFIG_ARGP_H
 
 #include "ipmi-chassis-config.h"
 
 void ipmi_chassis_config_argp_parse (int argc, char **argv, struct ipmi_chassis_config_arguments *cmd_args);
 
-#endif
+#endif /* IPMI_CHASSIS_CONFIG_ARGP_H */

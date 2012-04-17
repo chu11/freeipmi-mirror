@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _IPMI_CHASSIS_H
-#define _IPMI_CHASSIS_H
+#ifndef IPMI_CHASSIS_H
+#define IPMI_CHASSIS_H
 
 #include <freeipmi/freeipmi.h>
 
@@ -114,4 +114,4 @@ typedef struct ipmi_chassis_state_data
   pstdout_state_t pstate;
 } ipmi_chassis_state_data_t;
 
-#endif
+#endif /* IPMI_CHASSIS_H */

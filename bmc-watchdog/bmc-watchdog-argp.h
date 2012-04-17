@@ -25,11 +25,11 @@
  *  with Bmc-Watchdog.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _BMC_WATCHDOG_ARGP_H
-#define _BMC_WATCHDOG_ARGP_H
+#ifndef BMC_WATCHDOG_ARGP_H
+#define BMC_WATCHDOG_ARGP_H
 
 #include "bmc-watchdog.h"
 
 void bmc_watchdog_argp_parse (int argc, char **argv, struct bmc_watchdog_arguments *cmd_args);
 
-#endif
+#endif /* BMC_WATCHDOG_ARGP_H */

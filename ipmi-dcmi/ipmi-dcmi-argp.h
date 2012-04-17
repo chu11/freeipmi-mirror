@@ -27,7 +27,7 @@
 #ifndef IPMI_DCMI_ARGP_H
 #define IPMI_DCMI_ARGP_H
 
-#include "ipmi-dcmi_.h"
+#include "ipmi-dcmi.h"
 
 void ipmi_dcmi_argp_parse (int argc, char **argv, struct ipmi_dcmi_arguments *cmd_args);
 

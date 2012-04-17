@@ -24,17 +24,8 @@
  *  with Ipmi-Dcmi.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-/* file is named ipmi-dcmi_.h to differentiate itself from the
- * library ipmi-dcmi.h.
- *
- * I am scared of the portability of the #include_next directive, so
- * that's why I'm doing it this way.
- */
-
-/* file is "ipmi-dcmi_.h", so double underscore */
-
-#ifndef IPMI_DCMI__H
-#define IPMI_DCMI__H
+#ifndef IPMI_DCMI_H
+#define IPMI_DCMI_H
 
 #include <freeipmi/freeipmi.h>
 
@@ -105,4 +96,4 @@ typedef struct ipmi_dcmi_state_data
   struct ipmi_oem_data oem_data;
 } ipmi_dcmi_state_data_t;
 
-#endif /* IPMI_DCMI__H */
+#endif /* IPMI_DCMI_H */

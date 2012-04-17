@@ -16,9 +16,8 @@
  * 
  */
 
-
-#ifndef _BMC_CONFIG_H
-#define _BMC_CONFIG_H
+#ifndef BMC_CONFIG_H
+#define BMC_CONFIG_H
 
 #include <stdint.h>
 #include <freeipmi/freeipmi.h>
@@ -117,4 +116,4 @@ typedef struct bmc_config_state_data
   unsigned int sol_channel_numbers_loaded;
 } bmc_config_state_data_t;
 
-#endif /* _BMC_CONFIG_H */
+#endif /* BMC_CONFIG_H */

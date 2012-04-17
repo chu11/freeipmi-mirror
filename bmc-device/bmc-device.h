@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef _BMC_DEVICE_H
-#define _BMC_DEVICE_H
+#ifndef BMC_DEVICE_H
+#define BMC_DEVICE_H
 
 #include <freeipmi/freeipmi.h>
 
@@ -123,4 +123,4 @@ typedef struct bmc_device_state_data
   ipmi_sdr_parse_ctx_t sdr_parse_ctx;
 } bmc_device_state_data_t;
 
-#endif
+#endif /* BMC_DEVICE_H */
