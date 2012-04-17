@@ -13,6 +13,8 @@
 	
 	* Fix file scope object naming issues.
 
+	* Make some variables static that should be file local. 
+
 2012-03-20  Albert Chu <chu11@llnl.gov>
 
 	Merge intels5000pal branch.

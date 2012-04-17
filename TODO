@@ -4,11 +4,8 @@ ooo - priority code cleanup that should be done
 
 reserved
 
-macros w/ _ in front
-macros w/ __ in front
 variables w/ _ in front
 variables in __ in front
-functions w/ _ in front (does this matter?)
 
 branches to merge
 -----------------
