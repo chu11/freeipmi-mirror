@@ -503,6 +503,7 @@ struct ipmi_oem_command oem_intel[] =
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_intel_set_power_restore_delay
     },
+#if 0
     {
       "get-bmc-service-status",
       NULL,
@@ -517,6 +518,7 @@ struct ipmi_oem_command oem_intel[] =
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_intel_set_bmc_service_status
     },
+#endif
     {
       "restore-configuration",
       NULL,

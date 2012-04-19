@@ -1301,6 +1301,8 @@ ipmi_oem_intel_set_power_restore_delay (ipmi_oem_state_data_t *state_data)
   return (rv);
 }
 
+#if 0
+/* Cannot verify - need newer firmware from Intel */ 
 int
 ipmi_oem_intel_get_bmc_service_status (ipmi_oem_state_data_t *state_data)
 {
@@ -1490,6 +1492,7 @@ ipmi_oem_intel_set_bmc_service_status (ipmi_oem_state_data_t *state_data)
  cleanup:
   return (rv);
 }
+#endif
 
 int
 ipmi_oem_intel_restore_configuration (ipmi_oem_state_data_t *state_data)
