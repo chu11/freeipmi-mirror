@@ -1,5 +1,11 @@
 2012-04-19  Albert Chu <chu11@llnl.gov>
 
+	* NEWS, configure.ac: Update for release.
+
+	* Tagged Release-1_1_4.
+
+2012-04-19  Albert Chu <chu11@llnl.gov>
+
 	Merge branch intels2600jf
 
 	* ipmi-oem/: Add Intel --get-power-restore-delay,
