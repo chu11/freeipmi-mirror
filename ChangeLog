@@ -1,4 +1,24 @@
-2012-03-20  Albert Chu <chu11@llnl.gov>
+2012-04-19  Albert Chu <chu11@llnl.gov>
+
+	Merge branch intels2600jf
+
+	* ipmi-oem/: Add Intel --get-power-restore-delay,
+	--set-power-restore-delay, --get-bmc-service-status,
+	--set-bmc-service-status.
+
+	* libfreeipmi/include/freeipmi/spec/, libfreeipmi/sel-parse/:
+	Re-arch SEL OEM interpretations of Quanta QSSC-S4R/Appro GB812X-CN
+	to prepare for Intel S2600JF/Appro 512X.  Add QPI Interconnect
+	specific event offset messages.
+
+	* libfreeipmi/sel-parse/: Support Intel S2600JF/Appro 512X OEM SEL
+	events.
+
+	* libfreeipmi/include/: Add additions for Intel S2600JF/Appro 512x
+
+	* man/: Update documentation for Intel S2600JF/Appro 512x support.
+	
+2012-04-16  Albert Chu <chu11@llnl.gov>
 
 	Merge reservedmacros branch.
 

@@ -318,8 +318,6 @@ unsigned int ipmi_sensor_type_oem_fujitsu_config_backup_max_index = 0x0F;
 
 /*
  * Intel S5500WB/Penguin Computing Relion 700
- * Quanta QSSC-S4R/Appro GB812X-CN                                                                                                                                      
- * (Quanta motherboard maintains Intel manufacturer ID)          
  */
 
 const char * const ipmi_oem_intel_specific_pci_fatal_sensor[] =
@@ -355,4 +353,151 @@ const char * const ipmi_oem_intel_specific_pci_correctable_sensor[] =
   };
 unsigned int ipmi_oem_intel_specific_pci_correctable_sensor_max_index = 0x06;
 
+/*
+ * Quanta QSSC-S4R/Appro GB812X-CN
+ * (Quanta motherboard maintains Intel manufacturer ID)          
+ */
 
+/* achu: Similar to above, but some events text changed, so new arrays to differentiate */
+
+const char * const ipmi_oem_intel_quanta_qssc_s4r_specific_pci_fatal_sensor[] =
+  {
+    "Data Link Layer Protocol Error",
+    "Surprise Link Down",
+    "Unexpected Completer",
+    "Received Unsupported request condition on inbound address decode with exception of SAD",
+    "Poisoned TLP Error",
+    "Flow Control Protocol Error",
+    "Completion Timeout Error",
+    "Completer Abort Error",
+    "Receiver Buffer Overflow Error",
+    "ACS Violation Error",
+    "Malformed TLP Error",
+    "Received ERR_FATAL Message From Downstream Error",
+    "Unexpected Completion Error",
+    "Received ERR_NONFATAL Message Error",
+    NULL
+  };
+unsigned int ipmi_oem_intel_quanta_qssc_s4r_specific_pci_fatal_sensor_max_index = 0x0D;
+
+const char * const ipmi_oem_intel_quanta_qssc_s4r_specific_pci_correctable_sensor[] =
+  {
+    "Receiver Error",
+    "Bad DLLP Error",
+    "Bad TLLP Error",
+    "REPLAY_NUM Rollover Error",
+    "REPLAY Timer Timeout Error",
+    "Advisory Non-fatal Error (Received ERR_COR message)",
+    "Link Bandwidth Changed (ECN) Error",
+    NULL
+  };
+unsigned int ipmi_oem_intel_quanta_qssc_s4r_specific_pci_correctable_sensor_max_index = 0x06;
+
+/*
+ * Intel S2600JF/Appro 512X
+ */
+
+/* achu: Similar to above, but some events text changed and new ones,
+ * so new arrays to differentiate */
+
+const char * const ipmi_oem_intel_s2600jf_specific_pci_fatal_error[] =
+  {
+    "Data Link Layer Protocol Error",
+    "Surprise Link Down Error",
+    "Completer Abort",
+    "Unsupported Request",
+    "Poisoned TLP",
+    "Flow Control Protocol",
+    "Completion Timeout",
+    "Receiver Buffer Overflow",
+    "ACS Violation Error",
+    "Malformed TLP Error",
+    "ECRC Error",
+    "Received Fatal Message From Downstream",
+    "Unexpected Completion",
+    "Received ERR_NONFATAL Message",
+    "Uncorrectable Internal",
+    "MC Blocked TLP",
+    NULL
+  };
+unsigned int ipmi_oem_intel_s2600jf_specific_pci_fatal_error_max_index = 0x0F;
+
+const char * const ipmi_oem_intel_s2600jf_specific_pci_fatal_error_2[] =
+  {
+    "Atomic Egress Blocked",
+    "TLP Prefix Blocked",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "Unspecified Non-AER Fatal Error",
+    NULL
+  };
+unsigned int ipmi_oem_intel_s2600jf_specific_pci_fatal_error_2_max_index = 0x0F;
+
+const char * const ipmi_oem_intel_s2600jf_specific_pci_correctable_error[] =
+  {
+    "Receiver Error",
+    "Bad DLLP",
+    "Bad TLP",
+    "Replay Num Rollover",
+    "Replay Timer timeout",
+    "Advisory Non-fatal",
+    "Link BW Changed",
+    "Correctable Internal",
+    "Header Log Overflow",
+    NULL
+  };
+unsigned int ipmi_oem_intel_s2600jf_specific_pci_correctable_error_max_index = 0x08;
+
+const char * const ipmi_oem_intel_s2600jf_specific_opi_fatal_error[] =
+  {
+    "Link Layer Uncorrectable ECC Error",
+    "Protocol Layer Poisoned Packet Reception Error",
+    "LINK/PHY Init Failure with resultant degradation in link width",
+    "CSI PHY Layer detected drift buffer alarm",
+    "CSI PHY detected latency buffer rollover",
+    "CSI PHY Init Failure",
+    "CSI Link Layer generic control error (buffer overflow/underflow, credit underflow and so on.)",
+    "Parity error in link or PHY layer",
+    "Protocol layer timeout detected",
+    "Protocol layer failed response",
+    "Protocol layer illegal packet field, taret Node ID and so on.",
+    "Protocol Layer Queue/table overflow/underflow",
+    "Viral Error",
+    "Protocol Layer parity error",
+    "Routing Table Error",
+    NULL
+  };
+unsigned int ipmi_oem_intel_s2600jf_specific_opi_fatal_error_max_index = 0x0E;
+
+const char * const ipmi_oem_intel_s2600jf_specific_opi_fatal_error_2[] =
+  {
+    "Illegal inbound request",
+    "PCH Write Cache Uncorrectable Data ECC Error",
+    "PCH Write Cache Uncorrectable Data ECC Error", /* same not typo, typo in spec? */
+    "PCH Write Cache Uncorrectable Data ECC Error", /* same not typo, typo in spec? */
+    "PCH Received XPF physical/logical redirect interrupt inbound",
+    "PCH Illegal SAD or Illegal or non-existent address or memory",
+    "PCH Write Cache Coherency Violation",
+    NULL
+  };
+unsigned int ipmi_oem_intel_s2600jf_specific_opi_fatal_error_2_max_index = 0x06;
+
+const char * const ipmi_oem_intel_s2600jf_specific_qpi_link_width_reduced[] =
+  {
+    "reserved",
+    "Reduced to 1/2 width",
+    "Reduced to 1/4 width",
+    NULL
+  };
+unsigned int ipmi_oem_intel_s2600jf_specific_qpi_link_width_reduced_max_index = 0x02;

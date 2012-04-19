@@ -24,6 +24,15 @@
 int ipmi_oem_intel_get_smtp_config (ipmi_oem_state_data_t *state_data);
 int ipmi_oem_intel_set_smtp_config (ipmi_oem_state_data_t *state_data);
 
+int ipmi_oem_intel_get_power_restore_delay (ipmi_oem_state_data_t *state_data);
+int ipmi_oem_intel_set_power_restore_delay (ipmi_oem_state_data_t *state_data);
+
+#if 0
+/* Cannot verify - need newer firmware from Intel */ 
+int ipmi_oem_intel_get_bmc_service_status (ipmi_oem_state_data_t *state_data);
+int ipmi_oem_intel_set_bmc_service_status (ipmi_oem_state_data_t *state_data);
+#endif
+
 int ipmi_oem_intel_restore_configuration (ipmi_oem_state_data_t *state_data);
 
 #endif /* IPMI_OEM_INTEL_H */
