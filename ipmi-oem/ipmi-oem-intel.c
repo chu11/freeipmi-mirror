@@ -202,6 +202,19 @@
 #define IPMI_OEM_INTEL_RESTORE_CONFIGURATION_RESTORE_PROGRESS_RESTORE_IN_PROGRESS 0x00
 #define IPMI_OEM_INTEL_RESTORE_CONFIGURATION_RESTORE_PROGRESS_RESTORE_COMPLETED   0x01
 
+#define IPMI_OEM_INTEL_POWER_RESTORE_DELAY_MSB_MASK 0x07
+#define IPMI_OEM_INTEL_POWER_RESTORE_DELAY_LSB_MASK 0xFF
+
+#define IPMI_OEM_INTEL_POWER_RESTORE_DELAY_MAX 0x07FF
+
+#define IPMI_OEM_INTEL_DISABLE_SERVICES 0x00
+#define IPMI_OEM_INTEL_ENABLE_SERVICES  0x01
+
+#define IPMI_OEM_INTEL_STANDARD_SERVICES_SSH  0x80
+#define IPMI_OEM_INTEL_STANDARD_SERVICES_HTTP 0x20
+
+#define IPMI_OEM_INTEL_OEM_SPECIFIC_SERVICES_KVM 0x80
+
 static int
 _get_smtp_configuration_data (ipmi_oem_state_data_t *state_data,
 			      uint8_t channel_number,
@@ -1137,6 +1150,351 @@ ipmi_oem_intel_set_smtp_config (ipmi_oem_state_data_t *state_data)
 }
 
 int
+ipmi_oem_intel_get_power_restore_delay (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  uint16_t delay = 0; 
+  int rs_len;
+  int rv = -1;
+
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+
+  /* Intel S2600JF/Appro 512X
+   *
+   * Request 
+   *
+   * 0x30 - OEM network function
+   * 0x55 - OEM cmd
+   *
+   * Response 
+   *
+   * 0x55 - OEM cmd
+   * 0x?? - Completion Code
+   * 0x?? - delay setting (MSB)
+   *      - [7:3] - reserved
+   *      - [2:0] - most significant 3 bits
+   * 0x?? - delay setting (LSB)
+   *
+   * delay setting is 11 bits total.
+   */
+
+  bytes_rq[0] = IPMI_CMD_OEM_INTEL_GET_POWER_RESTORE_DELAY;
+
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+                              IPMI_NET_FN_OEM_INTEL_GENERIC_RQ, /* network function */
+                              bytes_rq, /* data */
+                              1, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+  
+  if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                   bytes_rs,
+                                                   rs_len,
+                                                   4,
+                                                   IPMI_CMD_OEM_INTEL_GET_POWER_RESTORE_DELAY,
+                                                   IPMI_NET_FN_OEM_INTEL_GENERIC_RS,
+                                                   NULL) < 0)
+    goto cleanup;
+
+  delay = ((bytes_rs[2] & IPMI_OEM_INTEL_POWER_RESTORE_DELAY_MSB_MASK) << 8) | bytes_rs[3];
+
+  pstdout_printf (state_data->pstate, "%u\n", delay);
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
+ipmi_oem_intel_set_power_restore_delay (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  unsigned int tmp;
+  char *endptr;
+  uint16_t delay = 0; 
+  int rs_len;
+  int rv = -1;
+
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 1);
+
+  errno = 0;
+  
+  tmp = strtoul (state_data->prog_data->args->oem_options[0],
+		 &endptr,
+		 10);
+  if (errno
+      || endptr[0] != '\0'
+      || tmp > IPMI_OEM_INTEL_POWER_RESTORE_DELAY_MAX)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "%s:%s invalid OEM option argument '%s'\n",
+		       state_data->prog_data->args->oem_id,
+		       state_data->prog_data->args->oem_command,
+		       state_data->prog_data->args->oem_options[0]);
+      goto cleanup;
+    }
+  
+  delay = tmp;
+  
+  /* Intel S2600JF/Appro 512X
+   *
+   * Request 
+   *
+   * 0x30 - OEM network function
+   * 0x54 - OEM cmd
+   * 0x?? - delay setting (MSB)
+   *      - [7:3] - reserved
+   *      - [2:0] - most significant 3 bits
+   * 0x?? - delay setting (LSB)
+   *
+   * Response 
+   *
+   * 0x55 - OEM cmd
+   * 0x?? - Completion Code
+   *
+   * delay setting is 11 bits total.
+   */
+
+  bytes_rq[0] = IPMI_CMD_OEM_INTEL_SET_POWER_RESTORE_DELAY;
+  bytes_rq[1] = (delay & IPMI_OEM_INTEL_POWER_RESTORE_DELAY_MSB_MASK) >> 8;
+  bytes_rq[2] = (delay & IPMI_OEM_INTEL_POWER_RESTORE_DELAY_LSB_MASK);
+
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+                              IPMI_NET_FN_OEM_INTEL_GENERIC_RQ, /* network function */
+                              bytes_rq, /* data */
+                              3, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+  
+  if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                   bytes_rs,
+                                                   rs_len,
+                                                   2,
+                                                   IPMI_CMD_OEM_INTEL_SET_POWER_RESTORE_DELAY,
+                                                   IPMI_NET_FN_OEM_INTEL_GENERIC_RS,
+                                                   NULL) < 0)
+    goto cleanup;
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+#if 0
+/* Cannot verify - need newer firmware from Intel */ 
+int
+ipmi_oem_intel_get_bmc_service_status (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  int rs_len;
+  int rv = -1;
+
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+
+  /* Intel S2600JF/Appro 512X
+   *
+   * Request 
+   *
+   * 0x30 - OEM network function
+   * 0xB2 - OEM cmd
+   *
+   * Response 
+   *
+   * 0xB2 - OEM cmd
+   * 0x?? - Completion Code
+   * 0x?? - Standard Services bit pattern
+   *      - bit 7 - 0 - ssh service is not running
+   *                1 - ssh service is running
+   *        bit 6 - reserved
+   *        bit 5 - 0 - http/https services not running
+   *                1 - http/https services running
+   *        bit 4:0 - reserved
+   * 0x?? - OEM specific Services bit pattern
+   *      - bit 7 - 0 - kvm service is not running
+   *                1 - kvm service is running
+   *        bit 6:0 - reserved 
+   */
+
+  bytes_rq[0] = IPMI_CMD_OEM_INTEL_GET_BMC_SERVICE_STATUS;
+
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+                              IPMI_NET_FN_OEM_INTEL_GENERIC_RQ, /* network function */
+                              bytes_rq, /* data */
+                              2, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+  
+  if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                   bytes_rs,
+                                                   rs_len,
+                                                   4,
+                                                   IPMI_CMD_OEM_INTEL_GET_BMC_SERVICE_STATUS,
+                                                   IPMI_NET_FN_OEM_INTEL_GENERIC_RS,
+                                                   NULL) < 0)
+    goto cleanup;
+
+  pstdout_printf (state_data->pstate, "SSH: %s\n",
+		  (bytes_rs[2] & IPMI_OEM_INTEL_STANDARD_SERVICES_SSH) ? "Enabled" : "Disabled");
+  
+  pstdout_printf (state_data->pstate, "HTTP/HTTPS: %s\n",
+		  (bytes_rs[2] & IPMI_OEM_INTEL_STANDARD_SERVICES_HTTP) ? "Enabled" : "Disabled");
+  
+  pstdout_printf (state_data->pstate, "KVM: %s\n",
+		  (bytes_rs[2] & IPMI_OEM_INTEL_OEM_SPECIFIC_SERVICES_KVM) ? "Enabled" : "Disabled");
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
+ipmi_oem_intel_set_bmc_service_status (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  uint8_t standard_services = 0;
+  uint8_t oem_specific_services = 0;
+  int rs_len;
+  int rv = -1;
+
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 2);
+
+  if (strcasecmp (state_data->prog_data->args->oem_options[0], "enable")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "disable"))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[0]);
+      goto cleanup;
+    }
+  
+  if (strcasecmp (state_data->prog_data->args->oem_options[1], "ssh")
+      && strcasecmp (state_data->prog_data->args->oem_options[1], "http")
+      && strcasecmp (state_data->prog_data->args->oem_options[1], "kvm"))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[1]);
+      goto cleanup;
+    }
+
+  /* Intel S2600JF/Appro 512X
+   *
+   * Request 
+   *
+   * 0x30 - OEM network function
+   * 0xB1 - OEM cmd
+   * 0x?? - 00h - disable given services
+   *        01h - enable given services
+   * 0x?? - Standard Services bit pattern
+   *      - bit 7 - 0 - ssh service is not running
+   *                1 - ssh service is running
+   *        bit 6 - reserved
+   *        bit 5 - 0 - http/https services not running
+   *                1 - http/https services running
+   *        bit 4:0 - reserved
+   * 0x?? - OEM specific Services bit pattern
+   *      - bit 7 - 0 - kvm service is not running
+   *                1 - kvm service is running
+   *        bit 6:0 - reserved 
+   *
+   * Response 
+   *
+   * 0xB1 - OEM cmd
+   * 0x?? - Completion Code
+   */
+
+  bytes_rq[0] = IPMI_CMD_OEM_INTEL_CONTROL_BMC_SERVICES;
+  if (!strcasecmp (state_data->prog_data->args->oem_options[0], "enable"))
+    bytes_rq[1] = IPMI_OEM_INTEL_ENABLE_SERVICES;
+  else
+    bytes_rq[1] = IPMI_OEM_INTEL_DISABLE_SERVICES;
+
+  if (!strcasecmp (state_data->prog_data->args->oem_options[1], "ssh"))
+    {
+      bytes_rq[2] = IPMI_OEM_INTEL_STANDARD_SERVICES_SSH;
+      bytes_rq[3] = 0;
+    }
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[1], "http"))
+    {
+      bytes_rq[2] = IPMI_OEM_INTEL_STANDARD_SERVICES_HTTP;
+      bytes_rq[3] = 0;
+    }
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[1], "kvm"))
+    {
+      bytes_rq[2] = 0;
+      bytes_rq[3] = IPMI_OEM_INTEL_OEM_SPECIFIC_SERVICES_KVM;
+    }
+
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+                              IPMI_NET_FN_OEM_INTEL_GENERIC_RQ, /* network function */
+                              bytes_rq, /* data */
+                              4, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+  
+  if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                   bytes_rs,
+                                                   rs_len,
+                                                   2,
+                                                   IPMI_CMD_OEM_INTEL_CONTROL_BMC_SERVICES,
+                                                   IPMI_NET_FN_OEM_INTEL_GENERIC_RS,
+                                                   NULL) < 0)
+    goto cleanup;
+  
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+#endif
+
+int
 ipmi_oem_intel_restore_configuration (ipmi_oem_state_data_t *state_data)
 {
   uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
@@ -1148,6 +1506,7 @@ ipmi_oem_intel_restore_configuration (ipmi_oem_state_data_t *state_data)
   assert (!state_data->prog_data->args->oem_options_count);
 
   /* Intel S5500WB/Penguin Computing Relion 700
+   * Intel S2600JF/Appro 512X
    *
    * Restore Configuration Request
    *

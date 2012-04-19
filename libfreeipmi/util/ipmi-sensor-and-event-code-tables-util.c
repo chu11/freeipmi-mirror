@@ -2004,28 +2004,98 @@ ipmi_get_oem_specific_message (uint32_t manufacturer_id,
    * Intel S5500WB/Penguin Computing Relion 700
    * Quanta QSSC-S4R/Appro GB812X-CN
    * (Quanta motherboard maintains Intel manufacturer ID)
+   * Intel S2600JF/Appro 512X
    */
-  if (manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL
-      && (product_id == IPMI_INTEL_PRODUCT_ID_S5500WB
-	  || product_id == IPMI_INTEL_PRODUCT_ID_QUANTA_QSSC_S4R))
+  if (manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL)
     {
-      if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_FATAL_SENSOR
-          && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
-        return (_get_event_message (offset,
-                                    buf,
-                                    buflen,
-                                    ipmi_oem_intel_specific_pci_fatal_sensor_max_index,
-                                    ipmi_oem_intel_specific_pci_fatal_sensor));
-      
-      if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_CORRECTABLE_SENSOR
-	  && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
-        return (_get_event_message (offset,
-                                    buf,
-                                    buflen,
-                                    ipmi_oem_intel_specific_pci_correctable_sensor_max_index,
-                                    ipmi_oem_intel_specific_pci_correctable_sensor));
-    }
+      if (product_id == IPMI_INTEL_PRODUCT_ID_S5500WB)
+	{
+	  if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_FATAL_SENSOR
+	      && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
+	    return (_get_event_message (offset,
+					buf,
+					buflen,
+					ipmi_oem_intel_specific_pci_fatal_sensor_max_index,
+					ipmi_oem_intel_specific_pci_fatal_sensor));
+	  
+	  if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_CORRECTABLE_SENSOR
+	      && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
+	    return (_get_event_message (offset,
+					buf,
+					buflen,
+					ipmi_oem_intel_specific_pci_correctable_sensor_max_index,
+					ipmi_oem_intel_specific_pci_correctable_sensor));
+	}
+      else if (product_id == IPMI_INTEL_PRODUCT_ID_QUANTA_QSSC_S4R)
+	{
+	  if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QUANTA_QSSC_S4R_PCIE_FATAL_SENSOR
+	      && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
+	    return (_get_event_message (offset,
+					buf,
+					buflen,
+					ipmi_oem_intel_quanta_qssc_s4r_specific_pci_fatal_sensor_max_index,
+					ipmi_oem_intel_quanta_qssc_s4r_specific_pci_fatal_sensor));
+	  
+	  if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QUANTA_QSSC_S4R_PCIE_CORRECTABLE_SENSOR
+	      && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
+	    return (_get_event_message (offset,
+					buf,
+					buflen,
+					ipmi_oem_intel_quanta_qssc_s4r_specific_pci_correctable_sensor_max_index,
+					ipmi_oem_intel_quanta_qssc_s4r_specific_pci_correctable_sensor));
+	}
+      else if (product_id == IPMI_INTEL_PRODUCT_ID_S2600JF)
+	{
+	  if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600JF_PCIE_FATAL_ERROR
+	      && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
+	    return (_get_event_message (offset,
+					buf,
+					buflen,
+					ipmi_oem_intel_s2600jf_specific_pci_fatal_error_max_index,
+					ipmi_oem_intel_s2600jf_specific_pci_fatal_error));
 
+	  if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600JF_PCIE_FATAL_ERROR_2
+	      && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
+	    return (_get_event_message (offset,
+					buf,
+					buflen,
+					ipmi_oem_intel_s2600jf_specific_pci_fatal_error_2_max_index,
+					ipmi_oem_intel_s2600jf_specific_pci_fatal_error_2));
+	  
+	  if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600JF_PCIE_CORRECTABLE_ERROR
+	      && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
+	    return (_get_event_message (offset,
+					buf,
+					buflen,
+					ipmi_oem_intel_s2600jf_specific_pci_correctable_error_max_index,
+					ipmi_oem_intel_s2600jf_specific_pci_correctable_error));
+
+	  if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600JF_OPI_FATAL_ERROR
+	      && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
+	    return (_get_event_message (offset,
+					buf,
+					buflen,
+					ipmi_oem_intel_s2600jf_specific_opi_fatal_error_max_index,
+					ipmi_oem_intel_s2600jf_specific_opi_fatal_error));
+
+	  if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600JF_OPI_FATAL_ERROR_2
+	      && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
+	    return (_get_event_message (offset,
+					buf,
+					buflen,
+					ipmi_oem_intel_s2600jf_specific_opi_fatal_error_2_max_index,
+					ipmi_oem_intel_s2600jf_specific_opi_fatal_error_2));
+	  
+	  if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600JF_QPI_LINK_WIDTH_REDUCED
+	      && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
+	    return (_get_event_message (offset,
+					buf,
+					buflen,
+					ipmi_oem_intel_s2600jf_specific_qpi_link_width_reduced_max_index,
+					ipmi_oem_intel_s2600jf_specific_qpi_link_width_reduced));
+	}
+    }
+  
   SET_ERRNO (EINVAL);
   return (-1);
 }

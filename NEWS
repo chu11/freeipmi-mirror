@@ -4,6 +4,10 @@ Tools
 ------
 o In ipmi-oem, fix error message output in several Supermicro OEM
   commands.
+o In ipmi-oem, add Intel --get-power-restore-delay and
+  --set-power-restore-delay support.
+o In ipmi-sel, support Intel S2600JF/Appro 512x OEM SEL
+  interpretations.
 
 Libraries
 ----------
@@ -11,6 +15,8 @@ o In libfreeipmi, support new sensor and SEL event interpretations,
   including Session Audit, Voltage Limits.
 o In libfreeipmi, support new OEM interpretations for Intel S5000PAL
   NMI State and SMI timeout sensors/SEL events.
+o In libfreeipmi, support Intel S2600JF/Appro 512x OEM SEL
+  interpretations.
 
 Misc
 ----

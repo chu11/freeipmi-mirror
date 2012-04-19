@@ -362,7 +362,7 @@ This OEM command will get the current SMTP configuration on the IPMI
 card.  By default, configuration for every LAN channel will be output.
 If a \fIchannel\-number\fR is specified, only that specific channel
 number's configuration will be output.  Command confirmed to work on
-Intel S5500WB (Penguin Computing Relion 700).
+Intel S5500WB (Penguin Computing Relion 700) and Intel S2600JF (Appro 512X).
 .TP
 .B set-smtp-config \fI[channel\-number]\fR \fIKEY=VALUE ...\fR
 This OEM command will set the current SMTP configuration on the IPMI
@@ -376,15 +376,40 @@ values are \fIsmtp=enable|disable\fR,
 \fIsenderemailaddress=string\fR, and \fIsmtphostname=string\fR.
 Multiple key=value pairs may be specified.  If no key=value pairs are
 specifed, available pairs are output.  Command confirmed to work on
-Intel S5500WB (Penguin Computing Relion 700).
+Intel S5500WB (Penguin Computing Relion 700) and Intel S2600JF (Appro 512X).
+.TP
+.B get-power-restore-delay 
+This OEM command will retrieve the power on delay.  The power on delay
+is a delay that occurs whenever the BMC turns on the system according
+to the Power Restore Policy setting.  It does not take effect
+otherwise (i.e. power button or Chassis Control).  Command confirmed
+to work on Intel S2600JF (Appro 512X).
+.TP
+.B set-power-restore-delay \fIseconds\fR
+This OEM command will set the power on delay.  (See
+\fIget\-power\-restore\-delay\fR above for description on power
+restore delay).  Command confirmed to work on Intel S2600JF (Appro
+512X).
+.if 0 \{
+.TP
+.B get-bmc-service-status
+This OEM command will get the current status of BMC services such as
+ssh, http, and kvm.  Command confirmed to work on Intel S2600JF (Appro
+512X).
+.TP
+.B set-bmc-service-status \fIenable|disable\fR \fIssh|http|kvm\fR
+This OEM command will enable or disable BMC services besides IPMI.
+Note that \fIhttp\fR refers to both http and https.  Command confirmed
+to work on Intel S2600JF (Appro 512X).
+\}
 .TP
 .B restore-configuration
 This OEM command will restore BMC configuration values back to default
 values.  The command will spin until the restore is confirmed to be
-complete.  Command configured to work on Intel S5500WB/Penguin
-Computing Relion 700.  After running this command, the BMC must be
-reset to return it to functioning status.  This may be accomplished by
-executing a cold-reset with
+complete.  Command configured to work on Intel S5500WB (Penguin
+Computing Relion 700) and Intel S2600JF (Appro 512X).  After running
+this command, the BMC must be reset to return it to functioning
+status.  This may be accomplished by executing a cold-reset with
 .B bmc-device(8).
 .RE
 .TP
