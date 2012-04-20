@@ -55,7 +55,8 @@ Requires: freeipmi = %{version}-%{release}
 Requires(post): /sbin/chkconfig
 Requires(preun): /sbin/chkconfig
 %description ipmidetectd
-IPMI node detection daemon.
+IPMI node detection daemon.  Regularly IPMI-pings remote nodes to
+provide data for a number of IPMI detection tools and features.
 
 %if %{?_with_debug:1}%{!?_with_debug:0}
   %define _enable_debug --enable-debug --enable-trace
