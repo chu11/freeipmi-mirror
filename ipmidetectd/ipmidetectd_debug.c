@@ -47,11 +47,11 @@ _ipmidetect_debug_msg_create(const char *fmt, ...)
   if (!fmt)
     return NULL;
 
-  if (!(buffer = malloc(DEBUG_BUFFER_LEN)))
+  if (!(buffer = malloc(IPMIDETECTD_DEBUG_BUFFER_LEN)))
     return NULL;
 
   va_start(ap, fmt);
-  vsnprintf(buffer, DEBUG_BUFFER_LEN, fmt, ap);
+  vsnprintf(buffer, IPMIDETECTD_DEBUG_BUFFER_LEN, fmt, ap);
   va_end(ap);
 
   return buffer;
