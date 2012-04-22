@@ -1,12 +1,12 @@
 2012-04-21  Albert Chu <chu11@llnl.gov>
 
-	* bmc-watchdog/bmc-watchdog.c (_daemon_cmd): Handle SIGQUIT in
-	addition to SIGTERM and SIGINT.  Properly set umask before writing
-	pidfile.  Properly unlink/delete pidfile when necessary. Code
-	cleanup.
+	* bmc-watchdog/bmc-watchdog.c: Handle SIGQUIT in addition to
+	SIGTERM and SIGINT.  Properly set umask before writing pidfile.
+	Properly unlink/delete pidfile when necessary. Code cleanup.
 
 	* ipmidetectd/ipmidetectd.c: Create pidfile on daemon startup.
 	Support debugging in production build.  Fix segfault corner case.
+	Handle signals SIGINT, SIGTERM, and SIGQUIT.
 	
 2012-04-19  Albert Chu <chu11@llnl.gov>
 

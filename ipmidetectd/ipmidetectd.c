@@ -55,6 +55,13 @@
 extern struct ipmidetectd_config conf;
 
 static void
+_signal_handler (int sig)
+{
+  if (!conf.debug)
+    (void) unlink (IPMIDETECTD_PIDFILE);
+}
+
+static void
 _daemon_init (void)
 {
   /* Based on code in Unix network programming by R. Stevens */
@@ -129,6 +136,15 @@ main (int argc, char **argv)
     }
   else
     err_set_flags (ERROR_STDERR);
+
+  if (signal (SIGTERM, _signal_handler) == SIG_ERR)
+    IPMIDETECTD_EXIT (("signal: %s", strerror (errno)));
+  
+  if (signal (SIGINT, _signal_handler) == SIG_ERR)
+    IPMIDETECTD_EXIT (("signal: %s", strerror (errno)));
+
+  if (signal (SIGQUIT, _signal_handler) == SIG_ERR)
+    IPMIDETECTD_EXIT (("signal: %s", strerror (errno)));
 
   /* Call after daemonization, since daemonization closes currently
    * open fds

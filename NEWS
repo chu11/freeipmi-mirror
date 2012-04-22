@@ -26,9 +26,10 @@ o In ipmidetect, exit with exit value 2 when an error occurs.  Exit
 o In ipmi-sel, support new --post-clear option.
 o In bmc-device, support new --set-sensor-reading-and-event-status option.
 o In bmc-watchdog daemon, support handling of SIGQUIT signal in
-  addition to SIGTERM and SIGINT.
-o In bmc-watchdog daemon, properly umask generated pidfile.
-o In bmc-watchdog daemon, properly unlink/delete pidfile when necessary. 
+  addition to SIGTERM and SIGINT, properly umask generated pidfile,
+  and delete pidfile when necessary.
+o In ipmidetectd daemon, handle SIGTERM, SIGINT, and SIGQUIT signals
+  and handle pidfile.
 
 Libraries
 ---------
