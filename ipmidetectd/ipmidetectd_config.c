@@ -260,7 +260,6 @@ ipmidetectd_config_setup (int argc, char **argv)
   _config_default ();
   _cmdline_parse (argc, argv);
   _config_file_parse ();
-  _arguments_error_check ();
 
   if (!hostlist_count (conf.hosts))
     IPMIDETECTD_EXIT (("No nodes configured"));
