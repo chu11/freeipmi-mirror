@@ -66,8 +66,9 @@
 
 #include "ipmidetectd.h"
 #include "ipmidetectd_config.h"
+#include "ipmidetectd_debug.h"
 #include "ipmidetectd_loop.h"
-#include "debug.h"
+
 #include "error.h"
 #include "fd.h"
 #include "freeipmi-portability.h"

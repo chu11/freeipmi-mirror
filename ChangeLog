@@ -6,7 +6,7 @@
 
 	* ipmidetectd/ipmidetectd.c: Create pidfile on daemon startup.
 	Support debugging in production build.  Fix segfault corner case.
-	Handle signals SIGINT, SIGTERM, and SIGQUIT.
+	Handle signals SIGINT, SIGTERM, and SIGQUIT.  Code cleanup.
 	
 2012-04-19  Albert Chu <chu11@llnl.gov>
 

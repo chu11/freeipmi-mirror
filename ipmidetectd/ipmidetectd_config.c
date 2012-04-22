@@ -46,8 +46,8 @@
 #include <errno.h>
 
 #include "ipmidetectd.h"
+#include "ipmidetectd_debug.h"
 #include "ipmidetectd_config.h"
-#include "debug.h"
 
 #include "freeipmi-portability.h"
 #include "conffile.h"

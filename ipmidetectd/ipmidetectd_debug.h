@@ -49,8 +49,8 @@
  *  with Cerebro.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef DEBUG_H
-#define DEBUG_H
+#ifndef IPMIDETECTD_DEBUG_H
+#define IPMIDETECTD_DEBUG_H
 
 #if HAVE_CONFIG_H
 #include "config.h"
@@ -64,58 +64,58 @@
 
 #include "error.h"
 
-#define DEBUG_BUFFER_LEN 8192
+#define IPMIDETECTD_DEBUG_BUFFER_LEN 8192
 
-#define DEBUG_MSG_CREATE(__msg) \
-    char __err[DEBUG_BUFFER_LEN]; \
+#define IPMIDETECTD_DEBUG_MSG_CREATE(__msg) \
+    char __err[IPMIDETECTD_DEBUG_BUFFER_LEN]; \
     int __len; \
     \
-    memset(__err, '\0', DEBUG_BUFFER_LEN); \
+    memset(__err, '\0', IPMIDETECTD_DEBUG_BUFFER_LEN); \
     \
     __len = snprintf(__err, \
-                     DEBUG_BUFFER_LEN, \
+                     IPMIDETECTD_DEBUG_BUFFER_LEN, \
                      "(%s, %s, %d): ", \
                      __FILE__, \
                      __FUNCTION__, \
                      __LINE__); \
     \
-    if (__len < DEBUG_BUFFER_LEN) \
+    if (__len < IPMIDETECTD_DEBUG_BUFFER_LEN) \
       { \
         char *__str; \
-        if ((__str = _debug_msg_create __msg)) \
+        if ((__str = _ipmidetect_debug_msg_create __msg)) \
           { \
-            strncat(__err, __str, DEBUG_BUFFER_LEN - __len - 1); \
+            strncat(__err, __str, IPMIDETECTD_DEBUG_BUFFER_LEN - __len - 1); \
             __len += strlen(__str); \
             free(__str); \
           } \
       }
 
 /*
- * _debug_msg_create
+ * _ipmidetect_debug_msg_create
  *
  * create a buffer and put the a mesage inside it
  *
  * Returns message buffer or NULL on error
  */
-char *_debug_msg_create(const char *fmt, ...);
+char *_ipmidetect_debug_msg_create(const char *fmt, ...);
 
 #ifndef NDEBUG
 
 #define IPMIDETECTD_DEBUG(__msg) \
     do { \
-      DEBUG_MSG_CREATE(__msg) \
+      IPMIDETECTD_DEBUG_MSG_CREATE(__msg) \
       err_debug(__err); \
     } while(0)
 
 #define IPMIDETECTD_OUTPUT(__msg) \
     do { \
-      DEBUG_MSG_CREATE(__msg) \
+      IPMIDETECTD_DEBUG_MSG_CREATE(__msg) \
       err_output(__err); \
     } while(0)
 
 #define IPMIDETECTD_EXIT(__msg) \
     do { \
-      DEBUG_MSG_CREATE(__msg) \
+      IPMIDETECTD_DEBUG_MSG_CREATE(__msg) \
       err_exit(__err); \
     } while(0)
    
@@ -135,4 +135,4 @@ char *_debug_msg_create(const char *fmt, ...);
 
 #endif /* NDEBUG */
 
-#endif /* DEBUG_H */
+#endif /* IPMIDETECTD_DEBUG_H */

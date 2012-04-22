@@ -34,12 +34,12 @@
 #include <stdarg.h>
 #endif /* STDC_HEADERS */
 
-#include "debug.h"
+#include "ipmidetectd_debug.h"
 
 #include "freeipmi-portability.h"
 
 char *
-_debug_msg_create(const char *fmt, ...)
+_ipmidetect_debug_msg_create(const char *fmt, ...)
 {
   char *buffer;
   va_list ap;

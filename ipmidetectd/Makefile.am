@@ -20,12 +20,12 @@ ipmidetectd_LDADD = \
 	$(top_builddir)/libfreeipmi/libfreeipmi.la
 
 ipmidetectd_SOURCES = \
-	debug.c \
-	debug.h \
 	ipmidetectd.c \
 	ipmidetectd.h \
 	ipmidetectd_config.c \
 	ipmidetectd_config.h \
+	ipmidetectd_debug.c \
+	ipmidetectd_debug.h \
 	ipmidetectd_loop.c \
 	ipmidetectd_loop.h
 
