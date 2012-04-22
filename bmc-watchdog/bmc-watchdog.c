@@ -1919,6 +1919,8 @@ _daemon_setup (void)
 static void
 _signal_handler (int sig)
 {
+  if (!cmd_args.common.debug)
+    (void) unlink (BMC_WATCHDOG_PIDFILE);
   shutdown_flag = 0;
 }
 
