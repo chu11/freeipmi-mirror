@@ -28,8 +28,7 @@ o In bmc-device, support new --set-sensor-reading-and-event-status option.
 o In bmc-watchdog daemon, support handling of SIGQUIT signal in
   addition to SIGTERM and SIGINT, properly umask generated pidfile,
   and delete pidfile when necessary.
-o In ipmidetectd daemon, handle SIGTERM, SIGINT, and SIGQUIT signals
-  and handle pidfile.
+o In ipmidetectd daemon, create/handle pidfile.
 
 Libraries
 ---------
