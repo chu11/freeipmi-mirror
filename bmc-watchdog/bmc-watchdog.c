@@ -1701,14 +1701,10 @@ _daemon_init ()
     {
       unsigned int i;
       pid_t pid;
-      FILE *pidfile;
       int fds[2];
 
       if ( pipe(fds) < 0 )
         _err_exit ("pipe: %s", strerror (errno));
-
-      if ( (pidfile = fopen(BMC_WATCHDOG_PIDFILE, "w")) == NULL )
-        _err_exit ("fopen: %s", strerror (errno));
 
       if ((pid = fork ()) < 0)
         _err_exit ("fork: %s", strerror (errno));
@@ -1730,6 +1726,11 @@ _daemon_init ()
       if ((pid = fork ()) < 0)
         _err_exit ("fork: %s", strerror (errno));
       if (pid) {
+	FILE *pidfile;
+
+	if ( (pidfile = fopen(BMC_WATCHDOG_PIDFILE, "w")) == NULL )
+	  _err_exit ("fopen: %s", strerror (errno));
+
         /* write the 2nd child PID to the pidfile */
         fprintf(pidfile, "%u\n", pid);
         fclose(pidfile);
