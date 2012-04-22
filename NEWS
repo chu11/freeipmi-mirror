@@ -25,6 +25,8 @@ o In ipmidetect, exit with exit value 2 when an error occurs.  Exit
   value of 0 or 1 are reserved for scripting.
 o In ipmi-sel, support new --post-clear option.
 o In bmc-device, support new --set-sensor-reading-and-event-status option.
+o In bmc-watchdog daemon, support handling of SIGQUIT signal in
+  addition to SIGTERM and SIGINT.
 
 Libraries
 ---------
