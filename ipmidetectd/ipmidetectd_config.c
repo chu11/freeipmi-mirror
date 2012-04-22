@@ -252,12 +252,6 @@ _config_file_parse (void)
   conffile_handle_destroy (cf);
 }
 
-static void
-_arguments_error_check (void)
-{
-  /* Nothing to check right now */
-}
-
 void
 ipmidetectd_config_setup (int argc, char **argv)
 {
