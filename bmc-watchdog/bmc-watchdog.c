@@ -1728,6 +1728,11 @@ _daemon_init ()
       if (pid) {
 	FILE *pidfile;
 
+	/* Do not want pidfile writable to group/other */
+	umask(022);
+
+	(void) unlink (BMC_WATCHDOG_PIDFILE);
+
 	if ( (pidfile = fopen(BMC_WATCHDOG_PIDFILE, "w")) == NULL )
 	  _err_exit ("fopen: %s", strerror (errno));
 

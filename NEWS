@@ -27,6 +27,7 @@ o In ipmi-sel, support new --post-clear option.
 o In bmc-device, support new --set-sensor-reading-and-event-status option.
 o In bmc-watchdog daemon, support handling of SIGQUIT signal in
   addition to SIGTERM and SIGINT.
+o In bmc-watchdog daemon, properly umask generated pidfile.
 
 Libraries
 ---------
