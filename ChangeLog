@@ -1,3 +1,8 @@
+2012-04-21  Albert Chu <chu11@llnl.gov>
+
+	* bmc-watchdog/bmc-watchdog.c (_daemon_cmd): Handle SIGQUIT in
+	addition to SIGTERM and SIGINT.
+	
 2012-04-19  Albert Chu <chu11@llnl.gov>
 
 	Merge branch intels2600jf

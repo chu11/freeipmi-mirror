@@ -1967,6 +1967,11 @@ _daemon_cmd (void)
       _bmclog ("signal: %s", strerror (errno));
       exit (1);
     }
+  if (signal (SIGQUIT, _signal_handler) == SIG_ERR)
+    {
+      _bmclog ("signal: %s", strerror (errno));
+      exit (1);
+    }
 
   _bmclog ("starting bmc-watchdog daemon");
 
