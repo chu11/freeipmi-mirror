@@ -356,7 +356,6 @@ _ipmi_ping_build (struct ipmidetectd_info *info, uint8_t *buf, unsigned int bufl
     IPMIDETECTD_EXIT (("assemble_ipmi_lan_pkt: %s", strerror (errno)));
 
 #if 0
-#ifndef NDEBUG
   if (conf.debug)
     {
       if (ipmi_dump_lan_packet (STDERR_FILENO,
@@ -368,7 +367,6 @@ _ipmi_ping_build (struct ipmidetectd_info *info, uint8_t *buf, unsigned int bufl
                                 tmpl_cmd_get_channel_authentication_capabilities_rq) < 0)
         IPMIDETECTD_EXIT (("ipmi_dump_lan_packet: %s", strerror (errno)));
     }
-#endif /* NDEBUG */
 #endif
 
   fiid_obj_destroy (obj_rmcp_hdr);
@@ -409,10 +407,8 @@ _ipmidetectd_send_pings (void)
                            sizeof (struct sockaddr_in)) < 0)
         IPMIDETECTD_EXIT (("ipmi_lan_sendto: %s", strerror (errno)));
 
-#ifndef NDEBUG
       if (conf.debug)
         fprintf (stderr, "Ping Request to %s\n", info->hostname);
-#endif /* NDEBUG */
     }
 
   list_iterator_destroy (itr);
@@ -503,10 +499,8 @@ _receive_ping (int fd)
       if (gettimeofday (&(info->last_received), NULL) < 0)
         IPMIDETECTD_EXIT (("gettimeofday: %s", strerror (errno)));
 
-#ifndef NDEBUG
       if (conf.debug)
         fprintf (stderr, "Ping Reply from %s\n", info->hostname);
-#endif /* NDEBUG */
     }
 }
 
@@ -525,10 +519,8 @@ _send_ping_data (void)
   if ((rhost_fd = accept (server_fd, (struct sockaddr *)&rhost, &rhost_len)) < 0)
     IPMIDETECTD_EXIT (("accept: %s", strerror (errno)));
 
-#ifndef NDEBUG
   if (conf.debug)
     fprintf (stderr, "Received ipmidetectd server request\n");
-#endif /* NDEBUG */
 
   if (!(itr = list_iterator_create (nodes)))
     IPMIDETECTD_EXIT (("list_iterator_create: %s", strerror (errno)));

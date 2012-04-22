@@ -4,6 +4,9 @@
 	addition to SIGTERM and SIGINT.  Properly set umask before writing
 	pidfile.  Properly unlink/delete pidfile when necessary. Code
 	cleanup.
+
+	* ipmidetectd/ipmidetectd.c: Create pidfile on daemon startup.
+	Support debugging in production build.
 	
 2012-04-19  Albert Chu <chu11@llnl.gov>
 

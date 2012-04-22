@@ -11,7 +11,8 @@ ipmidetectd_CPPFLAGS = \
 	-I$(top_srcdir)/common/portability \
 	-I$(top_srcdir)/libfreeipmi/include \
 	-D_GNU_SOURCE \
-	-D_REENTRANT
+	-D_REENTRANT \
+	-DIPMIDETECTD_LOCALSTATEDIR='"$(localstatedir)"'
 
 ipmidetectd_LDADD = \
 	$(top_builddir)/common/miscutil/libmiscutil.la \

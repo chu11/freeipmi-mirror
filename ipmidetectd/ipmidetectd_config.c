@@ -60,9 +60,7 @@ _config_default (void)
 {
   memset (&conf, '\0', sizeof (struct ipmidetectd_config));
 
-#ifndef NDEBUG
   conf.debug = IPMIDETECTD_DEBUG_DEFAULT;
-#endif /* NDEBUG */
   conf.config_file = NULL;
   conf.ipmiping_period = IPMIDETECTD_IPMIPING_PERIOD;
   conf.ipmidetectd_server_port = IPMIDETECTD_SERVER_PORT_DEFAULT;
@@ -76,12 +74,9 @@ _usage (void)
 {
   fprintf (stderr, "Usage: cerebrod [OPTIONS]\n"
            "-h    --help          Output Help\n"
-           "-v    --version       Output Version\n");
-#ifndef NDEBUG
-  fprintf (stderr,
+           "-v    --version       Output Version\n"
            "-c    --config_file   Specify alternate config file\n"
            "-d    --debug         Turn on debugging and run daemon in foreground\n");
-#endif /* NDEBUG */
   exit (0);
 }
 
@@ -103,10 +98,8 @@ _cmdline_parse (int argc, char **argv)
     {
       { "help",                0, NULL, 'h'},
       { "version",             0, NULL, 'v'},
-#ifndef NDEBUG
       { "config-file",         1, NULL, 'c'},
       { "debug",               0, NULL, 'd'},
-#endif /* NDEBUG */
       { NULL,                  0, NULL, 0},
     };
 #endif /* HAVE_GETOPT_LONG */
@@ -114,10 +107,7 @@ _cmdline_parse (int argc, char **argv)
   assert (argv);
 
   memset (options, '\0', sizeof (options));
-  strcat (options, "hv");
-#ifndef NDEBUG
-  strcat (options, "c:d");
-#endif /* NDEBUG */
+  strcat (options, "hvc:d");
 
   /* turn off output messages */
   opterr = 0;
@@ -136,7 +126,6 @@ _cmdline_parse (int argc, char **argv)
 	  case 'v':       /* --version */
 	    _version ();
 	    break;
-#ifndef NDEBUG
 	  case 'c':       /* --config-file */
 	    if (!(conf.config_file = strdup (optarg)))
 	      IPMIDETECTD_EXIT (("strdup: %s", strerror (errno)));
@@ -144,7 +133,6 @@ _cmdline_parse (int argc, char **argv)
 	  case 'd':       /* --debug */
 	    conf.debug++;
 	    break;
-#endif /* NDEBUG */
 	  case '?':
 	  default:
 	    IPMIDETECTD_EXIT (("unknown command line option '%c'", c));
@@ -248,7 +236,8 @@ _config_file_parse (void)
           char buf[CONFFILE_MAX_ERRMSGLEN];
           
           /* Its not an error if the default configuration file doesn't exist */
-          if (!strcmp (conf.config_file, IPMIDETECTD_CONFIG_FILE_DEFAULT)
+          if ((!conf.config_file
+	       || !strcmp (conf.config_file, IPMIDETECTD_CONFIG_FILE_DEFAULT))
               && conffile_errnum (cf) == CONFFILE_ERR_EXIST)
             goto cleanup;
           

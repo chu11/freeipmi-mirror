@@ -50,6 +50,8 @@
 #include "freeipmi-portability.h"
 #include "error.h"
 
+#define IPMIDETECTD_PIDFILE IPMIDETECTD_LOCALSTATEDIR "/run/ipmidetectd.pid"
+
 extern struct ipmidetectd_config conf;
 
 static void
@@ -83,9 +85,24 @@ _daemon_init (void)
   if ((pid = fork ()) < 0)
     IPMIDETECTD_EXIT (("fork: %s", strerror (errno)));
 
-  if (pid != 0)                 /* Terminate 1st Child */
-    exit (0);
-
+  if (pid) {
+    FILE *pidfile;
+    
+    /* Do not want pidfile writable to group/other */
+    umask(022);
+    
+    (void) unlink (IPMIDETECTD_PIDFILE);
+    
+    if ( (pidfile = fopen(IPMIDETECTD_PIDFILE, "w")) == NULL )
+      IPMIDETECTD_EXIT (("fopen: %s", strerror (errno)));
+    
+    /* write the 2nd child PID to the pidfile */
+    fprintf(pidfile, "%u\n", pid);
+    fclose(pidfile);
+    
+    exit (0);			/* 1st child terminates */
+  }
+  
   chdir ("/");
 
   umask (0);
@@ -105,7 +122,6 @@ main (int argc, char **argv)
 
   ipmidetectd_config_setup (argc, argv);
 
-#ifndef NDEBUG
   if (!conf.debug)
     {
       _daemon_init ();
@@ -113,10 +129,6 @@ main (int argc, char **argv)
     }
   else
     err_set_flags (ERROR_STDERR);
-#else  /* NDEBUG */
-  _daemon_init ();
-  err_set_flags (ERROR_SYSLOG);
-#endif /* NDEBUG */
 
   /* Call after daemonization, since daemonization closes currently
    * open fds

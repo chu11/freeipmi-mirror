@@ -39,9 +39,7 @@
 
 struct ipmidetectd_config
 {
-#ifndef NDEBUG
   int debug;
-#endif /* NDEBUG */
   char *config_file;
 
   int ipmiping_period;
