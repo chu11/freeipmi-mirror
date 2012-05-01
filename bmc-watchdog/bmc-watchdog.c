@@ -428,6 +428,9 @@ _init_ipmi (void)
   if (!(locate_ctx = ipmi_locate_ctx_create ()))
     err_exit ("Error creating locate_ctx: %s", strerror (errno));
 
+  if (!ipmi_is_root ())
+    err_exit ("Permission denied, must be root.");
+
   if (cmd_args.common.driver_type != IPMI_DEVICE_UNKNOWN)
     {
       if (cmd_args.common.driver_type == IPMI_DEVICE_KCS)
@@ -2180,9 +2183,6 @@ main (int argc, char **argv)
   ipmi_disable_coredump ();
 
   bmc_watchdog_argp_parse (argc, argv, &cmd_args);
-
-  if (!ipmi_is_root ())
-    err_exit ("Permission denied, must be root.");
 
   /* Early initialization.  Assumes its a cronjob if its not a daemon.
    * Daemon must do all initialization in daemon_init() b/c
