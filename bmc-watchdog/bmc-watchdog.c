@@ -525,7 +525,7 @@ _init_ipmi (void)
 
 /* Must be called after cmdline parsed */
 static void
-_init_bmc_watchdog (int facility, int err_to_stderr)
+_init_bmc_watchdog (int facility)
 {
   assert (facility == LOG_CRON || facility == LOG_DAEMON);
 
@@ -536,28 +536,13 @@ _init_bmc_watchdog (int facility, int err_to_stderr)
       if ((logfile_fd = open ((cmd_args.logfile) ? cmd_args.logfile : BMC_WATCHDOG_LOGFILE_DEFAULT,
                               O_WRONLY | O_CREAT | O_APPEND,
                               S_IRUSR | S_IWUSR)) < 0)
-        {
-          if (err_to_stderr)
-            err_exit ("Error opening logfile '%s': %s",
-                       (cmd_args.logfile) ? cmd_args.logfile : BMC_WATCHDOG_LOGFILE_DEFAULT,
-                       strerror (errno));
-          else
-            _syslog (LOG_ERR, "Error opening logfile '%s': %s",
-                     (cmd_args.logfile) ? cmd_args.logfile : BMC_WATCHDOG_LOGFILE_DEFAULT,
-
-                     strerror (errno));
-          exit (1);
-        }
+	err_exit ("Error opening logfile '%s': %s",
+		  (cmd_args.logfile) ? cmd_args.logfile : BMC_WATCHDOG_LOGFILE_DEFAULT,
+		  strerror (errno));
     }
 
   if (_init_ipmi () < 0)
-    {
-      if (err_to_stderr)
-        err_exit ("_init_ipmi: %s", strerror (errno));
-      else
-        _syslog (LOG_ERR, "_init_ipmi: %s", strerror (errno));
-      exit (1);
-    }
+    err_exit ("_init_ipmi: %s", strerror (errno));
 }
 
 static void
@@ -1740,7 +1725,7 @@ _daemon_init ()
   /* move error outs to syslog from stderr */
   err_set_flags (ERROR_SYSLOG);
 
-  _init_bmc_watchdog (LOG_DAEMON, 0);
+  _init_bmc_watchdog (LOG_DAEMON);
 }
 
 static void
@@ -2189,7 +2174,7 @@ main (int argc, char **argv)
    * daemon_init() needs to close all formerly open file descriptors.
    */
   if (!cmd_args.daemon)
-    _init_bmc_watchdog (LOG_CRON, 1);
+    _init_bmc_watchdog (LOG_CRON);
 
   if (cmd_args.set)
     _set_cmd ();
