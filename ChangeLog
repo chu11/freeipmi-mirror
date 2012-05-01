@@ -1,3 +1,8 @@
+2012-05-01  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/api/: Support new IPMI_ERR_DRIVER_BUSY error code to
+	return when a driver is busy.
+
 2012-04-30  Albert Chu <chu11@llnl.gov>
 
 	* bmc-watchdog/bmc-watchdog.c (_bmclog_write): Call fsync to sync

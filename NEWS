@@ -46,6 +46,7 @@ o In libfreeipmi, libipmiconsole, libipmimonitoring, support ability
 o In libfreeipmi, add additional IPMI commands/payloads. 
 o In libfreeipmi, fix several macro names which did not meet
   standardization needs.
+o In libfreeipmi, support new IPMI_ERR_DRIVER_BUSY error code.
 
 Misc
 ----

@@ -29,6 +29,13 @@ extern "C" {
 
 /* ERROR CODE NOTES
  *
+ * IPMI_ERR_BMC_BUSY vs IPMI_ERR_DRIVER_BUSY
+ *
+ * BMC_BUSY indicates the BMC cannot handle more requests, it is an
+ * error typically from a completion code returned from the BMC.  The
+ * DRIVER_BUSY error indicates a driver is too busy to handle
+ * additional requests, the error does not come from the BMC.
+ *
  * IPMI_ERR_MESSAGE_TIMEOUT
  *
  * message timeout is typical of bridging commands.  The
@@ -58,21 +65,22 @@ enum ipmi_errnum
     IPMI_ERR_DEVICE_NOT_OPEN = 16,
     IPMI_ERR_DEVICE_NOT_SUPPORTED = 17,
     IPMI_ERR_DEVICE_NOT_FOUND = 18,
-    IPMI_ERR_DRIVER_TIMEOUT = 19,
-    IPMI_ERR_MESSAGE_TIMEOUT = 20,
-    IPMI_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE = 21,
-    IPMI_ERR_BAD_COMPLETION_CODE = 22,
-    IPMI_ERR_BAD_RMCPPLUS_STATUS_CODE = 23,
-    IPMI_ERR_NOT_FOUND = 24,
-    IPMI_ERR_BMC_BUSY = 25,
-    IPMI_ERR_OUT_OF_MEMORY = 26,
-    IPMI_ERR_HOSTNAME_INVALID = 27,
-    IPMI_ERR_PARAMETERS = 28,
-    IPMI_ERR_DRIVER_PATH_REQUIRED = 29,
-    IPMI_ERR_IPMI_ERROR = 30,
-    IPMI_ERR_SYSTEM_ERROR = 31,
-    IPMI_ERR_INTERNAL_ERROR = 32,
-    IPMI_ERR_ERRNUMRANGE = 33,
+    IPMI_ERR_DRIVER_BUSY = 19,
+    IPMI_ERR_DRIVER_TIMEOUT = 20,
+    IPMI_ERR_MESSAGE_TIMEOUT = 21,
+    IPMI_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE = 22,
+    IPMI_ERR_BAD_COMPLETION_CODE = 23,
+    IPMI_ERR_BAD_RMCPPLUS_STATUS_CODE = 24,
+    IPMI_ERR_NOT_FOUND = 25,
+    IPMI_ERR_BMC_BUSY = 26,
+    IPMI_ERR_OUT_OF_MEMORY = 27,
+    IPMI_ERR_HOSTNAME_INVALID = 28,
+    IPMI_ERR_PARAMETERS = 29,
+    IPMI_ERR_DRIVER_PATH_REQUIRED = 30,
+    IPMI_ERR_IPMI_ERROR = 31,
+    IPMI_ERR_SYSTEM_ERROR = 32,
+    IPMI_ERR_INTERNAL_ERROR = 33,
+    IPMI_ERR_ERRNUMRANGE = 34,
   };
 typedef enum ipmi_errnum ipmi_errnum_type_t;
 
