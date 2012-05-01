@@ -65,6 +65,7 @@
 #include "bmc-watchdog-argp.h"
 
 #include "freeipmi-portability.h"
+#include "error.h"
 #include "debug-util.h"
 #include "tool-common.h"
 
@@ -200,28 +201,6 @@ _bmclog (const char *fmt, ...)
   _bmclog_write (fbuffer, len);
 
   va_end (ap);
-}
-
-static void
-_err_init (char *progname)
-{
-  char *ptr = strrchr (progname, '/');
-  err_progname = (!ptr) ? progname : ptr + 1;
-}
-
-static void
-_err_exit (char *fmt, ...)
-{
-  char buffer[BMC_WATCHDOG_ERR_BUFLEN];
-  va_list ap;
-
-  assert (fmt && err_progname);
-
-  va_start (ap, fmt);
-  snprintf (buffer, BMC_WATCHDOG_ERR_BUFLEN, "%s: %s\n", err_progname, fmt);
-  vfprintf (stderr, buffer, ap);
-  va_end (ap);
-  exit (1);
 }
 
 static int
@@ -447,35 +426,35 @@ _init_ipmi (void)
   assert (err_progname);
 
   if (!(locate_ctx = ipmi_locate_ctx_create ()))
-    _err_exit ("Error creating locate_ctx: %s", strerror (errno));
+    err_exit ("Error creating locate_ctx: %s", strerror (errno));
 
   if (!ipmi_is_root ())
-    _err_exit ("Permission denied, must be root.");
+    err_exit ("Permission denied, must be root.");
 
   if (cmd_args.common.driver_type != IPMI_DEVICE_UNKNOWN)
     {
       if (cmd_args.common.driver_type == IPMI_DEVICE_KCS)
         {
           if (_init_kcs_ipmi () < 0)
-            _err_exit ("Error initializing KCS IPMI driver");
+            err_exit ("Error initializing KCS IPMI driver");
           driver_type_used = IPMI_DEVICE_KCS;
         }
       if (cmd_args.common.driver_type == IPMI_DEVICE_SSIF)
         {
           if (_init_ssif_ipmi () < 0)
-            _err_exit ("Error initializing SSIF IPMI driver");
+            err_exit ("Error initializing SSIF IPMI driver");
           driver_type_used = IPMI_DEVICE_SSIF;
         }
       if (cmd_args.common.driver_type == IPMI_DEVICE_OPENIPMI)
         {
           if (_init_openipmi_ipmi () < 0)
-            _err_exit ("Error initializing OPENIPMI IPMI driver");
+            err_exit ("Error initializing OPENIPMI IPMI driver");
           driver_type_used = IPMI_DEVICE_OPENIPMI;
         }
       if (cmd_args.common.driver_type == IPMI_DEVICE_SUNBMC)
         {
           if (_init_sunbmc_ipmi () < 0)
-            _err_exit ("Error initializing SUNBMC IPMI driver");
+            err_exit ("Error initializing SUNBMC IPMI driver");
           driver_type_used = IPMI_DEVICE_SUNBMC;
         }
     }
@@ -525,7 +504,7 @@ _init_ipmi (void)
               if (_init_kcs_ipmi () < 0)
                 {
                   if (_init_ssif_ipmi () < 0)
-                    _err_exit ("Error initializing IPMI driver");
+                    err_exit ("Error initializing IPMI driver");
                   else
                     driver_type_used = IPMI_DEVICE_SSIF;
                 }
@@ -559,7 +538,7 @@ _init_bmc_watchdog (int facility, int err_to_stderr)
                               S_IRUSR | S_IWUSR)) < 0)
         {
           if (err_to_stderr)
-            _err_exit ("Error opening logfile '%s': %s",
+            err_exit ("Error opening logfile '%s': %s",
                        (cmd_args.logfile) ? cmd_args.logfile : BMC_WATCHDOG_LOGFILE_DEFAULT,
                        strerror (errno));
           else
@@ -574,7 +553,7 @@ _init_bmc_watchdog (int facility, int err_to_stderr)
   if (_init_ipmi () < 0)
     {
       if (err_to_stderr)
-        _err_exit ("_init_ipmi: %s", strerror (errno));
+        err_exit ("_init_ipmi: %s", strerror (errno));
       else
         _syslog (LOG_ERR, "_init_ipmi: %s", strerror (errno));
       exit (1);
@@ -591,9 +570,9 @@ _ipmi_err_exit (uint8_t cmd, uint8_t netfn, int comp_code, char *str)
   if (comp_code < 0)
     {
       if (errno == EAGAIN || errno == EBUSY)
-        _err_exit ("%s: BMC Busy", str);
+        err_exit ("%s: BMC Busy", str);
       else
-        _err_exit ("%s: %s", str, strerror (errno));
+        err_exit ("%s: %s", str, strerror (errno));
     }
   else
     {
@@ -602,8 +581,8 @@ _ipmi_err_exit (uint8_t cmd, uint8_t netfn, int comp_code, char *str)
                                            comp_code,
                                            buf,
                                            BMC_WATCHDOG_ERR_BUFLEN) < 0)
-        _err_exit ("ipmi_completion_code_strerror_r: %s", strerror (errno));
-      _err_exit ("%s: %s", str, buf);
+        err_exit ("ipmi_completion_code_strerror_r: %s", strerror (errno));
+      err_exit ("%s: %s", str, buf);
     }
 }
 
@@ -621,7 +600,7 @@ _sleep (unsigned int sleep_len)
   if (select (1, NULL, NULL, NULL, &tv) < 0)
     {
       if (errno != EINTR)
-        _err_exit ("select: %s", strerror (errno));
+        err_exit ("select: %s", strerror (errno));
     }
   return (0);
 }
@@ -1314,7 +1293,7 @@ _set_cmd (void)
 
   if ((pre_timeout_interrupt != IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_NONE)
       && (pre_timeout_interval > initial_countdown_seconds))
-    _err_exit ("pre-timeout interval greater than initial countdown seconds");
+    err_exit ("pre-timeout interval greater than initial countdown seconds");
 
   if ((ret = _set_watchdog_timer_cmd (BMC_WATCHDOG_RETRY_WAIT_TIME,
                                       BMC_WATCHDOG_RETRY_ATTEMPT,
@@ -1707,10 +1686,10 @@ _daemon_init ()
       int fds[2];
 
       if ( pipe(fds) < 0 )
-        _err_exit ("pipe: %s", strerror (errno));
+        err_exit ("pipe: %s", strerror (errno));
 
       if ((pid = fork ()) < 0)
-        _err_exit ("fork: %s", strerror (errno));
+        err_exit ("fork: %s", strerror (errno));
       if (pid)
         {
           /* parent terminates */
@@ -1724,10 +1703,10 @@ _daemon_init ()
       setsid ();
 
       if (signal (SIGHUP, SIG_IGN) == SIG_ERR)
-        _err_exit ("signal: %s", strerror (errno));
+        err_exit ("signal: %s", strerror (errno));
 
       if ((pid = fork ()) < 0)
-        _err_exit ("fork: %s", strerror (errno));
+        err_exit ("fork: %s", strerror (errno));
       if (pid) {
 	FILE *pidfile;
 
@@ -1737,7 +1716,7 @@ _daemon_init ()
 	(void) unlink (BMC_WATCHDOG_PIDFILE);
 
 	if ( (pidfile = fopen(BMC_WATCHDOG_PIDFILE, "w")) == NULL )
-	  _err_exit ("fopen: %s", strerror (errno));
+	  err_exit ("fopen: %s", strerror (errno));
 
         /* write the 2nd child PID to the pidfile */
         fprintf(pidfile, "%u\n", pid);
@@ -1747,7 +1726,7 @@ _daemon_init ()
       }
 
       if (chdir ("/") < 0)
-        _err_exit ("chdir: %s", strerror (errno));
+        err_exit ("chdir: %s", strerror (errno));
 
       umask (0);
 
@@ -1757,6 +1736,9 @@ _daemon_init ()
       for (i = 0; i < 64; i++)
         close (i);
     }
+
+  /* move error outs to syslog from stderr */
+  err_set_flags (ERROR_SYSLOG);
 
   _init_bmc_watchdog (LOG_DAEMON, 0);
 }
@@ -2195,7 +2177,8 @@ _daemon_cmd (void)
 int
 main (int argc, char **argv)
 {
-  _err_init (argv[0]);
+  err_init (argv[0]);
+  err_set_flags (ERROR_STDERR);
 
   ipmi_disable_coredump ();
 
@@ -2223,7 +2206,7 @@ main (int argc, char **argv)
   else if (cmd_args.daemon)
     _daemon_cmd ();
   else
-    _err_exit ("internal error, command not set");
+    err_exit ("internal error, command not set");
 
   ipmi_kcs_ctx_destroy (kcs_ctx);
   ipmi_ssif_ctx_destroy (ssif_ctx);
@@ -2232,7 +2215,7 @@ main (int argc, char **argv)
   if (logfile_fd >= 0)
     {
       if (close (logfile_fd) < 0)
-        _err_exit ("close: %s", strerror (errno));
+        err_exit ("close: %s", strerror (errno));
     }
   closelog ();
   exit (0);
