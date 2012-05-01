@@ -158,6 +158,9 @@ _bmclog_write (void *buf, size_t count)
       ptr += ret;
       left -= ret;
     }
+
+  if (fsync (logfile_fd) < 0)
+    _syslog (LOG_ERR, "_bmcwrite: fsync: %s", strerror (errno));
 }
 
 static void

@@ -1,3 +1,8 @@
+2012-04-30  Albert Chu <chu11@llnl.gov>
+
+	* bmc-watchdog/bmc-watchdog.c (_bmclog_write): Call fsync to sync
+	log errors to disk.
+	
 2012-04-21  Albert Chu <chu11@llnl.gov>
 
 	* bmc-watchdog/bmc-watchdog.c: Handle SIGQUIT in addition to

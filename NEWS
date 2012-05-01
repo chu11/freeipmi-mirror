@@ -29,6 +29,7 @@ o In bmc-watchdog daemon, support handling of SIGQUIT signal in
   addition to SIGTERM and SIGINT, properly umask generated pidfile,
   and delete pidfile when necessary.
 o In ipmidetectd daemon, create/handle pidfile.
+o In bmc-watchdog daemon, properly fsync log entries to disk.
 
 Libraries
 ---------
