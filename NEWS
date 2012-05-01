@@ -30,6 +30,7 @@ o In bmc-watchdog daemon, support handling of SIGQUIT signal in
   and delete pidfile when necessary.
 o In ipmidetectd daemon, create/handle pidfile.
 o In bmc-watchdog daemon, properly fsync log entries to disk.
+o In bmc-watchdog, properly support assumeio and spinpoll workarounds.
 
 Libraries
 ---------

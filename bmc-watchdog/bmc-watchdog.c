@@ -66,7 +66,6 @@
 
 #include "freeipmi-portability.h"
 #include "error.h"
-#include "debug-util.h"
 #include "tool-common.h"
 
 #define BMC_WATCHDOG_ERR_BUFLEN           1024
@@ -104,13 +103,7 @@
 struct bmc_watchdog_arguments cmd_args;
 
 /* program name */
-static char *err_progname = NULL;
-
-static ipmi_kcs_ctx_t kcs_ctx = NULL;
-static ipmi_ssif_ctx_t ssif_ctx = NULL;
-static ipmi_openipmi_ctx_t openipmi_ctx = NULL;
-static ipmi_sunbmc_ctx_t sunbmc_ctx = NULL;
-static int driver_type_used = -1;
+static ipmi_ctx_t ipmi_ctx = NULL;
 
 static int shutdown_flag = 1;
 
@@ -122,13 +115,13 @@ _syslog (int priority, const char *fmt, ...)
   char buffer[BMC_WATCHDOG_ERR_BUFLEN];
   va_list ap;
 
-  assert (fmt && err_progname);
+  assert (fmt);
 
   if (cmd_args.no_logging)
     return;
 
   va_start (ap, fmt);
-  snprintf (buffer, BMC_WATCHDOG_ERR_BUFLEN, "%s: %s\n", err_progname, fmt);
+  snprintf (buffer, BMC_WATCHDOG_ERR_BUFLEN, "%s\n", fmt);
   vsyslog (priority, buffer, ap);
   va_end (ap);
 }
@@ -175,8 +168,7 @@ _bmclog (const char *fmt, ...)
   va_list ap;
 
   assert (fmt
-          && err_progname
-          && (cmd_args.no_logging || logfile_fd >= 0));
+	  && (cmd_args.no_logging || logfile_fd >= 0));
 
   if (cmd_args.no_logging)
     return;
@@ -203,334 +195,66 @@ _bmclog (const char *fmt, ...)
   va_end (ap);
 }
 
-static int
-_init_kcs_ipmi (void)
-{
-  ipmi_locate_ctx_t locate_ctx = NULL;
-  struct ipmi_locate_info locate_info;
-  int rv = -1;
-
-  if (!(locate_ctx = ipmi_locate_ctx_create ()))
-    {
-      _bmclog ("ipmi_locate_ctx_create: %s", strerror (errno));
-      goto cleanup;
-    }
-
-  if (!cmd_args.common.disable_auto_probe)
-    {
-      if (ipmi_locate_get_device_info (locate_ctx,
-                                       IPMI_INTERFACE_KCS,
-                                       &locate_info) < 0)
-        {
-          _bmclog ("ipmi_locate_get_device_info: %s",
-                   ipmi_locate_ctx_errormsg (locate_ctx));
-          goto cleanup;
-        }
-    }
-
-  if (!(kcs_ctx = ipmi_kcs_ctx_create ()))
-    {
-      _bmclog ("ipmi_kcs_ctx_create: %s", strerror (errno));
-      goto cleanup;
-    }
-
-  if (cmd_args.common.driver_address)
-    locate_info.driver_address = cmd_args.common.driver_address;
-  if (cmd_args.common.register_spacing)
-    locate_info.register_spacing = cmd_args.common.register_spacing;
-
-  if (!cmd_args.common.disable_auto_probe || cmd_args.common.driver_address)
-    {
-      if (ipmi_kcs_ctx_set_driver_address (kcs_ctx, locate_info.driver_address) < 0)
-        {
-          _bmclog ("ipmi_kcs_ctx_set_driver_address: %s",
-                   ipmi_kcs_ctx_strerror (ipmi_kcs_ctx_errnum (kcs_ctx)));
-          goto cleanup;
-        }
-    }
-
-  if (!cmd_args.common.disable_auto_probe || cmd_args.common.register_spacing)
-    {
-      if (ipmi_kcs_ctx_set_register_spacing (kcs_ctx, locate_info.register_spacing) < 0)
-        {
-          _bmclog ("ipmi_kcs_ctx_set_register_spacing: %s",
-                   ipmi_kcs_ctx_strerror (ipmi_kcs_ctx_errnum (kcs_ctx)));
-          goto cleanup;
-        }
-    }
-
-  if (ipmi_kcs_ctx_set_flags (kcs_ctx, IPMI_KCS_FLAGS_NONBLOCKING) < 0)
-    {
-      _bmclog ("ipmi_kcs_ctx_set_flags: %s",
-               ipmi_kcs_ctx_strerror (ipmi_kcs_ctx_errnum (kcs_ctx)));
-      goto cleanup;
-    }
-
-  if (ipmi_kcs_ctx_io_init (kcs_ctx) < 0)
-    {
-      _bmclog ("ipmi_kcs_ctx_io_init: %s",
-               ipmi_kcs_ctx_strerror (ipmi_kcs_ctx_errnum (kcs_ctx)));
-      goto cleanup;
-    }
-
-  rv = 0;
- cleanup:
-  ipmi_locate_ctx_destroy (locate_ctx);
-  return (rv);
-}
-
-static int
-_init_ssif_ipmi (void)
-{
-  ipmi_locate_ctx_t locate_ctx = NULL;
-  struct ipmi_locate_info locate_info;
-  int rv = -1;
-
-  if (!(locate_ctx = ipmi_locate_ctx_create ()))
-    {
-      _bmclog ("ipmi_locate_ctx_create: %s", strerror (errno));
-      goto cleanup;
-    }
-
-  if (!cmd_args.common.disable_auto_probe)
-    {
-      if (ipmi_locate_get_device_info (locate_ctx,
-                                       IPMI_INTERFACE_SSIF,
-                                       &locate_info) < 0)
-        {
-          _bmclog ("ipmi_locate_get_device_info: %s",
-                   ipmi_locate_ctx_errormsg (locate_ctx));
-          goto cleanup;
-        }
-    }
-  if (!(ssif_ctx = ipmi_ssif_ctx_create ()))
-    {
-      _bmclog ("ipmi_ssif_ctx_create: %s", strerror (errno));
-      goto cleanup;
-    }
-
-  if (cmd_args.common.driver_address)
-    locate_info.driver_address = cmd_args.common.driver_address;
-  if (cmd_args.common.driver_device)
-    {
-      strncpy (locate_info.driver_device, cmd_args.common.driver_device, IPMI_LOCATE_PATH_MAX);
-      locate_info.driver_device[IPMI_LOCATE_PATH_MAX - 1] = '\0';
-    }
-
-  if (!cmd_args.common.disable_auto_probe || cmd_args.common.driver_address)
-    {
-      if (ipmi_ssif_ctx_set_driver_address (ssif_ctx, locate_info.driver_address) < 0)
-        {
-          _bmclog ("ipmi_ssif_ctx_set_driver_address: %s",
-                   ipmi_ssif_ctx_strerror (ipmi_ssif_ctx_errnum (ssif_ctx)));
-          goto cleanup;
-        }
-    }
-
-  if (!cmd_args.common.disable_auto_probe || cmd_args.common.driver_device)
-    {
-      if (ipmi_ssif_ctx_set_driver_device (ssif_ctx, locate_info.driver_device) < 0)
-        {
-          _bmclog ("ipmi_ssif_ctx_set_driver_device: %s",
-                   ipmi_ssif_ctx_strerror (ipmi_ssif_ctx_errnum (ssif_ctx)));
-          goto cleanup;
-        }
-    }
-
-  if (ipmi_ssif_ctx_set_flags (ssif_ctx, IPMI_SSIF_FLAGS_NONBLOCKING) < 0)
-    {
-      _bmclog ("ipmi_ssif_ctx_set_flags: %s",
-               ipmi_ssif_ctx_strerror (ipmi_ssif_ctx_errnum (ssif_ctx)));
-      goto cleanup;
-    }
-
-  if (ipmi_ssif_ctx_io_init (ssif_ctx) < 0)
-    {
-      _bmclog ("ipmi_ssif_ctx_io_init: %s",
-               ipmi_ssif_ctx_strerror (ipmi_ssif_ctx_errnum (ssif_ctx)));
-      goto cleanup;
-    }
-
-  rv = 0;
- cleanup:
-  ipmi_locate_ctx_destroy (locate_ctx);
-  return (rv);
-}
-
-static int
-_init_openipmi_ipmi (void)
-{
-  if (!(openipmi_ctx = ipmi_openipmi_ctx_create ()))
-    {
-      _bmclog ("ipmi_openipmi_ctx_create: %s", strerror (errno));
-      return (-1);
-    }
-
-  if (cmd_args.common.driver_device)
-    {
-      if (ipmi_openipmi_ctx_set_driver_device (openipmi_ctx,
-                                               cmd_args.common.driver_device) < 0)
-        {
-          _bmclog ("ipmi_openipmi_ctx_set_driver_device: %s",
-                   ipmi_openipmi_ctx_strerror (ipmi_openipmi_ctx_errnum (openipmi_ctx)));
-          return (-1);
-        }
-    }
-
-  if (ipmi_openipmi_ctx_io_init (openipmi_ctx) < 0)
-    {
-      _bmclog ("ipmi_openipmi_ctx_io_init: %s",
-               ipmi_openipmi_ctx_strerror (ipmi_openipmi_ctx_errnum (openipmi_ctx)));
-      return (-1);
-    }
-
-  return (0);
-}
-
-static int
-_init_sunbmc_ipmi (void)
-{
-  if (!(sunbmc_ctx = ipmi_sunbmc_ctx_create ()))
-    {
-      _bmclog ("ipmi_sunbmc_ctx_create: %s", strerror (errno));
-      return (-1);
-    }
-
-  if (cmd_args.common.driver_device)
-    {
-      if (ipmi_sunbmc_ctx_set_driver_device (sunbmc_ctx,
-                                             cmd_args.common.driver_device) < 0)
-        {
-          _bmclog ("ipmi_sunbmc_ctx_set_driver_device: %s",
-                   ipmi_sunbmc_ctx_strerror (ipmi_sunbmc_ctx_errnum (sunbmc_ctx)));
-          return (-1);
-        }
-    }
-
-  if (ipmi_sunbmc_ctx_io_init (sunbmc_ctx) < 0)
-    {
-      _bmclog ("ipmi_sunbmc_ctx_io_init: %s",
-               ipmi_sunbmc_ctx_strerror (ipmi_sunbmc_ctx_errnum (sunbmc_ctx)));
-      return (-1);
-    }
-
-  return (0);
-}
-
 /* Must be called after cmdline parsed b/c user may pass in io port */
 static int
 _init_ipmi (void)
 {
-  ipmi_locate_ctx_t locate_ctx = NULL;
-
-  assert (err_progname);
-
-  if (!(locate_ctx = ipmi_locate_ctx_create ()))
-    err_exit ("Error creating locate_ctx: %s", strerror (errno));
+  unsigned int workaround_flags = 0;
+  unsigned int flags = 0;
 
   if (!ipmi_is_root ())
     err_exit ("Permission denied, must be root.");
 
-  if (cmd_args.common.driver_type != IPMI_DEVICE_UNKNOWN)
+  if (cmd_args.common.workaround_flags_inband & IPMI_PARSE_WORKAROUND_FLAGS_INBAND_ASSUME_IO_BASE_ADDRESS)
+    workaround_flags |= IPMI_WORKAROUND_FLAGS_INBAND_ASSUME_IO_BASE_ADDRESS;
+
+  if (cmd_args.common.workaround_flags_inband & IPMI_PARSE_WORKAROUND_FLAGS_INBAND_SPIN_POLL)
+    workaround_flags |= IPMI_WORKAROUND_FLAGS_INBAND_SPIN_POLL;
+
+  flags = IPMI_FLAGS_NONBLOCKING;
+  if (cmd_args.common.debug)
+    flags |= IPMI_FLAGS_DEBUG_DUMP; 
+
+  if (!(ipmi_ctx = ipmi_ctx_create ()))
+    err_exit ("ipmi_ctx_create: %s", strerror (errno));
+  
+  if (cmd_args.common.driver_type == IPMI_DEVICE_UNKNOWN)
     {
-      if (cmd_args.common.driver_type == IPMI_DEVICE_KCS)
-        {
-          if (_init_kcs_ipmi () < 0)
-            err_exit ("Error initializing KCS IPMI driver");
-          driver_type_used = IPMI_DEVICE_KCS;
-        }
-      if (cmd_args.common.driver_type == IPMI_DEVICE_SSIF)
-        {
-          if (_init_ssif_ipmi () < 0)
-            err_exit ("Error initializing SSIF IPMI driver");
-          driver_type_used = IPMI_DEVICE_SSIF;
-        }
-      if (cmd_args.common.driver_type == IPMI_DEVICE_OPENIPMI)
-        {
-          if (_init_openipmi_ipmi () < 0)
-            err_exit ("Error initializing OPENIPMI IPMI driver");
-          driver_type_used = IPMI_DEVICE_OPENIPMI;
-        }
-      if (cmd_args.common.driver_type == IPMI_DEVICE_SUNBMC)
-        {
-          if (_init_sunbmc_ipmi () < 0)
-            err_exit ("Error initializing SUNBMC IPMI driver");
-          driver_type_used = IPMI_DEVICE_SUNBMC;
-        }
+      int ret;
+      
+      if ((ret = ipmi_ctx_find_inband (ipmi_ctx,
+				       NULL,
+				       cmd_args.common.disable_auto_probe,
+				       cmd_args.common.driver_address,
+				       cmd_args.common.register_spacing,
+				       cmd_args.common.driver_device,
+				       workaround_flags,
+				       flags)) < 0)
+	err_exit ("ipmi_ctx_find_inband: %s", ipmi_ctx_errormsg (ipmi_ctx));
+      
+      if (!ret)
+	err_exit ("could not find inband device");
     }
   else
     {
-      struct ipmi_locate_info locate_info;
-
-      /* achu:
-       *
-       * If one of KCS or SSIF is found, we try that one first.
-       * We don't want to hang on one or another if one is bad.
-       *
-       * If neither is found (perhaps b/c the vendor just assumes
-       * default values), then there's not much we can do, we can
-       * only guess.
-       *
-       * This does mean in-band communication is slower (doing
-       * excessive early probing).  It's a justified cost to me.
-       */
-
-      if (!ipmi_locate_discover_device_info (locate_ctx,
-                                             IPMI_INTERFACE_KCS,
-                                             &locate_info))
-        {
-          if (!_init_kcs_ipmi ())
-            {
-              driver_type_used = IPMI_DEVICE_KCS;
-              goto out;
-            }
-        }
-
-      if (!ipmi_locate_discover_device_info (locate_ctx,
-                                             IPMI_INTERFACE_SSIF,
-                                             &locate_info))
-        {
-          if (!_init_ssif_ipmi ())
-            {
-              driver_type_used = IPMI_DEVICE_SSIF;
-              goto out;
-            }
-        }
-
-      if (_init_sunbmc_ipmi () < 0)
-        {
-          if (_init_openipmi_ipmi () < 0)
-            {
-              if (_init_kcs_ipmi () < 0)
-                {
-                  if (_init_ssif_ipmi () < 0)
-                    err_exit ("Error initializing IPMI driver");
-                  else
-                    driver_type_used = IPMI_DEVICE_SSIF;
-                }
-              else
-                driver_type_used = IPMI_DEVICE_KCS;
-            }
-          else
-            driver_type_used = IPMI_DEVICE_OPENIPMI;
-        }
-      else
-        driver_type_used = IPMI_DEVICE_SUNBMC;
+      if (ipmi_ctx_open_inband (ipmi_ctx,
+				cmd_args.common.driver_type,
+				cmd_args.common.disable_auto_probe,
+				cmd_args.common.driver_address,
+				cmd_args.common.register_spacing,
+				cmd_args.common.driver_device,
+				workaround_flags,
+				flags) < 0)
+	err_exit ("ipmi_ctx_open_inband: %s", ipmi_ctx_errormsg (ipmi_ctx));
     }
-
- out:
-  ipmi_locate_ctx_destroy (locate_ctx);
+  
   return (0);
 }
 
 /* Must be called after cmdline parsed */
 static void
-_init_bmc_watchdog (int facility)
+_init_bmc_watchdog (void)
 {
-  assert (facility == LOG_CRON || facility == LOG_DAEMON);
-
-  openlog (err_progname, LOG_ODELAY | LOG_PID, facility);
-
   if (!cmd_args.no_logging)
     {
       if ((logfile_fd = open ((cmd_args.logfile) ? cmd_args.logfile : BMC_WATCHDOG_LOGFILE_DEFAULT,
@@ -610,129 +334,28 @@ _cmd (char *str,
           && cmd_rq
           && cmd_rs);
 
-  if (cmd_args.common.debug)
-    {
-      char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
-
-      debug_hdr_cmd (DEBUG_UTIL_TYPE_INBAND,
-                     DEBUG_UTIL_DIRECTION_REQUEST,
-                     netfn,
-                     cmd,
-		     0,
-                     hdrbuf,
-                     DEBUG_UTIL_HDR_BUFLEN);
-
-      if (ipmi_obj_dump (STDERR_FILENO, NULL, hdrbuf, NULL, cmd_rq) < 0)
-        _bmclog ("%s: ipmi_obj_dump: %s", str, strerror (errno));
-    }
-
   while (1)
     {
-      if (driver_type_used == IPMI_DEVICE_KCS)
-        {
-          if ((ret = ipmi_kcs_cmd (kcs_ctx,
-                                   IPMI_BMC_IPMB_LUN_BMC,
-                                   netfn,
-                                   cmd_rq,
-                                   cmd_rs)) < 0)
-            {
-              if (ipmi_kcs_ctx_errnum (kcs_ctx) != IPMI_KCS_ERR_BUSY)
-                {
-                  _bmclog ("%s: ipmi_kcs_cmd: %s",
-                           str,
-                           ipmi_kcs_ctx_strerror (ipmi_kcs_ctx_errnum (kcs_ctx)));
-                  if (ipmi_kcs_ctx_errnum (kcs_ctx) == IPMI_KCS_ERR_PARAMETERS)
-                    errno = EINVAL;
-                  else if (ipmi_kcs_ctx_errnum (kcs_ctx) == IPMI_KCS_ERR_PERMISSION)
-                    errno = EPERM;
-                  else if (ipmi_kcs_ctx_errnum (kcs_ctx) == IPMI_KCS_ERR_OUT_OF_MEMORY)
-                    errno = ENOMEM;
-                  else if (ipmi_kcs_ctx_errnum (kcs_ctx) == IPMI_KCS_ERR_IO_NOT_INITIALIZED)
-                    errno = EIO;
-                  else if (ipmi_kcs_ctx_errnum (kcs_ctx) == IPMI_KCS_ERR_OVERFLOW)
-                    errno = ENOSPC;
-                  else
-                    errno = EINVAL;
-                  return (-1);
-                }
-            }
-        }
-      else if (driver_type_used == IPMI_DEVICE_SSIF)
-        {
-          if ((ret = ipmi_ssif_cmd (ssif_ctx,
-                                    IPMI_BMC_IPMB_LUN_BMC,
-                                    netfn,
-                                    cmd_rq,
-                                    cmd_rs)) < 0)
-            {
-              if (ipmi_ssif_ctx_errnum (ssif_ctx) != IPMI_SSIF_ERR_BUSY)
-                {
-                  _bmclog ("%s: ipmi_ssif_cmd: %s",
-                           str,
-                           ipmi_ssif_ctx_strerror (ipmi_ssif_ctx_errnum (ssif_ctx)));
-                  if (ipmi_ssif_ctx_errnum (ssif_ctx) == IPMI_SSIF_ERR_PARAMETERS)
-                    errno = EINVAL;
-                  else if (ipmi_ssif_ctx_errnum (ssif_ctx) == IPMI_SSIF_ERR_PERMISSION)
-                    errno = EPERM;
-                  else if (ipmi_ssif_ctx_errnum (ssif_ctx) == IPMI_SSIF_ERR_OUT_OF_MEMORY)
-                    errno = ENOMEM;
-                  else if (ipmi_ssif_ctx_errnum (ssif_ctx) == IPMI_SSIF_ERR_IO_NOT_INITIALIZED)
-                    errno = EIO;
-                  else if (ipmi_ssif_ctx_errnum (ssif_ctx) == IPMI_SSIF_ERR_OVERFLOW)
-                    errno = ENOSPC;
-                  else
-                    errno = EINVAL;
-                  return (-1);
-                }
-            }
-        }
-      else if (driver_type_used == IPMI_DEVICE_OPENIPMI)
-        {
-          if ((ret = ipmi_openipmi_cmd (openipmi_ctx,
-                                        IPMI_BMC_IPMB_LUN_BMC,
-                                        netfn,
-                                        cmd_rq,
-                                        cmd_rs)) < 0)
-            {
-              _bmclog ("%s: ipmi_openipmi_cmd: %s",
-                       str,
-                       ipmi_openipmi_ctx_strerror (ipmi_openipmi_ctx_errnum (openipmi_ctx)));
-              if (ipmi_openipmi_ctx_errnum (openipmi_ctx) == IPMI_OPENIPMI_ERR_PARAMETERS)
-                errno = EINVAL;
-              else if (ipmi_openipmi_ctx_errnum (openipmi_ctx) == IPMI_OPENIPMI_ERR_PERMISSION)
-                errno = EPERM;
-              else if (ipmi_openipmi_ctx_errnum (openipmi_ctx) == IPMI_OPENIPMI_ERR_OUT_OF_MEMORY)
-                errno = ENOMEM;
-              else if (ipmi_openipmi_ctx_errnum (openipmi_ctx) == IPMI_OPENIPMI_ERR_IO_NOT_INITIALIZED)
-                errno = EIO;
-              else
-                errno = EINVAL;
-              return (-1);
-            }
-        }
-      else if (driver_type_used == IPMI_DEVICE_SUNBMC)
-        {
-          if ((ret = ipmi_sunbmc_cmd (sunbmc_ctx,
-                                      IPMI_BMC_IPMB_LUN_BMC,
-                                      netfn,
-                                      cmd_rq,
-                                      cmd_rs)) < 0)
-            {
-              _bmclog ("%s: ipmi_sunbmc_cmd: %s",
-                       str,
-                       ipmi_sunbmc_ctx_strerror (ipmi_sunbmc_ctx_errnum (sunbmc_ctx)));
-              if (ipmi_sunbmc_ctx_errnum (sunbmc_ctx) == IPMI_SUNBMC_ERR_PARAMETERS)
-                errno = EINVAL;
-              else if (ipmi_sunbmc_ctx_errnum (sunbmc_ctx) == IPMI_SUNBMC_ERR_PERMISSION)
-                errno = EPERM;
-              else if (ipmi_sunbmc_ctx_errnum (sunbmc_ctx) == IPMI_SUNBMC_ERR_OUT_OF_MEMORY)
-                errno = ENOMEM;
-              else if (ipmi_sunbmc_ctx_errnum (sunbmc_ctx) == IPMI_SUNBMC_ERR_IO_NOT_INITIALIZED)
-                errno = EIO;
-              else
-                errno = EINVAL;
-              return (-1);
-            }
+      if ((ret = ipmi_cmd (ipmi_ctx,
+			   IPMI_BMC_IPMB_LUN_BMC,
+			   netfn,
+			   cmd_rq,
+			   cmd_rs)) < 0)
+	{
+	  if (ipmi_ctx_errnum (ipmi_ctx) != IPMI_ERR_DRIVER_BUSY
+	      && ipmi_ctx_errnum (ipmi_ctx) != IPMI_ERR_BMC_BUSY)
+	    {
+	      _bmclog ("%s: ipmi_cmd: %s",
+		       str,
+		       ipmi_ctx_errormsg (ipmi_ctx));
+	      if (ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_PERMISSION)
+		errno = EPERM;
+	      else if (ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_OUT_OF_MEMORY)
+		errno = ENOMEM;
+	      else
+		errno = EINVAL;
+	      return (-1);
+	    }
         }
 
       if (ret < 0)
@@ -758,22 +381,6 @@ _cmd (char *str,
         }
       else
         break;
-    }
-
-  if (cmd_args.common.debug)
-    {
-      char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
-
-      debug_hdr_cmd (DEBUG_UTIL_TYPE_INBAND,
-                     DEBUG_UTIL_DIRECTION_REQUEST,
-                     netfn,
-                     cmd,
-		     0,
-                     hdrbuf,
-                     DEBUG_UTIL_HDR_BUFLEN);
-
-      if (ipmi_obj_dump (STDERR_FILENO, NULL, hdrbuf, NULL, cmd_rs) < 0)
-        _bmclog ("%s: ipmi_obj_dump: %s", str, strerror (errno));
     }
 
   BMC_WATCHDOG_FIID_OBJ_GET (cmd_rs, "comp_code", &comp_code, str);
@@ -1659,8 +1266,10 @@ _clear_cmd (void)
 }
 
 static void
-_daemon_init ()
+_daemon_init (const char *progname)
 {
+  assert (progname);
+
   /* Based on code in Unix network programming by R. Stevens */
 
   /* Run in foreground if debugging */
@@ -1723,9 +1332,12 @@ _daemon_init ()
     }
 
   /* move error outs to syslog from stderr */
+
   err_set_flags (ERROR_SYSLOG);
 
-  _init_bmc_watchdog (LOG_DAEMON);
+  openlog (progname, LOG_ODELAY | LOG_PID, LOG_DAEMON);
+
+  _init_bmc_watchdog ();
 }
 
 static void
@@ -1917,7 +1529,7 @@ _daemon_cmd_error_noexit (char *str, int ret)
 }
 
 static void
-_daemon_cmd (void)
+_daemon_cmd (const char *progname)
 {
   uint32_t reset_period = BMC_WATCHDOG_RESET_PERIOD_DEFAULT;
   uint8_t timer_use, timer_state, log, timeout_action, pre_timeout_interrupt,
@@ -1928,7 +1540,7 @@ _daemon_cmd (void)
   int retry_wait_time, retry_attempt;
   int ret;
 
-  _daemon_init ();
+  _daemon_init (progname);
 
   _daemon_setup ();
 
@@ -2174,7 +1786,10 @@ main (int argc, char **argv)
    * daemon_init() needs to close all formerly open file descriptors.
    */
   if (!cmd_args.daemon)
-    _init_bmc_watchdog (LOG_CRON);
+    {
+      openlog (argv[0], LOG_ODELAY | LOG_PID, LOG_CRON);
+      _init_bmc_watchdog ();
+    }
 
   if (cmd_args.set)
     _set_cmd ();
@@ -2189,14 +1804,12 @@ main (int argc, char **argv)
   else if (cmd_args.clear)
     _clear_cmd ();
   else if (cmd_args.daemon)
-    _daemon_cmd ();
+    _daemon_cmd (argv[0]);
   else
     err_exit ("internal error, command not set");
 
-  ipmi_kcs_ctx_destroy (kcs_ctx);
-  ipmi_ssif_ctx_destroy (ssif_ctx);
-  ipmi_openipmi_ctx_destroy (openipmi_ctx);
-  ipmi_sunbmc_ctx_destroy (sunbmc_ctx);
+  ipmi_ctx_close (ipmi_ctx);
+  ipmi_ctx_destroy (ipmi_ctx);
   if (logfile_fd >= 0)
     {
       if (close (logfile_fd) < 0)

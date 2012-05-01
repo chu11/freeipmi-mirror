@@ -4,6 +4,8 @@
 
 	* bmc-watchdog/: Use miscutil common error handling functions and
 	properly syslog some initialize errors when running as daemon.
+	Utilize libfreeipmi api when appropriate instead of bmc-watchdog
+	specific functions.
 	
 	* libfreeipmi/api/: Support new IPMI_ERR_DRIVER_BUSY error code to
 	return when a driver is busy.
