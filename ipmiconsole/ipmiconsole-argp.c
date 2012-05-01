@@ -52,7 +52,6 @@
 
 #include "freeipmi-portability.h"
 #include "conffile.h"
-#include "error.h"
 #include "secure.h"
 #include "tool-cmdline-common.h"
 #include "tool-common.h"
@@ -223,7 +222,10 @@ _ipmiconsole_args_validate (struct ipmiconsole_arguments *cmd_args)
   assert (cmd_args);
 
   if (!cmd_args->common.hostname)
-    err_exit ("hostname input required");
+    {
+      fprintf (stderr, "hostname input required");
+      exit (1);
+    }
 }
 
 void

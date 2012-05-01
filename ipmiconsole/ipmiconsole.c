@@ -60,7 +60,6 @@
 #include "ipmiconsole-argp.h"
 
 #include "freeipmi-portability.h"
-#include "error.h"
 #include "secure.h"
 
 static struct termios saved_tty;
@@ -265,9 +264,6 @@ main (int argc, char **argv)
   int debug_flags = 0;
   int fd = -1;
 
-  err_init (argv[0]);
-  err_set_flags (ERROR_STDOUT);
-
   ipmiconsole_argp_parse (argc, argv, &cmd_args);
 
   if (cmd_args.common.debug)
@@ -311,7 +307,10 @@ main (int argc, char **argv)
   else if (cmd_args.common.privilege_level == IPMI_PRIVILEGE_LEVEL_ADMIN)
     ipmi_config.privilege_level = IPMICONSOLE_PRIVILEGE_ADMIN;
   else
-    err_exit ("Config Error: Invalid privilege level");
+    {
+      fprintf (stderr, "Config Error: Invalid privilege level");
+      exit (1);
+    }
 
   ipmi_config.cipher_suite_id = cmd_args.common.cipher_suite_id;
 

@@ -2,6 +2,9 @@
 
 	* bmc-watchdog/bmc-watchdog.c (_bmclog_write): Call fsync to sync
 	log errors to disk.
+
+	* ipmiconsole/: Remove use of "error.h" convenience function.
+	Convenience functions were virtually unused.
 	
 2012-04-21  Albert Chu <chu11@llnl.gov>
 
