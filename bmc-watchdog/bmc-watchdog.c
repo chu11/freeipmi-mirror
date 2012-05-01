@@ -78,8 +78,8 @@
 
 #define BMC_WATCHDOG_FIID_OBJ_GET(__obj, __field, __val, __func)        \
   do {                                                                  \
-    uint64_t __temp;                                                    \
-    if (FIID_OBJ_GET ((__obj), (__field), &__temp) < 0)                 \
+    uint64_t cctemp;                                                    \
+    if (FIID_OBJ_GET ((__obj), (__field), &cctemp) < 0)                 \
       {                                                                 \
         _bmclog ("%s: fiid_obj_get: '%s': %s",                          \
                  (__func),                                              \
@@ -95,7 +95,7 @@
           errno = EINVAL;                                               \
         goto cleanup;                                                   \
       }                                                                 \
-    *(__val) = __temp;                                                  \
+    *(__val) = cctemp;                                                  \
   } while (0)
 
 #define BMC_WATCHDOG_PIDFILE BMC_WATCHDOG_LOCALSTATEDIR "/run/bmc-watchdog.pid"
