@@ -10,6 +10,8 @@
 	* libfreeipmi/api/: Support new IPMI_ERR_DRIVER_BUSY error code to
 	return when a driver is busy.
 
+	* man/bmc-watchdog.8.pre.in: Update with log file information.
+
 2012-04-30  Albert Chu <chu11@llnl.gov>
 
 	* bmc-watchdog/bmc-watchdog.c (_bmclog_write): Call fsync to sync

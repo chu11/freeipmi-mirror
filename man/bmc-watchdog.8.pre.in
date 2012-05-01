@@ -277,7 +277,8 @@ ARP responses will not be suspended.
 Time interval to wait before resetting timer.  The default is 60
 seconds.
 .SH "ERRORS"
-Errors are logged to the bmc-watchdog log.
+Errors are logged to the bmc-watchdog log.  The default log is
+@BMC_WATCHDOG_LOGFILE_DEFAULT@.
 #include <@top_srcdir@/man/manpage-common-workaround-heading-text.man>
 #include <@top_srcdir@/man/manpage-common-workaround-inband-text.man>
 .LP
@@ -311,6 +312,8 @@ be executed with a high scheduling priority.
 On some machines, the hardware based SMI Handler may disable a
 processor after a watchdog timer timeout if the timer use is set to
 something other than SMS/OS.
+.SH "FILES"
+@BMC_WATCHDOG_LOGFILE_DEFAULT@
 #include <@top_srcdir@/man/manpage-common-reporting-bugs.man>
 .SH COPYRIGHT
 Copyright (C) 2007-2012 Lawrence Livermore National Security, LLC.
