@@ -195,7 +195,6 @@ _bmclog (const char *fmt, ...)
   va_end (ap);
 }
 
-/* Must be called after cmdline parsed b/c user may pass in io port */
 static int
 _init_ipmi (void)
 {
