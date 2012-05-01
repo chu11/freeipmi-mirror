@@ -2,8 +2,8 @@
 
 	Rearch bmc-watchdog to use all new libraries available to it.
 
-	* bmc-watchdog/: Use miscutil common error handling functions.
-
+	* bmc-watchdog/: Use miscutil common error handling functions and
+	properly syslog some initialize errors when running as daemon.
 	
 	* libfreeipmi/api/: Support new IPMI_ERR_DRIVER_BUSY error code to
 	return when a driver is busy.
