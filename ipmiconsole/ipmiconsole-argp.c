@@ -223,7 +223,7 @@ _ipmiconsole_args_validate (struct ipmiconsole_arguments *cmd_args)
 
   if (!cmd_args->common.hostname)
     {
-      fprintf (stderr, "hostname input required");
+      fprintf (stderr, "hostname input required\n");
       exit (1);
     }
 }
