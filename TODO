@@ -242,6 +242,13 @@ bmc-device
 - (NOT CONFIRMED) get auxiliary log status
 - set sensor reading (XXX)
 
+bmc-watchdog
+------------
+Log to normal syslog, not to bmc log
+- legacy from when bmc-wachdog in cron, not daemon, and would log
+  every bmc reset
+cleanup to finally use libfreeipmi or common tool functions
+
 ipmiconsole
 -----------
 - support other escape codes like w/ &D
