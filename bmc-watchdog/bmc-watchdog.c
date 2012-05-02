@@ -1219,7 +1219,7 @@ _daemon_init (const char *progname)
 }
 
 static void
-_daemon_cmd_error_exit (char *str)
+_daemon_cmd_error_maybe_exit (char *str)
 {
   assert (str);
 
@@ -1262,7 +1262,7 @@ _daemon_setup (void)
 				   &initial_countdown_seconds,
 				   NULL) < 0)
         {
-          _daemon_cmd_error_exit ("Get Watchdog Timer");
+          _daemon_cmd_error_maybe_exit ("Get Watchdog Timer");
 	  _sleep (BMC_WATCHDOG_RETRY_WAIT_TIME_DEFAULT);
           continue;
         }
@@ -1315,7 +1315,7 @@ _daemon_setup (void)
 				   (cmd_args.clear_oem) ? 1 : 0,
 				   initial_countdown_seconds) < 0)
         {
-          _daemon_cmd_error_exit ("Set Watchdog Timer");
+          _daemon_cmd_error_maybe_exit ("Set Watchdog Timer");
 	  _sleep (BMC_WATCHDOG_RETRY_WAIT_TIME_DEFAULT);
           continue;
         }
@@ -1327,7 +1327,7 @@ _daemon_setup (void)
     {
       if (_reset_watchdog_timer_cmd () < 0)
         {
-          _daemon_cmd_error_exit ("Reset Watchdog Timer");
+          _daemon_cmd_error_maybe_exit ("Reset Watchdog Timer");
 	  _sleep (BMC_WATCHDOG_RETRY_WAIT_TIME_DEFAULT);
           continue;
         }
@@ -1355,7 +1355,7 @@ _daemon_setup (void)
           if ((ret = _suspend_bmc_arps_cmd (gratuitous_arp,
                                             arp_response)) < 0)
             {
-              _daemon_cmd_error_exit ("Suspend BMC ARPs");
+              _daemon_cmd_error_maybe_exit ("Suspend BMC ARPs");
 	      _sleep (BMC_WATCHDOG_RETRY_WAIT_TIME_DEFAULT);
               continue;
             }
@@ -1601,6 +1601,7 @@ _daemon_cmd (const char *progname)
 				   NULL) < 0)
         {
           _daemon_cmd_error_noexit ("Get Watchdog Timer");
+	  _sleep (BMC_WATCHDOG_RETRY_WAIT_TIME_DEFAULT);
           continue;
         }
       break;
@@ -1622,6 +1623,7 @@ _daemon_cmd (const char *progname)
 				   initial_countdown_seconds) < 0)
         {
           _daemon_cmd_error_noexit ("Set Watchdog Timer");
+	  _sleep (BMC_WATCHDOG_RETRY_WAIT_TIME_DEFAULT);
           continue;
         }
       break;
