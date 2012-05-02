@@ -108,12 +108,10 @@ Run
 .B bmc-watchdog 
 as a daemon.  Configurable BMC watchdog timer options are listed below
 under DAEMON OPTIONS.  The configuration values are set once, then the
-daemon will reset the timer at specified periodic intervals.
-Everytime the BMC watchdog timer is reset, a log entry will be
-generated in the bmc-watchdog log.  The default log is stored at
-/var/log/freeipmi/bmc-watchdog.log.  The daemon can be stopped using
-the \fB\-\-stop\fR command, \fB\-\-clear\fR command, or by setting the
-stop_timer flag on the \fB\-\-set\fR command.
+daemon will reset the timer at specified periodic intervals.  The
+daemon can be stopped using the \fB\-\-stop\fR command,
+\fB\-\-clear\fR command, or by setting the stop_timer flag on the
+\fB\-\-set\fR command.
 #include <@top_srcdir@/man/manpage-common-general-options-header.man>
 These options are generic and can be used by any command.
 .TP 
@@ -123,11 +121,10 @@ The currently available inband drivers are KCS, SSIF, OPENIPMI, and
 SUNBMC.
 #include <@top_srcdir@/man/manpage-common-inband.man>
 .TP
-\fB\-f\fR \fIFILE\fR, \fB\-\-logfile\fR=\fIFILE\fR
-Specify an alternate logfile from the default of
-/var/log/freeipmi/bmc-watchdog.log.
+\fB\-v\fR, \fB\-\-verbose\-logging\fR
+Increase verbosity of logging.
 .TP
-\fB\-n\fR, \fB\-\-no-logging\fR
+\fB\-n\fR, \fB\-\-no\-logging\fR
 Turns off all logging done by 
 .B bmc-watchdog.  
 #include <@top_srcdir@/man/manpage-common-config-file.man>
@@ -277,8 +274,7 @@ ARP responses will not be suspended.
 Time interval to wait before resetting timer.  The default is 60
 seconds.
 .SH "ERRORS"
-Errors are logged to the bmc-watchdog log.  The default log is
-@BMC_WATCHDOG_LOGFILE_DEFAULT@.
+Errors are logged to syslog.
 #include <@top_srcdir@/man/manpage-common-workaround-heading-text.man>
 #include <@top_srcdir@/man/manpage-common-workaround-inband-text.man>
 .LP
@@ -312,8 +308,6 @@ be executed with a high scheduling priority.
 On some machines, the hardware based SMI Handler may disable a
 processor after a watchdog timer timeout if the timer use is set to
 something other than SMS/OS.
-.SH "FILES"
-@BMC_WATCHDOG_LOGFILE_DEFAULT@
 #include <@top_srcdir@/man/manpage-common-reporting-bugs.man>
 .SH COPYRIGHT
 Copyright (C) 2007-2012 Lawrence Livermore National Security, LLC.

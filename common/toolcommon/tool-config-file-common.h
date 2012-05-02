@@ -84,8 +84,8 @@ struct config_file_data_bmc_info
 
 struct config_file_data_bmc_watchdog
 {
-  char *logfile;
-  int logfile_count;
+  int verbose_logging;
+  int verbose_logging_count;
   int no_logging;
   int no_logging_count;
 };

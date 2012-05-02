@@ -1850,9 +1850,10 @@ config_file_parse (const char *filename,
         &cmd_args_config,
         0
       },
+      /* deprecated */
       {
         "bmc-watchdog-logfile",
-        CONFFILE_OPTION_STRING,
+        CONFFILE_OPTION_IGNORE,
         -1,
         _config_file_string,
         1,
@@ -1860,6 +1861,17 @@ config_file_parse (const char *filename,
         &(bmc_watchdog_data.logfile_count),
         &(bmc_watchdog_data.logfile),
         0
+      },
+      {
+        "bmc-watchdog-verbose-logging",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        _config_file_bool,
+        1,
+        0,
+        &(bmc_watchdog_data.verbose_logging_count),
+        &(bmc_watchdog_data.verbose_logging),
+        0,
       },
       {
         "bmc-watchdog-no-logging",
