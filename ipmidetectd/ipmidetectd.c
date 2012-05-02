@@ -44,7 +44,6 @@
 #include <errno.h>
 
 #include "ipmidetectd_config.h"
-#include "ipmidetectd_debug.h"
 #include "ipmidetectd_loop.h"
 
 #include "freeipmi-portability.h"
@@ -70,9 +69,9 @@ _daemon_init (void)
   int fds[2];
 
   if (pipe(fds) < 0)
-    IPMIDETECTD_EXIT (("pipe: %s", strerror (errno)));
+    err_exit ("pipe: %s", strerror (errno));
   if ((pid = fork ()) < 0)
-    IPMIDETECTD_EXIT (("fork: %s", strerror (errno)));
+    err_exit ("fork: %s", strerror (errno));
 
   if (pid != 0)
     {
@@ -87,10 +86,10 @@ _daemon_init (void)
   setsid ();
 
   if (signal (SIGHUP, SIG_IGN) == SIG_ERR)
-    IPMIDETECTD_EXIT (("signal: %s", strerror (errno)));
+    err_exit ("signal: %s", strerror (errno));
 
   if ((pid = fork ()) < 0)
-    IPMIDETECTD_EXIT (("fork: %s", strerror (errno)));
+    err_exit ("fork: %s", strerror (errno));
 
   if (pid) {
     FILE *pidfile;
@@ -100,8 +99,8 @@ _daemon_init (void)
     
     (void) unlink (IPMIDETECTD_PIDFILE);
     
-    if ( (pidfile = fopen(IPMIDETECTD_PIDFILE, "w")) == NULL )
-      IPMIDETECTD_EXIT (("fopen: %s", strerror (errno)));
+    if (!(pidfile = fopen(IPMIDETECTD_PIDFILE, "w")))
+      err_exit ("fopen: %s", strerror (errno));
     
     /* write the 2nd child PID to the pidfile */
     fprintf(pidfile, "%u\n", pid);
@@ -138,13 +137,13 @@ main (int argc, char **argv)
     err_set_flags (ERROR_STDERR);
 
   if (signal (SIGTERM, _signal_handler) == SIG_ERR)
-    IPMIDETECTD_EXIT (("signal: %s", strerror (errno)));
+    err_exit ("signal: %s", strerror (errno));
   
   if (signal (SIGINT, _signal_handler) == SIG_ERR)
-    IPMIDETECTD_EXIT (("signal: %s", strerror (errno)));
+    err_exit ("signal: %s", strerror (errno));
 
   if (signal (SIGQUIT, _signal_handler) == SIG_ERR)
-    IPMIDETECTD_EXIT (("signal: %s", strerror (errno)));
+    err_exit ("signal: %s", strerror (errno));
 
   /* Call after daemonization, since daemonization closes currently
    * open fds

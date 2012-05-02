@@ -46,7 +46,6 @@
 #include <errno.h>
 
 #include "ipmidetectd.h"
-#include "ipmidetectd_debug.h"
 #include "ipmidetectd_config.h"
 
 #include "freeipmi-portability.h"
@@ -66,7 +65,7 @@ _config_default (void)
   conf.ipmidetectd_server_port = IPMIDETECTD_SERVER_PORT_DEFAULT;
 
   if (!(conf.hosts = hostlist_create (NULL)))
-    IPMIDETECTD_EXIT (("hostlist_create: %s", strerror (errno)));
+    err_exit ("hostlist_create: %s", strerror (errno));
 }
 
 static void
@@ -128,14 +127,14 @@ _cmdline_parse (int argc, char **argv)
 	    break;
 	  case 'c':       /* --config-file */
 	    if (!(conf.config_file = strdup (optarg)))
-	      IPMIDETECTD_EXIT (("strdup: %s", strerror (errno)));
+	      err_exit ("strdup: %s", strerror (errno));
 	    break;
 	  case 'd':       /* --debug */
 	    conf.debug++;
 	    break;
 	  case '?':
 	  default:
-	    IPMIDETECTD_EXIT (("unknown command line option '%c'", c));
+	    err_exit ("unknown command line option '%c'", c);
 	  }
       }
 }
@@ -151,7 +150,7 @@ _cb_host (conffile_t cf,
           int app_data)
 {
   if (!hostlist_push (conf.hosts, data->string))
-    IPMIDETECTD_EXIT (("hostlist_push: %s", strerror (errno)));
+    err_exit ("hostlist_push: %s", strerror (errno));
   return (0);
 }
 
@@ -204,7 +203,7 @@ _config_file_parse (void)
   
   if (!(cf = conffile_handle_create ()))
     {
-      IPMIDETECTD_DEBUG (("conffile_handle_create"));
+      err_output ("conffile_handle_create");
       goto cleanup;
     }
 
@@ -242,9 +241,9 @@ _config_file_parse (void)
             goto cleanup;
           
           if (conffile_errmsg (cf, buf, CONFFILE_MAX_ERRMSGLEN) < 0)
-            IPMIDETECTD_EXIT (("conffile_parse: %d", conffile_errnum (cf)));
+            err_exit ("conffile_parse: %d", conffile_errnum (cf));
           else
-            IPMIDETECTD_EXIT (("conffile_parse: %s", buf));
+            err_exit ("conffile_parse: %s", buf);
         }
     }
 
@@ -262,5 +261,5 @@ ipmidetectd_config_setup (int argc, char **argv)
   _config_file_parse ();
 
   if (!hostlist_count (conf.hosts))
-    IPMIDETECTD_EXIT (("No nodes configured"));
+    err_exit ("No nodes configured");
 }

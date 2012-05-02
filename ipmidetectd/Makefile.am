@@ -24,8 +24,6 @@ ipmidetectd_SOURCES = \
 	ipmidetectd.h \
 	ipmidetectd_config.c \
 	ipmidetectd_config.h \
-	ipmidetectd_debug.c \
-	ipmidetectd_debug.h \
 	ipmidetectd_loop.c \
 	ipmidetectd_loop.h
 

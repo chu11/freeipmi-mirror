@@ -66,7 +66,6 @@
 
 #include "ipmidetectd.h"
 #include "ipmidetectd_config.h"
-#include "ipmidetectd_debug.h"
 #include "ipmidetectd_loop.h"
 
 #include "error.h"
@@ -124,12 +123,12 @@ _fds_setup (void)
     fds_count++;
 
   if (!(fds = (int *)malloc (fds_count * sizeof (int))))
-    IPMIDETECTD_EXIT (("malloc: %s", strerror (errno)));
+    err_exit ("malloc: %s", strerror (errno));
 
   for (i = 0; i < fds_count; i++)
     {
       if ((fds[i] = socket (AF_INET, SOCK_DGRAM, 0)) < 0)
-        IPMIDETECTD_EXIT (("socket: %s", strerror (errno)));
+        err_exit ("socket: %s", strerror (errno));
 
       memset (&addr, '\0', sizeof (struct sockaddr_in));
       addr.sin_family = AF_INET;
@@ -137,11 +136,11 @@ _fds_setup (void)
       addr.sin_addr.s_addr = htonl (INADDR_ANY);
 
       if (bind (fds[i], (struct sockaddr *)&addr, sizeof (struct sockaddr_in)) < 0)
-        IPMIDETECTD_EXIT (("bind: %s", strerror (errno)));
+        err_exit ("bind: %s", strerror (errno));
     }
 
   if ((server_fd = socket (AF_INET, SOCK_STREAM, 0)) < 0)
-    IPMIDETECTD_EXIT (("socket: %s", strerror (errno)));
+    err_exit ("socket: %s", strerror (errno));
 
   memset (&addr, '\0', sizeof (struct sockaddr_in));
   addr.sin_family = AF_INET;
@@ -149,7 +148,7 @@ _fds_setup (void)
   addr.sin_addr.s_addr = htonl (INADDR_ANY);
 
   if (bind (server_fd, (struct sockaddr *)&addr, sizeof (struct sockaddr_in)) < 0)
-    IPMIDETECTD_EXIT (("bind: %s", strerror (errno)));
+    err_exit ("bind: %s", strerror (errno));
 
   /* For quick start/restart */
   option_value = 1;
@@ -160,10 +159,10 @@ _fds_setup (void)
                   SO_REUSEADDR,
                   &option_value,
                   option_value_len) < 0)
-    IPMIDETECTD_EXIT (("setsockopt: %s", strerror (errno)));
+    err_exit ("setsockopt: %s", strerror (errno));
 
   if (listen (server_fd, IPMIDETECTD_SERVER_BACKLOG) < 0)
-    IPMIDETECTD_EXIT (("listen: %s", strerror (errno)));
+    err_exit ("listen: %s", strerror (errno));
 }
 
 static void
@@ -180,16 +179,16 @@ _nodes_setup (void)
   assert (!nodes_index);
 
   if (!(nodes = list_create ((ListDelF)free)))
-    IPMIDETECTD_EXIT (("list_create: %s", strerror (errno)));
+    err_exit ("list_create: %s", strerror (errno));
 
   if (!(nodes_index = hash_create (nodes_count,
                                    (hash_key_f)hash_key_string,
                                    (hash_cmp_f)strcmp,
                                    NULL)))
-    IPMIDETECTD_EXIT (("hash_create: %s", strerror (errno)));
+    err_exit ("hash_create: %s", strerror (errno));
 
   if (!(itr = hostlist_iterator_create (conf.hosts)))
-    IPMIDETECTD_EXIT (("hostlist_iterator_create: %s", strerror (errno)));
+    err_exit ("hostlist_iterator_create: %s", strerror (errno));
 
   while ((host = hostlist_next (itr)))
     {
@@ -203,7 +202,7 @@ _nodes_setup (void)
       uint16_t port = RMCP_PRIMARY_RMCP_PORT;
 
       if (!(info = (struct ipmidetectd_info *)malloc (sizeof (struct ipmidetectd_info))))
-        IPMIDETECTD_EXIT (("malloc: %s", strerror (errno)));
+        err_exit ("malloc: %s", strerror (errno));
       memset (info, '\0', sizeof (struct ipmidetectd_info));
 
       if (strchr (host, ':'))
@@ -211,7 +210,7 @@ _nodes_setup (void)
 	  char *ptr;
 
 	  if (!(host_copy = strdup (host)))
-	    IPMIDETECTD_EXIT (("strdup: %s", strerror (errno)));
+	    err_exit ("strdup: %s", strerror (errno));
 	  
 	  if ((ptr = strchr (host_copy, ':')))
 	    {
@@ -227,7 +226,7 @@ _nodes_setup (void)
 		  || endptr[0] != '\0'
 		  || tmp <= 0
 		  || tmp > USHRT_MAX)
-		IPMIDETECTD_EXIT (("invalid port specified: %s", host));
+		err_exit ("invalid port specified: %s", host);
 	      
 	      port = tmp;
 	    }
@@ -238,25 +237,25 @@ _nodes_setup (void)
 	host_ptr = host;
 
       if (!(info->hostname = strdup (host_ptr)))
-        IPMIDETECTD_EXIT (("strdup: %s", strerror (errno)));
+        err_exit ("strdup: %s", strerror (errno));
 
       /* Use random number for starting sequence number to avoid probability of
        * duplicates and "hanging" BMC issue.
        */
       if ((len = ipmi_get_random (&(info->sequence_number),
                                   sizeof (info->sequence_number))) < 0)
-        IPMIDETECTD_EXIT (("ipmi_get_random: %s", strerror (errno)));
+        err_exit ("ipmi_get_random: %s", strerror (errno));
       if (len != sizeof (info->sequence_number))
-        IPMIDETECTD_EXIT (("ipmi_get_random: invalid len returned"));
+        err_exit ("ipmi_get_random: invalid len returned");
 
       info->fd = fds[i/IPMIDETECTD_NODES_PER_SOCKET];
 
       if (!(h = gethostbyname (host_ptr)))
         {
 #if HAVE_HSTRERROR
-          IPMIDETECTD_EXIT (("gethostbyname: %s", hstrerror (h_errno)));
+          err_exit ("gethostbyname: %s", hstrerror (h_errno));
 #else /* !HAVE_HSTRERROR */
-          IPMIDETECTD_EXIT (("gethostbyname: h_errno = %d", h_errno));
+          err_exit ("gethostbyname: h_errno = %d", h_errno);
 #endif /* !HAVE_HSTRERROR */
         }
 
@@ -267,19 +266,19 @@ _nodes_setup (void)
       free (host);
 
       if (!list_append (nodes, info))
-        IPMIDETECTD_EXIT (("list_append: %s", strerror (errno)));
+        err_exit ("list_append: %s", strerror (errno));
 
       if (!(tmpstr = inet_ntoa (info->destaddr.sin_addr)))
-        IPMIDETECTD_EXIT (("inet_ntoa: %s", strerror (errno))); /* strerror? */
+        err_exit ("inet_ntoa: %s", strerror (errno)); /* strerror? */
 
       if (!(ip = strdup (tmpstr)))
-        IPMIDETECTD_EXIT (("strdup: %s", strerror (errno)));
+        err_exit ("strdup: %s", strerror (errno));
 
       if (hash_find (nodes_index, ip))
-        IPMIDETECTD_EXIT (("Duplicate host ip: %s", ip));
+        err_exit ("Duplicate host ip: %s", ip);
 
       if (!hash_insert (nodes_index, ip, info))
-        IPMIDETECTD_EXIT (("hash_insert: %s", strerror (errno)));
+        err_exit ("hash_insert: %s", strerror (errno));
 
       i++;
     }
@@ -298,7 +297,7 @@ _ipmidetectd_setup (void)
 
   /* Avoid sigpipe exiting during server writes */
   if (signal (SIGPIPE, SIG_IGN) == SIG_ERR)
-    IPMIDETECTD_EXIT (("signal: %s", strerror (errno)));
+    err_exit ("signal: %s", strerror (errno));
 }
 
 static int
@@ -315,35 +314,35 @@ _ipmi_ping_build (struct ipmidetectd_info *info, uint8_t *buf, unsigned int bufl
   assert (buflen);
 
   if (!(obj_rmcp_hdr = fiid_obj_create (tmpl_rmcp_hdr)))
-    IPMIDETECTD_EXIT (("fiid_obj_create: %s", strerror (errno)));
+    err_exit ("fiid_obj_create: %s", strerror (errno));
   if (!(obj_lan_session_hdr = fiid_obj_create (tmpl_lan_session_hdr)))
-    IPMIDETECTD_EXIT (("fiid_obj_create: %s", strerror (errno)));
+    err_exit ("fiid_obj_create: %s", strerror (errno));
   if (!(obj_lan_msg_hdr = fiid_obj_create (tmpl_lan_msg_hdr_rq)))
-    IPMIDETECTD_EXIT (("fiid_obj_create: %s", strerror (errno)));
+    err_exit ("fiid_obj_create: %s", strerror (errno));
   if (!(obj_cmd = fiid_obj_create (tmpl_cmd_get_channel_authentication_capabilities_rq)))
-    IPMIDETECTD_EXIT (("fiid_obj_create: %s", strerror (errno)));
+    err_exit ("fiid_obj_create: %s", strerror (errno));
 
   if (fill_rmcp_hdr_ipmi (obj_rmcp_hdr) < 0)
-    IPMIDETECTD_EXIT (("fill_rmcp_hdr_ipmi: %s", strerror (errno)));
+    err_exit ("fill_rmcp_hdr_ipmi: %s", strerror (errno));
 
   if (fill_lan_session_hdr (IPMI_AUTHENTICATION_TYPE_NONE,
                             0,
                             0,
                             obj_lan_session_hdr) < 0)
-    IPMIDETECTD_EXIT (("fill_lan_session_hdr: %s", strerror (errno)));
+    err_exit ("fill_lan_session_hdr: %s", strerror (errno));
 
   if (fill_lan_msg_hdr (IPMI_SLAVE_ADDRESS_BMC,
                         IPMI_NET_FN_APP_RQ,
                         IPMI_BMC_IPMB_LUN_BMC,
                         info->sequence_number % (IPMI_RQ_SEQ_MAX+1),
                         obj_lan_msg_hdr) < 0)
-    IPMIDETECTD_EXIT (("fill_lan_msg_hdr: %s", strerror (errno)));
+    err_exit ("fill_lan_msg_hdr: %s", strerror (errno));
 
   if (fill_cmd_get_channel_authentication_capabilities (IPMI_CHANNEL_NUMBER_CURRENT_CHANNEL,
                                                         IPMI_PRIVILEGE_LEVEL_USER,
                                                         IPMI_GET_IPMI_V15_DATA,
                                                         obj_cmd) < 0)
-    IPMIDETECTD_EXIT (("fill_cmd_get_channel_authentication_capabilities: %s", strerror (errno)));
+    err_exit ("fill_cmd_get_channel_authentication_capabilities: %s", strerror (errno));
 
   if ((len = assemble_ipmi_lan_pkt (obj_rmcp_hdr,
                                     obj_lan_session_hdr,
@@ -354,7 +353,7 @@ _ipmi_ping_build (struct ipmidetectd_info *info, uint8_t *buf, unsigned int bufl
                                     buf,
                                     buflen,
 				    IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
-    IPMIDETECTD_EXIT (("assemble_ipmi_lan_pkt: %s", strerror (errno)));
+    err_exit ("assemble_ipmi_lan_pkt: %s", strerror (errno));
 
 #if 0
   if (conf.debug)
@@ -366,7 +365,7 @@ _ipmi_ping_build (struct ipmidetectd_info *info, uint8_t *buf, unsigned int bufl
                                 len,
                                 tmpl_lan_msg_hdr_rq,
                                 tmpl_cmd_get_channel_authentication_capabilities_rq) < 0)
-        IPMIDETECTD_EXIT (("ipmi_dump_lan_packet: %s", strerror (errno)));
+        err_exit ("ipmi_dump_lan_packet: %s", strerror (errno));
     }
 #endif
 
@@ -391,14 +390,14 @@ _ipmidetectd_send_pings (void)
   assert (nodes_count);
 
   if (!(itr = list_iterator_create (nodes)))
-    IPMIDETECTD_EXIT (("list_iterator_create: %s", strerror (errno)));
+    err_exit ("list_iterator_create: %s", strerror (errno));
 
   while ((info = list_next (itr)))
     {
       memset (buf, '\0', IPMIDETECTD_BUFLEN);
 
       if ((len = _ipmi_ping_build (info, buf, IPMIDETECTD_BUFLEN)) < 0)
-        IPMIDETECTD_EXIT (("_ipmi_ping_build: %s", strerror (errno)));
+        err_exit ("_ipmi_ping_build: %s", strerror (errno));
 
       if (ipmi_lan_sendto (info->fd,
                            buf,
@@ -406,7 +405,7 @@ _ipmidetectd_send_pings (void)
                            0,
                            (struct sockaddr *)&(info->destaddr),
                            sizeof (struct sockaddr_in)) < 0)
-        IPMIDETECTD_EXIT (("ipmi_lan_sendto: %s", strerror (errno)));
+        err_exit ("ipmi_lan_sendto: %s", strerror (errno));
 
       if (conf.debug)
         fprintf (stderr, "Ping Request to %s\n", info->hostname);
@@ -490,15 +489,15 @@ _receive_ping (int fd)
     return;
     
   if (len < 0)
-    IPMIDETECTD_EXIT (("ipmi_lan_recvfrom: %s", strerror (errno)));
+    err_exit ("ipmi_lan_recvfrom: %s", strerror (errno));
 
   if (!(tmpstr = inet_ntoa (from.sin_addr)))
-    IPMIDETECTD_EXIT (("inet_ntoa: %s", strerror (errno))); /* strerror? */
+    err_exit ("inet_ntoa: %s", strerror (errno)); /* strerror? */
 
   if ((info = hash_find (nodes_index, tmpstr)))
     {
       if (gettimeofday (&(info->last_received), NULL) < 0)
-        IPMIDETECTD_EXIT (("gettimeofday: %s", strerror (errno)));
+        err_exit ("gettimeofday: %s", strerror (errno));
 
       if (conf.debug)
         fprintf (stderr, "Ping Reply from %s\n", info->hostname);
@@ -518,13 +517,13 @@ _send_ping_data (void)
   assert (nodes_count);
 
   if ((rhost_fd = accept (server_fd, (struct sockaddr *)&rhost, &rhost_len)) < 0)
-    IPMIDETECTD_EXIT (("accept: %s", strerror (errno)));
+    err_exit ("accept: %s", strerror (errno));
 
   if (conf.debug)
     fprintf (stderr, "Received ipmidetectd server request\n");
 
   if (!(itr = list_iterator_create (nodes)))
-    IPMIDETECTD_EXIT (("list_iterator_create: %s", strerror (errno)));
+    err_exit ("list_iterator_create: %s", strerror (errno));
 
   while ((info = list_next (itr)))
     {
@@ -533,18 +532,18 @@ _send_ping_data (void)
 
       len = snprintf (buf, IPMIDETECTD_BUFLEN, "%s %lu\n", info->hostname, info->last_received.tv_sec);
       if (len >= IPMIDETECTD_BUFLEN)
-        IPMIDETECTD_EXIT (("len=%d", len));
+        err_exit ("len=%d", len);
 
       if ((n = fd_write_n (rhost_fd, buf, len)) < 0)
         {
           if (errno == EPIPE)
             break;
           else
-            IPMIDETECTD_EXIT (("fd_write_n: %s", strerror (errno)));
+            err_exit ("fd_write_n: %s", strerror (errno));
         }
 
       if (n != len)
-        IPMIDETECTD_EXIT (("fd_write_n: n=%d len=%d", n, len));
+        err_exit ("fd_write_n: n=%d len=%d", n, len);
     }
 
   list_iterator_destroy (itr);
@@ -564,7 +563,7 @@ ipmidetectd_loop (void)
 
   /* +1 fd for the server fd */
   if (!(pfds = (struct pollfd *)malloc ((fds_count + 1)*sizeof (struct pollfd))))
-    IPMIDETECTD_EXIT (("malloc: %s", strerror (errno)));
+    err_exit ("malloc: %s", strerror (errno));
 
   while (1)
     {
@@ -573,14 +572,14 @@ ipmidetectd_loop (void)
       int num;
 
       if (gettimeofday (&now, NULL) < 0)
-        IPMIDETECTD_EXIT (("gettimeofday: %s", strerror (errno)));
+        err_exit ("gettimeofday: %s", strerror (errno));
 
       if (timeval_gt (&now, &ipmidetectd_next_send))
         {
           _ipmidetectd_send_pings ();
 
           if (gettimeofday (&now, NULL) < 0)
-            IPMIDETECTD_EXIT (("gettimeofday: %s", strerror (errno)));
+            err_exit ("gettimeofday: %s", strerror (errno));
 
           timeval_add_ms (&now, conf.ipmiping_period, &ipmidetectd_next_send);
         }
@@ -591,7 +590,7 @@ ipmidetectd_loop (void)
       timeval_millisecond_calc (&timeout, &timeout_ms);
 
       if ((num = poll (pfds, fds_count + 1, timeout_ms)) < 0)
-        IPMIDETECTD_EXIT (("poll: %s", strerror (errno)));
+        err_exit ("poll: %s", strerror (errno));
 
       if (num)
         {
