@@ -1023,24 +1023,26 @@ _daemon_init (const char *progname)
 
       if ((pid = fork ()) < 0)
         err_exit ("fork: %s", strerror (errno));
-      if (pid) {
-	FILE *pidfile;
 
-	/* Do not want pidfile writable to group/other */
-	umask(022);
+      if (pid)
+	{
+	  FILE *pidfile;
+	  
+	  /* Do not want pidfile writable to group/other */
+	  umask(022);
+	  
+	  (void) unlink (BMC_WATCHDOG_PIDFILE);
 
-	(void) unlink (BMC_WATCHDOG_PIDFILE);
+	  if (!(pidfile = fopen(BMC_WATCHDOG_PIDFILE, "w")))
+	    err_exit ("fopen: %s", strerror (errno));
 
-	if (!(pidfile = fopen(BMC_WATCHDOG_PIDFILE, "w")))
-	  err_exit ("fopen: %s", strerror (errno));
+	  /* write the 2nd child PID to the pidfile */
+	  fprintf(pidfile, "%u\n", pid);
+	  fclose(pidfile);
 
-        /* write the 2nd child PID to the pidfile */
-        fprintf(pidfile, "%u\n", pid);
-        fclose(pidfile);
-
-        exit (0);                   /* 1st child terminates */
-      }
-
+	  exit (0);                   /* 1st child terminates */
+	}
+      
       if (chdir ("/") < 0)
         err_exit ("chdir: %s", strerror (errno));
 
