@@ -2,6 +2,8 @@
 
 	* man/freeipmi.conf.5.pre.in: Add ipmi-pet to list of supported
 	tools.
+
+	* man/bmc-watchdog.8.pre.in: Remove legacy information.
 	
 2012-04-30  Albert Chu <chu11@llnl.gov>
 

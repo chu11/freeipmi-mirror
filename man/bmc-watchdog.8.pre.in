@@ -108,12 +108,10 @@ Run
 .B bmc-watchdog 
 as a daemon.  Configurable BMC watchdog timer options are listed below
 under DAEMON OPTIONS.  The configuration values are set once, then the
-daemon will reset the timer at specified periodic intervals.
-Everytime the BMC watchdog timer is reset, a log entry will be
-generated in the bmc-watchdog log.  The default log is stored at
-/var/log/freeipmi/bmc-watchdog.log.  The daemon can be stopped using
-the \fB\-\-stop\fR command, \fB\-\-clear\fR command, or by setting the
-stop_timer flag on the \fB\-\-set\fR command.
+daemon will reset the timer at specified periodic intervals.  The
+daemon can be stopped using the \fB\-\-stop\fR command,
+\fB\-\-clear\fR command, or by setting the stop_timer flag on the
+\fB\-\-set\fR command.
 #include <@top_srcdir@/man/manpage-common-general-options-header.man>
 These options are generic and can be used by any command.
 .TP 
