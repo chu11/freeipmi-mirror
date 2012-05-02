@@ -1086,7 +1086,7 @@ _daemon_cmd_err (const char *str, int exit_on_fatal)
     }
 
   if (ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
-      err_output ("%s: %s", str, comp_code_errbuf);
+    err_output ("%s: %s", str, comp_code_errbuf);
   else if (ipmi_ctx_errnum (ipmi_ctx) != IPMI_ERR_DRIVER_BUSY
 	   && ipmi_ctx_errnum (ipmi_ctx) != IPMI_ERR_BMC_BUSY
 	   && ipmi_ctx_errnum (ipmi_ctx) != IPMI_ERR_IPMI_ERROR)
@@ -1096,6 +1096,10 @@ _daemon_cmd_err (const char *str, int exit_on_fatal)
 	exit (1);
     }
 
+  repeat_ipmi_ctx_errnum = last_ipmi_ctx_errnum;
+  repeat_cmd = last_cmd;
+  repeat_netfn = last_netfn;
+  repeat_comp_code = last_comp_code;
   log_repeat_count = 0;
 }
 
