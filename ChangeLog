@@ -4,6 +4,9 @@
 	tools.
 
 	* man/bmc-watchdog.8.pre.in: Remove legacy information.
+
+	* bmc-watchdog/bmc-watchdog.c (_set_cmd): Fix --start-if-stopped
+	and --reset-if-running logic.
 	
 2012-04-30  Albert Chu <chu11@llnl.gov>
 

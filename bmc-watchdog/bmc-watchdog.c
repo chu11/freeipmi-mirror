@@ -1298,6 +1298,7 @@ _set_cmd (void)
                         IPMI_NET_FN_APP_RQ,
                         ret,
                         "Reset Watchdog Timer Error");
+      return;
     }
 
   timer_use = (cmd_args.timer_use) ? cmd_args.timer_use_arg : timer_use;
