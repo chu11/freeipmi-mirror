@@ -648,6 +648,7 @@ _set_cmd (void)
     {
       if (_reset_watchdog_timer_cmd () < 0)
         _ipmi_err_exit ("Reset Watchdog Timer Error");
+      return; 
     }
 
   timer_use = (cmd_args.timer_use) ? cmd_args.timer_use_arg : timer_use;
