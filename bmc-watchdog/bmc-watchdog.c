@@ -225,6 +225,8 @@ _cmd (const char *str,
 			   obj_cmd_rq,
 			   obj_cmd_rs)) < 0)
 	{
+	  last_ipmi_ctx_errnum = ipmi_ctx_errnum (ipmi_ctx);
+
 	  if (ipmi_ctx_errnum (ipmi_ctx) != IPMI_ERR_DRIVER_BUSY
 	      && ipmi_ctx_errnum (ipmi_ctx) != IPMI_ERR_BMC_BUSY
 	      && ipmi_ctx_errnum (ipmi_ctx) != IPMI_ERR_IPMI_ERROR)
@@ -232,7 +234,6 @@ _cmd (const char *str,
 	      if (cmd_args.verbose_logging)
 		err_output ("%s: ipmi_cmd: %s", str, ipmi_ctx_errormsg (ipmi_ctx));
 
-	      last_ipmi_ctx_errnum = ipmi_ctx_errnum (ipmi_ctx);
 
 	      if (ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
 		{
