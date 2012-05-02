@@ -643,7 +643,6 @@ bmc_watchdog_argp_parse (int argc, char **argv, struct bmc_watchdog_arguments *c
   cmd_args->stop = 0;
   cmd_args->clear = 0;
   cmd_args->daemon = 0;
-  /* defined by Makefile */
   cmd_args->verbose_logging = 0;
   cmd_args->no_logging = 0;
   cmd_args->timer_use = 0;
