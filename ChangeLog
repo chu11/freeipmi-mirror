@@ -1,5 +1,10 @@
 2012-05-02  Albert Chu <chu11@llnl.gov>
 
+	* man/ipmidetectd.8.pre.in: Document that errors are logged to
+	syslog.
+	
+2012-05-02  Albert Chu <chu11@llnl.gov>
+
 	* man/freeipmi.conf.5.pre.in: Add ipmi-pet to list of supported
 	tools.
 
