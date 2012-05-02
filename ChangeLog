@@ -1,4 +1,9 @@
-2012-04-19  Albert Chu <chu11@llnl.gov>
+2012-05-02  Albert Chu <chu11@llnl.gov>
+
+	* man/freeipmi.conf.5.pre.in: Add ipmi-pet to list of supported
+	tools.
+	
+2012-04-30  Albert Chu <chu11@llnl.gov>
 
 	* NEWS, configure.ac: Update for release.
 

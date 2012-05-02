@@ -23,7 +23,8 @@ Currently, the tools that can be configured with the configuration file are:
 .B ipmi-chassis-config(8),
 .B ipmi-fru(8),
 .B ipmi-oem(8),
-.B ipmi-pef-config(8).
+.B ipmi-pef-config(8),
+.B ipmi-pet(8),
 .B ipmi-raw(8),
 .B ipmi-sel(8),
 .B ipmi-sensors(8),
