@@ -1,5 +1,10 @@
 2012-05-02  Albert Chu <chu11@llnl.gov>
 
+	* man/ipmidetectd.8.pre.in: Document that errors are logged to
+	syslog.
+	
+2012-05-02  Albert Chu <chu11@llnl.gov>
+
 	Merge branch bmcwatchdogrearch.  Rearch bmc-watchdog to use all
 	new libraries available to it, make it more consistent to other
 	daemons, and properly reflect features/options.

@@ -66,6 +66,8 @@ Specify alternate configuration file
 \fB\-d\fR, \fB\-\-debug\fR
 Turn on debugging and run daemon in foreground
 
+.SH "ERRORS"
+Errors are logged to syslog.
 .SH "FILES"
 @IPMIDETECTD_CONFIG_FILE_DEFAULT@
 #include <@top_srcdir@/man/manpage-common-reporting-bugs.man>
