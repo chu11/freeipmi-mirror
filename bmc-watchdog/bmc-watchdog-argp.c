@@ -325,7 +325,8 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case DAEMON_KEY:
       cmd_args->daemon++;
       break;
-    case LOGFILE_KEY:		/* deprecated */
+    case LOGFILE_KEY:
+      /* deprecated */
       break;
     case VERBOSE_LOGGING_KEY:
       cmd_args->verbose_logging++;

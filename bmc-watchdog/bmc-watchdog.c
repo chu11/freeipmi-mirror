@@ -78,6 +78,8 @@
 
 #define BMC_WATCHDOG_PIDFILE BMC_WATCHDOG_LOCALSTATEDIR "/run/bmc-watchdog.pid"
 
+#define BMC_WATCHDOG_LOG_REPEAT_LIMIT       10
+
 struct bmc_watchdog_arguments cmd_args;
 
 static ipmi_ctx_t ipmi_ctx = NULL;
@@ -86,6 +88,19 @@ static unsigned int retry_attempts = BMC_WATCHDOG_RETRY_ATTEMPTS_DEFAULT;
 static char comp_code_errbuf[BMC_WATCHDOG_ERR_BUFLEN];
 
 static int shutdown_flag = 1;
+
+/* for verbosity limiting */                                                                                                                  
+static int last_ipmi_ctx_errnum = -1;
+static uint8_t last_cmd = -1;
+static uint8_t last_netfn = -1;
+static uint8_t last_comp_code = 0;
+
+static int repeat_ipmi_ctx_errnum = -1;
+static uint8_t repeat_cmd = -1;
+static uint8_t repeat_netfn = -1;
+static uint8_t repeat_comp_code = 0;
+
+static int log_repeat_count = 0;
 
 /* Must be called after cmdline parsed */
 static void
@@ -142,7 +157,7 @@ _init_bmc_watchdog (void)
 }
 
 static void
-_ipmi_err_exit (char *str)
+_ipmi_err_exit (const char *str)
 {
   assert (str);
 
@@ -183,7 +198,7 @@ _fiid_obj_get(fiid_obj_t obj_cmd_rs, const char *field, uint64_t *val)
 }
 
 static int
-_cmd (char *str,
+_cmd (const char *str,
       uint8_t netfn,
       uint8_t cmd,
       fiid_obj_t obj_cmd_rq,
@@ -196,6 +211,11 @@ _cmd (char *str,
           && (netfn == IPMI_NET_FN_APP_RQ || netfn == IPMI_NET_FN_TRANSPORT_RQ)
           && obj_cmd_rq
           && obj_cmd_rs);
+
+  last_ipmi_ctx_errnum = -1;
+  last_cmd = cmd;
+  last_netfn = netfn;
+  last_comp_code = 0;
 
   while (1)
     {
@@ -212,27 +232,24 @@ _cmd (char *str,
 	      if (cmd_args.verbose_logging)
 		err_output ("%s: ipmi_cmd: %s", str, ipmi_ctx_errormsg (ipmi_ctx));
 
+	      last_ipmi_ctx_errnum = ipmi_ctx_errnum (ipmi_ctx);
+
 	      if (ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
 		{
-		  if (ipmi_completion_code_strerror_r (cmd,
-						       netfn,
-						       comp_code,
-						       comp_code_errbuf,
-						       BMC_WATCHDOG_ERR_BUFLEN) < 0)
+		  if (ipmi_completion_code_strerror_cmd_r (obj_cmd_rs,
+							   netfn,
+							   comp_code_errbuf,
+							   BMC_WATCHDOG_ERR_BUFLEN) < 0)
 		    {
-		      uint8_t comp_code;
 		      uint64_t val;
 		      
-		      if (cmd_args.verbose_logging)
-			err_output ("ipmi_completion_code_strerror_r: %s", strerror (errno));
-		      
 		      _fiid_obj_get (obj_cmd_rs, "comp_code", &val);
-		      comp_code = val;
+		      last_comp_code = val;
 		      
 		      snprintf (comp_code_errbuf,
 				BMC_WATCHDOG_ERR_BUFLEN,
 				"Comp Code 0x%X",
-				comp_code);
+				last_comp_code);
 		    }
 		}
 
@@ -1048,20 +1065,51 @@ _daemon_init (const char *progname)
 }
 
 static void
-_daemon_cmd_error_maybe_exit (char *str)
+_daemon_cmd_err (const char *str, int exit_on_fatal)
 {
   assert (str);
 
-  if (ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
+  if (!cmd_args.verbose_logging)
     {
-      err_output ("%s: %s", str, comp_code_errbuf);
-      return;
+      if (repeat_ipmi_ctx_errnum == last_ipmi_ctx_errnum
+	  && repeat_cmd == last_cmd
+	  && repeat_netfn == last_netfn
+	  && repeat_comp_code == last_comp_code)
+	{
+	  log_repeat_count++;
+	  if (log_repeat_count < BMC_WATCHDOG_LOG_REPEAT_LIMIT)
+	    return;
+	}
     }
-  
-  if (ipmi_ctx_errnum (ipmi_ctx) != IPMI_ERR_DRIVER_BUSY
-      && ipmi_ctx_errnum (ipmi_ctx) != IPMI_ERR_BMC_BUSY
-      && ipmi_ctx_errnum (ipmi_ctx) != IPMI_ERR_IPMI_ERROR)
-    err_exit ("%s: %s", str, ipmi_ctx_errormsg (ipmi_ctx));
+
+  if (ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
+      err_output ("%s: %s", str, comp_code_errbuf);
+  else if (ipmi_ctx_errnum (ipmi_ctx) != IPMI_ERR_DRIVER_BUSY
+	   && ipmi_ctx_errnum (ipmi_ctx) != IPMI_ERR_BMC_BUSY
+	   && ipmi_ctx_errnum (ipmi_ctx) != IPMI_ERR_IPMI_ERROR)
+    {
+      err_output ("%s: %s", str, ipmi_ctx_errormsg (ipmi_ctx));
+      if (exit_on_fatal)
+	exit (1);
+    }
+
+  log_repeat_count = 0;
+}
+
+static void
+_daemon_cmd_err_maybe_exit (const char *str)
+{
+  assert (str);
+
+  _daemon_cmd_err (str, 1);
+}
+
+static void
+_daemon_cmd_err_no_exit (const char *str)
+{
+  assert (str);
+
+  _daemon_cmd_err (str, 0);
 }
 
 static void
@@ -1088,7 +1136,7 @@ _daemon_setup (void)
 				   &initial_countdown_seconds,
 				   NULL) < 0)
         {
-          _daemon_cmd_error_maybe_exit ("Get Watchdog Timer");
+          _daemon_cmd_err_maybe_exit ("Get Watchdog Timer");
 	  _sleep (BMC_WATCHDOG_RETRY_WAIT_TIME_DEFAULT);
           continue;
         }
@@ -1139,7 +1187,7 @@ _daemon_setup (void)
 				   (cmd_args.clear_oem) ? 1 : 0,
 				   initial_countdown_seconds) < 0)
         {
-          _daemon_cmd_error_maybe_exit ("Set Watchdog Timer");
+          _daemon_cmd_err_maybe_exit ("Set Watchdog Timer");
 	  _sleep (BMC_WATCHDOG_RETRY_WAIT_TIME_DEFAULT);
           continue;
         }
@@ -1151,7 +1199,7 @@ _daemon_setup (void)
     {
       if (_reset_watchdog_timer_cmd () < 0)
         {
-          _daemon_cmd_error_maybe_exit ("Reset Watchdog Timer");
+          _daemon_cmd_err_maybe_exit ("Reset Watchdog Timer");
 	  _sleep (BMC_WATCHDOG_RETRY_WAIT_TIME_DEFAULT);
           continue;
         }
@@ -1179,7 +1227,7 @@ _daemon_setup (void)
           if ((ret = _suspend_bmc_arps_cmd (gratuitous_arp,
                                             arp_response)) < 0)
             {
-              _daemon_cmd_error_maybe_exit ("Suspend BMC ARPs");
+              _daemon_cmd_err_maybe_exit ("Suspend BMC ARPs");
 	      _sleep (BMC_WATCHDOG_RETRY_WAIT_TIME_DEFAULT);
               continue;
             }
@@ -1200,23 +1248,6 @@ _signal_handler (int sig)
   if (!cmd_args.common.debug)
     (void) unlink (BMC_WATCHDOG_PIDFILE);
   shutdown_flag = 0;
-}
-
-static void
-_daemon_cmd_error_noexit (char *str)
-{
-  assert (str);
-
-  if (ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
-    {
-      err_output ("%s: %s", str, comp_code_errbuf);
-      return;
-    }
-  
-  if (ipmi_ctx_errnum (ipmi_ctx) != IPMI_ERR_DRIVER_BUSY
-      && ipmi_ctx_errnum (ipmi_ctx) != IPMI_ERR_BMC_BUSY
-      && ipmi_ctx_errnum (ipmi_ctx) != IPMI_ERR_IPMI_ERROR)
-    err_output ("%s: %s", str, ipmi_ctx_errormsg (ipmi_ctx));
 }
 
 static void
@@ -1294,7 +1325,7 @@ _daemon_cmd (const char *progname)
 				   NULL,
 				   &present_countdown_seconds) < 0)
         {
-          _daemon_cmd_error_noexit ("Get Watchdog Timer");
+          _daemon_cmd_err_no_exit ("Get Watchdog Timer");
           goto sleep_now;
         }
 
@@ -1310,8 +1341,8 @@ _daemon_cmd (const char *progname)
         {
           if (previous_present_countdown_seconds == present_countdown_seconds)
             {
-              _bmclog ("timer stopped by another process");
-              goto cleanup;
+	      err_output ("timer stopped by another process");
+	      return;
             }
           previous_present_countdown_seconds = present_countdown_seconds;
         }
@@ -1319,14 +1350,14 @@ _daemon_cmd (const char *progname)
         {
           if (timer_state == IPMI_BMC_WATCHDOG_TIMER_TIMER_STATE_STOPPED)
             {
-              _bmclog ("timer stopped by another process");
-              goto cleanup;
+              err_output ("timer stopped by another process");
+	      return;
             }
         }
 
       if (_reset_watchdog_timer_cmd () < 0)
         {
-          _daemon_cmd_error_noexit ("Reset Watchdog Timer");
+          _daemon_cmd_err_no_exit ("Reset Watchdog Timer");
           goto sleep_now;
         }
 
@@ -1360,7 +1391,7 @@ _daemon_cmd (const char *progname)
 				       NULL,
 				       &present_countdown_seconds) < 0)
             {
-	      _daemon_cmd_error_noexit ("Get Watchdog Timer");
+	      _daemon_cmd_err_no_exit ("Get Watchdog Timer");
               goto sleep_now;
             }
           
@@ -1404,7 +1435,7 @@ _daemon_cmd (const char *progname)
 				   &initial_countdown_seconds,
 				   NULL) < 0)
         {
-          _daemon_cmd_error_noexit ("Get Watchdog Timer");
+          _daemon_cmd_err_no_exit ("Get Watchdog Timer");
 	  _sleep (BMC_WATCHDOG_RETRY_WAIT_TIME_DEFAULT);
           continue;
         }
@@ -1426,15 +1457,12 @@ _daemon_cmd (const char *progname)
 				   0,
 				   initial_countdown_seconds) < 0)
         {
-          _daemon_cmd_error_noexit ("Set Watchdog Timer");
+          _daemon_cmd_err_no_exit ("Set Watchdog Timer");
 	  _sleep (BMC_WATCHDOG_RETRY_WAIT_TIME_DEFAULT);
           continue;
         }
       break;
     }
-  
- cleanup:
-  _bmclog ("stopping bmc-watchdog daemon");
 }
 
 int

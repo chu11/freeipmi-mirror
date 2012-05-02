@@ -42,7 +42,7 @@ enum bmc_watchdog_argp_option_keys
     CLEAR_KEY = 'c',
     DAEMON_KEY = 'd',
     LOGFILE_KEY = 'f',
-    VERBOSE_LOGGIN_KEY = 'v',
+    VERBOSE_LOGGING_KEY = 'v',
     NO_LOGGING_KEY = 'n',
     TIMER_USE_KEY = 'u',
     STOP_TIMER_KEY = 'm',
