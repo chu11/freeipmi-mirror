@@ -84,54 +84,56 @@ static struct argp_option cmdline_options[] =
       "Clear BMC Watchdog Config.", 35},
     { "daemon", DAEMON_KEY, NULL, 0,
       "Run in daemon mode.", 36},
-    { "logfile", LOGFILE_KEY, "FILE", 0,
+    { "logfile", LOGFILE_KEY, "FILE", OPTION_HIDDEN,
       "Specify an alternate logfile.", 37},
+    { "verbose-logging", VERBOSE_LOGGING_KEY, 0, 0,
+      "Increase verbosity in logging.", 38},
     { "no-logging", NO_LOGGING_KEY, NULL, 0,
-      "Turn off all syslogging.", 38},
+      "Turn off all syslogging.", 39},
     { "timer-use", TIMER_USE_KEY, "INT", 0,
-      "Set timer use.", 39},
+      "Set timer use.", 40},
     { "stop-timer", STOP_TIMER_KEY, "INT", 0,
-      "Set Stop Timer Flag.", 40},
+      "Set Stop Timer Flag.", 41},
     { "log", LOG_KEY, "INT", 0,
-      "Set Log Flag.", 41},
+      "Set Log Flag.", 42},
     { "timeout-action", TIMEOUT_ACTION_KEY, "INT", 0,
-      "Set timeout action.", 42},
+      "Set timeout action.", 43},
     { "pre-timeout-interrupt", PRE_TIMEOUT_INTERRUPT_KEY, "INT", 0,
-      "Set pre-timeout interrupt.", 43},
+      "Set pre-timeout interrupt.", 44},
     { "pre-timeout-interval", PRE_TIMEOUT_INTERVAL_KEY, "SECONDS", 0,
-      "Set pre-timeout interval in seconds.", 44},
+      "Set pre-timeout interval in seconds.", 45},
     { "clear-bios-frb2", CLEAR_BIOS_FRB2_KEY, NULL, 0,
-      "Clear BIOS FRB2 Timer Use Flag.", 45},
+      "Clear BIOS FRB2 Timer Use Flag.", 46},
     { "clear-bios-post", CLEAR_BIOS_POST_KEY, NULL, 0,
-      "Clear BIOS POST Timer Use Flag.", 46},
+      "Clear BIOS POST Timer Use Flag.", 47},
     { "clear-os-load", CLEAR_OS_LOAD_KEY, NULL, 0,
-      "Clear OS Load Timer Use Flag.", 47},
+      "Clear OS Load Timer Use Flag.", 48},
     { "clear-sms-os", CLEAR_SMS_OS_KEY, NULL, 0,
-      "Clear SMS/OS Timer Use Flag.", 48},
+      "Clear SMS/OS Timer Use Flag.", 49},
     { "clear-oem", CLEAR_OEM_KEY, NULL, 0,
-      "Clear OEM Timer Use Flag.", 49},
+      "Clear OEM Timer Use Flag.", 50},
     { "initial-countdown", INITIAL_COUNTDOWN_KEY, "SECONDS", 0,
-      "Set initial countdown in seconds.", 50},
+      "Set initial countdown in seconds.", 51},
     { "start-after-set", START_AFTER_SET_KEY, NULL, 0,
-      "Start timer after set if timer is stopped.", 51},
+      "Start timer after set if timer is stopped.", 52},
     { "reset-after-set", RESET_AFTER_SET_KEY, NULL, 0,
-      "Reset timer after set if timer is running.", 52},
+      "Reset timer after set if timer is running.", 53},
     { "start-if-stopped", START_IF_STOPPED_KEY, NULL, 0,
-      "Don't set if timer is stopped, just start.", 53},
+      "Don't set if timer is stopped, just start.", 54},
     { "reset-if-running", RESET_IF_RUNNING_KEY, NULL, 0,
-      "Don't set if timer is running, just reset.", 54},
+      "Don't set if timer is running, just reset.", 55},
     { "gratuitous-arp", GRATUITOUS_ARP_KEY, "INT", 0,
-      "Set Gratuitous ARPs Flag.", 55},
+      "Set Gratuitous ARPs Flag.", 56},
     { "arp-response", ARP_RESPONSE_KEY, "INT", 0,
-      "Set ARP Responses Flag.", 56},
+      "Set ARP Responses Flag.", 57},
     { "reset-period", RESET_PERIOD_KEY, "SECONDS", 0,
-      "Specify time interval before resetting timer.", 57},
+      "Specify time interval before resetting timer.", 58},
     { "help", HELP_KEY, NULL, 0,
-      "Output help.", 58},
+      "Output help.", 59},
     { "help", HELP_KEY, NULL, 0,
-      "Output help.", 58},
+      "Output help.", 60},
     { "version", VERSION_KEY, NULL, 0,
-      "Output version.", 59},
+      "Output version.", 61},
     { NULL, 0, NULL, 0, NULL, 0}
   };
 
@@ -199,8 +201,8 @@ _usage (struct bmc_watchdog_arguments *cmd_args)
            "                 --driver-address=DRIVER-ADDRESS      Specify driver address.\n"
            "                 --driver-device=DEVICE               Specify driver device path.\n"
            "                 --register-spacing=REGISTER-SPACING  Specify driver register spacing.\n"
-           "  -f FILE        --logfile=FILE                       Specify an alternate logfile\n"
            "                 --config-file=FILE                   Specify an alternate config file\n"
+	   "  -v             --verbose-logging                    Turn on verbose logging\n"
            "  -n             --no-logging                         Turn off all logging\n"
            "  -?             --help                               Output help menu.\n"
            "  -V             --version                            Output version.\n");
@@ -264,7 +266,10 @@ _usage (struct bmc_watchdog_arguments *cmd_args)
 
   if (cmd_args->set)
     fprintf (stderr,
-             "  -w         --start-after-set            Start timer after set if timer is stopped.\n"            "  -x         --reset-after-set            Reset timer after set if timer is running.\n"            "  -j         --start-if-stopped           Don't set if timer is stopped, just start.\n"            "  -k         --reset-if-running           Don't set if timer is running, just reset.\n");
+             "  -w         --start-after-set            Start timer after set if timer is stopped.\n"
+	     "  -x         --reset-after-set            Reset timer after set if timer is running.\n"
+	     "  -j         --start-if-stopped           Don't set if timer is stopped, just start.\n"
+	     "  -k         --reset-if-running           Don't set if timer is running, just reset.\n");
 
   if (cmd_args->start || cmd_args->daemon)
     fprintf (stderr,
@@ -324,12 +329,10 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       cmd_args->daemon++;
       break;
     case LOGFILE_KEY:
-      free (cmd_args->logfile);
-      if (!(cmd_args->logfile = strdup (arg)))
-        {
-          perror ("strdup");
-          exit (1);
-        }
+      /* deprecated */
+      break;
+    case VERBOSE_LOGGING_KEY:
+      cmd_args->verbose_logging++;
       break;
     case NO_LOGGING_KEY:
       cmd_args->no_logging++;
@@ -549,8 +552,8 @@ _bmc_watchdog_config_file_parse (struct bmc_watchdog_arguments *cmd_args)
       exit (1);
     }
 
-  if (config_file_data.logfile_count)
-    cmd_args->logfile = config_file_data.logfile;
+  if (config_file_data.verbose_logging_count)
+    cmd_args->verbose_logging = config_file_data.verbose_logging;
   if (config_file_data.no_logging_count)
     cmd_args->no_logging = config_file_data.no_logging;
 }
@@ -640,8 +643,7 @@ bmc_watchdog_argp_parse (int argc, char **argv, struct bmc_watchdog_arguments *c
   cmd_args->stop = 0;
   cmd_args->clear = 0;
   cmd_args->daemon = 0;
-  /* defined by Makefile */
-  cmd_args->logfile = NULL;
+  cmd_args->verbose_logging = 0;
   cmd_args->no_logging = 0;
   cmd_args->timer_use = 0;
   cmd_args->timer_use_arg = 0;

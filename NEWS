@@ -29,7 +29,11 @@ o In bmc-watchdog daemon, support handling of SIGQUIT signal in
   addition to SIGTERM and SIGINT, properly umask generated pidfile,
   and delete pidfile when necessary.
 o In ipmidetectd daemon, create/handle pidfile.
-o In bmc-watchdog daemon, properly fsync log entries to disk.
+o In bmc-watchdog, log all errors to syslog instead of unique file.
+o In bmc-watchdog, remove --logfile option.
+o In bmc-watchdog, properly support assumeio and spinpoll workarounds.
+o In bmc-watchdog, support --verbose-logging option for increased
+  logging.
 
 Libraries
 ---------
@@ -46,6 +50,7 @@ o In libfreeipmi, libipmiconsole, libipmimonitoring, support ability
 o In libfreeipmi, add additional IPMI commands/payloads. 
 o In libfreeipmi, fix several macro names which did not meet
   standardization needs.
+o In libfreeipmi, support new IPMI_ERR_DRIVER_BUSY error code.
 
 Misc
 ----

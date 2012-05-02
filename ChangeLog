@@ -1,5 +1,29 @@
 2012-05-02  Albert Chu <chu11@llnl.gov>
 
+	Merge branch bmcwatchdogrearch.  Rearch bmc-watchdog to use all
+	new libraries available to it, make it more consistent to other
+	daemons, and properly reflect features/options.
+
+	* libfreeipmi/api/: Support new IPMI_ERR_DRIVER_BUSY error code to
+	return when a driver is busy.
+
+	* common/toolcommon/, bmc-watchdog/: Use miscutil common error
+	handling functions and properly syslog some initialize errors when
+	running as daemon.  Utilize libfreeipmi api when appropriate
+	instead of bmc-watchdog specific functions.  Remove support for
+	--logfile, all logs go to syslog now.  Support --verbose-logging.
+	Various code cleanup for consistency to rest of FreeIPMI and other
+	changes.
+
+	* etc/bmc-watchdog.logrotate, config/ac_bmc_watchdog_logfile.m4:
+	Remove files.
+
+	* freeipmi.spec.in, configure.ac, etc/Makefile.am,
+	etc/freeipmi.conf, man/bmc-watchdog.8.pre.in,
+	man/freeipmi.conf.5.pre.in: Update appropriately for changes.
+
+2012-05-02  Albert Chu <chu11@llnl.gov>
+
 	* man/freeipmi.conf.5.pre.in: Add ipmi-pet to list of supported
 	tools.
 

@@ -121,11 +121,10 @@ The currently available inband drivers are KCS, SSIF, OPENIPMI, and
 SUNBMC.
 #include <@top_srcdir@/man/manpage-common-inband.man>
 .TP
-\fB\-f\fR \fIFILE\fR, \fB\-\-logfile\fR=\fIFILE\fR
-Specify an alternate logfile from the default of
-/var/log/freeipmi/bmc-watchdog.log.
+\fB\-v\fR, \fB\-\-verbose\-logging\fR
+Increase verbosity of logging.
 .TP
-\fB\-n\fR, \fB\-\-no-logging\fR
+\fB\-n\fR, \fB\-\-no\-logging\fR
 Turns off all logging done by 
 .B bmc-watchdog.  
 #include <@top_srcdir@/man/manpage-common-config-file.man>
@@ -275,7 +274,7 @@ ARP responses will not be suspended.
 Time interval to wait before resetting timer.  The default is 60
 seconds.
 .SH "ERRORS"
-Errors are logged to the bmc-watchdog log.
+Errors are logged to syslog.
 #include <@top_srcdir@/man/manpage-common-workaround-heading-text.man>
 #include <@top_srcdir@/man/manpage-common-workaround-inband-text.man>
 .LP

@@ -354,8 +354,8 @@ Please see
 .B bmc-watchdog(8) 
 manpage for available workarounds.
 .TP
-\fBbmc\-watchdog\-logfile\fR \fIFILE\fR
-Specify the default logfile.
+\fBbmc\-watchdog\-verbose\-logging\fR \fIENABLE|DISABLE\fR
+Specify if logging will be verbose by default.
 .TP
 \fBbmc\-watchdog\-no\-logging\fR \fIENABLE|DISABLE\fR
 Specify if logging will be disabled by default.

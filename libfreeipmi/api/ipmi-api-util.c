@@ -172,7 +172,7 @@ api_set_api_errnum_by_kcs_errnum (ipmi_ctx_t ctx, int kcs_errnum)
       ctx->errnum = IPMI_ERR_DRIVER_TIMEOUT;
       break;
     case IPMI_KCS_ERR_BUSY:
-      ctx->errnum = IPMI_ERR_SYSTEM_ERROR;
+      ctx->errnum = IPMI_ERR_DRIVER_BUSY;
       break;
     case IPMI_KCS_ERR_SYSTEM_ERROR:
       ctx->errnum = IPMI_ERR_SYSTEM_ERROR;
@@ -205,7 +205,7 @@ api_set_api_errnum_by_ssif_errnum (ipmi_ctx_t ctx, int ssif_errnum)
       ctx->errnum = IPMI_ERR_DRIVER_TIMEOUT;
       break;
     case IPMI_SSIF_ERR_BUSY:
-      ctx->errnum = IPMI_ERR_SYSTEM_ERROR;
+      ctx->errnum = IPMI_ERR_DRIVER_BUSY;
       break;
     case IPMI_SSIF_ERR_SYSTEM_ERROR:
       ctx->errnum = IPMI_ERR_SYSTEM_ERROR;
