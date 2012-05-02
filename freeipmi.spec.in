@@ -44,7 +44,6 @@ Group: Applications/System
 Requires: freeipmi = %{version}-%{release}
 Requires(post): /sbin/chkconfig
 Requires(preun): /sbin/chkconfig
-Requires: logrotate
 %description bmc-watchdog
 Provides a watchdog daemon for OS monitoring and recovery.
 
@@ -302,7 +301,6 @@ fi
 %{_mandir}/man7/freeipmi.7*
 %{_mandir}/man5/libipmiconsole.conf.5*
 %dir %{_localstatedir}/cache/ipmimonitoringsdrcache
-%dir %{_localstatedir}/log/freeipmi
 
 %files devel
 %defattr(-,root,root)
@@ -362,7 +360,6 @@ fi
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.bmc-watchdog.UC
 %config(noreplace) %{_initrddir}/bmc-watchdog
 %config(noreplace) %{_sysconfdir}/sysconfig/bmc-watchdog
-%config(noreplace) %{_sysconfdir}/logrotate.d/bmc-watchdog
 %{_sbindir}/bmc-watchdog
 %{_mandir}/man8/bmc-watchdog.8*
 
@@ -375,6 +372,9 @@ fi
 %{_mandir}/man8/ipmidetectd.8*
 
 %changelog
+* Mon May 3 2012 Albert Chu <chu11@llnl.gov> 1.2.1
+- Remove bmc-watchdog logrotate file.
+
 * Mon Dec 12 2011 Albert Chu <chu11@llnl.gov> 1.1.1
 - Add contrib and ipmi-pet files.
 - Make main package own logdir.

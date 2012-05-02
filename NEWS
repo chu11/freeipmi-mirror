@@ -29,9 +29,9 @@ o In bmc-watchdog daemon, support handling of SIGQUIT signal in
   addition to SIGTERM and SIGINT, properly umask generated pidfile,
   and delete pidfile when necessary.
 o In ipmidetectd daemon, create/handle pidfile.
+o In bmc-watchdog, log all errors to syslog instead of unique file.
+o In bmc-watchdog, remove --logfile option.
 o In bmc-watchdog, properly support assumeio and spinpoll workarounds.
-o In bmc-watchdog, remove --logfile option, all logs go to syslog like
-  other daemons.
 o In bmc-watchdog, support --verbose-logging option for increased
   logging.
 
