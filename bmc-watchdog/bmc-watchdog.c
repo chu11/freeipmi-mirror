@@ -1031,7 +1031,7 @@ _daemon_init (const char *progname)
 
 	(void) unlink (BMC_WATCHDOG_PIDFILE);
 
-	if ( (pidfile = fopen(BMC_WATCHDOG_PIDFILE, "w")) == NULL )
+	if (!(pidfile = fopen(BMC_WATCHDOG_PIDFILE, "w")))
 	  err_exit ("fopen: %s", strerror (errno));
 
         /* write the 2nd child PID to the pidfile */
