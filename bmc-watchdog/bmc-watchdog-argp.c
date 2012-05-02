@@ -266,7 +266,10 @@ _usage (struct bmc_watchdog_arguments *cmd_args)
 
   if (cmd_args->set)
     fprintf (stderr,
-             "  -w         --start-after-set            Start timer after set if timer is stopped.\n"            "  -x         --reset-after-set            Reset timer after set if timer is running.\n"            "  -j         --start-if-stopped           Don't set if timer is stopped, just start.\n"            "  -k         --reset-if-running           Don't set if timer is running, just reset.\n");
+             "  -w         --start-after-set            Start timer after set if timer is stopped.\n"
+	     "  -x         --reset-after-set            Reset timer after set if timer is running.\n"
+	     "  -j         --start-if-stopped           Don't set if timer is stopped, just start.\n"
+	     "  -k         --reset-if-running           Don't set if timer is running, just reset.\n");
 
   if (cmd_args->start || cmd_args->daemon)
     fprintf (stderr,
