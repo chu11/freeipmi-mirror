@@ -9,6 +9,12 @@
 
 	* man/ipmidetectd.8.pre.in: Document that errors are logged to
 	syslog.
+
+	* ipmidetectd/: Use miscutil error libraries instead of internal
+	debug functions.
+
+	* ipmidetectd/ipmidetectd_debug.h,
+	ipmidetectd/ipmidetectd_debug.c: Remove files.
 	
 2012-05-02  Albert Chu <chu11@llnl.gov>
 
