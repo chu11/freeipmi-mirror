@@ -1,3 +1,8 @@
+2012-05-03  Albert Chu <chu11@llnl.gov>
+
+	* ipmidetectd/ipmidetectd_config.c (_usage): Fix cut and paste
+	typo.
+	
 2012-05-02  Albert Chu <chu11@llnl.gov>
 
 	* man/ipmidetectd.8.pre.in: Document that errors are logged to
