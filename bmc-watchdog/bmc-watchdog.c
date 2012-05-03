@@ -36,7 +36,6 @@
 #include <stdarg.h>
 #endif /* STDC_HEADERS */
 #include <syslog.h>
-#include <signal.h>
 #include <sys/types.h>
 #if HAVE_UNISTD_H
 #include <unistd.h>
