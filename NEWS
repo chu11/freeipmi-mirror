@@ -4,6 +4,7 @@ Tools
 ------
 o In bmc-watchdog, fix --start-if-stopped and --reset-if-running
   options.
+o In ipmidetectd, fix usage output typos.
 
 Misc
 ----
