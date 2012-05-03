@@ -80,19 +80,19 @@ daemonize_common (const char *pidfile)
 
   if (pid)
     {
-      FILE *pidfile;
+      FILE *pf;
           
       /* Do not want pidfile writable to group/other */
       umask(022);
           
       (void) unlink (pidfile);
 
-      if (!(pidfile = fopen (pidfile, "w")))
+      if (!(pf = fopen (pidfile, "w")))
 	err_exit ("fopen: %s", strerror (errno));
 
       /* write the 2nd child PID to the pidfile */
-      fprintf (pidfile, "%u\n", pid);
-      fclose (pidfile);
+      fprintf (pf, "%u\n", pid);
+      fclose (pf);
 
       exit (0);                   /* 1st child terminates */
     }
