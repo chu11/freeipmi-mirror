@@ -47,78 +47,12 @@
 #include "ipmidetectd_loop.h"
 
 #include "freeipmi-portability.h"
+#include "daemon-util.h"
 #include "error.h"
 
 #define IPMIDETECTD_PIDFILE IPMIDETECTD_LOCALSTATEDIR "/run/ipmidetectd.pid"
 
 extern struct ipmidetectd_config conf;
-
-static void
-_signal_handler (int sig)
-{
-  if (!conf.debug)
-    (void) unlink (IPMIDETECTD_PIDFILE);
-}
-
-static void
-_daemon_init (void)
-{
-  /* Based on code in Unix network programming by R. Stevens */
-  pid_t pid;
-  unsigned int i;
-  int fds[2];
-
-  if (pipe(fds) < 0)
-    err_exit ("pipe: %s", strerror (errno));
-  if ((pid = fork ()) < 0)
-    err_exit ("fork: %s", strerror (errno));
-
-  if (pid != 0)
-    {
-      /* Terminate Parent */
-      char buf;
-      read(fds[0], &buf, 1);
-      close(fds[1]);
-      close(fds[0]);
-      exit (0);
-    }
-
-  setsid ();
-
-  if (signal (SIGHUP, SIG_IGN) == SIG_ERR)
-    err_exit ("signal: %s", strerror (errno));
-
-  if ((pid = fork ()) < 0)
-    err_exit ("fork: %s", strerror (errno));
-
-  if (pid) {
-    FILE *pidfile;
-    
-    /* Do not want pidfile writable to group/other */
-    umask(022);
-    
-    (void) unlink (IPMIDETECTD_PIDFILE);
-    
-    if (!(pidfile = fopen(IPMIDETECTD_PIDFILE, "w")))
-      err_exit ("fopen: %s", strerror (errno));
-    
-    /* write the 2nd child PID to the pidfile */
-    fprintf(pidfile, "%u\n", pid);
-    fclose(pidfile);
-    
-    exit (0);			/* 1st child terminates */
-  }
-  
-  chdir ("/");
-
-  umask (0);
-  write(fds[1], "a", 1);
-  close(fds[1]);
-  close(fds[0]);
-
-  for (i = 0; i < 64; i++)
-    close (i);
-}
 
 int
 main (int argc, char **argv)
@@ -130,20 +64,13 @@ main (int argc, char **argv)
 
   if (!conf.debug)
     {
-      _daemon_init ();
+      daemonize_common (IPMIDETECTD_PIDFILE);
       err_set_flags (ERROR_SYSLOG);
     }
   else
     err_set_flags (ERROR_STDERR);
 
-  if (signal (SIGTERM, _signal_handler) == SIG_ERR)
-    err_exit ("signal: %s", strerror (errno));
-  
-  if (signal (SIGINT, _signal_handler) == SIG_ERR)
-    err_exit ("signal: %s", strerror (errno));
-
-  if (signal (SIGQUIT, _signal_handler) == SIG_ERR)
-    err_exit ("signal: %s", strerror (errno));
+  daemon_signal_handler_setup (NULL);
 
   /* Call after daemonization, since daemonization closes currently
    * open fds

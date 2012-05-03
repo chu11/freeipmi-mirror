@@ -65,6 +65,7 @@
 #include "bmc-watchdog-argp.h"
 
 #include "freeipmi-portability.h"
+#include "daemon-util.h"
 #include "error.h"
 #include "tool-common.h"
 
@@ -990,86 +991,6 @@ _clear_cmd (void)
 }
 
 static void
-_daemon_init (const char *progname)
-{
-  assert (progname);
-
-  /* Based on code in Unix network programming by R. Stevens */
-
-  /* Run in foreground if debugging */
-  if (!cmd_args.common.debug)
-    {
-      unsigned int i;
-      pid_t pid;
-      int fds[2];
-
-      if ( pipe(fds) < 0 )
-        err_exit ("pipe: %s", strerror (errno));
-
-      if ((pid = fork ()) < 0)
-        err_exit ("fork: %s", strerror (errno));
-      if (pid)
-        {
-          /* parent terminates */
-          char buf;
-          read(fds[0], &buf, 1);
-          close(fds[1]);
-          close(fds[0]);
-          exit (0);
-        }
-
-      setsid ();
-
-      if (signal (SIGHUP, SIG_IGN) == SIG_ERR)
-        err_exit ("signal: %s", strerror (errno));
-
-      if ((pid = fork ()) < 0)
-        err_exit ("fork: %s", strerror (errno));
-
-      if (pid)
-	{
-	  FILE *pidfile;
-	  
-	  /* Do not want pidfile writable to group/other */
-	  umask(022);
-	  
-	  (void) unlink (BMC_WATCHDOG_PIDFILE);
-
-	  if (!(pidfile = fopen(BMC_WATCHDOG_PIDFILE, "w")))
-	    err_exit ("fopen: %s", strerror (errno));
-
-	  /* write the 2nd child PID to the pidfile */
-	  fprintf(pidfile, "%u\n", pid);
-	  fclose(pidfile);
-
-	  exit (0);                   /* 1st child terminates */
-	}
-      
-      if (chdir ("/") < 0)
-        err_exit ("chdir: %s", strerror (errno));
-
-      umask (0);
-
-      write(fds[1], "a", 1);
-      close(fds[1]);
-      close(fds[0]);
-      for (i = 0; i < 64; i++)
-        close (i);
-    }
-
-  /* move error outs to syslog from stderr */
-
-  if (!cmd_args.no_logging)
-    err_set_flags (ERROR_SYSLOG);
-  else
-    err_set_flags (0);
-
-  openlog (progname, LOG_ODELAY | LOG_PID, LOG_DAEMON);
-
-  _init_bmc_watchdog ();
-}
-
-static void
 _daemon_cmd_err (const char *str, int exit_on_fatal)
 {
   assert (str);
@@ -1252,10 +1173,8 @@ _daemon_setup (void)
 }
 
 static void
-_signal_handler (int sig)
+_signal_handler_callback (int sig)
 {
-  if (!cmd_args.common.debug)
-    (void) unlink (BMC_WATCHDOG_PIDFILE);
   shutdown_flag = 0;
 }
 
@@ -1269,21 +1188,29 @@ _daemon_cmd (const char *progname)
   uint16_t previous_present_countdown_seconds = 0;
   uint16_t present_countdown_seconds;
 
-  _daemon_init (progname);
+  assert (progname);
+
+  /* Run in foreground if debugging */
+  if (!cmd_args.common.debug)
+    daemonize_common (BMC_WATCHDOG_PIDFILE);
+
+  daemon_signal_handler_setup (_signal_handler_callback);
+
+  /* move error outs to syslog from stderr */
+
+  if (!cmd_args.no_logging)
+    err_set_flags (ERROR_SYSLOG);
+  else
+    err_set_flags (0);
+
+  openlog (progname, LOG_ODELAY | LOG_PID, LOG_DAEMON);
+
+  _init_bmc_watchdog ();
 
   _daemon_setup ();
 
   if (cmd_args.reset_period)
     reset_period = cmd_args.reset_period_arg;
-
-  if (signal (SIGTERM, _signal_handler) == SIG_ERR)
-    err_exit ("signal: %s", strerror (errno));
-
-  if (signal (SIGINT, _signal_handler) == SIG_ERR)
-    err_exit ("signal: %s", strerror (errno));
-
-  if (signal (SIGQUIT, _signal_handler) == SIG_ERR)
-    err_exit ("signal: %s", strerror (errno));
 
   retry_wait_time = BMC_WATCHDOG_RETRY_WAIT_TIME_DEFAULT;
   retry_attempts = BMC_WATCHDOG_RETRY_ATTEMPTS_DEFAULT;

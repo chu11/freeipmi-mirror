@@ -1,3 +1,10 @@
+2012-05-03  Albert Chu <chu11@llnl.gov>
+
+	* common/daemonutil/daemon-util.h, common/daemonutil/daemonutil.c:
+	New files and convenience library.
+
+	* bmc-watchdog/, ipmidetectd/: Utilize new common library.
+	
 2012-05-02  Albert Chu <chu11@llnl.gov>
 
 	* man/ipmidetectd.8.pre.in: Document that errors are logged to

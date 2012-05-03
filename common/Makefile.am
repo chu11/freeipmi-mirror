@@ -1,5 +1,6 @@
 SUBDIRS = \
 	configtool \
+	daemonutil \
 	debugutil \
 	miscutil \
 	parsecommon \
