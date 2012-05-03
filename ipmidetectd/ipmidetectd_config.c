@@ -41,7 +41,7 @@
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
-#include <dirent.h>
+#include <limits.h>
 #include <assert.h>
 #include <errno.h>
 
@@ -52,91 +52,23 @@
 #include "conffile.h"
 #include "error.h"
 
-struct ipmidetectd_config conf;
+extern struct ipmidetectd_arguments cmd_args;
+
+extern struct ipmidetectd_config conf;
+
+#define IPMIDETECTD_IPMIPING_PERIOD      15000
+#define IPMIDETECTD_SERVER_PORT_DEFAULT  9225
 
 static void
 _config_default (void)
 {
   memset (&conf, '\0', sizeof (struct ipmidetectd_config));
 
-  conf.debug = IPMIDETECTD_DEBUG_DEFAULT;
-  conf.config_file = NULL;
   conf.ipmiping_period = IPMIDETECTD_IPMIPING_PERIOD;
   conf.ipmidetectd_server_port = IPMIDETECTD_SERVER_PORT_DEFAULT;
 
   if (!(conf.hosts = hostlist_create (NULL)))
     err_exit ("hostlist_create: %s", strerror (errno));
-}
-
-static void
-_usage (void)
-{
-  fprintf (stderr, "Usage: ipmidetectd [OPTIONS]\n"
-           "-h    --help          Output Help\n"
-           "-v    --version       Output Version\n"
-           "-c    --config_file   Specify alternate config file\n"
-           "-d    --debug         Turn on debugging and run daemon in foreground\n");
-  exit (0);
-}
-
-static void
-_version (void)
-{
-  fprintf (stderr, "ipmidetectd %s\n", VERSION);
-  exit (0);
-}
-
-static void
-_cmdline_parse (int argc, char **argv)
-{
-  char options[100];
-  int c;
-
-#if HAVE_GETOPT_LONG
-  struct option long_options[] =
-    {
-      { "help",                0, NULL, 'h'},
-      { "version",             0, NULL, 'v'},
-      { "config-file",         1, NULL, 'c'},
-      { "debug",               0, NULL, 'd'},
-      { NULL,                  0, NULL, 0},
-    };
-#endif /* HAVE_GETOPT_LONG */
-
-  assert (argv);
-
-  memset (options, '\0', sizeof (options));
-  strcat (options, "hvc:d");
-
-  /* turn off output messages */
-  opterr = 0;
-
-#if HAVE_GETOPT_LONG
-  while ((c = getopt_long (argc, argv, options, long_options, NULL)) != -1)
-#else
-    while ((c = getopt (argc, argv, options)) != -1)
-#endif
-      {
-	switch (c)
-	  {
-	  case 'h':       /* --help */
-	    _usage ();
-	    break;
-	  case 'v':       /* --version */
-	    _version ();
-	    break;
-	  case 'c':       /* --config-file */
-	    if (!(conf.config_file = strdup (optarg)))
-	      err_exit ("strdup: %s", strerror (errno));
-	    break;
-	  case 'd':       /* --debug */
-	    conf.debug++;
-	    break;
-	  case '?':
-	  default:
-	    err_exit ("unknown command line option '%c'", c);
-	  }
-      }
 }
 
 static int
@@ -210,7 +142,7 @@ _config_file_parse (void)
   num = sizeof (options)/sizeof (struct conffile_option);
 
   /* Try legacy file first */
-  if (!conf.config_file)
+  if (!cmd_args.config_file)
     {
       if (!conffile_parse (cf,
                            IPMIDETECTD_CONFIG_FILE_LEGACY,
@@ -225,7 +157,7 @@ _config_file_parse (void)
   if (!legacy_file_loaded)
     {
       if (conffile_parse (cf,
-                          conf.config_file ? conf.config_file : IPMIDETECTD_CONFIG_FILE_DEFAULT,
+                          cmd_args.config_file ? cmd_args.config_file : IPMIDETECTD_CONFIG_FILE_DEFAULT,
                           options,
                           num,
                           NULL,
@@ -235,8 +167,8 @@ _config_file_parse (void)
           char buf[CONFFILE_MAX_ERRMSGLEN];
           
           /* Its not an error if the default configuration file doesn't exist */
-          if ((!conf.config_file
-	       || !strcmp (conf.config_file, IPMIDETECTD_CONFIG_FILE_DEFAULT))
+          if ((!cmd_args.config_file
+	       || !strcmp (cmd_args.config_file, IPMIDETECTD_CONFIG_FILE_DEFAULT))
               && conffile_errnum (cf) == CONFFILE_ERR_EXIST)
             goto cleanup;
           
@@ -257,7 +189,6 @@ ipmidetectd_config_setup (int argc, char **argv)
   assert (argv);
 
   _config_default ();
-  _cmdline_parse (argc, argv);
   _config_file_parse ();
 
   if (!hostlist_count (conf.hosts))

@@ -31,22 +31,6 @@
 #include "config.h"
 #endif /* HAVE_CONFIG_H */
 
-#include "hostlist.h"
-
-#define IPMIDETECTD_DEBUG_DEFAULT                        0
-#define IPMIDETECTD_IPMIPING_PERIOD                      15000
-#define IPMIDETECTD_SERVER_PORT_DEFAULT                  9225
-
-struct ipmidetectd_config
-{
-  int debug;
-  char *config_file;
-
-  int ipmiping_period;
-  int ipmidetectd_server_port;
-  hostlist_t hosts;
-};
-
 void ipmidetectd_config_setup (int argc, char **argv);
 
 #endif /* IPMIDETECTD_CONFIG_H */

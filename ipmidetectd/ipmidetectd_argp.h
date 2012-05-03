@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmidetectd_loop.h,v 1.11 2010-02-08 22:02:31 chu11 Exp $
+ *  $Id: ipmidetectd.h,v 1.11 2010-02-08 22:02:30 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2012 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -24,9 +24,11 @@
  *  with Ipmidetect.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef IPMIDETECTD_LOOP_H
-#define IPMIDETECTD_LOOP_H
+#ifndef IPMIDETECTD_ARGP_H
+#define IPMIDETECTD_ARGP_H
 
-void ipmidetectd_loop (void);
+#include "ipmidetectd.h"
 
-#endif /* IPMIDETECTD_LOOP_H */
+void ipmidetectd_argp_parse (int argc, char **argv, struct ipmidetectd_arguments *cmd_args);
+
+#endif /* IPMIDETECTD_ARGP_H */

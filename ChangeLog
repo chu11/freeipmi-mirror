@@ -9,6 +9,16 @@
 	New files and convenience library.
 
 	* bmc-watchdog/, ipmidetectd/: Utilize new common library.
+	Various code cleanup as needed.
+
+	* ipmidetectd/ipmidetectd_loop.h, ipmidetectd/ipmidetectd_loop.c:
+	Remove files.  Collapse code in ipmidetectd.c.
+
+	* ipmidetectd/ipmidetectd_argp.h, ipmidetectd/ipmidetectd_argp.c:
+	New files.
+
+	* ipmidetectd/: Various code re-org for consistency to rest of
+	FreeIPMI.
 	
 2012-05-02  Albert Chu <chu11@llnl.gov>
 

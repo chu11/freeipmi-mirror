@@ -31,17 +31,28 @@
 #include "config.h"
 #endif /* HAVE_CONFIG_H */
 
-#include <limits.h>             /* MAXHOSTNAMELEN */
-#ifdef HAVE_NETDB_H
-#include <netdb.h>              /* MAXHOSTNAMELEN Solaris */
-#endif /* HAVE_NETDB_H */
+#include <freeipmi/freeipmi.h>
 
-#ifndef MAXHOSTNAMELEN
-#define MAXHOSTNAMELEN 64
-#endif /* MAXHOSTNAMELEN */
+#include "hostlist.h"
 
-#ifndef MAXPATHLEN
-#define MAXPATHLEN 4096
-#endif /* MAXPATHLEN */
+enum ipmidetectd_argp_option_keys
+  {
+    IPMIDETECTD_CONFIG_FILE_KEY = 'c',
+    IPMIDETECTD_LEGACY_CONFIG_FILE_KEY = 160,	/* legacy */
+    IPMIDETECTD_DEBUG_KEY = 'd',
+  };
+
+struct ipmidetectd_config
+{
+  int ipmiping_period;
+  int ipmidetectd_server_port;
+  hostlist_t hosts;
+};
+
+struct ipmidetectd_arguments
+{
+  int debug;
+  char *config_file;
+};
 
 #endif /* IPMIDETECTD_H */
