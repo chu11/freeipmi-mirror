@@ -1,5 +1,10 @@
 2012-05-03  Albert Chu <chu11@llnl.gov>
 
+	* ipmidetectd/ipmidetectd_config.c (_usage): Fix cut and paste
+	typo.
+	
+2012-05-03  Albert Chu <chu11@llnl.gov>
+
 	* common/daemonutil/daemon-util.h, common/daemonutil/daemonutil.c:
 	New files and convenience library.
 

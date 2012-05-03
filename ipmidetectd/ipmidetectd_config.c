@@ -71,7 +71,7 @@ _config_default (void)
 static void
 _usage (void)
 {
-  fprintf (stderr, "Usage: cerebrod [OPTIONS]\n"
+  fprintf (stderr, "Usage: ipmidetectd [OPTIONS]\n"
            "-h    --help          Output Help\n"
            "-v    --version       Output Version\n"
            "-c    --config_file   Specify alternate config file\n"
