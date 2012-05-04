@@ -5,6 +5,9 @@
 
 	* ipmidetectd/: Rename files for consistency to other parts of
 	FreeIPMI.
+
+	* toolevent/tool-event-common.c: Allow NULL for column_width input
+	as long as output will be comma separated.
 	
 2012-05-03  Albert Chu <chu11@llnl.gov>
 

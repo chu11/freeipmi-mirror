@@ -382,7 +382,7 @@ event_output_sensor_name (pstdout_state_t pstate,
   assert (sel_parse_ctx);
   assert (sdr_cache_ctx);
   assert (sdr_parse_ctx);
-  assert (column_width);
+  assert (column_width || (!column_width && comma_separated_output));
 
   if (entity_sensor_names
       && !sdr->ignore_sdr_cache)
@@ -470,19 +470,21 @@ event_output_sensor_name (pstdout_state_t pstate,
 	return (0);
     }
 
-  if (outbuf_len > column_width->sensor_name)
-    column_width->sensor_name = outbuf_len;
-
   memset (fmt, '\0', EVENT_FMT_BUFLEN + 1);
   if (comma_separated_output)
     snprintf (fmt,
               EVENT_FMT_BUFLEN,
               ",%%s");
   else
-    snprintf (fmt,
-              EVENT_FMT_BUFLEN,
-              " | %%-%ds",
-              column_width->sensor_name);
+    {
+      if (outbuf_len > column_width->sensor_name)
+	column_width->sensor_name = outbuf_len;
+
+      snprintf (fmt,
+		EVENT_FMT_BUFLEN,
+		" | %%-%ds",
+		column_width->sensor_name);
+    }
 
   if (outbuf_len)
     PSTDOUT_PRINTF (pstate, fmt, outbuf);
@@ -499,7 +501,7 @@ event_output_not_available_sensor_name (pstdout_state_t pstate,
 {
   char fmt[EVENT_FMT_BUFLEN + 1];
 
-  assert (column_width);
+  assert (column_width || (!column_width && comma_separated_output));
 
   memset (fmt, '\0', EVENT_FMT_BUFLEN + 1);
   if (comma_separated_output)
@@ -533,7 +535,7 @@ event_output_sensor_type (pstdout_state_t pstate,
   int ret;
 
   assert (sel_parse_ctx);
-  assert (column_width);
+  assert (column_width || (!column_width && comma_separated_output));
 
   if ((ret = _sel_parse_record_string (pstate,
 				       sel_parse_ctx,
@@ -549,19 +551,21 @@ event_output_sensor_type (pstdout_state_t pstate,
   if (!ret)
     return (0);
 
-  if (outbuf_len > column_width->sensor_type)
-    column_width->sensor_type = outbuf_len;
-  
   memset (fmt, '\0', EVENT_FMT_BUFLEN + 1);
   if (comma_separated_output)
     snprintf (fmt,
               EVENT_FMT_BUFLEN,
               ",%%s");
   else
-    snprintf (fmt,
-              EVENT_FMT_BUFLEN,
-              " | %%-%ds",
-              column_width->sensor_type);
+    {
+      if (outbuf_len > column_width->sensor_type)
+	column_width->sensor_type = outbuf_len;
+
+      snprintf (fmt,
+		EVENT_FMT_BUFLEN,
+		" | %%-%ds",
+		column_width->sensor_type);
+    }
 
   if (outbuf_len)
     PSTDOUT_PRINTF (pstate, fmt, outbuf);
@@ -578,7 +582,7 @@ event_output_not_available_sensor_type (pstdout_state_t pstate,
 {
   char fmt[EVENT_FMT_BUFLEN + 1];
 
-  assert (column_width);
+  assert (column_width || (!column_width && comma_separated_output));
   
   memset (fmt, '\0', EVENT_FMT_BUFLEN + 1);
   if (comma_separated_output)
