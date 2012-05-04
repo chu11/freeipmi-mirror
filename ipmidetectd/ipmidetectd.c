@@ -66,7 +66,8 @@
 #include <freeipmi/freeipmi.h>
 
 #include "ipmidetectd.h"
-#include "ipmidetectd_config.h"
+#include "ipmidetectd-argp.h"
+#include "ipmidetectd-config.h"
 
 #include "freeipmi-portability.h"
 #include "daemon-util.h"
