@@ -83,7 +83,6 @@ static error_t
 cmdline_parse (int key, char *arg, struct argp_state *state)
 {
   struct ipmidetectd_arguments *cmd_args;
-  error_t ret;
 
   assert (state);
   
