@@ -44,6 +44,7 @@
 #include "ipmidetectd_argp.h"
 
 #include "freeipmi-portability.h"
+#include "error.h"
 
 const char *argp_program_version =
   "ipmidetectd - " PACKAGE_VERSION "\n"
