@@ -36,7 +36,7 @@ FreeIPMI new stuff
 - pmbus.org
   - doable via FreeIPMI?  Can pass through Smbus to PmBus to do power control monitoring?
 - ipmi-seld (***)
-  - log sel events to syslog?
+  - log sel events to syslog/alternate log file
     - work across cluster, configure w/ range of hosts
     - need filtering thingie to remove messages you don't care about?
     - mechanism/option to clear when SEL buffer full
@@ -49,6 +49,7 @@ FreeIPMI new stuff
       - or only log new SEL events?
     - option allow user to specify format for log
       - i.e. %h: %t - %e
+    - store caches in /var/cache? or use present ones
 - server simulator
   - support testing at scale
   - test larger set of corner cases, possibilities, workarounds, etc. 
