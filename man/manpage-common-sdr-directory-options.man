@@ -1,0 +1,5 @@
+.TP
+\fB\-\-sdr\-cache\-directory\fR=\fIDIRECTORY\fR
+Specify an alternate directory for sensor data repository (SDR) caches
+to be stored or read from.  Defaults to the home directory if not
+specified.

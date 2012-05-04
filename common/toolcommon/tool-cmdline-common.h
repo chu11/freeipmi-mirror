@@ -65,9 +65,9 @@ enum argp_common_option_keys
     /* sdr options */
     ARGP_FLUSH_CACHE_KEY = 'f',
     ARGP_QUIET_CACHE_KEY = 'Q',
-    ARGP_SDR_CACHE_DIRECTORY_KEY = 146,
-    ARGP_SDR_CACHE_FILE_KEY = 147,
-    ARGP_SDR_CACHE_RECREATE_KEY = 148,
+    ARGP_SDR_CACHE_FILE_KEY = 146,
+    ARGP_SDR_CACHE_RECREATE_KEY = 147,
+    ARGP_SDR_CACHE_DIRECTORY_KEY = 148,
     ARGP_IGNORE_SDR_CACHE_KEY = 149,
     /* hostrange options */
     ARGP_BUFFER_OUTPUT_KEY = 'B',
@@ -175,12 +175,14 @@ enum argp_common_option_keys
       "Flush a cached version of the sensor data repository (SDR) cache.", 18},                                 \
   { "quiet-cache", ARGP_QUIET_CACHE_KEY,  0, 0,                                                                 \
       "Do not output information about cache creation/deletion.", 19},                                          \
-  { "sdr-cache-directory", ARGP_SDR_CACHE_DIRECTORY_KEY, "DIRECTORY", 0,                                        \
-      "Specify an alternate directory for sensor data repository (SDR) caches to be stored or read from.", 20}, \
   { "sdr-cache-file", ARGP_SDR_CACHE_FILE_KEY, "FILE", 0,                                                       \
-      "Specify a specific file for the sensor data repository (SDR) cache to be stored or read from.", 21},     \
+      "Specify a specific file for the sensor data repository (SDR) cache to be stored or read from.", 20},     \
   { "sdr-cache-recreate", ARGP_SDR_CACHE_RECREATE_KEY,  0, 0,                                                   \
-      "Recreate sensor data repository (SDR) cache if cache is out of date or invalid.", 22}
+      "Recreate sensor data repository (SDR) cache if cache is out of date or invalid.", 21}
+
+#define ARGP_COMMON_SDR_DIRECTORY_OPTIONS                                                                       \
+  { "sdr-cache-directory", ARGP_SDR_CACHE_DIRECTORY_KEY, "DIRECTORY", 0,                                        \
+      "Specify an alternate directory for sensor data repository (SDR) caches to be stored or read from.", 22}
 
 #define ARGP_COMMON_IGNORE_SDR_OPTIONS                                                                          \
   { "ignore-sdr-cache", ARGP_IGNORE_SDR_CACHE_KEY, 0, 0,                                                        \
@@ -232,9 +234,9 @@ struct sdr_cmd_args
 {
   int flush_cache;
   int quiet_cache;
-  char *sdr_cache_directory;
   char *sdr_cache_file;
   int sdr_cache_recreate;
+  char *sdr_cache_directory;
   int ignore_sdr_cache;
 };
 

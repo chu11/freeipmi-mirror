@@ -14,11 +14,6 @@ system.
 Do not output information about cache creation/deletion.  May be
 useful in scripting.
 .TP
-\fB\-\-sdr\-cache\-directory\fR=\fIDIRECTORY\fR
-Specify an alternate directory for sensor data repository (SDR) caches
-to be stored or read from.  Defaults to the home directory if not
-specified.
-.TP
 \fB\-\-sdr\-cache\-file\fR=\fIFILE\fR
 Specify a specific sensor data repository (SDR) cache file to be
 stored or read from.

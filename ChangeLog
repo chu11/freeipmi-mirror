@@ -1,3 +1,8 @@
+2012-05-04  Albert Chu <chu11@llnl.gov>
+
+	* common/toolcommon/, man/: Split SDR option "sdr-cache-directory"
+	into separate macro/man option.
+	
 2012-05-03  Albert Chu <chu11@llnl.gov>
 
 	* ipmidetectd/ipmidetectd_config.c (_usage): Fix cut and paste

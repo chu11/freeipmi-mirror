@@ -24,10 +24,10 @@ ipmidetectd_LDADD = \
 ipmidetectd_SOURCES = \
 	ipmidetectd.c \
 	ipmidetectd.h \
-	ipmidetectd_argp.c \
-	ipmidetectd_argp.h \
-	ipmidetectd_config.c \
-	ipmidetectd_config.h
+	ipmidetectd-argp.c \
+	ipmidetectd-argp.h \
+	ipmidetectd-config.c \
+	ipmidetectd-config.h
 
 $(top_builddir)/common/daemonutil/libdaemonutil.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
