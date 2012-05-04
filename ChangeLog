@@ -2,6 +2,9 @@
 
 	* common/toolcommon/, man/: Split SDR option "sdr-cache-directory"
 	into separate macro/man option.
+
+	* ipmidetectd/: Rename files for consistency to other parts of
+	FreeIPMI.
 	
 2012-05-03  Albert Chu <chu11@llnl.gov>
 
