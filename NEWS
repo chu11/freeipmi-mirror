@@ -29,24 +29,21 @@ o In ipmipower, exit with value 1 on IPMI errors in addition to system
   errors.
 o In ipmidetect, exit with exit value 2 when an error occurs.  Exit
   value of 0 or 1 are reserved for scripting.
-o In bmc-watchdog daemon, support handling of SIGQUIT signal in
-  addition to SIGTERM and SIGINT, properly umask generated pidfile,
-  and delete pidfile when necessary.
-o In ipmidetectd daemon, create/handle pidfile.
-o In ipmidetectd daemon, update command line parsing to use argp
-  instead of getopt.  This change leads to some changes for consistency 
-  with the rest of FreeIPMI, but changes some command line options.
-  - -v is no longer supported, -V outputs version information
-  - -h is no longer supported, -? outputs help
-o In ipmidetect, This change leads to some changes for consistency 
-  with the rest of FreeIPMI, but changes some command line options.
-  - -v is no longer supported, -V outputs version information
-  - -h is no longer supported, -? outputs help
+o In bmc-watchdog, properly support assumeio and spinpoll workarounds.
+o In bmc-watchdog and ipmidetectd daemon, support handling of SIGQUIT
+  signal in addition to SIGTERM and SIGINT, properly umask generated
+  pidfile, and delete pidfile when necessary.
 o In bmc-watchdog, log all errors to syslog instead of unique file.
 o In bmc-watchdog, remove --logfile option.
-o In bmc-watchdog, properly support assumeio and spinpoll workarounds.
 o In bmc-watchdog, support --verbose-logging option for increased
   logging.
+o In ipmidetectd daemon, create/handle pidfile.
+o In ipmidetectd daemon and ipmidetect, update command line parsing to
+  use argp instead of getopt.  This change leads to some changes for
+  consistency with the rest of FreeIPMI, but changes some command line
+  options.
+  - -v is no longer supported, -V outputs version information
+  - -h is no longer supported, -? outputs help
 
 Libraries
 ---------
