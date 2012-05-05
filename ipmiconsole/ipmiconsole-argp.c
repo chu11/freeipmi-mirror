@@ -237,6 +237,11 @@ ipmiconsole_argp_parse (int argc, char **argv, struct ipmiconsole_arguments *cmd
 
   init_common_cmd_args_admin (&(cmd_args->common));
 
+  /* ipmiconsole differences */
+  cmd_args->common.driver_type = IPMI_DEVICE_LAN_2_0;
+  cmd_args->common.session_timeout = 60000;
+  cmd_args->common.retransmission_timeout = 500;
+
   cmd_args->escape_char = '&';
   cmd_args->dont_steal = 0;
   cmd_args->deactivate = 0;
@@ -247,10 +252,6 @@ ipmiconsole_argp_parse (int argc, char **argv, struct ipmiconsole_arguments *cmd
   cmd_args->debugfile = 0;
   cmd_args->noraw = 0;
 #endif /* NDEBUG */
-
-  /* special case to ipmiconsole, different timeout defaults */
-  cmd_args->common.session_timeout = 60000;
-  cmd_args->common.retransmission_timeout = 500;
 
   argp_parse (&cmdline_config_file_argp,
               argc,

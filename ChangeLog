@@ -1,3 +1,8 @@
+2012-05-05  Albert Chu <chu11@llnl.gov>
+
+	* ipmiconsole/ipmiconsole-argp.c (ipmiconsole_argp_parse): Fix
+	password length check bug.  (Found by Diego Elio Pettenò)
+	
 2012-05-04  Albert Chu <chu11@llnl.gov>
 
 	* common/toolcommon/, man/: Split SDR option "sdr-cache-directory"
