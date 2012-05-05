@@ -2,6 +2,7 @@ FreeIPMI 1.1.5 - 04/19/12
 -------------------------
 Tools
 ------
+o In ipmiconsole, fix password length check bug.
 o In bmc-watchdog, fix --start-if-stopped and --reset-if-running
   options.
 o In ipmidetectd, fix usage output typos.
