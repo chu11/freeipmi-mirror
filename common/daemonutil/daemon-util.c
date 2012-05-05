@@ -108,7 +108,7 @@ daemonize_common (const char *pidfile)
   for (i = 0; i < 64; i++)
     close (i);
 
-  daemon_pidfile = pidfile;
+  daemon_pidfile = (char *)pidfile;
 
   return (0);
 }
