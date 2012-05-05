@@ -382,6 +382,7 @@ event_output_sensor_name (pstdout_state_t pstate,
   assert (sel_parse_ctx);
   assert (sdr_cache_ctx);
   assert (sdr_parse_ctx);
+  assert (!entity_sensor_names || (entity_sensor_names && entity_id_counts));
   assert (column_width || (!column_width && comma_separated_output));
 
   if (entity_sensor_names

@@ -7,7 +7,8 @@
 	FreeIPMI.
 
 	* toolevent/tool-event-common.c: Allow NULL for column_width input
-	as long as output will be comma separated.
+	as long as output will be comma separated.  Allow NULL for
+	entity_id_counts if entity_sensor_names not desired.
 	
 2012-05-03  Albert Chu <chu11@llnl.gov>
 
