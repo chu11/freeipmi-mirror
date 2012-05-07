@@ -2,6 +2,9 @@
 
 	* common/toolevent/tool-event-common.c (event_output_event):
 	Remove dead code.
+
+	* sel-parse/ipmi-sel-parse-string.c (_output_event_data2_event_data3):
+	Remove dead code.
 	
 2012-05-06  Albert Chu <chu11@llnl.gov>
 

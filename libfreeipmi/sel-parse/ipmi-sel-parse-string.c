@@ -2418,7 +2418,6 @@ _output_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
                                  unsigned int *wlen)
 {
   struct ipmi_sel_system_event_record_data system_event_record_data;
-  char tmpbuf[EVENT_BUFFER_LENGTH];
   char tmpbufdata2[EVENT_BUFFER_LENGTH + 1];
   char tmpbufdata3[EVENT_BUFFER_LENGTH + 1];
   unsigned int tmpbufdata2_wlen = 0;
@@ -2440,7 +2439,6 @@ _output_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
   if (sel_parse_get_system_event_record (ctx, sel_parse_entry, &system_event_record_data) < 0)
     return (-1);
 
-  memset (tmpbuf, '\0', EVENT_BUFFER_LENGTH);
   memset (tmpbufdata2, '\0', EVENT_BUFFER_LENGTH+1);
   memset (tmpbufdata3, '\0', EVENT_BUFFER_LENGTH+1);
 
