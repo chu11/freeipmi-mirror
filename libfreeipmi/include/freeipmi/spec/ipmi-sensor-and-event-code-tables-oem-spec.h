@@ -1464,6 +1464,7 @@ extern unsigned int ipmi_oem_intel_s2600jf_specific_qpi_link_width_reduced_max_i
  * Supermicro X8DTN+-F (X8DTNPLUS_F)
  * Supermicro X8SIE
  * Supermicro X9SCA-F-O (X9SCA_F_O)
+ * Supermicro H8DGU-F (H8DGU_F)
  */
 /* achu: not official names, named based on use context */
 #define IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP_LOW           0x00
