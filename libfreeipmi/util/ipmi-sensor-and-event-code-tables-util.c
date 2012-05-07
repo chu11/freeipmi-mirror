@@ -2153,7 +2153,8 @@ _supermicro_oem_temp_level_sensor_supported (uint32_t manufacturer_id, uint16_t 
 	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCM
 	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTNPLUS_F
 	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8SIE
-	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCA_F_O))
+	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCA_F_O
+	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_H8DGU_F))
       || (manufacturer_id == IPMI_IANA_ENTERPRISE_ID_MAGNUM_TECHNOLOGIES
 	  && product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTL))
     return (1);

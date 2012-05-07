@@ -1,3 +1,7 @@
+2012-05-06  Diego Elio Pettenò <flameeyes@flameeyes.eu>
+
+	* Add support for Supermicro H8DGU-F to ipmi-sensors.
+
 2012-05-06  Albert Chu <chu11@llnl.gov>
 
 	* ipmidetect/ipmidetect_.h, common/daemonutil/daemon-util.c:
