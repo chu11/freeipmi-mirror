@@ -1,3 +1,10 @@
+2012-05-06  Albert Chu <chu11@llnl.gov>
+
+	* Add Supermicro H8DGU-F support for ipmi-sel and interpret
+	library.
+
+	* Update docs for Supermicro H8DGU-F support.
+
 2012-05-06  Diego Elio Pettenò <flameeyes@flameeyes.eu>
 
 	* Add support for Supermicro H8DGU-F to ipmi-sensors.

@@ -2122,6 +2122,7 @@ _supermicro_oem_temp_level_sensor_supported (uint32_t manufacturer_id, uint16_t 
    * Supermicro X8DTN+-F (X8DTNPLUS_F)
    * Supermicro X8SIE
    * Supermicro X9SCA-F-O (X9SCA_F_O)
+   * Supermicro H8DGU-F (H8DGU_F)
    *
    * Event Reading Type Code = IPMI_EVENT_READING_TYPE_CODE_OEM_SUPERMICRO_GENERIC
    * Sensor Type = IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP
