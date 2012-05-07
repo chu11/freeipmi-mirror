@@ -39,8 +39,6 @@
 #include "config.h"
 #endif /* HAVE_CONFIG_H */
 
-#include <freeipmi/freeipmi.h>
-
 #include "hostlist.h"
 
 enum ipmidetect_argp_option_keys

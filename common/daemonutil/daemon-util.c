@@ -33,8 +33,6 @@
 #include <errno.h>
 #include <assert.h>
 
-#include <freeipmi/freeipmi.h>
-
 #include "daemon-util.h"
 
 #include "freeipmi-portability.h"
