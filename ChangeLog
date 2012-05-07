@@ -1,5 +1,10 @@
 2012-05-06  Albert Chu <chu11@llnl.gov>
 
+	* common/toolevent/tool-event-common.c (event_output_event):
+	Remove dead code.
+	
+2012-05-06  Albert Chu <chu11@llnl.gov>
+
 	* Add Supermicro H8DGU-F support for ipmi-sel and interpret
 	library.
 

@@ -830,7 +830,6 @@ event_output_event (pstdout_state_t pstate,
 	  || oem_data->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
 	  || oem_data->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710))
     {
-      uint8_t sensor_number;
       uint8_t sensor_type;
       
       if ((ret = event_data_info (pstate,
@@ -840,7 +839,7 @@ event_output_event (pstdout_state_t pstate,
 				  debug,
 				  NULL,
 				  &sensor_type,
-				  &sensor_number,
+				  NULL,
 				  NULL,
 				  NULL,
 				  NULL,
