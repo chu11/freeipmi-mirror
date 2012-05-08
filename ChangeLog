@@ -1,3 +1,9 @@
+2012-05-08  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/templates/ipmi-oem-intel-node-manager-cmds-templates.h,
+	libfreeipmi/cmds/ipmi-oem-intel-node-manager-cmds.c: Fix field
+	name typo (Found by Werner Fischer).
+
 2012-05-08  Thomas Renninger <trenn@suse.de>
 
 	* etc/ipmidetectd.init: Fix start run levels.
