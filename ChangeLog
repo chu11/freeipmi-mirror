@@ -1,3 +1,8 @@
+2012-05-07  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/sdr-cache/ipmi-sdr-cache-create.c (ipmi_sdr_cache_create):
+	Fix error code return value.
+
 2012-05-06  Albert Chu <chu11@llnl.gov>
 
 	* Add Supermicro H8DGU-F support for ipmi-sel and interpret
