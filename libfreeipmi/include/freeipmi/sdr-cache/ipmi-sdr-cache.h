@@ -102,20 +102,23 @@ typedef void (*Sdr_Create_Callback)(uint8_t sdr_version,
                                     uint16_t record_id,
                                     void *data);
 
-/* SDR Cache Context Functions */
+/*
+ * SDR Cache Context and General functions
+ */
 ipmi_sdr_cache_ctx_t ipmi_sdr_cache_ctx_create (void);
 void ipmi_sdr_cache_ctx_destroy (ipmi_sdr_cache_ctx_t ctx);
 int ipmi_sdr_cache_ctx_errnum (ipmi_sdr_cache_ctx_t ctx);
 char * ipmi_sdr_cache_ctx_strerror (int errnum);
 char * ipmi_sdr_cache_ctx_errormsg (ipmi_sdr_cache_ctx_t ctx);
 
-/* SDR flag functions */
 int ipmi_sdr_cache_ctx_get_flags (ipmi_sdr_cache_ctx_t ctx, unsigned int *flags);
 int ipmi_sdr_cache_ctx_set_flags (ipmi_sdr_cache_ctx_t ctx, unsigned int flags);
 char *ipmi_sdr_cache_ctx_get_debug_prefix (ipmi_sdr_cache_ctx_t ctx);
 int ipmi_sdr_cache_ctx_set_debug_prefix (ipmi_sdr_cache_ctx_t ctx, const char *debug_prefix);
 
-/* SDR Cache Creation Functions */
+/*
+ * SDR Cache Creation Functions
+ */
 int ipmi_sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
                            ipmi_ctx_t ipmi_ctx,
                            const char *filename,
@@ -124,9 +127,14 @@ int ipmi_sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
                            Sdr_Create_Callback create_callback,
                            void *create_callback_data);
 
-/* SDR Cache Reading Functions
- * - ipmi_ctx is optional
- * - if ipmi_ctx is specified, timestamps/version of the SDR will be checked for out-of-dateness
+/*
+ * SDR Cache Reading Functions
+ */
+
+/* ipmi_sdr_cache_open
+ *  - ipmi_ctx is optional
+ * - if ipmi_ctx is specified, timestamps/version of the SDR will be
+ *   checked for out-of-dateness
  */
 int ipmi_sdr_cache_open (ipmi_sdr_cache_ctx_t ctx,
                          ipmi_ctx_t ipmi_ctx,
@@ -153,7 +161,9 @@ int ipmi_sdr_cache_record_read (ipmi_sdr_cache_ctx_t ctx,
 
 int ipmi_sdr_cache_close (ipmi_sdr_cache_ctx_t ctx);
 
-/* SDR Cache Delete Functions */
+/*
+ * SDR Cache Utility Functions
+ */
 int ipmi_sdr_cache_delete (ipmi_sdr_cache_ctx_t ctx, const char *filename);
 
 #ifdef __cplusplus
