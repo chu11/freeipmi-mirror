@@ -744,9 +744,9 @@ ipmi_sdr_cache_search_sensor_wrapper (ipmi_sdr_cache_ctx_t ctx,
        *                                                                                                     
        * Discovered on Supermicro H8QME with SIMSO daughter card.                                            
        *                                                                                                     
-       * The slave address is reportedly incorrectly by having the                                           
-       * generator_id be shifted over by one.  This is a special                                             
-       * "try again" corner case.                                                                            
+       * The slave address is reported incorrectly by having the
+       * generator_id be shifted over by one.  This is a special "try
+       * again" corner case.
        */
       if (ipmi_sdr_cache_ctx_errnum (ctx) == IPMI_SDR_CACHE_ERR_NOT_FOUND
 	  && (generator_id == (IPMI_SLAVE_ADDRESS_BMC << 1)))
