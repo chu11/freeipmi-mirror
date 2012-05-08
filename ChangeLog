@@ -1,5 +1,10 @@
 2012-05-06  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/sdr-cache/ipmi-sdr-cache-create.c (ipmi_sdr_cache_create):
+	Fix error code return value.
+
+2012-05-06  Albert Chu <chu11@llnl.gov>
+
 	* common/toolevent/tool-event-common.c (event_output_event):
 	Remove dead code.
 
