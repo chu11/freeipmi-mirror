@@ -1,4 +1,4 @@
-2012-05-06  Albert Chu <chu11@llnl.gov>
+2012-05-08  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/sel-parse/ipmi-sel-parse.h,
 	libfreeipmi/sel-parse/ipmi-sel-parse-string.c (_output_event_data1_event_data2_event_data3),
@@ -8,9 +8,27 @@
 	* common/toolevent/tool-event-common.c (event_output_event): Use
 	new '%E' appropriately.
 	
-2012-05-06  Albert Chu <chu11@llnl.gov>
+2012-05-08  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/templates/ipmi-oem-intel-node-manager-cmds-templates.h,
+	libfreeipmi/cmds/ipmi-oem-intel-node-manager-cmds.c: Fix field
+	name typo (Found by Werner Fischer).
+
+2012-05-08  Thomas Renninger <trenn@suse.de>
+
+	* etc/ipmidetectd.init: Fix start run levels.
+	
+2012-05-07  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/sdr-cache/ipmi-sdr-cache-create.c (ipmi_sdr_cache_create):
+	Fix error code return value.
+
+2012-05-07  Albert Chu <chu11@llnl.gov>
 
 	* common/toolevent/tool-event-common.c (event_output_event):
+	Remove dead code.
+
+	* sel-parse/ipmi-sel-parse-string.c (_output_event_data2_event_data3):
 	Remove dead code.
 	
 2012-05-06  Albert Chu <chu11@llnl.gov>
