@@ -64,23 +64,28 @@
 #define MAXHOSTNAMELEN 64
 #endif
 
-struct ipmi_ctx
+struct ipmi_ctx_target_info
 {
-  uint32_t magic;
-
-  ipmi_driver_type_t type;
-  unsigned int workaround_flags_outofband;
-  unsigned int workaround_flags_outofband_2_0;
-  unsigned int workaround_flags_inband;
-  unsigned int flags;
-
   uint8_t target_channel_number;	/* for ipmb */
   int target_channel_number_is_set;	/* for ipmb */
   uint8_t target_rs_addr;		/* for ipmb */
   int target_rs_addr_is_set;		/* for ipmb */
   uint8_t lun;
   uint8_t net_fn;
+};
 
+struct ipmi_ctx
+{
+  uint32_t magic;
+  
+  ipmi_driver_type_t type;
+  unsigned int workaround_flags_outofband;
+  unsigned int workaround_flags_outofband_2_0;
+  unsigned int workaround_flags_inband;
+  unsigned int flags;
+  
+  struct ipmi_ctx_target_info target_info;
+  
   fiid_field_t      *tmpl_ipmb_cmd_rq;
   fiid_field_t      *tmpl_ipmb_cmd_rs;
 

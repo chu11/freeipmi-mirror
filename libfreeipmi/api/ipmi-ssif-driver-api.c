@@ -180,8 +180,8 @@ _ssif_cmd_write (ipmi_ctx_t ctx,
     }
   memset (pkt, '\0', pkt_len);
   
-  if (fill_hdr_ipmi_kcs (ctx->lun,
-                         ctx->net_fn,
+  if (fill_hdr_ipmi_kcs (ctx->target_info.lun,
+                         ctx->target_info.net_fn,
                          ctx->io.inband.rq.obj_hdr) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
@@ -203,7 +203,7 @@ _ssif_cmd_write (ipmi_ctx_t ctx,
 			pkt,
 			send_len,
 			cmd,
-			ctx->net_fn,
+			ctx->target_info.net_fn,
 			group_extension,
 			obj_cmd_rq);
 
@@ -283,7 +283,7 @@ _ssif_cmd_read (ipmi_ctx_t ctx,
 			pkt,
 			read_len,
 			cmd,
-			ctx->net_fn,
+			ctx->target_info.net_fn,
 			group_extension,
 			obj_cmd_rs);
 
@@ -335,7 +335,7 @@ ipmi_ssif_cmd_api (ipmi_ctx_t ctx,
       else
         cmd = val;
 
-      if (IPMI_NET_FN_GROUP_EXTENSION (ctx->net_fn))
+      if (IPMI_NET_FN_GROUP_EXTENSION (ctx->target_info.net_fn))
         {
           /* ignore error, continue on */
           if (FIID_OBJ_GET (obj_cmd_rq,

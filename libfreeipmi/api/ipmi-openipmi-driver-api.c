@@ -25,6 +25,7 @@
 #ifdef STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#include <assert.h>
 #include <errno.h>
 
 #include "freeipmi/driver/ipmi-openipmi-driver.h"
@@ -59,8 +60,8 @@ ipmi_openipmi_cmd_api (ipmi_ctx_t ctx,
           && fiid_obj_valid (obj_cmd_rs));
   
   if (ipmi_openipmi_cmd (ctx->io.inband.openipmi_ctx,
-                         ctx->lun,
-                         ctx->net_fn,
+                         ctx->target_info.lun,
+                         ctx->target_info.net_fn,
                          obj_cmd_rq,
                          obj_cmd_rs) < 0)
     {
@@ -84,10 +85,10 @@ ipmi_openipmi_cmd_api_ipmb (ipmi_ctx_t ctx,
           && fiid_obj_valid (obj_cmd_rs));
 
   if (ipmi_openipmi_cmd_ipmb (ctx->io.inband.openipmi_ctx,
-                              ctx->target_channel_number,
-                              ctx->target_rs_addr,
-                              ctx->lun,
-                              ctx->net_fn,
+                              ctx->target_info.target_channel_number,
+                              ctx->target_info.target_rs_addr,
+                              ctx->target_info.lun,
+                              ctx->target_info.net_fn,
                               obj_cmd_rq,
                               obj_cmd_rs) < 0)
     {

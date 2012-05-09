@@ -25,6 +25,7 @@
 #ifdef STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#include <assert.h>
 #include <errno.h>
 
 #include "freeipmi/driver/ipmi-sunbmc-driver.h"
@@ -59,8 +60,8 @@ ipmi_sunbmc_cmd_api (ipmi_ctx_t ctx,
           && fiid_obj_valid (obj_cmd_rs));
 
   if (ipmi_sunbmc_cmd (ctx->io.inband.sunbmc_ctx,
-                       ctx->lun,
-                       ctx->net_fn,
+                       ctx->target_info.lun,
+                       ctx->target_info.net_fn,
                        obj_cmd_rq,
                        obj_cmd_rs) < 0)
     {
@@ -110,8 +111,8 @@ ipmi_sunbmc_cmd_raw_api (ipmi_ctx_t ctx,
     }
 
   if (ipmi_sunbmc_cmd (ctx->io.inband.sunbmc_ctx,
-                       ctx->lun,
-                       ctx->net_fn,
+                       ctx->target_info.lun,
+                       ctx->target_info.net_fn,
                        obj_cmd_rq,
                        obj_cmd_rs) < 0)
     {
