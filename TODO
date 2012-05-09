@@ -127,6 +127,10 @@ libfreeipmi-api
     anything in acpi/smbios/etc.
   - User can use ipmi-locate if they really want to probe?
 
+libfreeipmi-sdr-parse
+---------------------
+collapse into sdr-cache?
+
 libfreeipmi-interpret
 ---------------------
 - handle sensor/sel events outside of spec - configurable in some way?
@@ -235,6 +239,7 @@ ipmi-fru
 - write FRU data option
   - for OEM integrators
   - or should be in bmc-device?
+- iterate through management controller SDR entries too
 
 bmc-device
 --------
