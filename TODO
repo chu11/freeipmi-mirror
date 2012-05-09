@@ -127,9 +127,9 @@ libfreeipmi-api
     anything in acpi/smbios/etc.
   - User can use ipmi-locate if they really want to probe?
 
-libfreeipmi-sdr-parse
----------------------
-collapse into sdr-cache?
+libfreeipmi-sdr-parse/libfreeipmi-sdr-cache
+-------------------------------------------
+someone merge libs into one
 
 libfreeipmi-interpret
 ---------------------
