@@ -1521,20 +1521,20 @@ ipmi_cmd (ipmi_ctx_t ctx,
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
     }
-
+  
   if (ctx->type == IPMI_DEVICE_UNKNOWN)
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_DEVICE_NOT_OPEN);
       return (-1);
     }
-
+  
   if (ctx->flags & IPMI_FLAGS_NOSESSION
       && ctx->type != IPMI_DEVICE_LAN)
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_DEVICE_NOT_OPEN);
       return (-1);
     }
-
+  
   if (ctx->type != IPMI_DEVICE_LAN
       && ctx->type != IPMI_DEVICE_LAN_2_0
       && ctx->type != IPMI_DEVICE_KCS
@@ -1543,6 +1543,20 @@ ipmi_cmd (ipmi_ctx_t ctx,
       && ctx->type != IPMI_DEVICE_SUNBMC)
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_INTERNAL_ERROR);
+      return (-1);
+    }
+  
+  if (!fiid_obj_valid (obj_cmd_rq)
+      || !fiid_obj_valid (obj_cmd_rs))
+    {
+      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  if (!fiid_obj_valid (obj_cmd_rq)
+      || !fiid_obj_valid (obj_cmd_rs))
+    {
+      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
