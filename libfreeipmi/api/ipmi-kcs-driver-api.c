@@ -450,7 +450,7 @@ _ipmi_kcs_ipmb_send (ipmi_ctx_t ctx,
       goto cleanup;
     }
 
-  if (fill_ipmb_msg_hdr (ctx->rs_addr,
+  if (fill_ipmb_msg_hdr (ctx->target_rs_addr,
                          ctx->net_fn,
                          ctx->lun,
                          IPMI_SLAVE_ADDRESS_BMC,
@@ -481,7 +481,7 @@ _ipmi_kcs_ipmb_send (ipmi_ctx_t ctx,
     }
 
   if (ipmi_cmd_send_message (ctx,
-                             ctx->channel_number,
+                             ctx->target_channel_number,
                              IPMI_SEND_MESSAGE_AUTHENTICATION_NOT_REQUIRED,
                              IPMI_SEND_MESSAGE_ENCRYPTION_NOT_REQUIRED,
                              IPMI_SEND_MESSAGE_TRACKING_OPERATION_NO_TRACKING,

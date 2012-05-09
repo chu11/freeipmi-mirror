@@ -74,8 +74,10 @@ struct ipmi_ctx
   unsigned int workaround_flags_inband;
   unsigned int flags;
 
-  uint8_t channel_number;       /* for ipmb */
-  uint8_t rs_addr;              /* for ipmb */
+  uint8_t target_channel_number;	/* for ipmb */
+  int target_channel_number_is_set;	/* for ipmb */
+  uint8_t target_rs_addr;		/* for ipmb */
+  int target_rs_addr_is_set;		/* for ipmb */
   uint8_t lun;
   uint8_t net_fn;
 

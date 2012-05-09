@@ -120,8 +120,8 @@ ipmi_openipmi_cmd_api_ipmb (ipmi_ctx_t ctx,
     }
 
   if (ipmi_openipmi_cmd_ipmb (ctx->io.inband.openipmi_ctx,
-                              ctx->channel_number,
-                              ctx->rs_addr,
+                              ctx->target_channel_number,
+                              ctx->target_rs_addr,
                               ctx->lun,
                               ctx->net_fn,
                               obj_cmd_rq,

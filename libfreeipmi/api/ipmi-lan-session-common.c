@@ -1208,7 +1208,7 @@ _ipmi_cmd_send_ipmb (ipmi_ctx_t ctx,
     }
 
   if (ipmi_cmd_send_message (ctx,
-                             ctx->channel_number,
+                             ctx->target_channel_number,
                              IPMI_SEND_MESSAGE_AUTHENTICATION_NOT_REQUIRED,
                              IPMI_SEND_MESSAGE_ENCRYPTION_NOT_REQUIRED,
                              IPMI_SEND_MESSAGE_TRACKING_OPERATION_TRACKING_REQUEST,
@@ -1298,7 +1298,7 @@ ipmi_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
   rq_seq_orig = ctx->io.outofband.rq_seq;
 
   if (_ipmi_cmd_send_ipmb (ctx,
-                           ctx->rs_addr,
+                           ctx->target_rs_addr,
                            ctx->lun,
                            ctx->net_fn,
                            obj_cmd_rq) < 0)
@@ -1338,7 +1338,7 @@ ipmi_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
           rq_seq_orig = ctx->io.outofband.rq_seq;
 
           if (_ipmi_cmd_send_ipmb (ctx,
-                                   ctx->rs_addr,
+                                   ctx->target_rs_addr,
                                    ctx->lun,
                                    ctx->net_fn,
                                    obj_cmd_rq) < 0)
@@ -3092,7 +3092,7 @@ ipmi_lan_2_0_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
   rq_seq_orig = ctx->io.outofband.rq_seq;
 
   if (_ipmi_cmd_send_ipmb (ctx,
-                           ctx->rs_addr,
+                           ctx->target_rs_addr,
                            ctx->lun,
                            ctx->net_fn,
                            obj_cmd_rq) < 0)
@@ -3143,7 +3143,7 @@ ipmi_lan_2_0_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
           rq_seq_orig = ctx->io.outofband.rq_seq;
 
           if (_ipmi_cmd_send_ipmb (ctx,
-                                   ctx->rs_addr,
+                                   ctx->target_rs_addr,
                                    ctx->lun,
                                    ctx->net_fn,
                                    obj_cmd_rq) < 0)
