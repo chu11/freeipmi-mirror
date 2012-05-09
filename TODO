@@ -151,6 +151,7 @@ libfreeipmi-sel-parse
 ---------------------
 - use else if to improve performance
 - split vendor files into motherboard files?  Is getting big.
+- cleanup parsing functions
 
 libipmiconsole
 --------------
