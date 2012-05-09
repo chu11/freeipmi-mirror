@@ -60,8 +60,8 @@ ipmi_openipmi_cmd_api (ipmi_ctx_t ctx,
           && fiid_obj_valid (obj_cmd_rs));
   
   if (ipmi_openipmi_cmd (ctx->io.inband.openipmi_ctx,
-                         ctx->target_info.lun,
-                         ctx->target_info.net_fn,
+                         ctx->target.lun,
+                         ctx->target.net_fn,
                          obj_cmd_rq,
                          obj_cmd_rs) < 0)
     {
@@ -85,10 +85,10 @@ ipmi_openipmi_cmd_api_ipmb (ipmi_ctx_t ctx,
           && fiid_obj_valid (obj_cmd_rs));
 
   if (ipmi_openipmi_cmd_ipmb (ctx->io.inband.openipmi_ctx,
-                              ctx->target_info.target_channel_number,
-                              ctx->target_info.target_rs_addr,
-                              ctx->target_info.lun,
-                              ctx->target_info.net_fn,
+                              ctx->target.channel_number,
+                              ctx->target.rs_addr,
+                              ctx->target.lun,
+                              ctx->target.net_fn,
                               obj_cmd_rq,
                               obj_cmd_rs) < 0)
     {

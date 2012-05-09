@@ -221,8 +221,8 @@ _kcs_cmd_write (ipmi_ctx_t ctx,
     }
   memset (pkt, '\0', pkt_len);
 
-  if (fill_hdr_ipmi_kcs (ctx->target_info.lun,
-                         ctx->target_info.net_fn,
+  if (fill_hdr_ipmi_kcs (ctx->target.lun,
+                         ctx->target.net_fn,
                          ctx->io.inband.rq.obj_hdr) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
@@ -244,7 +244,7 @@ _kcs_cmd_write (ipmi_ctx_t ctx,
 		       pkt,
 		       send_len,
 		       cmd,
-		       ctx->target_info.net_fn,
+		       ctx->target.net_fn,
 		       group_extension,
 		       obj_cmd_rq);
   
@@ -327,7 +327,7 @@ _kcs_cmd_read (ipmi_ctx_t ctx,
 		       pkt,
 		       read_len,
 		       cmd,
-		       ctx->target_info.net_fn,
+		       ctx->target.net_fn,
 		       group_extension,
 		       obj_cmd_rs);
   
@@ -379,7 +379,7 @@ ipmi_kcs_cmd_api (ipmi_ctx_t ctx,
       else
         cmd = val;
 
-      if (IPMI_NET_FN_GROUP_EXTENSION (ctx->target_info.net_fn))
+      if (IPMI_NET_FN_GROUP_EXTENSION (ctx->target.net_fn))
 	{
 	  /* ignore error, continue on */
 	  if (FIID_OBJ_GET (obj_cmd_rq,
@@ -404,7 +404,7 @@ static int
 _ipmi_kcs_ipmb_send (ipmi_ctx_t ctx,
                      fiid_obj_t obj_cmd_rq)
 {
-  struct ipmi_ctx_target_info target_info_save;
+  struct ipmi_ctx_target target_save;
   uint8_t buf[IPMI_MAX_PKT_LEN];
   fiid_obj_t obj_ipmb_msg_hdr_rq = NULL;
   fiid_obj_t obj_ipmb_msg_rq = NULL;
@@ -433,9 +433,9 @@ _ipmi_kcs_ipmb_send (ipmi_ctx_t ctx,
       goto cleanup;
     }
 
-  if (fill_ipmb_msg_hdr (ctx->target_info.target_rs_addr,
-                         ctx->target_info.net_fn,
-                         ctx->target_info.lun,
+  if (fill_ipmb_msg_hdr (ctx->target.rs_addr,
+                         ctx->target.net_fn,
+                         ctx->target.lun,
                          IPMI_SLAVE_ADDRESS_BMC,
                          IPMI_BMC_IPMB_LUN_SMS_MSG_LUN,
                          ctx->io.inband.rq_seq,
@@ -464,12 +464,12 @@ _ipmi_kcs_ipmb_send (ipmi_ctx_t ctx,
     }
 
   /* send_message will send to the BMC, so clear out target information */
-  memcpy (&target_info_save, &ctx->target_info, sizeof (target_info_save));
-  ctx->target_info.target_channel_number_is_set = 0;
-  ctx->target_info.target_rs_addr_is_set = 0;
+  memcpy (&target_save, &ctx->target, sizeof (target_save));
+  ctx->target.channel_number_is_set = 0;
+  ctx->target.rs_addr_is_set = 0;
   
   ret = ipmi_cmd_send_message (ctx,
-			       target_info_save.target_channel_number,
+			       target_save.channel_number,
 			       IPMI_SEND_MESSAGE_AUTHENTICATION_NOT_REQUIRED,
 			       IPMI_SEND_MESSAGE_ENCRYPTION_NOT_REQUIRED,
 			       IPMI_SEND_MESSAGE_TRACKING_OPERATION_NO_TRACKING,
@@ -478,7 +478,7 @@ _ipmi_kcs_ipmb_send (ipmi_ctx_t ctx,
 			       obj_send_cmd_rs);
 
   /* restore target info */
-  memcpy (&ctx->target_info, &target_info_save, sizeof (target_info_save));
+  memcpy (&ctx->target, &target_save, sizeof (target_save));
 
   if (ret < 0)
     {
@@ -506,7 +506,7 @@ _ipmi_kcs_ipmb_recv (ipmi_ctx_t ctx,
                      fiid_obj_t obj_ipmb_msg_trlr,
                      fiid_obj_t obj_cmd_rs)
 {
-  struct ipmi_ctx_target_info target_info_save;
+  struct ipmi_ctx_target target_save;
   uint8_t buf[IPMI_MAX_PKT_LEN];
   fiid_obj_t obj_ipmb_msg_rs = NULL;
   fiid_obj_t obj_get_cmd_rs = NULL;
@@ -535,14 +535,14 @@ _ipmi_kcs_ipmb_recv (ipmi_ctx_t ctx,
     }
   
   /* get_message will send to the BMC, so clear out target information */
-  memcpy (&target_info_save, &ctx->target_info, sizeof (target_info_save));
-  ctx->target_info.target_channel_number_is_set = 0;
-  ctx->target_info.target_rs_addr_is_set = 0;
+  memcpy (&target_save, &ctx->target, sizeof (target_save));
+  ctx->target.channel_number_is_set = 0;
+  ctx->target.rs_addr_is_set = 0;
   
   ret = ipmi_cmd_get_message (ctx, obj_get_cmd_rs);
 
   /* restore target info */
-  memcpy (&ctx->target_info, &target_info_save, sizeof (target_info_save));
+  memcpy (&ctx->target, &target_save, sizeof (target_save));
 
   if (ret < 0)
     {

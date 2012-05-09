@@ -229,13 +229,13 @@ int ipmi_ctx_find_inband (ipmi_ctx_t ctx,
 
 /* Set target channel and slave address so all ipmi_cmd() calls and
  * library API calls use ipmb.  Both the target channel number and
- * target slave address must be set together.
+ * slave address must be set together.
  *
  * To reset to defaults, pass in NULL for both parameters.
  */ 
 int ipmi_ctx_set_target (ipmi_ctx_t ctx, 
-			 uint8_t *target_channel_number,
-			 uint8_t *target_rs_addr);
+			 uint8_t *channel_number,
+			 uint8_t *rs_addr);
 
 int ipmi_cmd (ipmi_ctx_t ctx,
               uint8_t lun,

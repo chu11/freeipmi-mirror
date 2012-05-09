@@ -1456,8 +1456,8 @@ ipmi_ctx_find_inband (ipmi_ctx_t ctx,
 
 int
 ipmi_ctx_set_target (ipmi_ctx_t ctx,
-		     uint8_t *target_channel_number,
-		     uint8_t *target_rs_addr)
+		     uint8_t *channel_number,
+		     uint8_t *rs_addr)
 {
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -1465,37 +1465,37 @@ ipmi_ctx_set_target (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if ((target_channel_number && !target_rs_addr)
-      || (!target_channel_number && target_rs_addr))
+  if ((channel_number && !rs_addr)
+      || (!channel_number && rs_addr))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
 						
-  if (target_channel_number)
+  if (channel_number)
     {
-      if (!IPMI_CHANNEL_NUMBER_VALID (*target_channel_number))
+      if (!IPMI_CHANNEL_NUMBER_VALID (*channel_number))
 	{
 	  API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
 	  return (-1);
 	}
     }
 
-  if (target_channel_number)
+  if (channel_number)
     {
-      ctx->target_info.target_channel_number = *target_channel_number;
-      ctx->target_info.target_channel_number_is_set = 1;
+      ctx->target.channel_number = *channel_number;
+      ctx->target.channel_number_is_set = 1;
     }
   else
-    ctx->target_info.target_channel_number_is_set = 0;
+    ctx->target.channel_number_is_set = 0;
 
-  if (target_rs_addr)
+  if (rs_addr)
     {
-      ctx->target_info.target_rs_addr = *target_rs_addr;
-      ctx->target_info.target_rs_addr_is_set = 1;
+      ctx->target.rs_addr = *rs_addr;
+      ctx->target.rs_addr_is_set = 1;
     }
   else
-    ctx->target_info.target_rs_addr_is_set = 0;
+    ctx->target.rs_addr_is_set = 0;
 
   ctx->errnum = IPMI_ERR_SUCCESS;
   return (0);
@@ -1566,8 +1566,8 @@ ipmi_cmd (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  ctx->target_info.lun = lun;
-  ctx->target_info.net_fn = net_fn;
+  ctx->target.lun = lun;
+  ctx->target.net_fn = net_fn;
 
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
     {
@@ -1592,7 +1592,7 @@ ipmi_cmd (ipmi_ctx_t ctx,
           else
             cmd = val;
 
-	  if (IPMI_NET_FN_GROUP_EXTENSION (ctx->target_info.net_fn))
+	  if (IPMI_NET_FN_GROUP_EXTENSION (ctx->target.net_fn))
 	    {
 	      /* ignore error, continue on */
 	      if (FIID_OBJ_GET (obj_cmd_rq,
@@ -1605,7 +1605,7 @@ ipmi_cmd (ipmi_ctx_t ctx,
 
           debug_hdr_cmd (DEBUG_UTIL_TYPE_INBAND,
                          DEBUG_UTIL_DIRECTION_REQUEST,
-                         ctx->target_info.net_fn,
+                         ctx->target.net_fn,
                          cmd,
 			 group_extension,
                          hdrbuf,
@@ -1633,8 +1633,8 @@ ipmi_cmd (ipmi_ctx_t ctx,
 
   if (ctx->type == IPMI_DEVICE_LAN)
     {
-      if (ctx->target_info.target_channel_number_is_set
-	  && ctx->target_info.target_rs_addr_is_set)
+      if (ctx->target.channel_number_is_set
+	  && ctx->target.rs_addr_is_set)
 	rv = ipmi_lan_cmd_ipmb (ctx,
 				obj_cmd_rq,
 				obj_cmd_rs);
@@ -1643,8 +1643,8 @@ ipmi_cmd (ipmi_ctx_t ctx,
     }
   else if (ctx->type == IPMI_DEVICE_LAN_2_0)
     {
-      if (ctx->target_info.target_channel_number_is_set
-	  && ctx->target_info.target_rs_addr_is_set)
+      if (ctx->target.channel_number_is_set
+	  && ctx->target.rs_addr_is_set)
 	rv = ipmi_lan_2_0_cmd_ipmb (ctx,
 				    obj_cmd_rq,
 				    obj_cmd_rs);
@@ -1653,8 +1653,8 @@ ipmi_cmd (ipmi_ctx_t ctx,
     }
   else if (ctx->type == IPMI_DEVICE_KCS)
     {
-      if (ctx->target_info.target_channel_number_is_set
-	  && ctx->target_info.target_rs_addr_is_set)
+      if (ctx->target.channel_number_is_set
+	  && ctx->target.rs_addr_is_set)
 	rv = ipmi_kcs_cmd_api_ipmb (ctx,
 				    obj_cmd_rq,
 				    obj_cmd_rs);
@@ -1663,8 +1663,8 @@ ipmi_cmd (ipmi_ctx_t ctx,
     }
   else if (ctx->type == IPMI_DEVICE_SSIF)
     {
-      if (ctx->target_info.target_channel_number_is_set
-	  && ctx->target_info.target_rs_addr_is_set)
+      if (ctx->target.channel_number_is_set
+	  && ctx->target.rs_addr_is_set)
 	{
 	  API_SET_ERRNUM (ctx, IPMI_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE);
 	  rv = -1;
@@ -1674,8 +1674,8 @@ ipmi_cmd (ipmi_ctx_t ctx,
     }
   else if (ctx->type == IPMI_DEVICE_OPENIPMI)
     {
-      if (ctx->target_info.target_channel_number_is_set
-	  && ctx->target_info.target_rs_addr_is_set)
+      if (ctx->target.channel_number_is_set
+	  && ctx->target.rs_addr_is_set)
 	rv = ipmi_openipmi_cmd_api_ipmb (ctx,
 					 obj_cmd_rq,
 					 obj_cmd_rs);
@@ -1684,8 +1684,8 @@ ipmi_cmd (ipmi_ctx_t ctx,
     }
   else /* ctx->type == IPMI_DEVICE_SUNBMC */
     {
-      if (ctx->target_info.target_channel_number_is_set
-	  && ctx->target_info.target_rs_addr_is_set)
+      if (ctx->target.channel_number_is_set
+	  && ctx->target.rs_addr_is_set)
 	{
 	  API_SET_ERRNUM (ctx, IPMI_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE);
 	  rv = -1;
@@ -1717,7 +1717,7 @@ ipmi_cmd (ipmi_ctx_t ctx,
           else
             cmd = val;
 
-	  if (IPMI_NET_FN_GROUP_EXTENSION (ctx->target_info.net_fn))
+	  if (IPMI_NET_FN_GROUP_EXTENSION (ctx->target.net_fn))
 	    {
 	      /* ignore error, continue on */
 	      if (FIID_OBJ_GET (obj_cmd_rq,
@@ -1731,7 +1731,7 @@ ipmi_cmd (ipmi_ctx_t ctx,
           /* its ok to use the "request" net_fn */
           debug_hdr_cmd (DEBUG_UTIL_TYPE_INBAND,
                          DEBUG_UTIL_DIRECTION_RESPONSE,
-                         ctx->target_info.net_fn,
+                         ctx->target.net_fn,
                          cmd,
 			 group_extension,
                          hdrbuf,
@@ -1770,7 +1770,7 @@ ipmi_cmd_ipmb (ipmi_ctx_t ctx,
                fiid_obj_t obj_cmd_rq,
                fiid_obj_t obj_cmd_rs)
 {
-  struct ipmi_ctx_target_info target_info_save;
+  struct ipmi_ctx_target target_save;
   int rv = 0;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
@@ -1785,16 +1785,16 @@ ipmi_cmd_ipmb (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  memcpy (&target_info_save, &ctx->target_info, sizeof (target_info_save));
+  memcpy (&target_save, &ctx->target, sizeof (target_save));
   
-  ctx->target_info.target_channel_number = channel_number;
-  ctx->target_info.target_channel_number_is_set = 1;
-  ctx->target_info.target_rs_addr = rs_addr;
-  ctx->target_info.target_rs_addr_is_set = 1;
+  ctx->target.channel_number = channel_number;
+  ctx->target.channel_number_is_set = 1;
+  ctx->target.rs_addr = rs_addr;
+  ctx->target.rs_addr_is_set = 1;
   
   rv = ipmi_cmd (ctx, lun, net_fn, obj_cmd_rq, obj_cmd_rs);
   
-  memcpy (&ctx->target_info, &target_info_save, sizeof (target_info_save));
+  memcpy (&ctx->target, &target_save, sizeof (target_save));
   
   /* errnum set in ipmi_cmd() */
   return (rv);
@@ -1855,8 +1855,8 @@ ipmi_cmd_raw (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  ctx->target_info.lun = lun;
-  ctx->target_info.net_fn = net_fn;
+  ctx->target.lun = lun;
+  ctx->target.net_fn = net_fn;
 
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
     {
@@ -1873,7 +1873,7 @@ ipmi_cmd_raw (ipmi_ctx_t ctx,
 	  uint8_t group_extension = 0;
 
           cmd = ((uint8_t *)buf_rq)[0];
-	  if (IPMI_NET_FN_GROUP_EXTENSION (ctx->target_info.net_fn))
+	  if (IPMI_NET_FN_GROUP_EXTENSION (ctx->target.net_fn))
 	    {
 	      if (buf_rq_len > 1)
 		group_extension = ((uint8_t *)buf_rq)[1];
@@ -1881,7 +1881,7 @@ ipmi_cmd_raw (ipmi_ctx_t ctx,
     
           debug_hdr_cmd (DEBUG_UTIL_TYPE_INBAND,
                          DEBUG_UTIL_DIRECTION_REQUEST,
-                         ctx->target_info.net_fn,
+                         ctx->target.net_fn,
                          cmd,
 			 group_extension,
                          hdrbuf,
@@ -1898,8 +1898,8 @@ ipmi_cmd_raw (ipmi_ctx_t ctx,
 
   if (ctx->type == IPMI_DEVICE_LAN)
     {
-      if (ctx->target_info.target_channel_number_is_set
-	  && ctx->target_info.target_rs_addr_is_set)
+      if (ctx->target.channel_number_is_set
+	  && ctx->target.rs_addr_is_set)
 	rv = ipmi_lan_cmd_raw_ipmb (ctx,
 				    buf_rq,
 				    buf_rq_len,
@@ -1910,8 +1910,8 @@ ipmi_cmd_raw (ipmi_ctx_t ctx,
     }
   else if (ctx->type == IPMI_DEVICE_LAN_2_0)
     {
-      if (ctx->target_info.target_channel_number_is_set
-	  && ctx->target_info.target_rs_addr_is_set)
+      if (ctx->target.channel_number_is_set
+	  && ctx->target.rs_addr_is_set)
 	rv = ipmi_lan_2_0_cmd_raw_ipmb (ctx,
 					buf_rq,
 					buf_rq_len,
@@ -1922,8 +1922,8 @@ ipmi_cmd_raw (ipmi_ctx_t ctx,
     }
   else if (ctx->type == IPMI_DEVICE_KCS)
     {
-      if (ctx->target_info.target_channel_number_is_set
-	  && ctx->target_info.target_rs_addr_is_set)
+      if (ctx->target.channel_number_is_set
+	  && ctx->target.rs_addr_is_set)
 	rv = ipmi_kcs_cmd_raw_api_ipmb (ctx,
 					buf_rq,
 					buf_rq_len,
@@ -1934,8 +1934,8 @@ ipmi_cmd_raw (ipmi_ctx_t ctx,
     }
   else if (ctx->type == IPMI_DEVICE_SSIF)
     {
-      if (ctx->target_info.target_channel_number_is_set
-	  && ctx->target_info.target_rs_addr_is_set)
+      if (ctx->target.channel_number_is_set
+	  && ctx->target.rs_addr_is_set)
 	{
 	  API_SET_ERRNUM (ctx, IPMI_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE);
 	  rv = -1;
@@ -1945,8 +1945,8 @@ ipmi_cmd_raw (ipmi_ctx_t ctx,
     }
   else if (ctx->type == IPMI_DEVICE_OPENIPMI)
     {
-      if (ctx->target_info.target_channel_number_is_set
-	  && ctx->target_info.target_rs_addr_is_set)
+      if (ctx->target.channel_number_is_set
+	  && ctx->target.rs_addr_is_set)
 	rv = ipmi_openipmi_cmd_raw_api_ipmb (ctx,
 					     buf_rq,
 					     buf_rq_len,
@@ -1957,8 +1957,8 @@ ipmi_cmd_raw (ipmi_ctx_t ctx,
     }
   else /* ctx->type == IPMI_DEVICE_SUNBMC */
     {
-      if (ctx->target_info.target_channel_number_is_set
-	  && ctx->target_info.target_rs_addr_is_set)
+      if (ctx->target.channel_number_is_set
+	  && ctx->target.rs_addr_is_set)
 	{
 	  API_SET_ERRNUM (ctx, IPMI_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE);
 	  rv = -1;
@@ -1982,7 +1982,7 @@ ipmi_cmd_raw (ipmi_ctx_t ctx,
 	  uint8_t group_extension = 0;
 
           cmd = ((uint8_t *)buf_rq)[0];
-	  if (IPMI_NET_FN_GROUP_EXTENSION (ctx->target_info.net_fn))
+	  if (IPMI_NET_FN_GROUP_EXTENSION (ctx->target.net_fn))
 	    {
 	      if (buf_rq_len > 1)
 		group_extension = ((uint8_t *)buf_rq)[1];
@@ -1991,7 +1991,7 @@ ipmi_cmd_raw (ipmi_ctx_t ctx,
           /* its ok to use the "request" net_fn */
           debug_hdr_cmd (DEBUG_UTIL_TYPE_INBAND,
                          DEBUG_UTIL_DIRECTION_RESPONSE,
-                         ctx->target_info.net_fn,
+                         ctx->target.net_fn,
                          cmd,
 			 group_extension,
                          hdrbuf,
@@ -2021,7 +2021,7 @@ ipmi_cmd_raw_ipmb (ipmi_ctx_t ctx,
 		   void *buf_rs,
 		   unsigned int buf_rs_len)
 {
-  struct ipmi_ctx_target_info target_info_save;
+  struct ipmi_ctx_target target_save;
   int rv = 0;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
@@ -2036,12 +2036,12 @@ ipmi_cmd_raw_ipmb (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  memcpy (&target_info_save, &ctx->target_info, sizeof (target_info_save));
+  memcpy (&target_save, &ctx->target, sizeof (target_save));
 
-  ctx->target_info.target_channel_number = channel_number;
-  ctx->target_info.target_channel_number_is_set = 1;
-  ctx->target_info.target_rs_addr = rs_addr;
-  ctx->target_info.target_rs_addr_is_set = 1;
+  ctx->target.channel_number = channel_number;
+  ctx->target.channel_number_is_set = 1;
+  ctx->target.rs_addr = rs_addr;
+  ctx->target.rs_addr_is_set = 1;
 
   rv = ipmi_cmd_raw (ctx,
 		     lun,
@@ -2051,7 +2051,7 @@ ipmi_cmd_raw_ipmb (ipmi_ctx_t ctx,
 		     buf_rs,
 		     buf_rs_len);
 
-  memcpy (&ctx->target_info, &target_info_save, sizeof (target_info_save));
+  memcpy (&ctx->target, &target_save, sizeof (target_save));
 
   /* errnum set in ipmi_cmd_raw() */
   return (rv);
