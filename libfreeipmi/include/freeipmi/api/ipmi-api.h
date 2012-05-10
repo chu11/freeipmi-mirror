@@ -232,6 +232,8 @@ int ipmi_ctx_find_inband (ipmi_ctx_t ctx,
  * slave address must be set together.
  *
  * To reset to defaults, pass in NULL for both parameters.
+ *
+ * Can only be called after device opened. 
  */ 
 int ipmi_ctx_set_target (ipmi_ctx_t ctx, 
 			 uint8_t *channel_number,

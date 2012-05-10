@@ -1,3 +1,11 @@
+2012-05-10  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/api/ipmi-api.c: End bridging when closing ipmi
+	session.  Do not support setting bridging targets when session not
+	open.
+
+	* libfreeipmi/include/freeipmi/api/ipmi-api.h: Update comments.
+	
 2012-05-09  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/api/ipmi-api.h,
