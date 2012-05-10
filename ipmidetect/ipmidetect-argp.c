@@ -45,6 +45,7 @@
 #include "ipmidetect-argp.h"
 
 #include "freeipmi-portability.h"
+#include "error.h"
 #include "fd.h"
 #include "hostlist.h"
 

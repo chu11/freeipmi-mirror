@@ -180,8 +180,8 @@ _ssif_cmd_write (ipmi_ctx_t ctx,
     }
   memset (pkt, '\0', pkt_len);
   
-  if (fill_hdr_ipmi_kcs (ctx->lun,
-                         ctx->net_fn,
+  if (fill_hdr_ipmi_kcs (ctx->target.lun,
+                         ctx->target.net_fn,
                          ctx->io.inband.rq.obj_hdr) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
@@ -203,7 +203,7 @@ _ssif_cmd_write (ipmi_ctx_t ctx,
 			pkt,
 			send_len,
 			cmd,
-			ctx->net_fn,
+			ctx->target.net_fn,
 			group_extension,
 			obj_cmd_rq);
 
@@ -283,7 +283,7 @@ _ssif_cmd_read (ipmi_ctx_t ctx,
 			pkt,
 			read_len,
 			cmd,
-			ctx->net_fn,
+			ctx->target.net_fn,
 			group_extension,
 			obj_cmd_rs);
 
@@ -320,30 +320,12 @@ ipmi_ssif_cmd_api (ipmi_ctx_t ctx,
   uint8_t group_extension = 0; /* used for debugging */
   uint64_t val;
 
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (!fiid_obj_valid (obj_cmd_rq)
-      || !fiid_obj_valid (obj_cmd_rs))
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  if (FIID_OBJ_PACKET_VALID (obj_cmd_rq) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
-      return (-1);
-    }
-
-  if (ctx->type != IPMI_DEVICE_SSIF)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_INTERNAL_ERROR);
-      return (-1);
-    }
+  assert (ctx
+	  && ctx->magic == IPMI_CTX_MAGIC
+	  && ctx->type == IPMI_DEVICE_SSIF
+	  && fiid_obj_valid (obj_cmd_rq)
+	  && fiid_obj_packet_valid (obj_cmd_rq) == 1
+	  && fiid_obj_valid (obj_cmd_rs));
 
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
     {
@@ -353,7 +335,7 @@ ipmi_ssif_cmd_api (ipmi_ctx_t ctx,
       else
         cmd = val;
 
-      if (IPMI_NET_FN_GROUP_EXTENSION (ctx->net_fn))
+      if (IPMI_NET_FN_GROUP_EXTENSION (ctx->target.net_fn))
         {
           /* ignore error, continue on */
           if (FIID_OBJ_GET (obj_cmd_rq,
@@ -385,26 +367,13 @@ ipmi_ssif_cmd_raw_api (ipmi_ctx_t ctx,
   fiid_obj_t obj_cmd_rs = NULL;
   int len, rv = -1;
 
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (!buf_rq
-      || !buf_rq_len
-      || !buf_rs
-      || !buf_rs_len)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  if (ctx->type != IPMI_DEVICE_SSIF)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_INTERNAL_ERROR);
-      goto cleanup;
-    }
+  assert (ctx
+	  && ctx->magic == IPMI_CTX_MAGIC
+	  && ctx->type == IPMI_DEVICE_SSIF
+	  && buf_rq
+	  && buf_rq_len
+	  && buf_rs
+	  && buf_rs_len);
 
   if (!(obj_cmd_rq = fiid_obj_create (tmpl_ssif_raw)))
     {

@@ -221,8 +221,8 @@ _kcs_cmd_write (ipmi_ctx_t ctx,
     }
   memset (pkt, '\0', pkt_len);
 
-  if (fill_hdr_ipmi_kcs (ctx->lun,
-                         ctx->net_fn,
+  if (fill_hdr_ipmi_kcs (ctx->target.lun,
+                         ctx->target.net_fn,
                          ctx->io.inband.rq.obj_hdr) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
@@ -244,7 +244,7 @@ _kcs_cmd_write (ipmi_ctx_t ctx,
 		       pkt,
 		       send_len,
 		       cmd,
-		       ctx->net_fn,
+		       ctx->target.net_fn,
 		       group_extension,
 		       obj_cmd_rq);
   
@@ -327,7 +327,7 @@ _kcs_cmd_read (ipmi_ctx_t ctx,
 		       pkt,
 		       read_len,
 		       cmd,
-		       ctx->net_fn,
+		       ctx->target.net_fn,
 		       group_extension,
 		       obj_cmd_rs);
   
@@ -364,31 +364,13 @@ ipmi_kcs_cmd_api (ipmi_ctx_t ctx,
   uint8_t group_extension = 0; /* used for debugging */
   uint64_t val;
 
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (!fiid_obj_valid (obj_cmd_rq)
-      || !fiid_obj_valid (obj_cmd_rs))
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  if (FIID_OBJ_PACKET_VALID (obj_cmd_rq) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
-      return (-1);
-    }
-
-  if (ctx->type != IPMI_DEVICE_KCS)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_INTERNAL_ERROR);
-      return (-1);
-    }
-
+  assert (ctx
+	  && ctx->magic == IPMI_CTX_MAGIC
+	  && ctx->type == IPMI_DEVICE_KCS
+	  && fiid_obj_valid (obj_cmd_rq)
+	  && fiid_obj_packet_valid (obj_cmd_rq) == 1
+	  && fiid_obj_valid (obj_cmd_rs));
+  
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
     {
       /* ignore error, continue on */
@@ -397,7 +379,7 @@ ipmi_kcs_cmd_api (ipmi_ctx_t ctx,
       else
         cmd = val;
 
-      if (IPMI_NET_FN_GROUP_EXTENSION (ctx->net_fn))
+      if (IPMI_NET_FN_GROUP_EXTENSION (ctx->target.net_fn))
 	{
 	  /* ignore error, continue on */
 	  if (FIID_OBJ_GET (obj_cmd_rq,
@@ -422,11 +404,12 @@ static int
 _ipmi_kcs_ipmb_send (ipmi_ctx_t ctx,
                      fiid_obj_t obj_cmd_rq)
 {
+  struct ipmi_ctx_target target_save;
   uint8_t buf[IPMI_MAX_PKT_LEN];
   fiid_obj_t obj_ipmb_msg_hdr_rq = NULL;
   fiid_obj_t obj_ipmb_msg_rq = NULL;
   fiid_obj_t obj_send_cmd_rs = NULL;
-  int len, rv = -1;
+  int len, ret, rv = -1;
 
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC
@@ -450,9 +433,9 @@ _ipmi_kcs_ipmb_send (ipmi_ctx_t ctx,
       goto cleanup;
     }
 
-  if (fill_ipmb_msg_hdr (ctx->rs_addr,
-                         ctx->net_fn,
-                         ctx->lun,
+  if (fill_ipmb_msg_hdr (ctx->target.rs_addr,
+                         ctx->target.net_fn,
+                         ctx->target.lun,
                          IPMI_SLAVE_ADDRESS_BMC,
                          IPMI_BMC_IPMB_LUN_SMS_MSG_LUN,
                          ctx->io.inband.rq_seq,
@@ -480,16 +463,26 @@ _ipmi_kcs_ipmb_send (ipmi_ctx_t ctx,
       goto cleanup;
     }
 
-  if (ipmi_cmd_send_message (ctx,
-                             ctx->channel_number,
-                             IPMI_SEND_MESSAGE_AUTHENTICATION_NOT_REQUIRED,
-                             IPMI_SEND_MESSAGE_ENCRYPTION_NOT_REQUIRED,
-                             IPMI_SEND_MESSAGE_TRACKING_OPERATION_NO_TRACKING,
-                             buf,
-                             len,
-                             obj_send_cmd_rs) < 0)
+  /* send_message will send to the BMC, so clear out target information */
+  memcpy (&target_save, &ctx->target, sizeof (target_save));
+  ctx->target.channel_number_is_set = 0;
+  ctx->target.rs_addr_is_set = 0;
+  
+  ret = ipmi_cmd_send_message (ctx,
+			       target_save.channel_number,
+			       IPMI_SEND_MESSAGE_AUTHENTICATION_NOT_REQUIRED,
+			       IPMI_SEND_MESSAGE_ENCRYPTION_NOT_REQUIRED,
+			       IPMI_SEND_MESSAGE_TRACKING_OPERATION_NO_TRACKING,
+			       buf,
+			       len,
+			       obj_send_cmd_rs);
+
+  /* restore target info */
+  memcpy (&ctx->target, &target_save, sizeof (target_save));
+
+  if (ret < 0)
     {
-      /* assume these mean can't send message, back slave address, etc. */
+      /* assume these mean can't send message, bad slave address, etc. */
       if (ipmi_check_completion_code (obj_send_cmd_rs, IPMI_COMP_CODE_SEND_MESSAGE_LOST_ARBITRATION) == 1
           || ipmi_check_completion_code (obj_send_cmd_rs, IPMI_COMP_CODE_SEND_MESSAGE_BUS_ERROR) == 1
           || ipmi_check_completion_code (obj_send_cmd_rs, IPMI_COMP_CODE_SEND_MESSAGE_NAK_ON_WRITE) == 1)
@@ -513,10 +506,11 @@ _ipmi_kcs_ipmb_recv (ipmi_ctx_t ctx,
                      fiid_obj_t obj_ipmb_msg_trlr,
                      fiid_obj_t obj_cmd_rs)
 {
+  struct ipmi_ctx_target target_save;
   uint8_t buf[IPMI_MAX_PKT_LEN];
   fiid_obj_t obj_ipmb_msg_rs = NULL;
   fiid_obj_t obj_get_cmd_rs = NULL;
-  int len, rv = -1;
+  int len, ret, rv = -1;
   unsigned int intf_flags = IPMI_INTERFACE_FLAGS_DEFAULT;
 
   assert (ctx
@@ -539,8 +533,18 @@ _ipmi_kcs_ipmb_recv (ipmi_ctx_t ctx,
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
+  
+  /* get_message will send to the BMC, so clear out target information */
+  memcpy (&target_save, &ctx->target, sizeof (target_save));
+  ctx->target.channel_number_is_set = 0;
+  ctx->target.rs_addr_is_set = 0;
+  
+  ret = ipmi_cmd_get_message (ctx, obj_get_cmd_rs);
 
-  if (ipmi_cmd_get_message (ctx, obj_get_cmd_rs) < 0)
+  /* restore target info */
+  memcpy (&ctx->target, &target_save, sizeof (target_save));
+
+  if (ret < 0)
     {
       if (ipmi_check_completion_code (obj_get_cmd_rs, IPMI_COMP_CODE_GET_MESSAGE_DATA_NOT_AVAILABLE) == 1)
         API_SET_ERRNUM (ctx, IPMI_ERR_MESSAGE_TIMEOUT);
@@ -594,30 +598,12 @@ ipmi_kcs_cmd_api_ipmb (ipmi_ctx_t ctx,
   unsigned reread_count = 0;
   int ret, rv = -1;
 
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (!fiid_obj_valid (obj_cmd_rq)
-      || !fiid_obj_valid (obj_cmd_rs))
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  if (FIID_OBJ_PACKET_VALID (obj_cmd_rq) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
-      return (-1);
-    }
-
-  if (ctx->type != IPMI_DEVICE_KCS)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_INTERNAL_ERROR);
-      return (-1);
-    }
+  assert (ctx
+	  && ctx->magic == IPMI_CTX_MAGIC
+	  && ctx->type == IPMI_DEVICE_KCS
+	  && fiid_obj_valid (obj_cmd_rq)
+	  && fiid_obj_packet_valid (obj_cmd_rq) == 1
+	  && fiid_obj_valid (obj_cmd_rs));
 
   if (!(obj_ipmb_msg_hdr_rs = fiid_obj_create (tmpl_ipmb_msg_hdr_rs)))
     {
@@ -724,26 +710,13 @@ ipmi_kcs_cmd_raw_api (ipmi_ctx_t ctx,
   fiid_obj_t obj_cmd_rs = NULL;
   int len, rv = -1;
 
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (!buf_rq
-      || !buf_rq_len
-      || !buf_rs
-      || !buf_rs_len)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  if (ctx->type != IPMI_DEVICE_KCS)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_INTERNAL_ERROR);
-      goto cleanup;
-    }
+  assert (ctx
+	  && ctx->magic == IPMI_CTX_MAGIC
+	  && ctx->type == IPMI_DEVICE_KCS
+	  && buf_rq
+	  && buf_rq_len
+	  && buf_rs
+	  && buf_rs_len);
 
   if (!(obj_cmd_rq = fiid_obj_create (tmpl_kcs_raw)))
     {
@@ -795,26 +768,13 @@ ipmi_kcs_cmd_raw_api_ipmb (ipmi_ctx_t ctx,
   fiid_obj_t obj_cmd_rs = NULL;
   int len, rv = -1;
 
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (!buf_rq
-      || !buf_rq_len
-      || !buf_rs
-      || !buf_rs_len)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  if (ctx->type != IPMI_DEVICE_KCS)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_INTERNAL_ERROR);
-      goto cleanup;
-    }
+  assert (ctx
+	  && ctx->magic == IPMI_CTX_MAGIC
+	  && ctx->type == IPMI_DEVICE_KCS
+	  && buf_rq
+	  && buf_rq_len
+	  && buf_rs
+	  && buf_rs_len);
 
   if (!(obj_cmd_rq = fiid_obj_create (tmpl_kcs_raw)))
     {
