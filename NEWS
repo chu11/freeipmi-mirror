@@ -9,6 +9,10 @@ o In bmc-watchdog, fix --start-if-stopped and --reset-if-running
 o In ipmidetectd, fix usage output typos.
 o Fix start run levels in ipmidetectd init script. 
 
+Libraries
+---------
+o In libfreeipmi fru-parse API, handle additional device busy errors.
+
 Misc
 ----
 o Various documentation updates.

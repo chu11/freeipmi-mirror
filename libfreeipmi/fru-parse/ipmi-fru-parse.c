@@ -424,12 +424,7 @@ _read_fru_data (ipmi_fru_parse_ctx_t ctx,
               goto cleanup;
             }
 
-	  /* Consider the device busy only if we haven't read any data
-	   * yet.  If it's busy later, we'll assume there's a real
-	   * error/issue going on.
-	   */
-	  if (!num_bytes_read
-	      && ipmi_check_completion_code (fru_read_data_rs, IPMI_COMP_CODE_READ_FRU_DATA_FRU_DEVICE_BUSY) == 1)
+	  if (ipmi_check_completion_code (fru_read_data_rs, IPMI_COMP_CODE_READ_FRU_DATA_FRU_DEVICE_BUSY) == 1)
 	    {
 	      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_DEVICE_BUSY);
 	      goto cleanup;

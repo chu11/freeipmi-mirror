@@ -1,3 +1,8 @@
+2012-05-10  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/fru-parse/ipmi-fru-parse.c (_read_fru_data): Handle
+	additional device busy errors.
+	
 2012-05-08  Thomas Renninger <trenn@suse.de>
 
 	* etc/ipmidetectd.init: Fix start run levels.
