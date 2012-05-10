@@ -2,6 +2,20 @@
 
 	* ipmi-fru/: If builtin FRU device has SDR entry, output SDR entry
 	name instead of fixed string.
+
+	* libfreeipmi/include/freeipmi/sdr-parse/ipmi-sdr-parse.h,
+	libfreeipmi/sdr-parse/ipmi-sdr-parse.c (ipmi_sdr_parse_management_controller_device_locator_parameters):
+	Support ability to parse all fields from a managemnet controller
+	deivce locator record.
+
+	* ipmi-sensors/ipmi-sensors-detailed-output.c (_detailed_output_management_controller_device_locator_record):
+	Output more information about Management Controller Device
+	Records.
+	
+2012-05-10  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/fru-parse/ipmi-fru-parse.c (_read_fru_data): Handle
+	additional device busy errors.
 	
 2012-05-10  Albert Chu <chu11@llnl.gov>
 
