@@ -25,6 +25,8 @@ o In bmc-device, support new --set-sensor-reading-and-event-status
 
 Tools - Bug Fixes/Minor Changes
 -------------------------------
+o In ipmi-fru, if builtin FRU device (ID 0) has SDR entry, output SDR
+  entry name rather than fixed string.
 o In ipmipower, exit with value 1 on IPMI errors in addition to system
   errors.
 o In ipmidetect, exit with exit value 2 when an error occurs.  Exit
