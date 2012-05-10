@@ -1,5 +1,10 @@
 2012-05-10  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/fru-parse/ipmi-fru-parse.c (_read_fru_data): Handle
+	additional device busy errors.
+	
+2012-05-10  Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/api/ipmi-api.c: End bridging when closing ipmi
 	session.  Do not support setting bridging targets when session not
 	open.  Do not require setting both channel and rs_addr, pick
