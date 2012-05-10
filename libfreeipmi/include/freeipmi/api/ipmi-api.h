@@ -228,8 +228,12 @@ int ipmi_ctx_find_inband (ipmi_ctx_t ctx,
                           unsigned int flags);
 
 /* Set target channel and slave address so all ipmi_cmd() calls and
- * library API calls use ipmb.  Both the target channel number and
- * slave address must be set together.
+ * library API calls use ipmb.
+ *
+ * To set only one parameter, pass in NULL for the other parameter.
+ * When only one parameter is passed, the other will be the default
+ * target channel of IPMI_CHANNEL_NUMBER_PRIMARY_IPMB (0x0) or the
+ * default rs_addr of IPMI_SLAVE_ADDRESS_BMC (0x20).
  *
  * To reset to defaults, pass in NULL for both parameters.
  *
