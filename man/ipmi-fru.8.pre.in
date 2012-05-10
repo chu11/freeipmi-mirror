@@ -70,6 +70,11 @@ FRU data is correct.  Use this option to skip the checks checksum.
 Output may be unknown, pray for the best.  This option is confirmed to
 work around compliances issues on Inventec 5441/Dell Xanadu II, Dell
 Poweredge R610, and Dell Poweredge R710 motherboards.
+.TP
+\fB\-\-bridge\-fru\fR
+By default, FRU entries on other satellite controllers will not be
+read by default.  Bridging may not work on some interfaces/driver
+types.
 #include <@top_srcdir@/man/manpage-common-interpret-oem-data.man>
 #include <@top_srcdir@/man/manpage-common-sdr-options.man>
 #include <@top_srcdir@/man/manpage-common-sdr-directory-options.man>

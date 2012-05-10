@@ -11,6 +11,17 @@
 	* ipmi-sensors/ipmi-sensors-detailed-output.c (_detailed_output_management_controller_device_locator_record):
 	Output more information about Management Controller Device
 	Records.
+
+	* ipmi-fru/: Support --bridge-fru option.
+
+	* libfreeipmi/fru-parse/ipmi-fru-parse.c (_read_fru_data): Handle
+	message timeout errors when bridging.
+
+	* libfreeipmi/fru-parse/ipmi-fru-parse.c: Check ipmi ctx errnum
+	before checking for bad completion codes.
+	
+	* common/toolcommon/, man/, etc/: Update with new option support
+	appropriately.
 	
 2012-05-10  Albert Chu <chu11@llnl.gov>
 
