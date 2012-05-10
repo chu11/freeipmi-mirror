@@ -2200,6 +2200,14 @@ _detailed_output_management_controller_device_locator_record (ipmi_sensors_state
 {
   uint8_t device_slave_address;
   uint8_t channel_number;
+  uint8_t device_capabilities_sensor_device;
+  uint8_t device_capabilities_sdr_repository_device;
+  uint8_t device_capabilities_sel_device;
+  uint8_t device_capabilities_fru_inventory_device;
+  uint8_t device_capabilities_ipmb_event_receiver;
+  uint8_t device_capabilities_ipmb_event_generator;
+  uint8_t device_capabilities_bridge;
+  uint8_t device_capabilities_chassis_device;
 
   assert (state_data);
   assert (sdr_record);
@@ -2217,7 +2225,21 @@ _detailed_output_management_controller_device_locator_record (ipmi_sensors_state
                                                                       sdr_record,
                                                                       sdr_record_len,
                                                                       &device_slave_address,
-                                                                      &channel_number) < 0)
+                                                                      &channel_number,
+								      NULL,
+								      NULL,
+								      NULL,
+								      NULL,
+								      NULL,
+								      NULL,
+								      &device_capabilities_sensor_device,
+								      &device_capabilities_sdr_repository_device,
+								      &device_capabilities_sel_device,
+								      &device_capabilities_fru_inventory_device,
+								      &device_capabilities_ipmb_event_receiver,
+								      &device_capabilities_ipmb_event_generator,
+								      &device_capabilities_bridge,
+								      &device_capabilities_chassis_device) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -2233,6 +2255,38 @@ _detailed_output_management_controller_device_locator_record (ipmi_sensors_state
   pstdout_printf (state_data->pstate,
                   "Channel Number: %Xh\n",
                   channel_number);
+
+  pstdout_printf (state_data->pstate,
+		  "Sensor Device: %s\n",
+		  device_capabilities_sensor_device ? "Yes" : "No");
+
+  pstdout_printf (state_data->pstate,
+		  "SDR Repository Device: %s\n",
+		  device_capabilities_sdr_repository_device ? "Yes" : "No");
+
+  pstdout_printf (state_data->pstate,
+		  "SEL Device: %s\n",
+		  device_capabilities_sel_device ? "Yes" : "No");
+
+  pstdout_printf (state_data->pstate,
+		  "FRU Inventory Device: %s\n",
+		  device_capabilities_fru_inventory_device ? "Yes" : "No");
+
+  pstdout_printf (state_data->pstate,
+		  "IPMB Event Receiver: %s\n",
+		  device_capabilities_ipmb_event_receiver ? "Yes" : "No");
+
+  pstdout_printf (state_data->pstate,
+		  "IPMB Event Generator: %s\n",
+		  device_capabilities_ipmb_event_generator ? "Yes" : "No");
+  
+  pstdout_printf (state_data->pstate,
+		  "Bridge Support: %s\n",
+		  device_capabilities_bridge ? "Yes" : "No");
+
+  pstdout_printf (state_data->pstate,
+		  "Chassis Device: %s\n",
+		  device_capabilities_chassis_device ? "Yes" : "No");
 
   if (_output_entity_id_and_instance (state_data,
                                       sdr_record,
