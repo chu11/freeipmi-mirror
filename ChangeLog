@@ -1,3 +1,13 @@
+2012-05-09  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/api/ipmi-api.h,
+	libfreeipmi/api/ipmi-api.c (ipmi_ctx_set_target): New function.
+
+	* libfreeipmi/api/: Support ability to run bridged IPMI commands
+	without having to call _ipmb equivalent functions.
+
+	* libfreeipmi/api/: Various code cleanup.
+	
 2012-05-08  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/templates/ipmi-oem-intel-node-manager-cmds-templates.h,

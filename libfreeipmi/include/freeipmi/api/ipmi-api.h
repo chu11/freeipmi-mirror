@@ -227,12 +227,26 @@ int ipmi_ctx_find_inband (ipmi_ctx_t ctx,
                           unsigned int workaround_flags,
                           unsigned int flags);
 
+/* Set target channel and slave address so all ipmi_cmd() calls and
+ * library API calls use ipmb.  Both the target channel number and
+ * slave address must be set together.
+ *
+ * To reset to defaults, pass in NULL for both parameters.
+ */ 
+int ipmi_ctx_set_target (ipmi_ctx_t ctx, 
+			 uint8_t *channel_number,
+			 uint8_t *rs_addr);
+
 int ipmi_cmd (ipmi_ctx_t ctx,
               uint8_t lun,
               uint8_t net_fn,
               fiid_obj_t obj_cmd_rq,
               fiid_obj_t obj_cmd_rs);
 
+/* convenience function to perform a single bridged IPMI command.
+ * Will effectively call ipmi_ctx_set_target(), then ipmi_cmd(), then
+ * will set targets back to prior originals.
+ */
 int ipmi_cmd_ipmb (ipmi_ctx_t ctx,
                    uint8_t channel_number,
                    uint8_t rs_addr,
@@ -252,9 +266,10 @@ int ipmi_cmd_raw (ipmi_ctx_t ctx,
                   void *buf_rs,
                   unsigned int buf_rs_len);
 
-/* for request/response, byte #1 = cmd */
-/* for response, byte #2 (typically) = completion code */
-/* returns length written into buf_fs on success, -1 on error */
+/* convenience function to perform a single bridged IPMI raw command.
+ * Will effectively call ipmi_ctx_set_target(), then ipmi_cmd_raw(),
+ * then will set targets back to prior originals.
+ */
 int ipmi_cmd_raw_ipmb (ipmi_ctx_t ctx,
 		       uint8_t channel_number,
 		       uint8_t rs_addr,
