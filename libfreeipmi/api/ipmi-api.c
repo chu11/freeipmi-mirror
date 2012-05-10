@@ -1478,6 +1478,17 @@ ipmi_ctx_set_target (ipmi_ctx_t ctx,
       goto out;
     }
   
+  /* Special case, don't want to do bridging */
+  if ((channel_number
+       && (*channel_number) == IPMI_CHANNEL_NUMBER_PRIMARY_IPMB)
+      && (rs_addr
+	  && (*rs_addr) == IPMI_SLAVE_ADDRESS_BMC))
+    {
+      ctx->target.channel_number_is_set = 0;
+      ctx->target.rs_addr_is_set = 0;
+      goto out;
+    }
+
   if (channel_number)
     {
       if (!IPMI_CHANNEL_NUMBER_VALID (*channel_number))
