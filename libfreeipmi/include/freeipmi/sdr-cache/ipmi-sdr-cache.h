@@ -77,29 +77,27 @@ extern "C" {
 #define IPMI_SDR_CACHE_FLAGS_DEFAULT                   0x0000
 #define IPMI_SDR_CACHE_FLAGS_DEBUG_DUMP                0x0001
 
-#define IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH           261 /* 256 + header */
-
-#define IPMI_SDR_CACHE_CREATE_FLAGS_DEFAULT            0x0
-/* During cache creation, overwrite any previously created cache.  Default
- * is to return an error that the cache already exists.
+/* Flags just for cache creation
+ *
+ * OVERWRITE - overwrite any previously created cache.
+ *
+ * DUPLICATE_RECORD_ID - check for duplicate record IDs and return error if one is found. 
  */
-#define IPMI_SDR_CACHE_CREATE_FLAGS_OVERWRITE          0x1
+#define IPMI_SDR_CACHE_CREATE_FLAGS_DEFAULT             0x0
+#define IPMI_SDR_CACHE_CREATE_FLAGS_OVERWRITE           0x1
+#define IPMI_SDR_CACHE_CREATE_FLAGS_DUPLICATE_RECORD_ID 0x2
 
-#define IPMI_SDR_CACHE_VALIDATION_FLAGS_DEFAULT                 0x0
-/* During cache creation, check for duplicate record ids and return error if
- * one is found.
- */
-#define IPMI_SDR_CACHE_VALIDATION_FLAGS_DUPLICATE_RECORD_ID     0x1
+#define IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH            261 /* 256 + header */
 
 typedef struct ipmi_sdr_cache_ctx *ipmi_sdr_cache_ctx_t;
 
 /* Callback between every record that is cached */
 typedef void (*Ipmi_Sdr_Create_Callback)(uint8_t sdr_version,
-                                    uint16_t record_count,
-                                    uint32_t most_recent_addition_timestamp,
-                                    uint32_t most_recent_erase_timestamp,
-                                    uint16_t record_id,
-                                    void *data);
+					 uint16_t record_count,
+					 uint32_t most_recent_addition_timestamp,
+					 uint32_t most_recent_erase_timestamp,
+					 uint16_t record_id,
+					 void *data);
 
 /*
  * SDR Cache Context and General functions
@@ -121,8 +119,7 @@ int ipmi_sdr_cache_ctx_set_debug_prefix (ipmi_sdr_cache_ctx_t ctx, const char *d
 int ipmi_sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
                            ipmi_ctx_t ipmi_ctx,
                            const char *filename,
-                           int create_flags,
-                           int validation_flags,
+                           int cache_create_flags,
                            Ipmi_Sdr_Create_Callback create_callback,
                            void *create_callback_data);
 

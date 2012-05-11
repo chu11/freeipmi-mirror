@@ -641,8 +641,7 @@ int
 ipmi_sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
                        ipmi_ctx_t ipmi_ctx,
                        const char *filename,
-                       int create_flags,
-                       int validation_flags,
+                       int cache_create_flags,
                        Ipmi_Sdr_Create_Callback create_callback,
                        void *create_callback_data)
 {
@@ -654,6 +653,8 @@ ipmi_sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
   unsigned int total_bytes_written = 0;
   uint16_t *record_ids = NULL;
   unsigned int record_ids_count = 0;
+  unsigned int cache_create_flags_mask = (IPMI_SDR_CACHE_CREATE_FLAGS_OVERWRITE
+					  | IPMI_SDR_CACHE_CREATE_FLAGS_DUPLICATE_RECORD_ID);
   int fd = -1;
   int rv = -1;
 
@@ -667,9 +668,7 @@ ipmi_sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
   if (!ipmi_ctx
       || !filename
       || (strlen (filename) > MAXPATHLEN)
-      || (create_flags != IPMI_SDR_CACHE_CREATE_FLAGS_DEFAULT
-          && create_flags != IPMI_SDR_CACHE_CREATE_FLAGS_OVERWRITE)
-      || (validation_flags & ~(IPMI_SDR_CACHE_VALIDATION_FLAGS_DUPLICATE_RECORD_ID)))
+      || (cache_create_flags & ~cache_create_flags_mask))
     {
       SDR_CACHE_SET_ERRNUM (ctx, IPMI_SDR_CACHE_ERR_PARAMETERS);
       return (-1);
@@ -686,14 +685,14 @@ ipmi_sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
 
   ctx->operation = IPMI_SDR_CACHE_OPERATION_CREATE_CACHE;
 
-  if (create_flags == IPMI_SDR_CACHE_CREATE_FLAGS_DEFAULT)
+  if (cache_create_flags == IPMI_SDR_CACHE_CREATE_FLAGS_DEFAULT)
     open_flags = O_CREAT | O_EXCL | O_WRONLY;
   else
     open_flags = O_CREAT | O_TRUNC | O_WRONLY;
 
   if ((fd = open (filename, open_flags, 0644)) < 0)
     {
-      if (create_flags == IPMI_SDR_CACHE_CREATE_FLAGS_DEFAULT
+      if (!(cache_create_flags & IPMI_SDR_CACHE_CREATE_FLAGS_OVERWRITE)
           && errno == EEXIST)
         SDR_CACHE_SET_ERRNUM (ctx, IPMI_SDR_CACHE_ERR_CACHE_CREATE_CACHE_EXISTS);
       else if (errno == EPERM
@@ -744,7 +743,7 @@ ipmi_sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
   ctx->most_recent_addition_timestamp = most_recent_addition_timestamp;
   ctx->most_recent_erase_timestamp = most_recent_erase_timestamp;
 
-  if (validation_flags & IPMI_SDR_CACHE_VALIDATION_FLAGS_DUPLICATE_RECORD_ID)
+  if (cache_create_flags & IPMI_SDR_CACHE_CREATE_FLAGS_DUPLICATE_RECORD_ID)
     {
       if (!(record_ids = (uint16_t *)malloc (ctx->record_count * sizeof (uint16_t))))
         {

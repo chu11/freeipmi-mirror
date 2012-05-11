@@ -216,7 +216,6 @@ _ipmi_monitoring_sdr_cache_retrieve (ipmi_monitoring_ctx_t c,
                              c->ipmi_ctx,
                              filename,
                              IPMI_SDR_CACHE_CREATE_FLAGS_DEFAULT,
-                             IPMI_SDR_CACHE_VALIDATION_FLAGS_DEFAULT,
                              NULL,
                              NULL) < 0)
     {

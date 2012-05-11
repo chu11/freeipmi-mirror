@@ -530,7 +530,7 @@ _sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
 {
   char cachefilenamebuf[MAXPATHLEN+1];
   int count = 0;
-  int create_flags = 0;
+  int cache_create_flags = 0;
   int rv = -1;
 
   assert (ctx);
@@ -558,15 +558,14 @@ _sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
              cachefilenamebuf);
 
   if (sdr_cache_recreate)
-    create_flags = IPMI_SDR_CACHE_CREATE_FLAGS_OVERWRITE;
+    cache_create_flags = IPMI_SDR_CACHE_CREATE_FLAGS_OVERWRITE;
   else
-    create_flags = IPMI_SDR_CACHE_CREATE_FLAGS_DEFAULT;
+    cache_create_flags = IPMI_SDR_CACHE_CREATE_FLAGS_DEFAULT;
 
   if (ipmi_sdr_cache_create (ctx,
                              ipmi_ctx,
                              cachefilenamebuf,
-                             create_flags,
-                             IPMI_SDR_CACHE_VALIDATION_FLAGS_DEFAULT,
+                             cache_create_flags,
                              quiet_cache ? NULL : _sdr_cache_create_callback,
                              quiet_cache ? NULL : (void *)&count) < 0)
     {
