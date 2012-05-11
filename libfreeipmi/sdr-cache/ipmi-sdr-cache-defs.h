@@ -103,6 +103,7 @@ struct ipmi_sdr_cache_ctx {
   off_t records_start_offset;
   uint8_t *sdr_cache;
   off_t current_offset;
+  int current_offset_dumped;
 };
 
 #endif /* IPMI_SDR_CACHE_DEFS_H */

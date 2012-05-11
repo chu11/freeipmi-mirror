@@ -67,6 +67,8 @@ ipmi_sdr_cache_init_ctx (ipmi_sdr_cache_ctx_t ctx)
   ctx->file_size = 0;
   ctx->records_start_offset = 0;
   ctx->sdr_cache = NULL;
+  ctx->current_offset = 0;
+  ctx->current_offset_dumped = 0;
 }
 
 int

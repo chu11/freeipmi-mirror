@@ -643,7 +643,7 @@ ipmi_sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
                        const char *filename,
                        int create_flags,
                        int validation_flags,
-                       Sdr_Create_Callback create_callback,
+                       Ipmi_Sdr_Create_Callback create_callback,
                        void *create_callback_data)
 {
   int open_flags;
@@ -679,7 +679,7 @@ ipmi_sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
   if (ctx->operation != IPMI_SDR_CACHE_OPERATION_UNINITIALIZED)
     {
       if (ctx->operation == IPMI_SDR_CACHE_OPERATION_READ_CACHE)
-        SDR_CACHE_SET_ERRNUM (ctx, IPMI_SDR_CACHE_ERR_CACHE_CREATE_CTX_SET_TO_READ);
+        SDR_CACHE_SET_ERRNUM (ctx, IPMI_SDR_CACHE_ERR_CONTEXT_PERFORMING_OTHER_OPERATION);
       else
         SDR_CACHE_SET_ERRNUM (ctx, IPMI_SDR_CACHE_ERR_INTERNAL_ERROR);
       return (-1);
