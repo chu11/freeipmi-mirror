@@ -1,3 +1,8 @@
+2012-05-11  Albert Chu <chu11@llnl.gov>
+
+	* Support --target-channel-number and --target-slave-address
+	options for all inband activities.
+	
 2012-05-10  Albert Chu <chu11@llnl.gov>
 
 	Merge branch frubrudge  

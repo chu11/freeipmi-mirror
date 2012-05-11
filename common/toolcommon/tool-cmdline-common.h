@@ -46,35 +46,37 @@ enum argp_common_option_keys
     ARGP_RETRANSMISSION_TIMEOUT_KEY = 137,
     ARGP_REG_SPACE_KEY = 138,     /* for backwards compatability */
     ARGP_REGISTER_SPACING_KEY = 139,
+    ARGP_TARGET_CHANNEL_NUMBER_KEY = 140,
+    ARGP_TARGET_SLAVE_ADDRESS_KEY = 141,
     ARGP_HOSTNAME_KEY = 'h',
     ARGP_USERNAME_KEY = 'u',
     ARGP_PASSWORD_KEY = 'p',
     ARGP_PASSWORD_PROMPT_KEY = 'P',
     ARGP_K_G_KEY = 'k',
     ARGP_K_G_PROMPT_KEY = 'K',
-    ARGP_AUTH_TYPE_KEY = 140,     /* for backwards compatability */
+    ARGP_AUTH_TYPE_KEY = 142,     /* for backwards compatability */
     ARGP_AUTHENTICATION_TYPE_KEY = 'a',
     ARGP_CIPHER_SUITE_ID_KEY = 'I',
-    ARGP_PRIVILEGE_KEY = 141,     /* for backwards compatability */
-    ARGP_PRIV_LEVEL_KEY = 142,     /* for backwards compatability */
+    ARGP_PRIVILEGE_KEY = 143,     /* for backwards compatability */
+    ARGP_PRIV_LEVEL_KEY = 144,     /* for backwards compatability */
     ARGP_PRIVILEGE_LEVEL_KEY = 'l',
-    ARGP_CONFIG_KEY = 143,          /* for backwards compatability */
-    ARGP_CONFIG_FILE_KEY = 144,
+    ARGP_CONFIG_KEY = 145,          /* for backwards compatability */
+    ARGP_CONFIG_FILE_KEY = 146,
     ARGP_WORKAROUND_FLAGS_KEY = 'W',
-    ARGP_DEBUG_KEY = 145,
+    ARGP_DEBUG_KEY = 147,
     /* sdr options */
     ARGP_FLUSH_CACHE_KEY = 'f',
     ARGP_QUIET_CACHE_KEY = 'Q',
-    ARGP_SDR_CACHE_FILE_KEY = 146,
-    ARGP_SDR_CACHE_RECREATE_KEY = 147,
-    ARGP_SDR_CACHE_DIRECTORY_KEY = 148,
-    ARGP_IGNORE_SDR_CACHE_KEY = 149,
+    ARGP_SDR_CACHE_FILE_KEY = 148,
+    ARGP_SDR_CACHE_RECREATE_KEY = 149,
+    ARGP_SDR_CACHE_DIRECTORY_KEY = 150,
+    ARGP_IGNORE_SDR_CACHE_KEY = 151,
     /* hostrange options */
     ARGP_BUFFER_OUTPUT_KEY = 'B',
     ARGP_CONSOLIDATE_OUTPUT_KEY = 'C',
     ARGP_FANOUT_KEY = 'F',
     ARGP_ELIMINATE_KEY = 'E',
-    ARGP_ALWAYS_PREFIX_KEY = 150,
+    ARGP_ALWAYS_PREFIX_KEY = 152,
   };
 
 /*
@@ -103,106 +105,110 @@ enum argp_common_option_keys
   { "reg-space", ARGP_REG_SPACE_KEY, "REGISTER-SPACING", OPTION_HIDDEN,                                         \
       "Specify the in-band driver register spacing instead of the probed value.", 4},                           \
   { "register-spacing", ARGP_REGISTER_SPACING_KEY, "REGISTER-SPACING", 0,                                       \
-      "Specify the in-band driver register spacing instead of the probed value.", 4}
+      "Specify the in-band driver register spacing instead of the probed value.", 4},                           \
+  { "target-channel-number", ARGP_TARGET_CHANNEL_NUMBER_KEY, "CHANNEL-NUMBER", 0,                               \
+      "Specify an in-band driver target channel number to send IPMI requests to.", 5},                          \
+  { "target-slave-address", ARGP_TARGET_SLAVE_ADDRESS_KEY, "SLAVE-ADDRESS", 0,                                  \
+      "Specify an in-band driver target slave address to send IPMI requests to.", 6}
 
 #define ARGP_COMMON_OPTIONS_OUTOFBAND                                                                           \
   { "hostname",       ARGP_HOSTNAME_KEY, "IPMIHOST", 0,                                                         \
-      "Specify the remote host to communicate with.", 5},                                                       \
+      "Specify the remote host to communicate with.", 7},                                                       \
     ARGP_COMMON_OPTIONS_OUTOFBAND_COMMON,                                                                       \
     ARGP_COMMON_OPTIONS_OUTOFBAND_TIMEOUT
 
 #define ARGP_COMMON_OPTIONS_OUTOFBAND_HOSTRANGED                                                                \
   { "hostname",       ARGP_HOSTNAME_KEY, "IPMIHOST", 0,                                                         \
-      "Specify the remote host(s) to communicate with.", 5},                                                    \
+      "Specify the remote host(s) to communicate with.", 7},                                                    \
     ARGP_COMMON_OPTIONS_OUTOFBAND_COMMON,                                                                       \
     ARGP_COMMON_OPTIONS_OUTOFBAND_TIMEOUT
 
 #define ARGP_COMMON_OPTIONS_OUTOFBAND_COMMON                                                                    \
   { "username",       ARGP_USERNAME_KEY, "USERNAME", 0,                                                         \
-      "Specify the username to use when authenticating with the remote host.", 6},                              \
+      "Specify the username to use when authenticating with the remote host.", 8},                              \
   { "password",       ARGP_PASSWORD_KEY, "PASSWORD", 0,                                                         \
-      "Specify the password to use when authenticationg with the remote host. ", 7},                            \
+      "Specify the password to use when authenticationg with the remote host. ", 9},                            \
   { "password-prompt", ARGP_PASSWORD_PROMPT_KEY, 0, 0,                                                          \
-      "Prompt for password to avoid possibility of listing it in process lists.", 8},                           \
+      "Prompt for password to avoid possibility of listing it in process lists.", 10},                          \
   { "k-g",       ARGP_K_G_KEY, "K_G", 0,                                                                        \
-      "Specify the K_g BMC key to use when authenticating with the remote host for IPMI 2.0.", 9},              \
+      "Specify the K_g BMC key to use when authenticating with the remote host for IPMI 2.0.", 11},             \
   { "k-g-prompt", ARGP_K_G_PROMPT_KEY, 0, 0,                                                                    \
-      "Prompt for k-g to avoid possibility of listing it in process lists.", 10}
+      "Prompt for k-g to avoid possibility of listing it in process lists.", 12}
 
 /* retry-timeout is maintained for backwards compatability */
 /* timeout is maintained for backwards compatability */
 #define ARGP_COMMON_OPTIONS_OUTOFBAND_TIMEOUT                                                                   \
   { "timeout", ARGP_TIMEOUT_KEY, "MILLISECONDS", OPTION_HIDDEN,                                                 \
-      "Specify the session timeout in milliseconds.", 11},                                                      \
+      "Specify the session timeout in milliseconds.", 13},                                                      \
   { "session-timeout", ARGP_SESSION_TIMEOUT_KEY, "MILLISECONDS", 0,                                             \
-      "Specify the session timeout in milliseconds.", 11},                                                      \
+      "Specify the session timeout in milliseconds.", 13},                                                      \
   { "retry-timeout", ARGP_RETRY_TIMEOUT_KEY, "MILLISECONDS", OPTION_HIDDEN,                                     \
-      "Specify the packet retransmission timeout in milliseconds.", 12},                                        \
+      "Specify the packet retransmission timeout in milliseconds.", 14},                                        \
   { "retransmission-timeout", ARGP_RETRANSMISSION_TIMEOUT_KEY, "MILLISECONDS", 0,                               \
-      "Specify the packet retransmission timeout in milliseconds.", 12}
+      "Specify the packet retransmission timeout in milliseconds.", 14}
 
 /* auth-type is maintained for backwards compatability */
 #define ARGP_COMMON_OPTIONS_AUTHENTICATION_TYPE                                                                 \
   { "auth-type", ARGP_AUTH_TYPE_KEY, "AUTHENTICATION-TYPE", OPTION_HIDDEN,                                      \
-      "Specify the IPMI 1.5 authentication type to use.", 13},                                                  \
+      "Specify the IPMI 1.5 authentication type to use.", 15},                                                  \
   { "authentication-type", ARGP_AUTHENTICATION_TYPE_KEY, "AUTHENTICATION-TYPE", 0,                              \
-      "Specify the IPMI 1.5 authentication type to use.", 13}
+      "Specify the IPMI 1.5 authentication type to use.", 15}
 
 #define ARGP_COMMON_OPTIONS_CIPHER_SUITE_ID                                                                     \
   { "cipher-suite-id",     ARGP_CIPHER_SUITE_ID_KEY, "CIPHER-SUITE-ID", 0,                                      \
-      "Specify the IPMI 2.0 cipher suite ID to use.", 14}
+      "Specify the IPMI 2.0 cipher suite ID to use.", 16}
 
 /* privilege is maintained for backwards compatability */
 /* priv-level is maintained for backwards compatability */
 #define ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL                                                                     \
   { "privilege",  ARGP_PRIVILEGE_KEY, "PRIVILEGE-LEVEL", OPTION_HIDDEN,                                         \
-      "Specify the privilege level to be used. ", 15},                                                          \
+      "Specify the privilege level to be used. ", 17},                                                          \
   { "priv-level",  ARGP_PRIV_LEVEL_KEY, "PRIVILEGE-LEVEL", OPTION_HIDDEN,                                       \
-      "Specify the privilege level to be used.", 15},                                                           \
+      "Specify the privilege level to be used.", 17},                                                           \
   { "privilege-level",  ARGP_PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", 0,                                         \
-      "Specify the privilege level to be used.", 15}
+      "Specify the privilege level to be used.", 17}
 
 #define ARGP_COMMON_OPTIONS_CONFIG_FILE                                                                         \
   { "config-file", ARGP_CONFIG_FILE_KEY, "FILE", 0,                                                             \
-      "Specify alternate configuration file.", 16}
+      "Specify alternate configuration file.", 18}
 
 #define ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS                                                                    \
   { "workaround-flags",  ARGP_WORKAROUND_FLAGS_KEY, "WORKAROUNDS", 0,                                           \
-      "Specify workarounds to vendor compliance issues.", 17}
+      "Specify workarounds to vendor compliance issues.", 19}
 
 #define ARGP_COMMON_SDR_OPTIONS                                                                                 \
   { "flush-cache", ARGP_FLUSH_CACHE_KEY,  0, 0,                                                                 \
-      "Flush a cached version of the sensor data repository (SDR) cache.", 18},                                 \
+      "Flush a cached version of the sensor data repository (SDR) cache.", 20},                                 \
   { "quiet-cache", ARGP_QUIET_CACHE_KEY,  0, 0,                                                                 \
-      "Do not output information about cache creation/deletion.", 19},                                          \
+      "Do not output information about cache creation/deletion.", 21},                                          \
   { "sdr-cache-file", ARGP_SDR_CACHE_FILE_KEY, "FILE", 0,                                                       \
-      "Specify a specific file for the sensor data repository (SDR) cache to be stored or read from.", 20},     \
+      "Specify a specific file for the sensor data repository (SDR) cache to be stored or read from.", 22},     \
   { "sdr-cache-recreate", ARGP_SDR_CACHE_RECREATE_KEY,  0, 0,                                                   \
-      "Recreate sensor data repository (SDR) cache if cache is out of date or invalid.", 21}
+      "Recreate sensor data repository (SDR) cache if cache is out of date or invalid.", 23}
 
 #define ARGP_COMMON_SDR_DIRECTORY_OPTIONS                                                                       \
   { "sdr-cache-directory", ARGP_SDR_CACHE_DIRECTORY_KEY, "DIRECTORY", 0,                                        \
-      "Specify an alternate directory for sensor data repository (SDR) caches to be stored or read from.", 22}
+      "Specify an alternate directory for sensor data repository (SDR) caches to be stored or read from.", 24}
 
 #define ARGP_COMMON_IGNORE_SDR_OPTIONS                                                                          \
   { "ignore-sdr-cache", ARGP_IGNORE_SDR_CACHE_KEY, 0, 0,                                                        \
-      "Ignore all SDR cache related processing.", 23}
+      "Ignore all SDR cache related processing.", 25}
 
 #define ARGP_COMMON_HOSTRANGED_OPTIONS                                                                          \
   { "buffer-output", ARGP_BUFFER_OUTPUT_KEY, 0, 0,                                                              \
-      "Buffer hostranged output.", 24},                                                                         \
+      "Buffer hostranged output.", 26},                                                                         \
   { "consolidate-output", ARGP_CONSOLIDATE_OUTPUT_KEY, 0, 0,                                                    \
-      "Consolidate hostranged output.", 25},                                                                    \
+      "Consolidate hostranged output.", 27},                                                                    \
   { "fanout", ARGP_FANOUT_KEY, "NUM", 0,                                                                        \
-      "Specify multiple host fanout.", 26},                                                                     \
+      "Specify multiple host fanout.", 28},                                                                     \
   { "eliminate", ARGP_ELIMINATE_KEY, 0, 0,                                                                      \
-      "Eliminate undetected nodes.", 27},                                                                       \
+      "Eliminate undetected nodes.", 29},                                                                       \
   { "always-prefix", ARGP_ALWAYS_PREFIX_KEY, 0, 0,                                                              \
-      "Always prefix output.", 28}
+      "Always prefix output.", 30}
 
 #define ARGP_COMMON_OPTIONS_DEBUG                                                                               \
   { "debug",     ARGP_DEBUG_KEY, 0, 0,                                                                          \
-      "Turn on debugging.", 29}
+      "Turn on debugging.", 31}
 
 struct common_cmd_args
 {
@@ -212,6 +218,10 @@ struct common_cmd_args
   unsigned int driver_address;
   char *driver_device;
   unsigned int register_spacing;
+  uint8_t target_channel_number;
+  int target_channel_number_is_set; /* user can input zero, so need a flag */
+  uint8_t target_slave_address;
+  int target_slave_address_is_set; /* user can input zero so need a flag */
   unsigned int session_timeout;
   unsigned int retransmission_timeout;
   char *hostname;

@@ -79,6 +79,12 @@ Specify the default in-band driver device path to use.
 \fBregister\-spacing\fR \fIREGISTER\-SPACING\fR
 Specify the default in-band driver register spacing to use.
 .TP
+\fBtarget\-channel\-number\fR \fICHANNEL\-NUMBER\FR
+Specify the default in-band driver target channel number.
+.TP
+\fBtarget\-slave\-address\fR \fISLAVE\-ADDRESS\FR
+Specify the default in-band driver target slave address.
+.TP
 \fBusername\fR \fIUSERNAME\fR
 Specify the default username to use.
 .TP

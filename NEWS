@@ -13,6 +13,8 @@ o In ipmipower, support --oem-power-type option to support OEM
     under OEM power cases.
   - Re-architect to allow serialization of power control operations to
     the same host.
+o Globally in tools, support --target-channel-number and
+  --target-slave-address to specify specific targets.
 o Globally in tools, support ability to specify alternate port via
   optional [:port] in hostname or host config.
 o In ipmi-fru, support --bridge-fru option to allow reading FRU entries
@@ -48,6 +50,9 @@ o In ipmidetectd daemon and ipmidetect, update command line parsing to
   options.
   - -v is no longer supported, -V outputs version information
   - -h is no longer supported, -? outputs help
+o In ipmi-raw, make --channel-number and --slave-address legacy
+  options.  They are now overriden by --target-channel-number and
+  --target-slave-address.
 
 Libraries
 ---------

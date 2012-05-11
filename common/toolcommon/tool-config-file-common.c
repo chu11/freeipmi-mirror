@@ -1118,7 +1118,8 @@ config_file_parse (const char *filename,
 
   int disable_auto_probe_count = 0,
     driver_address_count = 0, driver_device_count = 0,
-    register_spacing_count = 0;
+    register_spacing_count = 0, target_channel_number_count = 0,
+    target_slave_address_count = 0;
 
   int username_count = 0, password_count = 0, k_g_count = 0,
     session_timeout_count = 0, retransmission_timeout_count = 0,
@@ -1328,6 +1329,18 @@ config_file_parse (const char *filename,
         &(cmd_args->register_spacing),
         0
       },
+      {
+        "target-channel-number",
+        CONFFILE_OPTION_INT,
+        -1,
+        _config_file_non_negative_int,
+        1,
+        0,
+        &target_channel_number_count,
+        &(cmd_args->target_channel_number),
+        0
+      },
+
     };
 
   struct conffile_option outofband_options[] =
@@ -4800,6 +4813,12 @@ config_file_parse (const char *filename,
     }
 
   /* copy file data over to tool */
+
+  if (target_channel_number_count)
+    cmd_args->target_channel_number_is_set = 1;
+
+  if (target_slave_address_count)
+    cmd_args->target_slave_address_is_set = 1;
 
   if (cmd_args_config.username_set)
     cmd_args->username = cmd_args_config.username;
