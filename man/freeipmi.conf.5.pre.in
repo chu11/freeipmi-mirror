@@ -76,8 +76,8 @@ Specify the default in-band driver address to use.
 \fBdriver\-device\fR \fIDEVICE\fR
 Specify the default in-band driver device path to use.
 .TP
-\fBregister\-spacing\fR \fIREGISTER-SPACING\fR
-Specify the default in-band driver registerspacing to use.
+\fBregister\-spacing\fR \fIREGISTER\-SPACING\fR
+Specify the default in-band driver register spacing to use.
 .TP
 \fBusername\fR \fIUSERNAME\fR
 Specify the default username to use.
