@@ -22,6 +22,9 @@
 	
 	* common/toolcommon/, man/, etc/: Update with new option support
 	appropriately.
+
+	* libfreeipmi/api/ipmi-kcs-driver-api.c (ipmi_kcs_cmd_api_ipmb):
+	Sleep a little bit between re-reads to limit spinning.
 	
 2012-05-10  Albert Chu <chu11@llnl.gov>
 
