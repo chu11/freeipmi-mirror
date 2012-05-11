@@ -392,7 +392,10 @@ _print_except_default_cb (ipmi_fru_state_data_t *state_data,
       /* stored in 7-bit form, unlike sensor owner ids, need to shift */
       device_slave_address <<= 1;
 
-      /* duplicate of base FRU Device ID 0 - skip */
+      /* duplicate of base FRU Device ID 0 - skip
+       *
+       * Note that it is always Device ID 0 w/ management controller device locators
+       */
       if (device_slave_address == IPMI_SLAVE_ADDRESS_BMC
 	  && channel_number == IPMI_CHANNEL_NUMBER_PRIMARY_IPMB)
 	goto out;
