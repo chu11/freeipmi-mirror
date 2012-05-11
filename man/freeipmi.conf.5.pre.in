@@ -616,6 +616,10 @@ Specify default verbose count to use for
 \fBipmi\-fru\-skip\-checks\fR \fIENABLE|DISABLE\fR
 Specify if checksum checks will be skipped by default.
 .TP
+\fBipmi\-fru\-bridge\-fru\fR \fIENABLE|DISABLE\fR
+Specify if FRU entries on other controllers should be read by default
+or not.
+.TP
 \fBipmi\-fru\-interpret\-oem\-data\fR \fIENABLE|DISABLE\fR
 Specify if
 .B ipmi-fru

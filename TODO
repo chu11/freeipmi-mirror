@@ -6,7 +6,6 @@ branches to merge
 -----------------
 intels2600jfrevision
 movetolib
-frubridge
 
 to test
 -------
@@ -241,7 +240,6 @@ ipmi-fru
 - write FRU data option
   - for OEM integrators
   - or should be in bmc-device?
-- iterate through management controller SDR entries too
 
 bmc-device
 --------

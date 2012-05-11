@@ -49,7 +49,7 @@
     __rserrnum = __rsval;                                                   \
     memset (__rserrstr, '\0', IPMI_ERR_STR_MAX_LEN);                        \
     ipmi_completion_code_strerror_cmd_r ((___rs),                           \
-                                         (___ctx)->net_fn,                  \
+                                         (___ctx)->target.net_fn,           \
                                          __rserrstr,                        \
                                          IPMI_ERR_STR_MAX_LEN);             \
     TRACE_MSG_OUT (__rserrstr, __rserrnum);                                 \

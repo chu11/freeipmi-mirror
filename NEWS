@@ -15,6 +15,8 @@ o In ipmipower, support --oem-power-type option to support OEM
     the same host.
 o Globally in tools, support ability to specify alternate port via
   optional [:port] in hostname or host config.
+o In ipmi-fru, support --bridge-fru option to allow reading FRU entries
+  from satellite controllers.
 o In bmc-config, add configuration support for
   Maximum_Privilege_Cipher_Suite_Id_15 under RMCPplus_Conf_Privilege.
 o Globally support Cipher Suite ID 15 and 16 based on comments from
@@ -25,6 +27,8 @@ o In bmc-device, support new --set-sensor-reading-and-event-status
 
 Tools - Bug Fixes/Minor Changes
 -------------------------------
+o In ipmi-fru, if builtin FRU device (ID 0) has SDR entry, output SDR
+  entry name rather than fixed string.
 o In ipmipower, exit with value 1 on IPMI errors in addition to system
   errors.
 o In ipmidetect, exit with exit value 2 when an error occurs.  Exit
@@ -61,6 +65,10 @@ o In libfreeipmi, add additional IPMI commands/payloads.
 o In libfreeipmi, fix several macro names which did not meet
   standardization needs.
 o In libfreeipmi, support new IPMI_ERR_DRIVER_BUSY error code.
+o In libfreeipmi sdr-parse, support more complete parsing of
+  Management Controller Locator Records.
+o In libfreeipmi, KCS driver now sleeps a small amount between IPMB
+  retries to avoid spinning.
 
 Misc
 ----

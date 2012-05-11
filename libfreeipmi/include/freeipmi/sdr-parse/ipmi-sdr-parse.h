@@ -381,8 +381,21 @@ int ipmi_sdr_parse_management_controller_device_locator_parameters (ipmi_sdr_par
                                                                     const void *sdr_record,
                                                                     unsigned int sdr_record_len,
                                                                     uint8_t *device_slave_address,
-                                                                    uint8_t *channel_number);
-
+                                                                    uint8_t *channel_number,
+								    uint8_t *global_initialization_event_message_generation,
+								    uint8_t *global_initialization_log_initialization_agent_errors,
+								    uint8_t *global_initialization_controller_logs_initialization_agent_errors,
+								    uint8_t *power_state_notification_controller,
+								    uint8_t *power_state_notification_acpi_device_power_state_notification,
+								    uint8_t *power_state_notification_acpi_system_power_state_notification,
+								    uint8_t *device_capabilities_sensor_device,
+								    uint8_t *device_capabilities_sdr_repository_device,
+								    uint8_t *device_capabilities_sel_device,
+								    uint8_t *device_capabilities_fru_inventory_device,
+								    uint8_t *device_capabilities_ipmb_event_receiver,
+								    uint8_t *device_capabilities_ipmb_event_generator,
+								    uint8_t *device_capabilities_bridge,
+								    uint8_t *device_capabilities_chassis_device);
 
 /* For Management Controller Confirmation, OEM SDR records */
 int ipmi_sdr_parse_manufacturer_id (ipmi_sdr_parse_ctx_t ctx,

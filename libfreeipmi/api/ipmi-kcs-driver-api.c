@@ -66,6 +66,7 @@
  */
 #define IPMI_KCS_IPMB_RETRANSMISSION_COUNT   32
 #define IPMI_KCS_IPMB_REREAD_COUNT           32
+#define IPMI_KCS_IPMB_REREAD_WAIT            1000
 
 fiid_template_t tmpl_kcs_raw =
   {
@@ -640,6 +641,12 @@ ipmi_kcs_cmd_api_ipmb (ipmi_ctx_t ctx,
                   goto cleanup;
                 }
 
+	      /* Wait a little bit to avoid spinning and killing the
+	       * controller.  Observed on the Quanta QSSC-S4R/Approp
+	       * GB812X-CN that when bridging FRU reads, this allowed
+	       * records to be read more successfully.
+	       */
+	      usleep (IPMI_KCS_IPMB_REREAD_WAIT);
               continue;
             }
           goto cleanup;

@@ -412,19 +412,28 @@ _read_fru_data (ipmi_fru_parse_ctx_t ctx,
                                   count_to_read,
                                   fru_read_data_rs) < 0)
         {
-          /* if first time we've read from this device id, assume the
-           * below completion codes mean that there is no data on this
-           * device.
-           */
-          if (!num_bytes_read
-              && (ipmi_check_completion_code (fru_read_data_rs, IPMI_COMP_CODE_COMMAND_TIMEOUT) == 1
-                  || ipmi_check_completion_code (fru_read_data_rs, IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1))
-            {
-              FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_NO_FRU_INFORMATION);
-              goto cleanup;
-            }
+	  if (ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
+	    {
+	      /* if first time we've read from this device id, assume the
+	       * below completion codes mean that there is no data on this
+	       * device.
+	       */
+	      if (!num_bytes_read
+		  && (ipmi_check_completion_code (fru_read_data_rs, IPMI_COMP_CODE_COMMAND_TIMEOUT) == 1
+		      || ipmi_check_completion_code (fru_read_data_rs, IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1))
+		{
+		  FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_NO_FRU_INFORMATION);
+		  goto cleanup;
+		}
+	      
+	      if (ipmi_check_completion_code (fru_read_data_rs, IPMI_COMP_CODE_READ_FRU_DATA_FRU_DEVICE_BUSY) == 1)
+		{
+		  FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_DEVICE_BUSY);
+		  goto cleanup;
+		}
+	    }
 
-	  if (ipmi_check_completion_code (fru_read_data_rs, IPMI_COMP_CODE_READ_FRU_DATA_FRU_DEVICE_BUSY) == 1)
+	  if (ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_MESSAGE_TIMEOUT)
 	    {
 	      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_DEVICE_BUSY);
 	      goto cleanup;
@@ -550,16 +559,25 @@ ipmi_fru_parse_open_device_id (ipmi_fru_parse_ctx_t ctx, uint8_t fru_device_id)
                                             ctx->fru_device_id,
                                             fru_get_inventory_rs) < 0)
     {
-      /* achu: Assume this completion code means we got a FRU SDR
-       * entry pointed to a device that doesn't exist on this
-       * particular mother board (b/c manufacturers may use the same
-       * SDR for multiple motherboards).
-       */
-      if (ipmi_check_completion_code (fru_get_inventory_rs, IPMI_COMP_CODE_REQUESTED_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1)
-        {
-          FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_NO_FRU_INFORMATION);
-          goto cleanup;
-        }
+      if (ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
+	{
+	  /* achu: Assume this completion code means we got a FRU SDR
+	   * entry pointed to a device that doesn't exist on this
+	   * particular mother board (b/c manufacturers may use the same
+	   * SDR for multiple motherboards).
+	   */
+	  if (ipmi_check_completion_code (fru_get_inventory_rs, IPMI_COMP_CODE_REQUESTED_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1)
+	    {
+	      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_NO_FRU_INFORMATION);
+	      goto cleanup;
+	    }
+	}
+
+      if (ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_MESSAGE_TIMEOUT)
+	{
+	  FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_DEVICE_BUSY);
+	  goto cleanup;
+	}
 
       FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_IPMI_ERROR);
       goto cleanup;
