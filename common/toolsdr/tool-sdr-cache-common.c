@@ -727,6 +727,36 @@ sdr_cache_flush_cache (ipmi_sdr_cache_ctx_t ctx,
 }
 
 int
+sdr_cache_setup_debug (ipmi_sdr_cache_ctx_t ctx,
+		       pstdout_state_t pstate,
+		       int debug,
+		       const char *hostname)
+{
+  assert (ctx);
+
+  if (debug)
+    {
+      /* Don't error out, if this fails we can still continue */
+      if (ipmi_sdr_cache_ctx_set_flags (ctx, IPMI_SDR_FLAGS_DEBUG_DUMP) < 0)
+        PSTDOUT_FPRINTF (pstate,
+                         stderr,
+                         "ipmi_sdr_cache_ctx_set_flags: %s\n",
+                         ipmi_sdr_cache_ctx_strerror (ipmi_sdr_cache_ctx_errnum (ctx)));
+      
+      if (hostname)
+        {
+          if (ipmi_sdr_cache_ctx_set_debug_prefix (ctx, hostname) < 0)
+            PSTDOUT_FPRINTF (pstate,
+                             stderr,
+                             "ipmi_sdr_cache_ctx_set_debug_prefix: %s\n",
+                             ipmi_sdr_cache_ctx_strerror (ipmi_sdr_cache_ctx_errnum (ctx)));
+        }
+    }
+  
+  return (0);
+}
+
+int
 ipmi_sdr_cache_search_sensor_wrapper (ipmi_sdr_cache_ctx_t ctx,
 				      uint8_t sensor_number,
 				      uint8_t generator_id)
@@ -762,3 +792,4 @@ ipmi_sdr_cache_search_sensor_wrapper (ipmi_sdr_cache_ctx_t ctx,
   
   return (rv);
 }
+

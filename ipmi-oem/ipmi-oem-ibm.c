@@ -465,26 +465,11 @@ _find_sensor (ipmi_oem_state_data_t *state_data,
       goto cleanup;
     }
 
-  if (state_data->prog_data->args->common.debug)
-    {
-      /* Don't error out, if this fails we can still continue */
-      if (ipmi_sdr_cache_ctx_set_flags (tmp_sdr_cache_ctx,
-                                        IPMI_SDR_FLAGS_DEBUG_DUMP) < 0)
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "ipmi_sdr_cache_ctx_set_flags: %s\n",
-                         ipmi_sdr_cache_ctx_strerror (ipmi_sdr_cache_ctx_errnum (tmp_sdr_cache_ctx)));
-
-      if (state_data->hostname)
-        {
-          if (ipmi_sdr_cache_ctx_set_debug_prefix (tmp_sdr_cache_ctx,
-                                                   state_data->hostname) < 0)
-            pstdout_fprintf (state_data->pstate,
-                             stderr,
-                             "ipmi_sdr_cache_ctx_set_debug_prefix: %s\n",
-                             ipmi_sdr_cache_ctx_strerror (ipmi_sdr_cache_ctx_errnum (tmp_sdr_cache_ctx)));
-        }
-    }
+  if (sdr_cache_setup_debug (tmp_sdr_cache_ctx,
+			     state_data->pstate,
+			     state_data->prog_data->args->common.debug,
+			     state_data->hostname) < 0)
+    goto cleanup;
 
   /* Should not cause sdr recreation, since this is the second time we're calling it */
   if (sdr_cache_create_and_load (tmp_sdr_cache_ctx,

@@ -2694,25 +2694,13 @@ _bmc_device (pstdout_state_t pstate,
       goto cleanup;
     }
   
-  if (state_data.prog_data->args->common.debug)
+  if (sdr_cache_setup_debug (state_data.sdr_cache_ctx,
+			     state_data.pstate,
+			     state_data.prog_data->args->common.debug,
+			     state_data.hostname) < 0)
     {
-      /* Don't error out, if this fails we can still continue */
-      if (ipmi_sdr_cache_ctx_set_flags (state_data.sdr_cache_ctx,
-                                        IPMI_SDR_FLAGS_DEBUG_DUMP) < 0)
-        pstdout_fprintf (pstate,
-                         stderr,
-                         "ipmi_sdr_cache_ctx_set_flags: %s\n",
-                         ipmi_sdr_cache_ctx_strerror (ipmi_sdr_cache_ctx_errnum (state_data.sdr_cache_ctx)));
-      
-      if (hostname)
-        {
-          if (ipmi_sdr_cache_ctx_set_debug_prefix (state_data.sdr_cache_ctx,
-                                                   hostname) < 0)
-            pstdout_fprintf (pstate,
-                             stderr,
-                             "ipmi_sdr_cache_ctx_set_debug_prefix: %s\n",
-                             ipmi_sdr_cache_ctx_strerror (ipmi_sdr_cache_ctx_errnum (state_data.sdr_cache_ctx)));
-        }
+      exit_code = EXIT_FAILURE;
+      goto cleanup;
     }
   
   if (!(state_data.sdr_parse_ctx = ipmi_sdr_parse_ctx_create ()))

@@ -3,6 +3,10 @@
 	* libfreeipmi/sdr-cache/: Various re-arch.
 
 	* common/toolsdr/, libipmimonitoring/: Adjust appropriately for changes.
+
+	* common/toolsdr/tool-sdr-cache-common.h,
+	common/toolsdr/tool-sdr-cache-common.c (sdr_cache_setup_debug):
+	New common function for many tools.
 	
 2012-05-11  Albert Chu <chu11@llnl.gov>
 
