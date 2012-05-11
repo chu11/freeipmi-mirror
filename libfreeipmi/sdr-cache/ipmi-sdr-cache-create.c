@@ -654,7 +654,6 @@ ipmi_sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
   unsigned int total_bytes_written = 0;
   uint16_t *record_ids = NULL;
   unsigned int record_ids_count = 0;
-
   int fd = -1;
   int rv = -1;
 
@@ -684,6 +683,8 @@ ipmi_sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
         SDR_CACHE_SET_ERRNUM (ctx, IPMI_SDR_CACHE_ERR_INTERNAL_ERROR);
       return (-1);
     }
+
+  ctx->operation = IPMI_SDR_CACHE_OPERATION_CREATE_CACHE;
 
   if (create_flags == IPMI_SDR_CACHE_CREATE_FLAGS_DEFAULT)
     open_flags = O_CREAT | O_EXCL | O_WRONLY;
@@ -896,6 +897,7 @@ ipmi_sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
   rv = 0;
   ctx->errnum = IPMI_SDR_CACHE_ERR_SUCCESS;
  cleanup:
+  ctx->operation = IPMI_SDR_CACHE_OPERATION_UNINITIALIZED;
   if (fd >= 0)
     {
       /* If the cache create never completed, try to remove the file */
@@ -908,5 +910,3 @@ ipmi_sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
   ipmi_sdr_cache_init_ctx (ctx);
   return (rv);
 }
-
-
