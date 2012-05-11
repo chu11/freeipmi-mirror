@@ -269,6 +269,21 @@ ipmi_open (const char *progname,
         }
     }
 
+  if (cmd_args->target_channel_number_is_set
+      || cmd_args->target_slave_address_is_set)
+    {
+      if (ipmi_ctx_set_target (ipmi_ctx,
+			       cmd_args->target_channel_number_is_set ? &cmd_args->target_channel_number : NULL,
+			       cmd_args->target_slave_address_is_set ? &cmd_args->target_slave_address : NULL) < 0)
+	{
+	  snprintf (errmsg,
+		    errmsglen,
+		    "ipmi_ctx_set_target: %s",
+		    ipmi_ctx_errormsg (ipmi_ctx));
+	  goto cleanup;
+	} 
+    }
+  
   return (ipmi_ctx);
 
  cleanup: 

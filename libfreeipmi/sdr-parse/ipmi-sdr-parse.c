@@ -4115,7 +4115,21 @@ ipmi_sdr_parse_management_controller_device_locator_parameters (ipmi_sdr_parse_c
                                                                 const void *sdr_record,
                                                                 unsigned int sdr_record_len,
                                                                 uint8_t *device_slave_address,
-                                                                uint8_t *channel_number)
+                                                                uint8_t *channel_number,
+								uint8_t *global_initialization_event_message_generation,
+								uint8_t *global_initialization_log_initialization_agent_errors,
+								uint8_t *global_initialization_controller_logs_initialization_agent_errors,
+								uint8_t *power_state_notification_controller,
+								uint8_t *power_state_notification_acpi_device_power_state_notification,
+								uint8_t *power_state_notification_acpi_system_power_state_notification,
+								uint8_t *device_capabilities_sensor_device,
+								uint8_t *device_capabilities_sdr_repository_device,
+								uint8_t *device_capabilities_sel_device,
+								uint8_t *device_capabilities_fru_inventory_device,
+								uint8_t *device_capabilities_ipmb_event_receiver,
+								uint8_t *device_capabilities_ipmb_event_generator,
+								uint8_t *device_capabilities_bridge,
+								uint8_t *device_capabilities_chassis_device)
 {
   fiid_obj_t obj_sdr_record = NULL;
   uint32_t acceptable_record_types;
@@ -4163,6 +4177,160 @@ ipmi_sdr_parse_management_controller_device_locator_parameters (ipmi_sdr_parse_c
           goto cleanup;
         }
       *channel_number = val;
+    }
+  if (global_initialization_event_message_generation)
+    {
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "global_initialization.event_message_generation",
+                        &val) < 0)
+        {
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
+          goto cleanup;
+        }
+      *global_initialization_event_message_generation = val;
+    }
+  if (global_initialization_log_initialization_agent_errors)
+    {
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "global_initialization.log_initialization_agent_errors",
+                        &val) < 0)
+        {
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
+          goto cleanup;
+        }
+      *global_initialization_log_initialization_agent_errors = val;
+    }
+  if (global_initialization_controller_logs_initialization_agent_errors)
+    {
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "global_initialization.controller_logs_initialization_agent_errors",
+                        &val) < 0)
+        {
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
+          goto cleanup;
+        }
+      *global_initialization_controller_logs_initialization_agent_errors = val;
+    }
+  if (power_state_notification_controller)
+    {
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "power_state_notification.controller",
+                        &val) < 0)
+        {
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
+          goto cleanup;
+        }
+      *power_state_notification_controller = val;
+    }
+  if (power_state_notification_acpi_device_power_state_notification)
+    {
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "power_state_notification.acpi_device_power_state_notification",
+                        &val) < 0)
+        {
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
+          goto cleanup;
+        }
+      *power_state_notification_acpi_device_power_state_notification = val;
+    }
+  if (power_state_notification_acpi_system_power_state_notification)
+    {
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "power_state_notification.acpi_system_power_state_notification",
+                        &val) < 0)
+        {
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
+          goto cleanup;
+        }
+      *power_state_notification_acpi_system_power_state_notification = val;
+    }
+  if (device_capabilities_sensor_device)
+    {
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "device_capabilities.sensor_device",
+                        &val) < 0)
+        {
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
+          goto cleanup;
+        }
+      *device_capabilities_sensor_device = val;
+    }
+  if (device_capabilities_sdr_repository_device)
+    {
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "device_capabilities.sdr_repository_device",
+                        &val) < 0)
+        {
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
+          goto cleanup;
+        }
+      *device_capabilities_sdr_repository_device = val;
+    }
+  if (device_capabilities_sel_device)
+    {
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "device_capabilities.sel_device",
+                        &val) < 0)
+        {
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
+          goto cleanup;
+        }
+      *device_capabilities_sel_device = val;
+    }
+  if (device_capabilities_fru_inventory_device)
+    {
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "device_capabilities.fru_inventory_device",
+                        &val) < 0)
+        {
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
+          goto cleanup;
+        }
+      *device_capabilities_fru_inventory_device = val;
+    }
+  if (device_capabilities_ipmb_event_receiver)
+    {
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "device_capabilities.ipmb_event_receiver",
+                        &val) < 0)
+        {
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
+          goto cleanup;
+        }
+      *device_capabilities_ipmb_event_receiver = val;
+    }
+  if (device_capabilities_ipmb_event_generator)
+    {
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "device_capabilities.ipmb_event_generator",
+                        &val) < 0)
+        {
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
+          goto cleanup;
+        }
+      *device_capabilities_ipmb_event_generator = val;
+    }
+  if (device_capabilities_bridge)
+    {
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "device_capabilities.bridge",
+                        &val) < 0)
+        {
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
+          goto cleanup;
+        }
+      *device_capabilities_bridge = val;
+    }
+  if (device_capabilities_chassis_device)
+    {
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "device_capabilities.chassis_device",
+                        &val) < 0)
+        {
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
+          goto cleanup;
+        }
+      *device_capabilities_chassis_device = val;
     }
 
   rv = 0;

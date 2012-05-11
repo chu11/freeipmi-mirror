@@ -161,6 +161,33 @@ common_parse_opt (int key,
         }
       cmd_args->register_spacing = tmp;
       break;
+    case ARGP_TARGET_CHANNEL_NUMBER_KEY:
+      errno = 0;
+      tmp = strtol (arg, &endptr, 0);
+      if (errno
+	  || endptr[0] != '\0'
+	  || tmp < 0
+	  || !IPMI_CHANNEL_NUMBER_VALID (tmp))
+        {
+          fprintf (stderr, "invalid target channel numbern");
+          exit (1);
+        }
+      cmd_args->target_channel_number = tmp;
+      cmd_args->target_channel_number_is_set = 1;
+      break;
+    case ARGP_TARGET_SLAVE_ADDRESS_KEY:
+      errno = 0;
+      tmp = strtol (arg, &endptr, 0);
+      if (errno
+	  || endptr[0] != '\0'
+	  || tmp < 0)
+        {
+          fprintf (stderr, "invalid target slave addressn");
+          exit (1);
+        }
+      cmd_args->target_slave_address = tmp;
+      cmd_args->target_slave_address_is_set = 1;
+      break;
     case ARGP_HOSTNAME_KEY:
       free (cmd_args->hostname);
       if (!(cmd_args->hostname = strdup (arg)))
@@ -470,6 +497,10 @@ _init_common_cmd_args (struct common_cmd_args *cmd_args)
   cmd_args->driver_address = 0;
   cmd_args->driver_device = NULL;
   cmd_args->register_spacing = 0;
+  cmd_args->target_channel_number = 0;
+  cmd_args->target_channel_number_is_set = 0;
+  cmd_args->target_slave_address = 0;
+  cmd_args->target_slave_address_is_set = 0;
   cmd_args->session_timeout = 0;
   cmd_args->retransmission_timeout = 0;
   cmd_args->hostname = NULL;
@@ -527,7 +558,6 @@ verify_common_cmd_args_inband (struct common_cmd_args *cmd_args)
           exit (1);
         }
     }
-
 }
 
 void

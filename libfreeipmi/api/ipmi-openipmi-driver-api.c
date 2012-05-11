@@ -25,6 +25,7 @@
 #ifdef STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#include <assert.h>
 #include <errno.h>
 
 #include "freeipmi/driver/ipmi-openipmi-driver.h"
@@ -51,34 +52,16 @@ ipmi_openipmi_cmd_api (ipmi_ctx_t ctx,
                        fiid_obj_t obj_cmd_rq,
                        fiid_obj_t obj_cmd_rs)
 {
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (!fiid_obj_valid (obj_cmd_rq)
-      || !fiid_obj_valid (obj_cmd_rs))
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-      return (-1);
-    }
+  assert (ctx
+          && ctx->magic == IPMI_CTX_MAGIC
+          && ctx->type == IPMI_DEVICE_OPENIPMI
+          && fiid_obj_valid (obj_cmd_rq)
+          && fiid_obj_packet_valid (obj_cmd_rq) == 1
+          && fiid_obj_valid (obj_cmd_rs));
   
-  if (FIID_OBJ_PACKET_VALID (obj_cmd_rq) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
-      return (-1);
-    }
-
-  if (ctx->type != IPMI_DEVICE_OPENIPMI)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_INTERNAL_ERROR);
-      return (-1);
-    }
-
   if (ipmi_openipmi_cmd (ctx->io.inband.openipmi_ctx,
-                         ctx->lun,
-                         ctx->net_fn,
+                         ctx->target.lun,
+                         ctx->target.net_fn,
                          obj_cmd_rq,
                          obj_cmd_rs) < 0)
     {
@@ -94,36 +77,18 @@ ipmi_openipmi_cmd_api_ipmb (ipmi_ctx_t ctx,
                             fiid_obj_t obj_cmd_rq,
                             fiid_obj_t obj_cmd_rs)
 {
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (!fiid_obj_valid (obj_cmd_rq)
-      || !fiid_obj_valid (obj_cmd_rs))
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  if (FIID_OBJ_PACKET_VALID (obj_cmd_rq) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
-      return (-1);
-    }
-
-  if (ctx->type != IPMI_DEVICE_OPENIPMI)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_INTERNAL_ERROR);
-      return (-1);
-    }
+  assert (ctx
+          && ctx->magic == IPMI_CTX_MAGIC
+          && ctx->type == IPMI_DEVICE_OPENIPMI
+          && fiid_obj_valid (obj_cmd_rq)
+          && fiid_obj_packet_valid (obj_cmd_rq) == 1
+          && fiid_obj_valid (obj_cmd_rs));
 
   if (ipmi_openipmi_cmd_ipmb (ctx->io.inband.openipmi_ctx,
-                              ctx->channel_number,
-                              ctx->rs_addr,
-                              ctx->lun,
-                              ctx->net_fn,
+                              ctx->target.channel_number,
+                              ctx->target.rs_addr,
+                              ctx->target.lun,
+                              ctx->target.net_fn,
                               obj_cmd_rq,
                               obj_cmd_rs) < 0)
     {
@@ -145,26 +110,13 @@ ipmi_openipmi_cmd_raw_api (ipmi_ctx_t ctx,
   fiid_obj_t obj_cmd_rs = NULL;
   int len, rv = -1;
 
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (!buf_rq
-      || !buf_rq_len
-      || !buf_rs
-      || !buf_rs_len)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  if (ctx->type != IPMI_DEVICE_OPENIPMI)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_INTERNAL_ERROR);
-      return (-1);
-    }
+  assert (ctx
+          && ctx->magic == IPMI_CTX_MAGIC
+          && ctx->type == IPMI_DEVICE_OPENIPMI
+          && buf_rq
+          && buf_rq_len
+          && buf_rs
+          && buf_rs_len);
 
   if (!(obj_cmd_rq = fiid_obj_create (tmpl_openipmi_raw)))
     {
@@ -216,26 +168,13 @@ ipmi_openipmi_cmd_raw_api_ipmb (ipmi_ctx_t ctx,
   fiid_obj_t obj_cmd_rs = NULL;
   int len, rv = -1;
 
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (!buf_rq
-      || !buf_rq_len
-      || !buf_rs
-      || !buf_rs_len)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  if (ctx->type != IPMI_DEVICE_OPENIPMI)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_INTERNAL_ERROR);
-      return (-1);
-    }
+  assert (ctx
+          && ctx->magic == IPMI_CTX_MAGIC
+          && ctx->type == IPMI_DEVICE_OPENIPMI
+          && buf_rq
+          && buf_rq_len
+          && buf_rs
+          && buf_rs_len);
 
   if (!(obj_cmd_rq = fiid_obj_create (tmpl_openipmi_raw)))
     {

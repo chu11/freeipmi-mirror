@@ -61,42 +61,13 @@ ipmi_lan_cmd (ipmi_ctx_t ctx,
   unsigned int internal_workaround_flags = 0;
   int ret;
 
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (ctx->type != IPMI_DEVICE_LAN)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_DEVICE_NOT_OPEN);
-      return (-1);
-    }
-
-  if (!ctx->io.outofband.sockfd)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_DEVICE_NOT_OPEN);
-      return (-1);
-    }
-
-  if (!fiid_obj_valid (obj_cmd_rq)
-      || !fiid_obj_valid (obj_cmd_rs))
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  if (FIID_OBJ_PACKET_VALID (obj_cmd_rq) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
-      return (-1);
-    }
-
-  if (ctx->type != IPMI_DEVICE_LAN)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_INTERNAL_ERROR);
-      return (-1);
-    }
+  assert (ctx
+          && ctx->magic == IPMI_CTX_MAGIC
+          && ctx->type == IPMI_DEVICE_LAN
+	  && ctx->io.outofband.sockfd
+          && fiid_obj_valid (obj_cmd_rq)
+          && fiid_obj_packet_valid (obj_cmd_rq) == 1
+          && fiid_obj_valid (obj_cmd_rs));
 
   ipmi_lan_cmd_get_session_parameters (ctx,
                                        &authentication_type,
@@ -105,8 +76,8 @@ ipmi_lan_cmd (ipmi_ctx_t ctx,
   if (ctx->flags & IPMI_FLAGS_NOSESSION)
     ret = ipmi_lan_cmd_wrapper (ctx,
 				internal_workaround_flags,
-				ctx->lun,
-                                ctx->net_fn,
+				ctx->target.lun,
+                                ctx->target.net_fn,
 				IPMI_AUTHENTICATION_TYPE_NONE,
 				0,
 				NULL,
@@ -122,8 +93,8 @@ ipmi_lan_cmd (ipmi_ctx_t ctx,
      */
     ret = ipmi_lan_cmd_wrapper (ctx,
 				internal_workaround_flags,
-				ctx->lun,
-				ctx->net_fn,
+				ctx->target.lun,
+				ctx->target.net_fn,
 				authentication_type,
 				1,
 				&(ctx->io.outofband.session_sequence_number),
@@ -142,42 +113,13 @@ ipmi_lan_cmd_ipmb (ipmi_ctx_t ctx,
 		   fiid_obj_t obj_cmd_rq,
 		   fiid_obj_t obj_cmd_rs)
 {
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (ctx->type != IPMI_DEVICE_LAN)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_DEVICE_NOT_OPEN);
-      return (-1);
-    }
-
-  if (!ctx->io.outofband.sockfd)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_DEVICE_NOT_OPEN);
-      return (-1);
-    }
-
-  if (!fiid_obj_valid (obj_cmd_rq)
-      || !fiid_obj_valid (obj_cmd_rs))
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  if (FIID_OBJ_PACKET_VALID (obj_cmd_rq) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
-      return (-1);
-    }
-
-  if (ctx->type != IPMI_DEVICE_LAN)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_INTERNAL_ERROR);
-      return (-1);
-    }
+  assert (ctx
+          && ctx->magic == IPMI_CTX_MAGIC
+          && ctx->type == IPMI_DEVICE_LAN
+	  && ctx->io.outofband.sockfd
+          && fiid_obj_valid (obj_cmd_rq)
+          && fiid_obj_packet_valid (obj_cmd_rq) == 1
+          && fiid_obj_valid (obj_cmd_rs));
 
   /* if auth type NONE, still pass password.  Needed for
    * check_unexpected_authcode workaround
@@ -198,38 +140,14 @@ ipmi_lan_cmd_raw (ipmi_ctx_t ctx,
   fiid_obj_t obj_cmd_rs = NULL;
   int len, rv = -1;
 
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (ctx->type != IPMI_DEVICE_LAN)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_DEVICE_NOT_OPEN);
-      return (-1);
-    }
-
-  if (!ctx->io.outofband.sockfd)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_DEVICE_NOT_OPEN);
-      return (-1);
-    }
-
-  if (!buf_rq
-      || !buf_rq_len
-      || !buf_rs
-      || !buf_rs_len)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  if (ctx->type != IPMI_DEVICE_LAN)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_INTERNAL_ERROR);
-      return (-1);
-    }
+  assert (ctx
+          && ctx->magic == IPMI_CTX_MAGIC
+          && ctx->type == IPMI_DEVICE_LAN
+	  && ctx->io.outofband.sockfd
+	  && buf_rq
+          && buf_rq_len
+          && buf_rs
+          && buf_rs_len);
 
   if (!(obj_cmd_rq = fiid_obj_create (tmpl_lan_raw)))
     {
@@ -281,38 +199,14 @@ ipmi_lan_cmd_raw_ipmb (ipmi_ctx_t ctx,
   fiid_obj_t obj_cmd_rs = NULL;
   int len, rv = -1;
 
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (ctx->type != IPMI_DEVICE_LAN)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_DEVICE_NOT_OPEN);
-      return (-1);
-    }
-
-  if (!ctx->io.outofband.sockfd)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_DEVICE_NOT_OPEN);
-      return (-1);
-    }
-
-  if (!buf_rq
-      || !buf_rq_len
-      || !buf_rs
-      || !buf_rs_len)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  if (ctx->type != IPMI_DEVICE_LAN)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_INTERNAL_ERROR);
-      return (-1);
-    }
+  assert (ctx
+          && ctx->magic == IPMI_CTX_MAGIC
+          && ctx->type == IPMI_DEVICE_LAN
+	  && ctx->io.outofband.sockfd
+	  && buf_rq
+          && buf_rq_len
+          && buf_rs
+          && buf_rs_len);
 
   if (!(obj_cmd_rq = fiid_obj_create (tmpl_lan_raw)))
     {
@@ -361,42 +255,13 @@ ipmi_lan_2_0_cmd (ipmi_ctx_t ctx,
   uint8_t payload_authenticated;
   uint8_t payload_encrypted;
 
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (ctx->type != IPMI_DEVICE_LAN_2_0)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_DEVICE_NOT_OPEN);
-      return (-1);
-    }
-
-  if (!ctx->io.outofband.sockfd)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_DEVICE_NOT_OPEN);
-      return (-1);
-    }
-
-  if (!fiid_obj_valid (obj_cmd_rq)
-      || !fiid_obj_valid (obj_cmd_rs))
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  if (FIID_OBJ_PACKET_VALID (obj_cmd_rq) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
-      return (-1);
-    }
-
-  if (ctx->type != IPMI_DEVICE_LAN_2_0)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_INTERNAL_ERROR);
-      return (-1);
-    }
+  assert (ctx
+          && ctx->magic == IPMI_CTX_MAGIC
+          && ctx->type == IPMI_DEVICE_LAN_2_0
+	  && ctx->io.outofband.sockfd
+          && fiid_obj_valid (obj_cmd_rq)
+          && fiid_obj_packet_valid (obj_cmd_rq) == 1
+          && fiid_obj_valid (obj_cmd_rs));
 
   ipmi_lan_2_0_cmd_get_session_parameters (ctx,
                                            &payload_authenticated,
@@ -404,8 +269,8 @@ ipmi_lan_2_0_cmd (ipmi_ctx_t ctx,
 
   return (ipmi_lan_2_0_cmd_wrapper (ctx,
                                     0,
-                                    ctx->lun,
-                                    ctx->net_fn,
+                                    ctx->target.lun,
+                                    ctx->target.net_fn,
                                     IPMI_PAYLOAD_TYPE_IPMI,
                                     payload_authenticated,
                                     payload_encrypted,
@@ -431,42 +296,13 @@ ipmi_lan_2_0_cmd_ipmb (ipmi_ctx_t ctx,
 		       fiid_obj_t obj_cmd_rq,
 		       fiid_obj_t obj_cmd_rs)
 {
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (ctx->type != IPMI_DEVICE_LAN_2_0)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_DEVICE_NOT_OPEN);
-      return (-1);
-    }
-
-  if (!ctx->io.outofband.sockfd)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_DEVICE_NOT_OPEN);
-      return (-1);
-    }
-
-  if (!fiid_obj_valid (obj_cmd_rq)
-      || !fiid_obj_valid (obj_cmd_rs))
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  if (FIID_OBJ_PACKET_VALID (obj_cmd_rq) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
-      return (-1);
-    }
-
-  if (ctx->type != IPMI_DEVICE_LAN_2_0)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_INTERNAL_ERROR);
-      return (-1);
-    }
+  assert (ctx
+          && ctx->magic == IPMI_CTX_MAGIC
+          && ctx->type == IPMI_DEVICE_LAN_2_0
+	  && ctx->io.outofband.sockfd
+          && fiid_obj_valid (obj_cmd_rq)
+          && fiid_obj_packet_valid (obj_cmd_rq) == 1
+          && fiid_obj_valid (obj_cmd_rs));
 
   return (ipmi_lan_2_0_cmd_wrapper_ipmb (ctx,
 					 obj_cmd_rq,
@@ -484,38 +320,14 @@ ipmi_lan_2_0_cmd_raw (ipmi_ctx_t ctx,
   fiid_obj_t obj_cmd_rs = NULL;
   int len, rv = -1;
 
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (ctx->type != IPMI_DEVICE_LAN_2_0)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_DEVICE_NOT_OPEN);
-      return (-1);
-    }
-
-  if (!ctx->io.outofband.sockfd)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_DEVICE_NOT_OPEN);
-      return (-1);
-    }
-
-  if (!buf_rq
-      || !buf_rq_len
-      || !buf_rs
-      || !buf_rs_len)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  if (ctx->type != IPMI_DEVICE_LAN_2_0)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_INTERNAL_ERROR);
-      return (-1);
-    }
+  assert (ctx
+          && ctx->magic == IPMI_CTX_MAGIC
+          && ctx->type == IPMI_DEVICE_LAN_2_0
+	  && ctx->io.outofband.sockfd
+	  && buf_rq
+          && buf_rq_len
+          && buf_rs
+          && buf_rs_len);
 
   if (!(obj_cmd_rq = fiid_obj_create (tmpl_lan_raw)))
     {
@@ -567,38 +379,14 @@ ipmi_lan_2_0_cmd_raw_ipmb (ipmi_ctx_t ctx,
   fiid_obj_t obj_cmd_rs = NULL;
   int len, rv = -1;
 
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (ctx->type != IPMI_DEVICE_LAN_2_0)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_DEVICE_NOT_OPEN);
-      return (-1);
-    }
-
-  if (!ctx->io.outofband.sockfd)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_DEVICE_NOT_OPEN);
-      return (-1);
-    }
-
-  if (!buf_rq
-      || !buf_rq_len
-      || !buf_rs
-      || !buf_rs_len)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  if (ctx->type != IPMI_DEVICE_LAN_2_0)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_INTERNAL_ERROR);
-      return (-1);
-    }
+  assert (ctx
+          && ctx->magic == IPMI_CTX_MAGIC
+          && ctx->type == IPMI_DEVICE_LAN_2_0
+	  && ctx->io.outofband.sockfd
+	  && buf_rq
+          && buf_rq_len
+          && buf_rs
+          && buf_rs_len);
 
   if (!(obj_cmd_rq = fiid_obj_create (tmpl_lan_raw)))
     {

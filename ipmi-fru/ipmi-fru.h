@@ -40,7 +40,8 @@ enum ipmi_sel_argp_option_keys
     DEVICE_ID_KEY = 'e',
     VERBOSE_KEY = 'v',
     SKIP_CHECKS_KEY = 's',
-    INTERPRET_OEM_DATA = 160,
+    BRIDGE_FRU_KEY = 160,
+    INTERPRET_OEM_DATA = 161,
   };
 
 struct ipmi_fru_arguments
@@ -52,6 +53,7 @@ struct ipmi_fru_arguments
   int device_id_set;
   int verbose_count;
   int skip_checks;
+  int bridge_fru;
   int interpret_oem_data;
 };
 

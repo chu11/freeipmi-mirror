@@ -35,16 +35,6 @@ required user privilege will depend on the raw commands executed.
 The following options are specific to
 .B Ipmi-raw.
 .TP
-\fB\-\-channel\-number\fR=\fInumber\fR
-Specify an alternate channel number to bridge raw commands to.  You
-must also specify the \fIslave-address\fR below if you use this
-option.
-.TP
-\fB\-\-slave\-address\fR=\fIaddress\fR
-Specify an alternate slave address to bridge raw commands to.  You
-must also specify the \fIchannel-number\fR above if you use this
-option.
-.TP
 \fB\-\-file\fR=\fICMD\-FILE\fR
 Specify a file to read command requests from.
 #include <@top_srcdir@/man/manpage-common-hostranged-options-header.man>

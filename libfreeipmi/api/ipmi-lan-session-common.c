@@ -1139,25 +1139,20 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
 }
 
 static int
-_ipmi_cmd_send_ipmb (ipmi_ctx_t ctx,
-                     uint8_t rs_addr,
-                     uint8_t lun,
-                     uint8_t net_fn,
-                     fiid_obj_t obj_cmd_rq)
+_ipmi_cmd_send_ipmb (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rq)
 {
+  struct ipmi_ctx_target target_save;
   uint8_t tbuf[IPMI_MAX_PKT_LEN];
   fiid_obj_t obj_ipmb_msg_hdr_rq = NULL;
   fiid_obj_t obj_ipmb_msg_rq = NULL;
   fiid_obj_t obj_send_cmd_rs = NULL;
-  int len, rv = -1;
+  int len, ret, rv = -1;
 
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC
           && (ctx->type == IPMI_DEVICE_LAN
               || ctx->type == IPMI_DEVICE_LAN_2_0)
           && ctx->io.outofband.sockfd
-          && IPMI_BMC_LUN_VALID (lun)
-          && IPMI_NET_FN_VALID (net_fn)
           && fiid_obj_valid (obj_cmd_rq)
           && fiid_obj_packet_valid (obj_cmd_rq) == 1);
 
@@ -1177,9 +1172,9 @@ _ipmi_cmd_send_ipmb (ipmi_ctx_t ctx,
       goto cleanup;
     }
 
-  if (fill_ipmb_msg_hdr (rs_addr,
-                         net_fn,
-                         lun,
+  if (fill_ipmb_msg_hdr (ctx->target.rs_addr,
+                         ctx->target.net_fn,
+                         ctx->target.lun,
                          IPMI_SLAVE_ADDRESS_BMC,
                          IPMI_BMC_IPMB_LUN_SMS_MSG_LUN,
                          ctx->io.outofband.rq_seq,
@@ -1207,22 +1202,28 @@ _ipmi_cmd_send_ipmb (ipmi_ctx_t ctx,
       goto cleanup;
     }
 
-  if (ipmi_cmd_send_message (ctx,
-                             ctx->channel_number,
-                             IPMI_SEND_MESSAGE_AUTHENTICATION_NOT_REQUIRED,
-                             IPMI_SEND_MESSAGE_ENCRYPTION_NOT_REQUIRED,
-                             IPMI_SEND_MESSAGE_TRACKING_OPERATION_TRACKING_REQUEST,
-                             tbuf,
-                             len,
-                             obj_send_cmd_rs) < 0)
+  /* send_message will send to the BMC, so clear out target information */
+  memcpy (&target_save, &ctx->target, sizeof (target_save));
+  ctx->target.channel_number_is_set = 0;
+  ctx->target.rs_addr_is_set = 0;
+
+  ret = ipmi_cmd_send_message (ctx,
+			       target_save.channel_number,
+			       IPMI_SEND_MESSAGE_AUTHENTICATION_NOT_REQUIRED,
+			       IPMI_SEND_MESSAGE_ENCRYPTION_NOT_REQUIRED,
+			       IPMI_SEND_MESSAGE_TRACKING_OPERATION_TRACKING_REQUEST,
+			       tbuf,
+			       len,
+			       obj_send_cmd_rs);
+  
+  /* restore target info */
+  memcpy (&ctx->target, &target_save, sizeof (target_save));
+  
+  if (ret < 0)
     {
       API_BAD_RESPONSE_TO_API_ERRNUM (ctx, obj_send_cmd_rs);
       goto cleanup;
     }
-
-  /* reset to original, would have been changed in send_message call */
-  ctx->lun = lun;
-  ctx->net_fn = net_fn;
 
   /* "pretend" a request was just sent */
   if (gettimeofday (&ctx->io.outofband.last_send, NULL) < 0)
@@ -1275,7 +1276,7 @@ ipmi_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
       else
         cmd = val;
 
-      if (IPMI_NET_FN_GROUP_EXTENSION (ctx->net_fn))
+      if (IPMI_NET_FN_GROUP_EXTENSION (ctx->target.net_fn))
 	{
 	  /* ignore error, continue on */
 	  if (FIID_OBJ_GET (obj_cmd_rq,
@@ -1297,11 +1298,7 @@ ipmi_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
 
   rq_seq_orig = ctx->io.outofband.rq_seq;
 
-  if (_ipmi_cmd_send_ipmb (ctx,
-                           ctx->rs_addr,
-                           ctx->lun,
-                           ctx->net_fn,
-                           obj_cmd_rq) < 0)
+  if (_ipmi_cmd_send_ipmb (ctx, obj_cmd_rq) < 0)
     goto cleanup;
 
   while (1)
@@ -1337,11 +1334,7 @@ ipmi_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
 
           rq_seq_orig = ctx->io.outofband.rq_seq;
 
-          if (_ipmi_cmd_send_ipmb (ctx,
-                                   ctx->rs_addr,
-                                   ctx->lun,
-                                   ctx->net_fn,
-                                   obj_cmd_rq) < 0)
+          if (_ipmi_cmd_send_ipmb (ctx, obj_cmd_rq) < 0)
             goto cleanup;
 
           continue;
@@ -1355,7 +1348,7 @@ ipmi_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
 			   pkt,
 			   recv_len,
 			   cmd,
-			   ctx->net_fn,
+			   ctx->target.net_fn,
 			   group_extension,
 			   obj_cmd_rs);
 
@@ -3069,7 +3062,7 @@ ipmi_lan_2_0_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
       else
         cmd = val;
 
-      if (IPMI_NET_FN_GROUP_EXTENSION (ctx->net_fn))
+      if (IPMI_NET_FN_GROUP_EXTENSION (ctx->target.net_fn))
 	{
 	  /* ignore error, continue on */
 	  if (FIID_OBJ_GET (obj_cmd_rq,
@@ -3091,11 +3084,7 @@ ipmi_lan_2_0_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
 
   rq_seq_orig = ctx->io.outofband.rq_seq;
 
-  if (_ipmi_cmd_send_ipmb (ctx,
-                           ctx->rs_addr,
-                           ctx->lun,
-                           ctx->net_fn,
-                           obj_cmd_rq) < 0)
+  if (_ipmi_cmd_send_ipmb (ctx, obj_cmd_rq) < 0)
     goto cleanup;
 
   while (1)
@@ -3142,11 +3131,7 @@ ipmi_lan_2_0_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
 
           rq_seq_orig = ctx->io.outofband.rq_seq;
 
-          if (_ipmi_cmd_send_ipmb (ctx,
-                                   ctx->rs_addr,
-                                   ctx->lun,
-                                   ctx->net_fn,
-                                   obj_cmd_rq) < 0)
+          if (_ipmi_cmd_send_ipmb (ctx, obj_cmd_rq) < 0)
             goto cleanup;
 
           continue;
@@ -3166,7 +3151,7 @@ ipmi_lan_2_0_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
 			       pkt,
 			       recv_len,
 			       cmd,
-			       ctx->net_fn,
+			       ctx->target.net_fn,
 			       group_extension,
 			       obj_cmd_rs);
 

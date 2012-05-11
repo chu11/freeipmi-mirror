@@ -67,17 +67,17 @@ static struct argp_option cmdline_options[] =
     ARGP_COMMON_OPTIONS_DEBUG,
     /* legacy */
     { "guid", GUID_KEY, NULL, OPTION_HIDDEN,
-      "Display only device guid.", 30},
+      "Display only device guid.", 40},
     { "get-device-id", GET_DEVICE_ID_KEY, NULL, 0,
-      "Display only device ID information.", 31},
+      "Display only device ID information.", 41},
     { "get-device-guid", GET_DEVICE_GUID_KEY, NULL, 0,
-      "Display only device guid.", 32},
+      "Display only device guid.", 42},
     { "get-system-info", GET_SYSTEM_INFO_KEY, NULL, 0,
-      "Display only system information.", 33},
+      "Display only system information.", 43},
     { "get-channel-info", GET_CHANNEL_INFO_KEY, NULL, 0,
-      "Display only channel information.", 34},
+      "Display only channel information.", 44},
     { "interpret-oem-data", INTERPRET_OEM_DATA, NULL, 0,
-      "Attempt to interpret OEM data.", 35},
+      "Attempt to interpret OEM data.", 45},
     { NULL, 0, NULL, 0, NULL, 0}
   };
 
