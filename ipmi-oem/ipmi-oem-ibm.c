@@ -469,7 +469,7 @@ _find_sensor (ipmi_oem_state_data_t *state_data,
     {
       /* Don't error out, if this fails we can still continue */
       if (ipmi_sdr_cache_ctx_set_flags (tmp_sdr_cache_ctx,
-                                        IPMI_SDR_CACHE_FLAGS_DEBUG_DUMP) < 0)
+                                        IPMI_SDR_FLAGS_DEBUG_DUMP) < 0)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_sdr_cache_ctx_set_flags: %s\n",

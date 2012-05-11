@@ -175,7 +175,7 @@ _find_sdr_record (ipmi_sel_parse_ctx_t ctx,
        * generator_id be shifted over by one.  This is a special
        * "try again" corner case.
        */
-      if (ipmi_sdr_cache_ctx_errnum (ctx->sdr_cache_ctx) == IPMI_SDR_CACHE_ERR_NOT_FOUND
+      if (ipmi_sdr_cache_ctx_errnum (ctx->sdr_cache_ctx) == IPMI_SDR_ERR_NOT_FOUND
           && (system_event_record_data->generator_id == (IPMI_SLAVE_ADDRESS_BMC << 1)))
         {
           if (!ipmi_sdr_cache_search_sensor (ctx->sdr_cache_ctx,
@@ -185,7 +185,7 @@ _find_sdr_record (ipmi_sel_parse_ctx_t ctx,
           /* else fall through to normal error path */
         }
 
-      if (ipmi_sdr_cache_ctx_errnum (ctx->sdr_cache_ctx) != IPMI_SDR_CACHE_ERR_NOT_FOUND)
+      if (ipmi_sdr_cache_ctx_errnum (ctx->sdr_cache_ctx) != IPMI_SDR_ERR_NOT_FOUND)
         {
           SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_SDR_CACHE_ERROR);
           return (-1);

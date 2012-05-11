@@ -73,7 +73,7 @@ _ipmi_monitoring_sdr_cache_ctx_init (ipmi_monitoring_ctx_t c, const char *hostna
   if (_ipmi_monitoring_flags & IPMI_MONITORING_FLAGS_DEBUG_IPMI_PACKETS)
     {
       /* Don't error out, if this fails we can still continue */
-      if (ipmi_sdr_cache_ctx_set_flags (c->sdr_cache_ctx, IPMI_SDR_CACHE_FLAGS_DEBUG_DUMP) < 0)
+      if (ipmi_sdr_cache_ctx_set_flags (c->sdr_cache_ctx, IPMI_SDR_FLAGS_DEBUG_DUMP) < 0)
         IPMI_MONITORING_DEBUG (("ipmi_sdr_cache_ctx_set_flags: %s", ipmi_sdr_cache_ctx_errormsg (c->sdr_cache_ctx)));
       
       if (hostname)
@@ -220,13 +220,13 @@ _ipmi_monitoring_sdr_cache_retrieve (ipmi_monitoring_ctx_t c,
                              NULL) < 0)
     {
       IPMI_MONITORING_DEBUG (("ipmi_sdr_cache_create: %s", ipmi_sdr_cache_ctx_errormsg (c->sdr_cache_ctx)));
-      if (ipmi_sdr_cache_ctx_errnum (c->sdr_cache_ctx) == IPMI_SDR_CACHE_ERR_FILESYSTEM)
+      if (ipmi_sdr_cache_ctx_errnum (c->sdr_cache_ctx) == IPMI_SDR_ERR_FILESYSTEM)
         c->errnum = IPMI_MONITORING_ERR_SDR_CACHE_FILESYSTEM;
-      else if (ipmi_sdr_cache_ctx_errnum (c->sdr_cache_ctx) == IPMI_SDR_CACHE_ERR_PERMISSION)
+      else if (ipmi_sdr_cache_ctx_errnum (c->sdr_cache_ctx) == IPMI_SDR_ERR_PERMISSION)
         c->errnum = IPMI_MONITORING_ERR_SDR_CACHE_PERMISSION;
-      else if (ipmi_sdr_cache_ctx_errnum (c->sdr_cache_ctx) == IPMI_SDR_CACHE_ERR_IPMI_ERROR)
+      else if (ipmi_sdr_cache_ctx_errnum (c->sdr_cache_ctx) == IPMI_SDR_ERR_IPMI_ERROR)
         ipmi_monitoring_ipmi_ctx_error_convert (c);
-      else if (ipmi_sdr_cache_ctx_errnum (c->sdr_cache_ctx) == IPMI_SDR_CACHE_ERR_SYSTEM_ERROR)
+      else if (ipmi_sdr_cache_ctx_errnum (c->sdr_cache_ctx) == IPMI_SDR_ERR_SYSTEM_ERROR)
         c->errnum = IPMI_MONITORING_ERR_SYSTEM_ERROR;
       else
         c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
@@ -248,10 +248,10 @@ _ipmi_monitoring_sdr_cache_delete (ipmi_monitoring_ctx_t c,
 
   if (ipmi_sdr_cache_delete (c->sdr_cache_ctx, filename) < 0)
     {
-      if (ipmi_sdr_cache_ctx_errnum (c->sdr_cache_ctx) !=  IPMI_SDR_CACHE_ERR_FILENAME_INVALID)
+      if (ipmi_sdr_cache_ctx_errnum (c->sdr_cache_ctx) !=  IPMI_SDR_ERR_FILENAME_INVALID)
         {
           IPMI_MONITORING_DEBUG (("ipmi_sdr_cache_delete: %s", ipmi_sdr_cache_ctx_errormsg (c->sdr_cache_ctx)));
-          if (ipmi_sdr_cache_ctx_errnum (c->sdr_cache_ctx) == IPMI_SDR_CACHE_ERR_PERMISSION)
+          if (ipmi_sdr_cache_ctx_errnum (c->sdr_cache_ctx) == IPMI_SDR_ERR_PERMISSION)
             c->errnum = IPMI_MONITORING_ERR_SDR_CACHE_PERMISSION;
           else
             c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
@@ -284,13 +284,13 @@ ipmi_monitoring_sdr_cache_load (ipmi_monitoring_ctx_t c,
                            c->ipmi_ctx,
                            filename) < 0)
     {
-      if (ipmi_sdr_cache_ctx_errnum (c->sdr_cache_ctx) == IPMI_SDR_CACHE_ERR_CACHE_READ_CACHE_DOES_NOT_EXIST)
+      if (ipmi_sdr_cache_ctx_errnum (c->sdr_cache_ctx) == IPMI_SDR_ERR_CACHE_READ_CACHE_DOES_NOT_EXIST)
         {
           if (_ipmi_monitoring_sdr_cache_retrieve (c, hostname, filename) < 0)
             goto cleanup;
         }
-      else if (ipmi_sdr_cache_ctx_errnum (c->sdr_cache_ctx) == IPMI_SDR_CACHE_ERR_CACHE_INVALID
-               || ipmi_sdr_cache_ctx_errnum (c->sdr_cache_ctx) == IPMI_SDR_CACHE_ERR_CACHE_OUT_OF_DATE)
+      else if (ipmi_sdr_cache_ctx_errnum (c->sdr_cache_ctx) == IPMI_SDR_ERR_CACHE_INVALID
+               || ipmi_sdr_cache_ctx_errnum (c->sdr_cache_ctx) == IPMI_SDR_ERR_CACHE_OUT_OF_DATE)
         {
           if (_ipmi_monitoring_sdr_cache_delete (c, hostname, filename) < 0)
             goto cleanup;
@@ -298,12 +298,12 @@ ipmi_monitoring_sdr_cache_load (ipmi_monitoring_ctx_t c,
           if (_ipmi_monitoring_sdr_cache_retrieve (c, hostname, filename) < 0)
             goto cleanup;
         }
-      else if (ipmi_sdr_cache_ctx_errnum (c->sdr_cache_ctx) == IPMI_SDR_CACHE_ERR_FILESYSTEM)
+      else if (ipmi_sdr_cache_ctx_errnum (c->sdr_cache_ctx) == IPMI_SDR_ERR_FILESYSTEM)
         {
           c->errnum = IPMI_MONITORING_ERR_SDR_CACHE_FILESYSTEM;
           goto cleanup;
         }
-      else if (ipmi_sdr_cache_ctx_errnum (c->sdr_cache_ctx) == IPMI_SDR_CACHE_ERR_PERMISSION)
+      else if (ipmi_sdr_cache_ctx_errnum (c->sdr_cache_ctx) == IPMI_SDR_ERR_PERMISSION)
         {
           c->errnum = IPMI_MONITORING_ERR_SDR_CACHE_PERMISSION;
           goto cleanup;
@@ -320,12 +320,12 @@ ipmi_monitoring_sdr_cache_load (ipmi_monitoring_ctx_t c,
                                c->ipmi_ctx,
                                filename) < 0)
         {
-          if (ipmi_sdr_cache_ctx_errnum (c->sdr_cache_ctx) == IPMI_SDR_CACHE_ERR_FILESYSTEM)
+          if (ipmi_sdr_cache_ctx_errnum (c->sdr_cache_ctx) == IPMI_SDR_ERR_FILESYSTEM)
             {
               c->errnum = IPMI_MONITORING_ERR_SDR_CACHE_FILESYSTEM;
               goto cleanup;
             }
-          else if (ipmi_sdr_cache_ctx_errnum (c->sdr_cache_ctx) == IPMI_SDR_CACHE_ERR_PERMISSION)
+          else if (ipmi_sdr_cache_ctx_errnum (c->sdr_cache_ctx) == IPMI_SDR_ERR_PERMISSION)
             {
               c->errnum = IPMI_MONITORING_ERR_SDR_CACHE_PERMISSION;
               goto cleanup;

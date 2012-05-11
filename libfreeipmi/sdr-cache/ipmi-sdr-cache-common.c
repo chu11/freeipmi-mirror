@@ -99,7 +99,7 @@ ipmi_sdr_cache_info (ipmi_sdr_cache_ctx_t ctx,
 
   if (ipmi_cmd_get_sdr_repository_info (ipmi_ctx, obj_cmd_rs) < 0)
     {
-      SDR_CACHE_SET_ERRNUM (ctx, IPMI_SDR_CACHE_ERR_IPMI_ERROR);
+      SDR_CACHE_SET_ERRNUM (ctx, IPMI_SDR_ERR_IPMI_ERROR);
       goto cleanup;
     }
 

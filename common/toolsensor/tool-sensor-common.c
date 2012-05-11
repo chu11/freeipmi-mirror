@@ -1204,7 +1204,7 @@ calculate_column_widths (pstdout_state_t pstate,
         {
           if (ipmi_sdr_cache_search_record_id (sdr_cache_ctx, record_ids[i]) < 0)
             {
-              if (ipmi_sdr_cache_ctx_errnum (sdr_cache_ctx) == IPMI_SDR_CACHE_ERR_NOT_FOUND)
+              if (ipmi_sdr_cache_ctx_errnum (sdr_cache_ctx) == IPMI_SDR_ERR_NOT_FOUND)
                 continue;
               else
                 {

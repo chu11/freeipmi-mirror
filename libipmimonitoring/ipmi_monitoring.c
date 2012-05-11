@@ -1443,7 +1443,7 @@ _ipmi_monitoring_sensor_readings_by_record_id (ipmi_monitoring_ctx_t c,
 
           if (ipmi_sdr_cache_search_record_id (c->sdr_cache_ctx, record_ids[i]) < 0)
             {
-              if (ipmi_sdr_cache_ctx_errnum (c->sdr_cache_ctx) == IPMI_SDR_CACHE_ERR_NOT_FOUND)
+              if (ipmi_sdr_cache_ctx_errnum (c->sdr_cache_ctx) == IPMI_SDR_ERR_NOT_FOUND)
                 {
                   c->errnum = IPMI_MONITORING_ERR_SENSOR_NOT_FOUND;
                   goto cleanup;

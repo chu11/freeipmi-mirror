@@ -45,35 +45,35 @@ sdr_cache_set_sdr_cache_errnum_by_errno (ipmi_sdr_cache_ctx_t ctx, int __errno)
   switch (__errno)
     {
     case 0:
-      ctx->errnum = IPMI_SDR_CACHE_ERR_SUCCESS;
+      ctx->errnum = IPMI_SDR_ERR_SUCCESS;
       break;
     case ENOSPC:
     case EMFILE:
     case ENFILE:
-      ctx->errnum = IPMI_SDR_CACHE_ERR_FILESYSTEM;
+      ctx->errnum = IPMI_SDR_ERR_FILESYSTEM;
       break;
     case EPERM:
     case EACCES:
     case EISDIR:
     case EROFS:
-      ctx->errnum = IPMI_SDR_CACHE_ERR_PERMISSION;
+      ctx->errnum = IPMI_SDR_ERR_PERMISSION;
       break;
     case ENOENT:
     case ENOTDIR:
-      ctx->errnum = IPMI_SDR_CACHE_ERR_CACHE_READ_CACHE_DOES_NOT_EXIST;
+      ctx->errnum = IPMI_SDR_ERR_CACHE_READ_CACHE_DOES_NOT_EXIST;
       break;
     case ENAMETOOLONG:
     case ELOOP:
-      ctx->errnum = IPMI_SDR_CACHE_ERR_FILENAME_INVALID;
+      ctx->errnum = IPMI_SDR_ERR_FILENAME_INVALID;
       break;
     case ENOMEM:
-      ctx->errnum = IPMI_SDR_CACHE_ERR_OUT_OF_MEMORY;
+      ctx->errnum = IPMI_SDR_ERR_OUT_OF_MEMORY;
       break;
     case EINVAL:
-      ctx->errnum = IPMI_SDR_CACHE_ERR_INTERNAL_ERROR;
+      ctx->errnum = IPMI_SDR_ERR_INTERNAL_ERROR;
       break;
     default:
-      ctx->errnum = IPMI_SDR_CACHE_ERR_SYSTEM_ERROR;
+      ctx->errnum = IPMI_SDR_ERR_SYSTEM_ERROR;
     }
 }
 
@@ -85,22 +85,22 @@ sdr_cache_set_sdr_cache_errnum_by_fiid_object (ipmi_sdr_cache_ctx_t ctx, fiid_ob
   switch (fiid_obj_errnum (obj))
     {
     case FIID_ERR_SUCCESS:
-      ctx->errnum = IPMI_SDR_CACHE_ERR_SUCCESS;
+      ctx->errnum = IPMI_SDR_ERR_SUCCESS;
       break;
     case FIID_ERR_OUT_OF_MEMORY:
-      ctx->errnum = IPMI_SDR_CACHE_ERR_OUT_OF_MEMORY;
+      ctx->errnum = IPMI_SDR_ERR_OUT_OF_MEMORY;
       break;
     case FIID_ERR_DATA_NOT_AVAILABLE:
-      ctx->errnum = IPMI_SDR_CACHE_ERR_IPMI_ERROR;
+      ctx->errnum = IPMI_SDR_ERR_IPMI_ERROR;
       break;
     case FIID_ERR_FIELD_NOT_FOUND:
     case FIID_ERR_DATA_NOT_BYTE_ALIGNED:
     case FIID_ERR_REQUIRED_FIELD_MISSING:
     case FIID_ERR_FIXED_LENGTH_FIELD_INVALID:
     case FIID_ERR_NOT_IDENTICAL:
-      ctx->errnum = IPMI_SDR_CACHE_ERR_PARAMETERS;
+      ctx->errnum = IPMI_SDR_ERR_PARAMETERS;
       break;
     default:
-      ctx->errnum = IPMI_SDR_CACHE_ERR_INTERNAL_ERROR;
+      ctx->errnum = IPMI_SDR_ERR_INTERNAL_ERROR;
     }
 }

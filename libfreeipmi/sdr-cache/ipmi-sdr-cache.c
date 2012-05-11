@@ -90,7 +90,7 @@ ipmi_sdr_cache_ctx_create (void)
     }
   memset (ctx, '\0', sizeof (struct ipmi_sdr_cache_ctx));
   ctx->magic = IPMI_SDR_CACHE_CTX_MAGIC;
-  ctx->flags = IPMI_SDR_CACHE_FLAGS_DEFAULT;
+  ctx->flags = IPMI_SDR_FLAGS_DEFAULT;
   ctx->debug_prefix = NULL;
   ipmi_sdr_cache_init_ctx (ctx);
   return (ctx);
@@ -119,9 +119,9 @@ int
 ipmi_sdr_cache_ctx_errnum (ipmi_sdr_cache_ctx_t ctx)
 {
   if (!ctx)
-    return (IPMI_SDR_CACHE_ERR_CONTEXT_NULL);
+    return (IPMI_SDR_ERR_CONTEXT_NULL);
   else if (ctx->magic != IPMI_SDR_CACHE_CTX_MAGIC)
-    return (IPMI_SDR_CACHE_ERR_CONTEXT_INVALID);
+    return (IPMI_SDR_ERR_CONTEXT_INVALID);
   else
     return (ctx->errnum);
 }
@@ -129,10 +129,10 @@ ipmi_sdr_cache_ctx_errnum (ipmi_sdr_cache_ctx_t ctx)
 char *
 ipmi_sdr_cache_ctx_strerror (int errnum)
 {
-  if (errnum >= IPMI_SDR_CACHE_ERR_SUCCESS && errnum <= IPMI_SDR_CACHE_ERR_ERRNUMRANGE)
+  if (errnum >= IPMI_SDR_ERR_SUCCESS && errnum <= IPMI_SDR_ERR_ERRNUMRANGE)
     return (ipmi_sdr_cache_errmsgs[errnum]);
   else
-    return (ipmi_sdr_cache_errmsgs[IPMI_SDR_CACHE_ERR_ERRNUMRANGE]);
+    return (ipmi_sdr_cache_errmsgs[IPMI_SDR_ERR_ERRNUMRANGE]);
 }
 
 char *
@@ -152,12 +152,12 @@ ipmi_sdr_cache_ctx_get_flags (ipmi_sdr_cache_ctx_t ctx, unsigned int *flags)
 
   if (!flags)
     {
-      SDR_CACHE_SET_ERRNUM (ctx, IPMI_SDR_CACHE_ERR_PARAMETERS);
+      SDR_CACHE_SET_ERRNUM (ctx, IPMI_SDR_ERR_PARAMETERS);
       return (-1);
     }
 
   *flags = ctx->flags;
-  ctx->errnum = IPMI_SDR_CACHE_ERR_SUCCESS;
+  ctx->errnum = IPMI_SDR_ERR_SUCCESS;
   return (0);
 }
 
@@ -170,14 +170,14 @@ ipmi_sdr_cache_ctx_set_flags (ipmi_sdr_cache_ctx_t ctx, unsigned int flags)
       return (-1);
     }
 
-  if (flags & ~IPMI_SDR_CACHE_FLAGS_DEBUG_DUMP)
+  if (flags & ~IPMI_SDR_FLAGS_DEBUG_DUMP)
     {
-      SDR_CACHE_SET_ERRNUM (ctx, IPMI_SDR_CACHE_ERR_PARAMETERS);
+      SDR_CACHE_SET_ERRNUM (ctx, IPMI_SDR_ERR_PARAMETERS);
       return (-1);
     }
 
   ctx->flags = flags;
-  ctx->errnum = IPMI_SDR_CACHE_ERR_SUCCESS;
+  ctx->errnum = IPMI_SDR_ERR_SUCCESS;
   return (0);
 }
 
@@ -190,7 +190,7 @@ ipmi_sdr_cache_ctx_get_debug_prefix (ipmi_sdr_cache_ctx_t ctx)
       return (NULL);
     }
 
-  ctx->errnum = IPMI_SDR_CACHE_ERR_SUCCESS;
+  ctx->errnum = IPMI_SDR_ERR_SUCCESS;
   return (ctx)->debug_prefix;
 }
 
@@ -210,11 +210,11 @@ ipmi_sdr_cache_ctx_set_debug_prefix (ipmi_sdr_cache_ctx_t ctx, const char *debug
     {
       if (!(ctx->debug_prefix = strdup (debug_prefix)))
         {
-          SDR_CACHE_SET_ERRNUM (ctx, IPMI_SDR_CACHE_ERR_OUT_OF_MEMORY);
+          SDR_CACHE_SET_ERRNUM (ctx, IPMI_SDR_ERR_OUT_OF_MEMORY);
           return (-1);
         }
     }
 
-  ctx->errnum = IPMI_SDR_CACHE_ERR_SUCCESS;
+  ctx->errnum = IPMI_SDR_ERR_SUCCESS;
   return (0);
 }

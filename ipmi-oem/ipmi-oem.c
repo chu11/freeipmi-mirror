@@ -1350,7 +1350,7 @@ _ipmi_oem (pstdout_state_t pstate,
     {
       /* Don't error out, if this fails we can still continue */
       if (ipmi_sdr_cache_ctx_set_flags (state_data.sdr_cache_ctx,
-                                        IPMI_SDR_CACHE_FLAGS_DEBUG_DUMP) < 0)
+                                        IPMI_SDR_FLAGS_DEBUG_DUMP) < 0)
         pstdout_fprintf (pstate,
                          stderr,
                          "ipmi_sdr_cache_ctx_set_flags: %s\n",

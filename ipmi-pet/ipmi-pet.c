@@ -1323,7 +1323,7 @@ _ipmi_pet_process (ipmi_pet_state_data_t *state_data,
 						    data.sensor_number,
 						    data.sensor_device) < 0)
 	    {
-	      if (ipmi_sdr_cache_ctx_errnum (state_data->sdr_cache_ctx) != IPMI_SDR_CACHE_ERR_NOT_FOUND)
+	      if (ipmi_sdr_cache_ctx_errnum (state_data->sdr_cache_ctx) != IPMI_SDR_ERR_NOT_FOUND)
 		{
 		  if (state_data->prog_data->args->common.debug)
 		    fprintf (stderr,
@@ -1469,7 +1469,7 @@ _ipmi_pet_process (ipmi_pet_state_data_t *state_data,
 					data.sensor_number,
 					data.sensor_device) < 0)
 	{
-	  if (ipmi_sdr_cache_ctx_errnum (state_data->sdr_cache_ctx) != IPMI_SDR_CACHE_ERR_NOT_FOUND)
+	  if (ipmi_sdr_cache_ctx_errnum (state_data->sdr_cache_ctx) != IPMI_SDR_ERR_NOT_FOUND)
 	    {
 	      fprintf (stderr,
 		       "ipmi_sdr_cache_search_record_id: %s\n",
@@ -2226,7 +2226,7 @@ _ipmi_pet (ipmi_pet_prog_data_t *prog_data)
     {
       /* Don't error out, if this fails we can still continue */
       if (ipmi_sdr_cache_ctx_set_flags (state_data.sdr_cache_ctx,
-                                        IPMI_SDR_CACHE_FLAGS_DEBUG_DUMP) < 0)
+                                        IPMI_SDR_FLAGS_DEBUG_DUMP) < 0)
         fprintf (stderr,
 		 "ipmi_sdr_cache_ctx_set_flags: %s\n",
 		 ipmi_sdr_cache_ctx_errormsg (state_data.sdr_cache_ctx));

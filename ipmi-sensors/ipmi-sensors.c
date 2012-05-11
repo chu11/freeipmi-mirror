@@ -579,7 +579,7 @@ _calculate_record_ids (ipmi_sensors_state_data_t *state_data,
 
           if (ipmi_sdr_cache_search_record_id (state_data->sdr_cache_ctx, state_data->prog_data->args->record_ids[i]) < 0)
             {
-              if (ipmi_sdr_cache_ctx_errnum (state_data->sdr_cache_ctx) == IPMI_SDR_CACHE_ERR_NOT_FOUND)
+              if (ipmi_sdr_cache_ctx_errnum (state_data->sdr_cache_ctx) == IPMI_SDR_ERR_NOT_FOUND)
                 {
                   pstdout_printf (state_data->pstate,
                                   "Sensor Record ID '%d' not found\n",
@@ -1520,7 +1520,7 @@ _ipmi_sensors (pstdout_state_t pstate,
     {
       /* Don't error out, if this fails we can still continue */
       if (ipmi_sdr_cache_ctx_set_flags (state_data.sdr_cache_ctx,
-                                        IPMI_SDR_CACHE_FLAGS_DEBUG_DUMP) < 0)
+                                        IPMI_SDR_FLAGS_DEBUG_DUMP) < 0)
         pstdout_fprintf (pstate,
                          stderr,
                          "ipmi_sdr_cache_ctx_set_flags: %s\n",
