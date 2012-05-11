@@ -51,7 +51,7 @@ static char cmdline_args_doc[] = "";
 static struct argp_option cmdline_options[] =
   {
     { "defaults", DEFAULTS_KEY, NULL, 0,
-      "Display system defaults.", 30},
+      "Display system defaults.", 40},
     { NULL, 0, NULL, 0, NULL, 0}
   };
 

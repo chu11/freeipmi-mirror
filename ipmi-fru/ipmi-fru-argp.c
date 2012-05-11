@@ -83,15 +83,15 @@ static struct argp_option cmdline_options[] =
     ARGP_COMMON_HOSTRANGED_OPTIONS,
     ARGP_COMMON_OPTIONS_DEBUG,
     { "device-id", DEVICE_ID_KEY, "DEVICE_ID", 0,
-      "Specify a specific FRU device ID.", 30},
+      "Specify a specific FRU device ID.", 40},
     { "verbose", VERBOSE_KEY, 0, 0,
-      "Increase verbosity in output.", 31},
+      "Increase verbosity in output.", 41},
     { "skip-checks", SKIP_CHECKS_KEY, 0, 0,
-      "Skip FRU checksum checks", 32},
+      "Skip FRU checksum checks", 42},
     { "bridge-fru", BRIDGE_FRU_KEY, 0, 0,
-      "Bridge to read FRU entries on other controllers", 33},
+      "Bridge to read FRU entries on other controllers", 43},
     { "interpret-oem-data", INTERPRET_OEM_DATA, NULL, 0,
-      "Attempt to interpret OEM data.", 34},
+      "Attempt to interpret OEM data.", 44},
     { NULL, 0, NULL, 0, NULL, 0}
   };
 

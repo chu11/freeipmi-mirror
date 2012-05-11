@@ -68,11 +68,11 @@ static struct argp_option cmdline_options[] =
     ARGP_COMMON_HOSTRANGED_OPTIONS,
     ARGP_COMMON_OPTIONS_DEBUG,
     { "channel-number", CHANNEL_NUMBER_KEY, "NUMBER", 0,
-      "Specify an alternate channel number to bridge raw commands to.", 30},
+      "Specify an alternate channel number to bridge raw commands to.", 40},
     { "slave-address", SLAVE_ADDRESS_KEY, "ADDRESS", 0,
-      "Specify an alternate slave address to bridge raw commands to.", 31},
+      "Specify an alternate slave address to bridge raw commands to.", 41},
     { "file", CMD_FILE_KEY, "CMD-FILE", 0,
-      "Specify a file to read command requests from.", 32},
+      "Specify a file to read command requests from.", 42},
     { NULL, 0, NULL, 0, NULL, 0}
   };
 
