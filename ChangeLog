@@ -1,3 +1,13 @@
+2012-XX-XX  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/sel-parse/ipmi-sel-parse.h,
+	libfreeipmi/sel-parse/ipmi-sel-parse-string.c (_output_event_data1_event_data2_event_data3),
+	libfreeipmi/sel-parse/ipmi-sel-parse-string.c (sel_parse_format_record_string):
+	Support new '%E' for sel string outputs.
+	
+	* common/toolevent/tool-event-common.c (event_output_event): Use
+	new '%E' appropriately.
+
 2012-05-11  Albert Chu <chu11@llnl.gov>
 
 	* Support --target-channel-number and --target-slave-address
@@ -57,16 +67,6 @@
 	without having to call _ipmb equivalent functions.
 
 	* libfreeipmi/api/: Various code cleanup.
-	
-2012-05-08  Albert Chu <chu11@llnl.gov>
-
-	* libfreeipmi/include/freeipmi/sel-parse/ipmi-sel-parse.h,
-	libfreeipmi/sel-parse/ipmi-sel-parse-string.c (_output_event_data1_event_data2_event_data3),
-	libfreeipmi/sel-parse/ipmi-sel-parse-string.c (sel_parse_format_record_string):
-	Support new '%E' for sel string outputs.
-	
-	* common/toolevent/tool-event-common.c (event_output_event): Use
-	new '%E' appropriately.
 	
 2012-05-08  Albert Chu <chu11@llnl.gov>
 
