@@ -410,7 +410,7 @@ event_output_sensor_name (pstdout_state_t pstate,
 
       /* achu: really shouldn't do this, b/c sel-parse library uses
        * this, but sel-parse lib doesn't iterate over the cache, so
-       * it's ok.  If we need to later, we'll open a new sdr_cache
+       * it's ok.  If we need to later, we'll open a new sdr_ctx
        */
       if (ipmi_sdr_cache_search_sensor_wrapper (sdr_ctx,
                                                 sensor_number,
