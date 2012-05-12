@@ -1312,10 +1312,8 @@ _ipmi_pet_process (ipmi_pet_state_data_t *state_data,
     {
       if (!args->sdr.ignore_sdr_cache)
 	{
-	  uint8_t sdr_record[IPMI_SDR_MAX_RECORD_LENGTH];
-	  int sdr_record_len = 0;
 	  uint8_t record_type;
-
+	  
 	  if (ipmi_sdr_cache_search_sensor_wrapper (state_data->sdr_ctx,
 						    data.sensor_number,
 						    data.sensor_device) < 0)
@@ -1332,23 +1330,9 @@ _ipmi_pet_process (ipmi_pet_state_data_t *state_data,
 		goto cant_be_determined;
 	    }
 	  
-	  if ((sdr_record_len = ipmi_sdr_cache_record_read (state_data->sdr_ctx,
-                                                            sdr_record,
-                                                            IPMI_SDR_MAX_RECORD_LENGTH)) < 0)
-            {
-              fprintf (stderr,
-		       "ipmi_sdr_cache_record_read: %s\n",
-		       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
-              goto cleanup;
-            }
-	  
-          /* Shouldn't be possible */
-          if (!sdr_record_len)
-	    goto cant_be_determined;
-	  
 	  if (ipmi_sdr_parse_record_id_and_type (state_data->sdr_ctx,
-                                                 sdr_record,
-                                                 sdr_record_len,
+                                                 NULL,
+                                                 0,
                                                  NULL,
                                                  &record_type) < 0)
             {
@@ -1357,15 +1341,15 @@ _ipmi_pet_process (ipmi_pet_state_data_t *state_data,
 		       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
               goto cleanup;
             }
-
+	  
 	  if (record_type != IPMI_SDR_FORMAT_FULL_SENSOR_RECORD
 	      && record_type != IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD
 	      && record_type != IPMI_SDR_FORMAT_EVENT_ONLY_RECORD)
 	    goto cant_be_determined;
 
 	  if (ipmi_sdr_parse_sensor_type (state_data->sdr_ctx,
-					  sdr_record,
-					  sdr_record_len,
+					  NULL,
+					  0,
 					  &data.sensor_type) < 0)
 	    {
 	      fprintf (stderr,
@@ -1375,8 +1359,8 @@ _ipmi_pet_process (ipmi_pet_state_data_t *state_data,
 	    }
 	  
 	  if (ipmi_sdr_parse_event_reading_type_code (state_data->sdr_ctx,
-						      sdr_record,
-						      sdr_record_len,
+						      NULL,
+						      0,
 						      &data.event_type) < 0)
 	    {
 	      fprintf (stderr,
@@ -1458,8 +1442,6 @@ _ipmi_pet_process (ipmi_pet_state_data_t *state_data,
   if (data.entity != IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_ENTITY_UNSPECIFIED
       && !args->sdr.ignore_sdr_cache)
     {
-      uint8_t sdr_record[IPMI_SDR_MAX_RECORD_LENGTH];
-      int sdr_record_len = 0;
       uint8_t entity_id, entity_instance;
       
       if (ipmi_sdr_cache_search_sensor (state_data->sdr_ctx,
@@ -1477,23 +1459,9 @@ _ipmi_pet_process (ipmi_pet_state_data_t *state_data,
 	    goto cant_do_entity_id_check;
 	}
 
-      if ((sdr_record_len = ipmi_sdr_cache_record_read (state_data->sdr_ctx,
-							sdr_record,
-							IPMI_SDR_MAX_RECORD_LENGTH)) < 0)
-	{
-	  fprintf (stderr,
-		   "ipmi_sdr_cache_record_read: %s\n",
-		   ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
-	  goto cleanup;
-	}
-      
-      /* Shouldn't be possible */
-      if (!sdr_record_len)
-	goto cant_do_entity_id_check;
-
       if (ipmi_sdr_parse_entity_id_instance_type (state_data->sdr_ctx,
-						  sdr_record,
-						  sdr_record_len,
+						  NULL,
+						  0,
 						  &entity_id,
 						  &entity_instance,
 						  NULL) < 0)
