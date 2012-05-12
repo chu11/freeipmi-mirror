@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-common.h,v 1.8 2010-02-08 22:09:40 chu11 Exp $
+ *  $Id: ipmi-sdr-common.h,v 1.8 2010-02-08 22:09:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2012 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -29,9 +29,9 @@
 
 #include <stdint.h>
 
-#include "freeipmi/sdr-cache/ipmi-sdr-cache.h"
+#include "freeipmi/sdr/ipmi-sdr.h"
 
-#include "ipmi-sdr-cache-defs.h"
+#include "ipmi-sdr-defs.h"
 
 #define IPMI_SDR_CACHE_DEBUG_BUFLEN 256
 

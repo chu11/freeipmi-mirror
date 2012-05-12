@@ -26,7 +26,7 @@ extern "C" {
 #include <stdint.h>
 #include <freeipmi/api/ipmi-api.h>
 #include <freeipmi/cmds/ipmi-sel-cmds.h>
-#include <freeipmi/sdr-cache/ipmi-sdr-cache.h>
+#include <freeipmi/sdr/ipmi-sdr.h>
 
 #define IPMI_SEL_PARSE_ERR_SUCCESS                                 0
 #define IPMI_SEL_PARSE_ERR_CONTEXT_NULL                            1

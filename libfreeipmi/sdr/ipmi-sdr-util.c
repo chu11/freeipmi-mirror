@@ -28,12 +28,12 @@
 #include <assert.h>
 #include <errno.h>
 
-#include "freeipmi/sdr-cache/ipmi-sdr-cache.h"
+#include "freeipmi/sdr/ipmi-sdr.h"
 #include "freeipmi/fiid/fiid.h"
 
-#include "ipmi-sdr-cache-defs.h"
-#include "ipmi-sdr-cache-trace.h"
-#include "ipmi-sdr-cache-util.h"
+#include "ipmi-sdr-defs.h"
+#include "ipmi-sdr-trace.h"
+#include "ipmi-sdr-util.h"
 
 #include "freeipmi-portability.h"
 

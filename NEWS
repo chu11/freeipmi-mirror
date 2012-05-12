@@ -74,6 +74,8 @@ o In libfreeipmi sdr-parse, support more complete parsing of
   Management Controller Locator Records.
 o In libfreeipmi, KCS driver now sleeps a small amount between IPMB
   retries to avoid spinning.
+o In libfreeipmi, the 'sdr-cache' library is now the 'sdr' library.
+  Various changes were made to the API besides the name change.
 
 Misc
 ----

@@ -32,7 +32,7 @@
 
 #include "libcommon/ipmi-trace.h"
 
-#include "ipmi-sdr-cache-util.h"
+#include "ipmi-sdr-util.h"
 
 #define SDR_CTX_SET_ERRNUM(__ctx, __errnum)                                 \
   do {                                                                      \

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-common.c,v 1.20 2010-02-08 22:09:40 chu11 Exp $
+ *  $Id: ipmi-sdr-common.c,v 1.20 2010-02-08 22:09:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2012 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -35,16 +35,16 @@
 #endif /* STDC_HEADERS */
 #include <assert.h>
 
-#include "freeipmi/sdr-cache/ipmi-sdr-cache.h"
+#include "freeipmi/sdr/ipmi-sdr.h"
 #include "freeipmi/fiid/fiid.h"
 #include "freeipmi/api/ipmi-sdr-repository-cmds-api.h"
 #include "freeipmi/cmds/ipmi-sdr-repository-cmds.h"
 #include "freeipmi/record-format/ipmi-sdr-record-format.h"
 
-#include "ipmi-sdr-cache-common.h"
-#include "ipmi-sdr-cache-defs.h"
-#include "ipmi-sdr-cache-trace.h"
-#include "ipmi-sdr-cache-util.h"
+#include "ipmi-sdr-common.h"
+#include "ipmi-sdr-defs.h"
+#include "ipmi-sdr-trace.h"
+#include "ipmi-sdr-util.h"
 
 #include "libcommon/ipmi-fiid-util.h"
 

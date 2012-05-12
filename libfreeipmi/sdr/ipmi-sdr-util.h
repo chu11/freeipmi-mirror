@@ -31,9 +31,9 @@
 #include <errno.h>
 
 #include "freeipmi/api/ipmi-api.h"
-#include "freeipmi/sdr-cache/ipmi-sdr-cache.h"
+#include "freeipmi/sdr/ipmi-sdr.h"
 
-#include "ipmi-sdr-cache-defs.h"
+#include "ipmi-sdr-defs.h"
 
 void sdr_ctx_set_sdr_ctx_errnum_by_errno (ipmi_sdr_ctx_t ctx, int __errno);
 
