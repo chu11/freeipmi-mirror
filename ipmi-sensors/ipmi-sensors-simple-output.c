@@ -48,7 +48,7 @@ ipmi_sensors_simple_output_setup (ipmi_sensors_state_data_t *state_data)
   if (state_data->prog_data->args->entity_sensor_names)
     {
       if (calculate_entity_id_counts (state_data->pstate,
-                                      state_data->sdr_cache_ctx,
+                                      state_data->sdr_ctx,
                                       state_data->sdr_parse_ctx,
                                       &(state_data->entity_id_counts)) < 0)
         return (-1);
@@ -63,7 +63,7 @@ ipmi_sensors_simple_output_setup (ipmi_sensors_state_data_t *state_data)
         entity_ptr = &(state_data->entity_id_counts);
 
       if (calculate_column_widths (state_data->pstate,
-                                   state_data->sdr_cache_ctx,
+                                   state_data->sdr_ctx,
                                    state_data->sdr_parse_ctx,
                                    state_data->prog_data->args->sensor_types,
                                    state_data->prog_data->args->sensor_types_length,

@@ -100,7 +100,7 @@ _flush_cache (ipmi_pet_state_data_t *state_data)
 {
   assert (state_data);
   
-  if (sdr_cache_flush_cache (state_data->sdr_cache_ctx,
+  if (sdr_cache_flush_cache (state_data->sdr_ctx,
                              NULL,
                              state_data->prog_data->args->sdr.quiet_cache,
                              state_data->hostname,
@@ -125,7 +125,7 @@ _ipmi_pet_init (ipmi_pet_state_data_t *state_data)
     {
       struct sensor_entity_id_counts *entity_ptr = NULL;
       
-      if (sdr_cache_create_and_load (state_data->sdr_cache_ctx,
+      if (sdr_cache_create_and_load (state_data->sdr_ctx,
                                      NULL,
                                      state_data->ipmi_ctx,
                                      args->sdr.quiet_cache,
@@ -138,7 +138,7 @@ _ipmi_pet_init (ipmi_pet_state_data_t *state_data)
       if (args->entity_sensor_names)
 	{
 	  if (calculate_entity_id_counts (NULL,
-					  state_data->sdr_cache_ctx,
+					  state_data->sdr_ctx,
 					  state_data->sdr_parse_ctx,
 					  &(state_data->entity_id_counts)) < 0)
 	    goto cleanup;
@@ -147,7 +147,7 @@ _ipmi_pet_init (ipmi_pet_state_data_t *state_data)
 	}
       
       if (calculate_column_widths (NULL,
-				   state_data->sdr_cache_ctx,
+				   state_data->sdr_ctx,
 				   state_data->sdr_parse_ctx,
 				   NULL,
 				   0,
@@ -867,7 +867,7 @@ _output_sensor_name (ipmi_pet_state_data_t *state_data,
 
   return (event_output_sensor_name (NULL,
 				    state_data->sel_parse_ctx,
-				    state_data->sdr_cache_ctx,
+				    state_data->sdr_ctx,
 				    state_data->sdr_parse_ctx,
 				    sel_record,
 				    sel_record_len,
@@ -1319,29 +1319,29 @@ _ipmi_pet_process (ipmi_pet_state_data_t *state_data,
 	  int sdr_record_len = 0;
 	  uint8_t record_type;
 
-	  if (ipmi_sdr_cache_search_sensor_wrapper (state_data->sdr_cache_ctx,
+	  if (ipmi_sdr_cache_search_sensor_wrapper (state_data->sdr_ctx,
 						    data.sensor_number,
 						    data.sensor_device) < 0)
 	    {
-	      if (ipmi_sdr_ctx_errnum (state_data->sdr_cache_ctx) != IPMI_SDR_ERR_NOT_FOUND)
+	      if (ipmi_sdr_ctx_errnum (state_data->sdr_ctx) != IPMI_SDR_ERR_NOT_FOUND)
 		{
 		  if (state_data->prog_data->args->common.debug)
 		    fprintf (stderr,
 			     "ipmi_sdr_cache_search_record_id: %s\n",
-			     ipmi_sdr_ctx_errormsg (state_data->sdr_cache_ctx));
+			     ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
 		  goto cleanup;
 		}
 	      else
 		goto cant_be_determined;
 	    }
 	  
-	  if ((sdr_record_len = ipmi_sdr_cache_record_read (state_data->sdr_cache_ctx,
+	  if ((sdr_record_len = ipmi_sdr_cache_record_read (state_data->sdr_ctx,
                                                             sdr_record,
                                                             IPMI_SDR_MAX_RECORD_LENGTH)) < 0)
             {
               fprintf (stderr,
 		       "ipmi_sdr_cache_record_read: %s\n",
-		       ipmi_sdr_ctx_errormsg (state_data->sdr_cache_ctx));
+		       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
               goto cleanup;
             }
 	  
@@ -1465,28 +1465,28 @@ _ipmi_pet_process (ipmi_pet_state_data_t *state_data,
       int sdr_record_len = 0;
       uint8_t entity_id, entity_instance;
       
-      if (ipmi_sdr_cache_search_sensor (state_data->sdr_cache_ctx,
+      if (ipmi_sdr_cache_search_sensor (state_data->sdr_ctx,
 					data.sensor_number,
 					data.sensor_device) < 0)
 	{
-	  if (ipmi_sdr_ctx_errnum (state_data->sdr_cache_ctx) != IPMI_SDR_ERR_NOT_FOUND)
+	  if (ipmi_sdr_ctx_errnum (state_data->sdr_ctx) != IPMI_SDR_ERR_NOT_FOUND)
 	    {
 	      fprintf (stderr,
 		       "ipmi_sdr_cache_search_record_id: %s\n",
-		       ipmi_sdr_ctx_errormsg (state_data->sdr_cache_ctx));
+		       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
 	      goto cleanup;
 	    }
 	  else
 	    goto cant_do_entity_id_check;
 	}
 
-      if ((sdr_record_len = ipmi_sdr_cache_record_read (state_data->sdr_cache_ctx,
+      if ((sdr_record_len = ipmi_sdr_cache_record_read (state_data->sdr_ctx,
 							sdr_record,
 							IPMI_SDR_MAX_RECORD_LENGTH)) < 0)
 	{
 	  fprintf (stderr,
 		   "ipmi_sdr_cache_record_read: %s\n",
-		   ipmi_sdr_ctx_errormsg (state_data->sdr_cache_ctx));
+		   ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
 	  goto cleanup;
 	}
       
@@ -2215,14 +2215,14 @@ _ipmi_pet (ipmi_pet_prog_data_t *prog_data)
 	}
     }
 
-  if (!(state_data.sdr_cache_ctx = ipmi_sdr_ctx_create ()))
+  if (!(state_data.sdr_ctx = ipmi_sdr_ctx_create ()))
     {
       perror ("ipmi_sdr_ctx_create()");
       exit_code = EXIT_FAILURE;
       goto cleanup;
     }
 
-  if (sdr_cache_setup_debug (state_data.sdr_cache_ctx,
+  if (sdr_cache_setup_debug (state_data.sdr_ctx,
 			     NULL,
 			     state_data.prog_data->args->common.debug,
 			     state_data.hostname) < 0)
@@ -2242,7 +2242,7 @@ _ipmi_pet (ipmi_pet_prog_data_t *prog_data)
   if (!prog_data->args->sdr.flush_cache)
     {
       if (!(state_data.sel_parse_ctx = ipmi_sel_parse_ctx_create (NULL,
-                                                                  prog_data->args->sdr.ignore_sdr_cache ? NULL : state_data.sdr_cache_ctx)))
+                                                                  prog_data->args->sdr.ignore_sdr_cache ? NULL : state_data.sdr_ctx)))
         {
           perror ("ipmi_sel_parse_ctx_create()");
           goto cleanup;
@@ -2339,7 +2339,7 @@ _ipmi_pet (ipmi_pet_prog_data_t *prog_data)
  cleanup:
   ipmi_fru_parse_ctx_destroy (state_data.fru_parse_ctx);
   ipmi_sel_parse_ctx_destroy (state_data.sel_parse_ctx);
-  ipmi_sdr_ctx_destroy (state_data.sdr_cache_ctx);
+  ipmi_sdr_ctx_destroy (state_data.sdr_ctx);
   ipmi_sdr_parse_ctx_destroy (state_data.sdr_parse_ctx);
   ipmi_ctx_close (state_data.ipmi_ctx);
   ipmi_ctx_destroy (state_data.ipmi_ctx);

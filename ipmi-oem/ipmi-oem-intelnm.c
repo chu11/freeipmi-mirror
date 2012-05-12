@@ -72,7 +72,7 @@ _ipmi_oem_intelnm_node_manager_init (ipmi_oem_state_data_t *state_data,
       goto cleanup;
     }
 
-  if (sdr_cache_create_and_load (state_data->sdr_cache_ctx,
+  if (sdr_cache_create_and_load (state_data->sdr_ctx,
                                  state_data->pstate,
                                  state_data->ipmi_ctx,
                                  state_data->prog_data->args->sdr.quiet_cache,
@@ -82,30 +82,30 @@ _ipmi_oem_intelnm_node_manager_init (ipmi_oem_state_data_t *state_data,
                                  state_data->prog_data->args->sdr.sdr_cache_file) < 0)
     goto cleanup;
 
-  if (ipmi_sdr_cache_record_count (state_data->sdr_cache_ctx, &record_count) < 0)
+  if (ipmi_sdr_cache_record_count (state_data->sdr_ctx, &record_count) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_cache_record_count: %s\n",
-                       ipmi_sdr_ctx_errormsg (state_data->sdr_cache_ctx));
+                       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
       goto cleanup;
     }
 
-  for (i = 0; i < record_count; i++, ipmi_sdr_cache_next (state_data->sdr_cache_ctx))
+  for (i = 0; i < record_count; i++, ipmi_sdr_cache_next (state_data->sdr_ctx))
     {
       uint8_t sdr_record[IPMI_SDR_MAX_RECORD_LENGTH];
       int sdr_record_len = 0;
       uint16_t record_id;
       uint8_t record_type;
 
-      if ((sdr_record_len = ipmi_sdr_cache_record_read (state_data->sdr_cache_ctx,
+      if ((sdr_record_len = ipmi_sdr_cache_record_read (state_data->sdr_ctx,
                                                         sdr_record,
                                                         IPMI_SDR_MAX_RECORD_LENGTH)) < 0)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
                            "ipmi_sdr_cache_record_read: %s\n",
-                           ipmi_sdr_ctx_errormsg (state_data->sdr_cache_ctx));
+                           ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
           goto cleanup;
         }
 

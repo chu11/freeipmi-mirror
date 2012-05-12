@@ -444,7 +444,7 @@ _find_sensor (ipmi_oem_state_data_t *state_data,
               char *id_string,
               unsigned int id_string_len)
 {
-  ipmi_sdr_ctx_t tmp_sdr_cache_ctx = NULL;
+  ipmi_sdr_ctx_t tmp_sdr_ctx = NULL;
   uint16_t record_count;
   int found = 0;
   int rv = -1;
@@ -457,22 +457,22 @@ _find_sensor (ipmi_oem_state_data_t *state_data,
   /* Make temporary sdr cache to search for sensor
    *
    * Redo loading of SDR cache since this is being called from a loop
-   * using the state_data sdr_cache_ctx.
+   * using the state_data sdr_ctx.
    */
-  if (!(tmp_sdr_cache_ctx = ipmi_sdr_ctx_create ()))
+  if (!(tmp_sdr_ctx = ipmi_sdr_ctx_create ()))
     {
       pstdout_perror (state_data->pstate, "ipmi_sdr_ctx_create()");
       goto cleanup;
     }
 
-  if (sdr_cache_setup_debug (tmp_sdr_cache_ctx,
+  if (sdr_cache_setup_debug (tmp_sdr_ctx,
 			     state_data->pstate,
 			     state_data->prog_data->args->common.debug,
 			     state_data->hostname) < 0)
     goto cleanup;
 
   /* Should not cause sdr recreation, since this is the second time we're calling it */
-  if (sdr_cache_create_and_load (tmp_sdr_cache_ctx,
+  if (sdr_cache_create_and_load (tmp_sdr_ctx,
                                  state_data->pstate,
                                  state_data->ipmi_ctx,
                                  1, /* quiet_cache */
@@ -482,16 +482,16 @@ _find_sensor (ipmi_oem_state_data_t *state_data,
                                  state_data->prog_data->args->sdr.sdr_cache_file) < 0)
     goto cleanup;
 
-  if (ipmi_sdr_cache_record_count (tmp_sdr_cache_ctx, &record_count) < 0)
+  if (ipmi_sdr_cache_record_count (tmp_sdr_ctx, &record_count) < 0)
     {
       pstdout_fprintf (state_data->pstate,
 		       stderr,
 		       "ipmi_sdr_cache_record_count: %s\n",
-		       ipmi_sdr_ctx_errormsg (tmp_sdr_cache_ctx));
+		       ipmi_sdr_ctx_errormsg (tmp_sdr_ctx));
       goto cleanup;
     }
 
-  for (i = 0; i < record_count; i++, ipmi_sdr_cache_next (tmp_sdr_cache_ctx))
+  for (i = 0; i < record_count; i++, ipmi_sdr_cache_next (tmp_sdr_ctx))
     {
       uint8_t sdr_record[IPMI_SDR_MAX_RECORD_LENGTH];
       int sdr_record_len = 0;
@@ -499,14 +499,14 @@ _find_sensor (ipmi_oem_state_data_t *state_data,
       uint8_t record_type;
       uint8_t sdr_sensor_number;
 
-      if ((sdr_record_len = ipmi_sdr_cache_record_read (tmp_sdr_cache_ctx,
+      if ((sdr_record_len = ipmi_sdr_cache_record_read (tmp_sdr_ctx,
 							sdr_record,
 							IPMI_SDR_MAX_RECORD_LENGTH)) < 0)
 	{
 	  pstdout_fprintf (state_data->pstate,
 			   stderr,
 			   "ipmi_sdr_cache_record_read: %s\n",
-			   ipmi_sdr_ctx_errormsg (tmp_sdr_cache_ctx));
+			   ipmi_sdr_ctx_errormsg (tmp_sdr_ctx));
 	  goto cleanup;
 	}
       
@@ -561,7 +561,7 @@ _find_sensor (ipmi_oem_state_data_t *state_data,
               sensor_number);
   rv = 0;
  cleanup:
-  ipmi_sdr_ctx_destroy (tmp_sdr_cache_ctx);
+  ipmi_sdr_ctx_destroy (tmp_sdr_ctx);
   return (rv);
 }
 
@@ -578,7 +578,7 @@ ipmi_oem_ibm_get_led (ipmi_oem_state_data_t *state_data)
   assert (state_data);
   assert (!state_data->prog_data->args->oem_options_count);
 
-  if (sdr_cache_create_and_load (state_data->sdr_cache_ctx,
+  if (sdr_cache_create_and_load (state_data->sdr_ctx,
                                  state_data->pstate,
                                  state_data->ipmi_ctx,
                                  state_data->prog_data->args->sdr.quiet_cache,
@@ -589,7 +589,7 @@ ipmi_oem_ibm_get_led (ipmi_oem_state_data_t *state_data)
     goto cleanup;
 
   if (calculate_column_widths (state_data->pstate,
-                               state_data->sdr_cache_ctx,
+                               state_data->sdr_ctx,
                                state_data->sdr_parse_ctx,
                                NULL,
                                0,
@@ -639,16 +639,16 @@ ipmi_oem_ibm_get_led (ipmi_oem_state_data_t *state_data)
    *      - 4 - BIOS or Administrator lit LED
    */
 
-  if (ipmi_sdr_cache_record_count (state_data->sdr_cache_ctx, &record_count) < 0)
+  if (ipmi_sdr_cache_record_count (state_data->sdr_ctx, &record_count) < 0)
     {
       pstdout_fprintf (state_data->pstate,
 		       stderr,
 		       "ipmi_sdr_cache_record_count: %s\n",
-		       ipmi_sdr_ctx_errormsg (state_data->sdr_cache_ctx));
+		       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
       goto cleanup;
     }
 
-  for (i = 0; i < record_count; i++, ipmi_sdr_cache_next (state_data->sdr_cache_ctx))
+  for (i = 0; i < record_count; i++, ipmi_sdr_cache_next (state_data->sdr_ctx))
     {
       uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
       uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
@@ -675,14 +675,14 @@ ipmi_oem_ibm_get_led (ipmi_oem_state_data_t *state_data)
       uint8_t sensor_number;
       int available_led;
 
-      if ((sdr_record_len = ipmi_sdr_cache_record_read (state_data->sdr_cache_ctx,
+      if ((sdr_record_len = ipmi_sdr_cache_record_read (state_data->sdr_ctx,
 							sdr_record,
 							IPMI_SDR_MAX_RECORD_LENGTH)) < 0)
 	{
 	  pstdout_fprintf (state_data->pstate,
 			   stderr,
 			   "ipmi_sdr_cache_record_read: %s\n",
-			   ipmi_sdr_ctx_errormsg (state_data->sdr_cache_ctx));
+			   ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
 	  goto cleanup;
 	}
       

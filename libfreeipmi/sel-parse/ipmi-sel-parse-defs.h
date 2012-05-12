@@ -90,7 +90,7 @@ struct ipmi_sel_parse_ctx {
   int reservation_id_registered;
 
   ipmi_ctx_t ipmi_ctx;
-  ipmi_sdr_ctx_t sdr_cache_ctx;
+  ipmi_sdr_ctx_t sdr_ctx;
 
   List sel_entries;
   ListIterator sel_entries_itr;

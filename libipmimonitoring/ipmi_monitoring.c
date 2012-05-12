@@ -1386,25 +1386,25 @@ _ipmi_monitoring_sensor_readings_by_record_id (ipmi_monitoring_ctx_t c,
 
   if (!record_ids)
     {
-      if (ipmi_sdr_cache_record_count (c->sdr_cache_ctx, &record_count) < 0)
+      if (ipmi_sdr_cache_record_count (c->sdr_ctx, &record_count) < 0)
         {
-          IPMI_MONITORING_DEBUG (("ipmi_sdr_cache_record_count: %s", ipmi_sdr_cache_ctx_errormsg (c->sdr_cache_ctx)));
+          IPMI_MONITORING_DEBUG (("ipmi_sdr_cache_record_count: %s", ipmi_sdr_ctx_errormsg (c->sdr_ctx)));
           c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
           goto cleanup;
         }
 
-      for (i = 0; i < record_count; i++, ipmi_sdr_cache_next (c->sdr_cache_ctx))
+      for (i = 0; i < record_count; i++, ipmi_sdr_cache_next (c->sdr_ctx))
         {
           uint8_t sdr_record[IPMI_MONITORING_MAX_SDR_RECORD_LENGTH];
           int sdr_record_len;
           int shared_ret = 0;
 
           memset (sdr_record, '\0', IPMI_MONITORING_MAX_SDR_RECORD_LENGTH);
-          if ((sdr_record_len = ipmi_sdr_cache_record_read (c->sdr_cache_ctx,
+          if ((sdr_record_len = ipmi_sdr_cache_record_read (c->sdr_ctx,
                                                             sdr_record,
                                                             IPMI_MONITORING_MAX_SDR_RECORD_LENGTH)) < 0)
             {
-              IPMI_MONITORING_DEBUG (("ipmi_sdr_cache_record_read: %s", ipmi_sdr_cache_ctx_errormsg (c->sdr_cache_ctx)));
+              IPMI_MONITORING_DEBUG (("ipmi_sdr_cache_record_read: %s", ipmi_sdr_ctx_errormsg (c->sdr_ctx)));
               c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
               goto cleanup;
             }
@@ -1441,24 +1441,24 @@ _ipmi_monitoring_sensor_readings_by_record_id (ipmi_monitoring_ctx_t c,
           int sdr_record_len;
           int shared_ret = 0;
 
-          if (ipmi_sdr_cache_search_record_id (c->sdr_cache_ctx, record_ids[i]) < 0)
+          if (ipmi_sdr_cache_search_record_id (c->sdr_ctx, record_ids[i]) < 0)
             {
-              if (ipmi_sdr_cache_ctx_errnum (c->sdr_cache_ctx) == IPMI_SDR_ERR_NOT_FOUND)
+              if (ipmi_sdr_ctx_errnum (c->sdr_ctx) == IPMI_SDR_ERR_NOT_FOUND)
                 {
                   c->errnum = IPMI_MONITORING_ERR_SENSOR_NOT_FOUND;
                   goto cleanup;
                 }
-              IPMI_MONITORING_DEBUG (("ipmi_sdr_cache_search_record_id: %s", ipmi_sdr_cache_ctx_errormsg (c->sdr_cache_ctx)));
+              IPMI_MONITORING_DEBUG (("ipmi_sdr_cache_search_record_id: %s", ipmi_sdr_ctx_errormsg (c->sdr_ctx)));
               c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
               goto cleanup;
             }
 
           memset (sdr_record, '\0', IPMI_MONITORING_MAX_SDR_RECORD_LENGTH);
-          if ((sdr_record_len = ipmi_sdr_cache_record_read (c->sdr_cache_ctx,
+          if ((sdr_record_len = ipmi_sdr_cache_record_read (c->sdr_ctx,
                                                             sdr_record,
                                                             IPMI_MONITORING_MAX_SDR_RECORD_LENGTH)) < 0)
             {
-              IPMI_MONITORING_DEBUG (("ipmi_sdr_cache_record_read: %s", ipmi_sdr_cache_ctx_errormsg (c->sdr_cache_ctx)));
+              IPMI_MONITORING_DEBUG (("ipmi_sdr_cache_record_read: %s", ipmi_sdr_ctx_errormsg (c->sdr_ctx)));
               c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
               goto cleanup;
             }
@@ -1606,25 +1606,25 @@ _ipmi_monitoring_sensor_readings_by_sensor_type (ipmi_monitoring_ctx_t c,
   if (ipmi_monitoring_sdr_cache_load (c, hostname) < 0)
     goto cleanup;
 
-  if (ipmi_sdr_cache_record_count (c->sdr_cache_ctx, &record_count) < 0)
+  if (ipmi_sdr_cache_record_count (c->sdr_ctx, &record_count) < 0)
     {
-      IPMI_MONITORING_DEBUG (("ipmi_sdr_cache_record_count: %s", ipmi_sdr_cache_ctx_errormsg (c->sdr_cache_ctx)));
+      IPMI_MONITORING_DEBUG (("ipmi_sdr_cache_record_count: %s", ipmi_sdr_ctx_errormsg (c->sdr_ctx)));
       c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
       goto cleanup;
     }
 
-  for (i = 0; i < record_count; i++, ipmi_sdr_cache_next (c->sdr_cache_ctx))
+  for (i = 0; i < record_count; i++, ipmi_sdr_cache_next (c->sdr_ctx))
     {
       uint8_t sdr_record[IPMI_MONITORING_MAX_SDR_RECORD_LENGTH];
       int sdr_record_len;
       int shared_ret = 0;
 
       memset (sdr_record, '\0', IPMI_MONITORING_MAX_SDR_RECORD_LENGTH);
-      if ((sdr_record_len = ipmi_sdr_cache_record_read (c->sdr_cache_ctx,
+      if ((sdr_record_len = ipmi_sdr_cache_record_read (c->sdr_ctx,
                                                         sdr_record,
                                                         IPMI_MONITORING_MAX_SDR_RECORD_LENGTH)) < 0)
         {
-          IPMI_MONITORING_DEBUG (("ipmi_sdr_cache_record_read: %s", ipmi_sdr_cache_ctx_errormsg (c->sdr_cache_ctx)));
+          IPMI_MONITORING_DEBUG (("ipmi_sdr_cache_record_read: %s", ipmi_sdr_ctx_errormsg (c->sdr_ctx)));
           c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
           goto cleanup;
         }

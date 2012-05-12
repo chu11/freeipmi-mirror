@@ -104,13 +104,13 @@ _intel_node_manager_init (ipmi_sel_parse_ctx_t ctx)
   if (ctx->intel_node_manager.node_manager_data_parsed)
     return (ctx->intel_node_manager.node_manager_data_found);
   
-  if (ipmi_sdr_cache_record_count (ctx->sdr_cache_ctx, &record_count) < 0)
+  if (ipmi_sdr_cache_record_count (ctx->sdr_ctx, &record_count) < 0)
     {
       SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_SDR_CACHE_ERROR);
       goto cleanup;
     }
   
-  if (ipmi_sdr_cache_first (ctx->sdr_cache_ctx) < 0)
+  if (ipmi_sdr_cache_first (ctx->sdr_ctx) < 0)
     {
       SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_SDR_CACHE_ERROR);
       goto cleanup;
@@ -122,7 +122,7 @@ _intel_node_manager_init (ipmi_sel_parse_ctx_t ctx)
       goto cleanup;
     }
 
-  for (i = 0; i < record_count; i++, ipmi_sdr_cache_next (ctx->sdr_cache_ctx))
+  for (i = 0; i < record_count; i++, ipmi_sdr_cache_next (ctx->sdr_ctx))
     {
       uint8_t sdr_record[IPMI_SDR_MAX_RECORD_LENGTH];
       int sdr_record_len;
@@ -133,7 +133,7 @@ _intel_node_manager_init (ipmi_sel_parse_ctx_t ctx)
       uint8_t version_number;
       uint64_t val;
       
-      if ((sdr_record_len = ipmi_sdr_cache_record_read (ctx->sdr_cache_ctx,
+      if ((sdr_record_len = ipmi_sdr_cache_record_read (ctx->sdr_ctx,
                                                         sdr_record,
                                                         IPMI_SDR_MAX_RECORD_LENGTH)) < 0)
         {

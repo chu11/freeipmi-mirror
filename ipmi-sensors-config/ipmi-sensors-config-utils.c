@@ -187,7 +187,7 @@ get_sdr_record (ipmi_sensors_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if (ipmi_sdr_cache_search_record_id (state_data->sdr_cache_ctx,
+  if (ipmi_sdr_cache_search_record_id (state_data->sdr_ctx,
                                        record_id) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
@@ -199,7 +199,7 @@ get_sdr_record (ipmi_sensors_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if ((len = ipmi_sdr_cache_record_read (state_data->sdr_cache_ctx,
+  if ((len = ipmi_sdr_cache_record_read (state_data->sdr_ctx,
                                          sdr_record,
                                          *sdr_record_len)) < 0)
     {
@@ -207,7 +207,7 @@ get_sdr_record (ipmi_sensors_config_state_data_t *state_data,
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_sdr_cache_record_read: %s\n",
-                         ipmi_sdr_ctx_errormsg (state_data->sdr_cache_ctx));
+                         ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }

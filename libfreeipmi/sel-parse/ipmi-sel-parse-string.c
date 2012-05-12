@@ -158,12 +158,12 @@ _find_sdr_record (ipmi_sel_parse_ctx_t ctx,
 
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
-  assert (ctx->sdr_cache_ctx);   /* must be checked earlier */
+  assert (ctx->sdr_ctx);   /* must be checked earlier */
   assert (system_event_record_data);
   assert (sdr_record);
   assert (sdr_record_len);
 
-  if (ipmi_sdr_cache_search_sensor (ctx->sdr_cache_ctx,
+  if (ipmi_sdr_cache_search_sensor (ctx->sdr_ctx,
                                     system_event_record_data->sensor_number,
                                     system_event_record_data->generator_id) < 0)
     {
@@ -175,17 +175,17 @@ _find_sdr_record (ipmi_sel_parse_ctx_t ctx,
        * generator_id be shifted over by one.  This is a special
        * "try again" corner case.
        */
-      if (ipmi_sdr_ctx_errnum (ctx->sdr_cache_ctx) == IPMI_SDR_ERR_NOT_FOUND
+      if (ipmi_sdr_ctx_errnum (ctx->sdr_ctx) == IPMI_SDR_ERR_NOT_FOUND
           && (system_event_record_data->generator_id == (IPMI_SLAVE_ADDRESS_BMC << 1)))
         {
-          if (!ipmi_sdr_cache_search_sensor (ctx->sdr_cache_ctx,
+          if (!ipmi_sdr_cache_search_sensor (ctx->sdr_ctx,
                                              system_event_record_data->sensor_number,
                                              (system_event_record_data->generator_id >> 1)))
             goto fall_through;
           /* else fall through to normal error path */
         }
 
-      if (ipmi_sdr_ctx_errnum (ctx->sdr_cache_ctx) != IPMI_SDR_ERR_NOT_FOUND)
+      if (ipmi_sdr_ctx_errnum (ctx->sdr_ctx) != IPMI_SDR_ERR_NOT_FOUND)
         {
           SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_SDR_CACHE_ERROR);
           return (-1);
@@ -197,7 +197,7 @@ _find_sdr_record (ipmi_sel_parse_ctx_t ctx,
  fall_through:
   memset (tmp_sdr_record, '\0', IPMI_SDR_MAX_RECORD_LENGTH);
 
-  if ((tmp_sdr_record_len = ipmi_sdr_cache_record_read (ctx->sdr_cache_ctx,
+  if ((tmp_sdr_record_len = ipmi_sdr_cache_record_read (ctx->sdr_ctx,
                                                         tmp_sdr_record,
                                                         IPMI_SDR_MAX_RECORD_LENGTH)) < 0)
     {
@@ -239,7 +239,7 @@ _get_sdr_id_string (ipmi_sel_parse_ctx_t ctx,
   assert (id_string);
   assert (id_string_len);
 
-  if (!ctx->sdr_cache_ctx)
+  if (!ctx->sdr_ctx)
     return (0);
 
   memset (sdr_record, '\0', IPMI_SDR_MAX_RECORD_LENGTH);
@@ -315,7 +315,7 @@ _get_sensor_reading (ipmi_sel_parse_ctx_t ctx,
   assert (sensor_units_buf);
   assert (sensor_units_buflen);
 
-  if (!ctx->sdr_cache_ctx)
+  if (!ctx->sdr_ctx)
     return (0);
 
   memset (sdr_record, '\0', IPMI_SDR_MAX_RECORD_LENGTH);

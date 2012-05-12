@@ -117,13 +117,13 @@ int sensor_type_listed_sdr (pstdout_state_t pstate,
                             unsigned int sensor_types_length);
 
 int calculate_entity_id_counts (pstdout_state_t pstate,
-                                ipmi_sdr_ctx_t sdr_cache_ctx,
+                                ipmi_sdr_ctx_t sdr_ctx,
                                 ipmi_sdr_parse_ctx_t sdr_parse_ctx,
                                 struct sensor_entity_id_counts *entity_id_counts);
 
 /* use normal names, set entity_id_counts to NULL */
 int calculate_column_widths (pstdout_state_t pstate,
-                             ipmi_sdr_ctx_t sdr_cache_ctx,
+                             ipmi_sdr_ctx_t sdr_ctx,
                              ipmi_sdr_parse_ctx_t sdr_parse_ctx,
                              char sensor_types[][MAX_SENSOR_TYPES_STRING_LENGTH+1],
                              unsigned int sensor_types_length,

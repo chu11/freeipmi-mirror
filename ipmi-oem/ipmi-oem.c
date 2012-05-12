@@ -1154,7 +1154,7 @@ _flush_cache (ipmi_oem_state_data_t *state_data)
 {
   assert (state_data);
   
-  if (sdr_cache_flush_cache (state_data->sdr_cache_ctx,
+  if (sdr_cache_flush_cache (state_data->sdr_ctx,
                              state_data->pstate,
                              state_data->prog_data->args->sdr.quiet_cache,
                              state_data->hostname,
@@ -1339,14 +1339,14 @@ _ipmi_oem (pstdout_state_t pstate,
 	}
     }
 
-  if (!(state_data.sdr_cache_ctx = ipmi_sdr_ctx_create ()))
+  if (!(state_data.sdr_ctx = ipmi_sdr_ctx_create ()))
     {
       pstdout_perror (pstate, "ipmi_sdr_ctx_create()");
       exit_code = EXIT_FAILURE;
       goto cleanup;
     }
 
-  if (sdr_cache_setup_debug (state_data.sdr_cache_ctx,
+  if (sdr_cache_setup_debug (state_data.sdr_ctx,
 			     state_data.pstate,
 			     state_data.prog_data->args->common.debug,
 			     state_data.hostname) < 0)
@@ -1370,7 +1370,7 @@ _ipmi_oem (pstdout_state_t pstate,
   
   exit_code = 0;
  cleanup:
-  ipmi_sdr_ctx_destroy (state_data.sdr_cache_ctx);
+  ipmi_sdr_ctx_destroy (state_data.sdr_ctx);
   ipmi_sdr_parse_ctx_destroy (state_data.sdr_parse_ctx);
   ipmi_ctx_close (state_data.ipmi_ctx);
   ipmi_ctx_destroy (state_data.ipmi_ctx);
