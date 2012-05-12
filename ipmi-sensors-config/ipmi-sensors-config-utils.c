@@ -76,7 +76,7 @@ create_section_name (ipmi_sensors_config_state_data_t *state_data,
   memset (section_name, '\0', section_name_len);
   memset (id_string, '\0', IPMI_SDR_CACHE_MAX_ID_STRING + 1);
 
-  if (ipmi_sdr_parse_record_id_and_type (state_data->sdr_parse_ctx,
+  if (ipmi_sdr_parse_record_id_and_type (state_data->sdr_ctx,
                                          sdr_record,
                                          sdr_record_len,
                                          &record_id,
@@ -85,11 +85,11 @@ create_section_name (ipmi_sensors_config_state_data_t *state_data,
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_parse_record_id_and_type: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+                       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
       goto cleanup;
     }
 
-  if (ipmi_sdr_parse_id_string (state_data->sdr_parse_ctx,
+  if (ipmi_sdr_parse_id_string (state_data->sdr_ctx,
                                 sdr_record,
                                 sdr_record_len,
                                 id_string,
@@ -98,7 +98,7 @@ create_section_name (ipmi_sensors_config_state_data_t *state_data,
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_parse_id_string: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+                       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
       goto cleanup;
     }
 

@@ -85,7 +85,6 @@ ipmi_oem_sun_get_led (ipmi_oem_state_data_t *state_data)
     {
       if (calculate_entity_id_counts (state_data->pstate,
                                       state_data->sdr_ctx,
-                                      state_data->sdr_parse_ctx,
                                       &entity_id_counts) < 0)
         goto cleanup;
 
@@ -94,7 +93,6 @@ ipmi_oem_sun_get_led (ipmi_oem_state_data_t *state_data)
 
   if (calculate_column_widths (state_data->pstate,
                                state_data->sdr_ctx,
-                               state_data->sdr_parse_ctx,
                                NULL,
                                0,
                                NULL,
@@ -200,7 +198,7 @@ ipmi_oem_sun_get_led (ipmi_oem_state_data_t *state_data)
 	  goto cleanup;
 	}
       
-      if (ipmi_sdr_parse_record_id_and_type (state_data->sdr_parse_ctx,
+      if (ipmi_sdr_parse_record_id_and_type (state_data->sdr_ctx,
 					     sdr_record,
 					     sdr_record_len,
 					     &record_id,
@@ -209,7 +207,7 @@ ipmi_oem_sun_get_led (ipmi_oem_state_data_t *state_data)
 	  pstdout_fprintf (state_data->pstate,
 			   stderr,
 			   "ipmi_sdr_parse_record_id_and_type: %s\n",
-			   ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+			   ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
 	  goto cleanup;
 	}
       
@@ -217,7 +215,7 @@ ipmi_oem_sun_get_led (ipmi_oem_state_data_t *state_data)
       if (record_type != IPMI_SDR_FORMAT_GENERIC_DEVICE_LOCATOR_RECORD)
         continue;
 
-      if (ipmi_sdr_parse_entity_id_instance_type (state_data->sdr_parse_ctx,
+      if (ipmi_sdr_parse_entity_id_instance_type (state_data->sdr_ctx,
                                                   sdr_record,
                                                   sdr_record_len,
                                                   NULL,
@@ -227,7 +225,7 @@ ipmi_oem_sun_get_led (ipmi_oem_state_data_t *state_data)
           pstdout_fprintf (state_data->pstate,
                            stderr,
                            "ipmi_sdr_parse_entity_id_and_instance: %s\n",
-                           ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+                           ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
           goto cleanup;
         }
       
@@ -301,7 +299,7 @@ ipmi_oem_sun_get_led (ipmi_oem_state_data_t *state_data)
           memset (sensor_name_buf, '\0', MAX_ENTITY_ID_SENSOR_NAME_STRING + 1);
           
           if (get_entity_sensor_name_string (state_data->pstate,
-                                             state_data->sdr_parse_ctx,
+                                             state_data->sdr_ctx,
                                              sdr_record,
                                              sdr_record_len,
                                              &entity_id_counts,
@@ -316,7 +314,7 @@ ipmi_oem_sun_get_led (ipmi_oem_state_data_t *state_data)
         {
           memset (device_id_string, '\0', IPMI_SDR_CACHE_MAX_DEVICE_ID_STRING + 1);
           
-          if (ipmi_sdr_parse_device_id_string (state_data->sdr_parse_ctx,
+          if (ipmi_sdr_parse_device_id_string (state_data->sdr_ctx,
                                                sdr_record,
                                                sdr_record_len,
                                                device_id_string,
@@ -325,7 +323,7 @@ ipmi_oem_sun_get_led (ipmi_oem_state_data_t *state_data)
               pstdout_fprintf (state_data->pstate,
                                stderr,
                                "ipmi_sdr_parse_device_id_string: %s\n",
-                               ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+                               ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
               goto cleanup;
             }
           
@@ -528,7 +526,7 @@ ipmi_oem_sun_set_led (ipmi_oem_state_data_t *state_data)
       goto cleanup;
     }
   
-  if (ipmi_sdr_parse_record_id_and_type (state_data->sdr_parse_ctx,
+  if (ipmi_sdr_parse_record_id_and_type (state_data->sdr_ctx,
                                          sdr_record,
                                          sdr_record_len,
                                          NULL,
@@ -537,7 +535,7 @@ ipmi_oem_sun_set_led (ipmi_oem_state_data_t *state_data)
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_parse_record_id_and_type: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+                       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
       goto cleanup;
     }
   
@@ -550,7 +548,7 @@ ipmi_oem_sun_set_led (ipmi_oem_state_data_t *state_data)
       goto cleanup;
     }
   
-  if (ipmi_sdr_parse_entity_id_instance_type (state_data->sdr_parse_ctx,
+  if (ipmi_sdr_parse_entity_id_instance_type (state_data->sdr_ctx,
                                               sdr_record,
                                               sdr_record_len,
                                               NULL,
@@ -560,7 +558,7 @@ ipmi_oem_sun_set_led (ipmi_oem_state_data_t *state_data)
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_parse_entity_id_and_instance: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+                       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
       goto cleanup;
     }
 

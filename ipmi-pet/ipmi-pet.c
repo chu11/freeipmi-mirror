@@ -139,7 +139,6 @@ _ipmi_pet_init (ipmi_pet_state_data_t *state_data)
 	{
 	  if (calculate_entity_id_counts (NULL,
 					  state_data->sdr_ctx,
-					  state_data->sdr_parse_ctx,
 					  &(state_data->entity_id_counts)) < 0)
 	    goto cleanup;
 	  
@@ -148,7 +147,6 @@ _ipmi_pet_init (ipmi_pet_state_data_t *state_data)
       
       if (calculate_column_widths (NULL,
 				   state_data->sdr_ctx,
-				   state_data->sdr_parse_ctx,
 				   NULL,
 				   0,
 				   NULL,
@@ -868,7 +866,6 @@ _output_sensor_name (ipmi_pet_state_data_t *state_data,
   return (event_output_sensor_name (NULL,
 				    state_data->sel_parse_ctx,
 				    state_data->sdr_ctx,
-				    state_data->sdr_parse_ctx,
 				    sel_record,
 				    sel_record_len,
 				    &state_data->entity_id_counts,
@@ -1349,7 +1346,7 @@ _ipmi_pet_process (ipmi_pet_state_data_t *state_data,
           if (!sdr_record_len)
 	    goto cant_be_determined;
 	  
-	  if (ipmi_sdr_parse_record_id_and_type (state_data->sdr_parse_ctx,
+	  if (ipmi_sdr_parse_record_id_and_type (state_data->sdr_ctx,
                                                  sdr_record,
                                                  sdr_record_len,
                                                  NULL,
@@ -1357,7 +1354,7 @@ _ipmi_pet_process (ipmi_pet_state_data_t *state_data,
             {
               fprintf (stderr,
 		       "ipmi_sdr_parse_record_id_and_type: %s\n",
-		       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+		       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
               goto cleanup;
             }
 
@@ -1366,25 +1363,25 @@ _ipmi_pet_process (ipmi_pet_state_data_t *state_data,
 	      && record_type != IPMI_SDR_FORMAT_EVENT_ONLY_RECORD)
 	    goto cant_be_determined;
 
-	  if (ipmi_sdr_parse_sensor_type (state_data->sdr_parse_ctx,
+	  if (ipmi_sdr_parse_sensor_type (state_data->sdr_ctx,
 					  sdr_record,
 					  sdr_record_len,
 					  &data.sensor_type) < 0)
 	    {
 	      fprintf (stderr,
 		       "ipmi_sdr_parse_sensor_type: %s\n",
-		       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+		       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
 	      goto cleanup;
 	    }
 	  
-	  if (ipmi_sdr_parse_event_reading_type_code (state_data->sdr_parse_ctx,
+	  if (ipmi_sdr_parse_event_reading_type_code (state_data->sdr_ctx,
 						      sdr_record,
 						      sdr_record_len,
 						      &data.event_type) < 0)
 	    {
 	      fprintf (stderr,
 		       "ipmi_sdr_parse_event_reading_type_code: %s\n",
-		       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+		       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
 	      goto cleanup;
 	    }
 	}
@@ -1494,7 +1491,7 @@ _ipmi_pet_process (ipmi_pet_state_data_t *state_data,
       if (!sdr_record_len)
 	goto cant_do_entity_id_check;
 
-      if (ipmi_sdr_parse_entity_id_instance_type (state_data->sdr_parse_ctx,
+      if (ipmi_sdr_parse_entity_id_instance_type (state_data->sdr_ctx,
 						  sdr_record,
 						  sdr_record_len,
 						  &entity_id,
@@ -1503,7 +1500,7 @@ _ipmi_pet_process (ipmi_pet_state_data_t *state_data,
 	{
 	  fprintf (stderr,
 		   "ipmi_sdr_parse_entity_id_instance_type: %s\n",
-		   ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+		   ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
 	  goto cleanup;
 	}
 
@@ -2231,13 +2228,6 @@ _ipmi_pet (ipmi_pet_prog_data_t *prog_data)
       goto cleanup;
     }
 
-  if (!(state_data.sdr_parse_ctx = ipmi_sdr_parse_ctx_create ()))
-    {
-      perror ("ipmi_sdr_parse_ctx_create()");
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
-    }
-
   /* Special case, just flush, don't do SEL stuff */
   if (!prog_data->args->sdr.flush_cache)
     {
@@ -2340,7 +2330,6 @@ _ipmi_pet (ipmi_pet_prog_data_t *prog_data)
   ipmi_fru_parse_ctx_destroy (state_data.fru_parse_ctx);
   ipmi_sel_parse_ctx_destroy (state_data.sel_parse_ctx);
   ipmi_sdr_ctx_destroy (state_data.sdr_ctx);
-  ipmi_sdr_parse_ctx_destroy (state_data.sdr_parse_ctx);
   ipmi_ctx_close (state_data.ipmi_ctx);
   ipmi_ctx_destroy (state_data.ipmi_ctx);
   return (exit_code);

@@ -57,8 +57,6 @@ _sensor_reading_cleanup (ipmi_monitoring_ctx_t c)
 
   ipmi_sensor_read_ctx_destroy (c->sensor_read_ctx);
   c->sensor_read_ctx = NULL;
-  ipmi_sdr_parse_ctx_destroy (c->sdr_parse_ctx);
-  c->sdr_parse_ctx = NULL;
 }
 
 int
@@ -68,18 +66,10 @@ ipmi_monitoring_sensor_reading_init (ipmi_monitoring_ctx_t c)
   assert (c->magic == IPMI_MONITORING_MAGIC);
   assert (c->ipmi_ctx);
   assert (!c->sensor_read_ctx);
-  assert (!c->sdr_parse_ctx);
 
   if (!(c->sensor_read_ctx = ipmi_sensor_read_ctx_create (c->ipmi_ctx)))
     {
       IPMI_MONITORING_DEBUG (("ipmi_sensor_read_ctx_create: %s", strerror (errno)));
-      c->errnum = IPMI_MONITORING_ERR_OUT_OF_MEMORY;
-      goto cleanup;
-    }
-
-  if (!(c->sdr_parse_ctx = ipmi_sdr_parse_ctx_create ()))
-    {
-      IPMI_MONITORING_DEBUG (("ipmi_sdr_parse_ctx_create: %s", strerror (errno)));
       c->errnum = IPMI_MONITORING_ERR_OUT_OF_MEMORY;
       goto cleanup;
     }
@@ -540,7 +530,7 @@ _threshold_sensor_reading (ipmi_monitoring_ctx_t c,
   assert (sdr_record);
   assert (sdr_record_len);
 
-  if (ipmi_sdr_parse_sensor_units (c->sdr_parse_ctx,
+  if (ipmi_sdr_parse_sensor_units (c->sdr_ctx,
                                    sdr_record,
                                    sdr_record_len,
                                    &sensor_units_percentage,
@@ -550,7 +540,7 @@ _threshold_sensor_reading (ipmi_monitoring_ctx_t c,
                                    &sensor_modifier_unit_type) < 0)
     {
       IPMI_MONITORING_DEBUG (("ipmi_sdr_parse_sensor_units: %s",
-                              ipmi_sdr_parse_ctx_errormsg (c->sdr_parse_ctx)));
+                              ipmi_sdr_ctx_errormsg (c->sdr_ctx)));
       c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
       return (-1);
     }
@@ -1066,14 +1056,14 @@ ipmi_monitoring_get_sensor_reading (ipmi_monitoring_ctx_t c,
   assert (sdr_record_len);
   assert (!sensor_types || sensor_types_len);
 
-  if (ipmi_sdr_parse_record_id_and_type (c->sdr_parse_ctx,
+  if (ipmi_sdr_parse_record_id_and_type (c->sdr_ctx,
                                          sdr_record,
                                          sdr_record_len,
                                          &record_id,
                                          &record_type) < 0)
     {
       IPMI_MONITORING_DEBUG (("ipmi_sdr_parse_record_id_and_type: %s",
-                              ipmi_sdr_parse_ctx_errormsg (c->sdr_parse_ctx)));
+                              ipmi_sdr_ctx_errormsg (c->sdr_ctx)));
       c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
       return (-1);
     }
@@ -1094,24 +1084,24 @@ ipmi_monitoring_get_sensor_reading (ipmi_monitoring_ctx_t c,
       return (0);
     }
 
-  if (ipmi_sdr_parse_sensor_number (c->sdr_parse_ctx,
+  if (ipmi_sdr_parse_sensor_number (c->sdr_ctx,
                                     sdr_record,
                                     sdr_record_len,
                                     &sensor_number_base) < 0)
     {
       IPMI_MONITORING_DEBUG (("ipmi_sdr_parse_sensor_number: %s",
-                              ipmi_sdr_parse_ctx_errormsg (c->sdr_parse_ctx)));
+                              ipmi_sdr_ctx_errormsg (c->sdr_ctx)));
       c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
       return (-1);
     }
 
-  if (ipmi_sdr_parse_sensor_type (c->sdr_parse_ctx,
+  if (ipmi_sdr_parse_sensor_type (c->sdr_ctx,
                                   sdr_record,
                                   sdr_record_len,
                                   &sdr_sensor_type) < 0)
     {
       IPMI_MONITORING_DEBUG (("ipmi_sdr_parse_sensor_type: %s",
-                              ipmi_sdr_parse_ctx_errormsg (c->sdr_parse_ctx)));
+                              ipmi_sdr_ctx_errormsg (c->sdr_ctx)));
       c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
       return (-1);
     }
@@ -1138,14 +1128,14 @@ ipmi_monitoring_get_sensor_reading (ipmi_monitoring_ctx_t c,
 
   memset (sensor_name, '\0', IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH);
 
-  if ((len = ipmi_sdr_parse_id_string (c->sdr_parse_ctx,
+  if ((len = ipmi_sdr_parse_id_string (c->sdr_ctx,
                                        sdr_record,
                                        sdr_record_len,
                                        sensor_name,
                                        IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH)) < 0)
     {
       IPMI_MONITORING_DEBUG (("ipmi_sdr_parse_id_string: %s",
-                              ipmi_sdr_parse_ctx_errormsg (c->sdr_parse_ctx)));
+                              ipmi_sdr_ctx_errormsg (c->sdr_ctx)));
       c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
       return (-1);
     }
@@ -1157,13 +1147,13 @@ ipmi_monitoring_get_sensor_reading (ipmi_monitoring_ctx_t c,
       return (-1);
     }
 
-  if (ipmi_sdr_parse_event_reading_type_code (c->sdr_parse_ctx,
+  if (ipmi_sdr_parse_event_reading_type_code (c->sdr_ctx,
                                               sdr_record,
                                               sdr_record_len,
                                               &event_reading_type_code) < 0)
     {
       IPMI_MONITORING_DEBUG (("ipmi_sdr_parse_event_reading_type_code: %s",
-                              ipmi_sdr_parse_ctx_errormsg (c->sdr_parse_ctx)));
+                              ipmi_sdr_ctx_errormsg (c->sdr_ctx)));
       c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
       return (-1);
     }

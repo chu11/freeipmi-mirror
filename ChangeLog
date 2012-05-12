@@ -3,6 +3,10 @@
 	* libfreeipmi/include/freeipmi/sdr/ipmi-sdr.h, libfreeipmi/sdr:
 	Turn sdr-cache libfreeipmi sub-library into sdr sub-library.
 
+	* libfreeipmi/include/freeipmi/sdr-parse/ipmi-sdr-parse.h,
+	libfreeipmi/sdr-parse: Remove sub-library. Fold into sdr
+	sub-library.
+
 	* common/toolsdr/, libipmimonitoring/: Adjust appropriately for changes.
 
 	* common/toolsdr/tool-sdr-cache-common.h,

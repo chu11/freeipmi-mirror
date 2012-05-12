@@ -1297,14 +1297,14 @@ _ipmi_monitoring_get_sensor_reading_shared (ipmi_monitoring_ctx_t c,
   assert (!(sensor_reading_flags & ~IPMI_MONITORING_SENSOR_READING_FLAGS_MASK));
   assert (sensor_reading_flags & IPMI_MONITORING_SENSOR_READING_FLAGS_SHARED_SENSORS);
   
-  if (ipmi_sdr_parse_record_id_and_type (c->sdr_parse_ctx,
+  if (ipmi_sdr_parse_record_id_and_type (c->sdr_ctx,
                                          sdr_record,
                                          sdr_record_len,
                                          NULL,
                                          &record_type) < 0)
     {
       IPMI_MONITORING_DEBUG (("ipmi_sdr_parse_record_id_and_type: %s",
-                              ipmi_sdr_parse_ctx_errormsg (c->sdr_parse_ctx)));
+                              ipmi_sdr_ctx_errormsg (c->sdr_ctx)));
       c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
       return (-1);
     }
@@ -1312,7 +1312,7 @@ _ipmi_monitoring_get_sensor_reading_shared (ipmi_monitoring_ctx_t c,
   if (record_type != IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD)
     return (0);
 
-  if (ipmi_sdr_parse_sensor_record_sharing (c->sdr_parse_ctx,
+  if (ipmi_sdr_parse_sensor_record_sharing (c->sdr_ctx,
                                             sdr_record,
                                             sdr_record_len,
                                             &share_count,
@@ -1321,7 +1321,7 @@ _ipmi_monitoring_get_sensor_reading_shared (ipmi_monitoring_ctx_t c,
                                             NULL) < 0)
     {
       IPMI_MONITORING_DEBUG (("ipmi_sdr_parse_sensor_record_sharing: %s",
-                              ipmi_sdr_parse_ctx_errormsg (c->sdr_parse_ctx)));
+                              ipmi_sdr_ctx_errormsg (c->sdr_ctx)));
       c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
       return (-1);
     }

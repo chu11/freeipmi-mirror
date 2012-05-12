@@ -255,14 +255,14 @@ _get_sdr_id_string (ipmi_sel_parse_ctx_t ctx,
       goto cleanup;
     }
 
-  if (ipmi_sdr_parse_id_string (ctx->sdr_parse_ctx,
+  if (ipmi_sdr_parse_id_string (ctx->sdr_ctx,
                                 sdr_record,
                                 sdr_record_len,
                                 id_string,
                                 id_string_len) < 0)
     {
-      if (ipmi_sdr_parse_ctx_errnum (ctx->sdr_parse_ctx) == IPMI_SDR_PARSE_ERR_INVALID_SDR_RECORD
-          || ipmi_sdr_parse_ctx_errnum (ctx->sdr_parse_ctx) == IPMI_SDR_PARSE_ERR_INCOMPLETE_SDR_RECORD)
+      if (ipmi_sdr_ctx_errnum (ctx->sdr_ctx) == IPMI_SDR_ERR_PARSE_INVALID_SDR_RECORD
+          || ipmi_sdr_ctx_errnum (ctx->sdr_ctx) == IPMI_SDR_ERR_PARSE_INCOMPLETE_SDR_RECORD)
         rv = 0;
       else
         SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_INTERNAL_ERROR);
@@ -331,13 +331,13 @@ _get_sensor_reading (ipmi_sel_parse_ctx_t ctx,
       goto cleanup;
     }
 
-  if (ipmi_sdr_parse_event_reading_type_code (ctx->sdr_parse_ctx,
+  if (ipmi_sdr_parse_event_reading_type_code (ctx->sdr_ctx,
                                               sdr_record,
                                               sdr_record_len,
                                               &sdr_event_reading_type_code) < 0)
     {
-      if (ipmi_sdr_parse_ctx_errnum (ctx->sdr_parse_ctx) == IPMI_SDR_PARSE_ERR_INVALID_SDR_RECORD
-          || ipmi_sdr_parse_ctx_errnum (ctx->sdr_parse_ctx) == IPMI_SDR_PARSE_ERR_INCOMPLETE_SDR_RECORD)
+      if (ipmi_sdr_ctx_errnum (ctx->sdr_ctx) == IPMI_SDR_ERR_PARSE_INVALID_SDR_RECORD
+          || ipmi_sdr_ctx_errnum (ctx->sdr_ctx) == IPMI_SDR_ERR_PARSE_INCOMPLETE_SDR_RECORD)
         rv = 0;
       else
         SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_INTERNAL_ERROR);
@@ -350,7 +350,7 @@ _get_sensor_reading (ipmi_sel_parse_ctx_t ctx,
       goto cleanup;
     }
 
-  if (ipmi_sdr_parse_sensor_decoding_data (ctx->sdr_parse_ctx,
+  if (ipmi_sdr_parse_sensor_decoding_data (ctx->sdr_ctx,
                                            sdr_record,
                                            sdr_record_len,
                                            &r_exponent,
@@ -360,15 +360,15 @@ _get_sensor_reading (ipmi_sel_parse_ctx_t ctx,
                                            &linearization,
                                            &analog_data_format) < 0)
     {
-      if (ipmi_sdr_parse_ctx_errnum (ctx->sdr_parse_ctx) == IPMI_SDR_PARSE_ERR_INVALID_SDR_RECORD
-          || ipmi_sdr_parse_ctx_errnum (ctx->sdr_parse_ctx) == IPMI_SDR_PARSE_ERR_INCOMPLETE_SDR_RECORD)
+      if (ipmi_sdr_ctx_errnum (ctx->sdr_ctx) == IPMI_SDR_ERR_PARSE_INVALID_SDR_RECORD
+          || ipmi_sdr_ctx_errnum (ctx->sdr_ctx) == IPMI_SDR_ERR_PARSE_INCOMPLETE_SDR_RECORD)
         rv = 0;
       else
         SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_INTERNAL_ERROR);
       goto cleanup;
     }
 
-  if (ipmi_sdr_parse_sensor_units (ctx->sdr_parse_ctx,
+  if (ipmi_sdr_parse_sensor_units (ctx->sdr_ctx,
                                    sdr_record,
                                    sdr_record_len,
                                    &sensor_units_percentage,
@@ -377,8 +377,8 @@ _get_sensor_reading (ipmi_sel_parse_ctx_t ctx,
                                    &sensor_base_unit_type,
                                    &sensor_modifier_unit_type) < 0)
     {
-      if (ipmi_sdr_parse_ctx_errnum (ctx->sdr_parse_ctx) == IPMI_SDR_PARSE_ERR_INVALID_SDR_RECORD
-          || ipmi_sdr_parse_ctx_errnum (ctx->sdr_parse_ctx) == IPMI_SDR_PARSE_ERR_INCOMPLETE_SDR_RECORD)
+      if (ipmi_sdr_ctx_errnum (ctx->sdr_ctx) == IPMI_SDR_ERR_PARSE_INVALID_SDR_RECORD
+          || ipmi_sdr_ctx_errnum (ctx->sdr_ctx) == IPMI_SDR_ERR_PARSE_INCOMPLETE_SDR_RECORD)
         rv = 0;
       else
         SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_INTERNAL_ERROR);

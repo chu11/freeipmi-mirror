@@ -4765,7 +4765,6 @@ ipmi_oem_dell_power_supply_info (ipmi_oem_state_data_t *state_data)
 
   if (calculate_entity_id_counts (state_data->pstate,
 				  state_data->sdr_ctx,
-				  state_data->sdr_parse_ctx,
 				  &entity_id_counts) < 0)
     goto cleanup;
 
@@ -4824,7 +4823,7 @@ ipmi_oem_dell_power_supply_info (ipmi_oem_state_data_t *state_data)
 	  goto cleanup;
 	}
       
-      if (ipmi_sdr_parse_record_id_and_type (state_data->sdr_parse_ctx,
+      if (ipmi_sdr_parse_record_id_and_type (state_data->sdr_ctx,
 					     sdr_record,
 					     sdr_record_len,
 					     &record_id,
@@ -4833,7 +4832,7 @@ ipmi_oem_dell_power_supply_info (ipmi_oem_state_data_t *state_data)
 	  pstdout_fprintf (state_data->pstate,
 			   stderr,
 			   "ipmi_sdr_parse_record_id_and_type: %s\n",
-			   ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+			   ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
 	  goto cleanup;
 	}
       
@@ -4845,7 +4844,7 @@ ipmi_oem_dell_power_supply_info (ipmi_oem_state_data_t *state_data)
 	  uint8_t entity_instance_type;
 	  uint8_t sensor_type;
 	  
-	  if (ipmi_sdr_parse_entity_id_instance_type (state_data->sdr_parse_ctx,
+	  if (ipmi_sdr_parse_entity_id_instance_type (state_data->sdr_ctx,
 						      sdr_record,
 						      sdr_record_len,
 						      &entity_id,
@@ -4855,11 +4854,11 @@ ipmi_oem_dell_power_supply_info (ipmi_oem_state_data_t *state_data)
 	      pstdout_fprintf (state_data->pstate,
 			       stderr,
 			       "ipmi_sdr_parse_entity_id_instance_type: %s\n",
-			       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+			       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
 	      goto cleanup;
 	    }
 	  
-	  if (ipmi_sdr_parse_sensor_type (state_data->sdr_parse_ctx,
+	  if (ipmi_sdr_parse_sensor_type (state_data->sdr_ctx,
 					  sdr_record,
 					  sdr_record_len,
 					  &sensor_type) < 0)
@@ -4867,7 +4866,7 @@ ipmi_oem_dell_power_supply_info (ipmi_oem_state_data_t *state_data)
 	      pstdout_fprintf (state_data->pstate,
 			       stderr,
 			       "ipmi_sdr_parse_sensor_type: %s\n",
-			       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+			       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
 	      goto cleanup;
 	    }
 	  
@@ -4898,7 +4897,7 @@ ipmi_oem_dell_power_supply_info (ipmi_oem_state_data_t *state_data)
 	       */
 
 	      if (get_entity_sensor_name_string (state_data->pstate,
-						 state_data->sdr_parse_ctx,
+						 state_data->sdr_ctx,
 						 sdr_record,
 						 sdr_record_len,
 						 &entity_id_counts,
@@ -6422,7 +6421,7 @@ ipmi_oem_dell_slot_power_control (ipmi_oem_state_data_t *state_data)
 	  goto cleanup;
 	}
       
-      if (ipmi_sdr_parse_record_id_and_type (state_data->sdr_parse_ctx,
+      if (ipmi_sdr_parse_record_id_and_type (state_data->sdr_ctx,
 					     sdr_record,
 					     sdr_record_len,
 					     &record_id,
@@ -6431,7 +6430,7 @@ ipmi_oem_dell_slot_power_control (ipmi_oem_state_data_t *state_data)
 	  pstdout_fprintf (state_data->pstate,
 			   stderr,
 			   "ipmi_sdr_parse_record_id_and_type: %s\n",
-			   ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+			   ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
 	  goto cleanup;
 	}
       
@@ -6442,7 +6441,7 @@ ipmi_oem_dell_slot_power_control (ipmi_oem_state_data_t *state_data)
 	  if (record_type != IPMI_SDR_FORMAT_FULL_SENSOR_RECORD)
 	    continue;
 	  
-	  if (ipmi_sdr_parse_sensor_number (state_data->sdr_parse_ctx,
+	  if (ipmi_sdr_parse_sensor_number (state_data->sdr_ctx,
 					    sdr_record,
 					    sdr_record_len,
 					    &sensor_number) < 0)
@@ -6450,7 +6449,7 @@ ipmi_oem_dell_slot_power_control (ipmi_oem_state_data_t *state_data)
 	      pstdout_fprintf (state_data->pstate,
 			       stderr,
 			       "ipmi_sdr_parse_sensor_number: %s\n",
-			       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+			       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
 	      goto cleanup;
 	    }
 	  

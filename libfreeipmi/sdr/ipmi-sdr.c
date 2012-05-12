@@ -69,6 +69,9 @@ static char *ipmi_sdr_cache_errmsgs[] =
     "SDR cache does not exist",
     "SDR cache invalid",
     "SDR cache out of date",
+    "invalid sdr record",
+    "incomplete sdr record",
+    "cannot parse or calculate",
     "not found",
     "internal IPMI error",
     "internal system error",
@@ -152,7 +155,7 @@ ipmi_sdr_ctx_get_flags (ipmi_sdr_ctx_t ctx, unsigned int *flags)
 
   if (!flags)
     {
-      SDR_CTX_SET_ERRNUM (ctx, IPMI_SDR_ERR_PARAMETERS);
+      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -172,7 +175,7 @@ ipmi_sdr_ctx_set_flags (ipmi_sdr_ctx_t ctx, unsigned int flags)
 
   if (flags & ~IPMI_SDR_FLAGS_DEBUG_DUMP)
     {
-      SDR_CTX_SET_ERRNUM (ctx, IPMI_SDR_ERR_PARAMETERS);
+      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -210,7 +213,7 @@ ipmi_sdr_ctx_set_debug_prefix (ipmi_sdr_ctx_t ctx, const char *debug_prefix)
     {
       if (!(ctx->debug_prefix = strdup (debug_prefix)))
         {
-          SDR_CTX_SET_ERRNUM (ctx, IPMI_SDR_ERR_OUT_OF_MEMORY);
+          SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_OUT_OF_MEMORY);
           return (-1);
         }
     }

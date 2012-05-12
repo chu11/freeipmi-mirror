@@ -67,7 +67,7 @@ _get_sdr_decoding_data (ipmi_sensors_config_state_data_t *state_data,
   assert (linearization);
   assert (analog_data_format);
 
-  if (ipmi_sdr_parse_sensor_decoding_data (state_data->sdr_parse_ctx,
+  if (ipmi_sdr_parse_sensor_decoding_data (state_data->sdr_ctx,
                                            sdr_record,
                                            sdr_record_len,
                                            r_exponent,
@@ -80,7 +80,7 @@ _get_sdr_decoding_data (ipmi_sensors_config_state_data_t *state_data,
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_parse_sensor_decoding_data: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+                       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
       goto cleanup;
     }
 
@@ -272,7 +272,7 @@ threshold_checkout (const char *section_name,
       goto cleanup;
     }
 
-  if (ipmi_sdr_parse_sensor_number (state_data->sdr_parse_ctx,
+  if (ipmi_sdr_parse_sensor_number (state_data->sdr_ctx,
                                     sdr_record,
                                     sdr_record_len,
                                     &sensor_number) < 0)
@@ -280,7 +280,7 @@ threshold_checkout (const char *section_name,
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_parse_sensor_number: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+                       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
       goto cleanup;
     }
 
@@ -452,7 +452,7 @@ threshold_commit (const char *section_name,
       goto cleanup;
     }
 
-  if (ipmi_sdr_parse_sensor_number (state_data->sdr_parse_ctx,
+  if (ipmi_sdr_parse_sensor_number (state_data->sdr_ctx,
                                     sdr_record,
                                     sdr_record_len,
                                     &sensor_number) < 0)
@@ -460,7 +460,7 @@ threshold_commit (const char *section_name,
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_parse_sensor_number: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+                       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
       goto cleanup;
     }
 
@@ -631,7 +631,7 @@ hysteresis_threshold_checkout (const char *section_name,
       goto cleanup;
     }
 
-  if (ipmi_sdr_parse_sensor_capabilities (state_data->sdr_parse_ctx,
+  if (ipmi_sdr_parse_sensor_capabilities (state_data->sdr_ctx,
                                           sdr_record,
                                           sdr_record_len,
                                           NULL,
@@ -643,7 +643,7 @@ hysteresis_threshold_checkout (const char *section_name,
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_parse_sensor_capabilities: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+                       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
       goto cleanup;
     }
 
@@ -657,7 +657,7 @@ hysteresis_threshold_checkout (const char *section_name,
       goto cleanup;
     }
 
-  if (ipmi_sdr_parse_sensor_number (state_data->sdr_parse_ctx,
+  if (ipmi_sdr_parse_sensor_number (state_data->sdr_ctx,
                                     sdr_record,
                                     sdr_record_len,
                                     &sensor_number) < 0)
@@ -665,7 +665,7 @@ hysteresis_threshold_checkout (const char *section_name,
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_parse_sensor_number: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+                       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
       goto cleanup;
     }
 
@@ -749,7 +749,7 @@ hysteresis_threshold_commit (const char *section_name,
       goto cleanup;
     }
 
-  if (ipmi_sdr_parse_sensor_capabilities (state_data->sdr_parse_ctx,
+  if (ipmi_sdr_parse_sensor_capabilities (state_data->sdr_ctx,
                                           sdr_record,
                                           sdr_record_len,
                                           NULL,
@@ -761,7 +761,7 @@ hysteresis_threshold_commit (const char *section_name,
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_parse_sensor_capabilities: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+                       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
       goto cleanup;
     }
 
@@ -773,7 +773,7 @@ hysteresis_threshold_commit (const char *section_name,
       goto cleanup;
     }
 
-  if (ipmi_sdr_parse_sensor_number (state_data->sdr_parse_ctx,
+  if (ipmi_sdr_parse_sensor_number (state_data->sdr_ctx,
                                     sdr_record,
                                     sdr_record_len,
                                     &sensor_number) < 0)
@@ -781,7 +781,7 @@ hysteresis_threshold_commit (const char *section_name,
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_parse_sensor_number: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+                       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
       goto cleanup;
     }
 
@@ -904,7 +904,7 @@ _floating_point_in_range (const char *section_name,
       goto cleanup;
     }
 
-  if (ipmi_sdr_parse_sensor_number (state_data->sdr_parse_ctx,
+  if (ipmi_sdr_parse_sensor_number (state_data->sdr_ctx,
                                     sdr_record,
                                     sdr_record_len,
                                     &sensor_number) < 0)
@@ -912,7 +912,7 @@ _floating_point_in_range (const char *section_name,
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_parse_sensor_number: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+                       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
       goto cleanup;
     }
 
@@ -1162,7 +1162,7 @@ _setup_threshold_fields (ipmi_sensors_config_state_data_t *state_data,
   else
     threshold_validate_ptr = threshold_validate;
 
-  if (ipmi_sdr_parse_threshold_readable (state_data->sdr_parse_ctx,
+  if (ipmi_sdr_parse_threshold_readable (state_data->sdr_ctx,
                                          sdr_record,
                                          sdr_record_len,
                                          &lower_non_critical_threshold_readable,
@@ -1175,11 +1175,11 @@ _setup_threshold_fields (ipmi_sensors_config_state_data_t *state_data,
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_parse_threshold_settable: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+                       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
       goto cleanup;
     }
 
-  if (ipmi_sdr_parse_threshold_settable (state_data->sdr_parse_ctx,
+  if (ipmi_sdr_parse_threshold_settable (state_data->sdr_ctx,
                                          sdr_record,
                                          sdr_record_len,
                                          &lower_non_critical_threshold_settable,
@@ -1192,7 +1192,7 @@ _setup_threshold_fields (ipmi_sensors_config_state_data_t *state_data,
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_parse_threshold_settable: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+                       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
       goto cleanup;
     }
 
@@ -1381,7 +1381,7 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
                                          NULL)))
     goto cleanup;
 
-  if (ipmi_sdr_parse_sensor_capabilities (state_data->sdr_parse_ctx,
+  if (ipmi_sdr_parse_sensor_capabilities (state_data->sdr_ctx,
                                           sdr_record,
                                           sdr_record_len,
                                           NULL,
@@ -1393,11 +1393,11 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_parse_sensor_capabilities: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+                       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
       goto cleanup;
     }
 
-  if (ipmi_sdr_parse_sensor_type (state_data->sdr_parse_ctx,
+  if (ipmi_sdr_parse_sensor_type (state_data->sdr_ctx,
                                   sdr_record,
                                   sdr_record_len,
                                   &sensor_type) < 0)
@@ -1405,11 +1405,11 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_parse_sensor_type: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+                       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
       goto cleanup;
     }
 
-  if (ipmi_sdr_parse_sensor_units (state_data->sdr_parse_ctx,
+  if (ipmi_sdr_parse_sensor_units (state_data->sdr_ctx,
                                    sdr_record,
                                    sdr_record_len,
                                    &sensor_units_percentage,
@@ -1421,7 +1421,7 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_parse_sensor_unit: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+                       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
       goto cleanup;
     }
 

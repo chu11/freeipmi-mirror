@@ -215,7 +215,6 @@ struct ipmi_monitoring_ctx {
 
   /* for sensor codepath */
   ipmi_sensor_read_ctx_t sensor_read_ctx;
-  ipmi_sdr_parse_ctx_t sdr_parse_ctx;
   List sensor_readings;
   ListIterator sensor_readings_itr;
   struct ipmi_monitoring_sensor_reading *current_sensor_reading;

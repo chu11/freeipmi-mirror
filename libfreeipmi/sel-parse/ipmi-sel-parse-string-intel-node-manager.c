@@ -100,6 +100,9 @@ _intel_node_manager_init (ipmi_sel_parse_ctx_t ctx)
 
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+
+  if (!ctx->sdr_ctx)
+    return (0);
   
   if (ctx->intel_node_manager.node_manager_data_parsed)
     return (ctx->intel_node_manager.node_manager_data_found);
@@ -145,14 +148,14 @@ _intel_node_manager_init (ipmi_sel_parse_ctx_t ctx)
       if (!sdr_record_len)
         continue;
       
-      if (ipmi_sdr_parse_record_id_and_type (ctx->sdr_parse_ctx,
+      if (ipmi_sdr_parse_record_id_and_type (ctx->sdr_ctx,
                                              sdr_record,
                                              sdr_record_len,
                                              &record_id,
                                              &record_type) < 0)
         {
-          if (ipmi_sdr_parse_ctx_errnum (ctx->sdr_parse_ctx) == IPMI_SDR_PARSE_ERR_INVALID_SDR_RECORD
-              || ipmi_sdr_parse_ctx_errnum (ctx->sdr_parse_ctx) == IPMI_SDR_PARSE_ERR_INCOMPLETE_SDR_RECORD)
+          if (ipmi_sdr_ctx_errnum (ctx->sdr_ctx) == IPMI_SDR_ERR_PARSE_INVALID_SDR_RECORD
+              || ipmi_sdr_ctx_errnum (ctx->sdr_ctx) == IPMI_SDR_ERR_PARSE_INCOMPLETE_SDR_RECORD)
             continue;
           else
             SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_INTERNAL_ERROR);

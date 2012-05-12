@@ -94,13 +94,6 @@ _ipmi_sensors_config (pstdout_state_t pstate,
       goto cleanup;
     }
 
-  if (!(state_data.sdr_parse_ctx = ipmi_sdr_parse_ctx_create ()))
-    {
-      pstdout_perror (pstate, "ipmi_sdr_parse_ctx_create()");
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
-    }
-
   if (prog_data->args->sdr.flush_cache)
     {
       if (sdr_cache_flush_cache (state_data.sdr_ctx,

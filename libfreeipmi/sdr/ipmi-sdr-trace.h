@@ -34,21 +34,21 @@
 
 #include "ipmi-sdr-util.h"
 
-#define SDR_CTX_SET_ERRNUM(__ctx, __errnum)                                 \
+#define SDR_SET_ERRNUM(__ctx, __errnum)                                     \
   do {                                                                      \
     (__ctx)->errnum = (__errnum);                                           \
     TRACE_MSG_OUT (ipmi_sdr_ctx_errormsg ((__ctx)), (__errnum));            \
   } while (0)
 
-#define SDR_CTX_ERRNO_TO_SDR_CTX_ERRNUM(__ctx, __errno)                     \
+#define SDR_ERRNO_TO_SDR_ERRNUM(__ctx, __errno)                             \
   do {                                                                      \
-    sdr_ctx_set_sdr_ctx_errnum_by_errno ((__ctx), (__errno));           \
+    sdr_set_sdr_errnum_by_errno ((__ctx), (__errno));                       \
     TRACE_ERRNO_OUT ((__errno));                                            \
   } while (0)
 
-#define SDR_CTX_FIID_OBJECT_ERROR_TO_SDR_CTX_ERRNUM(__ctx, __obj)           \
+#define SDR_FIID_OBJECT_ERROR_TO_SDR_ERRNUM(__ctx, __obj)                   \
   do {                                                                      \
-    sdr_ctx_set_sdr_ctx_errnum_by_fiid_object ((__ctx), (__obj));       \
+    sdr_set_sdr_errnum_by_fiid_object ((__ctx), (__obj));                   \
     TRACE_MSG_OUT (fiid_obj_errormsg ((__obj)), fiid_obj_errnum ((__obj))); \
   } while (0)
 

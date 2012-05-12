@@ -35,8 +35,8 @@
 
 #include "ipmi-sdr-defs.h"
 
-void sdr_ctx_set_sdr_ctx_errnum_by_errno (ipmi_sdr_ctx_t ctx, int __errno);
+void sdr_set_sdr_errnum_by_errno (ipmi_sdr_ctx_t ctx, int __errno);
 
-void sdr_ctx_set_sdr_ctx_errnum_by_fiid_object (ipmi_sdr_ctx_t ctx, fiid_obj_t obj);
+void sdr_set_sdr_errnum_by_fiid_object (ipmi_sdr_ctx_t ctx, fiid_obj_t obj);
 
 #endif /* IPMI_SDR_UTIL_H */

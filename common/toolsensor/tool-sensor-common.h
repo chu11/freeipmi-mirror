@@ -80,7 +80,7 @@ const char * get_sensor_type_output_string (unsigned int sensor_type);
 const char * get_oem_sensor_type_output_string (uint8_t sensor_type, uint8_t event_reading_code, uint32_t manufacturer_id, uint16_t product_id);
 
 int get_entity_sensor_name_string (pstdout_state_t pstate,
-                                   ipmi_sdr_parse_ctx_t sdr_parse_ctx,
+                                   ipmi_sdr_ctx_t sdr_ctx,
                                    const void *sdr_record,
                                    unsigned int sdr_record_len,
                                    struct sensor_entity_id_counts *entity_id_counts,
@@ -97,7 +97,7 @@ int valid_sensor_types (pstdout_state_t pstate,
                         unsigned int allow_oem_reserved);
 
 int get_sensor_units_output_string (pstdout_state_t pstate,
-                                    ipmi_sdr_parse_ctx_t sdr_parse_ctx,
+                                    ipmi_sdr_ctx_t sdr_ctx,
                                     const void *sdr_record,
                                     unsigned int sdr_record_len,
                                     char *sensor_units_buf,
@@ -110,7 +110,7 @@ int sensor_type_listed (pstdout_state_t pstate,
                         unsigned int sensor_types_length);
 
 int sensor_type_listed_sdr (pstdout_state_t pstate,
-                            ipmi_sdr_parse_ctx_t sdr_parse_ctx,
+                            ipmi_sdr_ctx_t sdr_ctx,
                             const void *sdr_record,
                             unsigned int sdr_record_len,
                             char sensor_types[][MAX_SENSOR_TYPES_STRING_LENGTH+1],
@@ -118,13 +118,11 @@ int sensor_type_listed_sdr (pstdout_state_t pstate,
 
 int calculate_entity_id_counts (pstdout_state_t pstate,
                                 ipmi_sdr_ctx_t sdr_ctx,
-                                ipmi_sdr_parse_ctx_t sdr_parse_ctx,
                                 struct sensor_entity_id_counts *entity_id_counts);
 
 /* use normal names, set entity_id_counts to NULL */
 int calculate_column_widths (pstdout_state_t pstate,
                              ipmi_sdr_ctx_t sdr_ctx,
-                             ipmi_sdr_parse_ctx_t sdr_parse_ctx,
                              char sensor_types[][MAX_SENSOR_TYPES_STRING_LENGTH+1],
                              unsigned int sensor_types_length,
                              unsigned int record_ids[],

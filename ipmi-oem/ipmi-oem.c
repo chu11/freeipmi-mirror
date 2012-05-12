@@ -1355,13 +1355,6 @@ _ipmi_oem (pstdout_state_t pstate,
       goto cleanup;
     }
   
-  if (!(state_data.sdr_parse_ctx = ipmi_sdr_parse_ctx_create ()))
-    {
-      pstdout_perror (pstate, "ipmi_sdr_parse_ctx_create()");
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
-    }
- 
   if (run_cmd_args (&state_data) < 0)
     {
       exit_code = EXIT_FAILURE;
@@ -1371,7 +1364,6 @@ _ipmi_oem (pstdout_state_t pstate,
   exit_code = 0;
  cleanup:
   ipmi_sdr_ctx_destroy (state_data.sdr_ctx);
-  ipmi_sdr_parse_ctx_destroy (state_data.sdr_parse_ctx);
   ipmi_ctx_close (state_data.ipmi_ctx);
   ipmi_ctx_destroy (state_data.ipmi_ctx);
   return (exit_code);

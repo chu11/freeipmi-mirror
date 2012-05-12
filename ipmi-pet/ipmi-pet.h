@@ -86,7 +86,6 @@ typedef struct ipmi_pet_state_data
   ipmi_ctx_t ipmi_ctx;
   char *hostname;
   ipmi_sdr_ctx_t sdr_ctx;
-  ipmi_sdr_parse_ctx_t sdr_parse_ctx;
   ipmi_sel_parse_ctx_t sel_parse_ctx;
   ipmi_fru_parse_ctx_t fru_parse_ctx;
   ipmi_interpret_ctx_t interpret_ctx;

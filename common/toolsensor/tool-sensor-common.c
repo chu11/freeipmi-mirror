@@ -95,7 +95,7 @@ get_oem_sensor_type_output_string (uint8_t sensor_type,
 
 int
 get_entity_sensor_name_string (pstdout_state_t pstate,
-                               ipmi_sdr_parse_ctx_t sdr_parse_ctx,
+                               ipmi_sdr_ctx_t sdr_ctx,
                                const void *sdr_record,
                                unsigned int sdr_record_len,
                                struct sensor_entity_id_counts *entity_id_counts,
@@ -111,7 +111,7 @@ get_entity_sensor_name_string (pstdout_state_t pstate,
   uint16_t record_id;
   uint8_t record_type;
 
-  assert (sdr_parse_ctx);
+  assert (sdr_ctx);
   assert (sdr_record);
   assert (sdr_record_len);
   assert (entity_id_counts);
@@ -120,7 +120,7 @@ get_entity_sensor_name_string (pstdout_state_t pstate,
 
   memset (sensor_name_buf, '\0', sensor_name_buf_len);
 
-  if (ipmi_sdr_parse_record_id_and_type (sdr_parse_ctx,
+  if (ipmi_sdr_parse_record_id_and_type (sdr_ctx,
                                          sdr_record,
                                          sdr_record_len,
                                          &record_id,
@@ -129,7 +129,7 @@ get_entity_sensor_name_string (pstdout_state_t pstate,
       PSTDOUT_FPRINTF (pstate,
                        stderr,
                        "ipmi_sdr_parse_record_id_and_type: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg (sdr_parse_ctx));
+                       ipmi_sdr_ctx_errormsg (sdr_ctx));
       return (-1);
     }
   
@@ -138,7 +138,7 @@ get_entity_sensor_name_string (pstdout_state_t pstate,
       || record_type == IPMI_SDR_FORMAT_EVENT_ONLY_RECORD)
     {
       memset (id_string, '\0', IPMI_SDR_CACHE_MAX_ID_STRING + 1);
-      if (ipmi_sdr_parse_id_string (sdr_parse_ctx,
+      if (ipmi_sdr_parse_id_string (sdr_ctx,
                                     sdr_record,
                                     sdr_record_len,
                                     id_string,
@@ -147,7 +147,7 @@ get_entity_sensor_name_string (pstdout_state_t pstate,
           PSTDOUT_FPRINTF (pstate,
                            stderr,
                            "ipmi_sdr_parse_id_string: %s\n",
-                           ipmi_sdr_parse_ctx_errormsg (sdr_parse_ctx));
+                           ipmi_sdr_ctx_errormsg (sdr_ctx));
           return (-1);
         }
 
@@ -157,7 +157,7 @@ get_entity_sensor_name_string (pstdout_state_t pstate,
            || record_type == IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD)
     {
       memset (device_id_string, '\0', IPMI_SDR_CACHE_MAX_DEVICE_ID_STRING + 1);
-      if (ipmi_sdr_parse_device_id_string (sdr_parse_ctx,
+      if (ipmi_sdr_parse_device_id_string (sdr_ctx,
                                            sdr_record,
                                            sdr_record_len,
                                            device_id_string,
@@ -166,7 +166,7 @@ get_entity_sensor_name_string (pstdout_state_t pstate,
           PSTDOUT_FPRINTF (pstate,
                            stderr,
                            "ipmi_sdr_parse_device_id_string: %s\n",
-                           ipmi_sdr_parse_ctx_errormsg (sdr_parse_ctx));
+                           ipmi_sdr_ctx_errormsg (sdr_ctx));
           return (-1);
         }
       
@@ -181,7 +181,7 @@ get_entity_sensor_name_string (pstdout_state_t pstate,
       return (-1);
     }
 
-  if (ipmi_sdr_parse_entity_id_instance_type (sdr_parse_ctx,
+  if (ipmi_sdr_parse_entity_id_instance_type (sdr_ctx,
                                               sdr_record,
                                               sdr_record_len,
                                               &entity_id,
@@ -191,7 +191,7 @@ get_entity_sensor_name_string (pstdout_state_t pstate,
       PSTDOUT_FPRINTF (pstate,
                        stderr,
                        "ipmi_sdr_parse_entity_id_instance_type: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg (sdr_parse_ctx));
+                       ipmi_sdr_ctx_errormsg (sdr_ctx));
       return (-1);
     }
 
@@ -224,7 +224,7 @@ get_entity_sensor_name_string (pstdout_state_t pstate,
               uint8_t id_string_instance_modifier_offset;
               uint8_t entity_instance_sharing;
 
-              if (ipmi_sdr_parse_sensor_record_sharing (sdr_parse_ctx,
+              if (ipmi_sdr_parse_sensor_record_sharing (sdr_ctx,
                                                         sdr_record,
                                                         sdr_record_len,
                                                         &share_count,
@@ -235,7 +235,7 @@ get_entity_sensor_name_string (pstdout_state_t pstate,
                   PSTDOUT_FPRINTF (pstate,
                                    stderr,
                                    "ipmi_sdr_parse_sensor_record_sharing: %s\n",
-                                   ipmi_sdr_parse_ctx_errormsg (sdr_parse_ctx));
+                                   ipmi_sdr_ctx_errormsg (sdr_ctx));
                   return (-1);
                 }
 
@@ -245,7 +245,7 @@ get_entity_sensor_name_string (pstdout_state_t pstate,
                   uint8_t sensor_number_base;
                   uint8_t sensor_number_offset;
 
-                  if (ipmi_sdr_parse_sensor_number (sdr_parse_ctx,
+                  if (ipmi_sdr_parse_sensor_number (sdr_ctx,
                                                     sdr_record,
                                                     sdr_record_len,
                                                     &sensor_number_base) < 0)
@@ -253,7 +253,7 @@ get_entity_sensor_name_string (pstdout_state_t pstate,
                       PSTDOUT_FPRINTF (pstate,
                                        stderr,
                                        "ipmi_sdr_parse_sensor_number: %s\n",
-                                       ipmi_sdr_parse_ctx_errormsg (sdr_parse_ctx));
+                                       ipmi_sdr_ctx_errormsg (sdr_ctx));
                       return (-1);
                     }
 
@@ -473,7 +473,7 @@ valid_sensor_types (pstdout_state_t pstate,
 
 int
 get_sensor_units_output_string (pstdout_state_t pstate,
-                                ipmi_sdr_parse_ctx_t sdr_parse_ctx,
+                                ipmi_sdr_ctx_t sdr_ctx,
                                 const void *sdr_record,
                                 unsigned int sdr_record_len,
                                 char *sensor_units_buf,
@@ -488,13 +488,13 @@ get_sensor_units_output_string (pstdout_state_t pstate,
   int sensor_units_ret = 0;
   int rv = -1;
 
-  assert (sdr_parse_ctx);
+  assert (sdr_ctx);
   assert (sdr_record);
   assert (sdr_record_len);
   assert (sensor_units_buf);
   assert (sensor_units_buflen);
 
-  if (ipmi_sdr_parse_sensor_units (sdr_parse_ctx,
+  if (ipmi_sdr_parse_sensor_units (sdr_ctx,
                                    sdr_record,
                                    sdr_record_len,
                                    &sensor_units_percentage,
@@ -506,7 +506,7 @@ get_sensor_units_output_string (pstdout_state_t pstate,
       PSTDOUT_FPRINTF (pstate,
                        stderr,
                        "ipmi_sdr_parse_sensor_units: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg (sdr_parse_ctx));
+                       ipmi_sdr_ctx_errormsg (sdr_ctx));
       goto cleanup;
     }
   
@@ -618,7 +618,7 @@ sensor_type_listed (pstdout_state_t pstate,
 
 int
 sensor_type_listed_sdr (pstdout_state_t pstate,
-                        ipmi_sdr_parse_ctx_t sdr_parse_ctx,
+                        ipmi_sdr_ctx_t sdr_ctx,
                         const void *sdr_record,
                         unsigned int sdr_record_len,
                         char sensor_types[][MAX_SENSOR_TYPES_STRING_LENGTH+1],
@@ -628,13 +628,13 @@ sensor_type_listed_sdr (pstdout_state_t pstate,
   uint8_t record_type;
   uint8_t sensor_type;
 
-  assert (sdr_parse_ctx);
+  assert (sdr_ctx);
   assert (sdr_record);
   assert (sdr_record_len);
   assert (sensor_types);
   assert (sensor_types_length);
 
-  if (ipmi_sdr_parse_record_id_and_type (sdr_parse_ctx,
+  if (ipmi_sdr_parse_record_id_and_type (sdr_ctx,
                                          sdr_record,
                                          sdr_record_len,
                                          &record_id,
@@ -643,7 +643,7 @@ sensor_type_listed_sdr (pstdout_state_t pstate,
       PSTDOUT_FPRINTF (pstate,
                        stderr,
                        "ipmi_sdr_parse_record_id_and_type: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg (sdr_parse_ctx));
+                       ipmi_sdr_ctx_errormsg (sdr_ctx));
       return (-1);
     }
 
@@ -652,7 +652,7 @@ sensor_type_listed_sdr (pstdout_state_t pstate,
       && record_type != IPMI_SDR_FORMAT_EVENT_ONLY_RECORD)
     return (0);
 
-  if (ipmi_sdr_parse_sensor_type (sdr_parse_ctx,
+  if (ipmi_sdr_parse_sensor_type (sdr_ctx,
                                   sdr_record,
                                   sdr_record_len,
                                   &sensor_type) < 0)
@@ -660,7 +660,7 @@ sensor_type_listed_sdr (pstdout_state_t pstate,
       PSTDOUT_FPRINTF (pstate,
                        stderr,
                        "ipmi_sdr_parse_sensor_type: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg (sdr_parse_ctx));
+                       ipmi_sdr_ctx_errormsg (sdr_ctx));
       return (-1);
     }
 
@@ -680,7 +680,7 @@ _sensor_entity_id_counts_init (struct sensor_entity_id_counts *entity_id_counts)
 
 static int
 _store_entity_id_count (pstdout_state_t pstate,
-                        ipmi_sdr_parse_ctx_t sdr_parse_ctx,
+                        ipmi_sdr_ctx_t sdr_ctx,
                         const void *sdr_record,
                         unsigned int sdr_record_len,
                         struct sensor_entity_id_counts *entity_id_counts)
@@ -689,12 +689,12 @@ _store_entity_id_count (pstdout_state_t pstate,
   uint8_t record_type;
   uint8_t entity_id, entity_instance, entity_instance_type;
 
-  assert (sdr_parse_ctx);
+  assert (sdr_ctx);
   assert (sdr_record);
   assert (sdr_record_len);
   assert (entity_id_counts);
 
-  if (ipmi_sdr_parse_record_id_and_type (sdr_parse_ctx,
+  if (ipmi_sdr_parse_record_id_and_type (sdr_ctx,
                                          sdr_record,
                                          sdr_record_len,
                                          &record_id,
@@ -703,7 +703,7 @@ _store_entity_id_count (pstdout_state_t pstate,
       PSTDOUT_FPRINTF (pstate,
                        stderr,
                        "ipmi_sdr_parse_record_id_and_type: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg (sdr_parse_ctx));
+                       ipmi_sdr_ctx_errormsg (sdr_ctx));
       return (-1);
     }
 
@@ -714,7 +714,7 @@ _store_entity_id_count (pstdout_state_t pstate,
       && record_type != IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD)
     return (0);
 
-  if (ipmi_sdr_parse_entity_id_instance_type (sdr_parse_ctx,
+  if (ipmi_sdr_parse_entity_id_instance_type (sdr_ctx,
                                               sdr_record,
                                               sdr_record_len,
                                               &entity_id,
@@ -724,7 +724,7 @@ _store_entity_id_count (pstdout_state_t pstate,
       PSTDOUT_FPRINTF (pstate,
                        stderr,
                        "ipmi_sdr_parse_entity_id_instance_type: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg (sdr_parse_ctx));
+                       ipmi_sdr_ctx_errormsg (sdr_ctx));
       return (-1);
     }
 
@@ -742,7 +742,7 @@ _store_entity_id_count (pstdout_state_t pstate,
       uint8_t share_count;
       uint8_t entity_instance_sharing;
 
-      if (ipmi_sdr_parse_sensor_record_sharing (sdr_parse_ctx,
+      if (ipmi_sdr_parse_sensor_record_sharing (sdr_ctx,
                                                 sdr_record,
                                                 sdr_record_len,
                                                 &share_count,
@@ -753,7 +753,7 @@ _store_entity_id_count (pstdout_state_t pstate,
           PSTDOUT_FPRINTF (pstate,
                            stderr,
                            "ipmi_sdr_parse_sensor_record_sharing: %s\n",
-                           ipmi_sdr_parse_ctx_errormsg (sdr_parse_ctx));
+                           ipmi_sdr_ctx_errormsg (sdr_ctx));
           return (-1);
         }
       
@@ -778,7 +778,6 @@ _store_entity_id_count (pstdout_state_t pstate,
 int
 calculate_entity_id_counts (pstdout_state_t pstate,
                             ipmi_sdr_ctx_t sdr_ctx,
-                            ipmi_sdr_parse_ctx_t sdr_parse_ctx,
                             struct sensor_entity_id_counts *entity_id_counts)
 {
   uint8_t sdr_record[IPMI_SDR_MAX_RECORD_LENGTH];
@@ -788,7 +787,6 @@ calculate_entity_id_counts (pstdout_state_t pstate,
   int i;
 
   assert (sdr_ctx);
-  assert (sdr_parse_ctx);
   assert (entity_id_counts);
 
   _sensor_entity_id_counts_init (entity_id_counts);
@@ -820,7 +818,7 @@ calculate_entity_id_counts (pstdout_state_t pstate,
         continue;
       
       if (_store_entity_id_count (pstate,
-                                  sdr_parse_ctx,
+                                  sdr_ctx,
                                   sdr_record,
                                   sdr_record_len,
                                   entity_id_counts) < 0)
@@ -861,7 +859,7 @@ _sensor_column_width_finish (struct sensor_column_width *column_width)
 
 static int
 _store_column_widths (pstdout_state_t pstate,
-                      ipmi_sdr_parse_ctx_t sdr_parse_ctx,
+                      ipmi_sdr_ctx_t sdr_ctx,
                       const void *sdr_record,
                       unsigned int sdr_record_len,
                       uint8_t *sensor_number,
@@ -879,12 +877,12 @@ _store_column_widths (pstdout_state_t pstate,
   uint8_t event_reading_type_code;
   int len;
 
-  assert (sdr_parse_ctx);
+  assert (sdr_ctx);
   assert (sdr_record);
   assert (sdr_record_len);
   assert (column_width);
 
-  if (ipmi_sdr_parse_record_id_and_type (sdr_parse_ctx,
+  if (ipmi_sdr_parse_record_id_and_type (sdr_ctx,
                                          sdr_record,
                                          sdr_record_len,
                                          &record_id,
@@ -893,7 +891,7 @@ _store_column_widths (pstdout_state_t pstate,
       PSTDOUT_FPRINTF (pstate,
                        stderr,
                        "ipmi_sdr_parse_record_id_and_type: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg (sdr_parse_ctx));
+                       ipmi_sdr_ctx_errormsg (sdr_ctx));
       return (-1);
     }
 
@@ -926,7 +924,7 @@ _store_column_widths (pstdout_state_t pstate,
       memset (sensor_name, '\0', MAX_ENTITY_ID_SENSOR_NAME_STRING + 1);
 
       if (get_entity_sensor_name_string (pstate,
-                                         sdr_parse_ctx,
+                                         sdr_ctx,
                                          sdr_record,
                                          sdr_record_len,
                                          entity_id_counts,
@@ -950,7 +948,7 @@ _store_column_widths (pstdout_state_t pstate,
           || record_type == IPMI_SDR_FORMAT_EVENT_ONLY_RECORD)
         {
           memset (id_string, '\0', IPMI_SDR_CACHE_MAX_ID_STRING + 1);
-          if (ipmi_sdr_parse_id_string (sdr_parse_ctx,
+          if (ipmi_sdr_parse_id_string (sdr_ctx,
                                         sdr_record,
                                         sdr_record_len,
                                         id_string,
@@ -959,7 +957,7 @@ _store_column_widths (pstdout_state_t pstate,
               PSTDOUT_FPRINTF (pstate,
                                stderr,
                                "ipmi_sdr_parse_id_string: %s\n",
-                               ipmi_sdr_parse_ctx_errormsg (sdr_parse_ctx));
+                               ipmi_sdr_ctx_errormsg (sdr_ctx));
               return (-1);
             }
 
@@ -968,7 +966,7 @@ _store_column_widths (pstdout_state_t pstate,
       else
         {
           memset (device_id_string, '\0', IPMI_SDR_CACHE_MAX_DEVICE_ID_STRING + 1);
-          if (ipmi_sdr_parse_device_id_string (sdr_parse_ctx,
+          if (ipmi_sdr_parse_device_id_string (sdr_ctx,
                                                sdr_record,
                                                sdr_record_len,
                                                device_id_string,
@@ -977,7 +975,7 @@ _store_column_widths (pstdout_state_t pstate,
               PSTDOUT_FPRINTF (pstate,
                                stderr,
                                "ipmi_sdr_parse_device_id_string: %s\n",
-                               ipmi_sdr_parse_ctx_errormsg (sdr_parse_ctx));
+                               ipmi_sdr_ctx_errormsg (sdr_ctx));
               return (-1);
             }
 
@@ -993,7 +991,7 @@ _store_column_widths (pstdout_state_t pstate,
       || record_type == IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD
       || record_type == IPMI_SDR_FORMAT_EVENT_ONLY_RECORD)
     {
-      if (ipmi_sdr_parse_sensor_type (sdr_parse_ctx,
+      if (ipmi_sdr_parse_sensor_type (sdr_ctx,
                                       sdr_record,
                                       sdr_record_len,
                                       &sensor_type) < 0)
@@ -1001,7 +999,7 @@ _store_column_widths (pstdout_state_t pstate,
           PSTDOUT_FPRINTF (pstate,
                            stderr,
                            "ipmi_sdr_parse_sensor_type: %s\n",
-                           ipmi_sdr_parse_ctx_errormsg (sdr_parse_ctx));
+                           ipmi_sdr_ctx_errormsg (sdr_ctx));
           return (-1);
         }
 
@@ -1009,7 +1007,7 @@ _store_column_widths (pstdout_state_t pstate,
       if (len > column_width->sensor_type)
         column_width->sensor_type = len;
 
-      if (ipmi_sdr_parse_event_reading_type_code (sdr_parse_ctx,
+      if (ipmi_sdr_parse_event_reading_type_code (sdr_ctx,
                                                   sdr_record,
                                                   sdr_record_len,
                                                   &event_reading_type_code) < 0)
@@ -1017,7 +1015,7 @@ _store_column_widths (pstdout_state_t pstate,
           PSTDOUT_FPRINTF (pstate,
                            stderr,
                            "ipmi_sdr_parse_event_reading_type_code: %s\n",
-                           ipmi_sdr_parse_ctx_errormsg (sdr_parse_ctx));
+                           ipmi_sdr_ctx_errormsg (sdr_ctx));
           return (-1);
         }
 
@@ -1027,7 +1025,7 @@ _store_column_widths (pstdout_state_t pstate,
           
           memset (sensor_units_buf, '\0', SENSOR_UNITS_BUFLEN + 1);
           if (get_sensor_units_output_string (pstate,
-                                              sdr_parse_ctx,
+                                              sdr_ctx,
                                               sdr_record,
                                               sdr_record_len,
                                               sensor_units_buf,
@@ -1046,7 +1044,7 @@ _store_column_widths (pstdout_state_t pstate,
 
 static int
 _store_column_widths_shared (pstdout_state_t pstate,
-                             ipmi_sdr_parse_ctx_t sdr_parse_ctx,
+                             ipmi_sdr_ctx_t sdr_ctx,
                              const void *sdr_record,
                              unsigned int sdr_record_len,
                              unsigned int non_abbreviated_units,
@@ -1061,12 +1059,12 @@ _store_column_widths_shared (pstdout_state_t pstate,
   uint8_t sensor_number_base;
   int i;
 
-  assert (sdr_parse_ctx);
+  assert (sdr_ctx);
   assert (sdr_record);
   assert (sdr_record_len);
   assert (column_width);
 
-  if (ipmi_sdr_parse_record_id_and_type (sdr_parse_ctx,
+  if (ipmi_sdr_parse_record_id_and_type (sdr_ctx,
                                          sdr_record,
                                          sdr_record_len,
                                          NULL,
@@ -1075,7 +1073,7 @@ _store_column_widths_shared (pstdout_state_t pstate,
       PSTDOUT_FPRINTF (pstate,
                        stderr,
                        "ipmi_sdr_parse_record_id_and_type: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg (sdr_parse_ctx));
+                       ipmi_sdr_ctx_errormsg (sdr_ctx));
       return (-1);
     }
 
@@ -1083,7 +1081,7 @@ _store_column_widths_shared (pstdout_state_t pstate,
       && record_type != IPMI_SDR_FORMAT_EVENT_ONLY_RECORD)
     {
       if (_store_column_widths (pstate,
-                                sdr_parse_ctx,
+                                sdr_ctx,
                                 sdr_record,
                                 sdr_record_len,
                                 NULL,
@@ -1097,7 +1095,7 @@ _store_column_widths_shared (pstdout_state_t pstate,
       return (0);
     }
   
-  if (ipmi_sdr_parse_sensor_record_sharing (sdr_parse_ctx,
+  if (ipmi_sdr_parse_sensor_record_sharing (sdr_ctx,
                                             sdr_record,
                                             sdr_record_len,
                                             &share_count,
@@ -1108,14 +1106,14 @@ _store_column_widths_shared (pstdout_state_t pstate,
       PSTDOUT_FPRINTF (pstate,
                        stderr,
                        "ipmi_sdr_parse_sensor_record_sharing: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg (sdr_parse_ctx));
+                       ipmi_sdr_ctx_errormsg (sdr_ctx));
       return (-1);
     }
   
   if (share_count <= 1)
     {
       if (_store_column_widths (pstate,
-                                sdr_parse_ctx,
+                                sdr_ctx,
                                 sdr_record,
                                 sdr_record_len,
                                 NULL,
@@ -1129,7 +1127,7 @@ _store_column_widths_shared (pstdout_state_t pstate,
       return (0);
     }
 
-  if (ipmi_sdr_parse_sensor_number (sdr_parse_ctx,
+  if (ipmi_sdr_parse_sensor_number (sdr_ctx,
                                     sdr_record,
                                     sdr_record_len,
                                     &sensor_number_base) < 0)
@@ -1137,7 +1135,7 @@ _store_column_widths_shared (pstdout_state_t pstate,
       PSTDOUT_FPRINTF (pstate,
                        stderr,
                        "ipmi_sdr_parse_sensor_number: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg (sdr_parse_ctx));
+                       ipmi_sdr_ctx_errormsg (sdr_ctx));
       return (-1);
     }
 
@@ -1155,7 +1153,7 @@ _store_column_widths_shared (pstdout_state_t pstate,
       sensor_number = sensor_number_base + i;
       
       if (_store_column_widths (pstate,
-                                sdr_parse_ctx,
+                                sdr_ctx,
                                 sdr_record,
                                 sdr_record_len,
                                 &sensor_number,
@@ -1174,7 +1172,6 @@ _store_column_widths_shared (pstdout_state_t pstate,
 int
 calculate_column_widths (pstdout_state_t pstate,
                          ipmi_sdr_ctx_t sdr_ctx,
-                         ipmi_sdr_parse_ctx_t sdr_parse_ctx,
                          char sensor_types[][MAX_SENSOR_TYPES_STRING_LENGTH+1],
                          unsigned int sensor_types_length,
                          unsigned int record_ids[],
@@ -1193,7 +1190,6 @@ calculate_column_widths (pstdout_state_t pstate,
   int i;
 
   assert (sdr_ctx);
-  assert (sdr_parse_ctx);
   assert (column_width);
 
   _sensor_column_width_init (column_width);
@@ -1234,7 +1230,7 @@ calculate_column_widths (pstdout_state_t pstate,
           if (shared_sensors)
             {
               if (_store_column_widths_shared (pstate,
-                                               sdr_parse_ctx,
+                                               sdr_ctx,
                                                sdr_record,
                                                sdr_record_len,
                                                non_abbreviated_units,
@@ -1248,7 +1244,7 @@ calculate_column_widths (pstdout_state_t pstate,
           else
             {
               if (_store_column_widths (pstate,
-                                        sdr_parse_ctx,
+                                        sdr_ctx,
                                         sdr_record,
                                         sdr_record_len,
                                         NULL,
@@ -1297,7 +1293,7 @@ calculate_column_widths (pstdout_state_t pstate,
           if (sensor_types && sensor_types_length)
             {
               if ((ret = sensor_type_listed_sdr (pstate,
-                                                 sdr_parse_ctx,
+                                                 sdr_ctx,
                                                  sdr_record,
                                                  sdr_record_len,
                                                  sensor_types,
@@ -1312,7 +1308,7 @@ calculate_column_widths (pstdout_state_t pstate,
               if (shared_sensors)
                 {
                   if (_store_column_widths_shared (pstate,
-                                                   sdr_parse_ctx,
+                                                   sdr_ctx,
                                                    sdr_record,
                                                    sdr_record_len,
                                                    non_abbreviated_units,
@@ -1326,7 +1322,7 @@ calculate_column_widths (pstdout_state_t pstate,
               else
                 {
                   if (_store_column_widths (pstate,
-                                            sdr_parse_ctx,
+                                            sdr_ctx,
                                             sdr_record,
                                             sdr_record_len,
                                             NULL,

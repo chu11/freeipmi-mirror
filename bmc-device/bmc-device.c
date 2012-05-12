@@ -1022,7 +1022,7 @@ rearm_sensor (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (ipmi_sdr_parse_record_id_and_type (state_data->sdr_parse_ctx,
+  if (ipmi_sdr_parse_record_id_and_type (state_data->sdr_ctx,
                                          sdr_record,
                                          sdr_record_len,
                                          NULL,
@@ -1031,7 +1031,7 @@ rearm_sensor (bmc_device_state_data_t *state_data)
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_parse_record_id_and_type: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+                       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
       goto cleanup;
     }
 
@@ -1046,7 +1046,7 @@ rearm_sensor (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
   
-  if (ipmi_sdr_parse_sensor_number (state_data->sdr_parse_ctx,
+  if (ipmi_sdr_parse_sensor_number (state_data->sdr_ctx,
                                     sdr_record,
                                     sdr_record_len,
                                     &sensor_number) < 0)
@@ -1054,11 +1054,11 @@ rearm_sensor (bmc_device_state_data_t *state_data)
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_parse_sensor_number: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+                       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
       goto cleanup;
     }
 
-  if (ipmi_sdr_parse_sensor_owner_id (state_data->sdr_parse_ctx,
+  if (ipmi_sdr_parse_sensor_owner_id (state_data->sdr_ctx,
                                       sdr_record,
                                       sdr_record_len,
                                       &sensor_owner_id_type,
@@ -1067,11 +1067,11 @@ rearm_sensor (bmc_device_state_data_t *state_data)
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_parse_sensor_owner_id: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+                       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
       goto cleanup;
     }
 
-  if (ipmi_sdr_parse_sensor_owner_lun (state_data->sdr_parse_ctx,
+  if (ipmi_sdr_parse_sensor_owner_lun (state_data->sdr_ctx,
                                        sdr_record,
                                        sdr_record_len,
                                        &sensor_owner_lun,
@@ -1080,7 +1080,7 @@ rearm_sensor (bmc_device_state_data_t *state_data)
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_parse_sensor_owner_lun: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+                       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
       goto cleanup;
     }
 
@@ -2703,13 +2703,6 @@ _bmc_device (pstdout_state_t pstate,
       goto cleanup;
     }
   
-  if (!(state_data.sdr_parse_ctx = ipmi_sdr_parse_ctx_create ()))
-    {
-      pstdout_perror (pstate, "ipmi_sdr_parse_ctx_create()");
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
-    }
-
   if (run_cmd_args (&state_data) < 0)
     {
       exit_code = EXIT_FAILURE;
@@ -2719,7 +2712,6 @@ _bmc_device (pstdout_state_t pstate,
   exit_code = 0;
  cleanup:
   ipmi_sdr_ctx_destroy (state_data.sdr_ctx);
-  ipmi_sdr_parse_ctx_destroy (state_data.sdr_parse_ctx);
   ipmi_ctx_close (state_data.ipmi_ctx);
   ipmi_ctx_destroy (state_data.ipmi_ctx);
   return (exit_code);

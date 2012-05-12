@@ -840,7 +840,6 @@ _normal_output_sensor_name (ipmi_sel_state_data_t *state_data, unsigned int flag
   return (event_output_sensor_name (state_data->pstate,
                                     state_data->sel_parse_ctx,
                                     state_data->sdr_ctx,
-                                    state_data->sdr_parse_ctx,
 				    NULL,
 				    0,
                                     &state_data->entity_id_counts,
@@ -1745,7 +1744,6 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
             {
               if (calculate_entity_id_counts (state_data->pstate,
                                               state_data->sdr_ctx,
-                                              state_data->sdr_parse_ctx,
                                               &(state_data->entity_id_counts)) < 0)
                 goto cleanup;
               
@@ -1754,7 +1752,6 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
           
           if (calculate_column_widths (state_data->pstate,
                                        state_data->sdr_ctx,
-                                       state_data->sdr_parse_ctx,
                                        NULL,
                                        0,
                                        NULL,
@@ -2208,13 +2205,6 @@ _ipmi_sel (pstdout_state_t pstate,
       goto cleanup;
     }
 
-  if (!(state_data.sdr_parse_ctx = ipmi_sdr_parse_ctx_create ()))
-    {
-      pstdout_perror (pstate, "ipmi_sdr_parse_ctx_create()");
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
-    }
-
   /* Special case, just flush, don't do SEL stuff */
   if (!prog_data->args->sdr.flush_cache)
     {
@@ -2336,7 +2326,6 @@ _ipmi_sel (pstdout_state_t pstate,
   exit_code = 0;
  cleanup:
   ipmi_sdr_ctx_destroy (state_data.sdr_ctx);
-  ipmi_sdr_parse_ctx_destroy (state_data.sdr_parse_ctx);
   ipmi_sel_parse_ctx_destroy (state_data.sel_parse_ctx);
   ipmi_ctx_close (state_data.ipmi_ctx);
   ipmi_ctx_destroy (state_data.ipmi_ctx);

@@ -120,7 +120,6 @@ typedef struct bmc_device_state_data
   pstdout_state_t pstate;
   char *hostname;
   ipmi_sdr_ctx_t sdr_ctx;
-  ipmi_sdr_parse_ctx_t sdr_parse_ctx;
 } bmc_device_state_data_t;
 
 #endif /* BMC_DEVICE_H */

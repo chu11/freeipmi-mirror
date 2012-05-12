@@ -56,7 +56,6 @@ typedef struct ipmi_sensors_config_state_data
   pstdout_state_t pstate;
   struct config_section *sections;
   ipmi_sdr_ctx_t sdr_ctx;
-  ipmi_sdr_parse_ctx_t sdr_parse_ctx;
 } ipmi_sensors_config_state_data_t;
 
 #endif /* IPMI_SENSORS_CONFIG_H */

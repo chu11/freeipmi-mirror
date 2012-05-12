@@ -109,7 +109,7 @@ _ipmi_oem_intelnm_node_manager_init (ipmi_oem_state_data_t *state_data,
           goto cleanup;
         }
 
-      if (ipmi_sdr_parse_record_id_and_type (state_data->sdr_parse_ctx,
+      if (ipmi_sdr_parse_record_id_and_type (state_data->sdr_ctx,
                                              sdr_record,
                                              sdr_record_len,
                                              &record_id,
@@ -118,7 +118,7 @@ _ipmi_oem_intelnm_node_manager_init (ipmi_oem_state_data_t *state_data,
           pstdout_fprintf (state_data->pstate,
                            stderr,
                            "ipmi_sdr_parse_record_id_and_type: %s\n",
-                           ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+                           ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
           goto cleanup;
         }
       
