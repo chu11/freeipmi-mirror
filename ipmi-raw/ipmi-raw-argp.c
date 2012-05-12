@@ -95,7 +95,6 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 {
   struct ipmi_raw_arguments *cmd_args;
   char *endptr;
-  int value;
   error_t ret;
 
   assert (state);
