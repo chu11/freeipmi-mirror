@@ -906,6 +906,6 @@ ipmi_sdr_cache_create (ipmi_sdr_ctx_t ctx,
       close (fd);
     }
   free (record_ids);
-  ipmi_sdr_cache_init_ctx (ctx);
+  ipmi_sdr_init_ctx (ctx);
   return (rv);
 }

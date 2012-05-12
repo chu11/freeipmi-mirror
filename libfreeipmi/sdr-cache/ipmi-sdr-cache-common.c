@@ -51,7 +51,7 @@
 #include "freeipmi-portability.h"
 
 void
-ipmi_sdr_cache_init_ctx (ipmi_sdr_ctx_t ctx)
+ipmi_sdr_init_ctx (ipmi_sdr_ctx_t ctx)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SDR_CTX_MAGIC);

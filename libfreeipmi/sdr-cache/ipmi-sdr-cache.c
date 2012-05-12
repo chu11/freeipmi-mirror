@@ -92,7 +92,7 @@ ipmi_sdr_ctx_create (void)
   ctx->magic = IPMI_SDR_CTX_MAGIC;
   ctx->flags = IPMI_SDR_FLAGS_DEFAULT;
   ctx->debug_prefix = NULL;
-  ipmi_sdr_cache_init_ctx (ctx);
+  ipmi_sdr_init_ctx (ctx);
   return (ctx);
 }
 

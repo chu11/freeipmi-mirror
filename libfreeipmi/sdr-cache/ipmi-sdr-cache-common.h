@@ -35,7 +35,7 @@
 
 #define IPMI_SDR_CACHE_DEBUG_BUFLEN 256
 
-void ipmi_sdr_cache_init_ctx (ipmi_sdr_ctx_t ctx);
+void ipmi_sdr_init_ctx (ipmi_sdr_ctx_t ctx);
 
 int ipmi_sdr_cache_info (ipmi_sdr_ctx_t ctx,
                          ipmi_ctx_t ipmi_ctx,
