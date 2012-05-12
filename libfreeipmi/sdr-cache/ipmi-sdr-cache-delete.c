@@ -53,7 +53,7 @@ ipmi_sdr_cache_delete (ipmi_sdr_ctx_t ctx, const char *filename)
 
   if (!ctx || ctx->magic != IPMI_SDR_CACHE_CTX_MAGIC)
     {
-      ERR_TRACE (ipmi_sdr_cache_ctx_errormsg (ctx), ipmi_sdr_cache_ctx_errnum (ctx));
+      ERR_TRACE (ipmi_sdr_ctx_errormsg (ctx), ipmi_sdr_ctx_errnum (ctx));
       return (-1);
     }
 

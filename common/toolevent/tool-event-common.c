@@ -422,7 +422,7 @@ event_output_sensor_name (pstdout_state_t pstate,
             PSTDOUT_FPRINTF (pstate,
                              stderr,
                              "ipmi_sdr_cache_search_sensor: %s\n",
-                             ipmi_sdr_cache_ctx_errormsg (sdr_cache_ctx));
+                             ipmi_sdr_ctx_errormsg (sdr_cache_ctx));
           goto normal_sensor_output;
         }
 
@@ -433,7 +433,7 @@ event_output_sensor_name (pstdout_state_t pstate,
           PSTDOUT_FPRINTF (pstate,
                            stderr,
                            "ipmi_sdr_cache_record_read: %s\n",
-                           ipmi_sdr_cache_ctx_errormsg (sdr_cache_ctx));
+                           ipmi_sdr_ctx_errormsg (sdr_cache_ctx));
           return (-1);
         }
 

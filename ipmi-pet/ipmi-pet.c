@@ -1323,12 +1323,12 @@ _ipmi_pet_process (ipmi_pet_state_data_t *state_data,
 						    data.sensor_number,
 						    data.sensor_device) < 0)
 	    {
-	      if (ipmi_sdr_cache_ctx_errnum (state_data->sdr_cache_ctx) != IPMI_SDR_ERR_NOT_FOUND)
+	      if (ipmi_sdr_ctx_errnum (state_data->sdr_cache_ctx) != IPMI_SDR_ERR_NOT_FOUND)
 		{
 		  if (state_data->prog_data->args->common.debug)
 		    fprintf (stderr,
 			     "ipmi_sdr_cache_search_record_id: %s\n",
-			     ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
+			     ipmi_sdr_ctx_errormsg (state_data->sdr_cache_ctx));
 		  goto cleanup;
 		}
 	      else
@@ -1341,7 +1341,7 @@ _ipmi_pet_process (ipmi_pet_state_data_t *state_data,
             {
               fprintf (stderr,
 		       "ipmi_sdr_cache_record_read: %s\n",
-		       ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
+		       ipmi_sdr_ctx_errormsg (state_data->sdr_cache_ctx));
               goto cleanup;
             }
 	  
@@ -1469,11 +1469,11 @@ _ipmi_pet_process (ipmi_pet_state_data_t *state_data,
 					data.sensor_number,
 					data.sensor_device) < 0)
 	{
-	  if (ipmi_sdr_cache_ctx_errnum (state_data->sdr_cache_ctx) != IPMI_SDR_ERR_NOT_FOUND)
+	  if (ipmi_sdr_ctx_errnum (state_data->sdr_cache_ctx) != IPMI_SDR_ERR_NOT_FOUND)
 	    {
 	      fprintf (stderr,
 		       "ipmi_sdr_cache_search_record_id: %s\n",
-		       ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
+		       ipmi_sdr_ctx_errormsg (state_data->sdr_cache_ctx));
 	      goto cleanup;
 	    }
 	  else
@@ -1486,7 +1486,7 @@ _ipmi_pet_process (ipmi_pet_state_data_t *state_data,
 	{
 	  fprintf (stderr,
 		   "ipmi_sdr_cache_record_read: %s\n",
-		   ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
+		   ipmi_sdr_ctx_errormsg (state_data->sdr_cache_ctx));
 	  goto cleanup;
 	}
       
@@ -2215,9 +2215,9 @@ _ipmi_pet (ipmi_pet_prog_data_t *prog_data)
 	}
     }
 
-  if (!(state_data.sdr_cache_ctx = ipmi_sdr_cache_ctx_create ()))
+  if (!(state_data.sdr_cache_ctx = ipmi_sdr_ctx_create ()))
     {
-      perror ("ipmi_sdr_cache_ctx_create()");
+      perror ("ipmi_sdr_ctx_create()");
       exit_code = EXIT_FAILURE;
       goto cleanup;
     }
@@ -2339,7 +2339,7 @@ _ipmi_pet (ipmi_pet_prog_data_t *prog_data)
  cleanup:
   ipmi_fru_parse_ctx_destroy (state_data.fru_parse_ctx);
   ipmi_sel_parse_ctx_destroy (state_data.sel_parse_ctx);
-  ipmi_sdr_cache_ctx_destroy (state_data.sdr_cache_ctx);
+  ipmi_sdr_ctx_destroy (state_data.sdr_cache_ctx);
   ipmi_sdr_parse_ctx_destroy (state_data.sdr_parse_ctx);
   ipmi_ctx_close (state_data.ipmi_ctx);
   ipmi_ctx_destroy (state_data.ipmi_ctx);

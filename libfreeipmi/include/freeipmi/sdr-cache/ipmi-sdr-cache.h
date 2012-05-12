@@ -93,25 +93,25 @@ typedef struct ipmi_sdr_ctx *ipmi_sdr_ctx_t;
 
 /* Callback between every record that is cached */
 typedef void (*Ipmi_Sdr_Cache_Create_Callback)(uint8_t sdr_version,
-					 uint16_t record_count,
-					 uint32_t most_recent_addition_timestamp,
-					 uint32_t most_recent_erase_timestamp,
-					 uint16_t record_id,
-					 void *data);
+					       uint16_t record_count,
+					       uint32_t most_recent_addition_timestamp,
+					       uint32_t most_recent_erase_timestamp,
+					       uint16_t record_id,
+					       void *data);
 
 /*
  * SDR Cache Context and General functions
  */
-ipmi_sdr_ctx_t ipmi_sdr_cache_ctx_create (void);
-void ipmi_sdr_cache_ctx_destroy (ipmi_sdr_ctx_t ctx);
-int ipmi_sdr_cache_ctx_errnum (ipmi_sdr_ctx_t ctx);
-char * ipmi_sdr_cache_ctx_strerror (int errnum);
-char * ipmi_sdr_cache_ctx_errormsg (ipmi_sdr_ctx_t ctx);
+ipmi_sdr_ctx_t ipmi_sdr_ctx_create (void);
+void ipmi_sdr_ctx_destroy (ipmi_sdr_ctx_t ctx);
+int ipmi_sdr_ctx_errnum (ipmi_sdr_ctx_t ctx);
+char * ipmi_sdr_ctx_strerror (int errnum);
+char * ipmi_sdr_ctx_errormsg (ipmi_sdr_ctx_t ctx);
 
-int ipmi_sdr_cache_ctx_get_flags (ipmi_sdr_ctx_t ctx, unsigned int *flags);
-int ipmi_sdr_cache_ctx_set_flags (ipmi_sdr_ctx_t ctx, unsigned int flags);
-char *ipmi_sdr_cache_ctx_get_debug_prefix (ipmi_sdr_ctx_t ctx);
-int ipmi_sdr_cache_ctx_set_debug_prefix (ipmi_sdr_ctx_t ctx, const char *debug_prefix);
+int ipmi_sdr_ctx_get_flags (ipmi_sdr_ctx_t ctx, unsigned int *flags);
+int ipmi_sdr_ctx_set_flags (ipmi_sdr_ctx_t ctx, unsigned int flags);
+char *ipmi_sdr_ctx_get_debug_prefix (ipmi_sdr_ctx_t ctx);
+int ipmi_sdr_ctx_set_debug_prefix (ipmi_sdr_ctx_t ctx, const char *debug_prefix);
 
 /*
  * SDR Cache Creation Functions

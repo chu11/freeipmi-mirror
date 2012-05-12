@@ -459,9 +459,9 @@ _find_sensor (ipmi_oem_state_data_t *state_data,
    * Redo loading of SDR cache since this is being called from a loop
    * using the state_data sdr_cache_ctx.
    */
-  if (!(tmp_sdr_cache_ctx = ipmi_sdr_cache_ctx_create ()))
+  if (!(tmp_sdr_cache_ctx = ipmi_sdr_ctx_create ()))
     {
-      pstdout_perror (state_data->pstate, "ipmi_sdr_cache_ctx_create()");
+      pstdout_perror (state_data->pstate, "ipmi_sdr_ctx_create()");
       goto cleanup;
     }
 
@@ -487,7 +487,7 @@ _find_sensor (ipmi_oem_state_data_t *state_data,
       pstdout_fprintf (state_data->pstate,
 		       stderr,
 		       "ipmi_sdr_cache_record_count: %s\n",
-		       ipmi_sdr_cache_ctx_errormsg (tmp_sdr_cache_ctx));
+		       ipmi_sdr_ctx_errormsg (tmp_sdr_cache_ctx));
       goto cleanup;
     }
 
@@ -506,7 +506,7 @@ _find_sensor (ipmi_oem_state_data_t *state_data,
 	  pstdout_fprintf (state_data->pstate,
 			   stderr,
 			   "ipmi_sdr_cache_record_read: %s\n",
-			   ipmi_sdr_cache_ctx_errormsg (tmp_sdr_cache_ctx));
+			   ipmi_sdr_ctx_errormsg (tmp_sdr_cache_ctx));
 	  goto cleanup;
 	}
       
@@ -561,7 +561,7 @@ _find_sensor (ipmi_oem_state_data_t *state_data,
               sensor_number);
   rv = 0;
  cleanup:
-  ipmi_sdr_cache_ctx_destroy (tmp_sdr_cache_ctx);
+  ipmi_sdr_ctx_destroy (tmp_sdr_cache_ctx);
   return (rv);
 }
 
@@ -644,7 +644,7 @@ ipmi_oem_ibm_get_led (ipmi_oem_state_data_t *state_data)
       pstdout_fprintf (state_data->pstate,
 		       stderr,
 		       "ipmi_sdr_cache_record_count: %s\n",
-		       ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
+		       ipmi_sdr_ctx_errormsg (state_data->sdr_cache_ctx));
       goto cleanup;
     }
 
@@ -682,7 +682,7 @@ ipmi_oem_ibm_get_led (ipmi_oem_state_data_t *state_data)
 	  pstdout_fprintf (state_data->pstate,
 			   stderr,
 			   "ipmi_sdr_cache_record_read: %s\n",
-			   ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
+			   ipmi_sdr_ctx_errormsg (state_data->sdr_cache_ctx));
 	  goto cleanup;
 	}
       

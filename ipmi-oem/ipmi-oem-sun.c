@@ -168,7 +168,7 @@ ipmi_oem_sun_get_led (ipmi_oem_state_data_t *state_data)
       pstdout_fprintf (state_data->pstate,
 		       stderr,
 		       "ipmi_sdr_cache_record_count: %s\n",
-		       ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
+		       ipmi_sdr_ctx_errormsg (state_data->sdr_cache_ctx));
       goto cleanup;
     }
 
@@ -196,7 +196,7 @@ ipmi_oem_sun_get_led (ipmi_oem_state_data_t *state_data)
 	  pstdout_fprintf (state_data->pstate,
 			   stderr,
 			   "ipmi_sdr_cache_record_read: %s\n",
-			   ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
+			   ipmi_sdr_ctx_errormsg (state_data->sdr_cache_ctx));
 	  goto cleanup;
 	}
       
@@ -513,7 +513,7 @@ ipmi_oem_sun_set_led (ipmi_oem_state_data_t *state_data)
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_cache_search_record_id: %s\n",
-                       ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
+                       ipmi_sdr_ctx_errormsg (state_data->sdr_cache_ctx));
       goto cleanup;
     }
   
@@ -524,7 +524,7 @@ ipmi_oem_sun_set_led (ipmi_oem_state_data_t *state_data)
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_cache_record_read: %s\n",
-                       ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
+                       ipmi_sdr_ctx_errormsg (state_data->sdr_cache_ctx));
       goto cleanup;
     }
   

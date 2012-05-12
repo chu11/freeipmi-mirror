@@ -660,7 +660,7 @@ ipmi_sdr_cache_create (ipmi_sdr_ctx_t ctx,
 
   if (!ctx || ctx->magic != IPMI_SDR_CACHE_CTX_MAGIC)
     {
-      ERR_TRACE (ipmi_sdr_cache_ctx_errormsg (ctx), ipmi_sdr_cache_ctx_errnum (ctx));
+      ERR_TRACE (ipmi_sdr_ctx_errormsg (ctx), ipmi_sdr_ctx_errnum (ctx));
       return (-1);
     }
 

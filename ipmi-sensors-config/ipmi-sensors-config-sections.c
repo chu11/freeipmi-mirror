@@ -51,7 +51,7 @@ ipmi_sensors_config_sections_create (ipmi_sensors_config_state_data_t *state_dat
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_cache_record_count: %s\n",
-                       ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
+                       ipmi_sdr_ctx_errormsg (state_data->sdr_cache_ctx));
       goto cleanup;
     }
 
@@ -73,7 +73,7 @@ ipmi_sensors_config_sections_create (ipmi_sensors_config_state_data_t *state_dat
           pstdout_fprintf (state_data->pstate,
                            stderr,
                            "ipmi_sdr_cache_record_read: %s\n",
-                           ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
+                           ipmi_sdr_ctx_errormsg (state_data->sdr_cache_ctx));
           goto cleanup;
         }
 

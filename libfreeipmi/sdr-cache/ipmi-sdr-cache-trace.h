@@ -37,7 +37,7 @@
 #define SDR_CACHE_SET_ERRNUM(__ctx, __errnum)                               \
   do {                                                                      \
     (__ctx)->errnum = (__errnum);                                           \
-    TRACE_MSG_OUT (ipmi_sdr_cache_ctx_errormsg ((__ctx)), (__errnum));      \
+    TRACE_MSG_OUT (ipmi_sdr_ctx_errormsg ((__ctx)), (__errnum));      \
   } while (0)
 
 

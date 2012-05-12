@@ -1007,7 +1007,7 @@ rearm_sensor (bmc_device_state_data_t *state_data)
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_cache_search_record_id: %s\n",
-                       ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
+                       ipmi_sdr_ctx_errormsg (state_data->sdr_cache_ctx));
       goto cleanup;
     }
   
@@ -1018,7 +1018,7 @@ rearm_sensor (bmc_device_state_data_t *state_data)
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_cache_record_read: %s\n",
-                       ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
+                       ipmi_sdr_ctx_errormsg (state_data->sdr_cache_ctx));
       goto cleanup;
     }
 
@@ -2687,9 +2687,9 @@ _bmc_device (pstdout_state_t pstate,
 	}
     }
 
-  if (!(state_data.sdr_cache_ctx = ipmi_sdr_cache_ctx_create ()))
+  if (!(state_data.sdr_cache_ctx = ipmi_sdr_ctx_create ()))
     {
-      pstdout_perror (pstate, "ipmi_sdr_cache_ctx_create()");
+      pstdout_perror (pstate, "ipmi_sdr_ctx_create()");
       exit_code = EXIT_FAILURE;
       goto cleanup;
     }
@@ -2718,7 +2718,7 @@ _bmc_device (pstdout_state_t pstate,
 
   exit_code = 0;
  cleanup:
-  ipmi_sdr_cache_ctx_destroy (state_data.sdr_cache_ctx);
+  ipmi_sdr_ctx_destroy (state_data.sdr_cache_ctx);
   ipmi_sdr_parse_ctx_destroy (state_data.sdr_parse_ctx);
   ipmi_ctx_close (state_data.ipmi_ctx);
   ipmi_ctx_destroy (state_data.ipmi_ctx);
