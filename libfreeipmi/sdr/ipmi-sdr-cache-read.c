@@ -712,9 +712,16 @@ int ipmi_sdr_cache_iterate (ipmi_sdr_ctx_t ctx,
 	  SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_ERROR_RETURNED_IN_CALLBACK);
 	  goto cleanup;
 	}
+
+      if (ret > 0)
+	{
+	  rv = ret;
+	  goto out;
+	}
     }
   
   rv = 0;
+ out:
   ctx->errnum = IPMI_SDR_ERR_SUCCESS;
  cleanup:
   return (rv);
