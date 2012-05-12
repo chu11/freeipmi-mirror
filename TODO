@@ -131,6 +131,7 @@ libfreeipmi-api
 libfreeipmi-sdr-parse/libfreeipmi-sdr-cache
 -------------------------------------------
 someone merge libs into one
+iterate function to iterate over all records
 
 libfreeipmi-interpret
 ---------------------
