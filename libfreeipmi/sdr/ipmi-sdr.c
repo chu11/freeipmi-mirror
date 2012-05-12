@@ -106,6 +106,12 @@ ipmi_sdr_ctx_destroy (ipmi_sdr_ctx_t ctx)
   if (!ctx || ctx->magic != IPMI_SDR_CTX_MAGIC)
     return;
 
+  if (ctx->callback_lock)
+    {
+      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_CONTEXT_PERFORMING_OTHER_OPERATION);
+      return (-1);
+    }
+
   /* ignore potential error, destroy path */
   if (ctx->fd >= 0)
     close (ctx->fd);
@@ -177,6 +183,12 @@ ipmi_sdr_ctx_set_flags (ipmi_sdr_ctx_t ctx, unsigned int flags)
   if (flags & ~IPMI_SDR_FLAGS_DEBUG_DUMP)
     {
       SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  if (ctx->callback_lock)
+    {
+      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_CONTEXT_PERFORMING_OTHER_OPERATION);
       return (-1);
     }
 
