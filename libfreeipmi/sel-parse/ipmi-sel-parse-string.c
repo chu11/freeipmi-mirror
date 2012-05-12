@@ -148,20 +148,13 @@ _invalid_sel_entry_common (ipmi_sel_parse_ctx_t ctx,
  * return (-1) - error
  */
 static int
-_find_sdr_record (ipmi_sel_parse_ctx_t ctx,
-                  struct ipmi_sel_system_event_record_data *system_event_record_data,
-                  void *sdr_record,
-                  unsigned int *sdr_record_len)
+_find_and_seek_record (ipmi_sel_parse_ctx_t ctx,
+		       struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
-  uint8_t tmp_sdr_record[IPMI_SDR_MAX_RECORD_LENGTH];
-  int tmp_sdr_record_len;
-
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
   assert (ctx->sdr_ctx);   /* must be checked earlier */
   assert (system_event_record_data);
-  assert (sdr_record);
-  assert (sdr_record_len);
 
   if (ipmi_sdr_cache_search_sensor (ctx->sdr_ctx,
                                     system_event_record_data->sensor_number,
@@ -181,7 +174,7 @@ _find_sdr_record (ipmi_sel_parse_ctx_t ctx,
           if (!ipmi_sdr_cache_search_sensor (ctx->sdr_ctx,
                                              system_event_record_data->sensor_number,
                                              (system_event_record_data->generator_id >> 1)))
-            goto fall_through;
+            return (1);
           /* else fall through to normal error path */
         }
 
@@ -193,26 +186,6 @@ _find_sdr_record (ipmi_sel_parse_ctx_t ctx,
       /* else can't find it */
       return (0);
     }
-
- fall_through:
-  memset (tmp_sdr_record, '\0', IPMI_SDR_MAX_RECORD_LENGTH);
-
-  if ((tmp_sdr_record_len = ipmi_sdr_cache_record_read (ctx->sdr_ctx,
-                                                        tmp_sdr_record,
-                                                        IPMI_SDR_MAX_RECORD_LENGTH)) < 0)
-    {
-      SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_SDR_CACHE_ERROR);
-      return (-1);
-    }
-
-  if ((*sdr_record_len) < tmp_sdr_record_len)
-    {
-      SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_INTERNAL_ERROR);
-      return (-1);
-    }
-
-  memcpy (sdr_record, tmp_sdr_record, tmp_sdr_record_len);
-  (*sdr_record_len) = tmp_sdr_record_len;
 
   return (1);
 }
@@ -228,8 +201,6 @@ _get_sdr_id_string (ipmi_sel_parse_ctx_t ctx,
                     char *id_string,
                     unsigned int id_string_len)
 {
-  uint8_t sdr_record[IPMI_SDR_MAX_RECORD_LENGTH];
-  unsigned int sdr_record_len = IPMI_SDR_MAX_RECORD_LENGTH;
   int rv = -1;
   int ret;
 
@@ -242,11 +213,8 @@ _get_sdr_id_string (ipmi_sel_parse_ctx_t ctx,
   if (!ctx->sdr_ctx)
     return (0);
 
-  memset (sdr_record, '\0', IPMI_SDR_MAX_RECORD_LENGTH);
-  if ((ret = _find_sdr_record (ctx,
-                               system_event_record_data,
-                               sdr_record,
-                               &sdr_record_len)) < 0)
+  if ((ret = _find_and_seek_record (ctx,
+				    system_event_record_data)) < 0)
     return (-1);
 
   if (!ret)
@@ -256,8 +224,8 @@ _get_sdr_id_string (ipmi_sel_parse_ctx_t ctx,
     }
 
   if (ipmi_sdr_parse_id_string (ctx->sdr_ctx,
-                                sdr_record,
-                                sdr_record_len,
+				NULL,
+				0,
                                 id_string,
                                 id_string_len) < 0)
     {
@@ -288,8 +256,6 @@ _get_sensor_reading (ipmi_sel_parse_ctx_t ctx,
                      char *sensor_units_buf,
                      unsigned int sensor_units_buflen)
 {
-  uint8_t sdr_record[IPMI_SDR_MAX_RECORD_LENGTH];
-  unsigned int sdr_record_len = IPMI_SDR_MAX_RECORD_LENGTH;
   uint8_t sdr_event_reading_type_code;
   int8_t r_exponent;
   int8_t b_exponent;
@@ -318,11 +284,8 @@ _get_sensor_reading (ipmi_sel_parse_ctx_t ctx,
   if (!ctx->sdr_ctx)
     return (0);
 
-  memset (sdr_record, '\0', IPMI_SDR_MAX_RECORD_LENGTH);
-  if ((ret = _find_sdr_record (ctx,
-                               system_event_record_data,
-                               sdr_record,
-                               &sdr_record_len)) < 0)
+  if ((ret = _find_and_seek_record (ctx,
+				    system_event_record_data)) < 0)
     return (-1);
 
   if (!ret)
@@ -332,8 +295,8 @@ _get_sensor_reading (ipmi_sel_parse_ctx_t ctx,
     }
 
   if (ipmi_sdr_parse_event_reading_type_code (ctx->sdr_ctx,
-                                              sdr_record,
-                                              sdr_record_len,
+					      NULL,
+					      0,
                                               &sdr_event_reading_type_code) < 0)
     {
       if (ipmi_sdr_ctx_errnum (ctx->sdr_ctx) == IPMI_SDR_ERR_PARSE_INVALID_SDR_RECORD
@@ -351,8 +314,8 @@ _get_sensor_reading (ipmi_sel_parse_ctx_t ctx,
     }
 
   if (ipmi_sdr_parse_sensor_decoding_data (ctx->sdr_ctx,
-                                           sdr_record,
-                                           sdr_record_len,
+					   NULL,
+					   0,
                                            &r_exponent,
                                            &b_exponent,
                                            &m,
@@ -369,8 +332,8 @@ _get_sensor_reading (ipmi_sel_parse_ctx_t ctx,
     }
 
   if (ipmi_sdr_parse_sensor_units (ctx->sdr_ctx,
-                                   sdr_record,
-                                   sdr_record_len,
+				   NULL,
+				   0,
                                    &sensor_units_percentage,
                                    &sensor_units_modifier,
                                    &sensor_units_rate,
