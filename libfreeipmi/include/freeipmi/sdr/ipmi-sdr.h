@@ -111,6 +111,7 @@ typedef void (*Ipmi_Sdr_Cache_Create_Callback)(uint8_t sdr_version,
  * context state will be blocked from use.
  */
 typedef int (*Ipmi_Sdr_Cache_Iterate_Callback)(ipmi_sdr_ctx_t ctx,
+					       uint8_t record_type,
 					       const void *sdr_record,
 					       unsigned int sdr_record_len,
 					       void *data);
