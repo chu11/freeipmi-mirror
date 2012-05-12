@@ -245,8 +245,8 @@ threshold_checkout (const char *section_name,
 {
   ipmi_sensors_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
-  uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
-  unsigned int sdr_record_len = IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH;
+  uint8_t sdr_record[IPMI_SDR_MAX_RECORD_LENGTH];
+  unsigned int sdr_record_len = IPMI_SDR_MAX_RECORD_LENGTH;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
   char *readable_str;
@@ -424,8 +424,8 @@ threshold_commit (const char *section_name,
 {
   ipmi_sensors_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
-  uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
-  unsigned int sdr_record_len = IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH;
+  uint8_t sdr_record[IPMI_SDR_MAX_RECORD_LENGTH];
+  unsigned int sdr_record_len = IPMI_SDR_MAX_RECORD_LENGTH;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
   uint8_t *lower_non_critical_threshold_ptr = NULL;
@@ -605,8 +605,8 @@ hysteresis_threshold_checkout (const char *section_name,
                                void *arg)
 {
   ipmi_sensors_config_state_data_t *state_data;
-  uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
-  unsigned int sdr_record_len = IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH;
+  uint8_t sdr_record[IPMI_SDR_MAX_RECORD_LENGTH];
+  unsigned int sdr_record_len = IPMI_SDR_MAX_RECORD_LENGTH;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
   uint8_t positive_going_threshold_hysteresis_value;
@@ -724,8 +724,8 @@ hysteresis_threshold_commit (const char *section_name,
 {
   ipmi_sensors_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
-  uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
-  unsigned int sdr_record_len = IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH;
+  uint8_t sdr_record[IPMI_SDR_MAX_RECORD_LENGTH];
+  unsigned int sdr_record_len = IPMI_SDR_MAX_RECORD_LENGTH;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
   uint8_t positive_going_threshold_hysteresis_value;
@@ -878,8 +878,8 @@ _floating_point_in_range (const char *section_name,
                           void *arg)
 {
   ipmi_sensors_config_state_data_t *state_data;
-  uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
-  unsigned int sdr_record_len = IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH;
+  uint8_t sdr_record[IPMI_SDR_MAX_RECORD_LENGTH];
+  unsigned int sdr_record_len = IPMI_SDR_MAX_RECORD_LENGTH;
   config_validate_t rv = CONFIG_VALIDATE_FATAL_ERROR;
   config_err_t ret;
   uint8_t threshold_raw;

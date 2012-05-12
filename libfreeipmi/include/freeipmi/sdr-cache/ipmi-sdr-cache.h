@@ -87,7 +87,7 @@ extern "C" {
 #define IPMI_SDR_CACHE_CREATE_FLAGS_OVERWRITE           0x1
 #define IPMI_SDR_CACHE_CREATE_FLAGS_DUPLICATE_RECORD_ID 0x2
 
-#define IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH            261 /* 256 + header */
+#define IPMI_SDR_MAX_RECORD_LENGTH                      261 /* 256 + header */
 
 typedef struct ipmi_sdr_ctx *ipmi_sdr_ctx_t;
 

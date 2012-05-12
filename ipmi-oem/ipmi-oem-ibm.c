@@ -493,7 +493,7 @@ _find_sensor (ipmi_oem_state_data_t *state_data,
 
   for (i = 0; i < record_count; i++, ipmi_sdr_cache_next (tmp_sdr_cache_ctx))
     {
-      uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
+      uint8_t sdr_record[IPMI_SDR_MAX_RECORD_LENGTH];
       int sdr_record_len = 0;
       uint16_t record_id;
       uint8_t record_type;
@@ -501,7 +501,7 @@ _find_sensor (ipmi_oem_state_data_t *state_data,
 
       if ((sdr_record_len = ipmi_sdr_cache_record_read (tmp_sdr_cache_ctx,
 							sdr_record,
-							IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH)) < 0)
+							IPMI_SDR_MAX_RECORD_LENGTH)) < 0)
 	{
 	  pstdout_fprintf (state_data->pstate,
 			   stderr,
@@ -653,9 +653,9 @@ ipmi_oem_ibm_get_led (ipmi_oem_state_data_t *state_data)
       uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
       uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
       int rs_len;
-      uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
+      uint8_t sdr_record[IPMI_SDR_MAX_RECORD_LENGTH];
       int sdr_record_len = 0;
-      uint8_t oem_data_buf[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
+      uint8_t oem_data_buf[IPMI_SDR_MAX_RECORD_LENGTH];
       int oem_data_buf_len;
       uint16_t record_id;
       uint8_t record_type;
@@ -677,7 +677,7 @@ ipmi_oem_ibm_get_led (ipmi_oem_state_data_t *state_data)
 
       if ((sdr_record_len = ipmi_sdr_cache_record_read (state_data->sdr_cache_ctx,
 							sdr_record,
-							IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH)) < 0)
+							IPMI_SDR_MAX_RECORD_LENGTH)) < 0)
 	{
 	  pstdout_fprintf (state_data->pstate,
 			   stderr,
@@ -707,7 +707,7 @@ ipmi_oem_ibm_get_led (ipmi_oem_state_data_t *state_data)
                                                    sdr_record,
                                                    sdr_record_len,
                                                    oem_data_buf,
-                                                   IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH)) < 0)
+                                                   IPMI_SDR_MAX_RECORD_LENGTH)) < 0)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,

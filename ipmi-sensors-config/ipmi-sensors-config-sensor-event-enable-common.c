@@ -444,8 +444,8 @@ _get_sensor_event_enable (ipmi_sensors_config_state_data_t *state_data,
                           struct sensor_event_enable_data *data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
-  unsigned int sdr_record_len = IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH;
+  uint8_t sdr_record[IPMI_SDR_MAX_RECORD_LENGTH];
+  unsigned int sdr_record_len = IPMI_SDR_MAX_RECORD_LENGTH;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
   uint8_t sensor_number;
@@ -581,8 +581,8 @@ _set_sensor_event_enable (ipmi_sensors_config_state_data_t *state_data,
                           uint8_t event_message_action)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
-  unsigned int sdr_record_len = IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH;
+  uint8_t sdr_record[IPMI_SDR_MAX_RECORD_LENGTH];
+  unsigned int sdr_record_len = IPMI_SDR_MAX_RECORD_LENGTH;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
   uint8_t sensor_number;
@@ -849,8 +849,8 @@ static config_err_t
 _threshold_event_enable_verify (ipmi_sensors_config_state_data_t *state_data,
                                 const char *section_name)
 {
-  uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
-  unsigned int sdr_record_len = IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH;
+  uint8_t sdr_record[IPMI_SDR_MAX_RECORD_LENGTH];
+  unsigned int sdr_record_len = IPMI_SDR_MAX_RECORD_LENGTH;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
   uint8_t event_reading_type_code;
@@ -1268,8 +1268,8 @@ _generic_event_enable_verify (ipmi_sensors_config_state_data_t *state_data,
                               const char *section_name,
                               uint8_t *event_reading_type_code_ptr)
 {
-  uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
-  unsigned int sdr_record_len = IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH;
+  uint8_t sdr_record[IPMI_SDR_MAX_RECORD_LENGTH];
+  unsigned int sdr_record_len = IPMI_SDR_MAX_RECORD_LENGTH;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
   uint8_t event_reading_type_code;
@@ -1659,8 +1659,8 @@ _sensor_specific_event_enable_verify (ipmi_sensors_config_state_data_t *state_da
                                       const char *section_name,
                                       uint8_t *sensor_type_ptr)
 {
-  uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
-  unsigned int sdr_record_len = IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH;
+  uint8_t sdr_record[IPMI_SDR_MAX_RECORD_LENGTH];
+  unsigned int sdr_record_len = IPMI_SDR_MAX_RECORD_LENGTH;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
   uint8_t event_reading_type_code;

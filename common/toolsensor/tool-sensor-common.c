@@ -781,7 +781,7 @@ calculate_entity_id_counts (pstdout_state_t pstate,
                             ipmi_sdr_parse_ctx_t sdr_parse_ctx,
                             struct sensor_entity_id_counts *entity_id_counts)
 {
-  uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
+  uint8_t sdr_record[IPMI_SDR_MAX_RECORD_LENGTH];
   int sdr_record_len = 0;
   uint16_t record_count;
   int rv = -1;
@@ -806,7 +806,7 @@ calculate_entity_id_counts (pstdout_state_t pstate,
     {
       if ((sdr_record_len = ipmi_sdr_cache_record_read (sdr_cache_ctx,
                                                         sdr_record,
-                                                        IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH)) < 0)
+                                                        IPMI_SDR_MAX_RECORD_LENGTH)) < 0)
         {
           PSTDOUT_FPRINTF (pstate,
                            stderr,
@@ -1187,7 +1187,7 @@ calculate_column_widths (pstdout_state_t pstate,
                          struct sensor_entity_id_counts *entity_id_counts,
                          struct sensor_column_width *column_width)
 {
-  uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
+  uint8_t sdr_record[IPMI_SDR_MAX_RECORD_LENGTH];
   int sdr_record_len = 0;
   int rv = -1;
   int i;
@@ -1218,7 +1218,7 @@ calculate_column_widths (pstdout_state_t pstate,
 
           if ((sdr_record_len = ipmi_sdr_cache_record_read (sdr_cache_ctx,
                                                             sdr_record,
-                                                            IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH)) < 0)
+                                                            IPMI_SDR_MAX_RECORD_LENGTH)) < 0)
             {
               PSTDOUT_FPRINTF (pstate,
                                stderr,
@@ -1281,7 +1281,7 @@ calculate_column_widths (pstdout_state_t pstate,
 
           if ((sdr_record_len = ipmi_sdr_cache_record_read (sdr_cache_ctx,
                                                             sdr_record,
-                                                            IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH)) < 0)
+                                                            IPMI_SDR_MAX_RECORD_LENGTH)) < 0)
             {
               PSTDOUT_FPRINTF (pstate,
                                stderr,

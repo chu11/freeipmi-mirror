@@ -921,7 +921,7 @@ rearm_sensor (bmc_device_state_data_t *state_data)
   uint16_t *assertion_bitmask_ptr;
   uint16_t *deassertion_bitmask_ptr;
   uint8_t re_arm_all_event_status_from_this_sensor;
-  uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
+  uint8_t sdr_record[IPMI_SDR_MAX_RECORD_LENGTH];
   int sdr_record_len = 0;
   uint8_t record_type;
   uint8_t sensor_number;
@@ -1013,7 +1013,7 @@ rearm_sensor (bmc_device_state_data_t *state_data)
   
   if ((sdr_record_len = ipmi_sdr_cache_record_read (state_data->sdr_cache_ctx,
                                                     sdr_record,
-                                                    IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH)) < 0)
+                                                    IPMI_SDR_MAX_RECORD_LENGTH)) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,

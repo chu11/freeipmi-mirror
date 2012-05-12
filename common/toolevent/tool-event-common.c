@@ -389,7 +389,7 @@ event_output_sensor_name (pstdout_state_t pstate,
       && !sdr->ignore_sdr_cache)
     {
       uint8_t generator_id, sensor_number;
-      uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
+      uint8_t sdr_record[IPMI_SDR_MAX_RECORD_LENGTH];
       int sdr_record_len = 0;
 
       if ((ret = event_data_info (pstate,
@@ -428,7 +428,7 @@ event_output_sensor_name (pstdout_state_t pstate,
 
       if ((sdr_record_len = ipmi_sdr_cache_record_read (sdr_cache_ctx,
                                                         sdr_record,
-                                                        IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH)) < 0)
+                                                        IPMI_SDR_MAX_RECORD_LENGTH)) < 0)
         {
           PSTDOUT_FPRINTF (pstate,
                            stderr,

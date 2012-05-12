@@ -124,7 +124,7 @@ _intel_node_manager_init (ipmi_sel_parse_ctx_t ctx)
 
   for (i = 0; i < record_count; i++, ipmi_sdr_cache_next (ctx->sdr_cache_ctx))
     {
-      uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
+      uint8_t sdr_record[IPMI_SDR_MAX_RECORD_LENGTH];
       int sdr_record_len;
       int expected_record_len;
       uint16_t record_id;
@@ -135,7 +135,7 @@ _intel_node_manager_init (ipmi_sel_parse_ctx_t ctx)
       
       if ((sdr_record_len = ipmi_sdr_cache_record_read (ctx->sdr_cache_ctx,
                                                         sdr_record,
-                                                        IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH)) < 0)
+                                                        IPMI_SDR_MAX_RECORD_LENGTH)) < 0)
         {
           SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_SDR_CACHE_ERROR);
           goto cleanup;

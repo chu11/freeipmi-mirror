@@ -1315,7 +1315,7 @@ _ipmi_pet_process (ipmi_pet_state_data_t *state_data,
     {
       if (!args->sdr.ignore_sdr_cache)
 	{
-	  uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
+	  uint8_t sdr_record[IPMI_SDR_MAX_RECORD_LENGTH];
 	  int sdr_record_len = 0;
 	  uint8_t record_type;
 
@@ -1337,7 +1337,7 @@ _ipmi_pet_process (ipmi_pet_state_data_t *state_data,
 	  
 	  if ((sdr_record_len = ipmi_sdr_cache_record_read (state_data->sdr_cache_ctx,
                                                             sdr_record,
-                                                            IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH)) < 0)
+                                                            IPMI_SDR_MAX_RECORD_LENGTH)) < 0)
             {
               fprintf (stderr,
 		       "ipmi_sdr_cache_record_read: %s\n",
@@ -1461,7 +1461,7 @@ _ipmi_pet_process (ipmi_pet_state_data_t *state_data,
   if (data.entity != IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_ENTITY_UNSPECIFIED
       && !args->sdr.ignore_sdr_cache)
     {
-      uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
+      uint8_t sdr_record[IPMI_SDR_MAX_RECORD_LENGTH];
       int sdr_record_len = 0;
       uint8_t entity_id, entity_instance;
       
@@ -1482,7 +1482,7 @@ _ipmi_pet_process (ipmi_pet_state_data_t *state_data,
 
       if ((sdr_record_len = ipmi_sdr_cache_record_read (state_data->sdr_cache_ctx,
 							sdr_record,
-							IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH)) < 0)
+							IPMI_SDR_MAX_RECORD_LENGTH)) < 0)
 	{
 	  fprintf (stderr,
 		   "ipmi_sdr_cache_record_read: %s\n",

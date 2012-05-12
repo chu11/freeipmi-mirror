@@ -51,7 +51,7 @@ ipmi_sdr_cache_delete (ipmi_sdr_ctx_t ctx, const char *filename)
 {
   int rv = -1;
 
-  if (!ctx || ctx->magic != IPMI_SDR_CACHE_CTX_MAGIC)
+  if (!ctx || ctx->magic != IPMI_SDR_CTX_MAGIC)
     {
       ERR_TRACE (ipmi_sdr_ctx_errormsg (ctx), ipmi_sdr_ctx_errnum (ctx));
       return (-1);
@@ -63,16 +63,16 @@ ipmi_sdr_cache_delete (ipmi_sdr_ctx_t ctx, const char *filename)
       return (-1);
     }
 
-  if (ctx->operation != IPMI_SDR_CACHE_OPERATION_UNINITIALIZED)
+  if (ctx->operation != IPMI_SDR_OPERATION_UNINITIALIZED)
     {
-      if (ctx->operation == IPMI_SDR_CACHE_OPERATION_READ_CACHE)
+      if (ctx->operation == IPMI_SDR_OPERATION_READ_CACHE)
         SDR_CACHE_SET_ERRNUM (ctx, IPMI_SDR_ERR_CONTEXT_PERFORMING_OTHER_OPERATION);
       else
         SDR_CACHE_SET_ERRNUM (ctx, IPMI_SDR_ERR_INTERNAL_ERROR);
       return (-1);
     }
 
-  ctx->operation = IPMI_SDR_CACHE_OPERATION_DELETE_CACHE;
+  ctx->operation = IPMI_SDR_OPERATION_DELETE_CACHE;
 
   if (unlink (filename) < 0)
     {
@@ -87,6 +87,6 @@ ipmi_sdr_cache_delete (ipmi_sdr_ctx_t ctx, const char *filename)
   rv = 0;
   ctx->errnum = IPMI_SDR_ERR_SUCCESS;
  cleanup:
-  ctx->operation = IPMI_SDR_CACHE_OPERATION_UNINITIALIZED;
+  ctx->operation = IPMI_SDR_OPERATION_UNINITIALIZED;
   return (rv);
 }

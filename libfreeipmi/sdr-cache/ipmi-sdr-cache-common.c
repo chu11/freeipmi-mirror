@@ -54,9 +54,9 @@ void
 ipmi_sdr_cache_init_ctx (ipmi_sdr_ctx_t ctx)
 {
   assert (ctx);
-  assert (ctx->magic == IPMI_SDR_CACHE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SDR_CTX_MAGIC);
 
-  ctx->operation = IPMI_SDR_CACHE_OPERATION_UNINITIALIZED;
+  ctx->operation = IPMI_SDR_OPERATION_UNINITIALIZED;
 
   ctx->sdr_version = 0;
   ctx->record_count = 0;
@@ -84,7 +84,7 @@ ipmi_sdr_cache_info (ipmi_sdr_ctx_t ctx,
   int rv = -1;
 
   assert (ctx);
-  assert (ctx->magic == IPMI_SDR_CACHE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SDR_CTX_MAGIC);
   assert (ipmi_ctx);
   assert (sdr_version);
   assert (record_count);
@@ -171,7 +171,7 @@ ipmi_sdr_cache_record_type_str (ipmi_sdr_ctx_t ctx,
   char *rv = NULL;
 
   assert (ctx);
-  assert (ctx->magic == IPMI_SDR_CACHE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SDR_CTX_MAGIC);
   assert (sdr_record);
   assert (sdr_record_len);
 
