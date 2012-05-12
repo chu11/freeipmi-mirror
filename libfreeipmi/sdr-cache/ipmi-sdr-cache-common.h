@@ -37,15 +37,15 @@
 
 void ipmi_sdr_init_ctx (ipmi_sdr_ctx_t ctx);
 
-int ipmi_sdr_cache_info (ipmi_sdr_ctx_t ctx,
-                         ipmi_ctx_t ipmi_ctx,
-                         uint8_t *sdr_version,
-                         uint16_t *record_count,
-                         uint32_t *most_recent_addition_timestamp,
-                         uint32_t *most_recent_erase_timestamp);
+int ipmi_sdr_info (ipmi_sdr_ctx_t ctx,
+		   ipmi_ctx_t ipmi_ctx,
+		   uint8_t *sdr_version,
+		   uint16_t *record_count,
+		   uint32_t *most_recent_addition_timestamp,
+		   uint32_t *most_recent_erase_timestamp);
 
-const char *ipmi_sdr_cache_record_type_str (ipmi_sdr_ctx_t ctx,
-                                            uint8_t *sdr_record,
-                                            unsigned int sdr_record_len);
+const char *ipmi_sdr_record_type_str (ipmi_sdr_ctx_t ctx,
+				      uint8_t *sdr_record,
+				      unsigned int sdr_record_len);
 
 #endif /* IPMI_SDR_COMMON_H */

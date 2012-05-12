@@ -38,7 +38,7 @@
 #include "freeipmi-portability.h"
 
 void
-sdr_cache_set_sdr_cache_errnum_by_errno (ipmi_sdr_ctx_t ctx, int __errno)
+sdr_ctx_set_sdr_ctx_errnum_by_errno (ipmi_sdr_ctx_t ctx, int __errno)
 {
   assert (ctx && ctx->magic == IPMI_SDR_CTX_MAGIC);
 
@@ -78,7 +78,7 @@ sdr_cache_set_sdr_cache_errnum_by_errno (ipmi_sdr_ctx_t ctx, int __errno)
 }
 
 void
-sdr_cache_set_sdr_cache_errnum_by_fiid_object (ipmi_sdr_ctx_t ctx, fiid_obj_t obj)
+sdr_ctx_set_sdr_ctx_errnum_by_fiid_object (ipmi_sdr_ctx_t ctx, fiid_obj_t obj)
 {
   assert (ctx && ctx->magic == IPMI_SDR_CTX_MAGIC);
 
