@@ -1,6 +1,7 @@
 2012-05-11  Albert Chu <chu11@llnl.gov>
 
-	* libfreeipmi/sdr-cache/: Various re-arch.
+	* libfreeipmi/include/freeipmi/sdr/ipmi-sdr.h, libfreeipmi/sdr:
+	Turn sdr-cache libfreeipmi sub-library into sdr sub-library.
 
 	* common/toolsdr/, libipmimonitoring/: Adjust appropriately for changes.
 

@@ -159,16 +159,16 @@ libfreeipmi_la_SOURCES = \
 	record-format/ipmi-sdr-record-format.c \
 	record-format/ipmi-sdr-oem-record-format.c \
 	record-format/ipmi-sel-record-format.c \
-	sdr-cache/ipmi-sdr-cache.c \
-	sdr-cache/ipmi-sdr-cache-common.c \
-	sdr-cache/ipmi-sdr-cache-common.h \
-	sdr-cache/ipmi-sdr-cache-create.c \
-	sdr-cache/ipmi-sdr-cache-defs.h \
-	sdr-cache/ipmi-sdr-cache-delete.c \
-	sdr-cache/ipmi-sdr-cache-read.c \
-	sdr-cache/ipmi-sdr-cache-trace.h \
-	sdr-cache/ipmi-sdr-cache-util.c \
-	sdr-cache/ipmi-sdr-cache-util.h \
+	sdr/ipmi-sdr.c \
+	sdr/ipmi-sdr-common.c \
+	sdr/ipmi-sdr-common.h \
+	sdr/ipmi-sdr-cache-create.c \
+	sdr/ipmi-sdr-defs.h \
+	sdr/ipmi-sdr-cache-delete.c \
+	sdr/ipmi-sdr-cache-read.c \
+	sdr/ipmi-sdr-trace.h \
+	sdr/ipmi-sdr-util.c \
+	sdr/ipmi-sdr-util.h \
 	sdr-parse/ipmi-sdr-parse.c \
 	sdr-parse/ipmi-sdr-parse-defs.h \
 	sdr-parse/ipmi-sdr-parse-trace.h \
