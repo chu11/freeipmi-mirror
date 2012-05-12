@@ -7,11 +7,15 @@
 	libfreeipmi/sdr-parse: Remove sub-library. Fold into sdr
 	sub-library.
 
-	* common/toolsdr/, libipmimonitoring/: Adjust appropriately for changes.
+	* libfreeipmi/include/sdr/ipmi-sdr.h,
+	libfreeipmi/sdr/ipmi-sdr-cache-read.c (ipmi_sdr_cache_iterate):
+	New function.
 
 	* common/toolsdr/tool-sdr-cache-common.h,
 	common/toolsdr/tool-sdr-cache-common.c (sdr_cache_setup_debug):
 	New common function for many tools.
+	
+	* Globally adjust tools and libraries for changes.
 	
 2012-05-11  Albert Chu <chu11@llnl.gov>
 

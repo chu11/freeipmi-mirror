@@ -69,6 +69,7 @@ ipmi_sdr_init_ctx (ipmi_sdr_ctx_t ctx)
   ctx->sdr_cache = NULL;
   ctx->current_offset = 0;
   ctx->current_offset_dumped = 0;
+  ctx->callback_lock = 0;
 }
 
 int

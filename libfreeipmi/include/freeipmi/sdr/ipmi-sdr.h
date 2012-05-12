@@ -70,12 +70,13 @@ extern "C" {
 #define IPMI_SDR_ERR_PARSE_INVALID_SDR_RECORD                     18
 #define IPMI_SDR_ERR_PARSE_INCOMPLETE_SDR_RECORD                  19
 #define IPMI_SDR_ERR_PARSE_CANNOT_PARSE_OR_CALCULATE              20
-#define IPMI_SDR_ERR_NOT_FOUND                                    21
-#define IPMI_SDR_ERR_IPMI_ERROR                                   22
-#define IPMI_SDR_ERR_SYSTEM_ERROR                                 23
-#define IPMI_SDR_ERR_OVERFLOW                                     24
-#define IPMI_SDR_ERR_INTERNAL_ERROR                               25
-#define IPMI_SDR_ERR_ERRNUMRANGE                                  26
+#define IPMI_SDR_ERR_ERROR_RETURNED_IN_CALLBACK                   21
+#define IPMI_SDR_ERR_NOT_FOUND                                    22
+#define IPMI_SDR_ERR_IPMI_ERROR                                   23
+#define IPMI_SDR_ERR_SYSTEM_ERROR                                 24
+#define IPMI_SDR_ERR_OVERFLOW                                     25
+#define IPMI_SDR_ERR_INTERNAL_ERROR                               26
+#define IPMI_SDR_ERR_ERRNUMRANGE                                  27
 
 #define IPMI_SDR_FLAGS_DEFAULT                   0x0000
 #define IPMI_SDR_FLAGS_DEBUG_DUMP                0x0001
@@ -94,12 +95,22 @@ extern "C" {
 
 typedef struct ipmi_sdr_ctx *ipmi_sdr_ctx_t;
 
-/* Callback between every record that is cached */
 typedef void (*Ipmi_Sdr_Cache_Create_Callback)(uint8_t sdr_version,
 					       uint16_t record_count,
 					       uint32_t most_recent_addition_timestamp,
 					       uint32_t most_recent_erase_timestamp,
 					       uint16_t record_id,
+					       void *data);
+
+/* return < 0 to quick iteration, return val will be returned up
+ * through original caller
+ *
+ * ctx can be used only for read-only functions, most notably
+ * ipmi_sdr_parse* functions.
+ */
+typedef int (*Ipmi_Sdr_Cache_Iterate_Callback)(ipmi_sdr_ctx_t ctx,
+					       const uint8_t *sdr_record,
+					       unsigned int sdr_record_len,
 					       void *data);
 
 /*
@@ -118,6 +129,9 @@ int ipmi_sdr_ctx_set_debug_prefix (ipmi_sdr_ctx_t ctx, const char *debug_prefix)
 
 /*
  * SDR Cache Creation Functions
+ */
+/* ipmi_sdr_cache_create
+ * - callback called between every record that is cached
  */
 int ipmi_sdr_cache_create (ipmi_sdr_ctx_t ctx,
                            ipmi_ctx_t ipmi_ctx,
@@ -157,6 +171,15 @@ int ipmi_sdr_cache_search_sensor (ipmi_sdr_ctx_t ctx, uint8_t sensor_number, uin
 int ipmi_sdr_cache_record_read (ipmi_sdr_ctx_t ctx,
                                 void *buf,
                                 unsigned int buflen);
+
+/* ipmi_sdr_cache_iterate 
+ * - iterate through all SDR records calling callback for each one.
+ * - if callback returns < 0, that will break iteration and return
+ *   value is returned here.
+ */
+int ipmi_sdr_cache_iterate (ipmi_sdr_ctx_t ctx,
+			    Ipmi_Sdr_Cache_Iterate_Callback iterate_callback,
+			    void *iterate_callback_data);
 
 int ipmi_sdr_cache_close (ipmi_sdr_ctx_t ctx);
 

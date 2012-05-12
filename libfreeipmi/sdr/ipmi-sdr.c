@@ -72,6 +72,7 @@ static char *ipmi_sdr_cache_errmsgs[] =
     "invalid sdr record",
     "incomplete sdr record",
     "cannot parse or calculate",
+    "error returned in callback",
     "not found",
     "internal IPMI error",
     "internal system error",

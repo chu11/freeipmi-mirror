@@ -106,6 +106,7 @@ struct ipmi_sdr_ctx {
   uint8_t *sdr_cache;
   off_t current_offset;
   int current_offset_dumped;
+  int callback_lock;
 };
 
 #endif /* IPMI_SDR_DEFS_H */
