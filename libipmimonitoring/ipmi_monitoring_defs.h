@@ -201,7 +201,7 @@ struct ipmi_monitoring_ctx {
   uint16_t product_id;
 
   /* for use by both sel and sensor codepath */
-  ipmi_sdr_cache_ctx_t sdr_cache_ctx;
+  ipmi_sdr_ctx_t sdr_cache_ctx;
   ipmi_ctx_t ipmi_ctx;
   Ipmi_Monitoring_Callback callback;
   void *callback_data;

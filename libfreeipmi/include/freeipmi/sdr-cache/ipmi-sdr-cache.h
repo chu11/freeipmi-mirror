@@ -89,7 +89,7 @@ extern "C" {
 
 #define IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH            261 /* 256 + header */
 
-typedef struct ipmi_sdr_cache_ctx *ipmi_sdr_cache_ctx_t;
+typedef struct ipmi_sdr_ctx *ipmi_sdr_ctx_t;
 
 /* Callback between every record that is cached */
 typedef void (*Ipmi_Sdr_Create_Callback)(uint8_t sdr_version,
@@ -102,21 +102,21 @@ typedef void (*Ipmi_Sdr_Create_Callback)(uint8_t sdr_version,
 /*
  * SDR Cache Context and General functions
  */
-ipmi_sdr_cache_ctx_t ipmi_sdr_cache_ctx_create (void);
-void ipmi_sdr_cache_ctx_destroy (ipmi_sdr_cache_ctx_t ctx);
-int ipmi_sdr_cache_ctx_errnum (ipmi_sdr_cache_ctx_t ctx);
+ipmi_sdr_ctx_t ipmi_sdr_cache_ctx_create (void);
+void ipmi_sdr_cache_ctx_destroy (ipmi_sdr_ctx_t ctx);
+int ipmi_sdr_cache_ctx_errnum (ipmi_sdr_ctx_t ctx);
 char * ipmi_sdr_cache_ctx_strerror (int errnum);
-char * ipmi_sdr_cache_ctx_errormsg (ipmi_sdr_cache_ctx_t ctx);
+char * ipmi_sdr_cache_ctx_errormsg (ipmi_sdr_ctx_t ctx);
 
-int ipmi_sdr_cache_ctx_get_flags (ipmi_sdr_cache_ctx_t ctx, unsigned int *flags);
-int ipmi_sdr_cache_ctx_set_flags (ipmi_sdr_cache_ctx_t ctx, unsigned int flags);
-char *ipmi_sdr_cache_ctx_get_debug_prefix (ipmi_sdr_cache_ctx_t ctx);
-int ipmi_sdr_cache_ctx_set_debug_prefix (ipmi_sdr_cache_ctx_t ctx, const char *debug_prefix);
+int ipmi_sdr_cache_ctx_get_flags (ipmi_sdr_ctx_t ctx, unsigned int *flags);
+int ipmi_sdr_cache_ctx_set_flags (ipmi_sdr_ctx_t ctx, unsigned int flags);
+char *ipmi_sdr_cache_ctx_get_debug_prefix (ipmi_sdr_ctx_t ctx);
+int ipmi_sdr_cache_ctx_set_debug_prefix (ipmi_sdr_ctx_t ctx, const char *debug_prefix);
 
 /*
  * SDR Cache Creation Functions
  */
-int ipmi_sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
+int ipmi_sdr_cache_create (ipmi_sdr_ctx_t ctx,
                            ipmi_ctx_t ipmi_ctx,
                            const char *filename,
                            int cache_create_flags,
@@ -132,35 +132,35 @@ int ipmi_sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
  * - if ipmi_ctx is specified, timestamps/version of the SDR will be
  *   checked for out-of-dateness
  */
-int ipmi_sdr_cache_open (ipmi_sdr_cache_ctx_t ctx,
+int ipmi_sdr_cache_open (ipmi_sdr_ctx_t ctx,
                          ipmi_ctx_t ipmi_ctx,
                          const char *filename);
 
-int ipmi_sdr_cache_sdr_version (ipmi_sdr_cache_ctx_t ctx, uint8_t *sdr_version);
-int ipmi_sdr_cache_record_count (ipmi_sdr_cache_ctx_t ctx, uint16_t *record_count);
-int ipmi_sdr_cache_most_recent_addition_timestamp (ipmi_sdr_cache_ctx_t ctx,
+int ipmi_sdr_cache_sdr_version (ipmi_sdr_ctx_t ctx, uint8_t *sdr_version);
+int ipmi_sdr_cache_record_count (ipmi_sdr_ctx_t ctx, uint16_t *record_count);
+int ipmi_sdr_cache_most_recent_addition_timestamp (ipmi_sdr_ctx_t ctx,
                                                    uint32_t *most_recent_addition_timestamp);
-int ipmi_sdr_cache_most_recent_erase_timestamp (ipmi_sdr_cache_ctx_t ctx,
+int ipmi_sdr_cache_most_recent_erase_timestamp (ipmi_sdr_ctx_t ctx,
                                                 uint32_t *most_recent_erase_timestamp);
 
-int ipmi_sdr_cache_first (ipmi_sdr_cache_ctx_t ctx);
-int ipmi_sdr_cache_next (ipmi_sdr_cache_ctx_t ctx);
-int ipmi_sdr_cache_seek (ipmi_sdr_cache_ctx_t ctx, unsigned int index);
-int ipmi_sdr_cache_search_record_id (ipmi_sdr_cache_ctx_t ctx, uint16_t record_id);
+int ipmi_sdr_cache_first (ipmi_sdr_ctx_t ctx);
+int ipmi_sdr_cache_next (ipmi_sdr_ctx_t ctx);
+int ipmi_sdr_cache_seek (ipmi_sdr_ctx_t ctx, unsigned int index);
+int ipmi_sdr_cache_search_record_id (ipmi_sdr_ctx_t ctx, uint16_t record_id);
 /* sensor owner id is 8bit field - 7 bit slave or system software id + 1 bit indicating type */
-int ipmi_sdr_cache_search_sensor (ipmi_sdr_cache_ctx_t ctx, uint8_t sensor_number, uint8_t sensor_owner_id);
+int ipmi_sdr_cache_search_sensor (ipmi_sdr_ctx_t ctx, uint8_t sensor_number, uint8_t sensor_owner_id);
 
 /* return length of data read into buffer on success, -1 on error */
-int ipmi_sdr_cache_record_read (ipmi_sdr_cache_ctx_t ctx,
+int ipmi_sdr_cache_record_read (ipmi_sdr_ctx_t ctx,
                                 void *buf,
                                 unsigned int buflen);
 
-int ipmi_sdr_cache_close (ipmi_sdr_cache_ctx_t ctx);
+int ipmi_sdr_cache_close (ipmi_sdr_ctx_t ctx);
 
 /*
  * SDR Cache Utility Functions
  */
-int ipmi_sdr_cache_delete (ipmi_sdr_cache_ctx_t ctx, const char *filename);
+int ipmi_sdr_cache_delete (ipmi_sdr_ctx_t ctx, const char *filename);
 
 #ifdef __cplusplus
 }

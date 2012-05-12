@@ -444,7 +444,7 @@ _find_sensor (ipmi_oem_state_data_t *state_data,
               char *id_string,
               unsigned int id_string_len)
 {
-  ipmi_sdr_cache_ctx_t tmp_sdr_cache_ctx = NULL;
+  ipmi_sdr_ctx_t tmp_sdr_cache_ctx = NULL;
   uint16_t record_count;
   int found = 0;
   int rv = -1;

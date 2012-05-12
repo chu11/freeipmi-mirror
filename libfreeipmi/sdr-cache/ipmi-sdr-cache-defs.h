@@ -87,7 +87,7 @@
 #define IPMI_SDR_CACHE_OPERATION_READ_CACHE     2
 #define IPMI_SDR_CACHE_OPERATION_DELETE_CACHE   3
 
-struct ipmi_sdr_cache_ctx {
+struct ipmi_sdr_ctx {
   uint32_t magic;
   int errnum;
   unsigned int operation;

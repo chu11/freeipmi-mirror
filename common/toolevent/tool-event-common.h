@@ -67,7 +67,7 @@ int event_output_not_available_time (pstdout_state_t pstate,
 
 int event_output_sensor_name (pstdout_state_t pstate,
 			      ipmi_sel_parse_ctx_t sel_parse_ctx,
-			      ipmi_sdr_cache_ctx_t sdr_cache_ctx,
+			      ipmi_sdr_ctx_t sdr_cache_ctx,
 			      ipmi_sdr_parse_ctx_t sdr_parse_ctx,
 			      uint8_t *sel_record,
 			      unsigned int sel_record_len,

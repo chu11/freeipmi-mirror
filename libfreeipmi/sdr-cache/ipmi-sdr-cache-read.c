@@ -59,7 +59,7 @@
 #include "debug-util.h"
 
 int
-ipmi_sdr_cache_open (ipmi_sdr_cache_ctx_t ctx,
+ipmi_sdr_cache_open (ipmi_sdr_ctx_t ctx,
                      ipmi_ctx_t ipmi_ctx,
                      const char *filename)
 {
@@ -213,7 +213,7 @@ ipmi_sdr_cache_open (ipmi_sdr_cache_ctx_t ctx,
 }
 
 int
-ipmi_sdr_cache_sdr_version (ipmi_sdr_cache_ctx_t ctx, uint8_t *sdr_version)
+ipmi_sdr_cache_sdr_version (ipmi_sdr_ctx_t ctx, uint8_t *sdr_version)
 {
   if (!ctx || ctx->magic != IPMI_SDR_CACHE_CTX_MAGIC)
     {
@@ -239,7 +239,7 @@ ipmi_sdr_cache_sdr_version (ipmi_sdr_cache_ctx_t ctx, uint8_t *sdr_version)
 }
 
 int
-ipmi_sdr_cache_record_count (ipmi_sdr_cache_ctx_t ctx, uint16_t *record_count)
+ipmi_sdr_cache_record_count (ipmi_sdr_ctx_t ctx, uint16_t *record_count)
 {
   if (!ctx || ctx->magic != IPMI_SDR_CACHE_CTX_MAGIC)
     {
@@ -265,7 +265,7 @@ ipmi_sdr_cache_record_count (ipmi_sdr_cache_ctx_t ctx, uint16_t *record_count)
 }
 
 int
-ipmi_sdr_cache_most_recent_addition_timestamp (ipmi_sdr_cache_ctx_t ctx, uint32_t *most_recent_addition_timestamp)
+ipmi_sdr_cache_most_recent_addition_timestamp (ipmi_sdr_ctx_t ctx, uint32_t *most_recent_addition_timestamp)
 {
   if (!ctx || ctx->magic != IPMI_SDR_CACHE_CTX_MAGIC)
     {
@@ -291,7 +291,7 @@ ipmi_sdr_cache_most_recent_addition_timestamp (ipmi_sdr_cache_ctx_t ctx, uint32_
 }
 
 int
-ipmi_sdr_cache_most_recent_erase_timestamp (ipmi_sdr_cache_ctx_t ctx, uint32_t *most_recent_erase_timestamp)
+ipmi_sdr_cache_most_recent_erase_timestamp (ipmi_sdr_ctx_t ctx, uint32_t *most_recent_erase_timestamp)
 {
   if (!ctx || ctx->magic != IPMI_SDR_CACHE_CTX_MAGIC)
     {
@@ -317,7 +317,7 @@ ipmi_sdr_cache_most_recent_erase_timestamp (ipmi_sdr_cache_ctx_t ctx, uint32_t *
 }
 
 static void
-_set_current_offset (ipmi_sdr_cache_ctx_t ctx, off_t new_offset)
+_set_current_offset (ipmi_sdr_ctx_t ctx, off_t new_offset)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SDR_CACHE_CTX_MAGIC);
@@ -327,7 +327,7 @@ _set_current_offset (ipmi_sdr_cache_ctx_t ctx, off_t new_offset)
 }
 
 static void
-_check_read_status (ipmi_sdr_cache_ctx_t ctx)
+_check_read_status (ipmi_sdr_ctx_t ctx)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SDR_CACHE_CTX_MAGIC);
@@ -365,7 +365,7 @@ _check_read_status (ipmi_sdr_cache_ctx_t ctx)
 }
 
 int
-ipmi_sdr_cache_first (ipmi_sdr_cache_ctx_t ctx)
+ipmi_sdr_cache_first (ipmi_sdr_ctx_t ctx)
 {
   if (!ctx || ctx->magic != IPMI_SDR_CACHE_CTX_MAGIC)
     {
@@ -386,7 +386,7 @@ ipmi_sdr_cache_first (ipmi_sdr_cache_ctx_t ctx)
 }
 
 int
-ipmi_sdr_cache_next (ipmi_sdr_cache_ctx_t ctx)
+ipmi_sdr_cache_next (ipmi_sdr_ctx_t ctx)
 {
   unsigned int record_length;
 
@@ -414,7 +414,7 @@ ipmi_sdr_cache_next (ipmi_sdr_cache_ctx_t ctx)
 }
 
 int
-ipmi_sdr_cache_seek (ipmi_sdr_cache_ctx_t ctx, unsigned int index)
+ipmi_sdr_cache_seek (ipmi_sdr_ctx_t ctx, unsigned int index)
 {
   off_t offset;
   unsigned int i;
@@ -458,7 +458,7 @@ ipmi_sdr_cache_seek (ipmi_sdr_cache_ctx_t ctx, unsigned int index)
 }
 
 int
-ipmi_sdr_cache_search_record_id (ipmi_sdr_cache_ctx_t ctx, uint16_t record_id)
+ipmi_sdr_cache_search_record_id (ipmi_sdr_ctx_t ctx, uint16_t record_id)
 {
   off_t offset;
   int found = 0;
@@ -513,7 +513,7 @@ ipmi_sdr_cache_search_record_id (ipmi_sdr_cache_ctx_t ctx, uint16_t record_id)
 }
 
 int
-ipmi_sdr_cache_search_sensor (ipmi_sdr_cache_ctx_t ctx, uint8_t sensor_number, uint8_t sensor_owner_id)
+ipmi_sdr_cache_search_sensor (ipmi_sdr_ctx_t ctx, uint8_t sensor_number, uint8_t sensor_owner_id)
 {
   off_t offset;
   int found = 0;
@@ -616,7 +616,7 @@ ipmi_sdr_cache_search_sensor (ipmi_sdr_cache_ctx_t ctx, uint8_t sensor_number, u
 }
 
 int
-ipmi_sdr_cache_record_read (ipmi_sdr_cache_ctx_t ctx,
+ipmi_sdr_cache_record_read (ipmi_sdr_ctx_t ctx,
                             void *buf,
                             unsigned int buflen)
 {
@@ -656,7 +656,7 @@ ipmi_sdr_cache_record_read (ipmi_sdr_cache_ctx_t ctx,
 }
 
 int
-ipmi_sdr_cache_close (ipmi_sdr_cache_ctx_t ctx)
+ipmi_sdr_cache_close (ipmi_sdr_ctx_t ctx)
 {
   if (!ctx || ctx->magic != IPMI_SDR_CACHE_CTX_MAGIC)
     {

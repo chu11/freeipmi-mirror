@@ -777,7 +777,7 @@ _store_entity_id_count (pstdout_state_t pstate,
 
 int
 calculate_entity_id_counts (pstdout_state_t pstate,
-                            ipmi_sdr_cache_ctx_t sdr_cache_ctx,
+                            ipmi_sdr_ctx_t sdr_cache_ctx,
                             ipmi_sdr_parse_ctx_t sdr_parse_ctx,
                             struct sensor_entity_id_counts *entity_id_counts)
 {
@@ -1173,7 +1173,7 @@ _store_column_widths_shared (pstdout_state_t pstate,
 
 int
 calculate_column_widths (pstdout_state_t pstate,
-                         ipmi_sdr_cache_ctx_t sdr_cache_ctx,
+                         ipmi_sdr_ctx_t sdr_cache_ctx,
                          ipmi_sdr_parse_ctx_t sdr_parse_ctx,
                          char sensor_types[][MAX_SENSOR_TYPES_STRING_LENGTH+1],
                          unsigned int sensor_types_length,

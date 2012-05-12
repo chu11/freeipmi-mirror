@@ -51,7 +51,7 @@
 #include "freeipmi-portability.h"
 
 void
-ipmi_sdr_cache_init_ctx (ipmi_sdr_cache_ctx_t ctx)
+ipmi_sdr_cache_init_ctx (ipmi_sdr_ctx_t ctx)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SDR_CACHE_CTX_MAGIC);
@@ -72,7 +72,7 @@ ipmi_sdr_cache_init_ctx (ipmi_sdr_cache_ctx_t ctx)
 }
 
 int
-ipmi_sdr_cache_info (ipmi_sdr_cache_ctx_t ctx,
+ipmi_sdr_cache_info (ipmi_sdr_ctx_t ctx,
                      ipmi_ctx_t ipmi_ctx,
                      uint8_t *sdr_version,
                      uint16_t *record_count,
@@ -160,7 +160,7 @@ ipmi_sdr_cache_info (ipmi_sdr_cache_ctx_t ctx,
 }
 
 const char *
-ipmi_sdr_cache_record_type_str (ipmi_sdr_cache_ctx_t ctx,
+ipmi_sdr_cache_record_type_str (ipmi_sdr_ctx_t ctx,
                                 uint8_t *sdr_record,
                                 unsigned int sdr_record_len)
 {

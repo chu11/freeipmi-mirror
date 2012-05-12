@@ -77,7 +77,7 @@ static char *ipmi_sel_parse_errmsgs[] =
   };
 
 ipmi_sel_parse_ctx_t
-ipmi_sel_parse_ctx_create (ipmi_ctx_t ipmi_ctx, ipmi_sdr_cache_ctx_t sdr_cache_ctx)
+ipmi_sel_parse_ctx_create (ipmi_ctx_t ipmi_ctx, ipmi_sdr_ctx_t sdr_cache_ctx)
 {
   struct ipmi_sel_parse_ctx *ctx = NULL;
 

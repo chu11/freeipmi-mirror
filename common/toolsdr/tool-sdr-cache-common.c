@@ -519,7 +519,7 @@ _sdr_cache_create_directory (pstdout_state_t pstate,
 }
 
 int
-_sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
+_sdr_cache_create (ipmi_sdr_ctx_t ctx,
 		   pstdout_state_t pstate,
 		   ipmi_ctx_t ipmi_ctx,
 		   int quiet_cache,
@@ -591,7 +591,7 @@ _sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
 }
 
 int
-sdr_cache_create_and_load (ipmi_sdr_cache_ctx_t ctx,
+sdr_cache_create_and_load (ipmi_sdr_ctx_t ctx,
                            pstdout_state_t pstate,
                            ipmi_ctx_t ipmi_ctx,
                            int quiet_cache,
@@ -688,7 +688,7 @@ sdr_cache_create_and_load (ipmi_sdr_cache_ctx_t ctx,
 }
 
 int
-sdr_cache_flush_cache (ipmi_sdr_cache_ctx_t ctx,
+sdr_cache_flush_cache (ipmi_sdr_ctx_t ctx,
                        pstdout_state_t pstate,
                        int quiet_cache,
                        const char *hostname,
@@ -727,7 +727,7 @@ sdr_cache_flush_cache (ipmi_sdr_cache_ctx_t ctx,
 }
 
 int
-sdr_cache_setup_debug (ipmi_sdr_cache_ctx_t ctx,
+sdr_cache_setup_debug (ipmi_sdr_ctx_t ctx,
 		       pstdout_state_t pstate,
 		       int debug,
 		       const char *hostname)
@@ -757,7 +757,7 @@ sdr_cache_setup_debug (ipmi_sdr_cache_ctx_t ctx,
 }
 
 int
-ipmi_sdr_cache_search_sensor_wrapper (ipmi_sdr_cache_ctx_t ctx,
+ipmi_sdr_cache_search_sensor_wrapper (ipmi_sdr_ctx_t ctx,
 				      uint8_t sensor_number,
 				      uint8_t generator_id)
 {

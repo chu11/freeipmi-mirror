@@ -73,7 +73,7 @@
 #define IPMI_SDR_CACHE_BYTES_TO_READ_DECREMENT  4
 
 static int
-_sdr_cache_header_write (ipmi_sdr_cache_ctx_t ctx,
+_sdr_cache_header_write (ipmi_sdr_ctx_t ctx,
                          ipmi_ctx_t ipmi_ctx,
                          int fd,
                          unsigned int *total_bytes_written,
@@ -197,7 +197,7 @@ _sdr_cache_header_write (ipmi_sdr_cache_ctx_t ctx,
 }
 
 static int
-_sdr_cache_reservation_id (ipmi_sdr_cache_ctx_t ctx,
+_sdr_cache_reservation_id (ipmi_sdr_ctx_t ctx,
                            ipmi_ctx_t ipmi_ctx,
                            uint16_t *reservation_id)
 {
@@ -239,7 +239,7 @@ _sdr_cache_reservation_id (ipmi_sdr_cache_ctx_t ctx,
 }
 
 static int
-_sdr_cache_get_record (ipmi_sdr_cache_ctx_t ctx,
+_sdr_cache_get_record (ipmi_sdr_ctx_t ctx,
                        ipmi_ctx_t ipmi_ctx,
                        uint16_t record_id,
                        void *record_buf,
@@ -550,7 +550,7 @@ _sdr_cache_get_record (ipmi_sdr_cache_ctx_t ctx,
 }
 
 static int
-_sdr_cache_record_write (ipmi_sdr_cache_ctx_t ctx,
+_sdr_cache_record_write (ipmi_sdr_ctx_t ctx,
                          int fd,
                          unsigned int *total_bytes_written,
                          uint16_t *record_ids,
@@ -638,7 +638,7 @@ _sdr_cache_record_write (ipmi_sdr_cache_ctx_t ctx,
 }
 
 int
-ipmi_sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
+ipmi_sdr_cache_create (ipmi_sdr_ctx_t ctx,
                        ipmi_ctx_t ipmi_ctx,
                        const char *filename,
                        int cache_create_flags,

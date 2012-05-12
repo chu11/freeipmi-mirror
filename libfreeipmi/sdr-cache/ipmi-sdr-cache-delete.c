@@ -47,7 +47,7 @@
 #include "freeipmi-portability.h"
 
 int
-ipmi_sdr_cache_delete (ipmi_sdr_cache_ctx_t ctx, const char *filename)
+ipmi_sdr_cache_delete (ipmi_sdr_ctx_t ctx, const char *filename)
 {
   int rv = -1;
 
