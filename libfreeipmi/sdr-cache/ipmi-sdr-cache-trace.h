@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef IPMI_SDR_CACHE_TRACE_H
-#define IPMI_SDR_CACHE_TRACE_H
+#ifndef IPMI_SDR_TRACE_H
+#define IPMI_SDR_TRACE_H
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -53,4 +53,4 @@
     TRACE_MSG_OUT (fiid_obj_errormsg ((__obj)), fiid_obj_errnum ((__obj))); \
   } while (0)
 
-#endif /* IPMI_SDR_CACHE_TRACE_H */
+#endif /* IPMI_SDR_TRACE_H */

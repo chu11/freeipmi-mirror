@@ -24,8 +24,8 @@
  *  with Ipmimonitoring.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef IPMI_SDR_CACHE_DEFS_H
-#define IPMI_SDR_CACHE_DEFS_H
+#ifndef IPMI_SDR_DEFS_H
+#define IPMI_SDR_DEFS_H
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -108,4 +108,4 @@ struct ipmi_sdr_ctx {
   int current_offset_dumped;
 };
 
-#endif /* IPMI_SDR_CACHE_DEFS_H */
+#endif /* IPMI_SDR_DEFS_H */

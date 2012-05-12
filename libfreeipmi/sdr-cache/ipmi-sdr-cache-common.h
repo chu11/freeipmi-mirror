@@ -24,8 +24,8 @@
  *  with Ipmimonitoring.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef IPMI_SDR_CACHE_COMMON_H
-#define IPMI_SDR_CACHE_COMMON_H
+#ifndef IPMI_SDR_COMMON_H
+#define IPMI_SDR_COMMON_H
 
 #include <stdint.h>
 
@@ -48,4 +48,4 @@ const char *ipmi_sdr_cache_record_type_str (ipmi_sdr_ctx_t ctx,
                                             uint8_t *sdr_record,
                                             unsigned int sdr_record_len);
 
-#endif /* IPMI_SDR_CACHE_COMMON_H */
+#endif /* IPMI_SDR_COMMON_H */

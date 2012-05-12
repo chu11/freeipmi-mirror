@@ -39,8 +39,8 @@
  *  with Ipmimonitoring.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef IPMI_SDR_CACHE_H
-#define IPMI_SDR_CACHE_H
+#ifndef IPMI_SDR_H
+#define IPMI_SDR_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -166,4 +166,4 @@ int ipmi_sdr_cache_delete (ipmi_sdr_ctx_t ctx, const char *filename);
 }
 #endif
 
-#endif /* IPMI_SDR_CACHE_H */
+#endif /* IPMI_SDR_H */
