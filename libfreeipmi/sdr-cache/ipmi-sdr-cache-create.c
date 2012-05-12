@@ -642,7 +642,7 @@ ipmi_sdr_cache_create (ipmi_sdr_ctx_t ctx,
                        ipmi_ctx_t ipmi_ctx,
                        const char *filename,
                        int cache_create_flags,
-                       Ipmi_Sdr_Create_Callback create_callback,
+                       Ipmi_Sdr_Cache_Create_Callback create_callback,
                        void *create_callback_data)
 {
   int open_flags;

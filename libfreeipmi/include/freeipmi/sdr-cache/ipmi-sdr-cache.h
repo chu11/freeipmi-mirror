@@ -92,7 +92,7 @@ extern "C" {
 typedef struct ipmi_sdr_ctx *ipmi_sdr_ctx_t;
 
 /* Callback between every record that is cached */
-typedef void (*Ipmi_Sdr_Create_Callback)(uint8_t sdr_version,
+typedef void (*Ipmi_Sdr_Cache_Create_Callback)(uint8_t sdr_version,
 					 uint16_t record_count,
 					 uint32_t most_recent_addition_timestamp,
 					 uint32_t most_recent_erase_timestamp,
@@ -120,7 +120,7 @@ int ipmi_sdr_cache_create (ipmi_sdr_ctx_t ctx,
                            ipmi_ctx_t ipmi_ctx,
                            const char *filename,
                            int cache_create_flags,
-                           Ipmi_Sdr_Create_Callback create_callback,
+                           Ipmi_Sdr_Cache_Create_Callback create_callback,
                            void *create_callback_data);
 
 /*
