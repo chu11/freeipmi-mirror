@@ -52,4 +52,10 @@
     TRACE_MSG_OUT (fiid_obj_errormsg ((__obj)), fiid_obj_errnum ((__obj))); \
   } while (0)
 
+#define SDR_SET_INTERNAL_ERRNUM(__ctx)                                      \
+  do {                                                                      \
+    sdr_set_internal_errnum ((__ctx));                                      \
+    TRACE_MSG_OUT (ipmi_sdr_ctx_errormsg ((__ctx)), (__errnum));            \
+  } while (0)
+
 #endif /* IPMI_SDR_TRACE_H */

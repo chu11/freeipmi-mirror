@@ -109,7 +109,7 @@ ipmi_sdr_ctx_destroy (ipmi_sdr_ctx_t ctx)
   if (ctx->callback_lock)
     {
       SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_CONTEXT_PERFORMING_OTHER_OPERATION);
-      return (-1);
+      return;
     }
 
   /* ignore potential error, destroy path */

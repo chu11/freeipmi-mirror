@@ -39,6 +39,7 @@
 #include "freeipmi/spec/ipmi-event-reading-type-code-spec.h"
 #include "freeipmi/util/ipmi-sensor-util.h"
 
+#include "ipmi-sdr-common.h"
 #include "ipmi-sdr-defs.h"
 #include "ipmi-sdr-trace.h"
 #include "ipmi-sdr-util.h"
@@ -66,8 +67,12 @@ ipmi_sdr_parse_record_id_and_type (ipmi_sdr_ctx_t ctx,
                                    uint16_t *record_id,
                                    uint8_t *record_type)
 {
+  uint8_t sdr_record_buf[IPMI_SDR_MAX_RECORD_LENGTH];
+  int sdr_record_buf_len;
   fiid_obj_t obj_sdr_record_header = NULL;
   int sdr_record_header_len;
+  void *sdr_record_to_use;
+  unsigned int sdr_record_len_to_use;
   uint64_t val;
   int rv = -1;
 
@@ -79,8 +84,30 @@ ipmi_sdr_parse_record_id_and_type (ipmi_sdr_ctx_t ctx,
 
   if (!sdr_record || !sdr_record_len)
     {
-      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_PARAMETERS);
-      return (-1);
+      if (ctx->operation == IPMI_SDR_OPERATION_READ_CACHE
+	  && !sdr_record
+	  && !sdr_record_len)
+	{
+	  if ((sdr_record_buf_len = ipmi_sdr_cache_record_read (ctx,
+								sdr_record_buf,
+								IPMI_SDR_MAX_RECORD_LENGTH)) < 0)
+	    {
+	      SDR_SET_INTERNAL_ERRNUM (ctx);
+	      return (-1);
+	    }
+	  sdr_record_to_use = sdr_record_buf;
+	  sdr_record_len_to_use = sdr_record_buf_len;
+	}
+      else
+	{
+	  SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_PARAMETERS);
+	  return (-1);
+	}
+    }
+  else
+    {
+      sdr_record_to_use = (void *)sdr_record;
+      sdr_record_len_to_use = sdr_record_len;
     }
 
   if ((sdr_record_header_len = fiid_template_len_bytes (tmpl_sdr_record_header)) < 0)
@@ -89,7 +116,7 @@ ipmi_sdr_parse_record_id_and_type (ipmi_sdr_ctx_t ctx,
       goto cleanup;
     }
 
-  if (sdr_record_len < sdr_record_header_len)
+  if (sdr_record_len_to_use < sdr_record_header_len)
     {
       SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_PARSE_INCOMPLETE_SDR_RECORD);
       goto cleanup;
@@ -102,7 +129,7 @@ ipmi_sdr_parse_record_id_and_type (ipmi_sdr_ctx_t ctx,
     }
 
   if (fiid_obj_set_all (obj_sdr_record_header,
-                        sdr_record,
+                        sdr_record_to_use,
                         sdr_record_header_len) < 0)
     {
       SDR_FIID_OBJECT_ERROR_TO_SDR_ERRNUM (ctx, obj_sdr_record_header);
@@ -133,6 +160,8 @@ ipmi_sdr_parse_record_id_and_type (ipmi_sdr_ctx_t ctx,
       *record_type = val;
     }
 
+  ipmi_sdr_check_read_status (ctx);
+
   rv = 0;
   ctx->errnum = IPMI_SDR_ERR_SUCCESS;
  cleanup:
@@ -146,21 +175,58 @@ _sdr_record_get_common (ipmi_sdr_ctx_t ctx,
                         unsigned int sdr_record_len,
                         uint32_t acceptable_record_types)
 {
+  uint8_t sdr_record_buf[IPMI_SDR_MAX_RECORD_LENGTH];
+  int sdr_record_buf_len;
+  void *sdr_record_to_use;
+  unsigned int sdr_record_len_to_use;
   fiid_obj_t obj_sdr_record = NULL;
   uint8_t record_type;
 
-  assert (ctx);
-  assert (ctx->magic == IPMI_SDR_CTX_MAGIC);
-  assert (sdr_record);
-  assert (sdr_record_len);
   assert (acceptable_record_types);
 
+  if (!ctx || ctx->magic != IPMI_SDR_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_sdr_ctx_errormsg (ctx), ipmi_sdr_ctx_errnum (ctx));
+      goto cleanup;
+    }
+
+  if (!sdr_record || !sdr_record_len)
+    {
+      if (ctx->operation == IPMI_SDR_OPERATION_READ_CACHE
+	  && !sdr_record
+	  && !sdr_record_len)
+	{
+	  if ((sdr_record_buf_len = ipmi_sdr_cache_record_read (ctx,
+								sdr_record_buf,
+								IPMI_SDR_MAX_RECORD_LENGTH)) < 0)
+	    {
+	      SDR_SET_INTERNAL_ERRNUM (ctx);
+	      goto cleanup;
+	    }
+	  sdr_record_to_use = sdr_record_buf;
+	  sdr_record_len_to_use = sdr_record_buf_len;
+	}
+      else
+	{
+	  SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_PARAMETERS);
+	  goto cleanup;
+	}
+    }
+  else
+    {
+      sdr_record_to_use = (void *)sdr_record;
+      sdr_record_len_to_use = sdr_record_len;
+    }
+
   if (ipmi_sdr_parse_record_id_and_type (ctx,
-                                         sdr_record,
-                                         sdr_record_len,
+                                         sdr_record_to_use,
+                                         sdr_record_len_to_use,
                                          NULL,
                                          &record_type) < 0)
-    goto cleanup;
+    {
+      SDR_SET_INTERNAL_ERRNUM (ctx);
+      goto cleanup;
+    }
 
   if (!(((acceptable_record_types & IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD)
          && record_type == IPMI_SDR_FORMAT_FULL_SENSOR_RECORD)
@@ -281,12 +347,14 @@ _sdr_record_get_common (ipmi_sdr_ctx_t ctx,
     }
 
   if (fiid_obj_set_all (obj_sdr_record,
-                        sdr_record,
-                        sdr_record_len) < 0)
+                        sdr_record_to_use,
+                        sdr_record_len_to_use) < 0)
     {
       SDR_FIID_OBJECT_ERROR_TO_SDR_ERRNUM (ctx, obj_sdr_record);
       goto cleanup;
     }
+
+  ipmi_sdr_check_read_status (ctx);
 
   return (obj_sdr_record);
 
@@ -306,18 +374,6 @@ ipmi_sdr_parse_sensor_owner_id (ipmi_sdr_ctx_t ctx,
   uint32_t acceptable_record_types;
   uint64_t val;
   int rv = -1;
-
-  if (!ctx || ctx->magic != IPMI_SDR_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_sdr_ctx_errormsg (ctx), ipmi_sdr_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (!sdr_record || !sdr_record_len)
-    {
-      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_PARAMETERS);
-      return (-1);
-    }
 
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD;
   acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_COMPACT_SENSOR_RECORD;
@@ -372,18 +428,6 @@ ipmi_sdr_parse_sensor_owner_lun (ipmi_sdr_ctx_t ctx,
   uint64_t val;
   int rv = -1;
 
-  if (!ctx || ctx->magic != IPMI_SDR_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_sdr_ctx_errormsg (ctx), ipmi_sdr_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (!sdr_record || !sdr_record_len)
-    {
-      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_PARAMETERS);
-      return (-1);
-    }
-
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD;
   acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_COMPACT_SENSOR_RECORD;
   acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_EVENT_ONLY_RECORD;
@@ -436,18 +480,6 @@ ipmi_sdr_parse_sensor_number (ipmi_sdr_ctx_t ctx,
   uint64_t val;
   int rv = -1;
 
-  if (!ctx || ctx->magic != IPMI_SDR_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_sdr_ctx_errormsg (ctx), ipmi_sdr_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (!sdr_record || !sdr_record_len)
-    {
-      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_PARAMETERS);
-      return (-1);
-    }
-
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD;
   acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_COMPACT_SENSOR_RECORD;
   acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_EVENT_ONLY_RECORD;
@@ -489,18 +521,6 @@ ipmi_sdr_parse_entity_id_instance_type (ipmi_sdr_ctx_t ctx,
   uint32_t acceptable_record_types;
   uint64_t val;
   int rv = -1;
-
-  if (!ctx || ctx->magic != IPMI_SDR_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_sdr_ctx_errormsg (ctx), ipmi_sdr_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (!sdr_record || !sdr_record_len)
-    {
-      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_PARAMETERS);
-      return (-1);
-    }
 
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD;
   acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_COMPACT_SENSOR_RECORD;
@@ -566,18 +586,6 @@ ipmi_sdr_parse_sensor_type (ipmi_sdr_ctx_t ctx,
   uint64_t val;
   int rv = -1;
 
-  if (!ctx || ctx->magic != IPMI_SDR_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_sdr_ctx_errormsg (ctx), ipmi_sdr_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (!sdr_record || !sdr_record_len)
-    {
-      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_PARAMETERS);
-      return (-1);
-    }
-
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD;
   acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_COMPACT_SENSOR_RECORD;
   acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_EVENT_ONLY_RECORD;
@@ -617,18 +625,6 @@ ipmi_sdr_parse_event_reading_type_code (ipmi_sdr_ctx_t ctx,
   uint32_t acceptable_record_types;
   uint64_t val;
   int rv = -1;
-
-  if (!ctx || ctx->magic != IPMI_SDR_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_sdr_ctx_errormsg (ctx), ipmi_sdr_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (!sdr_record || !sdr_record_len)
-    {
-      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_PARAMETERS);
-      return (-1);
-    }
 
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD;
   acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_COMPACT_SENSOR_RECORD;
@@ -670,18 +666,6 @@ ipmi_sdr_parse_id_string (ipmi_sdr_ctx_t ctx,
   uint32_t acceptable_record_types;
   int len = 0;
   int rv = -1;
-
-  if (!ctx || ctx->magic != IPMI_SDR_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_sdr_ctx_errormsg (ctx), ipmi_sdr_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (!sdr_record || !sdr_record_len)
-    {
-      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_PARAMETERS);
-      return (-1);
-    }
 
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD;
   acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_COMPACT_SENSOR_RECORD;
@@ -726,18 +710,6 @@ ipmi_sdr_parse_sensor_units (ipmi_sdr_ctx_t ctx,
   uint32_t acceptable_record_types;
   uint64_t val;
   int rv = -1;
-
-  if (!ctx || ctx->magic != IPMI_SDR_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_sdr_ctx_errormsg (ctx), ipmi_sdr_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (!sdr_record || !sdr_record_len)
-    {
-      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_PARAMETERS);
-      return (-1);
-    }
 
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD;
   acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_COMPACT_SENSOR_RECORD;
@@ -837,18 +809,6 @@ ipmi_sdr_parse_sensor_capabilities (ipmi_sdr_ctx_t ctx,
   uint64_t val;
   int rv = -1;
 
-  if (!ctx || ctx->magic != IPMI_SDR_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_sdr_ctx_errormsg (ctx), ipmi_sdr_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (!sdr_record || !sdr_record_len)
-    {
-      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_PARAMETERS);
-      return (-1);
-    }
-
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD;
   acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_COMPACT_SENSOR_RECORD;
 
@@ -932,18 +892,6 @@ ipmi_sdr_parse_sensor_direction (ipmi_sdr_ctx_t ctx,
   uint64_t val;
   int rv = -1;
 
-  if (!ctx || ctx->magic != IPMI_SDR_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_sdr_ctx_errormsg (ctx), ipmi_sdr_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (!sdr_record || !sdr_record_len)
-    {
-      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_PARAMETERS);
-      return (-1);
-    }
-
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD;
   acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_COMPACT_SENSOR_RECORD;
 
@@ -999,18 +947,6 @@ ipmi_sdr_parse_assertion_supported (ipmi_sdr_ctx_t ctx,
   uint8_t event_reading_type_code;
   uint64_t val;
   int rv = -1;
-
-  if (!ctx || ctx->magic != IPMI_SDR_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_sdr_ctx_errormsg (ctx), ipmi_sdr_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (!sdr_record || !sdr_record_len)
-    {
-      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_PARAMETERS);
-      return (-1);
-    }
 
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD;
   acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_COMPACT_SENSOR_RECORD;
@@ -1277,18 +1213,6 @@ ipmi_sdr_parse_deassertion_supported (ipmi_sdr_ctx_t ctx,
   uint64_t val;
   int rv = -1;
 
-  if (!ctx || ctx->magic != IPMI_SDR_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_sdr_ctx_errormsg (ctx), ipmi_sdr_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (!sdr_record || !sdr_record_len)
-    {
-      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_PARAMETERS);
-      return (-1);
-    }
-
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD;
   acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_COMPACT_SENSOR_RECORD;
 
@@ -1550,18 +1474,6 @@ ipmi_sdr_parse_threshold_assertion_supported (ipmi_sdr_ctx_t ctx,
   uint64_t val;
   int rv = -1;
 
-  if (!ctx || ctx->magic != IPMI_SDR_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_sdr_ctx_errormsg (ctx), ipmi_sdr_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (!sdr_record || !sdr_record_len)
-    {
-      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_PARAMETERS);
-      return (-1);
-    }
-
   /* achu:
    *
    * Technically, the IPMI spec lists that compact record formats also
@@ -1783,18 +1695,6 @@ ipmi_sdr_parse_threshold_deassertion_supported (ipmi_sdr_ctx_t ctx,
   uint64_t val;
   int rv = -1;
 
-  if (!ctx || ctx->magic != IPMI_SDR_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_sdr_ctx_errormsg (ctx), ipmi_sdr_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (!sdr_record || !sdr_record_len)
-    {
-      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_PARAMETERS);
-      return (-1);
-    }
-
   /* achu:
    *
    * Technically, the IPMI spec lists that compact record formats also
@@ -2010,18 +1910,6 @@ ipmi_sdr_parse_threshold_readable (ipmi_sdr_ctx_t ctx,
   uint64_t val;
   int rv = -1;
 
-  if (!ctx || ctx->magic != IPMI_SDR_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_sdr_ctx_errormsg (ctx), ipmi_sdr_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (!sdr_record || !sdr_record_len)
-    {
-      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_PARAMETERS);
-      return (-1);
-    }
-
   /* achu:
    *
    * Technically, the IPMI spec lists that compact record formats also
@@ -2165,18 +2053,6 @@ ipmi_sdr_parse_threshold_settable (ipmi_sdr_ctx_t ctx,
   uint64_t val;
   int rv = -1;
 
-  if (!ctx || ctx->magic != IPMI_SDR_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_sdr_ctx_errormsg (ctx), ipmi_sdr_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (!sdr_record || !sdr_record_len)
-    {
-      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_PARAMETERS);
-      return (-1);
-    }
-
   /* achu:
    *
    * Technically, the IPMI spec lists that compact record formats also
@@ -2318,18 +2194,6 @@ ipmi_sdr_parse_sensor_decoding_data (ipmi_sdr_ctx_t ctx,
   uint64_t val, val1, val2;
   int rv = -1;
 
-  if (!ctx || ctx->magic != IPMI_SDR_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_sdr_ctx_errormsg (ctx), ipmi_sdr_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (!sdr_record || !sdr_record_len)
-    {
-      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_PARAMETERS);
-      return (-1);
-    }
-
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD;
 
   if (!(obj_sdr_record = _sdr_record_get_common (ctx,
@@ -2456,11 +2320,6 @@ _sensor_decode_value (ipmi_sdr_ctx_t ctx,
   int rv = -1;
 
   assert (ctx);
-  if (!ctx || ctx->magic != IPMI_SDR_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_sdr_ctx_errormsg (ctx), ipmi_sdr_ctx_errnum (ctx));
-      return (-1);
-    }
   assert (ctx->magic == IPMI_SDR_CTX_MAGIC);
   assert (value_ptr);
 
@@ -2503,18 +2362,6 @@ ipmi_sdr_parse_sensor_reading_ranges_specified (ipmi_sdr_ctx_t ctx,
   uint32_t acceptable_record_types;
   uint64_t val;
   int rv = -1;
-
-  if (!ctx || ctx->magic != IPMI_SDR_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_sdr_ctx_errormsg (ctx), ipmi_sdr_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (!sdr_record || !sdr_record_len)
-    {
-      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_PARAMETERS);
-      return (-1);
-    }
 
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD;
 
@@ -2590,17 +2437,13 @@ ipmi_sdr_parse_sensor_reading_ranges (ipmi_sdr_ctx_t ctx,
   uint64_t val;
   int rv = -1;
 
-  if (!ctx || ctx->magic != IPMI_SDR_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_sdr_ctx_errormsg (ctx), ipmi_sdr_ctx_errnum (ctx));
-      return (-1);
-    }
+  acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD;
 
-  if (!sdr_record || !sdr_record_len)
-    {
-      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_PARAMETERS);
-      return (-1);
-    }
+  if (!(obj_sdr_record = _sdr_record_get_common (ctx,
+                                                 sdr_record,
+                                                 sdr_record_len,
+                                                 acceptable_record_types)))
+    goto cleanup;
 
   if (nominal_reading)
     *nominal_reading = NULL;
@@ -2612,14 +2455,6 @@ ipmi_sdr_parse_sensor_reading_ranges (ipmi_sdr_ctx_t ctx,
     *sensor_maximum_reading = NULL;
   if (sensor_minimum_reading)
     *sensor_minimum_reading = NULL;
-
-  acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD;
-
-  if (!(obj_sdr_record = _sdr_record_get_common (ctx,
-                                                 sdr_record,
-                                                 sdr_record_len,
-                                                 acceptable_record_types)))
-    goto cleanup;
 
   if (ipmi_sdr_parse_sensor_decoding_data (ctx,
                                            sdr_record,
@@ -2806,17 +2641,13 @@ ipmi_sdr_parse_thresholds (ipmi_sdr_ctx_t ctx,
   uint64_t val;
   int rv = -1;
 
-  if (!ctx || ctx->magic != IPMI_SDR_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_sdr_ctx_errormsg (ctx), ipmi_sdr_ctx_errnum (ctx));
-      return (-1);
-    }
+  acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD;
 
-  if (!sdr_record || !sdr_record_len)
-    {
-      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_PARAMETERS);
-      return (-1);
-    }
+  if (!(obj_sdr_record = _sdr_record_get_common (ctx,
+                                                 sdr_record,
+                                                 sdr_record_len,
+                                                 acceptable_record_types)))
+    goto cleanup;
 
   if (lower_non_critical_threshold)
     *lower_non_critical_threshold = NULL;
@@ -2830,14 +2661,6 @@ ipmi_sdr_parse_thresholds (ipmi_sdr_ctx_t ctx,
     *upper_critical_threshold = NULL;
   if (upper_non_recoverable_threshold)
     *upper_non_recoverable_threshold = NULL;
-
-  acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD;
-
-  if (!(obj_sdr_record = _sdr_record_get_common (ctx,
-                                                 sdr_record,
-                                                 sdr_record_len,
-                                                 acceptable_record_types)))
-    goto cleanup;
 
   if (ipmi_sdr_parse_sensor_decoding_data (ctx,
                                            sdr_record,
@@ -3042,18 +2865,6 @@ ipmi_sdr_parse_thresholds_raw (ipmi_sdr_ctx_t ctx,
   uint64_t val;
   int rv = -1;
 
-  if (!ctx || ctx->magic != IPMI_SDR_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_sdr_ctx_errormsg (ctx), ipmi_sdr_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (!sdr_record || !sdr_record_len)
-    {
-      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_PARAMETERS);
-      return (-1);
-    }
-
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD;
 
   if (!(obj_sdr_record = _sdr_record_get_common (ctx,
@@ -3180,21 +2991,6 @@ ipmi_sdr_parse_tolerance (ipmi_sdr_ctx_t ctx,
   uint64_t val;
   int rv = -1;
 
-  if (!ctx || ctx->magic != IPMI_SDR_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_sdr_ctx_errormsg (ctx), ipmi_sdr_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (!sdr_record || !sdr_record_len)
-    {
-      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  if (tolerance)
-    *tolerance = NULL;
-
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD;
 
   if (!(obj_sdr_record = _sdr_record_get_common (ctx,
@@ -3202,6 +2998,9 @@ ipmi_sdr_parse_tolerance (ipmi_sdr_ctx_t ctx,
                                                  sdr_record_len,
                                                  acceptable_record_types)))
     goto cleanup;
+
+  if (tolerance)
+    *tolerance = NULL;
 
   if (ipmi_sdr_parse_sensor_decoding_data (ctx,
                                            sdr_record,
@@ -3277,21 +3076,6 @@ ipmi_sdr_parse_accuracy (ipmi_sdr_ctx_t ctx,
   uint64_t val;
   int rv = -1;
 
-  if (!ctx || ctx->magic != IPMI_SDR_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_sdr_ctx_errormsg (ctx), ipmi_sdr_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (!sdr_record || !sdr_record_len)
-    {
-      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  if (accuracy)
-    *accuracy = NULL;
-
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD;
 
   if (!(obj_sdr_record = _sdr_record_get_common (ctx,
@@ -3299,6 +3083,9 @@ ipmi_sdr_parse_accuracy (ipmi_sdr_ctx_t ctx,
                                                  sdr_record_len,
                                                  acceptable_record_types)))
     goto cleanup;
+
+  if (accuracy)
+    *accuracy = NULL;
 
   if (accuracy)
     {
@@ -3374,18 +3161,6 @@ ipmi_sdr_parse_hysteresis (ipmi_sdr_ctx_t ctx,
   uint64_t val;
   int rv = -1;
 
-  if (!ctx || ctx->magic != IPMI_SDR_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_sdr_ctx_errormsg (ctx), ipmi_sdr_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (!sdr_record || !sdr_record_len)
-    {
-      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_PARAMETERS);
-      return (-1);
-    }
-
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FULL_SENSOR_RECORD;
   acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_COMPACT_SENSOR_RECORD;
 
@@ -3437,18 +3212,6 @@ ipmi_sdr_parse_sensor_record_sharing (ipmi_sdr_ctx_t ctx,
   uint32_t acceptable_record_types;
   uint64_t val;
   int rv = -1;
-
-  if (!ctx || ctx->magic != IPMI_SDR_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_sdr_ctx_errormsg (ctx), ipmi_sdr_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (!sdr_record || !sdr_record_len)
-    {
-      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_PARAMETERS);
-      return (-1);
-    }
 
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_COMPACT_SENSOR_RECORD;
   acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_EVENT_ONLY_RECORD;
@@ -3526,18 +3289,6 @@ ipmi_sdr_parse_container_entity (ipmi_sdr_ctx_t ctx,
   uint64_t val;
   int rv = -1;
 
-  if (!ctx || ctx->magic != IPMI_SDR_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_sdr_ctx_errormsg (ctx), ipmi_sdr_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (!sdr_record || !sdr_record_len)
-    {
-      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_PARAMETERS);
-      return (-1);
-    }
-
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_ENTITY_ASSOCIATION_RECORD;
   acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_DEVICE_RELATIVE_ENTITY_ASSOCIATION_RECORD;
 
@@ -3590,18 +3341,6 @@ ipmi_sdr_parse_device_id_string (ipmi_sdr_ctx_t ctx,
   int len = 0;
   int rv = -1;
 
-  if (!ctx || ctx->magic != IPMI_SDR_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_sdr_ctx_errormsg (ctx), ipmi_sdr_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (!sdr_record || !sdr_record_len)
-    {
-      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_PARAMETERS);
-      return (-1);
-    }
-
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_GENERIC_DEVICE_LOCATOR_RECORD;
   acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_FRU_DEVICE_LOCATOR_RECORD;
   acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD;
@@ -3642,18 +3381,6 @@ ipmi_sdr_parse_device_type (ipmi_sdr_ctx_t ctx,
   uint32_t acceptable_record_types;
   uint64_t val;
   int rv = -1;
-
-  if (!ctx || ctx->magic != IPMI_SDR_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_sdr_ctx_errormsg (ctx), ipmi_sdr_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (!sdr_record || !sdr_record_len)
-    {
-      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_PARAMETERS);
-      return (-1);
-    }
 
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_GENERIC_DEVICE_LOCATOR_RECORD;
   acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_FRU_DEVICE_LOCATOR_RECORD;
@@ -3711,18 +3438,6 @@ ipmi_sdr_parse_generic_device_locator_parameters (ipmi_sdr_ctx_t ctx,
   uint64_t val1, val2;
   uint64_t val;
   int rv = -1;
-
-  if (!ctx || ctx->magic != IPMI_SDR_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_sdr_ctx_errormsg (ctx), ipmi_sdr_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (!sdr_record || !sdr_record_len)
-    {
-      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_PARAMETERS);
-      return (-1);
-    }
 
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_GENERIC_DEVICE_LOCATOR_RECORD;
 
@@ -3840,18 +3555,6 @@ ipmi_sdr_parse_fru_device_locator_parameters (ipmi_sdr_ctx_t ctx,
   uint64_t val;
   int rv = -1;
 
-  if (!ctx || ctx->magic != IPMI_SDR_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_sdr_ctx_errormsg (ctx), ipmi_sdr_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (!sdr_record || !sdr_record_len)
-    {
-      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_PARAMETERS);
-      return (-1);
-    }
-
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FRU_DEVICE_LOCATOR_RECORD;
 
   if (!(obj_sdr_record = _sdr_record_get_common (ctx,
@@ -3946,18 +3649,6 @@ ipmi_sdr_parse_fru_entity_id_and_instance (ipmi_sdr_ctx_t ctx,
   uint64_t val;
   int rv = -1;
 
-  if (!ctx || ctx->magic != IPMI_SDR_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_sdr_ctx_errormsg (ctx), ipmi_sdr_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (!sdr_record || !sdr_record_len)
-    {
-      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_PARAMETERS);
-      return (-1);
-    }
-
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_FRU_DEVICE_LOCATOR_RECORD;
 
   if (!(obj_sdr_record = _sdr_record_get_common (ctx,
@@ -4021,18 +3712,6 @@ ipmi_sdr_parse_management_controller_device_locator_parameters (ipmi_sdr_ctx_t c
   uint32_t acceptable_record_types;
   uint64_t val;
   int rv = -1;
-
-  if (!ctx || ctx->magic != IPMI_SDR_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_sdr_ctx_errormsg (ctx), ipmi_sdr_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (!sdr_record || !sdr_record_len)
-    {
-      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_PARAMETERS);
-      return (-1);
-    }
 
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD;
 
@@ -4237,18 +3916,6 @@ ipmi_sdr_parse_manufacturer_id (ipmi_sdr_ctx_t ctx,
   uint64_t val;
   int rv = -1;
 
-  if (!ctx || ctx->magic != IPMI_SDR_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_sdr_ctx_errormsg (ctx), ipmi_sdr_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (!sdr_record || !sdr_record_len)
-    {
-      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_PARAMETERS);
-      return (-1);
-    }
-
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_MANAGEMENT_CONTROLLER_CONFIRMATION_RECORD;
   acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_OEM_RECORD;
 
@@ -4288,18 +3955,6 @@ ipmi_sdr_parse_product_id (ipmi_sdr_ctx_t ctx,
   uint64_t val;
   int rv = -1;
 
-  if (!ctx || ctx->magic != IPMI_SDR_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_sdr_ctx_errormsg (ctx), ipmi_sdr_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (!sdr_record || !sdr_record_len)
-    {
-      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_PARAMETERS);
-      return (-1);
-    }
-
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_MANAGEMENT_CONTROLLER_CONFIRMATION_RECORD;
 
   if (!(obj_sdr_record = _sdr_record_get_common (ctx,
@@ -4338,18 +3993,6 @@ ipmi_sdr_parse_oem_data (ipmi_sdr_ctx_t ctx,
   uint32_t acceptable_record_types;
   int len = 0;
   int rv = -1;
-
-  if (!ctx || ctx->magic != IPMI_SDR_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_sdr_ctx_errormsg (ctx), ipmi_sdr_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (!sdr_record || !sdr_record_len)
-    {
-      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_PARAMETERS);
-      return (-1);
-    }
 
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_OEM_RECORD;
 

@@ -106,10 +106,11 @@ typedef void (*Ipmi_Sdr_Cache_Create_Callback)(uint8_t sdr_version,
  * through original caller
  *
  * ctx can be used only for read-only functions, most notably
- * ipmi_sdr_parse* functions.
+ * ipmi_sdr_parse* functions.  Calls to functions that can modify
+ * context state will be blocked from use.
  */
 typedef int (*Ipmi_Sdr_Cache_Iterate_Callback)(ipmi_sdr_ctx_t ctx,
-					       const uint8_t *sdr_record,
+					       const void *sdr_record,
 					       unsigned int sdr_record_len,
 					       void *data);
 
@@ -190,6 +191,11 @@ int ipmi_sdr_cache_delete (ipmi_sdr_ctx_t ctx, const char *filename);
 
 /*
  * SDR Record Parsing Functions
+ *
+ * For all parsing functions, if currently reading the SDR cache
+ * (i.e. ipmi_sdr_cache_open() has been called), if sdr_record is NULL
+ * and sdr_record_len is 0, the current sdr record in the iterator
+ * will be used in parsing.
  */
 
 /* For all SDR records */

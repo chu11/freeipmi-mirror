@@ -104,3 +104,13 @@ sdr_set_sdr_errnum_by_fiid_object (ipmi_sdr_ctx_t ctx, fiid_obj_t obj)
       ctx->errnum = IPMI_SDR_ERR_INTERNAL_ERROR;
     }
 }
+
+void
+sdr_set_internal_errnum (ipmi_sdr_ctx_t ctx)
+{
+  if (ctx->errnum == IPMI_SDR_ERR_CONTEXT_NULL
+      || ctx->errnum == IPMI_SDR_ERR_CONTEXT_INVALID
+      || ctx->errnum == IPMI_SDR_ERR_PARAMETERS
+      || ctx->errnum == IPMI_SDR_ERR_OVERFLOW)
+    ctx->errnum = IPMI_SDR_ERR_INTERNAL_ERROR; 
+}

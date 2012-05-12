@@ -48,4 +48,6 @@ const char *ipmi_sdr_record_type_str (ipmi_sdr_ctx_t ctx,
 				      uint8_t *sdr_record,
 				      unsigned int sdr_record_len);
 
+void ipmi_sdr_check_read_status (ipmi_sdr_ctx_t ctx);
+
 #endif /* IPMI_SDR_COMMON_H */

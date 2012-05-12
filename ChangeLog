@@ -5,7 +5,8 @@
 
 	* libfreeipmi/include/freeipmi/sdr-parse/ipmi-sdr-parse.h,
 	libfreeipmi/sdr-parse: Remove sub-library. Fold into sdr
-	sub-library.
+	sub-library.  Support ability to call parsing functions w/o
+	passing in sdr buffer and using internal buffer during iteration.
 
 	* libfreeipmi/include/sdr/ipmi-sdr.h,
 	libfreeipmi/sdr/ipmi-sdr-cache-read.c (ipmi_sdr_cache_iterate):

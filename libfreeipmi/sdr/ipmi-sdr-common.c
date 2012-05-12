@@ -36,6 +36,7 @@
 #include <assert.h>
 
 #include "freeipmi/sdr/ipmi-sdr.h"
+#include "freeipmi/debug/ipmi-debug.h"
 #include "freeipmi/fiid/fiid.h"
 #include "freeipmi/api/ipmi-sdr-repository-cmds-api.h"
 #include "freeipmi/cmds/ipmi-sdr-repository-cmds.h"
@@ -49,6 +50,7 @@
 #include "libcommon/ipmi-fiid-util.h"
 
 #include "freeipmi-portability.h"
+#include "debug-util.h"
 
 void
 ipmi_sdr_init_ctx (ipmi_sdr_ctx_t ctx)
@@ -250,4 +252,46 @@ ipmi_sdr_record_type_str (ipmi_sdr_ctx_t ctx,
  cleanup:
   fiid_obj_destroy (obj_sdr_record_header);
   return (rv);
+}
+
+void
+ipmi_sdr_check_read_status (ipmi_sdr_ctx_t ctx)
+{
+  assert (ctx);
+  assert (ctx->magic == IPMI_SDR_CTX_MAGIC);
+
+  if (ctx->operation != IPMI_SDR_OPERATION_READ_CACHE)
+    return;
+
+  if (ctx->flags & IPMI_SDR_FLAGS_DEBUG_DUMP
+      && !ctx->current_offset_dumped)
+    {
+      unsigned int record_length;
+      const char *record_str;
+      
+      record_length = (uint8_t)((ctx->sdr_cache + ctx->current_offset)[IPMI_SDR_RECORD_LENGTH_INDEX]);
+
+      if ((record_str = ipmi_sdr_record_type_str (ctx,
+						  ctx->sdr_cache + ctx->current_offset,
+						  record_length + IPMI_SDR_RECORD_HEADER_LENGTH)))
+        {
+          char hdrbuf[IPMI_SDR_CACHE_DEBUG_BUFLEN];
+
+          debug_hdr_str (DEBUG_UTIL_TYPE_NONE,
+                         DEBUG_UTIL_DIRECTION_NONE,
+			 DEBUG_UTIL_FLAGS_DEFAULT,
+                         record_str,
+                         hdrbuf,
+                         IPMI_SDR_CACHE_DEBUG_BUFLEN);
+
+          ipmi_dump_sdr_record (STDERR_FILENO,
+                                ctx->debug_prefix,
+                                hdrbuf,
+                                NULL,
+                                ctx->sdr_cache + ctx->current_offset,
+                                record_length + IPMI_SDR_RECORD_HEADER_LENGTH);
+        }
+
+      ctx->current_offset_dumped = 1;
+    }
 }
