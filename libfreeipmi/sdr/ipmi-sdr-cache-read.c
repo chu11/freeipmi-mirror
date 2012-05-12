@@ -724,7 +724,7 @@ int ipmi_sdr_cache_iterate (ipmi_sdr_ctx_t ctx,
       int ret;
 
       memset (sdr_record, '\0', IPMI_SDR_MAX_RECORD_LENGTH);
-
+      
       if ((sdr_record_len = ipmi_sdr_cache_record_read (ctx,
                                                         sdr_record,
                                                         IPMI_SDR_MAX_RECORD_LENGTH)) < 0)
@@ -736,7 +736,7 @@ int ipmi_sdr_cache_iterate (ipmi_sdr_ctx_t ctx,
 			      (unsigned int)sdr_record_len,
 			      iterate_callback_data);
       ctx->callback_lock = 0;
-
+      
       if (ret < 0)
 	{
 	  rv = ret;
@@ -744,10 +744,10 @@ int ipmi_sdr_cache_iterate (ipmi_sdr_ctx_t ctx,
 	  goto cleanup;
 	}
     }
-
-      rv = 0;
+  
+  rv = 0;
   ctx->errnum = IPMI_SDR_ERR_SUCCESS;
-    cleanup:
+ cleanup:
   return (rv);
 }
 
