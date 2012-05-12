@@ -40,8 +40,6 @@ config_err_t sensor_event_enable_enable_scanning_on_this_sensor_commit (const ch
                                                                         void *arg);
 
 int setup_sensor_event_enable_fields (ipmi_sensors_config_state_data_t *state_data,
-                                      const void *sdr_record,
-                                      unsigned int sdr_record_len,
                                       struct config_section *section);
 
 #endif /* IPMI_SENSORS_CONFIG_SENSOR_EVENT_ENABLE_COMMON_H */

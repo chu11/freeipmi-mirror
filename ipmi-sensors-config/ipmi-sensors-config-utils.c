@@ -57,8 +57,6 @@ convert_id_string (ipmi_sensors_config_state_data_t *state_data,
 
 config_err_t
 create_section_name (ipmi_sensors_config_state_data_t *state_data,
-                     const void *sdr_record,
-                     unsigned int sdr_record_len,
                      char *section_name,
                      unsigned int section_name_len)
 {
@@ -68,8 +66,6 @@ create_section_name (ipmi_sensors_config_state_data_t *state_data,
   config_err_t ret;
 
   assert (state_data);
-  assert (sdr_record);
-  assert (sdr_record_len);
   assert (section_name);
   assert (section_name_len);
 
@@ -77,8 +73,8 @@ create_section_name (ipmi_sensors_config_state_data_t *state_data,
   memset (id_string, '\0', IPMI_SDR_CACHE_MAX_ID_STRING + 1);
 
   if (ipmi_sdr_parse_record_id_and_type (state_data->sdr_ctx,
-                                         sdr_record,
-                                         sdr_record_len,
+					 NULL,
+					 0,
                                          &record_id,
                                          NULL) < 0)
     {
@@ -90,8 +86,8 @@ create_section_name (ipmi_sensors_config_state_data_t *state_data,
     }
 
   if (ipmi_sdr_parse_id_string (state_data->sdr_ctx,
-                                sdr_record,
-                                sdr_record_len,
+				NULL,
+				0,
                                 id_string,
                                 IPMI_SDR_CACHE_MAX_ID_STRING) < 0)
     {
@@ -138,22 +134,17 @@ create_section_name (ipmi_sensors_config_state_data_t *state_data,
 }
 
 config_err_t
-get_sdr_record (ipmi_sensors_config_state_data_t *state_data,
-                const char *section_name,
-                void *sdr_record,
-                unsigned int *sdr_record_len)
+seek_to_sdr_record (ipmi_sensors_config_state_data_t *state_data,
+		    const char *section_name)
 {
   uint16_t record_id;
   char *str = NULL;
   char *ptr;
   char *endptr;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
-  int len;
 
   assert (state_data);
   assert (section_name);
-  assert (sdr_record);
-  assert (sdr_record_len);
 
   if (!(str = strdup (section_name)))
     {
@@ -198,21 +189,6 @@ get_sdr_record (ipmi_sensors_config_state_data_t *state_data,
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
-
-  if ((len = ipmi_sdr_cache_record_read (state_data->sdr_ctx,
-                                         sdr_record,
-                                         *sdr_record_len)) < 0)
-    {
-      if (state_data->prog_data->args->config_args.common.debug)
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "ipmi_sdr_cache_record_read: %s\n",
-                         ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
-      rv = CONFIG_ERR_NON_FATAL_ERROR;
-      goto cleanup;
-    }
-
-  *sdr_record_len = len;
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
