@@ -387,8 +387,6 @@ event_output_sensor_name (pstdout_state_t pstate,
       && !sdr->ignore_sdr_cache)
     {
       uint8_t generator_id, sensor_number;
-      uint8_t sdr_record[IPMI_SDR_MAX_RECORD_LENGTH];
-      int sdr_record_len = 0;
 
       if ((ret = event_data_info (pstate,
 				  sel_parse_ctx,
@@ -424,22 +422,9 @@ event_output_sensor_name (pstdout_state_t pstate,
           goto normal_sensor_output;
         }
 
-      if ((sdr_record_len = ipmi_sdr_cache_record_read (sdr_ctx,
-                                                        sdr_record,
-                                                        IPMI_SDR_MAX_RECORD_LENGTH)) < 0)
-        {
-          PSTDOUT_FPRINTF (pstate,
-                           stderr,
-                           "ipmi_sdr_cache_record_read: %s\n",
-                           ipmi_sdr_ctx_errormsg (sdr_ctx));
-          return (-1);
-        }
-
       memset (outbuf, '\0', EVENT_OUTPUT_BUFLEN+1);
       if (get_entity_sensor_name_string (pstate,
                                          sdr_ctx,
-                                         sdr_record,
-                                         sdr_record_len,
                                          entity_id_counts,
                                          &sensor_number,
                                          outbuf,

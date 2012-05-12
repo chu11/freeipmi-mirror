@@ -821,8 +821,6 @@ _detailed_output_hysteresis (ipmi_sensors_state_data_t *state_data,
   memset (sensor_units_buf, '\0', IPMI_SENSORS_UNITS_BUFLEN+1);
   if (get_sensor_units_output_string (state_data->pstate,
                                       state_data->sdr_ctx,
-                                      sdr_record,
-                                      sdr_record_len,
                                       sensor_units_buf,
                                       IPMI_SENSORS_UNITS_BUFLEN,
                                       _abbreviated_units_flag (state_data)) < 0)
@@ -1478,8 +1476,6 @@ _detailed_output_full_record (ipmi_sensors_state_data_t *state_data,
   memset (sensor_units_buf, '\0', IPMI_SENSORS_UNITS_BUFLEN+1);
   if (get_sensor_units_output_string (state_data->pstate,
                                       state_data->sdr_ctx,
-                                      sdr_record,
-                                      sdr_record_len,
                                       sensor_units_buf,
                                       IPMI_SENSORS_UNITS_BUFLEN,
                                       _abbreviated_units_flag (state_data)) < 0)

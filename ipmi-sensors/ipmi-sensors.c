@@ -542,8 +542,6 @@ _calculate_record_ids (ipmi_sensors_state_data_t *state_data,
 
               if ((flag = sensor_type_listed_sdr (state_data->pstate,
                                                   state_data->sdr_ctx,
-                                                  sdr_record,
-                                                  sdr_record_len,
                                                   state_data->prog_data->args->exclude_sensor_types,
                                                   state_data->prog_data->args->exclude_sensor_types_length)) < 0)
                 return (-1);
@@ -614,11 +612,9 @@ _calculate_record_ids (ipmi_sensors_state_data_t *state_data,
           if (state_data->prog_data->args->exclude_sensor_types_length)
             {
               int flag;
-          
+	      
               if ((flag = sensor_type_listed_sdr (state_data->pstate,
                                                   state_data->sdr_ctx,
-                                                  sdr_record,
-                                                  sdr_record_len,
                                                   state_data->prog_data->args->exclude_sensor_types,
                                                   state_data->prog_data->args->exclude_sensor_types_length)) < 0)
                 return (-1);
@@ -667,8 +663,6 @@ _calculate_record_ids (ipmi_sensors_state_data_t *state_data,
 
           if ((flag = sensor_type_listed_sdr (state_data->pstate,
                                               state_data->sdr_ctx,
-                                              sdr_record,
-                                              sdr_record_len,
                                               state_data->prog_data->args->sensor_types,
                                               state_data->prog_data->args->sensor_types_length)) < 0)
             return (-1);
@@ -697,8 +691,6 @@ _calculate_record_ids (ipmi_sensors_state_data_t *state_data,
             {
               if ((flag = sensor_type_listed_sdr (state_data->pstate,
                                                   state_data->sdr_ctx,
-                                                  sdr_record,
-                                                  sdr_record_len,
                                                   state_data->prog_data->args->exclude_sensor_types,
                                                   state_data->prog_data->args->exclude_sensor_types_length)) < 0)
                 return (-1);

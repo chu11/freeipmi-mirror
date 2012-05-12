@@ -300,8 +300,6 @@ ipmi_oem_sun_get_led (ipmi_oem_state_data_t *state_data)
           
           if (get_entity_sensor_name_string (state_data->pstate,
                                              state_data->sdr_ctx,
-                                             sdr_record,
-                                             sdr_record_len,
                                              &entity_id_counts,
                                              NULL,
                                              sensor_name_buf,

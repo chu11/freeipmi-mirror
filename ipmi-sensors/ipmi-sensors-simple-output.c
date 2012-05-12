@@ -220,8 +220,6 @@ _legacy_simple_output_full_record (ipmi_sensors_state_data_t *state_data,
           memset (sensor_units_buf, '\0', IPMI_SENSORS_UNITS_BUFLEN+1);
           if (get_sensor_units_output_string (state_data->pstate,
                                               state_data->sdr_ctx,
-                                              sdr_record,
-                                              sdr_record_len,
                                               sensor_units_buf,
                                               IPMI_SENSORS_UNITS_BUFLEN,
                                               0) < 0)
@@ -472,8 +470,6 @@ _ipmimonitoring_legacy_simple_output_full_record (ipmi_sensors_state_data_t *sta
             memset (sensor_units_buf, '\0', IPMI_SENSORS_UNITS_BUFLEN+1);
             if (get_sensor_units_output_string (state_data->pstate,
                                                 state_data->sdr_ctx,
-                                                sdr_record,
-                                                sdr_record_len,
                                                 sensor_units_buf,
                                                 IPMI_SENSORS_UNITS_BUFLEN,
                                                 0) < 0)
@@ -608,8 +604,6 @@ _simple_output_header (ipmi_sensors_state_data_t *state_data,
 
       if (get_entity_sensor_name_string (state_data->pstate,
                                          state_data->sdr_ctx,
-                                         sdr_record,
-                                         sdr_record_len,
                                          &(state_data->entity_id_counts),
                                          &sensor_number,
                                          sensor_name_buf,
@@ -785,8 +779,6 @@ _simple_output_full_record (ipmi_sensors_state_data_t *state_data,
           memset (sensor_units_buf, '\0', IPMI_SENSORS_UNITS_BUFLEN+1);
           if (get_sensor_units_output_string (state_data->pstate,
                                               state_data->sdr_ctx,
-                                              sdr_record,
-                                              sdr_record_len,
                                               sensor_units_buf,
                                               IPMI_SENSORS_UNITS_BUFLEN,
                                               state_data->prog_data->args->non_abbreviated_units) < 0)
@@ -859,8 +851,6 @@ _simple_output_full_record (ipmi_sensors_state_data_t *state_data,
 	      memset (sensor_units_buf, '\0', IPMI_SENSORS_UNITS_BUFLEN+1);
 	      if (get_sensor_units_output_string (state_data->pstate,
 						  state_data->sdr_ctx,
-						  sdr_record,
-						  sdr_record_len,
 						  sensor_units_buf,
 						  IPMI_SENSORS_UNITS_BUFLEN,
 						  state_data->prog_data->args->non_abbreviated_units) < 0)

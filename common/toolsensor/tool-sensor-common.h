@@ -81,8 +81,6 @@ const char * get_oem_sensor_type_output_string (uint8_t sensor_type, uint8_t eve
 
 int get_entity_sensor_name_string (pstdout_state_t pstate,
                                    ipmi_sdr_ctx_t sdr_ctx,
-                                   const void *sdr_record,
-                                   unsigned int sdr_record_len,
                                    struct sensor_entity_id_counts *entity_id_counts,
                                    uint8_t *sensor_number,
                                    char *sensor_name_buf,
@@ -98,8 +96,6 @@ int valid_sensor_types (pstdout_state_t pstate,
 
 int get_sensor_units_output_string (pstdout_state_t pstate,
                                     ipmi_sdr_ctx_t sdr_ctx,
-                                    const void *sdr_record,
-                                    unsigned int sdr_record_len,
                                     char *sensor_units_buf,
                                     unsigned int sensor_units_buflen,
                                     unsigned int abbreviated_units_flag);
@@ -111,8 +107,6 @@ int sensor_type_listed (pstdout_state_t pstate,
 
 int sensor_type_listed_sdr (pstdout_state_t pstate,
                             ipmi_sdr_ctx_t sdr_ctx,
-                            const void *sdr_record,
-                            unsigned int sdr_record_len,
                             char sensor_types[][MAX_SENSOR_TYPES_STRING_LENGTH+1],
                             unsigned int sensor_types_length);
 

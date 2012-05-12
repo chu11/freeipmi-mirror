@@ -4853,8 +4853,6 @@ _ipmi_oem_dell_power_supply_info_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
 	  
       if (get_entity_sensor_name_string (sdr_callback_arg->state_data->pstate,
 					 sdr_callback_arg->state_data->sdr_ctx,
-					 sdr_record,
-					 sdr_record_len,
 					 sdr_callback_arg->entity_id_counts,
 					 NULL,
 					 sensor_name_buf,
