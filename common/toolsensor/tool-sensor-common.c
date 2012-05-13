@@ -51,6 +51,12 @@
 
 #define SENSORS_SENSOR_NAME_LENGTH 16
 
+struct entity_id_count_sdr_callback
+{
+  pstdout_state_t pstate;
+  struct sensor_entity_id_counts *entity_id_counts;
+};
+
 static void
 _str_replace_char (char *str, char chr, char with)
 {
@@ -665,29 +671,21 @@ _sensor_entity_id_counts_init (struct sensor_entity_id_counts *entity_id_counts)
 }
 
 static int
-_store_entity_id_count (pstdout_state_t pstate,
-                        ipmi_sdr_ctx_t sdr_ctx,
-                        struct sensor_entity_id_counts *entity_id_counts)
+_store_entity_id_count (ipmi_sdr_ctx_t sdr_ctx,
+			uint8_t record_type,
+			const void *sdr_record,
+			unsigned int sdr_record_len,
+			void *arg)
 {
-  uint16_t record_id;
-  uint8_t record_type;
+  struct entity_id_count_sdr_callback *sdr_callback_arg;
   uint8_t entity_id, entity_instance, entity_instance_type;
 
   assert (sdr_ctx);
-  assert (entity_id_counts);
+  assert (sdr_record);
+  assert (sdr_record_len);
+  assert (arg);
 
-  if (ipmi_sdr_parse_record_id_and_type (sdr_ctx,
-					 NULL,
-					 0,
-                                         &record_id,
-                                         &record_type) < 0)
-    {
-      PSTDOUT_FPRINTF (pstate,
-                       stderr,
-                       "ipmi_sdr_parse_record_id_and_type: %s\n",
-                       ipmi_sdr_ctx_errormsg (sdr_ctx));
-      return (-1);
-    }
+  sdr_callback_arg = (struct entity_id_count_sdr_callback *)arg;
 
   if (record_type != IPMI_SDR_FORMAT_FULL_SENSOR_RECORD
       && record_type != IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD
@@ -697,13 +695,13 @@ _store_entity_id_count (pstdout_state_t pstate,
     return (0);
 
   if (ipmi_sdr_parse_entity_id_instance_type (sdr_ctx,
-					      NULL,
-					      0,
+					      sdr_record,
+					      sdr_record_len,
                                               &entity_id,
                                               &entity_instance,
                                               &entity_instance_type) < 0)
     {
-      PSTDOUT_FPRINTF (pstate,
+      PSTDOUT_FPRINTF (sdr_callback_arg->pstate,
                        stderr,
                        "ipmi_sdr_parse_entity_id_instance_type: %s\n",
                        ipmi_sdr_ctx_errormsg (sdr_ctx));
@@ -711,11 +709,11 @@ _store_entity_id_count (pstdout_state_t pstate,
     }
 
   /* there's now atleast one of this entity id */
-  if (!entity_id_counts->count[entity_id])
-    entity_id_counts->count[entity_id] = 1;
+  if (!sdr_callback_arg->entity_id_counts->count[entity_id])
+    sdr_callback_arg->entity_id_counts->count[entity_id] = 1;
 
-  if (entity_instance > entity_id_counts->count[entity_id])
-    entity_id_counts->count[entity_id] = entity_instance;
+  if (entity_instance > sdr_callback_arg->entity_id_counts->count[entity_id])
+    sdr_callback_arg->entity_id_counts->count[entity_id] = entity_instance;
 
   /* special case if sensor sharing is involved */
   if (record_type == IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD
@@ -732,7 +730,7 @@ _store_entity_id_count (pstdout_state_t pstate,
                                                 NULL,
                                                 &entity_instance_sharing) < 0)
         {
-          PSTDOUT_FPRINTF (pstate,
+          PSTDOUT_FPRINTF (sdr_callback_arg->pstate,
                            stderr,
                            "ipmi_sdr_parse_sensor_record_sharing: %s\n",
                            ipmi_sdr_ctx_errormsg (sdr_ctx));
@@ -748,8 +746,8 @@ _store_entity_id_count (pstdout_state_t pstate,
             {
               entity_instance += (i + 1);
               
-              if (entity_instance > entity_id_counts->count[entity_id])
-                entity_id_counts->count[entity_id] = entity_instance;
+              if (entity_instance > sdr_callback_arg->entity_id_counts->count[entity_id])
+                sdr_callback_arg->entity_id_counts->count[entity_id] = entity_instance;
             }
         }
     }
@@ -762,30 +760,26 @@ calculate_entity_id_counts (pstdout_state_t pstate,
                             ipmi_sdr_ctx_t sdr_ctx,
                             struct sensor_entity_id_counts *entity_id_counts)
 {
-  uint16_t record_count;
+  struct entity_id_count_sdr_callback sdr_callback_arg;
   int rv = -1;
-  int i;
-
+  
   assert (sdr_ctx);
   assert (entity_id_counts);
-
+  
   _sensor_entity_id_counts_init (entity_id_counts);
 
-  if (ipmi_sdr_cache_record_count (sdr_ctx, &record_count) < 0)
+  sdr_callback_arg.pstate = pstate;
+  sdr_callback_arg.entity_id_counts = entity_id_counts; 
+
+  if (ipmi_sdr_cache_iterate (sdr_ctx,
+			      _store_entity_id_count,
+			      &sdr_callback_arg) < 0)
     {
       PSTDOUT_FPRINTF (pstate,
-                       stderr,
-                       "ipmi_sdr_cache_record_count: %s\n",
-                       ipmi_sdr_ctx_errormsg (sdr_ctx));
+		       stderr,
+		       "ipmi_sdr_parse_sensor_record_sharing: %s\n",
+		       ipmi_sdr_ctx_errormsg (sdr_ctx));
       goto cleanup;
-    }
-  
-  for (i = 0; i < record_count; i++, ipmi_sdr_cache_next (sdr_ctx))
-    {
-      if (_store_entity_id_count (pstate,
-                                  sdr_ctx,
-                                  entity_id_counts) < 0)
-        goto cleanup;
     }
 
   rv = 0;
