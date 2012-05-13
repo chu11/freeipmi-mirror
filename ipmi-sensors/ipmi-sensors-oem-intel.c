@@ -61,8 +61,6 @@ _ipmi_sensors_oem_intel_output_oem_record_fan_control_profile_support (ipmi_sens
  */
 int
 ipmi_sensors_oem_intel_output_oem_record (ipmi_sensors_state_data_t *state_data,
-					  const void *sdr_record,
-					  unsigned int sdr_record_len,
 					  uint32_t oem_record_manufacturer_id,
 					  const uint8_t *oem_data,
 					  unsigned int oem_data_len)
@@ -70,8 +68,6 @@ ipmi_sensors_oem_intel_output_oem_record (ipmi_sensors_state_data_t *state_data,
   int ret;
 
   assert (state_data);
-  assert (sdr_record);
-  assert (sdr_record_len);
   assert (oem_data);
   assert (oem_data_len);
   assert (state_data->prog_data->args->verbose_count >= 2);
@@ -88,9 +84,7 @@ ipmi_sensors_oem_intel_output_oem_record (ipmi_sensors_state_data_t *state_data,
       || state_data->oem_data.product_id == IPMI_INTEL_PRODUCT_ID_S2600JF
       || state_data->oem_data.product_id == IPMI_INTEL_PRODUCT_ID_QUANTA_QSSC_S4R)
     {
-      if ((ret = ipmi_sensors_oem_intel_node_manager_output_oem_record (state_data,
-									sdr_record,
-									sdr_record_len)) < 0)
+      if ((ret = ipmi_sensors_oem_intel_node_manager_output_oem_record (state_data)) < 0)
 	return (-1);
 
       if (ret)

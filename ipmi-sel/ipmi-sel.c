@@ -369,7 +369,7 @@ _flush_cache (ipmi_sel_state_data_t *state_data)
 {
   assert (state_data);
 
-  if (sdr_cache_flush_cache (state_data->sdr_cache_ctx,
+  if (sdr_cache_flush_cache (state_data->sdr_ctx,
                              state_data->pstate,
                              state_data->prog_data->args->sdr.quiet_cache,
                              state_data->hostname,
@@ -839,8 +839,7 @@ _normal_output_sensor_name (ipmi_sel_state_data_t *state_data, unsigned int flag
 
   return (event_output_sensor_name (state_data->pstate,
                                     state_data->sel_parse_ctx,
-                                    state_data->sdr_cache_ctx,
-                                    state_data->sdr_parse_ctx,
+                                    state_data->sdr_ctx,
 				    NULL,
 				    0,
                                     &state_data->entity_id_counts,
@@ -1699,7 +1698,7 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
 
   if (!args->sdr.ignore_sdr_cache)
     {
-      if (sdr_cache_create_and_load (state_data->sdr_cache_ctx,
+      if (sdr_cache_create_and_load (state_data->sdr_ctx,
                                      state_data->pstate,
                                      state_data->ipmi_ctx,
                                      args->sdr.quiet_cache,
@@ -1744,8 +1743,7 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
           if (args->entity_sensor_names)
             {
               if (calculate_entity_id_counts (state_data->pstate,
-                                              state_data->sdr_cache_ctx,
-                                              state_data->sdr_parse_ctx,
+                                              state_data->sdr_ctx,
                                               &(state_data->entity_id_counts)) < 0)
                 goto cleanup;
               
@@ -1753,8 +1751,7 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
             }
           
           if (calculate_column_widths (state_data->pstate,
-                                       state_data->sdr_cache_ctx,
-                                       state_data->sdr_parse_ctx,
+                                       state_data->sdr_ctx,
                                        NULL,
                                        0,
                                        NULL,
@@ -2192,37 +2189,18 @@ _ipmi_sel (pstdout_state_t pstate,
         }
     }
 
-  if (!(state_data.sdr_cache_ctx = ipmi_sdr_cache_ctx_create ()))
+  if (!(state_data.sdr_ctx = ipmi_sdr_ctx_create ()))
     {
-      pstdout_perror (pstate, "ipmi_sdr_cache_ctx_create()");
+      pstdout_perror (pstate, "ipmi_sdr_ctx_create()");
       exit_code = EXIT_FAILURE;
       goto cleanup;
     }
 
-  if (state_data.prog_data->args->common.debug)
+  if (sdr_cache_setup_debug (state_data.sdr_ctx,
+			     state_data.pstate,
+			     state_data.prog_data->args->common.debug,
+			     state_data.hostname) < 0)
     {
-      /* Don't error out, if this fails we can still continue */
-      if (ipmi_sdr_cache_ctx_set_flags (state_data.sdr_cache_ctx,
-                                        IPMI_SDR_CACHE_FLAGS_DEBUG_DUMP) < 0)
-        pstdout_fprintf (pstate,
-                         stderr,
-                         "ipmi_sdr_cache_ctx_set_flags: %s\n",
-                         ipmi_sdr_cache_ctx_errormsg (state_data.sdr_cache_ctx));
-
-      if (hostname)
-        {
-          if (ipmi_sdr_cache_ctx_set_debug_prefix (state_data.sdr_cache_ctx,
-                                                   hostname) < 0)
-            pstdout_fprintf (pstate,
-                             stderr,
-                             "ipmi_sdr_cache_ctx_set_debug_prefix: %s\n",
-                             ipmi_sdr_cache_ctx_errormsg (state_data.sdr_cache_ctx));
-        }
-    }
-
-  if (!(state_data.sdr_parse_ctx = ipmi_sdr_parse_ctx_create ()))
-    {
-      pstdout_perror (pstate, "ipmi_sdr_parse_ctx_create()");
       exit_code = EXIT_FAILURE;
       goto cleanup;
     }
@@ -2233,7 +2211,7 @@ _ipmi_sel (pstdout_state_t pstate,
       unsigned int flags = 0;
 
       if (!(state_data.sel_parse_ctx = ipmi_sel_parse_ctx_create (state_data.ipmi_ctx,
-                                                                  prog_data->args->sdr.ignore_sdr_cache ? NULL : state_data.sdr_cache_ctx)))
+                                                                  prog_data->args->sdr.ignore_sdr_cache ? NULL : state_data.sdr_ctx)))
         {
           pstdout_perror (pstate, "ipmi_sel_parse_ctx_create()");
           goto cleanup;
@@ -2347,8 +2325,7 @@ _ipmi_sel (pstdout_state_t pstate,
 
   exit_code = 0;
  cleanup:
-  ipmi_sdr_cache_ctx_destroy (state_data.sdr_cache_ctx);
-  ipmi_sdr_parse_ctx_destroy (state_data.sdr_parse_ctx);
+  ipmi_sdr_ctx_destroy (state_data.sdr_ctx);
   ipmi_sel_parse_ctx_destroy (state_data.sel_parse_ctx);
   ipmi_ctx_close (state_data.ipmi_ctx);
   ipmi_ctx_destroy (state_data.ipmi_ctx);

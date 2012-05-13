@@ -28,14 +28,10 @@ config_err_t convert_event_string (ipmi_sensors_config_state_data_t *state_data,
                                    char *event_string);
 
 config_err_t create_section_name (ipmi_sensors_config_state_data_t *state_data,
-                                  const void *sdr_record,
-                                  unsigned int sdr_record_len,
                                   char *section_name,
                                   unsigned int section_name_len);
 
-config_err_t get_sdr_record (ipmi_sensors_config_state_data_t *state_data,
-                             const char *section_name,
-                             void *sdr_record,
-                             unsigned int *sdr_record_len);
+config_err_t seek_to_sdr_record (ipmi_sensors_config_state_data_t *state_data,
+				 const char *section_name);
 
 #endif /* IPMI_SENSORS_CONFIG_UTILS_H */

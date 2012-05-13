@@ -42,20 +42,167 @@
 #include "pstdout.h"
 #include "tool-sdr-cache-common.h"
 
+struct ipmi_oem_intelnm_sdr_callback
+{
+  ipmi_oem_state_data_t *state_data;
+  uint8_t *target_channel_number;
+  uint8_t *target_slave_address;
+  uint8_t *target_lun;
+  int found;
+};
+
+static int
+_ipmi_oem_intelnm_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
+				uint8_t record_type,
+				const void *sdr_record,
+				unsigned int sdr_record_len,
+				void *arg)
+{
+  struct ipmi_oem_intelnm_sdr_callback *sdr_callback_arg;
+  fiid_obj_t obj_oem_record = NULL;
+  int expected_record_len;
+  uint8_t record_subtype;
+  uint8_t version_number;
+  uint64_t val;
+  int rv = -1;
+
+  assert (sdr_ctx);
+  assert (sdr_record);
+  assert (sdr_record_len);
+  assert (arg);
+
+  sdr_callback_arg = (struct ipmi_oem_intelnm_sdr_callback *)arg;
+  
+  if (record_type != IPMI_SDR_FORMAT_OEM_RECORD)
+    return (0);
+  
+  if ((expected_record_len = fiid_template_len_bytes (tmpl_sdr_oem_intel_node_manager_record)) < 0)
+    {
+      pstdout_fprintf (sdr_callback_arg->state_data->pstate,
+		       stderr,
+		       "fiid_template_len_bytes: %s\n",
+		       strerror (errno));
+      goto cleanup;
+    }
+  
+  if (expected_record_len < sdr_record_len)
+    {
+      rv = 0;
+      goto cleanup;
+    }
+  
+  if (!(obj_oem_record = fiid_obj_create (tmpl_sdr_oem_intel_node_manager_record)))
+    {
+      pstdout_fprintf (sdr_callback_arg->state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  if (fiid_obj_set_all (obj_oem_record,
+			sdr_record,
+			sdr_record_len) < 0)
+    {
+      pstdout_fprintf (sdr_callback_arg->state_data->pstate,
+		       stderr,
+		       "fiid_obj_set_all: %s\n",
+		       fiid_obj_errormsg (obj_oem_record));
+      goto cleanup;
+    }
+  
+  /* achu: Node Manager documentation states that OEM ID in the
+   * SDR record should be Intel's, but I've seen motherboards w/o
+   * it, so don't bother checking.
+   */
+
+  if (FIID_OBJ_GET (obj_oem_record,
+		    "record_subtype",
+		    &val) < 0)
+    {
+      pstdout_fprintf (sdr_callback_arg->state_data->pstate,
+		       stderr,
+		       "fiid_obj_get: 'record_subtype': %s\n",
+		       fiid_obj_errormsg (obj_oem_record));
+      goto cleanup;
+    }
+  record_subtype = val;
+
+  if (record_subtype != IPMI_SDR_OEM_INTEL_NODE_MANAGER_RECORD_SUBTYPE_NM_DISCOVERY)
+    {
+      rv = 0;
+      goto cleanup;
+    }
+
+  if (FIID_OBJ_GET (obj_oem_record,
+		    "version_number",
+		    &val) < 0)
+    {
+      pstdout_fprintf (sdr_callback_arg->state_data->pstate,
+		       stderr,
+		       "fiid_obj_get: 'version_number': %s\n",
+		       fiid_obj_errormsg (obj_oem_record));
+      goto cleanup;
+    }
+  version_number = val;
+  
+  if (version_number != IPMI_SDR_OEM_INTEL_NODE_MANAGER_DISCOVERY_VERSION)
+    {
+      rv = 0;
+      goto cleanup;
+    }
+
+  if (FIID_OBJ_GET (obj_oem_record,
+		    "nm_device_slave_address",
+		    &val) < 0)
+    {
+      pstdout_fprintf (sdr_callback_arg->state_data->pstate,
+		       stderr,
+		       "FIID_OBJ_GET: 'nm_device_slave_address': %s\n",
+		       fiid_obj_errormsg (obj_oem_record));
+      goto cleanup;
+    }
+  (*(sdr_callback_arg->target_slave_address)) = val;
+  
+  if (FIID_OBJ_GET (obj_oem_record,
+		    "sensor_owner_lun",
+		    &val) < 0)
+    {
+      pstdout_fprintf (sdr_callback_arg->state_data->pstate,
+		       stderr,
+		       "FIID_OBJ_GET: 'sensor_owner_lun': %s\n",
+		       fiid_obj_errormsg (obj_oem_record));
+      goto cleanup;
+    }
+  (*(sdr_callback_arg->target_lun)) = val;
+
+  if (FIID_OBJ_GET (obj_oem_record,
+		    "channel_number",
+		    &val) < 0)
+    {
+      pstdout_fprintf (sdr_callback_arg->state_data->pstate,
+		       stderr,
+		       "FIID_OBJ_GET: 'channel_number': %s\n",
+		       fiid_obj_errormsg (obj_oem_record));
+      goto cleanup;
+    }
+  (*(sdr_callback_arg->target_channel_number)) = val;
+  
+  sdr_callback_arg->found = 1;
+  rv = 1;
+  
+ cleanup:
+  fiid_obj_destroy (obj_oem_record);
+  return (rv);
+}
+
 static int
 _ipmi_oem_intelnm_node_manager_init (ipmi_oem_state_data_t *state_data,
                                      uint8_t *target_channel_number,
                                      uint8_t *target_slave_address,
                                      uint8_t *target_lun)
 {
-  fiid_obj_t obj_oem_record = NULL;
-  uint16_t record_count;
-  int expected_record_len;
-  uint8_t record_subtype;
-  uint8_t version_number;
-  uint64_t val;
-  int found = 0;
-  int i;
+  struct ipmi_oem_intelnm_sdr_callback sdr_callback_arg;
   int rv = -1;
 
   assert (state_data);
@@ -63,16 +210,13 @@ _ipmi_oem_intelnm_node_manager_init (ipmi_oem_state_data_t *state_data,
   assert (target_slave_address);
   assert (target_lun);
 
-  if (!(obj_oem_record = fiid_obj_create (tmpl_sdr_oem_intel_node_manager_record)))
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_create: %s\n",
-                       strerror (errno));
-      goto cleanup;
-    }
+  sdr_callback_arg.state_data = state_data;
+  sdr_callback_arg.target_channel_number = target_channel_number;
+  sdr_callback_arg.target_slave_address = target_slave_address;
+  sdr_callback_arg.target_lun = target_lun;
+  sdr_callback_arg.found = 0;
 
-  if (sdr_cache_create_and_load (state_data->sdr_cache_ctx,
+  if (sdr_cache_create_and_load (state_data->sdr_ctx,
                                  state_data->pstate,
                                  state_data->ipmi_ctx,
                                  state_data->prog_data->args->sdr.quiet_cache,
@@ -82,164 +226,25 @@ _ipmi_oem_intelnm_node_manager_init (ipmi_oem_state_data_t *state_data,
                                  state_data->prog_data->args->sdr.sdr_cache_file) < 0)
     goto cleanup;
 
-  if (ipmi_sdr_cache_record_count (state_data->sdr_cache_ctx, &record_count) < 0)
+  if (ipmi_sdr_cache_iterate (state_data->sdr_ctx,
+			      _ipmi_oem_intelnm_sdr_callback,
+			      &sdr_callback_arg) < 0)
     {
       pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "ipmi_sdr_cache_record_count: %s\n",
-                       ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
+		       stderr,
+		       "ipmi_sdr_cache_iterate: %s\n",
+		       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
       goto cleanup;
     }
-
-  for (i = 0; i < record_count; i++, ipmi_sdr_cache_next (state_data->sdr_cache_ctx))
-    {
-      uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
-      int sdr_record_len = 0;
-      uint16_t record_id;
-      uint8_t record_type;
-
-      if ((sdr_record_len = ipmi_sdr_cache_record_read (state_data->sdr_cache_ctx,
-                                                        sdr_record,
-                                                        IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH)) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "ipmi_sdr_cache_record_read: %s\n",
-                           ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
-          goto cleanup;
-        }
-
-      if (ipmi_sdr_parse_record_id_and_type (state_data->sdr_parse_ctx,
-                                             sdr_record,
-                                             sdr_record_len,
-                                             &record_id,
-                                             &record_type) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "ipmi_sdr_parse_record_id_and_type: %s\n",
-                           ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
-          goto cleanup;
-        }
-      
-      if (record_type != IPMI_SDR_FORMAT_OEM_RECORD)
-        continue;
-      
-      if ((expected_record_len = fiid_template_len_bytes (tmpl_sdr_oem_intel_node_manager_record)) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "fiid_template_len_bytes: %s\n",
-                           strerror (errno));
-          goto cleanup;
-        }
-
-      if (expected_record_len < sdr_record_len)
-        continue;
-
-      if (fiid_obj_clear (obj_oem_record) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "fiid_obj_clear: %s\n",
-                           fiid_obj_errormsg (obj_oem_record));
-          goto cleanup;
-        }
-      
-      if (fiid_obj_set_all (obj_oem_record,
-                            sdr_record,
-                            sdr_record_len) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "fiid_obj_set_all: %s\n",
-                           fiid_obj_errormsg (obj_oem_record));
-          goto cleanup;
-        }
-
-      /* achu: Node Manager documentation states that OEM ID in the
-       * SDR record should be Intel's, but I've seen motherboards w/o
-       * it, so don't bother checking.
-       */
-
-      if (FIID_OBJ_GET (obj_oem_record,
-                        "record_subtype",
-                        &val) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "fiid_obj_get: 'record_subtype': %s\n",
-                           fiid_obj_errormsg (obj_oem_record));
-          goto cleanup;
-        }
-      record_subtype = val;
-
-      if (record_subtype != IPMI_SDR_OEM_INTEL_NODE_MANAGER_RECORD_SUBTYPE_NM_DISCOVERY)
-        continue;
-
-      if (FIID_OBJ_GET (obj_oem_record,
-                        "version_number",
-                        &val) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "fiid_obj_get: 'version_number': %s\n",
-                           fiid_obj_errormsg (obj_oem_record));
-          goto cleanup;
-        }
-      version_number = val;
-
-      if (version_number != IPMI_SDR_OEM_INTEL_NODE_MANAGER_DISCOVERY_VERSION)
-        continue;
-
-      if (FIID_OBJ_GET (obj_oem_record,
-                        "nm_device_slave_address",
-                        &val) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "FIID_OBJ_GET: 'nm_device_slave_address': %s\n",
-                           fiid_obj_errormsg (obj_oem_record));
-          goto cleanup;
-        }
-      (*target_slave_address) = val;
-
-      if (FIID_OBJ_GET (obj_oem_record,
-                        "sensor_owner_lun",
-                        &val) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "FIID_OBJ_GET: 'sensor_owner_lun': %s\n",
-                           fiid_obj_errormsg (obj_oem_record));
-          goto cleanup;
-        }
-      (*target_lun) = val;
-
-      if (FIID_OBJ_GET (obj_oem_record,
-                        "channel_number",
-                        &val) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "FIID_OBJ_GET: 'channel_number': %s\n",
-                           fiid_obj_errormsg (obj_oem_record));
-          goto cleanup;
-        }
-      (*target_channel_number) = val;
-
-      found++;
-      break;
-    }
-
-  if (!found)
+  
+  if (!sdr_callback_arg.found)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "Intel Node Manager not found\n");
       goto cleanup;
     }
-
+  
   /* slave address is stored as 7-bit i2c in SDR, we need the 8 bit
    * version for the communication
    */
@@ -247,7 +252,6 @@ _ipmi_oem_intelnm_node_manager_init (ipmi_oem_state_data_t *state_data,
   
   rv = 0;
  cleanup:
-  fiid_obj_destroy (obj_oem_record);
   return (rv);
 }
 

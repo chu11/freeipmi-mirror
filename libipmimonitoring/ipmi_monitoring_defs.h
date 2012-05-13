@@ -127,7 +127,6 @@
 #define IPMI_MONITORING_RETRANSMISSION_TIMEOUT_LENGTH_DEFAULT 500
 
 #define IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH      32
-#define IPMI_MONITORING_MAX_SDR_RECORD_LENGTH       1024
 
 #define IPMI_MONITORING_OEM_DATA_MAX                13
 
@@ -201,7 +200,7 @@ struct ipmi_monitoring_ctx {
   uint16_t product_id;
 
   /* for use by both sel and sensor codepath */
-  ipmi_sdr_cache_ctx_t sdr_cache_ctx;
+  ipmi_sdr_ctx_t sdr_ctx;
   ipmi_ctx_t ipmi_ctx;
   Ipmi_Monitoring_Callback callback;
   void *callback_data;
@@ -215,7 +214,6 @@ struct ipmi_monitoring_ctx {
 
   /* for sensor codepath */
   ipmi_sensor_read_ctx_t sensor_read_ctx;
-  ipmi_sdr_parse_ctx_t sdr_parse_ctx;
   List sensor_readings;
   ListIterator sensor_readings_itr;
   struct ipmi_monitoring_sensor_reading *current_sensor_reading;

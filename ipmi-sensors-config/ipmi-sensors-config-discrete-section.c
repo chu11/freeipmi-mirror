@@ -37,8 +37,6 @@
 
 config_err_t
 ipmi_sensors_config_discrete_section (ipmi_sensors_config_state_data_t *state_data,
-                                      const void *sdr_record,
-                                      unsigned int sdr_record_len,
                                       struct config_section **section_ptr)
 {
   struct config_section *section = NULL;
@@ -47,13 +45,9 @@ ipmi_sensors_config_discrete_section (ipmi_sensors_config_state_data_t *state_da
   config_err_t ret;
 
   assert (state_data);
-  assert (sdr_record);
-  assert (sdr_record_len);
   assert (section_ptr);
 
   if ((ret = create_section_name (state_data,
-                                  sdr_record,
-                                  sdr_record_len,
                                   section_name,
                                   CONFIG_MAX_SECTION_NAME_LEN)) != CONFIG_ERR_SUCCESS)
     {
@@ -75,10 +69,7 @@ ipmi_sensors_config_discrete_section (ipmi_sensors_config_state_data_t *state_da
                                          NULL)))
     goto cleanup;
 
-  if (setup_sensor_event_enable_fields (state_data,
-                                        sdr_record,
-                                        sdr_record_len,
-                                        section) < 0)
+  if (setup_sensor_event_enable_fields (state_data, section) < 0)
     goto cleanup;
 
   *section_ptr = section;

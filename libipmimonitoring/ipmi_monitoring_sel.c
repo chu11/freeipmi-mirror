@@ -75,10 +75,10 @@ ipmi_monitoring_sel_init (ipmi_monitoring_ctx_t c)
   assert (c);
   assert (c->magic == IPMI_MONITORING_MAGIC);
   assert (c->ipmi_ctx);
-  assert (c->sdr_cache_ctx);
+  assert (c->sdr_ctx);
   assert (!c->sel_parse_ctx);
 
-  if (!(c->sel_parse_ctx = ipmi_sel_parse_ctx_create (c->ipmi_ctx, c->sdr_cache_ctx)))
+  if (!(c->sel_parse_ctx = ipmi_sel_parse_ctx_create (c->ipmi_ctx, c->sdr_ctx)))
     {
       IPMI_MONITORING_DEBUG (("ipmi_sel_parse_ctx_create: %s", strerror (errno)));
       c->errnum = IPMI_MONITORING_ERR_OUT_OF_MEMORY;

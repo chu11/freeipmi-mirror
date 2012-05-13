@@ -26,8 +26,6 @@
  * return (-1) - error, cleanup and return error
  */
 int ipmi_sensors_oem_inventec_output_oem_record (ipmi_sensors_state_data_t *state_data,
-						 const void *sdr_record,
-						 unsigned int sdr_record_len,
 						 uint32_t oem_record_manufacturer_id,
 						 const uint8_t *oem_data,
 						 unsigned int oem_data_len);

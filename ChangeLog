@@ -1,5 +1,25 @@
 2012-05-11  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/sdr/ipmi-sdr.h, libfreeipmi/sdr:
+	Turn sdr-cache libfreeipmi sub-library into sdr sub-library.
+
+	* libfreeipmi/include/freeipmi/sdr-parse/ipmi-sdr-parse.h,
+	libfreeipmi/sdr-parse: Remove sub-library. Fold into sdr
+	sub-library.  Support ability to call parsing functions w/o
+	passing in sdr buffer and using internal buffer during iteration.
+
+	* libfreeipmi/include/sdr/ipmi-sdr.h,
+	libfreeipmi/sdr/ipmi-sdr-cache-read.c (ipmi_sdr_cache_iterate):
+	New function.
+
+	* common/toolsdr/tool-sdr-cache-common.h,
+	common/toolsdr/tool-sdr-cache-common.c (sdr_cache_setup_debug):
+	New common function for many tools.
+	
+	* Globally adjust tools and libraries for changes.
+	
+2012-05-11  Albert Chu <chu11@llnl.gov>
+
 	* Support --target-channel-number and --target-slave-address
 	options for all inband activities.
 	

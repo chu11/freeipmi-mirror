@@ -85,6 +85,147 @@
  * from ipmi-sel-parse-string.c.
  */
 
+struct intel_node_manager_sdr_callback
+{
+  ipmi_sel_parse_ctx_t ctx;
+  int found;
+};
+
+static int
+_intel_node_manager_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
+				  uint8_t record_type,
+				  const void *sdr_record,
+				  unsigned int sdr_record_len,
+				  void *arg)
+{
+  struct intel_node_manager_sdr_callback *sdr_callback_arg;
+  fiid_obj_t obj_oem_record = NULL;
+  int expected_record_len;
+  uint8_t record_subtype;
+  uint8_t version_number;
+  uint64_t val;
+  int rv = -1;
+
+  assert (sdr_ctx);
+  assert (sdr_record);
+  assert (sdr_record_len);
+  assert (arg);
+
+  sdr_callback_arg = (struct intel_node_manager_sdr_callback *)arg;
+
+  if (record_type != IPMI_SDR_FORMAT_OEM_RECORD)
+    {
+      rv = 0;
+      goto cleanup;
+    }
+
+  if ((expected_record_len = fiid_template_len_bytes (tmpl_sdr_oem_intel_node_manager_record)) < 0)
+    {
+      SEL_PARSE_ERRNO_TO_SEL_PARSE_ERRNUM (sdr_callback_arg->ctx, errno);
+      goto cleanup;
+    }
+      
+  if (expected_record_len < sdr_record_len)
+    {
+      rv = 0;
+      goto cleanup;
+    }
+
+  if (!(obj_oem_record = fiid_obj_create (tmpl_sdr_oem_intel_node_manager_record)))
+    {
+      SEL_PARSE_ERRNO_TO_SEL_PARSE_ERRNUM (sdr_callback_arg->ctx, errno);
+      goto cleanup;
+    }
+
+  if (fiid_obj_set_all (obj_oem_record,
+			sdr_record,
+			sdr_record_len) < 0)
+    {
+      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM (sdr_callback_arg->ctx, obj_oem_record);
+      goto cleanup;
+    }
+
+  /* achu: Node Manager documentation states that OEM ID in the
+   * SDR record should be Intel's, but I've seen motherboards w/
+   * alternate OEM identifiers, so don't bother checking.
+   */
+
+  if (FIID_OBJ_GET (obj_oem_record,
+		    "record_subtype",
+		    &val) < 0)
+    {
+      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM (sdr_callback_arg->ctx, obj_oem_record);
+      goto cleanup;
+    }
+  record_subtype = val;
+
+  if (record_subtype != IPMI_SDR_OEM_INTEL_NODE_MANAGER_RECORD_SUBTYPE_NM_DISCOVERY)
+    {
+      rv = 0;
+      goto cleanup;
+    }
+
+  if (FIID_OBJ_GET (obj_oem_record,
+		    "version_number",
+		    &val) < 0)
+    {
+      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM (sdr_callback_arg->ctx, obj_oem_record);
+      goto cleanup;
+    }
+  version_number = val;
+
+  if (version_number != IPMI_SDR_OEM_INTEL_NODE_MANAGER_DISCOVERY_VERSION)
+    {
+      rv = 0;
+      goto cleanup;
+    }
+
+  if (FIID_OBJ_GET (obj_oem_record,
+		    "nm_health_event_sensor_number",
+		    &val) < 0)
+    {
+      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM (sdr_callback_arg->ctx, obj_oem_record);
+      goto cleanup;
+    }
+  sdr_callback_arg->ctx->intel_node_manager.nm_health_event_sensor_number = val;
+
+  if (FIID_OBJ_GET (obj_oem_record,
+		    "nm_exception_event_sensor_number",
+		    &val) < 0)
+    {
+      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM (sdr_callback_arg->ctx, obj_oem_record);
+      goto cleanup;
+    }
+  sdr_callback_arg->ctx->intel_node_manager.nm_exception_event_sensor_number = val;
+
+  if (FIID_OBJ_GET (obj_oem_record,
+		    "nm_operational_capabilities_sensor_number",
+		    &val) < 0)
+    {
+      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM (sdr_callback_arg->ctx, obj_oem_record);
+      goto cleanup;
+    }
+  sdr_callback_arg->ctx->intel_node_manager.nm_operational_capabilities_sensor_number = val;
+
+  if (FIID_OBJ_GET (obj_oem_record,
+		    "nm_alert_threshold_exceeded_sensor_number",
+		    &val) < 0)
+    {
+      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM (sdr_callback_arg->ctx, obj_oem_record);
+      goto cleanup;
+    }
+  sdr_callback_arg->ctx->intel_node_manager.nm_alert_threshold_exceeded_sensor_number = val;
+      
+  sdr_callback_arg->ctx->intel_node_manager.node_manager_data_parsed = 1;
+  sdr_callback_arg->ctx->intel_node_manager.node_manager_data_found = 1;
+  sdr_callback_arg->found = 1;
+  rv = 1;
+
+ cleanup:
+  fiid_obj_destroy (obj_oem_record);
+  return (rv);
+}
+
 /* return (1) - Node Manager SDR entry found
  * return (0) - No Node Manager SDR entry found
  * return (-1) - error, cleanup and return error
@@ -92,179 +233,34 @@
 static int
 _intel_node_manager_init (ipmi_sel_parse_ctx_t ctx)
 {
-  fiid_obj_t obj_oem_record = NULL;
-  uint16_t record_count;
-  int found = 0;
+  struct intel_node_manager_sdr_callback sdr_callback_arg;
   int rv = -1;
-  unsigned int i;
 
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+
+  if (!ctx->sdr_ctx)
+    return (0);
   
   if (ctx->intel_node_manager.node_manager_data_parsed)
     return (ctx->intel_node_manager.node_manager_data_found);
   
-  if (ipmi_sdr_cache_record_count (ctx->sdr_cache_ctx, &record_count) < 0)
-    {
-      SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_SDR_CACHE_ERROR);
-      goto cleanup;
-    }
-  
-  if (ipmi_sdr_cache_first (ctx->sdr_cache_ctx) < 0)
-    {
-      SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_SDR_CACHE_ERROR);
-      goto cleanup;
-    }
+  sdr_callback_arg.ctx = ctx;
+  sdr_callback_arg.found = 0;
 
-  if (!(obj_oem_record = fiid_obj_create (tmpl_sdr_oem_intel_node_manager_record)))
-    {
-      SEL_PARSE_ERRNO_TO_SEL_PARSE_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  for (i = 0; i < record_count; i++, ipmi_sdr_cache_next (ctx->sdr_cache_ctx))
-    {
-      uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
-      int sdr_record_len;
-      int expected_record_len;
-      uint16_t record_id;
-      uint8_t record_type;
-      uint8_t record_subtype;
-      uint8_t version_number;
-      uint64_t val;
-      
-      if ((sdr_record_len = ipmi_sdr_cache_record_read (ctx->sdr_cache_ctx,
-                                                        sdr_record,
-                                                        IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH)) < 0)
-        {
-          SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_SDR_CACHE_ERROR);
-          goto cleanup;
-        }
-      
-      /* Shouldn't be possible */
-      if (!sdr_record_len)
-        continue;
-      
-      if (ipmi_sdr_parse_record_id_and_type (ctx->sdr_parse_ctx,
-                                             sdr_record,
-                                             sdr_record_len,
-                                             &record_id,
-                                             &record_type) < 0)
-        {
-          if (ipmi_sdr_parse_ctx_errnum (ctx->sdr_parse_ctx) == IPMI_SDR_PARSE_ERR_INVALID_SDR_RECORD
-              || ipmi_sdr_parse_ctx_errnum (ctx->sdr_parse_ctx) == IPMI_SDR_PARSE_ERR_INCOMPLETE_SDR_RECORD)
-            continue;
-          else
-            SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_INTERNAL_ERROR);
-          goto cleanup;
-        }
-      
-      if (record_type != IPMI_SDR_FORMAT_OEM_RECORD)
-        continue;
-
-      if ((expected_record_len = fiid_template_len_bytes (tmpl_sdr_oem_intel_node_manager_record)) < 0)
-        {
-          SEL_PARSE_ERRNO_TO_SEL_PARSE_ERRNUM (ctx, errno);
-          goto cleanup;
-        }
-      
-      if (expected_record_len < sdr_record_len)
-        continue;
-
-      if (fiid_obj_clear (obj_oem_record) < 0)
-        {
-          SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM (ctx, obj_oem_record);
-          goto cleanup;
-        }
-      
-      if (fiid_obj_set_all (obj_oem_record,
-                            sdr_record,
-                            sdr_record_len) < 0)
-        {
-          SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM (ctx, obj_oem_record);
-          goto cleanup;
-        }
-
-      /* achu: Node Manager documentation states that OEM ID in the
-       * SDR record should be Intel's, but I've seen motherboards w/
-       * alternate OEM identifiers, so don't bother checking.
-       */
-
-      if (FIID_OBJ_GET (obj_oem_record,
-                        "record_subtype",
-                        &val) < 0)
-        {
-          SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM (ctx, obj_oem_record);
-          goto cleanup;
-        }
-      record_subtype = val;
-
-      if (record_subtype != IPMI_SDR_OEM_INTEL_NODE_MANAGER_RECORD_SUBTYPE_NM_DISCOVERY)
-        continue;
-
-      if (FIID_OBJ_GET (obj_oem_record,
-                        "version_number",
-                        &val) < 0)
-        {
-          SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM (ctx, obj_oem_record);
-          goto cleanup;
-        }
-      version_number = val;
-
-      if (version_number != IPMI_SDR_OEM_INTEL_NODE_MANAGER_DISCOVERY_VERSION)
-        continue;
-
-      if (FIID_OBJ_GET (obj_oem_record,
-                        "nm_health_event_sensor_number",
-                        &val) < 0)
-        {
-          SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM (ctx, obj_oem_record);
-          goto cleanup;
-        }
-      ctx->intel_node_manager.nm_health_event_sensor_number = val;
-
-      if (FIID_OBJ_GET (obj_oem_record,
-                        "nm_exception_event_sensor_number",
-                        &val) < 0)
-        {
-          SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM (ctx, obj_oem_record);
-          goto cleanup;
-        }
-      ctx->intel_node_manager.nm_exception_event_sensor_number = val;
-
-      if (FIID_OBJ_GET (obj_oem_record,
-                        "nm_operational_capabilities_sensor_number",
-                        &val) < 0)
-        {
-          SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM (ctx, obj_oem_record);
-          goto cleanup;
-        }
-      ctx->intel_node_manager.nm_operational_capabilities_sensor_number = val;
-
-      if (FIID_OBJ_GET (obj_oem_record,
-                        "nm_alert_threshold_exceeded_sensor_number",
-                        &val) < 0)
-        {
-          SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM (ctx, obj_oem_record);
-          goto cleanup;
-        }
-      ctx->intel_node_manager.nm_alert_threshold_exceeded_sensor_number = val;
-      
-      ctx->intel_node_manager.node_manager_data_parsed = 1;
-      ctx->intel_node_manager.node_manager_data_found = 1;
-      found = 1;
-      break;
-    }
-
-  if (!found)
+  if (ipmi_sdr_cache_iterate (ctx->sdr_ctx,
+			      _intel_node_manager_sdr_callback,
+			      &sdr_callback_arg) < 0)
+    goto cleanup;
+	      
+  if (!sdr_callback_arg.found)
     {
       ctx->intel_node_manager.node_manager_data_parsed = 1;
       ctx->intel_node_manager.node_manager_data_found = 0;
     }
 
-  rv = found;
+  rv = sdr_callback_arg.found;
  cleanup:
-  fiid_obj_destroy (obj_oem_record);
   return (rv);
 }
 

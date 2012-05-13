@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.h,v 1.15 2010-02-08 22:02:31 chu11 Exp $
+ *  $Id: ipmi-sdr-common.h,v 1.8 2010-02-08 22:09:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2012 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -24,19 +24,30 @@
  *  with Ipmimonitoring.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef IPMI_MONITORING_SENSOR_READING_H
-#define IPMI_MONITORING_SENSOR_READING_H
+#ifndef IPMI_SDR_COMMON_H
+#define IPMI_SDR_COMMON_H
 
-#include "ipmi_monitoring.h"
+#include <stdint.h>
 
-int ipmi_monitoring_sensor_reading_init (ipmi_monitoring_ctx_t c);
+#include "freeipmi/sdr/ipmi-sdr.h"
 
-int ipmi_monitoring_sensor_reading_cleanup (ipmi_monitoring_ctx_t c);
+#include "ipmi-sdr-defs.h"
 
-int ipmi_monitoring_get_sensor_reading (ipmi_monitoring_ctx_t c,
-                                        unsigned int sensor_reading_flags,
-                                        unsigned int shared_sensor_number_offset,
-                                        unsigned int *sensor_types,
-                                        unsigned int sensor_types_len);
+#define IPMI_SDR_CACHE_DEBUG_BUFLEN 256
 
-#endif /* IPMI_MONITORING_SENSOR_READING_H */
+void ipmi_sdr_init_ctx (ipmi_sdr_ctx_t ctx);
+
+int ipmi_sdr_info (ipmi_sdr_ctx_t ctx,
+		   ipmi_ctx_t ipmi_ctx,
+		   uint8_t *sdr_version,
+		   uint16_t *record_count,
+		   uint32_t *most_recent_addition_timestamp,
+		   uint32_t *most_recent_erase_timestamp);
+
+const char *ipmi_sdr_record_type_str (ipmi_sdr_ctx_t ctx,
+				      uint8_t *sdr_record,
+				      unsigned int sdr_record_len);
+
+void ipmi_sdr_check_read_status (ipmi_sdr_ctx_t ctx);
+
+#endif /* IPMI_SDR_COMMON_H */

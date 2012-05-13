@@ -70,8 +70,7 @@ typedef struct ipmi_fru_state_data
   pstdout_state_t pstate;
   char *hostname;
   ipmi_fru_parse_ctx_t fru_parse_ctx;
-  ipmi_sdr_cache_ctx_t sdr_cache_ctx;
-  ipmi_sdr_parse_ctx_t sdr_parse_ctx;
+  ipmi_sdr_ctx_t sdr_ctx;
   struct ipmi_oem_data oem_data;
 } ipmi_fru_state_data_t;
 

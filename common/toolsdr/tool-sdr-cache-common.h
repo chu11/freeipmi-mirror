@@ -29,7 +29,7 @@
 #define IPMI_SDR_CACHE_MAX_ID_STRING         16
 #define IPMI_SDR_CACHE_MAX_DEVICE_ID_STRING  16
 
-int sdr_cache_create_and_load (ipmi_sdr_cache_ctx_t ctx,
+int sdr_cache_create_and_load (ipmi_sdr_ctx_t ctx,
                                pstdout_state_t pstate,
                                ipmi_ctx_t ipmi_ctx,
                                int quiet_cache,
@@ -38,15 +38,20 @@ int sdr_cache_create_and_load (ipmi_sdr_cache_ctx_t ctx,
                                const char *cache_dir,
 			       const char *cache_file);
 
-int sdr_cache_flush_cache (ipmi_sdr_cache_ctx_t ctx,
+int sdr_cache_flush_cache (ipmi_sdr_ctx_t ctx,
                            pstdout_state_t pstate,
                            int quiet_cache,
                            const char *hostname,
                            const char *cache_dir,
 			   const char *cache_file);
 
+int sdr_cache_setup_debug (ipmi_sdr_ctx_t ctx,
+			   pstdout_state_t pstate,
+			   int debug,
+			   const char *hostname);
+
 /* wrapper for ipmi_sdr_cache_search_sensor, handles some additional special workarounds */
-int ipmi_sdr_cache_search_sensor_wrapper (ipmi_sdr_cache_ctx_t ctx,
+int ipmi_sdr_cache_search_sensor_wrapper (ipmi_sdr_ctx_t ctx,
 					  uint8_t sensor_number,
 					  uint8_t generator_id);
 

@@ -16,19 +16,29 @@
  * 
  */
 
-#ifndef IPMI_SENSORS_SIMPLE_OUTPUT_H
-#define IPMI_SENSORS_SIMPLE_OUTPUT_H
+#ifndef IPMI_SDR_UTIL_H
+#define IPMI_SDR_UTIL_H
 
-#include "ipmi-sensors.h"
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif /* HAVE_CONFIG_H */
 
-int ipmi_sensors_simple_output_setup (ipmi_sensors_state_data_t *state_data);
+#include <stdio.h>
+#include <stdlib.h>
+#ifdef STDC_HEADERS
+#include <string.h>
+#endif /* STDC_HEADERS */
+#include <errno.h>
 
-int ipmi_sensors_simple_output (ipmi_sensors_state_data_t *state_data,
-                                uint8_t sensor_number,
-                                double *sensor_reading,
-                                int event_message_output_type,
-                                uint16_t sensor_event_bitmask,
-                                char **event_message_list,
-                                unsigned int event_message_list_len);
+#include "freeipmi/api/ipmi-api.h"
+#include "freeipmi/sdr/ipmi-sdr.h"
 
-#endif /* IPMI_SENSORS_SIMPLE_OUTPUT_H */
+#include "ipmi-sdr-defs.h"
+
+void sdr_set_sdr_errnum_by_errno (ipmi_sdr_ctx_t ctx, int __errno);
+
+void sdr_set_sdr_errnum_by_fiid_object (ipmi_sdr_ctx_t ctx, fiid_obj_t obj);
+
+void sdr_set_internal_errnum (ipmi_sdr_ctx_t ctx);
+
+#endif /* IPMI_SDR_UTIL_H */

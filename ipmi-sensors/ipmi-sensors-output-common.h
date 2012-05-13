@@ -71,8 +71,6 @@ int ipmi_sensors_output_event_message_list (ipmi_sensors_state_data_t *state_dat
                                             unsigned int each_on_newline);
 
 int ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
-                                 const void *sdr_record,
-                                 unsigned int sdr_record_len,
                                  double **lower_non_critical_threshold,
                                  double **lower_critical_threshold,
                                  double **lower_non_recoverable_threshold,
@@ -81,8 +79,6 @@ int ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
                                  double **upper_non_recoverable_threshold);
 
 int ipmi_sensors_get_sensor_state (ipmi_sensors_state_data_t *state_data,
-                                   const void *sdr_record,
-                                   unsigned int sdr_record_len,
                                    int event_message_output_type,
                                    uint16_t sensor_event_bitmask,
                                    char **sensor_state_str);

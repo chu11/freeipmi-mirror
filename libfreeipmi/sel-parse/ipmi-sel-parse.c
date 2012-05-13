@@ -38,7 +38,7 @@
 #include "freeipmi/debug/ipmi-debug.h"
 #include "freeipmi/fiid/fiid.h"
 #include "freeipmi/record-format/ipmi-sel-record-format.h"
-#include "freeipmi/sdr-parse/ipmi-sdr-parse.h"
+#include "freeipmi/sdr/ipmi-sdr.h"
 #include "freeipmi/spec/ipmi-comp-code-spec.h"
 #include "freeipmi/util/ipmi-sensor-and-event-code-tables-util.h"
 #include "freeipmi/util/ipmi-util.h"
@@ -77,7 +77,7 @@ static char *ipmi_sel_parse_errmsgs[] =
   };
 
 ipmi_sel_parse_ctx_t
-ipmi_sel_parse_ctx_create (ipmi_ctx_t ipmi_ctx, ipmi_sdr_cache_ctx_t sdr_cache_ctx)
+ipmi_sel_parse_ctx_create (ipmi_ctx_t ipmi_ctx, ipmi_sdr_ctx_t sdr_ctx)
 {
   struct ipmi_sel_parse_ctx *ctx = NULL;
 
@@ -100,15 +100,9 @@ ipmi_sel_parse_ctx_create (ipmi_ctx_t ipmi_ctx, ipmi_sdr_cache_ctx_t sdr_cache_c
   ctx->reservation_id_registered = 0;
 
   ctx->ipmi_ctx = ipmi_ctx;
-  ctx->sdr_cache_ctx = sdr_cache_ctx;
+  ctx->sdr_ctx = sdr_ctx;
 
   if (!(ctx->sel_entries = list_create ((ListDelF)free)))
-    {
-      ERRNO_TRACE (errno);
-      goto cleanup;
-    }
-
-  if (!(ctx->sdr_parse_ctx = ipmi_sdr_parse_ctx_create ()))
     {
       ERRNO_TRACE (errno);
       goto cleanup;
@@ -121,7 +115,6 @@ ipmi_sel_parse_ctx_create (ipmi_ctx_t ipmi_ctx, ipmi_sdr_cache_ctx_t sdr_cache_c
     {
       if (ctx->sel_entries)
         list_destroy (ctx->sel_entries);
-      ipmi_sdr_parse_ctx_destroy (ctx->sdr_parse_ctx);
       free (ctx);
     }
   return (NULL);
@@ -164,7 +157,6 @@ ipmi_sel_parse_ctx_destroy (ipmi_sel_parse_ctx_t ctx)
   free (ctx->separator);
   _sel_entries_clear (ctx);
   list_destroy (ctx->sel_entries);
-  ipmi_sdr_parse_ctx_destroy (ctx->sdr_parse_ctx);
   ctx->magic = ~IPMI_SEL_PARSE_CTX_MAGIC;
   free (ctx);
 }

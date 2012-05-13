@@ -26,7 +26,7 @@ extern "C" {
 #include <stdint.h>
 #include <freeipmi/api/ipmi-api.h>
 #include <freeipmi/cmds/ipmi-sel-cmds.h>
-#include <freeipmi/sdr-cache/ipmi-sdr-cache.h>
+#include <freeipmi/sdr/ipmi-sdr.h>
 
 #define IPMI_SEL_PARSE_ERR_SUCCESS                                 0
 #define IPMI_SEL_PARSE_ERR_CONTEXT_NULL                            1
@@ -74,11 +74,11 @@ typedef int (*Ipmi_Sel_Parse_Callback)(ipmi_sel_parse_ctx_t ctx, void *callback_
 
 /* SEL Parse Context Functions
  * - ipmi_ctx assumes ipmi opened and ready to go
- * - sdr_cache_ctx assumed ready for reading
+ * - sdr_ctx assumed ready for reading
  * - ipmi_ctx is optional, if NULL ctx cannot be for SEL reading, only parsing records
- * - sdr_cache_ctx is optional, sdr won't be used if not available
+ * - sdr_ctx is optional, sdr won't be used if not available
  */
-ipmi_sel_parse_ctx_t ipmi_sel_parse_ctx_create (ipmi_ctx_t ipmi_ctx, ipmi_sdr_cache_ctx_t sdr_cache_ctx);
+ipmi_sel_parse_ctx_t ipmi_sel_parse_ctx_create (ipmi_ctx_t ipmi_ctx, ipmi_sdr_ctx_t sdr_ctx);
 void ipmi_sel_parse_ctx_destroy (ipmi_sel_parse_ctx_t ctx);
 int ipmi_sel_parse_ctx_errnum (ipmi_sel_parse_ctx_t ctx);
 char * ipmi_sel_parse_ctx_strerror (int errnum);
