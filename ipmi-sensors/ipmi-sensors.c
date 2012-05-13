@@ -454,7 +454,6 @@ _calculate_record_ids (ipmi_sensors_state_data_t *state_data,
 {
   uint16_t record_count;
   uint16_t record_id;
-  uint8_t record_type;
   unsigned int i;
   unsigned int j;
 
@@ -493,7 +492,7 @@ _calculate_record_ids (ipmi_sensors_state_data_t *state_data,
 						 NULL,
 						 0,
                                                  &record_id,
-                                                 &record_type) < 0)
+						 NULL) < 0)
             {
               pstdout_fprintf (state_data->pstate,
                                stderr,
@@ -605,7 +604,7 @@ _calculate_record_ids (ipmi_sensors_state_data_t *state_data,
 						 NULL,
 						 0,
                                                  &record_id,
-                                                 &record_type) < 0)
+						 NULL) < 0)
             {
               pstdout_fprintf (state_data->pstate,
                                stderr,
@@ -1108,8 +1107,6 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
               && state_data->oem_data.product_id == IPMI_QUANTA_PRODUCT_ID_S99Q))
         {
           uint16_t record_count;
-          uint16_t record_id;
-          uint8_t record_type;
           int ret;
 
           if (ipmi_sdr_cache_record_count (state_data->sdr_ctx,
@@ -1124,19 +1121,6 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
 
           for (i = 0; i < record_count; i++, ipmi_sdr_cache_next (state_data->sdr_ctx))
             {
-              if (ipmi_sdr_parse_record_id_and_type (state_data->sdr_ctx,
-						     NULL,
-						     0,
-                                                     &record_id,
-                                                     &record_type) < 0)
-                {
-                  pstdout_fprintf (state_data->pstate,
-                                   stderr,
-                                   "ipmi_sdr_parse_record_id_and_type: %s\n",
-                                   ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
-                  goto cleanup;
-                }
-              
               if ((ret = ipmi_sensors_oem_parse_intel_node_manager (state_data,
                                                                     NULL,
                                                                     NULL,
