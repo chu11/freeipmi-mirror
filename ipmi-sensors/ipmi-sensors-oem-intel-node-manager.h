@@ -26,8 +26,6 @@
  * return (-1) - error
  */
 int ipmi_sensors_oem_parse_intel_node_manager (ipmi_sensors_state_data_t *state_data,
-                                               const void *sdr_record,
-                                               unsigned int sdr_record_len,
                                                uint8_t *nm_device_slave_address,
                                                uint8_t *sensor_owner_lun,
                                                uint8_t *channel_number,
@@ -40,8 +38,6 @@ int ipmi_sensors_oem_parse_intel_node_manager (ipmi_sensors_state_data_t *state_
  * return (1) - OEM match
  * return (-1) - error, cleanup and return error
  */
-int ipmi_sensors_oem_intel_node_manager_output_oem_record (ipmi_sensors_state_data_t *state_data,
-							   const void *sdr_record,
-							   unsigned int sdr_record_len);
+int ipmi_sensors_oem_intel_node_manager_output_oem_record (ipmi_sensors_state_data_t *state_data);
 
 #endif /* IPMI_SENSORS_OEM_INTEL_NODE_MANAGER_H */
