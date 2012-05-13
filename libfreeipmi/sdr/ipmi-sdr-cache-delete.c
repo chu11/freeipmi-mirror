@@ -38,48 +38,55 @@
 #endif /* HAVE_UNISTD_H */
 #include <errno.h>
 
-#include "freeipmi/sdr-cache/ipmi-sdr-cache.h"
+#include "freeipmi/sdr/ipmi-sdr.h"
 
-#include "ipmi-sdr-cache-defs.h"
-#include "ipmi-sdr-cache-trace.h"
-#include "ipmi-sdr-cache-util.h"
+#include "ipmi-sdr-defs.h"
+#include "ipmi-sdr-trace.h"
+#include "ipmi-sdr-util.h"
 
 #include "freeipmi-portability.h"
 
 int
-ipmi_sdr_cache_delete (ipmi_sdr_cache_ctx_t ctx, const char *filename)
+ipmi_sdr_cache_delete (ipmi_sdr_ctx_t ctx, const char *filename)
 {
-  if (!ctx || ctx->magic != IPMI_SDR_CACHE_CTX_MAGIC)
+  int rv = -1;
+
+  if (!ctx || ctx->magic != IPMI_SDR_CTX_MAGIC)
     {
-      ERR_TRACE (ipmi_sdr_cache_ctx_errormsg (ctx), ipmi_sdr_cache_ctx_errnum (ctx));
+      ERR_TRACE (ipmi_sdr_ctx_errormsg (ctx), ipmi_sdr_ctx_errnum (ctx));
       return (-1);
     }
 
   if (!filename)
     {
-      SDR_CACHE_SET_ERRNUM (ctx, IPMI_SDR_CACHE_ERR_PARAMETERS);
+      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_PARAMETERS);
       return (-1);
     }
 
-  if (ctx->operation != IPMI_SDR_CACHE_OPERATION_UNINITIALIZED)
+  if (ctx->operation != IPMI_SDR_OPERATION_UNINITIALIZED)
     {
-      if (ctx->operation == IPMI_SDR_CACHE_OPERATION_READ_CACHE)
-        SDR_CACHE_SET_ERRNUM (ctx, IPMI_SDR_CACHE_ERR_CACHE_DELETE_CTX_SET_TO_READ);
+      if (ctx->operation == IPMI_SDR_OPERATION_READ_CACHE)
+        SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_CONTEXT_PERFORMING_OTHER_OPERATION);
       else
-        SDR_CACHE_SET_ERRNUM (ctx, IPMI_SDR_CACHE_ERR_INTERNAL_ERROR);
+        SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_INTERNAL_ERROR);
       return (-1);
     }
+
+  ctx->operation = IPMI_SDR_OPERATION_DELETE_CACHE;
 
   if (unlink (filename) < 0)
     {
       /* If there is no file (ENOENT), its ok */
       if (errno != ENOENT)
         {
-          SDR_CACHE_ERRNO_TO_SDR_CACHE_ERRNUM (ctx, errno);
-          return (-1);
+          SDR_ERRNO_TO_SDR_ERRNUM (ctx, errno);
+	  goto cleanup;
         }
     }
 
-  ctx->errnum = IPMI_SDR_CACHE_ERR_SUCCESS;
-  return (0);
+  rv = 0;
+  ctx->errnum = IPMI_SDR_ERR_SUCCESS;
+ cleanup:
+  ctx->operation = IPMI_SDR_OPERATION_UNINITIALIZED;
+  return (rv);
 }

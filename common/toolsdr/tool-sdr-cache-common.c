@@ -519,7 +519,7 @@ _sdr_cache_create_directory (pstdout_state_t pstate,
 }
 
 int
-_sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
+_sdr_cache_create (ipmi_sdr_ctx_t ctx,
 		   pstdout_state_t pstate,
 		   ipmi_ctx_t ipmi_ctx,
 		   int quiet_cache,
@@ -530,7 +530,7 @@ _sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
 {
   char cachefilenamebuf[MAXPATHLEN+1];
   int count = 0;
-  int create_flags = 0;
+  int cache_create_flags = 0;
   int rv = -1;
 
   assert (ctx);
@@ -558,15 +558,14 @@ _sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
              cachefilenamebuf);
 
   if (sdr_cache_recreate)
-    create_flags = IPMI_SDR_CACHE_CREATE_FLAGS_OVERWRITE;
+    cache_create_flags = IPMI_SDR_CACHE_CREATE_FLAGS_OVERWRITE;
   else
-    create_flags = IPMI_SDR_CACHE_CREATE_FLAGS_DEFAULT;
+    cache_create_flags = IPMI_SDR_CACHE_CREATE_FLAGS_DEFAULT;
 
   if (ipmi_sdr_cache_create (ctx,
                              ipmi_ctx,
                              cachefilenamebuf,
-                             create_flags,
-                             IPMI_SDR_CACHE_VALIDATION_FLAGS_DEFAULT,
+                             cache_create_flags,
                              quiet_cache ? NULL : _sdr_cache_create_callback,
                              quiet_cache ? NULL : (void *)&count) < 0)
     {
@@ -577,7 +576,7 @@ _sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
       PSTDOUT_FPRINTF (pstate,
                        stderr,
                        "ipmi_sdr_cache_create: %s\n",
-                       ipmi_sdr_cache_ctx_errormsg (ctx));
+                       ipmi_sdr_ctx_errormsg (ctx));
       goto cleanup;
     }
 
@@ -592,7 +591,7 @@ _sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
 }
 
 int
-sdr_cache_create_and_load (ipmi_sdr_cache_ctx_t ctx,
+sdr_cache_create_and_load (ipmi_sdr_ctx_t ctx,
                            pstdout_state_t pstate,
                            ipmi_ctx_t ipmi_ctx,
                            int quiet_cache,
@@ -621,12 +620,12 @@ sdr_cache_create_and_load (ipmi_sdr_cache_ctx_t ctx,
                            cache_file ? NULL : ipmi_ctx,
                            cachefilenamebuf) < 0)
     {
-      if (ipmi_sdr_cache_ctx_errnum (ctx) != IPMI_SDR_CACHE_ERR_CACHE_READ_CACHE_DOES_NOT_EXIST
-          && !((ipmi_sdr_cache_ctx_errnum (ctx) == IPMI_SDR_CACHE_ERR_CACHE_INVALID
-                || ipmi_sdr_cache_ctx_errnum (ctx) == IPMI_SDR_CACHE_ERR_CACHE_OUT_OF_DATE)
+      if (ipmi_sdr_ctx_errnum (ctx) != IPMI_SDR_ERR_CACHE_READ_CACHE_DOES_NOT_EXIST
+          && !((ipmi_sdr_ctx_errnum (ctx) == IPMI_SDR_ERR_CACHE_INVALID
+                || ipmi_sdr_ctx_errnum (ctx) == IPMI_SDR_ERR_CACHE_OUT_OF_DATE)
                && sdr_cache_recreate))
         {
-          if (ipmi_sdr_cache_ctx_errnum (ctx) == IPMI_SDR_CACHE_ERR_CACHE_INVALID)
+          if (ipmi_sdr_ctx_errnum (ctx) == IPMI_SDR_ERR_CACHE_INVALID)
             {
               PSTDOUT_FPRINTF (pstate,
                                stderr,
@@ -634,7 +633,7 @@ sdr_cache_create_and_load (ipmi_sdr_cache_ctx_t ctx,
                                cachefilenamebuf);
               goto cleanup;
             }
-          else if (ipmi_sdr_cache_ctx_errnum (ctx) == IPMI_SDR_CACHE_ERR_CACHE_OUT_OF_DATE)
+          else if (ipmi_sdr_ctx_errnum (ctx) == IPMI_SDR_ERR_CACHE_OUT_OF_DATE)
             {
               PSTDOUT_FPRINTF (pstate,
                                stderr,
@@ -649,15 +648,15 @@ sdr_cache_create_and_load (ipmi_sdr_cache_ctx_t ctx,
                                stderr,
                                "ipmi_sdr_cache_open: %s: %s\n",
                                cachefilenamebuf,
-                               ipmi_sdr_cache_ctx_errormsg (ctx));
+                               ipmi_sdr_ctx_errormsg (ctx));
               goto cleanup;
             }
         }
     }
 
-  if (ipmi_sdr_cache_ctx_errnum (ctx) == IPMI_SDR_CACHE_ERR_CACHE_READ_CACHE_DOES_NOT_EXIST
-      || ((ipmi_sdr_cache_ctx_errnum (ctx) == IPMI_SDR_CACHE_ERR_CACHE_INVALID
-           || ipmi_sdr_cache_ctx_errnum (ctx) == IPMI_SDR_CACHE_ERR_CACHE_OUT_OF_DATE)
+  if (ipmi_sdr_ctx_errnum (ctx) == IPMI_SDR_ERR_CACHE_READ_CACHE_DOES_NOT_EXIST
+      || ((ipmi_sdr_ctx_errnum (ctx) == IPMI_SDR_ERR_CACHE_INVALID
+           || ipmi_sdr_ctx_errnum (ctx) == IPMI_SDR_ERR_CACHE_OUT_OF_DATE)
           && sdr_cache_recreate))
     {
       if (_sdr_cache_create (ctx,
@@ -678,7 +677,7 @@ sdr_cache_create_and_load (ipmi_sdr_cache_ctx_t ctx,
                            stderr,
                            "ipmi_sdr_cache_open: %s: %s\n",
                            cachefilenamebuf,
-                           ipmi_sdr_cache_ctx_errormsg (ctx));
+                           ipmi_sdr_ctx_errormsg (ctx));
           goto cleanup;
         }
     }
@@ -689,7 +688,7 @@ sdr_cache_create_and_load (ipmi_sdr_cache_ctx_t ctx,
 }
 
 int
-sdr_cache_flush_cache (ipmi_sdr_cache_ctx_t ctx,
+sdr_cache_flush_cache (ipmi_sdr_ctx_t ctx,
                        pstdout_state_t pstate,
                        int quiet_cache,
                        const char *hostname,
@@ -718,7 +717,7 @@ sdr_cache_flush_cache (ipmi_sdr_cache_ctx_t ctx,
       PSTDOUT_FPRINTF (pstate,
                        stderr,
                        "ipmi_sdr_cache_delete: %s\n",
-                       ipmi_sdr_cache_ctx_errormsg (ctx));
+                       ipmi_sdr_ctx_errormsg (ctx));
       goto cleanup;
     }
   
@@ -728,7 +727,37 @@ sdr_cache_flush_cache (ipmi_sdr_cache_ctx_t ctx,
 }
 
 int
-ipmi_sdr_cache_search_sensor_wrapper (ipmi_sdr_cache_ctx_t ctx,
+sdr_cache_setup_debug (ipmi_sdr_ctx_t ctx,
+		       pstdout_state_t pstate,
+		       int debug,
+		       const char *hostname)
+{
+  assert (ctx);
+
+  if (debug)
+    {
+      /* Don't error out, if this fails we can still continue */
+      if (ipmi_sdr_ctx_set_flags (ctx, IPMI_SDR_FLAGS_DEBUG_DUMP) < 0)
+        PSTDOUT_FPRINTF (pstate,
+                         stderr,
+                         "ipmi_sdr_ctx_set_flags: %s\n",
+                         ipmi_sdr_ctx_strerror (ipmi_sdr_ctx_errnum (ctx)));
+      
+      if (hostname)
+        {
+          if (ipmi_sdr_ctx_set_debug_prefix (ctx, hostname) < 0)
+            PSTDOUT_FPRINTF (pstate,
+                             stderr,
+                             "ipmi_sdr_ctx_set_debug_prefix: %s\n",
+                             ipmi_sdr_ctx_strerror (ipmi_sdr_ctx_errnum (ctx)));
+        }
+    }
+  
+  return (0);
+}
+
+int
+ipmi_sdr_cache_search_sensor_wrapper (ipmi_sdr_ctx_t ctx,
 				      uint8_t sensor_number,
 				      uint8_t generator_id)
 {
@@ -748,7 +777,7 @@ ipmi_sdr_cache_search_sensor_wrapper (ipmi_sdr_cache_ctx_t ctx,
        * generator_id be shifted over by one.  This is a special "try
        * again" corner case.
        */
-      if (ipmi_sdr_cache_ctx_errnum (ctx) == IPMI_SDR_CACHE_ERR_NOT_FOUND
+      if (ipmi_sdr_ctx_errnum (ctx) == IPMI_SDR_ERR_NOT_FOUND
 	  && (generator_id == (IPMI_SLAVE_ADDRESS_BMC << 1)))
 	{
 	  if (!ipmi_sdr_cache_search_sensor (ctx,
@@ -763,3 +792,4 @@ ipmi_sdr_cache_search_sensor_wrapper (ipmi_sdr_cache_ctx_t ctx,
   
   return (rv);
 }
+

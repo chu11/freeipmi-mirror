@@ -26,7 +26,7 @@
 #include <stdint.h>
 #include <sys/param.h>
 
-#include "freeipmi/sdr-parse/ipmi-sdr-parse.h"
+#include "freeipmi/sdr/ipmi-sdr.h"
 #include "freeipmi/sensor-read/ipmi-sensor-read.h"
 
 #include "list.h"
@@ -49,7 +49,7 @@ struct ipmi_sensor_read_ctx {
   unsigned int flags;
 
   ipmi_ctx_t ipmi_ctx;
-  ipmi_sdr_parse_ctx_t sdr_parse_ctx;
+  ipmi_sdr_ctx_t sdr_ctx;
 };
 
 #endif /* IPMI_SENSOR_READ_DEFS_H */

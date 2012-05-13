@@ -163,6 +163,23 @@
 
 #define IPMI_OEM_IBM_LED_INFO_BUFLEN       1024
 
+struct ipmi_oem_ibm_find_sensor_sdr_callback
+{
+  ipmi_oem_state_data_t *state_data;
+  uint8_t sensor_number;
+  char *id_string;
+  unsigned int id_string_len;
+  int found;
+};
+
+struct ipmi_oem_ibm_get_led_sdr_callback
+{
+  ipmi_oem_state_data_t *state_data;
+  struct sensor_column_width *column_width;
+  struct ipmi_oem_data *oem_data;
+  int header_output_flag;
+};
+
 static int
 _get_led_name (ipmi_oem_state_data_t *state_data,
                struct ipmi_oem_data *oem_data,
@@ -439,16 +456,64 @@ _get_led_name (ipmi_oem_state_data_t *state_data,
 }
 
 static int
+_find_sensor_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
+			   uint8_t record_type,
+			   const void *sdr_record,
+			   unsigned int sdr_record_len,
+			   void *arg)
+{
+  struct ipmi_oem_ibm_find_sensor_sdr_callback *sdr_callback_arg;
+  uint8_t sdr_sensor_number;
+
+  assert (sdr_ctx);
+  assert (sdr_record);
+  assert (sdr_record_len);
+  assert (arg);
+
+  sdr_callback_arg = (struct ipmi_oem_ibm_find_sensor_sdr_callback *)arg;
+
+  /* achu: xCAT only checks for Full records, I'll check compact too though */
+  if (record_type != IPMI_SDR_FORMAT_FULL_SENSOR_RECORD
+      && record_type != IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD)
+    return (0);
+
+  if (ipmi_sdr_parse_sensor_number (sdr_callback_arg->state_data->sdr_ctx,
+				    sdr_record,
+				    sdr_record_len,
+				    &sdr_sensor_number) < 0)
+    {
+      pstdout_fprintf (sdr_callback_arg->state_data->pstate,
+		       stderr,
+		       "ipmi_sdr_parse_sensor_number: %s\n",
+		       ipmi_sdr_ctx_errormsg (sdr_callback_arg->state_data->sdr_ctx));
+      return (-1);
+    }
+
+  if (sdr_callback_arg->sensor_number == sdr_sensor_number)
+    {
+      if (ipmi_sdr_parse_id_string (sdr_callback_arg->state_data->sdr_ctx,
+				    sdr_record,
+				    sdr_record_len,
+				    sdr_callback_arg->id_string,
+				    sdr_callback_arg->id_string_len) < 0)
+	return (-1);
+      
+      sdr_callback_arg->found = 1;
+      return (1);
+    }
+
+  return (0);
+}
+
+static int
 _find_sensor (ipmi_oem_state_data_t *state_data,
               uint8_t sensor_number,
               char *id_string,
               unsigned int id_string_len)
 {
-  ipmi_sdr_cache_ctx_t tmp_sdr_cache_ctx = NULL;
-  uint16_t record_count;
-  int found = 0;
+  struct ipmi_oem_ibm_find_sensor_sdr_callback sdr_callback_arg;
+  ipmi_sdr_ctx_t tmp_sdr_ctx = NULL;
   int rv = -1;
-  int i;
 
   assert (state_data);
   assert (id_string);
@@ -457,37 +522,28 @@ _find_sensor (ipmi_oem_state_data_t *state_data,
   /* Make temporary sdr cache to search for sensor
    *
    * Redo loading of SDR cache since this is being called from a loop
-   * using the state_data sdr_cache_ctx.
+   * using the state_data sdr_ctx.
    */
-  if (!(tmp_sdr_cache_ctx = ipmi_sdr_cache_ctx_create ()))
+  if (!(tmp_sdr_ctx = ipmi_sdr_ctx_create ()))
     {
-      pstdout_perror (state_data->pstate, "ipmi_sdr_cache_ctx_create()");
+      pstdout_perror (state_data->pstate, "ipmi_sdr_ctx_create()");
       goto cleanup;
     }
 
-  if (state_data->prog_data->args->common.debug)
-    {
-      /* Don't error out, if this fails we can still continue */
-      if (ipmi_sdr_cache_ctx_set_flags (tmp_sdr_cache_ctx,
-                                        IPMI_SDR_CACHE_FLAGS_DEBUG_DUMP) < 0)
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "ipmi_sdr_cache_ctx_set_flags: %s\n",
-                         ipmi_sdr_cache_ctx_strerror (ipmi_sdr_cache_ctx_errnum (tmp_sdr_cache_ctx)));
+  if (sdr_cache_setup_debug (tmp_sdr_ctx,
+			     state_data->pstate,
+			     state_data->prog_data->args->common.debug,
+			     state_data->hostname) < 0)
+    goto cleanup;
 
-      if (state_data->hostname)
-        {
-          if (ipmi_sdr_cache_ctx_set_debug_prefix (tmp_sdr_cache_ctx,
-                                                   state_data->hostname) < 0)
-            pstdout_fprintf (state_data->pstate,
-                             stderr,
-                             "ipmi_sdr_cache_ctx_set_debug_prefix: %s\n",
-                             ipmi_sdr_cache_ctx_strerror (ipmi_sdr_cache_ctx_errnum (tmp_sdr_cache_ctx)));
-        }
-    }
+  sdr_callback_arg.state_data = state_data;
+  sdr_callback_arg.sensor_number = sensor_number;
+  sdr_callback_arg.id_string = id_string;
+  sdr_callback_arg.id_string_len = id_string_len;
+  sdr_callback_arg.found = 0;
 
   /* Should not cause sdr recreation, since this is the second time we're calling it */
-  if (sdr_cache_create_and_load (tmp_sdr_cache_ctx,
+  if (sdr_cache_create_and_load (tmp_sdr_ctx,
                                  state_data->pstate,
                                  state_data->ipmi_ctx,
                                  1, /* quiet_cache */
@@ -497,132 +553,64 @@ _find_sensor (ipmi_oem_state_data_t *state_data,
                                  state_data->prog_data->args->sdr.sdr_cache_file) < 0)
     goto cleanup;
 
-  if (ipmi_sdr_cache_record_count (tmp_sdr_cache_ctx, &record_count) < 0)
+  if (ipmi_sdr_cache_iterate (tmp_sdr_ctx,
+			      _find_sensor_sdr_callback,
+			      &sdr_callback_arg) < 0)
     {
       pstdout_fprintf (state_data->pstate,
 		       stderr,
-		       "ipmi_sdr_cache_record_count: %s\n",
-		       ipmi_sdr_cache_ctx_errormsg (tmp_sdr_cache_ctx));
+		       "ipmi_sdr_cache_iterate: %s\n",
+		       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
       goto cleanup;
     }
 
-  for (i = 0; i < record_count; i++, ipmi_sdr_cache_next (tmp_sdr_cache_ctx))
-    {
-      uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
-      int sdr_record_len = 0;
-      uint16_t record_id;
-      uint8_t record_type;
-      uint8_t sdr_sensor_number;
-
-      if ((sdr_record_len = ipmi_sdr_cache_record_read (tmp_sdr_cache_ctx,
-							sdr_record,
-							IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH)) < 0)
-	{
-	  pstdout_fprintf (state_data->pstate,
-			   stderr,
-			   "ipmi_sdr_cache_record_read: %s\n",
-			   ipmi_sdr_cache_ctx_errormsg (tmp_sdr_cache_ctx));
-	  goto cleanup;
-	}
-      
-      if (ipmi_sdr_parse_record_id_and_type (state_data->sdr_parse_ctx,
-					     sdr_record,
-					     sdr_record_len,
-					     &record_id,
-					     &record_type) < 0)
-	{
-	  pstdout_fprintf (state_data->pstate,
-			   stderr,
-			   "ipmi_sdr_parse_record_id_and_type: %s\n",
-			   ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
-	  goto cleanup;
-	}
-      
-      /* achu: xCAT only checks for Full records, I'll check compact too though */
-      if (record_type != IPMI_SDR_FORMAT_FULL_SENSOR_RECORD
-          && record_type != IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD)
-        continue;
-
-      if (ipmi_sdr_parse_sensor_number (state_data->sdr_parse_ctx,
-                                        sdr_record,
-                                        sdr_record_len,
-                                        &sdr_sensor_number) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "ipmi_sdr_parse_sensor_number: %s\n",
-                           ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
-          goto cleanup;
-        }
-
-      if (sensor_number == sdr_sensor_number)
-        {
-          if (ipmi_sdr_parse_id_string (state_data->sdr_parse_ctx,
-                                        sdr_record,
-                                        sdr_record_len,
-                                        id_string,
-                                        id_string_len) < 0)
-            goto cleanup;
-
-          found++;
-          break;
-        }
-    }
-
-  if (!found)
+  if (!sdr_callback_arg.found)
     snprintf (id_string,
               id_string_len,
               "Sensor Number = %02Xh",
               sensor_number);
   rv = 0;
  cleanup:
-  ipmi_sdr_cache_ctx_destroy (tmp_sdr_cache_ctx);
+  ipmi_sdr_ctx_destroy (tmp_sdr_ctx);
   return (rv);
 }
 
-int
-ipmi_oem_ibm_get_led (ipmi_oem_state_data_t *state_data)
+static int
+_get_led_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
+		       uint8_t record_type,
+		       const void *sdr_record,
+		       unsigned int sdr_record_len,
+		       void *arg)
 {
-  struct sensor_column_width column_width;
-  struct ipmi_oem_data oem_data;
-  uint16_t record_count;
-  int rv = -1;
-  int header_output_flag = 0;
-  int i;
-  
-  assert (state_data);
-  assert (!state_data->prog_data->args->oem_options_count);
+  struct ipmi_oem_ibm_get_led_sdr_callback *sdr_callback_arg;
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  int rs_len;
+  uint8_t oem_data_buf[IPMI_SDR_MAX_RECORD_LENGTH];
+  int oem_data_buf_len;
+  uint16_t record_id;
+  char fmt[IPMI_OEM_FMT_BUFLEN + 1];
+  char led_name[IPMI_OEM_IBM_LED_NAME_BUFLEN + 1];
+  char led_pointer_name[IPMI_OEM_IBM_LED_NAME_BUFLEN + 1];
+  char id_string[IPMI_OEM_IBM_LED_ID_STRING_BUFLEN + 1];
+  char led_info[IPMI_OEM_IBM_LED_INFO_BUFLEN + 1];
+  char *led_state_str = NULL;
+  uint8_t sensor_type;
+  uint8_t led_id_ls;
+  uint8_t led_id_ms;
+  uint16_t led_id;
+  uint8_t led_state;
+  uint8_t led_active_type;
+  uint16_t led_pointer_id;
+  uint8_t sensor_number;
+  int available_led;
 
-  if (sdr_cache_create_and_load (state_data->sdr_cache_ctx,
-                                 state_data->pstate,
-                                 state_data->ipmi_ctx,
-                                 state_data->prog_data->args->sdr.quiet_cache,
-                                 state_data->prog_data->args->sdr.sdr_cache_recreate,
-                                 state_data->hostname,
-                                 state_data->prog_data->args->sdr.sdr_cache_directory,
-                                 state_data->prog_data->args->sdr.sdr_cache_file) < 0)
-    goto cleanup;
+  assert (sdr_ctx);
+  assert (sdr_record);
+  assert (sdr_record_len);
+  assert (arg);
 
-  if (calculate_column_widths (state_data->pstate,
-                               state_data->sdr_cache_ctx,
-                               state_data->sdr_parse_ctx,
-                               NULL,
-                               0,
-                               NULL,
-                               0,
-                               0, /* non_abbreviated_units */
-                               0, /* shared_sensors */
-                               0, /* count_event_only_records */
-                               0, /* count_device_locator_records */
-                               1, /* count_oem_records */
-                               NULL,
-                               &column_width) < 0)
-    goto cleanup;
-
-  if (ipmi_get_oem_data (state_data->pstate,
-                         state_data->ipmi_ctx,
-                         &oem_data) < 0)
-    goto cleanup;
+  sdr_callback_arg = (struct ipmi_oem_ibm_get_led_sdr_callback *)arg;
 
   /* IBM OEM
    *
@@ -654,289 +642,299 @@ ipmi_oem_ibm_get_led (ipmi_oem_state_data_t *state_data)
    *      - 4 - BIOS or Administrator lit LED
    */
 
-  if (ipmi_sdr_cache_record_count (state_data->sdr_cache_ctx, &record_count) < 0)
+  if (record_type != IPMI_SDR_FORMAT_OEM_RECORD)
+    return (0);
+
+  if (ipmi_sdr_parse_record_id_and_type (sdr_callback_arg->state_data->sdr_ctx,
+					 sdr_record,
+					 sdr_record_len,
+					 &record_id,
+					 NULL) < 0)
+    {
+      pstdout_fprintf (sdr_callback_arg->state_data->pstate,
+		       stderr,
+		       "ipmi_sdr_parse_record_id_and_type: %s\n",
+		       ipmi_sdr_ctx_errormsg (sdr_callback_arg->state_data->sdr_ctx));
+      return (-1);
+    }
+
+  if ((oem_data_buf_len = ipmi_sdr_parse_oem_data (sdr_callback_arg->state_data->sdr_ctx,
+						   sdr_record,
+						   sdr_record_len,
+						   oem_data_buf,
+						   IPMI_SDR_MAX_RECORD_LENGTH)) < 0)
+    {
+      pstdout_fprintf (sdr_callback_arg->state_data->pstate,
+		       stderr,
+		       "ipmi_sdr_parse_oem_data: %s\n",
+		       ipmi_sdr_ctx_errormsg (sdr_callback_arg->state_data->sdr_ctx));
+      return (-1);
+    }
+      
+  /* If not enough data, skip it */
+  if (oem_data_buf_len < IPMI_SDR_RECORD_OEM_IBM_LED_OEM_DATA_MIN_LENGTH)
+    return (0);
+
+  sensor_type = oem_data_buf[IPMI_SDR_RECORD_OEM_IBM_SENSOR_TYPE_OEM_DATA_INDEX];
+      
+  /* If not LED sensor type, skip it */
+  if (sensor_type != IPMI_SDR_RECORD_OEM_IBM_LED_SENSOR_TYPE)
+    return (0);
+
+  /* IBM systems use inconsistent endian, guess endian by assuming
+   * LED IDs are numerically started at 0
+   */
+      
+  if (oem_data_buf[IPMI_SDR_RECORD_OEM_IBM_LED_ID_LS_OEM_DATA_INDEX] > oem_data_buf[IPMI_SDR_RECORD_OEM_IBM_LED_ID_MS_OEM_DATA_INDEX])
+    {
+      led_id_ls = oem_data_buf[IPMI_SDR_RECORD_OEM_IBM_LED_ID_LS_OEM_DATA_INDEX];
+      led_id_ms = oem_data_buf[IPMI_SDR_RECORD_OEM_IBM_LED_ID_MS_OEM_DATA_INDEX];
+    }
+  else
+    {
+      led_id_ls = oem_data_buf[IPMI_SDR_RECORD_OEM_IBM_LED_ID_MS_OEM_DATA_INDEX];
+      led_id_ms = oem_data_buf[IPMI_SDR_RECORD_OEM_IBM_LED_ID_LS_OEM_DATA_INDEX];
+    }
+
+  led_id = led_id_ls | (led_id_ms << 8);
+
+  bytes_rq[0] = IPMI_CMD_OEM_IBM_GET_LED;
+  bytes_rq[1] = led_id_ms;
+  bytes_rq[2] = led_id_ls;
+      
+  if ((rs_len = ipmi_cmd_raw (sdr_callback_arg->state_data->ipmi_ctx,
+			      0, /* lun */
+			      IPMI_NET_FN_OEM_IBM_LED_RQ, /* network function */
+			      bytes_rq, /* data */
+			      3, /* num bytes */
+			      bytes_rs,
+			      IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (sdr_callback_arg->state_data->pstate,
+		       stderr,
+		       "ipmi_cmd_raw: %s\n",
+		       ipmi_ctx_errormsg (sdr_callback_arg->state_data->ipmi_ctx));
+      return (-1);
+    }
+      
+  /* If get parameter out of range, assume LED ID endian wrong and try again */
+  if (rs_len >= 2 && bytes_rs[1] == IPMI_COMP_CODE_PARAMETER_OUT_OF_RANGE)
+    {
+      bytes_rq[0] = IPMI_CMD_OEM_IBM_GET_LED;
+      bytes_rq[1] = led_id_ls;
+      bytes_rq[2] = led_id_ms;
+
+      if ((rs_len = ipmi_cmd_raw (sdr_callback_arg->state_data->ipmi_ctx,
+				  0, /* lun */
+				  IPMI_NET_FN_OEM_IBM_LED_RQ, /* network function */
+				  bytes_rq, /* data */
+				  3, /* num bytes */
+				  bytes_rs,
+				  IPMI_OEM_MAX_BYTES)) < 0)
+	{
+	  pstdout_fprintf (sdr_callback_arg->state_data->pstate,
+			   stderr,
+			   "ipmi_cmd_raw: %s\n",
+			   ipmi_ctx_errormsg (sdr_callback_arg->state_data->ipmi_ctx));
+	  return (-1);
+	}
+    }
+
+  /* achu: there are probably 1 or 2 completion codes that are
+   * acceptable to ignore and continue on, but who knows what they
+   * are.
+   */
+
+  /* Assume this error code means LED not available */
+  if (rs_len >= 2 && bytes_rs[1] == IPMI_COMP_CODE_PARAMETER_OUT_OF_RANGE)
+    available_led = 0;
+  else
+    {
+      if (ipmi_oem_check_response_and_completion_code (sdr_callback_arg->state_data,
+						       bytes_rs,
+						       rs_len,
+						       8,
+						       IPMI_CMD_OEM_IBM_GET_LED,
+						       IPMI_NET_FN_OEM_IBM_LED_RS,
+						       NULL) < 0)
+	return (-1);
+      
+      available_led = 1;
+    }
+
+  if (!sdr_callback_arg->header_output_flag)
+    {
+      memset (fmt, '\0', IPMI_OEM_FMT_BUFLEN + 1);
+      
+      snprintf (fmt,
+		IPMI_OEM_FMT_BUFLEN,
+		"%%-%ds | LED               | State    | LED Information\n",
+		sdr_callback_arg->column_width->record_id);
+      
+      pstdout_printf (sdr_callback_arg->state_data->pstate,
+		      fmt,
+		      SENSORS_HEADER_RECORD_ID_STR);
+      
+      sdr_callback_arg->header_output_flag++;
+    }
+      
+  memset (led_name, '\0', IPMI_OEM_IBM_LED_NAME_BUFLEN + 1);
+  memset (led_pointer_name, '\0', IPMI_OEM_IBM_LED_NAME_BUFLEN + 1);
+  memset (id_string, '\0', IPMI_OEM_IBM_LED_ID_STRING_BUFLEN + 1);
+  memset (led_info, '\0', IPMI_OEM_IBM_LED_INFO_BUFLEN + 1);
+      
+  if (_get_led_name (sdr_callback_arg->state_data,
+		     sdr_callback_arg->oem_data,
+		     led_id,
+		     led_name,
+		     IPMI_OEM_IBM_LED_NAME_BUFLEN) < 0)
+    return (-1);
+      
+  if (available_led)
+    {
+      led_state = bytes_rs[3];
+      led_active_type = bytes_rs[7];
+      led_pointer_id = (bytes_rs[5] << 8) | bytes_rs[6];
+      sensor_number = bytes_rs[6];
+
+      if (led_state == IPMI_OEM_IBM_LED_STATE_INACTIVE)
+	led_state_str = "Inactive";
+      else
+	led_state_str = "Active";
+      
+      if (led_state != IPMI_OEM_IBM_LED_STATE_INACTIVE)
+	{
+	  /* Location LED special case */
+	  if (!led_id)
+	    {
+	      snprintf (led_info,
+			IPMI_OEM_IBM_LED_INFO_BUFLEN,
+			"System Error Condition");
+	    }
+	  else if (led_active_type == IPMI_OEM_IBM_LED_ACTIVE_BY_LED)
+	    {
+	      if (_get_led_name (sdr_callback_arg->state_data,
+				 sdr_callback_arg->oem_data,
+				 led_pointer_id,
+				 led_pointer_name,
+				 IPMI_OEM_IBM_LED_NAME_BUFLEN) < 0)
+		return (-1);
+	      
+	      snprintf (led_info,
+			IPMI_OEM_IBM_LED_INFO_BUFLEN,
+			"'%s' Active",
+			led_pointer_name);
+	    }
+	  else if (led_active_type == IPMI_OEM_IBM_LED_ACTIVE_BY_SENSOR)
+	    {
+	      /* achu: sensor numbers may not be unique.  I'm copying
+	       * this algorithm from xCAT so I assume it's safe for
+	       * IBM machines b/c IBM lays out their SDRs in a fashion
+	       * that this search is safe and won't result in an
+	       * incorrect output.
+	       */
+	      if (_find_sensor (sdr_callback_arg->state_data,
+				sensor_number,
+				id_string,
+				IPMI_OEM_IBM_LED_ID_STRING_BUFLEN) < 0)
+		return (-1);
+	      
+	      snprintf (led_info,
+			IPMI_OEM_IBM_LED_INFO_BUFLEN,
+			"Sensor '%s' error",
+			id_string);
+	    }
+	  else if (led_active_type == IPMI_OEM_IBM_LED_ACTIVE_BY_USER)
+	    {
+	      snprintf (led_info,
+			IPMI_OEM_IBM_LED_INFO_BUFLEN,
+			"LED Activated by User");
+	    }
+	  else if (led_active_type == IPMI_OEM_IBM_LED_ACTIVE_BY_BIOS_OR_ADMINISTRATOR)
+	    {
+	      snprintf (led_info,
+			IPMI_OEM_IBM_LED_INFO_BUFLEN,
+			"LED Activated by BIOS or Administrator");
+	    }
+	}
+    }
+  else
+    led_state_str = "N/A";
+      
+  snprintf (fmt,
+	    IPMI_OEM_FMT_BUFLEN,
+	    "%%-%du | %%-%ds | %%-%ds | %s\n",
+	    sdr_callback_arg->column_width->record_id,
+	    IPMI_OEM_IBM_LED_NAME_COLUMN_SIZE,
+	    IPMI_OEM_IBM_LED_STATE_COLUMN_SIZE,
+	    led_info);
+      
+  pstdout_printf (sdr_callback_arg->state_data->pstate,
+		  fmt,
+		  record_id,
+		  led_name,
+		  led_state_str,
+		  led_info);
+
+  return (0);
+}
+
+int
+ipmi_oem_ibm_get_led (ipmi_oem_state_data_t *state_data)
+{
+  struct ipmi_oem_ibm_get_led_sdr_callback sdr_callback_arg;
+  struct sensor_column_width column_width;
+  struct ipmi_oem_data oem_data;
+  int rv = -1;
+  
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+
+  if (sdr_cache_create_and_load (state_data->sdr_ctx,
+                                 state_data->pstate,
+                                 state_data->ipmi_ctx,
+                                 state_data->prog_data->args->sdr.quiet_cache,
+                                 state_data->prog_data->args->sdr.sdr_cache_recreate,
+                                 state_data->hostname,
+                                 state_data->prog_data->args->sdr.sdr_cache_directory,
+                                 state_data->prog_data->args->sdr.sdr_cache_file) < 0)
+    goto cleanup;
+
+  if (calculate_column_widths (state_data->pstate,
+                               state_data->sdr_ctx,
+                               NULL,
+                               0,
+                               NULL,
+                               0,
+                               0, /* non_abbreviated_units */
+                               0, /* shared_sensors */
+                               0, /* count_event_only_records */
+                               0, /* count_device_locator_records */
+                               1, /* count_oem_records */
+                               NULL,
+                               &column_width) < 0)
+    goto cleanup;
+
+  if (ipmi_get_oem_data (state_data->pstate,
+                         state_data->ipmi_ctx,
+                         &oem_data) < 0)
+    goto cleanup;
+
+  sdr_callback_arg.state_data = state_data;
+  sdr_callback_arg.column_width = &column_width;
+  sdr_callback_arg.oem_data = &oem_data;
+  sdr_callback_arg.header_output_flag = 0;
+
+  if (ipmi_sdr_cache_iterate (state_data->sdr_ctx,
+			      _get_led_sdr_callback,
+			      &sdr_callback_arg) < 0)
     {
       pstdout_fprintf (state_data->pstate,
 		       stderr,
-		       "ipmi_sdr_cache_record_count: %s\n",
-		       ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
+		       "ipmi_sdr_cache_iterate: %s\n",
+		       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
       goto cleanup;
     }
-
-  for (i = 0; i < record_count; i++, ipmi_sdr_cache_next (state_data->sdr_cache_ctx))
-    {
-      uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
-      uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
-      int rs_len;
-      uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
-      int sdr_record_len = 0;
-      uint8_t oem_data_buf[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
-      int oem_data_buf_len;
-      uint16_t record_id;
-      uint8_t record_type;
-      char fmt[IPMI_OEM_FMT_BUFLEN + 1];
-      char led_name[IPMI_OEM_IBM_LED_NAME_BUFLEN + 1];
-      char led_pointer_name[IPMI_OEM_IBM_LED_NAME_BUFLEN + 1];
-      char id_string[IPMI_OEM_IBM_LED_ID_STRING_BUFLEN + 1];
-      char led_info[IPMI_OEM_IBM_LED_INFO_BUFLEN + 1];
-      char *led_state_str = NULL;
-      uint8_t sensor_type;
-      uint8_t led_id_ls;
-      uint8_t led_id_ms;
-      uint16_t led_id;
-      uint8_t led_state;
-      uint8_t led_active_type;
-      uint16_t led_pointer_id;
-      uint8_t sensor_number;
-      int available_led;
-
-      if ((sdr_record_len = ipmi_sdr_cache_record_read (state_data->sdr_cache_ctx,
-							sdr_record,
-							IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH)) < 0)
-	{
-	  pstdout_fprintf (state_data->pstate,
-			   stderr,
-			   "ipmi_sdr_cache_record_read: %s\n",
-			   ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
-	  goto cleanup;
-	}
-      
-      if (ipmi_sdr_parse_record_id_and_type (state_data->sdr_parse_ctx,
-					     sdr_record,
-					     sdr_record_len,
-					     &record_id,
-					     &record_type) < 0)
-	{
-	  pstdout_fprintf (state_data->pstate,
-			   stderr,
-			   "ipmi_sdr_parse_record_id_and_type: %s\n",
-			   ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
-	  goto cleanup;
-	}
-      
-      
-      if (record_type != IPMI_SDR_FORMAT_OEM_RECORD)
-        continue;
-
-      if ((oem_data_buf_len = ipmi_sdr_parse_oem_data (state_data->sdr_parse_ctx,
-                                                   sdr_record,
-                                                   sdr_record_len,
-                                                   oem_data_buf,
-                                                   IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH)) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "ipmi_sdr_parse_oem_data: %s\n",
-                           ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
-          goto cleanup;
-        }
-      
-      /* If not enough data, skip it */
-      if (oem_data_buf_len < IPMI_SDR_RECORD_OEM_IBM_LED_OEM_DATA_MIN_LENGTH)
-        continue;
-
-      sensor_type = oem_data_buf[IPMI_SDR_RECORD_OEM_IBM_SENSOR_TYPE_OEM_DATA_INDEX];
-      
-      /* If not LED sensor type, skip it */
-      if (sensor_type != IPMI_SDR_RECORD_OEM_IBM_LED_SENSOR_TYPE)
-        continue;
-
-      /* IBM systems use inconsistent endian, guess endian by assuming
-       * LED IDs are numerically started at 0
-       */
-      
-      if (oem_data_buf[IPMI_SDR_RECORD_OEM_IBM_LED_ID_LS_OEM_DATA_INDEX] > oem_data_buf[IPMI_SDR_RECORD_OEM_IBM_LED_ID_MS_OEM_DATA_INDEX])
-        {
-          led_id_ls = oem_data_buf[IPMI_SDR_RECORD_OEM_IBM_LED_ID_LS_OEM_DATA_INDEX];
-          led_id_ms = oem_data_buf[IPMI_SDR_RECORD_OEM_IBM_LED_ID_MS_OEM_DATA_INDEX];
-        }
-      else
-        {
-          led_id_ls = oem_data_buf[IPMI_SDR_RECORD_OEM_IBM_LED_ID_MS_OEM_DATA_INDEX];
-          led_id_ms = oem_data_buf[IPMI_SDR_RECORD_OEM_IBM_LED_ID_LS_OEM_DATA_INDEX];
-        }
-
-      led_id = led_id_ls | (led_id_ms << 8);
-
-      bytes_rq[0] = IPMI_CMD_OEM_IBM_GET_LED;
-      bytes_rq[1] = led_id_ms;
-      bytes_rq[2] = led_id_ls;
-      
-      if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
-                                  0, /* lun */
-                                  IPMI_NET_FN_OEM_IBM_LED_RQ, /* network function */
-                                  bytes_rq, /* data */
-                                  3, /* num bytes */
-                                  bytes_rs,
-                                  IPMI_OEM_MAX_BYTES)) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "ipmi_cmd_raw: %s\n",
-                           ipmi_ctx_errormsg (state_data->ipmi_ctx));
-          goto cleanup;
-        }
-      
-      /* If get parameter out of range, assume LED ID endian wrong and try again */
-      if (rs_len >= 2 && bytes_rs[1] == IPMI_COMP_CODE_PARAMETER_OUT_OF_RANGE)
-        {
-          bytes_rq[0] = IPMI_CMD_OEM_IBM_GET_LED;
-          bytes_rq[1] = led_id_ls;
-          bytes_rq[2] = led_id_ms;
-
-          if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
-                                      0, /* lun */
-                                      IPMI_NET_FN_OEM_IBM_LED_RQ, /* network function */
-                                      bytes_rq, /* data */
-                                      3, /* num bytes */
-                                      bytes_rs,
-                                      IPMI_OEM_MAX_BYTES)) < 0)
-            {
-              pstdout_fprintf (state_data->pstate,
-                               stderr,
-                               "ipmi_cmd_raw: %s\n",
-                               ipmi_ctx_errormsg (state_data->ipmi_ctx));
-              goto cleanup;
-            }
-        }
-
-      /* achu: there are probably 1 or 2 completion codes that are
-       * acceptable to ignore and continue on, but who knows what they
-       * are.
-       */
-
-      /* Assume this error code means LED not available */
-      if (rs_len >= 2 && bytes_rs[1] == IPMI_COMP_CODE_PARAMETER_OUT_OF_RANGE)
-        available_led = 0;
-      else
-        {
-          if (ipmi_oem_check_response_and_completion_code (state_data,
-                                                           bytes_rs,
-                                                           rs_len,
-                                                           8,
-                                                           IPMI_CMD_OEM_IBM_GET_LED,
-                                                           IPMI_NET_FN_OEM_IBM_LED_RS,
-                                                           NULL) < 0)
-            goto cleanup;
-
-          available_led = 1;
-        }
-
-      if (!header_output_flag)
-        {
-          memset (fmt, '\0', IPMI_OEM_FMT_BUFLEN + 1);
-          
-          snprintf (fmt,
-                    IPMI_OEM_FMT_BUFLEN,
-                    "%%-%ds | LED               | State    | LED Information\n",
-                    column_width.record_id);
-
-          pstdout_printf (state_data->pstate,
-                          fmt,
-                          SENSORS_HEADER_RECORD_ID_STR);
-          
-          header_output_flag++;
-        }
-      
-      memset (led_name, '\0', IPMI_OEM_IBM_LED_NAME_BUFLEN + 1);
-      memset (led_pointer_name, '\0', IPMI_OEM_IBM_LED_NAME_BUFLEN + 1);
-      memset (id_string, '\0', IPMI_OEM_IBM_LED_ID_STRING_BUFLEN + 1);
-      memset (led_info, '\0', IPMI_OEM_IBM_LED_INFO_BUFLEN + 1);
-      
-      if (_get_led_name (state_data,
-                         &oem_data,
-                         led_id,
-                         led_name,
-                         IPMI_OEM_IBM_LED_NAME_BUFLEN) < 0)
-        goto cleanup;
-      
-      if (available_led)
-        {
-          led_state = bytes_rs[3];
-          led_active_type = bytes_rs[7];
-          led_pointer_id = (bytes_rs[5] << 8) | bytes_rs[6];
-          sensor_number = bytes_rs[6];
-
-          if (led_state == IPMI_OEM_IBM_LED_STATE_INACTIVE)
-            led_state_str = "Inactive";
-          else
-            led_state_str = "Active";
-      
-          if (led_state != IPMI_OEM_IBM_LED_STATE_INACTIVE)
-            {
-              /* Location LED special case */
-              if (!led_id)
-                {
-                  snprintf (led_info,
-                            IPMI_OEM_IBM_LED_INFO_BUFLEN,
-                            "System Error Condition");
-                }
-              else if (led_active_type == IPMI_OEM_IBM_LED_ACTIVE_BY_LED)
-                {
-                  if (_get_led_name (state_data,
-                                     &oem_data,
-                                     led_pointer_id,
-                                     led_pointer_name,
-                                     IPMI_OEM_IBM_LED_NAME_BUFLEN) < 0)
-                    goto cleanup;
-                  
-                  snprintf (led_info,
-                            IPMI_OEM_IBM_LED_INFO_BUFLEN,
-                            "'%s' Active",
-                            led_pointer_name);
-                }
-              else if (led_active_type == IPMI_OEM_IBM_LED_ACTIVE_BY_SENSOR)
-                {
-                  /* achu: sensor numbers may not be unique.  I'm copying
-                   * this algorithm from xCAT so I assume it's safe for
-                   * IBM machines b/c IBM lays out their SDRs in a fashion
-                   * that this search is safe and won't result in an
-                   * incorrect output.
-                   */
-                  if (_find_sensor (state_data,
-                                    sensor_number,
-                                    id_string,
-                                    IPMI_OEM_IBM_LED_ID_STRING_BUFLEN) < 0)
-                    goto cleanup;
-                  
-                  snprintf (led_info,
-                            IPMI_OEM_IBM_LED_INFO_BUFLEN,
-                            "Sensor '%s' error",
-                            id_string);
-                }
-              else if (led_active_type == IPMI_OEM_IBM_LED_ACTIVE_BY_USER)
-                {
-                  snprintf (led_info,
-                            IPMI_OEM_IBM_LED_INFO_BUFLEN,
-                            "LED Activated by User");
-                }
-              else if (led_active_type == IPMI_OEM_IBM_LED_ACTIVE_BY_BIOS_OR_ADMINISTRATOR)
-                {
-                  snprintf (led_info,
-                            IPMI_OEM_IBM_LED_INFO_BUFLEN,
-                            "LED Activated by BIOS or Administrator");
-                }
-            }
-        }
-      else
-        led_state_str = "N/A";
-      
-      snprintf (fmt,
-                IPMI_OEM_FMT_BUFLEN,
-                "%%-%du | %%-%ds | %%-%ds | %s\n",
-                column_width.record_id,
-                IPMI_OEM_IBM_LED_NAME_COLUMN_SIZE,
-                IPMI_OEM_IBM_LED_STATE_COLUMN_SIZE,
-                led_info);
-      
-      pstdout_printf (state_data->pstate,
-                      fmt,
-                      record_id,
-                      led_name,
-                      led_state_str,
-                      led_info);
-    }
-  
   
   rv = 0;
  cleanup:

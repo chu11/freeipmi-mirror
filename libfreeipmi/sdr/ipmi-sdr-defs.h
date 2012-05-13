@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-defs.h,v 1.13 2010-02-08 22:09:40 chu11 Exp $
+ *  $Id: ipmi-sdr-defs.h,v 1.13 2010-02-08 22:09:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2012 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -24,8 +24,8 @@
  *  with Ipmimonitoring.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef IPMI_SDR_CACHE_DEFS_H
-#define IPMI_SDR_CACHE_DEFS_H
+#ifndef IPMI_SDR_DEFS_H
+#define IPMI_SDR_DEFS_H
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -38,31 +38,36 @@
 #include <unistd.h>             /* off_t */
 #endif /* HAVE_UNISTD_H */
 
-#include "freeipmi/sdr-cache/ipmi-sdr-cache.h"
+#include "freeipmi/sdr/ipmi-sdr.h"
 
 #ifndef MAXPATHLEN
 #define MAXPATHLEN 4096
 #endif /* MAXPATHLEN */
 
-#define IPMI_SDR_CACHE_CTX_MAGIC        0xABCD9876
+#define IPMI_SDR_CTX_MAGIC        0xABCD9876
+
+#define IPMI_SDR_OPERATION_UNINITIALIZED  0
+#define IPMI_SDR_OPERATION_CREATE_CACHE   1
+#define IPMI_SDR_OPERATION_READ_CACHE     2
+#define IPMI_SDR_OPERATION_DELETE_CACHE   3
 
 /* Why use indexes instead of fiid templates?  B/c that's how it was
  * written before libipmimonitoring's libipmisdrcache was written before
  * it was included in freeipmi.
  */
-#define IPMI_SDR_CACHE_SDR_RECORD_HEADER_LENGTH               5
-#define IPMI_SDR_CACHE_SDR_RECORD_LENGTH_INDEX                4
-#define IPMI_SDR_CACHE_SDR_RECORD_ID_INDEX_LS                 0
-#define IPMI_SDR_CACHE_SDR_RECORD_ID_INDEX_MS                 1
-#define IPMI_SDR_CACHE_SDR_RECORD_TYPE_INDEX                  3
-#define IPMI_SDR_CACHE_SDR_RECORD_SENSOR_OWNER_ID_INDEX       5
-#define IPMI_SDR_CACHE_SDR_RECORD_SENSOR_NUMBER_INDEX         7
-#define IPMI_SDR_CACHE_SDR_RECORD_COMPACT_SHARE_COUNT         23
-#define IPMI_SDR_CACHE_SDR_RECORD_COMPACT_SHARE_COUNT_BITMASK 0x0F
-#define IPMI_SDR_CACHE_SDR_RECORD_COMPACT_SHARE_COUNT_SHIFT   0
-#define IPMI_SDR_CACHE_SDR_RECORD_EVENT_SHARE_COUNT           12
-#define IPMI_SDR_CACHE_SDR_RECORD_EVENT_SHARE_COUNT_BITMASK   0x0F
-#define IPMI_SDR_CACHE_SDR_RECORD_EVENT_SHARE_COUNT_SHIFT     0
+#define IPMI_SDR_RECORD_HEADER_LENGTH               5
+#define IPMI_SDR_RECORD_LENGTH_INDEX                4
+#define IPMI_SDR_RECORD_ID_INDEX_LS                 0
+#define IPMI_SDR_RECORD_ID_INDEX_MS                 1
+#define IPMI_SDR_RECORD_TYPE_INDEX                  3
+#define IPMI_SDR_RECORD_SENSOR_OWNER_ID_INDEX       5
+#define IPMI_SDR_RECORD_SENSOR_NUMBER_INDEX         7
+#define IPMI_SDR_RECORD_COMPACT_SHARE_COUNT         23
+#define IPMI_SDR_RECORD_COMPACT_SHARE_COUNT_BITMASK 0x0F
+#define IPMI_SDR_RECORD_COMPACT_SHARE_COUNT_SHIFT   0
+#define IPMI_SDR_RECORD_EVENT_SHARE_COUNT           12
+#define IPMI_SDR_RECORD_EVENT_SHARE_COUNT_BITMASK   0x0F
+#define IPMI_SDR_RECORD_EVENT_SHARE_COUNT_SHIFT     0
 
 #if 0
 /* Original - sdr cache version 1.0 - keep for documentation history */
@@ -82,10 +87,7 @@
 #define IPMI_SDR_CACHE_FILE_VERSION_2 0x00
 #define IPMI_SDR_CACHE_FILE_VERSION_3 0x01
 
-#define IPMI_SDR_CACHE_OPERATION_UNINITIALIZED 0
-#define IPMI_SDR_CACHE_OPERATION_READ_CACHE    1
-
-struct ipmi_sdr_cache_ctx {
+struct ipmi_sdr_ctx {
   uint32_t magic;
   int errnum;
   unsigned int operation;
@@ -103,6 +105,8 @@ struct ipmi_sdr_cache_ctx {
   off_t records_start_offset;
   uint8_t *sdr_cache;
   off_t current_offset;
+  int current_offset_dumped;
+  int callback_lock;
 };
 
-#endif /* IPMI_SDR_CACHE_DEFS_H */
+#endif /* IPMI_SDR_DEFS_H */

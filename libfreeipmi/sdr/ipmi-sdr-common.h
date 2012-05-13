@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-common.h,v 1.8 2010-02-08 22:09:40 chu11 Exp $
+ *  $Id: ipmi-sdr-common.h,v 1.8 2010-02-08 22:09:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2012 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -24,28 +24,30 @@
  *  with Ipmimonitoring.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef IPMI_SDR_CACHE_COMMON_H
-#define IPMI_SDR_CACHE_COMMON_H
+#ifndef IPMI_SDR_COMMON_H
+#define IPMI_SDR_COMMON_H
 
 #include <stdint.h>
 
-#include "freeipmi/sdr-cache/ipmi-sdr-cache.h"
+#include "freeipmi/sdr/ipmi-sdr.h"
 
-#include "ipmi-sdr-cache-defs.h"
+#include "ipmi-sdr-defs.h"
 
 #define IPMI_SDR_CACHE_DEBUG_BUFLEN 256
 
-void ipmi_sdr_cache_init_ctx (ipmi_sdr_cache_ctx_t ctx);
+void ipmi_sdr_init_ctx (ipmi_sdr_ctx_t ctx);
 
-int ipmi_sdr_cache_info (ipmi_sdr_cache_ctx_t ctx,
-                         ipmi_ctx_t ipmi_ctx,
-                         uint8_t *sdr_version,
-                         uint16_t *record_count,
-                         uint32_t *most_recent_addition_timestamp,
-                         uint32_t *most_recent_erase_timestamp);
+int ipmi_sdr_info (ipmi_sdr_ctx_t ctx,
+		   ipmi_ctx_t ipmi_ctx,
+		   uint8_t *sdr_version,
+		   uint16_t *record_count,
+		   uint32_t *most_recent_addition_timestamp,
+		   uint32_t *most_recent_erase_timestamp);
 
-const char *ipmi_sdr_cache_record_type_str (ipmi_sdr_cache_ctx_t ctx,
-                                            uint8_t *sdr_record,
-                                            unsigned int sdr_record_len);
+const char *ipmi_sdr_record_type_str (ipmi_sdr_ctx_t ctx,
+				      uint8_t *sdr_record,
+				      unsigned int sdr_record_len);
 
-#endif /* IPMI_SDR_CACHE_COMMON_H */
+void ipmi_sdr_check_read_status (ipmi_sdr_ctx_t ctx);
+
+#endif /* IPMI_SDR_COMMON_H */

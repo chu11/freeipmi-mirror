@@ -35,8 +35,6 @@ int ipmi_monitoring_sensor_reading_cleanup (ipmi_monitoring_ctx_t c);
 
 int ipmi_monitoring_get_sensor_reading (ipmi_monitoring_ctx_t c,
                                         unsigned int sensor_reading_flags,
-                                        uint8_t *sdr_record,
-                                        unsigned int sdr_record_len,
                                         unsigned int shared_sensor_number_offset,
                                         unsigned int *sensor_types,
                                         unsigned int sensor_types_len);

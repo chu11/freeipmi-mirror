@@ -103,7 +103,7 @@ ipmi_sensor_read_ctx_create (ipmi_ctx_t ipmi_ctx)
 
   ctx->ipmi_ctx = ipmi_ctx;
 
-  if (!(ctx->sdr_parse_ctx = ipmi_sdr_parse_ctx_create ()))
+  if (!(ctx->sdr_ctx = ipmi_sdr_ctx_create ()))
     {
       ERRNO_TRACE (errno);
       goto cleanup;
@@ -114,7 +114,7 @@ ipmi_sensor_read_ctx_create (ipmi_ctx_t ipmi_ctx)
  cleanup:
   if (ctx)
     {
-      ipmi_sdr_parse_ctx_destroy (ctx->sdr_parse_ctx);
+      ipmi_sdr_ctx_destroy (ctx->sdr_ctx);
       free (ctx);
     }
   return (NULL);
@@ -127,7 +127,7 @@ ipmi_sensor_read_ctx_destroy (ipmi_sensor_read_ctx_t ctx)
     return;
 
   ctx->magic = ~IPMI_SENSOR_READ_CTX_MAGIC;
-  ipmi_sdr_parse_ctx_destroy (ctx->sdr_parse_ctx);
+  ipmi_sdr_ctx_destroy (ctx->sdr_ctx);
   free (ctx);
 }
 
@@ -422,7 +422,7 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
   *sensor_reading = NULL;
   *sensor_event_bitmask = 0;
 
-  if (ipmi_sdr_parse_record_id_and_type (ctx->sdr_parse_ctx,
+  if (ipmi_sdr_parse_record_id_and_type (ctx->sdr_ctx,
                                          sdr_record,
                                          sdr_record_len,
                                          &record_id,
@@ -439,7 +439,7 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
       goto cleanup;
     }
 
-  if (ipmi_sdr_parse_sensor_owner_id (ctx->sdr_parse_ctx,
+  if (ipmi_sdr_parse_sensor_owner_id (ctx->sdr_ctx,
                                       sdr_record,
                                       sdr_record_len,
                                       &sensor_owner_id_type,
@@ -449,7 +449,7 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
       goto cleanup;
     }
 
-  if (ipmi_sdr_parse_sensor_owner_lun (ctx->sdr_parse_ctx,
+  if (ipmi_sdr_parse_sensor_owner_lun (ctx->sdr_ctx,
                                        sdr_record,
                                        sdr_record_len,
                                        &sensor_owner_lun,
@@ -459,7 +459,7 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
       goto cleanup;
     }
 
-  if (ipmi_sdr_parse_sensor_number (ctx->sdr_parse_ctx,
+  if (ipmi_sdr_parse_sensor_number (ctx->sdr_ctx,
                                     sdr_record,
                                     sdr_record_len,
                                     &sensor_number) < 0)
@@ -478,7 +478,7 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
           goto cleanup;
         }
 
-      if (ipmi_sdr_parse_sensor_record_sharing (ctx->sdr_parse_ctx,
+      if (ipmi_sdr_parse_sensor_record_sharing (ctx->sdr_ctx,
                                                 sdr_record,
                                                 sdr_record_len,
                                                 &share_count,
@@ -505,7 +505,7 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
       sensor_number += shared_sensor_number_offset;
     }
 
-  if (ipmi_sdr_parse_event_reading_type_code (ctx->sdr_parse_ctx,
+  if (ipmi_sdr_parse_event_reading_type_code (ctx->sdr_ctx,
                                               sdr_record,
                                               sdr_record_len,
                                               &event_reading_type_code) < 0)
@@ -713,7 +713,7 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
           int16_t m, b;
           uint8_t linearization, analog_data_format;
 
-          if (ipmi_sdr_parse_sensor_decoding_data (ctx->sdr_parse_ctx,
+          if (ipmi_sdr_parse_sensor_decoding_data (ctx->sdr_ctx,
                                                    sdr_record,
                                                    sdr_record_len,
                                                    &r_exponent,
@@ -804,7 +804,7 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
 	  uint8_t sensor_base_unit_type;
 	  uint8_t sensor_modifier_unit_type;
 
-          if (ipmi_sdr_parse_sensor_decoding_data (ctx->sdr_parse_ctx,
+          if (ipmi_sdr_parse_sensor_decoding_data (ctx->sdr_ctx,
                                                    sdr_record,
                                                    sdr_record_len,
                                                    &r_exponent,
@@ -818,7 +818,7 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
               goto cleanup;
             }
 
-	  if (ipmi_sdr_parse_sensor_units (ctx->sdr_parse_ctx,
+	  if (ipmi_sdr_parse_sensor_units (ctx->sdr_ctx,
 					   sdr_record,
 					   sdr_record_len,
 					   &sensor_units_percentage,

@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef IPMI_SDR_PARSE_UTIL_H
-#define IPMI_SDR_PARSE_UTIL_H
+#ifndef IPMI_SDR_UTIL_H
+#define IPMI_SDR_UTIL_H
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -31,13 +31,14 @@
 #include <errno.h>
 
 #include "freeipmi/api/ipmi-api.h"
-#include "freeipmi/fiid/fiid.h"
-#include "freeipmi/sdr-parse/ipmi-sdr-parse.h"
+#include "freeipmi/sdr/ipmi-sdr.h"
 
-#include "ipmi-sdr-parse-defs.h"
+#include "ipmi-sdr-defs.h"
 
-void sdr_parse_set_sdr_parse_errnum_by_errno (ipmi_sdr_parse_ctx_t ctx, int __errno);
+void sdr_set_sdr_errnum_by_errno (ipmi_sdr_ctx_t ctx, int __errno);
 
-void sdr_parse_set_sdr_parse_errnum_by_fiid_object (ipmi_sdr_parse_ctx_t ctx, fiid_obj_t obj);
+void sdr_set_sdr_errnum_by_fiid_object (ipmi_sdr_ctx_t ctx, fiid_obj_t obj);
 
-#endif /* IPMI_SDR_PARSE_UTIL_H */
+void sdr_set_internal_errnum (ipmi_sdr_ctx_t ctx);
+
+#endif /* IPMI_SDR_UTIL_H */

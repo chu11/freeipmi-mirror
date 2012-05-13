@@ -43,8 +43,6 @@
  */
 int
 ipmi_sensors_oem_parse_intel_node_manager (ipmi_sensors_state_data_t *state_data,
-                                           const void *sdr_record,
-                                           unsigned int sdr_record_len,
                                            uint8_t *nm_device_slave_address,
                                            uint8_t *sensor_owner_lun,
                                            uint8_t *channel_number,
@@ -53,6 +51,8 @@ ipmi_sensors_oem_parse_intel_node_manager (ipmi_sensors_state_data_t *state_data
                                            uint8_t *nm_operational_capabilities_sensor_number,
                                            uint8_t *nm_alert_threshold_exceeded_sensor_number)
 {
+  uint8_t sdr_record[IPMI_SDR_MAX_RECORD_LENGTH];
+  int sdr_record_len = 0;
   fiid_obj_t obj_oem_record = NULL;
   int expected_record_len;
   uint8_t record_subtype;
@@ -61,8 +61,17 @@ ipmi_sensors_oem_parse_intel_node_manager (ipmi_sensors_state_data_t *state_data
   int rv = -1;
 
   assert (state_data);
-  assert (sdr_record);
-  assert (sdr_record_len);
+
+  if ((sdr_record_len = ipmi_sdr_cache_record_read (state_data->sdr_ctx,
+						    sdr_record,
+						    IPMI_SDR_MAX_RECORD_LENGTH)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "ipmi_sdr_cache_record_read: %s\n",
+		       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
+      goto cleanup;
+    }
 
   if ((expected_record_len = fiid_template_len_bytes (tmpl_sdr_oem_intel_node_manager_record)) < 0)
     {
@@ -256,13 +265,9 @@ ipmi_sensors_oem_parse_intel_node_manager (ipmi_sensors_state_data_t *state_data
  * return (-1) - error, cleanup and return error
  */
 int
-ipmi_sensors_oem_intel_node_manager_output_oem_record (ipmi_sensors_state_data_t *state_data,
-						       const void *sdr_record,
-						       unsigned int sdr_record_len)
+ipmi_sensors_oem_intel_node_manager_output_oem_record (ipmi_sensors_state_data_t *state_data)
 {
   assert (state_data);
-  assert (sdr_record);
-  assert (sdr_record_len);
   assert (state_data->prog_data->args->verbose_count >= 2);
   assert (state_data->prog_data->args->interpret_oem_data);
 
@@ -278,8 +283,6 @@ ipmi_sensors_oem_intel_node_manager_output_oem_record (ipmi_sensors_state_data_t
       int ret;
       
       if ((ret = ipmi_sensors_oem_parse_intel_node_manager (state_data,
-                                                            sdr_record,
-                                                            sdr_record_len,
                                                             &nm_device_slave_address,
                                                             &sensor_owner_lun,
                                                             &channel_number,

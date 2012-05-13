@@ -6,7 +6,6 @@ branches to merge
 -----------------
 intels2600jfrevision
 movetolib
-sdrrearch
 
 to test
 -------
@@ -131,6 +130,7 @@ libfreeipmi-api
 libfreeipmi-sdr-parse/libfreeipmi-sdr-cache
 -------------------------------------------
 someone merge libs into one
+iterate function to iterate over all records
 
 libfreeipmi-interpret
 ---------------------

@@ -62,8 +62,7 @@ nobase_include_HEADERS = \
 	freeipmi/record-format/ipmi-sdr-record-format.h \
 	freeipmi/record-format/ipmi-sdr-oem-record-format.h \
 	freeipmi/record-format/ipmi-sel-record-format.h \
-	freeipmi/sdr-cache/ipmi-sdr-cache.h \
-	freeipmi/sdr-parse/ipmi-sdr-parse.h \
+	freeipmi/sdr/ipmi-sdr.h \
 	freeipmi/sel-parse/ipmi-sel-parse.h \
 	freeipmi/sensor-read/ipmi-sensor-read.h \
 	freeipmi/spec/ipmi-authentication-type-spec.h \
