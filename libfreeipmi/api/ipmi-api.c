@@ -1516,6 +1516,43 @@ ipmi_ctx_set_target (ipmi_ctx_t ctx,
 }
 
 int
+ipmi_ctx_get_target (ipmi_ctx_t ctx,
+		     uint8_t *channel_number,
+		     uint8_t *rs_addr)
+{
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if (ctx->type == IPMI_DEVICE_UNKNOWN)
+    {
+      API_SET_ERRNUM (ctx, IPMI_ERR_DEVICE_NOT_OPEN);
+      return (-1);
+    }
+  
+  if (channel_number)
+    {
+      if (ctx->target.channel_number_is_set)
+	(*channel_number) = ctx->target.channel_number;
+      else
+	(*channel_number) = IPMI_CHANNEL_NUMBER_PRIMARY_IPMB;
+    }
+
+  if (rs_addr)
+    {
+      if (ctx->target.rs_addr_is_set)
+	(*rs_addr) = ctx->target.rs_addr;
+      else
+	(*rs_addr) = IPMI_SLAVE_ADDRESS_BMC;
+    }
+
+  ctx->errnum = IPMI_ERR_SUCCESS;
+  return (0);
+}
+
+int
 ipmi_cmd (ipmi_ctx_t ctx,
           uint8_t lun,
           uint8_t net_fn,

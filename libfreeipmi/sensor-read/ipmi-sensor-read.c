@@ -92,6 +92,13 @@ ipmi_sensor_read_ctx_create (ipmi_ctx_t ipmi_ctx)
       return (NULL);
     }
 
+  /* check that ipmi_ctx is open for use */
+  if (ipmi_ctx_get_target (ipmi_ctx, NULL, NULL) < 0)
+    {
+      SET_ERRNO (EINVAL);
+      return (NULL);
+    }
+
   if (!(ctx = (ipmi_sensor_read_ctx_t)malloc (sizeof (struct ipmi_sensor_read_ctx))))
     {
       ERRNO_TRACE (errno);

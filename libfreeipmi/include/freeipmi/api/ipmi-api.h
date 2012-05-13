@@ -243,6 +243,10 @@ int ipmi_ctx_set_target (ipmi_ctx_t ctx,
 			 uint8_t *channel_number,
 			 uint8_t *rs_addr);
 
+int ipmi_ctx_get_target (ipmi_ctx_t ctx, 
+			 uint8_t *channel_number,
+			 uint8_t *rs_addr);
+
 int ipmi_cmd (ipmi_ctx_t ctx,
               uint8_t lun,
               uint8_t net_fn,

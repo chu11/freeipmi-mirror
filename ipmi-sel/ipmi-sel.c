@@ -1696,19 +1696,6 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
 
   args = state_data->prog_data->args;
 
-  if (!args->sdr.ignore_sdr_cache)
-    {
-      if (sdr_cache_create_and_load (state_data->sdr_ctx,
-                                     state_data->pstate,
-                                     state_data->ipmi_ctx,
-                                     args->sdr.quiet_cache,
-                                     args->sdr.sdr_cache_recreate,
-                                     state_data->hostname,
-                                     args->sdr.sdr_cache_directory,
-                                     args->sdr.sdr_cache_file) < 0)
-        goto cleanup;
-    }
-
   if (!args->legacy_output)
     {
       if (ipmi_sel_parse_ctx_set_separator (state_data->sel_parse_ctx, EVENT_OUTPUT_SEPARATOR) < 0)
@@ -2189,29 +2176,52 @@ _ipmi_sel (pstdout_state_t pstate,
         }
     }
 
-  if (!(state_data.sdr_ctx = ipmi_sdr_ctx_create ()))
+  /* need to create/open cache before creating sel_parse_ctx */
+  if (!prog_data->args->info
+      && !prog_data->args->list_sensor_types
+      && !prog_data->args->clear
+      && !prog_data->args->delete
+      && !prog_data->args->delete_range
+      && !prog_data->args->sdr.ignore_sdr_cache)
     {
-      pstdout_perror (pstate, "ipmi_sdr_ctx_create()");
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
-    }
+      if (!(state_data.sdr_ctx = ipmi_sdr_ctx_create ()))
+	{
+	  pstdout_perror (pstate, "ipmi_sdr_ctx_create()");
+	  exit_code = EXIT_FAILURE;
+	  goto cleanup;
+	}
+      
+      if (sdr_cache_setup_debug (state_data.sdr_ctx,
+				 state_data.pstate,
+				 state_data.prog_data->args->common.debug,
+				 state_data.hostname) < 0)
+	{
+	  exit_code = EXIT_FAILURE;
+	  goto cleanup;
+	}
 
-  if (sdr_cache_setup_debug (state_data.sdr_ctx,
-			     state_data.pstate,
-			     state_data.prog_data->args->common.debug,
-			     state_data.hostname) < 0)
-    {
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
+      if (!prog_data->args->sdr.flush_cache)
+	{
+	  if (sdr_cache_create_and_load (state_data.sdr_ctx,
+					 state_data.pstate,
+					 state_data.ipmi_ctx,
+					 prog_data->args->sdr.quiet_cache,
+					 prog_data->args->sdr.sdr_cache_recreate,
+					 state_data.hostname,
+					 prog_data->args->sdr.sdr_cache_directory,
+					 prog_data->args->sdr.sdr_cache_file) < 0)
+	    goto cleanup;
+	}
     }
+  else
+    state_data.sdr_ctx = NULL;
 
   /* Special case, just flush, don't do SEL stuff */
   if (!prog_data->args->sdr.flush_cache)
     {
       unsigned int flags = 0;
 
-      if (!(state_data.sel_parse_ctx = ipmi_sel_parse_ctx_create (state_data.ipmi_ctx,
-                                                                  prog_data->args->sdr.ignore_sdr_cache ? NULL : state_data.sdr_ctx)))
+      if (!(state_data.sel_parse_ctx = ipmi_sel_parse_ctx_create (state_data.ipmi_ctx, state_data.sdr_ctx)))
         {
           pstdout_perror (pstate, "ipmi_sel_parse_ctx_create()");
           goto cleanup;

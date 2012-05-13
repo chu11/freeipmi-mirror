@@ -1,3 +1,19 @@
+2012-05-13  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/api/ipmi-api.h,
+	libfreeipmi/api/ipmi-api.c (ipmi_ctx_get_target): New function.
+
+	* libfreeipmi/sel-parse/ipmi-sel-parse.c (ipmi_sel_parse_ctx_create):
+	Check that sdr is open for reading and ipmi_ctx open.
+
+	* libfreeipmi/fru-parse/ipmi-fru-parse.c (ipmi_fru_parse_ctx_create):
+	Check that ipmi_ctx is open.
+
+	* libfreeipmi/sensor_read/ipmi-sensor_read.c (ipmi_sensor_read_ctx_create):
+	Check that ipmi_ctx is open.
+
+	* ipmi-sel/: Update for API changes.
+	
 2012-05-12  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/sdr/ipmi-sdr.h, libfreeipmi/sdr:
