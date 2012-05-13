@@ -1,4 +1,4 @@
-2012-05-11  Albert Chu <chu11@llnl.gov>
+2012-05-12  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/sdr/ipmi-sdr.h, libfreeipmi/sdr:
 	Turn sdr-cache libfreeipmi sub-library into sdr sub-library.
