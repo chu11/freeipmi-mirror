@@ -173,6 +173,11 @@ int ipmi_sel_parse_sel_entry_count (ipmi_sel_parse_ctx_t ctx);
 int ipmi_sel_parse_seek_record_id (ipmi_sel_parse_ctx_t ctx, uint16_t record_id);
 int ipmi_sel_parse_search_record_id (ipmi_sel_parse_ctx_t ctx, uint16_t record_id);
 
+/* return length of data read into buffer on success, -1 on error */
+int ipmi_sel_parse_read_record (ipmi_sel_parse_ctx_t ctx,
+                                void *buf,
+                                unsigned int buflen);
+
 /* SEL read functions - can be used after sel parsed or within callbacks
  * - will return IPMI_SEL_PARSE_ERR_INVALID_SEL_ENTRY if current sel entry
  *   is not appropriate for data requested.
@@ -226,11 +231,6 @@ int ipmi_sel_parse_read_manufacturer_id (ipmi_sel_parse_ctx_t ctx, uint32_t *man
 /* oem - works with sel timestamped and non-timestamped OEM record types */
 /* return length of data read into buffer on success, -1 on error */
 int ipmi_sel_parse_read_oem (ipmi_sel_parse_ctx_t ctx, void *buf, unsigned int buflen);
-
-/* return length of data read into buffer on success, -1 on error */
-int ipmi_sel_parse_read_record (ipmi_sel_parse_ctx_t ctx,
-                                void *buf,
-                                unsigned int buflen);
 
 /*
  * create a string output of the SEL entry.

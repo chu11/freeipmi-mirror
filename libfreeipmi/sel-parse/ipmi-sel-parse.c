@@ -1276,6 +1276,45 @@ _parse_read_common (ipmi_sel_parse_ctx_t ctx, struct ipmi_sel_parse_entry **sel_
 }
 
 int
+ipmi_sel_parse_read_record (ipmi_sel_parse_ctx_t ctx,
+                            void *buf,
+                            unsigned int buflen)
+{
+  struct ipmi_sel_parse_entry *sel_parse_entry = NULL;
+  int rv = 0;
+
+  if (!ctx || ctx->magic != IPMI_SEL_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if (!buf || !buflen)
+    {
+      SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  if (_parse_read_common (ctx, &sel_parse_entry) < 0)
+    return (-1);
+
+  if (buflen < sel_parse_entry->sel_event_record_len)
+    {
+      ctx->errnum = IPMI_SEL_PARSE_ERR_OVERFLOW;
+      return (-1);
+    }
+
+  memcpy (buf,
+          sel_parse_entry->sel_event_record,
+          sel_parse_entry->sel_event_record_len);
+
+  rv = sel_parse_entry->sel_event_record_len;
+
+  ctx->errnum = IPMI_SEL_PARSE_ERR_SUCCESS;
+  return (rv);
+}
+
+int
 ipmi_sel_parse_read_record_id (ipmi_sel_parse_ctx_t ctx, uint16_t *record_id)
 {
   struct ipmi_sel_parse_entry *sel_parse_entry = NULL;
@@ -1817,45 +1856,6 @@ ipmi_sel_parse_read_oem (ipmi_sel_parse_ctx_t ctx, void *buf, unsigned int bufle
                                buf,
                                buflen)) < 0)
     return (-1);
-
-  ctx->errnum = IPMI_SEL_PARSE_ERR_SUCCESS;
-  return (rv);
-}
-
-int
-ipmi_sel_parse_read_record (ipmi_sel_parse_ctx_t ctx,
-                            void *buf,
-                            unsigned int buflen)
-{
-  struct ipmi_sel_parse_entry *sel_parse_entry = NULL;
-  int rv = 0;
-
-  if (!ctx || ctx->magic != IPMI_SEL_PARSE_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (!buf || !buflen)
-    {
-      SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  if (_parse_read_common (ctx, &sel_parse_entry) < 0)
-    return (-1);
-
-  if (buflen < sel_parse_entry->sel_event_record_len)
-    {
-      ctx->errnum = IPMI_SEL_PARSE_ERR_OVERFLOW;
-      return (-1);
-    }
-
-  memcpy (buf,
-          sel_parse_entry->sel_event_record,
-          sel_parse_entry->sel_event_record_len);
-
-  rv = sel_parse_entry->sel_event_record_len;
 
   ctx->errnum = IPMI_SEL_PARSE_ERR_SUCCESS;
   return (rv);
