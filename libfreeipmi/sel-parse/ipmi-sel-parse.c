@@ -1133,6 +1133,12 @@ ipmi_sel_parse_first (ipmi_sel_parse_ctx_t ctx)
       return (-1);
     }
 
+  if (!ctx->sel_entries_loaded)
+    {
+      ctx->errnum = IPMI_SEL_PARSE_ERR_SEL_ENTRIES_NOT_LOADED;
+      return (-1);
+    }
+
   if (!ctx->sel_entries_itr)
     {
       ctx->errnum = IPMI_SEL_PARSE_ERR_NO_SEL_ENTRIES;
@@ -1153,6 +1159,12 @@ ipmi_sel_parse_next (ipmi_sel_parse_ctx_t ctx)
       return (-1);
     }
 
+  if (!ctx->sel_entries_loaded)
+    {
+      ctx->errnum = IPMI_SEL_PARSE_ERR_SEL_ENTRIES_NOT_LOADED;
+      return (-1);
+    }
+
   if (!ctx->sel_entries_itr)
     {
       ctx->errnum = IPMI_SEL_PARSE_ERR_NO_SEL_ENTRIES;
@@ -1169,6 +1181,12 @@ ipmi_sel_parse_sel_entry_count (ipmi_sel_parse_ctx_t ctx)
   if (!ctx || ctx->magic != IPMI_SEL_PARSE_CTX_MAGIC)
     {
       ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if (!ctx->sel_entries_loaded)
+    {
+      ctx->errnum = IPMI_SEL_PARSE_ERR_SEL_ENTRIES_NOT_LOADED;
       return (-1);
     }
 
@@ -1192,6 +1210,12 @@ _ipmi_sel_parse_find_record_id (ipmi_sel_parse_ctx_t ctx,
   if (!ctx || ctx->magic != IPMI_SEL_PARSE_CTX_MAGIC)
     {
       ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if (!ctx->sel_entries_loaded)
+    {
+      ctx->errnum = IPMI_SEL_PARSE_ERR_SEL_ENTRIES_NOT_LOADED;
       return (-1);
     }
 
