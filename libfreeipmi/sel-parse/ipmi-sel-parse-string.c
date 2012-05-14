@@ -3007,8 +3007,8 @@ _output_oem_string (ipmi_sel_parse_ctx_t ctx,
 int
 sel_parse_format_record_string (ipmi_sel_parse_ctx_t ctx,
                                 const char *fmt,
-                                const void *record_buf,
-                                unsigned int record_buflen,
+                                const void *sel_record,
+                                unsigned int sel_record_len,
                                 char *buf,
                                 unsigned int buflen,
                                 unsigned int flags)
@@ -3024,13 +3024,13 @@ sel_parse_format_record_string (ipmi_sel_parse_ctx_t ctx,
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
   assert (fmt);
-  assert (record_buf);
-  assert (record_buflen >= IPMI_SEL_RECORD_LENGTH);
+  assert (sel_record);
+  assert (sel_record_len >= IPMI_SEL_RECORD_LENGTH);
   assert (buf);
   assert (buflen);
   assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
 
-  memcpy (sel_parse_entry.sel_event_record, record_buf, IPMI_SEL_RECORD_LENGTH);
+  memcpy (sel_parse_entry.sel_event_record, sel_record, IPMI_SEL_RECORD_LENGTH);
   sel_parse_entry.sel_event_record_len = IPMI_SEL_RECORD_LENGTH;
 
   if (sel_parse_get_record_header_info (ctx,

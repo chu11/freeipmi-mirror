@@ -41,8 +41,8 @@ int ipmi_sel_parse_string_snprintf (char *buf,
 
 int sel_parse_format_record_string (ipmi_sel_parse_ctx_t ctx,
 				    const char *fmt,
-				    const void *record_buf,
-				    unsigned int record_buflen,
+				    const void *sel_record,
+				    unsigned int sel_record_len,
 				    char *buf,
 				    unsigned int buflen,
 				    unsigned int flags);

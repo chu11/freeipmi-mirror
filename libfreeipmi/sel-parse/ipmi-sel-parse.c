@@ -2030,8 +2030,8 @@ ipmi_sel_record_type_class (uint8_t record_type)
 
 int
 ipmi_sel_parse_record_record_id (ipmi_sel_parse_ctx_t ctx,
-                                 const void *record_buf,
-                                 unsigned int record_buflen,
+                                 const void *sel_record,
+                                 unsigned int sel_record_len,
                                  uint16_t *record_id)
 {
   struct ipmi_sel_parse_entry sel_parse_entry;
@@ -2042,17 +2042,17 @@ ipmi_sel_parse_record_record_id (ipmi_sel_parse_ctx_t ctx,
       return (-1);
     }
 
-  if (!record_buf
-      || !record_buflen)
+  if (!sel_record
+      || !sel_record_len)
     {
       SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_PARAMETERS);
       return (-1);
     }
 
   memset (&sel_parse_entry, '\0', sizeof (struct ipmi_sel_parse_entry));
-  sel_parse_entry.sel_event_record_len = record_buflen > IPMI_SEL_RECORD_LENGTH ? IPMI_SEL_RECORD_LENGTH : record_buflen;
+  sel_parse_entry.sel_event_record_len = sel_record_len > IPMI_SEL_RECORD_LENGTH ? IPMI_SEL_RECORD_LENGTH : sel_record_len;
   memcpy (sel_parse_entry.sel_event_record,
-          record_buf,
+          sel_record,
           sel_parse_entry.sel_event_record_len);
 
   if (sel_parse_get_record_header_info (ctx,
@@ -2067,8 +2067,8 @@ ipmi_sel_parse_record_record_id (ipmi_sel_parse_ctx_t ctx,
 
 int
 ipmi_sel_parse_record_record_type (ipmi_sel_parse_ctx_t ctx,
-                                   const void *record_buf,
-                                   unsigned int record_buflen,
+                                   const void *sel_record,
+                                   unsigned int sel_record_len,
                                    uint8_t *record_type)
 {
   struct ipmi_sel_parse_entry sel_parse_entry;
@@ -2079,17 +2079,17 @@ ipmi_sel_parse_record_record_type (ipmi_sel_parse_ctx_t ctx,
       return (-1);
     }
 
-  if (!record_buf
-      || !record_buflen)
+  if (!sel_record
+      || !sel_record_len)
     {
       SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_PARAMETERS);
       return (-1);
     }
 
   memset (&sel_parse_entry, '\0', sizeof (struct ipmi_sel_parse_entry));
-  sel_parse_entry.sel_event_record_len = record_buflen > IPMI_SEL_RECORD_LENGTH ? IPMI_SEL_RECORD_LENGTH : record_buflen;
+  sel_parse_entry.sel_event_record_len = sel_record_len > IPMI_SEL_RECORD_LENGTH ? IPMI_SEL_RECORD_LENGTH : sel_record_len;
   memcpy (sel_parse_entry.sel_event_record,
-          record_buf,
+          sel_record,
           sel_parse_entry.sel_event_record_len);
 
   if (sel_parse_get_record_header_info (ctx,
@@ -2104,8 +2104,8 @@ ipmi_sel_parse_record_record_type (ipmi_sel_parse_ctx_t ctx,
 
 int
 ipmi_sel_parse_record_timestamp (ipmi_sel_parse_ctx_t ctx,
-                                 const void *record_buf,
-                                 unsigned int record_buflen,
+                                 const void *sel_record,
+                                 unsigned int sel_record_len,
                                  uint32_t *timestamp)
 {
   struct ipmi_sel_parse_entry sel_parse_entry;
@@ -2116,17 +2116,17 @@ ipmi_sel_parse_record_timestamp (ipmi_sel_parse_ctx_t ctx,
       return (-1);
     }
 
-  if (!record_buf
-      || !record_buflen)
+  if (!sel_record
+      || !sel_record_len)
     {
       SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_PARAMETERS);
       return (-1);
     }
 
   memset (&sel_parse_entry, '\0', sizeof (struct ipmi_sel_parse_entry));
-  sel_parse_entry.sel_event_record_len = record_buflen > IPMI_SEL_RECORD_LENGTH ? IPMI_SEL_RECORD_LENGTH : record_buflen;
+  sel_parse_entry.sel_event_record_len = sel_record_len > IPMI_SEL_RECORD_LENGTH ? IPMI_SEL_RECORD_LENGTH : sel_record_len;
   memcpy (sel_parse_entry.sel_event_record,
-          record_buf,
+          sel_record,
           sel_parse_entry.sel_event_record_len);
 
   if (sel_parse_get_timestamp (ctx,
@@ -2140,22 +2140,22 @@ ipmi_sel_parse_record_timestamp (ipmi_sel_parse_ctx_t ctx,
 
 int
 _parse_record_system_event_common (ipmi_sel_parse_ctx_t ctx,
-                                   const void *record_buf,
-                                   unsigned int record_buflen,
+                                   const void *sel_record,
+                                   unsigned int sel_record_len,
                                    struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   struct ipmi_sel_parse_entry sel_parse_entry;
 
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
-  assert (record_buf);
-  assert (record_buflen);
+  assert (sel_record);
+  assert (sel_record_len);
   assert (system_event_record_data);
 
   memset (&sel_parse_entry, '\0', sizeof (struct ipmi_sel_parse_entry));
-  sel_parse_entry.sel_event_record_len = record_buflen > IPMI_SEL_RECORD_LENGTH ? IPMI_SEL_RECORD_LENGTH : record_buflen;
+  sel_parse_entry.sel_event_record_len = sel_record_len > IPMI_SEL_RECORD_LENGTH ? IPMI_SEL_RECORD_LENGTH : sel_record_len;
   memcpy (sel_parse_entry.sel_event_record,
-          record_buf,
+          sel_record,
           sel_parse_entry.sel_event_record_len);
 
   if (sel_parse_get_system_event_record (ctx,
@@ -2168,8 +2168,8 @@ _parse_record_system_event_common (ipmi_sel_parse_ctx_t ctx,
 
 int
 ipmi_sel_parse_record_generator_id (ipmi_sel_parse_ctx_t ctx,
-                                    const void *record_buf,
-                                    unsigned int record_buflen,
+                                    const void *sel_record,
+                                    unsigned int sel_record_len,
                                     uint8_t *generator_id)
 {
   struct ipmi_sel_system_event_record_data system_event_record_data;
@@ -2180,16 +2180,16 @@ ipmi_sel_parse_record_generator_id (ipmi_sel_parse_ctx_t ctx,
       return (-1);
     }
 
-  if (!record_buf
-      || !record_buflen)
+  if (!sel_record
+      || !sel_record_len)
     {
       SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_PARAMETERS);
       return (-1);
     }
 
   if (_parse_record_system_event_common (ctx,
-                                         record_buf,
-                                         record_buflen,
+                                         sel_record,
+                                         sel_record_len,
                                          &system_event_record_data) < 0)
     return (-1);
 
@@ -2202,8 +2202,8 @@ ipmi_sel_parse_record_generator_id (ipmi_sel_parse_ctx_t ctx,
 
 int
 ipmi_sel_parse_record_ipmb_device_lun (ipmi_sel_parse_ctx_t ctx,
-                                       const void *record_buf,
-                                       unsigned int record_buflen,
+                                       const void *sel_record,
+                                       unsigned int sel_record_len,
                                        uint8_t *ipmb_device_lun)
 {
   struct ipmi_sel_system_event_record_data system_event_record_data;
@@ -2214,16 +2214,16 @@ ipmi_sel_parse_record_ipmb_device_lun (ipmi_sel_parse_ctx_t ctx,
       return (-1);
     }
 
-  if (!record_buf
-      || !record_buflen)
+  if (!sel_record
+      || !sel_record_len)
     {
       SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_PARAMETERS);
       return (-1);
     }
 
   if (_parse_record_system_event_common (ctx,
-                                         record_buf,
-                                         record_buflen,
+                                         sel_record,
+                                         sel_record_len,
                                          &system_event_record_data) < 0)
     return (-1);
 
@@ -2236,8 +2236,8 @@ ipmi_sel_parse_record_ipmb_device_lun (ipmi_sel_parse_ctx_t ctx,
 
 int
 ipmi_sel_parse_record_channel_number (ipmi_sel_parse_ctx_t ctx,
-                                      const void *record_buf,
-                                      unsigned int record_buflen,
+                                      const void *sel_record,
+                                      unsigned int sel_record_len,
                                       uint8_t *channel_number)
 {
   struct ipmi_sel_system_event_record_data system_event_record_data;
@@ -2248,16 +2248,16 @@ ipmi_sel_parse_record_channel_number (ipmi_sel_parse_ctx_t ctx,
       return (-1);
     }
 
-  if (!record_buf
-      || !record_buflen)
+  if (!sel_record
+      || !sel_record_len)
     {
       SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_PARAMETERS);
       return (-1);
     }
 
   if (_parse_record_system_event_common (ctx,
-                                         record_buf,
-                                         record_buflen,
+                                         sel_record,
+                                         sel_record_len,
                                          &system_event_record_data) < 0)
     return (-1);
 
@@ -2277,8 +2277,8 @@ ipmi_sel_parse_record_channel_number (ipmi_sel_parse_ctx_t ctx,
 
 int
 ipmi_sel_parse_record_event_message_format_version (ipmi_sel_parse_ctx_t ctx,
-                                                    const void *record_buf,
-                                                    unsigned int record_buflen,
+                                                    const void *sel_record,
+                                                    unsigned int sel_record_len,
                                                     uint8_t *event_message_format_version)
 {
   struct ipmi_sel_system_event_record_data system_event_record_data;
@@ -2289,16 +2289,16 @@ ipmi_sel_parse_record_event_message_format_version (ipmi_sel_parse_ctx_t ctx,
       return (-1);
     }
 
-  if (!record_buf
-      || !record_buflen)
+  if (!sel_record
+      || !sel_record_len)
     {
       SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_PARAMETERS);
       return (-1);
     }
 
   if (_parse_record_system_event_common (ctx,
-                                         record_buf,
-                                         record_buflen,
+                                         sel_record,
+                                         sel_record_len,
                                          &system_event_record_data) < 0)
     return (-1);
 
@@ -2311,8 +2311,8 @@ ipmi_sel_parse_record_event_message_format_version (ipmi_sel_parse_ctx_t ctx,
 
 int
 ipmi_sel_parse_record_sensor_type (ipmi_sel_parse_ctx_t ctx,
-                                   const void *record_buf,
-                                   unsigned int record_buflen,
+                                   const void *sel_record,
+                                   unsigned int sel_record_len,
                                    uint8_t *sensor_type)
 {
   struct ipmi_sel_system_event_record_data system_event_record_data;
@@ -2323,16 +2323,16 @@ ipmi_sel_parse_record_sensor_type (ipmi_sel_parse_ctx_t ctx,
       return (-1);
     }
 
-  if (!record_buf
-      || !record_buflen)
+  if (!sel_record
+      || !sel_record_len)
     {
       SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_PARAMETERS);
       return (-1);
     }
 
   if (_parse_record_system_event_common (ctx,
-                                         record_buf,
-                                         record_buflen,
+                                         sel_record,
+                                         sel_record_len,
                                          &system_event_record_data) < 0)
     return (-1);
 
@@ -2345,8 +2345,8 @@ ipmi_sel_parse_record_sensor_type (ipmi_sel_parse_ctx_t ctx,
 
 int
 ipmi_sel_parse_record_sensor_number (ipmi_sel_parse_ctx_t ctx,
-                                     const void *record_buf,
-                                     unsigned int record_buflen,
+                                     const void *sel_record,
+                                     unsigned int sel_record_len,
                                      uint8_t *sensor_number)
 {
   struct ipmi_sel_system_event_record_data system_event_record_data;
@@ -2357,16 +2357,16 @@ ipmi_sel_parse_record_sensor_number (ipmi_sel_parse_ctx_t ctx,
       return (-1);
     }
 
-  if (!record_buf
-      || !record_buflen)
+  if (!sel_record
+      || !sel_record_len)
     {
       SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_PARAMETERS);
       return (-1);
     }
 
   if (_parse_record_system_event_common (ctx,
-                                         record_buf,
-                                         record_buflen,
+                                         sel_record,
+                                         sel_record_len,
                                          &system_event_record_data) < 0)
     return (-1);
 
@@ -2379,8 +2379,8 @@ ipmi_sel_parse_record_sensor_number (ipmi_sel_parse_ctx_t ctx,
 
 int
 ipmi_sel_parse_record_event_direction (ipmi_sel_parse_ctx_t ctx,
-                                       const void *record_buf,
-                                       unsigned int record_buflen,
+                                       const void *sel_record,
+                                       unsigned int sel_record_len,
                                        uint8_t *event_direction)
 {
   struct ipmi_sel_system_event_record_data system_event_record_data;
@@ -2391,16 +2391,16 @@ ipmi_sel_parse_record_event_direction (ipmi_sel_parse_ctx_t ctx,
       return (-1);
     }
 
-  if (!record_buf
-      || !record_buflen)
+  if (!sel_record
+      || !sel_record_len)
     {
       SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_PARAMETERS);
       return (-1);
     }
 
   if (_parse_record_system_event_common (ctx,
-                                         record_buf,
-                                         record_buflen,
+                                         sel_record,
+                                         sel_record_len,
                                          &system_event_record_data) < 0)
     return (-1);
 
@@ -2413,8 +2413,8 @@ ipmi_sel_parse_record_event_direction (ipmi_sel_parse_ctx_t ctx,
 
 int
 ipmi_sel_parse_record_event_type_code (ipmi_sel_parse_ctx_t ctx,
-                                       const void *record_buf,
-                                       unsigned int record_buflen,
+                                       const void *sel_record,
+                                       unsigned int sel_record_len,
                                        uint8_t *event_type_code)
 {
   struct ipmi_sel_system_event_record_data system_event_record_data;
@@ -2425,16 +2425,16 @@ ipmi_sel_parse_record_event_type_code (ipmi_sel_parse_ctx_t ctx,
       return (-1);
     }
 
-  if (!record_buf
-      || !record_buflen)
+  if (!sel_record
+      || !sel_record_len)
     {
       SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_PARAMETERS);
       return (-1);
     }
 
   if (_parse_record_system_event_common (ctx,
-                                         record_buf,
-                                         record_buflen,
+                                         sel_record,
+                                         sel_record_len,
                                          &system_event_record_data) < 0)
     return (-1);
 
@@ -2447,8 +2447,8 @@ ipmi_sel_parse_record_event_type_code (ipmi_sel_parse_ctx_t ctx,
 
 int
 ipmi_sel_parse_record_event_data1 (ipmi_sel_parse_ctx_t ctx,
-                                   const void *record_buf,
-                                   unsigned int record_buflen,
+                                   const void *sel_record,
+                                   unsigned int sel_record_len,
                                    uint8_t *event_data1)
 {
   struct ipmi_sel_system_event_record_data system_event_record_data;
@@ -2459,16 +2459,16 @@ ipmi_sel_parse_record_event_data1 (ipmi_sel_parse_ctx_t ctx,
       return (-1);
     }
 
-  if (!record_buf
-      || !record_buflen)
+  if (!sel_record
+      || !sel_record_len)
     {
       SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_PARAMETERS);
       return (-1);
     }
 
   if (_parse_record_system_event_common (ctx,
-                                         record_buf,
-                                         record_buflen,
+                                         sel_record,
+                                         sel_record_len,
                                          &system_event_record_data) < 0)
     return (-1);
 
@@ -2484,8 +2484,8 @@ ipmi_sel_parse_record_event_data1 (ipmi_sel_parse_ctx_t ctx,
 
 int
 ipmi_sel_parse_record_event_data1_offset_from_event_reading_type_code (ipmi_sel_parse_ctx_t ctx,
-                                                                       const void *record_buf,
-                                                                       unsigned int record_buflen,
+                                                                       const void *sel_record,
+                                                                       unsigned int sel_record_len,
                                                                        uint8_t *event_data1_offset)
 {
   struct ipmi_sel_system_event_record_data system_event_record_data;
@@ -2496,16 +2496,16 @@ ipmi_sel_parse_record_event_data1_offset_from_event_reading_type_code (ipmi_sel_
       return (-1);
     }
 
-  if (!record_buf
-      || !record_buflen)
+  if (!sel_record
+      || !sel_record_len)
     {
       SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_PARAMETERS);
       return (-1);
     }
 
   if (_parse_record_system_event_common (ctx,
-                                         record_buf,
-                                         record_buflen,
+                                         sel_record,
+                                         sel_record_len,
                                          &system_event_record_data) < 0)
     return (-1);
 
@@ -2518,8 +2518,8 @@ ipmi_sel_parse_record_event_data1_offset_from_event_reading_type_code (ipmi_sel_
 
 int
 ipmi_sel_parse_record_event_data1_event_data2_flag (ipmi_sel_parse_ctx_t ctx,
-                                                    const void *record_buf,
-                                                    unsigned int record_buflen,
+                                                    const void *sel_record,
+                                                    unsigned int sel_record_len,
                                                     uint8_t *event_data2_flag)
 {
   struct ipmi_sel_system_event_record_data system_event_record_data;
@@ -2530,16 +2530,16 @@ ipmi_sel_parse_record_event_data1_event_data2_flag (ipmi_sel_parse_ctx_t ctx,
       return (-1);
     }
 
-  if (!record_buf
-      || !record_buflen)
+  if (!sel_record
+      || !sel_record_len)
     {
       SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_PARAMETERS);
       return (-1);
     }
 
   if (_parse_record_system_event_common (ctx,
-                                         record_buf,
-                                         record_buflen,
+                                         sel_record,
+                                         sel_record_len,
                                          &system_event_record_data) < 0)
     return (-1);
 
@@ -2552,8 +2552,8 @@ ipmi_sel_parse_record_event_data1_event_data2_flag (ipmi_sel_parse_ctx_t ctx,
 
 int
 ipmi_sel_parse_record_event_data1_event_data3_flag (ipmi_sel_parse_ctx_t ctx,
-                                                    const void *record_buf,
-                                                    unsigned int record_buflen,
+                                                    const void *sel_record,
+                                                    unsigned int sel_record_len,
                                                     uint8_t *event_data3_flag)
 {
   struct ipmi_sel_system_event_record_data system_event_record_data;
@@ -2564,16 +2564,16 @@ ipmi_sel_parse_record_event_data1_event_data3_flag (ipmi_sel_parse_ctx_t ctx,
       return (-1);
     }
 
-  if (!record_buf
-      || !record_buflen)
+  if (!sel_record
+      || !sel_record_len)
     {
       SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_PARAMETERS);
       return (-1);
     }
 
   if (_parse_record_system_event_common (ctx,
-                                         record_buf,
-                                         record_buflen,
+                                         sel_record,
+                                         sel_record_len,
                                          &system_event_record_data) < 0)
     return (-1);
 
@@ -2586,8 +2586,8 @@ ipmi_sel_parse_record_event_data1_event_data3_flag (ipmi_sel_parse_ctx_t ctx,
 
 int
 ipmi_sel_parse_record_event_data2 (ipmi_sel_parse_ctx_t ctx,
-                                   const void *record_buf,
-                                   unsigned int record_buflen,
+                                   const void *sel_record,
+                                   unsigned int sel_record_len,
                                    uint8_t *event_data2)
 {
   struct ipmi_sel_system_event_record_data system_event_record_data;
@@ -2598,16 +2598,16 @@ ipmi_sel_parse_record_event_data2 (ipmi_sel_parse_ctx_t ctx,
       return (-1);
     }
 
-  if (!record_buf
-      || !record_buflen)
+  if (!sel_record
+      || !sel_record_len)
     {
       SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_PARAMETERS);
       return (-1);
     }
 
   if (_parse_record_system_event_common (ctx,
-                                         record_buf,
-                                         record_buflen,
+                                         sel_record,
+                                         sel_record_len,
                                          &system_event_record_data) < 0)
     return (-1);
 
@@ -2620,8 +2620,8 @@ ipmi_sel_parse_record_event_data2 (ipmi_sel_parse_ctx_t ctx,
 
 int
 ipmi_sel_parse_record_event_data3 (ipmi_sel_parse_ctx_t ctx,
-                                   const void *record_buf,
-                                   unsigned int record_buflen,
+                                   const void *sel_record,
+                                   unsigned int sel_record_len,
                                    uint8_t *event_data3)
 {
   struct ipmi_sel_system_event_record_data system_event_record_data;
@@ -2632,16 +2632,16 @@ ipmi_sel_parse_record_event_data3 (ipmi_sel_parse_ctx_t ctx,
       return (-1);
     }
 
-  if (!record_buf
-      || !record_buflen)
+  if (!sel_record
+      || !sel_record_len)
     {
       SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_PARAMETERS);
       return (-1);
     }
 
   if (_parse_record_system_event_common (ctx,
-                                         record_buf,
-                                         record_buflen,
+                                         sel_record,
+                                         sel_record_len,
                                          &system_event_record_data) < 0)
     return (-1);
 
@@ -2654,8 +2654,8 @@ ipmi_sel_parse_record_event_data3 (ipmi_sel_parse_ctx_t ctx,
 
 int
 ipmi_sel_parse_record_manufacturer_id (ipmi_sel_parse_ctx_t ctx,
-                                       const void *record_buf,
-                                       unsigned int record_buflen,
+                                       const void *sel_record,
+                                       unsigned int sel_record_len,
                                        uint32_t *manufacturer_id)
 {
   struct ipmi_sel_parse_entry sel_parse_entry;
@@ -2666,17 +2666,17 @@ ipmi_sel_parse_record_manufacturer_id (ipmi_sel_parse_ctx_t ctx,
       return (-1);
     }
 
-  if (!record_buf
-      || !record_buflen)
+  if (!sel_record
+      || !sel_record_len)
     {
       SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_PARAMETERS);
       return (-1);
     }
 
   memset (&sel_parse_entry, '\0', sizeof (struct ipmi_sel_parse_entry));
-  sel_parse_entry.sel_event_record_len = record_buflen > IPMI_SEL_RECORD_LENGTH ? IPMI_SEL_RECORD_LENGTH : record_buflen;
+  sel_parse_entry.sel_event_record_len = sel_record_len > IPMI_SEL_RECORD_LENGTH ? IPMI_SEL_RECORD_LENGTH : sel_record_len;
   memcpy (sel_parse_entry.sel_event_record,
-          record_buf,
+          sel_record,
           sel_parse_entry.sel_event_record_len);
 
   if (sel_parse_get_manufacturer_id (ctx,
@@ -2690,8 +2690,8 @@ ipmi_sel_parse_record_manufacturer_id (ipmi_sel_parse_ctx_t ctx,
 
 int
 ipmi_sel_parse_record_oem (ipmi_sel_parse_ctx_t ctx,
-                           const void *record_buf,
-                           unsigned int record_buflen,
+                           const void *sel_record,
+                           unsigned int sel_record_len,
                            void *buf,
                            unsigned int buflen)
 {
@@ -2704,8 +2704,8 @@ ipmi_sel_parse_record_oem (ipmi_sel_parse_ctx_t ctx,
       return (-1);
     }
 
-  if (!record_buf
-      || !record_buflen
+  if (!sel_record
+      || !sel_record_len
       || !buf
       || !buflen)
     {
@@ -2714,9 +2714,9 @@ ipmi_sel_parse_record_oem (ipmi_sel_parse_ctx_t ctx,
     }
 
   memset (&sel_parse_entry, '\0', sizeof (struct ipmi_sel_parse_entry));
-  sel_parse_entry.sel_event_record_len = record_buflen > IPMI_SEL_RECORD_LENGTH ? IPMI_SEL_RECORD_LENGTH : record_buflen;
+  sel_parse_entry.sel_event_record_len = sel_record_len > IPMI_SEL_RECORD_LENGTH ? IPMI_SEL_RECORD_LENGTH : sel_record_len;
   memcpy (sel_parse_entry.sel_event_record,
-          record_buf,
+          sel_record,
           sel_parse_entry.sel_event_record_len);
 
   if ((rv = sel_parse_get_oem (ctx,
@@ -2732,8 +2732,8 @@ ipmi_sel_parse_record_oem (ipmi_sel_parse_ctx_t ctx,
 int
 ipmi_sel_parse_format_record_string (ipmi_sel_parse_ctx_t ctx,
                                      const char *fmt,
-                                     const void *record_buf,
-                                     unsigned int record_buflen,
+                                     const void *sel_record,
+                                     unsigned int sel_record_len,
                                      char *buf,
                                      unsigned int buflen,
                                      unsigned int flags)
@@ -2745,8 +2745,8 @@ ipmi_sel_parse_format_record_string (ipmi_sel_parse_ctx_t ctx,
     }
 
   if (!fmt
-      || !record_buf
-      || !record_buflen
+      || !sel_record
+      || !sel_record_len
       || !buf
       || !buflen
       || (flags & ~IPMI_SEL_PARSE_STRING_MASK))
@@ -2755,7 +2755,7 @@ ipmi_sel_parse_format_record_string (ipmi_sel_parse_ctx_t ctx,
       return (-1);
     }
 
-  if (record_buflen < IPMI_SEL_RECORD_LENGTH)
+  if (sel_record_len < IPMI_SEL_RECORD_LENGTH)
     {
       ctx->errnum = IPMI_SEL_PARSE_ERR_INVALID_SEL_ENTRY;
       return (-1);
@@ -2763,8 +2763,8 @@ ipmi_sel_parse_format_record_string (ipmi_sel_parse_ctx_t ctx,
 
   return (sel_parse_format_record_string (ctx,
                                           fmt,
-                                          record_buf,
-                                          record_buflen,
+                                          sel_record,
+                                          sel_record_len,
                                           buf,
                                           buflen,
                                           flags));
