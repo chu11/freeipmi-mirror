@@ -16,6 +16,8 @@
 	
 2012-05-12  Albert Chu <chu11@llnl.gov>
 
+	Merge sdrrearch branch. 
+
 	* libfreeipmi/include/freeipmi/sdr/ipmi-sdr.h, libfreeipmi/sdr:
 	Turn sdr-cache libfreeipmi sub-library into sdr sub-library.
 
