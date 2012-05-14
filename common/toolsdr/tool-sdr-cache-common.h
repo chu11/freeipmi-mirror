@@ -32,16 +32,16 @@
 int sdr_cache_create_and_load (ipmi_sdr_ctx_t ctx,
                                pstdout_state_t pstate,
                                ipmi_ctx_t ipmi_ctx,
+                               const char *hostname,
                                int quiet_cache,
                                int sdr_cache_recreate,
-                               const char *hostname,
                                const char *cache_dir,
 			       const char *cache_file);
 
 int sdr_cache_flush_cache (ipmi_sdr_ctx_t ctx,
                            pstdout_state_t pstate,
-                           int quiet_cache,
                            const char *hostname,
+                           int quiet_cache,
                            const char *cache_dir,
 			   const char *cache_file);
 

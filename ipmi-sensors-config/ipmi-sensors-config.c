@@ -98,8 +98,8 @@ _ipmi_sensors_config (pstdout_state_t pstate,
     {
       if (sdr_cache_flush_cache (state_data.sdr_ctx,
                                  NULL,
-                                 state_data.prog_data->args->sdr.quiet_cache,
                                  hostname,
+                                 state_data.prog_data->args->sdr.quiet_cache,
                                  state_data.prog_data->args->sdr.sdr_cache_directory,
 				 state_data.prog_data->args->sdr.sdr_cache_file) < 0)
         {
@@ -113,9 +113,9 @@ _ipmi_sensors_config (pstdout_state_t pstate,
   if (sdr_cache_create_and_load (state_data.sdr_ctx,
                                  NULL,
                                  state_data.ipmi_ctx,
+                                 hostname,
                                  prog_data->args->sdr.quiet_cache,
                                  prog_data->args->sdr.sdr_cache_recreate,
-                                 hostname,
                                  prog_data->args->sdr.sdr_cache_directory,
                                  prog_data->args->sdr.sdr_cache_file) < 0)
     {

@@ -1,3 +1,12 @@
+2012-05-14  Albert Chu <chu11@llnl.gov>
+
+	Merge toolcleanup branch
+
+	* common/toolsdr/: Pass appropriate cmdline parsing structs
+	instead of each option individually.
+
+	* Update tools appropriately for changes
+	
 2012-05-13  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/api/ipmi-api.h,

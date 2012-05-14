@@ -102,8 +102,8 @@ _flush_cache (ipmi_pet_state_data_t *state_data)
   
   if (sdr_cache_flush_cache (state_data->sdr_ctx,
                              NULL,
-                             state_data->prog_data->args->sdr.quiet_cache,
                              state_data->hostname,
+                             state_data->prog_data->args->sdr.quiet_cache,
                              state_data->prog_data->args->sdr.sdr_cache_directory,
                              state_data->prog_data->args->sdr.sdr_cache_file) < 0)
     return (-1);
@@ -128,9 +128,9 @@ _ipmi_pet_init (ipmi_pet_state_data_t *state_data)
       if (sdr_cache_create_and_load (state_data->sdr_ctx,
                                      NULL,
                                      state_data->ipmi_ctx,
+                                     state_data->hostname,
                                      args->sdr.quiet_cache,
                                      args->sdr.sdr_cache_recreate,
-                                     state_data->hostname,
                                      args->sdr.sdr_cache_directory,
                                      args->sdr.sdr_cache_file) < 0)
         goto cleanup;
