@@ -133,7 +133,6 @@ sel_parse_get_record_header_info (ipmi_sel_parse_ctx_t ctx,
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
   assert (sel_parse_entry);
-  assert (record_id || record_type);
 
   if (sel_parse_entry->sel_event_record_len < IPMI_SEL_RECORD_HEADER_LENGTH)
     {
@@ -203,7 +202,6 @@ sel_parse_get_timestamp (ipmi_sel_parse_ctx_t ctx,
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
   assert (sel_parse_entry);
-  assert (timestamp);
 
   if (sel_parse_entry->sel_event_record_len < IPMI_SEL_RECORD_LENGTH)
     {
@@ -251,14 +249,17 @@ sel_parse_get_timestamp (ipmi_sel_parse_ctx_t ctx,
       goto cleanup;
     }
 
-  if (FIID_OBJ_GET (obj_sel_record,
-                    "timestamp",
-                    &val) < 0)
+  if (timestamp)
     {
-      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM (ctx, obj_sel_record);
-      goto cleanup;
+      if (FIID_OBJ_GET (obj_sel_record,
+			"timestamp",
+			&val) < 0)
+	{
+	  SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM (ctx, obj_sel_record);
+	  goto cleanup;
+	}
+      (*timestamp) = val;
     }
-  (*timestamp) = val;
 
   rv = 0;
  cleanup:
@@ -280,7 +281,6 @@ sel_parse_get_manufacturer_id (ipmi_sel_parse_ctx_t ctx,
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
   assert (sel_parse_entry);
-  assert (manufacturer_id);
 
   if (sel_parse_entry->sel_event_record_len < IPMI_SEL_RECORD_LENGTH)
     {
@@ -316,14 +316,17 @@ sel_parse_get_manufacturer_id (ipmi_sel_parse_ctx_t ctx,
       goto cleanup;
     }
 
-  if (FIID_OBJ_GET (obj_sel_record,
-                    "manufacturer_id",
-                    &val) < 0)
+  if (manufacturer_id)
     {
-      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM (ctx, obj_sel_record);
-      goto cleanup;
+      if (FIID_OBJ_GET (obj_sel_record,
+			"manufacturer_id",
+			&val) < 0)
+	{
+	  SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM (ctx, obj_sel_record);
+	  goto cleanup;
+	}
+      (*manufacturer_id) = val;
     }
-  (*manufacturer_id) = val;
 
   rv = 0;
  cleanup:
