@@ -3,7 +3,9 @@ noinst_LTLIBRARIES = \
 
 libtoolsdr_la_CPPFLAGS = \
 	-I$(top_srcdir)/common/miscutil \
+	-I$(top_srcdir)/common/parsecommon \
 	-I$(top_srcdir)/common/portability \
+	-I$(top_srcdir)/common/toolcommon \
 	-I$(top_srcdir)/common/toolhostrange \
 	-I$(top_srcdir)/libfreeipmi/include \
 	-D_GNU_SOURCE \

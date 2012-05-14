@@ -24,6 +24,7 @@
 
 #include <freeipmi/freeipmi.h>
 
+#include "tool-cmdline-common.h"
 #include "pstdout.h"
 
 #define IPMI_SDR_CACHE_MAX_ID_STRING         16
@@ -33,17 +34,12 @@ int sdr_cache_create_and_load (ipmi_sdr_ctx_t ctx,
                                pstdout_state_t pstate,
                                ipmi_ctx_t ipmi_ctx,
                                const char *hostname,
-                               int quiet_cache,
-                               int sdr_cache_recreate,
-                               const char *cache_dir,
-			       const char *cache_file);
+			       const struct sdr_cmd_args *sdr_args);
 
 int sdr_cache_flush_cache (ipmi_sdr_ctx_t ctx,
                            pstdout_state_t pstate,
                            const char *hostname,
-                           int quiet_cache,
-                           const char *cache_dir,
-			   const char *cache_file);
+			   const struct sdr_cmd_args *sdr_args);
 
 int sdr_cache_setup_debug (ipmi_sdr_ctx_t ctx,
 			   pstdout_state_t pstate,

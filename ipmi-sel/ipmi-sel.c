@@ -372,9 +372,7 @@ _flush_cache (ipmi_sel_state_data_t *state_data)
   if (sdr_cache_flush_cache (state_data->sdr_ctx,
                              state_data->pstate,
                              state_data->hostname,
-                             state_data->prog_data->args->sdr.quiet_cache,
-			     state_data->prog_data->args->sdr.sdr_cache_directory,
-			     state_data->prog_data->args->sdr.sdr_cache_file) < 0)
+			     &state_data->prog_data->args->sdr) < 0)
     return (-1);
 
   return (0);
@@ -2206,10 +2204,7 @@ _ipmi_sel (pstdout_state_t pstate,
 					 state_data.pstate,
 					 state_data.ipmi_ctx,
 					 state_data.hostname,
-					 prog_data->args->sdr.quiet_cache,
-					 prog_data->args->sdr.sdr_cache_recreate,
-					 prog_data->args->sdr.sdr_cache_directory,
-					 prog_data->args->sdr.sdr_cache_file) < 0)
+					 &state_data.prog_data->args->sdr) < 0)
 	    goto cleanup;
 	}
     }

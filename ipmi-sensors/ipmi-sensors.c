@@ -408,9 +408,7 @@ _flush_cache (ipmi_sensors_state_data_t *state_data)
   if (sdr_cache_flush_cache (state_data->sdr_ctx,
                              state_data->pstate,
                              state_data->hostname,
-                             state_data->prog_data->args->sdr.quiet_cache,
-                             state_data->prog_data->args->sdr.sdr_cache_directory,
-                             state_data->prog_data->args->sdr.sdr_cache_file) < 0)
+			     &state_data->prog_data->args->sdr) < 0)
     return (-1);
 
   return (0);
@@ -1339,10 +1337,7 @@ run_cmd_args (ipmi_sensors_state_data_t *state_data)
                                  state_data->pstate,
                                  state_data->ipmi_ctx,
                                  state_data->hostname,
-                                 args->sdr.quiet_cache,
-                                 args->sdr.sdr_cache_recreate,
-                                 args->sdr.sdr_cache_directory,
-                                 args->sdr.sdr_cache_file) < 0)
+				 &state_data->prog_data->args->sdr) < 0)
     return (-1);
 
   if (_display_sensors (state_data) < 0)
