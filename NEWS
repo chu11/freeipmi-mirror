@@ -62,6 +62,8 @@ o In libfreeipmi, add Cipher Suite 18 and 19 information, but do not
   support.
 o In libfreeipmi, support reservation-id registration and clearing in
   the sel-parse sub-library.
+o In libfreeipmi, sel-parse sub-library now supports a "no sel entries
+  loaded" error.
 o In libfreeipmi, add missing macro definitions.
 o In libipmimonitoring, support Cipher Suite ID 15, 16, and 17.
 o In libfreeipmi, libipmiconsole, libipmimonitoring, support ability

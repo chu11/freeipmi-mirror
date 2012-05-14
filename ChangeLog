@@ -1,5 +1,11 @@
 2012-05-14  Albert Chu <chu11@llnl.gov>
 
+	Cleanup sel-parse sub-library
+
+	* Support IPMI_SEL_PARSE_ERR_SEL_ENTRIES_NOT_LOADED error code.
+	
+2012-05-14  Albert Chu <chu11@llnl.gov>
+
 	* Various code cleanup when calling ipmi_sdr_cache_iterate
 	callbacks.
 	

@@ -62,6 +62,7 @@ static char *ipmi_sel_parse_errmsgs[] =
     "invalid parameters",
     "out of memory",
     "sdr cache error",
+    "no sel entries loaded",
     "no sel entries available",
     "invalid sel entry",
     "end of sel entries list reached",
@@ -122,6 +123,8 @@ ipmi_sel_parse_ctx_create (ipmi_ctx_t ipmi_ctx, ipmi_sdr_ctx_t sdr_ctx)
   ctx->ipmi_ctx = ipmi_ctx;
   ctx->sdr_ctx = sdr_ctx;
 
+  ctx->sel_entries_loaded = 0;
+
   if (!(ctx->sel_entries = list_create ((ListDelF)free)))
     {
       ERRNO_TRACE (errno);
@@ -159,6 +162,7 @@ _sel_entries_clear (ipmi_sel_parse_ctx_t ctx)
       list_iterator_destroy (ctx->sel_entries_itr);
       ctx->sel_entries_itr = NULL;
     }
+  ctx->sel_entries_loaded = 0;
 
   ctx->current_sel_entry = NULL;
   ctx->callback_sel_entry = NULL;
@@ -993,6 +997,7 @@ ipmi_sel_parse (ipmi_sel_parse_ctx_t ctx,
         }
       ctx->current_sel_entry = list_next (ctx->sel_entries_itr);
     }
+  ctx->sel_entries_loaded = 1; 
 
   ctx->errnum = IPMI_SEL_PARSE_ERR_SUCCESS;
  cleanup:
@@ -1109,6 +1114,7 @@ ipmi_sel_parse_record_ids (ipmi_sel_parse_ctx_t ctx,
         }
       ctx->current_sel_entry = list_next (ctx->sel_entries_itr);
     }
+  ctx->sel_entries_loaded = 1; 
 
   ctx->errnum = IPMI_SEL_PARSE_ERR_SUCCESS;
  cleanup:
@@ -1257,6 +1263,12 @@ _parse_read_common (ipmi_sel_parse_ctx_t ctx, struct ipmi_sel_parse_entry **sel_
     *sel_parse_entry = ctx->callback_sel_entry;
   else
     {
+      if (!ctx->sel_entries_loaded)
+	{
+	  ctx->errnum = IPMI_SEL_PARSE_ERR_SEL_ENTRIES_NOT_LOADED;
+	  return (-1);
+	}
+
       if (!ctx->sel_entries_itr)
         {
           ctx->errnum = IPMI_SEL_PARSE_ERR_NO_SEL_ENTRIES;

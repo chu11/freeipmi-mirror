@@ -92,6 +92,7 @@ struct ipmi_sel_parse_ctx {
   ipmi_ctx_t ipmi_ctx;
   ipmi_sdr_ctx_t sdr_ctx;
 
+  int sel_entries_loaded;
   List sel_entries;
   ListIterator sel_entries_itr;
   struct ipmi_sel_parse_entry *current_sel_entry;
