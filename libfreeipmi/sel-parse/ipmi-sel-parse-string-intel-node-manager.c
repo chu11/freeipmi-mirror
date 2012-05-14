@@ -99,6 +99,7 @@ _intel_node_manager_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
 				  void *arg)
 {
   struct intel_node_manager_sdr_callback *sdr_callback_arg;
+  ipmi_sel_parse_ctx_t ctx;
   fiid_obj_t obj_oem_record = NULL;
   int expected_record_len;
   uint8_t record_subtype;
@@ -112,6 +113,7 @@ _intel_node_manager_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
   assert (arg);
 
   sdr_callback_arg = (struct intel_node_manager_sdr_callback *)arg;
+  ctx = sdr_callback_arg->ctx;
 
   if (record_type != IPMI_SDR_FORMAT_OEM_RECORD)
     {
@@ -121,7 +123,7 @@ _intel_node_manager_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
 
   if ((expected_record_len = fiid_template_len_bytes (tmpl_sdr_oem_intel_node_manager_record)) < 0)
     {
-      SEL_PARSE_ERRNO_TO_SEL_PARSE_ERRNUM (sdr_callback_arg->ctx, errno);
+      SEL_PARSE_ERRNO_TO_SEL_PARSE_ERRNUM (ctx, errno);
       goto cleanup;
     }
       
@@ -133,7 +135,7 @@ _intel_node_manager_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
 
   if (!(obj_oem_record = fiid_obj_create (tmpl_sdr_oem_intel_node_manager_record)))
     {
-      SEL_PARSE_ERRNO_TO_SEL_PARSE_ERRNUM (sdr_callback_arg->ctx, errno);
+      SEL_PARSE_ERRNO_TO_SEL_PARSE_ERRNUM (ctx, errno);
       goto cleanup;
     }
 
@@ -141,7 +143,7 @@ _intel_node_manager_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
 			sdr_record,
 			sdr_record_len) < 0)
     {
-      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM (sdr_callback_arg->ctx, obj_oem_record);
+      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM (ctx, obj_oem_record);
       goto cleanup;
     }
 
@@ -154,7 +156,7 @@ _intel_node_manager_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
 		    "record_subtype",
 		    &val) < 0)
     {
-      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM (sdr_callback_arg->ctx, obj_oem_record);
+      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM (ctx, obj_oem_record);
       goto cleanup;
     }
   record_subtype = val;
@@ -169,7 +171,7 @@ _intel_node_manager_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
 		    "version_number",
 		    &val) < 0)
     {
-      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM (sdr_callback_arg->ctx, obj_oem_record);
+      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM (ctx, obj_oem_record);
       goto cleanup;
     }
   version_number = val;
@@ -184,40 +186,40 @@ _intel_node_manager_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
 		    "nm_health_event_sensor_number",
 		    &val) < 0)
     {
-      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM (sdr_callback_arg->ctx, obj_oem_record);
+      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM (ctx, obj_oem_record);
       goto cleanup;
     }
-  sdr_callback_arg->ctx->intel_node_manager.nm_health_event_sensor_number = val;
+  ctx->intel_node_manager.nm_health_event_sensor_number = val;
 
   if (FIID_OBJ_GET (obj_oem_record,
 		    "nm_exception_event_sensor_number",
 		    &val) < 0)
     {
-      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM (sdr_callback_arg->ctx, obj_oem_record);
+      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM (ctx, obj_oem_record);
       goto cleanup;
     }
-  sdr_callback_arg->ctx->intel_node_manager.nm_exception_event_sensor_number = val;
+  ctx->intel_node_manager.nm_exception_event_sensor_number = val;
 
   if (FIID_OBJ_GET (obj_oem_record,
 		    "nm_operational_capabilities_sensor_number",
 		    &val) < 0)
     {
-      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM (sdr_callback_arg->ctx, obj_oem_record);
+      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM (ctx, obj_oem_record);
       goto cleanup;
     }
-  sdr_callback_arg->ctx->intel_node_manager.nm_operational_capabilities_sensor_number = val;
+  ctx->intel_node_manager.nm_operational_capabilities_sensor_number = val;
 
   if (FIID_OBJ_GET (obj_oem_record,
 		    "nm_alert_threshold_exceeded_sensor_number",
 		    &val) < 0)
     {
-      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM (sdr_callback_arg->ctx, obj_oem_record);
+      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM (ctx, obj_oem_record);
       goto cleanup;
     }
-  sdr_callback_arg->ctx->intel_node_manager.nm_alert_threshold_exceeded_sensor_number = val;
+  ctx->intel_node_manager.nm_alert_threshold_exceeded_sensor_number = val;
       
-  sdr_callback_arg->ctx->intel_node_manager.node_manager_data_parsed = 1;
-  sdr_callback_arg->ctx->intel_node_manager.node_manager_data_found = 1;
+  ctx->intel_node_manager.node_manager_data_parsed = 1;
+  ctx->intel_node_manager.node_manager_data_found = 1;
   sdr_callback_arg->found = 1;
   rv = 1;
 

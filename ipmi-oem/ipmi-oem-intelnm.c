@@ -59,6 +59,7 @@ _ipmi_oem_intelnm_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
 				void *arg)
 {
   struct ipmi_oem_intelnm_sdr_callback *sdr_callback_arg;
+  ipmi_oem_state_data_t *state_data;
   fiid_obj_t obj_oem_record = NULL;
   int expected_record_len;
   uint8_t record_subtype;
@@ -72,13 +73,14 @@ _ipmi_oem_intelnm_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
   assert (arg);
 
   sdr_callback_arg = (struct ipmi_oem_intelnm_sdr_callback *)arg;
+  state_data = sdr_callback_arg->state_data;
   
   if (record_type != IPMI_SDR_FORMAT_OEM_RECORD)
     return (0);
   
   if ((expected_record_len = fiid_template_len_bytes (tmpl_sdr_oem_intel_node_manager_record)) < 0)
     {
-      pstdout_fprintf (sdr_callback_arg->state_data->pstate,
+      pstdout_fprintf (state_data->pstate,
 		       stderr,
 		       "fiid_template_len_bytes: %s\n",
 		       strerror (errno));
@@ -93,7 +95,7 @@ _ipmi_oem_intelnm_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
   
   if (!(obj_oem_record = fiid_obj_create (tmpl_sdr_oem_intel_node_manager_record)))
     {
-      pstdout_fprintf (sdr_callback_arg->state_data->pstate,
+      pstdout_fprintf (state_data->pstate,
                        stderr,
                        "fiid_obj_create: %s\n",
                        strerror (errno));
@@ -104,7 +106,7 @@ _ipmi_oem_intelnm_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
 			sdr_record,
 			sdr_record_len) < 0)
     {
-      pstdout_fprintf (sdr_callback_arg->state_data->pstate,
+      pstdout_fprintf (state_data->pstate,
 		       stderr,
 		       "fiid_obj_set_all: %s\n",
 		       fiid_obj_errormsg (obj_oem_record));
@@ -120,7 +122,7 @@ _ipmi_oem_intelnm_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
 		    "record_subtype",
 		    &val) < 0)
     {
-      pstdout_fprintf (sdr_callback_arg->state_data->pstate,
+      pstdout_fprintf (state_data->pstate,
 		       stderr,
 		       "fiid_obj_get: 'record_subtype': %s\n",
 		       fiid_obj_errormsg (obj_oem_record));
@@ -138,7 +140,7 @@ _ipmi_oem_intelnm_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
 		    "version_number",
 		    &val) < 0)
     {
-      pstdout_fprintf (sdr_callback_arg->state_data->pstate,
+      pstdout_fprintf (state_data->pstate,
 		       stderr,
 		       "fiid_obj_get: 'version_number': %s\n",
 		       fiid_obj_errormsg (obj_oem_record));
@@ -156,7 +158,7 @@ _ipmi_oem_intelnm_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
 		    "nm_device_slave_address",
 		    &val) < 0)
     {
-      pstdout_fprintf (sdr_callback_arg->state_data->pstate,
+      pstdout_fprintf (state_data->pstate,
 		       stderr,
 		       "FIID_OBJ_GET: 'nm_device_slave_address': %s\n",
 		       fiid_obj_errormsg (obj_oem_record));
@@ -168,7 +170,7 @@ _ipmi_oem_intelnm_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
 		    "sensor_owner_lun",
 		    &val) < 0)
     {
-      pstdout_fprintf (sdr_callback_arg->state_data->pstate,
+      pstdout_fprintf (state_data->pstate,
 		       stderr,
 		       "FIID_OBJ_GET: 'sensor_owner_lun': %s\n",
 		       fiid_obj_errormsg (obj_oem_record));
@@ -180,7 +182,7 @@ _ipmi_oem_intelnm_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
 		    "channel_number",
 		    &val) < 0)
     {
-      pstdout_fprintf (sdr_callback_arg->state_data->pstate,
+      pstdout_fprintf (state_data->pstate,
 		       stderr,
 		       "FIID_OBJ_GET: 'channel_number': %s\n",
 		       fiid_obj_errormsg (obj_oem_record));

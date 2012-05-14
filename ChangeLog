@@ -1,3 +1,8 @@
+2012-05-14  Albert Chu <chu11@llnl.gov>
+
+	* Various code cleanup when calling ipmi_sdr_cache_iterate
+	callbacks.
+	
 2012-05-13  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/api/ipmi-api.h,

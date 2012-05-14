@@ -73,6 +73,7 @@ _sun_get_led_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
 			   void *arg)
 {
   struct ipmi_oem_sun_get_led_sdr_callback *sdr_callback_arg;
+  ipmi_oem_state_data_t *state_data;
   uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
   uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
   int rs_len;
@@ -91,6 +92,7 @@ _sun_get_led_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
   assert (arg);
 
   sdr_callback_arg = (struct ipmi_oem_sun_get_led_sdr_callback *)arg;
+  state_data = sdr_callback_arg->state_data;
 
   /* Sun OEM
    *
@@ -150,17 +152,17 @@ _sun_get_led_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
   if (record_type != IPMI_SDR_FORMAT_GENERIC_DEVICE_LOCATOR_RECORD)
     return (0);
 
-  if (ipmi_sdr_parse_entity_id_instance_type (sdr_callback_arg->state_data->sdr_ctx,
+  if (ipmi_sdr_parse_entity_id_instance_type (state_data->sdr_ctx,
 					      sdr_record,
 					      sdr_record_len,
 					      NULL,
 					      NULL,
 					      &entity_instance_type) < 0)
     {
-      pstdout_fprintf (sdr_callback_arg->state_data->pstate,
+      pstdout_fprintf (state_data->pstate,
 		       stderr,
 		       "ipmi_sdr_parse_entity_id_and_instance: %s\n",
-		       ipmi_sdr_ctx_errormsg (sdr_callback_arg->state_data->sdr_ctx));
+		       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
       return (-1);
     }
       
@@ -169,16 +171,16 @@ _sun_get_led_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
   if (entity_instance_type == IPMI_SDR_LOGICAL_CONTAINER_ENTITY)
     return (0);
           
-  if (ipmi_sdr_parse_record_id_and_type (sdr_callback_arg->state_data->sdr_ctx,
+  if (ipmi_sdr_parse_record_id_and_type (state_data->sdr_ctx,
 					 sdr_record,
 					 sdr_record_len,
 					 &record_id,
 					 NULL) < 0)
     {
-      pstdout_fprintf (sdr_callback_arg->state_data->pstate,
+      pstdout_fprintf (state_data->pstate,
 		       stderr,
 		       "ipmi_sdr_parse_record_id_and_type: %s\n",
-		       ipmi_sdr_ctx_errormsg (sdr_callback_arg->state_data->sdr_ctx));
+		       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
       return (-1);
     }
 
@@ -193,7 +195,7 @@ _sun_get_led_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
   bytes_rq[4] = ((uint8_t *)sdr_record)[IPMI_SDR_RECORD_GENERIC_DEVICE_LOCATOR_OEM_INDEX];
   bytes_rq[5] = IPMI_OEM_SUN_LED_FORCE_GO_THRU_CONTROLLER;
 
-  if ((rs_len = ipmi_cmd_raw (sdr_callback_arg->state_data->ipmi_ctx,
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
 			      0, /* lun */
 			      IPMI_NET_FN_OEM_GROUP_RQ, /* network function */
 			      bytes_rq, /* data */
@@ -201,10 +203,10 @@ _sun_get_led_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
 			      bytes_rs,
 			      IPMI_OEM_MAX_BYTES)) < 0)
     {
-      pstdout_fprintf (sdr_callback_arg->state_data->pstate,
+      pstdout_fprintf (state_data->pstate,
 		       stderr,
 		       "ipmi_cmd_raw: %s\n",
-		       ipmi_ctx_errormsg (sdr_callback_arg->state_data->ipmi_ctx));
+		       ipmi_ctx_errormsg (state_data->ipmi_ctx));
       return (-1);
     }
   
@@ -213,7 +215,7 @@ _sun_get_led_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
    * are.
    */
 
-  if (ipmi_oem_check_response_and_completion_code (sdr_callback_arg->state_data,
+  if (ipmi_oem_check_response_and_completion_code (state_data,
 						   bytes_rs,
 						   rs_len,
 						   3,
@@ -232,7 +234,7 @@ _sun_get_led_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
 		sdr_callback_arg->column_width->record_id,
 		sdr_callback_arg->column_width->sensor_name);
       
-      pstdout_printf (sdr_callback_arg->state_data->pstate,
+      pstdout_printf (state_data->pstate,
 		      fmt,
 		      SENSORS_HEADER_RECORD_ID_STR,
 		      SENSORS_HEADER_NAME_STR);
@@ -242,12 +244,12 @@ _sun_get_led_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
       
   led_mode = bytes_rs[2];
       
-  if (sdr_callback_arg->state_data->prog_data->args->verbose_count)
+  if (state_data->prog_data->args->verbose_count)
     {
       memset (sensor_name_buf, '\0', MAX_ENTITY_ID_SENSOR_NAME_STRING + 1);
       
-      if (get_entity_sensor_name_string (sdr_callback_arg->state_data->pstate,
-					 sdr_callback_arg->state_data->sdr_ctx,
+      if (get_entity_sensor_name_string (state_data->pstate,
+					 state_data->sdr_ctx,
 					 sdr_callback_arg->entity_id_counts,
 					 NULL,
 					 sensor_name_buf,
@@ -260,16 +262,16 @@ _sun_get_led_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
     {
       memset (device_id_string, '\0', IPMI_SDR_CACHE_MAX_DEVICE_ID_STRING + 1);
       
-      if (ipmi_sdr_parse_device_id_string (sdr_callback_arg->state_data->sdr_ctx,
+      if (ipmi_sdr_parse_device_id_string (state_data->sdr_ctx,
 					   sdr_record,
 					   sdr_record_len,
 					   device_id_string,
 					   IPMI_SDR_CACHE_MAX_DEVICE_ID_STRING) < 0)
 	{
-	  pstdout_fprintf (sdr_callback_arg->state_data->pstate,
+	  pstdout_fprintf (state_data->pstate,
 			   stderr,
 			   "ipmi_sdr_parse_device_id_string: %s\n",
-			   ipmi_sdr_ctx_errormsg (sdr_callback_arg->state_data->sdr_ctx));
+			   ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
 	  return (-1);
 	}
       
@@ -304,7 +306,7 @@ _sun_get_led_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
 	    sdr_callback_arg->column_width->sensor_name,
 	    led_mode_str);
       
-  pstdout_printf (sdr_callback_arg->state_data->pstate,
+  pstdout_printf (state_data->pstate,
 		  fmt,
 		  record_id,
 		  sensor_name);
