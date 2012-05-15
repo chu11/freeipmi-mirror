@@ -33,18 +33,18 @@
 #include "ipmi-sel-defs.h"
 
 /* returns 0 on success, 1 on success but w/ truncation */
-int ipmi_sel_parse_string_snprintf (char *buf,
-				    unsigned int buflen,
-				    unsigned int *wlen,
-				    const char *fmt,
-				    ...);
+int sel_string_snprintf (char *buf,
+			 unsigned int buflen,
+			 unsigned int *wlen,
+			 const char *fmt,
+			 ...);
 
-int sel_parse_format_record_string (ipmi_sel_ctx_t ctx,
-				    const char *fmt,
-				    const void *sel_record,
-				    unsigned int sel_record_len,
-				    char *buf,
-				    unsigned int buflen,
-				    unsigned int flags);
+int sel_format_record_string (ipmi_sel_ctx_t ctx,
+			      const char *fmt,
+			      const void *sel_record,
+			      unsigned int sel_record_len,
+			      char *buf,
+			      unsigned int buflen,
+			      unsigned int flags);
 
 #endif /* IPMI_SEL_STRING_H */

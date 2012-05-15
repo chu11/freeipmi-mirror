@@ -41,9 +41,7 @@
 #define IPMI_SEL_RECORD_LENGTH               16
 #define IPMI_SEL_RECORD_HEADER_LENGTH         3
 
-#define IPMI_SEL_PARSE_DEBUG_BUFLEN         256
-
-#define IPMI_SEL_PARSE_RESERVATION_ID_RETRY   4
+#define IPMI_SEL_RESERVATION_ID_RETRY         4
 
 #define IPMI_SEL_FLAGS_MASK                    \
   (IPMI_SEL_FLAGS_DEBUG_DUMP                   \

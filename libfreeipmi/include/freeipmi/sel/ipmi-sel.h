@@ -406,13 +406,13 @@ int ipmi_sel_parse_read_oem (ipmi_sel_ctx_t ctx,
  * Returns length of data written to buffer.  If >= buflen, no null
  * termination exists in buffer.
  */
-int ipmi_sel_parse_read_ecord_string (ipmi_sel_ctx_t ctx,
-				      const char *fmt,
-				      const void *sel_record,
-				      unsigned int sel_record_len,
-				      char *buf,
-				      unsigned int buflen,
-				      unsigned int flags);
+int ipmi_sel_parse_read_record_string (ipmi_sel_ctx_t ctx,
+				       const char *fmt,
+				       const void *sel_record,
+				       unsigned int sel_record_len,
+				       char *buf,
+				       unsigned int buflen,
+				       unsigned int flags);
 
 /* Utility functions */
 int ipmi_sel_clear_sel (ipmi_sel_ctx_t ctx);

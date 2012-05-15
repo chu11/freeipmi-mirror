@@ -48,9 +48,9 @@
 #include "freeipmi-portability.h"
 
 int
-sel_parse_get_reservation_id (ipmi_sel_ctx_t ctx,
-                              uint16_t *reservation_id,
-                              unsigned int *is_insufficient_privilege_level)
+sel_get_reservation_id (ipmi_sel_ctx_t ctx,
+			uint16_t *reservation_id,
+			unsigned int *is_insufficient_privilege_level)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
@@ -121,10 +121,10 @@ sel_parse_get_reservation_id (ipmi_sel_ctx_t ctx,
 }
 
 int
-sel_parse_get_record_header_info (ipmi_sel_ctx_t ctx,
-                                  struct ipmi_sel_entry *sel_entry,
-                                  uint16_t *record_id,
-                                  uint8_t *record_type)
+sel_get_record_header_info (ipmi_sel_ctx_t ctx,
+			    struct ipmi_sel_entry *sel_entry,
+			    uint16_t *record_id,
+			    uint8_t *record_type)
 {
   fiid_obj_t obj_sel_record_header = NULL;
   uint64_t val;
@@ -189,9 +189,9 @@ sel_parse_get_record_header_info (ipmi_sel_ctx_t ctx,
 }
 
 int
-sel_parse_get_timestamp (ipmi_sel_ctx_t ctx,
-                         struct ipmi_sel_entry *sel_entry,
-                         uint32_t *timestamp)
+sel_get_timestamp (ipmi_sel_ctx_t ctx,
+		   struct ipmi_sel_entry *sel_entry,
+		   uint32_t *timestamp)
 {
   fiid_obj_t obj_sel_record = NULL;
   uint8_t record_type;
@@ -209,10 +209,10 @@ sel_parse_get_timestamp (ipmi_sel_ctx_t ctx,
       goto cleanup;
     }
 
-  if (sel_parse_get_record_header_info (ctx,
-                                        sel_entry,
-                                        NULL,
-                                        &record_type) < 0)
+  if (sel_get_record_header_info (ctx,
+				  sel_entry,
+				  NULL,
+				  &record_type) < 0)
     goto cleanup;
 
   record_type_class = ipmi_sel_record_type_class (record_type);
@@ -268,9 +268,9 @@ sel_parse_get_timestamp (ipmi_sel_ctx_t ctx,
 }
 
 int
-sel_parse_get_manufacturer_id (ipmi_sel_ctx_t ctx,
-                               struct ipmi_sel_entry *sel_entry,
-                               uint32_t *manufacturer_id)
+sel_get_manufacturer_id (ipmi_sel_ctx_t ctx,
+			 struct ipmi_sel_entry *sel_entry,
+			 uint32_t *manufacturer_id)
 {
   fiid_obj_t obj_sel_record = NULL;
   uint8_t record_type;
@@ -288,10 +288,10 @@ sel_parse_get_manufacturer_id (ipmi_sel_ctx_t ctx,
       goto cleanup;
     }
 
-  if (sel_parse_get_record_header_info (ctx,
-                                        sel_entry,
-                                        NULL,
-                                        &record_type) < 0)
+  if (sel_get_record_header_info (ctx,
+				  sel_entry,
+				  NULL,
+				  &record_type) < 0)
     goto cleanup;
 
   record_type_class = ipmi_sel_record_type_class (record_type);
@@ -335,10 +335,10 @@ sel_parse_get_manufacturer_id (ipmi_sel_ctx_t ctx,
 }
 
 int
-sel_parse_get_oem (ipmi_sel_ctx_t ctx,
-                   struct ipmi_sel_entry *sel_entry,
-                   uint8_t *buf,
-                   unsigned int buflen)
+sel_get_oem (ipmi_sel_ctx_t ctx,
+	     struct ipmi_sel_entry *sel_entry,
+	     uint8_t *buf,
+	     unsigned int buflen)
 {
   fiid_obj_t obj_sel_record = NULL;
   uint8_t record_type;
@@ -358,10 +358,10 @@ sel_parse_get_oem (ipmi_sel_ctx_t ctx,
       goto cleanup;
     }
 
-  if (sel_parse_get_record_header_info (ctx,
-                                        sel_entry,
-                                        NULL,
-                                        &record_type) < 0)
+  if (sel_get_record_header_info (ctx,
+				  sel_entry,
+				  NULL,
+				  &record_type) < 0)
     goto cleanup;
 
   record_type_class = ipmi_sel_record_type_class (record_type);
@@ -414,9 +414,9 @@ sel_parse_get_oem (ipmi_sel_ctx_t ctx,
 }
 
 int
-sel_parse_get_system_event_record (ipmi_sel_ctx_t ctx,
-                                   struct ipmi_sel_entry *sel_entry,
-                                   struct ipmi_sel_system_event_record_data *system_event_record_data)
+sel_get_system_event_record (ipmi_sel_ctx_t ctx,
+			     struct ipmi_sel_entry *sel_entry,
+			     struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   fiid_obj_t obj_sel_system_event_record = NULL;
   int record_type_class;
@@ -437,10 +437,10 @@ sel_parse_get_system_event_record (ipmi_sel_ctx_t ctx,
       goto cleanup;
     }
 
-  if (sel_parse_get_record_header_info (ctx,
-                                        sel_entry,
-                                        NULL,
-                                        &record_type) < 0)
+  if (sel_get_record_header_info (ctx,
+				  sel_entry,
+				  NULL,
+				  &record_type) < 0)
     goto cleanup;
 
   record_type_class = ipmi_sel_record_type_class (record_type);
