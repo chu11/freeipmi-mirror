@@ -84,6 +84,8 @@ o In libfreeipmi, create new 'sdr' sub-library which is merger of the
   earlier 'sdr-cache' and 'sdr-parse' libraries.
 o In libfreeipmi, create new 'sel' sub-library which replaces the
   'sel-parse' library.
+o In libfreeipmi and libipmimonitoring, do not export functions that
+  shouldn't be.
 
 Misc
 ----
