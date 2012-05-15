@@ -4,7 +4,7 @@
     ipmi_monitoring_ctx_create;
     ipmi_monitoring_ctx_destroy;
     ipmi_monitoring_ctx_errnum;
-    ipmi_monitoring_ctx_strerror (errnum);
+    ipmi_monitoring_ctx_strerror;
     ipmi_monitoring_ctx_errormsg;
     ipmi_monitoring_ctx_sel_config_file;
     ipmi_monitoring_ctx_sensor_config_file;
