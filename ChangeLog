@@ -9,9 +9,9 @@
 	parameter and output errors instead of returning error string in
 	buffer.
 
-	* common/tooloem/, common/toolsdr/, common/toolevent/,
-	common/toolsensor/, common/toolhostrange/: Merge into
-	common/toolcommon/ library.
+	* common/daemonutil/, common/tooloem/, common/toolsdr/,
+	common/toolevent/, common/toolsensor/, common/toolhostrange/:
+	Merge into common/toolcommon/ library.
 
 	* Update tools appropriately for changes.
 	

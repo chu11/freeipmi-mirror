@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef DAEMON_UTIL_H
-#define DAEMON_UTIL_H
+#ifndef TOOL_DAEMON_COMMON_H
+#define TOOL_DAEMON_COMMON_H
 
 #include <stdint.h>
 #include <signal.h>
@@ -27,4 +27,4 @@ int daemonize_common (const char *pidfile);
 /* can pass NULL for no callback */
 int daemon_signal_handler_setup (sighandler_t cb);
 
-#endif /* DAEMON_UTIL_H */
+#endif /* TOOL_DAEMON_COMMON_H */

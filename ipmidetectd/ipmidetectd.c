@@ -70,14 +70,14 @@
 #include "ipmidetectd-config.h"
 
 #include "freeipmi-portability.h"
-#include "daemon-util.h"
 #include "error.h"
 #include "fd.h"
 #include "hash.h"
+#include "hostlist.h"
 #include "list.h"
 #include "timeval.h"
 
-#include "hostlist.h"
+#include "tool-daemon-common.h"
 
 #define IPMIDETECTD_PIDFILE IPMIDETECTD_LOCALSTATEDIR "/run/ipmidetectd.pid"
 

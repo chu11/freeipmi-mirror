@@ -8,9 +8,6 @@ libtoolcommon_la_CPPFLAGS = \
 	-I$(top_srcdir)/common/miscutil \
 	-I$(top_srcdir)/common/parsecommon \
 	-I$(top_srcdir)/common/portability \
-	-I$(top_srcdir)/common/toolhostrange \
-	-I$(top_srcdir)/common/toolsdr \
-	-I$(top_srcdir)/common/toolsensor \
 	-I$(top_srcdir)/libfreeipmi/include \
 	-D_GNU_SOURCE \
 	-D_REENTRANT
@@ -24,6 +21,8 @@ libtoolcommon_la_SOURCES = \
 	tool-config-file-common.h \
 	tool-cmdline-common.c \
 	tool-cmdline-common.h \
+	tool-daemon-common.c \
+	tool-daemon-common.h \
 	tool-event-common.c \
 	tool-event-common.h \
 	tool-hostrange-common.c \
