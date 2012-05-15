@@ -1218,8 +1218,8 @@ _interpret_sensor_oem_intel_smi_timeout_power_throttled (ipmi_interpret_ctx_t ct
 
 static int
 _interpret_sensor_oem_intel_nmi_state_wrapper (ipmi_interpret_ctx_t ctx,
-								 uint32_t manufacturer_id,
-								 uint16_t product_id)
+					       uint32_t manufacturer_id,
+					       uint16_t product_id)
 {
   struct ipmi_interpret_sensor_oem_config *oem_conf;
 
@@ -1315,7 +1315,7 @@ _interpret_sensor_oem_config_init (ipmi_interpret_ctx_t ctx)
 }
 
 int
-ipmi_interpret_sensor_init (ipmi_interpret_ctx_t ctx)
+interpret_sensor_init (ipmi_interpret_ctx_t ctx)
 {
   int rv = -1;
 
@@ -1678,7 +1678,7 @@ _interpret_config_sensor_destroy (ipmi_interpret_ctx_t ctx,
 }
 
 void
-ipmi_interpret_sensor_destroy (ipmi_interpret_ctx_t ctx)
+interpret_sensor_destroy (ipmi_interpret_ctx_t ctx)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
@@ -1866,7 +1866,7 @@ _cb_sensor_parse (conffile_t cf,
   assert (optionname);
   assert (option_ptr);
 
-  if ((state = ipmi_interpret_config_parse_state (cf, data->string)) < 0)
+  if ((state = interpret_config_parse_state (cf, data->string)) < 0)
     return (-1);
 
   i = 0;
@@ -1931,23 +1931,23 @@ _cb_sensor_oem_parse (conffile_t cf,
       return (-1);
     }
   
-  if (ipmi_interpret_config_parse_manufactuer_id_product_id (cf,
-                                                             data->stringlist[0],
-                                                             ids,
-                                                             &ids_count) < 0)
+  if (interpret_config_parse_manufactuer_id_product_id (cf,
+							data->stringlist[0],
+							ids,
+							&ids_count) < 0)
     return (-1);
 
-  if (ipmi_interpret_config_parse_strtoul (cf,
-                                           data->stringlist[1],
-                                           UCHAR_MAX,
-                                           &tmp) < 0)
+  if (interpret_config_parse_strtoul (cf,
+				      data->stringlist[1],
+				      UCHAR_MAX,
+				      &tmp) < 0)
     return (-1);
   event_reading_type_code = tmp;
 
-  if (ipmi_interpret_config_parse_strtoul (cf,
-                                           data->stringlist[2],
-                                           UCHAR_MAX,
-                                           &tmp) < 0)
+  if (interpret_config_parse_strtoul (cf,
+				      data->stringlist[2],
+				      UCHAR_MAX,
+				      &tmp) < 0)
     return (-1);
   sensor_type = tmp;
   
@@ -1956,14 +1956,14 @@ _cb_sensor_oem_parse (conffile_t cf,
    * perhaps there is a bug and some vendors need to have the 16th bit
    * matched.
    */
-  if (ipmi_interpret_config_parse_strtoul (cf,
-                                           data->stringlist[3],
-                                           USHRT_MAX,
-                                           &tmp) < 0)
+  if (interpret_config_parse_strtoul (cf,
+				      data->stringlist[3],
+				      USHRT_MAX,
+				      &tmp) < 0)
     return (-1);
   sensor_event_bitmask = tmp;
 
-  if ((sensor_state = ipmi_interpret_config_parse_state (cf, data->stringlist[4])) < 0)
+  if ((sensor_state = interpret_config_parse_state (cf, data->stringlist[4])) < 0)
     return (-1);
   
   if (!strcasecmp (optionname, "IPMI_OEM_Bitmask"))
@@ -2076,8 +2076,8 @@ _fill_sensor_config_options (struct conffile_option *to_options,
 }
 
 int
-ipmi_interpret_sensor_config_parse (ipmi_interpret_ctx_t ctx,
-                                    const char *sensor_config_file)
+interpret_sensor_config_parse (ipmi_interpret_ctx_t ctx,
+			       const char *sensor_config_file)
 {
   int ipmi_interpret_sensor_threshold_flags[ipmi_interpret_sensor_threshold_config_len];
   int ipmi_interpret_sensor_temperature_state_flags[ipmi_interpret_sensor_temperature_state_config_len];

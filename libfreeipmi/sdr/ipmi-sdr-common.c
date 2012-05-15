@@ -53,7 +53,7 @@
 #include "debug-util.h"
 
 void
-ipmi_sdr_init_ctx (ipmi_sdr_ctx_t ctx)
+sdr_init_ctx (ipmi_sdr_ctx_t ctx)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SDR_CTX_MAGIC);
@@ -75,12 +75,12 @@ ipmi_sdr_init_ctx (ipmi_sdr_ctx_t ctx)
 }
 
 int
-ipmi_sdr_info (ipmi_sdr_ctx_t ctx,
-	       ipmi_ctx_t ipmi_ctx,
-	       uint8_t *sdr_version,
-	       uint16_t *record_count,
-	       uint32_t *most_recent_addition_timestamp,
-	       uint32_t *most_recent_erase_timestamp)
+sdr_info (ipmi_sdr_ctx_t ctx,
+	  ipmi_ctx_t ipmi_ctx,
+	  uint8_t *sdr_version,
+	  uint16_t *record_count,
+	  uint32_t *most_recent_addition_timestamp,
+	  uint32_t *most_recent_erase_timestamp)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
@@ -163,9 +163,9 @@ ipmi_sdr_info (ipmi_sdr_ctx_t ctx,
 }
 
 const char *
-ipmi_sdr_record_type_str (ipmi_sdr_ctx_t ctx,
-			  uint8_t *sdr_record,
-			  unsigned int sdr_record_len)
+sdr_record_type_str (ipmi_sdr_ctx_t ctx,
+		     uint8_t *sdr_record,
+		     unsigned int sdr_record_len)
 {
   fiid_obj_t obj_sdr_record_header = NULL;
   uint8_t record_type;
@@ -255,7 +255,7 @@ ipmi_sdr_record_type_str (ipmi_sdr_ctx_t ctx,
 }
 
 void
-ipmi_sdr_check_read_status (ipmi_sdr_ctx_t ctx)
+sdr_check_read_status (ipmi_sdr_ctx_t ctx)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SDR_CTX_MAGIC);
@@ -271,9 +271,9 @@ ipmi_sdr_check_read_status (ipmi_sdr_ctx_t ctx)
       
       record_length = (uint8_t)((ctx->sdr_cache + ctx->current_offset)[IPMI_SDR_RECORD_LENGTH_INDEX]);
 
-      if ((record_str = ipmi_sdr_record_type_str (ctx,
-						  ctx->sdr_cache + ctx->current_offset,
-						  record_length + IPMI_SDR_RECORD_HEADER_LENGTH)))
+      if ((record_str = sdr_record_type_str (ctx,
+					     ctx->sdr_cache + ctx->current_offset,
+					     record_length + IPMI_SDR_RECORD_HEADER_LENGTH)))
         {
           char hdrbuf[IPMI_SDR_CACHE_DEBUG_BUFLEN];
 

@@ -471,7 +471,7 @@ ipmi_ssif_ctx_create (void)
   ctx->device_fd = -1;
   ctx->io_init = 0;
 
-  if ((ctx->semid = ipmi_mutex_init ()) < 0)
+  if ((ctx->semid = driver_mutex_init ()) < 0)
     {
       ERRNO_TRACE (errno);
       goto cleanup;
@@ -723,7 +723,7 @@ ipmi_ssif_write (ipmi_ssif_ctx_t ctx,
 
   if (!(ctx->flags & IPMI_SSIF_FLAGS_NONBLOCKING))
     {
-      if (ipmi_mutex_lock (ctx->semid) < 0)
+      if (driver_mutex_lock (ctx->semid) < 0)
         {
           SSIF_ERRNO_TO_SSIF_ERRNUM (ctx, errno);
           goto cleanup;
@@ -731,7 +731,7 @@ ipmi_ssif_write (ipmi_ssif_ctx_t ctx,
     }
   else
     {
-      if (ipmi_mutex_lock_interruptible (ctx->semid) < 0)
+      if (driver_mutex_lock_interruptible (ctx->semid) < 0)
         {
           SSIF_ERRNO_TO_SSIF_ERRNUM (ctx, errno);
           goto cleanup;
@@ -761,7 +761,7 @@ ipmi_ssif_write (ipmi_ssif_ctx_t ctx,
 
  cleanup:
   if (lock_flag)
-    ipmi_mutex_unlock (ctx->semid);
+    driver_mutex_unlock (ctx->semid);
   return (-1);
 }
 
@@ -803,7 +803,7 @@ ipmi_ssif_read (ipmi_ssif_ctx_t ctx,
   ctx->errnum = IPMI_SSIF_ERR_SUCCESS;
  cleanup:
   if (ctx && ctx->magic == IPMI_SSIF_CTX_MAGIC)
-    ipmi_mutex_unlock (ctx->semid);
+    driver_mutex_unlock (ctx->semid);
   return (rv);
 }
 

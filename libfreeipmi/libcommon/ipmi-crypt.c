@@ -40,7 +40,7 @@ GCRY_THREAD_OPTION_PTHREAD_IMPL;
 
 #include "freeipmi-portability.h"
 
-static int ipmi_crypt_initialized = 0;
+static int crypt_initialized = 0;
 
 #ifdef WITH_ENCRYPTION
 static int
@@ -55,7 +55,7 @@ _gpg_error_to_errno (gcry_error_t e)
 #endif /* !WITH_ENCRYPTION */
 
 int
-ipmi_crypt_init (void)
+crypt_init (void)
 {
 #ifdef WITH_ENCRYPTION
   gcry_error_t e;
@@ -88,7 +88,7 @@ ipmi_crypt_init (void)
       return (-1);
     }
 
-  ipmi_crypt_initialized++;
+  crypt_initialized++;
   return (0);
 #else /* !WITH_ENCRYPTION */
   /* Can run this init, but the actual encryption functions will fail */
@@ -97,14 +97,14 @@ ipmi_crypt_init (void)
 }
 
 int
-ipmi_crypt_hash (unsigned int hash_algorithm,
-                 unsigned int hash_flags,
-                 const void *key,
-                 unsigned int key_len,
-                 const void *hash_data,
-                 unsigned int hash_data_len,
-                 void *digest,
-                 unsigned int digest_len)
+crypt_hash (unsigned int hash_algorithm,
+	    unsigned int hash_flags,
+	    const void *key,
+	    unsigned int key_len,
+	    const void *hash_data,
+	    unsigned int hash_data_len,
+	    void *digest,
+	    unsigned int digest_len)
 {
 #ifdef WITH_ENCRYPTION
   gcry_md_hd_t h = NULL;
@@ -123,7 +123,7 @@ ipmi_crypt_hash (unsigned int hash_algorithm,
       return (-1);
     }
 
-  if (!ipmi_crypt_initialized)
+  if (!crypt_initialized)
     {
       SET_ERRNO (EINVAL);
       return (-1);
@@ -204,7 +204,7 @@ ipmi_crypt_hash (unsigned int hash_algorithm,
 }
 
 int
-ipmi_crypt_hash_digest_len (unsigned int hash_algorithm)
+crypt_hash_digest_len (unsigned int hash_algorithm)
 {
 #ifdef WITH_ENCRYPTION
   int gcry_md_algorithm;
@@ -215,7 +215,7 @@ ipmi_crypt_hash_digest_len (unsigned int hash_algorithm)
       return (-1);
     }
 
-  if (!ipmi_crypt_initialized)
+  if (!crypt_initialized)
     {
       SET_ERRNO (EINVAL);
       return (-1);
@@ -274,13 +274,13 @@ _cipher_crypt (unsigned int cipher_algorithm,
   else
     gcry_cipher_mode = GCRY_CIPHER_MODE_CBC;
 
-  if ((cipher_keylen = ipmi_crypt_cipher_key_len (cipher_algorithm)) < 0)
+  if ((cipher_keylen = crypt_cipher_key_len (cipher_algorithm)) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
     }
 
-  if ((cipher_blocklen = ipmi_crypt_cipher_block_len (cipher_algorithm)) < 0)
+  if ((cipher_blocklen = crypt_cipher_block_len (cipher_algorithm)) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -311,7 +311,7 @@ _cipher_crypt (unsigned int cipher_algorithm,
   if (key && key_len > expected_cipher_key_len)
     key_len = expected_cipher_key_len;
 
-  if (!ipmi_crypt_initialized)
+  if (!crypt_initialized)
     {
       SET_ERRNO (EINVAL);
       return (-1);
@@ -391,14 +391,14 @@ _cipher_crypt (unsigned int cipher_algorithm,
 #endif /* !WITH_ENCRYPTION */
 
 int
-ipmi_crypt_cipher_encrypt (unsigned int cipher_algorithm,
-                           unsigned int cipher_mode,
-                           const void *key,
-                           unsigned int key_len,
-                           const void *iv,
-                           unsigned int iv_len,
-                           void *data,
-                           unsigned int data_len)
+crypt_cipher_encrypt (unsigned int cipher_algorithm,
+		      unsigned int cipher_mode,
+		      const void *key,
+		      unsigned int key_len,
+		      const void *iv,
+		      unsigned int iv_len,
+		      void *data,
+		      unsigned int data_len)
 {
 #ifdef WITH_ENCRYPTION
   return (_cipher_crypt (cipher_algorithm,
@@ -417,14 +417,14 @@ ipmi_crypt_cipher_encrypt (unsigned int cipher_algorithm,
 }
 
 int
-ipmi_crypt_cipher_decrypt (unsigned int cipher_algorithm,
-                           unsigned int cipher_mode,
-                           const void *key,
-                           unsigned int key_len,
-                           const void *iv,
-                           unsigned int iv_len,
-                           void *data,
-                           unsigned int data_len)
+crypt_cipher_decrypt (unsigned int cipher_algorithm,
+		      unsigned int cipher_mode,
+		      const void *key,
+		      unsigned int key_len,
+		      const void *iv,
+		      unsigned int iv_len,
+		      void *data,
+		      unsigned int data_len)
 {
 #ifdef WITH_ENCRYPTION
   return (_cipher_crypt (cipher_algorithm,
@@ -444,7 +444,7 @@ ipmi_crypt_cipher_decrypt (unsigned int cipher_algorithm,
 
 #ifdef WITH_ENCRYPTION
 static int
-_ipmi_crypt_cipher_info (unsigned int cipher_algorithm, unsigned int cipher_info)
+_crypt_cipher_info (unsigned int cipher_algorithm, unsigned int cipher_info)
 {
   int gcry_cipher_algorithm, gcry_crypt_cipher_info_what;
   gcry_error_t e;
@@ -464,7 +464,7 @@ _ipmi_crypt_cipher_info (unsigned int cipher_algorithm, unsigned int cipher_info
   else
     gcry_crypt_cipher_info_what = GCRYCTL_GET_BLKLEN;
 
-  if (!ipmi_crypt_initialized)
+  if (!crypt_initialized)
     {
       SET_ERRNO (EINVAL);
       return (-1);
@@ -491,10 +491,10 @@ _ipmi_crypt_cipher_info (unsigned int cipher_algorithm, unsigned int cipher_info
 #endif /* !WITH_ENCRYPTION */
 
 int
-ipmi_crypt_cipher_key_len (unsigned int cipher_algorithm)
+crypt_cipher_key_len (unsigned int cipher_algorithm)
 {
 #ifdef WITH_ENCRYPTION
-  return (_ipmi_crypt_cipher_info (cipher_algorithm, IPMI_CRYPT_CIPHER_INFO_KEY_LENGTH));
+  return (_crypt_cipher_info (cipher_algorithm, IPMI_CRYPT_CIPHER_INFO_KEY_LENGTH));
 #else /* !WITH_ENCRYPTION */
   SET_ERRNO (EPERM);
   return (-1);
@@ -502,10 +502,10 @@ ipmi_crypt_cipher_key_len (unsigned int cipher_algorithm)
 }
 
 int
-ipmi_crypt_cipher_block_len (unsigned int cipher_algorithm)
+crypt_cipher_block_len (unsigned int cipher_algorithm)
 {
 #ifdef WITH_ENCRYPTION
-  return (_ipmi_crypt_cipher_info (cipher_algorithm, IPMI_CRYPT_CIPHER_INFO_BLOCK_LENGTH));
+  return (_crypt_cipher_info (cipher_algorithm, IPMI_CRYPT_CIPHER_INFO_BLOCK_LENGTH));
 #else /* !WITH_ENCRYPTION */
   SET_ERRNO (EPERM);
   return (-1);

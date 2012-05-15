@@ -35,19 +35,19 @@
 
 #define IPMI_SDR_CACHE_DEBUG_BUFLEN 256
 
-void ipmi_sdr_init_ctx (ipmi_sdr_ctx_t ctx);
+void sdr_init_ctx (ipmi_sdr_ctx_t ctx);
 
-int ipmi_sdr_info (ipmi_sdr_ctx_t ctx,
-		   ipmi_ctx_t ipmi_ctx,
-		   uint8_t *sdr_version,
-		   uint16_t *record_count,
-		   uint32_t *most_recent_addition_timestamp,
-		   uint32_t *most_recent_erase_timestamp);
+int sdr_info (ipmi_sdr_ctx_t ctx,
+	      ipmi_ctx_t ipmi_ctx,
+	      uint8_t *sdr_version,
+	      uint16_t *record_count,
+	      uint32_t *most_recent_addition_timestamp,
+	      uint32_t *most_recent_erase_timestamp);
 
-const char *ipmi_sdr_record_type_str (ipmi_sdr_ctx_t ctx,
-				      uint8_t *sdr_record,
-				      unsigned int sdr_record_len);
+const char *sdr_record_type_str (ipmi_sdr_ctx_t ctx,
+				 uint8_t *sdr_record,
+				 unsigned int sdr_record_len);
 
-void ipmi_sdr_check_read_status (ipmi_sdr_ctx_t ctx);
+void sdr_check_read_status (ipmi_sdr_ctx_t ctx);
 
 #endif /* IPMI_SDR_COMMON_H */

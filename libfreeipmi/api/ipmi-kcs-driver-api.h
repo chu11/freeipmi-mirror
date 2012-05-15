@@ -28,24 +28,24 @@
    highly recommended to use ipmi_kcs_cmd instead. Otherwise make sure
    you check the return status of write before calling read.
 */
-int ipmi_kcs_cmd_api (ipmi_ctx_t ctx,
-                      fiid_obj_t obj_cmd_rq,
-                      fiid_obj_t obj_cmd_rs);
+int api_kcs_cmd (ipmi_ctx_t ctx,
+		 fiid_obj_t obj_cmd_rq,
+		 fiid_obj_t obj_cmd_rs);
 
-int ipmi_kcs_cmd_api_ipmb (ipmi_ctx_t ctx,
-                           fiid_obj_t obj_cmd_rq,
-                           fiid_obj_t obj_cmd_rs);
+int api_kcs_cmd_ipmb (ipmi_ctx_t ctx,
+		      fiid_obj_t obj_cmd_rq,
+		      fiid_obj_t obj_cmd_rs);
 
-int ipmi_kcs_cmd_raw_api (ipmi_ctx_t ctx,
-                          const void *buf_rq,
-                          unsigned int buf_rq_len,
-                          void *buf_rs,
-                          unsigned int buf_rs_len);
+int api_kcs_cmd_raw (ipmi_ctx_t ctx,
+		     const void *buf_rq,
+		     unsigned int buf_rq_len,
+		     void *buf_rs,
+		     unsigned int buf_rs_len);
 
-int ipmi_kcs_cmd_raw_api_ipmb (ipmi_ctx_t ctx,
-			       const void *buf_rq,
-			       unsigned int buf_rq_len,
-			       void *buf_rs,
-			       unsigned int buf_rs_len);
+int api_kcs_cmd_raw_ipmb (ipmi_ctx_t ctx,
+			  const void *buf_rq,
+			  unsigned int buf_rq_len,
+			  void *buf_rs,
+			  unsigned int buf_rs_len);
 
 #endif /* IPMI_KCS_DRIVER_API_H */

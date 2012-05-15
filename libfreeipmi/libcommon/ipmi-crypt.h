@@ -55,7 +55,7 @@
 #define IPMI_CRYPT_AES_CBC_128_KEY_LENGTH        16
 #define IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH      16
 
-/* ipmi_crypt_init
+/* crypt_init
  *
  * Must be called first before anything else that may use crypt
  * functions.  In threaded programs, must be called before threads are
@@ -63,10 +63,10 @@
  *
  * Returns 0 on success, -1 on error.
  */
-int ipmi_crypt_init (void);
+int crypt_init (void);
 
 /* return length of data written into buffer on success, -1 on error */
-int ipmi_crypt_hash (unsigned int hash_algorithm,
+int crypt_hash (unsigned int hash_algorithm,
                      unsigned int hash_flags,
                      const void *key,
                      unsigned int key_len,
@@ -75,10 +75,10 @@ int ipmi_crypt_hash (unsigned int hash_algorithm,
                      void *digest,
                      unsigned int digest_len);
 
-int ipmi_crypt_hash_digest_len (unsigned int hash_algorithm);
+int crypt_hash_digest_len (unsigned int hash_algorithm);
 
 /* return length of data written into buffer on success, -1 on error */
-int ipmi_crypt_cipher_encrypt (unsigned int cipher_algorithm,
+int crypt_cipher_encrypt (unsigned int cipher_algorithm,
                                unsigned int cipher_mode,
                                const void *key,
                                unsigned int key_len,
@@ -88,7 +88,7 @@ int ipmi_crypt_cipher_encrypt (unsigned int cipher_algorithm,
                                unsigned int data_len);
 
 /* return length of data written into buffer on success, -1 on error */
-int ipmi_crypt_cipher_decrypt (unsigned int cipher_algorithm,
+int crypt_cipher_decrypt (unsigned int cipher_algorithm,
                                unsigned int cipher_mode,
                                const void *key,
                                unsigned int key_len,
@@ -97,8 +97,8 @@ int ipmi_crypt_cipher_decrypt (unsigned int cipher_algorithm,
                                void *data,
                                unsigned int data_len);
 
-int ipmi_crypt_cipher_key_len (unsigned int cipher_algorithm);
+int crypt_cipher_key_len (unsigned int cipher_algorithm);
 
-int ipmi_crypt_cipher_block_len (unsigned int cipher_algorithm);
+int crypt_cipher_block_len (unsigned int cipher_algorithm);
 
 #endif /* IPMI_CRYPT_H */

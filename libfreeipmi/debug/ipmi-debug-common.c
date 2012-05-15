@@ -73,7 +73,7 @@ _write (int fd, const void *buf, size_t n)
 }
 
 int
-ipmi_debug_dprintf (int fd, const char *fmt, ...)
+debug_dprintf (int fd, const char *fmt, ...)
 {
   va_list ap;
   int len, rv;
@@ -88,7 +88,7 @@ ipmi_debug_dprintf (int fd, const char *fmt, ...)
 }
 
 int
-ipmi_debug_set_prefix (char *buf, unsigned int buflen, const char *prefix)
+debug_set_prefix (char *buf, unsigned int buflen, const char *prefix)
 {
   assert (buf && buflen > 3);
 
@@ -106,7 +106,7 @@ ipmi_debug_set_prefix (char *buf, unsigned int buflen, const char *prefix)
 }
 
 int
-ipmi_debug_output_str (int fd, const char *prefix, const char *str)
+debug_output_str (int fd, const char *prefix, const char *str)
 {
   /* achu: Yeah, I know this is slow.  Figure out something better
    * later.
@@ -117,7 +117,7 @@ ipmi_debug_output_str (int fd, const char *prefix, const char *str)
 
       if (prefix)
         {
-          if (ipmi_debug_dprintf (fd, "%s", prefix) < 0)
+          if (debug_dprintf (fd, "%s", prefix) < 0)
             {
               ERRNO_TRACE (errno);
               return (-1);
@@ -128,14 +128,14 @@ ipmi_debug_output_str (int fd, const char *prefix, const char *str)
         {
           if (*ptr == '\n')
             {
-              if (ipmi_debug_dprintf (fd, "%c", *ptr++) < 0)
+              if (debug_dprintf (fd, "%c", *ptr++) < 0)
                 {
                   ERRNO_TRACE (errno);
                   return (-1);
                 }
               if (prefix)
                 {
-                  if (ipmi_debug_dprintf (fd, "%s", prefix) < 0)
+                  if (debug_dprintf (fd, "%s", prefix) < 0)
                     {
                       ERRNO_TRACE (errno);
                       return (-1);
@@ -144,7 +144,7 @@ ipmi_debug_output_str (int fd, const char *prefix, const char *str)
             }
           else
             {
-              if (ipmi_debug_dprintf (fd, "%c", *ptr++) < 0)
+              if (debug_dprintf (fd, "%c", *ptr++) < 0)
                 {
                   ERRNO_TRACE (errno);
                   return (-1);
@@ -152,7 +152,7 @@ ipmi_debug_output_str (int fd, const char *prefix, const char *str)
             }
         }
 
-      if (ipmi_debug_dprintf (fd, "\n") < 0)
+      if (debug_dprintf (fd, "\n") < 0)
         {
           ERRNO_TRACE (errno);
           return (-1);
@@ -163,7 +163,7 @@ ipmi_debug_output_str (int fd, const char *prefix, const char *str)
 }
 
 int
-ipmi_debug_output_byte_array (int fd, const char *prefix, const uint8_t *buf, unsigned int buf_len)
+debug_output_byte_array (int fd, const char *prefix, const uint8_t *buf, unsigned int buf_len)
 {
   unsigned int count = 0;
 
@@ -174,14 +174,14 @@ ipmi_debug_output_byte_array (int fd, const char *prefix, const uint8_t *buf, un
       int i = 0;
       if (prefix)
         {
-          if (ipmi_debug_dprintf (fd, "%s", prefix) < 0)
+          if (debug_dprintf (fd, "%s", prefix) < 0)
             {
               ERRNO_TRACE (errno);
               return (-1);
             }
         }
 
-      if (ipmi_debug_dprintf (fd, "[ ") < 0)
+      if (debug_dprintf (fd, "[ ") < 0)
         {
           ERRNO_TRACE (errno);
           return (-1);
@@ -189,7 +189,7 @@ ipmi_debug_output_byte_array (int fd, const char *prefix, const uint8_t *buf, un
 
       while (count < buf_len && i < IPMI_DEBUG_CHAR_PER_LINE)
         {
-          if (ipmi_debug_dprintf (fd, "%02Xh ", buf[count++]) < 0)
+          if (debug_dprintf (fd, "%02Xh ", buf[count++]) < 0)
             {
               ERRNO_TRACE (errno);
               return (-1);
@@ -197,7 +197,7 @@ ipmi_debug_output_byte_array (int fd, const char *prefix, const uint8_t *buf, un
           i++;
         }
 
-      if (ipmi_debug_dprintf (fd, "]\n") < 0)
+      if (debug_dprintf (fd, "]\n") < 0)
         {
           ERRNO_TRACE (errno);
           return (-1);
@@ -208,12 +208,12 @@ ipmi_debug_output_byte_array (int fd, const char *prefix, const uint8_t *buf, un
 }
 
 int
-ipmi_debug_dump_ipmb (int fd,
-                      const char *prefix,
-                      const uint8_t *ipmb_buf,
-                      unsigned int ipmb_buf_len,
-                      fiid_template_t tmpl_ipmb_msg_hdr,
-                      fiid_template_t tmpl_ipmb_cmd)
+debug_dump_ipmb (int fd,
+		 const char *prefix,
+		 const uint8_t *ipmb_buf,
+		 unsigned int ipmb_buf_len,
+		 fiid_template_t tmpl_ipmb_msg_hdr,
+		 fiid_template_t tmpl_ipmb_cmd)
 {
   char *ipmb_msg_hdr =
     "IPMB Message Header:\n"

@@ -713,12 +713,12 @@ ipmi_sdr_cache_create (ipmi_sdr_ctx_t ctx,
       goto cleanup;
     }
 
-  if (ipmi_sdr_info (ctx,
-		     ipmi_ctx,
-		     &sdr_version,
-		     &record_count,
-		     &most_recent_addition_timestamp,
-		     &most_recent_erase_timestamp) < 0)
+  if (sdr_info (ctx,
+		ipmi_ctx,
+		&sdr_version,
+		&record_count,
+		&most_recent_addition_timestamp,
+		&most_recent_erase_timestamp) < 0)
     goto cleanup;
 
   if (!record_count)
@@ -786,9 +786,9 @@ ipmi_sdr_cache_create (ipmi_sdr_ctx_t ctx,
             {
               const char *record_str;
 
-              if ((record_str = ipmi_sdr_record_type_str (ctx,
-							  record_buf,
-							  record_len)))
+              if ((record_str = sdr_record_type_str (ctx,
+						     record_buf,
+						     record_len)))
                 {
                   char hdrbuf[IPMI_SDR_CACHE_DEBUG_BUFLEN];
 
@@ -906,6 +906,6 @@ ipmi_sdr_cache_create (ipmi_sdr_ctx_t ctx,
       close (fd);
     }
   free (record_ids);
-  ipmi_sdr_init_ctx (ctx);
+  sdr_init_ctx (ctx);
   return (rv);
 }

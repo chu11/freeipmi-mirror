@@ -48,9 +48,9 @@ fiid_template_t tmpl_sunbmc_raw =
   };
 
 int
-ipmi_sunbmc_cmd_api (ipmi_ctx_t ctx,
-                     fiid_obj_t obj_cmd_rq,
-                     fiid_obj_t obj_cmd_rs)
+api_sunbmc_cmd (ipmi_ctx_t ctx,
+		fiid_obj_t obj_cmd_rq,
+		fiid_obj_t obj_cmd_rs)
 {
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC
@@ -73,11 +73,11 @@ ipmi_sunbmc_cmd_api (ipmi_ctx_t ctx,
 }
 
 int
-ipmi_sunbmc_cmd_raw_api (ipmi_ctx_t ctx,
-                         const void *buf_rq,
-                         unsigned int buf_rq_len,
-                         void *buf_rs,
-                         unsigned int buf_rs_len)
+api_sunbmc_cmd_raw (ipmi_ctx_t ctx,
+		    const void *buf_rq,
+		    unsigned int buf_rq_len,
+		    void *buf_rs,
+		    unsigned int buf_rs_len)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   fiid_obj_t obj_cmd_rs = NULL;

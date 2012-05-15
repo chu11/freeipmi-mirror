@@ -1,4 +1,11 @@
 2012-05-15  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/: Rename a large number of internal functions with
+	'ipmi' prefixes so they are not exported by libfreeipmi.
+	
+2012-05-15  Albert Chu <chu11@llnl.gov>
+
+	Merge movetolib branch
 	
        * libfreeipmi/include/freeipmi/sel/ipmi-sel.h,
        libfreeipmi/sel/ipmi-sel-string.c (_output_event_data1_event_data2_event_data3),

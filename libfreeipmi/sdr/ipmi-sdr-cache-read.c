@@ -176,12 +176,12 @@ ipmi_sdr_cache_open (ipmi_sdr_ctx_t ctx,
 
   if (ipmi_ctx)
     {
-      if (ipmi_sdr_info (ctx,
-			 ipmi_ctx,
-			 &sdr_version,
-			 &record_count,
-			 &most_recent_addition_timestamp,
-			 &most_recent_erase_timestamp) < 0)
+      if (sdr_info (ctx,
+		    ipmi_ctx,
+		    &sdr_version,
+		    &record_count,
+		    &most_recent_addition_timestamp,
+		    &most_recent_erase_timestamp) < 0)
 	goto cleanup;
 
       if (ctx->sdr_version != sdr_version
@@ -206,7 +206,7 @@ ipmi_sdr_cache_open (ipmi_sdr_ctx_t ctx,
   /* ignore potential error, cleanup path */
   if (ctx->sdr_cache)
     munmap ((void *)ctx->sdr_cache, ctx->file_size);
-  ipmi_sdr_init_ctx (ctx);
+  sdr_init_ctx (ctx);
   return (-1);
 }
 
@@ -638,7 +638,7 @@ ipmi_sdr_cache_record_read (ipmi_sdr_ctx_t ctx,
       return (-1);
     }
 
-  ipmi_sdr_check_read_status (ctx);
+  sdr_check_read_status (ctx);
 
   memcpy (buf, ctx->sdr_cache + ctx->current_offset, record_length + IPMI_SDR_RECORD_HEADER_LENGTH);
   ctx->errnum = IPMI_SDR_ERR_SUCCESS;
@@ -758,7 +758,7 @@ ipmi_sdr_cache_close (ipmi_sdr_ctx_t ctx)
   /* ignore potential error, cleanup path */
   if (ctx->sdr_cache)
     munmap ((void *)ctx->sdr_cache, ctx->file_size);
-  ipmi_sdr_init_ctx (ctx);
+  sdr_init_ctx (ctx);
 
   ctx->operation = IPMI_SDR_OPERATION_UNINITIALIZED;
   ctx->errnum = IPMI_SDR_ERR_SUCCESS;
