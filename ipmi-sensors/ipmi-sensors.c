@@ -54,6 +54,7 @@
 #include "tool-oem-common.h"
 #include "tool-sdr-cache-common.h"
 #include "tool-sensor-common.h"
+#include "tool-util-common.h"
 
 #define IPMI_SENSORS_MESSAGE_LENGTH 1024
 

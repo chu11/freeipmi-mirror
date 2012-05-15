@@ -39,7 +39,6 @@
 #include "freeipmi-portability.h"
 #include "parse-common.h"
 #include "pstdout.h"
-#include "tool-common.h"
 #include "tool-cmdline-common.h"
 
 error_t

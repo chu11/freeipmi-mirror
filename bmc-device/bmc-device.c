@@ -50,6 +50,7 @@
 #include "tool-cmdline-common.h"
 #include "tool-hostrange-common.h"
 #include "tool-sdr-cache-common.h"
+#include "tool-util-common.h"
 
 typedef int (*Bmc_device_system_info_first_set)(ipmi_ctx_t ctx,
 						uint8_t set_selector,

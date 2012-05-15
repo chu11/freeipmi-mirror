@@ -37,6 +37,7 @@
 #include "tool-common.h"
 #include "tool-cmdline-common.h"
 #include "tool-hostrange-common.h"
+#include "tool-util-common.h"
 
 static int
 _ipmi_pef_config (pstdout_state_t pstate,

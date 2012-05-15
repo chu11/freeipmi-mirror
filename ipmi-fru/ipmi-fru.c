@@ -49,6 +49,7 @@
 #include "tool-hostrange-common.h"
 #include "tool-oem-common.h"
 #include "tool-sdr-cache-common.h"
+#include "tool-util-common.h"
 
 #define IPMI_FRU_DEFAULT_DEVICE_ID_STRING "Default FRU Device"
 

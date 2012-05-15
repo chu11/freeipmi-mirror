@@ -16,6 +16,11 @@
 	struct hostrange_cmd_args pointer as argument instead of each
 	desired parameter.
 
+	* common/toolhostrange/tool-util-common.h,
+	common/toolhostrange/tool-util-common.c: New files, functions
+	split off from common/toolcommon/tool-common.h and
+	common/toolcommon/tool-common.c.
+
 	* common/daemonutil/, common/tooloem/, common/toolsdr/,
 	common/toolevent/, common/toolsensor/, common/toolhostrange/:
 	Merge into common/toolcommon/ library.

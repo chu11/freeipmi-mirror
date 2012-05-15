@@ -56,6 +56,7 @@
 #include "tool-common.h"
 #include "tool-cmdline-common.h"
 #include "tool-hostrange-common.h"
+#include "tool-util-common.h"
 
 #define IPMI_DCMI_ROLLING_AVERAGE_TIME_PERIOD_BUFLEN 4096
 

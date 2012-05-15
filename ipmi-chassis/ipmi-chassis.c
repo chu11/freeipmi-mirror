@@ -37,6 +37,7 @@
 #include "tool-common.h"
 #include "tool-cmdline-common.h"
 #include "tool-hostrange-common.h"
+#include "tool-util-common.h"
 
 static int
 get_chassis_capabilities (ipmi_chassis_state_data_t *state_data)

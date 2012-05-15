@@ -54,6 +54,7 @@
 #include "tool-oem-common.h"
 #include "tool-sdr-cache-common.h"
 #include "tool-sensor-common.h"
+#include "tool-util-common.h"
 
 #define IPMI_PET_GUID_HEADER            "GUID"
 #define IPMI_PET_MANUFACTURER_ID_HEADER "Manufacturer ID"

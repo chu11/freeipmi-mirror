@@ -51,6 +51,7 @@
 #include "tool-oem-common.h"
 #include "tool-sdr-cache-common.h"
 #include "tool-sensor-common.h"
+#include "tool-util-common.h"
 
 static int
 _display_sel_info (ipmi_sel_state_data_t *state_data)

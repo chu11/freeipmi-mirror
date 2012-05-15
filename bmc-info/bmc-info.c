@@ -38,6 +38,7 @@
 #include "tool-common.h"
 #include "tool-cmdline-common.h"
 #include "tool-hostrange-common.h"
+#include "tool-util-common.h"
 
 typedef struct channel_info
 {

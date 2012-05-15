@@ -41,6 +41,7 @@
 #include "tool-common.h"
 #include "tool-cmdline-common.h"
 #include "tool-hostrange-common.h"
+#include "tool-util-common.h"
 
 static int
 ipmi_raw_cmdline (ipmi_raw_state_data_t *state_data)

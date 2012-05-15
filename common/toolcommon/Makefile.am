@@ -32,4 +32,6 @@ libtoolcommon_la_SOURCES = \
 	tool-sdr-cache-common.c \
 	tool-sdr-cache-common.h \
 	tool-sensor-common.c \
-	tool-sensor-common.h
+	tool-sensor-common.h \
+	tool-util-common.c \
+	tool-util-common.h

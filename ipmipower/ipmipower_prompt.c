@@ -59,8 +59,8 @@
 #include "cbuf.h"
 #include "hostlist.h"
 #include "pstdout.h"
-#include "tool-common.h"
 #include "tool-cmdline-common.h"
+#include "tool-util-common.h"
 
 extern cbuf_t ttyout;
 extern cbuf_t ttyin;
