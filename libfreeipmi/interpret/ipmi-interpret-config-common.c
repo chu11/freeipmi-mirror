@@ -105,10 +105,10 @@ interpret_config_parse_strtoul (conffile_t cf,
 }
 
 int
-ipmi_interpret_config_parse_manufactuer_id_product_id (conffile_t cf,
-                                                       const char *str,
-                                                       struct ipmi_interpret_config_file_ids ids[IPMI_INTERPRET_CONFIG_FILE_MANUFACTURER_ID_MAX],
-                                                       unsigned int *ids_count)
+interpret_config_parse_manufactuer_id_product_id (conffile_t cf,
+						  const char *str,
+						  struct ipmi_interpret_config_file_ids ids[IPMI_INTERPRET_CONFIG_FILE_MANUFACTURER_ID_MAX],
+						  unsigned int *ids_count)
 {
   char *tmpstr = NULL;
   char *manufacturer_id_ptr;

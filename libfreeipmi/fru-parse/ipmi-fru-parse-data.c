@@ -758,9 +758,9 @@ ipmi_fru_parse_multirecord_power_supply_information (ipmi_fru_parse_ctx_t ctx,
       goto cleanup;
     }
 
-  if (ipmi_fru_parse_dump_obj (ctx,
-                               obj_record,
-                               "FRU Power Supply Information") < 0)
+  if (fru_parse_dump_obj (ctx,
+			  obj_record,
+			  "FRU Power Supply Information") < 0)
     goto cleanup;
 
   if (overall_capacity)
@@ -1068,9 +1068,9 @@ ipmi_fru_parse_multirecord_dc_output (ipmi_fru_parse_ctx_t ctx,
       goto cleanup;
     }
 
-  if (ipmi_fru_parse_dump_obj (ctx,
-                               obj_record,
-                               "FRU DC Output") < 0)
+  if (fru_parse_dump_obj (ctx,
+			  obj_record,
+			  "FRU DC Output") < 0)
     goto cleanup;
 
   if (output_number)
@@ -1224,9 +1224,9 @@ ipmi_fru_parse_multirecord_dc_load (ipmi_fru_parse_ctx_t ctx,
       goto cleanup;
     }
 
-  if (ipmi_fru_parse_dump_obj (ctx,
-                               obj_record,
-                               "FRU DC Load") < 0)
+  if (fru_parse_dump_obj (ctx,
+			  obj_record,
+			  "FRU DC Load") < 0)
     goto cleanup;
 
   if (output_number)
@@ -1375,9 +1375,9 @@ ipmi_fru_parse_multirecord_management_access_record (ipmi_fru_parse_ctx_t ctx,
       goto cleanup;
     }
   
-  if (ipmi_fru_parse_dump_obj (ctx,
-                               obj_record,
-                               "FRU Management Access Record") < 0)
+  if (fru_parse_dump_obj (ctx,
+			  obj_record,
+			  "FRU Management Access Record") < 0)
     goto cleanup;
 
   if (sub_record_type)
@@ -1468,9 +1468,9 @@ ipmi_fru_parse_multirecord_base_compatibility_record (ipmi_fru_parse_ctx_t ctx,
       goto cleanup;
     }
   
-  if (ipmi_fru_parse_dump_obj (ctx,
-                               obj_record,
-                               "FRU Base Compatibility Record") < 0)
+  if (fru_parse_dump_obj (ctx,
+			  obj_record,
+			  "FRU Base Compatibility Record") < 0)
     goto cleanup;
 
   if (manufacturer_id)
@@ -1597,9 +1597,9 @@ ipmi_fru_parse_multirecord_extended_compatibility_record (ipmi_fru_parse_ctx_t c
       goto cleanup;
     }
   
-  if (ipmi_fru_parse_dump_obj (ctx,
-                               obj_record,
-                               "FRU Extended Compatibility Record") < 0)
+  if (fru_parse_dump_obj (ctx,
+			  obj_record,
+			  "FRU Extended Compatibility Record") < 0)
     goto cleanup;
 
   if (manufacturer_id)
@@ -1723,9 +1723,9 @@ ipmi_fru_parse_multirecord_oem_record (ipmi_fru_parse_ctx_t ctx,
       goto cleanup;
     }
   
-  if (ipmi_fru_parse_dump_obj (ctx,
-                               obj_record,
-                               "FRU OEM Record") < 0)
+  if (fru_parse_dump_obj (ctx,
+			  obj_record,
+			  "FRU OEM Record") < 0)
     goto cleanup;
 
   if (manufacturer_id)
