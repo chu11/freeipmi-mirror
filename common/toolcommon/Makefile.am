@@ -24,7 +24,13 @@ libtoolcommon_la_SOURCES = \
 	tool-config-file-common.h \
 	tool-cmdline-common.c \
 	tool-cmdline-common.h \
+	tool-event-common.c \
+	tool-event-common.h \
 	tool-hostrange-common.c \
 	tool-hostrange-common.h \
 	tool-oem-common.c \
-	tool-oem-common.h
+	tool-oem-common.h \
+	tool-sdr-cache-common.c \
+	tool-sdr-cache-common.h \
+	tool-sensor-common.c \
+	tool-sensor-common.h

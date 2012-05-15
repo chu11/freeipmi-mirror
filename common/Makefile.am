@@ -6,7 +6,4 @@ SUBDIRS = \
 	parsecommon \
 	pingtool \
 	portability \
-	toolcommon \
-	toolevent \
-	toolsdr \
-	toolsensor
+	toolcommon

@@ -1,12 +1,17 @@
 2012-05-15  Albert Chu <chu11@llnl.gov>
 
-	* common/tooloem/, common/toolhostrange/: Merge into
-	common/toolcommon/ library.
+	* common/toolsdr/tool-sdr-cache-common.h,
+	common/toolsdr/tool-sdr-cache-common.c: Take struct sdr_cmd_args
+	pointer as argument instead of each desired parameter.
 
 	* common/toolcommon/tool-common.h,
 	common/toolcommon/tool-common.c (ipmi_open): Take pstdout_state_t
 	parameter and output errors instead of returning error string in
 	buffer.
+
+	* common/tooloem/, common/toolsdr/, common/toolevent/,
+	common/toolsensor/, common/toolhostrange/: Merge into
+	common/toolcommon/ library.
 
 	* Update tools appropriately for changes.
 	

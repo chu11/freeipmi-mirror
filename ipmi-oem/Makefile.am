@@ -2,8 +2,6 @@ sbin_PROGRAMS = ipmi-oem
 
 ipmi_oem_CPPFLAGS = \
 	-I$(top_srcdir)/common/toolcommon \
-	-I$(top_srcdir)/common/toolsdr \
-	-I$(top_srcdir)/common/toolsensor \
 	-I$(top_srcdir)/common/miscutil \
 	-I$(top_srcdir)/common/parsecommon \
 	-I$(top_srcdir)/common/portability \
@@ -13,8 +11,6 @@ ipmi_oem_CPPFLAGS = \
 
 ipmi_oem_LDADD = \
 	$(top_builddir)/common/toolcommon/libtoolcommon.la \
-	$(top_builddir)/common/toolsdr/libtoolsdr.la \
-	$(top_builddir)/common/toolsensor/libtoolsensor.la \
 	$(top_builddir)/common/miscutil/libmiscutil.la \
 	$(top_builddir)/common/parsecommon/libparsecommon.la \
 	$(top_builddir)/common/portability/libportability.la \
@@ -48,12 +44,6 @@ ipmi_oem_SOURCES = \
 	ipmi-oem-supermicro.h
 
 $(top_builddir)/common/toolcommon/libtoolcommon.la : force-dependency-check
-	@cd `dirname $@` && $(MAKE) `basename $@`
-
-$(top_builddir)/common/toolsdr/libtoolsdr.la : force-dependency-check
-	@cd `dirname $@` && $(MAKE) `basename $@`
-
-$(top_builddir)/common/toolsensor/libtoolsensor.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
 $(top_builddir)/common/miscutil/libmiscutil.la : force-dependency-check

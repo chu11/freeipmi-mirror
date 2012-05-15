@@ -41,9 +41,6 @@ AC_CONFIG_FILES([
         common/pingtool/Makefile
         common/portability/Makefile
         common/toolcommon/Makefile
-        common/toolevent/Makefile
-        common/toolsdr/Makefile
-        common/toolsensor/Makefile
         contrib/Makefile
         doc/Makefile 
         etc/Makefile
