@@ -1,5 +1,7 @@
 2012-05-15  Albert Chu <chu11@llnl.gov>
 
+	Merge branch toolcleanup
+
 	* common/toolsdr/tool-sdr-cache-common.h,
 	common/toolsdr/tool-sdr-cache-common.c: Take struct sdr_cmd_args
 	pointer as argument instead of each desired parameter.
