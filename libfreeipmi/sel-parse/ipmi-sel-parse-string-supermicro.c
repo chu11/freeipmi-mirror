@@ -74,7 +74,7 @@
  */
 int
 ipmi_sel_parse_output_supermicro_event_data1_class_oem (ipmi_sel_parse_ctx_t ctx,
-							struct ipmi_sel_parse_entry *sel_parse_entry,
+							struct ipmi_sel_entry *sel_entry,
 							uint8_t sel_record_type,
 							char *tmpbuf,
 							unsigned int tmpbuflen,
@@ -88,10 +88,10 @@ ipmi_sel_parse_output_supermicro_event_data1_class_oem (ipmi_sel_parse_ctx_t ctx
 	  || ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND
 	  || ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_PEPPERCON
 	  || ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_MAGNUM_TECHNOLOGIES);
-  assert (sel_parse_entry);
+  assert (sel_entry);
   assert (tmpbuf);
   assert (tmpbuflen);
-  assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
+  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
   assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (wlen);
   assert (system_event_record_data);

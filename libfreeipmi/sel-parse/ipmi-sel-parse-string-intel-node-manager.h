@@ -31,7 +31,7 @@
 #include "ipmi-sel-parse-common.h"
 
 int ipmi_sel_parse_output_intel_node_manager_sensor_name (ipmi_sel_parse_ctx_t ctx,
-							  struct ipmi_sel_parse_entry *sel_parse_entry,
+							  struct ipmi_sel_entry *sel_entry,
 							  uint8_t sel_record_type,
 							  char *buf,
 							  unsigned int buflen,
@@ -41,7 +41,7 @@ int ipmi_sel_parse_output_intel_node_manager_sensor_name (ipmi_sel_parse_ctx_t c
 							  int *oem_rv);
 
 int ipmi_sel_parse_output_intel_node_manager_event_data1_class_oem (ipmi_sel_parse_ctx_t ctx,
-                                                                    struct ipmi_sel_parse_entry *sel_parse_entry,
+                                                                    struct ipmi_sel_entry *sel_entry,
                                                                     uint8_t sel_record_type,
                                                                     char *tmpbuf,
                                                                     unsigned int tmpbuflen,
@@ -50,7 +50,7 @@ int ipmi_sel_parse_output_intel_node_manager_event_data1_class_oem (ipmi_sel_par
                                                                     struct ipmi_sel_system_event_record_data *system_event_record_data);
 
 int ipmi_sel_parse_output_intel_node_manager_event_data2_class_oem (ipmi_sel_parse_ctx_t ctx,
-                                                                    struct ipmi_sel_parse_entry *sel_parse_entry,
+                                                                    struct ipmi_sel_entry *sel_entry,
                                                                     uint8_t sel_record_type,
                                                                     char *tmpbuf,
                                                                     unsigned int tmpbuflen,
@@ -59,7 +59,7 @@ int ipmi_sel_parse_output_intel_node_manager_event_data2_class_oem (ipmi_sel_par
                                                                     struct ipmi_sel_system_event_record_data *system_event_record_data);
 
 int ipmi_sel_parse_output_intel_node_manager_event_data3_class_oem (ipmi_sel_parse_ctx_t ctx,
-                                                                    struct ipmi_sel_parse_entry *sel_parse_entry,
+                                                                    struct ipmi_sel_entry *sel_entry,
                                                                     uint8_t sel_record_type,
                                                                     char *tmpbuf,
                                                                     unsigned int tmpbuflen,

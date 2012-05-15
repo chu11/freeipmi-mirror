@@ -122,7 +122,7 @@ sel_parse_get_reservation_id (ipmi_sel_parse_ctx_t ctx,
 
 int
 sel_parse_get_record_header_info (ipmi_sel_parse_ctx_t ctx,
-                                  struct ipmi_sel_parse_entry *sel_parse_entry,
+                                  struct ipmi_sel_entry *sel_entry,
                                   uint16_t *record_id,
                                   uint8_t *record_type)
 {
@@ -132,9 +132,9 @@ sel_parse_get_record_header_info (ipmi_sel_parse_ctx_t ctx,
 
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
-  assert (sel_parse_entry);
+  assert (sel_entry);
 
-  if (sel_parse_entry->sel_event_record_len < IPMI_SEL_RECORD_HEADER_LENGTH)
+  if (sel_entry->sel_event_record_len < IPMI_SEL_RECORD_HEADER_LENGTH)
     {
       SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_INVALID_SEL_ENTRY);
       goto cleanup;
@@ -147,8 +147,8 @@ sel_parse_get_record_header_info (ipmi_sel_parse_ctx_t ctx,
     }
 
   if (fiid_obj_set_all (obj_sel_record_header,
-                        sel_parse_entry->sel_event_record,
-                        sel_parse_entry->sel_event_record_len) < 0)
+                        sel_entry->sel_event_record,
+                        sel_entry->sel_event_record_len) < 0)
     {
       SEL_FIID_OBJECT_ERROR_TO_SEL_ERRNUM (ctx, obj_sel_record_header);
       goto cleanup;
@@ -190,7 +190,7 @@ sel_parse_get_record_header_info (ipmi_sel_parse_ctx_t ctx,
 
 int
 sel_parse_get_timestamp (ipmi_sel_parse_ctx_t ctx,
-                         struct ipmi_sel_parse_entry *sel_parse_entry,
+                         struct ipmi_sel_entry *sel_entry,
                          uint32_t *timestamp)
 {
   fiid_obj_t obj_sel_record = NULL;
@@ -201,16 +201,16 @@ sel_parse_get_timestamp (ipmi_sel_parse_ctx_t ctx,
 
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
-  assert (sel_parse_entry);
+  assert (sel_entry);
 
-  if (sel_parse_entry->sel_event_record_len < IPMI_SEL_RECORD_LENGTH)
+  if (sel_entry->sel_event_record_len < IPMI_SEL_RECORD_LENGTH)
     {
       SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_INVALID_SEL_ENTRY);
       goto cleanup;
     }
 
   if (sel_parse_get_record_header_info (ctx,
-                                        sel_parse_entry,
+                                        sel_entry,
                                         NULL,
                                         &record_type) < 0)
     goto cleanup;
@@ -242,8 +242,8 @@ sel_parse_get_timestamp (ipmi_sel_parse_ctx_t ctx,
     }
 
   if (fiid_obj_set_all (obj_sel_record,
-                        sel_parse_entry->sel_event_record,
-                        sel_parse_entry->sel_event_record_len) < 0)
+                        sel_entry->sel_event_record,
+                        sel_entry->sel_event_record_len) < 0)
     {
       SEL_FIID_OBJECT_ERROR_TO_SEL_ERRNUM (ctx, obj_sel_record);
       goto cleanup;
@@ -269,7 +269,7 @@ sel_parse_get_timestamp (ipmi_sel_parse_ctx_t ctx,
 
 int
 sel_parse_get_manufacturer_id (ipmi_sel_parse_ctx_t ctx,
-                               struct ipmi_sel_parse_entry *sel_parse_entry,
+                               struct ipmi_sel_entry *sel_entry,
                                uint32_t *manufacturer_id)
 {
   fiid_obj_t obj_sel_record = NULL;
@@ -280,16 +280,16 @@ sel_parse_get_manufacturer_id (ipmi_sel_parse_ctx_t ctx,
 
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
-  assert (sel_parse_entry);
+  assert (sel_entry);
 
-  if (sel_parse_entry->sel_event_record_len < IPMI_SEL_RECORD_LENGTH)
+  if (sel_entry->sel_event_record_len < IPMI_SEL_RECORD_LENGTH)
     {
       SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_INVALID_SEL_ENTRY);
       goto cleanup;
     }
 
   if (sel_parse_get_record_header_info (ctx,
-                                        sel_parse_entry,
+                                        sel_entry,
                                         NULL,
                                         &record_type) < 0)
     goto cleanup;
@@ -309,8 +309,8 @@ sel_parse_get_manufacturer_id (ipmi_sel_parse_ctx_t ctx,
     }
 
   if (fiid_obj_set_all (obj_sel_record,
-                        sel_parse_entry->sel_event_record,
-                        sel_parse_entry->sel_event_record_len) < 0)
+                        sel_entry->sel_event_record,
+                        sel_entry->sel_event_record_len) < 0)
     {
       SEL_FIID_OBJECT_ERROR_TO_SEL_ERRNUM (ctx, obj_sel_record);
       goto cleanup;
@@ -336,7 +336,7 @@ sel_parse_get_manufacturer_id (ipmi_sel_parse_ctx_t ctx,
 
 int
 sel_parse_get_oem (ipmi_sel_parse_ctx_t ctx,
-                   struct ipmi_sel_parse_entry *sel_parse_entry,
+                   struct ipmi_sel_entry *sel_entry,
                    uint8_t *buf,
                    unsigned int buflen)
 {
@@ -348,18 +348,18 @@ sel_parse_get_oem (ipmi_sel_parse_ctx_t ctx,
 
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
-  assert (sel_parse_entry);
+  assert (sel_entry);
   assert (buf);
   assert (buflen);
 
-  if (sel_parse_entry->sel_event_record_len < IPMI_SEL_RECORD_LENGTH)
+  if (sel_entry->sel_event_record_len < IPMI_SEL_RECORD_LENGTH)
     {
       SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_INVALID_SEL_ENTRY);
       goto cleanup;
     }
 
   if (sel_parse_get_record_header_info (ctx,
-                                        sel_parse_entry,
+                                        sel_entry,
                                         NULL,
                                         &record_type) < 0)
     goto cleanup;
@@ -391,8 +391,8 @@ sel_parse_get_oem (ipmi_sel_parse_ctx_t ctx,
     }
 
   if (fiid_obj_set_all (obj_sel_record,
-                        sel_parse_entry->sel_event_record,
-                        sel_parse_entry->sel_event_record_len) < 0)
+                        sel_entry->sel_event_record,
+                        sel_entry->sel_event_record_len) < 0)
     {
       SEL_FIID_OBJECT_ERROR_TO_SEL_ERRNUM (ctx, obj_sel_record);
       goto cleanup;
@@ -415,7 +415,7 @@ sel_parse_get_oem (ipmi_sel_parse_ctx_t ctx,
 
 int
 sel_parse_get_system_event_record (ipmi_sel_parse_ctx_t ctx,
-                                   struct ipmi_sel_parse_entry *sel_parse_entry,
+                                   struct ipmi_sel_entry *sel_entry,
                                    struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   fiid_obj_t obj_sel_system_event_record = NULL;
@@ -428,17 +428,17 @@ sel_parse_get_system_event_record (ipmi_sel_parse_ctx_t ctx,
 
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
-  assert (sel_parse_entry);
+  assert (sel_entry);
   assert (system_event_record_data);
 
-  if (sel_parse_entry->sel_event_record_len < IPMI_SEL_RECORD_LENGTH)
+  if (sel_entry->sel_event_record_len < IPMI_SEL_RECORD_LENGTH)
     {
       SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_INVALID_SEL_ENTRY);
       goto cleanup;
     }
 
   if (sel_parse_get_record_header_info (ctx,
-                                        sel_parse_entry,
+                                        sel_entry,
                                         NULL,
                                         &record_type) < 0)
     goto cleanup;
@@ -458,8 +458,8 @@ sel_parse_get_system_event_record (ipmi_sel_parse_ctx_t ctx,
     }
 
   if (fiid_obj_set_all (obj_sel_system_event_record,
-                        sel_parse_entry->sel_event_record,
-                        sel_parse_entry->sel_event_record_len) < 0)
+                        sel_entry->sel_event_record,
+                        sel_entry->sel_event_record_len) < 0)
     {
       SEL_FIID_OBJECT_ERROR_TO_SEL_ERRNUM (ctx, obj_sel_system_event_record);
       goto cleanup;

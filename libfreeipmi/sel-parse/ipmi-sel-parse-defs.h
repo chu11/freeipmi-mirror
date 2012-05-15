@@ -49,9 +49,9 @@
   (IPMI_SEL_FLAGS_DEBUG_DUMP                   \
    | IPMI_SEL_FLAGS_ASSUME_SYTEM_EVENT_RECORDS)
 
-#define IPMI_SEL_PARSE_SEPARATOR_STRING     " | "
+#define IPMI_SEL_SEPARATOR_STRING     " | "
 
-#define IPMI_SEL_PARSE_STRING_MASK                  \
+#define IPMI_SEL_STRING_FLAGS_MASK                  \
   (IPMI_SEL_STRING_FLAGS_VERBOSE                    \
    | IPMI_SEL_STRING_FLAGS_IGNORE_UNAVAILABLE_FIELD \
    | IPMI_SEL_STRING_FLAGS_OUTPUT_NOT_AVAILABLE     \
@@ -61,7 +61,7 @@
    | IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA       \
    | IPMI_SEL_STRING_FLAGS_LEGACY)
 
-struct ipmi_sel_parse_entry {
+struct ipmi_sel_entry {
   uint8_t sel_event_record[IPMI_SEL_RECORD_LENGTH];
   unsigned int sel_event_record_len; /* should always be 16, but just in case */
 };
@@ -95,9 +95,9 @@ struct ipmi_sel_parse_ctx {
   int sel_entries_loaded;
   List sel_entries;
   ListIterator sel_entries_itr;
-  struct ipmi_sel_parse_entry *current_sel_entry;
+  struct ipmi_sel_entry *current_sel_entry;
 
-  struct ipmi_sel_parse_entry *callback_sel_entry;
+  struct ipmi_sel_entry *callback_sel_entry;
 
   struct ipmi_sel_oem_intel_node_manager intel_node_manager;
 };

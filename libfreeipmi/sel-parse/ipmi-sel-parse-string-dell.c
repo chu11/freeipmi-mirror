@@ -65,7 +65,7 @@
  */
 int
 ipmi_sel_parse_output_dell_event_data1_class_sensor_specific_discrete (ipmi_sel_parse_ctx_t ctx,
-                                                                       struct ipmi_sel_parse_entry *sel_parse_entry,
+                                                                       struct ipmi_sel_entry *sel_entry,
                                                                        uint8_t sel_record_type,
                                                                        char *tmpbuf,
                                                                        unsigned int tmpbuflen,
@@ -77,10 +77,10 @@ ipmi_sel_parse_output_dell_event_data1_class_sensor_specific_discrete (ipmi_sel_
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL);
-  assert (sel_parse_entry);
+  assert (sel_entry);
   assert (tmpbuf);
   assert (tmpbuflen);
-  assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
+  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
   assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (wlen);
   assert (system_event_record_data);
@@ -123,7 +123,7 @@ ipmi_sel_parse_output_dell_event_data1_class_sensor_specific_discrete (ipmi_sel_
  */
 int
 ipmi_sel_parse_output_dell_event_data1_class_oem (ipmi_sel_parse_ctx_t ctx,
-                                                  struct ipmi_sel_parse_entry *sel_parse_entry,
+                                                  struct ipmi_sel_entry *sel_entry,
                                                   uint8_t sel_record_type,
                                                   char *tmpbuf,
                                                   unsigned int tmpbuflen,
@@ -134,10 +134,10 @@ ipmi_sel_parse_output_dell_event_data1_class_oem (ipmi_sel_parse_ctx_t ctx,
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL);
-  assert (sel_parse_entry);
+  assert (sel_entry);
   assert (tmpbuf);
   assert (tmpbuflen);
-  assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
+  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
   assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (wlen);
   assert (system_event_record_data);
@@ -198,7 +198,7 @@ ipmi_sel_parse_output_dell_event_data1_class_oem (ipmi_sel_parse_ctx_t ctx,
  */
 int
 ipmi_sel_parse_output_dell_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
-						     struct ipmi_sel_parse_entry *sel_parse_entry,
+						     struct ipmi_sel_entry *sel_entry,
 						     uint8_t sel_record_type,
 						     char *tmpbuf,
 						     unsigned int tmpbuflen,
@@ -209,10 +209,10 @@ ipmi_sel_parse_output_dell_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL);
-  assert (sel_parse_entry);
+  assert (sel_entry);
   assert (tmpbuf);
   assert (tmpbuflen);
-  assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
+  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
   assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (wlen);
   assert (system_event_record_data);
@@ -551,7 +551,7 @@ ipmi_sel_parse_output_dell_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
  */
 int
 ipmi_sel_parse_output_dell_event_data2_class_oem (ipmi_sel_parse_ctx_t ctx,
-						  struct ipmi_sel_parse_entry *sel_parse_entry,
+						  struct ipmi_sel_entry *sel_entry,
 						  uint8_t sel_record_type,
 						  char *tmpbuf,
 						  unsigned int tmpbuflen,
@@ -562,10 +562,10 @@ ipmi_sel_parse_output_dell_event_data2_class_oem (ipmi_sel_parse_ctx_t ctx,
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL);
-  assert (sel_parse_entry);
+  assert (sel_entry);
   assert (tmpbuf);
   assert (tmpbuflen);
-  assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
+  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
   assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (wlen);
   assert (system_event_record_data);
@@ -611,7 +611,7 @@ ipmi_sel_parse_output_dell_event_data2_class_oem (ipmi_sel_parse_ctx_t ctx,
  */
 int
 ipmi_sel_parse_output_dell_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
-						     struct ipmi_sel_parse_entry *sel_parse_entry,
+						     struct ipmi_sel_entry *sel_entry,
 						     uint8_t sel_record_type,
 						     char *tmpbuf,
 						     unsigned int tmpbuflen,
@@ -622,10 +622,10 @@ ipmi_sel_parse_output_dell_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL);
-  assert (sel_parse_entry);
+  assert (sel_entry);
   assert (tmpbuf);
   assert (tmpbuflen);
-  assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
+  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
   assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (wlen);
   assert (system_event_record_data);
@@ -743,7 +743,7 @@ ipmi_sel_parse_output_dell_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
  */
 int
 ipmi_sel_parse_output_dell_event_data3_class_oem (ipmi_sel_parse_ctx_t ctx,
-						  struct ipmi_sel_parse_entry *sel_parse_entry,
+						  struct ipmi_sel_entry *sel_entry,
 						  uint8_t sel_record_type,
 						  char *tmpbuf,
 						  unsigned int tmpbuflen,
@@ -754,10 +754,10 @@ ipmi_sel_parse_output_dell_event_data3_class_oem (ipmi_sel_parse_ctx_t ctx,
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL);
-  assert (sel_parse_entry);
+  assert (sel_entry);
   assert (tmpbuf);
   assert (tmpbuflen);
-  assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
+  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
   assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (wlen);
   assert (system_event_record_data);
@@ -818,7 +818,7 @@ _dell_version_change_entity_string (uint8_t data_entity)
  */
 int
 ipmi_sel_parse_output_dell_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
-						    struct ipmi_sel_parse_entry *sel_parse_entry,
+						    struct ipmi_sel_entry *sel_entry,
 						    uint8_t sel_record_type,
 						    char *buf,
 						    unsigned int buflen,
@@ -830,10 +830,10 @@ ipmi_sel_parse_output_dell_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL);
-  assert (sel_parse_entry);
+  assert (sel_entry);
   assert (buf);
   assert (buflen);
-  assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
+  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
   assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (wlen);
   assert (system_event_record_data);

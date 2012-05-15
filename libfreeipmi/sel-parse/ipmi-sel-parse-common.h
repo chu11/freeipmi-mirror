@@ -53,25 +53,25 @@ int sel_parse_get_reservation_id (ipmi_sel_parse_ctx_t ctx,
                                   unsigned int *is_insufficient_privilege_level);
 
 int sel_parse_get_record_header_info (ipmi_sel_parse_ctx_t ctx,
-                                      struct ipmi_sel_parse_entry *sel_parse_entry,
+                                      struct ipmi_sel_entry *sel_entry,
                                       uint16_t *record_id,
                                       uint8_t *record_type);
 
 int sel_parse_get_timestamp (ipmi_sel_parse_ctx_t ctx,
-                             struct ipmi_sel_parse_entry *sel_parse_entry,
+                             struct ipmi_sel_entry *sel_entry,
                              uint32_t *timestamp);
 
 int sel_parse_get_manufacturer_id (ipmi_sel_parse_ctx_t ctx,
-                                   struct ipmi_sel_parse_entry *sel_parse_entry,
+                                   struct ipmi_sel_entry *sel_entry,
                                    uint32_t *manufacturer_id);
 
 int sel_parse_get_oem (ipmi_sel_parse_ctx_t ctx,
-                       struct ipmi_sel_parse_entry *sel_parse_entry,
+                       struct ipmi_sel_entry *sel_entry,
                        uint8_t *buf,
                        unsigned int buflen);
 
 int sel_parse_get_system_event_record (ipmi_sel_parse_ctx_t ctx,
-                                       struct ipmi_sel_parse_entry *sel_parse_entry,
+                                       struct ipmi_sel_entry *sel_entry,
                                        struct ipmi_sel_system_event_record_data *system_event_record_data);
 
 #endif /* IPMI_SEL_COMMON_H */
