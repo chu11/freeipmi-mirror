@@ -463,6 +463,7 @@ _find_sensor_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
 			   void *arg)
 {
   struct ipmi_oem_ibm_find_sensor_sdr_callback *sdr_callback_arg;
+  ipmi_oem_state_data_t *state_data;
   uint8_t sdr_sensor_number;
 
   assert (sdr_ctx);
@@ -471,27 +472,28 @@ _find_sensor_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
   assert (arg);
 
   sdr_callback_arg = (struct ipmi_oem_ibm_find_sensor_sdr_callback *)arg;
+  state_data = sdr_callback_arg->state_data;
 
   /* achu: xCAT only checks for Full records, I'll check compact too though */
   if (record_type != IPMI_SDR_FORMAT_FULL_SENSOR_RECORD
       && record_type != IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD)
     return (0);
 
-  if (ipmi_sdr_parse_sensor_number (sdr_callback_arg->state_data->sdr_ctx,
+  if (ipmi_sdr_parse_sensor_number (state_data->sdr_ctx,
 				    sdr_record,
 				    sdr_record_len,
 				    &sdr_sensor_number) < 0)
     {
-      pstdout_fprintf (sdr_callback_arg->state_data->pstate,
+      pstdout_fprintf (state_data->pstate,
 		       stderr,
 		       "ipmi_sdr_parse_sensor_number: %s\n",
-		       ipmi_sdr_ctx_errormsg (sdr_callback_arg->state_data->sdr_ctx));
+		       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
       return (-1);
     }
 
   if (sdr_callback_arg->sensor_number == sdr_sensor_number)
     {
-      if (ipmi_sdr_parse_id_string (sdr_callback_arg->state_data->sdr_ctx,
+      if (ipmi_sdr_parse_id_string (state_data->sdr_ctx,
 				    sdr_record,
 				    sdr_record_len,
 				    sdr_callback_arg->id_string,
@@ -585,6 +587,7 @@ _get_led_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
 		       void *arg)
 {
   struct ipmi_oem_ibm_get_led_sdr_callback *sdr_callback_arg;
+  ipmi_oem_state_data_t *state_data;
   uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
   uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
   int rs_len;
@@ -613,6 +616,7 @@ _get_led_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
   assert (arg);
 
   sdr_callback_arg = (struct ipmi_oem_ibm_get_led_sdr_callback *)arg;
+  state_data = sdr_callback_arg->state_data;
 
   /* IBM OEM
    *
@@ -647,29 +651,29 @@ _get_led_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
   if (record_type != IPMI_SDR_FORMAT_OEM_RECORD)
     return (0);
 
-  if (ipmi_sdr_parse_record_id_and_type (sdr_callback_arg->state_data->sdr_ctx,
+  if (ipmi_sdr_parse_record_id_and_type (state_data->sdr_ctx,
 					 sdr_record,
 					 sdr_record_len,
 					 &record_id,
 					 NULL) < 0)
     {
-      pstdout_fprintf (sdr_callback_arg->state_data->pstate,
+      pstdout_fprintf (state_data->pstate,
 		       stderr,
 		       "ipmi_sdr_parse_record_id_and_type: %s\n",
-		       ipmi_sdr_ctx_errormsg (sdr_callback_arg->state_data->sdr_ctx));
+		       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
       return (-1);
     }
 
-  if ((oem_data_buf_len = ipmi_sdr_parse_oem_data (sdr_callback_arg->state_data->sdr_ctx,
+  if ((oem_data_buf_len = ipmi_sdr_parse_oem_data (state_data->sdr_ctx,
 						   sdr_record,
 						   sdr_record_len,
 						   oem_data_buf,
 						   IPMI_SDR_MAX_RECORD_LENGTH)) < 0)
     {
-      pstdout_fprintf (sdr_callback_arg->state_data->pstate,
+      pstdout_fprintf (state_data->pstate,
 		       stderr,
 		       "ipmi_sdr_parse_oem_data: %s\n",
-		       ipmi_sdr_ctx_errormsg (sdr_callback_arg->state_data->sdr_ctx));
+		       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
       return (-1);
     }
       
@@ -704,7 +708,7 @@ _get_led_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
   bytes_rq[1] = led_id_ms;
   bytes_rq[2] = led_id_ls;
       
-  if ((rs_len = ipmi_cmd_raw (sdr_callback_arg->state_data->ipmi_ctx,
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
 			      0, /* lun */
 			      IPMI_NET_FN_OEM_IBM_LED_RQ, /* network function */
 			      bytes_rq, /* data */
@@ -712,10 +716,10 @@ _get_led_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
 			      bytes_rs,
 			      IPMI_OEM_MAX_BYTES)) < 0)
     {
-      pstdout_fprintf (sdr_callback_arg->state_data->pstate,
+      pstdout_fprintf (state_data->pstate,
 		       stderr,
 		       "ipmi_cmd_raw: %s\n",
-		       ipmi_ctx_errormsg (sdr_callback_arg->state_data->ipmi_ctx));
+		       ipmi_ctx_errormsg (state_data->ipmi_ctx));
       return (-1);
     }
       
@@ -726,7 +730,7 @@ _get_led_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
       bytes_rq[1] = led_id_ls;
       bytes_rq[2] = led_id_ms;
 
-      if ((rs_len = ipmi_cmd_raw (sdr_callback_arg->state_data->ipmi_ctx,
+      if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
 				  0, /* lun */
 				  IPMI_NET_FN_OEM_IBM_LED_RQ, /* network function */
 				  bytes_rq, /* data */
@@ -734,10 +738,10 @@ _get_led_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
 				  bytes_rs,
 				  IPMI_OEM_MAX_BYTES)) < 0)
 	{
-	  pstdout_fprintf (sdr_callback_arg->state_data->pstate,
+	  pstdout_fprintf (state_data->pstate,
 			   stderr,
 			   "ipmi_cmd_raw: %s\n",
-			   ipmi_ctx_errormsg (sdr_callback_arg->state_data->ipmi_ctx));
+			   ipmi_ctx_errormsg (state_data->ipmi_ctx));
 	  return (-1);
 	}
     }
@@ -752,7 +756,7 @@ _get_led_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
     available_led = 0;
   else
     {
-      if (ipmi_oem_check_response_and_completion_code (sdr_callback_arg->state_data,
+      if (ipmi_oem_check_response_and_completion_code (state_data,
 						       bytes_rs,
 						       rs_len,
 						       8,
@@ -773,7 +777,7 @@ _get_led_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
 		"%%-%ds | LED               | State    | LED Information\n",
 		sdr_callback_arg->column_width->record_id);
       
-      pstdout_printf (sdr_callback_arg->state_data->pstate,
+      pstdout_printf (state_data->pstate,
 		      fmt,
 		      SENSORS_HEADER_RECORD_ID_STR);
       
@@ -785,7 +789,7 @@ _get_led_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
   memset (id_string, '\0', IPMI_OEM_IBM_LED_ID_STRING_BUFLEN + 1);
   memset (led_info, '\0', IPMI_OEM_IBM_LED_INFO_BUFLEN + 1);
       
-  if (_get_led_name (sdr_callback_arg->state_data,
+  if (_get_led_name (state_data,
 		     sdr_callback_arg->oem_data,
 		     led_id,
 		     led_name,
@@ -815,7 +819,7 @@ _get_led_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
 	    }
 	  else if (led_active_type == IPMI_OEM_IBM_LED_ACTIVE_BY_LED)
 	    {
-	      if (_get_led_name (sdr_callback_arg->state_data,
+	      if (_get_led_name (state_data,
 				 sdr_callback_arg->oem_data,
 				 led_pointer_id,
 				 led_pointer_name,
@@ -835,7 +839,7 @@ _get_led_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
 	       * that this search is safe and won't result in an
 	       * incorrect output.
 	       */
-	      if (_find_sensor (sdr_callback_arg->state_data,
+	      if (_find_sensor (state_data,
 				sensor_number,
 				id_string,
 				IPMI_OEM_IBM_LED_ID_STRING_BUFLEN) < 0)
@@ -871,7 +875,7 @@ _get_led_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
 	    IPMI_OEM_IBM_LED_STATE_COLUMN_SIZE,
 	    led_info);
       
-  pstdout_printf (sdr_callback_arg->state_data->pstate,
+  pstdout_printf (state_data->pstate,
 		  fmt,
 		  record_id,
 		  led_name,

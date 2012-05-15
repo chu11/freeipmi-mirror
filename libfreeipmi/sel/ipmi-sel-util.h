@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef IPMI_SEL_PARSE_UTIL_H
-#define IPMI_SEL_PARSE_UTIL_H
+#ifndef IPMI_SEL_UTIL_H
+#define IPMI_SEL_UTIL_H
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -32,12 +32,12 @@
 
 #include "freeipmi/api/ipmi-api.h"
 #include "freeipmi/fiid/fiid.h"
-#include "freeipmi/sel-parse/ipmi-sel-parse.h"
+#include "freeipmi/sel/ipmi-sel.h"
 
-#include "ipmi-sel-parse-defs.h"
+#include "ipmi-sel-defs.h"
 
-void sel_parse_set_sel_parse_errnum_by_errno (ipmi_sel_parse_ctx_t ctx, int __errno);
+void sel_set_sel_errnum_by_errno (ipmi_sel_ctx_t ctx, int __errno);
 
-void sel_parse_set_sel_parse_errnum_by_fiid_object (ipmi_sel_parse_ctx_t ctx, fiid_obj_t obj);
+void sel_set_sel_errnum_by_fiid_object (ipmi_sel_ctx_t ctx, fiid_obj_t obj);
 
-#endif /* IPMI_SEL_PARSE_UTIL_H */
+#endif /* IPMI_SEL_UTIL_H */

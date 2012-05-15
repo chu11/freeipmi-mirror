@@ -32,22 +32,22 @@
 
 #include "libcommon/ipmi-trace.h"
 
-#define INTERPRET_SET_ERRNUM(__ctx, __errnum)                                                                       \
-  do {                                                                                                              \
-    (__ctx)->errnum = (__errnum);                                                                                   \
-    TRACE_MSG_OUT (ipmi_interpret_ctx_errormsg ((__ctx)), (__errnum));                                              \
+#define INTERPRET_SET_ERRNUM(__ctx, __errnum)                                                           \
+  do {                                                                                                  \
+    (__ctx)->errnum = (__errnum);                                                                       \
+    TRACE_MSG_OUT (ipmi_interpret_ctx_errormsg ((__ctx)), (__errnum));                                  \
   } while (0)
 
-#define INTERPRET_ERRNO_TO_INTERPRET_ERRNUM(__ctx, __errno)                                                         \
-  do {                                                                                                              \
-    interpret_set_interpret_errnum_by_errno ((__ctx), (__errno));                                                   \
-    TRACE_ERRNO_OUT ((__errno));                                                                                    \
+#define INTERPRET_ERRNO_TO_INTERPRET_ERRNUM(__ctx, __errno)                                             \
+  do {                                                                                                  \
+    interpret_set_interpret_errnum_by_errno ((__ctx), (__errno));                                       \
+    TRACE_ERRNO_OUT ((__errno));                                                                        \
   } while (0)
 
-#define INTERPRET_SEL_PARSE_CTX_ERROR_TO_INTERPRET_ERRNUM(__ctx, __sel_parse_ctx)                                   \
-  do {                                                                                                              \
-    interpret_set_interpret_errnum_by_sel_parse_ctx ((__ctx), (__sel_parse_ctx));                                   \
-    TRACE_MSG_OUT (ipmi_sel_parse_ctx_errormsg ((__sel_parse_ctx)), ipmi_sel_parse_ctx_errnum ((__sel_parse_ctx))); \
+#define INTERPRET_SEL_PARSE_CTX_ERROR_TO_INTERPRET_ERRNUM(__ctx, __sel_parse_ctx)                       \
+  do {                                                                                                  \
+    interpret_set_interpret_errnum_by_sel_parse_ctx ((__ctx), (__sel_parse_ctx));                       \
+    TRACE_MSG_OUT (ipmi_sel_ctx_errormsg ((__sel_parse_ctx)), ipmi_sel_ctx_errnum ((__sel_parse_ctx))); \
   } while (0)
 
 #endif /* IPMI_INTERPRET_TRACE_H */

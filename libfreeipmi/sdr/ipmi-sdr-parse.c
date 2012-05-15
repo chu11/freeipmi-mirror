@@ -3064,9 +3064,9 @@ ipmi_sdr_parse_tolerance (ipmi_sdr_ctx_t ctx,
 
 int
 ipmi_sdr_parse_accuracy (ipmi_sdr_ctx_t ctx,
-                          const void *sdr_record,
-                          unsigned int sdr_record_len,
-                          double **accuracy)
+			 const void *sdr_record,
+			 unsigned int sdr_record_len,
+			 double **accuracy)
 {
   fiid_obj_t obj_sdr_record = NULL;
   uint32_t acceptable_record_types;

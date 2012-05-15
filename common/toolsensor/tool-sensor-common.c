@@ -678,6 +678,7 @@ _store_entity_id_count (ipmi_sdr_ctx_t sdr_ctx,
 			void *arg)
 {
   struct entity_id_count_sdr_callback *sdr_callback_arg;
+  struct sensor_entity_id_counts *entity_id_counts;
   uint8_t entity_id, entity_instance, entity_instance_type;
 
   assert (sdr_ctx);
@@ -686,6 +687,7 @@ _store_entity_id_count (ipmi_sdr_ctx_t sdr_ctx,
   assert (arg);
 
   sdr_callback_arg = (struct entity_id_count_sdr_callback *)arg;
+  entity_id_counts = sdr_callback_arg->entity_id_counts;
 
   if (record_type != IPMI_SDR_FORMAT_FULL_SENSOR_RECORD
       && record_type != IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD
@@ -709,11 +711,11 @@ _store_entity_id_count (ipmi_sdr_ctx_t sdr_ctx,
     }
 
   /* there's now atleast one of this entity id */
-  if (!sdr_callback_arg->entity_id_counts->count[entity_id])
-    sdr_callback_arg->entity_id_counts->count[entity_id] = 1;
+  if (!entity_id_counts->count[entity_id])
+    entity_id_counts->count[entity_id] = 1;
 
-  if (entity_instance > sdr_callback_arg->entity_id_counts->count[entity_id])
-    sdr_callback_arg->entity_id_counts->count[entity_id] = entity_instance;
+  if (entity_instance > entity_id_counts->count[entity_id])
+    entity_id_counts->count[entity_id] = entity_instance;
 
   /* special case if sensor sharing is involved */
   if (record_type == IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD
@@ -746,8 +748,8 @@ _store_entity_id_count (ipmi_sdr_ctx_t sdr_ctx,
             {
               entity_instance += (i + 1);
               
-              if (entity_instance > sdr_callback_arg->entity_id_counts->count[entity_id])
-                sdr_callback_arg->entity_id_counts->count[entity_id] = entity_instance;
+              if (entity_instance > entity_id_counts->count[entity_id])
+                entity_id_counts->count[entity_id] = entity_instance;
             }
         }
     }

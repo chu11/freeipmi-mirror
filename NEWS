@@ -62,6 +62,10 @@ o In libfreeipmi, add Cipher Suite 18 and 19 information, but do not
   support.
 o In libfreeipmi, support reservation-id registration and clearing in
   the sel-parse sub-library.
+o In libfreeipmi, sel-parse sub-library now supports a "no sel entries
+  loaded" error.
+o In libfreeipmi, condense sel-parse record parsing functions.  One
+  set of functions now handles the previous case of both sets.
 o In libfreeipmi, add missing macro definitions.
 o In libipmimonitoring, support Cipher Suite ID 15, 16, and 17.
 o In libfreeipmi, libipmiconsole, libipmimonitoring, support ability
@@ -76,6 +80,8 @@ o In libfreeipmi, KCS driver now sleeps a small amount between IPMB
   retries to avoid spinning.
 o In libfreeipmi, create new 'sdr' sub-library which is merger of the
   earlier 'sdr-cache' and 'sdr-parse' libraries.
+o In libfreeipmi, create new 'sel' sub-library which replaces the
+  'sel-parse' library.
 
 Misc
 ----
