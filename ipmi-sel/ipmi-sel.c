@@ -670,6 +670,8 @@ _legacy_normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
   memset (outbuf, '\0', EVENT_OUTPUT_BUFLEN+1);
   if ((outbuf_len = ipmi_sel_parse_read_record_string (state_data->sel_parse_ctx,
                                                        fmt,
+						       NULL,
+						       0,
                                                        outbuf,
                                                        EVENT_OUTPUT_BUFLEN,
                                                        flags)) < 0)
@@ -705,6 +707,8 @@ _normal_output_record_id (ipmi_sel_state_data_t *state_data, unsigned int flags)
   memset (outbuf, '\0', EVENT_OUTPUT_BUFLEN+1);
   if ((outbuf_len = ipmi_sel_parse_read_record_string (state_data->sel_parse_ctx,
                                                        "%i",
+						       NULL,
+						       0,
                                                        outbuf,
                                                        EVENT_OUTPUT_BUFLEN,
                                                        flags)) < 0)
@@ -749,6 +753,8 @@ _normal_output_date (ipmi_sel_state_data_t *state_data, unsigned int flags)
   memset (outbuf, '\0', EVENT_OUTPUT_BUFLEN+1);
   if ((outbuf_len = ipmi_sel_parse_read_record_string (state_data->sel_parse_ctx,
                                                        "%d",
+						       NULL,
+						       0,
                                                        outbuf,
                                                        EVENT_OUTPUT_BUFLEN,
                                                        flags)) < 0)
@@ -976,6 +982,8 @@ _output_oem_event_strings (ipmi_sel_state_data_t *state_data,
 
   if ((ret = ipmi_sel_parse_read_record_string (state_data->sel_parse_ctx,
                                                 "%O",
+						NULL,
+						0,
                                                 outbuf,
                                                 outbuflen,
                                                 flags)) < 0)
@@ -1071,6 +1079,8 @@ _normal_output_oem_data (ipmi_sel_state_data_t *state_data,
         {
           if ((outbuf_len = ipmi_sel_parse_read_record_string (state_data->sel_parse_ctx,
                                                                "%m ; %o",
+							       NULL,
+							       0,
                                                                outbuf,
                                                                EVENT_OUTPUT_BUFLEN,
                                                                flags)) < 0)
@@ -1084,6 +1094,8 @@ _normal_output_oem_data (ipmi_sel_state_data_t *state_data,
         {
           if ((outbuf_len = ipmi_sel_parse_read_record_string (state_data->sel_parse_ctx,
                                                                "%o",
+							       NULL,
+							       0,
                                                                outbuf,
                                                                EVENT_OUTPUT_BUFLEN,
                                                                flags)) < 0)
@@ -1438,6 +1450,8 @@ _sel_parse_callback (ipmi_sel_parse_ctx_t ctx, void *callback_data)
       uint16_t record_id;
 
       if (ipmi_sel_parse_read_record_id (state_data->sel_parse_ctx,
+					 NULL,
+					 0,
                                          &record_id) < 0)
         {
           if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_read_record_id") < 0)
@@ -1471,6 +1485,8 @@ _sel_parse_callback (ipmi_sel_parse_ctx_t ctx, void *callback_data)
       int flag;
 
       if (ipmi_sel_parse_read_sensor_type (state_data->sel_parse_ctx,
+					   NULL,
+					   0,
                                            &sensor_type) < 0)
         {
           if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_read_record_type") < 0)
@@ -1504,6 +1520,8 @@ _sel_parse_callback (ipmi_sel_parse_ctx_t ctx, void *callback_data)
     }
 
   if (ipmi_sel_parse_read_record_type (state_data->sel_parse_ctx,
+				       NULL,
+				       0,
                                        &record_type) < 0)
     {
       if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_read_record_type") < 0)
@@ -1542,6 +1560,8 @@ _sel_parse_callback (ipmi_sel_parse_ctx_t ctx, void *callback_data)
       uint32_t timestamp;
       
       if (ipmi_sel_parse_read_timestamp (state_data->sel_parse_ctx,
+					 NULL,
+					 0,
                                          &timestamp) < 0)
         {
           if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_read_timestamp") < 0)
@@ -1616,6 +1636,8 @@ _sel_record_id_callback (ipmi_sel_parse_ctx_t ctx, void *callback_data)
   memset (outbuf, '\0', EVENT_OUTPUT_BUFLEN+1);
   if ((outbuf_len = ipmi_sel_parse_read_record_string (state_data->sel_parse_ctx,
                                                        "%i",
+						       NULL,
+						       0,
                                                        outbuf,
                                                        EVENT_OUTPUT_BUFLEN,
                                                        0)) < 0)
@@ -1645,7 +1667,10 @@ _sel_record_id_first_callback (ipmi_sel_parse_ctx_t ctx, void *callback_data)
 
   state_data = (ipmi_sel_state_data_t *)callback_data;
 
-  if (ipmi_sel_parse_read_record_id (ctx, &state_data->first_record_id) < 0)
+  if (ipmi_sel_parse_read_record_id (ctx,
+				     NULL,
+				     0,
+				     &state_data->first_record_id) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -1670,7 +1695,10 @@ _sel_record_id_last_callback (ipmi_sel_parse_ctx_t ctx, void *callback_data)
 
   state_data = (ipmi_sel_state_data_t *)callback_data;
 
-  if (ipmi_sel_parse_read_record_id (ctx, &state_data->last_record_id) < 0)
+  if (ipmi_sel_parse_read_record_id (ctx,
+				     NULL,
+				     0,
+				     &state_data->last_record_id) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,

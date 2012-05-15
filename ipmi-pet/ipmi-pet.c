@@ -763,13 +763,13 @@ _output_date (ipmi_pet_state_data_t *state_data,
   assert (sel_record_len);
 
   memset (outbuf, '\0', EVENT_OUTPUT_BUFLEN+1);
-  if ((outbuf_len = ipmi_sel_parse_format_record_string (state_data->sel_parse_ctx,
-							 "%d",
-							 sel_record,
-							 sel_record_len,
-							 outbuf,
-							 EVENT_OUTPUT_BUFLEN,
-							 flags)) < 0)
+  if ((outbuf_len = ipmi_sel_parse_read_record_string (state_data->sel_parse_ctx,
+						       "%d",
+						       sel_record,
+						       sel_record_len,
+						       outbuf,
+						       EVENT_OUTPUT_BUFLEN,
+						       flags)) < 0)
     {
       if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_format_record_string") < 0)
         return (-1);

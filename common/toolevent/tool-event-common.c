@@ -83,39 +83,20 @@ _sel_parse_record_string (pstdout_state_t pstate,
   assert (outbuf_len);
   
   memset (outbuf, '\0', EVENT_OUTPUT_BUFLEN+1);
-  if (sel_record && sel_record_len)
+  if ((*outbuf_len = ipmi_sel_parse_read_record_string (sel_parse_ctx,
+							fmt,
+							sel_record,
+							sel_record_len,
+							outbuf,
+							EVENT_OUTPUT_BUFLEN,
+							flags)) < 0)
     {
-      if ((*outbuf_len = ipmi_sel_parse_format_record_string (sel_parse_ctx,
-							      fmt,
-							      sel_record,
-							      sel_record_len,
-							      outbuf,
-							      EVENT_OUTPUT_BUFLEN,
-							      flags)) < 0)
-	{
-	  if (_sel_parse_err_handle (pstate,
-				     sel_parse_ctx,
-				     debug,
-				     "ipmi_sel_parse_format_record_string") < 0)
-	    return (-1);
-	  return (0);
-	}
-    }
-  else
-    {
-      if ((*outbuf_len = ipmi_sel_parse_read_record_string (sel_parse_ctx,
-							    fmt,
-							    outbuf,
-							    EVENT_OUTPUT_BUFLEN,
-							    flags)) < 0)
-	{
-	  if (_sel_parse_err_handle (pstate,
-				     sel_parse_ctx,
-				     debug,
-				     "ipmi_sel_parse_read_record_string") < 0)
-	    return (-1);
-	  return (0);
-	}
+      if (_sel_parse_err_handle (pstate,
+				 sel_parse_ctx,
+				 debug,
+				 "ipmi_sel_parse_format_record_string") < 0)
+	return (-1);
+      return (0);
     }
 
   return (1);
@@ -136,50 +117,19 @@ event_data_info (pstdout_state_t pstate,
 		 uint8_t *event_data2,
 		 uint8_t *event_data3)
 {
-  uint8_t sel_record_buf[IPMI_SEL_RECORD_MAX_RECORD_LENGTH];
-  int sel_record_buf_len;
-  uint8_t *sel_record_ptr;
-  unsigned int sel_record_ptr_len;
-  
   assert (sel_parse_ctx);
 
-  if (!sel_record || !sel_record_len)
-    {
-      if ((sel_record_buf_len = ipmi_sel_parse_read_record (sel_parse_ctx,
-							    sel_record_buf,
-							    IPMI_SEL_RECORD_MAX_RECORD_LENGTH)) < 0)
-	{
-	  if (_sel_parse_err_handle (pstate,
-				     sel_parse_ctx,
-				     debug,
-				     "ipmi_sel_parse_read_record") < 0)
-	    return (-1);
-	  return (0);
-	}
-      
-      if (!sel_record_buf_len)
-	return (0);
-      
-      sel_record_ptr = sel_record_buf;
-      sel_record_ptr_len = sel_record_buf_len;
-    }
-  else
-    {
-      sel_record_ptr = sel_record;
-      sel_record_ptr_len = sel_record_len;
-    }
-  
   if (generator_id)
     {
-      if (ipmi_sel_parse_record_generator_id (sel_parse_ctx,
-					      sel_record_ptr,
-					      sel_record_ptr_len,
-					      generator_id) < 0)
+      if (ipmi_sel_parse_read_generator_id (sel_parse_ctx,
+					    sel_record,
+					    sel_record_len,
+					    generator_id) < 0)
 	{
 	  if (_sel_parse_err_handle (pstate,
 				     sel_parse_ctx,
 				     debug,
-				     "ipmi_sel_parse_record_generator_id") < 0)
+				     "ipmi_sel_parse_read_generator_id") < 0)
 	    return (-1);
 	  return (0);
 	}
@@ -187,15 +137,15 @@ event_data_info (pstdout_state_t pstate,
   
   if (sensor_type)
     {
-      if (ipmi_sel_parse_record_sensor_type (sel_parse_ctx,
-					     sel_record_ptr,
-					     sel_record_ptr_len,
-					     sensor_type) < 0)
+      if (ipmi_sel_parse_read_sensor_type (sel_parse_ctx,
+					   sel_record,
+					   sel_record_len,
+					   sensor_type) < 0)
 	{
 	  if (_sel_parse_err_handle (pstate,
 				     sel_parse_ctx,
 				     debug,
-				     "ipmi_sel_parse_record_sensor_type") < 0)
+				     "ipmi_sel_parse_read_sensor_type") < 0)
 	    return (-1);
 	  return (0);
 	}
@@ -203,15 +153,15 @@ event_data_info (pstdout_state_t pstate,
   
   if (sensor_number)
     {
-      if (ipmi_sel_parse_record_sensor_number (sel_parse_ctx,
-					       sel_record_ptr,
-					       sel_record_ptr_len,
-					       sensor_number) < 0)
+      if (ipmi_sel_parse_read_sensor_number (sel_parse_ctx,
+					     sel_record,
+					     sel_record_len,
+					     sensor_number) < 0)
 	{
 	  if (_sel_parse_err_handle (pstate,
 				     sel_parse_ctx,
 				     debug,
-				     "ipmi_sel_parse_record_sensor_number") < 0)
+				     "ipmi_sel_parse_read_sensor_number") < 0)
 	    return (-1);
 	  return (0);
 	}
@@ -219,15 +169,15 @@ event_data_info (pstdout_state_t pstate,
 
   if (event_type_code)
     {
-      if (ipmi_sel_parse_record_event_type_code (sel_parse_ctx,
-						 sel_record_ptr,
-						 sel_record_ptr_len,
-						 event_type_code) < 0)
+      if (ipmi_sel_parse_read_event_type_code (sel_parse_ctx,
+					       sel_record,
+					       sel_record_len,
+					       event_type_code) < 0)
 	{
 	  if (_sel_parse_err_handle (pstate,
 				     sel_parse_ctx,
 				     debug,
-				     "ipmi_sel_parse_record_event_type_code") < 0)
+				     "ipmi_sel_parse_read_event_type_code") < 0)
 	    return (-1);
 	  return (0);
 	}
@@ -235,15 +185,15 @@ event_data_info (pstdout_state_t pstate,
 
   if (event_data2_flag)
     {
-      if (ipmi_sel_parse_record_event_data1_event_data2_flag (sel_parse_ctx,
-							      sel_record_ptr,
-							      sel_record_ptr_len,
-							      event_data2_flag) < 0)
+      if (ipmi_sel_parse_read_event_data1_event_data2_flag (sel_parse_ctx,
+							    sel_record,
+							    sel_record_len,
+							    event_data2_flag) < 0)
 	{
 	  if (_sel_parse_err_handle (pstate,
 				     sel_parse_ctx,
 				     debug,
-				     "ipmi_sel_parse_record_event_data1_event_data2_flag") < 0)
+				     "ipmi_sel_parse_read_event_data1_event_data2_flag") < 0)
 	    return (-1);
 	  return (0);
 	}
@@ -251,15 +201,15 @@ event_data_info (pstdout_state_t pstate,
 
   if (event_data3_flag)
     {
-      if (ipmi_sel_parse_record_event_data1_event_data3_flag (sel_parse_ctx,
-							      sel_record_ptr,
-							      sel_record_ptr_len,
-							      event_data3_flag) < 0)
+      if (ipmi_sel_parse_read_event_data1_event_data3_flag (sel_parse_ctx,
+							    sel_record,
+							    sel_record_len,
+							    event_data3_flag) < 0)
 	{
 	  if (_sel_parse_err_handle (pstate,
 				     sel_parse_ctx,
 				     debug,
-				     "ipmi_sel_parse_record_event_data1_event_data3_flag") < 0)
+				     "ipmi_sel_parse_read_event_data1_event_data3_flag") < 0)
 	    return (-1);
 	  return (0);
 	}
@@ -267,15 +217,15 @@ event_data_info (pstdout_state_t pstate,
 
   if (event_data2)
     {
-      if (ipmi_sel_parse_record_event_data2 (sel_parse_ctx,
-					     sel_record_ptr,
-					     sel_record_ptr_len,
-					     event_data2) < 0)
+      if (ipmi_sel_parse_read_event_data2 (sel_parse_ctx,
+					   sel_record,
+					   sel_record_len,
+					   event_data2) < 0)
 	{
 	  if (_sel_parse_err_handle (pstate,
 				     sel_parse_ctx,
 				     debug,
-				     "ipmi_sel_parse_record_event_data2") < 0)
+				     "ipmi_sel_parse_read_event_data2") < 0)
 	    return (-1);
 	  return (0);
 	}
@@ -283,15 +233,15 @@ event_data_info (pstdout_state_t pstate,
 
   if (event_data3)
     {
-      if (ipmi_sel_parse_record_event_data3 (sel_parse_ctx,
-					     sel_record_ptr,
-					     sel_record_ptr_len,
-					     event_data3) < 0)
+      if (ipmi_sel_parse_read_event_data3 (sel_parse_ctx,
+					   sel_record,
+					   sel_record_len,
+					   event_data3) < 0)
 	{
 	  if (_sel_parse_err_handle (pstate,
 				     sel_parse_ctx,
 				     debug,
-				     "ipmi_sel_parse_record_event_data3") < 0)
+				     "ipmi_sel_parse_read_event_data3") < 0)
 	    return (-1);
 	  return (0);
 	}

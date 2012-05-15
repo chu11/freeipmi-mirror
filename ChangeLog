@@ -13,7 +13,8 @@
 	Change to _get_previous_state_or_severity and put in
 	libfreeipmi/sel-parse/ipmi-sel-parse-string.c.
 
-	* libfreeipmi/interpret/: Update appropriately for changes.
+	* libfreeipmi/interpret/, common/toolevent/, ipmi-sel/, ipmi-pet/:
+	Update appropriately for changes.
 	
 2012-05-14  Albert Chu <chu11@llnl.gov>
 

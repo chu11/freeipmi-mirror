@@ -296,7 +296,10 @@ _ipmi_monitoring_sel_parse_system_event_record (ipmi_monitoring_ctx_t c,
   assert (c->magic == IPMI_MONITORING_MAGIC);
   assert (s);
 
-  if (ipmi_sel_parse_read_timestamp (c->sel_parse_ctx, &timestamp) < 0)
+  if (ipmi_sel_parse_read_timestamp (c->sel_parse_ctx,
+				     NULL,
+				     0,
+				     &timestamp) < 0)
     {
       IPMI_MONITORING_DEBUG (("ipmi_sel_parse_read_timestamp: %s",
                               ipmi_sel_parse_ctx_errnum (c->sel_parse_ctx)));
@@ -305,7 +308,10 @@ _ipmi_monitoring_sel_parse_system_event_record (ipmi_monitoring_ctx_t c,
     }
   s->timestamp = timestamp;
 
-  if (ipmi_sel_parse_read_sensor_type (c->sel_parse_ctx, &sel_sensor_type) < 0)
+  if (ipmi_sel_parse_read_sensor_type (c->sel_parse_ctx,
+				       NULL,
+				       0,
+				       &sel_sensor_type) < 0)
     {
       IPMI_MONITORING_DEBUG (("ipmi_sel_parse_read_sensor_type: %s",
                               ipmi_sel_parse_ctx_errnum (c->sel_parse_ctx)));
@@ -318,7 +324,10 @@ _ipmi_monitoring_sel_parse_system_event_record (ipmi_monitoring_ctx_t c,
 
   s->sensor_type = sensor_type;
 
-  if (ipmi_sel_parse_read_sensor_number (c->sel_parse_ctx, &sensor_number) < 0)
+  if (ipmi_sel_parse_read_sensor_number (c->sel_parse_ctx,
+					 NULL,
+					 0,
+					 &sensor_number) < 0)
     {
       IPMI_MONITORING_DEBUG (("ipmi_sel_parse_read_sensor_number: %s",
                               ipmi_sel_parse_ctx_errnum (c->sel_parse_ctx)));
@@ -328,7 +337,10 @@ _ipmi_monitoring_sel_parse_system_event_record (ipmi_monitoring_ctx_t c,
 
   s->sensor_number = sensor_number;
   
-  if (ipmi_sel_parse_read_event_direction (c->sel_parse_ctx, &event_direction) < 0)
+  if (ipmi_sel_parse_read_event_direction (c->sel_parse_ctx,
+					   NULL,
+					   0,
+					   &event_direction) < 0)
     {
       IPMI_MONITORING_DEBUG (("ipmi_sel_parse_read_event_direction: %s",
                               ipmi_sel_parse_ctx_errnum (c->sel_parse_ctx)));
@@ -341,7 +353,10 @@ _ipmi_monitoring_sel_parse_system_event_record (ipmi_monitoring_ctx_t c,
   else
     s->event_direction = IPMI_MONITORING_SEL_EVENT_DIRECTION_DEASSERTION;
       
-  if (ipmi_sel_parse_read_event_data1_offset_from_event_reading_type_code (c->sel_parse_ctx, &event_offset) < 0)
+  if (ipmi_sel_parse_read_event_data1_offset_from_event_reading_type_code (c->sel_parse_ctx,
+									   NULL,
+									   0,
+									   &event_offset) < 0)
     {
       IPMI_MONITORING_DEBUG (("ipmi_sel_parse_read_event_data1_offset_from_event_reading_type_code: %s",
                               ipmi_sel_parse_ctx_errnum (c->sel_parse_ctx)));
@@ -350,7 +365,10 @@ _ipmi_monitoring_sel_parse_system_event_record (ipmi_monitoring_ctx_t c,
     }
   s->event_offset = event_offset;
 
-  if (ipmi_sel_parse_read_event_type_code (c->sel_parse_ctx, &event_type_code) < 0)
+  if (ipmi_sel_parse_read_event_type_code (c->sel_parse_ctx,
+					   NULL,
+					   0,
+					   &event_type_code) < 0)
     {
       IPMI_MONITORING_DEBUG (("ipmi_sel_parse_read_event_type_code: %s",
                               ipmi_sel_parse_ctx_errnum (c->sel_parse_ctx)));
@@ -364,7 +382,10 @@ _ipmi_monitoring_sel_parse_system_event_record (ipmi_monitoring_ctx_t c,
                                                       sel_sensor_type)) < 0)
     return (-1);
 
-  if (ipmi_sel_parse_read_event_data1 (c->sel_parse_ctx, &event_data1) < 0)
+  if (ipmi_sel_parse_read_event_data1 (c->sel_parse_ctx,
+				       NULL,
+				       0,
+				       &event_data1) < 0)
     {
       IPMI_MONITORING_DEBUG (("ipmi_sel_parse_read_event_data1: %s",
                               ipmi_sel_parse_ctx_errnum (c->sel_parse_ctx)));
@@ -373,7 +394,10 @@ _ipmi_monitoring_sel_parse_system_event_record (ipmi_monitoring_ctx_t c,
     }
   s->event_data1 = event_data1;
 
-  if (ipmi_sel_parse_read_event_data2 (c->sel_parse_ctx, &event_data2) < 0)
+  if (ipmi_sel_parse_read_event_data2 (c->sel_parse_ctx,
+				       NULL,
+				       0,
+				       &event_data2) < 0)
     {
       IPMI_MONITORING_DEBUG (("ipmi_sel_parse_read_event_data2: %s",
                               ipmi_sel_parse_ctx_errnum (c->sel_parse_ctx)));
@@ -382,7 +406,10 @@ _ipmi_monitoring_sel_parse_system_event_record (ipmi_monitoring_ctx_t c,
     }
   s->event_data2 = event_data2;
 
-  if (ipmi_sel_parse_read_event_data3 (c->sel_parse_ctx, &event_data3) < 0)
+  if (ipmi_sel_parse_read_event_data3 (c->sel_parse_ctx,
+				       NULL,
+				       0,
+				       &event_data3) < 0)
     {
       IPMI_MONITORING_DEBUG (("ipmi_sel_parse_read_event_data3: %s",
                               ipmi_sel_parse_ctx_errnum (c->sel_parse_ctx)));
@@ -393,6 +420,8 @@ _ipmi_monitoring_sel_parse_system_event_record (ipmi_monitoring_ctx_t c,
 
   if (ipmi_sel_parse_read_record_string (c->sel_parse_ctx,
                                          "%s",
+					 NULL,
+					 0,
                                          s->sensor_name,
                                          IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH,
                                          IPMI_SEL_PARSE_STRING_FLAGS_IGNORE_UNAVAILABLE_FIELD | IPMI_SEL_PARSE_STRING_FLAGS_OUTPUT_NOT_AVAILABLE) < 0)
@@ -407,6 +436,8 @@ _ipmi_monitoring_sel_parse_system_event_record (ipmi_monitoring_ctx_t c,
 
   if ((ret = ipmi_sel_parse_read_record_string (c->sel_parse_ctx,
                                                 "%e",
+						NULL,
+						0,
                                                 event_offset_string,
                                                 IPMI_MONITORING_SEL_EVENT_OFFSET_STRING_MAX,
                                                 IPMI_SEL_PARSE_STRING_FLAGS_IGNORE_UNAVAILABLE_FIELD | IPMI_SEL_PARSE_STRING_FLAGS_OUTPUT_NOT_AVAILABLE)) < 0)
@@ -452,7 +483,10 @@ _ipmi_monitoring_sel_parse_timestamped_oem_record (ipmi_monitoring_ctx_t c,
   assert (c->magic == IPMI_MONITORING_MAGIC);
   assert (s);
 
-  if (ipmi_sel_parse_read_timestamp (c->sel_parse_ctx, &timestamp) < 0)
+  if (ipmi_sel_parse_read_timestamp (c->sel_parse_ctx,
+				     NULL,
+				     0,
+				     &timestamp) < 0)
     {
       IPMI_MONITORING_DEBUG (("ipmi_sel_parse_read_timestamp: %s",
                               ipmi_sel_parse_ctx_errnum (c->sel_parse_ctx)));
@@ -461,7 +495,10 @@ _ipmi_monitoring_sel_parse_timestamped_oem_record (ipmi_monitoring_ctx_t c,
     }
   s->timestamp = timestamp;
   
-  if (ipmi_sel_parse_read_manufacturer_id (c->sel_parse_ctx, &manufacturer_id) < 0)
+  if (ipmi_sel_parse_read_manufacturer_id (c->sel_parse_ctx,
+					   NULL,
+					   0,
+					   &manufacturer_id) < 0)
     {
       IPMI_MONITORING_DEBUG (("ipmi_sel_parse_read_manufacturer_id: %s",
                               ipmi_sel_parse_ctx_errnum (c->sel_parse_ctx)));
@@ -471,6 +508,8 @@ _ipmi_monitoring_sel_parse_timestamped_oem_record (ipmi_monitoring_ctx_t c,
   s->manufacturer_id = manufacturer_id;
 
   if ((ret = ipmi_sel_parse_read_oem (c->sel_parse_ctx,
+				      NULL,
+				      0,
                                       s->oem_data,
                                       IPMI_MONITORING_OEM_DATA_MAX)) < 0)
     {
@@ -495,6 +534,8 @@ _ipmi_monitoring_sel_parse_non_timestamped_oem_record (ipmi_monitoring_ctx_t c,
   assert (s);
 
   if ((ret = ipmi_sel_parse_read_oem (c->sel_parse_ctx,
+				      NULL,
+				      0,
                                       s->oem_data,
                                       IPMI_MONITORING_OEM_DATA_MAX)) < 0)
     {
@@ -542,7 +583,10 @@ _store_sel_record (ipmi_monitoring_ctx_t c, unsigned int sel_flags)
       goto cleanup;
     }
   
-  if (ipmi_sel_parse_read_record_id (c->sel_parse_ctx, &record_id) < 0)
+  if (ipmi_sel_parse_read_record_id (c->sel_parse_ctx,
+				     NULL,
+				     0,
+				     &record_id) < 0)
     {
       IPMI_MONITORING_DEBUG (("ipmi_sel_parse_read_record_id: %s",
                               ipmi_sel_parse_ctx_errnum (c->sel_parse_ctx)));
@@ -550,7 +594,10 @@ _store_sel_record (ipmi_monitoring_ctx_t c, unsigned int sel_flags)
       goto cleanup;
     }
 
-  if (ipmi_sel_parse_read_record_type (c->sel_parse_ctx, &record_type) < 0)
+  if (ipmi_sel_parse_read_record_type (c->sel_parse_ctx,
+				       NULL,
+				       0,
+				       &record_type) < 0)
     {
       IPMI_MONITORING_DEBUG (("ipmi_sel_parse_read_record_id: %s",
                               ipmi_sel_parse_ctx_errnum (c->sel_parse_ctx)));
@@ -678,7 +725,10 @@ _ipmi_monitoring_sel_parse_sensor_types (ipmi_sel_parse_ctx_t ctx, void *callbac
 
   spd = (struct sel_parse_data *)callback_data;
 
-  if (ipmi_sel_parse_read_record_type (spd->c->sel_parse_ctx, &record_type) < 0)
+  if (ipmi_sel_parse_read_record_type (spd->c->sel_parse_ctx,
+				       NULL,
+				       0,
+				       &record_type) < 0)
     {
       IPMI_MONITORING_DEBUG (("ipmi_sel_parse_read_record_id: %s",
                               ipmi_sel_parse_ctx_errnum (spd->c->sel_parse_ctx)));
@@ -706,7 +756,10 @@ _ipmi_monitoring_sel_parse_sensor_types (ipmi_sel_parse_ctx_t ctx, void *callbac
       int sensor_type;
       int found = 0;
 
-      if (ipmi_sel_parse_read_sensor_type (spd->c->sel_parse_ctx, &sel_sensor_type) < 0)
+      if (ipmi_sel_parse_read_sensor_type (spd->c->sel_parse_ctx,
+					   NULL,
+					   0,
+					   &sel_sensor_type) < 0)
         {
           IPMI_MONITORING_DEBUG (("ipmi_sel_parse_read_sensor_type: %s",
                                   ipmi_sel_parse_ctx_errnum (spd->c->sel_parse_ctx)));
@@ -748,7 +801,10 @@ _ipmi_monitoring_sel_parse_date_range (ipmi_sel_parse_ctx_t ctx, void *callback_
 
   spd = (struct sel_parse_data *)callback_data;
 
-  if (ipmi_sel_parse_read_record_type (spd->c->sel_parse_ctx, &record_type) < 0)
+  if (ipmi_sel_parse_read_record_type (spd->c->sel_parse_ctx,
+				       NULL,
+				       0,
+				       &record_type) < 0)
     {
       IPMI_MONITORING_DEBUG (("ipmi_sel_parse_read_record_id: %s",
                               ipmi_sel_parse_ctx_errnum (spd->c->sel_parse_ctx)));
@@ -774,7 +830,10 @@ _ipmi_monitoring_sel_parse_date_range (ipmi_sel_parse_ctx_t ctx, void *callback_
     {
       uint32_t timestamp;
 
-      if (ipmi_sel_parse_read_timestamp (spd->c->sel_parse_ctx, &timestamp) < 0)
+      if (ipmi_sel_parse_read_timestamp (spd->c->sel_parse_ctx,
+					 NULL,
+					 0,
+					 &timestamp) < 0)
         {
           IPMI_MONITORING_DEBUG (("ipmi_sel_parse_read_timestamp: %s",
                                   ipmi_sel_parse_ctx_errnum (spd->c->sel_parse_ctx)));
