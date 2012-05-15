@@ -40,6 +40,7 @@
 #include "parse-common.h"
 #include "pstdout.h"
 #include "tool-cmdline-common.h"
+#include "tool-util-common.h"
 
 error_t
 cmdline_config_file_parse (int key, char *arg, struct argp_state *state)
