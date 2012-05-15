@@ -1,6 +1,9 @@
 noinst_LTLIBRARIES = \
 	libtoolcommon.la
 
+libtoolcommon_la_LDFLAGS = \
+	$(PTHREAD_LIBS)
+
 libtoolcommon_la_CPPFLAGS = \
 	-I$(top_srcdir)/common/miscutil \
 	-I$(top_srcdir)/common/parsecommon \
@@ -13,11 +16,15 @@ libtoolcommon_la_CPPFLAGS = \
 	-D_REENTRANT
 
 libtoolcommon_la_SOURCES = \
+	pstdout.c \
+	pstdout.h \
 	tool-common.c \
 	tool-common.h \
 	tool-config-file-common.c \
 	tool-config-file-common.h \
 	tool-cmdline-common.c \
 	tool-cmdline-common.h \
+	tool-hostrange-common.c \
+	tool-hostrange-common.h \
 	tool-oem-common.c \
 	tool-oem-common.h

@@ -2,7 +2,6 @@ sbin_PROGRAMS = ipmiconsole
 
 ipmiconsole_CPPFLAGS = \
 	-I$(top_srcdir)/common/toolcommon \
-	-I$(top_srcdir)/common/toolhostrange \
 	-I$(top_srcdir)/common/miscutil \
 	-I$(top_srcdir)/common/parsecommon \
 	-I$(top_srcdir)/common/portability \
@@ -14,7 +13,6 @@ ipmiconsole_CPPFLAGS = \
 
 ipmiconsole_LDADD = \
 	$(top_builddir)/common/toolcommon/libtoolcommon.la \
-	$(top_builddir)/common/toolhostrange/libtoolhostrange.la \
 	$(top_builddir)/common/miscutil/libmiscutil.la \
 	$(top_builddir)/common/parsecommon/libparsecommon.la \
 	$(top_builddir)/common/portability/libportability.la \
@@ -27,9 +25,6 @@ ipmiconsole_SOURCES = \
 	ipmiconsole-argp.h
 
 $(top_builddir)/common/toolcommon/libtoolcommon.la : force-dependency-check
-	@cd `dirname $@` && $(MAKE) `basename $@`
-
-$(top_builddir)/common/toolhostrange/libtoolhostrange.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
 $(top_builddir)/common/miscutil/libmiscutil.la : force-dependency-check

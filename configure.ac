@@ -42,7 +42,6 @@ AC_CONFIG_FILES([
         common/portability/Makefile
         common/toolcommon/Makefile
         common/toolevent/Makefile
-        common/toolhostrange/Makefile
         common/toolsdr/Makefile
         common/toolsensor/Makefile
         contrib/Makefile

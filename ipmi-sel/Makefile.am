@@ -3,7 +3,6 @@ sbin_PROGRAMS = ipmi-sel
 ipmi_sel_CPPFLAGS = \
 	-I$(top_srcdir)/common/toolcommon \
 	-I$(top_srcdir)/common/toolevent \
-	-I$(top_srcdir)/common/toolhostrange \
 	-I$(top_srcdir)/common/toolsdr \
 	-I$(top_srcdir)/common/toolsensor \
 	-I$(top_srcdir)/common/debugutil \
@@ -16,7 +15,6 @@ ipmi_sel_CPPFLAGS = \
 
 ipmi_sel_LDADD = \
 	$(top_builddir)/common/toolcommon/libtoolcommon.la \
-	$(top_builddir)/common/toolhostrange/libtoolhostrange.la \
 	$(top_builddir)/common/toolsdr/libtoolsdr.la \
 	$(top_builddir)/common/toolsensor/libtoolsensor.la \
 	$(top_builddir)/common/toolevent/libtoolevent.la \
@@ -34,9 +32,6 @@ ipmi_sel_SOURCES = \
 	ipmi-sel-argp.h
  
 $(top_builddir)/common/toolcommon/libtoolcommon.la : force-dependency-check
-	@cd `dirname $@` && $(MAKE) `basename $@`
-
-$(top_builddir)/common/toolhostrange/libtoolhostrange.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
 $(top_builddir)/common/toolevent/libtoolevent.la : force-dependency-check

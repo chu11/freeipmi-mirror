@@ -1,6 +1,7 @@
 2012-05-15  Albert Chu <chu11@llnl.gov>
 
-	* common/tooloem/: Merge into common/toolcommon/ library.
+	* common/tooloem/, common/toolhostrange/: Merge into
+	common/toolcommon/ library.
 
 	* common/toolcommon/tool-common.h,
 	common/toolcommon/tool-common.c (ipmi_open): Take pstdout_state_t

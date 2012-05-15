@@ -8,6 +8,5 @@ SUBDIRS = \
 	portability \
 	toolcommon \
 	toolevent \
-	toolhostrange \
 	toolsdr \
 	toolsensor

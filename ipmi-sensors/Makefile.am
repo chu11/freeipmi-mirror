@@ -4,7 +4,6 @@ sbin_SCRIPTS = ipmimonitoring
 
 ipmi_sensors_CPPFLAGS = \
 	-I$(top_srcdir)/common/toolcommon \
-	-I$(top_srcdir)/common/toolhostrange \
 	-I$(top_srcdir)/common/toolsdr \
 	-I$(top_srcdir)/common/toolsensor \
 	-I$(top_srcdir)/common/miscutil \
@@ -16,7 +15,6 @@ ipmi_sensors_CPPFLAGS = \
 
 ipmi_sensors_LDADD = \
 	$(top_builddir)/common/toolcommon/libtoolcommon.la \
-	$(top_builddir)/common/toolhostrange/libtoolhostrange.la \
 	$(top_builddir)/common/toolsdr/libtoolsdr.la \
 	$(top_builddir)/common/toolsensor/libtoolsensor.la \
 	$(top_builddir)/common/miscutil/libmiscutil.la \
@@ -50,9 +48,6 @@ ipmimonitoring: ipmimonitoring.in
 	chmod +x ipmimonitoring
 
 $(top_builddir)/common/toolcommon/libtoolcommon.la : force-dependency-check
-	@cd `dirname $@` && $(MAKE) `basename $@`
-
-$(top_builddir)/common/toolhostrange/libtoolhostrange.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
 $(top_builddir)/common/toolsdr/libtoolsdr.la : force-dependency-check
