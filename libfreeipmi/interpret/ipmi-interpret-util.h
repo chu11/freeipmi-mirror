@@ -31,7 +31,7 @@
 #include <errno.h>
 
 #include "freeipmi/interpret/ipmi-interpret.h"
-#include "freeipmi/sel-parse/ipmi-sel-parse.h"
+#include "freeipmi/sel/ipmi-sel.h"
 
 #include "ipmi-interpret-defs.h"
 

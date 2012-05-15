@@ -28,12 +28,12 @@
 #include <assert.h>
 #include <errno.h>
 
-#include "freeipmi/sel-parse/ipmi-sel-parse.h"
+#include "freeipmi/sel/ipmi-sel.h"
 #include "freeipmi/fiid/fiid.h"
 
-#include "ipmi-sel-parse-defs.h"
-#include "ipmi-sel-parse-trace.h"
-#include "ipmi-sel-parse-util.h"
+#include "ipmi-sel-defs.h"
+#include "ipmi-sel-trace.h"
+#include "ipmi-sel-util.h"
 
 #include "freeipmi-portability.h"
 

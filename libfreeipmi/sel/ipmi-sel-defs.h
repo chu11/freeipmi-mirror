@@ -27,7 +27,7 @@
 #include <sys/param.h>
 
 #include "freeipmi/sdr/ipmi-sdr.h"
-#include "freeipmi/sel-parse/ipmi-sel-parse.h"
+#include "freeipmi/sel/ipmi-sel.h"
 
 #include "list.h"
 

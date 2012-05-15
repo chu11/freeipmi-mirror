@@ -25,9 +25,9 @@
 
 #include <stdint.h>
 
-#include "freeipmi/sel-parse/ipmi-sel-parse.h"
+#include "freeipmi/sel/ipmi-sel.h"
 
-#include "ipmi-sel-parse-defs.h"
+#include "ipmi-sel-defs.h"
 
 /* convenience struct */
 struct ipmi_sel_system_event_record_data

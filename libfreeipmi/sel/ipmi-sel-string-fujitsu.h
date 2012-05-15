@@ -26,10 +26,10 @@
 
 #include <stdint.h>
 
-#include "freeipmi/sel-parse/ipmi-sel-parse.h"
+#include "freeipmi/sel/ipmi-sel.h"
 
-#include "ipmi-sel-parse-defs.h"
-#include "ipmi-sel-parse-common.h"
+#include "ipmi-sel-defs.h"
+#include "ipmi-sel-common.h"
 
 int ipmi_sel_parse_output_fujitsu_event_data1_class_sensor_specific_discrete (ipmi_sel_ctx_t ctx,
                                                                               struct ipmi_sel_entry *sel_entry,

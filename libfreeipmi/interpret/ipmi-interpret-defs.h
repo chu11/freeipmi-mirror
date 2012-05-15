@@ -26,7 +26,7 @@
 #include <stdint.h>
 
 #include "freeipmi/interpret/ipmi-interpret.h"
-#include "freeipmi/sel-parse/ipmi-sel-parse.h"
+#include "freeipmi/sel/ipmi-sel.h"
 
 #include "hash.h"
 

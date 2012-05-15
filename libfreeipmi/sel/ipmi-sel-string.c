@@ -39,7 +39,7 @@
 #include <assert.h>
 #include <errno.h>
 
-#include "freeipmi/sel-parse/ipmi-sel-parse.h"
+#include "freeipmi/sel/ipmi-sel.h"
 
 #include "freeipmi/cmds/ipmi-sel-cmds.h"
 #include "freeipmi/record-format/ipmi-sdr-record-format.h"
@@ -61,18 +61,18 @@
 #include "freeipmi/util/ipmi-sensor-util.h"
 #include "freeipmi/util/ipmi-util.h"
 
-#include "ipmi-sel-parse-common.h"
-#include "ipmi-sel-parse-defs.h"
-#include "ipmi-sel-parse-string.h"
-#include "ipmi-sel-parse-string-dell.h"
-#include "ipmi-sel-parse-string-fujitsu.h"
-#include "ipmi-sel-parse-string-intel.h"
-#include "ipmi-sel-parse-string-inventec.h"
-#include "ipmi-sel-parse-string-quanta.h"
-#include "ipmi-sel-parse-string-sun.h"
-#include "ipmi-sel-parse-string-supermicro.h"
-#include "ipmi-sel-parse-trace.h"
-#include "ipmi-sel-parse-util.h"
+#include "ipmi-sel-common.h"
+#include "ipmi-sel-defs.h"
+#include "ipmi-sel-string.h"
+#include "ipmi-sel-string-dell.h"
+#include "ipmi-sel-string-fujitsu.h"
+#include "ipmi-sel-string-intel.h"
+#include "ipmi-sel-string-inventec.h"
+#include "ipmi-sel-string-quanta.h"
+#include "ipmi-sel-string-sun.h"
+#include "ipmi-sel-string-supermicro.h"
+#include "ipmi-sel-trace.h"
+#include "ipmi-sel-util.h"
 
 #include "freeipmi-portability.h"
 

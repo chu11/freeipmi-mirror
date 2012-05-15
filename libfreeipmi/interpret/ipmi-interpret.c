@@ -37,7 +37,7 @@
 
 #include "freeipmi/record-format/ipmi-sdr-record-format.h"
 #include "freeipmi/record-format/ipmi-sel-record-format.h"
-#include "freeipmi/sel-parse/ipmi-sel-parse.h"
+#include "freeipmi/sel/ipmi-sel.h"
 #include "freeipmi/spec/ipmi-event-reading-type-code-spec.h"
 #include "freeipmi/spec/ipmi-sensor-types-spec.h"
 

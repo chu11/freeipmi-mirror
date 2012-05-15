@@ -16,27 +16,28 @@
  * 
  */
 
-#ifndef IPMI_SEL_STRING_SUPERMICRO_H
-#define IPMI_SEL_STRING_SUPERMICRO_H
+#ifndef IPMI_SEL_UTIL_H
+#define IPMI_SEL_UTIL_H
 
 #ifdef HAVE_CONFIG_H
-#include "config.h"
+#include <config.h>
 #endif /* HAVE_CONFIG_H */
 
-#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#ifdef STDC_HEADERS
+#include <string.h>
+#endif /* STDC_HEADERS */
+#include <errno.h>
 
-#include "freeipmi/sel-parse/ipmi-sel-parse.h"
+#include "freeipmi/api/ipmi-api.h"
+#include "freeipmi/fiid/fiid.h"
+#include "freeipmi/sel/ipmi-sel.h"
 
-#include "ipmi-sel-parse-defs.h"
-#include "ipmi-sel-parse-common.h"
+#include "ipmi-sel-defs.h"
 
-int ipmi_sel_parse_output_supermicro_event_data1_class_oem (ipmi_sel_ctx_t ctx,
-							    struct ipmi_sel_entry *sel_entry,
-							    uint8_t sel_record_type,
-							    char *tmpbuf,
-							    unsigned int tmpbuflen,
-							    unsigned int flags,
-							    unsigned int *wlen,
-							    struct ipmi_sel_system_event_record_data *system_event_record_data);
+void sel_set_sel_errnum_by_errno (ipmi_sel_ctx_t ctx, int __errno);
 
-#endif /* IPMI_SEL_STRING_SUPERMICRO_H */
+void sel_set_sel_errnum_by_fiid_object (ipmi_sel_ctx_t ctx, fiid_obj_t obj);
+
+#endif /* IPMI_SEL_UTIL_H */
