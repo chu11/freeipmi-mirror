@@ -11,6 +11,11 @@
 	parameter and output errors instead of returning error string in
 	buffer.
 
+	* common/toolhostrange/tool-hostrange-common.h,
+	common/toolhostrange/tool-hostrange-common.c (pstdout_setup): Take
+	struct hostrange_cmd_args pointer as argument instead of each
+	desired parameter.
+
 	* common/daemonutil/, common/tooloem/, common/toolsdr/,
 	common/toolevent/, common/toolsensor/, common/toolhostrange/:
 	Merge into common/toolcommon/ library.

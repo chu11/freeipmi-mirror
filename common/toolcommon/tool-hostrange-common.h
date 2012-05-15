@@ -19,12 +19,9 @@
 #ifndef TOOL_HOSTRANGE_COMMON_H
 #define TOOL_HOSTRANGE_COMMON_H
 
+#include "tool-cmdline-common.h"
+
 /* Returns number of hosts setup for, -1 on error */
-int pstdout_setup (char **hosts,
-                   int buffer_output,
-                   int consolidate_output,
-                   int fanout,
-                   int eliminate,
-                   int always_prefix);
+int pstdout_setup (char **hosts, struct hostrange_cmd_args *hostrange_args);
 
 #endif /* TOOL_HOSTRANGE_COMMON_H */
