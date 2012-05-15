@@ -48,30 +48,30 @@ struct ipmi_sel_system_event_record_data
   uint8_t event_data3;
 };
 
-int sel_parse_get_reservation_id (ipmi_sel_ctx_t ctx,
-                                  uint16_t *reservation_id,
-                                  unsigned int *is_insufficient_privilege_level);
+int sel_get_reservation_id (ipmi_sel_ctx_t ctx,
+			    uint16_t *reservation_id,
+			    unsigned int *is_insufficient_privilege_level);
 
-int sel_parse_get_record_header_info (ipmi_sel_ctx_t ctx,
-                                      struct ipmi_sel_entry *sel_entry,
-                                      uint16_t *record_id,
-                                      uint8_t *record_type);
+int sel_get_record_header_info (ipmi_sel_ctx_t ctx,
+				struct ipmi_sel_entry *sel_entry,
+				uint16_t *record_id,
+				uint8_t *record_type);
 
-int sel_parse_get_timestamp (ipmi_sel_ctx_t ctx,
-                             struct ipmi_sel_entry *sel_entry,
-                             uint32_t *timestamp);
+int sel_get_timestamp (ipmi_sel_ctx_t ctx,
+		       struct ipmi_sel_entry *sel_entry,
+		       uint32_t *timestamp);
 
-int sel_parse_get_manufacturer_id (ipmi_sel_ctx_t ctx,
-                                   struct ipmi_sel_entry *sel_entry,
-                                   uint32_t *manufacturer_id);
+int sel_get_manufacturer_id (ipmi_sel_ctx_t ctx,
+			     struct ipmi_sel_entry *sel_entry,
+			     uint32_t *manufacturer_id);
 
-int sel_parse_get_oem (ipmi_sel_ctx_t ctx,
-                       struct ipmi_sel_entry *sel_entry,
-                       uint8_t *buf,
-                       unsigned int buflen);
+int sel_get_oem (ipmi_sel_ctx_t ctx,
+		 struct ipmi_sel_entry *sel_entry,
+		 uint8_t *buf,
+		 unsigned int buflen);
 
-int sel_parse_get_system_event_record (ipmi_sel_ctx_t ctx,
-                                       struct ipmi_sel_entry *sel_entry,
-                                       struct ipmi_sel_system_event_record_data *system_event_record_data);
+int sel_get_system_event_record (ipmi_sel_ctx_t ctx,
+				 struct ipmi_sel_entry *sel_entry,
+				 struct ipmi_sel_system_event_record_data *system_event_record_data);
 
 #endif /* IPMI_SEL_COMMON_H */

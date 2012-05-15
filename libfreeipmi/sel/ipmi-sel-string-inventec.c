@@ -78,15 +78,15 @@
  * 1 - buffer full, return full buffer to user
  */
 int
-ipmi_sel_parse_output_inventec_sensor_name (ipmi_sel_ctx_t ctx,
-					    struct ipmi_sel_entry *sel_entry,
-					    uint8_t sel_record_type,
-					    char *buf,
-					    unsigned int buflen,
-					    unsigned int flags,
-					    unsigned int *wlen,
-					    struct ipmi_sel_system_event_record_data *system_event_record_data,
-					    int *oem_rv)
+sel_string_output_inventec_sensor_name (ipmi_sel_ctx_t ctx,
+					     struct ipmi_sel_entry *sel_entry,
+					     uint8_t sel_record_type,
+					     char *buf,
+					     unsigned int buflen,
+					     unsigned int flags,
+					     unsigned int *wlen,
+					     struct ipmi_sel_system_event_record_data *system_event_record_data,
+					     int *oem_rv)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
@@ -127,10 +127,10 @@ ipmi_sel_parse_output_inventec_sensor_name (ipmi_sel_ctx_t ctx,
 	       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS
 	       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INVENTEC_PORT80_CODE_EVENT)))
 	{
-	  if (ipmi_sel_parse_string_snprintf (buf,
-					      buflen,
-					      wlen,
-					      "BIOS"))
+	  if (sel_string_snprintf (buf,
+				   buflen,
+				   wlen,
+				   "BIOS"))
 	    (*oem_rv) = 1;
 	  else
 	    (*oem_rv) = 0;
@@ -138,15 +138,15 @@ ipmi_sel_parse_output_inventec_sensor_name (ipmi_sel_ctx_t ctx,
 	  return (1);
 	}
 
-      if ((nmret = ipmi_sel_parse_output_intel_node_manager_sensor_name (ctx,
-									 sel_entry,
-									 sel_record_type,
-									 buf,
-									 buflen,
-									 flags,
-									 wlen,
-									 system_event_record_data,
-									 oem_rv)) < 0)
+      if ((nmret = sel_string_output_intel_node_manager_sensor_name (ctx,
+									  sel_entry,
+									  sel_record_type,
+									  buf,
+									  buflen,
+									  flags,
+									  wlen,
+									  system_event_record_data,
+									  oem_rv)) < 0)
         return (-1);
       
       if (nmret)
@@ -161,14 +161,14 @@ ipmi_sel_parse_output_inventec_sensor_name (ipmi_sel_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 int
-ipmi_sel_parse_output_inventec_event_data1_class_oem (ipmi_sel_ctx_t ctx,
-                                                      struct ipmi_sel_entry *sel_entry,
-                                                      uint8_t sel_record_type,
-                                                      char *tmpbuf,
-                                                      unsigned int tmpbuflen,
-                                                      unsigned int flags,
-                                                      unsigned int *wlen,
-                                                      struct ipmi_sel_system_event_record_data *system_event_record_data)
+sel_string_output_inventec_event_data1_class_oem (ipmi_sel_ctx_t ctx,
+						       struct ipmi_sel_entry *sel_entry,
+						       uint8_t sel_record_type,
+						       char *tmpbuf,
+						       unsigned int tmpbuflen,
+						       unsigned int flags,
+						       unsigned int *wlen,
+						       struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
@@ -210,14 +210,14 @@ ipmi_sel_parse_output_inventec_event_data1_class_oem (ipmi_sel_ctx_t ctx,
           return (1);
         }
 
-      if ((nmret = ipmi_sel_parse_output_intel_node_manager_event_data1_class_oem (ctx,
-                                                                                   sel_entry,
-                                                                                   sel_record_type,
-                                                                                   tmpbuf,
-                                                                                   tmpbuflen,
-                                                                                   flags,
-                                                                                   wlen,
-                                                                                   system_event_record_data)) < 0)
+      if ((nmret = sel_string_output_intel_node_manager_event_data1_class_oem (ctx,
+										    sel_entry,
+										    sel_record_type,
+										    tmpbuf,
+										    tmpbuflen,
+										    flags,
+										    wlen,
+										    system_event_record_data)) < 0)
         return (-1);
 
       if (nmret)
@@ -232,14 +232,14 @@ ipmi_sel_parse_output_inventec_event_data1_class_oem (ipmi_sel_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 int
-ipmi_sel_parse_output_inventec_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
-							 struct ipmi_sel_entry *sel_entry,
-							 uint8_t sel_record_type,
-							 char *tmpbuf,
-							 unsigned int tmpbuflen,
-							 unsigned int flags,
-							 unsigned int *wlen,
-							 struct ipmi_sel_system_event_record_data *system_event_record_data)
+sel_string_output_inventec_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
+							  struct ipmi_sel_entry *sel_entry,
+							  uint8_t sel_record_type,
+							  char *tmpbuf,
+							  unsigned int tmpbuflen,
+							  unsigned int flags,
+							  unsigned int *wlen,
+							  struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
@@ -303,14 +303,14 @@ ipmi_sel_parse_output_inventec_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 int
-ipmi_sel_parse_output_inventec_event_data2_class_oem (ipmi_sel_ctx_t ctx,
-						      struct ipmi_sel_entry *sel_entry,
-						      uint8_t sel_record_type,
-						      char *tmpbuf,
-						      unsigned int tmpbuflen,
-						      unsigned int flags,
-						      unsigned int *wlen,
-						      struct ipmi_sel_system_event_record_data *system_event_record_data)
+sel_string_output_inventec_event_data2_class_oem (ipmi_sel_ctx_t ctx,
+						       struct ipmi_sel_entry *sel_entry,
+						       uint8_t sel_record_type,
+						       char *tmpbuf,
+						       unsigned int tmpbuflen,
+						       unsigned int flags,
+						       unsigned int *wlen,
+						       struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
@@ -349,14 +349,14 @@ ipmi_sel_parse_output_inventec_event_data2_class_oem (ipmi_sel_ctx_t ctx,
           return (1);
         }
 
-      if ((nmret = ipmi_sel_parse_output_intel_node_manager_event_data2_class_oem (ctx,
-                                                                                   sel_entry,
-                                                                                   sel_record_type,
-                                                                                   tmpbuf,
-                                                                                   tmpbuflen,
-                                                                                   flags,
-                                                                                   wlen,
-                                                                                   system_event_record_data)) < 0)
+      if ((nmret = sel_string_output_intel_node_manager_event_data2_class_oem (ctx,
+										    sel_entry,
+										    sel_record_type,
+										    tmpbuf,
+										    tmpbuflen,
+										    flags,
+										    wlen,
+										    system_event_record_data)) < 0)
         return (-1);
       
       if (nmret)
@@ -371,14 +371,14 @@ ipmi_sel_parse_output_inventec_event_data2_class_oem (ipmi_sel_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 int
-ipmi_sel_parse_output_inventec_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
-							 struct ipmi_sel_entry *sel_entry,
-							 uint8_t sel_record_type,
-							 char *tmpbuf,
-							 unsigned int tmpbuflen,
-							 unsigned int flags,
-							 unsigned int *wlen,
-							 struct ipmi_sel_system_event_record_data *system_event_record_data)
+sel_string_output_inventec_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
+							  struct ipmi_sel_entry *sel_entry,
+							  uint8_t sel_record_type,
+							  char *tmpbuf,
+							  unsigned int tmpbuflen,
+							  unsigned int flags,
+							  unsigned int *wlen,
+							  struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
@@ -598,14 +598,14 @@ ipmi_sel_parse_output_inventec_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 int
-ipmi_sel_parse_output_inventec_event_data3_class_oem (ipmi_sel_ctx_t ctx,
-						      struct ipmi_sel_entry *sel_entry,
-						      uint8_t sel_record_type,
-						      char *tmpbuf,
-						      unsigned int tmpbuflen,
-						      unsigned int flags,
-						      unsigned int *wlen,
-						      struct ipmi_sel_system_event_record_data *system_event_record_data)
+sel_string_output_inventec_event_data3_class_oem (ipmi_sel_ctx_t ctx,
+						       struct ipmi_sel_entry *sel_entry,
+						       uint8_t sel_record_type,
+						       char *tmpbuf,
+						       unsigned int tmpbuflen,
+						       unsigned int flags,
+						       unsigned int *wlen,
+						       struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
@@ -644,14 +644,14 @@ ipmi_sel_parse_output_inventec_event_data3_class_oem (ipmi_sel_ctx_t ctx,
           return (1);
         }
 
-      if ((nmret = ipmi_sel_parse_output_intel_node_manager_event_data3_class_oem (ctx,
-                                                                                   sel_entry,
-                                                                                   sel_record_type,
-                                                                                   tmpbuf,
-                                                                                   tmpbuflen,
-                                                                                   flags,
-                                                                                   wlen,
-                                                                                   system_event_record_data)) < 0)
+      if ((nmret = sel_string_output_intel_node_manager_event_data3_class_oem (ctx,
+										    sel_entry,
+										    sel_record_type,
+										    tmpbuf,
+										    tmpbuflen,
+										    flags,
+										    wlen,
+										    system_event_record_data)) < 0)
         return (-1);
 
       if (nmret)
@@ -670,15 +670,15 @@ ipmi_sel_parse_output_inventec_event_data3_class_oem (ipmi_sel_ctx_t ctx,
  * 1 - buffer full, return full buffer to user
  */
 int
-ipmi_sel_parse_output_inventec_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
-							struct ipmi_sel_entry *sel_entry,
-							uint8_t sel_record_type,
-							char *buf,
-							unsigned int buflen,
-							unsigned int flags,
-							unsigned int *wlen,
-							struct ipmi_sel_system_event_record_data *system_event_record_data,
-							int *oem_rv)
+sel_string_output_inventec_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
+							 struct ipmi_sel_entry *sel_entry,
+							 uint8_t sel_record_type,
+							 char *buf,
+							 unsigned int buflen,
+							 unsigned int flags,
+							 unsigned int *wlen,
+							 struct ipmi_sel_system_event_record_data *system_event_record_data,
+							 int *oem_rv)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
@@ -926,11 +926,11 @@ ipmi_sel_parse_output_inventec_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
 	      error_code_str = "Undefined BIOS Error";
 	    }
       
-          if (ipmi_sel_parse_string_snprintf (buf,
-					      buflen,
-					      wlen,
-					      "%s",
-					      error_code_str))
+          if (sel_string_snprintf (buf,
+				   buflen,
+				   wlen,
+				   "%s",
+				   error_code_str))
             (*oem_rv) = 1;
           else
             (*oem_rv) = 0;
@@ -946,12 +946,12 @@ ipmi_sel_parse_output_inventec_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
           && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
           && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
         {
-          if (ipmi_sel_parse_string_snprintf (buf,
-					      buflen,
-					      wlen,
-					      "BIOS Version %X.%02X",
-					      system_event_record_data->event_data2,
-					      system_event_record_data->event_data3))
+          if (sel_string_snprintf (buf,
+				   buflen,
+				   wlen,
+				   "BIOS Version %X.%02X",
+				   system_event_record_data->event_data2,
+				   system_event_record_data->event_data3))
             (*oem_rv) = 1;
           else
             (*oem_rv) = 0;

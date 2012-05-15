@@ -72,15 +72,15 @@
 #define QUANTA_EVENT_BUFFER_LENGTH 4096
 
 int
-ipmi_sel_parse_output_quanta_sensor_name (ipmi_sel_ctx_t ctx,
-					  struct ipmi_sel_entry *sel_entry,
-					  uint8_t sel_record_type,
-					  char *buf,
-					  unsigned int buflen,
-					  unsigned int flags,
-					  unsigned int *wlen,
-					  struct ipmi_sel_system_event_record_data *system_event_record_data,
-					  int *oem_rv)
+sel_string_output_quanta_sensor_name (ipmi_sel_ctx_t ctx,
+				      struct ipmi_sel_entry *sel_entry,
+				      uint8_t sel_record_type,
+				      char *buf,
+				      unsigned int buflen,
+				      unsigned int flags,
+				      unsigned int *wlen,
+				      struct ipmi_sel_system_event_record_data *system_event_record_data,
+				      int *oem_rv)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
@@ -102,15 +102,15 @@ ipmi_sel_parse_output_quanta_sensor_name (ipmi_sel_ctx_t ctx,
     {
       int nmret;
 
-      if ((nmret = ipmi_sel_parse_output_intel_node_manager_sensor_name (ctx,
-									 sel_entry,
-									 sel_record_type,
-									 buf,
-									 buflen,
-									 flags,
-									 wlen,
-									 system_event_record_data,
-									 oem_rv)) < 0)
+      if ((nmret = sel_string_output_intel_node_manager_sensor_name (ctx,
+								     sel_entry,
+								     sel_record_type,
+								     buf,
+								     buflen,
+								     flags,
+								     wlen,
+								     system_event_record_data,
+								     oem_rv)) < 0)
         return (-1);
       
       if (nmret)
@@ -125,14 +125,14 @@ ipmi_sel_parse_output_quanta_sensor_name (ipmi_sel_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 int
-ipmi_sel_parse_output_quanta_event_data1_class_oem (ipmi_sel_ctx_t ctx,
-                                                    struct ipmi_sel_entry *sel_entry,
-                                                    uint8_t sel_record_type,
-                                                    char *tmpbuf,
-                                                    unsigned int tmpbuflen,
-                                                    unsigned int flags,
-                                                    unsigned int *wlen,
-                                                    struct ipmi_sel_system_event_record_data *system_event_record_data)
+sel_string_output_quanta_event_data1_class_oem (ipmi_sel_ctx_t ctx,
+						struct ipmi_sel_entry *sel_entry,
+						uint8_t sel_record_type,
+						char *tmpbuf,
+						unsigned int tmpbuflen,
+						unsigned int flags,
+						unsigned int *wlen,
+						struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
@@ -153,14 +153,14 @@ ipmi_sel_parse_output_quanta_event_data1_class_oem (ipmi_sel_ctx_t ctx,
     {
       int nmret;
 
-      if ((nmret = ipmi_sel_parse_output_intel_node_manager_event_data1_class_oem (ctx,
-                                                                                   sel_entry,
-                                                                                   sel_record_type,
-                                                                                   tmpbuf,
-                                                                                   tmpbuflen,
-                                                                                   flags,
-                                                                                   wlen,
-                                                                                   system_event_record_data)) < 0)
+      if ((nmret = sel_string_output_intel_node_manager_event_data1_class_oem (ctx,
+									       sel_entry,
+									       sel_record_type,
+									       tmpbuf,
+									       tmpbuflen,
+									       flags,
+									       wlen,
+									       system_event_record_data)) < 0)
         return (-1);
 
       if (nmret)
@@ -175,14 +175,14 @@ ipmi_sel_parse_output_quanta_event_data1_class_oem (ipmi_sel_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 int
-ipmi_sel_parse_output_quanta_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
-                                                       struct ipmi_sel_entry *sel_entry,
-                                                       uint8_t sel_record_type,
-                                                       char *tmpbuf,
-                                                       unsigned int tmpbuflen,
-                                                       unsigned int flags,
-                                                       unsigned int *wlen,
-                                                       struct ipmi_sel_system_event_record_data *system_event_record_data)
+sel_string_output_quanta_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
+						   struct ipmi_sel_entry *sel_entry,
+						   uint8_t sel_record_type,
+						   char *tmpbuf,
+						   unsigned int tmpbuflen,
+						   unsigned int flags,
+						   unsigned int *wlen,
+						   struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
@@ -256,14 +256,14 @@ ipmi_sel_parse_output_quanta_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 int
-ipmi_sel_parse_output_quanta_event_data2_class_oem (ipmi_sel_ctx_t ctx,
-                                                    struct ipmi_sel_entry *sel_entry,
-                                                    uint8_t sel_record_type,
-                                                    char *tmpbuf,
-                                                    unsigned int tmpbuflen,
-                                                    unsigned int flags,
-                                                    unsigned int *wlen,
-                                                    struct ipmi_sel_system_event_record_data *system_event_record_data)
+sel_string_output_quanta_event_data2_class_oem (ipmi_sel_ctx_t ctx,
+						struct ipmi_sel_entry *sel_entry,
+						uint8_t sel_record_type,
+						char *tmpbuf,
+						unsigned int tmpbuflen,
+						unsigned int flags,
+						unsigned int *wlen,
+						struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
@@ -284,14 +284,14 @@ ipmi_sel_parse_output_quanta_event_data2_class_oem (ipmi_sel_ctx_t ctx,
     {
       int nmret;
 
-      if ((nmret = ipmi_sel_parse_output_intel_node_manager_event_data2_class_oem (ctx,
-                                                                                   sel_entry,
-                                                                                   sel_record_type,
-                                                                                   tmpbuf,
-                                                                                   tmpbuflen,
-                                                                                   flags,
-                                                                                   wlen,
-                                                                                   system_event_record_data)) < 0)
+      if ((nmret = sel_string_output_intel_node_manager_event_data2_class_oem (ctx,
+									       sel_entry,
+									       sel_record_type,
+									       tmpbuf,
+									       tmpbuflen,
+									       flags,
+									       wlen,
+									       system_event_record_data)) < 0)
         return (-1);
 
       if (nmret)
@@ -306,14 +306,14 @@ ipmi_sel_parse_output_quanta_event_data2_class_oem (ipmi_sel_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 int
-ipmi_sel_parse_output_quanta_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
-						       struct ipmi_sel_entry *sel_entry,
-						       uint8_t sel_record_type,
-						       char *tmpbuf,
-						       unsigned int tmpbuflen,
-						       unsigned int flags,
-						       unsigned int *wlen,
-						       struct ipmi_sel_system_event_record_data *system_event_record_data)
+sel_string_output_quanta_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
+						   struct ipmi_sel_entry *sel_entry,
+						   uint8_t sel_record_type,
+						   char *tmpbuf,
+						   unsigned int tmpbuflen,
+						   unsigned int flags,
+						   unsigned int *wlen,
+						   struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
@@ -486,14 +486,14 @@ ipmi_sel_parse_output_quanta_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 int
-ipmi_sel_parse_output_quanta_event_data3_class_oem (ipmi_sel_ctx_t ctx,
-                                                    struct ipmi_sel_entry *sel_entry,
-                                                    uint8_t sel_record_type,
-                                                    char *tmpbuf,
-                                                    unsigned int tmpbuflen,
-                                                    unsigned int flags,
-                                                    unsigned int *wlen,
-                                                    struct ipmi_sel_system_event_record_data *system_event_record_data)
+sel_string_output_quanta_event_data3_class_oem (ipmi_sel_ctx_t ctx,
+						struct ipmi_sel_entry *sel_entry,
+						uint8_t sel_record_type,
+						char *tmpbuf,
+						unsigned int tmpbuflen,
+						unsigned int flags,
+						unsigned int *wlen,
+						struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
@@ -514,14 +514,14 @@ ipmi_sel_parse_output_quanta_event_data3_class_oem (ipmi_sel_ctx_t ctx,
     {
       int nmret;
 
-      if ((nmret = ipmi_sel_parse_output_intel_node_manager_event_data3_class_oem (ctx,
-                                                                                   sel_entry,
-                                                                                   sel_record_type,
-                                                                                   tmpbuf,
-                                                                                   tmpbuflen,
-                                                                                   flags,
-                                                                                   wlen,
-                                                                                   system_event_record_data)) < 0)
+      if ((nmret = sel_string_output_intel_node_manager_event_data3_class_oem (ctx,
+									       sel_entry,
+									       sel_record_type,
+									       tmpbuf,
+									       tmpbuflen,
+									       flags,
+									       wlen,
+									       system_event_record_data)) < 0)
         return (-1);
       
       if (nmret)
