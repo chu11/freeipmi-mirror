@@ -2816,7 +2816,7 @@ _output_event_data1_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
   if (ipmi_sel_record_type_class (sel_record_type) != IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)
     return (_invalid_sel_entry_common (ctx, buf, buflen, flags, wlen));
 
-  if (sel_parse_get_system_event_record (ctx, sel_entry, &system_event_record_data) < 0)
+  if (sel_get_system_event_record (ctx, sel_entry, &system_event_record_data) < 0)
     return (-1);
 
   memset (tmpbufeventdata1, '\0', EVENT_BUFFER_LENGTH+1);
@@ -2851,23 +2851,23 @@ _output_event_data1_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
       && (strlen (tmpbufeventdata23)
           && strcasecmp (tmpbufeventdata23, NA_STRING)))
     {
-      if (ipmi_sel_parse_string_snprintf (buf,
-                                          buflen,
-                                          wlen,
-                                          "%s%s%s",
-                                          tmpbufeventdata1,
-                                          ctx->separator ? ctx->separator : IPMI_SEL_SEPARATOR_STRING,
-                                          tmpbufeventdata23))
+      if (sel_string_snprintf (buf,
+			       buflen,
+			       wlen,
+			       "%s%s%s",
+			       tmpbufeventdata1,
+			       ctx->separator ? ctx->separator : IPMI_SEL_SEPARATOR_STRING,
+			       tmpbufeventdata23))
         return (1);
     }
   else if (strlen (tmpbufeventdata1)
            && strcasecmp (tmpbufeventdata1, NA_STRING))
     {
-      if (ipmi_sel_parse_string_snprintf (buf,
-                                          buflen,
-                                          wlen,
-                                          "%s",
-                                          tmpbufeventdata1))
+      if (sel_string_snprintf (buf,
+			       buflen,
+			       wlen,
+			       "%s",
+			       tmpbufeventdata1))
         return (1);
     }
   else if (strlen (tmpbufeventdata23)
@@ -2876,20 +2876,20 @@ _output_event_data1_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
       /* Having event_data1 as N/A and event data 2+3 not N/A is
        * probably impossible, but handle it anyway.
        */
-      if (ipmi_sel_parse_string_snprintf (buf,
-                                          buflen,
-                                          wlen,
-                                          "%s",
-                                          tmpbufeventdata23))
+      if (sel_string_snprintf (buf,
+			       buflen,
+			       wlen,
+			       "%s",
+			       tmpbufeventdata23))
         return (1);
     }
   else if (flags & IPMI_SEL_STRING_FLAGS_OUTPUT_NOT_AVAILABLE)
     {
-      if (ipmi_sel_parse_string_snprintf (buf,
-                                          buflen,
-                                          wlen,
-                                          "%s",
-                                          NA_STRING))
+      if (sel_string_snprintf (buf,
+			       buflen,
+			       wlen,
+			       "%s",
+			       NA_STRING))
         return (1);
     }
 
