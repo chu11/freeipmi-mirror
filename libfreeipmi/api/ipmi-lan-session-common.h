@@ -27,65 +27,65 @@
 #define IPMI_INTERNAL_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE     0x00000002
 #define IPMI_INTERNAL_WORKAROUND_FLAGS_CLOSE_SESSION_SKIP_RETRANSMIT 0x00000004
 
-void ipmi_lan_cmd_get_session_parameters (ipmi_ctx_t ctx,
-                                          uint8_t *authentication_type,
-                                          unsigned int *internal_workaround_flags);
+void api_lan_cmd_get_session_parameters (ipmi_ctx_t ctx,
+					 uint8_t *authentication_type,
+					 unsigned int *internal_workaround_flags);
 
-void ipmi_lan_2_0_cmd_get_session_parameters (ipmi_ctx_t ctx,
-                                              uint8_t *payload_authenticated,
-                                              uint8_t *payload_encrypted);
+void api_lan_2_0_cmd_get_session_parameters (ipmi_ctx_t ctx,
+					     uint8_t *payload_authenticated,
+					     uint8_t *payload_encrypted);
 
-int ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
-                          unsigned int internal_workaround_flags,
-                          uint8_t lun,
-                          uint8_t net_fn,
-                          uint8_t authentication_type,
-                          int check_authentication_code,
-                          uint32_t *session_sequence_number,
-                          uint32_t session_id,
-                          uint8_t *rq_seq,
-                          const char *password,
-                          unsigned int password_len,
-                          fiid_obj_t obj_cmd_rq,
-                          fiid_obj_t obj_cmd_rs);
+int api_lan_cmd_wrapper (ipmi_ctx_t ctx,
+			 unsigned int internal_workaround_flags,
+			 uint8_t lun,
+			 uint8_t net_fn,
+			 uint8_t authentication_type,
+			 int check_authentication_code,
+			 uint32_t *session_sequence_number,
+			 uint32_t session_id,
+			 uint8_t *rq_seq,
+			 const char *password,
+			 unsigned int password_len,
+			 fiid_obj_t obj_cmd_rq,
+			 fiid_obj_t obj_cmd_rs);
 
-int ipmi_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
-                               fiid_obj_t obj_cmd_rq,
-                               fiid_obj_t obj_cmd_rs);
+int api_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
+			      fiid_obj_t obj_cmd_rq,
+			      fiid_obj_t obj_cmd_rs);
 
-int ipmi_lan_open_session (ipmi_ctx_t ctx);
+int api_lan_open_session (ipmi_ctx_t ctx);
 
-int ipmi_lan_close_session (ipmi_ctx_t ctx);
+int api_lan_close_session (ipmi_ctx_t ctx);
 
-int ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
-                              unsigned int internal_workaround_flags,
-                              uint8_t lun,
-                              uint8_t net_fn,
-                              uint8_t payload_type,
-                              uint8_t payload_authenticated,
-                              uint8_t payload_encrypted,
-                              uint8_t *message_tag,
-                              uint32_t *session_sequence_number,
-                              uint32_t session_id,
-                              uint8_t *rq_seq,
-                              uint8_t authentication_algorithm,
-                              uint8_t integrity_algorithm,
-                              uint8_t confidentiality_algorithm,
-                              const void *integrity_key,
-                              unsigned int integrity_key_len,
-                              const void *confidentiality_key,
-                              unsigned int confidentiality_key_len,
-                              const char *password,
-                              unsigned int password_len,
-                              fiid_obj_t obj_cmd_rq,
-                              fiid_obj_t obj_cmd_rs);
+int api_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
+			     unsigned int internal_workaround_flags,
+			     uint8_t lun,
+			     uint8_t net_fn,
+			     uint8_t payload_type,
+			     uint8_t payload_authenticated,
+			     uint8_t payload_encrypted,
+			     uint8_t *message_tag,
+			     uint32_t *session_sequence_number,
+			     uint32_t session_id,
+			     uint8_t *rq_seq,
+			     uint8_t authentication_algorithm,
+			     uint8_t integrity_algorithm,
+			     uint8_t confidentiality_algorithm,
+			     const void *integrity_key,
+			     unsigned int integrity_key_len,
+			     const void *confidentiality_key,
+			     unsigned int confidentiality_key_len,
+			     const char *password,
+			     unsigned int password_len,
+			     fiid_obj_t obj_cmd_rq,
+			     fiid_obj_t obj_cmd_rs);
 
-int ipmi_lan_2_0_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
-                                   fiid_obj_t obj_cmd_rq,
-                                   fiid_obj_t obj_cmd_rs);
+int api_lan_2_0_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
+				  fiid_obj_t obj_cmd_rq,
+				  fiid_obj_t obj_cmd_rs);
 
-int ipmi_lan_2_0_open_session (ipmi_ctx_t ctx);
+int api_lan_2_0_open_session (ipmi_ctx_t ctx);
 
-int ipmi_lan_2_0_close_session (ipmi_ctx_t ctx);
+int api_lan_2_0_close_session (ipmi_ctx_t ctx);
 
 #endif /* IPMI_LAN_SESSION_COMMON_H */

@@ -48,7 +48,7 @@ fiid_template_t tmpl_openipmi_raw =
   };
 
 int
-ipmi_openipmi_cmd_api (ipmi_ctx_t ctx,
+api_openipmi_cmd (ipmi_ctx_t ctx,
                        fiid_obj_t obj_cmd_rq,
                        fiid_obj_t obj_cmd_rs)
 {
@@ -73,7 +73,7 @@ ipmi_openipmi_cmd_api (ipmi_ctx_t ctx,
 }
 
 int
-ipmi_openipmi_cmd_api_ipmb (ipmi_ctx_t ctx,
+api_openipmi_cmd_ipmb (ipmi_ctx_t ctx,
                             fiid_obj_t obj_cmd_rq,
                             fiid_obj_t obj_cmd_rs)
 {
@@ -100,11 +100,11 @@ ipmi_openipmi_cmd_api_ipmb (ipmi_ctx_t ctx,
 }
 
 int
-ipmi_openipmi_cmd_raw_api (ipmi_ctx_t ctx,
-                           const void *buf_rq,
-                           unsigned int buf_rq_len,
-                           void *buf_rs,
-                           unsigned int buf_rs_len)
+api_openipmi_cmd_raw (ipmi_ctx_t ctx,
+		      const void *buf_rq,
+		      unsigned int buf_rq_len,
+		      void *buf_rs,
+		      unsigned int buf_rs_len)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   fiid_obj_t obj_cmd_rs = NULL;
@@ -137,7 +137,7 @@ ipmi_openipmi_cmd_raw_api (ipmi_ctx_t ctx,
       goto cleanup;
     }
 
-  if (ipmi_openipmi_cmd_api (ctx,
+  if (api_openipmi_cmd (ctx,
 			     obj_cmd_rq,
 			     obj_cmd_rs) < 0)
     goto cleanup;
@@ -158,11 +158,11 @@ ipmi_openipmi_cmd_raw_api (ipmi_ctx_t ctx,
 }
 
 int
-ipmi_openipmi_cmd_raw_api_ipmb (ipmi_ctx_t ctx,
-				const void *buf_rq,
-				unsigned int buf_rq_len,
-				void *buf_rs,
-				unsigned int buf_rs_len)
+api_openipmi_cmd_raw_ipmb (ipmi_ctx_t ctx,
+			   const void *buf_rq,
+			   unsigned int buf_rq_len,
+			   void *buf_rs,
+			   unsigned int buf_rs_len)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   fiid_obj_t obj_cmd_rs = NULL;
@@ -195,7 +195,7 @@ ipmi_openipmi_cmd_raw_api_ipmb (ipmi_ctx_t ctx,
       goto cleanup;
     }
 
-  if (ipmi_openipmi_cmd_api_ipmb (ctx,
+  if (api_openipmi_cmd_ipmb (ctx,
 				  obj_cmd_rq,
 				  obj_cmd_rs) < 0)
     goto cleanup;

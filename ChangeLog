@@ -1,3 +1,25 @@
+2012-05-15  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/: Rename a large number of internal functions with
+	'ipmi' prefixes so they are not exported by libfreeipmi.
+	
+2012-05-15  Albert Chu <chu11@llnl.gov>
+
+	Merge movetolib branch
+	
+       * libfreeipmi/include/freeipmi/sel/ipmi-sel.h,
+       libfreeipmi/sel/ipmi-sel-string.c (_output_event_data1_event_data2_event_data3),
+       libfreeipmi/sel/ipmi-sel-string.c (sel_parse_format_record_string):
+       Support new '%E' for sel string outputs.
+	
+       * common/toolevent/tool-event-common.c (event_output_event): Use
+       new '%E' appropriately.
+
+2012-05-15  Albert Chu <chu11@llnl.gov>
+
+	* libipmimonitoring/ipmimonitoring.map/: Explicitly list functions
+	to avoid errant functions being made global.
+	
 2012-05-14  Albert Chu <chu11@llnl.gov>
 
 	Merge toolcleanup branch

@@ -275,15 +275,15 @@ _intel_node_manager_init (ipmi_sel_ctx_t ctx)
  * 1 - buffer full, return full buffer to user
  */
 int
-ipmi_sel_parse_output_intel_node_manager_sensor_name (ipmi_sel_ctx_t ctx,
-						      struct ipmi_sel_entry *sel_entry,
-						      uint8_t sel_record_type,
-						      char *buf,
-						      unsigned int buflen,
-						      unsigned int flags,
-						      unsigned int *wlen,
-						      struct ipmi_sel_system_event_record_data *system_event_record_data,
-						      int *oem_rv)
+sel_string_output_intel_node_manager_sensor_name (ipmi_sel_ctx_t ctx,
+						  struct ipmi_sel_entry *sel_entry,
+						  uint8_t sel_record_type,
+						  char *buf,
+						  unsigned int buflen,
+						  unsigned int flags,
+						  unsigned int *wlen,
+						  struct ipmi_sel_system_event_record_data *system_event_record_data,
+						  int *oem_rv)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
@@ -329,10 +329,10 @@ ipmi_sel_parse_output_intel_node_manager_sensor_name (ipmi_sel_ctx_t ctx,
       if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_NODE_MANAGER_HEALTH_EVENT
 	  && system_event_record_data->sensor_number == ctx->intel_node_manager.nm_health_event_sensor_number)
         {
-          if (ipmi_sel_parse_string_snprintf (buf,
-                                              buflen,
-                                              wlen,
-                                              "NM Health"))
+          if (sel_string_snprintf (buf,
+				   buflen,
+				   wlen,
+				   "NM Health"))
             (*oem_rv) = 1;
           else
             (*oem_rv) = 0;
@@ -342,10 +342,10 @@ ipmi_sel_parse_output_intel_node_manager_sensor_name (ipmi_sel_ctx_t ctx,
       else if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_NODE_MANAGER_EXCEPTION_EVENT
 	       && system_event_record_data->sensor_number == ctx->intel_node_manager.nm_exception_event_sensor_number)
         {
-          if (ipmi_sel_parse_string_snprintf (buf,
-                                              buflen,
-                                              wlen,
-                                              "NM Exception"))
+          if (sel_string_snprintf (buf,
+				   buflen,
+				   wlen,
+				   "NM Exception"))
             (*oem_rv) = 1;
           else
             (*oem_rv) = 0;
@@ -355,10 +355,10 @@ ipmi_sel_parse_output_intel_node_manager_sensor_name (ipmi_sel_ctx_t ctx,
       else if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_NODE_MANAGER_OPERATIONAL_CAPABILITIES_CHANGE_EVENT
                && system_event_record_data->sensor_number == ctx->intel_node_manager.nm_operational_capabilities_sensor_number)
         {
-          if (ipmi_sel_parse_string_snprintf (buf,
-                                              buflen,
-                                              wlen,
-                                              "NM Capabilities"))
+          if (sel_string_snprintf (buf,
+				   buflen,
+				   wlen,
+				   "NM Capabilities"))
             (*oem_rv) = 1;
           else
             (*oem_rv) = 0;
@@ -368,10 +368,10 @@ ipmi_sel_parse_output_intel_node_manager_sensor_name (ipmi_sel_ctx_t ctx,
       else if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_NODE_MANAGER_ALERT_THRESHOLD_EXCEEDED
                && system_event_record_data->sensor_number == ctx->intel_node_manager.nm_alert_threshold_exceeded_sensor_number)
         {
-          if (ipmi_sel_parse_string_snprintf (buf,
-                                              buflen,
-                                              wlen,
-                                              "NM Threshold"))
+          if (sel_string_snprintf (buf,
+				   buflen,
+				   wlen,
+				   "NM Threshold"))
             (*oem_rv) = 1;
           else
             (*oem_rv) = 0;
@@ -381,10 +381,10 @@ ipmi_sel_parse_output_intel_node_manager_sensor_name (ipmi_sel_ctx_t ctx,
       else if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH
                && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH)
         {
-          if (ipmi_sel_parse_string_snprintf (buf,
-                                              buflen,
-                                              wlen,
-                                              "NM Firmware"))
+          if (sel_string_snprintf (buf,
+				   buflen,
+				   wlen,
+				   "NM Firmware"))
             (*oem_rv) = 1;
           else
             (*oem_rv) = 0;
@@ -402,14 +402,14 @@ ipmi_sel_parse_output_intel_node_manager_sensor_name (ipmi_sel_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 int
-ipmi_sel_parse_output_intel_node_manager_event_data1_class_oem (ipmi_sel_ctx_t ctx,
-                                                                struct ipmi_sel_entry *sel_entry,
-                                                                uint8_t sel_record_type,
-                                                                char *tmpbuf,
-                                                                unsigned int tmpbuflen,
-                                                                unsigned int flags,
-                                                                unsigned int *wlen,
-                                                                struct ipmi_sel_system_event_record_data *system_event_record_data)
+sel_string_output_intel_node_manager_event_data1_class_oem (ipmi_sel_ctx_t ctx,
+							    struct ipmi_sel_entry *sel_entry,
+							    uint8_t sel_record_type,
+							    char *tmpbuf,
+							    unsigned int tmpbuflen,
+							    unsigned int flags,
+							    unsigned int *wlen,
+							    struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
@@ -526,14 +526,14 @@ ipmi_sel_parse_output_intel_node_manager_event_data1_class_oem (ipmi_sel_ctx_t c
  * return (-1) - error, cleanup and return error
  */
 int
-ipmi_sel_parse_output_intel_node_manager_event_data2_class_oem (ipmi_sel_ctx_t ctx,
-                                                                struct ipmi_sel_entry *sel_entry,
-                                                                uint8_t sel_record_type,
-                                                                char *tmpbuf,
-                                                                unsigned int tmpbuflen,
-                                                                unsigned int flags,
-                                                                unsigned int *wlen,
-                                                                struct ipmi_sel_system_event_record_data *system_event_record_data)
+sel_string_output_intel_node_manager_event_data2_class_oem (ipmi_sel_ctx_t ctx,
+							    struct ipmi_sel_entry *sel_entry,
+							    uint8_t sel_record_type,
+							    char *tmpbuf,
+							    unsigned int tmpbuflen,
+							    unsigned int flags,
+							    unsigned int *wlen,
+							    struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
@@ -684,14 +684,14 @@ ipmi_sel_parse_output_intel_node_manager_event_data2_class_oem (ipmi_sel_ctx_t c
  * return (-1) - error, cleanup and return error
  */
 int
-ipmi_sel_parse_output_intel_node_manager_event_data3_class_oem (ipmi_sel_ctx_t ctx,
-                                                                struct ipmi_sel_entry *sel_entry,
-                                                                uint8_t sel_record_type,
-                                                                char *tmpbuf,
-                                                                unsigned int tmpbuflen,
-                                                                unsigned int flags,
-                                                                unsigned int *wlen,
-                                                                struct ipmi_sel_system_event_record_data *system_event_record_data)
+sel_string_output_intel_node_manager_event_data3_class_oem (ipmi_sel_ctx_t ctx,
+							    struct ipmi_sel_entry *sel_entry,
+							    uint8_t sel_record_type,
+							    char *tmpbuf,
+							    unsigned int tmpbuflen,
+							    unsigned int flags,
+							    unsigned int *wlen,
+							    struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);

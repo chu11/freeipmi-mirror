@@ -160,7 +160,7 @@ ipmi_sdr_parse_record_id_and_type (ipmi_sdr_ctx_t ctx,
       *record_type = val;
     }
 
-  ipmi_sdr_check_read_status (ctx);
+  sdr_check_read_status (ctx);
 
   rv = 0;
   ctx->errnum = IPMI_SDR_ERR_SUCCESS;
@@ -354,7 +354,7 @@ _sdr_record_get_common (ipmi_sdr_ctx_t ctx,
       goto cleanup;
     }
 
-  ipmi_sdr_check_read_status (ctx);
+  sdr_check_read_status (ctx);
 
   return (obj_sdr_record);
 

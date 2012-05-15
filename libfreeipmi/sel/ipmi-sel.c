@@ -54,7 +54,7 @@
 #include "freeipmi-portability.h"
 #include "debug-util.h"
 
-static char *ipmi_sel_parse_errmsgs[] =
+static char *ipmi_sel_errmsgs[] =
   {
     "success",
     "context null",
@@ -200,9 +200,9 @@ char *
 ipmi_sel_ctx_strerror (int errnum)
 {
   if (errnum >= IPMI_SEL_ERR_SUCCESS && errnum <= IPMI_SEL_ERR_ERRNUMRANGE)
-    return (ipmi_sel_parse_errmsgs[errnum]);
+    return (ipmi_sel_errmsgs[errnum]);
   else
-    return (ipmi_sel_parse_errmsgs[IPMI_SEL_ERR_ERRNUMRANGE]);
+    return (ipmi_sel_errmsgs[IPMI_SEL_ERR_ERRNUMRANGE]);
 }
 
 char *
@@ -456,7 +456,7 @@ ipmi_sel_ctx_register_reservation_id (ipmi_sel_ctx_t ctx, uint16_t *reservation_
       return (-1);
     }
 
-  if (sel_parse_get_reservation_id (ctx, &ctx->reservation_id, NULL) < 0)
+  if (sel_get_reservation_id (ctx, &ctx->reservation_id, NULL) < 0)
     return (-1);
 
   /* Possible reservation ID not supported */
@@ -506,10 +506,10 @@ _sel_entry_dump (ipmi_sel_ctx_t ctx, struct ipmi_sel_entry *sel_entry)
   if (!(ctx->flags & IPMI_SEL_FLAGS_DEBUG_DUMP))
     return;
 
-  if (sel_parse_get_record_header_info (ctx,
-                                        sel_entry,
-                                        NULL,
-                                        &record_type) < 0)
+  if (sel_get_record_header_info (ctx,
+				  sel_entry,
+				  NULL,
+				  &record_type) < 0)
     goto cleanup;
 
   record_type_class = ipmi_sel_record_type_class (record_type);
@@ -519,9 +519,9 @@ _sel_entry_dump (ipmi_sel_ctx_t ctx, struct ipmi_sel_entry *sel_entry)
       struct ipmi_sel_system_event_record_data system_event_record_data;
       int event_type_code_class;
 
-      if (sel_parse_get_system_event_record (ctx,
-                                             sel_entry,
-                                             &system_event_record_data) < 0)
+      if (sel_get_system_event_record (ctx,
+				       sel_entry,
+				       &system_event_record_data) < 0)
         {
           if (ctx->errnum == IPMI_SEL_ERR_INVALID_SEL_ENTRY)
             {
@@ -689,7 +689,7 @@ _get_sel_entry (ipmi_sel_ctx_t ctx,
 	    (*reservation_id) = ctx->reservation_id;
 	  else
 	    {
-	      if (sel_parse_get_reservation_id (ctx, reservation_id, &is_insufficient_privilege_level) < 0)
+	      if (sel_get_reservation_id (ctx, reservation_id, &is_insufficient_privilege_level) < 0)
 		{
 		  /* IPMI Workaround (achu)
 		   *
@@ -732,7 +732,7 @@ _get_sel_entry (ipmi_sel_ctx_t ctx,
 		  reservation_canceled++;
 		  (*reservation_id_initialized) = 0;
 		  
-		  if (reservation_id_retry_count > IPMI_SEL_PARSE_RESERVATION_ID_RETRY)
+		  if (reservation_id_retry_count > IPMI_SEL_RESERVATION_ID_RETRY)
 		    {
 		      SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_IPMI_ERROR);
 		      goto cleanup;
@@ -837,10 +837,10 @@ ipmi_sel_parse (ipmi_sel_ctx_t ctx,
       
       tmp_sel_entry.sel_event_record_len = len;
 
-      if (sel_parse_get_record_header_info (ctx,
-					    &tmp_sel_entry,
-					    &tmp_record_id_last,
-					    NULL) < 0)
+      if (sel_get_record_header_info (ctx,
+				      &tmp_sel_entry,
+				      &tmp_record_id_last,
+				      NULL) < 0)
         goto cleanup;
 
       if (record_id_last > tmp_record_id_last)
@@ -1231,10 +1231,10 @@ _ipmi_sel_parse_find_record_id (ipmi_sel_ctx_t ctx,
     {
       uint16_t current_record_id;
 
-      if (sel_parse_get_record_header_info (ctx,
-                                            sel_entry,
-                                            &current_record_id,
-                                            NULL) < 0)
+      if (sel_get_record_header_info (ctx,
+				      sel_entry,
+				      &current_record_id,
+				      NULL) < 0)
         {
           /* if it was an invalid SEL entry, continue on */
           if (ctx->errnum == IPMI_SEL_ERR_INVALID_SEL_ENTRY)
@@ -1405,10 +1405,10 @@ ipmi_sel_parse_read_record_id (ipmi_sel_ctx_t ctx,
 			      &sel_entry) < 0)
     return (-1);
 
-  if (sel_parse_get_record_header_info (ctx,
-					sel_entry_ptr,
-					record_id,
-					NULL) < 0)
+  if (sel_get_record_header_info (ctx,
+				  sel_entry_ptr,
+				  record_id,
+				  NULL) < 0)
     return (-1);
 
   ctx->errnum = IPMI_SEL_ERR_SUCCESS;
@@ -1431,10 +1431,10 @@ ipmi_sel_parse_read_record_type (ipmi_sel_ctx_t ctx,
 			      &sel_entry) < 0)
     return (-1);
 
-  if (sel_parse_get_record_header_info (ctx,
-                                        sel_entry_ptr,
-                                        NULL,
-                                        record_type) < 0)
+  if (sel_get_record_header_info (ctx,
+				  sel_entry_ptr,
+				  NULL,
+				  record_type) < 0)
     return (-1);
 
   ctx->errnum = IPMI_SEL_ERR_SUCCESS;
@@ -1457,9 +1457,9 @@ ipmi_sel_parse_read_timestamp (ipmi_sel_ctx_t ctx,
 			      &sel_entry) < 0)
     return (-1);
 
-  if (sel_parse_get_timestamp (ctx,
-                               sel_entry_ptr,
-                               timestamp) < 0)
+  if (sel_get_timestamp (ctx,
+			 sel_entry_ptr,
+			 timestamp) < 0)
     return (-1);
 
   ctx->errnum = IPMI_SEL_ERR_SUCCESS;
@@ -1505,9 +1505,9 @@ _sel_parse_system_event_common (ipmi_sel_ctx_t ctx,
       sel_entry_ptr = &sel_entry_buf;
     }
   
-  if (sel_parse_get_system_event_record (ctx,
-                                         sel_entry_ptr,
-                                         system_event_record_data) < 0)
+  if (sel_get_system_event_record (ctx,
+				   sel_entry_ptr,
+				   system_event_record_data) < 0)
     return (-1);
   
   return (0);
@@ -1833,9 +1833,9 @@ ipmi_sel_parse_read_manufacturer_id (ipmi_sel_ctx_t ctx,
 			      &sel_entry) < 0)
     return (-1);
 
-  if (sel_parse_get_manufacturer_id (ctx,
-                                     sel_entry_ptr,
-                                     manufacturer_id) < 0)
+  if (sel_get_manufacturer_id (ctx,
+			       sel_entry_ptr,
+			       manufacturer_id) < 0)
     return (-1);
 
   ctx->errnum = IPMI_SEL_ERR_SUCCESS;
@@ -1866,10 +1866,10 @@ ipmi_sel_parse_read_oem (ipmi_sel_ctx_t ctx,
       return (-1);
     }
 
-  if ((rv = sel_parse_get_oem (ctx,
-                               sel_entry_ptr,
-                               buf,
-                               buflen)) < 0)
+  if ((rv = sel_get_oem (ctx,
+			 sel_entry_ptr,
+			 buf,
+			 buflen)) < 0)
     return (-1);
 
   ctx->errnum = IPMI_SEL_ERR_SUCCESS;
@@ -1931,13 +1931,13 @@ ipmi_sel_parse_read_record_string (ipmi_sel_ctx_t ctx,
       return (-1);
     }
 
-  return (sel_parse_format_record_string (ctx,
-                                          fmt,
-                                          sel_record_to_use,
-                                          sel_record_len_to_use,
-                                          buf,
-                                          buflen,
-                                          flags));
+  return (sel_format_record_string (ctx,
+				    fmt,
+				    sel_record_to_use,
+				    sel_record_len_to_use,
+				    buf,
+				    buflen,
+				    flags));
 }
 
 int
@@ -1966,7 +1966,7 @@ ipmi_sel_clear_sel (ipmi_sel_ctx_t ctx)
 	reservation_id = ctx->reservation_id;
       else
 	{
-	  if (sel_parse_get_reservation_id (ctx, &reservation_id, NULL) < 0)
+	  if (sel_get_reservation_id (ctx, &reservation_id, NULL) < 0)
 	    goto cleanup;
 	}
 
@@ -1988,13 +1988,13 @@ ipmi_sel_clear_sel (ipmi_sel_ctx_t ctx)
 		{
 		  reservation_id_retry_count++;
 		  
-		  if (reservation_id_retry_count > IPMI_SEL_PARSE_RESERVATION_ID_RETRY)
+		  if (reservation_id_retry_count > IPMI_SEL_RESERVATION_ID_RETRY)
 		    {
 		      SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_IPMI_ERROR);
 		      goto cleanup;
 		    }
 		  
-		  if (sel_parse_get_reservation_id (ctx, &reservation_id, NULL) < 0)
+		  if (sel_get_reservation_id (ctx, &reservation_id, NULL) < 0)
 		    goto cleanup;
 
 		  continue;
@@ -2050,7 +2050,7 @@ ipmi_sel_delete_sel_entry (ipmi_sel_ctx_t ctx, uint16_t record_id)
 	reservation_id = ctx->reservation_id;
       else
 	{
-	  if (sel_parse_get_reservation_id (ctx, &reservation_id, NULL) < 0)
+	  if (sel_get_reservation_id (ctx, &reservation_id, NULL) < 0)
 	    goto cleanup;
 	}
 
@@ -2079,13 +2079,13 @@ ipmi_sel_delete_sel_entry (ipmi_sel_ctx_t ctx, uint16_t record_id)
 		{
 		  reservation_id_retry_count++;
 		  
-		  if (reservation_id_retry_count > IPMI_SEL_PARSE_RESERVATION_ID_RETRY)
+		  if (reservation_id_retry_count > IPMI_SEL_RESERVATION_ID_RETRY)
 		    {
 		      SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_IPMI_ERROR);
 		      goto cleanup;
 		    }
 
-		  if (sel_parse_get_reservation_id (ctx, &reservation_id, NULL) < 0)
+		  if (sel_get_reservation_id (ctx, &reservation_id, NULL) < 0)
 		    goto cleanup;
 
 		  continue;

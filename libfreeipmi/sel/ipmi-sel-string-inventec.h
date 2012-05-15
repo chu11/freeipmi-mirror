@@ -30,69 +30,69 @@
 #include "ipmi-sel-defs.h"
 #include "ipmi-sel-common.h"
 
-int ipmi_sel_parse_output_inventec_sensor_name (ipmi_sel_ctx_t ctx,
-						struct ipmi_sel_entry *sel_entry,
-						uint8_t sel_record_type,
-						char *buf,
-						unsigned int buflen,
-						unsigned int flags,
-						unsigned int *wlen,
-						struct ipmi_sel_system_event_record_data *system_event_record_data,
-						int *oem_rv);
+int sel_string_output_inventec_sensor_name (ipmi_sel_ctx_t ctx,
+						 struct ipmi_sel_entry *sel_entry,
+						 uint8_t sel_record_type,
+						 char *buf,
+						 unsigned int buflen,
+						 unsigned int flags,
+						 unsigned int *wlen,
+						 struct ipmi_sel_system_event_record_data *system_event_record_data,
+						 int *oem_rv);
 
-int ipmi_sel_parse_output_inventec_event_data1_class_oem (ipmi_sel_ctx_t ctx,
-                                                          struct ipmi_sel_entry *sel_entry,
-                                                          uint8_t sel_record_type,
-                                                          char *tmpbuf,
-                                                          unsigned int tmpbuflen,
-                                                          unsigned int flags,
-                                                          unsigned int *wlen,
-                                                          struct ipmi_sel_system_event_record_data *system_event_record_data);
+int sel_string_output_inventec_event_data1_class_oem (ipmi_sel_ctx_t ctx,
+							   struct ipmi_sel_entry *sel_entry,
+							   uint8_t sel_record_type,
+							   char *tmpbuf,
+							   unsigned int tmpbuflen,
+							   unsigned int flags,
+							   unsigned int *wlen,
+							   struct ipmi_sel_system_event_record_data *system_event_record_data);
 
-int ipmi_sel_parse_output_inventec_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
+int sel_string_output_inventec_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
+							      struct ipmi_sel_entry *sel_entry,
+							      uint8_t sel_record_type,
+							      char *tmpbuf,
+							      unsigned int tmpbuflen,
+							      unsigned int flags,
+							      unsigned int *wlen,
+							      struct ipmi_sel_system_event_record_data *system_event_record_data);
+
+int sel_string_output_inventec_event_data2_class_oem (ipmi_sel_ctx_t ctx,
+							   struct ipmi_sel_entry *sel_entry,
+							   uint8_t sel_record_type,
+							   char *tmpbuf,
+							   unsigned int tmpbuflen,
+							   unsigned int flags,
+							   unsigned int *wlen,
+							   struct ipmi_sel_system_event_record_data *system_event_record_data);
+
+int sel_string_output_inventec_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
+							      struct ipmi_sel_entry *sel_entry,
+							      uint8_t sel_record_type,
+							      char *tmpbuf,
+							      unsigned int tmpbuflen,
+							      unsigned int flags,
+							      unsigned int *wlen,
+							      struct ipmi_sel_system_event_record_data *system_event_record_data);
+
+int sel_string_output_inventec_event_data3_class_oem (ipmi_sel_ctx_t ctx,
+							   struct ipmi_sel_entry *sel_entry,
+							   uint8_t sel_record_type,
+							   char *tmpbuf,
+							   unsigned int tmpbuflen,
+							   unsigned int flags,
+							   unsigned int *wlen,
+							   struct ipmi_sel_system_event_record_data *system_event_record_data);
+
+int sel_string_output_inventec_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
 							     struct ipmi_sel_entry *sel_entry,
 							     uint8_t sel_record_type,
-							     char *tmpbuf,
-							     unsigned int tmpbuflen,
+							     char *buf,
+							     unsigned int buflen,
 							     unsigned int flags,
 							     unsigned int *wlen,
-							     struct ipmi_sel_system_event_record_data *system_event_record_data);
-
-int ipmi_sel_parse_output_inventec_event_data2_class_oem (ipmi_sel_ctx_t ctx,
-							  struct ipmi_sel_entry *sel_entry,
-							  uint8_t sel_record_type,
-							  char *tmpbuf,
-							  unsigned int tmpbuflen,
-							  unsigned int flags,
-							  unsigned int *wlen,
-							  struct ipmi_sel_system_event_record_data *system_event_record_data);
-
-int ipmi_sel_parse_output_inventec_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
-							     struct ipmi_sel_entry *sel_entry,
-							     uint8_t sel_record_type,
-							     char *tmpbuf,
-							     unsigned int tmpbuflen,
-							     unsigned int flags,
-							     unsigned int *wlen,
-							     struct ipmi_sel_system_event_record_data *system_event_record_data);
-
-int ipmi_sel_parse_output_inventec_event_data3_class_oem (ipmi_sel_ctx_t ctx,
-							  struct ipmi_sel_entry *sel_entry,
-							  uint8_t sel_record_type,
-							  char *tmpbuf,
-							  unsigned int tmpbuflen,
-							  unsigned int flags,
-							  unsigned int *wlen,
-							  struct ipmi_sel_system_event_record_data *system_event_record_data);
-
-int ipmi_sel_parse_output_inventec_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
-							    struct ipmi_sel_entry *sel_entry,
-							    uint8_t sel_record_type,
-							    char *buf,
-							    unsigned int buflen,
-							    unsigned int flags,
-							    unsigned int *wlen,
-							    struct ipmi_sel_system_event_record_data *system_event_record_data,
-							    int *oem_rv);
+							     struct ipmi_sel_system_event_record_data *system_event_record_data,
+							     int *oem_rv);
 
 #endif /* IPMI_SEL_STRING_INVENTEC_H */

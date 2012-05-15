@@ -63,13 +63,13 @@ ipmi_dump_sdr_record (int fd,
       return (-1);
     }
 
-  if (ipmi_debug_set_prefix (prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN, prefix) < 0)
+  if (debug_set_prefix (prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN, prefix) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
     }
 
-  if (ipmi_debug_output_str (fd, prefix_buf, hdr) < 0)
+  if (debug_output_str (fd, prefix_buf, hdr) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -319,7 +319,7 @@ ipmi_dump_sdr_record (int fd,
       goto cleanup;
     }
 
-  if (ipmi_debug_output_str (fd, prefix_buf, trlr) < 0)
+  if (debug_output_str (fd, prefix_buf, trlr) < 0)
     {
       ERRNO_TRACE (errno);
       goto cleanup;

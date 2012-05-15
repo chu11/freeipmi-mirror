@@ -72,15 +72,15 @@
 #define INTEL_EVENT_BUFFER_LENGTH 4096
 
 int
-ipmi_sel_parse_output_intel_sensor_name (ipmi_sel_ctx_t ctx,
-					 struct ipmi_sel_entry *sel_entry,
-					 uint8_t sel_record_type,
-					 char *buf,
-					 unsigned int buflen,
-					 unsigned int flags,
-					 unsigned int *wlen,
-					 struct ipmi_sel_system_event_record_data *system_event_record_data,
-					 int *oem_rv)
+sel_string_output_intel_sensor_name (ipmi_sel_ctx_t ctx,
+				     struct ipmi_sel_entry *sel_entry,
+				     uint8_t sel_record_type,
+				     char *buf,
+				     unsigned int buflen,
+				     unsigned int flags,
+				     unsigned int *wlen,
+				     struct ipmi_sel_system_event_record_data *system_event_record_data,
+				     int *oem_rv)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
@@ -107,15 +107,15 @@ ipmi_sel_parse_output_intel_sensor_name (ipmi_sel_ctx_t ctx,
     {
       int nmret;
 
-      if ((nmret = ipmi_sel_parse_output_intel_node_manager_sensor_name (ctx,
-									 sel_entry,
-									 sel_record_type,
-									 buf,
-									 buflen,
-									 flags,
-									 wlen,
-									 system_event_record_data,
-									 oem_rv)) < 0)
+      if ((nmret = sel_string_output_intel_node_manager_sensor_name (ctx,
+								     sel_entry,
+								     sel_record_type,
+								     buf,
+								     buflen,
+								     flags,
+								     wlen,
+								     system_event_record_data,
+								     oem_rv)) < 0)
         return (-1);
       
       if (nmret)
@@ -130,14 +130,14 @@ ipmi_sel_parse_output_intel_sensor_name (ipmi_sel_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 int
-ipmi_sel_parse_output_intel_event_data1_class_oem (ipmi_sel_ctx_t ctx,
-                                                   struct ipmi_sel_entry *sel_entry,
-                                                   uint8_t sel_record_type,
-                                                   char *tmpbuf,
-                                                   unsigned int tmpbuflen,
-                                                   unsigned int flags,
-                                                   unsigned int *wlen,
-                                                   struct ipmi_sel_system_event_record_data *system_event_record_data)
+sel_string_output_intel_event_data1_class_oem (ipmi_sel_ctx_t ctx,
+					       struct ipmi_sel_entry *sel_entry,
+					       uint8_t sel_record_type,
+					       char *tmpbuf,
+					       unsigned int tmpbuflen,
+					       unsigned int flags,
+					       unsigned int *wlen,
+					       struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
@@ -239,14 +239,14 @@ ipmi_sel_parse_output_intel_event_data1_class_oem (ipmi_sel_ctx_t ctx,
     {
       int nmret;
 
-      if ((nmret = ipmi_sel_parse_output_intel_node_manager_event_data1_class_oem (ctx,
-                                                                                   sel_entry,
-                                                                                   sel_record_type,
-                                                                                   tmpbuf,
-                                                                                   tmpbuflen,
-                                                                                   flags,
-                                                                                   wlen,
-                                                                                   system_event_record_data)) < 0)
+      if ((nmret = sel_string_output_intel_node_manager_event_data1_class_oem (ctx,
+									       sel_entry,
+									       sel_record_type,
+									       tmpbuf,
+									       tmpbuflen,
+									       flags,
+									       wlen,
+									       system_event_record_data)) < 0)
         return (-1);
       
       if (nmret)
@@ -487,11 +487,11 @@ ipmi_sel_parse_output_intel_event_data1_class_oem (ipmi_sel_ctx_t ctx,
 }
 
 static void
-_ipmi_sel_parse_output_intel_bus (ipmi_sel_ctx_t ctx,
-				  char *tmpbuf,
-				  unsigned int tmpbuflen,
-				  unsigned int flags,
-				  struct ipmi_sel_system_event_record_data *system_event_record_data)
+_sel_string_output_intel_bus (ipmi_sel_ctx_t ctx,
+			      char *tmpbuf,
+			      unsigned int tmpbuflen,
+			      unsigned int flags,
+			      struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
@@ -510,7 +510,7 @@ _ipmi_sel_parse_output_intel_bus (ipmi_sel_ctx_t ctx,
 }
 
 static const char *
-_ipmi_sel_parse_output_intel_s2600jf_ras_mode (uint8_t event_data) 
+_sel_string_output_intel_s2600jf_ras_mode (uint8_t event_data) 
 {
   uint8_t ras_mode;
   char *ras_mode_str;
@@ -544,14 +544,14 @@ _ipmi_sel_parse_output_intel_s2600jf_ras_mode (uint8_t event_data)
  * return (-1) - error, cleanup and return error
  */
 int
-ipmi_sel_parse_output_intel_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
-                                                      struct ipmi_sel_entry *sel_entry,
-                                                      uint8_t sel_record_type,
-                                                      char *tmpbuf,
-                                                      unsigned int tmpbuflen,
-                                                      unsigned int flags,
-                                                      unsigned int *wlen,
-                                                      struct ipmi_sel_system_event_record_data *system_event_record_data)
+sel_string_output_intel_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
+						  struct ipmi_sel_entry *sel_entry,
+						  uint8_t sel_record_type,
+						  char *tmpbuf,
+						  unsigned int tmpbuflen,
+						  unsigned int flags,
+						  unsigned int *wlen,
+						  struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
@@ -577,7 +577,7 @@ ipmi_sel_parse_output_intel_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
 	  && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_PERR
 	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_SERR))
 	{
-	  _ipmi_sel_parse_output_intel_bus (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
+	  _sel_string_output_intel_bus (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
 	  
 	  return (1);
 	}
@@ -615,7 +615,7 @@ ipmi_sel_parse_output_intel_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
 	  && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_PERR
 	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_SERR))
 	{
-	  _ipmi_sel_parse_output_intel_bus (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
+	  _sel_string_output_intel_bus (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
 	  
 	  return (1);
 	}
@@ -802,7 +802,7 @@ ipmi_sel_parse_output_intel_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
 	  && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_PERR
 	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_SERR))
 	{
-	  _ipmi_sel_parse_output_intel_bus (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
+	  _sel_string_output_intel_bus (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
 	  
 	  return (1);
 	}
@@ -860,7 +860,7 @@ ipmi_sel_parse_output_intel_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
 	{
 	  const char *ras_mode_str;
 	  
-	  ras_mode_str = _ipmi_sel_parse_output_intel_s2600jf_ras_mode (system_event_record_data->event_data2);
+	  ras_mode_str = _sel_string_output_intel_s2600jf_ras_mode (system_event_record_data->event_data2);
 	  
 	  snprintf (tmpbuf,
 		    tmpbuflen,
@@ -879,14 +879,14 @@ ipmi_sel_parse_output_intel_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 int
-ipmi_sel_parse_output_intel_event_data2_class_oem (ipmi_sel_ctx_t ctx,
-                                                   struct ipmi_sel_entry *sel_entry,
-                                                   uint8_t sel_record_type,
-                                                   char *tmpbuf,
-                                                   unsigned int tmpbuflen,
-                                                   unsigned int flags,
-                                                   unsigned int *wlen,
-                                                   struct ipmi_sel_system_event_record_data *system_event_record_data)
+sel_string_output_intel_event_data2_class_oem (ipmi_sel_ctx_t ctx,
+					       struct ipmi_sel_entry *sel_entry,
+					       uint8_t sel_record_type,
+					       char *tmpbuf,
+					       unsigned int tmpbuflen,
+					       unsigned int flags,
+					       unsigned int *wlen,
+					       struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
@@ -911,7 +911,7 @@ ipmi_sel_parse_output_intel_event_data2_class_oem (ipmi_sel_ctx_t ctx,
 	      || (system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_PCIE_CORRECTABLE_SENSOR
 		  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_CORRECTABLE_SENSOR)))
 	{
-	  _ipmi_sel_parse_output_intel_bus (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
+	  _sel_string_output_intel_bus (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
 	  
 	  return (1);
 	}
@@ -947,7 +947,7 @@ ipmi_sel_parse_output_intel_event_data2_class_oem (ipmi_sel_ctx_t ctx,
 	      || (system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_QUANTA_QSSC_S4R_PCIE_CORRECTABLE_SENSOR
 		  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QUANTA_QSSC_S4R_PCIE_CORRECTABLE_SENSOR)))
 	{
-	  _ipmi_sel_parse_output_intel_bus (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
+	  _sel_string_output_intel_bus (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
 	  
 	  return (1);
 	}
@@ -985,7 +985,7 @@ ipmi_sel_parse_output_intel_event_data2_class_oem (ipmi_sel_ctx_t ctx,
 	      || (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600JF_PCIE_CORRECTABLE_ERROR
 		  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600JF_PCIE_CORRECTABLE_ERROR)))
 	{
-	  _ipmi_sel_parse_output_intel_bus (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
+	  _sel_string_output_intel_bus (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
 	  
 	  return (1);
 	}
@@ -1045,14 +1045,14 @@ ipmi_sel_parse_output_intel_event_data2_class_oem (ipmi_sel_ctx_t ctx,
     {
       int nmret;
 
-      if ((nmret = ipmi_sel_parse_output_intel_node_manager_event_data2_class_oem (ctx,
-                                                                                   sel_entry,
-                                                                                   sel_record_type,
-                                                                                   tmpbuf,
-                                                                                   tmpbuflen,
-                                                                                   flags,
-                                                                                   wlen,
-                                                                                   system_event_record_data)) < 0)
+      if ((nmret = sel_string_output_intel_node_manager_event_data2_class_oem (ctx,
+									       sel_entry,
+									       sel_record_type,
+									       tmpbuf,
+									       tmpbuflen,
+									       flags,
+									       wlen,
+									       system_event_record_data)) < 0)
         return (-1);
 
       if (nmret)
@@ -1063,11 +1063,11 @@ ipmi_sel_parse_output_intel_event_data2_class_oem (ipmi_sel_ctx_t ctx,
 }
 
 static void
-_ipmi_sel_parse_output_intel_device_function (ipmi_sel_ctx_t ctx,
-					      char *tmpbuf,
-					      unsigned int tmpbuflen,
-					      unsigned int flags,
-					      struct ipmi_sel_system_event_record_data *system_event_record_data)
+_sel_string_output_intel_device_function (ipmi_sel_ctx_t ctx,
+					  char *tmpbuf,
+					  unsigned int tmpbuflen,
+					  unsigned int flags,
+					  struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   uint8_t device, function;
 
@@ -1101,11 +1101,11 @@ _ipmi_sel_parse_output_intel_device_function (ipmi_sel_ctx_t ctx,
 }
 
 static void
-_ipmi_sel_parse_output_intel_quanta_qssc_s4r_memory_board (ipmi_sel_ctx_t ctx,
-							   char *tmpbuf,
-							   unsigned int tmpbuflen,
-							   unsigned int flags,
-							   struct ipmi_sel_system_event_record_data *system_event_record_data)
+_sel_string_output_intel_quanta_qssc_s4r_memory_board (ipmi_sel_ctx_t ctx,
+						       char *tmpbuf,
+						       unsigned int tmpbuflen,
+						       unsigned int flags,
+						       struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   uint8_t memory_board;
   char *memory_board_str;
@@ -1160,7 +1160,7 @@ _ipmi_sel_parse_output_intel_quanta_qssc_s4r_memory_board (ipmi_sel_ctx_t ctx,
 }
 
 static char *
-_ipmi_sel_parse_output_intel_quanta_qssc_s4r_dimm_slot_str (uint8_t dimm_slot)
+_sel_string_output_intel_quanta_qssc_s4r_dimm_slot_str (uint8_t dimm_slot)
 {
   switch (dimm_slot)
     {
@@ -1188,11 +1188,11 @@ _ipmi_sel_parse_output_intel_quanta_qssc_s4r_dimm_slot_str (uint8_t dimm_slot)
 }
 
 static void
-_ipmi_sel_parse_output_intel_quanta_qssc_s4r_dimm_slot (ipmi_sel_ctx_t ctx,
-							char *tmpbuf,
-							unsigned int tmpbuflen,
-							unsigned int flags,
-							struct ipmi_sel_system_event_record_data *system_event_record_data)
+_sel_string_output_intel_quanta_qssc_s4r_dimm_slot (ipmi_sel_ctx_t ctx,
+						    char *tmpbuf,
+						    unsigned int tmpbuflen,
+						    unsigned int flags,
+						    struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   uint8_t dimm_slot;
   char *dimm_slot_str;
@@ -1210,7 +1210,7 @@ _ipmi_sel_parse_output_intel_quanta_qssc_s4r_dimm_slot (ipmi_sel_ctx_t ctx,
   dimm_slot = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DIMM_SLOT_BITMASK);
   dimm_slot >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_DIMM_SLOT_SHIFT;
 
-  dimm_slot_str = _ipmi_sel_parse_output_intel_quanta_qssc_s4r_dimm_slot_str (dimm_slot);
+  dimm_slot_str = _sel_string_output_intel_quanta_qssc_s4r_dimm_slot_str (dimm_slot);
  
   snprintf (tmpbuf,
 	    tmpbuflen,
@@ -1219,11 +1219,11 @@ _ipmi_sel_parse_output_intel_quanta_qssc_s4r_dimm_slot (ipmi_sel_ctx_t ctx,
 }
 
 static void
-_ipmi_sel_parse_output_intel_quanta_qssc_s4r_smi_link (ipmi_sel_ctx_t ctx,
-						       char *tmpbuf,
-						       unsigned int tmpbuflen,
-						       unsigned int flags,
-						       struct ipmi_sel_system_event_record_data *system_event_record_data)
+_sel_string_output_intel_quanta_qssc_s4r_smi_link (ipmi_sel_ctx_t ctx,
+						   char *tmpbuf,
+						   unsigned int tmpbuflen,
+						   unsigned int flags,
+						   struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   uint8_t smi_link;
   char *smi_link_str;
@@ -1264,14 +1264,14 @@ _ipmi_sel_parse_output_intel_quanta_qssc_s4r_smi_link (ipmi_sel_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 int
-ipmi_sel_parse_output_intel_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
-                                                      struct ipmi_sel_entry *sel_entry,
-                                                      uint8_t sel_record_type,
-                                                      char *tmpbuf,
-                                                      unsigned int tmpbuflen,
-                                                      unsigned int flags,
-                                                      unsigned int *wlen,
-                                                      struct ipmi_sel_system_event_record_data *system_event_record_data)
+sel_string_output_intel_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
+						  struct ipmi_sel_entry *sel_entry,
+						  uint8_t sel_record_type,
+						  char *tmpbuf,
+						  unsigned int tmpbuflen,
+						  unsigned int flags,
+						  unsigned int *wlen,
+						  struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
@@ -1299,7 +1299,7 @@ ipmi_sel_parse_output_intel_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
 	  && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_PERR
 	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_SERR))
 	{
-	  _ipmi_sel_parse_output_intel_device_function (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
+	  _sel_string_output_intel_device_function (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
 	  
 	  return (1);
 	}
@@ -1414,7 +1414,7 @@ ipmi_sel_parse_output_intel_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
 	  && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_PERR
 	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_SERR))
 	{
-	  _ipmi_sel_parse_output_intel_device_function (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
+	  _sel_string_output_intel_device_function (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
 	  
 	  return (1);
 	}
@@ -1516,17 +1516,17 @@ ipmi_sel_parse_output_intel_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
 	  memset (memory_board_buf, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
 	  memset (dimm_slot_buf, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
 	  
-	  _ipmi_sel_parse_output_intel_quanta_qssc_s4r_memory_board (ctx,
-								     memory_board_buf,
-								     INTEL_EVENT_BUFFER_LENGTH,
-								     flags,
-								     system_event_record_data);
+	  _sel_string_output_intel_quanta_qssc_s4r_memory_board (ctx,
+								 memory_board_buf,
+								 INTEL_EVENT_BUFFER_LENGTH,
+								 flags,
+								 system_event_record_data);
 	  
-	  _ipmi_sel_parse_output_intel_quanta_qssc_s4r_dimm_slot (ctx,
-								  dimm_slot_buf,
-								  INTEL_EVENT_BUFFER_LENGTH,
-								  flags,
-								  system_event_record_data);
+	  _sel_string_output_intel_quanta_qssc_s4r_dimm_slot (ctx,
+							      dimm_slot_buf,
+							      INTEL_EVENT_BUFFER_LENGTH,
+							      flags,
+							      system_event_record_data);
 	  
 	  snprintf (tmpbuf,
                     tmpbuflen,
@@ -1556,17 +1556,17 @@ ipmi_sel_parse_output_intel_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
 	  memset (memory_board_buf, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
 	  memset (smi_link_buf, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
 	  
-	  _ipmi_sel_parse_output_intel_quanta_qssc_s4r_memory_board (ctx,
-								     memory_board_buf,
-								     INTEL_EVENT_BUFFER_LENGTH,
-								     flags,
-								     system_event_record_data);
-
-	  _ipmi_sel_parse_output_intel_quanta_qssc_s4r_smi_link (ctx,
-								 smi_link_buf,
+	  _sel_string_output_intel_quanta_qssc_s4r_memory_board (ctx,
+								 memory_board_buf,
 								 INTEL_EVENT_BUFFER_LENGTH,
 								 flags,
 								 system_event_record_data);
+
+	  _sel_string_output_intel_quanta_qssc_s4r_smi_link (ctx,
+							     smi_link_buf,
+							     INTEL_EVENT_BUFFER_LENGTH,
+							     flags,
+							     system_event_record_data);
 	  
 	  snprintf (tmpbuf,
                     tmpbuflen,
@@ -1586,11 +1586,11 @@ ipmi_sel_parse_output_intel_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
 
 	  memset (memory_board_buf, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
 
-	  _ipmi_sel_parse_output_intel_quanta_qssc_s4r_memory_board (ctx,
-                                                                     memory_board_buf,
-                                                                     INTEL_EVENT_BUFFER_LENGTH,
-                                                                     flags,
-                                                                     system_event_record_data);
+	  _sel_string_output_intel_quanta_qssc_s4r_memory_board (ctx,
+								 memory_board_buf,
+								 INTEL_EVENT_BUFFER_LENGTH,
+								 flags,
+								 system_event_record_data);
 	  
 	  snprintf (tmpbuf,
                     tmpbuflen,
@@ -1707,7 +1707,7 @@ ipmi_sel_parse_output_intel_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
 	{
 	  const char *ras_mode_str;
 
-	  ras_mode_str = _ipmi_sel_parse_output_intel_s2600jf_ras_mode (system_event_record_data->event_data3);
+	  ras_mode_str = _sel_string_output_intel_s2600jf_ras_mode (system_event_record_data->event_data3);
 	  
 	  snprintf (tmpbuf,
 		    tmpbuflen,
@@ -1726,7 +1726,7 @@ ipmi_sel_parse_output_intel_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
 	{
 	  const char *ras_mode_str;
 	  
-	  ras_mode_str = _ipmi_sel_parse_output_intel_s2600jf_ras_mode (system_event_record_data->event_data3);
+	  ras_mode_str = _sel_string_output_intel_s2600jf_ras_mode (system_event_record_data->event_data3);
 	  
 	  snprintf (tmpbuf,
 		    tmpbuflen,
@@ -1743,7 +1743,7 @@ ipmi_sel_parse_output_intel_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
 	  && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_PERR
 	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_SERR))
 	{
-	  _ipmi_sel_parse_output_intel_device_function (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
+	  _sel_string_output_intel_device_function (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
 	  
 	  return (1);
 	}
@@ -1757,14 +1757,14 @@ ipmi_sel_parse_output_intel_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 int
-ipmi_sel_parse_output_intel_event_data3_class_oem (ipmi_sel_ctx_t ctx,
-                                                   struct ipmi_sel_entry *sel_entry,
-                                                   uint8_t sel_record_type,
-                                                   char *tmpbuf,
-                                                   unsigned int tmpbuflen,
-                                                   unsigned int flags,
-                                                   unsigned int *wlen,
-                                                   struct ipmi_sel_system_event_record_data *system_event_record_data)
+sel_string_output_intel_event_data3_class_oem (ipmi_sel_ctx_t ctx,
+					       struct ipmi_sel_entry *sel_entry,
+					       uint8_t sel_record_type,
+					       char *tmpbuf,
+					       unsigned int tmpbuflen,
+					       unsigned int flags,
+					       unsigned int *wlen,
+					       struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
@@ -1789,7 +1789,7 @@ ipmi_sel_parse_output_intel_event_data3_class_oem (ipmi_sel_ctx_t ctx,
 	      || (system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_PCIE_CORRECTABLE_SENSOR
 		  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_CORRECTABLE_SENSOR)))
 	{
-	  _ipmi_sel_parse_output_intel_device_function (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
+	  _sel_string_output_intel_device_function (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
 	  
 	  return (1);
 	}
@@ -1808,7 +1808,7 @@ ipmi_sel_parse_output_intel_event_data3_class_oem (ipmi_sel_ctx_t ctx,
 	      || (system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_QUANTA_QSSC_S4R_PCIE_CORRECTABLE_SENSOR
 		  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QUANTA_QSSC_S4R_PCIE_CORRECTABLE_SENSOR)))
 	{
-	  _ipmi_sel_parse_output_intel_device_function (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
+	  _sel_string_output_intel_device_function (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
 	  
 	  return (1);
 	}
@@ -1829,7 +1829,7 @@ ipmi_sel_parse_output_intel_event_data3_class_oem (ipmi_sel_ctx_t ctx,
 	      || (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600JF_PCIE_CORRECTABLE_ERROR
 		  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600JF_PCIE_CORRECTABLE_ERROR)))
 	{
-	  _ipmi_sel_parse_output_intel_device_function (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
+	  _sel_string_output_intel_device_function (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
 	  
 	  return (1);
 	}
@@ -1848,14 +1848,14 @@ ipmi_sel_parse_output_intel_event_data3_class_oem (ipmi_sel_ctx_t ctx,
     {
       int nmret;
 
-      if ((nmret = ipmi_sel_parse_output_intel_node_manager_event_data3_class_oem (ctx,
-                                                                                   sel_entry,
-                                                                                   sel_record_type,
-                                                                                   tmpbuf,
-                                                                                   tmpbuflen,
-                                                                                   flags,
-                                                                                   wlen,
-                                                                                   system_event_record_data)) < 0)
+      if ((nmret = sel_string_output_intel_node_manager_event_data3_class_oem (ctx,
+									       sel_entry,
+									       sel_record_type,
+									       tmpbuf,
+									       tmpbuflen,
+									       flags,
+									       wlen,
+									       system_event_record_data)) < 0)
         return (-1);
       
       if (nmret)
@@ -1874,15 +1874,15 @@ ipmi_sel_parse_output_intel_event_data3_class_oem (ipmi_sel_ctx_t ctx,
  * 1 - buffer full, return full buffer to user
  */
 int
-ipmi_sel_parse_output_intel_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
-						     struct ipmi_sel_entry *sel_entry,
-						     uint8_t sel_record_type,
-						     char *buf,
-						     unsigned int buflen,
-						     unsigned int flags,
-						     unsigned int *wlen,
-						     struct ipmi_sel_system_event_record_data *system_event_record_data,
-						     int *oem_rv)
+sel_string_output_intel_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
+						 struct ipmi_sel_entry *sel_entry,
+						 uint8_t sel_record_type,
+						 char *buf,
+						 unsigned int buflen,
+						 unsigned int flags,
+						 unsigned int *wlen,
+						 struct ipmi_sel_system_event_record_data *system_event_record_data,
+						 int *oem_rv)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
@@ -2297,11 +2297,11 @@ ipmi_sel_parse_output_intel_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
 	      error_code_str = "Undefined Post Error";
 	    }
 
-	  if (ipmi_sel_parse_string_snprintf (buf,
-					      buflen,
-					      wlen,
-					      "%s",
-					      error_code_str))
+	  if (sel_string_snprintf (buf,
+				   buflen,
+				   wlen,
+				   "%s",
+				   error_code_str))
 	    (*oem_rv) = 1;
 	  else
 	    (*oem_rv) = 0;
@@ -2419,27 +2419,27 @@ ipmi_sel_parse_output_intel_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
 	  
 	  if (processor_socket_valid && channel_number_valid && dimm_slot_id_valid)
 	    {
-	      if (ipmi_sel_parse_string_snprintf (buf,
-						  buflen,
-						  wlen,
-						  "Error Type = %s, DIMM = %c%s",
-						  error_type_str,
-						  channel_number_char,
-						  dimm_slot_id_str))
+	      if (sel_string_snprintf (buf,
+				       buflen,
+				       wlen,
+				       "Error Type = %s, DIMM = %c%s",
+				       error_type_str,
+				       channel_number_char,
+				       dimm_slot_id_str))
 		(*oem_rv) = 1;
 	      else
 		(*oem_rv) = 0;
 	    }
 	  else
 	    {
-	      if (ipmi_sel_parse_string_snprintf (buf,
-						  buflen,
-						  wlen,
-						  "Error Type = %s, Processor Socket = %s, Channel Number = %s, Dimm Slot = %s",
-						  error_type_str,
-						  processor_socket_str,
-						  channel_number_str,
-						  dimm_slot_id_str))
+	      if (sel_string_snprintf (buf,
+				       buflen,
+				       wlen,
+				       "Error Type = %s, Processor Socket = %s, Channel Number = %s, Dimm Slot = %s",
+				       error_type_str,
+				       processor_socket_str,
+				       channel_number_str,
+				       dimm_slot_id_str))
 		(*oem_rv) = 1;
 	      else
 		(*oem_rv) = 0;
@@ -2520,13 +2520,13 @@ ipmi_sel_parse_output_intel_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
 			      socket_id);
 		}
 
-	      if (ipmi_sel_parse_string_snprintf (buf,
-                                                  buflen,
-                                                  wlen,
-						  "Memory Mirroring Domain Instance Id = %u%s%s",
-						  instance_id,
-						  mirroring_domain_local_subinstance_buf,
-						  socket_id_buf))
+	      if (sel_string_snprintf (buf,
+				       buflen,
+				       wlen,
+				       "Memory Mirroring Domain Instance Id = %u%s%s",
+				       instance_id,
+				       mirroring_domain_local_subinstance_buf,
+				       socket_id_buf))
 		(*oem_rv) = 1;
 	      else
                 (*oem_rv) = 0;
@@ -2559,13 +2559,13 @@ ipmi_sel_parse_output_intel_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
 			  ", Second Socket ID = %u",
 			  second_socket_id);
 
-	      if (ipmi_sel_parse_string_snprintf (buf,
-                                                  buflen,
-                                                  wlen,
-						  "Memory Mirroring Domain Instance Id = %u%s%s",
-						  instance_id,
-						  first_socket_id_buf,
-						  second_socket_id_buf))
+	      if (sel_string_snprintf (buf,
+				       buflen,
+				       wlen,
+				       "Memory Mirroring Domain Instance Id = %u%s%s",
+				       instance_id,
+				       first_socket_id_buf,
+				       second_socket_id_buf))
                 (*oem_rv) = 1;
               else
                 (*oem_rv) = 0;
@@ -2671,14 +2671,14 @@ ipmi_sel_parse_output_intel_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
 		    ", Spared Memory Board = %u",
 		    index_of_spared_memory_board);
 
-	  if (ipmi_sel_parse_string_snprintf (buf,
-					      buflen,
-					      wlen,
-					      "Domain Instance = %s%s%s%s",
-					      domain_instance_str,
-					      sparing_type_buf,
-					      index_of_spared_memory_board_buf,
-					      spared_dimm_information_buf))
+	  if (sel_string_snprintf (buf,
+				   buflen,
+				   wlen,
+				   "Domain Instance = %s%s%s%s",
+				   domain_instance_str,
+				   sparing_type_buf,
+				   index_of_spared_memory_board_buf,
+				   spared_dimm_information_buf))
 	    (*oem_rv) = 1;
 	  else
 	    (*oem_rv) = 0;
@@ -2739,28 +2739,28 @@ ipmi_sel_parse_output_intel_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
 	      error_type_str = "Unknown";
 	    }
 
-	  _ipmi_sel_parse_output_intel_quanta_qssc_s4r_memory_board (ctx,
-								     memory_board_buf,
-								     INTEL_EVENT_BUFFER_LENGTH,
-								     flags,
-								     system_event_record_data);
+	  _sel_string_output_intel_quanta_qssc_s4r_memory_board (ctx,
+								 memory_board_buf,
+								 INTEL_EVENT_BUFFER_LENGTH,
+								 flags,
+								 system_event_record_data);
 	  
 	  /* Technically Intel docs do not say 0 vs. 1 for true vs. false.  Gotta guess */
 	  if (dimm_slot_valid)
-	    _ipmi_sel_parse_output_intel_quanta_qssc_s4r_dimm_slot (ctx,
-								    dimm_slot_buf,
-								    INTEL_EVENT_BUFFER_LENGTH,
-								    flags,
-								    system_event_record_data);
+	    _sel_string_output_intel_quanta_qssc_s4r_dimm_slot (ctx,
+								dimm_slot_buf,
+								INTEL_EVENT_BUFFER_LENGTH,
+								flags,
+								system_event_record_data);
 
-	  if (ipmi_sel_parse_string_snprintf (buf,
-					      buflen,
-					      wlen,
-					      "Error Type = %s, Memory Board = %s%s%s",
-					      error_type_str,
-					      memory_board_buf,
-					      dimm_slot_valid ? ", DIMM Slot = " : "",
-					      dimm_slot_buf))
+	  if (sel_string_snprintf (buf,
+				   buflen,
+				   wlen,
+				   "Error Type = %s, Memory Board = %s%s%s",
+				   error_type_str,
+				   memory_board_buf,
+				   dimm_slot_valid ? ", DIMM Slot = " : "",
+				   dimm_slot_buf))
 	    (*oem_rv) = 1;
 	  else
 	    (*oem_rv) = 0;
@@ -2966,7 +2966,7 @@ ipmi_sel_parse_output_intel_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
 		      cpu_socket_str = "Unknown CPU Socket";
 		    }
 		  
-		  dimm_slot_str = _ipmi_sel_parse_output_intel_quanta_qssc_s4r_dimm_slot_str (dimm_slot);
+		  dimm_slot_str = _sel_string_output_intel_quanta_qssc_s4r_dimm_slot_str (dimm_slot);
 		  
 		  snprintf (error_code_buf,
 			    INTEL_EVENT_BUFFER_LENGTH,
@@ -2981,11 +2981,11 @@ ipmi_sel_parse_output_intel_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
 		error_code_str = "Undefined Post Error";
 	    }
 	  
-	  if (ipmi_sel_parse_string_snprintf (buf,
-					      buflen,
-					      wlen,
-					      "%s",
-					      error_code_str))
+	  if (sel_string_snprintf (buf,
+				   buflen,
+				   wlen,
+				   "%s",
+				   error_code_str))
 	    (*oem_rv) = 1;
 	  else
 	    (*oem_rv) = 0;
@@ -3395,11 +3395,11 @@ ipmi_sel_parse_output_intel_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
 	      error_code_str = "Undefined Post Error";
 	    }
 
-	  if (ipmi_sel_parse_string_snprintf (buf,
-					      buflen,
-					      wlen,
-					      "%s",
-					      error_code_str))
+	  if (sel_string_snprintf (buf,
+				   buflen,
+				   wlen,
+				   "%s",
+				   error_code_str))
 	    (*oem_rv) = 1;
 	  else
 	    (*oem_rv) = 0;
@@ -3507,16 +3507,16 @@ ipmi_sel_parse_output_intel_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
 	      dimm_str = "Unknown";
 	    }
 	  
-	  if (ipmi_sel_parse_string_snprintf (buf,
-					      buflen,
-					      wlen,
-					      "Error Type = %s, CPU = %s%s%s%s%s",
-					      error_type_str,
-					      socket_id_str,
-					      channel_valid ? ", Channel = " : "",
-					      channel_valid ? channel_str : "",
-					      dimm_valid ? ", DIMM = " : "",
-					      dimm_valid ? dimm_str : ""))
+	  if (sel_string_snprintf (buf,
+				   buflen,
+				   wlen,
+				   "Error Type = %s, CPU = %s%s%s%s%s",
+				   error_type_str,
+				   socket_id_str,
+				   channel_valid ? ", Channel = " : "",
+				   channel_valid ? channel_str : "",
+				   dimm_valid ? ", DIMM = " : "",
+				   dimm_valid ? dimm_str : ""))
 	    (*oem_rv) = 1;
 	  else
 	    (*oem_rv) = 0;

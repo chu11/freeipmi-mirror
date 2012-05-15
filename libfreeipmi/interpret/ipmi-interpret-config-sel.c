@@ -1315,7 +1315,7 @@ _interpret_sel_oem_config_init (ipmi_interpret_ctx_t ctx)
 }
 
 int
-ipmi_interpret_sel_init (ipmi_interpret_ctx_t ctx)
+interpret_sel_init (ipmi_interpret_ctx_t ctx)
 {
   int rv = -1;
 
@@ -1730,7 +1730,7 @@ _interpret_config_sel_destroy (ipmi_interpret_ctx_t ctx,
 }
 
 void
-ipmi_interpret_sel_destroy (ipmi_interpret_ctx_t ctx)
+interpret_sel_destroy (ipmi_interpret_ctx_t ctx)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
@@ -1955,14 +1955,14 @@ _cb_sel_parse (conffile_t cf,
       return (-1);
     }
 
-  if ((assertion_state = ipmi_interpret_config_parse_state (cf,
-                                                            data->stringlist[0])) < 0)
+  if ((assertion_state = interpret_config_parse_state (cf,
+						       data->stringlist[0])) < 0)
     return (-1);
 
   if (data->stringlist_len > 1)
     {
-      if ((deassertion_state = ipmi_interpret_config_parse_state (cf,
-                                                                  data->stringlist[1])) < 0)
+      if ((deassertion_state = interpret_config_parse_state (cf,
+							     data->stringlist[1])) < 0)
         return (-1);
     }
   else
@@ -2037,23 +2037,23 @@ _cb_sel_oem_sensor_parse (conffile_t cf,
       return (-1);
     }
   
-  if (ipmi_interpret_config_parse_manufactuer_id_product_id (cf,
-                                                             data->stringlist[0],
-                                                             ids,
-                                                             &ids_count) < 0)
+  if (interpret_config_parse_manufactuer_id_product_id (cf,
+							data->stringlist[0],
+							ids,
+							&ids_count) < 0)
     return (-1);
 
-  if (ipmi_interpret_config_parse_strtoul (cf,
-                                           data->stringlist[1],
-                                           UCHAR_MAX,
-                                           &tmp) < 0)
+  if (interpret_config_parse_strtoul (cf,
+				      data->stringlist[1],
+				      UCHAR_MAX,
+				      &tmp) < 0)
     return (-1);
   event_reading_type_code = tmp;
 
-  if (ipmi_interpret_config_parse_strtoul (cf,
-                                           data->stringlist[2],
-                                           UCHAR_MAX,
-                                           &tmp) < 0)
+  if (interpret_config_parse_strtoul (cf,
+				      data->stringlist[2],
+				      UCHAR_MAX,
+				      &tmp) < 0)
     return (-1);
   sensor_type = tmp;
   
@@ -2073,10 +2073,10 @@ _cb_sel_oem_sensor_parse (conffile_t cf,
     event_data1_any_flag = 1;
   else
     {
-      if (ipmi_interpret_config_parse_strtoul (cf,
-                                               data->stringlist[4],
-                                               UCHAR_MAX,
-                                               &tmp) < 0)
+      if (interpret_config_parse_strtoul (cf,
+					  data->stringlist[4],
+					  UCHAR_MAX,
+					  &tmp) < 0)
         return (-1);
 
       event_data1 = tmp;
@@ -2086,10 +2086,10 @@ _cb_sel_oem_sensor_parse (conffile_t cf,
     event_data2_any_flag = 1;
   else
     {
-      if (ipmi_interpret_config_parse_strtoul (cf,
-                                               data->stringlist[5],
-                                               UCHAR_MAX,
-                                               &tmp) < 0)
+      if (interpret_config_parse_strtoul (cf,
+					  data->stringlist[5],
+					  UCHAR_MAX,
+					  &tmp) < 0)
         return (-1);
 
       event_data2 = tmp;
@@ -2099,16 +2099,16 @@ _cb_sel_oem_sensor_parse (conffile_t cf,
     event_data3_any_flag = 1;
   else
     {
-      if (ipmi_interpret_config_parse_strtoul (cf,
-                                               data->stringlist[6],
-                                               UCHAR_MAX,
-                                               &tmp) < 0)
+      if (interpret_config_parse_strtoul (cf,
+					  data->stringlist[6],
+					  UCHAR_MAX,
+					  &tmp) < 0)
         return (-1);
 
       event_data3 = tmp;
     }
 
-  if ((sel_state = ipmi_interpret_config_parse_state (cf, data->stringlist[7])) < 0)
+  if ((sel_state = interpret_config_parse_state (cf, data->stringlist[7])) < 0)
     return (-1);
   
   for (i = 0; i < ids_count; i++)
@@ -2252,16 +2252,16 @@ _cb_sel_oem_record_parse (conffile_t cf,
       oem_data_count = IPMI_SEL_OEM_DATA_NON_TIMESTAMPED_BYTES;
     }
   
-  if (ipmi_interpret_config_parse_manufactuer_id_product_id (cf,
-                                                             data->stringlist[0],
-                                                             ids,
-                                                             &ids_count) < 0)
+  if (interpret_config_parse_manufactuer_id_product_id (cf,
+							data->stringlist[0],
+							ids,
+							&ids_count) < 0)
     return (-1);
 
-  if (ipmi_interpret_config_parse_strtoul (cf,
-                                           data->stringlist[1],
-                                           UCHAR_MAX,
-                                           &tmp) < 0)
+  if (interpret_config_parse_strtoul (cf,
+				      data->stringlist[1],
+				      UCHAR_MAX,
+				      &tmp) < 0)
     return (-1);
   record_type = tmp;
 
@@ -2291,10 +2291,10 @@ _cb_sel_oem_record_parse (conffile_t cf,
         }
       else
         {
-          if (ipmi_interpret_config_parse_strtoul (cf,
-                                                   data->stringlist[2 + i],
-                                                   UCHAR_MAX,
-                                                   &tmp) < 0)
+          if (interpret_config_parse_strtoul (cf,
+					      data->stringlist[2 + i],
+					      UCHAR_MAX,
+					      &tmp) < 0)
             return (-1);
 
           oem_bytes[i].any_flag = 0;
@@ -2302,7 +2302,7 @@ _cb_sel_oem_record_parse (conffile_t cf,
         }
     }
 
-  if ((sel_state = ipmi_interpret_config_parse_state (cf, data->stringlist[2 + oem_data_count])) < 0)
+  if ((sel_state = interpret_config_parse_state (cf, data->stringlist[2 + oem_data_count])) < 0)
     return (-1);
   
   for (i = 0; i < ids_count; i++)
@@ -2405,8 +2405,8 @@ _fill_sel_config_options (struct conffile_option *to_options,
 
 
 int
-ipmi_interpret_sel_config_parse (ipmi_interpret_ctx_t ctx,
-                                 const char *sel_config_file)
+interpret_sel_config_parse (ipmi_interpret_ctx_t ctx,
+			    const char *sel_config_file)
 {
   int ipmi_interpret_sel_threshold_flags[ipmi_interpret_sel_threshold_config_len];
   int ipmi_interpret_sel_temperature_state_flags[ipmi_interpret_sel_temperature_state_config_len];

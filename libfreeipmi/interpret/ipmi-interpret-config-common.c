@@ -60,8 +60,8 @@
 #include "conffile.h"
 
 int
-ipmi_interpret_config_parse_state (conffile_t cf,
-                                   char *option_string)
+interpret_config_parse_state (conffile_t cf,
+			      char *option_string)
 {
   assert (cf);
   assert (option_string);
@@ -78,10 +78,10 @@ ipmi_interpret_config_parse_state (conffile_t cf,
 }
 
 int
-ipmi_interpret_config_parse_strtoul (conffile_t cf,
-                                     const char *str,
-                                     uint32_t max,
-                                     uint32_t *value)
+interpret_config_parse_strtoul (conffile_t cf,
+				const char *str,
+				uint32_t max,
+				uint32_t *value)
 {
   char *endptr = NULL;
   
@@ -144,10 +144,10 @@ ipmi_interpret_config_parse_manufactuer_id_product_id (conffile_t cf,
       (*ptr) = '\0';
       product_ids_ptr = ptr + 1;
       
-      if (ipmi_interpret_config_parse_strtoul (cf,
-                                               manufacturer_id_ptr,
-                                               0x00FFFFFF,  /* 24 bit manufacturer ID */
-                                               &tmp) < 0)
+      if (interpret_config_parse_strtoul (cf,
+					  manufacturer_id_ptr,
+					  0x00FFFFFF,  /* 24 bit manufacturer ID */
+					  &tmp) < 0)
         goto cleanup;
       ids[(*ids_count)].manufacturer_id = tmp;
       
@@ -162,17 +162,17 @@ ipmi_interpret_config_parse_manufactuer_id_product_id (conffile_t cf,
           (*ptr) = '\0';
           product_id2_ptr = ptr + 1;
 
-          if (ipmi_interpret_config_parse_strtoul (cf,
-                                                   product_id1_ptr,
-                                                   USHRT_MAX,
-                                                   &tmp) < 0)
+          if (interpret_config_parse_strtoul (cf,
+					      product_id1_ptr,
+					      USHRT_MAX,
+					      &tmp) < 0)
             goto cleanup;
           product_id1 = tmp;
 
-          if (ipmi_interpret_config_parse_strtoul (cf,
-                                                   product_id2_ptr,
-                                                   USHRT_MAX,
-                                                   &tmp) < 0)
+          if (interpret_config_parse_strtoul (cf,
+					      product_id2_ptr,
+					      USHRT_MAX,
+					      &tmp) < 0)
             goto cleanup;
           product_id2 = tmp;
 
@@ -206,10 +206,10 @@ ipmi_interpret_config_parse_manufactuer_id_product_id (conffile_t cf,
               (*ptr) = '\0';
               product_ids_ptr = ptr + 1;
 
-              if (ipmi_interpret_config_parse_strtoul (cf,
-                                                       product_id_ptr,
-                                                       USHRT_MAX,
-                                                       &tmp) < 0)
+              if (interpret_config_parse_strtoul (cf,
+						  product_id_ptr,
+						  USHRT_MAX,
+						  &tmp) < 0)
                 goto cleanup;
               product_id = tmp;
               
@@ -218,10 +218,10 @@ ipmi_interpret_config_parse_manufactuer_id_product_id (conffile_t cf,
               index++;
             }
 
-          if (ipmi_interpret_config_parse_strtoul (cf,
-                                                   product_ids_ptr,
-                                                   USHRT_MAX,
-                                                   &tmp) < 0)
+          if (interpret_config_parse_strtoul (cf,
+					      product_ids_ptr,
+					      USHRT_MAX,
+					      &tmp) < 0)
             goto cleanup;
           product_id = tmp;
           
@@ -233,10 +233,10 @@ ipmi_interpret_config_parse_manufactuer_id_product_id (conffile_t cf,
         }
       else
         {
-          if (ipmi_interpret_config_parse_strtoul (cf,
-                                                   product_ids_ptr,
-                                                   USHRT_MAX,
-                                                   &tmp) < 0)
+          if (interpret_config_parse_strtoul (cf,
+					      product_ids_ptr,
+					      USHRT_MAX,
+					      &tmp) < 0)
             goto cleanup;
           ids[(*ids_count)].product_ids[0] = tmp;
           ids[(*ids_count)].product_ids_count = 1;

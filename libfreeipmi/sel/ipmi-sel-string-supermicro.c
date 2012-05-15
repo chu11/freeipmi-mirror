@@ -73,14 +73,14 @@
  * return (-1) - error, cleanup and return error
  */
 int
-ipmi_sel_parse_output_supermicro_event_data1_class_oem (ipmi_sel_ctx_t ctx,
-							struct ipmi_sel_entry *sel_entry,
-							uint8_t sel_record_type,
-							char *tmpbuf,
-							unsigned int tmpbuflen,
-							unsigned int flags,
-							unsigned int *wlen,
-							struct ipmi_sel_system_event_record_data *system_event_record_data)
+sel_string_output_supermicro_event_data1_class_oem (ipmi_sel_ctx_t ctx,
+						    struct ipmi_sel_entry *sel_entry,
+						    uint8_t sel_record_type,
+						    char *tmpbuf,
+						    unsigned int tmpbuflen,
+						    unsigned int flags,
+						    unsigned int *wlen,
+						    struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);

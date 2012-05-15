@@ -609,8 +609,8 @@ ipmi_ctx_open_outofband (ipmi_ctx_t ctx,
   if (_setup_socket (ctx) < 0)
     goto cleanup;
 
-  /* errnum set in ipmi_lan_open_session */
-  if (ipmi_lan_open_session (ctx) < 0)
+  /* errnum set in api_lan_open_session */
+  if (api_lan_open_session (ctx) < 0)
     goto cleanup;
 
   ctx->errnum = IPMI_ERR_SUCCESS;
@@ -828,8 +828,8 @@ ipmi_ctx_open_outofband_2_0 (ipmi_ctx_t ctx,
   if (_setup_socket (ctx) < 0)
     goto cleanup;
 
-  /* errnum set in ipmi_lan_2_0_open_session */
-  if (ipmi_lan_2_0_open_session (ctx) < 0)
+  /* errnum set in api_lan_2_0_open_session */
+  if (api_lan_2_0_open_session (ctx) < 0)
     goto cleanup;
 
   ctx->errnum = IPMI_ERR_SUCCESS;
@@ -1686,31 +1686,31 @@ ipmi_cmd (ipmi_ctx_t ctx,
     {
       if (ctx->target.channel_number_is_set
 	  && ctx->target.rs_addr_is_set)
-	rv = ipmi_lan_cmd_ipmb (ctx,
-				obj_cmd_rq,
-				obj_cmd_rs);
+	rv = api_lan_cmd_ipmb (ctx,
+			       obj_cmd_rq,
+			       obj_cmd_rs);
       else
-	rv = ipmi_lan_cmd (ctx, obj_cmd_rq, obj_cmd_rs);
+	rv = api_lan_cmd (ctx, obj_cmd_rq, obj_cmd_rs);
     }
   else if (ctx->type == IPMI_DEVICE_LAN_2_0)
     {
       if (ctx->target.channel_number_is_set
 	  && ctx->target.rs_addr_is_set)
-	rv = ipmi_lan_2_0_cmd_ipmb (ctx,
-				    obj_cmd_rq,
-				    obj_cmd_rs);
+	rv = api_lan_2_0_cmd_ipmb (ctx,
+				   obj_cmd_rq,
+				   obj_cmd_rs);
       else
-	rv = ipmi_lan_2_0_cmd (ctx, obj_cmd_rq, obj_cmd_rs);
+	rv = api_lan_2_0_cmd (ctx, obj_cmd_rq, obj_cmd_rs);
     }
   else if (ctx->type == IPMI_DEVICE_KCS)
     {
       if (ctx->target.channel_number_is_set
 	  && ctx->target.rs_addr_is_set)
-	rv = ipmi_kcs_cmd_api_ipmb (ctx,
-				    obj_cmd_rq,
-				    obj_cmd_rs);
+	rv = api_kcs_cmd_ipmb (ctx,
+			       obj_cmd_rq,
+			       obj_cmd_rs);
       else
-	rv = ipmi_kcs_cmd_api (ctx, obj_cmd_rq, obj_cmd_rs);
+	rv = api_kcs_cmd (ctx, obj_cmd_rq, obj_cmd_rs);
     }
   else if (ctx->type == IPMI_DEVICE_SSIF)
     {
@@ -1721,17 +1721,17 @@ ipmi_cmd (ipmi_ctx_t ctx,
 	  rv = -1;
 	}
       else
-	rv = ipmi_ssif_cmd_api (ctx, obj_cmd_rq, obj_cmd_rs);
+	rv = api_ssif_cmd (ctx, obj_cmd_rq, obj_cmd_rs);
     }
   else if (ctx->type == IPMI_DEVICE_OPENIPMI)
     {
       if (ctx->target.channel_number_is_set
 	  && ctx->target.rs_addr_is_set)
-	rv = ipmi_openipmi_cmd_api_ipmb (ctx,
-					 obj_cmd_rq,
-					 obj_cmd_rs);
+	rv = api_openipmi_cmd_ipmb (ctx,
+				    obj_cmd_rq,
+				    obj_cmd_rs);
       else
-	rv = ipmi_openipmi_cmd_api (ctx, obj_cmd_rq, obj_cmd_rs);
+	rv = api_openipmi_cmd (ctx, obj_cmd_rq, obj_cmd_rs);
     }
   else /* ctx->type == IPMI_DEVICE_SUNBMC */
     {
@@ -1742,7 +1742,7 @@ ipmi_cmd (ipmi_ctx_t ctx,
 	  rv = -1;
 	}
       else
-	rv = ipmi_sunbmc_cmd_api (ctx, obj_cmd_rq, obj_cmd_rs);
+	rv = api_sunbmc_cmd (ctx, obj_cmd_rq, obj_cmd_rs);
     }
 
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
@@ -1951,37 +1951,37 @@ ipmi_cmd_raw (ipmi_ctx_t ctx,
     {
       if (ctx->target.channel_number_is_set
 	  && ctx->target.rs_addr_is_set)
-	rv = ipmi_lan_cmd_raw_ipmb (ctx,
-				    buf_rq,
-				    buf_rq_len,
-				    buf_rs,
-				    buf_rs_len);
+	rv = api_lan_cmd_raw_ipmb (ctx,
+				   buf_rq,
+				   buf_rq_len,
+				   buf_rs,
+				   buf_rs_len);
       else
-	rv = ipmi_lan_cmd_raw (ctx, buf_rq, buf_rq_len, buf_rs, buf_rs_len);
+	rv = api_lan_cmd_raw (ctx, buf_rq, buf_rq_len, buf_rs, buf_rs_len);
     }
   else if (ctx->type == IPMI_DEVICE_LAN_2_0)
     {
       if (ctx->target.channel_number_is_set
 	  && ctx->target.rs_addr_is_set)
-	rv = ipmi_lan_2_0_cmd_raw_ipmb (ctx,
-					buf_rq,
-					buf_rq_len,
-					buf_rs,
-					buf_rs_len);
+	rv = api_lan_2_0_cmd_raw_ipmb (ctx,
+				       buf_rq,
+				       buf_rq_len,
+				       buf_rs,
+				       buf_rs_len);
       else
-	rv = ipmi_lan_2_0_cmd_raw (ctx, buf_rq, buf_rq_len, buf_rs, buf_rs_len);
+	rv = api_lan_2_0_cmd_raw (ctx, buf_rq, buf_rq_len, buf_rs, buf_rs_len);
     }
   else if (ctx->type == IPMI_DEVICE_KCS)
     {
       if (ctx->target.channel_number_is_set
 	  && ctx->target.rs_addr_is_set)
-	rv = ipmi_kcs_cmd_raw_api_ipmb (ctx,
-					buf_rq,
-					buf_rq_len,
-					buf_rs,
-					buf_rs_len);
+	rv = api_kcs_cmd_raw_ipmb (ctx,
+				   buf_rq,
+				   buf_rq_len,
+				   buf_rs,
+				   buf_rs_len);
       else
-	rv = ipmi_kcs_cmd_raw_api (ctx, buf_rq, buf_rq_len, buf_rs, buf_rs_len);
+	rv = api_kcs_cmd_raw (ctx, buf_rq, buf_rq_len, buf_rs, buf_rs_len);
     }
   else if (ctx->type == IPMI_DEVICE_SSIF)
     {
@@ -1992,19 +1992,19 @@ ipmi_cmd_raw (ipmi_ctx_t ctx,
 	  rv = -1;
 	}
       else
-	rv = ipmi_ssif_cmd_raw_api (ctx, buf_rq, buf_rq_len, buf_rs, buf_rs_len);
+	rv = api_ssif_cmd_raw (ctx, buf_rq, buf_rq_len, buf_rs, buf_rs_len);
     }
   else if (ctx->type == IPMI_DEVICE_OPENIPMI)
     {
       if (ctx->target.channel_number_is_set
 	  && ctx->target.rs_addr_is_set)
-	rv = ipmi_openipmi_cmd_raw_api_ipmb (ctx,
-					     buf_rq,
-					     buf_rq_len,
-					     buf_rs,
-					     buf_rs_len);
+	rv = api_openipmi_cmd_raw_ipmb (ctx,
+					buf_rq,
+					buf_rq_len,
+					buf_rs,
+					buf_rs_len);
       else
-	rv = ipmi_openipmi_cmd_raw_api (ctx, buf_rq, buf_rq_len, buf_rs, buf_rs_len);
+	rv = api_openipmi_cmd_raw (ctx, buf_rq, buf_rq_len, buf_rs, buf_rs_len);
     }
   else /* ctx->type == IPMI_DEVICE_SUNBMC */
     {
@@ -2015,7 +2015,7 @@ ipmi_cmd_raw (ipmi_ctx_t ctx,
 	  rv = -1;
 	}
       else
-	rv = ipmi_sunbmc_cmd_raw_api (ctx, buf_rq, buf_rq_len, buf_rs, buf_rs_len);
+	rv = api_sunbmc_cmd_raw (ctx, buf_rq, buf_rq_len, buf_rs, buf_rs_len);
     }
 
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP && rv >= 0)
@@ -2121,7 +2121,7 @@ _ipmi_outofband_close (ipmi_ctx_t ctx)
    */
   if (!(ctx->flags & IPMI_FLAGS_NOSESSION))
     {
-      if (ipmi_lan_close_session (ctx) < 0)
+      if (api_lan_close_session (ctx) < 0)
 	goto cleanup;
     }
 
@@ -2144,7 +2144,7 @@ _ipmi_outofband_2_0_close (ipmi_ctx_t ctx)
    * fails, session will eventually timeout anyways
    */
 
-  if (ipmi_lan_2_0_close_session (ctx) < 0)
+  if (api_lan_2_0_close_session (ctx) < 0)
     goto cleanup;
 
  cleanup:

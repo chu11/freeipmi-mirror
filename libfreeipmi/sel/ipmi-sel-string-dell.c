@@ -64,14 +64,14 @@
  * return (-1) - error, cleanup and return error
  */
 int
-ipmi_sel_parse_output_dell_event_data1_class_sensor_specific_discrete (ipmi_sel_ctx_t ctx,
-                                                                       struct ipmi_sel_entry *sel_entry,
-                                                                       uint8_t sel_record_type,
-                                                                       char *tmpbuf,
-                                                                       unsigned int tmpbuflen,
-                                                                       unsigned int flags,
-                                                                       unsigned int *wlen,
-                                                                       struct ipmi_sel_system_event_record_data *system_event_record_data)
+sel_string_output_dell_event_data1_class_sensor_specific_discrete (ipmi_sel_ctx_t ctx,
+								   struct ipmi_sel_entry *sel_entry,
+								   uint8_t sel_record_type,
+								   char *tmpbuf,
+								   unsigned int tmpbuflen,
+								   unsigned int flags,
+								   unsigned int *wlen,
+								   struct ipmi_sel_system_event_record_data *system_event_record_data)
 
 {
   assert (ctx);
@@ -122,14 +122,14 @@ ipmi_sel_parse_output_dell_event_data1_class_sensor_specific_discrete (ipmi_sel_
  * return (-1) - error, cleanup and return error
  */
 int
-ipmi_sel_parse_output_dell_event_data1_class_oem (ipmi_sel_ctx_t ctx,
-                                                  struct ipmi_sel_entry *sel_entry,
-                                                  uint8_t sel_record_type,
-                                                  char *tmpbuf,
-                                                  unsigned int tmpbuflen,
-                                                  unsigned int flags,
-                                                  unsigned int *wlen,
-                                                  struct ipmi_sel_system_event_record_data *system_event_record_data)
+sel_string_output_dell_event_data1_class_oem (ipmi_sel_ctx_t ctx,
+					      struct ipmi_sel_entry *sel_entry,
+					      uint8_t sel_record_type,
+					      char *tmpbuf,
+					      unsigned int tmpbuflen,
+					      unsigned int flags,
+					      unsigned int *wlen,
+					      struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
@@ -197,14 +197,14 @@ ipmi_sel_parse_output_dell_event_data1_class_oem (ipmi_sel_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 int
-ipmi_sel_parse_output_dell_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
-						     struct ipmi_sel_entry *sel_entry,
-						     uint8_t sel_record_type,
-						     char *tmpbuf,
-						     unsigned int tmpbuflen,
-						     unsigned int flags,
-						     unsigned int *wlen,
-						     struct ipmi_sel_system_event_record_data *system_event_record_data)
+sel_string_output_dell_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
+						 struct ipmi_sel_entry *sel_entry,
+						 uint8_t sel_record_type,
+						 char *tmpbuf,
+						 unsigned int tmpbuflen,
+						 unsigned int flags,
+						 unsigned int *wlen,
+						 struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
@@ -550,14 +550,14 @@ ipmi_sel_parse_output_dell_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 int
-ipmi_sel_parse_output_dell_event_data2_class_oem (ipmi_sel_ctx_t ctx,
-						  struct ipmi_sel_entry *sel_entry,
-						  uint8_t sel_record_type,
-						  char *tmpbuf,
-						  unsigned int tmpbuflen,
-						  unsigned int flags,
-						  unsigned int *wlen,
-						  struct ipmi_sel_system_event_record_data *system_event_record_data)
+sel_string_output_dell_event_data2_class_oem (ipmi_sel_ctx_t ctx,
+					      struct ipmi_sel_entry *sel_entry,
+					      uint8_t sel_record_type,
+					      char *tmpbuf,
+					      unsigned int tmpbuflen,
+					      unsigned int flags,
+					      unsigned int *wlen,
+					      struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
@@ -610,14 +610,14 @@ ipmi_sel_parse_output_dell_event_data2_class_oem (ipmi_sel_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 int
-ipmi_sel_parse_output_dell_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
-						     struct ipmi_sel_entry *sel_entry,
-						     uint8_t sel_record_type,
-						     char *tmpbuf,
-						     unsigned int tmpbuflen,
-						     unsigned int flags,
-						     unsigned int *wlen,
-						     struct ipmi_sel_system_event_record_data *system_event_record_data)
+sel_string_output_dell_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
+						 struct ipmi_sel_entry *sel_entry,
+						 uint8_t sel_record_type,
+						 char *tmpbuf,
+						 unsigned int tmpbuflen,
+						 unsigned int flags,
+						 unsigned int *wlen,
+						 struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
@@ -742,14 +742,14 @@ ipmi_sel_parse_output_dell_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 int
-ipmi_sel_parse_output_dell_event_data3_class_oem (ipmi_sel_ctx_t ctx,
-						  struct ipmi_sel_entry *sel_entry,
-						  uint8_t sel_record_type,
-						  char *tmpbuf,
-						  unsigned int tmpbuflen,
-						  unsigned int flags,
-						  unsigned int *wlen,
-						  struct ipmi_sel_system_event_record_data *system_event_record_data)
+sel_string_output_dell_event_data3_class_oem (ipmi_sel_ctx_t ctx,
+					      struct ipmi_sel_entry *sel_entry,
+					      uint8_t sel_record_type,
+					      char *tmpbuf,
+					      unsigned int tmpbuflen,
+					      unsigned int flags,
+					      unsigned int *wlen,
+					      struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
@@ -817,15 +817,15 @@ _dell_version_change_entity_string (uint8_t data_entity)
  * 1 - buffer full, return full buffer to user
  */
 int
-ipmi_sel_parse_output_dell_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
-						    struct ipmi_sel_entry *sel_entry,
-						    uint8_t sel_record_type,
-						    char *buf,
-						    unsigned int buflen,
-						    unsigned int flags,
-						    unsigned int *wlen,
-						    struct ipmi_sel_system_event_record_data *system_event_record_data,
-						    int *oem_rv)
+sel_string_output_dell_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
+						struct ipmi_sel_entry *sel_entry,
+						uint8_t sel_record_type,
+						char *buf,
+						unsigned int buflen,
+						unsigned int flags,
+						unsigned int *wlen,
+						struct ipmi_sel_system_event_record_data *system_event_record_data,
+						int *oem_rv)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
@@ -876,11 +876,11 @@ ipmi_sel_parse_output_dell_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
               
               watts = watts2 + watts3;
 
-              if (ipmi_sel_parse_string_snprintf (buf,
-						  buflen,
-						  wlen,
-						  "Power Supply rating mismatch ; Power Supply %u Watts",
-						  watts))
+              if (sel_string_snprintf (buf,
+				       buflen,
+				       wlen,
+				       "Power Supply rating mismatch ; Power Supply %u Watts",
+				       watts))
                 (*oem_rv) = 1;
               else
                 (*oem_rv) = 0;
@@ -1025,11 +1025,11 @@ ipmi_sel_parse_output_dell_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
               
               if (found)
                 {
-                  if (ipmi_sel_parse_string_snprintf (buf,
-						      buflen,
-						      wlen,
-						      "%s",
-						      dimmstr))
+                  if (sel_string_snprintf (buf,
+					   buflen,
+					   wlen,
+					   "%s",
+					   dimmstr))
                     (*oem_rv) = 1;
                   else
                     (*oem_rv) = 0;
@@ -1072,23 +1072,23 @@ ipmi_sel_parse_output_dell_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
                 {
                   if (memory_card != IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_NO_CARD)
                     {
-                      if (ipmi_sel_parse_string_snprintf (buf,
-							  buflen,
-							  wlen,
-							  "Memory Card %u, %s",
-							  memory_card,
-							  dimmstr))
+                      if (sel_string_snprintf (buf,
+					       buflen,
+					       wlen,
+					       "Memory Card %u, %s",
+					       memory_card,
+					       dimmstr))
                         (*oem_rv) = 1;
                       else
                         (*oem_rv) = 0;
                     }
                   else
                     {
-                      if (ipmi_sel_parse_string_snprintf (buf,
-							  buflen,
-							  wlen,
-							  "DIMM %s",
-							  dimmstr))
+                      if (sel_string_snprintf (buf,
+					       buflen,
+					       wlen,
+					       "DIMM %s",
+					       dimmstr))
                         (*oem_rv) = 1;
                       else
                         (*oem_rv) = 0;
@@ -1139,11 +1139,11 @@ ipmi_sel_parse_output_dell_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
           
           if (slot_flag)
             {
-              if (ipmi_sel_parse_string_snprintf (buf,
-						  buflen,
-						  wlen,
-						  "Slot %u",
-						  bus_slot_number))
+              if (sel_string_snprintf (buf,
+				       buflen,
+				       wlen,
+				       "Slot %u",
+				       bus_slot_number))
                 (*oem_rv) = 1;
               else
                 (*oem_rv) = 0;
@@ -1160,13 +1160,13 @@ ipmi_sel_parse_output_dell_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
               function = (system_event_record_data->event_data2 & IPMI_OEM_DELL_EVENT_DATA2_FUNCTION_NUMBER_BITMASK);
               function >>= IPMI_OEM_DELL_EVENT_DATA2_FUNCTION_NUMBER_SHIFT;
               
-              if (ipmi_sel_parse_string_snprintf (buf,
-						  buflen,
-						  wlen,
-						  "Bus %u, Device %u, Function %u",
-						  bus_slot_number,
-						  device,
-						  function))
+              if (sel_string_snprintf (buf,
+				       buflen,
+				       wlen,
+				       "Bus %u, Device %u, Function %u",
+				       bus_slot_number,
+				       device,
+				       function))
                 (*oem_rv) = 1;
               else
                 (*oem_rv) = 0;
@@ -1186,31 +1186,31 @@ ipmi_sel_parse_output_dell_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
             {
               if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_VERSION_CHANGE_EVENT_DATA3_OEM_DELL_OTHER)
                 {
-                  if (ipmi_sel_parse_string_snprintf (buf,
-						      buflen,
-						      wlen,
-						      "Hardware Type = Other"))
+                  if (sel_string_snprintf (buf,
+					   buflen,
+					   wlen,
+					   "Hardware Type = Other"))
                     (*oem_rv) = 1;
                   else
                     (*oem_rv) = 0;
                 }
               else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_VERSION_CHANGE_EVENT_DATA3_OEM_DELL_CPU)
                 {
-                  if (ipmi_sel_parse_string_snprintf (buf,
-						      buflen,
-						      wlen,
-						      "Hardware Type = CPU"))
+                  if (sel_string_snprintf (buf,
+					   buflen,
+					   wlen,
+					   "Hardware Type = CPU"))
                     (*oem_rv) = 1;
                   else
                     (*oem_rv) = 0;
                 }
               else
                 {
-                  if (ipmi_sel_parse_string_snprintf (buf,
-						      buflen,
-						      wlen,
-						      "Hardware Type = %02Xh",
-						      system_event_record_data->event_data3))
+                  if (sel_string_snprintf (buf,
+					   buflen,
+					   wlen,
+					   "Hardware Type = %02Xh",
+					   system_event_record_data->event_data3))
                     (*oem_rv) = 1;
                   else
                     (*oem_rv) = 0;
@@ -1284,23 +1284,23 @@ ipmi_sel_parse_output_dell_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
                   
                   slot_position = ((slot_number - 1)/ slots_per_node) + 1;
                   
-                  if (ipmi_sel_parse_string_snprintf (buf,
-						      buflen,
-						      wlen,
-						      "Mezzanine %c%c",
-						      mezzanine,
-						      '0' + slot_position))
+                  if (sel_string_snprintf (buf,
+					   buflen,
+					   wlen,
+					   "Mezzanine %c%c",
+					   mezzanine,
+					   '0' + slot_position))
                     (*oem_rv) = 1;
                   else
                     (*oem_rv) = 0;
                 }
               else
                 {
-                  if (ipmi_sel_parse_string_snprintf (buf,
-						      buflen,
-						      wlen,
-						      "Mezzanine %c",
-						      mezzanine))
+                  if (sel_string_snprintf (buf,
+					   buflen,
+					   wlen,
+					   "Mezzanine %c",
+					   mezzanine))
                     (*oem_rv) = 1;
                   else
                     (*oem_rv) = 0;
@@ -1308,10 +1308,10 @@ ipmi_sel_parse_output_dell_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
             }
           else
             {
-              if (ipmi_sel_parse_string_snprintf (buf,
-						  buflen,
-						  wlen,
-						  "Device Embedded"))
+              if (sel_string_snprintf (buf,
+				       buflen,
+				       wlen,
+				       "Device Embedded"))
                 (*oem_rv) = 1;
               else
                 (*oem_rv) = 0;
@@ -1389,16 +1389,16 @@ ipmi_sel_parse_output_dell_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
                   "%u",
                   data3_number);
 
-      if (ipmi_sel_parse_string_snprintf (buf,
-                                          buflen,
-                                          wlen,
-                                          "%s%s%s with %s%s%s",
-                                          data2_entity_str,
-                                          strlen (data2_number_str) ? " " : "",
-                                          data2_number_str,
-                                          data3_entity_str,
-                                          strlen (data3_number_str) ? " " : "",
-                                          data3_number_str))
+      if (sel_string_snprintf (buf,
+			       buflen,
+			       wlen,
+			       "%s%s%s with %s%s%s",
+			       data2_entity_str,
+			       strlen (data2_number_str) ? " " : "",
+			       data2_number_str,
+			       data3_entity_str,
+			       strlen (data3_number_str) ? " " : "",
+			       data3_number_str))
         (*oem_rv) = 1;
       else
         (*oem_rv) = 0;

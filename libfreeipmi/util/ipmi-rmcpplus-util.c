@@ -118,7 +118,7 @@ ipmi_calculate_sik (uint8_t authentication_algorithm,
       expected_digest_len = IPMI_HMAC_SHA256_DIGEST_LENGTH;
     }
 
-  if ((crypt_digest_len = ipmi_crypt_hash_digest_len (hash_algorithm)) < 0)
+  if ((crypt_digest_len = crypt_hash_digest_len (hash_algorithm)) < 0)
     {
       ERRNO_TRACE (errno);
       goto cleanup;
@@ -173,14 +173,14 @@ ipmi_calculate_sik (uint8_t authentication_algorithm,
       hash_data_len += user_name_len;
     }
 
-  if ((computed_digest_len = ipmi_crypt_hash (hash_algorithm,
-                                              hash_flags,
-                                              k_g,
-                                              k_g_len,
-                                              hash_data,
-                                              hash_data_len,
-                                              sik,
-                                              sik_len)) < 0)
+  if ((computed_digest_len = crypt_hash (hash_algorithm,
+					 hash_flags,
+					 k_g,
+					 k_g_len,
+					 hash_data,
+					 hash_data_len,
+					 sik,
+					 sik_len)) < 0)
     {
       ERRNO_TRACE (errno);
       goto cleanup;
@@ -225,7 +225,7 @@ _calculate_k_rakp_hmac (unsigned int hash_algorithm,
       return (-1);
     }
 
-  if ((crypt_digest_len = ipmi_crypt_hash_digest_len (hash_algorithm)) < 0)
+  if ((crypt_digest_len = crypt_hash_digest_len (hash_algorithm)) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -239,14 +239,14 @@ _calculate_k_rakp_hmac (unsigned int hash_algorithm,
    * value repeated up to the HMAC block size in length starting
    * with the constant 01h".
    */
-  if ((computed_digest_len =  ipmi_crypt_hash (hash_algorithm,
-                                               IPMI_CRYPT_HASH_FLAGS_HMAC,
-                                               sik_key,
-                                               crypt_digest_len,
-                                               constant,
-                                               IPMI_KEY_CONSTANT_LENGTH,
-                                               k,
-                                               k_len)) < 0)
+  if ((computed_digest_len =  crypt_hash (hash_algorithm,
+					  IPMI_CRYPT_HASH_FLAGS_HMAC,
+					  sik_key,
+					  crypt_digest_len,
+					  constant,
+					  IPMI_KEY_CONSTANT_LENGTH,
+					  k,
+					  k_len)) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -391,11 +391,11 @@ _ipmi_calculate_k (uint8_t authentication_algorithm,
                                         constant_len));
   else /* IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA256 */
     return (_calculate_k_rakp_hmac_sha256 (sik_key,
-                                        sik_key_len,
-                                        k,
-                                        k_len,
-                                        constant,
-                                        constant_len));
+					   sik_key_len,
+					   k,
+					   k_len,
+					   constant,
+					   constant_len));
 }
 
 int
@@ -515,9 +515,9 @@ ipmi_calculate_rmcpplus_session_keys (uint8_t authentication_algorithm,
       sik_key_buf_len = 0;
     }
   else /*
-     authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
-     || authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
-     || authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA256
+	 authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
+	 || authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
+	 || authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA256
        */
     {
       if ((authentication_code_data_len && !authentication_code_data)
@@ -802,14 +802,14 @@ ipmi_calculate_rakp_3_key_exchange_authentication_code (uint8_t authentication_a
       k_uid_ptr_len = IPMI_2_0_MAX_PASSWORD_LENGTH;
     }
 
-  if ((digest_len = ipmi_crypt_hash (hash_algorithm,
-                                     hash_flags,
-                                     k_uid_ptr,
-                                     k_uid_ptr_len,
-                                     buf,
-                                     buf_index,
-                                     digest,
-                                     IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH)) < 0)
+  if ((digest_len = crypt_hash (hash_algorithm,
+				hash_flags,
+				k_uid_ptr,
+				k_uid_ptr_len,
+				buf,
+				buf_index,
+				digest,
+				IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH)) < 0)
     {
       ERRNO_TRACE (errno);
       goto cleanup;
@@ -1091,14 +1091,14 @@ ipmi_rmcpplus_check_rakp_2_key_exchange_authentication_code (uint8_t authenticat
       k_uid_ptr_len = IPMI_2_0_MAX_PASSWORD_LENGTH;
     }
 
-  if ((digest_len = ipmi_crypt_hash (hash_algorithm,
-                                     hash_flags,
-                                     k_uid_ptr,
-                                     k_uid_ptr_len,
-                                     buf,
-                                     buf_index,
-                                     digest,
-                                     IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH)) < 0)
+  if ((digest_len = crypt_hash (hash_algorithm,
+				hash_flags,
+				k_uid_ptr,
+				k_uid_ptr_len,
+				buf,
+				buf_index,
+				digest,
+				IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH)) < 0)
     {
       ERRNO_TRACE (errno);
       goto cleanup;
@@ -1236,14 +1236,14 @@ ipmi_rmcpplus_check_rakp_4_integrity_check_value (uint8_t authentication_algorit
   memcpy (buf + buf_index, managed_system_guid, IPMI_MANAGED_SYSTEM_GUID_LENGTH);
   buf_index += IPMI_MANAGED_SYSTEM_GUID_LENGTH;
 
-  if ((digest_len = ipmi_crypt_hash (hash_algorithm,
-                                     hash_flags,
-                                     sik_key,
-                                     sik_key_len,
-                                     buf,
-                                     buf_index,
-                                     digest,
-                                     IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH)) < 0)
+  if ((digest_len = crypt_hash (hash_algorithm,
+				hash_flags,
+				sik_key,
+				sik_key_len,
+				buf,
+				buf_index,
+				digest,
+				IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH)) < 0)
     {
       ERRNO_TRACE (errno);
       goto cleanup;
@@ -1330,7 +1330,7 @@ ipmi_rmcpplus_check_packet_session_authentication_code (uint8_t integrity_algori
       compare_digest_len = IPMI_HMAC_SHA256_128_AUTHENTICATION_CODE_LENGTH;
     }
 
-  if ((crypt_digest_len = ipmi_crypt_hash_digest_len (hash_algorithm)) < 0)
+  if ((crypt_digest_len = crypt_hash_digest_len (hash_algorithm)) < 0)
     {
       ERRNO_TRACE (errno);
       goto cleanup;
@@ -1404,14 +1404,14 @@ ipmi_rmcpplus_check_packet_session_authentication_code (uint8_t integrity_algori
       hash_data_len += IPMI_2_0_MAX_PASSWORD_LENGTH;
     }
 
-  if ((integrity_digest_len = ipmi_crypt_hash (hash_algorithm,
-                                               hash_flags,
-                                               integrity_key,
-                                               integrity_key_len,
-                                               hash_data,
-                                               hash_data_len,
-                                               integrity_digest,
-                                               IPMI_MAX_INTEGRITY_DATA_LENGTH)) < 0)
+  if ((integrity_digest_len = crypt_hash (hash_algorithm,
+					  hash_flags,
+					  integrity_key,
+					  integrity_key_len,
+					  hash_data,
+					  hash_data_len,
+					  integrity_digest,
+					  IPMI_MAX_INTEGRITY_DATA_LENGTH)) < 0)
     {
       ERRNO_TRACE (errno);
       goto cleanup;

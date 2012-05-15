@@ -97,10 +97,10 @@ ipmi_interpret_ctx_create (void)
       goto cleanup;
     }
 
-  if (ipmi_interpret_sel_init (ctx) < 0)
+  if (interpret_sel_init (ctx) < 0)
     goto cleanup;
 
-  if (ipmi_interpret_sensor_init (ctx) < 0)
+  if (interpret_sensor_init (ctx) < 0)
     goto cleanup;
 
   return (ctx);
@@ -109,8 +109,8 @@ ipmi_interpret_ctx_create (void)
   if (ctx)
     {
       ipmi_sel_ctx_destroy (ctx->sel_parse_ctx);
-      ipmi_interpret_sel_destroy (ctx);
-      ipmi_interpret_sensor_destroy (ctx);
+      interpret_sel_destroy (ctx);
+      interpret_sensor_destroy (ctx);
       free (ctx);
     }
   return (NULL);
@@ -123,8 +123,8 @@ ipmi_interpret_ctx_destroy (ipmi_interpret_ctx_t ctx)
     return;
 
   ipmi_sel_ctx_destroy (ctx->sel_parse_ctx);
-  ipmi_interpret_sel_destroy (ctx);
-  ipmi_interpret_sensor_destroy (ctx);
+  interpret_sel_destroy (ctx);
+  interpret_sensor_destroy (ctx);
 
   ctx->magic = ~IPMI_INTERPRET_CTX_MAGIC;
   free (ctx);
@@ -317,7 +317,7 @@ ipmi_interpret_load_sel_config (ipmi_interpret_ctx_t ctx,
         }
     }
 
-  if (ipmi_interpret_sel_config_parse (ctx, sel_config_file) < 0)
+  if (interpret_sel_config_parse (ctx, sel_config_file) < 0)
     goto cleanup;
 
  out:
@@ -367,7 +367,7 @@ ipmi_interpret_load_sensor_config (ipmi_interpret_ctx_t ctx,
         }
     }
 
-  if (ipmi_interpret_sensor_config_parse (ctx, sensor_config_file) < 0)
+  if (interpret_sensor_config_parse (ctx, sensor_config_file) < 0)
     goto cleanup;
 
  out:
