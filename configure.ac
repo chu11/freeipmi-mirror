@@ -43,7 +43,6 @@ AC_CONFIG_FILES([
         common/toolcommon/Makefile
         common/toolevent/Makefile
         common/toolhostrange/Makefile
-        common/tooloem/Makefile
         common/toolsdr/Makefile
         common/toolsensor/Makefile
         contrib/Makefile

@@ -18,4 +18,6 @@ libtoolcommon_la_SOURCES = \
 	tool-config-file-common.c \
 	tool-config-file-common.h \
 	tool-cmdline-common.c \
-	tool-cmdline-common.h
+	tool-cmdline-common.h \
+	tool-oem-common.c \
+	tool-oem-common.h

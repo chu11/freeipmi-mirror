@@ -9,6 +9,5 @@ SUBDIRS = \
 	toolcommon \
 	toolevent \
 	toolhostrange \
-	tooloem \
 	toolsdr \
 	toolsensor

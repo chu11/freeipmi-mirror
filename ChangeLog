@@ -1,5 +1,9 @@
 2012-05-15  Albert Chu <chu11@llnl.gov>
 
+	* common/tooloem/: Merge into common/toolcommon/ library.
+	
+2012-05-15  Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/: Rename a large number of internal functions with
 	'ipmi' prefixes so they are not exported by libfreeipmi.
 	
