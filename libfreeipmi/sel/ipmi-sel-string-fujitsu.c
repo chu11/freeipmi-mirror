@@ -232,7 +232,7 @@ _ipmi_sel_oem_fujitsu_get_sel_entry_long_text (ipmi_sel_ctx_t ctx,
 
       /* BMC checks for boundaries, offset + len has to be <= 80 (iRMC S1) <= 100 (iRMC S2) */ 
       if (offset + bytes_rq[8] > data_length)
-         bytes_rq[8] = data_length - offset;
+	bytes_rq[8] = data_length - offset;
 
       if ((rs_len = ipmi_cmd_raw (ctx->ipmi_ctx,
                                   0, /* lun */
@@ -432,14 +432,14 @@ ipmi_sel_parse_output_fujitsu_event_data1_class_sensor_specific_discrete (ipmi_s
  */
 int
 ipmi_sel_parse_output_fujitsu_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
-							struct ipmi_sel_entry *sel_entry,
-							uint8_t sel_record_type,
-							char *buf,
-							unsigned int buflen,
-							unsigned int flags,
-							unsigned int *wlen,
-							struct ipmi_sel_system_event_record_data *system_event_record_data,
-							int *oem_rv)
+						       struct ipmi_sel_entry *sel_entry,
+						       uint8_t sel_record_type,
+						       char *buf,
+						       unsigned int buflen,
+						       unsigned int flags,
+						       unsigned int *wlen,
+						       struct ipmi_sel_system_event_record_data *system_event_record_data,
+						       int *oem_rv)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);

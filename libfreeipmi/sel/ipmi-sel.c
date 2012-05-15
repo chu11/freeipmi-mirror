@@ -321,8 +321,8 @@ ipmi_sel_ctx_set_product_id (ipmi_sel_ctx_t ctx, uint16_t product_id)
 
 int
 ipmi_sel_ctx_get_ipmi_version (ipmi_sel_ctx_t ctx,
-                                     uint8_t *ipmi_version_major,
-                                     uint8_t *ipmi_version_minor)
+			       uint8_t *ipmi_version_major,
+			       uint8_t *ipmi_version_minor)
 {
   if (!ctx || ctx->magic != IPMI_SEL_CTX_MAGIC)
     {
@@ -344,8 +344,8 @@ ipmi_sel_ctx_get_ipmi_version (ipmi_sel_ctx_t ctx,
 
 int
 ipmi_sel_ctx_set_ipmi_version (ipmi_sel_ctx_t ctx,
-                                     uint8_t ipmi_version_major,
-                                     uint8_t ipmi_version_minor)
+			       uint8_t ipmi_version_major,
+			       uint8_t ipmi_version_minor)
 {
   if (!ctx || ctx->magic != IPMI_SEL_CTX_MAGIC)
     {

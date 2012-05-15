@@ -73,14 +73,14 @@
 
 int
 ipmi_sel_parse_output_intel_sensor_name (ipmi_sel_ctx_t ctx,
-					  struct ipmi_sel_entry *sel_entry,
-					  uint8_t sel_record_type,
-					  char *buf,
-					  unsigned int buflen,
-					  unsigned int flags,
-					  unsigned int *wlen,
-					  struct ipmi_sel_system_event_record_data *system_event_record_data,
-					  int *oem_rv)
+					 struct ipmi_sel_entry *sel_entry,
+					 uint8_t sel_record_type,
+					 char *buf,
+					 unsigned int buflen,
+					 unsigned int flags,
+					 unsigned int *wlen,
+					 struct ipmi_sel_system_event_record_data *system_event_record_data,
+					 int *oem_rv)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
@@ -851,7 +851,7 @@ ipmi_sel_parse_output_intel_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
 	  return (1);
 	}
 
-    if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600JF_BIOS_POST
+      if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600JF_BIOS_POST
 	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_ENABLED
 	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
 	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600JF_MEMORY_RAS_MODE_SELECT
@@ -869,7 +869,7 @@ ipmi_sel_parse_output_intel_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
 	  
 	  return (1);
 	}
-      }
+    }
   
   return (0);
 }

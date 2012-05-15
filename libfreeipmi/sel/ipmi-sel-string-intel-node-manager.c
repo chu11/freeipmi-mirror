@@ -340,7 +340,7 @@ ipmi_sel_parse_output_intel_node_manager_sensor_name (ipmi_sel_ctx_t ctx,
           return (1);
         }
       else if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_NODE_MANAGER_EXCEPTION_EVENT
-          && system_event_record_data->sensor_number == ctx->intel_node_manager.nm_exception_event_sensor_number)
+	       && system_event_record_data->sensor_number == ctx->intel_node_manager.nm_exception_event_sensor_number)
         {
           if (ipmi_sel_parse_string_snprintf (buf,
                                               buflen,
