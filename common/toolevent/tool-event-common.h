@@ -119,8 +119,6 @@ int event_output_event (pstdout_state_t pstate,
 			ipmi_sel_ctx_t sel_ctx,
 			uint8_t *sel_record,
 			unsigned int sel_record_len,
-			struct ipmi_oem_data *oem_data,
-			int interpret_oem_data,
 			int comma_separated_output,
 			int debug,
 			unsigned int flags);

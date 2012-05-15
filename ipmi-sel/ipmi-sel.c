@@ -1039,8 +1039,6 @@ _normal_output_event (ipmi_sel_state_data_t *state_data, unsigned int flags)
 			      state_data->sel_ctx,
 			      NULL,
 			      0,
-			      &state_data->oem_data,
-			      state_data->prog_data->args->interpret_oem_data,
 			      state_data->prog_data->args->comma_separated_output,
 			      state_data->prog_data->args->common.debug,
 			      flags));

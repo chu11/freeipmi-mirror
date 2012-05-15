@@ -1,4 +1,14 @@
 2012-05-15  Albert Chu <chu11@llnl.gov>
+	
+       * libfreeipmi/include/freeipmi/sel/ipmi-sel.h,
+       libfreeipmi/sel/ipmi-sel-string.c (_output_event_data1_event_data2_event_data3),
+       libfreeipmi/sel/ipmi-sel-string.c (sel_parse_format_record_string):
+       Support new '%E' for sel string outputs.
+	
+       * common/toolevent/tool-event-common.c (event_output_event): Use
+       new '%E' appropriately.
+
+2012-05-15  Albert Chu <chu11@llnl.gov>
 
 	* libipmimonitoring/ipmimonitoring.map/: Explicitly list functions
 	to avoid errant functions being made global.

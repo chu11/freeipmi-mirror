@@ -1143,8 +1143,6 @@ _output_event (ipmi_pet_state_data_t *state_data,
 			      state_data->sel_ctx,
 			      sel_record,
 			      sel_record_len,
-			      &state_data->oem_data,
-			      state_data->prog_data->args->interpret_oem_data,
 			      state_data->prog_data->args->comma_separated_output,
 			      state_data->prog_data->args->common.debug,
 			      flags));

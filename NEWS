@@ -60,6 +60,8 @@ o In libfreeipmi, support Cipher Suite 15 and 16 implementation based
   on comments from Intel.
 o In libfreeipmi, add Cipher Suite 18 and 19 information, but do not
   support.
+o In libfreeipmi, support SEL string output format '%E' for combined
+  event data1, data2, and data3 output.
 o In libfreeipmi, support reservation-id registration and clearing in
   the sel-parse sub-library.
 o In libfreeipmi, sel-parse sub-library now supports a "no sel entries
