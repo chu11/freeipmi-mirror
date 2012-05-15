@@ -1,6 +1,13 @@
 2012-05-15  Albert Chu <chu11@llnl.gov>
 
 	* common/tooloem/: Merge into common/toolcommon/ library.
+
+	* common/toolcommon/tool-common.h,
+	common/toolcommon/tool-common.c (ipmi_open): Take pstdout_state_t
+	parameter and output errors instead of returning error string in
+	buffer.
+
+	* Update tools appropriately for changes.
 	
 2012-05-15  Albert Chu <chu11@llnl.gov>
 

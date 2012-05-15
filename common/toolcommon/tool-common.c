@@ -74,23 +74,20 @@ ipmi_ctx_t
 ipmi_open (const char *progname,
            const char *hostname,
            struct common_cmd_args *cmd_args,
-           char *errmsg,
-           unsigned int errmsglen)
+	   pstdout_state_t pstate)
 {
   ipmi_ctx_t ipmi_ctx = NULL;
   unsigned int workaround_flags = 0;
 
   assert (progname);
   assert (cmd_args);
-  assert (errmsg);
-  assert (errmsglen);
 
   if (!(ipmi_ctx = ipmi_ctx_create ()))
     {
-      snprintf (errmsg,
-                errmsglen,
-                "ipmi_ctx_create: %s",
-                strerror (errno));
+      PSTDOUT_FPRINTF (pstate,
+		       stderr,
+		       "ipmi_ctx_create: %s",
+		       strerror (errno));
       goto cleanup;
     }
 
@@ -137,16 +134,16 @@ ipmi_open (const char *progname,
                   || ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_HOSTNAME_INVALID
                   || ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_IPMI_2_0_UNAVAILABLE
                   || ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_CONNECTION_TIMEOUT)
-                snprintf (errmsg,
-                          errmsglen,
-                          "%s: %s",
-                          progname,
-                          ipmi_ctx_errormsg (ipmi_ctx));
+                PSTDOUT_FPRINTF (pstate,
+				 stderr,
+				 "%s: %s",
+				 progname,
+				 ipmi_ctx_errormsg (ipmi_ctx));
               else
-                snprintf (errmsg,
-                          errmsglen,
-                          "ipmi_ctx_open_outofband_2_0: %s",
-                          ipmi_ctx_errormsg (ipmi_ctx));
+                PSTDOUT_FPRINTF (pstate,
+				 stderr,
+				 "ipmi_ctx_open_outofband_2_0: %s",
+				 ipmi_ctx_errormsg (ipmi_ctx));
               goto cleanup;
             }
         }
@@ -182,16 +179,16 @@ ipmi_open (const char *progname,
                   || ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_PASSWORD_VERIFICATION_TIMEOUT
                   || ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_HOSTNAME_INVALID
                   || ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_CONNECTION_TIMEOUT)
-                snprintf (errmsg,
-                          errmsglen,
-                          "%s: %s",
-                          progname,
-                          ipmi_ctx_errormsg (ipmi_ctx));
+                PSTDOUT_FPRINTF (pstate,
+				 stderr,
+				 "%s: %s",
+				 progname,
+				 ipmi_ctx_errormsg (ipmi_ctx));
               else
-                snprintf (errmsg,
-                          errmsglen,
-                          "ipmi_ctx_open_outofband: %s",
-                          ipmi_ctx_errormsg (ipmi_ctx));
+                PSTDOUT_FPRINTF (pstate,
+				 stderr,
+				 "ipmi_ctx_open_outofband: %s",
+				 ipmi_ctx_errormsg (ipmi_ctx));
               goto cleanup;
             }
         }
@@ -200,11 +197,11 @@ ipmi_open (const char *progname,
     {
       if (!ipmi_is_root ())
         {
-          snprintf (errmsg,
-                    errmsglen,
-                    "%s: %s",
-                    progname,
-                    ipmi_ctx_strerror (IPMI_ERR_PERMISSION));
+          PSTDOUT_FPRINTF (pstate,
+			   stderr,
+			   "%s: %s",
+			   progname,
+			   ipmi_ctx_strerror (IPMI_ERR_PERMISSION));
           goto cleanup;
         }
 
@@ -227,18 +224,18 @@ ipmi_open (const char *progname,
                                            workaround_flags,
                                            (cmd_args->debug) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT)) < 0)
             {
-              snprintf (errmsg,
-                        errmsglen,
-                        "ipmi_ctx_find_inband: %s",
-                        ipmi_ctx_errormsg (ipmi_ctx));
+              PSTDOUT_FPRINTF (pstate,
+			       stderr,
+			       "ipmi_ctx_find_inband: %s",
+			       ipmi_ctx_errormsg (ipmi_ctx));
               goto cleanup;
             }
 
           if (!ret)
             {
-              snprintf (errmsg,
-                        errmsglen,
-                        "could not find inband device");
+              PSTDOUT_FPRINTF (pstate,
+			       stderr,
+			       "could not find inband device");
               goto cleanup;
             }
         }
@@ -254,16 +251,16 @@ ipmi_open (const char *progname,
                                     (cmd_args->debug) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT) < 0)
             {
               if (ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_DEVICE_NOT_FOUND)
-                snprintf (errmsg,
-                          errmsglen,
-                          "%s: %s",
-                          progname,
-                          ipmi_ctx_errormsg (ipmi_ctx));
+                PSTDOUT_FPRINTF (pstate,
+				 stderr,
+				 "%s: %s",
+				 progname,
+				 ipmi_ctx_errormsg (ipmi_ctx));
               else
-                snprintf (errmsg,
-                          errmsglen,
-                          "ipmi_ctx_open_inband: %s",
-                          ipmi_ctx_errormsg (ipmi_ctx));
+                PSTDOUT_FPRINTF (pstate,
+				 stderr,
+				 "ipmi_ctx_open_inband: %s",
+				 ipmi_ctx_errormsg (ipmi_ctx));
               goto cleanup;
             }
         }
@@ -276,10 +273,10 @@ ipmi_open (const char *progname,
 			       cmd_args->target_channel_number_is_set ? &cmd_args->target_channel_number : NULL,
 			       cmd_args->target_slave_address_is_set ? &cmd_args->target_slave_address : NULL) < 0)
 	{
-	  snprintf (errmsg,
-		    errmsglen,
-		    "ipmi_ctx_set_target: %s",
-		    ipmi_ctx_errormsg (ipmi_ctx));
+	  PSTDOUT_FPRINTF (pstate,
+			   stderr,
+			   "ipmi_ctx_set_target: %s",
+			   ipmi_ctx_errormsg (ipmi_ctx));
 	  goto cleanup;
 	} 
     }

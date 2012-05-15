@@ -24,8 +24,7 @@
 
 #include "tool-cmdline-common.h"
 #include "parse-common.h"
-
-#define IPMI_OPEN_ERRMSGLEN 1024
+#include "pstdout.h"
 
 int ipmi_is_root ();
 
@@ -34,8 +33,7 @@ void ipmi_disable_coredump (void);
 ipmi_ctx_t ipmi_open (const char *progname,
                       const char *hostname,
                       struct common_cmd_args *cmd_args,
-                      char *errmsg,
-                      unsigned int errmsglen);
+		      pstdout_state_t pstate);
 
 /* Check if kg len is decent */
 int check_kg_len (const char *in);

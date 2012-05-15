@@ -1353,7 +1353,6 @@ _ipmi_sensors (pstdout_state_t pstate,
 {
   ipmi_sensors_state_data_t state_data;
   ipmi_sensors_prog_data_t *prog_data;
-  char errmsg[IPMI_OPEN_ERRMSGLEN];
   int exit_code = -1;
 
   assert (pstate);
@@ -1374,13 +1373,8 @@ _ipmi_sensors (pstdout_state_t pstate,
       if (!(state_data.ipmi_ctx = ipmi_open (prog_data->progname,
                                              hostname,
                                              &(prog_data->args->common),
-                                             errmsg,
-                                             IPMI_OPEN_ERRMSGLEN)))
+					     state_data.pstate)))
         {
-          pstdout_fprintf (pstate,
-                           stderr,
-                           "%s\n",
-                           errmsg);
           exit_code = EXIT_FAILURE;
           goto cleanup;
         }

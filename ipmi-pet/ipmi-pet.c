@@ -2115,7 +2115,6 @@ static int
 _ipmi_pet (ipmi_pet_prog_data_t *prog_data)
 {
   ipmi_pet_state_data_t state_data;
-  char errmsg[IPMI_OPEN_ERRMSGLEN];
   int exit_code = -1;
 
   assert (prog_data);
@@ -2132,12 +2131,8 @@ _ipmi_pet (ipmi_pet_prog_data_t *prog_data)
       if (!(state_data.ipmi_ctx = ipmi_open (prog_data->progname,
                                              prog_data->args->common.hostname,
                                              &(prog_data->args->common),
-                                             errmsg,
-                                             IPMI_OPEN_ERRMSGLEN)))
+					     NULL)))
         {
-          fprintf (stderr,
-		   "%s\n",
-		   errmsg);
           exit_code = EXIT_FAILURE;
           goto cleanup;
         }

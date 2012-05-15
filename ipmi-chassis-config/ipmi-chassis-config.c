@@ -44,7 +44,6 @@ _ipmi_chassis_config (pstdout_state_t pstate,
 {
   ipmi_chassis_config_state_data_t state_data;
   ipmi_chassis_config_prog_data_t *prog_data;
-  char errmsg[IPMI_OPEN_ERRMSGLEN];
   int exit_code = -1;
   config_err_t ret = 0;
   int file_opened = 0;
@@ -62,13 +61,8 @@ _ipmi_chassis_config (pstdout_state_t pstate,
   if (!(state_data.ipmi_ctx = ipmi_open (prog_data->progname,
                                          hostname,
                                          &(prog_data->args->config_args.common),
-                                         errmsg,
-                                         IPMI_OPEN_ERRMSGLEN)))
+					 state_data.pstate)))
     {
-      pstdout_fprintf (pstate,
-                       stderr,
-                       "%s\n",
-                       errmsg);
       exit_code = EXIT_FAILURE;
       goto cleanup;
     }
