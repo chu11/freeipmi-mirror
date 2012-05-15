@@ -1,3 +1,8 @@
+2012-05-15  Albert Chu <chu11@llnl.gov>
+
+	* libipmimonitoring/ipmimonitoring.map/: Explicitly list functions
+	to avoid errant functions being made global.
+	
 2012-05-14  Albert Chu <chu11@llnl.gov>
 
 	Cleanup sel-parse sub-library
