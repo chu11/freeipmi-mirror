@@ -39,7 +39,7 @@
 #include <assert.h>
 #include <errno.h>
 
-#include "freeipmi/sel-parse/ipmi-sel-parse.h"
+#include "freeipmi/sel/ipmi-sel.h"
 
 #include "freeipmi/cmds/ipmi-sel-cmds.h"
 #include "freeipmi/record-format/ipmi-sdr-record-format.h"
@@ -59,21 +59,21 @@
 #include "freeipmi/util/ipmi-iana-enterprise-numbers-util.h"
 #include "freeipmi/util/ipmi-sensor-and-event-code-tables-util.h"
 
-#include "ipmi-sel-parse-common.h"
-#include "ipmi-sel-parse-defs.h"
-#include "ipmi-sel-parse-string.h"
-#include "ipmi-sel-parse-string-intel-node-manager.h"
-#include "ipmi-sel-parse-string-quanta.h"
-#include "ipmi-sel-parse-trace.h"
-#include "ipmi-sel-parse-util.h"
+#include "ipmi-sel-common.h"
+#include "ipmi-sel-defs.h"
+#include "ipmi-sel-string.h"
+#include "ipmi-sel-string-intel-node-manager.h"
+#include "ipmi-sel-string-quanta.h"
+#include "ipmi-sel-trace.h"
+#include "ipmi-sel-util.h"
 
 #include "freeipmi-portability.h"
 
 #define QUANTA_EVENT_BUFFER_LENGTH 4096
 
 int
-ipmi_sel_parse_output_quanta_sensor_name (ipmi_sel_parse_ctx_t ctx,
-					  struct ipmi_sel_parse_entry *sel_parse_entry,
+ipmi_sel_parse_output_quanta_sensor_name (ipmi_sel_ctx_t ctx,
+					  struct ipmi_sel_entry *sel_entry,
 					  uint8_t sel_record_type,
 					  char *buf,
 					  unsigned int buflen,
@@ -83,13 +83,13 @@ ipmi_sel_parse_output_quanta_sensor_name (ipmi_sel_parse_ctx_t ctx,
 					  int *oem_rv)
 {
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_QUANTA);
-  assert (sel_parse_entry);
+  assert (sel_entry);
   assert (buf);
   assert (buflen);
-  assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
-  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (wlen);
   assert (system_event_record_data);
   assert (oem_rv);
@@ -103,7 +103,7 @@ ipmi_sel_parse_output_quanta_sensor_name (ipmi_sel_parse_ctx_t ctx,
       int nmret;
 
       if ((nmret = ipmi_sel_parse_output_intel_node_manager_sensor_name (ctx,
-									 sel_parse_entry,
+									 sel_entry,
 									 sel_record_type,
 									 buf,
 									 buflen,
@@ -125,8 +125,8 @@ ipmi_sel_parse_output_quanta_sensor_name (ipmi_sel_parse_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 int
-ipmi_sel_parse_output_quanta_event_data1_class_oem (ipmi_sel_parse_ctx_t ctx,
-                                                    struct ipmi_sel_parse_entry *sel_parse_entry,
+ipmi_sel_parse_output_quanta_event_data1_class_oem (ipmi_sel_ctx_t ctx,
+                                                    struct ipmi_sel_entry *sel_entry,
                                                     uint8_t sel_record_type,
                                                     char *tmpbuf,
                                                     unsigned int tmpbuflen,
@@ -135,13 +135,13 @@ ipmi_sel_parse_output_quanta_event_data1_class_oem (ipmi_sel_parse_ctx_t ctx,
                                                     struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_QUANTA);
-  assert (sel_parse_entry);
+  assert (sel_entry);
   assert (tmpbuf);
   assert (tmpbuflen);
-  assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
-  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (wlen);
   assert (system_event_record_data);
 
@@ -154,7 +154,7 @@ ipmi_sel_parse_output_quanta_event_data1_class_oem (ipmi_sel_parse_ctx_t ctx,
       int nmret;
 
       if ((nmret = ipmi_sel_parse_output_intel_node_manager_event_data1_class_oem (ctx,
-                                                                                   sel_parse_entry,
+                                                                                   sel_entry,
                                                                                    sel_record_type,
                                                                                    tmpbuf,
                                                                                    tmpbuflen,
@@ -175,8 +175,8 @@ ipmi_sel_parse_output_quanta_event_data1_class_oem (ipmi_sel_parse_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 int
-ipmi_sel_parse_output_quanta_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
-                                                       struct ipmi_sel_parse_entry *sel_parse_entry,
+ipmi_sel_parse_output_quanta_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
+                                                       struct ipmi_sel_entry *sel_entry,
                                                        uint8_t sel_record_type,
                                                        char *tmpbuf,
                                                        unsigned int tmpbuflen,
@@ -185,13 +185,13 @@ ipmi_sel_parse_output_quanta_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
                                                        struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_QUANTA);
-  assert (sel_parse_entry);
+  assert (sel_entry);
   assert (tmpbuf);
   assert (tmpbuflen);
-  assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
-  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (wlen);
   assert (system_event_record_data);
   assert (system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
@@ -256,8 +256,8 @@ ipmi_sel_parse_output_quanta_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 int
-ipmi_sel_parse_output_quanta_event_data2_class_oem (ipmi_sel_parse_ctx_t ctx,
-                                                    struct ipmi_sel_parse_entry *sel_parse_entry,
+ipmi_sel_parse_output_quanta_event_data2_class_oem (ipmi_sel_ctx_t ctx,
+                                                    struct ipmi_sel_entry *sel_entry,
                                                     uint8_t sel_record_type,
                                                     char *tmpbuf,
                                                     unsigned int tmpbuflen,
@@ -266,13 +266,13 @@ ipmi_sel_parse_output_quanta_event_data2_class_oem (ipmi_sel_parse_ctx_t ctx,
                                                     struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_QUANTA);
-  assert (sel_parse_entry);
+  assert (sel_entry);
   assert (tmpbuf);
   assert (tmpbuflen);
-  assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
-  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (wlen);
   assert (system_event_record_data);
 
@@ -285,7 +285,7 @@ ipmi_sel_parse_output_quanta_event_data2_class_oem (ipmi_sel_parse_ctx_t ctx,
       int nmret;
 
       if ((nmret = ipmi_sel_parse_output_intel_node_manager_event_data2_class_oem (ctx,
-                                                                                   sel_parse_entry,
+                                                                                   sel_entry,
                                                                                    sel_record_type,
                                                                                    tmpbuf,
                                                                                    tmpbuflen,
@@ -306,8 +306,8 @@ ipmi_sel_parse_output_quanta_event_data2_class_oem (ipmi_sel_parse_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 int
-ipmi_sel_parse_output_quanta_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
-						       struct ipmi_sel_parse_entry *sel_parse_entry,
+ipmi_sel_parse_output_quanta_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
+						       struct ipmi_sel_entry *sel_entry,
 						       uint8_t sel_record_type,
 						       char *tmpbuf,
 						       unsigned int tmpbuflen,
@@ -316,13 +316,13 @@ ipmi_sel_parse_output_quanta_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
 						       struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_QUANTA);
-  assert (sel_parse_entry);
+  assert (sel_entry);
   assert (tmpbuf);
   assert (tmpbuflen);
-  assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
-  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (wlen);
   assert (system_event_record_data);
   assert (system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
@@ -486,8 +486,8 @@ ipmi_sel_parse_output_quanta_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 int
-ipmi_sel_parse_output_quanta_event_data3_class_oem (ipmi_sel_parse_ctx_t ctx,
-                                                    struct ipmi_sel_parse_entry *sel_parse_entry,
+ipmi_sel_parse_output_quanta_event_data3_class_oem (ipmi_sel_ctx_t ctx,
+                                                    struct ipmi_sel_entry *sel_entry,
                                                     uint8_t sel_record_type,
                                                     char *tmpbuf,
                                                     unsigned int tmpbuflen,
@@ -496,13 +496,13 @@ ipmi_sel_parse_output_quanta_event_data3_class_oem (ipmi_sel_parse_ctx_t ctx,
                                                     struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_QUANTA);
-  assert (sel_parse_entry);
+  assert (sel_entry);
   assert (tmpbuf);
   assert (tmpbuflen);
-  assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
-  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (wlen);
   assert (system_event_record_data);
 
@@ -515,7 +515,7 @@ ipmi_sel_parse_output_quanta_event_data3_class_oem (ipmi_sel_parse_ctx_t ctx,
       int nmret;
 
       if ((nmret = ipmi_sel_parse_output_intel_node_manager_event_data3_class_oem (ctx,
-                                                                                   sel_parse_entry,
+                                                                                   sel_entry,
                                                                                    sel_record_type,
                                                                                    tmpbuf,
                                                                                    tmpbuflen,

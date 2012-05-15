@@ -285,12 +285,12 @@ _sdr_cache_get_record (ipmi_sdr_ctx_t ctx,
       goto cleanup;
     }
   
- /* achu:
-  *
-  * Many motherboards now allow you to read the full SDR record, try
-  * that first.  If it fails for any reason, bail and try to read via
-  * partial reads.
-  */
+  /* achu:
+   *
+   * Many motherboards now allow you to read the full SDR record, try
+   * that first.  If it fails for any reason, bail and try to read via
+   * partial reads.
+   */
  
   reservation_id_retry_count = 0;
   

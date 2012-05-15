@@ -26,7 +26,7 @@
 #include <stdint.h>
 
 #include "freeipmi/interpret/ipmi-interpret.h"
-#include "freeipmi/sel-parse/ipmi-sel-parse.h"
+#include "freeipmi/sel/ipmi-sel.h"
 
 #include "hash.h"
 
@@ -274,7 +274,7 @@ struct ipmi_interpret_ctx {
   uint32_t manufacturer_id;
   uint16_t product_id;
 
-  ipmi_sel_parse_ctx_t sel_parse_ctx;
+  ipmi_sel_ctx_t sel_parse_ctx;
 
   struct ipmi_interpret_sel interpret_sel;
   struct ipmi_interpret_sensor interpret_sensor;

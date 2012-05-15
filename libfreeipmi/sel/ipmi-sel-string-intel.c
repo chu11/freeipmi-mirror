@@ -39,7 +39,7 @@
 #include <assert.h>
 #include <errno.h>
 
-#include "freeipmi/sel-parse/ipmi-sel-parse.h"
+#include "freeipmi/sel/ipmi-sel.h"
 
 #include "freeipmi/cmds/ipmi-sel-cmds.h"
 #include "freeipmi/record-format/ipmi-sdr-record-format.h"
@@ -59,37 +59,37 @@
 #include "freeipmi/util/ipmi-iana-enterprise-numbers-util.h"
 #include "freeipmi/util/ipmi-sensor-and-event-code-tables-util.h"
 
-#include "ipmi-sel-parse-common.h"
-#include "ipmi-sel-parse-defs.h"
-#include "ipmi-sel-parse-string.h"
-#include "ipmi-sel-parse-string-intel.h"
-#include "ipmi-sel-parse-string-intel-node-manager.h"
-#include "ipmi-sel-parse-trace.h"
-#include "ipmi-sel-parse-util.h"
+#include "ipmi-sel-common.h"
+#include "ipmi-sel-defs.h"
+#include "ipmi-sel-string.h"
+#include "ipmi-sel-string-intel.h"
+#include "ipmi-sel-string-intel-node-manager.h"
+#include "ipmi-sel-trace.h"
+#include "ipmi-sel-util.h"
 
 #include "freeipmi-portability.h"
 
 #define INTEL_EVENT_BUFFER_LENGTH 4096
 
 int
-ipmi_sel_parse_output_intel_sensor_name (ipmi_sel_parse_ctx_t ctx,
-					  struct ipmi_sel_parse_entry *sel_parse_entry,
-					  uint8_t sel_record_type,
-					  char *buf,
-					  unsigned int buflen,
-					  unsigned int flags,
-					  unsigned int *wlen,
-					  struct ipmi_sel_system_event_record_data *system_event_record_data,
-					  int *oem_rv)
+ipmi_sel_parse_output_intel_sensor_name (ipmi_sel_ctx_t ctx,
+					 struct ipmi_sel_entry *sel_entry,
+					 uint8_t sel_record_type,
+					 char *buf,
+					 unsigned int buflen,
+					 unsigned int flags,
+					 unsigned int *wlen,
+					 struct ipmi_sel_system_event_record_data *system_event_record_data,
+					 int *oem_rv)
 {
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL);
-  assert (sel_parse_entry);
+  assert (sel_entry);
   assert (buf);
   assert (buflen);
-  assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
-  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (wlen);
   assert (system_event_record_data);
   assert (oem_rv);
@@ -108,7 +108,7 @@ ipmi_sel_parse_output_intel_sensor_name (ipmi_sel_parse_ctx_t ctx,
       int nmret;
 
       if ((nmret = ipmi_sel_parse_output_intel_node_manager_sensor_name (ctx,
-									 sel_parse_entry,
+									 sel_entry,
 									 sel_record_type,
 									 buf,
 									 buflen,
@@ -130,8 +130,8 @@ ipmi_sel_parse_output_intel_sensor_name (ipmi_sel_parse_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 int
-ipmi_sel_parse_output_intel_event_data1_class_oem (ipmi_sel_parse_ctx_t ctx,
-                                                   struct ipmi_sel_parse_entry *sel_parse_entry,
+ipmi_sel_parse_output_intel_event_data1_class_oem (ipmi_sel_ctx_t ctx,
+                                                   struct ipmi_sel_entry *sel_entry,
                                                    uint8_t sel_record_type,
                                                    char *tmpbuf,
                                                    unsigned int tmpbuflen,
@@ -140,13 +140,13 @@ ipmi_sel_parse_output_intel_event_data1_class_oem (ipmi_sel_parse_ctx_t ctx,
                                                    struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL);
-  assert (sel_parse_entry);
+  assert (sel_entry);
   assert (tmpbuf);
   assert (tmpbuflen);
-  assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
-  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (wlen);
   assert (system_event_record_data);
 
@@ -240,7 +240,7 @@ ipmi_sel_parse_output_intel_event_data1_class_oem (ipmi_sel_parse_ctx_t ctx,
       int nmret;
 
       if ((nmret = ipmi_sel_parse_output_intel_node_manager_event_data1_class_oem (ctx,
-                                                                                   sel_parse_entry,
+                                                                                   sel_entry,
                                                                                    sel_record_type,
                                                                                    tmpbuf,
                                                                                    tmpbuflen,
@@ -487,19 +487,19 @@ ipmi_sel_parse_output_intel_event_data1_class_oem (ipmi_sel_parse_ctx_t ctx,
 }
 
 static void
-_ipmi_sel_parse_output_intel_bus (ipmi_sel_parse_ctx_t ctx,
+_ipmi_sel_parse_output_intel_bus (ipmi_sel_ctx_t ctx,
 				  char *tmpbuf,
 				  unsigned int tmpbuflen,
 				  unsigned int flags,
 				  struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL);
   assert (tmpbuf);
   assert (tmpbuflen);
-  assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
-  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (system_event_record_data);
   assert (system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
   
@@ -544,8 +544,8 @@ _ipmi_sel_parse_output_intel_s2600jf_ras_mode (uint8_t event_data)
  * return (-1) - error, cleanup and return error
  */
 int
-ipmi_sel_parse_output_intel_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
-                                                      struct ipmi_sel_parse_entry *sel_parse_entry,
+ipmi_sel_parse_output_intel_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
+                                                      struct ipmi_sel_entry *sel_entry,
                                                       uint8_t sel_record_type,
                                                       char *tmpbuf,
                                                       unsigned int tmpbuflen,
@@ -554,13 +554,13 @@ ipmi_sel_parse_output_intel_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
                                                       struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL);
-  assert (sel_parse_entry);
+  assert (sel_entry);
   assert (tmpbuf);
   assert (tmpbuflen);
-  assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
-  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (wlen);
   assert (system_event_record_data);
   assert (system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
@@ -851,7 +851,7 @@ ipmi_sel_parse_output_intel_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
 	  return (1);
 	}
 
-    if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600JF_BIOS_POST
+      if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600JF_BIOS_POST
 	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_ENABLED
 	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
 	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600JF_MEMORY_RAS_MODE_SELECT
@@ -869,7 +869,7 @@ ipmi_sel_parse_output_intel_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
 	  
 	  return (1);
 	}
-      }
+    }
   
   return (0);
 }
@@ -879,8 +879,8 @@ ipmi_sel_parse_output_intel_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 int
-ipmi_sel_parse_output_intel_event_data2_class_oem (ipmi_sel_parse_ctx_t ctx,
-                                                   struct ipmi_sel_parse_entry *sel_parse_entry,
+ipmi_sel_parse_output_intel_event_data2_class_oem (ipmi_sel_ctx_t ctx,
+                                                   struct ipmi_sel_entry *sel_entry,
                                                    uint8_t sel_record_type,
                                                    char *tmpbuf,
                                                    unsigned int tmpbuflen,
@@ -889,13 +889,13 @@ ipmi_sel_parse_output_intel_event_data2_class_oem (ipmi_sel_parse_ctx_t ctx,
                                                    struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL);
-  assert (sel_parse_entry);
+  assert (sel_entry);
   assert (tmpbuf);
   assert (tmpbuflen);
-  assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
-  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (wlen);
   assert (system_event_record_data);
 
@@ -1046,7 +1046,7 @@ ipmi_sel_parse_output_intel_event_data2_class_oem (ipmi_sel_parse_ctx_t ctx,
       int nmret;
 
       if ((nmret = ipmi_sel_parse_output_intel_node_manager_event_data2_class_oem (ctx,
-                                                                                   sel_parse_entry,
+                                                                                   sel_entry,
                                                                                    sel_record_type,
                                                                                    tmpbuf,
                                                                                    tmpbuflen,
@@ -1063,7 +1063,7 @@ ipmi_sel_parse_output_intel_event_data2_class_oem (ipmi_sel_parse_ctx_t ctx,
 }
 
 static void
-_ipmi_sel_parse_output_intel_device_function (ipmi_sel_parse_ctx_t ctx,
+_ipmi_sel_parse_output_intel_device_function (ipmi_sel_ctx_t ctx,
 					      char *tmpbuf,
 					      unsigned int tmpbuflen,
 					      unsigned int flags,
@@ -1072,12 +1072,12 @@ _ipmi_sel_parse_output_intel_device_function (ipmi_sel_parse_ctx_t ctx,
   uint8_t device, function;
 
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL);
   assert (tmpbuf);
   assert (tmpbuflen);
-  assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
-  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (system_event_record_data);
   assert (system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
   
@@ -1101,7 +1101,7 @@ _ipmi_sel_parse_output_intel_device_function (ipmi_sel_parse_ctx_t ctx,
 }
 
 static void
-_ipmi_sel_parse_output_intel_quanta_qssc_s4r_memory_board (ipmi_sel_parse_ctx_t ctx,
+_ipmi_sel_parse_output_intel_quanta_qssc_s4r_memory_board (ipmi_sel_ctx_t ctx,
 							   char *tmpbuf,
 							   unsigned int tmpbuflen,
 							   unsigned int flags,
@@ -1111,12 +1111,12 @@ _ipmi_sel_parse_output_intel_quanta_qssc_s4r_memory_board (ipmi_sel_parse_ctx_t 
   char *memory_board_str;
 
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL);
   assert (tmpbuf);
   assert (tmpbuflen);
-  assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
-  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (system_event_record_data);
   assert (system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
   
@@ -1188,7 +1188,7 @@ _ipmi_sel_parse_output_intel_quanta_qssc_s4r_dimm_slot_str (uint8_t dimm_slot)
 }
 
 static void
-_ipmi_sel_parse_output_intel_quanta_qssc_s4r_dimm_slot (ipmi_sel_parse_ctx_t ctx,
+_ipmi_sel_parse_output_intel_quanta_qssc_s4r_dimm_slot (ipmi_sel_ctx_t ctx,
 							char *tmpbuf,
 							unsigned int tmpbuflen,
 							unsigned int flags,
@@ -1198,12 +1198,12 @@ _ipmi_sel_parse_output_intel_quanta_qssc_s4r_dimm_slot (ipmi_sel_parse_ctx_t ctx
   char *dimm_slot_str;
 
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL);
   assert (tmpbuf);
   assert (tmpbuflen);
-  assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
-  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (system_event_record_data);
   assert (system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
   
@@ -1219,7 +1219,7 @@ _ipmi_sel_parse_output_intel_quanta_qssc_s4r_dimm_slot (ipmi_sel_parse_ctx_t ctx
 }
 
 static void
-_ipmi_sel_parse_output_intel_quanta_qssc_s4r_smi_link (ipmi_sel_parse_ctx_t ctx,
+_ipmi_sel_parse_output_intel_quanta_qssc_s4r_smi_link (ipmi_sel_ctx_t ctx,
 						       char *tmpbuf,
 						       unsigned int tmpbuflen,
 						       unsigned int flags,
@@ -1229,12 +1229,12 @@ _ipmi_sel_parse_output_intel_quanta_qssc_s4r_smi_link (ipmi_sel_parse_ctx_t ctx,
   char *smi_link_str;
 
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL);
   assert (tmpbuf);
   assert (tmpbuflen);
-  assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
-  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (system_event_record_data);
   assert (system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
   
@@ -1264,8 +1264,8 @@ _ipmi_sel_parse_output_intel_quanta_qssc_s4r_smi_link (ipmi_sel_parse_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 int
-ipmi_sel_parse_output_intel_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
-                                                      struct ipmi_sel_parse_entry *sel_parse_entry,
+ipmi_sel_parse_output_intel_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
+                                                      struct ipmi_sel_entry *sel_entry,
                                                       uint8_t sel_record_type,
                                                       char *tmpbuf,
                                                       unsigned int tmpbuflen,
@@ -1274,13 +1274,13 @@ ipmi_sel_parse_output_intel_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
                                                       struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL);
-  assert (sel_parse_entry);
+  assert (sel_entry);
   assert (tmpbuf);
   assert (tmpbuflen);
-  assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
-  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (wlen);
   assert (system_event_record_data);
   assert (system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
@@ -1757,8 +1757,8 @@ ipmi_sel_parse_output_intel_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 int
-ipmi_sel_parse_output_intel_event_data3_class_oem (ipmi_sel_parse_ctx_t ctx,
-                                                   struct ipmi_sel_parse_entry *sel_parse_entry,
+ipmi_sel_parse_output_intel_event_data3_class_oem (ipmi_sel_ctx_t ctx,
+                                                   struct ipmi_sel_entry *sel_entry,
                                                    uint8_t sel_record_type,
                                                    char *tmpbuf,
                                                    unsigned int tmpbuflen,
@@ -1767,13 +1767,13 @@ ipmi_sel_parse_output_intel_event_data3_class_oem (ipmi_sel_parse_ctx_t ctx,
                                                    struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL);
-  assert (sel_parse_entry);
+  assert (sel_entry);
   assert (tmpbuf);
   assert (tmpbuflen);
-  assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
-  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (wlen);
   assert (system_event_record_data);
 
@@ -1849,7 +1849,7 @@ ipmi_sel_parse_output_intel_event_data3_class_oem (ipmi_sel_parse_ctx_t ctx,
       int nmret;
 
       if ((nmret = ipmi_sel_parse_output_intel_node_manager_event_data3_class_oem (ctx,
-                                                                                   sel_parse_entry,
+                                                                                   sel_entry,
                                                                                    sel_record_type,
                                                                                    tmpbuf,
                                                                                    tmpbuflen,
@@ -1874,8 +1874,8 @@ ipmi_sel_parse_output_intel_event_data3_class_oem (ipmi_sel_parse_ctx_t ctx,
  * 1 - buffer full, return full buffer to user
  */
 int
-ipmi_sel_parse_output_intel_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
-						     struct ipmi_sel_parse_entry *sel_parse_entry,
+ipmi_sel_parse_output_intel_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
+						     struct ipmi_sel_entry *sel_entry,
 						     uint8_t sel_record_type,
 						     char *buf,
 						     unsigned int buflen,
@@ -1885,13 +1885,13 @@ ipmi_sel_parse_output_intel_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
 						     int *oem_rv)
 {
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL);
-  assert (sel_parse_entry);
+  assert (sel_entry);
   assert (buf);
   assert (buflen);
-  assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
-  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (wlen);
   assert (system_event_record_data);
   assert (oem_rv);

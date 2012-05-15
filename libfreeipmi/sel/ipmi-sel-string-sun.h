@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef IPMI_SEL_PARSE_STRING_SUN_H
-#define IPMI_SEL_PARSE_STRING_SUN_H
+#ifndef IPMI_SEL_STRING_SUN_H
+#define IPMI_SEL_STRING_SUN_H
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -25,13 +25,13 @@
 
 #include <stdint.h>
 
-#include "freeipmi/sel-parse/ipmi-sel-parse.h"
+#include "freeipmi/sel/ipmi-sel.h"
 
-#include "ipmi-sel-parse-defs.h"
-#include "ipmi-sel-parse-common.h"
+#include "ipmi-sel-defs.h"
+#include "ipmi-sel-common.h"
 
-int ipmi_sel_parse_output_sun_event_data3_threshold_oem (ipmi_sel_parse_ctx_t ctx,
-                                                         struct ipmi_sel_parse_entry *sel_parse_entry,
+int ipmi_sel_parse_output_sun_event_data3_threshold_oem (ipmi_sel_ctx_t ctx,
+                                                         struct ipmi_sel_entry *sel_entry,
                                                          uint8_t sel_record_type,
                                                          char *tmpbuf,
                                                          unsigned int tmpbuflen,
@@ -39,8 +39,8 @@ int ipmi_sel_parse_output_sun_event_data3_threshold_oem (ipmi_sel_parse_ctx_t ct
                                                          unsigned int *wlen,
                                                          struct ipmi_sel_system_event_record_data *system_event_record_data);
 
-int ipmi_sel_parse_output_sun_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
-                                                        struct ipmi_sel_parse_entry *sel_parse_entry,
+int ipmi_sel_parse_output_sun_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
+                                                        struct ipmi_sel_entry *sel_entry,
                                                         uint8_t sel_record_type,
                                                         char *tmpbuf,
                                                         unsigned int tmpbuflen,
@@ -48,4 +48,4 @@ int ipmi_sel_parse_output_sun_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx
                                                         unsigned int *wlen,
                                                         struct ipmi_sel_system_event_record_data *system_event_record_data);
 
-#endif /* IPMI_SEL_PARSE_STRING_SUN_H */
+#endif /* IPMI_SEL_STRING_SUN_H */
