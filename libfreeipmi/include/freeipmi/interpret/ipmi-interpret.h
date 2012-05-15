@@ -85,8 +85,8 @@ int ipmi_interpret_load_sensor_config (ipmi_interpret_ctx_t ctx,
 /* interpret core functions */
 
 int ipmi_interpret_sel (ipmi_interpret_ctx_t ctx,
-                        const void *record_buf,
-                        unsigned int record_buflen,
+                        const void *sel_record,
+                        unsigned int sel_record_len,
                         unsigned int *sel_state);
 
 int ipmi_interpret_sensor (ipmi_interpret_ctx_t ctx,

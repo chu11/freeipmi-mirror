@@ -69,7 +69,7 @@ struct ipmi_fru_sdr_callback
 {
   ipmi_fru_state_data_t *state_data;
   unsigned int *output_count;
-  ipmi_fru_sdr_callback cb;
+  ipmi_fru_sdr_callback fru_cb;
   void *arg;
 };
 
@@ -522,6 +522,7 @@ _loop_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
 		    void *sdr_arg)
 {
   struct ipmi_fru_sdr_callback *sdr_callback_arg;
+  ipmi_fru_state_data_t *state_data;
 
   assert (sdr_ctx);
   assert (sdr_record);
@@ -529,27 +530,28 @@ _loop_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
   assert (sdr_arg);
 
   sdr_callback_arg = (struct ipmi_fru_sdr_callback *)sdr_arg;
+  state_data = sdr_callback_arg->state_data;
 
   if (record_type != IPMI_SDR_FORMAT_FRU_DEVICE_LOCATOR_RECORD
       && record_type != IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD)
     return (0);
       
-  if (!sdr_callback_arg->state_data->prog_data->args->bridge_fru
+  if (!state_data->prog_data->args->bridge_fru
       && record_type == IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD)
     return (0);
 
-  return (sdr_callback_arg->cb (sdr_callback_arg->state_data,
-				sdr_callback_arg->output_count,
-				sdr_record,
-				sdr_record_len,
-				record_type,
-				sdr_callback_arg->arg));
+  return (sdr_callback_arg->fru_cb (state_data,
+				    sdr_callback_arg->output_count,
+				    sdr_record,
+				    sdr_record_len,
+				    record_type,
+				    sdr_callback_arg->arg));
 }
 
 static int
 _loop_sdr (ipmi_fru_state_data_t *state_data,
 	   unsigned int *output_count,
-	   ipmi_fru_sdr_callback cb,
+	   ipmi_fru_sdr_callback fru_cb,
 	   void *fru_arg)
 {
   struct ipmi_fru_sdr_callback sdr_callback_arg;
@@ -557,11 +559,11 @@ _loop_sdr (ipmi_fru_state_data_t *state_data,
 
   assert (state_data);
   assert (output_count);
-  assert (cb);
+  assert (fru_cb);
 
   sdr_callback_arg.state_data = state_data;
   sdr_callback_arg.output_count = output_count;
-  sdr_callback_arg.cb = cb;
+  sdr_callback_arg.fru_cb = fru_cb;
   sdr_callback_arg.arg = fru_arg;
 
   if (ipmi_sdr_cache_iterate (state_data->sdr_ctx,

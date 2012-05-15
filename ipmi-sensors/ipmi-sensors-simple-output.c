@@ -394,8 +394,7 @@ _ipmimonitoring_legacy_simple_output_full_record (ipmi_sensors_state_data_t *sta
   assert (state_data);
   assert (IPMI_SENSORS_EVENT_VALID (event_message_output_type));
 
-  if (_ipmimonitoring_legacy_simple_output_header (state_data,
-                                                   record_id) < 0)
+  if (_ipmimonitoring_legacy_simple_output_header (state_data, record_id) < 0)
     goto cleanup;
 
   if (state_data->prog_data->args->output_sensor_state)
@@ -499,8 +498,7 @@ _ipmimonitoring_legacy_simple_output_compact_record (ipmi_sensors_state_data_t *
   assert (state_data);
   assert (IPMI_SENSORS_EVENT_VALID (event_message_output_type));
 
-  if (_ipmimonitoring_legacy_simple_output_header (state_data,
-                                                   record_id) < 0)
+  if (_ipmimonitoring_legacy_simple_output_header (state_data, record_id) < 0)
     return (-1);
 
   if (state_data->prog_data->args->output_sensor_state)

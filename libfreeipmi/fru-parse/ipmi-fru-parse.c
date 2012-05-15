@@ -148,6 +148,16 @@ ipmi_fru_parse_ctx_create (ipmi_ctx_t ipmi_ctx)
 {
   struct ipmi_fru_parse_ctx *ctx = NULL;
 
+  /* check that ipmi_ctx is open for use if supplied */
+  if (ipmi_ctx)
+    {
+      if (ipmi_ctx_get_target (ipmi_ctx, NULL, NULL) < 0)
+	{
+	  SET_ERRNO (EINVAL);
+	  return (NULL);
+	}
+    }
+
   if (!(ctx = (ipmi_fru_parse_ctx_t)malloc (sizeof (struct ipmi_fru_parse_ctx))))
     {
       ERRNO_TRACE (errno);

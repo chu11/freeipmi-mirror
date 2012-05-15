@@ -50,6 +50,7 @@ _sections_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
 			void *arg)
 {
   struct ipmi_sensors_config_sdr_callback *sdr_callback_arg;
+  ipmi_sensors_config_state_data_t *state_data;
   struct config_section *section = NULL;
   uint8_t event_reading_type_code;
   int event_reading_type_code_class;
@@ -61,7 +62,8 @@ _sections_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
   assert (arg);
 
   sdr_callback_arg = (struct ipmi_sensors_config_sdr_callback *)arg;
-  
+  state_data = sdr_callback_arg->state_data;
+
   /* achu:
    *
    * Technically, the IPMI spec lists that compact record formats
@@ -80,23 +82,23 @@ _sections_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
   if (record_type != IPMI_SDR_FORMAT_FULL_SENSOR_RECORD
       && record_type != IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD)
     {
-      if (sdr_callback_arg->state_data->prog_data->args->config_args.verbose_count)
-	pstdout_fprintf (sdr_callback_arg->state_data->pstate,
+      if (state_data->prog_data->args->config_args.verbose_count)
+	pstdout_fprintf (state_data->pstate,
 			 stderr,
 			 "## Cannot handle SDR record format '0x%X'\n",
 			 record_type);
       return (0);
     }
   
-  if (ipmi_sdr_parse_event_reading_type_code (sdr_callback_arg->state_data->sdr_ctx,
+  if (ipmi_sdr_parse_event_reading_type_code (state_data->sdr_ctx,
 					      sdr_record,
 					      sdr_record_len,
 					      &event_reading_type_code) < 0)
     {
-      pstdout_fprintf (sdr_callback_arg->state_data->pstate,
+      pstdout_fprintf (state_data->pstate,
 		       stderr,
 		       "ipmi_sdr_parse_event_reading_type_code: %s\n",
-		       ipmi_sdr_ctx_errormsg (sdr_callback_arg->state_data->sdr_ctx));
+		       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
       return (-1);
     }
 
@@ -106,13 +108,13 @@ _sections_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
     {
       if (record_type != IPMI_SDR_FORMAT_FULL_SENSOR_RECORD)
 	{
-	  if (sdr_callback_arg->state_data->prog_data->args->config_args.verbose_count)
-	    pstdout_printf (sdr_callback_arg->state_data->pstate,
+	  if (state_data->prog_data->args->config_args.verbose_count)
+	    pstdout_printf (state_data->pstate,
 			    "## Unable to handle threshold sensor with compact SDR record\n");
 	  return (0);
 	}
 
-      if ((ret = ipmi_sensors_config_threshold_section (sdr_callback_arg->state_data,
+      if ((ret = ipmi_sensors_config_threshold_section (state_data,
 							&section)) != CONFIG_ERR_SUCCESS)
 	{
 	  if (ret == CONFIG_ERR_FATAL_ERROR)
@@ -123,7 +125,7 @@ _sections_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
   else if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_GENERIC_DISCRETE
 	   || event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE)
     {
-      if ((ret = ipmi_sensors_config_discrete_section (sdr_callback_arg->state_data,
+      if ((ret = ipmi_sensors_config_discrete_section (state_data,
 						       &section)) != CONFIG_ERR_SUCCESS)
 	{
 	  if (ret == CONFIG_ERR_FATAL_ERROR)
@@ -133,8 +135,8 @@ _sections_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
     }
   else
     {
-      if (sdr_callback_arg->state_data->prog_data->args->config_args.common.debug)
-	pstdout_fprintf (sdr_callback_arg->state_data->pstate,
+      if (state_data->prog_data->args->config_args.common.debug)
+	pstdout_fprintf (state_data->pstate,
 			 stderr,
 			 "## Cannot handle SDR with event reading type code '0x%X'\n",
 			 event_reading_type_code);

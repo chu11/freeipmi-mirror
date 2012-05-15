@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef IPMI_SEL_PARSE_DEFS_H
-#define IPMI_SEL_PARSE_DEFS_H
+#ifndef IPMI_SEL_DEFS_H
+#define IPMI_SEL_DEFS_H
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -27,7 +27,7 @@
 #include <sys/param.h>
 
 #include "freeipmi/sdr/ipmi-sdr.h"
-#include "freeipmi/sel-parse/ipmi-sel-parse.h"
+#include "freeipmi/sel/ipmi-sel.h"
 
 #include "list.h"
 
@@ -35,7 +35,7 @@
 #define MAXPATHLEN 4096
 #endif /* MAXPATHLEN */
 
-#define IPMI_SEL_PARSE_CTX_MAGIC 0xAECD1846
+#define IPMI_SEL_CTX_MAGIC 0xAECD1846
 
 /* Table 21-1 */
 #define IPMI_SEL_RECORD_LENGTH               16
@@ -45,23 +45,23 @@
 
 #define IPMI_SEL_PARSE_RESERVATION_ID_RETRY   4
 
-#define IPMI_SEL_PARSE_FLAGS_MASK                    \
-  (IPMI_SEL_PARSE_FLAGS_DEBUG_DUMP                   \
-   | IPMI_SEL_PARSE_FLAGS_ASSUME_SYTEM_EVENT_RECORDS)
+#define IPMI_SEL_FLAGS_MASK                    \
+  (IPMI_SEL_FLAGS_DEBUG_DUMP                   \
+   | IPMI_SEL_FLAGS_ASSUME_SYTEM_EVENT_RECORDS)
 
-#define IPMI_SEL_PARSE_SEPARATOR_STRING     " | "
+#define IPMI_SEL_SEPARATOR_STRING     " | "
 
-#define IPMI_SEL_PARSE_STRING_MASK                        \
-  (IPMI_SEL_PARSE_STRING_FLAGS_VERBOSE                    \
-   | IPMI_SEL_PARSE_STRING_FLAGS_IGNORE_UNAVAILABLE_FIELD \
-   | IPMI_SEL_PARSE_STRING_FLAGS_OUTPUT_NOT_AVAILABLE     \
-   | IPMI_SEL_PARSE_STRING_FLAGS_DATE_USE_SLASH           \
-   | IPMI_SEL_PARSE_STRING_FLAGS_DATE_MONTH_STRING        \
-   | IPMI_SEL_PARSE_STRING_FLAGS_NON_ABBREVIATED_UNITS    \
-   | IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA       \
-   | IPMI_SEL_PARSE_STRING_FLAGS_LEGACY)
+#define IPMI_SEL_STRING_FLAGS_MASK                  \
+  (IPMI_SEL_STRING_FLAGS_VERBOSE                    \
+   | IPMI_SEL_STRING_FLAGS_IGNORE_UNAVAILABLE_FIELD \
+   | IPMI_SEL_STRING_FLAGS_OUTPUT_NOT_AVAILABLE     \
+   | IPMI_SEL_STRING_FLAGS_DATE_USE_SLASH           \
+   | IPMI_SEL_STRING_FLAGS_DATE_MONTH_STRING        \
+   | IPMI_SEL_STRING_FLAGS_NON_ABBREVIATED_UNITS    \
+   | IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA       \
+   | IPMI_SEL_STRING_FLAGS_LEGACY)
 
-struct ipmi_sel_parse_entry {
+struct ipmi_sel_entry {
   uint8_t sel_event_record[IPMI_SEL_RECORD_LENGTH];
   unsigned int sel_event_record_len; /* should always be 16, but just in case */
 };
@@ -75,7 +75,7 @@ struct ipmi_sel_oem_intel_node_manager {
   uint8_t nm_alert_threshold_exceeded_sensor_number;
 };
 
-struct ipmi_sel_parse_ctx {
+struct ipmi_sel_ctx {
   uint32_t magic;
   int errnum;
   unsigned int flags;
@@ -92,13 +92,14 @@ struct ipmi_sel_parse_ctx {
   ipmi_ctx_t ipmi_ctx;
   ipmi_sdr_ctx_t sdr_ctx;
 
+  int sel_entries_loaded;
   List sel_entries;
   ListIterator sel_entries_itr;
-  struct ipmi_sel_parse_entry *current_sel_entry;
+  struct ipmi_sel_entry *current_sel_entry;
 
-  struct ipmi_sel_parse_entry *callback_sel_entry;
+  struct ipmi_sel_entry *callback_sel_entry;
 
   struct ipmi_sel_oem_intel_node_manager intel_node_manager;
 };
 
-#endif /* IPMI_SEL_PARSE_DEFS_H */
+#endif /* IPMI_SEL_DEFS_H */

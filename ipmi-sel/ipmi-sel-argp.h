@@ -19,7 +19,7 @@
 #ifndef IPMI_SEL_ARGP_H
 #define IPMI_SEL_ARGP_H
 
-#include "ipmi-sel.h"
+#include "ipmi-sel_.h"
 
 void ipmi_sel_argp_parse (int argc, char **argv, struct ipmi_sel_arguments *cmd_args);
 

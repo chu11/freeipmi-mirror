@@ -4755,6 +4755,7 @@ _ipmi_oem_dell_power_supply_info_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
 					       void *arg)
 {
   struct ipmi_oem_dell_power_supply_info_sdr_callback *sdr_callback_arg;
+  ipmi_oem_state_data_t *state_data;
   uint8_t entity_id;
   uint8_t entity_instance;
   uint8_t entity_instance_type;
@@ -4766,6 +4767,7 @@ _ipmi_oem_dell_power_supply_info_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
   assert (arg);
 
   sdr_callback_arg = (struct ipmi_oem_dell_power_supply_info_sdr_callback *)arg;
+  state_data = sdr_callback_arg->state_data;
 
   /* Dell Poweredge OEM
    *
@@ -4799,29 +4801,29 @@ _ipmi_oem_dell_power_supply_info_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
       && record_type != IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD)
     return (0);
   
-  if (ipmi_sdr_parse_entity_id_instance_type (sdr_callback_arg->state_data->sdr_ctx,
+  if (ipmi_sdr_parse_entity_id_instance_type (state_data->sdr_ctx,
 					      sdr_record,
 					      sdr_record_len,
 					      &entity_id,
 					      &entity_instance,
 					      &entity_instance_type) < 0)
     {
-      pstdout_fprintf (sdr_callback_arg->state_data->pstate,
+      pstdout_fprintf (state_data->pstate,
 		       stderr,
 		       "ipmi_sdr_parse_entity_id_instance_type: %s\n",
-		       ipmi_sdr_ctx_errormsg (sdr_callback_arg->state_data->sdr_ctx));
+		       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
       return (-1);
     }
 	  
-  if (ipmi_sdr_parse_sensor_type (sdr_callback_arg->state_data->sdr_ctx,
+  if (ipmi_sdr_parse_sensor_type (state_data->sdr_ctx,
 				  sdr_record,
 				  sdr_record_len,
 				  &sensor_type) < 0)
     {
-      pstdout_fprintf (sdr_callback_arg->state_data->pstate,
+      pstdout_fprintf (state_data->pstate,
 		       stderr,
 		       "ipmi_sdr_parse_sensor_type: %s\n",
-		       ipmi_sdr_ctx_errormsg (sdr_callback_arg->state_data->sdr_ctx));
+		       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
       return (-1);
     }
   
@@ -4851,8 +4853,8 @@ _ipmi_oem_dell_power_supply_info_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
        * sharing, so I won't either.
        */
 	  
-      if (get_entity_sensor_name_string (sdr_callback_arg->state_data->pstate,
-					 sdr_callback_arg->state_data->sdr_ctx,
+      if (get_entity_sensor_name_string (state_data->pstate,
+					 state_data->sdr_ctx,
 					 sdr_callback_arg->entity_id_counts,
 					 NULL,
 					 sensor_name_buf,
@@ -4863,7 +4865,7 @@ _ipmi_oem_dell_power_supply_info_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
       bytes_rq[1] = entity_id;
       bytes_rq[2] = entity_instance;
 	  
-      if ((rs_len = ipmi_cmd_raw (sdr_callback_arg->state_data->ipmi_ctx,
+      if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
 				  0, /* lun */
 				  IPMI_NET_FN_OEM_DELL_GENERIC_RQ, /* network function */
 				  bytes_rq, /* data */
@@ -4871,14 +4873,14 @@ _ipmi_oem_dell_power_supply_info_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
 				  bytes_rs,
 				  IPMI_OEM_MAX_BYTES)) < 0)
 	{
-	  pstdout_fprintf (sdr_callback_arg->state_data->pstate,
+	  pstdout_fprintf (state_data->pstate,
 			   stderr,
 			   "ipmi_cmd_raw: %s\n",
-			   ipmi_ctx_errormsg (sdr_callback_arg->state_data->ipmi_ctx));
+			   ipmi_ctx_errormsg (state_data->ipmi_ctx));
 	  return (-1);
 	}
 	      
-      if (ipmi_oem_check_response_and_completion_code (sdr_callback_arg->state_data,
+      if (ipmi_oem_check_response_and_completion_code (state_data,
 						       bytes_rs,
 						       rs_len,
 						       25,
@@ -4910,51 +4912,51 @@ _ipmi_oem_dell_power_supply_info_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
 	  
       onlinestatus = bytes_rs[23];
 	  
-      pstdout_printf (sdr_callback_arg->state_data->pstate,
+      pstdout_printf (state_data->pstate,
 		      "Power Supply      : %s\n",
 		      sensor_name_buf);
 	  
-      pstdout_printf (sdr_callback_arg->state_data->pstate,
+      pstdout_printf (state_data->pstate,
 		      "Rated Watts       : %u W\n",
 		      ratedwatts);
 	  
       ratedamps_val = ((double)ratedamps) / 10.0;
 	  
-      pstdout_printf (sdr_callback_arg->state_data->pstate,
+      pstdout_printf (state_data->pstate,
 		      "Rated Amps        : %.2f A\n",
 		      ratedamps_val);
 	  
-      pstdout_printf (sdr_callback_arg->state_data->pstate,
+      pstdout_printf (state_data->pstate,
 		      "Rated Volts       : %u V\n",
 		      ratedvolts);
 	  
-      pstdout_printf (sdr_callback_arg->state_data->pstate,
+      pstdout_printf (state_data->pstate,
 		      "Rated DC Watts    : %u W\n",
 		      rateddcwatts);
 	  
-      pstdout_printf (sdr_callback_arg->state_data->pstate,
+      pstdout_printf (state_data->pstate,
 		      "Power Supply Type : %s\n",
 		      (powersupplytype == IPMI_OEM_DELL_POWER_SUPPLY_INFO_DC) ? "DC" : "AC");
 	  
       if (onlinestatus <= ipmi_sensor_type_power_supply_max_index)
-	pstdout_printf (sdr_callback_arg->state_data->pstate,
+	pstdout_printf (state_data->pstate,
 			"Online Status     : %s\n",
 			ipmi_sensor_type_power_supply[onlinestatus]);
       else
-	pstdout_printf (sdr_callback_arg->state_data->pstate,
+	pstdout_printf (state_data->pstate,
 			"Online Status     : %02Xh\n",
 			onlinestatus);
 	  
-      pstdout_printf (sdr_callback_arg->state_data->pstate,
+      pstdout_printf (state_data->pstate,
 		      "Firmare Version   : %s\n",
 		      firmwareversion);
 	  
       /* internal dell componentid code */
-      pstdout_printf (sdr_callback_arg->state_data->pstate,
+      pstdout_printf (state_data->pstate,
 		      "Dell Componentid  : %u\n",
 		      componentid);
 	  
-      pstdout_printf (sdr_callback_arg->state_data->pstate,
+      pstdout_printf (state_data->pstate,
 		      "\n");
     }
 
