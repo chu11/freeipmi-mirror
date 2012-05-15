@@ -72,7 +72,7 @@
 #define INTEL_EVENT_BUFFER_LENGTH 4096
 
 int
-ipmi_sel_parse_output_intel_sensor_name (ipmi_sel_parse_ctx_t ctx,
+ipmi_sel_parse_output_intel_sensor_name (ipmi_sel_ctx_t ctx,
 					  struct ipmi_sel_entry *sel_entry,
 					  uint8_t sel_record_type,
 					  char *buf,
@@ -130,7 +130,7 @@ ipmi_sel_parse_output_intel_sensor_name (ipmi_sel_parse_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 int
-ipmi_sel_parse_output_intel_event_data1_class_oem (ipmi_sel_parse_ctx_t ctx,
+ipmi_sel_parse_output_intel_event_data1_class_oem (ipmi_sel_ctx_t ctx,
                                                    struct ipmi_sel_entry *sel_entry,
                                                    uint8_t sel_record_type,
                                                    char *tmpbuf,
@@ -487,7 +487,7 @@ ipmi_sel_parse_output_intel_event_data1_class_oem (ipmi_sel_parse_ctx_t ctx,
 }
 
 static void
-_ipmi_sel_parse_output_intel_bus (ipmi_sel_parse_ctx_t ctx,
+_ipmi_sel_parse_output_intel_bus (ipmi_sel_ctx_t ctx,
 				  char *tmpbuf,
 				  unsigned int tmpbuflen,
 				  unsigned int flags,
@@ -544,7 +544,7 @@ _ipmi_sel_parse_output_intel_s2600jf_ras_mode (uint8_t event_data)
  * return (-1) - error, cleanup and return error
  */
 int
-ipmi_sel_parse_output_intel_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
+ipmi_sel_parse_output_intel_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
                                                       struct ipmi_sel_entry *sel_entry,
                                                       uint8_t sel_record_type,
                                                       char *tmpbuf,
@@ -879,7 +879,7 @@ ipmi_sel_parse_output_intel_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 int
-ipmi_sel_parse_output_intel_event_data2_class_oem (ipmi_sel_parse_ctx_t ctx,
+ipmi_sel_parse_output_intel_event_data2_class_oem (ipmi_sel_ctx_t ctx,
                                                    struct ipmi_sel_entry *sel_entry,
                                                    uint8_t sel_record_type,
                                                    char *tmpbuf,
@@ -1063,7 +1063,7 @@ ipmi_sel_parse_output_intel_event_data2_class_oem (ipmi_sel_parse_ctx_t ctx,
 }
 
 static void
-_ipmi_sel_parse_output_intel_device_function (ipmi_sel_parse_ctx_t ctx,
+_ipmi_sel_parse_output_intel_device_function (ipmi_sel_ctx_t ctx,
 					      char *tmpbuf,
 					      unsigned int tmpbuflen,
 					      unsigned int flags,
@@ -1101,7 +1101,7 @@ _ipmi_sel_parse_output_intel_device_function (ipmi_sel_parse_ctx_t ctx,
 }
 
 static void
-_ipmi_sel_parse_output_intel_quanta_qssc_s4r_memory_board (ipmi_sel_parse_ctx_t ctx,
+_ipmi_sel_parse_output_intel_quanta_qssc_s4r_memory_board (ipmi_sel_ctx_t ctx,
 							   char *tmpbuf,
 							   unsigned int tmpbuflen,
 							   unsigned int flags,
@@ -1188,7 +1188,7 @@ _ipmi_sel_parse_output_intel_quanta_qssc_s4r_dimm_slot_str (uint8_t dimm_slot)
 }
 
 static void
-_ipmi_sel_parse_output_intel_quanta_qssc_s4r_dimm_slot (ipmi_sel_parse_ctx_t ctx,
+_ipmi_sel_parse_output_intel_quanta_qssc_s4r_dimm_slot (ipmi_sel_ctx_t ctx,
 							char *tmpbuf,
 							unsigned int tmpbuflen,
 							unsigned int flags,
@@ -1219,7 +1219,7 @@ _ipmi_sel_parse_output_intel_quanta_qssc_s4r_dimm_slot (ipmi_sel_parse_ctx_t ctx
 }
 
 static void
-_ipmi_sel_parse_output_intel_quanta_qssc_s4r_smi_link (ipmi_sel_parse_ctx_t ctx,
+_ipmi_sel_parse_output_intel_quanta_qssc_s4r_smi_link (ipmi_sel_ctx_t ctx,
 						       char *tmpbuf,
 						       unsigned int tmpbuflen,
 						       unsigned int flags,
@@ -1264,7 +1264,7 @@ _ipmi_sel_parse_output_intel_quanta_qssc_s4r_smi_link (ipmi_sel_parse_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 int
-ipmi_sel_parse_output_intel_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
+ipmi_sel_parse_output_intel_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
                                                       struct ipmi_sel_entry *sel_entry,
                                                       uint8_t sel_record_type,
                                                       char *tmpbuf,
@@ -1757,7 +1757,7 @@ ipmi_sel_parse_output_intel_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 int
-ipmi_sel_parse_output_intel_event_data3_class_oem (ipmi_sel_parse_ctx_t ctx,
+ipmi_sel_parse_output_intel_event_data3_class_oem (ipmi_sel_ctx_t ctx,
                                                    struct ipmi_sel_entry *sel_entry,
                                                    uint8_t sel_record_type,
                                                    char *tmpbuf,
@@ -1874,7 +1874,7 @@ ipmi_sel_parse_output_intel_event_data3_class_oem (ipmi_sel_parse_ctx_t ctx,
  * 1 - buffer full, return full buffer to user
  */
 int
-ipmi_sel_parse_output_intel_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
+ipmi_sel_parse_output_intel_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
 						     struct ipmi_sel_entry *sel_entry,
 						     uint8_t sel_record_type,
 						     char *buf,

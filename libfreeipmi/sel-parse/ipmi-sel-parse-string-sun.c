@@ -69,7 +69,7 @@
 #include "freeipmi-portability.h"
 
 int
-_ipmi_sel_parse_output_sun_event_data3_fru_position_number (ipmi_sel_parse_ctx_t ctx,
+_ipmi_sel_parse_output_sun_event_data3_fru_position_number (ipmi_sel_ctx_t ctx,
                                                             char *tmpbuf,
                                                             unsigned int tmpbuflen,
                                                             struct ipmi_sel_system_event_record_data *system_event_record_data)
@@ -110,7 +110,7 @@ _ipmi_sel_parse_output_sun_event_data3_fru_position_number (ipmi_sel_parse_ctx_t
  * return (-1) - error, cleanup and return error
  */
 int
-ipmi_sel_parse_output_sun_event_data3_threshold_oem (ipmi_sel_parse_ctx_t ctx,
+ipmi_sel_parse_output_sun_event_data3_threshold_oem (ipmi_sel_ctx_t ctx,
                                                      struct ipmi_sel_entry *sel_entry,
                                                      uint8_t sel_record_type,
                                                      char *tmpbuf,
@@ -155,7 +155,7 @@ ipmi_sel_parse_output_sun_event_data3_threshold_oem (ipmi_sel_parse_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 int
-ipmi_sel_parse_output_sun_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
+ipmi_sel_parse_output_sun_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
                                                     struct ipmi_sel_entry *sel_entry,
                                                     uint8_t sel_record_type,
                                                     char *tmpbuf,

@@ -73,7 +73,7 @@
  * return (-1) - error, cleanup and return error
  */
 int
-ipmi_sel_parse_output_supermicro_event_data1_class_oem (ipmi_sel_parse_ctx_t ctx,
+ipmi_sel_parse_output_supermicro_event_data1_class_oem (ipmi_sel_ctx_t ctx,
 							struct ipmi_sel_entry *sel_entry,
 							uint8_t sel_record_type,
 							char *tmpbuf,

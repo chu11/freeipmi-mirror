@@ -115,7 +115,7 @@ ipmi_sel_parse_string_snprintf (char *buf,
 }
 
 static int
-_invalid_sel_entry_common (ipmi_sel_parse_ctx_t ctx,
+_invalid_sel_entry_common (ipmi_sel_ctx_t ctx,
                            char *buf,
                            unsigned int buflen,
                            unsigned int flags,
@@ -148,7 +148,7 @@ _invalid_sel_entry_common (ipmi_sel_parse_ctx_t ctx,
  * return (-1) - error
  */
 static int
-_find_and_seek_record (ipmi_sel_parse_ctx_t ctx,
+_find_and_seek_record (ipmi_sel_ctx_t ctx,
 		       struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
@@ -196,7 +196,7 @@ _find_and_seek_record (ipmi_sel_parse_ctx_t ctx,
  * return (-1) - error
  */
 static int
-_get_sdr_id_string (ipmi_sel_parse_ctx_t ctx,
+_get_sdr_id_string (ipmi_sel_ctx_t ctx,
                     struct ipmi_sel_system_event_record_data *system_event_record_data,
                     char *id_string,
                     unsigned int id_string_len)
@@ -248,7 +248,7 @@ _get_sdr_id_string (ipmi_sel_parse_ctx_t ctx,
  * return (-1) - error
  */
 static int
-_get_sensor_reading (ipmi_sel_parse_ctx_t ctx,
+_get_sensor_reading (ipmi_sel_ctx_t ctx,
                      struct ipmi_sel_system_event_record_data *system_event_record_data,
                      unsigned int flags,
                      uint8_t raw_data,
@@ -404,7 +404,7 @@ _get_sensor_reading (ipmi_sel_parse_ctx_t ctx,
 }
 
 static int
-_get_previous_state_or_severity (ipmi_sel_parse_ctx_t ctx,
+_get_previous_state_or_severity (ipmi_sel_ctx_t ctx,
 				 struct ipmi_sel_entry *sel_entry,
 				 uint8_t *previous_offset_from_event_reading_type_code,
 				 uint8_t *offset_from_severity_event_reading_type_code)
@@ -462,7 +462,7 @@ _get_previous_state_or_severity (ipmi_sel_parse_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 static int
-_output_time (ipmi_sel_parse_ctx_t ctx,
+_output_time (ipmi_sel_ctx_t ctx,
               struct ipmi_sel_entry *sel_entry,
               uint8_t sel_record_type,
               char *buf,
@@ -511,7 +511,7 @@ _output_time (ipmi_sel_parse_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 static int
-_output_date (ipmi_sel_parse_ctx_t ctx,
+_output_date (ipmi_sel_ctx_t ctx,
               struct ipmi_sel_entry *sel_entry,
               uint8_t sel_record_type,
               char *buf,
@@ -577,7 +577,7 @@ _output_date (ipmi_sel_parse_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 static int
-_output_sensor_type (ipmi_sel_parse_ctx_t ctx,
+_output_sensor_type (ipmi_sel_ctx_t ctx,
                      struct ipmi_sel_entry *sel_entry,
                      uint8_t sel_record_type,
                      char *buf,
@@ -628,7 +628,7 @@ _output_sensor_type (ipmi_sel_parse_ctx_t ctx,
  * 1 - buffer full, return full buffer to user
  */
 static int
-_output_oem_sensor_name (ipmi_sel_parse_ctx_t ctx,
+_output_oem_sensor_name (ipmi_sel_ctx_t ctx,
                          struct ipmi_sel_entry *sel_entry,
                          uint8_t sel_record_type,
                          char *buf,
@@ -710,7 +710,7 @@ _output_oem_sensor_name (ipmi_sel_parse_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 static int
-_output_sensor_name (ipmi_sel_parse_ctx_t ctx,
+_output_sensor_name (ipmi_sel_ctx_t ctx,
                      struct ipmi_sel_entry *sel_entry,
                      uint8_t sel_record_type,
                      char *buf,
@@ -814,7 +814,7 @@ _output_sensor_name (ipmi_sel_parse_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 static int
-_output_oem_event_data1_class_sensor_specific_discrete (ipmi_sel_parse_ctx_t ctx,
+_output_oem_event_data1_class_sensor_specific_discrete (ipmi_sel_ctx_t ctx,
                                                         struct ipmi_sel_entry *sel_entry,
                                                         uint8_t sel_record_type,
                                                         char *tmpbuf,
@@ -877,7 +877,7 @@ _output_oem_event_data1_class_sensor_specific_discrete (ipmi_sel_parse_ctx_t ctx
  * return (-1) - error, cleanup and return error
  */
 static int
-_output_oem_event_data1_class_oem (ipmi_sel_parse_ctx_t ctx,
+_output_oem_event_data1_class_oem (ipmi_sel_ctx_t ctx,
                                    struct ipmi_sel_entry *sel_entry,
                                    uint8_t sel_record_type,
                                    char *tmpbuf,
@@ -990,7 +990,7 @@ _output_oem_event_data1_class_oem (ipmi_sel_parse_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 static int
-_output_event_data1 (ipmi_sel_parse_ctx_t ctx,
+_output_event_data1 (ipmi_sel_ctx_t ctx,
                      struct ipmi_sel_entry *sel_entry,
                      uint8_t sel_record_type,
                      char *buf,
@@ -1182,7 +1182,7 @@ _round_double2 (double d)
  * return (-1) - error, cleanup and return error
  */
 static int
-_output_oem_event_data2_threshold_oem (ipmi_sel_parse_ctx_t ctx,
+_output_oem_event_data2_threshold_oem (ipmi_sel_ctx_t ctx,
                                        struct ipmi_sel_entry *sel_entry,
                                        uint8_t sel_record_type,
                                        char *tmpbuf,
@@ -1212,7 +1212,7 @@ _output_oem_event_data2_threshold_oem (ipmi_sel_parse_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 static int
-_output_oem_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
+_output_oem_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
                                       struct ipmi_sel_entry *sel_entry,
                                       uint8_t sel_record_type,
                                       char *tmpbuf,
@@ -1306,7 +1306,7 @@ _output_oem_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 static int
-_output_oem_event_data2_class_oem (ipmi_sel_parse_ctx_t ctx,
+_output_oem_event_data2_class_oem (ipmi_sel_ctx_t ctx,
                                    struct ipmi_sel_entry *sel_entry,
                                    uint8_t sel_record_type,
                                    char *tmpbuf,
@@ -1399,7 +1399,7 @@ _output_oem_event_data2_class_oem (ipmi_sel_parse_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 static int
-_output_event_data2 (ipmi_sel_parse_ctx_t ctx,
+_output_event_data2 (ipmi_sel_ctx_t ctx,
                      struct ipmi_sel_entry *sel_entry,
                      uint8_t sel_record_type,
                      char *buf,
@@ -1773,7 +1773,7 @@ _output_event_data2 (ipmi_sel_parse_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 static int
-_output_oem_event_data3_threshold_oem (ipmi_sel_parse_ctx_t ctx,
+_output_oem_event_data3_threshold_oem (ipmi_sel_ctx_t ctx,
                                        struct ipmi_sel_entry *sel_entry,
                                        uint8_t sel_record_type,
                                        char *tmpbuf,
@@ -1819,7 +1819,7 @@ _output_oem_event_data3_threshold_oem (ipmi_sel_parse_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 static int
-_output_oem_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
+_output_oem_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
                                       struct ipmi_sel_entry *sel_entry,
                                       uint8_t sel_record_type,
                                       char *tmpbuf,
@@ -1929,7 +1929,7 @@ _output_oem_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 static int
-_output_oem_event_data3_class_oem (ipmi_sel_parse_ctx_t ctx,
+_output_oem_event_data3_class_oem (ipmi_sel_ctx_t ctx,
                                    struct ipmi_sel_entry *sel_entry,
                                    uint8_t sel_record_type,
                                    char *tmpbuf,
@@ -2022,7 +2022,7 @@ _output_oem_event_data3_class_oem (ipmi_sel_parse_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 static int
-_output_event_data3 (ipmi_sel_parse_ctx_t ctx,
+_output_event_data3 (ipmi_sel_ctx_t ctx,
                      struct ipmi_sel_entry *sel_entry,
                      uint8_t sel_record_type,
                      char *buf,
@@ -2327,7 +2327,7 @@ _output_event_data3 (ipmi_sel_parse_ctx_t ctx,
  * 1 - buffer full, return full buffer to user
  */
 static int
-_output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
+_output_oem_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
                                      struct ipmi_sel_entry *sel_entry,
                                      uint8_t sel_record_type,
                                      char *buf,
@@ -2426,7 +2426,7 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 static int
-_output_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
+_output_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
                                  struct ipmi_sel_entry *sel_entry,
                                  uint8_t sel_record_type,
                                  char *buf,
@@ -2591,7 +2591,7 @@ _output_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 static int
-_output_event_data2_previous_state_or_severity (ipmi_sel_parse_ctx_t ctx,
+_output_event_data2_previous_state_or_severity (ipmi_sel_ctx_t ctx,
                                                 struct ipmi_sel_entry *sel_entry,
                                                 uint8_t sel_record_type,
                                                 char *buf,
@@ -2741,7 +2741,7 @@ _output_event_data2_previous_state_or_severity (ipmi_sel_parse_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 static int
-_output_event_data2_previous_state (ipmi_sel_parse_ctx_t ctx,
+_output_event_data2_previous_state (ipmi_sel_ctx_t ctx,
                                     struct ipmi_sel_entry *sel_entry,
                                     uint8_t sel_record_type,
                                     char *buf,
@@ -2764,7 +2764,7 @@ _output_event_data2_previous_state (ipmi_sel_parse_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 static int
-_output_event_data2_severity (ipmi_sel_parse_ctx_t ctx,
+_output_event_data2_severity (ipmi_sel_ctx_t ctx,
                               struct ipmi_sel_entry *sel_entry,
                               uint8_t sel_record_type,
                               char *buf,
@@ -2787,7 +2787,7 @@ _output_event_data2_severity (ipmi_sel_parse_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 static int
-_output_event_direction (ipmi_sel_parse_ctx_t ctx,
+_output_event_direction (ipmi_sel_ctx_t ctx,
                          struct ipmi_sel_entry *sel_entry,
                          uint8_t sel_record_type,
                          char *buf,
@@ -2828,7 +2828,7 @@ _output_event_direction (ipmi_sel_parse_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 static int
-_output_manufacturer_id (ipmi_sel_parse_ctx_t ctx,
+_output_manufacturer_id (ipmi_sel_ctx_t ctx,
                          struct ipmi_sel_entry *sel_entry,
                          uint8_t sel_record_type,
                          char *buf,
@@ -2900,7 +2900,7 @@ _output_manufacturer_id (ipmi_sel_parse_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 static int
-_output_oem_interpreted_record_data (ipmi_sel_parse_ctx_t ctx,
+_output_oem_interpreted_record_data (ipmi_sel_ctx_t ctx,
                                      struct ipmi_sel_entry *sel_entry,
                                      uint8_t sel_record_type,
                                      char *tmpbuf,
@@ -2945,7 +2945,7 @@ _output_oem_interpreted_record_data (ipmi_sel_parse_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 static int
-_output_oem_record_data (ipmi_sel_parse_ctx_t ctx,
+_output_oem_record_data (ipmi_sel_ctx_t ctx,
                          struct ipmi_sel_entry *sel_entry,
                          uint8_t sel_record_type,
                          char *buf,
@@ -3013,7 +3013,7 @@ _output_oem_record_data (ipmi_sel_parse_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 static int
-_output_oem_string (ipmi_sel_parse_ctx_t ctx,
+_output_oem_string (ipmi_sel_ctx_t ctx,
                     struct ipmi_sel_entry *sel_entry,
                     uint8_t sel_record_type,
                     char *buf,
@@ -3059,7 +3059,7 @@ _output_oem_string (ipmi_sel_parse_ctx_t ctx,
 }
 
 int
-sel_parse_format_record_string (ipmi_sel_parse_ctx_t ctx,
+sel_parse_format_record_string (ipmi_sel_ctx_t ctx,
                                 const char *fmt,
                                 const void *sel_record,
                                 unsigned int sel_record_len,

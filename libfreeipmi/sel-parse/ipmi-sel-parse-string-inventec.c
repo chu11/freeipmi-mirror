@@ -78,7 +78,7 @@
  * 1 - buffer full, return full buffer to user
  */
 int
-ipmi_sel_parse_output_inventec_sensor_name (ipmi_sel_parse_ctx_t ctx,
+ipmi_sel_parse_output_inventec_sensor_name (ipmi_sel_ctx_t ctx,
 					    struct ipmi_sel_entry *sel_entry,
 					    uint8_t sel_record_type,
 					    char *buf,
@@ -161,7 +161,7 @@ ipmi_sel_parse_output_inventec_sensor_name (ipmi_sel_parse_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 int
-ipmi_sel_parse_output_inventec_event_data1_class_oem (ipmi_sel_parse_ctx_t ctx,
+ipmi_sel_parse_output_inventec_event_data1_class_oem (ipmi_sel_ctx_t ctx,
                                                       struct ipmi_sel_entry *sel_entry,
                                                       uint8_t sel_record_type,
                                                       char *tmpbuf,
@@ -232,7 +232,7 @@ ipmi_sel_parse_output_inventec_event_data1_class_oem (ipmi_sel_parse_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 int
-ipmi_sel_parse_output_inventec_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
+ipmi_sel_parse_output_inventec_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
 							 struct ipmi_sel_entry *sel_entry,
 							 uint8_t sel_record_type,
 							 char *tmpbuf,
@@ -303,7 +303,7 @@ ipmi_sel_parse_output_inventec_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ct
  * return (-1) - error, cleanup and return error
  */
 int
-ipmi_sel_parse_output_inventec_event_data2_class_oem (ipmi_sel_parse_ctx_t ctx,
+ipmi_sel_parse_output_inventec_event_data2_class_oem (ipmi_sel_ctx_t ctx,
 						      struct ipmi_sel_entry *sel_entry,
 						      uint8_t sel_record_type,
 						      char *tmpbuf,
@@ -371,7 +371,7 @@ ipmi_sel_parse_output_inventec_event_data2_class_oem (ipmi_sel_parse_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 int
-ipmi_sel_parse_output_inventec_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
+ipmi_sel_parse_output_inventec_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
 							 struct ipmi_sel_entry *sel_entry,
 							 uint8_t sel_record_type,
 							 char *tmpbuf,
@@ -598,7 +598,7 @@ ipmi_sel_parse_output_inventec_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ct
  * return (-1) - error, cleanup and return error
  */
 int
-ipmi_sel_parse_output_inventec_event_data3_class_oem (ipmi_sel_parse_ctx_t ctx,
+ipmi_sel_parse_output_inventec_event_data3_class_oem (ipmi_sel_ctx_t ctx,
 						      struct ipmi_sel_entry *sel_entry,
 						      uint8_t sel_record_type,
 						      char *tmpbuf,
@@ -670,7 +670,7 @@ ipmi_sel_parse_output_inventec_event_data3_class_oem (ipmi_sel_parse_ctx_t ctx,
  * 1 - buffer full, return full buffer to user
  */
 int
-ipmi_sel_parse_output_inventec_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
+ipmi_sel_parse_output_inventec_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
 							struct ipmi_sel_entry *sel_entry,
 							uint8_t sel_record_type,
 							char *buf,

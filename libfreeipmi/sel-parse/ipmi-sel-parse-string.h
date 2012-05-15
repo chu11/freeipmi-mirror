@@ -39,7 +39,7 @@ int ipmi_sel_parse_string_snprintf (char *buf,
 				    const char *fmt,
 				    ...);
 
-int sel_parse_format_record_string (ipmi_sel_parse_ctx_t ctx,
+int sel_parse_format_record_string (ipmi_sel_ctx_t ctx,
 				    const char *fmt,
 				    const void *sel_record,
 				    unsigned int sel_record_len,

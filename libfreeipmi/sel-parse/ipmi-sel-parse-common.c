@@ -48,7 +48,7 @@
 #include "freeipmi-portability.h"
 
 int
-sel_parse_get_reservation_id (ipmi_sel_parse_ctx_t ctx,
+sel_parse_get_reservation_id (ipmi_sel_ctx_t ctx,
                               uint16_t *reservation_id,
                               unsigned int *is_insufficient_privilege_level)
 {
@@ -121,7 +121,7 @@ sel_parse_get_reservation_id (ipmi_sel_parse_ctx_t ctx,
 }
 
 int
-sel_parse_get_record_header_info (ipmi_sel_parse_ctx_t ctx,
+sel_parse_get_record_header_info (ipmi_sel_ctx_t ctx,
                                   struct ipmi_sel_entry *sel_entry,
                                   uint16_t *record_id,
                                   uint8_t *record_type)
@@ -189,7 +189,7 @@ sel_parse_get_record_header_info (ipmi_sel_parse_ctx_t ctx,
 }
 
 int
-sel_parse_get_timestamp (ipmi_sel_parse_ctx_t ctx,
+sel_parse_get_timestamp (ipmi_sel_ctx_t ctx,
                          struct ipmi_sel_entry *sel_entry,
                          uint32_t *timestamp)
 {
@@ -268,7 +268,7 @@ sel_parse_get_timestamp (ipmi_sel_parse_ctx_t ctx,
 }
 
 int
-sel_parse_get_manufacturer_id (ipmi_sel_parse_ctx_t ctx,
+sel_parse_get_manufacturer_id (ipmi_sel_ctx_t ctx,
                                struct ipmi_sel_entry *sel_entry,
                                uint32_t *manufacturer_id)
 {
@@ -335,7 +335,7 @@ sel_parse_get_manufacturer_id (ipmi_sel_parse_ctx_t ctx,
 }
 
 int
-sel_parse_get_oem (ipmi_sel_parse_ctx_t ctx,
+sel_parse_get_oem (ipmi_sel_ctx_t ctx,
                    struct ipmi_sel_entry *sel_entry,
                    uint8_t *buf,
                    unsigned int buflen)
@@ -403,7 +403,7 @@ sel_parse_get_oem (ipmi_sel_parse_ctx_t ctx,
                                 buf,
                                 buflen)) < 0)
     {
-      ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      ERR_TRACE (ipmi_sel_ctx_errormsg (ctx), ipmi_sel_ctx_errnum (ctx));
       goto cleanup;
     }
 
@@ -414,7 +414,7 @@ sel_parse_get_oem (ipmi_sel_parse_ctx_t ctx,
 }
 
 int
-sel_parse_get_system_event_record (ipmi_sel_parse_ctx_t ctx,
+sel_parse_get_system_event_record (ipmi_sel_ctx_t ctx,
                                    struct ipmi_sel_entry *sel_entry,
                                    struct ipmi_sel_system_event_record_data *system_event_record_data)
 {

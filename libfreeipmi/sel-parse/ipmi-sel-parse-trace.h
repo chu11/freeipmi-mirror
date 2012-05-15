@@ -35,7 +35,7 @@
 #define SEL_SET_ERRNUM(__ctx, __errnum)                                     \
   do {                                                                      \
     (__ctx)->errnum = (__errnum);                                           \
-    TRACE_MSG_OUT (ipmi_sel_parse_ctx_errormsg ((__ctx)), (__errnum));      \
+    TRACE_MSG_OUT (ipmi_sel_ctx_errormsg ((__ctx)), (__errnum));            \
   } while (0)
 
 #define SEL_ERRNO_TO_SEL_ERRNUM(__ctx, __errno)                             \

@@ -115,7 +115,7 @@
  * TX120S2/TX300S6 (iRMC S2)
  */
 static int
-_ipmi_sel_oem_fujitsu_get_sel_entry_long_text (ipmi_sel_parse_ctx_t ctx,
+_ipmi_sel_oem_fujitsu_get_sel_entry_long_text (ipmi_sel_ctx_t ctx,
                                                struct ipmi_sel_entry *sel_entry,
                                                char *buf,
                                                unsigned int buflen,
@@ -365,7 +365,7 @@ _ipmi_sel_oem_fujitsu_get_sel_entry_long_text (ipmi_sel_parse_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 int
-ipmi_sel_parse_output_fujitsu_event_data1_class_sensor_specific_discrete (ipmi_sel_parse_ctx_t ctx,
+ipmi_sel_parse_output_fujitsu_event_data1_class_sensor_specific_discrete (ipmi_sel_ctx_t ctx,
                                                                           struct ipmi_sel_entry *sel_entry,
                                                                           uint8_t sel_record_type,
                                                                           char *tmpbuf,
@@ -431,7 +431,7 @@ ipmi_sel_parse_output_fujitsu_event_data1_class_sensor_specific_discrete (ipmi_s
  * 1 - buffer full, return full buffer to user
  */
 int
-ipmi_sel_parse_output_fujitsu_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
+ipmi_sel_parse_output_fujitsu_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
 							struct ipmi_sel_entry *sel_entry,
 							uint8_t sel_record_type,
 							char *buf,
@@ -501,7 +501,7 @@ ipmi_sel_parse_output_fujitsu_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
  * 1 - buffer full, return full buffer to user
  */
 int
-ipmi_sel_parse_output_fujitsu_oem_record_data (ipmi_sel_parse_ctx_t ctx,
+ipmi_sel_parse_output_fujitsu_oem_record_data (ipmi_sel_ctx_t ctx,
                                                struct ipmi_sel_entry *sel_entry,
                                                uint8_t sel_record_type,
                                                char *buf,
@@ -568,7 +568,7 @@ ipmi_sel_parse_output_fujitsu_oem_record_data (ipmi_sel_parse_ctx_t ctx,
  * 1 - buffer full, return full buffer to user
  */
 int
-ipmi_sel_parse_output_fujitsu_oem_string (ipmi_sel_parse_ctx_t ctx,
+ipmi_sel_parse_output_fujitsu_oem_string (ipmi_sel_ctx_t ctx,
                                           struct ipmi_sel_entry *sel_entry,
                                           uint8_t sel_record_type,
                                           char *buf,

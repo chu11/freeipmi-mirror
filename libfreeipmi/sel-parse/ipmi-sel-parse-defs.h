@@ -75,7 +75,7 @@ struct ipmi_sel_oem_intel_node_manager {
   uint8_t nm_alert_threshold_exceeded_sensor_number;
 };
 
-struct ipmi_sel_parse_ctx {
+struct ipmi_sel_ctx {
   uint32_t magic;
   int errnum;
   unsigned int flags;

@@ -91,7 +91,7 @@ ipmi_interpret_ctx_create (void)
   ctx->magic = IPMI_INTERPRET_CTX_MAGIC;
   ctx->flags = IPMI_INTERPRET_FLAGS_DEFAULT;
 
-  if (!(ctx->sel_parse_ctx = ipmi_sel_parse_ctx_create (NULL, NULL)))
+  if (!(ctx->sel_parse_ctx = ipmi_sel_ctx_create (NULL, NULL)))
     {
       ERRNO_TRACE (errno);
       goto cleanup;
@@ -108,7 +108,7 @@ ipmi_interpret_ctx_create (void)
  cleanup:
   if (ctx)
     {
-      ipmi_sel_parse_ctx_destroy (ctx->sel_parse_ctx);
+      ipmi_sel_ctx_destroy (ctx->sel_parse_ctx);
       ipmi_interpret_sel_destroy (ctx);
       ipmi_interpret_sensor_destroy (ctx);
       free (ctx);
@@ -122,7 +122,7 @@ ipmi_interpret_ctx_destroy (ipmi_interpret_ctx_t ctx)
   if (!ctx || ctx->magic != IPMI_INTERPRET_CTX_MAGIC)
     return;
 
-  ipmi_sel_parse_ctx_destroy (ctx->sel_parse_ctx);
+  ipmi_sel_ctx_destroy (ctx->sel_parse_ctx);
   ipmi_interpret_sel_destroy (ctx);
   ipmi_interpret_sensor_destroy (ctx);
 
@@ -197,7 +197,7 @@ ipmi_interpret_ctx_set_flags (ipmi_interpret_ctx_t ctx, unsigned int flags)
     tmpflags |= IPMI_SEL_FLAGS_ASSUME_SYTEM_EVENT_RECORDS;
 
   
-  if (ipmi_sel_parse_ctx_set_flags (ctx->sel_parse_ctx, tmpflags) < 0)
+  if (ipmi_sel_ctx_set_flags (ctx->sel_parse_ctx, tmpflags) < 0)
     {
       INTERPRET_SEL_PARSE_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_parse_ctx);
       return (-1);

@@ -398,12 +398,12 @@ _clear_entries (ipmi_sel_state_data_t *state_data)
 
   assert (state_data);
 
-  if (ipmi_sel_parse_clear_sel (state_data->sel_parse_ctx) < 0)
+  if (ipmi_sel_clear_sel (state_data->sel_parse_ctx) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "ipmi_sel_parse_clear_sel: %s\n",
-                       ipmi_sel_parse_ctx_errormsg (state_data->sel_parse_ctx));
+                       "ipmi_sel_clear_sel: %s\n",
+                       ipmi_sel_ctx_errormsg (state_data->sel_parse_ctx));
       goto cleanup;
     }
 
@@ -422,16 +422,16 @@ _delete_entry (ipmi_sel_state_data_t *state_data,
   assert (state_data);
   assert (record_id);
 
-  if (ipmi_sel_parse_delete_sel_entry (state_data->sel_parse_ctx,
-                                       record_id) < 0)
+  if (ipmi_sel_delete_sel_entry (state_data->sel_parse_ctx,
+				 record_id) < 0)
     {
       if (!(ignore_missing_sel_entries
-            && (ipmi_sel_parse_ctx_errnum (state_data->sel_parse_ctx) == IPMI_SEL_ERR_NOT_FOUND)))
+            && (ipmi_sel_ctx_errnum (state_data->sel_parse_ctx) == IPMI_SEL_ERR_NOT_FOUND)))
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "ipmi_sel_parse_delete_sel_entry: %s\n",
-                           ipmi_sel_parse_ctx_errormsg (state_data->sel_parse_ctx));
+                           "ipmi_sel_delete_sel_entry: %s\n",
+                           ipmi_sel_ctx_errormsg (state_data->sel_parse_ctx));
           goto cleanup;
         }
     }
@@ -488,7 +488,7 @@ _sel_parse_err_handle (ipmi_sel_state_data_t *state_data, char *func)
   assert (state_data);
   assert (func);
 
-  if (ipmi_sel_parse_ctx_errnum (state_data->sel_parse_ctx) == IPMI_SEL_ERR_INVALID_SEL_ENTRY)
+  if (ipmi_sel_ctx_errnum (state_data->sel_parse_ctx) == IPMI_SEL_ERR_INVALID_SEL_ENTRY)
     {
       /* maybe a bad SEL entry returned from remote system, don't error out */
       if (state_data->prog_data->args->common.debug)
@@ -502,7 +502,7 @@ _sel_parse_err_handle (ipmi_sel_state_data_t *state_data, char *func)
                    stderr,
                    "%s: %s\n",
                    func,
-                   ipmi_sel_parse_ctx_errormsg (state_data->sel_parse_ctx));
+                   ipmi_sel_ctx_errormsg (state_data->sel_parse_ctx));
   return (-1);
 }
 
@@ -1432,7 +1432,7 @@ _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
 }
 
 static int
-_sel_parse_callback (ipmi_sel_parse_ctx_t ctx, void *callback_data)
+_sel_parse_callback (ipmi_sel_ctx_t ctx, void *callback_data)
 {
   ipmi_sel_state_data_t *state_data;
   uint8_t record_type;
@@ -1619,7 +1619,7 @@ _sel_parse_callback (ipmi_sel_parse_ctx_t ctx, void *callback_data)
 }
 
 static int
-_sel_record_id_callback (ipmi_sel_parse_ctx_t ctx, void *callback_data)
+_sel_record_id_callback (ipmi_sel_ctx_t ctx, void *callback_data)
 {
   ipmi_sel_state_data_t *state_data;
   char outbuf[EVENT_OUTPUT_BUFLEN+1];
@@ -1642,7 +1642,7 @@ _sel_record_id_callback (ipmi_sel_parse_ctx_t ctx, void *callback_data)
                                                        EVENT_OUTPUT_BUFLEN,
                                                        0)) < 0)
     {
-      if (ipmi_sel_parse_ctx_errnum (state_data->sel_parse_ctx) == IPMI_SEL_ERR_INVALID_SEL_ENTRY)
+      if (ipmi_sel_ctx_errnum (state_data->sel_parse_ctx) == IPMI_SEL_ERR_INVALID_SEL_ENTRY)
         goto out;
       goto cleanup;
     }
@@ -1657,7 +1657,7 @@ _sel_record_id_callback (ipmi_sel_parse_ctx_t ctx, void *callback_data)
 }
 
 static int
-_sel_record_id_first_callback (ipmi_sel_parse_ctx_t ctx, void *callback_data)
+_sel_record_id_first_callback (ipmi_sel_ctx_t ctx, void *callback_data)
 {
   ipmi_sel_state_data_t *state_data;
   int rv = -1;
@@ -1675,7 +1675,7 @@ _sel_record_id_first_callback (ipmi_sel_parse_ctx_t ctx, void *callback_data)
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sel_parse_read_record_id: %s\n",
-                       ipmi_sel_parse_ctx_errormsg (state_data->sel_parse_ctx));
+                       ipmi_sel_ctx_errormsg (state_data->sel_parse_ctx));
       goto cleanup;
     }
   
@@ -1685,7 +1685,7 @@ _sel_record_id_first_callback (ipmi_sel_parse_ctx_t ctx, void *callback_data)
 }
 
 static int
-_sel_record_id_last_callback (ipmi_sel_parse_ctx_t ctx, void *callback_data)
+_sel_record_id_last_callback (ipmi_sel_ctx_t ctx, void *callback_data)
 {
   ipmi_sel_state_data_t *state_data;
   int rv = -1;
@@ -1703,7 +1703,7 @@ _sel_record_id_last_callback (ipmi_sel_parse_ctx_t ctx, void *callback_data)
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sel_parse_read_record_id: %s\n",
-                       ipmi_sel_parse_ctx_errormsg (state_data->sel_parse_ctx));
+                       ipmi_sel_ctx_errormsg (state_data->sel_parse_ctx));
       goto cleanup;
     }
   
@@ -1726,12 +1726,12 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
 
   if (!args->legacy_output)
     {
-      if (ipmi_sel_parse_ctx_set_separator (state_data->sel_parse_ctx, EVENT_OUTPUT_SEPARATOR) < 0)
+      if (ipmi_sel_ctx_set_separator (state_data->sel_parse_ctx, EVENT_OUTPUT_SEPARATOR) < 0)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
                            "ipmi_sel_parse: %s\n",
-                           ipmi_sel_parse_ctx_errormsg (state_data->sel_parse_ctx));
+                           ipmi_sel_ctx_errormsg (state_data->sel_parse_ctx));
           goto cleanup;
         }
 
@@ -1739,12 +1739,12 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
 
   if (args->post_clear)
     {
-      if (ipmi_sel_parse_ctx_register_reservation_id (state_data->sel_parse_ctx, NULL) < 0)
+      if (ipmi_sel_ctx_register_reservation_id (state_data->sel_parse_ctx, NULL) < 0)
 	{
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "ipmi_sel_parse_ctx_register_reservation_id: %s\n",
-                           ipmi_sel_parse_ctx_errormsg (state_data->sel_parse_ctx));
+                           "ipmi_sel_ctx_register_reservation_id: %s\n",
+                           ipmi_sel_ctx_errormsg (state_data->sel_parse_ctx));
 	  goto cleanup;
 	}
     }
@@ -1850,7 +1850,7 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
               pstdout_fprintf (state_data->pstate,
                                stderr,
                                "ipmi_sel_parse_record_ids: %s\n",
-                               ipmi_sel_parse_ctx_errormsg (state_data->sel_parse_ctx));
+                               ipmi_sel_ctx_errormsg (state_data->sel_parse_ctx));
               goto cleanup;
             }
         }
@@ -1866,7 +1866,7 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
               pstdout_fprintf (state_data->pstate,
                                stderr,
                                "ipmi_sel_parse: %s\n",
-                               ipmi_sel_parse_ctx_errormsg (state_data->sel_parse_ctx));
+                               ipmi_sel_ctx_errormsg (state_data->sel_parse_ctx));
               goto cleanup;
             }
         }
@@ -1882,7 +1882,7 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
               pstdout_fprintf (state_data->pstate,
                                stderr,
                                "ipmi_sel_parse: %s\n",
-                               ipmi_sel_parse_ctx_errormsg (state_data->sel_parse_ctx));
+                               ipmi_sel_ctx_errormsg (state_data->sel_parse_ctx));
               goto cleanup;
             }
         }
@@ -1895,34 +1895,34 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
                              &state_data->oem_data) < 0)
         goto cleanup;
 
-      if (ipmi_sel_parse_ctx_set_manufacturer_id (state_data->sel_parse_ctx,
+      if (ipmi_sel_ctx_set_manufacturer_id (state_data->sel_parse_ctx,
                                                   state_data->oem_data.manufacturer_id) < 0)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "ipmi_sel_parse_ctx_set_manufacturer_id: %s\n",
-                           ipmi_sel_parse_ctx_errormsg (state_data->sel_parse_ctx));
+                           "ipmi_sel_ctx_set_manufacturer_id: %s\n",
+                           ipmi_sel_ctx_errormsg (state_data->sel_parse_ctx));
           goto cleanup;
         }
       
-      if (ipmi_sel_parse_ctx_set_product_id (state_data->sel_parse_ctx,
+      if (ipmi_sel_ctx_set_product_id (state_data->sel_parse_ctx,
                                              state_data->oem_data.product_id) < 0)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "ipmi_sel_parse_ctx_set_product_id: %s\n",
-                           ipmi_sel_parse_ctx_errormsg (state_data->sel_parse_ctx));
+                           "ipmi_sel_ctx_set_product_id: %s\n",
+                           ipmi_sel_ctx_errormsg (state_data->sel_parse_ctx));
           goto cleanup;
         }
 
-      if (ipmi_sel_parse_ctx_set_ipmi_version (state_data->sel_parse_ctx,
+      if (ipmi_sel_ctx_set_ipmi_version (state_data->sel_parse_ctx,
                                                state_data->oem_data.ipmi_version_major,
                                                state_data->oem_data.ipmi_version_minor) < 0)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "ipmi_sel_parse_ctx_set_ipmi_version: %s\n",
-                           ipmi_sel_parse_ctx_errormsg (state_data->sel_parse_ctx));
+                           "ipmi_sel_ctx_set_ipmi_version: %s\n",
+                           ipmi_sel_ctx_errormsg (state_data->sel_parse_ctx));
           goto cleanup;
         }
 
@@ -1961,7 +1961,7 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
           pstdout_fprintf (state_data->pstate,
                            stderr,
                            "ipmi_sel_parse_record_ids: %s\n",
-                           ipmi_sel_parse_ctx_errormsg (state_data->sel_parse_ctx));
+                           ipmi_sel_ctx_errormsg (state_data->sel_parse_ctx));
           goto cleanup;
         }
     }
@@ -1976,7 +1976,7 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
           pstdout_fprintf (state_data->pstate,
                            stderr,
                            "ipmi_sel_parse: %s\n",
-                           ipmi_sel_parse_ctx_errormsg (state_data->sel_parse_ctx));
+                           ipmi_sel_ctx_errormsg (state_data->sel_parse_ctx));
           goto cleanup;
         }
     }
@@ -2025,7 +2025,7 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
               pstdout_fprintf (state_data->pstate,
                                stderr,
                                "ipmi_sel_parse: %s\n",
-                               ipmi_sel_parse_ctx_errormsg (state_data->sel_parse_ctx));
+                               ipmi_sel_ctx_errormsg (state_data->sel_parse_ctx));
               goto cleanup;
             }
           goto out;
@@ -2040,7 +2040,7 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
           pstdout_fprintf (state_data->pstate,
                            stderr,
                            "ipmi_sel_parse: %s\n",
-                           ipmi_sel_parse_ctx_errormsg (state_data->sel_parse_ctx));
+                           ipmi_sel_ctx_errormsg (state_data->sel_parse_ctx));
           goto cleanup;
         }
 
@@ -2053,7 +2053,7 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
           pstdout_fprintf (state_data->pstate,
                            stderr,
                            "ipmi_sel_parse: %s\n",
-                           ipmi_sel_parse_ctx_errormsg (state_data->sel_parse_ctx));
+                           ipmi_sel_ctx_errormsg (state_data->sel_parse_ctx));
           goto cleanup;
         }
 
@@ -2089,7 +2089,7 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
           pstdout_fprintf (state_data->pstate,
                            stderr,
                            "ipmi_sel_parse: %s\n",
-                           ipmi_sel_parse_ctx_errormsg (state_data->sel_parse_ctx));
+                           ipmi_sel_ctx_errormsg (state_data->sel_parse_ctx));
           goto cleanup;
         }
 
@@ -2107,19 +2107,19 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
           pstdout_fprintf (state_data->pstate,
                            stderr,
                            "ipmi_sel_parse: %s\n",
-                           ipmi_sel_parse_ctx_errormsg (state_data->sel_parse_ctx));
+                           ipmi_sel_ctx_errormsg (state_data->sel_parse_ctx));
           goto cleanup;
         }
     }
 
   if (args->post_clear)
     {
-      if (ipmi_sel_parse_clear_sel (state_data->sel_parse_ctx) < 0)
+      if (ipmi_sel_clear_sel (state_data->sel_parse_ctx) < 0)
 	{
 	  pstdout_fprintf (state_data->pstate,
 			   stderr,
-			   "ipmi_sel_parse_clear_sel: %s\n",
-			   ipmi_sel_parse_ctx_errormsg (state_data->sel_parse_ctx));
+			   "ipmi_sel_clear_sel: %s\n",
+			   ipmi_sel_ctx_errormsg (state_data->sel_parse_ctx));
 	  goto cleanup;
 	}
     }
@@ -2249,9 +2249,9 @@ _ipmi_sel (pstdout_state_t pstate,
     {
       unsigned int flags = 0;
 
-      if (!(state_data.sel_parse_ctx = ipmi_sel_parse_ctx_create (state_data.ipmi_ctx, state_data.sdr_ctx)))
+      if (!(state_data.sel_parse_ctx = ipmi_sel_ctx_create (state_data.ipmi_ctx, state_data.sdr_ctx)))
         {
-          pstdout_perror (pstate, "ipmi_sel_parse_ctx_create()");
+          pstdout_perror (pstate, "ipmi_sel_ctx_create()");
           goto cleanup;
         }
 
@@ -2264,21 +2264,21 @@ _ipmi_sel (pstdout_state_t pstate,
       if (flags)
         {
           /* Don't error out, if this fails we can still continue */
-          if (ipmi_sel_parse_ctx_set_flags (state_data.sel_parse_ctx, flags) < 0)
+          if (ipmi_sel_ctx_set_flags (state_data.sel_parse_ctx, flags) < 0)
             pstdout_fprintf (pstate,
                              stderr,
-                             "ipmi_sel_parse_ctx_set_flags: %s\n",
-                             ipmi_sel_parse_ctx_errormsg (state_data.sel_parse_ctx));
+                             "ipmi_sel_ctx_set_flags: %s\n",
+                             ipmi_sel_ctx_errormsg (state_data.sel_parse_ctx));
 	}
       
       if (state_data.prog_data->args->common.debug && hostname)
 	{
-	  if (ipmi_sel_parse_ctx_set_debug_prefix (state_data.sel_parse_ctx,
+	  if (ipmi_sel_ctx_set_debug_prefix (state_data.sel_parse_ctx,
 						   hostname) < 0)
 	    pstdout_fprintf (pstate,
 			     stderr,
-			     "ipmi_sel_parse_ctx_set_debug_prefix: %s\n",
-			     ipmi_sel_parse_ctx_errormsg (state_data.sel_parse_ctx));
+			     "ipmi_sel_ctx_set_debug_prefix: %s\n",
+			     ipmi_sel_ctx_errormsg (state_data.sel_parse_ctx));
         }
     }
 
@@ -2364,7 +2364,7 @@ _ipmi_sel (pstdout_state_t pstate,
   exit_code = 0;
  cleanup:
   ipmi_sdr_ctx_destroy (state_data.sdr_ctx);
-  ipmi_sel_parse_ctx_destroy (state_data.sel_parse_ctx);
+  ipmi_sel_ctx_destroy (state_data.sel_parse_ctx);
   ipmi_ctx_close (state_data.ipmi_ctx);
   ipmi_ctx_destroy (state_data.ipmi_ctx);
   return (exit_code);

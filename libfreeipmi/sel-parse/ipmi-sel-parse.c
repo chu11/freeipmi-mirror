@@ -77,10 +77,10 @@ static char *ipmi_sel_parse_errmsgs[] =
     NULL
   };
 
-ipmi_sel_parse_ctx_t
-ipmi_sel_parse_ctx_create (ipmi_ctx_t ipmi_ctx, ipmi_sdr_ctx_t sdr_ctx)
+ipmi_sel_ctx_t
+ipmi_sel_ctx_create (ipmi_ctx_t ipmi_ctx, ipmi_sdr_ctx_t sdr_ctx)
 {
-  struct ipmi_sel_parse_ctx *ctx = NULL;
+  struct ipmi_sel_ctx *ctx = NULL;
 
   /* check that ipmi_ctx is open for use if supplied */
   if (ipmi_ctx)
@@ -102,12 +102,12 @@ ipmi_sel_parse_ctx_create (ipmi_ctx_t ipmi_ctx, ipmi_sdr_ctx_t sdr_ctx)
 	}
     }
 
-  if (!(ctx = (ipmi_sel_parse_ctx_t)malloc (sizeof (struct ipmi_sel_parse_ctx))))
+  if (!(ctx = (ipmi_sel_ctx_t)malloc (sizeof (struct ipmi_sel_ctx))))
     {
       ERRNO_TRACE (errno);
       return (NULL);
     }
-  memset (ctx, '\0', sizeof (struct ipmi_sel_parse_ctx));
+  memset (ctx, '\0', sizeof (struct ipmi_sel_ctx));
   ctx->magic = IPMI_SEL_CTX_MAGIC;
   ctx->flags = IPMI_SEL_FLAGS_DEFAULT;
   ctx->manufacturer_id = 0;
@@ -150,7 +150,7 @@ _sel_entries_delete_all (void *x, void *y)
 }
 
 static void
-_sel_entries_clear (ipmi_sel_parse_ctx_t ctx)
+_sel_entries_clear (ipmi_sel_ctx_t ctx)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
@@ -169,11 +169,11 @@ _sel_entries_clear (ipmi_sel_parse_ctx_t ctx)
 }
 
 void
-ipmi_sel_parse_ctx_destroy (ipmi_sel_parse_ctx_t ctx)
+ipmi_sel_ctx_destroy (ipmi_sel_ctx_t ctx)
 {
   if (!ctx || ctx->magic != IPMI_SEL_CTX_MAGIC)
     {
-      ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      ERR_TRACE (ipmi_sel_ctx_errormsg (ctx), ipmi_sel_ctx_errnum (ctx));
       return;
     }
 
@@ -186,7 +186,7 @@ ipmi_sel_parse_ctx_destroy (ipmi_sel_parse_ctx_t ctx)
 }
 
 int
-ipmi_sel_parse_ctx_errnum (ipmi_sel_parse_ctx_t ctx)
+ipmi_sel_ctx_errnum (ipmi_sel_ctx_t ctx)
 {
   if (!ctx)
     return (IPMI_SEL_ERR_CONTEXT_NULL);
@@ -197,7 +197,7 @@ ipmi_sel_parse_ctx_errnum (ipmi_sel_parse_ctx_t ctx)
 }
 
 char *
-ipmi_sel_parse_ctx_strerror (int errnum)
+ipmi_sel_ctx_strerror (int errnum)
 {
   if (errnum >= IPMI_SEL_ERR_SUCCESS && errnum <= IPMI_SEL_ERR_ERRNUMRANGE)
     return (ipmi_sel_parse_errmsgs[errnum]);
@@ -206,17 +206,17 @@ ipmi_sel_parse_ctx_strerror (int errnum)
 }
 
 char *
-ipmi_sel_parse_ctx_errormsg (ipmi_sel_parse_ctx_t ctx)
+ipmi_sel_ctx_errormsg (ipmi_sel_ctx_t ctx)
 {
-  return (ipmi_sel_parse_ctx_strerror (ipmi_sel_parse_ctx_errnum (ctx)));
+  return (ipmi_sel_ctx_strerror (ipmi_sel_ctx_errnum (ctx)));
 }
 
 int
-ipmi_sel_parse_ctx_get_flags (ipmi_sel_parse_ctx_t ctx, unsigned int *flags)
+ipmi_sel_ctx_get_flags (ipmi_sel_ctx_t ctx, unsigned int *flags)
 {
   if (!ctx || ctx->magic != IPMI_SEL_CTX_MAGIC)
     {
-      ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      ERR_TRACE (ipmi_sel_ctx_errormsg (ctx), ipmi_sel_ctx_errnum (ctx));
       return (-1);
     }
 
@@ -232,11 +232,11 @@ ipmi_sel_parse_ctx_get_flags (ipmi_sel_parse_ctx_t ctx, unsigned int *flags)
 }
 
 int
-ipmi_sel_parse_ctx_set_flags (ipmi_sel_parse_ctx_t ctx, unsigned int flags)
+ipmi_sel_ctx_set_flags (ipmi_sel_ctx_t ctx, unsigned int flags)
 {
   if (!ctx || ctx->magic != IPMI_SEL_CTX_MAGIC)
     {
-      ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      ERR_TRACE (ipmi_sel_ctx_errormsg (ctx), ipmi_sel_ctx_errnum (ctx));
       return (-1);
     }
 
@@ -252,11 +252,11 @@ ipmi_sel_parse_ctx_set_flags (ipmi_sel_parse_ctx_t ctx, unsigned int flags)
 }
 
 int
-ipmi_sel_parse_ctx_get_manufacturer_id (ipmi_sel_parse_ctx_t ctx, uint32_t *manufacturer_id)
+ipmi_sel_ctx_get_manufacturer_id (ipmi_sel_ctx_t ctx, uint32_t *manufacturer_id)
 {
   if (!ctx || ctx->magic != IPMI_SEL_CTX_MAGIC)
     {
-      ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      ERR_TRACE (ipmi_sel_ctx_errormsg (ctx), ipmi_sel_ctx_errnum (ctx));
       return (-1);
     }
 
@@ -272,11 +272,11 @@ ipmi_sel_parse_ctx_get_manufacturer_id (ipmi_sel_parse_ctx_t ctx, uint32_t *manu
 }
 
 int
-ipmi_sel_parse_ctx_set_manufacturer_id (ipmi_sel_parse_ctx_t ctx, uint32_t manufacturer_id)
+ipmi_sel_ctx_set_manufacturer_id (ipmi_sel_ctx_t ctx, uint32_t manufacturer_id)
 {
   if (!ctx || ctx->magic != IPMI_SEL_CTX_MAGIC)
     {
-      ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      ERR_TRACE (ipmi_sel_ctx_errormsg (ctx), ipmi_sel_ctx_errnum (ctx));
       return (-1);
     }
 
@@ -286,11 +286,11 @@ ipmi_sel_parse_ctx_set_manufacturer_id (ipmi_sel_parse_ctx_t ctx, uint32_t manuf
 }
 
 int
-ipmi_sel_parse_ctx_get_product_id (ipmi_sel_parse_ctx_t ctx, uint16_t *product_id)
+ipmi_sel_ctx_get_product_id (ipmi_sel_ctx_t ctx, uint16_t *product_id)
 {
   if (!ctx || ctx->magic != IPMI_SEL_CTX_MAGIC)
     {
-      ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      ERR_TRACE (ipmi_sel_ctx_errormsg (ctx), ipmi_sel_ctx_errnum (ctx));
       return (-1);
     }
 
@@ -306,11 +306,11 @@ ipmi_sel_parse_ctx_get_product_id (ipmi_sel_parse_ctx_t ctx, uint16_t *product_i
 }
 
 int
-ipmi_sel_parse_ctx_set_product_id (ipmi_sel_parse_ctx_t ctx, uint16_t product_id)
+ipmi_sel_ctx_set_product_id (ipmi_sel_ctx_t ctx, uint16_t product_id)
 {
   if (!ctx || ctx->magic != IPMI_SEL_CTX_MAGIC)
     {
-      ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      ERR_TRACE (ipmi_sel_ctx_errormsg (ctx), ipmi_sel_ctx_errnum (ctx));
       return (-1);
     }
 
@@ -320,13 +320,13 @@ ipmi_sel_parse_ctx_set_product_id (ipmi_sel_parse_ctx_t ctx, uint16_t product_id
 }
 
 int
-ipmi_sel_parse_ctx_get_ipmi_version (ipmi_sel_parse_ctx_t ctx,
+ipmi_sel_ctx_get_ipmi_version (ipmi_sel_ctx_t ctx,
                                      uint8_t *ipmi_version_major,
                                      uint8_t *ipmi_version_minor)
 {
   if (!ctx || ctx->magic != IPMI_SEL_CTX_MAGIC)
     {
-      ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      ERR_TRACE (ipmi_sel_ctx_errormsg (ctx), ipmi_sel_ctx_errnum (ctx));
       return (-1);
     }
 
@@ -343,13 +343,13 @@ ipmi_sel_parse_ctx_get_ipmi_version (ipmi_sel_parse_ctx_t ctx,
 }
 
 int
-ipmi_sel_parse_ctx_set_ipmi_version (ipmi_sel_parse_ctx_t ctx,
+ipmi_sel_ctx_set_ipmi_version (ipmi_sel_ctx_t ctx,
                                      uint8_t ipmi_version_major,
                                      uint8_t ipmi_version_minor)
 {
   if (!ctx || ctx->magic != IPMI_SEL_CTX_MAGIC)
     {
-      ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      ERR_TRACE (ipmi_sel_ctx_errormsg (ctx), ipmi_sel_ctx_errnum (ctx));
       return (-1);
     }
 
@@ -360,11 +360,11 @@ ipmi_sel_parse_ctx_set_ipmi_version (ipmi_sel_parse_ctx_t ctx,
 }
 
 char *
-ipmi_sel_parse_ctx_get_debug_prefix (ipmi_sel_parse_ctx_t ctx)
+ipmi_sel_ctx_get_debug_prefix (ipmi_sel_ctx_t ctx)
 {
   if (!ctx || ctx->magic != IPMI_SEL_CTX_MAGIC)
     {
-      ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      ERR_TRACE (ipmi_sel_ctx_errormsg (ctx), ipmi_sel_ctx_errnum (ctx));
       return (NULL);
     }
 
@@ -373,11 +373,11 @@ ipmi_sel_parse_ctx_get_debug_prefix (ipmi_sel_parse_ctx_t ctx)
 }
 
 int
-ipmi_sel_parse_ctx_set_debug_prefix (ipmi_sel_parse_ctx_t ctx, const char *debug_prefix)
+ipmi_sel_ctx_set_debug_prefix (ipmi_sel_ctx_t ctx, const char *debug_prefix)
 {
   if (!ctx || ctx->magic != IPMI_SEL_CTX_MAGIC)
     {
-      ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      ERR_TRACE (ipmi_sel_ctx_errormsg (ctx), ipmi_sel_ctx_errnum (ctx));
       return (-1);
     }
 
@@ -398,11 +398,11 @@ ipmi_sel_parse_ctx_set_debug_prefix (ipmi_sel_parse_ctx_t ctx, const char *debug
 }
 
 char *
-ipmi_sel_parse_ctx_get_separator (ipmi_sel_parse_ctx_t ctx)
+ipmi_sel_ctx_get_separator (ipmi_sel_ctx_t ctx)
 {
   if (!ctx || ctx->magic != IPMI_SEL_CTX_MAGIC)
     {
-      ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      ERR_TRACE (ipmi_sel_ctx_errormsg (ctx), ipmi_sel_ctx_errnum (ctx));
       return (NULL);
     }
 
@@ -411,11 +411,11 @@ ipmi_sel_parse_ctx_get_separator (ipmi_sel_parse_ctx_t ctx)
 }
 
 int
-ipmi_sel_parse_ctx_set_separator (ipmi_sel_parse_ctx_t ctx, const char *separator)
+ipmi_sel_ctx_set_separator (ipmi_sel_ctx_t ctx, const char *separator)
 {
   if (!ctx || ctx->magic != IPMI_SEL_CTX_MAGIC)
     {
-      ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      ERR_TRACE (ipmi_sel_ctx_errormsg (ctx), ipmi_sel_ctx_errnum (ctx));
       return (-1);
     }
 
@@ -442,11 +442,11 @@ ipmi_sel_parse_ctx_set_separator (ipmi_sel_parse_ctx_t ctx, const char *separato
 }
 
 int
-ipmi_sel_parse_ctx_register_reservation_id (ipmi_sel_parse_ctx_t ctx, uint16_t *reservation_id)
+ipmi_sel_ctx_register_reservation_id (ipmi_sel_ctx_t ctx, uint16_t *reservation_id)
 {
   if (!ctx || ctx->magic != IPMI_SEL_CTX_MAGIC)
     {
-      ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      ERR_TRACE (ipmi_sel_ctx_errormsg (ctx), ipmi_sel_ctx_errnum (ctx));
       return (-1);
     }
 
@@ -476,11 +476,11 @@ ipmi_sel_parse_ctx_register_reservation_id (ipmi_sel_parse_ctx_t ctx, uint16_t *
 }
 
 int
-ipmi_sel_parse_ctx_clear_reservation_id (ipmi_sel_parse_ctx_t ctx)
+ipmi_sel_ctx_clear_reservation_id (ipmi_sel_ctx_t ctx)
 {
   if (!ctx || ctx->magic != IPMI_SEL_CTX_MAGIC)
     {
-      ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      ERR_TRACE (ipmi_sel_ctx_errormsg (ctx), ipmi_sel_ctx_errnum (ctx));
       return (-1);
     }
 
@@ -492,7 +492,7 @@ ipmi_sel_parse_ctx_clear_reservation_id (ipmi_sel_parse_ctx_t ctx)
 }
 
 static void
-_sel_entry_dump (ipmi_sel_parse_ctx_t ctx, struct ipmi_sel_entry *sel_entry)
+_sel_entry_dump (ipmi_sel_ctx_t ctx, struct ipmi_sel_entry *sel_entry)
 {
   fiid_obj_t obj_sel_record = NULL;
   char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
@@ -646,7 +646,7 @@ _sel_entry_dump (ipmi_sel_parse_ctx_t ctx, struct ipmi_sel_entry *sel_entry)
 }
 
 static int
-_get_sel_entry (ipmi_sel_parse_ctx_t ctx,
+_get_sel_entry (ipmi_sel_ctx_t ctx,
                 fiid_obj_t obj_cmd_rs,
                 uint16_t *reservation_id,
                 int *reservation_id_initialized,
@@ -757,7 +757,7 @@ _get_sel_entry (ipmi_sel_parse_ctx_t ctx,
 }
 
 int
-ipmi_sel_parse (ipmi_sel_parse_ctx_t ctx,
+ipmi_sel_parse (ipmi_sel_ctx_t ctx,
                 uint16_t record_id_start,
                 uint16_t record_id_last,
                 Ipmi_Sel_Parse_Callback callback,
@@ -776,7 +776,7 @@ ipmi_sel_parse (ipmi_sel_parse_ctx_t ctx,
 
   if (!ctx || ctx->magic != IPMI_SEL_CTX_MAGIC)
     {
-      ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      ERR_TRACE (ipmi_sel_ctx_errormsg (ctx), ipmi_sel_ctx_errnum (ctx));
       return (-1);
     }
 
@@ -1008,7 +1008,7 @@ ipmi_sel_parse (ipmi_sel_parse_ctx_t ctx,
 }
 
 int
-ipmi_sel_parse_record_ids (ipmi_sel_parse_ctx_t ctx,
+ipmi_sel_parse_record_ids (ipmi_sel_ctx_t ctx,
                            uint16_t *record_ids,
                            unsigned int record_ids_len,
                            Ipmi_Sel_Parse_Callback callback,
@@ -1024,7 +1024,7 @@ ipmi_sel_parse_record_ids (ipmi_sel_parse_ctx_t ctx,
 
   if (!ctx || ctx->magic != IPMI_SEL_CTX_MAGIC)
     {
-      ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      ERR_TRACE (ipmi_sel_ctx_errormsg (ctx), ipmi_sel_ctx_errnum (ctx));
       return (-1);
     }
 
@@ -1125,11 +1125,11 @@ ipmi_sel_parse_record_ids (ipmi_sel_parse_ctx_t ctx,
 }
 
 int
-ipmi_sel_parse_first (ipmi_sel_parse_ctx_t ctx)
+ipmi_sel_parse_first (ipmi_sel_ctx_t ctx)
 {
   if (!ctx || ctx->magic != IPMI_SEL_CTX_MAGIC)
     {
-      ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      ERR_TRACE (ipmi_sel_ctx_errormsg (ctx), ipmi_sel_ctx_errnum (ctx));
       return (-1);
     }
 
@@ -1151,11 +1151,11 @@ ipmi_sel_parse_first (ipmi_sel_parse_ctx_t ctx)
 }
 
 int
-ipmi_sel_parse_next (ipmi_sel_parse_ctx_t ctx)
+ipmi_sel_parse_next (ipmi_sel_ctx_t ctx)
 {
   if (!ctx || ctx->magic != IPMI_SEL_CTX_MAGIC)
     {
-      ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      ERR_TRACE (ipmi_sel_ctx_errormsg (ctx), ipmi_sel_ctx_errnum (ctx));
       return (-1);
     }
 
@@ -1176,11 +1176,11 @@ ipmi_sel_parse_next (ipmi_sel_parse_ctx_t ctx)
 }
 
 int
-ipmi_sel_parse_sel_entry_count (ipmi_sel_parse_ctx_t ctx)
+ipmi_sel_parse_sel_entry_count (ipmi_sel_ctx_t ctx)
 {
   if (!ctx || ctx->magic != IPMI_SEL_CTX_MAGIC)
     {
-      ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      ERR_TRACE (ipmi_sel_ctx_errormsg (ctx), ipmi_sel_ctx_errnum (ctx));
       return (-1);
     }
 
@@ -1200,7 +1200,7 @@ ipmi_sel_parse_sel_entry_count (ipmi_sel_parse_ctx_t ctx)
 }
 
 static int
-_ipmi_sel_parse_find_record_id (ipmi_sel_parse_ctx_t ctx,
+_ipmi_sel_parse_find_record_id (ipmi_sel_ctx_t ctx,
                                 uint16_t record_id,
                                 unsigned int exact_match_flag)
 {
@@ -1209,7 +1209,7 @@ _ipmi_sel_parse_find_record_id (ipmi_sel_parse_ctx_t ctx,
 
   if (!ctx || ctx->magic != IPMI_SEL_CTX_MAGIC)
     {
-      ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      ERR_TRACE (ipmi_sel_ctx_errormsg (ctx), ipmi_sel_ctx_errnum (ctx));
       return (-1);
     }
 
@@ -1261,7 +1261,7 @@ _ipmi_sel_parse_find_record_id (ipmi_sel_parse_ctx_t ctx,
 }
 
 int
-ipmi_sel_parse_seek_record_id (ipmi_sel_parse_ctx_t ctx, uint16_t record_id)
+ipmi_sel_parse_seek_record_id (ipmi_sel_ctx_t ctx, uint16_t record_id)
 {
   return (_ipmi_sel_parse_find_record_id (ctx,
                                           record_id,
@@ -1269,7 +1269,7 @@ ipmi_sel_parse_seek_record_id (ipmi_sel_parse_ctx_t ctx, uint16_t record_id)
 }
 
 int
-ipmi_sel_parse_search_record_id (ipmi_sel_parse_ctx_t ctx, uint16_t record_id)
+ipmi_sel_parse_search_record_id (ipmi_sel_ctx_t ctx, uint16_t record_id)
 {
   return (_ipmi_sel_parse_find_record_id (ctx,
                                           record_id,
@@ -1277,7 +1277,7 @@ ipmi_sel_parse_search_record_id (ipmi_sel_parse_ctx_t ctx, uint16_t record_id)
 }
 
 int
-_get_parse_sel_entry_common (ipmi_sel_parse_ctx_t ctx,
+_get_parse_sel_entry_common (ipmi_sel_ctx_t ctx,
 			     struct ipmi_sel_entry **sel_entry)
 {
   assert (ctx);
@@ -1313,7 +1313,7 @@ _get_parse_sel_entry_common (ipmi_sel_parse_ctx_t ctx,
 }
 
 int
-ipmi_sel_parse_read_record (ipmi_sel_parse_ctx_t ctx,
+ipmi_sel_parse_read_record (ipmi_sel_ctx_t ctx,
                             void *buf,
                             unsigned int buflen)
 {
@@ -1322,7 +1322,7 @@ ipmi_sel_parse_read_record (ipmi_sel_parse_ctx_t ctx,
 
   if (!ctx || ctx->magic != IPMI_SEL_CTX_MAGIC)
     {
-      ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      ERR_TRACE (ipmi_sel_ctx_errormsg (ctx), ipmi_sel_ctx_errnum (ctx));
       return (-1);
     }
 
@@ -1352,7 +1352,7 @@ ipmi_sel_parse_read_record (ipmi_sel_parse_ctx_t ctx,
 }
 
 static int
-_sel_parse_read_common (ipmi_sel_parse_ctx_t ctx,
+_sel_parse_read_common (ipmi_sel_ctx_t ctx,
 			const void *sel_record,
 			unsigned int sel_record_len,
 			struct ipmi_sel_entry **sel_entry_ptr,
@@ -1360,7 +1360,7 @@ _sel_parse_read_common (ipmi_sel_parse_ctx_t ctx,
 {
   if (!ctx || ctx->magic != IPMI_SEL_CTX_MAGIC)
     {
-      ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      ERR_TRACE (ipmi_sel_ctx_errormsg (ctx), ipmi_sel_ctx_errnum (ctx));
       return (-1);
     }
 
@@ -1390,7 +1390,7 @@ _sel_parse_read_common (ipmi_sel_parse_ctx_t ctx,
 }
 
 int
-ipmi_sel_parse_read_record_id (ipmi_sel_parse_ctx_t ctx,
+ipmi_sel_parse_read_record_id (ipmi_sel_ctx_t ctx,
 			       const void *sel_record,
 			       unsigned int sel_record_len,
 			       uint16_t *record_id)
@@ -1416,7 +1416,7 @@ ipmi_sel_parse_read_record_id (ipmi_sel_parse_ctx_t ctx,
 }
 
 int
-ipmi_sel_parse_read_record_type (ipmi_sel_parse_ctx_t ctx,
+ipmi_sel_parse_read_record_type (ipmi_sel_ctx_t ctx,
                                  const void *sel_record,
                                  unsigned int sel_record_len,
 				 uint8_t *record_type)
@@ -1442,7 +1442,7 @@ ipmi_sel_parse_read_record_type (ipmi_sel_parse_ctx_t ctx,
 }
 
 int
-ipmi_sel_parse_read_timestamp (ipmi_sel_parse_ctx_t ctx,
+ipmi_sel_parse_read_timestamp (ipmi_sel_ctx_t ctx,
 			       const void *sel_record,
 			       unsigned int sel_record_len,
 			       uint32_t *timestamp)
@@ -1467,7 +1467,7 @@ ipmi_sel_parse_read_timestamp (ipmi_sel_parse_ctx_t ctx,
 }
 
 int
-_sel_parse_system_event_common (ipmi_sel_parse_ctx_t ctx,
+_sel_parse_system_event_common (ipmi_sel_ctx_t ctx,
 				const void *sel_record,
 				unsigned int sel_record_len,
 				struct ipmi_sel_system_event_record_data *system_event_record_data)
@@ -1479,7 +1479,7 @@ _sel_parse_system_event_common (ipmi_sel_parse_ctx_t ctx,
   
   if (!ctx || ctx->magic != IPMI_SEL_CTX_MAGIC)
     {
-      ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      ERR_TRACE (ipmi_sel_ctx_errormsg (ctx), ipmi_sel_ctx_errnum (ctx));
       return (-1);
     }
 
@@ -1514,7 +1514,7 @@ _sel_parse_system_event_common (ipmi_sel_parse_ctx_t ctx,
 }
 
 int
-ipmi_sel_parse_read_generator_id (ipmi_sel_parse_ctx_t ctx,
+ipmi_sel_parse_read_generator_id (ipmi_sel_ctx_t ctx,
 				  const void *sel_record,
 				  unsigned int sel_record_len,
 				  uint8_t *generator_id)
@@ -1535,7 +1535,7 @@ ipmi_sel_parse_read_generator_id (ipmi_sel_parse_ctx_t ctx,
 }
 
 int
-ipmi_sel_parse_read_ipmb_device_lun (ipmi_sel_parse_ctx_t ctx,
+ipmi_sel_parse_read_ipmb_device_lun (ipmi_sel_ctx_t ctx,
 				     const void *sel_record,
 				     unsigned int sel_record_len,
 				     uint8_t *ipmb_device_lun)
@@ -1556,7 +1556,7 @@ ipmi_sel_parse_read_ipmb_device_lun (ipmi_sel_parse_ctx_t ctx,
 }
 
 int
-ipmi_sel_parse_read_channel_number (ipmi_sel_parse_ctx_t ctx,
+ipmi_sel_parse_read_channel_number (ipmi_sel_ctx_t ctx,
 				    const void *sel_record,
 				    unsigned int sel_record_len,
 				    uint8_t *channel_number)
@@ -1584,7 +1584,7 @@ ipmi_sel_parse_read_channel_number (ipmi_sel_parse_ctx_t ctx,
 }
 
 int
-ipmi_sel_parse_read_event_message_format_version (ipmi_sel_parse_ctx_t ctx,
+ipmi_sel_parse_read_event_message_format_version (ipmi_sel_ctx_t ctx,
 						  const void *sel_record,
 						  unsigned int sel_record_len,
 						  uint8_t *event_message_format_version)
@@ -1605,7 +1605,7 @@ ipmi_sel_parse_read_event_message_format_version (ipmi_sel_parse_ctx_t ctx,
 }
 
 int
-ipmi_sel_parse_read_sensor_type (ipmi_sel_parse_ctx_t ctx,
+ipmi_sel_parse_read_sensor_type (ipmi_sel_ctx_t ctx,
 				 const void *sel_record,
 				 unsigned int sel_record_len,
 				 uint8_t *sensor_type)
@@ -1626,7 +1626,7 @@ ipmi_sel_parse_read_sensor_type (ipmi_sel_parse_ctx_t ctx,
 }
 
 int
-ipmi_sel_parse_read_sensor_number (ipmi_sel_parse_ctx_t ctx,
+ipmi_sel_parse_read_sensor_number (ipmi_sel_ctx_t ctx,
 				   const void *sel_record,
 				   unsigned int sel_record_len,
 				   uint8_t *sensor_number)
@@ -1647,7 +1647,7 @@ ipmi_sel_parse_read_sensor_number (ipmi_sel_parse_ctx_t ctx,
 }
 
 int
-ipmi_sel_parse_read_event_direction (ipmi_sel_parse_ctx_t ctx,
+ipmi_sel_parse_read_event_direction (ipmi_sel_ctx_t ctx,
 				     const void *sel_record,
 				     unsigned int sel_record_len,
 				     uint8_t *event_direction)
@@ -1668,7 +1668,7 @@ ipmi_sel_parse_read_event_direction (ipmi_sel_parse_ctx_t ctx,
 }
 
 int
-ipmi_sel_parse_read_event_type_code (ipmi_sel_parse_ctx_t ctx,
+ipmi_sel_parse_read_event_type_code (ipmi_sel_ctx_t ctx,
 				     const void *sel_record,
 				     unsigned int sel_record_len,
 				     uint8_t *event_type_code)
@@ -1689,7 +1689,7 @@ ipmi_sel_parse_read_event_type_code (ipmi_sel_parse_ctx_t ctx,
 }
 
 int
-ipmi_sel_parse_read_event_data1 (ipmi_sel_parse_ctx_t ctx,
+ipmi_sel_parse_read_event_data1 (ipmi_sel_ctx_t ctx,
 				 const void *sel_record,
 				 unsigned int sel_record_len,
 				 uint8_t *event_data1)
@@ -1713,7 +1713,7 @@ ipmi_sel_parse_read_event_data1 (ipmi_sel_parse_ctx_t ctx,
 }
 
 int
-ipmi_sel_parse_read_event_data1_offset_from_event_reading_type_code (ipmi_sel_parse_ctx_t ctx,
+ipmi_sel_parse_read_event_data1_offset_from_event_reading_type_code (ipmi_sel_ctx_t ctx,
 								     const void *sel_record,
 								     unsigned int sel_record_len,
                                                                      uint8_t *event_data1_offset)
@@ -1734,7 +1734,7 @@ ipmi_sel_parse_read_event_data1_offset_from_event_reading_type_code (ipmi_sel_pa
 }
 
 int
-ipmi_sel_parse_read_event_data1_event_data2_flag (ipmi_sel_parse_ctx_t ctx,
+ipmi_sel_parse_read_event_data1_event_data2_flag (ipmi_sel_ctx_t ctx,
 						  const void *sel_record,
 						  unsigned int sel_record_len,
                                                   uint8_t *event_data2_flag)
@@ -1755,7 +1755,7 @@ ipmi_sel_parse_read_event_data1_event_data2_flag (ipmi_sel_parse_ctx_t ctx,
 }
 
 int
-ipmi_sel_parse_read_event_data1_event_data3_flag (ipmi_sel_parse_ctx_t ctx,
+ipmi_sel_parse_read_event_data1_event_data3_flag (ipmi_sel_ctx_t ctx,
 						  const void *sel_record,
 						  unsigned int sel_record_len,
                                                   uint8_t *event_data3_flag)
@@ -1776,7 +1776,7 @@ ipmi_sel_parse_read_event_data1_event_data3_flag (ipmi_sel_parse_ctx_t ctx,
 }
 
 int
-ipmi_sel_parse_read_event_data2 (ipmi_sel_parse_ctx_t ctx,
+ipmi_sel_parse_read_event_data2 (ipmi_sel_ctx_t ctx,
 				 const void *sel_record,
 				 unsigned int sel_record_len,
 				 uint8_t *event_data2)
@@ -1797,7 +1797,7 @@ ipmi_sel_parse_read_event_data2 (ipmi_sel_parse_ctx_t ctx,
 }
 
 int
-ipmi_sel_parse_read_event_data3 (ipmi_sel_parse_ctx_t ctx,
+ipmi_sel_parse_read_event_data3 (ipmi_sel_ctx_t ctx,
 				 const void *sel_record,
 				 unsigned int sel_record_len,
 				 uint8_t *event_data3)
@@ -1818,7 +1818,7 @@ ipmi_sel_parse_read_event_data3 (ipmi_sel_parse_ctx_t ctx,
 }
 
 int
-ipmi_sel_parse_read_manufacturer_id (ipmi_sel_parse_ctx_t ctx,
+ipmi_sel_parse_read_manufacturer_id (ipmi_sel_ctx_t ctx,
 				     const void *sel_record,
 				     unsigned int sel_record_len,
 				     uint32_t *manufacturer_id)
@@ -1843,7 +1843,7 @@ ipmi_sel_parse_read_manufacturer_id (ipmi_sel_parse_ctx_t ctx,
 }
 
 int
-ipmi_sel_parse_read_oem (ipmi_sel_parse_ctx_t ctx,
+ipmi_sel_parse_read_oem (ipmi_sel_ctx_t ctx,
 			 const void *sel_record,
 			 unsigned int sel_record_len,
 			 void *buf,
@@ -1877,7 +1877,7 @@ ipmi_sel_parse_read_oem (ipmi_sel_parse_ctx_t ctx,
 }
 
 int
-ipmi_sel_parse_read_record_string (ipmi_sel_parse_ctx_t ctx,
+ipmi_sel_parse_read_record_string (ipmi_sel_ctx_t ctx,
                                    const char *fmt,
 				   const void *sel_record,
 				   unsigned int sel_record_len,
@@ -1891,7 +1891,7 @@ ipmi_sel_parse_read_record_string (ipmi_sel_parse_ctx_t ctx,
 
   if (!ctx || ctx->magic != IPMI_SEL_CTX_MAGIC)
     {
-      ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      ERR_TRACE (ipmi_sel_ctx_errormsg (ctx), ipmi_sel_ctx_errnum (ctx));
       return (-1);
     }
 
@@ -1941,7 +1941,7 @@ ipmi_sel_parse_read_record_string (ipmi_sel_parse_ctx_t ctx,
 }
 
 int
-ipmi_sel_parse_clear_sel (ipmi_sel_parse_ctx_t ctx)
+ipmi_sel_clear_sel (ipmi_sel_ctx_t ctx)
 {
   unsigned int reservation_id_retry_count = 0;
   uint16_t reservation_id;
@@ -1950,7 +1950,7 @@ ipmi_sel_parse_clear_sel (ipmi_sel_parse_ctx_t ctx)
 
   if (!ctx || ctx->magic != IPMI_SEL_CTX_MAGIC)
     {
-      ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      ERR_TRACE (ipmi_sel_ctx_errormsg (ctx), ipmi_sel_ctx_errnum (ctx));
       return (-1);
     }
 
@@ -2018,7 +2018,7 @@ ipmi_sel_parse_clear_sel (ipmi_sel_parse_ctx_t ctx)
 }
 
 int
-ipmi_sel_parse_delete_sel_entry (ipmi_sel_parse_ctx_t ctx, uint16_t record_id)
+ipmi_sel_delete_sel_entry (ipmi_sel_ctx_t ctx, uint16_t record_id)
 {
   unsigned int reservation_id_retry_count = 0;
   uint16_t reservation_id;
@@ -2027,7 +2027,7 @@ ipmi_sel_parse_delete_sel_entry (ipmi_sel_parse_ctx_t ctx, uint16_t record_id)
 
   if (!ctx || ctx->magic != IPMI_SEL_CTX_MAGIC)
     {
-      ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      ERR_TRACE (ipmi_sel_ctx_errormsg (ctx), ipmi_sel_ctx_errnum (ctx));
       return (-1);
     }
 

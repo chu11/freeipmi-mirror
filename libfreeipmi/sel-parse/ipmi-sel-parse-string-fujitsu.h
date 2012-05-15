@@ -31,7 +31,7 @@
 #include "ipmi-sel-parse-defs.h"
 #include "ipmi-sel-parse-common.h"
 
-int ipmi_sel_parse_output_fujitsu_event_data1_class_sensor_specific_discrete (ipmi_sel_parse_ctx_t ctx,
+int ipmi_sel_parse_output_fujitsu_event_data1_class_sensor_specific_discrete (ipmi_sel_ctx_t ctx,
                                                                               struct ipmi_sel_entry *sel_entry,
                                                                               uint8_t sel_record_type,
                                                                               char *tmpbuf,
@@ -40,7 +40,7 @@ int ipmi_sel_parse_output_fujitsu_event_data1_class_sensor_specific_discrete (ip
                                                                               unsigned int *wlen,
                                                                               struct ipmi_sel_system_event_record_data *system_event_record_data);
 
-int ipmi_sel_parse_output_fujitsu_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
+int ipmi_sel_parse_output_fujitsu_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
                                                            struct ipmi_sel_entry *sel_entry,
                                                            uint8_t sel_record_type,
                                                            char *buf,
@@ -50,7 +50,7 @@ int ipmi_sel_parse_output_fujitsu_event_data2_event_data3 (ipmi_sel_parse_ctx_t 
                                                            struct ipmi_sel_system_event_record_data *system_event_record_data,
                                                            int *oem_rv);
 
-int ipmi_sel_parse_output_fujitsu_oem_record_data (ipmi_sel_parse_ctx_t ctx,
+int ipmi_sel_parse_output_fujitsu_oem_record_data (ipmi_sel_ctx_t ctx,
                                                    struct ipmi_sel_entry *sel_entry,
                                                    uint8_t sel_record_type,
                                                    char *buf,
@@ -59,7 +59,7 @@ int ipmi_sel_parse_output_fujitsu_oem_record_data (ipmi_sel_parse_ctx_t ctx,
                                                    unsigned int *wlen,
                                                    int *oem_rv);
 
-int ipmi_sel_parse_output_fujitsu_oem_string (ipmi_sel_parse_ctx_t ctx,
+int ipmi_sel_parse_output_fujitsu_oem_string (ipmi_sel_ctx_t ctx,
                                               struct ipmi_sel_entry *sel_entry,
                                               uint8_t sel_record_type,
                                               char *buf,

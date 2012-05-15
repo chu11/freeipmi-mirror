@@ -38,7 +38,7 @@
 #include "freeipmi-portability.h"
 
 void
-sel_set_sel_errnum_by_errno (ipmi_sel_parse_ctx_t ctx, int __errno)
+sel_set_sel_errnum_by_errno (ipmi_sel_ctx_t ctx, int __errno)
 {
   assert (ctx && ctx->magic == IPMI_SEL_CTX_MAGIC);
   
@@ -56,7 +56,7 @@ sel_set_sel_errnum_by_errno (ipmi_sel_parse_ctx_t ctx, int __errno)
 }
 
 void
-sel_set_sel_errnum_by_fiid_object (ipmi_sel_parse_ctx_t ctx, fiid_obj_t obj)
+sel_set_sel_errnum_by_fiid_object (ipmi_sel_ctx_t ctx, fiid_obj_t obj)
 {
   assert (ctx && ctx->magic == IPMI_SEL_CTX_MAGIC);
   

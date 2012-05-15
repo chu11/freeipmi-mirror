@@ -206,7 +206,7 @@ struct ipmi_monitoring_ctx {
   void *callback_data;
 
   /* for sel codepath */
-  ipmi_sel_parse_ctx_t sel_parse_ctx;
+  ipmi_sel_ctx_t sel_parse_ctx;
   List sel_records;
   ListIterator sel_records_itr;
   struct ipmi_monitoring_sel_record *current_sel_record;
