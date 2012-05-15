@@ -3,6 +3,15 @@
 	Cleanup sel-parse sub-library
 
 	* Support IPMI_SEL_PARSE_ERR_SEL_ENTRIES_NOT_LOADED error code.
+
+	* Properly trace all errors when debug tracing is enabled.
+
+	* Condense both sets of record parsing functions into one set.
+
+	* libfreeipmi/sel-parse/ipmi-sel-parse-common.h,
+	libfreeipmi/sel-parse/ipmi-sel-parse-common.c (sel_parse_get_previous_state_or_severity):
+	Change to _get_previous_state_or_severity and put in
+	libfreeipmi/sel-parse/ipmi-sel-parse-string.c.
 	
 2012-05-14  Albert Chu <chu11@llnl.gov>
 

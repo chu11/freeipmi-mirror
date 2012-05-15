@@ -403,6 +403,60 @@ _get_sensor_reading (ipmi_sel_parse_ctx_t ctx,
   return (rv);
 }
 
+static int
+_get_previous_state_or_severity (ipmi_sel_parse_ctx_t ctx,
+				 struct ipmi_sel_parse_entry *sel_parse_entry,
+				 uint8_t *previous_offset_from_event_reading_type_code,
+				 uint8_t *offset_from_severity_event_reading_type_code)
+{
+  fiid_obj_t obj_sel_system_event_record = NULL;
+  uint64_t val;
+  int rv = -1;
+
+  assert (ctx);
+  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (sel_parse_entry);
+  assert (previous_offset_from_event_reading_type_code);
+  assert (offset_from_severity_event_reading_type_code);
+
+  if (!(obj_sel_system_event_record = fiid_obj_create (tmpl_sel_system_event_record_discrete_previous_state_severity)))
+    {
+      SEL_PARSE_ERRNO_TO_SEL_PARSE_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (fiid_obj_set_all (obj_sel_system_event_record,
+                        sel_parse_entry->sel_event_record,
+                        sel_parse_entry->sel_event_record_len) < 0)
+    {
+      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM (ctx, obj_sel_system_event_record);
+      goto cleanup;
+    }
+
+  if (FIID_OBJ_GET (obj_sel_system_event_record,
+                    "previous_offset_from_event_reading_type_code",
+                    &val) < 0)
+    {
+      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM (ctx, obj_sel_system_event_record);
+      goto cleanup;
+    }
+  *previous_offset_from_event_reading_type_code = val;
+
+  if (FIID_OBJ_GET (obj_sel_system_event_record,
+                    "offset_from_severity_event_reading_type_code",
+                    &val) < 0)
+    {
+      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM (ctx, obj_sel_system_event_record);
+      goto cleanup;
+    }
+  *offset_from_severity_event_reading_type_code = val;
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_sel_system_event_record);
+  return (rv);
+}
+
 /* return (0) - continue on
  * return (1) - buffer full, return full buffer to user
  * return (-1) - error, cleanup and return error
@@ -1507,10 +1561,10 @@ _output_event_data2 (ipmi_sel_parse_ctx_t ctx,
                 break;
               }
 
-            if (sel_parse_get_previous_state_or_severity (ctx,
-                                                          sel_parse_entry,
-                                                          &previous_offset_from_event_reading_type_code,
-                                                          &offset_from_severity_event_reading_type_code) < 0)
+            if (_get_previous_state_or_severity (ctx,
+						 sel_parse_entry,
+						 &previous_offset_from_event_reading_type_code,
+						 &offset_from_severity_event_reading_type_code) < 0)
               return (-1);
 
             if (previous_offset_from_event_reading_type_code != IPMI_SEL_RECORD_UNSPECIFIED_OFFSET)
@@ -2569,10 +2623,10 @@ _output_event_data2_previous_state_or_severity (ipmi_sel_parse_ctx_t ctx,
   if (sel_parse_get_system_event_record (ctx, sel_parse_entry, &system_event_record_data) < 0)
     return (-1);
 
-  if (sel_parse_get_previous_state_or_severity (ctx,
-                                                sel_parse_entry,
-                                                &previous_offset_from_event_reading_type_code,
-                                                &offset_from_severity_event_reading_type_code) < 0)
+  if (_get_previous_state_or_severity (ctx,
+				       sel_parse_entry,
+				       &previous_offset_from_event_reading_type_code,
+				       &offset_from_severity_event_reading_type_code) < 0)
     return (-1);
 
   memset (tmpbuf, '\0', EVENT_BUFFER_LENGTH);

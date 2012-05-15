@@ -74,9 +74,4 @@ int sel_parse_get_system_event_record (ipmi_sel_parse_ctx_t ctx,
                                        struct ipmi_sel_parse_entry *sel_parse_entry,
                                        struct ipmi_sel_system_event_record_data *system_event_record_data);
 
-int sel_parse_get_previous_state_or_severity (ipmi_sel_parse_ctx_t ctx,
-                                              struct ipmi_sel_parse_entry *sel_parse_entry,
-                                              uint8_t *previous_offset_from_event_reading_type_code,
-                                              uint8_t *offset_from_severity_event_reading_type_code);
-
 #endif /* IPMI_SEL_PARSE_COMMON_H */

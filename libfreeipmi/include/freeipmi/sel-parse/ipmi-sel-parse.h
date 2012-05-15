@@ -179,7 +179,7 @@ int ipmi_sel_parse_read_record (ipmi_sel_parse_ctx_t ctx,
                                 void *buf,
                                 unsigned int buflen);
 
-/* SEL parsing read functions
+/* SEL parsing functions
  *
  * - if a sel_record is passed in, that sel_record is used for
  *   reading/parsing
@@ -194,53 +194,109 @@ int ipmi_sel_parse_read_record (ipmi_sel_parse_ctx_t ctx,
  */
 
 /* record_id & record_type - works with all SEL record types */
-int ipmi_sel_parse_read_record_id (ipmi_sel_parse_ctx_t ctx, uint16_t *record_id);
-int ipmi_sel_parse_read_record_type (ipmi_sel_parse_ctx_t ctx, uint8_t *record_type);
+int ipmi_sel_parse_read_record_id (ipmi_sel_parse_ctx_t ctx,
+				   const void *sel_record,
+				   unsigned int sel_record_len,
+				   uint16_t *record_id);
+
+int ipmi_sel_parse_read_record_type (ipmi_sel_parse_ctx_t ctx,
+				     const void *sel_record,
+				     unsigned int sel_record_len,
+				     uint8_t *record_type);
 
 /* timetamp - works with sel event and timestamped OEM record types */
-int ipmi_sel_parse_read_timestamp (ipmi_sel_parse_ctx_t ctx, uint32_t *timestamp);
+int ipmi_sel_parse_read_timestamp (ipmi_sel_parse_ctx_t ctx,
+				   const void *sel_record,
+				   unsigned int sel_record_len,
+				   uint32_t *timestamp);
 
 /* generator_id, event message format version, sensor type, sensor
  * number, event direction, event type code, and event data available
  * form system event record type
  */
-int ipmi_sel_parse_read_generator_id (ipmi_sel_parse_ctx_t ctx, uint8_t *generator_id);
+int ipmi_sel_parse_read_generator_id (ipmi_sel_parse_ctx_t ctx,
+				      const void *sel_record,
+				      unsigned int sel_record_len,
+				      uint8_t *generator_id);
 
-int ipmi_sel_parse_read_ipmb_device_lun (ipmi_sel_parse_ctx_t ctx, uint8_t *ipmb_device_lun);
+int ipmi_sel_parse_read_ipmb_device_lun (ipmi_sel_parse_ctx_t ctx,
+					 const void *sel_record,
+					 unsigned int sel_record_len,
+					 uint8_t *ipmb_device_lun);
 
-int ipmi_sel_parse_read_channel_number (ipmi_sel_parse_ctx_t ctx, uint8_t *channel_number);
+int ipmi_sel_parse_read_channel_number (ipmi_sel_parse_ctx_t ctx,
+					const void *sel_record,
+					unsigned int sel_record_len,
+					uint8_t *channel_number);
 
-int ipmi_sel_parse_read_event_message_format_version (ipmi_sel_parse_ctx_t ctx, uint8_t *event_message_format_version);
+int ipmi_sel_parse_read_event_message_format_version (ipmi_sel_parse_ctx_t ctx,
+						      const void *sel_record,
+						      unsigned int sel_record_len,
+						      uint8_t *event_message_format_version);
 
-int ipmi_sel_parse_read_sensor_type (ipmi_sel_parse_ctx_t ctx, uint8_t *sensor_type);
+int ipmi_sel_parse_read_sensor_type (ipmi_sel_parse_ctx_t ctx,
+				     const void *sel_record,
+				     unsigned int sel_record_len,
+				     uint8_t *sensor_type);
 
-int ipmi_sel_parse_read_sensor_number (ipmi_sel_parse_ctx_t ctx, uint8_t *sensor_number);
+int ipmi_sel_parse_read_sensor_number (ipmi_sel_parse_ctx_t ctx,
+				       const void *sel_record,
+				       unsigned int sel_record_len,
+				       uint8_t *sensor_number);
 
-int ipmi_sel_parse_read_event_direction (ipmi_sel_parse_ctx_t ctx, uint8_t *event_direction);
+int ipmi_sel_parse_read_event_direction (ipmi_sel_parse_ctx_t ctx,
+					 const void *sel_record,
+					 unsigned int sel_record_len,
+					 uint8_t *event_direction);
 
-int ipmi_sel_parse_read_event_type_code (ipmi_sel_parse_ctx_t ctx, uint8_t *event_type_code);
+int ipmi_sel_parse_read_event_type_code (ipmi_sel_parse_ctx_t ctx,
+					 const void *sel_record,
+					 unsigned int sel_record_len,	
+					 uint8_t *event_type_code);
 
-int ipmi_sel_parse_read_event_data1 (ipmi_sel_parse_ctx_t ctx, uint8_t *event_data1);
+int ipmi_sel_parse_read_event_data1 (ipmi_sel_parse_ctx_t ctx,
+				     const void *sel_record,
+				     unsigned int sel_record_len,
+				     uint8_t *event_data1);
 
 int ipmi_sel_parse_read_event_data1_offset_from_event_reading_type_code (ipmi_sel_parse_ctx_t ctx,
+									 const void *sel_record,
+									 unsigned int sel_record_len,
                                                                          uint8_t *event_data1_offset);
 
 int ipmi_sel_parse_read_event_data1_event_data2_flag (ipmi_sel_parse_ctx_t ctx,
+						      const void *sel_record,
+						      unsigned int sel_record_len,
                                                       uint8_t *event_data2_flag);
 
 int ipmi_sel_parse_read_event_data1_event_data3_flag (ipmi_sel_parse_ctx_t ctx,
+						      const void *sel_record,
+						      unsigned int sel_record_len,
                                                       uint8_t *event_data3_flag);
 
-int ipmi_sel_parse_read_event_data2 (ipmi_sel_parse_ctx_t ctx, uint8_t *event_data2);
+int ipmi_sel_parse_read_event_data2 (ipmi_sel_parse_ctx_t ctx,
+				     const void *sel_record,
+				     unsigned int sel_record_len,
+				     uint8_t *event_data2);
 
-int ipmi_sel_parse_read_event_data3 (ipmi_sel_parse_ctx_t ctx, uint8_t *event_data3);
+int ipmi_sel_parse_read_event_data3 (ipmi_sel_parse_ctx_t ctx,
+				     const void *sel_record,
+				     unsigned int sel_record_len,
+				     uint8_t *event_data3);
 
 /* manufacturer_id - works with sel timestamped OEM record types */
-int ipmi_sel_parse_read_manufacturer_id (ipmi_sel_parse_ctx_t ctx, uint32_t *manufacturer_id);
+int ipmi_sel_parse_read_manufacturer_id (ipmi_sel_parse_ctx_t ctx,
+					 const void *sel_record,
+					 unsigned int sel_record_len,
+					 uint32_t *manufacturer_id);
 
 /* oem - works with sel timestamped and non-timestamped OEM record types */
 /* return length of data read into buffer on success, -1 on error */
-int ipmi_sel_parse_read_oem (ipmi_sel_parse_ctx_t ctx, void *buf, unsigned int buflen);
+int ipmi_sel_parse_read_oem (ipmi_sel_parse_ctx_t ctx,
+			     const void *sel_record,
+			     unsigned int sel_record_len,
+			     void *buf,
+			     unsigned int buflen);
 
 /*
  * create a string output of the SEL entry.
@@ -352,6 +408,8 @@ int ipmi_sel_parse_read_oem (ipmi_sel_parse_ctx_t ctx, void *buf, unsigned int b
  */
 int ipmi_sel_parse_read_record_string (ipmi_sel_parse_ctx_t ctx,
                                        const char *fmt,
+				       const void *sel_record,
+				       unsigned int sel_record_len,
                                        char *buf,
                                        unsigned int buflen,
                                        unsigned int flags);
@@ -362,116 +420,6 @@ int ipmi_sel_parse_clear_sel (ipmi_sel_parse_ctx_t ctx);
 int ipmi_sel_parse_delete_sel_entry (ipmi_sel_parse_ctx_t ctx, uint16_t record_id);
 
 int ipmi_sel_record_type_class (uint8_t record_type);
-
-/* like above functions - but pass in arbitrary buffer */
-
-int ipmi_sel_parse_record_record_id (ipmi_sel_parse_ctx_t ctx,
-                                     const void *sel_record,
-                                     unsigned int sel_record_len,
-                                     uint16_t *record_id);
-
-int ipmi_sel_parse_record_record_type (ipmi_sel_parse_ctx_t ctx,
-                                       const void *sel_record,
-                                       unsigned int sel_record_len,
-                                       uint8_t *record_type);
-
-int ipmi_sel_parse_record_timestamp (ipmi_sel_parse_ctx_t ctx,
-                                     const void *sel_record,
-                                     unsigned int sel_record_len,
-                                     uint32_t *timestamp);
-
-int ipmi_sel_parse_record_generator_id (ipmi_sel_parse_ctx_t ctx,
-                                        const void *sel_record,
-                                        unsigned int sel_record_len,
-                                        uint8_t *generator_id);
-
-int ipmi_sel_parse_record_ipmb_device_lun (ipmi_sel_parse_ctx_t ctx,
-                                           const void *sel_record,
-                                           unsigned int sel_record_len,
-                                           uint8_t *ipmb_device_lun);
-
-int ipmi_sel_parse_record_channel_number (ipmi_sel_parse_ctx_t ctx,
-                                          const void *sel_record,
-                                          unsigned int sel_record_len,
-                                          uint8_t *channel_number);
-
-int ipmi_sel_parse_record_event_message_format_version (ipmi_sel_parse_ctx_t ctx,
-                                                        const void *sel_record,
-                                                        unsigned int sel_record_len,
-                                                        uint8_t *event_message_format_version);
-
-int ipmi_sel_parse_record_sensor_type (ipmi_sel_parse_ctx_t ctx,
-                                       const void *sel_record,
-                                       unsigned int sel_record_len,
-                                       uint8_t *sensor_type);
-
-int ipmi_sel_parse_record_sensor_number (ipmi_sel_parse_ctx_t ctx,
-                                         const void *sel_record,
-                                         unsigned int sel_record_len,
-                                         uint8_t *sensor_number);
-
-int ipmi_sel_parse_record_event_direction (ipmi_sel_parse_ctx_t ctx,
-                                           const void *sel_record,
-                                           unsigned int sel_record_len,
-                                           uint8_t *event_direction);
-
-int ipmi_sel_parse_record_event_type_code (ipmi_sel_parse_ctx_t ctx,
-                                           const void *sel_record,
-                                           unsigned int sel_record_len,
-                                           uint8_t *event_type_code);
-
-int ipmi_sel_parse_record_event_data1 (ipmi_sel_parse_ctx_t ctx,
-                                       const void *sel_record,
-                                       unsigned int sel_record_len,
-                                       uint8_t *event_data1);
-
-int ipmi_sel_parse_record_event_data1_offset_from_event_reading_type_code (ipmi_sel_parse_ctx_t ctx,
-                                                                           const void *sel_record,
-                                                                           unsigned int sel_record_len,
-                                                                           uint8_t *event_data1_offset);
-
-int ipmi_sel_parse_record_event_data1_event_data2_flag (ipmi_sel_parse_ctx_t ctx,
-                                                        const void *sel_record,
-                                                        unsigned int sel_record_len,
-                                                        uint8_t *event_data2_flag);
-
-int ipmi_sel_parse_record_event_data1_event_data3_flag (ipmi_sel_parse_ctx_t ctx,
-                                                        const void *sel_record,
-                                                        unsigned int sel_record_len,
-                                                        uint8_t *event_data3_flag);
-
-int ipmi_sel_parse_record_event_data2 (ipmi_sel_parse_ctx_t ctx,
-                                       const void *sel_record,
-                                       unsigned int sel_record_len,
-                                       uint8_t *event_data2);
-
-int ipmi_sel_parse_record_event_data3 (ipmi_sel_parse_ctx_t ctx,
-                                       const void *sel_record,
-                                       unsigned int sel_record_len,
-                                       uint8_t *event_data3);
-
-int ipmi_sel_parse_record_manufacturer_id (ipmi_sel_parse_ctx_t ctx,
-                                           const void *sel_record,
-                                           unsigned int sel_record_len,
-                                           uint32_t *manufacturer_id);
-
-/* return length of data read into buffer on success, -1 on error */
-int ipmi_sel_parse_record_oem (ipmi_sel_parse_ctx_t ctx,
-                               const void *sel_record,
-                               unsigned int sel_record_len,
-                               void *buf,
-                               unsigned int buflen);
-
-/* Returns length of data written to buffer.  If >= buflen, no null
- * termination exists in buffer.
- */
-int ipmi_sel_parse_format_record_string (ipmi_sel_parse_ctx_t ctx,
-                                         const char *fmt,
-                                         const void *sel_record,
-                                         unsigned int sel_record_len,
-                                         char *buf,
-                                         unsigned int buflen,
-                                         unsigned int flags);
 
 #ifdef __cplusplus
 }
