@@ -48,6 +48,7 @@
 #include "tool-cmdline-common.h"
 #include "tool-sdr-cache-common.h"
 #include "tool-hostrange-common.h"
+#include "tool-util-common.h"
 
 typedef int (*oem_callback)(ipmi_oem_state_data_t *);
 
