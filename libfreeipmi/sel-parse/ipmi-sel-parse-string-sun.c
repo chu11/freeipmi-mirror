@@ -75,7 +75,7 @@ _ipmi_sel_parse_output_sun_event_data3_fru_position_number (ipmi_sel_parse_ctx_t
                                                             struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_SUN_MICROSYSTEMS);
   assert (tmpbuf);
   assert (tmpbuflen);
@@ -120,13 +120,13 @@ ipmi_sel_parse_output_sun_event_data3_threshold_oem (ipmi_sel_parse_ctx_t ctx,
                                                      struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_SUN_MICROSYSTEMS);
   assert (sel_parse_entry);
   assert (tmpbuf);
   assert (tmpbuflen);
   assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
-  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (wlen);
   assert (system_event_record_data);
   assert (system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
@@ -165,13 +165,13 @@ ipmi_sel_parse_output_sun_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
                                                     struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_SUN_MICROSYSTEMS);
   assert (sel_parse_entry);
   assert (tmpbuf);
   assert (tmpbuflen);
   assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
-  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (wlen);
   assert (system_event_record_data);
   assert (system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);

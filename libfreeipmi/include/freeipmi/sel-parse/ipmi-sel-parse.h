@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef IPMI_SEL_PARSE_H
-#define IPMI_SEL_PARSE_H
+#ifndef IPMI_SEL_H
+#define IPMI_SEL_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -28,38 +28,38 @@ extern "C" {
 #include <freeipmi/cmds/ipmi-sel-cmds.h>
 #include <freeipmi/sdr/ipmi-sdr.h>
 
-#define IPMI_SEL_PARSE_ERR_SUCCESS                                 0
-#define IPMI_SEL_PARSE_ERR_CONTEXT_NULL                            1
-#define IPMI_SEL_PARSE_ERR_CONTEXT_INVALID                         2
-#define IPMI_SEL_PARSE_ERR_PARAMETERS                              3
-#define IPMI_SEL_PARSE_ERR_OUT_OF_MEMORY                           4
-#define IPMI_SEL_PARSE_ERR_SDR_CACHE_ERROR                         5
-#define IPMI_SEL_PARSE_ERR_SEL_ENTRIES_NOT_LOADED                  6
-#define IPMI_SEL_PARSE_ERR_NO_SEL_ENTRIES                          7
-#define IPMI_SEL_PARSE_ERR_SEL_ENTRIES_LIST_END                    8
-#define IPMI_SEL_PARSE_ERR_INVALID_SEL_ENTRY                       9
-#define IPMI_SEL_PARSE_ERR_NOT_FOUND                              10 
-#define IPMI_SEL_PARSE_ERR_RESERVATION_CANCELED                   11
-#define IPMI_SEL_PARSE_ERR_CALLBACK_ERROR                         12
-#define IPMI_SEL_PARSE_ERR_IPMI_ERROR                             13
-#define IPMI_SEL_PARSE_ERR_SYSTEM_ERROR                           14
-#define IPMI_SEL_PARSE_ERR_OVERFLOW                               15
-#define IPMI_SEL_PARSE_ERR_INTERNAL_ERROR                         16
-#define IPMI_SEL_PARSE_ERR_ERRNUMRANGE                            17
+#define IPMI_SEL_ERR_SUCCESS                                 0
+#define IPMI_SEL_ERR_CONTEXT_NULL                            1
+#define IPMI_SEL_ERR_CONTEXT_INVALID                         2
+#define IPMI_SEL_ERR_PARAMETERS                              3
+#define IPMI_SEL_ERR_OUT_OF_MEMORY                           4
+#define IPMI_SEL_ERR_SDR_CACHE_ERROR                         5
+#define IPMI_SEL_ERR_SEL_ENTRIES_NOT_LOADED                  6
+#define IPMI_SEL_ERR_NO_SEL_ENTRIES                          7
+#define IPMI_SEL_ERR_SEL_ENTRIES_LIST_END                    8
+#define IPMI_SEL_ERR_INVALID_SEL_ENTRY                       9
+#define IPMI_SEL_ERR_NOT_FOUND                              10 
+#define IPMI_SEL_ERR_RESERVATION_CANCELED                   11
+#define IPMI_SEL_ERR_CALLBACK_ERROR                         12
+#define IPMI_SEL_ERR_IPMI_ERROR                             13
+#define IPMI_SEL_ERR_SYSTEM_ERROR                           14
+#define IPMI_SEL_ERR_OVERFLOW                               15
+#define IPMI_SEL_ERR_INTERNAL_ERROR                         16
+#define IPMI_SEL_ERR_ERRNUMRANGE                            17
 
-#define IPMI_SEL_PARSE_FLAGS_DEFAULT                              0x0000
-#define IPMI_SEL_PARSE_FLAGS_DEBUG_DUMP                           0x0001
-#define IPMI_SEL_PARSE_FLAGS_ASSUME_SYTEM_EVENT_RECORDS           0x0002
+#define IPMI_SEL_FLAGS_DEFAULT                              0x0000
+#define IPMI_SEL_FLAGS_DEBUG_DUMP                           0x0001
+#define IPMI_SEL_FLAGS_ASSUME_SYTEM_EVENT_RECORDS           0x0002
 
-#define IPMI_SEL_PARSE_STRING_FLAGS_DEFAULT                       0x0000
-#define IPMI_SEL_PARSE_STRING_FLAGS_VERBOSE                       0x0001
-#define IPMI_SEL_PARSE_STRING_FLAGS_IGNORE_UNAVAILABLE_FIELD      0x0002
-#define IPMI_SEL_PARSE_STRING_FLAGS_OUTPUT_NOT_AVAILABLE          0x0004
-#define IPMI_SEL_PARSE_STRING_FLAGS_DATE_USE_SLASH                0x0008
-#define IPMI_SEL_PARSE_STRING_FLAGS_DATE_MONTH_STRING             0x0010
-#define IPMI_SEL_PARSE_STRING_FLAGS_NON_ABBREVIATED_UNITS         0x0020
-#define IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA            0x0100
-#define IPMI_SEL_PARSE_STRING_FLAGS_LEGACY                        0x1000
+#define IPMI_SEL_STRING_FLAGS_DEFAULT                       0x0000
+#define IPMI_SEL_STRING_FLAGS_VERBOSE                       0x0001
+#define IPMI_SEL_STRING_FLAGS_IGNORE_UNAVAILABLE_FIELD      0x0002
+#define IPMI_SEL_STRING_FLAGS_OUTPUT_NOT_AVAILABLE          0x0004
+#define IPMI_SEL_STRING_FLAGS_DATE_USE_SLASH                0x0008
+#define IPMI_SEL_STRING_FLAGS_DATE_MONTH_STRING             0x0010
+#define IPMI_SEL_STRING_FLAGS_NON_ABBREVIATED_UNITS         0x0020
+#define IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA            0x0100
+#define IPMI_SEL_STRING_FLAGS_LEGACY                        0x1000
 
 #define IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD               0x0
 #define IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD            0x1
@@ -89,7 +89,7 @@ char * ipmi_sel_parse_ctx_errormsg (ipmi_sel_parse_ctx_t ctx);
 int ipmi_sel_parse_ctx_get_flags (ipmi_sel_parse_ctx_t ctx, unsigned int *flags);
 int ipmi_sel_parse_ctx_set_flags (ipmi_sel_parse_ctx_t ctx, unsigned int flags);
 
-/* for use w/ string parsing w/ IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA */
+/* for use w/ string parsing w/ IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA */
 int ipmi_sel_parse_ctx_get_manufacturer_id (ipmi_sel_parse_ctx_t ctx, uint32_t *manufacturer_id);
 int ipmi_sel_parse_ctx_set_manufacturer_id (ipmi_sel_parse_ctx_t ctx, uint32_t manufacturer_id);
 int ipmi_sel_parse_ctx_get_product_id (ipmi_sel_parse_ctx_t ctx, uint16_t *product_id);
@@ -126,7 +126,7 @@ int ipmi_sel_parse_ctx_set_separator (ipmi_sel_parse_ctx_t ctx, const char *sepa
  * - These functions allow you to override the default functionality.
  *   You may inform the library to register a specific reservation ID
  *   and continue to use it for all SEL operations.  In the event that
- *   it has been canceled, a IPMI_SEL_PARSE_ERR_RESERVATION_CANCELED
+ *   it has been canceled, a IPMI_SEL_ERR_RESERVATION_CANCELED
  *   errnum will be returned.
  * - These functions are predominantly useful for doing a set of
  *   operations and wanting to be informed of a possible race
@@ -189,7 +189,7 @@ int ipmi_sel_parse_read_record (ipmi_sel_parse_ctx_t ctx,
  *   used.  It can be the record used within the iterator functions
  *   (i.e. ipmi_sel_parse_next()) or in callbacks.
  *
- * - will return IPMI_SEL_PARSE_ERR_INVALID_SEL_ENTRY if current sel
+ * - will return IPMI_SEL_ERR_INVALID_SEL_ENTRY if current sel
  *   entry is not appropriate for data requested.
  */
 
@@ -425,4 +425,4 @@ int ipmi_sel_record_type_class (uint8_t record_type);
 }
 #endif
 
-#endif /* IPMI_SEL_PARSE_H */
+#endif /* IPMI_SEL_H */

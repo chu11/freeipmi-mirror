@@ -262,13 +262,13 @@ _sel_parse_ctx_error_convert (ipmi_monitoring_ctx_t c)
   errnum = ipmi_sel_parse_ctx_errnum (c->sel_parse_ctx);
 
   /* if callback error - assume we set as needed */
-  if (errnum != IPMI_SEL_PARSE_ERR_CALLBACK_ERROR)
+  if (errnum != IPMI_SEL_ERR_CALLBACK_ERROR)
     {
-      if (errnum == IPMI_SEL_PARSE_ERR_IPMI_ERROR)
+      if (errnum == IPMI_SEL_ERR_IPMI_ERROR)
         c->errnum = IPMI_MONITORING_ERR_IPMI_ERROR;
-      else if (errnum == IPMI_SEL_PARSE_ERR_OUT_OF_MEMORY)
+      else if (errnum == IPMI_SEL_ERR_OUT_OF_MEMORY)
         c->errnum = IPMI_MONITORING_ERR_OUT_OF_MEMORY;
-      else if (errnum == IPMI_SEL_PARSE_ERR_SYSTEM_ERROR)
+      else if (errnum == IPMI_SEL_ERR_SYSTEM_ERROR)
         c->errnum = IPMI_MONITORING_ERR_SYSTEM_ERROR;
       else
         c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
@@ -424,7 +424,7 @@ _ipmi_monitoring_sel_parse_system_event_record (ipmi_monitoring_ctx_t c,
 					 0,
                                          s->sensor_name,
                                          IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH,
-                                         IPMI_SEL_PARSE_STRING_FLAGS_IGNORE_UNAVAILABLE_FIELD | IPMI_SEL_PARSE_STRING_FLAGS_OUTPUT_NOT_AVAILABLE) < 0)
+                                         IPMI_SEL_STRING_FLAGS_IGNORE_UNAVAILABLE_FIELD | IPMI_SEL_STRING_FLAGS_OUTPUT_NOT_AVAILABLE) < 0)
     {
       IPMI_MONITORING_DEBUG (("ipmi_sel_parse_read_record_string: %s",
                               ipmi_sel_parse_ctx_errnum (c->sel_parse_ctx)));
@@ -440,7 +440,7 @@ _ipmi_monitoring_sel_parse_system_event_record (ipmi_monitoring_ctx_t c,
 						0,
                                                 event_offset_string,
                                                 IPMI_MONITORING_SEL_EVENT_OFFSET_STRING_MAX,
-                                                IPMI_SEL_PARSE_STRING_FLAGS_IGNORE_UNAVAILABLE_FIELD | IPMI_SEL_PARSE_STRING_FLAGS_OUTPUT_NOT_AVAILABLE)) < 0)
+                                                IPMI_SEL_STRING_FLAGS_IGNORE_UNAVAILABLE_FIELD | IPMI_SEL_STRING_FLAGS_OUTPUT_NOT_AVAILABLE)) < 0)
     {
       IPMI_MONITORING_DEBUG (("ipmi_sel_parse_read_record_string: %s",
                               ipmi_sel_parse_ctx_errnum (c->sel_parse_ctx)));

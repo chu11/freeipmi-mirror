@@ -39,7 +39,7 @@
 
 #include <freeipmi/freeipmi.h>
 
-#include "ipmi-sel.h"
+#include "ipmi-sel_.h"
 #include "ipmi-sel-argp.h"
 
 #include "freeipmi-portability.h"
@@ -426,7 +426,7 @@ _delete_entry (ipmi_sel_state_data_t *state_data,
                                        record_id) < 0)
     {
       if (!(ignore_missing_sel_entries
-            && (ipmi_sel_parse_ctx_errnum (state_data->sel_parse_ctx) == IPMI_SEL_PARSE_ERR_NOT_FOUND)))
+            && (ipmi_sel_parse_ctx_errnum (state_data->sel_parse_ctx) == IPMI_SEL_ERR_NOT_FOUND)))
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
@@ -488,7 +488,7 @@ _sel_parse_err_handle (ipmi_sel_state_data_t *state_data, char *func)
   assert (state_data);
   assert (func);
 
-  if (ipmi_sel_parse_ctx_errnum (state_data->sel_parse_ctx) == IPMI_SEL_PARSE_ERR_INVALID_SEL_ENTRY)
+  if (ipmi_sel_parse_ctx_errnum (state_data->sel_parse_ctx) == IPMI_SEL_ERR_INVALID_SEL_ENTRY)
     {
       /* maybe a bad SEL entry returned from remote system, don't error out */
       if (state_data->prog_data->args->common.debug)
@@ -579,10 +579,10 @@ _legacy_normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
   assert (state_data);
   assert (state_data->prog_data->args->legacy_output);
 
-  flags = IPMI_SEL_PARSE_STRING_FLAGS_IGNORE_UNAVAILABLE_FIELD;
-  flags |= IPMI_SEL_PARSE_STRING_FLAGS_OUTPUT_NOT_AVAILABLE;
-  flags |= IPMI_SEL_PARSE_STRING_FLAGS_DATE_MONTH_STRING;
-  flags |= IPMI_SEL_PARSE_STRING_FLAGS_LEGACY;
+  flags = IPMI_SEL_STRING_FLAGS_IGNORE_UNAVAILABLE_FIELD;
+  flags |= IPMI_SEL_STRING_FLAGS_OUTPUT_NOT_AVAILABLE;
+  flags |= IPMI_SEL_STRING_FLAGS_DATE_MONTH_STRING;
+  flags |= IPMI_SEL_STRING_FLAGS_LEGACY;
 
   /* IPMI Workaround
    *
@@ -1214,15 +1214,15 @@ _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
       state_data->output_headers++;
     }
 
-  flags = IPMI_SEL_PARSE_STRING_FLAGS_IGNORE_UNAVAILABLE_FIELD;
-  flags |= IPMI_SEL_PARSE_STRING_FLAGS_OUTPUT_NOT_AVAILABLE;
-  flags |= IPMI_SEL_PARSE_STRING_FLAGS_DATE_MONTH_STRING;
+  flags = IPMI_SEL_STRING_FLAGS_IGNORE_UNAVAILABLE_FIELD;
+  flags |= IPMI_SEL_STRING_FLAGS_OUTPUT_NOT_AVAILABLE;
+  flags |= IPMI_SEL_STRING_FLAGS_DATE_MONTH_STRING;
   if (state_data->prog_data->args->verbose_count >= 2)
-    flags |= IPMI_SEL_PARSE_STRING_FLAGS_VERBOSE;
+    flags |= IPMI_SEL_STRING_FLAGS_VERBOSE;
   if (state_data->prog_data->args->non_abbreviated_units)
-    flags |= IPMI_SEL_PARSE_STRING_FLAGS_NON_ABBREVIATED_UNITS;
+    flags |= IPMI_SEL_STRING_FLAGS_NON_ABBREVIATED_UNITS;
   if (state_data->prog_data->args->interpret_oem_data)
-    flags |= IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA;
+    flags |= IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA;
 
   /* IPMI Workaround
    *
@@ -1642,7 +1642,7 @@ _sel_record_id_callback (ipmi_sel_parse_ctx_t ctx, void *callback_data)
                                                        EVENT_OUTPUT_BUFLEN,
                                                        0)) < 0)
     {
-      if (ipmi_sel_parse_ctx_errnum (state_data->sel_parse_ctx) == IPMI_SEL_PARSE_ERR_INVALID_SEL_ENTRY)
+      if (ipmi_sel_parse_ctx_errnum (state_data->sel_parse_ctx) == IPMI_SEL_ERR_INVALID_SEL_ENTRY)
         goto out;
       goto cleanup;
     }
@@ -2256,10 +2256,10 @@ _ipmi_sel (pstdout_state_t pstate,
         }
 
       if (state_data.prog_data->args->common.debug)
-	flags |= IPMI_SEL_PARSE_FLAGS_DEBUG_DUMP;
+	flags |= IPMI_SEL_FLAGS_DEBUG_DUMP;
 
       if (state_data.prog_data->args->assume_system_event_records)
-	flags |= IPMI_SEL_PARSE_FLAGS_ASSUME_SYTEM_EVENT_RECORDS;
+	flags |= IPMI_SEL_FLAGS_ASSUME_SYTEM_EVENT_RECORDS;
 
       if (flags)
         {

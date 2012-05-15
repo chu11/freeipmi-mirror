@@ -138,7 +138,7 @@ _ipmi_sel_oem_fujitsu_get_sel_entry_long_text (ipmi_sel_parse_ctx_t ctx,
   int rv = -1;
 
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_FUJITSU);
   assert (sel_parse_entry);
   assert (buf);
@@ -242,7 +242,7 @@ _ipmi_sel_oem_fujitsu_get_sel_entry_long_text (ipmi_sel_parse_ctx_t ctx,
                                   bytes_rs,
                                   IPMI_OEM_FUJITSU_MAX_BYTES)) < 0)
         {
-          SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_IPMI_ERROR);
+          SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_IPMI_ERROR);
           goto cleanup;
         }
       
@@ -349,7 +349,7 @@ _ipmi_sel_oem_fujitsu_get_sel_entry_long_text (ipmi_sel_parse_ctx_t ctx,
 
   if (strlen (string_buf) > buflen)
     {
-      SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_INTERNAL_ERROR);
+      SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_INTERNAL_ERROR);
       goto cleanup;
     }
   
@@ -376,13 +376,13 @@ ipmi_sel_parse_output_fujitsu_event_data1_class_sensor_specific_discrete (ipmi_s
 
 {
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_FUJITSU);
   assert (sel_parse_entry);
   assert (tmpbuf);
   assert (tmpbuflen);
   assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
-  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (wlen);
   assert (system_event_record_data);
   assert (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC);
@@ -442,13 +442,13 @@ ipmi_sel_parse_output_fujitsu_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
 							int *oem_rv)
 {
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_FUJITSU);
   assert (sel_parse_entry);
   assert (buf);
   assert (buflen);
   assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
-  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (wlen);
   assert (system_event_record_data);
   assert (oem_rv);
@@ -511,7 +511,7 @@ ipmi_sel_parse_output_fujitsu_oem_record_data (ipmi_sel_parse_ctx_t ctx,
                                                int *oem_rv)
 {
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_FUJITSU);
   assert (ipmi_sel_record_type_class (sel_record_type) == IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD
           || ipmi_sel_record_type_class (sel_record_type) == IPMI_SEL_RECORD_TYPE_CLASS_NON_TIMESTAMPED_OEM_RECORD);
@@ -519,7 +519,7 @@ ipmi_sel_parse_output_fujitsu_oem_record_data (ipmi_sel_parse_ctx_t ctx,
   assert (buf);
   assert (buflen);
   assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
-  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (wlen);
   assert (oem_rv);
 
@@ -578,7 +578,7 @@ ipmi_sel_parse_output_fujitsu_oem_string (ipmi_sel_parse_ctx_t ctx,
                                           int *oem_rv)
 {
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_FUJITSU);
   assert (sel_parse_entry);
   assert (buf);

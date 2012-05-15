@@ -15,6 +15,11 @@
 
 	* libfreeipmi/interpret/, common/toolevent/, ipmi-sel/, ipmi-pet/:
 	Update appropriately for changes.
+
+	* Convert the 'sel-parse' library to 'sel'.
+
+	* ipmi-sel/ipmi-sel.h: Rename to ipmi-sel_.h to avoid naming
+	conflict.
 	
 2012-05-14  Albert Chu <chu11@llnl.gov>
 

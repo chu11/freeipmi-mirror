@@ -38,47 +38,47 @@
 #include "freeipmi-portability.h"
 
 void
-sel_parse_set_sel_parse_errnum_by_errno (ipmi_sel_parse_ctx_t ctx, int __errno)
+sel_set_sel_errnum_by_errno (ipmi_sel_parse_ctx_t ctx, int __errno)
 {
-  assert (ctx && ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx && ctx->magic == IPMI_SEL_CTX_MAGIC);
   
   switch (__errno)
     {
     case 0:
-      ctx->errnum = IPMI_SEL_PARSE_ERR_SUCCESS;
+      ctx->errnum = IPMI_SEL_ERR_SUCCESS;
       break;
     case ENOMEM:
-      ctx->errnum = IPMI_SEL_PARSE_ERR_OUT_OF_MEMORY;
+      ctx->errnum = IPMI_SEL_ERR_OUT_OF_MEMORY;
       break;
     default:
-      ctx->errnum = IPMI_SEL_PARSE_ERR_INTERNAL_ERROR;
+      ctx->errnum = IPMI_SEL_ERR_INTERNAL_ERROR;
     }
 }
 
 void
-sel_parse_set_sel_parse_errnum_by_fiid_object (ipmi_sel_parse_ctx_t ctx, fiid_obj_t obj)
+sel_set_sel_errnum_by_fiid_object (ipmi_sel_parse_ctx_t ctx, fiid_obj_t obj)
 {
-  assert (ctx && ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx && ctx->magic == IPMI_SEL_CTX_MAGIC);
   
   switch (fiid_obj_errnum (obj))
     {
     case FIID_ERR_SUCCESS:
-      ctx->errnum = IPMI_SEL_PARSE_ERR_SUCCESS;
+      ctx->errnum = IPMI_SEL_ERR_SUCCESS;
       break;
     case FIID_ERR_OUT_OF_MEMORY:
-      ctx->errnum = IPMI_SEL_PARSE_ERR_OUT_OF_MEMORY;
+      ctx->errnum = IPMI_SEL_ERR_OUT_OF_MEMORY;
       break;
     case FIID_ERR_DATA_NOT_AVAILABLE:
-      ctx->errnum = IPMI_SEL_PARSE_ERR_SYSTEM_ERROR;
+      ctx->errnum = IPMI_SEL_ERR_SYSTEM_ERROR;
       break;
     case FIID_ERR_FIELD_NOT_FOUND:
     case FIID_ERR_DATA_NOT_BYTE_ALIGNED:
     case FIID_ERR_REQUIRED_FIELD_MISSING:
     case FIID_ERR_FIXED_LENGTH_FIELD_INVALID:
     case FIID_ERR_NOT_IDENTICAL:
-      ctx->errnum = IPMI_SEL_PARSE_ERR_PARAMETERS;
+      ctx->errnum = IPMI_SEL_ERR_PARAMETERS;
       break;
     default:
-      ctx->errnum = IPMI_SEL_PARSE_ERR_INTERNAL_ERROR;
+      ctx->errnum = IPMI_SEL_ERR_INTERNAL_ERROR;
     }
 }

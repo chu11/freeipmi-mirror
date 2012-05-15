@@ -730,7 +730,7 @@ _sel_parse_err_handle (ipmi_pet_state_data_t *state_data, char *func)
   assert (state_data);
   assert (func);
 
-  if (ipmi_sel_parse_ctx_errnum (state_data->sel_parse_ctx) == IPMI_SEL_PARSE_ERR_INVALID_SEL_ENTRY)
+  if (ipmi_sel_parse_ctx_errnum (state_data->sel_parse_ctx) == IPMI_SEL_ERR_INVALID_SEL_ENTRY)
     {
       if (state_data->prog_data->args->common.debug)
         fprintf (stderr,
@@ -1492,15 +1492,15 @@ _ipmi_pet_process (ipmi_pet_state_data_t *state_data,
 
  cant_do_entity_id_check:
 
-  flags = IPMI_SEL_PARSE_STRING_FLAGS_IGNORE_UNAVAILABLE_FIELD;
-  flags |= IPMI_SEL_PARSE_STRING_FLAGS_OUTPUT_NOT_AVAILABLE;
-  flags |= IPMI_SEL_PARSE_STRING_FLAGS_DATE_MONTH_STRING;
+  flags = IPMI_SEL_STRING_FLAGS_IGNORE_UNAVAILABLE_FIELD;
+  flags |= IPMI_SEL_STRING_FLAGS_OUTPUT_NOT_AVAILABLE;
+  flags |= IPMI_SEL_STRING_FLAGS_DATE_MONTH_STRING;
   if (state_data->prog_data->args->verbose_count >= 3)
-    flags |= IPMI_SEL_PARSE_STRING_FLAGS_VERBOSE;
+    flags |= IPMI_SEL_STRING_FLAGS_VERBOSE;
   if (state_data->prog_data->args->non_abbreviated_units)
-    flags |= IPMI_SEL_PARSE_STRING_FLAGS_NON_ABBREVIATED_UNITS;
+    flags |= IPMI_SEL_STRING_FLAGS_NON_ABBREVIATED_UNITS;
   if (state_data->prog_data->args->interpret_oem_data)
-    flags |= IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA;
+    flags |= IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA;
   
   if (data.localtimestamp != IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_LOCAL_TIMESTAMP_UNSPECIFIED)
     {

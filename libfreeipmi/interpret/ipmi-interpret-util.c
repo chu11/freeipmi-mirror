@@ -55,11 +55,11 @@ interpret_set_interpret_errnum_by_sel_parse_ctx (ipmi_interpret_ctx_t ctx, ipmi_
   if (!ctx || ctx->magic != IPMI_INTERPRET_CTX_MAGIC)
     return;
 
-  if (ipmi_sel_parse_ctx_errnum (sel_parse_ctx) == IPMI_SEL_PARSE_ERR_INVALID_SEL_ENTRY)
+  if (ipmi_sel_parse_ctx_errnum (sel_parse_ctx) == IPMI_SEL_ERR_INVALID_SEL_ENTRY)
     ctx->errnum = IPMI_INTERPRET_ERR_INVALID_SEL_RECORD;
-  else if (ipmi_sel_parse_ctx_errnum (sel_parse_ctx) == IPMI_SEL_PARSE_ERR_OUT_OF_MEMORY)
+  else if (ipmi_sel_parse_ctx_errnum (sel_parse_ctx) == IPMI_SEL_ERR_OUT_OF_MEMORY)
     ctx->errnum = IPMI_INTERPRET_ERR_OUT_OF_MEMORY;
-  else if (ipmi_sel_parse_ctx_errnum (sel_parse_ctx) == IPMI_SEL_PARSE_ERR_SYSTEM_ERROR)
+  else if (ipmi_sel_parse_ctx_errnum (sel_parse_ctx) == IPMI_SEL_ERR_SYSTEM_ERROR)
     ctx->errnum = IPMI_INTERPRET_ERR_SYSTEM_ERROR;
   else
     ctx->errnum = IPMI_INTERPRET_ERR_INTERNAL_ERROR;

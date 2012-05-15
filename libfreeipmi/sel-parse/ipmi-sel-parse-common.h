@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef IPMI_SEL_PARSE_COMMON_H
-#define IPMI_SEL_PARSE_COMMON_H
+#ifndef IPMI_SEL_COMMON_H
+#define IPMI_SEL_COMMON_H
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -74,4 +74,4 @@ int sel_parse_get_system_event_record (ipmi_sel_parse_ctx_t ctx,
                                        struct ipmi_sel_parse_entry *sel_parse_entry,
                                        struct ipmi_sel_system_event_record_data *system_event_record_data);
 
-#endif /* IPMI_SEL_PARSE_COMMON_H */
+#endif /* IPMI_SEL_COMMON_H */

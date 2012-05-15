@@ -31,7 +31,7 @@ ipmi_sel_LDADD = \
  
 ipmi_sel_SOURCES = \
 	ipmi-sel.c \
-	ipmi-sel.h \
+	ipmi-sel_.h \
 	ipmi-sel-argp.c \
 	ipmi-sel-argp.h
  

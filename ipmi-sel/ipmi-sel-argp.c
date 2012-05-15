@@ -46,7 +46,7 @@
 #include <assert.h>
 #include <errno.h>
 
-#include "ipmi-sel.h"
+#include "ipmi-sel_.h"
 #include "ipmi-sel-argp.h"
 
 #include "freeipmi-portability.h"

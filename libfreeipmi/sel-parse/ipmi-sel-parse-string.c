@@ -122,15 +122,15 @@ _invalid_sel_entry_common (ipmi_sel_parse_ctx_t ctx,
                            unsigned int *wlen)
 {
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (buf);
   assert (buflen);
   assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
   assert (wlen);
 
-  if (flags & IPMI_SEL_PARSE_STRING_FLAGS_IGNORE_UNAVAILABLE_FIELD)
+  if (flags & IPMI_SEL_STRING_FLAGS_IGNORE_UNAVAILABLE_FIELD)
     {
-      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_OUTPUT_NOT_AVAILABLE)
+      if (flags & IPMI_SEL_STRING_FLAGS_OUTPUT_NOT_AVAILABLE)
         {
           if (ipmi_sel_parse_string_snprintf (buf, buflen, wlen, "%s", NA_STRING))
             return (1);
@@ -138,7 +138,7 @@ _invalid_sel_entry_common (ipmi_sel_parse_ctx_t ctx,
         }
       return (0);
     }
-  ctx->errnum = IPMI_SEL_PARSE_ERR_INVALID_SEL_ENTRY;
+  ctx->errnum = IPMI_SEL_ERR_INVALID_SEL_ENTRY;
   return (-1);
 }
 
@@ -152,7 +152,7 @@ _find_and_seek_record (ipmi_sel_parse_ctx_t ctx,
 		       struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (ctx->sdr_ctx);   /* must be checked earlier */
   assert (system_event_record_data);
 
@@ -180,7 +180,7 @@ _find_and_seek_record (ipmi_sel_parse_ctx_t ctx,
 
       if (ipmi_sdr_ctx_errnum (ctx->sdr_ctx) != IPMI_SDR_ERR_NOT_FOUND)
         {
-          SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_SDR_CACHE_ERROR);
+          SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_SDR_CACHE_ERROR);
           return (-1);
         }
       /* else can't find it */
@@ -205,7 +205,7 @@ _get_sdr_id_string (ipmi_sel_parse_ctx_t ctx,
   int ret;
 
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (system_event_record_data);
   assert (id_string);
   assert (id_string_len);
@@ -233,7 +233,7 @@ _get_sdr_id_string (ipmi_sel_parse_ctx_t ctx,
           || ipmi_sdr_ctx_errnum (ctx->sdr_ctx) == IPMI_SDR_ERR_PARSE_INCOMPLETE_SDR_RECORD)
         rv = 0;
       else
-        SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_INTERNAL_ERROR);
+        SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_INTERNAL_ERROR);
       goto cleanup;
     }
 
@@ -274,7 +274,7 @@ _get_sensor_reading (ipmi_sel_parse_ctx_t ctx,
   int ret;
 
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (system_event_record_data);
   assert (ipmi_event_reading_type_code_class (system_event_record_data->event_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD);
   assert (reading);
@@ -303,7 +303,7 @@ _get_sensor_reading (ipmi_sel_parse_ctx_t ctx,
           || ipmi_sdr_ctx_errnum (ctx->sdr_ctx) == IPMI_SDR_ERR_PARSE_INCOMPLETE_SDR_RECORD)
         rv = 0;
       else
-        SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_INTERNAL_ERROR);
+        SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_INTERNAL_ERROR);
       goto cleanup;
     }
 
@@ -327,7 +327,7 @@ _get_sensor_reading (ipmi_sel_parse_ctx_t ctx,
           || ipmi_sdr_ctx_errnum (ctx->sdr_ctx) == IPMI_SDR_ERR_PARSE_INCOMPLETE_SDR_RECORD)
         rv = 0;
       else
-        SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_INTERNAL_ERROR);
+        SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_INTERNAL_ERROR);
       goto cleanup;
     }
 
@@ -344,11 +344,11 @@ _get_sensor_reading (ipmi_sel_parse_ctx_t ctx,
           || ipmi_sdr_ctx_errnum (ctx->sdr_ctx) == IPMI_SDR_ERR_PARSE_INCOMPLETE_SDR_RECORD)
         rv = 0;
       else
-        SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_INTERNAL_ERROR);
+        SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_INTERNAL_ERROR);
       goto cleanup;
     }
 
-  if (flags & IPMI_SEL_PARSE_STRING_FLAGS_NON_ABBREVIATED_UNITS)
+  if (flags & IPMI_SEL_STRING_FLAGS_NON_ABBREVIATED_UNITS)
     abbreviated_units = 0;
   else
     abbreviated_units = 1;
@@ -394,7 +394,7 @@ _get_sensor_reading (ipmi_sel_parse_ctx_t ctx,
                                 raw_data,
                                 reading) < 0)
     {
-      SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_INTERNAL_ERROR);
+      SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_INTERNAL_ERROR);
       goto cleanup;
     }
 
@@ -414,14 +414,14 @@ _get_previous_state_or_severity (ipmi_sel_parse_ctx_t ctx,
   int rv = -1;
 
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (sel_parse_entry);
   assert (previous_offset_from_event_reading_type_code);
   assert (offset_from_severity_event_reading_type_code);
 
   if (!(obj_sel_system_event_record = fiid_obj_create (tmpl_sel_system_event_record_discrete_previous_state_severity)))
     {
-      SEL_PARSE_ERRNO_TO_SEL_PARSE_ERRNUM (ctx, errno);
+      SEL_ERRNO_TO_SEL_ERRNUM (ctx, errno);
       goto cleanup;
     }
 
@@ -429,7 +429,7 @@ _get_previous_state_or_severity (ipmi_sel_parse_ctx_t ctx,
                         sel_parse_entry->sel_event_record,
                         sel_parse_entry->sel_event_record_len) < 0)
     {
-      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM (ctx, obj_sel_system_event_record);
+      SEL_FIID_OBJECT_ERROR_TO_SEL_ERRNUM (ctx, obj_sel_system_event_record);
       goto cleanup;
     }
 
@@ -437,7 +437,7 @@ _get_previous_state_or_severity (ipmi_sel_parse_ctx_t ctx,
                     "previous_offset_from_event_reading_type_code",
                     &val) < 0)
     {
-      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM (ctx, obj_sel_system_event_record);
+      SEL_FIID_OBJECT_ERROR_TO_SEL_ERRNUM (ctx, obj_sel_system_event_record);
       goto cleanup;
     }
   *previous_offset_from_event_reading_type_code = val;
@@ -446,7 +446,7 @@ _get_previous_state_or_severity (ipmi_sel_parse_ctx_t ctx,
                     "offset_from_severity_event_reading_type_code",
                     &val) < 0)
     {
-      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM (ctx, obj_sel_system_event_record);
+      SEL_FIID_OBJECT_ERROR_TO_SEL_ERRNUM (ctx, obj_sel_system_event_record);
       goto cleanup;
     }
   *offset_from_severity_event_reading_type_code = val;
@@ -476,7 +476,7 @@ _output_time (ipmi_sel_parse_ctx_t ctx,
   time_t t;
 
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (sel_parse_entry);
   assert (buf);
   assert (buflen);
@@ -525,7 +525,7 @@ _output_date (ipmi_sel_parse_ctx_t ctx,
   time_t t;
 
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (sel_parse_entry);
   assert (buf);
   assert (buflen);
@@ -547,20 +547,20 @@ _output_date (ipmi_sel_parse_ctx_t ctx,
 
   t = timestamp;
   localtime_r (&t, &tmp);
-  if (flags & IPMI_SEL_PARSE_STRING_FLAGS_LEGACY)
+  if (flags & IPMI_SEL_STRING_FLAGS_LEGACY)
     strftime (tmpbuf, SEL_PARSE_BUFFER_LENGTH, "%d-%b-%Y", &tmp);
   else
     {
-      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_DATE_MONTH_STRING)
+      if (flags & IPMI_SEL_STRING_FLAGS_DATE_MONTH_STRING)
         {
-          if (flags & IPMI_SEL_PARSE_STRING_FLAGS_DATE_USE_SLASH)
+          if (flags & IPMI_SEL_STRING_FLAGS_DATE_USE_SLASH)
             strftime (tmpbuf, SEL_PARSE_BUFFER_LENGTH, "%b/%d/%Y", &tmp);
           else
             strftime (tmpbuf, SEL_PARSE_BUFFER_LENGTH, "%b-%d-%Y", &tmp);
         }
       else
         {
-          if (flags & IPMI_SEL_PARSE_STRING_FLAGS_DATE_USE_SLASH)
+          if (flags & IPMI_SEL_STRING_FLAGS_DATE_USE_SLASH)
             strftime (tmpbuf, SEL_PARSE_BUFFER_LENGTH, "%m/%d/%Y", &tmp);
           else
             strftime (tmpbuf, SEL_PARSE_BUFFER_LENGTH, "%m-%d-%Y", &tmp);
@@ -589,7 +589,7 @@ _output_sensor_type (ipmi_sel_parse_ctx_t ctx,
   const char *sensor_type_str = NULL;
 
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (sel_parse_entry);
   assert (buf);
   assert (buflen);
@@ -602,7 +602,7 @@ _output_sensor_type (ipmi_sel_parse_ctx_t ctx,
   if (sel_parse_get_system_event_record (ctx, sel_parse_entry, &system_event_record_data) < 0)
     return (-1);
   
-  if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA)
+  if (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA)
     sensor_type_str = ipmi_get_oem_sensor_type_string (system_event_record_data.sensor_type,
                                                        (system_event_record_data.event_type_code & 0x7F), 
                                                        ctx->manufacturer_id,
@@ -641,12 +641,12 @@ _output_oem_sensor_name (ipmi_sel_parse_ctx_t ctx,
   int ret;
 
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (sel_parse_entry);
   assert (buf);
   assert (buflen);
   assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
-  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (wlen);
   assert (system_event_record_data);
   assert (oem_rv);
@@ -723,7 +723,7 @@ _output_sensor_name (ipmi_sel_parse_ctx_t ctx,
   int ret;
 
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (sel_parse_entry);
   assert (buf);
   assert (buflen);
@@ -755,7 +755,7 @@ _output_sensor_name (ipmi_sel_parse_ctx_t ctx,
     }
   /* else fall through */
 
-  if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA)
+  if (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA)
     {
       int oem_rv = 0;
 
@@ -774,7 +774,7 @@ _output_sensor_name (ipmi_sel_parse_ctx_t ctx,
         return (oem_rv);
     }
 
-  if (flags & IPMI_SEL_PARSE_STRING_FLAGS_VERBOSE)
+  if (flags & IPMI_SEL_STRING_FLAGS_VERBOSE)
     {
       if (ipmi_sel_parse_string_snprintf (buf,
                                           buflen,
@@ -786,7 +786,7 @@ _output_sensor_name (ipmi_sel_parse_ctx_t ctx,
     }
   else
     {
-      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_LEGACY)
+      if (flags & IPMI_SEL_STRING_FLAGS_LEGACY)
         { 
           if (ipmi_sel_parse_string_snprintf (buf,
                                               buflen,
@@ -827,12 +827,12 @@ _output_oem_event_data1_class_sensor_specific_discrete (ipmi_sel_parse_ctx_t ctx
   int ret;
 
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (sel_parse_entry);
   assert (tmpbuf);
   assert (tmpbuflen);
   assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
-  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (wlen);
   assert (system_event_record_data);
   assert (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC);
@@ -889,12 +889,12 @@ _output_oem_event_data1_class_oem (ipmi_sel_parse_ctx_t ctx,
   int ret;
 
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (sel_parse_entry);
   assert (tmpbuf);
   assert (tmpbuflen);
   assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
-  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (wlen);
   assert (system_event_record_data);
 
@@ -1004,7 +1004,7 @@ _output_event_data1 (ipmi_sel_parse_ctx_t ctx,
   int ret;
 
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (sel_parse_entry);
   assert (buf);
   assert (buflen);
@@ -1035,7 +1035,7 @@ _output_event_data1 (ipmi_sel_parse_ctx_t ctx,
       break;
     case IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE:
 
-      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA)
+      if (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA)
         {
           if ((ret = _output_oem_event_data1_class_sensor_specific_discrete (ctx,
                                                                              sel_parse_entry,
@@ -1065,7 +1065,7 @@ _output_event_data1 (ipmi_sel_parse_ctx_t ctx,
        * sensor type are non-OEM, Dell added an additional offset not
        * defined by the IPMI spec.
        */
-      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA
+      if (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA
 	  && ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
           && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
               || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
@@ -1088,7 +1088,7 @@ _output_event_data1 (ipmi_sel_parse_ctx_t ctx,
       break;
     case IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM:
 
-      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA)
+      if (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA)
         {
           if ((ret = _output_oem_event_data1_class_oem (ctx,
                                                         sel_parse_entry,
@@ -1107,14 +1107,14 @@ _output_event_data1 (ipmi_sel_parse_ctx_t ctx,
             }
         }
 
-      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_LEGACY)
+      if (flags & IPMI_SEL_STRING_FLAGS_LEGACY)
         snprintf (tmpbuf,
                   EVENT_BUFFER_LENGTH,
                   "Event Type Code = %02Xh",
                   system_event_record_data.event_type_code);
       else
         {
-          if (flags & IPMI_SEL_PARSE_STRING_FLAGS_VERBOSE)
+          if (flags & IPMI_SEL_STRING_FLAGS_VERBOSE)
             snprintf (tmpbuf,
                       EVENT_BUFFER_LENGTH,
                       "OEM Event Offset = %02Xh (Event Type Code = %02Xh)",
@@ -1140,7 +1140,7 @@ _output_event_data1 (ipmi_sel_parse_ctx_t ctx,
     }
   else
     {
-      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_VERBOSE)
+      if (flags & IPMI_SEL_STRING_FLAGS_VERBOSE)
         {
           if (ipmi_sel_parse_string_snprintf (buf,
                                               buflen,
@@ -1192,12 +1192,12 @@ _output_oem_event_data2_threshold_oem (ipmi_sel_parse_ctx_t ctx,
                                        struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (sel_parse_entry);
   assert (tmpbuf);
   assert (tmpbuflen);
   assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
-  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (wlen);
   assert (system_event_record_data);
   assert (system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
@@ -1224,12 +1224,12 @@ _output_oem_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
   int ret;
 
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (sel_parse_entry);
   assert (tmpbuf);
   assert (tmpbuflen);
   assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
-  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (wlen);
   assert (system_event_record_data);
   assert (system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
@@ -1318,12 +1318,12 @@ _output_oem_event_data2_class_oem (ipmi_sel_parse_ctx_t ctx,
   int ret;
 
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (sel_parse_entry);
   assert (tmpbuf);
   assert (tmpbuflen);
   assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
-  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (wlen);
   assert (system_event_record_data);
 
@@ -1414,7 +1414,7 @@ _output_event_data2 (ipmi_sel_parse_ctx_t ctx,
   int ret;
 
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (sel_parse_entry);
   assert (buf);
   assert (buflen);
@@ -1451,7 +1451,7 @@ _output_event_data2 (ipmi_sel_parse_ctx_t ctx,
 
             if (ret)
               {
-                if (flags & IPMI_SEL_PARSE_STRING_FLAGS_LEGACY)
+                if (flags & IPMI_SEL_STRING_FLAGS_LEGACY)
                   snprintf (tmpbuf,
                             EVENT_BUFFER_LENGTH,
                             "Reading = %.2f %s",
@@ -1490,7 +1490,7 @@ _output_event_data2 (ipmi_sel_parse_ctx_t ctx,
           break;
         case IPMI_SEL_EVENT_DATA_OEM_CODE:
 
-          if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA)
+          if (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA)
             {
               if ((ret = _output_oem_event_data2_threshold_oem (ctx,
                                                                 sel_parse_entry,
@@ -1515,7 +1515,7 @@ _output_event_data2 (ipmi_sel_parse_ctx_t ctx,
               break;
             }
 
-          if (flags & IPMI_SEL_PARSE_STRING_FLAGS_LEGACY)
+          if (flags & IPMI_SEL_STRING_FLAGS_LEGACY)
             snprintf (tmpbuf,
                       EVENT_BUFFER_LENGTH,
                       "OEM code = %02Xh",
@@ -1528,7 +1528,7 @@ _output_event_data2 (ipmi_sel_parse_ctx_t ctx,
           output_flag++;
           break;
         default:
-          if (flags & IPMI_SEL_PARSE_STRING_FLAGS_OUTPUT_NOT_AVAILABLE)
+          if (flags & IPMI_SEL_STRING_FLAGS_OUTPUT_NOT_AVAILABLE)
             {
               snprintf (tmpbuf,
                         EVENT_BUFFER_LENGTH,
@@ -1628,7 +1628,7 @@ _output_event_data2 (ipmi_sel_parse_ctx_t ctx,
           break;
         case IPMI_SEL_EVENT_DATA_OEM_CODE:
           
-          if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA)
+          if (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA)
             {
               if ((ret = _output_oem_event_data2_discrete_oem (ctx,
                                                                sel_parse_entry,
@@ -1653,7 +1653,7 @@ _output_event_data2 (ipmi_sel_parse_ctx_t ctx,
               break;
             }
 
-          if (flags & IPMI_SEL_PARSE_STRING_FLAGS_LEGACY)
+          if (flags & IPMI_SEL_STRING_FLAGS_LEGACY)
             snprintf (tmpbuf,
                       EVENT_BUFFER_LENGTH,
                       "OEM code = %02Xh",
@@ -1666,7 +1666,7 @@ _output_event_data2 (ipmi_sel_parse_ctx_t ctx,
           output_flag++;
           break;
         default:
-          if (flags & IPMI_SEL_PARSE_STRING_FLAGS_OUTPUT_NOT_AVAILABLE)
+          if (flags & IPMI_SEL_STRING_FLAGS_OUTPUT_NOT_AVAILABLE)
             {
               snprintf (tmpbuf,
                         EVENT_BUFFER_LENGTH,
@@ -1682,7 +1682,7 @@ _output_event_data2 (ipmi_sel_parse_ctx_t ctx,
       break;
     case IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM:
 
-      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA)
+      if (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA)
         {
           if ((ret = _output_oem_event_data2_class_oem (ctx,
                                                         sel_parse_entry,
@@ -1707,7 +1707,7 @@ _output_event_data2 (ipmi_sel_parse_ctx_t ctx,
           break;
         }
 
-      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_LEGACY)
+      if (flags & IPMI_SEL_STRING_FLAGS_LEGACY)
         snprintf (tmpbuf,
                   EVENT_BUFFER_LENGTH,
                   "Event data2 = %02Xh",
@@ -1731,12 +1731,12 @@ _output_event_data2 (ipmi_sel_parse_ctx_t ctx,
     }
   else
     {
-      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_LEGACY)
+      if (flags & IPMI_SEL_STRING_FLAGS_LEGACY)
         return (0);
 
       if (no_output_flag)
         {
-          if (flags & IPMI_SEL_PARSE_STRING_FLAGS_OUTPUT_NOT_AVAILABLE)
+          if (flags & IPMI_SEL_STRING_FLAGS_OUTPUT_NOT_AVAILABLE)
             {
               if (ipmi_sel_parse_string_snprintf (buf, buflen, wlen, "%s", NA_STRING))
                 return (1);
@@ -1744,7 +1744,7 @@ _output_event_data2 (ipmi_sel_parse_ctx_t ctx,
           return (0);
         }
 
-      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_VERBOSE)
+      if (flags & IPMI_SEL_STRING_FLAGS_VERBOSE)
         {
           if (ipmi_sel_parse_string_snprintf (buf,
                                               buflen,
@@ -1785,12 +1785,12 @@ _output_oem_event_data3_threshold_oem (ipmi_sel_parse_ctx_t ctx,
   int ret;
 
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (sel_parse_entry);
   assert (tmpbuf);
   assert (tmpbuflen);
   assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
-  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (wlen);
   assert (system_event_record_data);
   assert (system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
@@ -1831,12 +1831,12 @@ _output_oem_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
   int ret;
 
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (sel_parse_entry);
   assert (tmpbuf);
   assert (tmpbuflen);
   assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
-  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (wlen);
   assert (system_event_record_data);
   assert (system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
@@ -1941,12 +1941,12 @@ _output_oem_event_data3_class_oem (ipmi_sel_parse_ctx_t ctx,
   int ret;
 
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (sel_parse_entry);
   assert (tmpbuf);
   assert (tmpbuflen);
   assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
-  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (wlen);
   assert (system_event_record_data);
 
@@ -2037,7 +2037,7 @@ _output_event_data3 (ipmi_sel_parse_ctx_t ctx,
   int ret;
 
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (sel_parse_entry);
   assert (buf);
   assert (buflen);
@@ -2105,7 +2105,7 @@ _output_event_data3 (ipmi_sel_parse_ctx_t ctx,
           break;
         case IPMI_SEL_EVENT_DATA_OEM_CODE:
 
-          if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA)
+          if (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA)
             {
               if ((ret = _output_oem_event_data3_threshold_oem (ctx,
                                                                 sel_parse_entry,
@@ -2130,7 +2130,7 @@ _output_event_data3 (ipmi_sel_parse_ctx_t ctx,
               break;
             }
 
-          if (flags & IPMI_SEL_PARSE_STRING_FLAGS_LEGACY)
+          if (flags & IPMI_SEL_STRING_FLAGS_LEGACY)
             snprintf (tmpbuf,
                       EVENT_BUFFER_LENGTH,
                       "OEM code = %02Xh",
@@ -2143,7 +2143,7 @@ _output_event_data3 (ipmi_sel_parse_ctx_t ctx,
           output_flag++;
           break;
         default:
-          if (flags & IPMI_SEL_PARSE_STRING_FLAGS_OUTPUT_NOT_AVAILABLE)
+          if (flags & IPMI_SEL_STRING_FLAGS_OUTPUT_NOT_AVAILABLE)
             {
               snprintf (tmpbuf,
                         EVENT_BUFFER_LENGTH,
@@ -2178,7 +2178,7 @@ _output_event_data3 (ipmi_sel_parse_ctx_t ctx,
           break;
         case IPMI_SEL_EVENT_DATA_OEM_CODE:
 
-          if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA)
+          if (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA)
             {
               if ((ret = _output_oem_event_data3_discrete_oem (ctx,
                                                                sel_parse_entry,
@@ -2203,7 +2203,7 @@ _output_event_data3 (ipmi_sel_parse_ctx_t ctx,
               break;
             }
 
-          if (flags & IPMI_SEL_PARSE_STRING_FLAGS_LEGACY)
+          if (flags & IPMI_SEL_STRING_FLAGS_LEGACY)
             snprintf (tmpbuf,
                       EVENT_BUFFER_LENGTH,
                       "OEM code = %02Xh",
@@ -2216,7 +2216,7 @@ _output_event_data3 (ipmi_sel_parse_ctx_t ctx,
           output_flag++;
           break;
         default:
-          if (flags & IPMI_SEL_PARSE_STRING_FLAGS_OUTPUT_NOT_AVAILABLE)
+          if (flags & IPMI_SEL_STRING_FLAGS_OUTPUT_NOT_AVAILABLE)
             {
               snprintf (tmpbuf,
                         EVENT_BUFFER_LENGTH,
@@ -2232,7 +2232,7 @@ _output_event_data3 (ipmi_sel_parse_ctx_t ctx,
       break;
     case IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM:
 
-      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA)
+      if (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA)
         {
           if ((ret = _output_oem_event_data3_class_oem (ctx,
                                                         sel_parse_entry,
@@ -2257,7 +2257,7 @@ _output_event_data3 (ipmi_sel_parse_ctx_t ctx,
           break;
         }
 
-      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_LEGACY)
+      if (flags & IPMI_SEL_STRING_FLAGS_LEGACY)
         snprintf (tmpbuf,
                   EVENT_BUFFER_LENGTH,
                   "Event data3 = %02Xh",
@@ -2281,12 +2281,12 @@ _output_event_data3 (ipmi_sel_parse_ctx_t ctx,
     }
   else
     {
-      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_LEGACY)
+      if (flags & IPMI_SEL_STRING_FLAGS_LEGACY)
         return (0);
 
       if (no_output_flag)
         {
-          if (flags & IPMI_SEL_PARSE_STRING_FLAGS_OUTPUT_NOT_AVAILABLE)
+          if (flags & IPMI_SEL_STRING_FLAGS_OUTPUT_NOT_AVAILABLE)
             {
               if (ipmi_sel_parse_string_snprintf (buf, buflen, wlen, "%s", NA_STRING))
                 return (1);
@@ -2294,7 +2294,7 @@ _output_event_data3 (ipmi_sel_parse_ctx_t ctx,
           return (0);
         }
 
-      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_VERBOSE)
+      if (flags & IPMI_SEL_STRING_FLAGS_VERBOSE)
         {
           if (ipmi_sel_parse_string_snprintf (buf,
                                               buflen,
@@ -2340,12 +2340,12 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
   int ret;
 
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (sel_parse_entry);
   assert (buf);
   assert (buflen);
   assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
-  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (wlen);
   assert (system_event_record_data);
   assert (oem_rv);
@@ -2443,7 +2443,7 @@ _output_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
   int data3_ret;
 
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (sel_parse_entry);
   assert (buf);
   assert (buflen);
@@ -2482,7 +2482,7 @@ _output_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
       
       if (data3_ret)
 	{
-	  SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_INTERNAL_ERROR);
+	  SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_INTERNAL_ERROR);
 	  return (-1);
 	}
 
@@ -2495,7 +2495,7 @@ _output_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
       return (0);
     }
 
-  if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA)
+  if (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA)
     {
       int ret;
       int oem_rv = 0;
@@ -2535,7 +2535,7 @@ _output_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
 
   if (data2_ret || data3_ret)
     {
-      SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_INTERNAL_ERROR);
+      SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_INTERNAL_ERROR);
       return (-1);
     }
 
@@ -2573,7 +2573,7 @@ _output_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
                                           tmpbufdata3))
         return (1);
     }
-  else if (flags & IPMI_SEL_PARSE_STRING_FLAGS_OUTPUT_NOT_AVAILABLE)
+  else if (flags & IPMI_SEL_STRING_FLAGS_OUTPUT_NOT_AVAILABLE)
     {
       if (ipmi_sel_parse_string_snprintf (buf,
                                           buflen,
@@ -2610,7 +2610,7 @@ _output_event_data2_previous_state_or_severity (ipmi_sel_parse_ctx_t ctx,
   int ret;
 
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (sel_parse_entry);
   assert (buf);
   assert (buflen);
@@ -2677,9 +2677,9 @@ _output_event_data2_previous_state_or_severity (ipmi_sel_parse_ctx_t ctx,
     }
   else
     {
-      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_IGNORE_UNAVAILABLE_FIELD)
+      if (flags & IPMI_SEL_STRING_FLAGS_IGNORE_UNAVAILABLE_FIELD)
         {
-          if (flags & IPMI_SEL_PARSE_STRING_FLAGS_OUTPUT_NOT_AVAILABLE)
+          if (flags & IPMI_SEL_STRING_FLAGS_OUTPUT_NOT_AVAILABLE)
             {
               if (ipmi_sel_parse_string_snprintf (buf, buflen, wlen, "%s", NA_STRING))
                 return (1);
@@ -2687,7 +2687,7 @@ _output_event_data2_previous_state_or_severity (ipmi_sel_parse_ctx_t ctx,
             }
           return (0);
         }
-      ctx->errnum = IPMI_SEL_PARSE_ERR_INVALID_SEL_ENTRY;
+      ctx->errnum = IPMI_SEL_ERR_INVALID_SEL_ENTRY;
       return (-1);
     }
 
@@ -2699,12 +2699,12 @@ _output_event_data2_previous_state_or_severity (ipmi_sel_parse_ctx_t ctx,
     }
   else
     {
-      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_LEGACY)
+      if (flags & IPMI_SEL_STRING_FLAGS_LEGACY)
         return (0);
 
       if (no_output_flag)
         {
-          if (flags & IPMI_SEL_PARSE_STRING_FLAGS_OUTPUT_NOT_AVAILABLE)
+          if (flags & IPMI_SEL_STRING_FLAGS_OUTPUT_NOT_AVAILABLE)
             {
               if (ipmi_sel_parse_string_snprintf (buf, buflen, wlen, "%s", NA_STRING))
                 return (1);
@@ -2712,7 +2712,7 @@ _output_event_data2_previous_state_or_severity (ipmi_sel_parse_ctx_t ctx,
           return (0);
         }
 
-      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_VERBOSE)
+      if (flags & IPMI_SEL_STRING_FLAGS_VERBOSE)
         {
           if (ipmi_sel_parse_string_snprintf (buf,
                                               buflen,
@@ -2799,7 +2799,7 @@ _output_event_direction (ipmi_sel_parse_ctx_t ctx,
   char *str = NULL;
 
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (sel_parse_entry);
   assert (buf);
   assert (buflen);
@@ -2839,7 +2839,7 @@ _output_manufacturer_id (ipmi_sel_parse_ctx_t ctx,
   uint32_t manufacturer_id;
 
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (sel_parse_entry);
   assert (buf);
   assert (buflen);
@@ -2852,7 +2852,7 @@ _output_manufacturer_id (ipmi_sel_parse_ctx_t ctx,
   if (sel_parse_get_manufacturer_id (ctx, sel_parse_entry, &manufacturer_id) < 0)
     return (-1);
 
-  if (flags & IPMI_SEL_PARSE_STRING_FLAGS_LEGACY)
+  if (flags & IPMI_SEL_STRING_FLAGS_LEGACY)
     {
       if (ipmi_sel_parse_string_snprintf (buf, buflen, wlen, "Manufacturer ID = %02Xh", manufacturer_id))
         return (1);
@@ -2912,12 +2912,12 @@ _output_oem_interpreted_record_data (ipmi_sel_parse_ctx_t ctx,
   int ret;
 
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (sel_parse_entry);
   assert (tmpbuf);
   assert (tmpbuflen);
   assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
-  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (wlen);
   assert (oem_rv);
 
@@ -2958,7 +2958,7 @@ _output_oem_record_data (ipmi_sel_parse_ctx_t ctx,
   int oem_index;
 
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (sel_parse_entry);
   assert (buf);
   assert (buflen);
@@ -2969,7 +2969,7 @@ _output_oem_record_data (ipmi_sel_parse_ctx_t ctx,
       && ipmi_sel_record_type_class (sel_record_type) != IPMI_SEL_RECORD_TYPE_CLASS_NON_TIMESTAMPED_OEM_RECORD)
     return (_invalid_sel_entry_common (ctx, buf, buflen, flags, wlen));
 
-  if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA)
+  if (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA)
     {
       int ret;
       int oem_rv = 0;
@@ -3024,7 +3024,7 @@ _output_oem_string (ipmi_sel_parse_ctx_t ctx,
   int ret;
 
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (sel_parse_entry);
   assert (buf);
   assert (buflen);
@@ -3049,7 +3049,7 @@ _output_oem_string (ipmi_sel_parse_ctx_t ctx,
         return (oem_rv);
     }
   
-  if (flags & IPMI_SEL_PARSE_STRING_FLAGS_OUTPUT_NOT_AVAILABLE)
+  if (flags & IPMI_SEL_STRING_FLAGS_OUTPUT_NOT_AVAILABLE)
     {
       if (ipmi_sel_parse_string_snprintf (buf, buflen, wlen, "%s", NA_STRING))
         return (1);
@@ -3076,7 +3076,7 @@ sel_parse_format_record_string (ipmi_sel_parse_ctx_t ctx,
   int ret;
 
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (fmt);
   assert (sel_record);
   assert (sel_record_len >= IPMI_SEL_RECORD_LENGTH);
@@ -3329,7 +3329,7 @@ sel_parse_format_record_string (ipmi_sel_parse_ctx_t ctx,
 
  out:
   rv = wlen;
-  ctx->errnum = IPMI_SEL_PARSE_ERR_SUCCESS;
+  ctx->errnum = IPMI_SEL_ERR_SUCCESS;
  cleanup:
   return (rv);
 }

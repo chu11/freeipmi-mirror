@@ -83,7 +83,7 @@ ipmi_sel_parse_output_supermicro_event_data1_class_oem (ipmi_sel_parse_ctx_t ctx
 							struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_SUPERMICRO
 	  || ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND
 	  || ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_PEPPERCON
@@ -92,7 +92,7 @@ ipmi_sel_parse_output_supermicro_event_data1_class_oem (ipmi_sel_parse_ctx_t ctx
   assert (tmpbuf);
   assert (tmpbuflen);
   assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
-  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (wlen);
   assert (system_event_record_data);
 

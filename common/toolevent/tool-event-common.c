@@ -47,7 +47,7 @@ _sel_parse_err_handle (pstdout_state_t pstate,
   assert (sel_parse_ctx);
   assert (func);
   
-  if (ipmi_sel_parse_ctx_errnum (sel_parse_ctx) == IPMI_SEL_PARSE_ERR_INVALID_SEL_ENTRY)
+  if (ipmi_sel_parse_ctx_errnum (sel_parse_ctx) == IPMI_SEL_ERR_INVALID_SEL_ENTRY)
     {
       /* most likely bad event data from remote system or user input */
       if (debug)

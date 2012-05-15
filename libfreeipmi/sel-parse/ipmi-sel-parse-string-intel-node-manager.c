@@ -123,7 +123,7 @@ _intel_node_manager_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
 
   if ((expected_record_len = fiid_template_len_bytes (tmpl_sdr_oem_intel_node_manager_record)) < 0)
     {
-      SEL_PARSE_ERRNO_TO_SEL_PARSE_ERRNUM (ctx, errno);
+      SEL_ERRNO_TO_SEL_ERRNUM (ctx, errno);
       goto cleanup;
     }
       
@@ -135,7 +135,7 @@ _intel_node_manager_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
 
   if (!(obj_oem_record = fiid_obj_create (tmpl_sdr_oem_intel_node_manager_record)))
     {
-      SEL_PARSE_ERRNO_TO_SEL_PARSE_ERRNUM (ctx, errno);
+      SEL_ERRNO_TO_SEL_ERRNUM (ctx, errno);
       goto cleanup;
     }
 
@@ -143,7 +143,7 @@ _intel_node_manager_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
 			sdr_record,
 			sdr_record_len) < 0)
     {
-      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM (ctx, obj_oem_record);
+      SEL_FIID_OBJECT_ERROR_TO_SEL_ERRNUM (ctx, obj_oem_record);
       goto cleanup;
     }
 
@@ -156,7 +156,7 @@ _intel_node_manager_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
 		    "record_subtype",
 		    &val) < 0)
     {
-      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM (ctx, obj_oem_record);
+      SEL_FIID_OBJECT_ERROR_TO_SEL_ERRNUM (ctx, obj_oem_record);
       goto cleanup;
     }
   record_subtype = val;
@@ -171,7 +171,7 @@ _intel_node_manager_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
 		    "version_number",
 		    &val) < 0)
     {
-      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM (ctx, obj_oem_record);
+      SEL_FIID_OBJECT_ERROR_TO_SEL_ERRNUM (ctx, obj_oem_record);
       goto cleanup;
     }
   version_number = val;
@@ -186,7 +186,7 @@ _intel_node_manager_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
 		    "nm_health_event_sensor_number",
 		    &val) < 0)
     {
-      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM (ctx, obj_oem_record);
+      SEL_FIID_OBJECT_ERROR_TO_SEL_ERRNUM (ctx, obj_oem_record);
       goto cleanup;
     }
   ctx->intel_node_manager.nm_health_event_sensor_number = val;
@@ -195,7 +195,7 @@ _intel_node_manager_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
 		    "nm_exception_event_sensor_number",
 		    &val) < 0)
     {
-      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM (ctx, obj_oem_record);
+      SEL_FIID_OBJECT_ERROR_TO_SEL_ERRNUM (ctx, obj_oem_record);
       goto cleanup;
     }
   ctx->intel_node_manager.nm_exception_event_sensor_number = val;
@@ -204,7 +204,7 @@ _intel_node_manager_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
 		    "nm_operational_capabilities_sensor_number",
 		    &val) < 0)
     {
-      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM (ctx, obj_oem_record);
+      SEL_FIID_OBJECT_ERROR_TO_SEL_ERRNUM (ctx, obj_oem_record);
       goto cleanup;
     }
   ctx->intel_node_manager.nm_operational_capabilities_sensor_number = val;
@@ -213,7 +213,7 @@ _intel_node_manager_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
 		    "nm_alert_threshold_exceeded_sensor_number",
 		    &val) < 0)
     {
-      SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM (ctx, obj_oem_record);
+      SEL_FIID_OBJECT_ERROR_TO_SEL_ERRNUM (ctx, obj_oem_record);
       goto cleanup;
     }
   ctx->intel_node_manager.nm_alert_threshold_exceeded_sensor_number = val;
@@ -239,7 +239,7 @@ _intel_node_manager_init (ipmi_sel_parse_ctx_t ctx)
   int rv = -1;
 
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
 
   if (!ctx->sdr_ctx)
     return (0);
@@ -286,12 +286,12 @@ ipmi_sel_parse_output_intel_node_manager_sensor_name (ipmi_sel_parse_ctx_t ctx,
 						      int *oem_rv)
 {
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (sel_parse_entry);
   assert (buf);
   assert (buflen);
   assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
-  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (wlen);
   assert (system_event_record_data);
   assert (oem_rv);
@@ -412,12 +412,12 @@ ipmi_sel_parse_output_intel_node_manager_event_data1_class_oem (ipmi_sel_parse_c
                                                                 struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (sel_parse_entry);
   assert (tmpbuf);
   assert (tmpbuflen);
   assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
-  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (wlen);
   assert (system_event_record_data);
 
@@ -536,12 +536,12 @@ ipmi_sel_parse_output_intel_node_manager_event_data2_class_oem (ipmi_sel_parse_c
                                                                 struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (sel_parse_entry);
   assert (tmpbuf);
   assert (tmpbuflen);
   assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
-  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (wlen);
   assert (system_event_record_data);
 
@@ -694,12 +694,12 @@ ipmi_sel_parse_output_intel_node_manager_event_data3_class_oem (ipmi_sel_parse_c
                                                                 struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
-  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (sel_parse_entry);
   assert (tmpbuf);
   assert (tmpbuflen);
   assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
-  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (wlen);
   assert (system_event_record_data);
 
