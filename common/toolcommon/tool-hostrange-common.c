@@ -28,7 +28,7 @@
 #include <assert.h>
 #include <errno.h>
 
-#include "ipmidetect.h"
+#include <ipmidetect.h>
 
 #include "freeipmi-portability.h"
 #include "hostlist.h"
