@@ -16,18 +16,15 @@
  * 
  */
 
-#ifndef TOOL_COMMON_H
-#define TOOL_COMMON_H
+#ifndef TOOL_DAEMON_COMMON_H
+#define TOOL_DAEMON_COMMON_H
 
 #include <stdint.h>
-#include <freeipmi/freeipmi.h>
+#include <signal.h>
 
-#include "tool-cmdline-common.h"
-#include "pstdout.h"
+int daemonize_common (const char *pidfile);
 
-ipmi_ctx_t ipmi_open (const char *progname,
-                      const char *hostname,
-                      struct common_cmd_args *cmd_args,
-		      pstdout_state_t pstate);
+/* can pass NULL for no callback */
+int daemon_signal_handler_setup (sighandler_t cb);
 
-#endif /* TOOL_COMMON_H */
+#endif /* TOOL_DAEMON_COMMON_H */

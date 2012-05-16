@@ -329,11 +329,8 @@ ipmi_oem_sun_get_led (ipmi_oem_state_data_t *state_data)
   if (sdr_cache_create_and_load (state_data->sdr_ctx,
                                  state_data->pstate,
                                  state_data->ipmi_ctx,
-                                 state_data->prog_data->args->sdr.quiet_cache,
-                                 state_data->prog_data->args->sdr.sdr_cache_recreate,
                                  state_data->hostname,
-                                 state_data->prog_data->args->sdr.sdr_cache_directory,
-                                 state_data->prog_data->args->sdr.sdr_cache_file) < 0)
+ 				 &state_data->prog_data->args->sdr) < 0)
     goto cleanup;
 
   if (state_data->prog_data->args->verbose_count)
@@ -448,11 +445,8 @@ ipmi_oem_sun_set_led (ipmi_oem_state_data_t *state_data)
   if (sdr_cache_create_and_load (state_data->sdr_ctx,
                                  state_data->pstate,
                                  state_data->ipmi_ctx,
-                                 state_data->prog_data->args->sdr.quiet_cache,
-                                 state_data->prog_data->args->sdr.sdr_cache_recreate,
                                  state_data->hostname,
-                                 state_data->prog_data->args->sdr.sdr_cache_directory,
-                                 state_data->prog_data->args->sdr.sdr_cache_file) < 0)
+ 				 &state_data->prog_data->args->sdr) < 0)
     goto cleanup;
 
   /* Sun OEM

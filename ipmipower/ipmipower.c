@@ -71,6 +71,7 @@
 #include "cbuf.h"
 #include "hostlist.h"
 #include "tool-common.h"
+#include "tool-util-common.h"
 
 cbuf_t ttyin;
 cbuf_t ttyout;

@@ -34,7 +34,6 @@
 #include "parse-common.h"
 #include "pstdout.h"
 #include "tool-config-file-common.h"
-#include "tool-common.h"
 #include "tool-sensor-common.h"
 
 #define CONFIG_FILE_OPTIONS_MAX 1024

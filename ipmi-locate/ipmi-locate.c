@@ -38,6 +38,7 @@
 
 #include "freeipmi-portability.h"
 #include "tool-common.h"
+#include "tool-util-common.h"
 
 static void
 display_ipmi_locate_info (struct ipmi_locate_info *info)

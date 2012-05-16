@@ -49,6 +49,7 @@
 #include "tool-hostrange-common.h"
 #include "tool-oem-common.h"
 #include "tool-sdr-cache-common.h"
+#include "tool-util-common.h"
 
 #define IPMI_FRU_DEFAULT_DEVICE_ID_STRING "Default FRU Device"
 
@@ -80,10 +81,8 @@ _flush_cache (ipmi_fru_state_data_t *state_data)
 
   if (sdr_cache_flush_cache (state_data->sdr_ctx,
                              state_data->pstate,
-                             state_data->prog_data->args->sdr.quiet_cache,
                              state_data->hostname,
-                             state_data->prog_data->args->sdr.sdr_cache_directory,
-                             state_data->prog_data->args->sdr.sdr_cache_file) < 0)
+			     &state_data->prog_data->args->sdr) < 0)
     return (-1);
 
   return (0);
@@ -612,11 +611,8 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
       if (sdr_cache_create_and_load (state_data->sdr_ctx,
 				     state_data->pstate,
 				     state_data->ipmi_ctx,
-				     args->sdr.quiet_cache,
-				     args->sdr.sdr_cache_recreate,
 				     state_data->hostname,
-				     args->sdr.sdr_cache_directory,
-				     args->sdr.sdr_cache_file) < 0)
+				     &state_data->prog_data->args->sdr) < 0)
 	goto cleanup;
     }
 
@@ -724,7 +720,6 @@ _ipmi_fru (pstdout_state_t pstate,
 {
   ipmi_fru_state_data_t state_data;
   ipmi_fru_prog_data_t *prog_data;
-  char errmsg[IPMI_OPEN_ERRMSGLEN];
   int exit_code = -1;
 
   assert (pstate);
@@ -743,13 +738,8 @@ _ipmi_fru (pstdout_state_t pstate,
       if (!(state_data.ipmi_ctx = ipmi_open (prog_data->progname,
                                              hostname,
                                              &(prog_data->args->common),
-                                             errmsg,
-                                             IPMI_OPEN_ERRMSGLEN)))
+					     state_data.pstate)))
         {
-          pstdout_fprintf (pstate,
-                           stderr,
-                           "%s\n",
-                           errmsg);
           exit_code = EXIT_FAILURE;
           goto cleanup;
         }      
@@ -848,11 +838,7 @@ main (int argc, char **argv)
     prog_data.args->skip_checks = 1;
 
   if ((hosts_count = pstdout_setup (&(prog_data.args->common.hostname),
-                                    prog_data.args->hostrange.buffer_output,
-                                    prog_data.args->hostrange.consolidate_output,
-                                    prog_data.args->hostrange.fanout,
-                                    prog_data.args->hostrange.eliminate,
-                                    prog_data.args->hostrange.always_prefix)) < 0)
+				    &(prog_data.args->hostrange))) < 0)
     {
       exit_code = EXIT_FAILURE;
       goto cleanup;

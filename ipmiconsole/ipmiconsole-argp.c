@@ -54,7 +54,6 @@
 #include "conffile.h"
 #include "secure.h"
 #include "tool-cmdline-common.h"
-#include "tool-common.h"
 #include "tool-config-file-common.h"
 
 const char *argp_program_version =

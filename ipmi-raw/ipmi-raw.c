@@ -41,6 +41,7 @@
 #include "tool-common.h"
 #include "tool-cmdline-common.h"
 #include "tool-hostrange-common.h"
+#include "tool-util-common.h"
 
 static int
 ipmi_raw_cmdline (ipmi_raw_state_data_t *state_data)
@@ -382,7 +383,6 @@ _ipmi_raw (pstdout_state_t pstate,
 {
   ipmi_raw_state_data_t state_data;
   ipmi_raw_prog_data_t *prog_data;
-  char errmsg[IPMI_OPEN_ERRMSGLEN];
   int exit_code = -1;
 
   assert (pstate);
@@ -397,13 +397,8 @@ _ipmi_raw (pstdout_state_t pstate,
   if (!(state_data.ipmi_ctx = ipmi_open (prog_data->progname,
                                          hostname,
                                          &(prog_data->args->common),
-                                         errmsg,
-                                         IPMI_OPEN_ERRMSGLEN)))
+					 state_data.pstate)))
     {
-      pstdout_fprintf (pstate,
-                       stderr,
-                       "%s\n",
-                       errmsg);
       exit_code = EXIT_FAILURE;
       goto cleanup;
     }
@@ -438,11 +433,7 @@ main (int argc, char **argv)
   prog_data.args = &cmd_args;
 
   if ((hosts_count = pstdout_setup (&(prog_data.args->common.hostname),
-                                    prog_data.args->hostrange.buffer_output,
-                                    prog_data.args->hostrange.consolidate_output,
-                                    prog_data.args->hostrange.fanout,
-                                    prog_data.args->hostrange.eliminate,
-                                    prog_data.args->hostrange.always_prefix)) < 0)
+				    &(prog_data.args->hostrange))) < 0)
     {
       exit_code = EXIT_FAILURE;
       goto cleanup;

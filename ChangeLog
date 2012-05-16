@@ -1,5 +1,34 @@
 2012-05-15  Albert Chu <chu11@llnl.gov>
 
+	Merge branch toolcleanup
+
+	* common/toolsdr/tool-sdr-cache-common.h,
+	common/toolsdr/tool-sdr-cache-common.c: Take struct sdr_cmd_args
+	pointer as argument instead of each desired parameter.
+
+	* common/toolcommon/tool-common.h,
+	common/toolcommon/tool-common.c (ipmi_open): Take pstdout_state_t
+	parameter and output errors instead of returning error string in
+	buffer.
+
+	* common/toolhostrange/tool-hostrange-common.h,
+	common/toolhostrange/tool-hostrange-common.c (pstdout_setup): Take
+	struct hostrange_cmd_args pointer as argument instead of each
+	desired parameter.
+
+	* common/toolhostrange/tool-util-common.h,
+	common/toolhostrange/tool-util-common.c: New files, functions
+	split off from common/toolcommon/tool-common.h and
+	common/toolcommon/tool-common.c.
+
+	* common/daemonutil/, common/tooloem/, common/toolsdr/,
+	common/toolevent/, common/toolsensor/, common/toolhostrange/:
+	Merge into common/toolcommon/ library.
+
+	* Update tools appropriately for changes.
+	
+2012-05-15  Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/: Rename a large number of internal functions with
 	'ipmi' prefixes so they are not exported by libfreeipmi.
 	

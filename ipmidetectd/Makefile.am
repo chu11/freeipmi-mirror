@@ -7,7 +7,7 @@
 sbin_PROGRAMS = ipmidetectd
 
 ipmidetectd_CPPFLAGS = \
-	-I$(top_srcdir)/common/daemonutil \
+	-I$(top_srcdir)/common/toolcommon \
 	-I$(top_srcdir)/common/miscutil \
 	-I$(top_srcdir)/common/portability \
 	-I$(top_srcdir)/libfreeipmi/include \
@@ -16,7 +16,7 @@ ipmidetectd_CPPFLAGS = \
 	-DIPMIDETECTD_LOCALSTATEDIR='"$(localstatedir)"'
 
 ipmidetectd_LDADD = \
-	$(top_builddir)/common/daemonutil/libdaemonutil.la \
+	$(top_builddir)/common/toolcommon/libtoolcommon.la \
 	$(top_builddir)/common/miscutil/libmiscutil.la \
 	$(top_builddir)/common/portability/libportability.la \
 	$(top_builddir)/libfreeipmi/libfreeipmi.la
@@ -29,7 +29,7 @@ ipmidetectd_SOURCES = \
 	ipmidetectd-config.c \
 	ipmidetectd-config.h
 
-$(top_builddir)/common/daemonutil/libdaemonutil.la : force-dependency-check
+$(top_builddir)/common/toolcommon/libtoolcommon.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
 $(top_builddir)/common/miscutil/libmiscutil.la : force-dependency-check

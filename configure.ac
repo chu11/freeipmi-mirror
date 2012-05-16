@@ -34,18 +34,12 @@ AC_CONFIG_FILES([
         bmc-watchdog/Makefile 
         common/Makefile 
         common/configtool/Makefile
-        common/daemonutil/Makefile
         common/debugutil/Makefile
         common/miscutil/Makefile
         common/parsecommon/Makefile
         common/pingtool/Makefile
         common/portability/Makefile
         common/toolcommon/Makefile
-        common/toolevent/Makefile
-        common/toolhostrange/Makefile
-        common/tooloem/Makefile
-        common/toolsdr/Makefile
-        common/toolsensor/Makefile
         contrib/Makefile
         doc/Makefile 
         etc/Makefile

@@ -16,18 +16,26 @@
  * 
  */
 
-#ifndef TOOL_COMMON_H
-#define TOOL_COMMON_H
+#ifndef TOOL_OEM_COMMON_H
+#define TOOL_OEM_COMMON_H
 
+#include <stdio.h>
 #include <stdint.h>
+
 #include <freeipmi/freeipmi.h>
 
-#include "tool-cmdline-common.h"
 #include "pstdout.h"
 
-ipmi_ctx_t ipmi_open (const char *progname,
-                      const char *hostname,
-                      struct common_cmd_args *cmd_args,
-		      pstdout_state_t pstate);
+struct ipmi_oem_data
+{
+  uint32_t manufacturer_id;
+  uint16_t product_id;
+  uint8_t ipmi_version_major;
+  uint8_t ipmi_version_minor;
+};
 
-#endif /* TOOL_COMMON_H */
+int ipmi_get_oem_data (pstdout_state_t pstate,
+                       ipmi_ctx_t ipmi_ctx,
+                       struct ipmi_oem_data *oem_data);
+
+#endif /* TOOL_OEM_COMMON_H */

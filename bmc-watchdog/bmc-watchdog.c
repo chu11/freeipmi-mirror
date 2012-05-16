@@ -64,9 +64,10 @@
 #include "bmc-watchdog-argp.h"
 
 #include "freeipmi-portability.h"
-#include "daemon-util.h"
 #include "error.h"
 #include "tool-common.h"
+#include "tool-daemon-common.h"
+#include "tool-util-common.h"
 
 #define BMC_WATCHDOG_ERR_BUFLEN           1024
 #define BMC_WATCHDOG_STR_BUFLEN           1024

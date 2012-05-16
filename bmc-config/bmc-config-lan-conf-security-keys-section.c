@@ -34,7 +34,7 @@
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
-#include "tool-common.h"
+#include "tool-util-common.h"
 
 static config_err_t
 _get_key (bmc_config_state_data_t *state_data,

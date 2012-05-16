@@ -36,61 +36,30 @@
 #include <freeipmi/freeipmi.h>
 
 #include "tool-common.h"
+#include "tool-util-common.h"
+
+#include "parse-common.h"
 
 #include "freeipmi-portability.h"
-
-int
-ipmi_is_root ()
-{
-#if IPMI_DONT_CHECK_FOR_ROOT
-  return (1);
-#else /* !IPMI_DONT_CHECK_FOR_ROOT */
-  uid_t uid = getuid ();
-  if (uid == 0)
-    return (1);
-  return (0);
-#endif /* !IPMI_DONT_CHECK_FOR_ROOT */
-}
-
-void
-ipmi_disable_coredump (void)
-{
-  /* Disable core dumping when not-debugging.  Do not want username,
-   * password or other important stuff to core dump.
-   */
-#ifdef NDEBUG
-  struct rlimit resource_limit;
-
-  if (!getrlimit (RLIMIT_CORE, &resource_limit))
-    {
-      resource_limit.rlim_cur = 0;
-      if (setrlimit (RLIMIT_CORE, &resource_limit) < 0)
-        perror ("warning: setrlimit()");
-    }
-#endif /* NDEBUG */
-}
 
 ipmi_ctx_t
 ipmi_open (const char *progname,
            const char *hostname,
            struct common_cmd_args *cmd_args,
-           char *errmsg,
-           unsigned int errmsglen)
+	   pstdout_state_t pstate)
 {
   ipmi_ctx_t ipmi_ctx = NULL;
   unsigned int workaround_flags = 0;
 
   assert (progname);
   assert (cmd_args);
-  assert (errmsg);
-  assert (errmsglen);
 
   if (!(ipmi_ctx = ipmi_ctx_create ()))
     {
-      snprintf (errmsg,
-                errmsglen,
-                "ipmi_ctx_create: %s",
-                strerror (errno));
+      PSTDOUT_FPRINTF (pstate,
+		       stderr,
+		       "ipmi_ctx_create: %s",
+		       strerror (errno));
       goto cleanup;
     }
 
@@ -137,16 +106,16 @@ ipmi_open (const char *progname,
                   || ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_HOSTNAME_INVALID
                   || ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_IPMI_2_0_UNAVAILABLE
                   || ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_CONNECTION_TIMEOUT)
-                snprintf (errmsg,
-                          errmsglen,
-                          "%s: %s",
-                          progname,
-                          ipmi_ctx_errormsg (ipmi_ctx));
+                PSTDOUT_FPRINTF (pstate,
+				 stderr,
+				 "%s: %s",
+				 progname,
+				 ipmi_ctx_errormsg (ipmi_ctx));
               else
-                snprintf (errmsg,
-                          errmsglen,
-                          "ipmi_ctx_open_outofband_2_0: %s",
-                          ipmi_ctx_errormsg (ipmi_ctx));
+                PSTDOUT_FPRINTF (pstate,
+				 stderr,
+				 "ipmi_ctx_open_outofband_2_0: %s",
+				 ipmi_ctx_errormsg (ipmi_ctx));
               goto cleanup;
             }
         }
@@ -182,16 +151,16 @@ ipmi_open (const char *progname,
                   || ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_PASSWORD_VERIFICATION_TIMEOUT
                   || ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_HOSTNAME_INVALID
                   || ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_CONNECTION_TIMEOUT)
-                snprintf (errmsg,
-                          errmsglen,
-                          "%s: %s",
-                          progname,
-                          ipmi_ctx_errormsg (ipmi_ctx));
+                PSTDOUT_FPRINTF (pstate,
+				 stderr,
+				 "%s: %s",
+				 progname,
+				 ipmi_ctx_errormsg (ipmi_ctx));
               else
-                snprintf (errmsg,
-                          errmsglen,
-                          "ipmi_ctx_open_outofband: %s",
-                          ipmi_ctx_errormsg (ipmi_ctx));
+                PSTDOUT_FPRINTF (pstate,
+				 stderr,
+				 "ipmi_ctx_open_outofband: %s",
+				 ipmi_ctx_errormsg (ipmi_ctx));
               goto cleanup;
             }
         }
@@ -200,11 +169,11 @@ ipmi_open (const char *progname,
     {
       if (!ipmi_is_root ())
         {
-          snprintf (errmsg,
-                    errmsglen,
-                    "%s: %s",
-                    progname,
-                    ipmi_ctx_strerror (IPMI_ERR_PERMISSION));
+          PSTDOUT_FPRINTF (pstate,
+			   stderr,
+			   "%s: %s",
+			   progname,
+			   ipmi_ctx_strerror (IPMI_ERR_PERMISSION));
           goto cleanup;
         }
 
@@ -227,18 +196,18 @@ ipmi_open (const char *progname,
                                            workaround_flags,
                                            (cmd_args->debug) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT)) < 0)
             {
-              snprintf (errmsg,
-                        errmsglen,
-                        "ipmi_ctx_find_inband: %s",
-                        ipmi_ctx_errormsg (ipmi_ctx));
+              PSTDOUT_FPRINTF (pstate,
+			       stderr,
+			       "ipmi_ctx_find_inband: %s",
+			       ipmi_ctx_errormsg (ipmi_ctx));
               goto cleanup;
             }
 
           if (!ret)
             {
-              snprintf (errmsg,
-                        errmsglen,
-                        "could not find inband device");
+              PSTDOUT_FPRINTF (pstate,
+			       stderr,
+			       "could not find inband device");
               goto cleanup;
             }
         }
@@ -254,16 +223,16 @@ ipmi_open (const char *progname,
                                     (cmd_args->debug) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT) < 0)
             {
               if (ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_DEVICE_NOT_FOUND)
-                snprintf (errmsg,
-                          errmsglen,
-                          "%s: %s",
-                          progname,
-                          ipmi_ctx_errormsg (ipmi_ctx));
+                PSTDOUT_FPRINTF (pstate,
+				 stderr,
+				 "%s: %s",
+				 progname,
+				 ipmi_ctx_errormsg (ipmi_ctx));
               else
-                snprintf (errmsg,
-                          errmsglen,
-                          "ipmi_ctx_open_inband: %s",
-                          ipmi_ctx_errormsg (ipmi_ctx));
+                PSTDOUT_FPRINTF (pstate,
+				 stderr,
+				 "ipmi_ctx_open_inband: %s",
+				 ipmi_ctx_errormsg (ipmi_ctx));
               goto cleanup;
             }
         }
@@ -276,10 +245,10 @@ ipmi_open (const char *progname,
 			       cmd_args->target_channel_number_is_set ? &cmd_args->target_channel_number : NULL,
 			       cmd_args->target_slave_address_is_set ? &cmd_args->target_slave_address : NULL) < 0)
 	{
-	  snprintf (errmsg,
-		    errmsglen,
-		    "ipmi_ctx_set_target: %s",
-		    ipmi_ctx_errormsg (ipmi_ctx));
+	  PSTDOUT_FPRINTF (pstate,
+			   stderr,
+			   "ipmi_ctx_set_target: %s",
+			   ipmi_ctx_errormsg (ipmi_ctx));
 	  goto cleanup;
 	} 
     }
@@ -290,93 +259,4 @@ ipmi_open (const char *progname,
   ipmi_ctx_close (ipmi_ctx);
   ipmi_ctx_destroy (ipmi_ctx);
   return (NULL);
-}
-
-/* Check if kg len is decent */
-int
-check_kg_len (const char *in)
-{
-  assert (in);
-
-  if (strlen (in) == 0)
-    return (0);
-
-  if (strncasecmp (in, "0x", 2) == 0)
-    {
-      if (strlen (in) > IPMI_MAX_K_G_LENGTH*2+2)
-        return (-1);
-    }
-  else
-    {
-      if (strlen (in) > IPMI_MAX_K_G_LENGTH)
-        return (-1);
-    }
-
-  return (0);
-}
-
-char *
-format_kg (char *out, unsigned int outlen, const void *k_g)
-{
-  unsigned int i;
-  int printable = 1;
-  int foundnull = 0;
-  char *p;
-  const uint8_t *k_g_ptr = k_g;
-
-  assert (out);
-  assert (outlen > IPMI_MAX_K_G_LENGTH*2+2);
-  assert (k_g);
-
-  /* Are there any characters that would prevent printing this as a
-     string on a single line? */
-  for (i = 0; i < IPMI_MAX_K_G_LENGTH; i++)
-    {
-      if (k_g_ptr[i] == '\0')
-        {
-          ++foundnull;
-          continue;
-        }
-      if (!(isgraph (k_g_ptr[i]) || k_g_ptr[i] == ' ') || foundnull)
-        {
-          printable = 0;
-          break;
-        }
-    }
-
-  /* print out an entirely null key in hex rather than an empty
-     string */
-  if (foundnull == IPMI_MAX_K_G_LENGTH)
-    printable = 0;
-
-  /* don't print out a key starting with a literal '0x' as a string,
-     since parse_kg will try to interpret such strings as hex */
-  if (k_g_ptr[0] == '0' && k_g_ptr[1] == 'x')
-    printable = 0;
-
-  if (printable)
-    {
-      if (outlen < IPMI_MAX_K_G_LENGTH+1)
-        return (NULL);
-      p = out;
-      for (i = 0; i < IPMI_MAX_K_G_LENGTH; i++)
-        {
-          if (k_g_ptr[i] == '\0')
-            break;
-          p[i] = k_g_ptr[i];
-        }
-      p[i] = 0;
-    }
-  else
-    {
-      if (outlen < IPMI_MAX_K_G_LENGTH*2+3)
-        return (NULL);
-      p = out;
-      p[0] = '0'; p[1] = 'x';
-      p+=2;
-      for (i = 0; i < IPMI_MAX_K_G_LENGTH; i++, p+=2)
-        sprintf (p, "%02x", k_g_ptr[i]);
-    }
-
-  return (out);
 }

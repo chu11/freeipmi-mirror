@@ -50,6 +50,7 @@
 #include "tool-cmdline-common.h"
 #include "tool-hostrange-common.h"
 #include "tool-sdr-cache-common.h"
+#include "tool-util-common.h"
 
 typedef int (*Bmc_device_system_info_first_set)(ipmi_ctx_t ctx,
 						uint8_t set_selector,
@@ -79,10 +80,8 @@ _flush_cache (bmc_device_state_data_t *state_data)
   
   if (sdr_cache_flush_cache (state_data->sdr_ctx,
                              state_data->pstate,
-                             state_data->prog_data->args->sdr.quiet_cache,
                              state_data->hostname,
-                             state_data->prog_data->args->sdr.sdr_cache_directory,
-                             state_data->prog_data->args->sdr.sdr_cache_file) < 0)
+			     &state_data->prog_data->args->sdr) < 0)
     return (-1);
   
   return (0);
@@ -992,11 +991,8 @@ rearm_sensor (bmc_device_state_data_t *state_data)
   if (sdr_cache_create_and_load (state_data->sdr_ctx,
                                  state_data->pstate,
                                  state_data->ipmi_ctx,
-                                 state_data->prog_data->args->sdr.quiet_cache,
-                                 state_data->prog_data->args->sdr.sdr_cache_recreate,
                                  state_data->hostname,
-                                 state_data->prog_data->args->sdr.sdr_cache_directory,
-                                 state_data->prog_data->args->sdr.sdr_cache_file) < 0)
+				 &state_data->prog_data->args->sdr) < 0)
     goto cleanup;
   
   if (ipmi_sdr_cache_search_record_id (state_data->sdr_ctx,
@@ -2643,7 +2639,6 @@ _bmc_device (pstdout_state_t pstate,
 {
   bmc_device_state_data_t state_data;
   bmc_device_prog_data_t *prog_data;
-  char errmsg[IPMI_OPEN_ERRMSGLEN];
   int exit_code = -1;
 
   assert (pstate);
@@ -2662,13 +2657,8 @@ _bmc_device (pstdout_state_t pstate,
       if (!(state_data.ipmi_ctx = ipmi_open (prog_data->progname,
 					     hostname,
 					     &(prog_data->args->common),
-					     errmsg,
-					     IPMI_OPEN_ERRMSGLEN)))
+					     state_data.pstate)))
 	{
-	  pstdout_fprintf (pstate,
-			   stderr,
-			   "%s\n",
-			   errmsg);
 	  exit_code = EXIT_FAILURE;
 	  goto cleanup;
 	}
@@ -2721,11 +2711,7 @@ main (int argc, char **argv)
   prog_data.args = &cmd_args;
 
   if ((hosts_count = pstdout_setup (&(prog_data.args->common.hostname),
-                                    prog_data.args->hostrange.buffer_output,
-                                    prog_data.args->hostrange.consolidate_output,
-                                    prog_data.args->hostrange.fanout,
-                                    prog_data.args->hostrange.eliminate,
-                                    prog_data.args->hostrange.always_prefix)) < 0)
+				    &(prog_data.args->hostrange))) < 0)
     {
       exit_code = EXIT_FAILURE;
       goto cleanup;

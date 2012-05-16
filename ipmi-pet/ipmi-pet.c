@@ -54,6 +54,7 @@
 #include "tool-oem-common.h"
 #include "tool-sdr-cache-common.h"
 #include "tool-sensor-common.h"
+#include "tool-util-common.h"
 
 #define IPMI_PET_GUID_HEADER            "GUID"
 #define IPMI_PET_MANUFACTURER_ID_HEADER "Manufacturer ID"
@@ -102,10 +103,8 @@ _flush_cache (ipmi_pet_state_data_t *state_data)
   
   if (sdr_cache_flush_cache (state_data->sdr_ctx,
                              NULL,
-                             state_data->prog_data->args->sdr.quiet_cache,
                              state_data->hostname,
-                             state_data->prog_data->args->sdr.sdr_cache_directory,
-                             state_data->prog_data->args->sdr.sdr_cache_file) < 0)
+			     &state_data->prog_data->args->sdr) < 0)
     return (-1);
   
   return (0);
@@ -128,11 +127,8 @@ _ipmi_pet_init (ipmi_pet_state_data_t *state_data)
       if (sdr_cache_create_and_load (state_data->sdr_ctx,
                                      NULL,
                                      state_data->ipmi_ctx,
-                                     args->sdr.quiet_cache,
-                                     args->sdr.sdr_cache_recreate,
                                      state_data->hostname,
-                                     args->sdr.sdr_cache_directory,
-                                     args->sdr.sdr_cache_file) < 0)
+				     &state_data->prog_data->args->sdr) < 0)
         goto cleanup;
 
       if (args->entity_sensor_names)
@@ -2120,7 +2116,6 @@ static int
 _ipmi_pet (ipmi_pet_prog_data_t *prog_data)
 {
   ipmi_pet_state_data_t state_data;
-  char errmsg[IPMI_OPEN_ERRMSGLEN];
   int exit_code = -1;
 
   assert (prog_data);
@@ -2137,12 +2132,8 @@ _ipmi_pet (ipmi_pet_prog_data_t *prog_data)
       if (!(state_data.ipmi_ctx = ipmi_open (prog_data->progname,
                                              prog_data->args->common.hostname,
                                              &(prog_data->args->common),
-                                             errmsg,
-                                             IPMI_OPEN_ERRMSGLEN)))
+					     NULL)))
         {
-          fprintf (stderr,
-		   "%s\n",
-		   errmsg);
           exit_code = EXIT_FAILURE;
           goto cleanup;
         }
