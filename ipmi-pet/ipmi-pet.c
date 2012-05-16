@@ -101,8 +101,7 @@ _flush_cache (ipmi_pet_state_data_t *state_data)
 {
   assert (state_data);
   
-  if (sdr_cache_flush_cache (state_data->sdr_ctx,
-                             NULL,
+  if (sdr_cache_flush_cache (NULL,
                              state_data->hostname,
 			     &state_data->prog_data->args->sdr) < 0)
     return (-1);

@@ -370,8 +370,7 @@ _flush_cache (ipmi_sel_state_data_t *state_data)
 {
   assert (state_data);
 
-  if (sdr_cache_flush_cache (state_data->sdr_ctx,
-                             state_data->pstate,
+  if (sdr_cache_flush_cache (state_data->pstate,
                              state_data->hostname,
 			     &state_data->prog_data->args->sdr) < 0)
     return (-1);

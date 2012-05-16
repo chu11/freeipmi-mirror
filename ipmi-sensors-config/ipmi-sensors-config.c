@@ -91,8 +91,7 @@ _ipmi_sensors_config (pstdout_state_t pstate,
 
   if (prog_data->args->sdr.flush_cache)
     {
-      if (sdr_cache_flush_cache (state_data.sdr_ctx,
-                                 NULL,
+      if (sdr_cache_flush_cache (NULL,
                                  hostname,
 				 &state_data.prog_data->args->sdr) < 0)
         {
