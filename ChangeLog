@@ -6,6 +6,10 @@
 	* ipmi-oem/ipmi-oem.c (main), bmc-device/bmc-device.c (main): Turn
 	on quiet caching if doing communication to multiple hosts.
 
+	* ipmi-sensors/ipmi-sensors.c (_ipmi_sensors): Fix bug in which
+	multiple workaround flags and workaround flags with bridging could
+	not be specified.
+
 2012-05-10  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/fru-parse/ipmi-fru-parse.c (_read_fru_data): Handle
