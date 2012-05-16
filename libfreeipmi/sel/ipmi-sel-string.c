@@ -1701,7 +1701,8 @@ _output_event_data2 (ipmi_sel_ctx_t ctx,
             }
         }
       
-      if (system_event_record_data.event_data2 == IPMI_SEL_RECORD_UNSPECIFIED_EVENT)
+      if (system_event_record_data.event_data2 == IPMI_SEL_RECORD_UNSPECIFIED_EVENT
+	  || system_event_record_data.event_data2_flag == IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE)
         {
           no_output_flag++;
           break;
@@ -2251,7 +2252,8 @@ _output_event_data3 (ipmi_sel_ctx_t ctx,
             }
         }
      
-      if (system_event_record_data.event_data3 == IPMI_SEL_RECORD_UNSPECIFIED_EVENT)
+      if (system_event_record_data.event_data3 == IPMI_SEL_RECORD_UNSPECIFIED_EVENT
+	  || system_event_record_data.event_data3_flag == IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE)
         {
           no_output_flag++;
           break;
@@ -2787,6 +2789,118 @@ _output_event_data2_severity (ipmi_sel_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 static int
+_output_event_data1_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
+					     struct ipmi_sel_entry *sel_entry,
+					     uint8_t sel_record_type,
+					     char *buf,
+					     unsigned int buflen,
+					     unsigned int flags,
+					     unsigned int *wlen)
+{
+  struct ipmi_sel_system_event_record_data system_event_record_data;
+  char tmpbufeventdata1[EVENT_BUFFER_LENGTH + 1];
+  char tmpbufeventdata23[EVENT_BUFFER_LENGTH + 1];
+  unsigned int tmpbufeventdata1_wlen = 0;
+  unsigned int tmpbufeventdata23_wlen = 0;
+  int data1_ret;
+  int data23_ret;
+
+  assert (ctx);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
+  assert (sel_entry);
+  assert (buf);
+  assert (buflen);
+  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
+  assert (wlen);
+
+  if (ipmi_sel_record_type_class (sel_record_type) != IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)
+    return (_invalid_sel_entry_common (ctx, buf, buflen, flags, wlen));
+
+  if (sel_get_system_event_record (ctx, sel_entry, &system_event_record_data) < 0)
+    return (-1);
+
+  memset (tmpbufeventdata1, '\0', EVENT_BUFFER_LENGTH+1);
+  memset (tmpbufeventdata23, '\0', EVENT_BUFFER_LENGTH+1);
+
+  if ((data1_ret = _output_event_data1 (ctx,
+					sel_entry,
+					sel_record_type,
+					tmpbufeventdata1,
+					EVENT_BUFFER_LENGTH,
+					flags,
+					&tmpbufeventdata1_wlen)) < 0)
+    return (-1);
+
+  if ((data23_ret = _output_event_data2_event_data3 (ctx,
+						     sel_entry,
+						     sel_record_type,
+						     tmpbufeventdata23,
+						     EVENT_BUFFER_LENGTH,
+						     flags,
+						     &tmpbufeventdata23_wlen)) < 0)
+    return (-1);
+  
+  if (data1_ret || data23_ret)
+    {
+      SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_INTERNAL_ERROR);
+      return (-1);
+    }
+  
+  if ((strlen (tmpbufeventdata1) 
+       && strcasecmp (tmpbufeventdata1, NA_STRING))
+      && (strlen (tmpbufeventdata23)
+          && strcasecmp (tmpbufeventdata23, NA_STRING)))
+    {
+      if (sel_string_snprintf (buf,
+			       buflen,
+			       wlen,
+			       "%s%s%s",
+			       tmpbufeventdata1,
+			       ctx->separator ? ctx->separator : IPMI_SEL_SEPARATOR_STRING,
+			       tmpbufeventdata23))
+        return (1);
+    }
+  else if (strlen (tmpbufeventdata1)
+           && strcasecmp (tmpbufeventdata1, NA_STRING))
+    {
+      if (sel_string_snprintf (buf,
+			       buflen,
+			       wlen,
+			       "%s",
+			       tmpbufeventdata1))
+        return (1);
+    }
+  else if (strlen (tmpbufeventdata23)
+           && strcasecmp (tmpbufeventdata23, NA_STRING))
+    {
+      /* Having event_data1 as N/A and event data 2+3 not N/A is
+       * probably impossible, but handle it anyway.
+       */
+      if (sel_string_snprintf (buf,
+			       buflen,
+			       wlen,
+			       "%s",
+			       tmpbufeventdata23))
+        return (1);
+    }
+  else if (flags & IPMI_SEL_STRING_FLAGS_OUTPUT_NOT_AVAILABLE)
+    {
+      if (sel_string_snprintf (buf,
+			       buflen,
+			       wlen,
+			       "%s",
+			       NA_STRING))
+        return (1);
+    }
+
+  return (0);
+}
+
+/* return (0) - continue on
+ * return (1) - buffer full, return full buffer to user
+ * return (-1) - error, cleanup and return error
+ */
+static int
 _output_event_direction (ipmi_sel_ctx_t ctx,
                          struct ipmi_sel_entry *sel_entry,
                          uint8_t sel_record_type,
@@ -3252,6 +3366,20 @@ sel_format_record_string (ipmi_sel_ctx_t ctx,
             goto out;
           percent_flag = 0;
         }
+      else if (percent_flag && *fmt == 'E') /* combined event data 1, 2, and 3 string */
+	{
+	  if ((ret = _output_event_data1_event_data2_event_data3 (ctx,
+								  &sel_entry,
+								  sel_record_type,
+								  buf,
+								  buflen,
+								  flags,
+								  &wlen)) < 0)
+            goto cleanup;
+          if (ret)
+            goto out;
+          percent_flag = 0;
+	}
       else if (percent_flag && *fmt == 'k') /* event direction */
         {
           if ((ret = _output_event_direction (ctx,
