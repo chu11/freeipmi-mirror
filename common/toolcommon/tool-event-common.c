@@ -329,7 +329,6 @@ event_output_sensor_name (pstdout_state_t pstate,
   int ret;
 
   assert (sel_ctx);
-  assert (sdr_ctx);
   assert (!entity_sensor_names || (entity_sensor_names && entity_id_counts));
   assert (column_width || (!column_width && comma_separated_output));
 
