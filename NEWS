@@ -8,6 +8,8 @@ o In bmc-watchdog, fix --start-if-stopped and --reset-if-running
   options.
 o In ipmidetectd, fix usage output typos.
 o In ipmi-sensors-config, fix several parallel output corner cases.
+o For consistency to other tools, turn on quiet-caching if
+  communicating with multiple hosts in bmc-device and ipmi-oem.
 o Fix start run levels in ipmidetectd init script. 
 
 Libraries

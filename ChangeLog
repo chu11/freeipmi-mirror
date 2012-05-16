@@ -2,7 +2,10 @@
 
 	* ipmi-sensors-config/ipmi-sensors-config.c (_ipmi_sensors_config):
 	Fix several parallel output corner cases.
-	
+
+	* ipmi-oem/ipmi-oem.c (main), bmc-device/bmc-device.c (main): Turn
+	on quiet caching if doing communication to multiple hosts.
+
 2012-05-10  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/fru-parse/ipmi-fru-parse.c (_read_fru_data): Handle
