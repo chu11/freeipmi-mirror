@@ -4,6 +4,9 @@
 	common/toolcommon/tool-sdr-cache-common.c (sdr_cache_flush_cache):
 	Do not require ipmi_sdr_ctx_t parameter, create it inside
 	function.
+
+	* Globally in tools, call sdr_cache_flush_cache() before opening
+	ipmi_open.
 	
 2012-05-15  Albert Chu <chu11@llnl.gov>
 

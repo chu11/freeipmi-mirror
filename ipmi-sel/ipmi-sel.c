@@ -366,19 +366,6 @@ _display_sel_info (ipmi_sel_state_data_t *state_data)
 }
 
 static int
-_flush_cache (ipmi_sel_state_data_t *state_data)
-{
-  assert (state_data);
-
-  if (sdr_cache_flush_cache (state_data->pstate,
-                             state_data->hostname,
-			     &state_data->prog_data->args->sdr) < 0)
-    return (-1);
-
-  return (0);
-}
-
-static int
 _list_sensor_types (ipmi_sel_state_data_t *state_data)
 {
   assert (state_data);
@@ -2139,9 +2126,6 @@ run_cmd_args (ipmi_sel_state_data_t *state_data)
   if (args->info)
     return (_display_sel_info (state_data));
 
-  if (args->sdr.flush_cache)
-    return (_flush_cache (state_data));
-
   if (args->list_sensor_types)
     return (_list_sensor_types (state_data));
 
@@ -2175,8 +2159,17 @@ _ipmi_sel (pstdout_state_t pstate,
   assert (arg);
 
   prog_data = (ipmi_sel_prog_data_t *)arg;
-  memset (&state_data, '\0', sizeof (ipmi_sel_state_data_t));
 
+  if (prog_data->args->sdr.flush_cache)
+    {
+      if (sdr_cache_flush_cache (pstate,
+                                 hostname,
+                                 &prog_data->args->sdr) < 0)
+        return (EXIT_FAILURE);
+      return (EXIT_SUCCESS);
+    }
+
+  memset (&state_data, '\0', sizeof (ipmi_sel_state_data_t));
   state_data.prog_data = prog_data;
   state_data.pstate = pstate;
   state_data.hostname = (char *)hostname;

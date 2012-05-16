@@ -74,19 +74,6 @@ typedef int (*Bmc_device_system_info)(ipmi_ctx_t ctx,
 #define BMC_DEVICE_SET_SENSOR_READING_AND_EVENT_STATUS_ARGS 11
 
 static int
-_flush_cache (bmc_device_state_data_t *state_data)
-{
-  assert (state_data);
-  
-  if (sdr_cache_flush_cache (state_data->pstate,
-                             state_data->hostname,
-			     &state_data->prog_data->args->sdr) < 0)
-    return (-1);
-  
-  return (0);
-}
-
-static int
 cold_reset (bmc_device_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -2555,9 +2542,6 @@ run_cmd_args (bmc_device_state_data_t *state_data)
 
   args = state_data->prog_data->args;
 
-  if (args->sdr.flush_cache)
-    return (_flush_cache (state_data));
-
   if (args->cold_reset)
     return (cold_reset (state_data));
 
@@ -2644,23 +2628,28 @@ _bmc_device (pstdout_state_t pstate,
   assert (arg);
 
   prog_data = (bmc_device_prog_data_t *)arg;
-  memset (&state_data, '\0', sizeof (bmc_device_state_data_t));
 
+  if (prog_data->args->sdr.flush_cache)
+    {
+      if (sdr_cache_flush_cache (pstate,
+				 hostname,
+				 &prog_data->args->sdr) < 0)
+	return (EXIT_FAILURE);
+      return (EXIT_SUCCESS);
+    }
+  
+  memset (&state_data, '\0', sizeof (bmc_device_state_data_t));
   state_data.prog_data = prog_data;
   state_data.pstate = pstate;
   state_data.hostname = (char *)hostname;
 
-  /* Special case, just flush, don't do an IPMI connection */
-  if (!prog_data->args->sdr.flush_cache)
+  if (!(state_data.ipmi_ctx = ipmi_open (prog_data->progname,
+					 hostname,
+					 &(prog_data->args->common),
+					 state_data.pstate)))
     {
-      if (!(state_data.ipmi_ctx = ipmi_open (prog_data->progname,
-					     hostname,
-					     &(prog_data->args->common),
-					     state_data.pstate)))
-	{
-	  exit_code = EXIT_FAILURE;
-	  goto cleanup;
-	}
+      exit_code = EXIT_FAILURE;
+      goto cleanup;
     }
 
   if (!(state_data.sdr_ctx = ipmi_sdr_ctx_create ()))

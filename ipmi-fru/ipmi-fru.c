@@ -75,19 +75,6 @@ struct ipmi_fru_sdr_callback
 };
 
 static int
-_flush_cache (ipmi_fru_state_data_t *state_data)
-{
-  assert (state_data);
-
-  if (sdr_cache_flush_cache (state_data->pstate,
-                             state_data->hostname,
-			     &state_data->prog_data->args->sdr) < 0)
-    return (-1);
-
-  return (0);
-}
-
-static int
 _output_fru (ipmi_fru_state_data_t *state_data,
              unsigned int *output_count,
              uint8_t device_id,
@@ -592,9 +579,6 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
 
   args = state_data->prog_data->args;
 
-  if (args->sdr.flush_cache)
-    return (_flush_cache (state_data));
-
   if (args->sdr.ignore_sdr_cache)
     {
       /* no SDR?  This is all you get :-) */
@@ -720,69 +704,70 @@ _ipmi_fru (pstdout_state_t pstate,
   ipmi_fru_state_data_t state_data;
   ipmi_fru_prog_data_t *prog_data;
   int exit_code = -1;
+  unsigned int flags = 0;
 
   assert (pstate);
   assert (arg);
 
   prog_data = (ipmi_fru_prog_data_t *)arg;
-  memset (&state_data, '\0', sizeof (ipmi_fru_state_data_t));
 
+  if (prog_data->args->sdr.flush_cache)
+    {
+      if (sdr_cache_flush_cache (pstate,
+                                 hostname,
+                                 &prog_data->args->sdr) < 0)
+	return (EXIT_FAILURE);
+      return (EXIT_SUCCESS);
+    }
+
+  memset (&state_data, '\0', sizeof (ipmi_fru_state_data_t));
   state_data.prog_data = prog_data;
   state_data.pstate = pstate;
   state_data.hostname = (char *)hostname;
 
-  /* Special case, just flush, don't do an IPMI connection */
-  if (!prog_data->args->sdr.flush_cache)
+  if (!(state_data.ipmi_ctx = ipmi_open (prog_data->progname,
+					 hostname,
+					 &(prog_data->args->common),
+					 state_data.pstate)))
     {
-      if (!(state_data.ipmi_ctx = ipmi_open (prog_data->progname,
-                                             hostname,
-                                             &(prog_data->args->common),
-					     state_data.pstate)))
-        {
-          exit_code = EXIT_FAILURE;
-          goto cleanup;
-        }      
+      exit_code = EXIT_FAILURE;
+      goto cleanup;
+    }      
+
+  if (!(state_data.fru_parse_ctx = ipmi_fru_parse_ctx_create (state_data.ipmi_ctx)))
+    {
+      pstdout_perror (pstate, "ipmi_fru_parse_ctx_create()");
+      exit_code = EXIT_FAILURE;
+      goto cleanup;
     }
-
-  if (!prog_data->args->sdr.flush_cache)
+  
+  if (hostname)
     {
-      unsigned int flags = 0;
-
-      if (!(state_data.fru_parse_ctx = ipmi_fru_parse_ctx_create (state_data.ipmi_ctx)))
-        {
-          pstdout_perror (pstate, "ipmi_fru_parse_ctx_create()");
-          exit_code = EXIT_FAILURE;
-          goto cleanup;
-        }
+      if (ipmi_fru_parse_ctx_set_debug_prefix (state_data.fru_parse_ctx,
+					       hostname) < 0)
+	pstdout_fprintf (pstate,
+			 stderr,
+			 "ipmi_fru_parse_ctx_set_debug_prefix: %s\n",
+			 ipmi_fru_parse_ctx_errormsg (state_data.fru_parse_ctx));
+    }
       
-      if (state_data.prog_data->args->common.debug)
-        flags |= IPMI_FRU_PARSE_FLAGS_DEBUG_DUMP;
-      if (state_data.prog_data->args->skip_checks)
-        flags |= IPMI_FRU_PARSE_FLAGS_SKIP_CHECKSUM_CHECKS;
-      if (state_data.prog_data->args->interpret_oem_data)
-        flags |= IPMI_FRU_PARSE_FLAGS_INTERPRET_OEM_DATA;
-
-      if (hostname)
-        {
-          if (ipmi_fru_parse_ctx_set_debug_prefix (state_data.fru_parse_ctx,
-                                                   hostname) < 0)
-            pstdout_fprintf (pstate,
-                             stderr,
-                             "ipmi_fru_parse_ctx_set_debug_prefix: %s\n",
-                             ipmi_fru_parse_ctx_errormsg (state_data.fru_parse_ctx));
-        }
-      
-      if (flags)
-        {
-          if (ipmi_fru_parse_ctx_set_flags (state_data.fru_parse_ctx, flags) < 0)
-            {
-              pstdout_fprintf (pstate,
-                               stderr,
-                               "ipmi_fru_parse_ctx_set_flags: %s\n",
-                               ipmi_fru_parse_ctx_strerror (ipmi_fru_parse_ctx_errnum (state_data.fru_parse_ctx)));
-              goto cleanup;
-            }
-        }
+  if (state_data.prog_data->args->common.debug)
+    flags |= IPMI_FRU_PARSE_FLAGS_DEBUG_DUMP;
+  if (state_data.prog_data->args->skip_checks)
+    flags |= IPMI_FRU_PARSE_FLAGS_SKIP_CHECKSUM_CHECKS;
+  if (state_data.prog_data->args->interpret_oem_data)
+    flags |= IPMI_FRU_PARSE_FLAGS_INTERPRET_OEM_DATA;
+  
+  if (flags)
+    {
+      if (ipmi_fru_parse_ctx_set_flags (state_data.fru_parse_ctx, flags) < 0)
+	{
+	  pstdout_fprintf (pstate,
+			   stderr,
+			   "ipmi_fru_parse_ctx_set_flags: %s\n",
+			   ipmi_fru_parse_ctx_strerror (ipmi_fru_parse_ctx_errnum (state_data.fru_parse_ctx)));
+	  goto cleanup;
+	}
     }
 
   if (!(state_data.sdr_ctx = ipmi_sdr_ctx_create ()))

@@ -56,6 +56,15 @@ _ipmi_sensors_config (pstdout_state_t pstate,
 
   prog_data = (ipmi_sensors_config_prog_data_t *) arg;
 
+  if (prog_data->args->sdr.flush_cache)
+    {
+      if (sdr_cache_flush_cache (pstate,
+                                 hostname,
+				 &prog_data->args->sdr) < 0)
+	return (EXIT_FAILURE);
+      return (EXIT_SUCCESS);
+    }
+
   memset (&state_data, '\0', sizeof (ipmi_sensors_config_state_data_t));
   state_data.prog_data = prog_data;
   state_data.pstate = pstate;
@@ -86,19 +95,6 @@ _ipmi_sensors_config (pstdout_state_t pstate,
 			     hostname) < 0)
     {
       exit_code = EXIT_FAILURE;
-      goto cleanup;
-    }
-
-  if (prog_data->args->sdr.flush_cache)
-    {
-      if (sdr_cache_flush_cache (NULL,
-                                 hostname,
-				 &state_data.prog_data->args->sdr) < 0)
-        {
-          exit_code = EXIT_FAILURE;
-          goto cleanup;
-        }
-      exit_code = 0;
       goto cleanup;
     }
 

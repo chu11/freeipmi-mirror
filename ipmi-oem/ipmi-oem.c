@@ -1151,19 +1151,6 @@ _list (void)
 }
 
 static int
-_flush_cache (ipmi_oem_state_data_t *state_data)
-{
-  assert (state_data);
-  
-  if (sdr_cache_flush_cache (state_data->pstate,
-                             state_data->hostname,
-			     &state_data->prog_data->args->sdr) < 0)
-    return (-1);
-  
-  return (0);
-}
-
-static int
 _run_oem_cmd (ipmi_oem_state_data_t *state_data)
 {
   struct ipmi_oem_arguments *args;
@@ -1286,9 +1273,6 @@ run_cmd_args (ipmi_oem_state_data_t *state_data)
   assert (strcasecmp (args->oem_id, "list"));
   assert (strcasecmp (args->oem_id, "help"));
 
-  if (args->sdr.flush_cache)
-    return (_flush_cache (state_data));
-
   if (_run_oem_cmd (state_data) < 0)
     goto cleanup;
 
@@ -1310,16 +1294,23 @@ _ipmi_oem (pstdout_state_t pstate,
   assert (arg);
 
   prog_data = (ipmi_oem_prog_data_t *)arg;
-  memset (&state_data, '\0', sizeof (ipmi_oem_state_data_t));
 
+  if (prog_data->args->sdr.flush_cache)
+    {
+      if (sdr_cache_flush_cache (pstate,
+                                 hostname,
+                                 &prog_data->args->sdr) < 0)
+	return (EXIT_FAILURE);
+      return (EXIT_SUCCESS);
+    }
+
+  memset (&state_data, '\0', sizeof (ipmi_oem_state_data_t));
   state_data.prog_data = prog_data;
   state_data.pstate = pstate;
   state_data.hostname = (char *)hostname;
 
-  /* Special case, just flush, don't do an IPMI connection */
   /* Special case, we're going to output help info, don't do an IPMI connection */
-  if (!prog_data->args->sdr.flush_cache
-      && prog_data->args->oem_command)
+  if (prog_data->args->oem_command)
     {
       if (!(state_data.ipmi_ctx = ipmi_open (prog_data->progname,
 					     hostname,

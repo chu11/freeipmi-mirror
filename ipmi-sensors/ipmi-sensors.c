@@ -402,19 +402,6 @@ _sdr_repository_info (ipmi_sensors_state_data_t *state_data)
 }
 
 static int
-_flush_cache (ipmi_sensors_state_data_t *state_data)
-{
-  assert (state_data);
-
-  if (sdr_cache_flush_cache (state_data->pstate,
-                             state_data->hostname,
-			     &state_data->prog_data->args->sdr) < 0)
-    return (-1);
-
-  return (0);
-}
-
-static int
 _list_sensor_types (ipmi_sensors_state_data_t *state_data)
 {
   assert (state_data);
@@ -1327,9 +1314,6 @@ run_cmd_args (ipmi_sensors_state_data_t *state_data)
   if (args->sdr_info)
     return (_sdr_repository_info (state_data));
 
-  if (args->sdr.flush_cache)
-    return (_flush_cache (state_data));
-
   if (args->list_sensor_types)
     return (_list_sensor_types (state_data));
 
@@ -1359,16 +1343,23 @@ _ipmi_sensors (pstdout_state_t pstate,
   assert (arg);
 
   prog_data = (ipmi_sensors_prog_data_t *)arg;
-  memset (&state_data, '\0', sizeof (ipmi_sensors_state_data_t));
+  
+  if (prog_data->args->sdr.flush_cache)
+    {
+      if (sdr_cache_flush_cache (pstate,
+                                 hostname,
+                                 &prog_data->args->sdr) < 0)
+        return (EXIT_FAILURE);
+      return (EXIT_SUCCESS);
+    }
 
+  memset (&state_data, '\0', sizeof (ipmi_sensors_state_data_t));
   state_data.prog_data = prog_data;
   state_data.pstate = pstate;
   state_data.hostname = (char *)hostname;
-
-  /* Special case, just flush, don't do an IPMI connection */
+  
   /* Special case, just list sensor_types, don't do an IPMI connection */
-  if (!prog_data->args->sdr.flush_cache
-      && !prog_data->args->list_sensor_types)
+  if (!prog_data->args->list_sensor_types)
     {
       if (!(state_data.ipmi_ctx = ipmi_open (prog_data->progname,
                                              hostname,
@@ -1396,8 +1387,7 @@ _ipmi_sensors (pstdout_state_t pstate,
       goto cleanup;
     }
 
-  if (!prog_data->args->sdr.flush_cache
-      && !prog_data->args->list_sensor_types)
+  if (!prog_data->args->list_sensor_types)
     {
       if (!(state_data.sensor_read_ctx = ipmi_sensor_read_ctx_create (state_data.ipmi_ctx)))
         {

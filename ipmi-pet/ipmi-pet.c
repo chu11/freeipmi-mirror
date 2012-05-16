@@ -97,19 +97,6 @@ struct ipmi_pet_trap_data
 };
 
 static int
-_flush_cache (ipmi_pet_state_data_t *state_data)
-{
-  assert (state_data);
-  
-  if (sdr_cache_flush_cache (NULL,
-                             state_data->hostname,
-			     &state_data->prog_data->args->sdr) < 0)
-    return (-1);
-  
-  return (0);
-}
-
-static int
 _ipmi_pet_init (ipmi_pet_state_data_t *state_data)
 {
   struct ipmi_pet_arguments *args;
@@ -2056,9 +2043,6 @@ run_cmd_args (ipmi_pet_state_data_t *state_data)
   
   args = state_data->prog_data->args;
   
-  if (args->sdr.flush_cache)
-    return (_flush_cache (state_data));
-
   if (args->variable_bindings_length)
     {
       if (args->pet_acknowledge)
@@ -2112,13 +2096,21 @@ _ipmi_pet (ipmi_pet_prog_data_t *prog_data)
 
   assert (prog_data);
 
+  if (prog_data->args->sdr.flush_cache)
+    {
+      if (sdr_cache_flush_cache (NULL,
+                                 prog_data->args->common.hostname,
+                                 &prog_data->args->sdr) < 0)
+	return (EXIT_FAILURE);
+      return (EXIT_SUCCESS);
+    }
+
   memset (&state_data, '\0', sizeof (ipmi_pet_state_data_t));
   state_data.prog_data = prog_data;
   state_data.hostname = prog_data->args->common.hostname;
 
   /* Special case, just flush, don't do an IPMI connection */
-  if (!prog_data->args->sdr.flush_cache
-      && !prog_data->args->sdr.ignore_sdr_cache
+  if (!prog_data->args->sdr.ignore_sdr_cache
       && !prog_data->args->pet_acknowledge)
     {
       if (!(state_data.ipmi_ctx = ipmi_open (prog_data->progname,
@@ -2131,8 +2123,7 @@ _ipmi_pet (ipmi_pet_prog_data_t *prog_data)
         }
     }
 
-  if (!prog_data->args->sdr.flush_cache
-      && prog_data->args->pet_acknowledge)
+  if (prog_data->args->pet_acknowledge)
     {
       if (!(state_data.ipmi_ctx = ipmi_ctx_create ()))
 	{
@@ -2161,9 +2152,8 @@ _ipmi_pet (ipmi_pet_prog_data_t *prog_data)
 	}
     }
 
-  if ((!prog_data->args->sdr.ignore_sdr_cache
+  if (!prog_data->args->sdr.ignore_sdr_cache
        && !prog_data->args->pet_acknowledge)
-      || prog_data->args->sdr.flush_cache)
     {
       if (!(state_data.sdr_ctx = ipmi_sdr_ctx_create ()))
 	{
@@ -2181,8 +2171,7 @@ _ipmi_pet (ipmi_pet_prog_data_t *prog_data)
 	  goto cleanup;
 	}
       
-      if (!prog_data->args->sdr.flush_cache
-          && !prog_data->args->pet_acknowledge)
+      if (!prog_data->args->pet_acknowledge)
         {
           if (sdr_cache_create_and_load (state_data.sdr_ctx,
                                          NULL,
@@ -2195,31 +2184,27 @@ _ipmi_pet (ipmi_pet_prog_data_t *prog_data)
   else
     state_data.sdr_ctx = NULL;
   
-  /* Special case, just flush, don't do SEL stuff */
-  if (!prog_data->args->sdr.flush_cache)
+  if (!(state_data.sel_ctx = ipmi_sel_ctx_create (NULL, state_data.sdr_ctx)))
     {
-      if (!(state_data.sel_ctx = ipmi_sel_ctx_create (NULL, state_data.sdr_ctx)))
-        {
-          perror ("ipmi_sel_ctx_create()");
-          goto cleanup;
-        }
-      
-      if (state_data.prog_data->args->common.debug
-	  && prog_data->args->common.hostname)
-        {
-          if (ipmi_sel_ctx_set_debug_prefix (state_data.sel_ctx,
-					     prog_data->args->common.hostname) < 0)
-            fprintf (stderr,
-		     "ipmi_sel_ctx_set_debug_prefix: %s\n",
-		     ipmi_sel_ctx_errormsg (state_data.sel_ctx));
-        }
-
-      /* Only for outputting type/length fields */
-      if (!(state_data.fru_parse_ctx = ipmi_fru_parse_ctx_create (NULL)))
-        {
-          perror ("ipmi_fru_parse_ctx_create()");
-          goto cleanup;
-        }
+      perror ("ipmi_sel_ctx_create()");
+      goto cleanup;
+    }
+  
+  if (state_data.prog_data->args->common.debug
+      && prog_data->args->common.hostname)
+    {
+      if (ipmi_sel_ctx_set_debug_prefix (state_data.sel_ctx,
+					 prog_data->args->common.hostname) < 0)
+	fprintf (stderr,
+		 "ipmi_sel_ctx_set_debug_prefix: %s\n",
+		 ipmi_sel_ctx_errormsg (state_data.sel_ctx));
+    }
+  
+  /* Only for outputting type/length fields */
+  if (!(state_data.fru_parse_ctx = ipmi_fru_parse_ctx_create (NULL)))
+    {
+      perror ("ipmi_fru_parse_ctx_create()");
+      goto cleanup;
     }
 
   if (prog_data->args->output_event_state)
