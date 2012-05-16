@@ -7,6 +7,7 @@ o In ipmiconsole, fix password length check bug.
 o In bmc-watchdog, fix --start-if-stopped and --reset-if-running
   options.
 o In ipmidetectd, fix usage output typos.
+o In ipmi-sensors-config, fix several parallel output corner cases.
 o Fix start run levels in ipmidetectd init script. 
 
 Libraries
