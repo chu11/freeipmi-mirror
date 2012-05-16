@@ -1326,6 +1326,7 @@ _ipmi_sensors (pstdout_state_t pstate,
   ipmi_sensors_state_data_t state_data;
   ipmi_sensors_prog_data_t *prog_data;
   int exit_code = EXIT_FAILURE;
+  unsigned int sensor_read_flags = 0;
 
   assert (pstate);
   assert (arg);
@@ -1373,43 +1374,21 @@ _ipmi_sensors (pstdout_state_t pstate,
     }
 
   if (state_data.prog_data->args->bridge_sensors)
-    {
-      /* Don't error out, if this fails we can still continue */
-      if (ipmi_sensor_read_ctx_set_flags (state_data.sensor_read_ctx,
-					  IPMI_SENSOR_READ_FLAGS_BRIDGE_SENSORS) < 0)
-	pstdout_fprintf (pstate,
-			 stderr,
-			 "ipmi_sensor_read_ctx_set_flags: %s\n",
-			 ipmi_sensor_read_ctx_strerror (ipmi_sensor_read_ctx_errnum (state_data.sensor_read_ctx)));
-    }
-
+    sensor_read_flags |= IPMI_SENSOR_READ_FLAGS_BRIDGE_SENSORS;
+  
   if (state_data.prog_data->args->common.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_DISCRETE_READING)
-    {
-      /* Don't error out, if this fails we can still continue */
-      if (ipmi_sensor_read_ctx_set_flags (state_data.sensor_read_ctx,
-					  IPMI_SENSOR_READ_FLAGS_DISCRETE_READING) < 0)
-	pstdout_fprintf (pstate,
-			 stderr,
-			 "ipmi_sensor_read_ctx_set_flags: %s\n",
-			 ipmi_sensor_read_ctx_strerror (ipmi_sensor_read_ctx_errnum (state_data.sensor_read_ctx)));
-    }
-
+    sensor_read_flags |= IPMI_SENSOR_READ_FLAGS_DISCRETE_READING;
+  
   if (state_data.prog_data->args->common.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IGNORE_SCANNING_DISABLED)
-    {
-      /* Don't error out, if this fails we can still continue */
-      if (ipmi_sensor_read_ctx_set_flags (state_data.sensor_read_ctx,
-					  IPMI_SENSOR_READ_FLAGS_IGNORE_SCANNING_DISABLED) < 0)
-	pstdout_fprintf (pstate,
-			 stderr,
-			 "ipmi_sensor_read_ctx_set_flags: %s\n",
-			 ipmi_sensor_read_ctx_strerror (ipmi_sensor_read_ctx_errnum (state_data.sensor_read_ctx)));
-    }
-
+    sensor_read_flags |= IPMI_SENSOR_READ_FLAGS_IGNORE_SCANNING_DISABLED;
+  
   if (state_data.prog_data->args->common.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_ASSUME_BMC_OWNER)
+    sensor_read_flags |= IPMI_SENSOR_READ_FLAGS_ASSUME_BMC_OWNER;
+  
+  if (sensor_read_flags)
     {
       /* Don't error out, if this fails we can still continue */
-      if (ipmi_sensor_read_ctx_set_flags (state_data.sensor_read_ctx,
-					  IPMI_SENSOR_READ_FLAGS_ASSUME_BMC_OWNER) < 0)
+      if (ipmi_sensor_read_ctx_set_flags (state_data.sensor_read_ctx, sensor_read_flags) < 0)
 	pstdout_fprintf (pstate,
 			 stderr,
 			 "ipmi_sensor_read_ctx_set_flags: %s\n",

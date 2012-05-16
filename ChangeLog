@@ -7,6 +7,10 @@
 	* ipmi-sensors/, ipmi-sel/: Code cleanup with use of
 	list_sensor_type.  Call before launching threads in tools since it
 	is identical in all outputs.
+
+	* ipmi-sensors/ipmi-sensors.c (_ipmi_sensors): Fix bug in which
+	multiple workaround flags and workaround flags with bridging could
+	not be specified.
 	
 2012-05-16  Albert Chu <chu11@llnl.gov>
 
