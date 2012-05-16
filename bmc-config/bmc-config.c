@@ -126,7 +126,7 @@ _bmc_config (pstdout_state_t pstate,
                         fp) < 0)
 	goto cleanup;
     }
-
+  
   /* note: argp validation catches if user specified keypair and
      filename for a diff
   */
