@@ -1300,6 +1300,8 @@ run_cmd_args (ipmi_sensors_state_data_t *state_data)
 
   args = state_data->prog_data->args;
 
+  assert (!args->sdr.flush_cache);
+
   if (args->sdr_info)
     return (_sdr_repository_info (state_data));
 
@@ -1329,6 +1331,8 @@ _ipmi_sensors (pstdout_state_t pstate,
   assert (arg);
 
   prog_data = (ipmi_sensors_prog_data_t *)arg;
+
+  assert (!prog_data->args->list_sensor_types);
   
   if (prog_data->args->sdr.flush_cache)
     {

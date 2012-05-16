@@ -579,6 +579,8 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
 
   args = state_data->prog_data->args;
 
+  assert (!args->sdr.flush_cache);
+
   if (args->sdr.ignore_sdr_cache)
     {
       /* no SDR?  This is all you get :-) */

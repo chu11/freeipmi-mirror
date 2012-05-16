@@ -1272,6 +1272,7 @@ run_cmd_args (ipmi_oem_state_data_t *state_data)
   assert (args->oem_id);
   assert (strcasecmp (args->oem_id, "list"));
   assert (strcasecmp (args->oem_id, "help"));
+  assert (!args->sdr.flush_cache);
 
   if (_run_oem_cmd (state_data) < 0)
     goto cleanup;

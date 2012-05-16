@@ -2112,6 +2112,8 @@ run_cmd_args (ipmi_sel_state_data_t *state_data)
 
   args = state_data->prog_data->args;
 
+  assert (!args->sdr.flush_cache);
+
   if (args->info)
     return (_display_sel_info (state_data));
 
@@ -2146,6 +2148,8 @@ _ipmi_sel (pstdout_state_t pstate,
   assert (arg);
 
   prog_data = (ipmi_sel_prog_data_t *)arg;
+
+  assert (!prog_data->args->list_sensor_types);
 
   if (prog_data->args->sdr.flush_cache)
     {

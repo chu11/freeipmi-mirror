@@ -2043,6 +2043,8 @@ run_cmd_args (ipmi_pet_state_data_t *state_data)
   
   args = state_data->prog_data->args;
   
+  assert (!args->sdr.flush_cache);
+
   if (args->variable_bindings_length)
     {
       if (args->pet_acknowledge)
