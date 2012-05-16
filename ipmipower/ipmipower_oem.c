@@ -144,7 +144,7 @@ _ipmipower_power_cmd_to_oem_power_type_support (ipmipower_power_cmd_t cmd)
       return (IPMIPOWER_OEM_POWER_TYPE_SUPPORT_IDENTIFY_STATUS);
     default:
       IPMIPOWER_ERROR (("_ipmipower_power_cmd_to_oem_power_type_support: invalid power cmd: %d", cmd));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   return (-1);			/* NOT REACHED */

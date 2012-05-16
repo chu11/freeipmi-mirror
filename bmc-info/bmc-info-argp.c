@@ -159,7 +159,7 @@ _bmc_info_config_file_parse (struct bmc_info_arguments *cmd_args)
                          &config_file_data) < 0)
     {
       fprintf (stderr, "config_file_parse: %s\n", strerror (errno));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (config_file_data.interpret_oem_data_count)

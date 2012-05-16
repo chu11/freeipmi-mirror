@@ -128,7 +128,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 	  || endptr[0] != '\0')
         {
           fprintf (stderr, "invalid device id\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       
       if (tmp == IPMI_FRU_DEVICE_ID_RESERVED
@@ -136,7 +136,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           || tmp > IPMI_FRU_DEVICE_ID_MAX)
         {
           fprintf (stderr, "invalid device id\n");
-          exit(1);
+          exit (EXIT_FAILURE);
         }
       cmd_args->device_id = tmp;
       cmd_args->device_id_set++;
@@ -192,7 +192,7 @@ _ipmi_fru_config_file_parse (struct ipmi_fru_arguments *cmd_args)
                          &config_file_data) < 0)
     {
       fprintf (stderr, "config_file_parse: %s\n", strerror (errno));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (config_file_data.verbose_count_count)

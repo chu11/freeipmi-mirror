@@ -7,7 +7,11 @@
 
 	* Globally in tools, call sdr_cache_flush_cache() before opening
 	ipmi_open.
-	
+
+	* Globally cleanup usage of exit codes using EXIT_FAILURE and
+	EXIT_SUCCESS appropriately.  Globally in tools cleanup general
+	exit code.
+
 2012-05-15  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-pet/: Fix bugs associated with new library checks for sdr

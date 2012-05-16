@@ -1265,7 +1265,7 @@ _bmc_info (pstdout_state_t pstate,
 {
   bmc_info_state_data_t state_data;
   bmc_info_prog_data_t *prog_data;
-  int exit_code = -1;
+  int exit_code = EXIT_FAILURE;
 
   assert (pstate);
   assert (arg);
@@ -1316,16 +1316,10 @@ main (int argc, char **argv)
 
   if ((hosts_count = pstdout_setup (&(prog_data.args->common.hostname),
                                     &(prog_data.args->hostrange))) < 0)
-    {
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
-    }
+    return (EXIT_FAILURE);
 
   if (!hosts_count)
-    {
-      exit_code = EXIT_SUCCESS;
-      goto cleanup;
-    }
+    return (EXIT_SUCCESS);
 
   if ((rv = pstdout_launch (prog_data.args->common.hostname,
                             _bmc_info,
@@ -1334,11 +1328,8 @@ main (int argc, char **argv)
       fprintf (stderr,
                "pstdout_launch: %s\n",
                pstdout_strerror (pstdout_errnum));
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
+      return (EXIT_FAILURE);
     }
 
-  exit_code = rv;
- cleanup:
-  return (exit_code);
+  return (rv);
 }

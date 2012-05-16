@@ -141,7 +141,7 @@ _ipmi_pef_config_config_file_parse (struct ipmi_pef_config_arguments *cmd_args)
                          &config_file_data) < 0)
     {
       fprintf (stderr, "config_file_parse: %s\n", strerror (errno));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (config_file_data.verbose_count_count)
@@ -159,7 +159,7 @@ _ipmi_pef_config_args_validate (struct ipmi_pef_config_arguments *cmd_args)
     {
       fprintf (stderr,
                "Exactly one of --info, --checkout, --commit, --diff, or --listsections MUST be given\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   /* make dummy argument for args validate to pass */

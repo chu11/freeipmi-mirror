@@ -89,7 +89,7 @@ ipmipower_power_cmd_to_string (ipmipower_power_cmd_t cmd)
       return ("identify status");
     default:
       IPMIPOWER_ERROR (("ipmipower_power_cmd_to_string: invalid power cmd type: %d", cmd));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   
   return (NULL);		/* NOT REACHED */
@@ -145,7 +145,7 @@ ipmipower_poll (struct pollfd *ufds, unsigned int nfds, int timeout)
       if (gettimeofday(&start, NULL) < 0)
         {
           IPMIPOWER_ERROR (("gettimeofday: %s", strerror (errno)));
-          exit (1);
+          exit (EXIT_FAILURE);
         }
     }
   else
@@ -163,7 +163,7 @@ ipmipower_poll (struct pollfd *ufds, unsigned int nfds, int timeout)
       if (n < 0 && errno != EINTR)
         {
           IPMIPOWER_ERROR (("poll: %s", strerror (errno)));
-          exit (1);
+          exit (EXIT_FAILURE);
         }
 
       if (n < 0 && timeout >= 0)      /* EINTR - adjust timeout */
@@ -171,7 +171,7 @@ ipmipower_poll (struct pollfd *ufds, unsigned int nfds, int timeout)
           if (gettimeofday(&end, NULL) < 0)
             {
               IPMIPOWER_ERROR (("gettimeofday: %s", strerror (errno)));
-              exit (1);
+              exit (EXIT_FAILURE);
             }
 
           timersub(&end, &start, &delta);     /* delta = end-start */
@@ -200,7 +200,7 @@ ipmipower_cbuf_printf(cbuf_t cbuf, const char *fmt, ...)
   if (written < 0)
     {
       IPMIPOWER_ERROR (("cbuf_write: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   
   va_end(ap);
@@ -218,7 +218,7 @@ ipmipower_cbuf_peek_and_drop (cbuf_t buf, void *buffer, int len)
   if ((r_len = cbuf_peek (buf, buffer, len)) < 0)
     {
       IPMIPOWER_ERROR (("cbuf_peek: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   /* Nothing there */
@@ -228,19 +228,19 @@ ipmipower_cbuf_peek_and_drop (cbuf_t buf, void *buffer, int len)
   if ((dropped = cbuf_drop (buf, len)) < 0)
     {
       IPMIPOWER_ERROR (("cbuf_drop: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (dropped != r_len)
     {
       IPMIPOWER_ERROR (("cbuf_drop: dropped incorrect bytes: %d", dropped));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if ((rv = cbuf_drop (buf, -1)) < 0)
     {
       IPMIPOWER_ERROR (("cbuf_drop: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (rv > 0)

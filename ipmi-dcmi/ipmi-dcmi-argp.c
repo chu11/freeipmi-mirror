@@ -158,7 +158,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       if (strlen (cmd_args->set_asset_tag_arg) > IPMI_DCMI_MAX_ASSET_TAG_LENGTH)
         {
           fprintf (stderr, "asset tag invalid length\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       break;
     case GET_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING:
@@ -171,7 +171,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       if (strlen (cmd_args->set_management_controller_identifier_string_arg) > (IPMI_DCMI_MAX_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_LENGTH - 1))
         {
           fprintf (stderr, "management controller identifier string invalid length\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       break;
     case GET_DCMI_SENSOR_INFO:
@@ -212,13 +212,13 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 	  || endptr[0] != '\0')
         {
           fprintf (stderr, "invalid value for exception actions\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       if (tmp < IPMI_DCMI_EXCEPTION_ACTIONS_MIN
           || tmp > IPMI_DCMI_EXCEPTION_ACTIONS_MAX)
         {
           fprintf (stderr, "exception actions out of range\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       cmd_args->exception_actions_arg = tmp;
       cmd_args->exception_actions++;
@@ -230,13 +230,13 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 	  || endptr[0] != '\0')
         {
           fprintf (stderr, "invalid value for power limit requested\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       if (tmp < IPMI_DCMI_POWER_LIMIT_REQUESTED_MIN
           || tmp > IPMI_DCMI_POWER_LIMIT_REQUESTED_MAX)
         {
           fprintf (stderr, "power limit requested out of range\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       cmd_args->power_limit_requested_arg = tmp;
       cmd_args->power_limit_requested++;
@@ -248,13 +248,13 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 	  || endptr[0] != '\0')
         {
           fprintf (stderr, "invalid value for correction time limit\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       if (lltmp < IPMI_DCMI_CORRECTION_TIME_LIMIT_MIN
           || lltmp > IPMI_DCMI_CORRECTION_TIME_LIMIT_MAX)
         {
           fprintf (stderr, "correction time limit out of range\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       cmd_args->correction_time_limit_arg = lltmp;
       cmd_args->correction_time_limit++;
@@ -266,13 +266,13 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 	  || endptr[0] != '\0')
         {
           fprintf (stderr, "invalid value for statistics sampling period\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       if (tmp < IPMI_DCMI_MANAGEMENT_APPLICATION_STATISTICS_SAMPLING_PERIOD_MIN
           || tmp > IPMI_DCMI_MANAGEMENT_APPLICATION_STATISTICS_SAMPLING_PERIOD_MAX)
         {
           fprintf (stderr, "statistics sampling period out of range\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       cmd_args->statistics_sampling_period_arg = tmp;
       cmd_args->statistics_sampling_period++;
@@ -285,7 +285,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       else
         {
           fprintf (stderr, "invalid value for activate/deactivate power limit\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       cmd_args->activate_deactivate_power_limit++;
       break;
@@ -329,7 +329,7 @@ _ipmi_dcmi_config_file_parse (struct ipmi_dcmi_arguments *cmd_args)
                          &config_file_data) < 0)
     {
       fprintf (stderr, "config_file_parse: %s\n", strerror (errno));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (config_file_data.interpret_oem_data_count)
@@ -355,7 +355,7 @@ _ipmi_dcmi_args_validate (struct ipmi_dcmi_arguments *cmd_args)
     {
       fprintf (stderr,
                "No command specified.\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   
   if ((cmd_args->get_dcmi_capability_info
@@ -372,7 +372,7 @@ _ipmi_dcmi_args_validate (struct ipmi_dcmi_arguments *cmd_args)
     {
       fprintf (stderr,
                "Multiple commands specified.\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (cmd_args->set_power_limit
@@ -383,7 +383,7 @@ _ipmi_dcmi_args_validate (struct ipmi_dcmi_arguments *cmd_args)
     {
       fprintf (stderr,
                "No power limit configuration changes specified\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 }
 

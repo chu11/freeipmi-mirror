@@ -1645,7 +1645,7 @@ _ipmi_chassis (pstdout_state_t pstate,
 {
   ipmi_chassis_state_data_t state_data;
   ipmi_chassis_prog_data_t *prog_data;
-  int exit_code = -1;
+  int exit_code = EXIT_FAILURE;
 
   assert (pstate);
   assert (arg);
@@ -1660,18 +1660,12 @@ _ipmi_chassis (pstdout_state_t pstate,
                                          hostname,
                                          &(prog_data->args->common),
 					 state_data.pstate)))
-    {
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
-    }
+    goto cleanup;
 
   if (run_cmd_args (&state_data) < 0)
-    {
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
-    }
+    goto cleanup;
 
-  exit_code = 0;
+  exit_code = EXIT_SUCCESS;
  cleanup:
   ipmi_ctx_close (state_data.ipmi_ctx);
   ipmi_ctx_destroy (state_data.ipmi_ctx);
@@ -1683,7 +1677,6 @@ main (int argc, char **argv)
 {
   ipmi_chassis_prog_data_t prog_data;
   struct ipmi_chassis_arguments cmd_args;
-  int exit_code;
   int hosts_count;
   int rv;
 
@@ -1697,16 +1690,10 @@ main (int argc, char **argv)
 
   if ((hosts_count = pstdout_setup (&(prog_data.args->common.hostname),
 				    &(prog_data.args->hostrange))) < 0)
-    {
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
-    }
+    return (EXIT_FAILURE);
 
   if (!hosts_count)
-    {
-      exit_code = EXIT_SUCCESS;
-      goto cleanup;
-    }
+    return (EXIT_SUCCESS);
 
   if ((rv = pstdout_launch (prog_data.args->common.hostname,
                             _ipmi_chassis,
@@ -1715,11 +1702,8 @@ main (int argc, char **argv)
       fprintf (stderr,
                "pstdout_launch: %s\n",
                pstdout_strerror (pstdout_errnum));
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
+      return (EXIT_FAILURE);
     }
 
-  exit_code = rv;
- cleanup:
-  return (exit_code);
+  return (rv);
 }

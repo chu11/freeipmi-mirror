@@ -290,7 +290,7 @@ _usage (struct bmc_watchdog_arguments *cmd_args)
   if (cmd_args->set || cmd_args->start || cmd_args->daemon)
     fprintf (stderr, "\n");
 
-  exit (1);
+  exit (EXIT_FAILURE);
 }
 
 static error_t
@@ -346,7 +346,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           || !IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_VALID (tmp))
         {
           fprintf (stderr, "invalid timer use\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       cmd_args->timer_use_arg = tmp;
       break;
@@ -359,7 +359,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           || !IPMI_BMC_WATCHDOG_TIMER_STOP_TIMER_VALID (tmp))
         {
           fprintf (stderr, "invalid stop timer value\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       cmd_args->stop_timer_arg = tmp;
       break;
@@ -372,7 +372,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           || !IPMI_BMC_WATCHDOG_TIMER_LOG_VALID (tmp))
         {
           fprintf (stderr, "invalid log value\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       cmd_args->log_arg = tmp;
       break;
@@ -385,7 +385,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           || !IPMI_BMC_WATCHDOG_TIMER_TIMEOUT_ACTION_VALID (tmp))
         {
           fprintf (stderr, "invalid timeout action value\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       cmd_args->timeout_action_arg = tmp;
       break;
@@ -398,7 +398,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           || !IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_VALID (tmp))
         {
           fprintf (stderr, "invalid pre timeout interrupt value\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       cmd_args->pre_timeout_interrupt_arg = tmp;
       break;
@@ -410,13 +410,13 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 	  || endptr[0] != '\0')
         {
           fprintf (stderr, "invalid pre timeout interval\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       if (tmp < IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERVAL_MIN
           || tmp > IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERVAL_MAX)
         {
           fprintf (stderr, "pre timeout interval out of range\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       cmd_args->pre_timeout_interval_arg = tmp;
       break;
@@ -443,13 +443,13 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 	  || endptr[0] != '\0')
         {
           fprintf (stderr, "invalid initial countdown\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       if (tmp < IPMI_BMC_WATCHDOG_TIMER_INITIAL_COUNTDOWN_MIN_SECONDS
           || tmp > IPMI_BMC_WATCHDOG_TIMER_INITIAL_COUNTDOWN_MAX_SECONDS)
         {
           fprintf (stderr, "initial countdown out of range\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       cmd_args->initial_countdown_seconds_arg = tmp;
       break;
@@ -473,7 +473,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           || !IPMI_BMC_GENERATED_GRATUITOUS_ARP_VALID (tmp))
         {
           fprintf (stderr, "invalid gratuitous arp value\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       cmd_args->gratuitous_arp_arg = tmp;
       break;
@@ -486,7 +486,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           || !IPMI_BMC_GENERATED_ARP_RESPONSE_VALID (tmp))
         {
           fprintf (stderr, "invalid arp response value\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       cmd_args->arp_response_arg = tmp;
       break;
@@ -498,13 +498,13 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 	  || endptr[0] != '\0')
         {
           fprintf (stderr, "invalid reset period\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       if (tmp < IPMI_BMC_WATCHDOG_TIMER_INITIAL_COUNTDOWN_MIN_SECONDS
           || tmp > IPMI_BMC_WATCHDOG_TIMER_INITIAL_COUNTDOWN_MAX_SECONDS)
         {
           fprintf (stderr, "reset period out of range\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       cmd_args->reset_period_arg = tmp;
       break;
@@ -549,7 +549,7 @@ _bmc_watchdog_config_file_parse (struct bmc_watchdog_arguments *cmd_args)
 
     {
       fprintf (stderr, "config_file_parse: %s\n", strerror (errno));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (config_file_data.verbose_logging_count)
@@ -571,7 +571,7 @@ _bmc_watchdog_args_validate (struct bmc_watchdog_arguments *cmd_args)
   if (cmd_args->version)
     {
       fprintf (stderr, "%s\n", argp_program_version);
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   count = cmd_args->set + cmd_args->get + cmd_args->reset +
@@ -581,7 +581,7 @@ _bmc_watchdog_args_validate (struct bmc_watchdog_arguments *cmd_args)
   if (count > 1)
     {
       fprintf (stderr, "Only one command can be specified\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (((cmd_args->get
@@ -623,7 +623,7 @@ _bmc_watchdog_args_validate (struct bmc_watchdog_arguments *cmd_args)
 
       cmdstr = _cmd_string (cmd_args);
       fprintf (stderr, "Invalid command option specified for '%s' command\n", cmdstr);
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 }
 

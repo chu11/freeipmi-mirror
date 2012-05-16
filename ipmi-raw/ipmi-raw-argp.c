@@ -117,7 +117,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       if (!(cmd_args->cmd_file = strdup (arg)))
         {
           perror ("strdup");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       break;
     case ARGP_KEY_ARG:
@@ -134,7 +134,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
         if (*arg == '\0')
           {
             fprintf (stderr, "invalid hex byte argument\n");
-            exit (1);
+            exit (EXIT_FAILURE);
           }
         
         for (i = 0; arg[i] != '\0'; i++)
@@ -142,13 +142,13 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
             if (i >= 2)
               {
                 fprintf (stderr, "invalid hex byte argument\n");
-                exit (1);
+                exit (EXIT_FAILURE);
               }
             
             if (!isxdigit (arg[i]))
               {
                 fprintf (stderr, "invalid hex byte argument\n");
-                exit (1);
+                exit (EXIT_FAILURE);
               }
           }
         
@@ -160,14 +160,14 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 		|| endptr[0] != '\0')
 	      {
 		fprintf (stderr, "invalid hex byte argument\n");
-		exit (1);
+		exit (EXIT_FAILURE);
 	      }
 	    cmd_args->cmd[cmd_args->cmd_length++] = (uint8_t) value;
 	  }
 	else
 	  {
 	    fprintf (stderr, "Too many arguments specified\n");
-	    exit (1);
+	    exit (EXIT_FAILURE);
 	  }
         
         break;
@@ -199,7 +199,7 @@ _ipmi_raw_config_file_parse (struct ipmi_raw_arguments *cmd_args)
                          NULL) < 0)
     {
       fprintf (stderr, "config_file_parse: %s\n", strerror (errno));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 }
 

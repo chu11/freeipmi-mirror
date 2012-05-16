@@ -109,7 +109,7 @@ _config_file_non_negative_int (conffile_t cf,
   if (data->intval < 0)
     {
       fprintf (stderr, "Config File Error: invalid value for %s\n", optionname);
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   *value = data->intval;
@@ -137,7 +137,7 @@ _config_file_positive_int (conffile_t cf,
   if (data->intval <= 0)
     {
       fprintf (stderr, "Config File Error: invalid value for %s\n", optionname);
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   *value = data->intval;
@@ -165,7 +165,7 @@ _config_file_string (conffile_t cf,
   if (!(*value = strdup (data->string)))
     {
       perror ("strdup");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   return (0);
@@ -193,7 +193,7 @@ _config_file_driver_type (conffile_t cf,
   if ((tmp = parse_driver_type (data->string)) < 0)
     {
       fprintf (stderr, "Config File Error: invalid value for %s\n", optionname);
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   /* don't change default if we want outofband configuration only */
@@ -231,13 +231,13 @@ _config_file_username (conffile_t cf,
   if (strlen (data->string) > IPMI_MAX_USER_NAME_LENGTH)
     {
       fprintf (stderr, "Config File Error: %s value too long\n", optionname);
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (!(cmd_args_config->username = strdup (data->string)))
     {
       perror ("strdup");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   cmd_args_config->username_set++;
@@ -269,13 +269,13 @@ _config_file_password (conffile_t cf,
   if (strlen (data->string) > IPMI_2_0_MAX_PASSWORD_LENGTH)
     {
       fprintf (stderr, "Config File Error: %s value too long\n", optionname);
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (!(cmd_args_config->password = strdup (data->string)))
     {
       perror ("strdup");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   cmd_args_config->password_set++;
@@ -308,7 +308,7 @@ _config_file_k_g (conffile_t cf,
   if ((rv = parse_kg (cmd_args_config->k_g, IPMI_MAX_K_G_LENGTH + 1, data->string)) < 0)
     {
       fprintf (stderr, "Config File Error: k_g input formatted incorrectly\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (rv > 0)
@@ -344,7 +344,7 @@ _config_file_authentication_type (conffile_t cf,
   if ((tmp = parse_authentication_type (data->string)) < 0)
     {
       fprintf (stderr, "Config File Error: invalid value for %s\n", optionname);
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   cmd_args_config->authentication_type = tmp;
@@ -379,13 +379,13 @@ _config_file_cipher_suite_id (conffile_t cf,
       || data->intval > IPMI_CIPHER_SUITE_ID_MAX)
     {
       fprintf (stderr, "Config File Error: invalid value for %s\n", optionname);
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (!IPMI_CIPHER_SUITE_ID_SUPPORTED (data->intval))
     {
       fprintf (stderr, "Config File Error: unsupported value for %s\n", optionname);
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   cmd_args_config->cipher_suite_id = data->intval;
@@ -420,7 +420,7 @@ _config_file_privilege_level (conffile_t cf,
   if ((tmp = parse_privilege_level (data->string)) < 0)
     {
       fprintf (stderr, "Config File Error: invalid value for %s\n", optionname);
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   cmd_args_config->privilege_level = tmp;
@@ -468,7 +468,7 @@ _config_file_workaround_flags (conffile_t cf,
 				  &section_flags) < 0)
         {
           fprintf (stderr, "Config File Error: invalid value for %s\n", optionname);
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       
       if (outofband_flags
@@ -508,7 +508,7 @@ _config_file_tool_option_username (conffile_t cf,
   if (strlen (data->string) > IPMI_MAX_USER_NAME_LENGTH)
     {
       fprintf (stderr, "Config File Error: %s value too long\n", optionname);
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (cmd_args_config->username_set)
@@ -517,7 +517,7 @@ _config_file_tool_option_username (conffile_t cf,
   if (!(cmd_args_config->username = strdup (data->string)))
     {
       perror ("strdup");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   cmd_args_config->username_set++;
@@ -547,7 +547,7 @@ _config_file_tool_option_password (conffile_t cf,
   if (strlen (data->string) > IPMI_2_0_MAX_PASSWORD_LENGTH)
     {
       fprintf (stderr, "Config File Error: %s value too long\n", optionname);
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (cmd_args_config->password_set)
@@ -556,7 +556,7 @@ _config_file_tool_option_password (conffile_t cf,
   if (!(cmd_args_config->password = strdup (data->string)))
     {
       perror ("strdup");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   cmd_args_config->password_set++;
@@ -590,7 +590,7 @@ _config_file_tool_option_k_g (conffile_t cf,
   if ((rv = parse_kg (cmd_args_config->k_g, IPMI_MAX_K_G_LENGTH + 1, data->string)) < 0)
     {
       fprintf (stderr, "Config File Error: k_g input formatted incorrectly\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (rv > 0)
@@ -624,7 +624,7 @@ _config_file_tool_option_authentication_type (conffile_t cf,
   if ((tmp = parse_authentication_type (data->string)) < 0)
     {
       fprintf (stderr, "Config File Error: invalid value for %s\n", optionname);
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   cmd_args_config->authentication_type = tmp;
@@ -658,7 +658,7 @@ _config_file_tool_option_cipher_suite_id (conffile_t cf,
       || !IPMI_CIPHER_SUITE_ID_SUPPORTED (data->intval))
     {
       fprintf (stderr, "Config File Error: invalid value for %s\n", optionname);
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   cmd_args_config->cipher_suite_id = data->intval;
@@ -691,7 +691,7 @@ _config_file_tool_option_privilege_level (conffile_t cf,
   if ((tmp = parse_privilege_level (data->string)) < 0)
     {
       fprintf (stderr, "Config File Error: invalid value for %s\n", optionname);
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   cmd_args_config->privilege_level = tmp;
@@ -737,7 +737,7 @@ _config_file_tool_option_workaround_flags (conffile_t cf,
                                   &section_flags) < 0)
         {
           fprintf (stderr, "Config File Error: invalid value for %s\n", optionname);
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       
       if (outofband_flags
@@ -779,7 +779,7 @@ _config_file_fanout (conffile_t cf,
       || data->intval > PSTDOUT_FANOUT_MAX)
     {
       fprintf (stderr, "Config File Error: invalid value for %s\n", optionname);
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   hostrange_args->fanout = data->intval;
@@ -802,7 +802,7 @@ _config_file_sensor_types (struct conffile_data *data,
   if (data->stringlist_len > CONFIG_FILE_MAX_SENSOR_TYPES)
     {
       fprintf (stderr, "Config File Error: invalid number of arguments for %s\n", optionname);
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   for (i = 0; i < data->stringlist_len; i++)
@@ -812,7 +812,7 @@ _config_file_sensor_types (struct conffile_data *data,
           fprintf (stderr, "Config File Error: invalid value '%s' for %s\n",
                    data->stringlist[i],
                    optionname);
-          exit (1);
+          exit (EXIT_FAILURE);
         }
 
       strncpy (sensor_types[i],
@@ -889,7 +889,7 @@ _config_file_sensor_record_ids (struct conffile_data *data,
   if (data->intlist_len > CONFIG_FILE_MAX_SENSOR_RECORD_IDS)
     {
       fprintf (stderr, "Config File Error: invalid number of arguments for %s\n", optionname);
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   for (i = 0; i < data->intlist_len; i++)
@@ -900,7 +900,7 @@ _config_file_sensor_record_ids (struct conffile_data *data,
           fprintf (stderr, "Config File Error: invalid value '%d' for %s\n",
                    data->intlist[i],
                    optionname);
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       
       record_ids[i] = (unsigned int)data->intlist[i];
@@ -1054,7 +1054,7 @@ _config_file_ipmipower_ipmi_version (conffile_t cf,
   else
     {
       fprintf (stderr, "Config File Error: invalid value for %s\n", optionname);
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   cmd_args->driver_type = tmp;
@@ -4795,7 +4795,7 @@ config_file_parse (const char *filename,
           if (conffile_errmsg (cf, buf, CONFFILE_MAX_ERRMSGLEN) < 0)
             {
               fprintf (stderr, "conffile_parse: %d\n", conffile_errnum (cf));
-              exit (1);
+              exit (EXIT_FAILURE);
             }
           else
             {
@@ -4806,7 +4806,7 @@ config_file_parse (const char *filename,
                 fprintf (stderr, "Config File Error: %s\n", buf);
               else
                 fprintf (stderr, "conffile_parse: %s\n", buf);
-              exit (1);
+              exit (EXIT_FAILURE);
             }
         }
     }

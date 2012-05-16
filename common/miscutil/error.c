@@ -29,6 +29,7 @@
 #include "config.h"
 #endif /* HAVE_CONFIG_H */
 
+#include <stdlib.h>
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
@@ -40,7 +41,7 @@
 
 static char *err_prog = NULL;  
 static int err_flags = 0;
-static int exit_value = 1;
+static int exit_value = EXIT_FAILURE;
 
 #define ERROR_BUFLEN   1024
 

@@ -113,7 +113,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
             if (!(cmd_args->oem_id = strdup (arg)))
               {
                 perror ("strdup");
-                exit (1);
+                exit (EXIT_FAILURE);
               }
             break;
           }
@@ -122,7 +122,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
             if (!(cmd_args->oem_command = strdup (arg)))
               {
                 perror ("strdup");
-                exit (1);
+                exit (EXIT_FAILURE);
               }
             break;
           }
@@ -133,7 +133,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
                 if (!(cmd_args->oem_options[cmd_args->oem_options_count] = strdup (arg)))
                   {
                     perror ("strdup");
-                    exit (1);
+                    exit (EXIT_FAILURE);
                   }
                 cmd_args->oem_options_count++;
                 break;
@@ -141,7 +141,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 	    else
 	      {
 		fprintf (stderr, "Too many arguments specified\n");
-		exit (1);
+		exit (EXIT_FAILURE);
 	      }
           }
         break;
@@ -181,7 +181,7 @@ _ipmi_oem_config_file_parse (struct ipmi_oem_arguments *cmd_args)
                          &config_file_data) < 0)
     {
       fprintf (stderr, "config_file_parse: %s\n", strerror (errno));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (config_file_data.verbose_count_count)

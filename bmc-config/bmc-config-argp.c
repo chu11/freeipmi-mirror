@@ -138,7 +138,7 @@ _bmc_config_config_file_parse (struct bmc_config_arguments *cmd_args)
                          &config_file_data) < 0)
     {
       fprintf (stderr, "config_file_parse: %s\n", strerror (errno));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (config_file_data.verbose_count_count)
@@ -154,7 +154,7 @@ _bmc_config_args_validate (struct bmc_config_arguments *cmd_args)
     {
       fprintf (stderr,
                "Exactly one of --checkout, --commit, --diff, or --listsections MUST be given\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   config_args_validate (&(cmd_args->config_args));

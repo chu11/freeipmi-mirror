@@ -373,11 +373,11 @@ _output_data (void)
     _output_nodes (undetected_nodes);
 
   if (cmd_args.output_type == IPMIDETECT_DETECTED_AND_UNDETECTED_NODES)
-    exit_val = 0;
+    exit_val = EXIT_SUCCESS;
   else if (cmd_args.output_type == IPMIDETECT_DETECTED_NODES)
-    exit_val = (!undetected_count) ? 0 : 1;
+    exit_val = (!undetected_count) ? EXIT_SUCCESS : EXIT_FAILURE;
   else
-    exit_val = (!detected_count) ? 0 : 1;
+    exit_val = (!detected_count) ? EXIT_SUCCESS : EXIT_FAILURE;
 
   return (exit_val);
 }

@@ -703,7 +703,7 @@ _ipmi_fru (pstdout_state_t pstate,
 {
   ipmi_fru_state_data_t state_data;
   ipmi_fru_prog_data_t *prog_data;
-  int exit_code = -1;
+  int exit_code = EXIT_FAILURE;
   unsigned int flags = 0;
 
   assert (pstate);
@@ -729,15 +729,11 @@ _ipmi_fru (pstdout_state_t pstate,
 					 hostname,
 					 &(prog_data->args->common),
 					 state_data.pstate)))
-    {
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
-    }      
+    goto cleanup;
 
   if (!(state_data.fru_parse_ctx = ipmi_fru_parse_ctx_create (state_data.ipmi_ctx)))
     {
       pstdout_perror (pstate, "ipmi_fru_parse_ctx_create()");
-      exit_code = EXIT_FAILURE;
       goto cleanup;
     }
   
@@ -773,7 +769,6 @@ _ipmi_fru (pstdout_state_t pstate,
   if (!(state_data.sdr_ctx = ipmi_sdr_ctx_create ()))
     {
       pstdout_perror (pstate, "ipmi_sdr_ctx_create()");
-      exit_code = EXIT_FAILURE;
       goto cleanup;
     }
 
@@ -781,18 +776,12 @@ _ipmi_fru (pstdout_state_t pstate,
 			     state_data.pstate,
 			     state_data.prog_data->args->common.debug,
 			     state_data.hostname) < 0)
-    {
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
-    }
+    goto cleanup;
 
   if (run_cmd_args (&state_data) < 0)
-    {
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
-    }
+    goto cleanup;
 
-  exit_code = 0;
+  exit_code = EXIT_SUCCESS;
  cleanup:
   ipmi_fru_parse_ctx_destroy (state_data.fru_parse_ctx);
   ipmi_sdr_ctx_destroy (state_data.sdr_ctx);
@@ -806,7 +795,6 @@ main (int argc, char **argv)
 {
   ipmi_fru_prog_data_t prog_data;
   struct ipmi_fru_arguments cmd_args;
-  int exit_code;
   int hosts_count;
   int rv;
 
@@ -823,16 +811,10 @@ main (int argc, char **argv)
 
   if ((hosts_count = pstdout_setup (&(prog_data.args->common.hostname),
 				    &(prog_data.args->hostrange))) < 0)
-    {
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
-    }
+    return (EXIT_FAILURE);
 
   if (!hosts_count)
-    {
-      exit_code = EXIT_SUCCESS;
-      goto cleanup;
-    }
+    return (EXIT_SUCCESS);
 
   /* We don't want caching info to output when are doing ranged output */
   if (hosts_count > 1)
@@ -845,11 +827,8 @@ main (int argc, char **argv)
       fprintf (stderr,
                "pstdout_launch: %s\n",
                pstdout_strerror (pstdout_errnum));
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
+      return (EXIT_FAILURE);
     }
 
-  exit_code = rv;
- cleanup:
-  return (exit_code);
+  return (rv);
 }

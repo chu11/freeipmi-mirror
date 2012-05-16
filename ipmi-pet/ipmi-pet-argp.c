@@ -136,7 +136,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       if (!(cmd_args->cmd_file = strdup (arg)))
         {
           perror ("strdup");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       break;
     case OUTPUT_EVENT_SEVERITY_KEY:
@@ -149,7 +149,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       if (!(cmd_args->event_state_config_file = strdup (arg)))
         {
           perror ("strdup");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       break;
     case MANUFACTURER_ID_KEY:
@@ -160,7 +160,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 	  || !tmp)
         {
           fprintf (stderr, "invalid manufacturer id: %lu\n", tmp);
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       cmd_args->manufacturer_id = tmp;
       cmd_args->manufacturer_id_set = 1;
@@ -173,7 +173,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 	  || tmp > USHRT_MAX)
         {
           fprintf (stderr, "invalid product id: %lu\n", tmp);
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       cmd_args->product_id = tmp;
       cmd_args->product_id_set = 1;
@@ -218,7 +218,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 		|| endptr[0] != '\0')
 	      {
 		fprintf (stderr, "invalid specific trap argument\n");
-		exit (1);
+		exit (EXIT_FAILURE);
 	      }
 	    
 	    cmd_args->specific_trap = uvalue;
@@ -235,7 +235,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
         if (*arg == '\0')
           {
             fprintf (stderr, "invalid variable binding hex byte argument\n");
-            exit (1);
+            exit (EXIT_FAILURE);
           }
         
         for (i = 0; arg[i] != '\0'; i++)
@@ -243,13 +243,13 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
             if (i >= 2)
               {
                 fprintf (stderr, "invalid variable binding hex byte argument\n");
-                exit (1);
+                exit (EXIT_FAILURE);
               }
             
             if (!isxdigit (arg[i]))
               {
                 fprintf (stderr, "invalid variable binding hex byte argument\n");
-                exit (1);
+                exit (EXIT_FAILURE);
               }
           }
         
@@ -261,14 +261,14 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 		|| endptr[0] != '\0')
 	      {
 		fprintf (stderr, "invalid variable binding hex byte argument\n");
-		exit (1);
+		exit (EXIT_FAILURE);
 	      }
 	    cmd_args->variable_bindings[cmd_args->variable_bindings_length++] = (uint8_t) value;
           }
         else
           {
             fprintf (stderr, "Too many arguments specified\n");
-            exit (1);
+            exit (EXIT_FAILURE);
           }
         
         break;
@@ -306,7 +306,7 @@ _ipmi_pet_config_file_parse (struct ipmi_pet_arguments *cmd_args)
                          &config_file_data) < 0)
     {
       fprintf (stderr, "config_file_parse: %s\n", strerror (errno));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (config_file_data.verbose_count_count)
@@ -340,7 +340,7 @@ _ipmi_pet_args_validate (struct ipmi_pet_arguments *cmd_args)
       && !cmd_args->common.hostname)
     {
       fprintf (stderr, "Must specify hostname if PET acknowledge specified\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if ((cmd_args->manufacturer_id_set
@@ -349,7 +349,7 @@ _ipmi_pet_args_validate (struct ipmi_pet_arguments *cmd_args)
           && cmd_args->product_id_set))
     {
       fprintf (stderr, "Must specify both manufacturer id and product id\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 }
 

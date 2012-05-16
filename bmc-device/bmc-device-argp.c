@@ -199,7 +199,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       else
         {
           fprintf (stderr, "invalid value for system power state\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       break;
     case SET_ACPI_DEVICE_POWER_STATE_KEY:
@@ -216,7 +216,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       else
         {
           fprintf (stderr, "invalid value for device power state\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       break;
     case GET_LAN_STATISTICS_KEY:
@@ -318,7 +318,7 @@ _bmc_device_config_file_parse (struct bmc_device_arguments *cmd_args)
                          NULL) < 0)
     {
       fprintf (stderr, "config_file_parse: %s\n", strerror (errno));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 }
 
@@ -354,7 +354,7 @@ _bmc_device_args_validate (struct bmc_device_arguments *cmd_args)
     {
       fprintf (stderr,
                "No command specified.\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if ((cmd_args->sdr.flush_cache
@@ -385,7 +385,7 @@ _bmc_device_args_validate (struct bmc_device_arguments *cmd_args)
     {
       fprintf (stderr,
                "Multiple commands specified.\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   
   if (cmd_args->set_acpi_power_state
@@ -394,7 +394,7 @@ _bmc_device_args_validate (struct bmc_device_arguments *cmd_args)
     {
       fprintf (stderr,
                "No acpi power state configuration changes specified\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (cmd_args->set_system_firmware_version
@@ -402,7 +402,7 @@ _bmc_device_args_validate (struct bmc_device_arguments *cmd_args)
     {
       fprintf (stderr,
 	       "system firmware version string too long\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   
   if (cmd_args->set_system_name
@@ -410,7 +410,7 @@ _bmc_device_args_validate (struct bmc_device_arguments *cmd_args)
     {
       fprintf (stderr,
 	       "system name string too long\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   
   if (cmd_args->set_primary_operating_system_name
@@ -418,7 +418,7 @@ _bmc_device_args_validate (struct bmc_device_arguments *cmd_args)
     {
       fprintf (stderr,
 	       "primary operating system name string too long\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   
   if (cmd_args->set_operating_system_name
@@ -426,7 +426,7 @@ _bmc_device_args_validate (struct bmc_device_arguments *cmd_args)
     {
       fprintf (stderr,
 	       "operating system name string too long\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 }
 

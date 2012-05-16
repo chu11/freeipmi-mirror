@@ -2092,7 +2092,7 @@ static int
 _ipmi_pet (ipmi_pet_prog_data_t *prog_data)
 {
   ipmi_pet_state_data_t state_data;
-  int exit_code = -1;
+  int exit_code = EXIT_FAILURE;
 
   assert (prog_data);
 
@@ -2117,10 +2117,7 @@ _ipmi_pet (ipmi_pet_prog_data_t *prog_data)
                                              prog_data->args->common.hostname,
                                              &(prog_data->args->common),
 					     NULL)))
-        {
-          exit_code = EXIT_FAILURE;
-          goto cleanup;
-        }
+	goto cleanup;
     }
 
   if (prog_data->args->pet_acknowledge)
@@ -2128,7 +2125,6 @@ _ipmi_pet (ipmi_pet_prog_data_t *prog_data)
       if (!(state_data.ipmi_ctx = ipmi_ctx_create ()))
 	{
 	  perror ("ipmi_ctx_create()");
-	  exit_code = EXIT_FAILURE;
 	  goto cleanup;
 	}
 
@@ -2147,7 +2143,6 @@ _ipmi_pet (ipmi_pet_prog_data_t *prog_data)
 	    fprintf (stderr, "%s: %s\n", prog_data->progname, ipmi_ctx_errormsg (state_data.ipmi_ctx));
 	  else
 	    fprintf (stderr, "ipmi_ctx_open_outofband: %s\n", ipmi_ctx_errormsg (state_data.ipmi_ctx));
-	  exit_code = EXIT_FAILURE;
 	  goto cleanup;
 	}
     }
@@ -2158,7 +2153,6 @@ _ipmi_pet (ipmi_pet_prog_data_t *prog_data)
       if (!(state_data.sdr_ctx = ipmi_sdr_ctx_create ()))
 	{
 	  perror ("ipmi_sdr_ctx_create()");
-	  exit_code = EXIT_FAILURE;
 	  goto cleanup;
 	}
       
@@ -2166,10 +2160,7 @@ _ipmi_pet (ipmi_pet_prog_data_t *prog_data)
 				 NULL,
 				 state_data.prog_data->args->common.debug,
 				 state_data.hostname) < 0)
-	{
-	  exit_code = EXIT_FAILURE;
-	  goto cleanup;
-	}
+	goto cleanup;
       
       if (!prog_data->args->pet_acknowledge)
         {
@@ -2214,7 +2205,6 @@ _ipmi_pet (ipmi_pet_prog_data_t *prog_data)
       if (!(state_data.interpret_ctx = ipmi_interpret_ctx_create ()))
         {
           perror ("ipmi_interpret_ctx_create()");
-          exit_code = EXIT_FAILURE;
           goto cleanup;
         }
 
@@ -2235,7 +2225,6 @@ _ipmi_pet (ipmi_pet_prog_data_t *prog_data)
                 fprintf (stderr,
 			 "ipmi_interpret_load_sel_config: %s\n",
 			 ipmi_interpret_ctx_errormsg (state_data.interpret_ctx));
-              exit_code = EXIT_FAILURE;
               goto cleanup;
             }
         }
@@ -2249,7 +2238,6 @@ _ipmi_pet (ipmi_pet_prog_data_t *prog_data)
                 fprintf (stderr,
 			 "ipmi_interpret_load_sel_config: %s\n",
 			 ipmi_interpret_ctx_errormsg (state_data.interpret_ctx));
-              exit_code = EXIT_FAILURE;
               goto cleanup;
             }
         }
@@ -2264,19 +2252,15 @@ _ipmi_pet (ipmi_pet_prog_data_t *prog_data)
               fprintf (stderr,
 		       "ipmi_interpret_ctx_set_flags: %s\n",
 		       ipmi_interpret_ctx_errormsg (state_data.interpret_ctx));
-              exit_code = EXIT_FAILURE;
               goto cleanup;
             }
         }
     }
   
   if (run_cmd_args (&state_data) < 0)
-    {
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
-    }
+    goto cleanup;
 
-  exit_code = 0;
+  exit_code = EXIT_SUCCESS;
  cleanup:
   ipmi_fru_parse_ctx_destroy (state_data.fru_parse_ctx);
   ipmi_sel_ctx_destroy (state_data.sel_ctx);

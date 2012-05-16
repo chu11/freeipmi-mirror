@@ -131,7 +131,7 @@ _ipmi_chassis_config_config_file_parse (struct ipmi_chassis_config_arguments *cm
                          &config_file_data) < 0)
     {
       fprintf (stderr, "config_file_parse: %s\n", strerror (errno));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (config_file_data.verbose_count_count)
@@ -147,7 +147,7 @@ _ipmi_chassis_config_config_args_validate (struct ipmi_chassis_config_arguments 
     {
       fprintf (stderr,
                "Exactly one of --checkout, --commit, --diff, or --listsections MUST be given\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   config_args_validate (&(cmd_args->config_args));

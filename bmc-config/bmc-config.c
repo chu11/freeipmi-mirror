@@ -46,7 +46,7 @@ _bmc_config (pstdout_state_t pstate,
 {
   bmc_config_state_data_t state_data;
   bmc_config_prog_data_t *prog_data;
-  int exit_code = -1;
+  int exit_code = EXIT_FAILURE;
   config_err_t ret = 0;
   int file_opened = 0;
   FILE *fp = NULL;              /* init NULL to remove warnings */
@@ -64,16 +64,10 @@ _bmc_config (pstdout_state_t pstate,
                                          hostname,
                                          &(prog_data->args->config_args.common),
 					 state_data.pstate)))
-    {
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
-    }
+    goto cleanup;
 
   if (!(state_data.sections = bmc_config_sections_create (&state_data)))
-    {
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
-    }
+    goto cleanup;
 
   if (prog_data->args->config_args.action == CONFIG_ACTION_CHECKOUT)
     {
@@ -84,14 +78,12 @@ _bmc_config (pstdout_state_t pstate,
               pstdout_fprintf (pstate,
                                stderr,
                                "Cannot output multiple host checkout into a single file\n");
-              exit_code = EXIT_FAILURE;
               goto cleanup;
             }
 
           if (!(fp = fopen (prog_data->args->config_args.filename, "w")))
             {
               pstdout_perror (pstate, "fopen");
-              exit_code = EXIT_FAILURE;
               goto cleanup;
             }
           file_opened++;
@@ -108,7 +100,6 @@ _bmc_config (pstdout_state_t pstate,
           if (!(fp = fopen (prog_data->args->config_args.filename, "r")))
             {
               pstdout_perror (pstate, "fopen");
-              exit_code = EXIT_FAILURE;
               goto cleanup;
             }
           file_opened++;
@@ -133,11 +124,7 @@ _bmc_config (pstdout_state_t pstate,
                         state_data.sections,
                         &(prog_data->args->config_args),
                         fp) < 0)
-        {
-          /* errors printed in function call */
-          exit_code = EXIT_FAILURE;
-          goto cleanup;
-        }
+	goto cleanup;
     }
 
   /* note: argp validation catches if user specified keypair and
@@ -151,11 +138,7 @@ _bmc_config (pstdout_state_t pstate,
       if (config_sections_insert_keyvalues (pstate,
                                             state_data.sections,
                                             prog_data->args->config_args.keypairs) < 0)
-        {
-          /* errors printed in function call */
-          exit_code = EXIT_FAILURE;
-          goto cleanup;
-        }
+	goto cleanup;
     }
 
   if (prog_data->args->config_args.action == CONFIG_ACTION_COMMIT
@@ -166,18 +149,11 @@ _bmc_config (pstdout_state_t pstate,
       if ((num = config_sections_validate_keyvalue_inputs (pstate,
                                                            state_data.sections,
                                                            &state_data)) < 0)
-        {
-          /* errors printed in function call */
-          exit_code = EXIT_FAILURE;
-          goto cleanup;
-        }
+	goto cleanup;
 
       /* some errors found */
       if (num)
-        {
-          exit_code = EXIT_FAILURE;
-          goto cleanup;
-        }
+	goto cleanup;
     }
 
   if (prog_data->args->config_args.action == CONFIG_ACTION_CHECKOUT
@@ -195,7 +171,6 @@ _bmc_config (pstdout_state_t pstate,
                                stderr,
                                "Unknown section `%s'\n",
                                sstr->section_name);
-              exit_code = EXIT_FAILURE;
               goto cleanup;
             }
           sstr = sstr->next;
@@ -282,7 +257,6 @@ _bmc_config (pstdout_state_t pstate,
               pstdout_fprintf (pstate,
                                stderr,
                                "Cannot configure Lan_Conf:IP_Address on multiple hosts\n");
-              exit_code = EXIT_FAILURE;
               goto cleanup;
             }
 
@@ -292,7 +266,6 @@ _bmc_config (pstdout_state_t pstate,
               pstdout_fprintf (pstate,
                                stderr,
                                "Cannot configure Lan_Conf:MAC_Address on multiple hosts\n");
-              exit_code = EXIT_FAILURE;
               goto cleanup;
             }
         }
@@ -374,12 +347,9 @@ _bmc_config (pstdout_state_t pstate,
     }
 
   if (ret == CONFIG_ERR_FATAL_ERROR || ret == CONFIG_ERR_NON_FATAL_ERROR)
-    {
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
-    }
+    goto cleanup;
 
-  exit_code = 0;
+  exit_code = EXIT_SUCCESS;
  cleanup:
   ipmi_ctx_close (state_data.ipmi_ctx);
   ipmi_ctx_destroy (state_data.ipmi_ctx);
@@ -394,7 +364,6 @@ main (int argc, char *argv[])
 {
   bmc_config_prog_data_t prog_data;
   struct bmc_config_arguments cmd_args;
-  int exit_code;
   int hosts_count;
   int rv;
 
@@ -408,16 +377,10 @@ main (int argc, char *argv[])
 
   if ((hosts_count = pstdout_setup (&(prog_data.args->config_args.common.hostname),
 				    &(prog_data.args->config_args.hostrange))) < 0)
-    {
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
-    }
+    return (EXIT_FAILURE);
 
   if (!hosts_count)
-    {
-      exit_code = EXIT_SUCCESS;
-      goto cleanup;
-    }
+    return (EXIT_SUCCESS);
 
   prog_data.hosts_count = hosts_count;
 
@@ -428,11 +391,8 @@ main (int argc, char *argv[])
       fprintf (stderr,
                "pstdout_launch: %s\n",
                pstdout_strerror (pstdout_errnum));
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
+      return (EXIT_FAILURE);
     }
 
-  exit_code = rv;
- cleanup:
-  return (exit_code);
+  return (rv);
 }

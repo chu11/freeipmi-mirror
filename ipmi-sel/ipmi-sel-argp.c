@@ -191,7 +191,7 @@ _read_record_list (int *flag,
           || value >= IPMI_SEL_GET_RECORD_ID_LAST_ENTRY)
         {
           fprintf (stderr, "invalid record number: %d\n", value);
-          exit (1);
+          exit (EXIT_FAILURE);
         }
 
       record_list[(*record_list_length)] = value;
@@ -223,18 +223,18 @@ _read_record_id_range (int *flag,
   if (!(range_str = strdup (arg)))
     {
       perror ("strdup");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   if (!(start_ptr = strchr (range_str, '-')))
     {
       /* invalid input */
       fprintf (stderr, "invalid range input\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   if (!(range2_str = strdup (start_ptr + 1)))
     {
       perror ("strdup");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   *start_ptr = '\0';
   range1_str = range_str;
@@ -249,7 +249,7 @@ _read_record_id_range (int *flag,
       || value >= IPMI_SEL_GET_RECORD_ID_LAST_ENTRY)
     {
       fprintf (stderr, "invalid range record number: %d\n", value);
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   (*range1) = value;
@@ -264,7 +264,7 @@ _read_record_id_range (int *flag,
       || value >= IPMI_SEL_GET_RECORD_ID_LAST_ENTRY)
     {
       fprintf (stderr, "invalid range record number: %d\n", value);
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   (*range2) = value;
@@ -272,7 +272,7 @@ _read_record_id_range (int *flag,
   if ((*range2) < (*range1))
     {
       fprintf (stderr, "invalid END range\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   free (range1_str);
@@ -304,7 +304,7 @@ _read_date_range (int *flag,
   if (!(range_str = strdup (arg)))
     {
       perror ("strdup");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   
   /* Count number of dashes, to see what format user input */
@@ -354,19 +354,19 @@ _read_date_range (int *flag,
   else
     {
       fprintf (stderr, "invalid range input\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (*(split_ptr + 1) == '\0')
     {
       fprintf (stderr, "invalid range input\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (!(range2_str = strdup (split_ptr + 1)))
     {
       perror ("strdup");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   *split_ptr = '\0';
   range1_str = range_str;
@@ -392,7 +392,7 @@ _read_date_range (int *flag,
                       fprintf (stderr,
                                "Invalid time specification '%s'.\n",
                                range1_str);
-                      exit (1);
+                      exit (EXIT_FAILURE);
                     }
                 }
             }
@@ -408,7 +408,7 @@ _read_date_range (int *flag,
           fprintf (stderr,
                    "Time specification '%s' cannot be represented.\n",
                    range1_str);
-          exit (1);
+          exit (EXIT_FAILURE);
         }
     }
 
@@ -435,7 +435,7 @@ _read_date_range (int *flag,
                       fprintf (stderr,
                                "Invalid time specification '%s'.\n",
                                range2_str);
-                      exit (1);
+                      exit (EXIT_FAILURE);
                     }
                 }
             }
@@ -451,7 +451,7 @@ _read_date_range (int *flag,
           fprintf (stderr,
                    "Time specification '%s' cannot be represented.\n",
                    range2_str);
-          exit (1);
+          exit (EXIT_FAILURE);
         }
     }
 
@@ -460,7 +460,7 @@ _read_date_range (int *flag,
   if ((*range2) < (*range1))
     {
       fprintf (stderr, "invalid range\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   /* Date range input means beginning of range1 date to end of range2 date
@@ -576,7 +576,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           || value >= IPMI_SEL_GET_RECORD_ID_LAST_ENTRY)
         {
           fprintf (stderr, "invalid record count: %d\n", value);
-          exit (1);
+          exit (EXIT_FAILURE);
         }
 
       cmd_args->tail = 1;
@@ -617,7 +617,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       if (!(cmd_args->event_state_config_file = strdup (arg)))
         {
           perror ("strdup");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       break;
     case HEX_DUMP_KEY:
@@ -689,7 +689,7 @@ _ipmi_sel_config_file_parse (struct ipmi_sel_arguments *cmd_args)
                          &config_file_data) < 0)
     {
       fprintf (stderr, "config_file_parse: %s\n", strerror (errno));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (config_file_data.verbose_count_count)
@@ -761,7 +761,7 @@ _ipmi_sel_args_validate (struct ipmi_sel_arguments *cmd_args)
                               cmd_args->sensor_types,
                               cmd_args->sensor_types_length,
                               1) < 0)
-        exit (1);
+        exit (EXIT_FAILURE);
     }
   
   if (cmd_args->exclude_sensor_types_length)
@@ -770,7 +770,7 @@ _ipmi_sel_args_validate (struct ipmi_sel_arguments *cmd_args)
                               cmd_args->exclude_sensor_types,
                               cmd_args->exclude_sensor_types_length,
                               1) < 0)
-        exit (1);
+        exit (EXIT_FAILURE);
     }
 }
 

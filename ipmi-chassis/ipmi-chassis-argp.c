@@ -151,7 +151,7 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
       else
         {
           fprintf (stderr, "invalid value for boot-type\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
 
       cmd_args->set_system_boot_options_args.bios_boot_type++;
@@ -166,7 +166,7 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
       else
         {
           fprintf (stderr, "invalid value for lock-out-reset-button\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
 
       cmd_args->set_system_boot_options_args.lock_out_reset_button++;
@@ -181,7 +181,7 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
       else
         {
           fprintf (stderr, "invalid value for blank-screen\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
 
       cmd_args->set_system_boot_options_args.screen_blank++;
@@ -212,7 +212,7 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
       else
         {
           fprintf (stderr, "invalid value for boot-device\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
 
       cmd_args->set_system_boot_options_args.boot_device++;
@@ -227,7 +227,7 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
       else
         {
           fprintf (stderr, "invalid value for lock-keyboard\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
 
       cmd_args->set_system_boot_options_args.lock_keyboard++;
@@ -242,7 +242,7 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
       else
         {
           fprintf (stderr, "invalid value for clear-cmos\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
 
       cmd_args->set_system_boot_options_args.cmos_clear++;
@@ -259,7 +259,7 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
       else
         {
           fprintf (stderr, "invalid value for console-redirection\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
 
       cmd_args->set_system_boot_options_args.console_redirection++;
@@ -274,7 +274,7 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
       else
         {
           fprintf (stderr, "invalid value for user-password-bypass\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
 
       cmd_args->set_system_boot_options_args.user_password_bypass++;
@@ -289,7 +289,7 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
       else
         {
           fprintf (stderr, "invalid value for force-progress-event-traps\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
 
       cmd_args->set_system_boot_options_args.force_progress_event_traps++;
@@ -306,7 +306,7 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
       else
         {
           fprintf (stderr, "invalid value for firmware verbosity\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
 
       cmd_args->set_system_boot_options_args.firmware_bios_verbosity++;
@@ -358,7 +358,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       else
         {
           fprintf (stderr, "invalid value for chassis control\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       cmd_args->chassis_control++;
       break;
@@ -388,13 +388,13 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 	      || endptr[0] != '\0')
             {
               fprintf (stderr, "invalid value for chassis-identify\n");
-              exit (1);
+              exit (EXIT_FAILURE);
             }
           if (tmp < IPMI_CHASSIS_IDENTIFY_INTERVAL_MIN
               || tmp > IPMI_CHASSIS_IDENTIFY_INTERVAL_MAX)
             {
               fprintf (stderr, "chassis-identify interval out of range\n");
-              exit (1);
+              exit (EXIT_FAILURE);
             }
           cmd_args->chassis_identify_args.identify_interval = 1;
           cmd_args->chassis_identify_args.identify_interval_arg = tmp;
@@ -415,7 +415,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       else
         {
           fprintf (stderr, "invalid value for power restore policy\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       cmd_args->set_power_restore_policy++;
       break;
@@ -427,13 +427,13 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 	  || endptr[0] != '\0')
         {
           fprintf (stderr, "invalid value for power cycle interval\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       if (tmp < IPMI_CHASSIS_POWER_CYCLE_INTERVAL_MIN
           || tmp > IPMI_CHASSIS_POWER_CYCLE_INTERVAL_MAX)
         {
           fprintf (stderr, "power-cycle interval out of range\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       cmd_args->set_power_cycle_interval_arg = tmp;
       cmd_args->set_power_cycle_interval++;
@@ -490,7 +490,7 @@ _ipmi_chassis_config_file_parse (struct ipmi_chassis_arguments *cmd_args)
                          NULL) < 0)
     {
       fprintf (stderr, "config_file_parse: %s\n", strerror (errno));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 }
 
@@ -512,7 +512,7 @@ _ipmi_chassis_args_validate (struct ipmi_chassis_arguments *cmd_args)
     {
       fprintf (stderr,
                "No command specified.\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if ((cmd_args->get_chassis_capabilities
@@ -528,7 +528,7 @@ _ipmi_chassis_args_validate (struct ipmi_chassis_arguments *cmd_args)
     {
       fprintf (stderr,
                "Multiple commands specified.\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (cmd_args->set_system_boot_options
@@ -545,7 +545,7 @@ _ipmi_chassis_args_validate (struct ipmi_chassis_arguments *cmd_args)
     {
       fprintf (stderr,
                "No boot flags configuration changes specified\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 }
 

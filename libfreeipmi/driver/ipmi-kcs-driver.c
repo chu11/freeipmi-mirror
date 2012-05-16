@@ -897,11 +897,12 @@ ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
   count++;
 
 #if 0
-  if (!_ipmi_kcs_test_if_state (IPMI_KCS_STATE_READ)) {
-    printf ("Not in READ state after writing last byte?\n");
-    ipmi_kcs_print_state (ipmi_kcs_get_state ());
-    exit (1);
-  }
+  if (!_ipmi_kcs_test_if_state (IPMI_KCS_STATE_READ))
+    {
+      printf ("Not in READ state after writing last byte?\n");
+      ipmi_kcs_print_state (ipmi_kcs_get_state ());
+      exit (EXIT_FAILURE);
+    }
 #endif
   
   if (count > INT_MAX)

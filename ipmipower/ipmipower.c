@@ -112,21 +112,21 @@ _ipmipower_setup (void)
         IPMIPOWER_ERROR (("ipmi_rmcpplus_init: incompatible crypto library"));
       else
         IPMIPOWER_ERROR (("ipmi_rmcpplus_init: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   /* Create TTY bufs */
   if (!(ttyin  = cbuf_create (IPMIPOWER_MIN_TTY_BUF, IPMIPOWER_MAX_TTY_BUF)))
     {
       IPMIPOWER_ERROR (("cbuf_create: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   cbuf_opt_set (ttyin, CBUF_OPT_OVERWRITE, CBUF_WRAP_MANY);
 
   if (!(ttyout = cbuf_create (IPMIPOWER_MIN_TTY_BUF, IPMIPOWER_MAX_TTY_BUF)))
     {
       IPMIPOWER_ERROR (("cbuf_create: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   cbuf_opt_set (ttyout, CBUF_OPT_OVERWRITE, CBUF_WRAP_MANY);
 
@@ -135,7 +135,7 @@ _ipmipower_setup (void)
       if (!(output_hostrange[i] = hostlist_create (NULL)))
         {
           IPMIPOWER_ERROR (("hostlist_create: %s", strerror (errno)));
-          exit (1);
+          exit (EXIT_FAILURE);
         }
     }
 
@@ -170,7 +170,7 @@ _eliminate_nodes (void)
       if (!(id = ipmidetect_handle_create ()))
         {
           IPMIPOWER_ERROR (("ipmidetect_handle_create: %s", strerror (errno)));
-          exit (1);
+          exit (EXIT_FAILURE);
         }
 
       if (ipmidetect_load_data (id,
@@ -183,7 +183,7 @@ _eliminate_nodes (void)
             IPMIPOWER_ERROR (("Error connecting to ipmidetect daemon"));
           else
             IPMIPOWER_ERROR (("ipmidetect_load_data: %s", ipmidetect_errormsg (id)));
-          exit (1);
+          exit (EXIT_FAILURE);
         }
 
       for (i = 0; i < ics_len; i++)
@@ -196,7 +196,7 @@ _eliminate_nodes (void)
                 IPMIPOWER_ERROR (("Node '%s' unrecognized by ipmidetect", ics[i].hostname));
               else
                 IPMIPOWER_ERROR (("ipmidetect_is_node_detected: %s", ipmidetect_errormsg (id)));
-              exit (1);
+              exit (EXIT_FAILURE);
             }
 
           if (!ret)
@@ -216,13 +216,13 @@ _sendto (cbuf_t cbuf, int fd, struct sockaddr_in *destaddr)
   if ((n = cbuf_read (cbuf, buf, IPMIPOWER_PACKET_BUFLEN)) < 0)
     {
       IPMIPOWER_ERROR (("cbuf_read: %s", fd, strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (n == IPMIPOWER_PACKET_BUFLEN)
     {
       IPMIPOWER_ERROR (("cbuf_read: buffer full"));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   do 
@@ -238,14 +238,14 @@ _sendto (cbuf_t cbuf, int fd, struct sockaddr_in *destaddr)
   if (rv < 0)
     {
       IPMIPOWER_ERROR (("ipmi_lan_sendto: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   /* cbuf should be empty now */
   if (!cbuf_is_empty (cbuf))
     {
       IPMIPOWER_ERROR (("cbuf not empty"));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 }
 
@@ -307,13 +307,13 @@ _recvfrom (cbuf_t cbuf, int fd, struct sockaddr_in *srcaddr)
   if (rv < 0)
     {
       IPMIPOWER_ERROR (("ipmi_lan_recvfrom: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (!rv)
     {
       IPMIPOWER_ERROR (("ipmi_lan_recvfrom: EOF"));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   /* Don't store if this packet is strange for some reason */
@@ -332,7 +332,7 @@ _recvfrom (cbuf_t cbuf, int fd, struct sockaddr_in *srcaddr)
           if (cbuf_read (cbuf, tempbuf, IPMIPOWER_PACKET_BUFLEN) < 0)
             {
               IPMIPOWER_ERROR (("cbuf_read: %s", strerror (errno)));
-              exit (1);
+              exit (EXIT_FAILURE);
             }
         } while(!cbuf_is_empty (cbuf));
     }
@@ -340,13 +340,13 @@ _recvfrom (cbuf_t cbuf, int fd, struct sockaddr_in *srcaddr)
   if ((n = cbuf_write (cbuf, buf, rv, &dropped)) < 0)
     {
       IPMIPOWER_ERROR (("cbuf_write: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (n != rv)
     {
       IPMIPOWER_ERROR (("cbuf_write: rv=%d n=%d", rv, n));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (dropped)
@@ -422,7 +422,7 @@ _poll_loop (int non_interactive)
           if (!(pfds = (struct pollfd *)malloc (nfds * sizeof (struct pollfd))))
             {
               IPMIPOWER_ERROR (("malloc: %s", strerror (errno)));
-              exit (1);
+              exit (EXIT_FAILURE);
             }
         }
 
@@ -502,7 +502,7 @@ _poll_loop (int non_interactive)
           if ((n = cbuf_write_from_fd (ttyin, STDIN_FILENO, -1, &dropped)) < 0)
             {
               IPMIPOWER_ERROR (("cbuf_write_from_fd: %s", strerror (errno)));
-              exit (1);
+              exit (EXIT_FAILURE);
             }
 
           /* achu: If you are running ipmipower in co-process mode
@@ -516,7 +516,7 @@ _poll_loop (int non_interactive)
            * error message.
            */
           if (!n)
-            exit (1);
+            exit (EXIT_FAILURE);
           
           if (dropped)
             IPMIPOWER_DEBUG (("cbuf_write_from_fd: read dropped %d bytes", dropped));
@@ -527,7 +527,7 @@ _poll_loop (int non_interactive)
           if (cbuf_read_to_fd (ttyout, STDOUT_FILENO, -1) < 0)
             {
               IPMIPOWER_ERROR (("cbuf_read_to_fd: %s", strerror (errno)));
-              exit (1);
+              exit (EXIT_FAILURE);
             }
         }
     }
@@ -538,7 +538,6 @@ _poll_loop (int non_interactive)
 int
 main (int argc, char *argv[])
 {
-  int exit_val = 0;
   int i;
 
   ipmi_disable_coredump ();
@@ -565,7 +564,7 @@ main (int argc, char *argv[])
         {
           /* dump error outputs here, most notably invalid hostname output */
           cbuf_read_to_fd (ttyout, STDOUT_FILENO, -1);
-          exit (1);
+          exit (EXIT_FAILURE);
         }
 
       ics_len = len;
@@ -593,7 +592,7 @@ main (int argc, char *argv[])
 						   IPMIPOWER_OUTPUT_BUFLEN) <= 0)
 	    {
 	      IPMIPOWER_ERROR (("%s", errbuf));
-	      exit (1);
+	      exit (EXIT_FAILURE);
 	    }
 	}
       else
@@ -603,7 +602,7 @@ main (int argc, char *argv[])
 								   IPMIPOWER_OUTPUT_BUFLEN) <= 0)
 	    {
 	      IPMIPOWER_ERROR (("%s", errbuf));
-	      exit (1);
+	      exit (EXIT_FAILURE);
 	    }
 	}
 
@@ -632,7 +631,7 @@ main (int argc, char *argv[])
 							       IPMIPOWER_OUTPUT_BUFLEN) <= 0)
 		    {
 		      IPMIPOWER_ERROR (("%s", errbuf));
-		      exit (1);
+		      exit (EXIT_FAILURE);
 		    }
 		  
 		  eanode = eanode->next;
@@ -675,10 +674,8 @@ main (int argc, char *argv[])
   for (i = IPMIPOWER_MSG_TYPE_ERROR_MIN; i < IPMIPOWER_MSG_TYPE_ERROR_MAX; i++)
     {
       if (output_counts[i])
-	{
-	  exit_val = 1;
-	  break;
-	}
+	return (EXIT_FAILURE);
     }
-  exit (exit_val);
+
+  return (EXIT_SUCCESS);
 }

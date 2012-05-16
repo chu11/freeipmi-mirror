@@ -154,7 +154,7 @@ _cmd_hostname (char **argv)
       if (!(cmd_args.common.hostname = strdup (argv[1])))
         {
           IPMIPOWER_ERROR (("strdup: %s", strerror(errno)));
-          exit (1);
+          exit (EXIT_FAILURE);
         }
 
       ipmipower_ping_force_discovery_sweep ();
@@ -181,7 +181,7 @@ _cmd_username (char **argv)
           if (!(cmd_args.common.username = strdup (argv[1])))
             {
               IPMIPOWER_ERROR (("strdup: %s", strerror(errno)));
-              exit (1);
+              exit (EXIT_FAILURE);
             }
         }
 
@@ -217,7 +217,7 @@ _cmd_password (char **argv)
           if (!(cmd_args.common.password = strdup (argv[1])))
             {
               IPMIPOWER_ERROR (("strdup: %s", strerror(errno)));
-              exit (1);
+              exit (EXIT_FAILURE);
             }
         }
 
@@ -487,7 +487,7 @@ _cmd_power_specific_nodes (char **argv, ipmipower_power_cmd_t cmd)
   if (!(hitr = hostlist_iterator_create (h)))
     {
       IPMIPOWER_ERROR (("hostlist_iterator_create: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   
   memset (output_counts, '\0', sizeof (output_counts));
@@ -520,7 +520,7 @@ _cmd_power_specific_nodes (char **argv, ipmipower_power_cmd_t cmd)
       if (!(h2itr = hostlist_iterator_create (h2)))
         {
           IPMIPOWER_ERROR (("hostlist_iterator_create: %s", strerror (errno)));
-          exit (1);
+          exit (EXIT_FAILURE);
         }
 
       while ((h2str = hostlist_next (h2itr)))
@@ -540,7 +540,7 @@ _cmd_power_specific_nodes (char **argv, ipmipower_power_cmd_t cmd)
 		  if (!(h2str_extra_arg = strdup (ptr)))
 		    {
 		      IPMIPOWER_ERROR (("strdup: %s", strerror(errno)));
-		      exit (1);
+		      exit (EXIT_FAILURE);
 		    }
 		}
 	    }
@@ -806,7 +806,7 @@ _cmd_config (void)
       if ((rv = hostlist_ranged_string (discovered, IPMIPOWER_OUTPUT_BUFLEN, buf)) < 0)
         {
           IPMIPOWER_ERROR (("hostlist_ranged_string: %s", strerror (errno)));
-          exit (1);
+          exit (EXIT_FAILURE);
         }
 
       if (rv > 0)
@@ -817,7 +817,7 @@ _cmd_config (void)
       if ((rv = hostlist_ranged_string (undiscovered, IPMIPOWER_OUTPUT_BUFLEN, buf)) < 0)
         {
           IPMIPOWER_ERROR (("hostlist_ranged_string: %s", strerror (errno)));
-          exit (1);
+          exit (EXIT_FAILURE);
         }
 
       if (rv > 0)
@@ -828,7 +828,7 @@ _cmd_config (void)
       if ((rv = hostlist_ranged_string (badconnection, IPMIPOWER_OUTPUT_BUFLEN, buf)) < 0)
         {
           IPMIPOWER_ERROR (("hostlist_ranged_string: %s", strerror (errno)));
-          exit (1);
+          exit (EXIT_FAILURE);
         }
 
       if (rv > 0)
@@ -1165,7 +1165,7 @@ _readcmd (char *buf, int buflen)
   if ((bytes_peeked = cbuf_peek (ttyin, buf, buflen)) < 0)
     {
       IPMIPOWER_ERROR (("cbuf_peek: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (!bytes_peeked)
@@ -1199,7 +1199,7 @@ ipmipower_prompt_process_cmdline (void)
   if (!(buf = (char *)malloc (IPMIPOWER_MAX_TTY_BUF)))
     {
       IPMIPOWER_ERROR (("malloc: %s", strerror(errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   do

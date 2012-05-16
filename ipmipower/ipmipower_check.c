@@ -61,7 +61,7 @@ ipmipower_check_checksum (ipmipower_powercmd_t ip,
                                      ip->obj_lan_msg_trlr_rs)) < 0)
     {
       IPMIPOWER_ERROR (("ipmi_lan_check_checksum: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (!rv)
@@ -117,7 +117,7 @@ ipmipower_check_authentication_code (ipmipower_powercmd_t ip,
                                                                    password ? strlen (password) : 0)) < 0)
         {
           IPMIPOWER_ERROR (("ipmi_lan_check_packet_session_authentication_code: %s", strerror (errno)));
-          exit (1);
+          exit (EXIT_FAILURE);
         }
 
       /* IPMI Workaround (achu)
@@ -151,7 +151,7 @@ ipmipower_check_authentication_code (ipmipower_powercmd_t ip,
                                                                        password ? strlen (password) : 0)) < 0)
             {
               IPMIPOWER_ERROR (("ipmi_lan_check_packet_session_authentication_code: %s", strerror (errno)));
-              exit (1);
+              exit (EXIT_FAILURE);
             }
 
           if (rv)
@@ -178,7 +178,7 @@ ipmipower_check_authentication_code (ipmipower_powercmd_t ip,
                                                                         ip->obj_rmcpplus_session_trlr_rs)) < 0)
         {
           IPMIPOWER_ERROR (("ipmi_rmcpplus_check_packet_session_authentication_code: %s", strerror (errno)));
-          exit (1);
+          exit (EXIT_FAILURE);
         }
     }
 
@@ -220,7 +220,7 @@ ipmipower_check_outbound_sequence_number (ipmipower_powercmd_t ip,
         {
           IPMIPOWER_ERROR (("FIID_OBJ_GET: 'session_sequence_number': %s",
                             fiid_obj_errormsg (ip->obj_rmcpplus_session_hdr_rs)));
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       session_sequence_number = val;
     }
@@ -232,7 +232,7 @@ ipmipower_check_outbound_sequence_number (ipmipower_powercmd_t ip,
         {
           IPMIPOWER_ERROR (("FIID_OBJ_GET: 'session_sequence_number': %s",
                             fiid_obj_errormsg (ip->obj_lan_session_hdr_rs)));
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       session_sequence_number = val;
     }
@@ -277,7 +277,7 @@ ipmipower_check_outbound_sequence_number (ipmipower_powercmd_t ip,
                                                         0)) < 0)
         {
           IPMIPOWER_ERROR (("ipmi_check_session_sequence_number_1_5: %s", strerror (errno)));
-          exit (1);
+          exit (EXIT_FAILURE);
         }
     }
   else
@@ -288,7 +288,7 @@ ipmipower_check_outbound_sequence_number (ipmipower_powercmd_t ip,
                                                         0)) < 0)
         {
           IPMIPOWER_ERROR (("ipmi_check_session_sequence_number_2_0: %s", strerror (errno)));
-          exit (1);
+          exit (EXIT_FAILURE);
         }
     }
 
@@ -323,7 +323,7 @@ ipmipower_check_session_id (ipmipower_powercmd_t ip,
         {
           IPMIPOWER_ERROR (("FIID_OBJ_GET: 'session_id': %s",
                             fiid_obj_errormsg (ip->obj_lan_session_hdr_rs)));
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       session_id = val;
 
@@ -333,7 +333,7 @@ ipmipower_check_session_id (ipmipower_powercmd_t ip,
         {
           IPMIPOWER_ERROR (("FIID_OBJ_GET: 'session_id': %s",
                             fiid_obj_errormsg (ip->obj_activate_session_rs)));
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       expected_session_id = val;
     }
@@ -346,7 +346,7 @@ ipmipower_check_session_id (ipmipower_powercmd_t ip,
         {
           IPMIPOWER_ERROR (("FIID_OBJ_GET: 'session_id': %s",
                             fiid_obj_errormsg (ip->obj_rmcpplus_session_hdr_rs)));
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       session_id = val;
       expected_session_id = ip->remote_console_session_id;
@@ -363,7 +363,7 @@ ipmipower_check_session_id (ipmipower_powercmd_t ip,
         {
           IPMIPOWER_ERROR (("FIID_OBJ_GET: 'remote_console_session_id': %s",
                             fiid_obj_errormsg (obj_cmd)));
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       session_id = val;
       expected_session_id = ip->remote_console_session_id;
@@ -411,7 +411,7 @@ ipmipower_check_network_function (ipmipower_powercmd_t ip,
     {
       IPMIPOWER_ERROR (("FIID_OBJ_GET: 'net_fn': %s",
                         fiid_obj_errormsg (ip->obj_lan_msg_hdr_rs)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   netfn = val;
 
@@ -461,7 +461,7 @@ ipmipower_check_command (ipmipower_powercmd_t ip,
     {
       IPMIPOWER_ERROR (("FIID_OBJ_GET: 'cmd': %s",
                         fiid_obj_errormsg (obj_cmd)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   cmd = val;
 
@@ -499,7 +499,7 @@ ipmipower_check_command (ipmipower_powercmd_t ip,
       break;
     default:
       IPMIPOWER_ERROR (("ipmipower_check_command: invalid pkt type: %d", pkt));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (cmd != expected_cmd)
@@ -532,7 +532,7 @@ ipmipower_check_requester_sequence_number (ipmipower_powercmd_t ip,
     {
       IPMIPOWER_ERROR (("FIID_OBJ_GET: 'rq_seq': %s",
                         fiid_obj_errormsg (ip->obj_lan_msg_hdr_rs)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   req_seq = val;
 
@@ -567,7 +567,7 @@ ipmipower_check_completion_code (ipmipower_powercmd_t ip,
     {
       IPMIPOWER_ERROR (("FIID_OBJ_GET: 'comp_code': %s",
                         fiid_obj_errormsg (obj_cmd)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   comp_code = val;
 
@@ -599,7 +599,7 @@ ipmipower_check_payload_type (ipmipower_powercmd_t ip,
     {
       IPMIPOWER_ERROR (("FIID_OBJ_GET: 'payload_type': %s",
                         fiid_obj_errormsg (ip->obj_rmcpplus_session_hdr_rs)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   payload_type = val;
 
@@ -642,7 +642,7 @@ ipmipower_check_message_tag (ipmipower_powercmd_t ip,
     {
       IPMIPOWER_ERROR (("FIID_OBJ_GET: 'message_tag': %s",
                         fiid_obj_errormsg (obj_cmd)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   message_tag = val;
 
@@ -677,7 +677,7 @@ ipmipower_check_rmcpplus_status_code (ipmipower_powercmd_t ip,
     {
       IPMIPOWER_ERROR (("FIID_OBJ_GET: 'rmcpplus_status_code': %s",
                         fiid_obj_errormsg (obj_cmd)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   rmcpplus_status_code = val;
 
@@ -706,7 +706,7 @@ ipmipower_check_packet (ipmipower_powercmd_t ip,
     {
       IPMIPOWER_ERROR (("fiid_obj_packet_valid: %s",
                         fiid_obj_errormsg (obj_cmd)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (!ret)
@@ -744,7 +744,7 @@ ipmipower_check_open_session_response_privilege (ipmipower_powercmd_t ip,
         {
           IPMIPOWER_ERROR (("FIID_OBJ_GET: 'maximum_privilege_level': %s",
                             fiid_obj_errormsg (ip->obj_open_session_rs)));
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       maximum_privilege_level = val;
 
@@ -756,7 +756,7 @@ ipmipower_check_open_session_response_privilege (ipmipower_powercmd_t ip,
                                                            ip->obj_open_session_rs)) < 0)
         {
           IPMIPOWER_ERROR (("ipmi_check_open_session_maximum_privilege: %s", strerror (errno)));
-          exit (1);
+          exit (EXIT_FAILURE);
         }
     }
 
@@ -835,7 +835,7 @@ ipmipower_check_rakp_2_key_exchange_authentication_code (ipmipower_powercmd_t ip
         {
           IPMIPOWER_ERROR (("fiid_obj_get_data: 'key_exchange_authentication_code': %s",
                             fiid_obj_errormsg (ip->obj_rakp_message_2_rs)));
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       
       if (ip->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE
@@ -846,7 +846,7 @@ ipmipower_check_rakp_2_key_exchange_authentication_code (ipmipower_powercmd_t ip
             {
               IPMIPOWER_ERROR (("fiid_obj_clear_field: 'key_exchange_authentication_code': %s",
                                 fiid_obj_errormsg (ip->obj_rakp_message_2_rs)));
-              exit (1);
+              exit (EXIT_FAILURE);
             }
         }
       else if (ip->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
@@ -859,7 +859,7 @@ ipmipower_check_rakp_2_key_exchange_authentication_code (ipmipower_powercmd_t ip
             {
               IPMIPOWER_ERROR (("fiid_obj_set_data: 'key_exchange_authentication_code': %s",
                                 fiid_obj_errormsg (ip->obj_rakp_message_2_rs)));
-              exit (1);
+              exit (EXIT_FAILURE);
             }
         }
       else if (ip->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
@@ -872,7 +872,7 @@ ipmipower_check_rakp_2_key_exchange_authentication_code (ipmipower_powercmd_t ip
             {
               IPMIPOWER_ERROR (("fiid_obj_set_data: 'key_exchange_authentication_code': %s",
                                 fiid_obj_errormsg (ip->obj_rakp_message_2_rs)));
-              exit (1);
+              exit (EXIT_FAILURE);
             }
         }
     }
@@ -901,7 +901,7 @@ ipmipower_check_rakp_2_key_exchange_authentication_code (ipmipower_powercmd_t ip
     {
       IPMIPOWER_ERROR (("FIID_OBJ_GET: 'managed_system_session_id': %s",
                         fiid_obj_errormsg (ip->obj_open_session_rs)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   managed_system_session_id = val;
 
@@ -912,7 +912,7 @@ ipmipower_check_rakp_2_key_exchange_authentication_code (ipmipower_powercmd_t ip
     {
       IPMIPOWER_ERROR (("fiid_obj_get_data: 'managed_system_random_number': %s",
                         fiid_obj_errormsg (ip->obj_rakp_message_2_rs)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   
   if ((managed_system_guid_len = fiid_obj_get_data (ip->obj_rakp_message_2_rs,
@@ -922,7 +922,7 @@ ipmipower_check_rakp_2_key_exchange_authentication_code (ipmipower_powercmd_t ip
     {
       IPMIPOWER_ERROR (("fiid_obj_get_data: 'managed_system_guid': %s",
                         fiid_obj_errormsg (ip->obj_rakp_message_2_rs)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   /* IPMI Workaround (achu)
@@ -948,7 +948,7 @@ ipmipower_check_rakp_2_key_exchange_authentication_code (ipmipower_powercmd_t ip
         {
           IPMIPOWER_ERROR (("fiid_obj_get_data: 'key_exchange_authentication_code': %s",
                             fiid_obj_errormsg (ip->obj_rakp_message_2_rs)));
-          exit (1);
+          exit (EXIT_FAILURE);
         }
 
       if (buf_len == (IPMI_HMAC_SHA1_DIGEST_LENGTH + 1))
@@ -958,7 +958,7 @@ ipmipower_check_rakp_2_key_exchange_authentication_code (ipmipower_powercmd_t ip
             {
               IPMIPOWER_ERROR (("fiid_obj_clear_field: 'key_exchange_authentication_code': %s",
                                 fiid_obj_errormsg (ip->obj_rakp_message_2_rs)));
-              exit (1);
+              exit (EXIT_FAILURE);
             }
 
           if (fiid_obj_set_data (ip->obj_rakp_message_2_rs,
@@ -968,7 +968,7 @@ ipmipower_check_rakp_2_key_exchange_authentication_code (ipmipower_powercmd_t ip
             {
               IPMIPOWER_ERROR (("fiid_obj_set_data: 'key_exchange_authentication_code': %s",
                                 fiid_obj_errormsg (ip->obj_rakp_message_2_rs)));
-              exit (1);
+              exit (EXIT_FAILURE);
             }
         }
     }
@@ -991,7 +991,7 @@ ipmipower_check_rakp_2_key_exchange_authentication_code (ipmipower_powercmd_t ip
                                                                          ip->obj_rakp_message_2_rs)) < 0)
     {
       IPMIPOWER_ERROR (("ipmi_rmcpplus_check_rakp_2_key_exchange_authentication_code: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (!rv)
@@ -1058,7 +1058,7 @@ ipmipower_check_rakp_4_integrity_check_value (ipmipower_powercmd_t ip,
     {
       IPMIPOWER_ERROR (("FIID_OBJ_GET: 'managed_system_session_id': %s",
                         fiid_obj_errormsg (ip->obj_open_session_rs)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   managed_system_session_id = val;
 
@@ -1069,7 +1069,7 @@ ipmipower_check_rakp_4_integrity_check_value (ipmipower_powercmd_t ip,
     {
       IPMIPOWER_ERROR (("fiid_obj_get_data: 'managed_system_guid': %s",
                         fiid_obj_errormsg (ip->obj_rakp_message_2_rs)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   /* IPMI Workaround (achu)
@@ -1089,7 +1089,7 @@ ipmipower_check_rakp_4_integrity_check_value (ipmipower_powercmd_t ip,
         {
           IPMIPOWER_ERROR (("fiid_obj_clear_field: 'integrity_check_value': %s",
                             fiid_obj_errormsg (ip->obj_open_session_rs)));
-          exit (1);
+          exit (EXIT_FAILURE);
         }
     }
 
@@ -1104,7 +1104,7 @@ ipmipower_check_rakp_4_integrity_check_value (ipmipower_powercmd_t ip,
                                                               ip->obj_rakp_message_4_rs)) < 0)
     {
       IPMIPOWER_ERROR (("ipmi_rmcpplus_check_rakp_4_integrity_check_value: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (!rv)
@@ -1132,7 +1132,7 @@ ipmipower_check_payload_pad (ipmipower_powercmd_t ip,
                                              ip->obj_rmcpplus_payload_rs)) < 0)
     {
       IPMIPOWER_ERROR (("ipmi_rmcpplus_check_payload_pad: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (!rv)
@@ -1159,7 +1159,7 @@ ipmipower_check_integrity_pad (ipmipower_powercmd_t ip,
   if ((rv = ipmi_rmcpplus_check_integrity_pad (ip->obj_rmcpplus_session_trlr_rs)) < 0)
     {
       IPMIPOWER_ERROR (("ipmi_rmcpplus_check_integrity_pad: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (!rv)

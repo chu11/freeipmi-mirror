@@ -183,7 +183,7 @@ cmdline_parse (int key,
       else
         {
           fprintf (stderr, "invalid driver type specified");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       cmd_args->common.driver_type = tmp;
       break;
@@ -235,7 +235,7 @@ cmdline_parse (int key,
           || tmp <= 0)
         {
           fprintf (stderr, "retransmission wait timeout length invalid");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       cmd_args->retransmission_wait_timeout = tmp;
       break;
@@ -249,7 +249,7 @@ cmdline_parse (int key,
           || tmp <= 0)
         {
           fprintf (stderr, "retransmission backoff count invalid");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       cmd_args->retransmission_backoff_count = tmp;
       break;
@@ -261,7 +261,7 @@ cmdline_parse (int key,
           || tmp < 0)
         {
           fprintf (stderr, "ping interval length invalid");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       cmd_args->ping_interval = tmp;
       break;
@@ -273,7 +273,7 @@ cmdline_parse (int key,
           || tmp < 0)
         {
           fprintf (stderr, "ping timeout length invalid");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       cmd_args->ping_timeout = tmp;
       break;
@@ -285,7 +285,7 @@ cmdline_parse (int key,
           || tmp < 0)
         {
           fprintf (stderr, "ping packet count invalid");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       cmd_args->ping_packet_count = tmp;
       break;
@@ -297,7 +297,7 @@ cmdline_parse (int key,
           || tmp < 0)
         {
           fprintf (stderr, "ping percent invalid");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       cmd_args->ping_percent = tmp;
       break;
@@ -309,7 +309,7 @@ cmdline_parse (int key,
           || tmp < 0)
         {
           fprintf (stderr, "ping consec count invalid");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       cmd_args->ping_consec_count = tmp;
       break;
@@ -359,7 +359,7 @@ _ipmipower_config_file_parse (struct ipmipower_arguments *cmd_args)
                          &config_file_data) < 0)
     {
       fprintf (stderr, "config_file_parse: %s\n", strerror (errno));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
  out:
@@ -396,31 +396,31 @@ _ipmipower_args_validate (struct ipmipower_arguments *cmd_args)
   if (!IPMIPOWER_OEM_POWER_TYPE_VALID (cmd_args->oem_power_type))
     {
       fprintf (stderr, "invalid oem power type\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (cmd_args->retransmission_wait_timeout > cmd_args->common.session_timeout)
     {
       fprintf (stderr, "retransmission wait timeout larger than session timeout\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (cmd_args->powercmd != IPMIPOWER_POWER_CMD_NONE && !cmd_args->common.hostname)
     {
       fprintf (stderr, "must specify target hostname(s) in non-interactive mode\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (cmd_args->ping_interval > cmd_args->ping_timeout)
     {
       fprintf (stderr, "ping interval larger than ping timeout\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (cmd_args->ping_consec_count > cmd_args->ping_packet_count)
     {
       fprintf (stderr, "ping consec count larger than ping packet count\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 }
 

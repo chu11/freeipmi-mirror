@@ -1016,7 +1016,7 @@ _daemon_cmd_err (const char *str, int exit_on_fatal)
     {
       err_output ("%s: %s", str, ipmi_ctx_errormsg (ipmi_ctx));
       if (exit_on_fatal)
-	exit (1);
+	exit (EXIT_FAILURE);
     }
 
   repeat_ipmi_ctx_errnum = last_ipmi_ctx_errnum;
@@ -1438,5 +1438,5 @@ main (int argc, char **argv)
   ipmi_ctx_close (ipmi_ctx);
   ipmi_ctx_destroy (ipmi_ctx);
   closelog ();
-  exit (0);
+  exit (EXIT_SUCCESS);
 }

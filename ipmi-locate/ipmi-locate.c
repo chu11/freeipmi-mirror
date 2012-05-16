@@ -528,13 +528,13 @@ main (int argc, char **argv)
   if (!ipmi_is_root ())
     {
       fprintf (stderr, "%s: permission denied\n", argv[0]);
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (!(ctx = ipmi_locate_ctx_create ()))
     {
       fprintf (stderr, "ipmi_locate_ctx_create(): %s", strerror (errno));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   dmidecode_probe_display (ctx);
@@ -545,6 +545,6 @@ main (int argc, char **argv)
     defaults_display (ctx);
 
   ipmi_locate_ctx_destroy (ctx);
-  return (0);
+  return (EXIT_SUCCESS);
 }
 

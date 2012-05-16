@@ -46,7 +46,7 @@ _ipmi_sensors_config (pstdout_state_t pstate,
 {
   ipmi_sensors_config_state_data_t state_data;
   ipmi_sensors_config_prog_data_t *prog_data;
-  int exit_code = -1;
+  int exit_code = EXIT_FAILURE;
   config_err_t ret = 0;
   int file_opened = 0;
   FILE *fp = NULL;              /* init NULL to remove warnings */
@@ -76,16 +76,12 @@ _ipmi_sensors_config (pstdout_state_t pstate,
                                              hostname,
                                              &(prog_data->args->config_args.common),
 					     state_data.pstate)))
-        {
-          exit_code = EXIT_FAILURE;
-          goto cleanup;
-        }
+	goto cleanup;
     }
 
   if (!(state_data.sdr_ctx = ipmi_sdr_ctx_create ()))
     {
       pstdout_perror (pstate, "ipmi_sdr_ctx_create()");
-      exit_code = EXIT_FAILURE;
       goto cleanup;
     }
 
@@ -93,26 +89,17 @@ _ipmi_sensors_config (pstdout_state_t pstate,
 			     state_data.pstate,
 			     state_data.prog_data->args->config_args.common.debug,
 			     hostname) < 0)
-    {
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
-    }
+    goto cleanup;
 
   if (sdr_cache_create_and_load (state_data.sdr_ctx,
                                  NULL,
                                  state_data.ipmi_ctx,
                                  hostname,
 				 &state_data.prog_data->args->sdr) < 0)
-    {
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
-    }
+    goto cleanup;
 
   if (!(state_data.sections = ipmi_sensors_config_sections_create (&state_data)))
-    {
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
-    }
+    goto cleanup;
 
   if (prog_data->args->config_args.action == CONFIG_ACTION_CHECKOUT)
     {
@@ -123,14 +110,12 @@ _ipmi_sensors_config (pstdout_state_t pstate,
               pstdout_fprintf (pstate,
                                stderr,
                                "Cannot output multiple host checkout into a single file\n");
-              exit_code = EXIT_FAILURE;
               goto cleanup;
             }
 
           if (!(fp = fopen (prog_data->args->config_args.filename, "w")))
             {
               pstdout_perror (pstate, "fopen");
-              exit_code = EXIT_FAILURE;
               goto cleanup;
             }
           file_opened++;
@@ -147,7 +132,6 @@ _ipmi_sensors_config (pstdout_state_t pstate,
           if (!(fp = fopen (prog_data->args->config_args.filename, "r")))
             {
               pstdout_perror (pstate, "fopen");
-              exit_code = EXIT_FAILURE;
               goto cleanup;
             }
           file_opened++;
@@ -174,7 +158,6 @@ _ipmi_sensors_config (pstdout_state_t pstate,
                         fp) < 0)
         {
           /* errors printed in function call */
-          exit_code = EXIT_FAILURE;
           goto cleanup;
         }
     }
@@ -192,7 +175,6 @@ _ipmi_sensors_config (pstdout_state_t pstate,
                                             prog_data->args->config_args.keypairs) < 0)
         {
           /* errors printed in function call */
-          exit_code = EXIT_FAILURE;
           goto cleanup;
         }
     }
@@ -205,18 +187,11 @@ _ipmi_sensors_config (pstdout_state_t pstate,
       if ((num = config_sections_validate_keyvalue_inputs (pstate,
                                                            state_data.sections,
                                                            &state_data)) < 0)
-        {
-          /* errors printed in function call */
-          exit_code = EXIT_FAILURE;
-          goto cleanup;
-        }
+	goto cleanup;
 
       /* some errors found */
       if (num)
-        {
-          exit_code = EXIT_FAILURE;
-          goto cleanup;
-        }
+	goto cleanup;
     }
 
   if (prog_data->args->config_args.action == CONFIG_ACTION_CHECKOUT
@@ -234,7 +209,6 @@ _ipmi_sensors_config (pstdout_state_t pstate,
                                stderr,
                                "Unknown section `%s'\n",
                                sstr->section_name);
-              exit_code = EXIT_FAILURE;
               goto cleanup;
             }
           sstr = sstr->next;
@@ -317,12 +291,9 @@ _ipmi_sensors_config (pstdout_state_t pstate,
     }
 
   if (ret == CONFIG_ERR_FATAL_ERROR || ret == CONFIG_ERR_NON_FATAL_ERROR)
-    {
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
-    }
+    goto cleanup;
 
-  exit_code = 0;
+  exit_code = EXIT_SUCCESS;
  cleanup:
   ipmi_sdr_ctx_destroy (state_data.sdr_ctx);
   ipmi_ctx_close (state_data.ipmi_ctx);
@@ -338,7 +309,6 @@ main (int argc, char **argv)
 {
   ipmi_sensors_config_prog_data_t prog_data;
   struct ipmi_sensors_config_arguments cmd_args;
-  int exit_code;
   int hosts_count;
   int rv;
 
@@ -352,16 +322,10 @@ main (int argc, char **argv)
 
   if ((hosts_count = pstdout_setup (&(prog_data.args->config_args.common.hostname),
 				    &(prog_data.args->config_args.hostrange))) < 0)
-    {
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
-    }
+    return (EXIT_FAILURE);
 
   if (!hosts_count)
-    {
-      exit_code = EXIT_SUCCESS;
-      goto cleanup;
-    }
+    return (EXIT_SUCCESS);
 
   /* We don't want caching info to output when are doing ranged output */
   if (hosts_count > 1)
@@ -376,12 +340,9 @@ main (int argc, char **argv)
       fprintf (stderr,
                "pstdout_launch: %s\n",
                pstdout_strerror (pstdout_errnum));
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
+      return (EXIT_FAILURE);
     }
 
-  exit_code = rv;
- cleanup:
-  return (exit_code);
+  return (rv);
 }
 

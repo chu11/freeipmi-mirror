@@ -1254,7 +1254,7 @@ _pstdout_sigint(int s)
     }
 
   _pstdout_output_consolidated_finish();
-  exit(1);
+  exit (EXIT_FAILURE);
 }
 
 int

@@ -283,13 +283,13 @@ main (int argc, char **argv)
     {
       /* Argh, it doesn't return an errno, oh well */
       perror ("signal");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (ipmiconsole_engine_init (1, debug_flags) < 0)
     {
       perror ("ipmiconsole_setup");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   /* convert config information to ipmiconsole configuration */
@@ -309,7 +309,7 @@ main (int argc, char **argv)
   else
     {
       fprintf (stderr, "Config Error: Invalid privilege level");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   ipmi_config.cipher_suite_id = cmd_args.common.cipher_suite_id;
@@ -517,5 +517,5 @@ main (int argc, char **argv)
   _reset_mode ();
 #endif /* !NDEBUG */
 
-  return (0);
+  return (EXIT_SUCCESS);
 }

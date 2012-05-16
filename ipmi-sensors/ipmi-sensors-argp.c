@@ -201,7 +201,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
               || value > IPMI_SDR_RECORD_ID_LAST)
             {
               fprintf (stderr, "invalid sensor record id: %d\n", value);
-              exit (1);
+              exit (EXIT_FAILURE);
             }
 
           cmd_args->record_ids[cmd_args->record_ids_length] = value;
@@ -229,7 +229,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
               || value > IPMI_SDR_RECORD_ID_LAST)
             {
               fprintf (stderr, "invalid sensor record id: %d\n", value);
-              exit (1);
+              exit (EXIT_FAILURE);
             }
 
           cmd_args->exclude_record_ids[cmd_args->exclude_record_ids_length] = value;
@@ -307,7 +307,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       if (!(cmd_args->sensor_state_config_file = strdup (arg)))
         {
           perror ("strdup");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       break;
     case ENTITY_SENSOR_NAMES_KEY:
@@ -370,7 +370,7 @@ _ipmi_sensors_config_file_parse (struct ipmi_sensors_arguments *cmd_args)
                          &config_file_data) < 0)
     {
       fprintf (stderr, "config_file_parse: %s\n", strerror (errno));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (config_file_data.verbose_count_count)
@@ -466,7 +466,7 @@ _ipmi_sensors_args_validate (struct ipmi_sensors_arguments *cmd_args)
                               cmd_args->sensor_types,
                               cmd_args->sensor_types_length,
                               1) < 0)
-        exit (1);
+        exit (EXIT_FAILURE);
     }
 
   if (cmd_args->exclude_sensor_types_length)
@@ -475,7 +475,7 @@ _ipmi_sensors_args_validate (struct ipmi_sensors_arguments *cmd_args)
                               cmd_args->exclude_sensor_types,
                               cmd_args->exclude_sensor_types_length,
                               1) < 0)
-        exit (1);
+        exit (EXIT_FAILURE);
     }
 }
 
