@@ -1,5 +1,10 @@
 2012-05-15  Albert Chu <chu11@llnl.gov>
 
+	* ipmi-pet/: Fix bugs associated with new library checks for sdr
+	open for reading.
+	
+2012-05-15  Albert Chu <chu11@llnl.gov>
+
 	Merge branch toolcleanup
 
 	* common/toolsdr/tool-sdr-cache-common.h,
