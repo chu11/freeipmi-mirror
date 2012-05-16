@@ -2154,6 +2154,7 @@ _ipmi_sel (pstdout_state_t pstate,
   ipmi_sel_state_data_t state_data;
   ipmi_sel_prog_data_t *prog_data;
   int exit_code = EXIT_FAILURE;
+  unsigned int sel_flags = 0;
 
   assert (pstate);
   assert (arg);
@@ -2174,15 +2175,11 @@ _ipmi_sel (pstdout_state_t pstate,
   state_data.pstate = pstate;
   state_data.hostname = (char *)hostname;
 
-  /* Special case, just flush, don't do an IPMI connection */
-  if (!prog_data->args->sdr.flush_cache)
-    {
-      if (!(state_data.ipmi_ctx = ipmi_open (prog_data->progname,
-                                             hostname,
-                                             &(prog_data->args->common),
-					     state_data.pstate)))
-	goto cleanup;
-    }
+  if (!(state_data.ipmi_ctx = ipmi_open (prog_data->progname,
+					 hostname,
+					 &(prog_data->args->common),
+					 state_data.pstate)))
+    goto cleanup;
 
   /* need to create/open cache before creating sel_ctx */
   if (!prog_data->args->info
@@ -2204,60 +2201,53 @@ _ipmi_sel (pstdout_state_t pstate,
 				 state_data.hostname) < 0)
 	goto cleanup;
 
-      if (!prog_data->args->sdr.flush_cache)
-	{
-	  if (sdr_cache_create_and_load (state_data.sdr_ctx,
-					 state_data.pstate,
-					 state_data.ipmi_ctx,
-					 state_data.hostname,
-					 &state_data.prog_data->args->sdr) < 0)
-	    goto cleanup;
-	}
+      if (sdr_cache_create_and_load (state_data.sdr_ctx,
+				     state_data.pstate,
+				     state_data.ipmi_ctx,
+				     state_data.hostname,
+				     &state_data.prog_data->args->sdr) < 0)
+	goto cleanup;
     }
   else
     state_data.sdr_ctx = NULL;
 
-  /* Special case, just flush, don't do SEL stuff */
-  if (!prog_data->args->sdr.flush_cache)
+  if (!(state_data.sel_ctx = ipmi_sel_ctx_create (state_data.ipmi_ctx, state_data.sdr_ctx)))
     {
-      unsigned int flags = 0;
+      pstdout_perror (pstate, "ipmi_sel_ctx_create()");
+      goto cleanup;
+    }
 
-      if (!(state_data.sel_ctx = ipmi_sel_ctx_create (state_data.ipmi_ctx, state_data.sdr_ctx)))
-        {
-          pstdout_perror (pstate, "ipmi_sel_ctx_create()");
-          goto cleanup;
-        }
+  sel_flags = 0;
 
-      if (state_data.prog_data->args->common.debug)
-	flags |= IPMI_SEL_FLAGS_DEBUG_DUMP;
-
-      if (state_data.prog_data->args->assume_system_event_records)
-	flags |= IPMI_SEL_FLAGS_ASSUME_SYTEM_EVENT_RECORDS;
-
-      if (flags)
-        {
-          /* Don't error out, if this fails we can still continue */
-          if (ipmi_sel_ctx_set_flags (state_data.sel_ctx, flags) < 0)
-            pstdout_fprintf (pstate,
+  if (state_data.prog_data->args->common.debug)
+    sel_flags |= IPMI_SEL_FLAGS_DEBUG_DUMP;
+  
+  if (state_data.prog_data->args->assume_system_event_records)
+    sel_flags |= IPMI_SEL_FLAGS_ASSUME_SYTEM_EVENT_RECORDS;
+  
+  if (sel_flags)
+    {
+      /* Don't error out, if this fails we can still continue */
+      if (ipmi_sel_ctx_set_flags (state_data.sel_ctx, sel_flags) < 0)
+	pstdout_fprintf (pstate,
                              stderr,
-                             "ipmi_sel_ctx_set_flags: %s\n",
-                             ipmi_sel_ctx_errormsg (state_data.sel_ctx));
-	}
+			 "ipmi_sel_ctx_set_flags: %s\n",
+			 ipmi_sel_ctx_errormsg (state_data.sel_ctx));
+    }
       
-      if (state_data.prog_data->args->common.debug && hostname)
-	{
-	  if (ipmi_sel_ctx_set_debug_prefix (state_data.sel_ctx,
-					     hostname) < 0)
-	    pstdout_fprintf (pstate,
-			     stderr,
-			     "ipmi_sel_ctx_set_debug_prefix: %s\n",
-			     ipmi_sel_ctx_errormsg (state_data.sel_ctx));
-        }
+  if (state_data.prog_data->args->common.debug && hostname)
+    {
+      if (ipmi_sel_ctx_set_debug_prefix (state_data.sel_ctx,
+					 hostname) < 0)
+	pstdout_fprintf (pstate,
+			 stderr,
+			 "ipmi_sel_ctx_set_debug_prefix: %s\n",
+			 ipmi_sel_ctx_errormsg (state_data.sel_ctx));
     }
 
   if (prog_data->args->output_event_state)
     {
-      unsigned int flags = 0;
+      unsigned int interpret_flags = 0;
 
       if (!(state_data.interpret_ctx = ipmi_interpret_ctx_create ()))
         {
@@ -2306,14 +2296,14 @@ _ipmi_sel (pstdout_state_t pstate,
         }
 
       if (prog_data->args->assume_system_event_records)
-        flags |= IPMI_INTERPRET_FLAGS_SEL_ASSUME_SYSTEM_EVENT_RECORDS;
+        interpret_flags |= IPMI_INTERPRET_FLAGS_SEL_ASSUME_SYSTEM_EVENT_RECORDS;
 
       if (prog_data->args->interpret_oem_data)
-        flags |= IPMI_INTERPRET_FLAGS_INTERPRET_OEM_DATA;
+        interpret_flags |= IPMI_INTERPRET_FLAGS_INTERPRET_OEM_DATA;
 
-      if (flags)
+      if (interpret_flags)
         {
-          if (ipmi_interpret_ctx_set_flags (state_data.interpret_ctx, flags) < 0)
+          if (ipmi_interpret_ctx_set_flags (state_data.interpret_ctx, interpret_flags) < 0)
             {
               pstdout_fprintf (pstate,
                                stderr,

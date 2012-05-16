@@ -69,15 +69,11 @@ _ipmi_sensors_config (pstdout_state_t pstate,
   state_data.prog_data = prog_data;
   state_data.pstate = pstate;
 
-  /* Special case, just flush, don't do an IPMI connection */
-  if (!prog_data->args->sdr.flush_cache)
-    {
-      if (!(state_data.ipmi_ctx = ipmi_open (prog_data->progname,
-                                             hostname,
-                                             &(prog_data->args->config_args.common),
-					     state_data.pstate)))
-	goto cleanup;
-    }
+  if (!(state_data.ipmi_ctx = ipmi_open (prog_data->progname,
+					 hostname,
+					 &(prog_data->args->config_args.common),
+					 state_data.pstate)))
+    goto cleanup;
 
   if (!(state_data.sdr_ctx = ipmi_sdr_ctx_create ()))
     {
