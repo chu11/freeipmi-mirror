@@ -323,6 +323,7 @@ int ipmi_sel_parse_read_oem (ipmi_sel_ctx_t ctx,
  * %c - combined event data 2 and event data 3 string [2]
  * %p - event data 2 previous state string [3]
  * %s - event data 2 severity string [3]
+ * %E - combined event data 1, 2, and 3 string [4]
  * %k - event direction
  *
  * [1] - if a previous state and a severity state string are available
@@ -342,6 +343,12 @@ int ipmi_sel_parse_read_oem (ipmi_sel_ctx_t ctx,
  * [3] - if event type code indicates a discrete sensor and event data 2
  * flag indicates a previous state and/or severity state is available.
  *
+ * [4] - this can be loosely considered the equivalent of "%e" and
+ * "%c" concatenated with the defined separator between them.
+ * However, various corner cases will be handled for the user to
+ * create a nicer output.  For example, "Foo ; NA" will never be
+ * output.  This will be condensed into just "Foo".
+ *
  * Available in timestamped OEM SEL records
  *
  * %m - manufacturer id
@@ -352,13 +359,13 @@ int ipmi_sel_parse_read_oem (ipmi_sel_ctx_t ctx,
  *
  * Available in all record types for certain manufacturers
  *
- * %O - output an OEM supplied string describing the event. [4]
+ * %O - output an OEM supplied string describing the event. [5]
  *
- * [4] On some motherboards, the vendor is capable of supplying a full
+ * [5] On some motherboards, the vendor is capable of supplying a full
  * string describing the event data, in particular supplying strings
  * for OEM records and OEM event extensions.  Under the right
  * conditions, this output option may be used as a potential
- * replacement for %e, %f, %h, and/or %c.  If an OEM supplied string
+ * replacement for %e, %f, %h, %c, and/or %E.  If an OEM supplied string
  * is not available, nothing will be output (with the exception of N/A
  * if the OUTPUT_NOT_AVAILABLE flag is set).  Currently, this output
  * option supports Fujitsu systems with iRMC S1/iRMC S2.
