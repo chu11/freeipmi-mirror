@@ -2694,6 +2694,10 @@ main (int argc, char **argv)
   if (!hosts_count)
     return (EXIT_SUCCESS);
 
+  /* We don't want caching info to output when are doing ranged output */
+  if (hosts_count > 1)
+    prog_data.args->sdr.quiet_cache = 1;
+
   if ((rv = pstdout_launch (prog_data.args->common.hostname,
                             _bmc_device,
                             &prog_data)) < 0)
