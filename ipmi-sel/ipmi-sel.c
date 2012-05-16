@@ -2230,7 +2230,7 @@ _ipmi_sel (pstdout_state_t pstate,
       /* Don't error out, if this fails we can still continue */
       if (ipmi_sel_ctx_set_flags (state_data.sel_ctx, sel_flags) < 0)
 	pstdout_fprintf (pstate,
-                             stderr,
+			 stderr,
 			 "ipmi_sel_ctx_set_flags: %s\n",
 			 ipmi_sel_ctx_errormsg (state_data.sel_ctx));
     }
