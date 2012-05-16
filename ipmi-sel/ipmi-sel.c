@@ -366,17 +366,6 @@ _display_sel_info (ipmi_sel_state_data_t *state_data)
 }
 
 static int
-_list_sensor_types (ipmi_sel_state_data_t *state_data)
-{
-  assert (state_data);
-
-  if (list_sensor_types (state_data->pstate) < 0)
-    return (-1);
-
-  return (0);
-}
-
-static int
 _clear_entries (ipmi_sel_state_data_t *state_data)
 {
   int rv = -1;
@@ -2126,9 +2115,6 @@ run_cmd_args (ipmi_sel_state_data_t *state_data)
   if (args->info)
     return (_display_sel_info (state_data));
 
-  if (args->list_sensor_types)
-    return (_list_sensor_types (state_data));
-
   if (args->clear)
     return (_clear_entries (state_data));
 
@@ -2340,6 +2326,15 @@ main (int argc, char **argv)
   prog_data.progname = argv[0];
   ipmi_sel_argp_parse (argc, argv, &cmd_args);
   prog_data.args = &cmd_args;
+
+  /* Special case, just output list, don't do anything else */
+  if (prog_data.args->list_sensor_types)
+    {
+      if (list_sensor_types () < 0)
+	return (EXIT_FAILURE);
+      
+      return (EXIT_SUCCESS);
+    }
 
   /* Special case, if user specified workaround via flags instead of option */
   if (prog_data.args->common.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_ASSUME_SYSTEM_EVENT)

@@ -355,8 +355,7 @@ _get_sensor_type_cmdline_string (char *sensor_type)
 }
 
 static int
-_output_sensor_type (pstdout_state_t pstate,
-                     const char *sensor_type_str)
+_output_sensor_type (const char *sensor_type_str)
 {
   char *tmpstr = NULL;
 
@@ -364,23 +363,20 @@ _output_sensor_type (pstdout_state_t pstate,
 
   if (!(tmpstr = (char *)strdup (sensor_type_str)))
     {
-      PSTDOUT_FPRINTF (pstate,
-                       stderr,
-                       "strdup: %s\n",
-                       strerror (errno));
+      perror ("strdup");
       return (-1);
     }
 
   _get_sensor_type_cmdline_string (tmpstr);
   
-  PSTDOUT_PRINTF (pstate, "%s\n", tmpstr);
+  printf ("%s\n", tmpstr);
   
   free (tmpstr);
   return (0);
 }
 
 int
-list_sensor_types (pstdout_state_t pstate)
+list_sensor_types (void)
 {
   unsigned int i;
 
@@ -388,11 +384,11 @@ list_sensor_types (pstdout_state_t pstate)
     {
       assert (ipmi_sensor_types[i]);
 
-      if (_output_sensor_type (pstate, ipmi_sensor_types[i]) < 0)
+      if (_output_sensor_type (ipmi_sensor_types[i]) < 0)
         return (-1);
     }
   
-  if (_output_sensor_type (pstate, ipmi_oem_sensor_type) < 0)
+  if (_output_sensor_type (ipmi_oem_sensor_type) < 0)
     return (-1);
   
   return (0);

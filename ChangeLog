@@ -1,5 +1,15 @@
 2012-05-16  Albert Chu <chu11@llnl.gov>
 
+	* common/toolcommon/tool-common-sensor.h,
+	common/toolcommon/tool-sensor-common.c (list_sensor_types): Redo
+	to not take pstate parameter.
+
+	* ipmi-sensors/, ipmi-sel/: Code cleanup with use of
+	list_sensor_type.  Call before launching threads in tools since it
+	is identical in all outputs.
+	
+2012-05-16  Albert Chu <chu11@llnl.gov>
+
 	* ipmi-oem/ipmi-oem.c (main), bmc-device/bmc-device.c (main): Turn
 	on quiet caching if doing communication to multiple hosts.
 

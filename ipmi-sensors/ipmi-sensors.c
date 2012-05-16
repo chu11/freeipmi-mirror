@@ -402,17 +402,6 @@ _sdr_repository_info (ipmi_sensors_state_data_t *state_data)
 }
 
 static int
-_list_sensor_types (ipmi_sensors_state_data_t *state_data)
-{
-  assert (state_data);
-
-  if (list_sensor_types (state_data->pstate) < 0)
-    return (-1);
-
-  return (0);
-}
-
-static int
 _output_setup (ipmi_sensors_state_data_t *state_data)
 {
   int rv = -1;
@@ -1314,9 +1303,6 @@ run_cmd_args (ipmi_sensors_state_data_t *state_data)
   if (args->sdr_info)
     return (_sdr_repository_info (state_data));
 
-  if (args->list_sensor_types)
-    return (_list_sensor_types (state_data));
-
   if (sdr_cache_create_and_load (state_data->sdr_ctx,
                                  state_data->pstate,
                                  state_data->ipmi_ctx,
@@ -1531,6 +1517,15 @@ main (int argc, char **argv)
   ipmi_sensors_argp_parse (argc, argv, &cmd_args);
   prog_data.args = &cmd_args;
 
+  /* Special case, just output list, don't do anything else */
+  if (prog_data.args->list_sensor_types)
+    {
+      if (list_sensor_types () < 0)
+	return (EXIT_FAILURE);
+      
+      return (EXIT_SUCCESS);
+    }
+  
   if ((hosts_count = pstdout_setup (&(prog_data.args->common.hostname),
 				    &(prog_data.args->hostrange))) < 0)
     return (EXIT_FAILURE);
