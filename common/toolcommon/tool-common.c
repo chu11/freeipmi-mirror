@@ -108,13 +108,13 @@ ipmi_open (const char *progname,
                   || ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_CONNECTION_TIMEOUT)
                 PSTDOUT_FPRINTF (pstate,
 				 stderr,
-				 "%s: %s",
+				 "%s: %s\n",
 				 progname,
 				 ipmi_ctx_errormsg (ipmi_ctx));
               else
                 PSTDOUT_FPRINTF (pstate,
 				 stderr,
-				 "ipmi_ctx_open_outofband_2_0: %s",
+				 "ipmi_ctx_open_outofband_2_0: %s\n",
 				 ipmi_ctx_errormsg (ipmi_ctx));
               goto cleanup;
             }
@@ -153,13 +153,13 @@ ipmi_open (const char *progname,
                   || ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_CONNECTION_TIMEOUT)
                 PSTDOUT_FPRINTF (pstate,
 				 stderr,
-				 "%s: %s",
+				 "%s: %s\n",
 				 progname,
 				 ipmi_ctx_errormsg (ipmi_ctx));
               else
                 PSTDOUT_FPRINTF (pstate,
 				 stderr,
-				 "ipmi_ctx_open_outofband: %s",
+				 "ipmi_ctx_open_outofband: %s\n",
 				 ipmi_ctx_errormsg (ipmi_ctx));
               goto cleanup;
             }
@@ -171,7 +171,7 @@ ipmi_open (const char *progname,
         {
           PSTDOUT_FPRINTF (pstate,
 			   stderr,
-			   "%s: %s",
+			   "%s: %s\n",
 			   progname,
 			   ipmi_ctx_strerror (IPMI_ERR_PERMISSION));
           goto cleanup;
@@ -198,7 +198,7 @@ ipmi_open (const char *progname,
             {
               PSTDOUT_FPRINTF (pstate,
 			       stderr,
-			       "ipmi_ctx_find_inband: %s",
+			       "ipmi_ctx_find_inband: %s\n",
 			       ipmi_ctx_errormsg (ipmi_ctx));
               goto cleanup;
             }
@@ -225,13 +225,13 @@ ipmi_open (const char *progname,
               if (ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_DEVICE_NOT_FOUND)
                 PSTDOUT_FPRINTF (pstate,
 				 stderr,
-				 "%s: %s",
+				 "%s: %s\n",
 				 progname,
 				 ipmi_ctx_errormsg (ipmi_ctx));
               else
                 PSTDOUT_FPRINTF (pstate,
 				 stderr,
-				 "ipmi_ctx_open_inband: %s",
+				 "ipmi_ctx_open_inband: %s\n",
 				 ipmi_ctx_errormsg (ipmi_ctx));
               goto cleanup;
             }
@@ -247,7 +247,7 @@ ipmi_open (const char *progname,
 	{
 	  PSTDOUT_FPRINTF (pstate,
 			   stderr,
-			   "ipmi_ctx_set_target: %s",
+			   "ipmi_ctx_set_target: %s\n",
 			   ipmi_ctx_errormsg (ipmi_ctx));
 	  goto cleanup;
 	} 

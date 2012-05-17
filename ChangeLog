@@ -4,6 +4,12 @@
 	into the main common_cmd_args struct.
 
 	* Globally update tools for changes.
+
+	* common/toolcommon/tool-common.c (ipmi_open): Fix output corner
+	case.
+
+	* common/toolcommon/tool-sensor-common.h: Pick more reasonable
+	maxes for the MAX_SENSOR_RECORD_IDS and MAX_SENSOR_TYPES macros.
 	
 2012-05-16  Albert Chu <chu11@llnl.gov>
 

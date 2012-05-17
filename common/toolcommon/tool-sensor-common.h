@@ -49,9 +49,15 @@
 #define MAX_SENSOR_RECORD_IDS               128
 #define MAX_SENSOR_TYPES                    16
 #else /* !__CYGWIN__ */
+#if 0
 /* record id is 16 bits - 65536 */
 #define MAX_SENSOR_RECORD_IDS               65536
 #define MAX_SENSOR_TYPES                    256
+#else  /* !0 */
+/* achu: pick more reasonable limits than the theoretical maxes */
+#define MAX_SENSOR_RECORD_IDS               512
+#define MAX_SENSOR_TYPES                    64
+#endif	/* !0 */
 #endif /* !__CYGWIN__ */
 #define MAX_SENSOR_TYPES_STRING_LENGTH      256
 
