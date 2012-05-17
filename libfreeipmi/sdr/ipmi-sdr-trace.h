@@ -34,28 +34,28 @@
 
 #include "ipmi-sdr-util.h"
 
-#define SDR_SET_ERRNUM(__ctx, __errnum)                                     \
-  do {                                                                      \
-    (__ctx)->errnum = (__errnum);                                           \
-    TRACE_MSG_OUT (ipmi_sdr_ctx_errormsg ((__ctx)), (__errnum));            \
+#define SDR_SET_ERRNUM(__ctx, __errnum)                                             \
+  do {                                                                              \
+    (__ctx)->errnum = (__errnum);                                                   \
+    TRACE_MSG_OUT (ipmi_sdr_ctx_errormsg ((__ctx)), (__errnum));                    \
   } while (0)
 
-#define SDR_ERRNO_TO_SDR_ERRNUM(__ctx, __errno)                             \
-  do {                                                                      \
-    sdr_set_sdr_errnum_by_errno ((__ctx), (__errno));                       \
-    TRACE_ERRNO_OUT ((__errno));                                            \
+#define SDR_ERRNO_TO_SDR_ERRNUM(__ctx, __errno)                                     \
+  do {                                                                              \
+    sdr_set_sdr_errnum_by_errno ((__ctx), (__errno));                               \
+    TRACE_ERRNO_OUT ((__errno));                                                    \
   } while (0)
 
-#define SDR_FIID_OBJECT_ERROR_TO_SDR_ERRNUM(__ctx, __obj)                   \
-  do {                                                                      \
-    sdr_set_sdr_errnum_by_fiid_object ((__ctx), (__obj));                   \
-    TRACE_MSG_OUT (fiid_obj_errormsg ((__obj)), fiid_obj_errnum ((__obj))); \
+#define SDR_FIID_OBJECT_ERROR_TO_SDR_ERRNUM(__ctx, __obj)                           \
+  do {                                                                              \
+    sdr_set_sdr_errnum_by_fiid_object ((__ctx), (__obj));                           \
+    TRACE_MSG_OUT (fiid_obj_errormsg ((__obj)), fiid_obj_errnum ((__obj)));         \
   } while (0)
 
-#define SDR_SET_INTERNAL_ERRNUM(__ctx)                                      \
-  do {                                                                      \
-    sdr_set_internal_errnum ((__ctx));                                      \
-    TRACE_MSG_OUT (ipmi_sdr_ctx_errormsg ((__ctx)), (__errnum));            \
+#define SDR_SET_INTERNAL_ERRNUM(__ctx)                                              \
+  do {                                                                              \
+    sdr_set_internal_errnum ((__ctx));                                              \
+    TRACE_MSG_OUT (ipmi_sdr_ctx_errormsg ((__ctx)), ipmi_sdr_ctx_errnum ((__ctx))); \
   } while (0)
 
 #endif /* IPMI_SDR_TRACE_H */
