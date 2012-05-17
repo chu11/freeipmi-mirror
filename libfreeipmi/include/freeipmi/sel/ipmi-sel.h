@@ -73,7 +73,11 @@ typedef struct ipmi_sel_ctx *ipmi_sel_ctx_t;
 
 typedef int (*Ipmi_Sel_Parse_Callback)(ipmi_sel_ctx_t ctx, void *callback_data);
 
-/* SEL Parse Context Functions
+/* 
+ * SEL Context Functions
+ */
+
+/* ipmi_sel_ctx_create
  * - ipmi_ctx assumes ipmi opened and ready to go
  * - sdr_ctx assumes cache open and ready for reading
  * - ipmi_ctx is optional, if NULL ctx cannot be for SEL reading, only parsing records
@@ -145,11 +149,13 @@ int ipmi_sel_ctx_set_separator (ipmi_sel_ctx_t ctx, const char *separator);
 int ipmi_sel_ctx_register_reservation_id (ipmi_sel_ctx_t ctx, uint16_t *reservation_id);
 int ipmi_sel_ctx_clear_reservation_id (ipmi_sel_ctx_t ctx);
 
-/* SEL Parse Functions
- *
- * callback is called after each SEL entry is parsed
- *
- * Returns the number of entries parsed
+/*
+ * SEL Parse Functions
+ */
+
+/* ipmi_sel_parse and ipmi_sel_parse_record_ids
+ * - callback is called after each SEL entry is parsed
+ * - Returns the number of entries parsed
  */
 int ipmi_sel_parse (ipmi_sel_ctx_t ctx,
                     uint16_t record_id_start,
@@ -179,7 +185,7 @@ int ipmi_sel_parse_read_record (ipmi_sel_ctx_t ctx,
                                 void *buf,
                                 unsigned int buflen);
 
-/* SEL parsing functions
+/* SEL record parsing functions
  *
  * - if a sel_record is passed in, that sel_record is used for
  *   reading/parsing
@@ -421,7 +427,9 @@ int ipmi_sel_parse_read_record_string (ipmi_sel_ctx_t ctx,
 				       unsigned int buflen,
 				       unsigned int flags);
 
-/* Utility functions */
+/*
+ * SEL Utility functions
+ */
 int ipmi_sel_clear_sel (ipmi_sel_ctx_t ctx);
 
 int ipmi_sel_delete_sel_entry (ipmi_sel_ctx_t ctx, uint16_t record_id);
