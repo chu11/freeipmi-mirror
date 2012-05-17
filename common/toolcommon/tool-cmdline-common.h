@@ -264,14 +264,14 @@ struct common_cmd_args
 
 error_t common_parse_opt (int key,
                           char *arg,
-                          struct common_cmd_args *common_cmd_args);
+                          struct common_cmd_args *common_args);
 
-void init_common_cmd_args_user (struct common_cmd_args *cmd_args);
-void init_common_cmd_args_operator (struct common_cmd_args *cmd_args);
-void init_common_cmd_args_admin (struct common_cmd_args *cmd_args);
-void verify_common_cmd_args_inband (struct common_cmd_args *cmd_args);
-void verify_common_cmd_args_outofband (struct common_cmd_args *cmd_args, int check_hostname);
-void verify_common_cmd_args (struct common_cmd_args *cmd_args);
+void init_common_cmd_args_user (struct common_cmd_args *common_args);
+void init_common_cmd_args_operator (struct common_cmd_args *common_args);
+void init_common_cmd_args_admin (struct common_cmd_args *common_args);
+void verify_common_cmd_args_inband (struct common_cmd_args *common_args);
+void verify_common_cmd_args_outofband (struct common_cmd_args *common_args, int check_hostname);
+void verify_common_cmd_args (struct common_cmd_args *common_args);
 
 /* to parse only the --config-file option */
 error_t cmdline_config_file_parse (int key, char *arg, struct argp_state *state);
