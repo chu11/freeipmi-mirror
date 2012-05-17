@@ -187,11 +187,6 @@ int ipmi_sdr_cache_iterate (ipmi_sdr_ctx_t ctx,
 int ipmi_sdr_cache_close (ipmi_sdr_ctx_t ctx);
 
 /*
- * SDR Cache Utility Functions
- */
-int ipmi_sdr_cache_delete (ipmi_sdr_ctx_t ctx, const char *filename);
-
-/*
  * SDR Record Parsing Functions
  *
  * For all parsing functions, if currently reading the SDR cache
@@ -564,6 +559,11 @@ int ipmi_sdr_parse_oem_data (ipmi_sdr_ctx_t ctx,
                              unsigned int sdr_record_len,
                              void *oem_data,
                              unsigned int oem_data_len);
+
+/*
+ * SDR Cache Utility Functions
+ */
+int ipmi_sdr_cache_delete (ipmi_sdr_ctx_t ctx, const char *filename);
 
 #ifdef __cplusplus
 }
