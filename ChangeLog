@@ -1,3 +1,9 @@
+2012-05-17  Albert Chu <chu11@llnl.gov>
+
+	* NEWS, configure.ac: Update for release.
+
+	* Tagged Release-1_1_5.
+
 2012-05-16  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors-config/ipmi-sensors-config.c (_ipmi_sensors_config):
