@@ -135,7 +135,7 @@ _sections_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
     }
   else
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
 	pstdout_fprintf (state_data->pstate,
 			 stderr,
 			 "## Cannot handle SDR with event reading type code '0x%X'\n",

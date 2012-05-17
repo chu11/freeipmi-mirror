@@ -104,12 +104,12 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
   switch (key)
     {
     case CHANNEL_NUMBER_KEY:
-      ret = common_parse_opt (ARGP_TARGET_CHANNEL_NUMBER_KEY, arg, &(cmd_args->common));
+      ret = common_parse_opt (ARGP_TARGET_CHANNEL_NUMBER_KEY, arg, &(cmd_args->common_args));
       if (ret == ARGP_ERR_UNKNOWN)
 	return (ret);
       break;
     case SLAVE_ADDRESS_KEY:
-      ret = common_parse_opt (ARGP_TARGET_SLAVE_ADDRESS_KEY, arg, &(cmd_args->common));
+      ret = common_parse_opt (ARGP_TARGET_SLAVE_ADDRESS_KEY, arg, &(cmd_args->common_args));
       if (ret == ARGP_ERR_UNKNOWN)
 	return (ret);
       break;
@@ -175,7 +175,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case ARGP_KEY_END:
       break;
     default:
-      return (common_parse_opt (key, arg, &(cmd_args->common)));
+      return (common_parse_opt (key, arg, &(cmd_args->common_args)));
     }
 
   return (0);
@@ -186,9 +186,9 @@ _ipmi_raw_config_file_parse (struct ipmi_raw_arguments *cmd_args)
 {
   assert (cmd_args);
 
-  if (config_file_parse (cmd_args->common.config_file,
+  if (config_file_parse (cmd_args->common_args.config_file,
                          0,
-                         &(cmd_args->common),
+                         &(cmd_args->common_args),
                          CONFIG_FILE_INBAND | CONFIG_FILE_OUTOFBAND | CONFIG_FILE_HOSTRANGE,
                          CONFIG_FILE_TOOL_IPMI_RAW,
                          NULL) < 0)
@@ -205,7 +205,7 @@ ipmi_raw_argp_parse (int argc, char **argv, struct ipmi_raw_arguments *cmd_args)
   assert (argv);
   assert (cmd_args);
 
-  init_common_cmd_args_admin (&(cmd_args->common));
+  init_common_cmd_args_admin (&(cmd_args->common_args));
 
   cmd_args->cmd_file = NULL;
   memset (cmd_args->cmd, '\0', sizeof (uint8_t) * IPMI_RAW_MAX_ARGS);
@@ -216,7 +216,7 @@ ipmi_raw_argp_parse (int argc, char **argv, struct ipmi_raw_arguments *cmd_args)
               argv,
               ARGP_IN_ORDER,
               NULL,
-              &(cmd_args->common));
+              &(cmd_args->common_args));
 
   _ipmi_raw_config_file_parse (cmd_args);
 
@@ -227,5 +227,5 @@ ipmi_raw_argp_parse (int argc, char **argv, struct ipmi_raw_arguments *cmd_args)
               NULL,
               cmd_args);
 
-  verify_common_cmd_args (&(cmd_args->common));
+  verify_common_cmd_args (&(cmd_args->common_args));
 }

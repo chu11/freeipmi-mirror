@@ -38,7 +38,7 @@
 
 #define CONFIG_FILE_OPTIONS_MAX 1024
 
-struct cmd_args_config
+struct common_cmd_args_config
 {
   char *username;
   int username_set;
@@ -181,14 +181,14 @@ _config_file_driver_type (conffile_t cf,
                           void *app_ptr,
                           int app_data)
 {
-  struct common_cmd_args *cmd_args;
+  struct common_cmd_args *common_args;
   int tmp;
 
   assert (data);
   assert (optionname);
   assert (option_ptr);
 
-  cmd_args = (struct common_cmd_args *)option_ptr;
+  common_args = (struct common_cmd_args *)option_ptr;
 
   if ((tmp = parse_driver_type (data->string)) < 0)
     {
@@ -197,12 +197,12 @@ _config_file_driver_type (conffile_t cf,
     }
 
   /* don't change default if we want outofband configuration only */
-  if (cmd_args->driver_type_outofband_only
+  if (common_args->driver_type_outofband_only
       && (tmp == IPMI_DEVICE_LAN
           || tmp == IPMI_DEVICE_LAN_2_0))
-    cmd_args->driver_type = tmp;
+    common_args->driver_type = tmp;
   else
-    cmd_args->driver_type = tmp;
+    common_args->driver_type = tmp;
 
   return (0);
 }
@@ -217,15 +217,15 @@ _config_file_username (conffile_t cf,
                        void *app_ptr,
                        int app_data)
 {
-  struct cmd_args_config *cmd_args_config;
+  struct common_cmd_args_config *common_cmd_args_config;
 
   assert (data);
   assert (optionname);
   assert (option_ptr);
 
-  cmd_args_config = (struct cmd_args_config *)option_ptr;
+  common_cmd_args_config = (struct common_cmd_args_config *)option_ptr;
 
-  if (cmd_args_config->tool_option_username_set)
+  if (common_cmd_args_config->tool_option_username_set)
     return (0);
 
   if (strlen (data->string) > IPMI_MAX_USER_NAME_LENGTH)
@@ -234,13 +234,13 @@ _config_file_username (conffile_t cf,
       exit (EXIT_FAILURE);
     }
 
-  if (!(cmd_args_config->username = strdup (data->string)))
+  if (!(common_cmd_args_config->username = strdup (data->string)))
     {
       perror ("strdup");
       exit (EXIT_FAILURE);
     }
 
-  cmd_args_config->username_set++;
+  common_cmd_args_config->username_set++;
 
   return (0);
 }
@@ -255,15 +255,15 @@ _config_file_password (conffile_t cf,
                        void *app_ptr,
                        int app_data)
 {
-  struct cmd_args_config *cmd_args_config;
+  struct common_cmd_args_config *common_cmd_args_config;
 
   assert (data);
   assert (optionname);
   assert (option_ptr);
 
-  cmd_args_config = (struct cmd_args_config *)option_ptr;
+  common_cmd_args_config = (struct common_cmd_args_config *)option_ptr;
 
-  if (cmd_args_config->tool_option_password_set)
+  if (common_cmd_args_config->tool_option_password_set)
     return (0);
 
   if (strlen (data->string) > IPMI_2_0_MAX_PASSWORD_LENGTH)
@@ -272,13 +272,13 @@ _config_file_password (conffile_t cf,
       exit (EXIT_FAILURE);
     }
 
-  if (!(cmd_args_config->password = strdup (data->string)))
+  if (!(common_cmd_args_config->password = strdup (data->string)))
     {
       perror ("strdup");
       exit (EXIT_FAILURE);
     }
 
-  cmd_args_config->password_set++;
+  common_cmd_args_config->password_set++;
 
   return (0);
 }
@@ -293,28 +293,28 @@ _config_file_k_g (conffile_t cf,
                   void *app_ptr,
                   int app_data)
 {
-  struct cmd_args_config *cmd_args_config;
+  struct common_cmd_args_config *common_cmd_args_config;
   int rv;
 
   assert (data);
   assert (optionname);
   assert (option_ptr);
 
-  cmd_args_config = (struct cmd_args_config *)option_ptr;
+  common_cmd_args_config = (struct common_cmd_args_config *)option_ptr;
 
-  if (cmd_args_config->tool_option_k_g_set)
+  if (common_cmd_args_config->tool_option_k_g_set)
     return (0);
 
-  if ((rv = parse_kg (cmd_args_config->k_g, IPMI_MAX_K_G_LENGTH + 1, data->string)) < 0)
+  if ((rv = parse_kg (common_cmd_args_config->k_g, IPMI_MAX_K_G_LENGTH + 1, data->string)) < 0)
     {
       fprintf (stderr, "Config File Error: k_g input formatted incorrectly\n");
       exit (EXIT_FAILURE);
     }
 
   if (rv > 0)
-    cmd_args_config->k_g_len = rv;
+    common_cmd_args_config->k_g_len = rv;
 
-  cmd_args_config->k_g_set++;
+  common_cmd_args_config->k_g_set++;
 
   return (0);
 }
@@ -329,16 +329,16 @@ _config_file_authentication_type (conffile_t cf,
                                   void *app_ptr,
                                   int app_data)
 {
-  struct cmd_args_config *cmd_args_config;
+  struct common_cmd_args_config *common_cmd_args_config;
   int tmp;
 
   assert (data);
   assert (optionname);
   assert (option_ptr);
 
-  cmd_args_config = (struct cmd_args_config *)option_ptr;
+  common_cmd_args_config = (struct common_cmd_args_config *)option_ptr;
 
-  if (cmd_args_config->tool_option_authentication_type_set)
+  if (common_cmd_args_config->tool_option_authentication_type_set)
     return (0);
 
   if ((tmp = parse_authentication_type (data->string)) < 0)
@@ -347,9 +347,9 @@ _config_file_authentication_type (conffile_t cf,
       exit (EXIT_FAILURE);
     }
 
-  cmd_args_config->authentication_type = tmp;
+  common_cmd_args_config->authentication_type = tmp;
 
-  cmd_args_config->authentication_type_set++;
+  common_cmd_args_config->authentication_type_set++;
 
   return (0);
 }
@@ -364,15 +364,15 @@ _config_file_cipher_suite_id (conffile_t cf,
                               void *app_ptr,
                               int app_data)
 {
-  struct cmd_args_config *cmd_args_config;
+  struct common_cmd_args_config *common_cmd_args_config;
 
   assert (data);
   assert (optionname);
   assert (option_ptr);
 
-  cmd_args_config = (struct cmd_args_config *)option_ptr;
+  common_cmd_args_config = (struct common_cmd_args_config *)option_ptr;
 
-  if (cmd_args_config->tool_option_cipher_suite_id_set)
+  if (common_cmd_args_config->tool_option_cipher_suite_id_set)
     return (0);
 
   if (data->intval < IPMI_CIPHER_SUITE_ID_MIN
@@ -388,9 +388,9 @@ _config_file_cipher_suite_id (conffile_t cf,
       exit (EXIT_FAILURE);
     }
 
-  cmd_args_config->cipher_suite_id = data->intval;
+  common_cmd_args_config->cipher_suite_id = data->intval;
 
-  cmd_args_config->cipher_suite_id_set++;
+  common_cmd_args_config->cipher_suite_id_set++;
 
   return (0);
 }
@@ -405,16 +405,16 @@ _config_file_privilege_level (conffile_t cf,
                               void *app_ptr,
                               int app_data)
 {
-  struct cmd_args_config *cmd_args_config;
+  struct common_cmd_args_config *common_cmd_args_config;
   int tmp;
 
   assert (data);
   assert (optionname);
   assert (option_ptr);
 
-  cmd_args_config = (struct cmd_args_config *)option_ptr;
+  common_cmd_args_config = (struct common_cmd_args_config *)option_ptr;
 
-  if (cmd_args_config->tool_option_privilege_level_set)
+  if (common_cmd_args_config->tool_option_privilege_level_set)
     return (0);
 
   if ((tmp = parse_privilege_level (data->string)) < 0)
@@ -423,9 +423,9 @@ _config_file_privilege_level (conffile_t cf,
       exit (EXIT_FAILURE);
     }
 
-  cmd_args_config->privilege_level = tmp;
+  common_cmd_args_config->privilege_level = tmp;
 
-  cmd_args_config->privilege_level_set++;
+  common_cmd_args_config->privilege_level_set++;
 
   return (0);
 }
@@ -440,22 +440,22 @@ _config_file_workaround_flags (conffile_t cf,
                                void *app_ptr,
                                int app_data)
 {
-  struct cmd_args_config *cmd_args_config;
+  struct common_cmd_args_config *common_cmd_args_config;
   unsigned int i;
 
   assert (data);
   assert (optionname);
   assert (option_ptr);
 
-  cmd_args_config = (struct cmd_args_config *)option_ptr;
+  common_cmd_args_config = (struct common_cmd_args_config *)option_ptr;
 
-  if (cmd_args_config->tool_option_workaround_flags_set)
+  if (common_cmd_args_config->tool_option_workaround_flags_set)
     return (0);
 
-  cmd_args_config->workaround_flags_outofband = 0;
-  cmd_args_config->workaround_flags_outofband_2_0 = 0;
-  cmd_args_config->workaround_flags_inband = 0;
-  cmd_args_config->section_specific_workaround_flags = 0;
+  common_cmd_args_config->workaround_flags_outofband = 0;
+  common_cmd_args_config->workaround_flags_outofband_2_0 = 0;
+  common_cmd_args_config->workaround_flags_inband = 0;
+  common_cmd_args_config->section_specific_workaround_flags = 0;
 
   for (i = 0; i < data->stringlist_len; i++)
     {
@@ -476,11 +476,11 @@ _config_file_workaround_flags (conffile_t cf,
           || inband_flags
           || section_flags)
         {
-          cmd_args_config->workaround_flags_outofband |= outofband_flags;
-          cmd_args_config->workaround_flags_outofband_2_0 |= outofband_2_0_flags;
-          cmd_args_config->workaround_flags_inband |= inband_flags;
-          cmd_args_config->section_specific_workaround_flags |= section_flags;
-          cmd_args_config->workaround_flags_set++;
+          common_cmd_args_config->workaround_flags_outofband |= outofband_flags;
+          common_cmd_args_config->workaround_flags_outofband_2_0 |= outofband_2_0_flags;
+          common_cmd_args_config->workaround_flags_inband |= inband_flags;
+          common_cmd_args_config->section_specific_workaround_flags |= section_flags;
+          common_cmd_args_config->workaround_flags_set++;
         }
     }
 
@@ -497,13 +497,13 @@ _config_file_tool_option_username (conffile_t cf,
                                    void *app_ptr,
                                    int app_data)
 {
-  struct cmd_args_config *cmd_args_config;
+  struct common_cmd_args_config *common_cmd_args_config;
 
   assert (data);
   assert (optionname);
   assert (option_ptr);
 
-  cmd_args_config = (struct cmd_args_config *)option_ptr;
+  common_cmd_args_config = (struct common_cmd_args_config *)option_ptr;
 
   if (strlen (data->string) > IPMI_MAX_USER_NAME_LENGTH)
     {
@@ -511,17 +511,17 @@ _config_file_tool_option_username (conffile_t cf,
       exit (EXIT_FAILURE);
     }
 
-  if (cmd_args_config->username_set)
-    free (cmd_args_config->username);
+  if (common_cmd_args_config->username_set)
+    free (common_cmd_args_config->username);
 
-  if (!(cmd_args_config->username = strdup (data->string)))
+  if (!(common_cmd_args_config->username = strdup (data->string)))
     {
       perror ("strdup");
       exit (EXIT_FAILURE);
     }
 
-  cmd_args_config->username_set++;
-  cmd_args_config->tool_option_username_set++;
+  common_cmd_args_config->username_set++;
+  common_cmd_args_config->tool_option_username_set++;
 
   return (0);
 }
@@ -536,13 +536,13 @@ _config_file_tool_option_password (conffile_t cf,
                                    void *app_ptr,
                                    int app_data)
 {
-  struct cmd_args_config *cmd_args_config;
+  struct common_cmd_args_config *common_cmd_args_config;
 
   assert (data);
   assert (optionname);
   assert (option_ptr);
 
-  cmd_args_config = (struct cmd_args_config *)option_ptr;
+  common_cmd_args_config = (struct common_cmd_args_config *)option_ptr;
 
   if (strlen (data->string) > IPMI_2_0_MAX_PASSWORD_LENGTH)
     {
@@ -550,17 +550,17 @@ _config_file_tool_option_password (conffile_t cf,
       exit (EXIT_FAILURE);
     }
 
-  if (cmd_args_config->password_set)
-    free (cmd_args_config->password);
+  if (common_cmd_args_config->password_set)
+    free (common_cmd_args_config->password);
 
-  if (!(cmd_args_config->password = strdup (data->string)))
+  if (!(common_cmd_args_config->password = strdup (data->string)))
     {
       perror ("strdup");
       exit (EXIT_FAILURE);
     }
 
-  cmd_args_config->password_set++;
-  cmd_args_config->tool_option_password_set++;
+  common_cmd_args_config->password_set++;
+  common_cmd_args_config->tool_option_password_set++;
 
   return (0);
 }
@@ -575,29 +575,29 @@ _config_file_tool_option_k_g (conffile_t cf,
                               void *app_ptr,
                               int app_data)
 {
-  struct cmd_args_config *cmd_args_config;
+  struct common_cmd_args_config *common_cmd_args_config;
   int rv;
 
   assert (data);
   assert (optionname);
   assert (option_ptr);
 
-  cmd_args_config = (struct cmd_args_config *)option_ptr;
+  common_cmd_args_config = (struct common_cmd_args_config *)option_ptr;
 
-  if (cmd_args_config->k_g_set)
-    memset (cmd_args_config->k_g, '\0', IPMI_MAX_K_G_LENGTH + 1);
+  if (common_cmd_args_config->k_g_set)
+    memset (common_cmd_args_config->k_g, '\0', IPMI_MAX_K_G_LENGTH + 1);
 
-  if ((rv = parse_kg (cmd_args_config->k_g, IPMI_MAX_K_G_LENGTH + 1, data->string)) < 0)
+  if ((rv = parse_kg (common_cmd_args_config->k_g, IPMI_MAX_K_G_LENGTH + 1, data->string)) < 0)
     {
       fprintf (stderr, "Config File Error: k_g input formatted incorrectly\n");
       exit (EXIT_FAILURE);
     }
 
   if (rv > 0)
-    cmd_args_config->k_g_len = rv;
+    common_cmd_args_config->k_g_len = rv;
 
-  cmd_args_config->k_g_set++;
-  cmd_args_config->tool_option_k_g_set++;
+  common_cmd_args_config->k_g_set++;
+  common_cmd_args_config->tool_option_k_g_set++;
 
   return (0);
 }
@@ -612,14 +612,14 @@ _config_file_tool_option_authentication_type (conffile_t cf,
                                               void *app_ptr,
                                               int app_data)
 {
-  struct cmd_args_config *cmd_args_config;
+  struct common_cmd_args_config *common_cmd_args_config;
   int tmp;
 
   assert (data);
   assert (optionname);
   assert (option_ptr);
 
-  cmd_args_config = (struct cmd_args_config *)option_ptr;
+  common_cmd_args_config = (struct common_cmd_args_config *)option_ptr;
 
   if ((tmp = parse_authentication_type (data->string)) < 0)
     {
@@ -627,10 +627,10 @@ _config_file_tool_option_authentication_type (conffile_t cf,
       exit (EXIT_FAILURE);
     }
 
-  cmd_args_config->authentication_type = tmp;
+  common_cmd_args_config->authentication_type = tmp;
 
-  cmd_args_config->authentication_type_set++;
-  cmd_args_config->tool_option_authentication_type_set++;
+  common_cmd_args_config->authentication_type_set++;
+  common_cmd_args_config->tool_option_authentication_type_set++;
 
   return (0);
 }
@@ -645,13 +645,13 @@ _config_file_tool_option_cipher_suite_id (conffile_t cf,
                                           void *app_ptr,
                                           int app_data)
 {
-  struct cmd_args_config *cmd_args_config;
+  struct common_cmd_args_config *common_cmd_args_config;
 
   assert (data);
   assert (optionname);
   assert (option_ptr);
 
-  cmd_args_config = (struct cmd_args_config *)option_ptr;
+  common_cmd_args_config = (struct common_cmd_args_config *)option_ptr;
 
   if (data->intval < IPMI_CIPHER_SUITE_ID_MIN
       || data->intval > IPMI_CIPHER_SUITE_ID_MAX
@@ -661,10 +661,10 @@ _config_file_tool_option_cipher_suite_id (conffile_t cf,
       exit (EXIT_FAILURE);
     }
 
-  cmd_args_config->cipher_suite_id = data->intval;
+  common_cmd_args_config->cipher_suite_id = data->intval;
 
-  cmd_args_config->cipher_suite_id_set++;
-  cmd_args_config->tool_option_cipher_suite_id_set++;
+  common_cmd_args_config->cipher_suite_id_set++;
+  common_cmd_args_config->tool_option_cipher_suite_id_set++;
 
   return (0);
 }
@@ -679,14 +679,14 @@ _config_file_tool_option_privilege_level (conffile_t cf,
                                           void *app_ptr,
                                           int app_data)
 {
-  struct cmd_args_config *cmd_args_config;
+  struct common_cmd_args_config *common_cmd_args_config;
   int tmp;
 
   assert (data);
   assert (optionname);
   assert (option_ptr);
 
-  cmd_args_config = (struct cmd_args_config *)option_ptr;
+  common_cmd_args_config = (struct common_cmd_args_config *)option_ptr;
 
   if ((tmp = parse_privilege_level (data->string)) < 0)
     {
@@ -694,10 +694,10 @@ _config_file_tool_option_privilege_level (conffile_t cf,
       exit (EXIT_FAILURE);
     }
 
-  cmd_args_config->privilege_level = tmp;
+  common_cmd_args_config->privilege_level = tmp;
 
-  cmd_args_config->privilege_level_set++;
-  cmd_args_config->tool_option_privilege_level_set++;
+  common_cmd_args_config->privilege_level_set++;
+  common_cmd_args_config->tool_option_privilege_level_set++;
 
   return (0);
 }
@@ -712,19 +712,19 @@ _config_file_tool_option_workaround_flags (conffile_t cf,
                                            void *app_ptr,
                                            int app_data)
 {
-  struct cmd_args_config *cmd_args_config;
+  struct common_cmd_args_config *common_cmd_args_config;
   unsigned int i;
 
   assert (data);
   assert (optionname);
   assert (option_ptr);
 
-  cmd_args_config = (struct cmd_args_config *)option_ptr;
+  common_cmd_args_config = (struct common_cmd_args_config *)option_ptr;
 
-  cmd_args_config->workaround_flags_outofband = 0;
-  cmd_args_config->workaround_flags_outofband_2_0 = 0;
-  cmd_args_config->workaround_flags_inband = 0;
-  cmd_args_config->section_specific_workaround_flags = 0;
+  common_cmd_args_config->workaround_flags_outofband = 0;
+  common_cmd_args_config->workaround_flags_outofband_2_0 = 0;
+  common_cmd_args_config->workaround_flags_inband = 0;
+  common_cmd_args_config->section_specific_workaround_flags = 0;
 
   for (i = 0; i < data->stringlist_len; i++)
     {
@@ -745,12 +745,12 @@ _config_file_tool_option_workaround_flags (conffile_t cf,
           || inband_flags
           || section_flags)
         {
-          cmd_args_config->workaround_flags_outofband |= outofband_flags;
-          cmd_args_config->workaround_flags_outofband_2_0 |= outofband_2_0_flags;
-          cmd_args_config->workaround_flags_inband |= inband_flags;
-          cmd_args_config->section_specific_workaround_flags |= section_flags;
-          cmd_args_config->workaround_flags_set++;
-          cmd_args_config->tool_option_workaround_flags_set++;
+          common_cmd_args_config->workaround_flags_outofband |= outofband_flags;
+          common_cmd_args_config->workaround_flags_outofband_2_0 |= outofband_2_0_flags;
+          common_cmd_args_config->workaround_flags_inband |= inband_flags;
+          common_cmd_args_config->section_specific_workaround_flags |= section_flags;
+          common_cmd_args_config->workaround_flags_set++;
+          common_cmd_args_config->tool_option_workaround_flags_set++;
         }
     }
 
@@ -767,13 +767,13 @@ _config_file_fanout (conffile_t cf,
                      void *app_ptr,
                      int app_data)
 {
-  struct common_cmd_args *cmd_args;
+  struct common_cmd_args *common_args;
 
   assert (data);
   assert (optionname);
   assert (option_ptr);
 
-  cmd_args = (struct common_cmd_args *)option_ptr;
+  common_args = (struct common_cmd_args *)option_ptr;
 
   if (data->intval < PSTDOUT_FANOUT_MIN
       || data->intval > PSTDOUT_FANOUT_MAX)
@@ -782,7 +782,7 @@ _config_file_fanout (conffile_t cf,
       exit (EXIT_FAILURE);
     }
 
-  cmd_args->fanout = data->intval;
+  common_args->fanout = data->intval;
   return (0);
 }
 
@@ -1038,14 +1038,14 @@ _config_file_ipmipower_ipmi_version (conffile_t cf,
                                      void *app_ptr,
                                      int app_data)
 {
-  struct common_cmd_args *cmd_args;
+  struct common_cmd_args *common_args;
   int tmp;
 
   assert (data);
   assert (optionname);
   assert (option_ptr);
 
-  cmd_args = (struct common_cmd_args *)option_ptr;
+  common_args = (struct common_cmd_args *)option_ptr;
 
   if (!strcasecmp (data->string, "1.5"))
     tmp = IPMI_DEVICE_LAN;
@@ -1057,7 +1057,7 @@ _config_file_ipmipower_ipmi_version (conffile_t cf,
       exit (EXIT_FAILURE);
     }
 
-  cmd_args->driver_type = tmp;
+  common_args->driver_type = tmp;
   return (0);
 }
 
@@ -1103,7 +1103,7 @@ _copy_options (struct conffile_option *to_options,
 int
 config_file_parse (const char *filename,
                    int no_error_if_not_found,
-                   struct common_cmd_args *cmd_args,
+                   struct common_cmd_args *common_args,
                    unsigned int support,
                    unsigned int tool_support,
                    void *tool_data)
@@ -1252,7 +1252,7 @@ config_file_parse (const char *filename,
   struct config_file_data_ipmipower ipmipower_data;
   struct config_file_data_ipmipower *ipmipower_data_ptr;
 
-  struct cmd_args_config cmd_args_config;
+  struct common_cmd_args_config common_cmd_args_config;
 
   struct conffile_option inband_and_outofband_options[] =
     {
@@ -1264,7 +1264,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &driver_type_count,
-        cmd_args,
+        common_args,
         0
       },
       {
@@ -1275,7 +1275,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &workaround_flags_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0
       }
     };
@@ -1290,7 +1290,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &disable_auto_probe_count,
-        &(cmd_args->disable_auto_probe),
+        &(common_args->disable_auto_probe),
         0
       },
       {
@@ -1301,7 +1301,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &driver_address_count,
-        &(cmd_args->driver_address),
+        &(common_args->driver_address),
         0
       },
       {
@@ -1312,7 +1312,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &driver_device_count,
-        &(cmd_args->driver_device),
+        &(common_args->driver_device),
         0
       },
       {
@@ -1323,7 +1323,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &register_spacing_count,
-        &(cmd_args->register_spacing),
+        &(common_args->register_spacing),
         0
       },
       {
@@ -1334,7 +1334,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &target_channel_number_count,
-        &(cmd_args->target_channel_number),
+        &(common_args->target_channel_number),
         0
       },
 
@@ -1350,7 +1350,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &username_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -1361,7 +1361,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &password_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -1372,7 +1372,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &k_g_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       /* timeout maintained for backwards compatability */
@@ -1384,7 +1384,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &session_timeout_count,
-        &(cmd_args->session_timeout),
+        &(common_args->session_timeout),
         0
       },
       {
@@ -1395,7 +1395,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &session_timeout_count,
-        &(cmd_args->session_timeout),
+        &(common_args->session_timeout),
         0
       },
       /* retry-timeout maintained for backwards compatability */
@@ -1407,7 +1407,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &retransmission_timeout_count,
-        &(cmd_args->retransmission_timeout),
+        &(common_args->retransmission_timeout),
         0
       },
       {
@@ -1418,7 +1418,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &retransmission_timeout_count,
-        &(cmd_args->retransmission_timeout),
+        &(common_args->retransmission_timeout),
         0
       },
       {
@@ -1429,7 +1429,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &authentication_type_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       /* cipher_suite_id (underscored) maintained for backwards compatability */
@@ -1441,7 +1441,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &cipher_suite_id_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -1452,7 +1452,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &cipher_suite_id_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       /* privilege maintained for backwards compatability */
@@ -1464,7 +1464,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &privilege_level_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -1475,7 +1475,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &privilege_level_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
     };
@@ -1490,7 +1490,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &quiet_cache_count,
-        &(cmd_args->quiet_cache),
+        &(common_args->quiet_cache),
         0
       },
       {
@@ -1501,7 +1501,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &sdr_cache_directory_count,
-        &(cmd_args->sdr_cache_directory),
+        &(common_args->sdr_cache_directory),
         0
       },
     };
@@ -1516,7 +1516,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &buffer_output_count,
-        &(cmd_args->consolidate_output),
+        &(common_args->consolidate_output),
         0
       },
       {
@@ -1527,7 +1527,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &consolidate_output_count,
-        &(cmd_args->consolidate_output),
+        &(common_args->consolidate_output),
         0
       },
       {
@@ -1538,7 +1538,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &fanout_count,
-        cmd_args,
+        common_args,
         0
       },
       {
@@ -1549,7 +1549,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &eliminate_count,
-        &(cmd_args->eliminate),
+        &(common_args->eliminate),
         0
       },
       {
@@ -1560,7 +1560,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &always_prefix_count,
-        &(cmd_args->always_prefix),
+        &(common_args->always_prefix),
         0
       },
     };
@@ -1582,7 +1582,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &bmc_config_username_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -1593,7 +1593,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &bmc_config_password_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -1604,7 +1604,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &bmc_config_k_g_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -1615,7 +1615,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &bmc_config_authentication_type_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -1626,7 +1626,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &bmc_config_cipher_suite_id_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -1637,7 +1637,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &bmc_config_privilege_level_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -1648,7 +1648,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &bmc_config_workaround_flags_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0
       },
       {
@@ -1677,7 +1677,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &bmc_device_username_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -1688,7 +1688,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &bmc_device_password_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -1699,7 +1699,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &bmc_device_k_g_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -1710,7 +1710,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &bmc_device_authentication_type_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -1721,7 +1721,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &bmc_device_cipher_suite_id_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -1732,7 +1732,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &bmc_device_privilege_level_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -1743,7 +1743,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &bmc_device_workaround_flags_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0
       },
     };
@@ -1761,7 +1761,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &bmc_info_username_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -1772,7 +1772,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &bmc_info_password_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -1783,7 +1783,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &bmc_info_k_g_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -1794,7 +1794,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &bmc_info_authentication_type_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -1805,7 +1805,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &bmc_info_cipher_suite_id_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -1816,7 +1816,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &bmc_info_privilege_level_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -1827,7 +1827,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &bmc_info_workaround_flags_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0
       },
       {
@@ -1857,7 +1857,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &bmc_watchdog_workaround_flags_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0
       },
       /* deprecated */
@@ -1909,7 +1909,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_chassis_username_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -1920,7 +1920,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_chassis_password_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -1931,7 +1931,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_chassis_k_g_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -1942,7 +1942,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_chassis_authentication_type_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -1953,7 +1953,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_chassis_cipher_suite_id_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -1964,7 +1964,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_chassis_privilege_level_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -1975,7 +1975,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_chassis_workaround_flags_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0
       },
     };
@@ -1993,7 +1993,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_chassis_config_username_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -2004,7 +2004,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_chassis_config_password_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -2015,7 +2015,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_chassis_config_k_g_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -2026,7 +2026,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_chassis_config_authentication_type_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -2037,7 +2037,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_chassis_config_cipher_suite_id_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -2048,7 +2048,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_chassis_config_privilege_level_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -2059,7 +2059,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_chassis_config_workaround_flags_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0
       },
       {
@@ -2089,7 +2089,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_dcmi_username_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -2100,7 +2100,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_dcmi_password_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -2111,7 +2111,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_dcmi_k_g_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -2122,7 +2122,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_dcmi_authentication_type_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -2133,7 +2133,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_dcmi_cipher_suite_id_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -2144,7 +2144,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_dcmi_privilege_level_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -2155,7 +2155,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_dcmi_workaround_flags_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0
       },
       {
@@ -2185,7 +2185,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_fru_username_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -2196,7 +2196,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_fru_password_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -2207,7 +2207,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_fru_k_g_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -2218,7 +2218,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_fru_authentication_type_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -2229,7 +2229,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_fru_cipher_suite_id_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -2240,7 +2240,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_fru_privilege_level_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -2251,7 +2251,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_fru_workaround_flags_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0
       },
       {
@@ -2313,7 +2313,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_oem_username_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -2324,7 +2324,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_oem_password_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -2335,7 +2335,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_oem_k_g_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -2346,7 +2346,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_oem_authentication_type_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -2357,7 +2357,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_oem_cipher_suite_id_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -2368,7 +2368,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_oem_privilege_level_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -2379,7 +2379,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_oem_workaround_flags_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0
       },
       {
@@ -2409,7 +2409,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_pef_config_username_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       /* maintained for backwards compatability */
@@ -2421,7 +2421,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_pef_config_password_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       /* maintained for backwards compatability */
@@ -2433,7 +2433,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_pef_config_k_g_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       /* maintained for backwards compatability */
@@ -2445,7 +2445,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_pef_config_authentication_type_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       /* maintained for backwards compatability */
@@ -2457,7 +2457,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_pef_config_cipher_suite_id_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       /* maintained for backwards compatability */
@@ -2469,7 +2469,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_pef_config_privilege_level_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       /* maintained for backwards compatability */
@@ -2481,7 +2481,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_pef_config_workaround_flags_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0
       },
       /* maintained for backwards compatability */
@@ -2504,7 +2504,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_pef_config_username_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -2515,7 +2515,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_pef_config_password_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -2526,7 +2526,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_pef_config_k_g_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -2537,7 +2537,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_pef_config_authentication_type_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -2548,7 +2548,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_pef_config_cipher_suite_id_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -2559,7 +2559,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_pef_config_privilege_level_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -2570,7 +2570,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_pef_config_workaround_flags_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0
       },
       {
@@ -2599,7 +2599,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_raw_username_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -2610,7 +2610,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_raw_password_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -2621,7 +2621,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_raw_k_g_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -2632,7 +2632,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_raw_authentication_type_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -2643,7 +2643,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_raw_cipher_suite_id_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -2654,7 +2654,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_raw_privilege_level_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -2665,7 +2665,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_raw_workaround_flags_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0
       },
     };
@@ -2683,7 +2683,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_pet_username_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -2694,7 +2694,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_pet_password_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -2705,7 +2705,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_pet_k_g_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -2716,7 +2716,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_pet_authentication_type_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -2727,7 +2727,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_pet_cipher_suite_id_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -2738,7 +2738,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_pet_privilege_level_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -2749,7 +2749,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_pet_workaround_flags_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0
       },
       {
@@ -2877,7 +2877,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_sel_username_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -2888,7 +2888,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_sel_password_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -2899,7 +2899,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_sel_k_g_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -2910,7 +2910,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_sel_authentication_type_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -2921,7 +2921,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_sel_cipher_suite_id_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -2932,7 +2932,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_sel_privilege_level_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -2943,7 +2943,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_sel_workaround_flags_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0
       },
       {
@@ -3149,7 +3149,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_sensors_username_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -3160,7 +3160,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_sensors_password_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -3171,7 +3171,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_sensors_k_g_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -3182,7 +3182,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_sensors_authentication_type_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -3193,7 +3193,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_sensors_cipher_suite_id_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -3204,7 +3204,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_sensors_privilege_level_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -3215,7 +3215,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_sensors_workaround_flags_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0
       },
       {
@@ -3495,7 +3495,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_sensors_username_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       /* backwards compatability to ipmimonitoring */
@@ -3507,7 +3507,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_sensors_password_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       /* backwards compatability to ipmimonitoring */
@@ -3519,7 +3519,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_sensors_k_g_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       /* backwards compatability to ipmimonitoring */
@@ -3531,7 +3531,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_sensors_authentication_type_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       /* backwards compatability to ipmimonitoring */
@@ -3543,7 +3543,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_sensors_cipher_suite_id_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       /* backwards compatability to ipmimonitoring */
@@ -3555,7 +3555,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_sensors_privilege_level_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       /* backwards compatability to ipmimonitoring */
@@ -3567,7 +3567,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_sensors_workaround_flags_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0
       },
       /* backwards compatability to ipmimonitoring */
@@ -3815,7 +3815,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_sensors_config_username_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -3826,7 +3826,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_sensors_config_password_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -3837,7 +3837,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_sensors_config_k_g_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -3848,7 +3848,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_sensors_config_authentication_type_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -3859,7 +3859,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_sensors_config_cipher_suite_id_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -3870,7 +3870,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_sensors_config_privilege_level_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -3881,7 +3881,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmi_sensors_config_workaround_flags_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0
       },
       {
@@ -3916,7 +3916,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmiconsole_username_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -3927,7 +3927,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmiconsole_password_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -3938,7 +3938,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmiconsole_k_g_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -3949,7 +3949,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmiconsole_authentication_type_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -3960,7 +3960,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmiconsole_cipher_suite_id_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -3971,7 +3971,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmiconsole_privilege_level_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -3982,7 +3982,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmiconsole_workaround_flags_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0
       },
       /* legacy - no ipmiconsole prefix */
@@ -4092,7 +4092,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmipower_username_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -4103,7 +4103,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmipower_password_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -4114,7 +4114,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmipower_k_g_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -4125,7 +4125,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmipower_authentication_type_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -4136,7 +4136,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmipower_cipher_suite_id_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -4147,7 +4147,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmipower_privilege_level_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0,
       },
       {
@@ -4158,7 +4158,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &ipmipower_workaround_flags_count,
-        &cmd_args_config,
+        &common_cmd_args_config,
         0
       },
       /* ipmi-version maintained for backwards compatability */
@@ -4170,7 +4170,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &driver_type_count,
-        cmd_args,
+        common_args,
         0
       },
       /* legacy - no ipmipower prefix */
@@ -4450,7 +4450,7 @@ config_file_parse (const char *filename,
                 || (support & CONFIG_FILE_OUTOFBAND)
 		|| (support & CONFIG_FILE_SDR)
 		|| (support & CONFIG_FILE_HOSTRANGE))
-               && cmd_args))
+               && common_args))
           && (((tool_support & CONFIG_FILE_TOOL_BMC_CONFIG) && tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_BMC_DEVICE) && !tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_BMC_INFO) && tool_data)
@@ -4741,7 +4741,7 @@ config_file_parse (const char *filename,
   memset (&ipmi_sensors_config_data, '\0', sizeof (struct config_file_data_ipmi_sensors_config));
   memset (&ipmiconsole_data, '\0', sizeof (struct config_file_data_ipmiconsole));
   memset (&ipmipower_data, '\0', sizeof (struct config_file_data_ipmipower));
-  memset (&cmd_args_config, '\0', sizeof (struct cmd_args_config));
+  memset (&common_cmd_args_config, '\0', sizeof (struct common_cmd_args_config));
 
   if (!(cf = conffile_handle_create ()))
     {
@@ -4810,38 +4810,38 @@ config_file_parse (const char *filename,
   /* copy file data over to tool */
 
   if (target_channel_number_count)
-    cmd_args->target_channel_number_is_set = 1;
+    common_args->target_channel_number_is_set = 1;
 
   if (target_slave_address_count)
-    cmd_args->target_slave_address_is_set = 1;
+    common_args->target_slave_address_is_set = 1;
 
-  if (cmd_args_config.username_set)
-    cmd_args->username = cmd_args_config.username;
+  if (common_cmd_args_config.username_set)
+    common_args->username = common_cmd_args_config.username;
 
-  if (cmd_args_config.password_set)
-    cmd_args->password = cmd_args_config.password;
+  if (common_cmd_args_config.password_set)
+    common_args->password = common_cmd_args_config.password;
 
-  if (cmd_args_config.k_g_set)
+  if (common_cmd_args_config.k_g_set)
     {
-      memcpy (cmd_args->k_g, cmd_args_config.k_g, IPMI_MAX_K_G_LENGTH);
-      cmd_args->k_g_len = cmd_args_config.k_g_len;
+      memcpy (common_args->k_g, common_cmd_args_config.k_g, IPMI_MAX_K_G_LENGTH);
+      common_args->k_g_len = common_cmd_args_config.k_g_len;
     }
 
-  if (cmd_args_config.authentication_type_set)
-    cmd_args->authentication_type = cmd_args_config.authentication_type;
+  if (common_cmd_args_config.authentication_type_set)
+    common_args->authentication_type = common_cmd_args_config.authentication_type;
 
-  if (cmd_args_config.cipher_suite_id_set)
-    cmd_args->cipher_suite_id = cmd_args_config.cipher_suite_id;
+  if (common_cmd_args_config.cipher_suite_id_set)
+    common_args->cipher_suite_id = common_cmd_args_config.cipher_suite_id;
 
-  if (cmd_args_config.privilege_level_set)
-    cmd_args->privilege_level = cmd_args_config.privilege_level;
+  if (common_cmd_args_config.privilege_level_set)
+    common_args->privilege_level = common_cmd_args_config.privilege_level;
 
-  if (cmd_args_config.workaround_flags_set)
+  if (common_cmd_args_config.workaround_flags_set)
     {
-      cmd_args->workaround_flags_outofband = cmd_args_config.workaround_flags_outofband;
-      cmd_args->workaround_flags_outofband_2_0 = cmd_args_config.workaround_flags_outofband_2_0;
-      cmd_args->workaround_flags_inband = cmd_args_config.workaround_flags_inband;
-      cmd_args->section_specific_workaround_flags = cmd_args_config.section_specific_workaround_flags;
+      common_args->workaround_flags_outofband = common_cmd_args_config.workaround_flags_outofband;
+      common_args->workaround_flags_outofband_2_0 = common_cmd_args_config.workaround_flags_outofband_2_0;
+      common_args->workaround_flags_inband = common_cmd_args_config.workaround_flags_inband;
+      common_args->section_specific_workaround_flags = common_cmd_args_config.section_specific_workaround_flags;
     }
 
   /* copy tool specific stuff */

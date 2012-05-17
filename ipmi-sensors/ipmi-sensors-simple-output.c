@@ -789,7 +789,7 @@ _simple_output_full_record (ipmi_sensors_state_data_t *state_data,
     default:
       if (!state_data->prog_data->args->quiet_readings)
         {
-	  if (state_data->prog_data->args->common.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_DISCRETE_READING
+	  if (state_data->prog_data->args->common_args.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_DISCRETE_READING
 	      && sensor_reading)
 	    {
 	      char sensor_units_buf[IPMI_SENSORS_UNITS_BUFLEN+1];

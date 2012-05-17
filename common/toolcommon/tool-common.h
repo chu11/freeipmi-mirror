@@ -27,7 +27,7 @@
 
 ipmi_ctx_t ipmi_open (const char *progname,
                       const char *hostname,
-                      struct common_cmd_args *cmd_args,
+                      struct common_cmd_args *common_args,
 		      pstdout_state_t pstate);
 
 #endif /* TOOL_COMMON_H */

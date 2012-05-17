@@ -506,7 +506,7 @@ enum ipmipower_argp_option_keys
 
 struct ipmipower_arguments
 {
-  struct common_cmd_args common;
+  struct common_cmd_args common_args;
 #ifndef NDEBUG
   int rmcpdump;
 #endif /* NDEBUG */

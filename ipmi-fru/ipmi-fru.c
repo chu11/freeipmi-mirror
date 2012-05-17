@@ -579,9 +579,9 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
 
   args = state_data->prog_data->args;
 
-  assert (!args->common.flush_cache);
+  assert (!args->common_args.flush_cache);
 
-  if (args->common.ignore_sdr_cache)
+  if (args->common_args.ignore_sdr_cache)
     {
       /* no SDR?  This is all you get :-) */
       if (_output_fru (state_data,
@@ -597,7 +597,7 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
 				     state_data->pstate,
 				     state_data->ipmi_ctx,
 				     state_data->hostname,
-				     &state_data->prog_data->args->common) < 0)
+				     &state_data->prog_data->args->common_args) < 0)
 	goto cleanup;
     }
 
@@ -713,11 +713,11 @@ _ipmi_fru (pstdout_state_t pstate,
 
   prog_data = (ipmi_fru_prog_data_t *)arg;
 
-  if (prog_data->args->common.flush_cache)
+  if (prog_data->args->common_args.flush_cache)
     {
       if (sdr_cache_flush_cache (pstate,
                                  hostname,
-                                 &prog_data->args->common) < 0)
+                                 &prog_data->args->common_args) < 0)
 	return (EXIT_FAILURE);
       return (EXIT_SUCCESS);
     }
@@ -729,7 +729,7 @@ _ipmi_fru (pstdout_state_t pstate,
 
   if (!(state_data.ipmi_ctx = ipmi_open (prog_data->progname,
 					 hostname,
-					 &(prog_data->args->common),
+					 &(prog_data->args->common_args),
 					 state_data.pstate)))
     goto cleanup;
 
@@ -749,7 +749,7 @@ _ipmi_fru (pstdout_state_t pstate,
 			 ipmi_fru_parse_ctx_errormsg (state_data.fru_parse_ctx));
     }
       
-  if (state_data.prog_data->args->common.debug)
+  if (state_data.prog_data->args->common_args.debug)
     flags |= IPMI_FRU_PARSE_FLAGS_DEBUG_DUMP;
   if (state_data.prog_data->args->skip_checks)
     flags |= IPMI_FRU_PARSE_FLAGS_SKIP_CHECKSUM_CHECKS;
@@ -776,7 +776,7 @@ _ipmi_fru (pstdout_state_t pstate,
 
   if (sdr_cache_setup_debug (state_data.sdr_ctx,
 			     state_data.pstate,
-			     state_data.prog_data->args->common.debug,
+			     state_data.prog_data->args->common_args.debug,
 			     state_data.hostname) < 0)
     goto cleanup;
 
@@ -808,11 +808,11 @@ main (int argc, char **argv)
   prog_data.args = &cmd_args;
 
   /* Special case, if user specified workaround via flags instead of option */
-  if (prog_data.args->common.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_SKIP_CHECKS)
+  if (prog_data.args->common_args.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_SKIP_CHECKS)
     prog_data.args->skip_checks = 1;
 
-  if ((hosts_count = pstdout_setup (&(prog_data.args->common.hostname),
-				    &(prog_data.args->common))) < 0)
+  if ((hosts_count = pstdout_setup (&(prog_data.args->common_args.hostname),
+				    &(prog_data.args->common_args))) < 0)
     return (EXIT_FAILURE);
 
   if (!hosts_count)
@@ -820,9 +820,9 @@ main (int argc, char **argv)
 
   /* We don't want caching info to output when are doing ranged output */
   if (hosts_count > 1)
-    prog_data.args->common.quiet_cache = 1;
+    prog_data.args->common_args.quiet_cache = 1;
 
-  if ((rv = pstdout_launch (prog_data.args->common.hostname,
+  if ((rv = pstdout_launch (prog_data.args->common_args.hostname,
                             _ipmi_fru,
                             &prog_data)) < 0)
     {

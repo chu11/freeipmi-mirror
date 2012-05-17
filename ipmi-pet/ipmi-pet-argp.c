@@ -275,7 +275,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case ARGP_KEY_END:
       break;
     default:
-      return (common_parse_opt (key, arg, &(cmd_args->common)));
+      return (common_parse_opt (key, arg, &(cmd_args->common_args)));
     }
 
   return (0);
@@ -292,9 +292,9 @@ _ipmi_pet_config_file_parse (struct ipmi_pet_arguments *cmd_args)
           '\0',
           sizeof (struct config_file_data_ipmi_pet));
 
-  if (config_file_parse (cmd_args->common.config_file,
+  if (config_file_parse (cmd_args->common_args.config_file,
                          0,
-                         &(cmd_args->common),
+                         &(cmd_args->common_args),
                          CONFIG_FILE_INBAND | CONFIG_FILE_OUTOFBAND | CONFIG_FILE_SDR,
                          CONFIG_FILE_TOOL_IPMI_PET,
                          &config_file_data) < 0)
@@ -331,7 +331,7 @@ _ipmi_pet_args_validate (struct ipmi_pet_arguments *cmd_args)
   assert (cmd_args);
 
   if (cmd_args->pet_acknowledge
-      && !cmd_args->common.hostname)
+      && !cmd_args->common_args.hostname)
     {
       fprintf (stderr, "Must specify hostname if PET acknowledge specified\n");
       exit (EXIT_FAILURE);
@@ -354,7 +354,7 @@ ipmi_pet_argp_parse (int argc, char **argv, struct ipmi_pet_arguments *cmd_args)
   assert (argv);
   assert (cmd_args);
 
-  init_common_cmd_args_operator (&(cmd_args->common));
+  init_common_cmd_args_operator (&(cmd_args->common_args));
 
   cmd_args->verbose_count = 0;
   cmd_args->pet_acknowledge = 0;
@@ -385,7 +385,7 @@ ipmi_pet_argp_parse (int argc, char **argv, struct ipmi_pet_arguments *cmd_args)
               argv,
               ARGP_IN_ORDER,
               NULL,
-              &(cmd_args->common));
+              &(cmd_args->common_args));
   
   _ipmi_pet_config_file_parse (cmd_args);
   
@@ -396,7 +396,7 @@ ipmi_pet_argp_parse (int argc, char **argv, struct ipmi_pet_arguments *cmd_args)
               NULL,
               cmd_args);
 
-  verify_common_cmd_args (&(cmd_args->common));
+  verify_common_cmd_args (&(cmd_args->common_args));
   _ipmi_pet_args_validate (cmd_args);
 }
 

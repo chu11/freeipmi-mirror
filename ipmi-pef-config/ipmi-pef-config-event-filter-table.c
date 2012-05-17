@@ -114,7 +114,7 @@ _get_event_filter_table (struct ipmi_pef_config_state_data *state_data,
     {
       config_err_t ret;
 
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_pef_configuration_parameters_event_filter_table: %s\n",
@@ -472,7 +472,7 @@ _set_event_filter_table (struct ipmi_pef_config_state_data *state_data,
     {
       config_err_t ret;
 
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_pef_configuration_parameters_event_filter_table: %s\n",

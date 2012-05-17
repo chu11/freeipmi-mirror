@@ -79,7 +79,7 @@ _get_alert_policy_table (struct ipmi_pef_config_state_data *state_data,
     {
       config_err_t ret;
 
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_pef_configuration_parameters_alert_policy_table: %s\n",
@@ -216,7 +216,7 @@ _set_alert_policy_table (struct ipmi_pef_config_state_data *state_data,
     {
       config_err_t ret;
 
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_pef_configuration_parameters_alert_policy_table: %s\n",
@@ -281,7 +281,7 @@ _set_alert_policy_table (struct ipmi_pef_config_state_data *state_data,
                                           "Event_Specific_Alert_String")))
             apt->event_specific_alert_string = same (kv->value_input, "yes");
 
-          if (state_data->prog_data->args->config_args.common.debug)
+          if (state_data->prog_data->args->config_args.common_args.debug)
             pstdout_fprintf (state_data->pstate,
                              stderr,
                              "ipmi_cmd_set_pef_configuration_parameters_alert_policy_table: attempting workaround\n");
@@ -297,7 +297,7 @@ _set_alert_policy_table (struct ipmi_pef_config_state_data *state_data,
                                                                             apt->event_specific_alert_string,
                                                                             obj_cmd_rs) < 0)
             {
-              if (state_data->prog_data->args->config_args.common.debug)
+              if (state_data->prog_data->args->config_args.common_args.debug)
                 pstdout_fprintf (state_data->pstate,
                                  stderr,
                                  "ipmi_cmd_set_pef_configuration_parameters_alert_policy_table: %s\n",

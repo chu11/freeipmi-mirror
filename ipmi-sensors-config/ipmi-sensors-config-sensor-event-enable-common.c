@@ -488,7 +488,7 @@ _get_sensor_event_enable (ipmi_sensors_config_state_data_t *state_data,
                                         sensor_number,
                                         obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_sensor_event_enable: %s\n",
@@ -622,7 +622,7 @@ _set_sensor_event_enable (ipmi_sensors_config_state_data_t *state_data,
                                         data->deassertion_bits,
                                         obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_sensor_event_enable: %s\n",
@@ -872,7 +872,7 @@ _threshold_event_enable_verify (ipmi_sensors_config_state_data_t *state_data,
 
   if (event_reading_type_code_class != IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "Attempting to access threshold event in non-threshold sensor\n");
@@ -1272,7 +1272,7 @@ _generic_event_enable_verify (ipmi_sensors_config_state_data_t *state_data,
 
   if (event_reading_type_code_class != IPMI_EVENT_READING_TYPE_CODE_CLASS_GENERIC_DISCRETE)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "Attempting to access generic event in non-generic sensor\n");
@@ -1646,7 +1646,7 @@ _sensor_specific_event_enable_verify (ipmi_sensors_config_state_data_t *state_da
 
   if (event_reading_type_code_class != IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "Attempting to access sensor-specific event in non-sensor-specific sensor\n");

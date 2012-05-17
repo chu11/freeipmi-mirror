@@ -81,7 +81,7 @@ _get_bad_password_threshold (bmc_config_state_data_t *state_data,
                                                                         IPMI_LAN_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                                         obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_lan_configuration_parameters_bad_password_threshold: %s\n",
@@ -178,7 +178,7 @@ _set_bad_password_threshold (bmc_config_state_data_t *state_data,
                                                                         bpt->user_lockout_interval,
                                                                         obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_lan_configuration_parameters_bad_password_threshold: %s\n",

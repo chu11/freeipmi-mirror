@@ -252,7 +252,7 @@ ipmipower_powercmd_queue (ipmipower_power_cmd_t cmd,
 
   ip->session_inbound_count = 0;
 
-  if (cmd_args.common.driver_type == IPMI_DEVICE_LAN)
+  if (cmd_args.common_args.driver_type == IPMI_DEVICE_LAN)
     {
       if (ipmi_check_session_sequence_number_1_5_init (&(ip->highest_received_sequence_number), 
                                                        &(ip->previously_received_list)) < 0)
@@ -273,7 +273,7 @@ ipmipower_powercmd_queue (ipmipower_power_cmd_t cmd,
 
   /* IPMI 1.5 */
 #if 0
-  if (cmd_args.common.driver_type == IPMI_DEVICE_LAN)
+  if (cmd_args.common_args.driver_type == IPMI_DEVICE_LAN)
     {
       /* ip->permsgauth_enabled is set after the Get Authentication
        * Capabilities Response and/or Activate Session Response is
@@ -284,16 +284,16 @@ ipmipower_powercmd_queue (ipmipower_power_cmd_t cmd,
 
   /* IPMI 2.0 */
 
-  if (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0)
+  if (cmd_args.common_args.driver_type == IPMI_DEVICE_LAN_2_0)
     {
-      if (ipmi_cipher_suite_id_to_algorithms (cmd_args.common.cipher_suite_id,
+      if (ipmi_cipher_suite_id_to_algorithms (cmd_args.common_args.cipher_suite_id,
                                               &(ip->authentication_algorithm),
                                               &(ip->integrity_algorithm),
                                               &(ip->confidentiality_algorithm)) < 0)
         {
           IPMIPOWER_ERROR (("ipmipower_powercmd_queue: ipmi_cipher_suite_id_to_algorithms: ",
-                            "cmd_args.common.cipher_suite_id: %d: %s",
-                            cmd_args.common.cipher_suite_id, strerror (errno)));
+                            "cmd_args.common_args.cipher_suite_id: %d: %s",
+                            cmd_args.common_args.cipher_suite_id, strerror (errno)));
           exit (EXIT_FAILURE);
         }
 
@@ -336,10 +336,10 @@ ipmipower_powercmd_queue (ipmipower_power_cmd_t cmd,
        * instead of a real privilege level.  So we must pass the actual
        * privilege we want to use.
        */
-      if (cmd_args.common.workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION
-          || cmd_args.common.workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUN_2_0_SESSION
-          || cmd_args.common.workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_OPEN_SESSION_PRIVILEGE)
-        ip->requested_maximum_privilege_level = cmd_args.common.privilege_level;
+      if (cmd_args.common_args.workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION
+          || cmd_args.common_args.workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUN_2_0_SESSION
+          || cmd_args.common_args.workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_OPEN_SESSION_PRIVILEGE)
+        ip->requested_maximum_privilege_level = cmd_args.common_args.privilege_level;
       else
         ip->requested_maximum_privilege_level = IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL;
       memset (ip->sik_key, '\0', IPMI_MAX_SIK_KEY_LENGTH);
@@ -696,7 +696,7 @@ _send_packet (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
 
   if (IPMIPOWER_PACKET_TYPE_IPMI_2_0_SETUP_RQ (pkt))
     ip->message_tag_count++;
-  else if (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0
+  else if (cmd_args.common_args.driver_type == IPMI_DEVICE_LAN_2_0
            && IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RQ (pkt))
     {
       /* IPMI 2.0 is special, sequence numbers of 0 don't count */
@@ -792,7 +792,7 @@ _send_packet (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
    * since the first inbound sequence number is specified by the
    * activate session command.
    */
-  if (cmd_args.common.driver_type == IPMI_DEVICE_LAN
+  if (cmd_args.common_args.driver_type == IPMI_DEVICE_LAN
       && IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RQ (pkt))
     ip->session_inbound_count++;
 
@@ -971,7 +971,7 @@ _recv_packet (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
        * The session sequence numbers for IPMI 1.5 are the wrong endian.
        * So we have to flip the bits to workaround it.
        */
-      if (cmd_args.common.workaround_flags_outofband & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_BIG_ENDIAN_SEQUENCE_NUMBER)
+      if (cmd_args.common_args.workaround_flags_outofband & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_BIG_ENDIAN_SEQUENCE_NUMBER)
         {
           uint32_t tmp_session_sequence_number = ip->highest_received_sequence_number;
           
@@ -982,7 +982,7 @@ _recv_packet (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
             | ((tmp_session_sequence_number & 0x000000FF) << 24);
         }
     }
-  else if (cmd_args.common.driver_type == IPMI_DEVICE_LAN
+  else if (cmd_args.common_args.driver_type == IPMI_DEVICE_LAN
 	   && IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RS (pkt))
     {
       if (!ipmipower_check_checksum (ip, pkt))
@@ -1142,7 +1142,7 @@ _recv_packet (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
           goto cleanup;
         }
     }
-  else if (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0
+  else if (cmd_args.common_args.driver_type == IPMI_DEVICE_LAN_2_0
 	   && IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RS (pkt))
     {
       if (!ipmipower_check_payload_type (ip, pkt))
@@ -1295,7 +1295,7 @@ _has_timed_out (ipmipower_powercmd_t ip)
   timeval_millisecond_calc (&result, &session_timeout);
 
   /* Must use >=, otherwise we could potentially spin */
-  if (session_timeout >= cmd_args.common.session_timeout)
+  if (session_timeout >= cmd_args.common_args.session_timeout)
     {
       /* Don't bother outputting timeout if we have finished the power
          control operation */
@@ -1340,7 +1340,7 @@ _retry_packets (ipmipower_powercmd_t ip)
           && ip->cmd == IPMIPOWER_POWER_CMD_POWER_OFF))
     retransmission_timeout = cmd_args.retransmission_wait_timeout * (1 + (ip->retransmission_count/cmd_args.retransmission_backoff_count));
   else
-    retransmission_timeout = cmd_args.common.retransmission_timeout * (1 + (ip->retransmission_count/cmd_args.retransmission_backoff_count));
+    retransmission_timeout = cmd_args.common_args.retransmission_timeout * (1 + (ip->retransmission_count/cmd_args.retransmission_backoff_count));
 
   if (gettimeofday (&cur_time, NULL) < 0)
     {
@@ -1355,7 +1355,7 @@ _retry_packets (ipmipower_powercmd_t ip)
     return (0);
 
   /* Do we have enough time to retransmit? */
-  timeval_add_ms (&cur_time, cmd_args.common.session_timeout, &end_time);
+  timeval_add_ms (&cur_time, cmd_args.common_args.session_timeout, &end_time);
   timeval_sub (&end_time, &cur_time, &result);
   timeval_millisecond_calc (&result, &time_left);
   if (time_left < retransmission_timeout)
@@ -1530,10 +1530,10 @@ _check_ipmi_1_5_authentication_capabilities (ipmipower_powercmd_t ip)
    * vs. null vs non-null username capabilities. The workaround is to
    * skip these checks.
    */
-  if (!(cmd_args.common.workaround_flags_outofband & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_AUTHENTICATION_CAPABILITIES))
+  if (!(cmd_args.common_args.workaround_flags_outofband & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_AUTHENTICATION_CAPABILITIES))
     {
-      if ((ret = ipmi_check_authentication_capabilities_username (cmd_args.common.username,
-                                                                  cmd_args.common.password,
+      if ((ret = ipmi_check_authentication_capabilities_username (cmd_args.common_args.username,
+                                                                  cmd_args.common_args.password,
                                                                   ip->obj_authentication_capabilities_rs)) < 0)
         {
           IPMIPOWER_ERROR (("ipmi_check_authentication_capabilities_username: %s",
@@ -1556,9 +1556,9 @@ _check_ipmi_1_5_authentication_capabilities (ipmipower_powercmd_t ip)
    * Authentication capabilities flags are not listed properly in the
    * response.  The workaround is to skip these checks.
    */
-  if (!(cmd_args.common.workaround_flags_outofband & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_AUTHENTICATION_CAPABILITIES))
+  if (!(cmd_args.common_args.workaround_flags_outofband & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_AUTHENTICATION_CAPABILITIES))
     {
-      if ((ret = ipmi_check_authentication_capabilities_authentication_type (cmd_args.common.authentication_type,
+      if ((ret = ipmi_check_authentication_capabilities_authentication_type (cmd_args.common_args.authentication_type,
                                                                              ip->obj_authentication_capabilities_rs)) < 0)
         {
           IPMIPOWER_ERROR (("ipmi_check_authentication_capabilities_authentication_type: %s",
@@ -1580,7 +1580,7 @@ _check_ipmi_1_5_authentication_capabilities (ipmipower_powercmd_t ip)
    * The remote BMC ignores if permsg authentiction is enabled
    * or disabled.  So we need to force it no matter what.
    */
-  if (!(cmd_args.common.workaround_flags_outofband & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_FORCE_PERMSG_AUTHENTICATION))
+  if (!(cmd_args.common_args.workaround_flags_outofband & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_FORCE_PERMSG_AUTHENTICATION))
     {
       if (!authentication_status_per_message_authentication)
         ip->permsgauth_enabled = 1;
@@ -1632,10 +1632,10 @@ _check_ipmi_2_0_authentication_capabilities (ipmipower_powercmd_t ip)
    *
    * K_g status is reported incorrectly too.  Again, skip the checks.
    */
-  if (!(cmd_args.common.workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_AUTHENTICATION_CAPABILITIES))
+  if (!(cmd_args.common_args.workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_AUTHENTICATION_CAPABILITIES))
     {
-      if ((ret = ipmi_check_authentication_capabilities_username (cmd_args.common.username,
-                                                                  cmd_args.common.password,
+      if ((ret = ipmi_check_authentication_capabilities_username (cmd_args.common_args.username,
+                                                                  cmd_args.common_args.password,
                                                                   ip->obj_authentication_capabilities_rs)) < 0)
         {
           IPMIPOWER_ERROR (("ipmi_check_authentication_capabilities_username: %s",
@@ -1649,8 +1649,8 @@ _check_ipmi_2_0_authentication_capabilities (ipmipower_powercmd_t ip)
           return (-1);
         }
 
-      if (cmd_args.common.k_g_len)
-        tmp_k_g_ptr = cmd_args.common.k_g;
+      if (cmd_args.common_args.k_g_len)
+        tmp_k_g_ptr = cmd_args.common_args.k_g;
 
       if ((ret = ipmi_check_authentication_capabilities_k_g (tmp_k_g_ptr,
                                                              ip->obj_authentication_capabilities_rs)) < 0)
@@ -1697,7 +1697,7 @@ _check_activate_session_authentication_type (ipmipower_powercmd_t ip)
     }
   authentication_type = val;
 
-  if (cmd_args.common.workaround_flags_outofband & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_FORCE_PERMSG_AUTHENTICATION)
+  if (cmd_args.common_args.workaround_flags_outofband & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_FORCE_PERMSG_AUTHENTICATION)
     return (0);
 
   /* IPMI Workaround (achu)
@@ -1724,7 +1724,7 @@ _check_activate_session_authentication_type (ipmipower_powercmd_t ip)
 
   if (ip->permsgauth_enabled)
     {
-      if (authentication_type != cmd_args.common.authentication_type)
+      if (authentication_type != cmd_args.common_args.authentication_type)
         {
           IPMIPOWER_DEBUG (("host = %s; p = %d; authentication_type mismatch",
                             ip->ic->hostname,
@@ -1776,21 +1776,21 @@ _calculate_cipher_keys (ipmipower_powercmd_t ip)
    * allowed.  "No Null characters (00h) are allowed in the name".
    * Table 13-11 in the IPMI 2.0 spec.
    */
-  if (cmd_args.common.workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION)
+  if (cmd_args.common_args.workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION)
     {
       memset (username_buf, '\0', IPMI_MAX_USER_NAME_LENGTH+1);
-      if (cmd_args.common.username)
-        strcpy (username_buf, cmd_args.common.username);
+      if (cmd_args.common_args.username)
+        strcpy (username_buf, cmd_args.common_args.username);
       username = username_buf;
       username_len = IPMI_MAX_USER_NAME_LENGTH;
     }
   else
     {
-      username = cmd_args.common.username;
+      username = cmd_args.common_args.username;
       username_len = (username) ? strlen (username) : 0;
     }
 
-  password = cmd_args.common.password;
+  password = cmd_args.common_args.password;
   password_len = (password) ? strlen (password) : 0;
 
   /* IPMI Workaround (achu)
@@ -1803,13 +1803,13 @@ _calculate_cipher_keys (ipmipower_powercmd_t ip)
    * password to 16 bytes when generating keys, hashes, etc.  So we
    * have to do the same when generating keys, hashes, etc.
    */
-  if ((cmd_args.common.workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION)
+  if ((cmd_args.common_args.workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION)
       && ip->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
       && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
     password_len = IPMI_1_5_MAX_PASSWORD_LENGTH;
 
-  if (cmd_args.common.k_g_len)
-    k_g = cmd_args.common.k_g;
+  if (cmd_args.common_args.k_g_len)
+    k_g = cmd_args.common_args.k_g;
   else
     k_g = NULL;
 
@@ -1829,13 +1829,13 @@ _calculate_cipher_keys (ipmipower_powercmd_t ip)
                                             password,
                                             password_len,
                                             k_g,
-                                            (k_g) ? cmd_args.common.k_g_len : 0,
+                                            (k_g) ? cmd_args.common_args.k_g_len : 0,
                                             ip->remote_console_random_number,
                                             IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH,
                                             managed_system_random_number,
                                             managed_system_random_number_len,
                                             ip->name_only_lookup,
-                                            cmd_args.common.privilege_level,
+                                            cmd_args.common_args.privilege_level,
                                             username,
                                             username_len,
                                             &(ip->sik_key_ptr),
@@ -1888,9 +1888,9 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
       /* Don't execute if fanout turned on and we're in the middle of too
        * many power commands.
        */
-      if (cmd_args.common.fanout
-          && (executing_count >= cmd_args.common.fanout))
-        return (cmd_args.common.session_timeout);
+      if (cmd_args.common_args.fanout
+          && (executing_count >= cmd_args.common_args.fanout))
+        return (cmd_args.common_args.session_timeout);
 
       _send_packet (ip, IPMIPOWER_PACKET_TYPE_AUTHENTICATION_CAPABILITIES_RQ);
 
@@ -1910,7 +1910,7 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
           goto done;
         }
       
-      if (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0)
+      if (cmd_args.common_args.driver_type == IPMI_DEVICE_LAN_2_0)
         {
           if (_check_ipmi_2_0_authentication_capabilities (ip) < 0)
             return (-1);
@@ -2371,7 +2371,7 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
       IPMIPOWER_ERROR (("gettimeofday: %s", strerror (errno)));
       exit (EXIT_FAILURE);
     }
-  timeval_add_ms (&(ip->time_begin), cmd_args.common.session_timeout, &end_time);
+  timeval_add_ms (&(ip->time_begin), cmd_args.common_args.session_timeout, &end_time);
   timeval_sub (&end_time, &cur_time, &result);
   timeval_millisecond_calc (&result, &timeout);
 
@@ -2385,7 +2385,7 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
     }
   else
     {
-      int retransmission_timeout = cmd_args.common.retransmission_timeout * (1 + (ip->retransmission_count/cmd_args.retransmission_backoff_count));
+      int retransmission_timeout = cmd_args.common_args.retransmission_timeout * (1 + (ip->retransmission_count/cmd_args.retransmission_backoff_count));
       if (timeout > retransmission_timeout)
         timeout = retransmission_timeout;
     }
@@ -2398,7 +2398,7 @@ ipmipower_powercmd_process_pending (int *timeout)
 {
   ListIterator itr;
   ipmipower_powercmd_t ip;
-  int min_timeout = cmd_args.common.session_timeout;
+  int min_timeout = cmd_args.common_args.session_timeout;
   int num_pending;
 
   assert (pending);  /* did not run ipmipower_powercmd_setup() */
@@ -2486,8 +2486,8 @@ ipmipower_powercmd_process_pending (int *timeout)
        * retransmission timeout so it appears more normal.
        */
 
-      if (cmd_args.common.retransmission_timeout < min_timeout)
-	min_timeout = cmd_args.common.retransmission_timeout;
+      if (cmd_args.common_args.retransmission_timeout < min_timeout)
+	min_timeout = cmd_args.common_args.retransmission_timeout;
     } 
 
   if (!(num_pending = list_count (pending)))

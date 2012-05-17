@@ -62,7 +62,7 @@ _bmc_config (pstdout_state_t pstate,
 
   if (!(state_data.ipmi_ctx = ipmi_open (prog_data->progname,
                                          hostname,
-                                         &(prog_data->args->config_args.common),
+                                         &(prog_data->args->config_args.common_args),
 					 state_data.pstate)))
     goto cleanup;
 
@@ -375,8 +375,8 @@ main (int argc, char *argv[])
 
   prog_data.args = &cmd_args;
 
-  if ((hosts_count = pstdout_setup (&(prog_data.args->config_args.common.hostname),
-				    &(prog_data.args->config_args.common))) < 0)
+  if ((hosts_count = pstdout_setup (&(prog_data.args->config_args.common_args.hostname),
+				    &(prog_data.args->config_args.common_args))) < 0)
     return (EXIT_FAILURE);
 
   if (!hosts_count)
@@ -384,7 +384,7 @@ main (int argc, char *argv[])
 
   prog_data.hosts_count = hosts_count;
 
-  if ((rv = pstdout_launch (prog_data.args->config_args.common.hostname,
+  if ((rv = pstdout_launch (prog_data.args->config_args.common_args.hostname,
                             _bmc_config,
                             &prog_data)) < 0)
     {

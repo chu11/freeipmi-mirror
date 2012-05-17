@@ -103,7 +103,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     default:
       ret = config_parse_opt (key, arg, &cmd_args->config_args);
       if (ret == ARGP_ERR_UNKNOWN)
-        ret = common_parse_opt (key, arg, &(cmd_args->config_args.common));
+        ret = common_parse_opt (key, arg, &(cmd_args->config_args.common_args));
       return (ret);
     }
 
@@ -121,9 +121,9 @@ _ipmi_sensors_config_config_file_parse (struct ipmi_sensors_config_arguments *cm
           '\0',
           sizeof (struct config_file_data_ipmi_sensors_config));
 
-  if (config_file_parse (cmd_args->config_args.common.config_file,
+  if (config_file_parse (cmd_args->config_args.common_args.config_file,
                          0,
-                         &(cmd_args->config_args.common),
+                         &(cmd_args->config_args.common_args),
                          CONFIG_FILE_INBAND | CONFIG_FILE_OUTOFBAND | CONFIG_FILE_SDR | CONFIG_FILE_HOSTRANGE,
                          CONFIG_FILE_TOOL_IPMI_SENSORS_CONFIG,
                          &config_file_data) < 0)
@@ -141,8 +141,8 @@ _ipmi_sensors_config_config_args_validate (struct ipmi_sensors_config_arguments 
 {
   assert (cmd_args);
 
-  if ((!cmd_args->config_args.action && !cmd_args->config_args.common.flush_cache)
-      || (cmd_args->config_args.action && cmd_args->config_args.common.flush_cache)
+  if ((!cmd_args->config_args.action && !cmd_args->config_args.common_args.flush_cache)
+      || (cmd_args->config_args.action && cmd_args->config_args.common_args.flush_cache)
       || cmd_args->config_args.action == -1)
     {
       fprintf (stderr,
@@ -165,14 +165,14 @@ ipmi_sensors_config_argp_parse (int argc, char **argv, struct ipmi_sensors_confi
   assert (cmd_args);
 
   init_config_args (&(cmd_args->config_args));
-  init_common_cmd_args_operator (&(cmd_args->config_args.common));
+  init_common_cmd_args_operator (&(cmd_args->config_args.common_args));
 
   argp_parse (&cmdline_config_file_argp,
               argc,
               argv,
               ARGP_IN_ORDER,
               NULL,
-              &(cmd_args->config_args.common));
+              &(cmd_args->config_args.common_args));
 
   _ipmi_sensors_config_config_file_parse (cmd_args);
 
@@ -183,6 +183,6 @@ ipmi_sensors_config_argp_parse (int argc, char **argv, struct ipmi_sensors_confi
               NULL,
               cmd_args);
 
-  verify_common_cmd_args (&(cmd_args->config_args.common));
+  verify_common_cmd_args (&(cmd_args->config_args.common_args));
   _ipmi_sensors_config_config_args_validate (cmd_args);
 }

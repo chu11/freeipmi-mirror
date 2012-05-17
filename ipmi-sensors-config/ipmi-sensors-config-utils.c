@@ -100,7 +100,7 @@ create_section_name (ipmi_sensors_config_state_data_t *state_data,
 
   if ((ret = convert_id_string (state_data, id_string)) != CONFIG_ERR_SUCCESS)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "convert_id_string: %s\n",
@@ -148,14 +148,14 @@ seek_to_sdr_record (ipmi_sensors_config_state_data_t *state_data,
 
   if (!(str = strdup (section_name)))
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_perror (state_data->pstate, "strdup");
       goto cleanup;
     }
 
   if (!(ptr = strchr (str, '_')))
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "Invalid section_name: %s\n",
@@ -170,7 +170,7 @@ seek_to_sdr_record (ipmi_sensors_config_state_data_t *state_data,
   if (errno
       || endptr[0] != '\0')
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "Invalid section_name: %s\n",
@@ -181,7 +181,7 @@ seek_to_sdr_record (ipmi_sensors_config_state_data_t *state_data,
   if (ipmi_sdr_cache_search_record_id (state_data->sdr_ctx,
                                        record_id) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "Record_id not found: %u\n",

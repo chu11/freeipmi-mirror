@@ -1,5 +1,13 @@
 2012-05-17  Albert Chu <chu11@llnl.gov>
 
+	Merge from branch toolcleanup2
+
+	* Globally cleanup variables and consistency of variables.
+	Whenever referring to the common_cmd_args use common_args.  When
+	referring to command specific structs use cmd_args.
+	
+2012-05-17  Albert Chu <chu11@llnl.gov>
+
 	* common/toolcommon/: Consolidate hostrange and sdr common options
 	into the main common_cmd_args struct.
 

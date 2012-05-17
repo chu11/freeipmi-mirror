@@ -1658,7 +1658,7 @@ _ipmi_chassis (pstdout_state_t pstate,
 
   if (!(state_data.ipmi_ctx = ipmi_open (prog_data->progname,
                                          hostname,
-                                         &(prog_data->args->common),
+                                         &(prog_data->args->common_args),
 					 state_data.pstate)))
     goto cleanup;
 
@@ -1688,14 +1688,14 @@ main (int argc, char **argv)
 
   prog_data.args = &cmd_args;
 
-  if ((hosts_count = pstdout_setup (&(prog_data.args->common.hostname),
-				    &(prog_data.args->common))) < 0)
+  if ((hosts_count = pstdout_setup (&(prog_data.args->common_args.hostname),
+				    &(prog_data.args->common_args))) < 0)
     return (EXIT_FAILURE);
 
   if (!hosts_count)
     return (EXIT_SUCCESS);
 
-  if ((rv = pstdout_launch (prog_data.args->common.hostname,
+  if ((rv = pstdout_launch (prog_data.args->common_args.hostname,
                             _ipmi_chassis,
                             &prog_data)) < 0)
     {

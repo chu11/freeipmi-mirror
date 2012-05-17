@@ -72,7 +72,7 @@ int event_output_sensor_name (pstdout_state_t pstate,
 			      unsigned int sel_record_len,
 			      struct sensor_entity_id_counts *entity_id_counts,
 			      struct sensor_column_width *column_width,
-			      struct common_cmd_args *cmd_args,
+			      struct common_cmd_args *common_args,
 			      int entity_sensor_names,
 			      int comma_separated_output,
 			      unsigned int flags);

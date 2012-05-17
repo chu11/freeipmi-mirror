@@ -51,7 +51,7 @@ ipmi_sensors_config_discrete_section (ipmi_sensors_config_state_data_t *state_da
                                   section_name,
                                   CONFIG_MAX_SECTION_NAME_LEN)) != CONFIG_ERR_SUCCESS)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "create_section_name: %s\n",

@@ -292,7 +292,7 @@ struct config_file_data_ipmipower
 
 int config_file_parse (const char *filename,
                        int no_error_if_not_found,
-                       struct common_cmd_args *cmd_args,
+                       struct common_cmd_args *common_args,
                        unsigned int support,
                        unsigned int tool_support,
                        void *tool_data);

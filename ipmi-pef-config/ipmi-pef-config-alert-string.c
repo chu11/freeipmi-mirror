@@ -81,7 +81,7 @@ _get_alert_string_keys (ipmi_pef_config_state_data_t *state_data,
     {
       config_err_t ret;
 
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_pef_configuration_parameters_alert_string_keys: %s\n",
@@ -153,7 +153,7 @@ _set_alert_string_keys (ipmi_pef_config_state_data_t *state_data,
     {
       config_err_t ret;
 
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_pef_configuration_parameters_alert_string_keys: %s\n",
@@ -338,7 +338,7 @@ alert_string_checkout (const char *section_name,
         {
           config_err_t ret;
 
-          if (state_data->prog_data->args->config_args.common.debug)
+          if (state_data->prog_data->args->config_args.common_args.debug)
             pstdout_fprintf (state_data->pstate,
                              stderr,
                              "ipmi_cmd_get_pef_configuration_parameters_alert_string: %s\n",
@@ -459,7 +459,7 @@ alert_string_commit (const char *section_name,
         {
           config_err_t ret;
       
-          if (state_data->prog_data->args->config_args.common.debug)
+          if (state_data->prog_data->args->config_args.common_args.debug)
             pstdout_fprintf (state_data->pstate,
                              stderr,
                              "ipmi_cmd_set_pef_configuration_parameters_alert_strings: %s\n",

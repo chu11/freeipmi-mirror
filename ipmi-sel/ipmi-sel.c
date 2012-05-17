@@ -465,7 +465,7 @@ _sel_parse_err_handle (ipmi_sel_state_data_t *state_data, char *func)
   if (ipmi_sel_ctx_errnum (state_data->sel_ctx) == IPMI_SEL_ERR_INVALID_SEL_ENTRY)
     {
       /* maybe a bad SEL entry returned from remote system, don't error out */
-      if (state_data->prog_data->args->common.debug)
+      if (state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "Invalid SEL entry read\n");
@@ -498,7 +498,7 @@ _hex_output (ipmi_sel_state_data_t *state_data)
       goto out;
     }
 
-  if (state_data->prog_data->args->common.debug
+  if (state_data->prog_data->args->common_args.debug
       && record_data_len < IPMI_SEL_RECORD_MAX_RECORD_LENGTH)
     {
       pstdout_fprintf (state_data->pstate,
@@ -583,7 +583,7 @@ _legacy_normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
 				  state_data->sel_ctx,
 				  NULL,
 				  0,
-				  state_data->prog_data->args->common.debug,
+				  state_data->prog_data->args->common_args.debug,
 				  NULL,
 				  NULL,
 				  NULL,
@@ -789,7 +789,7 @@ _normal_output_time (ipmi_sel_state_data_t *state_data, unsigned int flags)
 			     NULL,
 			     0,
                              state_data->prog_data->args->comma_separated_output,
-                             state_data->prog_data->args->common.debug,
+                             state_data->prog_data->args->common_args.debug,
                              flags));
 }
 
@@ -824,7 +824,7 @@ _normal_output_sensor_name (ipmi_sel_state_data_t *state_data, unsigned int flag
 				    0,
                                     &state_data->entity_id_counts,
                                     &state_data->column_width,
-				    &state_data->prog_data->args->common,
+				    &state_data->prog_data->args->common_args,
 				    state_data->prog_data->args->entity_sensor_names,
                                     state_data->prog_data->args->comma_separated_output,
                                     flags));
@@ -862,7 +862,7 @@ _normal_output_sensor_type (ipmi_sel_state_data_t *state_data, unsigned int flag
 				    0,
 				    &state_data->column_width,
 				    state_data->prog_data->args->comma_separated_output,
-				    state_data->prog_data->args->common.debug,
+				    state_data->prog_data->args->common_args.debug,
 				    flags));
 }
 
@@ -899,7 +899,7 @@ _normal_output_event_state (ipmi_sel_state_data_t *state_data, unsigned int flag
 				    NULL,
 				    0,
 				    state_data->prog_data->args->comma_separated_output,
-				    state_data->prog_data->args->common.debug,
+				    state_data->prog_data->args->common_args.debug,
 				    flags));
 }
 
@@ -919,7 +919,7 @@ _normal_output_event_direction (ipmi_sel_state_data_t *state_data, unsigned int 
 					NULL,
 					0,
 					state_data->prog_data->args->comma_separated_output,
-					state_data->prog_data->args->common.debug,
+					state_data->prog_data->args->common_args.debug,
 					flags));
 }
 
@@ -1013,7 +1013,7 @@ _normal_output_event (ipmi_sel_state_data_t *state_data, unsigned int flags)
 			      NULL,
 			      0,
 			      state_data->prog_data->args->comma_separated_output,
-			      state_data->prog_data->args->common.debug,
+			      state_data->prog_data->args->common_args.debug,
 			      flags));
 }
 
@@ -1722,7 +1722,7 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
 
   if (!args->legacy_output)
     {
-      if (!args->common.ignore_sdr_cache)
+      if (!args->common_args.ignore_sdr_cache)
         {
           struct sensor_entity_id_counts *entity_ptr = NULL;
           
@@ -2111,7 +2111,7 @@ run_cmd_args (ipmi_sel_state_data_t *state_data)
 
   args = state_data->prog_data->args;
 
-  assert (!args->common.flush_cache);
+  assert (!args->common_args.flush_cache);
 
   if (args->info)
     return (_display_sel_info (state_data));
@@ -2150,11 +2150,11 @@ _ipmi_sel (pstdout_state_t pstate,
 
   assert (!prog_data->args->list_sensor_types);
 
-  if (prog_data->args->common.flush_cache)
+  if (prog_data->args->common_args.flush_cache)
     {
       if (sdr_cache_flush_cache (pstate,
                                  hostname,
-                                 &prog_data->args->common) < 0)
+                                 &prog_data->args->common_args) < 0)
         return (EXIT_FAILURE);
       return (EXIT_SUCCESS);
     }
@@ -2166,7 +2166,7 @@ _ipmi_sel (pstdout_state_t pstate,
 
   if (!(state_data.ipmi_ctx = ipmi_open (prog_data->progname,
 					 hostname,
-					 &(prog_data->args->common),
+					 &(prog_data->args->common_args),
 					 state_data.pstate)))
     goto cleanup;
 
@@ -2176,7 +2176,7 @@ _ipmi_sel (pstdout_state_t pstate,
       && !prog_data->args->clear
       && !prog_data->args->delete
       && !prog_data->args->delete_range
-      && !prog_data->args->common.ignore_sdr_cache)
+      && !prog_data->args->common_args.ignore_sdr_cache)
     {
       if (!(state_data.sdr_ctx = ipmi_sdr_ctx_create ()))
 	{
@@ -2186,7 +2186,7 @@ _ipmi_sel (pstdout_state_t pstate,
       
       if (sdr_cache_setup_debug (state_data.sdr_ctx,
 				 state_data.pstate,
-				 state_data.prog_data->args->common.debug,
+				 state_data.prog_data->args->common_args.debug,
 				 state_data.hostname) < 0)
 	goto cleanup;
 
@@ -2194,7 +2194,7 @@ _ipmi_sel (pstdout_state_t pstate,
 				     state_data.pstate,
 				     state_data.ipmi_ctx,
 				     state_data.hostname,
-				     &state_data.prog_data->args->common) < 0)
+				     &state_data.prog_data->args->common_args) < 0)
 	goto cleanup;
     }
   else
@@ -2208,7 +2208,7 @@ _ipmi_sel (pstdout_state_t pstate,
 
   sel_flags = 0;
 
-  if (state_data.prog_data->args->common.debug)
+  if (state_data.prog_data->args->common_args.debug)
     sel_flags |= IPMI_SEL_FLAGS_DEBUG_DUMP;
   
   if (state_data.prog_data->args->assume_system_event_records)
@@ -2224,7 +2224,7 @@ _ipmi_sel (pstdout_state_t pstate,
 			 ipmi_sel_ctx_errormsg (state_data.sel_ctx));
     }
       
-  if (state_data.prog_data->args->common.debug && hostname)
+  if (state_data.prog_data->args->common_args.debug && hostname)
     {
       if (ipmi_sel_ctx_set_debug_prefix (state_data.sel_ctx,
 					 hostname) < 0)
@@ -2340,11 +2340,11 @@ main (int argc, char **argv)
     }
 
   /* Special case, if user specified workaround via flags instead of option */
-  if (prog_data.args->common.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_ASSUME_SYSTEM_EVENT)
+  if (prog_data.args->common_args.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_ASSUME_SYSTEM_EVENT)
     prog_data.args->assume_system_event_records = 1;
   
-  if ((hosts_count = pstdout_setup (&(prog_data.args->common.hostname),
-				    &(prog_data.args->common))) < 0)
+  if ((hosts_count = pstdout_setup (&(prog_data.args->common_args.hostname),
+				    &(prog_data.args->common_args))) < 0)
     return (EXIT_FAILURE);
 
   if (!hosts_count)
@@ -2352,9 +2352,9 @@ main (int argc, char **argv)
 
   /* We don't want caching info to output when are doing ranged output */
   if (hosts_count > 1)
-    prog_data.args->common.quiet_cache = 1;
+    prog_data.args->common_args.quiet_cache = 1;
 
-  if ((rv = pstdout_launch (prog_data.args->common.hostname,
+  if ((rv = pstdout_launch (prog_data.args->common_args.hostname,
                             _ipmi_sel,
                             &prog_data)) < 0)
     {

@@ -56,11 +56,11 @@ _ipmi_sensors_config (pstdout_state_t pstate,
 
   prog_data = (ipmi_sensors_config_prog_data_t *) arg;
 
-  if (prog_data->args->config_args.common.flush_cache)
+  if (prog_data->args->config_args.common_args.flush_cache)
     {
       if (sdr_cache_flush_cache (pstate,
                                  hostname,
-				 &prog_data->args->config_args.common) < 0)
+				 &prog_data->args->config_args.common_args) < 0)
 	return (EXIT_FAILURE);
       return (EXIT_SUCCESS);
     }
@@ -71,7 +71,7 @@ _ipmi_sensors_config (pstdout_state_t pstate,
 
   if (!(state_data.ipmi_ctx = ipmi_open (prog_data->progname,
 					 hostname,
-					 &(prog_data->args->config_args.common),
+					 &(prog_data->args->config_args.common_args),
 					 state_data.pstate)))
     goto cleanup;
 
@@ -83,7 +83,7 @@ _ipmi_sensors_config (pstdout_state_t pstate,
 
   if (sdr_cache_setup_debug (state_data.sdr_ctx,
 			     state_data.pstate,
-			     state_data.prog_data->args->config_args.common.debug,
+			     state_data.prog_data->args->config_args.common_args.debug,
 			     hostname) < 0)
     goto cleanup;
 
@@ -91,7 +91,7 @@ _ipmi_sensors_config (pstdout_state_t pstate,
                                  NULL,
                                  state_data.ipmi_ctx,
                                  hostname,
-				 &state_data.prog_data->args->config_args.common) < 0)
+				 &state_data.prog_data->args->config_args.common_args) < 0)
     goto cleanup;
 
   if (!(state_data.sections = ipmi_sensors_config_sections_create (&state_data)))
@@ -316,8 +316,8 @@ main (int argc, char **argv)
 
   prog_data.args = &cmd_args;
 
-  if ((hosts_count = pstdout_setup (&(prog_data.args->config_args.common.hostname),
-				    &(prog_data.args->config_args.common))) < 0)
+  if ((hosts_count = pstdout_setup (&(prog_data.args->config_args.common_args.hostname),
+				    &(prog_data.args->config_args.common_args))) < 0)
     return (EXIT_FAILURE);
 
   if (!hosts_count)
@@ -325,11 +325,11 @@ main (int argc, char **argv)
 
   /* We don't want caching info to output when are doing ranged output */
   if (hosts_count > 1)
-    prog_data.args->config_args.common.quiet_cache = 1;
+    prog_data.args->config_args.common_args.quiet_cache = 1;
 
   prog_data.hosts_count = hosts_count;
 
-  if ((rv = pstdout_launch (prog_data.args->config_args.common.hostname,
+  if ((rv = pstdout_launch (prog_data.args->config_args.common_args.hostname,
                             _ipmi_sensors_config,
                             &prog_data)) < 0)
     {

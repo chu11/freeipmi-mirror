@@ -80,7 +80,7 @@ _get_key (bmc_config_state_data_t *state_data,
                                           0,
                                           obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_channel_security_keys: %s\n",
@@ -158,7 +158,7 @@ _set_key (bmc_config_state_data_t *state_data,
                                           key_len,
                                           obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_channel_security_keys: %s\n",

@@ -184,8 +184,8 @@ ipmipower_oem_power_cmd_check_support_and_privilege (ipmipower_power_cmd_t cmd,
       /* XXX - I'm pretty sure */
       if ((cmd == IPMIPOWER_POWER_CMD_POWER_OFF
 	   || cmd == IPMIPOWER_POWER_CMD_POWER_ON)
-	  && (cmd_args.common.privilege_level == IPMI_PRIVILEGE_LEVEL_USER
-	      || cmd_args.common.privilege_level == IPMI_PRIVILEGE_LEVEL_OPERATOR))
+	  && (cmd_args.common_args.privilege_level == IPMI_PRIVILEGE_LEVEL_USER
+	      || cmd_args.common_args.privilege_level == IPMI_PRIVILEGE_LEVEL_OPERATOR))
 	{
 	  if (errbuf && errbuflen)
 	    snprintf (errbuf,

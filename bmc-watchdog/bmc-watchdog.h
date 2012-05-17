@@ -69,7 +69,7 @@ enum bmc_watchdog_argp_option_keys
 
 struct bmc_watchdog_arguments
 {
-  struct common_cmd_args common;
+  struct common_cmd_args common_args;
   int set;
   int get;
   int reset;

@@ -890,7 +890,7 @@ _output_sensor (ipmi_sensors_state_data_t *state_data,
       if (errnum == IPMI_SENSOR_READ_ERR_SENSOR_NON_ANALOG
           || errnum == IPMI_SENSOR_READ_ERR_SENSOR_NON_LINEAR)
         {
-          if (state_data->prog_data->args->common.debug)
+          if (state_data->prog_data->args->common_args.debug)
             pstdout_fprintf (state_data->pstate,
                              stderr,
                              "Sensor reading cannot be calculated: %s\n",
@@ -907,7 +907,7 @@ _output_sensor (ipmi_sensors_state_data_t *state_data,
           || errnum == IPMI_SENSOR_READ_ERR_SENSOR_NOT_OWNED_BY_BMC
           || errnum == IPMI_SENSOR_READ_ERR_SENSOR_CANNOT_BE_BRIDGED)
         {
-          if (state_data->prog_data->args->common.debug)
+          if (state_data->prog_data->args->common_args.debug)
             pstdout_fprintf (state_data->pstate,
                              stderr,
                              "Sensor reading/event bitmask not available: %s\n",
@@ -927,7 +927,7 @@ _output_sensor (ipmi_sensors_state_data_t *state_data,
       if (errnum == IPMI_SENSOR_READ_ERR_SENSOR_READING_CANNOT_BE_OBTAINED
           || errnum == IPMI_SENSOR_READ_ERR_NODE_BUSY)
         {
-          if (state_data->prog_data->args->common.debug)
+          if (state_data->prog_data->args->common_args.debug)
             pstdout_fprintf (state_data->pstate,
                              stderr,
                              "Sensor reading/event_bitmask retrieval error: %s\n",
@@ -1156,7 +1156,7 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
                              &output_record_ids_length) < 0)
     return (-1);
 
-  if (state_data->prog_data->args->common.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IGNORE_AUTH_CODE)
+  if (state_data->prog_data->args->common_args.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IGNORE_AUTH_CODE)
     {
       if (ipmi_ctx_get_flags (state_data->ipmi_ctx, &ctx_flags_orig) < 0)
         {
@@ -1274,7 +1274,7 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
         }
     }
 
-  if (state_data->prog_data->args->common.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IGNORE_AUTH_CODE)
+  if (state_data->prog_data->args->common_args.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IGNORE_AUTH_CODE)
     {
       if (ipmi_ctx_set_flags (state_data->ipmi_ctx, ctx_flags_orig) < 0)
         {
@@ -1300,7 +1300,7 @@ run_cmd_args (ipmi_sensors_state_data_t *state_data)
 
   args = state_data->prog_data->args;
 
-  assert (!args->common.flush_cache);
+  assert (!args->common_args.flush_cache);
 
   if (args->sdr_info)
     return (_sdr_repository_info (state_data));
@@ -1309,7 +1309,7 @@ run_cmd_args (ipmi_sensors_state_data_t *state_data)
                                  state_data->pstate,
                                  state_data->ipmi_ctx,
                                  state_data->hostname,
-				 &state_data->prog_data->args->common) < 0)
+				 &state_data->prog_data->args->common_args) < 0)
     return (-1);
 
   if (_display_sensors (state_data) < 0)
@@ -1335,11 +1335,11 @@ _ipmi_sensors (pstdout_state_t pstate,
 
   assert (!prog_data->args->list_sensor_types);
   
-  if (prog_data->args->common.flush_cache)
+  if (prog_data->args->common_args.flush_cache)
     {
       if (sdr_cache_flush_cache (pstate,
                                  hostname,
-                                 &prog_data->args->common) < 0)
+                                 &prog_data->args->common_args) < 0)
         return (EXIT_FAILURE);
       return (EXIT_SUCCESS);
     }
@@ -1351,7 +1351,7 @@ _ipmi_sensors (pstdout_state_t pstate,
   
   if (!(state_data.ipmi_ctx = ipmi_open (prog_data->progname,
 					 hostname,
-					 &(prog_data->args->common),
+					 &(prog_data->args->common_args),
 					 state_data.pstate)))
     goto cleanup;
 
@@ -1363,7 +1363,7 @@ _ipmi_sensors (pstdout_state_t pstate,
 
   if (sdr_cache_setup_debug (state_data.sdr_ctx,
 			     state_data.pstate,
-			     state_data.prog_data->args->common.debug,
+			     state_data.prog_data->args->common_args.debug,
 			     state_data.hostname) < 0)
     goto cleanup;
 
@@ -1376,13 +1376,13 @@ _ipmi_sensors (pstdout_state_t pstate,
   if (state_data.prog_data->args->bridge_sensors)
     sensor_read_flags |= IPMI_SENSOR_READ_FLAGS_BRIDGE_SENSORS;
   
-  if (state_data.prog_data->args->common.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_DISCRETE_READING)
+  if (state_data.prog_data->args->common_args.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_DISCRETE_READING)
     sensor_read_flags |= IPMI_SENSOR_READ_FLAGS_DISCRETE_READING;
   
-  if (state_data.prog_data->args->common.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IGNORE_SCANNING_DISABLED)
+  if (state_data.prog_data->args->common_args.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IGNORE_SCANNING_DISABLED)
     sensor_read_flags |= IPMI_SENSOR_READ_FLAGS_IGNORE_SCANNING_DISABLED;
   
-  if (state_data.prog_data->args->common.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_ASSUME_BMC_OWNER)
+  if (state_data.prog_data->args->common_args.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_ASSUME_BMC_OWNER)
     sensor_read_flags |= IPMI_SENSOR_READ_FLAGS_ASSUME_BMC_OWNER;
   
   if (sensor_read_flags)
@@ -1502,8 +1502,8 @@ main (int argc, char **argv)
       return (EXIT_SUCCESS);
     }
   
-  if ((hosts_count = pstdout_setup (&(prog_data.args->common.hostname),
-				    &(prog_data.args->common))) < 0)
+  if ((hosts_count = pstdout_setup (&(prog_data.args->common_args.hostname),
+				    &(prog_data.args->common_args))) < 0)
     return (EXIT_FAILURE);
 
   if (!hosts_count)
@@ -1511,9 +1511,9 @@ main (int argc, char **argv)
 
   /* We don't want caching info to output when are doing ranged output */
   if (hosts_count > 1)
-    prog_data.args->common.quiet_cache = 1;
+    prog_data.args->common_args.quiet_cache = 1;
 
-  if ((rv = pstdout_launch (prog_data.args->common.hostname,
+  if ((rv = pstdout_launch (prog_data.args->common_args.hostname,
                             _ipmi_sensors,
                             &prog_data)) < 0)
     {

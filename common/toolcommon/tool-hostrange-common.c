@@ -154,13 +154,13 @@ eliminate_nodes (char **hosts)
 }
 
 int
-pstdout_setup (char **hosts, struct common_cmd_args *cmd_args)
+pstdout_setup (char **hosts, struct common_cmd_args *common_args)
 {
   unsigned int output_flags = 0;
   int hosts_count = 0;
 
   assert (hosts);
-  assert (cmd_args);
+  assert (common_args);
 
   if (pstdout_init () < 0)
     {
@@ -192,7 +192,7 @@ pstdout_setup (char **hosts, struct common_cmd_args *cmd_args)
       hosts_count = 1;
 
       /* if always prefix - turn hostname into "localhost" for prefixing */
-      if (cmd_args->always_prefix)
+      if (common_args->always_prefix)
         {
           if (!(*hosts = strdup ("localhost")))
             {
@@ -205,16 +205,16 @@ pstdout_setup (char **hosts, struct common_cmd_args *cmd_args)
   /* if hosts_count > 1 it is always prefixed, so ignore always_prefixed flag */
   if (hosts_count > 1)
     {
-      if (cmd_args->buffer_output)
+      if (common_args->buffer_output)
         output_flags = PSTDOUT_OUTPUT_STDOUT_DEFAULT | PSTDOUT_OUTPUT_BUFFER_STDOUT | PSTDOUT_OUTPUT_STDERR_PREPEND_HOSTNAME;
-      else if (cmd_args->consolidate_output)
+      else if (common_args->consolidate_output)
         output_flags = PSTDOUT_OUTPUT_STDOUT_DEFAULT | PSTDOUT_OUTPUT_STDOUT_CONSOLIDATE | PSTDOUT_OUTPUT_STDERR_PREPEND_HOSTNAME;
       else
         output_flags = PSTDOUT_OUTPUT_STDOUT_PREPEND_HOSTNAME | PSTDOUT_OUTPUT_STDERR_PREPEND_HOSTNAME;
 
-      if (cmd_args->fanout)
+      if (common_args->fanout)
         {
-          if (pstdout_set_fanout (cmd_args->fanout) < 0)
+          if (pstdout_set_fanout (common_args->fanout) < 0)
             {
               fprintf (stderr,
                        "pstdout_set_fanout: %s\n",
@@ -223,7 +223,7 @@ pstdout_setup (char **hosts, struct common_cmd_args *cmd_args)
             }
         }
     }
-  else if (hosts_count == 1 && cmd_args->always_prefix)
+  else if (hosts_count == 1 && common_args->always_prefix)
     output_flags = PSTDOUT_OUTPUT_STDOUT_PREPEND_HOSTNAME | PSTDOUT_OUTPUT_STDERR_PREPEND_HOSTNAME;
 
   if (output_flags)
@@ -237,7 +237,7 @@ pstdout_setup (char **hosts, struct common_cmd_args *cmd_args)
         }
     }
 
-  if (*hosts && cmd_args->eliminate)
+  if (*hosts && common_args->eliminate)
     {
       int hosts_count_new;
       

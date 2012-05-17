@@ -109,7 +109,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     default:
       ret = config_parse_opt (key, arg, &cmd_args->config_args);
       if (ret == ARGP_ERR_UNKNOWN)
-        ret = common_parse_opt (key, arg, &cmd_args->config_args.common);
+        ret = common_parse_opt (key, arg, &cmd_args->config_args.common_args);
       return (ret);
     }
   return (0);
@@ -126,9 +126,9 @@ _bmc_config_config_file_parse (struct bmc_config_arguments *cmd_args)
           '\0',
           sizeof (struct config_file_data_bmc_config));
   
-  if (config_file_parse (cmd_args->config_args.common.config_file,
+  if (config_file_parse (cmd_args->config_args.common_args.config_file,
                          0,
-                         &(cmd_args->config_args.common),
+                         &(cmd_args->config_args.common_args),
                          CONFIG_FILE_INBAND | CONFIG_FILE_OUTOFBAND | CONFIG_FILE_HOSTRANGE,
                          CONFIG_FILE_TOOL_BMC_CONFIG,
                          &config_file_data) < 0)
@@ -165,14 +165,14 @@ bmc_config_argp_parse (int argc, char *argv[], struct bmc_config_arguments *cmd_
   assert (cmd_args);
 
   init_config_args (&(cmd_args->config_args));
-  init_common_cmd_args_admin (&(cmd_args->config_args.common));
+  init_common_cmd_args_admin (&(cmd_args->config_args.common_args));
 
   argp_parse (&cmdline_config_file_argp,
               argc,
               argv,
               ARGP_IN_ORDER,
               NULL,
-              &(cmd_args->config_args.common));
+              &(cmd_args->config_args.common_args));
 
   _bmc_config_config_file_parse (cmd_args);
 
@@ -183,6 +183,6 @@ bmc_config_argp_parse (int argc, char *argv[], struct bmc_config_arguments *cmd_
               NULL,
               cmd_args);
 
-  verify_common_cmd_args (&(cmd_args->config_args.common));
+  verify_common_cmd_args (&(cmd_args->config_args.common_args));
   _bmc_config_args_validate (cmd_args);
 }

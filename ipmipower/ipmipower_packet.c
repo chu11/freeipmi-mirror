@@ -196,7 +196,7 @@ ipmipower_packet_dump (ipmipower_powercmd_t ip,
   assert (IPMIPOWER_PACKET_TYPE_VALID (pkt));
   assert (buf);
 
-  if (cmd_args.common.debug)
+  if (cmd_args.common_args.debug)
     {
       fiid_field_t *tmpl_lan_msg_hdr;
       char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
@@ -204,7 +204,7 @@ ipmipower_packet_dump (ipmipower_powercmd_t ip,
       uint8_t packet_direction;
       const char *str_cmd = NULL;
 
-      if (cmd_args.common.driver_type == IPMI_DEVICE_LAN)
+      if (cmd_args.common_args.driver_type == IPMI_DEVICE_LAN)
         packet_type = DEBUG_UTIL_TYPE_IPMI_1_5;
       else
         packet_type = DEBUG_UTIL_TYPE_IPMI_2_0;
@@ -311,7 +311,7 @@ ipmipower_packet_dump (ipmipower_powercmd_t ip,
               exit (EXIT_FAILURE);
             }
         }
-      else if (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0
+      else if (cmd_args.common_args.driver_type == IPMI_DEVICE_LAN_2_0
                && IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET (pkt))
         {
           if (ipmi_dump_rmcpplus_packet (STDERR_FILENO,
@@ -334,7 +334,7 @@ ipmipower_packet_dump (ipmipower_powercmd_t ip,
               exit (EXIT_FAILURE);
             }
         }
-      else /* cmd_args.common.driver_type == IPMI_DEVICE_LAN
+      else /* cmd_args.common_args.driver_type == IPMI_DEVICE_LAN
 	      && IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET (pkt))
 	   */
         {
@@ -391,7 +391,7 @@ ipmipower_packet_store (ipmipower_powercmd_t ip,
       exit (EXIT_FAILURE);
     }
 
-  if (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0)
+  if (cmd_args.common_args.driver_type == IPMI_DEVICE_LAN_2_0)
     {
       if (fiid_obj_clear (ip->obj_rmcpplus_session_hdr_rs) < 0)
         {
@@ -417,7 +417,7 @@ ipmipower_packet_store (ipmipower_powercmd_t ip,
     }
 
   if (IPMIPOWER_PACKET_TYPE_IPMI_1_5_SETUP_RS (pkt)
-      || cmd_args.common.driver_type == IPMI_DEVICE_LAN)
+      || cmd_args.common_args.driver_type == IPMI_DEVICE_LAN)
     {
       if ((rv = unassemble_ipmi_lan_pkt (buf,
                                          buflen,
@@ -714,7 +714,7 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
       || pkt == IPMIPOWER_PACKET_TYPE_RAKP_MESSAGE_1
       || pkt == IPMIPOWER_PACKET_TYPE_RAKP_MESSAGE_3)
     {
-      username = cmd_args.common.username;
+      username = cmd_args.common_args.username;
 
       /* IPMI Workaround (achu)
        *
@@ -726,7 +726,7 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
        * Table 13-11 in the IPMI 2.0 spec.
        */
       if (pkt == IPMIPOWER_PACKET_TYPE_RAKP_MESSAGE_1
-          && (cmd_args.common.workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION))
+          && (cmd_args.common_args.workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION))
         {
           memset (username_buf, '\0', IPMI_MAX_USER_NAME_LENGTH+1);
           if (username)
@@ -747,7 +747,7 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
   if (pkt == IPMIPOWER_PACKET_TYPE_ACTIVATE_SESSION_RQ
       || IPMIPOWER_PACKET_TYPE_IPMI_2_0_SETUP_RQ (pkt) 
       || IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RQ (pkt))
-    password = cmd_args.common.password;
+    password = cmd_args.common_args.password;
   else
     password = NULL;
 
@@ -765,7 +765,7 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
 
       session_id = val;
     }
-  else if (cmd_args.common.driver_type == IPMI_DEVICE_LAN
+  else if (cmd_args.common_args.driver_type == IPMI_DEVICE_LAN
 	   && IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RQ (pkt))
     {
       if (FIID_OBJ_GET (ip->obj_activate_session_rs,
@@ -778,7 +778,7 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
         }
       session_id = val;
     }
-  else if (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0
+  else if (cmd_args.common_args.driver_type == IPMI_DEVICE_LAN_2_0
 	   && IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RQ (pkt))
     {
       if (FIID_OBJ_GET (ip->obj_open_session_rs,
@@ -795,7 +795,7 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
     session_id = 0;
 
   /* Calculate Sequence Number */
-  if (cmd_args.common.driver_type == IPMI_DEVICE_LAN
+  if (cmd_args.common_args.driver_type == IPMI_DEVICE_LAN
       && IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RQ (pkt))
     {
       uint32_t initial_inbound_sequence_number;
@@ -812,7 +812,7 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
 
       sequence_number = initial_inbound_sequence_number + ip->session_inbound_count;
     }
-  else if (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0
+  else if (cmd_args.common_args.driver_type == IPMI_DEVICE_LAN_2_0
 	   && IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RQ (pkt))
     sequence_number = ip->session_sequence_number;
   else
@@ -836,14 +836,14 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
 
   /* Calculate Authentication Type */
   if (pkt == IPMIPOWER_PACKET_TYPE_ACTIVATE_SESSION_RQ)
-    authentication_type = cmd_args.common.authentication_type;
-  else if (cmd_args.common.driver_type == IPMI_DEVICE_LAN
+    authentication_type = cmd_args.common_args.authentication_type;
+  else if (cmd_args.common_args.driver_type == IPMI_DEVICE_LAN
 	   && IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RQ (pkt))
     {
       if (!ip->permsgauth_enabled)
         authentication_type = IPMI_AUTHENTICATION_TYPE_NONE;
       else
-        authentication_type = cmd_args.common.authentication_type;
+        authentication_type = cmd_args.common_args.authentication_type;
 
       if (authentication_type == IPMI_AUTHENTICATION_TYPE_NONE)
         password = NULL;
@@ -851,7 +851,7 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
   else
     authentication_type = IPMI_AUTHENTICATION_TYPE_NONE;
 
-  if (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0)
+  if (cmd_args.common_args.driver_type == IPMI_DEVICE_LAN_2_0)
     {
       /* Calculate Payload Type */
       if (pkt == IPMIPOWER_PACKET_TYPE_OPEN_SESSION_REQUEST)
@@ -923,13 +923,13 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
     {
       uint8_t get_ipmi_v20_extended_data;
       
-      if (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0)
+      if (cmd_args.common_args.driver_type == IPMI_DEVICE_LAN_2_0)
         get_ipmi_v20_extended_data = IPMI_GET_IPMI_V20_EXTENDED_DATA;
       else
         get_ipmi_v20_extended_data = IPMI_GET_IPMI_V15_DATA;
       
       if (fill_cmd_get_channel_authentication_capabilities (IPMI_CHANNEL_NUMBER_CURRENT_CHANNEL,
-                                                            cmd_args.common.privilege_level,
+                                                            cmd_args.common_args.privilege_level,
                                                             get_ipmi_v20_extended_data,
                                                             ip->obj_authentication_capabilities_rq) < 0)
         {
@@ -943,7 +943,7 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
     {
       /* Note: The session_authentication_type is none, this authentication type may be different.
        */
-      if (fill_cmd_get_session_challenge (cmd_args.common.authentication_type,
+      if (fill_cmd_get_session_challenge (cmd_args.common_args.authentication_type,
                                           username,
                                           username_len,
                                           ip->obj_get_session_challenge_rq) < 0)
@@ -976,7 +976,7 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
         }
 
       if (fill_cmd_activate_session (authentication_type,
-                                     cmd_args.common.privilege_level,
+                                     cmd_args.common_args.privilege_level,
                                      challenge_string,
                                      challenge_string_len,
                                      IPMIPOWER_LAN_INITIAL_OUTBOUND_SEQUENCE_NUMBER,
@@ -1008,7 +1008,7 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
                                         managed_system_session_id,
                                         ip->remote_console_random_number,
                                         IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH,
-                                        cmd_args.common.privilege_level,
+                                        cmd_args.common_args.privilege_level,
                                         ip->name_only_lookup,
                                         username,
                                         username_len,
@@ -1049,7 +1049,7 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
        * same workaround.
        */
 
-      if (cmd_args.common.workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION)
+      if (cmd_args.common_args.workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION)
         name_only_lookup = IPMI_USER_NAME_PRIVILEGE_LOOKUP;
       else
         name_only_lookup = ip->name_only_lookup;
@@ -1066,7 +1066,7 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
        * password to 16 bytes when generating keys, hashes, etc.  So we
        * have to do the same when generating keys, hashes, etc.
        */
-      if ((cmd_args.common.workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION)
+      if ((cmd_args.common_args.workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION)
           && ip->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
           && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
         password_len = IPMI_1_5_MAX_PASSWORD_LENGTH;
@@ -1078,7 +1078,7 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
                                                                                                           managed_system_random_number_len,
                                                                                                           ip->remote_console_session_id,
                                                                                                           name_only_lookup,
-                                                                                                          cmd_args.common.privilege_level,
+                                                                                                          cmd_args.common_args.privilege_level,
                                                                                                           username,
                                                                                                           username_len,
                                                                                                           key_exchange_authentication_code,
@@ -1103,7 +1103,7 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
     }
   else if (pkt == IPMIPOWER_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RQ)
     {
-      if (fill_cmd_set_session_privilege_level (cmd_args.common.privilege_level,
+      if (fill_cmd_set_session_privilege_level (cmd_args.common_args.privilege_level,
                                                 ip->obj_set_session_privilege_level_rq) < 0)
         {
           IPMIPOWER_ERROR (("fill_cmd_set_session_privilege_level: %s", strerror (errno)));
@@ -1262,7 +1262,7 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
 
   /* Construct packets */
   if (IPMIPOWER_PACKET_TYPE_IPMI_1_5_SETUP_RQ (pkt)
-      || (cmd_args.common.driver_type == IPMI_DEVICE_LAN
+      || (cmd_args.common_args.driver_type == IPMI_DEVICE_LAN
 	  && IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RQ (pkt)))
     rv = _ipmi_1_5_packet_create (ip,
                                   pkt,
@@ -1276,7 +1276,7 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
                                   buf,
                                   buflen);
   else if (IPMIPOWER_PACKET_TYPE_IPMI_2_0_SETUP_RQ (pkt)
-           || (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0
+           || (cmd_args.common_args.driver_type == IPMI_DEVICE_LAN_2_0
 	       && IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RQ (pkt)))
     rv = _ipmi_2_0_packet_create (ip,
                                   pkt,
@@ -1392,7 +1392,7 @@ ipmipower_packet_errmsg (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
           exit (EXIT_FAILURE);
         }
       else if (pkt == IPMIPOWER_PACKET_TYPE_AUTHENTICATION_CAPABILITIES_RS
-               && cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0
+               && cmd_args.common_args.driver_type == IPMI_DEVICE_LAN_2_0
                && comp_code == IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST)
         return (IPMIPOWER_MSG_TYPE_IPMI_2_0_UNAVAILABLE);
       else if (pkt == IPMIPOWER_PACKET_TYPE_GET_SESSION_CHALLENGE_RS
