@@ -83,7 +83,7 @@ ipmipower_ping_process_pings (int *timeout)
 
   assert (timeout);
 
-  if (!cmd_args.common.hostname)
+  if (!cmd_args.common_args.hostname)
     return;
 
   if (!cmd_args.ping_interval)

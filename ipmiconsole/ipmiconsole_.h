@@ -54,7 +54,7 @@ enum ipmiconsole_argp_option_keys
 
 struct ipmiconsole_arguments
 {
-  struct common_cmd_args common;
+  struct common_cmd_args common_args;
   char escape_char;
   int dont_steal;
   int deactivate;

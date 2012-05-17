@@ -92,7 +92,7 @@ config_commit_section (pstdout_state_t pstate,
 	       * ignored.  We want to try to avoid this.
 	       */
 	      
-	      if (cmd_args->common.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_VERY_SLOW_COMMIT)
+	      if (cmd_args->common_args.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_VERY_SLOW_COMMIT)
 		sleep (1);
 	      
 	      commit_count++;
@@ -208,8 +208,8 @@ config_commit (pstdout_state_t pstate,
        * ignored.  We want to try to avoid this.
        */
 
-      if (cmd_args->common.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_SLOW_COMMIT
-	  || cmd_args->common.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_VERY_SLOW_COMMIT)
+      if (cmd_args->common_args.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_SLOW_COMMIT
+	  || cmd_args->common_args.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_VERY_SLOW_COMMIT)
 	sleep (1);
 
       s = s->next;

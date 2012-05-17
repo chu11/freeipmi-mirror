@@ -96,7 +96,7 @@ ip_address_source_checkout (const char *section_name,
                                                                    IPMI_LAN_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                                    obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_lan_configuration_parameters_ip_address_source: %s\n",
@@ -170,7 +170,7 @@ ip_address_source_commit (const char *section_name,
                                                                    ip_address_source_number (kv->value_input),
                                                                    obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_lan_configuration_parameters_ip_address_source: %s\n",
@@ -233,7 +233,7 @@ ip_address_checkout (const char *section_name,
                                                             IPMI_LAN_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                             obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_lan_configuration_parameters_ip_address: %s\n",
@@ -324,7 +324,7 @@ ip_address_commit (const char *section_name,
                                                             ip_address_val,
                                                             obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_lan_configuration_parameters_ip_address: %s\n",
@@ -387,7 +387,7 @@ mac_address_checkout (const char *section_name,
                                                              IPMI_LAN_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                              obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_lan_configuration_parameters_mac_address: %s\n",
@@ -481,7 +481,7 @@ mac_address_commit (const char *section_name,
                                                              mac_address_val,
                                                              obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_lan_configuration_parameters_mac_address: %s\n",
@@ -544,7 +544,7 @@ subnet_mask_checkout (const char *section_name,
                                                              IPMI_LAN_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                              obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_lan_configuration_parameters_subnet_mask: %s\n",
@@ -635,7 +635,7 @@ subnet_mask_commit (const char *section_name,
                                                              subnet_mask_val,
                                                              obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_lan_configuration_parameters_subnet_mask: %s\n",
@@ -698,7 +698,7 @@ default_gateway_address_checkout (const char *section_name,
                                                                          IPMI_LAN_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                                          obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_lan_configuration_parameters_default_gateway_address: %s\n",
@@ -790,7 +790,7 @@ default_gateway_address_commit (const char *section_name,
                                                                          ip_address_val,
                                                                          obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_lan_configuration_parameters_default_gateway_address: %s\n",
@@ -853,7 +853,7 @@ default_gateway_mac_address_checkout (const char *section_name,
                                                                              IPMI_LAN_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                                              obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_lan_configuration_parameters_default_gateway_mac_address: %s\n",
@@ -947,7 +947,7 @@ default_gateway_mac_address_commit (const char *section_name,
                                                                              mac_address_val,
                                                                              obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_lan_configuration_parameters_default_gateway_mac_address: %s\n",
@@ -1010,7 +1010,7 @@ backup_gateway_address_checkout (const char *section_name,
                                                                         IPMI_LAN_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                                         obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_lan_configuration_parameters_backup_gateway_address: %s\n",
@@ -1101,7 +1101,7 @@ backup_gateway_address_commit (const char *section_name,
                                                                         ip_address_val,
                                                                         obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_lan_configuration_parameters_backup_gateway_address: %s\n",
@@ -1164,7 +1164,7 @@ backup_gateway_mac_address_checkout (const char *section_name,
                                                                             IPMI_LAN_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                                             obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_lan_configuration_parameters_backup_gateway_mac_address: %s\n",
@@ -1257,7 +1257,7 @@ backup_gateway_mac_address_commit (const char *section_name,
                                                                             mac_address_val,
                                                                             obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_lan_configuration_parameters_backup_gateway_mac_address: %s\n",
@@ -1316,7 +1316,7 @@ _get_vlan_id (bmc_config_state_data_t *state_data,
                                                          IPMI_LAN_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                          obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_lan_configuration_parameters_vlan_id: %s\n",
@@ -1393,7 +1393,7 @@ _set_vlan_id (bmc_config_state_data_t *state_data,
                                                          vi->vlan_id_enable,
                                                          obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_lan_configuration_parameters_vlan_id: %s\n",
@@ -1567,7 +1567,7 @@ vlan_priority_checkout (const char *section_name,
                                                                IPMI_LAN_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                                obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_lan_configuration_parameters_vlan_priority: %s\n",
@@ -1641,7 +1641,7 @@ vlan_priority_commit (const char *section_name,
                                                                atoi (kv->value_input),
                                                                obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_lan_configuration_parameters_vlan_priority: %s\n",
@@ -1700,7 +1700,7 @@ _get_ipv4_header_parameters (bmc_config_state_data_t *state_data,
                                                                         IPMI_LAN_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                                         obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_lan_configuration_parameters_ipv4_header_parameters: %s\n",
@@ -1799,7 +1799,7 @@ _set_ipv4_header_parameters (bmc_config_state_data_t *state_data,
                                                                         ihp->precedence,
                                                                         obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_lan_configuration_parameters_ipv4_header_parameters: %s\n",
@@ -2060,7 +2060,7 @@ primary_rmcp_port_checkout (const char *section_name,
                                                                           IPMI_LAN_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                                           obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_lan_configuration_parameters_primary_rmcp_port_number: %s\n",
@@ -2132,7 +2132,7 @@ primary_rmcp_port_commit (const char *section_name,
                                                                           atoi (kv->value_input),
                                                                           obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_lan_configuration_parameters_primary_rmcp_port_number: %s\n",
@@ -2193,7 +2193,7 @@ secondary_rmcp_port_checkout (const char *section_name,
                                                                             IPMI_LAN_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                                             obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_lan_configuration_parameters_secondary_rmcp_port_number: %s\n",
@@ -2265,7 +2265,7 @@ secondary_rmcp_port_commit (const char *section_name,
                                                                             atoi (kv->value_input),
                                                                             obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_lan_configuration_parameters_secondary_rmcp_port_number: %s\n",

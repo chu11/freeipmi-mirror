@@ -113,29 +113,29 @@ _init_bmc_watchdog (void)
   if (!ipmi_is_root ())
     err_exit ("Permission denied, must be root.");
 
-  if (cmd_args.common.workaround_flags_inband & IPMI_PARSE_WORKAROUND_FLAGS_INBAND_ASSUME_IO_BASE_ADDRESS)
+  if (cmd_args.common_args.workaround_flags_inband & IPMI_PARSE_WORKAROUND_FLAGS_INBAND_ASSUME_IO_BASE_ADDRESS)
     workaround_flags |= IPMI_WORKAROUND_FLAGS_INBAND_ASSUME_IO_BASE_ADDRESS;
   
-  if (cmd_args.common.workaround_flags_inband & IPMI_PARSE_WORKAROUND_FLAGS_INBAND_SPIN_POLL)
+  if (cmd_args.common_args.workaround_flags_inband & IPMI_PARSE_WORKAROUND_FLAGS_INBAND_SPIN_POLL)
     workaround_flags |= IPMI_WORKAROUND_FLAGS_INBAND_SPIN_POLL;
   
   flags = IPMI_FLAGS_NONBLOCKING;
-  if (cmd_args.common.debug)
+  if (cmd_args.common_args.debug)
     flags |= IPMI_FLAGS_DEBUG_DUMP; 
   
   if (!(ipmi_ctx = ipmi_ctx_create ()))
     err_exit ("ipmi_ctx_create: %s", strerror (errno));
   
-  if (cmd_args.common.driver_type == IPMI_DEVICE_UNKNOWN)
+  if (cmd_args.common_args.driver_type == IPMI_DEVICE_UNKNOWN)
     {
       int ret;
       
       if ((ret = ipmi_ctx_find_inband (ipmi_ctx,
 				       NULL,
-				       cmd_args.common.disable_auto_probe,
-				       cmd_args.common.driver_address,
-				       cmd_args.common.register_spacing,
-				       cmd_args.common.driver_device,
+				       cmd_args.common_args.disable_auto_probe,
+				       cmd_args.common_args.driver_address,
+				       cmd_args.common_args.register_spacing,
+				       cmd_args.common_args.driver_device,
 				       workaround_flags,
 				       flags)) < 0)
 	err_exit ("ipmi_ctx_find_inband: %s", ipmi_ctx_errormsg (ipmi_ctx));
@@ -146,11 +146,11 @@ _init_bmc_watchdog (void)
   else
     {
       if (ipmi_ctx_open_inband (ipmi_ctx,
-				cmd_args.common.driver_type,
-				cmd_args.common.disable_auto_probe,
-				cmd_args.common.driver_address,
-				cmd_args.common.register_spacing,
-				cmd_args.common.driver_device,
+				cmd_args.common_args.driver_type,
+				cmd_args.common_args.disable_auto_probe,
+				cmd_args.common_args.driver_address,
+				cmd_args.common_args.register_spacing,
+				cmd_args.common_args.driver_device,
 				workaround_flags,
 				flags) < 0)
 	err_exit ("ipmi_ctx_open_inband: %s", ipmi_ctx_errormsg (ipmi_ctx));
@@ -1191,7 +1191,7 @@ _daemon_cmd (const char *progname)
   assert (progname);
 
   /* Run in foreground if debugging */
-  if (!cmd_args.common.debug)
+  if (!cmd_args.common_args.debug)
     daemonize_common (BMC_WATCHDOG_PIDFILE);
 
   daemon_signal_handler_setup (_signal_handler_callback);
@@ -1236,7 +1236,7 @@ _daemon_cmd (const char *progname)
    * delay up to 100 ms before seeing the countdown value change and
    * be reflected in the Get Watchdog Timer command".
    */
-  if (cmd_args.common.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IGNORE_STATE_FLAG)
+  if (cmd_args.common_args.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IGNORE_STATE_FLAG)
     _sleep (1);
 
   while (shutdown_flag)
@@ -1273,7 +1273,7 @@ _daemon_cmd (const char *progname)
        * to have an operational BMC watchdog, it must function without it.
        * We instead look to see if the timer is changing.
        */
-      if (cmd_args.common.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IGNORE_STATE_FLAG)
+      if (cmd_args.common_args.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IGNORE_STATE_FLAG)
         {
           if (previous_present_countdown_seconds == present_countdown_seconds)
             {
@@ -1305,7 +1305,7 @@ _daemon_cmd (const char *progname)
        * we need to reset the previous_present_countdown_seconds to
        * what it is after the timer reset.
        */
-      if (cmd_args.common.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IGNORE_STATE_FLAG)
+      if (cmd_args.common_args.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IGNORE_STATE_FLAG)
         {
           /* From 27.7 "Internal delays in the BMC may require software to
            * delay up to 100 ms before seeing the countdown value change and

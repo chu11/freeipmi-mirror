@@ -298,7 +298,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case ARGP_KEY_END:
       break;
     default:
-      return (common_parse_opt (key, arg, &(cmd_args->common)));
+      return (common_parse_opt (key, arg, &(cmd_args->common_args)));
     }
 
   return (0);
@@ -315,9 +315,9 @@ _ipmi_dcmi_config_file_parse (struct ipmi_dcmi_arguments *cmd_args)
           '\0',
           sizeof (struct config_file_data_ipmi_dcmi));
 
-  if (config_file_parse (cmd_args->common.config_file,
+  if (config_file_parse (cmd_args->common_args.config_file,
                          0,
-                         &(cmd_args->common),
+                         &(cmd_args->common_args),
                          CONFIG_FILE_INBAND | CONFIG_FILE_OUTOFBAND | CONFIG_FILE_HOSTRANGE,
                          CONFIG_FILE_TOOL_IPMI_DCMI,
                          &config_file_data) < 0)
@@ -388,7 +388,7 @@ ipmi_dcmi_argp_parse (int argc, char **argv, struct ipmi_dcmi_arguments *cmd_arg
   assert (argv);
   assert (cmd_args);
 
-  init_common_cmd_args_admin (&(cmd_args->common));
+  init_common_cmd_args_admin (&(cmd_args->common_args));
   
   cmd_args->get_dcmi_capability_info = 0;
   cmd_args->get_asset_tag = 0;
@@ -414,7 +414,7 @@ ipmi_dcmi_argp_parse (int argc, char **argv, struct ipmi_dcmi_arguments *cmd_arg
               argv,
               ARGP_IN_ORDER,
               NULL,
-              &(cmd_args->common));
+              &(cmd_args->common_args));
 
   _ipmi_dcmi_config_file_parse (cmd_args);
 
@@ -425,6 +425,6 @@ ipmi_dcmi_argp_parse (int argc, char **argv, struct ipmi_dcmi_arguments *cmd_arg
               NULL,
               cmd_args);
 
-  verify_common_cmd_args (&(cmd_args->common));
+  verify_common_cmd_args (&(cmd_args->common_args));
   _ipmi_dcmi_args_validate (cmd_args);
 }

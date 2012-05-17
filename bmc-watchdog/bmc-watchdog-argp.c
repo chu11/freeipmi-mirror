@@ -521,7 +521,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case ARGP_KEY_END:
       break;
     default:
-      return (common_parse_opt (key, arg, &(cmd_args->common)));
+      return (common_parse_opt (key, arg, &(cmd_args->common_args)));
     }
 
   return (0);
@@ -536,9 +536,9 @@ _bmc_watchdog_config_file_parse (struct bmc_watchdog_arguments *cmd_args)
           '\0',
           sizeof (struct config_file_data_bmc_watchdog));
 
-  if (config_file_parse (cmd_args->common.config_file,
+  if (config_file_parse (cmd_args->common_args.config_file,
                          0,
-                         &(cmd_args->common),
+                         &(cmd_args->common_args),
                          CONFIG_FILE_INBAND,
                          CONFIG_FILE_TOOL_BMC_WATCHDOG,
                          &config_file_data) < 0)
@@ -630,7 +630,7 @@ bmc_watchdog_argp_parse (int argc, char **argv, struct bmc_watchdog_arguments *c
   assert (argv);
   assert (cmd_args);
 
-  init_common_cmd_args_user (&(cmd_args->common));
+  init_common_cmd_args_user (&(cmd_args->common_args));
 
   cmd_args->set = 0;
   cmd_args->get = 0;
@@ -678,7 +678,7 @@ bmc_watchdog_argp_parse (int argc, char **argv, struct bmc_watchdog_arguments *c
               argv,
               ARGP_IN_ORDER | ARGP_NO_HELP,
               NULL,
-              &(cmd_args->common));
+              &(cmd_args->common_args));
 
   _bmc_watchdog_config_file_parse (cmd_args);
 
@@ -689,6 +689,6 @@ bmc_watchdog_argp_parse (int argc, char **argv, struct bmc_watchdog_arguments *c
               NULL,
               cmd_args);
 
-  verify_common_cmd_args (&(cmd_args->common));
+  verify_common_cmd_args (&(cmd_args->common_args));
   _bmc_watchdog_args_validate (cmd_args);
 }

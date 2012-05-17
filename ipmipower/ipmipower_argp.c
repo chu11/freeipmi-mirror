@@ -184,7 +184,7 @@ cmdline_parse (int key,
           fprintf (stderr, "invalid driver type specified");
           exit (EXIT_FAILURE);
         }
-      cmd_args->common.driver_type = tmp;
+      cmd_args->common_args.driver_type = tmp;
       break;
 #ifndef NDEBUG
     case RMCPDUMP_KEY:       /* --rmcpdump */
@@ -314,7 +314,7 @@ cmdline_parse (int key,
       break;
       /* removed legacy short options */
     default:
-      return (common_parse_opt (key, arg, &(cmd_args->common)));
+      return (common_parse_opt (key, arg, &(cmd_args->common_args)));
     }
 
   return (0);
@@ -332,20 +332,20 @@ _ipmipower_config_file_parse (struct ipmipower_arguments *cmd_args)
           sizeof (struct config_file_data_ipmipower));
 
   /* try legacy file first */
-  if (!cmd_args->common.config_file)
+  if (!cmd_args->common_args.config_file)
     {
       if (!config_file_parse (IPMIPOWER_CONFIG_FILE_LEGACY,
                               1,         /* do not exit if file not found */
-                              &(cmd_args->common),
+                              &(cmd_args->common_args),
                               CONFIG_FILE_OUTOFBAND | CONFIG_FILE_HOSTRANGE,
                               CONFIG_FILE_TOOL_IPMIPOWER,
                               &config_file_data))
         goto out;
     }
 
-  if (config_file_parse (cmd_args->common.config_file,
+  if (config_file_parse (cmd_args->common_args.config_file,
                          0,
-                         &(cmd_args->common),
+                         &(cmd_args->common_args),
                          CONFIG_FILE_OUTOFBAND | CONFIG_FILE_HOSTRANGE,
                          CONFIG_FILE_TOOL_IPMIPOWER,
                          &config_file_data) < 0)
@@ -391,13 +391,13 @@ _ipmipower_args_validate (struct ipmipower_arguments *cmd_args)
       exit (EXIT_FAILURE);
     }
 
-  if (cmd_args->retransmission_wait_timeout > cmd_args->common.session_timeout)
+  if (cmd_args->retransmission_wait_timeout > cmd_args->common_args.session_timeout)
     {
       fprintf (stderr, "retransmission wait timeout larger than session timeout\n");
       exit (EXIT_FAILURE);
     }
 
-  if (cmd_args->powercmd != IPMIPOWER_POWER_CMD_NONE && !cmd_args->common.hostname)
+  if (cmd_args->powercmd != IPMIPOWER_POWER_CMD_NONE && !cmd_args->common_args.hostname)
     {
       fprintf (stderr, "must specify target hostname(s) in non-interactive mode\n");
       exit (EXIT_FAILURE);
@@ -423,13 +423,13 @@ ipmipower_argp_parse (int argc, char **argv, struct ipmipower_arguments *cmd_arg
   assert (argv);
   assert (cmd_args);
 
-  init_common_cmd_args_operator (&(cmd_args->common));
+  init_common_cmd_args_operator (&(cmd_args->common_args));
 
   /* ipmipower differences */
-  cmd_args->common.driver_type = IPMI_DEVICE_LAN;
-  cmd_args->common.driver_type_outofband_only = 1;
-  cmd_args->common.session_timeout = 20000; /* 20 seconds */
-  cmd_args->common.retransmission_timeout = 400; /* .4 seconds */
+  cmd_args->common_args.driver_type = IPMI_DEVICE_LAN;
+  cmd_args->common_args.driver_type_outofband_only = 1;
+  cmd_args->common_args.session_timeout = 20000; /* 20 seconds */
+  cmd_args->common_args.retransmission_timeout = 400; /* .4 seconds */
 
 #ifndef NDEBUG
   cmd_args->rmcpdump = 0;
@@ -453,7 +453,7 @@ ipmipower_argp_parse (int argc, char **argv, struct ipmipower_arguments *cmd_arg
               argv,
               ARGP_IN_ORDER,
               NULL,
-              &(cmd_args->common));
+              &(cmd_args->common_args));
 
   _ipmipower_config_file_parse (cmd_args);
 
@@ -465,6 +465,6 @@ ipmipower_argp_parse (int argc, char **argv, struct ipmipower_arguments *cmd_arg
               cmd_args);
 
   /* don't check hostname inputs, ipmipower isn't like most tools */
-  verify_common_cmd_args_outofband (&(cmd_args->common), 0);
+  verify_common_cmd_args_outofband (&(cmd_args->common_args), 0);
   _ipmipower_args_validate (cmd_args);
 }

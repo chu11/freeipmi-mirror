@@ -85,7 +85,7 @@ ipmipower_output (ipmipower_msg_type_t num, const char *hostname, const char *ex
 
   /* If extra argument required, then we can't do consolidated output */
 
-  if (cmd_args.common.consolidate_output
+  if (cmd_args.common_args.consolidate_output
       && !IPMIPOWER_OEM_POWER_TYPE_REQUIRES_EXTRA_ARGUMENT (cmd_args.oem_power_type))
     {
       if (!hostlist_push_host (output_hostrange[num], hostname))
@@ -109,7 +109,7 @@ ipmipower_output (ipmipower_msg_type_t num, const char *hostname, const char *ex
 void
 ipmipower_output_finish (void)
 {
-  if (cmd_args.common.consolidate_output
+  if (cmd_args.common_args.consolidate_output
       && !IPMIPOWER_OEM_POWER_TYPE_REQUIRES_EXTRA_ARGUMENT (cmd_args.oem_power_type))
     {
       int i, rv;

@@ -307,7 +307,7 @@ _sdr_cache_get_cache_directory (pstdout_state_t pstate,
 static int
 _sdr_cache_get_cache_filename (pstdout_state_t pstate,
 			       const char *hostname,
-			       const struct common_cmd_args *cmd_args,
+			       const struct common_cmd_args *common_args,
 			       char *buf,
 			       unsigned int buflen)
 {
@@ -315,11 +315,11 @@ _sdr_cache_get_cache_filename (pstdout_state_t pstate,
   char *ptr;
   int ret;
 
-  assert (cmd_args);
+  assert (common_args);
   assert (buf);
   assert (buflen);
 
-  if (!cmd_args->sdr_cache_file)
+  if (!common_args->sdr_cache_file)
     {
       char hostnamebuf[MAXHOSTNAMELEN+1];
 
@@ -332,7 +332,7 @@ _sdr_cache_get_cache_filename (pstdout_state_t pstate,
 	*ptr = '\0';
       
       if (_sdr_cache_get_cache_directory (pstate,
-					  cmd_args->sdr_cache_directory,
+					  common_args->sdr_cache_directory,
 					  sdrcachebuf,
 					  MAXPATHLEN) < 0)
 	return (-1);
@@ -360,7 +360,7 @@ _sdr_cache_get_cache_filename (pstdout_state_t pstate,
     }
   else
     {
-      if (strlen (cmd_args->sdr_cache_file) > (MAXPATHLEN - 1))
+      if (strlen (common_args->sdr_cache_file) > (MAXPATHLEN - 1))
         {
           PSTDOUT_FPRINTF (pstate,
                            stderr,
@@ -368,14 +368,14 @@ _sdr_cache_get_cache_filename (pstdout_state_t pstate,
           return (-1);
         }
       
-      if (access (cmd_args->sdr_cache_file, R_OK) < 0)
+      if (access (common_args->sdr_cache_file, R_OK) < 0)
         {
 	  if (errno != ENOENT)
 	    {
 	      PSTDOUT_FPRINTF (pstate,
 			       stderr,
 			       "Cannot access cache file: %s\n",
-			       cmd_args->sdr_cache_file);
+			       common_args->sdr_cache_file);
 	      return (-1);
 	    }
 	  else
@@ -383,7 +383,7 @@ _sdr_cache_get_cache_filename (pstdout_state_t pstate,
 	      /* File doesn't exist, do checks for directory */
 	      char cachedirbuf[MAXPATHLEN+1];
 	      char *cachedirptr;
-	      strcpy (cachedirbuf, cmd_args->sdr_cache_file);
+	      strcpy (cachedirbuf, common_args->sdr_cache_file);
 
 	      cachedirptr = dirname (cachedirbuf);
 	      
@@ -399,7 +399,7 @@ _sdr_cache_get_cache_filename (pstdout_state_t pstate,
       if ((ret = snprintf (buf,
                            buflen,
 			   "%s",
-			   cmd_args->sdr_cache_file)) < 0)
+			   common_args->sdr_cache_file)) < 0)
 
         {
           PSTDOUT_PERROR (pstate, "snprintf");
@@ -523,7 +523,7 @@ _sdr_cache_create (ipmi_sdr_ctx_t ctx,
 		   pstdout_state_t pstate,
 		   ipmi_ctx_t ipmi_ctx,
 		   const char *hostname,
-		   const struct common_cmd_args *cmd_args)
+		   const struct common_cmd_args *common_args)
 {
   char cachefilenamebuf[MAXPATHLEN+1];
   int count = 0;
@@ -532,15 +532,15 @@ _sdr_cache_create (ipmi_sdr_ctx_t ctx,
 
   assert (ctx);
   assert (ipmi_ctx);
-  assert (cmd_args);
+  assert (common_args);
 
-  if (_sdr_cache_create_directory (pstate, cmd_args->sdr_cache_directory) < 0)
+  if (_sdr_cache_create_directory (pstate, common_args->sdr_cache_directory) < 0)
     goto cleanup;
 
   memset (cachefilenamebuf, '\0', MAXPATHLEN+1);
   if (_sdr_cache_get_cache_filename (pstate,
 				     hostname,
-				     cmd_args,
+				     common_args,
 				     cachefilenamebuf,
 				     MAXPATHLEN) < 0)
     goto cleanup;
@@ -549,12 +549,12 @@ _sdr_cache_create (ipmi_sdr_ctx_t ctx,
    * tool code to set quiet_cache if there are multiple
    * hosts are generating the cache at the same time.
    */
-  if (!cmd_args->quiet_cache)
+  if (!common_args->quiet_cache)
     fprintf (stderr,
              "Caching SDR repository information: %s\n",
              cachefilenamebuf);
 
-  if (cmd_args->sdr_cache_recreate)
+  if (common_args->sdr_cache_recreate)
     cache_create_flags = IPMI_SDR_CACHE_CREATE_FLAGS_OVERWRITE;
   else
     cache_create_flags = IPMI_SDR_CACHE_CREATE_FLAGS_DEFAULT;
@@ -563,11 +563,11 @@ _sdr_cache_create (ipmi_sdr_ctx_t ctx,
                              ipmi_ctx,
                              cachefilenamebuf,
                              cache_create_flags,
-                             cmd_args->quiet_cache ? NULL : _sdr_cache_create_callback,
-                             cmd_args->quiet_cache ? NULL : (void *)&count) < 0)
+                             common_args->quiet_cache ? NULL : _sdr_cache_create_callback,
+                             common_args->quiet_cache ? NULL : (void *)&count) < 0)
     {
       /* unique output corner case */
-      if (count && !cmd_args->quiet_cache)
+      if (count && !common_args->quiet_cache)
         fprintf (stderr, "\n");
 
       PSTDOUT_FPRINTF (pstate,
@@ -577,7 +577,7 @@ _sdr_cache_create (ipmi_sdr_ctx_t ctx,
       goto cleanup;
     }
 
-  if (!cmd_args->quiet_cache)
+  if (!common_args->quiet_cache)
     fprintf (stderr, "\n");
 
   rv = 0;
@@ -592,18 +592,18 @@ sdr_cache_create_and_load (ipmi_sdr_ctx_t ctx,
                            pstdout_state_t pstate,
                            ipmi_ctx_t ipmi_ctx,
                            const char *hostname,
-			   const struct common_cmd_args *cmd_args)
+			   const struct common_cmd_args *common_args)
 {
   char cachefilenamebuf[MAXPATHLEN+1];
   int rv = -1;
 
   assert (ctx);
-  assert (cmd_args);
+  assert (common_args);
 
   memset (cachefilenamebuf, '\0', MAXPATHLEN+1);
   if (_sdr_cache_get_cache_filename (pstate,
 				     hostname,
-				     cmd_args,
+				     common_args,
 				     cachefilenamebuf,
 				     MAXPATHLEN) < 0)
     goto cleanup;
@@ -611,13 +611,13 @@ sdr_cache_create_and_load (ipmi_sdr_ctx_t ctx,
   /* If user specifies cache file, don't check timestamps, just load it */
 
   if (ipmi_sdr_cache_open (ctx,
-                           cmd_args->sdr_cache_file ? NULL : ipmi_ctx,
+                           common_args->sdr_cache_file ? NULL : ipmi_ctx,
                            cachefilenamebuf) < 0)
     {
       if (ipmi_sdr_ctx_errnum (ctx) != IPMI_SDR_ERR_CACHE_READ_CACHE_DOES_NOT_EXIST
           && !((ipmi_sdr_ctx_errnum (ctx) == IPMI_SDR_ERR_CACHE_INVALID
                 || ipmi_sdr_ctx_errnum (ctx) == IPMI_SDR_ERR_CACHE_OUT_OF_DATE)
-               && cmd_args->sdr_cache_recreate))
+               && common_args->sdr_cache_recreate))
         {
           if (ipmi_sdr_ctx_errnum (ctx) == IPMI_SDR_ERR_CACHE_INVALID)
             {
@@ -651,17 +651,17 @@ sdr_cache_create_and_load (ipmi_sdr_ctx_t ctx,
   if (ipmi_sdr_ctx_errnum (ctx) == IPMI_SDR_ERR_CACHE_READ_CACHE_DOES_NOT_EXIST
       || ((ipmi_sdr_ctx_errnum (ctx) == IPMI_SDR_ERR_CACHE_INVALID
            || ipmi_sdr_ctx_errnum (ctx) == IPMI_SDR_ERR_CACHE_OUT_OF_DATE)
-          && cmd_args->sdr_cache_recreate))
+          && common_args->sdr_cache_recreate))
     {
       if (_sdr_cache_create (ctx,
 			     pstate,
 			     ipmi_ctx,
 			     hostname,
-			     cmd_args) < 0)
+			     common_args) < 0)
         goto cleanup;
 
       if (ipmi_sdr_cache_open (ctx,
-			       cmd_args->sdr_cache_file ? NULL : ipmi_ctx,
+			       common_args->sdr_cache_file ? NULL : ipmi_ctx,
                                cachefilenamebuf) < 0)
         {
           PSTDOUT_FPRINTF (pstate,
@@ -681,23 +681,23 @@ sdr_cache_create_and_load (ipmi_sdr_ctx_t ctx,
 int
 sdr_cache_flush_cache (pstdout_state_t pstate,
                        const char *hostname,
-		       const struct common_cmd_args *cmd_args)
+		       const struct common_cmd_args *common_args)
 {
   ipmi_sdr_ctx_t ctx = NULL;
   char cachefilenamebuf[MAXPATHLEN+1];
   int rv = -1;
 
-  assert (cmd_args);
+  assert (common_args);
 
   memset (cachefilenamebuf, '\0', MAXPATHLEN+1);
   if (_sdr_cache_get_cache_filename (pstate,
 				     hostname,
-				     cmd_args,
+				     common_args,
 				     cachefilenamebuf,
 				     MAXPATHLEN) < 0)
     goto cleanup;
 
-  if (!cmd_args->quiet_cache)
+  if (!common_args->quiet_cache)
     PSTDOUT_PRINTF (pstate, "Flushing cache: %s\n", cachefilenamebuf);
 
   if (!(ctx = ipmi_sdr_ctx_create ()))

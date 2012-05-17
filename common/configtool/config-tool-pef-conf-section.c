@@ -88,7 +88,7 @@ _get_pef_control (pstdout_state_t pstate,
     {
       config_err_t ret;
 
-      if (cmd_args->common.debug)
+      if (cmd_args->common_args.debug)
         pstdout_fprintf (pstate,
                          stderr,
                          "ipmi_cmd_get_pef_configuration_parameters_pef_control: %s\n",
@@ -180,7 +180,7 @@ _set_pef_control (pstdout_state_t pstate,
     {
       config_err_t ret;
 
-      if (cmd_args->common.debug)
+      if (cmd_args->common_args.debug)
         pstdout_fprintf (pstate,
                          stderr,
                          "ipmi_cmd_set_pef_configuration_parameters_pef_control: %s\n",
@@ -437,7 +437,7 @@ _get_pef_action_global_control (pstdout_state_t pstate,
     {
       config_err_t ret;
 
-      if (cmd_args->common.debug)
+      if (cmd_args->common_args.debug)
         pstdout_fprintf (pstate,
                          stderr,
                          "ipmi_cmd_get_pef_configuration_parameters_pef_action_global_control: %s\n",
@@ -551,7 +551,7 @@ _set_pef_action_global_control (pstdout_state_t pstate,
     {
       config_err_t ret;
 
-      if (cmd_args->common.debug)
+      if (cmd_args->common_args.debug)
         pstdout_fprintf (pstate,
                          stderr,
                          "ipmi_cmd_set_pef_configuration_parameters_pef_action_global_control: %s\n",
@@ -910,7 +910,7 @@ pef_startup_delay_checkout (pstdout_state_t pstate,
     {
       config_err_t ret;
 
-      if (cmd_args->common.debug)
+      if (cmd_args->common_args.debug)
         pstdout_fprintf (pstate,
                          stderr,
                          "ipmi_cmd_get_pef_configuration_parameters_pef_startup_delay: %s\n",
@@ -974,7 +974,7 @@ pef_startup_delay_commit (pstdout_state_t pstate,
     {
       config_err_t ret;
 
-      if (cmd_args->common.debug)
+      if (cmd_args->common_args.debug)
         pstdout_fprintf (pstate,
                          stderr,
                          "ipmi_cmd_set_pef_configuration_parameters_pef_startup_delay: %s\n",
@@ -1027,7 +1027,7 @@ pef_alert_startup_delay_checkout (pstdout_state_t pstate,
     {
       config_err_t ret;
 
-      if (cmd_args->common.debug)
+      if (cmd_args->common_args.debug)
         pstdout_fprintf (pstate,
                          stderr,
                          "ipmi_cmd_get_pef_configuration_parameters_pef_alert_startup_delay: %s\n",
@@ -1091,7 +1091,7 @@ pef_alert_startup_delay_commit (pstdout_state_t pstate,
     {
       config_err_t ret;
 
-      if (cmd_args->common.debug)
+      if (cmd_args->common_args.debug)
         pstdout_fprintf (pstate,
                          stderr,
                          "ipmi_cmd_set_pef_configuration_parameters_pef_alert_startup_delay: %s\n",

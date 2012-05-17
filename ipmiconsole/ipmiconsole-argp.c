@@ -156,7 +156,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case ARGP_KEY_END:
       break;
     default:
-      return (common_parse_opt (key, arg, &(cmd_args->common)));
+      return (common_parse_opt (key, arg, &(cmd_args->common_args)));
     }
 
   return (0);
@@ -173,21 +173,21 @@ _ipmiconsole_config_file_parse (struct ipmiconsole_arguments *cmd_args)
           '\0',
           sizeof (struct config_file_data_ipmiconsole));
 
-  if (!cmd_args->common.config_file)
+  if (!cmd_args->common_args.config_file)
     {
       /* try legacy file first */
       if (!config_file_parse (IPMICONSOLE_CONFIG_FILE_LEGACY,
                               1,         /* do not exit if file not found */
-                              &(cmd_args->common),
+                              &(cmd_args->common_args),
                               CONFIG_FILE_OUTOFBAND,
                               CONFIG_FILE_TOOL_IPMICONSOLE,
                               &config_file_data))
         goto out;
     }
 
-  if (config_file_parse (cmd_args->common.config_file,
+  if (config_file_parse (cmd_args->common_args.config_file,
                          0,
-                         &(cmd_args->common),
+                         &(cmd_args->common_args),
                          CONFIG_FILE_OUTOFBAND,
                          CONFIG_FILE_TOOL_IPMICONSOLE,
                          &config_file_data) < 0)
@@ -214,7 +214,7 @@ _ipmiconsole_args_validate (struct ipmiconsole_arguments *cmd_args)
 {
   assert (cmd_args);
 
-  if (!cmd_args->common.hostname)
+  if (!cmd_args->common_args.hostname)
     {
       fprintf (stderr, "hostname input required\n");
       exit (EXIT_FAILURE);
@@ -228,12 +228,12 @@ ipmiconsole_argp_parse (int argc, char **argv, struct ipmiconsole_arguments *cmd
   assert (argv);
   assert (cmd_args);
 
-  init_common_cmd_args_admin (&(cmd_args->common));
+  init_common_cmd_args_admin (&(cmd_args->common_args));
 
   /* ipmiconsole differences */
-  cmd_args->common.driver_type = IPMI_DEVICE_LAN_2_0;
-  cmd_args->common.session_timeout = 60000;
-  cmd_args->common.retransmission_timeout = 500;
+  cmd_args->common_args.driver_type = IPMI_DEVICE_LAN_2_0;
+  cmd_args->common_args.session_timeout = 60000;
+  cmd_args->common_args.retransmission_timeout = 500;
 
   cmd_args->escape_char = '&';
   cmd_args->dont_steal = 0;
@@ -251,7 +251,7 @@ ipmiconsole_argp_parse (int argc, char **argv, struct ipmiconsole_arguments *cmd
               argv,
               ARGP_IN_ORDER,
               NULL,
-              &(cmd_args->common));
+              &(cmd_args->common_args));
 
   _ipmiconsole_config_file_parse (cmd_args);
 
@@ -262,7 +262,7 @@ ipmiconsole_argp_parse (int argc, char **argv, struct ipmiconsole_arguments *cmd
               NULL,
               cmd_args);
 
-  verify_common_cmd_args (&(cmd_args->common));
+  verify_common_cmd_args (&(cmd_args->common_args));
   _ipmiconsole_args_validate (cmd_args);
 }
 

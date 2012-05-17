@@ -1272,7 +1272,7 @@ run_cmd_args (ipmi_oem_state_data_t *state_data)
   assert (args->oem_id);
   assert (strcasecmp (args->oem_id, "list"));
   assert (strcasecmp (args->oem_id, "help"));
-  assert (!args->common.flush_cache);
+  assert (!args->common_args.flush_cache);
 
   if (_run_oem_cmd (state_data) < 0)
     goto cleanup;
@@ -1296,11 +1296,11 @@ _ipmi_oem (pstdout_state_t pstate,
 
   prog_data = (ipmi_oem_prog_data_t *)arg;
 
-  if (prog_data->args->common.flush_cache)
+  if (prog_data->args->common_args.flush_cache)
     {
       if (sdr_cache_flush_cache (pstate,
                                  hostname,
-                                 &prog_data->args->common) < 0)
+                                 &prog_data->args->common_args) < 0)
 	return (EXIT_FAILURE);
       return (EXIT_SUCCESS);
     }
@@ -1315,7 +1315,7 @@ _ipmi_oem (pstdout_state_t pstate,
     {
       if (!(state_data.ipmi_ctx = ipmi_open (prog_data->progname,
 					     hostname,
-					     &(prog_data->args->common),
+					     &(prog_data->args->common_args),
 					     state_data.pstate)))
 	goto cleanup;
     }
@@ -1328,7 +1328,7 @@ _ipmi_oem (pstdout_state_t pstate,
 
   if (sdr_cache_setup_debug (state_data.sdr_ctx,
 			     state_data.pstate,
-			     state_data.prog_data->args->common.debug,
+			     state_data.prog_data->args->common_args.debug,
 			     state_data.hostname) < 0)
     goto cleanup;
   
@@ -1370,8 +1370,8 @@ main (int argc, char **argv)
       return (EXIT_SUCCESS);
     }
 
-  if ((hosts_count = pstdout_setup (&(prog_data.args->common.hostname),
-				    &(prog_data.args->common))) < 0)
+  if ((hosts_count = pstdout_setup (&(prog_data.args->common_args.hostname),
+				    &(prog_data.args->common_args))) < 0)
     return (EXIT_FAILURE);
 
   if (!hosts_count)
@@ -1379,9 +1379,9 @@ main (int argc, char **argv)
 
   /* We don't want caching info to output when are doing ranged output */
   if (hosts_count > 1)
-    prog_data.args->common.quiet_cache = 1;
+    prog_data.args->common_args.quiet_cache = 1;
 
-  if ((rv = pstdout_launch (prog_data.args->common.hostname,
+  if ((rv = pstdout_launch (prog_data.args->common_args.hostname,
                             _ipmi_oem,
                             &prog_data)) < 0)
     {

@@ -156,7 +156,7 @@ _get_user_access (bmc_config_state_data_t *state_data,
                                     userid,
                                     obj_cmd_rs) < 0)
         {
-          if (state_data->prog_data->args->config_args.common.debug)
+          if (state_data->prog_data->args->config_args.common_args.debug)
             pstdout_fprintf (state_data->pstate,
                              stderr,
                              "ipmi_cmd_get_user_access: %s\n",
@@ -346,7 +346,7 @@ _set_user_access (bmc_config_state_data_t *state_data,
       /* This is a fatal error, we're already in this section,
        * it should be findable
        */
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "Cannot find section '%s'\n",
@@ -366,7 +366,7 @@ _set_user_access (bmc_config_state_data_t *state_data,
                                 ua->session_limit,
                                 obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_user_access: %s\n",
@@ -439,7 +439,7 @@ username_checkout (const char *section_name,
     {
       config_err_t ret;
 
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_user_name: %s\n",
@@ -563,7 +563,7 @@ username_commit (const char *section_name,
     {
       config_err_t ret;
 
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_user_name: %s\n",
@@ -601,7 +601,7 @@ username_commit (const char *section_name,
 				      userid,
 				      obj_get_user_name_cmd_rs) < 0)
 	    {
-	      if (state_data->prog_data->args->config_args.common.debug)
+	      if (state_data->prog_data->args->config_args.common_args.debug)
 		pstdout_fprintf (state_data->pstate,
 				 stderr,
 				 "ipmi_cmd_get_user_name: %s\n",
@@ -725,7 +725,7 @@ _check_bmc_user_password (bmc_config_state_data_t *state_data,
         {
           config_err_t ret;
 
-          if (state_data->prog_data->args->config_args.common.debug)
+          if (state_data->prog_data->args->config_args.common_args.debug)
             pstdout_fprintf (state_data->pstate,
                              stderr,
                              "ipmi_cmd_set_user_password: %s\n",
@@ -850,7 +850,7 @@ password_commit (const char *section_name,
         {
           config_err_t ret;
 
-          if (state_data->prog_data->args->config_args.common.debug)
+          if (state_data->prog_data->args->config_args.common_args.debug)
             pstdout_fprintf (state_data->pstate,
                              stderr,
                              "ipmi_cmd_set_user_password: %s\n",
@@ -874,7 +874,7 @@ password_commit (const char *section_name,
                                       strlen (kv->value_input),
                                       obj_cmd_rs) < 0)
         {
-          if (state_data->prog_data->args->config_args.common.debug)
+          if (state_data->prog_data->args->config_args.common_args.debug)
             pstdout_fprintf (state_data->pstate,
                              stderr,
                              "ipmi_cmd_set_user_password: %s\n",
@@ -1069,7 +1069,7 @@ password20_commit (const char *section_name,
     {
       config_err_t ret;
 
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_user_password: %s\n",
@@ -1230,7 +1230,7 @@ enable_user_commit (const char *section_name,
                                       0,
                                       obj_cmd_rs) < 0)
         {
-          if (state_data->prog_data->args->config_args.common.debug)
+          if (state_data->prog_data->args->config_args.common_args.debug)
             pstdout_fprintf (state_data->pstate,
                              stderr,
                              "ipmi_cmd_set_user_password: %s\n",
@@ -1260,7 +1260,7 @@ enable_user_commit (const char *section_name,
               && (ipmi_check_completion_code (obj_cmd_rs,
                                               IPMI_COMP_CODE_REQUEST_DATA_LENGTH_INVALID) == 1))
             {
-              if (state_data->prog_data->args->config_args.common.debug)
+              if (state_data->prog_data->args->config_args.common_args.debug)
                 pstdout_fprintf (state_data->pstate,
                                  stderr,
                                  "ipmi_cmd_set_user_password: attempting workaround\n");
@@ -1301,7 +1301,7 @@ enable_user_commit (const char *section_name,
                             obj_cmd_rq,
                             obj_cmd_rs) < 0)
                 {
-                  if (state_data->prog_data->args->config_args.common.debug)
+                  if (state_data->prog_data->args->config_args.common_args.debug)
                     pstdout_fprintf (state_data->pstate,
                                      stderr,
                                      "ipmi_cmd: %s\n",
@@ -1790,7 +1790,7 @@ sol_payload_access_checkout (const char *section_name,
                                         userid,
                                         obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_user_payload_access: %s\n",
@@ -1911,7 +1911,7 @@ sol_payload_access_commit (const char *section_name,
                                         0,
                                         obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_user_payload_access: %s\n",

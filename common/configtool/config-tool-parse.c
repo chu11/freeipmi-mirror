@@ -56,7 +56,7 @@ config_parse (pstdout_state_t pstate,
 
       if (!str)
         {
-          if (cmd_args->common.debug)
+          if (cmd_args->common_args.debug)
             pstdout_fprintf (pstate,
                              stderr,
                              "%d: empty line\n",
@@ -66,7 +66,7 @@ config_parse (pstdout_state_t pstate,
 
       if (str[0] == '#')
         {
-          if (cmd_args->common.debug)
+          if (cmd_args->common_args.debug)
             pstdout_fprintf (pstate,
                              stderr,
                              "Comment on line %d\n",
@@ -95,7 +95,7 @@ config_parse (pstdout_state_t pstate,
               goto cleanup;
             }
 
-          if (cmd_args->common.debug)
+          if (cmd_args->common_args.debug)
             pstdout_fprintf (pstate,
                              stderr,
                              "Entering section `%s'\n",
@@ -116,7 +116,7 @@ config_parse (pstdout_state_t pstate,
               goto cleanup;
             }
 
-          if (cmd_args->common.debug)
+          if (cmd_args->common_args.debug)
             pstdout_fprintf (pstate,
                              stderr,
                              "Leaving section `%s'\n",
@@ -151,7 +151,7 @@ config_parse (pstdout_state_t pstate,
       if (!tok)
         tok = "";
 
-      if (cmd_args->common.debug)
+      if (cmd_args->common_args.debug)
         pstdout_fprintf (pstate,
                          stderr,
                          "Parsed `%s:%s=%s'\n",

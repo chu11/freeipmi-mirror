@@ -162,7 +162,7 @@ _ipmipower_cleanup (void)
 static void
 _eliminate_nodes (void)
 {
-  if (cmd_args.common.eliminate)
+  if (cmd_args.common_args.eliminate)
     {
       ipmidetect_t id = NULL;
       int i;
@@ -556,11 +556,11 @@ main (int argc, char *argv[])
 
   ipmipower_powercmd_setup ();
 
-  if (cmd_args.common.hostname)
+  if (cmd_args.common_args.hostname)
     {
       unsigned int len = 0;
 
-      if (!(ics = ipmipower_connection_array_create (cmd_args.common.hostname, &len)))
+      if (!(ics = ipmipower_connection_array_create (cmd_args.common_args.hostname, &len)))
         {
           /* dump error outputs here, most notably invalid hostname output */
           cbuf_read_to_fd (ttyout, STDOUT_FILENO, -1);
@@ -580,7 +580,7 @@ main (int argc, char *argv[])
       char errbuf[IPMIPOWER_OUTPUT_BUFLEN + 1];
 
       /* must be checked in args parsing */
-      assert (cmd_args.common.hostname);
+      assert (cmd_args.common_args.hostname);
 
       cmd_args.ping_interval = 0;
 

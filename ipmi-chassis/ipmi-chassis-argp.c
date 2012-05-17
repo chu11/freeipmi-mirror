@@ -466,7 +466,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     default:
       ret = boot_flag_parse (key, arg, state);
       if (ret == ARGP_ERR_UNKNOWN)
-        ret = common_parse_opt (key, arg, &(cmd_args->common));
+        ret = common_parse_opt (key, arg, &(cmd_args->common_args));
       return (ret);
     }
 
@@ -478,9 +478,9 @@ _ipmi_chassis_config_file_parse (struct ipmi_chassis_arguments *cmd_args)
 {
   assert (cmd_args);
 
-  if (config_file_parse (cmd_args->common.config_file,
+  if (config_file_parse (cmd_args->common_args.config_file,
                          0,
-                         &(cmd_args->common),
+                         &(cmd_args->common_args),
                          CONFIG_FILE_INBAND | CONFIG_FILE_OUTOFBAND | CONFIG_FILE_HOSTRANGE,
                          CONFIG_FILE_TOOL_IPMI_CHASSIS,
                          NULL) < 0)
@@ -554,7 +554,7 @@ ipmi_chassis_argp_parse (int argc,
   assert (argv);
   assert (cmd_args);
 
-  init_common_cmd_args_admin (&(cmd_args->common));
+  init_common_cmd_args_admin (&(cmd_args->common_args));
 
   cmd_args->get_chassis_capabilities = 0;
   cmd_args->get_chassis_status = 0;
@@ -587,7 +587,7 @@ ipmi_chassis_argp_parse (int argc,
               argv,
               ARGP_IN_ORDER,
               NULL,
-              &(cmd_args->common));
+              &(cmd_args->common_args));
 
   _ipmi_chassis_config_file_parse (cmd_args);
 
@@ -598,7 +598,7 @@ ipmi_chassis_argp_parse (int argc,
               NULL,
               cmd_args);
 
-  verify_common_cmd_args (&(cmd_args->common));
+  verify_common_cmd_args (&(cmd_args->common_args));
   _ipmi_chassis_args_validate (cmd_args);
 }
 

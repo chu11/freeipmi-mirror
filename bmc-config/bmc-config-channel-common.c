@@ -174,7 +174,7 @@ _get_channel_access (bmc_config_state_data_t *state_data,
                                    access_type,
                                    obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_channel_access: %s\n",
@@ -300,7 +300,7 @@ _set_channel_access (bmc_config_state_data_t *state_data,
                                     : IPMI_PRIVILEGE_LEVEL_LIMIT_SET_NON_VOLATILE),
                                    obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_channel_access: %s\n",

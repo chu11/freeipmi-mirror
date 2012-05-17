@@ -45,14 +45,14 @@
 ipmi_ctx_t
 ipmi_open (const char *progname,
            const char *hostname,
-           struct common_cmd_args *cmd_args,
+           struct common_cmd_args *common_args,
 	   pstdout_state_t pstate)
 {
   ipmi_ctx_t ipmi_ctx = NULL;
   unsigned int workaround_flags = 0;
 
   assert (progname);
-  assert (cmd_args);
+  assert (common_args);
 
   if (!(ipmi_ctx = ipmi_ctx_create ()))
     {
@@ -67,33 +67,33 @@ ipmi_open (const char *progname,
       && strcasecmp (hostname, "localhost") != 0
       && strcmp (hostname, "127.0.0.1") != 0)
     {
-      if (cmd_args->driver_type == IPMI_DEVICE_LAN_2_0)
+      if (common_args->driver_type == IPMI_DEVICE_LAN_2_0)
         {
-          if (cmd_args->workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_AUTHENTICATION_CAPABILITIES)
+          if (common_args->workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_AUTHENTICATION_CAPABILITIES)
             workaround_flags |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_2_0_AUTHENTICATION_CAPABILITIES;
-          if (cmd_args->workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION)
+          if (common_args->workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION)
             workaround_flags |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION;
-          if (cmd_args->workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUPERMICRO_2_0_SESSION)
+          if (common_args->workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUPERMICRO_2_0_SESSION)
             workaround_flags |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUPERMICRO_2_0_SESSION;
-          if (cmd_args->workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUN_2_0_SESSION)
+          if (common_args->workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUN_2_0_SESSION)
             workaround_flags |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUN_2_0_SESSION;
-          if (cmd_args->workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_OPEN_SESSION_PRIVILEGE)
+          if (common_args->workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_OPEN_SESSION_PRIVILEGE)
             workaround_flags |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_2_0_OPEN_SESSION_PRIVILEGE;
-          if (cmd_args->workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_NON_EMPTY_INTEGRITY_CHECK_VALUE)
+          if (common_args->workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_NON_EMPTY_INTEGRITY_CHECK_VALUE)
             workaround_flags |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_2_0_NON_EMPTY_INTEGRITY_CHECK_VALUE;
           
           if (ipmi_ctx_open_outofband_2_0 (ipmi_ctx,
                                            hostname,
-                                           cmd_args->username,
-                                           cmd_args->password,
-                                           (cmd_args->k_g_len) ? cmd_args->k_g : NULL,
-                                           (cmd_args->k_g_len) ? cmd_args->k_g_len : 0,
-                                           cmd_args->privilege_level,
-                                           cmd_args->cipher_suite_id,
-                                           cmd_args->session_timeout,
-                                           cmd_args->retransmission_timeout,
+                                           common_args->username,
+                                           common_args->password,
+                                           (common_args->k_g_len) ? common_args->k_g : NULL,
+                                           (common_args->k_g_len) ? common_args->k_g_len : 0,
+                                           common_args->privilege_level,
+                                           common_args->cipher_suite_id,
+                                           common_args->session_timeout,
+                                           common_args->retransmission_timeout,
                                            workaround_flags,
-                                           (cmd_args->debug) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT) < 0)
+                                           (common_args->debug) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT) < 0)
             {
               if (ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_USERNAME_INVALID
                   || ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_PASSWORD_INVALID
@@ -121,27 +121,27 @@ ipmi_open (const char *progname,
         }
       else
         {
-          if (cmd_args->workaround_flags_outofband & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_ACCEPT_SESSION_ID_ZERO)
+          if (common_args->workaround_flags_outofband & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_ACCEPT_SESSION_ID_ZERO)
             workaround_flags |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_ACCEPT_SESSION_ID_ZERO;
-          if (cmd_args->workaround_flags_outofband & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_FORCE_PERMSG_AUTHENTICATION)
+          if (common_args->workaround_flags_outofband & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_FORCE_PERMSG_AUTHENTICATION)
             workaround_flags |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_FORCE_PERMSG_AUTHENTICATION;
-          if (cmd_args->workaround_flags_outofband & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_CHECK_UNEXPECTED_AUTHCODE)
+          if (common_args->workaround_flags_outofband & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_CHECK_UNEXPECTED_AUTHCODE)
             workaround_flags |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_CHECK_UNEXPECTED_AUTHCODE;
-          if (cmd_args->workaround_flags_outofband & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_BIG_ENDIAN_SEQUENCE_NUMBER)
+          if (common_args->workaround_flags_outofband & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_BIG_ENDIAN_SEQUENCE_NUMBER)
             workaround_flags |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_BIG_ENDIAN_SEQUENCE_NUMBER;
-          if (cmd_args->workaround_flags_outofband & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_AUTHENTICATION_CAPABILITIES)
+          if (common_args->workaround_flags_outofband & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_AUTHENTICATION_CAPABILITIES)
             workaround_flags |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_AUTHENTICATION_CAPABILITIES;
 
           if (ipmi_ctx_open_outofband (ipmi_ctx,
                                        hostname,
-                                       cmd_args->username,
-                                       cmd_args->password,
-                                       cmd_args->authentication_type,
-                                       cmd_args->privilege_level,
-                                       cmd_args->session_timeout,
-                                       cmd_args->retransmission_timeout,
+                                       common_args->username,
+                                       common_args->password,
+                                       common_args->authentication_type,
+                                       common_args->privilege_level,
+                                       common_args->session_timeout,
+                                       common_args->retransmission_timeout,
                                        workaround_flags,
-                                       (cmd_args->debug) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT) < 0)
+                                       (common_args->debug) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT) < 0)
             {
               if (ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_USERNAME_INVALID
                   || ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_PASSWORD_INVALID
@@ -177,24 +177,24 @@ ipmi_open (const char *progname,
           goto cleanup;
         }
 
-      if (cmd_args->workaround_flags_inband & IPMI_PARSE_WORKAROUND_FLAGS_INBAND_ASSUME_IO_BASE_ADDRESS)
+      if (common_args->workaround_flags_inband & IPMI_PARSE_WORKAROUND_FLAGS_INBAND_ASSUME_IO_BASE_ADDRESS)
         workaround_flags |= IPMI_WORKAROUND_FLAGS_INBAND_ASSUME_IO_BASE_ADDRESS;
 
-      if (cmd_args->workaround_flags_inband & IPMI_PARSE_WORKAROUND_FLAGS_INBAND_SPIN_POLL)
+      if (common_args->workaround_flags_inband & IPMI_PARSE_WORKAROUND_FLAGS_INBAND_SPIN_POLL)
         workaround_flags |= IPMI_WORKAROUND_FLAGS_INBAND_SPIN_POLL;
 
-      if (cmd_args->driver_type == IPMI_DEVICE_UNKNOWN)
+      if (common_args->driver_type == IPMI_DEVICE_UNKNOWN)
         {
           int ret;
 
           if ((ret = ipmi_ctx_find_inband (ipmi_ctx,
                                            NULL,
-                                           cmd_args->disable_auto_probe,
-                                           cmd_args->driver_address,
-                                           cmd_args->register_spacing,
-                                           cmd_args->driver_device,
+                                           common_args->disable_auto_probe,
+                                           common_args->driver_address,
+                                           common_args->register_spacing,
+                                           common_args->driver_device,
                                            workaround_flags,
-                                           (cmd_args->debug) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT)) < 0)
+                                           (common_args->debug) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT)) < 0)
             {
               PSTDOUT_FPRINTF (pstate,
 			       stderr,
@@ -214,13 +214,13 @@ ipmi_open (const char *progname,
       else
         {
           if (ipmi_ctx_open_inband (ipmi_ctx,
-                                    cmd_args->driver_type,
-                                    cmd_args->disable_auto_probe,
-                                    cmd_args->driver_address,
-                                    cmd_args->register_spacing,
-                                    cmd_args->driver_device,
+                                    common_args->driver_type,
+                                    common_args->disable_auto_probe,
+                                    common_args->driver_address,
+                                    common_args->register_spacing,
+                                    common_args->driver_device,
                                     workaround_flags,
-                                    (cmd_args->debug) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT) < 0)
+                                    (common_args->debug) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT) < 0)
             {
               if (ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_DEVICE_NOT_FOUND)
                 PSTDOUT_FPRINTF (pstate,
@@ -238,12 +238,12 @@ ipmi_open (const char *progname,
         }
     }
 
-  if (cmd_args->target_channel_number_is_set
-      || cmd_args->target_slave_address_is_set)
+  if (common_args->target_channel_number_is_set
+      || common_args->target_slave_address_is_set)
     {
       if (ipmi_ctx_set_target (ipmi_ctx,
-			       cmd_args->target_channel_number_is_set ? &cmd_args->target_channel_number : NULL,
-			       cmd_args->target_slave_address_is_set ? &cmd_args->target_slave_address : NULL) < 0)
+			       common_args->target_channel_number_is_set ? &common_args->target_channel_number : NULL,
+			       common_args->target_slave_address_is_set ? &common_args->target_slave_address : NULL) < 0)
 	{
 	  PSTDOUT_FPRINTF (pstate,
 			   stderr,

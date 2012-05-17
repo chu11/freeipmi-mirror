@@ -95,7 +95,7 @@ _cmd_driver_type (char **argv)
                                argv[1]);
       else
         {
-          cmd_args.common.driver_type = tmp;
+          cmd_args.common_args.driver_type = tmp;
           ipmipower_cbuf_printf (ttyout,
                                  "driver type is now %s\n",
                                  argv[1]);
@@ -111,8 +111,8 @@ _cmd_driver_type (char **argv)
 static void
 _cmd_hostname_clear (void)
 {
-  free (cmd_args.common.hostname);
-  cmd_args.common.hostname = NULL;
+  free (cmd_args.common_args.hostname);
+  cmd_args.common_args.hostname = NULL;
       
   ipmipower_connection_array_destroy (ics, ics_len);
   ics = NULL;
@@ -151,7 +151,7 @@ _cmd_hostname (char **argv)
       ics = icsPtr;
       ics_len = len;
       
-      if (!(cmd_args.common.hostname = strdup (argv[1])))
+      if (!(cmd_args.common_args.hostname = strdup (argv[1])))
         {
           IPMIPOWER_ERROR (("strdup: %s", strerror(errno)));
           exit (EXIT_FAILURE);
@@ -161,7 +161,7 @@ _cmd_hostname (char **argv)
 
       ipmipower_cbuf_printf (ttyout,
                              "hostname: %s\n",
-                             cmd_args.common.hostname);
+                             cmd_args.common_args.hostname);
     }
 }
 
@@ -173,12 +173,12 @@ _cmd_username (char **argv)
   if (!argv[1]
       || (argv[1] && strlen (argv[1]) <= IPMI_MAX_USER_NAME_LENGTH))
     {
-      free (cmd_args.common.username);
-      cmd_args.common.username = NULL;
+      free (cmd_args.common_args.username);
+      cmd_args.common_args.username = NULL;
 
       if (argv[1])
         {
-          if (!(cmd_args.common.username = strdup (argv[1])))
+          if (!(cmd_args.common_args.username = strdup (argv[1])))
             {
               IPMIPOWER_ERROR (("strdup: %s", strerror(errno)));
               exit (EXIT_FAILURE);
@@ -187,7 +187,7 @@ _cmd_username (char **argv)
 
       ipmipower_cbuf_printf (ttyout,
                              "username: %s\n",
-                             (cmd_args.common.username) ? cmd_args.common.username : "NULL");
+                             (cmd_args.common_args.username) ? cmd_args.common_args.username : "NULL");
     }
   else
     ipmipower_cbuf_printf (ttyout, "username invalid length\n");
@@ -198,23 +198,23 @@ _cmd_password (char **argv)
 {
   assert (argv);
 
-  if (argv[1] && cmd_args.common.authentication_type == IPMI_AUTHENTICATION_TYPE_NONE)
+  if (argv[1] && cmd_args.common_args.authentication_type == IPMI_AUTHENTICATION_TYPE_NONE)
     ipmipower_cbuf_printf (ttyout,
                            "password cannot be set for authentication_type '%s'\n",
                            IPMI_PARSE_AUTHENTICATION_TYPE_NONE_STR);
   else if (!argv[1]
            || (argv[1]
-               && ((cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0
+               && ((cmd_args.common_args.driver_type == IPMI_DEVICE_LAN_2_0
                     && strlen (argv[1]) <= IPMI_2_0_MAX_PASSWORD_LENGTH)
-                   || (cmd_args.common.driver_type == IPMI_DEVICE_LAN
+                   || (cmd_args.common_args.driver_type == IPMI_DEVICE_LAN
                        && strlen (argv[1]) <= IPMI_1_5_MAX_PASSWORD_LENGTH))))
     {
-      free (cmd_args.common.password);
-      cmd_args.common.password = NULL;
+      free (cmd_args.common_args.password);
+      cmd_args.common_args.password = NULL;
 
       if (argv[1])
         {
-          if (!(cmd_args.common.password = strdup (argv[1])))
+          if (!(cmd_args.common_args.password = strdup (argv[1])))
             {
               IPMIPOWER_ERROR (("strdup: %s", strerror(errno)));
               exit (EXIT_FAILURE);
@@ -226,7 +226,7 @@ _cmd_password (char **argv)
 #else  /* !NDEBUG */
       ipmipower_cbuf_printf (ttyout,
                              "password: %s\n",
-                             (cmd_args.common.password) ? cmd_args.common.password : "NULL");
+                             (cmd_args.common_args.password) ? cmd_args.common_args.password : "NULL");
 #endif /* !NDEBUG */
     }
   else
@@ -243,28 +243,28 @@ _cmd_k_g (char **argv)
 
   assert (argv);
 
-  if (cmd_args.common.driver_type == IPMI_DEVICE_LAN)
+  if (cmd_args.common_args.driver_type == IPMI_DEVICE_LAN)
     ipmipower_cbuf_printf (ttyout, "k_g is only used for IPMI 2.0");
   else
     {
-      memset (cmd_args.common.k_g, '\0', IPMI_MAX_K_G_LENGTH);
+      memset (cmd_args.common_args.k_g, '\0', IPMI_MAX_K_G_LENGTH);
 
       if (argv[1])
-        rv = parse_kg (cmd_args.common.k_g, IPMI_MAX_K_G_LENGTH + 1, argv[1]);
+        rv = parse_kg (cmd_args.common_args.k_g, IPMI_MAX_K_G_LENGTH + 1, argv[1]);
 
       if (rv < 0)
         ipmipower_cbuf_printf (ttyout, "k_g invalid\n");
       else
         {
-          cmd_args.common.k_g_len = rv;
+          cmd_args.common_args.k_g_len = rv;
 #ifdef NDEBUG
           ipmipower_cbuf_printf (ttyout, "k_g changed\n");
 #else  /* !NDEBUG */
           ipmipower_cbuf_printf (ttyout,
 "k_g: %s\n",
-                                 (cmd_args.common.k_g_len) ? format_kg (buf,
-                                                                        IPMI_MAX_K_G_LENGTH*2+3,
-                                                                        cmd_args.common.k_g) : "NULL");
+                                 (cmd_args.common_args.k_g_len) ? format_kg (buf,
+									     IPMI_MAX_K_G_LENGTH*2+3,
+									     cmd_args.common_args.k_g) : "NULL");
 #endif /* !NDEBUG */
         }
     }
@@ -285,7 +285,7 @@ _cmd_authentication_type (char **argv)
                                argv[1]);
       else
         {
-          cmd_args.common.authentication_type = tmp;
+          cmd_args.common_args.authentication_type = tmp;
           ipmipower_cbuf_printf (ttyout,
                                  "authentication type is now %s\n",
                                  argv[1]);
@@ -325,7 +325,7 @@ _cmd_cipher_suite_id (char **argv)
                                argv[1]);
       else
         {
-          cmd_args.common.cipher_suite_id = tmp;
+          cmd_args.common_args.cipher_suite_id = tmp;
           ipmipower_cbuf_printf (ttyout,
                                  "cipher suite id is now %s\n",
                                  argv[1]);
@@ -351,7 +351,7 @@ _cmd_privilege_level (char **argv)
                                argv[1]);
       else
         {
-          cmd_args.common.authentication_type = tmp;
+          cmd_args.common_args.authentication_type = tmp;
           ipmipower_cbuf_printf (ttyout,
                                  "privilege_level type is now %s\n",
                                  argv[1]);
@@ -383,9 +383,9 @@ _cmd_workaround_flags (char **argv)
                                argv[1]);
       else
         {
-          cmd_args.common.workaround_flags_outofband = outofband_flags;
-          cmd_args.common.workaround_flags_outofband_2_0 = outofband_2_0_flags;
-          cmd_args.common.workaround_flags_inband = inband_flags;
+          cmd_args.common_args.workaround_flags_outofband = outofband_flags;
+          cmd_args.common_args.workaround_flags_outofband_2_0 = outofband_2_0_flags;
+          cmd_args.common_args.workaround_flags_inband = inband_flags;
           ipmipower_cbuf_printf (ttyout,
                                  "workaround flags are now %s\n",
                                  argv[1]);
@@ -610,7 +610,7 @@ _cmd_power (char **argv, ipmipower_power_cmd_t cmd)
   assert (IPMIPOWER_POWER_CMD_VALID (cmd));
   assert (IPMIPOWER_OEM_POWER_TYPE_VALID (cmd_args.oem_power_type));
   
-  if (!cmd_args.common.hostname)
+  if (!cmd_args.common_args.hostname)
     {
       ipmipower_cbuf_printf (ttyout, "no hostname(s) configured\n");
       return;
@@ -726,13 +726,13 @@ _cmd_debug (char **argv)
   assert (argv);
 
   if (!argv[1])
-    cmd_args.common.debug = !cmd_args.common.debug;
+    cmd_args.common_args.debug = !cmd_args.common_args.debug;
   else
     {
       if (!strcasecmp (argv[1], "on"))
-        cmd_args.common.debug = 1;
+        cmd_args.common_args.debug = 1;
       else if (!strcasecmp (argv[1], "off"))
-        cmd_args.common.debug = 0;
+        cmd_args.common_args.debug = 0;
       else
         {
           ipmipower_cbuf_printf (ttyout, "invalid parameter\n");
@@ -740,7 +740,7 @@ _cmd_debug (char **argv)
         }
     }
   ipmipower_cbuf_printf (ttyout,
-                         "debugging is now %s\n", (cmd_args.common.debug) ? "on" : "off");
+                         "debugging is now %s\n", (cmd_args.common_args.debug) ? "on" : "off");
 }
 
 static void
@@ -754,16 +754,16 @@ _cmd_config (void)
   int is_first = 0;
 
   str = "";
-  if (cmd_args.common.driver_type == IPMI_DEVICE_LAN)
+  if (cmd_args.common_args.driver_type == IPMI_DEVICE_LAN)
     str = IPMI_PARSE_DEVICE_LAN_STR;
-  else if (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0)
+  else if (cmd_args.common_args.driver_type == IPMI_DEVICE_LAN_2_0)
     str = IPMI_PARSE_DEVICE_LAN_2_0_STR;
 
   ipmipower_cbuf_printf (ttyout,
                          "Driver_Type:                  %s\n",
                          str);
 
-  if (cmd_args.common.hostname)
+  if (cmd_args.common_args.hostname)
     {
 #ifndef NDEBUG
       int i;
@@ -776,7 +776,7 @@ _cmd_config (void)
 
       ipmipower_cbuf_printf (ttyout,
                              "Hostname:                     %s\n",
-                             cmd_args.common.hostname);
+                             cmd_args.common_args.hostname);
 
 #ifndef NDEBUG
       if (!(discovered = hostlist_create (NULL)))
@@ -848,16 +848,16 @@ _cmd_config (void)
 
   ipmipower_cbuf_printf (ttyout,
                          "Username:                     %s\n",
-                         (cmd_args.common.username) ? cmd_args.common.username : "NULL");
+                         (cmd_args.common_args.username) ? cmd_args.common_args.username : "NULL");
 
 #ifndef NDEBUG
   ipmipower_cbuf_printf (ttyout,
                          "Password:                     %s\n",
-                         (cmd_args.common.password) ? cmd_args.common.password : "NULL");
+                         (cmd_args.common_args.password) ? cmd_args.common_args.password : "NULL");
   ipmipower_cbuf_printf (ttyout,
                          "K_g:                          %s\n",
-                         (cmd_args.common.k_g_len) ?
-                         format_kg (kgbuf, IPMI_MAX_K_G_LENGTH*2+3, cmd_args.common.k_g) : "NULL");
+                         (cmd_args.common_args.k_g_len) ?
+                         format_kg (kgbuf, IPMI_MAX_K_G_LENGTH*2+3, cmd_args.common_args.k_g) : "NULL");
 #else  /* !NDEBUG */
   ipmipower_cbuf_printf (ttyout,
                          "Password:                     *****\n");
@@ -867,19 +867,19 @@ _cmd_config (void)
 
   ipmipower_cbuf_printf (ttyout,
                          "Session Timeout:              %u ms\n",
-                         cmd_args.common.session_timeout);
+                         cmd_args.common_args.session_timeout);
   ipmipower_cbuf_printf (ttyout,
                          "Retransmission Timeout:       %u ms\n",
-                         cmd_args.common.retransmission_timeout);
+                         cmd_args.common_args.retransmission_timeout);
 
   str = "";
-  if (cmd_args.common.authentication_type == IPMI_AUTHENTICATION_TYPE_NONE)
+  if (cmd_args.common_args.authentication_type == IPMI_AUTHENTICATION_TYPE_NONE)
     str = IPMI_PARSE_AUTHENTICATION_TYPE_NONE_STR;
-  else if (cmd_args.common.authentication_type == IPMI_AUTHENTICATION_TYPE_MD2)
+  else if (cmd_args.common_args.authentication_type == IPMI_AUTHENTICATION_TYPE_MD2)
     str = IPMI_PARSE_AUTHENTICATION_TYPE_MD2_STR;
-  else if (cmd_args.common.authentication_type == IPMI_AUTHENTICATION_TYPE_MD5)
+  else if (cmd_args.common_args.authentication_type == IPMI_AUTHENTICATION_TYPE_MD5)
     str = IPMI_PARSE_AUTHENTICATION_TYPE_MD5_STR;
-  else if (cmd_args.common.authentication_type == IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY)
+  else if (cmd_args.common_args.authentication_type == IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY)
     str = IPMI_PARSE_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY_STR;
 
   ipmipower_cbuf_printf (ttyout,
@@ -887,23 +887,23 @@ _cmd_config (void)
                          str);
 
   str = "";
-  if (cmd_args.common.cipher_suite_id == 0)
+  if (cmd_args.common_args.cipher_suite_id == 0)
     str = "0";
-  else if (cmd_args.common.cipher_suite_id == 1)
+  else if (cmd_args.common_args.cipher_suite_id == 1)
     str = "1";
-  else if (cmd_args.common.cipher_suite_id == 2)
+  else if (cmd_args.common_args.cipher_suite_id == 2)
     str = "2";
-  else if (cmd_args.common.cipher_suite_id == 3)
+  else if (cmd_args.common_args.cipher_suite_id == 3)
     str = "3";
-  else if (cmd_args.common.cipher_suite_id == 6)
+  else if (cmd_args.common_args.cipher_suite_id == 6)
     str = "6";
-  else if (cmd_args.common.cipher_suite_id == 7)
+  else if (cmd_args.common_args.cipher_suite_id == 7)
     str = "7";
-  else if (cmd_args.common.cipher_suite_id == 8)
+  else if (cmd_args.common_args.cipher_suite_id == 8)
     str = "8";
-  else if (cmd_args.common.cipher_suite_id == 11)
+  else if (cmd_args.common_args.cipher_suite_id == 11)
     str = "11";
-  else if (cmd_args.common.cipher_suite_id == 12)
+  else if (cmd_args.common_args.cipher_suite_id == 12)
     str = "12";
 
   ipmipower_cbuf_printf (ttyout,
@@ -911,11 +911,11 @@ _cmd_config (void)
                          str);
 
   str = "";
-  if (cmd_args.common.privilege_level == IPMI_PRIVILEGE_LEVEL_USER)
+  if (cmd_args.common_args.privilege_level == IPMI_PRIVILEGE_LEVEL_USER)
     str = IPMI_PARSE_PRIVILEGE_LEVEL_USER_STR;
-  else if (cmd_args.common.privilege_level == IPMI_PRIVILEGE_LEVEL_OPERATOR)
+  else if (cmd_args.common_args.privilege_level == IPMI_PRIVILEGE_LEVEL_OPERATOR)
     str = IPMI_PARSE_PRIVILEGE_LEVEL_OPERATOR_STR;
-  else if (cmd_args.common.privilege_level == IPMI_PRIVILEGE_LEVEL_ADMIN)
+  else if (cmd_args.common_args.privilege_level == IPMI_PRIVILEGE_LEVEL_ADMIN)
     str = IPMI_PARSE_PRIVILEGE_LEVEL_ADMIN_STR;
 
   ipmipower_cbuf_printf (ttyout,
@@ -925,60 +925,60 @@ _cmd_config (void)
   memset (strbuf, '\0', IPMIPOWER_OUTPUT_BUFLEN);
   is_first = 0;
   _workarounds_strcat (strbuf,
-                       cmd_args.common.workaround_flags_outofband,
+                       cmd_args.common_args.workaround_flags_outofband,
                        IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_AUTHENTICATION_CAPABILITIES,
                        IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_AUTHENTICATION_CAPABILITIES_STR,
                        &is_first);
   _workarounds_strcat (strbuf,
-                       cmd_args.common.workaround_flags_outofband,
+                       cmd_args.common_args.workaround_flags_outofband,
                        IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_ACCEPT_SESSION_ID_ZERO,
                        IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_ACCEPT_SESSION_ID_ZERO_STR,
                        &is_first);
   _workarounds_strcat (strbuf,
-                       cmd_args.common.workaround_flags_outofband,
+                       cmd_args.common_args.workaround_flags_outofband,
                        IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_FORCE_PERMSG_AUTHENTICATION,
                        IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_FORCE_PERMSG_AUTHENTICATION_STR,
                        &is_first);
   _workarounds_strcat (strbuf,
-                       cmd_args.common.workaround_flags_outofband,
+                       cmd_args.common_args.workaround_flags_outofband,
                        IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_CHECK_UNEXPECTED_AUTHCODE,
                        IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_CHECK_UNEXPECTED_AUTHCODE_STR,
                        &is_first);
   _workarounds_strcat (strbuf,
-                       cmd_args.common.workaround_flags_outofband,
+                       cmd_args.common_args.workaround_flags_outofband,
                        IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_BIG_ENDIAN_SEQUENCE_NUMBER,
                        IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_BIG_ENDIAN_SEQUENCE_NUMBER_STR,
                        &is_first);
   /* This is a duplicate of the IPMI 1.5 version */
 #if 0
   _workarounds_strcat (strbuf,
-                       cmd_args.common.workaround_flags_outofband_2_0,
+                       cmd_args.common_args.workaround_flags_outofband_2_0,
                        IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_AUTHENTICATION_CAPABILITIES,
                        IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_AUTHENTICATION_CAPABILITIES_STR,
                        &is_first);
 #endif
   _workarounds_strcat (strbuf,
-                       cmd_args.common.workaround_flags_outofband_2_0,
+                       cmd_args.common_args.workaround_flags_outofband_2_0,
                        IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION,
                        IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION_STR,
                        &is_first);
   _workarounds_strcat (strbuf,
-                       cmd_args.common.workaround_flags_outofband_2_0,
+                       cmd_args.common_args.workaround_flags_outofband_2_0,
                        IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUPERMICRO_2_0_SESSION,
                        IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUPERMICRO_2_0_SESSION_STR,
                        &is_first);
   _workarounds_strcat (strbuf,
-                       cmd_args.common.workaround_flags_outofband_2_0,
+                       cmd_args.common_args.workaround_flags_outofband_2_0,
                        IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUN_2_0_SESSION,
                        IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUN_2_0_SESSION_STR,
                        &is_first);
   _workarounds_strcat (strbuf,
-                       cmd_args.common.workaround_flags_outofband_2_0,
+                       cmd_args.common_args.workaround_flags_outofband_2_0,
                        IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_OPEN_SESSION_PRIVILEGE,
                        IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_OPEN_SESSION_PRIVILEGE_STR,
                        &is_first);
   _workarounds_strcat (strbuf,
-                       cmd_args.common.workaround_flags_outofband_2_0,
+                       cmd_args.common_args.workaround_flags_outofband_2_0,
                        IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_NON_EMPTY_INTEGRITY_CHECK_VALUE,
                        IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_NON_EMPTY_INTEGRITY_CHECK_VALUE_STR,
                        &is_first);
@@ -989,7 +989,7 @@ _cmd_config (void)
 
   ipmipower_cbuf_printf (ttyout,
                          "Debug:                        %s\n",
-                         cmd_args.common.debug ? "on" : "off");
+                         cmd_args.common_args.debug ? "on" : "off");
 
 #ifndef NDEBUG
   ipmipower_cbuf_printf (ttyout,
@@ -1030,16 +1030,16 @@ _cmd_config (void)
 
   ipmipower_cbuf_printf (ttyout,
                          "Buffer-Output:                %s\n",
-                         (cmd_args.common.buffer_output) ? "enabled" : "disabled");
+                         (cmd_args.common_args.buffer_output) ? "enabled" : "disabled");
   ipmipower_cbuf_printf (ttyout,
                          "Consolidate-Output:           %s\n",
-                         (cmd_args.common.consolidate_output) ? "enabled" : "disabled");
+                         (cmd_args.common_args.consolidate_output) ? "enabled" : "disabled");
   ipmipower_cbuf_printf (ttyout,
                          "Fanout:                       %u\n",
-                         cmd_args.common.fanout);
+                         cmd_args.common_args.fanout);
   ipmipower_cbuf_printf (ttyout,
                          "Always-Prefix:                %s\n",
-                         (cmd_args.common.always_prefix) ? "enabled" : "disabled");
+                         (cmd_args.common_args.always_prefix) ? "enabled" : "disabled");
 }
 
 static void
@@ -1239,18 +1239,18 @@ ipmipower_prompt_process_cmdline (void)
               else if (!strcmp (argv[0], "timeout")
                        || !strcmp (argv[0], "session-timeout"))
                 _cmd_set_unsigned_int (argv,
-                                       &cmd_args.common.session_timeout,
+                                       &cmd_args.common_args.session_timeout,
                                        "timeout",
                                        0);
               /* support "retry-timeout" for backwards compatability */
               else if (!strcmp (argv[0], "retry-timeout")
                        || !strcmp (argv[0], "retransmission-timeout"))
                 _cmd_set_unsigned_int_ranged (argv,
-                                              &cmd_args.common.retransmission_timeout,
+                                              &cmd_args.common_args.retransmission_timeout,
                                               "retransmission-timeout",
                                               0,
                                               1,
-                                              cmd_args.common.session_timeout);
+                                              cmd_args.common_args.session_timeout);
               /* support underscored version for backwards compatability */
               else if (!strcmp (argv[0], "authentication_type")
                        || !strcmp (argv[0], "authentication-type"))
@@ -1315,7 +1315,7 @@ ipmipower_prompt_process_cmdline (void)
                                               "retransmission-wait-timeout",
                                               0,
                                               1,
-                                              cmd_args.common.session_timeout);
+                                              cmd_args.common_args.session_timeout);
               /* support "retry-backoff-count" for backwards compatability */
               else if (!strcmp (argv[0], "retry-backoff-count")
                        || !strcmp (argv[0], "retransmission-backoff-count"))
@@ -1354,19 +1354,19 @@ ipmipower_prompt_process_cmdline (void)
                                               cmd_args.ping_packet_count);
               else if (!strcmp (argv[0], "buffer-output"))
                 _cmd_set_flag (argv,
-                               &cmd_args.common.buffer_output,
+                               &cmd_args.common_args.buffer_output,
                                "buffer-output");
               else if (!strcmp (argv[0], "consolidate-output"))
                 _cmd_set_flag (argv,
-                               &cmd_args.common.consolidate_output,
+                               &cmd_args.common_args.consolidate_output,
                                "consolidate-output");
               else if (!strcmp (argv[0], "always-prefix"))
                 _cmd_set_flag (argv,
-                               &cmd_args.common.always_prefix,
+                               &cmd_args.common_args.always_prefix,
                                "always-prefix");
               else if (!strcmp (argv[0], "fanout"))
                 _cmd_set_unsigned_int_ranged (argv,
-                                              &cmd_args.common.fanout,
+                                              &cmd_args.common_args.fanout,
                                               "fanout",
                                               1,
                                               PSTDOUT_FANOUT_MIN,

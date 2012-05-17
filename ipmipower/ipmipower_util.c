@@ -107,7 +107,7 @@ ipmipower_power_cmd_check_privilege (ipmipower_power_cmd_t cmd,
   assert (errbuflen);
   assert (cmd_args.oem_power_type == IPMIPOWER_OEM_POWER_TYPE_NONE);
   
-  if (cmd_args.common.privilege_level == IPMI_PRIVILEGE_LEVEL_USER
+  if (cmd_args.common_args.privilege_level == IPMI_PRIVILEGE_LEVEL_USER
       && IPMIPOWER_POWER_CMD_REQUIRES_OPERATOR_PRIVILEGE_LEVEL (cmd))
     {
       char *power_cmd_str;

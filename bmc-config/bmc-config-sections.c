@@ -82,7 +82,7 @@ _get_number_of_users (bmc_config_state_data_t *state_data, uint8_t *number_of_us
                                 1, /* user_id number */
                                 obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_user_access: %s\n",

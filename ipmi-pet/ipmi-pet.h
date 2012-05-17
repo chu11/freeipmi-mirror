@@ -49,7 +49,7 @@ enum ipmi_pet_argp_option_keys
 
 struct ipmi_pet_arguments
 {
-  struct common_cmd_args common;
+  struct common_cmd_args common_args;
   int verbose_count;
   int pet_acknowledge;
   char *cmd_file;

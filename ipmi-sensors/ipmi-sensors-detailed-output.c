@@ -816,7 +816,7 @@ _detailed_output_hysteresis (ipmi_sensors_state_data_t *state_data,
                                       IPMI_SENSOR_HYSTERESIS_MASK,
                                       obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->common.debug)
+      if (state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_sensor_hysteresis: %s\n",
@@ -1061,7 +1061,7 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
       && event_reading_type_code_class != IPMI_EVENT_READING_TYPE_CODE_CLASS_GENERIC_DISCRETE
       && event_reading_type_code_class !=  IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE)
     {
-      if (state_data->prog_data->args->common.debug)
+      if (state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "Cannot handle event enables for event type reading code: 0x%X\n",
@@ -1098,7 +1098,7 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
                                         sensor_number,
                                         obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->common.debug)
+      if (state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_sensor_hysteresis: %s\n",

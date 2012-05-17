@@ -82,7 +82,7 @@ _get_boot_flags (ipmi_chassis_config_state_data_t *state_data,
     {
       config_err_t ret;
 
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_system_boot_options_boot_flags: %s\n",
@@ -311,7 +311,7 @@ _set_boot_flags (ipmi_chassis_config_state_data_t *state_data,
     {
       config_err_t ret;
 
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_system_boot_options_boot_flags: %s\n",
@@ -879,7 +879,7 @@ _set_system_boot_options_BMC_boot_flag_valid_bit_clearing (ipmi_chassis_config_s
     {
       config_err_t ret;
       
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing: %s\n",
@@ -928,7 +928,7 @@ _set_system_boot_options_boot_info_acknowledge (ipmi_chassis_config_state_data_t
     {
       config_err_t ret;
 
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_system_boot_options_boot_info_acknowledge: %s\n",

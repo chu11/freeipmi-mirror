@@ -35,7 +35,7 @@ enum ipmi_sensors_argp_option_keys
 
 struct ipmi_oem_arguments
 {
-  struct common_cmd_args common;
+  struct common_cmd_args common_args;
   int list;
   int verbose_count;
   char *oem_id;
