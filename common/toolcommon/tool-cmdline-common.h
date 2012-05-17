@@ -212,6 +212,7 @@ enum argp_common_option_keys
 
 struct common_cmd_args
 {
+  /* inband options */
   ipmi_driver_type_t driver_type;
   int driver_type_outofband_only; /* flag - set internally only */
   int disable_auto_probe;
@@ -222,36 +223,38 @@ struct common_cmd_args
   int target_channel_number_is_set; /* user can input zero, so need a flag */
   uint8_t target_slave_address;
   int target_slave_address_is_set; /* user can input zero so need a flag */
-  unsigned int session_timeout;
-  unsigned int retransmission_timeout;
+
+  /* outofband options */
   char *hostname;
   char *username;
   char *password;
   uint8_t k_g[IPMI_MAX_K_G_LENGTH+1];
   unsigned int k_g_len;
+  unsigned int session_timeout;
+  unsigned int retransmission_timeout;
   int authentication_type;
   int cipher_suite_id;
   int privilege_level;
+
+  /* 
+   * misc options
+   */
   char *config_file;
   unsigned int workaround_flags_outofband;
   unsigned int workaround_flags_outofband_2_0;
   unsigned int workaround_flags_inband;
   unsigned int section_specific_workaround_flags;
   int debug;
-};
 
-struct sdr_cmd_args
-{
+  /* sdr options */
   int flush_cache;
   int quiet_cache;
   char *sdr_cache_file;
   int sdr_cache_recreate;
   char *sdr_cache_directory;
   int ignore_sdr_cache;
-};
 
-struct hostrange_cmd_args
-{
+  /* hostrange options */
   int buffer_output;
   int consolidate_output;
   unsigned int fanout;
@@ -263,26 +266,12 @@ error_t common_parse_opt (int key,
                           char *arg,
                           struct common_cmd_args *common_cmd_args);
 
-error_t sdr_parse_opt (int key,
-                       char *arg,
-                       struct sdr_cmd_args *sdr_cmd_args);
-
-error_t hostrange_parse_opt (int key,
-                             char *arg,
-                             struct hostrange_cmd_args *hostrange_cmd_args);
-
 void init_common_cmd_args_user (struct common_cmd_args *cmd_args);
 void init_common_cmd_args_operator (struct common_cmd_args *cmd_args);
 void init_common_cmd_args_admin (struct common_cmd_args *cmd_args);
 void verify_common_cmd_args_inband (struct common_cmd_args *cmd_args);
 void verify_common_cmd_args_outofband (struct common_cmd_args *cmd_args, int check_hostname);
 void verify_common_cmd_args (struct common_cmd_args *cmd_args);
-
-void init_sdr_cmd_args (struct sdr_cmd_args *sdr_cmd_args);
-void verify_sdr_cmd_args (struct sdr_cmd_args *sdr_cmd_args);
-
-void init_hostrange_cmd_args (struct hostrange_cmd_args *hostrange_cmd_args);
-void verify_hostrange_cmd_args (struct hostrange_cmd_args *hostrange_cmd_args);
 
 /* to parse only the --config-file option */
 error_t cmdline_config_file_parse (int key, char *arg, struct argp_state *state);

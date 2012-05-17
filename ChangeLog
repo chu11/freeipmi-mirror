@@ -1,3 +1,10 @@
+2012-05-17  Albert Chu <chu11@llnl.gov>
+
+	* common/toolcommon/: Consolidate hostrange and sdr common options
+	into the main common_cmd_args struct.
+
+	* Globally update tools for changes.
+	
 2012-05-16  Albert Chu <chu11@llnl.gov>
 
 	* common/toolcommon/tool-common-sensor.h,

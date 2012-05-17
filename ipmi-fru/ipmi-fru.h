@@ -47,8 +47,6 @@ enum ipmi_sel_argp_option_keys
 struct ipmi_fru_arguments
 {
   struct common_cmd_args common;
-  struct sdr_cmd_args sdr;
-  struct hostrange_cmd_args hostrange;
   uint8_t device_id;
   int device_id_set;
   int verbose_count;

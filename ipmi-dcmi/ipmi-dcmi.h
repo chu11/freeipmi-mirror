@@ -56,7 +56,6 @@ enum ipmi_dcmi_argp_option_keys
 struct ipmi_dcmi_arguments
 {
   struct common_cmd_args common;
-  struct hostrange_cmd_args hostrange;
   int get_dcmi_capability_info;
   int get_asset_tag;
   int set_asset_tag;

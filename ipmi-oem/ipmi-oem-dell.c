@@ -4977,7 +4977,7 @@ ipmi_oem_dell_power_supply_info (ipmi_oem_state_data_t *state_data)
                                  state_data->pstate,
                                  state_data->ipmi_ctx,
                                  state_data->hostname,
-				 &state_data->prog_data->args->sdr) < 0)
+				 &state_data->prog_data->args->common) < 0)
     goto cleanup;
 
   if (calculate_entity_id_counts (state_data->pstate,
@@ -6380,7 +6380,7 @@ ipmi_oem_dell_slot_power_control (ipmi_oem_state_data_t *state_data)
 				 state_data->pstate,
 				 state_data->ipmi_ctx,
 				 state_data->hostname,
- 				 &state_data->prog_data->args->sdr) < 0)
+ 				 &state_data->prog_data->args->common) < 0)
     goto cleanup;
 
   if (!strcasecmp (state_data->prog_data->args->oem_options[0], "c410x"))

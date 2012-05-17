@@ -1030,16 +1030,16 @@ _cmd_config (void)
 
   ipmipower_cbuf_printf (ttyout,
                          "Buffer-Output:                %s\n",
-                         (cmd_args.hostrange.buffer_output) ? "enabled" : "disabled");
+                         (cmd_args.common.buffer_output) ? "enabled" : "disabled");
   ipmipower_cbuf_printf (ttyout,
                          "Consolidate-Output:           %s\n",
-                         (cmd_args.hostrange.consolidate_output) ? "enabled" : "disabled");
+                         (cmd_args.common.consolidate_output) ? "enabled" : "disabled");
   ipmipower_cbuf_printf (ttyout,
                          "Fanout:                       %u\n",
-                         cmd_args.hostrange.fanout);
+                         cmd_args.common.fanout);
   ipmipower_cbuf_printf (ttyout,
                          "Always-Prefix:                %s\n",
-                         (cmd_args.hostrange.always_prefix) ? "enabled" : "disabled");
+                         (cmd_args.common.always_prefix) ? "enabled" : "disabled");
 }
 
 static void
@@ -1354,19 +1354,19 @@ ipmipower_prompt_process_cmdline (void)
                                               cmd_args.ping_packet_count);
               else if (!strcmp (argv[0], "buffer-output"))
                 _cmd_set_flag (argv,
-                               &cmd_args.hostrange.buffer_output,
+                               &cmd_args.common.buffer_output,
                                "buffer-output");
               else if (!strcmp (argv[0], "consolidate-output"))
                 _cmd_set_flag (argv,
-                               &cmd_args.hostrange.consolidate_output,
+                               &cmd_args.common.consolidate_output,
                                "consolidate-output");
               else if (!strcmp (argv[0], "always-prefix"))
                 _cmd_set_flag (argv,
-                               &cmd_args.hostrange.always_prefix,
+                               &cmd_args.common.always_prefix,
                                "always-prefix");
               else if (!strcmp (argv[0], "fanout"))
                 _cmd_set_unsigned_int_ranged (argv,
-                                              &cmd_args.hostrange.fanout,
+                                              &cmd_args.common.fanout,
                                               "fanout",
                                               1,
                                               PSTDOUT_FANOUT_MIN,

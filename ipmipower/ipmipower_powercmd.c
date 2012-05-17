@@ -1888,8 +1888,8 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
       /* Don't execute if fanout turned on and we're in the middle of too
        * many power commands.
        */
-      if (cmd_args.hostrange.fanout
-          && (executing_count >= cmd_args.hostrange.fanout))
+      if (cmd_args.common.fanout
+          && (executing_count >= cmd_args.common.fanout))
         return (cmd_args.common.session_timeout);
 
       _send_packet (ip, IPMIPOWER_PACKET_TYPE_AUTHENTICATION_CAPABILITIES_RQ);

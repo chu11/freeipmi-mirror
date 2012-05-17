@@ -122,7 +122,6 @@ struct config_section_str
 struct config_arguments
 {
   struct common_cmd_args common;
-  struct hostrange_cmd_args hostrange;
 
   config_action_t action;
 

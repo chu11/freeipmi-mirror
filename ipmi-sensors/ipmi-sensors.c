@@ -1300,7 +1300,7 @@ run_cmd_args (ipmi_sensors_state_data_t *state_data)
 
   args = state_data->prog_data->args;
 
-  assert (!args->sdr.flush_cache);
+  assert (!args->common.flush_cache);
 
   if (args->sdr_info)
     return (_sdr_repository_info (state_data));
@@ -1309,7 +1309,7 @@ run_cmd_args (ipmi_sensors_state_data_t *state_data)
                                  state_data->pstate,
                                  state_data->ipmi_ctx,
                                  state_data->hostname,
-				 &state_data->prog_data->args->sdr) < 0)
+				 &state_data->prog_data->args->common) < 0)
     return (-1);
 
   if (_display_sensors (state_data) < 0)
@@ -1335,11 +1335,11 @@ _ipmi_sensors (pstdout_state_t pstate,
 
   assert (!prog_data->args->list_sensor_types);
   
-  if (prog_data->args->sdr.flush_cache)
+  if (prog_data->args->common.flush_cache)
     {
       if (sdr_cache_flush_cache (pstate,
                                  hostname,
-                                 &prog_data->args->sdr) < 0)
+                                 &prog_data->args->common) < 0)
         return (EXIT_FAILURE);
       return (EXIT_SUCCESS);
     }
@@ -1503,7 +1503,7 @@ main (int argc, char **argv)
     }
   
   if ((hosts_count = pstdout_setup (&(prog_data.args->common.hostname),
-				    &(prog_data.args->hostrange))) < 0)
+				    &(prog_data.args->common))) < 0)
     return (EXIT_FAILURE);
 
   if (!hosts_count)
@@ -1511,7 +1511,7 @@ main (int argc, char **argv)
 
   /* We don't want caching info to output when are doing ranged output */
   if (hosts_count > 1)
-    prog_data.args->sdr.quiet_cache = 1;
+    prog_data.args->common.quiet_cache = 1;
 
   if ((rv = pstdout_launch (prog_data.args->common.hostname,
                             _ipmi_sensors,

@@ -39,7 +39,6 @@
 struct ipmi_sensors_config_arguments
 {
   struct config_arguments config_args;
-  struct sdr_cmd_args sdr;
 };
 
 typedef struct ipmi_sensors_config_prog_data

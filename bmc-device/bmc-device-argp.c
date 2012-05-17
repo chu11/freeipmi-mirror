@@ -138,7 +138,6 @@ static error_t
 cmdline_parse (int key, char *arg, struct argp_state *state)
 {
   struct bmc_device_arguments *cmd_args;
-  error_t ret;
 
   assert (state);
   
@@ -292,12 +291,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case ARGP_KEY_END:
       break;
     default:
-      ret = common_parse_opt (key, arg, &(cmd_args->common));
-      if (ret == ARGP_ERR_UNKNOWN)
-	ret = sdr_parse_opt (key, arg, &(cmd_args->sdr));
-      if (ret == ARGP_ERR_UNKNOWN)
-        ret = hostrange_parse_opt (key, arg, &(cmd_args->hostrange));
-      return (ret);
+      return (common_parse_opt (key, arg, &(cmd_args->common)));
     }
 
   return (0);
@@ -311,8 +305,6 @@ _bmc_device_config_file_parse (struct bmc_device_arguments *cmd_args)
   if (config_file_parse (cmd_args->common.config_file,
                          0,
                          &(cmd_args->common),
-                         &(cmd_args->sdr),
-                         &(cmd_args->hostrange),
                          CONFIG_FILE_INBAND | CONFIG_FILE_OUTOFBAND | CONFIG_FILE_SDR | CONFIG_FILE_HOSTRANGE,
                          CONFIG_FILE_TOOL_BMC_DEVICE,
                          NULL) < 0)
@@ -327,7 +319,7 @@ _bmc_device_args_validate (struct bmc_device_arguments *cmd_args)
 {
   assert (cmd_args);
 
-  if (!cmd_args->sdr.flush_cache
+  if (!cmd_args->common.flush_cache
       && !cmd_args->cold_reset
       && !cmd_args->warm_reset
       && !cmd_args->get_self_test_results
@@ -357,7 +349,7 @@ _bmc_device_args_validate (struct bmc_device_arguments *cmd_args)
       exit (EXIT_FAILURE);
     }
 
-  if ((cmd_args->sdr.flush_cache
+  if ((cmd_args->common.flush_cache
        + cmd_args->cold_reset
        + cmd_args->warm_reset
        + cmd_args->get_self_test_results
@@ -438,8 +430,6 @@ bmc_device_argp_parse (int argc, char **argv, struct bmc_device_arguments *cmd_a
   assert (cmd_args);
 
   init_common_cmd_args_admin (&(cmd_args->common));
-  init_sdr_cmd_args (&(cmd_args->sdr));
-  init_hostrange_cmd_args (&(cmd_args->hostrange));
 
   cmd_args->cold_reset = 0;
   cmd_args->warm_reset = 0;
@@ -494,7 +484,6 @@ bmc_device_argp_parse (int argc, char **argv, struct bmc_device_arguments *cmd_a
               cmd_args);
 
   verify_common_cmd_args (&(cmd_args->common));
-  verify_hostrange_cmd_args (&(cmd_args->hostrange));
   _bmc_device_args_validate (cmd_args);
 }
 

@@ -83,7 +83,6 @@ struct cmd_chassis_identify
 struct ipmi_chassis_arguments
 {
   struct common_cmd_args common;
-  struct hostrange_cmd_args hostrange;
   int get_chassis_capabilities;
   int get_chassis_status;
   int chassis_control;

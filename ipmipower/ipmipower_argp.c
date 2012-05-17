@@ -165,7 +165,6 @@ cmdline_parse (int key,
 {
   struct ipmipower_arguments *cmd_args;
   char *endptr;
-  error_t ret;
   int tmp = 0;
 
   assert (state);
@@ -315,10 +314,7 @@ cmdline_parse (int key,
       break;
       /* removed legacy short options */
     default:
-      ret = common_parse_opt (key, arg, &(cmd_args->common));
-      if (ret == ARGP_ERR_UNKNOWN)
-        ret = hostrange_parse_opt (key, arg, &(cmd_args->hostrange));
-      return (ret);
+      return (common_parse_opt (key, arg, &(cmd_args->common)));
     }
 
   return (0);
@@ -341,8 +337,6 @@ _ipmipower_config_file_parse (struct ipmipower_arguments *cmd_args)
       if (!config_file_parse (IPMIPOWER_CONFIG_FILE_LEGACY,
                               1,         /* do not exit if file not found */
                               &(cmd_args->common),
-                              NULL,
-                              &(cmd_args->hostrange),
                               CONFIG_FILE_OUTOFBAND | CONFIG_FILE_HOSTRANGE,
                               CONFIG_FILE_TOOL_IPMIPOWER,
                               &config_file_data))
@@ -352,8 +346,6 @@ _ipmipower_config_file_parse (struct ipmipower_arguments *cmd_args)
   if (config_file_parse (cmd_args->common.config_file,
                          0,
                          &(cmd_args->common),
-                         NULL,
-                         &(cmd_args->hostrange),
                          CONFIG_FILE_OUTOFBAND | CONFIG_FILE_HOSTRANGE,
                          CONFIG_FILE_TOOL_IPMIPOWER,
                          &config_file_data) < 0)
@@ -432,7 +424,6 @@ ipmipower_argp_parse (int argc, char **argv, struct ipmipower_arguments *cmd_arg
   assert (cmd_args);
 
   init_common_cmd_args_operator (&(cmd_args->common));
-  init_hostrange_cmd_args (&(cmd_args->hostrange));
 
   /* ipmipower differences */
   cmd_args->common.driver_type = IPMI_DEVICE_LAN;
@@ -475,6 +466,5 @@ ipmipower_argp_parse (int argc, char **argv, struct ipmipower_arguments *cmd_arg
 
   /* don't check hostname inputs, ipmipower isn't like most tools */
   verify_common_cmd_args_outofband (&(cmd_args->common), 0);
-  verify_hostrange_cmd_args (&(cmd_args->hostrange));
   _ipmipower_args_validate (cmd_args);
 }

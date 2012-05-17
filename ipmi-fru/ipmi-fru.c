@@ -579,9 +579,9 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
 
   args = state_data->prog_data->args;
 
-  assert (!args->sdr.flush_cache);
+  assert (!args->common.flush_cache);
 
-  if (args->sdr.ignore_sdr_cache)
+  if (args->common.ignore_sdr_cache)
     {
       /* no SDR?  This is all you get :-) */
       if (_output_fru (state_data,
@@ -597,7 +597,7 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
 				     state_data->pstate,
 				     state_data->ipmi_ctx,
 				     state_data->hostname,
-				     &state_data->prog_data->args->sdr) < 0)
+				     &state_data->prog_data->args->common) < 0)
 	goto cleanup;
     }
 
@@ -713,11 +713,11 @@ _ipmi_fru (pstdout_state_t pstate,
 
   prog_data = (ipmi_fru_prog_data_t *)arg;
 
-  if (prog_data->args->sdr.flush_cache)
+  if (prog_data->args->common.flush_cache)
     {
       if (sdr_cache_flush_cache (pstate,
                                  hostname,
-                                 &prog_data->args->sdr) < 0)
+                                 &prog_data->args->common) < 0)
 	return (EXIT_FAILURE);
       return (EXIT_SUCCESS);
     }
@@ -812,7 +812,7 @@ main (int argc, char **argv)
     prog_data.args->skip_checks = 1;
 
   if ((hosts_count = pstdout_setup (&(prog_data.args->common.hostname),
-				    &(prog_data.args->hostrange))) < 0)
+				    &(prog_data.args->common))) < 0)
     return (EXIT_FAILURE);
 
   if (!hosts_count)
@@ -820,7 +820,7 @@ main (int argc, char **argv)
 
   /* We don't want caching info to output when are doing ranged output */
   if (hosts_count > 1)
-    prog_data.args->sdr.quiet_cache = 1;
+    prog_data.args->common.quiet_cache = 1;
 
   if ((rv = pstdout_launch (prog_data.args->common.hostname,
                             _ipmi_fru,

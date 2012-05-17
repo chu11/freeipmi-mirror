@@ -22,6 +22,6 @@
 #include "tool-cmdline-common.h"
 
 /* Returns number of hosts setup for, -1 on error */
-int pstdout_setup (char **hosts, struct hostrange_cmd_args *hostrange_args);
+int pstdout_setup (char **hosts, struct common_cmd_args *cmd_args);
 
 #endif /* TOOL_HOSTRANGE_COMMON_H */

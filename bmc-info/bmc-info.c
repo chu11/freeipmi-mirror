@@ -1280,18 +1280,12 @@ _bmc_info (pstdout_state_t pstate,
                                          hostname,
                                          &(prog_data->args->common),
 					 state_data.pstate)))
-    {
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
-    }
+    goto cleanup;
 
   if (run_cmd_args (&state_data) < 0)
-    {
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
-    }
+    goto cleanup;
 
-  exit_code = 0;
+  exit_code = EXIT_SUCCESS;
  cleanup:
   ipmi_ctx_close (state_data.ipmi_ctx);
   ipmi_ctx_destroy (state_data.ipmi_ctx);
@@ -1303,7 +1297,6 @@ main (int argc, char **argv)
 {
   bmc_info_prog_data_t prog_data;
   struct bmc_info_arguments cmd_args;
-  int exit_code;
   int hosts_count;
   int rv;
 
@@ -1315,7 +1308,7 @@ main (int argc, char **argv)
   prog_data.args = &cmd_args;
 
   if ((hosts_count = pstdout_setup (&(prog_data.args->common.hostname),
-                                    &(prog_data.args->hostrange))) < 0)
+                                    &(prog_data.args->common))) < 0)
     return (EXIT_FAILURE);
 
   if (!hosts_count)

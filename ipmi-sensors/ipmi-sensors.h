@@ -62,8 +62,6 @@ enum ipmi_sensors_argp_option_keys
 struct ipmi_sensors_arguments
 {
   struct common_cmd_args common;
-  struct sdr_cmd_args sdr;
-  struct hostrange_cmd_args hostrange;
   int verbose_count;
   int sdr_info;
   int quiet_readings;

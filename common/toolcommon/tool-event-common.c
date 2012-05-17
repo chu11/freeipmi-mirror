@@ -317,10 +317,9 @@ event_output_sensor_name (pstdout_state_t pstate,
 			  unsigned int sel_record_len,
 			  struct sensor_entity_id_counts *entity_id_counts,
 			  struct sensor_column_width *column_width,
-			  struct sdr_cmd_args *sdr,
+			  struct common_cmd_args *cmd_args,
 			  int entity_sensor_names,
 			  int comma_separated_output,
-			  int debug,
 			  unsigned int flags)
 {
   char fmt[EVENT_FMT_BUFLEN + 1];
@@ -331,9 +330,10 @@ event_output_sensor_name (pstdout_state_t pstate,
   assert (sel_ctx);
   assert (!entity_sensor_names || (entity_sensor_names && entity_id_counts));
   assert (column_width || (!column_width && comma_separated_output));
+  assert (cmd_args);
 
   if (entity_sensor_names
-      && !sdr->ignore_sdr_cache)
+      && !cmd_args->ignore_sdr_cache)
     {
       uint8_t generator_id, sensor_number;
 
@@ -341,7 +341,7 @@ event_output_sensor_name (pstdout_state_t pstate,
 				  sel_ctx,
 				  sel_record,
 				  sel_record_len,
-				  debug,
+				  cmd_args->debug,
 				  &generator_id,
 				  NULL,
 				  &sensor_number,
@@ -363,7 +363,7 @@ event_output_sensor_name (pstdout_state_t pstate,
                                                 sensor_number,
                                                 generator_id) < 0)
         {
-          if (debug)
+          if (cmd_args->debug)
             PSTDOUT_FPRINTF (pstate,
                              stderr,
                              "ipmi_sdr_cache_search_sensor: %s\n",
@@ -392,7 +392,7 @@ event_output_sensor_name (pstdout_state_t pstate,
 					   sel_ctx,
 					   sel_record,
 					   sel_record_len,
-					   debug,
+					   cmd_args->debug,
 					   flags,
 					   outbuf,
 					   &outbuf_len,

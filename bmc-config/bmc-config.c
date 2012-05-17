@@ -376,7 +376,7 @@ main (int argc, char *argv[])
   prog_data.args = &cmd_args;
 
   if ((hosts_count = pstdout_setup (&(prog_data.args->config_args.common.hostname),
-				    &(prog_data.args->config_args.hostrange))) < 0)
+				    &(prog_data.args->config_args.common))) < 0)
     return (EXIT_FAILURE);
 
   if (!hosts_count)

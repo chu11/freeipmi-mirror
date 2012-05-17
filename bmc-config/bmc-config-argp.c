@@ -110,8 +110,6 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       ret = config_parse_opt (key, arg, &cmd_args->config_args);
       if (ret == ARGP_ERR_UNKNOWN)
         ret = common_parse_opt (key, arg, &cmd_args->config_args.common);
-      if (ret == ARGP_ERR_UNKNOWN)
-        ret = hostrange_parse_opt (key, arg, &(cmd_args->config_args.hostrange));
       return (ret);
     }
   return (0);
@@ -131,8 +129,6 @@ _bmc_config_config_file_parse (struct bmc_config_arguments *cmd_args)
   if (config_file_parse (cmd_args->config_args.common.config_file,
                          0,
                          &(cmd_args->config_args.common),
-                         NULL,
-                         &(cmd_args->config_args.hostrange),
                          CONFIG_FILE_INBAND | CONFIG_FILE_OUTOFBAND | CONFIG_FILE_HOSTRANGE,
                          CONFIG_FILE_TOOL_BMC_CONFIG,
                          &config_file_data) < 0)
@@ -170,7 +166,6 @@ bmc_config_argp_parse (int argc, char *argv[], struct bmc_config_arguments *cmd_
 
   init_config_args (&(cmd_args->config_args));
   init_common_cmd_args_admin (&(cmd_args->config_args.common));
-  init_hostrange_cmd_args (&(cmd_args->config_args.hostrange));
 
   argp_parse (&cmdline_config_file_argp,
               argc,

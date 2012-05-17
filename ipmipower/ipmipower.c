@@ -162,7 +162,7 @@ _ipmipower_cleanup (void)
 static void
 _eliminate_nodes (void)
 {
-  if (cmd_args.hostrange.eliminate)
+  if (cmd_args.common.eliminate)
     {
       ipmidetect_t id = NULL;
       int i;

@@ -106,7 +106,7 @@ _ipmi_pet_init (ipmi_pet_state_data_t *state_data)
 
   args = state_data->prog_data->args;
 
-  if (!args->sdr.ignore_sdr_cache)
+  if (!args->common.ignore_sdr_cache)
     {
       struct sensor_entity_id_counts *entity_ptr = NULL;
       
@@ -143,7 +143,7 @@ _ipmi_pet_init (ipmi_pet_state_data_t *state_data)
     }
 
   if (args->interpret_oem_data
-      && !args->sdr.ignore_sdr_cache)
+      && !args->common.ignore_sdr_cache)
     {
       if (ipmi_get_oem_data (NULL,
 			     state_data->ipmi_ctx,
@@ -199,7 +199,7 @@ _ipmi_pet_oem_setup (ipmi_pet_state_data_t *state_data, struct ipmi_pet_trap_dat
 	      manufacturer_id = data->manufacturer_id;
 	      product_id = data->system_id;
 	    }
-	  else if (!args->sdr.ignore_sdr_cache)
+	  else if (!args->common.ignore_sdr_cache)
 	    {
 	      manufacturer_id = state_data->oem_data.manufacturer_id;
 	      product_id = state_data->oem_data.product_id;
@@ -845,10 +845,9 @@ _output_sensor_name (ipmi_pet_state_data_t *state_data,
 				    sel_record_len,
 				    &state_data->entity_id_counts,
 				    &state_data->column_width,
-				    &state_data->prog_data->args->sdr,
+				    &state_data->prog_data->args->common,
 				    state_data->prog_data->args->entity_sensor_names,
 				    state_data->prog_data->args->comma_separated_output,
-				    state_data->prog_data->args->common.debug,
 				    flags));
 }
                         
@@ -1283,7 +1282,7 @@ _ipmi_pet_process (ipmi_pet_state_data_t *state_data,
 
   if (input->specific_trap_na_specified)
     {
-      if (!args->sdr.ignore_sdr_cache)
+      if (!args->common.ignore_sdr_cache)
 	{
 	  uint8_t record_type;
 	  
@@ -1413,7 +1412,7 @@ _ipmi_pet_process (ipmi_pet_state_data_t *state_data,
     }
 
   if (data.entity != IPMI_PLATFORM_EVENT_TRAP_VARIABLE_BINDINGS_ENTITY_UNSPECIFIED
-      && !args->sdr.ignore_sdr_cache)
+      && !args->common.ignore_sdr_cache)
     {
       uint8_t entity_id, entity_instance;
       
@@ -1576,7 +1575,7 @@ _ipmi_pet_process (ipmi_pet_state_data_t *state_data,
   if (state_data->prog_data->args->verbose_count >= 1)
     {
       if (input->specific_trap_na_specified
-	  && args->sdr.ignore_sdr_cache)
+	  && args->common.ignore_sdr_cache)
 	{
 	  if ((ret = _output_not_available_event_direction (state_data)) < 0)
 	    goto cleanup;
@@ -2043,7 +2042,7 @@ run_cmd_args (ipmi_pet_state_data_t *state_data)
   
   args = state_data->prog_data->args;
   
-  assert (!args->sdr.flush_cache);
+  assert (!args->common.flush_cache);
 
   if (args->variable_bindings_length)
     {
@@ -2098,11 +2097,11 @@ _ipmi_pet (ipmi_pet_prog_data_t *prog_data)
 
   assert (prog_data);
 
-  if (prog_data->args->sdr.flush_cache)
+  if (prog_data->args->common.flush_cache)
     {
       if (sdr_cache_flush_cache (NULL,
                                  prog_data->args->common.hostname,
-                                 &prog_data->args->sdr) < 0)
+                                 &prog_data->args->common) < 0)
 	return (EXIT_FAILURE);
       return (EXIT_SUCCESS);
     }
@@ -2112,7 +2111,7 @@ _ipmi_pet (ipmi_pet_prog_data_t *prog_data)
   state_data.hostname = prog_data->args->common.hostname;
 
   /* Special case, just flush, don't do an IPMI connection */
-  if (!prog_data->args->sdr.ignore_sdr_cache
+  if (!prog_data->args->common.ignore_sdr_cache
       && !prog_data->args->pet_acknowledge)
     {
       if (!(state_data.ipmi_ctx = ipmi_open (prog_data->progname,
@@ -2149,7 +2148,7 @@ _ipmi_pet (ipmi_pet_prog_data_t *prog_data)
 	}
     }
 
-  if (!prog_data->args->sdr.ignore_sdr_cache
+  if (!prog_data->args->common.ignore_sdr_cache
        && !prog_data->args->pet_acknowledge)
     {
       if (!(state_data.sdr_ctx = ipmi_sdr_ctx_create ()))
@@ -2170,7 +2169,7 @@ _ipmi_pet (ipmi_pet_prog_data_t *prog_data)
                                          NULL,
                                          state_data.ipmi_ctx,
                                          state_data.hostname,
-                                         &state_data.prog_data->args->sdr) < 0)
+                                         &state_data.prog_data->args->common) < 0)
             goto cleanup;
         }
     }

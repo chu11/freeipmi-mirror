@@ -116,7 +116,6 @@ static error_t
 cmdline_parse (int key, char *arg, struct argp_state *state)
 {
   struct ipmiconsole_arguments *cmd_args;
-  error_t ret;
 
   assert (state);
   
@@ -157,8 +156,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case ARGP_KEY_END:
       break;
     default:
-      ret = common_parse_opt (key, arg, &(cmd_args->common));
-      return (ret);
+      return (common_parse_opt (key, arg, &(cmd_args->common)));
     }
 
   return (0);
@@ -181,8 +179,6 @@ _ipmiconsole_config_file_parse (struct ipmiconsole_arguments *cmd_args)
       if (!config_file_parse (IPMICONSOLE_CONFIG_FILE_LEGACY,
                               1,         /* do not exit if file not found */
                               &(cmd_args->common),
-                              NULL,
-                              NULL,
                               CONFIG_FILE_OUTOFBAND,
                               CONFIG_FILE_TOOL_IPMICONSOLE,
                               &config_file_data))
@@ -192,8 +188,6 @@ _ipmiconsole_config_file_parse (struct ipmiconsole_arguments *cmd_args)
   if (config_file_parse (cmd_args->common.config_file,
                          0,
                          &(cmd_args->common),
-                         NULL,
-                         NULL,
                          CONFIG_FILE_OUTOFBAND,
                          CONFIG_FILE_TOOL_IPMICONSOLE,
                          &config_file_data) < 0)

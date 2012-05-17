@@ -37,7 +37,6 @@ enum ipmi_raw_argp_option_keys
 struct ipmi_raw_arguments
 {
   struct common_cmd_args common;
-  struct hostrange_cmd_args hostrange;
   char *cmd_file;
   uint8_t cmd[IPMI_RAW_MAX_ARGS];
   unsigned int cmd_length;

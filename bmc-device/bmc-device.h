@@ -69,8 +69,6 @@ struct bmc_device_set_acpi_power_state
 struct bmc_device_arguments
 {
   struct common_cmd_args common;
-  struct sdr_cmd_args sdr;
-  struct hostrange_cmd_args hostrange;
   int cold_reset;
   int warm_reset;
   int get_self_test_results;

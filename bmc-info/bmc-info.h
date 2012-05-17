@@ -37,7 +37,6 @@ enum bmc_info_argp_option_keys
 struct bmc_info_arguments
 {
   struct common_cmd_args common;
-  struct hostrange_cmd_args hostrange;
   int get_device_id;
   int get_device_guid;
   int get_system_info;

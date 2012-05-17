@@ -514,7 +514,7 @@ _find_sensor (ipmi_oem_state_data_t *state_data,
               unsigned int id_string_len)
 {
   struct ipmi_oem_ibm_find_sensor_sdr_callback sdr_callback_arg;
-  struct sdr_cmd_args sdr_args;
+  struct common_cmd_args cmd_args;
   ipmi_sdr_ctx_t tmp_sdr_ctx = NULL;
   int rv = -1;
 
@@ -546,15 +546,15 @@ _find_sensor (ipmi_oem_state_data_t *state_data,
   sdr_callback_arg.found = 0;
 
   /* Should not cause sdr recreation, since this is the second time we're calling it */
-  memcpy (&sdr_args, &state_data->prog_data->args->sdr, sizeof (struct sdr_cmd_args));
-  sdr_args.quiet_cache = 1;
-  sdr_args.sdr_cache_recreate = 0;
+  memcpy (&cmd_args, &state_data->prog_data->args->common, sizeof (struct common_cmd_args));
+  cmd_args.quiet_cache = 1;
+  cmd_args.sdr_cache_recreate = 0;
 
   if (sdr_cache_create_and_load (tmp_sdr_ctx,
                                  state_data->pstate,
                                  state_data->ipmi_ctx,
                                  state_data->hostname,
-				 &sdr_args) < 0)
+				 &cmd_args) < 0)
     goto cleanup;
 
   if (ipmi_sdr_cache_iterate (tmp_sdr_ctx,
@@ -900,7 +900,7 @@ ipmi_oem_ibm_get_led (ipmi_oem_state_data_t *state_data)
                                  state_data->pstate,
                                  state_data->ipmi_ctx,
                                  state_data->hostname,
- 				 &state_data->prog_data->args->sdr) < 0)
+ 				 &state_data->prog_data->args->common) < 0)
     goto cleanup;
 
   if (calculate_column_widths (state_data->pstate,

@@ -222,7 +222,7 @@ _ipmi_oem_intelnm_node_manager_init (ipmi_oem_state_data_t *state_data,
                                  state_data->pstate,
                                  state_data->ipmi_ctx,
                                  state_data->hostname,
- 				 &state_data->prog_data->args->sdr) < 0)
+ 				 &state_data->prog_data->args->common) < 0)
     goto cleanup;
 
   if (ipmi_sdr_cache_iterate (state_data->sdr_ctx,

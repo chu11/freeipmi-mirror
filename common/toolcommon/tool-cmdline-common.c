@@ -105,6 +105,9 @@ common_parse_opt (int key,
 
   switch (key)
     {
+      /*
+       * inband options
+       */
     case ARGP_DRIVER_TYPE_KEY:
       if (cmd_args->driver_type_outofband_only)
         {
@@ -188,6 +191,10 @@ common_parse_opt (int key,
       cmd_args->target_slave_address = tmp;
       cmd_args->target_slave_address_is_set = 1;
       break;
+
+      /* 
+       * outofband options
+       */
     case ARGP_HOSTNAME_KEY:
       free (cmd_args->hostname);
       if (!(cmd_args->hostname = strdup (arg)))
@@ -368,6 +375,11 @@ common_parse_opt (int key,
         }
       cmd_args->privilege_level = tmp;
       break;
+
+      /* 
+       * misc options
+       */
+
       /* ARGP_CONFIG_KEY for backwards compatability */
     case ARGP_CONFIG_KEY:
     case ARGP_CONFIG_FILE_KEY:
@@ -391,74 +403,47 @@ common_parse_opt (int key,
     case ARGP_DEBUG_KEY:
       cmd_args->debug++;
       break;
-    default:
-      return (ARGP_ERR_UNKNOWN);
-    }
 
-  return (0);
-}
-
-error_t
-sdr_parse_opt (int key,
-               char *arg,
-               struct sdr_cmd_args *sdr_cmd_args)
-{
-  assert (sdr_cmd_args);
-
-  switch (key)
-    {
+      /* 
+       * sdr options
+       */
     case ARGP_FLUSH_CACHE_KEY:
-      sdr_cmd_args->flush_cache = 1;
+      cmd_args->flush_cache = 1;
       break;
     case ARGP_QUIET_CACHE_KEY:
-      sdr_cmd_args->quiet_cache = 1;
+      cmd_args->quiet_cache = 1;
       break;
     case ARGP_SDR_CACHE_FILE_KEY:
-      free (sdr_cmd_args->sdr_cache_file);
-      if (!(sdr_cmd_args->sdr_cache_file = strdup (arg)))
+      free (cmd_args->sdr_cache_file);
+      if (!(cmd_args->sdr_cache_file = strdup (arg)))
         {
           perror ("strdup");
           exit (EXIT_FAILURE);
         }
       break;
     case ARGP_SDR_CACHE_RECREATE_KEY:
-      sdr_cmd_args->sdr_cache_recreate = 1;
+      cmd_args->sdr_cache_recreate = 1;
       break;
     case ARGP_SDR_CACHE_DIRECTORY_KEY:
-      free (sdr_cmd_args->sdr_cache_directory);
-      if (!(sdr_cmd_args->sdr_cache_directory = strdup (arg)))
+      free (cmd_args->sdr_cache_directory);
+      if (!(cmd_args->sdr_cache_directory = strdup (arg)))
         {
           perror ("strdup");
           exit (EXIT_FAILURE);
         }
       break;
     case ARGP_IGNORE_SDR_CACHE_KEY:
-      sdr_cmd_args->ignore_sdr_cache = 1;
+      cmd_args->ignore_sdr_cache = 1;
       break;
-    default:
-      return (ARGP_ERR_UNKNOWN);
-    }
 
-  return (0);
-}
-
-error_t
-hostrange_parse_opt (int key,
-                     char *arg,
-                     struct hostrange_cmd_args *hostrange_cmd_args)
-{
-  char *endptr;
-  int tmp;
-
-  assert (hostrange_cmd_args);
-
-  switch (key)
-    {
+      /* 
+       * hostrange options
+       */
     case ARGP_BUFFER_OUTPUT_KEY:
-      hostrange_cmd_args->buffer_output = 1;
+      cmd_args->buffer_output = 1;
       break;
     case ARGP_CONSOLIDATE_OUTPUT_KEY:
-      hostrange_cmd_args->consolidate_output = 1;
+      cmd_args->consolidate_output = 1;
       break;
     case ARGP_FANOUT_KEY:
       tmp = strtol (arg, &endptr, 10);
@@ -471,13 +456,13 @@ hostrange_parse_opt (int key,
           exit (EXIT_FAILURE);
           break;
         }
-      hostrange_cmd_args->fanout = tmp;
+      cmd_args->fanout = tmp;
       break;
     case ARGP_ELIMINATE_KEY:
-      hostrange_cmd_args->eliminate = 1;
+      cmd_args->eliminate = 1;
       break;
     case ARGP_ALWAYS_PREFIX_KEY:
-      hostrange_cmd_args->always_prefix = 1;
+      cmd_args->always_prefix = 1;
       break;
     default:
       return (ARGP_ERR_UNKNOWN);
@@ -485,6 +470,8 @@ hostrange_parse_opt (int key,
 
   return (0);
 }
+
+
 
 static void
 _init_common_cmd_args (struct common_cmd_args *cmd_args)
@@ -501,22 +488,37 @@ _init_common_cmd_args (struct common_cmd_args *cmd_args)
   cmd_args->target_channel_number_is_set = 0;
   cmd_args->target_slave_address = 0;
   cmd_args->target_slave_address_is_set = 0;
-  cmd_args->session_timeout = 0;
-  cmd_args->retransmission_timeout = 0;
+
   cmd_args->hostname = NULL;
   cmd_args->username = NULL;
   cmd_args->password = NULL;
   memset (cmd_args->k_g, '\0', IPMI_MAX_K_G_LENGTH + 1);
   cmd_args->k_g_len = 0;
+  cmd_args->session_timeout = 0;
+  cmd_args->retransmission_timeout = 0;
   cmd_args->authentication_type = IPMI_AUTHENTICATION_TYPE_MD5;
   cmd_args->cipher_suite_id = 3;
   /* privilege_level set by parent function */
+
   cmd_args->config_file = NULL;
   cmd_args->workaround_flags_outofband = 0;
   cmd_args->workaround_flags_outofband_2_0 = 0;
   cmd_args->workaround_flags_inband = 0;
   cmd_args->section_specific_workaround_flags = 0;
   cmd_args->debug = 0;
+
+  cmd_args->flush_cache = 0;
+  cmd_args->quiet_cache = 0;
+  cmd_args->sdr_cache_file = NULL;
+  cmd_args->sdr_cache_recreate = 0;
+  cmd_args->sdr_cache_directory = NULL;
+  cmd_args->ignore_sdr_cache = 0;
+
+  cmd_args->buffer_output = 0;
+  cmd_args->consolidate_output = 0;
+  cmd_args->fanout = 0;
+  cmd_args->eliminate = 0;
+  cmd_args->always_prefix = 0;
 }
 
 void
@@ -622,55 +624,18 @@ verify_common_cmd_args (struct common_cmd_args *cmd_args)
 
   verify_common_cmd_args_inband (cmd_args);
   verify_common_cmd_args_outofband (cmd_args, 1);
-}
 
-void
-init_sdr_cmd_args (struct sdr_cmd_args *sdr_cmd_args)
-{
-  assert (sdr_cmd_args);
-
-  sdr_cmd_args->flush_cache = 0;
-  sdr_cmd_args->quiet_cache = 0;
-  sdr_cmd_args->sdr_cache_file = NULL;
-  sdr_cmd_args->sdr_cache_recreate = 0;
-  sdr_cmd_args->sdr_cache_directory = NULL;
-  sdr_cmd_args->ignore_sdr_cache = 0;
-}
-
-void
-verify_sdr_cmd_args (struct sdr_cmd_args *sdr_cmd_args)
-{
-  assert (sdr_cmd_args);
-
-  if (sdr_cmd_args->sdr_cache_directory)
+  if (cmd_args->sdr_cache_directory)
     {
-      if (access (sdr_cmd_args->sdr_cache_directory, R_OK|W_OK|X_OK) < 0)
+      if (access (cmd_args->sdr_cache_directory, R_OK|W_OK|X_OK) < 0)
         {
           fprintf (stderr, "insufficient permission on sensor cache directory '%s'\n",
-                   sdr_cmd_args->sdr_cache_directory);
+                   cmd_args->sdr_cache_directory);
           exit (EXIT_FAILURE);
         }
     }
-}
 
-void
-init_hostrange_cmd_args (struct hostrange_cmd_args *hostrange_cmd_args)
-{
-  assert (hostrange_cmd_args);
-
-  hostrange_cmd_args->buffer_output = 0;
-  hostrange_cmd_args->consolidate_output = 0;
-  hostrange_cmd_args->fanout = 0;
-  hostrange_cmd_args->eliminate = 0;
-  hostrange_cmd_args->always_prefix = 0;
-}
-
-void
-verify_hostrange_cmd_args (struct hostrange_cmd_args *hostrange_cmd_args)
-{
-  assert (hostrange_cmd_args);
-
-  if (hostrange_cmd_args->buffer_output && hostrange_cmd_args->consolidate_output)
+  if (cmd_args->buffer_output && cmd_args->consolidate_output)
     {
       fprintf (stderr, "cannot buffer and consolidate hostrange output, please select only one\n");
       exit (EXIT_FAILURE);

@@ -97,7 +97,6 @@ static error_t
 cmdline_parse (int key, char *arg, struct argp_state *state)
 {
   struct bmc_info_arguments *cmd_args;
-  error_t ret;
 
   assert (state);
   
@@ -129,10 +128,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case ARGP_KEY_END:
       break;
     default:
-      ret = common_parse_opt (key, arg, &(cmd_args->common));
-      if (ret == ARGP_ERR_UNKNOWN)
-        ret = hostrange_parse_opt (key, arg, &(cmd_args->hostrange));
-      return (ret);
+      return (common_parse_opt (key, arg, &(cmd_args->common)));
     }
 
   return (0);
@@ -152,8 +148,6 @@ _bmc_info_config_file_parse (struct bmc_info_arguments *cmd_args)
   if (config_file_parse (cmd_args->common.config_file,
                          0,
                          &(cmd_args->common),
-                         NULL,
-                         &(cmd_args->hostrange),
                          CONFIG_FILE_INBAND | CONFIG_FILE_OUTOFBAND | CONFIG_FILE_HOSTRANGE,
                          CONFIG_FILE_TOOL_BMC_INFO,
                          &config_file_data) < 0)
@@ -174,7 +168,6 @@ bmc_info_argp_parse (int argc, char **argv, struct bmc_info_arguments *cmd_args)
   assert (cmd_args);
 
   init_common_cmd_args_user (&(cmd_args->common));
-  init_hostrange_cmd_args (&(cmd_args->hostrange));
 
   cmd_args->get_device_id = 0;
   cmd_args->get_device_guid = 0;
@@ -198,5 +191,4 @@ bmc_info_argp_parse (int argc, char **argv, struct bmc_info_arguments *cmd_args)
               cmd_args);
 
   verify_common_cmd_args (&(cmd_args->common));
-  verify_hostrange_cmd_args (&(cmd_args->hostrange));
 }

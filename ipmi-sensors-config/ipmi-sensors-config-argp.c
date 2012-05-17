@@ -104,10 +104,6 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       ret = config_parse_opt (key, arg, &cmd_args->config_args);
       if (ret == ARGP_ERR_UNKNOWN)
         ret = common_parse_opt (key, arg, &(cmd_args->config_args.common));
-      if (ret == ARGP_ERR_UNKNOWN)
-        ret = sdr_parse_opt (key, arg, &(cmd_args->sdr));
-      if (ret == ARGP_ERR_UNKNOWN)
-        ret = hostrange_parse_opt (key, arg, &(cmd_args->config_args.hostrange));
       return (ret);
     }
 
@@ -128,8 +124,6 @@ _ipmi_sensors_config_config_file_parse (struct ipmi_sensors_config_arguments *cm
   if (config_file_parse (cmd_args->config_args.common.config_file,
                          0,
                          &(cmd_args->config_args.common),
-                         &(cmd_args->sdr),
-                         &(cmd_args->config_args.hostrange),
                          CONFIG_FILE_INBAND | CONFIG_FILE_OUTOFBAND | CONFIG_FILE_SDR | CONFIG_FILE_HOSTRANGE,
                          CONFIG_FILE_TOOL_IPMI_SENSORS_CONFIG,
                          &config_file_data) < 0)
@@ -147,8 +141,8 @@ _ipmi_sensors_config_config_args_validate (struct ipmi_sensors_config_arguments 
 {
   assert (cmd_args);
 
-  if ((!cmd_args->config_args.action && !cmd_args->sdr.flush_cache)
-      || (cmd_args->config_args.action && cmd_args->sdr.flush_cache)
+  if ((!cmd_args->config_args.action && !cmd_args->config_args.common.flush_cache)
+      || (cmd_args->config_args.action && cmd_args->config_args.common.flush_cache)
       || cmd_args->config_args.action == -1)
     {
       fprintf (stderr,
@@ -172,8 +166,6 @@ ipmi_sensors_config_argp_parse (int argc, char **argv, struct ipmi_sensors_confi
 
   init_config_args (&(cmd_args->config_args));
   init_common_cmd_args_operator (&(cmd_args->config_args.common));
-  init_hostrange_cmd_args (&(cmd_args->config_args.hostrange));
-  init_sdr_cmd_args (&(cmd_args->sdr));
 
   argp_parse (&cmdline_config_file_argp,
               argc,
@@ -191,7 +183,6 @@ ipmi_sensors_config_argp_parse (int argc, char **argv, struct ipmi_sensors_confi
               NULL,
               cmd_args);
 
-  verify_sdr_cmd_args (&(cmd_args->sdr));
   verify_common_cmd_args (&(cmd_args->config_args.common));
   _ipmi_sensors_config_config_args_validate (cmd_args);
 }

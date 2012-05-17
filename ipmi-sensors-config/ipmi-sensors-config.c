@@ -56,11 +56,11 @@ _ipmi_sensors_config (pstdout_state_t pstate,
 
   prog_data = (ipmi_sensors_config_prog_data_t *) arg;
 
-  if (prog_data->args->sdr.flush_cache)
+  if (prog_data->args->config_args.common.flush_cache)
     {
       if (sdr_cache_flush_cache (pstate,
                                  hostname,
-				 &prog_data->args->sdr) < 0)
+				 &prog_data->args->config_args.common) < 0)
 	return (EXIT_FAILURE);
       return (EXIT_SUCCESS);
     }
@@ -91,7 +91,7 @@ _ipmi_sensors_config (pstdout_state_t pstate,
                                  NULL,
                                  state_data.ipmi_ctx,
                                  hostname,
-				 &state_data.prog_data->args->sdr) < 0)
+				 &state_data.prog_data->args->config_args.common) < 0)
     goto cleanup;
 
   if (!(state_data.sections = ipmi_sensors_config_sections_create (&state_data)))
@@ -317,7 +317,7 @@ main (int argc, char **argv)
   prog_data.args = &cmd_args;
 
   if ((hosts_count = pstdout_setup (&(prog_data.args->config_args.common.hostname),
-				    &(prog_data.args->config_args.hostrange))) < 0)
+				    &(prog_data.args->config_args.common))) < 0)
     return (EXIT_FAILURE);
 
   if (!hosts_count)
@@ -325,7 +325,7 @@ main (int argc, char **argv)
 
   /* We don't want caching info to output when are doing ranged output */
   if (hosts_count > 1)
-    prog_data.args->sdr.quiet_cache = 1;
+    prog_data.args->config_args.common.quiet_cache = 1;
 
   prog_data.hosts_count = hosts_count;
 

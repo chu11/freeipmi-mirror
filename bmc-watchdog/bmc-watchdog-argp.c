@@ -297,7 +297,6 @@ static error_t
 cmdline_parse (int key, char *arg, struct argp_state *state)
 {
   struct bmc_watchdog_arguments *cmd_args;
-  error_t ret;
   char *endptr;
   int tmp;
 
@@ -522,8 +521,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case ARGP_KEY_END:
       break;
     default:
-      ret = common_parse_opt (key, arg, &(cmd_args->common));
-      return (ret);
+      return (common_parse_opt (key, arg, &(cmd_args->common)));
     }
 
   return (0);
@@ -541,8 +539,6 @@ _bmc_watchdog_config_file_parse (struct bmc_watchdog_arguments *cmd_args)
   if (config_file_parse (cmd_args->common.config_file,
                          0,
                          &(cmd_args->common),
-                         NULL,
-                         NULL,
                          CONFIG_FILE_INBAND,
                          CONFIG_FILE_TOOL_BMC_WATCHDOG,
                          &config_file_data) < 0)

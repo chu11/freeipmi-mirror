@@ -467,8 +467,6 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       ret = boot_flag_parse (key, arg, state);
       if (ret == ARGP_ERR_UNKNOWN)
         ret = common_parse_opt (key, arg, &(cmd_args->common));
-      if (ret == ARGP_ERR_UNKNOWN)
-        ret = hostrange_parse_opt (key, arg, &(cmd_args->hostrange));
       return (ret);
     }
 
@@ -483,8 +481,6 @@ _ipmi_chassis_config_file_parse (struct ipmi_chassis_arguments *cmd_args)
   if (config_file_parse (cmd_args->common.config_file,
                          0,
                          &(cmd_args->common),
-                         NULL,
-                         &(cmd_args->hostrange),
                          CONFIG_FILE_INBAND | CONFIG_FILE_OUTOFBAND | CONFIG_FILE_HOSTRANGE,
                          CONFIG_FILE_TOOL_IPMI_CHASSIS,
                          NULL) < 0)
@@ -559,7 +555,6 @@ ipmi_chassis_argp_parse (int argc,
   assert (cmd_args);
 
   init_common_cmd_args_admin (&(cmd_args->common));
-  init_hostrange_cmd_args (&(cmd_args->hostrange));
 
   cmd_args->get_chassis_capabilities = 0;
   cmd_args->get_chassis_status = 0;
@@ -604,7 +599,6 @@ ipmi_chassis_argp_parse (int argc,
               cmd_args);
 
   verify_common_cmd_args (&(cmd_args->common));
-  verify_hostrange_cmd_args (&(cmd_args->hostrange));
   _ipmi_chassis_args_validate (cmd_args);
 }
 

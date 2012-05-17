@@ -34,11 +34,11 @@ int sdr_cache_create_and_load (ipmi_sdr_ctx_t ctx,
                                pstdout_state_t pstate,
                                ipmi_ctx_t ipmi_ctx,
                                const char *hostname,
-			       const struct sdr_cmd_args *sdr_args);
+			       const struct common_cmd_args *cmd_args);
 
 int sdr_cache_flush_cache (pstdout_state_t pstate,
                            const char *hostname,
-			   const struct sdr_cmd_args *sdr_args);
+			   const struct common_cmd_args *cmd_args);
 
 int sdr_cache_setup_debug (ipmi_sdr_ctx_t ctx,
 			   pstdout_state_t pstate,

@@ -767,13 +767,13 @@ _config_file_fanout (conffile_t cf,
                      void *app_ptr,
                      int app_data)
 {
-  struct hostrange_cmd_args *hostrange_args;
+  struct common_cmd_args *cmd_args;
 
   assert (data);
   assert (optionname);
   assert (option_ptr);
 
-  hostrange_args = (struct hostrange_cmd_args *)option_ptr;
+  cmd_args = (struct common_cmd_args *)option_ptr;
 
   if (data->intval < PSTDOUT_FANOUT_MIN
       || data->intval > PSTDOUT_FANOUT_MAX)
@@ -782,7 +782,7 @@ _config_file_fanout (conffile_t cf,
       exit (EXIT_FAILURE);
     }
 
-  hostrange_args->fanout = data->intval;
+  cmd_args->fanout = data->intval;
   return (0);
 }
 
@@ -1104,8 +1104,6 @@ int
 config_file_parse (const char *filename,
                    int no_error_if_not_found,
                    struct common_cmd_args *cmd_args,
-                   struct sdr_cmd_args *sdr_args,
-                   struct hostrange_cmd_args *hostrange_args,
                    unsigned int support,
                    unsigned int tool_support,
                    void *tool_data)
@@ -1492,7 +1490,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &quiet_cache_count,
-        &(sdr_args->quiet_cache),
+        &(cmd_args->quiet_cache),
         0
       },
       {
@@ -1503,7 +1501,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &sdr_cache_directory_count,
-        &(sdr_args->sdr_cache_directory),
+        &(cmd_args->sdr_cache_directory),
         0
       },
     };
@@ -1518,7 +1516,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &buffer_output_count,
-        &(hostrange_args->consolidate_output),
+        &(cmd_args->consolidate_output),
         0
       },
       {
@@ -1529,7 +1527,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &consolidate_output_count,
-        &(hostrange_args->consolidate_output),
+        &(cmd_args->consolidate_output),
         0
       },
       {
@@ -1540,7 +1538,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &fanout_count,
-        hostrange_args,
+        cmd_args,
         0
       },
       {
@@ -1551,7 +1549,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &eliminate_count,
-        &(hostrange_args->eliminate),
+        &(cmd_args->eliminate),
         0
       },
       {
@@ -1562,7 +1560,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &always_prefix_count,
-        &(hostrange_args->always_prefix),
+        &(cmd_args->always_prefix),
         0
       },
     };
@@ -4449,12 +4447,10 @@ config_file_parse (const char *filename,
 
   assert ((!support
            || (((support & CONFIG_FILE_INBAND)
-                || (support & CONFIG_FILE_OUTOFBAND))
+                || (support & CONFIG_FILE_OUTOFBAND)
+		|| (support & CONFIG_FILE_SDR)
+		|| (support & CONFIG_FILE_HOSTRANGE))
                && cmd_args))
-          && (!(support & CONFIG_FILE_SDR)
-              || ((support & CONFIG_FILE_SDR) && sdr_args))
-          && (!(support & CONFIG_FILE_HOSTRANGE)
-              || ((support & CONFIG_FILE_HOSTRANGE) && hostrange_args))
           && (((tool_support & CONFIG_FILE_TOOL_BMC_CONFIG) && tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_BMC_DEVICE) && !tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_BMC_INFO) && tool_data)
