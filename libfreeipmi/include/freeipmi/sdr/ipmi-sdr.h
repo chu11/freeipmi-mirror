@@ -67,16 +67,17 @@ extern "C" {
 #define IPMI_SDR_ERR_CACHE_READ_CACHE_DOES_NOT_EXIST              15
 #define IPMI_SDR_ERR_CACHE_INVALID                                16
 #define IPMI_SDR_ERR_CACHE_OUT_OF_DATE                            17
-#define IPMI_SDR_ERR_PARSE_INVALID_SDR_RECORD                     18
-#define IPMI_SDR_ERR_PARSE_INCOMPLETE_SDR_RECORD                  19
-#define IPMI_SDR_ERR_PARSE_CANNOT_PARSE_OR_CALCULATE              20
-#define IPMI_SDR_ERR_ERROR_RETURNED_IN_CALLBACK                   21
-#define IPMI_SDR_ERR_NOT_FOUND                                    22
-#define IPMI_SDR_ERR_IPMI_ERROR                                   23
-#define IPMI_SDR_ERR_SYSTEM_ERROR                                 24
-#define IPMI_SDR_ERR_OVERFLOW                                     25
-#define IPMI_SDR_ERR_INTERNAL_ERROR                               26
-#define IPMI_SDR_ERR_ERRNUMRANGE                                  27
+#define IPMI_SDR_ERR_STATS_NOT_COMPILED                           18
+#define IPMI_SDR_ERR_PARSE_INVALID_SDR_RECORD                     19
+#define IPMI_SDR_ERR_PARSE_INCOMPLETE_SDR_RECORD                  20
+#define IPMI_SDR_ERR_PARSE_CANNOT_PARSE_OR_CALCULATE              21
+#define IPMI_SDR_ERR_ERROR_RETURNED_IN_CALLBACK                   22
+#define IPMI_SDR_ERR_NOT_FOUND                                    23
+#define IPMI_SDR_ERR_IPMI_ERROR                                   24
+#define IPMI_SDR_ERR_SYSTEM_ERROR                                 25
+#define IPMI_SDR_ERR_OVERFLOW                                     26
+#define IPMI_SDR_ERR_INTERNAL_ERROR                               27
+#define IPMI_SDR_ERR_ERRNUMRANGE                                  28
 
 #define IPMI_SDR_FLAGS_DEFAULT                   0x0000
 #define IPMI_SDR_FLAGS_DEBUG_DUMP                0x0001
@@ -185,6 +186,21 @@ int ipmi_sdr_cache_iterate (ipmi_sdr_ctx_t ctx,
 			    void *iterate_callback_data);
 
 int ipmi_sdr_cache_close (ipmi_sdr_ctx_t ctx);
+
+/*
+ * SDR stats functions
+ *
+ * After opening an SDR cache (i.e. ipmi_sdr_cache_open() has been
+ * called), loop through the cache and compile data on the cache for
+ * a variety of utility functions.
+ */
+
+int ipmi_sdr_stats_compile (ipmi_sdr_ctx_t ctx);
+
+/* returns the number of unique entity instances for an entity id found
+ * in the SDR
+ */
+int ipmi_sdr_stats_entity_instance_unique (ipmi_sdr_ctx_t ctx, uint8_t entity_id);
 
 /*
  * SDR Record Parsing Functions

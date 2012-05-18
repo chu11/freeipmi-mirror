@@ -72,6 +72,11 @@ sdr_init_ctx (ipmi_sdr_ctx_t ctx)
   ctx->current_offset = 0;
   ctx->current_offset_dumped = 0;
   ctx->callback_lock = 0;
+
+  ctx->stats_compiled = 0;
+  memset (ctx->entity_counts,
+	  '\0',
+	  sizeof (struct ipmi_sdr_entity_count) * IPMI_MAX_ENTITY_IDS); 
 }
 
 int

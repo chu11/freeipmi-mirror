@@ -69,6 +69,7 @@ static char *ipmi_sdr_cache_errmsgs[] =
     "SDR cache does not exist",
     "SDR cache invalid",
     "SDR cache out of date",
+    "stats not compiled",
     "invalid sdr record",
     "incomplete sdr record",
     "cannot parse or calculate",

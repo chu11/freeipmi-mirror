@@ -1,5 +1,10 @@
 2012-05-17  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/sdr/, libfreeipmi/sdr/: Support new
+	stats functions to compile useful info from the SDR.
+	
+2012-05-17  Albert Chu <chu11@llnl.gov>
+
 	Merge from branch toolcleanup2
 
 	* Globally cleanup variables and consistency of variables.
