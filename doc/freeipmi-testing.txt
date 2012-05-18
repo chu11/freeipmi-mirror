@@ -1333,6 +1333,35 @@ verify tool:
 - Exits with error.  Most likely/best error message "cipher suite id unavailable".
 * It is most important that the connection not succeed.
 
+Test)
+
+Begin with "pristine" configuration.
+
+Configure each user to have a password > 16 bytes in length.
+
+Execute all below tests with IPMI 2.0 (-D lan_2_0)
+
+Execute bmc-info, authenticating with USER1
+Execute bmc-info, authenticating with OPERATOR1
+Execute bmc-info, authenticating with ADMIN1
+verify tool:
+- Executes without errors for each test.
+
+Test)
+
+Begin with "pristine" configuration.
+
+Configure each user to have a password > 16 bytes in length.
+
+Execute all below tests with IPMI 1.5 (-D lan)
+
+Execute bmc-info, authenticating with USER1
+Execute bmc-info, authenticating with OPERATOR1
+Execute bmc-info, authenticating with ADMIN1
+- Exits with error.  Most likely/best error message "password verification timeout".
+* It is most important that the connection not succeed.
+
+
 Misc: Bad Password Threshold
 ----------------------------
 
