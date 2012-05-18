@@ -1713,6 +1713,16 @@ api_lan_open_session (ipmi_ctx_t ctx)
         API_SET_ERRNUM (ctx, IPMI_ERR_BMC_BUSY);
       else if (ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_ACTIVATE_SESSION_EXCEEDS_PRIVILEGE_LEVEL) == 1)
         API_SET_ERRNUM (ctx, IPMI_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED);
+#if 0
+      /* achu: noticed this on an Inventec 5441/Dell Xanadu II under
+       * some scenarios.  Password Invalid doesn't seem right, b/c on
+       * other motherboards it may be a legitimate bad input.  I think
+       * it best to comment this out and let the vendor fix their
+       * firmware.
+       */
+       else if (ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1)
+	API_SET_ERRNUM (ctx, IPMI_ERR_PASSWORD_INVALID);
+#endif
       else
         API_BAD_RESPONSE_TO_API_ERRNUM (ctx, obj_cmd_rs);
       goto cleanup;
