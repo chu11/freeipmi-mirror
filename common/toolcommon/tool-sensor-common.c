@@ -51,12 +51,6 @@
 
 #define SENSORS_SENSOR_NAME_LENGTH 16
 
-struct entity_id_count_sdr_callback
-{
-  pstdout_state_t pstate;
-  struct sensor_entity_id_counts *entity_id_counts;
-};
-
 static void
 _str_replace_char (char *str, char chr, char with)
 {
@@ -102,7 +96,6 @@ get_oem_sensor_type_output_string (uint8_t sensor_type,
 int
 get_entity_sensor_name_string (pstdout_state_t pstate,
                                ipmi_sdr_ctx_t sdr_ctx,
-                               struct sensor_entity_id_counts *entity_id_counts,
                                uint8_t *sensor_number,
                                char *sensor_name_buf,
                                unsigned int sensor_name_buf_len)
@@ -115,7 +108,6 @@ get_entity_sensor_name_string (pstdout_state_t pstate,
   uint8_t record_type;
 
   assert (sdr_ctx);
-  assert (entity_id_counts);
   assert (sensor_name_buf);
   assert (sensor_name_buf_len);
 
@@ -213,7 +205,7 @@ get_entity_sensor_name_string (pstdout_state_t pstate,
     }
   else
     {
-      if (entity_id_counts->count[entity_id] > 1)
+      if (ipmi_sdr_stats_entity_instance_unique (sdr_ctx, entity_id) > 1)
         {
           /* special case if sensor sharing is involved */
           if ((record_type == IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD
@@ -658,132 +650,21 @@ sensor_type_listed_sdr (pstdout_state_t pstate,
                               sensor_types_length));
 }
 
-static void
-_sensor_entity_id_counts_init (struct sensor_entity_id_counts *entity_id_counts)
-{
-  assert (entity_id_counts);
-
-  memset (entity_id_counts, '\0', sizeof (struct sensor_entity_id_counts));
-}
-
-static int
-_store_entity_id_count (ipmi_sdr_ctx_t sdr_ctx,
-			uint8_t record_type,
-			const void *sdr_record,
-			unsigned int sdr_record_len,
-			void *arg)
-{
-  struct entity_id_count_sdr_callback *sdr_callback_arg;
-  struct sensor_entity_id_counts *entity_id_counts;
-  uint8_t entity_id, entity_instance, entity_instance_type;
-
-  assert (sdr_ctx);
-  assert (sdr_record);
-  assert (sdr_record_len);
-  assert (arg);
-
-  sdr_callback_arg = (struct entity_id_count_sdr_callback *)arg;
-  entity_id_counts = sdr_callback_arg->entity_id_counts;
-
-  if (record_type != IPMI_SDR_FORMAT_FULL_SENSOR_RECORD
-      && record_type != IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD
-      && record_type != IPMI_SDR_FORMAT_EVENT_ONLY_RECORD
-      && record_type != IPMI_SDR_FORMAT_GENERIC_DEVICE_LOCATOR_RECORD
-      && record_type != IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD)
-    return (0);
-
-  if (ipmi_sdr_parse_entity_id_instance_type (sdr_ctx,
-					      sdr_record,
-					      sdr_record_len,
-                                              &entity_id,
-                                              &entity_instance,
-                                              &entity_instance_type) < 0)
-    {
-      PSTDOUT_FPRINTF (sdr_callback_arg->pstate,
-                       stderr,
-                       "ipmi_sdr_parse_entity_id_instance_type: %s\n",
-                       ipmi_sdr_ctx_errormsg (sdr_ctx));
-      return (-1);
-    }
-
-  /* there's now atleast one of this entity id */
-  if (!entity_id_counts->count[entity_id])
-    entity_id_counts->count[entity_id] = 1;
-
-  if (entity_instance > entity_id_counts->count[entity_id])
-    entity_id_counts->count[entity_id] = entity_instance;
-
-  /* special case if sensor sharing is involved */
-  if (record_type == IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD
-      || record_type == IPMI_SDR_FORMAT_EVENT_ONLY_RECORD)
-    {
-      uint8_t share_count;
-      uint8_t entity_instance_sharing;
-
-      if (ipmi_sdr_parse_sensor_record_sharing (sdr_ctx,
-						NULL,
-						0,
-                                                &share_count,
-                                                NULL,
-                                                NULL,
-                                                &entity_instance_sharing) < 0)
-        {
-          PSTDOUT_FPRINTF (sdr_callback_arg->pstate,
-                           stderr,
-                           "ipmi_sdr_parse_sensor_record_sharing: %s\n",
-                           ipmi_sdr_ctx_errormsg (sdr_ctx));
-          return (-1);
-        }
-      
-      if (share_count > 1
-          && entity_instance_sharing == IPMI_SDR_ENTITY_INSTANCE_INCREMENTS_FOR_EACH_SHARED_RECORD)
-        {
-          int i;
-
-          for (i = 0; i < share_count; i++)
-            {
-              entity_instance += (i + 1);
-              
-              if (entity_instance > entity_id_counts->count[entity_id])
-                entity_id_counts->count[entity_id] = entity_instance;
-            }
-        }
-    }
- 
-  return (0);
-}
-
 int
-calculate_entity_id_counts (pstdout_state_t pstate,
-                            ipmi_sdr_ctx_t sdr_ctx,
-                            struct sensor_entity_id_counts *entity_id_counts)
+calculate_entity_id_counts (pstdout_state_t pstate, ipmi_sdr_ctx_t sdr_ctx)
 {
-  struct entity_id_count_sdr_callback sdr_callback_arg;
-  int rv = -1;
-  
   assert (sdr_ctx);
-  assert (entity_id_counts);
   
-  _sensor_entity_id_counts_init (entity_id_counts);
-
-  sdr_callback_arg.pstate = pstate;
-  sdr_callback_arg.entity_id_counts = entity_id_counts; 
-
-  if (ipmi_sdr_cache_iterate (sdr_ctx,
-			      _store_entity_id_count,
-			      &sdr_callback_arg) < 0)
+  if (ipmi_sdr_stats_compile (sdr_ctx) < 0)
     {
       PSTDOUT_FPRINTF (pstate,
 		       stderr,
-		       "ipmi_sdr_parse_sensor_record_sharing: %s\n",
+		       "ipmi_sdr_stats_compile: %s\n",
 		       ipmi_sdr_ctx_errormsg (sdr_ctx));
-      goto cleanup;
+      return (-1);
     }
 
-  rv = 0;
- cleanup:
-  ipmi_sdr_cache_first (sdr_ctx);
-  return (rv);
+  return (0);
 }
 
 static void
@@ -820,7 +701,7 @@ _store_column_widths (pstdout_state_t pstate,
                       unsigned int count_event_only_records,
                       unsigned int count_device_locator_records,
                       unsigned int count_oem_records,
-                      struct sensor_entity_id_counts *entity_id_counts,
+		      int entity_sensor_names,
                       struct sensor_column_width *column_width)
 {
   char record_id_buf[RECORD_ID_BUFLEN + 1];
@@ -868,7 +749,7 @@ _store_column_widths (pstdout_state_t pstate,
   if (record_type == IPMI_SDR_FORMAT_OEM_RECORD)
     return (0);
 
-  if (entity_id_counts)
+  if (entity_sensor_names)
     {
       char sensor_name[MAX_ENTITY_ID_SENSOR_NAME_STRING + 1];
 
@@ -876,7 +757,6 @@ _store_column_widths (pstdout_state_t pstate,
 
       if (get_entity_sensor_name_string (pstate,
                                          sdr_ctx,
-                                         entity_id_counts,
                                          sensor_number,
                                          sensor_name,
                                          MAX_ENTITY_ID_SENSOR_NAME_STRING) < 0)
@@ -996,7 +876,7 @@ _store_column_widths_shared (pstdout_state_t pstate,
                              unsigned int count_event_only_records,
                              unsigned int count_device_locator_records,
                              unsigned int count_oem_records,
-                             struct sensor_entity_id_counts *entity_id_counts,
+			     int entity_sensor_names,
                              struct sensor_column_width *column_width)
 {
   uint8_t record_type;
@@ -1030,7 +910,7 @@ _store_column_widths_shared (pstdout_state_t pstate,
                                 count_event_only_records,
                                 count_device_locator_records,
                                 count_oem_records,
-                                entity_id_counts,
+				entity_sensor_names,
                                 column_width) < 0)
         return (-1);
       return (0);
@@ -1060,7 +940,7 @@ _store_column_widths_shared (pstdout_state_t pstate,
                                 count_event_only_records,
                                 count_device_locator_records,
                                 count_oem_records,
-                                entity_id_counts,
+				entity_sensor_names,
                                 column_width) < 0)
         return (-1);
       return (0);
@@ -1098,7 +978,7 @@ _store_column_widths_shared (pstdout_state_t pstate,
                                 count_event_only_records,
                                 count_device_locator_records,
                                 count_oem_records,
-                                entity_id_counts,
+				entity_sensor_names,
                                 column_width) < 0)
         return (-1);
     }
@@ -1118,7 +998,7 @@ calculate_column_widths (pstdout_state_t pstate,
                          unsigned int count_event_only_records,
                          unsigned int count_device_locator_records,
                          unsigned int count_oem_records,
-                         struct sensor_entity_id_counts *entity_id_counts,
+			 int entity_sensor_names,
                          struct sensor_column_width *column_width)
 {
   int rv = -1;
@@ -1155,7 +1035,7 @@ calculate_column_widths (pstdout_state_t pstate,
                                                count_event_only_records,
                                                count_device_locator_records,
                                                count_oem_records,
-                                               entity_id_counts,
+					       entity_sensor_names,
                                                column_width) < 0)
                 goto cleanup;
             }
@@ -1168,7 +1048,7 @@ calculate_column_widths (pstdout_state_t pstate,
                                         count_event_only_records,
                                         count_device_locator_records,
                                         count_oem_records,
-                                        entity_id_counts,
+					entity_sensor_names,
                                         column_width) < 0)
                 goto cleanup;
             }
@@ -1212,7 +1092,7 @@ calculate_column_widths (pstdout_state_t pstate,
                                                    count_event_only_records,
                                                    count_device_locator_records,
                                                    count_oem_records,
-                                                   entity_id_counts,
+						   entity_sensor_names,
                                                    column_width) < 0)
                     goto cleanup;
                 }
@@ -1225,7 +1105,7 @@ calculate_column_widths (pstdout_state_t pstate,
                                             count_event_only_records,
                                             count_device_locator_records,
                                             count_oem_records,
-                                            entity_id_counts,
+					    entity_sensor_names,
                                             column_width) < 0)
                     goto cleanup;
                 }

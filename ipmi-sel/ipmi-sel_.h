@@ -144,7 +144,6 @@ typedef struct ipmi_sel_state_data
   ipmi_sel_ctx_t sel_ctx;
   ipmi_interpret_ctx_t interpret_ctx;
   int output_headers;
-  struct sensor_entity_id_counts entity_id_counts;
   struct sensor_column_width column_width;
   struct ipmi_oem_data oem_data;
   /* for tail usage */

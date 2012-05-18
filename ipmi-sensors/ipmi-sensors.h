@@ -115,7 +115,6 @@ typedef struct ipmi_sensors_state_data
   ipmi_sensor_read_ctx_t sensor_read_ctx;
   ipmi_interpret_ctx_t interpret_ctx;
   int output_headers;
-  struct sensor_entity_id_counts entity_id_counts;
   struct sensor_column_width column_width;
   struct ipmi_oem_data oem_data;
   struct ipmi_sensors_interpret_oem_data_intel_node_manager intel_node_manager;

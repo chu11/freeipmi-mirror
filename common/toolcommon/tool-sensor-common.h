@@ -77,17 +77,11 @@ struct sensor_column_width
   int sensor_units;
 };
 
-struct sensor_entity_id_counts
-{
-  unsigned int count[MAX_ENTITY_IDS];
-};
-
 const char * get_sensor_type_output_string (unsigned int sensor_type);
 const char * get_oem_sensor_type_output_string (uint8_t sensor_type, uint8_t event_reading_code, uint32_t manufacturer_id, uint16_t product_id);
 
 int get_entity_sensor_name_string (pstdout_state_t pstate,
                                    ipmi_sdr_ctx_t sdr_ctx,
-                                   struct sensor_entity_id_counts *entity_id_counts,
                                    uint8_t *sensor_number,
                                    char *sensor_name_buf,
                                    unsigned int sensor_name_buf_len);
@@ -116,11 +110,9 @@ int sensor_type_listed_sdr (pstdout_state_t pstate,
                             char sensor_types[][MAX_SENSOR_TYPES_STRING_LENGTH+1],
                             unsigned int sensor_types_length);
 
-int calculate_entity_id_counts (pstdout_state_t pstate,
-                                ipmi_sdr_ctx_t sdr_ctx,
-                                struct sensor_entity_id_counts *entity_id_counts);
+int calculate_entity_id_counts (pstdout_state_t pstate, ipmi_sdr_ctx_t sdr_ctx);
 
-/* use normal names, set entity_id_counts to NULL */
+/* use normal names, set entity_sensor_names to 0 */
 int calculate_column_widths (pstdout_state_t pstate,
                              ipmi_sdr_ctx_t sdr_ctx,
                              char sensor_types[][MAX_SENSOR_TYPES_STRING_LENGTH+1],
@@ -132,7 +124,7 @@ int calculate_column_widths (pstdout_state_t pstate,
                              unsigned int count_event_only_records,
                              unsigned int count_device_locator_records,
                              unsigned int count_oem_records,
-                             struct sensor_entity_id_counts *entity_id_counts,
+			     int entity_sensor_names,
                              struct sensor_column_width *column_width);
 
 int calculate_column_widths_ignored_sdr_cache (unsigned int non_abbreviated_units,

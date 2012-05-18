@@ -2,6 +2,12 @@
 
 	* libfreeipmi/include/freeipmi/sdr/, libfreeipmi/sdr/: Support new
 	stats functions to compile useful info from the SDR.
+
+	* common/toolcommon/tool-sensor-common.h,
+	common/toolcommon/tool-sensor-common.c: Update for new SDR stats
+	functions.
+
+	* Globally update tools as necessary for changes. 
 	
 2012-05-17  Albert Chu <chu11@llnl.gov>
 

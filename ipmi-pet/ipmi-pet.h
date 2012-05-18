@@ -89,7 +89,6 @@ typedef struct ipmi_pet_state_data
   ipmi_fru_parse_ctx_t fru_parse_ctx;
   ipmi_interpret_ctx_t interpret_ctx;
   int output_headers;
-  struct sensor_entity_id_counts entity_id_counts;
   struct sensor_column_width column_width;
   struct ipmi_oem_data oem_data;
 } ipmi_pet_state_data_t;

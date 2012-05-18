@@ -315,7 +315,6 @@ event_output_sensor_name (pstdout_state_t pstate,
 			  ipmi_sdr_ctx_t sdr_ctx,
 			  uint8_t *sel_record,
 			  unsigned int sel_record_len,
-			  struct sensor_entity_id_counts *entity_id_counts,
 			  struct sensor_column_width *column_width,
 			  struct common_cmd_args *common_args,
 			  int entity_sensor_names,
@@ -328,7 +327,6 @@ event_output_sensor_name (pstdout_state_t pstate,
   int ret;
 
   assert (sel_ctx);
-  assert (!entity_sensor_names || (entity_sensor_names && entity_id_counts));
   assert (column_width || (!column_width && comma_separated_output));
   assert (common_args);
 
@@ -374,7 +372,6 @@ event_output_sensor_name (pstdout_state_t pstate,
       memset (outbuf, '\0', EVENT_OUTPUT_BUFLEN+1);
       if (get_entity_sensor_name_string (pstate,
                                          sdr_ctx,
-                                         entity_id_counts,
                                          &sensor_number,
                                          outbuf,
                                          EVENT_OUTPUT_BUFLEN) < 0)
