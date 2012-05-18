@@ -1040,6 +1040,19 @@ BMC/IPMI Configuration Issue #30: [COMPLIANCE]
 
   Notes: Confirmed fixed in newer firmware.
 
+BMC/IPMI Configuration Issue #31: [IMPLEMENTATION]
+
+  Some new IPMI configuration are not accepted by the BMC until after
+  a system reboot is done.  
+
+  Seen on: Dell Poweredge R610, Dell Poweredge R710, Inventec
+  5441/Dell Xanadu II
+
+  Resolution: None
+
+  Notes: A cold reset of the BMC is sufficient to resolve this issue
+  on Inventec 5441/Dell Xanadu II without rebooting the machine.
+
 ----------------------------------------------------------------------
 
 -------------------------------------------------------
