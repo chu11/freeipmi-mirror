@@ -47,8 +47,14 @@ ipmi_sensors_simple_output_setup (ipmi_sensors_state_data_t *state_data)
   
   if (state_data->prog_data->args->entity_sensor_names)
     {
-      if (calculate_entity_id_counts (state_data->pstate, state_data->sdr_ctx) < 0)
-        return (-1);
+      if (ipmi_sdr_stats_compile (state_data->sdr_ctx) < 0)
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_sdr_stats_compile: %s\n",
+			   ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
+	  return (-1);
+	}
     }
 
   if (!state_data->prog_data->args->legacy_output

@@ -650,23 +650,6 @@ sensor_type_listed_sdr (pstdout_state_t pstate,
                               sensor_types_length));
 }
 
-int
-calculate_entity_id_counts (pstdout_state_t pstate, ipmi_sdr_ctx_t sdr_ctx)
-{
-  assert (sdr_ctx);
-  
-  if (ipmi_sdr_stats_compile (sdr_ctx) < 0)
-    {
-      PSTDOUT_FPRINTF (pstate,
-		       stderr,
-		       "ipmi_sdr_stats_compile: %s\n",
-		       ipmi_sdr_ctx_errormsg (sdr_ctx));
-      return (-1);
-    }
-
-  return (0);
-}
-
 static void
 _sensor_column_width_init (struct sensor_column_width *column_width)
 {

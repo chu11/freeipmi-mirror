@@ -110,8 +110,6 @@ int sensor_type_listed_sdr (pstdout_state_t pstate,
                             char sensor_types[][MAX_SENSOR_TYPES_STRING_LENGTH+1],
                             unsigned int sensor_types_length);
 
-int calculate_entity_id_counts (pstdout_state_t pstate, ipmi_sdr_ctx_t sdr_ctx);
-
 /* use normal names, set entity_sensor_names to 0 */
 int calculate_column_widths (pstdout_state_t pstate,
                              ipmi_sdr_ctx_t sdr_ctx,
