@@ -299,7 +299,7 @@ get_entity_sensor_name_string (pstdout_state_t pstate,
                     {
                       /* IPMI spec example is:
                        *
-                       * "Suppose snsor ID is 'Temp' for 'Temperature
+                       * "Suppose sensor ID is 'Temp' for 'Temperature
                        * Sensor', share count = 3, ID string instance
                        * modifier = numeric, instance modifier offset
                        * = 5 - then the sensors oculd be identified
