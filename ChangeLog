@@ -13,6 +13,10 @@
 	libfreeipmi/include/freeipmi/util/ipmi-sensor-units-util.c: Remove
 	files.  Collapse code into ipmi-sensor-util.h and
 	ipmi-sensor-util.c.
+
+	* libfreeipmi/include/freeipmi/util/ipmi-sensor-units-util.h,
+	libfreeipmi/include/freeipmi/util/ipmi-sensor-units-util.c (ipmi_sensor_entity_sensor_name_string):
+	New function.
 	
 2012-05-17  Albert Chu <chu11@llnl.gov>
 

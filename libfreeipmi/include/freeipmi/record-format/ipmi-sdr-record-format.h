@@ -199,6 +199,9 @@ extern "C" {
 #define IPMI_SDR_ACPI_SYSTEM_POWER_STATE_NOTIFICATION_REQUIRED     0x0
 #define IPMI_SDR_NO_ACPI_SYSTEM_POWER_STATE_NOTIFICATION_REQUIRED  0x1
 
+#define IPMI_SDR_MAX_ID_STRING_LENGTH        16
+#define IPMI_SDR_MAX_DEVICE_ID_STRING_LENGTH 16
+
 /* 
  * see freeipmi/templates/ for template definitions 
  */

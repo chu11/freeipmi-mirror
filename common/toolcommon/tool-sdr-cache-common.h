@@ -27,6 +27,7 @@
 #include "tool-cmdline-common.h"
 #include "pstdout.h"
 
+/* XXX */
 #define IPMI_SDR_CACHE_MAX_ID_STRING         16
 #define IPMI_SDR_CACHE_MAX_DEVICE_ID_STRING  16
 
