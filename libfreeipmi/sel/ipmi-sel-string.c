@@ -57,7 +57,6 @@
 #include "freeipmi/spec/ipmi-comp-code-spec.h"
 #include "freeipmi/util/ipmi-iana-enterprise-numbers-util.h"
 #include "freeipmi/util/ipmi-sensor-and-event-code-tables-util.h"
-#include "freeipmi/util/ipmi-sensor-units-util.h"
 #include "freeipmi/util/ipmi-sensor-util.h"
 #include "freeipmi/util/ipmi-util.h"
 
