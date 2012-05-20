@@ -55,8 +55,8 @@ o In ipmi-raw, make --channel-number and --slave-address legacy
   --target-slave-address.
 o Re-work entity sensor names calculation to more properly meet IPMI
   specification.  Users may see slight changes in the output of sensor
-  names when using the --entity-sensor-names option similar output in
-  ipmi-sensors, ipmi-sel, ipmi-pet, or ipmi-oem.
+  names when using the --entity-sensor-names option or similar output
+  in ipmi-sensors, ipmi-sel, ipmi-pet, or ipmi-oem.
 
 Libraries
 ---------
