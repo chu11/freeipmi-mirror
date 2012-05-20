@@ -223,7 +223,6 @@ libfreeipmi_la_SOURCES = \
 	util/ipmi-outofband-util.c \
 	util/ipmi-rmcpplus-util.c \
 	util/ipmi-sensor-and-event-code-tables-util.c \
-	util/ipmi-sensor-units-util.c \
 	util/ipmi-sensor-util.c \
 	util/ipmi-util.c \
 	util/rmcp-util.c
