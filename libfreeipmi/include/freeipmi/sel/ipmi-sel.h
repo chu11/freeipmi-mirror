@@ -78,8 +78,8 @@ typedef int (*Ipmi_Sel_Parse_Callback)(ipmi_sel_ctx_t ctx, void *callback_data);
  */
 
 /* ipmi_sel_ctx_create
- * - ipmi_ctx assumes ipmi opened and ready to go
- * - sdr_ctx assumes cache open and ready for reading
+ * - ipmi_ctx ipmi opened and ready to go
+ * - sdr_ctx cache open and ready for reading
  * - ipmi_ctx is optional, if NULL ctx cannot be for SEL reading, only parsing records
  * - sdr_ctx is optional, sdr won't be used if not available
  */
