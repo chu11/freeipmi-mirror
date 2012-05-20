@@ -35,6 +35,18 @@ const char *ipmi_get_oem_sensor_type_string (uint8_t sensor_type,
                                              uint32_t manufacturer_id,
                                              uint16_t product_id);
 
+#define IPMI_SENSOR_ENTITY_SENSOR_NAME_FLAGS_DEFAULT               0x00000000
+#define IPMI_SENSOR_ENTITY_SENSOR_NAME_FLAGS_IGNORE_SHARED_SENSORS 0x00000001
+
+/* returns length written into buffer on success, -1 on error */
+int ipmi_sensor_entity_sensor_name_string (ipmi_sdr_ctx_t sdr_ctx,
+					   const void *sdr_record,
+					   unsigned int sdr_record_len,
+					   uint8_t sensor_number,
+					   unsigned int flags,
+					   char *buf,
+					   char *buflen);
+
 /* returns length written into buffer on success, -1 on error */
 int ipmi_sensor_units_string (uint8_t sensor_units_percentage,
                               uint8_t sensor_units_modifier,
