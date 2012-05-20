@@ -260,6 +260,21 @@ ipmi_sensor_entity_sensor_name_string (ipmi_sdr_ctx_t sdr_ctx,
       goto cleanup;
     }
 
+  /* Table 39-1
+   *
+   * "It is recommended that console software subtract 60h when
+   * presenting device-relative Entity Instance values, and present
+   * the Entity Instance number along with an ID for the device
+   * providing the interface to the entity."
+   *
+   * achu: For the time being we do not output the device providing
+   * the interface, only the right instance number.  Adjust later if
+   * necessary.
+   */
+
+  if (IPMI_ENTITY_INSTANCE_DEVICE_RELATIVE (entity_instance))
+    entity_instance -= IPMI_ENTITY_INSTANCE_DEVICE_RELATIVE_MIN;
+
   entity_id_str = ipmi_get_entity_id_string (entity_id);
 
   /* a few special cases, for entity_ids are special, the vendor has

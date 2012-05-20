@@ -17,6 +17,9 @@
 	* libfreeipmi/include/freeipmi/util/ipmi-sensor-units-util.h,
 	libfreeipmi/include/freeipmi/util/ipmi-sensor-units-util.c (ipmi_sensor_entity_sensor_name_string):
 	New function.
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-entity-ids-spec.h:
+	Support system and device relative entity instance number macros.
 	
 2012-05-17  Albert Chu <chu11@llnl.gov>
 
