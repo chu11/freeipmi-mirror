@@ -96,17 +96,17 @@ static int
 _legacy_simple_output_header (ipmi_sensors_state_data_t *state_data,
                               uint16_t record_id)
 {
-  char id_string[IPMI_SDR_CACHE_MAX_ID_STRING + 1];
+  char id_string[IPMI_SDR_MAX_ID_STRING_LENGTH + 1];
 
   assert (state_data);
 
-  memset (id_string, '\0', IPMI_SDR_CACHE_MAX_ID_STRING + 1);
+  memset (id_string, '\0', IPMI_SDR_MAX_ID_STRING_LENGTH + 1);
 
   if (ipmi_sdr_parse_id_string (state_data->sdr_ctx,
 				NULL,
 				0,
                                 id_string,
-                                IPMI_SDR_CACHE_MAX_ID_STRING) < 0)
+                                IPMI_SDR_MAX_ID_STRING_LENGTH) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -324,20 +324,20 @@ static int
 _ipmimonitoring_legacy_simple_output_header (ipmi_sensors_state_data_t *state_data,
                                              uint16_t record_id)
 {
-  char id_string[IPMI_SDR_CACHE_MAX_ID_STRING + 1];
+  char id_string[IPMI_SDR_MAX_ID_STRING_LENGTH + 1];
   uint8_t sensor_type;
   uint8_t event_reading_type_code;
   const char * sensor_type_string = NULL;
 
   assert (state_data);
 
-  memset (id_string, '\0', IPMI_SDR_CACHE_MAX_ID_STRING + 1);
+  memset (id_string, '\0', IPMI_SDR_MAX_ID_STRING_LENGTH + 1);
 
   if (ipmi_sdr_parse_id_string (state_data->sdr_ctx,
 				NULL,
 				0,
                                 id_string,
-                                IPMI_SDR_CACHE_MAX_ID_STRING) < 0)
+                                IPMI_SDR_MAX_ID_STRING_LENGTH) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -542,7 +542,7 @@ _simple_output_header (ipmi_sensors_state_data_t *state_data,
                        uint16_t sensor_event_bitmask)
 {
   char fmt[IPMI_SENSORS_FMT_BUFLEN + 1];
-  char id_string[IPMI_SDR_CACHE_MAX_ID_STRING + 1];
+  char id_string[IPMI_SDR_MAX_ID_STRING_LENGTH + 1];
   char sensor_name_buf[MAX_ENTITY_ID_SENSOR_NAME_STRING + 1];
   char *sensor_name = NULL;
   const char *sensor_type_string;
@@ -567,13 +567,13 @@ _simple_output_header (ipmi_sensors_state_data_t *state_data,
     }
   else
     {
-      memset (id_string, '\0', IPMI_SDR_CACHE_MAX_ID_STRING + 1);
+      memset (id_string, '\0', IPMI_SDR_MAX_ID_STRING_LENGTH + 1);
 
       if (ipmi_sdr_parse_id_string (state_data->sdr_ctx,
 				    NULL,
 				    0,
                                     id_string,
-                                    IPMI_SDR_CACHE_MAX_ID_STRING) < 0)
+                                    IPMI_SDR_MAX_ID_STRING_LENGTH) < 0)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,

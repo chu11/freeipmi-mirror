@@ -263,7 +263,7 @@ _output_fru_with_sdr (ipmi_fru_state_data_t *state_data,
 		      unsigned int sdr_record_len,
 		      uint8_t device_id)
 {
-  char device_id_string[IPMI_SDR_CACHE_MAX_DEVICE_ID_STRING+1];
+  char device_id_string[IPMI_SDR_MAX_DEVICE_ID_STRING_LENGTH+1];
   int rv = -1;
 
   assert (state_data);
@@ -271,13 +271,13 @@ _output_fru_with_sdr (ipmi_fru_state_data_t *state_data,
   assert (sdr_record);
   assert (sdr_record_len);
 
-  memset (device_id_string, '\0', IPMI_SDR_CACHE_MAX_DEVICE_ID_STRING+1);
+  memset (device_id_string, '\0', IPMI_SDR_MAX_DEVICE_ID_STRING_LENGTH+1);
 
   if (ipmi_sdr_parse_device_id_string (state_data->sdr_ctx,
 				       sdr_record,
 				       sdr_record_len,
 				       device_id_string,
-				       IPMI_SDR_CACHE_MAX_DEVICE_ID_STRING) < 0)
+				       IPMI_SDR_MAX_DEVICE_ID_STRING_LENGTH) < 0)
     {
       pstdout_fprintf (state_data->pstate,
 		       stderr,

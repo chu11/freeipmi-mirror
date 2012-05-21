@@ -60,7 +60,7 @@ create_section_name (ipmi_sensors_config_state_data_t *state_data,
                      char *section_name,
                      unsigned int section_name_len)
 {
-  char id_string[IPMI_SDR_CACHE_MAX_ID_STRING + 1];
+  char id_string[IPMI_SDR_MAX_ID_STRING_LENGTH + 1];
   uint16_t record_id;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
@@ -70,7 +70,7 @@ create_section_name (ipmi_sensors_config_state_data_t *state_data,
   assert (section_name_len);
 
   memset (section_name, '\0', section_name_len);
-  memset (id_string, '\0', IPMI_SDR_CACHE_MAX_ID_STRING + 1);
+  memset (id_string, '\0', IPMI_SDR_MAX_ID_STRING_LENGTH + 1);
 
   if (ipmi_sdr_parse_record_id_and_type (state_data->sdr_ctx,
 					 NULL,
@@ -89,7 +89,7 @@ create_section_name (ipmi_sensors_config_state_data_t *state_data,
 				NULL,
 				0,
                                 id_string,
-                                IPMI_SDR_CACHE_MAX_ID_STRING) < 0)
+                                IPMI_SDR_MAX_ID_STRING_LENGTH) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
