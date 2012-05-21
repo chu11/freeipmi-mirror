@@ -404,21 +404,12 @@ _sdr_repository_info (ipmi_sensors_state_data_t *state_data)
 static int
 _output_setup (ipmi_sensors_state_data_t *state_data)
 {
-  int rv = -1;
-
   assert (state_data);
 
-  switch (state_data->prog_data->args->verbose_count)
-    {
-    case 0:
-      rv = ipmi_sensors_simple_output_setup (state_data);
-      break;
-    default:
-      rv = 0;
-      break;
-    }
+  if (!state_data->prog_data->args->verbose_count)
+    return (ipmi_sensors_simple_output_setup (state_data));
 
-  return (rv);
+  return (0);
 }
 
 static int
@@ -996,30 +987,23 @@ _output_sensor (ipmi_sensors_state_data_t *state_data,
     }
 
  output:
-  switch (state_data->prog_data->args->verbose_count)
-    {
-    case 0:
-      rv = ipmi_sensors_simple_output (state_data,
-                                       sensor_number_base + shared_sensor_number_offset,
-                                       sensor_reading,
-                                       event_message_output_type,
-                                       sensor_event_bitmask,
-                                       event_message_list,
-                                       event_message_list_len);
-      break;
-    case 1:
-    case 2:
-    default:
-      rv = ipmi_sensors_detailed_output (state_data,
-                                         sensor_number_base + shared_sensor_number_offset,
-                                         sensor_reading,
-                                         event_message_output_type,
-                                         sensor_event_bitmask,
-                                         event_message_list,
-                                         event_message_list_len);
-      break;
-    }
-
+  if (state_data->prog_data->args->verbose_count)
+    rv = ipmi_sensors_detailed_output (state_data,
+				       sensor_number_base + shared_sensor_number_offset,
+				       sensor_reading,
+				       event_message_output_type,
+				       sensor_event_bitmask,
+				       event_message_list,
+				       event_message_list_len);
+  else
+    rv = ipmi_sensors_simple_output (state_data,
+				     sensor_number_base + shared_sensor_number_offset,
+				     sensor_reading,
+				     event_message_output_type,
+				     sensor_event_bitmask,
+				     event_message_list,
+				     event_message_list_len);
+  
  cleanup:
   free (sensor_reading);
   if (event_message_list)

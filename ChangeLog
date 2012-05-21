@@ -1,3 +1,50 @@
+2012-05-21  Albert Chu <chu11@llnl.gov>
+
+	Merge branch entitysensornamesredo.
+
+	* libfreeipmi/include/freeipmi/sdr/, libfreeipmi/sdr/: Support new
+	stats functions to compile useful info from the SDR.
+
+	* common/toolcommon/tool-sensor-common.h,
+	common/toolcommon/tool-sensor-common.c: Update for new SDR stats
+	functions.
+
+	* Globally update tools as necessary for changes. 
+
+	* libfreeipmi/include/freeipmi/util/ipmi-sensor-units-util.h,
+	libfreeipmi/include/freeipmi/util/ipmi-sensor-units-util.c: Remove
+	files.  Collapse code into ipmi-sensor-util.h and
+	ipmi-sensor-util.c.
+
+	* libfreeipmi/include/freeipmi/sdr/ipmi-sdr.h (ipmi_sdr_parse_entity_sensor_name):
+	New function.
+
+	* libfreeipmi/sdr/ipmi-sdr-parse-util.c: New
+	file.
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-entity-ids-spec.h:
+	Support system and device relative entity instance number macros.
+
+	* libfreeipmi/sel/ipmi-sel.c (ipmi_sel_ctx_create): Use
+	ipmi_sdr_cache_sdr_version instead of ipmi_sdr_cache_first to
+	check for open SDR for reading.
+
+	* Globally update tools as necessary for new functions.
+
+	* libfreeipmi/sdr/ipmi-sdr-common.h,
+	libfreeipmi/sdr/ipmi-sdr-common.c (sdr_set_current_offset): New
+	common function.
+
+	* libfreeipmi/sdr/ipmi-sdr-cache-read.c: Adjust for new common function.
+
+	* libfreeipmi/sdr/ipmi-sdr-defs.h,
+	libfreeipmi/sdr/ipmi-sdr-common.h,
+	libfreeipmi/sdr/ipmi-sdr-common.c (sdr_save_current_offset,
+	sdr_reset_current_offset): New common functions.
+
+	* libfreeipmi/sdr/ipmi-sdr-cache-read.c (ipmi_sdr_cache_iterate):
+	Preserve current offset/iterator point when function was called.
+	
 2012-05-17  Albert Chu <chu11@llnl.gov>
 
 	Merge from branch toolcleanup2

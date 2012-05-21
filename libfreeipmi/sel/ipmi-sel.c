@@ -95,7 +95,9 @@ ipmi_sel_ctx_create (ipmi_ctx_t ipmi_ctx, ipmi_sdr_ctx_t sdr_ctx)
   /* check that sdr_ctx is open for reading if supplied */
   if (sdr_ctx)
     {
-      if (ipmi_sdr_cache_first (sdr_ctx) < 0)
+      uint8_t tmp;
+
+      if (ipmi_sdr_cache_sdr_version (sdr_ctx, &tmp) < 0)
 	{
 	  SET_ERRNO (EINVAL);
 	  return (NULL);

@@ -914,7 +914,7 @@ ipmi_oem_ibm_get_led (ipmi_oem_state_data_t *state_data)
                                0, /* count_event_only_records */
                                0, /* count_device_locator_records */
                                1, /* count_oem_records */
-                               NULL,
+                               0, /* entity_sensor_names */
                                &column_width) < 0)
     goto cleanup;
 

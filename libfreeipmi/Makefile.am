@@ -167,6 +167,8 @@ libfreeipmi_la_SOURCES = \
 	sdr/ipmi-sdr-cache-delete.c \
 	sdr/ipmi-sdr-cache-read.c \
 	sdr/ipmi-sdr-parse.c \
+	sdr/ipmi-sdr-parse-util.c \
+	sdr/ipmi-sdr-stats.c \
 	sdr/ipmi-sdr-trace.h \
 	sdr/ipmi-sdr-util.c \
 	sdr/ipmi-sdr-util.h \
@@ -222,7 +224,6 @@ libfreeipmi_la_SOURCES = \
 	util/ipmi-outofband-util.c \
 	util/ipmi-rmcpplus-util.c \
 	util/ipmi-sensor-and-event-code-tables-util.c \
-	util/ipmi-sensor-units-util.c \
 	util/ipmi-sensor-util.c \
 	util/ipmi-util.c \
 	util/rmcp-util.c

@@ -822,7 +822,6 @@ _normal_output_sensor_name (ipmi_sel_state_data_t *state_data, unsigned int flag
                                     state_data->sdr_ctx,
 				    NULL,
 				    0,
-                                    &state_data->entity_id_counts,
                                     &state_data->column_width,
 				    &state_data->prog_data->args->common_args,
 				    state_data->prog_data->args->entity_sensor_names,
@@ -1724,18 +1723,6 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
     {
       if (!args->common_args.ignore_sdr_cache)
         {
-          struct sensor_entity_id_counts *entity_ptr = NULL;
-          
-          if (args->entity_sensor_names)
-            {
-              if (calculate_entity_id_counts (state_data->pstate,
-                                              state_data->sdr_ctx,
-                                              &(state_data->entity_id_counts)) < 0)
-                goto cleanup;
-              
-              entity_ptr = &(state_data->entity_id_counts);
-            }
-          
           if (calculate_column_widths (state_data->pstate,
                                        state_data->sdr_ctx,
                                        NULL,
@@ -1743,11 +1730,11 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
                                        NULL,
                                        0,
                                        state_data->prog_data->args->non_abbreviated_units,
-                                       (entity_ptr) ? 1 : 0, /* shared_sensors */
+                                       (args->entity_sensor_names) ? 1 : 0, /* shared_sensors */
                                        1, /* count_event_only_records */
                                        0, /* count_device_locator_records */
                                        0, /* count_oem_records */
-                                       entity_ptr,
+				       args->entity_sensor_names,
                                        &(state_data->column_width)) < 0)
             goto cleanup;
           

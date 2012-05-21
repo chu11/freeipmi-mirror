@@ -374,12 +374,6 @@
 #define IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_2_OR_1_4        1
 #define IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_8               2
 
-struct ipmi_oem_dell_power_supply_info_sdr_callback
-{
-  ipmi_oem_state_data_t *state_data;
-  struct sensor_entity_id_counts *entity_id_counts;
-};
-
 /* Will call ipmi_cmd_get_system_info_parameters only once, b/c field
  * requested is defined by OEM to be < 16 bytes in length
  */
@@ -921,7 +915,7 @@ _get_dell_system_info_idrac_info (ipmi_oem_state_data_t *state_data,
 
       idrac_info_len += (len - 1);
     }
-
+  
   if (idrac_info_len < IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_MIN_LEN)
     {
       pstdout_fprintf (state_data->pstate,
@@ -4754,7 +4748,6 @@ _ipmi_oem_dell_power_supply_info_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
 					       unsigned int sdr_record_len,
 					       void *arg)
 {
-  struct ipmi_oem_dell_power_supply_info_sdr_callback *sdr_callback_arg;
   ipmi_oem_state_data_t *state_data;
   uint8_t entity_id;
   uint8_t entity_instance;
@@ -4766,8 +4759,7 @@ _ipmi_oem_dell_power_supply_info_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
   assert (sdr_record_len);
   assert (arg);
 
-  sdr_callback_arg = (struct ipmi_oem_dell_power_supply_info_sdr_callback *)arg;
-  state_data = sdr_callback_arg->state_data;
+  state_data = (ipmi_oem_state_data_t *)arg;
 
   /* Dell Poweredge OEM
    *
@@ -4853,13 +4845,20 @@ _ipmi_oem_dell_power_supply_info_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
        * sharing, so I won't either.
        */
 	  
-      if (get_entity_sensor_name_string (state_data->pstate,
-					 state_data->sdr_ctx,
-					 sdr_callback_arg->entity_id_counts,
-					 NULL,
-					 sensor_name_buf,
-					 MAX_ENTITY_ID_SENSOR_NAME_STRING) < 0)
-	return (-1);
+      if (ipmi_sdr_parse_entity_sensor_name (state_data->sdr_ctx,
+					     NULL,
+					     0,
+					     0, /* sensor number */
+					     IPMI_SDR_ENTITY_SENSOR_NAME_FLAGS_IGNORE_SHARED_SENSORS,
+					     sensor_name_buf,
+					     MAX_ENTITY_ID_SENSOR_NAME_STRING) < 0)
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_sdr_parse_entity_sensor_name: %s\n",
+			   ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
+	  return (-1);
+	}
 	      
       bytes_rq[0] = IPMI_CMD_OEM_DELL_POWER_SUPPLY_INFO;
       bytes_rq[1] = entity_id;
@@ -4966,8 +4965,6 @@ _ipmi_oem_dell_power_supply_info_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
 int
 ipmi_oem_dell_power_supply_info (ipmi_oem_state_data_t *state_data)
 {
-  struct ipmi_oem_dell_power_supply_info_sdr_callback sdr_callback_arg;
-  struct sensor_entity_id_counts entity_id_counts;
   int rv = -1;
 
   assert (state_data);
@@ -4980,17 +4977,9 @@ ipmi_oem_dell_power_supply_info (ipmi_oem_state_data_t *state_data)
 				 &state_data->prog_data->args->common_args) < 0)
     goto cleanup;
 
-  if (calculate_entity_id_counts (state_data->pstate,
-				  state_data->sdr_ctx,
-				  &entity_id_counts) < 0)
-    goto cleanup;
-
-  sdr_callback_arg.state_data = state_data;
-  sdr_callback_arg.entity_id_counts = &entity_id_counts;
-
   if (ipmi_sdr_cache_iterate (state_data->sdr_ctx,
 			      _ipmi_oem_dell_power_supply_info_sdr_callback,
-			      &sdr_callback_arg) < 0)
+			      state_data) < 0)
     {
       pstdout_fprintf (state_data->pstate,
 		       stderr,

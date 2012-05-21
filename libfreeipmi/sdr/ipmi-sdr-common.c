@@ -72,6 +72,49 @@ sdr_init_ctx (ipmi_sdr_ctx_t ctx)
   ctx->current_offset = 0;
   ctx->current_offset_dumped = 0;
   ctx->callback_lock = 0;
+  
+  ctx->saved_offset_info = 0;
+  ctx->saved_current_offset = 0;
+  ctx->saved_current_offset_dumped = 0;
+
+  ctx->stats_compiled = 0;
+  memset (ctx->entity_counts,
+	  '\0',
+	  sizeof (struct ipmi_sdr_entity_count) * IPMI_MAX_ENTITY_IDS); 
+}
+
+void
+sdr_set_current_offset (ipmi_sdr_ctx_t ctx, off_t new_offset)
+{
+  assert (ctx);
+  assert (ctx->magic == IPMI_SDR_CTX_MAGIC);
+
+  ctx->current_offset = new_offset;
+  ctx->current_offset_dumped = 0;
+}
+
+void
+sdr_save_current_offset (ipmi_sdr_ctx_t ctx)
+{
+  assert (ctx);
+  assert (ctx->magic == IPMI_SDR_CTX_MAGIC);
+  assert (!ctx->saved_offset_info);
+
+  ctx->saved_current_offset = ctx->current_offset;
+  ctx->saved_current_offset_dumped = ctx->current_offset_dumped;
+  ctx->saved_offset_info = 1;
+}
+
+void
+sdr_reset_current_offset (ipmi_sdr_ctx_t ctx)
+{
+  assert (ctx);
+  assert (ctx->magic == IPMI_SDR_CTX_MAGIC);
+  assert (ctx->saved_offset_info);
+
+  ctx->current_offset = ctx->saved_current_offset;
+  ctx->current_offset_dumped = ctx->saved_current_offset_dumped;
+  ctx->saved_offset_info = 0;
 }
 
 int

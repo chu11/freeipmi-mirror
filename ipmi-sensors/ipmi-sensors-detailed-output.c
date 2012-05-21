@@ -190,7 +190,7 @@ static int
 _detailed_output_header (ipmi_sensors_state_data_t *state_data,
                          uint8_t sensor_number)
 {
-  char id_string[IPMI_SDR_CACHE_MAX_ID_STRING + 1];
+  char id_string[IPMI_SDR_MAX_ID_STRING_LENGTH + 1];
   uint8_t sensor_type;
   uint8_t event_reading_type_code;
   uint8_t sensor_owner_id_type, sensor_owner_id;
@@ -225,13 +225,13 @@ _detailed_output_header (ipmi_sensors_state_data_t *state_data,
       return (-1);
     }
 
-  memset (id_string, '\0', IPMI_SDR_CACHE_MAX_ID_STRING + 1);
+  memset (id_string, '\0', IPMI_SDR_MAX_ID_STRING_LENGTH + 1);
 
   if (ipmi_sdr_parse_id_string (state_data->sdr_ctx,
 				NULL,
 				0,
                                 id_string,
-                                IPMI_SDR_CACHE_MAX_ID_STRING) < 0)
+                                IPMI_SDR_MAX_ID_STRING_LENGTH) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -1749,18 +1749,18 @@ _detailed_output_device_relative_entity_association_record (ipmi_sensors_state_d
 static int
 _detailed_output_header2 (ipmi_sensors_state_data_t *state_data)
 {
-  char device_id_string[IPMI_SDR_CACHE_MAX_DEVICE_ID_STRING + 1];
+  char device_id_string[IPMI_SDR_MAX_DEVICE_ID_STRING_LENGTH + 1];
 
   assert (state_data);
   assert (state_data->prog_data->args->verbose_count >= 2);
 
-  memset (device_id_string, '\0', IPMI_SDR_CACHE_MAX_DEVICE_ID_STRING + 1);
+  memset (device_id_string, '\0', IPMI_SDR_MAX_DEVICE_ID_STRING_LENGTH + 1);
 
   if (ipmi_sdr_parse_device_id_string (state_data->sdr_ctx,
 				       NULL,
 				       0,
                                        device_id_string,
-                                       IPMI_SDR_CACHE_MAX_DEVICE_ID_STRING) < 0)
+                                       IPMI_SDR_MAX_DEVICE_ID_STRING_LENGTH) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,

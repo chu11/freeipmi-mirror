@@ -60,7 +60,6 @@
 struct ipmi_oem_sun_get_led_sdr_callback
 {
   ipmi_oem_state_data_t *state_data;
-  struct sensor_entity_id_counts *entity_id_counts;
   struct sensor_column_width *column_width;
   int header_output_flag;
 };
@@ -79,7 +78,7 @@ _sun_get_led_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
   int rs_len;
   uint16_t record_id;
   char fmt[IPMI_OEM_FMT_BUFLEN + 1];
-  char device_id_string[IPMI_SDR_CACHE_MAX_DEVICE_ID_STRING + 1];
+  char device_id_string[IPMI_SDR_MAX_DEVICE_ID_STRING_LENGTH + 1];
   char sensor_name_buf[MAX_ENTITY_ID_SENSOR_NAME_STRING + 1];
   char *sensor_name = NULL;
   uint8_t entity_instance_type;
@@ -248,25 +247,32 @@ _sun_get_led_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
     {
       memset (sensor_name_buf, '\0', MAX_ENTITY_ID_SENSOR_NAME_STRING + 1);
       
-      if (get_entity_sensor_name_string (state_data->pstate,
-					 state_data->sdr_ctx,
-					 sdr_callback_arg->entity_id_counts,
-					 NULL,
-					 sensor_name_buf,
-					 MAX_ENTITY_ID_SENSOR_NAME_STRING) < 0)
-	return (-1);
+      if (ipmi_sdr_parse_entity_sensor_name (state_data->sdr_ctx,
+					     NULL,
+					     0,
+					     0, /* sensor number */
+					     IPMI_SDR_ENTITY_SENSOR_NAME_FLAGS_IGNORE_SHARED_SENSORS, /* flags */
+					     sensor_name_buf,
+					     MAX_ENTITY_ID_SENSOR_NAME_STRING) < 0)
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_sdr_parse_entity_sensor_name: %s\n",
+			   ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
+	  return (-1);
+	}
           
       sensor_name = sensor_name_buf;
     }
   else
     {
-      memset (device_id_string, '\0', IPMI_SDR_CACHE_MAX_DEVICE_ID_STRING + 1);
+      memset (device_id_string, '\0', IPMI_SDR_MAX_DEVICE_ID_STRING_LENGTH + 1);
       
       if (ipmi_sdr_parse_device_id_string (state_data->sdr_ctx,
 					   sdr_record,
 					   sdr_record_len,
 					   device_id_string,
-					   IPMI_SDR_CACHE_MAX_DEVICE_ID_STRING) < 0)
+					   IPMI_SDR_MAX_DEVICE_ID_STRING_LENGTH) < 0)
 	{
 	  pstdout_fprintf (state_data->pstate,
 			   stderr,
@@ -318,8 +324,6 @@ int
 ipmi_oem_sun_get_led (ipmi_oem_state_data_t *state_data)
 {
   struct ipmi_oem_sun_get_led_sdr_callback sdr_callback_arg;
-  struct sensor_entity_id_counts entity_id_counts;
-  struct sensor_entity_id_counts *entity_ptr = NULL;
   struct sensor_column_width column_width;
   int rv = -1;
   
@@ -333,16 +337,6 @@ ipmi_oem_sun_get_led (ipmi_oem_state_data_t *state_data)
  				 &state_data->prog_data->args->common_args) < 0)
     goto cleanup;
 
-  if (state_data->prog_data->args->verbose_count)
-    {
-      if (calculate_entity_id_counts (state_data->pstate,
-                                      state_data->sdr_ctx,
-                                      &entity_id_counts) < 0)
-        goto cleanup;
-
-      entity_ptr = &entity_id_counts;
-    }
-
   if (calculate_column_widths (state_data->pstate,
                                state_data->sdr_ctx,
                                NULL,
@@ -354,12 +348,11 @@ ipmi_oem_sun_get_led (ipmi_oem_state_data_t *state_data)
                                0, /* count_event_only_records */
                                1, /* count_device_locator_records */
                                0, /* count_oem_records */
-                               entity_ptr,
+                               state_data->prog_data->args->verbose_count,
                                &column_width) < 0)
     goto cleanup;
 
   sdr_callback_arg.state_data = state_data;
-  sdr_callback_arg.entity_id_counts = &entity_id_counts;
   sdr_callback_arg.column_width = &column_width;
   sdr_callback_arg.header_output_flag = 0;
 

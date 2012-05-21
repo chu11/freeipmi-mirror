@@ -53,6 +53,10 @@ o In ipmidetectd daemon and ipmidetect, update command line parsing to
 o In ipmi-raw, make --channel-number and --slave-address legacy
   options.  They are now overriden by --target-channel-number and
   --target-slave-address.
+o Re-work entity sensor names calculation to more properly meet IPMI
+  specification.  Users may see slight changes in the output of sensor
+  names when using the --entity-sensor-names option or similar output
+  in ipmi-sensors, ipmi-sel, ipmi-pet, or ipmi-oem.
 
 Libraries
 ---------
@@ -86,6 +90,8 @@ o In libfreeipmi, create new 'sel' sub-library which replaces the
   'sel-parse' library.
 o In libfreeipmi and libipmimonitoring, do not export functions that
   shouldn't be.
+o In libfreeipmi, support stats functions and new utility functions in
+  sdr sub-library.
 
 Misc
 ----

@@ -67,16 +67,17 @@ extern "C" {
 #define IPMI_SDR_ERR_CACHE_READ_CACHE_DOES_NOT_EXIST              15
 #define IPMI_SDR_ERR_CACHE_INVALID                                16
 #define IPMI_SDR_ERR_CACHE_OUT_OF_DATE                            17
-#define IPMI_SDR_ERR_PARSE_INVALID_SDR_RECORD                     18
-#define IPMI_SDR_ERR_PARSE_INCOMPLETE_SDR_RECORD                  19
-#define IPMI_SDR_ERR_PARSE_CANNOT_PARSE_OR_CALCULATE              20
-#define IPMI_SDR_ERR_ERROR_RETURNED_IN_CALLBACK                   21
-#define IPMI_SDR_ERR_NOT_FOUND                                    22
-#define IPMI_SDR_ERR_IPMI_ERROR                                   23
-#define IPMI_SDR_ERR_SYSTEM_ERROR                                 24
-#define IPMI_SDR_ERR_OVERFLOW                                     25
-#define IPMI_SDR_ERR_INTERNAL_ERROR                               26
-#define IPMI_SDR_ERR_ERRNUMRANGE                                  27
+#define IPMI_SDR_ERR_STATS_NOT_COMPILED                           18
+#define IPMI_SDR_ERR_PARSE_INVALID_SDR_RECORD                     19
+#define IPMI_SDR_ERR_PARSE_INCOMPLETE_SDR_RECORD                  20
+#define IPMI_SDR_ERR_PARSE_CANNOT_PARSE_OR_CALCULATE              21
+#define IPMI_SDR_ERR_ERROR_RETURNED_IN_CALLBACK                   22
+#define IPMI_SDR_ERR_NOT_FOUND                                    23
+#define IPMI_SDR_ERR_IPMI_ERROR                                   24
+#define IPMI_SDR_ERR_SYSTEM_ERROR                                 25
+#define IPMI_SDR_ERR_OVERFLOW                                     26
+#define IPMI_SDR_ERR_INTERNAL_ERROR                               27
+#define IPMI_SDR_ERR_ERRNUMRANGE                                  28
 
 #define IPMI_SDR_FLAGS_DEFAULT                   0x0000
 #define IPMI_SDR_FLAGS_DEBUG_DUMP                0x0001
@@ -90,6 +91,10 @@ extern "C" {
 #define IPMI_SDR_CACHE_CREATE_FLAGS_DEFAULT             0x0
 #define IPMI_SDR_CACHE_CREATE_FLAGS_OVERWRITE           0x1
 #define IPMI_SDR_CACHE_CREATE_FLAGS_DUPLICATE_RECORD_ID 0x2
+
+#define IPMI_SDR_ENTITY_SENSOR_NAME_FLAGS_DEFAULT                       0x00000000
+#define IPMI_SDR_ENTITY_SENSOR_NAME_FLAGS_ALWAYS_OUTPUT_INSTANCE_NUMBER 0x00000001
+#define IPMI_SDR_ENTITY_SENSOR_NAME_FLAGS_IGNORE_SHARED_SENSORS         0x00000002
 
 #define IPMI_SDR_MAX_RECORD_LENGTH                      261 /* 256 + header */
 
@@ -185,6 +190,21 @@ int ipmi_sdr_cache_iterate (ipmi_sdr_ctx_t ctx,
 			    void *iterate_callback_data);
 
 int ipmi_sdr_cache_close (ipmi_sdr_ctx_t ctx);
+
+/*
+ * SDR stats functions
+ *
+ * After opening an SDR cache (i.e. ipmi_sdr_cache_open() has been
+ * called), loop through the cache and compile data on the cache for
+ * a variety of utility functions.
+ */
+
+int ipmi_sdr_stats_compile (ipmi_sdr_ctx_t ctx);
+
+/* returns the number of unique entity instances for an entity id found
+ * in the SDR
+ */
+int ipmi_sdr_stats_entity_instance_unique (ipmi_sdr_ctx_t ctx, uint8_t entity_id);
 
 /*
  * SDR Record Parsing Functions
@@ -563,7 +583,29 @@ int ipmi_sdr_parse_oem_data (ipmi_sdr_ctx_t ctx,
 /*
  * SDR Cache Utility Functions
  */
+
 int ipmi_sdr_cache_delete (ipmi_sdr_ctx_t ctx, const char *filename);
+
+/* ipmi_sensor_entity_sensor_name_string
+ * - Creates sensor names with the entity id and instance for better
+ *   names on some systems.
+ * - For example, on some systems sensor ID strings are all called
+ *   "Temp".  The entity ID and instance are needed to turn the name
+ *   into "Processor 1 Temp" or "Processor 2 Temp".
+ * - if sdr_record is NULL and sdr_record_len is 0, the current sdr
+ *   record in the iterator will be used in parsing.
+ */
+/* For Full, Compact, Event, Generic Device Locator, and Management
+ * Controller Device Locator SDR records
+ */
+/* returns length written into buffer on success, -1 on error */
+int ipmi_sdr_parse_entity_sensor_name (ipmi_sdr_ctx_t ctx,
+				       const void *sdr_record,
+				       unsigned int sdr_record_len,
+				       uint8_t sensor_number,
+				       unsigned int flags,
+				       char *buf,
+				       unsigned int buflen);
 
 #ifdef __cplusplus
 }
