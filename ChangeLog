@@ -14,9 +14,11 @@
 	files.  Collapse code into ipmi-sensor-util.h and
 	ipmi-sensor-util.c.
 
-	* libfreeipmi/include/freeipmi/util/ipmi-sensor-units-util.h,
-	libfreeipmi/include/freeipmi/util/ipmi-sensor-units-util.c (ipmi_sensor_entity_sensor_name_string):
+	* libfreeipmi/include/freeipmi/sdr/ipmi-sdr.h (ipmi_sdr_parse_entity_sensor_name):
 	New function.
+
+	* libfreeipmi/sdr/ipmi-sdr-parse-util.c: New
+	file.
 
 	* libfreeipmi/include/freeipmi/spec/ipmi-entity-ids-spec.h:
 	Support system and device relative entity instance number macros.

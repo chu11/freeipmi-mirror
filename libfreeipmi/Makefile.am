@@ -167,6 +167,7 @@ libfreeipmi_la_SOURCES = \
 	sdr/ipmi-sdr-cache-delete.c \
 	sdr/ipmi-sdr-cache-read.c \
 	sdr/ipmi-sdr-parse.c \
+	sdr/ipmi-sdr-parse-util.c \
 	sdr/ipmi-sdr-stats.c \
 	sdr/ipmi-sdr-trace.h \
 	sdr/ipmi-sdr-util.c \

@@ -36,35 +36,6 @@ const char *ipmi_get_oem_sensor_type_string (uint8_t sensor_type,
                                              uint32_t manufacturer_id,
                                              uint16_t product_id);
 
-#define IPMI_SENSOR_ENTITY_SENSOR_NAME_FLAGS_DEFAULT                       0x00000000
-#define IPMI_SENSOR_ENTITY_SENSOR_NAME_FLAGS_ALWAYS_OUTPUT_INSTANCE_NUMBER 0x00000001
-#define IPMI_SENSOR_ENTITY_SENSOR_NAME_FLAGS_IGNORE_SHARED_SENSORS         0x00000002
-
-/* ipmi_sensor_entity_sensor_name_string
- * - Creates sensor names with the entity id and instance for better
- *   names on some systems.
- * - For example, on some systems sensor ID strings are all called
- *   "Temp".  The entity ID and instance are needed to turn the name
- *   into "Processor 1 Temp" or "Processor 2 Temp".
- * - if specified, sdr_ctx cache must be open and ready for reading
- * - if NULL sdr_ctx, sdr won't be used and assumptions must be made
- * - For example, if there is only a single power supply in the
- *   system, you might see "Power Supply 0 Temp" if the sdr_ctx is not
- *   supplied.  If it is supplied, this function can determine there
- *   is a single power supply in the system and thus can make the name
- *   "Power Supply Temp".
- * - if sdr_record is NULL and sdr_record_len is 0, current record
- *   from sdr_ctx will be read.
- */
-/* returns length written into buffer on success, -1 on error */
-int ipmi_sensor_entity_sensor_name_string (ipmi_sdr_ctx_t sdr_ctx,
-					   const void *sdr_record,
-					   unsigned int sdr_record_len,
-					   uint8_t sensor_number,
-					   unsigned int flags,
-					   char *buf,
-					   unsigned int buflen);
-
 /* returns length written into buffer on success, -1 on error */
 int ipmi_sensor_units_string (uint8_t sensor_units_percentage,
                               uint8_t sensor_units_modifier,

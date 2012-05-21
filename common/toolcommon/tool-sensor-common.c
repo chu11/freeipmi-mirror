@@ -108,15 +108,15 @@ get_entity_sensor_name_string (pstdout_state_t pstate,
   assert (sensor_name_buf_len);
 
   if (!shared_sensors)
-    flags |= IPMI_SENSOR_ENTITY_SENSOR_NAME_FLAGS_IGNORE_SHARED_SENSORS;
+    flags |= IPMI_SDR_ENTITY_SENSOR_NAME_FLAGS_IGNORE_SHARED_SENSORS;
 
-  if (ipmi_sensor_entity_sensor_name_string (sdr_ctx,
-					     NULL,
-					     0,
-					     sensor_number,
-					     flags,
-					     sensor_name_buf,
-					     sensor_name_buf_len) < 0)
+  if (ipmi_sdr_parse_entity_sensor_name (sdr_ctx,
+					 NULL,
+					 0,
+					 sensor_number,
+					 flags,
+					 sensor_name_buf,
+					 sensor_name_buf_len) < 0)
     {
       PSTDOUT_FPRINTF (pstate,
                        stderr,
