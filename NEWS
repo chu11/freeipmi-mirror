@@ -92,6 +92,8 @@ o In libfreeipmi and libipmimonitoring, do not export functions that
   shouldn't be.
 o In libfreeipmi, support stats functions and new utility functions in
   sdr sub-library.
+o In libfreeipmi, sel sub-library now supports the output of entity
+  sensor names.
 
 Misc
 ----
