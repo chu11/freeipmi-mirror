@@ -37,6 +37,12 @@
 
 void sdr_init_ctx (ipmi_sdr_ctx_t ctx);
 
+void sdr_set_current_offset (ipmi_sdr_ctx_t ctx, off_t new_offset);
+
+void sdr_save_current_offset (ipmi_sdr_ctx_t ctx);
+
+void sdr_reset_current_offset (ipmi_sdr_ctx_t ctx);
+
 int sdr_info (ipmi_sdr_ctx_t ctx,
 	      ipmi_ctx_t ipmi_ctx,
 	      uint8_t *sdr_version,

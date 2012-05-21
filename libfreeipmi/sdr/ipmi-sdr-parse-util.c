@@ -66,7 +66,6 @@ ipmi_sdr_parse_entity_sensor_name (ipmi_sdr_ctx_t ctx,
   uint8_t record_type;
   unsigned int flags_mask = (IPMI_SDR_ENTITY_SENSOR_NAME_FLAGS_ALWAYS_OUTPUT_INSTANCE_NUMBER
 			     | IPMI_SDR_ENTITY_SENSOR_NAME_FLAGS_IGNORE_SHARED_SENSORS);
-  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_SDR_CTX_MAGIC)
     {

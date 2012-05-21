@@ -28,6 +28,20 @@
 	check for open SDR for reading.
 
 	* Globally update tools as necessary for new functions.
+
+	* libfreeipmi/sdr/ipmi-sdr-common.h,
+	libfreeipmi/sdr/ipmi-sdr-common.c (sdr_set_current_offset): New
+	common function.
+
+	* libfreeipmi/sdr/ipmi-sdr-cache-read.c: Adjust for new common function.
+
+	* libfreeipmi/sdr/ipmi-sdr-defs.h,
+	libfreeipmi/sdr/ipmi-sdr-common.h,
+	libfreeipmi/sdr/ipmi-sdr-common.c (sdr_save_current_offset,
+	sdr_reset_current_offset): New common functions.
+
+	* libfreeipmi/sdr/ipmi-sdr-cache-read.c (ipmi_sdr_cache_iterate):
+	Preserve current offset/iterator point when function was called.
 	
 2012-05-17  Albert Chu <chu11@llnl.gov>
 

@@ -116,6 +116,11 @@ struct ipmi_sdr_ctx {
   int current_offset_dumped;
   int callback_lock;
 
+  /* for saving/reset */
+  int saved_offset_info;
+  int saved_current_offset;
+  int saved_current_offset_dumped;
+
   /* Stats */
   int stats_compiled;
   struct ipmi_sdr_entity_count entity_counts[IPMI_MAX_ENTITY_IDS];
