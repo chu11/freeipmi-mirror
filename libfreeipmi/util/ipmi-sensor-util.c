@@ -247,7 +247,10 @@ ipmi_sensor_entity_sensor_name_string (ipmi_sdr_ctx_t sdr_ctx,
       id_string_ptr = device_id_string;
     }
   else
-    SET_ERRNO (EINVAL);
+    {
+      SET_ERRNO (EINVAL);
+      goto cleanup;
+    }
 
   if (ipmi_sdr_parse_entity_id_instance_type (local_sdr_ctx,
 					      sdr_record,
