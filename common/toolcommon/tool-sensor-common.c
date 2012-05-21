@@ -93,41 +93,6 @@ get_oem_sensor_type_output_string (uint8_t sensor_type,
   return (UNRECOGNIZED_SENSOR_TYPE);
 }
 
-int
-get_entity_sensor_name_string (pstdout_state_t pstate,
-                               ipmi_sdr_ctx_t sdr_ctx,
-                               uint8_t sensor_number,
-			       int shared_sensors,
-                               char *sensor_name_buf,
-                               unsigned int sensor_name_buf_len)
-{
-  unsigned int flags = 0;
-
-  assert (sdr_ctx);
-  assert (sensor_name_buf);
-  assert (sensor_name_buf_len);
-
-  if (!shared_sensors)
-    flags |= IPMI_SDR_ENTITY_SENSOR_NAME_FLAGS_IGNORE_SHARED_SENSORS;
-
-  if (ipmi_sdr_parse_entity_sensor_name (sdr_ctx,
-					 NULL,
-					 0,
-					 sensor_number,
-					 flags,
-					 sensor_name_buf,
-					 sensor_name_buf_len) < 0)
-    {
-      PSTDOUT_FPRINTF (pstate,
-                       stderr,
-                       "ipmi_sensor_entity_sensor_name_string: %s\n",
-                       ipmi_sdr_ctx_errormsg (sdr_ctx));
-      return (-1);
-    }
-  
-  return (0);
-}
-
 static void
 _get_sensor_type_cmdline_string (char *sensor_type)
 {
@@ -529,13 +494,20 @@ _store_column_widths (pstdout_state_t pstate,
 
       memset (sensor_name, '\0', MAX_ENTITY_ID_SENSOR_NAME_STRING + 1);
 
-      if (get_entity_sensor_name_string (pstate,
-                                         sdr_ctx,
-                                         sensor_number,
-					 1,
-                                         sensor_name,
-                                         MAX_ENTITY_ID_SENSOR_NAME_STRING) < 0)
-        return (-1);
+      if (ipmi_sdr_parse_entity_sensor_name (sdr_ctx,
+					     NULL,
+					     0,
+					     sensor_number,
+					     0,
+					     sensor_name,
+					     MAX_ENTITY_ID_SENSOR_NAME_STRING) < 0)
+	{
+	  PSTDOUT_FPRINTF (pstate,
+			   stderr,
+			   "ipmi_sdr_parse_entity_sensor_name: %s\n",
+			   ipmi_sdr_ctx_errormsg (sdr_ctx));
+	  return (-1);
+	}
 
       len = strlen (sensor_name);
       if (len > column_width->sensor_name)

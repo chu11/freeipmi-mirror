@@ -247,13 +247,20 @@ _sun_get_led_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
     {
       memset (sensor_name_buf, '\0', MAX_ENTITY_ID_SENSOR_NAME_STRING + 1);
       
-      if (get_entity_sensor_name_string (state_data->pstate,
-					 state_data->sdr_ctx,
-					 0,
-					 0,
-					 sensor_name_buf,
-					 MAX_ENTITY_ID_SENSOR_NAME_STRING) < 0)
-	return (-1);
+      if (ipmi_sdr_parse_entity_sensor_name (state_data->sdr_ctx,
+					     NULL,
+					     0,
+					     0, /* sensor number */
+					     IPMI_SDR_ENTITY_SENSOR_NAME_FLAGS_IGNORE_SHARED_SENSORS, /* flags */
+					     sensor_name_buf,
+					     MAX_ENTITY_ID_SENSOR_NAME_STRING) < 0)
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_sdr_parse_entity_sensor_name: %s\n",
+			   ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
+	  return (-1);
+	}
           
       sensor_name = sensor_name_buf;
     }

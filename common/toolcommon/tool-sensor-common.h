@@ -77,13 +77,6 @@ struct sensor_column_width
 const char * get_sensor_type_output_string (unsigned int sensor_type);
 const char * get_oem_sensor_type_output_string (uint8_t sensor_type, uint8_t event_reading_code, uint32_t manufacturer_id, uint16_t product_id);
 
-int get_entity_sensor_name_string (pstdout_state_t pstate,
-                                   ipmi_sdr_ctx_t sdr_ctx,
-                                   uint8_t sensor_number,
-				   int shared_sensors,
-                                   char *sensor_name_buf,
-                                   unsigned int sensor_name_buf_len);
-
 int list_sensor_types (void);
 
 /* 1 if all valid, 0 if not, -1 on error */

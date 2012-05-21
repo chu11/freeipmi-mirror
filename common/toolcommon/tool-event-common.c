@@ -370,13 +370,20 @@ event_output_sensor_name (pstdout_state_t pstate,
         }
 
       memset (outbuf, '\0', EVENT_OUTPUT_BUFLEN+1);
-      if (get_entity_sensor_name_string (pstate,
-                                         sdr_ctx,
-                                         sensor_number,
-					 1,
-                                         outbuf,
-                                         EVENT_OUTPUT_BUFLEN) < 0)
-        return (-1);
+      if (ipmi_sdr_parse_entity_sensor_name (sdr_ctx,
+					     NULL,
+					     0,
+					     sensor_number,
+					     0,
+					     outbuf,
+					     EVENT_OUTPUT_BUFLEN) < 0)
+	{
+	  PSTDOUT_FPRINTF (pstate,
+			   stderr,
+			   "ipmi_sdr_parse_entity_sensor_name: %s\n",
+			   ipmi_sdr_ctx_errormsg (sdr_ctx));
+	  return (-1);
+	}
       
       outbuf_len = strlen (outbuf);
       if (!outbuf_len)

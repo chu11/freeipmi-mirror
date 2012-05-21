@@ -4845,13 +4845,20 @@ _ipmi_oem_dell_power_supply_info_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
        * sharing, so I won't either.
        */
 	  
-      if (get_entity_sensor_name_string (state_data->pstate,
-					 state_data->sdr_ctx,
-					 0,
-					 0,
-					 sensor_name_buf,
-					 MAX_ENTITY_ID_SENSOR_NAME_STRING) < 0)
-	return (-1);
+      if (ipmi_sdr_parse_entity_sensor_name (state_data->sdr_ctx,
+					     NULL,
+					     0,
+					     0, /* sensor number */
+					     IPMI_SDR_ENTITY_SENSOR_NAME_FLAGS_IGNORE_SHARED_SENSORS,
+					     sensor_name_buf,
+					     MAX_ENTITY_ID_SENSOR_NAME_STRING) < 0)
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_sdr_parse_entity_sensor_name: %s\n",
+			   ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
+	  return (-1);
+	}
 	      
       bytes_rq[0] = IPMI_CMD_OEM_DELL_POWER_SUPPLY_INFO;
       bytes_rq[1] = entity_id;
