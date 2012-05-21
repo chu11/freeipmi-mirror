@@ -4970,15 +4970,6 @@ ipmi_oem_dell_power_supply_info (ipmi_oem_state_data_t *state_data)
 				 &state_data->prog_data->args->common_args) < 0)
     goto cleanup;
 
-  if (ipmi_sdr_stats_compile (state_data->sdr_ctx) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-		       stderr,
-		       "ipmi_sdr_stats_compile: %s\n",
-		       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
-      goto cleanup;
-    }
-
   if (ipmi_sdr_cache_iterate (state_data->sdr_ctx,
 			      _ipmi_oem_dell_power_supply_info_sdr_callback,
 			      state_data) < 0)

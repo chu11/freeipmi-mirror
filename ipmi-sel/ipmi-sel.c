@@ -1723,18 +1723,6 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
     {
       if (!args->common_args.ignore_sdr_cache)
         {
-          if (args->entity_sensor_names)
-            {
-	      if (ipmi_sdr_stats_compile (state_data->sdr_ctx) < 0)
-		{
-		  pstdout_fprintf (state_data->pstate,
-				   stderr,
-				   "ipmi_sdr_stats_compile: %s\n",
-				   ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
-		  goto cleanup;
-		}
-            }
-          
           if (calculate_column_widths (state_data->pstate,
                                        state_data->sdr_ctx,
                                        NULL,

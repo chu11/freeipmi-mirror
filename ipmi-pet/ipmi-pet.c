@@ -108,17 +108,6 @@ _ipmi_pet_init (ipmi_pet_state_data_t *state_data)
 
   if (!args->common_args.ignore_sdr_cache)
     {
-      if (args->entity_sensor_names)
-	{
-	  if (ipmi_sdr_stats_compile (state_data->sdr_ctx) < 0)
-	    {
-	      fprintf (stderr,
-		       "ipmi_sdr_stats_compile: %s\n",
-		       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
-	      goto cleanup;
-	    }
-	}
-      
       if (calculate_column_widths (NULL,
 				   state_data->sdr_ctx,
 				   NULL,
