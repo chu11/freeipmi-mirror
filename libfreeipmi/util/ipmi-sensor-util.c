@@ -292,6 +292,15 @@ ipmi_sensor_entity_sensor_name_string (ipmi_sdr_ctx_t sdr_ctx,
     }
   else
     {
+      if (sdr_ctx)
+	{
+	  if (ipmi_sdr_stats_compile (local_sdr_ctx) < 0)
+	    {
+	      SET_ERRNO (EINVAL);
+	      goto cleanup;
+	    }
+	}
+
       if (sdr_ctx
 	  && ipmi_sdr_stats_entity_instance_unique (local_sdr_ctx, entity_id) > 1)
         {
