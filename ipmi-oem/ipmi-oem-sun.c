@@ -249,7 +249,7 @@ _sun_get_led_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
       
       if (get_entity_sensor_name_string (state_data->pstate,
 					 state_data->sdr_ctx,
-					 NULL,
+					 0,
 					 0,
 					 sensor_name_buf,
 					 MAX_ENTITY_ID_SENSOR_NAME_STRING) < 0)
