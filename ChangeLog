@@ -1,4 +1,6 @@
-2012-05-XX  Albert Chu <chu11@llnl.gov>
+2012-05-21  Albert Chu <chu11@llnl.gov>
+
+	Merge branch entitysensornamesredo.
 
 	* libfreeipmi/include/freeipmi/sdr/, libfreeipmi/sdr/: Support new
 	stats functions to compile useful info from the SDR.
