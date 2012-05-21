@@ -372,7 +372,8 @@ event_output_sensor_name (pstdout_state_t pstate,
       memset (outbuf, '\0', EVENT_OUTPUT_BUFLEN+1);
       if (get_entity_sensor_name_string (pstate,
                                          sdr_ctx,
-                                         &sensor_number,
+                                         sensor_number,
+					 1,
                                          outbuf,
                                          EVENT_OUTPUT_BUFLEN) < 0)
         return (-1);

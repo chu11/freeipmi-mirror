@@ -96,7 +96,8 @@ get_oem_sensor_type_output_string (uint8_t sensor_type,
 int
 get_entity_sensor_name_string (pstdout_state_t pstate,
                                ipmi_sdr_ctx_t sdr_ctx,
-                               uint8_t *sensor_number,
+                               uint8_t sensor_number,
+			       int shared_sensors,
                                char *sensor_name_buf,
                                unsigned int sensor_name_buf_len)
 {
@@ -210,7 +211,7 @@ get_entity_sensor_name_string (pstdout_state_t pstate,
           /* special case if sensor sharing is involved */
           if ((record_type == IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD
                || record_type == IPMI_SDR_FORMAT_EVENT_ONLY_RECORD)
-              && sensor_number)
+              && shared_sensors)
             {
               uint8_t share_count;
               uint8_t id_string_instance_modifier_type;
@@ -251,8 +252,8 @@ get_entity_sensor_name_string (pstdout_state_t pstate,
                     }
 
                   /* I guess it's a bug if the sensor number passed in is bad */
-                  if ((*sensor_number) >= sensor_number_base)
-                    sensor_number_offset = (*sensor_number) - sensor_number_base;
+                  if (sensor_number >= sensor_number_base)
+                    sensor_number_offset = sensor_number - sensor_number_base;
                   else
                     goto fallthrough;
 
@@ -679,7 +680,7 @@ _sensor_column_width_finish (struct sensor_column_width *column_width)
 static int
 _store_column_widths (pstdout_state_t pstate,
                       ipmi_sdr_ctx_t sdr_ctx,
-                      uint8_t *sensor_number,
+                      uint8_t sensor_number,
                       unsigned int non_abbreviated_units,
                       unsigned int count_event_only_records,
                       unsigned int count_device_locator_records,
@@ -741,6 +742,7 @@ _store_column_widths (pstdout_state_t pstate,
       if (get_entity_sensor_name_string (pstate,
                                          sdr_ctx,
                                          sensor_number,
+					 1,
                                          sensor_name,
                                          MAX_ENTITY_ID_SENSOR_NAME_STRING) < 0)
         return (-1);
@@ -888,7 +890,7 @@ _store_column_widths_shared (pstdout_state_t pstate,
     {
       if (_store_column_widths (pstate,
                                 sdr_ctx,
-                                NULL,
+                                0,
                                 non_abbreviated_units,
                                 count_event_only_records,
                                 count_device_locator_records,
@@ -918,7 +920,7 @@ _store_column_widths_shared (pstdout_state_t pstate,
     {
       if (_store_column_widths (pstate,
                                 sdr_ctx,
-                                NULL,
+                                0,
                                 non_abbreviated_units,
                                 count_event_only_records,
                                 count_device_locator_records,
@@ -956,7 +958,7 @@ _store_column_widths_shared (pstdout_state_t pstate,
       
       if (_store_column_widths (pstate,
                                 sdr_ctx,
-                                &sensor_number,
+                                sensor_number,
                                 non_abbreviated_units,
                                 count_event_only_records,
                                 count_device_locator_records,
@@ -1026,7 +1028,7 @@ calculate_column_widths (pstdout_state_t pstate,
             {
               if (_store_column_widths (pstate,
                                         sdr_ctx,
-                                        NULL,
+                                        0,
                                         non_abbreviated_units,
                                         count_event_only_records,
                                         count_device_locator_records,
@@ -1083,7 +1085,7 @@ calculate_column_widths (pstdout_state_t pstate,
                 {
                   if (_store_column_widths (pstate,
                                             sdr_ctx,
-                                            NULL,
+                                            0,
                                             non_abbreviated_units,
                                             count_event_only_records,
                                             count_device_locator_records,

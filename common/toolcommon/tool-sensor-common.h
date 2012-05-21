@@ -80,7 +80,8 @@ const char * get_oem_sensor_type_output_string (uint8_t sensor_type, uint8_t eve
 
 int get_entity_sensor_name_string (pstdout_state_t pstate,
                                    ipmi_sdr_ctx_t sdr_ctx,
-                                   uint8_t *sensor_number,
+                                   uint8_t sensor_number,
+				   int shared_sensors,
                                    char *sensor_name_buf,
                                    unsigned int sensor_name_buf_len);
 

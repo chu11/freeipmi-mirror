@@ -557,7 +557,8 @@ _simple_output_header (ipmi_sensors_state_data_t *state_data,
 
       if (get_entity_sensor_name_string (state_data->pstate,
                                          state_data->sdr_ctx,
-                                         &sensor_number,
+                                         sensor_number,
+					 1,
                                          sensor_name_buf,
                                          MAX_ENTITY_ID_SENSOR_NAME_STRING) < 0)
         return (-1);
