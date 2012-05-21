@@ -312,12 +312,10 @@ event_output_not_available_time (pstdout_state_t pstate,
 int
 event_output_sensor_name (pstdout_state_t pstate,
 			  ipmi_sel_ctx_t sel_ctx,
-			  ipmi_sdr_ctx_t sdr_ctx,
 			  uint8_t *sel_record,
 			  unsigned int sel_record_len,
 			  struct sensor_column_width *column_width,
 			  struct common_cmd_args *common_args,
-			  int entity_sensor_names,
 			  int comma_separated_output,
 			  unsigned int flags)
 {
@@ -330,83 +328,19 @@ event_output_sensor_name (pstdout_state_t pstate,
   assert (column_width || (!column_width && comma_separated_output));
   assert (common_args);
 
-  if (entity_sensor_names
-      && !common_args->ignore_sdr_cache)
-    {
-      uint8_t generator_id, sensor_number;
-
-      if ((ret = event_data_info (pstate,
-				  sel_ctx,
-				  sel_record,
-				  sel_record_len,
-				  common_args->debug,
-				  &generator_id,
-				  NULL,
-				  &sensor_number,
-				  NULL,
-				  NULL,
-				  NULL,
-				  NULL,
-				  NULL)) < 0)
-	return (-1);
-
-      if (!ret)
-	return (0);
-
-      /* achu: really shouldn't do this, b/c sel library uses
-       * this, but sel lib doesn't iterate over the cache, so
-       * it's ok.  If we need to later, we'll open a new sdr_ctx
-       */
-      if (ipmi_sdr_cache_search_sensor_wrapper (sdr_ctx,
-                                                sensor_number,
-                                                generator_id) < 0)
-        {
-          if (common_args->debug)
-            PSTDOUT_FPRINTF (pstate,
-                             stderr,
-                             "ipmi_sdr_cache_search_sensor: %s\n",
-                             ipmi_sdr_ctx_errormsg (sdr_ctx));
-          goto normal_sensor_output;
-        }
-
-      memset (outbuf, '\0', EVENT_OUTPUT_BUFLEN+1);
-      if (ipmi_sdr_parse_entity_sensor_name (sdr_ctx,
-					     NULL,
-					     0,
-					     sensor_number,
-					     0,
-					     outbuf,
-					     EVENT_OUTPUT_BUFLEN) < 0)
-	{
-	  PSTDOUT_FPRINTF (pstate,
-			   stderr,
-			   "ipmi_sdr_parse_entity_sensor_name: %s\n",
-			   ipmi_sdr_ctx_errormsg (sdr_ctx));
-	  return (-1);
-	}
-      
-      outbuf_len = strlen (outbuf);
-      if (!outbuf_len)
-        goto normal_sensor_output;
-    }
-  else
-    {
-    normal_sensor_output:
-
-      if ((ret = _sel_parse_record_string (pstate,
-					   sel_ctx,
-					   sel_record,
-					   sel_record_len,
-					   common_args->debug,
-					   flags,
-					   outbuf,
-					   &outbuf_len,
-					   "%s")) < 0)
-	return (-1);
-      
-      if (!ret)
-	return (0);
-    }
+  if ((ret = _sel_parse_record_string (pstate,
+				       sel_ctx,
+				       sel_record,
+				       sel_record_len,
+				       common_args->debug,
+				       flags,
+				       outbuf,
+				       &outbuf_len,
+				       "%s")) < 0)
+    return (-1);
+  
+  if (!ret)
+    return (0);
 
   memset (fmt, '\0', EVENT_FMT_BUFLEN + 1);
   if (comma_separated_output)

@@ -828,12 +828,10 @@ _output_sensor_name (ipmi_pet_state_data_t *state_data,
 
   return (event_output_sensor_name (NULL,
 				    state_data->sel_ctx,
-				    state_data->sdr_ctx,
 				    sel_record,
 				    sel_record_len,
 				    &state_data->column_width,
 				    &state_data->prog_data->args->common_args,
-				    state_data->prog_data->args->entity_sensor_names,
 				    state_data->prog_data->args->comma_separated_output,
 				    flags));
 }
@@ -1456,6 +1454,8 @@ _ipmi_pet_process (ipmi_pet_state_data_t *state_data,
   flags |= IPMI_SEL_STRING_FLAGS_DATE_MONTH_STRING;
   if (state_data->prog_data->args->verbose_count >= 3)
     flags |= IPMI_SEL_STRING_FLAGS_VERBOSE;
+  if (state_data->prog_data->args->entity_sensor_names)
+    flags |= IPMI_SEL_STRING_FLAGS_ENTITY_SENSOR_NAMES;
   if (state_data->prog_data->args->non_abbreviated_units)
     flags |= IPMI_SEL_STRING_FLAGS_NON_ABBREVIATED_UNITS;
   if (state_data->prog_data->args->interpret_oem_data)

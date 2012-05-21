@@ -819,12 +819,10 @@ _normal_output_sensor_name (ipmi_sel_state_data_t *state_data, unsigned int flag
 
   return (event_output_sensor_name (state_data->pstate,
                                     state_data->sel_ctx,
-                                    state_data->sdr_ctx,
 				    NULL,
 				    0,
                                     &state_data->column_width,
 				    &state_data->prog_data->args->common_args,
-				    state_data->prog_data->args->entity_sensor_names,
                                     state_data->prog_data->args->comma_separated_output,
                                     flags));
 }
@@ -1189,6 +1187,8 @@ _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
   flags |= IPMI_SEL_STRING_FLAGS_DATE_MONTH_STRING;
   if (state_data->prog_data->args->verbose_count >= 2)
     flags |= IPMI_SEL_STRING_FLAGS_VERBOSE;
+  if (state_data->prog_data->args->entity_sensor_names)
+    flags |= IPMI_SEL_STRING_FLAGS_ENTITY_SENSOR_NAMES;
   if (state_data->prog_data->args->non_abbreviated_units)
     flags |= IPMI_SEL_STRING_FLAGS_NON_ABBREVIATED_UNITS;
   if (state_data->prog_data->args->interpret_oem_data)

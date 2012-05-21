@@ -64,8 +64,6 @@
 #define SENSOR_PARSE_ALL_STRING             "all"
 #define SENSOR_PARSE_NONE_STRING            "none"
 
-#define MAX_ENTITY_ID_SENSOR_NAME_STRING    256
-
 struct sensor_column_width
 {
   int record_id;

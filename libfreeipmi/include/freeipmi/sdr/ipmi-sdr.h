@@ -98,6 +98,8 @@ extern "C" {
 
 #define IPMI_SDR_MAX_RECORD_LENGTH                      261 /* 256 + header */
 
+#define IPMI_SDR_MAX_ENTITY_SENSOR_NAME_LENGTH          128
+
 typedef struct ipmi_sdr_ctx *ipmi_sdr_ctx_t;
 
 typedef void (*Ipmi_Sdr_Cache_Create_Callback)(uint8_t sdr_version,

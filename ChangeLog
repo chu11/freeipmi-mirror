@@ -1,5 +1,12 @@
 2012-05-21  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/sel/ipmi-sel.c, libfreeipmi/sel/:
+	Support IPMI_SEL_STRING_FLAGS_ENTITY_SENSOR_NAMES flag.
+	
+	* Adjust tools and common/toolcommon for new option.
+	
+2012-05-21  Albert Chu <chu11@llnl.gov>
+
 	Merge branch entitysensornamesredo.
 
 	* libfreeipmi/include/freeipmi/sdr/, libfreeipmi/sdr/: Support new

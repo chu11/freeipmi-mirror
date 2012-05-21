@@ -4835,7 +4835,7 @@ _ipmi_oem_dell_power_supply_info_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
       uint16_t rateddcwatts;
       uint8_t onlinestatus;
       double ratedamps_val;
-      char sensor_name_buf[MAX_ENTITY_ID_SENSOR_NAME_STRING + 1];
+      char sensor_name_buf[IPMI_SDR_MAX_ENTITY_SENSOR_NAME_LENGTH + 1];
       
       memset (firmwareversion, '\0', IPMI_OEM_MAX_BYTES);
 
@@ -4851,7 +4851,7 @@ _ipmi_oem_dell_power_supply_info_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
 					     0, /* sensor number */
 					     IPMI_SDR_ENTITY_SENSOR_NAME_FLAGS_IGNORE_SHARED_SENSORS,
 					     sensor_name_buf,
-					     MAX_ENTITY_ID_SENSOR_NAME_STRING) < 0)
+					     IPMI_SDR_MAX_ENTITY_SENSOR_NAME_LENGTH) < 0)
 	{
 	  pstdout_fprintf (state_data->pstate,
 			   stderr,

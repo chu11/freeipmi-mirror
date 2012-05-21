@@ -531,7 +531,7 @@ _simple_output_header (ipmi_sensors_state_data_t *state_data,
 {
   char fmt[IPMI_SENSORS_FMT_BUFLEN + 1];
   char id_string[IPMI_SDR_MAX_ID_STRING_LENGTH + 1];
-  char sensor_name_buf[MAX_ENTITY_ID_SENSOR_NAME_STRING + 1];
+  char sensor_name_buf[IPMI_SDR_MAX_ENTITY_SENSOR_NAME_LENGTH + 1];
   char *sensor_name = NULL;
   const char *sensor_type_string;
   uint8_t event_reading_type_code;
@@ -546,7 +546,7 @@ _simple_output_header (ipmi_sensors_state_data_t *state_data,
       if (!state_data->prog_data->args->shared_sensors)
 	entity_sensor_flags |= IPMI_SDR_ENTITY_SENSOR_NAME_FLAGS_IGNORE_SHARED_SENSORS;
 
-      memset (sensor_name_buf, '\0', MAX_ENTITY_ID_SENSOR_NAME_STRING + 1);
+      memset (sensor_name_buf, '\0', IPMI_SDR_MAX_ENTITY_SENSOR_NAME_LENGTH + 1);
 
       if (ipmi_sdr_parse_entity_sensor_name (state_data->sdr_ctx,
 					     NULL,
@@ -554,7 +554,7 @@ _simple_output_header (ipmi_sensors_state_data_t *state_data,
 					     sensor_number,
 					     entity_sensor_flags,
 					     sensor_name_buf,
-					     MAX_ENTITY_ID_SENSOR_NAME_STRING) < 0)
+					     IPMI_SDR_MAX_ENTITY_SENSOR_NAME_LENGTH) < 0)
 	{
 	  pstdout_fprintf (state_data->pstate,
 			   stderr,

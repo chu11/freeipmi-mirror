@@ -80,8 +80,8 @@
 #define DEASSERTION_EVENT "Deassertion Event"
 
 #define EVENT_BUFFER_LENGTH     4096
-#define SEL_BUFFER_LENGTH 256
-#define ID_STRING_LENGTH        256
+#define SEL_BUFFER_LENGTH       256
+#define SENSOR_NAME_LENGTH      256
 #define IANA_LENGTH             1024
 #define UNITS_BUFFER_LENGTH     1024
 
@@ -195,10 +195,11 @@ _find_and_seek_record (ipmi_sel_ctx_t ctx,
  * return (-1) - error
  */
 static int
-_get_sdr_id_string (ipmi_sel_ctx_t ctx,
-                    struct ipmi_sel_system_event_record_data *system_event_record_data,
-                    char *id_string,
-                    unsigned int id_string_len)
+_get_sensor_name (ipmi_sel_ctx_t ctx,
+		  struct ipmi_sel_system_event_record_data *system_event_record_data,
+		  unsigned int flags,
+		  char *sensor_name,
+		  unsigned int sensor_name_len)
 {
   int rv = -1;
   int ret;
@@ -206,14 +207,13 @@ _get_sdr_id_string (ipmi_sel_ctx_t ctx,
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (system_event_record_data);
-  assert (id_string);
-  assert (id_string_len);
+  assert (sensor_name);
+  assert (sensor_name_len);
 
   if (!ctx->sdr_ctx)
     return (0);
 
-  if ((ret = _find_and_seek_record (ctx,
-				    system_event_record_data)) < 0)
+  if ((ret = _find_and_seek_record (ctx, system_event_record_data)) < 0)
     return (-1);
 
   if (!ret)
@@ -222,18 +222,39 @@ _get_sdr_id_string (ipmi_sel_ctx_t ctx,
       goto cleanup;
     }
 
-  if (ipmi_sdr_parse_id_string (ctx->sdr_ctx,
-				NULL,
-				0,
-                                id_string,
-                                id_string_len) < 0)
+  if (flags & IPMI_SEL_STRING_FLAGS_ENTITY_SENSOR_NAMES)
     {
-      if (ipmi_sdr_ctx_errnum (ctx->sdr_ctx) == IPMI_SDR_ERR_PARSE_INVALID_SDR_RECORD
-          || ipmi_sdr_ctx_errnum (ctx->sdr_ctx) == IPMI_SDR_ERR_PARSE_INCOMPLETE_SDR_RECORD)
-        rv = 0;
-      else
-        SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_INTERNAL_ERROR);
-      goto cleanup;
+      if (ipmi_sdr_parse_entity_sensor_name (ctx->sdr_ctx,
+					     NULL,
+					     0,
+					     system_event_record_data->sensor_number,
+					     0, /* flags */
+					     sensor_name,
+					     sensor_name_len) < 0)
+	{
+	  if (ipmi_sdr_ctx_errnum (ctx->sdr_ctx) == IPMI_SDR_ERR_PARSE_INVALID_SDR_RECORD
+	      || ipmi_sdr_ctx_errnum (ctx->sdr_ctx) == IPMI_SDR_ERR_PARSE_INCOMPLETE_SDR_RECORD)
+	    rv = 0;
+	  else
+	    SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_INTERNAL_ERROR);
+	  goto cleanup;
+	}
+    }
+  else
+    {
+      if (ipmi_sdr_parse_id_string (ctx->sdr_ctx,
+				    NULL,
+				    0,
+				    sensor_name,
+				    sensor_name_len) < 0)
+	{
+	  if (ipmi_sdr_ctx_errnum (ctx->sdr_ctx) == IPMI_SDR_ERR_PARSE_INVALID_SDR_RECORD
+	      || ipmi_sdr_ctx_errnum (ctx->sdr_ctx) == IPMI_SDR_ERR_PARSE_INCOMPLETE_SDR_RECORD)
+	    rv = 0;
+	  else
+	    SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_INTERNAL_ERROR);
+	  goto cleanup;
+	}
     }
 
   rv = 1;
@@ -283,8 +304,7 @@ _get_sensor_reading (ipmi_sel_ctx_t ctx,
   if (!ctx->sdr_ctx)
     return (0);
 
-  if ((ret = _find_and_seek_record (ctx,
-				    system_event_record_data)) < 0)
+  if ((ret = _find_and_seek_record (ctx, system_event_record_data)) < 0)
     return (-1);
 
   if (!ret)
@@ -718,7 +738,7 @@ _output_sensor_name (ipmi_sel_ctx_t ctx,
                      unsigned int *wlen)
 {
   struct ipmi_sel_system_event_record_data system_event_record_data;
-  char id_string[ID_STRING_LENGTH];
+  char sensor_name_buf[SENSOR_NAME_LENGTH + 1];
   int ret;
 
   assert (ctx);
@@ -735,20 +755,21 @@ _output_sensor_name (ipmi_sel_ctx_t ctx,
   if (sel_get_system_event_record (ctx, sel_entry, &system_event_record_data) < 0)
     return (-1);
 
-  memset (id_string, '\0', ID_STRING_LENGTH);
-  if ((ret = _get_sdr_id_string (ctx,
-                                 &system_event_record_data,
-                                 id_string,
-                                 ID_STRING_LENGTH)) < 0)
+  memset (sensor_name_buf, '\0', SENSOR_NAME_LENGTH + 1);
+  if ((ret = _get_sensor_name (ctx,
+			       &system_event_record_data,
+			       flags,
+			       sensor_name_buf,
+			       SENSOR_NAME_LENGTH)) < 0)
     return (-1);
-
+  
   if (ret)
     {
       if (sel_string_snprintf (buf,
 			       buflen,
 			       wlen,
 			       "%s",
-			       id_string))
+			       sensor_name_buf))
         return (1);
       return (0);
     }
