@@ -20,6 +20,12 @@
 
 	* libfreeipmi/include/freeipmi/spec/ipmi-entity-ids-spec.h:
 	Support system and device relative entity instance number macros.
+
+	* libfreeipmi/sel/ipmi-sel.c (ipmi_sel_ctx_create): Use
+	ipmi_sdr_cache_sdr_version instead of ipmi_sdr_cache_first to
+	check for open SDR for reading.
+
+	* Globally update tools as necessary for new functions.
 	
 2012-05-17  Albert Chu <chu11@llnl.gov>
 

@@ -181,13 +181,15 @@ ipmi_sensor_entity_sensor_name_string (ipmi_sdr_ctx_t sdr_ctx,
   
   if (sdr_ctx)
     {
+      uint8_t tmp;
+
       /* check that sdr_ctx is open for reading if supplied */
-      if (ipmi_sdr_cache_first (sdr_ctx) < 0)
+      if (ipmi_sdr_cache_sdr_version (sdr_ctx, &tmp) < 0)
 	{
 	  SET_ERRNO (EINVAL);
 	  return (-1);
 	}
-
+      
       local_sdr_ctx = sdr_ctx;
     }
   else
@@ -210,7 +212,7 @@ ipmi_sensor_entity_sensor_name_string (ipmi_sdr_ctx_t sdr_ctx,
       SET_ERRNO (EINVAL);
       goto cleanup;
     }
-  
+
   if (record_type == IPMI_SDR_FORMAT_FULL_SENSOR_RECORD
       || record_type == IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD
       || record_type == IPMI_SDR_FORMAT_EVENT_ONLY_RECORD)
