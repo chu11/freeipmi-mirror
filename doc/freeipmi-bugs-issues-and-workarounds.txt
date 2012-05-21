@@ -333,6 +333,17 @@ LAN Authentication Issue #22: [COMPLIANCE]
 
   Notes: Confirmed fixed in newer firmware.
 
+LAN Authentication Issue #23: [COMPLIANCE]
+
+  The motherboard allows IPMI 1.5 authentication when > 16 byte
+  passwords are configured.  It appears the motherboard allows users
+  to authenticate using the 16 byte equivalent truncated password.
+  This violates the text in Table 22-35, which states "A password that
+  ha sbeen stored as a 20-byte password cannot be used for
+  establishing an IPMI v1.5 session."
+
+  Seen on: Supermicro X8DTG-D 
+
 ----------------------------------------------------------------------
 
 ----------------------
