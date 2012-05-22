@@ -37,6 +37,6 @@
 
 void interpret_set_interpret_errnum_by_errno (ipmi_interpret_ctx_t ctx, int __errno);
 
-void interpret_set_interpret_errnum_by_sel_ctx (ipmi_interpret_ctx_t ctx, ipmi_sel_ctx_t sel_parse_ctx);
+void interpret_set_interpret_errnum_by_sel_ctx (ipmi_interpret_ctx_t ctx, ipmi_sel_ctx_t sel_ctx);
 
 #endif /* IPMI_INTERPRET_UTIL_H */
