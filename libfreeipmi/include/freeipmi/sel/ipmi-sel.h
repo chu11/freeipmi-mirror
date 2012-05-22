@@ -40,16 +40,20 @@ extern "C" {
 #define IPMI_SEL_ERR_INVALID_SEL_ENTRY                       9
 #define IPMI_SEL_ERR_NOT_FOUND                              10 
 #define IPMI_SEL_ERR_RESERVATION_CANCELED                   11
-#define IPMI_SEL_ERR_CALLBACK_ERROR                         12
-#define IPMI_SEL_ERR_IPMI_ERROR                             13
-#define IPMI_SEL_ERR_SYSTEM_ERROR                           14
-#define IPMI_SEL_ERR_OVERFLOW                               15
-#define IPMI_SEL_ERR_INTERNAL_ERROR                         16
-#define IPMI_SEL_ERR_ERRNUMRANGE                            17
+#define IPMI_SEL_ERR_INTERPRET_CONFIG_FILE_ERROR            12
+#define IPMI_SEL_ERR_CALLBACK_ERROR                         13
+#define IPMI_SEL_ERR_IPMI_ERROR                             14
+#define IPMI_SEL_ERR_SYSTEM_ERROR                           15
+#define IPMI_SEL_ERR_OVERFLOW                               16
+#define IPMI_SEL_ERR_INTERNAL_ERROR                         17
+#define IPMI_SEL_ERR_ERRNUMRANGE                            18
 
 #define IPMI_SEL_FLAGS_DEFAULT                              0x0000
 #define IPMI_SEL_FLAGS_DEBUG_DUMP                           0x0001
 #define IPMI_SEL_FLAGS_ASSUME_SYTEM_EVENT_RECORDS           0x0002
+
+#define IPMI_SEL_PARAMETER_NONE                             0x0000
+#define IPMI_SEL_PARAMETER_INTERPRET_CONFIG_FILE            0x0001
 
 #define IPMI_SEL_STRING_FLAGS_DEFAULT                       0x0000
 #define IPMI_SEL_STRING_FLAGS_VERBOSE                       0x0001
@@ -105,6 +109,20 @@ int ipmi_sel_ctx_get_ipmi_version (ipmi_sel_ctx_t ctx,
 int ipmi_sel_ctx_set_ipmi_version (ipmi_sel_ctx_t ctx,
 				   uint8_t ipmi_version_major,
 				   uint8_t ipmi_version_minor);
+
+/* get/set lib parameters as needed
+ *
+ * INTERPRET_CONFIG_FILE - alternate configuration file as needed by
+ * the interpretation library for SEL events.  See "%I" below in
+ * ipmi_sel_parse_read_record_string.  Input/output shall be a char *
+ * string pointer to the filename.
+ */
+int ipmi_sel_ctx_get_parameter (ipmi_sel_ctx_t ctx,
+				unsigned int parameter,
+				void **ptr);
+int ipmi_sel_ctx_set_parameter (ipmi_sel_ctx_t ctx,
+				unsigned int parameter,
+				const void *ptr);
 
 char *ipmi_sel_ctx_get_debug_prefix (ipmi_sel_ctx_t ctx);
 int ipmi_sel_ctx_set_debug_prefix (ipmi_sel_ctx_t ctx, const char *debug_prefix);
@@ -314,6 +332,10 @@ int ipmi_sel_parse_read_oem (ipmi_sel_ctx_t ctx,
  * Available in all SEL record types
  *
  * %i - record ID in decimal
+ * %I - event nominal vs. warning vs. critical interpretation [1]
+ *
+ * [1] - see libfreeipmi interpret library for information.  See
+ * ipmi_sel_ctx_set_parameter() to input alternate config file.
  *
  * Available in SEL event and timestamped OEM SEL records
  *
@@ -325,19 +347,19 @@ int ipmi_sel_parse_read_oem (ipmi_sel_ctx_t ctx,
  * %T - sensor type
  * %s - sensor name
  * %e - event data 1 string (usually offset from event/reading code type string)
- * %f - event data 2 string [1]
+ * %f - event data 2 string [2]
  * %h - event data 3 string
- * %c - combined event data 2 and event data 3 string [2]
- * %p - event data 2 previous state string [3]
- * %s - event data 2 severity string [3]
- * %E - combined event data 1, 2, and 3 string [4]
+ * %c - combined event data 2 and event data 3 string [3]
+ * %p - event data 2 previous state string [4]
+ * %s - event data 2 severity string [4]
+ * %E - combined event data 1, 2, and 3 string [5]
  * %k - event direction
  *
- * [1] - if a previous state and a severity state string are available
+ * [2] - if a previous state and a severity state string are available
  * from a discrete sensor, they are concatenated with the defined
  * separator in between.
  *
- * [2] - for events where both event data 2 and event data 3 hold data
+ * [3] - for events where both event data 2 and event data 3 hold data
  * that must be combined for an effective output.  As an example, data
  * 2 holds a minor version number and data 3 holds a major version
  * number.  The combined output might print out "Version 1.2" instead
@@ -347,10 +369,10 @@ int ipmi_sel_parse_read_oem (ipmi_sel_ctx_t ctx,
  * separately with the defined separator between them
  * (e.g. effectively "%f ; %h").
  *
- * [3] - if event type code indicates a discrete sensor and event data 2
+ * [4] - if event type code indicates a discrete sensor and event data 2
  * flag indicates a previous state and/or severity state is available.
  *
- * [4] - this can be loosely considered the equivalent of "%e" and
+ * [5] - this can be loosely considered the equivalent of "%e" and
  * "%c" concatenated with the defined separator between them.
  * However, various corner cases will be handled for the user to
  * create a nicer output.  For example, "Foo ; NA" will never be
@@ -366,9 +388,9 @@ int ipmi_sel_parse_read_oem (ipmi_sel_ctx_t ctx,
  *
  * Available in all record types for certain manufacturers
  *
- * %O - output an OEM supplied string describing the event. [5]
+ * %O - output an OEM supplied string describing the event. [6]
  *
- * [5] On some motherboards, the vendor is capable of supplying a full
+ * [6] On some motherboards, the vendor is capable of supplying a full
  * string describing the event data, in particular supplying strings
  * for OEM records and OEM event extensions.  Under the right
  * conditions, this output option may be used as a potential

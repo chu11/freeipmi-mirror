@@ -1,5 +1,13 @@
 2012-05-22  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/sel/ipmi-sel.h, libfreeipmi/sel/:
+	Support interpretation of event in sel library.  Support %I string
+	output.  Support new ipmi_sel_ctx_get_parameter() and
+	ipmi_sel_ctx_set_parameter() to allow config of an alternate
+	interpret config file.
+	
+2012-05-22  Albert Chu <chu11@llnl.gov>
+
 	* common/toolcommon/tool-sdr-cache-common.h,
 	common/toolcommon/tool-sdr-cache-common.c (sdr_cache_setup_debug):
 	Remove function.  Fold into sdr_cache_create_and_load.

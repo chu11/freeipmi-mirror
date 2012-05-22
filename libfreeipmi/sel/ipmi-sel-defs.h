@@ -26,6 +26,7 @@
 #include <stdint.h>
 #include <sys/param.h>
 
+#include "freeipmi/interpret/ipmi-interpret.h"
 #include "freeipmi/sdr/ipmi-sdr.h"
 #include "freeipmi/sel/ipmi-sel.h"
 
@@ -82,6 +83,9 @@ struct ipmi_sel_ctx {
   uint16_t product_id;
   uint8_t ipmi_version_major;
   uint8_t ipmi_version_minor;
+  /* misc parameters */
+  char *interpret_config_file;
+  int interpret_config_file_loaded;
   char *debug_prefix;
   char *separator;
 
@@ -90,6 +94,8 @@ struct ipmi_sel_ctx {
 
   ipmi_ctx_t ipmi_ctx;
   ipmi_sdr_ctx_t sdr_ctx;
+
+  ipmi_interpret_ctx_t interpret_ctx;
 
   int sel_entries_loaded;
   List sel_entries;

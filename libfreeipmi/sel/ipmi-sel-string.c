@@ -42,6 +42,7 @@
 #include "freeipmi/sel/ipmi-sel.h"
 
 #include "freeipmi/cmds/ipmi-sel-cmds.h"
+#include "freeipmi/interpret/ipmi-interpret.h"
 #include "freeipmi/record-format/ipmi-sdr-record-format.h"
 #include "freeipmi/record-format/ipmi-sel-record-format.h"
 #include "freeipmi/sdr/ipmi-sdr.h"
@@ -474,6 +475,75 @@ _get_previous_state_or_severity (ipmi_sel_ctx_t ctx,
  cleanup:
   fiid_obj_destroy (obj_sel_system_event_record);
   return (rv);
+}
+
+/* return (0) - continue on
+ * return (1) - buffer full, return full buffer to user
+ * return (-1) - error, cleanup and return error
+ */
+static int
+_output_event_interpretation (ipmi_sel_ctx_t ctx,
+			      struct ipmi_sel_entry *sel_entry,
+			      uint8_t sel_record_type,
+			      char *buf,
+			      unsigned int buflen,
+			      unsigned int flags,
+			      unsigned int *wlen)
+{
+  unsigned int sel_state;
+  char *sel_state_str = NULL;
+
+  assert (ctx);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
+  assert (sel_entry);
+  assert (buf);
+  assert (buflen);
+  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
+  assert (wlen);
+
+  if (ipmi_sel_record_type_class (sel_record_type) != IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD
+      && ipmi_sel_record_type_class (sel_record_type) != IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD
+      && ipmi_sel_record_type_class (sel_record_type) != IPMI_SEL_RECORD_TYPE_CLASS_NON_TIMESTAMPED_OEM_RECORD)
+    return (_invalid_sel_entry_common (ctx, buf, buflen, flags, wlen));
+
+  if (!ctx->interpret_config_file_loaded)
+    {
+      if (ipmi_interpret_load_sel_config (ctx->interpret_ctx, ctx->interpret_config_file) < 0)
+	{
+	  SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_INTERPRET_CONFIG_FILE_ERROR);
+	  return (-1);
+	}
+      ctx->interpret_config_file_loaded = 1;
+    }
+
+  if (ipmi_interpret_sel (ctx->interpret_ctx,
+			  sel_entry->sel_event_record,
+			  sel_entry->sel_event_record_len,
+			  &sel_state) < 0)
+    {
+      SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_INTERPRET_CONFIG_FILE_ERROR);
+      return (-1);
+    }
+
+  /* achu
+   * 
+   * NOT_AVAILABLE and IGNORE_UNAVAILABLE_FIELD not applicable here.
+   * This output is always possible, the N/A indicates that there is
+   * no interpretation available for the current event.
+   */
+  if (sel_state == IPMI_INTERPRET_STATE_NOMINAL)
+    sel_state_str = "Nominal";
+  else if (sel_state == IPMI_INTERPRET_STATE_WARNING)
+    sel_state_str = "Warning";
+  else if (sel_state == IPMI_INTERPRET_STATE_CRITICAL)
+    sel_state_str = "Critical";
+  else
+    sel_state_str = NA_STRING;
+
+  if (sel_string_snprintf (buf, buflen, wlen, "%s", sel_state_str))
+    return (1);
+  
+  return (0);
 }
 
 /* return (0) - continue on
@@ -3247,6 +3317,20 @@ sel_format_record_string (ipmi_sel_ctx_t ctx,
             goto out;
           percent_flag = 0;
         }
+      else if (percent_flag && *fmt == 'I') /* event interpretation */
+	{
+          if ((ret = _output_event_interpretation (ctx,
+						   &sel_entry,
+						   sel_record_type,
+						   buf,
+						   buflen,
+						   flags,
+						   &wlen)) < 0)
+            goto cleanup;
+          if (ret)
+            goto out;
+          percent_flag = 0;
+	}
       else if (percent_flag && *fmt == 't') /* time */
         {
           if ((ret = _output_time (ctx,
