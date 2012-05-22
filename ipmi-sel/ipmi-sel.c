@@ -892,7 +892,6 @@ _normal_output_event_state (ipmi_sel_state_data_t *state_data, unsigned int flag
   
   return (event_output_event_state (state_data->pstate,
 				    state_data->sel_ctx,
-				    state_data->interpret_ctx,
 				    NULL,
 				    0,
 				    state_data->prog_data->args->comma_separated_output,
@@ -2282,6 +2281,15 @@ _ipmi_sel (pstdout_state_t pstate,
               goto cleanup;
             }
         }
+
+      if (ipmi_sel_ctx_set_interpret (state_data.sel_ctx, state_data.interpret_ctx) < 0)
+	{
+	  pstdout_fprintf (pstate,
+			   stderr,
+			   "ipmi_sel_ctx_set_interpret: %s\n",
+			   ipmi_sel_ctx_errormsg (state_data.sel_ctx));
+	  goto cleanup;
+	}
     }
 
   if (run_cmd_args (&state_data) < 0)

@@ -93,7 +93,6 @@ int event_output_not_available_sensor_type (pstdout_state_t pstate,
 
 int event_output_event_state (pstdout_state_t pstate,
 			      ipmi_sel_ctx_t sel_ctx,
-			      ipmi_interpret_ctx_t interpret_ctx,
 			      uint8_t *sel_record,
 			      unsigned int sel_record_len,
 			      int comma_separated_output,

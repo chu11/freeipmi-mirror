@@ -26,6 +26,7 @@ extern "C" {
 #include <stdint.h>
 #include <freeipmi/api/ipmi-api.h>
 #include <freeipmi/cmds/ipmi-sel-cmds.h>
+#include <freeipmi/interpret/ipmi-interpret.h>
 #include <freeipmi/sdr/ipmi-sdr.h>
 
 #define IPMI_SEL_ERR_SUCCESS                                 0
@@ -40,7 +41,7 @@ extern "C" {
 #define IPMI_SEL_ERR_INVALID_SEL_ENTRY                       9
 #define IPMI_SEL_ERR_NOT_FOUND                              10 
 #define IPMI_SEL_ERR_RESERVATION_CANCELED                   11
-#define IPMI_SEL_ERR_INTERPRET_CONFIG_FILE_ERROR            12
+#define IPMI_SEL_ERR_INTERPRET_ERROR                        12 
 #define IPMI_SEL_ERR_CALLBACK_ERROR                         13
 #define IPMI_SEL_ERR_IPMI_ERROR                             14
 #define IPMI_SEL_ERR_SYSTEM_ERROR                           15
@@ -51,9 +52,6 @@ extern "C" {
 #define IPMI_SEL_FLAGS_DEFAULT                              0x0000
 #define IPMI_SEL_FLAGS_DEBUG_DUMP                           0x0001
 #define IPMI_SEL_FLAGS_ASSUME_SYTEM_EVENT_RECORDS           0x0002
-
-#define IPMI_SEL_PARAMETER_NONE                             0x0000
-#define IPMI_SEL_PARAMETER_INTERPRET_CONFIG_FILE            0x0001
 
 #define IPMI_SEL_STRING_FLAGS_DEFAULT                       0x0000
 #define IPMI_SEL_STRING_FLAGS_VERBOSE                       0x0001
@@ -109,20 +107,10 @@ int ipmi_sel_ctx_get_ipmi_version (ipmi_sel_ctx_t ctx,
 int ipmi_sel_ctx_set_ipmi_version (ipmi_sel_ctx_t ctx,
 				   uint8_t ipmi_version_major,
 				   uint8_t ipmi_version_minor);
-
-/* get/set lib parameters as needed
- *
- * INTERPRET_CONFIG_FILE - alternate configuration file as needed by
- * the interpretation library for SEL events.  See "%I" below in
- * ipmi_sel_parse_read_record_string.  Input/output shall be a char *
- * string pointer to the filename.
+/* For use with %I - see below 
+ * - interpret_ctx assumed loaded with whatever config desired for interpretation
  */
-int ipmi_sel_ctx_get_parameter (ipmi_sel_ctx_t ctx,
-				unsigned int parameter,
-				void **ptr);
-int ipmi_sel_ctx_set_parameter (ipmi_sel_ctx_t ctx,
-				unsigned int parameter,
-				const void *ptr);
+int ipmi_sel_ctx_set_interpret (ipmi_sel_ctx_t ctx, ipmi_interpret_ctx_t interpret_ctx); 
 
 char *ipmi_sel_ctx_get_debug_prefix (ipmi_sel_ctx_t ctx);
 int ipmi_sel_ctx_set_debug_prefix (ipmi_sel_ctx_t ctx, const char *debug_prefix);
@@ -335,7 +323,8 @@ int ipmi_sel_parse_read_oem (ipmi_sel_ctx_t ctx,
  * %I - event nominal vs. warning vs. critical interpretation [1]
  *
  * [1] - see libfreeipmi interpret library for information.  See
- * ipmi_sel_ctx_set_parameter() to input alternate config file.
+ * ipmi_sel_ctx_set_interpret_ctx().  If interpret context not
+ * available, returns INTERPRET_ERROR.
  *
  * Available in SEL event and timestamped OEM SEL records
  *

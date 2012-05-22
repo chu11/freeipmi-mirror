@@ -1036,7 +1036,6 @@ _output_event_state (ipmi_pet_state_data_t *state_data,
 
   return (event_output_event_state (NULL,
 				    state_data->sel_ctx,
-				    state_data->interpret_ctx,
 				    sel_record,
 				    sel_record_len,
 				    state_data->prog_data->args->comma_separated_output,
@@ -2237,6 +2236,14 @@ _ipmi_pet (ipmi_pet_prog_data_t *prog_data)
               goto cleanup;
             }
         }
+
+      if (ipmi_sel_ctx_set_interpret (state_data.sel_ctx, state_data.interpret_ctx) < 0)
+	{
+	  fprintf (stderr,
+		   "ipmi_sel_ctx_set_interpret: %s\n",
+		   ipmi_sel_ctx_errormsg (state_data.sel_ctx));
+	  goto cleanup;
+	}
     }
   
   if (run_cmd_args (&state_data) < 0)

@@ -4,6 +4,8 @@
 	Support interpretation of event in sel library.  Support %I string
 	output.
 	
+	* Globally update tools as necessary for changes.
+
 2012-05-22  Albert Chu <chu11@llnl.gov>
 
 	* common/toolcommon/tool-sdr-cache-common.h,

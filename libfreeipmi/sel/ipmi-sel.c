@@ -409,6 +409,33 @@ ipmi_sel_ctx_set_ipmi_version (ipmi_sel_ctx_t ctx,
   return (0);
 }
 
+int
+ipmi_sel_ctx_set_interpret (ipmi_sel_ctx_t ctx,
+			    ipmi_interpret_ctx_t interpret_ctx)
+{
+  if (!ctx || ctx->magic != IPMI_SEL_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_sel_ctx_errormsg (ctx), ipmi_sel_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if (interpret_ctx)
+    {
+      uint16_t tmp;
+
+      /* test to make sure interpret_ctx legit */
+      if (ipmi_interpret_ctx_get_product_id (interpret_ctx, &tmp) < 0)
+	{
+	  SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_PARAMETERS);
+	  return (-1);
+	}
+    }
+
+  ctx->interpret_ctx = interpret_ctx;
+  ctx->errnum = IPMI_SEL_ERR_SUCCESS;
+  return (0);
+} 
+
 char *
 ipmi_sel_ctx_get_debug_prefix (ipmi_sel_ctx_t ctx)
 {
