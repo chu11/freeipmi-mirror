@@ -2,9 +2,7 @@
 
 	* libfreeipmi/include/freeipmi/sel/ipmi-sel.h, libfreeipmi/sel/:
 	Support interpretation of event in sel library.  Support %I string
-	output.  Support new ipmi_sel_ctx_get_parameter() and
-	ipmi_sel_ctx_set_parameter() to allow config of an alternate
-	interpret config file.
+	output.
 	
 2012-05-22  Albert Chu <chu11@llnl.gov>
 

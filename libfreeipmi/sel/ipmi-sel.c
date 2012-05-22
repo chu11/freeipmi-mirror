@@ -69,7 +69,7 @@ static char *ipmi_sel_errmsgs[] =
     "end of sel entries list reached",
     "not found",
     "reservation canceled",
-    "interpret config file error",
+    "interpret error",
     "callback error",
     "internal IPMI error",
     "internal system error",
@@ -118,8 +118,6 @@ ipmi_sel_ctx_create (ipmi_ctx_t ipmi_ctx, ipmi_sdr_ctx_t sdr_ctx)
   ctx->product_id = 0;
   ctx->ipmi_version_major = 0;
   ctx->ipmi_version_minor = 0;
-  ctx->interpret_config_file = NULL;
-  ctx->interpret_config_file_loaded = 0;
   ctx->debug_prefix = NULL;
   ctx->separator = NULL;
 
@@ -128,12 +126,7 @@ ipmi_sel_ctx_create (ipmi_ctx_t ipmi_ctx, ipmi_sdr_ctx_t sdr_ctx)
 
   ctx->ipmi_ctx = ipmi_ctx;
   ctx->sdr_ctx = sdr_ctx;
-
-  if (!(ctx->interpret_ctx = ipmi_interpret_ctx_create ()))
-    {
-      ERRNO_TRACE (errno);
-      goto cleanup;
-    }
+  ctx->interpret_ctx = NULL;
 
   ctx->sel_entries_loaded = 0;
 
@@ -148,8 +141,6 @@ ipmi_sel_ctx_create (ipmi_ctx_t ipmi_ctx, ipmi_sdr_ctx_t sdr_ctx)
  cleanup:
   if (ctx)
     {
-      if (ctx->interpret_ctx)
-	ipmi_interpret_ctx_destroy (ctx->interpret_ctx);
       if (ctx->sel_entries)
         list_destroy (ctx->sel_entries);
       free (ctx);
@@ -191,10 +182,8 @@ ipmi_sel_ctx_destroy (ipmi_sel_ctx_t ctx)
       return;
     }
 
-  free (ctx->interpret_config_file);
   free (ctx->debug_prefix);
   free (ctx->separator);
-  ipmi_interpret_ctx_destroy (ctx->interpret_ctx);
   _sel_entries_clear (ctx);
   list_destroy (ctx->sel_entries);
   ctx->magic = ~IPMI_SEL_CTX_MAGIC;
@@ -250,8 +239,6 @@ ipmi_sel_ctx_get_flags (ipmi_sel_ctx_t ctx, unsigned int *flags)
 int
 ipmi_sel_ctx_set_flags (ipmi_sel_ctx_t ctx, unsigned int flags)
 {
-  unsigned int interpret_flags = 0;
-
   if (!ctx || ctx->magic != IPMI_SEL_CTX_MAGIC)
     {
       ERR_TRACE (ipmi_sel_ctx_errormsg (ctx), ipmi_sel_ctx_errnum (ctx));
@@ -266,13 +253,26 @@ ipmi_sel_ctx_set_flags (ipmi_sel_ctx_t ctx, unsigned int flags)
 
   ctx->flags = flags;
 
-  if (flags & IPMI_SEL_FLAGS_ASSUME_SYTEM_EVENT_RECORDS)
-    interpret_flags |= IPMI_INTERPRET_FLAGS_SEL_ASSUME_SYSTEM_EVENT_RECORDS;
-
-  if (ipmi_interpret_ctx_set_flags (ctx->interpret_ctx, interpret_flags) < 0)
+  if (ctx->interpret_ctx)
     {
-      SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_INTERNAL_ERROR);
-      return (-1);
+      unsigned int interpret_flags;
+
+      if (ipmi_interpret_ctx_get_flags (ctx->interpret_ctx, &interpret_flags) < 0)
+	{
+	  SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_INTERPRET_ERROR);
+	  return (-1);
+	}
+
+      if (flags & IPMI_SEL_FLAGS_ASSUME_SYTEM_EVENT_RECORDS)
+	interpret_flags |= IPMI_INTERPRET_FLAGS_SEL_ASSUME_SYSTEM_EVENT_RECORDS;
+      else
+	interpret_flags &= ~IPMI_INTERPRET_FLAGS_SEL_ASSUME_SYSTEM_EVENT_RECORDS;
+      
+      if (ipmi_interpret_ctx_set_flags (ctx->interpret_ctx, interpret_flags) < 0)
+	{
+	  SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_INTERPRET_ERROR);
+	  return (-1);
+	}
     }
 
   ctx->errnum = IPMI_SEL_ERR_SUCCESS;
@@ -399,80 +399,6 @@ ipmi_sel_ctx_set_ipmi_version (ipmi_sel_ctx_t ctx,
 
   ctx->ipmi_version_major = ipmi_version_major;
   ctx->ipmi_version_minor = ipmi_version_minor;
-  ctx->errnum = IPMI_SEL_ERR_SUCCESS;
-  return (0);
-}
-
-int
-ipmi_sel_ctx_get_parameter (ipmi_sel_ctx_t ctx,
-			    unsigned int parameter,
-			    void **ptr)
-{
-  if (!ctx || ctx->magic != IPMI_SEL_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_sel_ctx_errormsg (ctx), ipmi_sel_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (!ptr)
-    {
-      SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  switch (parameter)
-    {
-    case IPMI_SEL_PARAMETER_NONE:
-      (*ptr) = NULL;
-      break;
-    case IPMI_SEL_PARAMETER_INTERPRET_CONFIG_FILE:
-      (*ptr) = ctx->interpret_config_file;
-      break;
-    default:
-      SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  ctx->errnum = IPMI_SEL_ERR_SUCCESS;
-  return (0);
-}
-
-int
-ipmi_sel_ctx_set_parameter (ipmi_sel_ctx_t ctx,
-			    unsigned int parameter,
-			    const void *ptr)
-{
-  if (!ctx || ctx->magic != IPMI_SEL_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_sel_ctx_errormsg (ctx), ipmi_sel_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (!ptr)
-    {
-      SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  switch (parameter)
-    {
-    case IPMI_SEL_PARAMETER_NONE:
-      break;
-    case IPMI_SEL_PARAMETER_INTERPRET_CONFIG_FILE:
-      if (ctx->interpret_config_file)
-	free (ctx->interpret_config_file);
-      if (!(ctx->interpret_config_file = strdup ((char *)ptr)))
-	{
-	  SEL_ERRNO_TO_SEL_ERRNUM (ctx, errno);
-	  return (-1);
-	}
-      ctx->interpret_config_file_loaded = 0;
-      break;
-    default:
-      SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_PARAMETERS);
-      return (-1);
-    }
-
   ctx->errnum = IPMI_SEL_ERR_SUCCESS;
   return (0);
 }

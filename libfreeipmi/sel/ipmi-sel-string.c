@@ -508,19 +508,9 @@ _output_event_interpretation (ipmi_sel_ctx_t ctx,
       && ipmi_sel_record_type_class (sel_record_type) != IPMI_SEL_RECORD_TYPE_CLASS_NON_TIMESTAMPED_OEM_RECORD)
     return (_invalid_sel_entry_common (ctx, buf, buflen, flags, wlen));
 
-  if (!ctx->interpret_config_file_loaded)
-    {
-      if (ipmi_interpret_load_sel_config (ctx->interpret_ctx, ctx->interpret_config_file) < 0)
-	{
-	  SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_INTERPRET_CONFIG_FILE_ERROR);
-	  return (-1);
-	}
-      ctx->interpret_config_file_loaded = 1;
-    }
-
   if (ipmi_interpret_ctx_get_flags (ctx->interpret_ctx, &interpret_flags_save) < 0)
     {
-      SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_INTERNAL_ERROR);
+      SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_INTERPRET_ERROR);
       return (-1);
     }
 
@@ -531,7 +521,7 @@ _output_event_interpretation (ipmi_sel_ctx_t ctx,
 
   if (ipmi_interpret_ctx_set_flags (ctx->interpret_ctx, interpret_flags) < 0)
     {
-      SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_INTERNAL_ERROR);
+      SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_INTERPRET_ERROR);
       return (-1);
     }
 
@@ -540,16 +530,16 @@ _output_event_interpretation (ipmi_sel_ctx_t ctx,
 			  sel_entry->sel_event_record_len,
 			  &sel_state) < 0)
     {
-      SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_INTERPRET_CONFIG_FILE_ERROR);
+      SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_INTERPRET_ERROR);
       return (-1);
     }
-
+  
   if (ipmi_interpret_ctx_set_flags (ctx->interpret_ctx, interpret_flags_save) < 0)
     {
-      SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_INTERNAL_ERROR);
+      SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_INTERPRET_ERROR);
       return (-1);
     }
-
+  
   /* achu
    * 
    * NOT_AVAILABLE and IGNORE_UNAVAILABLE_FIELD not applicable here.
