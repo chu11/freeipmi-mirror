@@ -37,6 +37,54 @@
 #include "freeipmi-portability.h"
 #include "pstdout.h"
 
+int
+event_load_event_state_config_file (pstdout_state_t pstate,
+				    ipmi_interpret_ctx_t interpret_ctx,
+				    const char *event_state_config_file)
+{
+  if (event_state_config_file)
+    {
+      if (ipmi_interpret_load_sel_config (interpret_ctx,
+					  event_state_config_file) < 0)
+	{
+	  if (ipmi_interpret_ctx_errnum (interpret_ctx) == IPMI_INTERPRET_ERR_SEL_CONFIG_FILE_DOES_NOT_EXIST)
+	    PSTDOUT_FPRINTF (pstate,
+			     stderr,
+			     "event state config file '%s' does not exist\n",
+			     event_state_config_file);
+	  else if (ipmi_interpret_ctx_errnum (interpret_ctx) == IPMI_INTERPRET_ERR_SEL_CONFIG_FILE_PARSE)
+	    PSTDOUT_FPRINTF (pstate,
+			     stderr,
+			     "event state config file '%s' parse error\n",
+			     event_state_config_file);
+	  else
+	    PSTDOUT_FPRINTF (pstate,
+			     stderr,
+			     "ipmi_interpret_load_sel_config: %s\n",
+			     ipmi_interpret_ctx_errormsg (interpret_ctx));
+	  return (-1);
+	}
+    }
+  else
+    {
+      if (ipmi_interpret_load_sel_config (interpret_ctx, NULL) < 0)
+	{
+	  if (ipmi_interpret_ctx_errnum (interpret_ctx) == IPMI_INTERPRET_ERR_SEL_CONFIG_FILE_PARSE)
+	    PSTDOUT_FPRINTF (pstate,
+			     stderr,
+			     "event state config file parse error\n");
+	  else
+	    PSTDOUT_FPRINTF (pstate,
+			     stderr,
+			     "ipmi_interpret_load_sel_config: %s\n",
+			     ipmi_interpret_ctx_errormsg (interpret_ctx));
+	  return (-1);
+	}
+    }
+  
+  return (0);
+}
+
 /* return -1 on failout error, 0 on invalid data */
 static int
 _sel_parse_err_handle (pstdout_state_t pstate,

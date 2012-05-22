@@ -2189,39 +2189,10 @@ _ipmi_pet (ipmi_pet_prog_data_t *prog_data)
           goto cleanup;
         }
 
-      if (prog_data->args->event_state_config_file)
-        {
-          if (ipmi_interpret_load_sel_config (state_data.interpret_ctx,
-                                              prog_data->args->event_state_config_file) < 0)
-            {
-              if (ipmi_interpret_ctx_errnum (state_data.interpret_ctx) == IPMI_INTERPRET_ERR_SEL_CONFIG_FILE_DOES_NOT_EXIST)
-                fprintf (stderr,
-			 "event state config file '%s' does not exist\n",
-			 prog_data->args->event_state_config_file);
-              else if (ipmi_interpret_ctx_errnum (state_data.interpret_ctx) == IPMI_INTERPRET_ERR_SEL_CONFIG_FILE_PARSE)
-                fprintf (stderr,
-			 "event state config file '%s' parse error\n",
-			 prog_data->args->event_state_config_file);
-              else
-                fprintf (stderr,
-			 "ipmi_interpret_load_sel_config: %s\n",
-			 ipmi_interpret_ctx_errormsg (state_data.interpret_ctx));
-              goto cleanup;
-            }
-        }
-      else
-        {
-          if (ipmi_interpret_load_sel_config (state_data.interpret_ctx, NULL) < 0)
-            {
-              if (ipmi_interpret_ctx_errnum (state_data.interpret_ctx) == IPMI_INTERPRET_ERR_SEL_CONFIG_FILE_PARSE)
-                fprintf (stderr, "event state config file parse error\n");
-              else
-                fprintf (stderr,
-			 "ipmi_interpret_load_sel_config: %s\n",
-			 ipmi_interpret_ctx_errormsg (state_data.interpret_ctx));
-              goto cleanup;
-            }
-        }
+      if (event_load_event_state_config_file (NULL,
+					      state_data.interpret_ctx,
+					      prog_data->args->event_state_config_file) < 0)
+	goto cleanup;
 
       if (prog_data->args->interpret_oem_data)
         flags |= IPMI_INTERPRET_FLAGS_INTERPRET_OEM_DATA;

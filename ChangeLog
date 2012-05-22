@@ -4,6 +4,10 @@
 	Support interpretation of event in sel library.  Support %I string
 	output.
 	
+	* common/toolcommon/tool-event-common.h,
+	common/toolcommon/tool-event-common.c (event_load_event_state_config_file):
+	New function.
+	
 	* Globally update tools as necessary for changes.
 
 2012-05-22  Albert Chu <chu11@llnl.gov>

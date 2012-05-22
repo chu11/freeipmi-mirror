@@ -2224,45 +2224,10 @@ _ipmi_sel (pstdout_state_t pstate,
           goto cleanup;
         }
 
-      if (prog_data->args->event_state_config_file)
-        {
-          if (ipmi_interpret_load_sel_config (state_data.interpret_ctx,
-                                              prog_data->args->event_state_config_file) < 0)
-            {
-              if (ipmi_interpret_ctx_errnum (state_data.interpret_ctx) == IPMI_INTERPRET_ERR_SEL_CONFIG_FILE_DOES_NOT_EXIST)
-                pstdout_fprintf (pstate,
-                                 stderr,
-                                 "event state config file '%s' does not exist\n",
-                                 prog_data->args->event_state_config_file);
-              else if (ipmi_interpret_ctx_errnum (state_data.interpret_ctx) == IPMI_INTERPRET_ERR_SEL_CONFIG_FILE_PARSE)
-                pstdout_fprintf (pstate,
-                                 stderr,
-                                 "event state config file '%s' parse error\n",
-                                 prog_data->args->event_state_config_file);
-              else
-                pstdout_fprintf (pstate,
-                                 stderr,
-                                 "ipmi_interpret_load_sel_config: %s\n",
-                                 ipmi_interpret_ctx_errormsg (state_data.interpret_ctx));
-              goto cleanup;
-            }
-        }
-      else
-        {
-          if (ipmi_interpret_load_sel_config (state_data.interpret_ctx, NULL) < 0)
-            {
-              if (ipmi_interpret_ctx_errnum (state_data.interpret_ctx) == IPMI_INTERPRET_ERR_SEL_CONFIG_FILE_PARSE)
-                pstdout_fprintf (pstate,
-                                 stderr,
-                                 "event state config file parse error\n");
-              else
-                pstdout_fprintf (pstate,
-                                 stderr,
-                                 "ipmi_interpret_load_sel_config: %s\n",
-                                 ipmi_interpret_ctx_errormsg (state_data.interpret_ctx));
-              goto cleanup;
-            }
-        }
+      if (event_load_event_state_config_file (pstate,
+					      state_data.interpret_ctx,
+					      prog_data->args->event_state_config_file) < 0)
+	goto cleanup;
 
       if (prog_data->args->assume_system_event_records)
         interpret_flags |= IPMI_INTERPRET_FLAGS_SEL_ASSUME_SYSTEM_EVENT_RECORDS;

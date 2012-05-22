@@ -34,7 +34,11 @@
 #define EVENT_NA_STRING        "N/A"
 #define EVENT_OUTPUT_SEPARATOR " ; "
 
-/* All functions
+int event_load_event_state_config_file (pstdout_state_t pstate,
+					ipmi_interpret_ctx_t interpret_ctx,
+					const char *event_state_config_file);
+
+/* All functions below
  * return 1 on success
  * return (0) on non-success, data ill-formed/invalid
  * return (-1) on error
