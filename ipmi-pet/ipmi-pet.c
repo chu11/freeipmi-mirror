@@ -2144,12 +2144,6 @@ _ipmi_pet (ipmi_pet_prog_data_t *prog_data)
 	  goto cleanup;
 	}
       
-      if (sdr_cache_setup_debug (state_data.sdr_ctx,
-				 NULL,
-				 state_data.prog_data->args->common_args.debug,
-				 state_data.hostname) < 0)
-	goto cleanup;
-      
       if (!prog_data->args->pet_acknowledge)
         {
           if (sdr_cache_create_and_load (state_data.sdr_ctx,

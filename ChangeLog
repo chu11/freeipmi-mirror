@@ -1,3 +1,11 @@
+2012-05-22  Albert Chu <chu11@llnl.gov>
+
+	* common/toolcommon/tool-sdr-cache-common.h,
+	common/toolcommon/tool-sdr-cache-common.c (sdr_cache_setup_debug):
+	Remove function.  Fold into sdr_cache_create_and_load.
+
+	* Globally update tools as necessary for changes.
+	
 2012-05-21  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/sel/ipmi-sel.c, libfreeipmi/sel/:

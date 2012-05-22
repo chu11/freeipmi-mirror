@@ -27,7 +27,7 @@
 #include "tool-cmdline-common.h"
 #include "pstdout.h"
 
-int sdr_cache_create_and_load (ipmi_sdr_ctx_t ctx,
+int sdr_cache_create_and_load (ipmi_sdr_ctx_t sdr_ctx,
                                pstdout_state_t pstate,
                                ipmi_ctx_t ipmi_ctx,
                                const char *hostname,
@@ -37,13 +37,8 @@ int sdr_cache_flush_cache (pstdout_state_t pstate,
                            const char *hostname,
 			   const struct common_cmd_args *common_args);
 
-int sdr_cache_setup_debug (ipmi_sdr_ctx_t ctx,
-			   pstdout_state_t pstate,
-			   int debug,
-			   const char *hostname);
-
 /* wrapper for ipmi_sdr_cache_search_sensor, handles some additional special workarounds */
-int ipmi_sdr_cache_search_sensor_wrapper (ipmi_sdr_ctx_t ctx,
+int ipmi_sdr_cache_search_sensor_wrapper (ipmi_sdr_ctx_t sdr_ctx,
 					  uint8_t sensor_number,
 					  uint8_t generator_id);
 

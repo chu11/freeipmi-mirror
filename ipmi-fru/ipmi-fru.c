@@ -774,12 +774,6 @@ _ipmi_fru (pstdout_state_t pstate,
       goto cleanup;
     }
 
-  if (sdr_cache_setup_debug (state_data.sdr_ctx,
-			     state_data.pstate,
-			     state_data.prog_data->args->common_args.debug,
-			     state_data.hostname) < 0)
-    goto cleanup;
-
   if (run_cmd_args (&state_data) < 0)
     goto cleanup;
 

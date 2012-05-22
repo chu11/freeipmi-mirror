@@ -1345,12 +1345,6 @@ _ipmi_sensors (pstdout_state_t pstate,
       goto cleanup;
     }
 
-  if (sdr_cache_setup_debug (state_data.sdr_ctx,
-			     state_data.pstate,
-			     state_data.prog_data->args->common_args.debug,
-			     state_data.hostname) < 0)
-    goto cleanup;
-
   if (!(state_data.sensor_read_ctx = ipmi_sensor_read_ctx_create (state_data.ipmi_ctx)))
     {
       pstdout_perror (pstate, "ipmi_sensor_read_ctx_create()");

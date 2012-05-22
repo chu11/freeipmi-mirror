@@ -2171,12 +2171,6 @@ _ipmi_sel (pstdout_state_t pstate,
 	  goto cleanup;
 	}
       
-      if (sdr_cache_setup_debug (state_data.sdr_ctx,
-				 state_data.pstate,
-				 state_data.prog_data->args->common_args.debug,
-				 state_data.hostname) < 0)
-	goto cleanup;
-
       if (sdr_cache_create_and_load (state_data.sdr_ctx,
 				     state_data.pstate,
 				     state_data.ipmi_ctx,

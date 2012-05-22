@@ -533,12 +533,6 @@ _find_sensor (ipmi_oem_state_data_t *state_data,
       goto cleanup;
     }
 
-  if (sdr_cache_setup_debug (tmp_sdr_ctx,
-			     state_data->pstate,
-			     state_data->prog_data->args->common_args.debug,
-			     state_data->hostname) < 0)
-    goto cleanup;
-
   sdr_callback_arg.state_data = state_data;
   sdr_callback_arg.sensor_number = sensor_number;
   sdr_callback_arg.id_string = id_string;

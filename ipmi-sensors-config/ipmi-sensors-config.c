@@ -81,12 +81,6 @@ _ipmi_sensors_config (pstdout_state_t pstate,
       goto cleanup;
     }
 
-  if (sdr_cache_setup_debug (state_data.sdr_ctx,
-			     state_data.pstate,
-			     state_data.prog_data->args->config_args.common_args.debug,
-			     hostname) < 0)
-    goto cleanup;
-
   if (sdr_cache_create_and_load (state_data.sdr_ctx,
                                  NULL,
                                  state_data.ipmi_ctx,
