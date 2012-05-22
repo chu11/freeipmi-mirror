@@ -199,7 +199,7 @@ ipmi_interpret_ctx_set_flags (ipmi_interpret_ctx_t ctx, unsigned int flags)
   
   if (ipmi_sel_ctx_set_flags (ctx->sel_ctx, tmpflags) < 0)
     {
-      INTERPRET_SEL_PARSE_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_ctx);
+      INTERPRET_SEL_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_ctx);
       return (-1);
     }
   
@@ -420,7 +420,7 @@ _get_sel_oem_sensor_state (ipmi_interpret_ctx_t ctx,
 					   sel_record_len,
 					   &sensor_type) < 0)
         {
-          INTERPRET_SEL_PARSE_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_ctx);
+          INTERPRET_SEL_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_ctx);
           return (-1);
         }
 
@@ -429,7 +429,7 @@ _get_sel_oem_sensor_state (ipmi_interpret_ctx_t ctx,
 					       sel_record_len,
 					       &event_direction) < 0)
         {
-          INTERPRET_SEL_PARSE_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_ctx);
+          INTERPRET_SEL_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_ctx);
           return (-1);
         }
 
@@ -438,7 +438,7 @@ _get_sel_oem_sensor_state (ipmi_interpret_ctx_t ctx,
 					   sel_record_len,
 					   &event_data1) < 0)
         {
-          INTERPRET_SEL_PARSE_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_ctx);
+          INTERPRET_SEL_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_ctx);
           return (-1);
         }
 
@@ -447,7 +447,7 @@ _get_sel_oem_sensor_state (ipmi_interpret_ctx_t ctx,
 					   sel_record_len,
 					   &event_data2) < 0)
         {
-          INTERPRET_SEL_PARSE_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_ctx);
+          INTERPRET_SEL_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_ctx);
           return (-1);
         }
       
@@ -456,7 +456,7 @@ _get_sel_oem_sensor_state (ipmi_interpret_ctx_t ctx,
 					   sel_record_len,
 					   &event_data3) < 0)
         {
-          INTERPRET_SEL_PARSE_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_ctx);
+          INTERPRET_SEL_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_ctx);
           return (-1);
         }
 
@@ -573,7 +573,7 @@ _get_sel_oem_record_state (ipmi_interpret_ctx_t ctx,
 						   oem_data,
 						   IPMI_SEL_OEM_DATA_MAX)) < 0)
         {
-          INTERPRET_SEL_PARSE_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_ctx);
+          INTERPRET_SEL_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_ctx);
           return (-1);
         }
 
@@ -638,7 +638,7 @@ ipmi_interpret_sel (ipmi_interpret_ctx_t ctx,
 				       sel_record_len,
 				       &record_type) < 0)
     {
-      INTERPRET_SEL_PARSE_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_ctx);
+      INTERPRET_SEL_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_ctx);
       return (-1);
     }
 
@@ -665,7 +665,7 @@ ipmi_interpret_sel (ipmi_interpret_ctx_t ctx,
 					   sel_record_len,
 					   &sensor_type) < 0)
         {
-          INTERPRET_SEL_PARSE_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_ctx);
+          INTERPRET_SEL_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_ctx);
           goto cleanup;
         }
 
@@ -674,7 +674,7 @@ ipmi_interpret_sel (ipmi_interpret_ctx_t ctx,
 					       sel_record_len,
 					       &event_direction) < 0)
         {
-          INTERPRET_SEL_PARSE_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_ctx);
+          INTERPRET_SEL_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_ctx);
           goto cleanup;
         }
 
@@ -683,7 +683,7 @@ ipmi_interpret_sel (ipmi_interpret_ctx_t ctx,
 					       sel_record_len,
 					       &event_reading_type_code) < 0)
         {
-          INTERPRET_SEL_PARSE_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_ctx);
+          INTERPRET_SEL_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_ctx);
           goto cleanup;
         }
 
@@ -692,7 +692,7 @@ ipmi_interpret_sel (ipmi_interpret_ctx_t ctx,
 									       sel_record_len,
 									       &offset_from_event_reading_type_code) < 0)
         {
-          INTERPRET_SEL_PARSE_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_ctx);
+          INTERPRET_SEL_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_ctx);
           goto cleanup;
         }
 
