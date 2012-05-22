@@ -91,7 +91,7 @@ ipmi_interpret_ctx_create (void)
   ctx->magic = IPMI_INTERPRET_CTX_MAGIC;
   ctx->flags = IPMI_INTERPRET_FLAGS_DEFAULT;
 
-  if (!(ctx->sel_parse_ctx = ipmi_sel_ctx_create (NULL, NULL)))
+  if (!(ctx->sel_ctx = ipmi_sel_ctx_create (NULL, NULL)))
     {
       ERRNO_TRACE (errno);
       goto cleanup;
@@ -108,7 +108,7 @@ ipmi_interpret_ctx_create (void)
  cleanup:
   if (ctx)
     {
-      ipmi_sel_ctx_destroy (ctx->sel_parse_ctx);
+      ipmi_sel_ctx_destroy (ctx->sel_ctx);
       interpret_sel_destroy (ctx);
       interpret_sensor_destroy (ctx);
       free (ctx);
@@ -122,7 +122,7 @@ ipmi_interpret_ctx_destroy (ipmi_interpret_ctx_t ctx)
   if (!ctx || ctx->magic != IPMI_INTERPRET_CTX_MAGIC)
     return;
 
-  ipmi_sel_ctx_destroy (ctx->sel_parse_ctx);
+  ipmi_sel_ctx_destroy (ctx->sel_ctx);
   interpret_sel_destroy (ctx);
   interpret_sensor_destroy (ctx);
 
@@ -197,9 +197,9 @@ ipmi_interpret_ctx_set_flags (ipmi_interpret_ctx_t ctx, unsigned int flags)
     tmpflags |= IPMI_SEL_FLAGS_ASSUME_SYTEM_EVENT_RECORDS;
 
   
-  if (ipmi_sel_ctx_set_flags (ctx->sel_parse_ctx, tmpflags) < 0)
+  if (ipmi_sel_ctx_set_flags (ctx->sel_ctx, tmpflags) < 0)
     {
-      INTERPRET_SEL_PARSE_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_parse_ctx);
+      INTERPRET_SEL_PARSE_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_ctx);
       return (-1);
     }
   
@@ -415,48 +415,48 @@ _get_sel_oem_sensor_state (ipmi_interpret_ctx_t ctx,
       
       (*sel_state) = IPMI_INTERPRET_STATE_NOMINAL;
       
-      if (ipmi_sel_parse_read_sensor_type (ctx->sel_parse_ctx,
+      if (ipmi_sel_parse_read_sensor_type (ctx->sel_ctx,
 					   sel_record,
 					   sel_record_len,
 					   &sensor_type) < 0)
         {
-          INTERPRET_SEL_PARSE_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_parse_ctx);
+          INTERPRET_SEL_PARSE_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_ctx);
           return (-1);
         }
 
-      if (ipmi_sel_parse_read_event_direction (ctx->sel_parse_ctx,
+      if (ipmi_sel_parse_read_event_direction (ctx->sel_ctx,
 					       sel_record,
 					       sel_record_len,
 					       &event_direction) < 0)
         {
-          INTERPRET_SEL_PARSE_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_parse_ctx);
+          INTERPRET_SEL_PARSE_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_ctx);
           return (-1);
         }
 
-      if (ipmi_sel_parse_read_event_data1 (ctx->sel_parse_ctx,
+      if (ipmi_sel_parse_read_event_data1 (ctx->sel_ctx,
 					   sel_record,
 					   sel_record_len,
 					   &event_data1) < 0)
         {
-          INTERPRET_SEL_PARSE_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_parse_ctx);
+          INTERPRET_SEL_PARSE_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_ctx);
           return (-1);
         }
 
-      if (ipmi_sel_parse_read_event_data2 (ctx->sel_parse_ctx,
+      if (ipmi_sel_parse_read_event_data2 (ctx->sel_ctx,
 					   sel_record,
 					   sel_record_len,
 					   &event_data2) < 0)
         {
-          INTERPRET_SEL_PARSE_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_parse_ctx);
+          INTERPRET_SEL_PARSE_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_ctx);
           return (-1);
         }
       
-      if (ipmi_sel_parse_read_event_data3 (ctx->sel_parse_ctx,
+      if (ipmi_sel_parse_read_event_data3 (ctx->sel_ctx,
 					   sel_record,
 					   sel_record_len,
 					   &event_data3) < 0)
         {
-          INTERPRET_SEL_PARSE_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_parse_ctx);
+          INTERPRET_SEL_PARSE_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_ctx);
           return (-1);
         }
 
@@ -567,13 +567,13 @@ _get_sel_oem_record_state (ipmi_interpret_ctx_t ctx,
       
       (*sel_state) = IPMI_INTERPRET_STATE_NOMINAL;
       
-      if ((oem_data_len = ipmi_sel_parse_read_oem (ctx->sel_parse_ctx,
+      if ((oem_data_len = ipmi_sel_parse_read_oem (ctx->sel_ctx,
 						   sel_record,
 						   sel_record_len,
 						   oem_data,
 						   IPMI_SEL_OEM_DATA_MAX)) < 0)
         {
-          INTERPRET_SEL_PARSE_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_parse_ctx);
+          INTERPRET_SEL_PARSE_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_ctx);
           return (-1);
         }
 
@@ -633,12 +633,12 @@ ipmi_interpret_sel (ipmi_interpret_ctx_t ctx,
       return (-1);
     }
 
-  if (ipmi_sel_parse_read_record_type (ctx->sel_parse_ctx,
+  if (ipmi_sel_parse_read_record_type (ctx->sel_ctx,
 				       sel_record,
 				       sel_record_len,
 				       &record_type) < 0)
     {
-      INTERPRET_SEL_PARSE_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_parse_ctx);
+      INTERPRET_SEL_PARSE_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_ctx);
       return (-1);
     }
 
@@ -660,39 +660,39 @@ ipmi_interpret_sel (ipmi_interpret_ctx_t ctx,
       uint8_t sensor_type;
       uint8_t offset_from_event_reading_type_code;
 
-      if (ipmi_sel_parse_read_sensor_type (ctx->sel_parse_ctx,
+      if (ipmi_sel_parse_read_sensor_type (ctx->sel_ctx,
 					   sel_record,
 					   sel_record_len,
 					   &sensor_type) < 0)
         {
-          INTERPRET_SEL_PARSE_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_parse_ctx);
+          INTERPRET_SEL_PARSE_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_ctx);
           goto cleanup;
         }
 
-      if (ipmi_sel_parse_read_event_direction (ctx->sel_parse_ctx,
+      if (ipmi_sel_parse_read_event_direction (ctx->sel_ctx,
 					       sel_record,
 					       sel_record_len,
 					       &event_direction) < 0)
         {
-          INTERPRET_SEL_PARSE_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_parse_ctx);
+          INTERPRET_SEL_PARSE_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_ctx);
           goto cleanup;
         }
 
-      if (ipmi_sel_parse_read_event_type_code (ctx->sel_parse_ctx,
+      if (ipmi_sel_parse_read_event_type_code (ctx->sel_ctx,
 					       sel_record,
 					       sel_record_len,
 					       &event_reading_type_code) < 0)
         {
-          INTERPRET_SEL_PARSE_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_parse_ctx);
+          INTERPRET_SEL_PARSE_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_ctx);
           goto cleanup;
         }
 
-      if (ipmi_sel_parse_read_event_data1_offset_from_event_reading_type_code (ctx->sel_parse_ctx,
+      if (ipmi_sel_parse_read_event_data1_offset_from_event_reading_type_code (ctx->sel_ctx,
 									       sel_record,
 									       sel_record_len,
 									       &offset_from_event_reading_type_code) < 0)
         {
-          INTERPRET_SEL_PARSE_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_parse_ctx);
+          INTERPRET_SEL_PARSE_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_ctx);
           goto cleanup;
         }
 
