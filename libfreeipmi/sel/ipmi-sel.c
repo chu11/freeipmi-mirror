@@ -310,11 +310,14 @@ ipmi_sel_ctx_set_manufacturer_id (ipmi_sel_ctx_t ctx, uint32_t manufacturer_id)
 
   ctx->manufacturer_id = manufacturer_id;
 
-  if (ipmi_interpret_ctx_set_manufacturer_id (ctx->interpret_ctx,
-					      ctx->manufacturer_id) < 0)
+  if (ctx->interpret_ctx)
     {
-      SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_INTERNAL_ERROR);
-      return (-1);
+      if (ipmi_interpret_ctx_set_manufacturer_id (ctx->interpret_ctx,
+						  ctx->manufacturer_id) < 0)
+	{
+	  SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_INTERNAL_ERROR);
+	  return (-1);
+	}
     }
 
   ctx->errnum = IPMI_SEL_ERR_SUCCESS;
@@ -352,11 +355,14 @@ ipmi_sel_ctx_set_product_id (ipmi_sel_ctx_t ctx, uint16_t product_id)
 
   ctx->product_id = product_id;
 
-  if (ipmi_interpret_ctx_set_product_id (ctx->interpret_ctx,
-					 ctx->product_id) < 0)
+  if (ctx->interpret_ctx)
     {
-      SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_INTERNAL_ERROR);
-      return (-1);
+      if (ipmi_interpret_ctx_set_product_id (ctx->interpret_ctx,
+					     ctx->product_id) < 0)
+	{
+	  SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_INTERNAL_ERROR);
+	  return (-1);
+	}
     }
 
   ctx->errnum = IPMI_SEL_ERR_SUCCESS;

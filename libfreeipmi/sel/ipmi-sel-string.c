@@ -508,6 +508,12 @@ _output_event_interpretation (ipmi_sel_ctx_t ctx,
       && ipmi_sel_record_type_class (sel_record_type) != IPMI_SEL_RECORD_TYPE_CLASS_NON_TIMESTAMPED_OEM_RECORD)
     return (_invalid_sel_entry_common (ctx, buf, buflen, flags, wlen));
 
+  if (!ctx->interpretation)
+    {
+      SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_INTERPRET_ERROR);
+      return (-1);
+    }
+
   if (ipmi_interpret_ctx_get_flags (ctx->interpret_ctx, &interpret_flags_save) < 0)
     {
       SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_INTERPRET_ERROR);
