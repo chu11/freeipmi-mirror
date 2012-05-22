@@ -490,6 +490,8 @@ _output_event_interpretation (ipmi_sel_ctx_t ctx,
 			      unsigned int flags,
 			      unsigned int *wlen)
 {
+  unsigned int interpret_flags_save;
+  unsigned int interpret_flags;
   unsigned int sel_state;
   char *sel_state_str = NULL;
 
@@ -516,12 +518,35 @@ _output_event_interpretation (ipmi_sel_ctx_t ctx,
       ctx->interpret_config_file_loaded = 1;
     }
 
+  if (ipmi_interpret_ctx_get_flags (ctx->interpret_ctx, &interpret_flags_save) < 0)
+    {
+      SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_INTERNAL_ERROR);
+      return (-1);
+    }
+
+  interpret_flags = interpret_flags_save;
+  
+  if (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA)
+    interpret_flags |= IPMI_INTERPRET_FLAGS_INTERPRET_OEM_DATA;
+
+  if (ipmi_interpret_ctx_set_flags (ctx->interpret_ctx, interpret_flags) < 0)
+    {
+      SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_INTERNAL_ERROR);
+      return (-1);
+    }
+
   if (ipmi_interpret_sel (ctx->interpret_ctx,
 			  sel_entry->sel_event_record,
 			  sel_entry->sel_event_record_len,
 			  &sel_state) < 0)
     {
       SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_INTERPRET_CONFIG_FILE_ERROR);
+      return (-1);
+    }
+
+  if (ipmi_interpret_ctx_set_flags (ctx->interpret_ctx, interpret_flags_save) < 0)
+    {
+      SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_INTERNAL_ERROR);
       return (-1);
     }
 
