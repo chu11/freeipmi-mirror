@@ -1018,7 +1018,8 @@ _interpret_sensor_oem_supermicro_discrete_cpu_temp_wrapper (ipmi_interpret_ctx_t
   return (0);
 }
 
-static int _interpret_sensor_oem_supermicro_discrete_cpu_temp (ipmi_interpret_ctx_t ctx)
+static int
+_interpret_sensor_oem_supermicro_discrete_cpu_temp (ipmi_interpret_ctx_t ctx)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
