@@ -9,6 +9,9 @@
 	function.
 
 	* ipmi-sel/, ipmi-pet/: Adjust for lib changes.
+
+	* common/toolcommon/, ipmi-sensors/, libfreeipmi/sel/,
+	libipmimonitoring/: Use ipmi_sdr_parse_sensor_name as needed.
 	
 2012-05-22  Albert Chu <chu11@llnl.gov>
 

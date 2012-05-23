@@ -243,11 +243,13 @@ _get_sensor_name (ipmi_sel_ctx_t ctx,
     }
   else
     {
-      if (ipmi_sdr_parse_id_string (ctx->sdr_ctx,
-				    NULL,
-				    0,
-				    sensor_name,
-				    sensor_name_len) < 0)
+      if (ipmi_sdr_parse_sensor_name (ctx->sdr_ctx,
+				      NULL,
+				      0,
+				      system_event_record_data->sensor_number,
+				      0, /* flags */
+				      sensor_name,
+				      sensor_name_len) < 0)
 	{
 	  if (ipmi_sdr_ctx_errnum (ctx->sdr_ctx) == IPMI_SDR_ERR_PARSE_INVALID_SDR_RECORD
 	      || ipmi_sdr_ctx_errnum (ctx->sdr_ctx) == IPMI_SDR_ERR_PARSE_INCOMPLETE_SDR_RECORD)

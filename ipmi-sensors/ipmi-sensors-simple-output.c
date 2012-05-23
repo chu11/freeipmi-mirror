@@ -530,30 +530,27 @@ _simple_output_header (ipmi_sensors_state_data_t *state_data,
                        uint16_t sensor_event_bitmask)
 {
   char fmt[IPMI_SENSORS_FMT_BUFLEN + 1];
-  char id_string[IPMI_SDR_MAX_ID_STRING_LENGTH + 1];
-  char sensor_name_buf[IPMI_SDR_MAX_SENSOR_NAME_LENGTH + 1];
-  char *sensor_name = NULL;
+  char sensor_name[IPMI_SDR_MAX_SENSOR_NAME_LENGTH + 1];
+  unsigned int sensor_name_flags = 0;
   const char *sensor_type_string;
   uint8_t event_reading_type_code;
 
   assert (state_data);
   assert (IPMI_SENSORS_EVENT_VALID (event_message_output_type));
 
+  memset (sensor_name, '\0', IPMI_SDR_MAX_SENSOR_NAME_LENGTH + 1);
+      
+  if (!state_data->prog_data->args->shared_sensors)
+    sensor_name_flags |= IPMI_SDR_SENSOR_NAME_FLAGS_IGNORE_SHARED_SENSORS;
+
   if (state_data->prog_data->args->entity_sensor_names)
     {
-      unsigned int entity_sensor_flags = 0;
-
-      if (!state_data->prog_data->args->shared_sensors)
-	entity_sensor_flags |= IPMI_SDR_SENSOR_NAME_FLAGS_IGNORE_SHARED_SENSORS;
-
-      memset (sensor_name_buf, '\0', IPMI_SDR_MAX_SENSOR_NAME_LENGTH + 1);
-
       if (ipmi_sdr_parse_entity_sensor_name (state_data->sdr_ctx,
 					     NULL,
 					     0,
 					     sensor_number,
-					     entity_sensor_flags,
-					     sensor_name_buf,
+					     sensor_name_flags,
+					     sensor_name,
 					     IPMI_SDR_MAX_SENSOR_NAME_LENGTH) < 0)
 	{
 	  pstdout_fprintf (state_data->pstate,
@@ -562,27 +559,23 @@ _simple_output_header (ipmi_sensors_state_data_t *state_data,
 			   ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
 	  return (-1);
 	}
-      
-      sensor_name = sensor_name_buf;
     }
   else
     {
-      memset (id_string, '\0', IPMI_SDR_MAX_ID_STRING_LENGTH + 1);
-
-      if (ipmi_sdr_parse_id_string (state_data->sdr_ctx,
-				    NULL,
-				    0,
-                                    id_string,
-                                    IPMI_SDR_MAX_ID_STRING_LENGTH) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "ipmi_sdr_parse_id_string: %s\n",
-                           ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
-          return (-1);
-        }
-
-      sensor_name = id_string;
+      if (ipmi_sdr_parse_sensor_name (state_data->sdr_ctx,
+				      NULL,
+				      0,
+				      sensor_number,
+				      sensor_name_flags,
+				      sensor_name,
+				      IPMI_SDR_MAX_SENSOR_NAME_LENGTH) < 0)
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_sdr_parse_sensor_name: %s\n",
+			   ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
+	  return (-1);
+	}
     }
   
   memset (fmt, '\0', IPMI_SENSORS_FMT_BUFLEN + 1);

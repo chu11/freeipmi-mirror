@@ -1028,6 +1028,7 @@ ipmi_monitoring_get_sensor_reading (ipmi_monitoring_ctx_t c,
   uint8_t sdr_sensor_type;
   int sensor_type;
   int len;
+  unsigned int sensor_name_flags = 0;
 
   assert (c);
   assert (c->magic == IPMI_MONITORING_MAGIC);
@@ -1108,13 +1109,18 @@ ipmi_monitoring_get_sensor_reading (ipmi_monitoring_ctx_t c,
 
   memset (sensor_name, '\0', IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH);
 
-  if ((len = ipmi_sdr_parse_id_string (c->sdr_ctx,
-				       NULL,
-				       0,
-                                       sensor_name,
-                                       IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH)) < 0)
+  if (!(sensor_reading_flags & IPMI_MONITORING_SENSOR_READING_FLAGS_SHARED_SENSORS))
+    sensor_reading_flags |= IPMI_SDR_SENSOR_NAME_FLAGS_IGNORE_SHARED_SENSORS;
+
+  if ((len = ipmi_sdr_parse_sensor_name (c->sdr_ctx,
+					 NULL,
+					 0,
+					 sensor_number_base + shared_sensor_number_offset,
+					 sensor_name_flags,
+					 sensor_name,
+					 IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH)) < 0)
     {
-      IPMI_MONITORING_DEBUG (("ipmi_sdr_parse_id_string: %s",
+      IPMI_MONITORING_DEBUG (("ipmi_sdr_parse_sensor_name: %s",
                               ipmi_sdr_ctx_errormsg (c->sdr_ctx)));
       c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
       return (-1);

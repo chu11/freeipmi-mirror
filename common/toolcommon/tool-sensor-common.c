@@ -437,12 +437,14 @@ _store_column_widths (pstdout_state_t pstate,
                       ipmi_sdr_ctx_t sdr_ctx,
                       uint8_t sensor_number,
                       unsigned int non_abbreviated_units,
+		      unsigned int shared_sensors,
                       unsigned int count_event_only_records,
                       unsigned int count_device_locator_records,
                       unsigned int count_oem_records,
 		      int entity_sensor_names,
                       struct sensor_column_width *column_width)
 {
+  char sensor_name[IPMI_SDR_MAX_SENSOR_NAME_LENGTH + 1];
   char record_id_buf[RECORD_ID_BUFLEN + 1];
   uint16_t record_id;
   uint8_t record_type;
@@ -472,6 +474,7 @@ _store_column_widths (pstdout_state_t pstate,
           || record_type != IPMI_SDR_FORMAT_EVENT_ONLY_RECORD)
       && (!count_device_locator_records
           || (record_type != IPMI_SDR_FORMAT_GENERIC_DEVICE_LOCATOR_RECORD
+	      && record_type != IPMI_SDR_FORMAT_FRU_DEVICE_LOCATOR_RECORD
               && record_type != IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD))
       && (!count_oem_records
           || record_type != IPMI_SDR_FORMAT_OEM_RECORD))
@@ -488,12 +491,10 @@ _store_column_widths (pstdout_state_t pstate,
   if (record_type == IPMI_SDR_FORMAT_OEM_RECORD)
     return (0);
 
+  memset (sensor_name, '\0', IPMI_SDR_MAX_SENSOR_NAME_LENGTH + 1);
+
   if (entity_sensor_names)
     {
-      char sensor_name[IPMI_SDR_MAX_SENSOR_NAME_LENGTH + 1];
-
-      memset (sensor_name, '\0', IPMI_SDR_MAX_SENSOR_NAME_LENGTH + 1);
-
       if (ipmi_sdr_parse_entity_sensor_name (sdr_ctx,
 					     NULL,
 					     0,
@@ -502,6 +503,9 @@ _store_column_widths (pstdout_state_t pstate,
 					     sensor_name,
 					     IPMI_SDR_MAX_SENSOR_NAME_LENGTH) < 0)
 	{
+	  if (ipmi_sdr_ctx_errnum (sdr_ctx) == IPMI_SDR_ERR_PARSE_INVALID_SDR_RECORD)
+	    goto normal_sensor_name;
+
 	  PSTDOUT_FPRINTF (pstate,
 			   stderr,
 			   "ipmi_sdr_parse_entity_sensor_name: %s\n",
@@ -515,50 +519,23 @@ _store_column_widths (pstdout_state_t pstate,
     }
   else
     {
-      char id_string[IPMI_SDR_MAX_ID_STRING_LENGTH + 1];
-      char device_id_string[IPMI_SDR_MAX_DEVICE_ID_STRING_LENGTH + 1];
-      char *id_string_ptr = NULL;
+    normal_sensor_name:
+      if (ipmi_sdr_parse_sensor_name (sdr_ctx,
+				      NULL,
+				      0,
+				      sensor_number,
+				      !shared_sensors ? IPMI_SDR_SENSOR_NAME_FLAGS_IGNORE_SHARED_SENSORS : 0,
+				      sensor_name,
+				      IPMI_SDR_MAX_SENSOR_NAME_LENGTH) < 0)
+	{
+	  PSTDOUT_FPRINTF (pstate,
+			   stderr,
+			   "ipmi_sdr_parse_sensor_name: %s\n",
+			   ipmi_sdr_ctx_errormsg (sdr_ctx));
+	  return (-1);
+	}
 
-      if (record_type == IPMI_SDR_FORMAT_FULL_SENSOR_RECORD
-          || record_type == IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD
-          || record_type == IPMI_SDR_FORMAT_EVENT_ONLY_RECORD)
-        {
-          memset (id_string, '\0', IPMI_SDR_MAX_ID_STRING_LENGTH + 1);
-          if (ipmi_sdr_parse_id_string (sdr_ctx,
-					NULL,
-					0,
-                                        id_string,
-                                        IPMI_SDR_MAX_ID_STRING_LENGTH) < 0)
-            {
-              PSTDOUT_FPRINTF (pstate,
-                               stderr,
-                               "ipmi_sdr_parse_id_string: %s\n",
-                               ipmi_sdr_ctx_errormsg (sdr_ctx));
-              return (-1);
-            }
-
-          id_string_ptr = id_string;
-        }
-      else
-        {
-          memset (device_id_string, '\0', IPMI_SDR_MAX_DEVICE_ID_STRING_LENGTH + 1);
-          if (ipmi_sdr_parse_device_id_string (sdr_ctx,
-					       NULL,
-					       0,
-                                               device_id_string,
-                                               IPMI_SDR_MAX_DEVICE_ID_STRING_LENGTH) < 0)
-            {
-              PSTDOUT_FPRINTF (pstate,
-                               stderr,
-                               "ipmi_sdr_parse_device_id_string: %s\n",
-                               ipmi_sdr_ctx_errormsg (sdr_ctx));
-              return (-1);
-            }
-
-          id_string_ptr = device_id_string;
-        }
-      
-      len = strlen (id_string_ptr);
+      len = strlen (sensor_name);
       if (len > column_width->sensor_name)
         column_width->sensor_name = len;
     }
@@ -654,6 +631,7 @@ _store_column_widths_shared (pstdout_state_t pstate,
                                 sdr_ctx,
                                 0,
                                 non_abbreviated_units,
+				0, /* shared_sensors */
                                 count_event_only_records,
                                 count_device_locator_records,
                                 count_oem_records,
@@ -684,6 +662,7 @@ _store_column_widths_shared (pstdout_state_t pstate,
                                 sdr_ctx,
                                 0,
                                 non_abbreviated_units,
+				0, /* shared_sensors */
                                 count_event_only_records,
                                 count_device_locator_records,
                                 count_oem_records,
@@ -722,6 +701,7 @@ _store_column_widths_shared (pstdout_state_t pstate,
                                 sdr_ctx,
                                 sensor_number,
                                 non_abbreviated_units,
+				1, /* shared_sensors */
                                 count_event_only_records,
                                 count_device_locator_records,
                                 count_oem_records,
@@ -792,6 +772,7 @@ calculate_column_widths (pstdout_state_t pstate,
                                         sdr_ctx,
                                         0,
                                         non_abbreviated_units,
+					0, /* shared_sensors */
                                         count_event_only_records,
                                         count_device_locator_records,
                                         count_oem_records,
@@ -849,6 +830,7 @@ calculate_column_widths (pstdout_state_t pstate,
                                             sdr_ctx,
                                             0,
                                             non_abbreviated_units,
+					    0, /* shared_sensors */
                                             count_event_only_records,
                                             count_device_locator_records,
                                             count_oem_records,
