@@ -1,5 +1,10 @@
 2012-05-22  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/interpret/: Support Supermicro OEM SEL event
+	interpretations.
+	
+2012-05-22  Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/sel/ipmi-sel.h, libfreeipmi/sel/:
 	Support interpretation of event in sel library.  Support %I string
 	output.

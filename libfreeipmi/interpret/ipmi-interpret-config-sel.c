@@ -1280,6 +1280,144 @@ _interpret_sel_oem_intel_nmi_state (ipmi_interpret_ctx_t ctx)
   return (0);
 }
 
+int
+_interpret_sel_oem_supermicro_discrete_cpu_temp_wrapper (ipmi_interpret_ctx_t ctx,
+							 uint32_t manufacturer_id,
+							 uint16_t product_id)
+{
+  struct ipmi_interpret_sel_oem_sensor_config *oem_conf;
+  
+  assert (ctx);
+  assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
+  assert (ctx->interpret_sel.sel_oem_sensor_config);
+  assert (ctx->interpret_sel.sel_oem_record_config);
+  
+  if (_interpret_sel_oem_sensor_config_create (ctx,
+					       manufacturer_id,
+					       product_id,
+					       IPMI_EVENT_READING_TYPE_CODE_OEM_SUPERMICRO_GENERIC,
+					       IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP,
+					       &oem_conf) < 0)
+    return (-1);
+  
+  oem_conf->oem_sensor_data[0].event_direction_any_flag = 1;
+  oem_conf->oem_sensor_data[0].event_direction = 0; /* doesn't matter */
+
+  oem_conf->oem_sensor_data[0].event_data1_any_flag = 0;
+  oem_conf->oem_sensor_data[0].event_data1 = IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP_SEL_OVERHEAT;
+
+  oem_conf->oem_sensor_data[0].event_data2_any_flag = 1;
+  oem_conf->oem_sensor_data[0].event_data2 = 0; /* doesn't matter */
+
+  oem_conf->oem_sensor_data[0].event_data3_any_flag = 1;
+  oem_conf->oem_sensor_data[0].event_data3 = 0; /* doesn't matter */
+
+  oem_conf->oem_sensor_data[0].sel_state = IPMI_INTERPRET_STATE_CRITICAL;
+
+  oem_conf->oem_sensor_data_count = 1;
+
+  return (0);
+}
+
+static int
+_interpret_sel_oem_supermicro_discrete_cpu_temp (ipmi_interpret_ctx_t ctx)
+{
+  assert (ctx);
+  assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
+  assert (ctx->interpret_sel.sel_oem_sensor_config);
+  assert (ctx->interpret_sel.sel_oem_record_config);
+  
+  /* Supermicro CPU Temperature Overheat
+   * X7DBR-3/X7DB8/X8DTN/X7SBI-LN4/X8DTH/X8DTG/X8DTU/X8DT3-LN4F/X8DTU-6+/X8DTL/X8DTL-3F/X8SIL-F/X9SCL/X9SCM/X8DTN+-F/X8SIE/X9SCA-F-O/H8DGU-F
+   *
+   * Manufacturer ID = 10876 (Supermicro), 10437 (Peppercon, IPMI card manufacturer),
+   *                   47488 (Supermicro, not IANA number, special case)
+   *                   5593 (Magnum Technologies, rebranded Supermicro board)
+   * Product ID = 4 (X7DBR-3, X7DB8, X8DTN, X7SBI-LN4 / X7SBI_LN4), 43707 (X8DTH, X8DTG, X8DTU, X8DT3-LN4F / X8DT3_LN4F), 1549 (X8DTU-6+ / X8DTU_6PLUS),
+   *              6 (X8DTL, X8DTL-3F / X8DTL_3F), 1541 (X8SIL-F), 1572 (X9SCL, X9SCM), 1551 (X8DTN+-F / X8DTNPLUS_F), 1037 (X8SIE), 
+   *              1585 (X9SCA-F-O / X9SCA_F_O), 43025 (H8DGU-F / H8DGU_F)
+   * Event/Reading Type Code = 70h (OEM)
+   * Sensor Type = C0h (OEM)
+   * EventData1 0x02 = "Overheat"
+   */
+
+  if (_interpret_sel_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
+							       IPMI_IANA_ENTERPRISE_ID_SUPERMICRO,
+							       IPMI_SUPERMICRO_PRODUCT_ID_X9SC_BASE) < 0)
+    return (-1);
+
+  if (_interpret_sel_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
+							       IPMI_IANA_ENTERPRISE_ID_PEPPERCON,
+							       IPMI_SUPERMICRO_PRODUCT_ID_FOUR_BASE) < 0)
+    return (-1);
+
+  if (_interpret_sel_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
+							       IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
+							       IPMI_SUPERMICRO_PRODUCT_ID_X8DT_BASE) < 0)
+    return (-1);
+  
+  if (_interpret_sel_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
+							       IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
+							       IPMI_SUPERMICRO_PRODUCT_ID_X8DTU_6PLUS) < 0)
+    return (-1);
+  
+  if (_interpret_sel_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
+							       IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
+							       IPMI_SUPERMICRO_PRODUCT_ID_X8DTL_BASE) < 0)
+    return (-1);
+  
+  if (_interpret_sel_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
+							       IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
+							       IPMI_SUPERMICRO_PRODUCT_ID_X8SIL_F) < 0)
+    return (-1);
+
+  if (_interpret_sel_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
+							       IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
+							       IPMI_SUPERMICRO_PRODUCT_ID_X9SC_BASE) < 0)
+    return (-1);
+
+  if (_interpret_sel_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
+							       IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
+							       IPMI_SUPERMICRO_PRODUCT_ID_X8DTNPLUS_F) < 0)
+    return (-1);
+
+  if (_interpret_sel_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
+							       IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
+							       IPMI_SUPERMICRO_PRODUCT_ID_X8SIE) < 0)
+    return (-1);
+
+  if (_interpret_sel_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
+							       IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
+							       IPMI_SUPERMICRO_PRODUCT_ID_X9SCA_F_O) < 0)
+    return (-1);
+
+  if (_interpret_sel_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
+							       IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
+							       IPMI_SUPERMICRO_PRODUCT_ID_H8DGU_F) < 0)
+    return (-1);
+
+  if (_interpret_sel_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
+							       IPMI_IANA_ENTERPRISE_ID_MAGNUM_TECHNOLOGIES,
+							       IPMI_SUPERMICRO_PRODUCT_ID_X8DTL_BASE) < 0)
+    return (-1);
+ 
+  return (0);
+}
+
+static int
+_interpret_sel_oem_supermicro (ipmi_interpret_ctx_t ctx)
+{
+  assert (ctx);
+  assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
+  assert (ctx->interpret_sel.sel_oem_sensor_config);
+  assert (ctx->interpret_sel.sel_oem_record_config);
+
+  if (_interpret_sel_oem_supermicro_discrete_cpu_temp (ctx) < 0)
+    return (-1);
+
+  return (0);
+}
+
 static int
 _interpret_sel_oem_intel (ipmi_interpret_ctx_t ctx)
 {
@@ -1311,6 +1449,9 @@ _interpret_sel_oem_config_init (ipmi_interpret_ctx_t ctx)
   if (_interpret_sel_oem_intel (ctx) < 0)
     return (-1);
   
+  if (_interpret_sel_oem_supermicro (ctx) < 0)
+    return (-1);
+
   return (0);
 }
 
