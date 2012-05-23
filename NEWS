@@ -2,9 +2,12 @@ FreeIPMI 1.1.6 - 05/17/12
 -------------------------
 Tools
 ------
+o In ipmi-sel, support Supermicro SEL OEM interpretations in
+  --output-event-state.
 
 Libraries
 ---------
+o Support Supermicro SEL OEM interpretations.
 
 Misc
 ----
