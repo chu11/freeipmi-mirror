@@ -49,6 +49,117 @@
 
 #define IPMI_SDR_CHARS_IN_ALPHABET 26
 
+static int
+_get_shared_sensor_name (ipmi_sdr_ctx_t ctx,
+			 const void *sdr_record,
+			 unsigned int sdr_record_len,
+			 uint8_t sensor_number,
+			 const char *id_string,
+			 char *buf,
+			 unsigned int buflen)
+{
+  uint8_t share_count;
+  uint8_t id_string_instance_modifier_type;
+  uint8_t id_string_instance_modifier_offset;
+  uint8_t entity_instance_sharing;
+
+  assert (ctx);
+  assert (ctx->magic == IPMI_SDR_CTX_MAGIC);
+  assert (id_string);
+
+  if (ipmi_sdr_parse_sensor_record_sharing (ctx,
+					    sdr_record,
+					    sdr_record_len,
+					    &share_count,
+					    &id_string_instance_modifier_type,
+					    &id_string_instance_modifier_offset,
+					    &entity_instance_sharing) < 0)
+    return (-1);
+      
+  if (share_count > 1
+      && entity_instance_sharing == IPMI_SDR_ENTITY_INSTANCE_INCREMENTS_FOR_EACH_SHARED_RECORD)
+    {
+      uint8_t sensor_number_base;
+      uint8_t sensor_number_offset;
+      
+      if (ipmi_sdr_parse_sensor_number (ctx,
+					sdr_record,
+					sdr_record_len,
+					&sensor_number_base) < 0)
+	return (-1);
+      
+      /* I guess it's a bug if the sensor number passed in is bad */
+      if (sensor_number >= sensor_number_base)
+	sensor_number_offset = sensor_number - sensor_number_base;
+      else
+	goto fallthrough;
+      
+      if (id_string_instance_modifier_type == IPMI_SDR_ID_STRING_INSTANCE_MODIFIER_TYPE_ALPHA)
+	{
+	  char modifierbuf[IPMI_SDR_MODIFIER_BUFLEN];
+	  
+	  memset (modifierbuf, '\0', IPMI_SDR_MODIFIER_BUFLEN);
+              
+	  /* IPMI spec example is:
+	   *
+	   * "If the modifier = alpha, offset=0
+	   * corresponds to 'A', offset=25 corresponses to
+	   * 'Z', and offset = 26 corresponds to 'AA', for
+	   * offset=26 the sensors could be identified as:
+	   * Temp AA, Temp AB, Temp AC."
+	   *
+	   * achu note: id_string_instance_modifier_type
+	   * is a 7 bit field, so we cannot reach a
+	   * situation of 'AAA' or 'AAB'.  The max is
+	   * 'EX':
+	   *
+	   * 'A' + (127/26) = 4 => 'E'
+	   * 'A' + (127 % 26) = 23 => 'X'
+	   */
+	      
+	  if ((id_string_instance_modifier_type + sensor_number_offset) < IPMI_SDR_CHARS_IN_ALPHABET)
+	    snprintf (buf,
+		      buflen,
+		      "%s %c",
+		      id_string,
+		      'A' + ((id_string_instance_modifier_type + sensor_number_offset)/IPMI_SDR_CHARS_IN_ALPHABET));
+	  else
+	    snprintf (buf,
+		      buflen,
+		      "%s %c%c",
+		      id_string,
+		      'A' + ((id_string_instance_modifier_type + sensor_number_offset)/IPMI_SDR_CHARS_IN_ALPHABET),
+		      'A' + (id_string_instance_modifier_type % IPMI_SDR_CHARS_IN_ALPHABET));
+	}
+      else
+	{
+	  /* IPMI spec example is:
+	   *
+	   * "Suppose sensor ID is 'Temp' for 'Temperature
+	   * Sensor', share count = 3, ID string instance
+	   * modifier = numeric, instance modifier offset
+	   * = 5 - then the sensors oculd be identified
+	   * as: Temp 5, Temp 6, Temp 7"
+	   */
+	  snprintf (buf,
+		    buflen,
+		    "%s %u",
+		    id_string,
+		    id_string_instance_modifier_offset + sensor_number_offset);
+	}
+	  
+      return (0);
+    }
+  
+ fallthrough:
+  snprintf (buf,
+	    buflen,
+	    "%s",
+	    id_string);
+
+  return (0);
+}
+
 int
 ipmi_sdr_parse_sensor_name (ipmi_sdr_ctx_t ctx,
 			    const void *sdr_record,
@@ -136,100 +247,14 @@ ipmi_sdr_parse_sensor_name (ipmi_sdr_ctx_t ctx,
        || record_type == IPMI_SDR_FORMAT_EVENT_ONLY_RECORD)
       && !(flags & IPMI_SDR_SENSOR_NAME_FLAGS_IGNORE_SHARED_SENSORS))
     {
-      uint8_t share_count;
-      uint8_t id_string_instance_modifier_type;
-      uint8_t id_string_instance_modifier_offset;
-      uint8_t entity_instance_sharing;
-      
-      if (ipmi_sdr_parse_sensor_record_sharing (ctx,
-						sdr_record,
-						sdr_record_len,
-						&share_count,
-						&id_string_instance_modifier_type,
-						&id_string_instance_modifier_offset,
-						&entity_instance_sharing) < 0)
+      if (_get_shared_sensor_name (ctx,
+				   sdr_record,
+				   sdr_record_len,
+				   sensor_number,
+				   id_string_ptr,
+				   buf,
+				   buflen) < 0)
 	return (-1);
-      
-      if (share_count > 1
-	  && entity_instance_sharing == IPMI_SDR_ENTITY_INSTANCE_INCREMENTS_FOR_EACH_SHARED_RECORD)
-	{
-	  uint8_t sensor_number_base;
-	  uint8_t sensor_number_offset;
-
-	  if (ipmi_sdr_parse_sensor_number (ctx,
-					    sdr_record,
-					    sdr_record_len,
-					    &sensor_number_base) < 0)
-	    return (-1);
-	  
-	  /* I guess it's a bug if the sensor number passed in is bad */
-	  if (sensor_number >= sensor_number_base)
-	    sensor_number_offset = sensor_number - sensor_number_base;
-	  else
-	    goto fallthrough;
-	  
-	  if (id_string_instance_modifier_type == IPMI_SDR_ID_STRING_INSTANCE_MODIFIER_TYPE_ALPHA)
-	    {
-	      char modifierbuf[IPMI_SDR_MODIFIER_BUFLEN];
-	      
-	      memset (modifierbuf, '\0', IPMI_SDR_MODIFIER_BUFLEN);
-              
-	      /* IPMI spec example is:
-	       *
-	       * "If the modifier = alpha, offset=0
-	       * corresponds to 'A', offset=25 corresponses to
-	       * 'Z', and offset = 26 corresponds to 'AA', for
-	       * offset=26 the sensors could be identified as:
-	       * Temp AA, Temp AB, Temp AC."
-	       *
-	       * achu note: id_string_instance_modifier_type
-	       * is a 7 bit field, so we cannot reach a
-	       * situation of 'AAA' or 'AAB'.  The max is
-	       * 'EX':
-	       *
-	       * 'A' + (127/26) = 4 => 'E'
-	       * 'A' + (127 % 26) = 23 => 'X'
-	       */
-	      
-	      if ((id_string_instance_modifier_type + sensor_number_offset) < IPMI_SDR_CHARS_IN_ALPHABET)
-		snprintf (buf,
-			  buflen,
-			  "%s %c",
-			  id_string_ptr,
-			  'A' + ((id_string_instance_modifier_type + sensor_number_offset)/IPMI_SDR_CHARS_IN_ALPHABET));
-	      else
-		snprintf (buf,
-			  buflen,
-			  "%s %c%c",
-			  id_string_ptr,
-			  'A' + ((id_string_instance_modifier_type + sensor_number_offset)/IPMI_SDR_CHARS_IN_ALPHABET),
-			  'A' + (id_string_instance_modifier_type % IPMI_SDR_CHARS_IN_ALPHABET));
-	    }
-	  else
-	    {
-	      /* IPMI spec example is:
-	       *
-	       * "Suppose sensor ID is 'Temp' for 'Temperature
-	       * Sensor', share count = 3, ID string instance
-	       * modifier = numeric, instance modifier offset
-	       * = 5 - then the sensors oculd be identified
-	       * as: Temp 5, Temp 6, Temp 7"
-	       */
-	      snprintf (buf,
-			buflen,
-			"%s %u",
-			id_string_ptr,
-			id_string_instance_modifier_offset + sensor_number_offset);
-	    }
-	  
-	  return (0);
-	}
-
-    fallthrough:
-      snprintf (buf,
-		buflen,
-		"%s",
-		id_string_ptr);
     }
   else
     snprintf (buf,
@@ -372,113 +397,40 @@ ipmi_sdr_parse_entity_sensor_name (ipmi_sdr_ctx_t ctx,
                || record_type == IPMI_SDR_FORMAT_EVENT_ONLY_RECORD)
               && !(flags & IPMI_SDR_SENSOR_NAME_FLAGS_IGNORE_SHARED_SENSORS))
             {
-              uint8_t share_count;
-              uint8_t id_string_instance_modifier_type;
-              uint8_t id_string_instance_modifier_offset;
-              uint8_t entity_instance_sharing;
+	      char sensor_name_buf[IPMI_SDR_MAX_SENSOR_NAME_LENGTH + 1];
 
-              if (ipmi_sdr_parse_sensor_record_sharing (ctx,
-							sdr_record,
-							sdr_record_len,
-                                                        &share_count,
-                                                        &id_string_instance_modifier_type,
-                                                        &id_string_instance_modifier_offset,
-                                                        &entity_instance_sharing) < 0)
+	      memset (sensor_name_buf, '\0', IPMI_SDR_MAX_SENSOR_NAME_LENGTH + 1);
+	      
+	      if (_get_shared_sensor_name (ctx,
+					   sdr_record,
+					   sdr_record_len,
+					   sensor_number,
+					   id_string_ptr,
+					   sensor_name_buf,
+					   IPMI_SDR_MAX_SENSOR_NAME_LENGTH) < 0)
 		return (-1);
 
-              if (share_count > 1
-                  && entity_instance_sharing == IPMI_SDR_ENTITY_INSTANCE_INCREMENTS_FOR_EACH_SHARED_RECORD)
-                {
-                  uint8_t sensor_number_base;
-                  uint8_t sensor_number_offset;
-
-                  if (ipmi_sdr_parse_sensor_number (ctx,
-						    sdr_record,
-						    sdr_record_len,
-						    &sensor_number_base) < 0)
-		    return (-1);
-
-                  /* I guess it's a bug if the sensor number passed in is bad */
-                  if (sensor_number >= sensor_number_base)
-                    sensor_number_offset = sensor_number - sensor_number_base;
-                  else
-                    goto fallthrough;
-
-                  if (id_string_instance_modifier_type == IPMI_SDR_ID_STRING_INSTANCE_MODIFIER_TYPE_ALPHA)
-                    {
-                      char modifierbuf[IPMI_SDR_MODIFIER_BUFLEN];
-
-                      memset (modifierbuf, '\0', IPMI_SDR_MODIFIER_BUFLEN);
-                      
-                      /* IPMI spec example is:
-                       *
-                       * "If the modifier = alpha, offset=0
-                       * corresponds to 'A', offset=25 corresponses to
-                       * 'Z', and offset = 26 corresponds to 'AA', for
-                       * offset=26 the sensors could be identified as:
-                       * Temp AA, Temp AB, Temp AC."
-                       *
-                       * achu note: id_string_instance_modifier_type
-                       * is a 7 bit field, so we cannot reach a
-                       * situation of 'AAA' or 'AAB'.  The max is
-                       * 'EX':
-                       *
-                       * 'A' + (127/26) = 4 => 'E'
-                       * 'A' + (127 % 26) = 23 => 'X'
-                       */
-
-                      if ((id_string_instance_modifier_type + sensor_number_offset) < IPMI_SDR_CHARS_IN_ALPHABET)
-                        snprintf (buf,
-                                  buflen,
-                                  "%s %s %c",
-                                  entity_id_str,
-                                  id_string_ptr,
-                                  'A' + ((id_string_instance_modifier_type + sensor_number_offset)/IPMI_SDR_CHARS_IN_ALPHABET));
-                      else
-                        snprintf (buf,
-                                  buflen,
-                                  "%s %s %c%c",
-                                  entity_id_str,
-                                  id_string_ptr,
-                                  'A' + ((id_string_instance_modifier_type + sensor_number_offset)/IPMI_SDR_CHARS_IN_ALPHABET),
-                                  'A' + (id_string_instance_modifier_type % IPMI_SDR_CHARS_IN_ALPHABET));
-                    }
-                  else
-                    {
-                      /* IPMI spec example is:
-                       *
-                       * "Suppose sensor ID is 'Temp' for 'Temperature
-                       * Sensor', share count = 3, ID string instance
-                       * modifier = numeric, instance modifier offset
-                       * = 5 - then the sensors oculd be identified
-                       * as: Temp 5, Temp 6, Temp 7"
-                       */
-                      snprintf (buf,
-                                buflen,
-                                "%s %s %u",
-                                entity_id_str,
-                                id_string_ptr,
-                                id_string_instance_modifier_offset + sensor_number_offset);
-                    }
-
-		  return (0);
-                }
-            }
-
-        fallthrough:
-          snprintf (buf,
-                    buflen,
-                    "%s %u %s",
-                    entity_id_str,
-                    entity_instance,
-                    id_string_ptr);
+	      snprintf (buf,
+			buflen,
+			"%s %u %s",
+			entity_id_str,
+			entity_instance,
+			sensor_name_buf);
+	    }
+	  else
+	    snprintf (buf,
+		      buflen,
+		      "%s %u %s",
+		      entity_id_str,
+		      entity_instance,
+		      id_string_ptr);
         }
       else
 	{
 	  if (flags & IPMI_SDR_SENSOR_NAME_FLAGS_ALWAYS_OUTPUT_INSTANCE_NUMBER)
 	    snprintf (buf,
 		      buflen,
-                    "%s %u %s",
+		      "%s %u %s",
 		      entity_id_str,
 		      entity_instance,
 		      id_string_ptr);
