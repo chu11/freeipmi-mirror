@@ -171,6 +171,8 @@ libipmimonitoring
   - also to deal w/ probability SDR's change on some mobos
 - support 'discretereading' workaround (XXX)
   - need a mobo to play with to test, lots of a breakage possibilities
+- sensor sharing
+- how specify record ids w/ sharing
 
 tools common
 ------------
