@@ -410,8 +410,9 @@ ipmi_sel_ctx_set_ipmi_version (ipmi_sel_ctx_t ctx,
 }
 
 int
-ipmi_sel_ctx_set_interpret (ipmi_sel_ctx_t ctx,
-			    ipmi_interpret_ctx_t interpret_ctx)
+ipmi_sel_ctx_get_parameter (ipmi_sel_ctx_t ctx,
+			    unsigned int parameter,
+			    void **ptr)
 {
   if (!ctx || ctx->magic != IPMI_SEL_CTX_MAGIC)
     {
@@ -419,19 +420,66 @@ ipmi_sel_ctx_set_interpret (ipmi_sel_ctx_t ctx,
       return (-1);
     }
 
-  if (interpret_ctx)
+  if (!ptr)
     {
-      uint16_t tmp;
-
-      /* test to make sure interpret_ctx legit */
-      if (ipmi_interpret_ctx_get_product_id (interpret_ctx, &tmp) < 0)
-	{
-	  SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_PARAMETERS);
-	  return (-1);
-	}
+      SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_PARAMETERS);
+      return (-1);
     }
 
-  ctx->interpret_ctx = interpret_ctx;
+  switch (parameter)
+    {
+    case IPMI_SEL_PARAMETER_INTERPRET_CONTEXT:
+      if (!ctx->interpret_ctx)
+	(*ptr) = NULL;
+      else
+	(*ptr) = &(ctx->interpret_ctx);
+      break;
+    default:
+      SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_PARAMETERS);
+      return (-1);
+    }
+  
+  ctx->errnum = IPMI_SEL_ERR_SUCCESS;
+  return (0);
+} 
+
+int
+ipmi_sel_ctx_set_parameter (ipmi_sel_ctx_t ctx,
+			    unsigned int parameter,
+			    const void *ptr)
+{
+  if (!ctx || ctx->magic != IPMI_SEL_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_sel_ctx_errormsg (ctx), ipmi_sel_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  switch (parameter)
+    {
+    case IPMI_SEL_PARAMETER_INTERPRET_CONTEXT:
+      if (ptr)
+	{
+	  ipmi_interpret_ctx_t interpret_ctx;
+	  uint16_t tmp;
+	  
+	  interpret_ctx = *((ipmi_interpret_ctx_t *)ptr);
+
+	  /* test to make sure interpret_ctx legit */
+	  if (ipmi_interpret_ctx_get_product_id (interpret_ctx, &tmp) < 0)
+	    {
+	      SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_PARAMETERS);
+	      return (-1);
+	    }
+	  ctx->interpret_ctx = interpret_ctx;
+	}
+      else
+	ctx->interpret_ctx = NULL;
+      break;
+    default:
+      SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_PARAMETERS);
+      return (-1);
+    }
+  
   ctx->errnum = IPMI_SEL_ERR_SUCCESS;
   return (0);
 } 

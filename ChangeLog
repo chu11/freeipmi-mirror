@@ -1,3 +1,15 @@
+2012-05-23  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/sel/ipmi-sel.h,
+	libfreeipmi/sel/ipmi-sel.c (ipmi_sel_ctx_set_parameter,
+	ipmi_sel_ctx_get_parameter): New functions.
+
+	* libfreeipmi/include/freeipmi/sel/ipmi-sel.h,
+	libfreeipmi/sel/ipmi-sel.c (ipmi_sel_ctx_set_interpret): Removed
+	function.
+
+	* ipmi-sel/, ipmi-pet/: Adjust for lib changes.
+	
 2012-05-22  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/interpret/: Support Supermicro OEM SEL event

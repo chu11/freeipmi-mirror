@@ -53,6 +53,8 @@ extern "C" {
 #define IPMI_SEL_FLAGS_DEBUG_DUMP                           0x0001
 #define IPMI_SEL_FLAGS_ASSUME_SYTEM_EVENT_RECORDS           0x0002
 
+#define IPMI_SEL_PARAMETER_INTERPRET_CONTEXT                0x0001
+
 #define IPMI_SEL_STRING_FLAGS_DEFAULT                       0x0000
 #define IPMI_SEL_STRING_FLAGS_VERBOSE                       0x0001
 #define IPMI_SEL_STRING_FLAGS_IGNORE_UNAVAILABLE_FIELD      0x0002
@@ -107,10 +109,20 @@ int ipmi_sel_ctx_get_ipmi_version (ipmi_sel_ctx_t ctx,
 int ipmi_sel_ctx_set_ipmi_version (ipmi_sel_ctx_t ctx,
 				   uint8_t ipmi_version_major,
 				   uint8_t ipmi_version_minor);
-/* For use with %I - see below 
- * - interpret_ctx assumed loaded with whatever config desired for interpretation
+/* get/set parameters
+ *
+ * For misc uses.
+ *
+ * INTERPRET_CONTEXT - for use with %I - see below.  interpret_ctx
+ * assumed loaded with whatever config desired for interpretation
  */
-int ipmi_sel_ctx_set_interpret (ipmi_sel_ctx_t ctx, ipmi_interpret_ctx_t interpret_ctx); 
+int ipmi_sel_ctx_get_parameter (ipmi_sel_ctx_t ctx,
+				unsigned int parameter,
+				void **ptr);
+
+int ipmi_sel_ctx_set_parameter (ipmi_sel_ctx_t ctx,
+				unsigned int parameter,
+				const void *ptr);
 
 char *ipmi_sel_ctx_get_debug_prefix (ipmi_sel_ctx_t ctx);
 int ipmi_sel_ctx_set_debug_prefix (ipmi_sel_ctx_t ctx, const char *debug_prefix);

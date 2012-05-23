@@ -2247,7 +2247,9 @@ _ipmi_sel (pstdout_state_t pstate,
             }
         }
 
-      if (ipmi_sel_ctx_set_interpret (state_data.sel_ctx, state_data.interpret_ctx) < 0)
+      if (ipmi_sel_ctx_set_parameter (state_data.sel_ctx,
+				      IPMI_SEL_PARAMETER_INTERPRET_CONTEXT,
+				      &(state_data.interpret_ctx)) < 0)
 	{
 	  pstdout_fprintf (pstate,
 			   stderr,

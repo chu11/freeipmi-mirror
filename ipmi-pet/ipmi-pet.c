@@ -2208,7 +2208,9 @@ _ipmi_pet (ipmi_pet_prog_data_t *prog_data)
             }
         }
 
-      if (ipmi_sel_ctx_set_interpret (state_data.sel_ctx, state_data.interpret_ctx) < 0)
+      if (ipmi_sel_ctx_set_parameter (state_data.sel_ctx,
+				      IPMI_SEL_PARAMETER_INTERPRET_CONTEXT,
+				      &(state_data.interpret_ctx)) < 0)
 	{
 	  fprintf (stderr,
 		   "ipmi_sel_ctx_set_interpret: %s\n",
