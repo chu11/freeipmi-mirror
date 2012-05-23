@@ -57,6 +57,10 @@ o Re-work entity sensor names calculation to more properly meet IPMI
   specification.  Users may see slight changes in the output of sensor
   names when using the --entity-sensor-names option or similar output
   in ipmi-sensors, ipmi-sel, ipmi-pet, or ipmi-oem.
+o Re-work shared sensors name output to more properly meet IPMI
+  specification.  Users may see slight changes in the output of sensor
+  names when using the --shared-sensors option or similar output in
+  ipmi-sensors, ipmi-sel, or ipmi-pet.
 
 Libraries
 ---------
