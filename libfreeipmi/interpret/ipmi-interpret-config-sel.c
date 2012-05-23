@@ -1343,17 +1343,17 @@ _interpret_sel_oem_supermicro_discrete_cpu_temp (ipmi_interpret_ctx_t ctx)
 
   if (_interpret_sel_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
 							       IPMI_IANA_ENTERPRISE_ID_SUPERMICRO,
-							       IPMI_SUPERMICRO_PRODUCT_ID_X9SC_BASE) < 0)
+							       __IPMI_SUPERMICRO_PRODUCT_ID_X9SC) < 0)
     return (-1);
 
   if (_interpret_sel_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
 							       IPMI_IANA_ENTERPRISE_ID_PEPPERCON,
-							       IPMI_SUPERMICRO_PRODUCT_ID_FOUR_BASE) < 0)
+							       __IPMI_SUPERMICRO_PRODUCT_ID_FOUR) < 0)
     return (-1);
 
   if (_interpret_sel_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
 							       IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
-							       IPMI_SUPERMICRO_PRODUCT_ID_X8DT_BASE) < 0)
+							       __IPMI_SUPERMICRO_PRODUCT_ID_X8DT) < 0)
     return (-1);
   
   if (_interpret_sel_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
@@ -1363,7 +1363,7 @@ _interpret_sel_oem_supermicro_discrete_cpu_temp (ipmi_interpret_ctx_t ctx)
   
   if (_interpret_sel_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
 							       IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
-							       IPMI_SUPERMICRO_PRODUCT_ID_X8DTL_BASE) < 0)
+							       __IPMI_SUPERMICRO_PRODUCT_ID_X8DTL) < 0)
     return (-1);
   
   if (_interpret_sel_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
@@ -1373,7 +1373,7 @@ _interpret_sel_oem_supermicro_discrete_cpu_temp (ipmi_interpret_ctx_t ctx)
 
   if (_interpret_sel_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
 							       IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
-							       IPMI_SUPERMICRO_PRODUCT_ID_X9SC_BASE) < 0)
+							       __IPMI_SUPERMICRO_PRODUCT_ID_X9SC) < 0)
     return (-1);
 
   if (_interpret_sel_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
@@ -1398,7 +1398,7 @@ _interpret_sel_oem_supermicro_discrete_cpu_temp (ipmi_interpret_ctx_t ctx)
 
   if (_interpret_sel_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
 							       IPMI_IANA_ENTERPRISE_ID_MAGNUM_TECHNOLOGIES,
-							       IPMI_SUPERMICRO_PRODUCT_ID_X8DTL_BASE) < 0)
+							       __IPMI_SUPERMICRO_PRODUCT_ID_X8DTL) < 0)
     return (-1);
  
   return (0);
