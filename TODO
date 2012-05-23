@@ -172,6 +172,7 @@ libipmimonitoring
 - support 'discretereading' workaround (XXX)
   - need a mobo to play with to test, lots of a breakage possibilities
 - how specify record ids w/ sharing
+- entity sensor names
 
 tools common
 ------------
