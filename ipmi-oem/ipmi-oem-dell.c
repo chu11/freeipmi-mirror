@@ -4849,7 +4849,7 @@ _ipmi_oem_dell_power_supply_info_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
 					     NULL,
 					     0,
 					     0, /* sensor number */
-					     IPMI_SDR_ENTITY_SENSOR_NAME_FLAGS_IGNORE_SHARED_SENSORS,
+					     IPMI_SDR_SENSOR_NAME_FLAGS_IGNORE_SHARED_SENSORS,
 					     sensor_name_buf,
 					     IPMI_SDR_MAX_SENSOR_NAME_LENGTH) < 0)
 	{

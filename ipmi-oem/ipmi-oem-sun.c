@@ -251,7 +251,7 @@ _sun_get_led_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
 					     NULL,
 					     0,
 					     0, /* sensor number */
-					     IPMI_SDR_ENTITY_SENSOR_NAME_FLAGS_IGNORE_SHARED_SENSORS, /* flags */
+					     IPMI_SDR_SENSOR_NAME_FLAGS_IGNORE_SHARED_SENSORS, /* flags */
 					     sensor_name_buf,
 					     IPMI_SDR_MAX_SENSOR_NAME_LENGTH) < 0)
 	{
