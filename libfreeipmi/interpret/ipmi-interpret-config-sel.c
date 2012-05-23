@@ -1160,7 +1160,7 @@ _interpret_sel_oem_intel_smi_timeout_power_throttled (ipmi_interpret_ctx_t ctx)
    * Event/Reading Type Code = 3h (State Asserted/Deasserted)
    * Sensor Type = F3h (OEM)                                                                                 
    * EventData1 0x00 = "State Deasserted"
-   * EventData2 0x01 = "State Asserted"
+   * EventData1 0x01 = "State Asserted"
    */
   
   /* From Intel
@@ -1268,7 +1268,7 @@ _interpret_sel_oem_intel_nmi_state (ipmi_interpret_ctx_t ctx)
    * Event/Reading Type Code = 3h (State Asserted/Deasserted)
    * Sensor Type = F3h (OEM)                                                                                 
    * EventData1 0x00 = "State Deasserted"
-   * EventData2 0x01 = "State Asserted"
+   * EventData1 0x01 = "State Asserted"
    */
 
   /* Intel S5000PAL */

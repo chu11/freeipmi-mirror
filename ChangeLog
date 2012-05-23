@@ -2,6 +2,9 @@
 
 	* libfreeipmi/interpret/: Support Supermicro OEM SEL event
 	interpretations.
+
+	* libfreeipmi/interpret/ipmi-interpret-config-sel.c,
+	etc/freeipmi_interpret_sel.conf: Fix comment typos.
 	
 2012-05-22  Albert Chu <chu11@llnl.gov>
 
