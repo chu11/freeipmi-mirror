@@ -499,7 +499,7 @@ _store_column_widths (pstdout_state_t pstate,
 					     NULL,
 					     0,
 					     sensor_number,
-					     0,
+					     !shared_sensors ? IPMI_SDR_SENSOR_NAME_FLAGS_IGNORE_SHARED_SENSORS : 0,
 					     sensor_name,
 					     IPMI_SDR_MAX_SENSOR_NAME_LENGTH) < 0)
 	{

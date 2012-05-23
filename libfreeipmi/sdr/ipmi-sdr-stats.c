@@ -210,7 +210,6 @@ ipmi_sdr_stats_compile (ipmi_sdr_ctx_t ctx)
       goto cleanup;
     }
 
-  (void)ipmi_sdr_cache_first (ctx);
   ctx->stats_compiled = 1;
 
  out:

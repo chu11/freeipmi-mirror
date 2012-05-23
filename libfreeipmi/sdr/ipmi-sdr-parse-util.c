@@ -61,7 +61,6 @@ _get_shared_sensor_name (ipmi_sdr_ctx_t ctx,
   uint8_t share_count;
   uint8_t id_string_instance_modifier_type;
   uint8_t id_string_instance_modifier_offset;
-  uint8_t entity_instance_sharing;
 
   assert (ctx);
   assert (ctx->magic == IPMI_SDR_CTX_MAGIC);
@@ -73,11 +72,10 @@ _get_shared_sensor_name (ipmi_sdr_ctx_t ctx,
 					    &share_count,
 					    &id_string_instance_modifier_type,
 					    &id_string_instance_modifier_offset,
-					    &entity_instance_sharing) < 0)
+					    NULL) < 0)
     return (-1);
       
-  if (share_count > 1
-      && entity_instance_sharing == IPMI_SDR_ENTITY_INSTANCE_INCREMENTS_FOR_EACH_SHARED_RECORD)
+  if (share_count > 1)
     {
       uint8_t sensor_number_base;
       uint8_t sensor_number_offset;
@@ -397,7 +395,36 @@ ipmi_sdr_parse_entity_sensor_name (ipmi_sdr_ctx_t ctx,
                || record_type == IPMI_SDR_FORMAT_EVENT_ONLY_RECORD)
               && !(flags & IPMI_SDR_SENSOR_NAME_FLAGS_IGNORE_SHARED_SENSORS))
             {
+	      uint8_t share_count;
+	      uint8_t entity_instance_sharing;
 	      char sensor_name_buf[IPMI_SDR_MAX_SENSOR_NAME_LENGTH + 1];
+
+	      if (ipmi_sdr_parse_sensor_record_sharing (ctx,
+							sdr_record,
+							sdr_record_len,
+							&share_count,
+							NULL,
+							NULL,
+							&entity_instance_sharing) < 0)
+		return (-1);
+      
+	      if (share_count > 1
+		  && entity_instance_sharing == IPMI_SDR_ENTITY_INSTANCE_INCREMENTS_FOR_EACH_SHARED_RECORD)
+		{
+		  uint8_t sensor_number_base;
+      
+		  if (ipmi_sdr_parse_sensor_number (ctx,
+						    sdr_record,
+						    sdr_record_len,
+						    &sensor_number_base) < 0)
+		    return (-1);
+      
+		  /* I guess it's a bug if the sensor number passed in is bad */
+		  if (sensor_number >= sensor_number_base)
+		    entity_instance += (sensor_number - sensor_number_base);
+		  else
+		    goto fallthrough;
+		}
 
 	      memset (sensor_name_buf, '\0', IPMI_SDR_MAX_SENSOR_NAME_LENGTH + 1);
 	      
@@ -418,13 +445,16 @@ ipmi_sdr_parse_entity_sensor_name (ipmi_sdr_ctx_t ctx,
 			sensor_name_buf);
 	    }
 	  else
-	    snprintf (buf,
-		      buflen,
-		      "%s %u %s",
-		      entity_id_str,
-		      entity_instance,
-		      id_string_ptr);
-        }
+	    {
+	    fallthrough:
+	      snprintf (buf,
+			buflen,
+			"%s %u %s",
+			entity_id_str,
+			entity_instance,
+			id_string_ptr);
+	    }
+	}
       else
 	{
 	  if (flags & IPMI_SDR_SENSOR_NAME_FLAGS_ALWAYS_OUTPUT_INSTANCE_NUMBER)
