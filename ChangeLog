@@ -5,6 +5,10 @@
 
 	* libfreeipmi/interpret/ipmi-interpret-config-sel.c,
 	etc/freeipmi_interpret_sel.conf: Fix comment typos.
+
+	* libfreeipmi/include/freeipmi/sdr/ipmi-sdr.h,
+	libfreeipmi/sdr/ipmi-sdr-parse-util.c (ipmi_sdr_parse_sensor_name):
+	New function.
 	
 2012-05-22  Albert Chu <chu11@llnl.gov>
 

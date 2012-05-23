@@ -490,9 +490,9 @@ _store_column_widths (pstdout_state_t pstate,
 
   if (entity_sensor_names)
     {
-      char sensor_name[IPMI_SDR_MAX_ENTITY_SENSOR_NAME_LENGTH + 1];
+      char sensor_name[IPMI_SDR_MAX_SENSOR_NAME_LENGTH + 1];
 
-      memset (sensor_name, '\0', IPMI_SDR_MAX_ENTITY_SENSOR_NAME_LENGTH + 1);
+      memset (sensor_name, '\0', IPMI_SDR_MAX_SENSOR_NAME_LENGTH + 1);
 
       if (ipmi_sdr_parse_entity_sensor_name (sdr_ctx,
 					     NULL,
@@ -500,7 +500,7 @@ _store_column_widths (pstdout_state_t pstate,
 					     sensor_number,
 					     0,
 					     sensor_name,
-					     IPMI_SDR_MAX_ENTITY_SENSOR_NAME_LENGTH) < 0)
+					     IPMI_SDR_MAX_SENSOR_NAME_LENGTH) < 0)
 	{
 	  PSTDOUT_FPRINTF (pstate,
 			   stderr,

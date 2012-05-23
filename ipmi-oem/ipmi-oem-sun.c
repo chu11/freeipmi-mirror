@@ -79,7 +79,7 @@ _sun_get_led_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
   uint16_t record_id;
   char fmt[IPMI_OEM_FMT_BUFLEN + 1];
   char device_id_string[IPMI_SDR_MAX_DEVICE_ID_STRING_LENGTH + 1];
-  char sensor_name_buf[IPMI_SDR_MAX_ENTITY_SENSOR_NAME_LENGTH + 1];
+  char sensor_name_buf[IPMI_SDR_MAX_SENSOR_NAME_LENGTH + 1];
   char *sensor_name = NULL;
   uint8_t entity_instance_type;
   uint8_t led_mode;
@@ -245,7 +245,7 @@ _sun_get_led_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
       
   if (state_data->prog_data->args->verbose_count)
     {
-      memset (sensor_name_buf, '\0', IPMI_SDR_MAX_ENTITY_SENSOR_NAME_LENGTH + 1);
+      memset (sensor_name_buf, '\0', IPMI_SDR_MAX_SENSOR_NAME_LENGTH + 1);
       
       if (ipmi_sdr_parse_entity_sensor_name (state_data->sdr_ctx,
 					     NULL,
@@ -253,7 +253,7 @@ _sun_get_led_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
 					     0, /* sensor number */
 					     IPMI_SDR_ENTITY_SENSOR_NAME_FLAGS_IGNORE_SHARED_SENSORS, /* flags */
 					     sensor_name_buf,
-					     IPMI_SDR_MAX_ENTITY_SENSOR_NAME_LENGTH) < 0)
+					     IPMI_SDR_MAX_SENSOR_NAME_LENGTH) < 0)
 	{
 	  pstdout_fprintf (state_data->pstate,
 			   stderr,

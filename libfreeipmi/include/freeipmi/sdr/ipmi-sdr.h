@@ -92,13 +92,14 @@ extern "C" {
 #define IPMI_SDR_CACHE_CREATE_FLAGS_OVERWRITE           0x1
 #define IPMI_SDR_CACHE_CREATE_FLAGS_DUPLICATE_RECORD_ID 0x2
 
-#define IPMI_SDR_ENTITY_SENSOR_NAME_FLAGS_DEFAULT                       0x00000000
-#define IPMI_SDR_ENTITY_SENSOR_NAME_FLAGS_ALWAYS_OUTPUT_INSTANCE_NUMBER 0x00000001
-#define IPMI_SDR_ENTITY_SENSOR_NAME_FLAGS_IGNORE_SHARED_SENSORS         0x00000002
+#define IPMI_SDR_SENSOR_NAME_FLAGS_DEFAULT                       0x00000000
+#define IPMI_SDR_SENSOR_NAME_FLAGS_IGNORE_SHARED_SENSORS         0x00000001
+/* applicable only to entity sensor names */
+#define IPMI_SDR_SENSOR_NAME_FLAGS_ALWAYS_OUTPUT_INSTANCE_NUMBER 0x00000002
 
 #define IPMI_SDR_MAX_RECORD_LENGTH                      261 /* 256 + header */
 
-#define IPMI_SDR_MAX_ENTITY_SENSOR_NAME_LENGTH          128
+#define IPMI_SDR_MAX_SENSOR_NAME_LENGTH                 128
 
 typedef struct ipmi_sdr_ctx *ipmi_sdr_ctx_t;
 
@@ -588,12 +589,34 @@ int ipmi_sdr_parse_oem_data (ipmi_sdr_ctx_t ctx,
 
 int ipmi_sdr_cache_delete (ipmi_sdr_ctx_t ctx, const char *filename);
 
-/* ipmi_sensor_entity_sensor_name_string
+/* ipmi_sensor_parse_sensor_name_string
+ * - Wrapper that will return id_string or device_id_string dependent
+ *   on SDR type.
+ * - Based on flags, will deal with shared sensors and alter sensor
+ *   name if necessary.
+ * - if sdr_record is NULL and sdr_record_len is 0, the current sdr
+ *   record in the iterator will be used in parsing.
+ */
+/* For Full, Compact, Event, Generic Device Locator, FRU Device
+ * Locator, and Management Controller Device Locator SDR records
+ */
+/* returns length written into buffer on success, -1 on error */
+int ipmi_sdr_parse_sensor_name (ipmi_sdr_ctx_t ctx,
+				const void *sdr_record,
+				unsigned int sdr_record_len,
+				uint8_t sensor_number,
+				unsigned int flags,
+				char *buf,
+				unsigned int buflen);
+
+/* ipmi_sensor_parse_entity_sensor_name
  * - Creates sensor names with the entity id and instance for better
  *   names on some systems.
  * - For example, on some systems sensor ID strings are all called
  *   "Temp".  The entity ID and instance are needed to turn the name
  *   into "Processor 1 Temp" or "Processor 2 Temp".
+ * - Based on flags, will deal with shared sensors and alter sensor
+ *   name if necessary.
  * - if sdr_record is NULL and sdr_record_len is 0, the current sdr
  *   record in the iterator will be used in parsing.
  */
