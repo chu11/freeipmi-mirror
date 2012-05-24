@@ -618,9 +618,11 @@ manpage for available workarounds.
 \fBipmi\-fru\-verbose\-count\fR \fICOUNT\fR
 Specify default verbose count to use for
 .B ipmi-fru(8).
+.if 0 \{
 .TP
 \fBipmi\-fru\-skip\-checks\fR \fIENABLE|DISABLE\fR
 Specify if checksum checks will be skipped by default.
+\}
 .TP
 \fBipmi\-fru\-bridge\-fru\fR \fIENABLE|DISABLE\fR
 Specify if FRU entries on other controllers should be read by default

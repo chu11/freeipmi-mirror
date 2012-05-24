@@ -86,7 +86,8 @@ static struct argp_option cmdline_options[] =
       "Specify a specific FRU device ID.", 40},
     { "verbose", VERBOSE_KEY, 0, 0,
       "Increase verbosity in output.", 41},
-    { "skip-checks", SKIP_CHECKS_KEY, 0, 0,
+    /* legacy */
+    { "skip-checks", SKIP_CHECKS_KEY, 0, OPTION_HIDDEN,
       "Skip FRU checksum checks", 42},
     { "bridge-fru", BRIDGE_FRU_KEY, 0, 0,
       "Bridge to read FRU entries on other controllers", 43},
@@ -143,6 +144,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case VERBOSE_KEY:
       cmd_args->verbose_count++;
       break;
+      /* legacy */
     case SKIP_CHECKS_KEY:
       cmd_args->skip_checks = 1;
       break;

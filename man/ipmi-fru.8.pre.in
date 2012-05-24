@@ -63,6 +63,7 @@ Specify a specific FRU device ID.
 .TP
 \fB\-v\fR, \fB\-\-verbose\fR
 Increase verbosity in output to include additional output.
+.if 0 \{
 .TP
 \fB\-s\fR, \fB\-\-skip-checks\fR
 Skip FRU checksum checks. Some FRUs have incorrect checksums, but the
@@ -70,6 +71,7 @@ FRU data is correct.  Use this option to skip the checks checksum.
 Output may be unknown, pray for the best.  This option is confirmed to
 work around compliances issues on Inventec 5441/Dell Xanadu II, Dell
 Poweredge R610, and Dell Poweredge R710 motherboards.
+\}
 .TP
 \fB\-\-bridge\-fru\fR
 By default, FRU entries on other satellite controllers will not be
@@ -101,12 +103,13 @@ types.
 #include <@top_srcdir@/man/manpage-common-workaround-outofband-15-text.man>
 #include <@top_srcdir@/man/manpage-common-workaround-outofband-20-text.man>
 .LP
-\fIskipchecks\fR - This workaround option will skip FRU checksum checks.
-Some FRUs have incorrect checksums, but the FRU data is correct.
-Output may be unknown, pray for the best.  This option is confirmed to
-work around compliances issues on Inventec 5441/Dell Xanadu II, Dell
-Poweredge R610, and Dell Poweredge R710 motherboards.  This option is
-identical to using the \fB\-\-skip\-checks\fR option above.
+\fIskipchecks\fR - This workaround option will skip FRU checksum
+checks.  Some FRUs have incorrect checksums, but the FRU data is
+correct.  Those hitting this issue may see "checksum invalid" errors
+in their FRU output.  Output may be unknown, pray for the best.  This
+option is confirmed to work around compliances issues on Inventec
+5441/Dell Xanadu II, Dell Poweredge R610, and Dell Poweredge R710
+motherboards.
 #include <@top_srcdir@/man/manpage-common-workaround-extra-text.man>
 #include <@top_srcdir@/man/manpage-common-oem-interpretation.man>
 .LP

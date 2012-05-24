@@ -108,8 +108,8 @@ struct config_file_data_ipmi_fru
 {
   int verbose_count;
   int verbose_count_count;
-  int skip_checks;
-  int skip_checks_count;
+  int skip_checks;		/* deprecated */
+  int skip_checks_count;	/* deprecated */
   int bridge_fru;
   int bridge_fru_count;
   int interpret_oem_data;

@@ -1,3 +1,8 @@
+2012-05-24  Albert Chu <chu11@llnl.gov>
+
+	* Deprecate use of --skip-checks in ipmi-fru in favor of
+	"skipchecks" workaround flag.
+	
 2012-05-23  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/sel/ipmi-sel.h,

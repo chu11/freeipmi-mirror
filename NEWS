@@ -61,6 +61,8 @@ o Re-work shared sensors name output to more properly meet IPMI
   specification.  Users may see slight changes in the output of sensor
   names when using the --shared-sensors option or similar output in
   ipmi-sensors, ipmi-sel, or ipmi-pet.
+o In ipmi-fru, deprecate --skip-checks option in favor of "skipchecks"
+  workaround flag.
 
 Libraries
 ---------

@@ -2265,6 +2265,7 @@ config_file_parse (const char *filename,
         &(ipmi_fru_data.verbose_count),
         0,
       },
+      /* deprecated */
       {
         "ipmi-fru-skip-checks",
         CONFFILE_OPTION_BOOL,
