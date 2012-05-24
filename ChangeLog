@@ -1,3 +1,8 @@
+2012-05-24  Albert Chu <chu11@llnl.gov>
+
+	* libipmimonitoring/ipmi_monitoring.h.in: Fix bug in
+	ASSUME_BMC_OWNER bitmask.
+	
 2012-05-22  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/interpret/: Support Supermicro OEM SEL event
