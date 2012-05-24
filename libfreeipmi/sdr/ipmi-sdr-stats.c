@@ -205,10 +205,7 @@ ipmi_sdr_stats_compile (ipmi_sdr_ctx_t ctx)
   if (ipmi_sdr_cache_iterate (ctx,
 			      _sdr_stat_callback,
 			      NULL) < 0)
-    {
-      (void)ipmi_sdr_cache_first (ctx);
-      goto cleanup;
-    }
+    goto cleanup;
 
   ctx->stats_compiled = 1;
 
