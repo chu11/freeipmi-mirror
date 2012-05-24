@@ -2265,7 +2265,7 @@ config_file_parse (const char *filename,
         &(ipmi_fru_data.verbose_count),
         0,
       },
-      /* deprecated */
+      /* legacy - maintain for backwards compatability */
       {
         "ipmi-fru-skip-checks",
         CONFFILE_OPTION_BOOL,
@@ -3035,6 +3035,7 @@ config_file_parse (const char *filename,
         &(ipmi_sel_data.event_state_config_file),
         0,
       },
+      /* legacy - maintain for backwards compatability */
       {
         "ipmi-sel-assume-system-event-records",
         CONFFILE_OPTION_BOOL,

@@ -1002,10 +1002,12 @@ should output the event state state by default.
 .TP
 \fBipmi\-sel\-event\-state\-config\-file\fR \fIFILE\fR
 Specify the default event state configuration file.
+.if 0 \{
 .TP
 \fBipmi\-sel\-assume\-system\-event\-records\fR \fIENABLE|DISABLE\fR
 Specify if system event records should be assumed when there are
 invalid record types.
+\}
 .TP
 \fBipmi\-sel\-interpret\-oem\-data\fR \fIENABLE|DISABLE\fR
 Specify if

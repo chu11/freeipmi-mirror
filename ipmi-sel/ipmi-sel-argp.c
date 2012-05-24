@@ -129,7 +129,8 @@ static struct argp_option cmdline_options[] =
       "Specify an alternate event state configuration file.", 59},
     { "hex-dump",   HEX_DUMP_KEY, 0, 0,
       "Hex-dump SEL records.", 60},
-    { "assume-system-event-records", ASSUME_SYSTEM_EVENT_RECORDS_KEY, 0, 0,
+    /* legacy */
+    { "assume-system-event-records", ASSUME_SYSTEM_EVENT_RECORDS_KEY, 0, OPTION_HIDDEN,
       "Assume invalid record types are system event records.", 61},
     { "interpret-oem-data", INTERPRET_OEM_DATA_KEY, NULL, 0,
       "Attempt to interpret OEM data.", 62},
@@ -622,6 +623,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case HEX_DUMP_KEY:
       cmd_args->hex_dump = 1;
       break;
+      /* legacy */
     case ASSUME_SYSTEM_EVENT_RECORDS_KEY:
       cmd_args->assume_system_event_records = 1;
       break;
@@ -722,6 +724,7 @@ _ipmi_sel_config_file_parse (struct ipmi_sel_arguments *cmd_args)
     cmd_args->output_event_state = config_file_data.output_event_state;
   if (config_file_data.event_state_config_file_count)
     cmd_args->event_state_config_file = config_file_data.event_state_config_file;
+  /* legacy */
   if (config_file_data.assume_system_event_records_count)
     cmd_args->assume_system_event_records = config_file_data.assume_system_event_records;
   if (config_file_data.interpret_oem_data_count)
@@ -834,6 +837,7 @@ ipmi_sel_argp_parse (int argc, char **argv, struct ipmi_sel_arguments *cmd_args)
   cmd_args->output_event_state = 0;
   cmd_args->event_state_config_file = NULL;
   cmd_args->hex_dump = 0;
+  /* legacy */
   cmd_args->assume_system_event_records = 0;
   cmd_args->interpret_oem_data = 0;
   cmd_args->output_oem_event_strings = 0;

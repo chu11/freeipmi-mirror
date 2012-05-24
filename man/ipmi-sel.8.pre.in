@@ -159,6 +159,7 @@ if \fB\-\-output\-event\-state\fR not specified.
 .TP
 \fB\-\-hex\-dump\fR
 Hex-dump SEL entries.
+.if 0 \{
 .TP
 \fB\-\-assume\-system\-event\-records\fR
 Some motherboards have invalid SEL record types listed, leading to
@@ -167,6 +168,7 @@ formatted correctly.  Use this option to assume these invalid record
 types are system event records and pray for the best.  This option is
 confirmed to work around compliances issues on HP DL 380 G5
 motherboards.
+\}
 #include <@top_srcdir@/man/manpage-common-interpret-oem-data.man>
 .TP
 \fB\-\-output\-oem\-event\-strings\fR
@@ -236,8 +238,7 @@ record types are system event records.  Records may be formatted
 correctly but report invalid record types.  Those hitting this issue
 may see "Unknown SEL Record Type" errors.  Output may be unknown, pray
 for the best.  This option is confirmed to work around compliances
-issues on HP DL 380 G5 motherboards.  This option is identical to
-using the \fB\-\-assume\-system\-event\-records\fR option above.
+issues on HP DL 380 G5 motherboards.
 #include <@top_srcdir@/man/manpage-common-workaround-extra-text.man>
 #include <@top_srcdir@/man/manpage-common-oem-interpretation.man>
 .LP

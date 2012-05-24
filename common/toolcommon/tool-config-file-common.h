@@ -172,8 +172,8 @@ struct config_file_data_ipmi_sel
   int output_event_state_count;
   char *event_state_config_file;
   int event_state_config_file_count;
-  int assume_system_event_records;
-  int assume_system_event_records_count;
+  int assume_system_event_records; /* deprecated */
+  int assume_system_event_records_count; /* deprecated */
   int interpret_oem_data;
   int interpret_oem_data_count;
   int output_oem_event_strings;

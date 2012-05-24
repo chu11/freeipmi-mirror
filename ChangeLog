@@ -2,7 +2,10 @@
 
 	* Deprecate use of --skip-checks in ipmi-fru in favor of
 	"skipchecks" workaround flag.
-	
+
+	* Deprecate use of --assume-system-event-records in ipmi-sel in
+	favor of "assumesystemevent" workaround flag.
+
 2012-05-23  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/sel/ipmi-sel.h,

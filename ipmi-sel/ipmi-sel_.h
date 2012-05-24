@@ -62,7 +62,7 @@ enum ipmi_sel_argp_option_keys
     OUTPUT_EVENT_STATE_KEY = 175,
     EVENT_STATE_CONFIG_FILE_KEY = 176,
     HEX_DUMP_KEY = 177,
-    ASSUME_SYSTEM_EVENT_RECORDS_KEY = 178,
+    ASSUME_SYSTEM_EVENT_RECORDS_KEY = 178, /* legacy */
     INTERPRET_OEM_DATA_KEY = 179,
     OUTPUT_OEM_EVENT_STRINGS_KEY = 180,
     ENTITY_SENSOR_NAMES_KEY = 181,
@@ -117,7 +117,7 @@ struct ipmi_sel_arguments
   int output_event_state;
   char *event_state_config_file;
   int hex_dump;
-  int assume_system_event_records;
+  int assume_system_event_records; /* legacy */
   int interpret_oem_data;
   int output_oem_event_strings;
   int entity_sensor_names;
