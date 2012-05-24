@@ -104,6 +104,7 @@ o In libfreeipmi, support stats functions and new utility functions in
   sdr sub-library.
 o In libfreeipmi, sel sub-library now supports the output of entity
   sensor names.
+o In libipmimonitoring, support entity sensor name output options.
 
 Misc
 ----

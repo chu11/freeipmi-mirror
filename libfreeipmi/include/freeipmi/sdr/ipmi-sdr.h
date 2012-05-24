@@ -114,9 +114,9 @@ typedef void (*Ipmi_Sdr_Cache_Create_Callback)(uint8_t sdr_version,
  * through original caller.  return < 0 will result in
  * IPMI_SDR_ERR_ERROR_RETURNED_IN_CALLBACK to bet set.
  *
- * ctx can be used only for read-only functions, most notably
- * ipmi_sdr_parse* functions.  Calls to functions that can modify
- * context state will be blocked from use.
+ * Users should be mindful of the API calls they make will in a
+ * callback.  Calls to some functions, such as ipmi_sdr_cache_first()
+ * may change iteration behavior.
  */
 typedef int (*Ipmi_Sdr_Cache_Iterate_Callback)(ipmi_sdr_ctx_t ctx,
 					       uint8_t record_type,

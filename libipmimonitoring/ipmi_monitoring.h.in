@@ -256,12 +256,16 @@ enum ipmi_monitoring_workaround_flags
  *
  * ASSUME_SYSTEM_EVENT_RECORD - If an event record is illegal, assume
  * it is a bug in the system and actually a system event record.
+ *
+ * ENTITY_SENSOR_NAMES - Return sensor names with appropriate entity
+ * id and instance prefixed when appropriate.
  */
 enum ipmi_monitoring_sel_flags
   {
     IPMI_MONITORING_SEL_FLAGS_REREAD_SDR_CACHE           = 0x00000001,
     IPMI_MONITORING_SEL_FLAGS_INTERPRET_OEM_DATA         = 0x00000002,
     IPMI_MONITORING_SEL_FLAGS_ASSUME_SYSTEM_EVENT_RECORD = 0x00000004,
+    IPMI_MONITORING_SEL_FLAGS_ENTITY_SENSOR_NAMES        = 0x00000008,
   };
 
 /* REREAD_SDR_CACHE - Re-read the SDR cache
@@ -287,6 +291,9 @@ enum ipmi_monitoring_sel_flags
  * ASSUME_BMC_OWNER - Assume the BMC is the sensor owner no matter what.  This option
  *                    works around motherboards that incorrectly indicate a non-BMC
  *                    sensor owner (e.g. usually bridging is required).
+ *
+ * ENTITY_SENSOR_NAMES - Return sensor names with appropriate entity
+ *                       id and instance prefixed when appropriate.
  */
 enum ipmi_monitoring_sensor_reading_flags
   {
@@ -297,7 +304,8 @@ enum ipmi_monitoring_sensor_reading_flags
     IPMI_MONITORING_SENSOR_READING_FLAGS_SHARED_SENSORS                   = 0x00000010,
     IPMI_MONITORING_SENSOR_READING_FLAGS_DISCRETE_READING                 = 0x00000020,
     IPMI_MONITORING_SENSOR_READING_FLAGS_IGNORE_SCANNING_DISABLED         = 0x00000040,	
-    IPMI_MONITORING_SENSOR_READING_FLAGS_ASSUME_BMC_OWNER                 = 0x00000080,	
+    IPMI_MONITORING_SENSOR_READING_FLAGS_ASSUME_BMC_OWNER                 = 0x00000080,
+    IPMI_MONITORING_SENSOR_READING_FLAGS_ENTITY_SENSOR_NAMES              = 0x00000100,
     IPMI_MONITORING_SENSOR_READING_FLAGS_IGNORE_UNREADABLE_SENSORS        = 0x00000002, /* legacy macro */
   };
 

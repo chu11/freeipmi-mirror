@@ -69,14 +69,10 @@ sdr_init_ctx (ipmi_sdr_ctx_t ctx)
   ctx->file_size = 0;
   ctx->records_start_offset = 0;
   ctx->sdr_cache = NULL;
-  ctx->current_offset = 0;
-  ctx->current_offset_dumped = 0;
+  ctx->current_offset.offset = 0;
+  ctx->current_offset.offset_dumped = 0;
   ctx->callback_lock = 0;
   
-  ctx->saved_offset_info = 0;
-  ctx->saved_current_offset = 0;
-  ctx->saved_current_offset_dumped = 0;
-
   ctx->stats_compiled = 0;
   memset (ctx->entity_counts,
 	  '\0',
@@ -273,15 +269,15 @@ sdr_check_read_status (ipmi_sdr_ctx_t ctx)
     return;
 
   if (ctx->flags & IPMI_SDR_FLAGS_DEBUG_DUMP
-      && !ctx->current_offset_dumped)
+      && !ctx->current_offset.offset_dumped)
     {
       unsigned int record_length;
       const char *record_str;
       
-      record_length = (uint8_t)((ctx->sdr_cache + ctx->current_offset)[IPMI_SDR_RECORD_LENGTH_INDEX]);
+      record_length = (uint8_t)((ctx->sdr_cache + ctx->current_offset.offset)[IPMI_SDR_RECORD_LENGTH_INDEX]);
 
       if ((record_str = sdr_record_type_str (ctx,
-					     ctx->sdr_cache + ctx->current_offset,
+					     ctx->sdr_cache + ctx->current_offset.offset,
 					     record_length + IPMI_SDR_RECORD_HEADER_LENGTH)))
         {
           char hdrbuf[IPMI_SDR_CACHE_DEBUG_BUFLEN];
@@ -297,10 +293,10 @@ sdr_check_read_status (ipmi_sdr_ctx_t ctx)
                                 ctx->debug_prefix,
                                 hdrbuf,
                                 NULL,
-                                ctx->sdr_cache + ctx->current_offset,
+                                ctx->sdr_cache + ctx->current_offset.offset,
                                 record_length + IPMI_SDR_RECORD_HEADER_LENGTH);
         }
 
-      ctx->current_offset_dumped = 1;
+      ctx->current_offset.offset_dumped = 1;
     }
 }

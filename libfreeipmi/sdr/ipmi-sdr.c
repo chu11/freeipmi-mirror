@@ -97,8 +97,24 @@ ipmi_sdr_ctx_create (void)
   ctx->magic = IPMI_SDR_CTX_MAGIC;
   ctx->flags = IPMI_SDR_FLAGS_DEFAULT;
   ctx->debug_prefix = NULL;
+
+  if (!(ctx->saved_offsets = list_create ((ListDelF)free)))
+    {
+      ERRNO_TRACE (errno);
+      goto cleanup;
+    }
+
   sdr_init_ctx (ctx);
   return (ctx);
+
+ cleanup:
+  if (ctx)
+    {
+      if (ctx->saved_offsets)
+	list_destroy (ctx->saved_offsets);
+      free (ctx);
+    }
+  return (NULL);
 }
 
 void
@@ -119,6 +135,8 @@ ipmi_sdr_ctx_destroy (ipmi_sdr_ctx_t ctx)
   /* ignore potential error, void return func */
   if (ctx->sdr_cache)
     munmap (ctx->sdr_cache, ctx->file_size);
+
+  list_destroy (ctx->saved_offsets);
 
   ctx->magic = ~IPMI_SDR_CTX_MAGIC;
   ctx->operation = IPMI_SDR_OPERATION_UNINITIALIZED;
@@ -184,12 +202,6 @@ ipmi_sdr_ctx_set_flags (ipmi_sdr_ctx_t ctx, unsigned int flags)
   if (flags & ~IPMI_SDR_FLAGS_DEBUG_DUMP)
     {
       SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  if (ctx->callback_lock)
-    {
-      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_CONTEXT_PERFORMING_OTHER_OPERATION);
       return (-1);
     }
 

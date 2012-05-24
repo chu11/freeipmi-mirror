@@ -40,6 +40,8 @@
 
 #include "freeipmi/sdr/ipmi-sdr.h"
 
+#include "list.h"
+
 #ifndef MAXPATHLEN
 #define MAXPATHLEN 4096
 #endif /* MAXPATHLEN */
@@ -90,6 +92,11 @@
 #define IPMI_MAX_ENTITY_IDS          256
 #define IPMI_MAX_ENTITY_ID_INSTANCES 256
 
+struct ipmi_sdr_offset {
+  off_t offset;
+  int offset_dumped;
+};
+
 struct ipmi_sdr_entity_count {
   uint8_t entity_instances[IPMI_MAX_ENTITY_ID_INSTANCES];
   unsigned int entity_instances_count;
@@ -112,14 +119,11 @@ struct ipmi_sdr_ctx {
   off_t file_size;
   off_t records_start_offset;
   uint8_t *sdr_cache;
-  off_t current_offset;
-  int current_offset_dumped;
+  struct ipmi_sdr_offset current_offset;
   int callback_lock;
 
   /* for saving/reset */
-  int saved_offset_info;
-  int saved_current_offset;
-  int saved_current_offset_dumped;
+  List saved_offsets;
 
   /* Stats */
   int stats_compiled;

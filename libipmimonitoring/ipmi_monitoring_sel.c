@@ -277,7 +277,8 @@ _sel_parse_ctx_error_convert (ipmi_monitoring_ctx_t c)
 
 static int
 _ipmi_monitoring_sel_parse_system_event_record (ipmi_monitoring_ctx_t c,
-                                                struct ipmi_monitoring_sel_record *s)
+                                                struct ipmi_monitoring_sel_record *s,
+						unsigned int sel_flags)
 {
   uint32_t timestamp;
   uint8_t sel_sensor_type;
@@ -290,6 +291,7 @@ _ipmi_monitoring_sel_parse_system_event_record (ipmi_monitoring_ctx_t c,
   uint8_t event_data3;
   char event_offset_string[IPMI_MONITORING_SEL_EVENT_OFFSET_STRING_MAX + 1];
   int sensor_type;
+  unsigned int sel_string_flags;
   int ret;
 
   assert (c);
@@ -418,13 +420,17 @@ _ipmi_monitoring_sel_parse_system_event_record (ipmi_monitoring_ctx_t c,
     }
   s->event_data3 = event_data3;
 
+  sel_string_flags = IPMI_SEL_STRING_FLAGS_IGNORE_UNAVAILABLE_FIELD | IPMI_SEL_STRING_FLAGS_OUTPUT_NOT_AVAILABLE;
+  if (sel_flags & IPMI_MONITORING_SEL_FLAGS_ENTITY_SENSOR_NAMES)
+    sel_string_flags |= IPMI_SEL_STRING_FLAGS_ENTITY_SENSOR_NAMES;
+  
   if (ipmi_sel_parse_read_record_string (c->sel_parse_ctx,
                                          "%s",
 					 NULL,
 					 0,
                                          s->sensor_name,
                                          IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH,
-                                         IPMI_SEL_STRING_FLAGS_IGNORE_UNAVAILABLE_FIELD | IPMI_SEL_STRING_FLAGS_OUTPUT_NOT_AVAILABLE) < 0)
+                                         sel_string_flags) < 0)
     {
       IPMI_MONITORING_DEBUG (("ipmi_sel_parse_read_record_string: %s",
                               ipmi_sel_ctx_errnum (c->sel_parse_ctx)));
@@ -434,13 +440,15 @@ _ipmi_monitoring_sel_parse_system_event_record (ipmi_monitoring_ctx_t c,
 
   memset (event_offset_string, '\0', IPMI_MONITORING_SEL_EVENT_OFFSET_STRING_MAX + 1);
 
+  sel_string_flags = IPMI_SEL_STRING_FLAGS_IGNORE_UNAVAILABLE_FIELD | IPMI_SEL_STRING_FLAGS_OUTPUT_NOT_AVAILABLE;
+
   if ((ret = ipmi_sel_parse_read_record_string (c->sel_parse_ctx,
                                                 "%e",
 						NULL,
 						0,
                                                 event_offset_string,
                                                 IPMI_MONITORING_SEL_EVENT_OFFSET_STRING_MAX,
-                                                IPMI_SEL_STRING_FLAGS_IGNORE_UNAVAILABLE_FIELD | IPMI_SEL_STRING_FLAGS_OUTPUT_NOT_AVAILABLE)) < 0)
+						sel_string_flags)) < 0)
     {
       IPMI_MONITORING_DEBUG (("ipmi_sel_parse_read_record_string: %s",
                               ipmi_sel_ctx_errnum (c->sel_parse_ctx)));
@@ -645,7 +653,7 @@ _store_sel_record (ipmi_monitoring_ctx_t c, unsigned int sel_flags)
     {
       s->record_type_class = IPMI_MONITORING_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD;
 
-      if (_ipmi_monitoring_sel_parse_system_event_record (c, s) < 0)
+      if (_ipmi_monitoring_sel_parse_system_event_record (c, s, sel_flags) < 0)
         goto cleanup;
     }
   else if (record_type_class == IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD)

@@ -56,6 +56,16 @@
 
 #include "freeipmi-portability.h"
 
+static void
+_sdr_set_current_offset (ipmi_sdr_ctx_t ctx, off_t new_offset)
+{
+  assert (ctx);
+  assert (ctx->magic == IPMI_SDR_CTX_MAGIC);
+
+  ctx->current_offset.offset = new_offset;
+  ctx->current_offset.offset_dumped = 0;
+}
+
 int
 ipmi_sdr_cache_open (ipmi_sdr_ctx_t ctx,
                      ipmi_ctx_t ipmi_ctx,
@@ -193,8 +203,7 @@ ipmi_sdr_cache_open (ipmi_sdr_ctx_t ctx,
 	}
     }
 
-  ctx->current_offset = ctx->records_start_offset;
-  ctx->current_offset_dumped = 0;
+  _sdr_set_current_offset (ctx, ctx->records_start_offset);
   ctx->operation = IPMI_SDR_OPERATION_READ_CACHE;
   ctx->errnum = IPMI_SDR_ERR_SUCCESS;
   return (0);
@@ -314,16 +323,6 @@ ipmi_sdr_cache_most_recent_erase_timestamp (ipmi_sdr_ctx_t ctx, uint32_t *most_r
   return (0);
 }
 
-static void
-_sdr_set_current_offset (ipmi_sdr_ctx_t ctx, off_t new_offset)
-{
-  assert (ctx);
-  assert (ctx->magic == IPMI_SDR_CTX_MAGIC);
-
-  ctx->current_offset = new_offset;
-  ctx->current_offset_dumped = 0;
-}
-
 int
 ipmi_sdr_cache_first (ipmi_sdr_ctx_t ctx)
 {
@@ -336,12 +335,6 @@ ipmi_sdr_cache_first (ipmi_sdr_ctx_t ctx)
   if (ctx->operation != IPMI_SDR_OPERATION_READ_CACHE)
     {
       SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_CACHE_READ_INITIALIZATION);
-      return (-1);
-    }
-
-  if (ctx->callback_lock)
-    {
-      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_CONTEXT_PERFORMING_OTHER_OPERATION);
       return (-1);
     }
 
@@ -368,18 +361,12 @@ ipmi_sdr_cache_next (ipmi_sdr_ctx_t ctx)
       return (-1);
     }
 
-  if (ctx->callback_lock)
-    {
-      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_CONTEXT_PERFORMING_OTHER_OPERATION);
-      return (-1);
-    }
+  record_length = (uint8_t)((ctx->sdr_cache + ctx->current_offset.offset)[IPMI_SDR_RECORD_LENGTH_INDEX]);
 
-  record_length = (uint8_t)((ctx->sdr_cache + ctx->current_offset)[IPMI_SDR_RECORD_LENGTH_INDEX]);
-
-  if ((ctx->current_offset + record_length + IPMI_SDR_RECORD_HEADER_LENGTH) >= ctx->file_size)
+  if ((ctx->current_offset.offset + record_length + IPMI_SDR_RECORD_HEADER_LENGTH) >= ctx->file_size)
     return (0);
 
-  _sdr_set_current_offset (ctx, ctx->current_offset + IPMI_SDR_RECORD_HEADER_LENGTH + record_length);
+  _sdr_set_current_offset (ctx, ctx->current_offset.offset + IPMI_SDR_RECORD_HEADER_LENGTH + record_length);
 
   ctx->errnum = IPMI_SDR_ERR_SUCCESS;
   return (1);
@@ -406,12 +393,6 @@ ipmi_sdr_cache_seek (ipmi_sdr_ctx_t ctx, unsigned int index)
   if (index >= ctx->record_count)
     {
       SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  if (ctx->callback_lock)
-    {
-      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_CONTEXT_PERFORMING_OTHER_OPERATION);
       return (-1);
     }
 
@@ -450,12 +431,6 @@ ipmi_sdr_cache_search_record_id (ipmi_sdr_ctx_t ctx, uint16_t record_id)
   if (ctx->operation != IPMI_SDR_OPERATION_READ_CACHE)
     {
       SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_CACHE_READ_INITIALIZATION);
-      return (-1);
-    }
-
-  if (ctx->callback_lock)
-    {
-      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_CONTEXT_PERFORMING_OTHER_OPERATION);
       return (-1);
     }
 
@@ -511,12 +486,6 @@ ipmi_sdr_cache_search_sensor (ipmi_sdr_ctx_t ctx, uint8_t sensor_number, uint8_t
   if (ctx->operation != IPMI_SDR_OPERATION_READ_CACHE)
     {
       SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_CACHE_READ_INITIALIZATION);
-      return (-1);
-    }
-
-  if (ctx->callback_lock)
-    {
-      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_CONTEXT_PERFORMING_OTHER_OPERATION);
       return (-1);
     }
 
@@ -630,7 +599,7 @@ ipmi_sdr_cache_record_read (ipmi_sdr_ctx_t ctx,
       return (-1);
     }
 
-  record_length = (uint8_t)((ctx->sdr_cache + ctx->current_offset)[IPMI_SDR_RECORD_LENGTH_INDEX]);
+  record_length = (uint8_t)((ctx->sdr_cache + ctx->current_offset.offset)[IPMI_SDR_RECORD_LENGTH_INDEX]);
 
   if (buflen < (record_length + IPMI_SDR_RECORD_HEADER_LENGTH))
     {
@@ -640,33 +609,58 @@ ipmi_sdr_cache_record_read (ipmi_sdr_ctx_t ctx,
 
   sdr_check_read_status (ctx);
 
-  memcpy (buf, ctx->sdr_cache + ctx->current_offset, record_length + IPMI_SDR_RECORD_HEADER_LENGTH);
+  memcpy (buf, ctx->sdr_cache + ctx->current_offset.offset, record_length + IPMI_SDR_RECORD_HEADER_LENGTH);
   ctx->errnum = IPMI_SDR_ERR_SUCCESS;
   return (record_length + IPMI_SDR_RECORD_HEADER_LENGTH);
 }
 
-static void
+static int
 _sdr_save_current_offset (ipmi_sdr_ctx_t ctx)
 {
+  struct ipmi_sdr_offset *saved_offset = NULL;
+
   assert (ctx);
   assert (ctx->magic == IPMI_SDR_CTX_MAGIC);
-  assert (!ctx->saved_offset_info);
 
-  ctx->saved_current_offset = ctx->current_offset;
-  ctx->saved_current_offset_dumped = ctx->current_offset_dumped;
-  ctx->saved_offset_info = 1;
+  if (!(saved_offset = (struct ipmi_sdr_offset *)malloc (sizeof (struct ipmi_sdr_offset))))
+    {
+      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_OUT_OF_MEMORY);
+      return (-1);
+    }
+
+  memcpy (saved_offset, &ctx->current_offset, sizeof (struct ipmi_sdr_offset));
+
+  if (!list_push (ctx->saved_offsets, saved_offset))
+    {
+      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_INTERNAL_ERROR);
+      goto cleanup;
+    }	
+
+  return (0);
+
+ cleanup:
+  free (saved_offset);
+  return (-1);
 }
 
-static void
+static int
 _sdr_reset_current_offset (ipmi_sdr_ctx_t ctx)
 {
+  struct ipmi_sdr_offset *saved_offset = NULL;
+
   assert (ctx);
   assert (ctx->magic == IPMI_SDR_CTX_MAGIC);
-  assert (ctx->saved_offset_info);
+  assert (list_count (ctx->saved_offsets) > 0);
 
-  ctx->current_offset = ctx->saved_current_offset;
-  ctx->current_offset_dumped = ctx->saved_current_offset_dumped;
-  ctx->saved_offset_info = 0;
+  if (!(saved_offset = list_pop (ctx->saved_offsets)))
+    {
+      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_INTERNAL_ERROR);
+      return (-1);
+    }
+
+  memcpy (&ctx->current_offset, saved_offset, sizeof (struct ipmi_sdr_offset));
+  free (saved_offset);
+  return (0);
 }
 
 int
@@ -696,7 +690,8 @@ ipmi_sdr_cache_iterate (ipmi_sdr_ctx_t ctx,
       return (-1);
     }
 
-  _sdr_save_current_offset (ctx);
+  if (_sdr_save_current_offset (ctx) < 0)
+    return (-1);
 
   if (ipmi_sdr_cache_record_count (ctx, &record_count) < 0)
     {
@@ -755,8 +750,7 @@ ipmi_sdr_cache_iterate (ipmi_sdr_ctx_t ctx,
  out:
   ctx->errnum = IPMI_SDR_ERR_SUCCESS;
  cleanup:
-  _sdr_reset_current_offset (ctx);
-  return (rv);
+  return (_sdr_reset_current_offset (ctx));
 }
 
 int

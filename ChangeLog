@@ -1,5 +1,14 @@
 2012-05-24  Albert Chu <chu11@llnl.gov>
 
+	* libipmimonitoring/: Support entity sensor names flags.
+
+	* contrib/libipmimonitoring/: Update with new flags options.
+
+	* libfreeipmi/sdr/: Support stack of saving offsets when calls to
+	ipmi_sdr_cache_iterate are made.
+
+2012-05-24  Albert Chu <chu11@llnl.gov>
+
 	* libipmimonitoring/ipmi_monitoring.h.in: Fix bug in
 	ASSUME_BMC_OWNER bitmask.
 	
