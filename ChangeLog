@@ -1,5 +1,10 @@
 2012-05-24  Albert Chu <chu11@llnl.gov>
 
+	* libipmimonitoring/ipmi_monitoring.h.in: Fix bug in
+	ASSUME_BMC_OWNER bitmask.
+	
+2012-05-24  Albert Chu <chu11@llnl.gov>
+
 	* Deprecate use of --skip-checks in ipmi-fru in favor of
 	"skipchecks" workaround flag.
 
