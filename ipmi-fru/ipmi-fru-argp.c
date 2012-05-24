@@ -191,6 +191,7 @@ _ipmi_fru_config_file_parse (struct ipmi_fru_arguments *cmd_args)
 
   if (config_file_data.verbose_count_count)
     cmd_args->verbose_count = config_file_data.verbose_count;
+  /* legacy */
   if (config_file_data.skip_checks_count)
     cmd_args->skip_checks = config_file_data.skip_checks;
   if (config_file_data.bridge_fru_count)
@@ -211,6 +212,7 @@ ipmi_fru_argp_parse (int argc, char **argv, struct ipmi_fru_arguments *cmd_args)
   cmd_args->device_id = 0;
   cmd_args->device_id_set = 0;
   cmd_args->verbose_count = 0;
+  /* legacy */
   cmd_args->skip_checks = 0;
   cmd_args->bridge_fru = 0;
   cmd_args->interpret_oem_data = 0;
