@@ -207,13 +207,14 @@ ipmi-sensors
   - i.e. perhaps need to do record-id and something else, like
     -r 5.2 to indicate record id 5 and offset 2.
   - issue for libipmimonitoring too?
+- remove shared sensor option
+  - make default like it should be
+  - this really ties to many other shared sensor issues 
 - do not error out on unexpected sensor_read errors, move on? (***)
   - i.e. unexpected completion code error?
   - require rework of sensor-read lib?  How detect session timeout, etc. 
 - make 'discretereading' on by default?
   - it does not appear that to be illegal by IPMI spec.
-- remove shared sensor option
-  - make default like it should be
 
 ipmi-sel
 --------
