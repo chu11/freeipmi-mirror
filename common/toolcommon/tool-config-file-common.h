@@ -108,8 +108,8 @@ struct config_file_data_ipmi_fru
 {
   int verbose_count;
   int verbose_count_count;
-  int skip_checks;		/* deprecated */
-  int skip_checks_count;	/* deprecated */
+  int skip_checks;		/* legacy - parse for backwards compatability */
+  int skip_checks_count;	/* legacy - parse for backwards compatability */
   int bridge_fru;
   int bridge_fru_count;
   int interpret_oem_data;
@@ -172,8 +172,8 @@ struct config_file_data_ipmi_sel
   int output_event_state_count;
   char *event_state_config_file;
   int event_state_config_file_count;
-  int assume_system_event_records; /* deprecated */
-  int assume_system_event_records_count; /* deprecated */
+  int assume_system_event_records; /* legacy - parse for backwards compatability */
+  int assume_system_event_records_count; /* legacy - parse for backwards compatability */
   int interpret_oem_data;
   int interpret_oem_data_count;
   int output_oem_event_strings;
