@@ -116,7 +116,6 @@ libfreeipmi-driver
 ------------------
 - ssif userspace implementation
   - see ipmiutil for example
-- (NEVER TESTED) openipmi ipmb
   
 libfreeipmi-api
 ---------------
@@ -125,11 +124,6 @@ libfreeipmi-api
   - Ultimately impossible to do correctly, vendor need not store
     anything in acpi/smbios/etc.
   - User can use ipmi-locate if they really want to probe?
-
-libfreeipmi-sdr-parse/libfreeipmi-sdr-cache
--------------------------------------------
-someone merge libs into one
-iterate function to iterate over all records
 
 libfreeipmi-interpret
 ---------------------
@@ -145,9 +139,8 @@ libfreeipmi-interpret
   - QSSCS4R SMI Timeout & Power Throttled sensors 
     - same event-type/sensor-type/etc., but different interpretation??  
 
-libfreeipmi-sel-parse
----------------------
-- use else if to improve performance
+libfreeipmi-sel
+---------------
 - split vendor files into motherboard files?  Is getting big.
 - cleanup parsing functions
 
