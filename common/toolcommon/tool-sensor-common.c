@@ -124,6 +124,45 @@ _output_sensor_type (const char *sensor_type_str)
 }
 
 int
+parse_sensor_types (const char *special_string,
+		    char sensor_types[MAX_SENSOR_TYPES][MAX_SENSOR_TYPES_STRING_LENGTH+1],
+		    unsigned int *sensor_types_length,
+		    const char *arg)
+{
+  char *strtmp;
+  char *tok;
+
+  assert (special_string);
+  assert (sensor_types);
+  assert (sensor_types_length);
+  assert (arg);
+
+  if (!(strtmp = strdup (arg)))
+    {
+      perror (arg);
+      return (-1);
+    }
+
+  tok = strtok (strtmp, " ,");
+  while (tok && (*sensor_types_length) < MAX_SENSOR_TYPES)
+    {
+      if (!strcasecmp (tok, special_string))
+	{
+	  (*sensor_types_length) = 0;
+	  break;
+	}
+      strncpy (sensor_types[(*sensor_types_length)],
+	       tok,
+	       MAX_SENSOR_TYPES_STRING_LENGTH);
+      (*sensor_types_length)++;
+      tok = strtok (NULL, " ,");
+    }
+
+  free (strtmp);
+  return (0);
+}
+
+int
 list_sensor_types (void)
 {
   unsigned int i;

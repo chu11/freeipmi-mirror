@@ -75,6 +75,11 @@ struct sensor_column_width
 const char * get_sensor_type_output_string (unsigned int sensor_type);
 const char * get_oem_sensor_type_output_string (uint8_t sensor_type, uint8_t event_reading_code, uint32_t manufacturer_id, uint16_t product_id);
 
+int parse_sensor_types (const char *special_string,
+			char sensor_types[MAX_SENSOR_TYPES][MAX_SENSOR_TYPES_STRING_LENGTH+1],
+			unsigned int *sensor_types_length,
+			const char *arg);
+
 int list_sensor_types (void);
 
 /* 1 if all valid, 0 if not, -1 on error */

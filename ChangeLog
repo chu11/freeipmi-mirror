@@ -1,5 +1,13 @@
 2012-05-24  Albert Chu <chu11@llnl.gov>
 
+	* common/toolcommon/tool-sensor-common.h,
+	common/toolcommon/tool-sensor-common.c (parse_sensor_types): New
+	common function.
+
+	* ipmi-sensors/, ipmi-sel/: Use common function appropriately.
+	
+2012-05-24  Albert Chu <chu11@llnl.gov>
+
 	* libipmimonitoring/: Support entity sensor names flags.
 
 	* contrib/libipmimonitoring/: Update with new flags options.
