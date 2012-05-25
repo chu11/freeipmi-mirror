@@ -2096,7 +2096,6 @@ _ipmi_pet (ipmi_pet_prog_data_t *prog_data)
   state_data.prog_data = prog_data;
   state_data.hostname = prog_data->args->common_args.hostname;
 
-  /* Special case, just flush, don't do an IPMI connection */
   if (!prog_data->args->common_args.ignore_sdr_cache
       && !prog_data->args->pet_acknowledge)
     {
