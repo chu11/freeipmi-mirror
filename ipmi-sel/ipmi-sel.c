@@ -2217,8 +2217,6 @@ _ipmi_sel (pstdout_state_t pstate,
       goto cleanup;
     }
 
-  sel_flags = 0;
-
   if (state_data.prog_data->args->common_args.debug)
     sel_flags |= IPMI_SEL_FLAGS_DEBUG_DUMP;
   
