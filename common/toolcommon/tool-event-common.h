@@ -44,20 +44,6 @@ int event_load_event_state_config_file (pstdout_state_t pstate,
  * return (-1) on error
  */
 
-int event_data_info (pstdout_state_t pstate,
-		     ipmi_sel_ctx_t sel_ctx,
-		     uint8_t *sel_record,
-		     unsigned int sel_record_len,
-		     int debug,
-		     uint8_t *generator_id,
-		     uint8_t *sensor_type,
-		     uint8_t *sensor_number,
-		     uint8_t *event_type_code,
-		     uint8_t *event_data2_flag,
-		     uint8_t *event_data3_flag,
-		     uint8_t *event_data2,
-		     uint8_t *event_data3);
-
 int event_output_time (pstdout_state_t pstate,
 		       ipmi_sel_ctx_t sel_ctx,
 		       uint8_t *sel_record,

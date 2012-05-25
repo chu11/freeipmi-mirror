@@ -548,7 +548,6 @@ _legacy_normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
   unsigned int flags;
   int record_type_class;
   int rv = -1;
-  int ret;
 
   assert (state_data);
   assert (state_data->prog_data->args->legacy_output);
@@ -579,23 +578,55 @@ _legacy_normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
       uint8_t event_data2;
       uint8_t event_data3;
 
-      if ((ret = event_data_info (state_data->pstate,
-				  state_data->sel_ctx,
-				  NULL,
-				  0,
-				  state_data->prog_data->args->common_args.debug,
-				  NULL,
-				  NULL,
-				  NULL,
-				  &event_type_code,
-				  &event_data2_flag,
-				  &event_data3_flag,
-				  &event_data2,
-				  &event_data3)) < 0)
-        goto cleanup;
+      if (ipmi_sel_parse_read_event_type_code (state_data->sel_ctx,
+					       NULL,
+					       0,
+					       &event_type_code) < 0)
+	{
+	  if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_read_event_type_code") < 0)
+	    goto cleanup;
+	  goto out;
+	}
+      
+      if (ipmi_sel_parse_read_event_data1_event_data2_flag (state_data->sel_ctx,
+							    NULL,
+							    0,
+							    &event_data2_flag) < 0)
+	{
+	  if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_read_event_data1_event_data2_flag") < 0)
+	    goto cleanup;
+	  goto out;
+	}
+  
+      if (ipmi_sel_parse_read_event_data1_event_data3_flag (state_data->sel_ctx,
+							    NULL,
+							    0,
+							    &event_data3_flag) < 0)
+	{
+	  if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_read_event_data1_event_data3_flag") < 0)
+	    goto cleanup;
+	  goto out;
+	}
 
-      if (!ret)
-        goto out;
+      if (ipmi_sel_parse_read_event_data2 (state_data->sel_ctx,
+					   NULL,
+					   0,
+					   &event_data2) < 0)
+	{
+	  if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_read_event_data2") < 0)
+	    goto cleanup;
+	  goto out;
+	}
+
+      if (ipmi_sel_parse_read_event_data3 (state_data->sel_ctx,
+					   NULL,
+					   0,
+					   &event_data3) < 0)
+	{
+	  if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_read_event_data3") < 0)
+	    goto cleanup;
+	  goto out;
+	}
 
       strcpy (fmtbuf, "%i:%d %t:%T %s:%e");
 
