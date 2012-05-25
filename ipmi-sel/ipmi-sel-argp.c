@@ -733,19 +733,15 @@ _ipmi_sel_args_validate (struct ipmi_sel_arguments *cmd_args)
 
   if (cmd_args->sensor_types_length)
     {
-      if (valid_sensor_types (NULL,
-                              cmd_args->sensor_types,
-                              cmd_args->sensor_types_length,
-                              1) < 0)
+      if (valid_sensor_types (cmd_args->sensor_types,
+                              cmd_args->sensor_types_length) < 0)
         exit (EXIT_FAILURE);
     }
   
   if (cmd_args->exclude_sensor_types_length)
     {
-      if (valid_sensor_types (NULL,
-                              cmd_args->exclude_sensor_types,
-                              cmd_args->exclude_sensor_types_length,
-                              1) < 0)
+      if (valid_sensor_types (cmd_args->exclude_sensor_types,
+                              cmd_args->exclude_sensor_types_length) < 0)
         exit (EXIT_FAILURE);
     }
 }

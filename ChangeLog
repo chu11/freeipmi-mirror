@@ -1,3 +1,11 @@
+2012-05-25  Albert Chu <chu11@llnl.gov>
+
+	* common/toolcommon/tool-sensor-common.h,
+	common/toolcommon/tool-sensor-common.c (valid_sensor_types):
+	Remove unused parameters.
+
+	* ipmi-sensors/, ipmi-sel/: Update for changes.
+	
 2012-05-24  Albert Chu <chu11@llnl.gov>
 
 	* common/toolcommon/tool-sensor-common.h,

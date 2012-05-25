@@ -182,10 +182,8 @@ list_sensor_types (void)
 }
 
 int
-valid_sensor_types (pstdout_state_t pstate,
-                    char sensor_types[][MAX_SENSOR_TYPES_STRING_LENGTH+1],
-                    unsigned int sensor_types_length,
-                    unsigned int allow_oem_reserved)
+valid_sensor_types (char sensor_types[][MAX_SENSOR_TYPES_STRING_LENGTH+1],
+                    unsigned int sensor_types_length)
 {
   unsigned int i;
 
@@ -227,27 +225,23 @@ valid_sensor_types (pstdout_state_t pstate,
             }
         }
       
-      if (allow_oem_reserved)
-        {
-          if (!found)
-            {
-              char sensor_type_cmdline[MAX_SENSOR_TYPES_STRING_LENGTH];
+      if (!found)
+	{
+	  char sensor_type_cmdline[MAX_SENSOR_TYPES_STRING_LENGTH];
+          
+	  strcpy (sensor_type_cmdline, ipmi_oem_sensor_type);
+	  _get_sensor_type_cmdline_string (sensor_type_cmdline);
               
-              strcpy (sensor_type_cmdline, ipmi_oem_sensor_type);
-              _get_sensor_type_cmdline_string (sensor_type_cmdline);
-              
-              if (!strcasecmp (sensor_types[i], ipmi_oem_sensor_type)
-                  || !strcasecmp (sensor_types[i], sensor_type_cmdline))
-                found++;
-            }
-        }
+	  if (!strcasecmp (sensor_types[i], ipmi_oem_sensor_type)
+	      || !strcasecmp (sensor_types[i], sensor_type_cmdline))
+	    found++;
+	}
       
       if (!found)
         {
-          PSTDOUT_FPRINTF (pstate,
-                           stderr,
-                           "invalid sensor type '%s'\n",
-                           sensor_types[i]);
+          fprintf (stderr,
+		   "invalid sensor type '%s'\n",
+		   sensor_types[i]);
           return (-1);
         }
     }
