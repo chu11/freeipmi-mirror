@@ -2225,6 +2225,7 @@ _ipmi_pet (ipmi_pet_prog_data_t *prog_data)
   exit_code = EXIT_SUCCESS;
  cleanup:
   ipmi_fru_parse_ctx_destroy (state_data.fru_parse_ctx);
+  ipmi_interpret_ctx_destroy (state_data.interpret_ctx);
   ipmi_sel_ctx_destroy (state_data.sel_ctx);
   ipmi_sdr_ctx_destroy (state_data.sdr_ctx);
   ipmi_ctx_close (state_data.ipmi_ctx);
