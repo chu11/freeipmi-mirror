@@ -212,6 +212,8 @@ ipmi-sensors
   - require rework of sensor-read lib?  How detect session timeout, etc. 
 - make 'discretereading' on by default?
   - it does not appear that to be illegal by IPMI spec.
+- remove shared sensor option
+  - make default like it should be
 
 ipmi-sel
 --------
