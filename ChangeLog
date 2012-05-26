@@ -4,13 +4,15 @@
 	ipmi-chassis-config/: Fix bug in which cipher suite ID input was
 	not allowed.
 
+	* man/manpage-common-sdr-options.man: Add extra info for
+	sdr-cache-file option.
+
 2012-05-26  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-pet/ipmi-pet-argp.c: Fix argp output, ipmi-pet does not
 	take hostranged arguments.
 
 	* common/toolcommon/tool-cmdline-common.h: Code cleanup.
-
 
 2012-05-25  Albert Chu <chu11@llnl.gov>
 
