@@ -4,7 +4,9 @@ Tools
 ------
 o In ipmi-sel, support Supermicro SEL OEM interpretations in
   --output-event-state.
-
+o In bmc-config, ipmi-chassis-config, ipmi-pef-config, and
+  ipmi-chassis-config, support cipher suite ID argument.
+ 
 Libraries
 ---------
 o Support Supermicro SEL OEM interpretations.
