@@ -90,6 +90,7 @@ MANS_COMMON = \
 	manpage-common-hostranged-text-localhost.man \
 	manpage-common-hostranged-text-threads.man \
 	manpage-common-sdr-options.man \
+	manpage-common-sdr-options-heading.man \
 	manpage-common-ignore-sdr-cache.man \
 	manpage-common-config-tool-options.man \
 	manpage-common-config-tool-options-verbose.man \

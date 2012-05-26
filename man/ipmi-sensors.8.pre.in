@@ -166,6 +166,7 @@ if \fB\-\-output\-sensor\-state\fR not specified.
 Output legacy format of legacy
 .B ipmimonitoring
 tool.  Newer options may not be applicable to legacy output.
+#include <@top_srcdir@/man/manpage-common-sdr-options-heading.man>
 #include <@top_srcdir@/man/manpage-common-sdr-options.man>
 #include <@top_srcdir@/man/manpage-common-hostranged-options-header.man>
 #include <@top_srcdir@/man/manpage-common-hostranged-buffer.man>

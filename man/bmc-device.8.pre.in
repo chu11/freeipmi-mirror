@@ -155,6 +155,7 @@ Set Operating System Name.
 .TP
 \fB\-\-verbose\fR
 Increase verbosity in output.
+#include <@top_srcdir@/man/manpage-common-sdr-options-heading.man>
 #include <@top_srcdir@/man/manpage-common-sdr-options.man>
 #include <@top_srcdir@/man/manpage-common-hostranged-options-header.man>
 #include <@top_srcdir@/man/manpage-common-hostranged-buffer.man>
