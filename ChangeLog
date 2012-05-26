@@ -1,10 +1,17 @@
 2012-05-26  Albert Chu <chu11@llnl.gov>
 
+	* bmc-config/, ipmi-pef-config/, ipmi-sensors-config/,
+	ipmi-chassis-config/: Fix bug in which cipher suite ID input was
+	not allowed.
+
+2012-05-26  Albert Chu <chu11@llnl.gov>
+
 	* ipmi-pet/ipmi-pet-argp.c: Fix argp output, ipmi-pet does not
 	take hostranged arguments.
 
 	* common/toolcommon/tool-cmdline-common.h: Code cleanup.
-	
+
+
 2012-05-25  Albert Chu <chu11@llnl.gov>
 
 	* common/toolcommon/tool-sensor-common.h,
