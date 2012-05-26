@@ -1,3 +1,8 @@
+2012-05-26  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-pet/ipmi-pet-argp.c: Fix argp output, ipmi-pet does not
+	take hostranged arguments.
+	
 2012-05-25  Albert Chu <chu11@llnl.gov>
 
 	* common/toolcommon/tool-sensor-common.h,
@@ -5,6 +10,9 @@
 	Remove unused parameters.
 
 	* ipmi-sensors/, ipmi-sel/: Update for changes.
+
+	* ipmi-pet/ipmi-pet.c (_ipmi_pet): Destroy interpret_ctx during
+	cleanup.
 	
 2012-05-24  Albert Chu <chu11@llnl.gov>
 
