@@ -45,7 +45,6 @@ required user privilege will depend on the oem commands executed.
 #include <@top_srcdir@/man/manpage-common-debug.man>
 #include <@top_srcdir@/man/manpage-common-misc.man>
 #include <@top_srcdir@/man/manpage-common-sdr-options.man>
-#include <@top_srcdir@/man/manpage-common-sdr-directory-options.man>
 #include <@top_srcdir@/man/manpage-common-hostranged-options-header.man>
 #include <@top_srcdir@/man/manpage-common-hostranged-buffer.man>
 #include <@top_srcdir@/man/manpage-common-hostranged-consolidate.man>

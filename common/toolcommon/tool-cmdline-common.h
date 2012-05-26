@@ -67,8 +67,8 @@ enum argp_common_option_keys
     /* sdr options */
     ARGP_FLUSH_CACHE_KEY = 'f',
     ARGP_QUIET_CACHE_KEY = 'Q',
-    ARGP_SDR_CACHE_FILE_KEY = 148,
     ARGP_SDR_CACHE_RECREATE_KEY = 149,
+    ARGP_SDR_CACHE_FILE_KEY = 148,
     ARGP_SDR_CACHE_DIRECTORY_KEY = 150,
     ARGP_IGNORE_SDR_CACHE_KEY = 151,
     /* hostrange options */
@@ -177,12 +177,10 @@ enum argp_common_option_keys
       "Flush a cached version of the sensor data repository (SDR) cache.", 20},                                 \
   { "quiet-cache", ARGP_QUIET_CACHE_KEY,  0, 0,                                                                 \
       "Do not output information about cache creation/deletion.", 21},                                          \
-  { "sdr-cache-file", ARGP_SDR_CACHE_FILE_KEY, "FILE", 0,                                                       \
-      "Specify a specific file for the sensor data repository (SDR) cache to be stored or read from.", 22},     \
   { "sdr-cache-recreate", ARGP_SDR_CACHE_RECREATE_KEY,  0, 0,                                                   \
-      "Recreate sensor data repository (SDR) cache if cache is out of date or invalid.", 23}
-
-#define ARGP_COMMON_SDR_DIRECTORY_OPTIONS                                                                       \
+      "Recreate sensor data repository (SDR) cache if cache is out of date or invalid.", 22},                   \
+  { "sdr-cache-file", ARGP_SDR_CACHE_FILE_KEY, "FILE", 0,                                                       \
+      "Specify a specific file for the sensor data repository (SDR) cache to be stored or read from.", 23},     \
   { "sdr-cache-directory", ARGP_SDR_CACHE_DIRECTORY_KEY, "DIRECTORY", 0,                                        \
       "Specify an alternate directory for sensor data repository (SDR) caches to be stored or read from.", 24}
 
@@ -245,8 +243,8 @@ struct common_cmd_args
   /* sdr options */
   int flush_cache;
   int quiet_cache;
-  char *sdr_cache_file;
   int sdr_cache_recreate;
+  char *sdr_cache_file;
   char *sdr_cache_directory;
   int ignore_sdr_cache;
 

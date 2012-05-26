@@ -413,6 +413,9 @@ common_parse_opt (int key,
     case ARGP_QUIET_CACHE_KEY:
       common_args->quiet_cache = 1;
       break;
+    case ARGP_SDR_CACHE_RECREATE_KEY:
+      common_args->sdr_cache_recreate = 1;
+      break;
     case ARGP_SDR_CACHE_FILE_KEY:
       free (common_args->sdr_cache_file);
       if (!(common_args->sdr_cache_file = strdup (arg)))
@@ -420,9 +423,6 @@ common_parse_opt (int key,
           perror ("strdup");
           exit (EXIT_FAILURE);
         }
-      break;
-    case ARGP_SDR_CACHE_RECREATE_KEY:
-      common_args->sdr_cache_recreate = 1;
       break;
     case ARGP_SDR_CACHE_DIRECTORY_KEY:
       free (common_args->sdr_cache_directory);
@@ -471,8 +471,6 @@ common_parse_opt (int key,
   return (0);
 }
 
-
-
 static void
 _init_common_cmd_args (struct common_cmd_args *common_args)
 {
@@ -509,8 +507,8 @@ _init_common_cmd_args (struct common_cmd_args *common_args)
 
   common_args->flush_cache = 0;
   common_args->quiet_cache = 0;
-  common_args->sdr_cache_file = NULL;
   common_args->sdr_cache_recreate = 0;
+  common_args->sdr_cache_file = NULL;
   common_args->sdr_cache_directory = NULL;
   common_args->ignore_sdr_cache = 0;
 

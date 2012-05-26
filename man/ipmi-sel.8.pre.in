@@ -191,7 +191,6 @@ systems.
 #include <@top_srcdir@/man/manpage-common-non-abbreviated-units.man>
 #include <@top_srcdir@/man/manpage-common-legacy-output.man>
 #include <@top_srcdir@/man/manpage-common-sdr-options.man>
-#include <@top_srcdir@/man/manpage-common-sdr-directory-options.man>
 #include <@top_srcdir@/man/manpage-common-ignore-sdr-cache.man>
 #include <@top_srcdir@/man/manpage-common-hostranged-options-header.man>
 #include <@top_srcdir@/man/manpage-common-hostranged-buffer.man>

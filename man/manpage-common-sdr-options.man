@@ -10,16 +10,21 @@ SDR is typically cached for faster subsequent access.  However, it may
 need to be flushed and re-generated if the SDR has been updated on a
 system.
 .TP
-\fB\-Q\fR, \fB\-\-\quiet\-cache\fR
+\fB\-Q\fR, \fB\-\-quiet\-cache\fR
 Do not output information about cache creation/deletion.  May be
 useful in scripting.
+.TP
+\fB\-\-sdr\-cache\-recreate\fR
+If the SDR cache is out of date or invalid, automatically recreate the
+sensor data repository (SDR) cache.  This option may be useful for
+scripting purposes.
 .TP
 \fB\-\-sdr\-cache\-file\fR=\fIFILE\fR
 Specify a specific sensor data repository (SDR) cache file to be
 stored or read from.  If this option is used when multiple hosts are
 specified, the same SDR cache file will be used for all hosts.
 .TP
-\fB\-\-sdr-cache-recreate\fR
-If the SDR cache is out of date or invalid, automatically recreate the
-sensor data repository (SDR) cache.  This option may be useful for
-scripting purposes.
+\fB\-\-sdr\-cache\-directory\fR=\fIDIRECTORY\fR
+Specify an alternate directory for sensor data repository (SDR) caches
+to be stored or read from.  Defaults to the home directory if not
+specified.

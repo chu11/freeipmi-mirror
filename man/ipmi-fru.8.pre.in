@@ -79,7 +79,6 @@ read by default.  Bridging may not work on some interfaces/driver
 types.
 #include <@top_srcdir@/man/manpage-common-interpret-oem-data.man>
 #include <@top_srcdir@/man/manpage-common-sdr-options.man>
-#include <@top_srcdir@/man/manpage-common-sdr-directory-options.man>
 #include <@top_srcdir@/man/manpage-common-ignore-sdr-cache.man>
 #include <@top_srcdir@/man/manpage-common-hostranged-options-header.man>
 #include <@top_srcdir@/man/manpage-common-hostranged-buffer.man>
