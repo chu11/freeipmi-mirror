@@ -123,6 +123,8 @@ enum argp_common_option_keys
     ARGP_COMMON_OPTIONS_OUTOFBAND_COMMON,                                                                       \
     ARGP_COMMON_OPTIONS_OUTOFBAND_TIMEOUT
 
+/* retry-timeout is maintained for backwards compatability */
+/* timeout is maintained for backwards compatability */
 #define ARGP_COMMON_OPTIONS_OUTOFBAND_COMMON                                                                    \
   { "username",       ARGP_USERNAME_KEY, "USERNAME", 0,                                                         \
       "Specify the username to use when authenticating with the remote host.", 8},                              \
@@ -133,11 +135,7 @@ enum argp_common_option_keys
   { "k-g",       ARGP_K_G_KEY, "K_G", 0,                                                                        \
       "Specify the K_g BMC key to use when authenticating with the remote host for IPMI 2.0.", 11},             \
   { "k-g-prompt", ARGP_K_G_PROMPT_KEY, 0, 0,                                                                    \
-      "Prompt for k-g to avoid possibility of listing it in process lists.", 12}
-
-/* retry-timeout is maintained for backwards compatability */
-/* timeout is maintained for backwards compatability */
-#define ARGP_COMMON_OPTIONS_OUTOFBAND_TIMEOUT                                                                   \
+      "Prompt for k-g to avoid possibility of listing it in process lists.", 12},                               \
   { "timeout", ARGP_TIMEOUT_KEY, "MILLISECONDS", OPTION_HIDDEN,                                                 \
       "Specify the session timeout in milliseconds.", 13},                                                      \
   { "session-timeout", ARGP_SESSION_TIMEOUT_KEY, "MILLISECONDS", 0,                                             \
