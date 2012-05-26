@@ -137,7 +137,7 @@ Delete record ids from START to END in the SEL.
 Output only system event records (i.e. don't output OEM records).
 .TP
 \fB\-\-oem\-event\-only\fR
-Output only OEM event records.
+Output only OEM event records (i.e. don't output system event records).
 .TP
 \fB\-\-output\-manufacturer\-id\fR
 For OEM SEL record types, output the manufacturer ID along with event
