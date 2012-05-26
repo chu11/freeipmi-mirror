@@ -1734,7 +1734,6 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
                            ipmi_sel_ctx_errormsg (state_data->sel_ctx));
           goto cleanup;
         }
-
     }
 
   if (args->post_clear)
