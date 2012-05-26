@@ -1,3 +1,8 @@
+2012-05-26  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-pet/ipmi-pet-argp.c: Fix argp output, ipmi-pet does not
+	take hostranged arguments.
+	
 2012-05-24  Albert Chu <chu11@llnl.gov>
 
 	* libipmimonitoring/ipmi_monitoring.h.in: Fix bug in
