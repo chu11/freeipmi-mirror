@@ -114,14 +114,12 @@ enum argp_common_option_keys
 #define ARGP_COMMON_OPTIONS_OUTOFBAND                                                                           \
   { "hostname",       ARGP_HOSTNAME_KEY, "IPMIHOST", 0,                                                         \
       "Specify the remote host to communicate with.", 7},                                                       \
-    ARGP_COMMON_OPTIONS_OUTOFBAND_COMMON,                                                                       \
-    ARGP_COMMON_OPTIONS_OUTOFBAND_TIMEOUT
+    ARGP_COMMON_OPTIONS_OUTOFBAND_COMMON
 
 #define ARGP_COMMON_OPTIONS_OUTOFBAND_HOSTRANGED                                                                \
   { "hostname",       ARGP_HOSTNAME_KEY, "IPMIHOST", 0,                                                         \
       "Specify the remote host(s) to communicate with.", 7},                                                    \
-    ARGP_COMMON_OPTIONS_OUTOFBAND_COMMON,                                                                       \
-    ARGP_COMMON_OPTIONS_OUTOFBAND_TIMEOUT
+    ARGP_COMMON_OPTIONS_OUTOFBAND_COMMON
 
 /* retry-timeout is maintained for backwards compatability */
 /* timeout is maintained for backwards compatability */
