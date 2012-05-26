@@ -10,11 +10,6 @@
 	* common/toolcommon/, man/: Undo split of SDR option
 	"sdr-cache-directory" into separate macro/man option.
 
-	* man/manpage-common-sdr-options-heading.man: New file.  Split off
-	from man/manpage-common-sdr-options.man.
-
-	* man/: Update manpages appropriately for new files.
-
 2012-05-26  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-pet/ipmi-pet-argp.c: Fix argp output, ipmi-pet does not
