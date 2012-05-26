@@ -172,19 +172,21 @@ enum argp_common_option_keys
   { "workaround-flags",  ARGP_WORKAROUND_FLAGS_KEY, "WORKAROUNDS", 0,                                           \
       "Specify workarounds to vendor compliance issues.", 19}
 
-#define ARGP_COMMON_SDR_OPTIONS                                                                                 \
+#define ARGP_COMMON_SDR_CACHE_OPTIONS                                                                           \
   { "flush-cache", ARGP_FLUSH_CACHE_KEY,  0, 0,                                                                 \
       "Flush a cached version of the sensor data repository (SDR) cache.", 20},                                 \
   { "quiet-cache", ARGP_QUIET_CACHE_KEY,  0, 0,                                                                 \
       "Do not output information about cache creation/deletion.", 21},                                          \
   { "sdr-cache-recreate", ARGP_SDR_CACHE_RECREATE_KEY,  0, 0,                                                   \
-      "Recreate sensor data repository (SDR) cache if cache is out of date or invalid.", 22},                   \
+      "Recreate sensor data repository (SDR) cache if cache is out of date or invalid.", 22}
+
+#define ARGP_COMMON_SDR_CACHE_OPTIONS_FILE_DIRECTORY                                                            \
   { "sdr-cache-file", ARGP_SDR_CACHE_FILE_KEY, "FILE", 0,                                                       \
       "Specify a specific file for the sensor data repository (SDR) cache to be stored or read from.", 23},     \
   { "sdr-cache-directory", ARGP_SDR_CACHE_DIRECTORY_KEY, "DIRECTORY", 0,                                        \
       "Specify an alternate directory for sensor data repository (SDR) caches to be stored or read from.", 24}
 
-#define ARGP_COMMON_IGNORE_SDR_OPTIONS                                                                          \
+#define ARGP_COMMON_SDR_CACHE_OPTIONS_IGNORE                                                                    \
   { "ignore-sdr-cache", ARGP_IGNORE_SDR_CACHE_KEY, 0, 0,                                                        \
       "Ignore all SDR cache related processing.", 25}
 

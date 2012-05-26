@@ -1,0 +1,5 @@
+.SH "SDR CACHE OPTIONS"
+This tool requires access to the sensor data repository (SDR) cache
+for general operation.  By default, SDR data will be downloaded and
+cached on the local machine.  The following options apply to the SDR
+cache.

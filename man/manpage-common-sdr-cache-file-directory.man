@@ -1,0 +1,10 @@
+.TP
+\fB\-\-sdr\-cache\-file\fR=\fIFILE\fR
+Specify a specific sensor data repository (SDR) cache file to be
+stored or read from.  If this option is used when multiple hosts are
+specified, the same SDR cache file will be used for all hosts.
+.TP
+\fB\-\-sdr\-cache\-directory\fR=\fIDIRECTORY\fR
+Specify an alternate directory for sensor data repository (SDR) caches
+to be stored or read from.  Defaults to the home directory if not
+specified.

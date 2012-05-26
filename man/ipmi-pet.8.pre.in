@@ -150,8 +150,10 @@ If this option is specified, so must \fB\-\-manufacturer\-id\fR.
 #include <@top_srcdir@/man/manpage-common-comma-separated-output.man>
 #include <@top_srcdir@/man/manpage-common-no-header-output.man>
 #include <@top_srcdir@/man/manpage-common-non-abbreviated-units.man>
-#include <@top_srcdir@/man/manpage-common-sdr-options.man>
-#include <@top_srcdir@/man/manpage-common-ignore-sdr-cache.man>
+#include <@top_srcdir@/man/manpage-common-sdr-cache-options-heading.man>
+#include <@top_srcdir@/man/manpage-common-sdr-cache-options.man>
+#include <@top_srcdir@/man/manpage-common-sdr-cache-file-directory.man>
+#include <@top_srcdir@/man/manpage-common-sdr-cache-ignore.man>
 #include <@top_srcdir@/man/manpage-common-troubleshooting-heading-start.man>
 #include <@top_srcdir@/man/manpage-common-troubleshooting-heading-outofband.man>
 #include <@top_srcdir@/man/manpage-common-troubleshooting-heading-inband.man>
