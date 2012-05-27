@@ -154,6 +154,8 @@ libipmiconsole
   conman and other console software. (***)
 - use conditional signals w/ garbage collector
   - should work, it's not like the poll loop from before
+- specify sol_payload_instance - pick between console instances (***)
+  - use case example, SOL to management controller controlling multiple devices
  
 libipmimonitoring
 -----------------
