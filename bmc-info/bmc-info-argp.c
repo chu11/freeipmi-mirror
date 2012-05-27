@@ -76,7 +76,7 @@ static struct argp_option cmdline_options[] =
       "Display only system information.", 43},
     { "get-channel-info", GET_CHANNEL_INFO_KEY, NULL, 0,
       "Display only channel information.", 44},
-    { "interpret-oem-data", INTERPRET_OEM_DATA, NULL, 0,
+    { "interpret-oem-data", INTERPRET_OEM_DATA_KEY, NULL, 0,
       "Attempt to interpret OEM data.", 45},
     { NULL, 0, NULL, 0, NULL, 0}
   };
@@ -118,7 +118,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case GET_CHANNEL_INFO_KEY:
       cmd_args->get_channel_info++;
       break;
-    case INTERPRET_OEM_DATA:
+    case INTERPRET_OEM_DATA_KEY:
       cmd_args->interpret_oem_data = 1;
       break;
     case ARGP_KEY_ARG:
