@@ -165,4 +165,13 @@ int parse_workaround_flags_tool (const char *str,
  */
 int parse_kg (void *out, unsigned int outlen, const char *in);
 
+void parse_get_freeipmi_outofband_flags (unsigned int parse_workaround_flags_outofband,
+					 unsigned int *freeipmi_workaround_flags_outofband);
+
+void parse_get_freeipmi_outofband_2_0_flags (unsigned int parse_workaround_flags_outofband_2_0,
+					     unsigned int *freeipmi_workaround_flags_outofband_2_0);
+
+void parse_get_freeipmi_inband_flags (unsigned int parse_workaround_flags_inband,
+				      unsigned int *freeipmi_workaround_flags_inband);
+
 #endif /* PARSE_COMMON_H */

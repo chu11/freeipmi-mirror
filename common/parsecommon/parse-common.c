@@ -355,3 +355,60 @@ parse_kg (void *out, unsigned int outlen, const char *in)
 
   return (rv);
 }
+
+void
+parse_get_freeipmi_outofband_flags (unsigned int parse_workaround_flags_outofband,
+				    unsigned int *freeipmi_workaround_flags_outofband)
+{
+  assert (freeipmi_workaround_flags_outofband);
+
+  (*freeipmi_workaround_flags_outofband) = 0;
+
+  if (parse_workaround_flags_outofband & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_ACCEPT_SESSION_ID_ZERO)
+    (*freeipmi_workaround_flags_outofband) |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_ACCEPT_SESSION_ID_ZERO;
+  if (parse_workaround_flags_outofband & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_FORCE_PERMSG_AUTHENTICATION)
+    (*freeipmi_workaround_flags_outofband) |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_FORCE_PERMSG_AUTHENTICATION;
+  if (parse_workaround_flags_outofband & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_CHECK_UNEXPECTED_AUTHCODE)
+    (*freeipmi_workaround_flags_outofband) |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_CHECK_UNEXPECTED_AUTHCODE;
+  if (parse_workaround_flags_outofband & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_BIG_ENDIAN_SEQUENCE_NUMBER)
+    (*freeipmi_workaround_flags_outofband) |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_BIG_ENDIAN_SEQUENCE_NUMBER;
+  if (parse_workaround_flags_outofband & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_AUTHENTICATION_CAPABILITIES)
+    (*freeipmi_workaround_flags_outofband) |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_AUTHENTICATION_CAPABILITIES;
+}
+
+void
+parse_get_freeipmi_outofband_2_0_flags (unsigned int parse_workaround_flags_outofband_2_0,
+					unsigned int *freeipmi_workaround_flags_outofband_2_0)
+{
+  assert (freeipmi_workaround_flags_outofband_2_0);
+
+  (*freeipmi_workaround_flags_outofband_2_0) = 0;
+
+  if (parse_workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_AUTHENTICATION_CAPABILITIES)
+    (*freeipmi_workaround_flags_outofband_2_0) |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_2_0_AUTHENTICATION_CAPABILITIES;
+  if (parse_workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION)
+    (*freeipmi_workaround_flags_outofband_2_0) |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION;
+  if (parse_workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUPERMICRO_2_0_SESSION)
+    (*freeipmi_workaround_flags_outofband_2_0) |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUPERMICRO_2_0_SESSION;
+  if (parse_workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUN_2_0_SESSION)
+    (*freeipmi_workaround_flags_outofband_2_0) |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUN_2_0_SESSION;
+  if (parse_workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_OPEN_SESSION_PRIVILEGE)
+    (*freeipmi_workaround_flags_outofband_2_0) |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_2_0_OPEN_SESSION_PRIVILEGE;
+  if (parse_workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_NON_EMPTY_INTEGRITY_CHECK_VALUE)
+    (*freeipmi_workaround_flags_outofband_2_0) |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_2_0_NON_EMPTY_INTEGRITY_CHECK_VALUE;
+}
+
+void
+parse_get_freeipmi_inband_flags (unsigned int parse_workaround_flags_inband,
+				 unsigned int *freeipmi_workaround_flags_inband)
+{
+  assert (freeipmi_workaround_flags_inband);
+
+  (*freeipmi_workaround_flags_inband) = 0;
+
+  if (parse_workaround_flags_inband & IPMI_PARSE_WORKAROUND_FLAGS_INBAND_ASSUME_IO_BASE_ADDRESS)
+    (*freeipmi_workaround_flags_inband) |= IPMI_WORKAROUND_FLAGS_INBAND_ASSUME_IO_BASE_ADDRESS;
+  
+  if (parse_workaround_flags_inband & IPMI_PARSE_WORKAROUND_FLAGS_INBAND_SPIN_POLL)
+    (*freeipmi_workaround_flags_inband) |= IPMI_WORKAROUND_FLAGS_INBAND_SPIN_POLL;
+}

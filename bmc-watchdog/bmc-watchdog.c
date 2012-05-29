@@ -113,11 +113,8 @@ _init_bmc_watchdog (void)
   if (!ipmi_is_root ())
     err_exit ("Permission denied, must be root.");
 
-  if (cmd_args.common_args.workaround_flags_inband & IPMI_PARSE_WORKAROUND_FLAGS_INBAND_ASSUME_IO_BASE_ADDRESS)
-    workaround_flags |= IPMI_WORKAROUND_FLAGS_INBAND_ASSUME_IO_BASE_ADDRESS;
-  
-  if (cmd_args.common_args.workaround_flags_inband & IPMI_PARSE_WORKAROUND_FLAGS_INBAND_SPIN_POLL)
-    workaround_flags |= IPMI_WORKAROUND_FLAGS_INBAND_SPIN_POLL;
+  parse_get_freeipmi_inband_flags (cmd_args.common_args.workaround_flags_inband,
+				   &workaround_flags);
   
   flags = IPMI_FLAGS_NONBLOCKING;
   if (cmd_args.common_args.debug)

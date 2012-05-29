@@ -1,3 +1,13 @@
+2012-05-29  Albert Chu <chu11@llnl.gov>
+
+	* common/parsecommon/parse-common.h,
+	common/parsecommon/parse-common.c (parse_get_freeipmi_outofband_flags,
+	parse_get_freeipmi_outofband_2_0_flags,
+	parse_get_freeipmi_inband_flags): New functions.
+
+	* bmc-watchdog/, common/toolcommon/: Use new convenience functions
+	appropriately.
+	
 2012-05-26  Albert Chu <chu11@llnl.gov>
 
 	* bmc-config/, ipmi-pef-config/, ipmi-sensors-config/,
