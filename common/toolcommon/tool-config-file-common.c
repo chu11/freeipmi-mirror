@@ -1337,7 +1337,17 @@ config_file_parse (const char *filename,
         &(common_args->target_channel_number),
         0
       },
-
+      {
+        "target-slave-address",
+        CONFFILE_OPTION_INT,
+        -1,
+        _config_file_non_negative_int,
+        1,
+        0,
+        &target_slave_address_count,
+        &(common_args->target_slave_address),
+        0
+      },
     };
 
   struct conffile_option outofband_options[] =
