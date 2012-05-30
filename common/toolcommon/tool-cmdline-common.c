@@ -627,7 +627,7 @@ verify_common_cmd_args (struct common_cmd_args *common_args)
     {
       if (access (common_args->sdr_cache_directory, R_OK|W_OK|X_OK) < 0)
         {
-          fprintf (stderr, "insufficient permission on sensor cache directory '%s'\n",
+          fprintf (stderr, "insufficient permission on SDR cache directory '%s'\n",
                    common_args->sdr_cache_directory);
           exit (EXIT_FAILURE);
         }
