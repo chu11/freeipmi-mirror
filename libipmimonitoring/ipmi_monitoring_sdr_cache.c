@@ -244,7 +244,6 @@ _ipmi_monitoring_sdr_cache_delete (ipmi_monitoring_ctx_t c,
   assert (c);
   assert (c->magic == IPMI_MONITORING_MAGIC);
   assert (c->sdr_ctx);
-  assert (c->ipmi_ctx);
 
   if (ipmi_sdr_cache_delete (c->sdr_ctx, filename) < 0)
     {
