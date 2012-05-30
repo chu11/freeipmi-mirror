@@ -1,3 +1,7 @@
+2012-05-30  Albert Chu <chu11@llnl.gov>
+
+	* man/, etc/: Add forgotten config entries.
+	
 2012-05-29  Albert Chu <chu11@llnl.gov>
 
 	* man/ipmi-sel.8.pre.in: Fix typo.

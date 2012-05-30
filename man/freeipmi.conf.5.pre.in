@@ -985,6 +985,21 @@ manpage for available workarounds.
 Specify default verbose count to use for
 .B ipmi-sel(8).
 .TP
+\fBipmi\-sel\-types\fR \fITYPE-LIST\fR
+Specify default types to show SEL events for.  Multiple types can
+be specified separated by whitespace.  Users may specify sensor types
+by string or by number (decimal or hex).  Please see 
+.B ipmi-sel(8)
+\fI\-\-list\-types\fR option to see possible string input types.
+.TP
+\fBipmi\-sel\-exclude\-types\fR \fSENSOR-TYPES-LIST\fR Specify
+default sensor types to not show SEL events for.  Multiple sensor
+types can be specified separated by whitespace.  Users may specify
+sensor types by string or by number.  Please see
+.B ipmi-sel(8)
+\fI\-\-list\-types\fR option to see possible string
+input types.
+.TP
 \fBipmi\-sel\-system\-event\-only\fR \fIENABLE|DISABLE\fR
 Specify if output should only include system event records.
 .TP
@@ -1119,14 +1134,14 @@ record ids can be specified separated by whitespace.
 Specify default types to show sensor outputs for.  Multiple types can
 be specified separated by whitespace.  Users may specify sensor types
 by string or by number (decimal or hex).  Please see 
-.Bipmi-sensors(8)'s
+.B ipmi-sensors(8)
 \fI\-\-list\-types\fR option to see possible string input types.
 .TP
 \fBipmi\-sensors\-exclude\-types\fR \fSENSOR-TYPES-LIST\fR Specify
 default sensor types to not show sensor outputs for.  Multiple sensor
 types can be specified separated by whitespace.  Users may specify
 sensor types by string or by number.  Please see
-.B ipmi-sensors(8)'s
+.B ipmi-sensors(8)
 \fI\-\-list\-types\fR option to see possible string
 input types.
 .TP
