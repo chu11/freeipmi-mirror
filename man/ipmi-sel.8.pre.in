@@ -94,7 +94,7 @@ configured defaults).  Users may specify sensor types by string (see
 .TP
 \fB\-T\fR \fISENSOR\-TYPE\-LIST\fR, \fB\-\-exclude\-sensor\-types\fR=\fISENSOR\-TYPE\-LIST\fR
 Specify sensor types to not show SEL events for.  Multiple types can
-be eparated by commas or spaces.  A special command line type of "no",
+be eparated by commas or spaces.  A special command line type of "none",
 will indicate no types should be excluded (may be useful for
 overriding configured defaults).  Users may specify sensor types by
 string (see \fB\-\-list\-sensor\-types\fR below) or by number (decimal
