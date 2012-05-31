@@ -60,6 +60,7 @@ AC_CONFIG_FILES([
         ipmidetectd/Makefile
         ipmiping/Makefile
         ipmipower/Makefile 
+        ipmiseld/Makefile
         libfreeipmi/Makefile 
         libfreeipmi/libfreeipmi.pc
         libfreeipmi/include/Makefile 
@@ -100,6 +101,8 @@ AC_CONFIG_FILES([
 	man/ipmidetectd.conf.5.pre
 	man/ipmiping.8.pre
 	man/ipmipower.8.pre
+	man/ipmiseld.8.pre
+	man/ipmiseld.conf.5.pre
         man/libfreeipmi.3.pre
         man/freeipmi_interpret_sensor.conf.5.pre
         man/freeipmi_interpret_sel.conf.5.pre
@@ -681,6 +684,8 @@ AC_INTERPRET_SENSOR_CONFIG_FILE
 AC_INTERPRET_SEL_CONFIG_FILE
 AC_IPMIDETECT_CONFIG_FILE
 AC_IPMIDETECTD_CONFIG_FILE
+AC_IPMISELD_CONFIG_FILE
+AC_IPMISELD_CACHE_DIRECTORY
 AC_LIBIPMICONSOLE_CONFIG_FILE
 AC_DONT_CHECK_FOR_ROOT
 

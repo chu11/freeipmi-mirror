@@ -1,0 +1,530 @@
+.\"#############################################################################
+.\"$Id: ipmiseld.8.pre.in,v 1.15 2010-06-30 21:56:36 chu11 Exp $
+.\"#############################################################################
+.\"  Copyright (C) 2012 Lawrence Livermore National Security, LLC.
+.\"  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
+.\"  Written by Albert Chu <chu11@llnl.gov>
+.\"  LLNL-CODE-559172
+.\"  
+.\"  This file is part of Ipmiseld, an IPMI SEL syslog logging daemon.
+.\"  For details, see http://www.llnl.gov/linux/.
+.\"
+.\"  Ipmiseld is free software; you can redistribute it and/or modify it under
+.\"  the terms of the GNU General Public License as published by the Free
+.\"  Software Foundation; either version 3 of the License, or (at your option)
+.\"  any later version.
+.\"  
+.\"  Ipmiseld is distributed in the hope that it will be useful, but WITHOUT 
+.\"  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
+.\"  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License 
+.\"  for more details.
+.\"  
+.\"  You should have received a copy of the GNU General Public License along
+.\"  with Ipmiseld.  If not, see <http://www.gnu.org/licenses/>.
+.\"#############################################################################
+.TH ipmiseld 8 "@ISODATE@" "ipmiseld @VERSION@" ipmiseld
+.SH "NAME"
+ipmiseld \- IPMI SEL logging daemon
+.SH "SYNOPSIS"
+.B ipmiseld 
+[\fIOPTION\fR...]
+.br
+.SH "DESCRIPTION"
+The
+.B ipmiseld
+daemon reads the system event log (SEL) of specified hosts and stores the
+logs into the local syslog.
+.LP
+Many of the options for this daemon are very similar to the
+.B ipmi-sel(8)
+tool.  It can be configured to log the local host, a remote host, or a
+range of hosts to the local syslog.
+See the
+.BR ipmiseld.conf(5)
+manpage for additional information.
+#include <@top_srcdir@/man/manpage-common-table-of-contents.man>
+#include <@top_srcdir@/man/manpage-common-general-options-header.man>
+#include <@top_srcdir@/man/manpage-common-driver.man>
+#include <@top_srcdir@/man/manpage-common-inband.man>
+#include <@top_srcdir@/man/manpage-common-outofband-hostname-hostranged.man>
+#include <@top_srcdir@/man/manpage-common-outofband-username-user.man>
+#include <@top_srcdir@/man/manpage-common-outofband-password.man>
+#include <@top_srcdir@/man/manpage-common-outofband-k-g.man>
+#include <@top_srcdir@/man/manpage-common-outofband-session-timeout.man>
+#include <@top_srcdir@/man/manpage-common-outofband-retransmission-timeout.man>
+#include <@top_srcdir@/man/manpage-common-authentication-type.man>
+#include <@top_srcdir@/man/manpage-common-cipher-suite-id-main.man>
+#include <@top_srcdir@/man/manpage-common-cipher-suite-id-details.man>
+#include <@top_srcdir@/man/manpage-common-privilege-level-operator.man>
+#include <@top_srcdir@/man/manpage-common-config-file.man>
+#include <@top_srcdir@/man/manpage-common-workaround-flags.man>
+#include <@top_srcdir@/man/manpage-common-debug.man>
+#include <@top_srcdir@/man/manpage-common-misc.man>
+.SH "IPMISELD OPTIONS"
+The following options are specific to
+.B Ipmiseld.
+.TP
+\fB\-v\fR
+Log verbose information.  This option will log additional information.
+Most notably it will output additional hex codes to given information
+on ambiguous SEL entries or SEL records.  For example, it will output
+Generator ID hex codes for sensors without names.
+.TP
+\fB\-t\fR \fISENSOR\-TYPE\-LIST\fR, \fB\-\-sensor\-types\fR=\fISENSOR\-TYPE\-LIST\fR
+Specify sensor types of SEL events to log.  By default, all sensor
+types are logged.  A special command line type of "all", will indicate
+all types should be shown (may be useful for overriding configured
+defaults).  Multiple types can be separated by commas or spaces.
+Users may specify sensor types by string (see
+\fB\-\-list\-sensor\-types\fR in
+.B ipmi-sel(8))
+or by number (decimal or hex).
+.TP
+\fB\-T\fR \fISENSOR\-TYPE\-LIST\fR, \fB\-\-exclude\-sensor\-types\fR=\fISENSOR\-TYPE\-LIST\fR
+Specify sensor types of SEL events to not log.  By default, no sensor
+types are filtered.  A special command line type of "none", will
+indicate no types should be excluded (may be useful for overriding
+configured defaults).  Multiple types can be separated by commas or
+spaces.  Users may specify sensor types by string (see
+\fB\-\-list\-sensor\-types\fR in
+.B ipmi-sel(8))
+or by number (decimal or hex).
+.TP
+\fB\-\-system\-event\-only\fR
+Log only system event records (i.e. don't log OEM records).
+.TP
+\fB\-\-oem\-event\-only\fR
+Log only OEM event records (i.e. don't log system event records).
+.TP
+\fB\-\-event\-state\-config\-file\fR=\fIFILE\fR
+Specify an alternate event state configuration file.
+#include <@top_srcdir@/man/manpage-common-interpret-oem-data.man>
+#include <@top_srcdir@/man/manpage-common-entity-sensor-names.man>
+#include <@top_srcdir@/man/manpage-common-non-abbreviated-units.man>
+.TP
+\fB\-\-event\-state\-filter\fR=\fIFILTERSTRING\fR
+Specify event states to be filtered out and not logged.  Possible
+inputs are NOMINAL, WARNING, CRITICAL, and NA.  Multiple states can be
+listed separted by comma.  The special case string of "none" will
+indicate no event states should be excluded (may be useful for
+overriding configured defaults).
+.TP
+\fB\-\-system\-event\-format\fR=\fIFORMATSTRING\fR
+Specify the format of the log output when a SEL system event is
+encountered.  Defaults to "SEL System Event: %s, %I, %E".  See SEL LOG
+FORMAT STRING below for formatting details.
+.TP
+\fB\-\-oem\-timestamped\-event\-format\fR=\fIFORMATSTRING\fR
+Specify the format of the log output when a SEL OEM timestamped event
+is encountered.  Defaults to "SEL OEM Event: %I, %o".  See SEL LOG
+FORMAT STRING below for formatting details.
+.TP
+\fB\-\-oem\-non\-timestamped\-event\-format\fR=\fIFORMATSTRING\fR
+Specify the format of the log output when a SEL OEM non-timestamped
+event is encountered.  Defaults to "SEL OEM Event: %I, %o".  See SEL
+LOG FORMAT STRING below for formatting details.
+.TP
+\fB\-\-log\-facility\fR=\fISTRING\fR
+Specify the log facility to use.  Defaults to LOG_DAEMON.  Legal
+inputs are LOG_DAEMON, LOG_USER, LOG_LOCAL0, LOG_LOCAL1, LOG_LOCAL2,
+LOG_LOCAL3, LOG_LOCAL4, LOG_LOCAL5, LOG_LOCAL6, LOG_LOCAL7.
+.TP
+\fB\-\-log\-priority\fR=\fISTRING\fR
+Specify the log priority to use.  Defaults to LOG_ERR.  Legal inputs
+are LOG_EMERG, LOG_ALERT, LOG_CRIT, LOG_ERR, LOG_WARNING, LOG_NOTICE,
+LOG_INFO, LOG_DEBUG.
+.TP
+\fB\-\-cache\-directory\fR=\fIDIRECTORY\fR
+Specify an alternate cache directory location for
+.B ipmiseld
+to use.  The cache directory will be used to cache a wide variety of
+data, including the SDR.
+.TP
+\fB\-\-test\-run\fR
+Do not daemonize, output the current SEL of configured hosts as a test
+of current settings and configuration.
+.TP
+\fB\-\-foreground\fR
+Run daemon in the foreground.
+.SH "SEL LOG FORMAT STRING"
+The output format of log messages can be adjusted via the
+\fB\-\-system\-event\-format\fR,
+\fB\-\-oem\-timestamped\-event\-format\fR and
+\fB\-\-oem\-non\-timestamped\-event\-format\fR options.  Options such
+as \fB\-\-interpret\-oem\-data\fR, \fB\-\-entity\-sensor\-names\fR,
+and \fB\-\-non\-abbreviated\-units\fR can further adjust the output
+format.  The following conversion directives will allow the user to
+output specifics of each SEL event that occurs.
+.sp
+\fIFor System, OEM timestamped, and OEM non-timestamped events\fR
+.sp
+%i - record ID in decimal 
+.sp
+%I - event state interpretation (NOMINAL, WARNING, or CRITICAL)
+.sp
+\fIFor System and OEM timestamped events\fR
+.sp
+%t - time in format H:M:S using 24 hour clock
+.sp
+%d - date in format D-M-YEAR
+.sp
+\fIFor System events\fR
+.sp
+%T - sensor type
+.sp
+%s - sensor name
+.sp
+%e - event data 1 string
+.sp
+%f - event data 2 string [2]
+.sp
+%h - event data 3 string
+.sp
+%c - combined event data 2 and event data 3 string
+.sp
+%p - event data 2 previous state string
+.sp
+%s - event data 2 severity string
+.sp
+%E - combined event data 1, 2, and 3 string
+.sp
+%k - event direction
+.sp
+\fIFor OEM timestamped events\fR
+.sp
+%m - manufacturer id
+.sp
+\fIFor OEM timestamped and OEM non-timestamped events\fR
+.sp
+%o - oem data in hex
+.sp
+%O - OEM supplied string describing the event (depends on manufacturer)
+#include <@top_srcdir@/man/manpage-common-hostranged-text-main.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-text-localhost.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-heading-start.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-heading-outofband.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-heading-inband.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-heading-end.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-outofband.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-inband.man>
+.SH "IPMISELD TROUBLESHOOTING"
+#include <@top_srcdir@/man/manpage-common-troubleshooting-sel.man>
+#include <@top_srcdir@/man/manpage-common-workaround-heading-text.man>
+#include <@top_srcdir@/man/manpage-common-workaround-inband-text.man>
+#include <@top_srcdir@/man/manpage-common-workaround-outofband-common-text.man>
+#include <@top_srcdir@/man/manpage-common-workaround-outofband-15-text.man>
+#include <@top_srcdir@/man/manpage-common-workaround-outofband-20-text.man>
+.LP
+\fIassumesystemevent\fR - This workaround option will assume invalid SEL
+record types are system event records.  Records may be formatted
+correctly but report invalid record types.  Those hitting this issue
+may see "Unknown SEL Record Type" errors.  Output may be unknown, pray
+for the best.  This option is confirmed to work around compliances
+issues on HP DL 380 G5 motherboards.
+#include <@top_srcdir@/man/manpage-common-workaround-extra-text.man>
+#include <@top_srcdir@/man/manpage-common-oem-interpretation.man>
+.LP
+Dell Poweredge 2900, Dell Poweredge 2950, Dell Poweredge R610, Dell
+Poweredge R710, Fujitsu iRMC S1 and iRMC S2 systems, Intel
+S5500WB/Penguin Computing Relion 700, Intel S2600JF/Appro 512X, Intel
+S5000PAL, Inventec 5441/Dell Xanadu II, Inventec 5442/Dell Xanadu III,
+Quanta S99Q/Dell FS12-TY, Quanta QSSC-S4R/Approp GB812X-CN, Sun X4140
+Supermicro X7DBR-3, Supermicro X7DB8, Supermicro X8DTN, Supermicro
+X7SBI-LN4, Supermicro X8DTH, Supermicro X8DTG, Supermicro X8DTU,
+Supermicro X8DT3-LN4F, Supermicro X8DTU-6+, Supermicro X8DTL,
+Supermicro X8DTL-3F, Supermicro X8SIL-F, Supermicro X9SCL, Supermicro
+X9SCM, Supermicro X8DTN+-F, Supermicro X8SIE, Supermicro X9SCA-F-O,
+Supermicro H8DGU-F.
+#include <@top_srcdir@/man/manpage-common-known-issues.man>
+.SH "FILES"
+@IPMISELD_CONFIG_FILE_DEFAULT@
+#include <@top_srcdir@/man/manpage-common-reporting-bugs.man>
+.SH COPYRIGHT
+Copyright (C) 2012 Lawrence Livermore National Security, LLC.
+#include <@top_srcdir@/man/manpage-common-gpl-program-text.man>
+.SH "SEE ALSO"
+freeipmi(7), ipmi-sel(8), ipmiseld.conf(5), bmc-config(8),
+bmc-device(8), freeipmi_interpret_sel.conf(5)
+#include <@top_srcdir@/man/manpage-common-homepage.man>
+.TH IPMI-SEL 8 "@ISODATE@" "ipmi-sel @PACKAGE_VERSION@" "System Commands"
+.SH "NAME"
+ipmi-sel \- display SEL entries
+.SH "SYNOPSIS"
+.B ipmi-sel
+[\fIOPTION\fR...]
+.SH "DESCRIPTION"
+.B Ipmi-sel
+is used to view and manage System Event Log (SEL) entries.  SEL
+records store system event information and may be useful for debugging
+problems.
+
+.B Ipmi-sel
+does not inform the user if an event is particularly good or bad, just
+that the event occurred.  Users may wish to use the
+\fB\-\-output\-event\-state\fR option to output the analyzed state.
+
+#include <@top_srcdir@/man/manpage-common-table-of-contents.man>
+To perform some advanced SEL management, please see
+.B bmc-device(8).
+
+#include <@top_srcdir@/man/manpage-common-general-options-header.man>
+#include <@top_srcdir@/man/manpage-common-driver.man>
+#include <@top_srcdir@/man/manpage-common-inband.man>
+#include <@top_srcdir@/man/manpage-common-outofband-hostname-hostranged.man>
+#include <@top_srcdir@/man/manpage-common-outofband-username-user.man>
+#include <@top_srcdir@/man/manpage-common-outofband-password.man>
+#include <@top_srcdir@/man/manpage-common-outofband-k-g.man>
+#include <@top_srcdir@/man/manpage-common-outofband-session-timeout.man>
+#include <@top_srcdir@/man/manpage-common-outofband-retransmission-timeout.man>
+#include <@top_srcdir@/man/manpage-common-authentication-type.man>
+#include <@top_srcdir@/man/manpage-common-cipher-suite-id-main.man>
+#include <@top_srcdir@/man/manpage-common-cipher-suite-id-details.man>
+#include <@top_srcdir@/man/manpage-common-privilege-level-operator.man>
+#include <@top_srcdir@/man/manpage-common-config-file.man>
+#include <@top_srcdir@/man/manpage-common-workaround-flags.man>
+#include <@top_srcdir@/man/manpage-common-debug.man>
+#include <@top_srcdir@/man/manpage-common-misc.man>
+.SH "IPMI-SEL OPTIONS"
+The following options are specific to
+.B Ipmi-sel.
+.TP
+\fB\-v\fR
+Output verbose output.  This option will output event direction.
+Event direction may be useful to differentiate severity between some
+events.  For example, some motherboards may issue an event both when a
+temperature exceeds a threshold and when it goes back down below it.
+.TP
+\fB\-vv\fR
+Output very verbose output.  This option will output additional
+information than verbose output.  Most notably it will output
+additional hex codes to given information on ambiguous SEL entries.
+For example, it will output Generator ID hex codes for sensors without
+names.
+.TP
+\fB\-i\fR, \fB\-\-info\fR
+Show general information about the SEL.
+.TP
+\fB\-\-display\fR=\fIRECORD\-IDS\-LIST\fR
+Display SEL records by record id.  Accepts space or comma separated lists.
+.TP
+\fB\-\-exclude\-display\fR=\fIRECORD\-IDS\-LIST\fR
+Exclude display of SEL records by record id.  Accepts space or comma
+separated lists.
+.TP
+\fB\-\-display-range\fR=\fISTART\-END\fR
+Display SEL records from record id START to END.
+.TP
+\fB\-\-exclude\-display-range\fR=\fISTART\-END\fR
+Exclude display of SEL records from record id START to END.
+.TP
+\fB\-\-date\-range\fR=\fIDATE\-DATE\fR
+Display SEL records with events occurring in the specified date range.
+Dates may be specified in MM/DD/YYYY or MM-DD-YYYY format.  The month
+may be specified as a numeral or its abbreviated string name.  The
+current local system time can be specified with "now".  Note that
+non-timestamped records will not be displayed automatically because
+they do not possess a timestamp.
+.TP
+\fB\-\-exclude\-date\-range\fR=\fIDATE\-DATE\fR
+Exclude display of SEL records with events occurring in the specified
+date range.  Dates may be specified in MM/DD/YYYY or MM-DD-YYYY
+format.  The month may be specified as a numeral or its abbreviated
+string name.  The current local system time can be specified with
+"now".  Note that non-timestamped records will be displayed
+automatically because they do not possess a timestamp.
+.TP
+\fB\-t\fR \fISENSOR\-TYPE\-LIST\fR, \fB\-\-sensor\-types\fR=\fISENSOR\-TYPE\-LIST\fR
+Specify sensor types to show sensor outputs for.  Multiple types can
+be separated by commas or spaces.  A special command line type of
+"all", will indicate all types should be shown (may be useful for
+overriding configured defaults).  Users may specify sensor types by
+string (see \fB\-\-list\-sensor\-types\fR below) or by number (decimal
+or hex).
+.TP
+\fB\-T\fR \fISENSOR\-TYPE\-LIST\fR, \fB\-\-exclude\-sensor\-types\fR=\fISENSOR\-TYPE\-LIST\fR
+Specify sensor types to not show sensor outputs for.  Multiple types
+can be eparated by commas or spaces.  A special command line type of
+"no", will indicate no types should be excluded (may be useful for
+overriding configured defaults).  Users may specify sensor types by
+string (see \fB\-\-list\-sensor\-types\fR below) or by number (decimal
+or hex).
+.TP
+\fB\-L\fR, \fB\-\-list\-sensor\-types\fR
+List sensor types.
+.TP
+\fB\-\-tail\fR=\fIcount\fR
+Display approximately the last \fIcount\fR SEL records.  The display
+count is calculated by approximating the record ids of the last SEL
+records.  It's correctness depends highly on the SEL implementation by
+the vendor.
+.TP
+\fB\-\-clear\fR
+Clear SEL.
+.TP
+\fB\-\-post\-clear\fR
+Identical to \fB\-\-clear\fR, except the SEL clearning will be
+performed after SEL event records are displayed.  This option is
+useful for scripting if users intend to log SEL events to another log,
+then immediately clear SEL.  Unlike calling \fB\-\-clear\fR in another
+execution of
+.B ipmi-sel,
+this option will use SEL reservations to notify the user if a SEL
+change has occurred while displaying and clearing the SEL.  This can
+protect users from a race, where a new SEL event is unknowingly
+generated before clearing the SEL.  Note that SEL reservations are
+optionally implemented by vendors and may not be available on all
+machines.
+.TP
+\fB\-\-delete\fR=\fIRECORD\-IDS\-LIST\fR
+Delete records by record id in the SEL.  Accepts space or comma
+separated lists.
+.TP
+\fB\-\-delete-range\fR=\fISTART\-END\fR
+Delete record ids from START to END in the SEL.
+.TP
+\fB\-\-system\-event\-only\fR
+Output only system event records (i.e. don't output OEM records).
+.TP
+\fB\-\-oem\-event\-only\fR
+Output only OEM event records.
+.TP
+\fB\-\-output\-manufacturer\-id\fR
+For OEM SEL record types, output the manufacturer ID along with event
+data when available.
+.TP
+\fB\-\-output\-event\-state\fR
+Output event state in output.  This will add an additional output
+reporting if an event should be viewed as NOMINAL, WARNING, or CRITICAL.
+The event state is an interpreted value based on the configuration
+file @INTERPRET_SEL_CONFIG_FILE_DEFAULT@ and the event direction.
+See
+.B freeipmi_interpret_sel.conf(5)
+for more information.
+.TP
+\fB\-\-event\-state\-config\-file\fR=\fIFILE\fR
+Specify an alternate event state configuration file.  Option ignored
+if \fB\-\-output\-event\-state\fR not specified.
+.TP
+\fB\-\-hex\-dump\fR
+Hex-dump SEL entries.
+.TP
+\fB\-\-assume\-system\-event\-records\fR
+Some motherboards have invalid SEL record types listed, leading to
+errors such as 'Unknown SEL Record Type'.  The records may actually be
+formatted correctly.  Use this option to assume these invalid record
+types are system event records and pray for the best.  This option is
+confirmed to work around compliances issues on HP DL 380 G5
+motherboards.
+#include <@top_srcdir@/man/manpage-common-interpret-oem-data.man>
+.TP
+\fB\-\-output\-oem\-event\-strings\fR
+Some motherboards support an IPMI OEM extension that returns the
+string output for a system event.  Such string output may be
+beneficial for determining the meaning behind OEM specific events.  This option
+will use the OEM event string to describe all system events in the
+.B ipmi-sel
+output.  This option differs from \fI\-\-interpret\-oem\-data\fR
+option in that all system events will output the vendor supplied event
+string, not just events that are OEM specific.  The event string may
+be very different from the normal FreeIPMI event string output.  If an
+OEM event strings is not available, the default output will be output.
+This option is confirmed to work for Fujitsu iRMC S1 and iRMC S2
+systems.
+#include <@top_srcdir@/man/manpage-common-entity-sensor-names.man>
+#include <@top_srcdir@/man/manpage-common-no-sensor-type-output.man>
+#include <@top_srcdir@/man/manpage-common-comma-separated-output.man>
+#include <@top_srcdir@/man/manpage-common-no-header-output.man>
+#include <@top_srcdir@/man/manpage-common-non-abbreviated-units.man>
+#include <@top_srcdir@/man/manpage-common-legacy-output.man>
+#include <@top_srcdir@/man/manpage-common-sdr-options.man>
+#include <@top_srcdir@/man/manpage-common-ignore-sdr-cache.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-options-header.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-buffer.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-consolidate.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-fanout.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-eliminate.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-always-prefix.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-text-main.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-text-threads.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-text-options.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-text-localhost.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-heading-start.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-heading-outofband.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-heading-inband.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-heading-end.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-outofband.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-inband.man>
+.SH "IPMI-SEL TROUBLESHOOTING"
+Some timestamps in the SEL may report a date of 1-Jan-1970, the epoch
+for SEL timestamps.  This timestamp is not necessarily incorrect.  It
+usually indicates a hardware event that occurred before a timestamp in
+firmware has been initialized.  For example, certain hardware
+components will have their internal clocks reset during a power cycle.
+.LP
+However, if the internal clock of the SEL appears to be regularly
+incorrect, you may need to set the SEL time.  This can be done using
+.B bmc-device(8).
+.LP
+The following are common issues for error messages in
+.B ipmi-sel.
+.LP
+"sel config file parse error" - A parse error was found in the sel
+event interpretation configuration file.  Please see
+.B freeipmi_interpret_sel.conf(5).
+
+#include <@top_srcdir@/man/manpage-common-workaround-heading-text.man>
+#include <@top_srcdir@/man/manpage-common-workaround-inband-text.man>
+#include <@top_srcdir@/man/manpage-common-workaround-outofband-common-text.man>
+#include <@top_srcdir@/man/manpage-common-workaround-outofband-15-text.man>
+#include <@top_srcdir@/man/manpage-common-workaround-outofband-20-text.man>
+.LP
+\fIassumesystemevent\fR - This workaround option will assume invalid SEL
+record types are system event records.  Records may be formatted
+correctly but report invalid record types.  Those hitting this issue
+may see "Unknown SEL Record Type" errors.  Output may be unknown, pray
+for the best.  This option is confirmed to work around compliances
+issues on HP DL 380 G5 motherboards.  This option is identical to
+using the \fB\-\-assume\-system\-event\-records\fR option above.
+#include <@top_srcdir@/man/manpage-common-workaround-extra-text.man>
+#include <@top_srcdir@/man/manpage-common-oem-interpretation.man>
+.LP
+Dell Poweredge 2900, Dell Poweredge 2950, Dell Poweredge R610, Dell
+Poweredge R710, Fujitsu iRMC S1 and iRMC S2 systems, Intel
+S5500WB/Penguin Computing Relion 700, Intel S2600JF/Appro 512X, Intel
+S5000PAL, Inventec 5441/Dell Xanadu II, Inventec 5442/Dell Xanadu III,
+Quanta S99Q/Dell FS12-TY, Sun X4140, Quanta QSSC-S4R/Approp GB812X-CN.
+.SH "EXAMPLES"
+.B # ipmi-sel 
+.PP
+Show all SEL records on the local machine.
+.PP
+.B # ipmi-sel -h ahost -u myusername -p mypassword
+.PP
+Show all SEL records of a remote machine using IPMI over LAN.
+.PP
+.B # ipmi-sel -h mycluster[0-127] -u myusername -p mypassword
+.PP
+Show all SEL records across a cluster using IPMI over LAN.
+.PP
+.B # ipmi-sel --delete=44,82
+.PP
+Delete SEL records 44 and 82 on the local machine.
+.PP
+.B # ipmi-sel --delete-all
+.PP
+Delete all SEL entries on the local machine.
+.PP
+.B # ipmi-sel --delete-range=12-42
+.PP
+Delete SEL entries in the range 12 to 42 on the local machine.
+.PP
+#include <@top_srcdir@/man/manpage-common-diagnostics.man>
+#include <@top_srcdir@/man/manpage-common-diagnostics-hostranged-text.man>
+#include <@top_srcdir@/man/manpage-common-known-issues.man>
+#include <@top_srcdir@/man/manpage-common-reporting-bugs.man>
+.SH "COPYRIGHT"
+Copyright \(co 2003-2012 FreeIPMI Core Team.  
+#include <@top_srcdir@/man/manpage-common-gpl-program-text.man>
+.SH "SEE ALSO"
+freeipmi(7), bmc-config(8), bmc-device(8), freeipmi_interpret_sel.conf(5)
+#include <@top_srcdir@/man/manpage-common-homepage.man>

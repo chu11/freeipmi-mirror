@@ -50,6 +50,7 @@
 #define CONFIG_FILE_TOOL_IPMI_SENSORS_CONFIG 0x00004000
 #define CONFIG_FILE_TOOL_IPMICONSOLE         0x00008000
 #define CONFIG_FILE_TOOL_IPMIPOWER           0x00010000
+#define CONFIG_FILE_TOOL_IPMISELD            0x00020000
 
 /* achu:
  *
@@ -288,6 +289,46 @@ struct config_file_data_ipmipower
   int ping_percent_count;
   unsigned int ping_consec_count;
   int ping_consec_count_count;
+};
+
+struct config_file_data_ipmiseld
+{
+  int verbose_count;
+  int verbose_count_count;
+  char sensor_types[CONFIG_FILE_MAX_SENSOR_TYPES][CONFIG_FILE_MAX_SENSOR_TYPES_STRING_LENGTH+1];
+  unsigned int sensor_types_length;
+  int sensor_types_count;
+  char exclude_sensor_types[CONFIG_FILE_MAX_SENSOR_TYPES][CONFIG_FILE_MAX_SENSOR_TYPES_STRING_LENGTH+1];
+  unsigned int exclude_sensor_types_length;
+  int exclude_sensor_types_count;
+  int system_event_only;
+  int system_event_only_count;
+  int oem_event_only;
+  int oem_event_only_count;
+  char *event_state_config_file;
+  int event_state_config_file_count;
+  int interpret_oem_data;
+  int interpret_oem_data_count;
+  int output_oem_event_strings;
+  int output_oem_event_strings_count;
+  int entity_sensor_names;
+  int entity_sensor_names_count;
+  int non_abbreviated_units;
+  int non_abbreviated_units_count;
+  char *event_state_filter_str;
+  int event_state_filter_str_count;
+  char *system_event_format_str;
+  int system_event_format_str_count;
+  char *oem_timestamped_event_format_str;
+  int oem_timestamped_event_format_str_count;
+  char *oem_non_timestamped_event_format_str;
+  int oem_non_timestamped_event_format_str_count;
+  char *log_facility_str;
+  int log_facility_str_count;
+  char *log_priority_str;
+  int log_priority_str_count;
+  char *cache_directory;
+  int cache_directory_count;
 };
 
 int config_file_parse (const char *filename,

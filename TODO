@@ -49,7 +49,28 @@ FreeIPMI new stuff
       - or only log new SEL events?
     - option allow user to specify format for log
       - i.e. %h: %t - %e
+  - options
+    -config-file
+    -debug/foreground
+    -poll-time
+    -hosts
+    - filter??
+    - log-old - flag
+    - clear on read
+    - clear on full
+    - warn on full
+    - warn on full percent
+      - warn/detect if clear/delete done out of band
+    - format to output
+    - log level
+    - log facility
+    - need to track last logged id?
+    - test/experiment option to test config/setup 
     - store caches in /var/cache? or use present ones
+  - way to clear caches / not-recreate
+  - start record-id?
+  - not daemon by default?
+    - output to "script" instead?
 - server simulator
   - support testing at scale
   - test larger set of corner cases, possibilities, workarounds, etc. 
