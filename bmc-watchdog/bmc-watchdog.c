@@ -44,17 +44,6 @@
 #include <fcntl.h>
 #endif /* HAVE_FCNTL_H */
 #include <sys/stat.h>
-#include <sys/select.h>
-#if TIME_WITH_SYS_TIME
-#include <sys/time.h>
-#include <time.h>
-#else  /* !TIME_WITH_SYS_TIME */
-#if HAVE_SYS_TIME_H
-#include <sys/time.h>
-#else /* !HAVE_SYS_TIME_H */
-#include <time.h>
-#endif  /* !HAVE_SYS_TIME_H */
-#endif /* !TIME_WITH_SYS_TIME */
 #include <assert.h>
 #include <errno.h>
 
@@ -165,25 +154,6 @@ _ipmi_err_exit (const char *str)
     err_exit ("%s: %s", str, ipmi_ctx_errormsg (ipmi_ctx));
 }
 
-/* signal handlers + sleep(3) is a bad idea */
-static int
-_sleep (unsigned int sleep_len)
-{
-  struct timeval tv;
-
-  if (!sleep_len)
-    return (0);
-
-  tv.tv_sec = sleep_len;
-  tv.tv_usec = 0;
-  if (select (1, NULL, NULL, NULL, &tv) < 0)
-    {
-      if (errno != EINTR)
-        err_exit ("select: %s", strerror (errno));
-    }
-  return (0);
-}
-
 static void
 _fiid_obj_get(fiid_obj_t obj_cmd_rs, const char *field, uint64_t *val)
 {
@@ -264,7 +234,7 @@ _cmd (const char *str,
               return (-1);
             }
 	  
-          _sleep (retry_wait_time);
+          daemon_sleep (retry_wait_time);
           retry_count++;
         }
       else
@@ -1064,7 +1034,7 @@ _daemon_setup (void)
 				   NULL) < 0)
         {
           _daemon_cmd_err_maybe_exit ("Get Watchdog Timer");
-	  _sleep (BMC_WATCHDOG_RETRY_WAIT_TIME_DEFAULT);
+	  daemon_sleep (BMC_WATCHDOG_RETRY_WAIT_TIME_DEFAULT);
           continue;
         }
       break;
@@ -1115,7 +1085,7 @@ _daemon_setup (void)
 				   initial_countdown_seconds) < 0)
         {
           _daemon_cmd_err_maybe_exit ("Set Watchdog Timer");
-	  _sleep (BMC_WATCHDOG_RETRY_WAIT_TIME_DEFAULT);
+	  daemon_sleep (BMC_WATCHDOG_RETRY_WAIT_TIME_DEFAULT);
           continue;
         }
       break;
@@ -1127,7 +1097,7 @@ _daemon_setup (void)
       if (_reset_watchdog_timer_cmd () < 0)
         {
           _daemon_cmd_err_maybe_exit ("Reset Watchdog Timer");
-	  _sleep (BMC_WATCHDOG_RETRY_WAIT_TIME_DEFAULT);
+	  daemon_sleep (BMC_WATCHDOG_RETRY_WAIT_TIME_DEFAULT);
           continue;
         }
       break;
@@ -1155,7 +1125,7 @@ _daemon_setup (void)
                                             arp_response)) < 0)
             {
               _daemon_cmd_err_maybe_exit ("Suspend BMC ARPs");
-	      _sleep (BMC_WATCHDOG_RETRY_WAIT_TIME_DEFAULT);
+	      daemon_sleep (BMC_WATCHDOG_RETRY_WAIT_TIME_DEFAULT);
               continue;
             }
 
@@ -1234,7 +1204,7 @@ _daemon_cmd (const char *progname)
    * be reflected in the Get Watchdog Timer command".
    */
   if (cmd_args.common_args.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IGNORE_STATE_FLAG)
-    _sleep (1);
+    daemon_sleep (1);
 
   while (shutdown_flag)
     {
@@ -1308,7 +1278,7 @@ _daemon_cmd (const char *progname)
            * delay up to 100 ms before seeing the countdown value change and
            * be reflected in the Get Watchdog Timer command".
            */
-          _sleep (1);
+          daemon_sleep (1);
 
           if (_get_watchdog_timer_cmd (NULL,
 				       NULL,
@@ -1341,7 +1311,7 @@ _daemon_cmd (const char *progname)
       if ((end_tv.tv_sec - start_tv.tv_sec) < adjusted_period)
 	adjusted_period -= (end_tv.tv_sec - start_tv.tv_sec);
 
-      _sleep (adjusted_period);
+      daemon_sleep (adjusted_period);
     }
 
   /* Need to stop the timer, don't want it to keep on going.  Don't
@@ -1369,7 +1339,7 @@ _daemon_cmd (const char *progname)
 				   NULL) < 0)
         {
           _daemon_cmd_err_no_exit ("Get Watchdog Timer");
-	  _sleep (BMC_WATCHDOG_RETRY_WAIT_TIME_DEFAULT);
+	  daemon_sleep (BMC_WATCHDOG_RETRY_WAIT_TIME_DEFAULT);
           continue;
         }
       break;
@@ -1391,7 +1361,7 @@ _daemon_cmd (const char *progname)
 				   initial_countdown_seconds) < 0)
         {
           _daemon_cmd_err_no_exit ("Set Watchdog Timer");
-	  _sleep (BMC_WATCHDOG_RETRY_WAIT_TIME_DEFAULT);
+	  daemon_sleep (BMC_WATCHDOG_RETRY_WAIT_TIME_DEFAULT);
           continue;
         }
       break;

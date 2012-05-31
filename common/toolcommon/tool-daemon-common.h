@@ -27,4 +27,7 @@ int daemonize_common (const char *pidfile);
 /* can pass NULL for no callback */
 int daemon_signal_handler_setup (sighandler_t cb);
 
+/* signal handlers + sleep(3) is a bad idea */
+int daemon_sleep (unsigned int sleep_len);
+
 #endif /* TOOL_DAEMON_COMMON_H */

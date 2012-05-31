@@ -639,7 +639,7 @@ _ipmiseld (ipmiseld_prog_data_t *prog_data)
 	  else
 	    timeout = prog_data->args->poll_interval;
 
-	  sleep (timeout);
+	  daemon_sleep (timeout);
 	}
     }
 
