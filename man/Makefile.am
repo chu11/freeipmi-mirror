@@ -23,6 +23,8 @@ MANS_CPP = \
 	ipmidetectd.conf.5 \
 	ipmiping.8 \
 	ipmipower.8 \
+	ipmiseld.8 \
+	ipmiseld.conf.5 \
 	freeipmi.7 \
 	freeipmi.conf.5 \
 	freeipmi_interpret_sel.conf.5 \
@@ -106,6 +108,7 @@ MANS_COMMON = \
 	manpage-common-troubleshooting-heading-start.man \
 	manpage-common-troubleshooting-inband.man \
 	manpage-common-troubleshooting-outofband.man \
+	manpage-common-troubleshooting-sel.man \
 	manpage-common-diagnostics.man \
 	manpage-common-diagnostics-hostranged-text.man \
 	manpage-common-known-issues.man \

@@ -32,6 +32,7 @@ SUBDIRS = \
 	ipmidetectd \
 	ipmiping \
 	ipmipower \
+	ipmiseld \
 	rmcpping \
 	contrib
 
@@ -59,6 +60,7 @@ EXTRA = \
 	COPYING.ipmidetect \
 	COPYING.ipmi-fru \
 	COPYING.ipmi-dcmi \
+	COPYING.ipmiseld \
 	COPYING.sunbmc \
 	COPYING.ZRESEARCH \
 	DISCLAIMER.bmc-watchdog \
@@ -70,6 +72,7 @@ EXTRA = \
 	DISCLAIMER.ipmidetect \
 	DISCLAIMER.ipmi-fru \
 	DISCLAIMER.ipmi-dcmi \
+	DISCLAIMER.ipmiseld \
 	DISCLAIMER.bmc-watchdog.UC \
 	DISCLAIMER.ipmipower.UC \
 	DISCLAIMER.ipmiping.UC \
