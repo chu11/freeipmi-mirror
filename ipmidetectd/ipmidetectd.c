@@ -112,6 +112,8 @@ int server_fd = 0;
 
 extern int h_errno;
 
+static int exit_flag = 1;
+
 static void
 _fds_setup (void)
 {
@@ -560,6 +562,12 @@ _send_ping_data (void)
 }
 
 static void
+_signal_handler_callback (int sig)
+{
+  exit_flag = 0;
+}
+
+static void
 _ipmidetectd_loop (void)
 {
   struct pollfd *pfds = NULL;
@@ -573,7 +581,7 @@ _ipmidetectd_loop (void)
   if (!(pfds = (struct pollfd *)malloc ((fds_count + 1)*sizeof (struct pollfd))))
     err_exit ("malloc: %s", strerror (errno));
 
-  while (1)
+  while (exit_flag)
     {
       struct timeval now, timeout;
       unsigned int timeout_ms;
@@ -634,7 +642,7 @@ main (int argc, char **argv)
   else
     err_set_flags (ERROR_STDERR);
 
-  daemon_signal_handler_setup (NULL);
+  daemon_signal_handler_setup (_signal_handler_callback);
 
   /* Call after daemonization, since daemonization closes currently
    * open fds
@@ -645,4 +653,3 @@ main (int argc, char **argv)
 
   return (0);
 }
-

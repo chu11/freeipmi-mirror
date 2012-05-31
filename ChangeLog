@@ -5,6 +5,8 @@
 	function.
 
 	* bmc-watchdog/: Use new common functions.
+
+	* ipmidetectd/ipmidetectd.c: Shutdown cleanly on signals.
 	
 2012-05-30  Albert Chu <chu11@llnl.gov>
 
