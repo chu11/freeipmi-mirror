@@ -105,16 +105,18 @@ static struct argp_option cmdline_options[] =
       "Specify format for oem timestamped event outputs.", 52},
     { "oem-non-timestamped-event-format", IPMISELD_OEM_NON_TIMESTAMPED_EVENT_FORMAT_KEY, "FORMATSTRING", 0,
       "Specify format for oem non-timestamped event outputs.", 53},
+    { "poll-interval", IPMISELD_POLL_INTERVAL, "SECONDS", 0,
+      "Specify poll interval to check the SEL for new events.", 54},  
     { "log-facility", IPMISELD_LOG_FACILITY_KEY, "STRING", 0,
-      "Specify syslog log facility.", 54},
+      "Specify syslog log facility.", 55},
     { "log-priority", IPMISELD_LOG_PRIORITY_KEY, "STRING", 0,
-      "Specify syslog log priority.", 55},
+      "Specify syslog log priority.", 56},
     { "cache-directory", IPMISELD_CACHE_DIRECTORY_KEY, "DIRECTORY", 0,
-      "Specify alternate cache directory.", 56},
+      "Specify alternate cache directory.", 57},
     { "test-run", IPMISELD_TEST_RUN_KEY, 0, 0,
-      "Do not daemonize, output current SEL as test of current settings.", 57},
+      "Do not daemonize, output current SEL as test of current settings.", 58},
     { "foreground", IPMISELD_FOREGROUND_KEY, 0, 0,
-      "Run daemon in foreground.", 58},
+      "Run daemon in foreground.", 59},
     { NULL, 0, NULL, 0, NULL, 0}
   };
 
@@ -134,6 +136,8 @@ static error_t
 cmdline_parse (int key, char *arg, struct argp_state *state)
 {
   struct ipmiseld_arguments *cmd_args;
+  char *endptr;
+  int tmp;
 
   assert (state);
   
@@ -231,6 +235,18 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 	  perror ("strdup");
 	  exit (EXIT_FAILURE);
 	}
+      break;
+    case IPMISELD_POLL_INTERVAL_KEY:
+      errno = 0;
+      tmp = strtol (arg, &endptr, 0);
+      if (errno
+          || endptr[0] != '\0'
+	  || tmp <= 0) 
+        {
+          fprintf (stderr, "invalid poll interval\n");
+          exit (EXIT_FAILURE);
+        }
+      cmd_args->poll_interval = tmp;
       break;
     case IPMISELD_TEST_RUN_KEY:
       cmd_args->test_run = 1;
@@ -337,6 +353,8 @@ _ipmiseld_config_file_parse (struct ipmiseld_arguments *cmd_args)
     cmd_args->oem_timestamped_event_format_str = config_file_data.oem_timestamped_event_format_str;
   if (config_file_data.oem_non_timestamped_event_format_str_count)
     cmd_args->oem_non_timestamped_event_format_str = config_file_data.oem_non_timestamped_event_format_str;
+  if (config_file_data.poll_interval_count)
+    cmd_args->poll_interval = config_file_data.poll_interval;
   if (config_file_data.log_facility_str_count)
     cmd_args->log_facility_str = config_file_data.log_facility_str;
   if (config_file_data.log_priority_str_count)
@@ -430,6 +448,7 @@ ipmiseld_argp_parse (int argc, char **argv, struct ipmiseld_arguments *cmd_args)
   cmd_args->log_facility_str = NULL;
   cmd_args->log_priority_str = NULL;
   cmd_args->cache_directory = NULL;
+  cmd_args->poll_interval = IPMISELD_POLL_INTERVAL_DEFAULT;
   cmd_args->test_run = 0;
   cmd_args->foreground = 0;
 

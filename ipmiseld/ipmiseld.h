@@ -36,6 +36,8 @@
 #include "tool-oem-common.h"
 #include "tool-sensor-common.h"
 
+#define IPMISELD_POLL_INTERVAL_DEFAULT 300
+
 enum ipmiseld_argp_option_keys
   {
     IPMISELD_VERBOSE_KEY = 'v',
@@ -52,11 +54,12 @@ enum ipmiseld_argp_option_keys
     IPMISELD_SYSTEM_EVENT_FORMAT_KEY = 168,
     IPMISELD_OEM_TIMESTAMPED_EVENT_FORMAT_KEY = 169,
     IPMISELD_OEM_NON_TIMESTAMPED_EVENT_FORMAT_KEY = 170,
-    IPMISELD_LOG_FACILITY_KEY = 171,
-    IPMISELD_LOG_PRIORITY_KEY = 172,
-    IPMISELD_CACHE_DIRECTORY_KEY = 173,
-    IPMISELD_TEST_RUN_KEY = 174,
-    IPMISELD_FOREGROUND_KEY = 175,
+    IPMISELD_POLL_INTERVAL = 171,
+    IPMISELD_LOG_FACILITY_KEY = 172,
+    IPMISELD_LOG_PRIORITY_KEY = 173,
+    IPMISELD_CACHE_DIRECTORY_KEY = 174,
+    IPMISELD_TEST_RUN_KEY = 175,
+    IPMISELD_FOREGROUND_KEY = 176,
   };
 
 struct ipmiseld_arguments
@@ -78,6 +81,7 @@ struct ipmiseld_arguments
   char *system_event_format_str;
   char *oem_timestamped_event_format_str;
   char *oem_non_timestamped_event_format_str;
+  unsigned int poll_interval; 
   char *log_facility_str;
   char *log_priority_str;
   char *cache_directory;

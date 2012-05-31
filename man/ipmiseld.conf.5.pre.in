@@ -48,7 +48,6 @@ limit access to this file.
 
 .SH "IPMISELD CONFIGURATION OPTIONS"
 .TP
-
 \fBdriver\-type\fR \fIIPMIDRIVER\fR
 Specify the driver type to use.  
 .TP
@@ -162,6 +161,9 @@ is encountered.
 \fBoem\-non\-timestamped\-event\-format\fR \fIFORMATSTRING\fR
 Specify the format of the log output when a SEL OEM non-timestamped
 event is encountered.
+.TP
+\fBpoll\-interval\fR \fISECONDS\fR
+Specify the poll interval to check the SEL for new events.
 .TP
 \fBlog\-facility\fR \fISTRING\fR
 Specify the log facility to use.

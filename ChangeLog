@@ -1,3 +1,21 @@
+2012-XX-XX  Albert Chu <chu11@llnl.gov>
+
+	Add new tool ipmiseld.
+
+	* ipmiseld/: New tool.
+
+	* common/, etc/, man/: Add new manpage entries, init scripts,
+	config files, as needed.
+
+	* man/manpage-common-troubleshooting-sel.man: Create new common
+	SEL troubleshooting common manpage.
+
+	* config/ac_ipmiseld_cache_dir.m4,
+	config/ac_ipmiseld_config_file.m4: New files.
+
+	* man/, freeipmi.spec.in, configure.ac: Update appropriately for
+	new tool.
+	
 2012-05-30  Albert Chu <chu11@llnl.gov>
 
 	* man/, etc/: Add forgotten config entries.

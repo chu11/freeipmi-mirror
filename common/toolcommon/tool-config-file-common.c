@@ -4663,6 +4663,17 @@ config_file_parse (const char *filename,
 	0,
       },
       {
+        "poll-interval",
+        CONFFILE_OPTION_INT,
+        -1,
+        _config_file_positive_int,
+        1,
+        0,
+        &(ipmiseld_data.poll_interval_count),
+        &(ipmiseld_data.poll_interval),
+        0
+      },
+      {
 	"log-facility",
 	CONFFILE_OPTION_STRING,
 	-1,

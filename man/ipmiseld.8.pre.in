@@ -124,6 +124,10 @@ Specify the format of the log output when a SEL OEM non-timestamped
 event is encountered.  Defaults to "SEL OEM Event: %I, %o".  See SEL
 LOG FORMAT STRING below for formatting details.
 .TP
+\fB\-\-poll\-interval\fR=\fISECONDS\fR
+Specify the poll interval to check the SEL for new events.  Defaults
+to 300 seconds (i.e. 5 minutes).
+.TP
 \fB\-\-log\-facility\fR=\fISTRING\fR
 Specify the log facility to use.  Defaults to LOG_DAEMON.  Legal
 inputs are LOG_DAEMON, LOG_USER, LOG_LOCAL0, LOG_LOCAL1, LOG_LOCAL2,

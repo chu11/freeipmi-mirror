@@ -323,6 +323,8 @@ struct config_file_data_ipmiseld
   int oem_timestamped_event_format_str_count;
   char *oem_non_timestamped_event_format_str;
   int oem_non_timestamped_event_format_str_count;
+  unsigned int poll_interval;
+  int poll_interval_count;
   char *log_facility_str;
   int log_facility_str_count;
   char *log_priority_str;
