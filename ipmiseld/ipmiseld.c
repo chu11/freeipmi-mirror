@@ -41,8 +41,8 @@
 
 #include "ipmiseld.h"
 #include "ipmiseld-argp.h"
+#include "ipmiseld-cache.h"
 #include "ipmiseld-common.h"
-#include "ipmiseld-sdr.h"
 
 #include "freeipmi-portability.h"
 #include "error.h"

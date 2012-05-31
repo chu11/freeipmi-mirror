@@ -28,10 +28,10 @@ ipmiseld_SOURCES = \
 	ipmiseld.h \
 	ipmiseld-argp.c \
 	ipmiseld-argp.h \
+	ipmiseld-cache.c \
+	ipmiseld-cache.h \
 	ipmiseld-common.c \
-	ipmiseld-common.h \
-	ipmiseld-sdr.c \
-	ipmiseld-sdr.h
+	ipmiseld-common.h
 
 $(top_builddir)/common/toolcommon/libtoolcommon.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`

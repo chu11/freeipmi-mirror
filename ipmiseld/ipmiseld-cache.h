@@ -23,12 +23,12 @@
  *  with Ipmiseld.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef IPMISELD_SDR_H
-#define IPMISELD_SDR_H
+#ifndef IPMISELD_CACHE_H
+#define IPMISELD_CACHE_H
 
 #include "ipmiseld.h"
 
 int ipmiseld_sdr_cache_create_and_load (ipmiseld_state_data_t *state_data,
 					const char *hostname);
 
-#endif /* IPMISELD_SDR_H */
+#endif /* IPMISELD_CACHE_H */

@@ -40,7 +40,7 @@
 #include <errno.h>
 
 #include "ipmiseld.h"
-#include "ipmiseld-sdr.h"
+#include "ipmiseld-cache.h"
 
 #include "freeipmi-portability.h"
 #include "error.h"
