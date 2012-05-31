@@ -165,6 +165,9 @@ event is encountered.
 \fBpoll\-interval\fR \fISECONDS\fR
 Specify the poll interval to check the SEL for new events.
 .TP
+\fBpoll\-error\-interval\fR \fISECONDS\fR
+Specify the poll interval to check the SEL if errors occur.
+.TP
 \fBlog\-facility\fR \fISTRING\fR
 Specify the log facility to use.
 .TP

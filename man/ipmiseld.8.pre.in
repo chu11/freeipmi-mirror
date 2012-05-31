@@ -128,6 +128,12 @@ LOG FORMAT STRING below for formatting details.
 Specify the poll interval to check the SEL for new events.  Defaults
 to 300 seconds (i.e. 5 minutes).
 .TP
+\fB\-\-poll\-error\-interval\fR=\fISECONDS\fR
+Specify the poll interval to check the SEL if error occurs.  Usually
+this number is larger than the \fBpoll\-interval\fR to slow down SEL
+polling in the event of a busy network, temporarily down hardware,
+firmware updates, etc.  Defaults to 600 seconds (i.e. 10 minutes).
+.TP
 \fB\-\-log\-facility\fR=\fISTRING\fR
 Specify the log facility to use.  Defaults to LOG_DAEMON.  Legal
 inputs are LOG_DAEMON, LOG_USER, LOG_LOCAL0, LOG_LOCAL1, LOG_LOCAL2,
